@@ -1,0 +1,5 @@
+package test;
+public class Test {
+    private t(Object o) {
+        if (o instanceof String) {
+            ((String) o).length()

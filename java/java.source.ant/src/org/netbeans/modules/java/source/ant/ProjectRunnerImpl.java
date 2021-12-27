@@ -122,8 +122,7 @@ public class ProjectRunnerImpl implements JavaRunnerImplementation {
     private static final RequestProcessor RP = new RequestProcessor(ProjectRunnerImpl.class);
     
     public boolean isSupported(String command, Map<String, ?> properties) {
-        return BuildArtifactMapper.isCompileOnSaveSupported() &&
-               locateScript(command) != null;
+        return locateScript(command) != null;
     }
 
     @Override
@@ -717,7 +716,7 @@ public class ProjectRunnerImpl implements JavaRunnerImplementation {
                     File sourceFile = FileUtil.toFile(source);
 
                     if (sourceFile == null) {
-                        LOG.log(Level.WARNING, "Source URL: {0} cannot be translated to file, skipped", source.getURL().toExternalForm());
+                        LOG.log(Level.WARNING, "Source URL: {0} cannot be translated to file, skipped", source.toURL().toExternalForm());
                         continue;
                     }
 

@@ -109,7 +109,7 @@ public final class JUnitUtils {
     }
     
     public static DataObject createSuiteTest(FileObject targetRootFolder, FileObject targetFolder, String suiteName, Map<CommonPlugin.CreateTestParam, Object> params) {
-        DefaultPlugin defaultPlugin = new DefaultPlugin();
+        DefaultPlugin defaultPlugin = new DefaultPlugin(null);
         
         if (!defaultPlugin.setupJUnitVersionByProject(targetFolder)) {
             return null;

@@ -54,6 +54,9 @@ public abstract class ASTElement extends GroovyElement {
         super(in, name);
         this.node = node;
         this.children = new ArrayList<>();
+        if (node != null) {
+            node.putNodeMetaData(ASTElement.class, this);
+        }
     }
 
     public ASTNode getNode() {

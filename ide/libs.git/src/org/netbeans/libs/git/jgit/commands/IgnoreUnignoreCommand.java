@@ -137,9 +137,7 @@ public abstract class IgnoreUnignoreCommand extends GitCommand {
             for (ListIterator<IgnoreRule> it = ignoreRules.listIterator(); it.hasNext(); ) {
                 String s = it.next().getPattern(false);
                 bw.write(s, 0, s.length());
-                if (it.hasNext()) {
-                    bw.newLine();
-                }
+                bw.newLine();
             }
         } finally {
             if (bw != null) {

@@ -90,7 +90,6 @@ public class BuildZipDistributionTest extends TestBase {
         suite.open();
         proj.open();
         
-        LOG.info("Workdir " + getWorkDirPath());
     }
     
     public void testBuildTheZipAppWhenAppNamePropIsNotSet() throws Exception {

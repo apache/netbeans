@@ -294,9 +294,9 @@ public class SAXGeneratorModel implements java.io.Serializable {
     public void loadElementBindings(ElementBindings bindings) {
         if (bindings == null) return;
         
-        Iterator it = bindings.values().iterator();
+        Iterator<ElementBindings.Entry> it = bindings.values().iterator();
         while (it.hasNext()) {
-            ElementBindings.Entry next = (ElementBindings.Entry) it.next();
+            ElementBindings.Entry next = it.next();
             
             if (elementDeclarations.getEntry(next.getElement()) != null) {
                 elementBindings.put(next.getElement(), next);
@@ -312,9 +312,9 @@ public class SAXGeneratorModel implements java.io.Serializable {
        
         if (parslets == null) return;
         
-        Iterator it = parslets.values().iterator();
+        Iterator<ParsletBindings.Entry> it = parslets.values().iterator();
         while (it.hasNext()) {
-            ParsletBindings.Entry next = (ParsletBindings.Entry) it.next();
+            ParsletBindings.Entry next = it.next();
             
             if (elementBindings.containsParslet(next.getId())) {
                 parsletBindings.put(next.getId(), next);

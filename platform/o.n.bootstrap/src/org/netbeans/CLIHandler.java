@@ -258,6 +258,7 @@ public abstract class CLIHandler extends Object {
         public static final int CANNOT_CONNECT = -255;
         public static final int CANNOT_WRITE = -254;
         public static final int ALREADY_RUNNING = -253;
+        public static final int CONNECTED = -252;
         
         private final File lockFile;
         private final int port;
@@ -1291,6 +1292,9 @@ public abstract class CLIHandler extends Object {
          */
         static final boolean isClosedSocket(SocketException ex) {
             if (ex.getMessage().equals("Broken pipe")) { // NOI18N
+                return true;
+            }
+            if (ex.getMessage().contains("SIGPIPE")) { // NOI18N
                 return true;
             }
             if (ex.getMessage().startsWith("Connection reset by peer")) { // NOI18N

@@ -25,6 +25,11 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.function.Function;
@@ -254,6 +259,26 @@ public class ImageUtilitiesTest extends TestCase {
         assertSame("Expected same instance", icon1, icon2);
     }
 
+    public void testSerializeImageIcon() throws IOException, ClassNotFoundException {
+        // testimage.png is a 16x16 image
+        ImageIcon icon = ImageUtilities.loadImageIcon("org/openide/util/testimage.png", false);
+        assertNotNull(icon);
+        byte data[];
+        try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+            try (ObjectOutputStream oos = new ObjectOutputStream(baos)) {
+                /* This confirmed to trigger a java.io.NotSerializableException before the custom
+                serialization methods ImageUtilities.IconImageIcon were added.*/
+                oos.writeObject(icon);
+            }
+            data = baos.toByteArray();
+        }
+        try (ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(data))) {
+          ImageIcon back = (ImageIcon) ois.readObject();
+          assertEquals(icon.getIconWidth(), back.getIconWidth());
+          assertEquals(icon.getIconHeight(), back.getIconHeight());
+        }
+    }
+
     public void testConversions() {
         /* Note: these are rather implementation-oriented tests. Implementation changes in
         ImageUtilities (addition or removal of caches etc.) might require this test to be
@@ -432,6 +457,33 @@ public class ImageUtilitiesTest extends TestCase {
         ImageUtilities.icon2Image(origIcon2);
         assertTrue(origIcon2.wasPaintCalled);
         assertNotNull(origIcon2.lastObservedComponent);
+    }
+
+    public void testZeroSideIconFilter() {
+        // Make sure there are no errors when one side is zero.
+        Icon icon = ImageUtilities.createDisabledIcon(new ZeroSideIcon());
+        BufferedImage img = new BufferedImage(100, 100, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g = img.createGraphics();
+        icon.paintIcon(null, g, 0, 0);
+        icon = ImageUtilities.image2Icon(
+                ImageUtilities.createDisabledImage(ImageUtilities.icon2Image(new ZeroSideIcon())));
+        icon.paintIcon(null, g, 0, 0);
+    }
+
+    private static final class ZeroSideIcon implements Icon {
+        @Override
+        public void paintIcon(Component c, Graphics g, int x, int y) {
+        }
+
+        @Override
+        public int getIconWidth() {
+            return 0;
+        }
+
+        @Override
+        public int getIconHeight() {
+            return 8;
+        }
     }
 
     private static final class CustomIcon implements Icon {

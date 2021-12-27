@@ -251,6 +251,7 @@ public class PHP5ErrorHandlerImpl implements PHP5ErrorHandler {
                 case ASTPHP5Symbols.T_OR_EQUAL : text = "|="; break; //NOI18N
                 case ASTPHP5Symbols.T_LOGICAL_XOR : text = "XOR"; break; //NOI18N
                 case ASTPHP5Symbols.T_FUNCTION : text = "function"; break; //NOI18N
+                case ASTPHP5Symbols.T_FN : text = "fn"; break; //NOI18N
                 case ASTPHP5Symbols.T_STATIC : text = "static"; break; //NOI18N
                 case ASTPHP5Symbols.T_NEKUDA : text = "'.'"; break; //NOI18N
                 case ASTPHP5Symbols.T_THROW : text = "throw"; break; //NOI18N
@@ -289,6 +290,7 @@ public class PHP5ErrorHandlerImpl implements PHP5ErrorHandler {
                 case ASTPHP5Symbols.T_CALLABLE : text = "callable"; break; //NOI18N
                 case ASTPHP5Symbols.T_PUBLIC : text = "public"; break; //NOI18N
                 case ASTPHP5Symbols.T_OBJECT_OPERATOR : text = "->"; break; //NOI18N
+                case ASTPHP5Symbols.T_NULLSAFE_OBJECT_OPERATOR : text = "?->"; break; //NOI18N
                 case ASTPHP5Symbols.T_TILDA : text = "~"; break; //NOI18N
                 case ASTPHP5Symbols.T_PAAMAYIM_NEKUDOTAYIM : text = "::"; break; //NOI18N
                 case ASTPHP5Symbols.T_IS_SMALLER_OR_EQUAL : text = "<="; break; //NOI18N
@@ -316,6 +318,7 @@ public class PHP5ErrorHandlerImpl implements PHP5ErrorHandler {
                 case ASTPHP5Symbols.T_UNSET : text = "unset"; break; //NOI18N
                 case ASTPHP5Symbols.T_INTERFACE : text = "interface"; break; //NOI18N
                 case ASTPHP5Symbols.T_SWITCH : text = "switch"; break; //NOI18N
+                case ASTPHP5Symbols.T_MATCH : text = "match"; break; //NOI18N
                 case ASTPHP5Symbols.T_IS_GREATER_OR_EQUAL : text = ">="; break; //NOI18N
                 case ASTPHP5Symbols.T_SPACESHIP : text = "<=>"; break; //NOI18N
                 case ASTPHP5Symbols.T_OPEN_RECT : text = "["; break; //NOI18N
@@ -352,6 +355,7 @@ public class PHP5ErrorHandlerImpl implements PHP5ErrorHandler {
                 case ASTPHP5Symbols.T_DEFINE : text = "define"; break; //NOI18N
                 case ASTPHP5Symbols.T_QUESTION_MARK : text = "?"; break; //NOI18N
                 case ASTPHP5Symbols.T_COALESCE : text = "??"; break; //NOI18N
+                case ASTPHP5Symbols.T_COALESCE_EQUAL : text = "??="; break; //NOI18N
                 case ASTPHP5Symbols.T_END_NOWDOC : text = "END_NOWDOC"; break; //NOI18N
                 case ASTPHP5Symbols.T_USE : text = "use"; break; //NOI18N
                 case ASTPHP5Symbols.T_KOVA : text = "^"; break; //NOI18N

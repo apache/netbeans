@@ -76,16 +76,20 @@ public class EjbJarImpl extends BaseEEModuleImpl implements EjbJarImplementation
             return profile;
         }
         String ver = getModuleVersion();
-        if (EjbJar.VERSION_2_1.equals(ver)) {
-            return Profile.J2EE_14;
-        }
-        if (EjbJar.VERSION_3_0.equals(ver)) {
-            return Profile.JAVA_EE_5;
+
+        if (EjbJar.VERSION_3_2.equals(ver)) {
+            return Profile.JAVA_EE_7_FULL;
         }
         if (EjbJar.VERSION_3_1.equals(ver)) {
             return Profile.JAVA_EE_6_FULL;
         }
-        return Profile.JAVA_EE_5;
+        if (EjbJar.VERSION_3_0.equals(ver)) {
+            return Profile.JAVA_EE_5;
+        }
+        if (EjbJar.VERSION_2_1.equals(ver)) {
+            return Profile.J2EE_14;
+        }
+        return Profile.JAVA_EE_8_FULL;
     }
     
     @Override
@@ -104,13 +108,14 @@ public class EjbJarImpl extends BaseEEModuleImpl implements EjbJarImplementation
         String version = PluginPropertyUtils.getPluginProperty(project,
                 Constants.GROUP_APACHE_PLUGINS, Constants.PLUGIN_EJB,
                 "ejbVersion", "ejb", "ejb.ejbVersion"); //NOI18N
+
         if (version != null) {
             return version.trim();
         }
         // in case there is no descriptor, we probably have 3.x spec stuff?
         //TODO we cannot differenciate ee5 and ee6 at this point, most cases shall
         // be coved by the previous cases
-       return EjbJar.VERSION_3_0;
+       return EjbJar.VERSION_3_2;
     }
 
     @Override

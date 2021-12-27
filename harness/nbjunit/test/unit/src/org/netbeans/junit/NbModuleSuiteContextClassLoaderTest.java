@@ -26,7 +26,8 @@ import test.pkg.not.in.junit.NbModuleSuiteT;
  * @author Jaroslav Tulach <jtulach@netbeans.org>
  */
 public class NbModuleSuiteContextClassLoaderTest extends NbTestCase {
-    static ClassLoader before;
+    
+    private static ClassLoader before;
     
     public NbModuleSuiteContextClassLoaderTest(String name) {
         super(name);

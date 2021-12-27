@@ -23,32 +23,43 @@ import java.awt.Component;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.util.Arrays;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.prefs.Preferences;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.GroupLayout;
+import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.LayoutStyle;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import org.netbeans.modules.analysis.spi.Analyzer;
 import org.netbeans.modules.php.analysis.commands.CodingStandardsFixer;
 import org.netbeans.modules.php.analysis.options.AnalysisOptions;
+import org.netbeans.modules.php.analysis.options.AnalysisOptionsValidator;
+import org.netbeans.modules.php.analysis.options.ValidatorCodingStandardsFixerParameter;
+import org.netbeans.modules.php.analysis.ui.AnalysisDefaultDocumentListener;
+import org.netbeans.modules.php.analysis.util.AnalysisUiUtils;
+import org.netbeans.modules.php.api.validation.ValidationResult;
 import org.openide.awt.Mnemonics;
 import org.openide.util.NbBundle;
+import org.openide.util.RequestProcessor;
 
 public class CodingStandardsFixerCustomizerPanel extends JPanel {
 
-    private static final long serialVersionUID = -575231773758741767L;
+    private static final long serialVersionUID = -2799627803431340323L;
 
     public static final String ENABLED = "codingStandardsFixer.enabled"; // NOI18N
+    public static final String PATH = "codingStandardsFixer.path"; // NOI18N
     public static final String VERSION = "codingStandardsFixer.version"; // NOI18N
     public static final String LEVEL = "codingStandardsFixer.level"; // NOI18N
     public static final String CONFIG = "codingStandardsFixer.config"; // NOI18N
     public static final String OPTIONS = "codingStandardsFixer.options"; // NOI18N
+    private static final RequestProcessor RP = new RequestProcessor(PHPStanCustomizerPanel.class);
 
     final Analyzer.CustomizerContext<Void, CodingStandardsFixerCustomizerPanel> context;
     final Preferences settings;
@@ -66,14 +77,24 @@ public class CodingStandardsFixerCustomizerPanel extends JPanel {
     }
 
     private void init() {
-        setEnabledCheckBox();
-        setVersionComboBox();
-        setLevelComboBox();
-        setConfigComboBox();
-        setOptionsTextField();
+        initEnabledCheckBox();
+        initCodingStandardsFixerField();
+        initVersionComboBox();
+        initLevelComboBox();
+        initConfigComboBox();
+        initOptionsTextField();
+        // avoid NPE: don't set errors during initializing
+        RP.schedule(() -> {
+            EventQueue.invokeLater(() -> {
+                context.setError(null);
+                if (enabledCheckBox.isSelected()) {
+                    validateData();
+                }
+            });
+        }, 1000, TimeUnit.MILLISECONDS);
     }
 
-    private void setEnabledCheckBox() {
+    private void initEnabledCheckBox() {
         assert EventQueue.isDispatchThread();
         enabledCheckBox.addItemListener((e) -> {
             setAllComponetsEnabled(enabledCheckBox.isSelected());
@@ -82,9 +103,22 @@ public class CodingStandardsFixerCustomizerPanel extends JPanel {
         boolean isEnabled = settings.getBoolean(ENABLED, false);
         enabledCheckBox.setSelected(isEnabled);
         setAllComponetsEnabled(isEnabled);
+        enabledCheckBox.addItemListener(e -> {
+            if (!enabledCheckBox.isSelected()) {
+                context.setError(null);
+            } else {
+                validateData();
+            }
+        });
     }
 
-    private void setVersionComboBox() {
+    private void initCodingStandardsFixerField() {
+        assert EventQueue.isDispatchThread();
+        codingStandardsFixerTextField.setText(settings.get(PATH, AnalysisOptions.getInstance().getCodingStandardsFixerPath()));
+        codingStandardsFixerTextField.getDocument().addDocumentListener(new AnalysisDefaultDocumentListener(() -> setCodingStandardsFixerPath()));
+    }
+
+    private void initVersionComboBox() {
         assert EventQueue.isDispatchThread();
         DefaultComboBoxModel<String> versionComboBoxModel = new DefaultComboBoxModel<>();
         CodingStandardsFixer.VERSIONS.forEach((version) -> {
@@ -97,7 +131,7 @@ public class CodingStandardsFixerCustomizerPanel extends JPanel {
         versionComboBoxModel.setSelectedItem(settings.get(VERSION, AnalysisOptions.getInstance().getCodingStandardsFixerVersion()));
     }
 
-    private void setLevelComboBox() {
+    private void initLevelComboBox() {
         assert EventQueue.isDispatchThread();
         DefaultComboBoxModel<String> levelComboBoxModel = new DefaultComboBoxModel<>();
         CodingStandardsFixer.ALL_LEVEL.forEach((level) -> {
@@ -110,7 +144,7 @@ public class CodingStandardsFixerCustomizerPanel extends JPanel {
         });
     }
 
-    private void setConfigComboBox() {
+    private void initConfigComboBox() {
         assert EventQueue.isDispatchThread();
         DefaultComboBoxModel<String> configComboBoxModel = new DefaultComboBoxModel<>();
         CodingStandardsFixer.ALL_CONFIG.forEach((config) -> {
@@ -123,33 +157,24 @@ public class CodingStandardsFixerCustomizerPanel extends JPanel {
         });
     }
 
-    private void setOptionsTextField() {
+    private void initOptionsTextField() {
         assert EventQueue.isDispatchThread();
         optionsTextField.setText(settings.get(OPTIONS, AnalysisOptions.getInstance().getCodingStandardsFixerOptions()));
-        optionsTextField.getDocument().addDocumentListener(new DocumentListener() {
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                processUpdate();
-            }
+        optionsTextField.getDocument().addDocumentListener(new AnalysisDefaultDocumentListener(() -> setOptions()));
+    }
 
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                processUpdate();
-            }
-
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-                processUpdate();
-            }
-
-            private void processUpdate() {
-                setOptions();
-            }
-        });
+    public String getCodingStandardsFixerPath() {
+        return codingStandardsFixerTextField.getText().trim();
     }
 
     private void setCodingStandardsFixerEnabled() {
         settings.putBoolean(ENABLED, enabledCheckBox.isSelected());
+    }
+
+    private void setCodingStandardsFixerPath() {
+        if (validateData()) {
+            settings.put(PATH, getCodingStandardsFixerPath());
+        }
     }
 
     private void setVersion() {
@@ -169,10 +194,35 @@ public class CodingStandardsFixerCustomizerPanel extends JPanel {
     }
 
     private void setVersion1ComponentsVisible(boolean isVisible) {
-        levelLabel.setVisible(isVisible);
-        levelComboBox.setVisible(isVisible);
-        configLabel.setVisible(isVisible);
-        configComboBox.setVisible(isVisible);
+        for (Component component : getVersion1Components()) {
+            component.setVisible(isVisible);
+        }
+    }
+
+    private List<Component> getVersion1Components() {
+        return Arrays.asList(
+                levelLabel,
+                levelComboBox,
+                configLabel,
+                configComboBox
+        );
+    }
+
+    private boolean validateData() {
+        ValidatorCodingStandardsFixerParameter param = ValidatorCodingStandardsFixerParameter.create(this);
+        ValidationResult result = new AnalysisOptionsValidator()
+                .validateCodingStandardsFixer(param)
+                .getResult();
+        if (result.hasErrors()) {
+            context.setError(result.getErrors().get(0).getMessage());
+            return false;
+        }
+        if (result.hasWarnings()) {
+            context.setError(result.getWarnings().get(0).getMessage());
+            return false;
+        }
+        context.setError(null);
+        return true;
     }
 
     private void setAllComponetsEnabled(boolean isEnabled) {
@@ -202,6 +252,10 @@ public class CodingStandardsFixerCustomizerPanel extends JPanel {
         versionLabel = new JLabel();
         versionComboBox = new JComboBox<>();
         enabledCheckBox = new JCheckBox();
+        codingStandarsFixerLabel = new JLabel();
+        codingStandardsFixerTextField = new JTextField();
+        browseButton = new JButton();
+        searchButton = new JButton();
 
         Mnemonics.setLocalizedText(levelLabel, NbBundle.getMessage(CodingStandardsFixerCustomizerPanel.class, "CodingStandardsFixerCustomizerPanel.levelLabel.text")); // NOI18N
 
@@ -219,32 +273,64 @@ public class CodingStandardsFixerCustomizerPanel extends JPanel {
 
         Mnemonics.setLocalizedText(enabledCheckBox, NbBundle.getMessage(CodingStandardsFixerCustomizerPanel.class, "CodingStandardsFixerCustomizerPanel.enabledCheckBox.text")); // NOI18N
 
+        Mnemonics.setLocalizedText(codingStandarsFixerLabel, NbBundle.getMessage(CodingStandardsFixerCustomizerPanel.class, "CodingStandardsFixerCustomizerPanel.codingStandarsFixerLabel.text")); // NOI18N
+
+        codingStandardsFixerTextField.setText(NbBundle.getMessage(CodingStandardsFixerCustomizerPanel.class, "CodingStandardsFixerCustomizerPanel.codingStandardsFixerTextField.text")); // NOI18N
+
+        Mnemonics.setLocalizedText(browseButton, NbBundle.getMessage(CodingStandardsFixerCustomizerPanel.class, "CodingStandardsFixerCustomizerPanel.browseButton.text")); // NOI18N
+        browseButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+                browseButtonActionPerformed(evt);
+            }
+        });
+
+        Mnemonics.setLocalizedText(searchButton, NbBundle.getMessage(CodingStandardsFixerCustomizerPanel.class, "CodingStandardsFixerCustomizerPanel.searchButton.text")); // NOI18N
+        searchButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+                searchButtonActionPerformed(evt);
+            }
+        });
+
         GroupLayout layout = new GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addComponent(enabledCheckBox)
+                .addGap(0, 0, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                    .addComponent(codingStandarsFixerLabel)
                     .addComponent(levelLabel)
                     .addComponent(configLabel)
                     .addComponent(optionsLabel)
                     .addComponent(versionLabel))
-                .addGap(21, 21, 21)
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                    .addComponent(optionsTextField)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
                                 .addComponent(levelComboBox, 0, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(configComboBox, 0, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addComponent(configComboBox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                             .addComponent(versionComboBox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                        .addContainerGap())))
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(enabledCheckBox)
-                .addGap(0, 0, Short.MAX_VALUE))
+                        .addContainerGap())
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                            .addComponent(codingStandardsFixerTextField)
+                            .addComponent(optionsTextField))
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(browseButton)
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(searchButton))))
         );
         layout.setVerticalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addComponent(enabledCheckBox)
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                    .addComponent(codingStandarsFixerLabel)
+                    .addComponent(codingStandardsFixerTextField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                    .addComponent(browseButton)
+                    .addComponent(searchButton))
                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                     .addComponent(versionComboBox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
@@ -277,8 +363,25 @@ public class CodingStandardsFixerCustomizerPanel extends JPanel {
         }
     }//GEN-LAST:event_versionComboBoxActionPerformed
 
+    private void browseButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_browseButtonActionPerformed
+        File file = AnalysisUiUtils.browseCodingStandardsFixer();
+        if (file != null) {
+            codingStandardsFixerTextField.setText(file.getAbsolutePath());
+        }
+    }//GEN-LAST:event_browseButtonActionPerformed
+
+    private void searchButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_searchButtonActionPerformed
+        String codingStandardsFixer = AnalysisUiUtils.searchCodingStandardsFixer();
+        if (codingStandardsFixer != null) {
+            codingStandardsFixerTextField.setText(codingStandardsFixer);
+        }
+    }//GEN-LAST:event_searchButtonActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private JButton browseButton;
+    private JTextField codingStandardsFixerTextField;
+    private JLabel codingStandarsFixerLabel;
     private JComboBox<String> configComboBox;
     private JLabel configLabel;
     private JCheckBox enabledCheckBox;
@@ -286,6 +389,7 @@ public class CodingStandardsFixerCustomizerPanel extends JPanel {
     private JLabel levelLabel;
     private JLabel optionsLabel;
     private JTextField optionsTextField;
+    private JButton searchButton;
     private JComboBox<String> versionComboBox;
     private JLabel versionLabel;
     // End of variables declaration//GEN-END:variables

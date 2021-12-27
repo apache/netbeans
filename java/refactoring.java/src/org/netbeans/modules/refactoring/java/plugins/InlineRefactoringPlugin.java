@@ -91,7 +91,7 @@ public class InlineRefactoringPlugin extends JavaRefactoringPlugin {
                 break;
             case CONSTANT:
             case TEMP:
-                visitor = new InlineVariableTransformer();
+                visitor = new InlineVariableTransformer(treePathHandle);
                 break;
             default:
                 return null;

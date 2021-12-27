@@ -1,0 +1,12 @@
+Code completion result for source line:
+return $this?->|address;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     create(string $name)            [STATIC]   User
+METHOD     getAddress()                    [PUBLIC]   User
+METHOD     privateMethod()                 [PRIVATE]  User
+METHOD     protectedMethod()               [PROTECTE  User
+METHOD     test()                          [STATIC]   User
+VARIABLE   ? protectedField                [PROTECTE  User
+VARIABLE   Address address                 [PRIVATE]  User
+VARIABLE   int id                          [PUBLIC]   User
+VARIABLE   string name                     [PRIVATE]  User

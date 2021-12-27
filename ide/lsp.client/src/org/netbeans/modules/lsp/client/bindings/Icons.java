@@ -75,4 +75,8 @@ public final class Icons {
         }
         return null;
     }
+
+    public static Icon getSymbolIcon(SymbolKind symbolKind) {
+        return ImageUtilities.loadImageIcon(getSymbolIconBase(symbolKind), false);
+    }
 }

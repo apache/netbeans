@@ -23,6 +23,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -303,10 +304,17 @@ public final class GlobalPathRegistry {
         }
         
         final List<SourceForBinaryQuery.Result> newResults = new LinkedList<SourceForBinaryQuery.Result> ();
+        final Set<String> seenEntryURL = new HashSet<>();
         final ChangeListener tmpResultListener = new SFBQListener ();
         for (ClassPath cp : compileAndBootPaths) {
             for (ClassPath.Entry entry : cp.entries()) {
-                SourceForBinaryQuery.Result result = SourceForBinaryQuery.findSourceRoots(entry.getURL());
+                URL url = entry.getURL();
+                String urlKey = url.toString();
+                if (!seenEntryURL.add(urlKey)) {
+                    //we have already processed this binary root, skip
+                    continue;
+                }
+                SourceForBinaryQuery.Result result = SourceForBinaryQuery.findSourceRoots(url);
                 result.addChangeListener(tmpResultListener);
                 newResults.add (result);
                 FileObject[] someRoots = result.getRoots();

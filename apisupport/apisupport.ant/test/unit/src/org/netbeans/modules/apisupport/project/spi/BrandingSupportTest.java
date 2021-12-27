@@ -50,6 +50,7 @@ public class BrandingSupportTest extends TestBase {
         super(testName);
     }
     
+    @Override
     protected void setUp() throws Exception {
         super.setUp();
         File suiteDir  = new File(getWorkDir(), "testSuite");
@@ -85,7 +86,7 @@ public class BrandingSupportTest extends TestBase {
     public void testBranding4() throws IOException {
         assertFalse(instance.getBrandingRoot().exists());
         implOfBundleKeyTest("org.netbeans.core.windows",
-                "org/netbeans/core/windows/view/ui/Bundle.properties", Collections.singleton("CTL_MainWindow_Title"), "NetBeans Platform {0}", instance.getBrandedBundleKeys());
+                "org/netbeans/core/windows/view/ui/Bundle.properties", Collections.singleton("CTL_MainWindow_Title"), "Apache NetBeans Platform {0}", instance.getBrandedBundleKeys());
     }
     
     public void testBrandingFile() throws IOException {

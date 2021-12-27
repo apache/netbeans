@@ -32,7 +32,6 @@ import javax.swing.text.JTextComponent;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenSequence;
-import org.netbeans.editor.BaseDocument;
 import org.netbeans.modules.csl.api.CodeCompletionContext;
 import org.netbeans.modules.csl.api.CodeCompletionHandler;
 import org.netbeans.modules.csl.api.CodeCompletionResult;
@@ -68,7 +67,7 @@ public class JsonCodeCompletion implements CodeCompletionHandler {
 
         long start = System.currentTimeMillis();
 
-        BaseDocument doc = (BaseDocument) context.getParserResult().getSnapshot().getSource().getDocument(false);
+        Document doc = (Document) context.getParserResult().getSnapshot().getSource().getDocument(false);
         if (doc == null) {
             return CodeCompletionResult.NONE;
         }
@@ -213,7 +212,7 @@ public class JsonCodeCompletion implements CodeCompletionHandler {
             int caretOffset,
             boolean upToOffset) {
         String prefix = "";
-        BaseDocument doc = (BaseDocument) info.getSnapshot().getSource().getDocument(false);
+        Document doc = (Document) info.getSnapshot().getSource().getDocument(false);
         if (doc == null) {
             return null;
         }

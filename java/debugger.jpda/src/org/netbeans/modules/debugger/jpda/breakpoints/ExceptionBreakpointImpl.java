@@ -96,9 +96,9 @@ public class ExceptionBreakpointImpl extends ClassBasedBreakpoint {
                     getEventRequestManager(),
                     referenceType,
                     (breakpoint.getCatchType () &
-                        ExceptionBreakpoint.TYPE_EXCEPTION_CATCHED) != 0,
+                        ExceptionBreakpoint.TYPE_EXCEPTION_CAUGHT) != 0,
                     (breakpoint.getCatchType () &
-                        ExceptionBreakpoint.TYPE_EXCEPTION_UNCATCHED) != 0
+                        ExceptionBreakpoint.TYPE_EXCEPTION_UNCAUGHT) != 0
                 );
                 addFilters(er, breakpoint.getClassFilters(), breakpoint.getClassExclusionFilters());
                 addEventRequest (er);

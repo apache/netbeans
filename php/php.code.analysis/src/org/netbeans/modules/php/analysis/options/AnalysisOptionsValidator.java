@@ -21,6 +21,7 @@ package org.netbeans.modules.php.analysis.options;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.netbeans.modules.php.analysis.MessDetectorParams;
 import org.netbeans.modules.php.analysis.commands.CodeSniffer;
 import org.netbeans.modules.php.analysis.commands.CodingStandardsFixer;
 import org.netbeans.modules.php.analysis.commands.MessDetector;
@@ -28,6 +29,8 @@ import org.netbeans.modules.php.analysis.commands.PHPStan;
 import org.netbeans.modules.php.api.util.FileUtils;
 import org.netbeans.modules.php.api.util.StringUtils;
 import org.netbeans.modules.php.api.validation.ValidationResult;
+import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileUtil;
 import org.openide.util.NbBundle;
 
 public final class AnalysisOptionsValidator {
@@ -35,20 +38,27 @@ public final class AnalysisOptionsValidator {
     private static final Pattern PHPSTAN_MEMORY_LIMIT_PATTERN = Pattern.compile("^\\-?\\d+[kmg]?$", Pattern.CASE_INSENSITIVE); // NOI18N
     private final ValidationResult result = new ValidationResult();
 
-    public AnalysisOptionsValidator validateCodeSniffer(String codeSnifferPath, String codeSnifferStandard) {
-        validateCodeSnifferPath(codeSnifferPath);
-        validateCodeSnifferStandard(codeSnifferStandard);
+    public AnalysisOptionsValidator validateCodeSniffer(ValidatorCodeSnifferParameter param) {
+        validateCodeSnifferPath(param.getCodeSnifferPath());
+        validateCodeSnifferStandard(param.getCodeSnifferStandard());
         return this;
     }
 
-    public AnalysisOptionsValidator validateMessDetector(String messDetectorPath, List<String> messDetectorRuleSets) {
-        validateMessDetectorPath(messDetectorPath);
-        validateMessDetectorRuleSets(messDetectorRuleSets);
+    public AnalysisOptionsValidator validateMessDetector(ValidatorMessDetectorParameter param) {
+        validateMessDetectorPath(param.getMessDetectorPath());
+        validateMessDetectorRuleSets(param.getRuleSets(), param.getRuleSetFilePath());
         return this;
     }
 
-    public AnalysisOptionsValidator validateCodingStandardsFixer(String codingStandardsFixerPath) {
-        validateCodingStandardsFixerPath(codingStandardsFixerPath);
+    public AnalysisOptionsValidator validateMessDetector(MessDetectorParams param) {
+        FileObject ruleSetFile = param.getRuleSetFile();
+        String ruleSetFilePath = ruleSetFile == null ? null : FileUtil.toFile(ruleSetFile).getAbsolutePath();
+        validateMessDetectorRuleSets(param.getRuleSets(), ruleSetFilePath);
+        return this;
+    }
+
+    public AnalysisOptionsValidator validateCodingStandardsFixer(ValidatorCodingStandardsFixerParameter param) {
+        validateCodingStandardsFixerPath(param.getCodingStandardsFixerPath());
         return this;
     }
 
@@ -73,7 +83,7 @@ public final class AnalysisOptionsValidator {
 
     @NbBundle.Messages("AnalysisOptionsValidator.codeSniffer.standard.empty=Valid code sniffer standard must be set.")
     public AnalysisOptionsValidator validateCodeSnifferStandard(String codeSnifferStandard) {
-        if (!StringUtils.hasText(codeSnifferStandard)) {
+        if (codeSnifferStandard == null) {
             result.addWarning(new ValidationResult.Message("codeSniffer.standard", Bundle.AnalysisOptionsValidator_codeSniffer_standard_empty())); // NOI18N
         }
         return this;
@@ -88,8 +98,8 @@ public final class AnalysisOptionsValidator {
     }
 
     @NbBundle.Messages("AnalysisOptionsValidator.messDetector.ruleSets.empty=At least one rule set must be set.")
-    public AnalysisOptionsValidator validateMessDetectorRuleSets(List<String> messDetectorRuleSets) {
-        if (messDetectorRuleSets.isEmpty()) {
+    private AnalysisOptionsValidator validateMessDetectorRuleSets(List<String> messDetectorRuleSets, String ruleSetFile) {
+        if ((messDetectorRuleSets == null || messDetectorRuleSets.size() == 1 && messDetectorRuleSets.contains(MessDetector.EMPTY_RULE_SET)) && StringUtils.isEmpty(ruleSetFile)) {
             result.addWarning(new ValidationResult.Message("messDetector.ruleSets", Bundle.AnalysisOptionsValidator_messDetector_ruleSets_empty())); // NOI18N
         }
         return this;
@@ -104,11 +114,9 @@ public final class AnalysisOptionsValidator {
     }
 
     private AnalysisOptionsValidator validatePHPStanPath(String phpStanPath) {
-        if (phpStanPath != null) {
-            String warning = PHPStan.validate(phpStanPath);
-            if (warning != null) {
-                result.addWarning(new ValidationResult.Message("phpStan.path", warning)); // NOI18N
-            }
+        String warning = PHPStan.validate(phpStanPath);
+        if (warning != null) {
+            result.addWarning(new ValidationResult.Message("phpStan.path", warning)); // NOI18N
         }
         return this;
     }

@@ -202,7 +202,7 @@ public class FixVersionConflictPanel extends javax.swing.JPanel {
         addSetCheckChanged();
 
         List<ArtifactVersion> versions = getClashingVersions();
-        DefaultListModel model = new DefaultListModel();
+        DefaultListModel<ArtifactVersion> model = new DefaultListModel<>();
         for (ArtifactVersion av : versions) {
             model.addElement(av);
         }
@@ -219,7 +219,7 @@ public class FixVersionConflictPanel extends javax.swing.JPanel {
 
         Set<Artifact> exclTargets = eTargets.getAll();
         if (!exclTargets.isEmpty()) {
-            DefaultListModel lModel = new DefaultListModel();
+            DefaultListModel<ExclTargetEntry> lModel = new DefaultListModel<>();
             for (Artifact exc : exclTargets) {
                 lModel.addElement(new ExclTargetEntry(exc,
                         recs.exclusionTargets != null && recs.exclusionTargets.contains(exc)));

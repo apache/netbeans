@@ -40,11 +40,15 @@ import org.netbeans.api.java.source.Comment;
 import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.java.source.ElementUtilities;
 import org.netbeans.api.java.source.GeneratorUtilities;
+import org.netbeans.api.java.source.SourceUtils;
+import org.netbeans.api.java.source.WorkingCopy;
 import org.netbeans.modules.refactoring.api.Problem;
 import org.netbeans.modules.refactoring.java.RefactoringUtils;
 import org.netbeans.modules.refactoring.java.api.MemberInfo;
 import org.netbeans.modules.refactoring.java.spi.RefactoringVisitor;
 import static org.netbeans.modules.refactoring.java.plugins.Bundle.*;
+import org.netbeans.modules.refactoring.java.spi.ToPhaseException;
+import org.openide.filesystems.FileObject;
 import org.openide.util.NbBundle;
 
 /**
@@ -54,6 +58,7 @@ import org.openide.util.NbBundle;
  */
 public class PushDownTransformer extends RefactoringVisitor {
 
+    private final FileObject originFile;
     private final MemberInfo<ElementHandle<? extends Element>>[] members;
     private Problem problem;
     private boolean inSuperClass;
@@ -62,9 +67,16 @@ public class PushDownTransformer extends RefactoringVisitor {
         return problem;
     }
 
-    public PushDownTransformer(MemberInfo<ElementHandle<? extends Element>> members[]) {
+    public PushDownTransformer(FileObject originFile, MemberInfo<ElementHandle<? extends Element>> members[]) {
+        this.originFile = originFile;
         this.members = members;
         this.translateQueue = new LinkedList<>();
+    }
+
+    @Override
+    public void setWorkingCopy(WorkingCopy workingCopy) throws ToPhaseException {
+        SourceUtils.forceSource(workingCopy, originFile);
+        super.setWorkingCopy(workingCopy); //To change body of generated methods, choose Tools | Templates.
     }
 
     private final Deque<Map<Tree, Tree>> translateQueue;

@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.89
+#Version 1.97
 
 CLSS public abstract interface java.io.Serializable
 
@@ -21,7 +21,6 @@ meth public final java.lang.String name()
 meth public java.lang.String toString()
 meth public static <%0 extends java.lang.Enum<{%%0}>> {%%0} valueOf(java.lang.Class<{%%0}>,java.lang.String)
 supr java.lang.Object
-hfds name,ordinal
 
 CLSS public abstract interface !annotation java.lang.FunctionalInterface
  anno 0 java.lang.annotation.Documented()
@@ -329,6 +328,7 @@ fld public final static org.netbeans.modules.css.lib.api.CssTokenId H
 fld public final static org.netbeans.modules.css.lib.api.CssTokenId HASH
 fld public final static org.netbeans.modules.css.lib.api.CssTokenId HASH_SYMBOL
 fld public final static org.netbeans.modules.css.lib.api.CssTokenId HEXCHAR
+fld public final static org.netbeans.modules.css.lib.api.CssTokenId HEXCHAR_WILDCARD
 fld public final static org.netbeans.modules.css.lib.api.CssTokenId I
 fld public final static org.netbeans.modules.css.lib.api.CssTokenId IDENT
 fld public final static org.netbeans.modules.css.lib.api.CssTokenId IMPORTANT_SYM
@@ -397,6 +397,7 @@ fld public final static org.netbeans.modules.css.lib.api.CssTokenId SASS_ERROR
 fld public final static org.netbeans.modules.css.lib.api.CssTokenId SASS_EXTEND
 fld public final static org.netbeans.modules.css.lib.api.CssTokenId SASS_EXTEND_ONLY_SELECTOR
 fld public final static org.netbeans.modules.css.lib.api.CssTokenId SASS_FOR
+fld public final static org.netbeans.modules.css.lib.api.CssTokenId SASS_FORWARD
 fld public final static org.netbeans.modules.css.lib.api.CssTokenId SASS_FUNCTION
 fld public final static org.netbeans.modules.css.lib.api.CssTokenId SASS_GLOBAL
 fld public final static org.netbeans.modules.css.lib.api.CssTokenId SASS_IF
@@ -404,6 +405,7 @@ fld public final static org.netbeans.modules.css.lib.api.CssTokenId SASS_INCLUDE
 fld public final static org.netbeans.modules.css.lib.api.CssTokenId SASS_MIXIN
 fld public final static org.netbeans.modules.css.lib.api.CssTokenId SASS_OPTIONAL
 fld public final static org.netbeans.modules.css.lib.api.CssTokenId SASS_RETURN
+fld public final static org.netbeans.modules.css.lib.api.CssTokenId SASS_USE
 fld public final static org.netbeans.modules.css.lib.api.CssTokenId SASS_VAR
 fld public final static org.netbeans.modules.css.lib.api.CssTokenId SASS_WARN
 fld public final static org.netbeans.modules.css.lib.api.CssTokenId SASS_WHILE
@@ -422,6 +424,7 @@ fld public final static org.netbeans.modules.css.lib.api.CssTokenId TOPRIGHTCORN
 fld public final static org.netbeans.modules.css.lib.api.CssTokenId TOPRIGHT_SYM
 fld public final static org.netbeans.modules.css.lib.api.CssTokenId U
 fld public final static org.netbeans.modules.css.lib.api.CssTokenId UNICODE
+fld public final static org.netbeans.modules.css.lib.api.CssTokenId URANGE
 fld public final static org.netbeans.modules.css.lib.api.CssTokenId URI
 fld public final static org.netbeans.modules.css.lib.api.CssTokenId URL
 fld public final static org.netbeans.modules.css.lib.api.CssTokenId V
@@ -589,6 +592,12 @@ fld public final static org.netbeans.modules.css.lib.api.NodeType sass_error
 fld public final static org.netbeans.modules.css.lib.api.NodeType sass_extend
 fld public final static org.netbeans.modules.css.lib.api.NodeType sass_extend_only_selector
 fld public final static org.netbeans.modules.css.lib.api.NodeType sass_for
+fld public final static org.netbeans.modules.css.lib.api.NodeType sass_forward
+fld public final static org.netbeans.modules.css.lib.api.NodeType sass_forward_as
+fld public final static org.netbeans.modules.css.lib.api.NodeType sass_forward_hide
+fld public final static org.netbeans.modules.css.lib.api.NodeType sass_forward_show
+fld public final static org.netbeans.modules.css.lib.api.NodeType sass_forward_with
+fld public final static org.netbeans.modules.css.lib.api.NodeType sass_forward_with_declaration
 fld public final static org.netbeans.modules.css.lib.api.NodeType sass_function_declaration
 fld public final static org.netbeans.modules.css.lib.api.NodeType sass_function_name
 fld public final static org.netbeans.modules.css.lib.api.NodeType sass_function_return
@@ -600,6 +609,10 @@ fld public final static org.netbeans.modules.css.lib.api.NodeType sass_map_pair
 fld public final static org.netbeans.modules.css.lib.api.NodeType sass_map_pairs
 fld public final static org.netbeans.modules.css.lib.api.NodeType sass_nested_properties
 fld public final static org.netbeans.modules.css.lib.api.NodeType sass_selector_interpolation_exp
+fld public final static org.netbeans.modules.css.lib.api.NodeType sass_use
+fld public final static org.netbeans.modules.css.lib.api.NodeType sass_use_as
+fld public final static org.netbeans.modules.css.lib.api.NodeType sass_use_with
+fld public final static org.netbeans.modules.css.lib.api.NodeType sass_use_with_declaration
 fld public final static org.netbeans.modules.css.lib.api.NodeType sass_while
 fld public final static org.netbeans.modules.css.lib.api.NodeType selector
 fld public final static org.netbeans.modules.css.lib.api.NodeType selectorsGroup
@@ -779,7 +792,7 @@ meth public void enableFeature(org.netbeans.modules.css.lib.api.properties.Gramm
 meth public void removeGrammarResolverListener(org.netbeans.modules.css.lib.api.properties.GrammarResolverListener)
 meth public void setFeature(org.netbeans.modules.css.lib.api.properties.GrammarResolver$Feature,java.lang.Object)
 supr java.lang.Object
-hfds FEATURES,LISTENERS,LOG,LOGGER,LOGGERS,grammar,lastResolved,resolvedSomething,resolvedTokens,tokenizer
+hfds FEATURES,LISTENERS,LOG,LOGGER,LOGGERS,globalValues,grammar,lastResolved,resolvedSomething,resolvedTokens,tokenizer
 hcls InputState
 
 CLSS public final static !enum org.netbeans.modules.css.lib.api.properties.GrammarResolver$Feature
@@ -1048,6 +1061,7 @@ innr public static Angle
 innr public static Anything
 innr public static Date
 innr public static Decibel
+innr public static Flex
 innr public static Frequency
 innr public static HashColor
 innr public static HashColorAplha
@@ -1062,6 +1076,7 @@ innr public static Resolution
 innr public static Semitones
 innr public static StringAcceptor
 innr public static Time
+innr public static Urange
 innr public static Uri
 innr public static Variable
 meth public abstract boolean accepts(org.netbeans.modules.css.lib.api.properties.Token)
@@ -1092,6 +1107,13 @@ meth public boolean accepts(java.lang.String)
 supr org.netbeans.modules.css.lib.api.properties.TokenAcceptor$TokenImageAcceptor
 
 CLSS public static org.netbeans.modules.css.lib.api.properties.TokenAcceptor$Decibel
+ outer org.netbeans.modules.css.lib.api.properties.TokenAcceptor
+cons public init(java.lang.String)
+meth protected java.util.List<java.lang.String> postfixes()
+supr org.netbeans.modules.css.lib.api.properties.TokenAcceptor$NumberPostfixAcceptor
+hfds POSTFIXES
+
+CLSS public static org.netbeans.modules.css.lib.api.properties.TokenAcceptor$Flex
  outer org.netbeans.modules.css.lib.api.properties.TokenAcceptor
 cons public init(java.lang.String)
 meth protected java.util.List<java.lang.String> postfixes()
@@ -1210,6 +1232,13 @@ cons public init(java.lang.String)
 meth public abstract boolean accepts(java.lang.String)
 meth public boolean accepts(org.netbeans.modules.css.lib.api.properties.Token)
 supr org.netbeans.modules.css.lib.api.properties.TokenAcceptor
+
+CLSS public static org.netbeans.modules.css.lib.api.properties.TokenAcceptor$Urange
+ outer org.netbeans.modules.css.lib.api.properties.TokenAcceptor
+cons public init(java.lang.String)
+meth public boolean accepts(org.netbeans.modules.css.lib.api.properties.Token)
+supr org.netbeans.modules.css.lib.api.properties.TokenAcceptor
+hfds URANGE_TOKEN_IMAGE
 
 CLSS public static org.netbeans.modules.css.lib.api.properties.TokenAcceptor$Uri
  outer org.netbeans.modules.css.lib.api.properties.TokenAcceptor

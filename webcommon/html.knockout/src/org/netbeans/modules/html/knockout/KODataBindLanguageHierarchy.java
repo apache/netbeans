@@ -53,6 +53,7 @@ public class KODataBindLanguageHierarchy extends LanguageHierarchy<KODataBindTok
     }
 
     @Override
+    @SuppressWarnings("fallthrough")
     protected LanguageEmbedding embedding(
             Token<KODataBindTokenId> token, LanguagePath languagePath, InputAttributes inputAttributes) {
         switch (token.id()) {

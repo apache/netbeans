@@ -243,7 +243,7 @@ public class StrutsConfigUtilities {
             }
             
             ClasspathInfo cpi = ClasspathInfo.create(dd);
-            JavaSource js = JavaSource.create(cpi, Collections.EMPTY_LIST);
+            JavaSource js = JavaSource.create(cpi, Collections.<FileObject>emptyList());
             final int[] index = new int[]{-1};
             js.runUserActionTask( new Task <CompilationController>(){
                 public void run(CompilationController  cc) throws Exception {                        

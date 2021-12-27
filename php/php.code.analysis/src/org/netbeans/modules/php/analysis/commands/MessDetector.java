@@ -31,6 +31,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.extexecution.ExecutionDescriptor;
+import org.netbeans.modules.php.analysis.MessDetectorParams;
 import org.netbeans.modules.php.analysis.options.AnalysisOptions;
 import org.netbeans.modules.php.analysis.parsers.MessDetectorReportParser;
 import org.netbeans.modules.php.analysis.results.Result;
@@ -59,10 +60,12 @@ public final class MessDetector {
     private static final String REPORT_FORMAT_PARAM = "xml"; // NOI18N
     private static final String EXCLUDE_PARAM = "--exclude"; // NOI18N
     private static final String SUFFIXES_PARAM = "--suffixes"; // NOI18N
+    public static final String EMPTY_RULE_SET = "-"; // NOI18N
 
     // rule sets
     @org.netbeans.api.annotations.common.SuppressWarnings(value = "MS_MUTABLE_COLLECTION", justification = "It is immutable") // NOI18N
     public static final List<String> RULE_SETS = Arrays.asList(
+            EMPTY_RULE_SET,
             "codesize", // NOI18N
             "controversial", // NOI18N
             "design", // NOI18N
@@ -79,12 +82,21 @@ public final class MessDetector {
     }
 
     /**
-     * Get the default, <b>valid only</b> Code Sniffer.
-     * @return the default, <b>valid only</b> Code Sniffer.
-     * @throws InvalidPhpExecutableException if Code Sniffer is not valid.
+     * Get the default, <b>valid only</b> Mess Detector.
+     * @return the default, <b>valid only</b> Mess Detector.
+     * @throws InvalidPhpExecutableException if Mess Detector is not valid.
      */
     public static MessDetector getDefault() throws InvalidPhpExecutableException {
-        String messDetectorPath = AnalysisOptions.getInstance().getMessDetectorPath();
+        return getCustom(AnalysisOptions.getInstance().getMessDetectorPath());
+    }
+
+    /**
+     * Get the custom, <b>valid only</b> Mess Detector.
+     * @param path custom path
+     * @return the custom, <b>valid only</b> Mess Detector.
+     * @throws InvalidPhpExecutableException if Mess Detector is not valid.
+     */
+    public static MessDetector getCustom(String messDetectorPath) throws InvalidPhpExecutableException {
         String error = validate(messDetectorPath);
         if (error != null) {
             throw new InvalidPhpExecutableException(error);
@@ -102,8 +114,8 @@ public final class MessDetector {
     }
 
     @CheckForNull
-    public List<Result> analyze(List<String> ruleSets, FileObject... files) {
-        return analyze(ruleSets, Arrays.asList(files));
+    public List<Result> analyze(MessDetectorParams params, FileObject... files) {
+        return analyze(params, Arrays.asList(files));
     }
 
     @NbBundle.Messages({
@@ -111,11 +123,11 @@ public final class MessDetector {
         "MessDetector.analyze=Mess Detector (analyze #{0})",
     })
     @CheckForNull
-    public List<Result> analyze(List<String> ruleSets, List<FileObject> files) {
+    public List<Result> analyze(MessDetectorParams params, List<FileObject> files) {
         assert assertValidFiles(files);
         try {
             Integer result = getExecutable(Bundle.MessDetector_analyze(analyzeGroupCounter++))
-                    .additionalParameters(getParameters(ruleSets, files))
+                    .additionalParameters(getParameters(params, files))
                     .runAndWait(getDescriptor(), "Running mess detector..."); // NOI18N
             if (result == null) {
                 return null;
@@ -155,19 +167,23 @@ public final class MessDetector {
                 });
     }
 
-    private List<String> getParameters(List<String> ruleSets, List<FileObject> files) {
+    private List<String> getParameters(MessDetectorParams parameters, List<FileObject> files) {
         List<String> params = new ArrayList<>();
         // paths
         params.add(joinFilePaths(files));
         // report format
         params.add(REPORT_FORMAT_PARAM);
         // rule sets
-        params.add(StringUtils.implode(ruleSets, ",")); // NOI18N
+        params.add(joinRuleSets(parameters.getRuleSets(), parameters.getRuleSetFile()));
         // extensions
         params.add(SUFFIXES_PARAM);
         params.add(StringUtils.implode(FileUtil.getMIMETypeExtensions(FileUtils.PHP_MIME_TYPE), ",")); // NOI18N
         // exclude
         addIgnoredFiles(params, files);
+        String options = parameters.getOptions();
+        if (StringUtils.hasText(options)) {
+            params.addAll(StringUtils.explode(options, " ")); // NOI18N
+        }
         return params;
     }
 
@@ -187,6 +203,28 @@ public final class MessDetector {
             paths.append(FileUtil.toFile(file).getAbsolutePath());
         }
         return paths.toString();
+    }
+
+    private String joinRuleSets(List<String> ruleSets, FileObject ruleSetFile) {
+        StringBuilder ruleSetsBuilder = new StringBuilder(200);
+        if (ruleSets != null) {
+            for (String ruleSet : ruleSets) {
+                if (ruleSet.equals(EMPTY_RULE_SET)) {
+                    continue;
+                }
+                if (ruleSetsBuilder.length() > 0) {
+                    ruleSetsBuilder.append(","); // NOI18N
+                }
+                ruleSetsBuilder.append(ruleSet);
+            }
+        }
+        if (ruleSetFile != null) {
+            if (ruleSetsBuilder.length() > 0) {
+                ruleSetsBuilder.append(","); // NOI18N
+            }
+            ruleSetsBuilder.append(FileUtil.toFile(ruleSetFile).getAbsolutePath());
+        }
+        return ruleSetsBuilder.toString();
     }
 
     private void addIgnoredFiles(List<String> params, List<FileObject> files) {

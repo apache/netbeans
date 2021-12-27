@@ -18,24 +18,20 @@
  */
 package org.netbeans.lib.nbjavac.services;
 
-import com.sun.source.doctree.DocCommentTree;
-import com.sun.source.tree.ClassTree;
+import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
+import com.sun.tools.javac.api.JavacScope;
 import com.sun.tools.javac.api.JavacTrees;
+import com.sun.tools.javac.code.Flags;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.tree.JCTree;
+import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
 import com.sun.tools.javac.tree.TreeInfo;
 import com.sun.tools.javac.tree.TreeMaker;
 import com.sun.tools.javac.util.Context;
-import java.lang.invoke.MethodHandle;
-import java.lang.invoke.MethodHandles;
-import java.lang.invoke.MethodType;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.lang.model.element.Element;
-import org.netbeans.lib.nbjavac.services.NBTreeMaker.IndexedClassDecl;
 
 /**
  *
@@ -55,35 +51,12 @@ public class NBJavacTrees extends JavacTrees {
     protected NBJavacTrees(Context context) {
         super(context);
     }
-
-    @Override
-    protected Copier createCopier(TreeMaker make) {
-        return new Copier(make) {
-            @Override public JCTree visitClass(ClassTree node, JCTree p) {
-                JCTree result;
-                try {
-                    MethodHandle superVisitClass = MethodHandles.lookup().findSpecial(Copier.class, "visitClass", MethodType.methodType(JCTree.class, new Class[]{ClassTree.class, JCTree.class}), getClass());
-                    result = (JCTree) superVisitClass.invokeExact(this, node, p);
-                } catch (Throwable ex) {
-                    Logger.getLogger(NBJavacTrees.class.getName()).log(Level.FINE, null, ex);
-                    result = super.visitClass(node, p);
-                }
-
-                if (node instanceof IndexedClassDecl && result instanceof IndexedClassDecl) {
-                    ((IndexedClassDecl) result).index = ((IndexedClassDecl) node).index;
-                }
-
-                return result;
-            }
-        };
-    }
-
     @Override
     public TreePath getPath(Element e) {
         TreePath path = super.getPath(e);
         return path != null ? path : element2paths.get(e);
     }
-    
+
     void addPathForElement(Element elem, TreePath path) {
         element2paths.put(elem, path);
     }
@@ -91,6 +64,21 @@ public class NBJavacTrees extends JavacTrees {
     @Override
     public Symbol getElement(TreePath path) {
         return TreeInfo.symbolFor((JCTree) path.getLeaf());
+    }
+
+    @Override
+    protected Copier createCopier(TreeMaker maker) {
+        return new Copier(maker) {
+            @Override
+            public JCTree visitVariable(VariableTree node, JCTree p) {
+                JCVariableDecl old = (JCVariableDecl) node;
+                JCVariableDecl nue = (JCVariableDecl) super.visitVariable(node, p);
+                if (old.sym != null) {
+                    nue.mods.flags |= old.sym.flags_field & Flags.EFFECTIVELY_FINAL;
+                }
+                return nue;
+            }
+        };
     }
 
 }

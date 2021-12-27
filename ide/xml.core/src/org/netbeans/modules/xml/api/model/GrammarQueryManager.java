@@ -27,6 +27,7 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Iterator;
+import java.util.List;
 import org.openide.ErrorManager;
 import org.openide.util.Lookup;
 import org.openide.util.lookup.Lookups;
@@ -145,9 +146,9 @@ public abstract class GrammarQueryManager {
         }
         
         public Enumeration enabled(GrammarEnvironment ctx) {
-            Iterator it = getRegistrations();
+            Iterator<GrammarQueryManager> it = getRegistrations();
             transaction.set(null);
-            ArrayList list = new ArrayList(5);
+            List list = new ArrayList<>(5);
             {
                 Enumeration en = ctx.getDocumentChildren();
                 while (en.hasMoreElements()) {
@@ -156,7 +157,7 @@ public abstract class GrammarQueryManager {
             }
             Object[] array = list.toArray();
             while (it.hasNext()) {
-                GrammarQueryManager next = (GrammarQueryManager) it.next();
+                GrammarQueryManager next = it.next();
                 GrammarEnvironment env = new GrammarEnvironment(
                     org.openide.util.Enumerations.array (array), 
                     ctx.getInputSource(),

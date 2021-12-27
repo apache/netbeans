@@ -37,6 +37,9 @@ import java.awt.image.ImageObserver;
 import java.awt.image.RGBImageFilter;
 import java.awt.image.WritableRaster;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.ObjectStreamException;
 import java.lang.ref.SoftReference;
 import java.net.URL;
 import java.util.HashMap;
@@ -525,8 +528,9 @@ public final class ImageUtilities {
                 }
                 useLoaderQuery = loaderQuery;
             }
-            Iterator it = useLoaderQuery.allInstances().iterator();
-            toReturn = Optional.ofNullable(it.hasNext() ? (T) it.next() : null);
+
+            Iterator<? extends T> it = useLoaderQuery.allInstances().iterator();
+            toReturn = Optional.ofNullable(it.hasNext() ? it.next() : null);
             if (!toReturn.isPresent()) {
                 if (!noLoaderWarned.getAndSet(true)) {
                     ERR.log(Level.WARNING, "No {0} instance found in {1}", // NOI18N
@@ -807,8 +811,8 @@ public final class ImageUtilities {
         ensureLoaded(image1);
         ensureLoaded(image2);
 
-        int w = Math.max(image1.getWidth(null), x + image2.getWidth(null));
-        int h = Math.max(image1.getHeight(null), y + image2.getHeight(null));
+        int w = Math.max(1, Math.max(image1.getWidth(null), x + image2.getWidth(null)));
+        int h = Math.max(1, Math.max(image1.getHeight(null), y + image2.getHeight(null)));
         boolean bitmask = (image1 instanceof Transparency) && ((Transparency)image1).getTransparency() != Transparency.TRANSLUCENT
                 && (image2 instanceof Transparency) && ((Transparency)image2).getTransparency() != Transparency.TRANSLUCENT;
 
@@ -1001,7 +1005,9 @@ public final class ImageUtilities {
      * scalable icons from {@link #loadImageIcon(String,boolean)} without changing the API.
      */
     private static final class IconImageIcon extends ImageIcon {
-        private final Icon delegate;
+        /* I'd love to make this final, but the custom serialization handling precludes this. Make
+        it volatile instead, to be completely sure that the class is still thread-safe. */
+        private volatile Icon delegate;
 
         private IconImageIcon(Icon delegate) {
             super(icon2Image(delegate));
@@ -1022,6 +1028,24 @@ public final class ImageUtilities {
         public Icon getDelegateIcon() {
             return delegate;
         }
+
+        /* NETBEANS-3769: Since ImageIcon implements Serializable, we must support serialization.
+        But there is no guarantee that the delegate implements Serializable, thus the default
+        serialization mechanism might throw a java.io.NotSerializableException when
+        ObjectOutputStream.writeObject gets recursively called on the delegate. Implement a custom
+        serialization mechanism based on ImageIcon instead. */
+
+        private void writeObject(ObjectOutputStream out) throws IOException {
+            out.writeObject(new ImageIcon(getImage()));
+        }
+
+        private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+            this.delegate = (ImageIcon) in.readObject();
+        }
+
+        private void readObjectNoData() throws ObjectStreamException {
+            this.delegate = new ImageIcon(new BufferedImage(1, 1, BufferedImage.TYPE_4BYTE_ABGR));
+        }
     }
 
     /**
@@ -1040,8 +1064,8 @@ public final class ImageUtilities {
             ImageUtilities.ensureLoaded(image);
             boolean bitmask = (image instanceof Transparency) && ((Transparency) image).getTransparency() != Transparency.TRANSLUCENT;
             ColorModel model = colorModel(bitmask ? Transparency.BITMASK : Transparency.TRANSLUCENT);
-            int w = image.getWidth(null);
-            int h = image.getHeight(null);
+            int w = Math.max(1, image.getWidth(null));
+            int h = Math.max(1, image.getHeight(null));
             if (url == null) {
                 Object value = image.getProperty("url", null);
                 url = (value instanceof URL) ? (URL) value : null;

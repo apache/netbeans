@@ -30,6 +30,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
+import java.awt.image.ColorModel;
+import java.awt.image.WritableRaster;
+import java.lang.ref.Reference;
 import java.lang.ref.SoftReference;
 import org.netbeans.swing.tabcontrol.TabData;
 import org.netbeans.swing.tabcontrol.TabDataModel;
@@ -378,24 +381,81 @@ public abstract class BasicScrollingTabDisplayerUI extends BasicTabDisplayerUI {
         }
     }
 
-    static SoftReference<BufferedImage> ctx = null;
+    /**
+     * Provides an offscreen graphics context so that widths based on character
+     * size can be calculated correctly before the component is shown.
+     *
+     * <p>For more accurate text measurements, clients should prefer calling
+     * {@link #getOffscreenGraphics(JComponent)}.
+     */
+    public static Graphics2D getOffscreenGraphics() {
+      return getOffscreenGraphics(null);
+    }
+
+    /* Just keep a single cached ScratchGraphics object for now. Even if two components are being
+    painted on different screens with different incompatible ScratchGraphics instances, the cache
+    should still be effective, since painting will likely happen one window at a time. */
+    private static volatile ScratchGraphics cachedScratchGraphics = null;
 
     /**
      * Provides an offscreen graphics context so that widths based on character
      * size can be calculated correctly before the component is shown
+     *
+     * @param component may be null without causing fatal errors, but should be set for accurate
+     *        text measurement (especially on displays with HiDPI scaling enabled)
      */
-    public static Graphics2D getOffscreenGraphics() {
-        BufferedImage result = null;
-        //XXX multi-monitors w/ different resolution may have problems;
-        //Better to call Toolkit to create a screen graphics
-        if (ctx != null) {
-            result = ctx.get();
+    public static Graphics2D getOffscreenGraphics(JComponent component) {
+      GraphicsConfiguration gc = (component == null) ? null : component.getGraphicsConfiguration();
+      if (gc == null) {
+          gc = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration();
+      }
+
+      ScratchGraphics scratchGraphics = cachedScratchGraphics;
+      if (scratchGraphics != null && scratchGraphics.isConfigurationCompatible(gc)) {
+          return scratchGraphics.getGraphics();
+      }
+
+      scratchGraphics = new ScratchGraphics(gc);
+      cachedScratchGraphics = scratchGraphics;
+      return scratchGraphics.getGraphics();
+    }
+
+    /* Same class as used in org.openide.awt.HtmlRendererImpl. This could eventually be pulled out
+    into its own utility class, though this would require a new API to be exposed. */
+    private static final class ScratchGraphics {
+        private final GraphicsConfiguration configuration;
+        private Reference<Graphics2D> graphics = new SoftReference<Graphics2D>(null);
+
+        public ScratchGraphics(GraphicsConfiguration configuration) {
+            if (configuration == null) {
+                throw new NullPointerException();
+            }
+            this.configuration = configuration;
         }
-        if (result == null) {
-            result = new BufferedImage(10, 10, BufferedImage.TYPE_INT_RGB);
-            ctx = new SoftReference<BufferedImage>(result);
+
+        public boolean isConfigurationCompatible(GraphicsConfiguration other) {
+            return configuration.getColorModel().equals(other.getColorModel())
+                && configuration.getDefaultTransform().equals(other.getDefaultTransform());
         }
-        return (Graphics2D) result.getGraphics();
+
+        public Graphics2D getGraphics() {
+            Graphics2D result = graphics.get();
+            if (result == null) {
+                /* Equivalent to configuration.createCompatibleImage(int, int), just to show that only the
+                ColorModel field of the GraphicsConfiguration is really relevant here. */
+                ColorModel model = configuration.getColorModel();
+                WritableRaster raster = model.createCompatibleWritableRaster(1, 1);
+                BufferedImage img = new BufferedImage(model, raster, model.isAlphaPremultiplied(), null);
+                result = img.createGraphics();
+                this.graphics = new SoftReference<Graphics2D>(result);
+            }
+            // Restore state on every call, just in case a client modified it for some reason.
+            result.setClip(null);
+            /* Apply the scaling HiDPI transform. This affects font measurements, via
+            FontRenderContext.getTransform(). */
+            result.setTransform(configuration.getDefaultTransform());
+            return result;
+        }
     }
 
     /**

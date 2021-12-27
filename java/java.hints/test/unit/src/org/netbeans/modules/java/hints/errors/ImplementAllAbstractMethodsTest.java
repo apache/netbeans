@@ -49,7 +49,7 @@ public class ImplementAllAbstractMethodsTest extends ErrorHintsTestBase {
                        "public enum Test implements Runnable {\n" +
                        "     A;\n" +
                        "     public void run() {\n" +
-                       "         throw new UnsupportedOperationException(\"Not supported yet.\"); //To change body of generated methods, choose Tools | Templates.\n" +
+                       "         throw new UnsupportedOperationException(\"Not supported yet.\"); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody\n" +
                        "     }\n" +
                        "}\n").replaceAll("[ \t\n]+", " "));
     }
@@ -83,7 +83,7 @@ public class ImplementAllAbstractMethodsTest extends ErrorHintsTestBase {
                        ("package test;\n" +
                        "public class Test implements Runnable {\n" +
                        "     public void run() {\n" +
-                       "         throw new UnsupportedOperationException(\"Not supported yet.\"); //To change body of generated methods, choose Tools | Templates.\n" +
+                       "         throw new UnsupportedOperationException(\"Not supported yet.\"); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody\n" +
                        "     }\n" +
                        "}\n").replaceAll("[ \t\n]+", " "));
     }
@@ -123,7 +123,7 @@ public class ImplementAllAbstractMethodsTest extends ErrorHintsTestBase {
                         "public enum Test implements Runnable {\n" +
                         "     A {\n" +
                         "         public void run() {\n" +
-                        "             throw new UnsupportedOperationException(\"Not supported yet.\"); //To change body of generated methods, choose Tools | Templates.\n" +
+                        "             throw new UnsupportedOperationException(\"Not supported yet.\"); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody\n" +
                         "         }\n" +
                         "     };\n" +
                         "}\n").replaceAll("[ \t\n]+", " "));
@@ -143,7 +143,7 @@ public class ImplementAllAbstractMethodsTest extends ErrorHintsTestBase {
                         "     A { public void run() {} },\n" +
                         "     B {\n" +
                         "         public void run() {\n" +
-                        "             throw new UnsupportedOperationException(\"Not supported yet.\"); //To change body of generated methods, choose Tools | Templates.\n" +
+                        "             throw new UnsupportedOperationException(\"Not supported yet.\"); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody\n" +
                         "         }\n" +
                         "     };\n" +
                         "}\n").replaceAll("[ \t\n]+", " "));
@@ -164,7 +164,7 @@ public class ImplementAllAbstractMethodsTest extends ErrorHintsTestBase {
                         "\n" +
                         "        @Override\n" +
                         "        public int boo() {\n" +
-                        "            throw new UnsupportedOperationException(\"Not supported yet.\"); //To change body of generated methods, choose Tools | Templates.\n" +
+                        "            throw new UnsupportedOperationException(\"Not supported yet.\"); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody\n" +
                         "        }\n" +
                         "    };\n" +
                         "    public abstract int boo();\n" +

@@ -60,6 +60,7 @@ public class NamespacesModule extends CssEditorModule {
     static ElementKind NAMESPACE_ELEMENT_KIND = ElementKind.GLOBAL; //XXX fix CSL
 
     @Override
+    @SuppressWarnings("fallthrough")
     public List<CompletionProposal> getCompletionProposals(final CompletionContext context) {
         final List<CompletionProposal> proposals = new ArrayList<>();
         Node activeNode = context.getActiveNode();

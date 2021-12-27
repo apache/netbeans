@@ -30,6 +30,7 @@ import javax.lang.model.element.*;
 import javax.lang.model.type.TypeMirror;
 import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.java.source.GeneratorUtilities;
+import org.netbeans.api.java.source.SourceUtils;
 import org.netbeans.api.java.source.TreePathHandle;
 import org.netbeans.api.java.source.TreeUtilities;
 import org.netbeans.api.java.source.WorkingCopy;
@@ -63,25 +64,29 @@ public class MoveClassTransformer extends RefactoringVisitor {
     private Set<ImportTree> importToRemove;
     private boolean isThisFileReferencingOldPackage = false;
     private final ElementHandle<TypeElement> targetHandle;
+    private final FileObject targetFile;
+    private final FileObject sourceFile;
     private boolean deleteFile;
 
     public MoveClassTransformer(TreePathHandle elementHandle, URL targetURL) {
-        this(elementHandle.getElementHandle(), targetURL, null);
+        this(elementHandle.getElementHandle(), targetURL, null, null, null);
         this.targetPackageName = RefactoringUtils.getPackageName(targetURL);
     }
     
-    public MoveClassTransformer(TreePathHandle elementHandle, ElementHandle<TypeElement> targetHandle) {
-        this(elementHandle.getElementHandle(), null, targetHandle);
+    public MoveClassTransformer(TreePathHandle elementHandle, ElementHandle<TypeElement> targetHandle, FileObject targetFile, FileObject sourceFile) {
+        this(elementHandle.getElementHandle(), null, targetHandle, targetFile, sourceFile);
     }
     
-    public MoveClassTransformer(ElementHandle<TypeElement> elementHandle, ElementHandle<TypeElement> targetHandle) {
-        this(elementHandle, null, targetHandle);
+    public MoveClassTransformer(ElementHandle<TypeElement> elementHandle, ElementHandle<TypeElement> targetHandle, FileObject targetFile, FileObject sourceFile) {
+        this(elementHandle, null, targetHandle, targetFile, sourceFile);
     }
     
-    private MoveClassTransformer(ElementHandle<TypeElement> elementHandle, URL targetURL, ElementHandle<TypeElement> targetHandle) {
+    private MoveClassTransformer(ElementHandle<TypeElement> elementHandle, URL targetURL, ElementHandle<TypeElement> targetHandle, FileObject targetFile, FileObject sourceFile) {
         this.elementHandle = elementHandle;
         this.targetURL = targetURL;
         this.targetHandle = targetHandle;
+        this.targetFile = targetFile;
+        this.sourceFile = sourceFile;
     }
 
     Problem getProblem() {
@@ -90,6 +95,9 @@ public class MoveClassTransformer extends RefactoringVisitor {
 
     @Override
     public void setWorkingCopy(WorkingCopy workingCopy) throws ToPhaseException {
+        if (sourceFile != null) {
+            SourceUtils.forceSource(workingCopy, sourceFile);
+        }
         super.setWorkingCopy(workingCopy);
         final TypeElement element = this.elementHandle.resolve(workingCopy);
         this.originalPackage = getPackageOf(element).getQualifiedName().toString();

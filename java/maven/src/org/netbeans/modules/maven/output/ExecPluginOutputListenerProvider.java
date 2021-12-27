@@ -39,7 +39,8 @@ public class ExecPluginOutputListenerProvider implements OutputProcessor {
     
     private static final String[] EXECGOALS = new String[] {
         "mojo-execute#exec:exec", //NOI18N
-        "mojo-execute#exec:java" //NOI18N
+        "mojo-execute#exec:java", //NOI18N
+        "mojo-execute#javafx:run" //NOI18N
     };
     private final NbMavenProjectImpl project;
     

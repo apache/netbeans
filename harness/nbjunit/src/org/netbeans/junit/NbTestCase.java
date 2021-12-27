@@ -34,7 +34,6 @@ import java.io.PrintStream;
 import java.lang.management.LockInfo;
 import java.lang.management.ManagementFactory;
 import java.lang.management.MonitorInfo;
-import java.lang.management.PlatformLoggingMXBean;
 import java.lang.management.RuntimeMXBean;
 import java.lang.management.ThreadInfo;
 import java.lang.management.ThreadMXBean;
@@ -62,6 +61,7 @@ import java.util.regex.Pattern;
 import junit.framework.AssertionFailedError;
 import junit.framework.TestCase;
 import junit.framework.TestResult;
+import org.junit.Ignore;
 import org.netbeans.insane.live.LiveReferences;
 import org.netbeans.insane.live.Path;
 import org.netbeans.insane.scanner.CountingVisitor;
@@ -129,6 +129,22 @@ public abstract class NbTestCase extends TestCase implements NbTest {
      * @return true if the test can run
      */
     public @Override boolean canRun() {
+        if (getClass().isAnnotationPresent(Ignore.class)) {
+            String message = getClass().getAnnotation(Ignore.class).value();
+            System.err.println("Skipping " + getClass().getName() + (message.isEmpty() ? "" : ": " + message));
+            return false;
+        }
+        
+        try {
+            if (getClass().getMethod(getName()).isAnnotationPresent(Ignore.class)) {
+                String message = getClass().getMethod(getName()).getAnnotation(Ignore.class).value();
+                System.err.println("Skipping " + getClass().getName() + "." + getName() + (message.isEmpty() ? "" : ": " + message));
+                return false;
+            }
+        } catch (NoSuchMethodException x) {
+            // Specially named methods; let it pass.
+        }
+        
         if (NbTestSuite.ignoreRandomFailures()) {
             if (getClass().isAnnotationPresent(RandomlyFails.class)) {
                 System.err.println("Skipping " + getClass().getName());
@@ -723,7 +739,7 @@ public abstract class NbTestCase extends TestCase implements NbTest {
         } else {
             try {
                 if (diffImpl.diff(test, pass, diffFile)) {
-                    throw new AssertionFileFailedError(message, null == diffFile ? "" : diffFile.getAbsolutePath());
+                    throw new AssertionFileFailedError(message+"\n diff: "+diffFile, null == diffFile ? "" : diffFile.getAbsolutePath());
                 }
             } catch (IOException e) {
                 fail("exception in assertFile : " + e.getMessage());
@@ -744,7 +760,7 @@ public abstract class NbTestCase extends TestCase implements NbTest {
      * already initialized, when passed in this assertFile function.
      */
     static public void assertFile(File test, File pass, File diff, Diff externalDiff) {
-        assertFile(null, test, pass, diff, externalDiff);
+        assertFile("Difference between " + test + " and " + pass, test, pass, diff, externalDiff);
     }
     /**
      * Asserts that two files are the same, it compares two files and stores possible differences
@@ -773,7 +789,7 @@ public abstract class NbTestCase extends TestCase implements NbTest {
      * by the '.diff'.
      */
     static public void assertFile(File test, File pass, File diff) {
-        assertFile(null, test, pass, diff, null);
+        assertFile("Difference between " + test + " and " + pass, test, pass, diff, null);
     }
     /**
      * Asserts that two files are the same, it just compares two files and doesn't produce any additional output.

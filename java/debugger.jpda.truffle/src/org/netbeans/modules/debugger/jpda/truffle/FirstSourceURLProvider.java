@@ -52,26 +52,27 @@ public class FirstSourceURLProvider extends SourcePathProvider {
     @Override
     public String getURL(String relativePath, boolean global) {
         if (TRUFFLE_ACCESSOR_PATH.equals(relativePath)) {
-            JPDAThread currentThread = debugger.getCurrentThread();
-            CurrentPCInfo currentPCInfo = TruffleAccess.getCurrentPCInfo(currentThread);
-            if (currentPCInfo != null) {
-                return currentPCInfo.getSourcePosition().getSource().getUrl().toExternalForm();
-            }
+            return getCurrentURL();
         }
         return null;
     }
     
     public String getURL(JPDAClassType clazz, String stratum) {
         if (TRUFFLE_ACCESSOR_CLASS_NAME.equals(clazz.getName())) {
-            JPDAThread currentThread = debugger.getCurrentThread();
-            CurrentPCInfo currentPCInfo = TruffleAccess.getCurrentPCInfo(currentThread);
-            if (currentPCInfo != null) {
-                Source source = currentPCInfo.getSourcePosition().getSource();
-                if (source != null) {
-                    URL url = source.getUrl();
-                    if (url != null) {
-                        return url.toExternalForm();
-                    }
+            return getCurrentURL();
+        }
+        return null;
+    }
+
+    private String getCurrentURL() {
+        JPDAThread currentThread = debugger.getCurrentThread();
+        CurrentPCInfo currentPCInfo = TruffleAccess.getCurrentGuestPCInfo(currentThread);
+        if (currentPCInfo != null) {
+            Source source = currentPCInfo.getSourcePosition().getSource();
+            if (source != null) {
+                URL url = source.getUrl();
+                if (url != null) {
+                    return url.toExternalForm();
                 }
             }
         }

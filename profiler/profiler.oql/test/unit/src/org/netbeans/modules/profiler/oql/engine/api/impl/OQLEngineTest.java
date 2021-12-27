@@ -24,12 +24,12 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.netbeans.lib.profiler.heap.HeapFactory;
 import org.netbeans.lib.profiler.heap.Instance;
@@ -37,6 +37,7 @@ import org.netbeans.lib.profiler.heap.JavaClass;
 import org.netbeans.modules.profiler.oql.engine.api.OQLEngine;
 import org.netbeans.modules.profiler.oql.engine.api.OQLEngine.ObjectVisitor;
 import static org.junit.Assert.*;
+import org.netbeans.lib.profiler.heap.GCRoot;
 
 /**
  *
@@ -165,18 +166,21 @@ public class OQLEngineTest {
     @Test
     public void testHeapRoots() throws Exception {
         System.out.println("heap.roots");
+        Set<Object> unique = new HashSet<>();
         final int[] counter = new int[1];
 
-        String query = "select heap.roots";
+        String query = "select heap.roots()";
 
         instance.executeQuery(query, new ObjectVisitor() {
 
             public boolean visit(Object o) {
+                unique.add(o);
                 counter[0]++;
-                return true;
+                return false;
             }
         });
-        assertTrue(counter[0] > 0);
+        assertEquals(404, unique.size());
+        assertEquals(491, counter[0]);
     }
 
     @Test
@@ -184,16 +188,16 @@ public class OQLEngineTest {
         System.out.println("heap.classes");
         final int[] counter = new int[1];
 
-        String query = "select heap.classes";
+        String query = "select heap.classes()";
 
         instance.executeQuery(query, new ObjectVisitor() {
 
             public boolean visit(Object o) {
                 counter[0]++;
-                return true;
+                return false;
             }
         });
-        assertTrue(counter[0] > 0);
+        assertTrue(counter[0] == 443);
     }
 
     @Test
@@ -201,16 +205,16 @@ public class OQLEngineTest {
         System.out.println("heap.finalizables");
         final int[] counter = new int[1];
 
-        String query = "select heap.finalizables";
+        String query = "select heap.finalizables()";
 
         instance.executeQuery(query, new ObjectVisitor() {
 
             public boolean visit(Object o) {
                 counter[0]++;
-                return true;
+                return false;
             }
         });
-        assertTrue(counter[0] > 0);
+        assertTrue(counter[0] == 0);
     }
 
     @Test

@@ -894,8 +894,14 @@ public class NewConnectionPanel extends ConnectionDialog.FocusablePanel {
             for (Entry<String, UrlField> entry : urlFields.entrySet()) {
                 if (url.requiresToken(entry.getKey()) && isEmpty(entry.getValue().getField().getText())) {
                     requiredFieldMissing = true;
+                    String fieldName = entry.getValue().getLabel().getText();
+                    /* Drop the colon, since this message goes at the bottom of the wizard dialog (e.g. avoid
+                    the message looking like "Please specify a value for TNS Name:"). */
+                    if (fieldName.endsWith(":")) {
+                        fieldName = fieldName.substring(0, fieldName.length() - 1);
+                    }
                     displayMessage(NbBundle.getMessage(NewConnectionPanel.class, "NewConnection.ERR_FieldRequired",
-                            entry.getValue().getLabel().getText()), false);
+                            fieldName), false);
                 }
             }
 

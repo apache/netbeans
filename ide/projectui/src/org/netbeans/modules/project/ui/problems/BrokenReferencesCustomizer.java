@@ -25,6 +25,7 @@ import java.awt.event.MouseEvent;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Consumer;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JList;
 import javax.swing.SwingUtilities;
@@ -179,13 +180,24 @@ public class BrokenReferencesCustomizer extends javax.swing.JPanel {
         final BrokenReferencesModel.ProblemReference or = (BrokenReferencesModel.ProblemReference) value;
         errorList.setEnabled(false);
         fix.setEnabled(false);
+        performProblemFix(or, (r) -> {
+            if (SwingUtilities.isEventDispatchThread()) {
+                updateAfterResolve(r);
+            } else {
+                SwingUtilities.invokeLater(() -> updateAfterResolve(r));
+            }
+        });
+    }
+    
+    static void performProblemFix(final BrokenReferencesModel.ProblemReference or, 
+            Consumer<ProjectProblemsProvider.Result> callbackWhenDone) {
         Future<ProjectProblemsProvider.Result> becomesResult = null;
         try {
             becomesResult = or.problem.resolve();
             assert becomesResult != null;
         } finally {
             if (becomesResult == null) {
-                updateAfterResolve(null);
+                callbackWhenDone.accept(null);
             } else if (becomesResult.isDone()) {
                 ProjectProblemsProvider.Result result = null;
                 try {
@@ -195,7 +207,7 @@ public class BrokenReferencesCustomizer extends javax.swing.JPanel {
                 } catch (ExecutionException ex) {
                     Exceptions.printStackTrace(ex);
                 } finally {
-                    updateAfterResolve(result);
+                    callbackWhenDone.accept(result);
                 }
             } else {
                 final Future<ProjectProblemsProvider.Result> becomesResultFin = becomesResult;
@@ -210,12 +222,7 @@ public class BrokenReferencesCustomizer extends javax.swing.JPanel {
                         } catch (ExecutionException ee) {
                             Exceptions.printStackTrace(ee);
                         } finally {
-                            SwingUtilities.invokeLater(new Runnable() {
-                                @Override
-                                public void run() {
-                                    updateAfterResolve(result.get());
-                                }
-                            });
+                            callbackWhenDone.accept(result.get());
                         }
                     }
                 });

@@ -107,7 +107,7 @@ public final class CachingArchiveProvider {
     public Archive getArchive(@NonNull final URL root, final boolean cacheFile)  {
         final URI rootURI = toURI(root);
         Archive archive;
-        
+
         synchronized (this) {
             archive = archives.get(rootURI);
         }
@@ -254,7 +254,8 @@ public final class CachingArchiveProvider {
                 return EMPTY;
             }
         }
-        if ("jar".equals(protocol)) {       //NOI18N
+        if ("jar".equals(protocol) &&      //NOI18N
+            root.first().getPath().endsWith("!/")) { //CachingArchive does not handle paths inside the archive - skip and use FileObjectArchive      //NOI18N
             URL inner = FileUtil.getArchiveFile(root.first());
             protocol = inner.getProtocol();
             if ("file".equals(protocol)) {  //NOI18N

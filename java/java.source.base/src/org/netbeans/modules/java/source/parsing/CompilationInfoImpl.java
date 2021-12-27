@@ -28,9 +28,12 @@ import com.sun.tools.javac.util.JCDiagnostic;
 import com.sun.tools.javac.util.Log;
 
 import java.io.IOException;
+import java.lang.ref.Reference;
+import java.lang.ref.SoftReference;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -41,6 +44,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.SortedMap;
 import java.util.TreeMap;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import javax.swing.text.Document;
 import javax.tools.Diagnostic;
@@ -83,12 +88,18 @@ public final class CompilationInfoImpl {
     final AbstractSourceFileObject jfo;
     //@NotThreadSafe    //accessed under parser lock
     private Snapshot snapshot;
+    private Reference<Snapshot> partialReparseLastGoodSnapshot;
     private final JavacParser parser;
     private final boolean isClassFile;
     private final boolean isDetached;
     JavaSource.Phase parserCrashed = JavaSource.Phase.UP_TO_DATE;      //When javac throws an error, the moveToPhase sets this to the last safe phase
     private final Map<CacheClearPolicy, Map<Object, Object>> userCache = new EnumMap<CacheClearPolicy, Map<Object, Object>>(CacheClearPolicy.class);
-
+    //cache of already parsed files
+    private Map<JavaFileObject, CompilationUnitTree> parsedTrees;
+    private Map<FileObject, AbstractSourceFileObject> ide2javacFileObject;
+    private Map<FileObject, Snapshot> fileObject2Snapshot;
+    private boolean incomplete;
+    
     /**
      * Creates a new CompilationInfoImpl for given source file
      * @param parser used to parse the file
@@ -99,13 +110,15 @@ public final class CompilationInfoImpl {
      * @param detached true if the CompilationInfoImpl is detached from parsing infrastructure.
      * @throws java.io.IOException
      */
-    CompilationInfoImpl (final JavacParser parser,
+    public CompilationInfoImpl (final JavacParser parser,
                          final FileObject file,
                          final FileObject root,
                          final JavacTaskImpl javacTask,
                          final DiagnosticListener<JavaFileObject> diagnosticListener,
                          final Snapshot snapshot,
-                         final boolean detached) throws IOException {
+                         final boolean detached,
+                         final Map<FileObject, AbstractSourceFileObject> ide2javacFileObject,
+                         final Map<FileObject, Snapshot> fileObject2Snapshot) throws IOException {
         assert parser != null;
         this.parser = parser;
         this.cpInfo = parser.getClasspathInfo();
@@ -113,14 +126,35 @@ public final class CompilationInfoImpl {
         this.file = file;
         this.root = root;
         this.snapshot = snapshot;
+        this.partialReparseLastGoodSnapshot = new SoftReference<>(snapshot);
         assert file == null || snapshot != null;
-        this.jfo = file != null ?
-            FileObjects.sourceFileObject(file, root, JavaFileFilterQuery.getFilter(file), snapshot.getText()) :
-            null;
         this.javacTask = javacTask;
         this.diagnosticListener = diagnosticListener;
         this.isClassFile = false;
         this.isDetached = detached;
+        this.ide2javacFileObject = ide2javacFileObject;
+        this.fileObject2Snapshot = fileObject2Snapshot;
+        this.jfo = file != null ?
+            getSourceFileObject(file) :
+            null;
+    }
+
+    private AbstractSourceFileObject getSourceFileObject(FileObject file) throws IOException {
+        AbstractSourceFileObject result = ide2javacFileObject.get(file);
+
+        if (result == null) {
+            Snapshot snapshot = fileObject2Snapshot.get(file);
+
+            if (snapshot != null) {
+                result = FileObjects.sourceFileObject(file, root, JavaFileFilterQuery.getFilter(file), snapshot.getText());
+            } else {
+                result = FileObjects.sourceFileObject(file, root); //TODO: filter?
+            }
+
+            ide2javacFileObject.put(file, result);
+        }
+
+        return result;
     }
 
     /**
@@ -172,7 +206,16 @@ public final class CompilationInfoImpl {
     public Snapshot getSnapshot () {
         return this.snapshot;
     }
-    
+
+    public Snapshot getPartialReparseLastGoodSnapshot() {
+        return partialReparseLastGoodSnapshot != null ? partialReparseLastGoodSnapshot.get()
+                                                      : null;
+    }
+
+    public void setPartialReparseLastGoodSnapshot(Snapshot snapshot) {
+        this.partialReparseLastGoodSnapshot = new SoftReference<>(snapshot);
+    }
+
     /**
      * Returns the current phase of the {@link JavaSource}.
      * @return {@link JavaSource.Phase} the state which was reached by the {@link JavaSource}.
@@ -329,7 +372,11 @@ public final class CompilationInfoImpl {
         }
         return null;
     }
-        
+
+    public Map<JavaFileObject, CompilationUnitTree> getParsedTrees() {
+        return this.parsedTrees;
+    }
+
                                 
     /**
      * Moves the state to required phase. If given state was already reached 
@@ -346,6 +393,24 @@ public final class CompilationInfoImpl {
      * @throws IOException when the file cannot be red
      */    
     public JavaSource.Phase toPhase(JavaSource.Phase phase ) throws IOException {
+        return toPhase(phase, Collections.emptyList());
+    }
+
+    /**
+     * Moves the state to required phase. If given state was already reached 
+     * the state is not changed. The method will throw exception if a state is 
+     * illegal required. Acceptable parameters for thid method are <BR>
+     * <LI>{@link org.netbeans.api.java.source.JavaSource.Phase.PARSED}
+     * <LI>{@link org.netbeans.api.java.source.JavaSource.Phase.ELEMENTS_RESOLVED}
+     * <LI>{@link org.netbeans.api.java.source.JavaSource.Phase.RESOLVED}
+     * <LI>{@link org.netbeans.api.java.source.JavaSource.Phase.UP_TO_DATE}   
+     * @param phase The required phase
+     * @return the reached state
+     * @throws IllegalArgumentException in case that given state can not be 
+     *         reached using this method
+     * @throws IOException when the file cannot be red
+     */    
+    public JavaSource.Phase toPhase(JavaSource.Phase phase, List<FileObject> forcedSources ) throws IOException {
         if (phase == JavaSource.Phase.MODIFIED) {
             throw new IllegalArgumentException( "Invalid phase: " + phase );    //NOI18N
         }
@@ -358,7 +423,7 @@ public final class CompilationInfoImpl {
             }
             return phase;
         } else {
-            JavaSource.Phase currentPhase = parser.moveToPhase(phase, this, false);
+            JavaSource.Phase currentPhase = parser.moveToPhase(phase, this, forcedSources, false);
             return currentPhase.compareTo (phase) < 0 ? currentPhase : phase;
         }
     }
@@ -369,12 +434,37 @@ public final class CompilationInfoImpl {
      * @return JavacTaskImpl
      */
     public synchronized JavacTaskImpl getJavacTask() {
+        try {
+            return getJavacTask(Collections.emptyList());
+        } catch (IOException ex) {
+            //should not happen
+            throw new IllegalStateException(ex);
+        }
+    }
+
+    /**
+     * Returns {@link JavacTaskImpl}, when it doesn't exist
+     * it's created.
+     * @return JavacTaskImpl
+     */
+    public synchronized JavacTaskImpl getJavacTask(List<FileObject> forcedSources) throws IOException {
         if (javacTask == null) {
+            List<JavaFileObject> jfos = new ArrayList<>();
+            if (jfo != null) {
+                jfos.add(jfo);
+                forcedSources.stream()
+                             .map(fo -> runAndThrow(this::getSourceFileObject, fo))
+                             .forEach(jfos::add);
+            }
             diagnosticListener = new DiagnosticListenerImpl(this.root, this.jfo, this.cpInfo);
-            javacTask = JavacParser.createJavacTask(this.file, this.jfo, this.root, this.cpInfo,
+            javacTask = JavacParser.createJavacTask(this.file, jfos, this.root, this.cpInfo,
                     this.parser, diagnosticListener, isDetached);
         }
 	return javacTask;
+    }
+
+    List<FileObject> getForcedSources() {
+        return Collections.emptyList();
     }
 
     public Object getCachedValue(Object key) {
@@ -444,12 +534,53 @@ public final class CompilationInfoImpl {
         assert compilationUnit != null;
         this.compilationUnit = compilationUnit;
     }
-                
-    private boolean hasSource () {
+
+    public void setParsedTrees(Map<JavaFileObject, CompilationUnitTree> parsedTrees) {
+        this.parsedTrees = parsedTrees;
+    }
+
+    private boolean hasSource() {
         return this.jfo != null && !isClassFile;
     }
-    
-    
+
+    List<AbstractSourceFileObject> getFiles(List<FileObject> sourceFiles) throws IOException {
+        return sourceFiles.stream()
+                          .map(fo -> runAndThrow(this::getSourceFileObject, fo))
+                          .collect(Collectors.toList());
+    }
+
+    private <P, R> R runAndThrow(Convert<P, R> run, P p) {
+        try {
+            return run.run(p);
+        } catch (Exception ex) {
+            throw this.<RuntimeException>thrw(ex);
+        }
+    }
+
+    private <T extends Exception> RuntimeException thrw(Exception e) throws T {
+        throw (T) e;
+    }
+
+    interface Convert<P, R> {
+        public R run(P p) throws Exception;
+    }
+
+    public Map<FileObject, AbstractSourceFileObject> getIde2javacFileObject() {
+        return ide2javacFileObject;
+    }
+
+    public Map<FileObject, Snapshot> getFileObject2Snapshot() {
+        return fileObject2Snapshot;
+    }
+
+    public boolean isIncomplete() {
+        return incomplete;
+    }
+
+    public void markIncomplete() {
+        this.incomplete = true;
+    }
+
     // Innerclasses ------------------------------------------------------------
     @Trusted
     public static class DiagnosticListenerImpl implements DiagnosticListener<JavaFileObject> {
@@ -499,13 +630,13 @@ public final class CompilationInfoImpl {
                     if (errors == null) {
                         source2Errors.put(file, errors = new Diagnostics());
                         if (this.jfo != null && this.jfo == file) {
-                            errors.add(-1, new IncompleteClassPath(this.jfo));
+                            errors.add(0, new IncompleteClassPath(this.jfo));
                         }
                     }
                 } else {
                     errors = new Diagnostics();
                     if (this.jfo != null && this.jfo == file) {
-                        errors.add(-1, new IncompleteClassPath(this.jfo));
+                        errors.add(0, new IncompleteClassPath(this.jfo));
                     }
                 }
             } else {
@@ -645,7 +776,7 @@ public final class CompilationInfoImpl {
 
             IncompleteClassPath(final JavaFileObject file) {
                 this.file = file;
-    }
+            }
 
             @Override
             public Kind getKind() {
@@ -659,7 +790,7 @@ public final class CompilationInfoImpl {
 
             @Override
             public long getPosition() {
-                return -1;
+                return 0;
             }
 
             @Override

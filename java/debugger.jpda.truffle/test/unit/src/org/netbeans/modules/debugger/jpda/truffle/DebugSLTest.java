@@ -130,7 +130,7 @@ public class DebugSLTest extends NbTestCase {
             assertNotNull("No top frame", topFrame);
             SourcePosition sourcePosition = topFrame.getSourcePosition();
             assertEquals("Bad source", "Meaning of world.sl", sourcePosition.getSource().getName());
-            assertEquals("Bad line", lineNo, sourcePosition.getLine());
+            assertEquals("Bad line", lineNo, sourcePosition.getStartLine());
             assertEquals("Bad method name", methodName, topFrame.getMethodName());
             
             support.doContinue();
@@ -178,7 +178,7 @@ public class DebugSLTest extends NbTestCase {
             assertNotNull("No top frame", topFrame);
             SourcePosition sourcePosition = topFrame.getSourcePosition();
             assertEquals("Bad source", "TestApp.sl", sourcePosition.getSource().getName());
-            assertEquals("Bad line", lb.getLineNumber(), sourcePosition.getLine());
+            assertEquals("Bad line", lb.getLineNumber(), sourcePosition.getStartLine());
             assertEquals("Bad method name", "main", topFrame.getMethodName());
             
             support.doContinue();

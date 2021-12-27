@@ -209,7 +209,7 @@ public class ToStringGenerator implements CodeGenerator {
         }
     }
 
-    private static MethodTree createToStringMethod(WorkingCopy wc, Iterable<? extends VariableElement> fields, String typeName, boolean useStringBuilder) {
+    public static MethodTree createToStringMethod(WorkingCopy wc, Iterable<? extends VariableElement> fields, String typeName, boolean useStringBuilder) {
         TreeMaker make = wc.getTreeMaker();
         Set<Modifier> mods = EnumSet.of(Modifier.PUBLIC);
         List<AnnotationTree> annotations = new LinkedList<>();
@@ -258,18 +258,20 @@ public class ToStringGenerator implements CodeGenerator {
         NewClassTree newStringBuilder = make.NewClass(null, Collections.emptyList(), stringBuilder, Collections.emptyList(), null);
         VariableTree variable = make.Variable(make.Modifiers(Collections.emptySet()), "sb", stringBuilder, newStringBuilder); // NOI18N
         statements.add(variable); // StringBuilder sb = new StringBuilder();
-
         IdentifierTree varName = make.Identifier(variable.getName());
+        statements.add(make.ExpressionStatement(createAppendInvocation( // sb.append("typeName{");
+                make,
+                varName,
+                Collections.singletonList(make.Literal(typeName + '{'))
+        )));
         boolean first = true;
         for (VariableElement variableElement : fields) {
             StringBuilder sb = new StringBuilder();
-            if (first) {
-                sb.append(typeName).append('{');
-            } else {
+            if (!first) {
                 sb.append(", "); // NOI18N
             }
             sb.append(variableElement.getSimpleName().toString()).append('=');
-            // sb.append("typeName{fieldName=").append(fieldName); or sb.append(", fieldName=").append(fieldName);
+            // sb.append("fieldName=").append(fieldName); or sb.append(", fieldName=").append(fieldName);
             statements.add(make.ExpressionStatement(createAppendInvocation(
                     make,
                     createAppendInvocation(

@@ -32,13 +32,11 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 import org.eclipse.lsp4j.DocumentSymbol;
 import org.eclipse.lsp4j.DocumentSymbolParams;
-import org.eclipse.lsp4j.Location;
-import org.eclipse.lsp4j.Position;
 import org.eclipse.lsp4j.Range;
 import org.eclipse.lsp4j.SymbolInformation;
-import org.eclipse.lsp4j.SymbolKind;
 import org.eclipse.lsp4j.TextDocumentIdentifier;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.netbeans.modules.lsp.client.LSPBindings;
@@ -52,7 +50,6 @@ import org.openide.filesystems.URLMapper;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
 import org.openide.nodes.Node;
-import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.LookupEvent;
 import org.openide.util.LookupListener;
@@ -137,7 +134,8 @@ public class NavigatorPanelImpl extends Children.Keys<Either<SymbolInformation, 
                 List<Either<SymbolInformation, DocumentSymbol>> symbols = bindings.getTextDocumentService().documentSymbol(new DocumentSymbolParams(new TextDocumentIdentifier(uri))).get();
 
                 setKeys(symbols);
-                view.expandAll();
+                
+                SwingUtilities.invokeLater(() -> view.expandAll());
             } catch (ExecutionException ex) {
                 LOG.log(Level.FINE, null, ex);
                 setKeys(Collections.emptyList());
@@ -170,7 +168,7 @@ public class NavigatorPanelImpl extends Children.Keys<Either<SymbolInformation, 
         }
 
         private static Children createChildren(String currentFileUri, DocumentSymbol sym) {
-            if (sym.getChildren().isEmpty()) {
+            if (sym.getChildren() == null || sym.getChildren().isEmpty()) {
                 return LEAF;
             }
             return new Keys<DocumentSymbol>() {
@@ -250,7 +248,10 @@ public class NavigatorPanelImpl extends Children.Keys<Either<SymbolInformation, 
         }
 
         public void expandAll() {
+            boolean scrollsOnExpand = internalView.getScrollsOnExpand();
+            internalView.setScrollsOnExpand(false);
             internalView.expandAll();
+            internalView.setScrollsOnExpand(scrollsOnExpand);
         }
     }
 

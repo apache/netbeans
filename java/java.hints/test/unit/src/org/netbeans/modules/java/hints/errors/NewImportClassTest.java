@@ -35,6 +35,7 @@ public class NewImportClassTest extends ErrorHintsTestBase {
 
     public NewImportClassTest(String name) {
         super(name);
+        doRunIndexing = true;
     }
     
     public void testImportHint200742a() throws Exception {

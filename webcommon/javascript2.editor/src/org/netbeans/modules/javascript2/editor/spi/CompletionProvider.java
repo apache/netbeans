@@ -37,7 +37,7 @@ public interface CompletionProvider {
     List<CompletionProposal> complete(CodeCompletionContext ccContext, CompletionContext jsCompletionContext, String prefix);
 
     String getHelpDocumentation(ParserResult info, ElementHandle element);
-
+    
     @Retention(RetentionPolicy.SOURCE)
     @Target(ElementType.TYPE)
     public @interface Registration {

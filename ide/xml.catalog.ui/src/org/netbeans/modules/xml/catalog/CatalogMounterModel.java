@@ -43,13 +43,13 @@ final class CatalogMounterModel extends Object {
     
     private ComboBoxModel cxModel = null;  // model containig CatalogMounterModel.Entries
     
-    private List changeListeners = new ArrayList(2);
+    private List<ChangeListener> changeListeners = new ArrayList<>(2);
         
     
     /** Creates new CatalogMounterModel */
     public CatalogMounterModel(Iterator providers) {        
         
-        Vector providersList = new Vector();
+        Vector<Entry> providersList = new Vector<>();
         while (providers.hasNext()) {
             providersList.add(new Entry((Class)providers.next()));
         }
@@ -118,8 +118,8 @@ final class CatalogMounterModel extends Object {
 
     private void fireStateChanged() {
 
-        for (Iterator it = changeListeners.iterator(); it.hasNext();) {
-            ChangeListener next = (ChangeListener) it.next();
+        for (Iterator<ChangeListener> it = changeListeners.iterator(); it.hasNext();) {
+            ChangeListener next = it.next();
             next.stateChanged(new ChangeEvent(this));
         }
     }

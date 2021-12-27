@@ -652,7 +652,7 @@ public class InnerToOutterTest extends RefactoringTestBase {
                                            "\n" +
                                            "/** * * @author junit */ public class B {\n" +
                                            "    public B(List<? extends Runnable> runnables) {\n" +
-                                           "        assert runnables.stream().noneMatch((r) -> r instanceof RunnableFuture);\n" +
+                                           "        assert runnables.stream().noneMatch(r -> r instanceof RunnableFuture);\n" + //TODO: note the conversion of "(r)" to "r" - would be better if the form would be kept
                                            "    }\n" +
                                            "} "));
     }

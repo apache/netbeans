@@ -48,13 +48,17 @@ import javax.lang.model.type.TypeMirror;
 import javax.swing.JButton;
 import javax.swing.text.BadLocationException;
 import org.netbeans.api.java.source.JavaSource;
+import org.netbeans.api.java.source.ModificationResult;
 import org.netbeans.api.java.source.SourceUtils;
-import org.netbeans.api.java.source.Task;
 import org.netbeans.api.java.source.TreeMaker;
 import org.netbeans.api.java.source.TreePathHandle;
 import org.netbeans.api.java.source.TreeUtilities;
 import org.netbeans.api.java.source.WorkingCopy;
 import org.netbeans.modules.java.hints.errors.Utilities;
+import org.netbeans.modules.parsing.api.ResultIterator;
+import org.netbeans.modules.parsing.api.Source;
+import org.netbeans.modules.parsing.api.UserTask;
+import org.netbeans.modules.parsing.spi.ParseException;
 import org.netbeans.spi.editor.hints.ChangeInfo;
 import org.netbeans.spi.editor.hints.Fix;
 import org.openide.DialogDescriptor;
@@ -68,10 +72,10 @@ import org.openide.util.NbBundle;
  */
 class IntroduceFieldFix extends IntroduceFixBase implements Fix {
     protected final String guessedName;
+    protected final boolean permitDuplicates;
     private final int[] initilizeIn;
     private final boolean statik;
     private final boolean allowFinalInCurrentMethod;
-    private final boolean permitDuplicates;
     private final TreePathHandle targetHandle;
     
     /**
@@ -85,14 +89,14 @@ class IntroduceFieldFix extends IntroduceFixBase implements Fix {
      * @param allowFinalInCurrentMethod false, if the variable may not be declared final
      * @param offset caret offset
      */
-    public IntroduceFieldFix(TreePathHandle handle, JavaSource js, String guessedName, 
+    public IntroduceFieldFix(TreePathHandle handle, Source source, String guessedName,
             int numDuplicates, int[] initilizeIn, boolean statik, boolean allowFinalInCurrentMethod, int offset, TreePathHandle target) {
-        this(handle, js, guessedName, numDuplicates, initilizeIn, statik, allowFinalInCurrentMethod, offset, false, target);
+        this(handle, source, guessedName, numDuplicates, initilizeIn, statik, allowFinalInCurrentMethod, offset, false, target);
     }
     
-    public IntroduceFieldFix(TreePathHandle handle, JavaSource js, String guessedName, 
+    public IntroduceFieldFix(TreePathHandle handle, Source source, String guessedName,
             int numDuplicates, int[] initilizeIn, boolean statik, boolean allowFinalInCurrentMethod, int offset, boolean allowDuplicates, TreePathHandle target) {
-        super(js, handle, numDuplicates, offset);
+        super(source, handle, numDuplicates, offset);
         this.guessedName = guessedName;
         this.initilizeIn = initilizeIn;
         this.statik = statik;
@@ -132,14 +136,22 @@ class IntroduceFieldFix extends IntroduceFixBase implements Fix {
         return pathToClass;
     }
 
+    private TreePath findOutermostClass(WorkingCopy copy, TreePath resolved) {
+        TreePath pathToClass = resolved;
+        while (pathToClass != null && (!TreeUtilities.CLASS_TREE_KINDS.contains(pathToClass.getLeaf().getKind()) || pathToClass.getParentPath().getLeaf().getKind() != Tree.Kind.COMPILATION_UNIT)) {
+            pathToClass = pathToClass.getParentPath();
+        }
+        return pathToClass;
+    }
+
     @Override
-    public ChangeInfo implement() throws IOException, BadLocationException {
+    public ChangeInfo implement() throws IOException, BadLocationException, ParseException {
         JButton btnOk = new JButton(NbBundle.getMessage(IntroduceHint.class, "LBL_Ok"));
         btnOk.getAccessibleContext().setAccessibleDescription(NbBundle.getMessage(IntroduceHint.class, "AD_IntrHint_OK"));
         JButton btnCancel = new JButton(NbBundle.getMessage(IntroduceHint.class, "LBL_Cancel"));
         btnCancel.getAccessibleContext().setAccessibleDescription(NbBundle.getMessage(IntroduceHint.class, "AD_IntrHint_Cancel"));
         IntroduceFieldPanel panel = createPanel(btnOk);
-        FieldValidator fv = new FieldValidator(js, null, this.handle);
+        FieldValidator fv = new FieldValidator(source, null, this.handle);
         if (targetIsInterface) {
             panel.setAllowAccess(false);
         }
@@ -151,18 +163,21 @@ class IntroduceFieldFix extends IntroduceFixBase implements Fix {
         if (DialogDisplayer.getDefault().notify(dd) != btnOk) {
             return null; //cancel
         }
-        js.runModificationTask(new Worker(panel.getFieldName(), permitDuplicates && panel.isReplaceAll(),
-                panel.isDeclareFinal(), panel.getAccess(), panel.getInitializeIn(), 
-                fv.getLastResult(),
-                panel.isRefactorExisting())).commit();
+        ModificationResult.runModificationTask(Collections.singleton(source), new Worker(panel.getFieldName(), permitDuplicates && panel.isReplaceAll(),
+                panel.isDeclareFinal(), panel.getAccess(), panel.getInitializeIn(), fv.getLastResult(), panel.isRefactorExisting())).commit();
         return null;
     }
-    
+
+    @Override
+    public ModificationResult getModificationResult() throws ParseException {
+        return ModificationResult.runModificationTask(Collections.singleton(source), new Worker(guessedName, permitDuplicates, false, EnumSet.of(Modifier.PRIVATE), IntroduceFieldPanel.INIT_FIELD, null, false));
+    }
+
     /**
      * The actual modification. Some javac related data are recorded in fields, inner class prevents
      * unintentional leak if someone keeps a reference to the Fix
      */
-    private final class Worker implements Task<WorkingCopy> {
+    protected final class Worker extends UserTask {
         final String name;
         final boolean replaceAll;
         final boolean declareFinal;
@@ -257,7 +272,8 @@ class IntroduceFieldFix extends IntroduceFixBase implements Fix {
         }
 
         @Override
-        public void run(WorkingCopy parameter) throws Exception {
+        public void run(ResultIterator resultIterator) throws Exception {
+            WorkingCopy parameter = WorkingCopy.get(resultIterator.getParserResult());
             parameter.toPhase(JavaSource.Phase.RESOLVED);
             TreePath resolved = handle.resolve(parameter);
             if (resolved == null) {
@@ -294,7 +310,7 @@ class IntroduceFieldFix extends IntroduceFixBase implements Fix {
             allNewUses.add(resolved.getLeaf());
             Collection<TreePath> duplicates = new ArrayList<>();
             if (replaceAll) {
-                for (TreePath p : SourceUtils.computeDuplicates(parameter, resolved, new TreePath(parameter.getCompilationUnit()), new AtomicBoolean())) {
+                for (TreePath p : SourceUtils.computeDuplicates(parameter, resolved, findOutermostClass(parameter, resolved), new AtomicBoolean())) {
                     if (variableRewrite) {
                         IntroduceHint.removeFromParent(parameter, p);
                     } else {
@@ -317,7 +333,9 @@ class IntroduceFieldFix extends IntroduceFixBase implements Fix {
             VariableTree field;
             expressionStatementRewrite = parentTree.getKind() == Tree.Kind.EXPRESSION_STATEMENT;
             if (!variableRewrite) {
-                field = make.Variable(modsTree, name, make.Type(tm), initializeIn == IntroduceFieldPanel.INIT_FIELD ? expression : null);
+                Tree varType = make.Type(tm);
+                field = make.Variable(modsTree, name, varType, initializeIn == IntroduceFieldPanel.INIT_FIELD ? expression : null);
+                parameter.tag(varType, TYPE_TAG);
                 if (!expressionStatementRewrite) {
                     Tree nueParent = parameter.getTreeUtilities().translate(parentTree, Collections.singletonMap(resolved.getLeaf(), make.Identifier(name)));
                     parameter.rewrite(parentTree, nueParent);
@@ -326,8 +344,9 @@ class IntroduceFieldFix extends IntroduceFixBase implements Fix {
                     toRemoveFromParent = resolved.getParentPath();
                 }
             } else {
-                VariableTree originalVar = (VariableTree) original;
-                field = make.Variable(modsTree, name, originalVar.getType(), initializeIn == IntroduceFieldPanel.INIT_FIELD ? expression : null);
+                Tree originalVarType = ((VariableTree) original).getType();
+                field = make.Variable(modsTree, name, originalVarType, initializeIn == IntroduceFieldPanel.INIT_FIELD ? expression : null);
+                parameter.tag(originalVarType, TYPE_TAG);
                 toRemoveFromParent = resolved;
             }
             nueClass = IntroduceHint.insertField(parameter, (ClassTree) pathToClass.getLeaf(), field, allNewUses, offset);

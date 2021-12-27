@@ -42,7 +42,7 @@ public class ASTTreeExpansionModel implements TreeExpansionModel {
     public boolean isExpanded(Object node) throws UnknownTypeException {
         if (node instanceof TruffleNode) {
             TruffleNode ast = (TruffleNode) node;
-            return ast.isCurrent();
+            return ast.isCurrentEncapsulating() || ast.isCurrent();
         } else {
             return false;
         }

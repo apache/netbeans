@@ -25,14 +25,8 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.GraphicsEnvironment;
 import java.awt.Insets;
-import java.awt.RenderingHints;
-import java.awt.Toolkit;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.swing.Icon;
 import javax.swing.JComponent;
@@ -46,14 +40,6 @@ import org.openide.util.Exceptions;
  * instance should ever exist.
  */
 class HtmlLabelUI extends LabelUI {
-
-    /** System property to automatically turn on antialiasing for html strings */
-    
-    static final boolean antialias = Boolean.getBoolean("nb.cellrenderer.antialiasing") // NOI18N
-         ||Boolean.getBoolean("swing.aatext") // NOI18N
-         ||(isGTK() && gtkShouldAntialias()) // NOI18N
-         || isAqua();
-    
     private static HtmlLabelUI uiInstance;
     
     private static int FIXED_HEIGHT;
@@ -71,10 +57,8 @@ class HtmlLabelUI extends LabelUI {
         }
     }
 
-    private static Map<Object,Object> hintsMap;
     private static Color unfocusedSelBg;
     private static Color unfocusedSelFg;
-    private static Boolean gtkAA;
 
     public static ComponentUI createUI(JComponent c) {
         assert c instanceof HtmlRendererImpl;
@@ -98,31 +82,51 @@ class HtmlLabelUI extends LabelUI {
     private static int textWidth(String text, Graphics g, Font f, boolean html) {
         if (text != null) {
             if (html) {
-                return Math.round(
-                    Math.round(
-                        Math.ceil(
-                            HtmlRenderer.renderHTML(
+                return (int) Math.ceil(
+                        HtmlRenderer.renderHTML(
                                 text, g, 0, 0, Integer.MAX_VALUE, Integer.MAX_VALUE, f, Color.BLACK,
                                 HtmlRenderer.STYLE_CLIP, false
-                            )
                         )
-                    )
                 );
             } else {
-                return Math.round(
-                    Math.round(
-                        Math.ceil(
-                            HtmlRenderer.renderPlainString(
+                return (int) Math.ceil(
+                        HtmlRenderer.renderPlainString(
                                 text, g, 0, 0, Integer.MAX_VALUE, Integer.MAX_VALUE, f, Color.BLACK,
                                 HtmlRenderer.STYLE_CLIP, false
-                            )
                         )
-                    )
                 );
             }
         } else {
             return 0;
         }
+    }
+
+    private static Font font(HtmlRendererImpl c) {
+        Font result = c.getFont();
+        if (result == null) {
+            String key;
+            switch(c.type()) {
+                case LIST :
+                    key = "List.font"; // NOI18N
+                    break;
+                case TABLE :
+                    key = "Table.font"; // NOI18N
+                    break;
+                case TREE :
+                    key = "Tree.font"; // NOI18N
+                    break;
+                default :
+                    key = "Label.font"; // NOI18N
+            }
+            result = UIManager.getFont(key);
+        }
+        if (result == null) {
+            result = UIManager.getFont("controlFont"); // NOI18N
+            if (result == null) {
+                result = new Font("SansSerif", Font.PLAIN, 12); // NOI18N
+            }
+        }
+        return result;
     }
 
     private Dimension calcPreferredSize(HtmlRendererImpl r) {
@@ -132,9 +136,9 @@ class HtmlLabelUI extends LabelUI {
 
         Graphics g = r.getGraphics();
         Icon icon = r.getIcon();
-
+        Font font = font(r);
         if (text != null) {
-            FontMetrics fm = g.getFontMetrics(r.getFont());
+            FontMetrics fm = g.getFontMetrics(font);
             prefSize.height += (fm.getMaxAscent() + fm.getMaxDescent());
         }
 
@@ -151,9 +155,9 @@ class HtmlLabelUI extends LabelUI {
         //Antialiasing affects the text metrics, so use it if needed when
         //calculating preferred size or the result here will be narrower
         //than the space actually needed
-        ((Graphics2D) g).addRenderingHints(getHints());
+        GraphicsUtils.configureDefaultRenderingHints(g);
 
-        int textwidth = textWidth(text, g, r.getFont(), r.isHtml()) + 4;
+        int textwidth = textWidth(text, g, font, r.isHtml()) + 4;
 
         if (r.isCentered()) {
             prefSize.width = Math.max(prefSize.width, textwidth + ins.right + ins.left);
@@ -166,24 +170,6 @@ class HtmlLabelUI extends LabelUI {
         }
 
         return prefSize;
-    }
-
-    @SuppressWarnings("unchecked")
-    static final Map<?,?> getHints() {
-        //XXX We REALLY need to put this in a graphics utils lib
-        if (hintsMap == null) {
-            //Thanks to Phil Race for making this possible
-            hintsMap = (Map)(Toolkit.getDefaultToolkit().getDesktopProperty("awt.font.desktophints")); //NOI18N
-            if (hintsMap == null) {
-                hintsMap = new HashMap<Object,Object>();
-                if (antialias) {
-                    hintsMap.put(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-                }
-            }
-        }
-        Map<?,?> ret = hintsMap;
-        assert ret != null; // does this method need to be synchronized?
-        return ret;
     }
 
     public @Override void update(Graphics g, JComponent c) {
@@ -225,8 +211,7 @@ class HtmlLabelUI extends LabelUI {
     }
 
     public @Override void paint(Graphics g, JComponent c) {
-
-        ((Graphics2D) g).addRenderingHints(getHints());
+        GraphicsUtils.configureDefaultRenderingHints(g);
 
         HtmlRendererImpl r = (HtmlRendererImpl) c;
 
@@ -239,7 +224,7 @@ class HtmlLabelUI extends LabelUI {
 
     /** Actually paint the icon and text using our own html rendering engine. */
     private void paintIconAndText(Graphics g, HtmlRendererImpl r) {
-        Font f = r.getFont();
+        Font f = font(r);
         g.setFont(f);
 
         FontMetrics fm = g.getFontMetrics();
@@ -348,7 +333,7 @@ class HtmlLabelUI extends LabelUI {
 
         int txtH = r.getHeight() - txtY;
 
-        Font f = r.getFont();
+        Font f = font(r);
         g.setFont(f);
 
         FontMetrics fm = g.getFontMetrics(f);
@@ -363,7 +348,7 @@ class HtmlLabelUI extends LabelUI {
             );
         } else {
             HtmlRenderer.renderString(
-                r.getText(), g, txtX, txtY, txtW, txtH, r.getFont(), foreground, r.getRenderStyle(), true
+                r.getText(), g, txtX, txtY, txtW, txtH, f, foreground, r.getRenderStyle(), true
             );
         }
     }
@@ -408,7 +393,7 @@ class HtmlLabelUI extends LabelUI {
 
         if (!replace) {
             dif = difference(fg, bg);
-            replace = dif < 80;
+            replace = dif < 60;
         }
 
         if (replace) {
@@ -560,14 +545,5 @@ class HtmlLabelUI extends LabelUI {
         }
 
         return unfocusedSelFg;
-    }
-
-    public static final boolean gtkShouldAntialias() {
-        if (gtkAA == null) {
-            Object o = Toolkit.getDefaultToolkit().getDesktopProperty("gnome.Xft/Antialias"); //NOI18N
-            gtkAA = Integer.valueOf(1).equals(o);
-        }
-
-        return gtkAA.booleanValue();
     }
 }

@@ -1,0 +1,544 @@
+<testresult testFile='nullsafeOperator_02.php'>
+    <scanner>
+        <token id='T_CLASS' start='814' end='819'>
+            <text>class</text>
+        </token>
+        <token id='T_STRING' start='820' end='833'>
+            <text>ClassNameTest</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='834' end='835'>
+            <text>{</text>
+        </token>
+        <token id='T_PRIVATE' start='841' end='848'>
+            <text>private</text>
+        </token>
+        <token id='T_VARIABLE' start='849' end='858'>
+            <text>$property</text>
+        </token>
+        <token id='T_EQUAL' start='859' end='860'>
+            <text>=</text>
+        </token>
+        <token id='T_OPEN_RECT' start='861' end='862'>
+            <text>[</text>
+        </token>
+        <token id='T_STRING' start='871' end='884'>
+            <text>ClassNameTest</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='884' end='886'>
+            <text>::</text>
+        </token>
+        <token id='T_CLASS' start='886' end='891'>
+            <text>class</text>
+        </token>
+        <token id='T_COMMA' start='891' end='892'>
+            <text>,</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='897' end='898'>
+            <text>]</text>
+        </token>
+        <token id='T_SEMICOLON' start='898' end='899'>
+            <text>;</text>
+        </token>
+        <token id='T_PUBLIC' start='905' end='911'>
+            <text>public</text>
+        </token>
+        <token id='T_VARIABLE' start='912' end='917'>
+            <text>$test</text>
+        </token>
+        <token id='T_SEMICOLON' start='917' end='918'>
+            <text>;</text>
+        </token>
+        <token id='T_PUBLIC' start='924' end='930'>
+            <text>public</text>
+        </token>
+        <token id='T_FUNCTION' start='931' end='939'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='940' end='951'>
+            <text>__construct</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='951' end='952'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='952' end='953'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='954' end='955'>
+            <text>{</text>
+        </token>
+        <token id='T_IF' start='964' end='966'>
+            <text>if</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='967' end='968'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='968' end='970'>
+            <text>$a</text>
+        </token>
+        <token id='T_INSTANCEOF' start='971' end='981'>
+            <text>instanceof</text>
+        </token>
+        <token id='T_VARIABLE' start='982' end='987'>
+            <text>$this</text>
+        </token>
+        <token id='T_NULLSAFE_OBJECT_OPERATOR' start='987' end='990'>
+            <text>?-&gt;</text>
+        </token>
+        <token id='T_STRING' start='990' end='994'>
+            <text>test</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='994' end='995'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='996' end='997'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='997' end='998'>
+            <text>}</text>
+        </token>
+        <token id='T_IF' start='1007' end='1009'>
+            <text>if</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1010' end='1011'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='1011' end='1013'>
+            <text>$a</text>
+        </token>
+        <token id='T_INSTANCEOF' start='1014' end='1024'>
+            <text>instanceof</text>
+        </token>
+        <token id='T_VARIABLE' start='1025' end='1030'>
+            <text>$this</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='1030' end='1032'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='1032' end='1036'>
+            <text>test</text>
+        </token>
+        <token id='T_NULLSAFE_OBJECT_OPERATOR' start='1036' end='1039'>
+            <text>?-&gt;</text>
+        </token>
+        <token id='T_STRING' start='1039' end='1042'>
+            <text>foo</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1042' end='1043'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1044' end='1045'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1045' end='1046'>
+            <text>}</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1051' end='1052'>
+            <text>}</text>
+        </token>
+        <token id='T_PRIVATE' start='1058' end='1065'>
+            <text>private</text>
+        </token>
+        <token id='T_STATIC' start='1066' end='1072'>
+            <text>static</text>
+        </token>
+        <token id='T_FUNCTION' start='1073' end='1081'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='1082' end='1090'>
+            <text>getIndex</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1090' end='1091'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1091' end='1092'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1093' end='1094'>
+            <text>{</text>
+        </token>
+        <token id='T_RETURN' start='1103' end='1109'>
+            <text>return</text>
+        </token>
+        <token id='T_LNUMBER' start='1110' end='1111'>
+            <text>0</text>
+        </token>
+        <token id='T_SEMICOLON' start='1111' end='1112'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1117' end='1118'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='1124' end='1130'>
+            <text>public</text>
+        </token>
+        <token id='T_STATIC' start='1131' end='1137'>
+            <text>static</text>
+        </token>
+        <token id='T_FUNCTION' start='1138' end='1146'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='1147' end='1151'>
+            <text>test</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1151' end='1152'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1152' end='1153'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1154' end='1155'>
+            <text>{</text>
+        </token>
+        <token id='T_VARIABLE' start='1164' end='1173'>
+            <text>$instance</text>
+        </token>
+        <token id='T_EQUAL' start='1174' end='1175'>
+            <text>=</text>
+        </token>
+        <token id='T_NEW' start='1176' end='1179'>
+            <text>new</text>
+        </token>
+        <token id='T_VARIABLE' start='1180' end='1185'>
+            <text>$this</text>
+        </token>
+        <token id='T_NULLSAFE_OBJECT_OPERATOR' start='1185' end='1188'>
+            <text>?-&gt;</text>
+        </token>
+        <token id='T_STRING' start='1188' end='1196'>
+            <text>property</text>
+        </token>
+        <token id='T_OPEN_RECT' start='1196' end='1197'>
+            <text>[</text>
+        </token>
+        <token id='T_VARIABLE' start='1197' end='1202'>
+            <text>$this</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='1202' end='1204'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='1204' end='1212'>
+            <text>getIndex</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1212' end='1213'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1213' end='1214'>
+            <text>)</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='1214' end='1215'>
+            <text>]</text>
+        </token>
+        <token id='T_SEMICOLON' start='1215' end='1216'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='1225' end='1234'>
+            <text>$instance</text>
+        </token>
+        <token id='T_EQUAL' start='1235' end='1236'>
+            <text>=</text>
+        </token>
+        <token id='T_NEW' start='1237' end='1240'>
+            <text>new</text>
+        </token>
+        <token id='T_VARIABLE' start='1241' end='1246'>
+            <text>$this</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='1246' end='1248'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='1248' end='1256'>
+            <text>property</text>
+        </token>
+        <token id='T_OPEN_RECT' start='1256' end='1257'>
+            <text>[</text>
+        </token>
+        <token id='T_VARIABLE' start='1257' end='1262'>
+            <text>$this</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='1262' end='1264'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='1264' end='1272'>
+            <text>getIndex</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1272' end='1273'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1273' end='1274'>
+            <text>)</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='1274' end='1275'>
+            <text>]</text>
+        </token>
+        <token id='T_NULLSAFE_OBJECT_OPERATOR' start='1275' end='1278'>
+            <text>?-&gt;</text>
+        </token>
+        <token id='T_STRING' start='1278' end='1282'>
+            <text>test</text>
+        </token>
+        <token id='T_SEMICOLON' start='1282' end='1283'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1288' end='1289'>
+            <text>}</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1290' end='1291'>
+            <text>}</text>
+        </token>
+        <token id='EOF' start='1292' end='1292'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='1292'>
+        <Comments>
+            <Comment start='6' end='813' commentType='multiLine'/>
+            <Comment start='6' end='813' commentType='multiLine'/>
+        </Comments>
+        <Statements>
+            <ClassDeclaration start='814' end='1291' modifier='NONE'>
+                <ClassName>
+                    <Identifier start='820' end='833' name='ClassNameTest'/>
+                </ClassName>
+                <SuperClassName>
+                </SuperClassName>
+                <Interfaces>
+                </Interfaces>
+                <Block start='834' end='1291' isCurly='true'>
+                    <FieldsDeclaration start='841' end='899' modifier='private'>
+                        <FieldType>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='849' end='858' isDollared='true'>
+                                <Identifier start='850' end='858' name='property'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                            <ArrayCreation start='861' end='898' type='NEW'>
+                                <ArrayElement start='871' end='891'>
+                                    <Key>
+                                    </Key>
+                                    <Value>
+                                        <StaticConstantAccess start='871' end='891'>
+                                            <NamespaceName start='871' end='884' isCurrent='false' isGlobal='false'>
+                                                <Identifier start='871' end='884' name='ClassNameTest'/>
+                                            </NamespaceName>
+                                            <Constant>
+                                                <Identifier start='886' end='891' name='class'/>
+                                            </Constant>
+                                            <Member>
+                                                <Identifier start='886' end='891' name='class'/>
+                                            </Member>
+                                        </StaticConstantAccess>
+                                    </Value>
+                                </ArrayElement>
+                            </ArrayCreation>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='905' end='918' modifier='public'>
+                        <FieldType>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='912' end='917' isDollared='true'>
+                                <Identifier start='913' end='917' name='test'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <MethodDeclaration start='924' end='1052' modifiers='public'>
+                        <FunctionDeclaration start='931' end='1052' isReference='false'>
+                            <Identifier start='940' end='951' name='__construct'/>
+                            <FormalParameters>
+                            </FormalParameters>
+                            <Block start='954' end='1052' isCurly='true'>
+                                <IfStatement start='964' end='998'>
+                                    <Condition>
+                                        <InstanceOfExpression start='968' end='994'>
+                                            <Variable start='968' end='970' isDollared='true'>
+                                                <Identifier start='969' end='970' name='a'/>
+                                            </Variable>
+                                            <ClassName start='982' end='994'>
+                                                <FieldAccess start='982' end='994' isNullsafe='true'>
+                                                    <Variable start='982' end='987' isDollared='true'>
+                                                        <Identifier start='983' end='987' name='this'/>
+                                                    </Variable>
+                                                    <Field>
+                                                        <Variable start='990' end='994' isDollared='false'>
+                                                            <Identifier start='990' end='994' name='test'/>
+                                                        </Variable>
+                                                    </Field>
+                                                </FieldAccess>
+                                            </ClassName>
+                                        </InstanceOfExpression>
+                                    </Condition>
+                                    <Then>
+                                        <Block start='996' end='998' isCurly='true'>
+                                        </Block>
+                                    </Then>
+                                    <Else>
+                                    </Else>
+                                </IfStatement>
+                                <IfStatement start='1007' end='1046'>
+                                    <Condition>
+                                        <InstanceOfExpression start='1011' end='1042'>
+                                            <Variable start='1011' end='1013' isDollared='true'>
+                                                <Identifier start='1012' end='1013' name='a'/>
+                                            </Variable>
+                                            <ClassName start='1025' end='1042'>
+                                                <FieldAccess start='1025' end='1042' isNullsafe='true'>
+                                                    <FieldAccess start='1025' end='1036' isNullsafe='false'>
+                                                        <Variable start='1025' end='1030' isDollared='true'>
+                                                            <Identifier start='1026' end='1030' name='this'/>
+                                                        </Variable>
+                                                        <Field>
+                                                            <Variable start='1032' end='1036' isDollared='false'>
+                                                                <Identifier start='1032' end='1036' name='test'/>
+                                                            </Variable>
+                                                        </Field>
+                                                    </FieldAccess>
+                                                    <Field>
+                                                        <Variable start='1039' end='1042' isDollared='false'>
+                                                            <Identifier start='1039' end='1042' name='foo'/>
+                                                        </Variable>
+                                                    </Field>
+                                                </FieldAccess>
+                                            </ClassName>
+                                        </InstanceOfExpression>
+                                    </Condition>
+                                    <Then>
+                                        <Block start='1044' end='1046' isCurly='true'>
+                                        </Block>
+                                    </Then>
+                                    <Else>
+                                    </Else>
+                                </IfStatement>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='1058' end='1118' modifiers='private static'>
+                        <FunctionDeclaration start='1073' end='1118' isReference='false'>
+                            <Identifier start='1082' end='1090' name='getIndex'/>
+                            <FormalParameters>
+                            </FormalParameters>
+                            <Block start='1093' end='1118' isCurly='true'>
+                                <ReturnStatement start='1103' end='1112'>
+                                    <Scalar start='1110' end='1111' type='INT' value='0'/>
+                                </ReturnStatement>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='1124' end='1289' modifiers='public static'>
+                        <FunctionDeclaration start='1138' end='1289' isReference='false'>
+                            <Identifier start='1147' end='1151' name='test'/>
+                            <FormalParameters>
+                            </FormalParameters>
+                            <Block start='1154' end='1289' isCurly='true'>
+                                <ExpressionStatement start='1164' end='1216'>
+                                    <Assignment start='1164' end='1215' operator='EQUAL'>
+                                        <Variable start='1164' end='1173' isDollared='true'>
+                                            <Identifier start='1165' end='1173' name='instance'/>
+                                        </Variable>
+                                        <ClassInstanceCreation start='1176' end='1215' anonymous='false'>
+                                            <ClassName start='1180' end='1215'>
+                                                <FieldAccess start='1180' end='1215' isNullsafe='true'>
+                                                    <Variable start='1180' end='1185' isDollared='true'>
+                                                        <Identifier start='1181' end='1185' name='this'/>
+                                                    </Variable>
+                                                    <Field>
+                                                        <ArrayAccess start='1188' end='1215' type='VARIABLE_ARRAY' isDollared='false'>
+                                                            <ArrayDimension start='1196' end='1215'>
+                                                                <Index>
+                                                                    <MethodInvocation start='1197' end='1214' isNullsafe='false'>
+                                                                        <Variable start='1197' end='1202' isDollared='true'>
+                                                                            <Identifier start='1198' end='1202' name='this'/>
+                                                                        </Variable>
+                                                                        <Method>
+                                                                            <FunctionInvocation start='1204' end='1214'>
+                                                                                <FucntionName start='1204' end='1212'>
+                                                                                    <Variable start='1204' end='1212' isDollared='false'>
+                                                                                        <Identifier start='1204' end='1212' name='getIndex'/>
+                                                                                    </Variable>
+                                                                                </FucntionName>
+                                                                                <Parameters>
+                                                                                </Parameters>
+                                                                            </FunctionInvocation>
+                                                                        </Method>
+                                                                    </MethodInvocation>
+                                                                </Index>
+                                                            </ArrayDimension>
+                                                            <Name>
+                                                                <Variable start='1188' end='1196' isDollared='false'>
+                                                                    <Identifier start='1188' end='1196' name='property'/>
+                                                                </Variable>
+                                                            </Name>
+                                                        </ArrayAccess>
+                                                    </Field>
+                                                </FieldAccess>
+                                            </ClassName>
+                                            <Parameters>
+                                            </Parameters>
+                                        </ClassInstanceCreation>
+                                    </Assignment>
+                                </ExpressionStatement>
+                                <ExpressionStatement start='1225' end='1283'>
+                                    <Assignment start='1225' end='1282' operator='EQUAL'>
+                                        <Variable start='1225' end='1234' isDollared='true'>
+                                            <Identifier start='1226' end='1234' name='instance'/>
+                                        </Variable>
+                                        <ClassInstanceCreation start='1237' end='1282' anonymous='false'>
+                                            <ClassName start='1241' end='1282'>
+                                                <FieldAccess start='1241' end='1282' isNullsafe='true'>
+                                                    <FieldAccess start='1241' end='1275' isNullsafe='false'>
+                                                        <Variable start='1241' end='1246' isDollared='true'>
+                                                            <Identifier start='1242' end='1246' name='this'/>
+                                                        </Variable>
+                                                        <Field>
+                                                            <ArrayAccess start='1248' end='1275' type='VARIABLE_ARRAY' isDollared='false'>
+                                                                <ArrayDimension start='1256' end='1275'>
+                                                                    <Index>
+                                                                        <MethodInvocation start='1257' end='1274' isNullsafe='false'>
+                                                                            <Variable start='1257' end='1262' isDollared='true'>
+                                                                                <Identifier start='1258' end='1262' name='this'/>
+                                                                            </Variable>
+                                                                            <Method>
+                                                                                <FunctionInvocation start='1264' end='1274'>
+                                                                                    <FucntionName start='1264' end='1272'>
+                                                                                        <Variable start='1264' end='1272' isDollared='false'>
+                                                                                            <Identifier start='1264' end='1272' name='getIndex'/>
+                                                                                        </Variable>
+                                                                                    </FucntionName>
+                                                                                    <Parameters>
+                                                                                    </Parameters>
+                                                                                </FunctionInvocation>
+                                                                            </Method>
+                                                                        </MethodInvocation>
+                                                                    </Index>
+                                                                </ArrayDimension>
+                                                                <Name>
+                                                                    <Variable start='1248' end='1256' isDollared='false'>
+                                                                        <Identifier start='1248' end='1256' name='property'/>
+                                                                    </Variable>
+                                                                </Name>
+                                                            </ArrayAccess>
+                                                        </Field>
+                                                    </FieldAccess>
+                                                    <Field>
+                                                        <Variable start='1278' end='1282' isDollared='false'>
+                                                            <Identifier start='1278' end='1282' name='test'/>
+                                                        </Variable>
+                                                    </Field>
+                                                </FieldAccess>
+                                            </ClassName>
+                                            <Parameters>
+                                            </Parameters>
+                                        </ClassInstanceCreation>
+                                    </Assignment>
+                                </ExpressionStatement>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                </Block>
+            </ClassDeclaration>
+        </Statements>
+    </Program>
+</testresult>

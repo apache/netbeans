@@ -24,22 +24,22 @@
     <import file="../../nbbuild/templates/projectized.xml"/>
 
     <target name="-check-jpa-doc" depends="projectized.build-init">
-        <available file="build/javax.persistence-2.1.0-doc.zip" property="jpa-doc-available"/>
+        <available file="build/javax.persistence-2.2.1-doc.zip" property="jpa-doc-available"/>
     </target>
 
     <target name="-build-jpa-doc" depends="-check-jpa-doc" unless="jpa-doc-available">
-       <delete dir="build/javax.persistence-2.1.0-sources" />
-       <delete dir="build/javax.persistence-2.1.0-doc" />
-       <delete file="build/javax.persistence-2.1.0-doc.zip" />
-       <unzip dest="build/javax.persistence-2.1.0-sources"
-              src="external/javax.persistence-2.1.0-sources.jar" />
-       <javadoc destdir="build/javax.persistence-2.1.0-doc">
-           <packageset dir="build/javax.persistence-2.1.0-sources" defaultexcludes="yes">
+       <delete dir="build/javax.persistence-2.2.1-sources" />
+       <delete dir="build/javax.persistence-2.2.1-doc" />
+       <delete file="build/javax.persistence-2.2.1-doc.zip" />
+       <unzip dest="build/javax.persistence-2.2.1-sources"
+              src="external/javax.persistence-2.2.1-sources.jar" />
+       <javadoc destdir="build/javax.persistence-2.2.1-doc">
+           <packageset dir="build/javax.persistence-2.2.1-sources" defaultexcludes="yes">
                <include name="javax/persistence/**" />
            </packageset>
        </javadoc>
-       <zip destfile="build/javax.persistence-2.1.0-doc.zip">
-           <zipfileset dir="build/javax.persistence-2.1.0-doc" prefix="docs/"/>
+       <zip destfile="build/javax.persistence-2.2.1-doc.zip">
+           <zipfileset dir="build/javax.persistence-2.2.1-doc" prefix="docs/"/>
        </zip>
     </target>
 

@@ -177,6 +177,7 @@
                 <friend>org.netbeans.modules.web.jsf.richfaces</friend>
                 <friend>org.netbeans.modules.web.jsf20</friend>
                 <friend>org.netbeans.modules.web.primefaces</friend>
+                <friend>org.netbeans.modules.web.bootsfaces</friend>
                 <friend>org.netbeans.modules.web.project</friend>
                 <package>org.netbeans.modules.web.jsfapi.api</package>
                 <package>org.netbeans.modules.web.jsfapi.spi</package>

@@ -21,7 +21,6 @@ package org.netbeans.modules.junit.api;
 
 import java.util.prefs.Preferences;
 import org.netbeans.modules.java.testrunner.CommonSettings;
-import org.netbeans.modules.junit.JUnitVersion;
 import org.openide.util.HelpCtx;
 import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;

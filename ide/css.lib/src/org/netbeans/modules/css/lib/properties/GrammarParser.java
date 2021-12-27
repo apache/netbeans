@@ -71,7 +71,8 @@ public class GrammarParser {
         }
         return root;
     }
-    
+
+    @SuppressWarnings("fallthrough")
     private void parseElements(ParserInput input, GroupGrammarElement parent, boolean ignoreInherits,
             AtomicInteger group_index, int openedParenthesis) {
         GrammarElement last = null;
@@ -191,12 +192,27 @@ public class GrammarParser {
                             text.append(c);
                         }
                     }
-                    StringTokenizer st = new StringTokenizer(text.toString(), ","); //NOI18N
-                    int min = Integer.parseInt(st.nextToken());
-                    int max = Integer.parseInt(st.nextToken());
+                    String[] parts =  text.toString().split(",", -1); //NOI18N
+                    if(parts.length == 1) {
+                        int elements = Integer.parseInt(parts[0]);
+                        last.setMinimumOccurances(elements);
+                        last.setMaximumOccurances(elements);
+                    } else if (parts.length == 2) {
+                        int min = 0;
+                        int max = Integer.MAX_VALUE;
+                        if(! parts[0].trim().isEmpty()) {
+                            min = Integer.parseInt(parts[0]);
+                        }
+                        if(! parts[1].trim().isEmpty()) {
+                            max = Integer.parseInt(parts[1]);
+                        }
+                        last.setMinimumOccurances(min);
+                        last.setMaximumOccurances(max);
+                    } else {
+                        throw new IllegalArgumentException("Invalid multiplicity: " + text.toString());
+                    }
 
-                    last.setMinimumOccurances(min);
-                    last.setMaximumOccurances(max);
+
 
                     break;
 

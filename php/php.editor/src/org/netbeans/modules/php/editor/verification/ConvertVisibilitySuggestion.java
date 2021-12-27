@@ -29,6 +29,7 @@ import org.netbeans.editor.BaseDocument;
 import org.netbeans.modules.csl.api.EditList;
 import org.netbeans.modules.csl.api.Hint;
 import org.netbeans.modules.csl.api.HintFix;
+import org.netbeans.modules.csl.api.HintSeverity;
 import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.csl.spi.support.CancelSupport;
 import org.netbeans.modules.php.editor.api.PhpModifiers;
@@ -38,6 +39,7 @@ import org.netbeans.modules.php.editor.parser.astnodes.BodyDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.BodyDeclaration.Modifier;
 import org.netbeans.modules.php.editor.parser.astnodes.ConstantDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.FieldsDeclaration;
+import org.netbeans.modules.php.editor.parser.astnodes.Identifier;
 import org.netbeans.modules.php.editor.parser.astnodes.InterfaceDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.MethodDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.visitors.DefaultVisitor;
@@ -48,7 +50,7 @@ import org.openide.util.Pair;
 /**
  * Convert the visibility of a property, a method, or a constant.
  */
-public class ConvertVisibilitySuggestion extends SuggestionRule {
+public class ConvertVisibilitySuggestion extends HintRule {
 
     private static final String HINT_ID = "Convert.Visibility.Suggestion"; // NOI18N
     private static final Logger LOGGER = Logger.getLogger(ConvertVisibilitySuggestion.class.getName());
@@ -80,9 +82,8 @@ public class ConvertVisibilitySuggestion extends SuggestionRule {
             return;
         }
         final BaseDocument doc = context.doc;
-        int caretOffset = getCaretOffset();
-        OffsetRange lineBounds = VerificationUtils.createLineBounds(caretOffset, doc);
-        if (lineBounds.containsInclusive(caretOffset)) {
+        OffsetRange lineBounds = VerificationUtils.createLineBounds(context.caretOffset, doc);
+        if (lineBounds.containsInclusive(context.caretOffset)) {
             FileObject fileObject = phpParseResult.getSnapshot().getSource().getFileObject();
             if (fileObject != null) {
                 CheckVisitor checkVisitor = new CheckVisitor(fileObject, this, context.doc, lineBounds);
@@ -93,6 +94,16 @@ public class ConvertVisibilitySuggestion extends SuggestionRule {
                 result.addAll(checkVisitor.getHints());
             }
         }
+    }
+
+    @Override
+    public HintSeverity getDefaultSeverity() {
+        return HintSeverity.CURRENT_LINE_WARNING;
+    }
+
+    @Override
+    public boolean getDefaultEnabled() {
+        return false;
     }
 
     private static final class CheckVisitor extends DefaultVisitor {
@@ -120,7 +131,7 @@ public class ConvertVisibilitySuggestion extends SuggestionRule {
                 }
                 List<HintFix> createFixes = createFixes(fixInfo);
                 if (!createFixes.isEmpty()) {
-                    hints.add(new Hint(suggestion, Bundle.ConvertVisibilitySuggestion_Hint_Description(), fileObject, lineRange, createFixes, 500));
+                    hints.add(new Hint(suggestion, Bundle.ConvertVisibilitySuggestion_Hint_Description(), fileObject, lineRange, createFixes, 1000));
                 }
             }
             return hints;
@@ -177,7 +188,8 @@ public class ConvertVisibilitySuggestion extends SuggestionRule {
             if (CancelSupport.getDefault().isCancelled()) {
                 return;
             }
-            OffsetRange nodeRange = new OffsetRange(node.getStartOffset(), node.getEndOffset());
+            Identifier functionName = node.getFunction().getFunctionName();
+            OffsetRange nodeRange = new OffsetRange(node.getStartOffset(), functionName.getStartOffset());
             if (lineRange.overlaps(nodeRange)) {
                 processBodyDeclaration(node);
             }

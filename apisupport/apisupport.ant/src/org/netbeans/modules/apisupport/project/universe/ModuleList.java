@@ -469,8 +469,8 @@ public final class ModuleList {
                 continue;
             }
             String name = kid.getName();
-            if (EXCLUDED_DIR_NAMES.contains(name)) {
-                // #61579: known to not be project dirs, so skip to save time.
+            if (name.startsWith(".") || EXCLUDED_DIR_NAMES.contains(name)) { // NOI18N
+                // #61579/[NETBEANS-3898]: known to not be project dirs, so skip to save time.
                 continue;
             }
             String newPathPrefix = (pathPrefix != null) ? pathPrefix + "/" + name : name; // NOI18N
@@ -857,7 +857,7 @@ public final class ModuleList {
         static final String CNB = "org.netbeans.libs.junit4";
         JUnitPlaceholderEntry(File root) {
             super(CNB, new File(root, "platform/modules/" + CNB.replace('.', '-') + ".jar"),
-                    new File[] {new File(System.getProperty("user.home"), ".m2/repository/junit/junit/4.8.2/junit-4.8.2.jar")},
+                    new File[] {new File(System.getProperty("user.home"), ".m2/repository/junit/junit/4.13.2/junit-4.13.2.jar")},
                     new File(root, "platform"), null, null, new String[0],
                     new ManifestManager.PackageExport[] {new ManifestManager.PackageExport("junit", true), new ManifestManager.PackageExport("org.junit", true)},
                     null, false, Collections.<Dependency>emptySet());

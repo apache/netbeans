@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.JTextComponent;
 import javax.swing.text.StyledDocument;
@@ -59,12 +60,12 @@ public class ErrorAnnotationImpl implements ErrorAnnotation {
     /** Jsp file, for which is the ErrorAnnotation */
     private FileObject jspFo;
     
-    private ArrayList annotations;
+    private List annotations;
     
     /** Creates a new instance of ErrorAnnotation */
     public ErrorAnnotationImpl(FileObject jspFo) {
         this.jspFo = jspFo;
-        annotations = new ArrayList();
+        annotations = new ArrayList<>();
     }
     
     /** Adds annotation for the errors. If the error is already annotated, does nothing. If there are 
@@ -74,7 +75,7 @@ public class ErrorAnnotationImpl implements ErrorAnnotation {
      */
     @Override
     public void annotate(ErrorInfo[] errors){
-        ArrayList added, removed, unchanged;
+        List added, removed, unchanged;
         Collection newAnnotations;
         
         // obtain data object
@@ -113,10 +114,10 @@ public class ErrorAnnotationImpl implements ErrorAnnotation {
         // create annotations from errors
         newAnnotations = getAnnotations(errors, document);
         // which annotations are really new
-        added=new ArrayList(newAnnotations);
+        added=new ArrayList<>(newAnnotations);
         added.removeAll(annotations);
         // which annotations were here before
-        unchanged=new ArrayList(annotations);
+        unchanged=new ArrayList<>(annotations);
         unchanged.retainAll(newAnnotations);
         // which annotations are obsolete
         removed = annotations;
@@ -125,7 +126,7 @@ public class ErrorAnnotationImpl implements ErrorAnnotation {
 
         // are there new annotations?
         if (!added.isEmpty()) {
-            final ArrayList finalAdded = added;
+            final List finalAdded = added;
             final DataObject doJsp2 = doJsp;
             Runnable docRenderer = new Runnable() {
                 @Override
@@ -190,7 +191,7 @@ public class ErrorAnnotationImpl implements ErrorAnnotation {
             // If we knew the errors were sorted by file & line number,
             // this would be easy (and we wouldn't need to do the hashmap
             // "sort"
-            Integer lineInt = new Integer(line);
+            Integer lineInt = line;
             /*LineSetAnnotation prev = (LineSetAnnotation)map.get(lineInt);
             if (prev != null) {
                 prev.chain(ann);

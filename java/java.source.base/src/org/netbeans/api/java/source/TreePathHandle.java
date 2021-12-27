@@ -320,6 +320,8 @@ public final class TreePathHandle {
             case FIELD:
             case ANNOTATION_TYPE:
             case ENUM_CONSTANT:
+            case RECORD:
+                //TODO: record component
                 return true;
             default:
                 return false;

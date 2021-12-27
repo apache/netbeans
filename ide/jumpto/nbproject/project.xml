@@ -251,23 +251,13 @@
                     </test-dependency>
                 </test-type>
             </test-dependencies>
-            <friend-packages>
-                <friend>com.sun.tools.tuxedo.codemodel.bridge</friend>
-                <friend>org.netbeans.modules.cnd.gotodeclaration</friend>
-                <friend>org.netbeans.modules.cnd.makeproject</friend>
-                <friend>org.netbeans.modules.cnd.makeproject.ui</friend>
-                <friend>org.netbeans.modules.csl.api</friend>
-                <friend>org.netbeans.modules.gsf</friend>
-                <friend>org.netbeans.modules.java.sourceui</friend>
-                <friend>org.netbeans.modules.javafx.editor</friend>
-                <friend>org.netbeans.modules.spring.beans</friend>
-                <friend>org.netbeans.modules.team.ide</friend>
+            <public-packages>
                 <package>org.netbeans.api.jumpto.type</package>
                 <package>org.netbeans.spi.jumpto.file</package>
                 <package>org.netbeans.spi.jumpto.support</package>
                 <package>org.netbeans.spi.jumpto.symbol</package>
                 <package>org.netbeans.spi.jumpto.type</package>
-            </friend-packages>
+            </public-packages>
         </data>
     </configuration>
 </project>

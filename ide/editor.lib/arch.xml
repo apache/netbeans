@@ -19,8 +19,8 @@
     under the License.
 
 -->
-<!DOCTYPE api-answers PUBLIC "-//NetBeans//DTD Arch Answers//EN" "../nbbuild/antsrc/org/netbeans/nbbuild/Arch.dtd" [
-  <!ENTITY api-questions SYSTEM "../nbbuild/antsrc/org/netbeans/nbbuild/Arch-api-questions.xml">
+<!DOCTYPE api-answers PUBLIC "-//NetBeans//DTD Arch Answers//EN" "../../nbbuild/antsrc/org/netbeans/nbbuild/Arch.dtd" [
+  <!ENTITY api-questions SYSTEM "../../nbbuild/antsrc/org/netbeans/nbbuild/Arch-api-questions.xml">
 ]>
 
 <api-answers
@@ -467,6 +467,12 @@ Description of public packages:
     <api type="export" name="line-limit" category="private" group="property">
         Document property that determines the number of characters in the longest line
         determined during the document loading from a reader by the editor kit. 
+    </api>
+    <br/>
+    <api type="export" name="CARET_MIN_WIDTH" category="devel" group="property">
+        Component client property that provides an <code>IntUnaryOperator</code>
+        which is invoked with a document offset and returns a minimum caret width.
+        This overrides a constant 2 minimum caret width.
     </api>
 </answer>
 

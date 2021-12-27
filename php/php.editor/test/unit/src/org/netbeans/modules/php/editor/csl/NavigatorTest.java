@@ -16,14 +16,13 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.netbeans.modules.php.editor.csl;
 
 /**
  *
  * @author Petr Pisl
  */
-public class NavigatorTest extends PhpNavigatorTestBase{
+public class NavigatorTest extends PhpNavigatorTestBase {
 
     public NavigatorTest(String testName) {
         super(testName);
@@ -31,20 +30,20 @@ public class NavigatorTest extends PhpNavigatorTestBase{
 
     public void testNamespace() throws Exception {
         performTest("structure/php53/namespace");
-
     }
+
     public void testMultiple_namespaces() throws Exception {
         performTest("structure/php53/multiple_namespaces");
-
     }
+
     public void testBracketedMultipleNamespaces() throws Exception {
         performTest("structure/php53/bracketed_multiple_namespaces");
-
     }
+
     public void testBracketedMultipleNamespacesWithDefaultOne() throws Exception {
         performTest("structure/php53/bracketed_multiple_namespaces_with_default_one");
-
     }
+
     public void testScan() throws Exception {
         performTest("structure/interface_001");
     }
@@ -107,6 +106,10 @@ public class NavigatorTest extends PhpNavigatorTestBase{
 
     public void testMagicMethods_01() throws Exception {
         performTest("structure/magicMethods");
+    }
+
+    public void testPHP80ConstructorPropertyPromotion() throws Exception {
+        performTest("structure/php80ConstructorPropertyPromotion");
     }
 
 }

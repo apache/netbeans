@@ -20,6 +20,8 @@ package org.netbeans.modules.debugger.ui;
 
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.GraphicsEnvironment;
+import java.awt.Toolkit;
 import java.awt.event.ActionListener;
 import java.awt.event.ContainerEvent;
 import java.awt.event.ContainerListener;
@@ -86,8 +88,10 @@ public class DebuggerManagerListener extends DebuggerManagerAdapter {
 
     @Override
     public void engineAdded (DebuggerEngine engine) {
-        openEngineComponents(engine);
-        setupToolbar(engine);
+        if (!GraphicsEnvironment.isHeadless()) {
+            openEngineComponents(engine);
+            setupToolbar(engine);
+        }
     }
 
     private void openEngineComponents (final DebuggerEngine engine) {
@@ -328,7 +332,7 @@ public class DebuggerManagerListener extends DebuggerManagerAdapter {
             @Override
             public void run() {
                 List<? extends ActionsProvider> actionsProviderList = engine.lookup(null, ActionsProvider.class);
-                final Set engineActions = new HashSet();
+                final Set<?> engineActions = new HashSet<>();
                 for (ActionsProvider ap : actionsProviderList) {
                     engineActions.addAll(ap.getActions());
                 }
@@ -391,6 +395,9 @@ public class DebuggerManagerListener extends DebuggerManagerAdapter {
 
     @Override
     public void engineRemoved (final DebuggerEngine engine) {
+        if (GraphicsEnvironment.isHeadless()) {
+            return ;
+        }
         DebuggerModule dm = DebuggerModule.findObject(DebuggerModule.class);
         if (dm != null && dm.isClosing()) {
             // Do not interfere with closeDebuggerUI()

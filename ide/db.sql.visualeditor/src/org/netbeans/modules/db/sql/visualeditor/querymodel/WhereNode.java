@@ -26,6 +26,7 @@ package org.netbeans.modules.db.sql.visualeditor.querymodel;
 // ptr, or a Where with null condition.
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Collection;
 
 import org.netbeans.api.db.sql.support.SQLIdentifiers;
@@ -82,7 +83,7 @@ public class WhereNode implements Where {
                 _cond = null;
         }
         else {
-            ArrayList column = new ArrayList();
+            List<Column> column = new ArrayList<>();
             _cond.getReferencedColumns(column);
             for (int i = 0; i < column.size(); i++) {
                 Column col = (Column)column.get(i);

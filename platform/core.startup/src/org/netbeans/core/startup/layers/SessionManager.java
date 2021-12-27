@@ -19,6 +19,8 @@
 
 package org.netbeans.core.startup.layers;
 
+import java.util.List;
+import java.util.ArrayList;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
@@ -48,7 +50,7 @@ public final class SessionManager {
     private HashMap<String,FileSystem> layers = new HashMap<String,FileSystem>(); //<layer_key, fs>
     
     /** Utility field holding list of PropertyChangeListeners. */
-    private transient java.util.ArrayList<PropertyChangeListener> propertyChangeListeners;
+    private transient List<PropertyChangeListener> propertyChangeListeners;
     
     /** Creates new SessionManager */
     private SessionManager() {
@@ -98,7 +100,7 @@ public final class SessionManager {
      */
     public synchronized void addPropertyChangeListener(PropertyChangeListener listener) {
         if (propertyChangeListeners == null ) {
-            propertyChangeListeners = new java.util.ArrayList<PropertyChangeListener>();
+            propertyChangeListeners = new ArrayList<>();
         }
         propertyChangeListeners.add(listener);
     }
@@ -116,10 +118,10 @@ public final class SessionManager {
      * @param name the name to be fired
      */
     private void firePropertyChange(String name) {
-        java.util.ArrayList list;
+        List<PropertyChangeListener> list;
         synchronized (this) {
             if (propertyChangeListeners == null || propertyChangeListeners.size() == 0) return;
-            list = (java.util.ArrayList)propertyChangeListeners.clone();
+            list = new ArrayList<>(propertyChangeListeners);
         }
         java.beans.PropertyChangeEvent event = new java.beans.PropertyChangeEvent(this, name, null, null);
         for (int i = 0; i < list.size(); i++) {

@@ -5,8 +5,8 @@ class SpecialGroovyClass implements |Runnable, Serializable {
 PACKAGE    com                                        null
 PACKAGE    groovy                                     null
 PACKAGE    groovyjarjarantlr                          null
+PACKAGE    groovyjarjarantlr4                         null
 PACKAGE    groovyjarjarasm                            null
-PACKAGE    groovyjarjarcommonscli                     null
 PACKAGE    groovyjarjarpicocli                        null
 PACKAGE    java                                       null
 PACKAGE    javax                                      null

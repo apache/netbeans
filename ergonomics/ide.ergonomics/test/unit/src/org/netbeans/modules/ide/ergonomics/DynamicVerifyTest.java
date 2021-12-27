@@ -21,6 +21,7 @@ package org.netbeans.modules.ide.ergonomics;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import junit.framework.Test;
@@ -143,6 +144,7 @@ public class DynamicVerifyTest extends NbTestCase {
         all.put("Fine", "org.netbeans.modules.project.ant.AntBasedProjectFactorySingleton");
         all.put("FineToo", "org.netbeans.modules.project.ui.convertor.ProjectConvertorFactory");
         all.put("MostlyOK", "org.netbeans.modules.java.openjdk.project.FilterStandardProjects");
+        all.put("NoProjectFileAvailable", "org.netbeans.modules.cpplite.project.CPPLiteProject$FactoryImpl");
 
         iterateRegistrations(sb, ProjectFactory.class, null, all);
         
@@ -185,12 +187,13 @@ public class DynamicVerifyTest extends NbTestCase {
             if (f.getClass().getPackage().getName().equals("org.netbeans.modules.ide.ergonomics.fod")) {
                 continue;
             }
-            sb.append(f.getClass().getName());
+            final String cname = f.getClass().getName();
+            sb.append(cname);
             if (info != null) {
                 Object more = info.invoke(f);
                 sb.append(" info: ").append(more);
                 Object value = all.get(more);
-                if (f.getClass().getName().equals(value)) {
+                if (cname.equals(value)) {
                     sb.append(" OK");
                     all.remove(more);
                 } else {
@@ -198,10 +201,10 @@ public class DynamicVerifyTest extends NbTestCase {
                     all.put("FAIL", more.toString());
                 }
             } else {
-                if (all.values().remove(f.getClass().getName())) {
+                if (removeAllValues(all, cname)) {
                     sb.append(" OK");
                 } else {
-                    all.put("FAIL", f.getClass().getName());
+                    all.put("FAIL", cname);
                     sb.append(" not present");
                 }
             }
@@ -215,6 +218,19 @@ public class DynamicVerifyTest extends NbTestCase {
         for (Map.Entry<String, String> entry : all.entrySet()) {
             sb.append("\nNot processed: ").append(entry.getKey()).append(" = ").append(entry.getValue());
         }
+    }
+
+    private static boolean removeAllValues(Map<String, String> all, final String cname) {
+        boolean found = false;
+        Iterator<Map.Entry<String, String>> it = all.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry<String, String> en = it.next();
+            if (cname.equals(en.getValue())) {
+                it.remove();
+                found = true;
+            }
+        }
+        return found;
     }
 
 }

@@ -35,14 +35,14 @@ public class DbMetaDataListenerSupport {
     }
 
     public static void fireTablesChanged(DatabaseConnection dbconn) {
-        for (Iterator i = listeners.allInstances().iterator(); i.hasNext();) {
-            ((DbMetaDataListener)i.next()).tablesChanged(dbconn);
+        for (Iterator<DbMetaDataListener> i = listeners.allInstances().iterator(); i.hasNext();) {
+            i.next().tablesChanged(dbconn);
         }
     }
 
     public static void fireTableChanged(DatabaseConnection dbconn, String tableName) {
-        for (Iterator i = listeners.allInstances().iterator(); i.hasNext();) {
-            ((DbMetaDataListener)i.next()).tableChanged(dbconn, tableName);
+        for (Iterator<DbMetaDataListener> i = listeners.allInstances().iterator(); i.hasNext();) {
+            i.next().tableChanged(dbconn, tableName);
         }
     }
 }

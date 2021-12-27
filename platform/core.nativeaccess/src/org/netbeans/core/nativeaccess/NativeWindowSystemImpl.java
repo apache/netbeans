@@ -78,18 +78,22 @@ public class NativeWindowSystemImpl extends NativeWindowSystem {
             if (gd.isWindowTranslucencySupported(GraphicsDevice.WindowTranslucency.TRANSLUCENT) ) {
                 try {
                     w.setOpacity(alpha);
+                    return;
                 } catch( Exception e ) {
                     //ignore, we'll try JNA
                 }
             }
         }
-        //try the JNA way
-        try {
-            WindowUtils.setWindowAlpha(w, alpha);
-        } catch( ThreadDeath td ) {
-            throw td;
-        } catch( Throwable e ) {
-            LOG.log(Level.INFO, null, e);
+        // Test isWindowAlphaSupported first to avoid an unnecessary log message.
+        if (WindowUtils.isWindowAlphaSupported()) {
+            //try the JNA way
+            try {
+                WindowUtils.setWindowAlpha(w, alpha);
+            } catch( ThreadDeath td ) {
+                throw td;
+            } catch( Throwable e ) {
+                LOG.log(Level.INFO, null, e);
+            }
         }
     }
     

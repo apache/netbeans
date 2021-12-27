@@ -284,7 +284,6 @@ public class JavaProjectGenerator {
      */
     public static void putSourceViews(AntProjectHelper helper, List<SourceFolder> sources, String style) {
         //assert ProjectManager.mutex().isWriteAccess();
-        ArrayList list = new ArrayList();
         Element data = Util.getPrimaryConfigurationData(helper);
         Document doc = data.getOwnerDocument();
         Element viewEl = XMLUtil.findElement(data, "view", Util.NAMESPACE); // NOI18N
@@ -465,6 +464,7 @@ public class JavaProjectGenerator {
         String namespace;
         
         switch (requiredVersion) {
+            case 5: namespace = JavaProjectNature.NS_JAVA_5; break;
             case 4: namespace = JavaProjectNature.NS_JAVA_4; break;
             case 3: namespace = JavaProjectNature.NS_JAVA_3; break;
             case 2: namespace = JavaProjectNature.NS_JAVA_2; break;
@@ -686,7 +686,6 @@ public class JavaProjectGenerator {
      */
     public static void putExports(AntProjectHelper helper, List<Export> exports) {
         //assert ProjectManager.mutex().isWriteAccess();
-        ArrayList list = new ArrayList();
         Element data = Util.getPrimaryConfigurationData(helper);
         Document doc = data.getOwnerDocument();
         
@@ -764,7 +763,6 @@ public class JavaProjectGenerator {
      */
     public static void putSubprojects(AntProjectHelper helper, List<String> subprojects) {
         //assert ProjectManager.mutex().isWriteAccess();
-        ArrayList list = new ArrayList();
         Element data = Util.getPrimaryConfigurationData(helper);
         Document doc = data.getOwnerDocument();
         Element subproject = XMLUtil.findElement(data, "subprojects", Util.NAMESPACE); // NOI18N
@@ -1036,11 +1034,14 @@ public class JavaProjectGenerator {
             final SpecificationVersion JAVA_6 = new SpecificationVersion("1.6");  //NOI18N
             final SpecificationVersion JAVA_7 = new SpecificationVersion("1.7");  //NOI18N
             final SpecificationVersion JAVA_8 = new SpecificationVersion("1.8");  //NOI18N
+            final SpecificationVersion JAVA_9 = new SpecificationVersion("9");  //NOI18N
             final SpecificationVersion current = new SpecificationVersion(unit.sourceLevel);
             if (JAVA_6.equals(current) || JAVA_7.equals(current)) {
                 min = 3;
-            } else if (JAVA_8.compareTo(current) <= 0) {
+            } else if (JAVA_8.equals(current)) {
                 min = 4;
+            } else if (JAVA_9.compareTo(current) <= 0) {
+                min = 5;
             }
         }
         return min;

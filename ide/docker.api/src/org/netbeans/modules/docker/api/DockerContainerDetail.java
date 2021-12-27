@@ -42,7 +42,7 @@ public class DockerContainerDetail {
         this.status = status;
         this.stdin = stdin;
         this.tty = tty;
-        this.portMappings = Collections.EMPTY_LIST;
+        this.portMappings = Collections.emptyList();
     }
     
     public DockerContainerDetail(String name, DockerContainer.Status status, boolean stdin, boolean tty, List<PortMapping> portMappings) {

@@ -6,6 +6,8 @@ namespace ExampleNamespace;
 use Some\Classes\{ClassA, ClassB, ClassC as C};
 
 class Example implements Iface1, Iface2, Iface3 {
+#[A1("param")]
+private ClassA|ClassB|null $unionType;
 
     public function ifExample ($a, $b) {
         if (convert($a) > $b) {
@@ -52,6 +54,19 @@ switch ($i) {
         break;
 }
 }
+
+public function matchExample() {
+$result = match ($i) {
+    1,2,3 => "1, 2, or 3",
+    4,5, => "4 or 5",
+    default => $this->getDefaultValue(),
+};
+}
+
+public function getDefaultValue(): int {
+    return 10;
+}
+
 public function tryExample() {
     try {
     echo inverse(5) . "\n";
@@ -79,12 +94,29 @@ public function alignParamsExample($arg1,
         $arg2, $arg3,
         $arg4, $arg5) {
 }
+
+public function unionTypesExample(
+        Class1|Class2|null $object
+        ): int|float|null {
+    return null;
 }
+
+public function nullsafeOperatorExample(object $object){
+    $object?->nullsafe();
+}
+}
+
+$anonymousFunc = function ($arg) use ($param):int {
+    return 1;
+};
 
 // Wrapping: Method Call Arguments must be set
 (new Example())->alignParamsExample('one',
         'two', 'three',
         'four', 'five');
+
+function namedArguments($a, $b) {}
+namedArguments(a:1, b:2);
 
 $shortName=10;
 $veryLooongName=20;

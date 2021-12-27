@@ -15,9 +15,14 @@
 # specific language governing permissions and limitations
 # under the License.
 
-30A271A6787BA2A9E9DD3A453A480FFDCC3DEDC4 org.eclipse.lsp4j:org.eclipse.lsp4j:0.5.0
-23800C88EE887571B43A4F08041922107843E506 org.eclipse.lsp4j:org.eclipse.lsp4j.generator:0.5.0
-4FE4E91D47494B73DED7E420806661F7C36A1B05 org.eclipse.lsp4j:org.eclipse.lsp4j.jsonrpc:0.5.0
-56459301B64C92BBBB6E13988B91CDBE1FC6264E org.eclipse.xtend:org.eclipse.xtend.lib:2.14.0
-F2FCA7A70C8A29374E79487417CEFB5F51A84867 org.eclipse.xtend:org.eclipse.xtend.lib.macro:2.14.0
-C40FFE7E5E6244DD094AE95009AA45072C629254 org.eclipse.xtext:org.eclipse.xtext.xbase.lib:2.14.0
+419B5181A4B2D054BF8FF764FCEB67DF09D87E7D org.eclipse.lsp4j:org.eclipse.lsp4j:0.12.0
+36F085FE35A24CD69A8E3F78F046E91D5DB8F360 org.eclipse.lsp4j:org.eclipse.lsp4j.debug:0.12.0
+80607078CEB77F92C6BFEC3CDEC050D3222EFDFF org.eclipse.lsp4j:org.eclipse.lsp4j.generator:0.12.0
+8A80D1368F19A2F6E328E41B9BC68E53C628C68B org.eclipse.lsp4j:org.eclipse.lsp4j.jsonrpc:0.12.0
+FB4B99875D4879475FFFD864E3FE94E4E74BEEC1 org.eclipse.lsp4j:org.eclipse.lsp4j.jsonrpc.debug:0.12.0
+A57306D5D523A4750FA09B2708062EA4972AFEA2 org.eclipse.xtend:org.eclipse.xtend.lib:2.24.0
+D8F5566BA67748ED9E91856E077EE99F00E86653 org.eclipse.xtend:org.eclipse.xtend.lib.macro:2.24.0
+53FBD66084B08850258E61C838CC1FB94335E718 org.eclipse.xtext:org.eclipse.xtext.xbase.lib:2.24.0
+
+2852E6E05FBB95076FC091F6D1780F1F8FE35E0F commons-io:commons-io:2.5
+9D28A6B23650E8A7E9063C04588ACE6CF7012C17 org.apache.commons:commons-lang3:3.6

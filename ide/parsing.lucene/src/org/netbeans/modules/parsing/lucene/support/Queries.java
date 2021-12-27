@@ -490,12 +490,19 @@ public final class Queries {
         }
     }
 
-    private static class RegexpFilter extends AbstractTCFilter {
+    static class RegexpFilter extends AbstractTCFilter {
         private static final BitSet SPECIAL_CHARS = new BitSet(126);
         static {
-            final char[] specials = new char[] {'{','}','[',']','(',')','\\','.','*','?'}; //NOI18N
+            final char[] specials = new char[] {'{','}','[',']','(',')','\\','.','*','?', '+'}; //NOI18N
             for (char c : specials) {
                 SPECIAL_CHARS.set(c);
+            }
+        }
+        private static final BitSet QUANTIFIER_CHARS = new BitSet(126);
+        static {
+            final char[] specials = new char[] {'{','*','?'}; //NOI18N
+            for (char c : specials) {
+                QUANTIFIER_CHARS.set(c);
             }
         }
 
@@ -518,6 +525,12 @@ public final class Queries {
             boolean quoted = false;
             for (int i = 0; i < regexp.length(); i++) {
                 char c = regexp.charAt(i);
+                if ((!quoted) && i < (regexp.length() - 1)) {
+                    char lookAhead = regexp.charAt(i + 1);
+                    if (QUANTIFIER_CHARS.get(lookAhead)) {
+                        break;
+                    }
+                }
                 if (c == '\\' && (i+1) < regexp.length()) { //NOI18N
                     char cn = regexp.charAt(i+1);
                     if (!quoted && cn == 'Q') { //NOI18N

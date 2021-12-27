@@ -120,9 +120,8 @@ public final class ParametrizedTextParser {
         StringBuffer insertTextBuffer = new StringBuffer(parametrizedText.length());
         insertTextBuffer.append(parametrizedTextFragments.get(0));
         int fragIndex = 1;
-        for (Iterator it = allParameters.iterator(); it.hasNext();) {
-            CodeTemplateParameterImpl param = CodeTemplateParameterImpl.get(
-                    (CodeTemplateParameter)it.next());
+        for (Iterator<CodeTemplateParameter> it = allParameters.iterator(); it.hasNext();) {
+            CodeTemplateParameterImpl param = CodeTemplateParameterImpl.get(it.next());
             int startOffset = insertTextBuffer.length();
             insertTextBuffer.append(param.getValue());
             param.resetPositions(

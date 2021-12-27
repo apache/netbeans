@@ -79,13 +79,13 @@ public class CompletionJListOperator extends JListOperator {
         return getCompletionItems((JList) getSource());
     }
 
-    private static List getCompletionItems(JList compJList)
+    private static List<Object> getCompletionItems(JList compJList)
             throws Exception {
         //ListModel model = (ListModel) compJList.getModel();
         // dump items to List
         CompletionJListOperator oper = new CompletionJListOperator(compJList);
         int size = oper.getModelSize();
-        List<Object> data = new ArrayList<Object>(size);
+        List<Object> data = new ArrayList<>(size);
         for (int i=0; i < size; i++) {
             data.add(oper.getModelElementAt(i));
         }
@@ -143,7 +143,7 @@ public class CompletionJListOperator extends JListOperator {
                     Field viewField = compSPane.getClass().getDeclaredField("view");
                     viewField.setAccessible(true);
                     CompletionJList compJList = (CompletionJList) viewField.get(compSPane);
-                    List list = getCompletionItems(compJList);
+                    List<Object> list = getCompletionItems(compJList);
                     // check if it is no a 'Please Wait' item
                     if (list.size() > 0 && !(list.contains(PLEASE_WAIT))) {
                         LOG.fine(list.toString());

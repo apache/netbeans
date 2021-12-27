@@ -1,0 +1,5 @@
+Code completion result for source line:
+$country = $session?->|user?->getAddress()?->country;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     getUser()                       [PUBLIC]   Session
+VARIABLE   User user                       [PUBLIC]   Session

@@ -859,7 +859,8 @@ public final class ClassIndex {
                         case CLASS:
                             result.add(ClassIndexImpl.UsageType.SUPER_CLASS);
                             break;
-                        case ENUM:	//enum is final
+                        case ENUM:
+                            result.add(ClassIndexImpl.UsageType.SUPER_CLASS);
                             break;
                         case OTHER:
                         case PACKAGE:

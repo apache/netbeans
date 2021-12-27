@@ -106,6 +106,7 @@ public class CPCssEditorModule extends CssEditorModule {
     }
 
     @Override
+    @SuppressWarnings("fallthrough")
     public List<CompletionProposal> getCompletionProposals(final CompletionContext context) {
         final List<CompletionProposal> proposals = new ArrayList<>();
 

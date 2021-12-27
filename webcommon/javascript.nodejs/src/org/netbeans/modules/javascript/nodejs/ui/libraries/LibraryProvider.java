@@ -23,14 +23,12 @@ import java.awt.EventQueue;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.WeakHashMap;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -291,6 +289,7 @@ public class LibraryProvider {
 
         /**
          * Parses the output of npm search call.
+         * Assumes output format of <code>npm search --parseable --long</code>.
          * 
          * @param searchResult output of the npm search call.
          * @return libraries/packages returned by the search or {@code null}
@@ -299,76 +298,22 @@ public class LibraryProvider {
         @CheckForNull
         private Library[] parseSearchResult(String searchResult) {
             String[] lines = searchResult.split("\n"); // NOI18N
-            String header = lines[0];
-            int descriptionIndex = header.indexOf("DESCRIPTION"); // NOI18N
-            if (descriptionIndex == -1) {
-                // #268060
-                LOGGER.log(Level.INFO, "Unexpected search result of npm search: {0}", searchResult);
-                return null;
+            ArrayList<Library> libraries = new ArrayList<>(lines.length);
+            
+            for (String line : lines) {
+                String[] columns = line.split("\t");
+                if (columns.length < 5) continue;
+                
+                Library library = new Library(columns[0].trim());
+                library.setDescription(columns[1].trim());
+                Library.Version latestVersion = new Library.Version(library, columns[4].trim());
+                library.setLatestVersion(latestVersion);
+                if(columns.length > 5)library.setKeywords(columns[5].split(" ")); //this can be optional
+                
+                libraries.add(library);
             }
-            int authorIndex = header.indexOf("AUTHOR"); // NOI18N
-            int dateIndex = header.indexOf("DATE"); // NOI18N
-            int versionIndex = header.indexOf("VERSION"); // NOI18N
-            int keywordsIndex = header.indexOf("KEYWORDS"); // NOI18N
-            List<Library> libraryList = new LinkedList<>();
-            String name = ""; // NOI18N
-            String description = ""; // NOI18N
-            String versionName = ""; // NOI18N
-            for (int i=lines.length-1; i>=1; i--) {
-                String line = lines[i];
-                int length = line.length();
-
-                // Name
-                String namePart = line.substring(0,descriptionIndex).trim();
-                name = namePart.trim() + name;
-
-                // Description
-                String descriptionPart = length < authorIndex
-                        ? line.substring(descriptionIndex).trim()
-                        : line.substring(descriptionIndex, authorIndex).trim();
-                description = descriptionPart + "\n" + description; // NOI18N
-
-                // Version
-                String versionNamePart;
-                if (length < versionIndex) {
-                    versionNamePart = "";
-                } else if (length < keywordsIndex) {
-                    versionNamePart = line.substring(versionIndex);
-                } else {
-                    versionNamePart = line.substring(versionIndex, keywordsIndex);
-                }
-                versionNamePart = versionNamePart.trim();
-                // multiline versions end with '...' character
-                if (versionNamePart.endsWith("\u2026")) { // NOI18N
-                    versionNamePart = versionNamePart.substring(0, versionNamePart.length()-1);
-                }
-                versionName = versionNamePart + versionName;
-
-                // The first line (but the last one we are processing as we go
-                // from the back) describing this library
-                if (length >= dateIndex && !Character.isWhitespace(line.charAt(dateIndex))) {
-                    // Some libraries (like jquery.tap.js or elasticsearch-jquery)
-                    // are broken. They don't have any version in npm meta-data
-                    // and cannot be installed => skip them.
-                    if (!versionName.isEmpty()) {
-                        String keywords = length < keywordsIndex
-                                ? "" // NOI18N
-                                : line.substring(keywordsIndex).trim();
-                        Library library = new Library(name);
-                        library.setDescription(description.trim());
-                        if (!keywords.isEmpty()) {
-                            library.setKeywords(keywords.split(" ")); // NOI18N
-                        }
-                        Library.Version version = new Library.Version(library, versionName);
-                        library.setLatestVersion(version);
-                        libraryList.add(0, library);
-                    }
-                    name = ""; // NOI18N
-                    description = ""; // NOI18N
-                    versionName = ""; // NOI18N
-                }
-            }
-            return libraryList.toArray(new Library[libraryList.size()]);
+            
+            return libraries.toArray(new Library[libraries.size()]);
         }
 
     }

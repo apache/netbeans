@@ -24,6 +24,8 @@ package org.netbeans.modules.db.explorer.action;
 import java.awt.Dialog;
 import java.awt.Dimension;
 import java.awt.EventQueue;
+import java.awt.GraphicsEnvironment;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
@@ -34,6 +36,7 @@ import java.sql.SQLException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JComponent;
@@ -55,10 +58,23 @@ import org.netbeans.modules.db.explorer.node.ConnectionNode;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
+import org.openide.awt.ActionID;
+import org.openide.awt.ActionReference;
+import org.openide.awt.ActionRegistration;
+import org.openide.awt.ActionState;
+import org.openide.awt.StatusDisplayer;
 import org.openide.util.HelpCtx;
 import org.openide.util.Lookup;
+import org.openide.util.Mutex;
 import org.openide.util.NbBundle;
 
+@ActionRegistration(
+        displayName = "#Connect", 
+        lazy = false,
+        enabledOn = @ActionState(type = DatabaseConnection.class, useActionInstance = true)
+)
+@ActionID(category = "Database", id = "netbeans.db.explorer.action.Connect")
+@ActionReference(path = "Databases/Explorer/Connection/Actions", position = 100)
 public class ConnectAction extends BaseAction {
     private static final Logger LOGGER = Logger.getLogger(ConnectAction.class.getName());
 
@@ -94,7 +110,10 @@ public class ConnectAction extends BaseAction {
     public void performAction(Node[] activatedNodes) {
         
         ConnectionNode node = activatedNodes[0].getLookup().lookup(ConnectionNode.class);
-                
+        DatabaseConnection dbconn = node.getLookup().lookup(DatabaseConnection.class);
+        if (dbconn.isConnected()) {
+            return;
+        }
         // Don't show the dialog if all information is already available, 
         // just make the connection
         new ConnectionDialogDisplayer().showDialog(node, false);
@@ -108,7 +127,7 @@ public class ConnectAction extends BaseAction {
         // This flag is used to detect whether there was a failure to connect
         // when using the progress bar.  The flag is set in the property
         // change listener when the status changes to "failed".          
-        boolean failed = false;
+        volatile boolean failed = false;
 
         /** Shows notification if DatabaseConnection fails. */
         final ExceptionListener excListener = new ExceptionListener() {
@@ -147,12 +166,19 @@ public class ConnectAction extends BaseAction {
             showDialog(dbcon, showDialog);
         }
 
+        @NbBundle.Messages({
+            "# {0} - connection name",
+            "Progress_ConnectingDB=Connecting to {0}",
+            "CannotConnectHeadless=Required connection properties missing or incorrect, cannot connect."
+        })
         public void showDialog(final DatabaseConnection dbcon, boolean showDialog) {
             String user = dbcon.getUser();
             boolean remember = dbcon.rememberPassword();
 
             dbcon.addExceptionListener(excListener);
 
+            final boolean headless = GraphicsEnvironment.isHeadless();
+            
             // If showDialog is true, show the dialog even if we have all 
             // the connection info
             //
@@ -161,6 +187,12 @@ public class ConnectAction extends BaseAction {
             // (and is the default password for MySQL and PostgreSQL).
             if (((!supportsConnectWithoutUsername(dbcon))
                     && (user == null || !remember)) || showDialog) {
+                
+                if (headless) {
+                    DialogDisplayer.getDefault().notifyLater(
+                            new NotifyDescriptor.Message(Bundle.CannotConnectHeadless(), NotifyDescriptor.ERROR_MESSAGE));
+                    return;
+                }
                 final ConnectPanel basePanel = new ConnectPanel(this, dbcon);
 
                 final PropertyChangeListener connectionListener = new PropertyChangeListener() {
@@ -229,62 +261,84 @@ public class ConnectAction extends BaseAction {
                     DialogDescriptor descriptor = null;
                     ProgressHandle progress = null;
                     
-                    progress = ProgressHandleFactory.createHandle("handle");
-                    JComponent progressComponent = ProgressHandleFactory.createProgressComponent(progress);
-                    progressComponent.setPreferredSize(new Dimension(350, 20));
-                    ConnectProgressDialog panel = new ConnectProgressDialog(progressComponent, null);
-                    panel.getAccessibleContext().setAccessibleDescription(NbBundle.getMessage (ConnectAction.class, "ACS_ConnectingDialogTextA11yDesc"));
-                    descriptor = new DialogDescriptor(panel, NbBundle.getMessage (ConnectAction.class, "ConnectingDialogTitle"), true, new Object[] {},
-                            null, DialogDescriptor.DEFAULT_ALIGN, null, null);
-                    final Dialog dialog = DialogDisplayer.getDefault().createDialog(descriptor);
+                    progress = ProgressHandle.createHandle(Bundle.Progress_ConnectingDB(dbcon.getDisplayName()));
                     
+                    final CountDownLatch connected = new CountDownLatch(1);
+                    final Dialog dialog;
+                    
+                    if (headless) {
+                        dialog = null;
+                    } else {
+                        JComponent progressComponent = ProgressHandleFactory.createProgressComponent(progress);
+                        progressComponent.setPreferredSize(new Dimension(350, 20));
+                        ConnectProgressDialog panel = new ConnectProgressDialog(progressComponent, null);
+                        panel.getAccessibleContext().setAccessibleDescription(NbBundle.getMessage (ConnectAction.class, "ACS_ConnectingDialogTextA11yDesc"));
+                        descriptor = new DialogDescriptor(panel, NbBundle.getMessage (ConnectAction.class, "ConnectingDialogTitle"), true, new Object[] {},
+                                null, DialogDescriptor.DEFAULT_ALIGN, null, null);
+                        dialog = DialogDisplayer.getDefault().createDialog(descriptor);
+                    }
+
                     final PropertyChangeListener connectionListener = new PropertyChangeListener() {
                         @Override
                         public void propertyChange(final PropertyChangeEvent event) {
-                            EventQueue.invokeLater(new Runnable() {
-                                @Override
-                                public void run() {
-                                    handlePropertyChange(event);
-                                }
-                            });
+                            if (headless) {
+                                handlePropertyChange(event);
+                            } else {
+                                Mutex.EVENT.readAccess(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        handlePropertyChange(event);
+                                    }
+                                });
+                            }
                         }
 
                         private void handlePropertyChange(PropertyChangeEvent event) {
                             if ("state".equals(event.getPropertyName())) {
                                 if (event.getNewValue() == State.connected) { //NOI18N
+                                    connected.countDown();
                                     if (dialog != null) {
                                         dialog.setVisible(false);
                                     }
                                 } else if (event.getNewValue() == State.failed) { // NOI18N
-                                if (dialog != null) {
-                                    dialog.setVisible(false);
+                                    // We want to bring up the Connect dialog if the
+                                    // attempt to connect using the progress bar fails.
+                                    // But we can't do it here because we can't control
+                                    // what processing the DatabaseConnection does 
+                                    // after posting this failure notification.  So
+                                    // we set a flag and wait for the connect process
+                                    // to fully complete, and *then* raise the Connect
+                                    // dialog.
+                                    failed = true;
+                                    connected.countDown();
+                                    if (dialog != null) {
+                                        dialog.setVisible(false);
+                                    }
                                 }
-                                
-                                // We want to bring up the Connect dialog if the
-                                // attempt to connect using the progress bar fails.
-                                // But we can't do it here because we can't control
-                                // what processing the DatabaseConnection does 
-                                // after posting this failure notification.  So
-                                // we set a flag and wait for the connect process
-                                // to fully complete, and *then* raise the Connect
-                                // dialog.
-                                failed = true;
                             }
                         }
-                        }
                     };
-                    
+
                     failed = false;
-                    
+
                     dbcon.addPropertyChangeListener(connectionListener);
                     dbcon.connectAsync();
-                    
+
                     progress.start();
                     progress.switchToIndeterminate();
-                    dialog.setVisible(true);
-                    progress.finish();                    
-                    dialog.dispose();
                     
+                    if (dialog == null) {
+                        connected.await();
+                    } else {
+                        dialog.setVisible(true);
+                    }
+                    progress.finish();                    
+                    
+                    if (dialog != null) {
+                        dialog.dispose();
+                    }
+                    
+
                     if ( failed ) {
                         // If the connection fails with a progress bar only, then 
                         // display the full Connect dialog so the user can give it

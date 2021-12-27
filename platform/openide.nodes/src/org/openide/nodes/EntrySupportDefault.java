@@ -546,9 +546,9 @@ class EntrySupportDefault extends EntrySupport {
                 children.parent.fireSubNodesChange(false, arr, current);
             }
             // fire change of parent
-            Iterator it = nodes.iterator();
+            Iterator<Node> it = nodes.iterator();
             while (it.hasNext()) {
-                Node n = (Node) it.next();
+                Node n = it.next();
                 n.deassignFrom(children);
                 n.fireParentNodeChange(children.parent, null);
             }

@@ -274,10 +274,10 @@ final class CatalogNode extends BeanNode implements Refreshable, PropertyChangeL
 
             Set<String> previous = new HashSet<>(keys);
             keys.clear();
-            Iterator it = peer.getPublicIDs();
+            Iterator<String> it = peer.getPublicIDs();
             if (it != null) {
                 while (it.hasNext()) {
-                    String publicID = (String) it.next();
+                    String publicID = it.next();
                     keys.add(publicID);
                     if (previous.contains(publicID)) {
                         refreshKey(publicID);  // recreate node, the systemId may have changed

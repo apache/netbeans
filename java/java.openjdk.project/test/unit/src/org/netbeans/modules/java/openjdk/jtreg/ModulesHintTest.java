@@ -65,14 +65,14 @@ public class ModulesHintTest extends NbTestCase {
 
     public void testSimpleModules() throws Exception {
         doTest("/**@test\n" +
-               " * |@modules| java.compiler/com.sun.tools.javac.file\n" +
-               " *          java.compiler/com.sun.tools.javac.util\n" +
+               " * |@modules| jdk.compiler/com.sun.tools.javac.file\n" +
+               " *          jdk.compiler/com.sun.tools.javac.util\n" +
                " */\n" +
                "public class Test {\n" +
                "    com.sun.tools.javac.main.Main m;\n" +
                "}\n",
                "/**@test\n" +
-               " * @modules java.compiler/com.sun.tools.javac.main\n" +
+               " * @modules jdk.compiler/com.sun.tools.javac.main\n" +
                " */\n" +
                "public class Test {\n" +
                "    com.sun.tools.javac.main.Main m;\n" +
@@ -81,16 +81,16 @@ public class ModulesHintTest extends NbTestCase {
 
     public void testMultiplePackages() throws Exception {
         doTest("/**@test\n" +
-               " * |@modules| java.compiler/com.sun.tools.javac.file\n" +
-               " *          java.compiler/com.sun.tools.javac.util\n" +
+               " * |@modules| jdk.compiler/com.sun.tools.javac.file\n" +
+               " *          jdk.compiler/com.sun.tools.javac.util\n" +
                " */\n" +
                "public class Test {\n" +
                "    com.sun.tools.javac.main.Main m;\n" +
                "    com.sun.tools.javac.util.List l;\n" +
                "}\n",
                "/**@test\n" +
-               " * @modules java.compiler/com.sun.tools.javac.main\n" +
-               " *          java.compiler/com.sun.tools.javac.util\n" +
+               " * @modules jdk.compiler/com.sun.tools.javac.main\n" +
+               " *          jdk.compiler/com.sun.tools.javac.util\n" +
                " */\n" +
                "public class Test {\n" +
                "    com.sun.tools.javac.main.Main m;\n" +
@@ -101,15 +101,15 @@ public class ModulesHintTest extends NbTestCase {
     public void testLibraries() throws Exception {
         doTest("/**@test\n" +
                " * @library /lib\n" +
-               " * |@modules| java.compiler/com.sun.tools.javac.file\n" +
-               " *          java.compiler/com.sun.tools.javac.util\n" +
+               " * |@modules| jdk.compiler/com.sun.tools.javac.file\n" +
+               " *          jdk.compiler/com.sun.tools.javac.util\n" +
                " * @build ToolBox Test\n" +
                " */\n" +
                "public class Test {\n" +
                "}\n",
                "/**@test\n" +
                " * @library /lib\n" +
-               " * @modules java.compiler/com.sun.tools.javac.main\n" +
+               " * @modules jdk.compiler/com.sun.tools.javac.main\n" +
                " * @build ToolBox Test\n" +
                " */\n" +
                "public class Test {\n" +
@@ -123,7 +123,7 @@ public class ModulesHintTest extends NbTestCase {
                "    com.sun.tools.javac.main.Main m;\n" +
                "}\n",
                "/**@test\n" +
-               " * @modules java.compiler/com.sun.tools.javac.main\n" +
+               " * @modules jdk.compiler/com.sun.tools.javac.main\n" +
                " */\n" +
                "public class Test {\n" +
                "    com.sun.tools.javac.main.Main m;\n" +
@@ -141,7 +141,7 @@ public class ModulesHintTest extends NbTestCase {
                "    }\n" +
                "}\n",
                "/**@test\n" +
-               " * @modules java.compiler/com.sun.tools.javac.main\n" +
+               " * @modules jdk.compiler/com.sun.tools.javac.main\n" +
                " */\n" +
                "public class Test {\n" +
                "    com.sun.tools.javac.main.Main m;\n" +
@@ -155,15 +155,15 @@ public class ModulesHintTest extends NbTestCase {
     public void testImplicit() throws Exception {
         doTest("/**@test\n" +
                " * @library /lib\n" +
-               " * |@modules| java.compiler/com.sun.tools.javac.file\n" +
-               " *          java.compiler/com.sun.tools.javac.util\n" +
+               " * |@modules| jdk.compiler/com.sun.tools.javac.file\n" +
+               " *          jdk.compiler/com.sun.tools.javac.util\n" +
                " */\n" +
                "public class Test {\n" +
                "    ToolBox t;\n" +
                "}\n",
                "/**@test\n" +
                " * @library /lib\n" +
-               " * @modules java.compiler/com.sun.tools.javac.main\n" +
+               " * @modules jdk.compiler/com.sun.tools.javac.main\n" +
                " */\n" +
                "public class Test {\n" +
                "    ToolBox t;\n" +
@@ -173,7 +173,7 @@ public class ModulesHintTest extends NbTestCase {
     public void testInMoreThanOne() throws Exception {
         doTest("/**@test\n" +
                " * @library /lib\n" +
-               " * |@modules| java.compiler/com.sun.tools.javac.file\n" +
+               " * |@modules| jdk.compiler/com.sun.tools.javac.file\n" +
                " * @build ToolBox Test\n" +
                " */\n" +
                "public class Test {\n" +
@@ -181,8 +181,8 @@ public class ModulesHintTest extends NbTestCase {
                "}\n",
                "/**@test\n" +
                " * @library /lib\n" +
-               " * @modules java.compiler/com.sun.tools.javac.main\n" +
-               " *          java.compiler/com.sun.tools.javac.util\n" +
+               " * @modules jdk.compiler/com.sun.tools.javac.main\n" +
+               " *          jdk.compiler/com.sun.tools.javac.util\n" +
                " * @build ToolBox Test\n" +
                " */\n" +
                "public class Test {\n" +
@@ -197,7 +197,7 @@ public class ModulesHintTest extends NbTestCase {
                "    com.sun.tools.javac.Main m;\n" +
                "}\n",
                "/**@test\n" +
-               " * @modules java.compiler\n" +
+               " * @modules jdk.compiler\n" +
                " */\n" +
                "public class Test {\n" +
                "    com.sun.tools.javac.Main m;\n" +
@@ -242,11 +242,76 @@ public class ModulesHintTest extends NbTestCase {
                "    com.sun.tools.javac.Main m;\n" +
                "}\n",
                "/**@test\n" +
-               " * @modules java.compiler\n" +
+               " * @modules jdk.compiler\n" +
                " */\n" +
                "public class Test {\n" +
                "    void run(Runnable r) {;\n" +
                "        run(this::undef);\n" +
+               "    }\n" +
+               "    com.sun.tools.javac.Main m;\n" +
+               "}\n");
+    }
+
+    public void testHiddenUse() throws Exception {
+        doTest("/**|@test|\n" +
+               " */\n" +
+               "public class Test {\n" +
+               "    void run(Runnable r) {;\n" +
+               "        m.get().toString();\n" +
+               "    }\n" +
+               "    com.sun.tools.javac.main.Main m;\n" +
+               "}\n",
+               "/**@test\n" +
+               " * @modules jdk.compiler/com.sun.tools.javac.main\n" +
+               " *          jdk.compiler/com.sun.tools.javac.test\n" +
+               " */\n" +
+               "public class Test {\n" +
+               "    void run(Runnable r) {;\n" +
+               "        m.get().toString();\n" +
+               "    }\n" +
+               "    com.sun.tools.javac.main.Main m;\n" +
+               "}\n");
+    }
+
+    public void testTransferOpen() throws Exception {
+        doTest("/**@test\n" +
+               " * |@modules| jdk.compiler/com.sun.tools.javac.main:open\n" +
+               " *          jdk.compiler/com.sun.tools.javac.test:+open\n" +
+               " */\n" +
+               "public class Test {\n" +
+               "    void run(Runnable r) {;\n" +
+               "        m.get().toString();\n" +
+               "    }\n" +
+               "    com.sun.tools.javac.main.Main m;\n" +
+               "}\n",
+               "/**@test\n" +
+               " * @modules jdk.compiler/com.sun.tools.javac.main:+open\n" +
+               " *          jdk.compiler/com.sun.tools.javac.test:+open\n" +
+               " */\n" +
+               "public class Test {\n" +
+               "    void run(Runnable r) {;\n" +
+               "        m.get().toString();\n" +
+               "    }\n" +
+               "    com.sun.tools.javac.main.Main m;\n" +
+               "}\n");
+    }
+
+    public void testIgnoreUnnormalized() throws Exception {
+        doTest("/**@test\n" +
+               " * @modules java.compiler\n" +
+               " *          jdk.compiler\n" +
+               " */\n" +
+               "public class Test {\n" +
+               "    void run(Runnable r) {;\n" +
+               "    }\n" +
+               "    com.sun.tools.javac.Main m;\n" +
+               "}\n",
+               "/**@test\n" +
+               " * @modules java.compiler\n" +
+               " *          jdk.compiler\n" +
+               " */\n" +
+               "public class Test {\n" +
+               "    void run(Runnable r) {;\n" +
                "    }\n" +
                "    com.sun.tools.javac.Main m;\n" +
                "}\n");
@@ -258,29 +323,42 @@ public class ModulesHintTest extends NbTestCase {
         createData("jdk/src/java.instrument/share/classes/module-info.java", "module java.instrument { exports java.lang.instrument; }");
         createData("jdk/src/java.instrument/share/classes/java/lang/instrument/Instrumentation.java", "package java.lang.instrument; public class Instrumentation {}");
         createData("langtools/src/java.compiler/share/classes/module-info.java", "module java.compiler { }");
-        createData("langtools/src/jdk.compiler/share/classes/module-info.java", "module jdk.compiler { exports com.sun.tools.javac; exports com.sun.tools.javac.main to jdk.compiler;}");
-        createData("langtools/src/jdk.compiler/share/classes/com/sun/tools/javac/Main.java", "package com.sun.tools.javac; public class Main {}");
-        createData("langtools/src/jdk.compiler/share/classes/com/sun/tools/javac/main/Main.java", "package com.sun.tools.javac.main; public class Main {}");
+        createData("langtools/src/jdk.compiler/share/classes/module-info.java", "module jdk.compiler { requires java.compiler; exports com.sun.tools.javac; exports com.sun.tools.javac.main to jdk.jshell;}");
+        createData("langtools/src/jdk.compiler/share/classes/com/sun/tools/javac/Main.java", "package com.sun.tools.javac; public class Main { }");
+        createData("langtools/src/jdk.compiler/share/classes/com/sun/tools/javac/main/Main.java", "package com.sun.tools.javac.main; public class Main { public com.sun.tools.javac.test.Test get() { return null; } }");
+        createData("langtools/src/jdk.compiler/share/classes/com/sun/tools/javac/test/Test.java", "package com.sun.tools.javac.test; public class Test { public int get() { return 0; } }");
         createData("langtools/src/jdk.compiler/share/classes/com/sun/tools/javac/util/List.java", "package com.sun.tools.javac.util; public class List {}");
-        createData("langtools/src/jdk.jshell/share/classes/module-info.java", "module jdk.jshell { requires java.compiler; exports jdk.jshell; }");
+        createData("langtools/src/jdk.jshell/share/classes/module-info.java", "module jdk.jshell { requires java.compiler; requires jdk.compiler; exports jdk.jshell; }");
         createData("langtools/src/jdk.jshell/share/classes/jdk/jshell/JShell.java", "package jdk.jshell; public class JShell {}");
         createData("langtools/test/lib/ToolBox.java", "public class ToolBox { com.sun.tools.javac.main.Main m; }");
         createData("langtools/test/TEST.ROOT", "");
 
         String[] originalPart = originalTest.split("\\|");
 
-        assertEquals(3, originalPart.length);
+        String realCode;
+        final int warningStart;
+        final int warningEnd;
 
-        final int warningStart = originalPart[0].length();
-        final int warningEnd   = originalPart[0].length() + originalPart[1].length();
+        if (originalPart.length == 3) {
+            realCode = originalPart[0] + originalPart[1] + originalPart[2];
+            warningStart = originalPart[0].length();
+            warningEnd   = originalPart[0].length() + originalPart[1].length();
+        } else {
+            assertEquals(1, originalPart.length);
+            realCode = originalTest;
+            warningStart = -1;
+            warningEnd = -1;
+        }
 
-        FileObject testTest = createData("langtools/test/feature/Test.java", originalPart[0] + originalPart[1] + originalPart[2]);
+        FileObject testTest = createData("langtools/test/feature/Test.java", realCode);
 
         Project instrument = FileOwnerQuery.getOwner(FileUtil.toFileObject(new File(getWorkDir(), "jdk/src/java.instrument")));
         Project javaCompiler = FileOwnerQuery.getOwner(FileUtil.toFileObject(new File(getWorkDir(), "langtools/src/java.compiler")));
+        Project jdkCompiler = FileOwnerQuery.getOwner(FileUtil.toFileObject(new File(getWorkDir(), "langtools/src/jdk.compiler")));
         Project jdkJShell = FileOwnerQuery.getOwner(FileUtil.toFileObject(new File(getWorkDir(), "langtools/src/jdk.jshell")));
 
-        OpenProjects.getDefault().open(new Project[] {instrument, javaCompiler, jdkJShell}, true);
+        OpenProjects.getDefault().open(new Project[] {instrument, javaCompiler, jdkCompiler, jdkJShell}, true);
+        OpenProjects.getDefault().openProjects().get();
 
         org.netbeans.modules.parsing.impl.indexing.RepositoryUpdater.getDefault().start(true);
 
@@ -298,8 +376,11 @@ public class ModulesHintTest extends NbTestCase {
             public void run(CompilationController cc) throws Exception {
                 cc.toPhase(JavaSource.Phase.UP_TO_DATE);
                 Pair<Fix, int[]> change = ModulesHint.computeChange(cc);
-                if (change == null)
+                if (change == null) {
+                    assertEquals(-1, warningStart);
+                    assertEquals(-1, warningEnd);
                     return ;
+                }
                 fix[0] = change.first();
                 assertEquals(warningStart, change.second()[0]);
                 assertEquals(warningEnd, change.second()[1]);
@@ -363,12 +444,4 @@ public class ModulesHintTest extends NbTestCase {
 
     }
 
-    public static Test suite() {
-        //XXX: the other modules don't pass currently, need to investigate!
-        TestSuite ts = new TestSuite();
-        
-        ts.addTest(new ModulesHintTest("testNoModulesNeeded"));
-        
-        return ts;
-    }
 }

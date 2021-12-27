@@ -40,13 +40,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.StringTokenizer;
+import org.netbeans.modules.java.source.BootClassPathUtil;
 import org.openide.util.Utilities;
 
 /**
  * @author Tomas Zezula
  */
 public class UiUtilsTest extends NbTestCase {
-    private static final String JTABLE_DATA = "jdk/JTable.java";    //NOI18N
+    private static final String JTABLE_DATA = "jdk/Table.java";    //NOI18N
 
     public UiUtilsTest(String testName) {
         super(testName);
@@ -80,14 +81,14 @@ public class UiUtilsTest extends NbTestCase {
         ClasspathInfo cpInfo = js.getClasspathInfo();
         CompilationInfo ci = SourceUtilsTestUtil.getCompilationInfo(js, Phase.RESOLVED);
         Elements elements = ci.getElements();
-        Element ce = elements.getTypeElement("javax.swing.JTable");
+        Element ce = elements.getTypeElement("test.Table");
         assertNotNull(ce);
         Object[] result = UiUtils.getOpenInfo(cpInfo, ce);
         assertNotNull(result);
         assertTrue(result[0] instanceof FileObject);
         assertTrue(result[1] instanceof Integer);
         assertEquals(srcFile, result[0]);
-        assertEquals(7996, ((Integer) result[1]).intValue());
+        assertEquals(824, ((Integer) result[1]).intValue());
     }
 
     private static FileObject getSrcRoot(FileObject wrkRoot) throws IOException {
@@ -103,8 +104,8 @@ public class UiUtilsTest extends NbTestCase {
         assertNotNull(data);
         FileObject srcRoot = getSrcRoot(wrkRoot);
         assertNotNull(srcRoot);
-        FileObject pkg = FileUtil.createFolder(srcRoot, "javax/swing");        //NOI18N
-        FileObject src = pkg.createData("JTable.java");                //NOI18N
+        FileObject pkg = FileUtil.createFolder(srcRoot, "test");        //NOI18N
+        FileObject src = pkg.createData("Table.java");                //NOI18N
         FileLock lock = src.lock();
         try {
             BufferedReader in = new BufferedReader(new InputStreamReader(data.getInputStream()));
@@ -127,25 +128,6 @@ public class UiUtilsTest extends NbTestCase {
         return src;
     }
 
-    private static ClassPath createBootClassPath() throws IOException {
-        String bcp = System.getProperty("sun.boot.class.path");    //NOI18N
-        assertNotNull(bcp);
-        StringTokenizer tk = new StringTokenizer(bcp, File.pathSeparator);
-        List<URL> roots = new ArrayList<URL>();
-        while (tk.hasMoreTokens()) {
-            String token = tk.nextToken();
-            File f = new File(token);
-            URL url = Utilities.toURI(f).toURL();
-            if (FileUtil.isArchiveFile(url)) {
-                url = FileUtil.getArchiveRoot(url);
-            } else if (!f.exists()) {
-                url = new URL(url.toExternalForm() + '/');
-            }
-            roots.add(url);
-        }
-        return ClassPathSupport.createClassPath(roots.toArray(new URL[roots.size()]));
-    }
-
     private static ClassPath createSourcePath(FileObject wrkRoot) throws IOException {
         return ClassPathSupport.createClassPath(new FileObject[]{getSrcRoot(wrkRoot)});
     }
@@ -157,7 +139,7 @@ public class UiUtilsTest extends NbTestCase {
                 if (type == ClassPath.SOURCE) {
                     return createSourcePath(FileUtil.toFileObject(getWorkDir()));
                 } else if (type == ClassPath.BOOT) {
-                    return createBootClassPath();
+                    return BootClassPathUtil.getBootClassPath();
                 }
             } catch (IOException ioe) {
                 //Skeep it

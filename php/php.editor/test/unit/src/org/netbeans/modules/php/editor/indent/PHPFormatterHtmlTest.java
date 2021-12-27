@@ -134,7 +134,17 @@ public class PHPFormatterHtmlTest extends PHPFormatterTestBase {
     }
 
     public void testIssue176223() throws Exception {
-        HashMap<String, Object> options = new HashMap<String, Object>(FmtOptions.getDefaults());
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_METHOD_CALL_ARGS_AFTER_LEFT_PAREN, false);
+        options.put(FmtOptions.WRAP_METHOD_CALL_ARGS_RIGHT_PAREN, false);
         reformatFileContents("testfiles/formatting/html/issue176223.php", options);
+    }
+
+    // NETBEANS-3391
+    public void testIssue176223_psr12() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_METHOD_CALL_ARGS_AFTER_LEFT_PAREN, true);
+        options.put(FmtOptions.WRAP_METHOD_CALL_ARGS_RIGHT_PAREN, true);
+        reformatFileContents("testfiles/formatting/html/issue176223_psr12.php", options);
     }
 }

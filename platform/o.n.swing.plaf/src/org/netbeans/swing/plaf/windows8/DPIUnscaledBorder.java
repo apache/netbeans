@@ -23,6 +23,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Insets;
 import java.awt.geom.AffineTransform;
+import javax.swing.JTextField;
 import javax.swing.border.Border;
 import javax.swing.plaf.UIResource;
 
@@ -39,12 +40,22 @@ import javax.swing.plaf.UIResource;
  */
 final class DPIUnscaledBorder implements Border, UIResource {
     private final Border delegate;
+    private final boolean tabContainer;
 
-    public DPIUnscaledBorder(Border delegate) {
+    /**
+     * @param tabContainer true if this border is for the lower half of a tab component, where
+     *        left/right borders need to connect with the previous component
+     */
+    public DPIUnscaledBorder(Border delegate, boolean tabContainer) {
         if (delegate == null) {
             throw new NullPointerException();
         }
         this.delegate = delegate;
+        this.tabContainer = tabContainer;
+    }
+
+    public DPIUnscaledBorder(Border delegate) {
+        this(delegate, false);
     }
 
     @Override
@@ -67,17 +78,43 @@ final class DPIUnscaledBorder implements Border, UIResource {
         {
             // HiDPI scaling is active.
             double scale = tx.getScaleX();
-            /* To be completely safe from overpainting the previous adjacent component, we would
-            probably need to round up here. But for borders to work properly on JTextField, we
-            must round down. And it seems to work fine in the
-            EDITOR_TAB_CONTENT_BORDER/VIEW_TAB_CONTENT_BORDER cases as well. */
-            int deviceX = (int) tx.getTranslateX();
-            int deviceY = (int) tx.getTranslateY();
+            /* Rounding of device pixel locations is tricky. For the start position, I have not
+            found a single policy which works in all situations. Overshooting or undershooting may
+            cause borders to disappear, due to overpainting by adjacent components or the current
+            component's contents. See comments in each case below. But when rounding down, always
+            use Math.floor rather than casting to int, as the latter rounds in the opposite
+            direction when the value is negative. */
+            final int deviceX;
+            final int deviceY;
+            if (tabContainer) {
+                /* For the X position of the tab content area's left border, we must use Math.round,
+                and not Math.floor or Math.ceil, as either of the latter may cause the border to
+                disappear in certain positions on 125% scaling. Math.round seems to avoid this on
+                all scalings. */
+                deviceX = (int) Math.round(tx.getTranslateX());
+                /* Round down here to make sure the left and right borders connect with the border
+                in the TabDisplayerUI above. */
+                deviceY = (int) Math.floor(tx.getTranslateY());
+            } else if (scale == 1.5 && c instanceof JTextField) {
+                /* Rounding up will sometimes make JTextField's white background extend one device
+                pixel outside the top/left borders. On 150% HiDPI scaling, some manual testing
+                indicates that it is safe to round the starting position down to prevent this
+                problem. Other scalings, such as 125%, may see overprinting problems if we do this,
+                however, so stick to the default on other scalings. */
+                deviceX = (int) Math.floor(tx.getTranslateX());
+                deviceY = (int) Math.floor(tx.getTranslateY());
+            } else {
+                /* Rounding to the nearest integer yielded the best results in most cases here.
+                Rounding up would avoid overpainting into the previous component, but could cause
+                overpainting by child components, or the component's own content. */
+                deviceX = (int) Math.round(tx.getTranslateX());
+                deviceY = (int) Math.round(tx.getTranslateY());
+            }
             /* Rounding down here should guarantee that we do not paint in an area that will be
             painted over by the next adjacent component. Rounding up, or to the nearest integer,
             is confirmed to cause problems. */
-            int deviceXend = (int) (tx.getTranslateX() + width * scale);
-            int deviceYend = (int) (tx.getTranslateY() + height * scale);
+            final int deviceXend = (int) Math.floor(tx.getTranslateX() + width * scale);
+            final int deviceYend = (int) Math.floor(tx.getTranslateY() + height * scale);
             deviceWidth = deviceXend - deviceX;
             deviceHeight = deviceYend - deviceY;
             /* Deactivate the HiDPI scaling transform so we can do paint operations in the device

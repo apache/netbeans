@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.lsp.client.options;
 
+import org.netbeans.modules.lsp.client.spi.ServerRestarter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;

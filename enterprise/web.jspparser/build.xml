@@ -57,7 +57,7 @@
 
     <target name="ext-compile">
         <mkdir dir="build/extclasses"/>
-        <javac srcdir="extsrc" destdir="build/extclasses" deprecation="${build.compiler.deprecation}" debug="${build.compiler.debug}" source="${javac.source}">
+        <javac srcdir="extsrc" destdir="build/extclasses" deprecation="${build.compiler.deprecation}" debug="${build.compiler.debug}" source="${javac.source}" release="8" target="1.8">
             <classpath>
                 <path path="${module.classpath}"/>
                 <path location="${cluster}/${module.jar}"/>

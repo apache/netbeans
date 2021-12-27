@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.7.0
+#Version 1.15.0
 
 CLSS public abstract interface java.io.Serializable
 
@@ -23,7 +23,6 @@ meth public final java.lang.String name()
 meth public java.lang.String toString()
 meth public static <%0 extends java.lang.Enum<{%%0}>> {%%0} valueOf(java.lang.Class<{%%0}>,java.lang.String)
 supr java.lang.Object
-hfds name,ordinal
 
 CLSS public java.lang.Exception
 cons protected init(java.lang.String,java.lang.Throwable,boolean,boolean)
@@ -32,7 +31,6 @@ cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.Throwable)
 cons public init(java.lang.Throwable)
 supr java.lang.Throwable
-hfds serialVersionUID
 
 CLSS public java.lang.IllegalStateException
 cons public init()
@@ -40,7 +38,6 @@ cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.Throwable)
 cons public init(java.lang.Throwable)
 supr java.lang.RuntimeException
-hfds serialVersionUID
 
 CLSS public abstract interface java.lang.Iterable<%0 extends java.lang.Object>
 meth public abstract java.util.Iterator<{java.lang.Iterable%0}> iterator()
@@ -68,7 +65,6 @@ cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.Throwable)
 cons public init(java.lang.Throwable)
 supr java.lang.Exception
-hfds serialVersionUID
 
 CLSS public java.lang.Throwable
 cons protected init(java.lang.String,java.lang.Throwable,boolean,boolean)
@@ -91,8 +87,6 @@ meth public void printStackTrace(java.io.PrintStream)
 meth public void printStackTrace(java.io.PrintWriter)
 meth public void setStackTrace(java.lang.StackTraceElement[])
 supr java.lang.Object
-hfds CAUSE_CAPTION,EMPTY_THROWABLE_ARRAY,NULL_CAUSE_MESSAGE,SELF_SUPPRESSION_MESSAGE,SUPPRESSED_CAPTION,SUPPRESSED_SENTINEL,UNASSIGNED_STACK,backtrace,cause,detailMessage,serialVersionUID,stackTrace,suppressedExceptions
-hcls PrintStreamOrWriter,SentinelHolder,WrappedPrintStream,WrappedPrintWriter
 
 CLSS public abstract interface java.lang.annotation.Annotation
 meth public abstract boolean equals(java.lang.Object)
@@ -138,7 +132,6 @@ meth public java.lang.Object[] toArray()
 meth public java.lang.String toString()
 meth public void clear()
 supr java.lang.Object
-hfds MAX_ARRAY_SIZE
 
 CLSS public abstract java.util.AbstractMap<%0 extends java.lang.Object, %1 extends java.lang.Object>
 cons protected init()
@@ -162,7 +155,6 @@ meth public {java.util.AbstractMap%1} get(java.lang.Object)
 meth public {java.util.AbstractMap%1} put({java.util.AbstractMap%0},{java.util.AbstractMap%1})
 meth public {java.util.AbstractMap%1} remove(java.lang.Object)
 supr java.lang.Object
-hfds keySet,values
 
 CLSS public abstract java.util.AbstractSet<%0 extends java.lang.Object>
 cons protected init()
@@ -227,8 +219,6 @@ meth public {java.util.HashMap%1} putIfAbsent({java.util.HashMap%0},{java.util.H
 meth public {java.util.HashMap%1} remove(java.lang.Object)
 meth public {java.util.HashMap%1} replace({java.util.HashMap%0},{java.util.HashMap%1})
 supr java.util.AbstractMap<{java.util.HashMap%0},{java.util.HashMap%1}>
-hfds DEFAULT_INITIAL_CAPACITY,DEFAULT_LOAD_FACTOR,MAXIMUM_CAPACITY,MIN_TREEIFY_CAPACITY,TREEIFY_THRESHOLD,UNTREEIFY_THRESHOLD,entrySet,loadFactor,modCount,serialVersionUID,size,table,threshold
-hcls EntryIterator,EntrySet,EntrySpliterator,HashIterator,HashMapSpliterator,KeyIterator,KeySet,KeySpliterator,Node,TreeNode,ValueIterator,ValueSpliterator,Values
 
 CLSS public java.util.HashSet<%0 extends java.lang.Object>
 cons public init()
@@ -248,7 +238,6 @@ meth public java.util.Iterator<{java.util.HashSet%0}> iterator()
 meth public java.util.Spliterator<{java.util.HashSet%0}> spliterator()
 meth public void clear()
 supr java.util.AbstractSet<{java.util.HashSet%0}>
-hfds PRESENT,map,serialVersionUID
 
 CLSS public abstract interface java.util.Iterator<%0 extends java.lang.Object>
 meth public abstract boolean hasNext()
@@ -274,8 +263,6 @@ meth public void replaceAll(java.util.function.BiFunction<? super {java.util.Lin
 meth public {java.util.LinkedHashMap%1} get(java.lang.Object)
 meth public {java.util.LinkedHashMap%1} getOrDefault(java.lang.Object,{java.util.LinkedHashMap%1})
 supr java.util.HashMap<{java.util.LinkedHashMap%0},{java.util.LinkedHashMap%1}>
-hfds accessOrder,head,serialVersionUID,tail
-hcls Entry,LinkedEntryIterator,LinkedEntrySet,LinkedHashIterator,LinkedKeyIterator,LinkedKeySet,LinkedValueIterator,LinkedValues
 
 CLSS public java.util.LinkedHashSet<%0 extends java.lang.Object>
 cons public init()
@@ -287,7 +274,6 @@ intf java.lang.Cloneable
 intf java.util.Set<{java.util.LinkedHashSet%0}>
 meth public java.util.Spliterator<{java.util.LinkedHashSet%0}> spliterator()
 supr java.util.HashSet<{java.util.LinkedHashSet%0}>
-hfds serialVersionUID
 
 CLSS public abstract interface java.util.Map<%0 extends java.lang.Object, %1 extends java.lang.Object>
 innr public abstract interface static Entry
@@ -340,7 +326,6 @@ CLSS public java.util.concurrent.CancellationException
 cons public init()
 cons public init(java.lang.String)
 supr java.lang.IllegalStateException
-hfds serialVersionUID
 
 CLSS public abstract interface org.antlr.v4.runtime.ANTLRErrorListener
 meth public abstract void reportAmbiguity(org.antlr.v4.runtime.Parser,org.antlr.v4.runtime.dfa.DFA,int,int,boolean,java.util.BitSet,org.antlr.v4.runtime.atn.ATNConfigSet)
@@ -454,6 +439,7 @@ meth public void consume()
 meth public void fill()
 meth public void release(int)
 meth public void reset()
+ anno 0 java.lang.Deprecated()
 meth public void seek(int)
 meth public void setTokenSource(org.antlr.v4.runtime.TokenSource)
 supr java.lang.Object
@@ -461,6 +447,74 @@ supr java.lang.Object
 CLSS public abstract interface org.antlr.v4.runtime.CharStream
 intf org.antlr.v4.runtime.IntStream
 meth public abstract java.lang.String getText(org.antlr.v4.runtime.misc.Interval)
+
+CLSS public final org.antlr.v4.runtime.CharStreams
+meth public static org.antlr.v4.runtime.CharStream fromChannel(java.nio.channels.ReadableByteChannel) throws java.io.IOException
+meth public static org.antlr.v4.runtime.CharStream fromChannel(java.nio.channels.ReadableByteChannel,java.nio.charset.Charset) throws java.io.IOException
+meth public static org.antlr.v4.runtime.CharStream fromFileName(java.lang.String) throws java.io.IOException
+meth public static org.antlr.v4.runtime.CharStream fromFileName(java.lang.String,java.nio.charset.Charset) throws java.io.IOException
+meth public static org.antlr.v4.runtime.CharStream fromPath(java.nio.file.Path) throws java.io.IOException
+meth public static org.antlr.v4.runtime.CharStream fromPath(java.nio.file.Path,java.nio.charset.Charset) throws java.io.IOException
+meth public static org.antlr.v4.runtime.CharStream fromStream(java.io.InputStream) throws java.io.IOException
+meth public static org.antlr.v4.runtime.CharStream fromStream(java.io.InputStream,java.nio.charset.Charset) throws java.io.IOException
+meth public static org.antlr.v4.runtime.CharStream fromStream(java.io.InputStream,java.nio.charset.Charset,long) throws java.io.IOException
+meth public static org.antlr.v4.runtime.CodePointCharStream fromChannel(java.nio.channels.ReadableByteChannel,int,java.nio.charset.CodingErrorAction,java.lang.String) throws java.io.IOException
+meth public static org.antlr.v4.runtime.CodePointCharStream fromChannel(java.nio.channels.ReadableByteChannel,java.nio.charset.Charset,int,java.nio.charset.CodingErrorAction,java.lang.String,long) throws java.io.IOException
+meth public static org.antlr.v4.runtime.CodePointCharStream fromReader(java.io.Reader) throws java.io.IOException
+meth public static org.antlr.v4.runtime.CodePointCharStream fromReader(java.io.Reader,java.lang.String) throws java.io.IOException
+meth public static org.antlr.v4.runtime.CodePointCharStream fromString(java.lang.String)
+meth public static org.antlr.v4.runtime.CodePointCharStream fromString(java.lang.String,java.lang.String)
+supr java.lang.Object
+hfds DEFAULT_BUFFER_SIZE
+
+CLSS public org.antlr.v4.runtime.CodePointBuffer
+innr public final static !enum Type
+innr public static Builder
+meth public int get(int)
+meth public int position()
+meth public int remaining()
+meth public static org.antlr.v4.runtime.CodePointBuffer withBytes(java.nio.ByteBuffer)
+meth public static org.antlr.v4.runtime.CodePointBuffer withChars(java.nio.CharBuffer)
+meth public static org.antlr.v4.runtime.CodePointBuffer withInts(java.nio.IntBuffer)
+meth public static org.antlr.v4.runtime.CodePointBuffer$Builder builder(int)
+meth public void position(int)
+supr java.lang.Object
+hfds byteBuffer,charBuffer,intBuffer,type
+
+CLSS public static org.antlr.v4.runtime.CodePointBuffer$Builder
+ outer org.antlr.v4.runtime.CodePointBuffer
+meth public org.antlr.v4.runtime.CodePointBuffer build()
+meth public void append(java.nio.CharBuffer)
+meth public void ensureRemaining(int)
+supr java.lang.Object
+hfds byteBuffer,charBuffer,intBuffer,prevHighSurrogate,type
+
+CLSS public final static !enum org.antlr.v4.runtime.CodePointBuffer$Type
+ outer org.antlr.v4.runtime.CodePointBuffer
+fld public final static org.antlr.v4.runtime.CodePointBuffer$Type BYTE
+fld public final static org.antlr.v4.runtime.CodePointBuffer$Type CHAR
+fld public final static org.antlr.v4.runtime.CodePointBuffer$Type INT
+meth public static org.antlr.v4.runtime.CodePointBuffer$Type valueOf(java.lang.String)
+meth public static org.antlr.v4.runtime.CodePointBuffer$Type[] values()
+supr java.lang.Enum<org.antlr.v4.runtime.CodePointBuffer$Type>
+
+CLSS public abstract org.antlr.v4.runtime.CodePointCharStream
+fld protected final int size
+fld protected final java.lang.String name
+fld protected int position
+intf org.antlr.v4.runtime.CharStream
+meth public final int index()
+meth public final int mark()
+meth public final int size()
+meth public final java.lang.String getSourceName()
+meth public final java.lang.String toString()
+meth public final void consume()
+meth public final void release(int)
+meth public final void seek(int)
+meth public static org.antlr.v4.runtime.CodePointCharStream fromBuffer(org.antlr.v4.runtime.CodePointBuffer)
+meth public static org.antlr.v4.runtime.CodePointCharStream fromBuffer(org.antlr.v4.runtime.CodePointBuffer,java.lang.String)
+supr java.lang.Object
+hcls CodePoint16BitCharStream,CodePoint32BitCharStream,CodePoint8BitCharStream
 
 CLSS public org.antlr.v4.runtime.CommonToken
 cons public init(int)
@@ -488,6 +542,7 @@ meth public int getTokenIndex()
 meth public int getType()
 meth public java.lang.String getText()
 meth public java.lang.String toString()
+meth public java.lang.String toString(org.antlr.v4.runtime.Recognizer)
 meth public org.antlr.v4.runtime.CharStream getInputStream()
 meth public org.antlr.v4.runtime.TokenSource getTokenSource()
 meth public void setChannel(int)
@@ -530,6 +585,8 @@ CLSS public org.antlr.v4.runtime.DefaultErrorStrategy
 cons public init()
 fld protected boolean errorRecoveryMode
 fld protected int lastErrorIndex
+fld protected int nextTokensState
+fld protected org.antlr.v4.runtime.ParserRuleContext nextTokensContext
 fld protected org.antlr.v4.runtime.misc.IntervalSet lastErrorStates
 intf org.antlr.v4.runtime.ANTLRErrorStrategy
 meth protected boolean singleTokenInsertion(org.antlr.v4.runtime.Parser)
@@ -581,6 +638,7 @@ hfds predicate,predicateIndex,ruleIndex
 
 CLSS public org.antlr.v4.runtime.InputMismatchException
 cons public init(org.antlr.v4.runtime.Parser)
+cons public init(org.antlr.v4.runtime.Parser,int,org.antlr.v4.runtime.ParserRuleContext)
 supr org.antlr.v4.runtime.RecognitionException
 
 CLSS public abstract interface org.antlr.v4.runtime.IntStream
@@ -612,7 +670,7 @@ fld public final org.antlr.v4.runtime.misc.IntegerStack _modeStack
 fld public final static int DEFAULT_MODE = 0
 fld public final static int DEFAULT_TOKEN_CHANNEL = 0
 fld public final static int HIDDEN = 1
-fld public final static int MAX_CHAR_VALUE = 65534
+fld public final static int MAX_CHAR_VALUE = 1114111
 fld public final static int MIN_CHAR_VALUE = 0
 fld public final static int MORE = -2
 fld public final static int SKIP = -3
@@ -637,6 +695,7 @@ meth public java.lang.String getErrorDisplay(int)
 meth public java.lang.String getErrorDisplay(java.lang.String)
 meth public java.lang.String getSourceName()
 meth public java.lang.String getText()
+meth public java.lang.String[] getChannelNames()
 meth public java.lang.String[] getModeNames()
 meth public java.lang.String[] getTokenNames()
  anno 0 java.lang.Deprecated()
@@ -669,8 +728,11 @@ supr org.antlr.v4.runtime.Recognizer<java.lang.Integer,org.antlr.v4.runtime.atn.
 CLSS public org.antlr.v4.runtime.LexerInterpreter
 cons public init(java.lang.String,java.util.Collection<java.lang.String>,java.util.Collection<java.lang.String>,java.util.Collection<java.lang.String>,org.antlr.v4.runtime.atn.ATN,org.antlr.v4.runtime.CharStream)
  anno 0 java.lang.Deprecated()
+cons public init(java.lang.String,org.antlr.v4.runtime.Vocabulary,java.util.Collection<java.lang.String>,java.util.Collection<java.lang.String>,java.util.Collection<java.lang.String>,org.antlr.v4.runtime.atn.ATN,org.antlr.v4.runtime.CharStream)
 cons public init(java.lang.String,org.antlr.v4.runtime.Vocabulary,java.util.Collection<java.lang.String>,java.util.Collection<java.lang.String>,org.antlr.v4.runtime.atn.ATN,org.antlr.v4.runtime.CharStream)
+ anno 0 java.lang.Deprecated()
 fld protected final java.lang.String grammarFileName
+fld protected final java.lang.String[] channelNames
 fld protected final java.lang.String[] modeNames
 fld protected final java.lang.String[] ruleNames
 fld protected final java.lang.String[] tokenNames
@@ -679,6 +741,7 @@ fld protected final org.antlr.v4.runtime.atn.ATN atn
 fld protected final org.antlr.v4.runtime.atn.PredictionContextCache _sharedContextCache
 fld protected final org.antlr.v4.runtime.dfa.DFA[] _decisionToDFA
 meth public java.lang.String getGrammarFileName()
+meth public java.lang.String[] getChannelNames()
 meth public java.lang.String[] getModeNames()
 meth public java.lang.String[] getRuleNames()
 meth public java.lang.String[] getTokenNames()
@@ -769,6 +832,8 @@ meth public org.antlr.v4.runtime.atn.ATN getATNWithBypassAlts()
 meth public org.antlr.v4.runtime.atn.ParseInfo getParseInfo()
 meth public org.antlr.v4.runtime.misc.IntervalSet getExpectedTokens()
 meth public org.antlr.v4.runtime.misc.IntervalSet getExpectedTokensWithinCurrentRule()
+meth public org.antlr.v4.runtime.tree.ErrorNode createErrorNode(org.antlr.v4.runtime.ParserRuleContext,org.antlr.v4.runtime.Token)
+meth public org.antlr.v4.runtime.tree.TerminalNode createTerminalNode(org.antlr.v4.runtime.ParserRuleContext,org.antlr.v4.runtime.Token)
 meth public org.antlr.v4.runtime.tree.pattern.ParseTreePattern compileParseTreePattern(java.lang.String,int)
 meth public org.antlr.v4.runtime.tree.pattern.ParseTreePattern compileParseTreePattern(java.lang.String,int,org.antlr.v4.runtime.Lexer)
 meth public void addParseListener(org.antlr.v4.runtime.tree.ParseTreeListener)
@@ -866,6 +931,7 @@ fld public org.antlr.v4.runtime.Token start
 fld public org.antlr.v4.runtime.Token stop
 meth public <%0 extends org.antlr.v4.runtime.ParserRuleContext> java.util.List<{%%0}> getRuleContexts(java.lang.Class<? extends {%%0}>)
 meth public <%0 extends org.antlr.v4.runtime.ParserRuleContext> {%%0} getRuleContext(java.lang.Class<? extends {%%0}>,int)
+meth public <%0 extends org.antlr.v4.runtime.tree.ParseTree> {%%0} addAnyChild({%%0})
 meth public <%0 extends org.antlr.v4.runtime.tree.ParseTree> {%%0} getChild(java.lang.Class<? extends {%%0}>,int)
 meth public int getChildCount()
 meth public java.lang.String toInfoString(org.antlr.v4.runtime.Parser)
@@ -876,8 +942,11 @@ meth public org.antlr.v4.runtime.Token getStart()
 meth public org.antlr.v4.runtime.Token getStop()
 meth public org.antlr.v4.runtime.misc.Interval getSourceInterval()
 meth public org.antlr.v4.runtime.tree.ErrorNode addErrorNode(org.antlr.v4.runtime.Token)
+ anno 0 java.lang.Deprecated()
+meth public org.antlr.v4.runtime.tree.ErrorNode addErrorNode(org.antlr.v4.runtime.tree.ErrorNode)
 meth public org.antlr.v4.runtime.tree.ParseTree getChild(int)
 meth public org.antlr.v4.runtime.tree.TerminalNode addChild(org.antlr.v4.runtime.Token)
+ anno 0 java.lang.Deprecated()
 meth public org.antlr.v4.runtime.tree.TerminalNode addChild(org.antlr.v4.runtime.tree.TerminalNode)
 meth public org.antlr.v4.runtime.tree.TerminalNode getToken(int,int)
 meth public void copyFrom(org.antlr.v4.runtime.ParserRuleContext)
@@ -975,6 +1044,7 @@ meth public org.antlr.v4.runtime.RuleContext getRuleContext()
 meth public org.antlr.v4.runtime.misc.Interval getSourceInterval()
 meth public org.antlr.v4.runtime.tree.ParseTree getChild(int)
 meth public void setAltNumber(int)
+meth public void setParent(org.antlr.v4.runtime.RuleContext)
 supr java.lang.Object
 
 CLSS public org.antlr.v4.runtime.RuleContextWithAltNum
@@ -987,7 +1057,7 @@ supr org.antlr.v4.runtime.ParserRuleContext
 
 CLSS public org.antlr.v4.runtime.RuntimeMetaData
 cons public init()
-fld public final static java.lang.String VERSION = "4.5.3"
+fld public final static java.lang.String VERSION = "4.7.2"
 meth public static java.lang.String getMajorMinorVersion(java.lang.String)
 meth public static java.lang.String getRuntimeVersion()
 meth public static void checkVersion(java.lang.String,java.lang.String)
@@ -1081,7 +1151,7 @@ meth public void replace(org.antlr.v4.runtime.Token,org.antlr.v4.runtime.Token,j
 meth public void rollback(int)
 meth public void rollback(java.lang.String,int)
 supr java.lang.Object
-hcls InsertBeforeOp,ReplaceOp
+hcls InsertAfterOp,InsertBeforeOp,ReplaceOp
 
 CLSS public org.antlr.v4.runtime.TokenStreamRewriter$RewriteOperation
  outer org.antlr.v4.runtime.TokenStreamRewriter
@@ -1099,15 +1169,16 @@ cons public init()
 cons public init(int)
 cons public init(java.io.InputStream)
 cons public init(java.io.InputStream,int)
+cons public init(java.io.InputStream,int,java.nio.charset.Charset)
 cons public init(java.io.Reader)
 cons public init(java.io.Reader,int)
-fld protected char[] data
 fld protected int currentCharIndex
 fld protected int lastChar
 fld protected int lastCharBufferStart
 fld protected int n
 fld protected int numMarkers
 fld protected int p
+fld protected int[] data
 fld protected java.io.Reader input
 fld public java.lang.String name
 intf org.antlr.v4.runtime.CharStream
@@ -1321,10 +1392,10 @@ cons public init()
 cons public init(org.antlr.v4.runtime.atn.ATNDeserializationOptions)
 fld public final static int SERIALIZED_VERSION
 fld public final static java.util.UUID SERIALIZED_UUID
-meth protected boolean isFeatureSupported(java.util.UUID,java.util.UUID)
 meth protected org.antlr.v4.runtime.atn.ATNState stateFactory(int,int)
 meth protected org.antlr.v4.runtime.atn.LexerAction lexerActionFactory(org.antlr.v4.runtime.atn.LexerActionType,int,int)
 meth protected org.antlr.v4.runtime.atn.Transition edgeFactory(org.antlr.v4.runtime.atn.ATN,int,int,int,int,int,int,java.util.List<org.antlr.v4.runtime.misc.IntervalSet>)
+meth protected static boolean isFeatureSupported(java.util.UUID,java.util.UUID)
 meth protected static int toInt(char)
 meth protected static int toInt32(char[],int)
 meth protected static java.util.UUID toUUID(char[],int)
@@ -1335,7 +1406,8 @@ meth protected void markPrecedenceDecisions(org.antlr.v4.runtime.atn.ATN)
 meth protected void verifyATN(org.antlr.v4.runtime.atn.ATN)
 meth public org.antlr.v4.runtime.atn.ATN deserialize(char[])
 supr java.lang.Object
-hfds ADDED_LEXER_ACTIONS,ADDED_PRECEDENCE_TRANSITIONS,BASE_SERIALIZED_UUID,SUPPORTED_UUIDS,deserializationOptions
+hfds ADDED_LEXER_ACTIONS,ADDED_PRECEDENCE_TRANSITIONS,ADDED_UNICODE_SMP,BASE_SERIALIZED_UUID,SUPPORTED_UUIDS,deserializationOptions
+hcls UnicodeDeserializer,UnicodeDeserializingMode
 
 CLSS public org.antlr.v4.runtime.atn.ATNSerializer
 cons public init(org.antlr.v4.runtime.atn.ATN)
@@ -1350,6 +1422,7 @@ meth public static java.lang.String getSerializedAsString(org.antlr.v4.runtime.a
 meth public static org.antlr.v4.runtime.misc.IntegerList getSerialized(org.antlr.v4.runtime.atn.ATN)
 supr java.lang.Object
 hfds tokenNames
+hcls CodePointSerializer
 
 CLSS public abstract org.antlr.v4.runtime.atn.ATNSimulator
 cons public init(org.antlr.v4.runtime.atn.ATN,org.antlr.v4.runtime.atn.PredictionContextCache)
@@ -1494,6 +1567,12 @@ CLSS public abstract org.antlr.v4.runtime.atn.BlockStartState
 cons public init()
 fld public org.antlr.v4.runtime.atn.BlockEndState endState
 supr org.antlr.v4.runtime.atn.DecisionState
+
+CLSS public abstract org.antlr.v4.runtime.atn.CodePointTransitions
+cons public init()
+meth public static org.antlr.v4.runtime.atn.Transition createWithCodePoint(org.antlr.v4.runtime.atn.ATNState,int)
+meth public static org.antlr.v4.runtime.atn.Transition createWithCodePointRange(org.antlr.v4.runtime.atn.ATNState,int,int)
+supr java.lang.Object
 
 CLSS public org.antlr.v4.runtime.atn.ContextSensitivityInfo
 cons public init(int,org.antlr.v4.runtime.atn.ATNConfigSet,org.antlr.v4.runtime.TokenStream,int,int)
@@ -1837,10 +1916,12 @@ fld protected org.antlr.v4.runtime.TokenStream _input
 fld protected org.antlr.v4.runtime.dfa.DFA _dfa
 fld protected org.antlr.v4.runtime.misc.DoubleKeyMap<org.antlr.v4.runtime.atn.PredictionContext,org.antlr.v4.runtime.atn.PredictionContext,org.antlr.v4.runtime.atn.PredictionContext> mergeCache
 fld public final org.antlr.v4.runtime.dfa.DFA[] decisionToDFA
+fld public final static boolean TURN_OFF_LR_LOOP_ENTRY_BRANCH_OPT
 fld public final static boolean debug = false
 fld public final static boolean debug_list_atn_decisions = false
 fld public final static boolean dfa_debug = false
 fld public final static boolean retry_debug = false
+meth protected boolean canDropLoopEntryEdgeInLeftRecursiveRule(org.antlr.v4.runtime.atn.ATNConfig)
 meth protected boolean evalSemanticContext(org.antlr.v4.runtime.atn.SemanticContext,org.antlr.v4.runtime.ParserRuleContext,int,boolean)
 meth protected int execATN(org.antlr.v4.runtime.dfa.DFA,org.antlr.v4.runtime.dfa.DFAState,org.antlr.v4.runtime.TokenStream,int,org.antlr.v4.runtime.ParserRuleContext)
 meth protected int execATNWithFullContext(org.antlr.v4.runtime.dfa.DFA,org.antlr.v4.runtime.dfa.DFAState,org.antlr.v4.runtime.atn.ATNConfigSet,org.antlr.v4.runtime.TokenStream,int,org.antlr.v4.runtime.ParserRuleContext)
@@ -1882,6 +1963,7 @@ meth public java.lang.String getRuleName(int)
 meth public java.lang.String getTokenName(int)
 meth public org.antlr.v4.runtime.Parser getParser()
 meth public org.antlr.v4.runtime.atn.ATNConfig precedenceTransition(org.antlr.v4.runtime.atn.ATNConfig,org.antlr.v4.runtime.atn.PrecedencePredicateTransition,boolean,boolean,boolean)
+meth public static java.lang.String getSafeEnv(java.lang.String)
 meth public void clearDFA()
 meth public void dumpDeadEndConfigs(org.antlr.v4.runtime.NoViableAltException)
 meth public void reset()
@@ -2375,7 +2457,6 @@ CLSS public abstract interface org.antlr.v4.runtime.misc.IntSet
 meth public abstract boolean contains(int)
 meth public abstract boolean equals(java.lang.Object)
 meth public abstract boolean isNil()
-meth public abstract int getSingleElement()
 meth public abstract int size()
 meth public abstract java.lang.String toString()
 meth public abstract java.util.List<java.lang.Integer> toList()
@@ -2395,6 +2476,7 @@ cons public init(org.antlr.v4.runtime.misc.IntegerList)
 meth public boolean equals(java.lang.Object)
 meth public final boolean contains(int)
 meth public final boolean isEmpty()
+meth public final char[] toCharArray()
 meth public final int binarySearch(int)
 meth public final int binarySearch(int,int,int)
 meth public final int get(int)
@@ -2423,6 +2505,18 @@ meth public final int peek()
 meth public final int pop()
 meth public final void push(int)
 supr org.antlr.v4.runtime.misc.IntegerList
+
+CLSS public org.antlr.v4.runtime.misc.InterpreterDataReader
+cons public init()
+innr public static InterpreterData
+meth public static org.antlr.v4.runtime.misc.InterpreterDataReader$InterpreterData parseFile(java.lang.String)
+supr java.lang.Object
+
+CLSS public static org.antlr.v4.runtime.misc.InterpreterDataReader$InterpreterData
+ outer org.antlr.v4.runtime.misc.InterpreterDataReader
+cons public init()
+supr java.lang.Object
+hfds atn,channels,modes,ruleNames,vocabulary
 
 CLSS public org.antlr.v4.runtime.misc.Interval
 cons public init(int,int)
@@ -2473,7 +2567,6 @@ meth public boolean isReadonly()
 meth public int get(int)
 meth public int getMaxElement()
 meth public int getMinElement()
-meth public int getSingleElement()
 meth public int hashCode()
 meth public int size()
 meth public int[] toArray()
@@ -2612,8 +2705,13 @@ meth public static <%0 extends java.lang.Object> void removeAllElements(java.uti
 meth public static char[] readFile(java.lang.String) throws java.io.IOException
 meth public static char[] readFile(java.lang.String,java.lang.String) throws java.io.IOException
 meth public static char[] toCharArray(org.antlr.v4.runtime.misc.IntegerList)
+meth public static int count(java.lang.String,char)
 meth public static int numNonnull(java.lang.Object[])
 meth public static java.lang.String escapeWhitespace(java.lang.String,boolean)
+meth public static java.lang.String expandTabs(java.lang.String,int)
+meth public static java.lang.String newlines(int)
+meth public static java.lang.String sequence(int,java.lang.String)
+meth public static java.lang.String spaces(int)
 meth public static java.util.Map<java.lang.String,java.lang.Integer> toMap(java.lang.String[])
 meth public static org.antlr.v4.runtime.misc.IntervalSet toSet(java.util.BitSet)
 meth public static void writeFile(java.lang.String,java.lang.String) throws java.io.IOException
@@ -2641,6 +2739,11 @@ intf org.antlr.v4.runtime.tree.ErrorNode
 meth public <%0 extends java.lang.Object> {%%0} accept(org.antlr.v4.runtime.tree.ParseTreeVisitor<? extends {%%0}>)
 supr org.antlr.v4.runtime.tree.TerminalNodeImpl
 
+CLSS public org.antlr.v4.runtime.tree.IterativeParseTreeWalker
+cons public init()
+meth public void walk(org.antlr.v4.runtime.tree.ParseTreeListener,org.antlr.v4.runtime.tree.ParseTree)
+supr org.antlr.v4.runtime.tree.ParseTreeWalker
+
 CLSS public abstract interface org.antlr.v4.runtime.tree.ParseTree
 intf org.antlr.v4.runtime.tree.SyntaxTree
 meth public abstract <%0 extends java.lang.Object> {%%0} accept(org.antlr.v4.runtime.tree.ParseTreeVisitor<? extends {%%0}>)
@@ -2648,6 +2751,7 @@ meth public abstract java.lang.String getText()
 meth public abstract java.lang.String toStringTree(org.antlr.v4.runtime.Parser)
 meth public abstract org.antlr.v4.runtime.tree.ParseTree getChild(int)
 meth public abstract org.antlr.v4.runtime.tree.ParseTree getParent()
+meth public abstract void setParent(org.antlr.v4.runtime.RuleContext)
 
 CLSS public abstract interface org.antlr.v4.runtime.tree.ParseTreeListener
 meth public abstract void enterEveryRule(org.antlr.v4.runtime.ParserRuleContext)
@@ -2705,6 +2809,7 @@ meth public org.antlr.v4.runtime.Token getSymbol()
 meth public org.antlr.v4.runtime.misc.Interval getSourceInterval()
 meth public org.antlr.v4.runtime.tree.ParseTree getChild(int)
 meth public org.antlr.v4.runtime.tree.ParseTree getParent()
+meth public void setParent(org.antlr.v4.runtime.RuleContext)
 supr java.lang.Object
 
 CLSS public abstract interface org.antlr.v4.runtime.tree.Tree

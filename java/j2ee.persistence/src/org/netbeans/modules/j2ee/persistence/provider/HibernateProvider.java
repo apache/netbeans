@@ -81,7 +81,7 @@ class HibernateProvider extends Provider{
 
     @Override
     public Map getUnresolvedVendorSpecificProperties() {
-        return Collections.EMPTY_MAP;
+        return Collections.emptyMap();
     }
     
     @Override

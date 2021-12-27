@@ -65,7 +65,7 @@ public class TextValueCompleter implements DocumentListener {
     private Pattern pattern;
     private Collection<String> completions;
     private JList completionList;
-    private DefaultListModel completionListModel;
+    private DefaultListModel<String> completionListModel;
     private JScrollPane listScroller;
     private Popup popup;
     private JTextField field;
@@ -96,7 +96,7 @@ public class TextValueCompleter implements DocumentListener {
             }
         };
         field.addCaretListener(caretListener);
-        completionListModel = new DefaultListModel();
+        completionListModel = new DefaultListModel<>();
         completionList = new JList(completionListModel);
         completionList.setFocusable(false);
         completionList.setPrototypeCellValue("lets have it at least this wide and add some more just in case"); //NOI18N

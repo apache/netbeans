@@ -40,6 +40,7 @@ public class KOTemplateContext {
 
     private boolean isId;
 
+    @SuppressWarnings("fallthrough")
     public Pair<Boolean, String> process(@NonNull Token<HTMLTokenId> token) {
         switch (token.id()) {
             case TAG_OPEN:

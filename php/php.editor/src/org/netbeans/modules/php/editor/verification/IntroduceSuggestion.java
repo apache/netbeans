@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.php.editor.verification;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
@@ -64,6 +65,7 @@ import org.netbeans.modules.php.editor.model.ModelElement;
 import org.netbeans.modules.php.editor.model.ModelUtils;
 import org.netbeans.modules.php.editor.model.TraitScope;
 import org.netbeans.modules.php.editor.model.TypeScope;
+import org.netbeans.modules.php.editor.model.impl.Type;
 import org.netbeans.modules.php.editor.parser.PHPParseResult;
 import org.netbeans.modules.php.editor.parser.astnodes.ASTNode;
 import org.netbeans.modules.php.editor.parser.astnodes.BodyDeclaration.Modifier;
@@ -173,15 +175,18 @@ public class IntroduceSuggestion extends SuggestionRule {
                     && lineBounds.containsInclusive(instanceCreation.getStartOffset())) {
                 String clzName = CodeUtils.extractClassName(instanceCreation.getClassName());
                 clzName = (clzName != null && clzName.trim().length() > 0) ? clzName : null;
-                ElementQuery.Index index = model.getIndexScope().getIndex();
-                Set<ClassElement> classes = Collections.emptySet();
-                if (StringUtils.hasText(clzName)) {
-                    classes = index.getClasses(NameKind.exact(clzName));
-                }
-                if (clzName != null && classes.isEmpty()) {
-                    ClassElement clz = getIndexedClass(clzName);
-                    if (clz == null) {
-                        fix = IntroduceClassFix.getInstance(clzName, model, instanceCreation);
+                if (!isSpecialTypeName(clzName)) {
+                    // other than "new static;" and "new self;"
+                    ElementQuery.Index index = model.getIndexScope().getIndex();
+                    Set<ClassElement> classes = Collections.emptySet();
+                    if (StringUtils.hasText(clzName)) {
+                        classes = index.getClasses(NameKind.exact(clzName));
+                    }
+                    if (clzName != null && classes.isEmpty()) {
+                        ClassElement clz = getIndexedClass(clzName);
+                        if (clz == null) {
+                            fix = IntroduceClassFix.getInstance(clzName, model, instanceCreation);
+                        }
                     }
                 }
             }
@@ -465,11 +470,11 @@ public class IntroduceSuggestion extends SuggestionRule {
             int length = fileName.length();
             if (length > 30) {
                 fileName = fileName.substring(length - 30);
-                final int indexOf = fileName.indexOf("/");
+                final int indexOf = fileName.indexOf(File.separator);
                 if (indexOf != -1) { //NOI18N
                     fileName = fileName.substring(indexOf);
                 }
-                fileName = String.format("...%s/%s.php", fileName, className); //NOI18N
+                fileName = String.format("...%s%s%s.php", fileName, File.separator, className); //NOI18N
             }
             return Bundle.IntroduceHintClassDesc(classNameWithNsPart, fileName);
         }
@@ -737,6 +742,10 @@ public class IntroduceSuggestion extends SuggestionRule {
         public boolean isSafe() {
             return true;
         }
+    }
+
+    private static boolean isSpecialTypeName(String typeName) {
+        return Type.STATIC.equals(typeName) || Type.SELF.equals(typeName) || Type.PARENT.equals(typeName);
     }
 
     private static String getParameters(final List<Expression> parameters) {

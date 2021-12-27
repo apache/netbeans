@@ -28,9 +28,9 @@ import java.util.Set;
 import javax.swing.text.AbstractDocument;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
+import org.netbeans.api.editor.document.LineDocument;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.lexer.TokenSequence;
-import org.netbeans.editor.BaseDocument;
-import org.netbeans.editor.Utilities;
 import org.netbeans.modules.csl.api.Hint;
 import org.netbeans.modules.csl.api.HintFix;
 import org.netbeans.modules.csl.api.HintSeverity;
@@ -115,10 +115,10 @@ public class GlobalIsNotDefined extends JsAstRule {
         boolean add = false;
         Document document = context.getJsParserResult().getSnapshot().getSource().getDocument(false);
         if (offset > -1) {
-            if (document != null && document instanceof BaseDocument) {
-                BaseDocument baseDocument = (BaseDocument)document;
-                int lineOffset = Utilities.getLineOffset(baseDocument, offset);
-                int lineOffsetRange = Utilities.getLineOffset(baseDocument, range.getStart());
+            LineDocument ld = LineDocumentUtils.as(document, LineDocument.class);
+            if (ld != null) {
+                int lineOffset = LineDocumentUtils.getLineIndex(ld, offset);
+                int lineOffsetRange = LineDocumentUtils.getLineIndex(ld, range.getStart());
                 add = lineOffset == lineOffsetRange;
             }
         } else {

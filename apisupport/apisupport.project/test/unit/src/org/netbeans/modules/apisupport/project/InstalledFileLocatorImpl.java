@@ -35,7 +35,7 @@ public class InstalledFileLocatorImpl extends org.openide.modules.InstalledFileL
      * Creates a new instance of InstalledFileLocatorImpl
      */
     public InstalledFileLocatorImpl() {
-    }
+}
 
 
     public File locate(String relativePath, String codeNameBase, boolean localized) {
@@ -44,12 +44,12 @@ public class InstalledFileLocatorImpl extends org.openide.modules.InstalledFileL
         if (f.exists()) {
             return f;
         }
-        
+
         File root = installDir;
         if (root == null) {
             return null;
         }
-        
+
         File[] arr = installDir.listFiles();
         for (int i = 0; i < arr.length; i++) {
             f = new File(arr[i], relativePath);
@@ -57,12 +57,12 @@ public class InstalledFileLocatorImpl extends org.openide.modules.InstalledFileL
                 return f;
             }
         }
-        
+
         return null;
     }
 
     public static void registerDestDir(File file) {
         installDir = file;
     }
-    
+
 }

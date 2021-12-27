@@ -241,7 +241,7 @@ public final class ClassPath {
         long current;
         synchronized (this) {
             if (rootsCache != null) {
-                return this.rootsCache;
+                return rootsCache.clone();
             }
             current = this.invalidRoots;
         }
@@ -256,9 +256,9 @@ public final class ClassPath {
                 if (rootsCache == null || rootsListener == null) {
                     attachRootsListener();
                     listenOnRoots(rootPairs);
-                    this.rootsCache = roots;
+                    this.rootsCache = roots.clone();
                 } else {
-                    roots = this.rootsCache;
+                    roots = rootsCache.clone();
                 }
             }
         }

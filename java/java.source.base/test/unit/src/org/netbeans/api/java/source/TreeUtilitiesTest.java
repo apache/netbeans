@@ -34,6 +34,7 @@ import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.SourcePositions;
 import com.sun.source.util.TreePath;
+import com.sun.source.util.TreePathScanner;
 import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import java.io.File;
 import java.io.OutputStreamWriter;
@@ -45,7 +46,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
+import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
+import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeMirror;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.source.Comment.Style;
@@ -75,6 +78,10 @@ public class TreeUtilitiesTest extends NbTestCase {
     private CompilationInfo info;
     
     private void prepareTest(String filename, String code) throws Exception {
+        prepareTest(filename, code, Phase.RESOLVED);
+    }
+
+    private void prepareTest(String filename, String code, Phase resolutionPhase) throws Exception {
         File work = getWorkDir();
         FileObject workFO = FileUtil.toFileObject(work);
         
@@ -97,7 +104,7 @@ public class TreeUtilitiesTest extends NbTestCase {
         
         assertNotNull(js);
         
-        info = SourceUtilsTestUtil.getCompilationInfo(js, JavaSource.Phase.RESOLVED);
+        info = SourceUtilsTestUtil.getCompilationInfo(js, resolutionPhase);
         
         assertNotNull(info);
     }
@@ -383,6 +390,33 @@ public class TreeUtilitiesTest extends NbTestCase {
         assertFalse(Kind.METHOD == tp.getParentPath().getLeaf().getKind());
     }
     
+    public void testAnnotationSyntheticValue1() throws Exception {
+        prepareTest("Test", "package test; @Meta(Test.VALUE) public class Test { public static final String VALUE = \"\"; } @interface Meta { public String value(); }");
+        
+        TreePath tp = info.getTreeUtilities().pathFor(58 - 30);
+        
+        assertEquals(Kind.MEMBER_SELECT, tp.getLeaf().getKind());
+        assertEquals("Test.VALUE", tp.getLeaf().toString());
+    }
+    
+    public void testAnnotationSyntheticValue2() throws Exception {
+        prepareTest("Test", "package test; @Meta(Test.VALUE) public class Test { public static final String VALUE = \"\"; } @interface Meta { public String[] value(); }");
+        
+        TreePath tp = info.getTreeUtilities().pathFor(58 - 30);
+        
+        assertEquals(Kind.MEMBER_SELECT, tp.getLeaf().getKind());
+        assertEquals("Test.VALUE", tp.getLeaf().toString());
+    }
+    
+    public void testAnnotationSyntheticValue3() throws Exception {
+        prepareTest("Test", "package test; @Meta({Test.VALUE}) public class Test { public static final String VALUE = \"\"; } @interface Meta { public String[] value(); }");
+        
+        TreePath tp = info.getTreeUtilities().pathFor(58 - 30);
+        
+        assertEquals(Kind.MEMBER_SELECT, tp.getLeaf().getKind());
+        assertEquals("Test.VALUE", tp.getLeaf().toString());
+    }
+    
     public void testAutoMapComments1() throws Exception {
         prepareTest("Test", "package test;\n" +
                             "import java.io.File;\n" +
@@ -643,6 +677,52 @@ public class TreeUtilitiesTest extends NbTestCase {
         assertEquals("s", el.toString());
     }
 
+    public void testNotUsingLiveScope() throws Exception {
+        try {
+            SourceVersion.valueOf("RELEASE_12");
+        } catch (IllegalArgumentException ex) {
+            //this test cannot pass on JDK <12, as javac there does not allow variables to own other variables
+            return ;
+        }
+        ClassPath boot = ClassPathSupport.createClassPath(SourceUtilsTestUtil.getBootClassPath().toArray(new URL[0]));
+        FileObject testFile = FileUtil.createData(FileUtil.createMemoryFileSystem().getRoot(), "Test.java");
+        try (Writer w = new OutputStreamWriter(testFile.getOutputStream())) {
+            w.append("import java.lang.String;\n" +
+                     "public class Test {\n" +
+                     "    void test(boolean b) {\n" +
+                     "        int i1;\n" +
+                     "        int i2;\n" +
+                     "        int i3;\n" +
+                     "        int i4;\n" +
+                     "        int i5;\n" +
+                     "        int i6;\n" +
+                     "        int scopeHere = 0;\n" +
+                     "    }\n" +
+                     "}\n");
+        }
+        JavaSource js = JavaSource.create(ClasspathInfo.create(boot, ClassPath.EMPTY, ClassPath.EMPTY), testFile);
+        js.runUserActionTask(new Task<CompilationController>() {
+            @Override
+            public void run(CompilationController parameter) throws Exception {
+                parameter.toPhase(Phase.RESOLVED);
+                TreePath[] path = new TreePath[1];
+                new TreePathScanner<Void, Void>() {
+                    @Override
+                    public Void visitVariable(VariableTree node, Void p) {
+                        if (node.getName().contentEquals("scopeHere")) {
+                            path[0] = new TreePath(getCurrentPath(), node.getInitializer());
+                        }
+                        return super.visitVariable(node, p);
+                    }
+                }.scan(parameter.getCompilationUnit(), null);
+                Scope scope = parameter.getTrees().getScope(path[0]);
+                StatementTree st = parameter.getTreeUtilities().parseStatement("{ String t; }", new SourcePositions[1]);
+                assertEquals(Kind.BLOCK, st.getKind());
+                parameter.getTreeUtilities().attributeTree(st, scope);
+            }
+        }, true);
+    }
+
     public void testIsEndOfCompoundVariableDeclaration() throws Exception {
         prepareTest("Test", "package test; public class Test {public Test(){int i = 10, j = 11;}}");
         TreePath tp = info.getTreeUtilities().pathFor(47);
@@ -686,5 +766,33 @@ public class TreeUtilitiesTest extends NbTestCase {
         TreePath tp4 = info.getTreeUtilities().pathFor(146 - 30);
         assertEquals(Kind.METHOD_INVOCATION, tp4.getLeaf().getKind());
         assertEquals("subList", ((MemberSelectTree) ((MethodInvocationTree) tp4.getLeaf()).getMethodSelect()).getIdentifier().toString());
+    }
+
+    public void testAttributeTreesInnerClasses() throws Exception {
+        String code = "package test; public class Test { public void test1() { new Object() {}; new Object() {}; } public void test2() { new Object() {}; new Object() {}; } }";
+        prepareTest("Test", code, Phase.ELEMENTS_RESOLVED);
+
+        List<String> expectedNames = Arrays.asList("test.Test",
+                                                   "test.Test$1",
+                                                   "test.Test$2",
+                                                   "test.Test$3",
+                                                   "test.Test$4");
+
+        for (int i = 0; i < 2; i++) {
+            TreePath tp = info.getTreeUtilities().pathFor(code.indexOf("{}"));
+            Scope scope = info.getTrees().getScope(tp);
+            StatementTree parsed = info.getTreeUtilities().parseStatement("{ new Object() {}; new Object() {}; }", new SourcePositions[1]);
+            info.getTreeUtilities().attributeTree(parsed, scope);
+            info.impl.toPhase(Phase.RESOLVED);
+            List<String> actualNames = new ArrayList<>();
+            new TreePathScanner<Void, Void>() {
+                @Override
+                public Void visitClass(ClassTree node, Void p) {
+                    actualNames.add(info.getElements().getBinaryName((TypeElement) info.getTrees().getElement(getCurrentPath())).toString());
+                    return super.visitClass(node, p);
+                }
+            }.scan(info.getCompilationUnit(), null);
+            assertEquals(expectedNames, actualNames);
+        }
     }
 }

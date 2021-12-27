@@ -27,15 +27,15 @@ import org.openide.util.NbBundle;
 final class Util {
 
     public static String getString(String key) {
-        return NbBundle.getBundle(Util.class).getString(key);
+        return NbBundle.getMessage(Util.class, key);
     }
 
     public static char getChar(String key) {
-        return NbBundle.getBundle(Util.class).getString(key).charAt(0);
+        return NbBundle.getMessage(Util.class, key).charAt(0);
     }
 
     public static String getMessage(String key, Object obj) {
-        return NbBundle.getMessage(Util.class,key, obj);
+        return NbBundle.getMessage(Util.class, key, obj);
     }
 
     public static String getMessage(String key, Object obj, Object obj2) {

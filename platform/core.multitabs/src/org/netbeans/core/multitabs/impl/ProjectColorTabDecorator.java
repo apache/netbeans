@@ -52,6 +52,7 @@ public class ProjectColorTabDecorator extends TabDecorator {
     private static final Map<Object, Color> project2color = new WeakHashMap<Object, Color>(10);
     private static final Map<TabData, Color> tab2color = new WeakHashMap<TabData, Color>(10);
     private static final List<Color> backGroundColors;
+    private static Color foregroundColor;
     private final static ChangeListener projectsListener = new ChangeListener() {
 
         @Override
@@ -82,6 +83,11 @@ public class ProjectColorTabDecorator extends TabDecorator {
             backGroundColors.add( new Color( 228, 255, 216 ) );
             backGroundColors.add( new Color( 227, 255, 158 ) );
             backGroundColors.add( new Color( 238, 209, 255 ) );
+        }
+
+        foregroundColor = UIManager.getColor("nb.multitabs.project.foreground");
+        if (foregroundColor == null) {
+            foregroundColor = Color.BLACK;
         }
 
         ProjectSupport projects = ProjectSupport.getDefault();
@@ -136,7 +142,7 @@ public class ProjectColorTabDecorator extends TabDecorator {
     public Color getForeground( TabData tab, boolean selected ) {
         if( selected || !Settings.getDefault().isSameProjectSameColor() )
             return null;
-        return null == getBackground( tab, selected ) ? null : Color.black;
+        return null == getBackground( tab, selected ) ? null : foregroundColor;
     }
 
     @Override
@@ -155,8 +161,16 @@ public class ProjectColorTabDecorator extends TabDecorator {
         }
         g.setColor( c );
         Rectangle rect = new Rectangle( tabRect );
-        rect.y += rect.height - 3;
-        rect.grow( -1, -1 );
+        int underlineHeight = UIManager.getInt("nb.multitabs.underlineHeight"); // NOI18N
+        if( underlineHeight > 0 ) {
+            // if the selected tab is highlighted with an "underline" (e.g. in FlatLaf)
+            // then paint the project color bar at the top of the tab
+            rect.height = underlineHeight;
+        } else {
+            // bottom project color bar
+            rect.y += rect.height - 3;
+            rect.grow( -1, -1 );
+        }
         g.fillRect( rect.x, rect.y, rect.width, rect.height );
     }
 

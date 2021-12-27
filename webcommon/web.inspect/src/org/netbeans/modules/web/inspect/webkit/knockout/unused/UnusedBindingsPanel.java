@@ -56,7 +56,7 @@ public class UnusedBindingsPanel extends javax.swing.JPanel implements ExplorerM
     /** Tree with unused bindings. */
     private BeanTreeView treeView;
     /** Root node of the tree with unused bindings. */
-    private final UnusedRootNode rootNode = new UnusedRootNode(Collections.EMPTY_MAP);
+    private final UnusedRootNode rootNode = new UnusedRootNode(Collections.<String, Map<Integer, UnusedBinding>>emptyMap());
 
     /**
      * Creates a new {@code UnusedBindingsPanel}.

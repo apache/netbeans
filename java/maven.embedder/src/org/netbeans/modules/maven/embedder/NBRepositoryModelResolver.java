@@ -25,6 +25,7 @@ import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.artifact.resolver.ArtifactNotFoundException;
 import org.apache.maven.artifact.resolver.ArtifactResolutionException;
+import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Parent;
 import org.apache.maven.model.Repository;
 import org.apache.maven.model.building.FileModelSource;
@@ -101,4 +102,9 @@ class NBRepositoryModelResolver
             throw new InvalidRepositoryException(ex.toString(), repository, ex);
         }
     }
+
+    @Override
+    public ModelSource resolveModel(Dependency dpndnc) throws UnresolvableModelException {
+        return resolveModel(dpndnc.getGroupId(), dpndnc.getArtifactId(), dpndnc.getVersion());
+    }    
 }

@@ -22,7 +22,6 @@ import java.io.File;
 import java.util.Collections;
 import java.util.Map;
 import org.netbeans.api.java.classpath.ClassPath;
-import org.netbeans.modules.csl.api.CompletionProposal;
 import org.netbeans.modules.php.api.PhpVersion;
 import org.netbeans.modules.php.project.api.PhpSourcePath;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
@@ -47,46 +46,22 @@ public class PHPCodeCompletion270237Test extends PHPCodeCompletionTestBase {
 
     public void testIssue270237_01a() throws Exception {
         checkCompletionCustomTemplateResult("testfiles/completion/lib/tests270237/issue270237.php", "test^",
-                new Filter(PhpVersion.PHP_71, "test71"), true);
+                new DefaultFilter(PhpVersion.PHP_71, "test71"), true);
     }
 
     public void testIssue270237_01b() throws Exception {
         checkCompletionCustomTemplateResult("testfiles/completion/lib/tests270237/issue270237.php", "test^",
-                new Filter(PhpVersion.PHP_55, "test71"), true);
+                new DefaultFilter(PhpVersion.PHP_55, "test71"), true);
     }
 
     public void testIssue270237_02a() throws Exception {
         checkCompletionCustomTemplateResult("testfiles/completion/lib/tests270237/issue270237.php", "test^",
-                new Filter(PhpVersion.PHP_70, "test70"), true);
+                new DefaultFilter(PhpVersion.PHP_70, "test70"), true);
     }
 
     public void testIssue270237_02b() throws Exception {
         checkCompletionCustomTemplateResult("testfiles/completion/lib/tests270237/issue270237.php", "test^",
-                new Filter(PhpVersion.PHP_56, "test70"), true);
+                new DefaultFilter(PhpVersion.PHP_56, "test70"), true);
     }
 
-    //~ Inner class
-    private final class Filter implements CompletionProposalFilter {
-
-        private final PhpVersion phpVersion;
-        private final String prefix;
-
-        public Filter(PhpVersion phpVersion, String prefix) {
-            this.phpVersion = phpVersion;
-            this.prefix = prefix;
-        }
-
-        @Override
-        public boolean accept(CompletionProposal proposal) {
-            if (proposal instanceof PHPCompletionItem.MethodDeclarationItem) {
-                PHPCompletionItem.MethodDeclarationItem item = (PHPCompletionItem.MethodDeclarationItem) proposal;
-                String name = item.getName();
-                if (name.startsWith(prefix)) {
-                    item.setPhpVersion(phpVersion);
-                    return true;
-                }
-            }
-            return false;
-        }
-    }
 }

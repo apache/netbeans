@@ -277,6 +277,7 @@
                 <friend>org.netbeans.modules.cnd.toolchain</friend>
                 <friend>org.netbeans.modules.cnd.toolchain.ui</friend>
                 <friend>org.netbeans.modules.cnd.ui</friend>
+                <friend>org.netbeans.modules.cpplite.debugger</friend>
                 <friend>org.netbeans.modules.dlight</friend>
                 <friend>org.netbeans.modules.dlight.collector.procfs</friend>
                 <friend>org.netbeans.modules.dlight.collector.stdout</friend>

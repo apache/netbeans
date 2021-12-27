@@ -799,6 +799,228 @@ public class PhpTypedBreakInterceptorTest extends PhpTypinghooksTestBase {
         );
     }
 
+    // PHP 8.0
+    public void testMatchExpressionWithSemicolon_01() throws Exception {
+        insertBreak(
+                "" // original
+                + "$result = match (true) {^",
+                "" // expected
+                + "$result = match (true) {\n"
+                + "    ^\n"
+                + "};" // semicolon is added
+        );
+    }
+
+    public void testMatchExpressionWithSemicolon_02() throws Exception {
+        insertBreak(
+                "" // original
+                + "return match (Foo::get($test)) {^",
+                "" // expected
+                + "return match (Foo::get($test)) {\n"
+                + "    ^\n"
+                + "};" // semicolon is added
+        );
+    }
+
+    public void testMatchExpressionWithSemicolon_03() throws Exception {
+        insertBreak(
+                "" // original
+                + "echo match (Foo::get($test)) {^",
+                "" // expected
+                + "echo match (Foo::get($test)) {\n"
+                + "    ^\n"
+                + "};" // semicolon is added
+        );
+    }
+
+    public void testMatchExpressionWithSemicolon_04() throws Exception {
+        insertBreak(
+                "" // original
+                + "function test () {\n"
+                + "    $test = match (true) {^\n"
+                + "}",
+                "" // expected
+                + "function test () {\n"
+                + "    $test = match (true) {\n"
+                + "        ^\n"
+                + "    };\n" // semicolon is added
+                + "}"
+        );
+    }
+
+    public void testMatchExpressionWithSemicolon_05() throws Exception {
+        insertBreak(
+                "" // original
+                + "function test () {\n"
+                + "    $a = \"test\";\n"
+                + "    $test = match (true) {^\n"
+                + "}",
+                "" // expected
+                + "function test () {\n"
+                + "    $a = \"test\";\n"
+                + "    $test = match (true) {\n"
+                + "        ^\n"
+                + "    };\n" // semicolon is added
+                + "}"
+        );
+    }
+
+    public void testMatchExpression_01() throws Exception {
+        insertBreak(
+                "" // original
+                + "match (true) {^\n",
+                "" // expected
+                + "match (true) {\n"
+                + "    ^\n"
+                + "}\n" // semicolon is not added
+        );
+    }
+
+    public void testMatchExpression_02() throws Exception {
+        insertBreak(
+                "" // original
+                + "$array = [\n"
+                + "    \"test\" => match (true) {^\n"
+                + "];",
+                "" // expected
+                + "$array = [\n"
+                + "    \"test\" => match (true) {\n"
+                + "        ^\n"
+                + "    }\n" // semicolon is not added
+                + "];"
+        );
+    }
+
+    public void testMatchExpression_03() throws Exception {
+        insertBreak(
+                "" // original
+                + "$array = [\n"
+                + "    $test = match (true) {^\n"
+                + "];",
+                "" // expected
+                + "$array = [\n"
+                + "    $test = match (true) {\n"
+                + "        ^\n"
+                + "    }\n" // semicolon is not added
+                + "];"
+        );
+    }
+
+    public void testMatchExpression_04() throws Exception {
+        insertBreak(
+                "" // original
+                + "$result = match (true) {\n"
+                + "    true => function(){^\n" // for closure
+                + "};",
+                "" // expected
+                + "$result = match (true) {\n"
+                + "    true => function(){\n"
+                + "    ^\n"
+                + "    }\n" // semicolon is not added
+                + "};"
+        );
+    }
+
+    public void testAttributeSyntax_01() throws Exception {
+        insertBreak(
+                "" // original
+                + "#[^]\n"
+                + "class Test {\n"
+                + "}",
+                "" // expected
+                + "#[\n"
+                + "    ^\n"
+                + "]\n"
+                + "class Test {\n"
+                + "}"
+        );
+    }
+
+    public void testConstructorPropertyPromotion_01() throws Exception {
+        insertBreak(
+                "" // original
+                + "class Test {\n"
+                + "    public function __construct(^){}\n"
+                + "}",
+                "" // expected
+                + "class Test {\n"
+                + "    public function __construct(\n"
+                + "            ^\n"
+                + "    ){}\n"
+                + "}"
+        );
+    }
+
+    public void testConstructorPropertyPromotion_02() throws Exception {
+        insertBreak(
+                "" // original
+                + "class Test {\n"
+                + "    public function __construct(\n"
+                + "            private int $field,^\n"
+                + "    ){}\n"
+                + "}",
+                "" // expected
+                + "class Test {\n"
+                + "    public function __construct(\n"
+                + "            private int $field,\n"
+                + "            ^\n"
+                + "    ){}\n"
+                + "}"
+        );
+    }
+
+    public void testConstructorPropertyPromotion_03() throws Exception {
+        insertBreak(
+                "" // original
+                + "class Test {\n"
+                + "    public function __construct(\n"
+                + "            private int|string $field = \"default value\",^\n"
+                + "    ){}\n"
+                + "}",
+                "" // expected
+                + "class Test {\n"
+                + "    public function __construct(\n"
+                + "            private int|string $field = \"default value\",\n"
+                + "            ^\n"
+                + "    ){}\n"
+                + "}"
+        );
+    }
+
+    public void testConstructorPropertyPromotion_04() throws Exception {
+        insertBreak(
+                "" // original
+                + "class Test {\n"
+                + "    public function __construct(\n"
+                + "            private ?string $field1,^\n"
+                + "            private int|string $field2 = \"default value\",\n"
+                + "    ){}\n"
+                + "}",
+                "" // expected
+                + "class Test {\n"
+                + "    public function __construct(\n"
+                + "            private ?string $field1,\n"
+                + "            ^\n"
+                + "            private int|string $field2 = \"default value\",\n"
+                + "    ){}\n"
+                + "}"
+        );
+    }
+
+    public void testConstructorPropertyPromotion_05() throws Exception {
+        insertBreak(
+                "" // original
+                + "class Test {\n"
+                + "    public function __construct(private int $field,^){}\n"
+                + "}",
+                "" // expected
+                + "class Test {\n"
+                + "    public function __construct(private int $field,\n"
+                + "            ^){}\n"
+                + "}"
+        );
+    }
+
     // #230814
     public void testDoNotInsertCommentAsterisk_01() throws Exception {
         insertBreakMultiLineComment(

@@ -19,32 +19,39 @@
 package org.netbeans.modules.php.analysis.ui.options;
 
 import java.awt.Cursor;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.List;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.GroupLayout;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JTextField;
+import javax.swing.LayoutStyle;
 import javax.swing.event.ChangeListener;
-import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import org.netbeans.modules.php.analysis.commands.PHPStan;
 import org.netbeans.modules.php.analysis.options.AnalysisOptions;
 import org.netbeans.modules.php.analysis.options.AnalysisOptionsValidator;
+import org.netbeans.modules.php.analysis.ui.AnalysisDefaultDocumentListener;
 import org.netbeans.modules.php.analysis.ui.PHPStanLevelListCellRenderer;
 import org.netbeans.modules.php.analysis.options.ValidatorPHPStanParameter;
-import org.netbeans.modules.php.api.util.FileUtils;
-import org.netbeans.modules.php.api.util.UiUtils;
+import org.netbeans.modules.php.analysis.util.AnalysisUiUtils;
 import org.netbeans.modules.php.api.validation.ValidationResult;
 import org.openide.awt.HtmlBrowser;
-import org.openide.filesystems.FileChooserBuilder;
+import org.openide.awt.Mnemonics;
 import org.openide.util.ChangeSupport;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 
 public class PHPStanOptionsPanel extends AnalysisCategoryPanel {
 
-    private static final String PHPSTAN_LAST_FOLDER_SUFFIX = ".phpstan"; // NOI18N
-    private static final String PHPSTAN_CONFIGURATION_LAST_FOLDER_SUFFIX = ".phpstan.config"; // NOI18N
-    private static final long serialVersionUID = -968090640401936313L;
+    private static final long serialVersionUID = 1199550925948622972L;
 
     private final ChangeSupport changeSupport = new ChangeSupport(this);
 
@@ -73,7 +80,7 @@ public class PHPStanOptionsPanel extends AnalysisCategoryPanel {
         phpStanLevelComboBox.addItem(PHPStan.MAX_LEVEL);
         phpStanLevelComboBox.setRenderer(new PHPStanLevelListCellRenderer(phpStanLevelComboBox.getRenderer()));
         // add listener
-        DefaultDocumentListener defaultDocumentListener = new DefaultDocumentListener();
+        DocumentListener defaultDocumentListener = new AnalysisDefaultDocumentListener(() -> fireChange());
         phpStanTextField.getDocument().addDocumentListener(defaultDocumentListener);
         phpStanConfigurationTextField.getDocument().addDocumentListener(defaultDocumentListener);
         phpStanMemoryLimitTextField.getDocument().addDocumentListener(defaultDocumentListener);
@@ -89,205 +96,167 @@ public class PHPStanOptionsPanel extends AnalysisCategoryPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        phpStanLabel = new javax.swing.JLabel();
-        phpStanTextField = new javax.swing.JTextField();
-        phpStanBrowseButton = new javax.swing.JButton();
-        phpStanSearchButton = new javax.swing.JButton();
-        phpStanHintLabel = new javax.swing.JLabel();
-        phpStanLevelLabel = new javax.swing.JLabel();
-        phpStanLevelComboBox = new javax.swing.JComboBox<>();
-        phpStanMemoryLimitLabel = new javax.swing.JLabel();
-        phpStanMemoryLimitTextField = new javax.swing.JTextField();
-        phpStanConfigurationLabel = new javax.swing.JLabel();
-        phpStanConfigurationTextField = new javax.swing.JTextField();
-        phpStanConfigurationInfoLabel = new javax.swing.JLabel();
-        phpStanConfiturationBrowseButton = new javax.swing.JButton();
-        phpStanNoteLabel = new javax.swing.JLabel();
-        phpStanMinVersionInfoLabel = new javax.swing.JLabel();
-        phpStanLearnMoreLabel = new javax.swing.JLabel();
+        phpStanLabel = new JLabel();
+        phpStanTextField = new JTextField();
+        phpStanBrowseButton = new JButton();
+        phpStanSearchButton = new JButton();
+        phpStanHintLabel = new JLabel();
+        phpStanLevelLabel = new JLabel();
+        phpStanLevelComboBox = new JComboBox<>();
+        phpStanMemoryLimitLabel = new JLabel();
+        phpStanMemoryLimitTextField = new JTextField();
+        phpStanConfigurationLabel = new JLabel();
+        phpStanConfigurationTextField = new JTextField();
+        phpStanConfigurationInfoLabel = new JLabel();
+        phpStanConfiturationBrowseButton = new JButton();
+        phpStanNoteLabel = new JLabel();
+        phpStanMinVersionInfoLabel = new JLabel();
+        phpStanLearnMoreLabel = new JLabel();
 
         phpStanLabel.setLabelFor(phpStanTextField);
-        org.openide.awt.Mnemonics.setLocalizedText(phpStanLabel, org.openide.util.NbBundle.getMessage(PHPStanOptionsPanel.class, "PHPStanOptionsPanel.phpStanLabel.text")); // NOI18N
+        Mnemonics.setLocalizedText(phpStanLabel, NbBundle.getMessage(PHPStanOptionsPanel.class, "PHPStanOptionsPanel.phpStanLabel.text")); // NOI18N
 
-        org.openide.awt.Mnemonics.setLocalizedText(phpStanBrowseButton, org.openide.util.NbBundle.getMessage(PHPStanOptionsPanel.class, "PHPStanOptionsPanel.phpStanBrowseButton.text")); // NOI18N
-        phpStanBrowseButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        Mnemonics.setLocalizedText(phpStanBrowseButton, NbBundle.getMessage(PHPStanOptionsPanel.class, "PHPStanOptionsPanel.phpStanBrowseButton.text")); // NOI18N
+        phpStanBrowseButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
                 phpStanBrowseButtonActionPerformed(evt);
             }
         });
 
-        org.openide.awt.Mnemonics.setLocalizedText(phpStanSearchButton, org.openide.util.NbBundle.getMessage(PHPStanOptionsPanel.class, "PHPStanOptionsPanel.phpStanSearchButton.text")); // NOI18N
-        phpStanSearchButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        Mnemonics.setLocalizedText(phpStanSearchButton, NbBundle.getMessage(PHPStanOptionsPanel.class, "PHPStanOptionsPanel.phpStanSearchButton.text")); // NOI18N
+        phpStanSearchButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
                 phpStanSearchButtonActionPerformed(evt);
             }
         });
 
-        org.openide.awt.Mnemonics.setLocalizedText(phpStanHintLabel, "HINT"); // NOI18N
+        Mnemonics.setLocalizedText(phpStanHintLabel, "HINT"); // NOI18N
 
         phpStanLevelLabel.setLabelFor(phpStanLevelComboBox);
-        org.openide.awt.Mnemonics.setLocalizedText(phpStanLevelLabel, org.openide.util.NbBundle.getMessage(PHPStanOptionsPanel.class, "PHPStanOptionsPanel.phpStanLevelLabel.text")); // NOI18N
+        Mnemonics.setLocalizedText(phpStanLevelLabel, NbBundle.getMessage(PHPStanOptionsPanel.class, "PHPStanOptionsPanel.phpStanLevelLabel.text")); // NOI18N
 
-        phpStanLevelComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "0", "1", "2", "3", "4", "5", "6", "7" }));
+        phpStanLevelComboBox.setModel(new DefaultComboBoxModel<>(new String[] { "0", "1", "2", "3", "4", "5", "6", "7" }));
 
         phpStanMemoryLimitLabel.setLabelFor(phpStanMemoryLimitTextField);
-        org.openide.awt.Mnemonics.setLocalizedText(phpStanMemoryLimitLabel, org.openide.util.NbBundle.getMessage(PHPStanOptionsPanel.class, "PHPStanOptionsPanel.phpStanMemoryLimitLabel.text")); // NOI18N
+        Mnemonics.setLocalizedText(phpStanMemoryLimitLabel, NbBundle.getMessage(PHPStanOptionsPanel.class, "PHPStanOptionsPanel.phpStanMemoryLimitLabel.text")); // NOI18N
 
         phpStanConfigurationLabel.setLabelFor(phpStanConfigurationTextField);
-        org.openide.awt.Mnemonics.setLocalizedText(phpStanConfigurationLabel, org.openide.util.NbBundle.getMessage(PHPStanOptionsPanel.class, "PHPStanOptionsPanel.phpStanConfigurationLabel.text")); // NOI18N
+        Mnemonics.setLocalizedText(phpStanConfigurationLabel, NbBundle.getMessage(PHPStanOptionsPanel.class, "PHPStanOptionsPanel.phpStanConfigurationLabel.text")); // NOI18N
 
-        org.openide.awt.Mnemonics.setLocalizedText(phpStanConfigurationInfoLabel, org.openide.util.NbBundle.getMessage(PHPStanOptionsPanel.class, "PHPStanOptionsPanel.phpStanConfigurationInfoLabel.text")); // NOI18N
+        Mnemonics.setLocalizedText(phpStanConfigurationInfoLabel, NbBundle.getMessage(PHPStanOptionsPanel.class, "PHPStanOptionsPanel.phpStanConfigurationInfoLabel.text")); // NOI18N
 
-        org.openide.awt.Mnemonics.setLocalizedText(phpStanConfiturationBrowseButton, org.openide.util.NbBundle.getMessage(PHPStanOptionsPanel.class, "PHPStanOptionsPanel.phpStanConfiturationBrowseButton.text")); // NOI18N
-        phpStanConfiturationBrowseButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        Mnemonics.setLocalizedText(phpStanConfiturationBrowseButton, NbBundle.getMessage(PHPStanOptionsPanel.class, "PHPStanOptionsPanel.phpStanConfiturationBrowseButton.text")); // NOI18N
+        phpStanConfiturationBrowseButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
                 phpStanConfiturationBrowseButtonActionPerformed(evt);
             }
         });
 
-        org.openide.awt.Mnemonics.setLocalizedText(phpStanNoteLabel, org.openide.util.NbBundle.getMessage(PHPStanOptionsPanel.class, "PHPStanOptionsPanel.phpStanNoteLabel.text")); // NOI18N
+        Mnemonics.setLocalizedText(phpStanNoteLabel, NbBundle.getMessage(PHPStanOptionsPanel.class, "PHPStanOptionsPanel.phpStanNoteLabel.text")); // NOI18N
 
-        org.openide.awt.Mnemonics.setLocalizedText(phpStanMinVersionInfoLabel, org.openide.util.NbBundle.getMessage(PHPStanOptionsPanel.class, "PHPStanOptionsPanel.phpStanMinVersionInfoLabel.text")); // NOI18N
+        Mnemonics.setLocalizedText(phpStanMinVersionInfoLabel, NbBundle.getMessage(PHPStanOptionsPanel.class, "PHPStanOptionsPanel.phpStanMinVersionInfoLabel.text")); // NOI18N
 
-        org.openide.awt.Mnemonics.setLocalizedText(phpStanLearnMoreLabel, org.openide.util.NbBundle.getMessage(PHPStanOptionsPanel.class, "PHPStanOptionsPanel.phpStanLearnMoreLabel.text")); // NOI18N
-        phpStanLearnMoreLabel.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mousePressed(java.awt.event.MouseEvent evt) {
+        Mnemonics.setLocalizedText(phpStanLearnMoreLabel, NbBundle.getMessage(PHPStanOptionsPanel.class, "PHPStanOptionsPanel.phpStanLearnMoreLabel.text")); // NOI18N
+        phpStanLearnMoreLabel.addMouseListener(new MouseAdapter() {
+            public void mousePressed(MouseEvent evt) {
                 phpStanLearnMoreLabelMousePressed(evt);
             }
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
+            public void mouseEntered(MouseEvent evt) {
                 phpStanLearnMoreLabelMouseEntered(evt);
             }
         });
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        GroupLayout layout = new GroupLayout(this);
         this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        layout.setHorizontalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                     .addComponent(phpStanMinVersionInfoLabel)
-                    .addComponent(phpStanLearnMoreLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(phpStanLearnMoreLabel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                     .addComponent(phpStanConfigurationLabel)
                     .addComponent(phpStanLabel)
                     .addComponent(phpStanLevelLabel)
-                    .addComponent(phpStanNoteLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(phpStanNoteLabel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                     .addComponent(phpStanMemoryLimitLabel))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(phpStanTextField, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                            .addComponent(phpStanConfigurationInfoLabel)
+                            .addComponent(phpStanLevelComboBox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                            .addComponent(phpStanMemoryLimitTextField, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 24, Short.MAX_VALUE))
+                    .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+                            .addComponent(phpStanConfigurationTextField)
+                            .addComponent(phpStanTextField, GroupLayout.Alignment.LEADING)
+                            .addGroup(GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                                 .addComponent(phpStanHintLabel)
                                 .addGap(0, 0, Short.MAX_VALUE)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(phpStanBrowseButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(phpStanSearchButton))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(phpStanConfigurationTextField)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(phpStanConfiturationBrowseButton))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(phpStanConfigurationInfoLabel)
-                            .addComponent(phpStanLevelComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(phpStanMemoryLimitTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 24, Short.MAX_VALUE))))
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(phpStanBrowseButton)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(phpStanSearchButton))
+                            .addComponent(phpStanConfiturationBrowseButton)))))
         );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        layout.setVerticalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                     .addComponent(phpStanLabel)
-                    .addComponent(phpStanTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(phpStanTextField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                     .addComponent(phpStanBrowseButton)
                     .addComponent(phpStanSearchButton))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(phpStanHintLabel)
                 .addGap(6, 6, 6)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                     .addComponent(phpStanConfigurationLabel)
-                    .addComponent(phpStanConfigurationTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(phpStanConfigurationTextField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                     .addComponent(phpStanConfiturationBrowseButton))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(phpStanConfigurationInfoLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                     .addComponent(phpStanLevelLabel)
-                    .addComponent(phpStanLevelComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(phpStanLevelComboBox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                     .addComponent(phpStanMemoryLimitLabel)
-                    .addComponent(phpStanMemoryLimitTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(phpStanMemoryLimitTextField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addComponent(phpStanNoteLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(phpStanNoteLabel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(phpStanMinVersionInfoLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(phpStanLearnMoreLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(phpStanLearnMoreLabel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    @NbBundle.Messages("PHPStanOptionsPanel.browse.title=Select PHPStan")
-    private void phpStanBrowseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_phpStanBrowseButtonActionPerformed
-        File file = new FileChooserBuilder(PHPStanOptionsPanel.class.getName() + PHPSTAN_LAST_FOLDER_SUFFIX)
-                .setFilesOnly(true)
-                .setTitle(Bundle.PHPStanOptionsPanel_browse_title())
-                .showOpenDialog();
+    private void phpStanBrowseButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_phpStanBrowseButtonActionPerformed
+        File file = AnalysisUiUtils.browsePHPStan();
         if (file != null) {
             phpStanTextField.setText(file.getAbsolutePath());
         }
     }//GEN-LAST:event_phpStanBrowseButtonActionPerformed
 
-    @NbBundle.Messages({
-        "PHPStanOptionsPanel.search.title=PHPStan scripts",
-        "PHPStanOptionsPanel.search.scripts=PHPStan scripts:",
-        "PHPStanOptionsPanel.search.pleaseWaitPart=PHPStan scripts",
-        "PHPStanOptionsPanel.search.notFound=No PHPStan scripts found."
-    })
-    private void phpStanSearchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_phpStanSearchButtonActionPerformed
-        String phpStan = UiUtils.SearchWindow.search(new UiUtils.SearchWindow.SearchWindowSupport() {
-
-            @Override
-            public List<String> detect() {
-                return FileUtils.findFileOnUsersPath(PHPStan.NAME, PHPStan.LONG_NAME);
-            }
-
-            @Override
-            public String getWindowTitle() {
-                return Bundle.PHPStanOptionsPanel_search_title();
-            }
-
-            @Override
-            public String getListTitle() {
-                return Bundle.PHPStanOptionsPanel_search_scripts();
-            }
-
-            @Override
-            public String getPleaseWaitPart() {
-                return Bundle.PHPStanOptionsPanel_search_pleaseWaitPart();
-            }
-
-            @Override
-            public String getNoItemsFound() {
-                return Bundle.PHPStanOptionsPanel_search_notFound();
-            }
-        });
+    private void phpStanSearchButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_phpStanSearchButtonActionPerformed
+        String phpStan = AnalysisUiUtils.searchPHPStan();
         if (phpStan != null) {
             phpStanTextField.setText(phpStan);
         }
     }//GEN-LAST:event_phpStanSearchButtonActionPerformed
 
-    private void phpStanLearnMoreLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_phpStanLearnMoreLabelMouseEntered
+    private void phpStanLearnMoreLabelMouseEntered(MouseEvent evt) {//GEN-FIRST:event_phpStanLearnMoreLabelMouseEntered
         evt.getComponent().setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
     }//GEN-LAST:event_phpStanLearnMoreLabelMouseEntered
 
-    private void phpStanLearnMoreLabelMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_phpStanLearnMoreLabelMousePressed
+    private void phpStanLearnMoreLabelMousePressed(MouseEvent evt) {//GEN-FIRST:event_phpStanLearnMoreLabelMousePressed
         try {
             URL url = new URL("https://github.com/phpstan/phpstan"); // NOI18N
             HtmlBrowser.URLDisplayer.getDefault().showURL(url);
@@ -296,12 +265,8 @@ public class PHPStanOptionsPanel extends AnalysisCategoryPanel {
         }
     }//GEN-LAST:event_phpStanLearnMoreLabelMousePressed
 
-    @NbBundle.Messages("PHPStanOptionsPanel.configuration.browse.title=Select PHPStan Configuration File")
-    private void phpStanConfiturationBrowseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_phpStanConfiturationBrowseButtonActionPerformed
-        File file = new FileChooserBuilder(PHPStanOptionsPanel.class.getName() + PHPSTAN_CONFIGURATION_LAST_FOLDER_SUFFIX)
-                .setFilesOnly(true)
-                .setTitle(Bundle.PHPStanOptionsPanel_configuration_browse_title())
-                .showOpenDialog();
+    private void phpStanConfiturationBrowseButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_phpStanConfiturationBrowseButtonActionPerformed
+        File file = AnalysisUiUtils.browsePHPStanConfiguration();
         if (file != null) {
             phpStanConfigurationTextField.setText(file.getAbsolutePath());
         }
@@ -309,22 +274,22 @@ public class PHPStanOptionsPanel extends AnalysisCategoryPanel {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton phpStanBrowseButton;
-    private javax.swing.JLabel phpStanConfigurationInfoLabel;
-    private javax.swing.JLabel phpStanConfigurationLabel;
-    private javax.swing.JTextField phpStanConfigurationTextField;
-    private javax.swing.JButton phpStanConfiturationBrowseButton;
-    private javax.swing.JLabel phpStanHintLabel;
-    private javax.swing.JLabel phpStanLabel;
-    private javax.swing.JLabel phpStanLearnMoreLabel;
-    private javax.swing.JComboBox<String> phpStanLevelComboBox;
-    private javax.swing.JLabel phpStanLevelLabel;
-    private javax.swing.JLabel phpStanMemoryLimitLabel;
-    private javax.swing.JTextField phpStanMemoryLimitTextField;
-    private javax.swing.JLabel phpStanMinVersionInfoLabel;
-    private javax.swing.JLabel phpStanNoteLabel;
-    private javax.swing.JButton phpStanSearchButton;
-    private javax.swing.JTextField phpStanTextField;
+    private JButton phpStanBrowseButton;
+    private JLabel phpStanConfigurationInfoLabel;
+    private JLabel phpStanConfigurationLabel;
+    private JTextField phpStanConfigurationTextField;
+    private JButton phpStanConfiturationBrowseButton;
+    private JLabel phpStanHintLabel;
+    private JLabel phpStanLabel;
+    private JLabel phpStanLearnMoreLabel;
+    private JComboBox<String> phpStanLevelComboBox;
+    private JLabel phpStanLevelLabel;
+    private JLabel phpStanMemoryLimitLabel;
+    private JTextField phpStanMemoryLimitTextField;
+    private JLabel phpStanMinVersionInfoLabel;
+    private JLabel phpStanNoteLabel;
+    private JButton phpStanSearchButton;
+    private JTextField phpStanTextField;
     // End of variables declaration//GEN-END:variables
 
     @NbBundle.Messages("PHPStanOptionsPanel.category.name=PHPStan")
@@ -419,29 +384,5 @@ public class PHPStanOptionsPanel extends AnalysisCategoryPanel {
 
     private void setPHPStanMemoryLimit(String memoryLimit) {
         phpStanMemoryLimitTextField.setText(memoryLimit);
-    }
-
-    //~ Inner classes
-    private final class DefaultDocumentListener implements DocumentListener {
-
-        @Override
-        public void insertUpdate(DocumentEvent e) {
-            processUpdate();
-        }
-
-        @Override
-        public void removeUpdate(DocumentEvent e) {
-            processUpdate();
-        }
-
-        @Override
-        public void changedUpdate(DocumentEvent e) {
-            processUpdate();
-        }
-
-        private void processUpdate() {
-            fireChange();
-        }
-
     }
 }

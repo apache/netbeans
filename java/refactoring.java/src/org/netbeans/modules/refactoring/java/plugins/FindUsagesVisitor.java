@@ -395,7 +395,7 @@ public class FindUsagesVisitor extends ErrorAwareTreePathScanner<Tree, Element> 
         if (classTree != null && p.getKind() == ElementKind.CONSTRUCTOR) {
             for (Tree t : classTree.getMembers()) {
                 Element elem = workingCopy.getTrees().getElement(TreePath.getPath(workingCopy.getCompilationUnit(), t));
-                if (elem.getKind() == ElementKind.CONSTRUCTOR) {
+                if ((elem != null) && (elem.getKind() == ElementKind.CONSTRUCTOR)) {
                     TreePath superCall = trees.getPath(workingCopy.getCompilationUnit(), ((ExpressionStatementTree) ((MethodTree) t).getBody().getStatements().get(0)).getExpression());
                     Element superCallElement = trees.getElement(superCall);
                     if (superCallElement != null && superCallElement.equals(p) && !workingCopy.getTreeUtilities().isSynthetic(superCall)) {

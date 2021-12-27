@@ -60,6 +60,7 @@ import org.netbeans.modules.php.editor.parser.astnodes.BodyDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.ClassDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.Comment;
 import org.netbeans.modules.php.editor.parser.astnodes.FieldsDeclaration;
+import org.netbeans.modules.php.editor.parser.astnodes.FormalParameter;
 import org.netbeans.modules.php.editor.parser.astnodes.Identifier;
 import org.netbeans.modules.php.editor.parser.astnodes.MethodDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.NullableType;
@@ -71,6 +72,7 @@ import org.netbeans.modules.php.editor.parser.astnodes.Program;
 import org.netbeans.modules.php.editor.parser.astnodes.SingleFieldDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.TraitDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.TypeDeclaration;
+import org.netbeans.modules.php.editor.parser.astnodes.UnionType;
 import org.netbeans.modules.php.editor.parser.astnodes.Variable;
 import org.netbeans.modules.php.editor.parser.astnodes.visitors.DefaultVisitor;
 import org.openide.filesystems.FileObject;
@@ -115,7 +117,7 @@ public final class CGSInfo {
         hasConstructor = false;
         this.generateDoc = true;
         fluentSetter = false;
-        isPublicModifier = false;
+        isPublicModifier = true;
         this.howToGenerate = CGSGenerator.GenWay.AS_JAVA;
         this.phpVersion = phpVersion != null ? phpVersion : PhpVersion.getDefault();
     }
@@ -361,11 +363,15 @@ public final class CGSInfo {
                 type = getPropertyType(singleFieldDeclaration);
             } else {
                 // PHP 7.4 or newer
-                QualifiedName qualifiedName = QualifiedName.create(fieldsDeclaration.getFieldType());
-                if (qualifiedName != null) {
-                    type = qualifiedName.toString();
-                    if (fieldsDeclaration.getFieldType() instanceof NullableType) {
-                        type = CodeUtils.NULLABLE_TYPE_PREFIX + type;
+                if (fieldsDeclaration.getFieldType() instanceof UnionType) {
+                    type = VariousUtils.getUnionType((UnionType) fieldsDeclaration.getFieldType());
+                } else {
+                    QualifiedName qualifiedName = QualifiedName.create(fieldsDeclaration.getFieldType());
+                    if (qualifiedName != null) {
+                        type = qualifiedName.toString();
+                        if (fieldsDeclaration.getFieldType() instanceof NullableType) {
+                            type = CodeUtils.NULLABLE_TYPE_PREFIX + type;
+                        }
                     }
                 }
                 assert !type.isEmpty() : "couldn't get the qualified name from the field type(" + fieldsDeclaration.getFieldType() + ")"; // NOI18N
@@ -436,6 +442,15 @@ public final class CGSInfo {
         public void visit(MethodDeclaration node) {
             String name = node.getFunction().getFunctionName().getName();
             String possibleProperty;
+            if (CodeUtils.isConstructor(node)) {
+                // [NETBEANS-4443] PHP 8.0 Constructor Property Promotion
+                for (FormalParameter parameter : node.getFunction().getFormalParameters()) {
+                    FieldsDeclaration fieldsDeclaration = FieldsDeclaration.create(parameter);
+                    if (fieldsDeclaration != null) {
+                        scan(fieldsDeclaration);
+                    }
+                }
+            }
             if (name != null) {
                 if (name.startsWith(CGSGenerator.START_OF_GETTER)) {
                     possibleProperty = name.substring(CGSGenerator.START_OF_GETTER.length());

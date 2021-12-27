@@ -622,7 +622,7 @@ public final class IdxPropertyPatternPanel extends javax.swing.JPanel
         if (TYPES == null) {
             String typeList = NbBundle.getMessage(PropertyPatternPanel.class, "PropertyPatternPanel_Types"); // NOI18N
             StringTokenizer st = new StringTokenizer(typeList, "|"); // NOI18N
-            List l = new LinkedList();
+            List<String> l = new LinkedList<>();
             while (st.hasMoreTokens()) {
                 String type = st.nextToken().trim();
                 l.add(type);

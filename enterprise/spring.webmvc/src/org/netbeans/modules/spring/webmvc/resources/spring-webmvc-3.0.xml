@@ -25,7 +25,7 @@
     <localizing-bundle>org.netbeans.modules.spring.webmvc.resources.Bundle</localizing-bundle>
     <volume>
         <type>classpath</type>
-        <resource>jar:nbinst://org.netbeans.libs.springframework/modules/ext/spring-3.0/spring-webmvc-3.2.7.RELEASE.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.libs.springframework/modules/ext/spring-3.0/spring-webmvc-3.2.18.RELEASE.jar!/</resource>
     </volume>
     <volume>
         <type>src</type>
@@ -37,7 +37,7 @@
     <properties>
         <property>
             <name>maven-dependencies</name>
-            <value>org.springframework:spring-webmvc:3.2.7.RELEASE:jar</value>
+            <value>org.springframework:spring-webmvc:3.2.18.RELEASE:jar</value>
         </property>
     </properties>
     

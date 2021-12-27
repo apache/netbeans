@@ -34,6 +34,7 @@ import java.util.StringTokenizer;
 import java.util.WeakHashMap;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import org.netbeans.lib.editor.util.StringEscapeUtils;
 import org.openide.ErrorManager;
 import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
@@ -70,12 +71,12 @@ public class IndexBuilder implements Runnable, ChangeListener {
         /**
          * Display name / title of the helpset
          */
-        String      title;
+        String title;
 
         /**
          * Name of the index/overview file
          */
-        String      indexFileName;
+        String indexFileName;
     }
 
     @SuppressWarnings("LeakingThisInConstructor")
@@ -157,8 +158,8 @@ public class IndexBuilder implements Runnable, ChangeListener {
         }
         URL[] docRoots = jdocRegs.getDocRoots();
         // XXX needs to be able to listen to result; when it changes, call scheduleTask()
-        Map<URL,Info> m = new WeakHashMap<URL,Info>();
-//        long startTime = System.nanoTime();
+        Map<URL,Info> m = new WeakHashMap<>();
+        // long startTime = System.nanoTime();
 
         for ( int ifCount = 0; ifCount < docRoots.length; ifCount++ ) {
             URL fo = docRoots[ifCount];
@@ -230,7 +231,7 @@ public class IndexBuilder implements Runnable, ChangeListener {
                 this.filesystemInfo = m;
             }
         }
-        List<Index> data = new ArrayList<Index>();
+        List<Index> data = new ArrayList<>();
         for (Map.Entry<URL,Info> entry : filesystemInfo.entrySet()) {
             Info info = entry.getValue();
             URL fo = URLUtils.findOpenable(entry.getKey(), info.indexFileName);
@@ -242,8 +243,8 @@ public class IndexBuilder implements Runnable, ChangeListener {
         Collections.sort(data);
         cachedData = data;
 
-//        long elapsedTime = System.nanoTime() - startTime;
-//        System.out.println("\nElapsed time[nano]: " + elapsedTime);
+        // long elapsedTime = System.nanoTime() - startTime;
+        // System.out.println("\nElapsed time[nano]: " + elapsedTime);
     }
     
     /**
@@ -252,20 +253,15 @@ public class IndexBuilder implements Runnable, ChangeListener {
      */
     private String parseTitle(URL html) {
         String title = null;
-        try {
+        try (InputStream is = new BufferedInputStream(URLUtils.openStream(html), 1024)) {
             // #71979: html parser used again to fix encoding issues.
             // I have measured no difference if the parser or plain file reading
             // is used (#32551).
             // In case the parser is stopped as soon as it finds the title it is
             // even faster than the previous fix.
-            InputStream is = new BufferedInputStream(URLUtils.openStream(html), 1024);
             SimpleTitleParser tp = new SimpleTitleParser(is);
-            try {
-                tp.parse();
-                title = tp.getTitle();
-            } finally {
-                is.close();
-            }
+            tp.parse();
+            title = tp.getTitle();
         } catch (IOException ioe) {
             ErrorManager.getDefault().notify(ErrorManager.INFORMATIONAL, ioe);
         }
@@ -417,6 +413,11 @@ public class IndexBuilder implements Runnable, ChangeListener {
                             } else {
                                 title = new String(buf, 0, offset - 7, charset).trim();
                             }
+                            
+                            // Unescape the title, done for JDK 11.
+                            // JDK 11 title contains &amp; (NETBEANS-4176)
+                            title = StringEscapeUtils.unescapeHtml(title);
+                            
                             return;
                         }
                     default:

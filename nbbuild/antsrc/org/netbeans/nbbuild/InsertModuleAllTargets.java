@@ -136,8 +136,29 @@ public final class InsertModuleAllTargets extends Task {
                     continue;
                 }
                 String[] prereqsAsCnb = entry.getBuildPrerequisites();
-                StringBuffer namedDeps = new StringBuffer("init");
-                String myCluster = clustersOfModules.get(path);
+                StringBuilder namedDeps = new StringBuilder("init");
+                String myCluster = clustersOfModules.get(entry.getNetbeansOrgId());
+                if (myCluster != null) {
+                    String clusterDep = "all-cluster-" + myCluster;
+                    if (!prj.getTargets().keySet().contains(clusterDep)) {
+                        Target t = new Target();
+                        t.setName(clusterDep);
+                        t.setLocation(getLocation());
+                        t.setDepends("init");
+                        prj.addTarget(t);
+                        CallTarget call = (CallTarget) prj.createTask("antcall");
+                        call.setTarget("build-one-cluster-dependencies");
+                        call.setInheritAll(false);
+                        Property param = call.createParam();
+                        param.setName("one.cluster.dependencies");
+                        param.setValue(props.get(myCluster + ".depends"));
+                        param = call.createParam();
+                        param.setName("one.cluster.name");
+                        param.setValue("this-cluster");
+                        t.addTask(call);
+                    }
+                    namedDeps.append(",").append(clusterDep);
+                }
                 for (String cnb : prereqsAsCnb ) {
                     ModuleListParser.Entry other = mlp.findByCodeNameBase(cnb);
                     if (other == null) {
@@ -159,18 +180,6 @@ public final class InsertModuleAllTargets extends Task {
                 t.setLocation(getLocation());
                 t.setDepends(namedDepsS);
                 prj.addTarget(t);
-                if (myCluster != null) {
-                    CallTarget call = (CallTarget) prj.createTask("antcall");
-                    call.setTarget("build-one-cluster-dependencies");
-                    call.setInheritAll(false);
-                    Property param = call.createParam();
-                    param.setName("one.cluster.dependencies");
-                    param.setValue(props.get(myCluster + ".depends"));
-                    param = call.createParam();
-                    param.setName("one.cluster.name");
-                    param.setValue("this-cluster");
-                    t.addTask(call);
-                }
                 Echo echo = (Echo) prj.createTask("echo");
                 echo.setMessage("Building " + path + "...");
                 t.addTask(echo);

@@ -56,14 +56,14 @@ class AddOSGiParamToNbmPluginConfiguration implements ModelOperation<POMModel> {
             //check plugin management first.
             PluginManagement pm = bld.getPluginManagement();
             if (pm != null) {
-                plg = PluginBackwardPropertyUtils.findPluginFromPluginManagement(pm);                
+                plg = PluginBackwardPropertyUtils.findPluginFromPluginManagement(pm);
             }
             if (plg == null) { // should not happen to begin with
                 plg = model.getFactory().createPlugin();
                 bld.addPlugin(plg);
                 plg.setGroupId(MavenNbModuleImpl.GROUPID_APACHE);
                 plg.setArtifactId(MavenNbModuleImpl.NBM_PLUGIN);
-                plg.setVersion(MavenNbModuleImpl.LATEST_NBM_PLUGIN_VERSION);
+                plg.setVersion(MavenNbModuleImpl.getLatestNbmPluginVersion());
             }
         }
         Configuration cnf = plg.getConfiguration();

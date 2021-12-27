@@ -84,6 +84,18 @@ is the proper place.
     <!-- ACTUAL CHANGES BEGIN HERE: -->
 
     <changes>
+        <change id="ElementOpenGetLocation">
+            <api name="general"/>
+            <summary>Adding ElementOpen.getLocation(ClasspathInfo, ElementHandle, String)</summary>
+            <version major="1" minor="45"/>
+            <date day="25" month="3" year="2021"/>
+            <author login="dbalek"/>
+            <compatibility addition="yes">
+            </compatibility>
+            <description>
+                 Adding ElementOpen.getLocation(ClasspathInfo, ElementHandle, String) method.
+            </description>
+        </change>
         <change id="ElementOpenForTreePathHandle">
             <api name="general"/>
             <summary>Adding ElementOpen.open(FileObject toSearch, TreePathHandle toOpen)</summary>

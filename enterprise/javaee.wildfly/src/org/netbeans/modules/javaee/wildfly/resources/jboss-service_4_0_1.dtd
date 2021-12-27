@@ -1,0 +1,301 @@
+<!--
+~ JBoss, Home of Professional Open Source
+~ Copyright 2019, Red Hat, Inc., and individual contributors as indicated
+~ by the @authors tag.
+~
+~ Licensed under the Apache License, Version 2.0 (the "License");
+~ you may not use this file except in compliance with the License.
+~ You may obtain a copy of the License at
+~
+~ http://www.apache.org/licenses/LICENSE-2.0
+~
+~ Unless required by applicable law or agreed to in writing, software
+~ distributed under the License is distributed on an "AS IS" BASIS,
+~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~ See the License for the specific language governing permissions and
+~ limitations under the License.
+-->
+
+<!-- A skeleton JBoss MBean service descriptor DTD. This cannot be used in
+general to validate a jboss-service.xml descriptor due to the fact that the
+'attribute' element allows ANY content.
+
+DOCTYPE server
+    PUBLIC "-//JBoss//DTD MBean Service 4.0//EN"
+    "http://www.jboss.org/dtd/jbossas/jboss-service_4_0_1.dtd"
+-->
+<!-- The server element is the root element.
+-->
+<!ELEMENT server (loader-repository? , local-directory* , classpath* , mbean*)>
+
+<!-- The loader-repository specifies the name of the UnifiedLoaderRepository
+   MBean to use for the ear to provide ear level scoping of classes deployed
+   in the ear. It is a unique JMX ObjectName string. It may also specify
+   an arbitrary configuration by including a loader-repository-config element.
+
+Examples:
+   <loader-repository>jboss.test:loader=cts-cmp2v1-sar.ear</loader-repository>
+
+   <loader-repository loaderRepositoryClass='dot.com.LoaderRepository'>
+      dot.com:loader=unique-archive-name
+      <loader-repository-config configParserClass='dot.com.LoaderParser'>
+         java2ParentDelegaton=true
+      </loader-repository-config>
+   </loader-repository>
+-->
+<!ELEMENT loader-repository (#PCDATA | loader-repository-config)*>
+
+<!-- The loaderRepositoryClass attribute gives the classname of the
+org.jboss.mx.loading.LoaderRepository implementation.
+-->
+<!ATTLIST loader-repository loaderRepositoryClass CDATA  #IMPLIED>
+
+<!-- The loader-repository-config element specifies any arbitrary configuration
+fragment for use in configuring the loader-repository instance. The actual
+content of this element is specific to the loaderRepositoryClass and the
+code parsing the element.
+-->
+<!ELEMENT loader-repository-config (#PCDATA)>
+
+<!-- The configParserClass attribute gives the classname of the
+org.jboss.mx.loading.LoaderRepositoryFactory.LoaderRepositoryConfigParser
+implementation to use to parse the loader-repository-config content.
+-->
+<!ATTLIST loader-repository-config configParserClass CDATA  #IMPLIED>
+
+<!-- A local-directory element specifies that portions of the sar are to be unjard into the data
+directory of the server configuration.
+-->
+<!ELEMENT local-directory EMPTY>
+
+<!-- The optional path attribute gives the prefix of the sar entries that should be copied
+into the data directory. If it is not specified the entire sar contents will be placed into
+the data directory.
+-->
+<!ATTLIST local-directory path CDATA  #IMPLIED>
+
+<!-- A classpath element specifies a location which will be included in the services
+deployment classpath.
+-->
+<!ELEMENT classpath EMPTY>
+
+<!-- The codebase attribute specifies the base URL from which the jars or classes
+are loaded from. If the codebase is '.' then it is equal to the mbean deployment URL.
+Otherwise, it is resolved as a path spec relative to the serverHomeURL (e.g., file:/jboss-3.2.0)
+using the URL ctor URL(serverHomeURL, codebase)
+
+Examples:
+
+   <classpath codebase='.' archives='util.jar' />
+   <classpath codebase='http://classloader.dot.com' archives='*' />
+   <classpath codebase="lib" archives="*"/>
+-->
+<!ATTLIST classpath codebase CDATA  #REQUIRED>
+
+<!-- The archives attribute specifies either the '*' wildcard to indicate all contents of the
+codebase should be included, or a comma seperated list of the jars to include.
+-->
+<!ATTLIST classpath archives CDATA  #IMPLIED>
+
+<!-- The mbean element defines a JBoss MBean service. This includes the
+mbean class, attributes and dependencies.
+-->
+<!ELEMENT mbean (constructor? , xmbean? , attribute* , depends* , depends-list*)>
+
+<!-- The code attributes gives the fully qualified name of the MBean
+implementation class.
+-->
+<!ATTLIST mbean code      CDATA  #REQUIRED>
+
+<!-- The name attribute gives the JMX ObjectName string to use when registering
+the MBean. This must be a unique and valid JMX name.
+-->
+<!ATTLIST mbean name      CDATA  #REQUIRED>
+
+<!-- The optional interface attribute gives the full qualified name of the class
+uses to construct the management interface of the mbean. In absence of it an interface
+with the name ending by MBean will be looked in the implementation class. When used
+this interface is defined explicitely.
+-->
+<!ATTLIST mbean interface CDATA  #IMPLIED>
+
+<!-- The xmbean-dd attribute defines the path to the JBoss XMBean descriptor. This
+is an xml document conforming to:
+
+<!DOCTYPE mbean PUBLIC
+      "-//JBoss//DTD JBOSS XMBEAN 1.0//EN"
+      "http://www.jboss.org/j2ee/dtd/jboss_xmbean_1_0.dtd">
+
+If the descriptor is embedded via a nested xmbean element, the xmbean-dd attribute
+must be given as an empty string.
+
+Example:
+	<mbean code="org.jboss.test.jmx.xmbean.User"
+		name="jboss.test:service=xmbean-user"
+		xmbean-dd="META-INF/org/jboss/test/jmx/xmbean/User.xml" />
+-->
+<!ATTLIST mbean xmbean-dd CDATA  #IMPLIED>
+
+<!-- The optional xmbean-code attribute specifies the ModelMBean implementation class
+to use. This defaults to org.jboss.mx.modelmbean.XMBean.
+-->
+<!ATTLIST mbean xmbean-code CDATA  #IMPLIED>
+
+<!-- The xmbean element specifies a nested JBoss XMBean descriptor fragment. Its
+supported content model is the same as the mbean element of the jboss_xmbean_1_0.dtd
+
+Example:
+	<mbean code="org.jboss.test.jmx.xmbean.User"
+		name="jboss.test:service=xmbean-user"
+		xmbean-dd="">
+		<xmbean>
+			...
+		</xmbean>
+	</mbean>
+-->
+<!ELEMENT xmbean ANY>
+
+<!-- The constructor element defines a non-default constructor to use when
+instantiating the mbean.
+-->
+<!ELEMENT constructor (arg*)>
+
+<!-- The arg element specify the constructor arguments in the order of the
+ctor signature. Each arg has a type and value attribute.
+-->
+<!ELEMENT arg EMPTY>
+
+<!-- The type attribute gives the type of the argument as defined in the
+ctor signature. If not defined java.lang.String is assumed.
+-->
+<!ATTLIST arg type  CDATA  #IMPLIED>
+
+<!-- The value attribute provides the string representation of the ctor
+argument. It is converted from a string to type using Java PropertyEditor or a
+ctor taking a single string as its argument.
+-->
+<!ATTLIST arg value CDATA  #REQUIRED>
+
+<!-- The attribute element specifies the initial value for a management attribute of
+the enclosing mbean. Typically the value of the attribute element is the string
+representation of the attribute, but it can be an arbitrary xml fragment that is
+parsed by the mbean.
+-->
+<!ELEMENT attribute ANY>
+
+<!-- The required name attribute gives the name of the attribute. This is the
+name exposed by the mbean to the MBeanServer for the attribute.
+-->
+<!ATTLIST attribute name CDATA  #REQUIRED>
+
+<!-- The optional replace attribute indicates whether references of the form ${x}
+in the attribute element content should be replaced with the corresponding
+System.getProperty(x) value.
+-->
+<!ATTLIST attribute replace (true | false) 'true'>
+<!-- The optional trim attribute specifies whether the attribute element content should
+be trimmed of whitespace.
+-->
+<!ATTLIST attribute trim (true | false) 'true'>
+
+<!-- The attributeClass attribute specifies that type of object that
+should be created. This is needed for non-concreate attribute types
+like interfaces and abstract classes.
+-->
+<!ATTLIST attribute attributeClass CDATA  #IMPLIED>
+
+<!-- The serialDataType defines the how the content of the attribute
+element is interpretted by the ServiceConfigurator. The possible values
+are:
+   + text: the content is treated as the string representation of the
+   attribute value. It will be mapped to the attribute using the PropertyEditor
+   registered for the attribute type.
+   + javaBean: the content is a collection of property elements.
+   + jbxb: the content is an xml element from a namespace with an associated
+      xml schema that can be unmarshalled using the JBossXB framework.
+-->
+<!ATTLIST attribute serialDataType (text | javaBean | jbxb) 'text'>
+
+<!-- The property element is used to describe the JavaBean properties of
+an attribute when the attribute element serialDataType is javaBean.
+-->
+<!ELEMENT property (#PCDATA)>
+<!-- The required name attribute gives the name of the property. This is the
+name of a JavaBean property for the attribute type.
+-->
+<!ATTLIST property name CDATA #REQUIRED>
+
+<!-- The depends element specifies a JMX ObjectName string for an mbean
+on which the enclosing mbean depends.
+
+Example:
+   <mbean code="myBean" name="domain:name=x">
+      <depends optional-attribute-name="yName">domain:name=y</depends>
+   </mbean>
+
+   <mbean code="myBean" name="domain:name=x">
+      <depends optional-attribute-name="anonName">
+         <mbean code="nestedBean" name="domain:name=x.y">
+         ...
+         </mbean>
+      </depends>
+   </mbean>
+-->
+<!ELEMENT depends (#PCDATA | mbean)*>
+
+<!-- The optional-attribute-name attribute specifies the attribute name
+which should be populated with the JMX ObjectName of the depends element.
+This allows an mbean to have access to the name of the mbean on which
+it depends.
+-->
+<!ATTLIST depends optional-attribute-name CDATA  #IMPLIED>
+
+<!-- The proxy-type attribute specifies the interface name
+that should be exposed on an MBeanProxy pointing at the dependent
+MBean, specified by the JMX ObjectName.
+
+The special value proxy-type="attribute" will use the
+class declared in the MBeanAttributeInfo as the interface
+for the MBeanProxy.
+
+Example:
+   <mbean code="org.jboss.example.Helper" name="domain:name=helper"/>
+
+   <mbean code="myBean" name="domain:name=x">
+      <depends optional-attribute-name="Helper"
+               proxy-type="org.jboss.example.HelperMBean"
+      >domain:name=helper</depends>
+   </mbean>
+
+   <mbean code="myBean" name="domain:name=x">
+      <depends optional-attribute-name="Helper"
+               proxy-type="attribute"
+      >domain:name=helper</depends>
+   </mbean>
+-->
+<!ATTLIST depends proxy-type CDATA  #IMPLIED>
+
+<!-- The depends-list element specifies a series of JMX ObjectName
+strings of mbeans on which the enclosing mbean depends.
+
+Example:
+   <mbean code="myBean" name="domain:name=x">
+      <depends-list optional-attribute-name="myObjectNameList">
+         <depends-list-element>domain:name=y</depends-list-element>
+         <depends-list-element>domain:name=z</depends-list-element>
+      </depends-list>
+   </mbean>
+-->
+<!ELEMENT depends-list (depends-list-element)+>
+
+<!-- The optional-attribute-name attribute specifies the attribute name
+which should be populated with a java.util.List that contains the JMX
+ObjectName(s) of the depends-list elements. This allows an mbean to have
+access to the names of the mbeans on which it depends.
+-->
+<!ATTLIST depends-list optional-attribute-name CDATA  #IMPLIED>
+
+<!-- The depends-list-element element specifies a JMX ObjectName string
+for an mbean on which the enclosing mbean depends.
+-->
+<!ELEMENT depends-list-element (#PCDATA | mbean)*>

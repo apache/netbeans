@@ -411,7 +411,7 @@ public class TagLibParseSupport implements org.openide.nodes.Node.Cookie, TagLib
         
         private boolean checkError(JspParserAPI.ErrorDescriptor err) {
             if(err.getErrorMessage() == null) {
-                Logger.global.log(Level.INFO, null, 
+                Logger.getGlobal().log(Level.INFO, null, 
                         new IllegalStateException("Invalid JspParserAPI.ErrorDescription from jsp parser - null error message: " + err.toString()));
                 return false;
             }

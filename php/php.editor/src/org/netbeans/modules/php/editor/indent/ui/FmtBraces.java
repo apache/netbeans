@@ -19,13 +19,27 @@
 
 package org.netbeans.modules.php.editor.indent.ui;
 
+import java.awt.BorderLayout;
+import java.awt.Component;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.GroupLayout;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSeparator;
+import javax.swing.LayoutStyle;
+import javax.swing.SwingConstants;
+import org.netbeans.api.annotations.common.StaticResource;
 import org.netbeans.modules.options.editor.spi.PreferencesCustomizer;
 import static org.netbeans.modules.php.editor.indent.FmtOptions.*;
 import org.netbeans.modules.php.editor.indent.FmtOptions.CategorySupport;
 import static org.netbeans.modules.php.editor.indent.FmtOptions.CategorySupport.OPTION_ID;
+import org.openide.awt.Mnemonics;
+import org.openide.util.NbBundle;
 
 
 /**
@@ -34,7 +48,10 @@ import static org.netbeans.modules.php.editor.indent.FmtOptions.CategorySupport.
  */
 public class FmtBraces extends javax.swing.JPanel {
 
+    @StaticResource
+    private static final String PREVIEW_FILE = "org/netbeans/modules/php/editor/indent/ui/Spaces.php"; // NOI18N
     private static final Logger LOGGER = Logger.getLogger(FmtBraces.class.getName());
+    private static final long serialVersionUID = -5170484158871845819L;
 
     public FmtBraces() {
         initComponents();
@@ -48,6 +65,7 @@ public class FmtBraces extends javax.swing.JPanel {
         ifCombo.putClientProperty(OPTION_ID, IF_BRACE_PLACEMENT);
         forCombo.putClientProperty(OPTION_ID, FOR_BRACE_PLACEMENT);
         switchCombo.putClientProperty(OPTION_ID, SWITCH_BRACE_PLACEMENT);
+        matchCombo.putClientProperty(OPTION_ID, MATCH_BRACE_PLACEMENT);
         whileCombo.putClientProperty(OPTION_ID, WHILE_BRACE_PLACEMENT);
         catchCombo.putClientProperty(OPTION_ID, CATCH_BRACE_PLACEMENT);
         useTraitCombo.putClientProperty(OPTION_ID, USE_TRAIT_BODY_BRACE_PLACEMENT);
@@ -56,14 +74,13 @@ public class FmtBraces extends javax.swing.JPanel {
     }
 
     public static PreferencesCustomizer.Factory getController() {
-        String preview = "";
+        String preview = ""; // NOI18N
         try {
-            preview = Utils.loadPreviewText(FmtBlankLines.class.getClassLoader().getResourceAsStream("org/netbeans/modules/php/editor/indent/ui/Spaces.php"));
+            preview = Utils.loadPreviewText(FmtBlankLines.class.getClassLoader().getResourceAsStream(PREVIEW_FILE));
         } catch (IOException ex) {
             LOGGER.log(Level.WARNING, null, ex);
         }
-        return new CategorySupport.Factory("braces", FmtBraces.class, //NOI18N
-                preview);
+        return new CategorySupport.Factory("braces", FmtBraces.class, preview); // NOI18N
     }
 
     /** This method is called from within the constructor to
@@ -74,118 +91,109 @@ public class FmtBraces extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        mainScrollPane = new javax.swing.JScrollPane();
-        mainPanel = new javax.swing.JPanel();
-        bracesPlacementLabel = new javax.swing.JLabel();
-        jSeparator1 = new javax.swing.JSeparator();
-        classDeclLabel = new javax.swing.JLabel();
-        classDeclCombo = new javax.swing.JComboBox();
-        anonymousClassLabel = new javax.swing.JLabel();
-        anonymousClassCombo = new javax.swing.JComboBox<>();
-        methodDeclLabel = new javax.swing.JLabel();
-        methodDeclCombo = new javax.swing.JComboBox();
-        ifLabel = new javax.swing.JLabel();
-        ifCombo = new javax.swing.JComboBox();
-        forLabel = new javax.swing.JLabel();
-        forCombo = new javax.swing.JComboBox();
-        whileLabel = new javax.swing.JLabel();
-        whileCombo = new javax.swing.JComboBox();
-        switchLabel = new javax.swing.JLabel();
-        switchCombo = new javax.swing.JComboBox();
-        catchLabel = new javax.swing.JLabel();
-        catchCombo = new javax.swing.JComboBox();
-        useTraitLabel = new javax.swing.JLabel();
-        useTraitCombo = new javax.swing.JComboBox();
-        groupUseLabel = new javax.swing.JLabel();
-        groupUseCombo = new javax.swing.JComboBox<>();
-        otherLabel = new javax.swing.JLabel();
-        otherCombo = new javax.swing.JComboBox();
+        mainScrollPane = new JScrollPane();
+        mainPanel = new JPanel();
+        bracesPlacementLabel = new JLabel();
+        jSeparator1 = new JSeparator();
+        classDeclLabel = new JLabel();
+        classDeclCombo = new JComboBox();
+        anonymousClassLabel = new JLabel();
+        anonymousClassCombo = new JComboBox<>();
+        methodDeclLabel = new JLabel();
+        methodDeclCombo = new JComboBox();
+        ifLabel = new JLabel();
+        ifCombo = new JComboBox();
+        forLabel = new JLabel();
+        forCombo = new JComboBox();
+        whileLabel = new JLabel();
+        whileCombo = new JComboBox();
+        switchLabel = new JLabel();
+        switchCombo = new JComboBox();
+        catchLabel = new JLabel();
+        catchCombo = new JComboBox();
+        useTraitLabel = new JLabel();
+        useTraitCombo = new JComboBox();
+        groupUseLabel = new JLabel();
+        groupUseCombo = new JComboBox<>();
+        otherLabel = new JLabel();
+        otherCombo = new JComboBox();
+        matchLabel = new JLabel();
+        matchCombo = new JComboBox<>();
 
-        setName(org.openide.util.NbBundle.getMessage(FmtBraces.class, "LBL_Braces")); // NOI18N
+        setName(NbBundle.getMessage(FmtBraces.class, "LBL_Braces")); // NOI18N
         setOpaque(false);
-        setLayout(new java.awt.BorderLayout());
+        setLayout(new BorderLayout());
 
         bracesPlacementLabel.setLabelFor(bracesPlacementLabel);
-        org.openide.awt.Mnemonics.setLocalizedText(bracesPlacementLabel, org.openide.util.NbBundle.getMessage(FmtBraces.class, "LBL_br_bracesPlacement")); // NOI18N
+        Mnemonics.setLocalizedText(bracesPlacementLabel, NbBundle.getMessage(FmtBraces.class, "LBL_br_bracesPlacement")); // NOI18N
 
         classDeclLabel.setLabelFor(classDeclCombo);
-        org.openide.awt.Mnemonics.setLocalizedText(classDeclLabel, org.openide.util.NbBundle.getMessage(FmtBraces.class, "LBL_bp_ClassDecl")); // NOI18N
+        Mnemonics.setLocalizedText(classDeclLabel, NbBundle.getMessage(FmtBraces.class, "LBL_bp_ClassDecl")); // NOI18N
 
-        classDeclCombo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        classDeclCombo.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                classDeclComboActionPerformed(evt);
-            }
-        });
+        classDeclCombo.setModel(new DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         anonymousClassLabel.setLabelFor(anonymousClassCombo);
-        org.openide.awt.Mnemonics.setLocalizedText(anonymousClassLabel, org.openide.util.NbBundle.getMessage(FmtBraces.class, "FmtBraces.anonymousClassLabel.text")); // NOI18N
+        Mnemonics.setLocalizedText(anonymousClassLabel, NbBundle.getMessage(FmtBraces.class, "FmtBraces.anonymousClassLabel.text")); // NOI18N
 
-        anonymousClassCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        anonymousClassCombo.setModel(new DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         methodDeclLabel.setLabelFor(methodDeclCombo);
-        org.openide.awt.Mnemonics.setLocalizedText(methodDeclLabel, org.openide.util.NbBundle.getMessage(FmtBraces.class, "LBL_bp_MethodDecl")); // NOI18N
+        Mnemonics.setLocalizedText(methodDeclLabel, NbBundle.getMessage(FmtBraces.class, "LBL_bp_MethodDecl")); // NOI18N
 
-        methodDeclCombo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        methodDeclCombo.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                methodDeclComboActionPerformed(evt);
-            }
-        });
+        methodDeclCombo.setModel(new DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         ifLabel.setLabelFor(ifCombo);
-        org.openide.awt.Mnemonics.setLocalizedText(ifLabel, org.openide.util.NbBundle.getMessage(FmtBraces.class, "LBL_bp_If")); // NOI18N
+        Mnemonics.setLocalizedText(ifLabel, NbBundle.getMessage(FmtBraces.class, "LBL_bp_If")); // NOI18N
 
-        ifCombo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        ifCombo.setModel(new DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         forLabel.setLabelFor(forCombo);
-        org.openide.awt.Mnemonics.setLocalizedText(forLabel, org.openide.util.NbBundle.getMessage(FmtBraces.class, "LBL_bp_FOR")); // NOI18N
+        Mnemonics.setLocalizedText(forLabel, NbBundle.getMessage(FmtBraces.class, "LBL_bp_FOR")); // NOI18N
 
-        forCombo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        forCombo.setModel(new DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         whileLabel.setLabelFor(whileCombo);
-        org.openide.awt.Mnemonics.setLocalizedText(whileLabel, org.openide.util.NbBundle.getMessage(FmtBraces.class, "LBL_bp_WHILE")); // NOI18N
+        Mnemonics.setLocalizedText(whileLabel, NbBundle.getMessage(FmtBraces.class, "LBL_bp_WHILE")); // NOI18N
 
-        whileCombo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        whileCombo.setModel(new DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         switchLabel.setLabelFor(switchCombo);
-        org.openide.awt.Mnemonics.setLocalizedText(switchLabel, org.openide.util.NbBundle.getMessage(FmtBraces.class, "LBL_bp_SWITCH")); // NOI18N
+        Mnemonics.setLocalizedText(switchLabel, NbBundle.getMessage(FmtBraces.class, "LBL_bp_SWITCH")); // NOI18N
 
-        switchCombo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        switchCombo.setModel(new DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         catchLabel.setLabelFor(catchCombo);
-        org.openide.awt.Mnemonics.setLocalizedText(catchLabel, org.openide.util.NbBundle.getMessage(FmtBraces.class, "LBL_bp_catch")); // NOI18N
+        Mnemonics.setLocalizedText(catchLabel, NbBundle.getMessage(FmtBraces.class, "LBL_bp_catch")); // NOI18N
 
-        catchCombo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        catchCombo.setModel(new DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
-        org.openide.awt.Mnemonics.setLocalizedText(useTraitLabel, org.openide.util.NbBundle.getMessage(FmtBraces.class, "FmtBraces.useTraitLabel.text")); // NOI18N
+        Mnemonics.setLocalizedText(useTraitLabel, NbBundle.getMessage(FmtBraces.class, "FmtBraces.useTraitLabel.text")); // NOI18N
 
-        useTraitCombo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        useTraitCombo.setModel(new DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         groupUseLabel.setLabelFor(groupUseCombo);
-        org.openide.awt.Mnemonics.setLocalizedText(groupUseLabel, org.openide.util.NbBundle.getMessage(FmtBraces.class, "FmtBraces.groupUseLabel.text")); // NOI18N
+        Mnemonics.setLocalizedText(groupUseLabel, NbBundle.getMessage(FmtBraces.class, "FmtBraces.groupUseLabel.text")); // NOI18N
 
-        groupUseCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        groupUseCombo.setModel(new DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         otherLabel.setLabelFor(otherCombo);
-        org.openide.awt.Mnemonics.setLocalizedText(otherLabel, org.openide.util.NbBundle.getMessage(FmtBraces.class, "LBL_bp_Other")); // NOI18N
+        Mnemonics.setLocalizedText(otherLabel, NbBundle.getMessage(FmtBraces.class, "LBL_bp_Other")); // NOI18N
 
-        otherCombo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        otherCombo.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                otherComboActionPerformed(evt);
-            }
-        });
+        otherCombo.setModel(new DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
-        javax.swing.GroupLayout mainPanelLayout = new javax.swing.GroupLayout(mainPanel);
+        matchLabel.setLabelFor(matchCombo);
+        Mnemonics.setLocalizedText(matchLabel, NbBundle.getMessage(FmtBraces.class, "FmtBraces.matchLabel.text")); // NOI18N
+
+        matchCombo.setModel(new DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
+        GroupLayout mainPanelLayout = new GroupLayout(mainPanel);
         mainPanel.setLayout(mainPanelLayout);
-        mainPanelLayout.setHorizontalGroup(
-            mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        mainPanelLayout.setHorizontalGroup(mainPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(mainPanelLayout.createSequentialGroup()
-                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(mainPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                     .addGroup(mainPanelLayout.createSequentialGroup()
                         .addContainerGap()
-                        .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(mainPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                             .addComponent(forLabel)
                             .addComponent(ifLabel)
                             .addComponent(whileLabel)
@@ -197,168 +205,167 @@ public class FmtBraces extends javax.swing.JPanel {
                             .addComponent(classDeclLabel)
                             .addComponent(anonymousClassLabel)
                             .addComponent(groupUseLabel))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(classDeclCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(anonymousClassCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(methodDeclCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(ifCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(forCombo, 0, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(whileCombo, 0, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(switchCombo, 0, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(catchCombo, 0, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(useTraitCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(groupUseCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(otherCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(mainPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                            .addComponent(classDeclCombo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                            .addComponent(anonymousClassCombo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                            .addComponent(methodDeclCombo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                            .addComponent(ifCombo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                            .addComponent(forCombo, 0, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                            .addComponent(whileCombo, 0, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                            .addComponent(switchCombo, 0, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                            .addComponent(catchCombo, 0, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                            .addComponent(useTraitCombo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                            .addComponent(groupUseCombo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                            .addComponent(otherCombo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
                     .addGroup(mainPanelLayout.createSequentialGroup()
                         .addGap(12, 12, 12)
                         .addComponent(bracesPlacementLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jSeparator1)))
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jSeparator1))
+                    .addGroup(mainPanelLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(matchLabel)
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(matchCombo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
 
-        mainPanelLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {classDeclCombo, methodDeclCombo});
+        mainPanelLayout.linkSize(SwingConstants.HORIZONTAL, new Component[] {classDeclCombo, methodDeclCombo});
 
-        mainPanelLayout.setVerticalGroup(
-            mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        mainPanelLayout.setVerticalGroup(mainPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(mainPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(mainPanelLayout.createParallelGroup(GroupLayout.Alignment.TRAILING)
                     .addComponent(bracesPlacementLabel)
-                    .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(classDeclLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(classDeclCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jSeparator1, GroupLayout.PREFERRED_SIZE, 10, GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(mainPanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                    .addComponent(classDeclLabel, GroupLayout.PREFERRED_SIZE, 18, GroupLayout.PREFERRED_SIZE)
+                    .addComponent(classDeclCombo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(mainPanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                     .addComponent(anonymousClassLabel)
-                    .addComponent(anonymousClassCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(anonymousClassCombo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(mainPanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                     .addComponent(methodDeclLabel)
-                    .addComponent(methodDeclCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(ifCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(methodDeclCombo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(mainPanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                    .addComponent(ifCombo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                     .addComponent(ifLabel))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(forCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(mainPanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                    .addComponent(forCombo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                     .addComponent(forLabel))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(whileCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(mainPanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                    .addComponent(whileCombo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                     .addComponent(whileLabel))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(switchCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(mainPanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                    .addComponent(switchCombo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                     .addComponent(switchLabel))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(catchCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(mainPanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                    .addComponent(matchCombo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                    .addComponent(matchLabel))
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(mainPanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                    .addComponent(catchCombo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                     .addComponent(catchLabel))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(useTraitCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(mainPanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                    .addComponent(useTraitCombo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                     .addComponent(useTraitLabel))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(mainPanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                     .addComponent(groupUseLabel)
-                    .addComponent(groupUseCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(otherCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(groupUseCombo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(mainPanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                    .addComponent(otherCombo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                     .addComponent(otherLabel))
-                .addContainerGap())
+                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        bracesPlacementLabel.getAccessibleContext().setAccessibleName(org.openide.util.NbBundle.getMessage(FmtBraces.class, "FmtBraces.bracesPlacementLabel.AccessibleContext.accessibleName")); // NOI18N
-        bracesPlacementLabel.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(FmtBraces.class, "FmtBraces.bracesPlacementLabel.AccessibleContext.accessibleDescription")); // NOI18N
-        jSeparator1.getAccessibleContext().setAccessibleName(org.openide.util.NbBundle.getMessage(FmtBraces.class, "FmtBraces.jSeparator1.AccessibleContext.accessibleName")); // NOI18N
-        jSeparator1.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(FmtBraces.class, "FmtBraces.jSeparator1.AccessibleContext.accessibleDescription")); // NOI18N
-        classDeclLabel.getAccessibleContext().setAccessibleName(org.openide.util.NbBundle.getMessage(FmtBraces.class, "FmtBraces.classDeclLabel.AccessibleContext.accessibleName")); // NOI18N
-        classDeclLabel.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(FmtBraces.class, "FmtBraces.classDeclLabel.AccessibleContext.accessibleDescription")); // NOI18N
-        classDeclCombo.getAccessibleContext().setAccessibleName(org.openide.util.NbBundle.getMessage(FmtBraces.class, "FmtBraces.classDeclCombo.AccessibleContext.accessibleName")); // NOI18N
-        classDeclCombo.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(FmtBraces.class, "FmtBraces.classDeclCombo.AccessibleContext.accessibleDescription")); // NOI18N
-        methodDeclLabel.getAccessibleContext().setAccessibleName(org.openide.util.NbBundle.getMessage(FmtBraces.class, "FmtBraces.methodDeclLabel.AccessibleContext.accessibleName")); // NOI18N
-        methodDeclLabel.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(FmtBraces.class, "FmtBraces.methodDeclLabel.AccessibleContext.accessibleDescription")); // NOI18N
-        methodDeclCombo.getAccessibleContext().setAccessibleName(org.openide.util.NbBundle.getMessage(FmtBraces.class, "FmtBraces.methodDeclCombo.AccessibleContext.accessibleName")); // NOI18N
-        methodDeclCombo.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(FmtBraces.class, "FmtBraces.methodDeclCombo.AccessibleContext.accessibleDescription")); // NOI18N
-        ifLabel.getAccessibleContext().setAccessibleName(org.openide.util.NbBundle.getMessage(FmtBraces.class, "FmtBraces.ifLabel.AccessibleContext.accessibleName")); // NOI18N
-        ifLabel.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(FmtBraces.class, "FmtBraces.ifLabel.AccessibleContext.accessibleDescription")); // NOI18N
-        ifCombo.getAccessibleContext().setAccessibleName(org.openide.util.NbBundle.getMessage(FmtBraces.class, "FmtBraces.ifCombo.AccessibleContext.accessibleName")); // NOI18N
-        ifCombo.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(FmtBraces.class, "FmtBraces.ifCombo.AccessibleContext.accessibleDescription")); // NOI18N
-        forLabel.getAccessibleContext().setAccessibleName(org.openide.util.NbBundle.getMessage(FmtBraces.class, "FmtBraces.forLabel.AccessibleContext.accessibleName")); // NOI18N
-        forLabel.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(FmtBraces.class, "FmtBraces.forLabel.AccessibleContext.accessibleDescription")); // NOI18N
-        forCombo.getAccessibleContext().setAccessibleName(org.openide.util.NbBundle.getMessage(FmtBraces.class, "FmtBraces.forCombo.AccessibleContext.accessibleName")); // NOI18N
-        forCombo.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(FmtBraces.class, "FmtBraces.forCombo.AccessibleContext.accessibleDescription")); // NOI18N
-        whileLabel.getAccessibleContext().setAccessibleName(org.openide.util.NbBundle.getMessage(FmtBraces.class, "FmtBraces.whileLabel.AccessibleContext.accessibleName")); // NOI18N
-        whileLabel.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(FmtBraces.class, "FmtBraces.whileLabel.AccessibleContext.accessibleDescription")); // NOI18N
-        whileCombo.getAccessibleContext().setAccessibleName(org.openide.util.NbBundle.getMessage(FmtBraces.class, "FmtBraces.whileCombo.AccessibleContext.accessibleName")); // NOI18N
-        whileCombo.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(FmtBraces.class, "FmtBraces.whileCombo.AccessibleContext.accessibleDescription")); // NOI18N
-        switchLabel.getAccessibleContext().setAccessibleName(org.openide.util.NbBundle.getMessage(FmtBraces.class, "FmtBraces.switchLabel.AccessibleContext.accessibleName")); // NOI18N
-        switchLabel.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(FmtBraces.class, "FmtBraces.switchLabel.AccessibleContext.accessibleDescription")); // NOI18N
-        switchCombo.getAccessibleContext().setAccessibleName(org.openide.util.NbBundle.getMessage(FmtBraces.class, "FmtBraces.switchCombo.AccessibleContext.accessibleName")); // NOI18N
-        switchCombo.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(FmtBraces.class, "FmtBraces.switchCombo.AccessibleContext.accessibleDescription")); // NOI18N
-        catchLabel.getAccessibleContext().setAccessibleName(org.openide.util.NbBundle.getMessage(FmtBraces.class, "FmtBraces.catchLabel.AccessibleContext.accessibleName")); // NOI18N
-        catchLabel.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(FmtBraces.class, "FmtBraces.catchLabel.AccessibleContext.accessibleDescription")); // NOI18N
-        catchCombo.getAccessibleContext().setAccessibleName(org.openide.util.NbBundle.getMessage(FmtBraces.class, "FmtBraces.catchCombo.AccessibleContext.accessibleName")); // NOI18N
-        catchCombo.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(FmtBraces.class, "FmtBraces.catchCombo.AccessibleContext.accessibleDescription")); // NOI18N
-        otherLabel.getAccessibleContext().setAccessibleName(org.openide.util.NbBundle.getMessage(FmtBraces.class, "FmtBraces.otherLabel.AccessibleContext.accessibleName")); // NOI18N
-        otherLabel.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(FmtBraces.class, "FmtBraces.otherLabel.AccessibleContext.accessibleDescription")); // NOI18N
-        otherCombo.getAccessibleContext().setAccessibleName(org.openide.util.NbBundle.getMessage(FmtBraces.class, "FmtBraces.otherCombo.AccessibleContext.accessibleName")); // NOI18N
-        otherCombo.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(FmtBraces.class, "FmtBraces.otherCombo.AccessibleContext.accessibleDescription")); // NOI18N
+        bracesPlacementLabel.getAccessibleContext().setAccessibleName(NbBundle.getMessage(FmtBraces.class, "FmtBraces.bracesPlacementLabel.AccessibleContext.accessibleName")); // NOI18N
+        bracesPlacementLabel.getAccessibleContext().setAccessibleDescription(NbBundle.getMessage(FmtBraces.class, "FmtBraces.bracesPlacementLabel.AccessibleContext.accessibleDescription")); // NOI18N
+        jSeparator1.getAccessibleContext().setAccessibleName(NbBundle.getMessage(FmtBraces.class, "FmtBraces.jSeparator1.AccessibleContext.accessibleName")); // NOI18N
+        jSeparator1.getAccessibleContext().setAccessibleDescription(NbBundle.getMessage(FmtBraces.class, "FmtBraces.jSeparator1.AccessibleContext.accessibleDescription")); // NOI18N
+        classDeclLabel.getAccessibleContext().setAccessibleName(NbBundle.getMessage(FmtBraces.class, "FmtBraces.classDeclLabel.AccessibleContext.accessibleName")); // NOI18N
+        classDeclLabel.getAccessibleContext().setAccessibleDescription(NbBundle.getMessage(FmtBraces.class, "FmtBraces.classDeclLabel.AccessibleContext.accessibleDescription")); // NOI18N
+        classDeclCombo.getAccessibleContext().setAccessibleName(NbBundle.getMessage(FmtBraces.class, "FmtBraces.classDeclCombo.AccessibleContext.accessibleName")); // NOI18N
+        classDeclCombo.getAccessibleContext().setAccessibleDescription(NbBundle.getMessage(FmtBraces.class, "FmtBraces.classDeclCombo.AccessibleContext.accessibleDescription")); // NOI18N
+        methodDeclLabel.getAccessibleContext().setAccessibleName(NbBundle.getMessage(FmtBraces.class, "FmtBraces.methodDeclLabel.AccessibleContext.accessibleName")); // NOI18N
+        methodDeclLabel.getAccessibleContext().setAccessibleDescription(NbBundle.getMessage(FmtBraces.class, "FmtBraces.methodDeclLabel.AccessibleContext.accessibleDescription")); // NOI18N
+        methodDeclCombo.getAccessibleContext().setAccessibleName(NbBundle.getMessage(FmtBraces.class, "FmtBraces.methodDeclCombo.AccessibleContext.accessibleName")); // NOI18N
+        methodDeclCombo.getAccessibleContext().setAccessibleDescription(NbBundle.getMessage(FmtBraces.class, "FmtBraces.methodDeclCombo.AccessibleContext.accessibleDescription")); // NOI18N
+        ifLabel.getAccessibleContext().setAccessibleName(NbBundle.getMessage(FmtBraces.class, "FmtBraces.ifLabel.AccessibleContext.accessibleName")); // NOI18N
+        ifLabel.getAccessibleContext().setAccessibleDescription(NbBundle.getMessage(FmtBraces.class, "FmtBraces.ifLabel.AccessibleContext.accessibleDescription")); // NOI18N
+        ifCombo.getAccessibleContext().setAccessibleName(NbBundle.getMessage(FmtBraces.class, "FmtBraces.ifCombo.AccessibleContext.accessibleName")); // NOI18N
+        ifCombo.getAccessibleContext().setAccessibleDescription(NbBundle.getMessage(FmtBraces.class, "FmtBraces.ifCombo.AccessibleContext.accessibleDescription")); // NOI18N
+        forLabel.getAccessibleContext().setAccessibleName(NbBundle.getMessage(FmtBraces.class, "FmtBraces.forLabel.AccessibleContext.accessibleName")); // NOI18N
+        forLabel.getAccessibleContext().setAccessibleDescription(NbBundle.getMessage(FmtBraces.class, "FmtBraces.forLabel.AccessibleContext.accessibleDescription")); // NOI18N
+        forCombo.getAccessibleContext().setAccessibleName(NbBundle.getMessage(FmtBraces.class, "FmtBraces.forCombo.AccessibleContext.accessibleName")); // NOI18N
+        forCombo.getAccessibleContext().setAccessibleDescription(NbBundle.getMessage(FmtBraces.class, "FmtBraces.forCombo.AccessibleContext.accessibleDescription")); // NOI18N
+        whileLabel.getAccessibleContext().setAccessibleName(NbBundle.getMessage(FmtBraces.class, "FmtBraces.whileLabel.AccessibleContext.accessibleName")); // NOI18N
+        whileLabel.getAccessibleContext().setAccessibleDescription(NbBundle.getMessage(FmtBraces.class, "FmtBraces.whileLabel.AccessibleContext.accessibleDescription")); // NOI18N
+        whileCombo.getAccessibleContext().setAccessibleName(NbBundle.getMessage(FmtBraces.class, "FmtBraces.whileCombo.AccessibleContext.accessibleName")); // NOI18N
+        whileCombo.getAccessibleContext().setAccessibleDescription(NbBundle.getMessage(FmtBraces.class, "FmtBraces.whileCombo.AccessibleContext.accessibleDescription")); // NOI18N
+        switchLabel.getAccessibleContext().setAccessibleName(NbBundle.getMessage(FmtBraces.class, "FmtBraces.switchLabel.AccessibleContext.accessibleName")); // NOI18N
+        switchLabel.getAccessibleContext().setAccessibleDescription(NbBundle.getMessage(FmtBraces.class, "FmtBraces.switchLabel.AccessibleContext.accessibleDescription")); // NOI18N
+        switchCombo.getAccessibleContext().setAccessibleName(NbBundle.getMessage(FmtBraces.class, "FmtBraces.switchCombo.AccessibleContext.accessibleName")); // NOI18N
+        switchCombo.getAccessibleContext().setAccessibleDescription(NbBundle.getMessage(FmtBraces.class, "FmtBraces.switchCombo.AccessibleContext.accessibleDescription")); // NOI18N
+        catchLabel.getAccessibleContext().setAccessibleName(NbBundle.getMessage(FmtBraces.class, "FmtBraces.catchLabel.AccessibleContext.accessibleName")); // NOI18N
+        catchLabel.getAccessibleContext().setAccessibleDescription(NbBundle.getMessage(FmtBraces.class, "FmtBraces.catchLabel.AccessibleContext.accessibleDescription")); // NOI18N
+        catchCombo.getAccessibleContext().setAccessibleName(NbBundle.getMessage(FmtBraces.class, "FmtBraces.catchCombo.AccessibleContext.accessibleName")); // NOI18N
+        catchCombo.getAccessibleContext().setAccessibleDescription(NbBundle.getMessage(FmtBraces.class, "FmtBraces.catchCombo.AccessibleContext.accessibleDescription")); // NOI18N
+        otherLabel.getAccessibleContext().setAccessibleName(NbBundle.getMessage(FmtBraces.class, "FmtBraces.otherLabel.AccessibleContext.accessibleName")); // NOI18N
+        otherLabel.getAccessibleContext().setAccessibleDescription(NbBundle.getMessage(FmtBraces.class, "FmtBraces.otherLabel.AccessibleContext.accessibleDescription")); // NOI18N
+        otherCombo.getAccessibleContext().setAccessibleName(NbBundle.getMessage(FmtBraces.class, "FmtBraces.otherCombo.AccessibleContext.accessibleName")); // NOI18N
+        otherCombo.getAccessibleContext().setAccessibleDescription(NbBundle.getMessage(FmtBraces.class, "FmtBraces.otherCombo.AccessibleContext.accessibleDescription")); // NOI18N
+        matchCombo.getAccessibleContext().setAccessibleName(NbBundle.getMessage(FmtBraces.class, "FmtBraces.matchCombo.AccessibleContext.accessibleName")); // NOI18N
+        matchCombo.getAccessibleContext().setAccessibleDescription(NbBundle.getMessage(FmtBraces.class, "FmtBraces.matchCombo.AccessibleContext.accessibleDescription")); // NOI18N
 
         mainScrollPane.setViewportView(mainPanel);
 
-        add(mainScrollPane, java.awt.BorderLayout.CENTER);
+        add(mainScrollPane, BorderLayout.CENTER);
 
-        getAccessibleContext().setAccessibleName(org.openide.util.NbBundle.getMessage(FmtBraces.class, "FmtBraces.AccessibleContext.accessibleName")); // NOI18N
-        getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(FmtBraces.class, "FmtBraces.AccessibleContext.accessibleDescription")); // NOI18N
+        getAccessibleContext().setAccessibleName(NbBundle.getMessage(FmtBraces.class, "FmtBraces.AccessibleContext.accessibleName")); // NOI18N
+        getAccessibleContext().setAccessibleDescription(NbBundle.getMessage(FmtBraces.class, "FmtBraces.AccessibleContext.accessibleDescription")); // NOI18N
     }// </editor-fold>//GEN-END:initComponents
 
-    private void methodDeclComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_methodDeclComboActionPerformed
-    // TODO add your handling code here:
-}//GEN-LAST:event_methodDeclComboActionPerformed
-
-    private void otherComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_otherComboActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_otherComboActionPerformed
-
-    private void classDeclComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_classDeclComboActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_classDeclComboActionPerformed
-
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JComboBox<String> anonymousClassCombo;
-    private javax.swing.JLabel anonymousClassLabel;
-    private javax.swing.JLabel bracesPlacementLabel;
-    private javax.swing.JComboBox catchCombo;
-    private javax.swing.JLabel catchLabel;
-    private javax.swing.JComboBox classDeclCombo;
-    private javax.swing.JLabel classDeclLabel;
-    private javax.swing.JComboBox forCombo;
-    private javax.swing.JLabel forLabel;
-    private javax.swing.JComboBox<String> groupUseCombo;
-    private javax.swing.JLabel groupUseLabel;
-    private javax.swing.JComboBox ifCombo;
-    private javax.swing.JLabel ifLabel;
-    private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JPanel mainPanel;
-    private javax.swing.JScrollPane mainScrollPane;
-    private javax.swing.JComboBox methodDeclCombo;
-    private javax.swing.JLabel methodDeclLabel;
-    private javax.swing.JComboBox otherCombo;
-    private javax.swing.JLabel otherLabel;
-    private javax.swing.JComboBox switchCombo;
-    private javax.swing.JLabel switchLabel;
-    private javax.swing.JComboBox useTraitCombo;
-    private javax.swing.JLabel useTraitLabel;
-    private javax.swing.JComboBox whileCombo;
-    private javax.swing.JLabel whileLabel;
+    private JComboBox<String> anonymousClassCombo;
+    private JLabel anonymousClassLabel;
+    private JLabel bracesPlacementLabel;
+    private JComboBox catchCombo;
+    private JLabel catchLabel;
+    private JComboBox classDeclCombo;
+    private JLabel classDeclLabel;
+    private JComboBox forCombo;
+    private JLabel forLabel;
+    private JComboBox<String> groupUseCombo;
+    private JLabel groupUseLabel;
+    private JComboBox ifCombo;
+    private JLabel ifLabel;
+    private JSeparator jSeparator1;
+    private JPanel mainPanel;
+    private JScrollPane mainScrollPane;
+    private JComboBox<String> matchCombo;
+    private JLabel matchLabel;
+    private JComboBox methodDeclCombo;
+    private JLabel methodDeclLabel;
+    private JComboBox otherCombo;
+    private JLabel otherLabel;
+    private JComboBox switchCombo;
+    private JLabel switchLabel;
+    private JComboBox useTraitCombo;
+    private JLabel useTraitLabel;
+    private JComboBox whileCombo;
+    private JLabel whileLabel;
     // End of variables declaration//GEN-END:variables
 
 }

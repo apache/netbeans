@@ -19,6 +19,10 @@
 package org.netbeans.modules.php.analysis.parsers;
 
 import java.io.File;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertNotNull;
@@ -46,7 +50,6 @@ public class PHPStanReportParserTest extends NbTestCase {
         assertEquals(5, result.getLine());
         assertEquals("error: Parameter $date of method HelloWorld::sayHello() has invalid typehint type DateTimeImutable.", result.getCategory());
         assertEquals("Parameter $date of method HelloWorld::sayHello() has invalid typehint type DateTimeImutable.", result.getDescription());
-
 
         result = results.get(2);
         assertEquals(FileUtil.toFile(root.getFileObject("vendor/nette/php-generator/src/PhpGenerator/Traits/CommentAware.php")).getAbsolutePath(), result.getFilePath());
@@ -88,9 +91,25 @@ public class PHPStanReportParserTest extends NbTestCase {
     public void testParseNetBeans3022WithoutWorkDir() throws Exception {
         FileObject root = getDataDir("phpstan/PHPStanSupport/netbeans3022");
         FileObject workDir = null;
-        List<Result> results = PHPStanReportParser.parse(getLogFile("phpstan-log-netbeans-3022-without-workdir.xml"), root, workDir);
+        File logFile = getLogFile("phpstan-log-netbeans-3022-without-workdir.xml");
+        fixContent(logFile);
+        List<Result> results = PHPStanReportParser.parse(logFile, root, workDir);
         assertNotNull(results);
         assertEquals(3, results.size());
+    }
+
+    public void testParseWithHtmlEntities() throws Exception {
+        FileObject root = getDataDir("phpstan/PHPStanSupport");
+        FileObject workDir = root;
+        List<Result> results = PHPStanReportParser.parse(getLogFile("phpstan-log-html-entities.xml"), root, workDir);
+        assertNotNull(results);
+
+        assertEquals(1, results.size());
+        Result result = results.get(0);
+        assertEquals(FileUtil.toFile(root.getFileObject("HelloWorld.php")).getAbsolutePath(), result.getFilePath());
+        assertEquals(7, result.getLine());
+        assertEquals("error: Function count() should return int but returns array<string>.", result.getCategory());
+        assertEquals("Function count() should return int but returns array&lt;string&gt;.", result.getDescription());
     }
 
     private File getLogFile(String name) throws Exception {
@@ -105,6 +124,14 @@ public class PHPStanReportParserTest extends NbTestCase {
         assertNotNull(name);
         FileObject dataDir = FileUtil.toFileObject(getDataDir());
         return dataDir.getFileObject(name);
+    }
+
+    private void fixContent(File file) throws Exception {
+        Path path = file.toPath();
+        Charset charset = StandardCharsets.UTF_8;
+        String content = new String(Files.readAllBytes(path), charset);
+        content = content.replace("%WORKDIR%", getDataDir().getAbsolutePath());
+        Files.write(path, content.getBytes(charset));
     }
 
 }

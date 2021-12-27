@@ -1344,8 +1344,8 @@ import org.openide.util.BaseUtilities;
         private void expireRoots() {
             long l = System.currentTimeMillis();
             
-            for (Iterator mapIt = rootHistory.values().iterator(); mapIt.hasNext(); ) {
-                Map<EventType, RingTimeBuffer> map = (Map<EventType, RingTimeBuffer>)mapIt.next();
+            for (Iterator<Map<EventType, RingTimeBuffer>> mapIt = rootHistory.values().iterator(); mapIt.hasNext(); ) {
+                Map<EventType, RingTimeBuffer> map = mapIt.next();
                 for (Iterator<Map.Entry<EventType, RingTimeBuffer>> it = map.entrySet().iterator(); it.hasNext(); ) {
                     Map.Entry<EventType, RingTimeBuffer> entry = it.next();
                     EventType et = entry.getKey();

@@ -24,18 +24,14 @@ import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Rectangle;
-import java.awt.RenderingHints;
 import java.awt.Shape;
-import java.awt.Toolkit;
 import java.awt.font.LineMetrics;
 import java.awt.geom.Area;
 import java.awt.geom.Rectangle2D;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.LinkedList;
-import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.logging.Level;
@@ -268,7 +264,7 @@ public final class HtmlRenderer {
      * @return A cell renderer that can render HTML.
      */
     public static final Renderer createRenderer() {
-        return new HtmlRendererImpl();
+        return new HtmlRendererImpl(true);
     }
 
     /**
@@ -290,7 +286,7 @@ public final class HtmlRenderer {
      * @return a label which can render a subset of HTML very quickly
      */
     public static final JLabel createLabel() {
-        return new HtmlRendererImpl();
+        return new HtmlRendererImpl(false);
     }
 
     /**
@@ -339,7 +335,7 @@ public final class HtmlRenderer {
             // #54257 - on macosx + chinese/japanese fonts, the getStringBounds() method returns bad value
             wid = fm.stringWidth(s);
         } else {
-            wid = (int)fm.getStringBounds(s, g).getWidth();
+            wid = (int) Math.ceil(fm.getStringBounds(s, g).getWidth());
         }
 
         if (paint) {
@@ -520,18 +516,6 @@ public final class HtmlRenderer {
         return _renderHTML( s, pos, g, x, y, w, h, f, defaultColor, style, paint, background, false );
     }
 
-    private static void configureRenderingHints(Graphics graphics) {
-        Graphics2D g = (Graphics2D) graphics;
-        Object desktopHints
-                = Toolkit.getDefaultToolkit().getDesktopProperty("awt.font.desktophints");
-        if (desktopHints instanceof Map<?, ?>) {
-            g.addRenderingHints((Map<?, ?>) desktopHints);
-        } else if (HtmlLabelUI.antialias) {
-            g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-        }
-
-    }
-
     /** Implementation of HTML rendering */
     static double _renderHTML(
         String s, int pos, Graphics g, int x, int y, int w, int h, Font f, Color defaultColor, int style, boolean paint,
@@ -558,7 +542,7 @@ public final class HtmlRenderer {
 
         g.setColor(defaultColor);
         g.setFont(f);
-        configureRenderingHints(g);
+        GraphicsUtils.configureDefaultRenderingHints(g);
 
         char[] chars = s.toCharArray();
         int origX = x;

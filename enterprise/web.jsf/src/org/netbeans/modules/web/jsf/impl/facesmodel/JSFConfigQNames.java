@@ -202,12 +202,14 @@ public enum JSFConfigQNames {
     private QName qname_2_0;
     private QName qname_2_1;
     private QName qname_2_2;
+    private QName qname_2_3;
 
 
     public static final String JSF_1_2_NS = "http://java.sun.com/xml/ns/javaee";  //NOI18N
     public static final String JSF_2_0_NS = "http://java.sun.com/xml/ns/javaee";  //NOI18N
     public static final String JSF_2_1_NS = "http://java.sun.com/xml/ns/javaee";  //NOI18N
     public static final String JSF_2_2_NS = "http://xmlns.jcp.org/xml/ns/javaee"; //NOI18N
+    public static final String JSF_2_3_NS = "http://xmlns.jcp.org/xml/ns/javaee"; //NOI18N
     public static final String JSF_1_1_NS = javax.xml.XMLConstants.NULL_NS_URI;
     public static final String JSFCONFIG_PREFIX = javax.xml.XMLConstants.DEFAULT_NS_PREFIX;
 
@@ -218,6 +220,7 @@ public enum JSFConfigQNames {
         qname_2_0 = new QName(JSF_2_0_NS, localName, JSFCONFIG_PREFIX);
         qname_2_1 = new QName(JSF_2_1_NS, localName, JSFCONFIG_PREFIX);
         qname_2_2 = new QName(JSF_2_2_NS, localName, JSFCONFIG_PREFIX);
+        qname_2_3 = new QName(JSF_2_3_NS, localName, JSFCONFIG_PREFIX);
     }
 
     public QName getQName(JSFVersion version) {
@@ -230,6 +233,8 @@ public enum JSFConfigQNames {
             value = qname_2_1;
         } else if (version.equals(JSFVersion.JSF_2_2)) {
             value = qname_2_2;
+        } else if (version.equals(JSFVersion.JSF_2_3)) {
+            value = qname_2_3;
         }
         return value;
     }
@@ -260,6 +265,8 @@ public enum JSFConfigQNames {
             return jsfqname.getQName(JSFVersion.JSF_2_1).equals(qname);
         } else if (JSFConfigQNames.JSF_2_2_NS.equals(element.getNamespaceURI())) {
             return jsfqname.getQName(JSFVersion.JSF_2_2).equals(qname);
+        } else if (JSFConfigQNames.JSF_2_3_NS.equals(element.getNamespaceURI())) {
+            return jsfqname.getQName(JSFVersion.JSF_2_3).equals(qname);
         }
         return jsfqname.getLocalName().equals(qname.getLocalPart());
     }
@@ -269,6 +276,7 @@ public enum JSFConfigQNames {
     private static final Set<QName> mappedQNames_2_0 = new HashSet<QName>();
     private static final Set<QName> mappedQNames_2_1 = new HashSet<QName>();
     private static final Set<QName> mappedQNames_2_2 = new HashSet<QName>();
+    private static final Set<QName> mappedQNames_2_3 = new HashSet<QName>();
 
     static {
         mappedQNames_1_1.add(FACES_CONFIG.getQName(JSFVersion.JSF_1_1));
@@ -575,12 +583,111 @@ public enum JSFConfigQNames {
         mappedQNames_2_2.add(FINALIZER.getQName(JSFVersion.JSF_2_2));
         mappedQNames_2_2.add(FLOW_CALL.getQName(JSFVersion.JSF_2_2));
         mappedQNames_2_2.add(INBOUND_PARAMETER.getQName(JSFVersion.JSF_2_2));
+        mappedQNames_2_3.add(FACES_CONFIG.getQName(JSFVersion.JSF_2_3));
+        mappedQNames_2_3.add(MANAGED_BEAN.getQName(JSFVersion.JSF_2_3));
+        mappedQNames_2_3.add(CONVERTER.getQName(JSFVersion.JSF_2_3));
+        mappedQNames_2_3.add(NAVIGATION_RULE.getQName(JSFVersion.JSF_2_3));
+        mappedQNames_2_3.add(NAVIGATION_CASE.getQName(JSFVersion.JSF_2_3));
+        mappedQNames_2_3.add(DESCRIPTION.getQName(JSFVersion.JSF_2_3));
+        mappedQNames_2_3.add(DISPLAY_NAME.getQName(JSFVersion.JSF_2_3));
+        mappedQNames_2_3.add(ICON.getQName(JSFVersion.JSF_2_3));
+        mappedQNames_2_3.add(APPLICATION.getQName(JSFVersion.JSF_2_3));
+        mappedQNames_2_3.add(VIEW_HANDLER.getQName(JSFVersion.JSF_2_3));
+        mappedQNames_2_3.add(RESOURCE_BUNDLE.getQName(JSFVersion.JSF_2_3));
+        mappedQNames_2_3.add(FACTORY.getQName(JSFVersion.JSF_2_3));
+        mappedQNames_2_3.add(COMPONENT.getQName(JSFVersion.JSF_2_3));
+        mappedQNames_2_3.add(REFERENCED_BEAN.getQName(JSFVersion.JSF_2_3));
+        mappedQNames_2_3.add(RENDER_KIT.getQName(JSFVersion.JSF_2_3));
+        mappedQNames_2_3.add(LIFECYCLE.getQName(JSFVersion.JSF_2_3));
+        mappedQNames_2_3.add(VALIDATOR.getQName(JSFVersion.JSF_2_3));
+        mappedQNames_2_3.add(FACES_CONFIG_EXTENSION.getQName(JSFVersion.JSF_2_3));
+        mappedQNames_2_3.add(RESOURCE_BUNDLE.getQName(JSFVersion.JSF_2_3));
+        mappedQNames_2_3.add(ACTION_LISTENER.getQName(JSFVersion.JSF_2_3));
+        mappedQNames_2_3.add(DEFAULT_RENDER_KIT_ID.getQName(JSFVersion.JSF_2_3));
+        mappedQNames_2_3.add(MESSAGE_BUNDLE.getQName(JSFVersion.JSF_2_3));
+        mappedQNames_2_3.add(NAVIGATION_HANDLER.getQName(JSFVersion.JSF_2_3));
+        mappedQNames_2_3.add(STATE_MANAGER.getQName(JSFVersion.JSF_2_3));
+        mappedQNames_2_3.add(EL_RESOLVER.getQName(JSFVersion.JSF_2_3));
+        mappedQNames_2_3.add(PROPERTY_RESOLVER.getQName(JSFVersion.JSF_2_3));
+        mappedQNames_2_3.add(VARIABLE_RESOLVER.getQName(JSFVersion.JSF_2_3));
+        mappedQNames_2_3.add(LOCALE_CONFIG.getQName(JSFVersion.JSF_2_3));
+        mappedQNames_2_3.add(APPLICATION_EXTENSION.getQName(JSFVersion.JSF_2_3));
+        mappedQNames_2_3.add(DEFAULT_LOCALE.getQName(JSFVersion.JSF_2_3));
+        mappedQNames_2_3.add(SUPPORTED_LOCALE.getQName(JSFVersion.JSF_2_3));
+        mappedQNames_2_3.add(APPLICATION_FACTORY.getQName(JSFVersion.JSF_2_3));
+        mappedQNames_2_3.add(FACES_CONTEXT_FACTORY.getQName(JSFVersion.JSF_2_3));
+        mappedQNames_2_3.add(FACELET_CACHE_FACTORY.getQName(JSFVersion.JSF_2_3));
+        mappedQNames_2_3.add(LIFECYCLE_FACTORY.getQName(JSFVersion.JSF_2_3));
+        mappedQNames_2_3.add(RENDER_KIT_FACTORY.getQName(JSFVersion.JSF_2_3));
+        mappedQNames_2_3.add(FACTORY_EXTENSION.getQName(JSFVersion.JSF_2_3));
+        mappedQNames_2_3.add(FACET.getQName(JSFVersion.JSF_2_3));
+        mappedQNames_2_3.add(ATTRIBUTE.getQName(JSFVersion.JSF_2_3));
+        mappedQNames_2_3.add(PROPERTY.getQName(JSFVersion.JSF_2_3));
+        mappedQNames_2_3.add(COMPONENT_EXTENSION.getQName(JSFVersion.JSF_2_3));
+        mappedQNames_2_3.add(CONVERTER_EXTENSION.getQName(JSFVersion.JSF_2_3));
+        mappedQNames_2_3.add(MANAGED_PROPERTY.getQName(JSFVersion.JSF_2_3));
+        mappedQNames_2_3.add(MAP_ENTRIES.getQName(JSFVersion.JSF_2_3));
+        mappedQNames_2_3.add(LIST_ENTRIES.getQName(JSFVersion.JSF_2_3));
+        mappedQNames_2_3.add(MANAGED_BEAN_EXTENSION.getQName(JSFVersion.JSF_2_3));
+        mappedQNames_2_3.add(NAVIGATION_RULE_EXTENSION.getQName(JSFVersion.JSF_2_3));
+        mappedQNames_2_3.add(RENDER_KIT_EXTENSION.getQName(JSFVersion.JSF_2_3));
+        mappedQNames_2_3.add(PHASE_LISTENER.getQName(JSFVersion.JSF_2_3));
+        mappedQNames_2_3.add(LIFECYCLE_EXTENSION.getQName(JSFVersion.JSF_2_3));
+        mappedQNames_2_3.add(VALIDATOR_EXTENSION.getQName(JSFVersion.JSF_2_3));
+        mappedQNames_2_3.add(FACES_CONFIG_EXTENSION.getQName(JSFVersion.JSF_2_3));
+        mappedQNames_2_3.add(IF.getQName(JSFVersion.JSF_2_3));
+        mappedQNames_2_3.add(REDIRECT.getQName(JSFVersion.JSF_2_3));
+        mappedQNames_2_3.add(VIEW_PARAM.getQName(JSFVersion.JSF_2_3));
+        mappedQNames_2_3.add(PARTIAL_TRAVERSAL.getQName(JSFVersion.JSF_2_3));
+        mappedQNames_2_3.add(SYSTEM_EVENT_LISTENER.getQName(JSFVersion.JSF_2_3));
+        mappedQNames_2_3.add(RESOURCE_HANDLER.getQName(JSFVersion.JSF_2_3));
+        mappedQNames_2_3.add(DEFAULT_VALIDATORS.getQName(JSFVersion.JSF_2_3));
+        mappedQNames_2_3.add(ORDERING.getQName(JSFVersion.JSF_2_3));
+        mappedQNames_2_3.add(AFTER.getQName(JSFVersion.JSF_2_3));
+        mappedQNames_2_3.add(BEFORE.getQName(JSFVersion.JSF_2_3));
+        mappedQNames_2_3.add(ABSOLUTE_ORDERING.getQName(JSFVersion.JSF_2_3));
+        mappedQNames_2_3.add(OTHERS.getQName(JSFVersion.JSF_2_3));
+        mappedQNames_2_3.add(EXCEPTION_HANDLER_FACTORY.getQName(JSFVersion.JSF_2_3));
+        mappedQNames_2_3.add(EXTERNAL_CONTEXT_FACTORY.getQName(JSFVersion.JSF_2_3));
+        mappedQNames_2_3.add(PARTIAL_VIEW_CONTEXT_FACTORY.getQName(JSFVersion.JSF_2_3));
+        mappedQNames_2_3.add(VIEW_DECLARATION_LANGUAGE_FACTORY.getQName(JSFVersion.JSF_2_3));
+        mappedQNames_2_3.add(TAG_HANDLER_DELEGATE_FACTORY.getQName(JSFVersion.JSF_2_3));
+        mappedQNames_2_3.add(VISIT_CONTEXT_FACTORY.getQName(JSFVersion.JSF_2_3));
+        mappedQNames_2_3.add(NAME.getQName(JSFVersion.JSF_2_3));
+        mappedQNames_2_3.add(RENDERER.getQName(JSFVersion.JSF_2_3));
+        mappedQNames_2_3.add(CLIENT_BEHAVIOR_RENDERER.getQName(JSFVersion.JSF_2_3));
+        mappedQNames_2_3.add(BEHAVIOR.getQName(JSFVersion.JSF_2_3));
+        mappedQNames_2_3.add(BEHAVIOR_EXTENSION.getQName(JSFVersion.JSF_2_3));
+        mappedQNames_2_3.add(RESOURCE_LIBRARY_CONTRACTS.getQName(JSFVersion.JSF_2_3));
+        mappedQNames_2_3.add(RESOURCE_BUNDLE.getQName(JSFVersion.JSF_2_3));
+        mappedQNames_2_3.add(RESOURCE_HANDLER.getQName(JSFVersion.JSF_2_3));
+        mappedQNames_2_3.add(URL_PATTERN.getQName(JSFVersion.JSF_2_3));
+        mappedQNames_2_3.add(FLOW_HANDLER_FACTORY.getQName(JSFVersion.JSF_2_3));
+        mappedQNames_2_3.add(FLASH_FACTORY.getQName(JSFVersion.JSF_2_3));
+        mappedQNames_2_3.add(START_NODE.getQName(JSFVersion.JSF_2_3));
+        mappedQNames_2_3.add(VIEW.getQName(JSFVersion.JSF_2_3));
+        mappedQNames_2_3.add(VDL_DOCUMENT.getQName(JSFVersion.JSF_2_3));
+        mappedQNames_2_3.add(DEFAULT_OUTCOME.getQName(JSFVersion.JSF_2_3));
+        mappedQNames_2_3.add(SWITCH.getQName(JSFVersion.JSF_2_3));
+        mappedQNames_2_3.add(METHOD_CALL.getQName(JSFVersion.JSF_2_3));
+        mappedQNames_2_3.add(FLOW_RETURN.getQName(JSFVersion.JSF_2_3));
+        mappedQNames_2_3.add(INITIALIZER.getQName(JSFVersion.JSF_2_3));
+        mappedQNames_2_3.add(FINALIZER.getQName(JSFVersion.JSF_2_3));
+        mappedQNames_2_3.add(FLOW_CALL.getQName(JSFVersion.JSF_2_3));
+        mappedQNames_2_3.add(INBOUND_PARAMETER.getQName(JSFVersion.JSF_2_3));
+        mappedQNames_2_3.add(OUTBOUND_PARAMETER.getQName(JSFVersion.JSF_2_3));
+        mappedQNames_2_3.add(FLOW_REFERENCE.getQName(JSFVersion.JSF_2_3));
+        mappedQNames_2_3.add(FLOW_ID.getQName(JSFVersion.JSF_2_3));
+        mappedQNames_2_3.add(METHOD.getQName(JSFVersion.JSF_2_3));
+        mappedQNames_2_3.add(FLOW_DEFINITION.getQName(JSFVersion.JSF_2_3));
+        mappedQNames_2_3.add(PROTECTED_VIEWS.getQName(JSFVersion.JSF_2_3));
         mappedQNames_2_2.add(OUTBOUND_PARAMETER.getQName(JSFVersion.JSF_2_2));
         mappedQNames_2_2.add(FLOW_REFERENCE.getQName(JSFVersion.JSF_2_2));
         mappedQNames_2_2.add(FLOW_ID.getQName(JSFVersion.JSF_2_2));
         mappedQNames_2_2.add(METHOD.getQName(JSFVersion.JSF_2_2));
         mappedQNames_2_2.add(FLOW_DEFINITION.getQName(JSFVersion.JSF_2_2));
         mappedQNames_2_2.add(PROTECTED_VIEWS.getQName(JSFVersion.JSF_2_2));
+        
     }
 
     public static Set<QName> getMappedQNames(JSFVersion version) {
@@ -593,6 +700,8 @@ public enum JSFConfigQNames {
             mappedQNames = mappedQNames_2_1;
         } else if (version.equals(JSFVersion.JSF_2_2)) {
             mappedQNames = mappedQNames_2_2;
+        } else if (version.equals(JSFVersion.JSF_2_3)) {
+            mappedQNames = mappedQNames_2_3;
         }
         return Collections.unmodifiableSet(mappedQNames);
     }

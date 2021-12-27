@@ -408,7 +408,7 @@ public class JspHyperlinkProvider implements HyperlinkProvider {
 
                     //compute the type off awt
                     ClasspathInfo cpInfo = ClasspathInfo.create(jspSup.getFileObject());
-                    JavaSource source = JavaSource.create(cpInfo, Collections.EMPTY_LIST);
+                    JavaSource source = JavaSource.create(cpInfo, Collections.<FileObject>emptyList());
 
                     AtomicBoolean cancel = new AtomicBoolean();
                     Compute<TypeElement> compute = new Compute<TypeElement>(cancel,

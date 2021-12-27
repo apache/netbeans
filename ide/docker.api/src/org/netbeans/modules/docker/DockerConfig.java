@@ -91,8 +91,8 @@ public final class DockerConfig {
         }
 
         List<Credentials> ret = new ArrayList<>(currentAuths.size());
-        for (Iterator it = currentAuths.entrySet().iterator(); it.hasNext();) {
-            Map.Entry e = (Map.Entry) it.next();
+        for (Iterator<Map.Entry> it = currentAuths.entrySet().iterator(); it.hasNext();) {
+            Map.Entry e = it.next();
             if (!(e.getKey() instanceof String)) {
                 continue;
             }
@@ -251,8 +251,8 @@ public final class DockerConfig {
                     currentHeaders = new JSONObject();
                 }
                 httpHeaders = new HashMap<>();
-                for (Iterator it = currentHeaders.entrySet().iterator(); it.hasNext(); ) {
-                    Map.Entry e = (Map.Entry) it.next();
+                for (Iterator<Map.Entry> it = currentHeaders.entrySet().iterator(); it.hasNext(); ) {
+                    Map.Entry e = it.next();
                     httpHeaders.put((String) e.getKey(), (String) e.getValue());
                 }
             }

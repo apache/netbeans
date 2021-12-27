@@ -45,8 +45,8 @@ public class TreeObjectListProxyListener implements PropertyChangeListener {
     public TreeObjectListProxyListener(TreeObjectList list) {
         this.list = list;
         list.addPropertyChangeListener(this);
-        for (Iterator it = list.iterator(); it.hasNext();) {
-            TreeObject next = (TreeObject) it.next();
+        for (Iterator<TreeObject> it = list.iterator(); it.hasNext();) {
+            TreeObject next = it.next();
             if (next != null) next.addPropertyChangeListener(this);
         }
     }

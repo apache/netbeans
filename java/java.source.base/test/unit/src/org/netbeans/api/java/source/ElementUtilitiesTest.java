@@ -18,10 +18,16 @@
  */
 
 package org.netbeans.api.java.source;
+import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.ClassTree;
+import com.sun.source.tree.MethodTree;
+import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
+import com.sun.source.util.TreePathScanner;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import javax.lang.model.element.Element;
@@ -436,4 +442,92 @@ public class ElementUtilitiesTest extends NbTestCase {
         }, true);
     }
 
+    public void testIsLocal() throws Exception {
+        prepareTest();
+        SourceUtilsTestUtil.setSourceLevel(testFO, "8");
+        TestUtilities.copyStringToFile(FileUtil.toFile(testFO),
+                "import java.util.Iterator;\n" +
+                "public class Test {\n" +
+                "    public class Nested {\n" +
+                "        {\n" +
+                "            int i;\n" +
+                "            class C { class CN {} int i; { int i;} private void test() { int i; } }\n" +
+                "        }\n" +
+                "        private void test() {\n" +
+                "            int i;\n" +
+                "            class C { class CN {} int i; { int i;} private void test() { int i; } }\n" +
+                "        }\n" +
+                "        private Object o = new Object() {\n" +
+                "            {\n" +
+                "                int i;\n" +
+                "                class C { class CN {} int i; { int i;} private void test() { int i; } }\n" +
+                "            }\n" +
+                "            private void test() {\n" +
+                "                int i;\n" +
+                "                class C { class CN {} int i; { int i;} private void test() { int i; } }\n" +
+                "            }\n" +
+                "            class ON {\n" +
+                "                {\n" +
+                "                    int i;\n" +
+                "                    class C { class CN {} int i; { int i;} private void test() { int i; } }\n" +
+                "                }\n" +
+                "                private void test() {\n" +
+                "                    int i;\n" +
+                "                    class C { class CN {} int i; { int i;} private void test() { int i; } }\n" +
+                "                }\n" +
+                "            }\n" +
+                "        };\n" +
+                "    }\n" +
+                "}");
+        SourceLevelQueryImpl.sourceLevel = "8";
+        JavaSource javaSource = JavaSource.forFileObject(testFO);
+        javaSource.runUserActionTask(new Task<CompilationController>() {
+            public void run(CompilationController controller) throws IOException {
+                controller.toPhase(JavaSource.Phase.RESOLVED);
+                new TreePathScanner<Void, Void>() {
+                    boolean local;
+                    @Override
+                    public Void visitClass(ClassTree node, Void p) {
+                        handleDecl();
+                        return super.visitClass(node, p);
+                    }
+                    @Override
+                    public Void visitMethod(MethodTree node, Void p) {
+                        handleDecl();
+                        boolean oldLocal = local;
+                        try {
+                            local = true;
+                            return super.visitMethod(node, p);
+                        } finally {
+                            local = oldLocal;
+                        }
+                    }
+                    @Override
+                    public Void visitVariable(VariableTree node, Void p) {
+                        handleDecl();
+                        boolean oldLocal = local;
+                        try {
+                            local = true;
+                            return super.visitVariable(node, p);
+                        } finally {
+                            local = oldLocal;
+                        }
+                    }
+                    @Override
+                    public Void visitBlock(BlockTree node, Void p) {
+                        boolean oldLocal = local;
+                        try {
+                            local |= TreeUtilities.CLASS_TREE_KINDS.contains(getCurrentPath().getParentPath().getLeaf().getKind());
+                            return super.visitBlock(node, p);
+                        } finally {
+                            local = oldLocal;
+                        }
+                    }
+                    private void handleDecl() {
+                        Element current = controller.getTrees().getElement(getCurrentPath());
+                        assertEquals(local, controller.getElementUtilities().isLocal(current));
+                    }
+                }.scan(controller.getCompilationUnit(), null);
+            }}, true);
+    }
 }

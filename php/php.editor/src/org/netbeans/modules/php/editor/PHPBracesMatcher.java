@@ -47,7 +47,7 @@ public final class PHPBracesMatcher implements BracesMatcher, BracesMatcher.Cont
 
     private static final Logger LOGGER = Logger.getLogger(PHPBracesMatcher.class.getName());
 
-    MatcherContext context;
+    private final MatcherContext context;
 
     private boolean findBackward;
     private int originOffset;
@@ -104,6 +104,8 @@ public final class PHPBracesMatcher implements BracesMatcher, BracesMatcher.Cont
                 } else if (LexUtilities.textEquals(token.text(), ']')) {
                     return new int [] {ts.offset(), ts.offset() + token.length()};
                 } else if (LexUtilities.textEquals(token.text(), '$', '{')) {
+                    return new int [] {ts.offset(), ts.offset() + token.length()};
+                } else if (LexUtilities.textEquals(token.text(), '#', '[')) { // [NETBEANS-4443] PHP 8.0
                     return new int [] {ts.offset(), ts.offset() + token.length()};
                 } else if (LexUtilities.textEquals(token.text(), ':')) {
                     do {
@@ -207,14 +209,18 @@ public final class PHPBracesMatcher implements BracesMatcher, BracesMatcher.Cont
                         r = LexUtilities.findFwd(doc, ts, PHPTokenId.PHP_TOKEN, '[', PHPTokenId.PHP_TOKEN, ']');
                         return new int [] {r.getStart(), r.getEnd() };
                     } else if (LexUtilities.textEquals(token.text(), ']')) {
-                        matchingText = "["; // NOI18N
                         findBackward = true;
                         r = LexUtilities.findBwd(doc, ts, PHPTokenId.PHP_TOKEN, '[', PHPTokenId.PHP_TOKEN, ']');
-                        return new int [] {r.getStart(), r.getEnd() };
+                        matchingText = r.getLength() == 1 ? "[" : "#["; // NOI18N
+                        return new int[]{r.getStart(), r.getEnd()};
                     } else if (LexUtilities.textEquals(token.text(), '$', '{')) {
                         matchingText = "}"; // NOI18N
                         r = LexUtilities.findFwd(doc, ts, PHPTokenId.PHP_TOKEN, '{', PHPTokenId.PHP_CURLY_CLOSE, '}');
-                        return new int [] {r.getStart(), r.getEnd() };
+                        return new int[]{r.getStart(), r.getEnd()};
+                    } else if (LexUtilities.textEquals(token.text(), '#', '[')) { // attribute
+                        matchingText = "]"; // NOI18N
+                        r = LexUtilities.findFwd(doc, ts, PHPTokenId.PHP_TOKEN, '[', PHPTokenId.PHP_TOKEN, ']');
+                        return new int[]{r.getStart(), r.getEnd()};
                     } else if (LexUtilities.textEquals(token.text(), ':')) {
                         r = LexUtilities.findFwdAlternativeSyntax(doc, ts, token);
                         Token<? extends PHPTokenId> t = ts.token();
@@ -264,6 +270,7 @@ public final class PHPBracesMatcher implements BracesMatcher, BracesMatcher.Cont
                 || LexUtilities.textEquals(token.text(), '[') // NOI18N
                 || LexUtilities.textEquals(token.text(), ']') // NOI18N
                 || LexUtilities.textEquals(token.text(), '$', '{') // NOI18N
+                || LexUtilities.textEquals(token.text(), '#', '[') // [NETBEANS-4443] PHP 8.0
                 || LexUtilities.textEquals(token.text(), ':') // NOI18N
                 || id == PHPTokenId.PHP_ENDFOR
                 || id == PHPTokenId.PHP_ENDFOREACH
@@ -308,7 +315,7 @@ public final class PHPBracesMatcher implements BracesMatcher, BracesMatcher.Cont
                     PHPTokenId.PHP_DO, PHPTokenId.PHP_WHILE,
                     PHPTokenId.PHP_TRY, PHPTokenId.PHP_CATCH, PHPTokenId.PHP_FINALLY,
                     PHPTokenId.PHP_IF, PHPTokenId.PHP_ELSE, PHPTokenId.PHP_ELSEIF,
-                    PHPTokenId.PHP_SWITCH, PHPTokenId.PHP_USE
+                    PHPTokenId.PHP_SWITCH, PHPTokenId.PHP_USE, PHPTokenId.PHP_MATCH
             );
             Token<? extends PHPTokenId> previousToken = LexUtilities.findPreviousToken(ts, lookfor);
             if (previousToken == null || previousToken.id() == PHPTokenId.PHP_CURLY_CLOSE) {

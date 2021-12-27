@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.6.0
+#Version 1.14.0
 
 CLSS public abstract interface java.awt.event.ActionListener
 intf java.util.EventListener
@@ -115,7 +115,6 @@ meth public void putValue(java.lang.String,java.lang.Object)
 meth public void removePropertyChangeListener(java.beans.PropertyChangeListener)
 meth public void setEnabled(boolean)
 supr java.lang.Object
-hfds RECONFIGURE_ON_NULL,arrayTable
 
 CLSS public abstract interface javax.swing.Action
 fld public final static java.lang.String ACCELERATOR_KEY = "AcceleratorKey"
@@ -203,8 +202,6 @@ meth public void setAsynchronousLoadPriority(int)
 meth public void setDocumentFilter(javax.swing.text.DocumentFilter)
 meth public void setDocumentProperties(java.util.Dictionary<java.lang.Object,java.lang.Object>)
 supr java.lang.Object
-hfds AsyncLoadPriority,BAD_LOCK_STATE,I18NProperty,MultiByteProperty,bidiRoot,context,currWriter,data,defaultI18NProperty,documentFilter,documentProperties,filterBypass,notifyingListeners,numReaders,numWriters
-hcls BidiElement,BidiRootElement,DefaultFilterBypass,UndoRedoDocumentEvent
 
 CLSS public javax.swing.text.DefaultEditorKit
 cons public init()
@@ -275,8 +272,6 @@ meth public void read(java.io.Reader,javax.swing.text.Document,int) throws java.
 meth public void write(java.io.OutputStream,javax.swing.text.Document,int,int) throws java.io.IOException,javax.swing.text.BadLocationException
 meth public void write(java.io.Writer,javax.swing.text.Document,int,int) throws java.io.IOException,javax.swing.text.BadLocationException
 supr javax.swing.text.EditorKit
-hfds defaultActions,selectionPageDownAction,selectionPageLeftAction,selectionPageRightAction,selectionPageUpAction,toggleComponentOrientationAction,unselectAction
-hcls BeginAction,BeginLineAction,BeginParagraphAction,BeginWordAction,DeleteNextCharAction,DeletePrevCharAction,DeleteWordAction,DumpModelAction,EndAction,EndLineAction,EndParagraphAction,EndWordAction,NextVisualPositionAction,NextWordAction,PageAction,PreviousWordAction,ReadOnlyAction,SelectAllAction,SelectLineAction,SelectParagraphAction,SelectWordAction,ToggleComponentOrientationAction,UnselectAction,VerticalPageAction,WritableAction
 
 CLSS public abstract interface javax.swing.text.Document
 fld public final static java.lang.String StreamDescriptionProperty = "stream"
@@ -1609,13 +1604,13 @@ meth public int checkCompletion(javax.swing.text.JTextComponent,java.lang.String
 meth public int[] findMatch(int,boolean) throws javax.swing.text.BadLocationException
 meth public int[] findMatchingBlock(int,boolean) throws javax.swing.text.BadLocationException
 meth public java.lang.String getEndTag(int) throws javax.swing.text.BadLocationException
-meth public java.util.List getFollowingLevelTags(int) throws javax.swing.text.BadLocationException
-meth public java.util.List getPreviousLevelTags(int) throws javax.swing.text.BadLocationException
+meth public java.util.List<java.lang.String> getFollowingLevelTags(int) throws javax.swing.text.BadLocationException
+meth public java.util.List<java.lang.String> getPreviousLevelTags(int) throws javax.swing.text.BadLocationException
 meth public org.netbeans.editor.TokenItem getPreviousToken(int) throws javax.swing.text.BadLocationException
 meth public org.netbeans.modules.xml.text.syntax.SyntaxElement createElement(org.netbeans.editor.TokenItem) throws javax.swing.text.BadLocationException
 meth public org.netbeans.modules.xml.text.syntax.SyntaxElement getElementChain(int) throws javax.swing.text.BadLocationException
 supr org.netbeans.editor.ext.ExtSyntaxSupport
-hfds CDATA_END,CDATA_START,documentMonitor,lastInsertedChar,publicId,reference,requestedAutoCompletion,systemId
+hfds CDATA_END,CDATA_START,documentMonitor,lastInsertedChar,publicId,requestedAutoCompletion,systemId
 hcls DocumentMonitor
 
 CLSS public org.netbeans.modules.xml.text.syntax.XMLSyntaxTokenMapper

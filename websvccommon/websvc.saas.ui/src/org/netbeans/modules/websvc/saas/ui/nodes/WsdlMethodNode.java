@@ -190,11 +190,11 @@ public class WsdlMethodNode extends AbstractNode {
 
             signature += ")";
 
-            Iterator excpIterator = javaMethod.getExceptions();
+            Iterator<String> excpIterator = javaMethod.getExceptions();
             if (excpIterator.hasNext()) {
                 signature += " throws";
                 while (excpIterator.hasNext()) {
-                    String currentExcp = (String) excpIterator.next();
+                    String currentExcp = excpIterator.next();
                     signature += " " + currentExcp;
                     if (excpIterator.hasNext()) {
                         signature += ",";
@@ -257,9 +257,9 @@ public class WsdlMethodNode extends AbstractNode {
                 sheet.put(exceptionSet);
             }
 
-            Iterator exceptionIterator = javaMethod.getExceptions();
+            Iterator<String> exceptionIterator = javaMethod.getExceptions();
             for (int ii = 0; exceptionIterator.hasNext(); ii++) {
-                String currentException = (String) exceptionIterator.next();
+                String currentException = exceptionIterator.next();
                 p = new Reflection(currentException, String.class, "toString", null); // NOI18N
                 p.setName("exception" + ii); // NOI18N
                 p.setDisplayName(NbBundle.getMessage(WsdlMethodNode.class, "METHOD_PARAMTYPE")); // NOI18N

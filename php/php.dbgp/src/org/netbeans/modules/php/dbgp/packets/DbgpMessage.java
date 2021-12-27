@@ -51,6 +51,7 @@ import org.xml.sax.SAXException;
  *
  */
 public abstract class DbgpMessage {
+
     private static final Logger LOGGER = Logger.getLogger(DbgpMessage.class.getName());
     private static final String INIT = "init"; // NOI18N
     private static final String RESPONSE = "response"; // NOI18N
@@ -214,8 +215,9 @@ public abstract class DbgpMessage {
      * Notify user about unexpected format of received packet.
      */
     @NbBundle.Messages("DbgpMessage.packet.error=Error occured during communication with Xdebug.\n\n"
-            + "Report issue, provide steps to reproduce and attach IDE and ideally also Xdebug log.\n"
-            + "(Add xdebug.remote_log=/log_path/xdebug.log to your php.ini.)")
+            + "Report issue, provide steps to reproduce and attach IDE and ideally also Xdebug log.\n\n"
+            + "Xdebug 3: Add xdebug.log=/log_path/xdebug.log to your php.ini.\n"
+            + "Xdebug 2: Add xdebug.remote_log=/log_path/xdebug.log to your php.ini.")
     private static void notifyPacketError(Exception e) {
         if (e != null) {
             LOGGER.log(Level.INFO, null, e);
@@ -349,6 +351,7 @@ public abstract class DbgpMessage {
     }
 
     public static final class NoneDbgpMessage extends DbgpMessage {
+
         public NoneDbgpMessage(Node node) {
             super(node);
         }

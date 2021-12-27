@@ -981,8 +981,8 @@
         </Comments>
         <Statements>
             <ExpressionStatement start='7' end='30'>
-                <FieldAccess start='7' end='29'>
-                    <FieldAccess start='7' end='22'>
+                <FieldAccess start='7' end='29' isNullsafe='false'>
+                    <FieldAccess start='7' end='22' isNullsafe='false'>
                         <Variable start='7' end='12' isDollared='true'>
                             <Identifier start='8' end='12' name='test'/>
                         </Variable>
@@ -1000,8 +1000,8 @@
                 </FieldAccess>
             </ExpressionStatement>
             <ExpressionStatement start='31' end='63'>
-                <FieldAccess start='31' end='62'>
-                    <FieldAccess start='31' end='47'>
+                <FieldAccess start='31' end='62' isNullsafe='false'>
+                    <FieldAccess start='31' end='47' isNullsafe='false'>
                         <FunctionInvocation start='31' end='37'>
                             <FucntionName start='31' end='35'>
                                 <NamespaceName start='31' end='35' isCurrent='false' isGlobal='false'>
@@ -1034,8 +1034,8 @@
                 </FieldAccess>
             </ExpressionStatement>
             <ExpressionStatement start='64' end='101'>
-                <FieldAccess start='64' end='100'>
-                    <FieldAccess start='64' end='82'>
+                <FieldAccess start='64' end='100' isNullsafe='false'>
+                    <FieldAccess start='64' end='82' isNullsafe='false'>
                         <ArrayAccess start='64' end='72' type='VARIABLE_ARRAY' isDollared='false'>
                             <ArrayDimension start='69' end='72'>
                                 <Index>
@@ -1080,8 +1080,8 @@
                 </FieldAccess>
             </ExpressionStatement>
             <ExpressionStatement start='102' end='128'>
-                <MethodInvocation start='102' end='127'>
-                    <FieldAccess start='102' end='117'>
+                <MethodInvocation start='102' end='127' isNullsafe='false'>
+                    <FieldAccess start='102' end='117' isNullsafe='false'>
                         <Variable start='102' end='107' isDollared='true'>
                             <Identifier start='103' end='107' name='test'/>
                         </Variable>
@@ -1111,8 +1111,8 @@
                             <Scalar start='155' end='156' type='INT' value='0'/>
                         </Index>
                     </ArrayDimension>
-                    <MethodInvocation start='129' end='154'>
-                        <FieldAccess start='129' end='144'>
+                    <MethodInvocation start='129' end='154' isNullsafe='false'>
+                        <FieldAccess start='129' end='144' isNullsafe='false'>
                             <Variable start='129' end='134' isDollared='true'>
                                 <Identifier start='130' end='134' name='test'/>
                             </Variable>
@@ -1143,8 +1143,8 @@
                             <Scalar start='185' end='186' type='INT' value='1'/>
                         </Index>
                     </ArrayDimension>
-                    <MethodInvocation start='159' end='184'>
-                        <FieldAccess start='159' end='174'>
+                    <MethodInvocation start='159' end='184' isNullsafe='false'>
+                        <FieldAccess start='159' end='174' isNullsafe='false'>
                             <Variable start='159' end='164' isDollared='true'>
                                 <Identifier start='160' end='164' name='test'/>
                             </Variable>
@@ -1169,8 +1169,8 @@
                 </DereferencedArrayAccess>
             </ExpressionStatement>
             <ExpressionStatement start='190' end='215'>
-                <FieldAccess start='190' end='214'>
-                    <FieldAccess start='190' end='207'>
+                <FieldAccess start='190' end='214' isNullsafe='false'>
+                    <FieldAccess start='190' end='207' isNullsafe='false'>
                         <DereferencableVariable start='190' end='197'>
                             <Variable start='191' end='196' isDollared='true'>
                                 <Identifier start='192' end='196' name='test'/>
@@ -1190,8 +1190,8 @@
                 </FieldAccess>
             </ExpressionStatement>
             <ExpressionStatement start='216' end='250'>
-                <FieldAccess start='216' end='249'>
-                    <FieldAccess start='216' end='234'>
+                <FieldAccess start='216' end='249' isNullsafe='false'>
+                    <FieldAccess start='216' end='234' isNullsafe='false'>
                         <DereferencableVariable start='216' end='224'>
                             <FunctionInvocation start='217' end='223'>
                                 <FucntionName start='217' end='221'>
@@ -1226,8 +1226,8 @@
                 </FieldAccess>
             </ExpressionStatement>
             <ExpressionStatement start='251' end='290'>
-                <FieldAccess start='251' end='289'>
-                    <FieldAccess start='251' end='271'>
+                <FieldAccess start='251' end='289' isNullsafe='false'>
+                    <FieldAccess start='251' end='271' isNullsafe='false'>
                         <DereferencableVariable start='251' end='261'>
                             <ArrayAccess start='252' end='260' type='VARIABLE_ARRAY' isDollared='false'>
                                 <ArrayDimension start='257' end='260'>
@@ -1274,9 +1274,9 @@
                 </FieldAccess>
             </ExpressionStatement>
             <ExpressionStatement start='291' end='319'>
-                <MethodInvocation start='291' end='318'>
+                <MethodInvocation start='291' end='318' isNullsafe='false'>
                     <DereferencableVariable start='291' end='308'>
-                        <FieldAccess start='292' end='307'>
+                        <FieldAccess start='292' end='307' isNullsafe='false'>
                             <Variable start='292' end='297' isDollared='true'>
                                 <Identifier start='293' end='297' name='test'/>
                             </Variable>
@@ -1307,8 +1307,8 @@
                             <Scalar start='348' end='349' type='INT' value='0'/>
                         </Index>
                     </ArrayDimension>
-                    <MethodInvocation start='320' end='347'>
-                        <FieldAccess start='320' end='337'>
+                    <MethodInvocation start='320' end='347' isNullsafe='false'>
+                        <FieldAccess start='320' end='337' isNullsafe='false'>
                             <DereferencableVariable start='320' end='327'>
                                 <Variable start='321' end='326' isDollared='true'>
                                     <Identifier start='322' end='326' name='test'/>
@@ -1341,8 +1341,8 @@
                             <Scalar start='380' end='381' type='INT' value='1'/>
                         </Index>
                     </ArrayDimension>
-                    <MethodInvocation start='352' end='379'>
-                        <FieldAccess start='352' end='369'>
+                    <MethodInvocation start='352' end='379' isNullsafe='false'>
+                        <FieldAccess start='352' end='369' isNullsafe='false'>
                             <DereferencableVariable start='352' end='359'>
                                 <Variable start='353' end='358' isDollared='true'>
                                     <Identifier start='354' end='358' name='test'/>
@@ -1370,7 +1370,7 @@
             </ExpressionStatement>
             <ExpressionStatement start='385' end='411'>
                 <StaticConstantAccess start='385' end='410'>
-                    <FieldAccess start='385' end='400'>
+                    <FieldAccess start='385' end='400' isNullsafe='false'>
                         <Variable start='385' end='390' isDollared='true'>
                             <Identifier start='386' end='390' name='test'/>
                         </Variable>
@@ -1390,7 +1390,7 @@
             </ExpressionStatement>
             <ExpressionStatement start='412' end='447'>
                 <StaticConstantAccess start='412' end='446'>
-                    <FieldAccess start='412' end='428'>
+                    <FieldAccess start='412' end='428' isNullsafe='false'>
                         <FunctionInvocation start='412' end='418'>
                             <FucntionName start='412' end='416'>
                                 <NamespaceName start='412' end='416' isCurrent='false' isGlobal='false'>
@@ -1430,7 +1430,7 @@
             </ExpressionStatement>
             <ExpressionStatement start='448' end='481'>
                 <StaticFieldAccess start='448' end='480'>
-                    <FieldAccess start='448' end='466'>
+                    <FieldAccess start='448' end='466' isNullsafe='false'>
                         <ArrayAccess start='448' end='456' type='VARIABLE_ARRAY' isDollared='false'>
                             <ArrayDimension start='453' end='456'>
                                 <Index>
@@ -1463,7 +1463,7 @@
             </ExpressionStatement>
             <ExpressionStatement start='482' end='515'>
                 <StaticFieldAccess start='482' end='514'>
-                    <FieldAccess start='482' end='497'>
+                    <FieldAccess start='482' end='497' isNullsafe='false'>
                         <Variable start='482' end='487' isDollared='true'>
                             <Identifier start='483' end='487' name='test'/>
                         </Variable>
@@ -1505,7 +1505,7 @@
             </ExpressionStatement>
             <ExpressionStatement start='516' end='552'>
                 <StaticFieldAccess start='516' end='551'>
-                    <FieldAccess start='516' end='531'>
+                    <FieldAccess start='516' end='531' isNullsafe='false'>
                         <Variable start='516' end='521' isDollared='true'>
                             <Identifier start='517' end='521' name='test'/>
                         </Variable>
@@ -1565,7 +1565,7 @@
             </ExpressionStatement>
             <ExpressionStatement start='553' end='585'>
                 <StaticMethodInvocation start='553' end='584'>
-                    <FieldAccess start='553' end='568'>
+                    <FieldAccess start='553' end='568' isNullsafe='false'>
                         <Variable start='553' end='558' isDollared='true'>
                             <Identifier start='554' end='558' name='test'/>
                         </Variable>
@@ -1599,7 +1599,7 @@
             </ExpressionStatement>
             <ExpressionStatement start='586' end='618'>
                 <StaticMethodInvocation start='586' end='617'>
-                    <FieldAccess start='586' end='601'>
+                    <FieldAccess start='586' end='601' isNullsafe='false'>
                         <Variable start='586' end='591' isDollared='true'>
                             <Identifier start='587' end='591' name='test'/>
                         </Variable>
@@ -1635,7 +1635,7 @@
                         </Index>
                     </ArrayDimension>
                     <StaticMethodInvocation start='619' end='650'>
-                        <FieldAccess start='619' end='634'>
+                        <FieldAccess start='619' end='634' isNullsafe='false'>
                             <Variable start='619' end='624' isDollared='true'>
                                 <Identifier start='620' end='624' name='test'/>
                             </Variable>
@@ -1672,7 +1672,7 @@
                         </Index>
                     </ArrayDimension>
                     <StaticMethodInvocation start='655' end='686'>
-                        <FieldAccess start='655' end='670'>
+                        <FieldAccess start='655' end='670' isNullsafe='false'>
                             <Variable start='655' end='660' isDollared='true'>
                                 <Identifier start='656' end='660' name='test'/>
                             </Variable>
@@ -1703,7 +1703,7 @@
             </ExpressionStatement>
             <ExpressionStatement start='692' end='720'>
                 <StaticConstantAccess start='692' end='719'>
-                    <FieldAccess start='692' end='709'>
+                    <FieldAccess start='692' end='709' isNullsafe='false'>
                         <DereferencableVariable start='692' end='699'>
                             <Variable start='693' end='698' isDollared='true'>
                                 <Identifier start='694' end='698' name='test'/>
@@ -1725,7 +1725,7 @@
             </ExpressionStatement>
             <ExpressionStatement start='721' end='758'>
                 <StaticConstantAccess start='721' end='757'>
-                    <FieldAccess start='721' end='739'>
+                    <FieldAccess start='721' end='739' isNullsafe='false'>
                         <DereferencableVariable start='721' end='729'>
                             <FunctionInvocation start='722' end='728'>
                                 <FucntionName start='722' end='726'>
@@ -1767,7 +1767,7 @@
             </ExpressionStatement>
             <ExpressionStatement start='759' end='794'>
                 <StaticFieldAccess start='759' end='793'>
-                    <FieldAccess start='759' end='779'>
+                    <FieldAccess start='759' end='779' isNullsafe='false'>
                         <DereferencableVariable start='759' end='769'>
                             <ArrayAccess start='760' end='768' type='VARIABLE_ARRAY' isDollared='false'>
                                 <ArrayDimension start='765' end='768'>
@@ -1803,7 +1803,7 @@
             <ExpressionStatement start='795' end='830'>
                 <StaticFieldAccess start='795' end='829'>
                     <DereferencableVariable start='795' end='812'>
-                        <FieldAccess start='796' end='811'>
+                        <FieldAccess start='796' end='811' isNullsafe='false'>
                             <Variable start='796' end='801' isDollared='true'>
                                 <Identifier start='797' end='801' name='test'/>
                             </Variable>
@@ -1846,7 +1846,7 @@
             </ExpressionStatement>
             <ExpressionStatement start='831' end='869'>
                 <StaticFieldAccess start='831' end='868'>
-                    <FieldAccess start='831' end='848'>
+                    <FieldAccess start='831' end='848' isNullsafe='false'>
                         <DereferencableVariable start='831' end='838'>
                             <Variable start='832' end='837' isDollared='true'>
                                 <Identifier start='833' end='837' name='test'/>
@@ -1908,7 +1908,7 @@
             </ExpressionStatement>
             <ExpressionStatement start='870' end='904'>
                 <StaticMethodInvocation start='870' end='903'>
-                    <FieldAccess start='870' end='887'>
+                    <FieldAccess start='870' end='887' isNullsafe='false'>
                         <DereferencableVariable start='870' end='877'>
                             <Variable start='871' end='876' isDollared='true'>
                                 <Identifier start='872' end='876' name='test'/>
@@ -1944,7 +1944,7 @@
             </ExpressionStatement>
             <ExpressionStatement start='905' end='939'>
                 <StaticMethodInvocation start='905' end='938'>
-                    <FieldAccess start='905' end='922'>
+                    <FieldAccess start='905' end='922' isNullsafe='false'>
                         <DereferencableVariable start='905' end='912'>
                             <Variable start='906' end='911' isDollared='true'>
                                 <Identifier start='907' end='911' name='test'/>
@@ -1982,7 +1982,7 @@
                         </Index>
                     </ArrayDimension>
                     <StaticMethodInvocation start='940' end='973'>
-                        <FieldAccess start='940' end='957'>
+                        <FieldAccess start='940' end='957' isNullsafe='false'>
                             <DereferencableVariable start='940' end='947'>
                                 <Variable start='941' end='946' isDollared='true'>
                                     <Identifier start='942' end='946' name='test'/>
@@ -2021,7 +2021,7 @@
                         </Index>
                     </ArrayDimension>
                     <StaticMethodInvocation start='978' end='1011'>
-                        <FieldAccess start='978' end='995'>
+                        <FieldAccess start='978' end='995' isNullsafe='false'>
                             <DereferencableVariable start='978' end='985'>
                                 <Variable start='979' end='984' isDollared='true'>
                                     <Identifier start='980' end='984' name='test'/>

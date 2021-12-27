@@ -73,7 +73,7 @@ public final class Turbo {
 
     private static WeakReference defaultInstance;
 
-    private List listeners = new ArrayList(100);
+    private List<TurboListener> listeners = new ArrayList<>(100);
 
     /** memory layer */
     private final Memory memory;

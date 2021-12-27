@@ -20,6 +20,7 @@ package org.netbeans.modules.typescript.editor;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.netbeans.api.editor.mimelookup.MimeRegistration;
@@ -32,12 +33,19 @@ import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle.Messages;
 
+import static org.netbeans.modules.typescript.editor.TypeScriptEditorKit.TYPESCRIPT_ICON;
+import static org.netbeans.modules.typescript.editor.TypeScriptEditorKit.TYPESCRIPT_MIME_TYPE;
+
 /**
  *
  * @author jlahoda
  */
-@MimeRegistration(mimeType="application/x-typescript", service=LanguageServerProvider.class)
+@MimeRegistration(mimeType=TYPESCRIPT_MIME_TYPE, service=LanguageServerProvider.class)
 public class TypeScriptLSP implements LanguageServerProvider {
+
+    private static final Logger LOG = Logger.getLogger(TypeScriptLSP.class.getName());
+
+    private final AtomicBoolean missingNodeWarningIssued = new AtomicBoolean();
 
     @Override
     @Messages({"WARN_NoNode=node.js not found, TypeScript support disabled.",
@@ -46,9 +54,11 @@ public class TypeScriptLSP implements LanguageServerProvider {
     public LanguageServerDescription startServer(Lookup lookup) {
         String node = NodeJsSupport.getInstance().getNode(null);
         if (node == null || node.isEmpty()) {
-            NotificationDisplayer.getDefault().notify(Bundle.WARN_NoNode(), ImageUtilities.loadImageIcon("org/netbeans/modules/typescript/editor/icon.png", true), Bundle.DESC_NoNode(), evt -> {
-                OptionsDisplayer.getDefault().open("Html5/NodeJs");
-            });
+            if (!missingNodeWarningIssued.getAndSet(true)) {
+                NotificationDisplayer.getDefault().notify(Bundle.WARN_NoNode(), ImageUtilities.loadImageIcon(TYPESCRIPT_ICON, true), Bundle.DESC_NoNode(), evt -> {
+                    OptionsDisplayer.getDefault().open("Html5/NodeJs");
+                });
+            }
             return null;
         }
         File server = InstalledFileLocator.getDefault().locate("typescript-lsp/node_modules/typescript-language-server/lib/cli.js", null, false);
@@ -61,6 +71,4 @@ public class TypeScriptLSP implements LanguageServerProvider {
         }
     }
 
-    private static final Logger LOG = Logger.getLogger(TypeScriptLSP.class.getName());
-    
 }

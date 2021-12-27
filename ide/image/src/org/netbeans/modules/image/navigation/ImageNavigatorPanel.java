@@ -178,7 +178,7 @@ public class ImageNavigatorPanel implements NavigatorPanel {
 
     private DataObject getDataObject(Collection data) {
         DataObject dataObject = null;
-        Iterator it = data.iterator();
+        Iterator<?> it = data.iterator();
         while (it.hasNext()) {
             Object o = it.next();
             if (o instanceof DataObject) {

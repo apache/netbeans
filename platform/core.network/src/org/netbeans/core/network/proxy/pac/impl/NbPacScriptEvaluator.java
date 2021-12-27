@@ -204,7 +204,7 @@ public class NbPacScriptEvaluator implements PacScriptEvaluator {
             resultCache = null;
         }
     }
-
+    
     @Override
     public List<Proxy> findProxyForURL(URI uri) throws PacValidationException {
 
@@ -218,7 +218,10 @@ public class NbPacScriptEvaluator implements PacScriptEvaluator {
             }
         }
         try {
-            Object jsResult = scriptEngine.findProxyForURL(PacUtils.toStrippedURLStr(uri), uri.getHost());
+            Object jsResult;
+            synchronized (scriptEngine) {
+                jsResult = scriptEngine.findProxyForURL(PacUtils.toStrippedURLStr(uri), uri.getHost());
+            }
             jsResultAnalyzed = analyzeResult(uri, jsResult);
             if (canUseURLCaching && (resultCache != null)) {
                 resultCache.put(uri, jsResultAnalyzed);   // save the result in the cache

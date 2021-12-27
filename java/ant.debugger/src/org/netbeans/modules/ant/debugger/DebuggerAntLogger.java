@@ -60,9 +60,9 @@ public class DebuggerAntLogger extends AntLogger {
     
     
     static DebuggerAntLogger getDefault () {
-        Iterator it = Lookup.getDefault ().lookupAll (AntLogger.class).iterator ();
+        Iterator<? extends AntLogger> it = Lookup.getDefault().lookupAll(AntLogger.class).iterator();
         while (it.hasNext ()) {
-            AntLogger al = (AntLogger) it.next ();
+            AntLogger al = it.next();
             if (al instanceof DebuggerAntLogger) {
                 return (DebuggerAntLogger) al;
             }
@@ -284,7 +284,7 @@ public class DebuggerAntLogger extends AntLogger {
     private Map<AntDebugger, AntSession> runningDebuggers2 = new HashMap<>();
     private Set<File> filesToDebug = new HashSet<>();
     /** File => WeakReference -> ExecutorTask */
-    private Map fileExecutors = new HashMap();
+    private Map<File, WeakReference> fileExecutors = new HashMap<>();
     
     void debugFile (File f) {
         filesToDebug.add (f);

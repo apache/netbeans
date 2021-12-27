@@ -459,6 +459,10 @@ public class VisualDebuggerListener extends DebuggerManagerAdapter {
      */
     private static void setFxDebug(VirtualMachine vm, ThreadReference tr) {
         ClassType sysPropClass = getClass(vm, tr, "com.sun.javafx.runtime.SystemProperties");
+        if(sysPropClass == null) {
+            // openjfx doesn't have runtime.SystemProperties.isDebug
+            return;
+        }
         try {
             Field debugFld = ReferenceTypeWrapper.fieldByName(sysPropClass, "isDebug"); // NOI18N
             sysPropClass.setValue(debugFld, VirtualMachineWrapper.mirrorOf(vm, true));
@@ -474,7 +478,7 @@ public class VisualDebuggerListener extends DebuggerManagerAdapter {
         if (t instanceof ClassType) {
             return (ClassType)t;
         }
-        logger.log(Level.WARNING, "{0} is not a class but {1}", new Object[]{name, t}); // NOI18N
+        // logger.log(Level.WARNING, "{0} is not a class but {1}", new Object[]{name, t}); // NOI18N
         return null;
     }
     

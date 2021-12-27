@@ -861,10 +861,10 @@ public final class XMLFileSystem extends AbstractFileSystem {
                 foAttrs = new XMLMapAttr();
             }
 
-            Iterator it = attrs.entrySet().iterator();
+            Iterator<Map.Entry> it = attrs.entrySet().iterator();
             boolean ch = false;
             while (it.hasNext()) {
-                Map.Entry attrEntry = (Map.Entry) it.next();
+                Map.Entry attrEntry = it.next();
                 Object prev = foAttrs.put(attrEntry.getKey(), attrEntry.getValue());
                 
                 ch |= (prev == null && attrEntry.getValue() != null) || !prev.equals(attrEntry.getValue());

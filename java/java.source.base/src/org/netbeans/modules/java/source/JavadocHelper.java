@@ -77,6 +77,8 @@ import org.netbeans.api.java.queries.JavadocForBinaryQuery;
 import org.netbeans.api.java.queries.SourceForBinaryQuery;
 import org.netbeans.api.java.source.SourceUtils;
 import org.netbeans.api.progress.ProgressHandle;
+import org.netbeans.modules.classfile.ClassFile;
+import org.netbeans.modules.classfile.Module;
 import org.netbeans.modules.java.source.base.Bundle;
 import org.netbeans.modules.java.source.indexing.JavaIndex;
 import org.netbeans.modules.java.source.parsing.CachingArchiveProvider;
@@ -768,7 +770,31 @@ binRoots:   for (URL binary : binaries) {
                         LOG.log(Level.FINE, "assumed valid Javadoc stream at {0}", url);
                     } else if (!speculative || !isRemote) {
                         try {
-                            is = openStream(url, Bundle.LBL_HTTPJavadocDownload());
+                            try {
+                                is = openStream(url, Bundle.LBL_HTTPJavadocDownload());
+                            } catch (InterruptedIOException iioe)  {
+                                throw iioe;
+                            } catch (IOException x) {
+                                // Some libraries like OpenJFX prefix their
+                                // javadoc by module, similar to the JDK.
+                                // Only search there when the default fails
+                                // to avoid additional I/O.
+                                // NOTE: No multi-release jar support for now.
+                                URL moduleInfo = new URL(binary, "module-info.class");
+                                try (InputStream classData = moduleInfo.openStream()) {
+                                    ClassFile clazz = new ClassFile(classData, false);
+                                    Module module = clazz.getModule();
+                                    if (module == null) {
+                                        throw x;
+                                    }
+                                    String moduleName = module.getName();
+                                    if (moduleName == null) {
+                                        throw x;
+                                    }
+                                    url = new URL(root, moduleName + "/" + pkgName + "/" + pageName + ".html");
+                                    is = openStream(url, Bundle.LBL_HTTPJavadocDownload());
+                                }
+                            }
                             if (useKnownGoodRoots) {
                                 knownGoodRoots.add(rootS);
                                 LOG.log(Level.FINE, "found valid Javadoc stream at {0}", url);
@@ -827,10 +853,10 @@ binRoots:   for (URL binary : binaries) {
 
     @NonNull
     private static Collection<? extends CharSequence> getFragment(Element e) {
-        final FragmentBuilder fb = new FragmentBuilder();
+        final FragmentBuilder fb = new FragmentBuilder(e.getKind());
         if (!e.getKind().isClass() && !e.getKind().isInterface()) {
             if (e.getKind() == ElementKind.CONSTRUCTOR) {
-                fb.append(e.getEnclosingElement().getSimpleName());
+                fb.constructor(e.getEnclosingElement().getSimpleName());
             } else {
                 fb.append(e.getSimpleName());
             }
@@ -870,21 +896,43 @@ binRoots:   for (URL binary : binaries) {
             final List<Convertor<CharSequence,CharSequence>> tmp = new ArrayList<>();
             tmp.add(Convertors.<CharSequence>identity());
             tmp.add(new JDoc8025633());
+            tmp.add(new JDoc8046068());
             FILTERS = Collections.unmodifiableList(tmp);
         };
         private final StringBuilder[] sbs;
 
-        FragmentBuilder() {
-            this.sbs = new StringBuilder[FILTERS.size()];
+        FragmentBuilder(@NonNull ElementKind kind) {
+            int size = FILTERS.size();
+            // JDK-8046068 changed the constructor format from "Name" to "<init>"
+            if (kind == ElementKind.CONSTRUCTOR) {
+                size *= 2;
+            }
+            this.sbs = new StringBuilder[size];
             for (int i = 0; i < sbs.length; i++) {
                 sbs[i] = new StringBuilder();
             }
         }
+        
+        @NonNull
+        FragmentBuilder constructor(@NonNull final CharSequence text) {
+            CharSequence constructor = text;
+            for (int i = 0; i < sbs.length;) {
+                for (int j = 0; j < FILTERS.size(); j++) {
+                    sbs[i].append(FILTERS.get(j).convert(constructor));
+                    i++;
+                }
+                constructor = "<init>";
+            }
+            return this;
+        }
 
         @NonNull
         FragmentBuilder append(@NonNull final CharSequence text) {
-            for (int i = 0; i < sbs.length; i++) {
-                sbs[i].append(FILTERS.get(i).convert(text));
+            for (int i = 0; i < sbs.length;) {
+                for (int j = 0; j < FILTERS.size(); j++) {
+                    sbs[i].append(FILTERS.get(j).convert(text));
+                    i++;
+                }
             }
             return this;
         }
@@ -936,6 +984,14 @@ binRoots:   for (URL binary : binaries) {
                     }
                 }
                 return sb.toString();
+            }
+        }
+        
+        private static final class JDoc8046068 implements Convertor<CharSequence,CharSequence> {
+            @Override
+            @NonNull
+            public CharSequence convert(@NonNull final CharSequence text) {
+                return text.toString().replace(" ", "");
             }
         }
     }

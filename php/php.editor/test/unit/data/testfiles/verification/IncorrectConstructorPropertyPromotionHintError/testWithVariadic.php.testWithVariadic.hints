@@ -1,0 +1,9 @@
+            private ...$incorrect1,
+            ----------------------
+HINT:Can't declare a promoted property with a variadic parameter.
+            private string ...$incorrect1,
+            -----------------------------
+HINT:Can't declare a promoted property with a variadic parameter.
+            protected string ...$incorrect1,
+            -------------------------------
+HINT:Can't declare a promoted property with a variadic parameter.

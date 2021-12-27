@@ -60,7 +60,7 @@ final class MainImpl extends Object {
         int res = execute (args, System.in, System.out, System.err, m);
         if (res == -1) {
             // Connected to another running NB instance and succeeded in making a call.
-            return;
+            System.exit(CLIHandler.Status.CONNECTED);
         } else if (res != 0) {
             // Some CLIHandler refused the invocation
             if (res == Integer.MIN_VALUE) {

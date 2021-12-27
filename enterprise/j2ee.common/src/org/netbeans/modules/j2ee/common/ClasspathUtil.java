@@ -24,7 +24,9 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -292,18 +294,33 @@ public class ClasspathUtil {
                 J2eePlatform j2eePlatformLocal = j2eePlatform != null ? j2eePlatform : Deployment.getDefault().getJ2eePlatform(j2eeModuleProvider.getServerInstanceID());
                 if (j2eePlatformLocal != null) {
                     try {
-                        return j2eePlatformLocal.getClasspathEntries(j2eeModuleProvider.getConfigSupport().getLibraries());
+                        File[] files = j2eePlatformLocal.getClasspathEntries(j2eeModuleProvider.getConfigSupport().getLibraries());
+                        sortClassPathEntries(files);
+                        return files;
                     } catch (ConfigurationException ex) {
                         LOGGER.log(Level.FINE, null, ex);
-                        return j2eePlatformLocal.getClasspathEntries();
+                        File[] files = j2eePlatformLocal.getClasspathEntries();
+                        sortClassPathEntries(files);
+                        return files;
                     }
                 }
             }
         }
         if (j2eePlatform != null) {
-            return j2eePlatform.getClasspathEntries();
+            File[] files = j2eePlatform.getClasspathEntries();
+            sortClassPathEntries(files);
+            return files;
         }
         return new File[]{};
+    }
+    
+    private static void sortClassPathEntries(File[] files) {
+        Arrays.sort(files, new Comparator < File > () {
+            @Override
+            public int compare(File f1, File f2) {
+                return f1.getAbsolutePath().compareTo(f2.getAbsolutePath());
+            }
+        });
     }
 
 }

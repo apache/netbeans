@@ -183,10 +183,10 @@ public class JsDocElementUtils {
 
             //if type at index=0, extract name and desc from the remaining text
             if ((curlyStart == 0) && (curlyEnd != -1)) {
-                parts = elementText.substring(curlyEnd + 1).trim().split("[\\s]+");
+                parts = elementText.substring(Math.min(curlyEnd + 1, elementText.length())).trim().split("[\\s]+");
             } else if (curlyStart > 0) {
                 //use entire text minus the types part to get name and desc 
-                String typesStr = elementText.substring(curlyStart, curlyEnd + 1);
+                String typesStr = elementText.substring(curlyStart, Math.min(curlyEnd + 1, elementText.length()));
                 StringBuilder buf = new StringBuilder(elementText);
                 elementText = buf.replace(curlyStart, curlyStart + typesStr.length(), "").toString();
                 parts = elementText.split("[\\s]+");

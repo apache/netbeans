@@ -50,10 +50,10 @@ public class SourceForBinaryImplTest extends TestBase {
     }
     
     public void testFindSourceRootForCompiledClasses() throws Exception {
-        doTestFindSourceRootForCompiledClasses("java.project/src", "java.project/build/classes");
-        doTestFindSourceRootForCompiledClasses("java.project/test/unit/src", "java.project/build/test/unit/classes");
-        doTestFindSourceRootForCompiledClasses("ant.freeform/src", "ant.freeform/build/classes");
-        doTestFindSourceRootForCompiledClasses("ant.freeform/test/unit/src", "ant.freeform/build/test/unit/classes");
+        doTestFindSourceRootForCompiledClasses("java/java.project/src", "java/java.project/build/classes");
+        doTestFindSourceRootForCompiledClasses("java/java.project/test/unit/src", "java/java.project/build/test/unit/classes");
+        doTestFindSourceRootForCompiledClasses("java/ant.freeform/src", "java/ant.freeform/build/classes");
+        doTestFindSourceRootForCompiledClasses("java/ant.freeform/test/unit/src", "java/ant.freeform/build/test/unit/classes");
     }
 
     /* XXX fails because o.n.m.a.p.queries.UpdateTrackingFileOwnerQuery does not scan extra-compilation-units
@@ -66,13 +66,13 @@ public class SourceForBinaryImplTest extends TestBase {
      */
     
     public void testFindSourceRootForModuleJar() throws Exception {
-        check("java.project/src", TestBase.CLUSTER_JAVA + "/modules/org-netbeans-modules-java-project.jar");
-        check("openide.loaders/src", TestBase.CLUSTER_PLATFORM + "/modules/org-openide-loaders.jar");
-        check("o.n.bootstrap/src", TestBase.CLUSTER_PLATFORM + "/lib/boot.jar");
-        check("diff/src", TestBase.CLUSTER_IDE + "/modules/org-netbeans-modules-diff.jar");
-        check("editor.lib/src", TestBase.CLUSTER_IDE + "/modules/org-netbeans-modules-editor-lib.jar");
-        check("nbjunit/src", "harness/modules/org-netbeans-modules-nbjunit.jar");
-        check("apisupport.project/test/unit/src",file("nbbuild/build/testdist/unit/" + TestBase.CLUSTER_APISUPPORT + "/org-netbeans-modules-apisupport-project/tests.jar"));
+        check("java/java.project/src", TestBase.CLUSTER_JAVA + "/modules/org-netbeans-modules-java-project.jar");
+        check("platform/openide.loaders/src", TestBase.CLUSTER_PLATFORM + "/modules/org-openide-loaders.jar");
+        check("platform/o.n.bootstrap/src", TestBase.CLUSTER_PLATFORM + "/lib/boot.jar");
+        check("ide/diff/src", TestBase.CLUSTER_IDE + "/modules/org-netbeans-modules-diff.jar");
+        check("ide/editor.lib/src", TestBase.CLUSTER_IDE + "/modules/org-netbeans-modules-editor-lib.jar");
+        check("harness/nbjunit/src", "harness/modules/org-netbeans-modules-nbjunit.jar");
+        check("apisupport/apisupport.project/test/unit/src",file("nbbuild/build/testdist/unit/" + TestBase.CLUSTER_APISUPPORT + "/org-netbeans-modules-apisupport-project/tests.jar"));
     }
     
     public void testExternalModules() throws Exception {

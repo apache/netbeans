@@ -306,9 +306,8 @@ public class AntDebugger extends ActionsProviderSupport {
         updateUI();
         currentFile = event.getScriptLocation();
         // update variable values
-        Set properties = event.getPropertyNames ();
-        variables = (String[]) properties.toArray 
-            (new String [properties.size ()]);
+        Set<String> properties = event.getPropertyNames();
+        variables = properties.toArray(new String[properties.size()]);
         fireVariables ();
         fireWatches ();
         fireBreakpoints ();
@@ -894,10 +893,10 @@ public class AntDebugger extends ActionsProviderSupport {
                     projectNamesByFiles.put(file, projName);
                 }
                 try {
-                    Set targets = TargetLister.getTargets (ant);
-                    Iterator it = targets.iterator ();
+                    Set<TargetLister.Target> targets = TargetLister.getTargets(ant);
+                    Iterator<TargetLister.Target> it = targets.iterator ();
                     while (it.hasNext ()) {
-                        TargetLister.Target t = (TargetLister.Target) it.next ();
+                        TargetLister.Target t = it.next();
                         nameToTarget.put (t.getName (), t);
                     }
                 } catch (IOException ioex) {

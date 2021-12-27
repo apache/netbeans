@@ -34,7 +34,6 @@ import org.netbeans.modules.csl.api.Error;
 import org.netbeans.modules.csl.api.Rule.AstRule;
 import org.netbeans.modules.csl.api.Rule.ErrorRule;
 import org.netbeans.modules.editor.NbEditorDocument;
-import org.netbeans.modules.html.editor.HtmlErrorFilter;
 import static org.netbeans.modules.html.editor.HtmlErrorFilter.*;
 import org.netbeans.modules.html.editor.HtmlExtensions;
 import org.netbeans.modules.html.editor.HtmlPreferences;
@@ -50,6 +49,7 @@ import org.netbeans.modules.html.editor.lib.api.HtmlVersion;
 import org.netbeans.modules.html.editor.lib.api.SyntaxAnalyzerResult;
 import org.netbeans.modules.parsing.api.Snapshot;
 import org.netbeans.modules.parsing.api.indexing.IndexingManager;
+import org.netbeans.modules.web.common.api.WebPageMetadata;
 import org.netbeans.spi.lexer.MutableTextInput;
 import org.openide.cookies.EditorCookie;
 import org.openide.filesystems.FileObject;
@@ -143,7 +143,7 @@ public class HtmlHintsProvider implements HintsProvider {
         HtmlParserResult result = (HtmlParserResult) context.parserResult;
         SyntaxAnalyzerResult saresult = result.getSyntaxAnalyzerResult();
         
-        if (isErrorCheckingEnabled(saresult)) {
+        if (isErrorCheckingEnabled(result)) {
             HtmlRuleContext htmlRuleContext = new HtmlRuleContext(result, saresult, Collections.<HintFix>emptyList());
 
             for (org.netbeans.modules.html.editor.hints.HtmlRule rule : getSortedRules(manager, context, true)) { //line hints
@@ -171,7 +171,7 @@ public class HtmlHintsProvider implements HintsProvider {
         }
         
         //html extensions
-        String sourceMimetype = Utils.getWebPageMimeType(result.getSyntaxAnalyzerResult());
+        String sourceMimetype = WebPageMetadata.getContentMimeType(result, true);
         for (HtmlExtension ext : HtmlExtensions.getRegisteredExtensions(sourceMimetype)) {
             ext.computeSuggestions(manager, context, suggestions, caretOffset);
         }
@@ -186,7 +186,7 @@ public class HtmlHintsProvider implements HintsProvider {
     public void computeSelectionHints(HintsManager manager, RuleContext context, List<Hint> suggestions, int start, int end) {
         //html extensions
         HtmlParserResult result = (HtmlParserResult)context.parserResult;
-        String sourceMimetype = Utils.getWebPageMimeType(result.getSyntaxAnalyzerResult());
+        String sourceMimetype = WebPageMetadata.getContentMimeType(result, true);
         for (HtmlExtension ext : HtmlExtensions.getRegisteredExtensions(sourceMimetype)) {
             ext.computeSelectionHints(manager, context, suggestions, start, end);
         }
@@ -222,10 +222,10 @@ public class HtmlHintsProvider implements HintsProvider {
 
         //add default fixes
         List<HintFix> defaultFixes = new ArrayList<>(3);
-        if (!isErrorCheckingDisabledForFile(saresult)) {
+        if (!isErrorCheckingDisabledForFile(result)) {
             defaultFixes.add(new DisableErrorChecksFix(snapshot));
         }
-        if (isErrorCheckingEnabledForMimetype(saresult)) {
+        if (isErrorCheckingEnabledForMimetype(result)) {
             defaultFixes.add(new DisableErrorChecksForMimetypeFix(saresult));
         }
 
@@ -273,7 +273,7 @@ public class HtmlHintsProvider implements HintsProvider {
         }
 
         //now process the non-fatal errors
-        if (isErrorCheckingEnabled(saresult)) {
+        if (isErrorCheckingEnabled(result)) {
 
             for (org.netbeans.modules.html.editor.hints.HtmlRule rule : getSortedRules(manager, context, false)) {
                 LOG.log(Level.FINE, "checking rule {0}", rule.getDisplayName());
@@ -302,10 +302,10 @@ public class HtmlHintsProvider implements HintsProvider {
         } else if (errorType < 2) {
             //add a special hint for reenabling disabled error checks
             List<HintFix> fixes = new ArrayList<>(3);
-            if (isErrorCheckingDisabledForFile(saresult)) {
+            if (isErrorCheckingDisabledForFile(result)) {
                 fixes.add(new EnableErrorChecksFix(snapshot));
             }
-            if (!isErrorCheckingEnabledForMimetype(saresult)) {
+            if (!isErrorCheckingEnabledForMimetype(result)) {
                 fixes.add(new EnableErrorChecksForMimetypeFix(saresult));
             }
 
@@ -320,7 +320,7 @@ public class HtmlHintsProvider implements HintsProvider {
         }
 
         //html extensions
-        String sourceMimetype = Utils.getWebPageMimeType(result.getSyntaxAnalyzerResult());
+        String sourceMimetype = WebPageMetadata.getContentMimeType(result, true);
         for (HtmlExtension ext : HtmlExtensions.getRegisteredExtensions(sourceMimetype)) {
             ext.computeErrors(manager, context, hints, unhandled);
         }

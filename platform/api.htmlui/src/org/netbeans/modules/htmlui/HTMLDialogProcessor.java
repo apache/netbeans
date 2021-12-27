@@ -42,6 +42,8 @@ import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.MirroredTypeException;
+import javax.lang.model.type.TypeKind;
+import javax.lang.model.type.TypeMirror;
 import javax.tools.Diagnostic;
 import javax.tools.FileObject;
 import javax.tools.JavaFileManager;
@@ -72,14 +74,14 @@ implements Comparator<ExecutableElement> {
     public SourceVersion getSupportedSourceVersion() {
         return SourceVersion.latest();
     }
-    
+
     private Set<Element> annotatedWith(RoundEnvironment re, Class<? extends Annotation> type) {
         Set<Element> collect = new HashSet<>();
         findAllElements(re.getElementsAnnotatedWith(type), collect, type);
         return collect;
     }
-    
-    
+
+
     @Override
     public boolean process(Set<? extends TypeElement> set, RoundEnvironment re)  {
         Map<String,Set<ExecutableElement>> names = new TreeMap<>();
@@ -98,11 +100,11 @@ implements Comparator<ExecutableElement> {
             if (!ee.getThrownTypes().isEmpty()) {
                 error("Method annotated by @HTMLDialog cannot throw exceptions", e);
             }
-            
+
             PackageElement pkg = findPkg(ee);
-            
+
             String fqn = pkg.getQualifiedName() + "." + reg.className();
-            
+
             Set<ExecutableElement> elems = names.get(fqn);
             if (elems == null) {
                 elems = new TreeSet<>(this);
@@ -125,11 +127,11 @@ implements Comparator<ExecutableElement> {
             if (!ee.getThrownTypes().isEmpty()) {
                 error("Method annotated by @HTMLComponent cannot throw exceptions", e);
             }
-            
+
             PackageElement pkg = findPkg(ee);
-            
+
             String fqn = pkg.getQualifiedName() + "." + reg.className();
-            
+
             Set<ExecutableElement> elems = names.get(fqn);
             if (elems == null) {
                 elems = new TreeSet<>(this);
@@ -137,7 +139,7 @@ implements Comparator<ExecutableElement> {
             }
             elems.add(ee);
         }
-        
+
         for (Map.Entry<String, Set<ExecutableElement>> entry : names.entrySet()) {
             String clazzName = entry.getKey();
             Set<ExecutableElement> elems = entry.getValue();
@@ -155,7 +157,7 @@ implements Comparator<ExecutableElement> {
                 w.append("class ").append(arr[1]).append(" {\n");
                 w.append("  private ").append(arr[1]).append("() {\n  }\n");
                 w.append("\n");
-                
+
                 for (ExecutableElement ee : elems) {
                     HTMLDialog reg = ee.getAnnotation(HTMLDialog.class);
                     HTMLComponent comp = ee.getAnnotation(HTMLComponent.class);
@@ -186,15 +188,15 @@ implements Comparator<ExecutableElement> {
                         generateComponent(w, ee, t, url, comp.techIds());
                     }
                 }
-                
+
                 w.append("}\n");
                 w.close();
-                
+
             } catch (IOException ex) {
                 error("Cannot create " + clazzName, first);
             }
         }
-        
+
         return true;
     }
 
@@ -217,7 +219,19 @@ implements Comparator<ExecutableElement> {
     }
 
     private void generateDialog(Writer w, ExecutableElement ee, String url, String[] techIds) throws IOException {
-        w.append("  public static String ").append(ee.getSimpleName());
+        TypeElement onSubmit = processingEnv.getElementUtils().getTypeElement(HTMLDialog.OnSubmit.class.getCanonicalName());
+        final TypeMirror retType = ee.getReturnType();
+        boolean returnsOnSubmit = retType.getKind() != TypeKind.ERROR && processingEnv.getTypeUtils().isSubtype(retType, onSubmit.asType());
+        if (!returnsOnSubmit) {
+            warning("Rather modify the method to return HTMLDialog.OnSubmit callback!", ee);
+        }
+        w.append("  public static ");
+        if (returnsOnSubmit) {
+            w.append("void ");
+        } else {
+            w.append("String ");
+        }
+        w.append(ee.getSimpleName());
         w.append("(");
         String sep = "";
         for (VariableElement v : ee.getParameters()) {
@@ -225,13 +239,27 @@ implements Comparator<ExecutableElement> {
             w.append("final ").append(v.asType().toString()).append(" ").append(v.getSimpleName());
             sep = ", ";
         }
-        
+
         w.append(") {\n");
-        w.append("    return Builder.newDialog(\"").append(url).append("\").\n");
-        generateTechIds(w, techIds);
-        w.append("      loadFinished(new Runnable() {\n");
+        w.append("    class DialogImpl implements Runnable");
+        if (returnsOnSubmit) {
+            w.append(", org.netbeans.api.htmlui.HTMLDialog.OnSubmit {\n");
+            w.append("        private volatile org.netbeans.api.htmlui.HTMLDialog.OnSubmit delegate;\n");
+            w.append("\n");
+            w.append("        @Override\n");
+            w.append("        public boolean onSubmit(String id) {\n");
+            w.append("          return delegate == null || delegate.onSubmit(id);\n");
+            w.append("        }\n");
+        } else {
+            w.append(" {\n");
+        }
+        w.append("        @Override\n");
         w.append("        public void run() {\n");
-        w.append("          ").append(ee.getEnclosingElement().getSimpleName())
+        w.append("          ");
+        if (returnsOnSubmit) {
+            w.append("delegate = ");
+        }
+        w.append(ee.getEnclosingElement().getSimpleName())
                 .append(".").append(ee.getSimpleName()).append("(");
         sep = "";
         for (VariableElement v : ee.getParameters()) {
@@ -241,11 +269,24 @@ implements Comparator<ExecutableElement> {
         }
         w.append(");\n");
         w.append("        }\n");
-        w.append("      }).\n");
-        w.append("      showAndWait();\n");
+        w.append("    }\n");
+        w.append("    DialogImpl impl = new DialogImpl();\n");
+        if (returnsOnSubmit) {
+            w.append("    ");
+        } else {
+            w.append("    return ");
+        }
+        w.append("Builder.newDialog(\"").append(url).append("\").\n");
+        generateTechIds(w, techIds);
+        w.append("      loadFinished(impl).\n");
+        if (returnsOnSubmit) {
+            w.append("      show(impl);\n");
+        } else {
+            w.append("      showAndWait();\n");
+        }
         w.append("  }\n");
     }
-    
+
     private void generateComponent(
         Writer w, ExecutableElement ee, String type, String url, String[] techIds
     ) throws IOException {
@@ -257,7 +298,7 @@ implements Comparator<ExecutableElement> {
             w.append("final ").append(v.asType().toString()).append(" ").append(v.getSimpleName());
             sep = ", ";
         }
-        
+
         w.append(") {\n");
         w.append("    return Builder.newDialog(\"").append(url).append("\").\n");
         generateTechIds(w, techIds);
@@ -281,14 +322,18 @@ implements Comparator<ExecutableElement> {
     private void error(final String msg, Element e) {
         processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, msg, e);
     }
-    
+
+    private void warning(final String msg, Element e) {
+        processingEnv.getMessager().printMessage(Diagnostic.Kind.WARNING, msg, e);
+    }
+
     private static PackageElement findPkg(Element e) {
         while (e.getKind() != ElementKind.PACKAGE) {
             e = e.getEnclosingElement();
         }
         return (PackageElement)e;
     }
-    
+
     private String[] splitPkg(String s, Element e) {
         int last = s.lastIndexOf('.');
         if (last == -1) {
@@ -323,7 +368,7 @@ implements Comparator<ExecutableElement> {
         }
         return id1 - id2;
     }
-    
+
     FileObject validateResource(String resource, Element originatingElement, Annotation annotation, String annotationMethod, boolean searchClasspath) throws LayerGenerationException {
         if (resource.startsWith("/")) {
             throw new LayerGenerationException("do not use leading slashes on resource paths", originatingElement, processingEnv, annotation, annotationMethod);

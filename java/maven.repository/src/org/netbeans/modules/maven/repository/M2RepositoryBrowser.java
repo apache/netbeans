@@ -28,7 +28,7 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import org.apache.maven.cli.MavenCli;
+import org.apache.maven.cli.configuration.SettingsXmlConfigurationProcessor;
 import org.netbeans.api.core.ide.ServicesTabNodeRegistration;
 import org.netbeans.modules.maven.indexer.api.QueryField;
 import org.netbeans.modules.maven.indexer.api.RepositoryIndexer;
@@ -187,7 +187,7 @@ public final class M2RepositoryBrowser extends AbstractNode {
         }
         @Override protected void addNotify() {
             RepositoryPreferences.getInstance().addChangeListener(this);
-            FileUtil.addFileChangeListener(this, MavenCli.DEFAULT_USER_SETTINGS_FILE);
+            FileUtil.addFileChangeListener(this, SettingsXmlConfigurationProcessor.DEFAULT_USER_SETTINGS_FILE);
             addChangeListener(this);
             addNotifyCalled = true;
         }
@@ -196,7 +196,7 @@ public final class M2RepositoryBrowser extends AbstractNode {
             removeChangeListener(this);
             if (addNotifyCalled) { //#213038
                 try {
-                    FileUtil.removeFileChangeListener(this, MavenCli.DEFAULT_USER_SETTINGS_FILE);
+                    FileUtil.removeFileChangeListener(this, SettingsXmlConfigurationProcessor.DEFAULT_USER_SETTINGS_FILE);
                 } catch (IllegalArgumentException exc) {
                     //we just ignore, who cares
                 }

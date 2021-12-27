@@ -123,25 +123,25 @@ public class UserXMLCatalog implements CatalogReader, CatalogWriter, CatalogDesc
     }
     
     protected void fireEntryAdded(String publicId) {
-        Iterator it = catalogListeners.iterator();
+        Iterator<CatalogListener> it = catalogListeners.iterator();
         while (it.hasNext()) {
-            CatalogListener listener = (CatalogListener)it.next();
+            CatalogListener listener = it.next();
             listener.notifyNew(publicId);
         }
     }
     
     protected void fireEntryRemoved(String publicId) {
-        Iterator it = catalogListeners.iterator();
+        Iterator<CatalogListener> it = catalogListeners.iterator();
         while (it.hasNext()) {
-            CatalogListener listener = (CatalogListener)it.next();
+            CatalogListener listener = it.next();
             listener.notifyRemoved(publicId);
         }
     }
     
     protected void fireEntryUpdated(String publicId) {
-        Iterator it = catalogListeners.iterator();
+        Iterator<CatalogListener> it = catalogListeners.iterator();
         while (it.hasNext()) {
-            CatalogListener listener = (CatalogListener)it.next();
+            CatalogListener listener = it.next();
             listener.notifyUpdate(publicId);
         }
     }
@@ -151,9 +151,9 @@ public class UserXMLCatalog implements CatalogReader, CatalogWriter, CatalogDesc
     }
 
     public void refresh() {
-        Iterator it = catalogListeners.iterator();
+        Iterator<CatalogListener> it = catalogListeners.iterator();
         while (it.hasNext()) {
-            CatalogListener listener = (CatalogListener)it.next();
+            CatalogListener listener = it.next();
             listener.notifyInvalidate();
         }
         FileObject userCatalog = FileUtil.getConfigFile(catalogResource);

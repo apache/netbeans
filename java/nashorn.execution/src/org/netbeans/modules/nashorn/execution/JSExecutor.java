@@ -19,24 +19,27 @@
 
 package org.netbeans.modules.nashorn.execution;
 
-import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.prefs.Preferences;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.platform.JavaPlatform;
 import org.netbeans.api.java.project.runner.JavaRunner;
-import org.netbeans.api.project.Project;
-import org.netbeans.api.project.ProjectManager;
-import org.netbeans.api.project.ProjectUtils;
+import org.netbeans.api.project.libraries.Library;
+import org.netbeans.api.project.libraries.LibraryManager;
 import org.netbeans.modules.nashorn.execution.options.Settings;
-import org.netbeans.spi.java.classpath.ClassPathFactory;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.openide.LifecycleManager;
 import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileStateInvalidException;
+import org.openide.filesystems.JarFileSystem;
 
 /**
  *
@@ -45,16 +48,38 @@ import org.openide.filesystems.FileObject;
 public class JSExecutor {
     
     private static final String NASHORN_SHELL = "jdk.nashorn.tools.Shell";      // NOI18N
+    private static final String JS_SHELL = "com.oracle.truffle.js.shell.JSLauncher";      // NOI18N
     
     public static void run(JavaPlatform javaPlatform, FileObject js, boolean debug) throws IOException, UnsupportedOperationException {
         LifecycleManager.getDefault().saveAll();
         Map<String, Object> properties = new HashMap<>();
         properties.put(JavaRunner.PROP_PLATFORM, javaPlatform);
-        properties.put(JavaRunner.PROP_CLASSNAME, NASHORN_SHELL);
-        properties.put(JavaRunner.PROP_EXECUTE_CLASSPATH, getClassPath(js));
+        final ClassPath path = getClassPath(js);
+        final Preferences p = Settings.getPreferences();
+        boolean preferNashorn = NashornPlatform.isNashornSupported(javaPlatform);
+        if (p.get(Settings.PREF_NASHORN, null) != null) {
+            preferNashorn = p.getBoolean(Settings.PREF_NASHORN, false);
+        } else {
+            if (NashornPlatform.isGraalJsSupported(javaPlatform)) {
+                if (NashornPlatform.isGraalJSPreferred(javaPlatform)) {
+                    preferNashorn = false;
+                }
+            }
+        }
+        if (preferNashorn) {
+            try {
+                javaPlatform.getBootstrapLibraries().getClassLoader(true).loadClass(NASHORN_SHELL);
+                properties.put(JavaRunner.PROP_CLASSNAME, NASHORN_SHELL);
+            } catch (ClassNotFoundException ex) {
+                properties.put(JavaRunner.PROP_CLASSNAME, JS_SHELL);
+            }
+        } else {
+            properties.put(JavaRunner.PROP_CLASSNAME, JS_SHELL);
+        }
+        properties.put(JavaRunner.PROP_EXECUTE_CLASSPATH, path);
         properties.put(JavaRunner.PROP_WORK_DIR, js.getParent());
         properties.put(JavaRunner.PROP_APPLICATION_ARGS, getApplicationArgs(js)); // Collections.singletonList(js.getNameExt()));
-        if (debug) {
+            if (debug) {
             JavaRunner.execute(JavaRunner.QUICK_DEBUG, properties);
         } else {
             JavaRunner.execute(JavaRunner.QUICK_RUN, properties);
@@ -66,7 +91,8 @@ public class JSExecutor {
         if (cp == null) {
             cp = ClassPath.EMPTY;
         }
-        return cp;
+        ClassPath engine = findGraalJsClassPath();
+        return ClassPathSupport.createProxyClassPath(cp, engine);
     }
     
     private static List<String> getApplicationArgs(FileObject js) {
@@ -87,4 +113,21 @@ public class JSExecutor {
         return args;
     }
     
+    static ClassPath findGraalJsClassPath() {
+        List<URL> urls;
+        Library graalJsLib = LibraryManager.getDefault().getLibrary("graaljs");
+        urls = graalJsLib.getContent("classpath");
+        ClassPath nbInstCp = ClassPathSupport.createClassPath(urls.toArray(new URL[0]));
+        urls = new ArrayList<>();
+        for (ClassPath.Entry e : nbInstCp.entries()) {
+            assert e.isValid() : "Invalid entry: " + e;
+            try {
+                JarFileSystem jfs = (JarFileSystem) e.getRoot().getFileSystem();
+                urls.add(new URL("jar:" + jfs.getJarFile().toURI().toURL() + "!/"));
+            } catch (FileStateInvalidException | MalformedURLException ignore) {
+                throw new AssertionError(ignore);
+            }
+        }
+        return ClassPathSupport.createClassPath(urls.toArray(new URL[0]));
+    }
 }

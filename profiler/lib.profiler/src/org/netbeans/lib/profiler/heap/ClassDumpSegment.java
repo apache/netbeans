@@ -59,7 +59,7 @@ class ClassDumpSegment extends TagBounds {
     final int superClassIDOffset;
     ClassDump java_lang_Class;
     boolean newSize;
-    Map /*<JavaClass,List<Field>>*/ fieldsCache;
+    Map<JavaClass,List<Field>> fieldsCache;
     private List<JavaClass> classes;
     private Map /*<Byte,JavaClass>*/ primitiveArrayMap;
 
@@ -202,12 +202,12 @@ class ClassDumpSegment extends TagBounds {
         }
     }
 
-    synchronized List /*<JavaClass>*/ createClassCollection() {
+    synchronized List<JavaClass> createClassCollection() {
         if (classes != null) {
             return classes;
         }
 
-        List cls = new ArrayList /*<JavaClass>*/(1000);
+        List<JavaClass> cls = new ArrayList<>(1000);
 
         long[] offset = new long[] { startOffset };
 

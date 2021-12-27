@@ -100,7 +100,7 @@ public class AquaEditorTabDisplayerUI extends BasicScrollingTabDisplayerUI {
         int prefHeight = 28;
         //Never call getGraphics() on the control, it resets in-process
         //painting on OS-X 1.4.1 and triggers gratuitous repaints
-        Graphics g = BasicScrollingTabDisplayerUI.getOffscreenGraphics();
+        Graphics g = BasicScrollingTabDisplayerUI.getOffscreenGraphics(c);
         if (g != null) {
             FontMetrics fm = g.getFontMetrics(displayer.getFont());
             Insets ins = getTabAreaInsets();
@@ -135,9 +135,46 @@ public class AquaEditorTabDisplayerUI extends BasicScrollingTabDisplayerUI {
             rightLineStart = 6;
         }
         g.setColor(UIManager.getColor("NbTabControl.borderColor"));
-        g.drawLine(rightLineStart, y-1, rightLineEnd, y-1);
+        drawLine(g, rightLineStart, y-1, rightLineEnd, y-1);
     }
-    
+
+    /**
+     * Draw a horizontal or vertical line, one logical pixel thick, in a manner which scales evenly
+     * from the regular 1x scaling case to the 2x retina (HiDPI) scaling case.
+     *
+     * <p>To make it easier to transition old code to this method, this method takes the same set of
+     * parameters as {@link Graphics#drawLine(int, int, int, int)}. Still, this method is only
+     * intended to be used to draw horizontal or vertical lines.
+     */
+    static void drawLine(Graphics g, int x1, int y1, int x2, int y2) {
+        /* Use fillRect rather than drawLine here, to avoid the lines being offset by one device pixel
+        (half a pixel in the Graphics2D coordinate system) when retina scaling is used. An old Java2D
+        FAQ explains how this works when painting on higher-resolution surfaces:
+
+        Q: Why are my 1-pixel wide lines repositioned when I print them? How do I correct this?
+        A: For horizontal or vertical 1-pixel wide line fills, it is generally better to use fillRect
+           rather than drawLine. The rounding of the drawLine method moves lines by half a device
+           pixel [they mean a pixel in the Graphics2D coordinate system, not a pixel on the printer],
+           which make the lines appear more consistent whether or not antialiasing is applied.
+           Therefore, if you have a 1-pixel wide line, the line is moved by half of its width. Because
+           this adjustment occurs at the device-space level, your lines can move by half of a line
+           width on printouts from high-resolution printers.
+
+           https://web.archive.org/web/20120626144901/http://java.sun.com/products/java-media/2D/reference/faqs/index.html
+        */
+        if (x1 == x2) {
+            int minY = Math.min(y1, y2);
+            int maxY = Math.max(y1, y2);
+            g.fillRect(x1, minY, 1, maxY - minY + 1);
+        } else if (y1 == y2) {
+            int minX = Math.min(x1, x2);
+            int maxX = Math.max(x1, x2);
+            g.fillRect(minX, y1, maxX - minX + 1, 1);
+        } else {
+            // Not a horizontal or vertical line. Just fall back to drawLine.
+            g.drawLine(x1, y1, x2, y2);
+        }
+    }
 
     private static void initIcons() {
         if( null == buttonIconPaths ) {

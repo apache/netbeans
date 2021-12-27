@@ -513,5 +513,77 @@ public class CssCompletionTest extends CssModuleTestBase {
                 + "    }\n"
                 + "}", arr("font-weight"), Match.CONTAINS);
     }
-    
+
+    // NETBEANS-445
+    public void testDisplay() throws Exception {
+        checkCompletion("testfiles/completion/display/display.css", "    display: ^/* test */", false);
+    }
+
+    public void testDisplayBlock() throws Exception {
+        checkCompletion("testfiles/completion/display/display.css", "    display: block ^;", false);
+    }
+
+    public void testDisplayBlockFlow() throws Exception {
+        checkCompletion("testfiles/completion/display/display.css", "    display: block flow ^;", false);
+    }
+
+    public void testDisplayBlockFlowRoot() throws Exception {
+        checkCompletion("testfiles/completion/display/display.css", "    display: block flow-root ^;", false);
+    }
+
+    public void testDisplayInline() throws Exception {
+        checkCompletion("testfiles/completion/display/display.css", "    display: inline ^;", false);
+    }
+
+    public void testDisplayInlineFlow() throws Exception {
+        checkCompletion("testfiles/completion/display/display.css", "    display: inline flow ^;", false);
+    }
+
+    public void testDisplayInlineFlowRoot() throws Exception {
+        checkCompletion("testfiles/completion/display/display.css", "    display: inline flow-root ^;", false);
+    }
+
+    public void testDisplayRunIn() throws Exception {
+        checkCompletion("testfiles/completion/display/display.css", "    display: run-in ^;", false);
+    }
+
+    public void testDisplayRunInFlowRoot() throws Exception {
+        checkCompletion("testfiles/completion/display/display.css", "    display: run-in flow-root l^;", false);
+    }
+
+    public void testDisplayFlow() throws Exception {
+        checkCompletion("testfiles/completion/display/display.css", "    display: flow ^;", false);
+    }
+
+    public void testDisplayFlowListItem() throws Exception {
+        checkCompletion("testfiles/completion/display/display.css", "    display: flow list-item ^;", false);
+    }
+
+    public void testDisplayFlowRootBlock() throws Exception {
+        checkCompletion("testfiles/completion/display/display.css", "    display: flow-root block ^;", false);
+    }
+
+    public void testDisplayListItem() throws Exception {
+        checkCompletion("testfiles/completion/display/display.css", "    display: list-item ^;", false);
+    }
+
+    public void testDisplayListItemBlock() throws Exception {
+        checkCompletion("testfiles/completion/display/display.css", "    display: list-item block ^;", false);
+    }
+
+    public void testDisplayListItemInline() throws Exception {
+        checkCompletion("testfiles/completion/display/display.css", "    display: list-item inline ^;", false);
+    }
+
+    public void testDisplayListItemRunIn() throws Exception {
+        checkCompletion("testfiles/completion/display/display.css", "    display: list-item run-in ^;", false);
+    }
+
+    public void testDisplayListItemFlow() throws Exception {
+        checkCompletion("testfiles/completion/display/display.css", "    display: list-item flow ^;", false);
+    }
+
+    public void testDisplayListItemFlowRoot() throws Exception {
+        checkCompletion("testfiles/completion/display/display.css", "    display: list-item flow-root ^;", false);
+    }
 }

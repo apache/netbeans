@@ -696,9 +696,9 @@ public class TestWebServiceMethodDlg extends JPanel implements ActionListener, M
         }
 
         private void notifyListeners(Object returnedObject) {
-            Iterator listenerIterator = listeners.iterator();
+            Iterator<MethodTaskListener> listenerIterator = listeners.iterator();
             while(listenerIterator.hasNext()) {
-                MethodTaskListener currentListener = (MethodTaskListener)listenerIterator.next();
+                MethodTaskListener currentListener = listenerIterator.next();
                 currentListener.methodFinished(returnedObject, paramList);
             }
         }

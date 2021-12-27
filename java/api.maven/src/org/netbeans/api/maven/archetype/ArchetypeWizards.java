@@ -88,6 +88,10 @@ public class ArchetypeWizards {
         return org.netbeans.modules.maven.api.archetype.ArchetypeWizards.definedArchetype(groupId, artifactId, version, repository, title);
     }
 
+    // possiblly expose the new method with Map<String, String> defaultProps here
+    // and an API for others to consume
+    // alas, with all the versioning stuff...
+
     private static org.netbeans.modules.maven.api.archetype.ProjectInfo convertProjectInfo(ProjectInfo pi) {
         return new org.netbeans.modules.maven.api.archetype.ProjectInfo(pi.getGroupId(), pi.getArtifactId(), pi.getVersion(), pi.getPackageName());
     }

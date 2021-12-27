@@ -348,18 +348,20 @@ public class ImportAnalysis2 {
         TypeElement type = (TypeElement) element;
 
         Element parent = type.getEnclosingElement();
-        if ((parent.getKind().isClass() || parent.getKind().isInterface()) && !cs.importInnerClasses()) {
-            ExpressionTree clazz = orig.getExpression();
-            if (clazz.getKind() == Kind.MEMBER_SELECT) {
-                clazz = resolveImport((MemberSelectTree) clazz, overlay.wrap(model, elements, parent));
+        if (parent != null) {
+            if ((parent.getKind().isClass() || parent.getKind().isInterface()) && !cs.importInnerClasses()) {
+                ExpressionTree clazz = orig.getExpression();
+                if (clazz.getKind() == Kind.MEMBER_SELECT) {
+                    clazz = resolveImport((MemberSelectTree) clazz, overlay.wrap(model, elements, parent));
+                }
+                return make.MemberSelect(clazz, orig.getIdentifier());
             }
-            return make.MemberSelect(clazz, orig.getIdentifier());
-        }
 
-        //check for java.lang:
-        if (parent.getKind() == ElementKind.PACKAGE) {
-            if ("java.lang".equals(((PackageElement) parent).getQualifiedName().toString())) {
-                return make.Identifier(element.getSimpleName());
+            //check for java.lang:
+            if (parent.getKind() == ElementKind.PACKAGE) {
+                if ("java.lang".equals(((PackageElement) parent).getQualifiedName().toString())) {
+                    return make.Identifier(element.getSimpleName());
+                }
             }
         }
 

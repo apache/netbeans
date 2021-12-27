@@ -25,6 +25,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -237,15 +238,15 @@ class InstallStep implements WizardDescriptor.FinishablePanel<WizardDescriptor> 
             return ;
         }
         
-        Validator v;
         // download
-        if ((v = handleDownload(support)) != null) {
-            Installer i;
-            // verifation
-            if ((i = handleValidation(v, support)) != null) {
+        Validator v = handleDownload(support);
+        if (v != null) {
+            // verification
+            Installer i = handleValidation(v, support);
+            if (i != null) {
                 // installation
-                Restarter r;
-                if ((r = handleInstall(i, support)) != null) {
+                Restarter r = handleInstall(i, support);
+                if (r != null) {
                     presentInstallNeedsRestart(r, support);
                 } else {
                     presentInstallDone ();
@@ -497,20 +498,29 @@ class InstallStep implements WizardDescriptor.FinishablePanel<WizardDescriptor> 
             spareHandle.finish ();
         }
         Installer tmpInst;
-        
-        try {
-            tmpInst = support.doValidate (v, handle);
-            if (tmpInst == null) return null;
-        } catch (OperationException ex) {
-            log.log (Level.INFO, ex.getMessage(), ex);
-            ProblemPanel problem = new ProblemPanel(ex, detailLabel.getText(), false);
-            if (ex.getErrorType() == OperationException.ERROR_TYPE.MODIFIED) {
-                problem.showModifiedProblemDialog(detailLabel.getText());
-            } else {
-                problem.showNetworkProblemDialog();
+
+        VALIDATE: for (;;) {
+            try {
+                tmpInst = support.doValidate (v, handle);
+                if (tmpInst == null) return null;
+                break VALIDATE;
+            } catch (OperationException ex) {
+                log.log (Level.INFO, ex.getMessage(), ex);
+                ProblemPanel problem = new ProblemPanel(ex, detailLabel.getText(), false);
+                if (ex.getErrorType() == OperationException.ERROR_TYPE.MODIFIED) {
+                    problem.showModifiedProblemDialog(detailLabel.getText());
+                } else if (ex.getErrorType() == OperationException.ERROR_TYPE.MISSING_UNPACK200) {
+                    File unpack200 = problem.showUnpack200ProblemDialog();
+                    support.getContainer().setUnpack200(unpack200);
+                    if (unpack200 != null) {
+                        continue VALIDATE;
+                    }
+                } else {
+                    problem.showNetworkProblemDialog();
+                }
+                handleCancel ();
+                return null;
             }
-            handleCancel ();
-            return null;
         }
         
         final Installer inst = tmpInst;

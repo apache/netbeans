@@ -30,21 +30,21 @@ public class ToggleCommentActionTest extends NeonActionsTestBase {
         super(testName);
     }
 
-//    public void testToggleComment_01() throws Exception {
-//        testInFile("testfiles/actions/toggleComment/toggle_01.neon");
-//    }
-//
-//    public void testToggleComment_02() throws Exception {
-//        testInFile("testfiles/actions/toggleComment/toggle_02.neon");
-//    }
-//
-//    public void testToggleComment_03() throws Exception {
-//        testInFile("testfiles/actions/toggleComment/toggle_03.neon");
-//    }
-//
-//    public void testToggleComment_04() throws Exception {
-//        testInFile("testfiles/actions/toggleComment/toggle_04.neon");
-//    }
+    public void testToggleComment_01() throws Exception {
+        testInFile("testfiles/actions/toggleComment/toggle_01.neon");
+    }
+
+    public void testToggleComment_02() throws Exception {
+        testInFile("testfiles/actions/toggleComment/toggle_02.neon");
+    }
+
+    public void testToggleComment_03() throws Exception {
+        testInFile("testfiles/actions/toggleComment/toggle_03.neon");
+    }
+
+    public void testToggleComment_04() throws Exception {
+        testInFile("testfiles/actions/toggleComment/toggle_04.neon");
+    }
 
     protected void testInFile(String file) throws Exception {
         testInFile(file, CslEditorKit.toggleCommentAction);

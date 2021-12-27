@@ -31,17 +31,17 @@
     <target name="-check-prepared-doc">
         <condition property="j2ee.platform.doccreated" value="present">
             <and>
-                <available file="external/generated-javaee-api-7.0-javadoc.jar" />
+                <available file="external/generated-javaee-api-8.0.1-javadoc.jar" />
             </and>
         </condition>
     </target>
 
     <target name="prepare-doc" depends="-check-prepared-doc" unless="j2ee.platform.doccreated">
-        <delete file="external/generated-javaee-api-7.0-javadoc.jar" />
+        <delete file="external/generated-javaee-api-8.0.1-javadoc.jar" />
 
         <!-- repackage doc file into the format netbeans used prior to switching to the maven central artefact -->
-        <jar destfile="external/generated-javaee-api-7.0-javadoc.jar">
-            <zipfileset src="external/javaee-api-7.0-javadoc.jar" includes="**" prefix="docs/api" />
+        <jar destfile="external/generated-javaee-api-8.0.1-javadoc.jar">
+            <zipfileset src="external/javaee-api-8.0.1-javadoc.jar" includes="**" prefix="docs/api" />
         </jar>
     </target>
 </project>

@@ -251,7 +251,7 @@ public final class ModelUtils {
      * @return null if repository with given url exists, otherwise a returned newly created item.
      */
     public static Repository addModelRepository(MavenProject project, POMModel mdl, String url) {
-        if (url.contains(RepositorySystem.DEFAULT_REMOTE_REPO_URL) || /* #212336 */url.contains("http://repo1.maven.org/maven2")) {
+        if (url.contains(RepositorySystem.DEFAULT_REMOTE_REPO_URL) || /* #212336 */url.contains("https://repo1.maven.org/maven2")) {
             return null;
         }
         List<Repository> repos = mdl.getProject().getRepositories();

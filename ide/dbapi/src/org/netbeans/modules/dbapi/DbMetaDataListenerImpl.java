@@ -41,14 +41,14 @@ public class DbMetaDataListenerImpl implements DbMetaDataListener {
     private final Lookup.Result listeners = getListeners();
 
     public void tablesChanged(DatabaseConnection dbconn) {
-        for (Iterator i = listeners.allInstances().iterator(); i.hasNext();) {
-            ((MetaDataListener)i.next()).tablesChanged(dbconn);
+        for (Iterator<MetaDataListener> i = listeners.allInstances().iterator(); i.hasNext();) {
+            i.next().tablesChanged(dbconn);
         }
     }
 
     public void tableChanged(DatabaseConnection dbconn, String tableName) {
-        for (Iterator i = listeners.allInstances().iterator(); i.hasNext();) {
-            ((MetaDataListener)i.next()).tableChanged(dbconn, tableName);
+        for (Iterator<MetaDataListener> i = listeners.allInstances().iterator(); i.hasNext();) {
+            i.next().tableChanged(dbconn, tableName);
         }
     }
 

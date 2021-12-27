@@ -26,14 +26,17 @@ import org.junit.Test;
  */
 public class CompatibilityKitTest {
     @Test public void fallbacksToDataStep() throws Throwable {
+        EnsureJavaFXPresent.checkAndThrow();
         RunTCK.test("datastep", "init()");
     }
     
     @Test public void specifiedManually() throws Throwable {
+        EnsureJavaFXPresent.checkAndThrow();
         RunTCK.test("manual", "init()");
     }
     
     @Test public void validateOnNextButton() throws Throwable {
+        EnsureJavaFXPresent.checkAndThrow();
         RunTCK.test("validation", "init()");
     }
 }

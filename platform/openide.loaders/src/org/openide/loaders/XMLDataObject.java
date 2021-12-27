@@ -525,7 +525,7 @@ public class XMLDataObject extends MultiDataObject {
     */
     final Document parsePrimaryFile () throws IOException, SAXException {
         if (ERR.isLoggable(Level.FINE)) ERR.fine("parsePrimaryFile" + " for " + this);
-        String loc = getPrimaryFile().getURL().toExternalForm();
+        String loc = getPrimaryFile().toURL().toExternalForm();
         try {
             return XMLUtil.parse(new InputSource(loc), false, /* #36295 */true, errorHandler, getSystemResolver());
         } catch (IOException e) {

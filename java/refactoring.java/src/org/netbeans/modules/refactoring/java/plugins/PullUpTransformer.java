@@ -40,6 +40,7 @@ import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Types;
 import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.java.source.GeneratorUtilities;
+import org.netbeans.api.java.source.SourceUtils;
 import org.netbeans.api.java.source.TreeMaker;
 import org.netbeans.api.java.source.TreePathHandle;
 import org.netbeans.api.java.source.WorkingCopy;
@@ -68,6 +69,7 @@ public class PullUpTransformer extends RefactoringVisitor {
 
     @Override
     public void setWorkingCopy(WorkingCopy copy) throws ToPhaseException {
+        SourceUtils.forceSource(copy, refactoring.getSourceType().getFileObject());
         super.setWorkingCopy(copy);
         this.targetType = refactoring.getTargetType().resolve(copy);
         this.sourceType = (TypeElement) refactoring.getSourceType().resolveElement(copy);

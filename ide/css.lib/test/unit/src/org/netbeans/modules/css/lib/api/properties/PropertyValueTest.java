@@ -81,7 +81,7 @@ public class PropertyValueTest extends CssTestBase {
 
     public void testAlternativesSet() {
         //set
-        assertAlternatives("a | b | c", "", "a", "b", "c");
+        assertAlternatives("a | b | c", "", "a", "b", "c", "initial", "inherit", "unset");
         assertAlternatives("a | b | c", "a");
         assertAlternatives("a | b | c", "b");
         assertAlternatives("a | b | c", "c");
@@ -90,7 +90,7 @@ public class PropertyValueTest extends CssTestBase {
 
     public void testAlternativesList() {
         //list
-        assertAlternatives("a || b || c", "", "a", "b", "c");
+        assertAlternatives("a || b || c", "", "a", "b", "c", "initial", "inherit", "unset");
         assertAlternatives("a || b || c", "a", "b", "c");
         assertAlternatives("a || b || c", "b", "a", "c");
         assertAlternatives("a || b || c", "c", "a", "b");
@@ -105,14 +105,14 @@ public class PropertyValueTest extends CssTestBase {
 
     public void testAlternativesSequence() {
         //sequence
-        assertAlternatives("a b c", "", "a");
+        assertAlternatives("a b c", "", "a", "inherit", "initial", "unset");
         assertAlternatives("a b c", "a", "b");
         assertAlternatives("a b c", "a b", "c");
         assertAlternatives("a b c", "a b c");
     }
 
     public void testAlternativesOfSequenceInSequence() {
-        String grammar = "marek  jitka  [ ovecka  beranek ]";
+        String grammar = "marek  jitka  [ ovecka beranek ]";
 
         assertAlternatives(grammar, "marek jitka", "ovecka");
         assertAlternatives(grammar, "marek jitka ovecka", "beranek");
@@ -125,7 +125,7 @@ public class PropertyValueTest extends CssTestBase {
 
         assertAlternatives(p.getGrammar(), text,
                 "fantasy", "serif", "!string", "sans-serif", "monospace", "/", 
-                "!identifier", "cursive", "initial", "var");
+                "!identifier", "cursive", "var");
 
     }
 
@@ -138,7 +138,7 @@ public class PropertyValueTest extends CssTestBase {
 //    }
     public void testPaddingAlternatives() {
         PropertyDefinition p = Properties.getPropertyDefinition( "padding");
-        assertAlternatives(p.getGrammar(), "", "auto", "!percentage", "!length", "-", "calc", "inherit", "initial", "var");
+        assertAlternatives(p.getGrammar(), "", "auto", "!percentage", "!length", "-", "calc", "inherit", "initial", "unset", "var");
 
     }
 
@@ -160,10 +160,10 @@ public class PropertyValueTest extends CssTestBase {
     public void testFontThoroughly() {
         PropertyDefinition p = Properties.getPropertyDefinition( "font");
         assertAlternatives(p.getGrammar(), "20px",
-                "fantasy", "serif", "!string", "sans-serif", "monospace", "/", "!identifier", "cursive", "initial", "var");
+                "fantasy", "serif", "!string", "sans-serif", "monospace", "/", "!identifier", "cursive", "var");
         assertAlternatives(p.getGrammar(), "20px /",
-                "initial", "normal", "none", "!number", "!length", "!percentage", "-", "calc", "var");
-        assertAlternatives(p.getGrammar(), "20px / 5pt","initial",
+                "normal", "none", "!number", "!length", "!percentage", "-", "calc", "var");
+        assertAlternatives(p.getGrammar(), "20px / 5pt",
                 "fantasy","serif","!string","sans-serif","monospace","!identifier","cursive", "var");
         assertAlternatives(p.getGrammar(), "20px / 5pt cursive", 
                 ",", "!identifier");
@@ -176,16 +176,16 @@ public class PropertyValueTest extends CssTestBase {
                 "700", "!length", "-", "xx-small", "bolder", "100", "300", "!percentage",
                 "200", "larger", "medium", "500", "x-large", "x-small", "400",
                 "xx-large", "900", "small", "large", "calc",  "fantasy","monospace",
-                "!identifier","!string","/","cursive","serif","sans-serif", "initial", "var");
+                "!identifier","!string","/","cursive","serif","sans-serif", "var");
 
         assertAlternatives(p.getGrammar(), "italic large",
-                "fantasy", "serif", "sans-serif", "monospace", "/", "cursive", "!string", "!identifier","initial", "var");
+                "fantasy", "serif", "sans-serif", "monospace", "/", "cursive", "!string", "!identifier", "var");
 
         assertAlternatives(p.getGrammar(), "italic large / ",
-                "!percentage", "initial", "normal", "!length", "-", "none", "!number", "calc", "var");
+                "!percentage", "normal", "!length", "-", "none", "!number", "calc", "var");
 
         assertAlternatives(p.getGrammar(), "italic large / normal",
-                "fantasy", "serif", "sans-serif", "monospace", "cursive", "!string", "!identifier","initial", "var");
+                "fantasy", "serif", "sans-serif", "monospace", "cursive", "!string", "!identifier", "var");
     }
 
     public void testBackgroundRGBAlternatives() {
@@ -219,8 +219,8 @@ public class PropertyValueTest extends CssTestBase {
         PropertyDefinition p = Properties.getPropertyDefinition( "font-family");
 
         assertAlternatives(p.getGrammar(), "",
-                "fantasy", "serif", "sans-serif", "inherit", "monospace", 
-                "cursive", "!string", "!identifier","initial", "var");
+                "fantasy", "serif", "sans-serif", "monospace", "cursive",
+                "!string", "!identifier", "var", "initial", "inherit", "unset");
 
     }
 
@@ -233,7 +233,7 @@ public class PropertyValueTest extends CssTestBase {
     public void testTheBorderCaseSimplified() {
         String g = " a || b || c";
 
-        assertAlternatives(g, "", "a", "b", "c");
+        assertAlternatives(g, "", "a", "b", "c", "initial", "inherit", "unset");
         assertAlternatives(g, "a", "b", "c");
 
         assertAlternatives(g, "a b", "c");
@@ -268,7 +268,7 @@ public class PropertyValueTest extends CssTestBase {
                 "fixed", "border-box", "center", "no-repeat", "none", "left", "right",
                 "top", "element", "scroll", "repeat-y", "linear-gradient", "repeat-x",
                 "image", "!uri", "cross-fade", "radial-gradient", "bottom", "local", 
-                "calc", "initial", "var");
+                "calc", "var");
     }
 
     public void testTheBackgroundCase2() {
@@ -280,14 +280,14 @@ public class PropertyValueTest extends CssTestBase {
                 "round", "!length", "-", "repeat", "repeating-radial-gradient", "space",
                 "fixed", "!percentage", "!uri", "border-box", "cross-fade",
                 "radial-gradient", "no-repeat", "auto", "none", "local", "calc",
-                "initial", "var");
+                "var");
 
 
     }
 
     public void testTheBackgroundCaseSimplified() {
         String g = " [ a , ]* b";
-        assertAlternatives(g, "", "a", "b");
+        assertAlternatives(g, "", "a", "b", "inherit", "initial", "unset");
         assertAlternatives(g, "a", ",");
         assertAlternatives(g, "a,", "b", "a");
         assertAlternatives(g, "a,a,", "b", "a");
@@ -298,7 +298,7 @@ public class PropertyValueTest extends CssTestBase {
 
     public void testTheBackgroundCaseSimplified2() {
         String g = " [ [ a || b ] , ]* [ a || c ]";
-        assertAlternatives(g, "", "a", "b", "c");
+        assertAlternatives(g, "", "a", "b", "c", "inherit", "initial", "unset");
 
         assertAlternatives(g, "a", ",", "b", "c");
 
@@ -337,7 +337,7 @@ public class PropertyValueTest extends CssTestBase {
 
     public void testAltsMinus() {
         String g = "-? x";
-        assertAlternatives(g, "", "x", "-");
+        assertAlternatives(g, "", "x", "-", "initial", "inherit", "unset");
     }
 
     public void testGetParseTree() {

@@ -35,13 +35,13 @@ import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.classpath.GlobalPathRegistry;
 import org.netbeans.api.java.source.SourceUtilsTestUtil;
 import org.netbeans.api.java.source.TestUtilities;
-import org.netbeans.api.java.source.TreeUtilities;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.api.project.SourceGroup;
 import org.netbeans.api.project.Sources;
 import org.netbeans.core.startup.Main;
 import org.netbeans.junit.NbTestCase;
+import org.netbeans.modules.java.source.BootClassPathUtil;
 import org.netbeans.modules.java.source.indexing.JavaCustomIndexer;
 import org.netbeans.modules.parsing.impl.indexing.CacheFolder;
 import org.netbeans.modules.parsing.impl.indexing.MimeTypes;
@@ -65,8 +65,6 @@ import org.openide.util.lookup.Lookups;
 import org.openide.util.lookup.ServiceProvider;
 
 public class RefTestBase extends NbTestCase {
-    // Turning off annoying info messages from treeutilities
-    private static final Logger TREEUTILITIESLOGGER = Logger.getLogger(TreeUtilities.class.getName());
 
     public RefTestBase(String name) {
         super(name);
@@ -164,7 +162,7 @@ public class RefTestBase extends NbTestCase {
 
     @Override
     protected void setUp() throws Exception {
-        TREEUTILITIESLOGGER.setLevel(Level.SEVERE);
+        Logger.getLogger("").setLevel(Level.SEVERE);
         MimeTypes.setAllMimeTypes(new HashSet<String>());
         SourceUtilsTestUtil.prepareTest(new String[] {"org/netbeans/modules/openide/loaders/layer.xml",
             "org/netbeans/modules/java/source/resources/layer.xml",
@@ -178,7 +176,7 @@ public class RefTestBase extends NbTestCase {
                     if ((src != null && (file == src || FileUtil.isParentOf(src, file)))
                             || (test != null && (file == test || FileUtil.isParentOf(test, file)))){
                         if (ClassPath.BOOT.equals(type)) {
-                            return ClassPathSupport.createClassPath(System.getProperty("sun.boot.class.path"));
+                            return BootClassPathUtil.getBootClassPath();
                         }
                         if (ClassPath.COMPILE.equals(type)) {
                             return ClassPathSupport.createClassPath(new FileObject[0]);

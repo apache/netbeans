@@ -19,6 +19,7 @@
 
 package org.netbeans.modules.quicksearch;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -105,6 +106,10 @@ public class QuickSearchComboBar extends AbstractQuickSearchComboBar {
 
         setLayout(new java.awt.GridBagLayout());
 
+        Color background = UIManager.getColor("nb.quicksearch.background"); //NOI18N
+        if (background != null) {
+            jPanel1.setBackground(background);
+        }
         jPanel1.setBorder(getQuickSearchBorder());
         jPanel1.setName("jPanel1"); // NOI18N
         jPanel1.setLayout(new java.awt.GridBagLayout());
@@ -138,7 +143,7 @@ public class QuickSearchComboBar extends AbstractQuickSearchComboBar {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 2);

@@ -455,9 +455,9 @@ public final class EditableManifest {
         }
         
         public void write(Writer w, boolean forceBlankLine) throws IOException {
-            Iterator it = lines.iterator();
+            Iterator<Line> it = lines.iterator();
             while (it.hasNext()) {
-                Line line = (Line) it.next();
+                Line line = it.next();
                 line.write(w);
             }
             for (int i = 0; i < blankLinesAfter; i++) {

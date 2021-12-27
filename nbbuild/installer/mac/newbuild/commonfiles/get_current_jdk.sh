@@ -23,7 +23,7 @@ if [ -z "$jdkhome" ] ; then
 
     # read Java Preferences
     if [ -x "/usr/libexec/java_home" ]; then
-        jdkhome=`/usr/libexec/java_home --version 1.8+`
+        jdkhome=`/usr/libexec/java_home`
     fi
 
     # JRE

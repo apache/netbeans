@@ -27,7 +27,7 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.FileSet;
 import org.netbeans.junit.NbTestCase;
-import org.netbeans.nbbuild.extlibs.DownloadBinaries.MavenCoordinate;
+import org.netbeans.nbbuild.extlibs.MavenCoordinate;
 
 public class DownloadBinariesTest extends NbTestCase {
 

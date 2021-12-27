@@ -77,9 +77,8 @@ public class JavaTestCreatorConfiguration extends TestCreatorConfiguration {
     }
 
     @Override
-    public boolean canHandleProject(@NonNull
-            String framework) {
-        return GuiUtils.JUNIT_TEST_FRAMEWORK.equals(framework) || GuiUtils.TESTNG_TEST_FRAMEWORK.equals(framework);
+    public boolean canHandleProject(@NonNull String framework) {
+        return framework.startsWith("JUnit") || GuiUtils.TESTNG_TEST_FRAMEWORK.equals(framework);
     }
 
     @Override

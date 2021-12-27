@@ -33,8 +33,11 @@ import javax.swing.SwingUtilities;
 import org.netbeans.api.db.explorer.ConnectionListener;
 import org.netbeans.api.db.explorer.ConnectionManager;
 import org.netbeans.api.db.explorer.DatabaseConnection;
+import org.netbeans.modules.db.explorer.node.RootNode;
 import org.netbeans.modules.db.util.DataComboBoxModel;
 import org.netbeans.modules.db.util.DataComboBoxSupport;
+import org.openide.nodes.FilterNode;
+import org.openide.nodes.Node;
 import org.openide.util.NbBundle;
 import org.openide.util.WeakListeners;
 
@@ -52,7 +55,7 @@ public final class DatabaseExplorerUIs {
 
     private DatabaseExplorerUIs() {
     }
-
+    
     /**
      * Populates and manages the contents of the passed combo box. The combo box
      * contents consists of the database connections defined in
@@ -92,7 +95,7 @@ public final class DatabaseExplorerUIs {
 
         @Override
         public void newItemActionPerformed() {
-            Set oldConnections = new HashSet(Arrays.asList(connectionManager.getConnections()));
+            Set<DatabaseConnection> oldConnections = new HashSet<>(Arrays.<DatabaseConnection>asList(connectionManager.getConnections()));
             connectionManager.showAddConnectionDialog(null);
 
             // try to find the new connection
@@ -204,6 +207,32 @@ public final class DatabaseExplorerUIs {
             } else {
                 return dispName2 == null ? 1 : dispName1.compareToIgnoreCase(dispName2);
             }
+        }
+    }
+    
+    /**
+     * Provides access to defined connections. The returned node contains connections,
+     * possibly not active, as its children. Active connections may offer database content as
+     * nested Nodes, depending on the actual DB provider.
+     * 
+     * @return connection nodes' parent
+     * @since 1.82
+     */
+    public static Node connectionsNode() {
+        Node original = RootNode.instance();
+        return new FilterNode(original, new ConnChildren(original));
+    }
+    
+    static final class ConnChildren extends FilterNode.Children {
+
+        public ConnChildren(Node or) {
+            super(or);
+        }
+
+        @Override
+        protected Node[] createNodes(Node key) {
+            DatabaseConnection c = key.getLookup().lookup(DatabaseConnection.class);
+            return c != null ? super.createNodes(key) : null;
         }
     }
 }

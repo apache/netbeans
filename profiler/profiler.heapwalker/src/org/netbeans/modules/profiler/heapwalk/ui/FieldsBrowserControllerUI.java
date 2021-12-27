@@ -153,7 +153,7 @@ public class FieldsBrowserControllerUI extends JTitledPanel {
         }
 
         public void mouseClicked(MouseEvent e) {
-            if (SwingUtilities.isLeftMouseButton(e) && e.getClickCount() == 2) {
+             if (SwingUtilities.isLeftMouseButton(e) && e.getClickCount() == 2) {
                 int row = fieldsListTable.rowAtPoint(e.getPoint());
                 if (e.getX() >= fieldsListTable.getTree().getRowBounds(row).x -
                                 fieldsListTable.getTreeCellOffsetX() && row != -1) {

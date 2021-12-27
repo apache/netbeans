@@ -845,7 +845,7 @@ public class JSONReader {
             return null;
         }
         if (array.isEmpty()) {
-            return Collections.EMPTY_MAP;
+            return Collections.<String, V8Object.Property>emptyMap();
         }
         Map<String, V8Object.Property> properties = new LinkedHashMap<>();
         V8Object.Property.Type[] types = V8Object.Property.Type.values();

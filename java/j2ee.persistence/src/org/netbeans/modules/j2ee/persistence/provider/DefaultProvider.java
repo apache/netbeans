@@ -44,10 +44,10 @@ public class DefaultProvider extends Provider{
     }
     
     public Map getUnresolvedVendorSpecificProperties() {
-        return Collections.EMPTY_MAP;
+        return Collections.emptyMap();
     }
     
     public Map getDefaultVendorSpecificProperties() {
-        return Collections.EMPTY_MAP;
+        return Collections.emptyMap();
     }
 }

@@ -192,12 +192,7 @@ public class WebModules implements WebModuleProvider, AntProjectListener, ClassP
         SourceGroup sg [] = ProjectUtils.getSources (project).getSourceGroups (JavaProjectConstants.SOURCES_TYPE_JAVA);
         Set<FileObject> srcRootSet = new HashSet<FileObject>();
         for (int i = 0; i < sg.length; i++) {
-            URL entry; 
-            try {
-                entry = sg[i].getRootFolder().getURL();
-            } catch (FileStateInvalidException x) {
-                throw new AssertionError(x);
-            }
+            URL entry = sg[i].getRootFolder().toURL();
             // There is important calling this. Withouth calling this, will not work java cc in Jsp editor correctly.
             SourceForBinaryQuery.Result res = SourceForBinaryQuery.findSourceRoots (entry);
             FileObject srcForBin [] = res.getRoots ();

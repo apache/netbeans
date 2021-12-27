@@ -167,26 +167,7 @@ public abstract class TestBase extends NbTestCase {
     protected void performTest(Input input, final Performer performer, boolean doCompileRecursively, Validator validator) throws Exception {
         SourceUtilsTestUtil.prepareTest(new String[] {"org/netbeans/modules/java/editor/resources/layer.xml"}, new Object[] {
             new MIMEResolverImpl(),
-            new CompilerOptionsQueryImplementation() {
-                @Override
-                public CompilerOptionsQueryImplementation.Result getOptions(FileObject file) {
-                    if (testSourceFO == file) {
-                        return new CompilerOptionsQueryImplementation.Result() {
-                            @Override
-                            public List<? extends String> getArguments() {
-                                return extraOptions;
-                            }
-
-                            @Override
-                            public void addChangeListener(ChangeListener listener) {}
-
-                            @Override
-                            public void removeChangeListener(ChangeListener listener) {}
-                        };
-                    }
-                    return null;
-                }
-            }
+            new CompilerOptionsQueryImplementationImpl()
         });
         
 	FileObject scratch = SourceUtilsTestUtil.makeScratchDir(this);
@@ -263,7 +244,10 @@ public abstract class TestBase extends NbTestCase {
     }
 
     protected void performTest(String fileName, String code, Performer performer, boolean doCompileRecursively, String... expected) throws Exception {
-        SourceUtilsTestUtil.prepareTest(new String[] {"org/netbeans/modules/java/editor/resources/layer.xml"}, new Object[] {new MIMEResolverImpl()});
+        SourceUtilsTestUtil.prepareTest(new String[] {"org/netbeans/modules/java/editor/resources/layer.xml"}, new Object[] {
+            new MIMEResolverImpl(),
+            new CompilerOptionsQueryImplementationImpl()
+        });
 
 	FileObject scratch = SourceUtilsTestUtil.makeScratchDir(this);
 	FileObject cache   = scratch.createFolder("cache");
@@ -425,5 +409,27 @@ public abstract class TestBase extends NbTestCase {
 
     protected interface Validator {
         public void validate(String actual) throws Exception;
+    }
+
+    private class CompilerOptionsQueryImplementationImpl implements CompilerOptionsQueryImplementation {
+
+        @Override
+        public CompilerOptionsQueryImplementation.Result getOptions(FileObject file) {
+            if (testSourceFO == file || testSourceFO.getParent() == file) {
+                return new CompilerOptionsQueryImplementation.Result() {
+                    @Override
+                    public List<? extends String> getArguments() {
+                        return extraOptions;
+                    }
+
+                    @Override
+                    public void addChangeListener(ChangeListener listener) {}
+
+                    @Override
+                    public void removeChangeListener(ChangeListener listener) {}
+                };
+            }
+            return null;
+        }
     }
 }

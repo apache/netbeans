@@ -44,8 +44,8 @@ public class ToggleDebuggingAction extends BaseAction implements Presenter.Toolb
     public static final String toggleDebuggingAction = "toggle-debugging-action";
     static final long serialVersionUID = 0L;
 
-    static final Set<Document> debuggingEnabled = Collections.synchronizedSet(new WeakSet<Document>());
-    static final Set<ToggleDebuggingAction> actions = Collections.synchronizedSet(new WeakSet<ToggleDebuggingAction>());
+    static final Set<Document> debuggingEnabled = Collections.synchronizedSet(new WeakSet<>());
+    static final Set<ToggleDebuggingAction> actions = Collections.synchronizedSet(new WeakSet<>());
     
     private JEditorPane pane;
 

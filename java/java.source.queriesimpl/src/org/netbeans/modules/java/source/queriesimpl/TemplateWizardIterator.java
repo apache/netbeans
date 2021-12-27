@@ -104,8 +104,8 @@ class TemplateWizardIterator implements WizardDescriptor.AsynchronousInstantiati
 
     @Override
     public Set instantiate() throws IOException, IllegalArgumentException {
-        Set set = delegateIterator.instantiate();
-        FileObject template = (FileObject) set.iterator().next();
+        Set<FileObject> set = delegateIterator.instantiate();
+        FileObject template = set.iterator().next();
         if (wiz instanceof TemplateWizard) {
             Logger logger = Logger.getLogger("org.netbeans.ui.metrics.form"); // NOI18N
             LogRecord rec = new LogRecord(Level.INFO, "USG_FORM_CREATED"); // NOI18N

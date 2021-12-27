@@ -146,7 +146,7 @@ public abstract class BasePanel extends JPanel {
         public void run() {
             // build the allowed values
             String allowedRegEx = jcb.getActionCommand();
-            DefaultComboBoxModel dcbm = new DefaultComboBoxModel();
+            DefaultComboBoxModel<String> dcbm = new DefaultComboBoxModel<>();
             Pattern p = Pattern.compile(allowedRegEx);
             Set<String> keys = data.keySet();
             //String pushPrefix = null;

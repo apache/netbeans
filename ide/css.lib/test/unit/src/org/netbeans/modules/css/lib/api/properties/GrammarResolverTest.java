@@ -776,6 +776,12 @@ public class GrammarResolverTest extends CssTestBase {
         assertResolve(g, "a");
         assertResolve(g, "a c");
         assertResolve(g, "c a");
+
+        String g2 = "d? && e && f";
+        assertResolve(g2, "e f");
+        assertResolve(g2, "d e f");
+        assertResolve(g2, "e f d");
+        assertResolve(g2, "f e d");
     }
     
     public void testBackground() {
@@ -846,4 +852,15 @@ public class GrammarResolverTest extends CssTestBase {
     }
     
 
+    public void testGlobalValuesAreResolved() {
+        String grammar = "a";
+
+        // Baseline matching - validate, that grammar works
+        assertResolve(grammar, "a");
+
+        // Verify that the global values unset, inherit and initial are matched
+        assertResolve(grammar, "unset");
+        assertResolve(grammar, "inherit");
+        assertResolve(grammar, "initial");
+    }
 }

@@ -729,7 +729,7 @@ private void saasBrowse(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saasB
         d.putProperty(ClientWizardProperties.WSDL_PACKAGE_NAME, getPackageName());
         d.putProperty(ClientWizardProperties.CLIENT_STUB_TYPE, jCbxClientType.getSelectedItem());
         d.putProperty(ClientWizardProperties.JAX_VERSION, jComboBoxJaxVersion.getSelectedItem());
-        d.putProperty(ClientWizardProperties.USEDISPATCH, Boolean.valueOf(dispatchCB.isSelected()));
+        d.putProperty(ClientWizardProperties.USEDISPATCH, dispatchCB.isSelected());
     }
     
     void read(WizardDescriptor d) {
@@ -871,13 +871,13 @@ private void saasBrowse(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saasB
             jCbxPackageName.setSelectedItem(getPackageItem(pName));
             // Normalize selection, in case it's unspecified.
             Integer source = (Integer) d.getProperty(ClientWizardProperties.WSDL_SOURCE);
-            if(source == null || source.intValue() < WSDL_FROM_PROJECT || 
-                    source.intValue() > WSDL_FROM_SAAS) 
+            if(source == null || source < WSDL_FROM_PROJECT || 
+                    source > WSDL_FROM_SAAS) 
             {
-                source = Integer.valueOf(WSDL_FROM_PROJECT);
+                source = WSDL_FROM_PROJECT;
             }
             
-            this.wsdlSource = source.intValue();
+            this.wsdlSource = source;
             this.wsdlTmpFile = null;
             this.retriever = null;
             this.downloadMsg = null;

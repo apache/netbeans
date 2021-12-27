@@ -107,8 +107,17 @@ public class CliParserTest extends NbTestCase {
         assertEquals("Sends your logs to: files, sockets, inboxes, databases and various web services", result.getDescription());
     }
 
-    public void testParseSearchEmptyDescription() {
+    public void testParseSearchEmptyDescriptionLegacy() {
         String chunk = "monolog/monolog:";
+        List<SearchResult> results = cliParser.parseSearch(chunk);
+        assertEquals(1, results.size());
+        SearchResult result = results.get(0);
+        assertEquals("monolog/monolog", result.getName());
+        assertEquals("", result.getDescription());
+    }
+
+    public void testParseSearchEmptyDescription() {
+        String chunk = "monolog/monolog";
         List<SearchResult> results = cliParser.parseSearch(chunk);
         assertEquals(1, results.size());
         SearchResult result = results.get(0);

@@ -27,13 +27,13 @@ import com.sun.tools.javac.code.Symtab;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCAnnotation;
 import com.sun.tools.javac.tree.JCTree.JCBlock;
-import com.sun.tools.javac.tree.JCTree.JCCase;
 import com.sun.tools.javac.tree.JCTree.JCCatch;
 import com.sun.tools.javac.tree.JCTree.JCErroneous;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
 import com.sun.tools.javac.tree.JCTree.JCIdent;
 import com.sun.tools.javac.tree.JCTree.JCModifiers;
 import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
+import com.sun.tools.javac.tree.JCTree.JCCase;
 import com.sun.tools.javac.tree.JCTree.Visitor;
 import com.sun.tools.javac.tree.TreeMaker;
 import com.sun.tools.javac.util.Context;
@@ -41,9 +41,7 @@ import com.sun.tools.javac.util.List;
 import com.sun.tools.javac.util.Name;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -62,7 +60,35 @@ import net.bytebuddy.matcher.ElementMatchers;
 public class JackpotTrees {
 
     private static final Map<Class<?>, Class<?>> baseClass2Impl = new HashMap<>();
-    public static <T> T createInstance(Context ctx, Class<T> clazz, Name ident, JCIdent jcIdent, Class<?>[] requiredConstructor, Object[] params) {
+
+    // JDK 8-11
+    public static JCCase createJCCase(Name ident, JCIdent jcIdent, List<?> stats) {
+        return createInstance(JCCase.class, ident, jcIdent,
+                new Class<?>[] {JCExpression.class, List.class},
+                new Object[] {jcIdent, stats});
+    }
+
+    // JDK 12-17+
+    public static JCCase createJCCase(Name ident, JCIdent jcIdent, String caseKind, List<?> labels, List<?> stats, JCTree body) throws ReflectiveOperationException {
+        
+        @SuppressWarnings("rawtypes")
+        Class kindClass = Class.forName("com.sun.source.tree.CaseTree$CaseKind", false, JCCase.class.getClassLoader());
+        @SuppressWarnings("unchecked")
+        Object caseKindValue = Enum.valueOf(kindClass, caseKind);
+
+        return createInstance(JCCase.class, ident, jcIdent,
+                    new Class<?>[] {kindClass, List.class, List.class, JCTree.class},
+                    new Object[] {caseKindValue, labels, stats, body});
+    }
+
+    // JDK 8-17+
+    public static JCVariableDecl createJCVariableDecl(Name ident, JCIdent jcIdent, JCModifiers mods, Name param2, JCExpression vartype, JCExpression init, VarSymbol sym) {
+        return createInstance(JCVariableDecl.class, ident, jcIdent,
+                new Class<?>[] {JCModifiers.class, Name.class, JCExpression.class, JCExpression.class, VarSymbol.class},
+                new Object[] {mods, param2, vartype, init, sym});
+    }
+
+    private static <T> T createInstance(Class<T> clazz, Name ident, JCIdent jcIdent, Class<?>[] requiredConstructor, Object[] params) {
         try {
             Class<?> fake = baseClass2Impl.get(clazz);
 
@@ -85,37 +111,31 @@ public class JackpotTrees {
                         .getLoaded();
                 baseClass2Impl.put(clazz, fake);
             }
-
-            NEXT: for (Constructor c : fake.getDeclaredConstructors()) {
-                if (c.getParameterCount() < requiredConstructor.length)
-                    continue;
-                for (int e = 0; e < requiredConstructor.length; e++) {
-                    if (!c.getParameterTypes()[e].equals(requiredConstructor[e])) {
-                        continue NEXT;
-                    }
+            
+            Constructor<?> compatible = null;
+            for (Constructor<?> constructor : fake.getDeclaredConstructors()) {
+                if (Arrays.equals(constructor.getParameterTypes(), requiredConstructor)) {
+                    compatible = constructor;
+                    break;
                 }
-                java.util.List<Object> instances = new ArrayList<>();
-                instances.addAll(Arrays.asList(params));
-                for (int i = instances.size(); i < c.getParameterCount(); i++) {
-                    instances.add(null);
-                }
-
-                JCTree tree = (JCTree) c.newInstance(instances.toArray(new Object[0]));
+            }
+            
+            if (compatible != null) {
+                
+                JCTree tree = (JCTree) compatible.newInstance(params);
 
                 Field identField = fake.getDeclaredField("ident");
-
                 identField.set(tree, ident);
 
                 Field jcIdentField = fake.getDeclaredField("jcIdent");
-
                 jcIdentField.set(tree, jcIdent);
 
                 return clazz.cast(tree);
+            } else {
+                throw new IllegalStateException("no compatible constructors found in: "+Arrays.asList(fake.getDeclaredConstructors()).toString());
             }
-
-            throw new IllegalStateException(Arrays.asList(fake.getDeclaredConstructors()).toString());
-        } catch (IllegalAccessException | IllegalArgumentException | IllegalStateException | InstantiationException | NoSuchFieldException | NoSuchMethodException | SecurityException | InvocationTargetException ex) {
-            throw new IllegalStateException(ex);
+        } catch (ReflectiveOperationException | IllegalArgumentException | IllegalStateException | SecurityException ex) {
+            throw new IllegalStateException("can't instantiate "+Arrays.asList(requiredConstructor).toString()+" of "+clazz, ex);
         }
     }
 
@@ -130,6 +150,7 @@ public class JackpotTrees {
             this.jcIdent = jcIdent;
         }
 
+        @Override
         public Name getName() {
             return ident;
         }
@@ -167,6 +188,7 @@ public class JackpotTrees {
             this.jcIdent = jcIdent;
         }
 
+        @Override
         public Name getName() {
             return ident;
         }
@@ -201,27 +223,7 @@ public class JackpotTrees {
 
         err.type = Symtab.instance(ctx).errType;
 
-        JCVariableDecl var;
-        
-        try {
-            var = createInstance(ctx,
-                                 JCVariableDecl.class,
-                                 name,
-                                 jcIdent,
-                                 new Class<?>[] {JCModifiers.class, Name.class, JCExpression.class, JCExpression.class, VarSymbol.class},
-                                 new Object[] {new FakeModifiers(), name, err, null, null});
-        } catch (IllegalStateException ex) {
-            try {
-                var = createInstance(ctx,
-                                     JCVariableDecl.class,
-                                     name,
-                                     jcIdent,
-                                     new Class<?>[] {JCModifiers.class, Name.class, JCExpression.class, JCExpression.class, VarSymbol.class, List.class},
-                                     new Object[] {new FakeModifiers(), name, err, null, null, List.nil()});
-            } catch (IllegalStateException ex2) {
-                throw ex;
-            }
-        }
+        JCVariableDecl var = createJCVariableDecl(name, jcIdent, new FakeModifiers(), name, err, null, null);
 
         var.sym = new VarSymbol(0, name, var.vartype.type, Symtab.instance(ctx).errSymbol);
         var.type = var.vartype.type;

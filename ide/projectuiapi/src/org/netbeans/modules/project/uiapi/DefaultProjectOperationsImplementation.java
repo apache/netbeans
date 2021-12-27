@@ -647,7 +647,7 @@ public final class DefaultProjectOperationsImplementation {
         confirm.setEnabled(((InvalidablePanel) panel).isPanelValid());
         
         final Dialog[] dialog = new Dialog[1];
-        
+
         DialogDescriptor dd = new DialogDescriptor(doSetMessageType ? panel : wrapPanel(panel), caption, true, new Object[] {confirm, cancel}, cancelButton != null ? cancel : confirm, DialogDescriptor.DEFAULT_ALIGN, null, new ActionListener() {
             private boolean operationRunning;
             public @Override void actionPerformed(ActionEvent e) {
@@ -691,7 +691,9 @@ public final class DefaultProjectOperationsImplementation {
                             } finally {                            
                                 SwingUtilities.invokeLater(new Runnable() {
                                     public @Override void run() {
-                                        dialog[0].setVisible(false);
+                                        if (dialog[0] != null) {
+                                            dialog[0].setVisible(false);
+                                        }
                                         if (e.get() != null) {
                                             LOG.log(Level.WARNING, null, e.get());
                                         }

@@ -48,7 +48,12 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.JarOutputStream;
 import java.util.jar.Manifest;
+import java.util.logging.Handler;
 import java.util.logging.Level;
+import java.util.logging.LogRecord;
+import static junit.framework.TestCase.assertTrue;
+import static org.junit.Assert.assertNotEquals;
+import static org.netbeans.SetupHid.createTestJAR;
 import org.netbeans.junit.RandomlyFails;
 import org.openide.modules.Dependency;
 import org.openide.modules.ModuleInfo;
@@ -88,11 +93,27 @@ public class ModuleManagerTest extends SetupHid {
     public ModuleManagerTest(String name) {
         super(name);
     }
+    
+    private LogHandler logHandler = new LogHandler();
 
     @Override
     protected Level logLevel() {
         return Level.FINE;
     }
+
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp(); 
+        Util.err.addHandler(logHandler);
+    }
+
+    @Override
+    protected void tearDown() throws Exception {
+        Util.err.removeHandler(logHandler);
+        super.tearDown();
+    }
+    
+    
     
     /** Load simple-module and depends-on-simple-module.
      * Make sure they can be installed and in a sane order.
@@ -256,6 +277,13 @@ public class ModuleManagerTest extends SetupHid {
                 fail("Should not permit you to simulate enablement of an eager module");
             } catch (IllegalArgumentException iae) {
                 // Good. m2 should not have been passed to it.
+            }
+            try {
+                mgr.enable(new HashSet<>(Arrays.asList(m1, m2)));
+                fail("Should not permit you enablem of an eager module");
+            } catch (IllegalModuleException iae) {
+                // Good. m2 should not have been passed to it.
+                assertNotEquals(iae.getMessage(), iae.getLocalizedMessage());
             }
             assertEquals(Collections.EMPTY_SET, m1.getProblems());
             assertEquals(Collections.EMPTY_SET, m2.getProblems());
@@ -2797,6 +2825,8 @@ public class ModuleManagerTest extends SetupHid {
 
         assertTrue("Host must be enabled", mgr.getEnabledModules().contains(host));
         assertTrue("Fragment must not be enabled", !mgr.getEnabledModules().contains(fragment));
+        
+        assertTrue(logHandler.warnings.isEmpty());
     }
     
     public void testEnableFragmentBeforeItsHost() throws Exception {
@@ -2850,6 +2880,170 @@ public class ModuleManagerTest extends SetupHid {
         }
     }
 
+    public void testAutoloadHostWithFragmentsDoesNotRun() throws Exception {
+        MockModuleInstaller installer = new MockModuleInstaller();
+        MockEvents ev = new MockEvents();
+        ModuleManager mgr = new ModuleManager(installer, ev);
+        mgr.mutexPrivileged().enterWriteAccess();
+
+        createTestJAR(data, jars, "client-module", null);
+
+        Module host = mgr.create(new File(jars, "host-module.jar"), null, false, true, false);
+        Module fragment = mgr.create(new File(jars, "fragment-module.jar"), null, false, true, false);
+        
+        Module client = mgr.create(new File(jars, "client-module.jar"), null, false, false, false);
+        
+        mgr.enable(client);
+
+        assertFalse("Host can't enable always", mgr.getEnabledModules().contains(host));
+        assertFalse("Fragment must not be enabled", mgr.getEnabledModules().contains(fragment));
+    }
+    
+    
+    public void testAutoloadFragmentEnablesHostAndPeers() throws Exception {
+        ModsCreator c = new ModsCreator();
+        createTestJAR(data, jars, "client-module-depend-frag", "client-module");
+        c.loadModules();
+        
+        Module client = c.mgr.create(new File(jars, "client-module-depend-frag.jar"), null, false, false, false);
+        c.mgr.enable(client);
+
+        c.checkHostAndOtherFragmentsLoaded(c.fragmentAutoload);
+    }
+    
+    public void testAutoloadHostEnablesAllFragments() throws Exception {
+        ModsCreator c = new ModsCreator();
+        createTestJAR(data, jars, "client-module-depend-host", "client-module");
+        c.loadModules();
+        
+        Module client = c.mgr.create(new File(jars, "client-module-depend-host.jar"), null, false, false, false);
+        c.mgr.enable(client);
+
+        c.checkHostAndOtherFragmentsLoaded(c.host);
+    }
+    
+    public void testBrokenAutoloadFragmentDepend() throws Exception {
+        MockModuleInstaller installer = new MockModuleInstaller();
+        MockEvents ev = new MockEvents();
+        ModuleManager mgr = new ModuleManager(installer, ev);
+        mgr.mutexPrivileged().enterWriteAccess();
+
+        createTestJAR(data, jars, "client-module-depend-broken", "client-module");
+        createTestJAR(data, jars, "fragment-module-missing-token", null);
+
+        Module host = mgr.create(new File(jars, "host-module.jar"), null, false, false, false);
+        Module fragment = mgr.create(new File(jars, "fragment-module-missing-token.jar"), null, false, false, true);
+        Module client = mgr.create(new File(jars, "client-module-depend-broken.jar"), null, false, false, false);
+        
+        try {
+            mgr.enable(client);
+        } catch (IllegalModuleException ex) {
+            assertTrue(ex.getMessage().contains("org.foo.client"));
+        }
+        
+        assertFalse(mgr.getEnabledModules().contains(host));
+        assertFalse(mgr.getEnabledModules().contains(fragment));
+        assertFalse(mgr.getEnabledModules().contains(client));
+    }
+
+    public void testBrokenAutoloadFragmentNeeds() throws Exception {
+        MockModuleInstaller installer = new MockModuleInstaller();
+        MockEvents ev = new MockEvents();
+        ModuleManager mgr = new ModuleManager(installer, ev);
+        mgr.mutexPrivileged().enterWriteAccess();
+
+        createTestJAR(data, jars, "client-module-needs-broken", "client-module");
+        createTestJAR(data, jars, "fragment-module-missing-token", null);
+
+        Module host = mgr.create(new File(jars, "host-module.jar"), null, false, false, false);
+        Module fragment = mgr.create(new File(jars, "fragment-module-missing-token.jar"), null, false, false, true);
+        Module client = mgr.create(new File(jars, "client-module-needs-broken.jar"), null, false, false, false);
+        
+        try {
+            mgr.enable(client);
+        } catch (IllegalModuleException ex) {
+            assertTrue(ex.getMessage().contains("org.foo.client"));
+        }
+        
+        assertFalse(mgr.getEnabledModules().contains(host));
+        assertFalse(mgr.getEnabledModules().contains(fragment));
+        assertFalse(mgr.getEnabledModules().contains(client));
+    }
+
+    private class LogHandler extends Handler {
+        private List<LogRecord> warnings = new ArrayList<>();
+        @Override
+        public void publish(LogRecord record) {
+            if (record.getLevel().intValue() >= Level.WARNING.intValue()) {
+                warnings.add(record);
+            }
+        }
+
+        @Override
+        public void flush() {
+        }
+
+        @Override
+        public void close() throws SecurityException {
+        }
+    }
+    
+    private class ModsCreator {
+        private final ModuleManager mgr;
+        
+        private Module host;
+        private Module fragmentService;
+        private Module fragmentBroken;
+        private Module fragmentAutoload;
+        private Module fragmentRegular;
+        
+        private List<Module> liveFragments = new ArrayList<>();
+
+        public ModsCreator() {
+            MockModuleInstaller installer = new MockModuleInstaller();
+            MockEvents ev = new MockEvents();
+            mgr = new ModuleManager(installer, ev);
+            mgr.mutexPrivileged().enterWriteAccess();
+        }
+        
+        void loadModules() throws Exception {
+            
+            createTestJAR(data, jars, "fragment-module-reg", "fragment-module");
+            createTestJAR(data, jars, "fragment-module-auto", "fragment-module");
+            createTestJAR(data, jars, "fragment-module-missing-token", "fragment-module");
+
+            if (host == null) {
+                host = mgr.create(new File(jars, "host-module.jar"), null, false, true, false);
+            }
+            if (fragmentService == null) {
+                fragmentService = mgr.create(new File(jars, "fragment-module.jar"), null, false, true, false);
+            }
+            if (fragmentRegular == null) {
+                fragmentRegular = mgr.create(new File(jars, "fragment-module-reg.jar"), null, false, false, false);
+            }
+            if (fragmentAutoload == null) {
+                fragmentAutoload = mgr.create(new File(jars, "fragment-module-auto.jar"), null, false, true, false);
+            }
+            if (fragmentBroken == null) {
+                fragmentBroken = mgr.create(new File(jars, "fragment-module-missing-token.jar"), null, false, true, false);
+            }
+            liveFragments.add(fragmentService);
+            liveFragments.add(fragmentRegular);
+            liveFragments.add(fragmentAutoload);
+        }
+        
+        void checkHostAndOtherFragmentsLoaded(Module pickedDep) {
+            assertTrue("Fragment host must enable", mgr.getEnabledModules().contains(host));
+            for (Module m : liveFragments) {
+                if (m != pickedDep) {
+                    assertTrue("Peer fragment must be autoloaded", mgr.getEnabledModules().contains(m));
+                }
+            }
+            // the fragment with unsatisfied "needs" is not reported, as it is autoload being triggered by host module.
+            assertTrue(logHandler.warnings.isEmpty());
+        }
+    }
+    
     private File copyJar(File file, String manifest) throws IOException {
         File ret = File.createTempFile(file.getName(), "2ndcopy", file.getParentFile());
         JarFile jar = new JarFile(file);
@@ -2889,4 +3083,4 @@ public class ModuleManagerTest extends SetupHid {
         assertTrue(token + " is not among the list of provides of module " + m + " which is " + arr, ok);
         return arr;
     }
-}
+    }

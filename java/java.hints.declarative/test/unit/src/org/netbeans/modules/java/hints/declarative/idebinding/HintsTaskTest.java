@@ -120,7 +120,27 @@ public class HintsTaskTest extends TestBase {
         
         assertFalse(new HashSet<String>(errors).contains("ERR_RemoveExpression"));
     }
-    
+
+    public void testTypeConditions() throws Exception {
+        prepareTest("test/Test.java", "");
+
+        FileObject hint = sourceRoot.createData("test.hint");
+        String code = "$1.length() :: $1 instanceof java.lang.String;;";
+
+        TestUtilities.copyStringToFile(hint, code);
+
+        TokenHierarchy<?> h = TokenHierarchy.create(code, DeclarativeHintTokenId.language());
+        DeclarativeHintsParser.Result res = new DeclarativeHintsParser().parse(hint, code, h.tokenSequence(DeclarativeHintTokenId.language()));
+        List<ErrorDescription> errorInstances = HintsTask.computeErrors(res, code, hint);
+        List<String> errors = new ArrayList<String>();
+
+        for (ErrorDescription ed : errorInstances) {
+            errors.add(ed.toString());
+        }
+
+        assertEquals(Arrays.asList(), errors);
+    }
+
     static {
         NbBundle.setBranding("test");
     }

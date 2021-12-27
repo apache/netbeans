@@ -103,6 +103,46 @@ public class ValidatorImplTest extends NbTestCase {
 
     }
 
+    public void testNETBEANS2333() throws ValidationException {
+        String code = ""
+                + "<!DOCTYPE html>\n"
+                + "<html>\n"
+                + "    <head>\n"
+                + "        <title>NETBEANS2333</title>\n"
+                + "    </head>\n"
+                + "    <body>\n"
+                + "        <input type=\"text\" placeholder=\"input text\" name=\"text3\" minlength=\"3\" maxlength=\"15\" required>\n"
+                + "    </body>\n"
+                + "</html>\n";
+        testNoProblems(code);
+    }
+
+    public void testNETBEANS3681() throws ValidationException {
+        String code = ""
+                + "<!DOCTYPE html>\n"
+                + "<html>\n"
+                + "    <head>\n"
+                + "        <title>NETBEANS3681</title>\n"
+                + "        <script type=\"module\">\n"
+                + "        </script>\n"
+                + "    </head>\n"
+                + "    <body>\n"
+                + "    </body>\n"
+                + "</html>\n";
+        testNoProblems(code);
+    }
+
+    private void testNoProblems(String code) throws ValidationException {
+        HtmlSource source = new HtmlSource(code);
+        SyntaxAnalyzerResult result = SyntaxAnalyzer.create(source).analyze();
+
+        Validator instance = Lookup.getDefault().lookup(Validator.class);
+        assertNotNull(instance);
+
+        ValidationResult validationResult = instance.validate(new ValidationContext(new StringReader(code), HtmlVersion.HTML5, null, result));
+        assertNoProblems(validationResult);
+    }
+
 //    //tests if the validation ignores the templating language marks @@@
 //    public void testValidateVirtualHtmlSource() throws SAXException, IOException, ParseException, ValidationException {
 //        String code = "@@@<!doctype html> <html @@@><head><title>hello</title></head><body><div>ahoj!</div></body></html>";

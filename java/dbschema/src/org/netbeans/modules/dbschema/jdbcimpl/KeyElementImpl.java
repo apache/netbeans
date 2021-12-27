@@ -33,17 +33,19 @@ public abstract class KeyElementImpl extends DBMemberElementImpl implements KeyE
 	/** Creates new KeyElementImpl with the specified name */
     public KeyElementImpl (String name) {
         super(name);
-		columns = initializeCollection();
+        columns = initializeCollection();
 
-        //workaround for bug #4396371
-        //http://andorra.eng:8080/cgi-bin/ws.exe/bugtraq/bug.hts?where=bugid_value%3D4396371
-        Object hc = String.valueOf(columns.hashCode());
+        // NOTE - After doing research, not sure this comment still applys? Remove it?
+        // workaround for bug #4396371
+        // http://andorra.eng:8080/cgi-bin/ws.exe/bugtraq/bug.hts?where=bugid_value%3D4396371
+        String hc = String.valueOf(columns.hashCode());
+
         while (DBElementsCollection.instances.contains(hc)) {
-    		columns = initializeCollection();
+            columns = initializeCollection();
             hc = String.valueOf(columns.hashCode());
         }
         DBElementsCollection.instances.add(hc);
-	}
+    }
 
     protected DBElementsCollection initializeCollection() {
         return new DBElementsCollection(this, new ColumnElement[0]);

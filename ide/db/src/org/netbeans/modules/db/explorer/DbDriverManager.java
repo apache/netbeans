@@ -223,8 +223,8 @@ public class DbDriverManager {
         // try the registered drivers first
         synchronized (this) {
             if (registeredDrivers != null) {
-                for (Iterator i = registeredDrivers.iterator(); i.hasNext();) {
-                    Driver d = (Driver)i.next();
+                for (Iterator<Driver> i = registeredDrivers.iterator(); i.hasNext();) {
+                    Driver d = i.next();
                     try {
                         if (d.acceptsURL(databaseURL)) {
                             return d;

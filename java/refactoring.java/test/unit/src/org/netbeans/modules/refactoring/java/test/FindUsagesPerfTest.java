@@ -32,6 +32,7 @@ import org.netbeans.api.fileinfo.NonRecursiveFolder;
 import org.netbeans.api.java.source.*;
 import org.netbeans.junit.Log;
 import org.netbeans.junit.NbModuleSuite;
+import org.netbeans.junit.NbTestSuite;
 import org.netbeans.modules.refactoring.api.AbstractRefactoring;
 import org.netbeans.modules.refactoring.api.RefactoringElement;
 import org.netbeans.modules.refactoring.api.RefactoringSession;
@@ -130,7 +131,8 @@ public class FindUsagesPerfTest extends RefPerfTestCase {
     }
     
     public static Test suite() throws InterruptedException {
-        return NbModuleSuite.create(NbModuleSuite.emptyConfiguration().addTest(FindUsagesPerfTest.class, "testFindUsage").gui(false));
+//        return NbModuleSuite.create(NbModuleSuite.emptyConfiguration().addTest(FindUsagesPerfTest.class, "testFindUsage").gui(false));
+        return NbTestSuite.createTest(Noop.class, "noop");
     }
 
 }

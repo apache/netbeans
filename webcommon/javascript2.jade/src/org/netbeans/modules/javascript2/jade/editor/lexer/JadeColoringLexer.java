@@ -1148,6 +1148,7 @@ public final class JadeColoringLexer {
    * @return      the next token
    * @exception   java.io.IOException  if any I/O-Error occurs
    */
+  @SuppressWarnings("fallthrough")
   public JadeTokenId yylex() throws java.io.IOException {
     int zzInput;
     int zzAction;

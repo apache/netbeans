@@ -1370,7 +1370,7 @@ public class UnixNativeUtils extends NativeUtils {
                 matcher = Pattern.compile("uid=([0-9]+)\\(").matcher(stdout);
             }
             if (matcher.find()) {
-                adm = new Integer(matcher.group(1)).intValue() == 0;
+                adm = Integer.parseInt(matcher.group(1)) == 0;
             }
         } catch (IOException e) {
             LogManager.log(e);

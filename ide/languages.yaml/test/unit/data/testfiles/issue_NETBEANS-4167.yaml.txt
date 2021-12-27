@@ -1,0 +1,3 @@
+.t.e.s.t. SimpleCurly
+n: {
+.e.o.f.

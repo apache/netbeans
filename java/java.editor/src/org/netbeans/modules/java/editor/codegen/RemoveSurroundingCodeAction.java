@@ -55,7 +55,9 @@ import com.sun.source.util.TreePath;
 
 import org.netbeans.api.editor.EditorActionNames;
 import org.netbeans.api.editor.EditorActionRegistration;
+import org.netbeans.api.editor.mimelookup.MimeLookup;
 import org.netbeans.api.editor.settings.AttributesUtilities;
+import org.netbeans.api.editor.settings.FontColorSettings;
 import org.netbeans.api.java.lexer.JavaTokenId;
 import org.netbeans.api.java.source.Comment;
 import org.netbeans.api.java.source.CompilationController;
@@ -77,7 +79,11 @@ import org.netbeans.modules.editor.java.Utilities;
 import org.netbeans.modules.java.editor.overridden.PopupUtil;
 import org.netbeans.spi.editor.highlighting.support.OffsetsBag;
 import org.openide.util.Exceptions;
+import org.openide.util.Lookup;
+import org.openide.util.LookupEvent;
+import org.openide.util.LookupListener;
 import org.openide.util.NbBundle;
+import org.openide.util.WeakListeners;
 
 /**
  * Remove the enclosing parts of a nested statement.
@@ -89,7 +95,38 @@ import org.openide.util.NbBundle;
                           menuPath = "Source",
                           menuPosition = 2280,
                           menuText = "#" + EditorActionNames.removeSurroundingCode + "_menu_text")
-public class RemoveSurroundingCodeAction extends BaseAction {
+public class RemoveSurroundingCodeAction extends BaseAction implements LookupListener {
+
+    private static final String DELETE_HIGHLIGHT_FCS_NAME = "remove-surround-code-delete"; //NOI18N
+    private static final String REMAIN_HIGHLIGHT_FCS_NAME = "remove-surround-code-remain"; //NOI18N
+    private static AttributeSet DELETE_HIGHLIGHT;
+    private static AttributeSet REMAIN_HIGHLIGHT;
+    private Lookup.Result<FontColorSettings> result;
+
+    public RemoveSurroundingCodeAction(){
+        // retrieve colors from fonts color settings
+        Lookup lookup = MimeLookup.getLookup(JavaKit.JAVA_MIME_TYPE);
+        result = lookup.lookupResult(FontColorSettings.class);
+        result.addLookupListener(WeakListeners.create(LookupListener.class, this, result));
+        resultChanged(null); // initial retrieval
+    }
+
+    @Override
+    public void resultChanged(LookupEvent ev) {
+        FontColorSettings fcs = result.allInstances().iterator().next();
+        synchronized(this) {
+            if (fcs!=null) {
+                DELETE_HIGHLIGHT = fcs.getFontColors(DELETE_HIGHLIGHT_FCS_NAME);
+                REMAIN_HIGHLIGHT = fcs.getFontColors(REMAIN_HIGHLIGHT_FCS_NAME);
+            }
+            if (DELETE_HIGHLIGHT == null) {
+                DELETE_HIGHLIGHT = AttributesUtilities.createImmutable(StyleConstants.Background, new Color(245, 245, 245), StyleConstants.Foreground, new Color(180, 180, 180));
+            }
+            if (REMAIN_HIGHLIGHT == null) {
+                REMAIN_HIGHLIGHT = AttributesUtilities.createImmutable(StyleConstants.Background, new Color(210, 240, 210));
+            }
+        }
+    }
 
     @Override
     public void actionPerformed(final ActionEvent evt, final JTextComponent component) {
@@ -211,9 +248,6 @@ public class RemoveSurroundingCodeAction extends BaseAction {
         int end = (int) sp.getEndPosition(controller.getCompilationUnit(), ifTree.getThenStatement());
         return end > 0 && caretPosition > end;
     }
-
-    private static final AttributeSet DELETE_HIGHLIGHT = AttributesUtilities.createImmutable(StyleConstants.Background, new Color(245, 245, 245), StyleConstants.Foreground, new Color(180, 180, 180));
-    private static final AttributeSet REMAIN_HIGHLIGHT = AttributesUtilities.createImmutable(StyleConstants.Background, new Color(210, 240, 210));
 
     private static class TreeDeleter implements CodeDeleter {
 

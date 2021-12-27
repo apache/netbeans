@@ -40,6 +40,8 @@ public abstract class AbstractModelNode {
     private static final String STRING = "string"; // NOI18N
     private static final String UNDEF = "uninitialized"; // NOI18N
     private static final String NULL = "null"; // NOI18N
+    private static final String BOOLEAN = "boolean"; // NOI18N
+    private static final String BOOL = "bool"; // NOI18N
     private List<AbstractVariableNode> myVars;
     private AbstractModelNode myParent;
 
@@ -71,8 +73,9 @@ public abstract class AbstractModelNode {
                 return new ObjectVariableNode(property, parent);
             case RESOURCE:
                 return new ResourceVariableNode(property, parent);
-            case ScalarTypeVariableNode.BOOLEAN:
-            case ScalarTypeVariableNode.BOOL:
+            case BOOLEAN:
+            case BOOL:
+                return new BooleanVariableNode(property, parent);
             case ScalarTypeVariableNode.INTEGER:
             case ScalarTypeVariableNode.INT:
             case ScalarTypeVariableNode.FLOAT:

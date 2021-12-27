@@ -63,7 +63,7 @@ import org.openide.util.MutexException;
 public final class NewSpringXMLConfigWizardIterator implements WizardDescriptor.AsynchronousInstantiatingIterator {
 
     private static final Logger LOG = Logger.getLogger(NewSpringXMLConfigWizardIterator.class.getName());
-    private static final String DEFAULT_SPRING_VERSION = "3.2.3";
+    private static final String DEFAULT_SPRING_VERSION = "3.2.18";
     private int index;
     private WizardDescriptor wizard;
     private WizardDescriptor.Panel[] panels;

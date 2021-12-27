@@ -80,6 +80,9 @@ import org.openide.filesystems.XMLFileSystem;
 import org.openide.modules.SpecificationVersion;
 import org.openide.util.RequestProcessor;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  *
  * @author mkleint
@@ -107,10 +110,11 @@ public class MavenNbModuleImpl implements NbModuleProvider {
     public static final String GROUPID_MOJO = "org.codehaus.mojo";
     public static final String GROUPID_APACHE = "org.apache.netbeans.utilities";
     public static final String NBM_PLUGIN = "nbm-maven-plugin";
-    public static final String LATEST_NBM_PLUGIN_VERSION = "4.3";
-    
-    public static final String NETBEANSAPI_GROUPID = "org.netbeans.api";  
-    
+    private static final String LATEST_NBM_PLUGIN_VERSION = "4.3";
+
+    public static final String NETBEANSAPI_GROUPID = "org.netbeans.api";
+
+    private static final Logger LOG = Logger.getLogger("org.netbeans.modules.maven.apisupport.MavenNbModuleImpl");
 
     /** Creates a new instance of MavenNbModuleImpl 
      * @param project 
@@ -123,7 +127,28 @@ public class MavenNbModuleImpl implements NbModuleProvider {
         return Arrays.asList(
                 RepositoryPreferences.getInstance().getRepositoryInfoById(MAVEN_CENTRAL));
     }
-    
+
+    public static String getLatestNbmPluginVersion() {
+        try {
+            RepositoryQueries.Result<NBVersionInfo> versionsResult = RepositoryQueries.getVersionsResult(GROUPID_APACHE, NBM_PLUGIN, null);
+
+            if (versionsResult.isPartial()) {
+                versionsResult.waitForSkipped();
+            }
+
+            // Versions are sorted in descending order
+            List<NBVersionInfo> results = versionsResult.getResults();
+            if (!results.isEmpty()) {
+                return results.get(0).getVersion();
+            }
+        }
+        catch (NullPointerException ex) {
+            // This exceptions occurs during unit tests so default to LATEST_NBM_PLUGIN_VERSION
+            LOG.log(Level.WARNING, "Unable to get latest nbm-maven-plugin version number");
+        }
+        return LATEST_NBM_PLUGIN_VERSION;
+    }
+
     private File getModuleXmlLocation() {
         String file = PluginBackwardPropertyUtils.getPluginProperty(project, 
                     "descriptor", null, null); //NOI18N

@@ -19,6 +19,7 @@
 
 package org.netbeans.api.java.source;
 
+import com.sun.source.tree.Tree;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
@@ -38,7 +39,12 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.element.TypeParameterElement;
 import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.DeclaredType;
+import javax.lang.model.type.TypeMirror;
+import javax.lang.model.type.TypeVariable;
+import javax.lang.model.type.WildcardType;
 import javax.lang.model.util.ElementFilter;
 import javax.swing.event.ChangeListener;
 import org.netbeans.api.java.classpath.ClassPath;
@@ -381,6 +387,15 @@ public class SourceUtilsTest extends ClassIndexTestCase {
         final FileObject inhMain = createFile(src, "D1.java","class D1 { public static void main (String... args){}} class D1X extends D1 {}");
         assertMain(new String[] {"D1","D1X"}, SourceUtils.getMainClasses(inhMain));
     }
+
+    public void testIsClassFile() throws Exception {
+        final File wd = getWorkDir();
+        final FileObject src = FileUtil.createFolder(new File (wd,"src"));
+        final FileObject emptyJava = createFile(src, "C1.java","class C1 {}");
+        assertFalse(SourceUtils.isClassFile(emptyJava));
+        final FileObject emptyClass = createFile(src, "C1.class","");
+        assertTrue(SourceUtils.isClassFile(emptyClass));
+    }
     
     public void testGenerateReadableParameterName() throws Exception {
         System.out.println("testGenerateReadableParameterName");
@@ -426,6 +441,21 @@ public class SourceUtilsTest extends ClassIndexTestCase {
         test = info.getElements().getTypeElement("sourceutils.TestDollarSourceName$dollar.InnerClass");
         f = SourceUtils.getFile(ElementHandle.create(test), info.getClasspathInfo());
         assertEquals("TestDollarSourceName.java", f.getNameExt());
+    }
+
+    public void testGetBound() throws Exception {
+        //only a scatch of the test, add testcases as needed:
+        prepareTest();
+
+        TypeElement test = info.getElements().getTypeElement("sourceutils.TestGetBound");
+
+        assertNotNull(test);
+
+        TypeParameterElement typeParam = test.getTypeParameters().get(0);
+        TypeMirror outerBound = ((TypeVariable) typeParam.asType()).getUpperBound();
+
+        TypeMirror bound = SourceUtils.getBound((WildcardType) ((DeclaredType) outerBound).getTypeArguments().get(0));
+        assertEquals("java.lang.CharSequence", String.valueOf(bound));
     }
 
     //<editor-fold defaultstate="collapsed" desc="Helper methods & Mock services">

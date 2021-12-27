@@ -162,7 +162,7 @@ public class ProcessIOParser {
             String prompt = content.getCurrentPrompt();
             promptLen = prompt != null ? prompt.length() : 0;
             promptBuff = new CyclicStringBuffer(promptLen);
-            output = new LinkedList();
+            output = new LinkedList<>();
         }
 
         /**
@@ -200,6 +200,7 @@ public class ProcessIOParser {
          * @return Next state transition based on current state
          *         and character class.
          */
+        @SuppressWarnings("fallthrough")
         protected State action(final char c) {
             Input cl = Input.value(c, content.getCurrentPrompt(), promptBuff);
             switch (state) {

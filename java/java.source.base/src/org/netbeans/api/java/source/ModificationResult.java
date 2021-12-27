@@ -400,11 +400,14 @@ public final class ModificationResult {
                 // first insert the new content, THEN remove the old one. In situations where the content AFTER the
                 // change is not writable this ordering allows to replace the content, but if we first delete, 
                 // replacement cannot be inserted into the nonwritable area.
-                int delta = diff.getNewText().length();
                 int offs = diff.getStartPosition().getOffset();
                 int removeLen = diff.getEndPosition().getOffset() - offs;
                 
+                // [NETBEANS-4270] Can't use "delta = diff.getNewText().length()".
+                // doc.insertString may filter chars, e.g. '\r', and change length.
+                int initialLength = doc.getLength();
                 doc.insertString(offs, diff.getNewText(), null);
+                int delta = doc.getLength() - initialLength;
                 doc.remove(delta + offs, removeLen);
                 break;
             }

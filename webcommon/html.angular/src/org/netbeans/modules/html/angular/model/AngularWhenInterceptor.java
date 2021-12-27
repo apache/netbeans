@@ -102,6 +102,7 @@ public class AngularWhenInterceptor implements FunctionInterceptor {
         INIT, INSTRING, INVALUE, END
     }
 
+    @SuppressWarnings("fallthrough")
     private String getStringValueAt(String content, int offset) {
         String value = "";
         STATE state = STATE.INIT;

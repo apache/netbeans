@@ -84,7 +84,7 @@ public class EjbsNodeFactory implements NodeFactory {
             if (!isViewEmpty){
                 return Collections.singletonList(KEY_EJBS);
             }else{
-                return Collections.EMPTY_LIST;
+                return Collections.emptyList();
             }
         }
 

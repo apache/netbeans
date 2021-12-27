@@ -106,6 +106,7 @@ import org.openide.util.Pair;
 import org.openide.util.Parameters;
 import org.openide.util.BaseUtilities;
 import org.openide.util.Lookup;
+import org.openide.util.NbBundle;
 
 
 
@@ -284,9 +285,10 @@ public class BinaryAnalyser {
                 return idLvl;
             }
 
+            @NbBundle.Messages("USE_FULL_INDEX=false")
             @NonNull
             private static UsagesLevel resolveUsagesLevel() {
-                UsagesLevel lvl = Boolean.getBoolean(PROP_FULL_INDEX) ?
+                UsagesLevel lvl = "true".equals(Bundle.USE_FULL_INDEX()) || Boolean.getBoolean(PROP_FULL_INDEX) ? //NOI18N
                         UsagesLevel.ALL:
                         null;
                 if (lvl == null) {

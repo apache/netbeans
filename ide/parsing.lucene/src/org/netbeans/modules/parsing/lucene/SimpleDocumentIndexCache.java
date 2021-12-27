@@ -43,14 +43,14 @@ public class SimpleDocumentIndexCache implements DocumentIndexCache {
 
     private List<IndexDocument> toAdd;
     private List<String> toRemove;
-    private Reference<List[]> dataRef;
+    private Reference<List<?>[]> dataRef;
 
     @Override
     public boolean addDocument(IndexDocument document) {
         if (!(document instanceof IndexDocumentImpl)) {
             throw new IllegalArgumentException(document.getClass().getName());
         }
-        final Reference<List[]> ref = getDataRef();
+        final Reference<List<?>[]> ref = getDataRef();
         assert ref != null;
         final boolean shouldFlush = disableCache || ref.get() == null;
         toAdd.add(document);
@@ -60,7 +60,7 @@ public class SimpleDocumentIndexCache implements DocumentIndexCache {
 
     @Override
     public boolean removeDocument(String primaryKey) {
-        final Reference<List[]> ref = getDataRef();
+        final Reference<List<?>[]> ref = getDataRef();
         assert ref != null;
         final boolean shouldFlush = ref.get() == null;
         toRemove.add(primaryKey);
@@ -91,13 +91,13 @@ public class SimpleDocumentIndexCache implements DocumentIndexCache {
         dataRef.clear();
     }
 
-    private Reference<List[]> getDataRef() {
+    private Reference<List<?>[]> getDataRef() {
         if (toAdd == null || toRemove == null) {
             assert toAdd == null && toRemove == null;
             assert dataRef == null;
             toAdd = new ArrayList<IndexDocument>();
             toRemove = new ArrayList<String>();
-            dataRef = new SoftReference<List[]>(new List[] {toAdd, toRemove});
+            dataRef = new SoftReference<List<?>[]>(new List<?>[] {toAdd, toRemove});
         }
         return dataRef;
     }

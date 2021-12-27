@@ -59,7 +59,6 @@ public abstract class PositionEstimator {
      */
     public static final int NOPOS = -2;
     
-    
     final List<? extends Tree> oldL;
     final List<? extends Tree> newL;
     final DiffContext diffContext;

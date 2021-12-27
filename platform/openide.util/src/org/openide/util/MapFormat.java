@@ -66,7 +66,7 @@ public class MapFormat extends Format {
     private String rdel = "}"; // NOI18N
 
     /** Used formatting map */
-    private Map argmap;
+    private Map<String, Object> argmap;
 
     /** Offsets to {} expressions */
     private int[] offsets;
@@ -310,13 +310,13 @@ public class MapFormat extends Format {
     */
     public String parse(String source) {
         StringBuffer sbuf = new StringBuffer(source);
-        Iterator key_it = argmap.keySet().iterator();
+        Iterator<String> key_it = argmap.keySet().iterator();
 
         //skipped = new RangeList();
         // What was this for??
         //process(source, "\"", "\""); // NOI18N
         while (key_it.hasNext()) {
-            String it_key = (String) key_it.next();
+            String it_key = key_it.next();
             String it_obj = formatObject(argmap.get(it_key));
             int it_idx = -1;
 

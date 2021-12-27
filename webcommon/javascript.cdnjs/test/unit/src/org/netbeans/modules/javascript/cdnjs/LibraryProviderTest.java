@@ -18,10 +18,8 @@
  */
 package org.netbeans.modules.javascript.cdnjs;
 
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.netbeans.junit.NbTestCase;
-import org.netbeans.junit.RandomlyFails;
 
 /**
  * Tests of a {@code LibraryProvider} class.
@@ -34,12 +32,23 @@ public class LibraryProviderTest extends NbTestCase {
         super(name);
     }
 
-    @BeforeClass
-    public static void initProxy() {
-        System.setProperty("http.proxyHost", "www-proxy.uk.oracle.com"); // NOI18N
-        System.setProperty("http.proxyPort", "80"); // NOI18N
-        System.setProperty("https.proxyHost", "www-proxy.uk.oracle.com"); // NOI18N
-        System.setProperty("https.proxyPort", "80"); // NOI18N
+    /**
+     * Tests whether the CDNJS server returns the content with the expected
+     * structure. So, it is more a sanity check of the CDNJS service.
+     * then a test of the class {@code LibraryProvider} itself.
+     */
+    public void testCDNJSResponseSearchStructure() {
+        String searchTerm = "knockout"; // NOI18N
+        LibraryProvider provider = LibraryProvider.getInstance();
+        Library[] libraries = provider.findLibraries(searchTerm);
+
+        assertNotNull(libraries);
+        assertTrue(libraries.length > 0);
+
+        for(Library library: libraries) {
+            assertNotNull(library.getVersions());
+            assertEquals(0, library.getVersions().length);
+        }
     }
 
     /**
@@ -48,24 +57,12 @@ public class LibraryProviderTest extends NbTestCase {
      * then a test of the class {@code LibraryProvider} itself.
      */
     @Test
-    @RandomlyFails
-    public void testCDNJSResponseStructure() {
+    public void testCDNJSResponseLibraryStructure() {
         String searchTerm = "knockout"; // NOI18N
         LibraryProvider provider = LibraryProvider.getInstance();
-        LibraryProvider.SearchTask task = provider.new SearchTask(searchTerm);
-        String searchURL = task.getSearchURL();
-        String data = task.readUrl(searchURL);
-        assertNotNull(data);
+        Library knockoutLibrary = provider.loadLibrary(searchTerm);
+        assertNotNull(knockoutLibrary);
 
-        Library[] libraries = task.parse(data);
-        assertNotNull(libraries);
-
-        Library knockoutLibrary = null;
-        for (Library library : libraries) {
-            if (searchTerm.equals(library.getName())) {
-                knockoutLibrary = library;
-            }
-        }
         assertNotNull(knockoutLibrary);
         assertNotNull(knockoutLibrary.getDescription());
         assertNotNull(knockoutLibrary.getHomePage());
@@ -73,6 +70,9 @@ public class LibraryProviderTest extends NbTestCase {
         Library.Version[] versions = knockoutLibrary.getVersions();
         assertNotNull(versions);
         assertTrue(versions.length > 0);
+
+        provider.updateLibraryVersions(knockoutLibrary);
+        versions = knockoutLibrary.getVersions();
 
         Library.Version version = versions[0];
         assertNotNull(version);

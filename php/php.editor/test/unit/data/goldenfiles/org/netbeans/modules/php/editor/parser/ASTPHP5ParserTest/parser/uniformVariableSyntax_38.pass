@@ -513,7 +513,7 @@
                 </Block>
             </FunctionDeclaration>
             <ExpressionStatement start='1112' end='1140'>
-                <MethodInvocation start='1112' end='1139'>
+                <MethodInvocation start='1112' end='1139' isNullsafe='false'>
                     <AnonymousObjectVariable start='1112' end='1123'>
                         <ClassInstanceCreation start='1113' end='1122' anonymous='false'>
                             <ClassName start='1117' end='1120'>
@@ -558,7 +558,7 @@
                 </ParenthesisExpression>
             </ExpressionStatement>
             <ExpressionStatement start='1174' end='1201'>
-                <MethodInvocation start='1174' end='1200'>
+                <MethodInvocation start='1174' end='1200' isNullsafe='false'>
                     <DereferencableVariable start='1174' end='1192'>
                         <Assignment start='1175' end='1191' operator='EQUAL'>
                             <Variable start='1175' end='1180' isDollared='true'>
@@ -665,7 +665,7 @@
                     <Variable start='1271' end='1278' isDollared='true'>
                         <Identifier start='1272' end='1278' name='isTest'/>
                     </Variable>
-                    <MethodInvocation start='1281' end='1316'>
+                    <MethodInvocation start='1281' end='1316' isNullsafe='false'>
                         <DereferencableVariable start='1281' end='1300'>
                             <Assignment start='1282' end='1299' operator='EQUAL'>
                                 <Variable start='1282' end='1287' isDollared='true'>

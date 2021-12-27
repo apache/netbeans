@@ -50,7 +50,9 @@ import org.openide.util.lookup.ServiceProvider;
  *
  * @author nenik
  */
-@ServiceProvider(service=Notifier.class, position=400)
+// This must come before NioNotifier to avoid dangling directory references.
+// See [NETBEANS-2785], [NETBEANS-3769]
+@ServiceProvider(service=Notifier.class, position=150)
 public final class WindowsNotifier extends Notifier<Void> {
     static final Logger LOG = Logger.getLogger(WindowsNotifier.class.getName());
 

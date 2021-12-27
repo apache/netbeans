@@ -25,7 +25,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Supress the warning reported by the code analyzing tool.
+ * Suppress the warning reported by the code analyzing tool.
  *
  * @author Petr Hejl
  */
@@ -40,7 +40,7 @@ public @interface SuppressWarnings {
     String[] value() default {};
 
     /**
-     * The justification for the suppression. Should be human readable
+     * The justification for the suppression. Should be a human readable
      * description explaining why it is ok to suppress the message(s).
      *
      * @return the justification for the suppression

@@ -859,6 +859,10 @@ public class OutlineView extends JScrollPane {
         invalidate();
         validate();
         Node[] arr = manager.getSelectedNodes ();
+        
+        // [NETBEANS-4857]: prevent property change events during synchronization  
+        outline.getSelectionModel().setValueIsAdjusting(true);
+        
         outline.getSelectionModel().clearSelection();
         int size = outline.getRowCount();
         int firstSelection = -1;
@@ -876,6 +880,9 @@ public class OutlineView extends JScrollPane {
                 }
             }
         }
+        // [NETBEANS-4857]: re-activate property change events
+        outline.getSelectionModel().setValueIsAdjusting(false);
+        
 //        System.err.println("\nOutlineView.synchronizeSelectedNodes("+java.util.Arrays.toString(arr)+"): "+
 //                           "columnModel = "+outline.getColumnModel()+", column selection model = "+outline.getColumnModel().getSelectionModel()+
 //                           ", column lead selection index = "+outline.getColumnModel().getSelectionModel().getLeadSelectionIndex()+"\n");

@@ -31,7 +31,7 @@ METHOD     findResult(Object, Closure)                Object
 METHOD     getAt(String)                              Object
 METHOD     getClass()                      [PUBLIC]   Class<?>
 METHOD     getDelegation()                 [PUBLIC]   Delegation
-METHOD     getMetaClass()                             MetaClass
+METHOD     getMetaClass()                  [PUBLIC]   MetaClass
 METHOD     getMetaPropertyValues()                    List
 METHOD     getProperties()                            Map
 METHOD     getProperty(String)             [PUBLIC]   Object
@@ -62,14 +62,15 @@ METHOD     putAt(String, Object)                      void
 METHOD     respondsTo(String)                         List
 METHOD     respondsTo(String, Object)                 List
 METHOD     setDelegation(Delegation)       [PUBLIC]   void
-METHOD     setMetaClass(MetaClass)                    void
+METHOD     setMetaClass(MetaClass)         [PUBLIC]   void
 METHOD     setProperty(String, Object)     [PUBLIC]   void
-METHOD     showMe()                        [PROTECTE  void
+METHOD     showMe()                        [PUBLIC]   void
 METHOD     sleep(long)                                void
 METHOD     sleep(long, Closure)                       void
 METHOD     split(Closure)                             Collection
 METHOD     sprintf(String, Object)                    String
 METHOD     sprintf(String, Object)                    String
+METHOD     stream()                                   Stream
 METHOD     tap(Closure)                               Object
 METHOD     toString()                      [PUBLIC]   String
 METHOD     use(Class, Closure)                        Object

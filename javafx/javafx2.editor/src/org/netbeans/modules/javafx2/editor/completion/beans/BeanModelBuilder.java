@@ -26,8 +26,11 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
+
 import javax.lang.model.element.AnnotationMirror;
+import javax.lang.model.element.AnnotationValue;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
@@ -46,6 +49,7 @@ import javax.lang.model.type.WildcardType;
 import javax.lang.model.util.AbstractTypeVisitor7;
 import javax.lang.model.util.ElementFilter;
 import javax.lang.model.util.Types;
+
 import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.api.editor.mimelookup.MimeLookup;
 import org.netbeans.api.java.source.CompilationInfo;
@@ -310,6 +314,77 @@ public final class BeanModelBuilder {
                 addMapProperty(m, n);
             }
         }
+        if (allProperties.isEmpty() && !resultInfo.isFxInstance()) {
+            processGettersCheckForImmutables();
+        }
+    }
+
+    private static final String NAMED_ARG = "javafx.beans.NamedArg";
+
+    /** Some javafx classes, such as Insets, are immutable and do not have
+     * no argument constructors or setters; so they are not found.
+     * Accept a property if there is a getter with a corresponding
+     * constructor param declared with NamedArg annotation; use constructor
+     * with the most NamedArg parameters.
+     * <p/>
+     * One alternate strategy would be to provide a document with lines like:
+     * "Insets: top bottom left right" and use this info.
+     */
+    private void processGettersCheckForImmutables() {
+        Set<String> propsConstructor = Collections.emptySet();
+        Set<String> props1 = new HashSet<>();
+        CHECK_CONSTR: for (ExecutableElement c : ElementFilter.constructorsIn(classElement.getEnclosedElements())) {
+            props1.clear();
+            CHECK_PARAMS: for (VariableElement p : c.getParameters()) {
+                for (AnnotationMirror am : p.getAnnotationMirrors()) {
+                    if (am.getAnnotationType().asElement().equals(
+                            compilationInfo.getElements().getTypeElement(NAMED_ARG))) {
+                        for (Entry<? extends ExecutableElement, ? extends AnnotationValue> entry
+                                : am.getElementValues().entrySet()) {
+                            if (entry.getKey().getSimpleName().toString().equals("value")) { // NOI18N
+                                props1.add((String)entry.getValue().getValue());
+                                continue CHECK_PARAMS;
+                            }
+                        }
+                    }
+                }
+                // a parameters wasn't NAMED_ARG; skip this constructor.
+                continue CHECK_CONSTR;
+            }
+            if (propsConstructor.size() < props1.size()) {
+                propsConstructor = new HashSet<>(props1);
+            }
+        }
+
+        if (propsConstructor.isEmpty()) {
+            return;
+        }
+
+        // problem if not all constructor args are covered?
+        boolean fxInstance = false;
+        for (ExecutableElement m : getters) {
+            String n = getPropertyName(m.getSimpleName().toString());
+            if (propsConstructor.contains(n)) {
+                addGetterOnlyProperty(m, n);
+                fxInstance = true;
+            }
+        }
+        resultInfo.setFxInstance(fxInstance);
+    }
+
+    private void addGetterOnlyProperty(ExecutableElement m, String propName) {
+        TypeMirror returnType = m.getReturnType();
+        boolean simple = FxClassUtils.isSimpleType(returnType, compilationInfo);
+
+        // Could only accept simple?
+
+        FxProperty pi = new FxProperty(propName, FxDefinitionKind.GETTER);
+        pi.setAccessor(ElementHandle.create(m));
+        pi.setSimple(simple);
+        pi.setType(TypeMirrorHandle.create(returnType));
+        pi.setObservableAccessors(pi.getAccessor());
+        
+        registerProperty(pi);
     }
     
     private static final String EVENT_TYPE_NAME = "javafx.event.Event"; // NOI18N

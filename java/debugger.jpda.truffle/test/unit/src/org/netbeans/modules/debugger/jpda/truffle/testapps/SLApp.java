@@ -44,7 +44,7 @@ public class SLApp {
             "}\n",
             "Meaning of world.sl").build();
         
-        Context context = Context.newBuilder().out(os).build();
+        Context context = Context.newBuilder().allowAllAccess(true).out(os).build();
         Value result = context.eval(src);                           // LBREAKPOINT
 
         assertEquals("Expected result", 42L, result.asLong());

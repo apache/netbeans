@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.74
+#Version 1.82
 
 CLSS public abstract interface java.io.Serializable
 
@@ -21,7 +21,6 @@ meth public final java.lang.String name()
 meth public java.lang.String toString()
 meth public static <%0 extends java.lang.Enum<{%%0}>> {%%0} valueOf(java.lang.Class<{%%0}>,java.lang.String)
 supr java.lang.Object
-hfds name,ordinal
 
 CLSS public java.lang.Object
 cons public init()
@@ -286,7 +285,7 @@ meth public void addChangeListener(javax.swing.event.ChangeListener)
 meth public void notifyChange()
 meth public void removeChangeListener(javax.swing.event.ChangeListener)
 supr java.lang.Object
-hfds INDEXES,LOGGER,REGEXP_CHARS_TO_ENCODE,SASS_EXT,SCSS_EXT,allDepsCache,allDepsCache_hashCode,changeSupport,querySupport,sourceRoots
+hfds INDEXES,LOGGER,REGEXP_CHARS_TO_ENCODE,SASS_EXT,SCSS_EXT,VIRTUAL_ELEMENT_MARKER_STR,allDepsCache,allDepsCache_hashCode,changeSupport,querySupport,sourceRoots
 
 CLSS public static org.netbeans.modules.css.indexing.api.CssIndex$AllDependenciesMaps
  outer org.netbeans.modules.css.indexing.api.CssIndex

@@ -586,12 +586,12 @@ public class VariableMirrorTranslator {
             ObjectReference objectConstructor = (ObjectReference)
                     ObjectReferenceWrapper.invokeMethod(objectClass, thread,
                                                   getDeclaredConstructorMethod,
-                                                  Collections.EMPTY_LIST,
+                                                  Collections.<Value>emptyList(),
                                                   ClassType.INVOKE_SINGLE_THREADED);
             ObjectReference rf = (ObjectReference)
                     ClassTypeWrapper.invokeMethod(reflectionFactoryType, thread,
                                                   getReflectionFactoryMethod,
-                                                  Collections.EMPTY_LIST,
+                                                  Collections.<Value>emptyList(),
                                                   ClassType.INVOKE_SINGLE_THREADED);
             ObjectReference constructor = (ObjectReference)
                     ObjectReferenceWrapper.invokeMethod(rf, thread,
@@ -610,11 +610,11 @@ public class VariableMirrorTranslator {
             ObjectReference newInstance = (ObjectReference)
                     ObjectReferenceWrapper.invokeMethod(constructor, thread,
                                                         newInstanceMethod,
-                                                        Collections.EMPTY_LIST,
+                                                        Collections.<Value>emptyList(),
                                                         ClassType.INVOKE_SINGLE_THREADED);
             return newInstance;
         } else {
-            return ClassTypeWrapper.newInstance(type, thread, c, Collections.EMPTY_LIST, ClassType.INVOKE_SINGLE_THREADED);
+            return ClassTypeWrapper.newInstance(type, thread, c, Collections.<Value>emptyList(), ClassType.INVOKE_SINGLE_THREADED);
         }
     }
     

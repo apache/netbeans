@@ -30,11 +30,8 @@ import org.openide.util.NbBundle;
 class ScalarTypeVariableNode extends org.netbeans.modules.php.dbgp.models.VariablesModel.AbstractVariableNode {
     private static final String TYPE_FLOAT = "TYPE_Float"; // NOI18N
     private static final String TYPE_INT = "TYPE_Int"; // NOI18N
-    private static final String TYPE_BOOLEAN = "TYPE_Boolean"; // NOI18N
     private static final String TYPE_STRING = "TYPE_String"; // NOI18N
     private static final String TYPE_NULL = "TYPE_Null"; // NOI18N
-    public static final String BOOLEAN = "boolean"; // NOI18N
-    public static final String BOOL = "bool"; // NOI18N
     public static final String INTEGER = "integer"; // NOI18N
     public static final String INT = "int"; // NOI18N
     public static final String FLOAT = "float"; // NOI18N
@@ -49,10 +46,6 @@ class ScalarTypeVariableNode extends org.netbeans.modules.php.dbgp.models.Variab
         String type = super.getType();
         String bundleKey;
         switch (type) {
-            case BOOLEAN:
-            case BOOL:
-                bundleKey = TYPE_BOOLEAN;
-                break;
             case INTEGER:
             case INT:
                 bundleKey = TYPE_INT;

@@ -19,6 +19,7 @@
 
 package org.netbeans.libs.javafx;
 
+import javafx.embed.swing.JFXPanel;
 import junit.framework.Test;
 import org.netbeans.junit.NbModuleSuite;
 import org.netbeans.junit.NbTestCase;
@@ -42,6 +43,11 @@ public class IsFXEnabledTest extends NbTestCase {
     }
     
     public void testIsFxModuleEnabled() throws Exception {
+        try {
+            JFXPanel p = new JFXPanel();
+        } catch (RuntimeException | LinkageError err) {
+            return;
+        }
         for (ModuleInfo mi : Lookup.getDefault().lookupAll(ModuleInfo.class)) {
             if (mi.getCodeNameBase().equals("org.netbeans.libs.javafx")) {
                 assertTrue("Enabled", mi.isEnabled());

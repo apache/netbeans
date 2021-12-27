@@ -1,0 +1,77 @@
+<testresult testFile='staticReturnTypeErrorWithParameterType_03.php'>
+    <scanner>
+        <token id='T_CLASS' start='815' end='820'>
+            <text>class</text>
+        </token>
+        <token id='T_STRING' start='821' end='837'>
+            <text>StaticReturnType</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='838' end='839'>
+            <text>{</text>
+        </token>
+        <token id='T_PUBLIC' start='844' end='850'>
+            <text>public</text>
+        </token>
+        <token id='T_FUNCTION' start='851' end='859'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='860' end='864'>
+            <text>test</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='864' end='865'>
+            <text>(</text>
+        </token>
+        <token id='T_STRING' start='865' end='869'>
+            <text>self</text>
+        </token>
+        <token id='T_OR' start='869' end='870'>
+            <text>|</text>
+        </token>
+        <token id='T_STATIC' start='870' end='876'>
+            <text>static</text>
+        </token>
+        <token id='T_OR' start='876' end='877'>
+            <text>|</text>
+        </token>
+        <token id='T_STRING' start='877' end='881'>
+            <text>null</text>
+        </token>
+        <token id='T_VARIABLE' start='882' end='888'>
+            <text>$param</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='888' end='889'>
+            <text>)</text>
+        </token>
+        <token id='T_NEKUDOTAIM' start='889' end='890'>
+            <text>:</text>
+        </token>
+        <token id='T_STRING' start='891' end='895'>
+            <text>void</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='896' end='897'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='902' end='903'>
+            <text>}</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='904' end='905'>
+            <text>}</text>
+        </token>
+        <token id='EOF' start='906' end='906'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='906'>
+        <Comments>
+            <Comment start='6' end='813' commentType='multiLine'/>
+            <Comment start='6' end='813' commentType='multiLine'/>
+        </Comments>
+        <Statements>
+            <ASTError start='815' end='870'/>
+            <ASTError start='870' end='876'/>
+            <ASTError start='877' end='881'/>
+            <ASTError start='882' end='888'/>
+            <ASTError start='891' end='903'/>
+        </Statements>
+    </Program>
+</testresult>

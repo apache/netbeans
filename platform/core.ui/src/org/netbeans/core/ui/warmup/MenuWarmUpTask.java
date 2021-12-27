@@ -34,7 +34,6 @@ import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.SwingUtilities;
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
 import static org.netbeans.core.ui.warmup.Bundle.*;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor.Message;
@@ -184,7 +183,7 @@ public final class MenuWarmUpTask implements Runnable {
                 LOG.fine("Refresh disabled, aborting");
                 return; // no file refresh
             }
-            final ProgressHandle h = ProgressHandleFactory.createHandle(MSG_Refresh(), this, null);
+            final ProgressHandle h = ProgressHandle.createHandle(MSG_Refresh(), this, null);
             if (!LOG.isLoggable(Level.FINE)) {
                 int delay = Integer.parseInt(MSG_RefreshDelay());
                 h.setInitialDelay(delay);

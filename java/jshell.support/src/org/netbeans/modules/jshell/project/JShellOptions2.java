@@ -79,7 +79,7 @@ public class JShellOptions2 extends javax.swing.JPanel implements ItemListener {
     private J2SECategoryExtensionProvider.ConfigChangeListener listener;
     private ChangeListener  changeListener;
     private Map<String, String> changedOptions = new HashMap<>();
-    private List<JComponent> hideControls = new ArrayList();
+    private List<JComponent> hideControls = new ArrayList<>();
     private ElementHandle<TypeElement> targetClass;
     private String oldText;
     private ClasspathInfo cpi;
@@ -91,7 +91,7 @@ public class JShellOptions2 extends javax.swing.JPanel implements ItemListener {
         this.project = project;
         initComponents();
         
-        DefaultComboBoxModel mdl = new DefaultComboBoxModel();
+        DefaultComboBoxModel<LoaderPolicy> mdl = new DefaultComboBoxModel<>();
         mdl.addElement(LoaderPolicy.SYSTEM);
         mdl.addElement(LoaderPolicy.CLASS);
         mdl.addElement(LoaderPolicy.EVAL);

@@ -39,8 +39,9 @@ import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
 import javax.swing.text.StyledDocument;
 import org.netbeans.api.editor.EditorRegistry;
+import org.netbeans.api.editor.document.LineDocument;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.editor.BaseDocument;
-import org.netbeans.editor.Utilities;
 import org.netbeans.lib.editor.util.swing.DocumentUtilities;
 import org.netbeans.modules.csl.api.DataLoadersBridge;
 import org.netbeans.modules.editor.NbEditorUtilities;
@@ -74,14 +75,42 @@ public final class GsfUtilities {
 
     private GsfUtilities() { // Utility class only, no instances
     }
-
-    public static int getLineIndent(BaseDocument doc, int offset) {
-        try {
-            return IndentUtils.lineIndent(doc, Utilities.getRowStart(doc, offset));
-        } catch (BadLocationException ble) {
-            LOG.log(Level.WARNING, null, ble);
+    
+    /**
+     * Determines indentation level at the defined point in the document. The document
+     * must provide {@link LineDocument} service otherwise 0 will be returned. On invalid 
+     * offset 0 will be returned as well.
+     * 
+     * @param doc the document.
+     * @param offset position in the document.
+     * @return indentation level, in characters; 0 in case of location error.
+     * @since 2.65
+     */
+    public static int getLineIndent(Document doc, int offset) {
+        LineDocument ld = LineDocumentUtils.as(doc, LineDocument.class);
+        if (ld == null) {
             return 0;
         }
+        try {
+            return IndentUtils.lineIndent(doc, LineDocumentUtils.getLineStart(ld, offset));
+        } catch (BadLocationException | IndexOutOfBoundsException ex) {
+            LOG.log(Level.WARNING, null, ex);
+            return 0;
+        }
+    }
+
+    /**
+     * Determines indentation level at the defined point in the document.
+     * This obsolete variant uses {@link BaseDocument} which promotes depedency on specialized
+     * Editor UI APIs. 
+     * 
+     * @param doc the document.
+     * @param offset position in the document.
+     * @return indentation level, in characters.
+     * @deprecated Use {@link #getLineIndent(javax.swing.text.Document, int) } instead.
+     */
+    public static int getLineIndent(BaseDocument doc, int offset) {
+        return getLineIndent((Document)doc, offset);
     }
 
     /**
@@ -89,9 +118,38 @@ public final class GsfUtilities {
      * indentation, and return the length difference of old and new indentation.
      *
      * Copied from Indent module's "modifyIndent"
+     * @deprecated Use {@link #setLineIndentation(javax.swing.text.Document, int, int).
      */
     public static int setLineIndentation(BaseDocument doc, int lineOffset, int newIndent) throws BadLocationException {
-        int lineStartOffset = Utilities.getRowStart(doc, lineOffset);
+        return setLineIndentation((Document)doc, lineOffset, newIndent);
+    }
+    
+    /**
+     * Adjust the indentation of the line containing the given offset to the provided
+     * indentation. Returns the length difference of old and new indentation. The document
+     * must support {@link LineDocument} services, otherwise {@code -1} is returned.
+     * <p>
+     * Copied from Indent module's "modifyIndent"
+     * 
+     * @param doc the document
+     * @param lineOffset character index into the line
+     * @param newIndent new indentation level
+     * @throws BadLocationException in case of position error
+     * @return old indentation, or {@code -1} if the document is not supported.
+     * @since 2.65
+     */
+    public static int setLineIndentation(Document doc, int lineOffset, int newIndent) throws BadLocationException {
+        LineDocument ld = LineDocumentUtils.as(doc, LineDocument.class);
+        if (ld == null) {
+            return -1;
+        }
+        int lineStartOffset;
+        
+        try {
+            lineStartOffset = LineDocumentUtils.getLineStart(ld, lineOffset);
+        } catch (IndexOutOfBoundsException ex) {
+            throw new BadLocationException(ex.getMessage(), lineOffset);
+        }
 
         // Determine old indent first together with oldIndentEndOffset
         int indent = 0;
@@ -166,7 +224,29 @@ public final class GsfUtilities {
         return null;
     }
 
+    /**
+     * Finds or loads a document for the FileObject. If 'openIfNecessary' is false, returns {@code null}
+     * if the document is not opened yet.
+     * 
+     * @param fileObject file for the document
+     * @param openIfNecessary if true, the Document will be loaded into memory, if not open at the moment.
+     * @return document instance or {@code null} if not opened and {@code openIfNecessary} was false.
+     * @deprecated Use {@link #getADocument(org.openide.filesystems.FileObject, boolean)}.
+     */
     public static BaseDocument getDocument(FileObject fileObject, boolean openIfNecessary) {
+        return getDocument(fileObject, openIfNecessary, false);
+    }
+
+    /**
+     * Finds or loads a document for the FileObject. If 'openIfNecessary' is false, returns {@code null}
+     * if the document is not opened yet.
+     * 
+     * @param fileObject file for the document
+     * @param openIfNecessary if true, the Document will be loaded into memory, if not open at the moment.
+     * @return document instance or {@code null} if not opened and {@code openIfNecessary} was false.
+     * @since 2.65
+     */
+    public static Document getADocument(FileObject fileObject, boolean openIfNecessary) {
         return getDocument(fileObject, openIfNecessary, false);
     }
 
@@ -178,6 +258,7 @@ public final class GsfUtilities {
      * @param skipLarge If true, check the file size, and if the file is really large (defined by
      *    openide.loaders), then skip it (otherwise we could end up with a large file warning).
      * @return
+     * @deprecated Use {@link #getADocument(org.openide.filesystems.FileObject, boolean, boolean)}.
      */
     public static BaseDocument getDocument(FileObject fileObject, boolean openIfNecessary, boolean skipLarge) {
         if (skipLarge) {
@@ -218,7 +299,21 @@ public final class GsfUtilities {
 
         return null;
     }
-
+    
+    /**
+     * Load the document for the given fileObject.
+     * @param fileObject the file whose document we want to obtain
+     * @param openIfNecessary If true, block if necessary to open the document. If false, will only return the
+     *    document if it is already open.
+     * @param skipLarge If true, check the file size, and if the file is really large (defined by
+     *    openide.loaders), then skip it (otherwise we could end up with a large file warning).
+     * @return
+     * @since 2.65
+     */
+    public static Document getADocument(FileObject fileObject, boolean openIfNecessary, boolean skipLarge) {
+        return getDocument(fileObject, openIfNecessary, skipLarge);
+    }
+   
     @Deprecated // Use getDocument instead
     public static BaseDocument getBaseDocument(FileObject fileObject, boolean forceOpen) {
         return getDocument(fileObject, forceOpen);

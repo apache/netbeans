@@ -118,7 +118,7 @@ public final class SingleModuleProperties extends ModuleProperties {
     public static final String SPEC_VERSION_BASE = "spec.version.base"; // NOI18N
     /** @see "#66278" */
     public static final String JAVAC_COMPILERARGS = "javac.compilerargs"; // NOI18N
-    static final String[] SOURCE_LEVELS = {"1.4", "1.5", "1.6", "1.7", "1.8", "9", "10", "11", "12"}; // NOI18N
+    static final String[] SOURCE_LEVELS = {"1.4", "1.5", "1.6", "1.7", "1.8", "9", "10", "11", "12", "13", "14"}; // NOI18N
     private final static Map<String, String> DEFAULTS;
 
     private static final Logger LOG = Logger.getLogger(SingleModuleProperties.class.getName());
@@ -429,8 +429,8 @@ public final class SingleModuleProperties extends ModuleProperties {
             return false;
         }
         Set<ModuleDependency> deps = depsModel.getDependencies();
-        for (Iterator it = deps.iterator(); it.hasNext();) {
-            ModuleDependency dep = (ModuleDependency) it.next();
+        for (Iterator<ModuleDependency> it = deps.iterator(); it.hasNext();) {
+            ModuleDependency dep = it.next();
             if (dep.hasImplementationDependency()) {
                 return true;
             }
@@ -741,8 +741,8 @@ public final class SingleModuleProperties extends ModuleProperties {
     String[] getAvailableFriends() {
         SortedSet<String> set = new TreeSet<String>();
         if (isSuiteComponent()) {
-            for (Iterator it = SuiteUtils.getSubProjects(getSuite()).iterator(); it.hasNext();) {
-                Project prj = (Project) it.next();
+            for (Iterator<NbModuleProject> it = SuiteUtils.getSubProjects(getSuite()).iterator(); it.hasNext();) {
+                Project prj = it.next();
                 String cnb = ProjectUtils.getInformation(prj).getName();
                 if (!getCodeNameBase().equals(cnb)) {
                     set.add(cnb);
@@ -750,8 +750,8 @@ public final class SingleModuleProperties extends ModuleProperties {
             }
         } else if (isNetBeansOrg()) {
             Set<ModuleDependency> deps = getUniverseDependencies(false);
-            for (Iterator it = deps.iterator(); it.hasNext();) {
-                ModuleDependency dep = (ModuleDependency) it.next();
+            for (Iterator<ModuleDependency> it = deps.iterator(); it.hasNext();) {
+                ModuleDependency dep = it.next();
                 set.add(dep.getModuleEntry().getCodeNameBase());
             }
         } // else standalone module - leave empty (see the UI spec)
@@ -901,8 +901,8 @@ public final class SingleModuleProperties extends ModuleProperties {
         for (int i = 0; i < pexports.length; i++) {
             ManifestManager.PackageExport pexport = pexports[i];
             if (pexport.isRecursive()) {
-                for (Iterator it = getAvailablePublicPackages().iterator(); it.hasNext(); ) {
-                    String p = (String) it.next();
+                for (Iterator<String> it = getAvailablePublicPackages().iterator(); it.hasNext(); ) {
+                    String p = it.next();
                     if (p.startsWith(pexport.getPackage())) {
                         sPackages.add(p);
                     }

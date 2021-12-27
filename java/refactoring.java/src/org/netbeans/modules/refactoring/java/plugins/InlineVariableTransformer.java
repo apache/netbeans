@@ -27,13 +27,31 @@ import javax.lang.model.element.Name;
 import javax.lang.model.type.TypeMirror;
 import org.netbeans.api.java.source.ElementUtilities;
 import org.netbeans.api.java.source.GeneratorUtilities;
+import org.netbeans.api.java.source.SourceUtils;
+import org.netbeans.api.java.source.TreePathHandle;
+import org.netbeans.api.java.source.WorkingCopy;
 import org.netbeans.modules.refactoring.java.spi.RefactoringVisitor;
+import org.netbeans.modules.refactoring.java.spi.ToPhaseException;
+import org.openide.filesystems.FileObject;
 
 /**
  *
  * @author Ralph Ruijs
  */
 public class InlineVariableTransformer extends RefactoringVisitor {
+
+    private final FileObject sourceFile;
+
+    public InlineVariableTransformer(TreePathHandle treePathHandle) {
+        this.sourceFile = treePathHandle.getFileObject();
+    }
+
+    
+    @Override
+    public void setWorkingCopy(WorkingCopy workingCopy) throws ToPhaseException {
+        SourceUtils.forceSource(workingCopy, sourceFile);
+        super.setWorkingCopy(workingCopy);
+    }
 
     @Override
     public Tree visitIdentifier(IdentifierTree node, Element p) {

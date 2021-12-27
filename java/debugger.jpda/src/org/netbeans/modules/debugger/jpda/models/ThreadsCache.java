@@ -149,28 +149,12 @@ public class ThreadsCache implements Executor {
     
     private synchronized void init() throws VMDisconnectedExceptionWrapper, InternalExceptionWrapper {
         allThreads = new ArrayList<ThreadReference>(VirtualMachineWrapper.allThreads(vm));
-        filterThreads(allThreads);
     }
     
-    private void filterThreads(List<ThreadReference> threads) {
-        for (int i = 0; i < threads.size(); i++) {
-            ThreadReference tr = threads.get(i);
-            try {
-                if (ThreadReferenceWrapper.name(tr).contains(THREAD_NAME_FILTER_PATTERN)) {
-                    threads.remove(i);
-                    i--;
-                }
-            } catch (Exception ex) {
-                // continue
-            }
-        }
-    }
-
     private void initGroups(ThreadGroupReference group) {
         try {
             List<ThreadGroupReference> groups = new ArrayList<>(ThreadGroupReferenceWrapper.threadGroups0(group));
             List<ThreadReference> threads = new ArrayList<>(ThreadGroupReferenceWrapper.threads0(group));
-            filterThreads(threads);
             groupMap.put(group, groups);
             threadMap.put(group, threads);
             for (ThreadGroupReference g : groups) {
@@ -260,7 +244,7 @@ public class ThreadsCache implements Executor {
         }
         List<ThreadReference> threads = threadMap.get(group);
         if (threads == null) {
-            threads = Collections.emptyList();
+            threads = Collections.<ThreadReference>emptyList();
         } else {
             threads = Collections.<List<ThreadReference>>unmodifiableList(new ArrayList(threads));
         }
@@ -283,7 +267,7 @@ public class ThreadsCache implements Executor {
             groupMap.put(group, groups);
         }
         if (groups == null) {
-            groups = Collections.emptyList();
+            groups = Collections.<ThreadGroupReference>emptyList();
         } else {
             groups = Collections.<List<ThreadReference>>unmodifiableList(new ArrayList(groups));
         }
@@ -562,7 +546,6 @@ public class ThreadsCache implements Executor {
             } catch (VMDisconnectedExceptionWrapper vmdex) {
                 return ;
             }
-            filterThreads(allThreadsNew);
 
             newThreads = new ArrayList<ThreadReference>(allThreadsNew);
             newThreads.removeAll(allThreads);

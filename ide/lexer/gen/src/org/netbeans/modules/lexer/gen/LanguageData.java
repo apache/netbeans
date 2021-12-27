@@ -289,7 +289,7 @@ public class LanguageData {
                 );
             }
             
-            MutableTokenId dupIntId = (MutableTokenId)info.put(new Integer(intId), id);
+            MutableTokenId dupIntId = (MutableTokenId)info.put(Integer.valueOf(intId), id);
             if (dupIntId != null) {
                 throw new IllegalStateException("Ids " + id.getName()
                     + " and " + dupIntId.getName()

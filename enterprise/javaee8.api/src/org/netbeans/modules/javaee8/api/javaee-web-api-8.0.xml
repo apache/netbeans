@@ -35,7 +35,7 @@
     <properties>
         <property>
             <name>maven-dependencies</name>
-            <value>javax:javaee-web-api:8.0:jar</value>
+            <value>javax:javaee-web-api:8.0.1:jar</value>
         </property>
     </properties>
 </library>

@@ -48,6 +48,7 @@ import javax.swing.table.TableModel;
 import org.netbeans.modules.db.dataview.meta.DBColumn;
 import org.netbeans.modules.db.dataview.meta.DBException;
 import org.netbeans.modules.db.dataview.meta.DBTable;
+import org.netbeans.modules.db.dataview.output.dataexport.DataViewTableDataExportFileChooser;
 import org.netbeans.modules.db.dataview.table.ResultSetJXTable;
 import org.netbeans.modules.db.dataview.util.ColorHelper;
 import org.openide.DialogDisplayer;
@@ -451,6 +452,11 @@ final class DataViewTableUI extends ResultSetJXTable {
             }
         });
         tablePopupMenu.add(printTable);
+        
+        JMenuItem exportTable = new JMenuItem(NbBundle.getMessage(DataViewTableUI.class, "TOOLTIP_export_data"));
+        
+        exportTable.addActionListener(e -> DataViewTableDataExportFileChooser.extractAsFile(getModel()));
+        tablePopupMenu.add(exportTable);
 
         JMenuItem miRefreshAction = new JMenuItem(NbBundle.getMessage(DataViewTableUI.class, "TOOLTIP_refresh"));
         miRefreshAction.addActionListener(new ActionListener() {

@@ -47,6 +47,7 @@ import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.project.ui.OpenProjects;
 import static org.netbeans.modules.maven.Bundle.*;
 import org.netbeans.modules.maven.api.Constants;
+import org.netbeans.modules.maven.api.MavenConfiguration;
 import org.netbeans.modules.maven.api.ModelUtils;
 import org.netbeans.modules.maven.api.ModuleInfoUtils;
 import org.netbeans.modules.maven.api.NbMavenProject;
@@ -55,6 +56,7 @@ import org.netbeans.modules.maven.api.customizer.ModelHandle2;
 import org.netbeans.modules.maven.api.execute.RunConfig;
 import org.netbeans.modules.maven.api.execute.RunUtils;
 import org.netbeans.modules.maven.configurations.M2ConfigProvider;
+import org.netbeans.modules.maven.configurations.M2Configuration;
 import org.netbeans.modules.maven.customizer.ActionMappings;
 import org.netbeans.modules.maven.customizer.WarnPanel;
 import org.netbeans.modules.maven.execute.ActionToGoalUtils;
@@ -76,6 +78,8 @@ import org.netbeans.modules.maven.spi.actions.MavenActionsProvider;
 import org.netbeans.modules.maven.spi.actions.ReplaceTokenProvider;
 import org.netbeans.spi.project.ActionProgress;
 import org.netbeans.spi.project.ActionProvider;
+import org.netbeans.spi.project.ProjectConfiguration;
+import org.netbeans.spi.project.ProjectConfigurationProvider;
 import org.netbeans.spi.project.ProjectServiceProvider;
 import org.netbeans.spi.project.SingleMethod;
 import org.netbeans.spi.project.ui.support.DefaultProjectOperations;
@@ -98,7 +102,6 @@ import org.openide.util.NbBundle.Messages;
 import org.openide.util.NbPreferences;
 import org.openide.util.RequestProcessor;
 import org.openide.util.Task;
-import org.openide.util.TaskListener;
 import org.openide.util.actions.Presenter;
 import org.openide.util.lookup.Lookups;
 import org.openide.util.lookup.ProxyLookup;
@@ -145,7 +148,10 @@ public class ActionProviderImpl implements ActionProvider {
         COMMAND_DELETE,
         COMMAND_RENAME,
         COMMAND_MOVE,
-        COMMAND_COPY
+        COMMAND_COPY,
+        
+        // infrastructure
+        COMMAND_PRIME
     };
     
     private static final RequestProcessor RP = new RequestProcessor(ActionProviderImpl.class.getName(), 3);
@@ -154,11 +160,36 @@ public class ActionProviderImpl implements ActionProvider {
     public ActionProviderImpl(Project proj) {
         this.proj = proj;
     }
+    
+    protected M2Configuration usedConfiguration(boolean useActive, Lookup ctx) {
+        ProjectConfiguration selected = ctx.lookup(ProjectConfiguration.class);
+        M2ConfigProvider configs = proj.getLookup().lookup(M2ConfigProvider.class);
+        ProjectConfiguration toFind;
+        
+        if (selected == null) {
+            if (useActive) {
+                selected = configs.getActiveConfiguration();
+                if (selected == null) {
+                    return null;
+                }
+                toFind = selected;
+            } else {
+                return null;
+            }
+        } else {
+            toFind = selected;
+        }
+        // documentation says the configuration may not be != and should be compared by equals.
+        return configs.getConfigurations().stream().filter(c -> toFind.equals(c)).findFirst().orElse(null);
+    }
 
     @Override
     public String[] getSupportedActions() {
         Set<String> supp = new HashSet<String>();
-        supp.addAll( Arrays.asList( supported));
+        supp.addAll( Arrays.asList(supported));
+        
+        M2ConfigProvider configs = proj.getLookup().lookup(M2ConfigProvider.class);
+        configs.getConfigurations().forEach(c -> supp.addAll(c.getSupportedDefaultActions()));
         for (MavenActionsProvider add : ActionToGoalUtils.actionProviders(proj)) {
             Set<String> added = add.getSupportedDefaultActions();
             if (added != null) {
@@ -193,7 +224,8 @@ public class ActionProviderImpl implements ActionProvider {
     private boolean usingJUnit5() {
         return proj.getLookup().lookup(NbMavenProject.class).getMavenProject().getArtifacts()
                 .stream()
-                .anyMatch((a) -> ("org.junit.jupiter".equals(a.getGroupId()) && "junit-jupiter-engine".equals(a.getArtifactId())));
+                .anyMatch((a) -> ("org.junit.jupiter".equals(a.getGroupId()) && "junit-jupiter-engine".equals(a.getArtifactId()) ||
+                        "org.junit.platform".equals(a.getGroupId()) && "junit-platform-engine".equals(a.getArtifactId())));
     }
 
     private boolean usingTestNG() {
@@ -211,6 +243,8 @@ public class ActionProviderImpl implements ActionProvider {
     
     //TODO these effectively need updating once in a while
     private static final String SUREFIRE_VERSION_SAFE = "2.15"; //2.16 is broken
+    // surefire 2.22 is needed for JUnit 5
+    private static final String SUREFIRE_VERSION_SAFE_5 = "2.22.0";
     private static final String JUNIT_VERSION_SAFE = "4.11";
 
     @Override public void invokeAction(final String action, final Lookup lookup) {
@@ -239,7 +273,7 @@ public class ActionProviderImpl implements ActionProvider {
             Operations.renameProject(proj.getLookup().lookup(NbMavenProjectImpl.class));
             return;
         }
-
+        
         if (SwingUtilities.isEventDispatchThread()) {
             RP.post(new Runnable() {
                 @Override
@@ -261,10 +295,18 @@ public class ActionProviderImpl implements ActionProvider {
         if (convertedAction == null) {
             convertedAction = action;
         }
-
-        Lookup enhanced = new ProxyLookup(lookup, Lookups.fixed(replacements(proj, convertedAction, lookup)));
         
-        RunConfig rc = ActionToGoalUtils.createRunConfig(convertedAction, proj.getLookup().lookup(NbMavenProjectImpl.class), enhanced);
+        for (InternalActionDelegate del : proj.getLookup().lookupAll(InternalActionDelegate.class)) {
+            ActionProvider ap = del.getActionProvider();
+            if (Arrays.asList(ap.getSupportedActions()).contains(action)) {
+                ap.invokeAction(action, lookup);
+                return;
+            }
+        }
+        Lookup enhanced = new ProxyLookup(lookup, Lookups.fixed(replacements(proj, convertedAction, lookup)));
+
+        RunConfig rc = ActionToGoalUtils.createRunConfig(convertedAction, proj.getLookup().lookup(NbMavenProjectImpl.class), 
+                usedConfiguration(true, lookup), enhanced);
         if (rc == null) {
             Logger.getLogger(ActionProviderImpl.class.getName()).log(Level.INFO, "No handling for action: {0}. Ignoring.", action); //NOI18N
 
@@ -273,10 +315,8 @@ public class ActionProviderImpl implements ActionProvider {
             final ActionProgress listener = ActionProgress.start(lookup);
             final ExecutorTask task = RunUtils.run(rc);
             if (task != null) {
-                task.addTaskListener(new TaskListener() {
-                    @Override public void taskFinished(Task t) {
-                        listener.finished(task.result() == 0);
-                    }
+                task.addTaskListener((Task t) -> {
+                    listener.finished(task.result() == 0);
                 });
             } else {
                 listener.finished(false);
@@ -288,14 +328,17 @@ public class ActionProviderImpl implements ActionProvider {
 
     @Messages({
         "run_single_method_disabled=Surefire 2.8+ with JUnit 4.8+ or TestNG needed to run a single test method.",
+        "run_single_method_disabled5=Surefire 2.22.0 is required to run a single test method with JUnit5.",
         "TIT_RequiresUpdateOfPOM=Feature requires update of POM",
-        "TXT_Run_Single_method=<html>Executing single test method requires Surefire 2.8+ and JUnit in version 4.8 and bigger. <br/><br/>Update your pom.xml?</html>"
+        "TXT_Run_Single_method=<html>Executing single test method requires Surefire 2.8+ and JUnit in version 4.8 and bigger. <br/><br/>Update your pom.xml?</html>",
+        "TXT_Run_Single_method5=<html>Executing single test method with JUnit 5 requires Surefire 2.22.0. <br/><br/>Update your pom.xml?</html>"
     })    
     private boolean checkSurefire(final String action) {
         if (action.equals(SingleMethod.COMMAND_RUN_SINGLE_METHOD) || action.equals(SingleMethod.COMMAND_DEBUG_SINGLE_METHOD)) {
             if (!runSingleMethodEnabled()) {
+                boolean ju5 = usingJUnit5();
                 if (NbPreferences.forModule(ActionProviderImpl.class).getBoolean(SHOW_SUREFIRE_WARNING, true)) {
-                    WarnPanel pnl = new WarnPanel(TXT_Run_Single_method());
+                    WarnPanel pnl = new WarnPanel(ju5 ? TXT_Run_Single_method5() : TXT_Run_Single_method());
                     Object o = DialogDisplayer.getDefault().notify(new NotifyDescriptor.Confirmation(pnl, TIT_RequiresUpdateOfPOM(), NotifyDescriptor.YES_NO_OPTION));
                     if (pnl.disabledWarning()) {
                         NbPreferences.forModule(ActionProviderImpl.class).putBoolean(SHOW_SUREFIRE_WARNING, false);
@@ -304,9 +347,24 @@ public class ActionProviderImpl implements ActionProvider {
                         RequestProcessor.getDefault().post(new Runnable() {
                             @Override
                             public void run() {
+                                String surefireVersion = null;
+                                String junitVersion = null;
+                                
+                                if (ju5 && !usingSurefire2_22()) {
+                                    surefireVersion = SUREFIRE_VERSION_SAFE_5;
+                                } else if (!usingSurefire28()) {
+                                    surefireVersion = SUREFIRE_VERSION_SAFE;
+                                }
+                                if (!ju5) {
+                                    junitVersion = usingJUnit4() || usingTestNG() ? null : JUNIT_VERSION_SAFE;
+                                }
+                                
                                 Utilities.performPOMModelOperations(
                                         proj.getProjectDirectory().getFileObject("pom.xml"),
-                                        Collections.singletonList(new UpdateSurefireOperation(usingSurefire28() ? null : SUREFIRE_VERSION_SAFE, usingJUnit4() || usingTestNG() ? null : JUNIT_VERSION_SAFE)));
+                                        Collections.singletonList(new UpdateSurefireOperation(
+                                                surefireVersion, junitVersion
+                                        ))
+                                );
                                 //this appears to run too fast, before the resolved model is updated.
 //                                SwingUtilities.invokeLater(new Runnable() {
 //                                    @Override
@@ -319,7 +377,8 @@ public class ActionProviderImpl implements ActionProvider {
                         return false;
                     }
                 }
-                StatusDisplayer.getDefault().setStatusText(run_single_method_disabled());
+                StatusDisplayer.getDefault().setStatusText(
+                        ju5 ? run_single_method_disabled5() : run_single_method_disabled());
                 return false;
             }
         }
@@ -447,7 +506,15 @@ public class ActionProviderImpl implements ActionProvider {
         if (convertedAction == null) {
             convertedAction = action;
         }
-        return ActionToGoalUtils.isActionEnable(convertedAction, proj.getLookup().lookup(NbMavenProjectImpl.class), lookup);
+        
+        for (InternalActionDelegate ap : proj.getLookup().lookupAll(InternalActionDelegate.class)) {
+            if (ap.getActionProvider().isActionEnabled(action, lookup)) {
+                return true;
+            }
+        }
+
+        return ActionToGoalUtils.isActionEnable(convertedAction, proj.getLookup().lookup(NbMavenProjectImpl.class), 
+                usedConfiguration(false, lookup), lookup);
     }
 
     public static Action createCustomMavenAction(String name, NetbeansActionMapping mapping, boolean showUI, Lookup context, Project project) {
@@ -829,5 +896,4 @@ public class ActionProviderImpl implements ActionProvider {
             ModelUtils.openAtPlugin(model, Constants.GROUP_APACHE_PLUGINS, Constants.PLUGIN_COMPILER);
         }
     }
-    
 }

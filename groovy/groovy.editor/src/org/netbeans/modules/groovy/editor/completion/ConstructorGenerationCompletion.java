@@ -20,13 +20,14 @@
 package org.netbeans.modules.groovy.editor.completion;
 
 import java.util.Collections;
-import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import org.codehaus.groovy.ast.ClassNode;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.modules.csl.api.CompletionProposal;
 import org.netbeans.modules.groovy.editor.api.completion.CaretLocation;
 import org.netbeans.modules.groovy.editor.api.completion.CompletionItem;
+import org.netbeans.modules.groovy.editor.api.completion.MethodSignature;
 import org.netbeans.modules.groovy.editor.completion.util.CamelCaseUtil;
 import org.netbeans.modules.groovy.editor.api.completion.util.ContextHelper;
 import org.netbeans.modules.groovy.editor.api.lexer.GroovyTokenId;
@@ -45,7 +46,7 @@ import org.netbeans.modules.groovy.editor.api.completion.util.CompletionContext;
 public class ConstructorGenerationCompletion extends BaseCompletion {
 
     @Override
-    public boolean complete(List<CompletionProposal> proposals, CompletionContext request, int anchor) {
+    public boolean complete(Map<Object, CompletionProposal> proposals, CompletionContext request, int anchor) {
         LOG.log(Level.FINEST, "-> constructor generation completion"); // NOI18N
 
         if (!isValidLocation(request)) {
@@ -62,7 +63,8 @@ public class ConstructorGenerationCompletion extends BaseCompletion {
         boolean camelCaseMatch = CamelCaseUtil.compareCamelCase(className, request.getPrefix());
         if (camelCaseMatch) {
             LOG.log(Level.FINEST, "Prefix matches Class's CamelCase signature. Adding."); // NOI18N
-            proposals.add(new CompletionItem.ConstructorItem(className, Collections.EMPTY_LIST, anchor, true));
+            CompletionItem.ConstructorItem ci = new CompletionItem.ConstructorItem(className, Collections.emptyList(), anchor, true);
+            proposals.putIfAbsent(new MethodSignature("<init>", new String[0]) , ci);
         }
 
         return camelCaseMatch;

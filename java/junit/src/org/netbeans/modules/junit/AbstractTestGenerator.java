@@ -19,6 +19,7 @@
 
 package org.netbeans.modules.junit;
 
+import org.netbeans.modules.junit.api.JUnitVersion;
 import org.netbeans.modules.junit.api.JUnitSettings;
 import org.netbeans.modules.junit.api.JUnitTestUtil;
 import org.netbeans.api.java.source.TreeUtilities;

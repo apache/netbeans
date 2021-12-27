@@ -166,7 +166,7 @@ final class NonStretchingViewTabLayoutModel implements TabLayoutModel {
         for (int i = 0; i < size; i++) {
             tabIndex = i;
             curText = model.getTab(tabIndex).getText();
-            curX += HtmlRenderer.renderString(curText, BasicScrollingTabDisplayerUI.getOffscreenGraphics(), 0, 0,
+            curX += HtmlRenderer.renderString(curText, BasicScrollingTabDisplayerUI.getOffscreenGraphics(tabDisplayer), 0, 0,
                                        Integer.MAX_VALUE,
                                        Integer.MAX_VALUE, tabDisplayer.getFont(),
                                        Color.BLACK, HtmlRenderer.STYLE_TRUNCATE,

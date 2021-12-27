@@ -453,7 +453,7 @@
     <api name="popupText" category="stable" type="export" group="property" url="@TOP@/org/openide/awt/Actions.html#connect-javax.swing.JMenuItem-javax.swing.Action-boolean-"/>
    </li>
    <li> 
-    <api name="USE_MNEMONICS" category="stable" type="export" group="branding">
+    <api name="org.openide.awt.USE_MNEMONICS" category="stable" type="export" group="branding">
         There is a way to enable mnemonics in popup menu items created via
         <a href="@TOP@/org/openide/awt/Actions.html">Actions</a> factory methods
         in your own application build on top of NetBeans Platform.

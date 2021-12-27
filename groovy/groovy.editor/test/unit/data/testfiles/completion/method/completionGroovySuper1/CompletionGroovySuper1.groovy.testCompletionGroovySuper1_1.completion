@@ -66,6 +66,7 @@ METHOD     sleep(long, Closure)                       void
 METHOD     split(Closure)                             Collection
 METHOD     sprintf(String, Object)                    String
 METHOD     sprintf(String, Object)                    String
+METHOD     stream()                                   Stream
 METHOD     tap(Closure)                               Object
 METHOD     toString()                      [PUBLIC]   String
 METHOD     use(Class, Closure)                        Object

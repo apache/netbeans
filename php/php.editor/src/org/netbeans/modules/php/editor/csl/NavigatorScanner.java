@@ -21,11 +21,13 @@ package org.netbeans.modules.php.editor.csl;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
+import org.netbeans.api.annotations.common.StaticResource;
 import org.netbeans.modules.csl.api.ElementHandle;
 import org.netbeans.modules.csl.api.ElementKind;
 import org.netbeans.modules.csl.api.HtmlFormatter;
@@ -56,6 +58,7 @@ import org.netbeans.modules.php.editor.model.Scope;
 import org.netbeans.modules.php.editor.model.TraitScope;
 import org.netbeans.modules.php.editor.model.TypeScope;
 import org.netbeans.modules.php.editor.model.UseScope;
+import org.netbeans.modules.php.editor.model.impl.Type;
 import org.netbeans.modules.php.editor.model.impl.VariousUtils;
 import org.openide.util.ImageUtilities;
 
@@ -64,6 +67,7 @@ import org.openide.util.ImageUtilities;
  * @author Ondrej Brejla <obrejla@netbeans.org>
  */
 public final class NavigatorScanner {
+
     private static final Logger LOGGER = Logger.getLogger(NavigatorScanner.class.getName());
     private static final String FONT_GRAY_COLOR = "<font color=\"#999999\">"; //NOI18N
     private static final String CLOSE_FONT = "</font>"; //NOI18N
@@ -76,6 +80,8 @@ public final class NavigatorScanner {
     public static NavigatorScanner create(Model model, boolean resolveDeprecatedElements) {
         return new NavigatorScanner(model, resolveDeprecatedElements);
     }
+
+    private static final Comparator<TraitScope> TRAIT_SCOPE_COMPARATOR = (TraitScope o1, TraitScope o2) -> o1.getName().compareToIgnoreCase(o2.getName());
 
     private NavigatorScanner(Model model, boolean resolveDeprecatedElements) {
         fileScope = model.getFileScope();
@@ -98,7 +104,7 @@ public final class NavigatorScanner {
 
     private void processNamespaces(List<StructureItem> items, Collection<? extends NamespaceScope> declaredNamespaces) {
         for (NamespaceScope nameScope : declaredNamespaces) {
-            List<StructureItem> namespaceChildren = nameScope.isDefaultNamespace() ? items : new ArrayList<StructureItem>();
+            List<StructureItem> namespaceChildren = nameScope.isDefaultNamespace() ? items : new ArrayList<>();
             if (!nameScope.isDefaultNamespace()) {
                 items.add(new PHPNamespaceStructureItem(nameScope, namespaceChildren));
             }
@@ -133,6 +139,9 @@ public final class NavigatorScanner {
             } else if (type instanceof TraitScope) {
                 namespaceChildren.add(new PHPTraitStructureItem((TraitScope) type, children));
             }
+
+            // methods
+            Set<String> declMethodNames = new HashSet<>();
             Collection<? extends MethodScope> declaredMethods = type.getDeclaredMethods();
             for (MethodScope method : declaredMethods) {
                 // The method name doesn't have to be always defined during parsing.
@@ -145,17 +154,49 @@ public final class NavigatorScanner {
                     } else {
                         children.add(new PHPMethodStructureItem(method, variables));
                     }
+                    declMethodNames.add(method.getName());
                 }
             }
+            // inherited methods
+            for (MethodScope inheritedMethod : type.getInheritedMethods()) {
+                if (!inheritedMethod.getName().isEmpty() && !declMethodNames.contains(inheritedMethod.getName())) {
+                    List<StructureItem> variables = new ArrayList<>();
+                    if (inheritedMethod.isConstructor()) {
+                        children.add(new PHPConstructorStructureItem(inheritedMethod, variables, true));
+                    } else {
+                        children.add(new PHPMethodStructureItem(inheritedMethod, variables, true));
+                    }
+                }
+            }
+
+            // constants
+            Set<String> declClsConstantNames = new HashSet<>();
             Collection<? extends ClassConstantElement> declaredClsConstants = type.getDeclaredConstants();
             for (ClassConstantElement classConstant : declaredClsConstants) {
-                children.add(new PHPConstantStructureItem(classConstant, "con")); //NOI18N
+                children.add(new PHPClassConstantStructureItem(classConstant, "con")); //NOI18N
+                declClsConstantNames.add(classConstant.getName());
             }
+            // inherited constants
+            for (ClassConstantElement inheritedConstant : type.getInheritedConstants()) {
+                if (!declClsConstantNames.contains(inheritedConstant.getName())) {
+                    children.add(new PHPClassConstantStructureItem(inheritedConstant, "con", true)); //NOI18N
+                }
+            }
+
             if (type instanceof ClassScope) {
                 ClassScope cls = (ClassScope) type;
+                // fields
+                Set<String> declaredFieldNames = new HashSet<>();
                 Collection<? extends FieldElement> declaredFields = cls.getDeclaredFields();
                 for (FieldElement field : declaredFields) {
                     children.add(new PHPFieldStructureItem(field));
+                    declaredFieldNames.add(field.getName());
+                }
+                // inherited fields
+                for (FieldElement inheritedField : cls.getInheritedFields()) {
+                    if (!declaredFieldNames.contains(inheritedField.getName())) {
+                        children.add(new PHPFieldStructureItem(inheritedField, true));
+                    }
                 }
             }
             if (type instanceof TraitScope) {
@@ -296,7 +337,9 @@ public final class NavigatorScanner {
 
         protected void appendUsedTraits(Collection<? extends TraitScope> usedTraits, HtmlFormatter formatter) {
             boolean first = true;
-            for (TraitScope traitScope : usedTraits) {
+            List<TraitScope> traits = new ArrayList<>(usedTraits);
+            Collections.sort(traits, TRAIT_SCOPE_COMPARATOR);
+            for (TraitScope traitScope : traits) {
                 if (!first) {
                     formatter.appendText(", ");  //NOI18N
                 } else {
@@ -348,7 +391,7 @@ public final class NavigatorScanner {
                                 QualifiedName typeName = typeResolver.getTypeName(false);
                                 if (typeName != null) {
                                     if (i > 1) {
-                                        formatter.appendText("|"); //NOI18N
+                                        formatter.appendText(Type.SEPARATOR);
                                     }
                                     if (typeResolver.isNullableType()) {
                                         formatter.appendText(CodeUtils.NULLABLE_TYPE_PREFIX);
@@ -418,9 +461,38 @@ public final class NavigatorScanner {
         }
     }
 
-    private class PHPFieldStructureItem extends PHPSimpleStructureItem {
+
+    private abstract class PHPStructureInheritedItem extends PHPStructureItem implements StructureItem.InheritedItem {
+
+        private final boolean isInherited;
+
+        public PHPStructureInheritedItem(ModelElement elementHandle, List<? extends StructureItem> children, String sortPrefix, boolean isInherited) {
+            super(elementHandle, children, sortPrefix);
+            this.isInherited = isInherited;
+        }
+
+        @Override
+        public boolean isInherited() {
+            return isInherited;
+        }
+
+        @Override
+        public ElementHandle getDeclaringElement() {
+            return getModelElement().getInScope();
+        }
+    }
+
+    private class PHPFieldStructureItem extends PHPSimpleStructureItem implements StructureItem.InheritedItem {
+
+        private final boolean isInherited;
+
         public PHPFieldStructureItem(FieldElement elementHandle) {
+            this(elementHandle, false);
+        }
+
+        public PHPFieldStructureItem(FieldElement elementHandle, boolean isInherited) {
             super(elementHandle, "field"); //NOI18N
+            this.isInherited = isInherited;
         }
 
         public FieldElement getField() {
@@ -453,7 +525,17 @@ public final class NavigatorScanner {
             return formatter.getText();
         }
 
+        @Override
+        public boolean isInherited() {
+            return isInherited;
+        }
+
+        @Override
+        public ElementHandle getDeclaringElement() {
+            return getField().getInScope();
+        }
     }
+
     private class PHPSimpleStructureItem extends PHPStructureItem {
 
         private String simpleText;
@@ -606,6 +688,31 @@ public final class NavigatorScanner {
 
     }
 
+    private class PHPClassConstantStructureItem extends PHPConstantStructureItem implements StructureItem.InheritedItem {
+
+        private boolean isInherited;
+
+        public PHPClassConstantStructureItem(ConstantElement elementHandle, String prefix) {
+            this(elementHandle, prefix, false);
+        }
+
+        public PHPClassConstantStructureItem(ConstantElement elementHandle, String prefix, boolean isInherited) {
+            super(elementHandle, prefix);
+            this.isInherited = isInherited;
+        }
+
+        @Override
+        public boolean isInherited() {
+            return isInherited;
+        }
+
+        @Override
+        public ElementHandle getDeclaringElement() {
+            return getConstant().getInScope();
+        }
+
+    }
+
     private class PHPFunctionStructureItem extends PHPStructureItem {
 
         public PHPFunctionStructureItem(FunctionScope elementHandle, List<? extends StructureItem> children) {
@@ -625,10 +732,14 @@ public final class NavigatorScanner {
 
     }
 
-    private class PHPMethodStructureItem extends PHPStructureItem {
+    private class PHPMethodStructureItem extends PHPStructureInheritedItem {
 
         public PHPMethodStructureItem(MethodScope elementHandle, List<? extends StructureItem> children) {
-            super(elementHandle, children, "fn"); //NOI18N
+            this(elementHandle, children, false);
+        }
+
+        public PHPMethodStructureItem(MethodScope elementHandle, List<? extends StructureItem> children, boolean isInherited) {
+            super(elementHandle, children, "fn", isInherited); //NOI18N
         }
 
         public MethodScope getMethodScope() {
@@ -645,6 +756,8 @@ public final class NavigatorScanner {
     }
 
     private class PHPInterfaceStructureItem extends PHPStructureItem {
+
+        @StaticResource
         private static final String PHP_INTERFACE_ICON = "org/netbeans/modules/php/editor/resources/interface.png"; //NOI18N
         private final Collection<? extends InterfaceScope> interfaces;
 
@@ -680,6 +793,8 @@ public final class NavigatorScanner {
     }
 
     private class PHPTraitStructureItem extends PHPStructureItem {
+
+        @StaticResource
         private static final String PHP_TRAIT_ICON = "org/netbeans/modules/php/editor/resources/trait.png"; //NOI18N
         private final Collection<? extends TraitScope> usedTraits;
 
@@ -714,10 +829,14 @@ public final class NavigatorScanner {
 
     }
 
-    private class PHPConstructorStructureItem extends PHPStructureItem {
+    private class PHPConstructorStructureItem extends PHPStructureInheritedItem {
 
         public PHPConstructorStructureItem(MethodScope elementHandle, List<? extends StructureItem> children) {
-            super(elementHandle, children, "con"); //NOI18N
+            this(elementHandle, children, false);
+        }
+
+        public PHPConstructorStructureItem(MethodScope elementHandle, List<? extends StructureItem> children, boolean isInherited) {
+            super(elementHandle, children, "con", isInherited); //NOI18N
         }
 
         @Override

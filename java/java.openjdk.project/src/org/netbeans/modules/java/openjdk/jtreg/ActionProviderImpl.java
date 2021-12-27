@@ -409,12 +409,15 @@ public class ActionProviderImpl implements ActionProvider {
     static String builtClassesDirsForBootClassPath(FileObject testFile) {
         File buildDir = BuildUtils.getBuildTargetDir(testFile);
         Project prj = FileOwnerQuery.getOwner(testFile);
+        Settings settings = prj.getLookup().lookup(Settings.class);
+        boolean useLangtoolsBuild = settings == null || settings.isUseAntBuild();
         List<FileObject> roots = new ArrayList<>();
 
         if (buildDir != null) {
             FileObject repo = prj.getProjectDirectory().getParent().getParent();
             if (repo.getNameExt().equals("langtools") &&
-                ShortcutUtils.getDefault().shouldUseCustomTest(repo.getNameExt(), FileUtil.getRelativePath(repo, testFile))) {
+                ShortcutUtils.getDefault().shouldUseCustomTest(repo.getNameExt(), FileUtil.getRelativePath(repo, testFile)) &&
+                useLangtoolsBuild) {
                 listAllRoots(BuildUtils.getFileObject(prj.getProjectDirectory(), "../.."), new LinkedList<>(Arrays.asList("build", "classes")), roots);
                 listAllRoots(BuildUtils.getFileObject(prj.getProjectDirectory(), "../.."), new LinkedList<>(Arrays.asList("build", "*", "classes")), roots);
             } else {
@@ -441,12 +444,15 @@ public class ActionProviderImpl implements ActionProvider {
     static boolean fullBuild(FileObject testFile) {
         File buildDir = BuildUtils.getBuildTargetDir(testFile);
         Project prj = FileOwnerQuery.getOwner(testFile);
+        Settings settings = prj.getLookup().lookup(Settings.class);
+        boolean useLangtoolsBuild = settings == null || settings.isUseAntBuild();
 
         if (buildDir != null) {
             FileObject repo = prj.getProjectDirectory().getParent().getParent();
             String repoName = ShortcutUtils.getDefault().inferLegacyRepository(prj);
             return !("langtools".equals(repoName) &&
-                    ShortcutUtils.getDefault().shouldUseCustomTest(repoName, FileUtil.getRelativePath(repo, testFile)));
+                    ShortcutUtils.getDefault().shouldUseCustomTest(repoName, FileUtil.getRelativePath(repo, testFile)) &&
+                    useLangtoolsBuild);
         }
 
         return false;

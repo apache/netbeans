@@ -41,6 +41,7 @@ import org.netbeans.modules.maven.api.execute.ActiveJ2SEPlatformProvider;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.classpath.JavaClassPathConstants;
 import org.netbeans.api.java.platform.JavaPlatform;
+import org.netbeans.api.java.queries.SourceLevelQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.modules.java.api.common.classpath.ClassPathSupport;
@@ -54,6 +55,7 @@ import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Mutex;
 import org.openide.util.Utilities;
+import org.openide.util.WeakListeners;
 
 /**
  * Defines class path for maven2 projects..
@@ -92,7 +94,9 @@ public final class ClassPathProviderImpl implements ClassPathProvider, ActiveJ2S
     private final static int JAVA8_RUNTIME_PATH = 21;           // JAVA8_TEST_RUNTIME_PATH = 22
     private final static int JAVA8_TEST_SCOPED_RUNTIME_PATH = 23;
     
-    private final ClassPath[] cache = new ClassPath[24];
+    private final static int ANNOTATION_PROC_PATH = 24;         // TEST_ANNOTATION_PROC_PATH = 25
+    
+    private final ClassPath[] cache = new ClassPath[26];
     
     private BootClassPathImpl bcpImpl;
     private EndorsedClassPathImpl ecpImpl;
@@ -213,8 +217,7 @@ public final class ClassPathProviderImpl implements ClassPathProvider, ActiveJ2S
         } else if (type.equals(ClassPathSupport.ENDORSED)) {
             return getEndorsedClassPath();
         } else if (type.equals(JavaClassPathConstants.PROCESSOR_PATH)) {
-            // XXX read <processorpath> from maven-compiler-plugin config
-            return getCompileTimeClasspath(fileType);
+            return getAnnotationProcClassPath(fileType);
         } else if (type.equals(JavaClassPathConstants.MODULE_BOOT_PATH)) {            
             return getModuleBootPath();
         } else if (type.equals(JavaClassPathConstants.MODULE_COMPILE_PATH)) {            
@@ -294,6 +297,34 @@ public final class ClassPathProviderImpl implements ClassPathProvider, ActiveJ2S
         return computeIfAbsent(
                 SOURCE_PATH + ftype, 
                 () -> ClassPathFactory.createClassPath(ftype == TYPE_SRC ? new SourceClassPathImpl(getNBMavenProject()) : new TestSourceClassPathImpl(getNBMavenProject())));
+    }
+    
+    private ClassPath getAnnotationProcClassPath(int type) {
+        final int ftype;
+        switch (type) {
+            case TYPE_WEB: 
+            default:
+                ftype = TYPE_SRC;
+                break;
+            case TYPE_SRC:
+            case TYPE_TESTSRC:
+                ftype = type;
+                break;
+        }
+        int index = ANNOTATION_PROC_PATH + ftype;
+        return computeIfAbsent(
+                index,
+                () -> {
+                    ClassPath anno = ClassPathFactory.createClassPath(new AnnotationProcClassPathImpl(getNBMavenProject(), ftype == TYPE_SRC));
+                    return createMultiplexClassPath(
+                            new AnnotationPathSelector(
+                                    getNBMavenProject(), anno, 
+                                    () -> getCompileTimeClasspath(type)
+                            )
+                    );
+                }
+                        
+        );
     }
     
     private ClassPath getCompileTimeClasspath(int type) {
@@ -538,9 +569,17 @@ public final class ClassPathProviderImpl implements ClassPathProvider, ActiveJ2S
             if (ret == null) {
                 // see org.apache.maven.plugin.compiler.CompilerMojo.classpathElements
                 for (String sourceRoot : proj.getOriginalMavenProject().getCompileSourceRoots()) {
-                    if(new File(sourceRoot, MODULE_INFO_JAVA).exists()) {
-                        ret = hasModuleInfoCP.get();  
-                        LOGGER.log(Level.FINER, "ModuleInfoSelector {0} for project {1}: has module-info.java", new Object [] {logDesc, proj.getProjectDirectory().getPath()}); // NOI18N
+                    final File moduleInfoFile = new File(sourceRoot, MODULE_INFO_JAVA);
+                    if(moduleInfoFile.exists()) {
+                        FileObject moduleInfo = FileUtil.toFileObject(moduleInfoFile);
+                        String sourceLevel = SourceLevelQuery.getSourceLevel2(moduleInfo).getSourceLevel();
+                        String ide_jdkvers = System.getProperty("java.version"); //NOI18N
+                        if(!sourceLevel.startsWith("1.") && !ide_jdkvers.startsWith("1.")) { //NOI18N
+                            // both sourceLevel and ideJDK are 9+
+                            ret = hasModuleInfoCP.get();  
+                        }
+                        final Object retObject = ret;
+                        LOGGER.log(Level.FINER, () -> String.format("ModuleInfoSelector %s for project %s: has module-info.java %s", logDesc, proj.getProjectDirectory().getPath(), retObject == null ? "IGNORED" : "")); // NOI18N
                         break;
                     }
                 }
@@ -669,8 +708,54 @@ public final class ClassPathProviderImpl implements ClassPathProvider, ActiveJ2S
         }
     }
     
+    /**
+     * This selector chooses the annotation classpath, if it is not empty (has items, or is broken), or the regular
+     * compile classpath if annotation path is empty. The selector reacts 
+     */
+    private static class AnnotationPathSelector extends ClassPathSelector {
+        private final ClassPath annotationCP;
+        private final Supplier<ClassPath> compileClassPath;
+        
+        public AnnotationPathSelector(NbMavenProjectImpl proj, ClassPath anno, Supplier<ClassPath> compile) {
+            super(proj);
+            this.annotationCP = anno;
+            this.compileClassPath = compile;
+            
+            anno.addPropertyChangeListener(WeakListeners.propertyChange(
+                    e -> {
+                        active = null;
+                        support.firePropertyChange(PROP_ACTIVE_CLASS_PATH, null, null);
+                    }, ClassPath.PROP_ROOTS, anno
+            ));
+//            proj.getProjectWatcher().addPropertyChangeListener((e) -> {
+//                if (NbMavenProject.PROP_PROJECT.equals(e.getPropertyName())) {
+//                    active = null;
+//                    support.firePropertyChange(PROP_ACTIVE_CLASS_PATH, null, null);
+//                }
+//            });
+        }
+
+        @Override
+        protected boolean isReset(PropertyChangeEvent evt) {
+            return NbMavenProject.PROP_PROJECT.equals(evt.getPropertyName());
+        }
+
+        @Override
+        public ClassPath getActiveClassPath() {
+            if (active != null) {
+                return active;
+            }
+            if (annotationCP.getFlags().contains(ClassPath.Flag.INCOMPLETE) ||
+                !annotationCP.entries().isEmpty()) {
+                return active = annotationCP;
+            } else {
+                return active = compileClassPath.get();
+            }
+        }
+    }
+    
     private static abstract class ClassPathSelector implements org.netbeans.spi.java.classpath.support.ClassPathSupport.Selector {
-        private final PropertyChangeSupport support = new PropertyChangeSupport(this);
+        protected final PropertyChangeSupport support = new PropertyChangeSupport(this);
         
         protected final NbMavenProjectImpl proj;
         protected ClassPath active = null;

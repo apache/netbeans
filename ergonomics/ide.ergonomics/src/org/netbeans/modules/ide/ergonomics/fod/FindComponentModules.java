@@ -299,7 +299,7 @@ public final class FindComponentModules extends Task {
     private void registerExtraDownloadable(FeatureInfo fi, FeatureInfo.ExtraModuleInfo fmi) {
         boolean required = false;
         if (fmi.isRequiredFor(jdk)) {
-            required = true;
+//            required = true;
         }
         if (fi.getExtraModulesRequiredText() != null && fi.getExtraModulesRecommendedText() == null) {
             required = true;

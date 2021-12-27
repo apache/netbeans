@@ -80,16 +80,19 @@ public class PhpUnitTest extends NbTestCase {
 
     public void testRelPath() {
         final File testFile = new File("/tmp/a.php");
-        final File sourceFile = new File("/home/b.php");
+        final String sourcePath = "/home/b.php";
+        final File sourceFile = new File(sourcePath);
         final String abs = "ABS/";
         final String rel = "REL/";
         final String suff = "/SUFF";
 
         String relPath = PhpUnit.getRelPath(testFile, sourceFile, abs, rel, suff, false);
-        assertEquals(rel + ".." + sourceFile.getAbsolutePath() + suff, relPath);
+        // Need to compare with source path because on Windows path will start with drive letter.
+        assertEquals(rel + ".." + sourcePath + suff, relPath);
 
         relPath = PhpUnit.getRelPath(testFile, sourceFile, abs, rel, suff, true);
-        assertEquals(abs + sourceFile.getAbsolutePath() + suff, relPath);
+        // Need to replace on Windows "\\" with "/" because relativizeFile always uses "/" as separator.
+        assertEquals(abs + sourceFile.getAbsolutePath().replace("\\", "/") + suff, relPath);
     }
 
 }

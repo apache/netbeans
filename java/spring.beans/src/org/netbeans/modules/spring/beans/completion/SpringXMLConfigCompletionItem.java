@@ -1180,6 +1180,7 @@ public abstract class SpringXMLConfigCompletionItem implements CompletionItem {
             }
         }
 
+        @SuppressWarnings("fallthrough")
         private void resolveDocumentation(CompilationController controller, Element el) throws IOException {
             switch (el.getKind()) {
             case ANNOTATION_TYPE:

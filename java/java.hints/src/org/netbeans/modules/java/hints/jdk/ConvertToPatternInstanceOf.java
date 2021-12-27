@@ -64,7 +64,8 @@ import org.openide.util.NbBundle;
     "ERR_ConvertToPatternInstanceOf=instanceof <pattern> can be used here",
     "FIX_ConvertToPatternInstanceOf=Use instanceof <pattern>"
 })
-@Hint(displayName="#DN_ConvertToPatternInstanceOf", description="#DESC_ConvertToPatternInstanceOf", category="rules15")
+@Hint(displayName="#DN_ConvertToPatternInstanceOf", description="#DESC_ConvertToPatternInstanceOf", category="rules15",
+        minSourceVersion = "14")
 public class ConvertToPatternInstanceOf {
     
     @TriggerPatterns({
@@ -137,9 +138,8 @@ public class ConvertToPatternInstanceOf {
             IfTree it = (IfTree) main.getLeaf();
             InstanceOfTree iot = (InstanceOfTree) ((ParenthesizedTree) it.getCondition()).getExpression();
             StatementTree bt = it.getThenStatement();
-//            wc.rewrite(iot.getType(), wc.getTreeMaker().BindingPattern(var.getName(), iot.getType()));
-//            wc.rewrite(bt, wc.getTreeMaker().removeBlockStatement(bt, 0));
-            InstanceOfTree cond = wc.getTreeMaker().InstanceOf(iot.getExpression(), wc.getTreeMaker().BindingPattern(varName, iot.getType()));
+            InstanceOfTree cond = wc.getTreeMaker().InstanceOf(iot.getExpression(),
+                                                               wc.getTreeMaker().BindingPattern(wc.getTreeMaker().Variable(wc.getTreeMaker().Modifiers(EnumSet.noneOf(Modifier.class)), varName, iot.getType(), null)));
             StatementTree thenBlock = removeFirst ? wc.getTreeMaker().removeBlockStatement((BlockTree) bt, 0) : bt;
             wc.rewrite(it, wc.getTreeMaker().If(wc.getTreeMaker().Parenthesized(cond), thenBlock, it.getElseStatement()));
             replaceOccurrences.stream().map(tph -> tph.resolve(wc)).forEach(tp -> {

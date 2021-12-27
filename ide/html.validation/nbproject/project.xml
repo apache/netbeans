@@ -160,24 +160,32 @@
                 <binary-origin>external/jing-0unknown.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/saxon9B.jar</runtime-relative-path>
-                <binary-origin>external/saxon9B-9.1.0.2.jar</binary-origin>
-            </class-path-extension>
-            <class-path-extension>
                 <runtime-relative-path>ext/log4j-1.2.15.jar</runtime-relative-path>
                 <binary-origin>external/log4j-1.2.15.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>ext/iri.jar</runtime-relative-path>
-                <binary-origin>external/iri-0.5.jar</binary-origin>
+                <binary-origin>external/iri-0.8.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>ext/validator.jar</runtime-relative-path>
-                <binary-origin>external/validator-20150629-patched.jar</binary-origin>
+                <binary-origin>external/validator-20200626-patched.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>ext/isorelax.jar</runtime-relative-path>
                 <binary-origin>external/isorelax-20041111.jar</binary-origin>
+            </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path>ext/salvation.jar</runtime-relative-path>
+                <binary-origin>external/salvation-2.7.2.jar</binary-origin>
+            </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path>ext/galimatias.jar</runtime-relative-path>
+                <binary-origin>external/galimatias-0.1.3.jar</binary-origin>
+            </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path>ext/langdetect.jar</runtime-relative-path>
+                <binary-origin>external/langdetect-1.2.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

@@ -266,11 +266,11 @@ public final class BIEditorSupport extends DataEditorSupport
     }
     
     private static void detachStatusListeners() {
-        Iterator iter = fsToStatusListener.entrySet().iterator();
+        Iterator<Map.Entry<FileSystem, FileStatusListener>> iter = fsToStatusListener.entrySet().iterator();
         while (iter.hasNext()) {
-            Map.Entry entry = (Map.Entry)iter.next();
-            FileSystem fs = (FileSystem)entry.getKey();
-            FileStatusListener fsl = (FileStatusListener)entry.getValue();
+            Map.Entry<FileSystem, FileStatusListener> entry = iter.next();
+            FileSystem fs = entry.getKey();
+            FileStatusListener fsl = entry.getValue();
             fs.removeFileStatusListener(fsl);
         }
         fsToStatusListener.clear();

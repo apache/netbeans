@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.18
+#Version 1.26
 
 CLSS public abstract interface java.io.Serializable
 
@@ -21,7 +21,6 @@ meth public final java.lang.String name()
 meth public java.lang.String toString()
 meth public static <%0 extends java.lang.Enum<{%%0}>> {%%0} valueOf(java.lang.Class<{%%0}>,java.lang.String)
 supr java.lang.Object
-hfds name,ordinal
 
 CLSS public java.lang.Exception
 cons protected init(java.lang.String,java.lang.Throwable,boolean,boolean)
@@ -30,7 +29,6 @@ cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.Throwable)
 cons public init(java.lang.Throwable)
 supr java.lang.Throwable
-hfds serialVersionUID
 
 CLSS public java.lang.Object
 cons public init()
@@ -67,8 +65,6 @@ meth public void printStackTrace(java.io.PrintStream)
 meth public void printStackTrace(java.io.PrintWriter)
 meth public void setStackTrace(java.lang.StackTraceElement[])
 supr java.lang.Object
-hfds CAUSE_CAPTION,EMPTY_THROWABLE_ARRAY,NULL_CAUSE_MESSAGE,SELF_SUPPRESSION_MESSAGE,SUPPRESSED_CAPTION,SUPPRESSED_SENTINEL,UNASSIGNED_STACK,backtrace,cause,detailMessage,serialVersionUID,stackTrace,suppressedExceptions
-hcls PrintStreamOrWriter,SentinelHolder,WrappedPrintStream,WrappedPrintWriter
 
 CLSS public abstract org.netbeans.core.network.proxy.pac.PacHelperMethods
 cons public init()
@@ -238,6 +234,7 @@ meth public static java.net.InetAddress nameResolve(java.lang.String,int,org.net
  anno 0 org.netbeans.api.annotations.common.NonNull()
 meth public static java.net.InetAddress[] nameResolveArr(java.lang.String,int,org.netbeans.core.network.utils.IpAddressUtils$IpTypePreference) throws java.lang.InterruptedException,java.net.UnknownHostException,java.util.concurrent.TimeoutException
  anno 0 org.netbeans.api.annotations.common.NonNull()
+meth public static void removeLoopback(java.util.List<java.net.InetAddress>)
 meth public static void sortIpAddresses(java.util.List<java.net.InetAddress>,boolean)
 meth public static void sortIpAddressesShallow(java.util.List<java.net.InetAddress>,boolean)
 supr java.lang.Object
@@ -267,12 +264,14 @@ meth public static java.net.InetAddress[] getLocalHostAddresses(org.netbeans.cor
  anno 0 org.netbeans.api.annotations.common.NonNull()
 meth public static java.net.InetAddress[] getMostLikelyLocalInetAddresses(org.netbeans.core.network.utils.IpAddressUtils$IpTypePreference)
  anno 0 org.netbeans.api.annotations.common.NonNull()
+meth public static java.util.List<java.net.InetAddress> getDatagramLocalInetAddress(org.netbeans.core.network.utils.IpAddressUtils$IpTypePreference)
+ anno 0 org.netbeans.api.annotations.common.NonNull()
 meth public static java.util.List<java.net.InetAddress> getPrioritizedLocalHostAddresses(org.netbeans.core.network.utils.IpAddressUtils$IpTypePreference)
  anno 0 org.netbeans.api.annotations.common.NonNull()
 meth public static void refreshNetworkInfo(boolean)
 meth public static void warmUp()
 supr java.lang.Object
-hfds C1,C2,C3,LOCK,LOG,LOOPBACK_IPV4,LOOPBACK_IPV4_RAW,LOOPBACK_IPV6,LOOPBACK_IPV6_RAW,RP,fut1,fut2,fut3
+hfds C1,C2,C3,C4,LOCK,LOG,LOOPBACK_IPV4,LOOPBACK_IPV4_RAW,LOOPBACK_IPV6,LOOPBACK_IPV6_RAW,RP,SOMEADDR_IPV4,SOMEADDR_IPV4_RAW,SOMEADDR_IPV6,SOMEADDR_IPV6_RAW,fut1,fut2,fut3,fut4
 
 CLSS public org.netbeans.core.network.utils.NativeException
 cons public init(int)

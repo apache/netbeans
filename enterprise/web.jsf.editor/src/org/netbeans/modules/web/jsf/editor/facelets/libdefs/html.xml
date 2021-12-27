@@ -53,6 +53,7 @@
     <tag name="column"/>
     <tag name="commandButton"/>
     <tag name="commandLink"/>
+    <tag name="commandScript"/>
     <tag name="dataTable">
         <attr name="frame">
             <type name="enum">
@@ -132,6 +133,9 @@
                 <val>pageDirection</val>
                 <val>lineDirection</val>
             </type>
+        </attr>
+        <attr name="group">
+          <type name="text"/>
         </attr>
     </tag>
 </library>

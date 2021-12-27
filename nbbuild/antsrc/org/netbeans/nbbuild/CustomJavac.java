@@ -66,14 +66,30 @@ public class CustomJavac extends Javac {
 
     @Override
     public void execute() throws BuildException {
-        String src = getSource();
-        if (src.matches("\\d+")) {
-            src = "1." + src;
-        }
-        if (!JavaEnvUtils.isAtLeastJavaVersion(src)) {
-            log("Cannot handle -source " + src + " from this VM; forking " + maybeFork, Project.MSG_WARN);
-            super.setFork(true);
-            super.setExecutable(maybeFork);
+        String release = getRelease();
+        if (release == null || release.isEmpty()) {
+            String tgr = getTarget();
+            if (tgr.matches("\\d+")) {
+                tgr = "1." + tgr;
+            }
+            if (!isBootclasspathOptionUsed()) {
+                setRelease(tgr.substring(2));
+            }
+            String src = getSource();
+            if (src.matches("\\d+")) {
+                src = "1." + src;
+            }
+            if (!JavaEnvUtils.isAtLeastJavaVersion(src)) {
+                log("Cannot handle -source " + src + " from this VM; forking " + maybeFork, Project.MSG_WARN);
+                super.setFork(true);
+                super.setExecutable(maybeFork);
+            }
+        } else {
+            if (!JavaEnvUtils.isAtLeastJavaVersion(release)) {
+                log("Cannot handle -release " + release + " from this VM; forking " + maybeFork, Project.MSG_WARN);
+                super.setFork(true);
+                super.setExecutable(maybeFork);
+            }
         }
         generatedClassesDir = new File(getDestdir().getParentFile(), getDestdir().getName() + "-generated");
         if (!usingExplicitIncludes) {
@@ -100,6 +116,15 @@ public class CustomJavac extends Javac {
             log("Warning: could not create " + generatedClassesDir, Project.MSG_WARN);
         }
         super.compile();
+    }
+
+    private boolean isBootclasspathOptionUsed() {
+        for (String arg : getCurrentCompilerArgs()) {
+            if (arg.contains("-Xbootclasspath")) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -189,7 +214,7 @@ public class CustomJavac extends Javac {
         File d = getDestdir();
         if (!d.isDirectory()) {
             return;
-}
+        }
         FileSet classes = new FileSet();
         classes.setDir(d);
         classes.setIncludes("**/*$*.class");

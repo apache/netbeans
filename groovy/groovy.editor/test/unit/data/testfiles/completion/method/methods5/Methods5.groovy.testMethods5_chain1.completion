@@ -1,0 +1,8 @@
+Code completion result for source line:
+someFile.getP|arentFile().mkdirs()
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+METHOD     getParent()                     [PUBLIC]   String
+METHOD     getParentFile()                 [PUBLIC]   File
+METHOD     getPath()                       [PUBLIC]   String
+METHOD     getProperties()                            Map

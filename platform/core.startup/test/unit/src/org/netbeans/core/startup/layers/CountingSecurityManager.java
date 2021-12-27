@@ -196,6 +196,11 @@ final class CountingSecurityManager extends SecurityManager implements Callable<
                 return;
             }
 
+            if (file.endsWith("org-netbeans-insane-hook.jar")) {
+                // only used in tests
+                return;
+            }
+
             setCnt(getCnt() + 1);
             pw.println("checkRead: " + file);
             if (who.get(file) == null) {

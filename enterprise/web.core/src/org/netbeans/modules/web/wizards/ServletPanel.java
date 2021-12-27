@@ -166,10 +166,10 @@ public class ServletPanel implements WizardDescriptor.FinishablePanel {
             return servlets;
         }
         catch (MetadataModelException e) {
-            Logger.global.log(Level.WARNING, "getServlets failed", e);
+            Logger.getGlobal().log(Level.WARNING, "getServlets failed", e);
         }
         catch (IOException e) {
-            Logger.global.log(Level.WARNING, "getServlets failed", e);
+            Logger.getGlobal().log(Level.WARNING, "getServlets failed", e);
         }
         return Collections.emptyList();
     }
@@ -184,10 +184,10 @@ public class ServletPanel implements WizardDescriptor.FinishablePanel {
             return filters;
         }
         catch (MetadataModelException e) {
-            Logger.global.log(Level.WARNING, "getFilters failed", e);
+            Logger.getGlobal().log(Level.WARNING, "getFilters failed", e);
         }
         catch (IOException e) {
-            Logger.global.log(Level.WARNING, "getFilters failed", e);
+            Logger.getGlobal().log(Level.WARNING, "getFilters failed", e);
         }
         return Collections.emptyList();
     }

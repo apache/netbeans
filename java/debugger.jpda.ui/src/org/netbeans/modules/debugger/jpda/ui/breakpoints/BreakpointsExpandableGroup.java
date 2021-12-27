@@ -174,11 +174,7 @@ abstract class BreakpointsExpandableGroup<T> implements OutlineComboBox.Expandab
         
         @Override
         public String toString() {
-            try {
-                return fo.getURL().toExternalForm();
-            } catch (FileStateInvalidException ex) {
-                return "file://"+fo.getPath();
-            }
+            return fo.toURL().toExternalForm();
         }
 
         @Override

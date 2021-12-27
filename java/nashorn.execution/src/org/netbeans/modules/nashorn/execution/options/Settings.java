@@ -32,6 +32,7 @@ public final class Settings {
     public static final String PREF_NASHORN_PLATFORM_DISPLAY_NAME = "nashornPlatformDisplayName";   // NOI18N
     public static final String PREF_NASHORN_OPTIONS = "nashornEngineOptions";       // NOI18N
     public static final String PREF_NASHORN_ARGUMENTS = "nashornScriptArguments";   // NOI18N
+    public static final String PREF_NASHORN = "nashornIsPreferred";   // NOI18N
     
     private Settings() {}
     

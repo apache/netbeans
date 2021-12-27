@@ -53,12 +53,14 @@ import org.netbeans.modules.debugger.jpda.jdi.ClassNotPreparedExceptionWrapper;
 import org.netbeans.modules.debugger.jpda.jdi.ClassTypeWrapper;
 import org.netbeans.modules.debugger.jpda.jdi.InternalExceptionWrapper;
 import org.netbeans.modules.debugger.jpda.jdi.ObjectCollectedExceptionWrapper;
+import org.netbeans.modules.debugger.jpda.jdi.UnsupportedOperationExceptionWrapper;
 import org.netbeans.modules.debugger.jpda.jdi.VMDisconnectedExceptionWrapper;
 import org.netbeans.modules.debugger.jpda.models.JPDAThreadImpl;
+import org.netbeans.modules.debugger.jpda.truffle.PersistentValues;
 import org.netbeans.modules.debugger.jpda.truffle.TruffleDebugManager;
 import org.netbeans.modules.debugger.jpda.truffle.access.TruffleAccess;
 import org.netbeans.modules.debugger.jpda.truffle.access.TruffleStrataProvider;
-import org.netbeans.modules.debugger.jpda.truffle.breakpoints.TruffleBreakpointsHandler;
+import org.netbeans.modules.debugger.jpda.truffle.breakpoints.impl.TruffleBreakpointsHandler;
 import org.netbeans.modules.debugger.jpda.truffle.source.Source;
 import org.netbeans.spi.debugger.ActionsProvider;
 import org.netbeans.spi.debugger.ActionsProviderSupport;
@@ -163,10 +165,11 @@ public class RunToCursorActionProvider extends ActionsProviderSupport {
                 @Override
                 public void callMethods(JPDAThread thread) {
                     ThreadReference tr = ((JPDAThreadImpl) thread).getThreadReference();
-                    StringReference pathRef = tr.virtualMachine().mirrorOf(uri);
-                    IntegerValue lineRef = tr.virtualMachine().mirrorOf(line);
-                    List<? extends Value> args = Arrays.asList(new Value[] { pathRef, lineRef });
+                    PersistentValues persistents = new PersistentValues(tr.virtualMachine());
                     try {
+                        StringReference pathRef = persistents.mirrorOf(uri);
+                        IntegerValue lineRef = tr.virtualMachine().mirrorOf(line);
+                        List<? extends Value> args = Arrays.asList(new Value[] { pathRef, lineRef });
                         ArrayReference ret = (ArrayReference) ClassTypeWrapper.invokeMethod(
                                 debugAccessor,
                                 tr,
@@ -178,10 +181,12 @@ public class RunToCursorActionProvider extends ActionsProviderSupport {
                         Throwable ex = new InvocationExceptionTranslated(iex, (JPDADebuggerImpl) debugger).preload((JPDAThreadImpl) thread);
                         Exceptions.printStackTrace(Exceptions.attachMessage(ex, "Setting one shot breakpoint to "+uri+":"+line));
                     } catch (InvalidTypeException | ClassNotLoadedException |
-                             IncompatibleThreadStateException |
+                             IncompatibleThreadStateException | UnsupportedOperationExceptionWrapper |
                              InternalExceptionWrapper | VMDisconnectedExceptionWrapper |
                              ObjectCollectedExceptionWrapper ex) {
                         Exceptions.printStackTrace(Exceptions.attachMessage(ex, "Setting one shot breakpoint to "+uri+":"+line));
+                    } finally {
+                        persistents.collect();
                     }
                 }
             });

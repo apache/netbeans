@@ -20,8 +20,6 @@ package org.netbeans.modules.javascript.cdnjs.ui;
 
 import java.awt.Component;
 import java.awt.Dialog;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -32,6 +30,7 @@ import java.util.List;
 import java.util.Map;
 import javax.swing.JPanel;
 import javax.swing.JTable;
+import javax.swing.SwingUtilities;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
@@ -50,6 +49,7 @@ import org.openide.filesystems.FileChooserBuilder;
 import org.openide.util.HelpCtx;
 import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle;
+import org.openide.util.RequestProcessor;
 
 /**
  * Panel for customization of CDNJS libraries.
@@ -67,6 +67,7 @@ public class SelectionPanel extends JPanel implements HelpCtx.Provider {
     private final File webRoot;
     /** Maps the name of the library to its CDNJS meta-data. */
     private final Map<String,Library> libraryInfo = new HashMap<>();
+    private static final RequestProcessor RP = new RequestProcessor(SearchPanel.class.getName(), 3);
 
     /**
      * Creates a new {@code SelectionPanel}.
@@ -122,7 +123,6 @@ public class SelectionPanel extends JPanel implements HelpCtx.Provider {
     @NbBundle.Messages({"SelectionPanel.searchDialog.title=Add CDNJS Library"})
     private void showSearchPanel() {
         SearchPanel panel = getSearchPanel();
-        panel.activate();
         DialogDescriptor descriptor = new DialogDescriptor(
                 panel,
                 Bundle.SelectionPanel_searchDialog_title(),
@@ -138,7 +138,6 @@ public class SelectionPanel extends JPanel implements HelpCtx.Provider {
         );
         Dialog dialog = DialogDisplayer.getDefault().createDialog(descriptor);
         dialog.setVisible(true);
-        panel.deactivate();
         if (descriptor.getValue() == panel.getAddButton()) {
             Library.Version selectedVersion = panel.getSelectedVersion();
             if (selectedVersion != null) {
@@ -269,36 +268,21 @@ public class SelectionPanel extends JPanel implements HelpCtx.Provider {
     }
 
     /**
-     * Releases resources and unregisters the listeners used by this panel.
-     */
-    public void dispose() {
-        LibraryProvider.getInstance().removePropertyChangeListener(libraryInfoListener);
-    }
-
-    /** Listener on the CDNJS library provider. */
-    private PropertyChangeListener libraryInfoListener;
-
-    /**
      * Loads the CDNJS meta-data about the existing libraries.
      * 
      * @param existingLibraries libraries already present in the project.
      */
     private void loadLibraryInfo(final Library.Version[] existingLibraries) {
-        LibraryProvider provider = LibraryProvider.getInstance();
-        libraryInfoListener = new PropertyChangeListener() {
-            @Override
-            public void propertyChange(PropertyChangeEvent evt) {
-                updateLibraryInfo(evt.getPropertyName(), (Library[])evt.getNewValue());
+        RP.execute(() -> {
+            LibraryProvider provider = LibraryProvider.getInstance();
+            for (Library.Version libraryVersion : existingLibraries) {
+                String libraryName = libraryVersion.getLibrary().getName();
+                Library library = provider.loadLibrary(libraryName);
+                if (library != null) {
+                    SwingUtilities.invokeLater(() -> updateLibraryInfo(library));
+                }
             }
-        };
-        provider.addPropertyChangeListener(libraryInfoListener);
-        for (Library.Version libraryVersion : existingLibraries) {
-            String libraryName = libraryVersion.getLibrary().getName();
-            Library[] foundLibraries = provider.findLibraries(libraryName, Thread.MIN_PRIORITY);
-            if (foundLibraries != null) {
-                updateLibraryInfo(libraryName, foundLibraries);
-            }
-        }
+        });
     }
 
     /**
@@ -307,17 +291,8 @@ public class SelectionPanel extends JPanel implements HelpCtx.Provider {
      * @param libraryName name of the library.
      * @param foundLibraries search result for a search term equal to the name of the library.
      */
-    void updateLibraryInfo(String libraryName, Library[] foundLibraries) {
-        if (foundLibraries == null) {
-            libraryInfo.put(libraryName, null);
-        } else {
-            for (Library library : foundLibraries) {
-                if (libraryName.equals(library.getName())) {
-                    libraryInfo.put(libraryName, library);
-                    break;
-                }
-            }
-        }
+    void updateLibraryInfo(Library foundLibrary) {
+        libraryInfo.put(foundLibrary.getName(), foundLibrary);
         tableModel.fireTableDataChanged();
     }
 
@@ -670,7 +645,7 @@ public class SelectionPanel extends JPanel implements HelpCtx.Provider {
                 case 2:
                     String libraryName = libraryVersion.getLibrary().getName();
                     Library library = libraryInfo.get(libraryName);
-                    if (library == null) {
+                    if (library == null || library.getVersions() == null || library.getVersions().length == 0) {
                         value = libraryInfo.containsKey(libraryName)
                                 ? VersionColumnRenderer.UNKNOWN
                                 : VersionColumnRenderer.CHECKING;

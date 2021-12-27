@@ -140,9 +140,9 @@ public class WebServiceGroup {
     
     public void setWebServiceIds(Set ids){
         webserviceIds = ids;
-        Iterator iter = webserviceIds.iterator();
+        Iterator<String> iter = webserviceIds.iterator();
         while(iter.hasNext()) {
-            WebServiceData wsData = WebServiceListModel.getInstance().getWebService((String)iter.next());
+            WebServiceData wsData = WebServiceListModel.getInstance().getWebService(iter.next());
             wsData.setGroupId(getId());
         }
     }

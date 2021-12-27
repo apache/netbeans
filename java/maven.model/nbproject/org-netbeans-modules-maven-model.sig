@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.50
+#Version 1.58
 
 CLSS public abstract interface java.io.Serializable
 
@@ -27,7 +27,6 @@ meth public final java.lang.String name()
 meth public java.lang.String toString()
 meth public static <%0 extends java.lang.Enum<{%%0}>> {%%0} valueOf(java.lang.Class<{%%0}>,java.lang.String)
 supr java.lang.Object
-hfds name,ordinal
 
 CLSS public java.lang.Object
 cons public init()
@@ -75,7 +74,7 @@ CLSS public abstract interface javax.swing.event.UndoableEditListener
 intf java.util.EventListener
 meth public abstract void undoableEditHappened(javax.swing.event.UndoableEditEvent)
 
-CLSS public abstract interface org.netbeans.modules.maven.model.ModelOperation<%0 extends org.netbeans.modules.xml.xam.dom.AbstractDocumentModel>
+CLSS public abstract interface org.netbeans.modules.maven.model.ModelOperation<%0 extends org.netbeans.modules.xml.xam.dom.AbstractDocumentModel<? extends org.netbeans.modules.xml.xam.dom.DocumentComponent<?>>>
 meth public abstract void performOperation({org.netbeans.modules.maven.model.ModelOperation%0})
 
 CLSS public org.netbeans.modules.maven.model.Utilities

@@ -26,6 +26,8 @@ import java.net.URL;
 import java.util.Arrays;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.netbeans.api.java.queries.JavadocForBinaryQuery;
+import org.netbeans.api.java.queries.SourceForBinaryQuery;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.maven.NbMavenProjectImpl;
@@ -59,6 +61,10 @@ public class RepositoryForBinaryQueryImplTest extends NbTestCase{
         super.tearDown(); 
         File prj10 = new File(getWorkDir(), "prj10");
         org.codehaus.plexus.util.FileUtils.deleteDirectory(prj10);
+        
+        File repo = EmbedderFactory.getProjectEmbedder().getLocalRepositoryFile();
+        File nbtest = new File(repo, "nbtest");
+        org.codehaus.plexus.util.FileUtils.deleteDirectory(nbtest);
     }
     
     
@@ -79,9 +85,8 @@ public class RepositoryForBinaryQueryImplTest extends NbTestCase{
         
 
         // now create source jar
-        File sourceJar = new File(this.getDataDir(), "source.jar");
         File repoSourceJar = new File(art10.getParentFile(), "testprj-1.0-sources.jar");
-        org.codehaus.plexus.util.FileUtils.copyFile(sourceJar, repoSourceJar);
+        org.codehaus.plexus.util.FileUtils.copyFile(art10, repoSourceJar);
         assertEquals(1, result.getRoots().length);
         assertEquals(FileUtil.getArchiveRoot(FileUtil.toFileObject(repoSourceJar)), result.getRoots()[0]);
         
@@ -127,6 +132,108 @@ public class RepositoryForBinaryQueryImplTest extends NbTestCase{
         
         
         
+    }
+    
+    @Test
+    public void testFindJavadoc() throws IOException {
+        File repo = EmbedderFactory.getProjectEmbedder().getLocalRepositoryFile();
+        File parent = new File(repo, "nbtest/testprj/1.0");
+        RepositoryForBinaryQueryImpl query = new RepositoryForBinaryQueryImpl();
+        
+        // find nothing
+        File artifact = new File(parent, "testprj-1.0.jar");
+        TestFileUtils.writeZipFile(artifact, "META-INF/MANIFEST.MF:Version:1.0");
+        URL artifactRoot = FileUtil.getArchiveRoot(artifact.toURI().toURL());
+        JavadocForBinaryQuery.Result result = query.findJavadoc(artifactRoot);
+        assertNotNull(result);
+        assertEquals(0, result.getRoots().length);
+        
+        // find regular javadoc
+        File javadoc = new File(parent, "testprj-1.0-javadoc.jar");
+        TestFileUtils.writeZipFile(javadoc, "META-INF/MANIFEST.MF:Version:1.0");
+        URL javadocRoot = FileUtil.getArchiveRoot(javadoc.toURI().toURL());
+        result = query.findJavadoc(artifactRoot);
+        assertEquals(1, result.getRoots().length);
+        assertEquals(javadocRoot, result.getRoots()[0]);
+        
+        // classifier attachments should fall back to the regular javadoc
+        File attachment = new File(parent, "testprj-1.0-attachment.jar");
+        TestFileUtils.writeZipFile(attachment, "META-INF/MANIFEST.MF:Version:1.0");
+        URL attachmentRoot = FileUtil.getArchiveRoot(attachment.toURI().toURL());
+        result = query.findJavadoc(attachmentRoot);
+        assertEquals(1, result.getRoots().length);
+        assertEquals(javadocRoot, result.getRoots()[0]);
+        
+        // classifier attachments should find their own javadoc
+        File attachmentJavadoc = new File(parent, "testprj-1.0-attachment-javadoc.jar");
+        TestFileUtils.writeZipFile(attachmentJavadoc, "META-INF/MANIFEST.MF:Version:1.0");
+        URL attachmentJavadocRoot = FileUtil.getArchiveRoot(attachmentJavadoc.toURI().toURL());
+        result = query.findJavadoc(attachmentRoot);
+        assertEquals(1, result.getRoots().length);
+        assertEquals(attachmentJavadocRoot, result.getRoots()[0]);
+        
+        // result reacts to filesystem changes
+        org.codehaus.plexus.util.FileUtils.forceDelete(attachmentJavadoc);
+        assertEquals(1, result.getRoots().length);
+        assertEquals(javadocRoot, result.getRoots()[0]);
+        
+        org.codehaus.plexus.util.FileUtils.forceDelete(javadoc);
+        assertEquals(0, result.getRoots().length);
+        
+        TestFileUtils.writeZipFile(javadoc, "META-INF/MANIFEST.MF:Version:1.0");
+        assertEquals(1, result.getRoots().length);
+        assertEquals(javadocRoot, result.getRoots()[0]);
+    }
+    
+    @Test
+    public void testFindSources() throws IOException {
+        File repo = EmbedderFactory.getProjectEmbedder().getLocalRepositoryFile();
+        File parent = new File(repo, "nbtest/testprj/1.0");
+        RepositoryForBinaryQueryImpl query = new RepositoryForBinaryQueryImpl();
+        
+        // find nothing
+        File artifact = new File(parent, "testprj-1.0.jar");
+        TestFileUtils.writeZipFile(artifact, "META-INF/MANIFEST.MF:Version:1.0");
+        URL artifactRoot = FileUtil.getArchiveRoot(artifact.toURI().toURL());
+        SourceForBinaryQuery.Result result = query.findSourceRoots(artifactRoot);
+        assertNotNull(result);
+        assertEquals(0, result.getRoots().length);
+        
+        // find regular sources
+        File sources = new File(parent, "testprj-1.0-sources.jar");
+        TestFileUtils.writeZipFile(sources, "META-INF/MANIFEST.MF:Version:1.0");
+        URL sourcesRoot = FileUtil.getArchiveRoot(sources.toURI().toURL());
+        result = query.findSourceRoots(artifactRoot);
+        assertEquals(1, result.getRoots().length);
+        assertEquals(sourcesRoot, result.getRoots()[0].toURL());
+        
+        // classifier attachments should fall back to the regular sources
+        File attachment = new File(parent, "testprj-1.0-attachment.jar");
+        TestFileUtils.writeZipFile(attachment, "META-INF/MANIFEST.MF:Version:1.0");
+        URL attachmentRoot = FileUtil.getArchiveRoot(attachment.toURI().toURL());
+        result = query.findSourceRoots(attachmentRoot);
+        assertEquals(1, result.getRoots().length);
+        assertEquals(sourcesRoot, result.getRoots()[0].toURL());
+        
+        // classifier attachments should find their own sources
+        File attachmentSources = new File(parent, "testprj-1.0-attachment-sources.jar");
+        TestFileUtils.writeZipFile(attachmentSources, "META-INF/MANIFEST.MF:Version:1.0");
+        URL attachmentSourcesRoot = FileUtil.getArchiveRoot(attachmentSources.toURI().toURL());
+        result = query.findSourceRoots(attachmentRoot);
+        assertEquals(1, result.getRoots().length);
+        assertEquals(attachmentSourcesRoot, result.getRoots()[0].toURL());
+        
+        // result reacts to filesystem changes
+        org.codehaus.plexus.util.FileUtils.forceDelete(attachmentSources);
+        assertEquals(1, result.getRoots().length);
+        assertEquals(sourcesRoot, result.getRoots()[0].toURL());
+        
+        org.codehaus.plexus.util.FileUtils.forceDelete(sources);
+        assertEquals(0, result.getRoots().length);
+        
+        TestFileUtils.writeZipFile(sources, "META-INF/MANIFEST.MF:Version:1.0");
+        assertEquals(1, result.getRoots().length);
+        assertEquals(sourcesRoot, result.getRoots()[0].toURL());
     }
 
 }

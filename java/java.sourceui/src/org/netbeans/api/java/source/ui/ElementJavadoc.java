@@ -65,8 +65,8 @@ import javax.swing.Action;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.concurrent.Callable;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.FutureTask;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Function;
 import javax.lang.model.element.AnnotationMirror;
@@ -131,7 +131,7 @@ public class ElementJavadoc {
     private final FileObject fileObject;
     private final ElementHandle<? extends Element> handle;
     //private Doc doc;
-    private volatile Future<String> content;
+    private volatile CompletableFuture<String> content;
     private final Callable<Boolean> cancel;
     private Map<String, ElementHandle<? extends Element>> links = new HashMap<>();
     private int linkCounter = 0;
@@ -371,26 +371,30 @@ public class ElementJavadoc {
                 computeDocURL(Collections.emptyList(), true, cancel);
                 doc = header.append(noJavadocFound());
             }
-            this.content = new Now(doc.toString());
+            this.content = CompletableFuture.completedFuture(doc.toString());
         } catch (JavadocHelper.RemoteJavadocException re) {
             if (fileObject == null || JavaSource.forFileObject(fileObject) == null) {
                 header.append(noJavadocFound());
-                this.content = new Now(header.toString());
+                this.content = CompletableFuture.completedFuture(header.toString());
                 return;
             }
-            this.content = new FutureTask<>(() -> {
-                final JavaSourceUtil.Handle ch = JavaSourceUtil.createControllerHandle(fileObject, null);
-                final CompilationController c = (CompilationController) ch.getCompilationController();
-                c.toPhase(Phase.RESOLVED);
-                final Element el = handle.resolve(c);
-                CharSequence doc = getElementDoc(el, c, header, url, false);
-                if (doc == null) {
-                    computeDocURL(Collections.emptyList(), false, cancel);
-                    doc = header.append(noJavadocFound());
+            this.content = CompletableFuture.supplyAsync(() -> {
+                try {
+                    final JavaSourceUtil.Handle ch = JavaSourceUtil.createControllerHandle(fileObject, null);
+                    final CompilationController c = (CompilationController) ch.getCompilationController();
+                    c.toPhase(Phase.RESOLVED);
+                    final Element el = handle.resolve(c);
+                    CharSequence doc = getElementDoc(el, c, header, url, false);
+                    if (doc == null) {
+                        computeDocURL(Collections.emptyList(), false, cancel);
+                        doc = header.append(noJavadocFound());
+                    }
+                    return doc.toString();
+                } catch (Exception ex) {
+                    Exceptions.printStackTrace(ex);
+                    return null;
                 }
-                return doc.toString();
-            });
-            RP.post((Runnable)this.content);
+            }, RP);
         }
     }
 
@@ -406,7 +410,7 @@ public class ElementJavadoc {
 
     private ElementJavadoc(final String message, final Callable<Boolean> cancel) {
         assert message != null;
-        this.content = new Now(message);
+        this.content = CompletableFuture.completedFuture(message);
         this.docURL = null;
         this.handle = null;
         this.cpInfo = null;
@@ -1020,35 +1024,41 @@ public class ElementJavadoc {
                     }
                     break;
                 }
-                if (element.getKind() == ElementKind.METHOD) {
-                    if (!ret.containsKey(DocTree.Kind.RETURN)) {
+            }
+
+            if (element.getKind() == ElementKind.METHOD) {
+                if (!ret.containsKey(DocTree.Kind.RETURN)) {
+                    //If the method does not have a return javadoc then we need to get javadoc from parent.
+                    if (inheritedDoc == null && !inheritedDocNeeded.getAndSet(true)) {
+                        inheritedDoc = getInherited((ExecutableElement)element, (TypeElement)element.getEnclosingElement(), info, funct);
+                    }
+                    if (inheritedDoc != null && inheritedDoc.containsKey(DocTree.Kind.RETURN)) {
+                        ret.put(DocTree.Kind.RETURN, new StringBuilder(inheritedDoc.get(DocTree.Kind.RETURN)));
+                    }
+                }
+                for (int i = 0; i < ((ExecutableElement)element).getParameters().size(); i++) {
+                    //Check every parameters in the method. If the current parameter has javadoc we do nothing.
+                    //If the current parameter does not have javadoc we try to get javadoc from the parent.
+                    if (!ret.containsKey(i)) {
                         if (inheritedDoc == null && !inheritedDocNeeded.getAndSet(true)) {
                             inheritedDoc = getInherited((ExecutableElement)element, (TypeElement)element.getEnclosingElement(), info, funct);
                         }
-                        if (inheritedDoc != null && inheritedDoc.containsKey(DocTree.Kind.RETURN)) {
-                            ret.put(DocTree.Kind.RETURN, new StringBuilder(inheritedDoc.get(DocTree.Kind.RETURN)));
-                        }                    
-                    }
-                    for (int i = 0; i < ((ExecutableElement)element).getParameters().size(); i++) {
-                        if (!ret.containsKey(i)) {
-                            if (inheritedDoc == null && !inheritedDocNeeded.getAndSet(true)) {
-                                inheritedDoc = getInherited((ExecutableElement)element, (TypeElement)element.getEnclosingElement(), info, funct);
-                            }
-                            if (inheritedDoc != null && inheritedDoc.containsKey(i)) {
-                                ret.put(i, new StringBuilder(inheritedDoc.get(i)));
-                            }                    
+                        if (inheritedDoc != null && inheritedDoc.containsKey(i)) {
+                            ret.put(i, new StringBuilder(inheritedDoc.get(i)));
                         }
                     }
-                    for (TypeMirror thrownType : ((ExecutableElement)element).getThrownTypes()) {
-                        Element e = thrownType.getKind() == TypeKind.TYPEVAR ? ((TypeVariable)thrownType).asElement() : ((DeclaredType)thrownType).asElement();
-                        if (!ret.containsKey(e)) {
-                            if (inheritedDoc == null && !inheritedDocNeeded.getAndSet(true)) {
-                                inheritedDoc = getInherited((ExecutableElement)element, (TypeElement)element.getEnclosingElement(), info, funct);
-                            }
-                            if (inheritedDoc != null && inheritedDoc.containsKey(e)) {
-                                ret.put(e, new StringBuilder(inheritedDoc.get(e)));
-                            }
-                        }                    
+                }
+                for (TypeMirror thrownType : ((ExecutableElement)element).getThrownTypes()) {
+                    //Check every throwables listed in the method. If for the current throwable there is not a javadoc try to get it from the parent.
+                    //If for the current throwable there is a javadoc we show the current javadoc.
+                    Element e = thrownType.getKind() == TypeKind.TYPEVAR ? ((TypeVariable)thrownType).asElement() : ((DeclaredType)thrownType).asElement();
+                    if (!ret.containsKey(e)) {
+                        if (inheritedDoc == null && !inheritedDocNeeded.getAndSet(true)) {
+                            inheritedDoc = getInherited((ExecutableElement)element, (TypeElement)element.getEnclosingElement(), info, funct);
+                        }
+                        if (inheritedDoc != null && inheritedDoc.containsKey(e)) {
+                            ret.put(e, new StringBuilder(inheritedDoc.get(e)));
+                        }
                     }
                 }
             }
@@ -1159,21 +1169,17 @@ public class ElementJavadoc {
             final FileObject resource = cp.findResource(toSearch);
             if (resource != null) {
                 final FileObject root = cp.findOwnerRoot(resource);
-                try {
-                    final URL rootURL = root.getURL();
-                    if (JavadocForBinaryQuery.findJavadoc(rootURL).getRoots().length == 0) {
-                        FileObject userRoot = FileUtil.getArchiveFile(root);
-                        if (userRoot == null) {
-                            userRoot = root;
-                        }
-                        return NbBundle.getMessage(
+                final URL rootURL = root.toURL();
+                if (JavadocForBinaryQuery.findJavadoc(rootURL).getRoots().length == 0) {
+                    FileObject userRoot = FileUtil.getArchiveFile(root);
+                    if (userRoot == null) {
+                        userRoot = root;
+                    }
+                    return NbBundle.getMessage(
                                 ElementJavadoc.class,
                                 "javadoc_content_not_found_attach",
                                 rootURL.toExternalForm(),
                                 FileUtil.getFileDisplayName(userRoot));
-                    }
-                } catch (FileStateInvalidException ex) {
-                    Exceptions.printStackTrace(ex);
                 }
             }
         }
@@ -1529,40 +1535,6 @@ public class ElementJavadoc {
     @SuppressWarnings("unchecked")
     private static <R, T extends Throwable> R sthrow (@NonNull final Throwable t) throws T {
         throw (T) t;
-    }
-
-    private static final class Now implements Future<String> {
-
-        private final String value;
-
-        Now(final String value) {
-            this.value = value;
-        }
-
-        @Override
-        public boolean cancel(boolean mayInterruptIfRunning) {
-            return false;
-        }
-
-        @Override
-        public boolean isCancelled() {
-            return false;
-        }
-
-        @Override
-        public boolean isDone() {
-            return true;
-        }
-
-        @Override
-        public String get() throws InterruptedException, ExecutionException {
-            return value;
-        }
-
-        @Override
-        public String get(long timeout, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
-            return value;
-        }
     }
 
     private void assignSource(

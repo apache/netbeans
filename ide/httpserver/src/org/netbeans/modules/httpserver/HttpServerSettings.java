@@ -257,7 +257,7 @@ public final class HttpServerSettings {
     public void setPort(int p) {
         if (p <= 0 || p >65535) {
             NotifyDescriptor.Message msg = new NotifyDescriptor.Message(
-                        NbBundle.getMessage(HttpServerSettings.class, "ERR_PortNumberOutOfRange", new Integer(p)), NotifyDescriptor.ERROR_MESSAGE);
+                        NbBundle.getMessage(HttpServerSettings.class, "ERR_PortNumberOutOfRange", Integer.valueOf(p)), NotifyDescriptor.ERROR_MESSAGE);
             
             DialogDisplayer.getDefault().notify(msg);
             return;

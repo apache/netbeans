@@ -65,9 +65,9 @@ public final class DocumentUtilities {
     
     private static final Object TYPING_MODIFICATION_KEY = new Object();
     
-    private static Field numReadersField;
+    private static volatile Field numReadersField;
     
-    private static Field currWriterField;
+    private static volatile Field currWriterField;
     
     
     private DocumentUtilities() {
@@ -472,24 +472,21 @@ public final class DocumentUtilities {
      */
     public static boolean isReadLocked(Document doc) {
         if (checkAbstractDoc(doc)) {
-            if (isWriteLocked(doc))
+            if (isWriteLocked(doc)) {
                 return true;
-            if (numReadersField == null) {
-                Field f = null;
+            }
+            Field f = numReadersField;
+            if (f == null) {
                 try {
                     f = AbstractDocument.class.getDeclaredField("numReaders"); // NOI18N
                 } catch (NoSuchFieldException ex) {
                     throw new IllegalStateException(ex);
                 }
                 f.setAccessible(true);
-                synchronized (doc) {
-                    numReadersField = f;
-                }
+                numReadersField = f;
             }
             try {
-                synchronized (doc) {
-                    return numReadersField.getInt(doc) > 0;
-                }
+                return f.getInt(doc) > 0;
             } catch (IllegalAccessException ex) {
                 throw new IllegalStateException(ex);
             }
@@ -516,22 +513,18 @@ public final class DocumentUtilities {
      */
     public static boolean isWriteLocked(Document doc) {
         if (checkAbstractDoc(doc)) {
-            if (currWriterField == null) {
-                Field f = null;
+            Field f = currWriterField;
+            if (f == null) {
                 try {
                     f = AbstractDocument.class.getDeclaredField("currWriter"); // NOI18N
                 } catch (NoSuchFieldException ex) {
                     throw new IllegalStateException(ex);
                 }
                 f.setAccessible(true);
-                synchronized (doc) {
-                    currWriterField = f;
-                }
+                currWriterField = f;
             }
             try {
-                synchronized (doc) {
-                    return currWriterField.get(doc) == Thread.currentThread();
-                }
+                return f.get(doc) == Thread.currentThread();
             } catch (IllegalAccessException ex) {
                 throw new IllegalStateException(ex);
             }

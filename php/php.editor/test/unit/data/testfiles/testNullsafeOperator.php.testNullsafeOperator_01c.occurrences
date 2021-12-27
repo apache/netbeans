@@ -1,0 +1,8 @@
+    public ?User $|>MARK_OCCURRENCES:user<|;
+        $this->|>MARK_OCCURRENCES:user<| = $user;
+        return $this->|>MARK_OCCURRENCES:user<|;
+$country = $session?->|>MARK_OCCURRENCES:user<|?->getAddress()?->country;
+$country = $session?->|>MARK_OCCURRENCES:us^er<|::$test;
+$country = $session?->|>MARK_OCCURRENCES:user<|::test();
+$country = $session?->|>MARK_OCCURRENCES:user<|->id;
+$country = $session?->|>MARK_OCCURRENCES:user<|?->getAddress()::ID;

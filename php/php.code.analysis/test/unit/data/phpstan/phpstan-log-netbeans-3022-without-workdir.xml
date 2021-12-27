@@ -20,10 +20,10 @@
 
 -->
 <checkstyle>
-<file name="/home/junichi11/NetBeansProjects/PHPStan/app/Test1.php">
+<file name="%WORKDIR%/Test1.php">
   <error line="13" column="1" severity="error" message="Binary operation &quot;+&quot; between string and 2 results in an error." />
 </file>
-<file name="/home/junichi11/NetBeansProjects/PHPStan/app/Test2.php">
+<file name="%WORKDIR%/Test2.php">
   <error line="9" column="1" severity="error" message="Anonymous function should return string but returns void." />
   <error line="9" column="1" severity="error" message="Result of closure (void) is used." />
 </file>

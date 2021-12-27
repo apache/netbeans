@@ -1431,6 +1431,9 @@ public class NbModuleSuite {
                 if (res.startsWith("org.junit") || res.startsWith("org/junit")) {
                     return true;
                 }
+                if (res.startsWith("org.hamcrest") || res.startsWith("org/hamcrest")) {
+                    return true;
+                }
                 if (res.startsWith("org.netbeans.junit") || res.startsWith("org/netbeans/junit")) {
                     if (res.startsWith("org.netbeans.junit.ide") || res.startsWith("org/netbeans/junit/ide")) {
                         return false;

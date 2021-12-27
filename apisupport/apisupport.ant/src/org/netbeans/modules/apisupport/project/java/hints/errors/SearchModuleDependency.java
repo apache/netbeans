@@ -113,6 +113,7 @@ public class SearchModuleDependency implements org.netbeans.modules.java.hints.s
     }
 
     @Override
+    @SuppressWarnings("fallthrough")
     public List<Fix> run(final CompilationInfo info, String diagnosticKey,
             final int offset, TreePath treePath, Data<Void> data) {
         cancel.set(false);

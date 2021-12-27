@@ -134,7 +134,7 @@ final class DelegateActionMap extends ActionMap {
             if (all) {
                 Object[] allKeys = m.allKeys();
                 if( null == allKeys ) {
-                    l = Collections.EMPTY_LIST;
+                    l = Collections.emptyList();
                 } else {
                     l = Arrays.asList(m.allKeys());
                 }

@@ -72,7 +72,7 @@ public class AddJavaFXPropertyMaker {
     private MethodTree createGetter(ModifiersTree mods, TypeMirror valueType) {
         StringBuilder getterName = GeneratorUtils.getCapitalizedName(config.getName());
         getterName.insert(0, valueType.getKind() == TypeKind.BOOLEAN ? "is" : "get");
-        ReturnTree returnTree = make.Return(make.MethodInvocation(Collections.EMPTY_LIST, make.MemberSelect(make.Identifier(config.getName()), hasGet ? "get" : "getValue"), Collections.EMPTY_LIST));
+        ReturnTree returnTree = make.Return(make.MethodInvocation(Collections.emptyList(), make.MemberSelect(make.Identifier(config.getName()), hasGet ? "get" : "getValue"), Collections.emptyList()));
         BlockTree getterBody = make.Block(Collections.singletonList(returnTree), false);
         Tree valueTree;
         if (valueType.getKind() == TypeKind.DECLARED) {
@@ -82,7 +82,7 @@ public class AddJavaFXPropertyMaker {
         } else {
             valueTree = make.Identifier(valueType.toString());
         }
-        MethodTree getter = make.Method(mods, getterName, valueTree, Collections.EMPTY_LIST, Collections.EMPTY_LIST, Collections.EMPTY_LIST, getterBody, null);
+        MethodTree getter = make.Method(mods, getterName, valueTree, Collections.emptyList(), Collections.emptyList(), Collections.emptyList(), getterBody, null);
         return getter;
     }
 
@@ -97,10 +97,10 @@ public class AddJavaFXPropertyMaker {
         } else {
             valueTree = make.Identifier(valueType.toString());
         }
-        StatementTree statement = make.ExpressionStatement(make.MethodInvocation(Collections.EMPTY_LIST, make.MemberSelect(make.Identifier(config.getName()), hasGet ? "set" : "setValue"), Collections.singletonList(make.Identifier("value"))));
+        StatementTree statement = make.ExpressionStatement(make.MethodInvocation(Collections.emptyList(), make.MemberSelect(make.Identifier(config.getName()), hasGet ? "set" : "setValue"), Collections.singletonList(make.Identifier("value"))));
         BlockTree getterBody = make.Block(Collections.singletonList(statement), false);
         VariableTree var = make.Variable(make.Modifiers(EnumSet.noneOf(Modifier.class)), "value", valueTree, null);
-        MethodTree getter = make.Method(mods, getterName, make.PrimitiveType(TypeKind.VOID), Collections.EMPTY_LIST, Collections.singletonList(var), Collections.EMPTY_LIST, getterBody, null);
+        MethodTree getter = make.Method(mods, getterName, make.PrimitiveType(TypeKind.VOID), Collections.emptyList(), Collections.singletonList(var), Collections.emptyList(), getterBody, null);
         return getter;
     }
 
@@ -110,11 +110,11 @@ public class AddJavaFXPropertyMaker {
         if (wrapperMethod == null) {
             expression = make.Identifier(config.getName());
         } else {
-            expression = make.MethodInvocation(Collections.EMPTY_LIST, make.MemberSelect(make.Identifier(config.getName()), wrapperMethod.getSimpleName()), Collections.EMPTY_LIST);
+            expression = make.MethodInvocation(Collections.emptyList(), make.MemberSelect(make.Identifier(config.getName()), wrapperMethod.getSimpleName()), Collections.emptyList());
         }
         ReturnTree returnTree = make.Return(expression);
         BlockTree getterBody = make.Block(Collections.singletonList(returnTree), false);
-        MethodTree getter = make.Method(mods, getterName, selectedType == null ? make.Identifier(config.getPropertyType()) : make.QualIdent(selectedType.asElement()), Collections.EMPTY_LIST, Collections.EMPTY_LIST, Collections.EMPTY_LIST, getterBody, null);
+        MethodTree getter = make.Method(mods, getterName, selectedType == null ? make.Identifier(config.getPropertyType()) : make.QualIdent(selectedType.asElement()), Collections.emptyList(), Collections.emptyList(), Collections.emptyList(), getterBody, null);
         return getter;
     }
 
@@ -191,7 +191,7 @@ public class AddJavaFXPropertyMaker {
     private VariableTree createField(DeclaredType selectedType, ExpressionTree implementationType) {
         String initializer = config.getInitializer();
         NewClassTree newClass = make.NewClass(null,
-                Collections.EMPTY_LIST,
+                Collections.emptyList(),
                 implementationType,
                 Collections.singletonList(make.Identifier(initializer)), null);
         VariableTree property = make.Variable(

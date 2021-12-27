@@ -70,6 +70,62 @@ public class PHP56CodeCompletionTest extends PHPCodeCompletionTestBase {
         checkCompletion("testfiles/completion/lib/php56/useFuncAndConst.php", "use function Name\\Space\\f^nc as fnc2;", false);
     }
 
+    public void testClassConst_01() throws Exception {
+        checkCompletion("testfiles/completion/lib/php56/classConst.php", "       echo self::INDEX^;", false);
+    }
+
+    public void testClassConst_02() throws Exception {
+        checkCompletion("testfiles/completion/lib/php56/classConst.php", "        echo self::ALICE^;", false);
+    }
+
+    public void testClassConst_03() throws Exception {
+        checkCompletion("testfiles/completion/lib/php56/classConst.php", "        echo self::PLANET^;", false);
+    }
+
+    public void testClassConst_04() throws Exception {
+        checkCompletion("testfiles/completion/lib/php56/classConst.php", "        echo self::NO_KEYS^;", false);
+    }
+
+    public void testClassConst_05() throws Exception {
+        checkCompletion("testfiles/completion/lib/php56/classConst.php", "       echo self::WITH_KEYS^;", false);
+    }
+
+    public void testClassConst_06() throws Exception {
+        checkCompletion("testfiles/completion/lib/php56/classConst.php", "       echo self::LONG_ARRAY^;", false);
+    }
+
+    public void testClassConst_07() throws Exception {
+        checkCompletion("testfiles/completion/lib/php56/classConst.php", "       echo self::CONST_REF^;", false);
+    }
+
+    public void testGlobalConst_01() throws Exception {
+        checkCompletion("testfiles/completion/lib/php56/globalConst.php", "echo INDEX^;", false);
+    }
+
+    public void testGlobalConst_02() throws Exception {
+        checkCompletion("testfiles/completion/lib/php56/globalConst.php", "echo ALICE^;", false);
+    }
+
+    public void testGlobalConst_03() throws Exception {
+        checkCompletion("testfiles/completion/lib/php56/globalConst.php", "echo PLANET^;", false);
+    }
+
+    public void testGlobalConst_04() throws Exception {
+        checkCompletion("testfiles/completion/lib/php56/globalConst.php", "echo NO_KEYS^;", false);
+    }
+
+    public void testGlobalConst_05() throws Exception {
+        checkCompletion("testfiles/completion/lib/php56/globalConst.php", "echo WITH_KEYS^;", false);
+    }
+
+    public void testGlobalConst_06() throws Exception {
+        checkCompletion("testfiles/completion/lib/php56/globalConst.php", "echo LONG_ARRAY^;", false);
+    }
+
+    public void testGlobalConst_07() throws Exception {
+        checkCompletion("testfiles/completion/lib/php56/globalConst.php", "echo CONST_REF^;", false);
+    }
+
     @Override
     protected Map<String, ClassPath> createClassPathsForTest() {
         return Collections.singletonMap(

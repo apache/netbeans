@@ -161,24 +161,24 @@ public class Retriever implements Runnable {
     // Instance attributes                                                    //
     ////////////////////////////////////////////////////////////////////////////
     
-    private Updater updater;
+    private final Updater updater;
     private final String locationUrl;
     private final String targetUrlPrefix;
     private final String defaultTargetUrl;
-    private File targetInstallDir;
-    private String topLevelPrefix;
+    private final File targetInstallDir;
+    private final String topLevelPrefix;
     
     ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
     ////////////////////////////////////////////////////////////////////////////
     
     public Retriever(File installDir, String locationUrl, String urlPrefix, 
-            String defaultTargetUrl, Updater u, String topLevelPrefix) {
+            String defaultTargetUrl, Updater updater, String topLevelPrefix) {
         this.targetInstallDir = installDir;
         this.locationUrl = locationUrl;
         this.targetUrlPrefix = urlPrefix;
         this.defaultTargetUrl = defaultTargetUrl;
-        this.updater = u;
+        this.updater = updater;
         this.topLevelPrefix = topLevelPrefix;
     }
     ////////////////////////////////////////////////////////////////////////////
@@ -252,10 +252,10 @@ public class Retriever implements Runnable {
         String message = null;
 
         try {
+            targetUrl = new URL(getDownloadLocation());
             backupDir = backupInstallDir(targetInstallDir);
             
             setDownloadState(STATUS_CONNECTING);
-            targetUrl = new URL(getDownloadLocation());
 
             Logger.getLogger("payara").log(Level.FINE, "Downloading from {0}", targetUrl); // NOI18N
             connection = targetUrl.openConnection();
@@ -321,55 +321,58 @@ public class Retriever implements Runnable {
         String result = defaultTargetUrl;
         int retries = 0;
         boolean run = true;
-        while(run) {
-            URLConnection conn;
-            try {
-                URL url = new URL(location);
-                conn = url.openConnection();
-                if (conn instanceof HttpURLConnection) {
-                    HttpURLConnection hconn = (HttpURLConnection) conn;
-                    hconn.setConnectTimeout(LOCATION_DOWNLOAD_TIMEOUT);
-                    hconn.setReadTimeout(LOCATION_DOWNLOAD_TIMEOUT);
-                    hconn.setRequestMethod("HEAD");
-                    if (hconn instanceof HttpsURLConnection) {
-                        handleSecureConnection((HttpsURLConnection)hconn);
-                    }
-                    hconn.connect();
-                    int responseCode = hconn.getResponseCode();
-                    LOGGER.log(Level.FINE, "URL Response code: {0} {1}",
-                            new String[] {Integer.toString(responseCode),
-                                hconn.getResponseMessage()});
-                    switch (responseCode) {
-                        case 301: case 302:
-                            location = hconn.getHeaderField("Location");
-                            if (location == null || location.trim().isEmpty()) {
+        if (location != null) {
+            while (run) {
+                URLConnection conn;
+                try {
+                    URL url = new URL(location);
+                    conn = url.openConnection();
+                    if (conn instanceof HttpURLConnection) {
+                        HttpURLConnection hconn = (HttpURLConnection) conn;
+                        hconn.setConnectTimeout(LOCATION_DOWNLOAD_TIMEOUT);
+                        hconn.setReadTimeout(LOCATION_DOWNLOAD_TIMEOUT);
+                        hconn.setRequestMethod("HEAD");
+                        if (hconn instanceof HttpsURLConnection) {
+                            handleSecureConnection((HttpsURLConnection) hconn);
+                        }
+                        hconn.connect();
+                        int responseCode = hconn.getResponseCode();
+                        LOGGER.log(Level.FINE, "URL Response code: {0} {1}",
+                                new String[]{Integer.toString(responseCode),
+                                    hconn.getResponseMessage()});
+                        switch (responseCode) {
+                            case 301:
+                            case 302:
+                                location = hconn.getHeaderField("Location");
+                                if (location == null || location.trim().isEmpty()) {
+                                    run = false;
+                                } else {
+                                    LOGGER.log(Level.FINE, "URL Redirrection: {0}",
+                                            location);
+                                    run = retries++ < LOCATION_TRIES;
+                                }
+                                break;
+                            case 200:
+                                int len = hconn.getContentLength();
+                                if (len > 0) {
+                                    result = location;
+                                    LOGGER.log(Level.FINE,
+                                            "New Payara Location: {0}", result);
+                                }
+                            default:
                                 run = false;
-                            } else {
-                                LOGGER.log(Level.FINE, "URL Redirrection: {0}",
-                                        location);
-                                run = retries++ < LOCATION_TRIES;
-                            }
-                            break;
-                        case 200:
-                            int len = hconn.getContentLength();
-                            if (len > 0) {
-                                result = location;
-                                LOGGER.log(Level.FINE,
-                                        "New Payara Location: {0}", result);
-                            }
-                        default:
-                            run = false;
+                        }
+                    } else {
+                        LOGGER.log(Level.INFO,
+                                "Unexpected connection type: {0}", location);
                     }
-                } else {
-                    LOGGER.log(Level.INFO,
-                            "Unexpected connection type: {0}", location);
+                } catch (MalformedURLException mue) {
+                    LOGGER.log(Level.INFO, "Error opening URL connection", mue);
+                    run = false;
+                } catch (IOException ioe) {
+                    LOGGER.log(Level.INFO, "Error reading from URL", ioe);
+                    run = false;
                 }
-            } catch (MalformedURLException mue) {
-                LOGGER.log(Level.INFO, "Error opening URL connection", mue);
-                run = false;
-            } catch (IOException ioe) {
-                LOGGER.log(Level.INFO, "Error reading from URL", ioe);
-                run = false;
             }
         }
         return result;

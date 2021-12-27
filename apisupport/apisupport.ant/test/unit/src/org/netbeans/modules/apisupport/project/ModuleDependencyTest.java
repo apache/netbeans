@@ -58,8 +58,8 @@ public class ModuleDependencyTest extends TestBase {
         ModuleDependency d5 = new ModuleDependency(antME, antME.getReleaseVersion(), null, true, false);
         
         // test hash code and equals
-        Set<ModuleDependency> set = new HashSet<ModuleDependency>();
-        Set<ModuleDependency> sorted = new TreeSet<ModuleDependency>();
+        Set<ModuleDependency> set = new HashSet<>();
+        Set<ModuleDependency> sorted = new TreeSet<>();
         set.add(d1);
         sorted.add(d1);
         assertFalse("already there", set.add(sameAsD1));
@@ -93,7 +93,6 @@ public class ModuleDependencyTest extends TestBase {
             new ModuleDependency(ml.getEntry("org.openide.loaders")),
             new ModuleDependency(ml.getEntry("org.apache.tools.ant.module")),
             new ModuleDependency(ml.getEntry("org.openide.io")),
-            new ModuleDependency(ml.getEntry("org.jdesktop.layout")),
             new ModuleDependency(ml.getEntry("org.openide.filesystems")),
             new ModuleDependency(ml.getEntry("org.openide.execution")),
         };

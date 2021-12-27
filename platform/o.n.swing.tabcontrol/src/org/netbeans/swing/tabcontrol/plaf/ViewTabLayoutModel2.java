@@ -178,7 +178,7 @@ final class ViewTabLayoutModel2 implements TabLayoutModel, ChangeListener {
         for (int i = 0; i < size; i++) {
             tabIndex = pos2Index.get(i);
             curText = model.getTab(tabIndex).getText();
-            curX += HtmlRenderer.renderString(curText, BasicScrollingTabDisplayerUI.getOffscreenGraphics(), 0, 0,
+            curX += HtmlRenderer.renderString(curText, BasicScrollingTabDisplayerUI.getOffscreenGraphics(displayer), 0, 0,
                                        Integer.MAX_VALUE,
                                        Integer.MAX_VALUE, displayer.getFont(),
                                        Color.BLACK, HtmlRenderer.STYLE_TRUNCATE,

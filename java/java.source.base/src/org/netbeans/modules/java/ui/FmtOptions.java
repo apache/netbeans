@@ -201,6 +201,7 @@ public class FmtOptions {
     public static final String spaceWithinParens = "spaceWithinParens"; //NOI18N
     public static final String spaceWithinMethodDeclParens = "spaceWithinMethodDeclParens"; //NOI18N
     public static final String spaceWithinLambdaParens = "spaceWithinLambdaParens"; //NOI18N
+    public static final String parensAroundSingularLambdaParam = "parensAroundSingularLambdaParam"; //NOI18N
     public static final String spaceWithinMethodCallParens = "spaceWithinMethodCallParens"; //NOI18N
     public static final String spaceWithinIfParens = "spaceWithinIfParens"; //NOI18N
     public static final String spaceWithinForParens = "spaceWithinForParens"; //NOI18N
@@ -505,6 +506,7 @@ public class FmtOptions {
             { spaceWithinParens, FALSE}, //NOI18N
             { spaceWithinMethodDeclParens, FALSE}, //NOI18N
             { spaceWithinLambdaParens, FALSE}, //NOI18N
+            { parensAroundSingularLambdaParam, FALSE}, //NOI18N
             { spaceWithinMethodCallParens, FALSE}, //NOI18N
             { spaceWithinIfParens, FALSE}, //NOI18N
             { spaceWithinForParens, FALSE}, //NOI18N

@@ -56,15 +56,15 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.selectors.SelectorUtils;
 import org.netbeans.nbbuild.JUnitReportWriter;
-import org.netbeans.nbbuild.extlibs.DownloadBinaries.MavenCoordinate;
 import org.netbeans.nbbuild.extlibs.licenseinfo.Fileset;
 import org.netbeans.nbbuild.extlibs.licenseinfo.Licenseinfo;
-import org.netbeans.nbbuild.extlibs.licenseinfo.Licenseinfos;
 
 /**
  * Task to check that external libraries have legitimate licenses, etc.
  */
 public class VerifyLibsAndLicenses extends Task {
+
+    private static final Pattern URL_PATTERN = Pattern.compile("(https?://\\S*[^/\\s]+)\\s+(\\S+)$");
 
     private File nball;
     public void setNball(File nball) {
@@ -323,9 +323,10 @@ public class VerifyLibsAndLicenses extends Task {
                 String license = headers.get("License");
                 if (license != null) {
                     if (license.contains("GPL")) {
-                        if (headers.getOrDefault("Type", "").contains("compile-time")) {
+                        String type = headers.getOrDefault("Type", "");
+                        if (type.contains("compile-time") || type.contains("reviewed")) {
                             // GPL dependencies are ok as build/compile time dependencies
-                            // but not ok, as a runtime dependency
+                            // or if they are explicitly reviewed
                             if (!headers.containsKey("Comment")) {
                                 msg.append("\n" + path + " has a GPL-family license but does not have a Comment.");
                             }
@@ -680,10 +681,13 @@ public class VerifyLibsAndLicenses extends Task {
                     if (hashAndFile.length < 2) {
                         throw new BuildException("Bad line '" + line + "' in " + list);
                     }
+                    Matcher urlMatcher = URL_PATTERN.matcher(hashAndFile[1]);
                     if (MavenCoordinate.isMavenFile(hashAndFile[1])) {
                         MavenCoordinate coordinate = MavenCoordinate.fromGradleFormat(hashAndFile[1]);
                         String artifactFile = coordinate.toArtifactFilename();
                         files.add(artifactFile);
+                    } else if (urlMatcher.matches()) {
+                        files.add(urlMatcher.group(2));
                     } else {
                         files.add(hashAndFile[1]);
                     }

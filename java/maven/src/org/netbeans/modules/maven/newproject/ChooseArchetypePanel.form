@@ -230,7 +230,7 @@
           <Properties>
             <Property name="editable" type="boolean" value="false"/>
             <Property name="background" type="java.awt.Color" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-              <Connection code="(java.awt.Color)(UIManager.get(&quot;textArea.background&quot;)!=null?&#xa;    UIManager.get(&quot;textArea.background&quot;):new java.awt.Color(238, 238, 238))" type="code"/>
+              <Connection code="(java.awt.Color)(UIManager.get(&quot;TextArea.background&quot;)!=null?&#xa;    UIManager.get(&quot;TextArea.background&quot;):new java.awt.Color(238, 238, 238))" type="code"/>
             </Property>
             <Property name="columns" type="int" value="20"/>
             <Property name="lineWrap" type="boolean" value="true"/>

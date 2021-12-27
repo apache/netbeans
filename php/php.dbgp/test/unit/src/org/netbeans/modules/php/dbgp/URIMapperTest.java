@@ -27,7 +27,6 @@ import java.util.Collections;
 import java.util.List;
 import org.netbeans.junit.NbTestCase;
 import org.openide.filesystems.FileUtil;
-import static org.junit.Assert.*;
 import org.openide.util.Pair;
 
 /**
@@ -50,8 +49,8 @@ public class URIMapperTest extends NbTestCase {
     protected void setUp() throws Exception {
         super.setUp();
         sourceFolderBase = getWorkDir();
-        String currentDir = new File(".").getCanonicalPath(); // NOI18N
-        webServerURIBase = URI.create("file://" + currentDir + "/dbgtest2/");//NOI18N
+        File currentDir = new File(".").getCanonicalFile(); // NOI18N
+        webServerURIBase = URI.create(currentDir.toURI().toString() + "/dbgtest2/").normalize(); // NOI18N
         webServerURIBaseFile = new File(webServerURIBase);
         webServerURIBaseFile.mkdir();
 

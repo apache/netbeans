@@ -33,6 +33,7 @@ import java.io.ObjectOutput;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+import java.util.Iterator;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -137,10 +138,10 @@ public abstract class SystemOption extends SharedClassObject implements HelpCtx.
                 return;
             }
 
-            java.util.Iterator it = m.entrySet().iterator();
+            Iterator<Map.Entry> it = m.entrySet().iterator();
 WHILE: 
             while (it.hasNext()) {
-                Map.Entry e = (Map.Entry) it.next();
+                Map.Entry e = it.next();
 
                 if (e.getValue() instanceof Box) {
                     Object value = ((Box) e.getValue()).value;

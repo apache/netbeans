@@ -42,6 +42,7 @@ public class FmtBraces extends javax.swing.JPanel {
         forBracesCombo.putClientProperty(OPTION_ID, redundantForBraces);
         whileBracesCombo.putClientProperty(OPTION_ID, redundantWhileBraces);
         doWhileBracesCombo.putClientProperty(OPTION_ID, redundantDoWhileBraces);
+        lambdaParensCheckBox.putClientProperty(OPTION_ID, parensAroundSingularLambdaParam);
     }
     
     public static PreferencesCustomizer.Factory getController() {
@@ -79,6 +80,9 @@ public class FmtBraces extends javax.swing.JPanel {
         jSeparator2 = new javax.swing.JSeparator();
         moduleDeclLabel = new javax.swing.JLabel();
         moduleDeclCombo = new javax.swing.JComboBox<>();
+        jLabel1 = new javax.swing.JLabel();
+        jSeparator3 = new javax.swing.JSeparator();
+        lambdaParensCheckBox = new javax.swing.JCheckBox();
 
         setName(org.openide.util.NbBundle.getMessage(FmtBraces.class, "LBL_Braces")); // NOI18N
         setOpaque(false);
@@ -137,6 +141,10 @@ public class FmtBraces extends javax.swing.JPanel {
 
         moduleDeclCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(FmtBraces.class, "FmtBraces.jLabel1.text")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(lambdaParensCheckBox, org.openide.util.NbBundle.getMessage(FmtBraces.class, "FmtBraces.lambdaParensCheckBox.text")); // NOI18N
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -149,6 +157,10 @@ public class FmtBraces extends javax.swing.JPanel {
                 .addComponent(bracesGenerationLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator2))
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jSeparator3))
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -173,8 +185,9 @@ public class FmtBraces extends javax.swing.JPanel {
                     .addComponent(specialElseIfCheckBox)
                     .addComponent(ifBracesLabel)
                     .addComponent(forBracesLabel)
-                    .addComponent(moduleDeclLabel))
-                .addGap(16, 16, 16))
+                    .addComponent(moduleDeclLabel)
+                    .addComponent(lambdaParensCheckBox))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {classDeclCombo, doWhileBracesCombo, forBracesCombo, ifBracesCombo, methodDeclCombo, otherCombo, whileBracesCombo});
@@ -227,7 +240,13 @@ public class FmtBraces extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(doWhileBracesLabel)
                     .addComponent(doWhileBracesCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel1)
+                    .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 8, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(lambdaParensCheckBox)
+                .addContainerGap(30, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -247,8 +266,11 @@ public class FmtBraces extends javax.swing.JPanel {
     private javax.swing.JLabel forBracesLabel;
     private javax.swing.JComboBox ifBracesCombo;
     private javax.swing.JLabel ifBracesLabel;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
+    private javax.swing.JSeparator jSeparator3;
+    private javax.swing.JCheckBox lambdaParensCheckBox;
     private javax.swing.JComboBox methodDeclCombo;
     private javax.swing.JLabel methodDeclLabel;
     private javax.swing.JComboBox<String> moduleDeclCombo;

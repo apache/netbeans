@@ -403,12 +403,19 @@ public class JavaFixUtilitiesTest extends TestBase {
     public void testRewriteCatchMultiVariable() throws Exception {
         performRewriteTest("package test;\n" +
                            "public class Test {\n" +
-                           "    { try { } catch (NullPointerException ex) { } }\n" +
+                           "    {\n" +
+                           "        try {\n" +
+                           "        } catch (NullPointerException ex) { }\n" +
+                           "    }\n" +
                            "}\n",
                            "try { } catch $catches$ => try { new Object(); } catch $catches$",
                            "package test;\n" +
                            "public class Test {\n" +
-                           "    { try { new Object();\n } catch (NullPointerException ex) { } }\n" +
+                           "    {\n" +
+                           "        try {\n" +
+                           "            new Object();\n" +
+                           "        } catch (NullPointerException ex) { }\n" +
+                           "    }\n" +
 		           "}\n");
     }
 
@@ -1319,6 +1326,38 @@ public class JavaFixUtilitiesTest extends TestBase {
                            "        void t() {\n" +
                            "            Test.this.toString();\n" +
                            "        }\n" +
+                           "    }\n" +
+		           "}\n");
+    }
+
+    public void testRewriteUndeclaredLambda() throws Exception {
+        performRewriteTest("package test;\n" +
+                           "public class Test {\n" +
+                           "    public void m() {\n" +
+                           "        m();\n" +
+                           "    }\n" +
+                           "}\n",
+                           "$0{test.Test}.m()=>$0.m(t -> System.err.println(t))",
+                           "package test;\n" +
+                           "public class Test {\n" +
+                           "    public void m() {\n" +
+                           "        m(t -> System.err.println(t));\n" +
+                           "    }\n" +
+		           "}\n");
+    }
+
+    public void testRewriteToExplicitLambda() throws Exception {
+        performRewriteTest("package test;\n" +
+                           "public class Test {\n" +
+                           "    public void m() {\n" +
+                           "        m();\n" +
+                           "    }\n" +
+                           "}\n",
+                           "$0{test.Test}.m()=>$0.m((String t) -> System.err.println(t))",
+                           "package test;\n" +
+                           "public class Test {\n" +
+                           "    public void m() {\n" +
+                           "        m((String t) -> System.err.println(t));\n" +
                            "    }\n" +
 		           "}\n");
     }

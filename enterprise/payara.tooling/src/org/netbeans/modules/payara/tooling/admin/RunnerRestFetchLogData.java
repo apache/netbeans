@@ -221,7 +221,7 @@ public class RunnerRestFetchLogData extends RunnerRest {
     protected boolean processResponse() {
         // Make ArrayList copy of stored lines. ArrayList allows better access
         // to log values.
-        List logLines = new ArrayList(lines.size());
+        List<String> logLines = new ArrayList<>(lines.size());
         for (String line : lines) {
             logLines.add(line);
         }

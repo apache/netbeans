@@ -69,6 +69,10 @@ public abstract class TestCreatorProvider {
     @Target(ElementType.TYPE)
     @Retention(RetentionPolicy.SOURCE)
     public @interface Registration {
+        /** Priority of the provider. The lower the higher priority it has.
+         * @since 2.18
+         */
+        int position() default Integer.MAX_VALUE;
 
         /**
          * Identifier of the TestCreatorProvider. 

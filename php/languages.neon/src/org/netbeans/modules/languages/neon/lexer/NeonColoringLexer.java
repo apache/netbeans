@@ -749,6 +749,7 @@ public class NeonColoringLexer {
    * @return      the next token
    * @exception   java.io.IOException  if any I/O-Error occurs
    */
+  @SuppressWarnings("fallthrough")
   public NeonTokenId nextToken() throws java.io.IOException {
     int zzInput;
     int zzAction;

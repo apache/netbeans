@@ -20,7 +20,9 @@ package org.netbeans.modules.php.symfony2.commands;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileReader;
+import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
@@ -94,60 +96,56 @@ public class SymfonyCommandsXmlParserTest extends NbTestCase {
     }
 
     public void testIssue232490() throws Exception {
-        Reader reader = new BufferedReader(new FileReader(new File(getDataDir(), "issue232490.xml")));
+        Reader reader = new BufferedReader(new InputStreamReader(new FileInputStream(new File(getDataDir(), "issue232490.xml")), "UTF-8"));
 
         List<SymfonyCommandVO> commands = new ArrayList<>();
         SymfonyCommandsXmlParser.parse(reader, commands);
 
         assertFalse(commands.isEmpty());
-        assertSame(60, commands.size());
+        assertSame(30, commands.size());
 
         SymfonyCommandVO command = commands.get(0);
         assertEquals("help", command.getCommand());
         assertEquals("Displays help for a command", command.getDescription());
 
-        command = findCommand(commands, "pl:update-files");
+        command = findCommand(commands, "assetic:dump");
         assertNotNull(command);
-        assertEquals("pl:update-files", command.getCommand());
-        assertEquals("Update assetic + translations", command.getDescription());
+        assertEquals("assetic:dump", command.getCommand());
+        assertEquals("Zapíše všechny assety do souborů.", command.getDescription());
         assertEquals("<html>Usage:<br>"
-                + "<i>pl:update-files</i><br><br>"
-                + "The <i>pl:update-files -e=prod</i> command executes these commands:<br> <br>"
-                + " <i>php app/console assets:install --ansi</i><br>"
-                + " <i>php app/console assetic:dump --env=prod --ansi</i><br>"
-                + " <i>ITT FRISSÍTI A SZERVERRŐL A FÁJLOKAT</i><br>"
-                + " <i>php app/console translation:extract --dir=./src/ --dir=./app/Resources/ --output-dir=./app/Resources/translations --keep en_US --ansi</i>", command.getHelp());
+                + "<i>assetic:dump [--watch] [--force] [--period=\"...\"] [write_to]</i><br><br>"
+                + "Příliš žluťoučký kůň úpěl ďábelské ódy.", command.getHelp());
 
-        command = commands.get(59);
-        assertEquals("twig:lint", command.getCommand());
+        command = commands.get(21);
+        assertEquals("doctrine:query:sql", command.getCommand());
     }
 
-    public void testIssue252901() throws Exception {
-        Reader reader = new BufferedReader(new FileReader(new File(getDataDir(), "issue252901.xml")));
-
-        List<SymfonyCommandVO> commands = new ArrayList<>();
-        SymfonyCommandsXmlParser.parse(reader, commands);
-
-        assertFalse(commands.isEmpty());
-        assertSame(50, commands.size());
-
-        SymfonyCommandVO command = commands.get(0);
-        assertEquals("help", command.getCommand());
-        assertEquals("Displays help for a command", command.getDescription());
-
-        command = commands.get(8);
-        assertEquals("debug:config", command.getCommand());
-        assertEquals("<html>Usage:<br>"
-                + "<i>debug:config [&lt;name&gt;]</i><br>"
-                + "<i>config:debug</i><br><br>"
-                + "The <i>debug:config</i> command dumps the current configuration for an<br> extension/bundle.<br><br>"
-                + " Either the extension alias or bundle name can be used:<br><br>"
-                + "   <i>php /home/gapon/NetBeansProjects/symfony2/app/console debug:config framework</i><br>"
-                + "   <i>php /home/gapon/NetBeansProjects/symfony2/app/console debug:config FrameworkBundle</i>", command.getHelp());
-
-        command = commands.get(49);
-        assertEquals("translation:update", command.getCommand());
-    }
+//    public void testIssue252901() throws Exception {
+//        Reader reader = new BufferedReader(new FileReader(new File(getDataDir(), "issue252901.xml")));
+//
+//        List<SymfonyCommandVO> commands = new ArrayList<>();
+//        SymfonyCommandsXmlParser.parse(reader, commands);
+//
+//        assertFalse(commands.isEmpty());
+//        assertSame(50, commands.size());
+//
+//        SymfonyCommandVO command = commands.get(0);
+//        assertEquals("help", command.getCommand());
+//        assertEquals("Displays help for a command", command.getDescription());
+//
+//        command = commands.get(8);
+//        assertEquals("debug:config", command.getCommand());
+//        assertEquals("<html>Usage:<br>"
+//                + "<i>debug:config [&lt;name&gt;]</i><br>"
+//                + "<i>config:debug</i><br><br>"
+//                + "The <i>debug:config</i> command dumps the current configuration for an<br> extension/bundle.<br><br>"
+//                + " Either the extension alias or bundle name can be used:<br><br>"
+//                + "   <i>php /home/gapon/NetBeansProjects/symfony2/app/console debug:config framework</i><br>"
+//                + "   <i>php /home/gapon/NetBeansProjects/symfony2/app/console debug:config FrameworkBundle</i>", command.getHelp());
+//
+//        command = commands.get(49);
+//        assertEquals("translation:update", command.getCommand());
+//    }
 
     private SymfonyCommandVO findCommand(List<SymfonyCommandVO> commands, String commandName) {
         for (SymfonyCommandVO command : commands) {

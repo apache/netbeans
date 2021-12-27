@@ -65,7 +65,7 @@ public class NbCollections {
      */
     public static <E> Set<E> checkedSetByCopy(Set rawSet, Class<E> type, boolean strict) throws ClassCastException {
         Set<E> s = new HashSet<E>(rawSet.size() * 4 / 3 + 1);
-        Iterator it = rawSet.iterator();
+        Iterator<?> it = rawSet.iterator();
         while (it.hasNext()) {
             Object e = it.next();
             try {
@@ -93,7 +93,7 @@ public class NbCollections {
      */
     public static <E> List<E> checkedListByCopy(List rawList, Class<E> type, boolean strict) throws ClassCastException {
         List<E> l = (rawList instanceof RandomAccess) ? new ArrayList<E>(rawList.size()) : new LinkedList<E>();
-        Iterator it = rawList.iterator();
+        Iterator<?> it = rawList.iterator();
         while (it.hasNext()) {
             Object e = it.next();
             try {
@@ -122,9 +122,9 @@ public class NbCollections {
      */
     public static <K,V> Map<K,V> checkedMapByCopy(Map rawMap, Class<K> keyType, Class<V> valueType, boolean strict) throws ClassCastException {
         Map<K,V> m2 = new HashMap<K,V>(rawMap.size() * 4 / 3 + 1);
-        Iterator it = rawMap.entrySet().iterator();
+        Iterator<Map.Entry> it = rawMap.entrySet().iterator();
         while (it.hasNext()) {
-            Map.Entry e = (Map.Entry) it.next();
+            Map.Entry e = it.next();
             try {
                 m2.put(keyType.cast(e.getKey()), valueType.cast(e.getValue()));
             } catch (ClassCastException x) {
@@ -142,7 +142,7 @@ public class NbCollections {
 
         private static final Object WAITING = new Object();
 
-        private final Iterator it;
+        private final Iterator<?> it;
         private Object next = WAITING;
 
         public CheckedIterator(Iterator it) {
@@ -264,7 +264,7 @@ public class NbCollections {
         @Override
         public int size() {
             int c = 0;
-            Iterator it = rawSet.iterator();
+            Iterator<?> it = rawSet.iterator();
             while (it.hasNext()) {
                 if (acceptEntry(it.next())) {
                     c++;
@@ -365,9 +365,9 @@ public class NbCollections {
             @Override
             public int size() {
                 int c = 0;
-                Iterator it = rawMap.entrySet().iterator();
+                Iterator<Map.Entry> it = rawMap.entrySet().iterator();
                 while (it.hasNext()) {
-                    if (acceptEntry((Map.Entry) it.next())) {
+                    if (acceptEntry(it.next())) {
                         c++;
                     }
                 }
@@ -430,9 +430,9 @@ public class NbCollections {
         @Override
         public int size() {
             int c = 0;
-            Iterator it = rawMap.entrySet().iterator();
+            Iterator<Map.Entry> it = rawMap.entrySet().iterator();
             while (it.hasNext()) {
-                if (acceptEntry((Map.Entry) it.next())) {
+                if (acceptEntry(it.next())) {
                     c++;
                 }
             }

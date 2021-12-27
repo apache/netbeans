@@ -59,7 +59,7 @@ public class UnknownAnnotationLine implements AnnotationParsedLine {
 
     @Override
     public Map<OffsetRange, String> getTypes() {
-        return Collections.EMPTY_MAP;
+        return Collections.<OffsetRange, String>emptyMap();
     }
 
     @Override

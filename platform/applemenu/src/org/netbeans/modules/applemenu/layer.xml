@@ -92,13 +92,16 @@
                 <attr name="originalFile" stringvalue="Actions/Refactoring/org-netbeans-modules-refactoring-api-ui-RenameAction.instance"/>
             </file>
         </folder>
+        <folder name="Idea">
+            <file name="CA-F11.shadow_hidden"/>
+        </folder>
     </folder>
 
     <folder name="Toolbars">
     <!-- quick search enabled for ide in toolbar by default -->
         <folder name="QuickSearch">
             <attr name="displayName" bundlevalue="org.netbeans.modules.applemenu.Bundle#Toolbars/QuickSearch"/>
-            <attr name="position" intvalue="700"/>
+            <attr name="position" intvalue="710"/>
             <file name="org-netbeans-modules-quicksearch-QuickSearchAction.shadow">
                 <attr name="originalFile" stringvalue="Actions/Edit/org-netbeans-modules-quicksearch-QuickSearchAction.instance"/>
                 <attr name="position" intvalue="250"/>

@@ -86,7 +86,10 @@ public class WhereUsedPanel extends JPanel implements CustomRefactoringPanel {
             case FIELD:
             case ENUM_CONSTANT:
             default: {
-                panel = new WhereUsedPanelVariable(parent);
+                if (kind.name().equals("RECORD"))   // NOI18N
+                     panel = new WhereUsedPanelClass(parent);
+                else
+                    panel = new WhereUsedPanelVariable(parent);
                 break;
             }
         }
@@ -227,7 +230,7 @@ public class WhereUsedPanel extends JPanel implements CustomRefactoringPanel {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(innerPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 181, Short.MAX_VALUE)
+                .addComponent(innerPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 210, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(scope, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)

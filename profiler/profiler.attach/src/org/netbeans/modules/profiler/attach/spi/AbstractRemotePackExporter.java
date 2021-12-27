@@ -38,7 +38,6 @@ abstract public class AbstractRemotePackExporter {
             put(IntegrationUtils.PLATFORM_MAC_OS, "mac"); //NOI18N
             put(IntegrationUtils.PLATFORM_SOLARIS_AMD64_OS, "solamd64"); //NOI18N
             put(IntegrationUtils.PLATFORM_SOLARIS_INTEL_OS, "solx86"); //NOI18N
-            put(IntegrationUtils.PLATFORM_SOLARIS_SPARC_OS, "solsparc"); //NOI18N
             put(IntegrationUtils.PLATFORM_SOLARIS_SPARC64_OS, "solsparcv9"); //NOI18N
             put(IntegrationUtils.PLATFORM_WINDOWS_AMD64_OS, "winamd64"); //NOI18N
             put(IntegrationUtils.PLATFORM_WINDOWS_OS, "win"); //NOI18N

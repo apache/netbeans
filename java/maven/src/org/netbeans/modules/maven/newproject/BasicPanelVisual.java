@@ -43,8 +43,8 @@ import org.apache.maven.artifact.resolver.ArtifactResolutionException;
 import org.apache.maven.artifact.versioning.ArtifactVersion;
 import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
 import org.netbeans.api.options.OptionsDisplayer;
-import org.netbeans.api.progress.aggregate.AggregateProgressFactory;
 import org.netbeans.api.progress.aggregate.AggregateProgressHandle;
+import org.netbeans.api.progress.aggregate.BasicAggregateProgressFactory;
 import org.netbeans.api.progress.aggregate.ProgressContributor;
 import org.netbeans.modules.maven.api.MavenValidators;
 import org.netbeans.modules.maven.api.archetype.Archetype;
@@ -118,8 +118,10 @@ public class BasicPanelVisual extends JPanel implements DocumentListener, Window
         "ERR_Project_Folder_cannot_be_created=Project Folder cannot be created.",
         "ERR_Project_Folder_is_not_valid_path=Project Folder is not a valid path.",
         "ERR_Project_Folder_is_UNC=Project Folder cannot be located on UNC path.",
+        "ERR_Package_ends_in_dot=Package name can not end in '.'.",
         "# {0} - version", "ERR_old_maven=Maven {0} is too old, version 2.0.7 or newer is needed.",
-        "ERR_Project_Folder_exists=Project Folder already exists and is not empty."
+        "ERR_Project_Folder_exists=Project Folder already exists and is not empty.",
+        "ERR_Project_Folder_not_directory=Project Folder is not a directory."
     })
     BasicPanelVisual(BasicWizardPanel panel, Archetype arch) {
         this.panel = panel;
@@ -158,7 +160,17 @@ public class BasicPanelVisual extends JPanel implements DocumentListener, Window
                 vg.add(txtGroupId, MavenValidators.createGroupIdValidators());
                 vg.add(txtArtifactId, MavenValidators.createArtifactIdValidators());
                 vg.add(txtVersion, MavenValidators.createVersionValidators());
-                vg.add(txtPackage, StringValidators.JAVA_PACKAGE_NAME);
+                vg.add(txtPackage, ValidatorUtils.merge(
+                        StringValidators.JAVA_PACKAGE_NAME,
+                        new AbstractValidator<String>(String.class) {
+                        @Override
+                        public void validate(Problems problems, String compName, String model)
+                        {
+                            // MAY_NOT_END_WITH_PERIOD validator broken in NB's
+                            // version (empty string); so copy current version' code.
+                            if(model != null && !model.isEmpty() && model.charAt(model.length() - 1) == '.')
+                                problems.add(ERR_Package_ends_in_dot());
+                        }}));
                 vg.add(projectNameTextField, ValidatorUtils.merge(
                         MavenValidators.createArtifactIdValidators(),
                         StringValidators.REQUIRE_VALID_FILENAME
@@ -198,6 +210,10 @@ public class BasicPanelVisual extends JPanel implements DocumentListener, Window
                             return;
                         }
                         File destFolder = FileUtil.normalizeFile(new File(new File(projectLocationTextField.getText().trim()), projectNameTextField.getText().trim()).getAbsoluteFile());
+                        if(destFolder.exists() && !destFolder.isDirectory()) {
+                            problems.add(ERR_Project_Folder_not_directory());
+                            return;
+                        }
                         File[] kids = destFolder.listFiles();
                         if (destFolder.exists() && kids != null && kids.length > 0) {
                             // Folder exists and is not empty
@@ -509,12 +525,15 @@ public class BasicPanelVisual extends JPanel implements DocumentListener, Window
         }
         String name = projectNameTextField.getText().trim();
         String folder = createdFolderTextField.getText().trim();
-        final File parentFolder = new File(folder);
+        final File projectFolder = new File(folder);
         
-        d.putProperty(CommonProjectActions.PROJECT_PARENT_FOLDER, parentFolder);
+        // PROJECT_PARENT_FOLDER confusing, better name is PROJECT_BASE_FOLDER
+        d.putProperty(CommonProjectActions.PROJECT_PARENT_FOLDER, projectFolder);
         if (d instanceof TemplateWizard) {
-            parentFolder.mkdirs();
-            ((TemplateWizard) d).setTargetFolder(DataFolder.findFolder(FileUtil.toFileObject(parentFolder)));
+            ((TemplateWizard) d).setTargetFolderLazy(() -> {
+                projectFolder.mkdirs();
+                return DataFolder.findFolder(FileUtil.toFileObject(projectFolder));
+            });
         }
         d.putProperty("name", name); //NOI18N
         if (d instanceof TemplateWizard) {
@@ -548,21 +567,40 @@ public class BasicPanelVisual extends JPanel implements DocumentListener, Window
         });
     }
     
+    private static final String SETTINGS_HAVE_READ = "BasicPanelVisual-read-properties-before"; //NOI18N
     @Messages({
         "# {0} - project count", "TXT_MavenProjectName=mavenproject{0}",
         "TXT_Checking1=Checking additional creation properties..."
     })
-    void read(WizardDescriptor settings) {
+    void read(WizardDescriptor settings, Map<String,String> defaultProps) {
         synchronized (HANDLE_LOCK) {
             if (handle != null) {
                 handle.finish();
                 handle = null;
             }
         }        
-        File projectLocation = (File) settings.getProperty(CommonProjectActions.PROJECT_PARENT_FOLDER); //NOI18N
-        if (projectLocation == null || projectLocation.getParentFile() == null || !projectLocation.getParentFile().isDirectory()) {
-            projectLocation = ProjectChooser.getProjectsFolder();
-        } 
+        // PROJECT_PARENT_FOLDER usage is confusing. Sometimes it's the
+        // parent directory, sometimes it's the project directory.
+        // Maybe introduce PROJECT_BASE_FOLDER, to clarify and differentiate.
+        // But for local fix [NETBEANS-4206] keep track of whether
+        // these properties have been read before.
+        boolean haveRead =  Boolean.parseBoolean((String)settings.getProperty(SETTINGS_HAVE_READ)); //NOI18N
+        File projectFolder = (File) settings.getProperty(CommonProjectActions.PROJECT_PARENT_FOLDER); //NOI18N
+        File projectLocation;
+        if(!haveRead && projectFolder != null) {
+            // First time in here, dialog was started with project folder;
+            // example is creating a project from pom parent
+            projectLocation = projectFolder;
+        } else {
+            if (projectFolder == null || projectFolder.getParentFile() == null || !projectFolder.getParentFile().isDirectory()) {
+                projectLocation = ProjectChooser.getProjectsFolder();
+            } else {
+                projectLocation = projectFolder.getParentFile();
+            }
+        }
+        if(!haveRead) {
+            settings.putProperty(SETTINGS_HAVE_READ, "true"); //NOI18N
+        }
         this.projectLocationTextField.setText(projectLocation.getAbsolutePath());
         
         String projectName = (String) settings.getProperty("name"); //NOI18N
@@ -596,7 +634,7 @@ public class BasicPanelVisual extends JPanel implements DocumentListener, Window
             RPprep.post(new Runnable() {
                 @Override
                 public void run() {
-                    prepareAdditionalProperties(archet);
+                    prepareAdditionalProperties(archet, defaultProps);
                 }
             });
         }
@@ -613,7 +651,7 @@ public class BasicPanelVisual extends JPanel implements DocumentListener, Window
         "COL_Value=Value",
         "TXT_Checking2=A&dditional Creation Properties:"
     })
-    private void prepareAdditionalProperties(Archetype arch) {
+    private void prepareAdditionalProperties(Archetype arch, Map<String, String> defaultProps) {
         final DefaultTableModel dtm = new DefaultTableModel();
         dtm.addColumn(COL_Key());
         dtm.addColumn(COL_Value());
@@ -627,7 +665,13 @@ public class BasicPanelVisual extends JPanel implements DocumentListener, Window
                     if ("groupId".equals(key) || "artifactId".equals(key) || "version".equals(key)) {
                         continue; //don't show the basic props as additionals..
                     }
-                    dtm.addRow(new Object[] {key, defVal == null ? "" : defVal });
+                    if (defaultProps != null && defaultProps.containsKey(key)) {
+                        defVal = defaultProps.get(key);
+                    }
+                    if (defVal == null) {
+                        defVal = "";
+                    }
+                    dtm.addRow(new Object[] {key, defVal });
                 }
             }
         } catch (ArtifactResolutionException ex) {
@@ -669,9 +713,9 @@ public class BasicPanelVisual extends JPanel implements DocumentListener, Window
     @Messages("Handle_Download=Downloading Archetype")
     private Artifact downloadArchetype(Archetype arch) throws ArtifactResolutionException, ArtifactNotFoundException {
         
-        AggregateProgressHandle hndl = AggregateProgressFactory.createHandle(Handle_Download(),
+        AggregateProgressHandle hndl = BasicAggregateProgressFactory.createHandle(Handle_Download(),
                 new ProgressContributor[] {
-                    AggregateProgressFactory.createProgressContributor("zaloha") },  //NOI18N
+                    BasicAggregateProgressFactory.createProgressContributor("zaloha") },  //NOI18N
                 ProgressTransferListener.cancellable(), null);
         synchronized (HANDLE_LOCK) {
            handle = hndl;

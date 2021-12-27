@@ -75,6 +75,8 @@ public final class ComposerActionsFactory extends AbstractAction implements Pres
             add(new InstallNoDevAction());
             add(new UpdateDevAction());
             add(new UpdateNoDevAction());
+            add(new UpdateAutoloaderDevAction());
+            add(new UpdateAutoloaderNoDevAction());
             add(new ValidateAction());
             addSeparator();
             add(new SelfUpdateAction());

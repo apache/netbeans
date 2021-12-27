@@ -18,129 +18,290 @@
  */
 package org.netbeans.modules.php.api.annotation.util;
 
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import org.netbeans.junit.NbTestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+import org.junit.Test;
+import org.junit.experimental.runners.Enclosed;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
+import org.junit.runners.Parameterized.Parameter;
+import org.junit.runners.Parameterized.Parameters;
 import org.netbeans.modules.csl.api.OffsetRange;
 
 /**
  *
  * @author Ondrej Brejla <obrejla@netbeans.org>
  */
-public class AnnotationUtilsTest extends NbTestCase {
+@RunWith(Enclosed.class)
+public class AnnotationUtilsTest {
 
     private static final String ANNOTATION_NAME = "Annotation";
 
-    public AnnotationUtilsTest(String name) {
-        super(name);
+    @RunWith(Parameterized.class)
+    public static class IsTypeAnnotationValidTest {
+
+        @Parameters(name = "{index}: {0} is a type annotation of {1}")
+        public static Collection<Object[]> data() {
+            return Arrays.asList(new Object[][] {
+                {"\\Foo\\Bar\\Baz\\" + ANNOTATION_NAME, ANNOTATION_NAME},
+                {"Foo\\Bar\\Baz\\" + ANNOTATION_NAME, ANNOTATION_NAME},
+                {ANNOTATION_NAME, ANNOTATION_NAME},
+                {ANNOTATION_NAME.toLowerCase(), ANNOTATION_NAME},
+                {"Foo\\Bar\\Baz\\" + ANNOTATION_NAME.toLowerCase(), ANNOTATION_NAME},
+            });
+        }
+
+        @Parameter(0)
+        public String lineToCheck;
+
+        @Parameter(1)
+        public String annotationName;
+
+        @Test
+        public void test() throws Exception {
+            assertTrue(AnnotationUtils.isTypeAnnotation(lineToCheck, annotationName));
+        }
     }
 
-    public void testValidUseCase_01() throws Exception {
-        assertTrue(AnnotationUtils.isTypeAnnotation("\\Foo\\Bar\\Baz\\" + ANNOTATION_NAME, ANNOTATION_NAME));
+    @RunWith(Parameterized.class)
+    public static class IsTypeAnnotationInvalidTest {
+
+        @Parameters(name = "{index}: {0} is not a type annotation of {1}")
+        public static Collection<Object[]> data() {
+            return Arrays.asList(new Object[][] {
+                {ANNOTATION_NAME + "\\Foo\\Bar\\Baz\\", ANNOTATION_NAME},
+                {"\\Foo\\Bar" + ANNOTATION_NAME + "\\Baz\\", ANNOTATION_NAME},
+            });
+        }
+
+        @Parameter(0)
+        public String lineToCheck;
+
+        @Parameter(1)
+        public String annotationName;
+
+        @Test
+        public void test() throws Exception {
+            assertFalse(AnnotationUtils.isTypeAnnotation(lineToCheck, annotationName));
+        }
     }
 
-    public void testValidUseCase_02() throws Exception {
-        assertTrue(AnnotationUtils.isTypeAnnotation("Foo\\Bar\\Baz\\" + ANNOTATION_NAME, ANNOTATION_NAME));
+    @RunWith(Parameterized.class)
+    public static class IsTypeAnnotationNotNullableTest {
+
+        @Parameters(name = "{index}: invoking isTypeAnnotation with [{0}, {1}] throws NullPointerException")
+        public static Collection<Object[]> data() {
+            return Arrays.asList(new Object[][] {
+                {null, ""},
+                {"", null},
+            });
+        }
+
+        @Parameter(0)
+        public String lineToCheck;
+
+        @Parameter(1)
+        public String annotationName;
+
+        @Test
+        public void test() throws Exception {
+            try {
+                AnnotationUtils.isTypeAnnotation(lineToCheck, annotationName);
+                fail();
+            } catch (NullPointerException ex) {}
+        }
     }
 
-    public void testValidUseCase_03() throws Exception {
-        assertTrue(AnnotationUtils.isTypeAnnotation(ANNOTATION_NAME, ANNOTATION_NAME));
+    @RunWith(Parameterized.class)
+    public static class ExtractTypesFromParametersTest {
+
+        @Parameters(name = "{index}: extracting types from {0}")
+        public static Collection<Object[]> data() {
+            return Arrays.asList(new Object[][] {
+                {
+                    "DiscriminatorMap({\"person\" = \" Person \", \"employee\" = \" Employee \"})",
+                    new HashSet<String>() {{
+                        add("");
+                    }},
+                    new HashMap<OffsetRange, String>() {{
+                        put(new OffsetRange(31, 37), "Person");
+                        put(new OffsetRange(56, 64), "Employee");
+                    }},
+                },
+                {
+                    "DiscriminatorMap({\"person\" = Person, \"employee\" = Employee })",
+                    new HashSet<String>() {{
+                        add("");
+                    }},
+                    new HashMap<OffsetRange, String>() {{
+                        put(new OffsetRange(29, 35), "Person");
+                        put(new OffsetRange(50, 58), "Employee");
+                    }},
+                },
+                {
+                    "DiscriminatorMap({\"person\" = Person::class, \"employee\" = \"Employee\" })",
+                    new HashSet<String>() {{
+                        add("");
+                    }},
+                    new HashMap<OffsetRange, String>() {{
+                        put(new OffsetRange(29, 35), "Person");
+                        put(new OffsetRange(58, 66), "Employee");
+                    }},
+                },
+                {
+                    "DiscriminatorMap({\"person\" = \" My\\Person \", \"employee\" = \" \\Full\\Q\\Employee \"})",
+                    new HashSet<String>() {{
+                        add("");
+                    }},
+                    new HashMap<OffsetRange, String>() {{
+                        put(new OffsetRange(31, 40), "My\\Person");
+                        put(new OffsetRange(59, 75), "\\Full\\Q\\Employee");
+                    }},
+                },
+                {
+                    "DiscriminatorMap({person = My\\Person, employee=\\Full\\Q\\Employee})",
+                    new HashSet<String>() {{
+                        add("");
+                    }},
+                    new HashMap<OffsetRange, String>() {{
+                        put(new OffsetRange(27, 36), "My\\Person");
+                        put(new OffsetRange(47, 63), "\\Full\\Q\\Employee");
+                    }},
+                },
+                {
+                    "ManyToOne(targetEntity=\"Cart\", cascade={\"all\"}, fetch=\"EAGER\")",
+                    new HashSet<String>() {{
+                        add("targetEntity");
+                    }},
+                    new HashMap<OffsetRange, String>() {{
+                        put(new OffsetRange(24, 28), "Cart");
+                    }},
+                },
+                {
+                    "ManyToOne(targetEntity=Cart, cascade={\"all\"}, fetch=\"EAGER\")",
+                    new HashSet<String>() {{
+                        add("targetEntity");
+                    }},
+                    new HashMap<OffsetRange, String>() {{
+                        put(new OffsetRange(23, 27), "Cart");
+                    }},
+                },
+                {
+                    "ManyToOne(targetEntity=\"\\Foo\\Cart\", cascade={\"all\"}, fetch=\"EAGER\")",
+                    new HashSet<String>() {{
+                        add("targetEntity");
+                    }},
+                    new HashMap<OffsetRange, String>() {{
+                        put(new OffsetRange(24, 33), "\\Foo\\Cart");
+                    }},
+                },
+                {
+                    "ManyToOne(targetEntity=\"\\Foo\\Cart::class \" , cascade={\"all\"}, fetch=\"EAGER\")",
+                    new HashSet<String>() {{
+                        add("targetEntity");
+                    }},
+                    new HashMap<OffsetRange, String>() {{
+                        put(new OffsetRange(24, 33), "\\Foo\\Cart");
+                    }},
+                },
+                {
+                    "ManyToOne(targetEntity = \\Foo\\Cart, cascade={\"all\"}, fetch=\"EAGER\")",
+                    new HashSet<String>() {{
+                        add("targetEntity");
+                    }},
+                    new HashMap<OffsetRange, String>() {{
+                        put(new OffsetRange(25, 34), "\\Foo\\Cart");
+                    }},
+                },
+                {
+                    "@Enum(class=\"Visibility\")",
+                    new HashSet<String>() {{
+                        add("class");
+                    }},
+                    new HashMap<OffsetRange, String>() {{
+                        put(new OffsetRange(13, 23), "Visibility");
+                    }},
+                },
+                {
+                    "@Enum(class=\"Visibility::class\")",
+                    new HashSet<String>() {{
+                        add("class");
+                    }},
+                    new HashMap<OffsetRange, String>() {{
+                        put(new OffsetRange(13, 23), "Visibility");
+                    }},
+                },
+                {
+                    "@Enum(class=Visibility::class)",
+                    new HashSet<String>() {{
+                        add("class");
+                    }},
+                    new HashMap<OffsetRange, String>() {{
+                        put(new OffsetRange(12, 22), "Visibility");
+                    }},
+                },
+                {
+                    // If there's a leading quote, then there must be a trailing quote as well. The other way around would work though.
+                    "@Enum(class=\"Visibility)",
+                    new HashSet<String>() {{
+                        add("class");
+                    }},
+                    new HashMap<OffsetRange, String>(),
+                },
+            });
+        }
+
+        @Parameter(0)
+        public String line;
+
+        @Parameter(1)
+        public Set<String> parameterNameRegexs;
+
+        @Parameter(2)
+        public Map<OffsetRange, String> expected;
+
+        @Test
+        public void test() throws Exception {
+            Map<OffsetRange, String> actual = AnnotationUtils.extractTypesFromParameters(line, parameterNameRegexs);
+            assertNotNull(actual);
+            assertEquals(expected, actual);
+        }
     }
 
-    public void testValidUseCase_04() throws Exception {
-        assertTrue(AnnotationUtils.isTypeAnnotation(ANNOTATION_NAME.toLowerCase(), ANNOTATION_NAME));
-    }
+    @RunWith(Parameterized.class)
+    public static class ExtractTypesFromParametersNotNullableTest {
 
-    public void testValidUseCase_05() throws Exception {
-        assertTrue(AnnotationUtils.isTypeAnnotation("Foo\\Bar\\Baz\\" + ANNOTATION_NAME.toLowerCase(), ANNOTATION_NAME));
-    }
+        @Parameters(name = "{index}: invoking extractTypesFromParameters with [{0}, {1}] throws NullPointerException")
+        public static Collection<Object[]> data() {
+            return Arrays.asList(new Object[][] {
+                {null, Collections.EMPTY_SET},
+                {"", null},
+            });
+        }
 
-    public void testInvalidUseCase_01() throws Exception {
-        assertFalse(AnnotationUtils.isTypeAnnotation(ANNOTATION_NAME + "\\Foo\\Bar\\Baz\\", ANNOTATION_NAME));
-    }
+        @Parameter(0)
+        public String line;
 
-    public void testInvalidUseCase_02() throws Exception {
-        assertFalse(AnnotationUtils.isTypeAnnotation("\\Foo\\Bar" + ANNOTATION_NAME + "\\Baz\\", ANNOTATION_NAME));
-    }
+        @Parameter(1)
+        public Set<String> parameterNameRegexs;
 
-    public void testExtractParamTypes() throws Exception {
-        Set<String> discriminatorMapRegexs = new HashSet<String>();
-        discriminatorMapRegexs.add(""); //NOI18N
-        Map<OffsetRange, String> types = AnnotationUtils.extractTypesFromParameters("DiscriminatorMap({\"person\" = \" Person \", \"employee\" = \" Employee \"})", discriminatorMapRegexs);
-        assertNotNull(types);
-        assertTrue(!types.isEmpty());
-        assertEquals(2, types.size());
-        assertTrue(types.containsValue("Person"));
-        assertTrue(types.containsValue("Employee"));
-        assertTrue(types.containsKey(new OffsetRange(31, 37)));
-        assertTrue(types.containsKey(new OffsetRange(56, 64)));
-    }
-
-    public void testQualifiedExtractParamTypes() throws Exception {
-        Set<String> discriminatorMapRegexs = new HashSet<String>();
-        discriminatorMapRegexs.add(""); //NOI18N
-        Map<OffsetRange, String> types = AnnotationUtils.extractTypesFromParameters("DiscriminatorMap({\"person\" = \" My\\Person \", \"employee\" = \" \\Full\\Q\\Employee \"})", discriminatorMapRegexs);
-        assertNotNull(types);
-        assertTrue(!types.isEmpty());
-        assertEquals(2, types.size());
-        assertTrue(types.containsValue("My\\Person"));
-        assertTrue(types.containsValue("\\Full\\Q\\Employee"));
-        assertTrue(types.containsKey(new OffsetRange(31, 40)));
-        assertTrue(types.containsKey(new OffsetRange(59, 75)));
-    }
-
-    public void extractJustSomeParamTypes_01() throws Exception {
-        Set<String> manyToOneRegexs = new HashSet<String>();
-        manyToOneRegexs.add("targetEntity"); //NOI18N
-        Map<OffsetRange, String> types = AnnotationUtils.extractTypesFromParameters("ManyToOne(targetEntity=\"Cart\", cascade={\"all\"}, fetch=\"EAGER\")", manyToOneRegexs);
-        assertNotNull(types);
-        assertEquals(2, types.size());
-        String type1 = types.get(new OffsetRange(0, 9));
-        assertEquals("ManyToOne", type1);
-        String type2 = types.get(new OffsetRange(24, 28));
-        assertEquals("Cart", type2);
-    }
-
-    public void extractJustSomeParamTypes_02() throws Exception {
-        Set<String> manyToOneRegexs = new HashSet<String>();
-        manyToOneRegexs.add("targetEntity"); //NOI18N
-        Map<OffsetRange, String> types = AnnotationUtils.extractTypesFromParameters("ManyToOne(targetEntity=\"\\Foo\\Cart\", cascade={\"all\"}, fetch=\"EAGER\")", manyToOneRegexs);
-        assertNotNull(types);
-        assertEquals(2, types.size());
-        String type1 = types.get(new OffsetRange(0, 9));
-        assertEquals("ManyToOne", type1);
-        String type2 = types.get(new OffsetRange(24, 33));
-        assertEquals("\\Foo\\Cart", type2);
-    }
-
-    public void testNotNullTypeAnnotation_01() throws Exception {
-        try {
-            AnnotationUtils.isTypeAnnotation(null, "");
-            fail();
-        } catch (NullPointerException ex) {}
-    }
-
-    public void testNotNullTypeAnnotation_02() throws Exception {
-        try {
-            AnnotationUtils.isTypeAnnotation("", null);
-            fail();
-        } catch (NullPointerException ex) {}
-    }
-
-    public void testNotNullExtracParamTypes() throws Exception {
-        try {
-            AnnotationUtils.extractTypesFromParameters(null, Collections.EMPTY_SET);
-            fail();
-        } catch (NullPointerException ex) {}
-    }
-
-    public void testNotNullExtracParamTypesRegexs() throws Exception {
-        try {
-            AnnotationUtils.extractTypesFromParameters("", null);
-            fail();
-        } catch (NullPointerException ex) {}
+        @Test
+        public void test() throws Exception {
+            try {
+                AnnotationUtils.extractTypesFromParameters(line, parameterNameRegexs);
+                fail();
+            } catch (NullPointerException ex) {}
+        }
     }
 
 }

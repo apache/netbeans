@@ -80,7 +80,6 @@ public abstract class Module extends ModuleInfo {
     private ModuleData data;
     private NbInstrumentation instr;
     
-    private static Method findResources;
     private static final Object DATA_LOCK = new Object();
 
     /** Use ModuleManager.create as a factory. */
@@ -560,16 +559,13 @@ public abstract class Module extends ModuleInfo {
      */
     public Enumeration<URL> findResources(String resources) {
         try { // #149136
-            // Cannot use getResources because we do not wish to delegate to parents.
-            // In fact both URLClassLoader and ProxyClassLoader override this method to be public.
-            if (findResources == null) {
-                findResources = ClassLoader.class.getDeclaredMethod("findResources", String.class); // NOI18N
-                findResources.setAccessible(true);
-            }
             ClassLoader cl = getClassLoader();
-            @SuppressWarnings("unchecked")
-            Enumeration<URL> en = (Enumeration<URL>) findResources.invoke(cl, resources); // NOI18N
-            return en;
+
+            if (cl instanceof ProxyClassLoader) {
+                return ((ProxyClassLoader) cl).findResources(resources);
+            }
+            //TODO: other ClassLoaders - what can we expect here? can fallback to getResources for JVM classloaders, and nothing else should be here?
+            throw new IllegalStateException("Unexpected ClassLoader: " + cl + ".");
         } catch (Exception x) {
             Exceptions.printStackTrace(x);
             return Enumerations.empty();

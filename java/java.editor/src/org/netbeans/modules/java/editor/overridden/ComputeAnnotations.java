@@ -204,7 +204,7 @@ public class ComputeAnnotations extends JavaParserResultTask<Result> {
 
     @Override
     public int getPriority() {
-        return Integer.MAX_VALUE;
+        return Integer.MAX_VALUE - 1;
     }
 
     @Override

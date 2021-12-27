@@ -19,8 +19,13 @@
 
 package org.netbeans.modules.j2ee.dd.impl.application;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.math.BigDecimal;
+
 import org.netbeans.modules.j2ee.dd.api.application.Application;
+
+import java.beans.PropertyChangeListener;
 
 /**
  * @author  Nitya Doraisamy
@@ -28,7 +33,7 @@ import org.netbeans.modules.j2ee.dd.api.application.Application;
 public class ApplicationProxy implements Application {
     private Application app;
     private String version;
-    private java.util.List listeners;
+    private List<PropertyChangeListener> listeners;
     public boolean writing=false;
     private OutputProvider outputProvider;
     private org.xml.sax.SAXParseException error;
@@ -40,14 +45,13 @@ public class ApplicationProxy implements Application {
     public ApplicationProxy(Application app, String version) {
         this.app = app;
         this.version = version;
-        listeners = new java.util.ArrayList();
+        listeners = new ArrayList<>();
     }
 
     public void setOriginal(Application app) {
         if (this.app != app) {
             for (int i=0;i<listeners.size();i++) {
-                java.beans.PropertyChangeListener pcl = 
-                    (java.beans.PropertyChangeListener)listeners.get(i);
+                java.beans.PropertyChangeListener pcl = listeners.get(i);
                 if (this.app != null) this.app.removePropertyChangeListener(pcl);
                 if (app != null) app.addPropertyChangeListener(pcl);
                 
@@ -193,7 +197,7 @@ public class ApplicationProxy implements Application {
     public void setStatus(int value) {
         if (ddStatus!=value) {
             java.beans.PropertyChangeEvent evt = 
-                new java.beans.PropertyChangeEvent(this, PROPERTY_STATUS, new Integer(ddStatus), new Integer(value));
+                new java.beans.PropertyChangeEvent(this, PROPERTY_STATUS, ddStatus, value);
             ddStatus=value;
             for (int i=0;i<listeners.size();i++) {
                 ((java.beans.PropertyChangeListener)listeners.get(i)).propertyChange(evt);

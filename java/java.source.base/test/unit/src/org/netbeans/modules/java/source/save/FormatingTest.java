@@ -5413,6 +5413,84 @@ public class FormatingTest extends NbTestCase {
         preferences.putBoolean("spaceWithinMethodCallParens", false);
     }
 
+    public void testJavadocSnippetAnnotation()throws Exception{
+        
+        try {
+            SourceVersion.valueOf("RELEASE_18"); //NOI18N
+        } catch (IllegalArgumentException ex) {
+            //OK, no RELEASE_17, skip test
+            return;
+        }
+        
+        testFile = new File(getWorkDir(), "Test.java");
+        TestUtilities.copyStringToFile(testFile,
+                "package hierbas.del.litoral;\n\n"
+                + "public class Test {\n"
+                + "    public void taragui(CharSequence cs, Object obj) {\n"
+                + "    }\n"
+                + "}\n");
+        FileObject testSourceFO = FileUtil.toFileObject(testFile);
+        DataObject testSourceDO = DataObject.find(testSourceFO);
+        EditorCookie ec = (EditorCookie)testSourceDO.getCookie(EditorCookie.class);
+        final Document doc = ec.openDocument();
+        doc.putProperty(Language.class, JavaTokenId.language());
+        
+        String content =
+                "package hierbas.del.litoral;\n"
+                + "\n"
+                + "public class Test {\n"
+                + "\n"
+                + "/**\n"
+                + "     * {@snippet :\n"
+                + "     *   public static void main (String... args) {\n"
+                + "     *       for (var arg : args) {                 //@highlight substring=\"arg\" regi = rg1 type=\"highlighted\"\n"
+                + "     *           if (!arg.isBlargk()) {\n"
+                + "     *               System.arg.println(\"arg\");     //@highlight region substring=\"print\"\n"
+                + "     *               System.arg.println(\"arg\");\n"
+                + "     *               System.arg.println(\"tests\");\n"
+                + "     *               System.out.println(\"\\barg\\b\"); // @highlight substring = \"\\barg\\b\" @end\n"
+                + "     *               System.out.println(\"\\barg\\b\");         // to-do\n"
+                + "     *               System.out.println(\"bargs\"); //@highlight regex = \"bargs\" @highlight regex=\"b\"\n"
+                + "     *               System.arg.println(\"arg\");   //@highlight substring=\"arg\" type=\"highlighted\" @highlight substring=\"span\" type=\"highlighted\"\n"
+                + "     * }\n"
+                + "     * }\n"
+                + "     * }\n"
+                + "     * }\n"
+                + "     */"
+                + "    public Object get(Object o) {\n"
+                + "        return o;\n"
+                + "    }\n"
+                + "}\n";
+        String golden = "package hierbas.del.litoral;\n"
+                + "\n"
+                + "public class Test {\n"
+                + "\n"
+                + "    /**\n"
+                + "     * {@snippet :\n"
+                + "     *   public static void main (String... args) {\n"
+                + "     *       for (var arg : args) {                 //@highlight substring=\"arg\" regi = rg1 type=\"highlighted\"\n"
+                + "     *           if (!arg.isBlargk()) {\n"
+                + "     *               System.arg.println(\"arg\");     //@highlight region substring=\"print\"\n"
+                + "     *               System.arg.println(\"arg\");\n"
+                + "     *               System.arg.println(\"tests\");\n"
+                + "     *               System.out.println(\"\\barg\\b\"); // @highlight substring = \"\\barg\\b\" @end\n"
+                + "     *               System.out.println(\"\\barg\\b\");         // to-do\n"
+                + "     *               System.out.println(\"bargs\"); //@highlight regex = \"bargs\" @highlight regex=\"b\"\n"
+                + "     *               System.arg.println(\"arg\");   //@highlight substring=\"arg\" type=\"highlighted\" @highlight substring=\"span\" type=\"highlighted\"\n"
+                + "     * }\n"
+                + "     * }\n"
+                + "     * }\n"
+                + "     * }\n"
+                + "     */\n"
+                + "    public Object get(Object o) {\n"
+                + "        return o;\n"
+                + "    }\n"
+                + "}\n"
+                + "";
+
+        reformat(doc, content, golden);
+    }
+    
     /**
      * Problems with code formatting and comments put in the wrong place.
      * Regression test.

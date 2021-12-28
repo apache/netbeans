@@ -23,7 +23,8 @@
 
     <import file="../../nbbuild/templates/projectized.xml"/>
 
-    <target name="compile" depends="-build-hooks,check-main-status,projectized-common.compile,rebuild-main"/>
+    <target name="files-init" depends="-build-hooks,projectized.files-init"/>
+    <target name="compile" depends="check-main-status,projectized-common.compile,rebuild-main"/>
     <target name="clean" depends="projectized-common.clean,-clean-hooks"/>
 
     <target name="check-main-status">

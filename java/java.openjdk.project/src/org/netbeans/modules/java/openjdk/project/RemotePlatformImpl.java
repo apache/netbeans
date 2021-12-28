@@ -29,7 +29,6 @@ import javax.swing.event.ChangeListener;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.modules.java.openjdk.project.JDKProject.Root;
 import org.netbeans.modules.java.openjdk.project.JDKProject.RootKind;
-import org.netbeans.spi.java.source.RemotePlatform;
 import org.netbeans.spi.project.ProjectConfigurationProvider;
 import org.openide.filesystems.FileChangeAdapter;
 import org.openide.filesystems.FileChangeListener;
@@ -39,12 +38,13 @@ import org.openide.filesystems.FileUtil;
 import org.openide.util.ChangeSupport;
 import org.openide.util.Lookup;
 import org.openide.util.lookup.Lookups;
+import org.netbeans.spi.java.source.RemoteEditorPlatform;
 
 /**
  *
  * @author lahvac
  */
-public class RemotePlatformImpl implements RemotePlatform {
+public class RemotePlatformImpl implements RemoteEditorPlatform {
 
     private static final Map<FileObject, RemotePlatformImpl> jdkRoot2Platform = new HashMap<>();
 
@@ -93,11 +93,6 @@ public class RemotePlatformImpl implements RemotePlatform {
     }
 
     @Override
-    public List<String> getJavaArguments() {
-        return Collections.emptyList();
-    }
-
-    @Override
     public void addChangeListener(ChangeListener l) {
         cs.addChangeListener(l);
     }
@@ -110,7 +105,7 @@ public class RemotePlatformImpl implements RemotePlatform {
     public static Lookup createProvider(FileObject jdkRoot, JDKProject project) {
         Provider provider = new Provider() {
             @Override
-            public RemotePlatform findPlatform(FileObject file) {
+            public RemoteEditorPlatform findPlatform(FileObject file) {
                 switch (project.getLookup().lookup(Settings.class).getUseRemotePlatform()) {
                     case JAVA_COMPILER:
                         if (!"java.compiler".equals(project.getProjectDirectory().getNameExt())) {

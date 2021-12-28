@@ -33,17 +33,17 @@ import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.project.SourceGroup;
-import org.netbeans.spi.java.source.RemotePlatform;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.ChangeSupport;
 import org.openide.util.lookup.ServiceProvider;
+import org.netbeans.spi.java.source.RemoteEditorPlatform;
 
 /**
  *
  * @author lahvac
  */
-public class RemotePlatformImpl implements RemotePlatform {
+public class RemotePlatformImpl implements RemoteEditorPlatform {
 
     private static final String KEY_ENABLE_REMOTING = "enable.remoting";
     
@@ -83,11 +83,6 @@ public class RemotePlatformImpl implements RemotePlatform {
     }
 
     @Override
-    public List<String> getJavaArguments() {
-        return Collections.emptyList();
-    }
-
-    @Override
     public void addChangeListener(ChangeListener l) {
         cs.addChangeListener(l);
     }
@@ -102,7 +97,7 @@ public class RemotePlatformImpl implements RemotePlatform {
         private final Map<Project, RemotePlatformImpl> project2Platform = new WeakHashMap<>();
 
         @Override
-        public RemotePlatform findPlatform(FileObject source) {
+        public RemoteEditorPlatform findPlatform(FileObject source) {
             Project prj = FileOwnerQuery.getOwner(source);
             if (prj == null) {
                 return null;

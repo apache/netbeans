@@ -51,6 +51,7 @@ import org.netbeans.api.java.lexer.JavaTokenId;
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.JavaParserResultTask;
 import org.netbeans.api.java.source.JavaSource.Phase;
+import org.netbeans.api.java.source.SourceUtils;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenSequence;
@@ -72,7 +73,6 @@ import org.netbeans.spi.editor.hints.ErrorDescriptionFactory;
 import org.netbeans.spi.editor.hints.Fix;
 import org.netbeans.spi.editor.hints.LazyFixList;
 import org.netbeans.spi.editor.hints.Severity;
-import org.netbeans.spi.java.source.RemotePlatform;
 import org.openide.ErrorManager;
 import org.openide.cookies.LineCookie;
 import org.openide.filesystems.FileObject;
@@ -80,7 +80,6 @@ import org.openide.loaders.DataObject;
 import org.openide.text.Line;
 import org.openide.text.NbDocument;
 import org.openide.util.Exceptions;
-import org.openide.util.Lookup;
 
 
 
@@ -737,7 +736,7 @@ public final class ErrorHintsProvider extends JavaParserResultTask {
             return ;
         }
 
-        if (RemotePlatform.hasRemotePlatform(info.getFileObject())) {
+        if (SourceUtils.hasRemoteEditorPlatform(info.getFileObject())) {
             return ;
         }
 

@@ -20,23 +20,23 @@ package org.netbeans.modules.java.source;
 
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
-import org.netbeans.spi.java.source.RemotePlatform;
 import org.openide.filesystems.FileObject;
 import org.openide.util.lookup.ServiceProvider;
+import org.netbeans.spi.java.source.RemoteEditorPlatform;
 
 /**
  *
  * @author lahvac
  */
-@ServiceProvider(service=RemotePlatform.Provider.class, position=1000)
-public class ProjectRemotePlatformProvider implements RemotePlatform.Provider {
+@ServiceProvider(service=RemoteEditorPlatform.Provider.class, position=1000)
+public class ProjectRemotePlatformProvider implements RemoteEditorPlatform.Provider {
 
     @Override
-    public RemotePlatform findPlatform(FileObject source) {
+    public RemoteEditorPlatform findPlatform(FileObject source) {
         Project prj = FileOwnerQuery.getOwner(source);
         
         if (prj != null) {
-            RemotePlatform.Provider p = prj.getLookup().lookup(RemotePlatform.Provider.class);
+            RemoteEditorPlatform.Provider p = prj.getLookup().lookup(RemoteEditorPlatform.Provider.class);
 
             if (p != null) {
                 return p.findPlatform(source);

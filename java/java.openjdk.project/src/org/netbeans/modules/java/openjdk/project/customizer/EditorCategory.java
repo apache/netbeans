@@ -123,7 +123,7 @@ public class EditorCategory extends javax.swing.JPanel {
         put(UseRemotePlatform.NEVER, "Never");
     }};
 
-    @CompositeCategoryProvider.Registration(projectType=JDKProject.PROJECT_KEY)
+    @CompositeCategoryProvider.Registration(projectType=JDKProject.PROJECT_KEY, position=300)
     public static CompositeCategoryProvider createCategoryProvider() {
         return new CompositeCategoryProvider() {
             @Override

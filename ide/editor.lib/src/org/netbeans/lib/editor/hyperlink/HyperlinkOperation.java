@@ -221,12 +221,30 @@ public class HyperlinkOperation implements MouseListener, MouseMotionListener, P
         final BaseDocument doc = (BaseDocument) component.getDocument();
         doc.readLock();
         try {
-            HyperlinkProviderExt provider = findProvider(position, type);
-            if (provider != null) {
-                int[] offsets = provider.getHyperlinkSpan(doc, position, type);
-                if (offsets != null) {
-                    makeHyperlink(type, provider, offsets[0], offsets[1], position);
+            String mimeType = getMimeType();
+            int[] hyperlinkSpan = null;
+
+            Collection<? extends HyperlinkProviderExt> extProviders = getHyperlinkProviderExts(mimeType);
+
+            for (HyperlinkProviderExt provider : extProviders) {
+                if (provider.getSupportedHyperlinkTypes().contains(type) &&
+                    (hyperlinkSpan = provider.getHyperlinkSpan(component.getDocument(), position, type)) != null) {
+                    break;
                 }
+            }
+
+            if (type == HyperlinkType.GO_TO_DECLARATION && hyperlinkSpan == null) {
+                Collection<? extends HyperlinkProvider> providers = getHyperlinkProviders(mimeType);
+
+                for (final HyperlinkProvider provider : providers) {
+                    if ((hyperlinkSpan = provider.getHyperlinkSpan(component.getDocument(), position)) != null) {
+                        break;
+                    }
+                }
+            }
+
+            if (hyperlinkSpan != null) {
+                makeHyperlink(type, hyperlinkSpan[0], hyperlinkSpan[1], position);
             } else {
                 unHyperlink(true);
             }
@@ -237,69 +255,68 @@ public class HyperlinkOperation implements MouseListener, MouseMotionListener, P
     }
     
     private void performAction(int position, HyperlinkType type) {
-        HyperlinkProviderExt provider = findProvider(position, type);
-        
-        if (provider != null) {
+        String mimeType = getMimeType();
+        HyperlinkProviderExt found = null;
+        Collection<? extends HyperlinkProviderExt> extProviders = getHyperlinkProviderExts(mimeType);
+
+        for (HyperlinkProviderExt provider : extProviders) {
+            if (provider.getSupportedHyperlinkTypes().contains(type) &&
+                provider.isHyperlinkPoint(component.getDocument(), position, type)) {
+                found = provider;
+                break;
+            }
+        }
+
+        if (type == HyperlinkType.GO_TO_DECLARATION && found == null) {
+            Collection<? extends HyperlinkProvider> providers = getHyperlinkProviders(mimeType);
+
+            for (final HyperlinkProvider provider : providers) {
+                if (provider.isHyperlinkPoint(component.getDocument(), position)) {
+                    found = new HyperlinkProviderExt() {
+                        public Set<HyperlinkType> getSupportedHyperlinkTypes() {
+                            return EnumSet.of(HyperlinkType.GO_TO_DECLARATION);
+                        }
+                        public boolean isHyperlinkPoint(Document doc, int offset, HyperlinkType type) {
+                            return provider.isHyperlinkPoint(doc, offset);
+                        }
+                        public int[] getHyperlinkSpan(Document doc, int offset, HyperlinkType type) {
+                            return provider.getHyperlinkSpan(doc, offset);
+                        }
+                        public void performClickAction(Document doc, int offset, HyperlinkType type) {
+                            provider.performClickAction(doc, offset);
+                        }
+                        public String getTooltipText(Document doc, int offset, HyperlinkType type) {
+                            return null;
+                        }
+                    };
+                    break;
+                }
+            }
+        }
+
+        if (found != null) {
             unHyperlink(true);
             
             //make sure the position is correct and the JumpList works:
             component.getCaret().setDot(position);
             JumpList.checkAddEntry(component, position);
             
-            provider.performClickAction(component.getDocument(), position, type);
+            found.performClickAction(component.getDocument(), position, type);
         }
     }
     
-    private HyperlinkProviderExt findProvider(int position, HyperlinkType type) {
+    private String getMimeType() {
         Object mimeTypeObj = component.getDocument().getProperty(BaseDocument.MIME_TYPE_PROP);  //NOI18N
         String mimeType;
-        
         if (mimeTypeObj instanceof String)
             mimeType = (String) mimeTypeObj;
         else {
             mimeType = this.operationMimeType;
         }
-        
-        Collection<? extends HyperlinkProviderExt> extProviders = getHyperlinkProviderExts(mimeType);
-        
-        for (HyperlinkProviderExt provider : extProviders) {
-            if (provider.getSupportedHyperlinkTypes().contains(type) && provider.isHyperlinkPoint(component.getDocument(), position, type)) {
-                return provider;
-            }
-        }
-        
-        if (type != HyperlinkType.GO_TO_DECLARATION) {
-            return null;
-        }
-        
-        Collection<? extends HyperlinkProvider> providers = getHyperlinkProviders(mimeType);
-        
-        for (final HyperlinkProvider provider : providers) {
-            if (provider.isHyperlinkPoint(component.getDocument(), position)) {
-                return new HyperlinkProviderExt() {
-                    public Set<HyperlinkType> getSupportedHyperlinkTypes() {
-                        return EnumSet.of(HyperlinkType.GO_TO_DECLARATION);
-                    }
-                    public boolean isHyperlinkPoint(Document doc, int offset, HyperlinkType type) {
-                        return provider.isHyperlinkPoint(doc, offset);
-                    }
-                    public int[] getHyperlinkSpan(Document doc, int offset, HyperlinkType type) {
-                        return provider.getHyperlinkSpan(doc, offset);
-                    }
-                    public void performClickAction(Document doc, int offset, HyperlinkType type) {
-                        provider.performClickAction(doc, offset);
-                    }
-                    public String getTooltipText(Document doc, int offset, HyperlinkType type) {
-                        return null;
-                    }
-                };
-            }
-        }
-        
-        return null;
+        return mimeType;
     }
     
-    private synchronized void makeHyperlink(HyperlinkType type, HyperlinkProviderExt provider, final int start, final int end, final int offset) {
+    private synchronized void makeHyperlink(HyperlinkType type, final int start, final int end, final int offset) {
         boolean makeCursorSnapshot = true;
         
         if (hyperlinkUp) {
@@ -313,7 +330,7 @@ public class HyperlinkOperation implements MouseListener, MouseMotionListener, P
         AttributeSet hyperlinksHighlight = fcs.getFontColors("hyperlinks"); //NOI18N
         prepare.addHighlight(start, end, AttributesUtilities.createComposite(
             hyperlinksHighlight != null ? hyperlinksHighlight : defaultHyperlinksHighlight,
-            AttributesUtilities.createImmutable(EditorStyleConstants.Tooltip, new TooltipResolver(provider, offset, type))));
+            AttributesUtilities.createImmutable(EditorStyleConstants.Tooltip, new TooltipResolver(offset, type))));
 
         getBag(currentDocument).setHighlights(prepare);
 
@@ -469,22 +486,31 @@ public class HyperlinkOperation implements MouseListener, MouseMotionListener, P
         }
     }
 
-    private static final class TooltipResolver implements HighlightAttributeValue<CharSequence> {
+    private final class TooltipResolver implements HighlightAttributeValue<CharSequence> {
 
         private static final String HYPERLINK_LISTENER = "TooltipResolver.hyperlinkListener"; //NOI18N
-        private HyperlinkProviderExt provider;
         private int offset;
         private HyperlinkType type;
 
-        public TooltipResolver(HyperlinkProviderExt provider, int offset, HyperlinkType type) {
-            this.provider = provider;
+        public TooltipResolver(int offset, HyperlinkType type) {
             this.offset = offset;
             this.type = type;
         }
 
         public CharSequence getValue(JTextComponent component, Document document, Object attributeKey, int startOffset, int endOffset) {
             try {
-                String tooltipText = provider.getTooltipText(document, offset, type);
+                String mimeType = getMimeType();
+                String tooltipText = null;
+
+                Collection<? extends HyperlinkProviderExt> extProviders = getHyperlinkProviderExts(mimeType);
+
+                for (HyperlinkProviderExt provider : extProviders) {
+                    if (provider.getSupportedHyperlinkTypes().contains(type) &&
+                        (tooltipText = provider.getTooltipText(component.getDocument(), offset, type)) != null) {
+                        break;
+                    }
+                }
+
                 HyperlinkListener hl = (HyperlinkListener)document.getProperty(HYPERLINK_LISTENER);
                 return hl != null ? new TooltipInfo(tooltipText, hl) : tooltipText;
             } finally {

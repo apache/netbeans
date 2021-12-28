@@ -47,7 +47,6 @@ import org.netbeans.modules.parsing.api.Source;
 import org.netbeans.spi.editor.completion.*;
 import org.netbeans.spi.editor.completion.support.AsyncCompletionQuery;
 import org.netbeans.spi.editor.completion.support.AsyncCompletionTask;
-import org.netbeans.spi.java.source.RemotePlatform;
 
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
@@ -74,7 +73,7 @@ public class JavaCompletionProvider implements CompletionProvider {
     @Override
     public CompletionTask createTask(int type, JTextComponent component) {
         if ((type & COMPLETION_QUERY_TYPE) != 0 || type == TOOLTIP_QUERY_TYPE || type == DOCUMENTATION_QUERY_TYPE) {
-            if (RemotePlatform.hasRemotePlatform(NbEditorUtilities.getFileObject(component.getDocument()))) {
+            if (SourceUtils.hasRemoteEditorPlatform(NbEditorUtilities.getFileObject(component.getDocument()))) {
                 return null;
             }
             return new AsyncCompletionTask(new JavaCompletionQuery(type, component.getSelectionStart()), component);

@@ -20,6 +20,7 @@ package org.netbeans.modules.java.source.parsing;
 
 import com.sun.source.tree.MethodTree;
 import com.sun.source.util.JavacTask;
+import com.sun.source.util.ParameterNameProvider;
 import com.sun.source.util.TreePathScanner;
 import com.sun.tools.javac.api.JavacTaskImpl;
 import com.sun.tools.javac.code.Kinds;
@@ -36,9 +37,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.InterruptedIOException;
 import java.io.Reader;
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -71,36 +69,17 @@ import org.netbeans.api.java.source.SourceUtils;
 import org.netbeans.modules.java.source.JavadocHelper;
 import org.openide.filesystems.FileObject;
 import org.openide.util.BaseUtilities;
-import org.openide.util.Exceptions;
 
 /**
  *
  * @author lahvac
  */
-public class ParameterNameProviderImpl {
+public class ParameterNameProviderImpl implements ParameterNameProvider {
     public static boolean DISABLE_ARTIFICAL_PARAMETER_NAMES;
     public static boolean DISABLE_PARAMETER_NAMES_LOADING;
 
     public static void register(JavacTask task, ClasspathInfo cpInfo) {
-        try {
-            Class<?> c = Class.forName("com.sun.source.util.ParameterNameProvider");
-            ParameterNameProviderImpl impl = new ParameterNameProviderImpl(cpInfo, task);
-            InvocationHandler h = new InvocationHandler() {
-                @Override
-                public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-                    if (method.getName().equals("getParameterName")) {
-                        return impl.getParameterName((VariableElement) args[0]);
-                    }
-                    return null;
-                }
-            };
-            Object proxy = Proxy.newProxyInstance(ParameterNameProviderImpl.class.getClassLoader(), new Class[] {c}, h);
-            JavacTask.class.getDeclaredMethod("setParameterNameProvider", c).invoke(task, proxy);
-        } catch (ClassNotFoundException ex) {
-            //ok
-        } catch (Exception ex) {
-            Exceptions.printStackTrace(ex);
-        }
+        task.setParameterNameProvider(new ParameterNameProviderImpl(cpInfo, task));
     }
 
             static final int MAX_CACHE_SIZE = 100;
@@ -116,6 +95,7 @@ public class ParameterNameProviderImpl {
         this.task = task;
     }
 
+    @Override
     public CharSequence getParameterName(VariableElement parameter) {
         if (DISABLE_PARAMETER_NAMES_LOADING) {
             return null;

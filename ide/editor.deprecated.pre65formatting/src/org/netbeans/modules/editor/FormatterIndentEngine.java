@@ -38,7 +38,7 @@ import org.openide.util.NbBundle;
  * @deprecated Please use Editor Indentation API instead, for details see
  *   <a href="@org-netbeans-modules-editor-indent@/overview-summary.html">Editor Indentation</a>.
  */
-
+@Deprecated
 public abstract class FormatterIndentEngine extends IndentEngine {
 
     public static final String EXPAND_TABS_PROP = "expandTabs"; //NOI18N
@@ -92,6 +92,7 @@ public abstract class FormatterIndentEngine extends IndentEngine {
      * @deprecated use {@link #setValue(java.lang.String, java.lang.Object, java.lang.String)} instead 
      * with properly specified propertyName
      */
+    @Deprecated
     public void setValue(String settingName, Object newValue) {
         setValue(settingName, newValue, null);
     }

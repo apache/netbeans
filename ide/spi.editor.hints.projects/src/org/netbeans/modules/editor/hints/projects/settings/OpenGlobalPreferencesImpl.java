@@ -16,29 +16,23 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.glassfish.tooling.data;
+package org.netbeans.modules.editor.hints.projects.settings;
+
+import org.netbeans.api.options.OptionsDisplayer;
+import org.netbeans.modules.editor.hints.settings.friend.OpenGlobalPreferences;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
- * IDE context containing interfaces to access IDE objects.
- * <p/>
- * @author Tomas Kraus, Peter Benedikovic
- * @deprecated IDE context support was removed. DO NOT USE!
+ *
+ * @author lahvac
  */
-@Deprecated
-public class IdeContext {
+@ServiceProvider(service=OpenGlobalPreferences.class)
+public class OpenGlobalPreferencesImpl implements OpenGlobalPreferences {
 
-    ////////////////////////////////////////////////////////////////////////////
-    // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
-    /**
-     * Constructs IDE context object and sets IDE accessors.
-     * <p/>
-     * @deprecated IDE context support was removed. DO NOT USE!
-     */
-    @Deprecated
-    public IdeContext() {
+    @Override
+    public boolean openFilePreferences(String mimeType, String hintId) {
+        OptionsDisplayer.getDefault().open("Editor/Hints/" + mimeType + "/" + hintId);
+        return true;
     }
-
 
 }

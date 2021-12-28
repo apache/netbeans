@@ -119,10 +119,10 @@ public abstract class JavaCompletionItem implements CompletionItem {
                 return new EnumItem(info, elem, type, 0, substitutionOffset, referencesCount, isDeprecated, insideNew, addSimpleName, smartType, autoImportEnclosingType, whiteList);
             case ANNOTATION_TYPE:
                 return new AnnotationTypeItem(info, elem, type, 0, substitutionOffset, referencesCount, isDeprecated, insideNew, addSimpleName, smartType, autoImportEnclosingType, whiteList);
+            case RECORD:
+                return new RecordItem(info, elem, type, 0, substitutionOffset, referencesCount, isDeprecated, insideNew, addSimpleName, smartType, autoImportEnclosingType, whiteList);
             default:
-                if(elem.getKind().name().equals(TreeShims.RECORD))
-                    return new RecordItem(info, elem, type, 0, substitutionOffset, referencesCount, isDeprecated, insideNew, addSimpleName, smartType, autoImportEnclosingType, whiteList);
-                else throw new IllegalArgumentException("kind=" + elem.getKind());
+                throw new IllegalArgumentException("kind=" + elem.getKind());
         }
     }
 

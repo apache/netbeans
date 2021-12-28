@@ -67,6 +67,7 @@ import javax.lang.model.element.Modifier;
 import javax.lang.model.element.ModuleElement;
 import javax.lang.model.element.Name;
 import javax.lang.model.element.PackageElement;
+import javax.lang.model.element.RecordComponentElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.TypeParameterElement;
 import javax.lang.model.element.VariableElement;
@@ -785,8 +786,9 @@ public class GoToSupport {
         try {
             switch (t.getKind()) {
                 case INSTANCE_OF:
-                    Tree pattern = TreeShims.getPattern((InstanceOfTree) t);
-                    if (pattern == null || !"BINDING_PATTERN".equals(pattern.getKind().name())) {
+                    //XXX: why the following?
+                    Tree pattern = ((InstanceOfTree) t).getPattern();
+                    if (pattern == null || pattern.getKind() != Kind.BINDING_PATTERN) {
                         return false;
                     }
                 case ANNOTATION_TYPE:
@@ -1040,7 +1042,7 @@ public class GoToSupport {
                 
                 if (e.getKind() != ElementKind.PARAMETER && e.getKind() != ElementKind.LOCAL_VARIABLE
                         && e.getKind() != ElementKind.RESOURCE_VARIABLE && e.getKind() != ElementKind.EXCEPTION_PARAMETER
-                        && !TreeShims.BINDING_VARIABLE.equals(e.getKind().name())) {
+                        && e.getKind() != ElementKind.BINDING_VARIABLE) {
                     result.append(" in ");
 
                     //short typename:
@@ -1101,13 +1103,10 @@ public class GoToSupport {
         public Void visitTypeParameter(TypeParameterElement e, Boolean highlightName) {
             return null;
         }
-        
+
         @Override
-        public Void visitUnknown(Element e, Boolean p) {
-            if (TreeShims.isRecordComponent(e)) {
-                return visitVariable((VariableElement) e, p);
-            }
-            return super.visitUnknown(e, p);
+        public Void visitRecordComponent(RecordComponentElement e, Boolean p) {
+            return visitVariable((VariableElement) e, p);
         }
         
         private void modifier(Set<Modifier> modifiers) {

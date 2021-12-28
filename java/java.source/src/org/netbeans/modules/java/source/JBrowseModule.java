@@ -24,7 +24,6 @@ import java.awt.GraphicsEnvironment;
 import java.awt.HeadlessException;
 import java.util.logging.Level;
 import java.util.prefs.Preferences;
-import javax.lang.model.SourceVersion;
 import org.netbeans.api.annotations.common.StaticResource;
 import org.netbeans.modules.autoupdate.ui.api.PluginManager;
 import org.netbeans.modules.java.source.usages.ClassIndexManager;
@@ -66,7 +65,7 @@ public class JBrowseModule extends ModuleInstall {
                              " Please either:" +
                              "<ul>" +
                                  "<li>install nb-javac library (<b>highly recommended</b>)</li>" +
-                                 "<li>run NetBeans on JDK 9 or later</li>" +
+                                 "<li>run NetBeans on JDK 17 or later</li>" +
                              "</ul>",
         "BN_Install=Install nb-javac",
         "DN_nbjavac=nb-javac library",
@@ -99,7 +98,7 @@ public class JBrowseModule extends ModuleInstall {
                     prefs.putBoolean(KEY_WARNING_SHOWN, true);
                 }
 
-                if (!NoJavacHelper.hasNbJavac() && !hasJDK14OrAboveJavac()) {
+                if (!NoJavacHelper.hasNbJavac()) {
                     NotificationDisplayer.getDefault().notify("Install nb-javac Library", ImageUtilities.loadImageIcon(WARNING_ICON, false), Bundle.DESC_InstallNbJavac(), evt -> {
                         PluginManager.installSingle("org.netbeans.modules.nbjavac", Bundle.DN_nbjavac());
                     }, prefs.getBoolean(KEY_WARNING_SHOWN, false) ? Priority.SILENT : Priority.HIGH);
@@ -108,15 +107,6 @@ public class JBrowseModule extends ModuleInstall {
             });
         });
         super.restored();
-    }
-
-    private boolean hasJDK14OrAboveJavac() {
-        try {
-            SourceVersion.valueOf("RELEASE_14");
-            return true;
-        } catch (IllegalArgumentException ex) {
-            return false;
-        }
     }
 
     @Override

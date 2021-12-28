@@ -16,29 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.glassfish.tooling.data;
+package org.netbeans.modules.editor.hints.settings.friend;
 
 /**
- * IDE context containing interfaces to access IDE objects.
- * <p/>
- * @author Tomas Kraus, Peter Benedikovic
- * @deprecated IDE context support was removed. DO NOT USE!
+ *
+ * @author lahvac
  */
-@Deprecated
-public class IdeContext {
-
-    ////////////////////////////////////////////////////////////////////////////
-    // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
-    /**
-     * Constructs IDE context object and sets IDE accessors.
-     * <p/>
-     * @deprecated IDE context support was removed. DO NOT USE!
-     */
-    @Deprecated
-    public IdeContext() {
-    }
-
-
+public interface OpenGlobalPreferences {
+    public boolean openFilePreferences(String mimeType, String hintId);
 }

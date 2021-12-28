@@ -518,15 +518,15 @@ public final class JavaCompletionTask<T> extends BaseTask {
             case STRING_LITERAL:
                 insideStringLiteral(env);
                 break;
-            default:
-                if (path.getLeaf().getKind().toString().equals(TreeShims.SWITCH_EXPRESSION)) {
-                    insideSwitch(env);
-                } else if (TreeShims.isRecord(path.getLeaf())) {
-                    insideRecord(env);
-                } else if (path.getLeaf().getKind().toString().equals("DEFAULT_CASE_LABEL")) {
-                    localResult(env);
-                    addKeywordsForBlock(env);
-                }
+            case SWITCH_EXPRESSION:
+                insideSwitch(env);
+                break;
+            case RECORD:
+                insideRecord(env);
+                break;
+            case DEFAULT_CASE_LABEL:
+                localResult(env);
+                addKeywordsForBlock(env);
                 break;
         }
     }
@@ -750,7 +750,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
             if (options.contains(Options.ALL_COMPLETION) || options.contains(Options.COMBINED_COMPLETION)) {
                 EnumSet<ElementKind> classKinds = EnumSet.of(CLASS, INTERFACE, ENUM, ANNOTATION_TYPE);
                 if (isRecordSupported(env)) {
-                    classKinds.add(TreeShims.getRecordKind());
+                    classKinds.add(RECORD);
                 }
                 addTypes(env, classKinds, null);
             } else {
@@ -781,7 +781,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
         }
         TreeUtilities tu = controller.getTreeUtilities();
         Tree lastPerm = null;
-        List<? extends Tree> permits = TreeShims.getPermits(cls);
+        List<? extends Tree> permits = cls.getPermitsClause();
         permits = permits == null ? new ArrayList<>() : permits;
         for (Tree perm : permits) {
             int permPos = (int) sourcePositions.getEndPosition(root, perm);
@@ -1588,7 +1588,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
         if (SOURCE_VERSION_RELEASE_13 != null && env.getController().getSourceVersion().compareTo(SOURCE_VERSION_RELEASE_13) >= 0
                 && Utilities.startsWith(YIELD_KEYWORD, prefix)) {
             TreePath parentPath = env.getPath().getParentPath();
-            if (parentPath.getLeaf().getKind() == Tree.Kind.CASE && parentPath.getParentPath().getLeaf().getKind().toString().equals(TreeShims.SWITCH_EXPRESSION)) {
+            if (parentPath.getLeaf().getKind() == Tree.Kind.CASE && parentPath.getParentPath().getLeaf().getKind() == Kind.SWITCH_EXPRESSION) {
                 addKeyword(env, YIELD_KEYWORD, null, false);
             }
         }
@@ -2133,7 +2133,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
                     if (encl == null) {
                         EnumSet<ElementKind> classKinds = EnumSet.of(CLASS, INTERFACE, ENUM, ANNOTATION_TYPE);
                         if (isRecordSupported(env)) {
-                            classKinds.add(TreeShims.getRecordKind());
+                            classKinds.add(RECORD);
                         }
                         addTypes(env, classKinds, base);
                     } else {
@@ -2385,16 +2385,15 @@ public final class JavaCompletionTask<T> extends BaseTask {
             exprTree = ((SwitchTree) path.getLeaf()).getExpression();
 
         } else {
-            List<? extends ExpressionTree> exprTrees = TreeShims.getExpressions(path.getLeaf());
-            if (!exprTrees.isEmpty()) {
-                exprTree = exprTrees.get(0);
-            }
+            exprTree = ((SwitchExpressionTree) path.getLeaf()).getExpression();
         }
         SourcePositions sourcePositions = env.getSourcePositions();
         CompilationUnitTree root = env.getRoot();
         if (sourcePositions.getStartPosition(root, exprTree) < offset) {
             CaseTree lastCase = null;
-            for (CaseTree t : TreeShims.getCases(path.getLeaf())) {
+            List<? extends CaseTree> cases = path.getLeaf().getKind() == Kind.SWITCH ? ((SwitchTree) path.getLeaf()).getCases()
+                                                                                     : ((SwitchExpressionTree) path.getLeaf()).getCases();
+            for (CaseTree t : cases) {
                 int pos = (int) sourcePositions.getStartPosition(root, t);
                 if (pos == Diagnostic.NOPOS || offset <= pos) {
                     break;
@@ -2405,7 +2404,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
                 StatementTree last = null;
                 List<? extends StatementTree> statements = lastCase.getStatements();
                 if (statements == null) {
-                    Tree caseBody = TreeShims.getBody(lastCase);
+                    Tree caseBody = lastCase.getBody();
                     if (caseBody instanceof StatementTree) {
                         statements = Collections.singletonList((StatementTree) caseBody);
                     }
@@ -2435,8 +2434,8 @@ public final class JavaCompletionTask<T> extends BaseTask {
                 localResult(env);
                 addKeywordsForBlock(env);
                 String prefix = env.getPrefix();
-                if (SOURCE_VERSION_RELEASE_13 != null && (env.getController().getSourceVersion().compareTo(SOURCE_VERSION_RELEASE_13) >= 0
-                        && path.getLeaf().getKind().toString().equals(TreeShims.SWITCH_EXPRESSION) && Utilities.startsWith(YIELD_KEYWORD, prefix))) {
+                if (env.getController().getSourceVersion().compareTo(SourceVersion.RELEASE_13) >= 0
+                    && path.getLeaf().getKind() == Kind.SWITCH_EXPRESSION && Utilities.startsWith(YIELD_KEYWORD, prefix)) {
                     addKeyword(env, YIELD_KEYWORD, null, false);
                 }
 
@@ -2460,7 +2459,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
         TreePath parentPath = path.getParentPath();
         ExpressionTree caseExpressionTree = null;
         ExpressionTree caseErroneousTree = null;
-        List<? extends ExpressionTree> caseTreeList = TreeShims.getExpressions(cst);
+        List<? extends ExpressionTree> caseTreeList = cst.getExpressions();
         if (!caseTreeList.isEmpty() && caseTreeList.size() == 1) {
             caseExpressionTree = caseTreeList.get(0);
             caseErroneousTree = caseTreeList.get(0);
@@ -2477,15 +2476,12 @@ public final class JavaCompletionTask<T> extends BaseTask {
         if (caseExpressionTree != null && ((sourcePositions.getStartPosition(root, caseExpressionTree) >= offset)
                 || (caseErroneousTree != null && caseErroneousTree.getKind() == Tree.Kind.ERRONEOUS && ((ErroneousTree) caseErroneousTree).getErrorTrees().isEmpty() && sourcePositions.getEndPosition(root, caseErroneousTree) >= offset))) {
 
-            if (parentPath.getLeaf().getKind() == Tree.Kind.SWITCH || parentPath.getLeaf().getKind().toString().equals(TreeShims.SWITCH_EXPRESSION)) {
+            if (parentPath.getLeaf().getKind() == Tree.Kind.SWITCH || parentPath.getLeaf().getKind() == Kind.SWITCH_EXPRESSION) {
                 ExpressionTree exprTree = null;
                 if (parentPath.getLeaf().getKind() == Tree.Kind.SWITCH) {
                     exprTree = ((SwitchTree) parentPath.getLeaf()).getExpression();
                 } else {
-                    List<? extends ExpressionTree> exprTrees = TreeShims.getExpressions(parentPath.getLeaf());
-                    if (!exprTrees.isEmpty()) {
-                        exprTree = exprTrees.get(0);
-                    }
+                    exprTree = ((SwitchExpressionTree) parentPath.getLeaf()).getExpression();
                 }
                 TypeMirror tm = controller.getTrees().getTypeMirror(new TreePath(parentPath, exprTree));
                 if (tm.getKind() == TypeKind.DECLARED && ((DeclaredType) tm).asElement().getKind() == ENUM) {
@@ -3098,16 +3094,16 @@ public final class JavaCompletionTask<T> extends BaseTask {
     private void addClassTypes(final Env env, DeclaredType baseType) throws IOException{
         EnumSet<ElementKind> classKinds = EnumSet.of(CLASS, INTERFACE, ENUM, ANNOTATION_TYPE, TYPE_PARAMETER);
         if (isRecordSupported(env)) {
-            classKinds.add(TreeShims.getRecordKind());
+            classKinds.add(RECORD);
         }
         addTypes(env, classKinds, baseType);
     }
 
     private boolean isRecordSupported(final Env env) {
-        return (SOURCE_VERSION_RELEASE_14 != null && env.getController().getSourceVersion().compareTo(SOURCE_VERSION_RELEASE_14) >= 0);
+        return env.getController().getSourceVersion().compareTo(SourceVersion.RELEASE_14) >= 0;
     }
     private boolean isSealedSupported(final Env env) {
-        return (SOURCE_VERSION_RELEASE_15 != null && env.getController().getSourceVersion().compareTo(SOURCE_VERSION_RELEASE_15) >= 0);
+        return env.getController().getSourceVersion().compareTo(SourceVersion.RELEASE_15) >= 0;
     }
 
     private void insideRecord(Env env) throws IOException {
@@ -4039,13 +4035,13 @@ public final class JavaCompletionTask<T> extends BaseTask {
         if (path != null && path.getLeaf().getKind() == Tree.Kind.SWITCH) {
             SwitchTree st = (SwitchTree) path.getLeaf();
             caseTrees = st.getCases();
-        } else if (path != null && path.getLeaf().getKind().toString().equals(TreeShims.SWITCH_EXPRESSION)) {
-            caseTrees = TreeShims.getCases(path.getLeaf());
+        } else if (path != null && path.getLeaf().getKind() == Tree.Kind.SWITCH_EXPRESSION) {
+            caseTrees = ((SwitchExpressionTree) path.getLeaf()).getCases();
         }
 
         if (caseTrees != null) {
             for (CaseTree ct : caseTrees) {
-                for (ExpressionTree et : TreeShims.getExpressions(ct)) {
+                for (ExpressionTree et : ct.getExpressions()) {
                     Element e = et != null ? trees.getElement(new TreePath(path, et)) : null;
                     if (e != null && e.getKind() == ENUM_CONSTANT) {
                         alreadyUsed.add(e);
@@ -4066,7 +4062,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
 
     private void addPackageContent(final Env env, PackageElement pe, EnumSet<ElementKind> kinds, DeclaredType baseType, boolean insideNew, boolean srcOnly) throws IOException {
         if (isRecordSupported(env)) {
-            kinds.add(TreeShims.getRecordKind());
+            kinds.add(RECORD);
         }
         Set<? extends TypeMirror> smartTypes = options.contains(Options.ALL_COMPLETION) ? null : getSmartTypes(env);
         CompilationController controller = env.getController();
@@ -6365,9 +6361,9 @@ public final class JavaCompletionTask<T> extends BaseTask {
     }
     
     private static ElementKind simplifyElementKind(ElementKind kind) {
-        if (TreeShims.BINDING_VARIABLE.equals(kind.name())) {
+        if (ElementKind.BINDING_VARIABLE == kind) {
             return ElementKind.LOCAL_VARIABLE;
-        } else if (TreeShims.RECORD.equals(kind.name())) {
+        } else if (ElementKind.RECORD == kind) {
             return ElementKind.CLASS;
         }
         return kind;

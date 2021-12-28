@@ -35,6 +35,7 @@ import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.CompoundAssignmentTree;
 import com.sun.source.tree.ConditionalExpressionTree;
 import com.sun.source.tree.ContinueTree;
+import com.sun.source.tree.DefaultCaseLabelTree;
 import com.sun.source.tree.DoWhileLoopTree;
 import com.sun.source.tree.EmptyStatementTree;
 import com.sun.source.tree.EnhancedForLoopTree;
@@ -43,6 +44,7 @@ import com.sun.source.tree.ExportsTree;
 import com.sun.source.tree.ExpressionStatementTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.ForLoopTree;
+import com.sun.source.tree.GuardedPatternTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.IfTree;
 import com.sun.source.tree.ImportTree;
@@ -62,6 +64,7 @@ import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.OpensTree;
 import com.sun.source.tree.PackageTree;
 import com.sun.source.tree.ParameterizedTypeTree;
+import com.sun.source.tree.ParenthesizedPatternTree;
 import com.sun.source.tree.ParenthesizedTree;
 import com.sun.source.tree.PrimitiveTypeTree;
 import com.sun.source.tree.ProvidesTree;
@@ -1392,15 +1395,33 @@ public class ExpectedTypeResolver implements TreeVisitor<List<? extends TypeMirr
         return null;
     }
    
+    @Override
     public List<? extends TypeMirror> visitBindingPattern(BindingPatternTree bpt, Object p) {
         return null;
     }
     
+    @Override
     public List<? extends TypeMirror> visitSwitchExpression(SwitchExpressionTree set, Object p) {
         return null;
     }
 
+    @Override
     public List<? extends TypeMirror> visitYield(YieldTree yt, Object p) {
+        return null;
+    }
+
+    @Override
+    public List<? extends TypeMirror> visitDefaultCaseLabel(DefaultCaseLabelTree node, Object p) {
+        return null;
+    }
+
+    @Override
+    public List<? extends TypeMirror> visitGuardedPattern(GuardedPatternTree node, Object p) {
+        return null;
+    }
+
+    @Override
+    public List<? extends TypeMirror> visitParenthesizedPattern(ParenthesizedPatternTree node, Object p) {
         return null;
     }
 }

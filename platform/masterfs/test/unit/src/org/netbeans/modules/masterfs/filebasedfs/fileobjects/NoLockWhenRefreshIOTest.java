@@ -21,11 +21,11 @@ package org.netbeans.modules.masterfs.filebasedfs.fileobjects;
 
 import java.io.File;
 import java.io.IOException;
-import java.security.Permission;
 import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.netbeans.agent.hooks.TrackingHooks;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.masterfs.filebasedfs.children.ChildrenSupport;
 import org.openide.filesystems.FileObject;
@@ -40,6 +40,7 @@ public class NoLockWhenRefreshIOTest extends NbTestCase {
 
     
     Logger LOG;
+    private AssertNoLockManager hooks;
     
     public NoLockWhenRefreshIOTest(String testName) {
         super(testName);
@@ -65,6 +66,18 @@ public class NoLockWhenRefreshIOTest extends NbTestCase {
         assertEquals("Two hundred", 200, dir.list().length);
     }
 
+    private void registerHooks() {
+        hooks = new AssertNoLockManager(getWorkDirPath());
+        TrackingHooks.register(hooks, 0, TrackingHooks.HOOK_IO);
+    }
+
+    @Override
+    protected void tearDown() throws Exception {
+        if (hooks != null) {
+            TrackingHooks.unregister(hooks);
+        }
+    }
+
     @Override
     protected Level logLevel() {
         return Level.INFO;
@@ -74,7 +87,7 @@ public class NoLockWhenRefreshIOTest extends NbTestCase {
         FileObject fo = FileUtil.toFileObject(getWorkDir());
         FileObject dir = fo.getFileObject("dir");
         assertNotNull("dir found", dir);
-        System.setSecurityManager(new AssertNoLockManager(getWorkDirPath()));
+        registerHooks();
         List<FileObject> arr = Arrays.asList(dir.getChildren());
         dir.refresh();
         List<FileObject> arr2 = Arrays.asList(dir.getChildren());
@@ -92,12 +105,12 @@ public class NoLockWhenRefreshIOTest extends NbTestCase {
         FileObject fo = FileUtil.toFileObject(getWorkDir());
         FileObject dir = fo.getFileObject("dir");
         assertNotNull("dir found", dir);
-        System.setSecurityManager(new AssertNoLockManager(getWorkDirPath()));
+        registerHooks();
         FileObject fileObject = dir.getFileObject("x50.txt");
         assertNotNull(fileObject);
     }
 
-    private static class AssertNoLockManager extends SecurityManager {
+    private static class AssertNoLockManager extends TrackingHooks {
         final String prefix;
 
         public AssertNoLockManager(String p) {
@@ -105,24 +118,12 @@ public class NoLockWhenRefreshIOTest extends NbTestCase {
         }
 
         @Override
-        public void checkRead(String string) {
+        public void checkFileRead(String string) {
             if (string.startsWith(prefix)) {
                 assertFalse("No lock", ChildrenSupport.isLock());
             }
         }
 
-        @Override
-        public void checkRead(String string, Object o) {
-            checkRead(string);
-        }
-
-        @Override
-        public void checkPermission(Permission prmsn) {
-        }
-
-        @Override
-        public void checkPermission(Permission prmsn, Object o) {
-        }
     }
         
 }

@@ -308,7 +308,7 @@ public final class ModuleNames {
                     null,
                     FileEncodingQuery.getEncoding(moduleInfo))));
         final CompilationUnitTree cu =  jt.parse().iterator().next();
-        final ModuleTree module = TreeShims.getModule(cu);
+        final ModuleTree module = cu.getModule();
         if (module != null) {
             return module.getName().toString();
         }

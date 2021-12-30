@@ -44,6 +44,12 @@ public interface NbCodeLanguageClient extends LanguageClient {
      */
     @JsonNotification("window/showStatusBarMessage")
     public void showStatusBarMessage(@NonNull ShowStatusMessageParams params);
+    /**
+     * Shows an HTML based UI.
+     * @param params the URI of the page to show
+     */
+    @JsonRequest("window/showHtmlPage")
+    public CompletableFuture<String> showHtmlPage(@NonNull HtmlPageParams params);
 
     /**
      * Shows a selection list allowing multiple selections.

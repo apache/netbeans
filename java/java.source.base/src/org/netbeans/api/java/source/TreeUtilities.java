@@ -104,7 +104,6 @@ import org.netbeans.lib.nbjavac.services.CancelService;
 import org.netbeans.lib.nbjavac.services.NBAttr;
 import org.netbeans.lib.nbjavac.services.NBParserFactory;
 import org.netbeans.lib.nbjavac.services.NBResolve;
-import org.netbeans.modules.java.source.TreeShims;
 import org.netbeans.modules.java.source.TreeUtilitiesAccessor;
 import org.netbeans.modules.java.source.builder.CommentHandlerService;
 import org.netbeans.modules.java.source.builder.CommentSetImpl;
@@ -127,15 +126,7 @@ public final class TreeUtilities {
      * 
      * @since 0.67
      */
-    public static final Set<Kind> CLASS_TREE_KINDS = EnumSet.of(Kind.ANNOTATION_TYPE, Kind.CLASS, Kind.ENUM, Kind.INTERFACE);
-    static {
-        Kind recKind = null;
-        try {
-            recKind = Kind.valueOf(TreeShims.RECORD);
-            CLASS_TREE_KINDS.add(recKind);
-        } catch (IllegalArgumentException ex) {
-        }
-    }
+    public static final Set<Kind> CLASS_TREE_KINDS = EnumSet.of(Kind.ANNOTATION_TYPE, Kind.CLASS, Kind.ENUM, Kind.INTERFACE, Kind.RECORD);
     private final CompilationInfo info;
     private final CommentHandlerService handler;
     
@@ -1442,10 +1433,9 @@ public final class TreeUtilities {
                 } else {
                     return target;
                 }
+            case YIELD:
+                return (Tree) ((JCTree.JCYield) leaf).target;
             default:
-                if (TreeShims.YIELD.equals(leaf.getKind().name())) {
-                    return TreeShims.getTarget(leaf);
-                }
                 throw new IllegalArgumentException("Unsupported kind: " + leaf.getKind());
         }
     }

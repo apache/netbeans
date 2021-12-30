@@ -285,7 +285,7 @@ public abstract class JPACompletionItem implements CompletionItem {
         return substituteText(component, substOffset, component.getCaret().getDot() - substOffset, false);
     }
 
-    private abstract static class DBElementItem extends JPACompletionItem {
+    abstract static class DBElementItem extends JPACompletionItem {
 
         private String name;
         private boolean quote;

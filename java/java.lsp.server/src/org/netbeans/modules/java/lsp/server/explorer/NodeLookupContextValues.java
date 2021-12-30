@@ -152,43 +152,50 @@ public class NodeLookupContextValues implements TreeDataProvider {
         for (String s : classes) {
             String prefix = null;
             String toPrefix = null;
-            String classToken = s;
-            int bracket = s.indexOf('[');
+            
+            String line = s.trim();
+            String classToken = line;
+            int bracket = line.indexOf('['); // NOI18N
             if (bracket != -1) {
-                int endBracket = s.indexOf(']', bracket + 1);
+                int endBracket = line.indexOf(']', bracket + 1); // NOI18N
                 if (endBracket == -1) {
-                    throw new IllegalArgumentException(s);
+                    throw new IllegalArgumentException(line);
                 } else {
-                    prefix = s.substring(bracket + 1, endBracket);
-                    int eq = prefix.indexOf('=');
+                    prefix = line.substring(bracket + 1, endBracket);
+                    int eq = prefix.indexOf('='); // NOI18N
                     if (eq != -1) {
                         prefix = prefix.substring(0, eq);
-                        toPrefix = prefix.substring(eq + 1);
+                        toPrefix = prefix.length() <= eq + 1 ? "" : prefix.substring(eq + 1); // NOI18N
                     } else {
                         toPrefix = ""; // NOI18N
                     }
-                    s = s.substring(0, bracket) + prefix + s.substring(endBracket + 1);
+                    if (line.length() <= endBracket + 1) {
+                        line = "";  // NOI18N
+                    } else {
+                        classToken = line.substring(0, bracket) + line.substring(endBracket + 1);
+                        line = line.substring(0, bracket) + prefix + line.substring(endBracket + 1);
+                    }
                 }
             } else {
-                int eq = s.indexOf('=');
+                int eq = line.indexOf('='); // NOI18N
                 if (eq != -1) {
-                    classToken = s.substring(eq + 1);
-                    s = s.substring(0, eq);
+                    classToken = line.substring(eq + 1);
+                    line = line.substring(0, eq);
                 }
             }
-            if (!s.isEmpty()) {
-                boolean enableWatch = s.charAt(0) == '*';
+            if (!line.isEmpty()) {
+                boolean enableWatch = line.charAt(0) == '*'; // NOI18N
                 if (enableWatch) {
-                    s = s.substring(1);
+                    line = line.substring(1);
                 }
                 try {
-                    Class clazz = ldr.loadClass(s);
+                    Class clazz = ldr.loadClass(line);
                     tokens.put(clazz, classToken);
                     if (enableWatch) {
                         watch.add(clazz);
                     }
                 } catch (ClassNotFoundException ex) {
-                    LOG.log(Level.INFO, "Service class {0} not found.", s);
+                    LOG.log(Level.INFO, "Service class {0} not found.", line);
                 }
             } else if (toPrefix != null) {
                 prefixes.put(prefix, toPrefix);

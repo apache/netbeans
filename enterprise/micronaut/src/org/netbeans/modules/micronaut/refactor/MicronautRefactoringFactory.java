@@ -38,7 +38,7 @@ import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.project.SourceGroup;
 import org.netbeans.modules.micronaut.MicronautConfigProperties;
 import org.netbeans.modules.micronaut.MicronautConfigUtilities;
-import org.netbeans.modules.micronaut.completion.MicronautConfigCompletionItem;
+import org.netbeans.modules.micronaut.completion.MicronautConfigCompletionProvider;
 import org.netbeans.modules.refactoring.api.AbstractRefactoring;
 import org.netbeans.modules.refactoring.api.Problem;
 import org.netbeans.modules.refactoring.api.Scope;
@@ -210,7 +210,7 @@ public class MicronautRefactoringFactory implements RefactoringPluginFactory {
             if (idx < 0) {
                 sb.append(text);
             } else {
-                sb.append(MicronautConfigCompletionItem.PROPERTY_NAME_COLOR).append("<b>");
+                sb.append(MicronautConfigCompletionProvider.PROPERTY_NAME_COLOR).append("<b>");
                 sb.append(text.substring(0, idx));
                 sb.append("</b></font>");
                 sb.append(text.substring(idx));

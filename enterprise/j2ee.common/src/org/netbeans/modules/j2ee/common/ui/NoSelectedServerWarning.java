@@ -89,6 +89,7 @@ final class NoSelectedServerWarning extends JPanel {
      *         if canceled.
      * @deprecated
      */
+    @Deprecated
     public static String selectServerDialog(Object[] moduleTypes, String j2eeSpec, String title, String description) {
         List<J2eeModule.Type> types = new ArrayList<J2eeModule.Type>(moduleTypes.length);
         for (Object obj : moduleTypes) {

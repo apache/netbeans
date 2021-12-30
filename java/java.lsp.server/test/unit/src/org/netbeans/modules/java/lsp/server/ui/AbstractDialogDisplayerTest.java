@@ -28,6 +28,7 @@ import org.eclipse.lsp4j.MessageParams;
 import org.eclipse.lsp4j.MessageType;
 import org.eclipse.lsp4j.ShowMessageRequestParams;
 import org.netbeans.junit.NbTestCase;
+import org.netbeans.modules.java.lsp.server.protocol.HtmlPageParams;
 import org.netbeans.modules.java.lsp.server.protocol.ShowStatusMessageParams;
 import org.openide.NotifyDescriptor;
 import org.openide.awt.StatusDisplayer;

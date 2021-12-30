@@ -40,11 +40,15 @@ import java.util.concurrent.CountDownLatch;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
+import javax.swing.ActionMap;
+import javax.swing.text.DefaultEditorKit;
 import org.netbeans.modules.java.lsp.server.protocol.NbCodeLanguageClient;
 import org.netbeans.modules.java.lsp.server.explorer.api.NodeChangedParams;
 import org.openide.explorer.ExplorerManager;
+import org.openide.explorer.ExplorerUtils;
+import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileUtil;
 import org.openide.nodes.Node;
-import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.lookup.Lookups;
 import org.openide.util.lookup.ProxyLookup;
@@ -111,11 +115,15 @@ public class TreeNodeRegistryImpl implements TreeNodeRegistry {
             Lookups.forPath("Explorers/_all") // NOI18N
         );
         
+        
+        FileObject conf = FileUtil.getConfigFile("Explorers/" + id); // NOI18N
+        boolean confirmDelete = conf != null &&conf.getAttribute("explorerConfirmsDelete") == Boolean.TRUE; // NOI18N
+        
         for (ExplorerManagerFactory f : ctxLookup.lookupAll(ExplorerManagerFactory.class)) {
             CompletionStage<ExplorerManager> em = f.createManager(id, ctxLookup);
             if (em != null) {
                 LOG.log(Level.FINER, "Creating provider from factory {0}", f);
-                return em.thenApply(em2 -> registerManager(em2, id, ctxLookup));
+                return em.thenApply(em2 -> registerManager(em2, id, ctxLookup, confirmDelete));
             }
         }
         CompletableFuture<TreeViewProvider> f = new CompletableFuture<>();
@@ -125,7 +133,7 @@ public class TreeNodeRegistryImpl implements TreeNodeRegistry {
     
     protected void notifyItemChanged(NodeChangedParams itemId) {}
     
-    private synchronized TreeViewProvider registerManager(ExplorerManager em, String id, Lookup ctxLookup) {
+    private synchronized TreeViewProvider registerManager(ExplorerManager em, String id, Lookup ctxLookup, boolean confirmDelete) {
         TreeViewProvider p = providers.get(id);
         if (p != null) {
             return p;
@@ -135,8 +143,17 @@ public class TreeNodeRegistryImpl implements TreeNodeRegistry {
                 throw new PropertyVetoException("Root change not allowed", e);
             }
         });
+        
+        ActionMap map = new ActionMap();
+        map.put(DefaultEditorKit.copyAction, ExplorerUtils.actionCopy(em));
+        map.put(DefaultEditorKit.cutAction, ExplorerUtils.actionCut(em));
+        map.put(DefaultEditorKit.pasteAction, ExplorerUtils.actionPaste(em));
+        map.put("delete", ExplorerUtils.actionDelete(em, confirmDelete)); // NOI18N
+        
+        Lookup expLookup = ExplorerUtils.createLookup (em, map);
+        
         // delegate the TreeViewProvider notification out:
-        final TreeViewProvider tvp = new TreeViewProvider(id, em, this, ctxLookup) {
+        final TreeViewProvider tvp = new TreeViewProvider(id, em, this, new ProxyLookup(expLookup, ctxLookup)) {
             @Override
             protected void onDidChangeTreeData(Node n, int id) {
                 int rootId = findId(em.getRootContext());

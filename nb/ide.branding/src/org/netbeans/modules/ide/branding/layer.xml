@@ -33,4 +33,8 @@
             </file>
         </folder>
     </folder>
+
+    <folder name="Editors">
+      <attr name="currentFontColorProfile" stringvalue="FlatLaf Light" />
+    </folder>
 </filesystem>

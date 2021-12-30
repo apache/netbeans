@@ -46,11 +46,26 @@ public interface LspServerState {
     
     /**
      * Asynchronously opens projects that contain the passed files. Completes with the list
-     * of opened projects, in no particular order.
+     * of opened projects, in no particular order. File owners will be registered as opened in the 
+     * workspace.
      * @param fileCandidates reference / owned files
      * @return opened projects.
      */
-    public CompletableFuture<Project[]>   asyncOpenSelectedProjects(List<FileObject> fileCandidates);
+    public default CompletableFuture<Project[]>   asyncOpenSelectedProjects(List<FileObject> fileCandidates) {
+        return asyncOpenSelectedProjects(fileCandidates, true);
+    }
+    
+    /**
+     * Asynchronously opens projects that contain the passed files. Completes with the list
+     * of opened projects, in no particular order. addWorkspace controls if the projects will
+     * be registered as a part of client workspace. Content of workspace project and their subprojects are 
+     * trusted, no questions are asked about opening.
+     * 
+     * @param addWorkspace register projects as part of client workspace.
+     * @param fileCandidates reference / owned files
+     * @return opened projects.
+     */
+    public CompletableFuture<Project[]>   asyncOpenSelectedProjects(List<FileObject> fileCandidates, boolean addWorkspace);
     
     /**
      * Opens project on behalf of a file. This makes the project 'second-class citizen' in LSP: it will be

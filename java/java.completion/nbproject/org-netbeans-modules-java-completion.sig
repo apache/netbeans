@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.21.0
+#Version 1.22.0
 
 CLSS public abstract interface java.io.Serializable
 
@@ -137,41 +137,6 @@ meth public static org.netbeans.modules.java.completion.JavaTooltipTask create(i
 meth public void run(org.netbeans.modules.parsing.api.ResultIterator) throws java.lang.Exception
 supr org.netbeans.modules.parsing.api.UserTask
 hfds INIT,SUPER_KEYWORD,THIS_KEYWORD,anchorOffset,toolTipData,toolTipIndex,toolTipOffset
-
-CLSS public org.netbeans.modules.java.completion.TreeShims
-cons public init()
-fld public final static int PATTERN_MATCHING_INSTANCEOF_PREVIEW_JDK_VERSION = 15
-fld public final static java.lang.String BINDING_PATTERN = "BINDING_PATTERN"
-fld public final static java.lang.String BINDING_VARIABLE = "BINDING_VARIABLE"
-fld public final static java.lang.String RECORD = "RECORD"
-fld public final static java.lang.String SWITCH_EXPRESSION = "SWITCH_EXPRESSION"
-fld public final static java.lang.String YIELD = "YIELD"
-meth public static <%0 extends com.sun.source.tree.Tree> boolean isRecord({%%0})
-meth public static <%0 extends java.lang.Throwable> java.lang.RuntimeException throwAny(java.lang.Throwable) throws {%%0}
-meth public static boolean isJDKVersionRelease16_Or_Above()
-meth public static boolean isJDKVersionSupportEnablePreview()
-meth public static boolean isRecord(javax.lang.model.element.Element)
-meth public static boolean isRecordComponent(javax.lang.model.element.Element)
-meth public static boolean isRecordComponent(javax.lang.model.element.ElementKind)
-meth public static boolean isRuleCase(com.sun.source.tree.CaseTree)
-meth public static com.sun.source.doctree.ReferenceTree getRefrenceTree(com.sun.tools.javac.tree.DocTreeMaker,com.sun.source.tree.ExpressionTree,java.lang.CharSequence,java.util.List<? extends com.sun.source.tree.Tree>,com.sun.tools.javac.util.Names,java.util.List<com.sun.tools.javac.tree.JCTree>)
-meth public static com.sun.source.tree.ExpressionTree getValue(com.sun.source.tree.BreakTree)
-meth public static com.sun.source.tree.ExpressionTree getYieldValue(com.sun.source.tree.Tree)
-meth public static com.sun.source.tree.ModuleTree getModule(com.sun.source.tree.CompilationUnitTree)
-meth public static com.sun.source.tree.Tree SwitchExpression(com.sun.tools.javac.tree.TreeMaker,com.sun.source.tree.ExpressionTree,java.util.List<? extends com.sun.source.tree.CaseTree>)
-meth public static com.sun.source.tree.Tree getBindingPatternType(com.sun.source.tree.Tree)
-meth public static com.sun.source.tree.Tree getBody(com.sun.source.tree.CaseTree)
-meth public static com.sun.source.tree.Tree getPattern(com.sun.source.tree.InstanceOfTree)
-meth public static com.sun.source.tree.Tree getTarget(com.sun.source.tree.Tree)
-meth public static java.util.List<? extends com.sun.source.tree.CaseTree> getCases(com.sun.source.tree.Tree)
-meth public static java.util.List<? extends com.sun.source.tree.ExpressionTree> getExpressions(com.sun.source.tree.CaseTree)
-meth public static java.util.List<? extends com.sun.source.tree.ExpressionTree> getExpressions(com.sun.source.tree.Tree)
-meth public static java.util.List<? extends com.sun.source.tree.Tree> getPermits(com.sun.source.tree.ClassTree)
-meth public static java.util.List<? extends com.sun.source.tree.Tree> getPermits(com.sun.tools.javac.tree.JCTree$JCClassDecl)
-meth public static javax.lang.model.element.Element toRecordComponent(javax.lang.model.element.Element)
-meth public static javax.lang.model.element.ElementKind getRecordKind()
-meth public static javax.lang.model.element.Name getBinding(com.sun.source.tree.Tree)
-supr java.lang.Object
 
 CLSS public final org.netbeans.modules.java.completion.Utilities
 meth public static boolean isCaseSensitive()

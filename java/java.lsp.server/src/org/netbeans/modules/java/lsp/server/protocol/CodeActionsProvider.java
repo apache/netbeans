@@ -159,11 +159,11 @@ public abstract class CodeActionsProvider {
             this.signature = ElementHandleAccessor.getInstance().getJVMSignature(handle);
         }
 
-        ElementHandle toHandle() {
+        public ElementHandle toHandle() {
             return ElementHandleAccessor.getInstance().create(ElementKind.valueOf(kind), signature);
         }
 
-        Element resolve(CompilationInfo info) {
+        public Element resolve(CompilationInfo info) {
             return toHandle().resolve(info);
         }
 

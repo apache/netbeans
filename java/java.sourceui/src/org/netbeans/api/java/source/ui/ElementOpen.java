@@ -373,23 +373,35 @@ public final class ElementOpen {
                 final FileObject root = cp.findOwnerRoot(resource);
                 if (root != null) {
                     final CompletableFuture<Object[]> future = new CompletableFuture<>();
-                    SourceJavadocAttacher.attachSources(root.toURL(), new SourceJavadocAttacher.AttachmentListener() {
-                        @Override
-                        public void attachmentSucceeded() {
-                            Object[] openInfo = getOpenInfo(cpInfo, el, cancel);
-                            if (openInfo != null && (int) openInfo[1] != (-1) && (int) openInfo[2] != (-1) && openInfo[5] != null) {
-                                future.complete(openInfo);
-                            } else {
-                                attachmentFailed();
+                    try {
+                        SourceJavadocAttacher.attachSources(root.toURL(), new SourceJavadocAttacher.AttachmentListener() {
+                            @Override
+                            public void attachmentSucceeded() {
+                                try {
+                                    Object[] openInfo = getOpenInfo(cpInfo, el, cancel);
+                                    if (openInfo != null && (int) openInfo[1] != (-1) && (int) openInfo[2] != (-1) && openInfo[5] != null) {
+                                        future.complete(openInfo);
+                                    } else {
+                                        attachmentFailed();
+                                    }
+                                } catch (Throwable t) {
+                                    future.completeExceptionally(t);
+                                }
                             }
-                        }
 
-                        @Override
-                        public void attachmentFailed() {
-                            FileObject generated = CodeGenerator.generateCode(cpInfo, el);
-                            future.complete(generated != null ? getOpenInfo(generated, el, cancel) : null);
-                        }
-                    });
+                            @Override
+                            public void attachmentFailed() {
+                                try {
+                                    FileObject generated = CodeGenerator.generateCode(cpInfo, el);
+                                    future.complete(generated != null ? getOpenInfo(generated, el, cancel) : null);
+                                } catch (Throwable t) {
+                                    future.completeExceptionally(t);
+                                }
+                            }
+                        });
+                    } catch (Throwable t) {
+                        future.completeExceptionally(t);
+                    }
                     return future;
                 }
             }

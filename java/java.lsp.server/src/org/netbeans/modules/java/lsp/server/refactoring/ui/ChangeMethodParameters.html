@@ -1,0 +1,79 @@
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Security-Policy" content="default-src http: 'unsafe-inline' 'unsafe-eval'">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="refactoring.css">
+    <link rel="stylesheet" href="codicon.css">
+    <title>Refactor: Change Method Parameters...</title>
+</head>
+
+<body>
+    <div class="section">
+        <div class="flex vdivider">
+            <div>
+                <label>Access:</label>
+                <select data-bind="options: availableModifiers, value: selectedModifier"></select>
+            </div>
+            <div class="flex-grow hdivider">
+                <label>Return:</label>
+                <input type="text" data-bind="textInput: returnType">
+            </div>
+            <div class="flex-grow hdivider">
+                <label>Name:</label>
+                <input type="text" data-bind="textInput: name">
+            </div>
+        </div>
+        <label>Parameters:</label>
+        <div class="flex">
+            <label class="flex-grow params-caption">Type:</label>
+            <label class="flex-grow params-caption">Name:</label>
+            <span class="filler"></span>
+        </div>
+    </div>
+    <div class="flex-vscrollable section2" data-bind="foreach: parameters">
+        <div class="flex row">
+            <input type="text" data-bind="textInput: type" class="flex-grow">
+            <input type="text" data-bind="textInput: name" class="flex-grow">
+            <button class="action-button codicon codicon-arrow-up" data-bind="click: $root.moveUpParameter"></button>
+            <button class="action-button codicon codicon-arrow-down" data-bind="click: $root.moveDownParameter"></button>
+            <button class="action-button codicon codicon-trash" data-bind="click: $root.removeParameter"></button>
+        </div>
+    </div>
+    <div class="add-param flex">
+        <button id="addParam" class="silent-button codicon codicon-add full-width flex-grow" data-bind="click: addParameter"><span class="button-text vscode-font">Add Parameter</span></button>
+    </div>
+    <div class="section">
+        <label>Signature preview:</label>
+    </div>
+    <div class="section1">
+        <p class="preview-panel" data-bind="text: preview"></p>
+    </div>
+    <div>
+        <button id="accept" hidden class="regular-button vscode-font align-right">Refactor</button>
+        <button id="reject" hidden class="regular-button vscode-font">Cancel</button>
+    </div>
+</body>
+</html>

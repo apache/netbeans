@@ -28,6 +28,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,10 +36,16 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.function.Function;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.eclipse.lsp4j.ExecuteCommandParams;
 import org.eclipse.lsp4j.MessageParams;
 import org.eclipse.lsp4j.MessageType;
 import org.eclipse.lsp4j.WorkspaceFolder;
+import org.netbeans.api.project.FileOwnerQuery;
+import org.netbeans.api.project.Project;
+import org.netbeans.api.project.ProjectUtils;
+import org.netbeans.api.project.SourceGroup;
+import org.netbeans.api.project.SourceGroupModifier;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.URLMapper;
@@ -72,6 +79,8 @@ abstract class LspTemplateUI {
      * for the client's response.
      */
     private static final RequestProcessor    CREATION_RP = new RequestProcessor(LspTemplateUI.class);
+    
+    private static final Logger LOG = Logger.getLogger(LspTemplateUI.class.getName()); 
     
     private LspTemplateUI() {
     }
@@ -161,28 +170,32 @@ abstract class LspTemplateUI {
     }
 
     private static CompletionStage<Pair<DataFolder, String>> findTargetAndNameForTemplate(CompletionStage<DataObject> findTemplate, NbCodeLanguageClient client, ExecuteCommandParams params) {
-        final CompletionStage<DataFolder> findTarget = findTemplate.thenCompose(any -> client.workspaceFolders()).thenCompose(folders -> {
-            boolean[] suggestionIsExact = { true };
-            DataFolder suggestion = findTargetFolder(params, folders, suggestionIsExact);
-            if (suggestionIsExact[0]) {
-                return CompletableFuture.completedFuture(suggestion);
-            }
-
-            class VerifyPath implements Function<String, CompletionStage<DataFolder>> {
-                @Override
-                public CompletionStage<DataFolder> apply(String path) {
-                    if (path == null) {
-                        throw raise(RuntimeException.class, new UserCancelException(path));
-                    }
-                    FileObject fo = FileUtil.toFileObject(new File(path));
-                    if (fo == null || !fo.isFolder()) {
-                        client.showMessage(new MessageParams(MessageType.Error, Bundle.ERR_InvalidPath(path)));
-                        return client.showInputBox(new ShowInputBoxParams(Bundle.CTL_TemplateUI_SelectTarget(), suggestion.getPrimaryFile().getPath())).thenCompose(this);
-                    }
-                    return CompletableFuture.completedFuture(DataFolder.findFolder(fo));
+        final DataObject[] templateObject = new DataObject[1];
+        final CompletionStage<DataFolder> findTarget = findTemplate.thenCompose(any -> { 
+                templateObject[0] = any; 
+                return client.workspaceFolders();
+            }).thenCompose(folders -> {
+                boolean[] suggestionIsExact = { true };
+                DataFolder suggestion = findTargetFolder(params, templateObject[0], folders, suggestionIsExact);
+                if (suggestionIsExact[0]) {
+                    return CompletableFuture.completedFuture(suggestion);
                 }
-            }
-            return client.showInputBox(new ShowInputBoxParams(Bundle.CTL_TemplateUI_SelectTarget(), suggestion.getPrimaryFile().getPath())).thenCompose(new VerifyPath());
+
+                class VerifyPath implements Function<String, CompletionStage<DataFolder>> {
+                    @Override
+                    public CompletionStage<DataFolder> apply(String path) {
+                        if (path == null) {
+                            throw raise(RuntimeException.class, new UserCancelException(path));
+                        }
+                        FileObject fo = FileUtil.toFileObject(new File(path));
+                        if (fo == null || !fo.isFolder()) {
+                            client.showMessage(new MessageParams(MessageType.Error, Bundle.ERR_InvalidPath(path)));
+                            return client.showInputBox(new ShowInputBoxParams(Bundle.CTL_TemplateUI_SelectTarget(), suggestion.getPrimaryFile().getPath())).thenCompose(this);
+                        }
+                        return CompletableFuture.completedFuture(DataFolder.findFolder(fo));
+                    }
+                }
+                return client.showInputBox(new ShowInputBoxParams(Bundle.CTL_TemplateUI_SelectTarget(), suggestion.getPrimaryFile().getPath())).thenCompose(new VerifyPath());
         });
         CompletionStage<String> findTargetName = findTarget.thenCombine(findTemplate, (target, source) -> source).thenCompose((source) -> {
             return client.showInputBox(new ShowInputBoxParams(Bundle.CTL_TemplateUI_SelectName(), source.getName()));
@@ -273,9 +286,48 @@ abstract class LspTemplateUI {
         }
         return selectedGroups.get(0).getUserData().toString();
     }
+    
+    private static final String ATTR_SOURCE_GROUP = "new.sourceGroup";  // NOI18N
+    private static final String ATTR_SOURCE_HINT = "new.sourceHint"; // NOI18N
 
-    private static DataFolder findTargetFolder(ExecuteCommandParams params, List<WorkspaceFolder> folders, boolean[] defaultTargetExact) {
+    /**
+     * Finds a folder appropriate for the template and the context. The method goes through parameters in `params`, stops at the 1st URI-like one that does not
+     * map to a file. Project and its source groups are extracted from the file. If the template prescribes a certain source group, and the context file/folder
+     * belongs to that source group, its nearest parent folder is used. If none of the context files fall into the desired source group,
+     * the group's root folder is used. If no suitable context file is present, workspace folder is returned
+     * 
+     * @param params new from template parameters / context
+     * @param template the template
+     * @param folders workspace folders
+     * @param defaultTargetExact receives true, if the context parameters directly contains an acceptable location
+     * @return the target to create the file from template in.
+     */
+    private static DataFolder findTargetFolder(ExecuteCommandParams params, DataObject template, List<WorkspaceFolder> folders, boolean[] defaultTargetExact) {
+        FileObject f = template.getPrimaryFile();
+        String sourceGroup = null;
+        String sourceHint = null;
+        Project p = null;
+        SourceGroup[] groups = null;
+        
+        while (f != null && (sourceGroup == null || sourceHint == null)) {
+            if (sourceGroup == null) {
+                Object o = f.getAttribute(ATTR_SOURCE_GROUP);
+                if (o != null) {
+                    sourceGroup = o.toString();
+                }
+            }
+            if (sourceHint == null) {
+                Object o = f.getAttribute(ATTR_SOURCE_HINT);
+                if (o != null) {
+                    sourceHint = o.toString();
+                }
+            }
+            f = f.getParent();
+        }
+        LOG.log(Level.FINER, "Template: {2}, Source group: {0}, hint: {1}", new Object[] { template.getPrimaryFile().getPath(), sourceGroup, sourceHint } );
+        int index = 0;
         for (Object arg : params.getArguments()) {
+            ++index;
             if (arg == null) {
                 continue;
             }
@@ -290,6 +342,7 @@ abstract class LspTemplateUI {
                 FileObject fo = URLMapper.findFileObject(new URL(path));
                 for (;;) {
                     if (fo == null) {
+                        LOG.log(Level.FINER, "Got non-file at param #{0}.", index);
                         break;
                     }
                     if (!fo.isFolder()) {
@@ -297,13 +350,54 @@ abstract class LspTemplateUI {
                         defaultTargetExact[0] = false;
                         continue;
                     }
+                    if (p == null) {
+                        p = FileOwnerQuery.getOwner(fo);
+                    }
+                    if (sourceGroup != null) {
+                        if (groups == null) {
+                            if (p != null) {
+                                LOG.log(Level.FINER, "Target project found: {0}", p);
+                                // accept 1st project found and its source groups
+                                if (sourceHint != null) {
+                                    SourceGroup sg = SourceGroupModifier.createSourceGroup(p, sourceGroup, sourceHint);
+                                    if (sg != null) {
+                                        LOG.log(Level.FINER, "Specific source group found / created: {0}", sg);
+                                        groups = new SourceGroup[] { sg };
+                                    }
+                                } 
+                                if (groups == null) {
+                                    groups = ProjectUtils.getSources(p).getSourceGroups(sourceGroup);
+                                    if (groups != null) {
+                                        LOG.log(Level.FINER, "Container source groups of type: {0} : {1} ", Arrays.asList(sourceGroup, Arrays.asList(groups)));
+                                    }
+                                }
+                            }
+                        }
+                        if (groups != null) {
+                            for (SourceGroup sg : groups) {
+                                if (fo.equals(sg.getRootFolder()) || FileUtil.isParentOf(sg.getRootFolder(), fo)) {
+                                    LOG.log(Level.FINER, "Selected target candidate: {0}", fo);
+                                    return DataFolder.findFolder(fo);
+                                }
+                            }
+                        }
+                        
+                        if (!defaultTargetExact[0] || (p != null && fo.equals(p.getProjectDirectory()))) {
+                            // continue with a new candidate if we're guessing from context or have just project context
+                            break;
+                        }
+                    }
+                    // no SG specification
                     return DataFolder.findFolder(fo);
                 }
             } catch (MalformedURLException ex) {
-                continue;
+                // perhaps not file URL, ignore
             }
         }
         defaultTargetExact[0] = false;
+        if (groups != null && groups.length > 0) {
+            return DataFolder.findFolder(groups[0].getRootFolder());
+        }
         return findWorkspaceRoot(folders);
     }
 

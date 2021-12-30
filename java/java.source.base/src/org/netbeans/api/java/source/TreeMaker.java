@@ -66,6 +66,7 @@ import javax.tools.JavaFileObject;
 
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
@@ -73,7 +74,6 @@ import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenSequence;
 
 import org.netbeans.api.java.lexer.JavaTokenId;
-import org.netbeans.modules.java.source.TreeShims;
 
 import org.netbeans.modules.java.source.builder.ASTService;
 import org.netbeans.modules.java.source.query.CommentSet;
@@ -276,7 +276,7 @@ public final class TreeMaker {
      * @since 2.39
      */
     public CaseTree CasePatterns(List<? extends Tree> patterns, Tree body) {
-        return delegate.CaseMultiplePatterns(patterns, body);
+        return delegate.CaseMultiplePatterns(patterns.stream().map(p -> (CaseLabelTree) p).collect(Collectors.toList()), body);
     }
     
     /**
@@ -288,7 +288,7 @@ public final class TreeMaker {
      * @since 2.39
      */
     public CaseTree CasePatterns(List<? extends Tree> patterns, List<? extends StatementTree> statements) {
-        return delegate.CaseMultiplePatterns(patterns, statements);
+        return delegate.CaseMultiplePatterns(patterns.stream().map(p -> (CaseLabelTree) p).collect(Collectors.toList()), statements);
     }
     
     /**
@@ -2908,9 +2908,7 @@ public final class TreeMaker {
         // todo (#pf): Shouldn't here be check that names are not the same?
         // i.e. node label == aLabel? -- every case branch has to check itself
         // This will improve performance, no change was done by API user.
-        Tree.Kind kind = TreeShims.isRecord(node) ? Kind.CLASS : node.getKind();
-       
-        switch (kind) {
+        switch (node.getKind()) {
             case BREAK: {
                 BreakTree t = (BreakTree) node;
                 N clone = (N) Break(
@@ -2921,7 +2919,8 @@ public final class TreeMaker {
             case ANNOTATION_TYPE:
             case CLASS:
             case ENUM:
-            case INTERFACE: {
+            case INTERFACE:
+            case RECORD: {
                 ClassTree t = (ClassTree) node;
                 // copy all the members, for constructor change their name
                 // too!

@@ -40,6 +40,7 @@ export async function prepareProject(folder: string) {
 <properties>
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
+    <exec.mainClass>pkg.Main</exec.mainClass>
 </properties>
 <build>
 <plugins>

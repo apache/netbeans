@@ -50,30 +50,32 @@ export class NbTestAdapter {
     }
 
     async run(request: TestRunRequest, cancellation: CancellationToken): Promise<void> {
-        cancellation.onCancellationRequested(() => this.cancel());
-        this.currentRun = this.testController.createTestRun(request);
-        this.itemsToRun = new Set();
-		if (request.include) {
-            const include = [...new Map(request.include.map(item => !item.uri && item.parent?.uri ? [item.parent.id, item.parent] : [item.id, item])).values()];
-            for (let item of include) {
-                if (item.uri) {
-                    this.set(item, 'enqueued');
-                    const idx = item.id.indexOf(':');
-                    await commands.executeCommand(request.profile?.kind === TestRunProfileKind.Debug ? 'java.debug.single' : 'java.run.single', item.uri.toString(), idx < 0 ? undefined : item.id.slice(idx + 1));
+        if (!this.currentRun) {
+            cancellation.onCancellationRequested(() => this.cancel());
+            this.currentRun = this.testController.createTestRun(request);
+            this.itemsToRun = new Set();
+            if (request.include) {
+                const include = [...new Map(request.include.map(item => !item.uri && item.parent?.uri ? [item.parent.id, item.parent] : [item.id, item])).values()];
+                for (let item of include) {
+                    if (item.uri) {
+                        this.set(item, 'enqueued');
+                        const idx = item.id.indexOf(':');
+                        await commands.executeCommand(request.profile?.kind === TestRunProfileKind.Debug ? 'java.debug.single' : 'java.run.single', item.uri.toString(), idx < 0 ? undefined : item.id.slice(idx + 1));
+                    }
+                }
+            } else {
+                this.testController.items.forEach(item => this.set(item, 'enqueued'));
+                for (let workspaceFolder of workspace.workspaceFolders || []) {
+                    if (!cancellation.isCancellationRequested) {
+                        await commands.executeCommand(request.profile?.kind === TestRunProfileKind.Debug ? 'java.debug.test': 'java.run.test', workspaceFolder.uri.toString());
+                    }
                 }
             }
-		} else {
-            this.testController.items.forEach(item => this.set(item, 'enqueued'));
-            for (let workspaceFolder of workspace.workspaceFolders || []) {
-                if (!cancellation.isCancellationRequested) {
-                    await commands.executeCommand(request.profile?.kind === TestRunProfileKind.Debug ? 'java.debug.test': 'java.run.test', workspaceFolder.uri.toString());
-                }
-            }
+            this.itemsToRun.forEach(item => this.set(item, 'skipped'));
+            this.itemsToRun = undefined;
+            this.currentRun.end();
+            this.currentRun = undefined;
         }
-        this.itemsToRun.forEach(item => this.set(item, 'skipped'));
-        this.itemsToRun = undefined;
-        this.currentRun.end();
-        this.currentRun = undefined;
     }
 
     set(item: TestItem, state: 'enqueued' | 'started' | 'passed' | 'failed' | 'skipped' | 'errored', message?: TestMessage | readonly TestMessage[], noPassDown? : boolean): void {
@@ -92,7 +94,9 @@ export class NbTestAdapter {
                 case 'failed':
                 case 'errored':
                     this.itemsToRun?.delete(item);
-                    this.currentRun[state](item, message || new TestMessage(''));
+                    if (message) {
+                        this.currentRun[state](item, message);
+                    }
                     break;
             }
             if (!noPassDown) {

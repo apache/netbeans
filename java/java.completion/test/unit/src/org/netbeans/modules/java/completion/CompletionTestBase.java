@@ -214,14 +214,12 @@ public class CompletionTestBase extends CompletionTestBaseBase {
             String varName = elem.getSimpleName().toString();
             String typeName = type != null ? info.getTypeUtilities().getTypeName(type).toString() : null;
             ElementKind ek = elem.getKind();
-            if (TreeShims.BINDING_VARIABLE.equals(ek.name())) {
-                ek = ElementKind.LOCAL_VARIABLE;
-            }
             switch (ek) {
                 case LOCAL_VARIABLE:
                 case RESOURCE_VARIABLE:
                 case PARAMETER:
                 case EXCEPTION_PARAMETER:
+                case BINDING_VARIABLE:
                     return new CI((typeName != null ? typeName + " " : "") + varName, smartType ? 200 - SMART_TYPE : 200, varName);
                 case ENUM_CONSTANT:
                 case FIELD:

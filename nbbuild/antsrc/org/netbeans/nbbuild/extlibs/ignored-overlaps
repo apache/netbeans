@@ -32,7 +32,8 @@ ide/db.dataview/external/commons-compress-1.20.jar java/java.disco/external/comm
 # It happens that maven 3.3.9 uses commons-lang-2.6.jar, same as o.apache.commons.lang
 # and commons-io-2.5.jar, same as java.lsp.server
 # These are used independently, different functional goals
-java/java.lsp.server/external/commons-io-2.5.jar java/maven.embedder/external/apache-maven-3.6.3-bin.zip
+# maven 3.8.4 use common-io-2.6 java/java.lsp.server/external/commons-io-2.5.jar java/maven.embedder/external/apache-maven-3.6.3-bin.zip
+platform/o.apache.commons.io/external/commons-io-2.6.jar java/maven.embedder/external/apache-maven-3.8.4-bin.zip
 
 # Contains test data (badPackageFileInJar.jar is packaged twice) - this is an
 # upstream problem
@@ -41,6 +42,10 @@ nbbuild/external/langtools-9.zip nbbuild/external/langtools-9.zip
 # Used to parse data during build, but need to as a lib for ide cluster
 nbbuild/external/json-simple-1.1.1.jar ide/libs.json_simple/external/json-simple-1.1.1.jar
 
+# Compile only nb-javac
+java/libs.nbjavacapi/external/nb-javac-jdk-17+35-api.jar nbbuild/external/nb-javac-jdk-17+35-api.jar
+java/libs.nbjavacapi/external/nb-javac-jdk-17+35.jar nbbuild/external/nb-javac-jdk-17+35.jar
+
 # JFlex is used by multiple modules.
 webcommon/javascript2.jade/external/jflex-1.4.3.jar webcommon/javascript2.lexer/external/jflex-1.4.3.jar
 
@@ -48,6 +53,10 @@ webcommon/javascript2.jade/external/jflex-1.4.3.jar webcommon/javascript2.lexer/
 enterprise/javaee.api/external/javax.annotation-api-1.2.jar java/maven.indexer/external/javax.annotation-api-1.2.jar
 enterprise/javaee7.api/external/javax.annotation-api-1.2.jar enterprise/javaee8.api/external/javax.annotation-api-1.2.jar
 enterprise/javaee8.api/external/javax.annotation-api-1.2.jar java/maven.indexer/external/javax.annotation-api-1.2.jar
+enterprise/javaee8.api/external/javax.annotation-api-1.2.jar java/maven.embedder/external/apache-maven-3.8.4-bin.zip
+enterprise/javaee7.api/external/javax.annotation-api-1.2.jar java/maven.embedder/external/apache-maven-3.8.4-bin.zip
+java/maven.indexer/external/javax.annotation-api-1.2.jar java/maven.embedder/external/apache-maven-3.8.4-bin.zip
+
 
 # jaxb-api-osgi is used by multiple modules.
 enterprise/javaee.api/external/jaxb-api-osgi-2.2.7.jar enterprise/javaee7.api/external/jaxb-api-osgi-2.2.7.jar
@@ -71,7 +80,7 @@ extide/gradle/external/gradle-7.3-bin.zip ide/c.jcraft.jzlib/external/jzlib-1.1.
 extide/gradle/external/gradle-7.3-bin.zip ide/libs.antlr4.runtime/external/antlr4-runtime-4.7.2.jar
 extide/gradle/external/gradle-7.3-bin.zip ide/o.apache.commons.lang/external/commons-lang-2.6.jar
 extide/gradle/external/gradle-7.3-bin.zip ide/o.eclipse.jgit/external/org.eclipse.jgit-5.7.0.202003110725-r.jar
-extide/gradle/external/gradle-7.3-bin.zip java/maven.embedder/external/apache-maven-3.6.3-bin.zip
+extide/gradle/external/gradle-7.3-bin.zip java/maven.embedder/external/apache-maven-3.8.4-bin.zip
 extide/gradle/external/gradle-7.3-bin.zip platform/libs.junit4/external/hamcrest-core-1.3.jar
 extide/gradle/external/gradle-7.3-bin.zip platform/libs.junit4/external/junit-4.13.2.jar
 extide/gradle/external/gradle-7.3-bin.zip platform/libs.testng/external/jcommander-1.78.jar
@@ -113,5 +122,5 @@ webcommon/javascript2.jsdoc/external/testfiles-jsdoc-1.zip webcommon/javascript2
 harness/apisupport.harness/external/launcher-12.5-distribution.zip platform/o.n.bootstrap/external/launcher-12.5-distribution.zip
 
 # only one is part of the product:
-java/libs.javacapi/external/nb-javac-jdk-17+35-api.jar java/libs.nbjavacapi/external/nb-javac-jdk-17+35-api.jar
-java/libs.javacapi/external/nb-javac-jdk-17+35.jar java/libs.nbjavacapi/external/nb-javac-jdk-17+35.jar
+java/libs.javacapi/external/nb-javac-jdk-17.0.1-ga-api.jar java/libs.nbjavacapi/external/nb-javac-jdk-17.0.1-ga-api.jar
+java/libs.javacapi/external/nb-javac-jdk-17.0.1-ga.jar java/libs.nbjavacapi/external/nb-javac-jdk-17.0.1-ga.jar

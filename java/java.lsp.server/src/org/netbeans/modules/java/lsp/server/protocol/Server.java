@@ -18,7 +18,6 @@
  */
 package org.netbeans.modules.java.lsp.server.protocol;
 
-import org.netbeans.modules.java.lsp.server.explorer.api.NodeChangedParams;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -97,6 +96,7 @@ import org.netbeans.modules.java.lsp.server.LspServerState;
 import org.netbeans.modules.java.lsp.server.LspSession;
 import org.netbeans.modules.java.lsp.server.Utils;
 import org.netbeans.modules.java.lsp.server.explorer.LspTreeViewServiceImpl;
+import org.netbeans.modules.java.lsp.server.explorer.api.NodeChangedParams;
 import org.netbeans.modules.java.lsp.server.explorer.api.TreeViewService;
 import org.netbeans.modules.java.lsp.server.files.OpenedDocuments;
 import org.netbeans.modules.java.lsp.server.progress.OperationContext;
@@ -355,13 +355,13 @@ public final class Server {
          * @return future that yields the opened project instances.
          */
         @Override
-        public CompletableFuture<Project[]> asyncOpenSelectedProjects(List<FileObject> projectCandidates) {
+        public CompletableFuture<Project[]> asyncOpenSelectedProjects(List<FileObject> projectCandidates, boolean addWorkspace) {
             if (projectCandidates == null || projectCandidates.isEmpty()) {
                 return CompletableFuture.completedFuture(new Project[0]);
             }
             CompletableFuture<Project[]> f = new CompletableFuture<>();
             SERVER_INIT_RP.post(() -> {
-                asyncOpenSelectedProjects0(f, projectCandidates, true, false);
+                asyncOpenSelectedProjects0(f, projectCandidates, addWorkspace, false);
             });
             return f;
         }
@@ -695,9 +695,10 @@ public final class Server {
                 capabilities.setImplementationProvider(true);
                 capabilities.setDocumentHighlightProvider(true);
                 capabilities.setReferencesProvider(true);
-                List<String> commands = new ArrayList<>(Arrays.asList(
-                        GRAALVM_PAUSE_SCRIPT,
+                List<String> commands = new ArrayList<>(Arrays.asList(GRAALVM_PAUSE_SCRIPT,
                         JAVA_BUILD_WORKSPACE,
+                        JAVA_CLEAN_WORKSPACE,
+                        JAVA_RUN_PROJECT_ACTION,
                         JAVA_FIND_DEBUG_ATTACH_CONFIGURATIONS,
                         JAVA_FIND_DEBUG_PROCESS_TO_ATTACH,
                         JAVA_FIND_PROJECT_CONFIGURATIONS,
@@ -709,6 +710,7 @@ public final class Server {
                         JAVA_NEW_PROJECT,
                         JAVA_PROJECT_CONFIGURATION_COMPLETION,
                         JAVA_SUPER_IMPLEMENTATION,
+                        JAVA_SOURCE_FOR,
                         JAVA_CLEAR_PROJECT_CACHES,
                         NATIVE_IMAGE_FIND_DEBUG_PROCESS_TO_ATTACH));
                 for (CodeActionsProvider codeActionsProvider : Lookup.getDefault().lookupAll(CodeActionsProvider.class)) {
@@ -840,6 +842,7 @@ public final class Server {
                 }
             });
             sessionServices.add(new WorkspaceUIContext(client));
+            sessionServices.add(treeService.getNodeRegistry());
             ((LanguageClientAware) getTextDocumentService()).connect(client);
             ((LanguageClientAware) getWorkspaceService()).connect(client);
             ((LanguageClientAware) treeService).connect(client);
@@ -847,6 +850,7 @@ public final class Server {
     }
 
     public static final String JAVA_BUILD_WORKSPACE =  "java.build.workspace";
+    public static final String JAVA_CLEAN_WORKSPACE =  "java.clean.workspace";
     public static final String JAVA_NEW_FROM_TEMPLATE =  "java.new.from.template";
     public static final String JAVA_NEW_PROJECT =  "java.new.project";
     public static final String JAVA_GET_PROJECT_SOURCE_ROOTS = "java.get.project.source.roots";
@@ -854,7 +858,9 @@ public final class Server {
     public static final String JAVA_GET_PROJECT_PACKAGES = "java.get.project.packages";
     public static final String JAVA_LOAD_WORKSPACE_TESTS =  "java.load.workspace.tests";
     public static final String JAVA_SUPER_IMPLEMENTATION =  "java.super.implementation";
+    public static final String JAVA_SOURCE_FOR =  "java.source.for";
     public static final String GRAALVM_PAUSE_SCRIPT =  "graalvm.pause.script";
+    public static final String JAVA_RUN_PROJECT_ACTION = "java.project.run.action";
 
     /**
      * Enumerates project configurations.
@@ -972,6 +978,12 @@ public final class Server {
         @Override
         public void notifyNodeChange(NodeChangedParams params) {
             logWarning(params);
+        }
+
+        @Override
+        public CompletableFuture<String> showHtmlPage(HtmlPageParams params) {
+            logWarning(params);
+            return CompletableFuture.completedFuture(null);
         }
     };
 

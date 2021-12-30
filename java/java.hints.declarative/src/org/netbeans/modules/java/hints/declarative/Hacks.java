@@ -56,7 +56,6 @@ import org.netbeans.api.java.source.ClasspathInfo;
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.modules.java.hints.spiimpl.Utilities;
 import org.openide.filesystems.FileUtil;
-import org.openide.util.Exceptions;
 
 /**
  *
@@ -80,13 +79,7 @@ public class Hacks {
         DiagnosticListener<JavaFileObject> devNull = new DiagnosticListener<JavaFileObject>() {
             public void report(Diagnostic<? extends JavaFileObject> diagnostic) {}
         };
-        StandardJavaFileManager sjfm;
-        try {
-            sjfm = ToolProvider.getSystemJavaCompiler().getStandardFileManager(devNull, null, null);
-        } catch (Error err) {
-            Exceptions.printStackTrace(err);
-            return Collections.emptyMap();
-        }
+        StandardJavaFileManager sjfm = ToolProvider.getSystemJavaCompiler().getStandardFileManager(devNull, null, null);
 
         final Map<String, ByteArrayOutputStream> class2BAOS = new HashMap<String, ByteArrayOutputStream>();
         sjfm.setLocation(StandardLocation.CLASS_PATH, toFiles(compile));

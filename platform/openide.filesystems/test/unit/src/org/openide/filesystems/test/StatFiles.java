@@ -19,20 +19,19 @@
 package org.openide.filesystems.test;
 
 import java.io.File;
-import java.io.FileDescriptor;
-import java.security.Permission;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import junit.framework.Assert;
+import org.netbeans.agent.hooks.TrackingHooks;
 
 /**
  *
  * @author rmatous, Jiri Skrivanek
  */
-public class StatFiles extends SecurityManager {
+public class StatFiles extends TrackingHooks {
 
     public static final int ALL = 0;
     public static final int READ = 1;
@@ -40,23 +39,17 @@ public class StatFiles extends SecurityManager {
     public static final int DELETE = 3;
     private Results results;
     private Monitor monitor;
-    private SecurityManager defaultSecurityManager;
 
     public StatFiles() {
         reset();
     }
 
     public void register() {
-        if (defaultSecurityManager == null) {
-            defaultSecurityManager = System.getSecurityManager();
-        }
-        System.setSecurityManager(this);
+        TrackingHooks.register(this, 0, TrackingHooks.HOOK_IO);
     }
     
     public void unregister() {
-        if (defaultSecurityManager == null) {
-            System.setSecurityManager(defaultSecurityManager);
-        }
+        TrackingHooks.unregister(this);
     }
     
     public void reset() {
@@ -72,16 +65,7 @@ public class StatFiles extends SecurityManager {
     }
 
     @Override
-    public void checkPermission(Permission perm) {
-    }
-
-    @Override
-    public void checkRead(FileDescriptor fd) {
-        super.checkRead(fd);
-    }
-
-    @Override
-    public void checkRead(String file) {
+    public void checkFileRead(String file) {
         File f = new File(file);
         if (!canBeSkipped()) {
             if (monitor != null) {
@@ -94,17 +78,7 @@ public class StatFiles extends SecurityManager {
     }
 
     @Override
-    public void checkRead(String file, Object context) {
-        super.checkRead(file, context);
-    }
-
-    @Override
-    public void checkWrite(FileDescriptor fd) {
-        super.checkWrite(fd);
-    }
-
-    @Override
-    public void checkWrite(String file) {
+    public void checkFileWrite(String file) {
         File f = new File(file);
         if (!canBeSkipped()) {
             if (monitor != null) {

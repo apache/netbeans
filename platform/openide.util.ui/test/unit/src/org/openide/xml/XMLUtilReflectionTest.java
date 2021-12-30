@@ -20,7 +20,8 @@
 package org.openide.xml;
 
 import java.io.*;
-import java.security.Permission;
+import java.lang.reflect.AccessibleObject;
+import java.lang.reflect.Member;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -28,6 +29,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 import junit.framework.Assert;
+import org.netbeans.agent.hooks.TrackingHooks;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXParseException;
 
@@ -95,12 +97,12 @@ public class XMLUtilReflectionTest extends org.netbeans.junit.NbTestCase {
         assertNotNull("Reader provider", XMLUtil.createXMLReader(validate, namespace));
     }
     
-    static final class CountingSecurityManager extends SecurityManager {
-        public static void initialize() {
-            if (System.getSecurityManager() instanceof CountingSecurityManager) {
-                // ok
-            } else {
-                System.setSecurityManager(new CountingSecurityManager());
+    static final class CountingSecurityManager extends TrackingHooks {
+        private static boolean initialized;
+        public static synchronized void initialize() {
+            if (!initialized) {
+                TrackingHooks.register(new CountingSecurityManager(), 0, HOOK_ACCESSIBLE);
+                initialized = true;
             }
             members.clear();
         }
@@ -128,11 +130,15 @@ public class XMLUtilReflectionTest extends org.netbeans.junit.NbTestCase {
         }
 
         static Map<Class,Who> members = Collections.synchronizedMap(new HashMap<Class, Who>());
-        public void checkMemberAccess(Class<?> clazz, int which) {
-            if (clazz == null) {
-                assertMembers(which);
-            }
 
+        @Override
+        protected void checkSetAccessible(AccessibleObject what) {
+            Class<?> clazz;
+            if (what instanceof Member) {
+                clazz = ((Member) what).getDeclaringClass();
+            } else {
+                throw new IllegalArgumentException(what.getClass().toString());
+            }
             Who w = members.get(clazz);
             if (w == null) {
                 w = new Who(clazz);
@@ -219,13 +225,6 @@ public class XMLUtilReflectionTest extends org.netbeans.junit.NbTestCase {
             }
         }
 
-        @Override
-        public void checkPermission(Permission perm, Object context) {
-        }
-
-        @Override
-        public void checkPermission(Permission perm) {
-        }
     }
     
 }

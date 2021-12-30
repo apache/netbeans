@@ -18,7 +18,7 @@
  */
 package org.openide;
 
-import java.security.Permission;
+import org.netbeans.agent.hooks.TrackingHooks;
 import org.netbeans.junit.NbTestCase;
 
 /**
@@ -27,7 +27,7 @@ import org.netbeans.junit.NbTestCase;
  */
 public class LifecycleManagerTest extends NbTestCase {
     static {
-        System.setSecurityManager(new ChokeOnExit());
+        TrackingHooks.register(new ChokeOnExit(), 0, TrackingHooks.HOOK_EXIT);
         System.setProperty("netbeans.full.hack", "true");
     }
     
@@ -49,7 +49,7 @@ public class LifecycleManagerTest extends NbTestCase {
         }
     }
     
-    private static final class ChokeOnExit extends SecurityManager {
+    private static final class ChokeOnExit extends TrackingHooks {
         static int expectedExitCode;
         
         @Override
@@ -61,9 +61,6 @@ public class LifecycleManagerTest extends NbTestCase {
             }
         }
 
-        @Override
-        public void checkPermission(Permission perm) {
-        }
     }
     
     private static final class Exit extends SecurityException {

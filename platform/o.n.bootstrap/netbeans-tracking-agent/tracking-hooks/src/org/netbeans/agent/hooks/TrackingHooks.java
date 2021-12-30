@@ -31,6 +31,7 @@ import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -79,6 +80,17 @@ public abstract class TrackingHooks {
 
     public static synchronized void clear() {
         hook2Delegates.clear();
+    }
+
+    public static synchronized void unregister(TrackingHooks toRemove) {
+        for (Set<HookDescription> delegates : hook2Delegates.values()) {
+            for (Iterator<HookDescription> it = delegates.iterator(); it.hasNext();) {
+                HookDescription hd = it.next();
+                if (hd.hooks == toRemove) {
+                    it.remove();
+                }
+            }
+        }
     }
 
     public static synchronized  boolean isInstalled() {

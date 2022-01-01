@@ -4862,7 +4862,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
             if (!modifiers.contains(ABSTRACT)) {
                 kws.add(ABSTRACT_KEYWORD);
             }
-            if (!contains(modifiers, "SEALED") && !contains(modifiers, "NON_SEALED")) {
+            if (!modifiers.contains(SEALED) && !modifiers.contains(NON_SEALED)) {
                 if (!modifiers.contains(ABSTRACT)) {
                     kws.add(FINAL_KEYWORD);
                 }
@@ -4882,14 +4882,6 @@ public final class JavaCompletionTask<T> extends BaseTask {
             if (Utilities.startsWith(kw, prefix)) {
                 results.add(itemFactory.createKeywordItem(kw, SPACE, anchorOffset, false));
             }
-        }
-    }
-
-    private static boolean contains(Set<Modifier> modifiers, String modifier) {
-        try {
-            return modifiers.contains(Modifier.valueOf(modifier));
-        } catch (IllegalArgumentException ex) {
-            return false;
         }
     }
 

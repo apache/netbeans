@@ -24,6 +24,7 @@ addons:
       - xvfb
       - openjfx
       - libgfortran3
+      - libxml2-utils
 
 install:
   - export PATH="$PATH:$TRAVIS_BUILD_DIR/nbbuild/travis"
@@ -34,6 +35,10 @@ install:
 cache:
   directories:
   - $HOME/.hgexternalcache
+
+git:
+  quiet: true
+  depth: 3
 
 matrix:
     include:
@@ -717,3 +722,7 @@ matrix:
           script:
             - export JAVA_HOME=$TEST_JDK
             - hide-logs.sh ant $OPTS commit-validation
+
+after_failure:
+  - nbbuild/travis/print-junit-report.sh
+  - sleep 3

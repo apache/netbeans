@@ -148,6 +148,8 @@ public class ElementJavadoc {
     private final Callable<Boolean> cancel;
     private Map<String, ElementHandle<? extends Element>> links = new HashMap<>();
     private List<? extends ImportTree> imports;
+    private String packageName;
+    private String className;
     private int linkCounter = 0;
     private volatile URL docURL = null;
     private volatile URL docRoot = null;
@@ -385,7 +387,10 @@ public class ElementJavadoc {
         this.fileObject = compilationInfo.getFileObject();
         this.handle = element == null ? null : ElementHandle.create(element);
         this.cancel = cancel;
+        this.packageName = compilationInfo.getCompilationUnit().getPackageName().toString();
         this.imports = compilationInfo.getCompilationUnit().getImports();
+        this.className = compilationInfo.getCompilationUnit().getSourceFile().getName().replaceFirst("[.][^.]+$", "");
+
         final StringBuilder header = getElementHeader(element, compilationInfo);
         try {
             //Optimisitic no http
@@ -1324,7 +1329,7 @@ public class ElementJavadoc {
         MarkupTagProcessor tagProcessor = new MarkupTagProcessor();
         MarkupTagProcessor.ProcessedTags tags = tagProcessor.process(parseResult);
         applyTags(parseResult, tags, sb);
-        
+
         sb.append("</code>"); //NOI18N
         sb.append("</pre>"); //NOI18N
     }
@@ -1513,6 +1518,7 @@ public class ElementJavadoc {
         String linkHtmlStartTag = "";
         String linkHtmlEndTag = "";
         try {
+            linkTarget = linkTarget.startsWith("#") ? className+linkTarget : linkTarget;
             String javaDocCodeBody = prepareJavaDocForSnippetMarkupLinkTag(linkTarget);
             String fullClassCode = addImportsToSource(javaDocCodeBody);
             JavaDocSnippetLinkTagFileObject docSnippetLinkTagFileObject = new JavaDocSnippetLinkTagFileObject(fullClassCode);
@@ -1574,6 +1580,7 @@ public class ElementJavadoc {
                 source.append(impTree.toString()).append("\n");
             }
         }
+        source.append("import ").append(packageName).append(".*;");
         return source.append(javaDocClassBody).toString();
 
     }
@@ -1607,12 +1614,21 @@ public class ElementJavadoc {
     
     private void createSnippetMarkupLinkTag(StringBuilder sb, JavaDocSnippetLinkTagFileObject fileObject) throws IOException {
         JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
-        JavacTask task = (JavacTask)compiler.getTask(null, null, null, null, null, Arrays.asList(fileObject));
+        StringBuilder prjClsPath = new StringBuilder();
+        String prjSrcPath = cpInfo.getClassPath(ClasspathInfo.PathKind.SOURCE).toString();
+        prjClsPath.append(prjSrcPath);
+
+        for(ClassPath.Entry cpe : cpInfo.getClassPath(ClasspathInfo.PathKind.COMPILE).entries()){
+            prjClsPath.append(";");
+            prjClsPath.append(cpe.getRoot().getFileSystem().getDisplayName());
+        }
+        List<String> opt = Arrays.asList("-cp",prjClsPath.toString());
+        JavacTask task = (JavacTask) compiler.getTask(null, null, null, opt, null, Arrays.asList(fileObject));
 
         DocTrees docTrees = DocTrees.instance(task);//trees
 
         Iterable<? extends Element> docClass = task.analyze();
-        
+
         main:
         for(Element element: docClass){
             for(Element docClassMember : element.getEnclosedElements()){

@@ -1478,7 +1478,9 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                 try {
                     List<TextEdit> edits = TextDocumentServiceImpl.modify2TextEdits(js, wc -> {
                         wc.toPhase(JavaSource.Phase.RESOLVED);
-                        OrganizeImports.doOrganizeImports(wc, null, false);
+                        if (wc.getDiagnostics().isEmpty()) {
+                            OrganizeImports.doOrganizeImports(wc, null, false);
+                        }
                     });
                     return edits;
                 } catch (IOException ex) {}

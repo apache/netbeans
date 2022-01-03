@@ -40,12 +40,15 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BiConsumer;
@@ -111,6 +114,9 @@ import org.netbeans.spi.project.ActionProgress;
 import org.netbeans.spi.project.ActionProvider;
 import org.netbeans.spi.project.ProjectConfiguration;
 import org.netbeans.spi.project.ProjectConfigurationProvider;
+import org.netbeans.spi.project.ui.ProjectProblemsProvider;
+import org.openide.DialogDisplayer;
+import org.openide.NotifyDescriptor;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.URLMapper;
 import org.openide.util.Exceptions;
@@ -484,6 +490,61 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                 CompletableFuture<List<CompletionItem>> joinedFuture = CompletableFuture.allOf(completionFutures.toArray(new CompletableFuture[0]))
                         .thenApply(avoid -> completionFutures.stream().flatMap(c -> c.join().stream()).collect(Collectors.toList()));
                 return (CompletableFuture<Object>) (CompletableFuture<?>) joinedFuture;
+            }
+            case Server.JAVA_PROJECT_RESOLVE_PROJECT_PROBLEMS: {
+                CompletableFuture<Object> result = new CompletableFuture<>();
+                List<Object> arguments = params.getArguments();
+                if (!arguments.isEmpty()) {
+                    String fileStr = ((JsonPrimitive) arguments.get(0)).getAsString();
+                    FileObject file;
+                    try {
+                        file = URLMapper.findFileObject(URI.create(fileStr).toURL());
+                    } catch (MalformedURLException ex) {
+                        result.completeExceptionally(ex);
+                        return result;
+                    }
+                    Project project = FileOwnerQuery.getOwner(file);
+                    if (project != null) {
+                        ProjectProblemsProvider ppp = project.getLookup().lookup(ProjectProblemsProvider.class);
+                        if (ppp != null) {
+                            Collection<? extends ProjectProblemsProvider.ProjectProblem> problems = ppp.getProblems();
+                            if (!problems.isEmpty()) {
+                                List<Pair<ProjectProblemsProvider.ProjectProblem, Future<ProjectProblemsProvider.Result>>> resolvers = new LinkedList<>();
+                                for (ProjectProblemsProvider.ProjectProblem problem : ppp.getProblems()) {
+                                    if (problem.isResolvable()) {
+                                        resolvers.add(Pair.of(problem, problem.resolve()));
+                                    } else {
+                                        DialogDisplayer.getDefault().notifyLater(new NotifyDescriptor.Message(problem.getDescription(), NotifyDescriptor.Message.ERROR_MESSAGE));
+                                    }
+                                }
+                                if (resolvers.isEmpty()) {
+                                    result.complete(true);
+                                } else {
+                                    result = CompletableFuture.supplyAsync(() -> {
+                                        for (Pair<ProjectProblemsProvider.ProjectProblem, Future<ProjectProblemsProvider.Result>> resolver : resolvers) {
+                                            try {
+                                                if (!resolver.second().get().isResolved()) {
+                                                    String message = resolver.second().get().getMessage();
+                                                    if (message != null) {
+                                                        DialogDisplayer.getDefault().notifyLater(new NotifyDescriptor.Message(message, NotifyDescriptor.Message.ERROR_MESSAGE));
+                                                    }
+                                                }
+                                            } catch (ExecutionException ex) {
+                                                throw new RuntimeException(ex.getCause());
+                                            } catch (InterruptedException ex) {
+                                                return false;
+                                            }
+                                        }
+                                        return true;
+                                    }, new RequestProcessor());
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    result.completeExceptionally(new IllegalStateException("Expecting file URL as an argument to " + command));
+                }
+                return result;
             }
             case Server.JAVA_CLEAR_PROJECT_CACHES: {
                 // politely clear project manager's cache of "no project" answers

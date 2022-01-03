@@ -26,6 +26,7 @@ import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.Future;
 import org.netbeans.api.project.Project;
 import org.netbeans.spi.project.ProjectServiceProvider;
@@ -81,10 +82,11 @@ public class GradleProjectProblemProvider implements ProjectProblemsProvider {
         GradleProject gp = project.getLookup().lookup(NbGradleProjectImpl.class).getGradleProject();
         if (gp.getQuality().notBetterThan(EVALUATED)) {
             ret.add(ProjectProblem.createError(Bundle.LBL_PrimingRequired(), Bundle.TXT_PrimingRequired(), resolver));
-        }
-        for (String problem : gp.getProblems()) {
-            String[] lines = problem.split("\\n"); //NOI18N
-            ret.add(ProjectProblem.createWarning(lines[0], problem.replaceAll("\\n", "<br/>"), resolver)); //NOI18N
+        } else {
+            for (String problem : gp.getProblems()) {
+                String[] lines = problem.split("\\n"); //NOI18N
+                ret.add(ProjectProblem.createWarning(lines[0], problem.replaceAll("\\n", "<br/>"), resolver)); //NOI18N
+            }
         }
         return ret;
     }
@@ -98,7 +100,12 @@ public class GradleProjectProblemProvider implements ProjectProblemsProvider {
                 Quality q = gradleProject.getQuality();
                 Status st = q.worseThan(SIMPLE) ? Status.UNRESOLVED
                         : q.worseThan(FULL) ? Status.RESOLVED_WITH_WARNING : Status.RESOLVED;
-                return Result.create(st);
+                Set<String> problems = gradleProject.getProblems();
+                if (problems.isEmpty()) {
+                    return Result.create(st);
+                } else {
+                    return Result.create(st, problems.iterator().next());
+                }
             });
        }
     }

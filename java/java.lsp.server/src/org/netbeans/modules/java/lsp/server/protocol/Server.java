@@ -709,6 +709,7 @@ public final class Server {
                         JAVA_NEW_FROM_TEMPLATE,
                         JAVA_NEW_PROJECT,
                         JAVA_PROJECT_CONFIGURATION_COMPLETION,
+                        JAVA_PROJECT_RESOLVE_PROJECT_PROBLEMS,
                         JAVA_SUPER_IMPLEMENTATION,
                         JAVA_SOURCE_FOR,
                         JAVA_CLEAR_PROJECT_CACHES,
@@ -882,6 +883,10 @@ public final class Server {
      * Provides code-completion of configurations.
      */
     public static final String JAVA_PROJECT_CONFIGURATION_COMPLETION = "java.project.configuration.completion";
+    /**
+     * Provides resolution of project problems.
+     */
+    public static final String JAVA_PROJECT_RESOLVE_PROJECT_PROBLEMS = "java.project.resolveProjectProblems";
 
 
     /**

@@ -65,7 +65,7 @@ public class FoldManagerImplTest {
 
         List<FoldInfo> infos = FoldManagerImpl.computeInfos(doc, ranges);
         assertEquals(1, infos.size());
-        assertEquals(0, infos.get(0).getStart());
+        assertEquals(6, infos.get(0).getStart());
         assertEquals(20, infos.get(0).getEnd());
     }
 
@@ -121,10 +121,10 @@ public class FoldManagerImplTest {
         assertNotNull(infos);
         assertEquals(2, infos.size());
         // first fold
-        assertEquals(31, infos.get(0).getStart());
+        assertEquals(51, infos.get(0).getStart());
         assertEquals(103, infos.get(0).getEnd());
         // second fold
-        assertEquals(52, infos.get(1).getStart());
+        assertEquals(59, infos.get(1).getStart());
         assertEquals(67, infos.get(1).getEnd());
     }
 

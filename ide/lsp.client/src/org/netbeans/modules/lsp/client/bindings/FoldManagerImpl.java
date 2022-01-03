@@ -136,7 +136,13 @@ public class FoldManagerImpl implements FoldManager, BackgroundTask {
         List<FoldInfo> infos = new ArrayList<>();
         if (ranges != null) {
             for (FoldingRange r : ranges) {
-                int start = Utils.getOffset(doc, new Position(r.getStartLine(), r.getStartCharacter() != null ? r.getStartCharacter() : 0));
+                int start;
+                if(r.getStartCharacter() == null) {
+                    int endCharacter = Utils.getEndCharacter(doc, r.getStartLine());
+                    start = Utils.getOffset(doc, new Position(r.getStartLine(), endCharacter));
+                } else {
+                    start = Utils.getOffset(doc, new Position(r.getStartLine(), r.getStartCharacter()));
+                }
                 int end;
                 if (r.getEndCharacter() == null) {
                     int endCharacter = Utils.getEndCharacter(doc, r.getEndLine());

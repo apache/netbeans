@@ -108,7 +108,7 @@ BUILD_BASE="./build"
 DIST=${DIST_BASE}/$(OSNAME)-$(PLATFORM)
 BUILD=${BUILD_BASE}/$(OSNAME)-$(PLATFORM)
 
-INSTALLDIR=../../nbbuild/netbeans/cnd/bin
+INSTALLDIR=../../../nbbuild/netbeans/cnd/bin
 
 all: build_impl install ${CODEAN_TARGET}
 

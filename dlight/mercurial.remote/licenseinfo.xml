@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
 
     Licensed to the Apache Software Foundation (ASF) under one
@@ -18,18 +19,13 @@
     under the License.
 
 -->
-
-C/C++ Support
--------------
-
-See https://cwiki.apache.org/confluence/display/NETBEANS/4th+and+5th+donations
-for details on how the C/C++ support donated by Oracle has been incorporated to
-Apache NetBeans.
-
-Building
---------
-
-To build the C/C++ support, invoke:
-
-ant -Dcluster.config=cnd
-
+<licenseinfo>
+    <fileset>
+        <file>src/org/netbeans/modules/mercurial/remote/util/log-full-changeset.tmpl</file>
+        <file>src/org/netbeans/modules/mercurial/remote/util/log-no-files-changeset.tmpl</file>
+        <file>src/org/netbeans/modules/mercurial/remote/util/log-only-file-copies-changeset.tmpl</file>
+        <file>src/org/netbeans/modules/mercurial/remote/util/log.style</file>
+        <license ref="Apache-2.0-ASF" />
+        <comment type="TEMPLATE_MINIMAL_IP" />
+    </fileset>
+</licenseinfo>

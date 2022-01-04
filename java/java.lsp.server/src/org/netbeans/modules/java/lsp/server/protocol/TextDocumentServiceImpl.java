@@ -895,7 +895,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                             }
                             action.setKind(kind(err.getSeverity()));
                             if (inputAction.getCommand() != null) {
-                                action.setCommand(new Command(inputAction.getCommand().getTitle(), inputAction.getCommand().getCommand()));
+                                action.setCommand(new Command(inputAction.getCommand().getTitle(), inputAction.getCommand().getCommand(), Arrays.asList(params.getTextDocument().getUri())));
                             }
                             if (inputAction.getEdit() != null) {
                                 org.netbeans.api.lsp.WorkspaceEdit edit = inputAction.getEdit();

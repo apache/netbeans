@@ -28,6 +28,7 @@ export class NbTestAdapter {
 	private disposables: { dispose(): void }[] = [];
     private currentRun: TestRun | undefined;
     private itemsToRun: Set<TestItem> | undefined;
+    private started: boolean = false;
 
     constructor() {
         this.testController = tests.createTestController('apacheNetBeansController', 'Apache NetBeans');
@@ -51,9 +52,11 @@ export class NbTestAdapter {
 
     async run(request: TestRunRequest, cancellation: CancellationToken): Promise<void> {
         if (!this.currentRun) {
+            commands.executeCommand('workbench.debug.action.focusRepl');
             cancellation.onCancellationRequested(() => this.cancel());
             this.currentRun = this.testController.createTestRun(request);
             this.itemsToRun = new Set();
+            this.started = false;
             if (request.include) {
                 const include = [...new Map(request.include.map(item => !item.uri && item.parent?.uri ? [item.parent.id, item.parent] : [item.id, item])).values()];
                 for (let item of include) {
@@ -71,7 +74,9 @@ export class NbTestAdapter {
                     }
                 }
             }
-            this.itemsToRun.forEach(item => this.set(item, 'skipped'));
+            if (this.started) {
+                this.itemsToRun.forEach(item => this.set(item, 'skipped'));
+            }
             this.itemsToRun = undefined;
             this.currentRun.end();
             this.currentRun = undefined;
@@ -130,6 +135,7 @@ export class NbTestAdapter {
                 this.updateTests(suite);
                 break;
             case 'started':
+                this.started = true;
                 if (currentSuite) {
                     this.set(currentSuite, 'started');
                 }

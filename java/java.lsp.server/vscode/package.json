@@ -436,6 +436,11 @@
                                 "title": "Add Database Connection",
  				"category": "Database"
                         },
+                        {
+                                "command": "db.entity.from.tables",
+                                "title": "Generate Entity Classes from DB",
+ 				"category": "Database"
+                        },
 			{
 				"command": "nbls:Database:netbeans.db.explorer.action.Connect",
 				"title": "Connect to Database"

@@ -492,7 +492,7 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                 return (CompletableFuture<Object>) (CompletableFuture<?>) joinedFuture;
             }
             case Server.JAVA_PROJECT_RESOLVE_PROJECT_PROBLEMS: {
-                CompletableFuture<Object> result = new CompletableFuture<>();
+                final CompletableFuture<Object> result = new CompletableFuture<>();
                 List<Object> arguments = params.getArguments();
                 if (!arguments.isEmpty()) {
                     String fileStr = ((JsonPrimitive) arguments.get(0)).getAsString();
@@ -509,18 +509,16 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                         if (ppp != null) {
                             Collection<? extends ProjectProblemsProvider.ProjectProblem> problems = ppp.getProblems();
                             if (!problems.isEmpty()) {
-                                List<Pair<ProjectProblemsProvider.ProjectProblem, Future<ProjectProblemsProvider.Result>>> resolvers = new LinkedList<>();
-                                for (ProjectProblemsProvider.ProjectProblem problem : ppp.getProblems()) {
-                                    if (problem.isResolvable()) {
-                                        resolvers.add(Pair.of(problem, problem.resolve()));
-                                    } else {
-                                        DialogDisplayer.getDefault().notifyLater(new NotifyDescriptor.Message(problem.getDescription(), NotifyDescriptor.Message.ERROR_MESSAGE));
+                                WORKER.post(() -> {
+                                    List<Pair<ProjectProblemsProvider.ProjectProblem, Future<ProjectProblemsProvider.Result>>> resolvers = new LinkedList<>();
+                                    for (ProjectProblemsProvider.ProjectProblem problem : ppp.getProblems()) {
+                                        if (problem.isResolvable()) {
+                                            resolvers.add(Pair.of(problem, problem.resolve()));
+                                        } else {
+                                            DialogDisplayer.getDefault().notifyLater(new NotifyDescriptor.Message(problem.getDescription(), NotifyDescriptor.Message.ERROR_MESSAGE));
+                                        }
                                     }
-                                }
-                                if (resolvers.isEmpty()) {
-                                    result.complete(true);
-                                } else {
-                                    result = CompletableFuture.supplyAsync(() -> {
+                                    if (!resolvers.isEmpty()) {
                                         for (Pair<ProjectProblemsProvider.ProjectProblem, Future<ProjectProblemsProvider.Result>> resolver : resolvers) {
                                             try {
                                                 if (!resolver.second().get().isResolved()) {
@@ -530,14 +528,17 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                                                     }
                                                 }
                                             } catch (ExecutionException ex) {
-                                                throw new RuntimeException(ex.getCause());
+                                                result.completeExceptionally(ex.getCause());
                                             } catch (InterruptedException ex) {
-                                                return false;
+                                                result.complete(false);
+                                                break;
                                             }
                                         }
-                                        return true;
-                                    }, new RequestProcessor());
-                                }
+                                    }
+                                    if (!result.isDone()) {
+                                        result.complete(true);
+                                    }
+                                });
                             }
                         }
                     }

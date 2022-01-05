@@ -46,6 +46,18 @@ public abstract class PhpNavigatorTestBase extends ParserTestBase {
         super(testName);
     }
 
+    private static final Comparator<StructureItem> STRUCTURE_ITEM_COMPARATOR = (StructureItem o1, StructureItem o2) -> {
+        String path1 = o1.getElementHandle().getFileObject().getPath();
+        String path2 = o2.getElementHandle().getFileObject().getPath();
+        int result = path1.compareToIgnoreCase(path2);
+        if (result == 0) {
+            long position1 = o1.getPosition();
+            long position2 = o2.getPosition();
+            result = Long.compare(position1, position2);
+        }
+        return result;
+    };
+
     @Override
     protected String getTestResult(String filename) throws Exception {
         StringBuilder sb = new StringBuilder();
@@ -64,7 +76,7 @@ public abstract class PhpNavigatorTestBase extends ParserTestBase {
         UserTask task = new UserTask() {
             @Override
             public void run(ResultIterator resultIterator) throws Exception {
-                PHPParseResult info = (PHPParseResult)resultIterator.getParserResult();
+                PHPParseResult info = (PHPParseResult) resultIterator.getParserResult();
                 if (info != null) {
                     result.addAll(instance.scan(info));
                 }
@@ -81,18 +93,10 @@ public abstract class PhpNavigatorTestBase extends ParserTestBase {
             }
         }
 
-        Comparator<StructureItem> comparator = new Comparator<StructureItem>() {
-            @Override
-            public int compare(StructureItem o1, StructureItem o2) {
-                long position1 = o1.getPosition();
-                long position2 = o2.getPosition();
-                return (int) (position1 - position2);
-            }
-        };
-        Collections.sort(result,comparator);
+        Collections.sort(result, STRUCTURE_ITEM_COMPARATOR);
 
         for (StructureItem structureItem : result) {
-            Collections.sort(structureItem.getNestedItems(),comparator);
+            Collections.sort(structureItem.getNestedItems(), STRUCTURE_ITEM_COMPARATOR);
             sb.append(printStructureItem(structureItem, 0));
             sb.append("\n");
         }
@@ -102,24 +106,31 @@ public abstract class PhpNavigatorTestBase extends ParserTestBase {
     private String printStructureItem(StructureItem structureItem, int indent) {
         StringBuilder sb = new StringBuilder();
         sb.append(indent(indent));
+        if (structureItem instanceof StructureItem.InheritedItem) {
+            if (((StructureItem.InheritedItem) structureItem).isInherited()) {
+                sb.append("(Inherited) ");
+            }
+        }
         sb.append(structureItem.getName());
         sb.append(" [");
         sb.append(structureItem.getPosition());
         sb.append(", ");
         sb.append(structureItem.getEndPosition());
         sb.append("] : ");
-        HtmlFormatter formatter = new TestHtmlFormatter() ;
+        HtmlFormatter formatter = new TestHtmlFormatter();
         sb.append(structureItem.getHtml(formatter));
-        for (StructureItem item : structureItem.getNestedItems()) {
+        List<? extends StructureItem> nestedItems = structureItem.getNestedItems();
+        Collections.sort(nestedItems, STRUCTURE_ITEM_COMPARATOR);
+        for (StructureItem item : nestedItems) {
             sb.append("\n");
-            sb.append(printStructureItem(item, indent+1));
+            sb.append(printStructureItem(item, indent + 1));
         }
         return sb.toString();
     }
 
     private String indent(int indent) {
         String text = "|-";
-        for (int i = 0; i < indent; i++  ) {
+        for (int i = 0; i < indent; i++) {
             text = text + "-";
         }
         return text;

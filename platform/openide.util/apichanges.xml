@@ -25,7 +25,41 @@
         <apidef name="util_base">Base Utilities API</apidef>
         <apidef name="xml_base">XML API</apidef>
     </apidefs>
-    <changes>
+        <changes>
+            <change id="uri-normalize">
+                <api name="util_base"/>
+                <summary>Adding BaseUtilities.normalize</summary>
+                <version major="9" minor="20"/>
+                <date year="2021" month="6" day="15"/>
+                <author login="jlahoda"/>
+                <compatibility addition="yes" binary="compatible" source="compatible"/>
+                <description>
+                    <p>
+                        Adding BaseUtilities.normalize, as a replacement for URI.normalize,
+                        which should more carefully handle certain special URIs in non-normal
+                        form.
+                    </p>
+                </description>
+                <class package="org.openide.util" name="BaseUtilities"/>
+                <issue number="4953"/>
+        </change>
+        <change id="lookup-mutex-event">
+            <api name="util_base"/>
+            <summary>Propagate current Lookup via Mutex.EVENT</summary>
+            <version major="9" minor="18"/>
+            <date year="2021" month="1" day="10"/>
+            <author login="jtulach"/>
+            <compatibility addition="yes" binary="compatible" source="compatible"/>
+            <description>
+                <p>
+                    <a href="@TOP@/org/openide/util/Mutex.html#EVENT">Mutex.EVENT</a>
+                    methods have been enhanced to work well with
+                    <a href="@org-openide-util-lookup@/org/openide/util/lookup/Lookups.html#executeWith-org.openide.util.Lookup-java.lang.Runnable-">Lookups.executeWith(...)</a>.
+                </p>
+            </description>
+            <class package="org.openide.util" name="Mutex"/>
+            <issue number="188604"/>
+        </change>
     <change id="weak-listen-on-specific-property">
         <api name="util_base"/>
         <summary>Weak property and vetoable listeners for a specific property name.</summary>

@@ -4,6 +4,7 @@ public f|unction testAnon() {
 PACKAGE    Firm                            [PUBLIC]   My
 ------------------------------------
 CLASS      FloatClass                      [PUBLIC]   scalarTypeHints.php
+KEYWORD    false                                      null
 KEYWORD    final                                      null
 KEYWORD    float                                      null
 KEYWORD    function                                   null

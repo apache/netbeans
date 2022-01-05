@@ -70,6 +70,7 @@ public class BrokenServerSupport {
      * @return selected application server. Might be <code>null</code>.
      * @deprecated
      */
+    @Deprecated
     public static String selectServer(final String j2eeSpec, final Object moduleType) {
         return NoSelectedServerWarning.selectServerDialog(
                 new Object[] { moduleType }, j2eeSpec,

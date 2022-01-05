@@ -22,6 +22,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import org.netbeans.modules.refactoring.api.RefactoringSession;
+import org.netbeans.modules.refactoring.spi.ModificationResult;
+import org.netbeans.modules.refactoring.spi.RefactoringCommit;
 import org.netbeans.modules.refactoring.spi.RefactoringElementImplementation;
 import org.netbeans.modules.refactoring.spi.RefactoringElementsBag;
 import org.netbeans.modules.refactoring.spi.SimpleRefactoringElementImplementation;
@@ -52,5 +54,6 @@ public abstract class SPIAccessor {
     public abstract boolean hasChangesInReadOnlyFiles(RefactoringElementsBag bag);
     public abstract void check(Transaction commit, boolean undo);
     public abstract void sum(Transaction commit);
+    public abstract Collection<? extends ModificationResult> getTransactions(RefactoringCommit c);
     
 }

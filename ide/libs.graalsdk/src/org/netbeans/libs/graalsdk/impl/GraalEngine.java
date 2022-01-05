@@ -173,13 +173,17 @@ final class GraalEngine implements ScriptEngine, Invocable {
 
     @Override
     public <T> T getInterface(Object thiz, Class<T> clasz) {
-        if (thiz instanceof Value) {
-            return ((Value) thiz).as(clasz);
-        }
-        Value v = factory.ctx.ctx().asValue(thiz);
-        T ret = v.as(clasz);
-        if (ret != null) {
-            return ret;
+        try {
+            if (thiz instanceof Value) {
+                return ((Value) thiz).as(clasz);
+            }
+            Value v = factory.ctx.ctx().asValue(thiz);
+            T ret = v.as(clasz);
+            if (ret != null) {
+                return ret;
+            }
+        } catch (ClassCastException ex) {
+            // the interface is not supported on the value object; ignore.
         }
         if (clasz.isInstance(thiz)) {
             return clasz.cast(thiz);

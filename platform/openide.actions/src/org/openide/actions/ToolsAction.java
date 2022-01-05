@@ -18,6 +18,7 @@
  */
 package org.openide.actions;
 
+import java.awt.Component;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
@@ -362,7 +363,7 @@ public class ToolsAction extends SystemAction implements ContextAwareAction, Pre
 
                     removeAll();
 
-                    Iterator it = generate(toolsAction, false).iterator();
+                    Iterator<JMenuItem> it = generate(toolsAction, false).iterator();
 
                     while (it.hasNext()) {
                         java.awt.Component item = (java.awt.Component) it.next();

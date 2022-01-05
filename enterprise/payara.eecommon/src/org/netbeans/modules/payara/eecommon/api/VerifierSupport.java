@@ -133,7 +133,7 @@ public class VerifierSupport extends TopComponent {
     private Vector<Test> failResults = new Vector<>();
     private Vector<Test> warnResults = new Vector<>();
     private Vector<Error> errorResults = new Vector<>();
-    private Vector naResults = new Vector();
+    private Vector<Test> naResults = new Vector<>();
     private Vector notImplementedResults = new Vector();
     private Vector notRunResults = new Vector();
     private Vector defaultResults = new Vector();

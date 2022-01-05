@@ -154,7 +154,7 @@ public class WebServiceData implements WsdlData {
         boolean oldValue = this.resolved;
         this.resolved = resolved;
         PropertyChangeEvent evt =
-                new PropertyChangeEvent(this, "resolved", Boolean.valueOf(oldValue), Boolean.valueOf(this.resolved)); // NOI18N
+                new PropertyChangeEvent(this, "resolved", oldValue, this.resolved); // NOI18N
 
         for (PropertyChangeListener listener : propertyListeners) {
             listener.propertyChange(evt);

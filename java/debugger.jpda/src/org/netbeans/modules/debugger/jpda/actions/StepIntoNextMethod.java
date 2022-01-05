@@ -46,6 +46,7 @@ import org.netbeans.modules.debugger.jpda.JPDADebuggerImpl;
 import org.netbeans.modules.debugger.jpda.JPDAStepImpl;
 import org.netbeans.modules.debugger.jpda.SourcePath;
 import static org.netbeans.modules.debugger.jpda.actions.StepActionProvider.getTopFrame;
+import org.netbeans.modules.debugger.jpda.impl.StepUtils;
 import org.netbeans.modules.debugger.jpda.jdi.IllegalThreadStateExceptionWrapper;
 import org.netbeans.modules.debugger.jpda.jdi.InternalExceptionWrapper;
 import org.netbeans.modules.debugger.jpda.jdi.InvalidRequestStateExceptionWrapper;
@@ -509,6 +510,7 @@ public class StepIntoNextMethod implements Executor, PropertyChangeListener {
                     tr,
                     stepSize,
                     step);
+            StepUtils.markOriginalStepDepth(stepRequest, tr);
             getDebuggerImpl ().getOperator ().register (stepRequest, this);
             suspendPolicy = getDebuggerImpl().getSuspend();
             EventRequestWrapper.setSuspendPolicy (stepRequest, suspendPolicy);

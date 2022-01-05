@@ -175,7 +175,7 @@ public class JspDataObject extends MultiDataObject implements QueryStringCookie 
                     //the jsp templates contains the ${encoding} property 
                     //so the ICHNE is always thrown for them, just ignore
                     Boolean template = (Boolean)file.getAttribute("template");//NOI18N
-                    if(template == null || !template.booleanValue()) {
+                    if(template == null || !template) {
                         Logger.getLogger("global").log(Level.INFO, "Detected illegal charset name in file " + file.getNameExt() + " (" + ichse.getMessage() + ")");  //NOI18N
                     }
                 } catch (UnsupportedCharsetException uchse) {

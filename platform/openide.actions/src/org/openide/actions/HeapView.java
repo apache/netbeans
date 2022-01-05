@@ -19,6 +19,7 @@
 package org.openide.actions;
 
 import java.awt.AWTEvent;
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -26,10 +27,14 @@ import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.awt.Shape;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
+import java.awt.font.GlyphVector;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.Path2D;
+import java.awt.geom.Rectangle2D;
 import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.prefs.Preferences;
@@ -49,6 +54,8 @@ import org.openide.util.NbPreferences;
  * <li> nb.heapview.background - Color of widget background
  * <li> nb.heapview.foreground - Color of text
  * <li> nb.heapview.chart - Color of area chart
+ * <li> nb.heapview.highlight - Color of outline around the text, to provide a contrast against
+ *                               the chart (may have a non-opaque alpha value)
  * </ul>
  * @author sky, radim, peter
  */
@@ -70,6 +77,11 @@ class HeapView extends JComponent {
      * Color for text.
      */
     private static final Color TEXT_COLOR;
+
+    /**
+     * Color for an outline around the text.
+     */
+    private static final Color OUTLINE_COLOR;
 
     /**
      * Color for the background.
@@ -105,6 +117,15 @@ class HeapView extends JComponent {
             c = new Color(0xCEDBE6);
         }
         BACKGROUND_COLOR = c;
+
+        c = UIManager.getColor("nb.heapview.highlight"); //NOI18N
+        if (null == c) {
+            c = new Color(BACKGROUND_COLOR.getRed(),
+                    BACKGROUND_COLOR.getGreen(),
+                    BACKGROUND_COLOR.getBlue(),
+                    192);
+        }
+        OUTLINE_COLOR = c;
     }
 
     /**
@@ -155,21 +176,15 @@ class HeapView extends JComponent {
     }
 
     /**
-     * Overridden to return true, GCComponent paints in its entire bounds in an
-     * opaque manner.
-     */
-    @Override
-    public boolean isOpaque() {
-        return true;
-    }
-
-    /**
      * Updates the look and feel for this component.
      */
     @Override
     public void updateUI() {
         Font f = UIManager.getFont("Label.font");
         setFont(f);
+        /* Setting this true seems to cause some painting artifacts on 150% scaling, as we don't
+        always manage to fill every device pixel with the background color. So leave it off. */
+        setOpaque(false);
     }
 
     /**
@@ -275,17 +290,23 @@ class HeapView extends JComponent {
 
         if (width > 0 && height > 0) {
             startTimerIfNecessary();
-            Graphics2D g2 = (Graphics2D) g;
-            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-            // Fill background
-            g2.setPaint(BACKGROUND_COLOR);
-            g2.fillRect(0, 0, width + 1, height + 1);
-            // Draw samples
-            g2.setPaint(CHART_COLOR);
-            paintSamples(g2, width, height);
-            // Draw text if enabled
-            if (getShowText()) {
-                paintText(g2, width, height);
+            Graphics2D g2 = (Graphics2D) g.create();
+            try {
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                g2.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
+                g2.clipRect(0, 0, width, height);
+                // Draw background.
+                g2.setColor(BACKGROUND_COLOR);
+                g2.fillRect(0, 0, width, height);
+                // Draw samples
+                g2.setColor(CHART_COLOR);
+                paintSamples(g2, width, height);
+                // Draw text if enabled
+                if (getShowText()) {
+                    paintText(g2, width, height);
+                }
+            } finally {
+              g2.dispose();
             }
         } else {
             stopTimerIfNecessary();
@@ -296,14 +317,22 @@ class HeapView extends JComponent {
      * Renders the text using an optional drop shadow.
      */
     private void paintText(Graphics2D g, int w, int h) {
-        g.setFont(getFont());
+        Font font = getFont();
         String text = getHeapSizeText();
-        FontMetrics fm = g.getFontMetrics();
-        int textWidth = fm.stringWidth(text);
-        int x = (w - maxTextWidth) / 2 + (maxTextWidth - textWidth);
-        int y = h / 2 + fm.getAscent() / 2 - 2;
+        GlyphVector gv = font.createGlyphVector(g.getFontRenderContext(), text);
+        FontMetrics fm = g.getFontMetrics(font);
+        Shape outline = gv.getOutline();
+        Rectangle2D bounds = outline.getBounds2D();
+        double x = Math.max(0, (w - bounds.getWidth()) / 2.0);
+        double y = h / 2.0 + fm.getAscent() / 2.0 - 2.0;
+        AffineTransform oldTransform = g.getTransform();
+        g.translate(x, y);
+        g.setColor(OUTLINE_COLOR);
+        g.setStroke(new BasicStroke(2.5f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+        g.draw(outline);
         g.setColor(TEXT_COLOR);
-        g.drawString(text, x, y);
+        g.fill(outline);
+        g.setTransform(oldTransform);
     }
 
     private String getHeapSizeText() {

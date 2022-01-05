@@ -51,16 +51,21 @@ public class GradleJavaEEProjectSettings implements JavaEEProjectSettingsImpleme
 
     public static final String PROP_SELECTED_BROWSER = "selected.browser";
     public static final String PROP_SELECTED_SERVER = "selected.server";
-    
+
     static final Map<String, Profile> PROFILE_DEPENDENCIES = new LinkedHashMap<>();
 
     static {
+      PROFILE_DEPENDENCIES.put("jakarta.platform:jakarta.jakartaee-api:9.*", JAKARTA_EE_9_FULL);
+      PROFILE_DEPENDENCIES.put("jakarta.platform:jakarta.jakartaee-web-api:9.*", JAKARTA_EE_9_WEB);
+      PROFILE_DEPENDENCIES.put("jakarta.platform:jakarta.jakartaee-api:8.*", JAKARTA_EE_8_FULL);
+      PROFILE_DEPENDENCIES.put("jakarta.platform:jakarta.jakartaee-web-api:8.*", JAKARTA_EE_8_WEB);
         PROFILE_DEPENDENCIES.put("javax:javaee-api:8.*", JAVA_EE_8_FULL);
         PROFILE_DEPENDENCIES.put("javax:javaee-web-api:8.*", JAVA_EE_8_WEB);
         PROFILE_DEPENDENCIES.put("javax:javaee-api:7.*", JAVA_EE_7_FULL);
         PROFILE_DEPENDENCIES.put("javax:javaee-web-api:7.*", JAVA_EE_7_WEB);
         PROFILE_DEPENDENCIES.put("javax:javaee-api:6.*", JAVA_EE_6_FULL);
         PROFILE_DEPENDENCIES.put("javax:javaee-web-api:6.*", JAVA_EE_6_WEB);
+        PROFILE_DEPENDENCIES.put("javax\\.servlet:javax\\.servlet-api:4\\.0.*", JAKARTA_EE_8_WEB);
         PROFILE_DEPENDENCIES.put("javax\\.servlet:javax\\.servlet-api:4\\.0.*", JAVA_EE_8_WEB);
         PROFILE_DEPENDENCIES.put("javax\\.servlet:javax\\.servlet-api:3\\.1.*", JAVA_EE_7_WEB);
         PROFILE_DEPENDENCIES.put("javax\\.servlet:javax\\.servlet-api:3\\.0.*", JAVA_EE_6_WEB);
@@ -74,7 +79,7 @@ public class GradleJavaEEProjectSettings implements JavaEEProjectSettingsImpleme
     }
 
     private static final List<String> CHECK_FIRST_CONFIGURATIONS = Arrays.asList("providedCompile", "compileOnly");
-    
+
     final Project project;
     Profile profile;
     final PropertyChangeListener pcl;
@@ -93,7 +98,7 @@ public class GradleJavaEEProjectSettings implements JavaEEProjectSettingsImpleme
         };
         NbGradleProject.addPropertyChangeListener(project, WeakListeners.propertyChange(pcl, NbGradleProject.get(project)));
     }
-    
+
     @Override
     public void setProfile(Profile profile) {
     }
@@ -134,15 +139,15 @@ public class GradleJavaEEProjectSettings implements JavaEEProjectSettingsImpleme
     public String getServerInstanceID() {
         return getPreferences().get(PROP_SELECTED_SERVER, null);
     }
-    
+
     Preferences getPreferences(boolean shared) {
         return ProjectUtils.getPreferences(project, GradleJavaEEProjectSettings.class, shared);
     }
-    
+
     public Preferences getPreferences() {
         return getPreferences(false);
     }
-    
+
     private static Profile checkProfileDependency(ModuleSearchSupport support) {
         Profile ret = null;
         for (Map.Entry<String, Profile> entry : PROFILE_DEPENDENCIES.entrySet()) {

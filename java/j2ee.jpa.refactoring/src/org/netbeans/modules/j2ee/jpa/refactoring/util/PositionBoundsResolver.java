@@ -156,8 +156,6 @@ public class PositionBoundsResolver {
                 ErrorManager.getDefault().notify(ex);
             } catch (FileNotFoundException ex) {
                 ErrorManager.getDefault().notify(ex);
-            } catch (IOException ex) {
-                ErrorManager.getDefault().notify(ex);
             } catch (BadLocationException ex) {
                 ErrorManager.getDefault().notify(ex);
             }

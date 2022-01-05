@@ -46,11 +46,11 @@
         <property>
             <name>maven-dependencies</name>
             <value>
-                org.glassfish.metro:webservices-api:2.3.1:jar 
-                org.glassfish.metro:webservices-extra:2.3.1:jar
-                org.glassfish.metro:webservices-extra-api:2.3.1:jar 
-                org.glassfish.metro:webservices-rt:2.3.1:jar 
-                org.glassfish.metro:webservices-tools:2.3.1:jar
+                org.glassfish.metro:webservices-api:2.4.4:jar 
+                org.glassfish.metro:webservices-extra:2.4.4:jar
+                org.glassfish.metro:webservices-extra-api:2.4.4:jar 
+                org.glassfish.metro:webservices-rt:2.4.4:jar 
+                org.glassfish.metro:webservices-tools:2.4.4:jar
             </value>
         </property>
     </properties>    

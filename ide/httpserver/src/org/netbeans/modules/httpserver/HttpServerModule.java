@@ -95,7 +95,7 @@ public class HttpServerModule extends ModuleInstall implements Externalizable {
                                 reloader.activate();
                                 // this is not a debug message, this is a server startup message
                                 if (httpserverSettings().isStartStopMessages())
-                                    System.out.println(NbBundle.getMessage(HttpServerModule.class, "CTL_ServerStarted", new Object[] {new Integer(httpserverSettings().getPort())}));
+                                    System.out.println(NbBundle.getMessage(HttpServerModule.class, "CTL_ServerStarted", new Object[] {Integer.valueOf(httpserverSettings().getPort())}));
                             } catch (ThreadDeath td) {
                                 throw td;
                             } catch (Throwable ex) {

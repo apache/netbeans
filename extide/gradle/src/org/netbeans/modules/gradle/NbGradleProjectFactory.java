@@ -19,6 +19,7 @@
 
 package org.netbeans.modules.gradle;
 
+import org.netbeans.modules.gradle.cache.SubProjectDiskCache;
 import java.io.File;
 import org.netbeans.modules.gradle.spi.GradleFiles;
 import org.netbeans.modules.gradle.api.NbGradleProject;
@@ -66,17 +67,32 @@ public final class NbGradleProjectFactory implements ProjectFactory2 {
         }
         File suspect = FileUtil.toFile(dir);
         GradleFiles files = new GradleFiles(suspect);
-        if (!files.isRootProject()) {
-            Boolean inSubDirCache = GradleProjectCache.isKnownSubProject(files.getRootDir(), suspect);
-            return inSubDirCache != null ? inSubDirCache : files.isProject();
+        if (files.isRootProject() || files.isBuildSrcProject()) return true;
+        
+        if ((files.getSettingsScript() != null) && !files.isBuildSrcProject()) {
+            SubProjectDiskCache spCache = SubProjectDiskCache.get(files.getRootDir());
+            SubProjectDiskCache.SubProjectInfo data = spCache.loadData();
+            if (data != null) {
+                // Use the cached sub-project data, even if it's invalid,
+                // it may have better results, than the heuristics
+                return data.getProjectPath(suspect) != null;
+            } else {
+                // No cached info available, use heuristics.
+                return files.isProject();
+            }
         } else {
-            return true;
+            return false;
         }
     }
 
     @Override
     public Project loadProject(FileObject dir, ProjectState ps) throws IOException {
-        return isProject(dir) ? new NbGradleProjectImpl(dir, ps) : null;
+        if (!isProject(dir)) {
+            return null;
+        }
+        NbGradleProjectImpl prj = new NbGradleProjectImpl(dir, ps);
+        prj.getGradleProject();
+        return prj;
     }
 
     @Override

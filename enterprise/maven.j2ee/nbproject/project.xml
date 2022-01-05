@@ -540,6 +540,8 @@
             </test-dependencies>
             <friend-packages>
                 <friend>org.netbeans.modules.payara.micro</friend>
+                <package>org.netbeans.modules.maven.j2ee</package>
+                <package>org.netbeans.modules.maven.j2ee.execution</package>
                 <package>org.netbeans.modules.maven.j2ee.utils</package>
                 <package>org.netbeans.modules.maven.j2ee.ui</package>
             </friend-packages>

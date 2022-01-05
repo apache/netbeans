@@ -168,7 +168,6 @@ public class GenerateDOMScannerSupport implements XMLGenerateCookie {
      *
      */
     private void dtd2java (FileObject clazz, String tempRootName) throws IOException  {
-          Iterator it;
           final String constructorName = clazz.getName();
       
           JavaSource targetSource = JavaSource.forFileObject(clazz);

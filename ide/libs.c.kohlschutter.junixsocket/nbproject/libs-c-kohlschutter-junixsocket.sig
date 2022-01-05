@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.23
+#Version 2.29
 
 CLSS public abstract interface java.io.Closeable
 intf java.lang.AutoCloseable
@@ -28,7 +28,6 @@ meth public final java.lang.String name()
 meth public java.lang.String toString()
 meth public static <%0 extends java.lang.Enum<{%%0}>> {%%0} valueOf(java.lang.Class<{%%0}>,java.lang.String)
 supr java.lang.Object
-hfds name,ordinal
 
 CLSS public java.lang.Object
 cons public init()
@@ -58,8 +57,6 @@ meth public final java.net.InetAddress getAddress()
 meth public java.lang.String toString()
 meth public static java.net.InetSocketAddress createUnresolved(java.lang.String,int)
 supr java.net.SocketAddress
-hfds FIELDS_OFFSET,UNSAFE,holder,serialPersistentFields,serialVersionUID
-hcls InetSocketAddressHolder
 
 CLSS public java.net.ServerSocket
 cons public init() throws java.io.IOException
@@ -88,7 +85,6 @@ meth public void setReceiveBufferSize(int) throws java.net.SocketException
 meth public void setReuseAddress(boolean) throws java.net.SocketException
 meth public void setSoTimeout(int) throws java.net.SocketException
 supr java.lang.Object
-hfds bound,closeLock,closed,created,factory,impl,oldImpl
 
 CLSS public java.net.Socket
 cons protected init(java.net.SocketImpl) throws java.net.SocketException
@@ -146,13 +142,11 @@ meth public void setTrafficClass(int) throws java.net.SocketException
 meth public void shutdownInput() throws java.io.IOException
 meth public void shutdownOutput() throws java.io.IOException
 supr java.lang.Object
-hfds bound,closeLock,closed,connected,created,factory,impl,oldImpl,shutIn,shutOut
 
 CLSS public abstract java.net.SocketAddress
 cons public init()
 intf java.io.Serializable
 supr java.lang.Object
-hfds serialVersionUID
 
 CLSS public abstract javax.net.SocketFactory
 cons protected init()
@@ -163,7 +157,6 @@ meth public abstract java.net.Socket createSocket(java.net.InetAddress,int,java.
 meth public java.net.Socket createSocket() throws java.io.IOException
 meth public static javax.net.SocketFactory getDefault()
 supr java.lang.Object
-hfds theFactory
 
 CLSS public org.newsclub.net.unix.AFUNIXServerSocket
 cons protected init() throws java.io.IOException

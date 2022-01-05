@@ -111,7 +111,8 @@ public abstract class FileReferenceCompletion<T> implements ValueCompletion<T> {
                         || fileNamePart.equals(".") // ../.| case
                         || fileNamePart.equals("..")) //../..| case
                         ) { // NOI18N
-                    result.add(createGoUpItem(anchor, Color.BLUE, PACKAGE_ICON)); // NOI18N
+                    // Should match color in o.n.m.html.editor.api.completion.HtmlCompletionItem.createFileCompletionItem()
+                    result.add(createGoUpItem(anchor, new Color(224, 160, 65), PACKAGE_ICON));
                 }
             }
         } catch (FileStateInvalidException | IllegalArgumentException ex) {

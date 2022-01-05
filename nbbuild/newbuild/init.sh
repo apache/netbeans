@@ -139,7 +139,7 @@ if [ -z ${DONT_PACK_LOCALIZATION_JARS_ON_MAC} ]; then
     export DONT_PACK_LOCALIZATION_JARS_ON_MAC
 fi
 
-export ANT_OPTS=$ANT_OPTS" -Xmx2G -XX:MaxPermSize=500m"
+export ANT_OPTS=$ANT_OPTS" -Xmx2G"
 
 if [ -n ${JDK_HOME} ] && [ -z ${JAVA_HOME} ] ; then
     export JAVA_HOME=$JDK_HOME

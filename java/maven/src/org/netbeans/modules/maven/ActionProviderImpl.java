@@ -47,6 +47,7 @@ import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.project.ui.OpenProjects;
 import static org.netbeans.modules.maven.Bundle.*;
 import org.netbeans.modules.maven.api.Constants;
+import org.netbeans.modules.maven.api.MavenConfiguration;
 import org.netbeans.modules.maven.api.ModelUtils;
 import org.netbeans.modules.maven.api.ModuleInfoUtils;
 import org.netbeans.modules.maven.api.NbMavenProject;
@@ -55,6 +56,7 @@ import org.netbeans.modules.maven.api.customizer.ModelHandle2;
 import org.netbeans.modules.maven.api.execute.RunConfig;
 import org.netbeans.modules.maven.api.execute.RunUtils;
 import org.netbeans.modules.maven.configurations.M2ConfigProvider;
+import org.netbeans.modules.maven.configurations.M2Configuration;
 import org.netbeans.modules.maven.customizer.ActionMappings;
 import org.netbeans.modules.maven.customizer.WarnPanel;
 import org.netbeans.modules.maven.execute.ActionToGoalUtils;
@@ -76,6 +78,8 @@ import org.netbeans.modules.maven.spi.actions.MavenActionsProvider;
 import org.netbeans.modules.maven.spi.actions.ReplaceTokenProvider;
 import org.netbeans.spi.project.ActionProgress;
 import org.netbeans.spi.project.ActionProvider;
+import org.netbeans.spi.project.ProjectConfiguration;
+import org.netbeans.spi.project.ProjectConfigurationProvider;
 import org.netbeans.spi.project.ProjectServiceProvider;
 import org.netbeans.spi.project.SingleMethod;
 import org.netbeans.spi.project.ui.support.DefaultProjectOperations;
@@ -98,7 +102,6 @@ import org.openide.util.NbBundle.Messages;
 import org.openide.util.NbPreferences;
 import org.openide.util.RequestProcessor;
 import org.openide.util.Task;
-import org.openide.util.TaskListener;
 import org.openide.util.actions.Presenter;
 import org.openide.util.lookup.Lookups;
 import org.openide.util.lookup.ProxyLookup;
@@ -145,7 +148,10 @@ public class ActionProviderImpl implements ActionProvider {
         COMMAND_DELETE,
         COMMAND_RENAME,
         COMMAND_MOVE,
-        COMMAND_COPY
+        COMMAND_COPY,
+        
+        // infrastructure
+        COMMAND_PRIME
     };
     
     private static final RequestProcessor RP = new RequestProcessor(ActionProviderImpl.class.getName(), 3);
@@ -154,11 +160,36 @@ public class ActionProviderImpl implements ActionProvider {
     public ActionProviderImpl(Project proj) {
         this.proj = proj;
     }
+    
+    protected M2Configuration usedConfiguration(boolean useActive, Lookup ctx) {
+        ProjectConfiguration selected = ctx.lookup(ProjectConfiguration.class);
+        M2ConfigProvider configs = proj.getLookup().lookup(M2ConfigProvider.class);
+        ProjectConfiguration toFind;
+        
+        if (selected == null) {
+            if (useActive) {
+                selected = configs.getActiveConfiguration();
+                if (selected == null) {
+                    return null;
+                }
+                toFind = selected;
+            } else {
+                return null;
+            }
+        } else {
+            toFind = selected;
+        }
+        // documentation says the configuration may not be != and should be compared by equals.
+        return configs.getConfigurations().stream().filter(c -> toFind.equals(c)).findFirst().orElse(null);
+    }
 
     @Override
     public String[] getSupportedActions() {
         Set<String> supp = new HashSet<String>();
-        supp.addAll( Arrays.asList( supported));
+        supp.addAll( Arrays.asList(supported));
+        
+        M2ConfigProvider configs = proj.getLookup().lookup(M2ConfigProvider.class);
+        configs.getConfigurations().forEach(c -> supp.addAll(c.getSupportedDefaultActions()));
         for (MavenActionsProvider add : ActionToGoalUtils.actionProviders(proj)) {
             Set<String> added = add.getSupportedDefaultActions();
             if (added != null) {
@@ -193,7 +224,8 @@ public class ActionProviderImpl implements ActionProvider {
     private boolean usingJUnit5() {
         return proj.getLookup().lookup(NbMavenProject.class).getMavenProject().getArtifacts()
                 .stream()
-                .anyMatch((a) -> ("org.junit.jupiter".equals(a.getGroupId()) && "junit-jupiter-engine".equals(a.getArtifactId())));
+                .anyMatch((a) -> ("org.junit.jupiter".equals(a.getGroupId()) && "junit-jupiter-engine".equals(a.getArtifactId()) ||
+                        "org.junit.platform".equals(a.getGroupId()) && "junit-platform-engine".equals(a.getArtifactId())));
     }
 
     private boolean usingTestNG() {
@@ -241,7 +273,7 @@ public class ActionProviderImpl implements ActionProvider {
             Operations.renameProject(proj.getLookup().lookup(NbMavenProjectImpl.class));
             return;
         }
-
+        
         if (SwingUtilities.isEventDispatchThread()) {
             RP.post(new Runnable() {
                 @Override
@@ -263,10 +295,18 @@ public class ActionProviderImpl implements ActionProvider {
         if (convertedAction == null) {
             convertedAction = action;
         }
-
-        Lookup enhanced = new ProxyLookup(lookup, Lookups.fixed(replacements(proj, convertedAction, lookup)));
         
-        RunConfig rc = ActionToGoalUtils.createRunConfig(convertedAction, proj.getLookup().lookup(NbMavenProjectImpl.class), enhanced);
+        for (InternalActionDelegate del : proj.getLookup().lookupAll(InternalActionDelegate.class)) {
+            ActionProvider ap = del.getActionProvider();
+            if (Arrays.asList(ap.getSupportedActions()).contains(action)) {
+                ap.invokeAction(action, lookup);
+                return;
+            }
+        }
+        Lookup enhanced = new ProxyLookup(lookup, Lookups.fixed(replacements(proj, convertedAction, lookup)));
+
+        RunConfig rc = ActionToGoalUtils.createRunConfig(convertedAction, proj.getLookup().lookup(NbMavenProjectImpl.class), 
+                usedConfiguration(true, lookup), enhanced);
         if (rc == null) {
             Logger.getLogger(ActionProviderImpl.class.getName()).log(Level.INFO, "No handling for action: {0}. Ignoring.", action); //NOI18N
 
@@ -275,10 +315,8 @@ public class ActionProviderImpl implements ActionProvider {
             final ActionProgress listener = ActionProgress.start(lookup);
             final ExecutorTask task = RunUtils.run(rc);
             if (task != null) {
-                task.addTaskListener(new TaskListener() {
-                    @Override public void taskFinished(Task t) {
-                        listener.finished(task.result() == 0);
-                    }
+                task.addTaskListener((Task t) -> {
+                    listener.finished(task.result() == 0);
                 });
             } else {
                 listener.finished(false);
@@ -468,7 +506,15 @@ public class ActionProviderImpl implements ActionProvider {
         if (convertedAction == null) {
             convertedAction = action;
         }
-        return ActionToGoalUtils.isActionEnable(convertedAction, proj.getLookup().lookup(NbMavenProjectImpl.class), lookup);
+        
+        for (InternalActionDelegate ap : proj.getLookup().lookupAll(InternalActionDelegate.class)) {
+            if (ap.getActionProvider().isActionEnabled(action, lookup)) {
+                return true;
+            }
+        }
+
+        return ActionToGoalUtils.isActionEnable(convertedAction, proj.getLookup().lookup(NbMavenProjectImpl.class), 
+                usedConfiguration(false, lookup), lookup);
     }
 
     public static Action createCustomMavenAction(String name, NetbeansActionMapping mapping, boolean showUI, Lookup context, Project project) {
@@ -850,5 +896,4 @@ public class ActionProviderImpl implements ActionProvider {
             ModelUtils.openAtPlugin(model, Constants.GROUP_APACHE_PLUGINS, Constants.PLUGIN_COMPILER);
         }
     }
-    
 }

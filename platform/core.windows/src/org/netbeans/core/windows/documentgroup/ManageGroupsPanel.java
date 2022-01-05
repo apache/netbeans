@@ -165,8 +165,8 @@ class ManageGroupsPanel extends javax.swing.JPanel {
 
     private void fillGroups() {
         List<DocumentGroupImpl> groups = GroupsManager.getDefault().getGroups();
-        DefaultListModel model = new DefaultListModel();
-        for( DocumentGroupImpl group : groups ) {
+        DefaultListModel<DocumentGroupImpl> model = new DefaultListModel<>();
+        for (DocumentGroupImpl group : groups) {
             model.addElement( group );
         }
         listGroups.setModel( model );

@@ -42,6 +42,7 @@ public final class GradleJavaSourceSet implements Serializable {
         "LBL_JAVA=Java",
         "LBL_GROOVY=Groovy",
         "LBL_SCALA=Scala",
+        "LBL_KOTLIN=Kotlin",
         "LBL_RESOURCES=Resources",
         "LBL_GENERATED=Generated"
     })
@@ -49,7 +50,9 @@ public final class GradleJavaSourceSet implements Serializable {
 
         JAVA, GROOVY, SCALA, RESOURCES,
         /** @since 1.8 */
-        GENERATED;
+        GENERATED,
+        /** @since 1.15 */
+        KOTLIN;
 
         @Override
         public String toString() {
@@ -57,6 +60,7 @@ public final class GradleJavaSourceSet implements Serializable {
                 case JAVA: return Bundle.LBL_JAVA();
                 case GROOVY: return Bundle.LBL_GROOVY();
                 case SCALA: return Bundle.LBL_SCALA();
+                case KOTLIN: return Bundle.LBL_KOTLIN();
                 case RESOURCES: return Bundle.LBL_RESOURCES();
                 case GENERATED: return Bundle.LBL_GENERATED();
             }
@@ -160,10 +164,26 @@ public final class GradleJavaSourceSet implements Serializable {
         return targetCompatibility.getOrDefault(type, getSourcesCompatibility(type));
     }
 
+    /**
+     * Returns the name of the configuration used by this SourceSet for compile.
+     * This method returns an <code>null</code> from Gradle 7.0 as the
+     * corresponding method has been removed in that version. 
+     * @return the name of the configuration or <code>null</code> if that's not available.
+     * @deprecated No replacement.
+     */
+    @Deprecated
     public String getRuntimeConfigurationName() {
         return runtimeConfigurationName;
     }
 
+    /**
+     * Returns the name of the configuration used by this SourceSet for runtime.
+     * This method returns an <code>null</code> from Gradle 7.0 as the
+     * corresponding method has been removed in that version. 
+     * @return the name of the configuration or <code>null</code> if that's not available.
+     * @deprecated No replacement.
+     */
+    @Deprecated
     public String getCompileConfigurationName() {
         return compileConfigurationName;
     }
@@ -192,6 +212,11 @@ public final class GradleJavaSourceSet implements Serializable {
 
     public final Set<File> getScalaDirs() {
         return getSourceDirs(SourceType.SCALA);
+    }
+
+    /** @since 1.15 */
+    public final Set<File> getKotlinDirs() {
+        return getSourceDirs(SourceType.KOTLIN);
     }
 
     public final Set<File> getResourcesDirs() {
@@ -513,6 +538,8 @@ public final class GradleJavaSourceSet implements Serializable {
                 return getCompileTaskName("Groovy"); //NOI18N
             case SCALA:
                 return getCompileTaskName("Scala"); //NOI18N
+            case KOTLIN:
+                return getCompileTaskName("Kotlin"); //NOI18N
         }
         return null;
     }

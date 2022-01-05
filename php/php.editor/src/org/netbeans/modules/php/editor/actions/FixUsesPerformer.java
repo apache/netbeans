@@ -34,6 +34,7 @@ import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.editor.BaseDocument;
 import org.netbeans.modules.csl.api.EditList;
 import org.netbeans.modules.csl.api.OffsetRange;
+import org.netbeans.modules.csl.spi.support.CancelSupport;
 import org.netbeans.modules.editor.indent.api.IndentUtils;
 import org.netbeans.modules.php.api.PhpVersion;
 import org.netbeans.modules.php.editor.CodeUtils;
@@ -53,10 +54,14 @@ import org.netbeans.modules.php.editor.model.UseScope;
 import org.netbeans.modules.php.editor.parser.PHPParseResult;
 import org.netbeans.modules.php.editor.parser.UnusedUsesCollector;
 import org.netbeans.modules.php.editor.parser.UnusedUsesCollector.UnusedOffsetRanges;
+import org.netbeans.modules.php.editor.parser.astnodes.DeclareStatement;
+import org.netbeans.modules.php.editor.parser.astnodes.NamespaceDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.Program;
 import org.netbeans.modules.php.editor.parser.astnodes.UseStatement;
 import org.netbeans.modules.php.editor.parser.astnodes.visitors.DefaultVisitor;
+import org.openide.awt.StatusDisplayer;
 import org.openide.util.Exceptions;
+import org.openide.util.NbBundle;
 
 /**
  *
@@ -109,11 +114,12 @@ public class FixUsesPerformer {
         }
     }
 
+    @NbBundle.Messages("FixUsesPerformer.noChanges=Fix imports: No Changes")
     private void processSelections() {
         final List<ImportData.DataItem> dataItems = resolveDuplicateSelections();
-        NamespaceScope namespaceScope = ModelUtils.getNamespaceScope(parserResult.getModel().getFileScope(), importData.caretPosition);
+        NamespaceScope namespaceScope = ModelUtils.getNamespaceScope(parserResult, importData.caretPosition);
         assert namespaceScope != null;
-        int startOffset = getOffset(baseDocument, namespaceScope);
+        int startOffset = getOffset(baseDocument, namespaceScope, parserResult, importData.caretPosition);
         List<UsePart> useParts = new ArrayList<>();
         Collection<? extends GroupUseScope> declaredGroupUses = namespaceScope.getDeclaredGroupUses();
         for (GroupUseScope groupUseElement : declaredGroupUses) {
@@ -142,7 +148,13 @@ public class FixUsesPerformer {
             }
         }
         replaceUnimportedItems();
-        editList.replace(startOffset, 0, createInsertString(useParts), false, 0);
+        String insertString = createInsertString(useParts);
+        // avoid being recognized as a modified file
+        if (insertString.isEmpty()) {
+            StatusDisplayer.getDefault().setStatusText(Bundle.FixUsesPerformer_noChanges());
+        } else {
+            editList.replace(startOffset, 0, insertString, false, 0);
+        }
     }
 
     private void replaceUnimportedItems() {
@@ -428,7 +440,7 @@ public class FixUsesPerformer {
         return result;
     }
 
-    private static int getOffset(BaseDocument baseDocument, NamespaceScope namespaceScope) {
+    private static int getOffset(BaseDocument baseDocument, NamespaceScope namespaceScope, PHPParseResult parserResult, int caretPosition) {
         try {
             ModelElement lastSingleUse = getLastUse(namespaceScope, false);
             ModelElement lastGroupUse = getLastUse(namespaceScope, true);
@@ -447,7 +459,36 @@ public class FixUsesPerformer {
                 // XXX is this correct?
                 return LineDocumentUtils.getLineEnd(baseDocument, lastGroupUse.getNameRange().getEnd());
             }
-            return LineDocumentUtils.getLineEnd(baseDocument, namespaceScope.getOffset());
+            // NETBEANS-4978 check whether declare statemens exist
+            // e.g. in the following case, insert the code(use statements) after the declare statement
+            // declare (strict_types=1);
+            // class TestClass
+            // {
+            //     public function __construct()
+            //     {
+            //         $test = new Foo();
+            //     }
+            // }
+            int offset = LineDocumentUtils.getLineEnd(baseDocument, namespaceScope.getOffset());
+            CheckVisitor checkVisitor = new CheckVisitor();
+            parserResult.getProgram().accept(checkVisitor);
+            if (namespaceScope.isDefaultNamespace()) {
+                List<NamespaceDeclaration> globalNamespaceDeclarations = checkVisitor.getGlobalNamespaceDeclarations();
+                if (!globalNamespaceDeclarations.isEmpty()) {
+                    offset = globalNamespaceDeclarations.get(0).getBody().getStartOffset() + 1; // +1: {
+                }
+                for (NamespaceDeclaration globalNamespace : globalNamespaceDeclarations) {
+                    if (globalNamespace.getStartOffset() <= caretPosition
+                            && caretPosition <= globalNamespace.getEndOffset()) {
+                        offset = globalNamespace.getBody().getStartOffset() + 1; // +1: {
+                        break;
+                    }
+                }
+            }
+            for (DeclareStatement declareStatement : checkVisitor.getDeclareStatements()) {
+                offset = Math.max(offset, declareStatement.getEndOffset());
+            }
+            return offset;
         } catch (BadLocationException ex) {
             Exceptions.printStackTrace(ex);
         }
@@ -465,6 +506,41 @@ public class FixUsesPerformer {
             }
         }
         return offsetElement;
+    }
+
+    //~ inner classes
+    private static class CheckVisitor extends DefaultVisitor {
+
+        private List<DeclareStatement> declareStatements = new ArrayList();
+        private List<NamespaceDeclaration> globalNamespaceDeclarations = new ArrayList();
+
+        public List<DeclareStatement> getDeclareStatements() {
+            return Collections.unmodifiableList(declareStatements);
+        }
+
+        public List<NamespaceDeclaration> getGlobalNamespaceDeclarations() {
+            return Collections.unmodifiableList(globalNamespaceDeclarations);
+        }
+
+        @Override
+        public void visit(DeclareStatement node) {
+            if (CancelSupport.getDefault().isCancelled()) {
+                return;
+            }
+            declareStatements.add(node);
+            super.visit(node);
+        }
+
+        @Override
+        public void visit(NamespaceDeclaration declaration) {
+            if (CancelSupport.getDefault().isCancelled()) {
+                return;
+            }
+            if (declaration.isBracketed() && declaration.getName() == null) {
+                globalNamespaceDeclarations.add(declaration);
+            }
+            super.visit(declaration);
+        }
     }
 
     private interface AliasStrategy {

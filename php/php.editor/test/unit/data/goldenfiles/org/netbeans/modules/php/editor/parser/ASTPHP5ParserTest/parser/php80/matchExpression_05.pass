@@ -1,0 +1,219 @@
+<testresult testFile='matchExpression_05.php'>
+    <scanner>
+        <token id='T_VARIABLE' start='815' end='824'>
+            <text>$variable</text>
+        </token>
+        <token id='T_EQUAL' start='825' end='826'>
+            <text>=</text>
+        </token>
+        <token id='T_LNUMBER' start='827' end='828'>
+            <text>1</text>
+        </token>
+        <token id='T_SEMICOLON' start='828' end='829'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='830' end='837'>
+            <text>$result</text>
+        </token>
+        <token id='T_EQUAL' start='838' end='839'>
+            <text>=</text>
+        </token>
+        <token id='T_MATCH' start='840' end='845'>
+            <text>match</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='846' end='847'>
+            <text>(</text>
+        </token>
+        <token id='T_STRING' start='847' end='851'>
+            <text>true</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='851' end='852'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='853' end='854'>
+            <text>{</text>
+        </token>
+        <token id='T_STRING' start='859' end='863'>
+            <text>true</text>
+        </token>
+        <token id='T_DOUBLE_ARROW' start='864' end='866'>
+            <text>=&gt;</text>
+        </token>
+        <token id='T_FN' start='867' end='869'>
+            <text>fn</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='869' end='870'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='870' end='871'>
+            <text>)</text>
+        </token>
+        <token id='T_DOUBLE_ARROW' start='872' end='874'>
+            <text>=&gt;</text>
+        </token>
+        <token id='T_YIELD' start='875' end='880'>
+            <text>yield</text>
+        </token>
+        <token id='T_LNUMBER' start='881' end='884'>
+            <text>100</text>
+        </token>
+        <token id='T_COMMA' start='884' end='885'>
+            <text>,</text>
+        </token>
+        <token id='T_STRING' start='890' end='895'>
+            <text>false</text>
+        </token>
+        <token id='T_DOUBLE_ARROW' start='896' end='898'>
+            <text>=&gt;</text>
+        </token>
+        <token id='T_FUNCTION' start='899' end='907'>
+            <text>function</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='908' end='909'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='909' end='915'>
+            <text>$param</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='915' end='916'>
+            <text>)</text>
+        </token>
+        <token id='T_NEKUDOTAIM' start='916' end='917'>
+            <text>:</text>
+        </token>
+        <token id='T_STRING' start='918' end='922'>
+            <text>void</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='923' end='924'>
+            <text>{</text>
+        </token>
+        <token id='T_ECHO' start='933' end='937'>
+            <text>echo</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='938' end='944'>
+            <text>"test"</text>
+        </token>
+        <token id='T_NEKUDA' start='945' end='946'>
+            <text>.</text>
+        </token>
+        <token id='T_STRING' start='947' end='954'>
+            <text>PHP_EOL</text>
+        </token>
+        <token id='T_SEMICOLON' start='954' end='955'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='960' end='961'>
+            <text>}</text>
+        </token>
+        <token id='T_COMMA' start='961' end='962'>
+            <text>,</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='963' end='964'>
+            <text>}</text>
+        </token>
+        <token id='T_SEMICOLON' start='964' end='965'>
+            <text>;</text>
+        </token>
+        <token id='T_STRING' start='967' end='975'>
+            <text>var_dump</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='975' end='976'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='976' end='983'>
+            <text>$result</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='983' end='984'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='984' end='985'>
+            <text>;</text>
+        </token>
+        <token id='EOF' start='986' end='986'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='986'>
+        <Comments>
+            <Comment start='6' end='813' commentType='multiLine'/>
+            <Comment start='6' end='813' commentType='multiLine'/>
+        </Comments>
+        <Statements>
+            <ExpressionStatement start='815' end='829'>
+                <Assignment start='815' end='828' operator='EQUAL'>
+                    <Variable start='815' end='824' isDollared='true'>
+                        <Identifier start='816' end='824' name='variable'/>
+                    </Variable>
+                    <Scalar start='827' end='828' type='INT' value='1'/>
+                </Assignment>
+            </ExpressionStatement>
+            <ExpressionStatement start='830' end='965'>
+                <Assignment start='830' end='964' operator='EQUAL'>
+                    <Variable start='830' end='837' isDollared='true'>
+                        <Identifier start='831' end='837' name='result'/>
+                    </Variable>
+                    <MatchExpression start='840' end='964'>
+                        <Scalar start='847' end='851' type='STRING' value='true'/>
+                        <MatchArms>
+                            <MatchArm start='859' end='884' isDefault='false'>
+                                <Conditions>
+                                    <Scalar start='859' end='863' type='STRING' value='true'/>
+                                </Conditions>
+                                <ArrowFunctionDeclaration start='867' end='884' isReference='false' isStatic='false'>
+                                    <YieldExpression start='875' end='884'>
+                                        <Scalar start='881' end='884' type='INT' value='100'/>
+                                    </YieldExpression>
+                                </ArrowFunctionDeclaration>
+                            </MatchArm>
+                            <MatchArm start='890' end='961' isDefault='false'>
+                                <Conditions>
+                                    <Scalar start='890' end='895' type='STRING' value='false'/>
+                                </Conditions>
+                                <LambdaFunctionDeclaration start='899' end='961' isReference='false'>
+                                    <FormalParameter start='909' end='915' isMandatory='true' isVariadic='false'>
+                                        <ParametrType>
+                                        </ParametrType>
+                                        <ParametrName>
+                                            <Variable start='909' end='915' isDollared='true'>
+                                                <Identifier start='910' end='915' name='param'/>
+                                            </Variable>
+                                        </ParametrName>
+                                        <DefaultValue>
+                                        </DefaultValue>
+                                    </FormalParameter>
+                                    <NamespaceName start='918' end='922' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='918' end='922' name='void'/>
+                                    </NamespaceName>
+                                    <Block start='923' end='961' isCurly='true'>
+                                        <EchoStatement start='933' end='955'>
+                                            <InfixExpression start='938' end='954' operator='CONCAT'>
+                                                <Scalar start='938' end='944' type='STRING' value='"test"'/>
+                                                <NamespaceName start='947' end='954' isCurrent='false' isGlobal='false'>
+                                                    <Identifier start='947' end='954' name='PHP_EOL'/>
+                                                </NamespaceName>
+                                            </InfixExpression>
+                                        </EchoStatement>
+                                    </Block>
+                                </LambdaFunctionDeclaration>
+                            </MatchArm>
+                        </MatchArms>
+                    </MatchExpression>
+                </Assignment>
+            </ExpressionStatement>
+            <ExpressionStatement start='967' end='985'>
+                <FunctionInvocation start='967' end='984'>
+                    <FucntionName start='967' end='975'>
+                        <NamespaceName start='967' end='975' isCurrent='false' isGlobal='false'>
+                            <Identifier start='967' end='975' name='var_dump'/>
+                        </NamespaceName>
+                    </FucntionName>
+                    <Parameters>
+                        <Variable start='976' end='983' isDollared='true'>
+                            <Identifier start='977' end='983' name='result'/>
+                        </Variable>
+                    </Parameters>
+                </FunctionInvocation>
+            </ExpressionStatement>
+        </Statements>
+    </Program>
+</testresult>

@@ -23,13 +23,17 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.File;
+import java.lang.ref.Reference;
+import java.lang.ref.WeakReference;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Future;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Level;
@@ -57,27 +61,38 @@ import org.netbeans.modules.maven.embedder.EmbedderFactory;
 import org.netbeans.modules.maven.embedder.MavenEmbedder;
 import org.netbeans.modules.maven.modelcache.MavenProjectCache;
 import static org.netbeans.modules.maven.problems.Bundle.*;
+import org.netbeans.spi.project.ActionProgress;
+import org.netbeans.spi.project.ActionProvider;
 import org.netbeans.spi.project.ProjectServiceProvider;
 import org.netbeans.spi.project.ui.ProjectProblemsProvider;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Exceptions;
+import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
 import org.openide.util.lookup.Lookups;
+import org.netbeans.modules.maven.InternalActionDelegate;
 
 /**
- *
+ * Suggests to run priming build. Also serves as a provider for Priming Build action,
+ * as it can share cache with the ProblemProvider.
+ * 
  * @author mkleint
  */
-@ProjectServiceProvider(service = ProjectProblemsProvider.class, projectType = "org-netbeans-modules-maven")
-public class MavenModelProblemsProvider implements ProjectProblemsProvider {
-    static final RequestProcessor RP  = new RequestProcessor(MavenModelProblemsProvider.class);
+@ProjectServiceProvider(service = { 
+        ProjectProblemsProvider.class, 
+        InternalActionDelegate.class,
+    }, projectType = "org-netbeans-modules-maven"
+)
+public class MavenModelProblemsProvider implements ProjectProblemsProvider, InternalActionDelegate {
+    static final ScheduledExecutorService RP  = new RequestProcessor(MavenModelProblemsProvider.class);
     private static final Logger LOG = Logger.getLogger(MavenModelProblemsProvider.class.getName());
     
     private final PropertyChangeSupport support = new PropertyChangeSupport(this);
     private final Project project;
     private final AtomicBoolean projectListenerSet = new AtomicBoolean(false);
     private final AtomicReference<Collection<ProjectProblem>> problemsCache = new AtomicReference<Collection<ProjectProblem>>();
+    private final PrimingActionProvider primingProvider = new PrimingActionProvider();
     private ProblemReporterImpl problemReporter;
     private final PropertyChangeListener projectListener = new PropertyChangeListener() {
 
@@ -103,11 +118,24 @@ public class MavenModelProblemsProvider implements ProjectProblemsProvider {
     public void removePropertyChangeListener(PropertyChangeListener listener) {
         support.removePropertyChangeListener(listener);
     }
-
+    
     @Override
     public Collection<? extends ProjectProblem> getProblems() {
+        Collection<? extends ProjectProblem> prbs = doGetProblems(false);
+        return prbs != null ? prbs : Collections.emptyList();
+    }
+    
+    
+    /**
+     * Compute problems. If 'sync' is true, the computation is done synchronously. Caches results,
+     * returns cache content immediately, if available.
+     * @param sync true = run synchronously. False = fork computation/
+     * @return project problems.
+     */
+    Collection<? extends ProjectProblem> doGetProblems(boolean sync) {
         final MavenProject prj = project.getLookup().lookup(NbMavenProject.class).getMavenProject();
         synchronized (this) {
+            LOG.log(Level.FINER, "Called getProblems for {0}", project);
             //lazy adding listener only when someone asks for the problems the first time
             if (projectListenerSet.compareAndSet(false, true)) {
                 //TODO do we check only when the project is opened?
@@ -121,6 +149,7 @@ public class MavenModelProblemsProvider implements ProjectProblemsProvider {
             Object wasprocessed = prj.getContextValue(MavenModelProblemsProvider.class.getName());
             if (wasprocessed != null) {
                 Collection<ProjectProblem> cached = problemsCache.get();
+                LOG.log(Level.FINER, "Project was processed, cached is: {0}", cached);
                 if (cached != null) {
                     return cached;
                 }
@@ -131,8 +160,9 @@ public class MavenModelProblemsProvider implements ProjectProblemsProvider {
                     Object wasprocessed = prj.getContextValue(MavenModelProblemsProvider.class.getName());
                     if (wasprocessed != null) {
                         Collection<ProjectProblem> cached = problemsCache.get();
+                        LOG.log(Level.FINER, "Project was processed #2, cached is: {0}", cached);
                         if (cached != null) {                            
-                            return Collections.EMPTY_LIST;
+                            return cached;
                         }
                     } 
                     List<ProjectProblem> toRet = new ArrayList<>();
@@ -145,13 +175,14 @@ public class MavenModelProblemsProvider implements ProjectProblemsProvider {
                     //mark the project model as checked once and cached
                     prj.setContextValue(MavenModelProblemsProvider.class.getName(), new Object());
                     synchronized(MavenModelProblemsProvider.this) {
+                        LOG.log(Level.FINER, "Project processing finished, result is: {0}", toRet);
                         problemsCache.set(toRet);
                     }
                     firePropertyChange();
                     return toRet;
                 }                
             };
-            if(Boolean.getBoolean("test.reload.sync")) {
+            if(sync || Boolean.getBoolean("test.reload.sync")) {
                 try {
                     return c.call();
                 } catch (Exception ex) {
@@ -162,7 +193,8 @@ public class MavenModelProblemsProvider implements ProjectProblemsProvider {
             }
         }
         
-        return Collections.emptyList();
+        // indicate that we do not know
+        return null;
     }
 
     private void firePropertyChange() {
@@ -231,7 +263,7 @@ public class MavenModelProblemsProvider implements ProjectProblemsProvider {
                 mess.append(art.getId()).append('\n');
             }
             if (missingNonSibling) {
-                toRet.add(ProjectProblem.createWarning(ERR_NonLocal(), MSG_NonLocal(mess), new SanityBuildAction(this.project)));
+                toRet.add(ProjectProblem.createWarning(ERR_NonLocal(), MSG_NonLocal(mess), createSanityBuildAction()));
             } else {
                 //we used to have a LOW severity ProblemReport here.
             }
@@ -258,13 +290,33 @@ public class MavenModelProblemsProvider implements ProjectProblemsProvider {
                 continue;
             }
             if (NbArtifactFixer.FALLBACK_NAME.equals(m.getName())) {
-                toRet.add(ProjectProblem.createError(ERR_NoParent(), MSG_NoParent(m.getId()), new SanityBuildAction(this.project)));
+                toRet.add(ProjectProblem.createError(ERR_NoParent(), MSG_NoParent(m.getId()), createSanityBuildAction()));
                 problemReporter.addMissingArtifact(EmbedderFactory.getProjectEmbedder().createArtifact(m.getGroupId(), m.getArtifactId(), m.getVersion(), "pom"));
             }
         }
         return toRet;
     }
 
+    /**
+     * Will keep a reference to the sanity build, if it was created, as long as
+     * Problems exist.
+     */
+    private Reference<SanityBuildAction> cachedSanityBuild = new WeakReference<>(null);
+
+    public SanityBuildAction createSanityBuildAction() {
+        synchronized (this) {
+            SanityBuildAction a = cachedSanityBuild.get();
+            if (a != null) {
+                Future<ProjectProblemsProvider.Result> r = a.getPendingResult();
+                if (r != null) {
+                    return a;
+                }
+            }
+            a = new SanityBuildAction(project);
+            cachedSanityBuild = new WeakReference<>(a);
+            return a;
+        }
+    }
     
     @NbBundle.Messages({
         "TXT_Artifact_Resolution_problem=Artifact Resolution problem",
@@ -285,7 +337,7 @@ public class MavenModelProblemsProvider implements ProjectProblemsProvider {
                 toRet.add(ProjectProblem.createError(TXT_Artifact_Not_Found(), getDescriptionText(e)));
                 problemReporter.addMissingArtifact(((ArtifactNotFoundException) e).getArtifact());
             } else if (e instanceof ProjectBuildingException) {
-                toRet.add(ProjectProblem.createError(TXT_Cannot_Load_Project(), getDescriptionText(e), new SanityBuildAction(project)));
+                toRet.add(ProjectProblem.createError(TXT_Cannot_Load_Project(), getDescriptionText(e), createSanityBuildAction()));
                 if (e.getCause() instanceof ModelBuildingException) {
                     ModelBuildingException mbe = (ModelBuildingException) e.getCause();
                     for (ModelProblem mp : mbe.getProblems()) {
@@ -327,5 +379,68 @@ public class MavenModelProblemsProvider implements ProjectProblemsProvider {
             String path = project.getProjectDirectory().getPath();
             return TXT_NoMsg(path);
         }
+    }
+    
+    //-------------------------------------------------------------------------
+    // ActionProvider implementation
+    
+    private static final String[] PROBLEM_ACTIONS = { ActionProvider.COMMAND_PRIME };
+
+    @Override
+    public ActionProvider getActionProvider() {
+        return primingProvider;
+    }
+    
+    private class PrimingActionProvider implements ActionProvider {
+        @Override
+        public String[] getSupportedActions() {
+            return PROBLEM_ACTIONS;
+        }
+
+        @Override
+        public void invokeAction(String command, Lookup context) throws IllegalArgumentException {
+            final ActionProgress listener = ActionProgress.start(context);
+            if (!PROBLEM_ACTIONS[0].equals(command)) {
+                throw new IllegalArgumentException(command);
+            }
+            // just keep the reference, so SABA is not collected.
+            Collection<? extends ProjectProblem> probs = doGetProblems(true);
+            // sanity build action has been created
+            SanityBuildAction saba = cachedSanityBuild.get();
+            if (saba == null) {
+                listener.finished(true);
+            } else {
+                CompletableFuture<ProjectProblemsProvider.Result> r = saba.resolve();
+                r.whenComplete((a, e) -> {
+                   listener.finished(e == null); 
+                });
+            }
+        }
+
+        @Override
+        public boolean isActionEnabled(String command, Lookup context) throws IllegalArgumentException {
+            if (!PROBLEM_ACTIONS[0].equals(command)) {
+                return false;
+            }
+            Collection<? extends ProjectProblem> probs = doGetProblems(false);
+            if (probs == null) {
+                // no value means that cache was not populated yet, Conservatively enable.
+                return true;
+            }
+            if (probs.isEmpty()) {
+                // problems identified: there are none. No primiing build.
+                return false;
+            }
+            // sanity build action has been created
+            SanityBuildAction saba = cachedSanityBuild.get();
+            if (saba == null) {
+                // other problems, but no need to prime.
+                return false;
+            }
+            Future<?> res = saba.getPendingResult();
+            // do not enabel, if the priming build was already started.
+            return res == null || !res.isDone();
+        }
+
     }
 }

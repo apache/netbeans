@@ -79,7 +79,7 @@ public class ChooseCustomizer extends javax.swing.JPanel {
     }
     
     private void evaluateInput() {
-        int whens = ((Integer)jSpinner1.getValue()).intValue();
+        int whens = ((Integer)jSpinner1.getValue());
         choose.setWhens(whens);
 
         choose.setOtherwise(jCheckBox1.isSelected());

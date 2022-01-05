@@ -29,6 +29,7 @@ import org.netbeans.api.project.ui.ProjectGroup;
 import org.netbeans.api.project.ui.ProjectGroupChangeListener;
 import org.netbeans.modules.project.ui.groups.Group;
 import org.netbeans.modules.project.uiapi.OpenProjectsTrampoline;
+import org.openide.explorer.ExplorerManager;
 
 /**
  * List of projects open in the GUI.
@@ -135,5 +136,20 @@ public final class OpenProjectsTrampolineImpl implements OpenProjectsTrampoline,
         }
         return null;
     }
-    
+
+    @Override
+    public ExplorerManager createLogicalView() {
+        ExplorerManager em = new ExplorerManager();
+        ProjectsRootNode root = new ProjectsRootNode(ProjectsRootNode.LOGICAL_VIEW);
+        em.setRootContext(root);
+        return em;
+    }
+
+    @Override
+    public ExplorerManager createPhysicalView() {
+        ExplorerManager em = new ExplorerManager();
+        ProjectsRootNode root = new ProjectsRootNode(ProjectsRootNode.PHYSICAL_VIEW);
+        em.setRootContext(root);
+        return em;
+    }
 }

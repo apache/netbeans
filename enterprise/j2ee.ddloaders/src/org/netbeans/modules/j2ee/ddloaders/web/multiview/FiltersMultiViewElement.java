@@ -237,7 +237,7 @@ public class FiltersMultiViewElement extends ToolBarMultiViewElement implements 
         AddAction(final DDDataObject dObj, String actionName) {
             super(actionName);
             char mnem = NbBundle.getMessage(FiltersMultiViewElement.class,"LBL_addFilter_mnem").charAt(0);
-            putValue(MNEMONIC_KEY,new Integer((int)mnem));
+            putValue(MNEMONIC_KEY, (int)mnem);
         }
         public void actionPerformed(java.awt.event.ActionEvent evt) {
 
@@ -328,7 +328,7 @@ public class FiltersMultiViewElement extends ToolBarMultiViewElement implements 
         RemoveAction(String actionName) {
             super(actionName);
             char mnem = NbBundle.getMessage(FiltersMultiViewElement.class,"LBL_remove_mnem").charAt(0);
-            putValue(MNEMONIC_KEY,new Integer((int)mnem));
+            putValue(MNEMONIC_KEY, (int)mnem);
         }
         
         public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -353,7 +353,7 @@ public class FiltersMultiViewElement extends ToolBarMultiViewElement implements 
                     SectionInnerPanel mappingsInnerPanel = ((FiltersView)sectionPanel.getSectionView()).getFilterMappingSectionPanel().getInnerPanel();
                     if (mappingsInnerPanel!=null) {
                         while (!deletedRows.empty())
-                            ((FilterMappingsPanel)mappingsInnerPanel).removeRow(((Integer)deletedRows.pop()).intValue());
+                            ((FilterMappingsPanel)mappingsInnerPanel).removeRow(((Integer)deletedRows.pop()));
                     }
                 } finally {
                     dObj.setChangedFromUI(false);

@@ -20,9 +20,12 @@ package org.netbeans;
 
 import java.text.MessageFormat;
 import java.util.Collections;
+import java.util.Map;
 import java.util.Set;
+import org.openide.modules.Dependency;
 import org.openide.util.NbBundle;
 import org.openide.util.NbBundle.Messages;
+import org.openide.util.Union2;
 
 /** Special subclass of {@link IllegalModuleException} with
  * better localized message.
@@ -74,13 +77,13 @@ final class IllegalModuleException extends IllegalArgumentException {
         }
     }
     private final Reason reason;
-    private final Set<Module> bogus;
+    private final Map<Module, Set<Union2<Dependency,InvalidException>>> bogus;
 
     IllegalModuleException(Reason reason, Module bogus) {
-        this(reason, Collections.singleton(bogus));
+        this(reason, Collections.singletonMap(bogus, Collections.emptySet()));
     }
 
-    IllegalModuleException(Reason reason, Set<Module> bogus) {
+    IllegalModuleException(Reason reason, Map<Module, Set<Union2<Dependency,InvalidException>>> bogus) {
         this.reason = reason;
         this.bogus = bogus;
     }
@@ -94,11 +97,15 @@ final class IllegalModuleException extends IllegalArgumentException {
     public String getLocalizedMessage() {
         if (reason.l10n != null) {
             StringBuilder sb = new StringBuilder();
-            for (Module m : bogus) {
-                if (sb.length() > 0) {
-                    sb.append(", ");
+            for (Map.Entry<Module, Set<Union2<Dependency, InvalidException>>> entry : bogus.entrySet()) {
+                Module m = entry.getKey();
+                sb.append(m.getDisplayName()).append("[").append(m.getCodeNameBase()).append("]"); // NOI18N
+                for (Union2<Dependency, InvalidException> u : entry.getValue()) {
+                    if (u.hasFirst()) {
+                        sb.append("\n - ").append(u.first().toString()); // NOI18N
+                    }
                 }
-                sb.append(m.getDisplayName());
+                sb.append("\n");
             }
             return NbBundle.getMessage(Reason.class, reason.l10n, sb.toString());
         } else {

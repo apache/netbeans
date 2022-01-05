@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.51.0
+#Version 1.58.0
 
 CLSS public java.lang.Object
 cons public init()
@@ -77,6 +77,7 @@ CLSS public abstract interface static org.netbeans.lib.editor.codetemplates.spi.
  outer org.netbeans.lib.editor.codetemplates.spi.CodeTemplateFilter
  anno 0 org.netbeans.spi.editor.mimelookup.MimeLocation(java.lang.Class<? extends org.netbeans.spi.editor.mimelookup.InstanceProvider> instanceProviderClass=class org.netbeans.spi.editor.mimelookup.InstanceProvider, java.lang.String subfolderName="CodeTemplateFilterFactories")
 meth public abstract org.netbeans.lib.editor.codetemplates.spi.CodeTemplateFilter createFilter(javax.swing.text.JTextComponent,int)
+meth public org.netbeans.lib.editor.codetemplates.spi.CodeTemplateFilter createFilter(javax.swing.text.Document,int,int)
 
 CLSS public final org.netbeans.lib.editor.codetemplates.spi.CodeTemplateInsertRequest
 meth public boolean isInserted()

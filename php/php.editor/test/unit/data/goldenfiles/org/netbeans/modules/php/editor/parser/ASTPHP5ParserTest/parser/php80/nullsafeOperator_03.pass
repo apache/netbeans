@@ -1,0 +1,735 @@
+<testresult testFile='nullsafeOperator_03.php'>
+    <scanner>
+        <token id='T_QUATE' start='815' end='816'>
+            <text>"</text>
+        </token>
+        <token id='T_CURLY_OPEN_WITH_DOLAR' start='816' end='817'>
+            <text>{</text>
+        </token>
+        <token id='T_VARIABLE' start='817' end='822'>
+            <text>$test</text>
+        </token>
+        <token id='T_NULLSAFE_OBJECT_OPERATOR' start='822' end='825'>
+            <text>?-&gt;</text>
+        </token>
+        <token id='T_STRING' start='825' end='828'>
+            <text>foo</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='828' end='829'>
+            <text>}</text>
+        </token>
+        <token id='T_QUATE' start='829' end='830'>
+            <text>"</text>
+        </token>
+        <token id='T_SEMICOLON' start='830' end='831'>
+            <text>;</text>
+        </token>
+        <token id='T_QUATE' start='832' end='833'>
+            <text>"</text>
+        </token>
+        <token id='T_CURLY_OPEN_WITH_DOLAR' start='833' end='834'>
+            <text>{</text>
+        </token>
+        <token id='T_VARIABLE' start='834' end='839'>
+            <text>$test</text>
+        </token>
+        <token id='T_NULLSAFE_OBJECT_OPERATOR' start='839' end='842'>
+            <text>?-&gt;</text>
+        </token>
+        <token id='T_STRING' start='842' end='845'>
+            <text>bar</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='845' end='846'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='846' end='847'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='847' end='848'>
+            <text>}</text>
+        </token>
+        <token id='T_QUATE' start='848' end='849'>
+            <text>"</text>
+        </token>
+        <token id='T_SEMICOLON' start='849' end='850'>
+            <text>;</text>
+        </token>
+        <token id='T_DOLLAR' start='852' end='853'>
+            <text>$</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='853' end='854'>
+            <text>{</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='854' end='859'>
+            <text>&apos;foo&apos;</text>
+        </token>
+        <token id='T_NEKUDA' start='860' end='861'>
+            <text>.</text>
+        </token>
+        <token id='T_VARIABLE' start='862' end='864'>
+            <text>$i</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='864' end='865'>
+            <text>}</text>
+        </token>
+        <token id='T_NULLSAFE_OBJECT_OPERATOR' start='865' end='868'>
+            <text>?-&gt;</text>
+        </token>
+        <token id='T_STRING' start='868' end='872'>
+            <text>test</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='872' end='873'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='873' end='874'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='874' end='875'>
+            <text>;</text>
+        </token>
+        <token id='T_DOLLAR' start='876' end='877'>
+            <text>$</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='877' end='878'>
+            <text>{</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='878' end='883'>
+            <text>&apos;foo&apos;</text>
+        </token>
+        <token id='T_NEKUDA' start='884' end='885'>
+            <text>.</text>
+        </token>
+        <token id='T_VARIABLE' start='886' end='888'>
+            <text>$i</text>
+        </token>
+        <token id='T_NULLSAFE_OBJECT_OPERATOR' start='888' end='891'>
+            <text>?-&gt;</text>
+        </token>
+        <token id='T_STRING' start='891' end='894'>
+            <text>bar</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='894' end='895'>
+            <text>}</text>
+        </token>
+        <token id='T_NULLSAFE_OBJECT_OPERATOR' start='895' end='898'>
+            <text>?-&gt;</text>
+        </token>
+        <token id='T_STRING' start='898' end='902'>
+            <text>test</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='902' end='903'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='903' end='904'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='904' end='905'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='973' end='978'>
+            <text>$test</text>
+        </token>
+        <token id='T_NULLSAFE_OBJECT_OPERATOR' start='978' end='981'>
+            <text>?-&gt;</text>
+        </token>
+        <token id='T_STRING' start='981' end='984'>
+            <text>foo</text>
+        </token>
+        <token id='T_MINUS_EQUAL' start='985' end='987'>
+            <text>-=</text>
+        </token>
+        <token id='T_LNUMBER' start='988' end='989'>
+            <text>1</text>
+        </token>
+        <token id='T_SEMICOLON' start='989' end='990'>
+            <text>;</text>
+        </token>
+        <token id='T_DEC' start='991' end='993'>
+            <text>--</text>
+        </token>
+        <token id='T_VARIABLE' start='993' end='998'>
+            <text>$test</text>
+        </token>
+        <token id='T_NULLSAFE_OBJECT_OPERATOR' start='998' end='1001'>
+            <text>?-&gt;</text>
+        </token>
+        <token id='T_STRING' start='1001' end='1004'>
+            <text>foo</text>
+        </token>
+        <token id='T_SEMICOLON' start='1004' end='1005'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='1006' end='1011'>
+            <text>$test</text>
+        </token>
+        <token id='T_NULLSAFE_OBJECT_OPERATOR' start='1011' end='1014'>
+            <text>?-&gt;</text>
+        </token>
+        <token id='T_STRING' start='1014' end='1017'>
+            <text>foo</text>
+        </token>
+        <token id='T_INC' start='1017' end='1019'>
+            <text>++</text>
+        </token>
+        <token id='T_SEMICOLON' start='1019' end='1020'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='1021' end='1026'>
+            <text>$test</text>
+        </token>
+        <token id='T_NULLSAFE_OBJECT_OPERATOR' start='1026' end='1029'>
+            <text>?-&gt;</text>
+        </token>
+        <token id='T_STRING' start='1029' end='1032'>
+            <text>foo</text>
+        </token>
+        <token id='T_COALESCE_EQUAL' start='1033' end='1036'>
+            <text>??=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='1037' end='1043'>
+            <text>&apos;test&apos;</text>
+        </token>
+        <token id='T_SEMICOLON' start='1043' end='1044'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='1045' end='1050'>
+            <text>$test</text>
+        </token>
+        <token id='T_NULLSAFE_OBJECT_OPERATOR' start='1050' end='1053'>
+            <text>?-&gt;</text>
+        </token>
+        <token id='T_STRING' start='1053' end='1056'>
+            <text>foo</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='1056' end='1058'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='1058' end='1061'>
+            <text>bar</text>
+        </token>
+        <token id='T_EQUAL' start='1062' end='1063'>
+            <text>=</text>
+        </token>
+        <token id='T_STRING' start='1064' end='1067'>
+            <text>baz</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1067' end='1068'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1068' end='1069'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='1069' end='1070'>
+            <text>;</text>
+        </token>
+        <token id='T_OPEN_RECT' start='1071' end='1072'>
+            <text>[</text>
+        </token>
+        <token id='T_VARIABLE' start='1072' end='1077'>
+            <text>$test</text>
+        </token>
+        <token id='T_NULLSAFE_OBJECT_OPERATOR' start='1077' end='1080'>
+            <text>?-&gt;</text>
+        </token>
+        <token id='T_STRING' start='1080' end='1083'>
+            <text>foo</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='1083' end='1085'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='1085' end='1088'>
+            <text>bar</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='1088' end='1089'>
+            <text>]</text>
+        </token>
+        <token id='T_EQUAL' start='1090' end='1091'>
+            <text>=</text>
+        </token>
+        <token id='T_OPEN_RECT' start='1092' end='1093'>
+            <text>[</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='1093' end='1099'>
+            <text>&apos;test&apos;</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='1099' end='1100'>
+            <text>]</text>
+        </token>
+        <token id='T_SEMICOLON' start='1100' end='1101'>
+            <text>;</text>
+        </token>
+        <token id='T_UNSET' start='1102' end='1107'>
+            <text>unset</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1107' end='1108'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='1108' end='1113'>
+            <text>$test</text>
+        </token>
+        <token id='T_NULLSAFE_OBJECT_OPERATOR' start='1113' end='1116'>
+            <text>?-&gt;</text>
+        </token>
+        <token id='T_STRING' start='1116' end='1119'>
+            <text>foo</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='1119' end='1121'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='1121' end='1124'>
+            <text>bar</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1124' end='1125'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='1125' end='1126'>
+            <text>;</text>
+        </token>
+        <token id='T_FOREACH' start='1127' end='1134'>
+            <text>foreach</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1134' end='1135'>
+            <text>(</text>
+        </token>
+        <token id='T_OPEN_RECT' start='1135' end='1136'>
+            <text>[</text>
+        </token>
+        <token id='T_LNUMBER' start='1136' end='1137'>
+            <text>0</text>
+        </token>
+        <token id='T_COMMA' start='1137' end='1138'>
+            <text>,</text>
+        </token>
+        <token id='T_LNUMBER' start='1139' end='1140'>
+            <text>2</text>
+        </token>
+        <token id='T_COMMA' start='1140' end='1141'>
+            <text>,</text>
+        </token>
+        <token id='T_LNUMBER' start='1142' end='1143'>
+            <text>4</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='1143' end='1144'>
+            <text>]</text>
+        </token>
+        <token id='T_AS' start='1145' end='1147'>
+            <text>as</text>
+        </token>
+        <token id='T_VARIABLE' start='1148' end='1153'>
+            <text>$test</text>
+        </token>
+        <token id='T_NULLSAFE_OBJECT_OPERATOR' start='1153' end='1156'>
+            <text>?-&gt;</text>
+        </token>
+        <token id='T_STRING' start='1156' end='1159'>
+            <text>foo</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1159' end='1160'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1160' end='1161'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1161' end='1162'>
+            <text>}</text>
+        </token>
+        <token id='T_VARIABLE' start='1163' end='1173'>
+            <text>$reference</text>
+        </token>
+        <token id='T_EQUAL' start='1174' end='1175'>
+            <text>=</text>
+        </token>
+        <token id='T_REFERENCE' start='1176' end='1177'>
+            <text>&amp;</text>
+        </token>
+        <token id='T_VARIABLE' start='1177' end='1182'>
+            <text>$test</text>
+        </token>
+        <token id='T_NULLSAFE_OBJECT_OPERATOR' start='1182' end='1185'>
+            <text>?-&gt;</text>
+        </token>
+        <token id='T_STRING' start='1185' end='1188'>
+            <text>foo</text>
+        </token>
+        <token id='T_SEMICOLON' start='1188' end='1189'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='1190' end='1201'>
+            <text>$reference2</text>
+        </token>
+        <token id='T_EQUAL' start='1202' end='1203'>
+            <text>=</text>
+        </token>
+        <token id='T_REFERENCE' start='1204' end='1205'>
+            <text>&amp;</text>
+        </token>
+        <token id='T_VARIABLE' start='1205' end='1210'>
+            <text>$test</text>
+        </token>
+        <token id='T_NULLSAFE_OBJECT_OPERATOR' start='1210' end='1213'>
+            <text>?-&gt;</text>
+        </token>
+        <token id='T_STRING' start='1213' end='1216'>
+            <text>foo</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='1216' end='1218'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='1218' end='1221'>
+            <text>bar</text>
+        </token>
+        <token id='T_SEMICOLON' start='1221' end='1222'>
+            <text>;</text>
+        </token>
+        <token id='EOF' start='1223' end='1223'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='1223'>
+        <Comments>
+            <Comment start='6' end='813' commentType='multiLine'/>
+            <Comment start='907' end='973' commentType='singleLine'/>
+            <Comment start='6' end='813' commentType='multiLine'/>
+            <Comment start='907' end='973' commentType='singleLine'/>
+        </Comments>
+        <Statements>
+            <ExpressionStatement start='815' end='831'>
+                <Quote start='815' end='830' type='QUOTE'>
+                    <Expressions>
+                        <ReflectionVariable start='816' end='829'>
+                            <FieldAccess start='817' end='828' isNullsafe='true'>
+                                <Variable start='817' end='822' isDollared='true'>
+                                    <Identifier start='818' end='822' name='test'/>
+                                </Variable>
+                                <Field>
+                                    <Variable start='825' end='828' isDollared='false'>
+                                        <Identifier start='825' end='828' name='foo'/>
+                                    </Variable>
+                                </Field>
+                            </FieldAccess>
+                        </ReflectionVariable>
+                    </Expressions>
+                </Quote>
+            </ExpressionStatement>
+            <ExpressionStatement start='832' end='850'>
+                <Quote start='832' end='849' type='QUOTE'>
+                    <Expressions>
+                        <ReflectionVariable start='833' end='848'>
+                            <MethodInvocation start='834' end='847' isNullsafe='true'>
+                                <Variable start='834' end='839' isDollared='true'>
+                                    <Identifier start='835' end='839' name='test'/>
+                                </Variable>
+                                <Method>
+                                    <FunctionInvocation start='842' end='847'>
+                                        <FucntionName start='842' end='845'>
+                                            <Variable start='842' end='845' isDollared='false'>
+                                                <Identifier start='842' end='845' name='bar'/>
+                                            </Variable>
+                                        </FucntionName>
+                                        <Parameters>
+                                        </Parameters>
+                                    </FunctionInvocation>
+                                </Method>
+                            </MethodInvocation>
+                        </ReflectionVariable>
+                    </Expressions>
+                </Quote>
+            </ExpressionStatement>
+            <ExpressionStatement start='852' end='875'>
+                <MethodInvocation start='852' end='874' isNullsafe='true'>
+                    <ReflectionVariable start='852' end='865'>
+                        <InfixExpression start='854' end='864' operator='CONCAT'>
+                            <Scalar start='854' end='859' type='STRING' value='&apos;foo&apos;'/>
+                            <Variable start='862' end='864' isDollared='true'>
+                                <Identifier start='863' end='864' name='i'/>
+                            </Variable>
+                        </InfixExpression>
+                    </ReflectionVariable>
+                    <Method>
+                        <FunctionInvocation start='868' end='874'>
+                            <FucntionName start='868' end='872'>
+                                <Variable start='868' end='872' isDollared='false'>
+                                    <Identifier start='868' end='872' name='test'/>
+                                </Variable>
+                            </FucntionName>
+                            <Parameters>
+                            </Parameters>
+                        </FunctionInvocation>
+                    </Method>
+                </MethodInvocation>
+            </ExpressionStatement>
+            <ExpressionStatement start='876' end='905'>
+                <MethodInvocation start='876' end='904' isNullsafe='true'>
+                    <ReflectionVariable start='876' end='895'>
+                        <InfixExpression start='878' end='894' operator='CONCAT'>
+                            <Scalar start='878' end='883' type='STRING' value='&apos;foo&apos;'/>
+                            <FieldAccess start='886' end='894' isNullsafe='true'>
+                                <Variable start='886' end='888' isDollared='true'>
+                                    <Identifier start='887' end='888' name='i'/>
+                                </Variable>
+                                <Field>
+                                    <Variable start='891' end='894' isDollared='false'>
+                                        <Identifier start='891' end='894' name='bar'/>
+                                    </Variable>
+                                </Field>
+                            </FieldAccess>
+                        </InfixExpression>
+                    </ReflectionVariable>
+                    <Method>
+                        <FunctionInvocation start='898' end='904'>
+                            <FucntionName start='898' end='902'>
+                                <Variable start='898' end='902' isDollared='false'>
+                                    <Identifier start='898' end='902' name='test'/>
+                                </Variable>
+                            </FucntionName>
+                            <Parameters>
+                            </Parameters>
+                        </FunctionInvocation>
+                    </Method>
+                </MethodInvocation>
+            </ExpressionStatement>
+            <ExpressionStatement start='973' end='990'>
+                <Assignment start='973' end='989' operator='MINUS_EQUAL'>
+                    <FieldAccess start='973' end='984' isNullsafe='true'>
+                        <Variable start='973' end='978' isDollared='true'>
+                            <Identifier start='974' end='978' name='test'/>
+                        </Variable>
+                        <Field>
+                            <Variable start='981' end='984' isDollared='false'>
+                                <Identifier start='981' end='984' name='foo'/>
+                            </Variable>
+                        </Field>
+                    </FieldAccess>
+                    <Scalar start='988' end='989' type='INT' value='1'/>
+                </Assignment>
+            </ExpressionStatement>
+            <ExpressionStatement start='991' end='1005'>
+                <PrefixExpression start='991' end='1004' operator='DEC'>
+                    <FieldAccess start='993' end='1004' isNullsafe='true'>
+                        <Variable start='993' end='998' isDollared='true'>
+                            <Identifier start='994' end='998' name='test'/>
+                        </Variable>
+                        <Field>
+                            <Variable start='1001' end='1004' isDollared='false'>
+                                <Identifier start='1001' end='1004' name='foo'/>
+                            </Variable>
+                        </Field>
+                    </FieldAccess>
+                </PrefixExpression>
+            </ExpressionStatement>
+            <ExpressionStatement start='1006' end='1020'>
+                <PostfixExpression start='1006' end='1019' operator='INC'>
+                    <FieldAccess start='1006' end='1017' isNullsafe='true'>
+                        <Variable start='1006' end='1011' isDollared='true'>
+                            <Identifier start='1007' end='1011' name='test'/>
+                        </Variable>
+                        <Field>
+                            <Variable start='1014' end='1017' isDollared='false'>
+                                <Identifier start='1014' end='1017' name='foo'/>
+                            </Variable>
+                        </Field>
+                    </FieldAccess>
+                </PostfixExpression>
+            </ExpressionStatement>
+            <ExpressionStatement start='1021' end='1044'>
+                <Assignment start='1021' end='1043' operator='COALESCE_EQUAL'>
+                    <FieldAccess start='1021' end='1032' isNullsafe='true'>
+                        <Variable start='1021' end='1026' isDollared='true'>
+                            <Identifier start='1022' end='1026' name='test'/>
+                        </Variable>
+                        <Field>
+                            <Variable start='1029' end='1032' isDollared='false'>
+                                <Identifier start='1029' end='1032' name='foo'/>
+                            </Variable>
+                        </Field>
+                    </FieldAccess>
+                    <Scalar start='1037' end='1043' type='STRING' value='&apos;test&apos;'/>
+                </Assignment>
+            </ExpressionStatement>
+            <ExpressionStatement start='1045' end='1070'>
+                <Assignment start='1045' end='1069' operator='EQUAL'>
+                    <FieldAccess start='1045' end='1061' isNullsafe='false'>
+                        <FieldAccess start='1045' end='1056' isNullsafe='true'>
+                            <Variable start='1045' end='1050' isDollared='true'>
+                                <Identifier start='1046' end='1050' name='test'/>
+                            </Variable>
+                            <Field>
+                                <Variable start='1053' end='1056' isDollared='false'>
+                                    <Identifier start='1053' end='1056' name='foo'/>
+                                </Variable>
+                            </Field>
+                        </FieldAccess>
+                        <Field>
+                            <Variable start='1058' end='1061' isDollared='false'>
+                                <Identifier start='1058' end='1061' name='bar'/>
+                            </Variable>
+                        </Field>
+                    </FieldAccess>
+                    <FunctionInvocation start='1064' end='1069'>
+                        <FucntionName start='1064' end='1067'>
+                            <NamespaceName start='1064' end='1067' isCurrent='false' isGlobal='false'>
+                                <Identifier start='1064' end='1067' name='baz'/>
+                            </NamespaceName>
+                        </FucntionName>
+                        <Parameters>
+                        </Parameters>
+                    </FunctionInvocation>
+                </Assignment>
+            </ExpressionStatement>
+            <ExpressionStatement start='1071' end='1101'>
+                <Assignment start='1071' end='1100' operator='EQUAL'>
+                    <ListVariable start='1071' end='1089' type='NEW'>
+                        <ArrayElement start='1072' end='1088'>
+                            <Key>
+                            </Key>
+                            <Value>
+                                <FieldAccess start='1072' end='1088' isNullsafe='false'>
+                                    <FieldAccess start='1072' end='1083' isNullsafe='true'>
+                                        <Variable start='1072' end='1077' isDollared='true'>
+                                            <Identifier start='1073' end='1077' name='test'/>
+                                        </Variable>
+                                        <Field>
+                                            <Variable start='1080' end='1083' isDollared='false'>
+                                                <Identifier start='1080' end='1083' name='foo'/>
+                                            </Variable>
+                                        </Field>
+                                    </FieldAccess>
+                                    <Field>
+                                        <Variable start='1085' end='1088' isDollared='false'>
+                                            <Identifier start='1085' end='1088' name='bar'/>
+                                        </Variable>
+                                    </Field>
+                                </FieldAccess>
+                            </Value>
+                        </ArrayElement>
+                    </ListVariable>
+                    <ArrayCreation start='1092' end='1100' type='NEW'>
+                        <ArrayElement start='1093' end='1099'>
+                            <Key>
+                            </Key>
+                            <Value>
+                                <Scalar start='1093' end='1099' type='STRING' value='&apos;test&apos;'/>
+                            </Value>
+                        </ArrayElement>
+                    </ArrayCreation>
+                </Assignment>
+            </ExpressionStatement>
+            <ExpressionStatement start='1102' end='1126'>
+                <FunctionInvocation start='1102' end='1125'>
+                    <FucntionName start='1102' end='1107'>
+                        <Identifier start='1102' end='1107' name='unset'/>
+                    </FucntionName>
+                    <Parameters>
+                        <FieldAccess start='1108' end='1124' isNullsafe='false'>
+                            <FieldAccess start='1108' end='1119' isNullsafe='true'>
+                                <Variable start='1108' end='1113' isDollared='true'>
+                                    <Identifier start='1109' end='1113' name='test'/>
+                                </Variable>
+                                <Field>
+                                    <Variable start='1116' end='1119' isDollared='false'>
+                                        <Identifier start='1116' end='1119' name='foo'/>
+                                    </Variable>
+                                </Field>
+                            </FieldAccess>
+                            <Field>
+                                <Variable start='1121' end='1124' isDollared='false'>
+                                    <Identifier start='1121' end='1124' name='bar'/>
+                                </Variable>
+                            </Field>
+                        </FieldAccess>
+                    </Parameters>
+                </FunctionInvocation>
+            </ExpressionStatement>
+            <ForEachStatement start='1127' end='1162'>
+                <Key>
+                </Key>
+                <Expression>
+                    <ArrayCreation start='1135' end='1144' type='NEW'>
+                        <ArrayElement start='1136' end='1137'>
+                            <Key>
+                            </Key>
+                            <Value>
+                                <Scalar start='1136' end='1137' type='INT' value='0'/>
+                            </Value>
+                        </ArrayElement>
+                        <ArrayElement start='1139' end='1140'>
+                            <Key>
+                            </Key>
+                            <Value>
+                                <Scalar start='1139' end='1140' type='INT' value='2'/>
+                            </Value>
+                        </ArrayElement>
+                        <ArrayElement start='1142' end='1143'>
+                            <Key>
+                            </Key>
+                            <Value>
+                                <Scalar start='1142' end='1143' type='INT' value='4'/>
+                            </Value>
+                        </ArrayElement>
+                    </ArrayCreation>
+                </Expression>
+                <Statement>
+                    <Block start='1160' end='1162' isCurly='true'>
+                    </Block>
+                </Statement>
+                <Value>
+                    <FieldAccess start='1148' end='1159' isNullsafe='true'>
+                        <Variable start='1148' end='1153' isDollared='true'>
+                            <Identifier start='1149' end='1153' name='test'/>
+                        </Variable>
+                        <Field>
+                            <Variable start='1156' end='1159' isDollared='false'>
+                                <Identifier start='1156' end='1159' name='foo'/>
+                            </Variable>
+                        </Field>
+                    </FieldAccess>
+                </Value>
+            </ForEachStatement>
+            <ExpressionStatement start='1163' end='1189'>
+                <Assignment start='1163' end='1188' operator='EQUAL'>
+                    <Variable start='1163' end='1173' isDollared='true'>
+                        <Identifier start='1164' end='1173' name='reference'/>
+                    </Variable>
+                    <Reference start='1176' end='1188'>
+                        <FieldAccess start='1177' end='1188' isNullsafe='true'>
+                            <Variable start='1177' end='1182' isDollared='true'>
+                                <Identifier start='1178' end='1182' name='test'/>
+                            </Variable>
+                            <Field>
+                                <Variable start='1185' end='1188' isDollared='false'>
+                                    <Identifier start='1185' end='1188' name='foo'/>
+                                </Variable>
+                            </Field>
+                        </FieldAccess>
+                    </Reference>
+                </Assignment>
+            </ExpressionStatement>
+            <ExpressionStatement start='1190' end='1222'>
+                <Assignment start='1190' end='1221' operator='EQUAL'>
+                    <Variable start='1190' end='1201' isDollared='true'>
+                        <Identifier start='1191' end='1201' name='reference2'/>
+                    </Variable>
+                    <Reference start='1204' end='1221'>
+                        <FieldAccess start='1205' end='1221' isNullsafe='false'>
+                            <FieldAccess start='1205' end='1216' isNullsafe='true'>
+                                <Variable start='1205' end='1210' isDollared='true'>
+                                    <Identifier start='1206' end='1210' name='test'/>
+                                </Variable>
+                                <Field>
+                                    <Variable start='1213' end='1216' isDollared='false'>
+                                        <Identifier start='1213' end='1216' name='foo'/>
+                                    </Variable>
+                                </Field>
+                            </FieldAccess>
+                            <Field>
+                                <Variable start='1218' end='1221' isDollared='false'>
+                                    <Identifier start='1218' end='1221' name='bar'/>
+                                </Variable>
+                            </Field>
+                        </FieldAccess>
+                    </Reference>
+                </Assignment>
+            </ExpressionStatement>
+        </Statements>
+    </Program>
+</testresult>

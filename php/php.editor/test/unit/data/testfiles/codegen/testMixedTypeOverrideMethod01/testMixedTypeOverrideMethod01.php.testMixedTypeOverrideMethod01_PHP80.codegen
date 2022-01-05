@@ -1,0 +1,3 @@
+public function testMixed(mixed $mixed): mixed{
+return parent::testMixed($mixed);
+}

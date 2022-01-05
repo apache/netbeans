@@ -361,7 +361,7 @@ NodeActionsProviderFilter, TableModel, Constants {
                     }
                     List<CallStackFrame> frames;
                     synchronized (framesAskedForMonitors) {
-                        frames = new ArrayList(framesAskedForMonitors);
+                        frames = new ArrayList<>(framesAskedForMonitors);
                     }
                     for (CallStackFrame frame : frames) {
                         modelEventSource.doRefreshCache(frame);

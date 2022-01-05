@@ -78,6 +78,7 @@ public class ParserTest {
         performTest("    file:///C:/CodeSourceryG++Lite/share/doc/arm-arm-none-eabi/html/getting-started/sec-cs3-startup.html", 4, 104);
         // NETBEANS-4593 accept @
         performTest("    https://cdn.jsdelivr.net/npm/jquery@3.2/dist/jquery.min.js\n", 4, 62);
+        performTest("    nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java", 4, 63);
     }
 
     @Test

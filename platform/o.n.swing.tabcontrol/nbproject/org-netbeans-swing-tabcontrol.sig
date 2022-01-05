@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.64
+#Version 1.70
 
 CLSS public abstract java.awt.AWTEvent
 cons public init(java.awt.Event)
@@ -33,7 +33,6 @@ meth public java.lang.String paramString()
 meth public java.lang.String toString()
 meth public void setSource(java.lang.Object)
 supr java.util.EventObject
-hfds INPUT_METHODS_ENABLED_MASK,acc,bdata,focusManagerIsDispatching,inputEvent_CanAccessSystemClipboard_Field,isPosted,isSystemGenerated,log,serialVersionUID
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -306,8 +305,6 @@ meth public void transferFocusUpCycle()
 meth public void update(java.awt.Graphics)
 meth public void validate()
 supr java.lang.Object
-hfds FOCUS_TRAVERSABLE_DEFAULT,FOCUS_TRAVERSABLE_SET,FOCUS_TRAVERSABLE_UNKNOWN,LOCK,acc,actionListenerK,adjustmentListenerK,appContext,autoFocusTransferOnDisposal,background,backgroundEraseDisabled,boundsOp,bufferStrategy,changeSupport,coalesceEventsParams,coalesceMap,coalescingEnabled,componentListener,componentListenerK,componentOrientation,componentSerializedDataVersion,compoundShape,containerListenerK,cursor,dropTarget,enabled,eventCache,eventLog,eventMask,focusListener,focusListenerK,focusLog,focusTraversalKeyPropertyNames,focusTraversalKeys,focusTraversalKeysEnabled,focusable,font,foreground,graphicsConfig,height,hierarchyBoundsListener,hierarchyBoundsListenerK,hierarchyListener,hierarchyListenerK,ignoreRepaint,incRate,inputMethodListener,inputMethodListenerK,isAddNotifyComplete,isFocusTraversableOverridden,isInc,isPacked,itemListenerK,keyListener,keyListenerK,locale,log,maxSize,maxSizeSet,minSize,minSizeSet,mixingCutoutRegion,mixingLog,mouseListener,mouseListenerK,mouseMotionListener,mouseMotionListenerK,mouseWheelListener,mouseWheelListenerK,name,nameExplicitlySet,newEventsOnly,objectLock,ownedWindowK,parent,peer,peerFont,popups,prefSize,prefSizeSet,requestFocusController,serialVersionUID,textListenerK,valid,visible,width,windowClosingException,windowFocusListenerK,windowListenerK,windowStateListenerK,x,y
-hcls AWTTreeLock,BltSubRegionBufferStrategy,DummyRequestFocusController,FlipSubRegionBufferStrategy,ProxyCapabilities,SingleBufferStrategy
 
 CLSS protected abstract java.awt.Component$AccessibleAWTComponent
  outer java.awt.Component
@@ -358,7 +355,6 @@ meth public void setLocation(java.awt.Point)
 meth public void setSize(java.awt.Dimension)
 meth public void setVisible(boolean)
 supr javax.accessibility.AccessibleContext
-hfds propertyListenersCount,serialVersionUID
 
 CLSS public java.awt.Container
 cons public init()
@@ -443,8 +439,6 @@ meth public void transferFocusDownCycle()
 meth public void update(java.awt.Graphics)
 meth public void validate()
 supr java.awt.Component
-hfds EMPTY_ARRAY,INCLUDE_SELF,SEARCH_HEAVYWEIGHTS,component,containerListener,containerSerializedDataVersion,descendUnconditionallyWhenValidating,descendantsCount,dispatcher,eventLog,focusCycleRoot,focusTraversalPolicy,focusTraversalPolicyProvider,isJavaAwtSmartInvalidate,layoutMgr,listeningBoundsChildren,listeningChildren,log,mixingLog,modalAppContext,modalComp,numOfHWComponents,numOfLWComponents,preserveBackgroundColor,printing,printingThreads,serialPersistentFields,serialVersionUID
-hcls DropTargetEventTargetFilter,EventTargetFilter,MouseEventTargetFilter,WakingRunnable
 
 CLSS protected java.awt.Container$AccessibleAWTContainer
  outer java.awt.Container
@@ -457,7 +451,6 @@ meth public javax.accessibility.Accessible getAccessibleChild(int)
 meth public void addPropertyChangeListener(java.beans.PropertyChangeListener)
 meth public void removePropertyChangeListener(java.beans.PropertyChangeListener)
 supr java.awt.Component$AccessibleAWTComponent
-hfds propertyListenersCount,serialVersionUID
 
 CLSS public abstract interface java.awt.ItemSelectable
 meth public abstract java.lang.Object[] getSelectedObjects()
@@ -500,8 +493,6 @@ meth public void invalidate()
 meth public void reset()
 meth public void translate(int,int)
 supr java.lang.Object
-hfds MIN_LENGTH,serialVersionUID
-hcls PolygonPathIterator
 
 CLSS public abstract interface java.awt.Shape
 meth public abstract boolean contains(double,double)
@@ -535,7 +526,6 @@ meth public java.lang.String getActionCommand()
 meth public java.lang.String paramString()
 meth public long getWhen()
 supr java.awt.AWTEvent
-hfds actionCommand,modifiers,serialVersionUID,when
 
 CLSS public abstract interface java.awt.event.ActionListener
 intf java.util.EventListener
@@ -636,7 +626,6 @@ meth public final java.lang.String name()
 meth public java.lang.String toString()
 meth public static <%0 extends java.lang.Enum<{%%0}>> {%%0} valueOf(java.lang.Class<{%%0}>,java.lang.String)
 supr java.lang.Object
-hfds name,ordinal
 
 CLSS public abstract interface !annotation java.lang.FunctionalInterface
  anno 0 java.lang.annotation.Documented()
@@ -697,7 +686,6 @@ intf java.io.Serializable
 meth public java.lang.Object getSource()
 meth public java.lang.String toString()
 supr java.lang.Object
-hfds serialVersionUID
 
 CLSS public abstract interface javax.accessibility.Accessible
 meth public abstract javax.accessibility.AccessibleContext getAccessibleContext()
@@ -783,7 +771,6 @@ meth public void setAccessibleDescription(java.lang.String)
 meth public void setAccessibleName(java.lang.String)
 meth public void setAccessibleParent(javax.accessibility.Accessible)
 supr java.lang.Object
-hfds accessibleChangeSupport,nativeAXResource,relationSet,targetAppContext
 
 CLSS public abstract interface javax.accessibility.AccessibleExtendedComponent
 intf javax.accessibility.AccessibleComponent
@@ -820,7 +807,6 @@ meth public void putValue(java.lang.String,java.lang.Object)
 meth public void removePropertyChangeListener(java.beans.PropertyChangeListener)
 meth public void setEnabled(boolean)
 supr java.lang.Object
-hfds RECONFIGURE_ON_NULL,arrayTable
 
 CLSS public abstract javax.swing.AbstractButton
 cons public init()
@@ -944,8 +930,6 @@ meth public void setVerticalAlignment(int)
 meth public void setVerticalTextPosition(int)
 meth public void updateUI()
 supr javax.swing.JComponent
-hfds action,actionPropertyChangeListener,borderPaintedSet,contentAreaFilled,contentAreaFilledSet,defaultCapable,defaultIcon,defaultMargin,disabledIcon,disabledSelectedIcon,handler,hideActionText,horizontalAlignment,horizontalTextPosition,iconTextGap,iconTextGapSet,margin,mnemonic,mnemonicIndex,multiClickThreshhold,paintBorder,paintFocus,pressedIcon,rolloverEnabled,rolloverEnabledSet,rolloverIcon,rolloverSelectedIcon,selectedIcon,setLayout,text,verticalAlignment,verticalTextPosition
-hcls ButtonActionPropertyChangeListener,Handler
 
 CLSS public abstract interface javax.swing.Action
 fld public final static java.lang.String ACCELERATOR_KEY = "AcceleratorKey"
@@ -985,7 +969,6 @@ meth public void removeNotify()
 meth public void setDefaultCapable(boolean)
 meth public void updateUI()
 supr javax.swing.AbstractButton
-hfds uiClassID
 
 CLSS public abstract javax.swing.JComponent
 cons public init()
@@ -1143,8 +1126,6 @@ meth public void unregisterKeyboardAction(javax.swing.KeyStroke)
 meth public void update(java.awt.Graphics)
 meth public void updateUI()
 supr java.awt.Container
-hfds ACTIONMAP_CREATED,ANCESTOR_INPUTMAP_CREATED,ANCESTOR_USING_BUFFER,AUTOSCROLLS_SET,COMPLETELY_OBSCURED,CREATED_DOUBLE_BUFFER,DEBUG_GRAPHICS_LOADED,FOCUS_INPUTMAP_CREATED,FOCUS_TRAVERSAL_KEYS_BACKWARD_SET,FOCUS_TRAVERSAL_KEYS_FORWARD_SET,INHERITS_POPUP_MENU,INPUT_VERIFIER_SOURCE_KEY,IS_DOUBLE_BUFFERED,IS_OPAQUE,IS_PAINTING_TILE,IS_PRINTING,IS_PRINTING_ALL,IS_REPAINTING,KEYBOARD_BINDINGS_KEY,KEY_EVENTS_ENABLED,NEXT_FOCUS,NOT_OBSCURED,OPAQUE_SET,PARTIALLY_OBSCURED,REQUEST_FOCUS_DISABLED,RESERVED_1,RESERVED_2,RESERVED_3,RESERVED_4,RESERVED_5,RESERVED_6,WHEN_IN_FOCUSED_WINDOW_BINDINGS,WIF_INPUTMAP_CREATED,WRITE_OBJ_COUNTER_FIRST,WRITE_OBJ_COUNTER_LAST,aaTextInfo,actionMap,alignmentX,alignmentY,ancestorInputMap,autoscrolls,border,clientProperties,componentObtainingGraphicsFrom,componentObtainingGraphicsFromLock,defaultLocale,flags,focusController,focusInputMap,inputVerifier,isAlignmentXSet,isAlignmentYSet,managingFocusBackwardTraversalKeys,managingFocusForwardTraversalKeys,paintingChild,popupMenu,readObjectCallbacks,revalidateRunnableScheduled,tempRectangles,uiClassID,verifyInputWhenFocusTarget,vetoableChangeSupport,windowInputMap
-hcls ActionStandin,IntVector,KeyboardState,ReadObjectCallback
 
 CLSS public abstract javax.swing.JComponent$AccessibleJComponent
  outer javax.swing.JComponent
@@ -1167,7 +1148,6 @@ meth public javax.accessibility.AccessibleStateSet getAccessibleStateSet()
 meth public void addPropertyChangeListener(java.beans.PropertyChangeListener)
 meth public void removePropertyChangeListener(java.beans.PropertyChangeListener)
 supr java.awt.Container$AccessibleAWTContainer
-hfds propertyListenersCount
 
 CLSS public javax.swing.JLabel
 cons public init()
@@ -1213,7 +1193,6 @@ meth public void setVerticalAlignment(int)
 meth public void setVerticalTextPosition(int)
 meth public void updateUI()
 supr javax.swing.JComponent
-hfds LABELED_BY_PROPERTY,defaultIcon,disabledIcon,disabledIconSet,horizontalAlignment,horizontalTextPosition,iconTextGap,mnemonic,mnemonicIndex,text,uiClassID,verticalAlignment,verticalTextPosition
 
 CLSS public javax.swing.JTable
 cons public init()
@@ -1418,8 +1397,6 @@ meth public void tableChanged(javax.swing.event.TableModelEvent)
 meth public void updateUI()
 meth public void valueChanged(javax.swing.event.ListSelectionEvent)
 supr javax.swing.JComponent
-hfds autoCreateRowSorter,columnSelectionAdjusting,dragEnabled,dropLocation,dropMode,editorRemover,fillsViewportHeight,ignoreSortChange,isRowHeightSet,printError,rowModel,rowSelectionAdjusting,sortManager,sorterChanged,surrendersFocusOnKeystroke,uiClassID,updateSelectionOnSort
-hcls BooleanEditor,BooleanRenderer,CellEditorRemover,DateRenderer,DoubleRenderer,GenericEditor,IconRenderer,ModelChange,NumberEditor,NumberRenderer,Resizable2,Resizable3,SortManager,ThreadSafePrintable
 
 CLSS public javax.swing.JToggleButton
 cons public init()
@@ -1438,7 +1415,6 @@ meth public java.lang.String getUIClassID()
 meth public javax.accessibility.AccessibleContext getAccessibleContext()
 meth public void updateUI()
 supr javax.swing.AbstractButton
-hfds uiClassID
 
 CLSS public abstract interface javax.swing.Scrollable
 meth public abstract boolean getScrollableTracksViewportHeight()
@@ -1492,7 +1468,6 @@ meth public int getIndex1()
 meth public int getType()
 meth public java.lang.String toString()
 supr java.util.EventObject
-hfds index0,index1,type
 
 CLSS public abstract interface javax.swing.event.ListDataListener
 intf java.util.EventListener
@@ -1572,7 +1547,6 @@ meth public void installUI(javax.swing.JComponent)
 meth public void paint(java.awt.Graphics,javax.swing.JComponent)
 meth public void uninstallUI(javax.swing.JComponent)
 supr javax.swing.plaf.ButtonUI
-hfds BASIC_BUTTON_UI_KEY,iconRect,propertyPrefix,shiftOffset,textRect,viewRect
 
 CLSS public javax.swing.plaf.basic.BasicToggleButtonUI
 cons public init()
@@ -1582,7 +1556,6 @@ meth protected void paintIcon(java.awt.Graphics,javax.swing.AbstractButton,java.
 meth public static javax.swing.plaf.ComponentUI createUI(javax.swing.JComponent)
 meth public void paint(java.awt.Graphics,javax.swing.JComponent)
 supr javax.swing.plaf.basic.BasicButtonUI
-hfds BASIC_TOGGLE_BUTTON_UI_KEY,propertyPrefix
 
 CLSS public org.netbeans.swing.popupswitcher.SwitcherTable
 cons public init(org.netbeans.swing.popupswitcher.SwitcherTableItem[])
@@ -2395,11 +2368,12 @@ meth public java.awt.Dimension getMinimumSize(javax.swing.JComponent)
 meth public java.awt.Insets getAutoscrollInsets()
 meth public java.awt.Insets getTabAreaInsets()
 meth public static java.awt.Graphics2D getOffscreenGraphics()
+meth public static java.awt.Graphics2D getOffscreenGraphics(javax.swing.JComponent)
 meth public void autoscroll(java.awt.Point)
 meth public void makeTabVisible(int)
 supr org.netbeans.swing.tabcontrol.plaf.BasicTabDisplayerUI
-hfds autoscroll,btnDropDown,btnMaximizeRestore,btnScrollLeft,btnScrollRight,controlButtons,ctx,lastKnownModelSize,scratch
-hcls Autoscroller,WCLayout
+hfds autoscroll,btnDropDown,btnMaximizeRestore,btnScrollLeft,btnScrollRight,cachedScratchGraphics,controlButtons,lastKnownModelSize,scratch
+hcls Autoscroller,ScratchGraphics,WCLayout
 
 CLSS protected org.netbeans.swing.tabcontrol.plaf.BasicScrollingTabDisplayerUI$ScrollingDisplayerComponentListener
  outer org.netbeans.swing.tabcontrol.plaf.BasicScrollingTabDisplayerUI
@@ -2605,7 +2579,7 @@ fld protected org.netbeans.swing.tabcontrol.TabDataModel model
 intf org.netbeans.swing.tabcontrol.plaf.TabLayoutModel
 meth protected int iconHeight(int)
 meth protected int iconWidth(int)
-meth protected int textHeight(int)
+meth protected int textHeight(int,javax.swing.JComponent)
 meth protected int textWidth(int)
 meth public int dropIndexOfPoint(int,int)
 meth public int getH(int)
@@ -3126,6 +3100,36 @@ meth public static javax.swing.plaf.ComponentUI createUI(javax.swing.JComponent)
 meth public void paint(java.awt.Graphics,javax.swing.JComponent)
 supr org.netbeans.swing.tabcontrol.plaf.AbstractViewTabDisplayerUI
 hfds BUMP_WIDTH,BUMP_X_PAD,GTK_TABBED_PANE_BACKGROUND_1,ICON_X_PAD,TXT_X_PAD,TXT_Y_PAD,buttonIconPaths,isGenericUI,prefSize,tempRect
+
+CLSS public org.netbeans.swing.tabcontrol.plaf.WinFlatEditorTabDisplayerUI
+cons public init(org.netbeans.swing.tabcontrol.TabDisplayer)
+meth protected java.awt.Rectangle getControlButtonsRectangle(java.awt.Container)
+meth protected org.netbeans.swing.tabcontrol.plaf.TabCellRenderer createDefaultRenderer()
+meth public java.awt.Dimension getPreferredSize(javax.swing.JComponent)
+meth public java.awt.Insets getTabAreaInsets()
+meth public javax.swing.Icon getButtonIcon(int,int)
+meth public org.netbeans.swing.tabcontrol.plaf.TabCellRenderer getTabCellRenderer(int)
+meth public static javax.swing.plaf.ComponentUI createUI(javax.swing.JComponent)
+meth public void paintBackground(java.awt.Graphics)
+supr org.netbeans.swing.tabcontrol.plaf.BasicScrollingTabDisplayerUI
+hfds ICON_X_PAD,activeBackground,background,contentBorderColor,tabInsets,unscaledBorders
+
+CLSS public org.netbeans.swing.tabcontrol.plaf.WinFlatViewTabDisplayerUI
+cons public init(org.netbeans.swing.tabcontrol.TabDisplayer)
+meth protected java.awt.Font getTxtFont()
+meth protected org.netbeans.swing.tabcontrol.plaf.AbstractViewTabDisplayerUI$Controller createController()
+meth protected void paintDisplayerBackground(java.awt.Graphics,javax.swing.JComponent)
+meth protected void paintTabBackground(java.awt.Graphics,int,int,int,int,int)
+meth protected void paintTabBorder(java.awt.Graphics,int,int,int,int,int)
+meth protected void paintTabContent(java.awt.Graphics,int,java.lang.String,int,int,int,int)
+meth public java.awt.Dimension getPreferredSize(javax.swing.JComponent)
+meth public javax.swing.Icon getButtonIcon(int,int)
+meth public static javax.swing.plaf.ComponentUI createUI(javax.swing.JComponent)
+meth public void installUI(javax.swing.JComponent)
+meth public void postTabAction(org.netbeans.swing.tabcontrol.event.TabActionEvent)
+supr org.netbeans.swing.tabcontrol.plaf.AbstractViewTabDisplayerUI
+hfds ICON_X_PAD,activeBackground,activeForeground,attentionBackground,attentionForeground,background,colorsReady,contentBorderColor,font,foreground,hoverBackground,hoverForeground,inactiveUnderlineColor,selectedBackground,selectedForeground,showSelectedTabBorder,showTabSeparators,tabInsets,tabSeparatorColor,underlineAtTop,underlineColor,underlineHeight,unscaledBorders,unselectedHoverBackground
+hcls OwnController
 
 CLSS public final org.netbeans.swing.tabcontrol.plaf.WinVistaEditorTabDisplayerUI
 cons public init(org.netbeans.swing.tabcontrol.TabDisplayer)

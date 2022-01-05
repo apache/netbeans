@@ -82,6 +82,7 @@ public abstract class PatternSandbox extends JPanel
     protected void initComponents() {
 
         cboxPattern = new JComboBox<String>();
+        cboxPattern.setEditor(new BasicSearchForm.MultiLineComboBoxEditor());
         cboxPattern.setEditable(true);
         cboxPattern.setRenderer(new ShorteningCellRenderer());
         lblPattern = new JLabel();
@@ -92,7 +93,7 @@ public abstract class PatternSandbox extends JPanel
         textPane = new JTextPane();
         textScrollPane = new JScrollPane();
         textScrollPane.setViewportView(textPane);
-        textScrollPane.setPreferredSize(new Dimension(350, 100));
+        textScrollPane.setPreferredSize(new Dimension(400, 100));
         textScrollPane.setBorder(new BevelBorder(BevelBorder.LOWERED));
         searchCriteria = new BasicSearchCriteria();
         initSpecificComponents();
@@ -186,14 +187,10 @@ public abstract class PatternSandbox extends JPanel
         JPanel buttonsPanel = createButtonsPanel();
 
         mainHelper.addRow(GroupLayout.DEFAULT_SIZE,
-                form.getPreferredSize().height,
-                form.getPreferredSize().height,
-                form);
-        mainHelper.addRow(
-                GroupLayout.DEFAULT_SIZE,
                 200,
                 Short.MAX_VALUE,
-                textScrollPane);
+                new JSplitPane(JSplitPane.VERTICAL_SPLIT, form, textScrollPane));
+
         mainHelper.addRow(
                 GroupLayout.DEFAULT_SIZE,
                 buttonsPanel.getPreferredSize().height,
@@ -224,13 +221,22 @@ public abstract class PatternSandbox extends JPanel
                 FormLayoutHelper.DEFAULT_COLUMN,
                 FormLayoutHelper.EAGER_COLUMN);
         formHelper.setInlineGaps(true);
-        formHelper.addRow(lblPattern, cboxPattern);
+        formHelper.addRow(
+                GroupLayout.DEFAULT_SIZE,
+                cboxPattern.getPreferredSize().height,
+                Short.MAX_VALUE,
+                lblPattern, cboxPattern);
+        
         if (lblHint.getText() != null
                 && !"".equals(lblHint.getText())) {                     //NOI18N
             formHelper.addRow(new JLabel(), lblHint);
         }
 
-        formHelper.addRow(lblOptions, pnlOptions);
+        formHelper.addRow(
+                GroupLayout.DEFAULT_SIZE,
+                0,
+                pnlOptions.getPreferredSize().height,
+                lblOptions, pnlOptions);
         return form;
     }
 
@@ -1011,7 +1017,7 @@ public abstract class PatternSandbox extends JPanel
     private static class TimeoutExeption extends RuntimeException {
     }
 
-    private class ShorteningCellRenderer extends DefaultListCellRenderer {
+    private static class ShorteningCellRenderer extends DefaultListCellRenderer {
 
         private static final int MAX_LENGTH = 50;
         private static final String THREE_DOTS = "...";                 //NOI18N

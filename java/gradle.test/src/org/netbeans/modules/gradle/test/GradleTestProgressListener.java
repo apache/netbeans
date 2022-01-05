@@ -177,6 +177,7 @@ public final class GradleTestProgressListener implements ProgressListener, Gradl
         String suiteName = GradleTestSuite.suiteName(op);
         if (suiteName.equals(currentSuite.getName())) {
             Report report = session.getReport(result.getEndTime() - result.getStartTime());
+            session.finishSuite(currentSuite);
             CoreManager manager = getManager();
             if (manager != null) {
                 manager.displayReport(session, report, true);
@@ -188,7 +189,7 @@ public final class GradleTestProgressListener implements ProgressListener, Gradl
         assert session != null;
         assert op.getParent() != null;
         TestSuite currentSuite = session.getCurrentSuite();
-        TestSuite newSuite = new GradleTestSuite((JvmTestOperationDescriptor) op.getParent());
+        TestSuite newSuite = new GradleTestSuite(getSuiteOpDesc((JvmTestOperationDescriptor) op.getParent(), op.getClassName()));
         if ((currentSuite == null) || !currentSuite.equals(newSuite)) {
             session.addSuite(newSuite);
             CoreManager manager = getManager();
@@ -243,6 +244,15 @@ public final class GradleTestProgressListener implements ProgressListener, Gradl
             runningTests.remove(getTestOpKey(op));
         }
 
+    }
+
+    private static JvmTestOperationDescriptor getSuiteOpDesc(JvmTestOperationDescriptor op, String className) {
+        for (JvmTestOperationDescriptor descriptor = op; descriptor != null; descriptor = (JvmTestOperationDescriptor) descriptor.getParent()) {
+            if (className == null || className.equals(descriptor.getClassName())) {
+                return descriptor;
+            }
+        }
+        return op;
     }
 
     private static String getTestOpKey(JvmTestOperationDescriptor op) {

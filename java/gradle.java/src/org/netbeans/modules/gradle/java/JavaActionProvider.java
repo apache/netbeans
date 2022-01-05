@@ -27,12 +27,16 @@ import org.netbeans.modules.gradle.spi.actions.DefaultGradleActionsProvider;
 import org.netbeans.modules.gradle.spi.actions.GradleActionsProvider;
 import static org.netbeans.modules.gradle.java.api.GradleJavaSourceSet.SourceType.*;
 import java.io.File;
+import java.util.Set;
 import static org.netbeans.spi.project.ActionProvider.*;
 import static org.netbeans.api.java.project.JavaProjectConstants.*;
 import org.netbeans.api.java.source.ClasspathInfo;
 import org.netbeans.api.java.source.SourceUtils;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.queries.FileBuiltQuery;
+import org.netbeans.modules.gradle.api.execute.ActionMapping;
+import org.netbeans.modules.gradle.api.execute.GradleCommandLine;
+import org.netbeans.modules.gradle.spi.actions.ProjectActionMappingProvider;
 import static org.netbeans.spi.project.SingleMethod.COMMAND_DEBUG_SINGLE_METHOD;
 import static org.netbeans.spi.project.SingleMethod.COMMAND_RUN_SINGLE_METHOD;
 import org.openide.filesystems.FileObject;
@@ -49,6 +53,17 @@ public class JavaActionProvider extends DefaultGradleActionsProvider {
 
     private static final String GATLING_PLUGIN = "com.github.lkishalmi.gatling"; //NOI18N
     private static final String SIMULATION_POSTFIX = "Simulation.scala"; //NOI18N
+
+    /**
+     * Name of the 'download.sources' standard action
+     */
+    public static final String COMMAND_DL_SOURCES = "download.sources"; //NOI18N
+
+    /**
+     * Name of the 'download.javadoc' standard action
+     */
+    public static final String COMMAND_DL_JAVADOC = "download.javadoc"; //NOI18N
+
 
     private static final String[] SUPPORTED = new String[]{
         COMMAND_BUILD,
@@ -67,6 +82,9 @@ public class JavaActionProvider extends DefaultGradleActionsProvider {
         COMMAND_DEBUG_SINGLE,
         COMMAND_COMPILE_SINGLE,
         COMMAND_DELETE,
+        
+        COMMAND_DL_JAVADOC,
+        COMMAND_DL_SOURCES
     };
 
     public JavaActionProvider() {
@@ -93,7 +111,14 @@ public class JavaActionProvider extends DefaultGradleActionsProvider {
                                 break;
                             case COMMAND_DEBUG_SINGLE:
                             case COMMAND_RUN_SINGLE:
-                                if (RunUtils.isAugmentedBuildEnabled(project)) {
+                                ProjectActionMappingProvider pamp = RunUtils.findActionProvider(project, context);
+                                ActionMapping runSingleMapping = pamp.findMapping(action);
+                                if (ActionMapping.isDisabled(runSingleMapping)) {
+                                    return false;
+                                }
+                                GradleCommandLine cli = new GradleCommandLine(RunUtils.evaluateActionArgs(project, action, runSingleMapping.getArgs(), context));
+                                Set<String> runSingleTasks = cli.getTasks();
+                                if (gbp.getTaskNames().containsAll(runSingleTasks) || RunUtils.isAugmentedBuildEnabled(project)) {
                                     File f = FileUtil.toFile(fo);
                                     GradleJavaSourceSet sourceSet = gjp.containingSourceSet(f);
                                     if ((sourceSet != null) && fo.isData()) {
@@ -105,11 +130,12 @@ public class JavaActionProvider extends DefaultGradleActionsProvider {
                                     }
                                 }
                                 break;
+
                             case COMMAND_TEST_SINGLE:
                             case COMMAND_DEBUG_TEST_SINGLE:
                             case COMMAND_RUN_SINGLE_METHOD:
                             case COMMAND_DEBUG_SINGLE_METHOD:
-                                if ("text/x-java".equals(fo.getMIMEType()) || "text/x-groovy".equals(fo.getMIMEType())) { //NOI18N
+                                if ("text/x-java".equals(fo.getMIMEType()) || "text/x-groovy".equals(fo.getMIMEType()) || "text/x-kotlin".equals(fo.getMIMEType())) { //NOI18N
                                     File f = FileUtil.toFile(fo);
                                     GradleJavaSourceSet sourceSet = gjp.containingSourceSet(f);
                                     ret = sourceSet != null && sourceSet.isTestSourceSet() && sourceSet.getSourceType(f) != RESOURCES;
@@ -129,7 +155,5 @@ public class JavaActionProvider extends DefaultGradleActionsProvider {
         }
         return ret;
     }
-
-
 
 }

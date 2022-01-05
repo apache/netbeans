@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.52
+#Version 1.58
 
 CLSS public java.lang.Object
 cons public init()
@@ -72,7 +72,6 @@ meth public void setEncoding(java.lang.String)
 meth public void setPublicId(java.lang.String)
 meth public void setSystemId(java.lang.String)
 supr java.lang.Object
-hfds byteStream,characterStream,encoding,publicId,systemId
 
 CLSS public abstract interface org.xml.sax.XMLReader
 meth public abstract boolean getFeature(java.lang.String) throws org.xml.sax.SAXNotRecognizedException,org.xml.sax.SAXNotSupportedException

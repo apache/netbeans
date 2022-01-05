@@ -30,6 +30,7 @@ import org.netbeans.api.debugger.LazyDebuggerManagerListener;
 import org.netbeans.api.debugger.Properties;
 import org.netbeans.api.debugger.Session;
 import org.netbeans.api.debugger.Watch;
+import org.netbeans.spi.debugger.DebuggerServiceRegistration;
 
 /**
  * Listens on DebuggerManager and:
@@ -39,10 +40,20 @@ import org.netbeans.api.debugger.Watch;
  *
  * @author Jan Jancura
  */
+@DebuggerServiceRegistration(types={LazyDebuggerManagerListener.class})
 public class PersistenceManager implements LazyDebuggerManagerListener {
+    
+    private boolean areBreakpointsPersisted() {
+        Properties p = Properties.getDefault ().getProperties ("debugger");
+        p = p.getProperties("persistence");
+        return p.getBoolean("breakpoints", true);
+    }
     
     @Override
     public Breakpoint[] initBreakpoints () {
+        if (!areBreakpointsPersisted()) {
+            return new Breakpoint[]{};
+        }
         Properties p = Properties.getDefault ().getProperties ("debugger").
             getProperties (DebuggerManager.PROP_BREAKPOINTS);
         Breakpoint[] breakpoints = (Breakpoint[]) p.getArray (
@@ -79,6 +90,9 @@ public class PersistenceManager implements LazyDebuggerManagerListener {
     
     @Override
     public void breakpointAdded (Breakpoint breakpoint) {
+        if (!areBreakpointsPersisted()) {
+            return ;
+        }
         if (breakpoint instanceof CPPLiteBreakpoint) {
             Properties p = Properties.getDefault ().getProperties ("debugger").
                 getProperties (DebuggerManager.PROP_BREAKPOINTS);
@@ -92,6 +106,9 @@ public class PersistenceManager implements LazyDebuggerManagerListener {
 
     @Override
     public void breakpointRemoved (Breakpoint breakpoint) {
+        if (!areBreakpointsPersisted()) {
+            return ;
+        }
         if (breakpoint instanceof CPPLiteBreakpoint) {
             Properties p = Properties.getDefault ().getProperties ("debugger").
                 getProperties (DebuggerManager.PROP_BREAKPOINTS);
@@ -134,12 +151,15 @@ public class PersistenceManager implements LazyDebuggerManagerListener {
     private static Breakpoint[] getBreakpoints () {
         Breakpoint[] bs = DebuggerManager.getDebuggerManager ().
             getBreakpoints ();
-        int i, k = bs.length;
         List<Breakpoint> bb = new ArrayList<>();
-        for (i = 0; i < k; i++)
-            // Don't store hidden breakpoints
-            if (bs[i] instanceof CPPLiteBreakpoint)
-                bb.add (bs [i]);
+        for (Breakpoint b : bs) {
+            if (b instanceof CPPLiteBreakpoint) {
+                // Don't store hidden breakpoints
+                if (!((CPPLiteBreakpoint) b).isHidden()) {
+                    bb.add(b);
+                }
+            }
+        }
         bs = new Breakpoint [bb.size ()];
         return (Breakpoint[]) bb.toArray (bs);
     }

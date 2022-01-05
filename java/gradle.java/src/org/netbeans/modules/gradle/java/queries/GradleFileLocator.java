@@ -38,14 +38,12 @@ import org.netbeans.api.project.SourceGroup;
 import org.netbeans.api.project.Sources;
 import org.netbeans.spi.java.classpath.ClassPathProvider;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
-import org.netbeans.spi.project.ProjectServiceProvider;
 import org.openide.filesystems.FileObject;
 
 /**
  *
  * @author mkleint
  */
-@ProjectServiceProvider(service=LineConvertors.FileLocator.class, projectType=NbGradleProject.GRADLE_PLUGIN_TYPE + "/java-base")
 public class GradleFileLocator implements LineConvertors.FileLocator {
 
     private ClassPath classpath;

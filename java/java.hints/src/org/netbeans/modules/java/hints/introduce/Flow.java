@@ -28,6 +28,7 @@ import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.BreakTree;
 import com.sun.source.tree.CaseTree;
+import com.sun.source.tree.CaseTree.CaseKind;
 import com.sun.source.tree.CatchTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
@@ -59,6 +60,7 @@ import com.sun.source.tree.ParenthesizedTree;
 import com.sun.source.tree.PrimitiveTypeTree;
 import com.sun.source.tree.ReturnTree;
 import com.sun.source.tree.StatementTree;
+import com.sun.source.tree.SwitchExpressionTree;
 import com.sun.source.tree.SwitchTree;
 import com.sun.source.tree.SynchronizedTree;
 import com.sun.source.tree.ThrowTree;
@@ -72,6 +74,7 @@ import com.sun.source.tree.UnionTypeTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.tree.WhileLoopTree;
 import com.sun.source.tree.WildcardTree;
+import com.sun.source.tree.YieldTree;
 import com.sun.source.util.TreePath;
 import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import java.util.ArrayList;
@@ -101,7 +104,7 @@ import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.CompilationInfo.CacheClearPolicy;
-import org.netbeans.api.java.source.support.CancellableTreePathScanner;
+import org.netbeans.api.java.source.support.CancellableTreeScanner;
 import org.netbeans.modules.java.hints.errors.Utilities;
 import org.netbeans.spi.java.hints.HintContext;
 
@@ -353,7 +356,7 @@ public class Flow {
      * that are qualified to belong to other scopes are ignored at the moment.
      * 
      */
-    private static final class VisitorImpl extends CancellableTreePathScanner<Boolean, ConstructorData> {
+    private static final class VisitorImpl extends CancellableTreeScanner<Boolean, ConstructorData> {
         
         private final CompilationInfo info;
         private final TypeElement undefinedSymbolScope;
@@ -444,11 +447,39 @@ public class Flow {
             return cancel.isCanceled();
         }
 
+        private TreePath currentPath;
+
+        public TreePath getCurrentPath() {
+            return currentPath;
+        }
+
+        public Boolean scan(TreePath path, ConstructorData p) {
+            TreePath oldPath = currentPath;
+            try {
+                currentPath = path;
+                return super.scan(path.getLeaf(), p);
+            } finally {
+                currentPath = oldPath;
+            }
+        }
+
         @Override
         public Boolean scan(Tree tree, ConstructorData p) {
             resume(tree, resumeBefore);
             
-            Boolean result = super.scan(tree, p);
+            Boolean result;
+
+            if (tree != null) {
+                TreePath oldPath = currentPath;
+                try {
+                    currentPath = new TreePath(currentPath, tree);
+                    result = super.scan(tree, p);
+                } finally {
+                    currentPath = oldPath;
+                }
+            } else {
+                result = null;
+            }
 
             resume(tree, resumeAfter);
             
@@ -1172,15 +1203,41 @@ public class Flow {
 
             Tree target = info.getTreeUtilities().getBreakContinueTargetTree(getCurrentPath());
             
-            resumeAfter(target, variable2State);
+            breakTo(target);
 
-            variable2State = new HashMap< Element, State>();
-            
             return null;
         }
 
+        @Override
+        public Boolean visitYield(YieldTree node, ConstructorData p) {
+            scan(node.getValue(), p);
+
+            Tree target = info.getTreeUtilities().getBreakContinueTargetTree(getCurrentPath());
+            
+            breakTo(target);
+
+            return null;
+        }
+
+        private void breakTo(Tree target) {
+            resumeAfter(target, variable2State);
+
+            variable2State = new HashMap<>();
+        }
+
         public Boolean visitSwitch(SwitchTree node, ConstructorData p) {
-            scan(node.getExpression(), null);
+            generalizedSwitch(node, node.getExpression(), node.getCases());
+            return null;
+        }
+
+        @Override
+        public Boolean visitSwitchExpression(SwitchExpressionTree node, ConstructorData p) {
+            generalizedSwitch(node, node.getExpression(), node.getCases());
+            return null; //never a constant expression
+        }
+
+        private void generalizedSwitch(Tree switchTree, ExpressionTree expression, List<? extends CaseTree> cases) {
+            scan(expression, null);
 
             Map< Element, State> origVariable2State = new HashMap< Element, State>(variable2State);
 
@@ -1188,7 +1245,7 @@ public class Flow {
 
             boolean exhaustive = false;
 
-            for (CaseTree ct : node.getCases()) {
+            for (CaseTree ct : cases) {
                 variable2State = mergeOr(variable2State, origVariable2State);
 
                 if (ct.getExpression() == null) {
@@ -1196,13 +1253,15 @@ public class Flow {
                 }
 
                 scan(ct, null);
+
+                if (ct.getCaseKind() == CaseKind.RULE) {
+                    breakTo(switchTree);
+                }
             }
 
             if (!exhaustive) {
                 variable2State = mergeOr(variable2State, origVariable2State);
             }
-            
-            return null;
         }
 
         public Boolean visitEnhancedForLoop(EnhancedForLoopTree node, ConstructorData p) {

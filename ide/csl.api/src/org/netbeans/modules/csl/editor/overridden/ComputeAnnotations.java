@@ -127,6 +127,10 @@ public final class ComputeAnnotations extends ParserResultTask<Result> {
 
                                     while (!todo.isEmpty()) {
                                         StructureItem i = todo.remove(0);
+                                        if (i instanceof StructureItem.InheritedItem
+                                                && ((StructureItem.InheritedItem) i).isInherited()) {
+                                            continue;
+                                        }
 
                                         todo.addAll(i.getNestedItems());
 

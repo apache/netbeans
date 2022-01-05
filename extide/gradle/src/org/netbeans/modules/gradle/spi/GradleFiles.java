@@ -22,7 +22,7 @@ package org.netbeans.modules.gradle.spi;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.Collections;
@@ -35,6 +35,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.WeakHashMap;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.netbeans.api.annotations.common.NonNull;
@@ -55,13 +56,17 @@ public final class GradleFiles implements Serializable {
         SETTINGS_SCRIPT,
         USER_PROPERTIES,
         PROJECT_PROPERTIES,
-        ROOT_PROPERTIES;
+        ROOT_PROPERTIES,
+        /** @since 2.4 */
+        BUILD_SRC;
 
-        public static final Set<Kind> SCRIPTS = EnumSet.of(ROOT_SCRIPT, BUILD_SCRIPT, SETTINGS_SCRIPT);
+        public static final Set<Kind> SCRIPTS = EnumSet.of(ROOT_SCRIPT, BUILD_SCRIPT, SETTINGS_SCRIPT, BUILD_SRC);
         public static final Set<Kind> PROPERTIES = EnumSet.of(USER_PROPERTIES, PROJECT_PROPERTIES, ROOT_PROPERTIES);
         public static final Set<Kind> PROJECT_FILES = EnumSet.of(ROOT_SCRIPT, BUILD_SCRIPT, SETTINGS_SCRIPT, PROJECT_PROPERTIES, ROOT_PROPERTIES);
     }
 
+    private static final Logger LOG = Logger.getLogger(GradleFiles.class.getName());
+    
     public static final String SETTINGS_FILE_NAME     = "settings.gradle"; //NOI18N
     public static final String SETTINGS_FILE_NAME_KTS = "settings.gradle.kts"; //NOI18N
     public static final String BUILD_FILE_NAME        = "build.gradle"; //NOI18N
@@ -83,6 +88,7 @@ public final class GradleFiles implements Serializable {
     }
     
     public GradleFiles(File dir, boolean knownProject) {
+        LOG.fine("Gradle Files for: " + dir.getAbsolutePath());
         this.knownProject = knownProject;
         try {
             dir = dir.getCanonicalFile();
@@ -111,9 +117,9 @@ public final class GradleFiles implements Serializable {
         if (!f1.canRead()) {
             f1 = new File(projectDir, BUILD_FILE_NAME);
         }
-        File f2 = new File(projectDir, projectDir.getName() + ".gradle.kts");
+        File f2 = new File(projectDir, projectDir.getName() + ".gradle.kts"); //NOI18N
         if (!f2.canRead()) {
-            f2 = new File(projectDir, projectDir.getName() + ".gradle");
+            f2 = new File(projectDir, projectDir.getName() + ".gradle"); //NOI18N
         }
 
         settingsScript = searchPathUp(projectDir, SETTINGS_FILE_NAME_KTS);
@@ -141,7 +147,7 @@ public final class GradleFiles implements Serializable {
     private void searchWrapper() {
         File w = new File(rootDir, WRAPPER_PROPERTIES);
         if (w.isFile()) {
-            gradlew = new File(rootDir, Utilities.isWindows() ? "gradlew.bat" : "gradlew");
+            gradlew = new File(rootDir, Utilities.isWindows() ? "gradlew.bat" : "gradlew"); //NOI18N
             wrapperProperties = w;
         }
     }
@@ -193,6 +199,16 @@ public final class GradleFiles implements Serializable {
         return wrapperProperties != null;
     }
 
+    /**
+     * Returns true if these files may represent a <code>buildSrc</code> project.
+     * @return true if the project folder is under root and it is in the folder
+     *         <code>buildSrc</code>
+     * @since 2.4
+     */
+    public boolean isBuildSrcProject() {
+        return "buildSrc".equals(projectDir.getName()) && rootDir.equals(projectDir.getParentFile());
+    }
+
     public boolean isRootProject() {
         return (buildScript != null) && rootDir.equals(projectDir);
     }
@@ -206,11 +222,17 @@ public final class GradleFiles implements Serializable {
     }
 
     public boolean isProject() {
-        boolean ret = knownProject || (buildScript != null);
-        if (!ret && (settingsScript != null)) {
-            ret = SettingsFile.getSubProjects(settingsScript).contains(projectDir);
+        if (knownProject || buildScript != null) {
+            return true;
         }
-        return ret;
+        if (settingsScript != null) {
+            if (projectDir.equals(settingsScript.getParentFile())) {
+                return true;
+            }
+            Set<File> parsed = SettingsFile.getSubProjects(settingsScript);
+            return parsed.contains(projectDir); 
+        }
+        return false;
     }
 
     /**
@@ -245,24 +267,41 @@ public final class GradleFiles implements Serializable {
      * @return
      */
     public File getFile(Kind kind) {
-        switch (kind) {
-            case BUILD_SCRIPT:
-                return buildScript != null ? buildScript : new File(projectDir, BUILD_FILE_NAME);
-            case ROOT_SCRIPT:
-                return parentScript != null ? parentScript : new File(rootDir, BUILD_FILE_NAME);
-            case SETTINGS_SCRIPT:
-                return settingsScript != null ? settingsScript : new File(rootDir, SETTINGS_FILE_NAME);
-
-            case PROJECT_PROPERTIES:
-                return new File(projectDir, GRADLE_PROPERTIES_NAME);
-            case ROOT_PROPERTIES:
-                return new File(rootDir, GRADLE_PROPERTIES_NAME);
-            case USER_PROPERTIES: {
-                File guh = GradleSettings.getDefault().getGradleUserHome();
-                return new File(guh, GRADLE_PROPERTIES_NAME);
+        if (isBuildSrcProject()) {
+            switch (kind) {
+                case BUILD_SCRIPT:
+                    return buildScript != null ? buildScript : new File(projectDir, BUILD_FILE_NAME);
+                case PROJECT_PROPERTIES:
+                    return new File(projectDir, GRADLE_PROPERTIES_NAME);
+                case USER_PROPERTIES: {
+                    File guh = GradleSettings.getDefault().getGradleUserHome();
+                    return new File(guh, GRADLE_PROPERTIES_NAME);
+                }
+                default:
+                    return null;
             }
-            default:
-                return null;
+        } else {
+            switch (kind) {
+                case BUILD_SCRIPT:
+                    return buildScript != null ? buildScript : new File(projectDir, BUILD_FILE_NAME);
+                case ROOT_SCRIPT:
+                    return parentScript != null ? parentScript : new File(rootDir, BUILD_FILE_NAME);
+                case SETTINGS_SCRIPT:
+                    return settingsScript != null ? settingsScript : new File(rootDir, SETTINGS_FILE_NAME);
+
+                case PROJECT_PROPERTIES:
+                    return new File(projectDir, GRADLE_PROPERTIES_NAME);
+                case ROOT_PROPERTIES:
+                    return new File(rootDir, GRADLE_PROPERTIES_NAME);
+                case USER_PROPERTIES: {
+                    File guh = GradleSettings.getDefault().getGradleUserHome();
+                    return new File(guh, GRADLE_PROPERTIES_NAME);
+                }
+                case BUILD_SRC:
+                    return new File(rootDir, "buildSrc"); //NOI18N
+                default:
+                    return null;
+            }
         }
     }
 
@@ -299,7 +338,7 @@ public final class GradleFiles implements Serializable {
 
     @Override
     public String toString() {
-        return "GradleFiles[projectDir=" + projectDir + ", rootDir=" + rootDir + "]";
+        return "GradleFiles[projectDir=" + projectDir + ", rootDir=" + rootDir + "]"; //NOI18N
     }
 
     public static class SettingsFile {
@@ -321,10 +360,10 @@ public final class GradleFiles implements Serializable {
             Map<String, String> projectPaths = new HashMap<>();
             String rootDir = f.getParentFile().getAbsolutePath();
             try {
-                List<String> lines = Files.readAllLines(f.toPath(), Charset.forName("UTF-8")); //NOI18N
+                List<String> lines = Files.readAllLines(f.toPath(), StandardCharsets.UTF_8);
                 for (String line : lines) {
                     line = line.trim();
-                    if (!line.startsWith("//")) {
+                    if (!line.startsWith("//")) { //NOI18N
 
                         String[] split = line.split("[\\s'\",\\(\\)]+"); //NOI18N
                         if ((split.length > 1) && "include".equals(split[0])) { //NOI18N
@@ -357,13 +396,13 @@ public final class GradleFiles implements Serializable {
             if (firstGuess.isDirectory()) {
                 return firstGuess;
             }
-            for (String subdirName : Arrays.asList("subProjects", "modules")) {
+            for (String subdirName : Arrays.asList("subProjects", "modules")) { //NOI18N
                 File subdir = new File(rootDir, subdirName);
                 if (subdir.isDirectory()) {
                     if (new File(subdir, projectName).isDirectory()) {
                         return new File(subdir, projectName);
                     }
-                    String gradleStyle = projectName.replaceAll("\\p{Upper}", "-$0").toLowerCase();
+                    String gradleStyle = projectName.replaceAll("\\p{Upper}", "-$0").toLowerCase(); //NOI18N
                     if (new File(subdir, gradleStyle).isDirectory()) {
                         return new File(subdir, gradleStyle);
                     }

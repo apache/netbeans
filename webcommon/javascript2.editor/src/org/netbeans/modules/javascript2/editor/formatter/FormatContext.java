@@ -32,12 +32,12 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import javax.swing.text.BadLocationException;
+import javax.swing.text.Document;
+import org.netbeans.api.editor.document.LineDocument;
 import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.lexer.Language;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenSequence;
-import org.netbeans.editor.BaseDocument;
-import org.netbeans.editor.Utilities;
 import org.netbeans.lib.editor.util.swing.DocumentUtilities;
 import org.netbeans.modules.editor.indent.api.IndentUtils;
 import org.netbeans.modules.editor.indent.spi.Context;
@@ -539,8 +539,12 @@ public final class FormatContext {
         return embedded && root == null;
     }
 
-    public BaseDocument getDocument() {
-        return (BaseDocument) context.document();
+    public Document getDocument() {
+        return context.document();
+    }
+
+    private LineDocument getLineDocument() {
+        return LineDocumentUtils.as(context.document(), LineDocument.class);
     }
 
     public Snapshot getSnapshot() {
@@ -566,7 +570,7 @@ public final class FormatContext {
         }
 
         try {
-            int diff = setLineIndentation(getDocument(),
+            int diff = setLineIndentation(getLineDocument(),
                     offset + realOffsetDiff, indentationSize, codeStyle);
             setOffsetDiff(offsetDiff + diff);
         } catch (BadLocationException ex) {
@@ -584,7 +588,7 @@ public final class FormatContext {
             return;
         }
 
-        BaseDocument doc = getDocument();
+        Document doc = getDocument();
         try {
             doc.insertString(offset + realOffsetDiff, newString, null);
             setOffsetDiff(offsetDiff + newString.length());
@@ -612,7 +616,7 @@ public final class FormatContext {
             return;
         }
 
-        BaseDocument doc = getDocument();
+        Document doc = getDocument();
         try {
             String oldText = doc.getText(offset + offsetDiff, length);
             if (newString.equals(oldText)) {
@@ -641,7 +645,7 @@ public final class FormatContext {
             return;
         }
 
-        BaseDocument doc = getDocument();
+        Document doc = getDocument();
         try {
             if(doc.getText(offset + offsetDiff, length).contains("\n")) {
                 LOGGER.log(Level.WARNING, "Tried to remove EOL");
@@ -659,7 +663,10 @@ public final class FormatContext {
     }
 
     private Integer getSuggestedIndentation(int offset) {
-        BaseDocument doc = getDocument();
+        LineDocument doc = getLineDocument();
+        if (doc == null) {
+            return null;
+        }
         Map<Integer, Integer> suggestedLineIndents = (Map<Integer, Integer>) doc.getProperty("AbstractIndenter.lineIndents");
         if (suggestedLineIndents != null) {
             try {
@@ -688,9 +695,12 @@ public final class FormatContext {
     }
 
     // XXX copied from GsfUtilities
-    private static int setLineIndentation(BaseDocument doc, int lineOffset,
+    private static int setLineIndentation(LineDocument doc, int lineOffset,
             int newIndent, CodeStyle.Holder codeStyle) throws BadLocationException {
-        int lineStartOffset = Utilities.getRowStart(doc, lineOffset);
+        if (doc == null) {
+            return 0;
+        }
+        int lineStartOffset = LineDocumentUtils.getLineStart(doc, lineOffset);
 
         // Determine old indent first together with oldIndentEndOffset
         int indent = 0;

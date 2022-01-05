@@ -156,11 +156,7 @@
             </sequential>
         </macrodef>
         <property name="test.config" value="default"/>
-        <condition property="test.run.args" value="-ea -Xmx480m -Xss2m -Dnetbeans.keyring.no.master=true">
-            <!-- JDK8 dropped support for PermSize (and JDK9 does not start with it being specified). Don't specify such option when running on JDK8 and newer. -->
-            <available classname="java.lang.FunctionalInterface"/>
-        </condition>
-        <property name="test.run.args" value="-ea -XX:PermSize=32m -XX:MaxPermSize=200m -Xmx480m -Xss2m -Dnetbeans.keyring.no.master=true"/>
+        <property name="test.run.args" value="-ea -Xmx480m -Xss2m -Dnetbeans.keyring.no.master=true"/>
         <property name="custom.jvm.args" value=""/>
         <property name="custom.jvm.executable" value="java"/>
         <property name="test.run.args.full" value="${test.run.args} ${custom.jvm.args}"/>

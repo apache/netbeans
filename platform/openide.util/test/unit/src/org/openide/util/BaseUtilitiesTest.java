@@ -201,4 +201,16 @@ public class BaseUtilitiesTest extends NbTestCase {
         assertEquals("third\\narg", args[2]);
     }
 
+    public void testNormalizeURI() throws Exception {
+        {
+            URI uri = new URI("file:////wsl$/Target/");
+            URI normalized = BaseUtilities.normalizeURI(uri);
+            assertEquals("file:////wsl$/Target/", normalized.toString());
+        }
+        {
+            URI uri = new URI("file:////wsl$/Target/home/./../");
+            URI normalized = BaseUtilities.normalizeURI(uri);
+            assertEquals("file:////wsl$/Target/", normalized.toString());
+        }
+    }
 }

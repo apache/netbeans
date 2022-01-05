@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 4.15.0
+#Version 4.21.0
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -272,8 +272,6 @@ meth public void transferFocusUpCycle()
 meth public void update(java.awt.Graphics)
 meth public void validate()
 supr java.lang.Object
-hfds FOCUS_TRAVERSABLE_DEFAULT,FOCUS_TRAVERSABLE_SET,FOCUS_TRAVERSABLE_UNKNOWN,LOCK,acc,actionListenerK,adjustmentListenerK,appContext,autoFocusTransferOnDisposal,background,backgroundEraseDisabled,boundsOp,bufferStrategy,changeSupport,coalesceEventsParams,coalesceMap,coalescingEnabled,componentListener,componentListenerK,componentOrientation,componentSerializedDataVersion,compoundShape,containerListenerK,cursor,dropTarget,enabled,eventCache,eventLog,eventMask,focusListener,focusListenerK,focusLog,focusTraversalKeyPropertyNames,focusTraversalKeys,focusTraversalKeysEnabled,focusable,font,foreground,graphicsConfig,height,hierarchyBoundsListener,hierarchyBoundsListenerK,hierarchyListener,hierarchyListenerK,ignoreRepaint,incRate,inputMethodListener,inputMethodListenerK,isAddNotifyComplete,isFocusTraversableOverridden,isInc,isPacked,itemListenerK,keyListener,keyListenerK,locale,log,maxSize,maxSizeSet,minSize,minSizeSet,mixingCutoutRegion,mixingLog,mouseListener,mouseListenerK,mouseMotionListener,mouseMotionListenerK,mouseWheelListener,mouseWheelListenerK,name,nameExplicitlySet,newEventsOnly,objectLock,ownedWindowK,parent,peer,peerFont,popups,prefSize,prefSizeSet,requestFocusController,serialVersionUID,textListenerK,valid,visible,width,windowClosingException,windowFocusListenerK,windowListenerK,windowStateListenerK,x,y
-hcls AWTTreeLock,BltSubRegionBufferStrategy,DummyRequestFocusController,FlipSubRegionBufferStrategy,ProxyCapabilities,SingleBufferStrategy
 
 CLSS public java.awt.Container
 cons public init()
@@ -358,8 +356,6 @@ meth public void transferFocusDownCycle()
 meth public void update(java.awt.Graphics)
 meth public void validate()
 supr java.awt.Component
-hfds EMPTY_ARRAY,INCLUDE_SELF,SEARCH_HEAVYWEIGHTS,component,containerListener,containerSerializedDataVersion,descendUnconditionallyWhenValidating,descendantsCount,dispatcher,eventLog,focusCycleRoot,focusTraversalPolicy,focusTraversalPolicyProvider,isJavaAwtSmartInvalidate,layoutMgr,listeningBoundsChildren,listeningChildren,log,mixingLog,modalAppContext,modalComp,numOfHWComponents,numOfLWComponents,preserveBackgroundColor,printing,printingThreads,serialPersistentFields,serialVersionUID
-hcls DropTargetEventTargetFilter,EventTargetFilter,MouseEventTargetFilter,WakingRunnable
 
 CLSS public abstract interface java.awt.MenuContainer
 meth public abstract boolean postEvent(java.awt.Event)
@@ -436,7 +432,6 @@ meth public long skip(long) throws java.io.IOException
 meth public void mark(int) throws java.io.IOException
 meth public void reset() throws java.io.IOException
 supr java.lang.Object
-hfds maxSkipBufferSize,skipBuffer
 
 CLSS public abstract interface java.io.Serializable
 
@@ -469,7 +464,6 @@ meth public final java.lang.String name()
 meth public java.lang.String toString()
 meth public static <%0 extends java.lang.Enum<{%%0}>> {%%0} valueOf(java.lang.Class<{%%0}>,java.lang.String)
 supr java.lang.Object
-hfds name,ordinal
 
 CLSS public java.lang.Exception
 cons protected init(java.lang.String,java.lang.Throwable,boolean,boolean)
@@ -478,7 +472,6 @@ cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.Throwable)
 cons public init(java.lang.Throwable)
 supr java.lang.Throwable
-hfds serialVersionUID
 
 CLSS public abstract interface !annotation java.lang.FunctionalInterface
  anno 0 java.lang.annotation.Documented()
@@ -524,8 +517,6 @@ meth public void printStackTrace(java.io.PrintStream)
 meth public void printStackTrace(java.io.PrintWriter)
 meth public void setStackTrace(java.lang.StackTraceElement[])
 supr java.lang.Object
-hfds CAUSE_CAPTION,EMPTY_THROWABLE_ARRAY,NULL_CAUSE_MESSAGE,SELF_SUPPRESSION_MESSAGE,SUPPRESSED_CAPTION,SUPPRESSED_SENTINEL,UNASSIGNED_STACK,backtrace,cause,detailMessage,serialVersionUID,stackTrace,suppressedExceptions
-hcls PrintStreamOrWriter,SentinelHolder,WrappedPrintStream,WrappedPrintWriter
 
 CLSS public abstract interface java.lang.annotation.Annotation
 meth public abstract boolean equals(java.lang.Object)
@@ -589,7 +580,6 @@ meth public {java.util.AbstractMap%1} get(java.lang.Object)
 meth public {java.util.AbstractMap%1} put({java.util.AbstractMap%0},{java.util.AbstractMap%1})
 meth public {java.util.AbstractMap%1} remove(java.lang.Object)
 supr java.lang.Object
-hfds keySet,values
 
 CLSS public abstract interface java.util.Comparator<%0 extends java.lang.Object>
  anno 0 java.lang.FunctionalInterface()
@@ -632,7 +622,6 @@ intf java.io.Serializable
 meth public java.lang.Object getSource()
 meth public java.lang.String toString()
 supr java.lang.Object
-hfds serialVersionUID
 
 CLSS public java.util.HashMap<%0 extends java.lang.Object, %1 extends java.lang.Object>
 cons public init()
@@ -667,8 +656,6 @@ meth public {java.util.HashMap%1} putIfAbsent({java.util.HashMap%0},{java.util.H
 meth public {java.util.HashMap%1} remove(java.lang.Object)
 meth public {java.util.HashMap%1} replace({java.util.HashMap%0},{java.util.HashMap%1})
 supr java.util.AbstractMap<{java.util.HashMap%0},{java.util.HashMap%1}>
-hfds DEFAULT_INITIAL_CAPACITY,DEFAULT_LOAD_FACTOR,MAXIMUM_CAPACITY,MIN_TREEIFY_CAPACITY,TREEIFY_THRESHOLD,UNTREEIFY_THRESHOLD,entrySet,loadFactor,modCount,serialVersionUID,size,table,threshold
-hcls EntryIterator,EntrySet,EntrySpliterator,HashIterator,HashMapSpliterator,KeyIterator,KeySet,KeySpliterator,Node,TreeNode,ValueIterator,ValueSpliterator,Values
 
 CLSS public java.util.Hashtable<%0 extends java.lang.Object, %1 extends java.lang.Object>
 cons public init()
@@ -710,8 +697,6 @@ meth public {java.util.Hashtable%1} putIfAbsent({java.util.Hashtable%0},{java.ut
 meth public {java.util.Hashtable%1} remove(java.lang.Object)
 meth public {java.util.Hashtable%1} replace({java.util.Hashtable%0},{java.util.Hashtable%1})
 supr java.util.Dictionary<{java.util.Hashtable%0},{java.util.Hashtable%1}>
-hfds ENTRIES,KEYS,MAX_ARRAY_SIZE,VALUES,count,entrySet,keySet,loadFactor,modCount,serialVersionUID,table,threshold,values
-hcls Entry,EntrySet,Enumerator,KeySet,ValueCollection
 
 CLSS public abstract interface java.util.Map<%0 extends java.lang.Object, %1 extends java.lang.Object>
 innr public abstract interface static Entry
@@ -764,7 +749,6 @@ meth public void putValue(java.lang.String,java.lang.Object)
 meth public void removePropertyChangeListener(java.beans.PropertyChangeListener)
 meth public void setEnabled(boolean)
 supr java.lang.Object
-hfds RECONFIGURE_ON_NULL,arrayTable
 
 CLSS public abstract interface javax.swing.Action
 fld public final static java.lang.String ACCELERATOR_KEY = "AcceleratorKey"
@@ -942,8 +926,6 @@ meth public void unregisterKeyboardAction(javax.swing.KeyStroke)
 meth public void update(java.awt.Graphics)
 meth public void updateUI()
 supr java.awt.Container
-hfds ACTIONMAP_CREATED,ANCESTOR_INPUTMAP_CREATED,ANCESTOR_USING_BUFFER,AUTOSCROLLS_SET,COMPLETELY_OBSCURED,CREATED_DOUBLE_BUFFER,DEBUG_GRAPHICS_LOADED,FOCUS_INPUTMAP_CREATED,FOCUS_TRAVERSAL_KEYS_BACKWARD_SET,FOCUS_TRAVERSAL_KEYS_FORWARD_SET,INHERITS_POPUP_MENU,INPUT_VERIFIER_SOURCE_KEY,IS_DOUBLE_BUFFERED,IS_OPAQUE,IS_PAINTING_TILE,IS_PRINTING,IS_PRINTING_ALL,IS_REPAINTING,KEYBOARD_BINDINGS_KEY,KEY_EVENTS_ENABLED,NEXT_FOCUS,NOT_OBSCURED,OPAQUE_SET,PARTIALLY_OBSCURED,REQUEST_FOCUS_DISABLED,RESERVED_1,RESERVED_2,RESERVED_3,RESERVED_4,RESERVED_5,RESERVED_6,WHEN_IN_FOCUSED_WINDOW_BINDINGS,WIF_INPUTMAP_CREATED,WRITE_OBJ_COUNTER_FIRST,WRITE_OBJ_COUNTER_LAST,aaTextInfo,actionMap,alignmentX,alignmentY,ancestorInputMap,autoscrolls,border,clientProperties,componentObtainingGraphicsFrom,componentObtainingGraphicsFromLock,defaultLocale,flags,focusController,focusInputMap,inputVerifier,isAlignmentXSet,isAlignmentYSet,managingFocusBackwardTraversalKeys,managingFocusForwardTraversalKeys,paintingChild,popupMenu,readObjectCallbacks,revalidateRunnableScheduled,tempRectangles,uiClassID,verifyInputWhenFocusTarget,vetoableChangeSupport,windowInputMap
-hcls ActionStandin,IntVector,KeyboardState,ReadObjectCallback
 
 CLSS public javax.swing.JPanel
 cons public init()
@@ -959,7 +941,6 @@ meth public javax.swing.plaf.PanelUI getUI()
 meth public void setUI(javax.swing.plaf.PanelUI)
 meth public void updateUI()
 supr javax.swing.JComponent
-hfds uiClassID
 
 CLSS public abstract interface javax.swing.Scrollable
 meth public abstract boolean getScrollableTracksViewportHeight()
@@ -1020,7 +1001,6 @@ meth public int getListenerCount(java.lang.Class<?>)
 meth public java.lang.Object[] getListenerList()
 meth public java.lang.String toString()
 supr java.lang.Object
-hfds NULL_ARRAY
 
 CLSS public abstract javax.swing.plaf.ComponentUI
 cons public init()
@@ -1096,8 +1076,6 @@ meth public void installUI(javax.swing.JComponent)
 meth public void uninstallUI(javax.swing.JComponent)
 meth public void update(java.awt.Graphics,javax.swing.JComponent)
 supr javax.swing.plaf.TextUI
-hfds defaultKit,defaultTransferHandler,discardBias,dragListener,dropCaret,editor,painted,rootView,textCursor,updateHandler
-hcls BasicCursor,DragListener,FocusAction,RootView,TextActionWrapper,TextTransferHandler,UpdateHandler
 
 CLSS public abstract javax.swing.text.AbstractDocument
 cons protected init(javax.swing.text.AbstractDocument$Content)
@@ -1165,8 +1143,6 @@ meth public void setAsynchronousLoadPriority(int)
 meth public void setDocumentFilter(javax.swing.text.DocumentFilter)
 meth public void setDocumentProperties(java.util.Dictionary<java.lang.Object,java.lang.Object>)
 supr java.lang.Object
-hfds AsyncLoadPriority,BAD_LOCK_STATE,I18NProperty,MultiByteProperty,bidiRoot,context,currWriter,data,defaultI18NProperty,documentFilter,documentProperties,filterBypass,notifyingListeners,numReaders,numWriters
-hcls BidiElement,BidiRootElement,DefaultFilterBypass,UndoRedoDocumentEvent
 
 CLSS public javax.swing.text.AbstractDocument$DefaultDocumentEvent
  outer javax.swing.text.AbstractDocument
@@ -1186,13 +1162,11 @@ meth public javax.swing.text.Document getDocument()
 meth public void redo()
 meth public void undo()
 supr javax.swing.undo.CompoundEdit
-hfds changeLookup,length,offset,type
 
 CLSS public javax.swing.text.BadLocationException
 cons public init(java.lang.String,int)
 meth public int offsetRequested()
 supr java.lang.Exception
-hfds offs
 
 CLSS public abstract interface javax.swing.text.Caret
 meth public abstract boolean isSelectionVisible()
@@ -1282,8 +1256,6 @@ meth public void read(java.io.Reader,javax.swing.text.Document,int) throws java.
 meth public void write(java.io.OutputStream,javax.swing.text.Document,int,int) throws java.io.IOException,javax.swing.text.BadLocationException
 meth public void write(java.io.Writer,javax.swing.text.Document,int,int) throws java.io.IOException,javax.swing.text.BadLocationException
 supr javax.swing.text.EditorKit
-hfds defaultActions,selectionPageDownAction,selectionPageLeftAction,selectionPageRightAction,selectionPageUpAction,toggleComponentOrientationAction,unselectAction
-hcls BeginAction,BeginLineAction,BeginParagraphAction,BeginWordAction,DeleteNextCharAction,DeletePrevCharAction,DeleteWordAction,DumpModelAction,EndAction,EndLineAction,EndParagraphAction,EndWordAction,NextVisualPositionAction,NextWordAction,PageAction,PreviousWordAction,ReadOnlyAction,SelectAllAction,SelectLineAction,SelectParagraphAction,SelectWordAction,ToggleComponentOrientationAction,UnselectAction,VerticalPageAction,WritableAction
 
 CLSS public abstract interface javax.swing.text.Document
 fld public final static java.lang.String StreamDescriptionProperty = "stream"
@@ -1427,8 +1399,6 @@ meth public void setUI(javax.swing.plaf.TextUI)
 meth public void updateUI()
 meth public void write(java.io.Writer) throws java.io.IOException
 supr javax.swing.JComponent
-hfds FOCUSED_COMPONENT,KEYMAP_TABLE,METHOD_OVERRIDDEN,caret,caretColor,caretEvent,checkedInputOverride,composedTextAttribute,composedTextCaret,composedTextContent,composedTextEnd,composedTextStart,defaultTransferHandler,disabledTextColor,dragEnabled,dropLocation,dropMode,editable,focusAccelerator,highlighter,inputMethodRequestsHandler,keymap,latestCommittedTextEnd,latestCommittedTextStart,margin,model,navigationFilter,needToSendKeyTypedEvent,originalCaret,selectedTextColor,selectionColor
-hcls ComposedTextCaret,DefaultKeymap,DefaultTransferHandler,DoSetCaretPosition,InputMethodRequestsHandler,KeymapActionMap,KeymapWrapper,MutableCaretEvent
 
 CLSS public static javax.swing.text.JTextComponent$KeyBinding
  outer javax.swing.text.JTextComponent
@@ -1532,7 +1502,6 @@ meth public void replace(int,int,javax.swing.text.View[])
 meth public void setParent(javax.swing.text.View)
 meth public void setSize(float,float)
 supr java.lang.Object
-hfds elem,firstUpdateIndex,lastUpdateIndex,parent,sharedBiasReturn
 
 CLSS public abstract interface javax.swing.text.ViewFactory
 meth public abstract javax.swing.text.View create(javax.swing.text.Element)
@@ -1556,7 +1525,6 @@ meth public void die()
 meth public void redo()
 meth public void undo()
 supr java.lang.Object
-hfds alive,hasBeenDone
 
 CLSS public javax.swing.undo.CompoundEdit
 cons public init()
@@ -1576,7 +1544,6 @@ meth public void end()
 meth public void redo()
 meth public void undo()
 supr javax.swing.undo.AbstractUndoableEdit
-hfds inProgress
 
 CLSS public abstract interface javax.swing.undo.UndoableEdit
 meth public abstract boolean addEdit(javax.swing.undo.UndoableEdit)

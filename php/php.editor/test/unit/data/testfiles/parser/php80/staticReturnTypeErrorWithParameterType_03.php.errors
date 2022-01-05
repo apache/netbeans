@@ -1,0 +1,19 @@
+[[870,876]-Syntax error
+ unexpected:	static
+ after:	|
+ expected:	identifier, array, callable, namespace, \, define] 870-876:Syntax error
+ unexpected:	static
+ after:	|
+ expected:	identifier, array, callable, namespace, \, define
+[[876,877]-POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	|] 876-877:POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	|
+[[882,888]-POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	variable '$param'] 882-888:POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	variable '$param'
+[[888,889]-POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	)] 888-889:POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	)
+[[904,905]-POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	}] 904-905:POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	}

@@ -126,6 +126,15 @@ ${cursor}]]>
         </code>
     </codetemplate>
 
+    <codetemplate uuid="org.netbeans.modules.php.editor.codetemplate.match" abbreviation="mat" contexts="php-code">
+        <code>
+<![CDATA[match (${VARIABLE variableFromPreviousAssignment default="$variable"}) {
+    ${condition} => ${expr},
+    default => ${defaultExpr},
+}${cursor}]]>
+        </code>
+    </codetemplate>
+
     <codetemplate uuid="org.netbeans.modules.php.editor.codetemplate.instanceof" abbreviation="inst" contexts="php-code">
         <code>
 <![CDATA[if (${VARIABLE variableFromPreviousAssignment default="$variable"} instanceof ${ClassName}) {

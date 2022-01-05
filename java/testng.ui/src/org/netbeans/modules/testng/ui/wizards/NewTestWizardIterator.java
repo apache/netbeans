@@ -45,7 +45,7 @@ import org.openide.util.NbBundle;
 /**
  * Wizard to create a new TestNG file.
  */
-@TemplateRegistration(folder = "UnitTests", position = 1000,
+@TemplateRegistration(folder = "UnitTests", position = 1100,
         content = "../resources/EmptyTestNGTest.java.template",
         scriptEngine = "freemarker",
         displayName = "#EmptyTestNGTest_displayName",

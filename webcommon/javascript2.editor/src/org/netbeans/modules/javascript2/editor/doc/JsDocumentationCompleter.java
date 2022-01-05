@@ -30,13 +30,12 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import javax.swing.text.BadLocationException;
+import javax.swing.text.Document;
 import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenSequence;
-import org.netbeans.editor.BaseDocument;
 import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.csl.spi.ParserResult;
 import org.netbeans.modules.editor.indent.api.IndentUtils;
-import org.netbeans.modules.javascript2.editor.Utils;
 import org.netbeans.modules.javascript2.doc.api.JsDocumentationSupport;
 import org.netbeans.modules.javascript2.doc.spi.SyntaxProvider;
 import org.netbeans.modules.javascript2.lexer.api.JsTokenId;
@@ -69,18 +68,18 @@ public class JsDocumentationCompleter {
 
     public static final RequestProcessor RP = new RequestProcessor("JavaScript Documentation Completer", 1); //NOI18N
 
-    public static void generateCompleteComment(BaseDocument doc, int caretOffset, int indent) {
+    public static void generateCompleteComment(Document doc, int caretOffset, int indent) {
         Runnable documentationGenerator = new DocumentationGenerator(doc, caretOffset, indent);
         RP.post(documentationGenerator);
     }
 
     private static class DocumentationGenerator implements Runnable {
 
-        private final BaseDocument doc;
+        private final Document doc;
         private final int offset;
         private final int indent;
 
-        public DocumentationGenerator(BaseDocument doc, int offset, int indent) {
+        public DocumentationGenerator(Document doc, int offset, int indent) {
             this.doc = doc;
             this.offset = offset;
             this.indent = indent;
@@ -206,7 +205,7 @@ public class JsDocumentationCompleter {
         }
     }
 
-    private static void generateFieldComment(BaseDocument doc, int offset, int indent, JsParserResult jsParserResult, JsObject jsObject) throws BadLocationException {
+    private static void generateFieldComment(Document doc, int offset, int indent, JsParserResult jsParserResult, JsObject jsObject) throws BadLocationException {
         StringBuilder toAdd = new StringBuilder();
         SyntaxProvider syntaxProvider = JsDocumentationSupport.getSyntaxProvider(jsParserResult);
 
@@ -226,7 +225,7 @@ public class JsDocumentationCompleter {
         doc.insertString(offset, toAdd.toString(), null);
     }
 
-    private static void generateFunctionComment(BaseDocument doc, int offset, int indent, JsParserResult jsParserResult, JsObject jsObject) throws BadLocationException {
+    private static void generateFunctionComment(Document doc, int offset, int indent, JsParserResult jsParserResult, JsObject jsObject) throws BadLocationException {
         StringBuilder toAdd = new StringBuilder();
         SyntaxProvider syntaxProvider = JsDocumentationSupport.getSyntaxProvider(jsParserResult);
         // TODO - could know constructors
@@ -266,13 +265,13 @@ public class JsDocumentationCompleter {
         return false;
     }
 
-    private static void addParameters(BaseDocument doc, StringBuilder toAdd, SyntaxProvider syntaxProvider, int indent, Collection<? extends JsObject> params) {
+    private static void addParameters(Document doc, StringBuilder toAdd, SyntaxProvider syntaxProvider, int indent, Collection<? extends JsObject> params) {
         for (JsObject jsObject : params) {
             generateDocEntry(doc, toAdd, syntaxProvider.paramTagTemplate(), indent, jsObject.getName(), null);
         }
     }
 
-    private static void addReturns(BaseDocument doc, StringBuilder toAdd, SyntaxProvider syntaxProvider, int indent, Collection<? extends TypeUsage> returns) {
+    private static void addReturns(Document doc, StringBuilder toAdd, SyntaxProvider syntaxProvider, int indent, Collection<? extends TypeUsage> returns) {
         StringBuilder sb = new StringBuilder();
 
         for (TypeUsage typeUsage : returns) {
@@ -290,7 +289,7 @@ public class JsDocumentationCompleter {
         generateDocEntry(doc, toAdd, syntaxProvider.returnTagTemplate(), indent, null, returnString);
     }
 
-    private static void generateDocEntry(BaseDocument doc, StringBuilder toAdd, String template, int indent, String name, String type) {
+    private static void generateDocEntry(Document doc, StringBuilder toAdd, String template, int indent, String name, String type) {
         toAdd.append("\n"); //NOI18N
         toAdd.append(IndentUtils.createIndentString(doc, indent));
 

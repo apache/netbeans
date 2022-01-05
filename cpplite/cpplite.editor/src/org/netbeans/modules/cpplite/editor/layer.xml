@@ -23,6 +23,7 @@
 <filesystem>
     <folder name="Templates">
         <folder name="cpplite">
+            <attr name="position" intvalue="1250"/>
             <attr name="displayName" bundlevalue="org.netbeans.modules.cpplite.editor.Bundle#Templates_cpplite" />
         </folder>
     </folder>

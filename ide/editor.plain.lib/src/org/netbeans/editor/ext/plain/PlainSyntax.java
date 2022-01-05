@@ -29,6 +29,7 @@ import org.netbeans.editor.TokenID;
  * @deprecated If you need this class you are doing something wrong, 
  *   please ask on nbdev@netbeans.org.
  */
+@Deprecated
 public class PlainSyntax extends Syntax {
 
     /* Internal states used internally by analyzer. There

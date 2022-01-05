@@ -21,6 +21,11 @@
 -->
 <!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
 <filesystem>
+    <folder name="Editors">
+        <folder name="AnnotationTypes">
+            <file name="runnable-test-annotation.xml" url="resources/runnable-test-annotation.xml"/>
+        </folder>
+    </folder>
     <folder name="Windows2">
         <folder name="Modes">
             <folder name="output">        <!-- "output" is defined in core/ui -->

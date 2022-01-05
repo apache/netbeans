@@ -38,18 +38,4 @@
             <compilerarg line="${javac.compilerargs}"/>
         </javac>
     </target>
-    
-    <target name="-build-windows-launchers" depends="build-init" if="do.build.windows.launchers">
-        <exec executable="make" dir="launcher/windows">
-            <arg value="-f"/>
-            <arg value="Makefile.mingw"/>
-        </exec>
-        <copy todir="${cluster}/lib" overwrite="true">
-            <fileset dir="launcher/windows">
-                <include name="nbexec*.dll"/>
-                <include name="nbexec*.exe"/>
-            </fileset>
-        </copy>
-    </target>
-    <target name="release" depends="projectized.release,-build-windows-launchers" />
 </project>

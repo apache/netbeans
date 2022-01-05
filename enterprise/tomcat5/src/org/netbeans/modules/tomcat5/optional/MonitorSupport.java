@@ -81,7 +81,7 @@ public class MonitorSupport {
     public static boolean getMonitorFlag(String managerURL) {
         InstanceProperties ip = InstanceProperties.getInstanceProperties(managerURL);
         String prop = ip.getProperty(MONITOR_ENABLED_PROPERTY_NAME);
-        return (prop == null) ? true : Boolean.valueOf(prop).booleanValue();
+        return (prop == null) ? true : Boolean.valueOf(prop);
     }
     
     public static void setMonitorFlag(TomcatManager tm, boolean enable) {
@@ -476,7 +476,7 @@ public class MonitorSupport {
         
         public void propertyChange(java.beans.PropertyChangeEvent evt) {
             if (evt.getPropertyName().equals("enabled")){ // NOI18N
-                spy.setEnabled(((Boolean)evt.getNewValue()).booleanValue());
+                spy.setEnabled(((Boolean)evt.getNewValue()));
             }            
         }  
     }

@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.16.0
+#Version 1.22.0
 
 CLSS public abstract interface java.io.Serializable
 
@@ -21,7 +21,6 @@ meth public final java.lang.String name()
 meth public java.lang.String toString()
 meth public static <%0 extends java.lang.Enum<{%%0}>> {%%0} valueOf(java.lang.Class<{%%0}>,java.lang.String)
 supr java.lang.Object
-hfds name,ordinal
 
 CLSS public java.lang.Object
 cons public init()
@@ -56,7 +55,7 @@ meth public static <%0 extends java.lang.Object> org.netbeans.modules.java.compl
  anno 4 org.netbeans.api.annotations.common.NullAllowed()
 meth public void run(org.netbeans.modules.parsing.api.ResultIterator) throws java.lang.Exception
 supr org.netbeans.modules.parsing.api.UserTask
-hfds ABSTRACT_KEYWORD,ASSERT_KEYWORD,BLOCK_KEYWORDS,BOOLEAN_KEYWORD,BREAK_KEYWORD,BYTE_KEYWORD,CASE_KEYWORD,CATCH_KEYWORD,CHAR_KEYWORD,CLASS_BODY_KEYWORDS,CLASS_KEYWORD,COLON,CONTINUE_KEYWORD,DEFAULT_KEYWORD,DOUBLE_KEYWORD,DO_KEYWORD,ELSE_KEYWORD,EMPTY,ENUM_KEYWORD,ERROR,EXPORTS_KEYWORD,EXTENDS_KEYWORD,FALSE_KEYWORD,FINALLY_KEYWORD,FINAL_KEYWORD,FLOAT_KEYWORD,FOR_KEYWORD,IF_KEYWORD,IMPLEMENTS_KEYWORD,IMPORT_KEYWORD,INIT,INSTANCEOF_KEYWORD,INTERFACE_KEYWORD,INT_KEYWORD,JAVA_LANG_CLASS,JAVA_LANG_ITERABLE,JAVA_LANG_OBJECT,LONG_KEYWORD,MODULE_BODY_KEYWORDS,MODULE_KEYWORD,NATIVE_KEYWORD,NEW_KEYWORD,NULL_KEYWORD,OPENS_KEYWORD,OPEN_KEYWORD,PACKAGE_KEYWORD,PRIM_KEYWORDS,PRIVATE_KEYWORD,PROTECTED_KEYWORD,PROVIDES_KEYWORD,PUBLIC_KEYWORD,REQUIRES_KEYWORD,RETURN_KEYWORD,SEMI,SHORT_KEYWORD,SOURCE_VERSION_RELEASE_10,SOURCE_VERSION_RELEASE_11,SOURCE_VERSION_RELEASE_13,SPACE,STATEMENT_KEYWORDS,STATEMENT_SPACE_KEYWORDS,STATIC_KEYWORD,STRICT_KEYWORD,SUPER_KEYWORD,SWITCH_KEYWORD,SYNCHRONIZED_KEYWORD,THIS_KEYWORD,THROWS_KEYWORD,THROW_KEYWORD,TO_KEYWORD,TRANSIENT_KEYWORD,TRANSITIVE_KEYWORD,TRUE_KEYWORD,TRY_KEYWORD,USES_KEYWORD,VAR_KEYWORD,VOID_KEYWORD,VOLATILE_KEYWORD,WHILE_KEYWORD,WITH_KEYWORD,YIELD_KEYWORD,anchorOffset,hasAdditionalClasses,hasAdditionalMembers,itemFactory,options,results
+hfds ABSTRACT_KEYWORD,ASSERT_KEYWORD,BLOCK_KEYWORDS,BOOLEAN_KEYWORD,BREAK_KEYWORD,BYTE_KEYWORD,CASE_KEYWORD,CATCH_KEYWORD,CHAR_KEYWORD,CLASS_BODY_KEYWORDS,CLASS_KEYWORD,COLON,CONTINUE_KEYWORD,DEFAULT_KEYWORD,DOUBLE_KEYWORD,DO_KEYWORD,ELSE_KEYWORD,EMPTY,ENUM_KEYWORD,ERROR,EXPORTS_KEYWORD,EXTENDS_KEYWORD,FALSE_KEYWORD,FINALLY_KEYWORD,FINAL_KEYWORD,FLOAT_KEYWORD,FOR_KEYWORD,IF_KEYWORD,IMPLEMENTS_KEYWORD,IMPORT_KEYWORD,INIT,INSTANCEOF_KEYWORD,INTERFACE_KEYWORD,INT_KEYWORD,JAVA_LANG_CLASS,JAVA_LANG_ITERABLE,JAVA_LANG_OBJECT,LONG_KEYWORD,MODULE_BODY_KEYWORDS,MODULE_KEYWORD,NATIVE_KEYWORD,NEW_KEYWORD,NON_SEALED_KEYWORD,NULL_KEYWORD,OPENS_KEYWORD,OPEN_KEYWORD,PACKAGE_KEYWORD,PERMITS_KEYWORD,PRIM_KEYWORDS,PRIVATE_KEYWORD,PROTECTED_KEYWORD,PROVIDES_KEYWORD,PUBLIC_KEYWORD,RECORD_KEYWORD,REQUIRES_KEYWORD,RETURN_KEYWORD,SEALED_KEYWORD,SEMI,SHORT_KEYWORD,SOURCE_VERSION_RELEASE_10,SOURCE_VERSION_RELEASE_11,SOURCE_VERSION_RELEASE_13,SOURCE_VERSION_RELEASE_14,SOURCE_VERSION_RELEASE_15,SPACE,STATEMENT_KEYWORDS,STATEMENT_SPACE_KEYWORDS,STATIC_KEYWORD,STRICT_KEYWORD,SUPER_KEYWORD,SWITCH_KEYWORD,SYNCHRONIZED_KEYWORD,THIS_KEYWORD,THROWS_KEYWORD,THROW_KEYWORD,TO_KEYWORD,TRANSIENT_KEYWORD,TRANSITIVE_KEYWORD,TRUE_KEYWORD,TRY_KEYWORD,USES_KEYWORD,VAR_KEYWORD,VOID_KEYWORD,VOLATILE_KEYWORD,WHILE_KEYWORD,WITH_KEYWORD,YIELD_KEYWORD,anchorOffset,hasAdditionalClasses,hasAdditionalMembers,itemFactory,options,results
 
 CLSS public abstract interface static org.netbeans.modules.java.completion.JavaCompletionTask$ItemFactory<%0 extends java.lang.Object>
  outer org.netbeans.modules.java.completion.JavaCompletionTask
@@ -95,6 +94,7 @@ meth public abstract {org.netbeans.modules.java.completion.JavaCompletionTask$Mo
 CLSS public final static !enum org.netbeans.modules.java.completion.JavaCompletionTask$Options
  outer org.netbeans.modules.java.completion.JavaCompletionTask
 fld public final static org.netbeans.modules.java.completion.JavaCompletionTask$Options ALL_COMPLETION
+fld public final static org.netbeans.modules.java.completion.JavaCompletionTask$Options COMBINED_COMPLETION
 fld public final static org.netbeans.modules.java.completion.JavaCompletionTask$Options SKIP_ACCESSIBILITY_CHECK
 meth public static org.netbeans.modules.java.completion.JavaCompletionTask$Options valueOf(java.lang.String)
 meth public static org.netbeans.modules.java.completion.JavaCompletionTask$Options[] values()
@@ -137,29 +137,6 @@ meth public static org.netbeans.modules.java.completion.JavaTooltipTask create(i
 meth public void run(org.netbeans.modules.parsing.api.ResultIterator) throws java.lang.Exception
 supr org.netbeans.modules.parsing.api.UserTask
 hfds INIT,SUPER_KEYWORD,THIS_KEYWORD,anchorOffset,toolTipData,toolTipIndex,toolTipOffset
-
-CLSS public org.netbeans.modules.java.completion.TreeShims
-cons public init()
-fld public final static java.lang.String BINDING_PATTERN = "BINDING_PATTERN"
-fld public final static java.lang.String BINDING_VARIABLE = "BINDING_VARIABLE"
-fld public final static java.lang.String RECORD = "RECORD"
-fld public final static java.lang.String SWITCH_EXPRESSION = "SWITCH_EXPRESSION"
-fld public final static java.lang.String YIELD = "YIELD"
-meth public static boolean isRecord(javax.lang.model.element.Element)
-meth public static boolean isRecordComponent(javax.lang.model.element.Element)
-meth public static boolean isRecordComponent(javax.lang.model.element.ElementKind)
-meth public static com.sun.source.tree.ExpressionTree getValue(com.sun.source.tree.BreakTree)
-meth public static com.sun.source.tree.ExpressionTree getYieldValue(com.sun.source.tree.Tree)
-meth public static com.sun.source.tree.Tree SwitchExpression(com.sun.tools.javac.tree.TreeMaker,com.sun.source.tree.ExpressionTree,java.util.List<? extends com.sun.source.tree.CaseTree>)
-meth public static com.sun.source.tree.Tree getBindingPatternType(com.sun.source.tree.Tree)
-meth public static com.sun.source.tree.Tree getBody(com.sun.source.tree.CaseTree)
-meth public static com.sun.source.tree.Tree getPattern(com.sun.source.tree.InstanceOfTree)
-meth public static java.util.List<? extends com.sun.source.tree.CaseTree> getCases(com.sun.source.tree.Tree)
-meth public static java.util.List<? extends com.sun.source.tree.ExpressionTree> getExpressions(com.sun.source.tree.CaseTree)
-meth public static java.util.List<? extends com.sun.source.tree.ExpressionTree> getExpressions(com.sun.source.tree.Tree)
-meth public static javax.lang.model.element.Element toRecordComponent(javax.lang.model.element.Element)
-meth public static javax.lang.model.element.Name getBinding(com.sun.source.tree.Tree)
-supr java.lang.Object
 
 CLSS public final org.netbeans.modules.java.completion.Utilities
 meth public static boolean isCaseSensitive()

@@ -500,7 +500,7 @@ public abstract class Node extends FeatureDescriptor implements Lookup.Provider,
             hierarchy = ch;
             hierarchy.attachTo(Node.this);
 
-            if (wasInited && hierarchy != Children.LEAF) {
+            if (wasInited && !wasLeaf && hierarchy != Children.LEAF) {
                 // init new children if old was inited
                 hierarchy.getNodesCount();
 

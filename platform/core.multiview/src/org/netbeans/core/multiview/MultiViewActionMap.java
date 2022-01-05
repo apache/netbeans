@@ -24,6 +24,8 @@ import javax.swing.Action;
 import javax.swing.ActionMap;
 import javax.swing.JComponent;
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 import org.openide.windows.TopComponent;
 
 
@@ -119,7 +121,7 @@ final class MultiViewActionMap extends ActionMap {
 
 
     private Object[] keys(boolean all) {
-        java.util.Set keys = new java.util.HashSet();
+        Set<Object> keys = new HashSet<>();
 
         if (delegate != null) {
             Object[] delegateKeys;

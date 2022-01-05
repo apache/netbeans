@@ -42,26 +42,37 @@ import org.openide.windows.InputOutput;
 
 import org.netbeans.modules.gradle.spi.actions.ReplaceTokenProvider;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.EnumSet;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.MissingResourceException;
 import java.util.Set;
 import java.util.WeakHashMap;
+import java.util.function.Function;
+import org.netbeans.api.project.ProjectInformation;
 
 import org.netbeans.api.project.ui.OpenProjects;
-import org.netbeans.modules.gradle.GradleDistributionManager;
 import org.netbeans.modules.gradle.ProjectTrust;
+import org.netbeans.modules.gradle.api.execute.GradleDistributionManager.GradleDistribution;
 import org.netbeans.modules.gradle.api.execute.RunConfig.ExecFlag;
-import org.netbeans.modules.gradle.execute.TrustProjectPanel;
+import org.netbeans.modules.gradle.execute.ConfigurableActionProvider;
 import org.netbeans.modules.gradle.spi.GradleSettings;
+import org.netbeans.modules.gradle.execute.ProjectConfigurationSupport;
+import org.netbeans.modules.gradle.spi.actions.ProjectActionMappingProvider;
+import org.netbeans.modules.gradle.spi.execute.GradleDistributionProvider;
+import org.netbeans.spi.project.ProjectConfiguration;
 import org.netbeans.spi.project.SingleMethod;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
+import org.openide.NotifyDescriptor;
 import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileUtil;
 import org.openide.loaders.DataObject;
+import org.openide.util.BaseUtilities;
+import org.openide.util.NbBundle;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.Pair;
 
@@ -100,9 +111,17 @@ public final class RunUtils {
             SingleMethod method = methods.iterator().next();
             files.add(method.getFile());
         }
+        if (files.isEmpty()) {
+            files.addAll(lookup.lookupAll(FileObject.class));
+        }
         return files.toArray(new FileObject[files.size()]);
     }
-
+    
+    /**
+     * Testing support: test can replace and mock the execution.
+     */
+    static Function<RunConfig, GradleExecutor> EXECUTOR_FACTORY = GradleDaemonExecutor::new;
+    
     /**
      * Executes a Gradle build with the given configuration. It can also take an
      * initial message, which is printed to the output tab before the actual
@@ -115,12 +134,20 @@ public final class RunUtils {
      */
     public static ExecutorTask executeGradle(RunConfig config, String initialOutput) {
         LifecycleManager.getDefault().saveAll();
+        
+        if (config.getExecConfig() == null) {
+            // enhance the RunConfig with the active Configuration.
+            config = new RunConfig(config.getProject(), config.getActionName(), 
+                    config.getTaskDisplayName(), config.getExecFlags(), config.getCommandLine(), 
+                    ProjectConfigurationSupport.getEffectiveConfiguration(config.getProject(), Lookup.EMPTY)
+            );
+        }
 
-        GradleExecutor exec = new GradleDaemonExecutor(config);
+        GradleExecutor exec = EXECUTOR_FACTORY.apply(config);
         ExecutorTask task = executeGradleImpl(config.getTaskDisplayName(), exec, initialOutput);
         GRADLE_TASKS.put(config, exec);
 
-        return task;
+        return exec.createTask(task);
     }
 
     /**
@@ -137,6 +164,31 @@ public final class RunUtils {
      * @since 1.5
      */
     public static RunConfig createRunConfig(Project project, String action, String displayName, Set<ExecFlag> flags, String... args) {
+        return createRunConfig(project, action, displayName, Lookup.EMPTY, ProjectConfigurationSupport.getEffectiveConfiguration(project, Lookup.EMPTY), flags, args);
+    }
+    
+    /**
+     * Create Gradle execution configuration (context). It applies the default
+     * setting from the project and the Global Gradle configuration on the
+     * command line. The passed {@link GradleExecConfiguration} is recorded in
+     * the {@link RunConfig#getExecConfig()}. If {@code null} is passed, the
+     * active project's configuration is recorded.
+     * 
+     * @param project The Gradle project
+     * @param action The name of the IDE action that's going to be executed
+     * @param displayName The display name of the output tab
+     * @param flags Execution flags.
+     * @param args Gradle command line arguments
+     * @return the Gradle execution configuration.
+     * @param context action infocation context
+     * @param cfg the desired configuration, or {@code null}.
+     * @since 2.13
+     */
+    public static RunConfig createRunConfig(Project project, String action, String displayName, Lookup context, 
+            GradleExecConfiguration cfg, Set<ExecFlag> flags, String... args) {
+        if (cfg == null) {
+            cfg = ProjectConfigurationSupport.getEffectiveConfiguration(project, context);
+        }
         GradleBaseProject gbp = GradleBaseProject.get(project);
 
         GradleCommandLine syscmd = GradleCommandLine.getDefaultCommandLine();
@@ -158,7 +210,7 @@ public final class RunUtils {
 
 
         GradleCommandLine cmd = GradleCommandLine.combine(basecmd, new GradleCommandLine(args));
-        RunConfig ret = new RunConfig(project, action, displayName, flags, cmd);
+        RunConfig ret = new RunConfig(project, action, displayName, flags, cmd, cfg);
         return ret;
     }
 
@@ -199,7 +251,7 @@ public final class RunUtils {
                 new ProxyNonSelectableInputOutput(io));
         if (initialOutput != null) {
             try {
-                if (IOColorPrint.isSupported(io)) {
+                if (IOColorPrint.isSupported(io) && IOColors.isSupported(io)) {
                     IOColorPrint.print(io, initialOutput, IOColors.getColor(io, IOColors.OutputType.LOG_DEBUG));
                 } else {
                     io.getOut().println(initialOutput);
@@ -246,69 +298,189 @@ public final class RunUtils {
      * Check if the given project is trusted for execution. If the project is not
      * trusted invoking this method can ask for temporal trust for one execution
      * only by displaying a dialog.
-     *
+     * <p>
+     * <b>Starting with version 2.8</b>, the presence and order of individual options
+     * can be customized by branding. This allows integrators to select appropriate choices.
+     * The supported options are:
+     * <ul>
+     * <li>{@code org.netbeans.modules.gradle.api.execute.TrustProjectOption.TrustOnce} - trusts just in this session. Equivalent of {@link ProjectTrust#trustProject(org.netbeans.api.project.Project, boolean)} 
+     * called with <code>permanently = false</code>.
+     * <li>{@code org.netbeans.modules.gradle.api.execute.TrustProjectOption.PermanentTrust} - trusts the project permanently. Equivalent of {@link ProjectTrust#trustProject(org.netbeans.api.project.Project, boolean)} 
+     * called with {@code permanently = true}. This option is only present if the passed {@code project} is not {@code null}and has {@link ProjectInformation} in it.
+     * <li>{@code org.netbeans.modules.gradle.api.execute.TrustProjectOption.RunAlways} - sets total trust in gradle scripts, see {@link GradleSettings#setGradleExecutionRule}.
+     * </ul>
+     * The presence and order of those options can be altered by keys in {@code Bundle.properties} branding in {@code org.netbeans.modules.gradle.api.execute} package:
+     * <ol>
+     * <li>if the key does not exist, is empty or has a non-numeric value, the option will be hidden.
+     * <li>negative value flags the default (pre-selected) option. Value is treated as positive for ordering. If more negative values are present one of them is selected.
+     * <li>the visible options will be selected in ascending order of their numeric values
+     * <li>Cancel is always present and is the last one.
+     * </ol>
+     * <div class="nonnormative">
+     * Example of branding: 
+     * {@codesnippet org.netbeans.modules.gradle.api.execute.Bundle#trustDialgoBranding}
+     * This branding enables all supported options, and will make the "Trust Permanently" the default one.
+     * </div>
+     * 
      * @param project the project to be checked
      * @param interactive ask for permission from UI.
+     * @since 2.8 the dialog options can be customized.
      * @return if the execution is trusted.
      */
-    @Messages({
-        "ProjectTrustDlg.TITLE=Not a Trusted Project"
-    })
     public static boolean isProjectTrusted(Project project, boolean interactive) {
         boolean ret = GradleSettings.getDefault().getGradleExecutionRule() == GradleSettings.GradleExecutionRule.ALWAYS
                 || ProjectTrust.getDefault().isTrusted(project);
         if (ret == false && interactive) {
-            TrustProjectPanel trust = new TrustProjectPanel(project);
-            DialogDescriptor dsc = new DialogDescriptor(trust, Bundle.ProjectTrustDlg_TITLE(), true, null);
-            if (DialogDisplayer.getDefault().notify(dsc) == DialogDescriptor.OK_OPTION) {
-                if (trust.getTrustInFuture()) {
-                    ProjectTrust.getDefault().trustProject(project);
-                }
-                ret = true;
+            Boolean q = askToTrustProject(project);
+            if (Boolean.FALSE == q) {
+                return false;
             }
+            ProjectTrust.getDefault().trustProject(project, Boolean.TRUE == q);
+            ret = true;
         }
         return ret;
     }
+
+    /**
+     * Prefix for option labels. THe prefix must match the messages listed below.
+     */
+    private static final String OPTION_MESSAGE_PREFIX = "TrustProjectPanel."; // NOI18N
+    
+    /**
+     * Prefix for the 'branding API' keys. The resource bundle is used to enable / disable / order
+     * choices in the dialog.
+     */
+    private static final String BRANDING_API_PREFIX = "org.netbeans.modules.gradle.api.execute.TrustProjectOption."; // NOI18N
+
+    @Messages({
+        "ProjectTrustDlg.TITLE=Not a Trusted Project",
+        "# {0} = Project name",
+        "TrustProjectPanel.INFO=<html><p>NetBeans is about to invoke a Gradle build process of the project: <b>{0}</b>.</p>"
+            + " <p>Executing Gradle can be potentially un-safe as it"
+            + " allows arbitrary code execution.</p>",
+        "TrustProjectPanel.INFO_UNKNOWN=<html><p>NetBeans is about to invoke a Gradle build process.</p>"
+            + " <p>Executing Gradle can be potentially un-safe as it"
+            + " allows arbitrary code execution.</p>",
+        "# Labels for trust dialog opptions. Do not change the \"TrustProjectPanel.\" prefix",
+        "TrustProjectPanel.TrustOnce=&OK",
+        "TrustProjectPanel.PermanentTrust=Trust &Permanently",
+        "TrustProjectPanel.RunAlways=Trust &All Projects",
+    })
+    /**
+     * Asks the user to trust the project, returns tri-state answer.
+     * <ul>
+     * <li>Boolean.TRUE to permanently trust the project.
+     * <li>Boolean.FALSE to not run the project
+     * <li>{@code null} to trust the project, but not mark it as trusted.
+     * </ul>
+     */
+    private static Boolean askToTrustProject(Project project) {
+        ProjectInformation info = project != null ? project.getLookup().lookup(ProjectInformation.class) : null;
+        String msg;
+        Object[] options;
+        Object defaultOption;
+        String permanentOption = Bundle.TrustProjectPanel_PermanentTrust();
+        String runAlways = Bundle.TrustProjectPanel_RunAlways();
+        String ok = Bundle.TrustProjectPanel_TrustOnce();
+
+        if (info == null) {
+            msg = Bundle.TrustProjectPanel_INFO_UNKNOWN();
+        } else {
+            msg = Bundle.TrustProjectPanel_INFO(info.getDisplayName());
+        }
+        Pair<Object[], Object> opts = brandedOptions(info != null);
+        options = opts.first();
+        defaultOption = opts.second();
+        NotifyDescriptor dsc = new NotifyDescriptor(msg, Bundle.ProjectTrustDlg_TITLE(), 
+                NotifyDescriptor.OK_CANCEL_OPTION, NotifyDescriptor.QUESTION_MESSAGE, 
+                options, defaultOption);
+        
+        Object result = DialogDisplayer.getDefault().notify(dsc);
+        if (result == runAlways) {
+             GradleSettings.getDefault().setGradleExecutionRule(GradleSettings.GradleExecutionRule.ALWAYS);
+             return null;
+        }
+        if (result == ok) {
+            return null;
+        } else if (result == permanentOption) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    private static Pair<Object[], Object> brandedOptions(boolean allowPermanent) {
+        Map<Object, Integer>  options = new HashMap<>();
+        Object def = null;
+        for (String opt : TRUST_DIALOG_OPTION_IDS) {
+            if (opt == TRUST_DIALOG_OPTION_IDS.get(2) && !allowPermanent) {
+                continue;
+            }
+            String key = BRANDING_API_PREFIX + opt;
+            String m;
+            int pos;
+            try  {
+                m = NbBundle.getMessage(RunUtils.class, OPTION_MESSAGE_PREFIX + opt);
+                String v = NbBundle.getMessage(RunUtils.class, key);
+                if ("".equals(v)) {
+                    continue;
+                }
+                pos = Integer.parseInt(v);
+                if (pos == 0) {
+                    continue;
+                } else if (pos < 0) {
+                    def = m;
+                    pos = -pos;
+                }
+            } catch (MissingResourceException ex) {
+                // just ignore
+                continue;
+            } catch (IllegalArgumentException ex) {
+                // non-numeric
+                continue;
+            }
+            if (def == null) {
+                def = m;
+            }
+            options.put(m, pos);
+        }
+        if (options.isEmpty()) {
+            // fall back to the default:
+            return Pair.of(new Object[] { 
+                    Bundle.TrustProjectPanel_TrustOnce(),
+                    Bundle.TrustProjectPanel_PermanentTrust(),
+                    DialogDescriptor.CANCEL_OPTION
+                }, 
+                Bundle.TrustProjectPanel_TrustOnce()
+            );
+        }
+        List<Object> ordered = new ArrayList<>(options.keySet());
+        Collections.sort(ordered, (a, b) -> options.get(a) - options.get(b));
+        ordered.add(DialogDescriptor.CANCEL_OPTION);
+        return Pair.of(ordered.toArray(new Object[ordered.size()]), def);
+    };
+    
+    private static final List<String> TRUST_DIALOG_OPTION_IDS = Arrays.asList(
+        "TrustOnce", "PermanentTrust", "RunAlways"
+    );
     
     public static GradleCommandLine getDefaultCommandLine(Project project) {
         String args = NbGradleProject.getPreferences(project, true).get(PROP_DEFAULT_CLI, null);
         return args != null ? new GradleCommandLine(args) : null;
     }
 
+    @Deprecated
     public static File evaluateGradleDistribution(Project project, boolean forceCompatibility) {
-        File ret = null;
 
-        GradleSettings settings = GradleSettings.getDefault();
-        GradleDistributionManager mgr = GradleDistributionManager.get(settings.getGradleUserHome());
-
-        GradleBaseProject gbp = GradleBaseProject.get(project);
-
-        if ((gbp != null) && settings.isWrapperPreferred()) {
-            GradleDistributionManager.NbGradleVersion ngv = mgr.evaluateGradleWrapperDistribution(gbp.getRootDir());
-            if ( (ngv != null) && forceCompatibility && !ngv.isCompatibleWithSystemJava()) {
-                ngv = mgr.defaultToolingVersion();
-            }
-            if ((ngv != null) && ngv.isAvailable()) {
-                ret = ngv.distributionDir();
-            }
+        GradleDistributionProvider pvd = project != null ? project.getLookup().lookup(GradleDistributionProvider.class) : null;
+        GradleDistribution dist = pvd != null ? pvd.getGradleDistribution() : null;
+        if (dist != null && (dist.isCompatibleWithSystemJava() || !forceCompatibility)) {
+            return dist.getDistributionDir();
+        } else {
+            GradleSettings settings = GradleSettings.getDefault();
+            dist = GradleDistributionManager.get(dist != null ? dist.getGradleUserHome() : settings.getGradleUserHome()).defaultDistribution();
+            return dist.getDistributionDir();
         }
-
-        if ((ret == null) && settings.useCustomGradle() && !settings.getDistributionHome().isEmpty()) {
-            File f = FileUtil.normalizeFile(new File(settings.getDistributionHome()));
-            if (f.isDirectory()) {
-                ret = f;
-            }
-        }
-        if (ret == null) {
-            GradleDistributionManager.NbGradleVersion ngv = mgr.createVersion(settings.getGradleVersion());
-            if ( (ngv != null) && forceCompatibility && !ngv.isCompatibleWithSystemJava()) {
-                ngv = mgr.defaultToolingVersion();
-            }
-            if ((ngv != null) && ngv.isAvailable()) {
-                ret = ngv.distributionDir();
-            }
-        }
-        return ret;
     }
 
     private static boolean isOptionEnabled(Project project, String option, boolean defaultValue) {
@@ -322,6 +494,24 @@ public final class RunUtils {
             }
         }
         return false;
+    }
+
+    /**
+     * Replace the tokens in <code>argLine</code> provided by the <code>project</code> for
+     * the action using the given context;
+     * 
+     * @param project the that holds the {@link ReplaceTokenProvider}-s.
+     * @param argLine a string which might hold tokens to be replaced.
+     * @param action  the action name to do the replacement for. It can be <code>null</code>
+     * @param context the context of the action.
+     *
+     * @return the <code>argLine</code> where the tokens are replaced.
+     * @since 2.6
+     */
+    public static String[] evaluateActionArgs(Project project, String action, String argLine, Lookup context) {
+        ReplaceTokenProvider tokenProvider = project.getLookup().lookup(ReplaceTokenProvider.class);
+        String repLine = ReplaceTokenProvider.replaceTokens(argLine, tokenProvider.createReplacements(action, context));
+        return BaseUtilities.parseParameters(repLine);
     }
 
     /**
@@ -350,6 +540,23 @@ public final class RunUtils {
                 return Collections.singletonMap(token, value);
             }
         };
+    }
+    
+    /**
+     * Returns an action mapping provider for the specified project and context. Specifically 
+     * supports {@link ProjectConfiguration}s, so the returned provider will 
+     * @param p the project
+     * @param context the action invocation context
+     * @return action provider suitable for the project/context.
+     * @since 2.14
+     */
+    public static ProjectActionMappingProvider findActionProvider(Project p, Lookup context) {
+        ConfigurableActionProvider cap = p.getLookup().lookup(ConfigurableActionProvider.class);
+        if (cap == null) {
+            return p.getLookup().lookup(ProjectActionMappingProvider.class);
+        }
+        GradleExecConfiguration cfg = ProjectConfigurationSupport.getEffectiveConfiguration(p, context);
+        return cap.findActionProvider(cfg.getId());
     }
 
     /**

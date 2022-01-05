@@ -53,6 +53,7 @@ import org.openide.util.NbPreferences;
 import org.eclipse.aether.repository.MirrorSelector;
 import org.eclipse.aether.repository.RemoteRepository;
 import org.eclipse.aether.util.repository.DefaultMirrorSelector;
+import org.openide.util.NbBundle;
 
 /**
  * List of Maven repositories of interest.
@@ -334,8 +335,23 @@ public final class RepositoryPreferences {
     }
 
     public static int getIndexUpdateFrequency() {
-        return getPreferences().getInt(PROP_INDEX_FREQ, Boolean.getBoolean("netbeans.full.hack") ? FREQ_NEVER : FREQ_ONCE_WEEK);
+        int defaultFrequency;
+        if (Boolean.getBoolean("netbeans.full.hack")) { // NOI18N
+            defaultFrequency = FREQ_NEVER;
+        } else {
+            defaultFrequency = getDefaultIndexUpdateFrequency();
+        }
+        return getPreferences().getInt(PROP_INDEX_FREQ, defaultFrequency);
     }
+
+    @NbBundle.Messages({
+        "# FREQ_ONCE_WEEK = 0, FREQ_ONCE_DAY = 1, FREQ_STARTUP = 2, FREQ_NEVER = 3;",
+        "DEFAULT_UPDATE_FREQ=0"
+    })
+    static int getDefaultIndexUpdateFrequency() throws NumberFormatException {
+        return Integer.parseInt(Bundle.DEFAULT_UPDATE_FREQ());
+    }
+
     /**
      * @since 2.27
      * @param bool 
@@ -349,7 +365,15 @@ public final class RepositoryPreferences {
      * @return 
      */
     public static boolean isIndexRepositories() {
-        return getPreferences().getBoolean(PROP_INDEX, true);
+        return getPreferences().getBoolean(PROP_INDEX, getDefaultIndexRepositories());
+    }
+
+    @NbBundle.Messages({
+        "# true or false:",
+        "DEFAULT_CREATE_INDEX=true"
+    })
+    static boolean getDefaultIndexRepositories() {
+        return Boolean.valueOf(Bundle.DEFAULT_CREATE_INDEX());
     }
 
     public static Date getLastIndexUpdate(String repoId) {

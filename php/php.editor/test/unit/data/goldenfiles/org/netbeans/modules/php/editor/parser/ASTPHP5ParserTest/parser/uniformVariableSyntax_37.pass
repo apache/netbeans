@@ -78,7 +78,7 @@
         </Comments>
         <Statements>
             <ExpressionStatement start='7' end='41'>
-                <FieldAccess start='7' end='40'>
+                <FieldAccess start='7' end='40' isNullsafe='false'>
                     <ExpressionArrayAccess start='7' end='30'>
                         <ArrayCreation start='7' end='27' type='NEW'>
                             <ArrayElement start='8' end='16'>
@@ -114,7 +114,7 @@
                 </FieldAccess>
             </ExpressionStatement>
             <ExpressionStatement start='42' end='81'>
-                <FieldAccess start='42' end='80'>
+                <FieldAccess start='42' end='80' isNullsafe='false'>
                     <ExpressionArrayAccess start='42' end='70'>
                         <ArrayCreation start='42' end='67' type='OLD'>
                             <ArrayElement start='48' end='56'>

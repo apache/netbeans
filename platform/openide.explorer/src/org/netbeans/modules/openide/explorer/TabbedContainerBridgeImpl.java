@@ -49,7 +49,7 @@ class TabbedContainerBridgeImpl extends TabbedContainerBridge {
     
     public Object[] getItems(JComponent jc) {
         TabbedContainer cont = (TabbedContainer) jc;
-        List l = cont.getModel().getTabs();
+        List<TabData> l = cont.getModel().getTabs();
         Object[] items = new Object[l.size()];
         for (int i=0; i < items.length; i++) {
             items[i] = ((TabData) l.get(i)).getUserObject();

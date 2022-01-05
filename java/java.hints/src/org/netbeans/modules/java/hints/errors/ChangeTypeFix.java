@@ -21,15 +21,12 @@ package org.netbeans.modules.java.hints.errors;
 
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
-import java.io.IOException;
+import com.sun.source.util.TreePath;
 import javax.lang.model.type.TypeMirror;
-import org.netbeans.api.java.source.Task;
-import org.netbeans.api.java.source.JavaSource;
+import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.TreeMaker;
-import org.netbeans.api.java.source.JavaSource.Phase;
 import org.netbeans.api.java.source.WorkingCopy;
-import org.netbeans.spi.editor.hints.ChangeInfo;
-import org.netbeans.spi.editor.hints.Fix;
+import org.netbeans.spi.java.hints.JavaFix;
 import org.openide.util.NbBundle;
 import org.openide.xml.XMLUtil;
 
@@ -41,49 +38,43 @@ import org.openide.xml.XMLUtil;
  *
  * @author Sandip Chitale
  */
-final class ChangeTypeFix implements Fix {
+final class ChangeTypeFix extends JavaFix {
     
-    private JavaSource js;
     private String treeName;
     private String type;
     private int position;
     
-    public ChangeTypeFix(JavaSource js, String treeName, String type, int position) {
-        this.js = js;
+    public ChangeTypeFix(CompilationInfo info, TreePath path, String treeName, String type, int position) {
+        super(info, path);
         this.treeName = escape(treeName);
         this.type = escape(type);
         this.position = position;
     }
-    
-    public ChangeInfo implement() throws IOException {
-        js.runModificationTask(new Task<WorkingCopy>() {
-            public void run(final WorkingCopy working) throws IOException {
-                working.toPhase(Phase.RESOLVED);
-                TypeMirror[] tm = new TypeMirror[1];
-                TypeMirror[] expressionType = new TypeMirror[1];
-                Tree[] leaf = new Tree[1];
 
-                ChangeType.computeType(working, position, tm, expressionType, leaf);
+    @Override
+    protected void performRewrite(TransformationContext ctx) throws Exception {
+        WorkingCopy working = ctx.getWorkingCopy();
+        TypeMirror[] tm = new TypeMirror[1];
+        TypeMirror[] expressionType = new TypeMirror[1];
+        Tree[] leaf = new Tree[1];
 
-                //anonymous class?
-                expressionType[0] = Utilities.convertIfAnonymous(expressionType[0]);
+        ChangeType.computeType(working, position, tm, expressionType, leaf);
 
-                if (leaf[0] instanceof VariableTree) {
-                    VariableTree oldVariableTree = ((VariableTree)leaf[0]);
-                    TreeMaker make = working.getTreeMaker();
+        //anonymous class?
+        expressionType[0] = Utilities.convertIfAnonymous(expressionType[0]);
 
-                    VariableTree newVariableTree = make.Variable(
-                            oldVariableTree.getModifiers(), 
-                            oldVariableTree.getName(),
-                            make.Type(expressionType[0]),
-                            oldVariableTree.getInitializer()); 
+        if (leaf[0] instanceof VariableTree) {
+            VariableTree oldVariableTree = ((VariableTree)leaf[0]);
+            TreeMaker make = working.getTreeMaker();
 
-                    working.rewrite(leaf[0], newVariableTree);
-                }
-            }
-        }).commit();
-        
-        return null;
+            VariableTree newVariableTree = make.Variable(
+                    oldVariableTree.getModifiers(), 
+                    oldVariableTree.getName(),
+                    make.Type(expressionType[0]),
+                    oldVariableTree.getInitializer()); 
+
+            working.rewrite(leaf[0], newVariableTree);
+        }
     }
     
     public String getText() {

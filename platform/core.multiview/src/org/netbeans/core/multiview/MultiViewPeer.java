@@ -801,7 +801,7 @@ public final class MultiViewPeer implements PropertyChangeListener {
      * Delegates to CloseOperationHandler.
      */
     boolean canClose() {
-        Collection col = model.getCreatedElements();
+        Collection<MultiViewElement> col = model.getCreatedElements();
         Iterator<MultiViewElement> it = col.iterator();
         Collection<CloseOperationState> badOnes = new ArrayList<>();
         while (it.hasNext()) {

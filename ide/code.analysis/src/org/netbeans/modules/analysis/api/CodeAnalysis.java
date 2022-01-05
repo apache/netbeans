@@ -24,7 +24,6 @@ import org.netbeans.modules.analysis.spi.Analyzer.WarningDescription;
 import org.openide.nodes.Node;
 import org.openide.util.Lookup;
 import org.openide.util.Utilities;
-import org.openide.util.lookup.Lookups;
 import org.openide.util.lookup.ProxyLookup;
 import org.openide.windows.TopComponent;
 

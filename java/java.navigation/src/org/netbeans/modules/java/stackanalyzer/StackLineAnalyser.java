@@ -58,6 +58,7 @@ class StackLineAnalyser {
         "\\p{javaJavaIdentifierStart}\\p{javaJavaIdentifierPart}*";    // NOI18N
     private static final Pattern LINE_PATTERN = Pattern.compile(
         "at\\s" +                                       //  initial at // NOI18N
+        "("+IDENTIFIER+"(?:\\."+IDENTIFIER+")*/)?" + // optional module name // NOI18N
         "(("+IDENTIFIER+"(\\."+IDENTIFIER+")*)\\.)?("+IDENTIFIER+")" + // class name // NOI18N
         "\\.("+IDENTIFIER+"|\\<init\\>|\\<clinit\\>)\\((?:"+IDENTIFIER+"(?:\\."+IDENTIFIER+")*/)?" +IDENTIFIER+"\\.java" + // method and file name // NOI18N
         "\\:([0-9]*)\\)");                              // line number // NOI18N
@@ -72,22 +73,26 @@ class StackLineAnalyser {
         if (matcher.find()) {
             int lineNumber = -1;
             try {
-                lineNumber = Integer.parseInt(matcher.group(6));
+                lineNumber = Integer.parseInt(matcher.group(7));
             } catch (NumberFormatException nfe) {
                 return null;
             }
-            if (matcher.group(1)==null ) {
-                return new Link(matcher.group(4),
+            int moduleStart = -1;
+            if (matcher.group(1) != null) {
+                moduleStart = matcher.start(1);
+            }
+            if (matcher.group(2)==null ) {
+                return new Link(matcher.group(5),
                             lineNumber,
-                            matcher.start(4),
-                            matcher.end(6)+1
+                            moduleStart != (-1) ? moduleStart : matcher.start(5),
+                            matcher.end(7)+1
                             );
                 
             }
-            return new Link(matcher.group(1) + matcher.group(4),
+            return new Link(matcher.group(2) + matcher.group(5),
                             lineNumber,
-                            matcher.start(1),
-                            matcher.end(6)+1
+                            moduleStart != (-1) ? moduleStart : matcher.start(2),
+                            matcher.end(7)+1
                             );
         }
         return null;

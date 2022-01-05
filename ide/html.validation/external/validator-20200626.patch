@@ -30,6 +30,183 @@ index 72145331..76d57d1e 100755
  ]
  
  moduleDependencyPackages = [
+diff --git a/src/nu/validator/checker/schematronequiv/Assertions.java b/src/nu/validator/checker/schematronequiv/Assertions.java
+index 917182f3..6aba4301 100644
+--- a/src/nu/validator/checker/schematronequiv/Assertions.java
++++ b/src/nu/validator/checker/schematronequiv/Assertions.java
+@@ -65,12 +65,6 @@ import nu.validator.messages.MessageEmitterAdapter;
+ 
+ import org.relaxng.datatype.DatatypeException;
+ 
+-import org.w3c.css.css.StyleSheetParser;
+-import org.w3c.css.parser.CssError;
+-import org.w3c.css.parser.CssParseException;
+-import org.w3c.css.parser.Errors;
+-import org.w3c.css.util.ApplContext;
+-
+ import org.xml.sax.Attributes;
+ import org.xml.sax.Locator;
+ import org.xml.sax.SAXException;
+@@ -1506,93 +1500,6 @@ public class Assertions extends Checker {
+             } else if ("option" == localName
+                     && !stack[currentPtr].hasOption()) {
+                 stack[currentPtr].setOptionFound();
+-            } else if ("style" == localName) {
+-                String styleContents = node.getTextContent().toString();
+-                int lineOffset = 0;
+-                if (styleContents.startsWith("\n")) {
+-                    lineOffset = 1;
+-                }
+-                ApplContext ac = new ApplContext("en");
+-                ac.setCssVersionAndProfile("css3svg");
+-                ac.setMedium("all");
+-                ac.setSuggestPropertyName(false);
+-                ac.setTreatVendorExtensionsAsWarnings(true);
+-                ac.setTreatCssHacksAsWarnings(true);
+-                ac.setWarningLevel(-1);
+-                ac.setFakeURL("file://localhost/StyleElement");
+-                StyleSheetParser styleSheetParser = new StyleSheetParser();
+-                styleSheetParser.parseStyleSheet(ac,
+-                        new StringReader(styleContents.substring(lineOffset)),
+-                        null);
+-                styleSheetParser.getStyleSheet().findConflicts(ac);
+-                Errors errors = styleSheetParser.getStyleSheet().getErrors();
+-                if (errors.getErrorCount() > 0) {
+-                    incrementUseCounter("style-element-errors-found");
+-                }
+-                for (int i = 0; i < errors.getErrorCount(); i++) {
+-                    String message = "";
+-                    String cssProperty = "";
+-                    String cssMessage = "";
+-                    CssError error = errors.getErrorAt(i);
+-                    int beginLine = error.getBeginLine() + lineOffset;
+-                    int beginColumn = error.getBeginColumn();
+-                    int endLine = error.getEndLine() + lineOffset;
+-                    int endColumn = error.getEndColumn();
+-                    if (beginLine == 0) {
+-                        continue;
+-                    }
+-                    Throwable ex = error.getException();
+-                    if (ex instanceof CssParseException) {
+-                        CssParseException cpe = (CssParseException) ex;
+-                        if ("generator.unrecognize" //
+-                                .equals(cpe.getErrorType())) {
+-                            cssMessage = "Parse Error";
+-                        }
+-                        if (cpe.getProperty() != null) {
+-                            cssProperty = String.format("\u201c%s\u201D: ",
+-                                    cpe.getProperty());
+-                        }
+-                        if (cpe.getMessage() != null) {
+-                            cssMessage = cpe.getMessage();
+-                        }
+-                        if (!"".equals(cssMessage)) {
+-                            message = cssProperty + cssMessage.trim();
+-                            if (!".".equals(
+-                                    message.substring(message.length() - 1))) {
+-                                message = message + ".";
+-                            }
+-                        }
+-                    } else {
+-                        message = ex.getMessage();
+-                    }
+-                    if (!"".equals(message)) {
+-                        int lastLine = node.locator.getLineNumber() //
+-                                + endLine - 1;
+-                        int lastColumn = endColumn;
+-                        int columnOffset = node.locator.getColumnNumber();
+-                        if (error.getBeginLine() == 1) {
+-                            if (lineOffset != 0) {
+-                                columnOffset = 0;
+-                            }
+-                        } else {
+-                            columnOffset = 0;
+-                        }
+-                        String prefix = sourceIsCss ? "" : "CSS: ";
+-                        SAXParseException spe = new SAXParseException( //
+-                                prefix + message, publicId, systemId, //
+-                                lastLine, lastColumn);
+-                        int[] start = {
+-                                node.locator.getLineNumber() + beginLine - 1,
+-                                beginColumn, columnOffset };
+-                        if ((getErrorHandler() instanceof MessageEmitterAdapter)
+-                                && !(getErrorHandler() instanceof TestRunner)) {
+-                            ((MessageEmitterAdapter) getErrorHandler()) //
+-                                    .errorWithStart(spe, start);
+-                        } else {
+-                            getErrorHandler().error(spe);
+-                        }
+-                    }
+-                }
+             }
+             if ("article" == localName || "aside" == localName
+                     || "nav" == localName || "section" == localName) {
+@@ -1743,64 +1650,7 @@ public class Assertions extends Checker {
+                                     + " XML-compatible.");
+                         }
+                     }
+-                    if ("style" == attLocal) {
+-                        String styleContents = atts.getValue(i);
+-                        ApplContext ac = new ApplContext("en");
+-                        ac.setCssVersionAndProfile("css3svg");
+-                        ac.setMedium("all");
+-                        ac.setSuggestPropertyName(false);
+-                        ac.setTreatVendorExtensionsAsWarnings(true);
+-                        ac.setTreatCssHacksAsWarnings(true);
+-                        ac.setWarningLevel(-1);
+-                        ac.setFakeURL("file://localhost/StyleAttribute");
+-                        StyleSheetParser styleSheetParser = //
+-                                new StyleSheetParser();
+-                        styleSheetParser.parseStyleAttribute(ac,
+-                                new ByteArrayInputStream(
+-                                        styleContents.getBytes()),
+-                                "", ac.getFakeURL(),
+-                                getDocumentLocator().getLineNumber());
+-                        styleSheetParser.getStyleSheet().findConflicts(ac);
+-                        Errors errors = //
+-                                styleSheetParser.getStyleSheet().getErrors();
+-                        if (errors.getErrorCount() > 0) {
+-                            incrementUseCounter("style-attribute-errors-found");
+-                        }
+-                        for (int j = 0; j < errors.getErrorCount(); j++) {
+-                            String message = "";
+-                            String cssProperty = "";
+-                            String cssMessage = "";
+-                            CssError error = errors.getErrorAt(j);
+-                            Throwable ex = error.getException();
+-                            if (ex instanceof CssParseException) {
+-                                CssParseException cpe = (CssParseException) ex;
+-                                if ("generator.unrecognize" //
+-                                        .equals(cpe.getErrorType())) {
+-                                    cssMessage = "Parse Error";
+-                                }
+-                                if (cpe.getProperty() != null) {
+-                                    cssProperty = String.format(
+-                                            "\u201c%s\u201D: ",
+-                                            cpe.getProperty());
+-                                }
+-                                if (cpe.getMessage() != null) {
+-                                    cssMessage = cpe.getMessage();
+-                                }
+-                                if (!"".equals(cssMessage)) {
+-                                    message = cssProperty + cssMessage.trim();
+-                                    if (!".".equals(message.substring(
+-                                            message.length() - 1))) {
+-                                        message = message + ".";
+-                                    }
+-                                }
+-                            } else {
+-                                message = ex.getMessage();
+-                            }
+-                            if (!"".equals(message)) {
+-                                err("CSS: " + message);
+-                            }
+-                        }
+-                    } else if ("tabindex" == attLocal) {
++                    if ("tabindex" == attLocal) {
+                         tabindex = true;
+                     } else if ("href" == attLocal) {
+                         href = true;
 diff --git a/src/nu/validator/datatype/IriRef.java b/src/nu/validator/datatype/IriRef.java
 index 8fb8de35..461c753c 100644
 --- a/src/nu/validator/datatype/IriRef.java
@@ -154,6 +331,80 @@ index fdb4ae59..b95f21ea 100644
              if (!isScript(subtag)) {
                  throw newDatatypeException("Bad script subtag.");
              }
+diff --git a/src/nu/validator/datatype/MediaQuery.java b/src/nu/validator/datatype/MediaQuery.java
+index dff51c58..1a2c86cd 100644
+--- a/src/nu/validator/datatype/MediaQuery.java
++++ b/src/nu/validator/datatype/MediaQuery.java
+@@ -22,14 +22,7 @@
+ 
+ package nu.validator.datatype;
+ 
+-import java.io.StringReader;
+-
+ import org.relaxng.datatype.DatatypeException;
+-import org.w3c.css.css.StyleSheetParser;
+-import org.w3c.css.parser.CssError;
+-import org.w3c.css.parser.CssParseException;
+-import org.w3c.css.parser.Errors;
+-import org.w3c.css.util.ApplContext;
+ 
+ public class MediaQuery extends AbstractDatatype {
+ 
+@@ -44,54 +37,6 @@ public class MediaQuery extends AbstractDatatype {
+ 
+     @Override
+     public void checkValid(CharSequence literal) throws DatatypeException {
+-        ApplContext ac = new ApplContext("en");
+-        ac.setCssVersionAndProfile("css3svg");
+-        ac.setMedium("all");
+-        ac.setSuggestPropertyName(false);
+-        ac.setTreatVendorExtensionsAsWarnings(true);
+-        ac.setTreatCssHacksAsWarnings(true);
+-        ac.setWarningLevel(-1);
+-        ac.setFakeURL("file://localhost/StyleElement");
+-        String literalString = literal.toString();
+-        String style;
+-        if (isMediaCondition()) {
+-            style = String.format("@media all and %s %s", literalString, "{}");
+-        } else {
+-            style = String.format("@media %s %s", literalString, "{}");
+-        }
+-        StyleSheetParser styleSheetParser = new StyleSheetParser();
+-        styleSheetParser.parseStyleSheet(ac, new StringReader(style), null);
+-        styleSheetParser.getStyleSheet().findConflicts(ac);
+-        Errors errors = styleSheetParser.getStyleSheet().getErrors();
+-        for (int i = 0; i < errors.getErrorCount(); i++) {
+-            String message = "";
+-            String cssProperty = "";
+-            String cssMessage = "";
+-            CssError error = errors.getErrorAt(i);
+-            Throwable ex = error.getException();
+-            if (ex instanceof CssParseException) {
+-                CssParseException cpe = (CssParseException) ex;
+-                if ("generator.unrecognize" //
+-                        .equals(cpe.getErrorType())) {
+-                    cssMessage = "Parse Error";
+-                }
+-                if (cpe.getProperty() != null) {
+-                    cssProperty = String.format("\u201c%s\u201D: ",
+-                            cpe.getProperty());
+-                }
+-                if (cpe.getMessage() != null) {
+-                    cssMessage = cpe.getMessage();
+-                }
+-                if (!"".equals(cssMessage)) {
+-                    message = cssProperty + cssMessage + ".";
+-                }
+-            } else {
+-                message = ex.getMessage();
+-            }
+-            if (!"".equals(message)) {
+-                throw newDatatypeException(message);
+-            }
+-        }
+     }
+ 
+     protected boolean isMediaCondition() {
 diff --git a/src/nu/validator/io/DataUri.java b/src/nu/validator/io/DataUri.java
 index eb6fba26..d68f74a5 100644
 --- a/src/nu/validator/io/DataUri.java

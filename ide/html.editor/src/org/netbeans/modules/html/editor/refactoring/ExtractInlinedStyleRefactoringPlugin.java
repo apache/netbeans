@@ -42,7 +42,7 @@ import org.netbeans.modules.css.refactoring.api.Entry;
 import org.netbeans.modules.css.refactoring.api.RefactoringElementType;
 import org.netbeans.modules.editor.indent.api.IndentUtils;
 import org.netbeans.modules.html.editor.HtmlSourceUtils;
-import org.netbeans.modules.html.editor.api.gsf.HtmlParserResult;
+import org.netbeans.modules.html.editor.lib.api.HtmlParsingResult;
 import org.netbeans.modules.html.editor.lib.api.elements.*;
 import org.netbeans.modules.html.editor.refactoring.api.ExtractInlinedStyleRefactoring;
 import org.netbeans.modules.html.editor.refactoring.api.SelectorType;
@@ -138,7 +138,9 @@ public class ExtractInlinedStyleRefactoringPlugin implements RefactoringPlugin {
 
     private boolean importStyleSheet(ModificationResult modificationResult, RefactoringContext context) {
         FileObject target = refactoring.getExternalSheet();
-        return HtmlSourceUtils.importStyleSheet(modificationResult, context.getModel().getParserResult(), target);
+        return HtmlSourceUtils.importStyleSheet(modificationResult, 
+                context.getModel().getParserResult(), 
+                context.getModel().getSnapshot(), target);
     }
 
     private boolean refactorToStyleSheet(ModificationResult modificationResult, RefactoringContext context) {
@@ -154,7 +156,7 @@ public class ExtractInlinedStyleRefactoringPlugin implements RefactoringPlugin {
     private boolean refactorToNewEmbeddedSection(ModificationResult modifications, RefactoringContext context) {
         try {
             //create a new embedded css section
-            HtmlParserResult result = context.getModel().getParserResult();
+            HtmlParsingResult result = context.getModel().getParserResult();
 
             final AtomicInteger insertPositionRef = new AtomicInteger(-1);
             final AtomicBoolean increaseIndent = new AtomicBoolean();

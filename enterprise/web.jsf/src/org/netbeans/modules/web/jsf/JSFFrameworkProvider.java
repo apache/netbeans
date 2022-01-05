@@ -124,7 +124,7 @@ public class JSFFrameworkProvider extends WebFrameworkProvider {
     // not named extend() so as to avoid implementing WebFrameworkProvider.extend()
     // better to move this to JSFConfigurationPanel
     public Set extendImpl(WebModule webModule, TreeMap<String, JsfComponentCustomizer> jsfComponentCustomizers) {
-        Set result = new HashSet();
+        Set<FileObject> result = new HashSet<>();
         Library jsfLibrary = null;
         Library jstlLibrary = null;
 
@@ -169,7 +169,7 @@ public class JSFFrameworkProvider extends WebFrameworkProvider {
                 // packed them to the war file by default.  classpath/compile_only (for scope provided)
                 boolean modified = false;
                 Boolean isMaven = (Boolean)panel.getController().getProperties().getProperty("maven");  //NOI18N
-                if (isMaven!=null && isMaven.booleanValue()) {
+                if (isMaven!=null && isMaven) {
                     Project prj = FileOwnerQuery.getOwner(webModule.getDocumentBase());
                     J2eeModuleProvider provider = prj.getLookup().lookup(J2eeModuleProvider.class);
                     if (provider != null) {
@@ -637,7 +637,7 @@ public class JSFFrameworkProvider extends WebFrameworkProvider {
                             if (jsfVersion != null && !jsfVersion.isAtLeast(JSFVersion.JSF_2_0) && !isMyFaces) {
                                 ViewHandler viewHandler = model.getFactory().createViewHandler();
                                 viewHandler.setFullyQualifiedClassType(HANDLER);
-                                application.addViewHandler(viewHandler);                                
+                                application.addViewHandler(viewHandler);
                             }
 //                            // A component library may require a render kit
 //                            if (isJSF20Plus && panel.getJsfComponentDescriptor() != null) {
@@ -741,7 +741,7 @@ public class JSFFrameworkProvider extends WebFrameworkProvider {
             String shortName;
             try {
                 shortName = Deployment.getDefault().getServerInstance(serverInstanceID).getServerID();
-                if ("gfv5ee8".equals(shortName) || "gfv5".equals(shortName) || "gfv3ee6".equals(shortName) || "gfv3".equals(shortName)) {
+                if ("gfv610ee9".equals(shortName) || "gfv6ee9".equals(shortName) || "gfv510ee8".equals(shortName) || "gfv5ee8".equals(shortName) || "gfv5".equals(shortName) || "gfv3ee6".equals(shortName) || "gfv3".equals(shortName)) {
                     return true;
                 }
             } catch (InstanceRemovedException ex) {

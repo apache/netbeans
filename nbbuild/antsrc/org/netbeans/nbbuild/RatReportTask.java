@@ -20,6 +20,7 @@ package org.netbeans.nbbuild;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -58,6 +59,13 @@ import org.xml.sax.SAXException;
  */
 public class RatReportTask extends Task {
 
+    private static final FileFilter DIRECTORY_FILTER = new FileFilter() {
+        @Override
+        public boolean accept(File file) {
+            return file.isDirectory() && (! file.isHidden());
+        }
+    };
+
     private File sourceFile;
     private File root;
     // not nice but to be last
@@ -92,8 +100,8 @@ public class RatReportTask extends Task {
     @Override
     public void execute() throws BuildException {
         root = sourceFile.getParentFile().getParentFile().getParentFile();
-        File[] modulesFolder = root.listFiles();
-        String repository = "";
+        File[] clusterFolders = root.listFiles(DIRECTORY_FILTER);
+        String repository = null;
         // get repository information from git
         //try {
         List<String> commandAndArgs = new ArrayList<>();
@@ -123,8 +131,8 @@ public class RatReportTask extends Task {
         // build map to get cluster and module related from cluster.properties
         Set<String> moduleDB = new HashSet<>();
         Map<String, Set<String>> modulebycluster = new TreeMap<>();
-        for (File module : modulesFolder) {
-            if (module.isDirectory() && !module.isHidden()) {
+        for (File clusterFolder : clusterFolders) {
+            for(File module: clusterFolder.listFiles(DIRECTORY_FILTER)) {
                 moduleDB.add(module.getName());
                 moduleRATInfo.put(module.getName(), new ModuleInfo(module));
             }
@@ -259,22 +267,19 @@ public class RatReportTask extends Task {
 
     private String getModuleName(String resource) {
         String moduleName;
-        if (!resource.contains(File.separator)) {
+        int firstSeparator = resource.indexOf(File.separator);
+        int secondSeparator = resource.indexOf(File.separator, firstSeparator + 1);
+        if (firstSeparator == -1 || secondSeparator == -1) {
             moduleName = NOT_CLUSTER;
         } else {
-            moduleName = resource.substring(0, resource.indexOf(File.separator));
+            moduleName = resource.substring(firstSeparator + 1, secondSeparator);
         }
         return moduleName;
     }
 
     class ModuleInfo {
-// approved resource list
-// very simple string for now.
-
         private final Set<String> approved = new HashSet<>();
-        // unapproved resource list
         private final Set<String> unapproved = new HashSet<>();
-
         private final Set<String> external = new HashSet<>();
         private final File folder;
 

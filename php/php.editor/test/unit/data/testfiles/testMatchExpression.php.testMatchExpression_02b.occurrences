@@ -1,0 +1,2 @@
+        $|>MARK_OCCURRENCES:state<| = self::STOP;
+        return match ($|>MARK_OCCURRENCES:s^tate<|) {

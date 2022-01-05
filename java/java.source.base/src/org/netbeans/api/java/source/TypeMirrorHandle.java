@@ -19,6 +19,7 @@
 package org.netbeans.api.java.source;
 
 import com.sun.tools.javac.code.Flags;
+import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.TypeSymbol;
 import com.sun.tools.javac.code.Symtab;
@@ -31,7 +32,10 @@ import com.sun.tools.javac.code.Types;
 import com.sun.tools.javac.code.Types.DefaultTypeVisitor;
 import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.ListBuffer;
+import com.sun.tools.javac.util.Name;
 import com.sun.tools.javac.util.Names;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -344,7 +348,18 @@ public final class TypeMirrorHandle<T extends TypeMirror> {
                     String[] signatures = element.getSignature();
                     assert signatures.length == 1;
                     Context context = info.impl.getJavacTask().getContext();
-                    return (T)new Type.ErrorType(Names.instance(context).table.fromString(signatures[0]), Symtab.instance(context).rootPackage, Type.noType);
+                    try {
+                        return (T) new Type.ErrorType(Names.instance(context).table.fromString(signatures[0]), Symtab.instance(context).rootPackage, Type.noType);
+                    } catch (NoSuchMethodError err) {
+                        // ErrorType constructor signature in vanilla javac differ from the corresponding signature in nb-javac.
+                        // TODO: Remove reflection once the nb-javac is fixed.
+                        try {
+                            Constructor<Type.ErrorType> constructor = Type.ErrorType.class.getConstructor(Name.class, Symbol.class, Type.class);
+                            return (T) constructor.newInstance(Names.instance(context).table.fromString(signatures[0]), Symtab.instance(context).rootPackage, Type.noType);
+                        } catch (IllegalAccessException | IllegalArgumentException | InstantiationException | NoSuchMethodException | SecurityException | InvocationTargetException ex) {
+                            return null;
+                        }
+                    }
                 }
                 if (!(e instanceof ClassSymbol))
                     return null;
@@ -450,10 +465,10 @@ public final class TypeMirrorHandle<T extends TypeMirror> {
 
         @Override
         public Void visitTypeVar(TypeVar t, Void s) {
-            if (t.bound instanceof PlaceholderType)
-                t.bound = ((PlaceholderType)t.bound).delegate;
-            else if (t.bound != null)
-                t.bound.accept(this, s);
+            if (t.getUpperBound() instanceof PlaceholderType)
+                t.setUpperBound(((PlaceholderType)t.getUpperBound()).delegate);
+            else if (t.getUpperBound() != null)
+                t.getUpperBound().accept(this, s);
             if (t.lower instanceof PlaceholderType)
                 t.lower = ((PlaceholderType)t.lower).delegate;
             else if (t.lower != null)
@@ -467,8 +482,8 @@ public final class TypeMirrorHandle<T extends TypeMirror> {
                 t.type = ((PlaceholderType)t.type).delegate;
             else if (t.type != null)
                 t.type.accept(this, s);
-            if (t.bound != null)
-                t.bound.accept(this, s);
+            if (t.getUpperBound() != null)
+                t.getUpperBound().accept(this, s);
             return null;
         }
     }

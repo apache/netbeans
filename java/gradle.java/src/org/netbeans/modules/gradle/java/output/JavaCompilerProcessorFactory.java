@@ -19,7 +19,6 @@
 
 package org.netbeans.modules.gradle.java.output;
 
-import org.netbeans.modules.gradle.api.NbGradleProject;
 import org.netbeans.modules.gradle.api.execute.RunConfig;
 import org.netbeans.modules.gradle.api.output.OutputDisplayer;
 import org.netbeans.modules.gradle.api.output.OutputProcessor;
@@ -36,7 +35,6 @@ import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.queries.SourceForBinaryQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
-import org.netbeans.spi.project.ProjectServiceProvider;
 import org.openide.awt.StatusDisplayer;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.URLMapper;
@@ -47,7 +45,6 @@ import org.netbeans.modules.gradle.java.api.ProjectSourcesClassPathProvider;
  *
  * @author Laszlo Kishalmi
  */
-@ProjectServiceProvider(service = OutputProcessorFactory.class, projectType = NbGradleProject.GRADLE_PLUGIN_TYPE + "/java-base")
 public final class JavaCompilerProcessorFactory implements OutputProcessorFactory {
 
     @Override

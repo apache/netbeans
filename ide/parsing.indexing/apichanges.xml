@@ -87,6 +87,49 @@ is the proper place.
 <!-- ACTUAL CHANGES BEGIN HERE: -->
 
   <changes>
+      <change id="IndexabilityQuery">
+          <api name="IndexingAPI"/>
+          <summary>Allow plugins to exclude files from being indexed.</summary>
+          <version major="9" minor="24"/>
+          <date day="14" month="9" year="2021"/>
+          <author login="matthiasblaesing"/>
+          <compatibility source="compatible" binary="compatible" semantic="compatible" addition="yes"/>
+          <description>
+              <p>
+                  There are situations where it is desireable to exclude files from the NetBeans indexing infrastructure. Implementors of
+                  <a href="@TOP@/org/netbeans/modules/parsing/spi/indexing/IndexabilityQueryImplementation.html">IndexabilityQueryImplementation</a>
+                  are queried whether an indexer should be invoked for a given file.
+              </p>
+              <p>
+                  Indexing for a file can be rejected verbatim (<code>boolean preventIndexing(FileObject fo)</code>) or more specific by
+                  indexer name, URL to the file to be indexed and the UTL of the indexing root.
+                  <code>boolean preventIndexing(String indexerName, URL indexable, URL rootUrl)</code>.
+              </p>
+              <p>
+                  One such example are Angular projects, where code assistence is provided by the typescript integration by the
+                  language server. In these cases the <code>node_modules</code> folder often contains huge amounts of javascript
+                  code, that the IDE user does not need to be indexed, but which take a lot of time to parse. A hypothetical
+                  plugin could check if an <code>angular.json</code> file is present and then prevent the <code>js</code> indexer
+                  from indexing files in the <code>node_modules</code> directory.
+              </p>
+          </description>
+          <class package="org.netbeans.modules.parsing.spi.indexing" name="IndexabilityQueryImplementation"/>
+      </change>
+      <change id="IndexingTask">
+          <api name="IndexingAPI"/>
+          <summary>Allow Parsers to adjust results for indexing</summary>
+          <version major="9" minor="22"/>
+          <date day="28" month="7" year="2021"/>
+          <author login="sdedic"/>
+          <compatibility source="compatible" binary="compatible" semantic="compatible" addition="yes"/>
+          <description>
+              <p>
+                  <a href="@org-netbeans-modules-parsing-api@/org/netbeans/modules/parsing/spi/Parser.html">Parsers</a> may need to provide reduced data for indexing, or enriched data for source parsing. The
+                  added <a href="@TOP@/org/netbeans/modules/parsing/spi/indexing/support/IndexingSupport.html#isIndexingTask-org.netbeans.modules.parsing.api.Task-">isIndexingTask()</a> method identifies tasks applied by indexing infrastructure.
+              </p>
+          </description>
+          <class package="org.netbeans.modules.parsing.spi.indexing.support" name="IndexingSupport"/>
+      </change>
       <change id="CustomCamelCase">
           <api name="IndexingAPI"/>
           <summary>Added custom camel case support into <code>QuerySupport</code></summary>

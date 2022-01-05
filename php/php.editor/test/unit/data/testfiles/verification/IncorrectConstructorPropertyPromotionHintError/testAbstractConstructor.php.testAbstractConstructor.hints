@@ -1,0 +1,15 @@
+    abstract public function __construct(private ?int $incorrect1 = 1);
+                                         ----------------------------
+HINT:Can't declare a promoted property in an abstract constructor.
+            private $incorrect1,
+            -------------------
+HINT:Can't declare a promoted property in an abstract constructor.
+            private ?int $incorrect2 = 1
+            ----------------------------
+HINT:Can't declare a promoted property in an abstract constructor.
+    public function __construct(public int|string $incorrect1);
+                                -----------------------------
+HINT:Can't declare a promoted property in an abstract constructor.
+    public function __construct(int $test, protected $incorrect1);
+                                           ---------------------
+HINT:Can't declare a promoted property in an abstract constructor.

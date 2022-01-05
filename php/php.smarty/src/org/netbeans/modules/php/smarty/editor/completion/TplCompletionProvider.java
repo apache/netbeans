@@ -27,6 +27,7 @@ import javax.swing.Action;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
+import org.netbeans.api.editor.mimelookup.MimeRegistration;
 import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.editor.BaseDocument;
@@ -45,6 +46,7 @@ import org.openide.util.Exceptions;
  *
  * @author Martin Fousek
  */
+@MimeRegistration(mimeType = "x-tpl", service = CompletionProvider.class, position = 1250)
 public class TplCompletionProvider implements CompletionProvider {
 
     @Override

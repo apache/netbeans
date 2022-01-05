@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 9.17
+#Version 9.23
 
 CLSS public java.io.IOException
 cons public init()
@@ -7,7 +7,6 @@ cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.Throwable)
 cons public init(java.lang.Throwable)
 supr java.lang.Exception
-hfds serialVersionUID
 
 CLSS public abstract interface java.io.Serializable
 
@@ -27,7 +26,6 @@ cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.Throwable)
 cons public init(java.lang.Throwable)
 supr java.lang.Throwable
-hfds serialVersionUID
 
 CLSS public java.lang.Object
 cons public init()
@@ -64,8 +62,6 @@ meth public void printStackTrace(java.io.PrintStream)
 meth public void printStackTrace(java.io.PrintWriter)
 meth public void setStackTrace(java.lang.StackTraceElement[])
 supr java.lang.Object
-hfds CAUSE_CAPTION,EMPTY_THROWABLE_ARRAY,NULL_CAUSE_MESSAGE,SELF_SUPPRESSION_MESSAGE,SUPPRESSED_CAPTION,SUPPRESSED_SENTINEL,UNASSIGNED_STACK,backtrace,cause,detailMessage,serialVersionUID,stackTrace,suppressedExceptions
-hcls PrintStreamOrWriter,SentinelHolder,WrappedPrintStream,WrappedPrintWriter
 
 CLSS public abstract interface java.lang.annotation.Annotation
 meth public abstract boolean equals(java.lang.Object)
@@ -102,7 +98,6 @@ intf java.io.Serializable
 meth public java.lang.Object getSource()
 meth public java.lang.String toString()
 supr java.lang.Object
-hfds serialVersionUID
 
 CLSS public abstract org.openide.filesystems.AbstractFileSystem
 cons public init()
@@ -378,6 +373,7 @@ meth public org.openide.filesystems.FileObject copy(org.openide.filesystems.File
 meth public org.openide.filesystems.FileObject createData(java.lang.String) throws java.io.IOException
 meth public org.openide.filesystems.FileObject getCanonicalFileObject() throws java.io.IOException
 meth public org.openide.filesystems.FileObject getFileObject(java.lang.String)
+meth public org.openide.filesystems.FileObject getFileObject(java.lang.String,boolean)
 meth public org.openide.filesystems.FileObject move(org.openide.filesystems.FileLock,org.openide.filesystems.FileObject,java.lang.String,java.lang.String) throws java.io.IOException
 meth public org.openide.filesystems.FileObject readSymbolicLink() throws java.io.IOException
 meth public org.openide.util.Lookup getLookup()
@@ -548,7 +544,6 @@ meth protected boolean isPersistent()
  anno 0 java.lang.Deprecated()
 meth protected final void setCapability(org.openide.filesystems.FileSystemCapability)
  anno 0 java.lang.Deprecated()
-meth public abstract org.openide.util.actions.SystemAction[] getActions()
 meth public final boolean isHidden()
  anno 0 java.lang.Deprecated()
 meth public final org.openide.filesystems.FileSystemCapability getCapability()
@@ -556,12 +551,13 @@ meth public final org.openide.filesystems.FileSystemCapability getCapability()
 meth public final void setHidden(boolean)
  anno 0 java.lang.Deprecated()
 meth public org.openide.filesystems.FileSystem$Status getStatus()
+meth public org.openide.util.actions.SystemAction[] getActions()
 meth public org.openide.util.actions.SystemAction[] getActions(java.util.Set<org.openide.filesystems.FileObject>)
 meth public static org.openide.filesystems.FileSystemCompat compat(org.openide.filesystems.FileSystem)
 meth public void prepareEnvironment(org.openide.filesystems.FileSystem$Environment) throws org.openide.filesystems.EnvironmentNotSupportedException
  anno 0 java.lang.Deprecated()
 supr java.lang.Object
-hfds PROP_CAPABILITIES,capability,capabilityListener,hidden,status
+hfds NO_SYSTEM_ACTIONS,PROP_CAPABILITIES,capability,capabilityListener,hidden,status
 hcls StatusImpl,SystemStatus
 
 CLSS public final org.openide.filesystems.FileUtil
@@ -578,6 +574,7 @@ meth public static boolean isArchiveFile(java.net.URL)
 meth public static boolean isArchiveFile(org.openide.filesystems.FileObject)
 meth public static boolean isParentOf(org.openide.filesystems.FileObject,org.openide.filesystems.FileObject)
 meth public static boolean isRecursiveSymbolicLink(org.openide.filesystems.FileObject) throws java.io.IOException
+meth public static boolean isValidFileName(java.lang.String)
 meth public static java.io.File archiveOrDirForURL(java.net.URL)
 meth public static java.io.File normalizeFile(java.io.File)
 meth public static java.io.File toFile(org.openide.filesystems.FileObject)
@@ -635,7 +632,7 @@ meth public static void removeRecursiveListener(org.openide.filesystems.FileChan
 meth public static void setMIMEType(java.lang.String,java.lang.String)
 meth public static void setOrder(java.util.List<org.openide.filesystems.FileObject>) throws java.io.IOException
 supr java.lang.Object
-hfds LOG,REFRESH_RP,archiveRootProviderCache,archiveRootProviders,diskFileSystem,normalizedRef,refreshTask,transientAttributes
+hfds ILLEGAL_FILENAME_CHARACTERS,LOG,REFRESH_RP,archiveRootProviderCache,archiveRootProviders,diskFileSystem,normalizedRef,refreshTask,transientAttributes
 hcls NonCanonicalizingFile
 
 CLSS public org.openide.filesystems.JarFileSystem

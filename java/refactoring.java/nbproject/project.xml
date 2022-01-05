@@ -74,15 +74,6 @@
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
-                        <specification-version>8.19</specification-version>
-                    </run-dependency>
-                </dependency>
-                <dependency>
-                    <code-name-base>org.netbeans.libs.javacimpl</code-name-base>
-                    <build-prerequisite/>
-                    <compile-dependency/>
-                    <run-dependency>
-                        <release-version>1</release-version>
                         <implementation-version/>
                     </run-dependency>
                 </dependency>
@@ -197,7 +188,7 @@
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
-                        <specification-version>2.25</specification-version>
+                        <specification-version>2.51</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -492,10 +483,6 @@
                     </test-dependency>
                     <test-dependency>
                         <code-name-base>org.netbeans.modules.java.editor.base</code-name-base>
-                        <compile-dependency/>
-                    </test-dependency>
-                    <test-dependency>
-                        <code-name-base>org.netbeans.modules.java.editor.lib</code-name-base>
                         <compile-dependency/>
                     </test-dependency>
                     <test-dependency>

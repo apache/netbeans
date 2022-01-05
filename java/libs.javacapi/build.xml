@@ -32,4 +32,11 @@
         <antcall target="projectized.-release.files" />
     </target>
     <target name="-release.files" depends="-check-nb-javac-exists,-release.files-build-javac,-release.files-delegate" />
+    <target name="clean" depends="projectized.clean">
+        <delete failonerror="false">
+            <fileset dir="external">
+                <include name="*.jar"/>
+            </fileset>
+        </delete>
+    </target>
 </project>

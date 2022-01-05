@@ -137,7 +137,7 @@ final class FileObjectKeeper implements FileChangeListener {
                  if (lm > previous && factory != null && !recursive) {
                      final BaseFileObj prevFO = factory.getCachedOnly(f);
                      if (prevFO == null) {
-                         BaseFileObj who = factory.getValidFileObject(f, Caller.GetChildern);
+                         BaseFileObj who = factory.getValidFileObject(f, Caller.GetChildern, true);
                          if (who != null) {
                              LOG.log(Level.FINE, "External change detected {0}", who);  //NOI18N
                              if (who.isData()) {
@@ -235,7 +235,7 @@ final class FileObjectKeeper implements FileChangeListener {
             if (factory == null) {
                 factory = FileObjectFactory.getInstance(f);
             }
-            FileObject fo = factory.getValidFileObject(f, Caller.Others);
+            FileObject fo = factory.getValidFileObject(f, Caller.Others, true);
             LOG.log(Level.FINEST, "listenToAll, check {0} for stop {1}", new Object[] { fo, stop });
             if (fo instanceof FolderObj) {
                 FolderObj child = (FolderObj) fo;
@@ -314,7 +314,7 @@ final class FileObjectKeeper implements FileChangeListener {
             if (factory == null) {
                 factory = FileObjectFactory.getInstance(f);
             }
-            FileObject fo = factory.getValidFileObject(f, Caller.Others);
+            FileObject fo = factory.getValidFileObject(f, Caller.Others, true);
             if (fo instanceof FolderObj) {
                 fileFolderCreatedRecursion((FolderObj) fo, factory);
             }

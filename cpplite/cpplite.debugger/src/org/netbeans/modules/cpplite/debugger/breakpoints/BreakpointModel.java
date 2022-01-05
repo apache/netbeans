@@ -19,12 +19,15 @@
 
 package org.netbeans.modules.cpplite.debugger.breakpoints;
 
-import java.util.Vector;
+import java.io.File;
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.netbeans.api.debugger.DebuggerEngine;
 import org.netbeans.api.debugger.DebuggerManager;
 import org.netbeans.modules.cpplite.debugger.CPPLiteDebugger;
 import org.netbeans.modules.cpplite.debugger.Utils;
+import org.netbeans.spi.debugger.DebuggerServiceRegistration;
 import org.netbeans.spi.viewmodel.ModelEvent;
 import org.netbeans.spi.viewmodel.NodeModel;
 import org.netbeans.spi.viewmodel.ModelListener;
@@ -35,16 +38,17 @@ import org.openide.filesystems.FileObject;
  *
  * @author   Jan Jancura
  */
+@DebuggerServiceRegistration(path="BreakpointsView", types={NodeModel.class})
 public class BreakpointModel implements NodeModel {
     
     public static final String      LINE_BREAKPOINT =
-        "org/netbeans/modules/debugger/resources/editor/Breakpoint";
+        "org/netbeans/modules/debugger/resources/breakpointsView/Breakpoint";
     public static final String      LINE_BREAKPOINT_PC =
-        "org/netbeans/modules/debugger/resources/editor/Breakpoint+PC";
+        "org/netbeans/modules/debugger/resources/breakpointsView/BreakpointHit";
     public static final String      DISABLED_LINE_BREAKPOINT =
-        "org/netbeans/modules/debugger/resources/editor/DisabledBreakpoint";
+        "org/netbeans/modules/debugger/resources/breakpointsView/DisabledBreakpoint";
     
-    private Vector                  listeners = new Vector ();
+    private List<ModelListener>   listeners = new CopyOnWriteArrayList<>();
     
     
     // NodeModel implementation ................................................
@@ -62,9 +66,15 @@ public class BreakpointModel implements NodeModel {
     public String getDisplayName (Object node) throws UnknownTypeException {
         if (node instanceof CPPLiteBreakpoint) {
             CPPLiteBreakpoint breakpoint = (CPPLiteBreakpoint) node;
-            FileObject fileObject = breakpoint.getLine().getLookup().lookup(FileObject.class);
-            return fileObject.getNameExt () + ":" + 
-                (breakpoint.getLine ().getLineNumber () + 1);
+            String nameExt;
+            FileObject fileObject = breakpoint.getFileObject();
+            if (fileObject != null) {
+                nameExt = fileObject.getNameExt();
+            } else {
+                File file = new File(breakpoint.getFilePath());
+                nameExt = file.getName();
+            }
+            return nameExt + ":" + breakpoint.getLineNumber();
         }
         throw new UnknownTypeException (node);
     }
@@ -111,7 +121,7 @@ public class BreakpointModel implements NodeModel {
     throws UnknownTypeException {
         if (node instanceof CPPLiteBreakpoint) {
             CPPLiteBreakpoint breakpoint = (CPPLiteBreakpoint) node;
-            return breakpoint.getLine ().getDisplayName ();
+            return breakpoint.getFilePath() + ":" + breakpoint.getLineNumber();
         }
         throw new UnknownTypeException (node);
     }
@@ -138,12 +148,10 @@ public class BreakpointModel implements NodeModel {
         
      
     public void fireChanges () {
-        Vector v = (Vector) listeners.clone ();
-        int i, k = v.size ();
-        for (i = 0; i < k; i++)
-            ((ModelListener) v.get (i)).modelChanged (
-                new ModelEvent.TreeChanged (this)
-            );
+        ModelEvent event = new ModelEvent.TreeChanged(this);
+        for (ModelListener l : listeners) {
+            l.modelChanged(event);
+        }
     }
     
     private static CPPLiteDebugger getDebugger () {

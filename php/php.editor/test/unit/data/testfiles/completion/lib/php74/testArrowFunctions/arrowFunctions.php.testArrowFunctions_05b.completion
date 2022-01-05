@@ -68,6 +68,7 @@ KEYWORD    instanceof                                 null
 KEYWORD    interface                                  null
 KEYWORD    isset()                                    Language Construct
 KEYWORD    list()                                     Language Construct
+KEYWORD    match                                      null
 KEYWORD    namespace                                  null
 KEYWORD    new                                        null
 KEYWORD    or                                         null

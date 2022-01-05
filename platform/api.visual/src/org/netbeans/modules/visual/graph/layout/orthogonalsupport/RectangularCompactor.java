@@ -21,7 +21,6 @@ package org.netbeans.modules.visual.graph.layout.orthogonalsupport;
 import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.BitSet;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -38,7 +37,7 @@ import org.netbeans.modules.visual.graph.layout.orthogonalsupport.MGraph.Vertex;
 import org.netbeans.modules.visual.graph.layout.orthogonalsupport.OrthogonalRepresentation.OrthogonalShape;
 import org.netbeans.modules.visual.graph.layout.orthogonalsupport.OrthogonalRepresentation.Tuple;
 
-public class RectangularCompactor {
+public class RectangularCompactor<N, E> {
 
     private static int startOfNextBar;
 
@@ -52,9 +51,9 @@ public class RectangularCompactor {
      * 
      * @param ors
      */
-    public void compact(Collection<OrthogonalRepresentation> ors) {
+    public void compact(Collection<OrthogonalRepresentation<N, E>> ors) {
         startOfNextBar = 0;
-        for (OrthogonalRepresentation or : ors) {
+        for (OrthogonalRepresentation<N, E> or : ors) {
             compact(or);
         }
     }
@@ -63,13 +62,13 @@ public class RectangularCompactor {
      * 
      * @param or
      */
-    private void compact(OrthogonalRepresentation or) {
+    private void compact(OrthogonalRepresentation<N, E> or) {
 
         insertBendVertices(or);
         assignEdgeDirections(or);
         refineShapes(or);
 
-        DirectionalGraph hGraph = DirectionalGraph.createGraph(or, Direction.HORIZONTAL);
+        DirectionalGraph<N, E> hGraph = DirectionalGraph.createGraph(or, Direction.HORIZONTAL);
 
         Collection<Bar> bars = hGraph.getBars();
         Bar[] barArray = new Bar[bars.size()];
@@ -87,7 +86,7 @@ public class RectangularCompactor {
             x += (maxWidth + OrthogonalLayout.gutter);
             maxWidth = -1;
 
-            for (Vertex v : bar.getVertices()) {
+            for (Vertex<?> v : bar.getVertices()) {
 
                 if (v instanceof DummyVertex) {
                     continue;
@@ -108,7 +107,7 @@ public class RectangularCompactor {
 
         startOfNextBar = x + maxWidth ;
 
-        DirectionalGraph vGraph = DirectionalGraph.createGraph(or, Direction.VERTICAL);
+        DirectionalGraph<?, ?> vGraph = DirectionalGraph.createGraph(or, Direction.VERTICAL);
 
         bars = vGraph.getBars();
         barArray = new Bar[bars.size()];
@@ -124,7 +123,7 @@ public class RectangularCompactor {
             y += (maxHeight + OrthogonalLayout.gutter);
             maxHeight = -1;
 
-            for (Vertex v : bar.getVertices()) {
+            for (Vertex<?> v : bar.getVertices()) {
 
                 if (v instanceof DummyVertex) {
                     continue;
@@ -149,15 +148,15 @@ public class RectangularCompactor {
      * 
      * @param or
      */
-    private void insertBendVertices(OrthogonalRepresentation or) {
-        MGraph originalGraph = or.getOriginalGraph().getOriginalGraph();
-        Map<Edge, Collection<Edge>> edgeMap = new HashMap<Edge, Collection<Edge>>();
+    private void insertBendVertices(OrthogonalRepresentation<?, ?> or) {
+        MGraph<?, ?> originalGraph = or.getOriginalGraph().getOriginalGraph();
+        Map<Edge<?>, Collection<Edge<?>>> edgeMap = new HashMap<>();
 
         for (OrthogonalShape shape : or.getShapes()) {
             Face face = shape.getFace();
 
             // Work around current modification exception.
-            ArrayList<Dart> darts = new ArrayList<Dart>(face.getDarts());
+            List<Dart> darts = new ArrayList<>(face.getDarts());
 
             for (Dart dart : darts) {
                 Tuple tuple = shape.getTuple(dart);
@@ -165,23 +164,22 @@ public class RectangularCompactor {
                     continue;
                 }
 
-                BitSet bends = tuple.getBends();
                 int numOfBends = tuple.getNumberOfBends();
 
                 if (numOfBends == 0) {
                     continue;
                 }
 
-                Edge edge = dart.getEdge();
-                Collection<Edge> newEdges = edgeMap.get(edge);
+                Edge<?> edge = dart.getEdge();
+                Collection<Edge<?>> newEdges = edgeMap.get(edge);
 
                 if (newEdges == null) {
-                    newEdges = new ArrayList<Edge>();
+                    newEdges = new ArrayList<>();
                     edgeMap.put(edge, newEdges);
-                    Vertex v = dart.getV();
-                    Vertex w = dart.getW();
+                    Vertex<?> v = dart.getV();
+                    Vertex<?> w = dart.getW();
                     for (int i = 0; i < numOfBends; i++) {
-                        Vertex dv = originalGraph.insertDummyVertex(edge, DummyVertex.Type.BEND);
+                        Vertex<?> dv = originalGraph.insertDummyVertex(edge, DummyVertex.Type.BEND);
                         newEdges.add(v.getEdge(dv));
                         edge = dv.getEdge(w);
                         v = dv;
@@ -198,11 +196,11 @@ public class RectangularCompactor {
      * 
      * @param or
      */
-    private void assignEdgeDirections(OrthogonalRepresentation or) {
+    private void assignEdgeDirections(OrthogonalRepresentation<?, ?> or) {
         Face outerFace = or.getOriginalGraph().getFaces().get(0);
-        HashSet<Face> visitedFace = new HashSet<Face>();
+        Set<Face> visitedFace = new HashSet<>();
         OrthogonalShape startingShape = or.getShape(outerFace);
-        Edge startingEdge = startingShape.getFace().getDarts().get(0).getEdge();
+        Edge<?> startingEdge = startingShape.getFace().getDarts().get(0).getEdge();
         startingEdge.setDirection(Direction.HORIZONTAL);
 
         assignEdgeDirections(startingShape, startingEdge, or, visitedFace);
@@ -216,11 +214,11 @@ public class RectangularCompactor {
      * @param or
      * @param visitedFaces
      */
-    private void assignEdgeDirections(OrthogonalShape shape, Edge startingEdge,
-            OrthogonalRepresentation or, Set<Face> visitedFaces) {
+    private void assignEdgeDirections(OrthogonalShape shape, Edge<?> startingEdge,
+            OrthogonalRepresentation<?, ?> or, Set<Face> visitedFaces) {
         Face face = shape.getFace();
         visitedFaces.add(face);
-        EmbeddedPlanarGraph epg = or.getOriginalGraph();
+        EmbeddedPlanarGraph<?, ?> epg = or.getOriginalGraph();
         List<Dart> darts = face.getDarts();
         int startingIndex = 0;
         int size = darts.size();
@@ -236,7 +234,7 @@ public class RectangularCompactor {
         Direction prevDirection = null;
         while (true) {
             Dart dart = darts.get(index);
-            Edge edge = dart.getEdge();
+            Edge<?> edge = dart.getEdge();
             Direction direction = edge.getDirection();
 
             if (direction == null) {
@@ -286,8 +284,8 @@ public class RectangularCompactor {
      * 
      * @param or
      */
-    private void refineShapes(OrthogonalRepresentation or) {
-        Map<Edge, Collection<Edge>> edgeMap = new HashMap<Edge, Collection<Edge>>();
+    private void refineShapes(OrthogonalRepresentation<N, E> or) {
+        Map<Edge<?>, Collection<Edge<?>>> edgeMap = new HashMap<>();
         OrthogonalShape outerShape = null;
 
         for (OrthogonalShape shape : or.getShapes()) {
@@ -311,7 +309,7 @@ public class RectangularCompactor {
      * @param shape
      * @param edgeMap
      */
-    private void updateShape(OrthogonalShape shape, Map<Edge, Collection<Edge>> edgeMap) {
+    private void updateShape(OrthogonalShape shape, Map<Edge<?>, Collection<Edge<?>>> edgeMap) {
         if (edgeMap.isEmpty()) {
             return;
         }
@@ -320,8 +318,8 @@ public class RectangularCompactor {
         Dart currentDart = face.getDarts().get(0);
 
         while (true) {
-            Edge edge = currentDart.getEdge();
-            Collection<Edge> newEdges = edgeMap.get(edge);
+            Edge<?> edge = currentDart.getEdge();
+            Collection<Edge<?>> newEdges = edgeMap.get(edge);
 
             if (newEdges != null) {
                 Tuple tuple = shape.getTuple(currentDart);
@@ -345,13 +343,13 @@ public class RectangularCompactor {
      * @param edgeMap
      */
     private void refineShape(OrthogonalShape shape,
-            OrthogonalRepresentation or,
-            Map<Edge, Collection<Edge>> edgeMap) {
+            OrthogonalRepresentation<?, ?> or,
+            Map<Edge<?>, Collection<Edge<?>>> edgeMap) {
         updateShape(shape, edgeMap);
 
         // Do outer face last.
         // May need multiple passes.
-        MGraph originalGraph = or.getOriginalGraph().getOriginalGraph();
+        MGraph<?, ?> originalGraph = or.getOriginalGraph().getOriginalGraph();
 
         while (refineShapeSub(shape, originalGraph, edgeMap)) {
             //do nothing
@@ -365,11 +363,11 @@ public class RectangularCompactor {
      * @param edgeMap
      * @return
      */
-    private boolean refineShapeSub(OrthogonalShape shape, MGraph originalGraph,
-            Map<Edge, Collection<Edge>> edgeMap) {
+    private boolean refineShapeSub(OrthogonalShape shape, MGraph<?, ?> originalGraph,
+            Map<Edge<?>, Collection<Edge<?>>> edgeMap) {
         Face face = shape.getFace();
         Logger.log(0, "refining face " + face);
-        ArrayList<Dart> darts = new ArrayList<Dart>(face.getDarts());
+        List<Dart> darts = new ArrayList<>(face.getDarts());
         Dart firstDart = darts.get(0);
         Dart currentDart = firstDart;
 
@@ -424,16 +422,16 @@ public class RectangularCompactor {
             }
 
             if (frontDart != null) {
-                Edge currentEdge = currentDart.getEdge();
+                Edge<?> currentEdge = currentDart.getEdge();
                 Direction direction = currentEdge.getDirection();
                 Tuple currentTuple = shape.getTuple(currentDart);
 
                 if (currentTuple.getAngles() != -1) {
-                    ArrayList<Edge> newEdges = new ArrayList<Edge>();
+                    List<Edge<?>> newEdges = new ArrayList<>();
                     edgeMap.put(currentEdge, newEdges);
 
-                    Vertex dv = originalGraph.insertDummyVertex(currentEdge, DummyVertex.Type.TEMPORARY);
-                    Edge de = originalGraph.addDummyEdge(dv, frontDart.getV());
+                    Vertex<?> dv = originalGraph.insertDummyVertex(currentEdge, DummyVertex.Type.TEMPORARY);
+                    Edge<?> de = originalGraph.addDummyEdge(dv, frontDart.getV());
 
                     if (direction == Direction.VERTICAL) {
                         de.setDirection(Direction.HORIZONTAL);
@@ -441,20 +439,20 @@ public class RectangularCompactor {
                         de.setDirection(Direction.VERTICAL);
                     }
 
-                    Vertex currentV = currentDart.getV();
-                    Edge de1 = currentV.getEdge(dv);
+                    Vertex<?> currentV = currentDart.getV();
+                    Edge<?> de1 = currentV.getEdge(dv);
                     de1.setDirection(direction);
                     newEdges.add(de1);
 
-                    Vertex currentW = currentDart.getW();
-                    Edge de2 = dv.getEdge(currentW);
+                    Vertex<?> currentW = currentDart.getW();
+                    Edge<?> de2 = dv.getEdge(currentW);
                     de2.setDirection(direction);
                     newEdges.add(de2);
 
                     shape.updateTuple(shape.getTuple(currentDart), newEdges);
                     shape.insertEdge(de);
                 } else {
-                    Edge de = originalGraph.addDummyEdge(currentDart.getV(), frontDart.getV());
+                    Edge<?> de = originalGraph.addDummyEdge(currentDart.getV(), frontDart.getV());
 
                     if (direction == Direction.VERTICAL) {
                         de.setDirection(Direction.HORIZONTAL);
@@ -483,16 +481,16 @@ public class RectangularCompactor {
      * @param or
      */
     private void addDummyOuterFace(OrthogonalShape shape,
-            OrthogonalRepresentation or) {
-        MGraph graph = or.getOriginalGraph().getOriginalGraph();
-        ArrayList<Edge> dummyEdges1 = new ArrayList<Edge>();
-        ArrayList<Edge> dummyEdges2 = new ArrayList<Edge>();
+            OrthogonalRepresentation<N, E> or) {
+        MGraph<N, E> graph = or.getOriginalGraph().getOriginalGraph();
+        List<Edge<?>> dummyEdges1 = new ArrayList<>();
+        List<Edge<?>> dummyEdges2 = new ArrayList<>();
 
-        Vertex dv = graph.addDummyVertex(DummyVertex.Type.TEMPORARY);
-        Vertex cornerVertex = dv;
+        Vertex<N> dv = graph.addDummyVertex(DummyVertex.Type.TEMPORARY);
+        Vertex<N> cornerVertex = dv;
 
         for (int i = 0; i < 4; i++) {
-            Vertex dw = null;
+            Vertex<N> dw = null;
 
             if (i < 3) {
                 dw = graph.addDummyVertex(DummyVertex.Type.TEMPORARY);
@@ -500,7 +498,7 @@ public class RectangularCompactor {
                 dw = cornerVertex;
             }
 
-            Edge de = graph.addDummyEdge(dv, dw);
+            Edge<?> de = graph.addDummyEdge(dv, dw);
             dummyEdges1.add(de);
 
             if (i == 0 || i == 2) {
@@ -555,10 +553,11 @@ public class RectangularCompactor {
                         if (firstIndex == -1) {
                             firstIndex = index;
                         }
-                        Edge de = dummyEdges1.get(index);
+                        Edge<?> de = dummyEdges1.get(index);
                         Direction direction = de.getDirection();
-                        Vertex v = de.getV();
-                        Vertex w = de.getW();
+                        Vertex<?> v = de.getV();
+                        Vertex<?> w = de.getW();
+                        graph.insertDummyVertex(de, DummyVertex.Type.TEMPORARY);
                         dv = graph.insertDummyVertex(de, DummyVertex.Type.TEMPORARY);
                         de = graph.addDummyEdge(currentDart.getW(), dv);
 
@@ -568,11 +567,11 @@ public class RectangularCompactor {
                             de.setDirection(Direction.HORIZONTAL);
                         }
 
-                        Edge e1 = dv.getEdge(w);
+                        Edge<?> e1 = dv.getEdge(w);
                         e1.setDirection(direction);
                         dummyEdges1.set(index, e1);
 
-                        Edge e2 = v.getEdge(dv);
+                        Edge<?> e2 = v.getEdge(dv);
                         e2.setDirection(direction);
 
                         if (dummyEdges2.get(index) == null) {
@@ -625,7 +624,7 @@ public class RectangularCompactor {
                 if (index == firstIndex) {
                     swapped = true;
 
-                    Edge de = dummyEdges2.get(firstIndex);
+                    Edge<?> de = dummyEdges2.get(firstIndex);
                     if (de != null) {
                         dummyEdges1.set(firstIndex, de);
                     }

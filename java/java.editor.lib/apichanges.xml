@@ -83,6 +83,19 @@ is the proper place.
     <!-- ACTUAL CHANGES BEGIN HERE: -->
 
     <changes>
+        <change id="JavaFoldManager.deprecated">
+            <summary>JavaFoldManager class deprecated</summary>
+            <version major="1" minor="1.49"/>
+            <date day="7" month="10" year="2020"/>
+            <author login="sdedic"/>
+            <compatibility binary="compatible" source="compatible" semantic="incompatible" deprecation="yes"/>
+            <description>
+                Java Editor dependencies on ext.* editor interfaces have been cut off, its Folding implementation does not derive
+                from the <a href="@TOP@/org/netbeans/editor/ext/java/JavaFoldManager.html">org.netbeans.editor.ext.java.JavaFoldManager</a> class. The <code>*_FOLD_TYPE</code> definitions
+                are still valid, although deprecated. Generic <a href="@org-netbeans-modules-editor-fold@/org/netbeans/api/editor/fold/FoldType.html">FoldType.*</a>
+                values should be used whenever possible.
+            </description>
+        </change>
         <change id="old-editor-settings-deprecation">
             <summary>Removing old settings classes</summary>
             <version major="1" minor="9"/>

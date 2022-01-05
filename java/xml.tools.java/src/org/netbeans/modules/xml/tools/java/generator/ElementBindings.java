@@ -153,7 +153,7 @@ public class ElementBindings extends HashMap {
     }
     
     public String toString() {
-        Iterator it = values().iterator();
+        Iterator<String> it = values().iterator();
         StringBuffer sb = new StringBuffer();
         sb.append("{"); // NOI18N
         while (it.hasNext()) {
@@ -283,7 +283,7 @@ public class ElementBindings extends HashMap {
          * Return suitable types (Vector<Strings>) for given element.
          */
         public static final Vector displayTypesFor(ElementDeclarations.Entry entry) {
-            Vector list = new Vector(4);
+            Vector<String> list = new Vector<>(4);
             list.add(IGNORE_HANDLING);
             if ((entry.getType() & ElementDeclarations.Entry.DATA) == 1) 
                 list.add(DATA_HANDLING);

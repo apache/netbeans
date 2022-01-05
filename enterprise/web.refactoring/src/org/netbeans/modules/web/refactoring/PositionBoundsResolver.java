@@ -155,8 +155,6 @@ public class PositionBoundsResolver {
                 Exceptions.printStackTrace(ex);
             } catch (FileNotFoundException ex) {
                 Exceptions.printStackTrace(ex);
-            } catch (IOException ex) {
-                Exceptions.printStackTrace(ex);
             } catch (BadLocationException ex) {
                 Exceptions.printStackTrace(ex);
             }

@@ -78,7 +78,7 @@ public class MessageHandlerWizard implements WizardDescriptor.InstantiatingItera
         JComponent c = (JComponent) firstPanel.getComponent();
         Utils.changeLabelInComponent(c, NbBundle.getMessage(MessageHandlerWizard.class, "LBL_JavaTargetChooserPanelGUI_ClassName_Label"), NbBundle.getMessage(MessageHandlerWizard.class, "LBL_Handler_Name")); //NOI18N
         c.putClientProperty(WizardDescriptor.PROP_CONTENT_DATA, HANDLER_STEPS);
-        c.putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, Integer.valueOf(0));
+        c.putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, 0);
         c.getAccessibleContext().setAccessibleDescription(HANDLER_STEPS[0]);
         wizardPanels = new WizardDescriptor.Panel[]{firstPanel};
     }

@@ -1,0 +1,5 @@
+Code completion result for source line:
+$closure = function(null|int|float $param1, st|ring| object $param): iterable|false {
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+KEYWORD    string                                     null

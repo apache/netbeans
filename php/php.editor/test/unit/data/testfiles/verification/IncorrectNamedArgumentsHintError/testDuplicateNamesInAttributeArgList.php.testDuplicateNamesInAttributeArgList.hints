@@ -1,0 +1,9 @@
+    name: 'duplicate1',
+    ------------------
+HINT:Duplicate argument name: "name" already exists.
+    name2: 'duplicate2',
+    -------------------
+HINT:Duplicate argument name: "name2" already exists.
+    name1: 'duplicate3',
+    -------------------
+HINT:Duplicate argument name: "name1" already exists.

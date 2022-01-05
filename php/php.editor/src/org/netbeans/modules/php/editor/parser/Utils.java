@@ -57,6 +57,9 @@ public final class Utils {
             case ASTPHP5Symbols.T_AT:
                 name = "T_AT"; //NOI18N
                 break;
+            case ASTPHP5Symbols.T_ATTRIBUTE:
+                name = "T_ATTRIBUTE"; //NOI18N
+                break;
             case ASTPHP5Symbols.T_BACKQUATE:
                 name = "T_BACKQUATE"; //NOI18N
                 break;
@@ -312,6 +315,9 @@ public final class Utils {
             case ASTPHP5Symbols.T_METHOD_C:
                 name = "T_METHOD_C"; //NOI18N
                 break;
+            case ASTPHP5Symbols.T_MATCH:
+                name = "T_MATCH"; //NOI18N
+                break;
             case ASTPHP5Symbols.T_MINUS:
                 name = "T_MINUS"; //NOI18N
                 break;
@@ -344,6 +350,9 @@ public final class Utils {
                 break;
             case ASTPHP5Symbols.T_OBJECT_OPERATOR:
                 name = "T_OBJECT_OPERATOR"; //NOI18N
+                break;
+            case ASTPHP5Symbols.T_NULLSAFE_OBJECT_OPERATOR:
+                name = "T_NULLSAFE_OBJECT_OPERATOR"; //NOI18N
                 break;
             case ASTPHP5Symbols.T_OPEN_PARENTHESE:
                 name = "T_OPEN_PARENTHESE"; //NOI18N

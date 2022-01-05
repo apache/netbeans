@@ -1,0 +1,9 @@
+Code completion result for source line:
+abstract protected function abstractClassMethod(array|object $param, TestInerface|Test|Class|null $object,): iterable|false;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+PACKAGE    Test1                           [PUBLIC]   null
+PACKAGE    Test2                           [PUBLIC]   null
+CLASS      TestAbstractClass               [PUBLIC,   Test2
+CLASS      TestChildClass                  [PUBLIC]   Test2
+CLASS      TestClass                       [PUBLIC]   Test2
+CLASS      TestInterface                   [PUBLIC]   Test2

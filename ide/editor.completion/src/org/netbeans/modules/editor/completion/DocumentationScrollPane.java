@@ -157,6 +157,8 @@ public class DocumentationScrollPane extends JScrollPane {
         ImageIcon icon = resolveIcon(BACK);
         if (icon != null) {            
             bBack = new BrowserButton(icon);
+            // For HiDPI support.
+            bBack.setDisabledIcon(ImageUtilities.createDisabledIcon(icon));
             bBack.addMouseListener(new MouseEventListener(bBack));
             bBack.setEnabled(false);
             bBack.setFocusable(false);
@@ -172,6 +174,7 @@ public class DocumentationScrollPane extends JScrollPane {
         icon = resolveIcon(FORWARD);
         if (icon != null) {
             bForward = new BrowserButton(icon);
+            bForward.setDisabledIcon(ImageUtilities.createDisabledIcon(icon));
             bForward.addMouseListener(new MouseEventListener(bForward));
             bForward.setEnabled(false);
             bForward.setFocusable(false);
@@ -187,6 +190,7 @@ public class DocumentationScrollPane extends JScrollPane {
         icon = resolveIcon(SHOW_WEB);
         if (icon != null) {            
             bShowWeb = new BrowserButton(icon);
+            bShowWeb.setDisabledIcon(ImageUtilities.createDisabledIcon(icon));
             bShowWeb.addMouseListener(new MouseEventListener(bShowWeb));
             bShowWeb.setEnabled(false);
             bShowWeb.setFocusable(false);
@@ -203,6 +207,7 @@ public class DocumentationScrollPane extends JScrollPane {
         icon = resolveIcon(GOTO_SOURCE);
         if (icon != null) {
             bGoToSource = new BrowserButton(icon);
+            bGoToSource.setDisabledIcon(ImageUtilities.createDisabledIcon(icon));
             bGoToSource.addMouseListener(new MouseEventListener(bGoToSource));
             bGoToSource.setEnabled(false);
             bGoToSource.setFocusable(false);

@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.73
+#Version 1.80
 
 CLSS public abstract interface java.io.Serializable
 
@@ -27,7 +27,6 @@ meth public final java.lang.String name()
 meth public java.lang.String toString()
 meth public static <%0 extends java.lang.Enum<{%%0}>> {%%0} valueOf(java.lang.Class<{%%0}>,java.lang.String)
 supr java.lang.Object
-hfds name,ordinal
 
 CLSS public java.lang.Object
 cons public init()
@@ -78,7 +77,6 @@ intf java.io.Serializable
 meth public java.lang.Object getSource()
 meth public java.lang.String toString()
 supr java.lang.Object
-hfds serialVersionUID
 
 CLSS public final org.netbeans.api.java.classpath.ClassPath
 fld public final static java.lang.String BOOT = "classpath/boot"
@@ -365,11 +363,20 @@ innr public abstract interface static AttachmentListener
 meth public static void attachJavadoc(java.net.URL,org.netbeans.api.java.queries.SourceJavadocAttacher$AttachmentListener)
  anno 1 org.netbeans.api.annotations.common.NonNull()
  anno 2 org.netbeans.api.annotations.common.NullAllowed()
+meth public static void attachJavadoc(java.net.URL,org.openide.util.Lookup,org.netbeans.api.java.queries.SourceJavadocAttacher$AttachmentListener)
+ anno 1 org.netbeans.api.annotations.common.NonNull()
+ anno 2 org.netbeans.api.annotations.common.NonNull()
+ anno 3 org.netbeans.api.annotations.common.NullAllowed()
 meth public static void attachSources(java.net.URL,org.netbeans.api.java.queries.SourceJavadocAttacher$AttachmentListener)
  anno 1 org.netbeans.api.annotations.common.NonNull()
  anno 2 org.netbeans.api.annotations.common.NullAllowed()
+meth public static void attachSources(java.net.URL,org.openide.util.Lookup,org.netbeans.api.java.queries.SourceJavadocAttacher$AttachmentListener)
+ anno 1 org.netbeans.api.annotations.common.NonNull()
+ anno 2 org.netbeans.api.annotations.common.NonNull()
+ anno 3 org.netbeans.api.annotations.common.NullAllowed()
 supr java.lang.Object
 hfds LOG
+hcls AttacherExecution
 
 CLSS public abstract interface static org.netbeans.api.java.queries.SourceJavadocAttacher$AttachmentListener
  outer org.netbeans.api.java.queries.SourceJavadocAttacher
@@ -600,6 +607,7 @@ meth public abstract boolean preferSources()
 
 CLSS public abstract interface org.netbeans.spi.java.queries.SourceJavadocAttacherImplementation
 innr public abstract interface static Definer
+innr public abstract interface static Definer2
 meth public abstract boolean attachJavadoc(java.net.URL,org.netbeans.api.java.queries.SourceJavadocAttacher$AttachmentListener) throws java.io.IOException
  anno 1 org.netbeans.api.annotations.common.NonNull()
  anno 2 org.netbeans.api.annotations.common.NonNull()
@@ -621,6 +629,12 @@ meth public abstract java.util.List<? extends java.net.URL> getSources(java.net.
  anno 0 org.netbeans.api.annotations.common.NonNull()
  anno 1 org.netbeans.api.annotations.common.NonNull()
  anno 2 org.netbeans.api.annotations.common.NonNull()
+
+CLSS public abstract interface static org.netbeans.spi.java.queries.SourceJavadocAttacherImplementation$Definer2
+ outer org.netbeans.spi.java.queries.SourceJavadocAttacherImplementation
+intf org.netbeans.spi.java.queries.SourceJavadocAttacherImplementation$Definer
+meth public abstract boolean accepts(java.net.URL)
+ anno 1 org.netbeans.api.annotations.common.NonNull()
 
 CLSS public abstract interface org.netbeans.spi.java.queries.SourceLevelQueryImplementation
  anno 0 java.lang.Deprecated()

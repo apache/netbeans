@@ -215,7 +215,6 @@ public class PhpTypedTextInterceptorTest extends PhpTypinghooksTestBase {
         insertChar("^\\", '"', "\"^\\");
     }
 
-
     public void testBrackets1() throws Exception {
         insertChar("x = ^", '[', "x = [^]");
     }
@@ -248,6 +247,14 @@ public class PhpTypedTextInterceptorTest extends PhpTypinghooksTestBase {
 
     public void testBrackets6() throws Exception {
         insertChar("x = [[]^]", ']', "x = [[]]^");
+    }
+
+    public void testAttributeSyntaxBrackets_01() throws Exception {
+        insertChar("#^", '[', "#[^]");
+    }
+
+    public void testAttributeSyntaxBrackets_02() throws Exception {
+        insertChar("#[^]", ']', "#[]^");
     }
 
     public void testParens1() throws Exception {

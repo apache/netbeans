@@ -196,8 +196,8 @@ public final class PayaraDDProvider {
         }
     }
 
-    final private Map<Object, RootInterface> ddMap = new WeakHashMap<Object, RootInterface>();
-    private Map<FileObject, DDProviderDataObject> dObjMap = new WeakHashMap<FileObject, DDProviderDataObject>();
+    final private Map<Object, RootInterface> ddMap = new WeakHashMap<>();
+    private Map<FileObject, DDProviderDataObject> dObjMap = new WeakHashMap<>();
 
     /**
      * This method retrieves the root of the XML DOM for a sun-* deployment
@@ -467,7 +467,6 @@ public final class PayaraDDProvider {
     public RootInterface newGraph(Class rootType, String version) {
         RootInterface result = null;
         SunBaseBean graphRoot = null;
-        Class graphRootClass = null;
 
         Map<String, VersionInfo> versionMap = apiToVersionMap.get(rootType);
         if (versionMap != null) {
@@ -746,6 +745,7 @@ public final class PayaraDDProvider {
      * determined.
      * @deprecated
      */
+    @Deprecated
     public static ASDDVersion getASDDVersion(RootInterface rootDD) {
         return getASDDVersion(rootDD, null);
     }

@@ -18,15 +18,14 @@
     under the License.
 
 -->
-<#noparse>
-plugins {
-    id "me.tatarka.retrolambda" version "3.7.1"
-}
-
 apply plugin: 'java'
-
-group 'com.dukescript.demo'
-version '1.0-SNAPSHOT'
+<#if group?has_content>
+group '${group}'
+</#if>
+<#if version?has_content>
+version '${version}'
+</#if>
+<#noparse>
 
 allprojects {
     repositories {
@@ -38,9 +37,10 @@ targetCompatibility = '1.8'
 sourceCompatibility = '1.8'
 
 dependencies {
-    compile "org.netbeans.html:net.java.html.json:1.6.1"
-    compile "com.dukescript.api:javafx.base:8.60.11"
-    compile "com.dukescript.api:javafx.beaninfo:0.5"
-    runtime "org.netbeans.html:ko4j:1.6.1"
+    implementation "org.netbeans.html:net.java.html.json:1.7.2"
+    implementation "com.dukescript.api:javafx.base:8.60.11"
+    implementation "com.dukescript.api:javafx.beaninfo:0.6"
+    annotationProcessor "com.dukescript.api:javafx.beaninfo:0.6"
+    runtimeOnly "org.netbeans.html:ko4j:1.7.2"
 }
 </#noparse>

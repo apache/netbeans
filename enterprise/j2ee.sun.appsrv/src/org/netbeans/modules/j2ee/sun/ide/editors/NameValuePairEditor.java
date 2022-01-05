@@ -27,7 +27,6 @@ package org.netbeans.modules.j2ee.sun.ide.editors;
 import java.util.ResourceBundle;
 import org.netbeans.modules.j2ee.sun.ide.editors.ui.DDTableModelEditor;
 
-import org.netbeans.modules.j2ee.sun.ide.editors.NameValuePair;
 
 /**
  *

@@ -119,6 +119,8 @@ public abstract class JavaCompletionItem implements CompletionItem {
                 return new EnumItem(info, elem, type, 0, substitutionOffset, referencesCount, isDeprecated, insideNew, addSimpleName, smartType, autoImportEnclosingType, whiteList);
             case ANNOTATION_TYPE:
                 return new AnnotationTypeItem(info, elem, type, 0, substitutionOffset, referencesCount, isDeprecated, insideNew, addSimpleName, smartType, autoImportEnclosingType, whiteList);
+            case RECORD:
+                return new RecordItem(info, elem, type, 0, substitutionOffset, referencesCount, isDeprecated, insideNew, addSimpleName, smartType, autoImportEnclosingType, whiteList);
             default:
                 throw new IllegalArgumentException("kind=" + elem.getKind());
         }
@@ -1313,7 +1315,25 @@ public abstract class JavaCompletionItem implements CompletionItem {
             return icon;
         }
     }
+    
+    static class RecordItem extends ClassItem {
 
+        private static final String RECORD = "org/netbeans/modules/editor/resources/completion/record.png"; // NOI18N
+        private static ImageIcon icon;
+
+        private RecordItem(CompilationInfo info, TypeElement elem, DeclaredType type, int dim, int substitutionOffset, ReferencesCount referencesCount, boolean isDeprecated, boolean insideNew, boolean addSimpleName, boolean smartType, boolean autoImport, WhiteListQuery.WhiteList whiteList) {
+            super(info, elem, type, dim, substitutionOffset, referencesCount, isDeprecated, insideNew, false, addSimpleName, smartType, autoImport, whiteList);
+        }
+
+        @Override
+        protected ImageIcon getBaseIcon() {
+            if (icon == null) {
+                icon = ImageUtilities.loadImageIcon(RECORD, false);
+            }
+            return icon;
+        }
+    }
+    
     static class AnnotationTypeItem extends ClassItem {
 
         private static final String ANNOTATION = "org/netbeans/modules/editor/resources/completion/annotation_type.png"; // NOI18N
@@ -3126,9 +3146,6 @@ public abstract class JavaCompletionItem implements CompletionItem {
 
         private AttributeValueItem(CompilationInfo info, String value, String documentation, TypeElement element, int substitutionOffset, ReferencesCount referencesCount, WhiteListQuery.WhiteList whiteList) {
             super(substitutionOffset, element != null ? ElementHandle.create(element) : null, whiteList);
-            if (value.charAt(0) == '\"' && value.charAt(value.length() - 1) != '\"') { //NOI18N
-                value = value + '\"'; //NOI18N
-            }
             this.value = value;
             this.documentation = documentation;
             if (element != null) {
@@ -3213,7 +3230,7 @@ public abstract class JavaCompletionItem implements CompletionItem {
                 } else {
                     StringBuilder sb = new StringBuilder();
                     sb.append(ATTRIBUTE_VALUE_COLOR);
-                    sb.append(value);
+                    sb.append(escape(getLastLine()));
                     sb.append(COLOR_END);
                     leftText = sb.toString();
                 }
@@ -3243,6 +3260,12 @@ public abstract class JavaCompletionItem implements CompletionItem {
                 sb.delete(sb.length() - 6, sb.length());
             }
             return super.substituteText(c, offset, length, sb, toAdd);
+        }
+
+        private String getLastLine() {
+            String[] lines = value.split("\n");
+            String last = lines.length > 0 ? lines[lines.length - 1] : value;
+            return last.trim();
         }
 
         @Override
@@ -4408,7 +4431,7 @@ public abstract class JavaCompletionItem implements CompletionItem {
     private static String escape(String s) {
         if (s != null) {
             try {
-                return XMLUtil.toAttributeValue(s);
+                return XMLUtil.toElementContent(s);
             } catch (Exception ex) {}
         }
         return s;

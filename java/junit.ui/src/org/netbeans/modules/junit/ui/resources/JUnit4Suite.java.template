@@ -18,7 +18,7 @@ import org.junit.runners.Suite;
 <#-- classNames:  "FooA,FooB" -->
 <#-- classes:     "FooA.class,FooB.class" -->
 @RunWith(Suite.class)
-@Suite.SuiteClasses({${classes}})
+@Suite.SuiteClasses({${classes!''}})
 public class ${name} {
 
 }

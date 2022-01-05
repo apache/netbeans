@@ -19,7 +19,6 @@
 
 package org.netbeans.modules.gradle.java.execute;
 
-import org.netbeans.modules.gradle.api.NbGradleProject;
 import org.netbeans.modules.gradle.java.api.GradleJavaProject;
 import org.netbeans.modules.gradle.java.api.GradleJavaSourceSet;
 import org.netbeans.modules.gradle.spi.actions.AfterBuildActionHook;
@@ -36,7 +35,6 @@ import org.netbeans.api.debugger.DebuggerEngine;
 import org.netbeans.api.debugger.DebuggerManager;
 import org.netbeans.api.debugger.jpda.JPDADebugger;
 import org.netbeans.api.java.classpath.ClassPath;
-import org.netbeans.spi.project.ProjectServiceProvider;
 import org.openide.util.Lookup;
 import org.netbeans.api.java.queries.SourceForBinaryQuery;
 import org.netbeans.api.project.Project;
@@ -51,10 +49,6 @@ import static org.netbeans.api.java.project.JavaProjectConstants.*;
  *
  * @author Laszlo Kishalmi
  */
-@ProjectServiceProvider(
-        service = {BeforeBuildActionHook.class, AfterBuildActionHook.class},
-        projectType = NbGradleProject.GRADLE_PLUGIN_TYPE + "/java-base"
-)
 public class DebugFixHooks implements BeforeBuildActionHook, AfterBuildActionHook {
 
     final Project project;

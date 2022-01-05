@@ -25,6 +25,25 @@
     <apidef name="htmlui">HTML UI API</apidef>
 </apidefs>
 <changes>
+    <change id="HTMLViewerSpi">
+        <api name="htmlui"/>
+        <summary>OnSubmit &amp; Service Provider Interface</summary>
+        <version major="1" minor="23"/>
+        <date year="2021" month="12" day="10"/>
+        <author login="jtulach"/>
+        <compatibility semantic="compatible" binary="compatible" source="compatible"/>
+        <description>
+            <p>
+                Validate your dialogs with
+                <a href="@TOP@org/netbeans/api/htmlui/HTMLDialog.OnSubmit.html">OnSubmit</a>
+                interface. Write own
+                <a href="@TOP@org/netbeans/spi/htmlui/HTMLViewerSpi.html">HTMLViewerSpi</a>
+                to provide own "chrome" for displaying HTML UI components.
+            </p>
+        </description>
+        <class package="org.netbeans.api.htmlui" name="HTMLDialog"/>
+        <class package="org.netbeans.spi.htmlui" name="HTMLViewerSpi"/>
+    </change>
     <change id="NoFreeGeoIp">
         <api name="htmlui"/>
         <summary>FreeGeoIp service no longer works</summary>

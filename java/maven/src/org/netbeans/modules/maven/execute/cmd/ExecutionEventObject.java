@@ -44,7 +44,7 @@ public class ExecutionEventObject {
         this.type = type;
     }
 
-    
+
     public static class GAV {
         public final String groupId;
         public final String artifactId;
@@ -55,13 +55,13 @@ public class ExecutionEventObject {
             this.artifactId = artifactId;
             this.version = version;
         }
-        
+
         public String getId() {
             return groupId + ":" + artifactId + ":" + version;
         }
-        
+
     }
-    
+
     private static final List<ExecutionEvent.Type> mojo_types = Arrays.asList(new ExecutionEvent.Type[] {
         ExecutionEvent.Type.MojoStarted, ExecutionEvent.Type.MojoFailed, ExecutionEvent.Type.MojoSucceeded, ExecutionEvent.Type.MojoSkipped
     });
@@ -71,7 +71,7 @@ public class ExecutionEventObject {
     private static final List<ExecutionEvent.Type> session_types = Arrays.asList(new ExecutionEvent.Type[] {
         ExecutionEvent.Type.SessionStarted, ExecutionEvent.Type.SessionEnded
     });
-    
+
     public static ExecutionEventObject create(JSONObject obj) {
         String s = (String) obj.get("type");
         ExecutionEvent.Type t = ExecutionEvent.Type.valueOf(s);
@@ -86,7 +86,7 @@ public class ExecutionEventObject {
         }
         return new ExecutionEventObject(t);
     }
-    
+
     public static class Tree {
         private final ExecutionEventObject startEvent;
         private ExecutionEventObject endEvent;
@@ -141,8 +141,8 @@ public class ExecutionEventObject {
         public @NonNull List<Tree> getChildrenNodes() {
             return childrenNodes;
         }
-                
-        
+
+
         public ExecutionEventObject.Tree findParentNodeOfType(ExecutionEvent.Type startType) {
             if (parentNode == null) {
                 return null;
@@ -156,17 +156,21 @@ public class ExecutionEventObject {
             }
             return parentNode.findParentNodeOfType(startType);
         }
-        
+
         public void reassingParent(ExecutionEventObject.Tree parent) {
             this.parentNode = parent;
         }
-        
+
         /**
          * Start fold for the curent tree.
          *
          * @param io InputOutput the output is written to.
          */
         public void startFold(InputOutput io) {
+            if (!IOFolding.isSupported(io)) {
+                return;
+            }
+
             assert foldHandle == null;
             ExecutionEventObject.Tree parentProject = findParentNodeOfType(ExecutionEvent.Type.MojoStarted);
             if (parentProject != null) {
@@ -175,10 +179,9 @@ public class ExecutionEventObject {
                 this.foldHandle = parentProject.foldHandle.silentStartFold(true);
                 return;
             }
-            
+
             parentProject = findParentNodeOfType(ExecutionEvent.Type.ProjectStarted);
             if (parentProject == null) {
-                
                 this.foldHandle = IOFolding.startFold(io, true);
             } else {
                 if (parentProject.foldHandle == null) {
@@ -209,6 +212,10 @@ public class ExecutionEventObject {
          * it will be finished before starting new fold.
          */
         public void startInnerOutputFold(InputOutput io) {
+            if (!IOFolding.isSupported(io)) {
+                return;
+            }
+
             if (innerOutputFoldHandle != null && !innerOutputFoldHandle.isFinished()) {
                 innerOutputFoldHandle.silentFinish();
             }
@@ -250,5 +257,5 @@ public class ExecutionEventObject {
             }
         }
     }
-    
+
 }

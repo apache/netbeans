@@ -132,7 +132,7 @@ public class ConnectionStatusPanel extends javax.swing.JPanel {
             connectionStatusMessage.setVisible(false) ;
             validationInfo.setVisible(true) ;
             if ( sqlException == null ) {
-                valStatusText.setText(getMsg("ConStat_rows_selected_msg", tableName, new Integer(rows)) ) ; // NOI18N
+                valStatusText.setText(getMsg("ConStat_rows_selected_msg", tableName, Integer.valueOf(rows)) ) ; // NOI18N
                 valStatusIcon.setIcon( new ImageIcon(conGood) ) ;
                 String valMsg ;
                 if (rows > 1 ) {

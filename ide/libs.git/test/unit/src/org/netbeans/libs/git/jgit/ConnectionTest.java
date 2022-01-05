@@ -445,5 +445,10 @@ public class ConnectionTest extends AbstractGitTestCase {
         public int getTimezone (long l) {
             return instance.getTimezone(l);
         }
+
+        @Override
+        public FileBasedConfig openJGitConfig(Config config, FS fs) {
+            return instance.openJGitConfig(config, fs);
+        }
     }
 }

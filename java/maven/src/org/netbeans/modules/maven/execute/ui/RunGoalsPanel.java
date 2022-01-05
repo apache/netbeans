@@ -32,7 +32,7 @@ import org.netbeans.modules.maven.TextValueCompleter;
 import org.netbeans.modules.maven.api.ProjectProfileHandler;
 import org.netbeans.modules.maven.api.execute.RunConfig;
 import org.netbeans.modules.maven.customizer.ActionMappings;
-import org.netbeans.modules.maven.customizer.PropertySplitter;
+import org.netbeans.modules.maven.runjar.PropertySplitter;
 import org.netbeans.modules.maven.embedder.EmbedderFactory;
 import org.netbeans.modules.maven.execute.BeanRunConfig;
 import org.netbeans.modules.maven.execute.model.ActionToGoalMapping;

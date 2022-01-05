@@ -26,6 +26,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -40,11 +41,14 @@ import java.util.logging.Logger;
 import org.netbeans.modules.maven.api.NbMavenProject;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 import org.netbeans.api.project.Project;
+import org.netbeans.modules.maven.NbMavenProjectImpl;
+import org.netbeans.modules.maven.configurations.M2ConfigProvider;
 import org.netbeans.modules.maven.configurations.M2Configuration;
 import org.netbeans.modules.maven.execute.DefaultReplaceTokenProvider;
 import org.netbeans.modules.maven.execute.ModelRunConfig;
 import org.netbeans.modules.maven.execute.model.ActionToGoalMapping;
 import org.netbeans.modules.maven.execute.model.NetbeansActionMapping;
+import org.netbeans.modules.maven.execute.model.NetbeansActionProfile;
 import org.netbeans.modules.maven.execute.model.NetbeansActionReader;
 import org.netbeans.modules.maven.execute.model.io.xpp3.NetbeansBuildActionXpp3Reader;
 import org.netbeans.modules.maven.execute.model.io.xpp3.NetbeansBuildActionXpp3Writer;
@@ -88,6 +92,10 @@ public abstract class AbstractMavenActionsProvider implements MavenActionsProvid
             files.add(method.getFile());
         }
 
+        if (files.isEmpty()) {
+            files.addAll(lookup.lookupAll(FileObject.class));
+        }
+        
         return files.toArray(new FileObject[files.size()]);
     }
 
@@ -315,5 +323,123 @@ public abstract class AbstractMavenActionsProvider implements MavenActionsProvid
             }
         }
         return buf.toString();
+    }
+    
+    /**
+     * Constructs a {@link MavenActionsProvider} from declarative action descriptions. The 
+     * {@code resourceURL} parameter identifies a {@code nbactions.xml}-format resource which
+     * can add/define actions in the default configuration. It can also <b>contribute</b>
+     * configurations (profiles) using the nested {@code &lt;profile>} element.
+     * <p/>
+     * Actions in the contributed configuration profiles are merged; multiple {@link MavenActionProviders}
+     * created by {@link #fromNbActions(org.netbeans.api.project.Project, java.net.URL)} can supply their
+     * actions. The first definition of a given {@code actionName} counts, subsequent definitions from 
+     * {@link MavenActionProviders} further in the project's Lookup are ignored.
+     * <p/>
+     * Note: at the moment it is not possible to build the <b>default configuration</b> actions 
+     * from multiple {@link MavenActionProviders}. 
+     * <p/>
+     * <b>This is a part of Maven module's friend API. If possible, use se  
+     * <a href="@org-netbeans-api-maven@/org/netbeans/spi/maven/MavenActions.html">MavenActions</a> to register
+     * actions declaratively, using module layers.
+     * 
+     * @param mavenProject the maven project. 
+     * @param resourceURL action definitions.
+     * @return new {@link MavenActionProvider} instance.
+     * @since 2.148
+     */
+    public static MavenActionsProvider fromNbActions(Project mavenProject, URL resourceURL) {
+        NbMavenProjectImpl mvn = mavenProject.getLookup().lookup(NbMavenProjectImpl.class);
+        if (mvn == null) {
+            throw new IllegalArgumentException("Not a maven proejct: " + mavenProject);
+        }
+        return new ResourceConfigAwareProvider(mvn, resourceURL);
+    }
+    
+    /**
+     * This provider wraps a custom resource, and provides actions from it.
+     * It cooperates with {@link M2ConfigProvider#getActiveConfiguration()} and provides actions
+     * for just the active one. For {@link M2ConfigProvider#DEFAULT} configuration, the returned
+     * mapping contains list of contributed configurations (profiles) if defined.
+     */
+    static class ResourceConfigAwareProvider extends AbstractMavenActionsProvider {
+        /**
+         * The backing resource
+         */
+        private final URL resource;
+        
+        /**
+         * The target project.
+         */
+        private final Project project;
+        
+        /**
+         * Quick lookup for profiles.
+         */
+        private final Map<String, ActionToGoalMapping> profileMap = new HashMap<>();
+        
+        /**
+         * Project's config provider, lazy initialized to avoid Lookup calls inside
+         * constructor called from within beforeLookup.
+         */
+        private M2ConfigProvider cfg;
+        
+        ResourceConfigAwareProvider(Project prj, URL resource) {
+            this.resource = resource;
+            this.project = prj;
+        }
+        
+        private M2ConfigProvider cfg() {
+            if (this.cfg != null) {
+                return this.cfg;
+            }
+            return this.cfg = project.getLookup().lookup(M2ConfigProvider.class);
+        }
+        
+        @Override
+        public ActionToGoalMapping getRawMappings() {
+            ActionToGoalMapping  allMappings = super.getRawMappings();
+            String id = cfg().getActiveConfiguration().getId();
+            if (M2Configuration.DEFAULT.equals(id) || allMappings.getProfiles() == null || allMappings.getProfiles().isEmpty()) {
+                return allMappings;
+            }
+            synchronized (this) {
+                ActionToGoalMapping pm = profileMap.get(id);
+                if (pm != null) {
+                    return pm;
+                }
+                if (!profileMap.isEmpty()) {
+                    return allMappings;
+                }
+                
+                for (NetbeansActionProfile p : allMappings.getProfiles()) {
+                    Set<String> overridenIds = new HashSet<>();
+                    ActionToGoalMapping m = new ActionToGoalMapping();
+                    for (NetbeansActionMapping am : p.getActions()) {
+                        overridenIds.add(am.getActionName());
+                        m.addAction(am);
+                    }
+                    for (NetbeansActionMapping am : allMappings.getActions()) {
+                        if (!overridenIds.contains(am.getActionName())) {
+                            m.addAction(am);
+                        }
+                    }
+                    profileMap.put(p.getId(), m);
+                }
+                
+                pm = profileMap.get(id);
+                return pm == null ? allMappings : pm;
+            }
+        }
+
+        @Override
+        protected InputStream getActionDefinitionStream() {
+            try {
+                return resource.openStream();
+            } catch (IOException ex) {
+                throw new IllegalStateException(ex);
+            }
+        }
+
     }
 }

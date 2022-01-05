@@ -42,7 +42,7 @@ public class EscapeProcessingOutputStreamTest {
         }
 
         @Override
-        public void processText(String text) {
+        public void processText(String text, boolean forced) {
             output.append(text);
         }
 

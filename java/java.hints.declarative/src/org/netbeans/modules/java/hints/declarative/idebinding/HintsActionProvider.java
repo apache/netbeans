@@ -43,10 +43,12 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service=ActionProvider.class)
 public class HintsActionProvider implements ActionProvider {
 
+    @Override
     public String[] getSupportedActions() {
         return new String[]{ActionProvider.COMMAND_RUN_SINGLE};
     }
 
+    @Override
     public void invokeAction(String command, Lookup context) throws IllegalArgumentException {
         assert ActionProvider.COMMAND_RUN_SINGLE.equals(command);
         
@@ -60,15 +62,13 @@ public class HintsActionProvider implements ActionProvider {
         
         if (doc != null) {
             final String[] spec = new String[1];
-            doc.render(new Runnable() {
-                @Override public void run() {
-                    try {
-                        spec[0] = doc.getText(0, doc.getLength());
-                    } catch (BadLocationException ex) {
-                        //should not happen...
-                        Exceptions.printStackTrace(ex);
-                        spec[0] = "";
-                    }
+            doc.render(() -> {
+                try {
+                    spec[0] = doc.getText(0, doc.getLength());
+                } catch (BadLocationException ex) {
+                    //should not happen...
+                    Exceptions.printStackTrace(ex);
+                    spec[0] = "";
                 }
             });
             hints = DeclarativeHintRegistry.parseHints(hdo.getPrimaryFile(), spec[0]);
@@ -85,6 +85,7 @@ public class HintsActionProvider implements ActionProvider {
         InspectAndRefactorUI.openRefactoringUI(Lookups.singleton(new InspectAndRefactorUI.HintWrap(m, DeclarativeHintRegistry.join(hints))));
     }
 
+    @Override
     public boolean isActionEnabled(String command, Lookup context) throws IllegalArgumentException {
         assert ActionProvider.COMMAND_RUN_SINGLE.equals(command);
         return context.lookup(HintDataObject.class) != null;

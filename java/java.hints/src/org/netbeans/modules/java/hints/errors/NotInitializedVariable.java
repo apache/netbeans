@@ -31,16 +31,12 @@ import javax.lang.model.element.ElementKind;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import org.netbeans.api.java.source.CompilationInfo;
-import org.netbeans.api.java.source.JavaSource;
-import org.netbeans.api.java.source.JavaSource.Phase;
-import org.netbeans.api.java.source.Task;
 import org.netbeans.api.java.source.TreePathHandle;
 import org.netbeans.api.java.source.WorkingCopy;
 import org.netbeans.modules.java.hints.spi.ErrorRule;
 import org.netbeans.modules.java.hints.spi.ErrorRule.Data;
-import org.netbeans.spi.editor.hints.ChangeInfo;
 import org.netbeans.spi.editor.hints.Fix;
-import org.openide.filesystems.FileObject;
+import org.netbeans.spi.java.hints.JavaFix;
 import org.openide.util.NbBundle;
 
 
@@ -69,7 +65,7 @@ public class NotInitializedVariable implements ErrorRule<Void> {
             if (!canceled && e != null && e.getKind() == ElementKind.LOCAL_VARIABLE) {
                 TreePath declaration = t.getPath(e);
                 if (!canceled && declaration != null) {
-                    result.add(new NIVFix(compilationInfo.getFileObject(),e.getSimpleName().toString(),TreePathHandle.create(declaration, compilationInfo)));
+                    result.add(new NIVFix(e.getSimpleName().toString(),TreePathHandle.create(declaration, compilationInfo)).toEditorFix());
                 }
             }            
         }
@@ -89,68 +85,55 @@ public class NotInitializedVariable implements ErrorRule<Void> {
     }
     
     
-    private static class NIVFix implements Fix {
+    private static class NIVFix extends JavaFix {
         
-        private final FileObject file;
         private final String variableName;
-        private final TreePathHandle variable;
         
-        public NIVFix (final FileObject file, final String variableName, final TreePathHandle variable) {
-            assert file != null;
+        public NIVFix(final String variableName, final TreePathHandle variable) {
+            super(variable);
             assert variableName != null;
             assert variable != null;
-            this.file = file;
             this.variableName = variableName;
-            this.variable = variable;
         }
 
         public String getText() {
             return NbBundle.getMessage(NotInitializedVariable.class, "LBL_NotInitializedVariable_fix",variableName); //NOI18N
         }
 
-        public ChangeInfo implement() throws Exception {
-            final JavaSource js = JavaSource.forFileObject(this.file);
-            if (js != null) {
-                js.runModificationTask(new Task<WorkingCopy>() {
-                    public void run(final WorkingCopy wc) throws Exception {
-                         wc.toPhase(Phase.RESOLVED);
-                        TreePath tp = variable.resolve(wc);                        
-                        if (tp == null)
-                            return;                        
-                        VariableTree vt = (VariableTree) tp.getLeaf();
-                        ExpressionTree init = vt.getInitializer();
-                        if (init != null) {
-                            return;
-                        }
-                        Element decl = wc.getTrees().getElement(tp);
-                        if (decl == null) {
-                            return;
-                        }
-                        TypeMirror type = decl.asType();
-                        TypeKind kind = type.getKind();
-                        Object value;
-                        if (kind.isPrimitive()) {
-                            if (kind == TypeKind.BOOLEAN) {
-                                value = false;
-                            }
-                            else {
-                                value = 0;
-                            }
-                        }
-                        else {
-                            value = null;
-                        }
-                        ExpressionTree newInit = wc.getTreeMaker().Literal(value);
-                        VariableTree newVt = wc.getTreeMaker().Variable(
-                                vt.getModifiers(),
-                                vt.getName(),
-                                vt.getType(),
-                                newInit);
-                        wc.rewrite(vt, newVt);
-                    }
-                }).commit();
+        @Override
+        protected void performRewrite(TransformationContext ctx) throws Exception {
+            WorkingCopy wc = ctx.getWorkingCopy();
+            TreePath tp = ctx.getPath();
+            VariableTree vt = (VariableTree) tp.getLeaf();
+            ExpressionTree init = vt.getInitializer();
+            if (init != null) {
+                return;
             }
-            return null;
+            Element decl = wc.getTrees().getElement(tp);
+            if (decl == null) {
+                return;
+            }
+            TypeMirror type = decl.asType();
+            TypeKind kind = type.getKind();
+            Object value;
+            if (kind.isPrimitive()) {
+                if (kind == TypeKind.BOOLEAN) {
+                    value = false;
+                }
+                else {
+                    value = 0;
+                }
+            }
+            else {
+                value = null;
+            }
+            ExpressionTree newInit = wc.getTreeMaker().Literal(value);
+            VariableTree newVt = wc.getTreeMaker().Variable(
+                    vt.getModifiers(),
+                    vt.getName(),
+                    vt.getType(),
+                    newInit);
+            wc.rewrite(vt, newVt);
         }
         
     }

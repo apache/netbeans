@@ -149,7 +149,8 @@
                 <friend>org.netbeans.modules.csl.api</friend>
                 <friend>org.netbeans.modules.java.navigation</friend>
                 <friend>org.netbeans.modules.latex.ui</friend>
-                <friend> org.netbeans.modules.xml.text</friend>
+                <friend>org.netbeans.modules.lsp.client</friend>
+                <friend>org.netbeans.modules.xml.text</friend>
                 <package>org.netbeans.modules.editor.breadcrumbs.spi</package>
             </friend-packages>
         </data>

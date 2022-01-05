@@ -4,3 +4,4 @@ echo $c::staticReturnSelf()::|staticTestA() . PHP_EOL; // staticTestA (PHP7)
 METHOD     staticReturnSelf()              [STATIC]   A
 METHOD     staticReturnStatic()            [STATIC]   A
 METHOD     staticTestA()                   [STATIC]   A
+CONSTANT   class \A                        [PUBLIC]   Magic Constant

@@ -19,17 +19,27 @@
 
 package org.netbeans.modules.db.explorer;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.IOException;
+import java.lang.ref.Reference;
+import java.lang.ref.WeakReference;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.WeakHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.prefs.PreferenceChangeEvent;
+import java.util.prefs.PreferenceChangeListener;
+import java.util.prefs.Preferences;
 import org.netbeans.api.db.explorer.ConnectionListener;
 import org.netbeans.api.db.explorer.DatabaseException;
 import org.openide.util.Lookup;
 import org.openide.util.LookupEvent;
 import org.openide.util.LookupListener;
 import org.openide.util.NbBundle;
+import org.openide.util.NbPreferences;
+import org.openide.util.WeakListeners;
 import org.openide.util.lookup.Lookups;
 
 
@@ -45,19 +55,26 @@ import org.openide.util.lookup.Lookups;
  * @author Andrei Badea
  */
 public class ConnectionList {
+    private static final String PREF_PREFERRED_CONNECTION_NAME = "preferredConnection"; // NOI18N
 
     private static ConnectionList DEFAULT;
 
     private final List<ConnectionListener> listeners = new CopyOnWriteArrayList<ConnectionListener>();
 
-    private Lookup.Result<DatabaseConnection> result = getLookupResult();
+    private final Preferences dbPreferences;
 
+    private Lookup.Result<DatabaseConnection> result = getLookupResult();
+    
+    private Reference<DatabaseConnection> preferred = new WeakReference<>(null);
+    
     /**
      * Set of connections that the listeners were notified about. Stored not to
      * fire change events if the list has not been actually changed.
      */
     private WeakHashMap<DatabaseConnection, Boolean> lastKnownConnections =
             new WeakHashMap<DatabaseConnection, Boolean>();
+    
+    private boolean prefChanged;
 
     public static ConnectionList getDefault(boolean initialize) {
         if (initialize) {
@@ -82,6 +99,28 @@ public class ConnectionList {
 
         result.addLookupListener(new LookupListener() {
             public void resultChanged(LookupEvent e) {
+                fireListeners();
+            }
+        });
+        dbPreferences = NbPreferences.forModule(ConnectionList.class);
+        dbPreferences.addPreferenceChangeListener(new PreferenceChangeListener() {
+            @Override
+            public void preferenceChange(PreferenceChangeEvent evt) {
+                if (evt.getNode() == null || !evt.getNode().absolutePath().equals(dbPreferences.absolutePath())) {
+                    return;
+                }
+                if (!PREF_PREFERRED_CONNECTION_NAME.equals(evt.getKey())) {
+                    return;
+                }
+                DatabaseConnection c = getPreferredConnection(true);
+                synchronized (ConnectionList.this) {
+                    Reference<DatabaseConnection> ref = preferred;
+                    DatabaseConnection pref = ref.get();
+                    if (c == pref) {
+                        return;
+                    }
+                    prefChanged = true;
+                }
                 fireListeners();
             }
         });
@@ -129,6 +168,12 @@ public class ConnectionList {
         if (dbconn == null) {
             throw new NullPointerException();
         }
+        synchronized (this) {
+            DatabaseConnection pref = preferred.get();
+            if (pref == dbconn) {
+                preferred.clear();
+            }
+        }
         try {
             DatabaseConnectionConvertor.remove(dbconn);
         } catch (IOException e) {
@@ -152,9 +197,17 @@ public class ConnectionList {
     private void fireListeners() {
         boolean theSame;
         DatabaseConnection[] connections = getConnections();
+        DatabaseConnection publicPref = getPreferredConnection(true);
         synchronized (this) {
+            // verify that the connection list actually contains the preferred one, and clear the ref if not
+            Reference<DatabaseConnection> ref = preferred;
+            DatabaseConnection pref = ref.get();
+            if (pref != null && pref != publicPref) {
+                ref.clear();
+                prefChanged = true;
+            }
             if (connections.length == lastKnownConnections.size()) {
-                theSame = true;
+                theSame = prefChanged;
                 for (int i = 0; i < connections.length; i++) {
                     if (!lastKnownConnections.containsKey(connections[i])) {
                         theSame = false;
@@ -164,7 +217,7 @@ public class ConnectionList {
             } else {
                 theSame = false;
             }
-            if (theSame) {
+            if (!prefChanged && theSame) {
                 return;
             } else {
                 lastKnownConnections.clear();
@@ -172,6 +225,7 @@ public class ConnectionList {
                     lastKnownConnections.put(dc, Boolean.TRUE);
                 }
             }
+            prefChanged = false;
         }
         for (ConnectionListener listener : listeners) {
             listener.connectionsChanged();
@@ -181,4 +235,73 @@ public class ConnectionList {
     private synchronized Lookup.Result<DatabaseConnection> getLookupResult() {
         return Lookups.forPath(DatabaseConnectionConvertor.CONNECTIONS_PATH).lookupResult(DatabaseConnection.class);
     }
+    
+    private class PreferredRef extends WeakReference<DatabaseConnection> implements PropertyChangeListener {
+        private final PropertyChangeListener l;
+        
+        public PreferredRef(DatabaseConnection referent) {
+            super(referent);
+            referent.addPropertyChangeListener(l = WeakListeners.propertyChange(this, referent));
+        }
+
+        @Override
+        public void propertyChange(PropertyChangeEvent evt) {
+            DatabaseConnection c = get();
+            if (c != null && DatabaseConnection.PROP_NAME.equals(evt)) {
+                dbPreferences.put(PREF_PREFERRED_CONNECTION_NAME, c.getName());
+            }
+        }
+
+        @Override
+        public void clear() {
+            DatabaseConnection c = get();
+            super.clear(); 
+            if (c != null) {
+                c.removePropertyChangeListener(l);
+            }
+        }
+    }
+    
+    public void setPreferredConnection(DatabaseConnection c) {
+        if (!contains(c)) {
+            throw new IllegalArgumentException();
+        }
+        synchronized (this) {
+            Reference<DatabaseConnection> ref = preferred;
+            if (ref.get() == c) {
+                return;
+            }
+            ref.clear();
+            preferred = new PreferredRef(c);
+        }
+        dbPreferences.put(PREF_PREFERRED_CONNECTION_NAME, c.getName());
+        fireListeners();
+    }
+    
+    public DatabaseConnection getPreferredConnection(boolean selectFirst) {
+        DatabaseConnection p = preferred.get();
+        if (p != null) {
+            return p;
+        }
+        String prefName = dbPreferences.get(PREF_PREFERRED_CONNECTION_NAME, null);
+        DatabaseConnection[] conns = getConnections();
+        if (prefName == null) {
+            return conns.length == 0 || !selectFirst ? null : conns[0];
+        }
+        for (int i = 0; i < conns.length; i++) {
+            DatabaseConnection c = conns[i];
+            if (prefName.equals(c.getName())) {
+                synchronized (this) {
+                    p = preferred.get();
+                    if (p == null) {
+                        preferred = new PreferredRef(c);
+                        p = c;
+                    }
+                    return p;
+                }
+            }
+        }
+        return null;
+    }
+
 }

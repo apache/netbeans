@@ -129,7 +129,7 @@ public final class ImportHelper {
 
                 @Override
                 public void run() {
-                    addImportStatements(fo, singleCandidates);
+                    addImportStatements(fo, singleCandidates).apply();
                 }
             }, "Adding imports", cancel, false);
         }
@@ -192,7 +192,7 @@ public final class ImportHelper {
 
     private static Set<ImportCandidate> findJavaImportCandidates(FileObject fo, String packageName, String missingClass) {
         final Set<ImportCandidate> candidates = new HashSet<>();
-        final ClasspathInfo pathInfo = createClasspathInfo(fo);
+        final ClasspathInfo pathInfo = ClasspathInfo.create(fo);
 
         Set<ElementHandle<TypeElement>> typeNames = pathInfo.getClassIndex().getDeclaredTypes(
                 missingClass, NameKind.SIMPLE_NAME, EnumSet.allOf(ClassIndex.SearchScope.class));
@@ -216,24 +216,6 @@ public final class ImportHelper {
             }
         }
         return candidates;
-    }
-
-    @NonNull
-    private static ClasspathInfo createClasspathInfo(FileObject fo) {
-        ClassPath bootPath = ClassPath.getClassPath(fo, ClassPath.BOOT);
-        ClassPath compilePath = ClassPath.getClassPath(fo, ClassPath.COMPILE);
-        ClassPath srcPath = ClassPath.getClassPath(fo, ClassPath.SOURCE);
-
-        if (bootPath == null) {
-            bootPath = ClassPath.EMPTY;
-        }
-        if (compilePath == null) {
-            compilePath = ClassPath.EMPTY;
-        }
-        if (srcPath == null) {
-            srcPath = ClassPath.EMPTY;
-        }
-        return ClasspathInfo.create(bootPath, compilePath, srcPath);
     }
 
     private static ImportCandidate createImportCandidate(String missingClass, String fqnName, ElementKind kind) {
@@ -266,19 +248,17 @@ public final class ImportHelper {
      */
     public static String getMissingClassName(String errorMessage) {
         String errorPrefix = "unable to resolve class "; // NOI18N
-        String missingClass = null;
-
-        if (errorMessage.startsWith(errorPrefix)) {
-
-            missingClass = errorMessage.substring(errorPrefix.length());
-            int idx = missingClass.indexOf(" ");
-
-            if (idx != -1) {
-                return missingClass.substring(0, idx);
-            }
+        if (!errorMessage.startsWith(errorPrefix)) {
+            return null;
         }
 
-        return missingClass;
+        String missingClass = errorMessage.substring(errorPrefix.length());
+        int idx = missingClass.indexOf(" ");
+        if (idx != -1) {
+            missingClass = missingClass.substring(0, idx);
+        }
+
+        return missingClass.trim();
     }
 
     private static List<String> showFixImportChooser(Map<String, Set<ImportCandidate>> multipleCandidates) {
@@ -309,48 +289,60 @@ public final class ImportHelper {
      * @param fqName fully qualified name of the import
      */
     public static void addImportStatement(FileObject fo, String fqName) {
-        addImportStatements(fo, Collections.singletonList(fqName));
+        addImportStatements(fo, Collections.singletonList(fqName)).apply();
     }
 
-    private static void addImportStatements(FileObject fo, List<String> fqNames) {
+    /**
+     * Returns edits for adding import to the source code (does not run any checks if the import
+     * has more candidates from different packages etc.). Typically used by "Add import
+     * hint" where we already know what to add.
+     *
+     * @param fo file where we want to put import statement
+     * @param fqName fully qualified name of the import
+     * @return list of edits to be made
+     */
+    public static EditList addImportStatementEdits(FileObject fo, String fqName) {
+        return addImportStatements(fo, Collections.singletonList(fqName));
+    }
+
+    private static EditList addImportStatements(FileObject fo, List<String> fqNames) {
         BaseDocument doc = LexUtilities.getDocument(fo, true);
-        if (doc == null) {
-            return;
-        }
+        EditList edits = new EditList(doc);
+        if (doc != null) {
+            for (String fqName : fqNames) {
+                try {
+                    int packageLine = getPackageLineIndex(doc);
+                    int afterPackageLine = packageLine + 1;
+                    int afterPackageOffset = Utilities.getRowStartFromLineOffset(doc, afterPackageLine);
+                    int importLine = getAppropriateLine(doc, fqName);
+                    if (importLine >= 0) {
+                        // If the line after the package statement isn't empty, put one empty line there
+                        if (!Utilities.isRowWhite(doc, afterPackageOffset)) {
+                            edits.replace(afterPackageOffset, 0, "\n", false, 0);
+                        } else {
+                            if (collectImports(doc).isEmpty()) {
+                                importLine++;
+                            }
+                        }
 
-        for (String fqName : fqNames) {
-            EditList edits = new EditList(doc);
-            try {
-                int packageLine = getPackageLineIndex(doc);
-                int afterPackageLine = packageLine + 1;
-                int afterPackageOffset = Utilities.getRowStartFromLineOffset(doc, afterPackageLine);
-                int importLine = getAppropriateLine(doc, fqName);
-                
-                // If the line after the package statement isn't empty, put one empty line there
-                if (!Utilities.isRowWhite(doc, afterPackageOffset)) {
-                    edits.replace(afterPackageOffset, 0, "\n", false, 0);
-                } else {
-                    if (collectImports(doc).isEmpty()) {
-                        importLine++;
+                        // Find appropriate place to import and put it there
+                        int importOffset = Utilities.getRowStartFromLineOffset(doc, importLine);
+                        edits.replace(importOffset, 0, "import " + fqName + "\n", false, 0);
+
+                        // If it's the last import and if the line after the last import
+                        // statement isn't empty, put one empty line there
+                        int afterImportsOffset = Utilities.getRowStartFromLineOffset(doc, importLine);
+
+                        if (!Utilities.isRowWhite(doc, afterImportsOffset) && isLastImport(doc, fqName)) {
+                            edits.replace(afterImportsOffset, 0, "\n", false, 0);
+                        }
                     }
+                } catch (BadLocationException ex) {
+                    Exceptions.printStackTrace(ex);
                 }
-
-                // Find appropriate place to import and put it there
-                int importOffset = Utilities.getRowStartFromLineOffset(doc, importLine);
-                edits.replace(importOffset, 0, "import " + fqName + "\n", false, 0);
-
-                // If it's the last import and if the line after the last import
-                // statement isn't empty, put one empty line there
-                int afterImportsOffset = Utilities.getRowStartFromLineOffset(doc, importLine);
-                
-                if (!Utilities.isRowWhite(doc, afterImportsOffset) && isLastImport(doc, fqName)) {
-                    edits.replace(afterImportsOffset, 0, "\n", false, 0);
-                }
-            } catch (BadLocationException ex) {
-                Exceptions.printStackTrace(ex);
             }
-            edits.apply();
         }
+        return edits;
     }
 
     private static int getAppropriateLine(BaseDocument doc, String fqName) throws BadLocationException {
@@ -358,6 +350,11 @@ public final class ImportHelper {
         if (imports.isEmpty()) {
             // No imports in the source code yet, put the first one two lines behind package statement
             return getPackageLineIndex(doc) + 1;
+        }
+
+        if (imports.containsKey(fqName)) {
+            // Already imported
+            return -1;
         }
 
         imports.put(fqName, -1);

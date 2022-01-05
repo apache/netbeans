@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.3
+#Version 2.9
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -272,8 +272,6 @@ meth public void transferFocusUpCycle()
 meth public void update(java.awt.Graphics)
 meth public void validate()
 supr java.lang.Object
-hfds FOCUS_TRAVERSABLE_DEFAULT,FOCUS_TRAVERSABLE_SET,FOCUS_TRAVERSABLE_UNKNOWN,LOCK,acc,actionListenerK,adjustmentListenerK,appContext,autoFocusTransferOnDisposal,background,backgroundEraseDisabled,boundsOp,bufferStrategy,changeSupport,coalesceEventsParams,coalesceMap,coalescingEnabled,componentListener,componentListenerK,componentOrientation,componentSerializedDataVersion,compoundShape,containerListenerK,cursor,dropTarget,enabled,eventCache,eventLog,eventMask,focusListener,focusListenerK,focusLog,focusTraversalKeyPropertyNames,focusTraversalKeys,focusTraversalKeysEnabled,focusable,font,foreground,graphicsConfig,height,hierarchyBoundsListener,hierarchyBoundsListenerK,hierarchyListener,hierarchyListenerK,ignoreRepaint,incRate,inputMethodListener,inputMethodListenerK,isAddNotifyComplete,isFocusTraversableOverridden,isInc,isPacked,itemListenerK,keyListener,keyListenerK,locale,log,maxSize,maxSizeSet,minSize,minSizeSet,mixingCutoutRegion,mixingLog,mouseListener,mouseListenerK,mouseMotionListener,mouseMotionListenerK,mouseWheelListener,mouseWheelListenerK,name,nameExplicitlySet,newEventsOnly,objectLock,ownedWindowK,parent,peer,peerFont,popups,prefSize,prefSizeSet,requestFocusController,serialVersionUID,textListenerK,valid,visible,width,windowClosingException,windowFocusListenerK,windowListenerK,windowStateListenerK,x,y
-hcls AWTTreeLock,BltSubRegionBufferStrategy,DummyRequestFocusController,FlipSubRegionBufferStrategy,ProxyCapabilities,SingleBufferStrategy
 
 CLSS public java.awt.Container
 cons public init()
@@ -358,8 +356,6 @@ meth public void transferFocusDownCycle()
 meth public void update(java.awt.Graphics)
 meth public void validate()
 supr java.awt.Component
-hfds EMPTY_ARRAY,INCLUDE_SELF,SEARCH_HEAVYWEIGHTS,component,containerListener,containerSerializedDataVersion,descendUnconditionallyWhenValidating,descendantsCount,dispatcher,eventLog,focusCycleRoot,focusTraversalPolicy,focusTraversalPolicyProvider,isJavaAwtSmartInvalidate,layoutMgr,listeningBoundsChildren,listeningChildren,log,mixingLog,modalAppContext,modalComp,numOfHWComponents,numOfLWComponents,preserveBackgroundColor,printing,printingThreads,serialPersistentFields,serialVersionUID
-hcls DropTargetEventTargetFilter,EventTargetFilter,MouseEventTargetFilter,WakingRunnable
 
 CLSS public abstract interface java.awt.ItemSelectable
 meth public abstract java.lang.Object[] getSelectedObjects()
@@ -406,7 +402,6 @@ meth public void setPreferred(boolean)
 meth public void setShortDescription(java.lang.String)
 meth public void setValue(java.lang.String,java.lang.Object)
 supr java.lang.Object
-hfds TRANSIENT,classRef,displayName,expert,hidden,name,preferred,shortDescription,table
 
 CLSS public abstract interface java.io.Externalizable
 intf java.io.Serializable
@@ -419,6 +414,12 @@ CLSS public abstract interface java.lang.Cloneable
 
 CLSS public abstract interface java.lang.Comparable<%0 extends java.lang.Object>
 meth public abstract int compareTo({java.lang.Comparable%0})
+
+CLSS public abstract interface !annotation java.lang.Deprecated
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[CONSTRUCTOR, FIELD, LOCAL_VARIABLE, METHOD, PACKAGE, PARAMETER, TYPE])
+intf java.lang.annotation.Annotation
 
 CLSS public abstract java.lang.Enum<%0 extends java.lang.Enum<{java.lang.Enum%0}>>
 cons protected init(java.lang.String,int)
@@ -435,7 +436,6 @@ meth public final java.lang.String name()
 meth public java.lang.String toString()
 meth public static <%0 extends java.lang.Enum<{%%0}>> {%%0} valueOf(java.lang.Class<{%%0}>,java.lang.String)
 supr java.lang.Object
-hfds name,ordinal
 
 CLSS public java.lang.Exception
 cons protected init(java.lang.String,java.lang.Throwable,boolean,boolean)
@@ -444,7 +444,6 @@ cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.Throwable)
 cons public init(java.lang.Throwable)
 supr java.lang.Throwable
-hfds serialVersionUID
 
 CLSS public abstract interface !annotation java.lang.FunctionalInterface
  anno 0 java.lang.annotation.Documented()
@@ -535,8 +534,6 @@ meth public void setContextClassLoader(java.lang.ClassLoader)
 meth public void setUncaughtExceptionHandler(java.lang.Thread$UncaughtExceptionHandler)
 meth public void start()
 supr java.lang.Object
-hfds EMPTY_STACK_TRACE,SUBCLASS_IMPLEMENTATION_PERMISSION,blocker,blockerLock,contextClassLoader,daemon,defaultUncaughtExceptionHandler,eetop,group,inheritableThreadLocals,inheritedAccessControlContext,name,nativeParkEventPointer,parkBlocker,priority,single_step,stackSize,stillborn,target,threadInitNumber,threadLocalRandomProbe,threadLocalRandomSecondarySeed,threadLocalRandomSeed,threadLocals,threadQ,threadSeqNumber,threadStatus,tid,uncaughtExceptionHandler
-hcls Caches,WeakClassKey
 
 CLSS public java.lang.Throwable
 cons protected init(java.lang.String,java.lang.Throwable,boolean,boolean)
@@ -559,8 +556,6 @@ meth public void printStackTrace(java.io.PrintStream)
 meth public void printStackTrace(java.io.PrintWriter)
 meth public void setStackTrace(java.lang.StackTraceElement[])
 supr java.lang.Object
-hfds CAUSE_CAPTION,EMPTY_THROWABLE_ARRAY,NULL_CAUSE_MESSAGE,SELF_SUPPRESSION_MESSAGE,SUPPRESSED_CAPTION,SUPPRESSED_SENTINEL,UNASSIGNED_STACK,backtrace,cause,detailMessage,serialVersionUID,stackTrace,suppressedExceptions
-hcls PrintStreamOrWriter,SentinelHolder,WrappedPrintStream,WrappedPrintWriter
 
 CLSS public abstract interface java.lang.annotation.Annotation
 meth public abstract boolean equals(java.lang.Object)
@@ -605,7 +600,6 @@ meth public static java.net.PasswordAuthentication requestPasswordAuthentication
 meth public static java.net.PasswordAuthentication requestPasswordAuthentication(java.net.InetAddress,int,java.lang.String,java.lang.String,java.lang.String)
 meth public static void setDefault(java.net.Authenticator)
 supr java.lang.Object
-hfds requestingAuthType,requestingHost,requestingPort,requestingPrompt,requestingProtocol,requestingScheme,requestingSite,requestingURL,theAuthenticator
 
 CLSS public abstract interface java.util.Comparator<%0 extends java.lang.Object>
  anno 0 java.lang.FunctionalInterface()
@@ -685,7 +679,6 @@ meth public void putValue(java.lang.String,java.lang.Object)
 meth public void removePropertyChangeListener(java.beans.PropertyChangeListener)
 meth public void setEnabled(boolean)
 supr java.lang.Object
-hfds RECONFIGURE_ON_NULL,arrayTable
 
 CLSS public abstract interface javax.swing.Action
 fld public final static java.lang.String ACCELERATOR_KEY = "AcceleratorKey"
@@ -799,8 +792,6 @@ meth public void updateUI()
 meth public {javax.swing.JComboBox%0} getItemAt(int)
 meth public {javax.swing.JComboBox%0} getPrototypeDisplayValue()
 supr javax.swing.JComponent
-hfds action,actionPropertyChangeListener,firingActionEvent,prototypeDisplayValue,selectingItem,uiClassID
-hcls ComboBoxActionPropertyChangeListener,DefaultKeySelectionManager
 
 CLSS public abstract javax.swing.JComponent
 cons public init()
@@ -958,8 +949,6 @@ meth public void unregisterKeyboardAction(javax.swing.KeyStroke)
 meth public void update(java.awt.Graphics)
 meth public void updateUI()
 supr java.awt.Container
-hfds ACTIONMAP_CREATED,ANCESTOR_INPUTMAP_CREATED,ANCESTOR_USING_BUFFER,AUTOSCROLLS_SET,COMPLETELY_OBSCURED,CREATED_DOUBLE_BUFFER,DEBUG_GRAPHICS_LOADED,FOCUS_INPUTMAP_CREATED,FOCUS_TRAVERSAL_KEYS_BACKWARD_SET,FOCUS_TRAVERSAL_KEYS_FORWARD_SET,INHERITS_POPUP_MENU,INPUT_VERIFIER_SOURCE_KEY,IS_DOUBLE_BUFFERED,IS_OPAQUE,IS_PAINTING_TILE,IS_PRINTING,IS_PRINTING_ALL,IS_REPAINTING,KEYBOARD_BINDINGS_KEY,KEY_EVENTS_ENABLED,NEXT_FOCUS,NOT_OBSCURED,OPAQUE_SET,PARTIALLY_OBSCURED,REQUEST_FOCUS_DISABLED,RESERVED_1,RESERVED_2,RESERVED_3,RESERVED_4,RESERVED_5,RESERVED_6,WHEN_IN_FOCUSED_WINDOW_BINDINGS,WIF_INPUTMAP_CREATED,WRITE_OBJ_COUNTER_FIRST,WRITE_OBJ_COUNTER_LAST,aaTextInfo,actionMap,alignmentX,alignmentY,ancestorInputMap,autoscrolls,border,clientProperties,componentObtainingGraphicsFrom,componentObtainingGraphicsFromLock,defaultLocale,flags,focusController,focusInputMap,inputVerifier,isAlignmentXSet,isAlignmentYSet,managingFocusBackwardTraversalKeys,managingFocusForwardTraversalKeys,paintingChild,popupMenu,readObjectCallbacks,revalidateRunnableScheduled,tempRectangles,uiClassID,verifyInputWhenFocusTarget,vetoableChangeSupport,windowInputMap
-hcls ActionStandin,IntVector,KeyboardState,ReadObjectCallback
 
 CLSS public javax.swing.JPanel
 cons public init()
@@ -975,7 +964,6 @@ meth public javax.swing.plaf.PanelUI getUI()
 meth public void setUI(javax.swing.plaf.PanelUI)
 meth public void updateUI()
 supr javax.swing.JComponent
-hfds uiClassID
 
 CLSS public javax.swing.JTabbedPane
 cons public init()
@@ -1058,8 +1046,6 @@ meth public void setToolTipTextAt(int,java.lang.String)
 meth public void setUI(javax.swing.plaf.TabbedPaneUI)
 meth public void updateUI()
 supr javax.swing.JComponent
-hfds haveRegistered,pages,tabLayoutPolicy,uiClassID,visComp
-hcls Page
 
 CLSS public abstract interface javax.swing.SwingConstants
 fld public final static int BOTTOM = 3
@@ -1294,6 +1280,7 @@ intf org.openide.util.Lookup$Provider
 intf org.openide.util.LookupListener
 meth public boolean equals(java.lang.Object)
 meth public boolean isHotDeployEnabled()
+meth public boolean isHotDeployFeatureAvailable()
 meth public boolean isProcessRunning()
 meth public boolean isRemote()
 meth public boolean isRemovable()
@@ -1340,7 +1327,9 @@ meth public org.netbeans.modules.payara.common.PayaraInstanceProvider getInstanc
 meth public org.netbeans.modules.payara.common.PayaraJvmMode getJvmMode()
 meth public org.netbeans.modules.payara.common.parser.DomainXMLChangeListener getDomainXMLChangeListener()
 meth public org.netbeans.modules.payara.tooling.data.PayaraAdminInterface getAdminInterface()
+meth public org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI getPlatformVersion()
 meth public org.netbeans.modules.payara.tooling.data.PayaraVersion getVersion()
+ anno 0 java.lang.Deprecated()
 meth public org.openide.nodes.Node getBasicNode()
 meth public org.openide.nodes.Node getFullNode()
 meth public org.openide.util.Lookup getLookup()
@@ -1365,7 +1354,7 @@ meth public void setJavaHome(java.lang.String)
 meth public void setProcess(java.lang.Process)
 meth public void setProperties(org.netbeans.modules.payara.common.PayaraInstance$Props)
 supr java.lang.Object
-hfds INSTANCE_FO_ATTR,KEYRING_IDENT_SEPARATOR,KEYRING_NAME_SEPARATOR,KEYRING_NAME_SPACE,LOGGER,LOWEST_USER_PORT,commonInstance,commonSupport,currentFactories,domainXMLListener,full,fullNode,ic,instanceProvider,localLookup,lookupResult,process,properties,removable,version
+hfds INSTANCE_FO_ATTR,KEYRING_IDENT_SEPARATOR,KEYRING_NAME_SEPARATOR,KEYRING_NAME_SPACE,LOGGER,LOWEST_USER_PORT,commonInstance,commonSupport,currentFactories,domainXMLListener,full,fullNode,ic,instanceProvider,localLookup,lookupResult,platformVersion,process,properties,removable,version
 
 CLSS public org.netbeans.modules.payara.common.PayaraInstance$Props
  outer org.netbeans.modules.payara.common.PayaraInstance
@@ -1433,6 +1422,13 @@ cons public init()
 meth public static java.util.logging.Logger get(java.lang.Class)
 supr java.lang.Object
 
+CLSS public org.netbeans.modules.payara.common.PayaraPlatformDetails
+cons public init()
+meth public static boolean isInstalledInDirectory(org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI,java.io.File)
+meth public static java.util.Optional<org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI> getVersionFromInstallDirectory(java.io.File)
+meth public static org.openide.WizardDescriptor$InstantiatingIterator getInstantiatingIterator()
+supr java.lang.Object
+
 CLSS public org.netbeans.modules.payara.common.PayaraSettings
 cons public init()
 meth public static boolean getGf312WarningShowAgain()
@@ -1483,13 +1479,6 @@ meth public java.lang.String getLocalizedMessage()
 supr java.lang.Exception
 hfds args,messageName
 
-CLSS public org.netbeans.modules.payara.common.RegisteredDerbyServerImpl
-cons public init()
-intf org.netbeans.modules.payara.spi.RegisteredDerbyServer
-meth public void initialize(java.lang.String)
-meth public void start()
-supr java.lang.Object
-
 CLSS public org.netbeans.modules.payara.common.RestartTask
 cons public !varargs init(org.netbeans.modules.payara.common.CommonServerSupport,org.netbeans.modules.payara.tooling.TaskStateListener[])
 meth public org.netbeans.modules.payara.tooling.TaskState call()
@@ -1498,6 +1487,7 @@ supr org.netbeans.modules.payara.common.BasicTask<org.netbeans.modules.payara.to
 hfds LOGGER,RESTART_DELAY,support
 
 CLSS public final !enum org.netbeans.modules.payara.common.ServerDetails
+ anno 0 java.lang.Deprecated()
 fld public final static org.netbeans.modules.payara.common.ServerDetails PAYARA_SERVER_4_1_144
 fld public final static org.netbeans.modules.payara.common.ServerDetails PAYARA_SERVER_4_1_151
 fld public final static org.netbeans.modules.payara.common.ServerDetails PAYARA_SERVER_4_1_152
@@ -1522,15 +1512,26 @@ fld public final static org.netbeans.modules.payara.common.ServerDetails PAYARA_
 fld public final static org.netbeans.modules.payara.common.ServerDetails PAYARA_SERVER_5_194
 fld public final static org.netbeans.modules.payara.common.ServerDetails PAYARA_SERVER_5_201
 fld public final static org.netbeans.modules.payara.common.ServerDetails PAYARA_SERVER_5_202
+intf org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI
+meth public boolean equals(org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI)
+meth public boolean equalsMajorMinor(org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI)
 meth public boolean isDownloadable()
+meth public boolean isEE7Supported()
+meth public boolean isEE8Supported()
 meth public boolean isInstalledInDirectory(java.io.File)
+meth public boolean isMinimumSupportedVersion()
 meth public int getVersionInt()
 meth public java.lang.String getDirectUrl()
 meth public java.lang.String getIndirectUrl()
 meth public java.lang.String getLicenseUrl()
 meth public java.lang.String getUriFragment()
+meth public java.lang.String toFullString()
 meth public java.lang.String toString()
 meth public org.netbeans.modules.payara.tooling.data.PayaraVersion getVersion()
+meth public short getBuild()
+meth public short getMajor()
+meth public short getMinor()
+meth public short getUpdate()
 meth public static int getVersionFromDomainXml(java.io.File)
  anno 0 java.lang.Deprecated()
 meth public static int getVersionFromInstallDirectory(java.io.File)
@@ -1745,7 +1746,6 @@ fld protected boolean jdbcDriverDeploymentFlag
 fld protected boolean loopbackFlag
 fld protected boolean preserverSessionsFlag
 fld protected boolean showPasswordFlag
-fld protected boolean startDerbyFlag
 fld protected final org.netbeans.modules.payara.common.PayaraInstance instance
 fld protected java.util.Set<? extends java.net.InetAddress> ips
 fld protected javax.swing.JCheckBox commetSupport
@@ -1754,7 +1754,6 @@ fld protected javax.swing.JCheckBox httpMonitor
 fld protected javax.swing.JCheckBox jdbcDriverDeployment
 fld protected javax.swing.JCheckBox localIpCB
 fld protected javax.swing.JCheckBox preserveSessions
-fld protected javax.swing.JCheckBox startDerby
 fld protected javax.swing.JComboBox hostLocalField
 fld protected javax.swing.JLabel dasPortLabel
 fld protected javax.swing.JLabel domainLabel
@@ -1809,11 +1808,10 @@ meth protected boolean getHttpMonitorProperty()
 meth protected boolean getJdbcDriverDeploymentProperty()
 meth protected boolean getLoopbackProperty()
 meth protected boolean getPreserveSessionsProperty()
-meth protected boolean getStartDerbyProperty()
-meth protected void store(boolean,boolean,boolean,boolean,boolean,boolean,boolean,org.netbeans.modules.payara.common.PayaraInstance)
+meth protected void store(boolean,boolean,boolean,boolean,boolean,boolean,org.netbeans.modules.payara.common.PayaraInstance)
 meth protected void storeBooleanProperty(java.lang.String,boolean,org.netbeans.modules.payara.common.PayaraInstance)
 supr java.lang.Object
-hfds cometSupportProperty,hotDeployProperty,httpMonitorProperty,jdbcDriverDeploymentProperty,loopbackProperty,preserveSessionsProperty,startDerbyProperty
+hfds cometSupportProperty,hotDeployProperty,httpMonitorProperty,jdbcDriverDeploymentProperty,loopbackProperty,preserveSessionsProperty
 
 CLSS public org.netbeans.modules.payara.common.ui.InstanceRemotePanel
 cons public init(org.netbeans.modules.payara.common.PayaraInstance)
@@ -2123,7 +2121,6 @@ fld public final static java.lang.String PASSWORD_CONVERTED_FLAG = "this really 
 fld public final static java.lang.String PAYARA_FOLDER_ATTR = "homefolder"
 fld public final static java.lang.String PROFILE_MODE
 fld public final static java.lang.String SESSION_PRESERVATION_FLAG = "preserveSessionsOn"
-fld public final static java.lang.String START_DERBY_FLAG = "derbyStartOn"
 fld public final static java.lang.String TARGET_ATTR = "target"
 fld public final static java.lang.String URL_ATTR = "url"
 fld public final static java.lang.String USERNAME_ATTR = "username"
@@ -2197,22 +2194,9 @@ meth public abstract org.openide.windows.OutputListener processLine(java.lang.St
 CLSS public abstract interface org.netbeans.modules.payara.spi.RecognizerCookie
 meth public abstract java.util.Collection<? extends org.netbeans.modules.payara.spi.Recognizer> getRecognizers()
 
-CLSS public org.netbeans.modules.payara.spi.RegisterDatabase
-cons public init()
-meth public static org.netbeans.modules.payara.spi.RegisterDatabase getDefault()
-meth public void configureDatabase()
-meth public void setupDerby(java.lang.String)
-supr java.lang.Object
-hfds reg
-hcls DerbyLibraryRegistrar
-
 CLSS public abstract interface org.netbeans.modules.payara.spi.RegisteredDDCatalog
 meth public abstract void refreshRunTimeDDCatalog(org.netbeans.spi.server.ServerInstanceProvider,java.lang.String)
 meth public abstract void registerRunTimeDDCatalog(org.netbeans.spi.server.ServerInstanceProvider)
-
-CLSS public abstract interface org.netbeans.modules.payara.spi.RegisteredDerbyServer
-meth public abstract void initialize(java.lang.String)
-meth public abstract void start()
 
 CLSS public abstract interface org.netbeans.modules.payara.spi.RemoveCookie
 meth public abstract void removeInstance(java.lang.String)
@@ -2298,6 +2282,24 @@ meth public abstract void error(org.netbeans.modules.payara.tooling.data.PayaraS
 meth public abstract void newState(org.netbeans.modules.payara.tooling.data.PayaraServer,org.netbeans.modules.payara.tooling.PayaraStatus,org.netbeans.modules.payara.tooling.data.PayaraStatusTask)
 meth public abstract void removed()
 
+CLSS public abstract interface org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI
+fld public final static char SEPARATOR = '.'
+fld public final static java.lang.String SEPARATOR_PATTERN = "\u005c."
+meth public abstract boolean equals(org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI)
+meth public abstract boolean equalsMajorMinor(org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI)
+meth public abstract boolean isEE7Supported()
+meth public abstract boolean isEE8Supported()
+meth public abstract boolean isMinimumSupportedVersion()
+meth public abstract java.lang.String getDirectUrl()
+meth public abstract java.lang.String getIndirectUrl()
+meth public abstract java.lang.String getLicenseUrl()
+meth public abstract java.lang.String getUriFragment()
+meth public abstract java.lang.String toFullString()
+meth public abstract short getBuild()
+meth public abstract short getMajor()
+meth public abstract short getMinor()
+meth public abstract short getUpdate()
+
 CLSS public abstract interface org.netbeans.modules.payara.tooling.data.PayaraServer
 meth public abstract boolean isRemote()
 meth public abstract int getAdminPort()
@@ -2312,7 +2314,9 @@ meth public abstract java.lang.String getServerHome()
 meth public abstract java.lang.String getServerRoot()
 meth public abstract java.lang.String getUrl()
 meth public abstract org.netbeans.modules.payara.tooling.data.PayaraAdminInterface getAdminInterface()
+meth public abstract org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI getPlatformVersion()
 meth public abstract org.netbeans.modules.payara.tooling.data.PayaraVersion getVersion()
+ anno 0 java.lang.Deprecated()
 
 CLSS public abstract interface org.netbeans.spi.server.ServerInstanceImplementation
 meth public abstract boolean isRemovable()

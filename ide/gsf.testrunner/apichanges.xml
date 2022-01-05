@@ -52,6 +52,31 @@
 <!-- ACTUAL CHANGES BEGIN HERE: -->
 
 <changes>
+    <change id="TestSession_finishSuite">
+        <api name="CommonTestrunnerAPI"/>
+        <summary>TestSession.finishSuite method added</summary>
+        <version major="2" minor="26"/>
+        <date day="8" month="10" year="2021"/>
+        <author login="dbalek"/>
+        <compatibility addition="yes"/>
+        <description>
+            TestSession.finishSuite() method added.
+        </description>
+        <class package="org.netbeans.modules.gsf.testrunner.api" name="TestSession"/>
+    </change>
+    <change id="CommonTestrunnerAPI_Public">
+        <api name="CommonTestrunnerAPI"/>
+        <summary>Common Test Runner API made public</summary>
+        <version major="2" minor="22"/>
+        <date day="19" month="2" year="2021"/>
+        <author login="dbalek"/>
+        <compatibility addition="yes"/>
+        <description>
+            Common Test Runner API made public instead of long list of friend modules.
+        </description>
+        <package name="org.netbeans.modules.gsf.testrunner.api"/>
+        <package name="org.netbeans.modules.gsf.testrunner.plugin"/>
+    </change>
     <change id="TestCreatorProvider_Registration_Identifier">
         <api name="CommonTestrunnerAPI"/>
         <summary>Added identifier attribute in TestCreatorProvider @Registration</summary>

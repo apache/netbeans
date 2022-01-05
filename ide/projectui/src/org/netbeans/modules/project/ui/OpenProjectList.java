@@ -43,6 +43,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
@@ -59,7 +60,6 @@ import javax.swing.Icon;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectInformation;
@@ -72,6 +72,8 @@ import static org.netbeans.modules.project.ui.Bundle.*;
 import org.netbeans.modules.project.ui.api.UnloadedProjectInformation;
 import org.netbeans.modules.project.ui.groups.Group;
 import org.netbeans.modules.project.uiapi.ProjectOpenedTrampoline;
+import org.netbeans.spi.project.ActionProgress;
+import org.netbeans.spi.project.ActionProvider;
 import org.netbeans.spi.project.ProjectContainerProvider;
 import org.netbeans.spi.project.SubprojectProvider;
 import org.netbeans.spi.project.ui.PrivilegedTemplates;
@@ -103,6 +105,8 @@ import org.openide.util.Parameters;
 import org.openide.util.RequestProcessor;
 import org.openide.util.Utilities;
 import org.openide.util.WeakListeners;
+import org.openide.util.lookup.Lookups;
+import org.openide.util.lookup.ProxyLookup;
 import org.openide.windows.WindowManager;
 
 /**
@@ -212,7 +216,7 @@ public final class OpenProjectList {
     }
     
     public static void waitProjectsFullyOpen() {
-        getDefault().LOAD.waitFinished();
+        getDefault().LOAD.waitFinished(0);
     }
 
     static void preferredProject(final Project lazyP) {
@@ -337,17 +341,28 @@ public final class OpenProjectList {
             action = a;
             currentFiles = Utilities.actionsGlobalContext().lookupResult(FileObject.class);
             currentFiles.addLookupListener(WeakListeners.create(LookupListener.class, this, currentFiles));
-            progress = ProgressHandleFactory.createHandle(CAP_Opening_Projects());
+            progress = ProgressHandle.createHandle(CAP_Opening_Projects());
         }
 
-        final void waitFinished() {
+        final boolean waitFinished(long timeout) {
             log(Level.FINER, "waitFinished, action {0}", action); // NOI18N
             if (action == 0) {
                 run();
             }
             log(Level.FINER, "waitFinished, before wait"); // NOI18N
-            TASK.waitFinished();
+            if (timeout == 0) {
+                TASK.waitFinished();
+            } else {
+                try {
+                    if (!TASK.waitFinished(timeout)) {
+                        return false;
+                    }
+                } catch (InterruptedException ex) {
+                    return false;
+                }
+            }
             log(Level.FINER, "waitFinished, after wait"); // NOI18N
+            return true;
         }
         
         @Override
@@ -441,12 +456,19 @@ public final class OpenProjectList {
                 }
             });
         }
-            
+
+        @NbBundle.Messages({
+            "#NOI18N",
+            "LOAD_PROJECTS_ON_START=true"
+        })
         private void loadOnBackground() {
-            lazilyOpenedProjects = new ArrayList<Project>();
-            List<URL> URLs = OpenProjectListSettings.getInstance().getOpenProjectsURLs();
-            final List<Project> initial = new ArrayList<Project>();
-            final LinkedList<Project> projects = URLs2Projects(URLs);
+            lazilyOpenedProjects = new ArrayList<>();
+            final boolean loadProjectsOnStart = "true".equals(Bundle.LOAD_PROJECTS_ON_START());
+            List<URL> urls = loadProjectsOnStart ?
+                    OpenProjectListSettings.getInstance().getOpenProjectsURLs() :
+                    Collections.emptyList();
+            final List<Project> initial = new ArrayList<>();
+            final LinkedList<Project> projects = URLs2Projects(urls);
             OpenProjectList.MUTEX.writeAccess(new Mutex.Action<Void>() {
                 public @Override Void run() {
                     toOpenProjects.addAll(projects);
@@ -573,7 +595,7 @@ public final class OpenProjectList {
 
         @Override
         public Project[] get() throws InterruptedException, ExecutionException {
-            TASK.waitFinished();
+            waitFinished(0);
             try {
                 enteredGuard.lock();
                 while (entered > 0) {
@@ -588,7 +610,7 @@ public final class OpenProjectList {
         @Override
         public Project[] get(long timeout, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
             long ms = unit.convert(timeout, TimeUnit.MILLISECONDS);
-            if (!TASK.waitFinished(timeout)) {
+            if (!waitFinished(timeout)) {
                 throw new TimeoutException();
             } 
             try {
@@ -618,10 +640,10 @@ public final class OpenProjectList {
     }
     
     public void open(final Project[] projects, final boolean openSubprojects, final boolean asynchronously) {
-        open(projects, openSubprojects, asynchronously, null);
+        open(projects, false, openSubprojects, asynchronously, null);
     }
 
-    public void open(final Project[] projects, final boolean openSubprojects, final boolean asynchronously, final Project/*|null*/ mainProject) {
+    public void open(final Project[] projects, boolean prime, final boolean openSubprojects, final boolean asynchronously, final Project/*|null*/ mainProject) {
         if (projects.length == 0) {
             //nothing to do:
             return ;
@@ -640,14 +662,14 @@ public final class OpenProjectList {
                 }
             }
             final Cancellation cancellation = new Cancellation();
-            final ProgressHandle handle = ProgressHandleFactory.createHandle(CAP_Opening_Projects(), cancellation);
+            final ProgressHandle handle = ProgressHandle.createHandle(CAP_Opening_Projects(), cancellation);
             handle.start();
             handle.progress(projects[0].getProjectDirectory().getNameExt());
             OPENING_RP.post(new Runnable() {
                 @Override public void run() {
                     cancellation.t = Thread.currentThread();
                     try {
-                        open(projects, openSubprojects, handle, cancellation);
+                        open(projects, prime, openSubprojects, handle, cancellation);
                     } finally {
                         handle.finish();
                     }
@@ -657,7 +679,7 @@ public final class OpenProjectList {
                 }
             });
         } else {
-            open(projects, openSubprojects, null, null);
+            open(projects, prime, openSubprojects, null, null);
             if (mainProject != null && Arrays.asList(projects).contains(mainProject) && openProjects.contains(mainProject)) {
                 setMainProject(mainProject);
             }
@@ -674,8 +696,8 @@ public final class OpenProjectList {
         "# {0} - project display name", "OpenProjectList.finding_subprojects=Finding required projects of {0}",
         "# {0} - project path", "OpenProjectList.deleted_project={0} seems to have been deleted."
     })
-    public void open(Project[] projects, boolean openSubprojects, ProgressHandle handle, AtomicBoolean canceled) {
-        LOAD.waitFinished();
+    public void open(Project[] projects, boolean prime, boolean openSubprojects, ProgressHandle handle, AtomicBoolean canceled) {
+        LOAD.waitFinished(0);
             
         List<Project> toHandle = new LinkedList<Project>();
 
@@ -689,9 +711,37 @@ public final class OpenProjectList {
                 } else {
                     LOGGER.log(Level.WARNING, "Project in {0} disappeared", p.getProjectDirectory());
                 }
-            } catch (IOException ex) {
-                LOGGER.log(Level.INFO, "Cannot convert " + p.getProjectDirectory(), ex);
-            } catch (IllegalArgumentException ex) {
+                if (prime) {
+                    ActionProvider ap = p2.getLookup().lookup(ActionProvider.class);
+                    if (ap != null && 
+                        Arrays.asList(ap.getSupportedActions()).contains(ActionProvider.COMMAND_PRIME) &&
+                        ap.isActionEnabled(ActionProvider.COMMAND_PRIME, p2.getLookup())) {
+                        final CountDownLatch[] await = new CountDownLatch[1];
+                        ActionProgress awaitPriming = new ActionProgress() {
+                            @Override
+                            protected void started() {
+                                if (await[0] == null) {
+                                    await[0] = new CountDownLatch(1);
+                                }
+                            }
+
+                            @Override
+                            public void finished(boolean success) {
+                                if (await[0] != null) {
+                                    await[0].countDown();
+                                }
+                            }
+                        };
+                        Lookup waitAndProject = new ProxyLookup(
+                            Lookups.singleton(awaitPriming), p2.getLookup()
+                        );
+                        ap.invokeAction(ActionProvider.COMMAND_PRIME, waitAndProject);
+                        if (await[0] != null) {
+                            await[0].await();
+                        }
+                    }
+                }
+            } catch (InterruptedException | IOException | IllegalArgumentException ex) {
                 LOGGER.log(Level.INFO, "Cannot convert " + p.getProjectDirectory(), ex);
             }
         }
@@ -861,7 +911,7 @@ public final class OpenProjectList {
         boolean doSave = false;
         if (!LOAD.closeBeforeOpen(someProjects)) {
             doSave = true;
-            LOAD.waitFinished();
+            LOAD.waitFinished(0);
         }
         
         final Project[] projects = new Project[someProjects.length];

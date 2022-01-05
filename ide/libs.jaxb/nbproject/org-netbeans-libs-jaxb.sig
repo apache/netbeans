@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.39
+#Version 1.45
 
 CLSS public final com.sun.codemodel.ClassType
 fld public final static com.sun.codemodel.ClassType ANNOTATION_TYPE_DECL
@@ -19,6 +19,7 @@ supr java.lang.Object
 
 CLSS public abstract interface com.sun.codemodel.JAnnotatable
 meth public abstract <%0 extends com.sun.codemodel.JAnnotationWriter> {%%0} annotate2(java.lang.Class<{%%0}>)
+meth public abstract boolean removeAnnotation(com.sun.codemodel.JAnnotationUse)
 meth public abstract com.sun.codemodel.JAnnotationUse annotate(com.sun.codemodel.JClass)
 meth public abstract com.sun.codemodel.JAnnotationUse annotate(java.lang.Class<? extends java.lang.annotation.Annotation>)
 meth public abstract java.util.Collection<com.sun.codemodel.JAnnotationUse> annotations()
@@ -26,10 +27,12 @@ meth public abstract java.util.Collection<com.sun.codemodel.JAnnotationUse> anno
 CLSS public final com.sun.codemodel.JAnnotationArrayMember
 intf com.sun.codemodel.JAnnotatable
 meth public <%0 extends com.sun.codemodel.JAnnotationWriter> {%%0} annotate2(java.lang.Class<{%%0}>)
+meth public boolean removeAnnotation(com.sun.codemodel.JAnnotationUse)
 meth public com.sun.codemodel.JAnnotationArrayMember param(boolean)
 meth public com.sun.codemodel.JAnnotationArrayMember param(byte)
 meth public com.sun.codemodel.JAnnotationArrayMember param(char)
 meth public com.sun.codemodel.JAnnotationArrayMember param(com.sun.codemodel.JAnnotationUse)
+ anno 0 java.lang.Deprecated()
 meth public com.sun.codemodel.JAnnotationArrayMember param(com.sun.codemodel.JEnumConstant)
 meth public com.sun.codemodel.JAnnotationArrayMember param(com.sun.codemodel.JExpression)
 meth public com.sun.codemodel.JAnnotationArrayMember param(com.sun.codemodel.JType)
@@ -51,6 +54,7 @@ hfds owner,values
 CLSS public final com.sun.codemodel.JAnnotationUse
 meth public com.sun.codemodel.JAnnotationArrayMember paramArray(java.lang.String)
 meth public com.sun.codemodel.JAnnotationUse annotate(java.lang.Class<? extends java.lang.annotation.Annotation>)
+ anno 0 java.lang.Deprecated()
 meth public com.sun.codemodel.JAnnotationUse annotationParam(java.lang.String,java.lang.Class<? extends java.lang.annotation.Annotation>)
 meth public com.sun.codemodel.JAnnotationUse param(java.lang.String,boolean)
 meth public com.sun.codemodel.JAnnotationUse param(java.lang.String,byte)
@@ -86,6 +90,14 @@ meth public com.sun.codemodel.JArray add(com.sun.codemodel.JExpression)
 meth public void generate(com.sun.codemodel.JFormatter)
 supr com.sun.codemodel.JExpressionImpl
 hfds exprs,size,type
+
+CLSS public final com.sun.codemodel.JArrayCompRef
+intf com.sun.codemodel.JAssignmentTarget
+meth public com.sun.codemodel.JExpression assign(com.sun.codemodel.JExpression)
+meth public com.sun.codemodel.JExpression assignPlus(com.sun.codemodel.JExpression)
+meth public void generate(com.sun.codemodel.JFormatter)
+supr com.sun.codemodel.JExpressionImpl
+hfds array,index
 
 CLSS public com.sun.codemodel.JAssignment
 intf com.sun.codemodel.JStatement
@@ -150,6 +162,11 @@ meth public void state(com.sun.codemodel.JFormatter)
 supr java.lang.Object
 hfds body,isDefaultCase,label
 
+CLSS public final com.sun.codemodel.JCast
+meth public void generate(com.sun.codemodel.JFormatter)
+supr com.sun.codemodel.JExpressionImpl
+hfds object,type
+
 CLSS public com.sun.codemodel.JCatchBlock
 intf com.sun.codemodel.JGenerable
 meth public com.sun.codemodel.JBlock body()
@@ -172,6 +189,7 @@ meth public abstract java.lang.String name()
 meth public abstract java.util.Iterator<com.sun.codemodel.JClass> _implements()
 meth public com.sun.codemodel.JClass array()
 meth public com.sun.codemodel.JClass boxify()
+ anno 0 java.lang.Deprecated()
 meth public com.sun.codemodel.JClass erasure()
 meth public com.sun.codemodel.JClass narrow(com.sun.codemodel.JClass)
 meth public com.sun.codemodel.JClass narrow(com.sun.codemodel.JType)
@@ -212,6 +230,7 @@ meth public abstract com.sun.codemodel.JCodeModel owner()
 meth public abstract com.sun.codemodel.JDefinedClass _annotationTypeDeclaration(java.lang.String) throws com.sun.codemodel.JClassAlreadyExistsException
 meth public abstract com.sun.codemodel.JDefinedClass _class(int,java.lang.String) throws com.sun.codemodel.JClassAlreadyExistsException
 meth public abstract com.sun.codemodel.JDefinedClass _class(int,java.lang.String,boolean) throws com.sun.codemodel.JClassAlreadyExistsException
+ anno 0 java.lang.Deprecated()
 meth public abstract com.sun.codemodel.JDefinedClass _class(int,java.lang.String,com.sun.codemodel.ClassType) throws com.sun.codemodel.JClassAlreadyExistsException
 meth public abstract com.sun.codemodel.JDefinedClass _class(java.lang.String) throws com.sun.codemodel.JClassAlreadyExistsException
 meth public abstract com.sun.codemodel.JDefinedClass _enum(java.lang.String) throws com.sun.codemodel.JClassAlreadyExistsException
@@ -235,6 +254,8 @@ fld public final com.sun.codemodel.JPrimitiveType SHORT
 fld public final com.sun.codemodel.JPrimitiveType VOID
 fld public final static java.util.Map<java.lang.Class<?>,java.lang.Class<?>> boxToPrimitive
 fld public final static java.util.Map<java.lang.Class<?>,java.lang.Class<?>> primitiveToBox
+meth public !varargs void _prepareModuleInfo(java.lang.String,java.lang.String[])
+meth public !varargs void _updateModuleInfo(java.lang.String[])
 meth public com.sun.codemodel.JClass directClass(java.lang.String)
 meth public com.sun.codemodel.JClass ref(java.lang.Class<?>)
 meth public com.sun.codemodel.JClass ref(java.lang.String)
@@ -246,6 +267,9 @@ meth public com.sun.codemodel.JDefinedClass _getClass(java.lang.String)
 meth public com.sun.codemodel.JDefinedClass anonymousClass(com.sun.codemodel.JClass)
 meth public com.sun.codemodel.JDefinedClass anonymousClass(java.lang.Class<?>)
 meth public com.sun.codemodel.JDefinedClass newAnonymousClass(com.sun.codemodel.JClass)
+ anno 0 java.lang.Deprecated()
+meth public com.sun.codemodel.JModule _getModuleInfo()
+meth public com.sun.codemodel.JModule _moduleInfo(java.lang.String)
 meth public com.sun.codemodel.JPackage _package(java.lang.String)
 meth public com.sun.codemodel.JType _ref(java.lang.Class<?>)
 meth public com.sun.codemodel.JType parseType(java.lang.String) throws java.lang.ClassNotFoundException
@@ -259,7 +283,7 @@ meth public void build(java.io.File,java.io.File) throws java.io.IOException
 meth public void build(java.io.File,java.io.File,java.io.PrintStream) throws java.io.IOException
 meth public void build(java.io.File,java.io.PrintStream) throws java.io.IOException
 supr java.lang.Object
-hfds packages,refClasses,wildcard
+hfds module,packages,refClasses,wildcard
 hcls JReferencedClass,TypeNameParser
 
 CLSS public com.sun.codemodel.JCommentPart
@@ -298,15 +322,18 @@ meth public boolean isClass()
 meth public boolean isHidden()
 meth public boolean isInterface()
 meth public boolean isPackage()
+meth public boolean removeAnnotation(com.sun.codemodel.JAnnotationUse)
 meth public com.sun.codemodel.ClassType getClassType()
 meth public com.sun.codemodel.JAnnotationUse annotate(com.sun.codemodel.JClass)
 meth public com.sun.codemodel.JAnnotationUse annotate(java.lang.Class<? extends java.lang.annotation.Annotation>)
 meth public com.sun.codemodel.JBlock init()
+meth public com.sun.codemodel.JBlock instanceInit()
 meth public com.sun.codemodel.JClass _extends()
 meth public com.sun.codemodel.JClass outer()
 meth public com.sun.codemodel.JDefinedClass _annotationTypeDeclaration(java.lang.String) throws com.sun.codemodel.JClassAlreadyExistsException
 meth public com.sun.codemodel.JDefinedClass _class(int,java.lang.String) throws com.sun.codemodel.JClassAlreadyExistsException
 meth public com.sun.codemodel.JDefinedClass _class(int,java.lang.String,boolean) throws com.sun.codemodel.JClassAlreadyExistsException
+ anno 0 java.lang.Deprecated()
 meth public com.sun.codemodel.JDefinedClass _class(int,java.lang.String,com.sun.codemodel.ClassType) throws com.sun.codemodel.JClassAlreadyExistsException
 meth public com.sun.codemodel.JDefinedClass _class(java.lang.String) throws com.sun.codemodel.JClassAlreadyExistsException
 meth public com.sun.codemodel.JDefinedClass _enum(int,java.lang.String) throws com.sun.codemodel.JClassAlreadyExistsException
@@ -352,7 +379,7 @@ meth public void direct(java.lang.String)
 meth public void hide()
 meth public void removeField(com.sun.codemodel.JFieldVar)
 supr com.sun.codemodel.JClass
-hfds annotations,classType,classes,constructors,directBlock,enumConstantsByName,fields,generifiable,hideFile,init,interfaces,jdoc,methods,mods,name,outer,superClass
+hfds annotations,classType,classes,constructors,directBlock,enumConstantsByName,fields,generifiable,hideFile,init,instanceInit,interfaces,jdoc,methods,mods,name,outer,superClass
 
 CLSS public com.sun.codemodel.JDoLoop
 intf com.sun.codemodel.JStatement
@@ -386,6 +413,7 @@ intf com.sun.codemodel.JAnnotatable
 intf com.sun.codemodel.JDeclaration
 intf com.sun.codemodel.JDocCommentable
 meth public <%0 extends com.sun.codemodel.JAnnotationWriter> {%%0} annotate2(java.lang.Class<{%%0}>)
+meth public boolean removeAnnotation(com.sun.codemodel.JAnnotationUse)
 meth public com.sun.codemodel.JAnnotationUse annotate(com.sun.codemodel.JClass)
 meth public com.sun.codemodel.JAnnotationUse annotate(java.lang.Class<? extends java.lang.annotation.Annotation>)
 meth public com.sun.codemodel.JDocComment javadoc()
@@ -397,6 +425,11 @@ meth public void generate(com.sun.codemodel.JFormatter)
 supr com.sun.codemodel.JExpressionImpl
 hfds annotations,args,jdoc,name,type
 
+CLSS public com.sun.codemodel.JExportsDirective
+meth public com.sun.codemodel.JFormatter generate(com.sun.codemodel.JFormatter)
+meth public com.sun.codemodel.JModuleDirective$Type getType()
+supr com.sun.codemodel.JModuleDirective
+
 CLSS public abstract com.sun.codemodel.JExpr
 fld public final static com.sun.codemodel.JExpression FALSE
 fld public final static com.sun.codemodel.JExpression TRUE
@@ -404,6 +437,7 @@ meth public static com.sun.codemodel.JArray newArray(com.sun.codemodel.JType)
 meth public static com.sun.codemodel.JArray newArray(com.sun.codemodel.JType,com.sun.codemodel.JExpression)
 meth public static com.sun.codemodel.JArray newArray(com.sun.codemodel.JType,int)
 meth public static com.sun.codemodel.JArrayCompRef component(com.sun.codemodel.JExpression,com.sun.codemodel.JExpression)
+meth public static com.sun.codemodel.JCast cast(com.sun.codemodel.JType,com.sun.codemodel.JExpression)
 meth public static com.sun.codemodel.JExpression _null()
 meth public static com.sun.codemodel.JExpression _super()
 meth public static com.sun.codemodel.JExpression _this()
@@ -418,7 +452,6 @@ meth public static com.sun.codemodel.JExpression lit(float)
 meth public static com.sun.codemodel.JExpression lit(int)
 meth public static com.sun.codemodel.JExpression lit(java.lang.String)
 meth public static com.sun.codemodel.JExpression lit(long)
-meth public static com.sun.codemodel.JExpressionImpl cast(com.sun.codemodel.JType,com.sun.codemodel.JExpression)
 meth public static com.sun.codemodel.JFieldRef ref(com.sun.codemodel.JExpression,com.sun.codemodel.JVar)
 meth public static com.sun.codemodel.JFieldRef ref(com.sun.codemodel.JExpression,java.lang.String)
 meth public static com.sun.codemodel.JFieldRef ref(java.lang.String)
@@ -606,6 +639,7 @@ meth protected com.sun.codemodel.JCodeModel owner()
 meth public <%0 extends com.sun.codemodel.JAnnotationWriter> {%%0} annotate2(java.lang.Class<{%%0}>)
 meth public boolean hasSignature(com.sun.codemodel.JType[])
 meth public boolean hasVarArgs()
+meth public boolean removeAnnotation(com.sun.codemodel.JAnnotationUse)
 meth public com.sun.codemodel.JAnnotationUse annotate(com.sun.codemodel.JClass)
 meth public com.sun.codemodel.JAnnotationUse annotate(java.lang.Class<? extends java.lang.annotation.Annotation>)
 meth public com.sun.codemodel.JBlock body()
@@ -613,6 +647,7 @@ meth public com.sun.codemodel.JDocComment javadoc()
 meth public com.sun.codemodel.JMethod _throws(com.sun.codemodel.JClass)
 meth public com.sun.codemodel.JMethod _throws(java.lang.Class<? extends java.lang.Throwable>)
 meth public com.sun.codemodel.JMods getMods()
+ anno 0 java.lang.Deprecated()
 meth public com.sun.codemodel.JMods mods()
 meth public com.sun.codemodel.JType listVarParamType()
 meth public com.sun.codemodel.JType type()
@@ -670,6 +705,36 @@ meth public void setSynchronized(boolean)
 supr java.lang.Object
 hfds CLASS,FIELD,INTERFACE,METHOD,VAR,mods
 
+CLSS public com.sun.codemodel.JModule
+meth public !varargs void _requires(boolean,boolean,java.lang.String[])
+meth public !varargs void _requires(java.lang.String[])
+meth public com.sun.codemodel.JFormatter generate(com.sun.codemodel.JFormatter)
+meth public java.lang.String name()
+meth public void _exports(com.sun.codemodel.JPackage)
+meth public void _exports(java.util.Collection<com.sun.codemodel.JPackage>,boolean)
+meth public void _requires(java.lang.String)
+meth public void _requires(java.lang.String,boolean,boolean)
+supr java.lang.Object
+hfds FILE_NAME,directives,name
+
+CLSS public abstract com.sun.codemodel.JModuleDirective
+fld protected final java.lang.String name
+innr public final static !enum Type
+meth public abstract com.sun.codemodel.JFormatter generate(com.sun.codemodel.JFormatter)
+meth public abstract com.sun.codemodel.JModuleDirective$Type getType()
+meth public boolean equals(java.lang.Object)
+meth public int hashCode()
+meth public java.lang.String name()
+supr java.lang.Object
+
+CLSS public final static !enum com.sun.codemodel.JModuleDirective$Type
+ outer com.sun.codemodel.JModuleDirective
+fld public final static com.sun.codemodel.JModuleDirective$Type ExportsDirective
+fld public final static com.sun.codemodel.JModuleDirective$Type RequiresDirective
+meth public static com.sun.codemodel.JModuleDirective$Type valueOf(java.lang.String)
+meth public static com.sun.codemodel.JModuleDirective$Type[] values()
+supr java.lang.Enum<com.sun.codemodel.JModuleDirective$Type>
+
 CLSS public final com.sun.codemodel.JNullType
 meth protected com.sun.codemodel.JClass substituteParams(com.sun.codemodel.JTypeVar[],java.util.List<com.sun.codemodel.JClass>)
 meth public boolean isAbstract()
@@ -719,10 +784,12 @@ intf com.sun.codemodel.JDocCommentable
 intf com.sun.codemodel.JGenerable
 intf java.lang.Comparable<com.sun.codemodel.JPackage>
 meth public <%0 extends com.sun.codemodel.JAnnotationWriter> {%%0} annotate2(java.lang.Class<{%%0}>)
+meth public boolean hasClasses()
 meth public boolean hasResourceFile(java.lang.String)
 meth public boolean isClass()
 meth public boolean isDefined(java.lang.String)
 meth public boolean isPackage()
+meth public boolean removeAnnotation(com.sun.codemodel.JAnnotationUse)
 meth public com.sun.codemodel.JAnnotationUse annotate(com.sun.codemodel.JClass)
 meth public com.sun.codemodel.JAnnotationUse annotate(java.lang.Class<? extends java.lang.annotation.Annotation>)
 meth public com.sun.codemodel.JClass ref(java.lang.String) throws java.lang.ClassNotFoundException
@@ -730,6 +797,7 @@ meth public com.sun.codemodel.JClassContainer parentContainer()
 meth public com.sun.codemodel.JDefinedClass _annotationTypeDeclaration(java.lang.String) throws com.sun.codemodel.JClassAlreadyExistsException
 meth public com.sun.codemodel.JDefinedClass _class(int,java.lang.String) throws com.sun.codemodel.JClassAlreadyExistsException
 meth public com.sun.codemodel.JDefinedClass _class(int,java.lang.String,boolean) throws com.sun.codemodel.JClassAlreadyExistsException
+ anno 0 java.lang.Deprecated()
 meth public com.sun.codemodel.JDefinedClass _class(int,java.lang.String,com.sun.codemodel.ClassType) throws com.sun.codemodel.JClassAlreadyExistsException
 meth public com.sun.codemodel.JDefinedClass _class(java.lang.String) throws com.sun.codemodel.JClassAlreadyExistsException
 meth public com.sun.codemodel.JDefinedClass _enum(java.lang.String) throws com.sun.codemodel.JClassAlreadyExistsException
@@ -759,15 +827,24 @@ meth public boolean isPrimitive()
 meth public com.sun.codemodel.JClass array()
 meth public com.sun.codemodel.JClass boxify()
 meth public com.sun.codemodel.JClass getWrapperClass()
+ anno 0 java.lang.Deprecated()
 meth public com.sun.codemodel.JCodeModel owner()
 meth public com.sun.codemodel.JExpression unwrap(com.sun.codemodel.JExpression)
 meth public com.sun.codemodel.JExpression wrap(com.sun.codemodel.JExpression)
 meth public com.sun.codemodel.JType unboxify()
+ anno 0 java.lang.Deprecated()
 meth public java.lang.String fullName()
 meth public java.lang.String name()
 meth public void generate(com.sun.codemodel.JFormatter)
 supr com.sun.codemodel.JType
 hfds arrayClass,owner,typeName,wrapperClass
+
+CLSS public com.sun.codemodel.JRequiresDirective
+meth protected void generateModifiers(com.sun.codemodel.JFormatter)
+meth public com.sun.codemodel.JFormatter generate(com.sun.codemodel.JFormatter)
+meth public com.sun.codemodel.JModuleDirective$Type getType()
+supr com.sun.codemodel.JModuleDirective
+hfds isPublic,isStatic
 
 CLSS public abstract com.sun.codemodel.JResourceFile
 cons protected init(java.lang.String)
@@ -847,6 +924,7 @@ intf com.sun.codemodel.JAssignmentTarget
 intf com.sun.codemodel.JDeclaration
 meth protected boolean isAnnotated()
 meth public <%0 extends com.sun.codemodel.JAnnotationWriter> {%%0} annotate2(java.lang.Class<{%%0}>)
+meth public boolean removeAnnotation(com.sun.codemodel.JAnnotationUse)
 meth public com.sun.codemodel.JAnnotationUse annotate(com.sun.codemodel.JClass)
 meth public com.sun.codemodel.JAnnotationUse annotate(java.lang.Class<? extends java.lang.annotation.Annotation>)
 meth public com.sun.codemodel.JExpression assign(com.sun.codemodel.JExpression)
@@ -969,25 +1047,36 @@ supr java.lang.Object
 hfds eagerQuit,fragment,inscopeNamespaces,saxHandler,staxStreamReader
 
 CLSS public abstract interface com.sun.istack.localization.Localizable
-fld public final static java.lang.String NOT_LOCALIZABLE
+fld public final static java.lang.String NOT_LOCALIZABLE = "\u0000"
 meth public abstract java.lang.Object[] getArguments()
 meth public abstract java.lang.String getKey()
 meth public abstract java.lang.String getResourceBundleName()
+meth public abstract java.util.ResourceBundle getResourceBundle(java.util.Locale)
 
 CLSS public final com.sun.istack.localization.LocalizableMessage
+cons public !varargs init(java.lang.String,com.sun.istack.localization.LocalizableMessageFactory$ResourceBundleSupplier,java.lang.String,java.lang.Object[])
 cons public !varargs init(java.lang.String,java.lang.String,java.lang.Object[])
+ anno 0 java.lang.Deprecated()
 intf com.sun.istack.localization.Localizable
 meth public java.lang.Object[] getArguments()
 meth public java.lang.String getKey()
 meth public java.lang.String getResourceBundleName()
+meth public java.util.ResourceBundle getResourceBundle(java.util.Locale)
 supr java.lang.Object
-hfds _args,_bundlename,_key
+hfds _args,_bundlename,_key,_rbSupplier
 
 CLSS public com.sun.istack.localization.LocalizableMessageFactory
 cons public init(java.lang.String)
+ anno 0 java.lang.Deprecated()
+cons public init(java.lang.String,com.sun.istack.localization.LocalizableMessageFactory$ResourceBundleSupplier)
+innr public abstract interface static ResourceBundleSupplier
 meth public !varargs com.sun.istack.localization.Localizable getMessage(java.lang.String,java.lang.Object[])
 supr java.lang.Object
-hfds _bundlename
+hfds _bundlename,_rbSupplier
+
+CLSS public abstract interface static com.sun.istack.localization.LocalizableMessageFactory$ResourceBundleSupplier
+ outer com.sun.istack.localization.LocalizableMessageFactory
+meth public abstract java.util.ResourceBundle getResourceBundle(java.util.Locale)
 
 CLSS public com.sun.istack.localization.Localizer
 cons public init()
@@ -996,6 +1085,16 @@ meth public java.lang.String localize(com.sun.istack.localization.Localizable)
 meth public java.util.Locale getLocale()
 supr java.lang.Object
 hfds _locale,_resourceBundles
+
+CLSS public final com.sun.istack.localization.NullLocalizable
+cons public init(java.lang.String)
+intf com.sun.istack.localization.Localizable
+meth public java.lang.Object[] getArguments()
+meth public java.lang.String getKey()
+meth public java.lang.String getResourceBundleName()
+meth public java.util.ResourceBundle getResourceBundle(java.util.Locale)
+supr java.lang.Object
+hfds msg
 
 CLSS public com.sun.istack.logging.Logger
 cons protected init(java.lang.String,java.lang.String)
@@ -1016,6 +1115,7 @@ meth public static com.sun.istack.logging.Logger getLogger(java.lang.String,java
  anno 1 com.sun.istack.NotNull()
  anno 2 com.sun.istack.NotNull()
 meth public void config(java.lang.String)
+meth public void config(java.lang.String,java.lang.Object[])
 meth public void config(java.lang.String,java.lang.Throwable)
 meth public void entering()
 meth public void exiting()
@@ -1023,33 +1123,43 @@ meth public void exiting(java.lang.Object)
 meth public void fine(java.lang.String)
 meth public void fine(java.lang.String,java.lang.Throwable)
 meth public void finer(java.lang.String)
+meth public void finer(java.lang.String,java.lang.Object[])
 meth public void finer(java.lang.String,java.lang.Throwable)
 meth public void finest(java.lang.String)
+meth public void finest(java.lang.String,java.lang.Object[])
 meth public void finest(java.lang.String,java.lang.Throwable)
 meth public void info(java.lang.String)
+meth public void info(java.lang.String,java.lang.Object[])
 meth public void info(java.lang.String,java.lang.Throwable)
 meth public void log(java.util.logging.Level,java.lang.String)
+meth public void log(java.util.logging.Level,java.lang.String,java.lang.Object)
+meth public void log(java.util.logging.Level,java.lang.String,java.lang.Object[])
 meth public void log(java.util.logging.Level,java.lang.String,java.lang.Throwable)
 meth public void setLevel(java.util.logging.Level)
 meth public void severe(java.lang.String)
+meth public void severe(java.lang.String,java.lang.Object[])
 meth public void severe(java.lang.String,java.lang.Throwable)
 meth public void warning(java.lang.String)
+meth public void warning(java.lang.String,java.lang.Object[])
 meth public void warning(java.lang.String,java.lang.Throwable)
 supr java.lang.Object
 hfds METHOD_CALL_LEVEL_VALUE,ROOT_WS_PACKAGE,WS_LOGGING_SUBSYSTEM_NAME_ROOT,componentClassName,logger
 
-CLSS public abstract com.sun.istack.tools.APTTypeVisitor<%0 extends java.lang.Object, %1 extends java.lang.Object>
- anno 0 java.lang.Deprecated()
-cons public init()
-meth protected abstract {com.sun.istack.tools.APTTypeVisitor%0} onArrayType(com.sun.mirror.type.ArrayType,{com.sun.istack.tools.APTTypeVisitor%1})
-meth protected abstract {com.sun.istack.tools.APTTypeVisitor%0} onClassType(com.sun.mirror.type.ClassType,{com.sun.istack.tools.APTTypeVisitor%1})
-meth protected abstract {com.sun.istack.tools.APTTypeVisitor%0} onInterfaceType(com.sun.mirror.type.InterfaceType,{com.sun.istack.tools.APTTypeVisitor%1})
-meth protected abstract {com.sun.istack.tools.APTTypeVisitor%0} onPrimitiveType(com.sun.mirror.type.PrimitiveType,{com.sun.istack.tools.APTTypeVisitor%1})
-meth protected abstract {com.sun.istack.tools.APTTypeVisitor%0} onTypeVariable(com.sun.mirror.type.TypeVariable,{com.sun.istack.tools.APTTypeVisitor%1})
-meth protected abstract {com.sun.istack.tools.APTTypeVisitor%0} onVoidType(com.sun.mirror.type.VoidType,{com.sun.istack.tools.APTTypeVisitor%1})
-meth protected abstract {com.sun.istack.tools.APTTypeVisitor%0} onWildcard(com.sun.mirror.type.WildcardType,{com.sun.istack.tools.APTTypeVisitor%1})
-meth public final {com.sun.istack.tools.APTTypeVisitor%0} apply(com.sun.mirror.type.TypeMirror,{com.sun.istack.tools.APTTypeVisitor%1})
-supr java.lang.Object
+CLSS public com.sun.istack.tools.DefaultAuthenticator
+innr public abstract interface static Receiver
+meth protected java.net.PasswordAuthentication getPasswordAuthentication()
+meth public static com.sun.istack.tools.DefaultAuthenticator getAuthenticator()
+meth public static void reset()
+meth public void setAuth(java.io.File,com.sun.istack.tools.DefaultAuthenticator$Receiver)
+meth public void setProxyAuth(java.lang.String)
+supr java.net.Authenticator
+hfds LOGGER,authInfo,counter,instance,proxyPasswd,proxyUser,systemAuthenticator
+hcls AuthInfo,DefaultRImpl
+
+CLSS public abstract interface static com.sun.istack.tools.DefaultAuthenticator$Receiver
+ outer com.sun.istack.tools.DefaultAuthenticator
+meth public abstract void onError(java.lang.Exception,org.xml.sax.Locator)
+meth public abstract void onParsingError(java.lang.String,org.xml.sax.Locator)
 
 CLSS public com.sun.istack.tools.MaskingClassLoader
 cons public !varargs init(java.lang.ClassLoader,java.lang.String[])
@@ -1075,1501 +1185,49 @@ CLSS public abstract com.sun.istack.tools.ProtectedTask
 hfds root
 hcls AntElement
 
-CLSS public final com.sun.msv.grammar.AnyNameClass
-cons protected init()
-fld public final static com.sun.msv.grammar.NameClass theInstance
-meth public boolean accepts(java.lang.String,java.lang.String)
-meth public java.lang.Object visit(com.sun.msv.grammar.NameClassVisitor)
-meth public java.lang.String toString()
-supr com.sun.msv.grammar.NameClass
-hfds serialVersionUID
+CLSS public abstract interface com.sun.tools.rngom.digested.DPatternVisitor<%0 extends java.lang.Object>
+meth public abstract {com.sun.tools.rngom.digested.DPatternVisitor%0} onAttribute(com.sun.tools.rngom.digested.DAttributePattern)
+meth public abstract {com.sun.tools.rngom.digested.DPatternVisitor%0} onChoice(com.sun.tools.rngom.digested.DChoicePattern)
+meth public abstract {com.sun.tools.rngom.digested.DPatternVisitor%0} onData(com.sun.tools.rngom.digested.DDataPattern)
+meth public abstract {com.sun.tools.rngom.digested.DPatternVisitor%0} onElement(com.sun.tools.rngom.digested.DElementPattern)
+meth public abstract {com.sun.tools.rngom.digested.DPatternVisitor%0} onEmpty(com.sun.tools.rngom.digested.DEmptyPattern)
+meth public abstract {com.sun.tools.rngom.digested.DPatternVisitor%0} onGrammar(com.sun.tools.rngom.digested.DGrammarPattern)
+meth public abstract {com.sun.tools.rngom.digested.DPatternVisitor%0} onGroup(com.sun.tools.rngom.digested.DGroupPattern)
+meth public abstract {com.sun.tools.rngom.digested.DPatternVisitor%0} onInterleave(com.sun.tools.rngom.digested.DInterleavePattern)
+meth public abstract {com.sun.tools.rngom.digested.DPatternVisitor%0} onList(com.sun.tools.rngom.digested.DListPattern)
+meth public abstract {com.sun.tools.rngom.digested.DPatternVisitor%0} onMixed(com.sun.tools.rngom.digested.DMixedPattern)
+meth public abstract {com.sun.tools.rngom.digested.DPatternVisitor%0} onNotAllowed(com.sun.tools.rngom.digested.DNotAllowedPattern)
+meth public abstract {com.sun.tools.rngom.digested.DPatternVisitor%0} onOneOrMore(com.sun.tools.rngom.digested.DOneOrMorePattern)
+meth public abstract {com.sun.tools.rngom.digested.DPatternVisitor%0} onOptional(com.sun.tools.rngom.digested.DOptionalPattern)
+meth public abstract {com.sun.tools.rngom.digested.DPatternVisitor%0} onRef(com.sun.tools.rngom.digested.DRefPattern)
+meth public abstract {com.sun.tools.rngom.digested.DPatternVisitor%0} onText(com.sun.tools.rngom.digested.DTextPattern)
+meth public abstract {com.sun.tools.rngom.digested.DPatternVisitor%0} onValue(com.sun.tools.rngom.digested.DValuePattern)
+meth public abstract {com.sun.tools.rngom.digested.DPatternVisitor%0} onZeroOrMore(com.sun.tools.rngom.digested.DZeroOrMorePattern)
 
-CLSS public com.sun.msv.grammar.AttributeExp
-cons public init(com.sun.msv.grammar.NameClass,com.sun.msv.grammar.Expression)
-fld public final com.sun.msv.grammar.Expression exp
-fld public final com.sun.msv.grammar.NameClass nameClass
-intf com.sun.msv.grammar.NameClassAndExpression
-meth protected boolean calcEpsilonReducibility()
-meth protected final int calcHashCode()
-meth public boolean equals(java.lang.Object)
-meth public boolean visit(com.sun.msv.grammar.ExpressionVisitorBoolean)
-meth public com.sun.msv.grammar.Expression visit(com.sun.msv.grammar.ExpressionVisitorExpression)
-meth public final com.sun.msv.grammar.Expression getContentModel()
-meth public final com.sun.msv.grammar.NameClass getNameClass()
-meth public java.lang.Object visit(com.sun.msv.grammar.ExpressionVisitor)
-meth public void visit(com.sun.msv.grammar.ExpressionVisitorVoid)
-supr com.sun.msv.grammar.Expression
-hfds serialVersionUID
-
-CLSS public abstract com.sun.msv.grammar.BinaryExp
-cons public init(com.sun.msv.grammar.Expression,com.sun.msv.grammar.Expression)
-fld public final com.sun.msv.grammar.Expression exp1
-fld public final com.sun.msv.grammar.Expression exp2
-meth protected final int calcHashCode()
-meth public boolean equals(java.lang.Object)
-meth public com.sun.msv.grammar.Expression[] getChildren()
-meth public java.util.Iterator children()
-supr com.sun.msv.grammar.Expression
-hfds serialVersionUID
-
-CLSS public final com.sun.msv.grammar.ChoiceExp
-meth protected boolean calcEpsilonReducibility()
-meth public boolean visit(com.sun.msv.grammar.ExpressionVisitorBoolean)
-meth public com.sun.msv.grammar.Expression visit(com.sun.msv.grammar.ExpressionVisitorExpression)
-meth public java.lang.Object visit(com.sun.msv.grammar.ExpressionVisitor)
-meth public void visit(com.sun.msv.grammar.ExpressionVisitorVoid)
-supr com.sun.msv.grammar.BinaryExp
-hfds serialVersionUID
-
-CLSS public com.sun.msv.grammar.ChoiceNameClass
-cons public init(com.sun.msv.grammar.NameClass,com.sun.msv.grammar.NameClass)
-fld public final com.sun.msv.grammar.NameClass nc1
-fld public final com.sun.msv.grammar.NameClass nc2
-meth public boolean accepts(java.lang.String,java.lang.String)
-meth public java.lang.Object visit(com.sun.msv.grammar.NameClassVisitor)
-meth public java.lang.String toString()
-supr com.sun.msv.grammar.NameClass
-hfds serialVersionUID
-
-CLSS public final com.sun.msv.grammar.ConcurExp
-meth protected boolean calcEpsilonReducibility()
-meth public boolean visit(com.sun.msv.grammar.ExpressionVisitorBoolean)
-meth public com.sun.msv.grammar.Expression visit(com.sun.msv.grammar.ExpressionVisitorExpression)
-meth public java.lang.Object visit(com.sun.msv.grammar.ExpressionVisitor)
-meth public void visit(com.sun.msv.grammar.ExpressionVisitorVoid)
-supr com.sun.msv.grammar.BinaryExp
-hfds serialVersionUID
-
-CLSS public final com.sun.msv.grammar.DataExp
-cons protected init(org.relaxng.datatype.Datatype,com.sun.msv.util.StringPair,com.sun.msv.grammar.Expression)
-fld public final com.sun.msv.grammar.Expression except
-fld public final com.sun.msv.util.StringPair name
-fld public final org.relaxng.datatype.Datatype dt
-intf com.sun.msv.grammar.DataOrValueExp
-meth protected boolean calcEpsilonReducibility()
-meth protected final int calcHashCode()
-meth public boolean equals(java.lang.Object)
-meth public boolean visit(com.sun.msv.grammar.ExpressionVisitorBoolean)
-meth public com.sun.msv.grammar.Expression visit(com.sun.msv.grammar.ExpressionVisitorExpression)
-meth public com.sun.msv.util.StringPair getName()
-meth public java.lang.Object visit(com.sun.msv.grammar.ExpressionVisitor)
-meth public org.relaxng.datatype.Datatype getType()
-meth public void visit(com.sun.msv.grammar.ExpressionVisitorVoid)
-supr com.sun.msv.grammar.Expression
-hfds serialVersionUID
-
-CLSS public abstract interface com.sun.msv.grammar.DataOrValueExp
-meth public abstract com.sun.msv.util.StringPair getName()
-meth public abstract org.relaxng.datatype.Datatype getType()
-
-CLSS public com.sun.msv.grammar.DifferenceNameClass
-cons public init(com.sun.msv.grammar.NameClass,com.sun.msv.grammar.NameClass)
-fld public final com.sun.msv.grammar.NameClass nc1
-fld public final com.sun.msv.grammar.NameClass nc2
-meth public boolean accepts(java.lang.String,java.lang.String)
-meth public java.lang.Object visit(com.sun.msv.grammar.NameClassVisitor)
-meth public java.lang.String toString()
-supr com.sun.msv.grammar.NameClass
-hfds serialVersionUID
-
-CLSS public abstract com.sun.msv.grammar.ElementExp
-cons public init(com.sun.msv.grammar.Expression,boolean)
-fld public boolean ignoreUndeclaredAttributes
-fld public com.sun.msv.grammar.Expression contentModel
-intf com.sun.msv.grammar.NameClassAndExpression
-meth protected final boolean calcEpsilonReducibility()
-meth protected final int calcHashCode()
-meth public abstract com.sun.msv.grammar.NameClass getNameClass()
-meth public final boolean equals(java.lang.Object)
-meth public final boolean visit(com.sun.msv.grammar.ExpressionVisitorBoolean)
-meth public final com.sun.msv.grammar.Expression getContentModel()
-meth public final com.sun.msv.grammar.Expression visit(com.sun.msv.grammar.ExpressionVisitorExpression)
-meth public final java.lang.Object visit(com.sun.msv.grammar.ExpressionVisitor)
-meth public final void visit(com.sun.msv.grammar.ExpressionVisitorVoid)
-supr com.sun.msv.grammar.Expression
-hfds serialVersionUID
-
-CLSS public abstract com.sun.msv.grammar.Expression
-cons protected init()
-cons protected init(int)
-fld public final static com.sun.msv.grammar.Expression anyString
-fld public final static com.sun.msv.grammar.Expression epsilon
-fld public final static com.sun.msv.grammar.Expression nullSet
-fld public java.lang.Object verifierTag
-intf java.io.Serializable
-meth protected abstract boolean calcEpsilonReducibility()
-meth protected abstract int calcHashCode()
-meth protected java.lang.Object readResolve()
-meth protected static int hashCode(java.lang.Object,int)
-meth protected static int hashCode(java.lang.Object,java.lang.Object,int)
-meth public abstract boolean equals(java.lang.Object)
-meth public abstract boolean visit(com.sun.msv.grammar.ExpressionVisitorBoolean)
-meth public abstract com.sun.msv.grammar.Expression visit(com.sun.msv.grammar.ExpressionVisitorExpression)
-meth public abstract java.lang.Object visit(com.sun.msv.grammar.ExpressionVisitor)
-meth public abstract void visit(com.sun.msv.grammar.ExpressionVisitorVoid)
-meth public boolean isEpsilonReducible()
-meth public boolean visit(com.sun.msv.grammar.relax.RELAXExpressionVisitorBoolean)
-meth public com.sun.msv.grammar.Expression getExpandedExp(com.sun.msv.grammar.ExpressionPool)
-meth public com.sun.msv.grammar.Expression visit(com.sun.msv.grammar.relax.RELAXExpressionVisitorExpression)
-meth public final com.sun.msv.grammar.Expression peelOccurence()
-meth public final int hashCode()
-meth public java.lang.Object visit(com.sun.msv.grammar.relax.RELAXExpressionVisitor)
-meth public void visit(com.sun.msv.grammar.relax.RELAXExpressionVisitorVoid)
-supr java.lang.Object
-hfds cachedHashCode,epsilonReducibility,expandedExp,serialVersionUID
-hcls AnyStringExpression,EpsilonExpression,NullSetExpression
-
-CLSS public abstract com.sun.msv.grammar.ExpressionCloner
-cons protected init(com.sun.msv.grammar.ExpressionPool)
-fld protected final com.sun.msv.grammar.ExpressionPool pool
-intf com.sun.msv.grammar.ExpressionVisitorExpression
-meth public com.sun.msv.grammar.Expression onAnyString()
-meth public com.sun.msv.grammar.Expression onChoice(com.sun.msv.grammar.ChoiceExp)
-meth public com.sun.msv.grammar.Expression onConcur(com.sun.msv.grammar.ConcurExp)
-meth public com.sun.msv.grammar.Expression onData(com.sun.msv.grammar.DataExp)
-meth public com.sun.msv.grammar.Expression onEpsilon()
-meth public com.sun.msv.grammar.Expression onInterleave(com.sun.msv.grammar.InterleaveExp)
-meth public com.sun.msv.grammar.Expression onList(com.sun.msv.grammar.ListExp)
-meth public com.sun.msv.grammar.Expression onMixed(com.sun.msv.grammar.MixedExp)
-meth public com.sun.msv.grammar.Expression onNullSet()
-meth public com.sun.msv.grammar.Expression onOneOrMore(com.sun.msv.grammar.OneOrMoreExp)
-meth public com.sun.msv.grammar.Expression onSequence(com.sun.msv.grammar.SequenceExp)
-meth public com.sun.msv.grammar.Expression onValue(com.sun.msv.grammar.ValueExp)
-supr java.lang.Object
-
-CLSS public com.sun.msv.grammar.ExpressionPool
+CLSS public com.sun.tools.rngom.digested.DPatternWalker
 cons public init()
-cons public init(com.sun.msv.grammar.ExpressionPool)
-innr public final static ClosedHash
-intf java.io.Serializable
-meth protected final com.sun.msv.grammar.Expression unify(com.sun.msv.grammar.Expression)
-meth public final com.sun.msv.grammar.Expression createAnyString()
-meth public final com.sun.msv.grammar.Expression createAttribute(com.sun.msv.grammar.NameClass)
-meth public final com.sun.msv.grammar.Expression createAttribute(com.sun.msv.grammar.NameClass,com.sun.msv.grammar.Expression)
-meth public final com.sun.msv.grammar.Expression createChoice(com.sun.msv.grammar.Expression,com.sun.msv.grammar.Expression)
-meth public final com.sun.msv.grammar.Expression createConcur(com.sun.msv.grammar.Expression,com.sun.msv.grammar.Expression)
-meth public final com.sun.msv.grammar.Expression createData(com.sun.msv.datatype.xsd.XSDatatype)
-meth public final com.sun.msv.grammar.Expression createData(org.relaxng.datatype.Datatype,com.sun.msv.util.StringPair)
-meth public final com.sun.msv.grammar.Expression createData(org.relaxng.datatype.Datatype,com.sun.msv.util.StringPair,com.sun.msv.grammar.Expression)
-meth public final com.sun.msv.grammar.Expression createEpsilon()
-meth public final com.sun.msv.grammar.Expression createInterleave(com.sun.msv.grammar.Expression,com.sun.msv.grammar.Expression)
-meth public final com.sun.msv.grammar.Expression createList(com.sun.msv.grammar.Expression)
-meth public final com.sun.msv.grammar.Expression createMixed(com.sun.msv.grammar.Expression)
-meth public final com.sun.msv.grammar.Expression createNullSet()
-meth public final com.sun.msv.grammar.Expression createOneOrMore(com.sun.msv.grammar.Expression)
-meth public final com.sun.msv.grammar.Expression createOptional(com.sun.msv.grammar.Expression)
-meth public final com.sun.msv.grammar.Expression createSequence(com.sun.msv.grammar.Expression,com.sun.msv.grammar.Expression)
-meth public final com.sun.msv.grammar.Expression createValue(com.sun.msv.datatype.xsd.XSDatatype,java.lang.Object)
-meth public final com.sun.msv.grammar.Expression createValue(org.relaxng.datatype.Datatype,com.sun.msv.util.StringPair,java.lang.Object)
-meth public final com.sun.msv.grammar.Expression createZeroOrMore(com.sun.msv.grammar.Expression)
+intf com.sun.tools.rngom.digested.DPatternVisitor<java.lang.Void>
+meth protected java.lang.Void onContainer(com.sun.tools.rngom.digested.DContainerPattern)
+meth protected java.lang.Void onUnary(com.sun.tools.rngom.digested.DUnaryPattern)
+meth protected java.lang.Void onXmlToken(com.sun.tools.rngom.digested.DXmlTokenPattern)
+meth public java.lang.Void onAttribute(com.sun.tools.rngom.digested.DAttributePattern)
+meth public java.lang.Void onChoice(com.sun.tools.rngom.digested.DChoicePattern)
+meth public java.lang.Void onData(com.sun.tools.rngom.digested.DDataPattern)
+meth public java.lang.Void onElement(com.sun.tools.rngom.digested.DElementPattern)
+meth public java.lang.Void onEmpty(com.sun.tools.rngom.digested.DEmptyPattern)
+meth public java.lang.Void onGrammar(com.sun.tools.rngom.digested.DGrammarPattern)
+meth public java.lang.Void onGroup(com.sun.tools.rngom.digested.DGroupPattern)
+meth public java.lang.Void onInterleave(com.sun.tools.rngom.digested.DInterleavePattern)
+meth public java.lang.Void onList(com.sun.tools.rngom.digested.DListPattern)
+meth public java.lang.Void onMixed(com.sun.tools.rngom.digested.DMixedPattern)
+meth public java.lang.Void onNotAllowed(com.sun.tools.rngom.digested.DNotAllowedPattern)
+meth public java.lang.Void onOneOrMore(com.sun.tools.rngom.digested.DOneOrMorePattern)
+meth public java.lang.Void onOptional(com.sun.tools.rngom.digested.DOptionalPattern)
+meth public java.lang.Void onRef(com.sun.tools.rngom.digested.DRefPattern)
+meth public java.lang.Void onText(com.sun.tools.rngom.digested.DTextPattern)
+meth public java.lang.Void onValue(com.sun.tools.rngom.digested.DValuePattern)
+meth public java.lang.Void onZeroOrMore(com.sun.tools.rngom.digested.DZeroOrMorePattern)
 supr java.lang.Object
-hfds expTable,serialVersionUID
-
-CLSS public final static com.sun.msv.grammar.ExpressionPool$ClosedHash
- outer com.sun.msv.grammar.ExpressionPool
-cons public init()
-cons public init(com.sun.msv.grammar.ExpressionPool$ClosedHash)
-intf java.io.Serializable
-meth public com.sun.msv.grammar.Expression get(com.sun.msv.grammar.Expression)
-meth public com.sun.msv.grammar.Expression get(int,com.sun.msv.grammar.Expression,java.lang.Class)
-meth public com.sun.msv.grammar.Expression getBinExp(com.sun.msv.grammar.Expression,com.sun.msv.grammar.Expression,java.lang.Class)
-meth public void put(com.sun.msv.grammar.Expression)
-supr java.lang.Object
-hfds count,initialCapacity,loadFactor,parent,serialPersistentFields,serialVersionUID,table,threshold
-
-CLSS public abstract interface com.sun.msv.grammar.ExpressionVisitor
-meth public abstract java.lang.Object onAnyString()
-meth public abstract java.lang.Object onAttribute(com.sun.msv.grammar.AttributeExp)
-meth public abstract java.lang.Object onChoice(com.sun.msv.grammar.ChoiceExp)
-meth public abstract java.lang.Object onConcur(com.sun.msv.grammar.ConcurExp)
-meth public abstract java.lang.Object onData(com.sun.msv.grammar.DataExp)
-meth public abstract java.lang.Object onElement(com.sun.msv.grammar.ElementExp)
-meth public abstract java.lang.Object onEpsilon()
-meth public abstract java.lang.Object onInterleave(com.sun.msv.grammar.InterleaveExp)
-meth public abstract java.lang.Object onList(com.sun.msv.grammar.ListExp)
-meth public abstract java.lang.Object onMixed(com.sun.msv.grammar.MixedExp)
-meth public abstract java.lang.Object onNullSet()
-meth public abstract java.lang.Object onOneOrMore(com.sun.msv.grammar.OneOrMoreExp)
-meth public abstract java.lang.Object onOther(com.sun.msv.grammar.OtherExp)
-meth public abstract java.lang.Object onRef(com.sun.msv.grammar.ReferenceExp)
-meth public abstract java.lang.Object onSequence(com.sun.msv.grammar.SequenceExp)
-meth public abstract java.lang.Object onValue(com.sun.msv.grammar.ValueExp)
-
-CLSS public abstract interface com.sun.msv.grammar.ExpressionVisitorBoolean
-meth public abstract boolean onAnyString()
-meth public abstract boolean onAttribute(com.sun.msv.grammar.AttributeExp)
-meth public abstract boolean onChoice(com.sun.msv.grammar.ChoiceExp)
-meth public abstract boolean onConcur(com.sun.msv.grammar.ConcurExp)
-meth public abstract boolean onData(com.sun.msv.grammar.DataExp)
-meth public abstract boolean onElement(com.sun.msv.grammar.ElementExp)
-meth public abstract boolean onEpsilon()
-meth public abstract boolean onInterleave(com.sun.msv.grammar.InterleaveExp)
-meth public abstract boolean onList(com.sun.msv.grammar.ListExp)
-meth public abstract boolean onMixed(com.sun.msv.grammar.MixedExp)
-meth public abstract boolean onNullSet()
-meth public abstract boolean onOneOrMore(com.sun.msv.grammar.OneOrMoreExp)
-meth public abstract boolean onOther(com.sun.msv.grammar.OtherExp)
-meth public abstract boolean onRef(com.sun.msv.grammar.ReferenceExp)
-meth public abstract boolean onSequence(com.sun.msv.grammar.SequenceExp)
-meth public abstract boolean onValue(com.sun.msv.grammar.ValueExp)
-
-CLSS public abstract interface com.sun.msv.grammar.ExpressionVisitorExpression
-meth public abstract com.sun.msv.grammar.Expression onAnyString()
-meth public abstract com.sun.msv.grammar.Expression onAttribute(com.sun.msv.grammar.AttributeExp)
-meth public abstract com.sun.msv.grammar.Expression onChoice(com.sun.msv.grammar.ChoiceExp)
-meth public abstract com.sun.msv.grammar.Expression onConcur(com.sun.msv.grammar.ConcurExp)
-meth public abstract com.sun.msv.grammar.Expression onData(com.sun.msv.grammar.DataExp)
-meth public abstract com.sun.msv.grammar.Expression onElement(com.sun.msv.grammar.ElementExp)
-meth public abstract com.sun.msv.grammar.Expression onEpsilon()
-meth public abstract com.sun.msv.grammar.Expression onInterleave(com.sun.msv.grammar.InterleaveExp)
-meth public abstract com.sun.msv.grammar.Expression onList(com.sun.msv.grammar.ListExp)
-meth public abstract com.sun.msv.grammar.Expression onMixed(com.sun.msv.grammar.MixedExp)
-meth public abstract com.sun.msv.grammar.Expression onNullSet()
-meth public abstract com.sun.msv.grammar.Expression onOneOrMore(com.sun.msv.grammar.OneOrMoreExp)
-meth public abstract com.sun.msv.grammar.Expression onOther(com.sun.msv.grammar.OtherExp)
-meth public abstract com.sun.msv.grammar.Expression onRef(com.sun.msv.grammar.ReferenceExp)
-meth public abstract com.sun.msv.grammar.Expression onSequence(com.sun.msv.grammar.SequenceExp)
-meth public abstract com.sun.msv.grammar.Expression onValue(com.sun.msv.grammar.ValueExp)
-
-CLSS public abstract interface com.sun.msv.grammar.ExpressionVisitorVoid
-meth public abstract void onAnyString()
-meth public abstract void onAttribute(com.sun.msv.grammar.AttributeExp)
-meth public abstract void onChoice(com.sun.msv.grammar.ChoiceExp)
-meth public abstract void onConcur(com.sun.msv.grammar.ConcurExp)
-meth public abstract void onData(com.sun.msv.grammar.DataExp)
-meth public abstract void onElement(com.sun.msv.grammar.ElementExp)
-meth public abstract void onEpsilon()
-meth public abstract void onInterleave(com.sun.msv.grammar.InterleaveExp)
-meth public abstract void onList(com.sun.msv.grammar.ListExp)
-meth public abstract void onMixed(com.sun.msv.grammar.MixedExp)
-meth public abstract void onNullSet()
-meth public abstract void onOneOrMore(com.sun.msv.grammar.OneOrMoreExp)
-meth public abstract void onOther(com.sun.msv.grammar.OtherExp)
-meth public abstract void onRef(com.sun.msv.grammar.ReferenceExp)
-meth public abstract void onSequence(com.sun.msv.grammar.SequenceExp)
-meth public abstract void onValue(com.sun.msv.grammar.ValueExp)
-
-CLSS public abstract interface com.sun.msv.grammar.Grammar
-intf java.io.Serializable
-meth public abstract com.sun.msv.grammar.Expression getTopLevel()
-meth public abstract com.sun.msv.grammar.ExpressionPool getPool()
-
-CLSS public abstract interface com.sun.msv.grammar.IDContextProvider
-intf org.relaxng.datatype.ValidationContext
-meth public abstract void onID(org.relaxng.datatype.Datatype,java.lang.String)
-
-CLSS public abstract interface com.sun.msv.grammar.IDContextProvider2
-intf org.relaxng.datatype.ValidationContext
-meth public abstract void onID(org.relaxng.datatype.Datatype,com.sun.msv.verifier.regexp.StringToken)
-
-CLSS public final com.sun.msv.grammar.InterleaveExp
-meth protected boolean calcEpsilonReducibility()
-meth public boolean visit(com.sun.msv.grammar.ExpressionVisitorBoolean)
-meth public com.sun.msv.grammar.Expression visit(com.sun.msv.grammar.ExpressionVisitorExpression)
-meth public java.lang.Object visit(com.sun.msv.grammar.ExpressionVisitor)
-meth public void visit(com.sun.msv.grammar.ExpressionVisitorVoid)
-supr com.sun.msv.grammar.BinaryExp
-hfds serialVersionUID
-
-CLSS public final com.sun.msv.grammar.ListExp
-meth protected boolean calcEpsilonReducibility()
-meth public boolean visit(com.sun.msv.grammar.ExpressionVisitorBoolean)
-meth public com.sun.msv.grammar.Expression visit(com.sun.msv.grammar.ExpressionVisitorExpression)
-meth public java.lang.Object visit(com.sun.msv.grammar.ExpressionVisitor)
-meth public void visit(com.sun.msv.grammar.ExpressionVisitorVoid)
-supr com.sun.msv.grammar.UnaryExp
-hfds serialVersionUID
-
-CLSS public final com.sun.msv.grammar.MixedExp
-meth protected boolean calcEpsilonReducibility()
-meth public boolean visit(com.sun.msv.grammar.ExpressionVisitorBoolean)
-meth public com.sun.msv.grammar.Expression visit(com.sun.msv.grammar.ExpressionVisitorExpression)
-meth public java.lang.Object visit(com.sun.msv.grammar.ExpressionVisitor)
-meth public void visit(com.sun.msv.grammar.ExpressionVisitorVoid)
-supr com.sun.msv.grammar.UnaryExp
-hfds serialVersionUID
-
-CLSS public abstract com.sun.msv.grammar.NameClass
-cons public init()
-fld public final static com.sun.msv.grammar.NameClass ALL
-fld public final static com.sun.msv.grammar.NameClass NONE
-fld public final static java.lang.String LOCALNAME_WILDCARD = "*"
-fld public final static java.lang.String NAMESPACE_WILDCARD = "*"
-intf java.io.Serializable
-meth public abstract boolean accepts(java.lang.String,java.lang.String)
-meth public abstract java.lang.Object visit(com.sun.msv.grammar.NameClassVisitor)
-meth public boolean isNull()
-meth public com.sun.msv.grammar.NameClass simplify()
-meth public final boolean accepts(com.sun.msv.util.StringPair)
-meth public final boolean includes(com.sun.msv.grammar.NameClass)
-meth public final boolean isEqualTo(com.sun.msv.grammar.NameClass)
-meth public static com.sun.msv.grammar.NameClass intersection(com.sun.msv.grammar.NameClass,com.sun.msv.grammar.NameClass)
-meth public static com.sun.msv.grammar.NameClass union(com.sun.msv.grammar.NameClass,com.sun.msv.grammar.NameClass)
-supr java.lang.Object
-hfds serialVersionUID
-
-CLSS public abstract interface com.sun.msv.grammar.NameClassAndExpression
-meth public abstract com.sun.msv.grammar.Expression getContentModel()
-meth public abstract com.sun.msv.grammar.NameClass getNameClass()
-
-CLSS public abstract interface com.sun.msv.grammar.NameClassVisitor
-meth public abstract java.lang.Object onAnyName(com.sun.msv.grammar.AnyNameClass)
-meth public abstract java.lang.Object onChoice(com.sun.msv.grammar.ChoiceNameClass)
-meth public abstract java.lang.Object onDifference(com.sun.msv.grammar.DifferenceNameClass)
-meth public abstract java.lang.Object onNot(com.sun.msv.grammar.NotNameClass)
-meth public abstract java.lang.Object onNsName(com.sun.msv.grammar.NamespaceNameClass)
-meth public abstract java.lang.Object onSimple(com.sun.msv.grammar.SimpleNameClass)
-
-CLSS public com.sun.msv.grammar.NamespaceNameClass
-cons public init(java.lang.String)
-fld public final java.lang.String namespaceURI
-meth public boolean accepts(java.lang.String,java.lang.String)
-meth public java.lang.Object visit(com.sun.msv.grammar.NameClassVisitor)
-meth public java.lang.String toString()
-supr com.sun.msv.grammar.NameClass
-hfds serialVersionUID
-
-CLSS public final com.sun.msv.grammar.NotNameClass
-cons public init(com.sun.msv.grammar.NameClass)
-fld public final com.sun.msv.grammar.NameClass child
-meth public boolean accepts(java.lang.String,java.lang.String)
-meth public java.lang.Object visit(com.sun.msv.grammar.NameClassVisitor)
-meth public java.lang.String toString()
-supr com.sun.msv.grammar.NameClass
-hfds serialVersionUID
-
-CLSS public final com.sun.msv.grammar.OneOrMoreExp
-meth protected boolean calcEpsilonReducibility()
-meth public boolean visit(com.sun.msv.grammar.ExpressionVisitorBoolean)
-meth public com.sun.msv.grammar.Expression visit(com.sun.msv.grammar.ExpressionVisitorExpression)
-meth public java.lang.Object visit(com.sun.msv.grammar.ExpressionVisitor)
-meth public void visit(com.sun.msv.grammar.ExpressionVisitorVoid)
-supr com.sun.msv.grammar.UnaryExp
-hfds serialVersionUID
-
-CLSS public com.sun.msv.grammar.OtherExp
-cons public init()
-cons public init(com.sun.msv.grammar.Expression)
-fld public com.sun.msv.grammar.Expression exp
-meth protected boolean calcEpsilonReducibility()
-meth protected final int calcHashCode()
-meth public boolean equals(java.lang.Object)
-meth public final boolean visit(com.sun.msv.grammar.ExpressionVisitorBoolean)
-meth public final com.sun.msv.grammar.Expression visit(com.sun.msv.grammar.ExpressionVisitorExpression)
-meth public final java.lang.Object visit(com.sun.msv.grammar.ExpressionVisitor)
-meth public final void visit(com.sun.msv.grammar.ExpressionVisitorVoid)
-meth public java.lang.String printName()
-supr com.sun.msv.grammar.Expression
-hfds serialVersionUID
-
-CLSS public abstract com.sun.msv.grammar.ReferenceContainer
-cons public init()
-fld protected final java.util.Map impl
-intf java.io.Serializable
-meth protected abstract com.sun.msv.grammar.ReferenceExp createReference(java.lang.String)
-meth public final com.sun.msv.grammar.ReferenceExp _get(java.lang.String)
-meth public final com.sun.msv.grammar.ReferenceExp _getOrCreate(java.lang.String)
-meth public final com.sun.msv.grammar.ReferenceExp remove(java.lang.String)
-meth public final com.sun.msv.grammar.ReferenceExp[] getAll()
-meth public final int size()
-meth public final java.util.Iterator iterator()
-meth public void redefine(java.lang.String,com.sun.msv.grammar.ReferenceExp)
-supr java.lang.Object
-hfds serialVersionUID
-
-CLSS public com.sun.msv.grammar.ReferenceExp
-cons public init(java.lang.String)
-cons public init(java.lang.String,com.sun.msv.grammar.Expression)
-fld public com.sun.msv.grammar.Expression exp
-fld public final java.lang.String name
-meth protected boolean calcEpsilonReducibility()
-meth protected final int calcHashCode()
-meth public boolean equals(java.lang.Object)
-meth public boolean isDefined()
-meth public final boolean visit(com.sun.msv.grammar.ExpressionVisitorBoolean)
-meth public final com.sun.msv.grammar.Expression visit(com.sun.msv.grammar.ExpressionVisitorExpression)
-meth public final java.lang.Object visit(com.sun.msv.grammar.ExpressionVisitor)
-meth public final void visit(com.sun.msv.grammar.ExpressionVisitorVoid)
-supr com.sun.msv.grammar.Expression
-hfds serialVersionUID
-
-CLSS public final com.sun.msv.grammar.SequenceExp
-meth protected boolean calcEpsilonReducibility()
-meth public boolean visit(com.sun.msv.grammar.ExpressionVisitorBoolean)
-meth public com.sun.msv.grammar.Expression visit(com.sun.msv.grammar.ExpressionVisitorExpression)
-meth public java.lang.Object visit(com.sun.msv.grammar.ExpressionVisitor)
-meth public void visit(com.sun.msv.grammar.ExpressionVisitorVoid)
-supr com.sun.msv.grammar.BinaryExp
-hfds serialVersionUID
-
-CLSS public final com.sun.msv.grammar.SimpleNameClass
-cons public init(com.sun.msv.util.StringPair)
-cons public init(java.lang.String,java.lang.String)
-fld public final java.lang.String localName
-fld public final java.lang.String namespaceURI
-meth public boolean accepts(java.lang.String,java.lang.String)
-meth public com.sun.msv.util.StringPair toStringPair()
-meth public java.lang.Object visit(com.sun.msv.grammar.NameClassVisitor)
-meth public java.lang.String toString()
-supr com.sun.msv.grammar.NameClass
-hfds serialVersionUID
-
-CLSS public abstract com.sun.msv.grammar.UnaryExp
-cons protected init(com.sun.msv.grammar.Expression)
-fld public final com.sun.msv.grammar.Expression exp
-meth protected final int calcHashCode()
-meth public boolean equals(java.lang.Object)
-supr com.sun.msv.grammar.Expression
-hfds serialVersionUID
-
-CLSS public final com.sun.msv.grammar.ValueExp
-cons protected init(org.relaxng.datatype.Datatype,com.sun.msv.util.StringPair,java.lang.Object)
-fld public final com.sun.msv.util.StringPair name
-fld public final java.lang.Object value
-fld public final org.relaxng.datatype.Datatype dt
-intf com.sun.msv.grammar.DataOrValueExp
-meth protected boolean calcEpsilonReducibility()
-meth protected final int calcHashCode()
-meth public boolean equals(java.lang.Object)
-meth public boolean visit(com.sun.msv.grammar.ExpressionVisitorBoolean)
-meth public com.sun.msv.grammar.Expression visit(com.sun.msv.grammar.ExpressionVisitorExpression)
-meth public com.sun.msv.util.StringPair getName()
-meth public java.lang.Object visit(com.sun.msv.grammar.ExpressionVisitor)
-meth public org.relaxng.datatype.Datatype getType()
-meth public void visit(com.sun.msv.grammar.ExpressionVisitorVoid)
-supr com.sun.msv.grammar.Expression
-hfds serialVersionUID
-
-CLSS public abstract com.sun.msv.grammar.util.ExpressionFinder
-cons public init()
-intf com.sun.msv.grammar.ExpressionVisitorBoolean
-meth public boolean onAnyString()
-meth public boolean onAttribute(com.sun.msv.grammar.AttributeExp)
-meth public boolean onChoice(com.sun.msv.grammar.ChoiceExp)
-meth public boolean onConcur(com.sun.msv.grammar.ConcurExp)
-meth public boolean onData(com.sun.msv.grammar.DataExp)
-meth public boolean onElement(com.sun.msv.grammar.ElementExp)
-meth public boolean onEpsilon()
-meth public boolean onInterleave(com.sun.msv.grammar.InterleaveExp)
-meth public boolean onList(com.sun.msv.grammar.ListExp)
-meth public boolean onMixed(com.sun.msv.grammar.MixedExp)
-meth public boolean onNullSet()
-meth public boolean onOneOrMore(com.sun.msv.grammar.OneOrMoreExp)
-meth public boolean onOther(com.sun.msv.grammar.OtherExp)
-meth public boolean onRef(com.sun.msv.grammar.ReferenceExp)
-meth public boolean onSequence(com.sun.msv.grammar.SequenceExp)
-meth public boolean onValue(com.sun.msv.grammar.ValueExp)
-supr java.lang.Object
-
-CLSS public com.sun.msv.util.DatatypeRef
-cons public init()
-fld public org.relaxng.datatype.Datatype[] types
-supr java.lang.Object
-
-CLSS public final com.sun.msv.util.LightStack
-cons public init()
-meth public boolean contains(java.lang.Object)
-meth public int size()
-meth public java.lang.Object pop()
-meth public java.lang.Object top()
-meth public void push(java.lang.Object)
-supr java.lang.Object
-hfds buf,len
-
-CLSS public com.sun.msv.util.StartTagInfo
-cons protected init()
-cons public init(java.lang.String,java.lang.String,java.lang.String,org.xml.sax.Attributes,com.sun.msv.grammar.IDContextProvider)
-cons public init(java.lang.String,java.lang.String,java.lang.String,org.xml.sax.Attributes,com.sun.msv.grammar.IDContextProvider2)
-fld public com.sun.msv.grammar.IDContextProvider2 context
-fld public java.lang.String localName
-fld public java.lang.String namespaceURI
-fld public java.lang.String qName
-fld public org.xml.sax.Attributes attributes
-meth public final boolean containsAttribute(java.lang.String)
-meth public final boolean containsAttribute(java.lang.String,java.lang.String)
-meth public final java.lang.String getAttribute(java.lang.String)
-meth public final java.lang.String getAttribute(java.lang.String,java.lang.String)
-meth public final java.lang.String getCollapsedAttribute(java.lang.String)
-meth public final java.lang.String getDefaultedAttribute(java.lang.String,java.lang.String)
-meth public final java.lang.String getDefaultedAttribute(java.lang.String,java.lang.String,java.lang.String)
-meth public void reinit(java.lang.String,java.lang.String,java.lang.String,org.xml.sax.Attributes,com.sun.msv.grammar.IDContextProvider)
-meth public void reinit(java.lang.String,java.lang.String,java.lang.String,org.xml.sax.Attributes,com.sun.msv.grammar.IDContextProvider2)
-supr java.lang.Object
-
-CLSS public final com.sun.msv.util.StringPair
-cons public init(com.sun.msv.grammar.SimpleNameClass)
-cons public init(java.lang.String,java.lang.String)
-fld public final java.lang.String localName
-fld public final java.lang.String namespaceURI
-intf java.io.Serializable
-meth public boolean equals(java.lang.Object)
-meth public int hashCode()
-meth public java.lang.String toString()
-supr java.lang.Object
-
-CLSS public com.sun.msv.util.StringRef
-cons public init()
-fld public java.lang.String str
-supr java.lang.Object
-
-CLSS public com.sun.msv.util.Uri
-cons public init()
-meth public static boolean hasFragmentId(java.lang.String)
-meth public static boolean isAbsolute(java.lang.String)
-meth public static boolean isValid(java.lang.String)
-meth public static java.lang.String escapeDisallowedChars(java.lang.String)
-meth public static java.lang.String resolve(java.lang.String,java.lang.String)
-supr java.lang.Object
-hfds HEX_DIGITS,excluded,utf8
-
-CLSS public com.sun.msv.util.Util
-cons public init()
-meth public static boolean isAbsoluteURI(java.lang.String)
-meth public static java.lang.String which(java.lang.Class)
-meth public static java.lang.String which(java.lang.String,java.lang.ClassLoader)
-meth public static org.xml.sax.InputSource getInputSource(java.lang.String)
-supr java.lang.Object
-
-CLSS public abstract com.sun.msv.verifier.AbstractVerifier
-cons public init()
-fld protected boolean performIDcheck
-fld protected final java.util.Map ids
-fld protected final java.util.Set idrefs
-fld protected final org.xml.sax.helpers.NamespaceSupport namespaceSupport
-fld protected final static org.xml.sax.Locator dummyLocator
-fld protected org.xml.sax.Locator locator
-intf com.sun.msv.grammar.IDContextProvider2
-intf org.xml.sax.ContentHandler
-intf org.xml.sax.DTDHandler
-meth protected abstract void onDuplicateId(java.lang.String)
-meth protected void init()
-meth public boolean isNotation(java.lang.String)
-meth public boolean isUnparsedEntity(java.lang.String)
-meth public final org.xml.sax.Locator getLocator()
-meth public java.lang.String getBaseUri()
-meth public java.lang.String resolveNamespacePrefix(java.lang.String)
-meth public void endElement(java.lang.String,java.lang.String,java.lang.String) throws org.xml.sax.SAXException
-meth public void endPrefixMapping(java.lang.String)
-meth public void notationDecl(java.lang.String,java.lang.String,java.lang.String)
-meth public void onID(org.relaxng.datatype.Datatype,com.sun.msv.verifier.regexp.StringToken)
-meth public void processingInstruction(java.lang.String,java.lang.String)
-meth public void setDocumentLocator(org.xml.sax.Locator)
-meth public void skippedEntity(java.lang.String)
-meth public void startElement(java.lang.String,java.lang.String,java.lang.String,org.xml.sax.Attributes) throws org.xml.sax.SAXException
-meth public void startPrefixMapping(java.lang.String,java.lang.String)
-meth public void unparsedEntityDecl(java.lang.String,java.lang.String,java.lang.String,java.lang.String)
-supr java.lang.Object
-hfds contextPushed,notations,unparsedEntities
-
-CLSS public abstract interface com.sun.msv.verifier.Acceptor
-fld public final static int STRING_IGNORE = 1
-fld public final static int STRING_PROHIBITED = 0
-fld public final static int STRING_STRICT = 2
-meth public abstract boolean isAcceptState(com.sun.msv.util.StringRef)
-meth public abstract boolean onAttribute(java.lang.String,java.lang.String,java.lang.String,java.lang.String,com.sun.msv.grammar.IDContextProvider,com.sun.msv.util.StringRef,com.sun.msv.util.DatatypeRef)
-meth public abstract boolean onAttribute2(java.lang.String,java.lang.String,java.lang.String,java.lang.String,com.sun.msv.grammar.IDContextProvider2,com.sun.msv.util.StringRef,com.sun.msv.util.DatatypeRef)
-meth public abstract boolean onEndAttributes(com.sun.msv.util.StartTagInfo,com.sun.msv.util.StringRef)
-meth public abstract boolean onText(java.lang.String,com.sun.msv.grammar.IDContextProvider,com.sun.msv.util.StringRef,com.sun.msv.util.DatatypeRef)
-meth public abstract boolean onText2(java.lang.String,com.sun.msv.grammar.IDContextProvider2,com.sun.msv.util.StringRef,com.sun.msv.util.DatatypeRef)
-meth public abstract boolean stepForward(com.sun.msv.verifier.Acceptor,com.sun.msv.util.StringRef)
-meth public abstract com.sun.msv.verifier.Acceptor createChildAcceptor(com.sun.msv.util.StartTagInfo,com.sun.msv.util.StringRef)
-meth public abstract com.sun.msv.verifier.Acceptor createClone()
-meth public abstract int getStringCareLevel()
-meth public abstract java.lang.Object getOwnerType()
-
-CLSS public abstract interface com.sun.msv.verifier.DocumentDeclaration
-meth public abstract com.sun.msv.verifier.Acceptor createAcceptor()
-
-CLSS public abstract com.sun.msv.verifier.ErrorInfo
-cons public init()
-innr public abstract static ElementErrorInfo
-innr public static BadAttribute
-innr public static BadTagName
-innr public static BadText
-innr public static IncompleteContentModel
-innr public static MissingAttribute
-supr java.lang.Object
-
-CLSS public static com.sun.msv.verifier.ErrorInfo$BadAttribute
- outer com.sun.msv.verifier.ErrorInfo
-cons protected init(com.sun.msv.util.StartTagInfo,java.lang.String,java.lang.String,java.lang.String,java.lang.String)
-fld public final java.lang.String attLocalName
-fld public final java.lang.String attNamespaceURI
-fld public final java.lang.String attQName
-fld public final java.lang.String attValue
-supr com.sun.msv.verifier.ErrorInfo$ElementErrorInfo
-
-CLSS public static com.sun.msv.verifier.ErrorInfo$BadTagName
- outer com.sun.msv.verifier.ErrorInfo
-cons public init(com.sun.msv.util.StartTagInfo)
-cons public init(java.lang.String,java.lang.String,java.lang.String)
-supr com.sun.msv.verifier.ErrorInfo$ElementErrorInfo
-
-CLSS public static com.sun.msv.verifier.ErrorInfo$BadText
- outer com.sun.msv.verifier.ErrorInfo
-cons public init(java.lang.String)
-cons public init(java.lang.StringBuffer)
-fld public final java.lang.String literal
-supr com.sun.msv.verifier.ErrorInfo
-
-CLSS public abstract static com.sun.msv.verifier.ErrorInfo$ElementErrorInfo
- outer com.sun.msv.verifier.ErrorInfo
-cons public init(com.sun.msv.util.StartTagInfo)
-cons public init(java.lang.String,java.lang.String,java.lang.String)
-fld public final java.lang.String localName
-fld public final java.lang.String namespaceURI
-fld public final java.lang.String qName
-supr com.sun.msv.verifier.ErrorInfo
-
-CLSS public static com.sun.msv.verifier.ErrorInfo$IncompleteContentModel
- outer com.sun.msv.verifier.ErrorInfo
-cons public init(com.sun.msv.util.StartTagInfo)
-cons public init(java.lang.String,java.lang.String,java.lang.String)
-supr com.sun.msv.verifier.ErrorInfo$ElementErrorInfo
-
-CLSS public static com.sun.msv.verifier.ErrorInfo$MissingAttribute
- outer com.sun.msv.verifier.ErrorInfo
-cons public init(com.sun.msv.util.StartTagInfo)
-cons public init(java.lang.String,java.lang.String,java.lang.String)
-supr com.sun.msv.verifier.ErrorInfo$ElementErrorInfo
-
-CLSS public abstract interface com.sun.msv.verifier.IVerifier
-intf org.iso_relax.verifier.VerifierHandler
-meth public abstract boolean isValid()
-meth public abstract java.lang.Object getCurrentElementType()
-meth public abstract org.relaxng.datatype.Datatype[] getLastCharacterType()
-meth public abstract org.xml.sax.ErrorHandler getErrorHandler()
-meth public abstract org.xml.sax.Locator getLocator()
-meth public abstract void setErrorHandler(org.xml.sax.ErrorHandler)
-meth public abstract void setPanicMode(boolean)
-
-CLSS public com.sun.msv.verifier.ValidationUnrecoverableException
-cons public init(org.xml.sax.SAXParseException)
-supr org.xml.sax.SAXParseException
-
-CLSS public com.sun.msv.verifier.ValidityViolation
-cons public init(org.xml.sax.Locator,java.lang.String,com.sun.msv.verifier.ErrorInfo)
-meth public com.sun.msv.verifier.ErrorInfo getErrorInfo()
-supr org.xml.sax.SAXParseException
-hfds errorInfo
-
-CLSS public com.sun.msv.verifier.Verifier
-cons public init(com.sun.msv.verifier.DocumentDeclaration,org.xml.sax.ErrorHandler)
-fld protected boolean hadError
-fld protected com.sun.msv.verifier.Acceptor current
-fld protected final com.sun.msv.verifier.DocumentDeclaration docDecl
-fld protected int panicLevel
-fld protected org.xml.sax.ErrorHandler errorHandler
-fld public final static java.lang.String ERR_DUPLICATE_ID = "Verifier.Error.DuplicateId"
-fld public final static java.lang.String ERR_MISSING_ATTRIBUTE = "Verifier.Error.MissingAttribute"
-fld public final static java.lang.String ERR_UNCOMPLETED_CONTENT = "Verifier.Error.UncompletedContent"
-fld public final static java.lang.String ERR_UNEXPECTED_ATTRIBUTE = "Verifier.Error.UnexpectedAttribute"
-fld public final static java.lang.String ERR_UNEXPECTED_ELEMENT = "Verifier.Error.UnexpectedElement"
-fld public final static java.lang.String ERR_UNEXPECTED_STARTTAG = "Verifier.Error.UnexpectedStartTag"
-fld public final static java.lang.String ERR_UNEXPECTED_TEXT = "Verifier.Error.UnexpectedText"
-fld public final static java.lang.String ERR_UNSOLD_IDREF = "Verifier.Error.UnsoldIDREF"
-intf com.sun.msv.verifier.IVerifier
-meth protected com.sun.msv.verifier.ValidityViolation onError(com.sun.msv.util.StringRef,java.lang.String,com.sun.msv.verifier.ErrorInfo) throws org.xml.sax.SAXException
-meth protected com.sun.msv.verifier.ValidityViolation onError(java.lang.String,com.sun.msv.verifier.ErrorInfo) throws org.xml.sax.SAXException
-meth protected org.relaxng.datatype.Datatype[] feedAttribute(com.sun.msv.verifier.Acceptor,java.lang.String,java.lang.String,java.lang.String,java.lang.String) throws org.xml.sax.SAXException
-meth protected void init()
-meth protected void onNextAcceptorReady(com.sun.msv.util.StartTagInfo,com.sun.msv.verifier.Acceptor) throws org.xml.sax.SAXException
-meth protected void verifyText() throws org.xml.sax.SAXException
-meth public final boolean isValid()
-meth public final org.xml.sax.ErrorHandler getErrorHandler()
-meth public final void setErrorHandler(org.xml.sax.ErrorHandler)
-meth public final void setPanicMode(boolean)
-meth public java.lang.Object getCurrentElementType()
-meth public org.relaxng.datatype.Datatype[] getLastCharacterType()
-meth public static java.lang.String localizeMessage(java.lang.String,java.lang.Object[])
-meth public void characters(char[],int,int) throws org.xml.sax.SAXException
-meth public void endDocument() throws org.xml.sax.SAXException
-meth public void endElement(java.lang.String,java.lang.String,java.lang.String) throws org.xml.sax.SAXException
-meth public void ignorableWhitespace(char[],int,int) throws org.xml.sax.SAXException
-meth public void onDuplicateId(java.lang.String)
-meth public void startDocument() throws org.xml.sax.SAXException
-meth public void startElement(java.lang.String,java.lang.String,java.lang.String,org.xml.sax.Attributes) throws org.xml.sax.SAXException
-supr com.sun.msv.verifier.AbstractVerifier
-hfds DEFAULT_PANIC_LEVEL,attributeType,characterType,duplicateIds,initialPanicLevel,isFinished,stack,sti,stringCareLevel,text
-hcls Context
-
-CLSS public com.sun.msv.verifier.VerifierFilter
-cons public init(com.sun.msv.verifier.DocumentDeclaration,org.xml.sax.ErrorHandler)
-cons public init(com.sun.msv.verifier.IVerifier)
-intf com.sun.msv.verifier.IVerifier
-meth public boolean isValid()
-meth public com.sun.msv.verifier.IVerifier getVerifier()
-meth public final org.xml.sax.ErrorHandler getErrorHandler()
-meth public final org.xml.sax.Locator getLocator()
-meth public final void setErrorHandler(org.xml.sax.ErrorHandler)
-meth public final void setPanicMode(boolean)
-meth public java.lang.Object getCurrentElementType()
-meth public org.relaxng.datatype.Datatype[] getLastCharacterType()
-meth public void characters(char[],int,int) throws org.xml.sax.SAXException
-meth public void endDocument() throws org.xml.sax.SAXException
-meth public void endElement(java.lang.String,java.lang.String,java.lang.String) throws org.xml.sax.SAXException
-meth public void endPrefixMapping(java.lang.String) throws org.xml.sax.SAXException
-meth public void ignorableWhitespace(char[],int,int) throws org.xml.sax.SAXException
-meth public void processingInstruction(java.lang.String,java.lang.String) throws org.xml.sax.SAXException
-meth public void setDocumentLocator(org.xml.sax.Locator)
-meth public void skippedEntity(java.lang.String) throws org.xml.sax.SAXException
-meth public void startDocument() throws org.xml.sax.SAXException
-meth public void startElement(java.lang.String,java.lang.String,java.lang.String,org.xml.sax.Attributes) throws org.xml.sax.SAXException
-meth public void startPrefixMapping(java.lang.String,java.lang.String) throws org.xml.sax.SAXException
-supr org.xml.sax.helpers.XMLFilterImpl
-hfds verifier
-
-CLSS public final com.sun.msv.verifier.regexp.AnyElementToken
-fld public final static com.sun.msv.verifier.regexp.Token theInstance
-meth public boolean match(com.sun.msv.grammar.ElementExp)
-supr com.sun.msv.verifier.regexp.ElementToken
-
-CLSS public com.sun.msv.verifier.regexp.AttributeFeeder
-cons public init(com.sun.msv.verifier.regexp.REDocumentDeclaration)
-fld protected final com.sun.msv.grammar.ExpressionPool pool
-fld protected final com.sun.msv.verifier.regexp.REDocumentDeclaration docDecl
-intf com.sun.msv.grammar.ExpressionVisitorExpression
-meth public com.sun.msv.grammar.Expression onAnyString()
-meth public com.sun.msv.grammar.Expression onAttribute(com.sun.msv.grammar.AttributeExp)
-meth public com.sun.msv.grammar.Expression onChoice(com.sun.msv.grammar.ChoiceExp)
-meth public com.sun.msv.grammar.Expression onConcur(com.sun.msv.grammar.ConcurExp)
-meth public com.sun.msv.grammar.Expression onData(com.sun.msv.grammar.DataExp)
-meth public com.sun.msv.grammar.Expression onElement(com.sun.msv.grammar.ElementExp)
-meth public com.sun.msv.grammar.Expression onEpsilon()
-meth public com.sun.msv.grammar.Expression onInterleave(com.sun.msv.grammar.InterleaveExp)
-meth public com.sun.msv.grammar.Expression onList(com.sun.msv.grammar.ListExp)
-meth public com.sun.msv.grammar.Expression onMixed(com.sun.msv.grammar.MixedExp)
-meth public com.sun.msv.grammar.Expression onNullSet()
-meth public com.sun.msv.grammar.Expression onOneOrMore(com.sun.msv.grammar.OneOrMoreExp)
-meth public com.sun.msv.grammar.Expression onOther(com.sun.msv.grammar.OtherExp)
-meth public com.sun.msv.grammar.Expression onRef(com.sun.msv.grammar.ReferenceExp)
-meth public com.sun.msv.grammar.Expression onSequence(com.sun.msv.grammar.SequenceExp)
-meth public com.sun.msv.grammar.Expression onValue(com.sun.msv.grammar.ValueExp)
-meth public final com.sun.msv.grammar.Expression feed(com.sun.msv.grammar.Expression,com.sun.msv.verifier.regexp.AttributeToken,boolean)
-supr java.lang.Object
-hfds token
-
-CLSS public com.sun.msv.verifier.regexp.AttributePicker
-cons public init(com.sun.msv.grammar.ExpressionPool)
-intf com.sun.msv.grammar.ExpressionVisitorExpression
-meth public com.sun.msv.grammar.Expression onAnyString()
-meth public com.sun.msv.grammar.Expression onAttribute(com.sun.msv.grammar.AttributeExp)
-meth public com.sun.msv.grammar.Expression onChoice(com.sun.msv.grammar.ChoiceExp)
-meth public com.sun.msv.grammar.Expression onConcur(com.sun.msv.grammar.ConcurExp)
-meth public com.sun.msv.grammar.Expression onData(com.sun.msv.grammar.DataExp)
-meth public com.sun.msv.grammar.Expression onElement(com.sun.msv.grammar.ElementExp)
-meth public com.sun.msv.grammar.Expression onEpsilon()
-meth public com.sun.msv.grammar.Expression onInterleave(com.sun.msv.grammar.InterleaveExp)
-meth public com.sun.msv.grammar.Expression onList(com.sun.msv.grammar.ListExp)
-meth public com.sun.msv.grammar.Expression onMixed(com.sun.msv.grammar.MixedExp)
-meth public com.sun.msv.grammar.Expression onNullSet()
-meth public com.sun.msv.grammar.Expression onOneOrMore(com.sun.msv.grammar.OneOrMoreExp)
-meth public com.sun.msv.grammar.Expression onOther(com.sun.msv.grammar.OtherExp)
-meth public com.sun.msv.grammar.Expression onRef(com.sun.msv.grammar.ReferenceExp)
-meth public com.sun.msv.grammar.Expression onSequence(com.sun.msv.grammar.SequenceExp)
-meth public com.sun.msv.grammar.Expression onValue(com.sun.msv.grammar.ValueExp)
-supr java.lang.Object
-hfds pool
-
-CLSS public com.sun.msv.verifier.regexp.AttributePruner
-cons public init(com.sun.msv.grammar.ExpressionPool)
-meth public com.sun.msv.grammar.Expression onAttribute(com.sun.msv.grammar.AttributeExp)
-meth public com.sun.msv.grammar.Expression onElement(com.sun.msv.grammar.ElementExp)
-meth public com.sun.msv.grammar.Expression onOther(com.sun.msv.grammar.OtherExp)
-meth public com.sun.msv.grammar.Expression onRef(com.sun.msv.grammar.ReferenceExp)
-meth public final com.sun.msv.grammar.Expression prune(com.sun.msv.grammar.Expression)
-supr com.sun.msv.grammar.ExpressionCloner
-
-CLSS public com.sun.msv.verifier.regexp.AttributeRemover
-cons public init(com.sun.msv.grammar.ExpressionPool)
-meth public com.sun.msv.grammar.Expression onAttribute(com.sun.msv.grammar.AttributeExp)
-meth public com.sun.msv.grammar.Expression onElement(com.sun.msv.grammar.ElementExp)
-meth public com.sun.msv.grammar.Expression onOther(com.sun.msv.grammar.OtherExp)
-meth public com.sun.msv.grammar.Expression onRef(com.sun.msv.grammar.ReferenceExp)
-supr com.sun.msv.grammar.ExpressionCloner
-
-CLSS public com.sun.msv.verifier.regexp.AttributeToken
-cons protected init(com.sun.msv.verifier.regexp.REDocumentDeclaration,java.lang.String,java.lang.String,java.lang.String,com.sun.msv.verifier.regexp.StringToken)
-cons protected init(com.sun.msv.verifier.regexp.REDocumentDeclaration,java.lang.String,java.lang.String,java.lang.String,java.lang.String,com.sun.msv.grammar.IDContextProvider2)
-fld protected com.sun.msv.verifier.regexp.REDocumentDeclaration docDecl
-fld public com.sun.msv.grammar.AttributeExp matchedExp
-fld public com.sun.msv.verifier.regexp.StringToken value
-fld public java.lang.String localName
-fld public java.lang.String namespaceURI
-fld public java.lang.String qName
-meth public boolean match(com.sun.msv.grammar.AttributeExp)
-supr com.sun.msv.verifier.regexp.Token
-hfds saturated
-
-CLSS public com.sun.msv.verifier.regexp.CombinedChildContentExpCreator
-cons protected init(com.sun.msv.grammar.ExpressionPool)
-fld protected final com.sun.msv.grammar.ExpressionPool pool
-innr public static ExpressionPair
-intf com.sun.msv.grammar.ExpressionVisitorVoid
-meth public com.sun.msv.verifier.regexp.CombinedChildContentExpCreator$ExpressionPair get(com.sun.msv.grammar.Expression,com.sun.msv.util.StartTagInfo)
-meth public com.sun.msv.verifier.regexp.CombinedChildContentExpCreator$ExpressionPair get(com.sun.msv.grammar.Expression,com.sun.msv.util.StartTagInfo,boolean)
-meth public final boolean isComplex()
-meth public final com.sun.msv.grammar.ElementExp[] getMatchedElements()
-meth public final com.sun.msv.verifier.regexp.CombinedChildContentExpCreator$ExpressionPair continueGet(com.sun.msv.grammar.Expression,com.sun.msv.util.StartTagInfo,boolean)
-meth public final int numMatchedElements()
-meth public void onAnyString()
-meth public void onAttribute(com.sun.msv.grammar.AttributeExp)
-meth public void onChoice(com.sun.msv.grammar.ChoiceExp)
-meth public void onConcur(com.sun.msv.grammar.ConcurExp)
-meth public void onData(com.sun.msv.grammar.DataExp)
-meth public void onElement(com.sun.msv.grammar.ElementExp)
-meth public void onEpsilon()
-meth public void onInterleave(com.sun.msv.grammar.InterleaveExp)
-meth public void onList(com.sun.msv.grammar.ListExp)
-meth public void onMixed(com.sun.msv.grammar.MixedExp)
-meth public void onNullSet()
-meth public void onOneOrMore(com.sun.msv.grammar.OneOrMoreExp)
-meth public void onOther(com.sun.msv.grammar.OtherExp)
-meth public void onRef(com.sun.msv.grammar.ReferenceExp)
-meth public void onSequence(com.sun.msv.grammar.SequenceExp)
-meth public void onValue(com.sun.msv.grammar.ValueExp)
-supr java.lang.Object
-hfds checkTagName,content,continuation,foundConcur,numElements,result,tagInfo
-
-CLSS public static com.sun.msv.verifier.regexp.CombinedChildContentExpCreator$ExpressionPair
- outer com.sun.msv.verifier.regexp.CombinedChildContentExpCreator
-cons public init(com.sun.msv.grammar.Expression,com.sun.msv.grammar.Expression)
-fld public final com.sun.msv.grammar.Expression content
-fld public final com.sun.msv.grammar.Expression continuation
-supr java.lang.Object
-
-CLSS public final com.sun.msv.verifier.regexp.ComplexAcceptor
-cons public init(com.sun.msv.verifier.regexp.REDocumentDeclaration,com.sun.msv.grammar.Expression,com.sun.msv.grammar.ElementExp[])
-cons public init(com.sun.msv.verifier.regexp.REDocumentDeclaration,com.sun.msv.grammar.Expression,com.sun.msv.grammar.Expression[],com.sun.msv.grammar.ElementExp[])
-fld public final com.sun.msv.grammar.ElementExp[] owners
-meth public com.sun.msv.verifier.Acceptor createClone()
-meth public final com.sun.msv.grammar.ElementExp[] getSatisfiedOwners()
-supr com.sun.msv.verifier.regexp.ComplexAcceptorBaseImpl
-
-CLSS public abstract com.sun.msv.verifier.regexp.ComplexAcceptorBaseImpl
-cons public init(com.sun.msv.verifier.regexp.REDocumentDeclaration,com.sun.msv.grammar.Expression,com.sun.msv.grammar.Expression[],boolean)
-fld protected final com.sun.msv.grammar.Expression[] contents
-meth protected boolean onAttribute(com.sun.msv.verifier.regexp.AttributeToken,com.sun.msv.util.StringRef)
-meth public boolean onEndAttributes(com.sun.msv.util.StartTagInfo,com.sun.msv.util.StringRef)
-meth public final boolean onText2(java.lang.String,com.sun.msv.grammar.IDContextProvider2,com.sun.msv.util.StringRef,com.sun.msv.util.DatatypeRef)
-meth public final boolean stepForward(com.sun.msv.verifier.Acceptor,com.sun.msv.util.StringRef)
-supr com.sun.msv.verifier.regexp.ContentModelAcceptor
-
-CLSS public abstract com.sun.msv.verifier.regexp.ContentModelAcceptor
-cons protected init(com.sun.msv.verifier.regexp.REDocumentDeclaration,com.sun.msv.grammar.Expression,boolean)
-meth protected com.sun.msv.verifier.Acceptor createAcceptor(com.sun.msv.grammar.Expression,com.sun.msv.grammar.Expression,com.sun.msv.grammar.ElementExp[],int)
-meth public boolean stepForward(com.sun.msv.verifier.Acceptor,com.sun.msv.util.StringRef)
-meth public java.lang.Object getOwnerType()
-supr com.sun.msv.verifier.regexp.ExpressionAcceptor
-
-CLSS public com.sun.msv.verifier.regexp.ContentModelRefExpRemover
-cons public init()
-supr java.lang.Object
-hcls Remover
-
-CLSS public com.sun.msv.verifier.regexp.ElementToken
-cons public init(com.sun.msv.grammar.ElementExp[])
-meth public boolean match(com.sun.msv.grammar.ElementExp)
-meth public java.lang.String toString()
-supr com.sun.msv.verifier.regexp.Token
-hfds acceptedPatterns
-
-CLSS public com.sun.msv.verifier.regexp.ElementsOfConcernCollector
-cons public init()
-intf com.sun.msv.grammar.ExpressionVisitor
-meth public final java.lang.Object onAnyString()
-meth public final java.lang.Object onAttribute(com.sun.msv.grammar.AttributeExp)
-meth public final java.lang.Object onChoice(com.sun.msv.grammar.ChoiceExp)
-meth public final java.lang.Object onConcur(com.sun.msv.grammar.ConcurExp)
-meth public final java.lang.Object onData(com.sun.msv.grammar.DataExp)
-meth public final java.lang.Object onElement(com.sun.msv.grammar.ElementExp)
-meth public final java.lang.Object onEpsilon()
-meth public final java.lang.Object onInterleave(com.sun.msv.grammar.InterleaveExp)
-meth public final java.lang.Object onList(com.sun.msv.grammar.ListExp)
-meth public final java.lang.Object onMixed(com.sun.msv.grammar.MixedExp)
-meth public final java.lang.Object onNullSet()
-meth public final java.lang.Object onOneOrMore(com.sun.msv.grammar.OneOrMoreExp)
-meth public final java.lang.Object onOther(com.sun.msv.grammar.OtherExp)
-meth public final java.lang.Object onRef(com.sun.msv.grammar.ReferenceExp)
-meth public final java.lang.Object onSequence(com.sun.msv.grammar.SequenceExp)
-meth public final java.lang.Object onValue(com.sun.msv.grammar.ValueExp)
-meth public final void collect(com.sun.msv.grammar.Expression,java.util.Collection)
-supr java.lang.Object
-hfds result
-
-CLSS public abstract com.sun.msv.verifier.regexp.ExpressionAcceptor
-cons public init(com.sun.msv.verifier.regexp.REDocumentDeclaration,com.sun.msv.grammar.Expression,boolean)
-fld protected final boolean ignoreUndeclaredAttributes
-fld protected final com.sun.msv.verifier.regexp.REDocumentDeclaration docDecl
-intf com.sun.msv.verifier.Acceptor
-meth protected abstract com.sun.msv.verifier.Acceptor createAcceptor(com.sun.msv.grammar.Expression,com.sun.msv.grammar.Expression,com.sun.msv.grammar.ElementExp[],int)
-meth protected boolean onAttribute(com.sun.msv.verifier.regexp.AttributeToken,com.sun.msv.util.StringRef)
-meth protected boolean stepForward(com.sun.msv.verifier.regexp.Token,com.sun.msv.util.StringRef)
-meth protected java.lang.String diagnoseUncompletedContent()
-meth public boolean isAcceptState(com.sun.msv.util.StringRef)
-meth public boolean onEndAttributes(com.sun.msv.util.StartTagInfo,com.sun.msv.util.StringRef)
-meth public boolean onText2(java.lang.String,com.sun.msv.grammar.IDContextProvider2,com.sun.msv.util.StringRef,com.sun.msv.util.DatatypeRef)
-meth public com.sun.msv.grammar.Expression getExpression()
-meth public com.sun.msv.verifier.Acceptor createChildAcceptor(com.sun.msv.util.StartTagInfo,com.sun.msv.util.StringRef)
-meth public final boolean onAttribute(java.lang.String,java.lang.String,java.lang.String,java.lang.String,com.sun.msv.grammar.IDContextProvider,com.sun.msv.util.StringRef,com.sun.msv.util.DatatypeRef)
-meth public final boolean onAttribute2(java.lang.String,java.lang.String,java.lang.String,java.lang.String,com.sun.msv.grammar.IDContextProvider2,com.sun.msv.util.StringRef,com.sun.msv.util.DatatypeRef)
-meth public final boolean onText(java.lang.String,com.sun.msv.grammar.IDContextProvider,com.sun.msv.util.StringRef,com.sun.msv.util.DatatypeRef)
-meth public final boolean stepForwardByContinuation(com.sun.msv.grammar.Expression,com.sun.msv.util.StringRef)
-meth public int getStringCareLevel()
-supr java.lang.Object
-hfds expression
-
-CLSS public com.sun.msv.verifier.regexp.REDocumentDeclaration
-cons public init(com.sun.msv.grammar.Expression,com.sun.msv.grammar.ExpressionPool)
-cons public init(com.sun.msv.grammar.Grammar)
-fld protected final com.sun.msv.grammar.Expression topLevel
-fld protected final com.sun.msv.verifier.regexp.AttributeFeeder attFeeder
-fld protected final com.sun.msv.verifier.regexp.AttributePicker attPicker
-fld protected final com.sun.msv.verifier.regexp.AttributePruner attPruner
-fld protected final com.sun.msv.verifier.regexp.AttributeRemover attRemover
-fld protected final com.sun.msv.verifier.regexp.CombinedChildContentExpCreator cccec
-fld protected final com.sun.msv.verifier.regexp.ElementsOfConcernCollector ecc
-fld protected final com.sun.msv.verifier.regexp.ResidualCalculator resCalc
-fld public final com.sun.msv.grammar.ExpressionPool pool
-fld public final com.sun.msv.verifier.regexp.AttributeToken attToken
-fld public final static java.lang.String DIAG_BAD_ATTRIBUTE_VALUE_DATATYPE = "Diagnosis.BadAttributeValue.DataType"
-fld public final static java.lang.String DIAG_BAD_ATTRIBUTE_VALUE_GENERIC = "Diagnosis.BadAttributeValue.Generic"
-fld public final static java.lang.String DIAG_BAD_ATTRIBUTE_VALUE_MORE = "Diagnosis.BadAttributeValue.More"
-fld public final static java.lang.String DIAG_BAD_ATTRIBUTE_VALUE_SEPARATOR = "Diagnosis.BadAttributeValue.Separator"
-fld public final static java.lang.String DIAG_BAD_ATTRIBUTE_VALUE_WRAPUP = "Diagnosis.BadAttributeValue.WrapUp"
-fld public final static java.lang.String DIAG_BAD_KEY_VALUE = "Diagnosis.BadKeyValue"
-fld public final static java.lang.String DIAG_BAD_KEY_VALUE2 = "Diagnosis.BadKeyValue2"
-fld public final static java.lang.String DIAG_BAD_LITERAL_GENERIC = "Diagnosis.BadLiteral.Generic"
-fld public final static java.lang.String DIAG_BAD_LITERAL_INCORRECT_VALUE = "Diagnosis.BadLiteral.IncorrectValue"
-fld public final static java.lang.String DIAG_BAD_LITERAL_MORE = "Diagnosis.BadLiteral.More"
-fld public final static java.lang.String DIAG_BAD_LITERAL_SEPARATOR = "Diagnosis.BadLiteral.Separator"
-fld public final static java.lang.String DIAG_BAD_LITERAL_WRAPUP = "Diagnosis.BadLiteral.WrapUp"
-fld public final static java.lang.String DIAG_BAD_TAGNAME_GENERIC = "Diagnosis.BadTagName.Generic"
-fld public final static java.lang.String DIAG_BAD_TAGNAME_MORE = "Diagnosis.BadTagName.More"
-fld public final static java.lang.String DIAG_BAD_TAGNAME_PROBABLY_WRONG_NAMESPACE = "Diagnosis.BadTagName.ProbablyWrongNamespace"
-fld public final static java.lang.String DIAG_BAD_TAGNAME_SEPARATOR = "Diagnosis.BadTagName.Separator"
-fld public final static java.lang.String DIAG_BAD_TAGNAME_WRAPUP = "Diagnosis.BadTagName.WrapUp"
-fld public final static java.lang.String DIAG_BAD_TAGNAME_WRONG_NAMESPACE = "Diagnosis.BadTagName.WrongNamespace"
-fld public final static java.lang.String DIAG_CONTENT_MODEL_IS_NULLSET = "Diagnosis.ContentModelIsNullset"
-fld public final static java.lang.String DIAG_ELEMENT_NOT_ALLOWED = "Diagnosis.ElementNotAllowed"
-fld public final static java.lang.String DIAG_MISSING_ATTRIBUTE_GENERIC = "Diagnosis.MissingAttribute.Generic"
-fld public final static java.lang.String DIAG_MISSING_ATTRIBUTE_MORE = "Diagnosis.MissingAttribute.More"
-fld public final static java.lang.String DIAG_MISSING_ATTRIBUTE_SEPARATOR = "Diagnosis.MissingAttribute.Separator"
-fld public final static java.lang.String DIAG_MISSING_ATTRIBUTE_SIMPLE = "Diagnosis.MissingAttribute.Simple"
-fld public final static java.lang.String DIAG_MISSING_ATTRIBUTE_WRAPUP = "Diagnosis.MissingAttribute.WrapUp"
-fld public final static java.lang.String DIAG_NAMESPACE_NAMECLASS = "Diagnosis.NamespaceNameClass"
-fld public final static java.lang.String DIAG_NOT_NAMESPACE_NAMECLASS = "Diagnosis.NotNamespaceNameClass"
-fld public final static java.lang.String DIAG_SIMPLE_NAMECLASS = "Diagnosis.SimpleNameClass"
-fld public final static java.lang.String DIAG_STRING_NOT_ALLOWED = "Diagnosis.StringNotAllowed"
-fld public final static java.lang.String DIAG_UNCOMPLETED_CONTENT_MORE = "Diagnosis.UncompletedContent.More"
-fld public final static java.lang.String DIAG_UNCOMPLETED_CONTENT_SEPARATOR = "Diagnosis.UncompletedContent.Separator"
-fld public final static java.lang.String DIAG_UNCOMPLETED_CONTENT_WRAPUP = "Diagnosis.UncompletedContent.WrapUp"
-fld public final static java.lang.String DIAG_UNDECLARED_ATTRIBUTE = "Diagnosis.UndeclaredAttribute"
-intf com.sun.msv.verifier.DocumentDeclaration
-meth public com.sun.msv.verifier.Acceptor createAcceptor()
-meth public final java.lang.String localizeMessage(java.lang.String,java.lang.Object)
-meth public final java.lang.String localizeMessage(java.lang.String,java.lang.Object,java.lang.Object)
-meth public java.lang.String localizeMessage(java.lang.String,java.lang.Object[])
-supr java.lang.Object
-
-CLSS public com.sun.msv.verifier.regexp.ResidualCalculator
-cons public init(com.sun.msv.grammar.ExpressionPool)
-fld protected com.sun.msv.verifier.regexp.Token token
-fld protected final com.sun.msv.grammar.ExpressionPool pool
-intf com.sun.msv.grammar.ExpressionVisitorExpression
-meth public com.sun.msv.grammar.Expression onAnyString()
-meth public com.sun.msv.grammar.Expression onAttribute(com.sun.msv.grammar.AttributeExp)
-meth public com.sun.msv.grammar.Expression onChoice(com.sun.msv.grammar.ChoiceExp)
-meth public com.sun.msv.grammar.Expression onConcur(com.sun.msv.grammar.ConcurExp)
-meth public com.sun.msv.grammar.Expression onData(com.sun.msv.grammar.DataExp)
-meth public com.sun.msv.grammar.Expression onElement(com.sun.msv.grammar.ElementExp)
-meth public com.sun.msv.grammar.Expression onEpsilon()
-meth public com.sun.msv.grammar.Expression onInterleave(com.sun.msv.grammar.InterleaveExp)
-meth public com.sun.msv.grammar.Expression onList(com.sun.msv.grammar.ListExp)
-meth public com.sun.msv.grammar.Expression onMixed(com.sun.msv.grammar.MixedExp)
-meth public com.sun.msv.grammar.Expression onNullSet()
-meth public com.sun.msv.grammar.Expression onOneOrMore(com.sun.msv.grammar.OneOrMoreExp)
-meth public com.sun.msv.grammar.Expression onOther(com.sun.msv.grammar.OtherExp)
-meth public com.sun.msv.grammar.Expression onRef(com.sun.msv.grammar.ReferenceExp)
-meth public com.sun.msv.grammar.Expression onSequence(com.sun.msv.grammar.SequenceExp)
-meth public com.sun.msv.grammar.Expression onValue(com.sun.msv.grammar.ValueExp)
-meth public final com.sun.msv.grammar.Expression calcResidual(com.sun.msv.grammar.Expression,com.sun.msv.verifier.regexp.Token)
-supr java.lang.Object
-
-CLSS public com.sun.msv.verifier.regexp.SimpleAcceptor
-cons public init(com.sun.msv.verifier.regexp.REDocumentDeclaration,com.sun.msv.grammar.Expression,com.sun.msv.grammar.ElementExp,com.sun.msv.grammar.Expression)
-fld public final com.sun.msv.grammar.ElementExp owner
-fld public final com.sun.msv.grammar.Expression continuation
-meth public com.sun.msv.verifier.Acceptor createClone()
-meth public final java.lang.Object getOwnerType()
-supr com.sun.msv.verifier.regexp.ContentModelAcceptor
-
-CLSS public com.sun.msv.verifier.regexp.StringCareLevelCalculator
-cons protected init()
-fld protected final static com.sun.msv.verifier.regexp.StringCareLevelCalculator theInstance
-meth public boolean onAnyString()
-meth public boolean onAttribute(com.sun.msv.grammar.AttributeExp)
-meth public boolean onData(com.sun.msv.grammar.DataExp)
-meth public boolean onElement(com.sun.msv.grammar.ElementExp)
-meth public boolean onList(com.sun.msv.grammar.ListExp)
-meth public boolean onMixed(com.sun.msv.grammar.MixedExp)
-meth public boolean onValue(com.sun.msv.grammar.ValueExp)
-meth public static int calc(com.sun.msv.grammar.Expression)
-supr com.sun.msv.grammar.util.ExpressionFinder
-
-CLSS public com.sun.msv.verifier.regexp.StringToken
-cons public init(com.sun.msv.verifier.regexp.REDocumentDeclaration,java.lang.String,com.sun.msv.grammar.IDContextProvider2)
-cons public init(com.sun.msv.verifier.regexp.REDocumentDeclaration,java.lang.String,com.sun.msv.grammar.IDContextProvider2,com.sun.msv.util.DatatypeRef)
-cons public init(com.sun.msv.verifier.regexp.ResidualCalculator,java.lang.String,com.sun.msv.grammar.IDContextProvider2,com.sun.msv.util.DatatypeRef)
-fld protected boolean saturated
-fld protected final boolean ignorable
-fld protected final com.sun.msv.verifier.regexp.ResidualCalculator resCalc
-fld public com.sun.msv.util.DatatypeRef refType
-fld public final com.sun.msv.grammar.IDContextProvider2 context
-fld public final java.lang.String literal
-meth protected com.sun.msv.verifier.regexp.StringToken createChildStringToken(java.lang.String,com.sun.msv.util.DatatypeRef)
-meth public boolean match(com.sun.msv.grammar.DataExp)
-meth public boolean match(com.sun.msv.grammar.ListExp)
-meth public boolean match(com.sun.msv.grammar.ValueExp)
-meth public boolean matchAnyString()
-supr com.sun.msv.verifier.regexp.Token
-hfds ignoredType
-
-CLSS public abstract com.sun.msv.verifier.regexp.Token
-cons public init()
-meth public boolean match(com.sun.msv.grammar.AttributeExp)
-meth public boolean match(com.sun.msv.grammar.DataExp)
-meth public boolean match(com.sun.msv.grammar.ElementExp)
-meth public boolean match(com.sun.msv.grammar.ListExp)
-meth public boolean match(com.sun.msv.grammar.ValueExp)
-meth public boolean matchAnyString()
-supr java.lang.Object
-
-CLSS public com.sun.org.apache.xml.internal.resolver.Catalog
-cons public init()
-cons public init(com.sun.org.apache.xml.internal.resolver.CatalogManager)
-fld protected boolean default_override
-fld protected com.sun.org.apache.xml.internal.resolver.CatalogManager catalogManager
-fld protected java.net.URL base
-fld protected java.net.URL catalogCwd
-fld protected java.util.Hashtable readerMap
-fld protected java.util.Vector catalogEntries
-fld protected java.util.Vector catalogFiles
-fld protected java.util.Vector catalogs
-fld protected java.util.Vector localCatalogFiles
-fld protected java.util.Vector localDelegate
-fld protected java.util.Vector readerArr
-fld public final static int BASE
-fld public final static int CATALOG
-fld public final static int DELEGATE_PUBLIC
-fld public final static int DELEGATE_SYSTEM
-fld public final static int DELEGATE_URI
-fld public final static int DOCTYPE
-fld public final static int DOCUMENT
-fld public final static int DTDDECL
-fld public final static int ENTITY
-fld public final static int LINKTYPE
-fld public final static int NOTATION
-fld public final static int OVERRIDE
-fld public final static int PUBLIC
-fld public final static int REWRITE_SYSTEM
-fld public final static int REWRITE_URI
-fld public final static int SGMLDECL
-fld public final static int SYSTEM
-fld public final static int SYSTEM_SUFFIX
-fld public final static int URI
-fld public final static int URI_SUFFIX
-meth protected com.sun.org.apache.xml.internal.resolver.Catalog newCatalog()
-meth protected java.lang.String encodedByte(int)
-meth protected java.lang.String fixSlashes(java.lang.String)
-meth protected java.lang.String makeAbsolute(java.lang.String)
-meth protected java.lang.String normalizeURI(java.lang.String)
-meth protected java.lang.String resolveLocalPublic(int,java.lang.String,java.lang.String,java.lang.String) throws java.io.IOException
-meth protected java.lang.String resolveLocalSystem(java.lang.String) throws java.io.IOException
-meth protected java.lang.String resolveLocalURI(java.lang.String) throws java.io.IOException
-meth protected java.lang.String resolveSubordinateCatalogs(int,java.lang.String,java.lang.String,java.lang.String) throws java.io.IOException
-meth protected void addDelegate(com.sun.org.apache.xml.internal.resolver.CatalogEntry)
-meth protected void copyReaders(com.sun.org.apache.xml.internal.resolver.Catalog)
-meth protected void parseCatalogFile(java.lang.String) throws com.sun.org.apache.xml.internal.resolver.CatalogException,java.io.IOException
-meth protected void parsePendingCatalogs() throws java.io.IOException
-meth public com.sun.org.apache.xml.internal.resolver.CatalogManager getCatalogManager()
-meth public java.lang.String getCurrentBase()
-meth public java.lang.String getDefaultOverride()
-meth public java.lang.String resolveDoctype(java.lang.String,java.lang.String,java.lang.String) throws java.io.IOException
-meth public java.lang.String resolveDocument() throws java.io.IOException
-meth public java.lang.String resolveEntity(java.lang.String,java.lang.String,java.lang.String) throws java.io.IOException
-meth public java.lang.String resolveNotation(java.lang.String,java.lang.String,java.lang.String) throws java.io.IOException
-meth public java.lang.String resolvePublic(java.lang.String,java.lang.String) throws java.io.IOException
-meth public java.lang.String resolveSystem(java.lang.String) throws java.io.IOException
-meth public java.lang.String resolveURI(java.lang.String) throws java.io.IOException
-meth public void addEntry(com.sun.org.apache.xml.internal.resolver.CatalogEntry)
-meth public void addReader(java.lang.String,com.sun.org.apache.xml.internal.resolver.readers.CatalogReader)
-meth public void loadSystemCatalogs() throws java.io.IOException
-meth public void parseAllCatalogs() throws java.io.IOException
-meth public void parseCatalog(java.lang.String) throws java.io.IOException
-meth public void parseCatalog(java.lang.String,java.io.InputStream) throws com.sun.org.apache.xml.internal.resolver.CatalogException,java.io.IOException
-meth public void parseCatalog(java.net.URL) throws java.io.IOException
-meth public void setCatalogManager(com.sun.org.apache.xml.internal.resolver.CatalogManager)
-meth public void setupReaders()
-meth public void unknownEntry(java.util.Vector)
-supr java.lang.Object
-
-CLSS public com.sun.org.apache.xml.internal.resolver.CatalogEntry
-cons public init()
-cons public init(int,java.util.Vector) throws com.sun.org.apache.xml.internal.resolver.CatalogException
-cons public init(java.lang.String,java.util.Vector) throws com.sun.org.apache.xml.internal.resolver.CatalogException
-fld protected int entryType
-fld protected java.util.Vector args
-fld protected static int nextEntry
-fld protected static java.util.Hashtable entryTypes
-fld protected static java.util.Vector entryArgs
-meth public int getEntryType()
-meth public java.lang.String getEntryArg(int)
-meth public static int addEntryType(java.lang.String,int)
-meth public static int getEntryArgCount(int) throws com.sun.org.apache.xml.internal.resolver.CatalogException
-meth public static int getEntryArgCount(java.lang.String) throws com.sun.org.apache.xml.internal.resolver.CatalogException
-meth public static int getEntryType(java.lang.String) throws com.sun.org.apache.xml.internal.resolver.CatalogException
-meth public void setEntryArg(int,java.lang.String)
-supr java.lang.Object
-
-CLSS public com.sun.org.apache.xml.internal.resolver.CatalogException
-cons public init(int)
-cons public init(int,java.lang.String)
-cons public init(java.lang.Exception)
-cons public init(java.lang.String,java.lang.Exception)
-fld public final static int INVALID_ENTRY = 2
-fld public final static int INVALID_ENTRY_TYPE = 3
-fld public final static int NO_XML_PARSER = 4
-fld public final static int PARSE_FAILED = 7
-fld public final static int UNENDED_COMMENT = 8
-fld public final static int UNKNOWN_FORMAT = 5
-fld public final static int UNPARSEABLE = 6
-fld public final static int WRAPPER = 1
-meth public int getExceptionType()
-meth public java.lang.Exception getException()
-meth public java.lang.String getMessage()
-meth public java.lang.String toString()
-supr java.lang.Exception
-hfds exception,exceptionType
-
-CLSS public com.sun.org.apache.xml.internal.resolver.CatalogManager
-cons public init()
-cons public init(java.lang.String)
-fld public com.sun.org.apache.xml.internal.resolver.helpers.Debug debug
-meth public boolean allowOasisXMLCatalogPI()
-meth public boolean getAllowOasisXMLCatalogPI()
-meth public boolean getIgnoreMissingProperties()
-meth public boolean getPreferPublic()
-meth public boolean getRelativeCatalogs()
-meth public boolean getUseStaticCatalog()
-meth public boolean preferPublic()
-meth public boolean queryAllowOasisXMLCatalogPI()
-meth public boolean relativeCatalogs()
-meth public boolean staticCatalog()
-meth public com.sun.org.apache.xml.internal.resolver.Catalog getCatalog()
-meth public com.sun.org.apache.xml.internal.resolver.Catalog getPrivateCatalog()
-meth public com.sun.org.apache.xml.internal.resolver.helpers.BootstrapResolver getBootstrapResolver()
-meth public int getVerbosity()
-meth public int verbosity()
-meth public java.lang.String catalogClassName()
-meth public java.lang.String getCatalogClassName()
-meth public java.lang.String queryCatalogClassName()
-meth public java.util.Vector catalogFiles()
-meth public java.util.Vector getCatalogFiles()
-meth public static com.sun.org.apache.xml.internal.resolver.CatalogManager getStaticManager()
-meth public void ignoreMissingProperties(boolean)
-meth public void setAllowOasisXMLCatalogPI(boolean)
-meth public void setBootstrapResolver(com.sun.org.apache.xml.internal.resolver.helpers.BootstrapResolver)
-meth public void setCatalogClassName(java.lang.String)
-meth public void setCatalogFiles(java.lang.String)
-meth public void setIgnoreMissingProperties(boolean)
-meth public void setPreferPublic(boolean)
-meth public void setRelativeCatalogs(boolean)
-meth public void setUseStaticCatalog(boolean)
-meth public void setVerbosity(int)
-supr java.lang.Object
-hfds bResolver,catalogClassName,catalogFiles,defaultCatalogFiles,defaultOasisXMLCatalogPI,defaultPreferPublic,defaultRelativeCatalogs,defaultUseStaticCatalog,defaultVerbosity,fromPropertiesFile,ignoreMissingProperties,oasisXMLCatalogPI,pAllowPI,pClassname,pFiles,pIgnoreMissing,pPrefer,pStatic,pVerbosity,preferPublic,propertyFile,propertyFileURI,relativeCatalogs,resources,staticCatalog,staticManager,useStaticCatalog,verbosity
-
-CLSS public com.sun.org.apache.xml.internal.resolver.Resolver
-cons public init()
-fld public final static int RESOLVER
-fld public final static int SYSTEMREVERSE
-fld public final static int SYSTEMSUFFIX
-fld public final static int URISUFFIX
-meth protected com.sun.org.apache.xml.internal.resolver.Resolver queryResolver(java.lang.String,java.lang.String,java.lang.String,java.lang.String)
-meth protected java.lang.String resolveExternalPublic(java.lang.String,java.lang.String) throws java.io.IOException
-meth protected java.lang.String resolveExternalSystem(java.lang.String,java.lang.String) throws java.io.IOException
-meth public java.lang.String resolvePublic(java.lang.String,java.lang.String) throws java.io.IOException
-meth public java.lang.String resolveSystem(java.lang.String) throws java.io.IOException
-meth public java.lang.String resolveSystemReverse(java.lang.String) throws java.io.IOException
-meth public java.lang.String resolveURI(java.lang.String) throws java.io.IOException
-meth public java.util.Vector resolveAllSystem(java.lang.String) throws java.io.IOException
-meth public java.util.Vector resolveAllSystemReverse(java.lang.String) throws java.io.IOException
-meth public void addEntry(com.sun.org.apache.xml.internal.resolver.CatalogEntry)
-meth public void setupReaders()
-supr com.sun.org.apache.xml.internal.resolver.Catalog
-
-CLSS public com.sun.org.apache.xml.internal.resolver.helpers.BootstrapResolver
-cons public init()
-fld public final static java.lang.String xmlCatalogPubId = "-//OASIS//DTD XML Catalogs V1.0//EN"
-fld public final static java.lang.String xmlCatalogRNG = "http://www.oasis-open.org/committees/entity/release/1.0/catalog.rng"
-fld public final static java.lang.String xmlCatalogSysId = "http://www.oasis-open.org/committees/entity/release/1.0/catalog.dtd"
-fld public final static java.lang.String xmlCatalogXSD = "http://www.oasis-open.org/committees/entity/release/1.0/catalog.xsd"
-intf javax.xml.transform.URIResolver
-intf org.xml.sax.EntityResolver
-meth public javax.xml.transform.Source resolve(java.lang.String,java.lang.String) throws javax.xml.transform.TransformerException
-meth public org.xml.sax.InputSource resolveEntity(java.lang.String,java.lang.String)
-supr java.lang.Object
-hfds publicMap,systemMap,uriMap
-
-CLSS public com.sun.org.apache.xml.internal.resolver.helpers.Debug
-cons public init()
-fld protected int debug
-meth public int getDebug()
-meth public void message(int,java.lang.String)
-meth public void message(int,java.lang.String,java.lang.String)
-meth public void message(int,java.lang.String,java.lang.String,java.lang.String)
-meth public void setDebug(int)
-supr java.lang.Object
-
-CLSS public abstract com.sun.org.apache.xml.internal.resolver.helpers.FileURL
-cons protected init()
-meth public static java.net.URL makeURL(java.lang.String) throws java.net.MalformedURLException
-supr java.lang.Object
-
-CLSS public com.sun.org.apache.xml.internal.resolver.helpers.Namespaces
-cons public init()
-meth public static java.lang.String getLocalName(org.w3c.dom.Element)
-meth public static java.lang.String getNamespaceURI(org.w3c.dom.Element)
-meth public static java.lang.String getNamespaceURI(org.w3c.dom.Node,java.lang.String)
-meth public static java.lang.String getPrefix(org.w3c.dom.Element)
-supr java.lang.Object
-
-CLSS public abstract com.sun.org.apache.xml.internal.resolver.helpers.PublicId
-cons protected init()
-meth public static java.lang.String decodeURN(java.lang.String)
-meth public static java.lang.String encodeURN(java.lang.String)
-meth public static java.lang.String normalize(java.lang.String)
-supr java.lang.Object
-
-CLSS public abstract interface com.sun.org.apache.xml.internal.resolver.readers.CatalogReader
-meth public abstract void readCatalog(com.sun.org.apache.xml.internal.resolver.Catalog,java.io.InputStream) throws com.sun.org.apache.xml.internal.resolver.CatalogException,java.io.IOException
-meth public abstract void readCatalog(com.sun.org.apache.xml.internal.resolver.Catalog,java.lang.String) throws com.sun.org.apache.xml.internal.resolver.CatalogException,java.io.IOException
-
-CLSS public abstract interface com.sun.org.apache.xml.internal.resolver.readers.DOMCatalogParser
-meth public abstract void parseCatalogEntry(com.sun.org.apache.xml.internal.resolver.Catalog,org.w3c.dom.Node)
-
-CLSS public com.sun.org.apache.xml.internal.resolver.readers.DOMCatalogReader
-cons public init()
-fld protected java.util.Hashtable namespaceMap
-intf com.sun.org.apache.xml.internal.resolver.readers.CatalogReader
-meth public java.lang.String getCatalogParser(java.lang.String,java.lang.String)
-meth public void readCatalog(com.sun.org.apache.xml.internal.resolver.Catalog,java.io.InputStream) throws com.sun.org.apache.xml.internal.resolver.CatalogException,java.io.IOException
-meth public void readCatalog(com.sun.org.apache.xml.internal.resolver.Catalog,java.lang.String) throws com.sun.org.apache.xml.internal.resolver.CatalogException,java.io.IOException
-meth public void setCatalogParser(java.lang.String,java.lang.String,java.lang.String)
-supr java.lang.Object
-
-CLSS public com.sun.org.apache.xml.internal.resolver.readers.ExtendedXMLCatalogReader
-cons public init()
-fld public final static java.lang.String extendedNamespaceName = "http://nwalsh.com/xcatalog/1.0"
-meth public void endElement(java.lang.String,java.lang.String,java.lang.String) throws org.xml.sax.SAXException
-meth public void startElement(java.lang.String,java.lang.String,java.lang.String,org.xml.sax.Attributes) throws org.xml.sax.SAXException
-supr com.sun.org.apache.xml.internal.resolver.readers.OASISXMLCatalogReader
-
-CLSS public com.sun.org.apache.xml.internal.resolver.readers.OASISXMLCatalogReader
-cons public init()
-fld protected com.sun.org.apache.xml.internal.resolver.Catalog catalog
-fld protected java.util.Stack baseURIStack
-fld protected java.util.Stack namespaceStack
-fld protected java.util.Stack overrideStack
-fld public final static java.lang.String namespaceName = "urn:oasis:names:tc:entity:xmlns:xml:catalog"
-fld public final static java.lang.String tr9401NamespaceName = "urn:oasis:names:tc:entity:xmlns:tr9401:catalog"
-intf com.sun.org.apache.xml.internal.resolver.readers.SAXCatalogParser
-meth protected boolean inExtensionNamespace()
-meth public boolean checkAttributes(org.xml.sax.Attributes,java.lang.String)
-meth public boolean checkAttributes(org.xml.sax.Attributes,java.lang.String,java.lang.String)
-meth public com.sun.org.apache.xml.internal.resolver.Catalog getCatalog()
-meth public void characters(char[],int,int) throws org.xml.sax.SAXException
-meth public void endDocument() throws org.xml.sax.SAXException
-meth public void endElement(java.lang.String,java.lang.String,java.lang.String) throws org.xml.sax.SAXException
-meth public void endPrefixMapping(java.lang.String) throws org.xml.sax.SAXException
-meth public void ignorableWhitespace(char[],int,int) throws org.xml.sax.SAXException
-meth public void processingInstruction(java.lang.String,java.lang.String) throws org.xml.sax.SAXException
-meth public void setCatalog(com.sun.org.apache.xml.internal.resolver.Catalog)
-meth public void setDocumentLocator(org.xml.sax.Locator)
-meth public void skippedEntity(java.lang.String) throws org.xml.sax.SAXException
-meth public void startDocument() throws org.xml.sax.SAXException
-meth public void startElement(java.lang.String,java.lang.String,java.lang.String,org.xml.sax.Attributes) throws org.xml.sax.SAXException
-meth public void startPrefixMapping(java.lang.String,java.lang.String) throws org.xml.sax.SAXException
-supr com.sun.org.apache.xml.internal.resolver.readers.SAXCatalogReader
-
-CLSS public abstract interface com.sun.org.apache.xml.internal.resolver.readers.SAXCatalogParser
-intf org.xml.sax.ContentHandler
-intf org.xml.sax.DocumentHandler
-meth public abstract void setCatalog(com.sun.org.apache.xml.internal.resolver.Catalog)
-
-CLSS public com.sun.org.apache.xml.internal.resolver.readers.SAXCatalogReader
-cons public init()
-cons public init(java.lang.String)
-cons public init(javax.xml.parsers.SAXParserFactory)
-fld protected com.sun.org.apache.xml.internal.resolver.helpers.Debug debug
-fld protected java.lang.String parserClass
-fld protected java.util.Hashtable namespaceMap
-fld protected javax.xml.parsers.SAXParserFactory parserFactory
-intf com.sun.org.apache.xml.internal.resolver.readers.CatalogReader
-intf org.xml.sax.ContentHandler
-intf org.xml.sax.DocumentHandler
-meth public java.lang.String getCatalogParser(java.lang.String,java.lang.String)
-meth public java.lang.String getParserClass()
-meth public javax.xml.parsers.SAXParserFactory getParserFactory()
-meth public void characters(char[],int,int) throws org.xml.sax.SAXException
-meth public void endDocument() throws org.xml.sax.SAXException
-meth public void endElement(java.lang.String) throws org.xml.sax.SAXException
-meth public void endElement(java.lang.String,java.lang.String,java.lang.String) throws org.xml.sax.SAXException
-meth public void endPrefixMapping(java.lang.String) throws org.xml.sax.SAXException
-meth public void ignorableWhitespace(char[],int,int) throws org.xml.sax.SAXException
-meth public void processingInstruction(java.lang.String,java.lang.String) throws org.xml.sax.SAXException
-meth public void readCatalog(com.sun.org.apache.xml.internal.resolver.Catalog,java.io.InputStream) throws com.sun.org.apache.xml.internal.resolver.CatalogException,java.io.IOException
-meth public void readCatalog(com.sun.org.apache.xml.internal.resolver.Catalog,java.lang.String) throws com.sun.org.apache.xml.internal.resolver.CatalogException,java.io.IOException
-meth public void setCatalogParser(java.lang.String,java.lang.String,java.lang.String)
-meth public void setDocumentLocator(org.xml.sax.Locator)
-meth public void setParserClass(java.lang.String)
-meth public void setParserFactory(javax.xml.parsers.SAXParserFactory)
-meth public void skippedEntity(java.lang.String) throws org.xml.sax.SAXException
-meth public void startDocument() throws org.xml.sax.SAXException
-meth public void startElement(java.lang.String,java.lang.String,java.lang.String,org.xml.sax.Attributes) throws org.xml.sax.SAXException
-meth public void startElement(java.lang.String,org.xml.sax.AttributeList) throws org.xml.sax.SAXException
-meth public void startPrefixMapping(java.lang.String,java.lang.String) throws org.xml.sax.SAXException
-supr java.lang.Object
-hfds abandonHope,catalog,saxParser
-
-CLSS public com.sun.org.apache.xml.internal.resolver.readers.SAXParserHandler
-cons public init()
-meth public org.xml.sax.InputSource resolveEntity(java.lang.String,java.lang.String) throws org.xml.sax.SAXException
-meth public void characters(char[],int,int) throws org.xml.sax.SAXException
-meth public void endDocument() throws org.xml.sax.SAXException
-meth public void endElement(java.lang.String,java.lang.String,java.lang.String) throws org.xml.sax.SAXException
-meth public void endPrefixMapping(java.lang.String) throws org.xml.sax.SAXException
-meth public void ignorableWhitespace(char[],int,int) throws org.xml.sax.SAXException
-meth public void processingInstruction(java.lang.String,java.lang.String) throws org.xml.sax.SAXException
-meth public void setContentHandler(org.xml.sax.ContentHandler)
-meth public void setDocumentLocator(org.xml.sax.Locator)
-meth public void setEntityResolver(org.xml.sax.EntityResolver)
-meth public void skippedEntity(java.lang.String) throws org.xml.sax.SAXException
-meth public void startDocument() throws org.xml.sax.SAXException
-meth public void startElement(java.lang.String,java.lang.String,java.lang.String,org.xml.sax.Attributes) throws org.xml.sax.SAXException
-meth public void startPrefixMapping(java.lang.String,java.lang.String) throws org.xml.sax.SAXException
-supr org.xml.sax.helpers.DefaultHandler
-hfds ch,er
-
-CLSS public com.sun.org.apache.xml.internal.resolver.readers.TR9401CatalogReader
-cons public init()
-meth public void readCatalog(com.sun.org.apache.xml.internal.resolver.Catalog,java.io.InputStream) throws java.io.IOException
-supr com.sun.org.apache.xml.internal.resolver.readers.TextCatalogReader
-
-CLSS public com.sun.org.apache.xml.internal.resolver.readers.TextCatalogReader
-cons public init()
-fld protected boolean caseSensitive
-fld protected int top
-fld protected int[] stack
-fld protected java.io.InputStream catfile
-fld protected java.util.Stack tokenStack
-intf com.sun.org.apache.xml.internal.resolver.readers.CatalogReader
-meth protected int nextChar() throws java.io.IOException
-meth protected java.lang.String nextToken() throws com.sun.org.apache.xml.internal.resolver.CatalogException,java.io.IOException
-meth protected void finalize()
-meth public boolean getCaseSensitive()
-meth public void readCatalog(com.sun.org.apache.xml.internal.resolver.Catalog,java.io.InputStream) throws java.io.IOException
-meth public void readCatalog(com.sun.org.apache.xml.internal.resolver.Catalog,java.lang.String) throws java.io.IOException
-meth public void setCaseSensitive(boolean)
-supr java.lang.Object
-
-CLSS public com.sun.org.apache.xml.internal.resolver.readers.XCatalogReader
-cons public init(javax.xml.parsers.SAXParserFactory)
-fld protected com.sun.org.apache.xml.internal.resolver.Catalog catalog
-intf com.sun.org.apache.xml.internal.resolver.readers.SAXCatalogParser
-meth public com.sun.org.apache.xml.internal.resolver.Catalog getCatalog()
-meth public void characters(char[],int,int) throws org.xml.sax.SAXException
-meth public void endDocument() throws org.xml.sax.SAXException
-meth public void endElement(java.lang.String,java.lang.String,java.lang.String) throws org.xml.sax.SAXException
-meth public void ignorableWhitespace(char[],int,int) throws org.xml.sax.SAXException
-meth public void processingInstruction(java.lang.String,java.lang.String) throws org.xml.sax.SAXException
-meth public void setCatalog(com.sun.org.apache.xml.internal.resolver.Catalog)
-meth public void setDocumentLocator(org.xml.sax.Locator)
-meth public void startDocument() throws org.xml.sax.SAXException
-meth public void startElement(java.lang.String,java.lang.String,java.lang.String,org.xml.sax.Attributes) throws org.xml.sax.SAXException
-supr com.sun.org.apache.xml.internal.resolver.readers.SAXCatalogReader
-
-CLSS public com.sun.org.apache.xml.internal.resolver.tools.CatalogResolver
-cons public init()
-cons public init(boolean)
-cons public init(com.sun.org.apache.xml.internal.resolver.CatalogManager)
-fld public boolean namespaceAware
-fld public boolean validating
-intf javax.xml.transform.URIResolver
-intf org.xml.sax.EntityResolver
-meth public com.sun.org.apache.xml.internal.resolver.Catalog getCatalog()
-meth public java.lang.String getResolvedEntity(java.lang.String,java.lang.String)
-meth public javax.xml.transform.Source resolve(java.lang.String,java.lang.String) throws javax.xml.transform.TransformerException
-meth public org.xml.sax.InputSource resolveEntity(java.lang.String,java.lang.String)
-supr java.lang.Object
-hfds catalog,catalogManager
-
-CLSS public com.sun.org.apache.xml.internal.resolver.tools.ResolvingParser
-cons public init()
-cons public init(com.sun.org.apache.xml.internal.resolver.CatalogManager)
-fld public static boolean namespaceAware
-fld public static boolean suppressExplanation
-fld public static boolean validating
-intf org.xml.sax.DTDHandler
-intf org.xml.sax.DocumentHandler
-intf org.xml.sax.EntityResolver
-intf org.xml.sax.Parser
-meth public com.sun.org.apache.xml.internal.resolver.Catalog getCatalog()
-meth public org.xml.sax.InputSource resolveEntity(java.lang.String,java.lang.String)
-meth public void characters(char[],int,int) throws org.xml.sax.SAXException
-meth public void endDocument() throws org.xml.sax.SAXException
-meth public void endElement(java.lang.String) throws org.xml.sax.SAXException
-meth public void ignorableWhitespace(char[],int,int) throws org.xml.sax.SAXException
-meth public void notationDecl(java.lang.String,java.lang.String,java.lang.String) throws org.xml.sax.SAXException
-meth public void parse(java.lang.String) throws java.io.IOException,org.xml.sax.SAXException
-meth public void parse(org.xml.sax.InputSource) throws java.io.IOException,org.xml.sax.SAXException
-meth public void processingInstruction(java.lang.String,java.lang.String) throws org.xml.sax.SAXException
-meth public void setDTDHandler(org.xml.sax.DTDHandler)
-meth public void setDocumentHandler(org.xml.sax.DocumentHandler)
-meth public void setDocumentLocator(org.xml.sax.Locator)
-meth public void setEntityResolver(org.xml.sax.EntityResolver)
-meth public void setErrorHandler(org.xml.sax.ErrorHandler)
-meth public void setLocale(java.util.Locale) throws org.xml.sax.SAXException
-meth public void startDocument() throws org.xml.sax.SAXException
-meth public void startElement(java.lang.String,org.xml.sax.AttributeList) throws org.xml.sax.SAXException
-meth public void unparsedEntityDecl(java.lang.String,java.lang.String,java.lang.String,java.lang.String) throws org.xml.sax.SAXException
-supr java.lang.Object
-hfds allowXMLCatalogPI,baseURL,catalogManager,catalogResolver,documentHandler,dtdHandler,oasisXMLCatalogPI,parser,piCatalogResolver,saxParser
-
-CLSS public com.sun.org.apache.xml.internal.resolver.tools.ResolvingXMLFilter
-cons public init()
-cons public init(com.sun.org.apache.xml.internal.resolver.CatalogManager)
-cons public init(org.xml.sax.XMLReader)
-cons public init(org.xml.sax.XMLReader,com.sun.org.apache.xml.internal.resolver.CatalogManager)
-fld public static boolean suppressExplanation
-meth public com.sun.org.apache.xml.internal.resolver.Catalog getCatalog()
-meth public org.xml.sax.InputSource resolveEntity(java.lang.String,java.lang.String)
-meth public void notationDecl(java.lang.String,java.lang.String,java.lang.String) throws org.xml.sax.SAXException
-meth public void parse(java.lang.String) throws java.io.IOException,org.xml.sax.SAXException
-meth public void parse(org.xml.sax.InputSource) throws java.io.IOException,org.xml.sax.SAXException
-meth public void processingInstruction(java.lang.String,java.lang.String) throws org.xml.sax.SAXException
-meth public void startElement(java.lang.String,java.lang.String,java.lang.String,org.xml.sax.Attributes) throws org.xml.sax.SAXException
-meth public void unparsedEntityDecl(java.lang.String,java.lang.String,java.lang.String,java.lang.String) throws org.xml.sax.SAXException
-supr org.xml.sax.helpers.XMLFilterImpl
-hfds allowXMLCatalogPI,baseURL,catalogManager,catalogResolver,oasisXMLCatalogPI,piCatalogResolver
-
-CLSS public com.sun.org.apache.xml.internal.resolver.tools.ResolvingXMLReader
-cons public init()
-cons public init(com.sun.org.apache.xml.internal.resolver.CatalogManager)
-fld public static boolean namespaceAware
-fld public static boolean validating
-supr com.sun.org.apache.xml.internal.resolver.tools.ResolvingXMLFilter
 
 CLSS public com.sun.tools.xjc.AbortException
 cons public init()
@@ -2607,6 +1265,7 @@ meth public static void main(java.lang.String[]) throws java.lang.Exception
 meth public static void usage(com.sun.tools.xjc.Options,boolean)
  anno 1 com.sun.istack.Nullable()
 supr java.lang.Object
+hfds SYSTEM_PROXY_PROPERTY
 hcls Mode,OptionsEx,WeAreDone
 
 CLSS public abstract com.sun.tools.xjc.ErrorReceiver
@@ -2629,13 +1288,17 @@ supr java.lang.Object
 
 CLSS public final !enum com.sun.tools.xjc.Language
 fld public final static com.sun.tools.xjc.Language DTD
-fld public final static com.sun.tools.xjc.Language RELAXNG
-fld public final static com.sun.tools.xjc.Language RELAXNG_COMPACT
 fld public final static com.sun.tools.xjc.Language WSDL
 fld public final static com.sun.tools.xjc.Language XMLSCHEMA
 meth public static com.sun.tools.xjc.Language valueOf(java.lang.String)
 meth public static com.sun.tools.xjc.Language[] values()
 supr java.lang.Enum<com.sun.tools.xjc.Language>
+
+CLSS public com.sun.tools.xjc.Messages
+cons public init()
+meth public !varargs static java.lang.String format(java.lang.String,java.lang.Object[])
+supr java.lang.Object
+hfds ADDON_USAGE,AT,BUILD_ID,COMPILING_SCHEMA,DATE_FORMAT,DEFAULT_PACKAGE_WARNING,DEFAULT_VERSION,DRIVER_PRIVATE_USAGE,DRIVER_PUBLIC_USAGE,ERROR_MSG,ERR_BINDING_FILE_NOT_SUPPORTED_FOR_RNC,ERR_NOT_A_BINDING_FILE,ERR_TOO_MANY_SCHEMA,EXPERIMENTAL_LANGUAGE_WARNING,FAILED_TO_GENERATE_CODE,FAILED_TO_LOAD,FAILED_TO_PARSE,FIELD_RENDERER_CONFLICT,FILE_PROLOG_COMMENT,FULLVERSION,ILLEGAL_PROXY,ILLEGAL_TARGET_VERSION,INFO_MSG,INVALID_JAVA_MODULE_NAME,LINE_X_OF_Y,MISSING_GRAMMAR,MISSING_MODE_OPERAND,MISSING_OPERAND,MISSING_PROXY,MISSING_PROXYFILE,MISSING_PROXYHOST,MISSING_PROXYPORT,NAME_CONVERTER_CONFLICT,NON_EXISTENT_DIR,NOT_A_FILE_NOR_URL,NOT_A_VALID_FILENAME,NO_SUCH_FILE,PARSE_FAILED,PARSING_SCHEMA,PLUGIN_LOAD_FAILURE,STACK_OVERFLOW,TIME_FORMAT,UNKNOWN_FILE,UNKNOWN_LOCATION,UNRECOGNIZED_MODE,UNRECOGNIZED_PARAMETER,UNSUPPORTED_ENCODING,VERSION,WARNING_MSG
 
 CLSS public final com.sun.tools.xjc.ModelLoader
 cons public init(com.sun.tools.xjc.Options,com.sun.codemodel.JCodeModel,com.sun.tools.xjc.ErrorReceiver)
@@ -2655,6 +1318,7 @@ cons public init()
 fld public boolean automaticNameConflictResolution
 fld public boolean contentForWildcard
 fld public boolean debugMode
+fld public boolean disableXmlSecurity
 fld public boolean enableIntrospection
 fld public boolean noFileHeader
 fld public boolean packageLevelAnnotations
@@ -2675,6 +1339,7 @@ fld public java.io.File targetDir
 fld public java.lang.String defaultPackage
 fld public java.lang.String defaultPackage2
 fld public java.lang.String encoding
+fld public java.lang.String proxyAuth
 fld public org.xml.sax.EntityResolver entityResolver
 meth public boolean isExtensionMode()
 meth public com.sun.codemodel.CodeWriter createCodeWriter() throws java.io.IOException
@@ -2684,9 +1349,10 @@ meth public com.sun.tools.xjc.Language guessSchemaLanguage()
 meth public com.sun.tools.xjc.generator.bean.field.FieldRendererFactory getFieldRendererFactory()
 meth public com.sun.xml.bind.api.impl.NameConverter getNameConverter()
 meth public int parseArgument(java.lang.String[],int) throws com.sun.tools.xjc.BadCommandLineException
+meth public java.lang.ClassLoader getUserClassLoader(java.lang.ClassLoader)
+meth public java.lang.String getModuleName()
 meth public java.lang.String getPrologComment()
 meth public java.lang.String requireArgument(java.lang.String,java.lang.String[],int) throws com.sun.tools.xjc.BadCommandLineException
-meth public java.net.URLClassLoader getUserClassLoader(java.lang.ClassLoader)
 meth public java.util.List<com.sun.tools.xjc.Plugin> getAllPlugins()
 meth public org.xml.sax.InputSource[] getBindFiles()
 meth public org.xml.sax.InputSource[] getGrammars()
@@ -2705,7 +1371,7 @@ meth public void setFieldRendererFactory(com.sun.tools.xjc.generator.bean.field.
 meth public void setNameConverter(com.sun.xml.bind.api.impl.NameConverter,com.sun.tools.xjc.Plugin) throws com.sun.tools.xjc.BadCommandLineException
 meth public void setSchemaLanguage(com.sun.tools.xjc.Language)
 supr java.lang.Object
-hfds allPlugins,bindFiles,fieldRendererFactory,fieldRendererFactoryOwner,grammars,is2_2,logger,nameConverter,nameConverterOwner,pluginLoadFailure,proxyHost,proxyPassword,proxyPort,proxyUser,schemaLanguage
+hfds allPlugins,bindFiles,catalogUrls,fieldRendererFactory,fieldRendererFactoryOwner,grammars,javaModule,logger,nameConverter,nameConverterOwner,pluginLoadFailure,proxyHost,proxyPort,schemaLanguage
 
 CLSS public abstract com.sun.tools.xjc.Plugin
 cons public init()
@@ -2720,19 +1386,25 @@ meth public void postProcessModel(com.sun.tools.xjc.model.Model,org.xml.sax.Erro
 supr java.lang.Object
 
 CLSS public final com.sun.tools.xjc.SchemaCache
-cons public init(java.net.URL)
+cons public init(java.lang.String,java.lang.Class<?>)
+cons public init(java.lang.String,java.lang.Class<?>,boolean)
 meth public javax.xml.validation.ValidatorHandler newValidator()
 supr java.lang.Object
-hfds schema,source
+hfds clazz,createResolver,resourceName,schema
+hcls ResourceResolver
 
 CLSS public com.sun.tools.xjc.XJC2Task
-hfds classpath,cmdLine,dependsSet,failonerror,producesSet,producesSpecified,removeOldOutput,stackSize,xmlCatalog
+
+CLSS public com.sun.tools.xjc.XJCBase
+hfds addexports,addmodules,addopens,addreads,bindingFiles,catalog,classpath,cmd,cmdLine,dependsSet,extension,failonerror,fork,limitmodules,modulepath,patchmodule,producesSet,producesSpecified,removeOldOutput,schemaFiles,specTarget,stackSize,upgrademodulepath,xmlCatalog
 hcls AntProgressCodeWriter,ErrorReceiverImpl
 
 CLSS public com.sun.tools.xjc.XJCFacade
 cons public init()
+meth public static java.lang.String parseVersion(java.lang.String)
 meth public static void main(java.lang.String[]) throws java.lang.Throwable
 supr java.lang.Object
+hfds JDK6_REQUIRED
 
 CLSS public abstract com.sun.tools.xjc.XJCListener
 cons public init()
@@ -2764,6 +1436,7 @@ CLSS public com.sun.tools.xjc.addon.code_injector.PluginImpl
 cons public init()
 meth public boolean isCustomizationTagName(java.lang.String,java.lang.String)
 meth public boolean run(com.sun.tools.xjc.outline.Outline,com.sun.tools.xjc.Options,org.xml.sax.ErrorHandler)
+ anno 1 com.sun.istack.NotNull()
 meth public java.lang.String getOptionName()
 meth public java.lang.String getUsage()
 meth public java.util.List<java.lang.String> getCustomizationURIs()
@@ -2860,6 +1533,7 @@ fld public final static com.sun.tools.xjc.api.SpecVersion V2_0
 fld public final static com.sun.tools.xjc.api.SpecVersion V2_1
 fld public final static com.sun.tools.xjc.api.SpecVersion V2_2
 meth public boolean isLaterThan(com.sun.tools.xjc.api.SpecVersion)
+meth public java.lang.String getVersion()
 meth public static com.sun.tools.xjc.api.SpecVersion parse(java.lang.String)
 meth public static com.sun.tools.xjc.api.SpecVersion valueOf(java.lang.String)
 meth public static com.sun.tools.xjc.api.SpecVersion[] values()
@@ -2872,17 +1546,9 @@ meth public abstract void annotate(com.sun.codemodel.JAnnotatable)
 
 CLSS public final com.sun.tools.xjc.api.XJC
 cons public init()
-meth public static com.sun.tools.xjc.api.JavaCompiler createJavaCompiler()
 meth public static com.sun.tools.xjc.api.SchemaCompiler createSchemaCompiler()
 meth public static java.lang.String getDefaultPackageName(java.lang.String)
 supr java.lang.Object
-
-CLSS public com.sun.tools.xjc.api.impl.j2s.JavaCompilerImpl
-cons public init()
-intf com.sun.tools.xjc.api.JavaCompiler
-meth public com.sun.tools.xjc.api.J2SJAXBModel bind(java.util.Collection<com.sun.tools.xjc.api.Reference>,java.util.Map<javax.xml.namespace.QName,com.sun.tools.xjc.api.Reference>,java.lang.String,javax.annotation.processing.ProcessingEnvironment)
-supr java.lang.Object
-hcls ErrorHandlerImpl
 
 CLSS public final com.sun.tools.xjc.api.impl.s2j.PropertyImpl
 fld protected final com.sun.codemodel.JCodeModel codeModel
@@ -2922,38 +1588,6 @@ meth public void setTargetVersion(com.sun.tools.xjc.api.SpecVersion)
 meth public void warning(org.xml.sax.SAXParseException)
 supr com.sun.tools.xjc.ErrorReceiver
 hfds NO_CORRECTNESS_CHECK,errorListener,hadError
-
-CLSS public final com.sun.tools.xjc.api.util.ApClassLoader
-cons public init(java.lang.ClassLoader,java.lang.String[]) throws com.sun.tools.xjc.api.util.ToolsJarNotFoundException
- anno 1 com.sun.istack.Nullable()
-meth protected java.lang.Class findClass(java.lang.String) throws java.lang.ClassNotFoundException
-meth public java.lang.Class loadClass(java.lang.String) throws java.lang.ClassNotFoundException
-supr java.net.URLClassLoader
-hfds packagePrefixes
-
-CLSS public final com.sun.tools.xjc.api.util.FilerCodeWriter
-cons public init(javax.annotation.processing.Filer)
-meth public java.io.OutputStream openBinary(com.sun.codemodel.JPackage,java.lang.String) throws java.io.IOException
-meth public java.io.Writer openSource(com.sun.codemodel.JPackage,java.lang.String) throws java.io.IOException
-meth public void close()
-supr com.sun.codemodel.CodeWriter
-hfds filer
-
-CLSS public final com.sun.tools.xjc.api.util.ToolsJarNotFoundException
-cons public init(java.io.File)
-fld public final java.io.File toolsJar
-supr java.lang.Exception
-
-CLSS public abstract interface com.sun.tools.xjc.generator.annotation.ri.OverrideAnnotationOfWriter
-intf com.sun.codemodel.JAnnotationWriter<com.sun.xml.bind.annotation.OverrideAnnotationOf>
-meth public abstract com.sun.tools.xjc.generator.annotation.ri.OverrideAnnotationOfWriter value(java.lang.String)
-
-CLSS public abstract interface com.sun.tools.xjc.generator.annotation.ri.XmlIsSetWriter
-intf com.sun.codemodel.JAnnotationWriter<com.sun.xml.bind.annotation.XmlIsSet>
-meth public abstract com.sun.tools.xjc.generator.annotation.ri.XmlIsSetWriter value(java.lang.String)
-
-CLSS public abstract interface com.sun.tools.xjc.generator.annotation.ri.XmlLocationWriter
-intf com.sun.codemodel.JAnnotationWriter<com.sun.xml.bind.annotation.XmlLocation>
 
 CLSS public abstract interface com.sun.tools.xjc.generator.annotation.spec.XmlAccessorOrderWriter
 intf com.sun.codemodel.JAnnotationWriter<javax.xml.bind.annotation.XmlAccessorOrder>
@@ -3133,7 +1767,7 @@ meth public java.util.Collection<com.sun.tools.xjc.generator.bean.ClassOutlineIm
 meth public java.util.Collection<com.sun.tools.xjc.outline.EnumOutline> getEnums()
 meth public static com.sun.tools.xjc.outline.Outline generate(com.sun.tools.xjc.model.Model,com.sun.tools.xjc.ErrorReceiver)
 supr java.lang.Object
-hfds classes,codeModel,codeModelClassFactory,elements,enums,errorReceiver,exposedContainerBuilder,fields,generatedRuntime,implContainerBuilder,model,packageContexts
+hfds JAXB_PACKAGE,classes,codeModel,codeModelClassFactory,elements,enums,errorReceiver,exposedContainerBuilder,fields,generatedRuntime,implContainerBuilder,model,packageContexts
 
 CLSS public final com.sun.tools.xjc.generator.bean.ClassOutlineImpl
 meth public com.sun.tools.xjc.generator.bean.BeanGenerator parent()
@@ -3523,6 +2157,7 @@ cons public init(java.lang.String,com.sun.xml.xsom.XSComponent,com.sun.tools.xjc
  anno 7 com.sun.istack.Nullable()
 fld protected final com.sun.tools.xjc.model.TypeUse type
 intf com.sun.xml.bind.v2.model.core.AttributePropertyInfo<com.sun.tools.xjc.model.nav.NType,com.sun.tools.xjc.model.nav.NClass>
+meth public <%0 extends java.lang.Object, %1 extends java.lang.Object> {%%0} accept(com.sun.tools.xjc.model.CPropertyVisitor2<{%%0},{%%1}>,{%%1})
 meth public <%0 extends java.lang.Object> {%%0} accept(com.sun.tools.xjc.model.CPropertyVisitor<{%%0}>)
 meth public boolean isOptionalPrimitive()
 meth public boolean isRequired()
@@ -3567,22 +2202,35 @@ fld public final static com.sun.tools.xjc.model.TypeUse STRING_LIST
 fld public final static com.sun.tools.xjc.model.TypeUse TOKEN
 fld public final static java.util.Map<com.sun.tools.xjc.model.nav.NType,com.sun.tools.xjc.model.CBuiltinLeafInfo> LEAVES
 intf com.sun.tools.xjc.model.CNonElement
+intf com.sun.xml.bind.v2.model.core.BuiltinLeafInfo<com.sun.tools.xjc.model.nav.NType,com.sun.tools.xjc.model.nav.NClass>
+intf com.sun.xml.bind.v2.model.core.LeafInfo<com.sun.tools.xjc.model.nav.NType,com.sun.tools.xjc.model.nav.NClass>
+intf com.sun.xml.bind.v2.runtime.Location
+meth public boolean isSimpleType()
 meth public com.sun.codemodel.JType toType(com.sun.tools.xjc.outline.Outline,com.sun.tools.xjc.outline.Aspect)
 meth public com.sun.tools.xjc.model.CNonElement getInfo()
  anno 0 java.lang.Deprecated()
+meth public com.sun.tools.xjc.model.nav.NType getType()
+meth public com.sun.xml.bind.v2.model.annotation.Locatable getUpstream()
 meth public com.sun.xml.bind.v2.model.core.ID idUse()
+meth public com.sun.xml.bind.v2.runtime.Location getLocation()
+meth public final boolean canBeReferencedByIDREF()
 meth public final boolean isCollection()
  anno 0 java.lang.Deprecated()
+meth public final boolean isElement()
 meth public final com.sun.tools.xjc.model.CAdapter getAdapterUse()
  anno 0 java.lang.Deprecated()
 meth public final com.sun.tools.xjc.model.TypeUse makeAdapted(java.lang.Class<? extends javax.xml.bind.annotation.adapters.XmlAdapter>,boolean)
 meth public final com.sun.tools.xjc.model.TypeUse makeCollection()
 meth public final com.sun.tools.xjc.model.TypeUse makeMimeTyped(javax.activation.MimeType)
+meth public final com.sun.xml.bind.v2.model.core.Element<com.sun.tools.xjc.model.nav.NType,com.sun.tools.xjc.model.nav.NClass> asElement()
 meth public final com.sun.xml.xsom.XSComponent getSchemaComponent()
+meth public final javax.xml.namespace.QName getElementName()
+meth public final javax.xml.namespace.QName[] getTypeNames()
 meth public javax.activation.MimeType getExpectedMimeType()
+meth public javax.xml.namespace.QName getTypeName()
 meth public org.xml.sax.Locator getLocator()
-supr com.sun.xml.bind.v2.model.impl.BuiltinLeafInfoImpl<com.sun.tools.xjc.model.nav.NType,com.sun.tools.xjc.model.nav.NClass>
-hfds id
+supr java.lang.Object
+hfds id,type,typeName,typeNames
 hcls Builtin,NoConstantBuiltin
 
 CLSS public abstract interface com.sun.tools.xjc.model.CClass
@@ -3794,6 +2442,7 @@ CLSS public final com.sun.tools.xjc.model.CElementPropertyInfo
 cons public init(java.lang.String,com.sun.tools.xjc.model.CElementPropertyInfo$CollectionMode,com.sun.xml.bind.v2.model.core.ID,javax.activation.MimeType,com.sun.xml.xsom.XSComponent,com.sun.tools.xjc.model.CCustomizations,org.xml.sax.Locator,boolean)
 innr public final static !enum CollectionMode
 intf com.sun.xml.bind.v2.model.core.ElementPropertyInfo<com.sun.tools.xjc.model.nav.NType,com.sun.tools.xjc.model.nav.NClass>
+meth public <%0 extends java.lang.Object, %1 extends java.lang.Object> {%%0} accept(com.sun.tools.xjc.model.CPropertyVisitor2<{%%0},{%%1}>,{%%1})
 meth public <%0 extends java.lang.Object> {%%0} accept(com.sun.tools.xjc.model.CPropertyVisitor<{%%0}>)
 meth public boolean isCollectionNillable()
 meth public boolean isCollectionRequired()
@@ -3916,6 +2565,7 @@ fld public java.lang.String javadoc
 intf com.sun.tools.xjc.model.CCustomizable
 intf com.sun.xml.bind.v2.model.core.PropertyInfo<com.sun.tools.xjc.model.nav.NType,com.sun.tools.xjc.model.nav.NClass>
 meth protected static boolean needsExplicitTypeName(com.sun.tools.xjc.model.TypeUse,javax.xml.namespace.QName)
+meth public abstract <%0 extends java.lang.Object, %1 extends java.lang.Object> {%%0} accept(com.sun.tools.xjc.model.CPropertyVisitor2<{%%0},{%%1}>,{%%1})
 meth public abstract <%0 extends java.lang.Object> {%%0} accept(com.sun.tools.xjc.model.CPropertyVisitor<{%%0}>)
 meth public abstract com.sun.tools.xjc.model.CAdapter getAdapter()
 meth public abstract java.util.Collection<? extends com.sun.tools.xjc.model.CTypeInfo> ref()
@@ -3943,9 +2593,16 @@ meth public abstract {com.sun.tools.xjc.model.CPropertyVisitor%0} onElement(com.
 meth public abstract {com.sun.tools.xjc.model.CPropertyVisitor%0} onReference(com.sun.tools.xjc.model.CReferencePropertyInfo)
 meth public abstract {com.sun.tools.xjc.model.CPropertyVisitor%0} onValue(com.sun.tools.xjc.model.CValuePropertyInfo)
 
+CLSS public abstract interface com.sun.tools.xjc.model.CPropertyVisitor2<%0 extends java.lang.Object, %1 extends java.lang.Object>
+meth public abstract {com.sun.tools.xjc.model.CPropertyVisitor2%0} visit(com.sun.tools.xjc.model.CAttributePropertyInfo,{com.sun.tools.xjc.model.CPropertyVisitor2%1})
+meth public abstract {com.sun.tools.xjc.model.CPropertyVisitor2%0} visit(com.sun.tools.xjc.model.CElementPropertyInfo,{com.sun.tools.xjc.model.CPropertyVisitor2%1})
+meth public abstract {com.sun.tools.xjc.model.CPropertyVisitor2%0} visit(com.sun.tools.xjc.model.CReferencePropertyInfo,{com.sun.tools.xjc.model.CPropertyVisitor2%1})
+meth public abstract {com.sun.tools.xjc.model.CPropertyVisitor2%0} visit(com.sun.tools.xjc.model.CValuePropertyInfo,{com.sun.tools.xjc.model.CPropertyVisitor2%1})
+
 CLSS public final com.sun.tools.xjc.model.CReferencePropertyInfo
 cons public init(java.lang.String,boolean,boolean,boolean,com.sun.xml.xsom.XSComponent,com.sun.tools.xjc.model.CCustomizations,org.xml.sax.Locator,boolean,boolean,boolean)
 intf com.sun.xml.bind.v2.model.core.ReferencePropertyInfo<com.sun.tools.xjc.model.nav.NType,com.sun.tools.xjc.model.nav.NClass>
+meth public <%0 extends java.lang.Object, %1 extends java.lang.Object> {%%0} accept(com.sun.tools.xjc.model.CPropertyVisitor2<{%%0},{%%1}>,{%%1})
 meth public <%0 extends java.lang.Object> {%%0} accept(com.sun.tools.xjc.model.CPropertyVisitor<{%%0}>)
 meth public boolean isCollectionNillable()
 meth public boolean isCollectionRequired()
@@ -3997,6 +2654,7 @@ CLSS public final com.sun.tools.xjc.model.CValuePropertyInfo
 cons public init(java.lang.String,com.sun.xml.xsom.XSComponent,com.sun.tools.xjc.model.CCustomizations,org.xml.sax.Locator,com.sun.tools.xjc.model.TypeUse,javax.xml.namespace.QName)
 fld protected final com.sun.tools.xjc.model.TypeUse type
 intf com.sun.xml.bind.v2.model.core.ValuePropertyInfo<com.sun.tools.xjc.model.nav.NType,com.sun.tools.xjc.model.nav.NClass>
+meth public <%0 extends java.lang.Object, %1 extends java.lang.Object> {%%0} accept(com.sun.tools.xjc.model.CPropertyVisitor2<{%%0},{%%1}>,{%%1})
 meth public <%0 extends java.lang.Object> {%%0} accept(com.sun.tools.xjc.model.CPropertyVisitor<{%%0}>)
 meth public final com.sun.tools.xjc.model.CAdapter getAdapter()
 meth public final com.sun.tools.xjc.model.CNonElement getTarget()
@@ -4075,7 +2733,7 @@ meth public void dump(javax.xml.transform.Result)
 meth public void setNameConverter(com.sun.xml.bind.api.impl.NameConverter)
 meth public void setPackageLevelAnnotations(boolean)
 supr java.lang.Object
-hfds EMPTY_LOCATOR,allElements,allocator,beans,cache,customizations,elementMappings,enums,gloablCustomizations,nameConverter,packageLevelAnnotations,symbolSpaces,typeUses
+hfds EMPTY_LOCATOR,allElements,allocator,beans,cache,customizations,elementMappings,enums,globalCustomizations,nameConverter,packageLevelAnnotations,symbolSpaces,typeUses
 
 CLSS public final com.sun.tools.xjc.model.Multiplicity
 fld public final java.math.BigInteger max
@@ -4182,10 +2840,10 @@ meth public boolean isSubClassOf(com.sun.tools.xjc.model.nav.NType,com.sun.tools
 meth public boolean isTransient(java.lang.Void)
 meth public com.sun.tools.xjc.model.nav.NClass asDecl(com.sun.tools.xjc.model.nav.NType)
 meth public com.sun.tools.xjc.model.nav.NClass asDecl(java.lang.Class)
-meth public com.sun.tools.xjc.model.nav.NClass findClass(java.lang.String,com.sun.tools.xjc.model.nav.NClass)
 meth public com.sun.tools.xjc.model.nav.NClass getDeclaringClassForField(java.lang.Void)
 meth public com.sun.tools.xjc.model.nav.NClass getDeclaringClassForMethod(java.lang.Void)
 meth public com.sun.tools.xjc.model.nav.NClass getSuperClass(com.sun.tools.xjc.model.nav.NClass)
+meth public com.sun.tools.xjc.model.nav.NClass loadObjectFactory(com.sun.tools.xjc.model.nav.NClass,java.lang.String)
 meth public com.sun.tools.xjc.model.nav.NClass ref(com.sun.codemodel.JClass)
 meth public com.sun.tools.xjc.model.nav.NClass ref(java.lang.Class)
 meth public com.sun.tools.xjc.model.nav.NType getBaseClass(com.sun.tools.xjc.model.nav.NType,com.sun.tools.xjc.model.nav.NClass)
@@ -4214,8 +2872,6 @@ meth public java.util.Collection<? extends java.lang.Void> getDeclaredMethods(co
 meth public static com.sun.tools.xjc.model.nav.NClass create(java.lang.Class)
 supr java.lang.Object
 
-CLSS abstract interface com.sun.tools.xjc.model.package-info
-
 CLSS public final !enum com.sun.tools.xjc.outline.Aspect
 fld public final static com.sun.tools.xjc.outline.Aspect EXPOSED
 fld public final static com.sun.tools.xjc.outline.Aspect IMPLEMENTATION
@@ -4233,19 +2889,31 @@ fld public final com.sun.codemodel.JDefinedClass ref
  anno 0 com.sun.istack.NotNull()
 fld public final com.sun.tools.xjc.model.CClassInfo target
  anno 0 com.sun.istack.NotNull()
+intf com.sun.tools.xjc.outline.CustomizableOutline
 meth public abstract com.sun.tools.xjc.outline.Outline parent()
  anno 0 com.sun.istack.NotNull()
+meth public com.sun.codemodel.JDefinedClass getImplClass()
+meth public com.sun.tools.xjc.model.CCustomizable getTarget()
 meth public com.sun.tools.xjc.outline.PackageOutline _package()
  anno 0 com.sun.istack.NotNull()
 meth public final com.sun.tools.xjc.outline.ClassOutline getSuperClass()
 meth public final com.sun.tools.xjc.outline.FieldOutline[] getDeclaredFields()
 supr java.lang.Object
 
+CLSS public abstract interface com.sun.tools.xjc.outline.CustomizableOutline
+meth public abstract com.sun.codemodel.JDefinedClass getImplClass()
+ anno 0 com.sun.istack.NotNull()
+meth public abstract com.sun.tools.xjc.model.CCustomizable getTarget()
+ anno 0 com.sun.istack.NotNull()
+
 CLSS public abstract com.sun.tools.xjc.outline.ElementOutline
 cons protected init(com.sun.tools.xjc.model.CElementInfo,com.sun.codemodel.JDefinedClass)
 fld public final com.sun.codemodel.JDefinedClass implClass
 fld public final com.sun.tools.xjc.model.CElementInfo target
+intf com.sun.tools.xjc.outline.CustomizableOutline
 meth public abstract com.sun.tools.xjc.outline.Outline parent()
+meth public com.sun.codemodel.JDefinedClass getImplClass()
+meth public com.sun.tools.xjc.model.CCustomizable getTarget()
 meth public com.sun.tools.xjc.outline.PackageOutline _package()
 supr java.lang.Object
 
@@ -4260,8 +2928,11 @@ cons protected init(com.sun.tools.xjc.model.CEnumLeafInfo,com.sun.codemodel.JDef
 fld public final com.sun.codemodel.JDefinedClass clazz
 fld public final com.sun.tools.xjc.model.CEnumLeafInfo target
 fld public final java.util.List<com.sun.tools.xjc.outline.EnumConstantOutline> constants
+intf com.sun.tools.xjc.outline.CustomizableOutline
 meth public abstract com.sun.tools.xjc.outline.Outline parent()
  anno 0 com.sun.istack.NotNull()
+meth public com.sun.codemodel.JDefinedClass getImplClass()
+meth public com.sun.tools.xjc.model.CCustomizable getTarget()
 meth public com.sun.tools.xjc.outline.PackageOutline _package()
  anno 0 com.sun.istack.NotNull()
 supr java.lang.Object
@@ -4305,8 +2976,6 @@ meth public abstract java.lang.String getMostUsedNamespaceURI()
 meth public abstract java.util.Set<? extends com.sun.tools.xjc.outline.ClassOutline> getClasses()
 meth public abstract javax.xml.bind.annotation.XmlNsForm getAttributeFormDefault()
 meth public abstract javax.xml.bind.annotation.XmlNsForm getElementFormDefault()
-
-CLSS abstract interface com.sun.tools.xjc.package-info
 
 CLSS public abstract com.sun.tools.xjc.reader.AbstractExtensionBindingChecker
 cons public init(java.lang.String,com.sun.tools.xjc.Options,org.xml.sax.ErrorHandler)
@@ -4555,7 +3224,7 @@ supr org.xml.sax.helpers.XMLFilterImpl
 hfds locator
 
 CLSS public final com.sun.tools.xjc.reader.internalizer.DOMForest
-cons public init(com.sun.tools.xjc.reader.internalizer.InternalizationLogic)
+cons public init(com.sun.tools.xjc.reader.internalizer.InternalizationLogic,com.sun.tools.xjc.Options)
 cons public init(javax.xml.parsers.SAXParserFactory,javax.xml.parsers.DocumentBuilder,com.sun.tools.xjc.reader.internalizer.InternalizationLogic)
 fld protected final com.sun.tools.xjc.reader.internalizer.InternalizationLogic logic
 fld public final com.sun.tools.xjc.reader.internalizer.LocatorTable locatorTable
@@ -4584,7 +3253,7 @@ meth public void setEntityResolver(org.xml.sax.EntityResolver)
 meth public void setErrorHandler(com.sun.tools.xjc.ErrorReceiver)
 meth public void weakSchemaCorrectnessCheck(javax.xml.validation.SchemaFactory)
 supr java.lang.Object
-hfds core,documentBuilder,entityResolver,errorReceiver,parserFactory,rootDocuments
+hfds core,documentBuilder,entityResolver,errorReceiver,options,parserFactory,rootDocuments
 hcls HandlerImpl
 
 CLSS public abstract interface static com.sun.tools.xjc.reader.internalizer.DOMForest$Handler
@@ -4630,8 +3299,8 @@ supr org.xml.sax.helpers.XMLFilterImpl
 hfds VERSIONS,locator,rootTagStart,seenBindings,seenRoot,version
 
 CLSS public final com.sun.tools.xjc.reader.relaxng.RELAXNGCompiler
-cons public init(org.kohsuke.rngom.digested.DPattern,com.sun.codemodel.JCodeModel,com.sun.tools.xjc.Options)
-meth public static com.sun.tools.xjc.model.Model build(org.kohsuke.rngom.digested.DPattern,com.sun.codemodel.JCodeModel,com.sun.tools.xjc.Options)
+cons public init(com.sun.tools.rngom.digested.DPattern,com.sun.codemodel.JCodeModel,com.sun.tools.xjc.Options)
+meth public static com.sun.tools.xjc.model.Model build(com.sun.tools.rngom.digested.DPattern,com.sun.codemodel.JCodeModel,com.sun.tools.xjc.Options)
 supr java.lang.Object
 hfds bindQueue,classes,datatypes,defs,grammar,model,opts,pkg,typeUseBinder
 
@@ -4646,12 +3315,12 @@ hcls ReferenceFinder
 
 CLSS public final com.sun.tools.xjc.reader.relaxng.RawTypeSetBuilder
 cons public init(com.sun.tools.xjc.reader.relaxng.RELAXNGCompiler,com.sun.tools.xjc.model.Multiplicity)
-meth public java.lang.Void onAttribute(org.kohsuke.rngom.digested.DAttributePattern)
-meth public java.lang.Void onElement(org.kohsuke.rngom.digested.DElementPattern)
-meth public java.lang.Void onOneOrMore(org.kohsuke.rngom.digested.DOneOrMorePattern)
-meth public java.lang.Void onZeroOrMore(org.kohsuke.rngom.digested.DZeroOrMorePattern)
-meth public static com.sun.tools.xjc.reader.RawTypeSet build(com.sun.tools.xjc.reader.relaxng.RELAXNGCompiler,org.kohsuke.rngom.digested.DPattern,com.sun.tools.xjc.model.Multiplicity)
-supr org.kohsuke.rngom.digested.DPatternWalker
+meth public java.lang.Void onAttribute(com.sun.tools.rngom.digested.DAttributePattern)
+meth public java.lang.Void onElement(com.sun.tools.rngom.digested.DElementPattern)
+meth public java.lang.Void onOneOrMore(com.sun.tools.rngom.digested.DOneOrMorePattern)
+meth public java.lang.Void onZeroOrMore(com.sun.tools.rngom.digested.DZeroOrMorePattern)
+meth public static com.sun.tools.xjc.reader.RawTypeSet build(com.sun.tools.xjc.reader.relaxng.RELAXNGCompiler,com.sun.tools.rngom.digested.DPattern,com.sun.tools.xjc.model.Multiplicity)
+supr com.sun.tools.rngom.digested.DPatternWalker
 hfds compiler,mul,refs
 hcls CClassInfoRef
 
@@ -4951,11 +3620,11 @@ supr com.sun.tools.xjc.reader.xmlschema.BindingComponent
 hfds INT_MAX,INT_MIN,LONG_MAX,LONG_MIN,acknowledgedXmimeContentTypes,builtinTypeSafeEnumCapableTypes,initiatingType,model,reportedEnumMemberSizeWarnings
 
 CLSS public final com.sun.tools.xjc.reader.xmlschema.WildcardNameClassBuilder
-intf com.sun.xml.xsom.visitor.XSWildcardFunction<org.kohsuke.rngom.nc.NameClass>
-meth public org.kohsuke.rngom.nc.NameClass any(com.sun.xml.xsom.XSWildcard$Any)
-meth public org.kohsuke.rngom.nc.NameClass other(com.sun.xml.xsom.XSWildcard$Other)
-meth public org.kohsuke.rngom.nc.NameClass union(com.sun.xml.xsom.XSWildcard$Union)
-meth public static org.kohsuke.rngom.nc.NameClass build(com.sun.xml.xsom.XSWildcard)
+intf com.sun.xml.xsom.visitor.XSWildcardFunction<com.sun.tools.rngom.nc.NameClass>
+meth public com.sun.tools.rngom.nc.NameClass any(com.sun.xml.xsom.XSWildcard$Any)
+meth public com.sun.tools.rngom.nc.NameClass other(com.sun.xml.xsom.XSWildcard$Other)
+meth public com.sun.tools.rngom.nc.NameClass union(com.sun.xml.xsom.XSWildcard$Union)
+meth public static com.sun.tools.rngom.nc.NameClass build(com.sun.xml.xsom.XSWildcard)
 supr java.lang.Object
 hfds theInstance
 
@@ -5315,7 +3984,8 @@ meth public int size()
 meth public java.lang.String getDocumentation()
 meth public java.util.Iterator<com.sun.tools.xjc.reader.xmlschema.bindinfo.BIDeclaration> iterator()
 meth public org.xml.sax.Locator getSourceLocation()
-meth public static com.sun.xml.bind.v2.runtime.JAXBContextImpl getJAXBContext()
+meth public static javax.xml.bind.JAXBContext getCustomizationContext()
+meth public static javax.xml.bind.Unmarshaller getCustomizationUnmarshaller()
 meth public void absorb(com.sun.tools.xjc.reader.xmlschema.bindinfo.BindInfo)
 meth public void addDecl(com.sun.tools.xjc.reader.xmlschema.bindinfo.BIDeclaration)
 meth public void setOwner(com.sun.tools.xjc.reader.xmlschema.BGMBuilder,com.sun.xml.xsom.XSComponent)
@@ -5426,7 +4096,7 @@ hfds core
 
 CLSS public com.sun.tools.xjc.reader.xmlschema.parser.SchemaConstraintChecker
 cons public init()
-meth public static boolean check(org.xml.sax.InputSource[],com.sun.tools.xjc.ErrorReceiver,org.xml.sax.EntityResolver)
+meth public static boolean check(org.xml.sax.InputSource[],com.sun.tools.xjc.ErrorReceiver,org.xml.sax.EntityResolver,boolean)
 meth public static void main(java.lang.String[]) throws java.io.IOException
 supr java.lang.Object
 
@@ -5600,17 +4270,6 @@ meth public java.lang.Object marshal(java.lang.Object)
 meth public java.lang.Object unmarshal(java.lang.Object)
 supr javax.xml.bind.annotation.adapters.XmlAdapter<java.lang.Object,java.lang.Object>
 
-CLSS public com.sun.xml.bind.ContextFactory
-cons public init()
-meth public static javax.xml.bind.JAXBContext createContext(java.lang.String,java.lang.ClassLoader) throws javax.xml.bind.JAXBException
-supr java.lang.Object
-
-CLSS public com.sun.xml.bind.ContextFactory_1_0_1
-cons public init()
-fld public final static java.lang.String RUNTIME_KEY = "com.sun.xml.bind.jaxbContextImpl"
-meth public static javax.xml.bind.JAXBContext createContext(java.lang.String,java.lang.ClassLoader) throws javax.xml.bind.JAXBException
-supr java.lang.Object
-
 CLSS public abstract interface com.sun.xml.bind.CycleRecoverable
 innr public abstract interface static Context
 meth public abstract java.lang.Object onCycleDetected(com.sun.xml.bind.CycleRecoverable$Context)
@@ -5620,7 +4279,87 @@ CLSS public abstract interface static com.sun.xml.bind.CycleRecoverable$Context
 meth public abstract javax.xml.bind.Marshaller getMarshaller()
 
 CLSS public final com.sun.xml.bind.DatatypeConverterImpl
+ anno 0 java.lang.Deprecated()
 cons protected init()
+fld public final static javax.xml.bind.DatatypeConverterInterface theInstance
+ anno 0 java.lang.Deprecated()
+intf javax.xml.bind.DatatypeConverterInterface
+meth public boolean parseBoolean(java.lang.String)
+ anno 0 java.lang.Deprecated()
+meth public byte parseByte(java.lang.String)
+ anno 0 java.lang.Deprecated()
+meth public byte[] parseBase64Binary(java.lang.String)
+ anno 0 java.lang.Deprecated()
+meth public byte[] parseHexBinary(java.lang.String)
+ anno 0 java.lang.Deprecated()
+meth public double parseDouble(java.lang.String)
+ anno 0 java.lang.Deprecated()
+meth public float parseFloat(java.lang.String)
+ anno 0 java.lang.Deprecated()
+meth public int parseInt(java.lang.String)
+ anno 0 java.lang.Deprecated()
+meth public int parseUnsignedShort(java.lang.String)
+ anno 0 java.lang.Deprecated()
+meth public java.lang.String parseAnySimpleType(java.lang.String)
+ anno 0 java.lang.Deprecated()
+meth public java.lang.String parseString(java.lang.String)
+ anno 0 java.lang.Deprecated()
+meth public java.lang.String printAnySimpleType(java.lang.String)
+ anno 0 java.lang.Deprecated()
+meth public java.lang.String printBase64Binary(byte[])
+ anno 0 java.lang.Deprecated()
+meth public java.lang.String printBoolean(boolean)
+ anno 0 java.lang.Deprecated()
+meth public java.lang.String printByte(byte)
+ anno 0 java.lang.Deprecated()
+meth public java.lang.String printDate(java.util.Calendar)
+ anno 0 java.lang.Deprecated()
+meth public java.lang.String printDateTime(java.util.Calendar)
+ anno 0 java.lang.Deprecated()
+meth public java.lang.String printDecimal(java.math.BigDecimal)
+ anno 0 java.lang.Deprecated()
+meth public java.lang.String printDouble(double)
+ anno 0 java.lang.Deprecated()
+meth public java.lang.String printFloat(float)
+ anno 0 java.lang.Deprecated()
+meth public java.lang.String printHexBinary(byte[])
+ anno 0 java.lang.Deprecated()
+meth public java.lang.String printInt(int)
+ anno 0 java.lang.Deprecated()
+meth public java.lang.String printInteger(java.math.BigInteger)
+ anno 0 java.lang.Deprecated()
+meth public java.lang.String printLong(long)
+ anno 0 java.lang.Deprecated()
+meth public java.lang.String printQName(javax.xml.namespace.QName,javax.xml.namespace.NamespaceContext)
+ anno 0 java.lang.Deprecated()
+meth public java.lang.String printShort(short)
+ anno 0 java.lang.Deprecated()
+meth public java.lang.String printString(java.lang.String)
+ anno 0 java.lang.Deprecated()
+meth public java.lang.String printTime(java.util.Calendar)
+ anno 0 java.lang.Deprecated()
+meth public java.lang.String printUnsignedInt(long)
+ anno 0 java.lang.Deprecated()
+meth public java.lang.String printUnsignedShort(int)
+ anno 0 java.lang.Deprecated()
+meth public java.math.BigDecimal parseDecimal(java.lang.String)
+ anno 0 java.lang.Deprecated()
+meth public java.math.BigInteger parseInteger(java.lang.String)
+ anno 0 java.lang.Deprecated()
+meth public java.util.Calendar parseDate(java.lang.String)
+ anno 0 java.lang.Deprecated()
+meth public java.util.Calendar parseDateTime(java.lang.String)
+ anno 0 java.lang.Deprecated()
+meth public java.util.Calendar parseTime(java.lang.String)
+ anno 0 java.lang.Deprecated()
+meth public javax.xml.namespace.QName parseQName(java.lang.String,javax.xml.namespace.NamespaceContext)
+ anno 0 java.lang.Deprecated()
+meth public long parseLong(java.lang.String)
+ anno 0 java.lang.Deprecated()
+meth public long parseUnsignedInt(java.lang.String)
+ anno 0 java.lang.Deprecated()
+meth public short parseShort(java.lang.String)
+ anno 0 java.lang.Deprecated()
 meth public static byte _parseByte(java.lang.CharSequence)
 meth public static byte encodeByte(int)
 meth public static byte[] _parseBase64Binary(java.lang.String)
@@ -5648,67 +4387,14 @@ meth public static java.lang.String _printShort(short)
 meth public static java.math.BigDecimal _parseDecimal(java.lang.CharSequence)
 meth public static java.math.BigInteger _parseInteger(java.lang.CharSequence)
 meth public static java.util.GregorianCalendar _parseDateTime(java.lang.CharSequence)
+meth public static javax.xml.datatype.DatatypeFactory getDatatypeFactory()
 meth public static javax.xml.namespace.QName _parseQName(java.lang.CharSequence,javax.xml.namespace.NamespaceContext)
 meth public static long _parseLong(java.lang.CharSequence)
 meth public static short _parseShort(java.lang.CharSequence)
 meth public static void _printBase64Binary(byte[],int,int,javax.xml.stream.XMLStreamWriter) throws javax.xml.stream.XMLStreamException
 supr java.lang.Object
-hfds PADDING,datatypeFactory,decodeMap,encodeMap
+hfds DF_CACHE,PADDING,decodeMap,encodeMap,hexCode
 hcls CalendarFormatter
-
-CLSS public com.sun.xml.bind.DefaultJAXBContextImpl
-cons public init(com.sun.xml.bind.GrammarInfo)
-cons public init(java.lang.String,java.lang.ClassLoader) throws javax.xml.bind.JAXBException
-fld public final static java.lang.String JAXB_RI_BUILD_ID = "jaxb.ri.build.id"
-meth public com.sun.msv.grammar.Grammar getGrammar() throws javax.xml.bind.JAXBException
-meth public com.sun.xml.bind.GrammarInfo getGrammarInfo()
-meth public java.lang.Object getProperty(java.lang.String) throws javax.xml.bind.PropertyException
-meth public java.lang.Object newInstance(java.lang.Class) throws javax.xml.bind.JAXBException
-meth public javax.xml.bind.Marshaller createMarshaller() throws javax.xml.bind.JAXBException
-meth public javax.xml.bind.Unmarshaller createUnmarshaller() throws javax.xml.bind.JAXBException
-meth public javax.xml.bind.Validator createValidator() throws javax.xml.bind.JAXBException
-meth public void setProperty(java.lang.String,java.lang.Object) throws javax.xml.bind.PropertyException
-supr javax.xml.bind.JAXBContext
-hfds buildVersionId,gi
-
-CLSS public com.sun.xml.bind.ErrorHandlerToEventHandler
-cons public init(javax.xml.bind.ValidationEventHandler,com.sun.xml.bind.validator.Locator)
-intf org.xml.sax.ErrorHandler
-meth public void error(org.xml.sax.SAXParseException) throws org.xml.sax.SAXException
-meth public void fatalError(org.xml.sax.SAXParseException) throws org.xml.sax.SAXException
-meth public void warning(org.xml.sax.SAXParseException) throws org.xml.sax.SAXException
-supr java.lang.Object
-hfds locator,veh
-
-CLSS public com.sun.xml.bind.GrammarImpl
-cons public init(com.sun.msv.grammar.ExpressionPool)
-innr public abstract static Plug
-intf com.sun.msv.grammar.Grammar
-intf java.io.Serializable
-meth public com.sun.msv.grammar.Expression getTopLevel()
-meth public com.sun.msv.grammar.ExpressionPool getPool()
-meth public com.sun.msv.grammar.trex.ElementPattern createElement(com.sun.msv.grammar.NameClass,com.sun.msv.grammar.Expression)
-meth public void connect(com.sun.msv.grammar.Grammar[])
-meth public void setPlugs(com.sun.xml.bind.GrammarImpl$Plug[])
-meth public void setTopLevel(com.sun.msv.grammar.Expression)
-supr java.lang.Object
-hfds elementContents,plugs,pool,serialVersionUID,topLevel
-
-CLSS public abstract static com.sun.xml.bind.GrammarImpl$Plug
- outer com.sun.xml.bind.GrammarImpl
-cons public init()
-intf java.io.Serializable
-meth public abstract void connect(com.sun.msv.grammar.ExpressionPool,com.sun.msv.grammar.Grammar[])
-supr com.sun.msv.grammar.OtherExp
-hfds serialVersionUID
-
-CLSS public abstract com.sun.xml.bind.GrammarInfo
-cons public init()
-meth protected abstract java.lang.Class getRootElement(java.lang.String,java.lang.String)
-meth protected abstract java.lang.String[] getProbePoints()
-meth protected com.sun.msv.grammar.Grammar getGrammar() throws javax.xml.bind.JAXBException
-meth public abstract java.lang.Class getDefaultImplementation(java.lang.Class)
-supr java.lang.Object
 
 CLSS public abstract com.sun.xml.bind.IDResolver
 cons public init()
@@ -5722,72 +4408,10 @@ CLSS public abstract interface com.sun.xml.bind.InternalAccessorFactory
 intf com.sun.xml.bind.AccessorFactory
 meth public abstract com.sun.xml.bind.v2.runtime.reflect.Accessor createFieldAccessor(java.lang.Class,java.lang.reflect.Field,boolean,boolean) throws javax.xml.bind.JAXBException
 
-CLSS public com.sun.xml.bind.JAXBAssertionError
-cons public init()
-cons public init(java.lang.String)
-cons public init(java.lang.Throwable)
-meth public void printStackTrace()
-meth public void printStackTrace(java.io.PrintStream)
-meth public void printStackTrace(java.io.PrintWriter)
-supr java.lang.Error
-hfds linkedException
-
-CLSS public abstract interface com.sun.xml.bind.JAXBObject
-
 CLSS public abstract interface com.sun.xml.bind.Locatable
 meth public abstract org.xml.sax.Locator sourceLocation()
 
-CLSS public com.sun.xml.bind.Messages
-cons public init()
-fld public final static java.lang.String BUILD_ID = "DefaultJAXBContextImpl.buildID"
-fld public final static java.lang.String CI_CI_NOT_NULL = "DefaultJAXBContextImpl.CICINotNull"
-fld public final static java.lang.String CI_NOT_NULL = "DefaultJAXBContextImpl.CINotNull"
-fld public final static java.lang.String COLLISION_DETECTED = "GrammarInfoFacade.CollisionDetected"
-fld public final static java.lang.String ERR_TYPE_MISMATCH = "Util.TypeMismatch"
-fld public final static java.lang.String INCOMPATIBLE_VERSION = "GrammarInfoFacade.IncompatibleVersion"
-fld public final static java.lang.String INCORRECT_VERSION = "ContextFactory.IncorrectVersion"
-fld public final static java.lang.String MISSING_INTERFACE = "ImplementationRegistry.MissingInterface"
-fld public final static java.lang.String NO_BGM = "GrammarInfo.NoBGM"
-fld public final static java.lang.String UNABLE_TO_READ_BGM = "GrammarInfo.UnableToReadBGM"
-meth public static java.lang.String format(java.lang.String)
-meth public static java.lang.String format(java.lang.String,java.lang.Object)
-meth public static java.lang.String format(java.lang.String,java.lang.Object,java.lang.Object)
-meth public static java.lang.String format(java.lang.String,java.lang.Object,java.lang.Object,java.lang.Object)
-meth public static java.lang.String format(java.lang.String,java.lang.Object[])
-supr java.lang.Object
-
-CLSS public com.sun.xml.bind.ProxyGroup
-meth public static java.lang.Object blindWrap(java.lang.Object,java.lang.Class,java.lang.Class[])
-meth public static java.lang.Object unwrap(java.lang.Object)
-meth public static java.lang.Object wrap(java.lang.Object,java.lang.Class,java.lang.Class[])
-supr java.lang.Object
-hfds faceToMaskMap,faceToProxyMap,maskToProxyMap
-hcls DynamicProxyHandler
-
-CLSS public abstract interface com.sun.xml.bind.RIElement
-intf javax.xml.bind.Element
-meth public abstract java.lang.String ____jaxb_ri____getLocalName()
-meth public abstract java.lang.String ____jaxb_ri____getNamespaceURI()
-
-CLSS public final com.sun.xml.bind.StringInputStream
-cons public init(java.lang.String)
-meth public int available()
-meth public int read()
-meth public int read(byte[])
-meth public int read(byte[],int,int)
-supr java.io.InputStream
-hfds idx,str
-
-CLSS public com.sun.xml.bind.TypeRegistry
-cons public init(com.sun.xml.bind.GrammarInfo)
-meth public com.sun.xml.bind.unmarshaller.UnmarshallableObject createInstanceOf(java.lang.Class)
-meth public com.sun.xml.bind.unmarshaller.UnmarshallableObject createRootElement(java.lang.String,java.lang.String)
-meth public final com.sun.xml.bind.GrammarInfo getGrammarInfo()
-meth public java.lang.Class getRootElement(java.lang.String,java.lang.String)
-supr java.lang.Object
-hfds info
-
-CLSS public abstract com.sun.xml.bind.Util
+CLSS public final com.sun.xml.bind.Utils
 meth public static java.lang.String getSystemProperty(java.lang.String)
 meth public static java.util.logging.Logger getClassLogger()
 supr java.lang.Object
@@ -5798,9 +4422,9 @@ meth public abstract java.lang.String getFieldName()
 
 CLSS public abstract com.sun.xml.bind.WhiteSpaceProcessor
 cons public init()
-meth protected final static boolean isWhiteSpaceExceptSpace(char)
-meth public final static boolean isWhiteSpace(char)
-meth public final static boolean isWhiteSpace(java.lang.CharSequence)
+meth protected static boolean isWhiteSpaceExceptSpace(char)
+meth public static boolean isWhiteSpace(char)
+meth public static boolean isWhiteSpace(java.lang.CharSequence)
 meth public static java.lang.CharSequence collapse(java.lang.CharSequence)
 meth public static java.lang.CharSequence replace(java.lang.CharSequence)
 meth public static java.lang.CharSequence trim(java.lang.CharSequence)
@@ -5963,10 +4587,13 @@ meth public abstract void warning(org.xml.sax.SAXParseException)
 CLSS public abstract com.sun.xml.bind.api.JAXBRIContext
 cons protected init()
 fld public final static java.lang.String ANNOTATION_READER
+fld public final static java.lang.String BACKUP_WITH_PARENT_NAMESPACE = "com.sun.xml.bind.backupWithParentNamespace"
 fld public final static java.lang.String CANONICALIZATION_SUPPORT = "com.sun.xml.bind.c14n"
 fld public final static java.lang.String DEFAULT_NAMESPACE_REMAP = "com.sun.xml.bind.defaultNamespaceRemap"
+fld public final static java.lang.String DISABLE_XML_SECURITY = "com.sun.xml.bind.disableXmlSecurity"
 fld public final static java.lang.String ENABLE_XOP = "com.sun.xml.bind.XOP"
 fld public final static java.lang.String IMPROVED_XSI_TYPE_HANDLING = "com.sun.xml.bind.improvedXsiTypeHandling"
+fld public final static java.lang.String MAX_ERRORS = "com.sun.xml.bind.maxErrorsCount"
 fld public final static java.lang.String RETAIN_REFERENCE_TO_INFO = "retainReferenceToInfo"
 fld public final static java.lang.String SUBCLASS_REPLACEMENTS = "com.sun.xml.bind.subclassReplacements"
 fld public final static java.lang.String SUPRESS_ACCESSOR_WARNINGS = "supressAccessorWarnings"
@@ -6081,12 +4708,8 @@ meth public java.lang.String toPackageName(java.lang.String)
 meth public java.lang.String toPropertyName(java.lang.String)
 meth public java.lang.String toVariableName(java.lang.String)
 meth public java.util.List<java.lang.String> toWordList(java.lang.String)
-meth public static boolean isJavaIdentifier(java.lang.String)
-meth public static boolean isJavaPackageName(java.lang.String)
 meth public static void escape(java.lang.StringBuilder,java.lang.String,int)
 supr java.lang.Object
-
-CLSS abstract interface com.sun.xml.bind.api.package-info
 
 CLSS public abstract interface com.sun.xml.bind.marshaller.CharacterEscapeHandler
 meth public abstract void escape(char[],int,int,boolean,java.io.Writer) throws java.io.IOException
@@ -6111,30 +4734,6 @@ fld public final static com.sun.xml.bind.marshaller.CharacterEscapeHandler theIn
 intf com.sun.xml.bind.marshaller.CharacterEscapeHandler
 meth public void escape(char[],int,int,boolean,java.io.Writer) throws java.io.IOException
 supr java.lang.Object
-
-CLSS public abstract interface com.sun.xml.bind.marshaller.IdentifiableObject
-meth public abstract java.lang.String ____jaxb____getId()
-
-CLSS public final com.sun.xml.bind.marshaller.MS1252Encoder
-cons public init(java.nio.charset.Charset)
-meth protected java.nio.charset.CoderResult encodeLoop(java.nio.CharBuffer,java.nio.ByteBuffer)
-meth public boolean canEncode(char)
-meth public byte encode(char)
-supr java.nio.charset.CharsetEncoder
-hfds index1,index2
-
-CLSS public com.sun.xml.bind.marshaller.MarshallerImpl
-cons public init()
-meth protected com.sun.xml.bind.marshaller.CharacterEscapeHandler createEscapeHandler(java.lang.String)
-meth public com.sun.xml.bind.marshaller.XMLWriter createWriter(java.io.OutputStream) throws javax.xml.bind.JAXBException
-meth public com.sun.xml.bind.marshaller.XMLWriter createWriter(java.io.OutputStream,java.lang.String) throws javax.xml.bind.JAXBException
-meth public com.sun.xml.bind.marshaller.XMLWriter createWriter(java.io.Writer) throws javax.xml.bind.JAXBException
-meth public com.sun.xml.bind.marshaller.XMLWriter createWriter(java.io.Writer,java.lang.String) throws javax.xml.bind.JAXBException
-meth public java.lang.Object getProperty(java.lang.String) throws javax.xml.bind.PropertyException
-meth public void marshal(java.lang.Object,javax.xml.transform.Result) throws javax.xml.bind.JAXBException
-meth public void setProperty(java.lang.String,java.lang.Object) throws javax.xml.bind.PropertyException
-supr javax.xml.bind.helpers.AbstractMarshallerImpl
-hfds ENCODING_HANDLER,INDENT_STRING,escapeHandler,indent
 
 CLSS public com.sun.xml.bind.marshaller.Messages
 cons public init()
@@ -6168,24 +4767,6 @@ meth public java.lang.String[] getPreDeclaredNamespaceUris2()
 supr java.lang.Object
 hfds EMPTY_STRING
 
-CLSS public com.sun.xml.bind.marshaller.NamespaceSupport
-cons public init()
-fld public final static java.lang.String XMLNS = "http://www.w3.org/XML/1998/namespace"
-meth public boolean declarePrefix(java.lang.String,java.lang.String)
-meth public java.lang.String getPrefix(java.lang.String)
-meth public java.lang.String getPrefix2(java.lang.String)
-meth public java.lang.String getURI(java.lang.String)
-meth public java.lang.String[] processName(java.lang.String,java.lang.String[],boolean)
-meth public java.util.Enumeration getDeclaredPrefixes()
-meth public java.util.Enumeration getPrefixes()
-meth public java.util.Enumeration getPrefixes(java.lang.String)
-meth public void popContext()
-meth public void pushContext()
-meth public void reset()
-supr java.lang.Object
-hfds EMPTY_ENUMERATION,contextPos,contexts,currentContext
-hcls Context
-
 CLSS public com.sun.xml.bind.marshaller.NioEscapeHandler
 cons public init(java.lang.String)
 intf com.sun.xml.bind.marshaller.CharacterEscapeHandler
@@ -6193,8 +4774,16 @@ meth public void escape(char[],int,int,boolean,java.io.Writer) throws java.io.IO
 supr java.lang.Object
 hfds encoder
 
+CLSS public com.sun.xml.bind.marshaller.NoEscapeHandler
+cons public init()
+fld public final static com.sun.xml.bind.marshaller.NoEscapeHandler theInstance
+intf com.sun.xml.bind.marshaller.CharacterEscapeHandler
+meth public void escape(char[],int,int,boolean,java.io.Writer) throws java.io.IOException
+supr java.lang.Object
+
 CLSS public com.sun.xml.bind.marshaller.SAX2DOMEx
 cons public init() throws javax.xml.parsers.ParserConfigurationException
+cons public init(javax.xml.parsers.DocumentBuilderFactory) throws javax.xml.parsers.ParserConfigurationException
 cons public init(org.w3c.dom.Node)
 cons public init(org.w3c.dom.Node,boolean)
 fld protected final java.util.Stack<org.w3c.dom.Node> nodeStack
@@ -6217,38 +4806,6 @@ meth public void startElement(java.lang.String,java.lang.String,java.lang.String
 meth public void startPrefixMapping(java.lang.String,java.lang.String)
 supr java.lang.Object
 hfds isConsolidate,node,unprocessedNamespaces
-
-CLSS public com.sun.xml.bind.marshaller.SAXMarshaller
-cons public init(org.xml.sax.ContentHandler,com.sun.xml.bind.marshaller.MarshallerImpl)
-intf com.sun.xml.bind.serializer.XMLSerializer
-meth public com.sun.xml.bind.serializer.NamespaceContext2 getNamespaceContext()
-meth public java.lang.String onID(java.lang.String) throws org.xml.sax.SAXException
-meth public java.lang.String onIDREF(java.lang.String) throws org.xml.sax.SAXException
-meth public void childAsAttributeBodies(com.sun.xml.bind.serializer.XMLSerializable) throws org.xml.sax.SAXException
-meth public void childAsAttributes(com.sun.xml.bind.serializer.XMLSerializable) throws org.xml.sax.SAXException
-meth public void childAsElements(com.sun.xml.bind.serializer.XMLSerializable) throws org.xml.sax.SAXException
-meth public void endAttribute()
-meth public void endAttributes() throws org.xml.sax.SAXException
-meth public void endElement() throws org.xml.sax.SAXException
-meth public void reportError(javax.xml.bind.ValidationEvent) throws com.sun.xml.bind.serializer.AbortSerializationException
-meth public void startAttribute(java.lang.String,java.lang.String)
-meth public void startElement(java.lang.String,java.lang.String) throws org.xml.sax.SAXException
-meth public void text(java.lang.String) throws org.xml.sax.SAXException
-supr java.lang.Object
-hfds attLocalName,attNamespaceUri,attributes,elementLen,elementStack,endPrefixCallback,nsContext,owner,startPrefixCallback,textBuf,writer
-
-CLSS public com.sun.xml.bind.marshaller.SchemaLocationFilter
-cons public init(java.lang.String,java.lang.String,org.xml.sax.ContentHandler)
-meth public void endElement(java.lang.String,java.lang.String,java.lang.String) throws org.xml.sax.SAXException
-meth public void startElement(java.lang.String,java.lang.String,java.lang.String,org.xml.sax.Attributes) throws org.xml.sax.SAXException
-meth public void startPrefixMapping(java.lang.String,java.lang.String) throws org.xml.sax.SAXException
-supr org.xml.sax.helpers.XMLFilterImpl
-hfds elementCount,noNSSchemaLocation,prefix,prefixDeclared,rootElement,schemaLocation,seenXsiURI,xsiURI
-
-CLSS public com.sun.xml.bind.marshaller.Util
-cons public init()
-meth public static void handlePrintConversionException(java.lang.Object,java.lang.Exception,com.sun.xml.bind.serializer.XMLSerializer) throws org.xml.sax.SAXException
-supr java.lang.Object
 
 CLSS public com.sun.xml.bind.marshaller.XMLWriter
 cons public init(java.io.Writer,java.lang.String)
@@ -6280,74 +4837,6 @@ meth public void startPrefixMapping(java.lang.String,java.lang.String) throws or
 supr org.xml.sax.helpers.XMLFilterImpl
 hfds EMPTY_ATTS,elementLevel,encoding,escapeHandler,header,locallyDeclaredPrefix,output,startTagIsClosed,writeXmlDecl
 
-CLSS public abstract interface com.sun.xml.bind.serializer.XMLSerializer
-meth public abstract com.sun.xml.bind.serializer.NamespaceContext2 getNamespaceContext()
-meth public abstract java.lang.String onID(java.lang.String) throws org.xml.sax.SAXException
-meth public abstract java.lang.String onIDREF(java.lang.String) throws org.xml.sax.SAXException
-meth public abstract void childAsAttributeBodies(com.sun.xml.bind.serializer.XMLSerializable) throws org.xml.sax.SAXException
-meth public abstract void childAsAttributes(com.sun.xml.bind.serializer.XMLSerializable) throws org.xml.sax.SAXException
-meth public abstract void childAsElements(com.sun.xml.bind.serializer.XMLSerializable) throws org.xml.sax.SAXException
-meth public abstract void endAttribute() throws org.xml.sax.SAXException
-meth public abstract void endAttributes() throws org.xml.sax.SAXException
-meth public abstract void endElement() throws org.xml.sax.SAXException
-meth public abstract void reportError(javax.xml.bind.ValidationEvent) throws com.sun.xml.bind.serializer.AbortSerializationException
-meth public abstract void startAttribute(java.lang.String,java.lang.String) throws org.xml.sax.SAXException
-meth public abstract void startElement(java.lang.String,java.lang.String) throws org.xml.sax.SAXException
-meth public abstract void text(java.lang.String) throws org.xml.sax.SAXException
-
-CLSS public abstract com.sun.xml.bind.unmarshaller.ContentHandlerEx
-cons public init(com.sun.xml.bind.unmarshaller.UnmarshallingContext,java.lang.String)
-fld public final com.sun.xml.bind.unmarshaller.UnmarshallingContext context
-fld public int state
-intf com.sun.xml.bind.unmarshaller.UnmarshallingEventHandler
-meth protected abstract com.sun.xml.bind.unmarshaller.UnmarshallableObject owner()
-meth protected final boolean isListState()
-meth protected final java.lang.Object spawnChildFromEnterAttribute(java.lang.Class,int,java.lang.String,java.lang.String) throws com.sun.xml.bind.unmarshaller.UnreportedException
-meth protected final java.lang.Object spawnChildFromEnterElement(java.lang.Class,int,java.lang.String,java.lang.String,org.xml.sax.Attributes) throws com.sun.xml.bind.unmarshaller.UnreportedException
-meth protected final java.lang.Object spawnChildFromLeaveAttribute(java.lang.Class,int,java.lang.String,java.lang.String) throws com.sun.xml.bind.unmarshaller.UnreportedException
-meth protected final java.lang.Object spawnChildFromLeaveElement(java.lang.Class,int,java.lang.String,java.lang.String) throws com.sun.xml.bind.unmarshaller.UnreportedException
-meth protected final java.lang.Object spawnChildFromText(java.lang.Class,int,java.lang.String) throws com.sun.xml.bind.unmarshaller.UnreportedException
-meth protected final javax.xml.bind.Element spawnWildcard(int,java.lang.String,java.lang.String,org.xml.sax.Attributes) throws com.sun.xml.bind.unmarshaller.UnreportedException
-meth protected final void dump()
-meth protected final void revertToParentFromEnterAttribute(java.lang.String,java.lang.String) throws com.sun.xml.bind.unmarshaller.UnreportedException
-meth protected final void revertToParentFromEnterElement(java.lang.String,java.lang.String,org.xml.sax.Attributes) throws com.sun.xml.bind.unmarshaller.UnreportedException
-meth protected final void revertToParentFromLeaveAttribute(java.lang.String,java.lang.String) throws com.sun.xml.bind.unmarshaller.UnreportedException
-meth protected final void revertToParentFromLeaveElement(java.lang.String,java.lang.String) throws com.sun.xml.bind.unmarshaller.UnreportedException
-meth protected final void revertToParentFromText(java.lang.String) throws com.sun.xml.bind.unmarshaller.UnreportedException
-meth protected final void spawnSuperClassFromEnterAttribute(com.sun.xml.bind.unmarshaller.ContentHandlerEx,int,java.lang.String,java.lang.String) throws com.sun.xml.bind.unmarshaller.UnreportedException
-meth protected final void spawnSuperClassFromEnterElement(com.sun.xml.bind.unmarshaller.ContentHandlerEx,int,java.lang.String,java.lang.String,org.xml.sax.Attributes) throws com.sun.xml.bind.unmarshaller.UnreportedException
-meth protected final void spawnSuperClassFromFromText(com.sun.xml.bind.unmarshaller.ContentHandlerEx,int,java.lang.String) throws com.sun.xml.bind.unmarshaller.UnreportedException
-meth protected final void spawnSuperClassFromLeaveAttribute(com.sun.xml.bind.unmarshaller.ContentHandlerEx,int,java.lang.String,java.lang.String) throws com.sun.xml.bind.unmarshaller.UnreportedException
-meth protected final void spawnSuperClassFromLeaveElement(com.sun.xml.bind.unmarshaller.ContentHandlerEx,int,java.lang.String,java.lang.String) throws com.sun.xml.bind.unmarshaller.UnreportedException
-meth protected final void spawnSuperClassFromText(com.sun.xml.bind.unmarshaller.ContentHandlerEx,int,java.lang.String) throws com.sun.xml.bind.unmarshaller.UnreportedException
-meth protected final void unexpectedEnterAttribute(java.lang.String,java.lang.String) throws com.sun.xml.bind.unmarshaller.UnreportedException
-meth protected final void unexpectedEnterElement(java.lang.String,java.lang.String) throws com.sun.xml.bind.unmarshaller.UnreportedException
-meth protected final void unexpectedLeaveAttribute(java.lang.String,java.lang.String) throws com.sun.xml.bind.unmarshaller.UnreportedException
-meth protected final void unexpectedLeaveChild() throws com.sun.xml.bind.unmarshaller.UnreportedException
-meth protected final void unexpectedLeaveElement(java.lang.String,java.lang.String) throws com.sun.xml.bind.unmarshaller.UnreportedException
-meth protected final void unexpectedText(java.lang.String) throws com.sun.xml.bind.unmarshaller.UnreportedException
-meth protected void handleParseConversionException(java.lang.Exception)
-meth protected void handleUnexpectedTextException(java.lang.String,java.lang.RuntimeException) throws com.sun.xml.bind.unmarshaller.UnreportedException
-meth public void enterAttribute(java.lang.String,java.lang.String) throws com.sun.xml.bind.unmarshaller.UnreportedException
-meth public void enterElement(java.lang.String,java.lang.String,org.xml.sax.Attributes) throws com.sun.xml.bind.unmarshaller.UnreportedException
-meth public void leaveAttribute(java.lang.String,java.lang.String) throws com.sun.xml.bind.unmarshaller.UnreportedException
-meth public void leaveChild(int) throws com.sun.xml.bind.unmarshaller.UnreportedException
-meth public void leaveElement(java.lang.String,java.lang.String) throws com.sun.xml.bind.unmarshaller.UnreportedException
-meth public void text(java.lang.String) throws com.sun.xml.bind.unmarshaller.UnreportedException
-supr java.lang.Object
-hfds child,stateTextTypes
-
-CLSS public com.sun.xml.bind.unmarshaller.ContentHandlerExAdaptor
-cons public init(com.sun.xml.bind.unmarshaller.UnmarshallingContext,org.xml.sax.ContentHandler)
-meth protected com.sun.xml.bind.unmarshaller.UnmarshallableObject owner()
-meth public void enterAttribute(java.lang.String,java.lang.String) throws com.sun.xml.bind.unmarshaller.UnreportedException
-meth public void enterElement(java.lang.String,java.lang.String,org.xml.sax.Attributes) throws com.sun.xml.bind.unmarshaller.UnreportedException
-meth public void leaveAttribute(java.lang.String,java.lang.String) throws com.sun.xml.bind.unmarshaller.UnreportedException
-meth public void leaveElement(java.lang.String,java.lang.String) throws com.sun.xml.bind.unmarshaller.UnreportedException
-meth public void text(java.lang.String) throws com.sun.xml.bind.unmarshaller.UnreportedException
-supr com.sun.xml.bind.unmarshaller.ContentHandlerEx
-hfds depth,handler
-
 CLSS public com.sun.xml.bind.unmarshaller.DOMScanner
 cons public init()
 intf com.sun.xml.bind.unmarshaller.InfosetScanner
@@ -6372,30 +4861,12 @@ meth public void visit(org.w3c.dom.Element) throws org.xml.sax.SAXException
 supr java.lang.Object
 hfds atts,currentNode,locator,receiver
 
-CLSS public com.sun.xml.bind.unmarshaller.DatatypeDeserializer
-cons public init()
-meth public static org.relaxng.datatype.Datatype deserialize(java.lang.String)
-supr java.lang.Object
-
 CLSS public abstract interface com.sun.xml.bind.unmarshaller.InfosetScanner<%0 extends java.lang.Object>
 meth public abstract com.sun.xml.bind.v2.runtime.unmarshaller.LocatorEx getLocator()
 meth public abstract org.xml.sax.ContentHandler getContentHandler()
 meth public abstract void scan({com.sun.xml.bind.unmarshaller.InfosetScanner%0}) throws org.xml.sax.SAXException
 meth public abstract void setContentHandler(org.xml.sax.ContentHandler)
 meth public abstract {com.sun.xml.bind.unmarshaller.InfosetScanner%0} getCurrentElement()
-
-CLSS public com.sun.xml.bind.unmarshaller.InterningXMLReader
-cons protected init()
-cons protected init(org.xml.sax.XMLReader)
-meth public static org.xml.sax.XMLReader adapt(org.xml.sax.XMLReader)
-meth public void endElement(java.lang.String,java.lang.String,java.lang.String) throws org.xml.sax.SAXException
-meth public void endPrefixMapping(java.lang.String) throws org.xml.sax.SAXException
-meth public void processingInstruction(java.lang.String,java.lang.String) throws org.xml.sax.SAXException
-meth public void startElement(java.lang.String,java.lang.String,java.lang.String,org.xml.sax.Attributes) throws org.xml.sax.SAXException
-meth public void startPrefixMapping(java.lang.String,java.lang.String) throws org.xml.sax.SAXException
-supr org.xml.sax.helpers.XMLFilterImpl
-hfds attributes
-hcls AttributesImpl
 
 CLSS public com.sun.xml.bind.unmarshaller.Messages
 cons public init()
@@ -6418,141 +4889,6 @@ supr java.lang.Object
 
 CLSS public abstract interface com.sun.xml.bind.unmarshaller.Patcher
 meth public abstract void run() throws org.xml.sax.SAXException
-
-CLSS public abstract interface com.sun.xml.bind.unmarshaller.SAXUnmarshallerHandler
-intf javax.xml.bind.UnmarshallerHandler
-intf javax.xml.bind.ValidationEventHandler
-
-CLSS public com.sun.xml.bind.unmarshaller.SAXUnmarshallerHandlerImpl
-cons public init(com.sun.xml.bind.unmarshaller.UnmarshallerImpl,com.sun.xml.bind.TypeRegistry)
-intf com.sun.xml.bind.unmarshaller.SAXUnmarshallerHandler
-intf com.sun.xml.bind.unmarshaller.UnmarshallingContext
-meth protected void consumeText(java.lang.String,boolean) throws com.sun.xml.bind.unmarshaller.UnreportedException
-meth public boolean handleEvent(javax.xml.bind.ValidationEvent)
-meth public boolean isNotation(java.lang.String)
-meth public boolean isUnparsedEntity(java.lang.String)
-meth public com.sun.xml.bind.TypeRegistry getTypeRegistry()
-meth public com.sun.xml.bind.unmarshaller.ContentHandlerEx getCurrentHandler()
-meth public com.sun.xml.bind.unmarshaller.Tracer getTracer()
-meth public com.sun.xml.bind.unmarshaller.UnmarshallableObject getObjectFromId(java.lang.String)
-meth public com.sun.xml.bind.unmarshaller.UnmarshallingEventHandler getCurrentEventHandler()
-meth public final void characters(char[],int,int)
-meth public final void endElement(java.lang.String,java.lang.String,java.lang.String) throws org.xml.sax.SAXException
-meth public final void ignorableWhitespace(char[],int,int)
-meth public int getAttribute(java.lang.String,java.lang.String)
-meth public java.lang.Object getResult() throws javax.xml.bind.UnmarshalException
-meth public java.lang.String addToIdTable(java.lang.String)
-meth public java.lang.String getBaseUri()
-meth public java.lang.String getNamespaceURI(java.lang.String)
-meth public java.lang.String getPrefix(java.lang.String)
-meth public java.lang.String resolveNamespacePrefix(java.lang.String)
-meth public java.util.Iterator getPrefixes(java.lang.String)
-meth public org.xml.sax.Attributes getUnconsumedAttributes()
-meth public org.xml.sax.Locator getLocator()
-meth public void addPatcher(java.lang.Runnable)
-meth public void consumeAttribute(int) throws com.sun.xml.bind.unmarshaller.UnreportedException
-meth public void endDocument() throws org.xml.sax.SAXException
-meth public void endPrefixMapping(java.lang.String)
-meth public void popAttributes()
-meth public void popContentHandler() throws com.sun.xml.bind.unmarshaller.UnreportedException
-meth public void processingInstruction(java.lang.String,java.lang.String)
-meth public void pushAttributes(org.xml.sax.Attributes)
-meth public void pushContentHandler(com.sun.xml.bind.unmarshaller.UnmarshallingEventHandler,int)
-meth public void reportAndThrow(com.sun.xml.bind.unmarshaller.UnreportedException) throws org.xml.sax.SAXException
-meth public void setDocumentLocator(org.xml.sax.Locator)
-meth public void setTracer(com.sun.xml.bind.unmarshaller.Tracer)
-meth public void skippedEntity(java.lang.String)
-meth public void startDocument() throws org.xml.sax.SAXException
-meth public void startElement(java.lang.String,java.lang.String,java.lang.String,org.xml.sax.Attributes) throws org.xml.sax.SAXException
-meth public void startPrefixMapping(java.lang.String,java.lang.String)
-supr java.lang.Object
-hfds aborted,attStack,buffer,handlerLen,handlers,idmap,idxStack,idxStackTop,isUnmarshalInProgress,locator,mementos,nsBind,nsLen,parent,patchers,patchersLen,result,tracer,typeRegistry
-
-CLSS public com.sun.xml.bind.unmarshaller.Tracer
-cons public init()
-innr public static Standard
-meth public void nextState(int)
-meth public void onConvertValue(java.lang.String,java.lang.String)
-meth public void onEnterAttribute(java.lang.String,java.lang.String)
-meth public void onEnterElement(java.lang.String,java.lang.String)
-meth public void onLeaveAttribute(java.lang.String,java.lang.String)
-meth public void onLeaveElement(java.lang.String,java.lang.String)
-meth public void onRevertToParent()
-meth public void onSpawnChild(java.lang.String,java.lang.String)
-meth public void onSpawnSuper(java.lang.String)
-meth public void onSpawnWildcard()
-meth public void onText(java.lang.String)
-meth public void suspend()
-supr java.lang.Object
-
-CLSS public static com.sun.xml.bind.unmarshaller.Tracer$Standard
- outer com.sun.xml.bind.unmarshaller.Tracer
-cons public init()
-meth public void nextState(int)
-meth public void onConvertValue(java.lang.String,java.lang.String)
-meth public void onEnterAttribute(java.lang.String,java.lang.String)
-meth public void onEnterElement(java.lang.String,java.lang.String)
-meth public void onLeaveAttribute(java.lang.String,java.lang.String)
-meth public void onLeaveElement(java.lang.String,java.lang.String)
-meth public void onRevertToParent()
-meth public void onSpawnChild(java.lang.String,java.lang.String)
-meth public void onSpawnSuper(java.lang.String)
-meth public void onText(java.lang.String)
-meth public void suspend()
-supr com.sun.xml.bind.unmarshaller.Tracer
-hfds indent,out
-
-CLSS public abstract interface com.sun.xml.bind.unmarshaller.UnmarshallableObject
-meth public abstract com.sun.xml.bind.unmarshaller.ContentHandlerEx getUnmarshaller(com.sun.xml.bind.unmarshaller.UnmarshallingContext)
-meth public abstract java.lang.Class getPrimaryInterfaceClass()
-
-CLSS public com.sun.xml.bind.unmarshaller.UnmarshallerImpl
-cons public init(com.sun.xml.bind.DefaultJAXBContextImpl,com.sun.xml.bind.TypeRegistry)
-meth protected java.lang.Object unmarshal(org.xml.sax.XMLReader,org.xml.sax.InputSource) throws javax.xml.bind.JAXBException
-meth public com.sun.xml.bind.unmarshaller.SAXUnmarshallerHandler createUnmarshallerHandler(com.sun.xml.bind.validator.Locator)
-meth public final java.lang.Object unmarshal(org.w3c.dom.Node) throws javax.xml.bind.JAXBException
-meth public javax.xml.bind.UnmarshallerHandler getUnmarshallerHandler()
-supr javax.xml.bind.helpers.AbstractUnmarshallerImpl
-hfds context,registry
-
-CLSS public abstract interface com.sun.xml.bind.unmarshaller.UnmarshallingContext
-intf javax.xml.bind.ValidationEventHandler
-intf javax.xml.namespace.NamespaceContext
-intf org.relaxng.datatype.ValidationContext
-intf org.xml.sax.ContentHandler
-meth public abstract com.sun.xml.bind.TypeRegistry getTypeRegistry()
-meth public abstract com.sun.xml.bind.unmarshaller.ContentHandlerEx getCurrentHandler()
-meth public abstract com.sun.xml.bind.unmarshaller.Tracer getTracer()
-meth public abstract com.sun.xml.bind.unmarshaller.UnmarshallableObject getObjectFromId(java.lang.String)
-meth public abstract com.sun.xml.bind.unmarshaller.UnmarshallingEventHandler getCurrentEventHandler()
-meth public abstract int getAttribute(java.lang.String,java.lang.String)
-meth public abstract java.lang.String addToIdTable(java.lang.String)
-meth public abstract org.xml.sax.Attributes getUnconsumedAttributes()
-meth public abstract org.xml.sax.Locator getLocator()
-meth public abstract void addPatcher(java.lang.Runnable)
-meth public abstract void consumeAttribute(int) throws com.sun.xml.bind.unmarshaller.UnreportedException
-meth public abstract void endPrefixMapping(java.lang.String)
-meth public abstract void popAttributes()
-meth public abstract void popContentHandler() throws com.sun.xml.bind.unmarshaller.UnreportedException
-meth public abstract void pushAttributes(org.xml.sax.Attributes)
-meth public abstract void pushContentHandler(com.sun.xml.bind.unmarshaller.UnmarshallingEventHandler,int)
-meth public abstract void startPrefixMapping(java.lang.String,java.lang.String)
-
-CLSS public abstract interface com.sun.xml.bind.unmarshaller.UnmarshallingEventHandler
-meth public abstract void enterAttribute(java.lang.String,java.lang.String) throws com.sun.xml.bind.unmarshaller.UnreportedException
-meth public abstract void enterElement(java.lang.String,java.lang.String,org.xml.sax.Attributes) throws com.sun.xml.bind.unmarshaller.UnreportedException
-meth public abstract void leaveAttribute(java.lang.String,java.lang.String) throws com.sun.xml.bind.unmarshaller.UnreportedException
-meth public abstract void leaveChild(int) throws com.sun.xml.bind.unmarshaller.UnreportedException
-meth public abstract void leaveElement(java.lang.String,java.lang.String) throws com.sun.xml.bind.unmarshaller.UnreportedException
-meth public abstract void text(java.lang.String) throws com.sun.xml.bind.unmarshaller.UnreportedException
-
-CLSS public com.sun.xml.bind.unmarshaller.UnreportedException
-cons public init(java.lang.String,org.xml.sax.Locator)
-cons public init(java.lang.String,org.xml.sax.Locator,java.lang.Exception)
-meth public javax.xml.bind.UnmarshalException createUnmarshalException()
-meth public javax.xml.bind.ValidationEvent createValidationEvent()
-supr java.lang.Exception
-hfds locator,nestedException
 
 CLSS public com.sun.xml.bind.util.AttributesImpl
 cons public init()
@@ -6584,65 +4920,6 @@ meth public void setValue(int,java.lang.String)
 supr java.lang.Object
 hfds data,length
 
-CLSS public com.sun.xml.bind.util.CalendarConv
-cons public init()
-fld public final static java.text.DateFormat formatter
-meth public static java.util.Calendar createCalendar(java.lang.String)
-supr java.lang.Object
-
-CLSS public final com.sun.xml.bind.util.EmptyIterator
-fld public final static java.util.Iterator theInstance
-intf java.util.Iterator
-meth public boolean hasNext()
-meth public java.lang.Object next()
-meth public void remove()
-supr java.lang.Object
-
-CLSS public com.sun.xml.bind.util.ListImpl<%0 extends java.lang.Object>
-cons public init(java.util.List<{com.sun.xml.bind.util.ListImpl%0}>)
-intf java.io.Serializable
-meth public boolean isModified()
-meth public java.lang.Object clone()
-meth public void setModified(boolean)
-supr com.sun.xml.bind.util.ProxyListImpl<{com.sun.xml.bind.util.ListImpl%0}>
-hfds isModified,serialVersionUID
-
-CLSS public abstract com.sun.xml.bind.util.ProxyListImpl<%0 extends java.lang.Object>
-cons public init()
-cons public init(java.util.List<{com.sun.xml.bind.util.ProxyListImpl%0}>)
-fld protected final java.util.List<{com.sun.xml.bind.util.ProxyListImpl%0}> core
-intf java.io.Serializable
-intf java.util.List<{com.sun.xml.bind.util.ProxyListImpl%0}>
-meth public <%0 extends java.lang.Object> {%%0}[] toArray({%%0}[])
-meth public abstract void setModified(boolean)
-meth public boolean add({com.sun.xml.bind.util.ProxyListImpl%0})
-meth public boolean addAll(int,java.util.Collection<? extends {com.sun.xml.bind.util.ProxyListImpl%0}>)
-meth public boolean addAll(java.util.Collection<? extends {com.sun.xml.bind.util.ProxyListImpl%0}>)
-meth public boolean contains(java.lang.Object)
-meth public boolean containsAll(java.util.Collection<?>)
-meth public boolean equals(java.lang.Object)
-meth public boolean isEmpty()
-meth public boolean remove(java.lang.Object)
-meth public boolean removeAll(java.util.Collection<?>)
-meth public boolean retainAll(java.util.Collection<?>)
-meth public int hashCode()
-meth public int indexOf(java.lang.Object)
-meth public int lastIndexOf(java.lang.Object)
-meth public int size()
-meth public java.lang.Object[] toArray()
-meth public java.util.Iterator<{com.sun.xml.bind.util.ProxyListImpl%0}> iterator()
-meth public java.util.List<{com.sun.xml.bind.util.ProxyListImpl%0}> subList(int,int)
-meth public java.util.ListIterator<{com.sun.xml.bind.util.ProxyListImpl%0}> listIterator()
-meth public java.util.ListIterator<{com.sun.xml.bind.util.ProxyListImpl%0}> listIterator(int)
-meth public void add(int,{com.sun.xml.bind.util.ProxyListImpl%0})
-meth public void clear()
-meth public {com.sun.xml.bind.util.ProxyListImpl%0} get(int)
-meth public {com.sun.xml.bind.util.ProxyListImpl%0} remove(int)
-meth public {com.sun.xml.bind.util.ProxyListImpl%0} set(int,{com.sun.xml.bind.util.ProxyListImpl%0})
-supr java.lang.Object
-hfds serialVersionUID
-hcls Itr,ListItr
-
 CLSS public com.sun.xml.bind.util.ValidationEventLocatorExImpl
 cons public init(java.lang.Object,java.lang.String)
 intf com.sun.xml.bind.ValidationEventLocatorEx
@@ -6671,10 +4948,39 @@ CLSS public com.sun.xml.bind.v2.ContextFactory
 cons public init()
 fld public final static java.lang.String USE_JAXB_PROPERTIES = "_useJAXBProperties"
 meth public static com.sun.xml.bind.api.JAXBRIContext createContext(java.lang.Class[],java.util.Collection<com.sun.xml.bind.api.TypeReference>,java.util.Map<java.lang.Class,java.lang.Class>,java.lang.String,boolean,com.sun.xml.bind.v2.model.annotation.RuntimeAnnotationReader,boolean,boolean,boolean) throws javax.xml.bind.JAXBException
+ anno 0 java.lang.Deprecated()
 meth public static com.sun.xml.bind.api.JAXBRIContext createContext(java.lang.Class[],java.util.Collection<com.sun.xml.bind.api.TypeReference>,java.util.Map<java.lang.Class,java.lang.Class>,java.lang.String,boolean,com.sun.xml.bind.v2.model.annotation.RuntimeAnnotationReader,boolean,boolean,boolean,boolean) throws javax.xml.bind.JAXBException
+ anno 0 java.lang.Deprecated()
 meth public static javax.xml.bind.JAXBContext createContext(java.lang.Class[],java.util.Map<java.lang.String,java.lang.Object>) throws javax.xml.bind.JAXBException
 meth public static javax.xml.bind.JAXBContext createContext(java.lang.String,java.lang.ClassLoader,java.util.Map<java.lang.String,java.lang.Object>) throws javax.xml.bind.JAXBException
 supr java.lang.Object
+
+CLSS public com.sun.xml.bind.v2.JAXBContextFactory
+cons public init()
+intf javax.xml.bind.JAXBContextFactory
+meth public javax.xml.bind.JAXBContext createContext(java.lang.Class<?>[],java.util.Map<java.lang.String,?>) throws javax.xml.bind.JAXBException
+meth public javax.xml.bind.JAXBContext createContext(java.lang.String,java.lang.ClassLoader,java.util.Map<java.lang.String,?>) throws javax.xml.bind.JAXBException
+supr java.lang.Object
+
+CLSS public final !enum com.sun.xml.bind.v2.Messages
+fld public final static com.sun.xml.bind.v2.Messages BROKEN_CONTEXTPATH
+fld public final static com.sun.xml.bind.v2.Messages ERROR_LOADING_CLASS
+fld public final static com.sun.xml.bind.v2.Messages ILLEGAL_ENTRY
+fld public final static com.sun.xml.bind.v2.Messages INVALID_JAXP_IMPLEMENTATION
+fld public final static com.sun.xml.bind.v2.Messages INVALID_PROPERTY_VALUE
+fld public final static com.sun.xml.bind.v2.Messages INVALID_TYPE_IN_MAP
+fld public final static com.sun.xml.bind.v2.Messages JAXP_EXTERNAL_ACCESS_CONFIGURED
+fld public final static com.sun.xml.bind.v2.Messages JAXP_SUPPORTED_PROPERTY
+fld public final static com.sun.xml.bind.v2.Messages JAXP_UNSUPPORTED_PROPERTY
+fld public final static com.sun.xml.bind.v2.Messages JAXP_XML_SECURITY_DISABLED
+fld public final static com.sun.xml.bind.v2.Messages NO_DEFAULT_CONSTRUCTOR_IN_INNER_CLASS
+fld public final static com.sun.xml.bind.v2.Messages UNSUPPORTED_PROPERTY
+meth public !varargs java.lang.String format(java.lang.Object[])
+meth public java.lang.String toString()
+meth public static com.sun.xml.bind.v2.Messages valueOf(java.lang.String)
+meth public static com.sun.xml.bind.v2.Messages[] values()
+supr java.lang.Enum<com.sun.xml.bind.v2.Messages>
+hfds rb
 
 CLSS public abstract com.sun.xml.bind.v2.TODO
 cons public init()
@@ -6960,7 +5266,7 @@ supr java.lang.Enum<com.sun.xml.bind.v2.model.core.PropertyKind>
 
 CLSS public final com.sun.xml.bind.v2.model.core.Ref<%0 extends java.lang.Object, %1 extends java.lang.Object>
 cons public init(com.sun.xml.bind.v2.model.annotation.AnnotationReader<{com.sun.xml.bind.v2.model.core.Ref%0},{com.sun.xml.bind.v2.model.core.Ref%1},?,?>,com.sun.xml.bind.v2.model.nav.Navigator<{com.sun.xml.bind.v2.model.core.Ref%0},{com.sun.xml.bind.v2.model.core.Ref%1},?,?>,{com.sun.xml.bind.v2.model.core.Ref%0},javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter,javax.xml.bind.annotation.XmlList)
-cons public init(com.sun.xml.bind.v2.model.impl.ModelBuilder<{com.sun.xml.bind.v2.model.core.Ref%0},{com.sun.xml.bind.v2.model.core.Ref%1},?,?>,{com.sun.xml.bind.v2.model.core.Ref%0},javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter,javax.xml.bind.annotation.XmlList)
+cons public init(com.sun.xml.bind.v2.model.impl.ModelBuilderI<{com.sun.xml.bind.v2.model.core.Ref%0},{com.sun.xml.bind.v2.model.core.Ref%1},?,?>,{com.sun.xml.bind.v2.model.core.Ref%0},javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter,javax.xml.bind.annotation.XmlList)
 cons public init({com.sun.xml.bind.v2.model.core.Ref%0})
 cons public init({com.sun.xml.bind.v2.model.core.Ref%0},com.sun.xml.bind.v2.model.core.Adapter<{com.sun.xml.bind.v2.model.core.Ref%0},{com.sun.xml.bind.v2.model.core.Ref%1}>,boolean)
 fld public final boolean valueList
@@ -7053,7 +5359,6 @@ meth public com.sun.xml.bind.v2.runtime.Location getLocation()
 meth public final boolean canBeReferencedByIDREF()
 meth public java.lang.String toString()
 meth public javax.xml.namespace.QName getTypeName()
-meth public static javax.xml.namespace.QName calcArrayTypeName(javax.xml.namespace.QName)
 meth public {com.sun.xml.bind.v2.model.impl.ArrayInfoImpl%0} getType()
 supr com.sun.xml.bind.v2.model.impl.TypeInfoImpl<{com.sun.xml.bind.v2.model.impl.ArrayInfoImpl%0},{com.sun.xml.bind.v2.model.impl.ArrayInfoImpl%1},{com.sun.xml.bind.v2.model.impl.ArrayInfoImpl%2},{com.sun.xml.bind.v2.model.impl.ArrayInfoImpl%3}>
 hfds arrayType,itemType,typeName
@@ -7139,12 +5444,14 @@ fld public boolean hasSwaRef
 fld public final com.sun.xml.bind.v2.model.annotation.AnnotationReader<{com.sun.xml.bind.v2.model.impl.ModelBuilder%0},{com.sun.xml.bind.v2.model.impl.ModelBuilder%1},{com.sun.xml.bind.v2.model.impl.ModelBuilder%2},{com.sun.xml.bind.v2.model.impl.ModelBuilder%3}> reader
 fld public final com.sun.xml.bind.v2.model.nav.Navigator<{com.sun.xml.bind.v2.model.impl.ModelBuilder%0},{com.sun.xml.bind.v2.model.impl.ModelBuilder%1},{com.sun.xml.bind.v2.model.impl.ModelBuilder%2},{com.sun.xml.bind.v2.model.impl.ModelBuilder%3}> nav
 fld public final java.lang.String defaultNsUri
+intf com.sun.xml.bind.v2.model.impl.ModelBuilderI<{com.sun.xml.bind.v2.model.impl.ModelBuilder%0},{com.sun.xml.bind.v2.model.impl.ModelBuilder%1},{com.sun.xml.bind.v2.model.impl.ModelBuilder%2},{com.sun.xml.bind.v2.model.impl.ModelBuilder%3}>
 meth protected com.sun.xml.bind.v2.model.impl.ArrayInfoImpl<{com.sun.xml.bind.v2.model.impl.ModelBuilder%0},{com.sun.xml.bind.v2.model.impl.ModelBuilder%1},{com.sun.xml.bind.v2.model.impl.ModelBuilder%2},{com.sun.xml.bind.v2.model.impl.ModelBuilder%3}> createArrayInfo(com.sun.xml.bind.v2.model.annotation.Locatable,{com.sun.xml.bind.v2.model.impl.ModelBuilder%0})
 meth protected com.sun.xml.bind.v2.model.impl.ClassInfoImpl<{com.sun.xml.bind.v2.model.impl.ModelBuilder%0},{com.sun.xml.bind.v2.model.impl.ModelBuilder%1},{com.sun.xml.bind.v2.model.impl.ModelBuilder%2},{com.sun.xml.bind.v2.model.impl.ModelBuilder%3}> createClassInfo({com.sun.xml.bind.v2.model.impl.ModelBuilder%1},com.sun.xml.bind.v2.model.annotation.Locatable)
 meth protected com.sun.xml.bind.v2.model.impl.ElementInfoImpl<{com.sun.xml.bind.v2.model.impl.ModelBuilder%0},{com.sun.xml.bind.v2.model.impl.ModelBuilder%1},{com.sun.xml.bind.v2.model.impl.ModelBuilder%2},{com.sun.xml.bind.v2.model.impl.ModelBuilder%3}> createElementInfo(com.sun.xml.bind.v2.model.impl.RegistryInfoImpl<{com.sun.xml.bind.v2.model.impl.ModelBuilder%0},{com.sun.xml.bind.v2.model.impl.ModelBuilder%1},{com.sun.xml.bind.v2.model.impl.ModelBuilder%2},{com.sun.xml.bind.v2.model.impl.ModelBuilder%3}>,{com.sun.xml.bind.v2.model.impl.ModelBuilder%3}) throws com.sun.xml.bind.v2.runtime.IllegalAnnotationException
 meth protected com.sun.xml.bind.v2.model.impl.EnumLeafInfoImpl<{com.sun.xml.bind.v2.model.impl.ModelBuilder%0},{com.sun.xml.bind.v2.model.impl.ModelBuilder%1},{com.sun.xml.bind.v2.model.impl.ModelBuilder%2},{com.sun.xml.bind.v2.model.impl.ModelBuilder%3}> createEnumLeafInfo({com.sun.xml.bind.v2.model.impl.ModelBuilder%1},com.sun.xml.bind.v2.model.annotation.Locatable)
 meth protected com.sun.xml.bind.v2.model.impl.TypeInfoSetImpl<{com.sun.xml.bind.v2.model.impl.ModelBuilder%0},{com.sun.xml.bind.v2.model.impl.ModelBuilder%1},{com.sun.xml.bind.v2.model.impl.ModelBuilder%2},{com.sun.xml.bind.v2.model.impl.ModelBuilder%3}> createTypeInfoSet()
 meth public boolean isReplaced({com.sun.xml.bind.v2.model.impl.ModelBuilder%1})
+meth public com.sun.xml.bind.v2.model.annotation.AnnotationReader<{com.sun.xml.bind.v2.model.impl.ModelBuilder%0},{com.sun.xml.bind.v2.model.impl.ModelBuilder%1},{com.sun.xml.bind.v2.model.impl.ModelBuilder%2},{com.sun.xml.bind.v2.model.impl.ModelBuilder%3}> getReader()
 meth public com.sun.xml.bind.v2.model.core.NonElement<{com.sun.xml.bind.v2.model.impl.ModelBuilder%0},{com.sun.xml.bind.v2.model.impl.ModelBuilder%1}> getClassInfo({com.sun.xml.bind.v2.model.impl.ModelBuilder%1},boolean,com.sun.xml.bind.v2.model.annotation.Locatable)
 meth public com.sun.xml.bind.v2.model.core.NonElement<{com.sun.xml.bind.v2.model.impl.ModelBuilder%0},{com.sun.xml.bind.v2.model.impl.ModelBuilder%1}> getClassInfo({com.sun.xml.bind.v2.model.impl.ModelBuilder%1},com.sun.xml.bind.v2.model.annotation.Locatable)
 meth public com.sun.xml.bind.v2.model.core.NonElement<{com.sun.xml.bind.v2.model.impl.ModelBuilder%0},{com.sun.xml.bind.v2.model.impl.ModelBuilder%1}> getTypeInfo(com.sun.xml.bind.v2.model.core.Ref<{com.sun.xml.bind.v2.model.impl.ModelBuilder%0},{com.sun.xml.bind.v2.model.impl.ModelBuilder%1}>)
@@ -7152,14 +5459,20 @@ meth public com.sun.xml.bind.v2.model.core.NonElement<{com.sun.xml.bind.v2.model
 meth public com.sun.xml.bind.v2.model.core.RegistryInfo<{com.sun.xml.bind.v2.model.impl.ModelBuilder%0},{com.sun.xml.bind.v2.model.impl.ModelBuilder%1}> addRegistry({com.sun.xml.bind.v2.model.impl.ModelBuilder%1},com.sun.xml.bind.v2.model.annotation.Locatable)
 meth public com.sun.xml.bind.v2.model.core.RegistryInfo<{com.sun.xml.bind.v2.model.impl.ModelBuilder%0},{com.sun.xml.bind.v2.model.impl.ModelBuilder%1}> getRegistry(java.lang.String)
 meth public com.sun.xml.bind.v2.model.core.TypeInfoSet<{com.sun.xml.bind.v2.model.impl.ModelBuilder%0},{com.sun.xml.bind.v2.model.impl.ModelBuilder%1},{com.sun.xml.bind.v2.model.impl.ModelBuilder%2},{com.sun.xml.bind.v2.model.impl.ModelBuilder%3}> link()
+meth public com.sun.xml.bind.v2.model.nav.Navigator<{com.sun.xml.bind.v2.model.impl.ModelBuilder%0},{com.sun.xml.bind.v2.model.impl.ModelBuilder%1},{com.sun.xml.bind.v2.model.impl.ModelBuilder%2},{com.sun.xml.bind.v2.model.impl.ModelBuilder%3}> getNavigator()
 meth public final void reportError(com.sun.xml.bind.v2.runtime.IllegalAnnotationException)
 meth public void setErrorHandler(com.sun.xml.bind.v2.model.core.ErrorHandler)
 supr java.lang.Object
-hfds errorHandler,hadError,linked,proxyErrorHandler,registries,subclassReplacements,typeInfoSet,typeNames
+hfds errorHandler,hadError,linked,logger,proxyErrorHandler,registries,subclassReplacements,typeInfoSet,typeNames
+
+CLSS public abstract interface com.sun.xml.bind.v2.model.impl.ModelBuilderI<%0 extends java.lang.Object, %1 extends java.lang.Object, %2 extends java.lang.Object, %3 extends java.lang.Object>
+meth public abstract com.sun.xml.bind.v2.model.annotation.AnnotationReader<{com.sun.xml.bind.v2.model.impl.ModelBuilderI%0},{com.sun.xml.bind.v2.model.impl.ModelBuilderI%1},{com.sun.xml.bind.v2.model.impl.ModelBuilderI%2},{com.sun.xml.bind.v2.model.impl.ModelBuilderI%3}> getReader()
+meth public abstract com.sun.xml.bind.v2.model.nav.Navigator<{com.sun.xml.bind.v2.model.impl.ModelBuilderI%0},{com.sun.xml.bind.v2.model.impl.ModelBuilderI%1},{com.sun.xml.bind.v2.model.impl.ModelBuilderI%2},{com.sun.xml.bind.v2.model.impl.ModelBuilderI%3}> getNavigator()
 
 CLSS public abstract com.sun.xml.bind.v2.model.impl.RuntimeBuiltinLeafInfoImpl<%0 extends java.lang.Object>
 fld public final static com.sun.xml.bind.v2.model.impl.RuntimeBuiltinLeafInfoImpl<java.lang.String> STRING
 fld public final static java.lang.String MAP_ANYURI_TO_URI = "mapAnyUriToUri"
+fld public final static java.lang.String USE_OLD_GMONTH_MAPPING = "jaxb.ri.useOldGmonthMapping"
 fld public final static java.util.List<com.sun.xml.bind.v2.model.impl.RuntimeBuiltinLeafInfoImpl<?>> builtinBeanInfos
 fld public final static java.util.Map<java.lang.reflect.Type,com.sun.xml.bind.v2.model.impl.RuntimeBuiltinLeafInfoImpl<?>> LEAVES
 intf com.sun.xml.bind.v2.model.runtime.RuntimeBuiltinLeafInfo
@@ -7171,7 +5484,7 @@ meth public final java.lang.Class getClazz()
 meth public javax.xml.namespace.QName getTypeName({com.sun.xml.bind.v2.model.impl.RuntimeBuiltinLeafInfoImpl%0})
 meth public void declareNamespace({com.sun.xml.bind.v2.model.impl.RuntimeBuiltinLeafInfoImpl%0},com.sun.xml.bind.v2.runtime.XMLSerializer) throws com.sun.xml.bind.api.AccessorException
 supr com.sun.xml.bind.v2.model.impl.BuiltinLeafInfoImpl<java.lang.reflect.Type,java.lang.Class>
-hfds DATE,datatypeFactory,xmlGregorianCalendarFieldRef,xmlGregorianCalendarFormatString
+hfds DATE,logger,xmlGregorianCalendarFieldRef,xmlGregorianCalendarFormatString
 hcls PcdataImpl,StringImpl,StringImplImpl,UUIDImpl
 
 CLSS public com.sun.xml.bind.v2.model.impl.RuntimeModelBuilder
@@ -7182,7 +5495,6 @@ meth protected com.sun.xml.bind.v2.model.impl.RuntimeClassInfoImpl createClassIn
 meth protected com.sun.xml.bind.v2.model.impl.RuntimeEnumLeafInfoImpl createEnumLeafInfo(java.lang.Class,com.sun.xml.bind.v2.model.annotation.Locatable)
 meth protected com.sun.xml.bind.v2.model.runtime.RuntimeTypeInfoSet createTypeInfoSet()
 meth public com.sun.xml.bind.v2.model.impl.RuntimeArrayInfoImpl createArrayInfo(com.sun.xml.bind.v2.model.annotation.Locatable,java.lang.reflect.Type)
-meth public com.sun.xml.bind.v2.model.nav.ReflectionNavigator getNavigator()
 meth public com.sun.xml.bind.v2.model.runtime.RuntimeElementInfo createElementInfo(com.sun.xml.bind.v2.model.impl.RegistryInfoImpl<java.lang.reflect.Type,java.lang.Class,java.lang.reflect.Field,java.lang.reflect.Method>,java.lang.reflect.Method) throws com.sun.xml.bind.v2.runtime.IllegalAnnotationException
 meth public com.sun.xml.bind.v2.model.runtime.RuntimeNonElement getClassInfo(java.lang.Class,boolean,com.sun.xml.bind.v2.model.annotation.Locatable)
 meth public com.sun.xml.bind.v2.model.runtime.RuntimeNonElement getClassInfo(java.lang.Class,com.sun.xml.bind.v2.model.annotation.Locatable)
@@ -7192,7 +5504,6 @@ supr com.sun.xml.bind.v2.model.impl.ModelBuilder<java.lang.reflect.Type,java.lan
 hcls IDTransducerImpl
 
 CLSS public abstract interface com.sun.xml.bind.v2.model.nav.Navigator<%0 extends java.lang.Object, %1 extends java.lang.Object, %2 extends java.lang.Object, %3 extends java.lang.Object>
-fld public final static com.sun.xml.bind.v2.model.nav.ReflectionNavigator REFLECTION
 meth public abstract <%0 extends java.lang.Object> {com.sun.xml.bind.v2.model.nav.Navigator%0} erasure({com.sun.xml.bind.v2.model.nav.Navigator%0})
 meth public abstract boolean hasDefaultConstructor({com.sun.xml.bind.v2.model.nav.Navigator%1})
 meth public abstract boolean isAbstract({com.sun.xml.bind.v2.model.nav.Navigator%1})
@@ -7237,69 +5548,12 @@ meth public abstract {com.sun.xml.bind.v2.model.nav.Navigator%0} use({com.sun.xm
 meth public abstract {com.sun.xml.bind.v2.model.nav.Navigator%0}[] getMethodParameters({com.sun.xml.bind.v2.model.nav.Navigator%3})
 meth public abstract {com.sun.xml.bind.v2.model.nav.Navigator%1} asDecl(java.lang.Class)
 meth public abstract {com.sun.xml.bind.v2.model.nav.Navigator%1} asDecl({com.sun.xml.bind.v2.model.nav.Navigator%0})
-meth public abstract {com.sun.xml.bind.v2.model.nav.Navigator%1} findClass(java.lang.String,{com.sun.xml.bind.v2.model.nav.Navigator%1})
 meth public abstract {com.sun.xml.bind.v2.model.nav.Navigator%1} getDeclaringClassForField({com.sun.xml.bind.v2.model.nav.Navigator%2})
 meth public abstract {com.sun.xml.bind.v2.model.nav.Navigator%1} getDeclaringClassForMethod({com.sun.xml.bind.v2.model.nav.Navigator%3})
 meth public abstract {com.sun.xml.bind.v2.model.nav.Navigator%1} getSuperClass({com.sun.xml.bind.v2.model.nav.Navigator%1})
+meth public abstract {com.sun.xml.bind.v2.model.nav.Navigator%1} loadObjectFactory({com.sun.xml.bind.v2.model.nav.Navigator%1},java.lang.String)
 meth public abstract {com.sun.xml.bind.v2.model.nav.Navigator%2} getDeclaredField({com.sun.xml.bind.v2.model.nav.Navigator%1},java.lang.String)
 meth public abstract {com.sun.xml.bind.v2.model.nav.Navigator%2}[] getEnumConstants({com.sun.xml.bind.v2.model.nav.Navigator%1})
-
-CLSS public final com.sun.xml.bind.v2.model.nav.ReflectionNavigator
-intf com.sun.xml.bind.v2.model.nav.Navigator<java.lang.reflect.Type,java.lang.Class,java.lang.reflect.Field,java.lang.reflect.Method>
-meth public !varargs java.lang.reflect.Type createParameterizedType(java.lang.Class,java.lang.reflect.Type[])
-meth public <%0 extends java.lang.Object> java.lang.Class<{%%0}> erasure(java.lang.reflect.Type)
-meth public boolean hasDefaultConstructor(java.lang.Class)
-meth public boolean isAbstract(java.lang.Class)
-meth public boolean isArray(java.lang.reflect.Type)
-meth public boolean isArrayButNotByteArray(java.lang.reflect.Type)
-meth public boolean isBridgeMethod(java.lang.reflect.Method)
-meth public boolean isEnum(java.lang.Class)
-meth public boolean isFinal(java.lang.Class)
-meth public boolean isFinalMethod(java.lang.reflect.Method)
-meth public boolean isInnerClass(java.lang.Class)
-meth public boolean isInterface(java.lang.Class)
-meth public boolean isOverriding(java.lang.reflect.Method,java.lang.Class)
-meth public boolean isParameterizedType(java.lang.reflect.Type)
-meth public boolean isPrimitive(java.lang.reflect.Type)
-meth public boolean isPublicField(java.lang.reflect.Field)
-meth public boolean isPublicMethod(java.lang.reflect.Method)
-meth public boolean isSameType(java.lang.reflect.Type,java.lang.reflect.Type)
-meth public boolean isStaticField(java.lang.reflect.Field)
-meth public boolean isStaticMethod(java.lang.reflect.Method)
-meth public boolean isSubClassOf(java.lang.reflect.Type,java.lang.reflect.Type)
-meth public boolean isTransient(java.lang.reflect.Field)
-meth public com.sun.xml.bind.v2.runtime.Location getClassLocation(java.lang.Class)
-meth public com.sun.xml.bind.v2.runtime.Location getFieldLocation(java.lang.reflect.Field)
-meth public com.sun.xml.bind.v2.runtime.Location getMethodLocation(java.lang.reflect.Method)
-meth public java.lang.Class asDecl(java.lang.Class)
-meth public java.lang.Class asDecl(java.lang.reflect.Type)
-meth public java.lang.Class findClass(java.lang.String,java.lang.Class)
-meth public java.lang.Class getDeclaringClassForField(java.lang.reflect.Field)
-meth public java.lang.Class getDeclaringClassForMethod(java.lang.reflect.Method)
-meth public java.lang.Class getSuperClass(java.lang.Class)
-meth public java.lang.Class ref(java.lang.Class)
-meth public java.lang.Class use(java.lang.Class)
-meth public java.lang.String getClassName(java.lang.Class)
-meth public java.lang.String getClassShortName(java.lang.Class)
-meth public java.lang.String getFieldName(java.lang.reflect.Field)
-meth public java.lang.String getMethodName(java.lang.reflect.Method)
-meth public java.lang.String getPackageName(java.lang.Class)
-meth public java.lang.String getTypeName(java.lang.reflect.Type)
-meth public java.lang.reflect.Field getDeclaredField(java.lang.Class,java.lang.String)
-meth public java.lang.reflect.Field[] getEnumConstants(java.lang.Class)
-meth public java.lang.reflect.Type getBaseClass(java.lang.reflect.Type,java.lang.Class)
-meth public java.lang.reflect.Type getComponentType(java.lang.reflect.Type)
-meth public java.lang.reflect.Type getFieldType(java.lang.reflect.Field)
-meth public java.lang.reflect.Type getPrimitive(java.lang.Class)
-meth public java.lang.reflect.Type getReturnType(java.lang.reflect.Method)
-meth public java.lang.reflect.Type getTypeArgument(java.lang.reflect.Type,int)
-meth public java.lang.reflect.Type getVoidType()
-meth public java.lang.reflect.Type[] getMethodParameters(java.lang.reflect.Method)
-meth public java.util.Collection<? extends java.lang.reflect.Field> getDeclaredFields(java.lang.Class)
-meth public java.util.Collection<? extends java.lang.reflect.Method> getDeclaredMethods(java.lang.Class)
-supr java.lang.Object
-hfds baseClassFinder,binder,eraser
-hcls BinderArg
 
 CLSS public abstract interface com.sun.xml.bind.v2.model.runtime.RuntimeArrayInfo
 intf com.sun.xml.bind.v2.model.core.ArrayInfo<java.lang.reflect.Type,java.lang.Class>
@@ -7391,7 +5645,6 @@ intf com.sun.xml.bind.v2.model.core.TypeInfo<java.lang.reflect.Type,java.lang.Cl
 
 CLSS public abstract interface com.sun.xml.bind.v2.model.runtime.RuntimeTypeInfoSet
 intf com.sun.xml.bind.v2.model.core.TypeInfoSet<java.lang.reflect.Type,java.lang.Class,java.lang.reflect.Field,java.lang.reflect.Method>
-meth public abstract com.sun.xml.bind.v2.model.nav.ReflectionNavigator getNavigator()
 meth public abstract com.sun.xml.bind.v2.model.runtime.RuntimeElementInfo getElementInfo(java.lang.Class,javax.xml.namespace.QName)
 meth public abstract com.sun.xml.bind.v2.model.runtime.RuntimeNonElement getAnyTypeInfo()
 meth public abstract com.sun.xml.bind.v2.model.runtime.RuntimeNonElement getClassInfo(java.lang.Class)
@@ -7416,8 +5669,6 @@ intf com.sun.xml.bind.v2.model.runtime.RuntimePropertyInfo
 meth public abstract com.sun.xml.bind.v2.model.runtime.RuntimeNonElement getTarget()
 
 CLSS abstract interface com.sun.xml.bind.v2.model.runtime.package-info
-
-CLSS abstract interface com.sun.xml.bind.v2.package-info
 
 CLSS public final com.sun.xml.bind.v2.runtime.AssociationMap<%0 extends java.lang.Object>
 cons public init()
@@ -7500,15 +5751,11 @@ supr com.sun.xml.bind.v2.runtime.JaxBeanInfo<com.sun.xml.bind.api.CompositeStruc
 
 CLSS public abstract com.sun.xml.bind.v2.runtime.Coordinator
 cons public init()
-fld public java.lang.Exception guyWhoSetTheTableToNull
-fld public static boolean debugTableNPE
 intf javax.xml.bind.ValidationEventHandler
 intf org.xml.sax.ErrorHandler
 meth protected abstract javax.xml.bind.ValidationEventLocator getLocation()
 meth protected final void popCoordinator()
 meth protected final void pushCoordinator()
-meth protected final void resetThreadAffinity()
-meth protected final void setThreadAffinity()
 meth public <%0 extends javax.xml.bind.annotation.adapters.XmlAdapter> boolean containsAdapter(java.lang.Class<{%%0}>)
 meth public final <%0 extends javax.xml.bind.annotation.adapters.XmlAdapter> {%%0} getAdapter(java.lang.Class<{%%0}>)
 meth public final javax.xml.bind.annotation.adapters.XmlAdapter putAdapter(java.lang.Class<? extends javax.xml.bind.annotation.adapters.XmlAdapter>,javax.xml.bind.annotation.adapters.XmlAdapter)
@@ -7517,7 +5764,7 @@ meth public final void fatalError(org.xml.sax.SAXParseException) throws org.xml.
 meth public final void warning(org.xml.sax.SAXParseException) throws org.xml.sax.SAXException
 meth public static com.sun.xml.bind.v2.runtime.Coordinator _getInstance()
 supr java.lang.Object
-hfds activeTable,adapters,old,table
+hfds activeTable,adapters,old
 
 CLSS public final com.sun.xml.bind.v2.runtime.ElementBeanInfoImpl
 cons protected init(com.sun.xml.bind.v2.runtime.JAXBContextImpl)
@@ -7599,6 +5846,7 @@ fld protected final boolean c14nSupport
 fld protected java.util.Map<com.sun.xml.bind.v2.model.runtime.RuntimeTypeInfo,com.sun.xml.bind.v2.runtime.JaxBeanInfo> beanInfos
 fld public com.sun.xml.bind.v2.runtime.NameBuilder nameBuilder
 fld public final boolean allNillable
+fld public final boolean disableSecurityProcessing
 fld public final boolean fastBoot
 fld public final boolean improvedXsiTypeHandling
 fld public final boolean retainPropertyInfo
@@ -7607,6 +5855,8 @@ fld public final boolean xmlAccessorFactorySupport
 fld public final com.sun.istack.Pool<javax.xml.bind.Marshaller> marshallerPool
 fld public final com.sun.istack.Pool<javax.xml.bind.Unmarshaller> unmarshallerPool
 fld public final com.sun.xml.bind.v2.runtime.NameList nameList
+fld public final int maxErrorsCount
+fld public java.lang.Boolean backupWithParentNamespace
 innr public static JAXBContextBuilder
 meth protected com.sun.xml.bind.v2.runtime.ClassBeanInfoImpl getOrCreate(com.sun.xml.bind.v2.model.runtime.RuntimeClassInfo)
 meth protected com.sun.xml.bind.v2.runtime.JaxBeanInfo getOrCreate(com.sun.xml.bind.v2.model.runtime.RuntimeArrayInfo)
@@ -7643,16 +5893,15 @@ meth public java.util.Set<javax.xml.bind.annotation.XmlNs> getXmlNsSet()
 meth public java.util.Set<javax.xml.namespace.QName> getValidRootNames()
 meth public javax.xml.bind.Binder<org.w3c.dom.Node> createBinder()
 meth public javax.xml.bind.JAXBIntrospector createJAXBIntrospector()
-meth public javax.xml.bind.SchemaOutputResolver createTestResolver()
 meth public javax.xml.bind.Validator createValidator()
 meth public javax.xml.namespace.QName getElementName(java.lang.Class) throws javax.xml.bind.JAXBException
 meth public javax.xml.namespace.QName getElementName(java.lang.Object) throws javax.xml.bind.JAXBException
 meth public javax.xml.namespace.QName getTypeName(com.sun.xml.bind.api.TypeReference)
-meth public static javax.xml.transform.sax.TransformerHandler createTransformerHandler()
+meth public static javax.xml.transform.sax.TransformerHandler createTransformerHandler(boolean)
 meth public void generateEpisode(javax.xml.transform.Result)
 meth public void generateSchema(javax.xml.bind.SchemaOutputResolver) throws java.io.IOException
 supr com.sun.xml.bind.api.JAXBRIContext
-hfds QNAME_COMPARATOR,annotationReader,beanInfoMap,bridges,classes,db,defaultNsUri,elements,hasSwaRef,rootMap,subclassReplacements,tf,typeInfoSetCache,typeMap,utf8nameTable,xmlNsSet
+hfds QNAME_COMPARATOR,annotationReader,beanInfoMap,bridges,classes,db,defaultNsUri,elements,hasSwaRef,rootMap,subclassReplacements,typeInfoSetCache,typeMap,utf8nameTable,xmlNsSet
 
 CLSS public static com.sun.xml.bind.v2.runtime.JAXBContextImpl$JAXBContextBuilder
  outer com.sun.xml.bind.v2.runtime.JAXBContextImpl
@@ -7661,17 +5910,20 @@ cons public init(com.sun.xml.bind.v2.runtime.JAXBContextImpl)
 meth public com.sun.xml.bind.v2.runtime.JAXBContextImpl build() throws javax.xml.bind.JAXBException
 meth public com.sun.xml.bind.v2.runtime.JAXBContextImpl$JAXBContextBuilder setAllNillable(boolean)
 meth public com.sun.xml.bind.v2.runtime.JAXBContextImpl$JAXBContextBuilder setAnnotationReader(com.sun.xml.bind.v2.model.annotation.RuntimeAnnotationReader)
+meth public com.sun.xml.bind.v2.runtime.JAXBContextImpl$JAXBContextBuilder setBackupWithParentNamespace(java.lang.Boolean)
 meth public com.sun.xml.bind.v2.runtime.JAXBContextImpl$JAXBContextBuilder setC14NSupport(boolean)
 meth public com.sun.xml.bind.v2.runtime.JAXBContextImpl$JAXBContextBuilder setClasses(java.lang.Class[])
 meth public com.sun.xml.bind.v2.runtime.JAXBContextImpl$JAXBContextBuilder setDefaultNsUri(java.lang.String)
+meth public com.sun.xml.bind.v2.runtime.JAXBContextImpl$JAXBContextBuilder setDisableSecurityProcessing(boolean)
 meth public com.sun.xml.bind.v2.runtime.JAXBContextImpl$JAXBContextBuilder setImprovedXsiTypeHandling(boolean)
+meth public com.sun.xml.bind.v2.runtime.JAXBContextImpl$JAXBContextBuilder setMaxErrorsCount(int)
 meth public com.sun.xml.bind.v2.runtime.JAXBContextImpl$JAXBContextBuilder setRetainPropertyInfo(boolean)
 meth public com.sun.xml.bind.v2.runtime.JAXBContextImpl$JAXBContextBuilder setSubclassReplacements(java.util.Map<java.lang.Class,java.lang.Class>)
 meth public com.sun.xml.bind.v2.runtime.JAXBContextImpl$JAXBContextBuilder setSupressAccessorWarnings(boolean)
 meth public com.sun.xml.bind.v2.runtime.JAXBContextImpl$JAXBContextBuilder setTypeRefs(java.util.Collection<com.sun.xml.bind.api.TypeReference>)
 meth public com.sun.xml.bind.v2.runtime.JAXBContextImpl$JAXBContextBuilder setXmlAccessorFactorySupport(boolean)
 supr java.lang.Object
-hfds allNillable,annotationReader,c14nSupport,classes,defaultNsUri,improvedXsiTypeHandling,retainPropertyInfo,subclassReplacements,supressAccessorWarnings,typeRefs,xmlAccessorFactorySupport
+hfds allNillable,annotationReader,backupWithParentNamespace,c14nSupport,classes,defaultNsUri,disableSecurityProcessing,improvedXsiTypeHandling,maxErrorsCount,retainPropertyInfo,subclassReplacements,supressAccessorWarnings,typeRefs,xmlAccessorFactorySupport
 
 CLSS public abstract com.sun.xml.bind.v2.runtime.JaxBeanInfo<%0 extends java.lang.Object>
 cons protected init(com.sun.xml.bind.v2.runtime.JAXBContextImpl,com.sun.xml.bind.v2.model.runtime.RuntimeTypeInfo,java.lang.Class<{com.sun.xml.bind.v2.runtime.JaxBeanInfo%0}>,boolean,boolean,boolean)
@@ -7752,7 +6004,7 @@ meth public void setListener(javax.xml.bind.Marshaller$Listener)
 meth public void setProperty(java.lang.String,java.lang.Object) throws javax.xml.bind.PropertyException
 meth public void setSchema(javax.xml.validation.Schema)
 supr javax.xml.bind.helpers.AbstractMarshallerImpl
-hfds c14nSupport,context,escapeHandler,externalListener,header,indent,prefixMapper,schema,toBeClosed,toBeFlushed
+hfds LOGGER,c14nSupport,context,escapeHandler,externalListener,header,indent,prefixMapper,schema,toBeClosed,toBeFlushed
 
 CLSS public final com.sun.xml.bind.v2.runtime.MimeTypedTransducer<%0 extends java.lang.Object>
 cons public init(com.sun.xml.bind.v2.runtime.Transducer<{com.sun.xml.bind.v2.runtime.MimeTypedTransducer%0}>,javax.activation.MimeType)
@@ -7807,8 +6059,6 @@ cons public init()
 fld public final static java.util.Map<java.lang.Class,java.lang.Class> boxToPrimitive
 fld public final static java.util.Map<java.lang.Class,java.lang.Class> primitiveToBox
 innr public final static ToStringAdapter
-meth public static void handlePrintConversionException(java.lang.Object,java.lang.Exception,com.sun.xml.bind.v2.runtime.XMLSerializer) throws org.xml.sax.SAXException
-meth public static void handleTypeMismatchError(com.sun.xml.bind.v2.runtime.XMLSerializer,java.lang.Object,java.lang.String,java.lang.Object) throws org.xml.sax.SAXException
 supr java.lang.Object
 
 CLSS public final static com.sun.xml.bind.v2.runtime.RuntimeUtil$ToStringAdapter
@@ -7830,6 +6080,12 @@ CLSS public final com.sun.xml.bind.v2.runtime.SwaRefAdapter
 cons public init()
 meth public java.lang.String marshal(javax.activation.DataHandler)
 meth public javax.activation.DataHandler unmarshal(java.lang.String)
+supr javax.xml.bind.annotation.adapters.XmlAdapter<java.lang.String,javax.activation.DataHandler>
+
+CLSS public com.sun.xml.bind.v2.runtime.SwaRefAdapterMarker
+cons public init()
+meth public java.lang.String marshal(javax.activation.DataHandler) throws java.lang.Exception
+meth public javax.activation.DataHandler unmarshal(java.lang.String) throws java.lang.Exception
 supr javax.xml.bind.annotation.adapters.XmlAdapter<java.lang.String,javax.activation.DataHandler>
 
 CLSS public abstract interface com.sun.xml.bind.v2.runtime.Transducer<%0 extends java.lang.Object>
@@ -7966,12 +6222,6 @@ meth public void text(com.sun.xml.bind.v2.runtime.output.Pcdata,boolean) throws 
 meth public void text(java.lang.String,boolean) throws java.io.IOException,javax.xml.stream.XMLStreamException,org.xml.sax.SAXException
 supr com.sun.xml.bind.v2.runtime.output.XmlOutputAbstractImpl
 hfds lhs,rhs
-
-CLSS public final com.sun.xml.bind.v2.runtime.output.InPlaceDOMOutput
-cons public init(org.w3c.dom.Node,com.sun.xml.bind.v2.runtime.AssociationMap)
-meth public void endStartTag() throws org.xml.sax.SAXException
-supr com.sun.xml.bind.v2.runtime.output.SAXOutput
-hfds assoc
 
 CLSS public final com.sun.xml.bind.v2.runtime.output.IndentingUTF8XmlOutput
 cons public init(java.io.OutputStream,java.lang.String,com.sun.xml.bind.v2.runtime.output.Encoded[],com.sun.xml.bind.marshaller.CharacterEscapeHandler)
@@ -8120,9 +6370,9 @@ supr com.sun.xml.bind.v2.runtime.output.XmlOutputAbstractImpl
 hfds ef,out,sp
 
 CLSS public com.sun.xml.bind.v2.runtime.output.XMLStreamWriterOutput
-cons protected init(javax.xml.stream.XMLStreamWriter)
+cons protected init(javax.xml.stream.XMLStreamWriter,com.sun.xml.bind.marshaller.CharacterEscapeHandler)
 fld protected final char[] buf
-meth public static com.sun.xml.bind.v2.runtime.output.XmlOutput create(javax.xml.stream.XMLStreamWriter,com.sun.xml.bind.v2.runtime.JAXBContextImpl)
+meth public static com.sun.xml.bind.v2.runtime.output.XmlOutput create(javax.xml.stream.XMLStreamWriter,com.sun.xml.bind.v2.runtime.JAXBContextImpl,com.sun.xml.bind.marshaller.CharacterEscapeHandler)
 meth public void attribute(int,java.lang.String,java.lang.String) throws java.io.IOException,javax.xml.stream.XMLStreamException
 meth public void beginStartTag(int,java.lang.String) throws java.io.IOException,javax.xml.stream.XMLStreamException
 meth public void endDocument(boolean) throws java.io.IOException,javax.xml.stream.XMLStreamException,org.xml.sax.SAXException
@@ -8132,7 +6382,8 @@ meth public void startDocument(com.sun.xml.bind.v2.runtime.XMLSerializer,boolean
 meth public void text(com.sun.xml.bind.v2.runtime.output.Pcdata,boolean) throws java.io.IOException,javax.xml.stream.XMLStreamException,org.xml.sax.SAXException
 meth public void text(java.lang.String,boolean) throws java.io.IOException,javax.xml.stream.XMLStreamException,org.xml.sax.SAXException
 supr com.sun.xml.bind.v2.runtime.output.XmlOutputAbstractImpl
-hfds FI_OUTPUT_CTOR,FI_STAX_WRITER_CLASS,STAXEX_OUTPUT_CTOR,STAXEX_WRITER_CLASS,out
+hfds FI_OUTPUT_CTOR,FI_STAX_WRITER_CLASS,STAXEX_OUTPUT_CTOR,STAXEX_WRITER_CLASS,escapeHandler,out,writerWrapper
+hcls XmlStreamOutWriterAdapter
 
 CLSS public abstract interface com.sun.xml.bind.v2.runtime.output.XmlOutput
 meth public abstract void attribute(com.sun.xml.bind.v2.runtime.Name,java.lang.String) throws java.io.IOException,javax.xml.stream.XMLStreamException
@@ -8163,8 +6414,6 @@ meth public void endDocument(boolean) throws java.io.IOException,javax.xml.strea
 meth public void endTag(com.sun.xml.bind.v2.runtime.Name) throws java.io.IOException,javax.xml.stream.XMLStreamException,org.xml.sax.SAXException
 meth public void startDocument(com.sun.xml.bind.v2.runtime.XMLSerializer,boolean,int[],com.sun.xml.bind.v2.runtime.output.NamespaceContextImpl) throws java.io.IOException,javax.xml.stream.XMLStreamException,org.xml.sax.SAXException
 supr java.lang.Object
-
-CLSS abstract interface com.sun.xml.bind.v2.runtime.output.package-info
 
 CLSS public final com.sun.xml.bind.v2.runtime.property.AttributeProperty<%0 extends java.lang.Object>
 cons public init(com.sun.xml.bind.v2.runtime.JAXBContextImpl,com.sun.xml.bind.v2.model.runtime.RuntimeAttributePropertyInfo)
@@ -8256,6 +6505,7 @@ innr public static SetterOnlyReflection
 intf com.sun.xml.bind.v2.runtime.unmarshaller.Receiver
 meth public abstract void set({com.sun.xml.bind.v2.runtime.reflect.Accessor%0},{com.sun.xml.bind.v2.runtime.reflect.Accessor%1}) throws com.sun.xml.bind.api.AccessorException
 meth public abstract {com.sun.xml.bind.v2.runtime.reflect.Accessor%1} get({com.sun.xml.bind.v2.runtime.reflect.Accessor%0}) throws com.sun.xml.bind.api.AccessorException
+meth public boolean isAbstractable(java.lang.Class)
 meth public boolean isAdapted()
 meth public boolean isValueTypeAbstractable()
 meth public com.sun.xml.bind.v2.runtime.reflect.Accessor<{com.sun.xml.bind.v2.runtime.reflect.Accessor%0},{com.sun.xml.bind.v2.runtime.reflect.Accessor%1}> optimize(com.sun.xml.bind.v2.runtime.JAXBContextImpl)
@@ -8414,14 +6664,14 @@ supr com.sun.xml.bind.v2.runtime.reflect.TransducedAccessor<{com.sun.xml.bind.v2
 
 CLSS public final com.sun.xml.bind.v2.runtime.reflect.opt.Const
 cons public init()
-fld public static boolean default_value_boolean
-fld public static byte default_value_byte
-fld public static char default_value_char
-fld public static double default_value_double
-fld public static float default_value_float
-fld public static int default_value_int
-fld public static long default_value_long
-fld public static short default_value_short
+fld public final static boolean default_value_boolean = false
+fld public final static byte default_value_byte = 0
+fld public final static char default_value_char = '\u0000'
+fld public final static double default_value_double = 0.0
+fld public final static float default_value_float = 0.0
+fld public final static int default_value_int = 0
+fld public final static long default_value_long = 0
+fld public final static short default_value_short = 0
 supr java.lang.Object
 
 CLSS public com.sun.xml.bind.v2.runtime.reflect.opt.FieldAccessor_Boolean
@@ -8533,6 +6783,7 @@ meth public void set(java.lang.Object,java.lang.Object)
 supr com.sun.xml.bind.v2.runtime.reflect.Accessor
 
 CLSS public abstract com.sun.xml.bind.v2.runtime.reflect.opt.OptimizedAccessorFactory
+fld public final static boolean noOptimization
 meth public final static <%0 extends java.lang.Object, %1 extends java.lang.Object> com.sun.xml.bind.v2.runtime.reflect.Accessor<{%%0},{%%1}> get(java.lang.reflect.Field)
 meth public final static <%0 extends java.lang.Object, %1 extends java.lang.Object> com.sun.xml.bind.v2.runtime.reflect.Accessor<{%%0},{%%1}> get(java.lang.reflect.Method,java.lang.reflect.Method)
 supr java.lang.Object
@@ -8837,7 +7088,7 @@ meth public void startDocument() throws org.xml.sax.SAXException
 meth public void startElement(java.lang.String,java.lang.String,java.lang.String,org.xml.sax.Attributes) throws org.xml.sax.SAXException
 meth public void startPrefixMapping(java.lang.String,java.lang.String) throws org.xml.sax.SAXException
 supr java.lang.Object
-hfds buffer,context,loc,next,predictor,tagName
+hfds buffer,context,loc,logger,next,predictor,tagName
 hcls TagNameImpl
 
 CLSS public final com.sun.xml.bind.v2.runtime.unmarshaller.Scope<%0 extends java.lang.Object, %1 extends java.lang.Object, %2 extends java.lang.Object, %3 extends java.lang.Object>
@@ -8891,6 +7142,7 @@ intf java.io.Closeable
 intf javax.xml.bind.ValidationEventHandler
 meth protected <%0 extends java.lang.Object> javax.xml.bind.JAXBElement<{%%0}> unmarshal(org.xml.sax.XMLReader,org.xml.sax.InputSource,java.lang.Class<{%%0}>) throws javax.xml.bind.JAXBException
 meth protected java.lang.Object unmarshal(org.xml.sax.XMLReader,org.xml.sax.InputSource) throws javax.xml.bind.JAXBException
+meth protected org.xml.sax.XMLReader getXMLReader() throws javax.xml.bind.JAXBException
 meth protected void finalize() throws java.lang.Throwable
 meth public <%0 extends java.lang.Object> com.sun.xml.bind.v2.runtime.JaxBeanInfo<{%%0}> getBeanInfo(java.lang.Class<{%%0}>) throws javax.xml.bind.JAXBException
 meth public <%0 extends java.lang.Object> javax.xml.bind.JAXBElement<{%%0}> unmarshal(javax.xml.stream.XMLEventReader,java.lang.Class<{%%0}>) throws javax.xml.bind.JAXBException
@@ -8928,7 +7180,7 @@ meth public void setProperty(java.lang.String,java.lang.Object) throws javax.xml
 meth public void setSchema(javax.xml.validation.Schema)
 meth public void setValidating(boolean)
 supr javax.xml.bind.helpers.AbstractUnmarshallerImpl
-hfds attachmentUnmarshaller,dummyHandler,externalListener,idResolver,schema
+hfds attachmentUnmarshaller,dummyHandler,externalListener,idResolver,reader,schema
 
 CLSS public final com.sun.xml.bind.v2.runtime.unmarshaller.UnmarshallingContext
 cons public init(com.sun.xml.bind.v2.runtime.unmarshaller.UnmarshallerImpl,com.sun.xml.bind.v2.runtime.AssociationMap)
@@ -8947,6 +7199,7 @@ meth protected javax.xml.bind.ValidationEventLocator getLocation()
 meth public boolean expectText()
  anno 0 java.lang.Deprecated()
 meth public boolean handleEvent(javax.xml.bind.ValidationEvent)
+meth public boolean shouldErrorBeReported() throws org.xml.sax.SAXException
 meth public com.sun.xml.bind.v2.runtime.JAXBContextImpl getJAXBContext()
 meth public com.sun.xml.bind.v2.runtime.unmarshaller.Loader selectRootLoader(com.sun.xml.bind.v2.runtime.unmarshaller.UnmarshallingContext$State,com.sun.xml.bind.v2.runtime.unmarshaller.TagName) throws org.xml.sax.SAXException
 meth public com.sun.xml.bind.v2.runtime.unmarshaller.LocatorEx getLocator()
@@ -8993,22 +7246,28 @@ meth public void startPrefixMapping(java.lang.String,java.lang.String)
 meth public void startScope(int)
 meth public void text(java.lang.CharSequence) throws org.xml.sax.SAXException
 supr com.sun.xml.bind.v2.runtime.Coordinator
-hfds DEFAULT_ROOT_LOADER,DUMMY_INSTANCE,EXPECTED_TYPE_ROOT_LOADER,aborted,assoc,current,currentElement,environmentNamespaceContext,expectedType,factories,idResolver,isInplaceMode,isUnmarshalInProgress,locator,nsBind,nsLen,patchers,patchersLen,result,root,scanner,scopeTop,scopes
+hfds DEFAULT_ROOT_LOADER,DUMMY_INSTANCE,EXPECTED_TYPE_ROOT_LOADER,aborted,assoc,current,currentElement,environmentNamespaceContext,errorsCounter,expectedType,factories,idResolver,isInplaceMode,isUnmarshalInProgress,locator,logger,nsBind,nsLen,patchers,patchersLen,result,root,scanner,scopeTop,scopes
 hcls DefaultRootLoader,ExpectedTypeRootLoader,Factory
 
 CLSS public final com.sun.xml.bind.v2.runtime.unmarshaller.UnmarshallingContext$State
  outer com.sun.xml.bind.v2.runtime.unmarshaller.UnmarshallingContext
-fld public boolean nil
-fld public com.sun.xml.bind.v2.runtime.unmarshaller.Intercepter intercepter
-fld public com.sun.xml.bind.v2.runtime.unmarshaller.Loader loader
-fld public com.sun.xml.bind.v2.runtime.unmarshaller.Receiver receiver
-fld public com.sun.xml.bind.v2.runtime.unmarshaller.UnmarshallingContext$State prev
-fld public java.lang.Object backup
-fld public java.lang.Object target
-fld public java.lang.String elementDefaultValue
+meth public boolean isMixed()
+meth public boolean isNil()
+meth public com.sun.xml.bind.v2.runtime.unmarshaller.Loader getLoader()
 meth public com.sun.xml.bind.v2.runtime.unmarshaller.UnmarshallingContext getContext()
+meth public com.sun.xml.bind.v2.runtime.unmarshaller.UnmarshallingContext$State getPrev()
+meth public java.lang.Object getBackup()
+meth public java.lang.Object getTarget()
+meth public java.lang.String getElementDefaultValue()
+meth public void setBackup(java.lang.Object)
+meth public void setElementDefaultValue(java.lang.String)
+meth public void setIntercepter(com.sun.xml.bind.v2.runtime.unmarshaller.Intercepter)
+meth public void setLoader(com.sun.xml.bind.v2.runtime.unmarshaller.Loader)
+meth public void setNil(boolean)
+meth public void setReceiver(com.sun.xml.bind.v2.runtime.unmarshaller.Receiver)
+meth public void setTarget(java.lang.Object)
 supr java.lang.Object
-hfds next,numNsDecl
+hfds backup,elementDefaultValue,intercepter,loader,mixed,next,nil,numNsDecl,prev,receiver,target
 
 CLSS public com.sun.xml.bind.v2.runtime.unmarshaller.ValuePropertyLoader
 cons public init(com.sun.xml.bind.v2.runtime.reflect.TransducedAccessor)
@@ -9115,8 +7374,6 @@ meth public abstract com.sun.xml.bind.v2.schemagen.episode.Package _package()
 meth public abstract void map(boolean)
 
 CLSS abstract interface com.sun.xml.bind.v2.schemagen.episode.package-info
-
-CLSS abstract interface com.sun.xml.bind.v2.schemagen.package-info
 
 CLSS public abstract interface com.sun.xml.bind.v2.schemagen.xmlschema.Annotated
 intf com.sun.xml.txw2.TypedXmlWriter
@@ -9434,7 +7691,7 @@ meth public static int editDistance(java.lang.String,java.lang.String)
 meth public static java.lang.String findNearest(java.lang.String,java.lang.String[])
 meth public static java.lang.String findNearest(java.lang.String,java.util.Collection<java.lang.String>)
 supr java.lang.Object
-hfds a,b,back,cost
+hfds CACHE,a,b,back,cost
 
 CLSS public com.sun.xml.bind.v2.util.FatalAdapter
 cons public init(org.xml.sax.ErrorHandler)
@@ -9495,6 +7752,20 @@ CLSS public com.sun.xml.bind.v2.util.TypeCast
 cons public init()
 meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.Map<{%%0},{%%1}> checkedCast(java.util.Map<?,?>,java.lang.Class<{%%0}>,java.lang.Class<{%%1}>)
 supr java.lang.Object
+
+CLSS public com.sun.xml.bind.v2.util.XmlFactory
+cons public init()
+fld public final static java.lang.String ACCESS_EXTERNAL_DTD = "http://javax.xml.XMLConstants/property/accessExternalDTD"
+fld public final static java.lang.String ACCESS_EXTERNAL_SCHEMA = "http://javax.xml.XMLConstants/property/accessExternalSchema"
+meth public static javax.xml.parsers.DocumentBuilderFactory createDocumentBuilderFactory(boolean)
+meth public static javax.xml.parsers.SAXParserFactory createParserFactory(boolean)
+meth public static javax.xml.transform.TransformerFactory createTransformerFactory(boolean)
+meth public static javax.xml.validation.SchemaFactory allowExternalAccess(javax.xml.validation.SchemaFactory,java.lang.String,boolean)
+meth public static javax.xml.validation.SchemaFactory allowExternalDTDAccess(javax.xml.validation.SchemaFactory,java.lang.String,boolean)
+meth public static javax.xml.validation.SchemaFactory createSchemaFactory(java.lang.String,boolean)
+meth public static javax.xml.xpath.XPathFactory createXPathFactory(boolean)
+supr java.lang.Object
+hfds DISABLE_XML_SECURITY,LOGGER,XML_SECURITY_DISABLED
 
 CLSS public abstract interface com.sun.xml.dtdparser.DTDEventListener
 fld public final static short CHOICE = 0
@@ -9659,7 +7930,6 @@ meth public void write(byte[],int,int)
 meth public void write(int)
 meth public void writeTo(java.io.OutputStream) throws java.io.IOException
 supr java.io.OutputStream
-hfds MAX_ARRAY_SIZE
 
 CLSS public abstract interface java.io.Closeable
 intf java.lang.AutoCloseable
@@ -9667,21 +7937,6 @@ meth public abstract void close() throws java.io.IOException
 
 CLSS public abstract interface java.io.Flushable
 meth public abstract void flush() throws java.io.IOException
-
-CLSS public abstract java.io.InputStream
-cons public init()
-intf java.io.Closeable
-meth public abstract int read() throws java.io.IOException
-meth public boolean markSupported()
-meth public int available() throws java.io.IOException
-meth public int read(byte[]) throws java.io.IOException
-meth public int read(byte[],int,int) throws java.io.IOException
-meth public long skip(long) throws java.io.IOException
-meth public void close() throws java.io.IOException
-meth public void mark(int)
-meth public void reset() throws java.io.IOException
-supr java.lang.Object
-hfds MAX_SKIP_BUFFER_SIZE
 
 CLSS public abstract java.io.OutputStream
 cons public init()
@@ -9743,8 +7998,6 @@ meth public void setClassAssertionStatus(java.lang.String,boolean)
 meth public void setDefaultAssertionStatus(boolean)
 meth public void setPackageAssertionStatus(java.lang.String,boolean)
 supr java.lang.Object
-hfds assertionLock,classAssertionStatus,classes,defaultAssertionStatus,defaultDomain,loadedLibraryNames,nativeLibraries,nativeLibraryContext,nocerts,package2certs,packageAssertionStatus,packages,parallelLockMap,parent,scl,sclSet,sys_paths,systemNativeLibraries,usr_paths
-hcls NativeLibrary,ParallelLoaders
 
 CLSS public abstract interface java.lang.Cloneable
 
@@ -9772,16 +8025,6 @@ meth public final java.lang.String name()
 meth public java.lang.String toString()
 meth public static <%0 extends java.lang.Enum<{%%0}>> {%%0} valueOf(java.lang.Class<{%%0}>,java.lang.String)
 supr java.lang.Object
-hfds name,ordinal
-
-CLSS public java.lang.Error
-cons protected init(java.lang.String,java.lang.Throwable,boolean,boolean)
-cons public init()
-cons public init(java.lang.String)
-cons public init(java.lang.String,java.lang.Throwable)
-cons public init(java.lang.Throwable)
-supr java.lang.Throwable
-hfds serialVersionUID
 
 CLSS public java.lang.Exception
 cons protected init(java.lang.String,java.lang.Throwable,boolean,boolean)
@@ -9790,7 +8033,6 @@ cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.Throwable)
 cons public init(java.lang.Throwable)
 supr java.lang.Throwable
-hfds serialVersionUID
 
 CLSS public abstract interface java.lang.Iterable<%0 extends java.lang.Object>
 meth public abstract java.util.Iterator<{java.lang.Iterable%0}> iterator()
@@ -9818,7 +8060,6 @@ cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.Throwable)
 cons public init(java.lang.Throwable)
 supr java.lang.Exception
-hfds serialVersionUID
 
 CLSS public java.lang.Throwable
 cons protected init(java.lang.String,java.lang.Throwable,boolean,boolean)
@@ -9841,8 +8082,6 @@ meth public void printStackTrace(java.io.PrintStream)
 meth public void printStackTrace(java.io.PrintWriter)
 meth public void setStackTrace(java.lang.StackTraceElement[])
 supr java.lang.Object
-hfds CAUSE_CAPTION,EMPTY_THROWABLE_ARRAY,NULL_CAUSE_MESSAGE,SELF_SUPPRESSION_MESSAGE,SUPPRESSED_CAPTION,SUPPRESSED_SENTINEL,UNASSIGNED_STACK,backtrace,cause,detailMessage,serialVersionUID,stackTrace,suppressedExceptions
-hcls PrintStreamOrWriter,SentinelHolder,WrappedPrintStream,WrappedPrintWriter
 
 CLSS public abstract interface java.lang.annotation.Annotation
 meth public abstract boolean equals(java.lang.Object)
@@ -9873,61 +8112,23 @@ meth public abstract java.lang.annotation.ElementType[] value()
 CLSS public abstract interface java.lang.reflect.InvocationHandler
 meth public abstract java.lang.Object invoke(java.lang.Object,java.lang.reflect.Method,java.lang.Object[]) throws java.lang.Throwable
 
-CLSS public java.net.URLClassLoader
-cons public init(java.net.URL[])
-cons public init(java.net.URL[],java.lang.ClassLoader)
-cons public init(java.net.URL[],java.lang.ClassLoader,java.net.URLStreamHandlerFactory)
-intf java.io.Closeable
-meth protected java.lang.Class<?> findClass(java.lang.String) throws java.lang.ClassNotFoundException
-meth protected java.lang.Package definePackage(java.lang.String,java.util.jar.Manifest,java.net.URL)
-meth protected java.security.PermissionCollection getPermissions(java.security.CodeSource)
-meth protected void addURL(java.net.URL)
-meth public java.io.InputStream getResourceAsStream(java.lang.String)
-meth public java.net.URL findResource(java.lang.String)
-meth public java.net.URL[] getURLs()
-meth public java.util.Enumeration<java.net.URL> findResources(java.lang.String) throws java.io.IOException
-meth public static java.net.URLClassLoader newInstance(java.net.URL[])
-meth public static java.net.URLClassLoader newInstance(java.net.URL[],java.lang.ClassLoader)
-meth public void close() throws java.io.IOException
-supr java.security.SecureClassLoader
-hfds acc,closeables,ucp
-
-CLSS public abstract java.nio.charset.CharsetEncoder
-cons protected init(java.nio.charset.Charset,float,float)
-cons protected init(java.nio.charset.Charset,float,float,byte[])
-meth protected abstract java.nio.charset.CoderResult encodeLoop(java.nio.CharBuffer,java.nio.ByteBuffer)
-meth protected java.nio.charset.CoderResult implFlush(java.nio.ByteBuffer)
-meth protected void implOnMalformedInput(java.nio.charset.CodingErrorAction)
-meth protected void implOnUnmappableCharacter(java.nio.charset.CodingErrorAction)
-meth protected void implReplaceWith(byte[])
-meth protected void implReset()
-meth public boolean canEncode(char)
-meth public boolean canEncode(java.lang.CharSequence)
-meth public boolean isLegalReplacement(byte[])
-meth public final byte[] replacement()
-meth public final float averageBytesPerChar()
-meth public final float maxBytesPerChar()
-meth public final java.nio.ByteBuffer encode(java.nio.CharBuffer) throws java.nio.charset.CharacterCodingException
-meth public final java.nio.charset.Charset charset()
-meth public final java.nio.charset.CharsetEncoder onMalformedInput(java.nio.charset.CodingErrorAction)
-meth public final java.nio.charset.CharsetEncoder onUnmappableCharacter(java.nio.charset.CodingErrorAction)
-meth public final java.nio.charset.CharsetEncoder replaceWith(byte[])
-meth public final java.nio.charset.CharsetEncoder reset()
-meth public final java.nio.charset.CoderResult encode(java.nio.CharBuffer,java.nio.ByteBuffer,boolean)
-meth public final java.nio.charset.CoderResult flush(java.nio.ByteBuffer)
-meth public java.nio.charset.CodingErrorAction malformedInputAction()
-meth public java.nio.charset.CodingErrorAction unmappableCharacterAction()
+CLSS public abstract java.net.Authenticator
+cons public init()
+innr public final static !enum RequestorType
+meth protected final int getRequestingPort()
+meth protected final java.lang.String getRequestingHost()
+meth protected final java.lang.String getRequestingPrompt()
+meth protected final java.lang.String getRequestingProtocol()
+meth protected final java.lang.String getRequestingScheme()
+meth protected final java.net.InetAddress getRequestingSite()
+meth protected java.net.Authenticator$RequestorType getRequestorType()
+meth protected java.net.PasswordAuthentication getPasswordAuthentication()
+meth protected java.net.URL getRequestingURL()
+meth public static java.net.PasswordAuthentication requestPasswordAuthentication(java.lang.String,java.net.InetAddress,int,java.lang.String,java.lang.String,java.lang.String)
+meth public static java.net.PasswordAuthentication requestPasswordAuthentication(java.lang.String,java.net.InetAddress,int,java.lang.String,java.lang.String,java.lang.String,java.net.URL,java.net.Authenticator$RequestorType)
+meth public static java.net.PasswordAuthentication requestPasswordAuthentication(java.net.InetAddress,int,java.lang.String,java.lang.String,java.lang.String)
+meth public static void setDefault(java.net.Authenticator)
 supr java.lang.Object
-hfds ST_CODING,ST_END,ST_FLUSHED,ST_RESET,averageBytesPerChar,cachedDecoder,charset,malformedInputAction,maxBytesPerChar,replacement,state,stateNames,unmappableCharacterAction
-
-CLSS public java.security.SecureClassLoader
-cons protected init()
-cons protected init(java.lang.ClassLoader)
-meth protected final java.lang.Class<?> defineClass(java.lang.String,byte[],int,int,java.security.CodeSource)
-meth protected final java.lang.Class<?> defineClass(java.lang.String,java.nio.ByteBuffer,java.security.CodeSource)
-meth protected java.security.PermissionCollection getPermissions(java.security.CodeSource)
-supr java.lang.ClassLoader
-hfds debug,initialized,pdcache
 
 CLSS public abstract java.util.AbstractCollection<%0 extends java.lang.Object>
 cons protected init()
@@ -9947,7 +8148,6 @@ meth public java.lang.Object[] toArray()
 meth public java.lang.String toString()
 meth public void clear()
 supr java.lang.Object
-hfds MAX_ARRAY_SIZE
 
 CLSS public abstract java.util.AbstractList<%0 extends java.lang.Object>
 cons protected init()
@@ -9970,7 +8170,6 @@ meth public void clear()
 meth public {java.util.AbstractList%0} remove(int)
 meth public {java.util.AbstractList%0} set(int,{java.util.AbstractList%0})
 supr java.util.AbstractCollection<{java.util.AbstractList%0}>
-hcls Itr,ListItr
 
 CLSS public java.util.ArrayList<%0 extends java.lang.Object>
 cons public init()
@@ -10012,8 +8211,6 @@ meth public {java.util.ArrayList%0} get(int)
 meth public {java.util.ArrayList%0} remove(int)
 meth public {java.util.ArrayList%0} set(int,{java.util.ArrayList%0})
 supr java.util.AbstractList<{java.util.ArrayList%0}>
-hfds DEFAULTCAPACITY_EMPTY_ELEMENTDATA,DEFAULT_CAPACITY,EMPTY_ELEMENTDATA,MAX_ARRAY_SIZE,elementData,serialVersionUID,size
-hcls ArrayListSpliterator,Itr,ListItr,SubList
 
 CLSS public abstract interface java.util.Collection<%0 extends java.lang.Object>
 intf java.lang.Iterable<{java.util.Collection%0}>
@@ -10102,24 +8299,67 @@ meth public abstract {javax.xml.bind.Binder%0} updateXML(java.lang.Object) throw
 meth public abstract {javax.xml.bind.Binder%0} updateXML(java.lang.Object,{javax.xml.bind.Binder%0}) throws javax.xml.bind.JAXBException
 supr java.lang.Object
 
-CLSS public abstract interface javax.xml.bind.Element
+CLSS public abstract interface javax.xml.bind.DatatypeConverterInterface
+meth public abstract boolean parseBoolean(java.lang.String)
+meth public abstract byte parseByte(java.lang.String)
+meth public abstract byte[] parseBase64Binary(java.lang.String)
+meth public abstract byte[] parseHexBinary(java.lang.String)
+meth public abstract double parseDouble(java.lang.String)
+meth public abstract float parseFloat(java.lang.String)
+meth public abstract int parseInt(java.lang.String)
+meth public abstract int parseUnsignedShort(java.lang.String)
+meth public abstract java.lang.String parseAnySimpleType(java.lang.String)
+meth public abstract java.lang.String parseString(java.lang.String)
+meth public abstract java.lang.String printAnySimpleType(java.lang.String)
+meth public abstract java.lang.String printBase64Binary(byte[])
+meth public abstract java.lang.String printBoolean(boolean)
+meth public abstract java.lang.String printByte(byte)
+meth public abstract java.lang.String printDate(java.util.Calendar)
+meth public abstract java.lang.String printDateTime(java.util.Calendar)
+meth public abstract java.lang.String printDecimal(java.math.BigDecimal)
+meth public abstract java.lang.String printDouble(double)
+meth public abstract java.lang.String printFloat(float)
+meth public abstract java.lang.String printHexBinary(byte[])
+meth public abstract java.lang.String printInt(int)
+meth public abstract java.lang.String printInteger(java.math.BigInteger)
+meth public abstract java.lang.String printLong(long)
+meth public abstract java.lang.String printQName(javax.xml.namespace.QName,javax.xml.namespace.NamespaceContext)
+meth public abstract java.lang.String printShort(short)
+meth public abstract java.lang.String printString(java.lang.String)
+meth public abstract java.lang.String printTime(java.util.Calendar)
+meth public abstract java.lang.String printUnsignedInt(long)
+meth public abstract java.lang.String printUnsignedShort(int)
+meth public abstract java.math.BigDecimal parseDecimal(java.lang.String)
+meth public abstract java.math.BigInteger parseInteger(java.lang.String)
+meth public abstract java.util.Calendar parseDate(java.lang.String)
+meth public abstract java.util.Calendar parseDateTime(java.lang.String)
+meth public abstract java.util.Calendar parseTime(java.lang.String)
+meth public abstract javax.xml.namespace.QName parseQName(java.lang.String,javax.xml.namespace.NamespaceContext)
+meth public abstract long parseLong(java.lang.String)
+meth public abstract long parseUnsignedInt(java.lang.String)
+meth public abstract short parseShort(java.lang.String)
 
 CLSS public abstract javax.xml.bind.JAXBContext
 cons protected init()
-fld public final static java.lang.String JAXB_CONTEXT_FACTORY = "javax.xml.bind.context.factory"
-meth public !varargs static javax.xml.bind.JAXBContext newInstance(java.lang.Class[]) throws javax.xml.bind.JAXBException
+fld public final static java.lang.String JAXB_CONTEXT_FACTORY = "javax.xml.bind.JAXBContextFactory"
+meth public !varargs static javax.xml.bind.JAXBContext newInstance(java.lang.Class<?>[]) throws javax.xml.bind.JAXBException
 meth public <%0 extends java.lang.Object> javax.xml.bind.Binder<{%%0}> createBinder(java.lang.Class<{%%0}>)
 meth public abstract javax.xml.bind.Marshaller createMarshaller() throws javax.xml.bind.JAXBException
 meth public abstract javax.xml.bind.Unmarshaller createUnmarshaller() throws javax.xml.bind.JAXBException
 meth public abstract javax.xml.bind.Validator createValidator() throws javax.xml.bind.JAXBException
+ anno 0 java.lang.Deprecated()
 meth public javax.xml.bind.Binder<org.w3c.dom.Node> createBinder()
 meth public javax.xml.bind.JAXBIntrospector createJAXBIntrospector()
-meth public static javax.xml.bind.JAXBContext newInstance(java.lang.Class[],java.util.Map<java.lang.String,?>) throws javax.xml.bind.JAXBException
+meth public static javax.xml.bind.JAXBContext newInstance(java.lang.Class<?>[],java.util.Map<java.lang.String,?>) throws javax.xml.bind.JAXBException
 meth public static javax.xml.bind.JAXBContext newInstance(java.lang.String) throws javax.xml.bind.JAXBException
 meth public static javax.xml.bind.JAXBContext newInstance(java.lang.String,java.lang.ClassLoader) throws javax.xml.bind.JAXBException
 meth public static javax.xml.bind.JAXBContext newInstance(java.lang.String,java.lang.ClassLoader,java.util.Map<java.lang.String,?>) throws javax.xml.bind.JAXBException
 meth public void generateSchema(javax.xml.bind.SchemaOutputResolver) throws java.io.IOException
 supr java.lang.Object
+
+CLSS public abstract interface javax.xml.bind.JAXBContextFactory
+meth public abstract javax.xml.bind.JAXBContext createContext(java.lang.Class<?>[],java.util.Map<java.lang.String,?>) throws javax.xml.bind.JAXBException
+meth public abstract javax.xml.bind.JAXBContext createContext(java.lang.String,java.lang.ClassLoader,java.util.Map<java.lang.String,?>) throws javax.xml.bind.JAXBException
 
 CLSS public javax.xml.bind.JAXBException
 cons public init(java.lang.String)
@@ -10376,9 +8616,6 @@ CLSS public abstract interface javax.xml.transform.Source
 meth public abstract java.lang.String getSystemId()
 meth public abstract void setSystemId(java.lang.String)
 
-CLSS public abstract interface javax.xml.transform.URIResolver
-meth public abstract javax.xml.transform.Source resolve(java.lang.String,java.lang.String) throws javax.xml.transform.TransformerException
-
 CLSS public javax.xml.transform.stream.StreamSource
 cons public init()
 cons public init(java.io.File)
@@ -10399,100 +8636,6 @@ meth public void setReader(java.io.Reader)
 meth public void setSystemId(java.io.File)
 meth public void setSystemId(java.lang.String)
 supr java.lang.Object
-hfds inputStream,publicId,reader,systemId
-
-CLSS public abstract interface org.iso_relax.verifier.VerifierHandler
-intf org.xml.sax.ContentHandler
-meth public abstract boolean isValid()
-
-CLSS public abstract interface org.kohsuke.rngom.digested.DPatternVisitor<%0 extends java.lang.Object>
-meth public abstract {org.kohsuke.rngom.digested.DPatternVisitor%0} onAttribute(org.kohsuke.rngom.digested.DAttributePattern)
-meth public abstract {org.kohsuke.rngom.digested.DPatternVisitor%0} onChoice(org.kohsuke.rngom.digested.DChoicePattern)
-meth public abstract {org.kohsuke.rngom.digested.DPatternVisitor%0} onData(org.kohsuke.rngom.digested.DDataPattern)
-meth public abstract {org.kohsuke.rngom.digested.DPatternVisitor%0} onElement(org.kohsuke.rngom.digested.DElementPattern)
-meth public abstract {org.kohsuke.rngom.digested.DPatternVisitor%0} onEmpty(org.kohsuke.rngom.digested.DEmptyPattern)
-meth public abstract {org.kohsuke.rngom.digested.DPatternVisitor%0} onGrammar(org.kohsuke.rngom.digested.DGrammarPattern)
-meth public abstract {org.kohsuke.rngom.digested.DPatternVisitor%0} onGroup(org.kohsuke.rngom.digested.DGroupPattern)
-meth public abstract {org.kohsuke.rngom.digested.DPatternVisitor%0} onInterleave(org.kohsuke.rngom.digested.DInterleavePattern)
-meth public abstract {org.kohsuke.rngom.digested.DPatternVisitor%0} onList(org.kohsuke.rngom.digested.DListPattern)
-meth public abstract {org.kohsuke.rngom.digested.DPatternVisitor%0} onMixed(org.kohsuke.rngom.digested.DMixedPattern)
-meth public abstract {org.kohsuke.rngom.digested.DPatternVisitor%0} onNotAllowed(org.kohsuke.rngom.digested.DNotAllowedPattern)
-meth public abstract {org.kohsuke.rngom.digested.DPatternVisitor%0} onOneOrMore(org.kohsuke.rngom.digested.DOneOrMorePattern)
-meth public abstract {org.kohsuke.rngom.digested.DPatternVisitor%0} onOptional(org.kohsuke.rngom.digested.DOptionalPattern)
-meth public abstract {org.kohsuke.rngom.digested.DPatternVisitor%0} onRef(org.kohsuke.rngom.digested.DRefPattern)
-meth public abstract {org.kohsuke.rngom.digested.DPatternVisitor%0} onText(org.kohsuke.rngom.digested.DTextPattern)
-meth public abstract {org.kohsuke.rngom.digested.DPatternVisitor%0} onValue(org.kohsuke.rngom.digested.DValuePattern)
-meth public abstract {org.kohsuke.rngom.digested.DPatternVisitor%0} onZeroOrMore(org.kohsuke.rngom.digested.DZeroOrMorePattern)
-
-CLSS public org.kohsuke.rngom.digested.DPatternWalker
-cons public init()
-intf org.kohsuke.rngom.digested.DPatternVisitor<java.lang.Void>
-meth protected java.lang.Void onContainer(org.kohsuke.rngom.digested.DContainerPattern)
-meth protected java.lang.Void onUnary(org.kohsuke.rngom.digested.DUnaryPattern)
-meth protected java.lang.Void onXmlToken(org.kohsuke.rngom.digested.DXmlTokenPattern)
-meth public java.lang.Void onAttribute(org.kohsuke.rngom.digested.DAttributePattern)
-meth public java.lang.Void onChoice(org.kohsuke.rngom.digested.DChoicePattern)
-meth public java.lang.Void onData(org.kohsuke.rngom.digested.DDataPattern)
-meth public java.lang.Void onElement(org.kohsuke.rngom.digested.DElementPattern)
-meth public java.lang.Void onEmpty(org.kohsuke.rngom.digested.DEmptyPattern)
-meth public java.lang.Void onGrammar(org.kohsuke.rngom.digested.DGrammarPattern)
-meth public java.lang.Void onGroup(org.kohsuke.rngom.digested.DGroupPattern)
-meth public java.lang.Void onInterleave(org.kohsuke.rngom.digested.DInterleavePattern)
-meth public java.lang.Void onList(org.kohsuke.rngom.digested.DListPattern)
-meth public java.lang.Void onMixed(org.kohsuke.rngom.digested.DMixedPattern)
-meth public java.lang.Void onNotAllowed(org.kohsuke.rngom.digested.DNotAllowedPattern)
-meth public java.lang.Void onOneOrMore(org.kohsuke.rngom.digested.DOneOrMorePattern)
-meth public java.lang.Void onOptional(org.kohsuke.rngom.digested.DOptionalPattern)
-meth public java.lang.Void onRef(org.kohsuke.rngom.digested.DRefPattern)
-meth public java.lang.Void onText(org.kohsuke.rngom.digested.DTextPattern)
-meth public java.lang.Void onValue(org.kohsuke.rngom.digested.DValuePattern)
-meth public java.lang.Void onZeroOrMore(org.kohsuke.rngom.digested.DZeroOrMorePattern)
-supr java.lang.Object
-
-CLSS public abstract interface org.relaxng.datatype.Datatype
-fld public final static int ID_TYPE_ID = 1
-fld public final static int ID_TYPE_IDREF = 2
-fld public final static int ID_TYPE_IDREFS = 3
-fld public final static int ID_TYPE_NULL = 0
-meth public abstract boolean isContextDependent()
-meth public abstract boolean isValid(java.lang.String,org.relaxng.datatype.ValidationContext)
-meth public abstract boolean sameValue(java.lang.Object,java.lang.Object)
-meth public abstract int getIdType()
-meth public abstract int valueHashCode(java.lang.Object)
-meth public abstract java.lang.Object createValue(java.lang.String,org.relaxng.datatype.ValidationContext)
-meth public abstract org.relaxng.datatype.DatatypeStreamingValidator createStreamingValidator(org.relaxng.datatype.ValidationContext)
-meth public abstract void checkValid(java.lang.String,org.relaxng.datatype.ValidationContext) throws org.relaxng.datatype.DatatypeException
-
-CLSS public abstract interface org.relaxng.datatype.DatatypeBuilder
-meth public abstract org.relaxng.datatype.Datatype createDatatype() throws org.relaxng.datatype.DatatypeException
-meth public abstract void addParameter(java.lang.String,java.lang.String,org.relaxng.datatype.ValidationContext) throws org.relaxng.datatype.DatatypeException
-
-CLSS public org.relaxng.datatype.DatatypeException
-cons public init()
-cons public init(int,java.lang.String)
-cons public init(java.lang.String)
-fld public final static int UNKNOWN = -1
-meth public int getIndex()
-supr java.lang.Exception
-hfds index
-
-CLSS public abstract interface org.relaxng.datatype.DatatypeLibrary
-meth public abstract org.relaxng.datatype.Datatype createDatatype(java.lang.String) throws org.relaxng.datatype.DatatypeException
-meth public abstract org.relaxng.datatype.DatatypeBuilder createDatatypeBuilder(java.lang.String) throws org.relaxng.datatype.DatatypeException
-
-CLSS public abstract interface org.relaxng.datatype.DatatypeLibraryFactory
-meth public abstract org.relaxng.datatype.DatatypeLibrary createDatatypeLibrary(java.lang.String)
-
-CLSS public abstract interface org.relaxng.datatype.DatatypeStreamingValidator
-meth public abstract boolean isValid()
-meth public abstract void addCharacters(char[],int,int)
-meth public abstract void checkValid() throws org.relaxng.datatype.DatatypeException
-
-CLSS public abstract interface org.relaxng.datatype.ValidationContext
-meth public abstract boolean isNotation(java.lang.String)
-meth public abstract boolean isUnparsedEntity(java.lang.String)
-meth public abstract java.lang.String getBaseUri()
-meth public abstract java.lang.String resolveNamespacePrefix(java.lang.String)
 
 CLSS public abstract interface org.w3c.dom.ls.LSInput
 meth public abstract boolean getCertifiedText()
@@ -10543,16 +8686,6 @@ CLSS public abstract interface org.xml.sax.DTDHandler
 meth public abstract void notationDecl(java.lang.String,java.lang.String,java.lang.String) throws org.xml.sax.SAXException
 meth public abstract void unparsedEntityDecl(java.lang.String,java.lang.String,java.lang.String,java.lang.String) throws org.xml.sax.SAXException
 
-CLSS public abstract interface org.xml.sax.DocumentHandler
-meth public abstract void characters(char[],int,int) throws org.xml.sax.SAXException
-meth public abstract void endDocument() throws org.xml.sax.SAXException
-meth public abstract void endElement(java.lang.String) throws org.xml.sax.SAXException
-meth public abstract void ignorableWhitespace(char[],int,int) throws org.xml.sax.SAXException
-meth public abstract void processingInstruction(java.lang.String,java.lang.String) throws org.xml.sax.SAXException
-meth public abstract void setDocumentLocator(org.xml.sax.Locator)
-meth public abstract void startDocument() throws org.xml.sax.SAXException
-meth public abstract void startElement(java.lang.String,org.xml.sax.AttributeList) throws org.xml.sax.SAXException
-
 CLSS public abstract interface org.xml.sax.EntityResolver
 meth public abstract org.xml.sax.InputSource resolveEntity(java.lang.String,java.lang.String) throws java.io.IOException,org.xml.sax.SAXException
 
@@ -10567,15 +8700,6 @@ meth public abstract int getLineNumber()
 meth public abstract java.lang.String getPublicId()
 meth public abstract java.lang.String getSystemId()
 
-CLSS public abstract interface org.xml.sax.Parser
-meth public abstract void parse(java.lang.String) throws java.io.IOException,org.xml.sax.SAXException
-meth public abstract void parse(org.xml.sax.InputSource) throws java.io.IOException,org.xml.sax.SAXException
-meth public abstract void setDTDHandler(org.xml.sax.DTDHandler)
-meth public abstract void setDocumentHandler(org.xml.sax.DocumentHandler)
-meth public abstract void setEntityResolver(org.xml.sax.EntityResolver)
-meth public abstract void setErrorHandler(org.xml.sax.ErrorHandler)
-meth public abstract void setLocale(java.util.Locale) throws org.xml.sax.SAXException
-
 CLSS public org.xml.sax.SAXException
 cons public init()
 cons public init(java.lang.Exception)
@@ -10586,7 +8710,6 @@ meth public java.lang.String getMessage()
 meth public java.lang.String toString()
 meth public java.lang.Throwable getCause()
 supr java.lang.Exception
-hfds exception,serialVersionUID
 
 CLSS public org.xml.sax.SAXParseException
 cons public init(java.lang.String,java.lang.String,java.lang.String,int,int)
@@ -10599,7 +8722,6 @@ meth public java.lang.String getPublicId()
 meth public java.lang.String getSystemId()
 meth public java.lang.String toString()
 supr org.xml.sax.SAXException
-hfds columnNumber,lineNumber,publicId,serialVersionUID,systemId
 
 CLSS public abstract interface org.xml.sax.XMLFilter
 intf org.xml.sax.XMLReader
@@ -10621,31 +8743,6 @@ meth public abstract void setEntityResolver(org.xml.sax.EntityResolver)
 meth public abstract void setErrorHandler(org.xml.sax.ErrorHandler)
 meth public abstract void setFeature(java.lang.String,boolean) throws org.xml.sax.SAXNotRecognizedException,org.xml.sax.SAXNotSupportedException
 meth public abstract void setProperty(java.lang.String,java.lang.Object) throws org.xml.sax.SAXNotRecognizedException,org.xml.sax.SAXNotSupportedException
-
-CLSS public org.xml.sax.helpers.DefaultHandler
-cons public init()
-intf org.xml.sax.ContentHandler
-intf org.xml.sax.DTDHandler
-intf org.xml.sax.EntityResolver
-intf org.xml.sax.ErrorHandler
-meth public org.xml.sax.InputSource resolveEntity(java.lang.String,java.lang.String) throws java.io.IOException,org.xml.sax.SAXException
-meth public void characters(char[],int,int) throws org.xml.sax.SAXException
-meth public void endDocument() throws org.xml.sax.SAXException
-meth public void endElement(java.lang.String,java.lang.String,java.lang.String) throws org.xml.sax.SAXException
-meth public void endPrefixMapping(java.lang.String) throws org.xml.sax.SAXException
-meth public void error(org.xml.sax.SAXParseException) throws org.xml.sax.SAXException
-meth public void fatalError(org.xml.sax.SAXParseException) throws org.xml.sax.SAXException
-meth public void ignorableWhitespace(char[],int,int) throws org.xml.sax.SAXException
-meth public void notationDecl(java.lang.String,java.lang.String,java.lang.String) throws org.xml.sax.SAXException
-meth public void processingInstruction(java.lang.String,java.lang.String) throws org.xml.sax.SAXException
-meth public void setDocumentLocator(org.xml.sax.Locator)
-meth public void skippedEntity(java.lang.String) throws org.xml.sax.SAXException
-meth public void startDocument() throws org.xml.sax.SAXException
-meth public void startElement(java.lang.String,java.lang.String,java.lang.String,org.xml.sax.Attributes) throws org.xml.sax.SAXException
-meth public void startPrefixMapping(java.lang.String,java.lang.String) throws org.xml.sax.SAXException
-meth public void unparsedEntityDecl(java.lang.String,java.lang.String,java.lang.String,java.lang.String) throws org.xml.sax.SAXException
-meth public void warning(org.xml.sax.SAXParseException) throws org.xml.sax.SAXException
-supr java.lang.Object
 
 CLSS public org.xml.sax.helpers.XMLFilterImpl
 cons public init()
@@ -10689,5 +8786,4 @@ meth public void startPrefixMapping(java.lang.String,java.lang.String) throws or
 meth public void unparsedEntityDecl(java.lang.String,java.lang.String,java.lang.String,java.lang.String) throws org.xml.sax.SAXException
 meth public void warning(org.xml.sax.SAXParseException) throws org.xml.sax.SAXException
 supr java.lang.Object
-hfds contentHandler,dtdHandler,entityResolver,errorHandler,locator,parent
 

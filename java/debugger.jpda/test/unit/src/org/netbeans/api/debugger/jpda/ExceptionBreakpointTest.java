@@ -51,7 +51,7 @@ public class ExceptionBreakpointTest extends NbTestCase {
         try {
             ExceptionBreakpoint eb1 = ExceptionBreakpoint.create (
                 "org.netbeans.api.debugger.jpda.testapps.ExceptionTestException", 
-                ExceptionBreakpoint.TYPE_EXCEPTION_CATCHED
+                ExceptionBreakpoint.TYPE_EXCEPTION_CAUGHT
             );
             TestBreakpointListener tbl = new TestBreakpointListener (
                 "org.netbeans.api.debugger.jpda.testapps.ExceptionTestException", 

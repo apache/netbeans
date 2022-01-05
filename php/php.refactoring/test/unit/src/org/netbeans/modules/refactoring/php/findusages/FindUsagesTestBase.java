@@ -19,6 +19,7 @@
 package org.netbeans.modules.refactoring.php.findusages;
 
 import java.util.Collections;
+import java.util.concurrent.Future;
 import org.netbeans.modules.parsing.api.ParserManager;
 import org.netbeans.modules.parsing.api.ResultIterator;
 import org.netbeans.modules.parsing.api.Source;
@@ -49,6 +50,12 @@ public abstract class FindUsagesTestBase extends RefactoringTestBase {
         assertDescriptionMatches(exactFileName, result, true, ".findUsages");
     }
 
+    protected void findUsages(final String caretLine, String filePath) throws Exception {
+        final String exactFileName = getTestFolderPath() + "/" + filePath;
+        final String result = getTestResult(exactFileName, caretLine);
+        assertDescriptionMatches(exactFileName, result, true, ".findUsages");
+    }
+
     private String getTestResult(final String exactFileName, final String caretLine) throws Exception {
         FileObject testFile = getTestFile(exactFileName);
         Source testSource = getTestSource(testFile);
@@ -60,7 +67,8 @@ public abstract class FindUsagesTestBase extends RefactoringTestBase {
             caretOffset = -1;
         }
         final String[] result = new String[1];
-        ParserManager.parse(Collections.singleton(testSource), new UserTask() {
+        // wait for the scan to finish
+        Future<Void> future = ParserManager.parseWhenScanFinished(Collections.singleton(testSource), new UserTask() {
 
             @Override
             public void run(final ResultIterator resultIterator) throws Exception {
@@ -90,6 +98,9 @@ public abstract class FindUsagesTestBase extends RefactoringTestBase {
                 result[0] = sb.toString().trim();
             }
         });
+        if (!future.isDone()) {
+            future.get();
+        }
         return result[0];
     }
 

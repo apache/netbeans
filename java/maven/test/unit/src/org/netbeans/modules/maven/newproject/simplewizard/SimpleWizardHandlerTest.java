@@ -61,6 +61,10 @@ public class SimpleWizardHandlerTest extends NbTestCase {
     }
     
     public void testSimpleWizard() throws Exception {
+        if (!EnsureJavaFXPresent.check()) {
+            return;
+        }
+
         clearWorkDir();
         File whereTo = new File(getWorkDir(), "whereTo");
         whereTo.mkdirs();
@@ -86,7 +90,7 @@ public class SimpleWizardHandlerTest extends NbTestCase {
         Set<?> results = instIter.instantiate();
         assertEquals("One directory: " + results, 1, results.size());
         FileObject createProject = fileObject(results.iterator().next());
-        assertEquals("In the same dir", whereToObj.getParent(), createProject.getParent());
+        assertEquals("In the same dir", whereToObj, createProject.getParent());
         assertEquals("Name as artifactId", "simplewizardtest", createProject.getNameExt());
         
         RunConfig runConfig = MockExecuteMaven.assertConfigExists();

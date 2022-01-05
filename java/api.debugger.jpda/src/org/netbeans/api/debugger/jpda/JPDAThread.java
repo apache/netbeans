@@ -21,10 +21,8 @@ package org.netbeans.api.debugger.jpda;
 
 import com.sun.jdi.AbsentInformationException;
 import com.sun.jdi.ThreadReference;
-import java.beans.PropertyChangeListener;
 import java.util.List;
 import java.util.concurrent.locks.Lock;
-import org.netbeans.spi.debugger.jpda.EditorContext;
 import org.netbeans.spi.debugger.jpda.EditorContext.Operation;
 
 

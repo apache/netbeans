@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.39.0
+#Version 1.45.0
 
 CLSS public abstract interface java.io.Serializable
 
@@ -21,7 +21,6 @@ meth public final java.lang.String name()
 meth public java.lang.String toString()
 meth public static <%0 extends java.lang.Enum<{%%0}>> {%%0} valueOf(java.lang.Class<{%%0}>,java.lang.String)
 supr java.lang.Object
-hfds name,ordinal
 
 CLSS public java.lang.Object
 cons public init()
@@ -193,7 +192,7 @@ meth protected abstract void performRewrite(org.netbeans.spi.java.hints.JavaFix$
  anno 1 org.netbeans.api.annotations.common.NonNull()
 meth public final org.netbeans.spi.editor.hints.Fix toEditorFix()
 supr java.lang.Object
-hfds handle,options,sortText
+hfds handle,modResult2ChangeInfo,options,sortText
 
 CLSS public final static org.netbeans.spi.java.hints.JavaFix$TransformationContext
  outer org.netbeans.spi.java.hints.JavaFix

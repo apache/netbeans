@@ -29,4 +29,14 @@ public interface ProgressUIWorkerProvider {
     public ProgressUIWorkerWithModel getDefaultWorker();
     
     public ExtractedProgressUIWorker getExtractedComponentWorker();
+
+    /**
+     * Provides an extracted worker instance for the given internal handle.
+     * @param handle internal handle for the worker.
+     * @return the worker instance, possibly {@code null}.
+     * @since 1.59
+     */
+    public default ExtractedProgressUIWorker extractProgressWorker(InternalHandle handle) {
+        return getExtractedComponentWorker();
+    }
 }

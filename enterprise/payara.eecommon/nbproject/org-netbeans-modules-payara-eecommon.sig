@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.4.0
+#Version 2.10.0
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -272,8 +272,6 @@ meth public void transferFocusUpCycle()
 meth public void update(java.awt.Graphics)
 meth public void validate()
 supr java.lang.Object
-hfds FOCUS_TRAVERSABLE_DEFAULT,FOCUS_TRAVERSABLE_SET,FOCUS_TRAVERSABLE_UNKNOWN,LOCK,acc,actionListenerK,adjustmentListenerK,appContext,autoFocusTransferOnDisposal,background,backgroundEraseDisabled,boundsOp,bufferStrategy,changeSupport,coalesceEventsParams,coalesceMap,coalescingEnabled,componentListener,componentListenerK,componentOrientation,componentSerializedDataVersion,compoundShape,containerListenerK,cursor,dropTarget,enabled,eventCache,eventLog,eventMask,focusListener,focusListenerK,focusLog,focusTraversalKeyPropertyNames,focusTraversalKeys,focusTraversalKeysEnabled,focusable,font,foreground,graphicsConfig,height,hierarchyBoundsListener,hierarchyBoundsListenerK,hierarchyListener,hierarchyListenerK,ignoreRepaint,incRate,inputMethodListener,inputMethodListenerK,isAddNotifyComplete,isFocusTraversableOverridden,isInc,isPacked,itemListenerK,keyListener,keyListenerK,locale,log,maxSize,maxSizeSet,minSize,minSizeSet,mixingCutoutRegion,mixingLog,mouseListener,mouseListenerK,mouseMotionListener,mouseMotionListenerK,mouseWheelListener,mouseWheelListenerK,name,nameExplicitlySet,newEventsOnly,objectLock,ownedWindowK,parent,peer,peerFont,popups,prefSize,prefSizeSet,requestFocusController,serialVersionUID,textListenerK,valid,visible,width,windowClosingException,windowFocusListenerK,windowListenerK,windowStateListenerK,x,y
-hcls AWTTreeLock,BltSubRegionBufferStrategy,DummyRequestFocusController,FlipSubRegionBufferStrategy,ProxyCapabilities,SingleBufferStrategy
 
 CLSS public java.awt.Container
 cons public init()
@@ -358,8 +356,6 @@ meth public void transferFocusDownCycle()
 meth public void update(java.awt.Graphics)
 meth public void validate()
 supr java.awt.Component
-hfds EMPTY_ARRAY,INCLUDE_SELF,SEARCH_HEAVYWEIGHTS,component,containerListener,containerSerializedDataVersion,descendUnconditionallyWhenValidating,descendantsCount,dispatcher,eventLog,focusCycleRoot,focusTraversalPolicy,focusTraversalPolicyProvider,isJavaAwtSmartInvalidate,layoutMgr,listeningBoundsChildren,listeningChildren,log,mixingLog,modalAppContext,modalComp,numOfHWComponents,numOfLWComponents,preserveBackgroundColor,printing,printingThreads,serialPersistentFields,serialVersionUID
-hcls DropTargetEventTargetFilter,EventTargetFilter,MouseEventTargetFilter,WakingRunnable
 
 CLSS public abstract interface java.awt.MenuContainer
 meth public abstract boolean postEvent(java.awt.Event)
@@ -411,7 +407,6 @@ meth public final java.lang.String name()
 meth public java.lang.String toString()
 meth public static <%0 extends java.lang.Enum<{%%0}>> {%%0} valueOf(java.lang.Class<{%%0}>,java.lang.String)
 supr java.lang.Object
-hfds name,ordinal
 
 CLSS public abstract interface !annotation java.lang.FunctionalInterface
  anno 0 java.lang.annotation.Documented()
@@ -502,8 +497,6 @@ meth public void setContextClassLoader(java.lang.ClassLoader)
 meth public void setUncaughtExceptionHandler(java.lang.Thread$UncaughtExceptionHandler)
 meth public void start()
 supr java.lang.Object
-hfds EMPTY_STACK_TRACE,SUBCLASS_IMPLEMENTATION_PERMISSION,blocker,blockerLock,contextClassLoader,daemon,defaultUncaughtExceptionHandler,eetop,group,inheritableThreadLocals,inheritedAccessControlContext,name,nativeParkEventPointer,parkBlocker,priority,single_step,stackSize,stillborn,target,threadInitNumber,threadLocalRandomProbe,threadLocalRandomSecondarySeed,threadLocalRandomSeed,threadLocals,threadQ,threadSeqNumber,threadStatus,tid,uncaughtExceptionHandler
-hcls Caches,WeakClassKey
 
 CLSS public abstract interface java.lang.annotation.Annotation
 meth public abstract boolean equals(java.lang.Object)
@@ -692,8 +685,6 @@ meth public void unregisterKeyboardAction(javax.swing.KeyStroke)
 meth public void update(java.awt.Graphics)
 meth public void updateUI()
 supr java.awt.Container
-hfds ACTIONMAP_CREATED,ANCESTOR_INPUTMAP_CREATED,ANCESTOR_USING_BUFFER,AUTOSCROLLS_SET,COMPLETELY_OBSCURED,CREATED_DOUBLE_BUFFER,DEBUG_GRAPHICS_LOADED,FOCUS_INPUTMAP_CREATED,FOCUS_TRAVERSAL_KEYS_BACKWARD_SET,FOCUS_TRAVERSAL_KEYS_FORWARD_SET,INHERITS_POPUP_MENU,INPUT_VERIFIER_SOURCE_KEY,IS_DOUBLE_BUFFERED,IS_OPAQUE,IS_PAINTING_TILE,IS_PRINTING,IS_PRINTING_ALL,IS_REPAINTING,KEYBOARD_BINDINGS_KEY,KEY_EVENTS_ENABLED,NEXT_FOCUS,NOT_OBSCURED,OPAQUE_SET,PARTIALLY_OBSCURED,REQUEST_FOCUS_DISABLED,RESERVED_1,RESERVED_2,RESERVED_3,RESERVED_4,RESERVED_5,RESERVED_6,WHEN_IN_FOCUSED_WINDOW_BINDINGS,WIF_INPUTMAP_CREATED,WRITE_OBJ_COUNTER_FIRST,WRITE_OBJ_COUNTER_LAST,aaTextInfo,actionMap,alignmentX,alignmentY,ancestorInputMap,autoscrolls,border,clientProperties,componentObtainingGraphicsFrom,componentObtainingGraphicsFromLock,defaultLocale,flags,focusController,focusInputMap,inputVerifier,isAlignmentXSet,isAlignmentYSet,managingFocusBackwardTraversalKeys,managingFocusForwardTraversalKeys,paintingChild,popupMenu,readObjectCallbacks,revalidateRunnableScheduled,tempRectangles,uiClassID,verifyInputWhenFocusTarget,vetoableChangeSupport,windowInputMap
-hcls ActionStandin,IntVector,KeyboardState,ReadObjectCallback
 
 CLSS public abstract interface org.netbeans.modules.j2ee.deployment.plugins.spi.config.ContextRootConfiguration
 meth public abstract java.lang.String getContextRoot() throws org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException
@@ -742,7 +733,7 @@ meth public org.w3c.dom.Document getDomainDocument()
 meth public org.w3c.dom.Document getDomainDocument(java.lang.String)
 meth public void createSampleDatasource()
 supr java.lang.Object
-hfds CONST_AO,CONST_CP,CONST_DATABASE_NAME,CONST_DERBY_CONN_ATTRS,CONST_DRIVER_CLASS,CONST_DS_CLASS,CONST_ENABLED,CONST_JDBC,CONST_JNDINAME,CONST_JVM_OPTIONS,CONST_LOWER_DATABASE_NAME,CONST_LOWER_PORT_NUMBER,CONST_NAME,CONST_OBJTYPE,CONST_PASSWORD,CONST_POOLNAME,CONST_PORT_NUMBER,CONST_PROP,CONST_RES_TYPE,CONST_SERVER_NAME,CONST_SID,CONST_URL,CONST_USER,CONST_VALUE,HTTPS_PROXY_HOST,HTTPS_PROXY_PORT,HTTP_PROXY_HOST,HTTP_PROXY_NO_HOST,HTTP_PROXY_PORT,LOGGER,NBPROFILERNAME,SAMPLE_CONNPOOL,SAMPLE_DATASOURCE,XML_ENTITY,dmLoc,dmName,sysDatasources
+hfds CONST_AO,CONST_CP,CONST_DATABASE_NAME,CONST_DRIVER_CLASS,CONST_DS_CLASS,CONST_ENABLED,CONST_JDBC,CONST_JNDINAME,CONST_JVM_OPTIONS,CONST_LOWER_DATABASE_NAME,CONST_LOWER_PORT_NUMBER,CONST_NAME,CONST_OBJTYPE,CONST_PASSWORD,CONST_POOLNAME,CONST_PORT_NUMBER,CONST_PROP,CONST_RES_TYPE,CONST_SERVER_NAME,CONST_SID,CONST_URL,CONST_USER,CONST_VALUE,HTTPS_PROXY_HOST,HTTPS_PROXY_PORT,HTTP_PROXY_HOST,HTTP_PROXY_NO_HOST,HTTP_PROXY_PORT,LOGGER,NBPROFILERNAME,SAMPLE_CONNPOOL,SAMPLE_DATASOURCE,XML_ENTITY,dmLoc,dmName,sysDatasources
 hcls InnerResolver
 
 CLSS public org.netbeans.modules.payara.eecommon.api.ExecSupport
@@ -1146,6 +1137,7 @@ hfds j2eeModuleVersion,numericModuleVersion,numericSpecVersion
 CLSS public final org.netbeans.modules.payara.eecommon.api.config.J2EEVersion
 fld public final static org.netbeans.modules.payara.eecommon.api.config.J2EEVersion J2EE_1_3
 fld public final static org.netbeans.modules.payara.eecommon.api.config.J2EEVersion J2EE_1_4
+fld public final static org.netbeans.modules.payara.eecommon.api.config.J2EEVersion JAKARTAEE_8_0
 fld public final static org.netbeans.modules.payara.eecommon.api.config.J2EEVersion JAVAEE_5_0
 fld public final static org.netbeans.modules.payara.eecommon.api.config.J2EEVersion JAVAEE_6_0
 fld public final static org.netbeans.modules.payara.eecommon.api.config.J2EEVersion JAVAEE_7_0
@@ -1231,8 +1223,12 @@ supr java.lang.Enum<org.netbeans.modules.payara.eecommon.api.config.JavaEEModule
 hfds LOGGER,j2eeModuleTypeToValue,moduleType
 
 CLSS public abstract org.netbeans.modules.payara.eecommon.api.config.PayaraConfiguration
+cons protected init(org.netbeans.modules.j2ee.deployment.devmodules.api.J2eeModule,org.netbeans.modules.payara.eecommon.api.config.J2eeModuleHelper,org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI) throws org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException
 cons protected init(org.netbeans.modules.j2ee.deployment.devmodules.api.J2eeModule,org.netbeans.modules.payara.eecommon.api.config.J2eeModuleHelper,org.netbeans.modules.payara.tooling.data.PayaraVersion) throws org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException
+ anno 0 java.lang.Deprecated()
+cons protected init(org.netbeans.modules.j2ee.deployment.devmodules.api.J2eeModule,org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI) throws org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException
 cons protected init(org.netbeans.modules.j2ee.deployment.devmodules.api.J2eeModule,org.netbeans.modules.payara.tooling.data.PayaraVersion) throws org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException
+ anno 0 java.lang.Deprecated()
 cons public init()
  anno 0 java.lang.Deprecated()
 fld protected final java.io.File primaryDD
@@ -1241,6 +1237,7 @@ fld protected final org.netbeans.modules.j2ee.deployment.devmodules.api.J2eeModu
 fld protected final org.netbeans.modules.payara.eecommon.api.config.J2eeModuleHelper moduleHelper
 fld protected org.netbeans.modules.payara.eecommon.api.config.DescriptorListener descriptorListener
 fld protected org.netbeans.modules.payara.tooling.data.PayaraVersion version
+ anno 0 java.lang.Deprecated()
 innr public final static !enum ChangeOperation
 intf org.netbeans.modules.j2ee.deployment.plugins.spi.config.ContextRootConfiguration
 intf org.netbeans.modules.j2ee.deployment.plugins.spi.config.DatasourceConfiguration
@@ -1251,6 +1248,7 @@ meth protected org.netbeans.modules.j2ee.deployment.devmodules.spi.J2eeModulePro
 meth protected org.netbeans.modules.j2ee.sun.dd.api.ASDDVersion getInstalledAppServerVersion(java.io.File)
 meth protected org.netbeans.modules.j2ee.sun.dd.api.ASDDVersion getTargetAppServerVersion()
 meth protected org.netbeans.modules.j2ee.sun.dd.api.RootInterface getPayaraDDRoot(boolean) throws java.io.IOException
+meth protected org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI getPlatformVersion()
 meth protected org.openide.filesystems.FileObject getPayaraDD(java.io.File,boolean) throws java.io.IOException
 meth protected void createDefaultSunDD(java.io.File) throws java.io.IOException
 meth protected void displayError(java.lang.Exception,java.lang.String)
@@ -1265,8 +1263,12 @@ meth public abstract org.netbeans.modules.j2ee.deployment.common.api.Datasource 
 meth public abstract org.netbeans.modules.j2ee.deployment.common.api.MessageDestination createMessageDestination(java.lang.String,org.netbeans.modules.j2ee.deployment.common.api.MessageDestination$Type) throws org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException
 meth public final org.netbeans.modules.j2ee.dd.api.common.RootInterface getStandardRootDD()
 meth public final org.netbeans.modules.j2ee.dd.api.webservices.Webservices getWebServicesRootDD()
+meth public final static org.openide.util.Pair<java.io.File,java.lang.Boolean> getExistingResourceFile(org.netbeans.modules.j2ee.deployment.devmodules.api.J2eeModule,org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI)
 meth public final static org.openide.util.Pair<java.io.File,java.lang.Boolean> getExistingResourceFile(org.netbeans.modules.j2ee.deployment.devmodules.api.J2eeModule,org.netbeans.modules.payara.tooling.data.PayaraVersion)
+ anno 0 java.lang.Deprecated()
+meth public final static org.openide.util.Pair<java.io.File,java.lang.Boolean> getNewResourceFile(org.netbeans.modules.j2ee.deployment.devmodules.api.J2eeModule,org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI)
 meth public final static org.openide.util.Pair<java.io.File,java.lang.Boolean> getNewResourceFile(org.netbeans.modules.j2ee.deployment.devmodules.api.J2eeModule,org.netbeans.modules.payara.tooling.data.PayaraVersion)
+ anno 0 java.lang.Deprecated()
 meth public java.lang.String findDatasourceJndiName(java.lang.String) throws org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException
 meth public java.lang.String findDatasourceJndiNameForEjb(java.lang.String,java.lang.String) throws org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException
 meth public java.lang.String findJndiNameForEjb(java.lang.String) throws org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException
@@ -1293,7 +1295,7 @@ meth public void saveConfiguration(java.io.OutputStream) throws org.netbeans.mod
 meth public void setAppServerVersion(org.netbeans.modules.j2ee.sun.dd.api.ASDDVersion)
 meth public void setContextRoot(java.lang.String) throws org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException
 supr java.lang.Object
-hfds LOGGER,RESOURCE_FILES,RESOURCE_FILES_SUFFIX,RP,appServerVersion,configurationMap,configurationMonitor,defaultcr,deferredAppServerChange,maxASVersion,minASVersion,serverIds
+hfds LOGGER,RESOURCE_FILES,RESOURCE_FILES_SUFFIX,RP,appServerVersion,configurationMap,configurationMonitor,defaultcr,deferredAppServerChange,maxASVersion,minASVersion,platformVersion,serverIds
 
 CLSS public final static !enum org.netbeans.modules.payara.eecommon.api.config.PayaraConfiguration$ChangeOperation
  outer org.netbeans.modules.payara.eecommon.api.config.PayaraConfiguration

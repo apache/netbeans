@@ -32,8 +32,9 @@
         </folder>
 
         <folder name="ClientSide">
-            <attr name="position" intvalue="610"/>
+            <attr name="position" intvalue="1610"/>
             <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.web.clientproject.Bundle"/>
+            <attr name="templateWizardURL" urlvalue="nbresloc:/org/netbeans/modules/web/clientproject/resources/clientside-description.html"/>
 
             <file name="html.html" url="nbresloc:/org/netbeans/modules/html/templates/html.html">
                 <attr name="position" intvalue="100"/>

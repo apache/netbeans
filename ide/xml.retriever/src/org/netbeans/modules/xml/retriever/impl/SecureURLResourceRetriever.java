@@ -19,6 +19,7 @@
 
 package org.netbeans.modules.xml.retriever.impl;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -26,18 +27,21 @@ import java.net.ProxySelector;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLConnection;
+import java.security.GeneralSecurityException;
 import java.security.KeyStore;
+import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
+import java.util.stream.Stream;
 import javax.net.ssl.*;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.ErrorManager;
-import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 
 /**
@@ -51,7 +55,9 @@ public class SecureURLResourceRetriever extends URLResourceRetriever {
     
     /** Creates a new instance of SecureURLResourceRetriever */
     public SecureURLResourceRetriever() {}
+    private static final KeyStore DEFAULT_TRUST_STORE = null;
 
+    @Override
     public boolean accept(String baseAddr, String currentAddr) throws URISyntaxException {
         URI currURI = new URI(currentAddr);
         if( (currURI.isAbsolute()) && (currURI.getScheme().equalsIgnoreCase(URI_SCHEME)))
@@ -64,7 +70,8 @@ public class SecureURLResourceRetriever extends URLResourceRetriever {
         return false;
     }
     
-    public HashMap<String, InputStream> retrieveDocument(String baseAddress, String documentAddress) throws IOException,URISyntaxException{
+    @Override
+    public Map<String, InputStream> retrieveDocument(String baseAddress, String documentAddress) throws IOException,URISyntaxException{
         String effAddr = getEffectiveAddress(baseAddress, documentAddress);
         if(effAddr == null)
             return null;
@@ -72,7 +79,7 @@ public class SecureURLResourceRetriever extends URLResourceRetriever {
         HashMap<String, InputStream> result = null;
         if (acceptedCertificates==null) acceptedCertificates = new HashSet();
         InputStream is = getInputStreamOfURL(currURI.toURL(), ProxySelector.getDefault().select(currURI).get(0));
-        result = new HashMap<String, InputStream>();
+        result = new HashMap<>();
         result.put(effectiveURL.toString(), is);
         return result;
     }
@@ -87,13 +94,26 @@ public class SecureURLResourceRetriever extends URLResourceRetriever {
     
     // Install the trust manager for retriever
     private void setRetrieverTrustManager(HttpsURLConnection con) {
+        TrustManager[] defaultTrustManagers;
+        try {
+            TrustManagerFactory tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+            tmf.init(DEFAULT_TRUST_STORE);
+            defaultTrustManagers = tmf.getTrustManagers();
+        } catch (KeyStoreException | NoSuchAlgorithmException ex) {
+            defaultTrustManagers = new TrustManager[0];
+        }
         TrustManager[] trustAllCerts = new TrustManager[]{
             new X509TrustManager() {
+                @Override
                 public X509Certificate[] getAcceptedIssuers() {
                     return new X509Certificate[0];
                 }
+
+                @Override
                 public void checkClientTrusted(X509Certificate[] certs, String authType) {
                 }
+
+                @Override
                 public void checkServerTrusted(X509Certificate[] certs, String authType)
                 throws CertificateException {
                     // ask user to accept the unknown certificate
@@ -119,45 +139,48 @@ public class SecureURLResourceRetriever extends URLResourceRetriever {
                 }
             }
         };
+        TrustManager[] combinedTrustManagers = (TrustManager[]) Stream.of(defaultTrustManagers, trustAllCerts)
+                .flatMap(Stream::of)
+                .toArray(size -> new TrustManager[size]);
 
-        // #208324: proper key managers need to be passed, so let's configure at least the defaults...
-        KeyManager[] mgrs;
-        if (System.getProperty("javax.net.ssl.keyStorePassword") != null &&  // NOI18N
-            System.getProperty("javax.net.ssl.keyStore") != null) { // NOI18N
-            try {
-                KeyStore ks = KeyStore.getInstance("JKS"); // NOI18N
-                    ks.load(new FileInputStream(System.getProperty("javax.net.ssl.keyStore")), //NOI18N
-                    System.getProperty("javax.net.ssl.keyStorePassword").toCharArray() //NOI18N
-                );
-                // Set up key manager factory to use our key store
-                KeyManagerFactory kmf = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
-                kmf.init(ks,System.getProperty("javax.net.ssl.keyStorePassword").toCharArray()); // NOI18N
-                mgrs = kmf.getKeyManagers();
-            } catch (IOException ex) {
-                // this is somewhat expected, i.e. JKS file not present
-                mgrs = null;
-            } catch (java.security.GeneralSecurityException e) {
-                ErrorManager.getDefault().notify(e);
-                return;
+        KeyManager[] keyManagersFromSystemProperties = null;
+        try {
+            KeyStore keyStoreFromSystemProperties = null;
+            char[] keyStorePassword = System.getProperty("javax.net.ssl.keyStorePassword", "").toCharArray();
+            if (System.getProperty("javax.net.ssl.keyStore") != null) {
+                File keyStoreFile = new File(System.getProperty("javax.net.ssl.keyStore"));
+                if (keyStoreFile.exists()) {
+                    KeyStore keyStore = KeyStore.getInstance(System.getProperty("javax.net.ssl.keyStoreType", KeyStore.getDefaultType()));
+                    try ( InputStream keyStoreStream = new FileInputStream(keyStoreFile)) {
+                        keyStore.load(keyStoreStream, keyStorePassword);
+                    }
+
+                    keyStoreFromSystemProperties = keyStore;
+                }
             }
-        } else {
-            mgrs = null;
+
+            KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
+            keyManagerFactory.init(keyStoreFromSystemProperties, keyStorePassword);
+            keyManagersFromSystemProperties = keyManagerFactory.getKeyManagers();
+        } catch (GeneralSecurityException | IOException ex) {
+            keyManagersFromSystemProperties = new KeyManager[0];
         }
+
         try {
             SSLContext sslContext = SSLContext.getInstance("SSL"); //NOI18N
-            sslContext.init(mgrs, trustAllCerts, new java.security.SecureRandom());
+            sslContext.init(keyManagersFromSystemProperties, combinedTrustManagers, new java.security.SecureRandom());
             con.setSSLSocketFactory(sslContext.getSocketFactory());
-            con.setHostnameVerifier(new HostnameVerifier() {
-                public boolean verify(String string, SSLSession sSLSession) {
-                    // accept all hosts
-                    return true;
-                }
-            });
-        } catch (java.security.GeneralSecurityException e) {
+            con.setHostnameVerifier(this::acceptAllHosts);
+        } catch (GeneralSecurityException e) {
             ErrorManager.getDefault().notify(e);
         }
     }
-    
+
+    private boolean acceptAllHosts(String host, SSLSession sslSession) {
+        return true;
+    }
+
+    @Override
     public String getEffectiveAddress(String baseAddress, String documentAddress) throws IOException, URISyntaxException {
         URI currURI = new URI(documentAddress);
         String result = null;

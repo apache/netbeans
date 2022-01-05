@@ -52,6 +52,20 @@
 <!-- ACTUAL CHANGES BEGIN HERE: -->
 
 <changes>
+        <change id="SourceAttacher.Definer2">
+            <api name="queries"/>
+            <summary>Allows <code>SourceJavadocAttacherImplementation.Definer</code> to reject a binary root.</summary>
+            <version major="1" minor="78"/>
+            <date day="16" month="4" year="2021"/>
+            <author login="sdedic"/>
+            <compatibility semantic="compatible" source="compatible" binary="compatible"/>
+            <description>
+                <p>
+                    When multiple Definers are defined, an implementation can opt out from the source/javadoc download.
+                </p>
+            </description>
+            <class package="org.netbeans.spi.java.queries" name="SourceJavadocAttacherImplementation"/>
+        </change>
         <change id="ModulePathsConstants">
             <api name="queries"/>
             <summary>Added constants for module paths into the <code>JavaClassPathConstants</code></summary>

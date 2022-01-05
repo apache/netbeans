@@ -31,7 +31,7 @@ import org.netbeans.api.debugger.jpda.Super;
 import org.netbeans.api.debugger.jpda.This;
 import org.netbeans.api.debugger.jpda.Variable;
 import org.netbeans.modules.debugger.jpda.truffle.access.TruffleStrataProvider;
-import org.netbeans.modules.debugger.jpda.truffle.vars.TruffleScope;
+import org.netbeans.modules.debugger.jpda.truffle.vars.impl.TruffleScope;
 import org.netbeans.modules.debugger.jpda.truffle.vars.TruffleVariable;
 import org.netbeans.spi.debugger.DebuggerServiceRegistration;
 import org.netbeans.spi.debugger.DebuggerServiceRegistrations;
@@ -49,6 +49,8 @@ import org.openide.util.datatransfer.PasteType;
     @DebuggerServiceRegistration(path="netbeans-JPDASession/"+TruffleStrataProvider.TRUFFLE_STRATUM+"/WatchesView", types=ExtendedNodeModelFilter.class),
 })
 public class TruffleVariablesNodeModel implements ExtendedNodeModelFilter {
+
+    private static final String SCOPE_ICON = "org/netbeans/modules/debugger/resources/threadsView/call_stack_16.png";
 
     @Override
     public boolean canRename(ExtendedNodeModel original, Object node) throws UnknownTypeException {
@@ -88,12 +90,14 @@ public class TruffleVariablesNodeModel implements ExtendedNodeModelFilter {
     @Override
     public String getIconBaseWithExtension(ExtendedNodeModel original, Object node) throws UnknownTypeException {
         if (node instanceof TruffleVariable) {
-            String name = ((TruffleVariable) node).getName();
-            if ("this".equals(name)) {
+            TruffleVariable var = (TruffleVariable) node;
+            if (var.isReceiver()) {
                 return original.getIconBaseWithExtension(EmptyThis.INSTANCE);
             } else {
                 return original.getIconBaseWithExtension(EmptyVar.INSTANCE);
             }
+        } else if (node instanceof TruffleScope) {
+            return SCOPE_ICON;
         }
         return original.getIconBaseWithExtension(node);
     }

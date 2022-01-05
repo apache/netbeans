@@ -26,9 +26,11 @@ public class ${name} extends TestCase {
     <#-- classes:     "FooA.class,FooB.class" -->
     public static Test suite() {
         TestSuite suite = new TestSuite("${name}");
+<#if classes??>
         <#list "${classes}"?split(",") as class>
         suite.addTest(new TestSuite(${class}));
         </#list>
+</#if>
         return suite;
     }
 

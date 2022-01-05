@@ -270,7 +270,7 @@ public class CompositeComponentModel extends JsfPageModel {
             if (folder.getName().equalsIgnoreCase("resources")) { //NOI18N
                 //check if its parent is META-INF
                 FileObject parent = folder.getParent();
-                if (parent != null && parent.getNameExt().startsWith("META-INF")) { //NOI18N
+                if (parent != null && parent.getName().startsWith("META-INF")) { //NOI18N
                     //the folder seems to be the right resources folder
                     return folder;
                 }

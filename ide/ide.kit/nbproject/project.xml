@@ -195,6 +195,13 @@
                     </run-dependency>
                 </dependency>
                 <dependency>
+                    <code-name-base>org.netbeans.modules.nativeimage.api</code-name-base>
+                    <run-dependency>
+                        <release-version>0</release-version>
+                        <specification-version>0.1</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
                     <code-name-base>org.netbeans.modules.options.editor</code-name-base>
                     <run-dependency>
                         <release-version>1</release-version>

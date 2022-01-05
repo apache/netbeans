@@ -19,6 +19,9 @@
 package org.netbeans.modules.cpplite.editor.file;
 
 import java.io.IOException;
+import org.netbeans.api.annotations.common.StaticResource;
+import org.netbeans.core.spi.multiview.MultiViewElement;
+import org.netbeans.core.spi.multiview.text.MultiViewEditorElement;
 import org.netbeans.modules.textmate.lexer.api.GrammarRegistration;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
@@ -29,7 +32,9 @@ import org.openide.loaders.DataObject;
 import org.openide.loaders.DataObjectExistsException;
 import org.openide.loaders.MultiDataObject;
 import org.openide.loaders.MultiFileLoader;
+import org.openide.util.Lookup;
 import org.openide.util.NbBundle.Messages;
+import org.openide.windows.TopComponent;
 
 @Messages({
     "LBL_CPP_LOADER=Files of CPP"
@@ -38,11 +43,11 @@ import org.openide.util.NbBundle.Messages;
         displayName = "#LBL_CPP_LOADER",
         mimeType = MIMETypes.CPP,
         extension = {"cpp", "cc", "c++", "cxx"},
-        position = 1000000
+        position = 1000100
 )
 @DataObject.Registration(
         mimeType = MIMETypes.CPP,
-        iconBase = "org/netbeans/modules/cpplite/editor/file/resources/CCSrcIcon.gif",
+        iconBase = CPPDataObject.ICON,
         displayName = "#LBL_CPP_LOADER",
         position = 300
 )
@@ -96,14 +101,28 @@ import org.openide.util.NbBundle.Messages;
             path = "Loaders/" + MIMETypes.CPP + "/Actions",
             id = @ActionID(category = "System", id = "org.openide.actions.PropertiesAction"),
             position = 1400
+    ),
+    @ActionReference(
+            path = "Editors/" + MIMETypes.CPP + "/Popup",
+            id = @ActionID(category = "Refactoring", id = "org.netbeans.modules.refactoring.api.ui.WhereUsedAction"),
+            position = 1400
+    ),
+    @ActionReference(
+            path = "Editors/" + MIMETypes.CPP + "/Popup",
+            id = @ActionID(category = "Refactoring", id = "org.netbeans.modules.refactoring.api.ui.RenameAction"),
+            position = 1500,
+            separatorAfter = 1550
     )
 })
 @GrammarRegistration(grammar="resources/cpp.tmLanguage.json", mimeType=MIMETypes.CPP)
 public class CPPDataObject extends MultiDataObject {
 
+    @StaticResource
+    static final String ICON = "org/netbeans/modules/cpplite/editor/file/resources/CCSrcIcon.gif";
+
     public CPPDataObject(FileObject pf, MultiFileLoader loader) throws DataObjectExistsException, IOException {
         super(pf, loader);
-        registerEditor(MIMETypes.CPP, false);
+        registerEditor(MIMETypes.CPP, true);
     }
 
     @Override
@@ -111,4 +130,15 @@ public class CPPDataObject extends MultiDataObject {
         return 1;
     }
 
+    @MultiViewElement.Registration(
+        displayName = "#Source",
+        iconBase = CPPDataObject.ICON,
+        persistenceType = TopComponent.PERSISTENCE_ONLY_OPENED,
+        mimeType = MIMETypes.CPP,
+        preferredID = "cpp.source",
+        position = 100
+    )
+    public static MultiViewEditorElement createEditor(Lookup lkp) {
+        return new MultiViewEditorElement(lkp);
+    }
 }

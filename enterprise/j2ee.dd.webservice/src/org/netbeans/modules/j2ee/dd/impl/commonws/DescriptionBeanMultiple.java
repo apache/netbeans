@@ -25,6 +25,8 @@
 
 package org.netbeans.modules.j2ee.dd.impl.commonws;
 
+import java.util.Iterator;
+
 import org.netbeans.modules.schema2beans.Version;
 import org.netbeans.modules.j2ee.dd.api.common.*;
 import org.openide.ErrorManager;
@@ -76,7 +78,7 @@ public abstract class DescriptionBeanMultiple extends EnclosingBean implements D
     public void setAllDescriptions(java.util.Map descriptions) throws VersionNotSupportedException {
         removeAllDescriptions();
         if (descriptions!=null) {
-            java.util.Iterator keys = descriptions.keySet().iterator();
+            Iterator<String> keys = descriptions.keySet().iterator();
             int i=0;
             while (keys.hasNext()) {
                 String key = (String) keys.next();

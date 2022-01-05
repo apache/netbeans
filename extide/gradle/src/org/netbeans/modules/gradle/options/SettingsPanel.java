@@ -19,17 +19,16 @@
 
 package org.netbeans.modules.gradle.options;
 
-import org.netbeans.modules.gradle.GradleDistributionManager;
 import org.netbeans.modules.gradle.spi.GradleSettings;
 import java.awt.CardLayout;
 import java.io.File;
 import javax.swing.JFileChooser;
 import org.netbeans.spi.options.OptionsPanelController;
-import org.netbeans.modules.gradle.GradleDistributionManager.NbGradleVersion;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ItemEvent;
+import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import javax.swing.ButtonModel;
@@ -40,10 +39,12 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.ListCellRenderer;
 import javax.swing.SwingWorker;
+import javax.swing.UIManager;
 import org.netbeans.api.annotations.common.StaticResource;
+import org.netbeans.modules.gradle.api.execute.GradleDistributionManager;
+import org.netbeans.modules.gradle.api.execute.GradleDistributionManager.GradleDistribution;
 import org.openide.LifecycleManager;
 import org.openide.awt.NotificationDisplayer;
-import org.openide.util.Exceptions;
 import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle;
 import org.openide.util.NbBundle.Messages;
@@ -135,6 +136,7 @@ public class SettingsPanel extends javax.swing.JPanel {
         jLabel1 = new javax.swing.JLabel();
         cbEnableCache = new javax.swing.JCheckBox();
         cbOpenLazy = new javax.swing.JCheckBox();
+        cbBundledLoading = new javax.swing.JCheckBox();
 
         setPreferredSize(new java.awt.Dimension(723, 417));
         setLayout(new java.awt.BorderLayout());
@@ -575,6 +577,9 @@ public class SettingsPanel extends javax.swing.JPanel {
         org.openide.awt.Mnemonics.setLocalizedText(cbOpenLazy, org.openide.util.NbBundle.getMessage(SettingsPanel.class, "SettingsPanel.cbOpenLazy.text")); // NOI18N
         cbOpenLazy.setToolTipText(org.openide.util.NbBundle.getMessage(SettingsPanel.class, "SettingsPanel.cbOpenLazy.toolTipText")); // NOI18N
 
+        org.openide.awt.Mnemonics.setLocalizedText(cbBundledLoading, org.openide.util.NbBundle.getMessage(SettingsPanel.class, "SettingsPanel.cbBundledLoading.text")); // NOI18N
+        cbBundledLoading.setToolTipText(org.openide.util.NbBundle.getMessage(SettingsPanel.class, "SettingsPanel.cbBundledLoading.toolTipText")); // NOI18N
+
         javax.swing.GroupLayout pnlExperimentalLayout = new javax.swing.GroupLayout(pnlExperimental);
         pnlExperimental.setLayout(pnlExperimentalLayout);
         pnlExperimentalLayout.setHorizontalGroup(
@@ -587,7 +592,8 @@ public class SettingsPanel extends javax.swing.JPanel {
                         .addGap(6, 6, 6)
                         .addGroup(pnlExperimentalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(cbOpenLazy)
-                            .addComponent(cbEnableCache))))
+                            .addComponent(cbEnableCache)
+                            .addComponent(cbBundledLoading))))
                 .addContainerGap(423, Short.MAX_VALUE))
         );
         pnlExperimentalLayout.setVerticalGroup(
@@ -599,7 +605,9 @@ public class SettingsPanel extends javax.swing.JPanel {
                 .addComponent(cbEnableCache)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(cbOpenLazy)
-                .addContainerGap(362, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(cbBundledLoading)
+                .addContainerGap(334, Short.MAX_VALUE))
         );
 
         pnlCards.add(pnlExperimental, "Experimental");
@@ -639,12 +647,14 @@ public class SettingsPanel extends javax.swing.JPanel {
 
     @Messages("LBL_IncompatibleGradle=This version does not work with NetBeans!")
     private void cbGradleVersionItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbGradleVersionItemStateChanged
-        NbGradleVersion v = gdm.createVersion(evt.getItem().toString());
-        if ((v != null) && (evt.getStateChange() == ItemEvent.SELECTED)) {
-            if (v.isBlackListed()) {
-                lbVersionInfo.setText(Bundle.LBL_IncompatibleGradle());
-            } else {
-                lbVersionInfo.setText(null);
+        if (evt.getItem() instanceof GradleDistribution) {
+            GradleDistribution v = (GradleDistribution) evt.getItem();
+            if ((v != null) && (evt.getStateChange() == ItemEvent.SELECTED)) {
+                if (v.isBlackListed()) {
+                    lbVersionInfo.setText(Bundle.LBL_IncompatibleGradle());
+                } else {
+                    lbVersionInfo.setText(null);
+                }
             }
         }
     }//GEN-LAST:event_cbGradleVersionItemStateChanged
@@ -690,7 +700,8 @@ public class SettingsPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_btDefaultHomeActionPerformed
 
     public void setValues() {
-        final GradleSettings settings = GradleSettings.getDefault();
+        GradleSettings settings = GradleSettings.getDefault();
+        GradleExperimentalSettings experimental = GradleExperimentalSettings.getDefault();
 
         tfGradleUserHome.setText(settings.getGradleUserHome().getAbsolutePath());
 
@@ -717,8 +728,9 @@ public class SettingsPanel extends javax.swing.JPanel {
         cbDisplayDescription.setSelected(settings.isDisplayDesctiption());
         cbReuseEditorOnStackTrace.setSelected(settings.isReuseEditorOnStackTace());
 
-        cbEnableCache.setSelected(!settings.isCacheDisabled());
-        cbOpenLazy.setSelected(settings.isOpenLazy());
+        cbEnableCache.setSelected(!experimental.isCacheDisabled());
+        cbOpenLazy.setSelected(experimental.isOpenLazy());
+        cbBundledLoading.setSelected(experimental.isBundledLoading());
 
         cbPreferMaven.setSelected(settings.isPreferMaven());
 
@@ -728,23 +740,28 @@ public class SettingsPanel extends javax.swing.JPanel {
 
         cbAllowExecution.setSelectedItem(settings.getGradleExecutionRule());
 
-        new SwingWorker<List<NbGradleVersion>, Void>() {
+        new SwingWorker<List<GradleDistribution>, Void>() {
 
             @Override
-            protected List<NbGradleVersion> doInBackground() throws Exception {
-                return gdm.availableVersions(true);
+            protected List<GradleDistribution> doInBackground() throws Exception {
+                try {
+                    return gdm.availableDistributions(true);
+                } catch (IOException ex) {
+                    return gdm.availableLocalDistributions();
+                }
             }
 
             @Override
             protected void done() {
+                GradleDistribution[] items = new GradleDistribution[0];
                 try {
-                    NbGradleVersion[] items = get().toArray(new NbGradleVersion[0]);
-                    ComboBoxModel<NbGradleVersion> model = new DefaultComboBoxModel<>(items);
-                    cbGradleVersion.setModel(model);
-                    model.setSelectedItem(settings.getGradleVersion());
+                    items = get().toArray(new GradleDistribution[0]);
                 } catch (InterruptedException | ExecutionException ex) {
-                    Exceptions.printStackTrace(ex);
+                    // Something happened, let's have the combo list box empty;
                 }
+                ComboBoxModel<GradleDistribution> model = new DefaultComboBoxModel<>(items);
+                cbGradleVersion.setModel(model);
+                model.setSelectedItem(gdm.distributionFromVersion(settings.getGradleVersion()));
             }
 
         }.execute();
@@ -756,13 +773,17 @@ public class SettingsPanel extends javax.swing.JPanel {
     })
     public void applyValues() {
         GradleSettings settings = GradleSettings.getDefault();
+        GradleExperimentalSettings experimental = GradleExperimentalSettings.getDefault();
 
         if (getDefaultGradleUserHome().equals(tfGradleUserHome.getText())) {
             settings.setGradleUserHome(null);
         } else {
             settings.setGradleUserHome(new File(tfGradleUserHome.getText()));
         }
-        settings.setGradleVersion(cbGradleVersion.getSelectedItem().toString());
+        GradleDistribution distVersion = (GradleDistribution) cbGradleVersion.getSelectedItem();
+        if (distVersion != null) {
+            settings.setGradleVersion(distVersion.getVersion());
+        }
         settings.setDistributionHome(tfUseCustomGradle.getText());
         settings.setWrapperPreferred(cbPreferWrapper.isSelected());
         boolean useCustomGradle = bgUsedDistribution.getSelection() == rbUseCustomGradle.getModel();
@@ -782,8 +803,9 @@ public class SettingsPanel extends javax.swing.JPanel {
         settings.setDisplayDescription(cbDisplayDescription.isSelected());
         settings.setReuseEditorOnStackTrace(cbReuseEditorOnStackTrace.isSelected());
 
-        settings.setCacheDisabled(!cbEnableCache.isSelected());
-        settings.setOpenLazy(cbOpenLazy.isSelected());
+        experimental.setCacheDisabled(!cbEnableCache.isSelected());
+        experimental.setOpenLazy(cbOpenLazy.isSelected());
+        experimental.setBundledLoading(cbBundledLoading.isSelected());
 
         settings.setDownloadLibs((GradleSettings.DownloadLibsRule) cbDownloadLibs.getSelectedItem());
         settings.setDownloadSources((GradleSettings.DownloadMiscRule) cbDownloadSources.getSelectedItem());
@@ -804,6 +826,7 @@ public class SettingsPanel extends javax.swing.JPanel {
 
     public boolean hasChanges() {
         GradleSettings settings = GradleSettings.getDefault();
+        GradleExperimentalSettings experimental = GradleExperimentalSettings.getDefault();
         boolean isChanged = !settings.getDistributionHome().equals(tfUseCustomGradle.getText());
         isChanged |= settings.isWrapperPreferred() != cbPreferWrapper.isSelected();
         isChanged |= !settings.getGradleVersion().equals(String.valueOf(cbGradleVersion.getSelectedItem()));
@@ -827,8 +850,9 @@ public class SettingsPanel extends javax.swing.JPanel {
         isChanged |= settings.isReuseOutputTabs() != cbReuseOutputTabs.isSelected();
         isChanged |= settings.isReuseEditorOnStackTace() != cbReuseEditorOnStackTrace.isSelected();
 
-        isChanged |= settings.isCacheDisabled() == cbEnableCache.isSelected();
-        isChanged |= settings.isOpenLazy() != cbOpenLazy.isSelected();
+        isChanged |= experimental.isCacheDisabled() == cbEnableCache.isSelected();
+        isChanged |= experimental.isOpenLazy() != cbOpenLazy.isSelected();
+        isChanged |= experimental.isBundledLoading() != cbBundledLoading.isSelected();
 
         isChanged |= settings.isPreferMaven() != cbPreferMaven.isSelected();
 
@@ -842,6 +866,8 @@ public class SettingsPanel extends javax.swing.JPanel {
     }
 
     private class VersionCellRenderer extends DefaultListCellRenderer {
+        final Color blackListColor = UIManager.getColor("nb.errorForeground");         //NOI18N
+        final Color unavailableColor = UIManager.getColor("Label.disabledForeground"); //NOI18N
         @SuppressWarnings("rawtypes")
         final ListCellRenderer delegate;
         @SuppressWarnings("rawtypes")
@@ -860,25 +886,22 @@ public class SettingsPanel extends javax.swing.JPanel {
             if (cmp instanceof JLabel) {
                 JLabel label = (JLabel) cmp;
                 label.setHorizontalAlignment(RIGHT);
-                if (value != null) {
-                    NbGradleVersion version = gdm.createVersion(value.toString());
-                    if (!version.isAvailable()) {
+                if (value != null && value instanceof GradleDistribution) {
+                    GradleDistribution dist = (GradleDistribution) value;
+                    label.setText(dist.getVersion());
+                    if (!dist.isAvailable()) {
                         label.setToolTipText(Bundle.NbGradleVersion_autoInstall_TXT());
-                        label.setForeground(Color.gray);
+                        label.setForeground(unavailableColor);
                     }
-                    if (version.isBlackListed()) {
+                    if (dist.isBlackListed()) {
                         label.setToolTipText(Bundle.NbGradleVersion_blacklist_TXT());
-                        label.setForeground(Color.red);
+                        label.setForeground(blackListColor);
                     }
                 }
             }
             return cmp;
         }
 
-    }
-
-    private static String getRawGradleUserHome() {
-        return GradleSettings.getDefault().getPreferences().get(GradleSettings.PROP_GRADLE_USER_HOME, null);
     }
 
     private static String getDefaultGradleUserHome() {
@@ -893,13 +916,14 @@ public class SettingsPanel extends javax.swing.JPanel {
     private javax.swing.JButton btUseCustomGradle;
     private javax.swing.JComboBox<GradleSettings.GradleExecutionRule> cbAllowExecution;
     private javax.swing.JCheckBox cbAlwaysShowOutput;
+    private javax.swing.JCheckBox cbBundledLoading;
     private javax.swing.JCheckBox cbConfigureOnDemand;
     private javax.swing.JCheckBox cbDisplayDescription;
     private javax.swing.JComboBox<GradleSettings.DownloadMiscRule> cbDownloadJavadoc;
     private javax.swing.JComboBox<GradleSettings.DownloadLibsRule> cbDownloadLibs;
     private javax.swing.JComboBox<GradleSettings.DownloadMiscRule> cbDownloadSources;
     private javax.swing.JCheckBox cbEnableCache;
-    private javax.swing.JComboBox<NbGradleVersion> cbGradleVersion;
+    private javax.swing.JComboBox<GradleDistribution> cbGradleVersion;
     private javax.swing.JCheckBox cbHideEmptyConfig;
     private javax.swing.JCheckBox cbNoRebuild;
     private javax.swing.JCheckBox cbOffline;

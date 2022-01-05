@@ -844,7 +844,7 @@ public final class EarProjectProperties {
             return;
         }
         
-        for( Iterator/*<Project>*/ it = spp.getSubprojects().iterator(); it.hasNext(); ) {
+        for( Iterator<? extends Project> it = spp.getSubprojects().iterator(); it.hasNext(); ) {
             Project sp = (Project) it.next();
             if (ProjectUtils.hasSubprojectCycles(project, sp)) {
                 Logger.getLogger("global").log(Level.WARNING, "There would be cyclic " + // NOI18N

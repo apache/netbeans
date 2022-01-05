@@ -1,0 +1,11 @@
+Code completion result for source line:
+::|testStaticReturnNullableTypeParentStatic() // parent test17
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     testSelfReturnNullableTypePare  [STATIC]   ParentClass
+METHOD     testSelfReturnTypeParentStatic  [STATIC]   ParentClass
+METHOD     testSelfReturnUnionTypeParentS  [STATIC]   ParentClass
+METHOD     testStaticReturnNullableTypePa  [STATIC]   ParentClass
+METHOD     testStaticReturnTypeParentStat  [STATIC]   ParentClass
+METHOD     testStaticReturnUnionTypeParen  [STATIC]   ParentClass
+METHOD     testStaticSelfReturnUnionTypeP  [STATIC]   ParentClass
+CONSTANT   class \ParentClass              [PUBLIC]   Magic Constant

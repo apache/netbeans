@@ -18,27 +18,40 @@
  */
 package org.netbeans.modules.php.dbgp;
 
-import java.awt.Color;
-import java.awt.Font;
-import javax.swing.Icon;
-import javax.swing.JEditorPane;
+import java.awt.Cursor;
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.net.MalformedURLException;
+import java.net.URL;
+import javax.swing.GroupLayout;
+import javax.swing.JButton;
 import javax.swing.JLabel;
-import javax.swing.UIManager;
-import javax.swing.event.HyperlinkEvent;
-import javax.swing.event.HyperlinkListener;
+import javax.swing.JPanel;
+import javax.swing.LayoutStyle;
+import org.netbeans.modules.php.dbgp.breakpoints.Utils;
 import org.netbeans.modules.php.project.api.PhpOptions;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.awt.HtmlBrowser;
+import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 
 /**
  *
- * @author  Radek Matous
+ * @author Radek Matous
  */
-public class ConnectionErrMessage extends javax.swing.JPanel {
+public class ConnectionErrMessage extends JPanel {
+
+    private static final long serialVersionUID = -2227584113811663220L;
     private final String message;
+    private static final String NEWLINE = System.getProperty("line.separator"); // NOI18N
+
     public static void showMe(int seconds) {
         ConnectionErrMessage panel = new ConnectionErrMessage(seconds);
 
@@ -48,121 +61,248 @@ public class ConnectionErrMessage extends javax.swing.JPanel {
         DialogDisplayer.getDefault().createDialog(descr2).setVisible(true);
     }
 
-    /** Creates new form ConnectionErrMessage */
+    /**
+     * Creates new form ConnectionErrMessage.
+     */
     private ConnectionErrMessage(int seconds) {
         message = createMessage(seconds);
         initComponents();
+        emptyLabel.setText(" "); // NOI18N to avoid hiding the bottom components
     }
 
+    @NbBundle.Messages({
+        "ConnectionErrMessage.xdebug.remote_host=xdebug.remote_host=localhost (or hostname)", // xdebug2
+        "# {0} - port",
+        "ConnectionErrMessage.xdebug.remote_port=xdebug.remote_port={0} (default port: 9000)", // xdebug2
+        "ConnectionErrMessage.xdebug.client_host=xdebug.client_host=localhost (or hostname)", // xdebug3
+        "# {0} - port",
+        "ConnectionErrMessage.xdebug.client_port=xdebug.client_port={0} (default port: 9003)", // xdebug3
+    })
     private static String createMessage(int seconds) {
-        int debuggerPort = PhpOptions.getInstance().getDebuggerPort();
-        final String entry1 = "<li>"+NbBundle.getMessage(ConnectionErrMessage.class, "MSG_ErrDebugSessionEntry1")+"</li>";//NOI18N
-        final String entry2 = "<li>"+NbBundle.getMessage(ConnectionErrMessage.class, "MSG_ErrDebugSessionEntry2")+"</li>";//NOI18N
-        final String entry3 = "<li>"+NbBundle.getMessage(ConnectionErrMessage.class, "MSG_ErrDebugSessionEntry3")+"</li>";//NOI18N
-        final String entry4 = "<li>"+NbBundle.getMessage(ConnectionErrMessage.class, "MSG_ErrDebugSessionEntry4",
-                String.valueOf(debuggerPort))+"</li>";//NOI18N
-        final String entries = "<ul>"+entry1+entry2+entry3+entry4+"</ul>";
-        return "<html>"+NbBundle.getMessage(ConnectionErrMessage.class, "MSG_ErrDebugSession", seconds,entries)+"</html>";//NOI18N
+        String debuggerPort = String.valueOf(PhpOptions.getInstance().getDebuggerPort());
+        String xdebugIdekey = String.format("xdebug.idekey=\"%s\"", PhpOptions.getInstance().getDebuggerSessionId()); // NOI18N
+        StringBuilder sb = new StringBuilder();
+        sb.append("<h4>Xdebug 2</h4>"); // NOI18N
+        sb.append("<ul>"); // NOI18N
+        sb.append("<li>").append("xdebug.remote_enable=on").append("</li>"); // NOI18N
+        sb.append("<li>").append("xdebug.remote_handler=dbgp").append("</li>"); // NOI18N
+        sb.append("<li>").append(Bundle.ConnectionErrMessage_xdebug_remote_host()).append("</li>"); // NOI18N
+        sb.append("<li>").append(Bundle.ConnectionErrMessage_xdebug_remote_port(debuggerPort)).append("</li>"); // NOI18N
+        sb.append("<li>").append(xdebugIdekey).append("</li>"); // NOI18N
+        sb.append("</ul>"); // NOI18N
+        sb.append("<h4>Xdebug 3</h4>"); // NOI18N
+        sb.append("<ul>"); // NOI18N
+        sb.append("<li>").append("xdebug.mode=debug").append("</li>"); // NOI18N
+        sb.append("<li>").append(Bundle.ConnectionErrMessage_xdebug_client_host()).append("</li>"); // NOI18N
+        sb.append("<li>").append(Bundle.ConnectionErrMessage_xdebug_client_port(debuggerPort)).append("</li>"); // NOI18N
+        sb.append("<li>").append(xdebugIdekey).append("</li>"); // NOI18N
+        sb.append("</ul>"); // NOI18N
+        return "<html>" + NbBundle.getMessage(ConnectionErrMessage.class, "MSG_ErrDebugSession", seconds, sb.toString()) + "</html>";//NOI18N
     }
 
-    private static JLabel createIconLabel() {
-        final Icon icon = UIManager.getIcon("OptionPane.informationIcon");//NOI18N
-        return (icon != null) ? new JLabel(icon) : new JLabel();
-    }
-
-    /** This method is called from within the constructor to
-     * initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is
-     * always regenerated by the Form Editor.
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        messageIconLabel = createIconLabel();
-        messageTextLabel = new javax.swing.JLabel();
-        link = HyperlinkPane.create();
+        messageTextLabel = new JLabel();
+        noteLabel = new JLabel();
+        debuggerPortOptionLabel = new JLabel();
+        optionsLabel = new JLabel();
+        learnMoreLabel = new JLabel();
+        emptyLabel = new JLabel();
+        copySettingsLabel = new JLabel();
+        copySettingsXdebug2Button = new JButton();
+        copySettingsXdebug3Button = new JButton();
 
         messageTextLabel.setText(message);
 
-        link.setEditable(false);
+        noteLabel.setText("<html><i>Note:</i></html>");
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        debuggerPortOptionLabel.setText("<html>If you use Xdebug 2 with default port, please set 9000 to the Debugger Port option.</html>");
+
+        optionsLabel.setText("<html><a href=\"#\">Options...</a></html>");
+        optionsLabel.addMouseListener(new MouseAdapter() {
+            public void mousePressed(MouseEvent evt) {
+                optionsLabelMousePressed(evt);
+            }
+            public void mouseEntered(MouseEvent evt) {
+                optionsLabelMouseEntered(evt);
+            }
+        });
+
+        learnMoreLabel.setText("<html><a href=\"#\">Learn more about Xdebug</a>");
+        learnMoreLabel.addMouseListener(new MouseAdapter() {
+            public void mousePressed(MouseEvent evt) {
+                learnMoreLabelMousePressed(evt);
+            }
+            public void mouseEntered(MouseEvent evt) {
+                learnMoreLabelMouseEntered(evt);
+            }
+        });
+
+        emptyLabel.setText("EMPTY"); // NOI18N
+
+        copySettingsLabel.setText("Copy example settings to clipboard:");
+
+        copySettingsXdebug2Button.setText("Xdebug 2");
+        copySettingsXdebug2Button.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+                copySettingsXdebug2ButtonActionPerformed(evt);
+            }
+        });
+
+        copySettingsXdebug3Button.setText("Xdebug 3");
+        copySettingsXdebug3Button.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+                copySettingsXdebug3ButtonActionPerformed(evt);
+            }
+        });
+
+        GroupLayout layout = new GroupLayout(this);
         this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        layout.setHorizontalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(messageIconLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(link)
-                    .addComponent(messageTextLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 482, Short.MAX_VALUE))
-                .addContainerGap())
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(24, 24, 24)
+                        .addComponent(optionsLabel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                            .addComponent(noteLabel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                            .addComponent(learnMoreLabel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                            .addComponent(emptyLabel)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(12, 12, 12)
+                                .addComponent(debuggerPortOptionLabel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(messageTextLabel, GroupLayout.PREFERRED_SIZE, 550, GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(copySettingsLabel)
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(copySettingsXdebug2Button)
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(copySettingsXdebug3Button)))
+                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        layout.setVerticalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(messageTextLabel)
-                    .addComponent(messageIconLabel))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(link, javax.swing.GroupLayout.DEFAULT_SIZE, 39, Short.MAX_VALUE)
+                .addComponent(messageTextLabel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                    .addComponent(copySettingsLabel)
+                    .addComponent(copySettingsXdebug2Button)
+                    .addComponent(copySettingsXdebug3Button))
+                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(noteLabel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                .addGap(7, 7, 7)
+                .addComponent(debuggerPortOptionLabel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(optionsLabel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(learnMoreLabel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(emptyLabel)
                 .addContainerGap())
         );
 
         messageTextLabel.getAccessibleContext().setAccessibleDescription("Error Message");
-        link.getAccessibleContext().setAccessibleName("Error Message");
 
         getAccessibleContext().setAccessibleName("Error Message Form");
         getAccessibleContext().setAccessibleDescription("Error Message Form");
     }// </editor-fold>//GEN-END:initComponents
 
-    private static class HyperlinkPane extends JEditorPane implements HyperlinkListener {
-        static HyperlinkPane create() {
-            String url = NbBundle.getMessage(ConnectionErrMessage.class, "MSG_ErrDebugSessionLinkURL");//NOI18N
-            String descr = NbBundle.getMessage(ConnectionErrMessage.class, "MSG_ErrDebugSessionLinkDescription");//NOI18N
-            String text = "<a href=\""+url+"\">"+descr+"</a>";//NOI18N
-            Font font = UIManager.getFont("Label.font");//NOI18N
-            Color color = UIManager.getColor("Label.background");
-            if (font == null || color == null ) {
-                JLabel lbl = new JLabel();
-                font = lbl.getFont();
-                color = lbl.getBackground();
-            }
-            HyperlinkPane retval = new HyperlinkPane("<html><body style=\"font-size: " +//NOI18N
-                    font.getSize() + "pt; font-family: " + font.getName() + ";\">" + text + "</body></html>");//NOI18N
-            retval.setBackground(color);//NOI18N
-            retval.setEditable(false);
-            retval.setFocusable(false);
-            return retval;
-        }
+    private void learnMoreLabelMouseEntered(MouseEvent evt) {//GEN-FIRST:event_learnMoreLabelMouseEntered
+        setHandCursor(evt);
+    }//GEN-LAST:event_learnMoreLabelMouseEntered
 
-        private HyperlinkPane(String text) {
-            super("text/html", text);//NOI18N
-            addHyperlinkListener(this);
-        }
+    private void learnMoreLabelMousePressed(MouseEvent evt) {//GEN-FIRST:event_learnMoreLabelMousePressed
+        showUrl("https://xdebug.org/docs"); // NOI18N
+    }//GEN-LAST:event_learnMoreLabelMousePressed
 
-        @Override
-        public synchronized void addHyperlinkListener(HyperlinkListener listener) {
-            super.addHyperlinkListener(listener);
-        }
+    private void optionsLabelMouseEntered(MouseEvent evt) {//GEN-FIRST:event_optionsLabelMouseEntered
+        setHandCursor(evt);
+    }//GEN-LAST:event_optionsLabelMouseEntered
 
-        @Override
-        public void hyperlinkUpdate(HyperlinkEvent hlevt) {
-            if (HyperlinkEvent.EventType.ACTIVATED == hlevt.getEventType()) {
-                assert hlevt.getURL() != null;
-                HtmlBrowser.URLDisplayer displayer = HtmlBrowser.URLDisplayer.getDefault();
-                assert displayer != null : "HtmlBrowser.URLDisplayer found.";
-                displayer.showURL(hlevt.getURL());
-            }
+    private void optionsLabelMousePressed(MouseEvent evt) {//GEN-FIRST:event_optionsLabelMousePressed
+        Utils.openPhpOptionsDialog();
+    }//GEN-LAST:event_optionsLabelMousePressed
+
+    @NbBundle.Messages({
+        "# {0} - settings",
+        "ConnectionErrMessage.copied=Copied.\n{0}",
+    })
+    private void copySettingsXdebug2ButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_copySettingsXdebug2ButtonActionPerformed
+        copySettings(createXdebug2Settings());
+    }//GEN-LAST:event_copySettingsXdebug2ButtonActionPerformed
+
+    private void copySettingsXdebug3ButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_copySettingsXdebug3ButtonActionPerformed
+        copySettings(createXdebug3Settings());
+    }//GEN-LAST:event_copySettingsXdebug3ButtonActionPerformed
+
+    private void showUrl(String url) {
+        try {
+            HtmlBrowser.URLDisplayer.getDefault().showURL(new URL(url));
+        } catch (MalformedURLException ex) {
+            Exceptions.printStackTrace(ex);
         }
     }
 
+    private void setHandCursor(MouseEvent evt) {
+        evt.getComponent().setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+    }
+
+    private void copySettings(String settings) {
+        copyToClipboard(settings);
+        showDialog(Bundle.ConnectionErrMessage_copied(settings));
+    }
+
+    private void copyToClipboard(String contents) {
+        StringSelection selection = new StringSelection(contents);
+        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+        clipboard.setContents(selection, selection);
+    }
+
+    private void showDialog(String message) {
+        DialogDisplayer.getDefault().notify(new NotifyDescriptor.Message(message));
+    }
+
+    private String createXdebug2Settings() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("xdebug.remote_enable=on").append(NEWLINE); // NOI18N
+        sb.append("xdebug.remote_handler=dbgp").append(NEWLINE); // NOI18N
+        sb.append("xdebug.client_port=localhost").append(NEWLINE); // NOI18N
+        sb.append("xdebug.remote_port=").append(String.valueOf(PhpOptions.getInstance().getDebuggerPort())).append(NEWLINE); // NOI18N
+        sb.append(String.format("xdebug.idekey=\"%s\"", PhpOptions.getInstance().getDebuggerSessionId())); // NOI18N
+        return sb.toString();
+    }
+
+    private String createXdebug3Settings() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("xdebug.mode=debug").append(NEWLINE); // NOI18N
+        sb.append("xdebug.client_host=localhost").append(NEWLINE); // NOI18N
+        sb.append("xdebug.client_port=").append(String.valueOf(PhpOptions.getInstance().getDebuggerPort())).append(NEWLINE); // NOI18N
+        sb.append(String.format("xdebug.idekey=\"%s\"", PhpOptions.getInstance().getDebuggerSessionId())); // NOI18N
+        return sb.toString();
+    }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JEditorPane link;
-    private javax.swing.JLabel messageIconLabel;
-    private javax.swing.JLabel messageTextLabel;
+    private JLabel copySettingsLabel;
+    private JButton copySettingsXdebug2Button;
+    private JButton copySettingsXdebug3Button;
+    private JLabel debuggerPortOptionLabel;
+    private JLabel emptyLabel;
+    private JLabel learnMoreLabel;
+    private JLabel messageTextLabel;
+    private JLabel noteLabel;
+    private JLabel optionsLabel;
     // End of variables declaration//GEN-END:variables
 }

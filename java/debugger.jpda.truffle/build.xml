@@ -23,7 +23,7 @@
     <import file="../../nbbuild/templates/projectized.xml"/>
 
     <target name="build-init" depends="projectized.build-init">
-        <property name="truffle-backend.cp" value="${module.classpath}:${truffle-backend.cp.extra}"/>
+        <property name="truffle-backend.cp" value="${module.classpath}"/>
     </target>
 
     <target name="compile-truffle-backend" depends="init">

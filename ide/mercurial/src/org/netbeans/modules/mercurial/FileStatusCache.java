@@ -290,7 +290,7 @@ public class FileStatusCache {
                             upToDateAccess = 0;
                             if (LOG_UPTODATE_FILES.isLoggable(Level.FINE)) {
                                 synchronized (upToDateFiles) {
-                                    LOG_UPTODATE_FILES.log(Level.FINE, "Another {0} U2D files added: {1}", new Object[] {new Integer(UTD_NOTIFY_NUMBER), upToDateFiles});
+                                    LOG_UPTODATE_FILES.log(Level.FINE, "Another {0} U2D files added: {1}", new Object[] {Integer.valueOf(UTD_NOTIFY_NUMBER), upToDateFiles});
                                 }
                             }
                         }

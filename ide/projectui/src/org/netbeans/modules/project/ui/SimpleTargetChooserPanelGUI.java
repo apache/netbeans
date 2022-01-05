@@ -551,8 +551,8 @@ public class SimpleTargetChooserPanelGUI extends javax.swing.JPanel implements A
         public @Override Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
             if (value instanceof SourceGroup) {
                 SourceGroup group = (SourceGroup)value;
-                String projectDisplayName = ProjectUtils.getInformation( project ).getDisplayName();
                 String groupDisplayName = group.getDisplayName();
+                String projectDisplayName = project != null ? ProjectUtils.getInformation( project ).getDisplayName() : groupDisplayName;
                 if ( projectDisplayName.equals( groupDisplayName ) ) {
                     setText( groupDisplayName );
                 }

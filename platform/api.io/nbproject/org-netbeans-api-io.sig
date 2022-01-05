@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.11
+#Version 1.17
 
 CLSS public abstract interface java.io.Closeable
 intf java.lang.AutoCloseable
@@ -55,7 +55,6 @@ meth public void write(int)
 meth public void write(java.lang.String)
 meth public void write(java.lang.String,int,int)
 supr java.io.Writer
-hfds autoFlush,formatter,lineSeparator,psOut,trouble
 
 CLSS public abstract interface java.io.Serializable
 
@@ -77,7 +76,6 @@ meth public void write(int) throws java.io.IOException
 meth public void write(java.lang.String) throws java.io.IOException
 meth public void write(java.lang.String,int,int) throws java.io.IOException
 supr java.lang.Object
-hfds WRITE_BUFFER_SIZE,writeBuffer
 
 CLSS public abstract interface java.lang.Appendable
 meth public abstract java.lang.Appendable append(char) throws java.io.IOException
@@ -105,7 +103,6 @@ meth public final java.lang.String name()
 meth public java.lang.String toString()
 meth public static <%0 extends java.lang.Enum<{%%0}>> {%%0} valueOf(java.lang.Class<{%%0}>,java.lang.String)
 supr java.lang.Object
-hfds name,ordinal
 
 CLSS public java.lang.Object
 cons public init()

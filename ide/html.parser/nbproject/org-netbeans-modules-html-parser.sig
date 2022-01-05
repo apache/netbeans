@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.42.0
+#Version 1.48.0
 
 CLSS public com.ibm.icu.impl.Assert
 cons public init()
@@ -7783,7 +7783,6 @@ meth public void close() throws java.io.IOException
 meth public void mark(int)
 meth public void reset() throws java.io.IOException
 supr java.lang.Object
-hfds MAX_SKIP_BUFFER_SIZE
 
 CLSS public abstract java.io.Reader
 cons protected init()
@@ -7802,7 +7801,6 @@ meth public long skip(long) throws java.io.IOException
 meth public void mark(int) throws java.io.IOException
 meth public void reset() throws java.io.IOException
 supr java.lang.Object
-hfds maxSkipBufferSize,skipBuffer
 
 CLSS public abstract interface java.io.Serializable
 
@@ -7977,8 +7975,6 @@ meth public static java.lang.Character valueOf(char)
 meth public static java.lang.String getName(int)
 meth public static java.lang.String toString(char)
 supr java.lang.Object
-hfds ERROR,serialVersionUID,value
-hcls CharacterCache
 
 CLSS public static java.lang.Character$Subset
  outer java.lang.Character
@@ -7987,7 +7983,6 @@ meth public final boolean equals(java.lang.Object)
 meth public final int hashCode()
 meth public final java.lang.String toString()
 supr java.lang.Object
-hfds name
 
 CLSS public abstract interface java.lang.Cloneable
 
@@ -8009,7 +8004,6 @@ meth public final java.lang.String name()
 meth public java.lang.String toString()
 meth public static <%0 extends java.lang.Enum<{%%0}>> {%%0} valueOf(java.lang.Class<{%%0}>,java.lang.String)
 supr java.lang.Object
-hfds name,ordinal
 
 CLSS public java.lang.Exception
 cons protected init(java.lang.String,java.lang.Throwable,boolean,boolean)
@@ -8018,7 +8012,6 @@ cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.Throwable)
 cons public init(java.lang.Throwable)
 supr java.lang.Throwable
-hfds serialVersionUID
 
 CLSS public abstract interface !annotation java.lang.FunctionalInterface
  anno 0 java.lang.annotation.Documented()
@@ -8032,7 +8025,6 @@ cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.Throwable)
 cons public init(java.lang.Throwable)
 supr java.lang.RuntimeException
-hfds serialVersionUID
 
 CLSS public abstract interface java.lang.Iterable<%0 extends java.lang.Object>
 meth public abstract java.util.Iterator<{java.lang.Iterable%0}> iterator()
@@ -8049,7 +8041,6 @@ meth public abstract long longValue()
 meth public byte byteValue()
 meth public short shortValue()
 supr java.lang.Object
-hfds serialVersionUID
 
 CLSS public java.lang.Object
 cons public init()
@@ -8075,7 +8066,6 @@ cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.Throwable)
 cons public init(java.lang.Throwable)
 supr java.lang.Exception
-hfds serialVersionUID
 
 CLSS public java.lang.Throwable
 cons protected init(java.lang.String,java.lang.Throwable,boolean,boolean)
@@ -8098,8 +8088,6 @@ meth public void printStackTrace(java.io.PrintStream)
 meth public void printStackTrace(java.io.PrintWriter)
 meth public void setStackTrace(java.lang.StackTraceElement[])
 supr java.lang.Object
-hfds CAUSE_CAPTION,EMPTY_THROWABLE_ARRAY,NULL_CAUSE_MESSAGE,SELF_SUPPRESSION_MESSAGE,SUPPRESSED_CAPTION,SUPPRESSED_SENTINEL,UNASSIGNED_STACK,backtrace,cause,detailMessage,serialVersionUID,stackTrace,suppressedExceptions
-hcls PrintStreamOrWriter,SentinelHolder,WrappedPrintStream,WrappedPrintWriter
 
 CLSS public abstract interface java.lang.annotation.Annotation
 meth public abstract boolean equals(java.lang.Object)
@@ -8153,7 +8141,6 @@ meth public final boolean equals(java.lang.Object)
 meth public final int hashCode()
 meth public java.lang.String toString()
 supr java.lang.Object
-hfds instanceMap,name,serialVersionUID
 
 CLSS public abstract interface java.text.CharacterIterator
 fld public final static char DONE = '\uffff'
@@ -8181,20 +8168,16 @@ meth public java.lang.Object clone()
 meth public java.lang.Object parseObject(java.lang.String) throws java.text.ParseException
 meth public java.text.AttributedCharacterIterator formatToCharacterIterator(java.lang.Object)
 supr java.lang.Object
-hfds serialVersionUID
-hcls FieldDelegate
 
 CLSS public static java.text.Format$Field
  outer java.text.Format
 cons protected init(java.lang.String)
 supr java.text.AttributedCharacterIterator$Attribute
-hfds serialVersionUID
 
 CLSS public java.text.ParseException
 cons public init(java.lang.String,int)
 meth public int getErrorOffset()
 supr java.lang.Exception
-hfds errorOffset,serialVersionUID
 
 CLSS public abstract interface java.util.Comparator<%0 extends java.lang.Object>
  anno 0 java.lang.FunctionalInterface()
@@ -8236,7 +8219,6 @@ meth protected java.util.Set<java.lang.String> handleKeySet()
 meth public final java.lang.Object handleGetObject(java.lang.String)
 meth public java.util.Enumeration<java.lang.String> getKeys()
 supr java.util.ResourceBundle
-hfds lookup
 
 CLSS public abstract java.util.ResourceBundle
 cons public init()
@@ -8262,8 +8244,6 @@ meth public java.util.Set<java.lang.String> keySet()
 meth public static java.util.ResourceBundle getBundle(java.lang.String,java.util.Locale,java.lang.ClassLoader)
 meth public static java.util.ResourceBundle getBundle(java.lang.String,java.util.Locale,java.lang.ClassLoader,java.util.ResourceBundle$Control)
 supr java.lang.Object
-hfds INITIAL_CACHE_SIZE,NONEXISTENT_BUNDLE,cacheKey,cacheList,expired,keySet,locale,name,providers,referenceQueue
-hcls BundleReference,CacheKey,CacheKeyReference,LoaderReference,NoFallbackControl,RBClassLoader,SingleFormatControl
 
 CLSS public abstract java.util.TimeZone
 cons public init()
@@ -8295,7 +8275,6 @@ meth public static java.util.TimeZone getTimeZone(java.time.ZoneId)
 meth public static void setDefault(java.util.TimeZone)
 meth public void setID(java.lang.String)
 supr java.lang.Object
-hfds GMT_ID,GMT_ID_LENGTH,ID,NO_TIMEZONE,ONE_DAY,ONE_HOUR,ONE_MINUTE,defaultTimeZone,mainAppContextDefault,serialVersionUID
 
 CLSS public java.util.logging.Logger
 cons protected init(java.lang.String,java.lang.String)
@@ -8367,8 +8346,6 @@ meth public void throwing(java.lang.String,java.lang.String,java.lang.Throwable)
 meth public void warning(java.lang.String)
 meth public void warning(java.util.function.Supplier<java.lang.String>)
 supr java.lang.Object
-hfds NO_RESOURCE_BUNDLE,SYSTEM_BUNDLE,SYSTEM_LOGGER_RB_NAME,anonymous,callersClassLoaderRef,catalog,catalogLocale,catalogName,emptyHandlers,filter,handlers,isSystemLogger,kids,levelObject,levelValue,loggerBundle,manager,name,offValue,parent,treeLock,useParentHandlers
-hcls LoggerBundle,SystemLoggerHelper
 
 CLSS public abstract javax.xml.parsers.DocumentBuilder
 cons protected init()

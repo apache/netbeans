@@ -192,7 +192,7 @@ public class BreakpointsReader implements Properties.Reader, PropertyChangeListe
                 ),
                 properties.getInt (
                     ExceptionBreakpoint.PROP_CATCH_TYPE, 
-                    ExceptionBreakpoint.TYPE_EXCEPTION_CATCHED_UNCATCHED
+                    ExceptionBreakpoint.TYPE_EXCEPTION_CAUGHT_UNCAUGHT
                 )
             );
             eb.setCondition (
@@ -325,20 +325,14 @@ public class BreakpointsReader implements Properties.Reader, PropertyChangeListe
             if (tgp != null) {
                 FileObject fo = tgp.getFileObject();
                 if (fo != null) {
-                    try {
-                        URL url = fo.getURL();
-                        fileURL = url.toExternalForm();
-                    } catch (FileStateInvalidException ex) {
-                    }
+                    URL url = fo.toURL();
+                    fileURL = url.toExternalForm();
                 }
                 Project project = tgp.getProject();
                 if (project != null) {
                     fo = project.getProjectDirectory();
-                    try {
-                        URL url = fo.getURL();
+                        URL url = fo.toURL();
                         projectURL = url.toExternalForm();
-                    } catch (FileStateInvalidException ex) {
-                    }
                 }
                 type = tgp.getType();
             }

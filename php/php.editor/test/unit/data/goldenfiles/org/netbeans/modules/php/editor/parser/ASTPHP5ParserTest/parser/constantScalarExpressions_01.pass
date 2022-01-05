@@ -368,7 +368,7 @@
             </ClassDeclaration>
             <EchoStatement start='257' end='280'>
                 <InfixExpression start='262' end='279' operator='CONCAT'>
-                    <MethodInvocation start='262' end='274'>
+                    <MethodInvocation start='262' end='274' isNullsafe='false'>
                         <AnonymousObjectVariable start='262' end='269'>
                             <ClassInstanceCreation start='263' end='268' anonymous='false'>
                                 <ClassName start='267' end='268'>

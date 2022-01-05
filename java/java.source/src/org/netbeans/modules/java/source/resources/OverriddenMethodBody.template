@@ -12,7 +12,7 @@ ${class_name}               qualified name of the enclosing class
 ${simple_class_name}        simple name of the enclosing class
 -->
 <#if method_return_type?? && method_return_type != "void">
-return ${super_method_call}; //To change body of generated methods, choose Tools | Templates.
+return ${super_method_call}; // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
 <#else>
-${super_method_call}; //To change body of generated methods, choose Tools | Templates.
+${super_method_call!''}; // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
 </#if>

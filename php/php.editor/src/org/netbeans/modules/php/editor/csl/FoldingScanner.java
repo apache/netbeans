@@ -59,6 +59,7 @@ import org.netbeans.modules.php.editor.parser.astnodes.FinallyClause;
 import org.netbeans.modules.php.editor.parser.astnodes.ForEachStatement;
 import org.netbeans.modules.php.editor.parser.astnodes.ForStatement;
 import org.netbeans.modules.php.editor.parser.astnodes.IfStatement;
+import org.netbeans.modules.php.editor.parser.astnodes.MatchExpression;
 import org.netbeans.modules.php.editor.parser.astnodes.Program;
 import org.netbeans.modules.php.editor.parser.astnodes.Statement;
 import org.netbeans.modules.php.editor.parser.astnodes.SwitchCase;
@@ -130,6 +131,7 @@ public final class FoldingScanner {
     );
 
     private static final String LAST_CORRECT_FOLDING_PROPERTY = "LAST_CORRECT_FOLDING_PROPERY"; //NOI18N
+    private static final boolean FOLD_PHPTAG = !Boolean.getBoolean("nb.php.editor.doNotFoldPhptag"); // NOI18N NETBEANS-5480
 
     public static FoldingScanner create() {
         return new FoldingScanner();
@@ -169,7 +171,9 @@ public final class FoldingScanner {
             Source source = phpParseResult.getSnapshot().getSource();
             assert source != null : "source was null";
             Document doc = source.getDocument(false);
-            processPHPTags(folds, doc);
+            if (FOLD_PHPTAG) {
+                processPHPTags(folds, doc);
+            }
             setFoldingProperty(doc, folds);
             return folds;
         }
@@ -429,6 +433,13 @@ public final class FoldingScanner {
                 }
                 addFold(offsetRange);
             }
+        }
+
+        @Override
+        public void visit(MatchExpression node) {
+            // NETBEANS-4443 PHP 8.0
+            super.visit(node);
+            addFold(node.getBlockRange());
         }
 
         @Override

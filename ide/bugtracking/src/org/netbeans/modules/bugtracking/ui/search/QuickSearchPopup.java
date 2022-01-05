@@ -480,7 +480,7 @@ private void jList1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:even
         // lPane can be null when the corresponding dialog is closed already
         // for example, when the user didn't want to wait until the search finishes
         if (!isDisplayable() && (lPane != null)) {
-            lPane.add(this, new Integer(JLayeredPane.POPUP_LAYER + 1) );
+            lPane.add(this, Integer.valueOf(JLayeredPane.POPUP_LAYER + 1) );
         }
 
         boolean statusVisible = updateStatusPanel();

@@ -30,7 +30,8 @@ import org.openide.util.Lookup;
         displayName = "#AdvancedOption_DisplayName_LanguageServers",
         keywords = "#AdvancedOption_Keywords_LanguageServers",
         keywordsCategory = "Editor/LanguageServers",
-        location="Editor"
+        location="Editor", 
+        position = 0 // other panels have #0 too.
 )
 @org.openide.util.NbBundle.Messages({"AdvancedOption_DisplayName_LanguageServers=Language Servers", "AdvancedOption_Keywords_LanguageServers=lsp highlighting code completion"})
 public final class LanguageServersOptionsPanelController extends OptionsPanelController {

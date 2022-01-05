@@ -53,7 +53,7 @@ public class TreeManipulationTest extends GeneratorTestBase  {
         String testContent = "\n" +
                 "public class NewArrayTest {\n" +
                 "\n" +
-                " public foo(String... a){;}" +
+                " public void foo(String... a){;}" +
                 "}\n";
         TestUtilities.copyStringToFile(testFile, testContent);
 

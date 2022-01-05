@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.15
+#Version 1.21
 
 CLSS public abstract interface java.io.Closeable
 intf java.lang.AutoCloseable
@@ -32,7 +32,6 @@ meth public final java.lang.String name()
 meth public java.lang.String toString()
 meth public static <%0 extends java.lang.Enum<{%%0}>> {%%0} valueOf(java.lang.Class<{%%0}>,java.lang.String)
 supr java.lang.Object
-hfds name,ordinal
 
 CLSS public java.lang.Exception
 cons protected init(java.lang.String,java.lang.Throwable,boolean,boolean)
@@ -41,7 +40,6 @@ cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.Throwable)
 cons public init(java.lang.Throwable)
 supr java.lang.Throwable
-hfds serialVersionUID
 
 CLSS public abstract interface !annotation java.lang.FunctionalInterface
  anno 0 java.lang.annotation.Documented()
@@ -70,7 +68,6 @@ cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.Throwable)
 cons public init(java.lang.Throwable)
 supr java.lang.Exception
-hfds serialVersionUID
 
 CLSS public java.lang.Throwable
 cons protected init(java.lang.String,java.lang.Throwable,boolean,boolean)
@@ -93,8 +90,6 @@ meth public void printStackTrace(java.io.PrintStream)
 meth public void printStackTrace(java.io.PrintWriter)
 meth public void setStackTrace(java.lang.StackTraceElement[])
 supr java.lang.Object
-hfds CAUSE_CAPTION,EMPTY_THROWABLE_ARRAY,NULL_CAUSE_MESSAGE,SELF_SUPPRESSION_MESSAGE,SUPPRESSED_CAPTION,SUPPRESSED_SENTINEL,UNASSIGNED_STACK,backtrace,cause,detailMessage,serialVersionUID,stackTrace,suppressedExceptions
-hcls PrintStreamOrWriter,SentinelHolder,WrappedPrintStream,WrappedPrintWriter
 
 CLSS public abstract interface java.lang.annotation.Annotation
 meth public abstract boolean equals(java.lang.Object)
@@ -1398,6 +1393,9 @@ fld public final static org.netbeans.modules.glassfish.tooling.data.GlassFishVer
 fld public final static org.netbeans.modules.glassfish.tooling.data.GlassFishVersion GF_5
 fld public final static org.netbeans.modules.glassfish.tooling.data.GlassFishVersion GF_5_0_1
 fld public final static org.netbeans.modules.glassfish.tooling.data.GlassFishVersion GF_5_1_0
+fld public final static org.netbeans.modules.glassfish.tooling.data.GlassFishVersion GF_6
+fld public final static org.netbeans.modules.glassfish.tooling.data.GlassFishVersion GF_6_1_0
+fld public final static org.netbeans.modules.glassfish.tooling.data.GlassFishVersion GF_6_2_1
 meth public boolean equals(org.netbeans.modules.glassfish.tooling.data.GlassFishVersion)
 meth public boolean equalsMajorMinor(org.netbeans.modules.glassfish.tooling.data.GlassFishVersion)
 meth public java.lang.String toFullString()
@@ -1418,7 +1416,7 @@ meth public static org.netbeans.modules.glassfish.tooling.data.GlassFishVersion 
 meth public static org.netbeans.modules.glassfish.tooling.data.GlassFishVersion valueOf(java.lang.String)
 meth public static org.netbeans.modules.glassfish.tooling.data.GlassFishVersion[] values()
 supr java.lang.Enum<org.netbeans.modules.glassfish.tooling.data.GlassFishVersion>
-hfds GF_1_STR,GF_1_STR_NEXT,GF_2_1_1_STR,GF_2_1_1_STR_NEXT,GF_2_1_STR,GF_2_1_STR_NEXT,GF_2_STR,GF_2_STR_NEXT,GF_3_0_1_STR,GF_3_0_1_STR_NEXT,GF_3_1_1_STR,GF_3_1_1_STR_NEXT,GF_3_1_2_2_STR,GF_3_1_2_3_STR,GF_3_1_2_4_STR,GF_3_1_2_5_STR,GF_3_1_2_STR,GF_3_1_2_STR_NEXT,GF_3_1_STR,GF_3_1_STR_NEXT,GF_3_STR,GF_3_STR_NEXT,GF_4_0_1_STR,GF_4_0_1_STR_NEXT,GF_4_1_1_STR,GF_4_1_1_STR_NEXT,GF_4_1_2_STR,GF_4_1_2_STR_NEXT,GF_4_1_STR,GF_4_1_STR_NEXT,GF_4_STR,GF_4_STR_NEXT,GF_5_0_1_STR,GF_5_0_1_STR_NEXT,GF_5_1_0_STR,GF_5_1_0_STR_NEXT,GF_5_STR,GF_5_STR_NEXT,build,major,minor,stringValuesMap,update,value
+hfds GF_1_STR,GF_1_STR_NEXT,GF_2_1_1_STR,GF_2_1_1_STR_NEXT,GF_2_1_STR,GF_2_1_STR_NEXT,GF_2_STR,GF_2_STR_NEXT,GF_3_0_1_STR,GF_3_0_1_STR_NEXT,GF_3_1_1_STR,GF_3_1_1_STR_NEXT,GF_3_1_2_2_STR,GF_3_1_2_3_STR,GF_3_1_2_4_STR,GF_3_1_2_5_STR,GF_3_1_2_STR,GF_3_1_2_STR_NEXT,GF_3_1_STR,GF_3_1_STR_NEXT,GF_3_STR,GF_3_STR_NEXT,GF_4_0_1_STR,GF_4_0_1_STR_NEXT,GF_4_1_1_STR,GF_4_1_1_STR_NEXT,GF_4_1_2_STR,GF_4_1_2_STR_NEXT,GF_4_1_STR,GF_4_1_STR_NEXT,GF_4_STR,GF_4_STR_NEXT,GF_5_0_1_STR,GF_5_0_1_STR_NEXT,GF_5_1_0_STR,GF_5_1_0_STR_NEXT,GF_5_STR,GF_5_STR_NEXT,GF_6_1_0_STR,GF_6_1_0_STR_NEXT,GF_6_2_1_STR,GF_6_2_1_STR_NEXT,GF_6_STR,GF_6_STR_NEXT,build,major,minor,stringValuesMap,update,value
 
 CLSS public org.netbeans.modules.glassfish.tooling.data.IdeContext
 cons public init()
@@ -1697,7 +1695,7 @@ meth public static java.net.URL getBuilderConfig(org.netbeans.modules.glassfish.
 meth public static org.netbeans.modules.glassfish.tooling.server.config.ConfigBuilder getBuilder(org.netbeans.modules.glassfish.tooling.data.GlassFishServer)
 meth public static void destroyBuilder(org.netbeans.modules.glassfish.tooling.data.GlassFishServer)
 supr java.lang.Object
-hfds CONFIG_V3,CONFIG_V4,CONFIG_V4_1,CONFIG_V5,CONFIG_V5_0_1,CONFIG_V5_1,builders,config
+hfds CONFIG_V3,CONFIG_V4,CONFIG_V4_1,CONFIG_V5,CONFIG_V5_0_1,CONFIG_V5_1,CONFIG_V6,CONFIG_V6_1_0,CONFIG_V6_2_1,builders,config
 
 CLSS public org.netbeans.modules.glassfish.tooling.server.config.ConfigUtils
 cons public init()
@@ -1748,6 +1746,10 @@ fld public final static org.netbeans.modules.glassfish.tooling.server.config.Jav
 fld public final static org.netbeans.modules.glassfish.tooling.server.config.JavaEEProfile v1_7_web
 fld public final static org.netbeans.modules.glassfish.tooling.server.config.JavaEEProfile v1_8
 fld public final static org.netbeans.modules.glassfish.tooling.server.config.JavaEEProfile v1_8_web
+fld public final static org.netbeans.modules.glassfish.tooling.server.config.JavaEEProfile v8_0_0
+fld public final static org.netbeans.modules.glassfish.tooling.server.config.JavaEEProfile v8_0_0_web
+fld public final static org.netbeans.modules.glassfish.tooling.server.config.JavaEEProfile v9_0_0
+fld public final static org.netbeans.modules.glassfish.tooling.server.config.JavaEEProfile v9_0_0_web
 innr public final static !enum Type
 innr public final static !enum Version
 meth public java.lang.String toString()
@@ -1778,6 +1780,8 @@ fld public final static org.netbeans.modules.glassfish.tooling.server.config.Jav
 fld public final static org.netbeans.modules.glassfish.tooling.server.config.JavaEEProfile$Version v1_6
 fld public final static org.netbeans.modules.glassfish.tooling.server.config.JavaEEProfile$Version v1_7
 fld public final static org.netbeans.modules.glassfish.tooling.server.config.JavaEEProfile$Version v1_8
+fld public final static org.netbeans.modules.glassfish.tooling.server.config.JavaEEProfile$Version v8_0_0
+fld public final static org.netbeans.modules.glassfish.tooling.server.config.JavaEEProfile$Version v9_0_0
 meth public java.lang.String toString()
 meth public static org.netbeans.modules.glassfish.tooling.server.config.JavaEEProfile$Version valueOf(java.lang.String)
 meth public static org.netbeans.modules.glassfish.tooling.server.config.JavaEEProfile$Version[] values()
@@ -1797,6 +1801,9 @@ hfds checkResults,checks,modules,profiles
 CLSS public final !enum org.netbeans.modules.glassfish.tooling.server.config.JavaSEPlatform
 fld public final static char SEPARATOR = '.'
 fld public final static int length
+fld public final static org.netbeans.modules.glassfish.tooling.server.config.JavaSEPlatform v11
+fld public final static org.netbeans.modules.glassfish.tooling.server.config.JavaSEPlatform v16
+fld public final static org.netbeans.modules.glassfish.tooling.server.config.JavaSEPlatform v17
 fld public final static org.netbeans.modules.glassfish.tooling.server.config.JavaSEPlatform v1_1
 fld public final static org.netbeans.modules.glassfish.tooling.server.config.JavaSEPlatform v1_2
 fld public final static org.netbeans.modules.glassfish.tooling.server.config.JavaSEPlatform v1_3
@@ -1810,7 +1817,7 @@ meth public static org.netbeans.modules.glassfish.tooling.server.config.JavaSEPl
 meth public static org.netbeans.modules.glassfish.tooling.server.config.JavaSEPlatform valueOf(java.lang.String)
 meth public static org.netbeans.modules.glassfish.tooling.server.config.JavaSEPlatform[] values()
 supr java.lang.Enum<org.netbeans.modules.glassfish.tooling.server.config.JavaSEPlatform>
-hfds V1_1_STR,V1_2_STR,V1_3_STR,V1_4_STR,V1_5_STR,V1_6_STR,V1_7_STR,V1_8_STR,stringValuesMap
+hfds V11_STR,V16_STR,V17_STR,V1_1_STR,V1_2_STR,V1_3_STR,V1_4_STR,V1_5_STR,V1_6_STR,V1_7_STR,V1_8_STR,stringValuesMap
 
 CLSS public org.netbeans.modules.glassfish.tooling.server.config.JavaSESet
 cons public init(java.util.List<java.lang.String>,java.lang.String)

@@ -29,8 +29,8 @@
                     <code-name-base>org.netbeans.modules.libs.gradle</code-name-base>
                     <compile-dependency/>
                     <run-dependency>
-                        <release-version>6</release-version>
-                        <specification-version>6.3</specification-version>
+                        <release-version>7</release-version>
+                        <specification-version>7.3</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -57,15 +57,7 @@
                     <compile-dependency/>
                     <run-dependency>
                         <release-version>1</release-version>
-                        <specification-version>1.47.1</specification-version>
-                    </run-dependency>
-                </dependency>
-                <dependency>
-                    <code-name-base>org.netbeans.api.progress.nb</code-name-base>
-                    <build-prerequisite/>
-                    <compile-dependency/>
-                    <run-dependency>
-                        <specification-version>1.47.1</specification-version>
+                        <specification-version>1.59</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -154,7 +146,7 @@
                     <compile-dependency/>
                     <run-dependency>
                         <release-version>1</release-version>
-                        <specification-version>1.57.1</specification-version>
+                        <specification-version>1.79</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -230,7 +222,7 @@
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
-                        <specification-version>6.56.1</specification-version>
+                        <specification-version>6.73</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -330,11 +322,6 @@
                         <compile-dependency/>
                     </test-dependency>
                     <test-dependency>
-                        <code-name-base>org.netbeans.modules.apisupport.project</code-name-base>
-                        <compile-dependency/>
-                        <test/>
-                    </test-dependency>
-                    <test-dependency>
                         <code-name-base>org.netbeans.modules.nbjunit</code-name-base>
                         <recursive/>
                         <compile-dependency/>
@@ -349,6 +336,11 @@
                     </test-dependency>
                     <test-dependency>
                         <code-name-base>org.openide.filesystems</code-name-base>
+                        <compile-dependency/>
+                        <test/>
+                    </test-dependency>
+                    <test-dependency>
+                        <code-name-base>org.openide.modules</code-name-base>
                         <compile-dependency/>
                         <test/>
                     </test-dependency>

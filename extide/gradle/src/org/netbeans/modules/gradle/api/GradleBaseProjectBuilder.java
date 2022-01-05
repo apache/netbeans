@@ -20,7 +20,7 @@
 package org.netbeans.modules.gradle.api;
 
 import org.netbeans.modules.gradle.spi.GradleFiles;
-import org.netbeans.modules.gradle.GradleArtifactStore;
+import org.netbeans.modules.gradle.loaders.GradleArtifactStore;
 import static org.netbeans.modules.gradle.api.GradleDependency.*;
 import org.netbeans.modules.gradle.spi.ProjectInfoExtractor;
 import java.io.File;
@@ -34,7 +34,12 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.TreeSet;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.netbeans.modules.gradle.GradleModuleFileCache21;
+import org.netbeans.modules.gradle.spi.GradleSettings;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
@@ -46,6 +51,7 @@ import org.openide.util.lookup.ServiceProvider;
 class GradleBaseProjectBuilder implements ProjectInfoExtractor.Result {
 
     final static Map<String, List<String>> DEPENDENCY_TO_PLUGIN = new LinkedHashMap<>();
+    final static Logger LOG = Logger.getLogger(GradleBaseProjectBuilder.class.getName());
 
     static {
         addDependencyPlugin("javax:javaee-api:.*", "ejb", "jpa");
@@ -66,10 +72,15 @@ class GradleBaseProjectBuilder implements ProjectInfoExtractor.Result {
     final GradleArtifactStore artifactSore = GradleArtifactStore.getDefault();
 
     GradleBaseProjectBuilder(Map<String, Object> info) {
-        this.info = info;
+        this.info = new TreeMap<>(info);
     }
 
     void build() {
+        if (LOG.isLoggable(Level.FINE)) {
+            for (Map.Entry<String, Object> entry : info.entrySet()) {
+                LOG.log(Level.FINE, entry.getKey() + " = " + String.valueOf(entry.getValue()));
+            }
+        }
         processBasicInfo();
         processTasks();
         processDependencies();
@@ -91,7 +102,12 @@ class GradleBaseProjectBuilder implements ProjectInfoExtractor.Result {
         prj.license = (String) info.get("license");
 
         prj.plugins = new TreeSet<>(createSet((Set<String>) info.get("plugins")));
-        prj.subProjects = (Map<String, File>) info.get("project_subProjects");
+        Map<String, File> rawSubprojects = (Map<String, File>) info.get("project_subProjects");
+        Map<String, File> refinedSubprojects = (Map<String, File>) info.get("project_subProjects");
+        for (Map.Entry<String, File> entry : rawSubprojects.entrySet()) {
+            refinedSubprojects.put(entry.getKey(), entry.getValue().isAbsolute() ? entry.getValue() : new File(prj.rootDir, entry.getValue().toString()));
+        }
+        prj.subProjects = Collections.unmodifiableMap(refinedSubprojects);
         prj.includedBuilds = (Map<String, File>) info.get("project_includedBuilds");
         if (info.containsKey("buildClassPath")) {
             prj.buildClassPath = (Set<File>) info.get("buildClassPath");
@@ -120,6 +136,9 @@ class GradleBaseProjectBuilder implements ProjectInfoExtractor.Result {
 
     void processDependencies() {
 
+        File gradleUserHome = (File) info.get("gradle_user_home");
+        gradleUserHome = gradleUserHome != null ? gradleUserHome : GradleSettings.getDefault().getGradleUserHome();
+        
         Set<File> sourceSetOutputs = new HashSet<>();
         Set<String> sourceSetNames = (Set<String>) info.get("sourcesets");
         if (sourceSetNames != null) {
@@ -146,11 +165,19 @@ class GradleBaseProjectBuilder implements ProjectInfoExtractor.Result {
         unresolvedProblems = unresolvedProblems != null ? unresolvedProblems : Collections.<String, String>emptyMap();
         Map<String, ModuleDependency> components = new HashMap<>();
         for (Map.Entry<String, Set<File>> entry : arts.entrySet()) {
-            ModuleDependency dep = new ModuleDependency(entry.getKey(), entry.getValue());
-
-            components.put(entry.getKey(), dep);
-            dep.sources = sources.get(entry.getKey());
-            dep.javadoc = javadocs.get(entry.getKey());
+            String componentId = entry.getKey();
+            // Looking at cache first as we might have the chance to find Sources and Javadocs
+            ModuleDependency dep = resolveModuleDependency(gradleUserHome, componentId);
+            if (!dep.getArtifacts().equals(entry.getValue())) {
+                dep = new ModuleDependency(componentId, entry.getValue());
+            }
+            components.put(componentId, dep);
+            if (sources.containsKey(componentId)) {
+                dep.sources = sources.get(entry.getKey());
+            }
+            if (javadocs.containsKey(componentId)) {
+                dep.javadoc = javadocs.get(entry.getKey());
+            }
         }
         Map<String, ProjectDependency> projects = new HashMap<>();
         for (Map.Entry<String, File> entry : prjs.entrySet()) {
@@ -169,38 +196,48 @@ class GradleBaseProjectBuilder implements ProjectInfoExtractor.Result {
                 conf.modules = new HashSet<>();
                 Boolean nonResolvingConf = (Boolean)info.get("configuration_" + name + "_non_resolving");
                 conf.canBeResolved = nonResolvingConf != null ? !nonResolvingConf : true;
-                if (conf.isCanBeResolved()) {
-                    Set<String> requiredComponents = (Set<String>) info.get("configuration_" + name + "_components");
+                Set<String> requiredComponents = (Set<String>) info.get("configuration_" + name + "_components");
+                if (requiredComponents != null) {
                     for (String c : requiredComponents) {
                         ModuleDependency dep = components.get(c);
                         if (dep != null) {
                             conf.modules.add(dep);
                         } else {
-                            Set<File> binaries = artifactSore.getBinaries(c);
-                            if (binaries != null) {
-                                dep = new ModuleDependency(c, binaries);
+                            dep = resolveModuleDependency(gradleUserHome, c);
+                            if (dep != null) {
                                 components.put(c, dep);
                                 conf.modules.add(dep);
+                            } else {
+                               // NETBEANS-5161: This could happen on composite projects
+                               // TODO: Implement composite project module dependency
                             }
                         }
                     }
-                    conf.projects = new HashSet<>();
-                    Set<String> requiredProjects = (Set<String>) info.get("configuration_" + name + "_projects");
+                }
+                conf.projects = new HashSet<>();
+                Set<String> requiredProjects = (Set<String>) info.get("configuration_" + name + "_projects");
+                if (requiredProjects != null) {
                     for (String p : requiredProjects) {
                         conf.projects.add(projects.get(p));
                     }
-                    conf.unresolved = new HashSet<>();
-                    Set<String> unresolvedComp = (Set<String>) info.get("configuration_" + name + "_unresolved");
-                    for (String u : unresolvedComp) {
-                        conf.unresolved.add(unresolved.get(u));
-                    }
-                    Set<File> files = (Set<File>) info.get("configuration_" + name + "_files");
-                    if (files != null) {
-                        files = new HashSet<>(files);
-                        files.removeAll(sourceSetOutputs);
-                    }
-                    conf.files = new FileCollectionDependency(createSet(files));
                 }
+                conf.unresolved = new HashSet<>();
+                Set<String> unresolvedComp = (Set<String>) info.get("configuration_" + name + "_unresolved");
+                if (unresolvedComp != null) {
+                    for (String u : unresolvedComp) {
+                        UnresolvedDependency dep = unresolved.get(u);
+                        if (dep == null) {
+                            dep = new UnresolvedDependency(u);
+                        }
+                        conf.unresolved.add(dep);
+                    }
+                }
+                Set<File> files = (Set<File>) info.get("configuration_" + name + "_files");
+                if (files != null) {
+                    files = new HashSet<>(files);
+                    files.removeAll(sourceSetOutputs);
+                }
+                conf.files = new FileCollectionDependency(createSet(files));
                 Boolean transitive = (Boolean) info.get("configuration_" + name + "_transitive");
                 conf.transitive = transitive == null ? true : transitive;
 
@@ -235,6 +272,28 @@ class GradleBaseProjectBuilder implements ProjectInfoExtractor.Result {
 
         // Add detailed problems on unresolved dependencies
         problems.addAll(unresolvedProblems.values());
+    }
+
+    private ModuleDependency resolveModuleDependency(File gradleUserHome, String c) {
+        GradleModuleFileCache21 moduleCache = GradleModuleFileCache21.getGradleFileCache(gradleUserHome.toPath());
+        try {
+            GradleModuleFileCache21.CachedArtifactVersion artVersion = moduleCache.resolveModule(c);
+            Set<File> binaries = artifactSore.getBinaries(c);
+            if (((binaries == null) || binaries.isEmpty()) && (artVersion.getBinary() != null)) {
+                binaries = Collections.singleton(artVersion.getBinary().getPath().toFile());
+            }
+            ModuleDependency ret = new ModuleDependency(c, binaries);
+            if (artVersion.getSources() != null) {
+                ret.sources = Collections.singleton(artVersion.getSources().getPath().toFile());
+            }
+            if (artVersion.getJavaDoc() != null) {
+                ret.javadoc = Collections.singleton(artVersion.getJavaDoc().getPath().toFile());
+            }
+            return ret;
+        } catch (IllegalArgumentException iae) {
+            // NETBEANS-5161: This could happen on composite projects
+            return null;
+        }
     }
 
     private void processDependencyPlugins() {

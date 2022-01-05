@@ -79,6 +79,16 @@ public class Utils {
     public static int getOffset(Document doc, Position pos) {
         return LineDocumentUtils.getLineStartFromIndex((LineDocument) doc, pos.getLine()) + pos.getCharacter();
     }
+    
+    public static int getEndCharacter(Document doc, int line) {
+        int start = LineDocumentUtils.getLineStartFromIndex((LineDocument) doc, line);
+        try {
+            return LineDocumentUtils.getLineEnd((LineDocument) doc, start) - start;
+        } catch (BadLocationException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+        return 0;
+    }
 
     public static void applyWorkspaceEdit(WorkspaceEdit edit) {
         if (edit.getDocumentChanges() != null) {
@@ -248,26 +258,31 @@ public class Utils {
         return edits;
     }
 
-    public static void open(String targetUri, Range targetRange) {
+    public static FileObject fromURI(String targetUri) {
         try {
             URI target = URI.create(targetUri);
-            FileObject targetFile = URLMapper.findFileObject(target.toURL());
-
-            if (targetFile != null) {
-                LineCookie lc = targetFile.getLookup().lookup(LineCookie.class);
-
-                //TODO: expecting lc != null!
-
-                Line line = lc.getLineSet().getCurrent(targetRange.getStart().getLine());
-
-                SwingUtilities.invokeLater(() ->
-                    line.show(Line.ShowOpenType.OPEN, Line.ShowVisibilityType.FOCUS, targetRange.getStart().getCharacter())
-                );
-            } else {
-                //TODO: beep
-            }
+            return URLMapper.findFileObject(target.toURL());
         } catch (MalformedURLException ex) {
             Exceptions.printStackTrace(ex);
+            return null;
+        }
+    }
+
+    public static void open(String targetUri, Range targetRange) {
+        FileObject targetFile = fromURI(targetUri);
+
+        if (targetFile != null) {
+            LineCookie lc = targetFile.getLookup().lookup(LineCookie.class);
+
+            //TODO: expecting lc != null!
+
+            Line line = lc.getLineSet().getCurrent(targetRange.getStart().getLine());
+
+            SwingUtilities.invokeLater(() ->
+                line.show(Line.ShowOpenType.OPEN, Line.ShowVisibilityType.FOCUS, targetRange.getStart().getCharacter())
+            );
+        } else {
+            //TODO: beep
         }
     }
 
@@ -282,4 +297,8 @@ public class Utils {
             return c2 - c1;
         }
     };
+
+    public static boolean isTrue(Boolean b) {
+        return b != null && b;
+    }
 }

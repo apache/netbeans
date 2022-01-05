@@ -50,7 +50,7 @@ public class DbSchemaEjbGenerator {
     
     private GeneratedTables genTables;
     private Map beans = new HashMap();
-    private List relations = new ArrayList();
+    private List<EntityRelation> relations = new ArrayList<>();
     private SchemaElement schemaElement;
     private Set<String> tablesReferecedByOtherTables;
     private Set<String> primaryKeyIsForeignKeyTables;
@@ -583,7 +583,7 @@ public class DbSchemaEjbGenerator {
     }
     
     private List getFieldNames(EntityClass bean) {
-        List result = new ArrayList();
+        List<String> result = new ArrayList<>();
         for (Iterator i = bean.getFields().iterator(); i.hasNext();) {
             EntityMember member = (EntityMember)i.next();
             result.add(member.getMemberName());
@@ -600,7 +600,7 @@ public class DbSchemaEjbGenerator {
      */
     private EntityRelation[] makeRelationsUnique() {
         EntityRelation[] r = getRelations();
-        List relationNames = new ArrayList(r.length);
+        List<String> relationNames = new ArrayList<>(r.length);
         for (int i = 0; i < r.length; i++) {
             r[i].makeRoleNamesUnique();
             String baseName = r[i].getRelationName();
@@ -612,7 +612,7 @@ public class DbSchemaEjbGenerator {
     /**
      * return name generated or base name if this was ok
      */
-    private static String uniqueAlgorithm(List names, String baseName, String sep) {
+    private static String uniqueAlgorithm(List<String> names, String baseName, String sep) {
         String newName = baseName;
         int unique = 0;
         while (names.contains(newName)) {

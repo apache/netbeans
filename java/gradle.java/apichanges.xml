@@ -76,13 +76,59 @@ is the proper place.
 
     <!-- First, a list of API names you may use: -->
     <apidefs>
-        <apidef name="general">Gradle Java Project API</apidef>
+        <apidef name="gradle.java.api">Gradle Java Project API</apidef>
         <!-- etc. -->
     </apidefs>
 
     <!-- ACTUAL CHANGES BEGIN HERE: -->
 
     <changes>
+        <change id="gradle-7.0-deprecation">
+            <api name="gradle.java.api"/>
+            <summary>Deprecating Gradle 7.0 removed API-s</summary>
+            <version major="1" minor="13"/>
+            <date day="10" month="4" year="2021"/>
+            <author login="lkishalmi"/>
+            <compatibility semantic="incompatible" deprecation="yes"/>
+            <description>
+                <code><a href="@TOP@/org/netbeans/modules/gradle/java/api/GradleJavaSourceSet.html">GradleJavaSourceSet</a></code> 
+                methods <code>getCompileConfigurationName()</code> and <code>getRuntimeConfigurationName()</code> 
+                were deprecated as Gradle 7.0 does no longer supports them. They return <code>null</code> on Gradle 7.0.
+            </description>
+            <class package="org.netbeans.modules.gradle.java.api" name="GradleJavaSourceSet"/>
+            <issue number="NETBEANS-5541"/>            
+        </change>
+        <change id="run.argument.properties">
+            <api name="gradle.java.api"/>
+            <summary>Support for explicit commandline arguments</summary>
+            <version major="1" minor="12"/>
+            <date day="27" month="3" year="2021"/>
+            <author login="sdedic"/>
+            <compatibility semantic="compatible" addition="yes"/>
+            <description>
+                Gradle Java interpolate <code>javaExec.jvmArgs</code> and <code>javaExec.args</code>
+                tokens in action mapping that can be used to pass explicit JVM and application
+                parameters to user process started by Gradle build. For more details, see 
+                <a href="@TOP@/org/netbeans/modules/gradle/java/api/ProjectActions.html#TOKEN_JAVAEXEC_JVMARGS">ProjectActions.TOKEN_JAVAEXEC_JVMARGS</a>
+            </description>
+            <class package="org.netbeans.modules.gradle.java.api" name="ProjectActions"/>
+            <issue number="NETBEANS-5482"/>
+        </change>
+        <change>
+            <api name="gradle.java.api"/>
+            <summary>Support Kotlin Source Directories</summary>
+            <version major="1" minor="15"/>
+            <date day="22" month="11" year="2020"/>
+            <author login="jpesek"/>
+            <compatibility addition="yes"/>
+            <description>
+                Sourcsets introduce a new SourceType called KOTLIN
+                It is possible to retrieve the kotlin source directories
+                form a GradleJavaSourceSet from now.
+            </description>
+            <class package="org.netbeans.modules.gradle.java.api" name="GradleJavaSourceSet"/>
+            <issue number="NETBEANS-5050"/>
+        </change>
         <change>
             <api name="gradle.java.api"/>
             <summary>Support Generated Source Directories</summary>

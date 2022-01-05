@@ -407,6 +407,30 @@ public abstract class TreeView extends JScrollPane {
         tree.setShowsRootHandles(!visible);
     }
 
+
+    /**
+     * Set the <code>scrollsOnExpand</code> property on the
+     * underlying tree component.
+     * @see javax.swing.JTree#setScrollsOnExpand(boolean)
+     *
+     * @param newValue the new value of the property
+     * @since 6.73
+     */
+    public void setScrollsOnExpand(boolean newValue) {
+        tree.setScrollsOnExpand(newValue);
+    }
+
+    /**
+     * Returns the value of the <code>scrollsOnExpand</code> property of
+     * the underlying tree component.
+     *
+     * @return the value of the <code>scrollsOnExpand</code> property
+     * @since 6.73
+     */
+    public boolean getScrollsOnExpand() {
+        return tree.getScrollsOnExpand();
+    }
+
     /**
      * Test whether the quick search feature is enabled or not.
      * Default is enabled (true).

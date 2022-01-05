@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 3.37
+#Version 3.43
 
 CLSS public abstract interface java.io.Serializable
 
@@ -26,7 +26,6 @@ intf java.io.Serializable
 meth public java.lang.Object getSource()
 meth public java.lang.String toString()
 supr java.lang.Object
-hfds serialVersionUID
 
 CLSS public abstract org.netbeans.modules.web.jsps.parserapi.ELNode
 cons public init()

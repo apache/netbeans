@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 0.81
+#Version 0.88
 
 CLSS public abstract interface java.io.Serializable
 
@@ -21,7 +21,6 @@ meth public final java.lang.String name()
 meth public java.lang.String toString()
 meth public static <%0 extends java.lang.Enum<{%%0}>> {%%0} valueOf(java.lang.Class<{%%0}>,java.lang.String)
 supr java.lang.Object
-hfds name,ordinal
 
 CLSS public java.lang.Object
 cons public init()
@@ -122,6 +121,11 @@ CLSS public abstract interface static !annotation org.netbeans.modules.javascrip
 intf java.lang.annotation.Annotation
 meth public abstract !hasdefault int priority()
 
+CLSS public abstract interface org.netbeans.modules.javascript2.editor.spi.CompletionProviderEx
+intf org.netbeans.modules.javascript2.editor.spi.CompletionProvider
+meth public abstract java.util.List<org.netbeans.modules.csl.api.CompletionProposal> complete(org.netbeans.modules.javascript2.editor.spi.ProposalRequest)
+meth public java.util.List<org.netbeans.modules.csl.api.CompletionProposal> complete(org.netbeans.modules.csl.api.CodeCompletionContext,org.netbeans.modules.javascript2.editor.spi.CompletionContext,java.lang.String)
+
 CLSS public abstract interface org.netbeans.modules.javascript2.editor.spi.DeclarationFinder
 innr public abstract interface static !annotation Registration
 intf org.netbeans.modules.csl.api.DeclarationFinder
@@ -133,7 +137,22 @@ CLSS public abstract interface static !annotation org.netbeans.modules.javascrip
 intf java.lang.annotation.Annotation
 meth public abstract !hasdefault int priority()
 
+CLSS public abstract interface org.netbeans.modules.javascript2.editor.spi.ElementDocumentation
+meth public abstract org.netbeans.modules.csl.api.Documentation getDocumentation()
+ anno 0 org.netbeans.api.annotations.common.CheckForNull()
+
 CLSS public abstract interface org.netbeans.modules.javascript2.editor.spi.PostScanProvider
 meth public abstract void addPostScanTask(java.lang.Runnable)
  anno 1 org.netbeans.api.annotations.common.NonNull()
+
+CLSS public final org.netbeans.modules.javascript2.editor.spi.ProposalRequest
+cons public init(org.netbeans.modules.csl.api.CodeCompletionContext,org.netbeans.modules.javascript2.editor.spi.CompletionContext,java.util.Collection<java.lang.String>,int)
+meth public int getAnchor()
+meth public java.lang.String getPrefix()
+meth public java.util.Collection<java.lang.String> getSelectors()
+meth public org.netbeans.modules.csl.api.CodeCompletionContext getContext()
+meth public org.netbeans.modules.csl.spi.ParserResult getInfo()
+meth public org.netbeans.modules.javascript2.editor.spi.CompletionContext getType()
+supr java.lang.Object
+hfds context,offset,selectors,type
 

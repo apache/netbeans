@@ -456,11 +456,11 @@ public class DependencyGraphScene<I extends GraphNodeImplementation> extends Gra
     }
     
     void highlightRelated (GraphNode<I> node) {
-        List<GraphNode> importantNodes = new ArrayList<GraphNode>();
-        List<GraphEdge> otherPathsEdges = new ArrayList<GraphEdge>();
-        List<GraphEdge> primaryPathEdges = new ArrayList<GraphEdge>();
-        List<GraphNode> childrenNodes = new ArrayList<GraphNode>();
-        List<GraphEdge> childrenEdges = new ArrayList<GraphEdge>();
+        List<GraphNode> importantNodes  = new ArrayList<>();
+        List<GraphEdge> otherPathsEdges = new ArrayList<>();
+        List<GraphEdge> primaryPathEdges = new ArrayList<>();
+        List<GraphNode> childrenNodes   = new ArrayList<>();
+        List<GraphEdge> childrenEdges   = new ArrayList<>();
 
         importantNodes.add(node);
 

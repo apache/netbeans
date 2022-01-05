@@ -19,6 +19,7 @@
 
 package org.netbeans.modules.gradle.actions;
 
+import org.netbeans.modules.gradle.spi.actions.ProjectActionMappingProvider;
 import org.netbeans.modules.gradle.api.GradleBaseProject;
 import org.netbeans.modules.gradle.api.NbGradleProject;
 import org.netbeans.modules.gradle.api.execute.ActionMapping;
@@ -41,6 +42,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 import java.util.logging.Logger;
+import org.netbeans.modules.gradle.api.execute.GradleExecConfiguration;
 import org.netbeans.modules.gradle.spi.GradleFiles;
 
 /**
@@ -168,11 +170,9 @@ public class ProjectActionMappingProviderImpl implements ProjectActionMappingPro
             }
         }
     }
-
+    
     @Override
     public Set<String> customizedActions() {
         return projectMappings.keySet();
     }
-
-
 }

@@ -825,6 +825,8 @@ final class PackageViewChildren extends Children.Keys<String> implements FileCha
                     Exceptions.printStackTrace(e);
                     return new PasteType[0];
                 }
+            } else if (t.isDataFlavorSupported(DataFlavor.stringFlavor)) {
+                return new PasteType[]{new CreateJavaClassFileFromClipboard(dataFolder, t)};
             }
             else {
                 DataFlavor[] flavors = t.getTransferDataFlavors();

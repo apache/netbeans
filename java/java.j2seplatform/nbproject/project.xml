@@ -49,7 +49,7 @@
                     <compile-dependency/>
                     <run-dependency>
                         <release-version>1</release-version>
-                        <specification-version>1.60</specification-version>
+                        <specification-version>1.78</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -331,16 +331,10 @@
                     </test-dependency>
                 </test-type>
             </test-dependencies>
-            <friend-packages>
-                <friend>org.netbeans.modules.debugger.jpda.trufflenode</friend>
-                <friend>org.netbeans.modules.glassfish.common</friend>
-                <friend>org.netbeans.modules.payara.common</friend>
-                <friend>org.netbeans.modules.javafx2.platform</friend>
-                <friend>org.netbeans.modules.projectimport.eclipse.core</friend>
-                <friend>org.netbeans.modules.projectimport.jbuilder</friend>
+            <public-packages>
                 <package>org.netbeans.modules.java.j2seplatform.api</package>
                 <package>org.netbeans.modules.java.j2seplatform.spi</package>
-            </friend-packages>
+            </public-packages>
             <extra-compilation-unit>
                 <package-root>probesrc</package-root>
                 <classpath/>

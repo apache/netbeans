@@ -29,9 +29,9 @@ import org.openide.util.NbBundle;
  * @author mkuchtiak
  */
 public class RefreshSaveDialog extends org.openide.DialogDescriptor {
-    public static final Integer OPTION_FIX=new Integer(0);
-    public static final Integer OPTION_REFRESH=new Integer(1);
-    public static final Integer OPTION_SAVE=new Integer(2);
+    public static final Integer OPTION_FIX=Integer.valueOf(0);
+    public static final Integer OPTION_REFRESH=Integer.valueOf(1);
+    public static final Integer OPTION_SAVE=Integer.valueOf(2);
 
     private static final String[] OPTIONS = new String[] {
         NbBundle.getMessage(RefreshSaveDialog.class,"OPT_FixNow"),

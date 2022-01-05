@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.63
+#Version 2.70
 
 CLSS public abstract interface java.awt.event.ActionListener
 intf java.util.EventListener
@@ -31,7 +31,6 @@ meth public final java.lang.String name()
 meth public java.lang.String toString()
 meth public static <%0 extends java.lang.Enum<{%%0}>> {%%0} valueOf(java.lang.Class<{%%0}>,java.lang.String)
 supr java.lang.Object
-hfds name,ordinal
 
 CLSS public abstract interface !annotation java.lang.FunctionalInterface
  anno 0 java.lang.annotation.Documented()
@@ -105,7 +104,6 @@ meth public void putValue(java.lang.String,java.lang.Object)
 meth public void removePropertyChangeListener(java.beans.PropertyChangeListener)
 meth public void setEnabled(boolean)
 supr java.lang.Object
-hfds RECONFIGURE_ON_NULL,arrayTable
 
 CLSS public abstract interface javax.swing.Action
 fld public final static java.lang.String ACCELERATOR_KEY = "AcceleratorKey"
@@ -196,8 +194,6 @@ meth public void read(java.io.Reader,javax.swing.text.Document,int) throws java.
 meth public void write(java.io.OutputStream,javax.swing.text.Document,int,int) throws java.io.IOException,javax.swing.text.BadLocationException
 meth public void write(java.io.Writer,javax.swing.text.Document,int,int) throws java.io.IOException,javax.swing.text.BadLocationException
 supr javax.swing.text.EditorKit
-hfds defaultActions,selectionPageDownAction,selectionPageLeftAction,selectionPageRightAction,selectionPageUpAction,toggleComponentOrientationAction,unselectAction
-hcls BeginAction,BeginLineAction,BeginParagraphAction,BeginWordAction,DeleteNextCharAction,DeletePrevCharAction,DeleteWordAction,DumpModelAction,EndAction,EndLineAction,EndParagraphAction,EndWordAction,NextVisualPositionAction,NextWordAction,PageAction,PreviousWordAction,ReadOnlyAction,SelectAllAction,SelectLineAction,SelectParagraphAction,SelectWordAction,ToggleComponentOrientationAction,UnselectAction,VerticalPageAction,WritableAction
 
 CLSS public abstract javax.swing.text.EditorKit
 cons public init()
@@ -480,6 +476,7 @@ hfds contentType,serialVersionUID
 CLSS public org.netbeans.modules.html.editor.api.Utils
 cons public init()
 meth public static java.lang.String getWebPageMimeType(org.netbeans.modules.html.editor.lib.api.SyntaxAnalyzerResult)
+ anno 0 java.lang.Deprecated()
 meth public static org.netbeans.api.lexer.Token<org.netbeans.api.html.lexer.HTMLTokenId> findTagOpenToken(org.netbeans.api.lexer.TokenSequence)
 meth public static org.netbeans.api.lexer.TokenSequence<org.netbeans.api.html.lexer.HTMLTokenId> getJoinedHtmlSequence(javax.swing.text.Document,int)
 meth public static org.netbeans.api.lexer.TokenSequence<org.netbeans.api.html.lexer.HTMLTokenId> getJoinedHtmlSequence(org.netbeans.api.lexer.TokenHierarchy,int)
@@ -555,6 +552,7 @@ meth public java.lang.CharSequence getSortText()
 meth public java.lang.String getHelp()
 meth public java.lang.String getHelpId()
 meth public java.lang.String getItemText()
+meth public java.lang.String toString()
 meth public java.net.URL getHelpURL()
 meth public org.netbeans.modules.html.editor.lib.api.HelpItem getHelpItem()
 meth public org.netbeans.spi.editor.completion.CompletionTask createDocumentationTask()
@@ -577,6 +575,7 @@ meth public void prepareHelp()
 meth public void processKeyEvent(java.awt.event.KeyEvent)
 meth public void render(java.awt.Graphics,java.awt.Font,java.awt.Color,java.awt.Color,int,int,boolean)
 supr java.lang.Object
+hfds END_FONT
 
 CLSS public static org.netbeans.modules.html.editor.api.completion.HtmlCompletionItem$Attribute
  outer org.netbeans.modules.html.editor.api.completion.HtmlCompletionItem
@@ -755,9 +754,12 @@ meth public org.netbeans.modules.html.editor.lib.api.elements.Node rootOfUndecla
 meth public static org.netbeans.modules.html.editor.lib.api.elements.Node getBoundNode(org.netbeans.modules.csl.api.Error)
 supr org.netbeans.modules.csl.spi.ParserResult
 hfds errors,isValid,result
-hcls Accessor
+hcls Accessor,Lkp
 
 CLSS public org.netbeans.modules.html.editor.api.index.HtmlIndex
+fld public final static int VERSION = 2
+fld public final static java.lang.String NAME = "html"
+fld public final static java.lang.String REFERS_KEY = "imports"
 innr public static AllDependenciesMaps
 meth public java.util.Collection<org.openide.filesystems.FileObject> find(java.lang.String,java.lang.String)
 meth public java.util.List<java.net.URL> getAllRemoteDependencies() throws java.io.IOException
@@ -769,7 +771,7 @@ meth public void addChangeListener(javax.swing.event.ChangeListener)
 meth public void notifyChange()
 meth public void removeChangeListener(javax.swing.event.ChangeListener)
 supr java.lang.Object
-hfds INDEXES,LOG,LOGGER,changeSupport,querySupport
+hfds INDEXES,changeSupport,querySupport
 
 CLSS public static org.netbeans.modules.html.editor.api.index.HtmlIndex$AllDependenciesMaps
  outer org.netbeans.modules.html.editor.api.index.HtmlIndex

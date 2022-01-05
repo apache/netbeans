@@ -145,6 +145,7 @@
                 <attr name="instanceCreate" methodvalue="org.openide.actions.SaveAsAction.create"/>
                 <attr name="instanceClass" stringvalue="org.openide.util.ContextAwareAction"/>
             </file>
+            <file name="org-openide-actions-SaveAsTemplateAction.instance"/>
             <file name="org-openide-actions-PropertiesAction.instance"/>
             <file name="org-openide-actions-FileSystemAction.instance"/>
             <file name="org-openide-actions-ToolsAction.instance"/>

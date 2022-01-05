@@ -138,7 +138,7 @@ public class CppLexerPerformanceTestCase extends NbTestCase {
     }
 
     private String readFile() throws Exception {
-        File testJComponentFile = new File(getDataDir() + "/testfiles/stdio.h.txt");
+        File testJComponentFile = new File(getDataDir() + "/testfiles/apr_portable.h.txt");
         FileReader r = new FileReader(testJComponentFile);
         try {
             int fileLen = (int)testJComponentFile.length();

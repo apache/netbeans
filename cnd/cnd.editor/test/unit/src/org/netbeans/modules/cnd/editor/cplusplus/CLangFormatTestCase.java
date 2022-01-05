@@ -20,6 +20,7 @@
 package org.netbeans.modules.cnd.editor.cplusplus;
 
 import javax.swing.text.Document;
+import org.junit.Ignore;
 import org.netbeans.editor.BaseDocument;
 import org.netbeans.modules.cnd.spi.CndDocumentCodeStyleProvider;
 
@@ -47,6 +48,11 @@ public class CLangFormatTestCase extends EditorBase {
     return doc;
   }
     
+  /**
+   * clang format is not available in Apache NetBeans CND as we've dropped
+   * a dependency with libclank.
+   */
+  @Ignore
     public void testLLVM_Style() {
         setLoadDocumentText(
                 "int main() {\n" 

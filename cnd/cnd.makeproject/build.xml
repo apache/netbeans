@@ -27,14 +27,14 @@
     <import file="../../nbbuild/templates/projectized.xml"/>
     
     <!-- zip up samples before creating the jar file -->
-    <property name="cnd/sample-src" value="samples_src"/>
-    <property name="cnd/sample-dist" value="build/classes/org/netbeans/modules/cnd/makeproject/resources/samples"/>
+    <property name="sample-src" value="samples_src"/>
+    <property name="sample-dist" value="build/classes/org/netbeans/modules/cnd/makeproject/resources/samples"/>
     <patternset id="sample-src-pattern-set">
-        <include name="cnd/**/*"/>
-        <exclude name="cnd/**/SCCS"/>
-        <exclude name="cnd/**/CVS"/>
+        <include name="**/*"/>
+        <exclude name="**/SCCS"/>
+        <exclude name="**/CVS"/>
     </patternset>
-    <target name="cnd/jar-prep" depends="projectized-common.jar-prep">
+    <target name="jar-prep" depends="projectized-common.jar-prep">
         <mkdir dir="${sample-dist}"/>
         <zip zipfile="${sample-dist}/args.zip" >
             <fileset dir="${sample-src}/args">

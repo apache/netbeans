@@ -30,6 +30,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
@@ -49,6 +50,7 @@ import org.openide.explorer.ExplorerUtils;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.nodes.Node;
+import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
 import org.openide.util.lookup.Lookups;
 import org.openide.util.lookup.ProxyLookup;
@@ -220,7 +222,6 @@ public class TreeNodeRegistryImpl implements TreeNodeRegistry {
                 if (h == -1 || w == -1) {
                     try {
                         observer.cdl.await();
-                        Thread.sleep(1000);
                     } catch (InterruptedException ex) {
                     }
                     synchronized (observer) {
@@ -248,10 +249,33 @@ public class TreeNodeRegistryImpl implements TreeNodeRegistry {
         }
         synchronized (this) {
             if (res == null) {
-                res = new ImageDataOrIndex(imageURI, imageCounter++);
+                res = new ImageDataOrIndex(imageURI, imageCounter++).
+                        baseURL(findImageURI(i));
             }
             images.put(i, res);
         }
         return res;
     }
+
+
+    public static URI findImageURI(Image i) {
+        Object o = i.getProperty("url", null);
+        try {
+            if (o instanceof URL) {
+                return ((URL)o).toURI();
+            }
+            o = i.getProperty("uri", null);
+            if (o instanceof URI) {
+                return (URI)o;
+            } else if (o instanceof String) {
+                return new URI(o.toString());
+            } else {
+                return null;
+            }
+        } catch (URISyntaxException ex) {
+            LOG.log(Level.WARNING, "Unable to interpret image URL: {0}", o);
+            return null;
+        }
+    }
+    
 }

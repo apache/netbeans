@@ -1,9 +1,9 @@
-Name: Apache HttpComponents Core HTTP/2
-Origin: Apache Software Foundation
-Version: 5.0.2
+Name: DiscoClient
+Origin: Gerrit Grunwald
+Version: 2.0.23
 License: Apache-2.0
-Description: HTTP client
-Origin: http://hc.apache.org/
+Description: Library to access the Foojay.io Discovery API service.
+Origin: https://github.com/foojayio/discoclient
 
                                  Apache License
                            Version 2.0, January 2004

@@ -18,28 +18,41 @@
  */
 package org.netbeans.modules.java.disco;
 
+import org.netbeans.spi.java.platform.CustomPlatformInstall;
 import org.openide.WizardDescriptor;
+import org.openide.WizardDescriptor.InstantiatingIterator;
+import org.openide.util.NbBundle;
 
-public class BrowseWizardPanel extends AbstractWizardPanel<BrowsePanel> {
+@NbBundle.Messages({
+    "DiscoPlatformInstall.displayName=Download OpenJDK (via Foojay.io Disco API)",
+    "Disco.clientName=Apache NetBeans",
+    "Disco.defaultDistribution=Zulu"
+})
+public class DiscoPlatformInstall extends CustomPlatformInstall {
 
-    private final WizardState state;
-
-    BrowseWizardPanel(WizardState state) {
-        this.state = state;
+    private DiscoPlatformInstall() {
     }
 
     @Override
-    protected BrowsePanel createComponent() {
-        return new BrowsePanel(this, state);
+    public InstantiatingIterator<WizardDescriptor> createIterator() {
+        return new DiscoPlatformIt();
     }
 
     @Override
-    public boolean isValid() {
-        return getComponent().isOK();
+    public String getDisplayName() {
+        return Bundle.DiscoPlatformInstall_displayName();
     }
 
-    @Override
-    public void storeSettings(WizardDescriptor wiz) {
-        wiz.putProperty(DiscoPlatformIt.PROP_DOWNLOAD_FOLDER, getComponent().getUserDownloadFolder());
+    public static DiscoPlatformInstall create() {
+        return new DiscoPlatformInstall();
     }
+
+    static String clientName() {
+        return Bundle.Disco_clientName();
+    }
+
+    static String defaultDistribution() {
+        return Bundle.Disco_defaultDistribution();
+    }
+
 }

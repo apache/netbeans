@@ -19,21 +19,22 @@
 package org.netbeans.modules.java.disco;
 
 import com.google.common.collect.Maps;
-import io.foojay.api.discoclient.pkg.Architecture;
+import eu.hansolo.jdktools.Architecture;
 import io.foojay.api.discoclient.pkg.Pkg;
-import io.foojay.api.discoclient.pkg.PackageType;
+import eu.hansolo.jdktools.PackageType;
 import io.foojay.api.discoclient.pkg.Distribution;
-import io.foojay.api.discoclient.pkg.OperatingSystem;
-import io.foojay.api.discoclient.pkg.VersionNumber;
-import io.foojay.api.discoclient.pkg.ArchiveType;
-import io.foojay.api.discoclient.pkg.Latest;
+import eu.hansolo.jdktools.OperatingSystem;
+import eu.hansolo.jdktools.versioning.VersionNumber;
+import eu.hansolo.jdktools.ArchiveType;
+import eu.hansolo.jdktools.Latest;
 import io.foojay.api.discoclient.pkg.MajorVersion;
-import io.foojay.api.discoclient.pkg.TermOfSupport;
+import eu.hansolo.jdktools.TermOfSupport;
 import io.foojay.api.discoclient.util.Helper;
+
 import static org.netbeans.modules.java.disco.OS.getOperatingSystem;
 import static org.netbeans.modules.java.disco.SwingWorker2.submit;
+
 import java.awt.CardLayout;
-import java.util.AbstractMap;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -93,6 +94,19 @@ public class SelectPackagePanel extends FirstPanel {
     @UIEffect
     public void addNotify() {
         super.addNotify();
+        
+        class Result {
+            final List<Integer> versionNumbers;
+            final Map<Integer, TermOfSupport> versionNumberSupport;
+            final List<Distribution> distributions;
+
+            public Result(List<Integer> versionNumbers, Map<Integer, TermOfSupport> versionNumberSupport, List<Distribution> distributions) {
+                this.versionNumbers = versionNumbers;
+                this.versionNumberSupport = versionNumberSupport;
+                this.distributions = distributions;
+            }
+            
+        }
 
         if (initialLoad)
             return;
@@ -100,8 +114,9 @@ public class SelectPackagePanel extends FirstPanel {
 
         //loading stuff when ui shown
         submit(() -> {
+                    List<Distribution> distros = discoClient.getDistributions();
                     // Get release infos
-                    Map<Integer, TermOfSupport> majorVersions = discoClient.getAllLTSVersions().stream()
+                    Map<Integer, TermOfSupport> majorVersions = discoClient.getAllMajorVersions().stream()
                             .collect(Collectors.toMap(MajorVersion::getAsInt, MajorVersion::getTermOfSupport));
 
                     MajorVersion nextRelease = discoClient.getLatestSts(true);
@@ -112,13 +127,15 @@ public class SelectPackagePanel extends FirstPanel {
                         versionNumbers.add(i);
                     }
                     Map<Integer, TermOfSupport> versionNumberSupport = new HashMap<>(Maps.filterKeys(majorVersions, v -> versionNumbers.contains(v)));
-                    return new AbstractMap.SimpleEntry<>(versionNumbers, versionNumberSupport);
+//                    return new AbstractMap.SimpleEntry<>(versionNumbers, versionNumberSupport);
+                    return new Result(versionNumbers, versionNumberSupport, distros);
         }).then((c) -> {
             //hide 'please wait' message, show tabs
             ((CardLayout) getLayout()).next(SelectPackagePanel.this);
 
-            advancedPanel.setVersions(c.getKey(), c.getValue());
-            quickPanel.setVersions(c.getKey(), c.getValue());
+            advancedPanel.updateDistributions(c.distributions);
+            advancedPanel.setVersions(c.versionNumbers, c.versionNumberSupport);
+            quickPanel.setVersions(c.versionNumbers, c.versionNumberSupport);
 
             SelectPackagePanel.this.firePropertyChange(PROP_VALIDITY_CHANGED, false, true);
         }).handle(ex -> {
@@ -128,8 +145,8 @@ public class SelectPackagePanel extends FirstPanel {
             long currentTimeMillisStart = System.currentTimeMillis();
             //check connectivity
             submit(() -> {
-                String body = Helper.get("http://www.example.com");
-                return !"".equals(body);
+                String body = Helper.get("http://www.example.com").body();
+                return body != null && !"".equals(body);
             }).then(isOnline -> {
                 long now = System.currentTimeMillis();
                 //if we are online, but still got an error, let's show it to the user if our ping didn't take forever
@@ -175,6 +192,11 @@ public class SelectPackagePanel extends FirstPanel {
                 //TODO: Show something to user, offer reload, auto-reload in N seconds?
                 .handle(Exceptions::printStackTrace)
                 .execute();
+    }
+
+    @Override
+    protected void updateDistributions(List<Distribution> distros) {
+        super.updateDistributions(distros); //To change body of generated methods, choose Tools | Templates.
     }
 
     @UIEffect

@@ -18,8 +18,8 @@
  */
 package org.netbeans.modules.java.disco;
 
-import io.foojay.api.discoclient.pkg.Architecture;
-import io.foojay.api.discoclient.pkg.OperatingSystem;
+import eu.hansolo.jdktools.Architecture;
+import eu.hansolo.jdktools.OperatingSystem;
 import java.io.File;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.openide.util.Utilities;

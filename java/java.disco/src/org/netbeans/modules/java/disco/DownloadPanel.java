@@ -21,16 +21,19 @@ package org.netbeans.modules.java.disco;
 import io.foojay.api.discoclient.event.DownloadEvt;
 import io.foojay.api.discoclient.event.Evt;
 import io.foojay.api.discoclient.pkg.Pkg;
+
 import static org.netbeans.modules.java.disco.SwingWorker2.submit;
+
 import org.netbeans.modules.java.disco.archive.JDKCommonsUnzip;
 import org.netbeans.modules.java.disco.archive.UnarchiveUtils;
 import org.netbeans.modules.java.disco.ioprovider.IOContainerPanel;
 import java.awt.CardLayout;
 import java.io.File;
 import java.io.IOException;
-import java.util.concurrent.Future;
 import javax.swing.Action;
+
 import static javax.swing.SwingUtilities.invokeLater;
+
 import javax.swing.UIManager;
 import org.checkerframework.checker.guieffect.qual.UIEffect;
 import org.checkerframework.checker.nullness.qual.NonNull;
@@ -88,6 +91,7 @@ public class DownloadPanel extends javax.swing.JPanel {
         initialLoad = true;
 
         //this potentially does network calls, do it after component shown
+        discoClient.removeAllObservers();
         discoClient.setOnEvt(DownloadEvt.DOWNLOAD_STARTED, this::handleDownloadStarted);
         discoClient.setOnEvt(DownloadEvt.DOWNLOAD_FINISHED, this::handleDownloadFinished);
         discoClient.setOnEvt(DownloadEvt.DOWNLOAD_FAILED, this::handleDownloadFailed);
@@ -113,15 +117,10 @@ public class DownloadPanel extends javax.swing.JPanel {
             return discoClient.getPkgInfo(bundle.getEphemeralId(), bundle.getJavaVersion());
         }).then(pkgInfo -> {
             download = new File(destinationFolder, pkgInfo.getFileName());
-
-            //        if (download.exists())
-            //            handleDCEvent(this, new DCEvent(DCEventType.DOWNLOAD_FINISHED, 1));
-            Future<?> future = discoClient.downloadPkg(pkgInfo, download.getAbsolutePath());
-            //        try {
-            //            assert null == future.get();
-            //        } catch (InterruptedException | ExecutionException e) {
-            //
-            //        }
+            String path = download.getAbsolutePath();
+            submit(() -> discoClient.downloadPkg(pkgInfo, path))
+                    .handle(this::handleDownloadFailed)
+                    .execute();
         }).handle(this::handleDownloadFailed)
         .execute();
     }

@@ -18,12 +18,12 @@
  */
 package org.netbeans.modules.java.disco;
 
-import io.foojay.api.discoclient.pkg.ArchiveType;
+import eu.hansolo.jdktools.ArchiveType;
+import eu.hansolo.jdktools.PackageType;
+import eu.hansolo.jdktools.ReleaseStatus;
+import eu.hansolo.jdktools.versioning.VersionNumber;
 import io.foojay.api.discoclient.pkg.Distribution;
 import io.foojay.api.discoclient.pkg.Pkg;
-import io.foojay.api.discoclient.pkg.PackageType;
-import io.foojay.api.discoclient.pkg.ReleaseStatus;
-import io.foojay.api.discoclient.pkg.VersionNumber;
 
 import javax.swing.table.AbstractTableModel;
 import java.util.List;

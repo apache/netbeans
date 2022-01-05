@@ -63,7 +63,9 @@ export class NbTestAdapter {
                     if (item.uri) {
                         this.set(item, 'enqueued');
                         const idx = item.id.indexOf(':');
-                        await commands.executeCommand(request.profile?.kind === TestRunProfileKind.Debug ? 'java.debug.single' : 'java.run.single', item.uri.toString(), idx < 0 ? undefined : item.id.slice(idx + 1));
+                        if (!cancellation.isCancellationRequested) {
+                            await commands.executeCommand(request.profile?.kind === TestRunProfileKind.Debug ? 'java.debug.single' : 'java.run.single', item.uri.toString(), idx < 0 ? undefined : item.id.slice(idx + 1));
+                        }
                     }
                 }
             } else {

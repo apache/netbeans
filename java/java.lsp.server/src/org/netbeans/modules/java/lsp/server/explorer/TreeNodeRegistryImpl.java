@@ -259,21 +259,18 @@ public class TreeNodeRegistryImpl implements TreeNodeRegistry {
 
 
     public static URI findImageURI(Image i) {
-        Object o = i.getProperty("url", null);
+        String s = ImageUtilities.findImageBaseId(i);
+        if (s == null) {
+            return null;
+        }
         try {
-            if (o instanceof URL) {
-                return ((URL)o).toURI();
-            }
-            o = i.getProperty("uri", null);
-            if (o instanceof URI) {
-                return (URI)o;
-            } else if (o instanceof String) {
-                return new URI(o.toString());
+            if (s.contains(":")) {
+                return new URI(s);
             } else {
-                return null;
+                return new URI("nbres:/" + s);
             }
         } catch (URISyntaxException ex) {
-            LOG.log(Level.WARNING, "Unable to interpret image URL: {0}", o);
+            LOG.log(Level.WARNING, "Unable to interpret image ID: {0}", s);
             return null;
         }
     }

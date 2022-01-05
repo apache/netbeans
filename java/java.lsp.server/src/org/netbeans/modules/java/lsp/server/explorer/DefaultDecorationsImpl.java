@@ -56,6 +56,7 @@ public class DefaultDecorationsImpl implements TreeDataProvider.Factory {
     public static final String EXPLORER_ROOT = "Explorers"; // NOI18N
     public static final String COOKIES_EXT = "contextValues"; // NOI18N
     
+    public static final String CTXVALUE_FILE = "is:file"; // NOI18N
     public static final String CTXVALUE_FOLDER = "is:folder"; // NOI18N
     public static final String CTXVALUE_PROJECT = "is:project"; // NOI18N
     public static final String CTXVALUE_PROJECT_ROOT = "is:projectRoot"; // NOI18N
@@ -166,7 +167,8 @@ public class DefaultDecorationsImpl implements TreeDataProvider.Factory {
                                 }
                                 folder = true;
                                 d.addContextValues(CTXVALUE_FOLDER);
-                            } else {
+                            } else if ((f.isData() || f.isValid()) && !f.isVirtual()) {
+                                d.addContextValues(CTXVALUE_FILE);
                                 // PENDING: this could be moved to the VSNetbeans module ?
                                 d.setCommand("vscode.open"); // NOI18N
                             }

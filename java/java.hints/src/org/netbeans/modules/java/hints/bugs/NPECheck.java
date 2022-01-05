@@ -20,6 +20,7 @@
 package org.netbeans.modules.java.hints.bugs;
 
 import com.sun.source.tree.*;
+import com.sun.source.tree.CaseTree.CaseKind;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.util.TreePath;
 import java.util.ArrayList;
@@ -49,7 +50,6 @@ import javax.lang.model.util.ElementFilter;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.support.CancellableTreeScanner;
-import org.netbeans.modules.editor.java.TreeShims;
 import org.netbeans.spi.editor.hints.ErrorDescription;
 import org.openide.util.NbBundle;
 
@@ -645,13 +645,7 @@ public class NPECheck {
                 TreePath oldPath = currentPath;
                 try {
                     currentPath = new TreePath(currentPath, tree);
-                    if (TreeShims.SWITCH_EXPRESSION.equals(tree.getKind().name())) {
-                        r = visitSwitchExpression(tree, p);
-                    } else if (TreeShims.YIELD.equals(tree.getKind().name())) {
-                        r = visitYield(tree, p);
-                    } else {
-                        r = super.scan(tree, p);
-                    }
+                    r = super.scan(tree, p);
                 } finally {
                     currentPath = oldPath;
                 }
@@ -1263,11 +1257,12 @@ public class NPECheck {
             return null;
         }
 
-        public State visitSwitchExpression(Tree node, Void p) {
+        @Override
+        public State visitSwitchExpression(SwitchExpressionTree node, Void p) {
             List<State> oldPendingYields = pendingYields;
             try {
                 pendingYields = new ArrayList<>();
-                handleGeneralizedSwitch(node, TreeShims.getExpressions(node).get(0), TreeShims.getCases(node));
+                handleGeneralizedSwitch(node, node.getExpression(), node.getCases());
                 if (pendingYields.isEmpty()) {
                     //should not happen (for valid source)
                     return State.POSSIBLE_NULL;
@@ -1298,7 +1293,7 @@ public class NPECheck {
 
                 State caseResult = scan(ct, null);
 
-                if (TreeShims.isRuleCase(ct)) {
+                if (ct.getCaseKind() == CaseKind.RULE) {
                     pendingYields.add(caseResult);
                     breakTo(switchTree);
                 }
@@ -1320,8 +1315,9 @@ public class NPECheck {
             return null;
         }
 
-        public State visitYield(Tree node, Void p) {
-            pendingYields.add(scan(TreeShims.getYieldValue(node), p));
+        @Override
+        public State visitYield(YieldTree node, Void p) {
+            pendingYields.add(scan(node.getValue(), p));
 
             Tree target = info.getTreeUtilities().getBreakContinueTargetTree(getCurrentPath());
             

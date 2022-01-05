@@ -51,15 +51,17 @@ public enum JavaSEPlatform {
     /** JavaSE 11. */
     v11,
     /** JavaSE 16. */
-    v16;
-    
+    v16,
+    /** JavaSE 17. */
+    v17;
+
     ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
     ////////////////////////////////////////////////////////////////////////////
 
     /** GlassFish JavaEE platform enumeration length. */
     public static final int length = JavaSEPlatform.values().length;
-    
+
     /** JavaEE platform version elements separator character. */
     public static final char SEPARATOR = '.';
 
@@ -91,10 +93,12 @@ public enum JavaSEPlatform {
     static final String V11_STR = "11";
 
     /**  A <code>String</code> representation of v16 value. */
-    static final String V16_STR = "16";    
-    
-    
-    /** 
+    static final String V16_STR = "16";
+
+    /**  A <code>String</code> representation of v17 value. */
+    static final String V17_STR = "17";
+
+    /**
      * Stored <code>String</code> values for backward <code>String</code>
      * conversion.
      */
@@ -153,9 +157,10 @@ public enum JavaSEPlatform {
             case v1_6:     return V1_6_STR;
             case v1_7:     return V1_7_STR;
             case v1_8:     return V1_8_STR;
-            case v11:     return V11_STR;            
-            case v16:     return V16_STR;                   
-                        
+            case v11:      return V11_STR;
+            case v16:      return V16_STR;
+            case v17:      return V17_STR;
+
             // This is unrecheable. Being here means this class does not handle
             // all possible values correctly.
             default:   throw new ServerConfigException(

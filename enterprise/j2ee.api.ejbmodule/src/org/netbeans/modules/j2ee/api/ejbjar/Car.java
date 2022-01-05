@@ -110,6 +110,7 @@ public final class Car {
      * @return J2EE platform version
      * @deprecated use {@link #getJ2eeProfile()}
      */
+    @Deprecated
     public String getJ2eePlatformVersion () {
         if (impl2 != null) {
             return impl2.getJ2eeProfile().toPropertiesString();

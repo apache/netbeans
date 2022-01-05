@@ -203,6 +203,12 @@ public class GroovyCompletionImpl {
     }
     
     private void makeClassProposals(ProposalsCollector proposalsCollector, CompletionContext context) {
+        
+        if (context.location == CaretLocation.INSIDE_PACKAGE) {
+            proposalsCollector.completePackages(context);
+            return;
+        }
+        
         if (!(context.location == CaretLocation.OUTSIDE_CLASSES || context.location == CaretLocation.INSIDE_STRING)) {
             proposalsCollector.completePackages(context);
             proposalsCollector.completeTypes(context);

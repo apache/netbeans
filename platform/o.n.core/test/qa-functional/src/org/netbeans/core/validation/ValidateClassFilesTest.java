@@ -89,6 +89,9 @@ public class ValidateClassFilesTest extends NbTestCase {
                         if (entry.getName().startsWith("META-INF/versions/")) {
                             continue;
                         }
+                        if (entry.getName().startsWith("META-INF/ct.sym/")) {
+                            continue;
+                        }
 
                         if (entry.getName().endsWith(".class")) {
                             try (DataInputStream dis = new DataInputStream(jf.getInputStream(entry))) {

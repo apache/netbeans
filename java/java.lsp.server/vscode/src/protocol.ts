@@ -19,15 +19,26 @@
 'use strict';
 
 import * as vscode from 'vscode';
+
 import {
-    NotificationType,
-    RequestType,
-    ShowMessageParams
+    ProtocolNotificationType,
+    ProtocolRequestType,
+    ShowMessageParams,
+    NotificationType
 } from 'vscode-languageclient';
+
 import {
     Position,
     Range
 } from 'vscode-languageserver-protocol';
+
+export interface HtmlPageParams {
+    uri: string;
+}
+
+export namespace HtmlPageRequest {
+    export const type = new ProtocolRequestType<HtmlPageParams, string, never, void, void>('window/showHtmlPage');
+};
 
 export interface ShowStatusMessageParams extends ShowMessageParams {
     /**
@@ -37,7 +48,7 @@ export interface ShowStatusMessageParams extends ShowMessageParams {
 }
 
 export namespace StatusMessageRequest {
-    export const type = new NotificationType<ShowStatusMessageParams, void>('window/showStatusBarMessage');
+    export const type = new ProtocolNotificationType<ShowStatusMessageParams, void>('window/showStatusBarMessage');
 };
 
 export interface ShowQuickPickParams {
@@ -56,7 +67,7 @@ export interface ShowQuickPickParams {
 }
 
 export namespace QuickPickRequest {
-    export const type = new RequestType<ShowQuickPickParams, vscode.QuickPickItem[], void, void>('window/showQuickPick');
+    export const type = new ProtocolRequestType<ShowQuickPickParams, vscode.QuickPickItem[], never, void, void>('window/showQuickPick');
 }
 
 export interface ShowInputBoxParams {
@@ -68,10 +79,14 @@ export interface ShowInputBoxParams {
      * The value to prefill in the input box.
      */
     value: string;
+    /**
+     * Controls if a password input is shown. Password input hides the typed text.
+     */
+    password?: boolean;
 }
 
 export namespace InputBoxRequest {
-    export const type = new RequestType<ShowInputBoxParams, string | undefined, void, void>('window/showInputBox');
+    export const type = new ProtocolRequestType<ShowInputBoxParams, string | undefined, never, void, void>('window/showInputBox');
 }
 
 export interface TestProgressParams {
@@ -97,7 +112,7 @@ export interface TestCase {
 }
 
 export namespace TestProgressNotification {
-    export const type = new NotificationType<TestProgressParams, void>('window/notifyTestProgress');
+    export const type = new ProtocolNotificationType<TestProgressParams, void>('window/notifyTestProgress');
 };
 
 export interface DebugConnector {
@@ -116,15 +131,61 @@ export interface SetTextEditorDecorationParams {
 };
 
 export namespace TextEditorDecorationCreateRequest {
-    export const type = new RequestType<vscode.DecorationRenderOptions, string, void, void>('window/createTextEditorDecoration');
+    export const type = new ProtocolRequestType<vscode.DecorationRenderOptions, never, string, void, void>('window/createTextEditorDecoration');
 };
 
 export namespace TextEditorDecorationSetNotification {
-    export const type = new NotificationType<SetTextEditorDecorationParams, void>('window/setTextEditorDecoration');
+    export const type = new ProtocolNotificationType<SetTextEditorDecorationParams, void>('window/setTextEditorDecoration');
 };
 
 export namespace TextEditorDecorationDisposeNotification {
-    export const type = new NotificationType<string, void>('window/disposeTextEditorDecoration');
+    export const type = new ProtocolNotificationType<string, void>('window/disposeTextEditorDecoration');
+}
+
+export interface NodeChangedParams {
+    rootId : number;
+    nodeId : number | null;
+}
+
+export interface CreateExplorerParams {
+    explorerId : string;
+}
+
+export interface NodeOperationParams {
+    nodeId : number;
+}
+
+export interface ProjectActionParams {
+    action : string;
+    configuration? : string;
+    fallback? : boolean;
+}
+
+export namespace NodeInfoNotification {
+    export const type = new ProtocolNotificationType<NodeChangedParams, void>('nodes/nodeChanged');
+}
+
+export namespace NodeInfoRequest {
+    export const explorermanager = new ProtocolRequestType<CreateExplorerParams, never, Data, void, void>('nodes/explorermanager');
+    export const info = new ProtocolRequestType<NodeOperationParams, Data, never,void, void>('nodes/info');
+    export const children = new ProtocolRequestType<NodeOperationParams, number[], never, void, void>('nodes/children');
+    export const destroy = new ProtocolRequestType<NodeOperationParams, boolean, never, void, void>('nodes/delete');
+    export const collapsed = new ProtocolNotificationType<NodeOperationParams, void>('nodes/collapsed');
+    
+    export interface Data {
+        id : number; /* numeric ID of the node */
+        name : string; /* Node.getName() */
+        label : string; /* Node.getDisplayName() */
+        tooltip? : string; 
+        description : string; /* Node.getShortDescription() */
+        resourceUri? : string; /* external URL to file: resource */
+        collapsibleState : vscode.TreeItemCollapsibleState;
+        canDestroy : boolean; /* Node.canDestroy() */
+        contextValue : string; /* Node.getCookies() */
+        iconUri : string | null;
+        iconIndex : number;
+        command? : string;
+    }
 };
 
 export function asPosition(value: undefined | null): undefined;

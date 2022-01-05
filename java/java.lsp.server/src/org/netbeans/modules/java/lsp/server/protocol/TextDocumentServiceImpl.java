@@ -22,8 +22,10 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.sun.source.tree.ClassTree;
+import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.LineMap;
 import com.sun.source.tree.MethodTree;
+import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.VariableTree;
@@ -37,6 +39,8 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.time.Instant;
+import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -124,11 +128,13 @@ import org.eclipse.lsp4j.ResourceOperation;
 import org.eclipse.lsp4j.SignatureHelp;
 import org.eclipse.lsp4j.SignatureHelpParams;
 import org.eclipse.lsp4j.SymbolInformation;
+import org.eclipse.lsp4j.SymbolKind;
 import org.eclipse.lsp4j.TextDocumentContentChangeEvent;
 import org.eclipse.lsp4j.TextDocumentEdit;
 import org.eclipse.lsp4j.TextEdit;
 import org.eclipse.lsp4j.TypeDefinitionParams;
 import org.eclipse.lsp4j.VersionedTextDocumentIdentifier;
+import org.eclipse.lsp4j.WillSaveTextDocumentParams;
 import org.eclipse.lsp4j.WorkspaceEdit;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.eclipse.lsp4j.jsonrpc.messages.ResponseErrorCode;
@@ -172,6 +178,7 @@ import org.netbeans.modules.java.editor.codegen.GeneratorUtils;
 import org.netbeans.modules.java.editor.options.MarkOccurencesSettings;
 import org.netbeans.modules.java.editor.overridden.ComputeOverriding;
 import org.netbeans.modules.java.editor.overridden.ElementDescription;
+import org.netbeans.modules.java.hints.OrganizeImports;
 import org.netbeans.modules.java.hints.introduce.IntroduceFixBase;
 import org.netbeans.modules.java.hints.introduce.IntroduceHint;
 import org.netbeans.modules.java.hints.introduce.IntroduceKind;
@@ -230,6 +237,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
     private static final String COMMAND_RUN_SINGLE = "java.run.single";         // NOI18N
     private static final String COMMAND_DEBUG_SINGLE = "java.debug.single";     // NOI18N
     private static final String NETBEANS_JAVADOC_LOAD_TIMEOUT = "netbeans.javadoc.load.timeout";// NOI18N
+    private static final String NETBEANS_JAVA_ON_SAVE_ORGANIZE_IMPORTS = "netbeans.java.onSave.organizeImports";// NOI18N
     
     private static final RequestProcessor BACKGROUND_TASKS = new RequestProcessor(TextDocumentServiceImpl.class.getName(), 1, false, false);
     private static final RequestProcessor WORKER = new RequestProcessor(TextDocumentServiceImpl.class.getName(), 1, false, false);
@@ -349,7 +357,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                         }
                         org.netbeans.api.lsp.TextEdit edit = completion.getTextEdit();
                         if (edit != null) {
-                            item.setTextEdit(new TextEdit(new Range(Utils.createPosition(file, edit.getStartOffset()), Utils.createPosition(file, edit.getEndOffset())), edit.getNewText()));
+                            item.setTextEdit(Either.forLeft(new TextEdit(new Range(Utils.createPosition(file, edit.getStartOffset()), Utils.createPosition(file, edit.getEndOffset())), edit.getNewText())));
                         }
                         if (completion.getAdditionalTextEdits() != null && completion.getAdditionalTextEdits().isDone()) {
                             List<org.netbeans.api.lsp.TextEdit> additionalTextEdits = completion.getAdditionalTextEdits().getNow(null);
@@ -745,39 +753,51 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
 
     @Override
     public CompletableFuture<List<Either<SymbolInformation, DocumentSymbol>>> documentSymbol(DocumentSymbolParams params) {
-        // shortcut: if the projects are not yet initialized, return empty:
-        if (server.openedProjects().getNow(null) == null) {
-            return CompletableFuture.completedFuture(Collections.emptyList());
-        }
-        JavaSource js = getJavaSource(params.getTextDocument().getUri());
-        if (js == null) {
-            return CompletableFuture.completedFuture(Collections.emptyList());
-        }
-        List<Either<SymbolInformation, DocumentSymbol>> result = new ArrayList<>();
-        try {
-            js.runUserActionTask(cc -> {
-                cc.toPhase(JavaSource.Phase.RESOLVED);
-                for (Element tel : cc.getTopLevelElements()) {
-                    DocumentSymbol ds = element2DocumentSymbol(cc, tel);
-                    if (ds != null)
-                        result.add(Either.forRight(ds));
-                }
-            }, true);
-        } catch (IOException ex) {
-            //TODO: include stack trace:
-            client.logMessage(new MessageParams(MessageType.Error, ex.getMessage()));
-        }
-
-        return CompletableFuture.completedFuture(result);
+        return server.openedProjects().thenCompose(projects -> {
+            JavaSource js = getJavaSource(params.getTextDocument().getUri());
+            if (js == null) {
+                return CompletableFuture.completedFuture(Collections.emptyList());
+            }
+            List<Either<SymbolInformation, DocumentSymbol>> result = new ArrayList<>();
+            try {
+                js.runUserActionTask(cc -> {
+                    cc.toPhase(JavaSource.Phase.RESOLVED);
+                    Trees trees = cc.getTrees();
+                    CompilationUnitTree cu = cc.getCompilationUnit();
+                    if (cu.getPackage() != null) {
+                        TreePath tp = trees.getPath(cu, cu.getPackage());
+                        Element el = trees.getElement(tp);
+                        if (el != null && el.getKind() == ElementKind.PACKAGE) {
+                            String name = Utils.label(cc, el, true);
+                            SymbolKind kind = Utils.elementKind2SymbolKind(el.getKind());
+                            Range range = Utils.treeRange(cc, tp.getLeaf());
+                            result.add(Either.forRight(new DocumentSymbol(name, kind, range, range)));
+                        }
+                    }
+                    for (Element tel : cc.getTopLevelElements()) {
+                        DocumentSymbol ds = element2DocumentSymbol(cc, tel);
+                        if (ds != null)
+                            result.add(Either.forRight(ds));
+                    }
+                }, true);
+            } catch (IOException ex) {
+                client.logMessage(new MessageParams(MessageType.Error, ex.getMessage()));
+            }
+            return CompletableFuture.completedFuture(result);
+        });
     }
 
-    private DocumentSymbol element2DocumentSymbol(CompilationInfo info, Element el) throws BadLocationException {
+    private static DocumentSymbol element2DocumentSymbol(CompilationInfo info, Element el) {
         TreePath path = info.getTrees().getPath(el);
         if (path == null)
+            return null;
+        TreeUtilities tu = info.getTreeUtilities();
+        if (tu.isSynthetic(path))
             return null;
         Range range = Utils.treeRange(info, path.getLeaf());
         if (range == null)
             return null;
+        Range selection = Utils.selectionRange(info, path.getLeaf());
         List<DocumentSymbol> children = new ArrayList<>();
         for (Element c : el.getEnclosedElements()) {
             DocumentSymbol ds = element2DocumentSymbol(info, c);
@@ -785,16 +805,44 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                 children.add(ds);
             }
         }
-
-        String simpleName;
-
-        if (el.getKind() == ElementKind.CONSTRUCTOR) {
-            simpleName = el.getEnclosingElement().getSimpleName().toString();
-        } else {
-            simpleName = el.getSimpleName().toString();
+        if (path.getLeaf().getKind() == Kind.METHOD || path.getLeaf().getKind() == Kind.VARIABLE) {
+            children.addAll(getAnonymousInnerClasses(info, path));
         }
+        String name = Utils.label(info, el, false);
+        String detail = Utils.detail(info, el, false);
+        return new DocumentSymbol(name, Utils.elementKind2SymbolKind(el.getKind()), range, selection != null ? selection : range, detail, children);
+    }
 
-        return new DocumentSymbol(simpleName, Utils.elementKind2SymbolKind(el.getKind()), range, range, null, children);
+    private static List<DocumentSymbol> getAnonymousInnerClasses(CompilationInfo info, TreePath path) {
+        List<DocumentSymbol> inner = new ArrayList<>();
+        new TreePathScanner<Void, Void>() {
+            @Override
+            public Void visitNewClass(NewClassTree node, Void p) {
+                if (node.getClassBody() != null) {
+                    Range range = Utils.treeRange(info, node);
+                    if (range != null) {
+                        Range selectionRange = Utils.treeRange(info, node.getIdentifier());
+                        Element e = info.getTrees().getElement(new TreePath(getCurrentPath(), node.getClassBody()));
+                        if (e != null) {
+                            Element te = info.getTrees().getElement(new TreePath(getCurrentPath(), node.getIdentifier()));
+                            if (te != null) {
+                                String name = "new " + te.getSimpleName() + "() {...}";
+                                List<DocumentSymbol> children = new ArrayList<>();
+                                for (Element c : e.getEnclosedElements()) {
+                                    DocumentSymbol ds = element2DocumentSymbol(info, c);
+                                    if (ds != null) {
+                                        children.add(ds);
+                                    }
+                                }
+                                inner.add(new DocumentSymbol(name, Utils.elementKind2SymbolKind(e.getKind()), range, selectionRange, null, children));
+                            }
+                        }
+                    }
+                }
+                return null;
+            }
+        }.scan(path, null);
+        return inner;
     }
 
     @Override
@@ -847,7 +895,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                             }
                             action.setKind(kind(err.getSeverity()));
                             if (inputAction.getCommand() != null) {
-                                action.setCommand(new Command(inputAction.getCommand().getTitle(), inputAction.getCommand().getCommand()));
+                                action.setCommand(new Command(inputAction.getCommand().getTitle(), inputAction.getCommand().getCommand(), Arrays.asList(params.getTextDocument().getUri())));
                             }
                             if (inputAction.getEdit() != null) {
                                 org.netbeans.api.lsp.WorkspaceEdit edit = inputAction.getEdit();
@@ -958,7 +1006,23 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         });
         return resultFuture;
     }
-                
+
+    @Override
+    public CompletableFuture<CodeAction> resolveCodeAction(CodeAction unresolved) {
+        JsonObject data = (JsonObject) unresolved.getData();
+        if (data != null) {
+            String providerClass = data.getAsJsonPrimitive(CodeActionsProvider.CODE_ACTIONS_PROVIDER_CLASS).getAsString();
+            for (CodeActionsProvider codeGenerator : Lookup.getDefault().lookupAll(CodeActionsProvider.class)) {
+                try {
+                    if (codeGenerator.getClass().getName().equals(providerClass)) {
+                        return codeGenerator.resolve(client, unresolved, data.get(CodeActionsProvider.DATA));
+                    }
+                } catch (Exception ex) {
+                }
+            }
+        }
+        return CompletableFuture.completedFuture(unresolved);
+    }
 
     @NbBundle.Messages({"# {0} - method name", "LBL_Run=Run {0}",
                         "# {0} - method name", "LBL_Debug=Debug {0}",
@@ -1397,6 +1461,32 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         } finally {
             reportNotificationDone("didClose", params);
         }
+    }
+
+    @Override
+    public CompletableFuture<List<TextEdit>> willSaveWaitUntil(WillSaveTextDocumentParams params) {
+        String uri = params.getTextDocument().getUri();
+        JavaSource js = getJavaSource(uri);
+        if (js == null) {
+            return CompletableFuture.completedFuture(Collections.emptyList());
+        }
+        ConfigurationItem conf = new ConfigurationItem();
+        conf.setScopeUri(uri);
+        conf.setSection(NETBEANS_JAVA_ON_SAVE_ORGANIZE_IMPORTS);
+        return client.configuration(new ConfigurationParams(Collections.singletonList(conf))).thenApply(c -> {
+            if (c != null && !c.isEmpty() && ((JsonPrimitive) c.get(0)).getAsBoolean()) {
+                try {
+                    List<TextEdit> edits = TextDocumentServiceImpl.modify2TextEdits(js, wc -> {
+                        wc.toPhase(JavaSource.Phase.RESOLVED);
+                        if (wc.getDiagnostics().isEmpty()) {
+                            OrganizeImports.doOrganizeImports(wc, null, false);
+                        }
+                    });
+                    return edits;
+                } catch (IOException ex) {}
+            }
+            return Collections.emptyList();
+        });
     }
 
     @Override

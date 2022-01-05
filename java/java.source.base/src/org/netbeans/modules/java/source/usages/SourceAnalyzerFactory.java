@@ -57,7 +57,6 @@ import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.java.source.SourceUtils;
 import org.netbeans.modules.java.source.ElementHandleAccessor;
-import org.netbeans.modules.java.source.TreeShims;
 import org.netbeans.modules.java.source.builder.ElementsService;
 import org.netbeans.modules.java.source.indexing.JavaCustomIndexer;
 import org.netbeans.modules.java.source.parsing.FileObjects;
@@ -404,7 +403,7 @@ public final class SourceAnalyzerFactory {
                 state=oldState;
             }
             scan(node.getTypeDecls(),p);
-            scan(TreeShims.getModule(cu),p); //note: on older JDKs, this will analyze the ModuleTree twice
+            scan(cu.getModule(),p);
 
             Pair<BinaryName,String> name = null;
             if (!imports.isEmpty() ||

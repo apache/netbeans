@@ -19,21 +19,28 @@
 package org.netbeans.modules.java.lsp.server;
 
 import com.google.gson.stream.JsonWriter;
+import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.LineMap;
+import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
+import com.sun.source.tree.VariableTree;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.io.StringWriter;
 import java.net.MalformedURLException;
 import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.Properties;
+import java.util.Iterator;
+import java.util.List;
+import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
+import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.PackageElement;
+import javax.lang.model.element.TypeElement;
+import javax.lang.model.element.TypeParameterElement;
+import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.ArrayType;
+import javax.lang.model.type.TypeKind;
+import javax.lang.model.type.TypeMirror;
 import javax.swing.text.StyledDocument;
 import org.eclipse.lsp4j.Position;
 import org.eclipse.lsp4j.Range;
@@ -41,11 +48,10 @@ import org.eclipse.lsp4j.SymbolKind;
 import org.netbeans.api.editor.document.LineDocument;
 import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.java.source.CompilationInfo;
+import org.netbeans.modules.editor.java.Utilities;
 import org.openide.cookies.EditorCookie;
 import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.URLMapper;
-import org.openide.modules.Places;
 import org.openide.text.NbDocument;
 import org.openide.util.Exceptions;
 
@@ -95,6 +101,97 @@ public class Utils {
         }
     }
 
+    public static String label(CompilationInfo info, Element e, boolean fqn) {
+        switch (e.getKind()) {
+            case PACKAGE:
+                PackageElement pe = (PackageElement) e;
+                return fqn ? pe.getQualifiedName().toString() : pe.getSimpleName().toString();
+            case CLASS:
+            case INTERFACE:
+            case ENUM:
+            case ANNOTATION_TYPE:
+                TypeElement te = (TypeElement) e;
+                StringBuilder sb = new StringBuilder();
+                sb.append(fqn ? te.getQualifiedName() : te.getSimpleName());
+                List<? extends TypeParameterElement> typeParams = te.getTypeParameters();
+                if (typeParams != null && !typeParams.isEmpty()) {
+                    sb.append("<"); // NOI18N
+                    for(Iterator<? extends TypeParameterElement> it = typeParams.iterator(); it.hasNext();) {
+                        TypeParameterElement tp = it.next();
+                        sb.append(tp.getSimpleName());
+                        List<? extends TypeMirror> bounds = tp.getBounds();
+                        if (!bounds.isEmpty()) {
+                            if (bounds.size() > 1 || !"java.lang.Object".equals(bounds.get(0).toString())) { // NOI18N
+                                sb.append(" extends "); // NOI18N
+                                for (Iterator<? extends TypeMirror> bIt = bounds.iterator(); bIt.hasNext();) {
+                                    sb.append(Utilities.getTypeName(info, bIt.next(), fqn));
+                                    if (bIt.hasNext()) {
+                                        sb.append(" & "); // NOI18N
+                                    }
+                                }
+                            }
+                        }
+                        if (it.hasNext()) {
+                            sb.append(", "); // NOI18N
+                        }
+                    }
+                    sb.append(">"); // NOI18N
+                }
+                return sb.toString();
+            case FIELD:
+            case ENUM_CONSTANT:
+                return e.getSimpleName().toString();
+            case CONSTRUCTOR:
+            case METHOD:
+                ExecutableElement ee = (ExecutableElement) e;
+                sb = new StringBuilder();
+                if (ee.getKind() == ElementKind.CONSTRUCTOR) {
+                    sb.append(ee.getEnclosingElement().getSimpleName());
+                } else {
+                    sb.append(ee.getSimpleName());
+                }
+                sb.append("("); // NOI18N
+                for (Iterator<? extends VariableElement> it = ee.getParameters().iterator(); it.hasNext();) {
+                    VariableElement param = it.next();
+                    if (!it.hasNext() && ee.isVarArgs() && param.asType().getKind() == TypeKind.ARRAY) {
+                        sb.append(Utilities.getTypeName(info, ((ArrayType) param.asType()).getComponentType(), fqn));
+                        sb.append("...");
+                    } else {
+                        sb.append(Utilities.getTypeName(info, param.asType(), fqn));
+                    }
+                    sb.append(" "); // NOI18N
+                    sb.append(param.getSimpleName());
+                    if (it.hasNext()) {
+                        sb.append(", "); // NOI18N
+                    }
+                }
+                sb.append(")"); // NOI18N
+                return sb.toString();
+        }
+        return null;
+    }
+
+    public static String detail(CompilationInfo info, Element e, boolean fqn) {
+        switch (e.getKind()) {
+            case FIELD:
+                StringBuilder sb = new StringBuilder();
+                sb.append(": " );
+                sb.append(Utilities.getTypeName(info, e.asType(), fqn));
+                return sb.toString();
+            case METHOD:
+                sb = new StringBuilder();
+                TypeMirror rt = ((ExecutableElement) e).getReturnType();
+                if (rt.getKind() == TypeKind.VOID) {
+                    sb.append(": void" );
+                } else {
+                    sb.append(": ");
+                    sb.append(Utilities.getTypeName(info, rt, fqn));
+                }
+                return sb.toString();
+        }
+        return null;
+    }
+
     public static Range treeRange(CompilationInfo info, Tree tree) {
         long start = info.getTrees().getSourcePositions().getStartPosition(info.getCompilationUnit(), tree);
         long end   = info.getTrees().getSourcePositions().getEndPosition(info.getCompilationUnit(), tree);
@@ -103,6 +200,26 @@ public class Utils {
         }
         return new Range(createPosition(info.getCompilationUnit(), (int) start),
                          createPosition(info.getCompilationUnit(), (int) end));
+    }
+
+    public static Range selectionRange(CompilationInfo info, Tree tree) {
+        int[] span = null;
+        switch (tree.getKind()) {
+            case CLASS:
+                span = info.getTreeUtilities().findNameSpan((ClassTree) tree);
+                break;
+            case METHOD:
+                span = info.getTreeUtilities().findNameSpan((MethodTree)tree);
+                break;
+            case VARIABLE:
+                span = info.getTreeUtilities().findNameSpan((VariableTree)tree);
+                break;
+        }
+        if (span == null) {
+            return null;
+        }
+        return new Range(createPosition(info.getCompilationUnit(), (int) span[0]),
+                         createPosition(info.getCompilationUnit(), (int) span[1]));
     }
 
     public static Position createPosition(CompilationUnitTree cut, int offset) {

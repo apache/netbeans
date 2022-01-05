@@ -65,5 +65,13 @@ class WorkspaceUIContext extends UIContext {
         }
         return null;
     }
-    
+
+    @Override
+    protected CompletableFuture<String> showHtmlPage(HtmlPageParams msg) {
+        return client.showHtmlPage(msg);
+    }
+
+    public final NbCodeClientCapabilities getNbCodeCapabilities() {
+        return client.getNbCodeCapabilities();
+    }
 }

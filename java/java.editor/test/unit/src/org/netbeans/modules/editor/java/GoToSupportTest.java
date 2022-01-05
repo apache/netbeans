@@ -48,7 +48,6 @@ import org.netbeans.api.java.source.TestUtilities;
 import org.netbeans.api.lexer.Language;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.editor.java.GoToSupport.UiUtilsCaller;
-import org.netbeans.modules.java.source.TreeShims;
 //import org.netbeans.modules.java.source.TreeLoader;
 import org.netbeans.modules.java.source.parsing.JavacParser;
 import org.netbeans.spi.java.queries.CompilerOptionsQueryImplementation;
@@ -1022,6 +1021,7 @@ public class GoToSupportTest extends NbTestCase {
             //OK, no RELEASE_10, skip test:
             return ;
         }
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
         final boolean[] wasCalled = new boolean[1];
         this.sourceLevel = "1.10";
         final String code = "package test;\n" +
@@ -1479,7 +1479,7 @@ public class GoToSupportTest extends NbTestCase {
                             parameter.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
                             Element e = el.resolve(parameter);
 
-                            assertTrue(TreeShims.isRecord(e));
+                            assertTrue(e.getKind() == ElementKind.RECORD);
                             assertEquals("test.Auxiliary", ((TypeElement) e).getQualifiedName().toString());
                             wasCalled[0] = true;
                         }

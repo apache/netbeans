@@ -116,12 +116,13 @@ public class NBParserFactory extends ParserFactory {
         }
 
         @Override
-        protected JCTree methodDeclaratorRest(int pos, JCModifiers mods, JCExpression type, Name name, List<JCTypeParameter> typarams, boolean isInterface, boolean isVoid, Comment dc) {
+        protected JCTree methodDeclaratorRest(int pos, JCModifiers mods, JCExpression type, Name name, List<JCTypeParameter> typarams, boolean isInterface, boolean isVoid, boolean isRecord, Comment dc) {
             if (cancelService != null) {
                 cancelService.abortIfCanceled();
             }
-            return super.methodDeclaratorRest(pos, mods, type, name, typarams, isInterface, isVoid, dc);
+            return super.methodDeclaratorRest(pos, mods, type, name, typarams, isInterface, isVoid, isRecord, dc);
         }
+
 
         @Override
         public int getEndPos(JCTree jctree) {

@@ -102,6 +102,7 @@ public class PrepareBundles {
             Writer binariesList = new OutputStreamWriter(Files.newOutputStream(bundlesDir.resolve("binaries-list")), "UTF-8")) {
             for (Path module : ds) {
                 if (".bin".equals(module.getFileName().toString())) continue;
+                if (".package-lock.json".equals(module.getFileName().toString())) continue;
                 if ("@types".equals(module.getFileName().toString())) continue;
                 if ("@ungap".equals(module.getFileName().toString())) {
                     module = module.resolve("promise-all-settled");

@@ -73,7 +73,7 @@ public class DefaultMatcher extends AbstractMatcher {
         if (trivial) {
             realMatcher = new TrivialFileMatcher();
         } else {
-            boolean multiline = TextRegexpUtil.canBeMultilinePattern(
+            boolean multiline = TextRegexpUtil.isMultilineOrMatchesMultiline(
                     searchPattern.getSearchExpression());
 
             realMatcher = multiline

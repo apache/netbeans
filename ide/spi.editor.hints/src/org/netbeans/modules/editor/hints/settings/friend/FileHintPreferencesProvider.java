@@ -29,5 +29,6 @@ public interface FileHintPreferencesProvider {
     
     //TODO: change listener - requires Result?
     public Preferences getFilePreferences(FileObject file, String mimeType);
-    
+    public boolean openFilePreferences(FileObject file, String mimeType, String hintId);
+
 }

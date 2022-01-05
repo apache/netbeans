@@ -1365,6 +1365,7 @@ public class Utilities {
         }
 
 
+        @Override
         public JCVariableDecl formalParameter(boolean lambdaParam, boolean recordComponents) {
             if (token.kind == TokenKind.IDENTIFIER) {
                 if (token.name().startsWith(dollar)) {
@@ -1378,35 +1379,7 @@ public class Utilities {
                     }
                 }
             }
-            JCTree.JCVariableDecl result = null;
-            try {
-                Class<?>[] paramTypes = {boolean.class, boolean.class};
-                result = (JCTree.JCVariableDecl) MethodHandles.lookup()
-                        .findSpecial(JavacParser.class, "formalParameter", MethodType.methodType(JCTree.JCVariableDecl.class, paramTypes), JackpotJavacParser.class) // NOI18N
-                        .invoke(this, lambdaParam, recordComponents);
-            } catch (Throwable ex) {
-                throw new IllegalStateException(ex);
-            }
-            return result;
-
-        }
-        
-        @Override
-        public JCVariableDecl formalParameter(boolean lambdaParam) {
-            if (token.kind == TokenKind.IDENTIFIER) {
-                if (token.name().startsWith(dollar)) {
-                    com.sun.tools.javac.util.Name name = token.name();
-
-                    Token peeked = S.token(1);
-
-                    if (peeked.kind == TokenKind.COMMA || peeked.kind == TokenKind.RPAREN) {
-                        nextToken();
-                        return JackpotTrees.createVariableWildcard(ctx, name);
-                    }
-                }
-            }
-
-            return super.formalParameter(lambdaParam);
+            return super.formalParameter(lambdaParam, recordComponents);
         }
 
         @Override
@@ -1448,6 +1421,7 @@ public class Utilities {
             return super.catchClause();
         }
         
+        @Override
         public com.sun.tools.javac.util.List<JCTree> classOrInterfaceOrRecordBodyDeclaration(com.sun.tools.javac.util.Name className, boolean isInterface, boolean isRecord) {
 
             if (token.kind == TokenKind.IDENTIFIER) {
@@ -1465,36 +1439,9 @@ public class Utilities {
                 }
             }
 
-            com.sun.tools.javac.util.List<JCTree> result = null;
-            Class<?>[] argsType = {com.sun.tools.javac.util.Name.class, boolean.class, boolean.class};
-            try {
-                result = (com.sun.tools.javac.util.List<JCTree>) MethodHandles.lookup().findSpecial(JavacParser.class, "classOrInterfaceOrRecordBodyDeclaration", MethodType.methodType(com.sun.tools.javac.util.List.class, argsType), JackpotJavacParser.class) // NOI18N
-                        .invoke(this, className, false, false);
-            } catch (Throwable ex) {
-                throw new IllegalStateException(ex);
-            }
-            return result;
+            return super.classOrInterfaceOrRecordBodyDeclaration(className, isInterface, isRecord);
         }
         
-        @Override
-        public com.sun.tools.javac.util.List<JCTree> classOrInterfaceBodyDeclaration(com.sun.tools.javac.util.Name className, boolean isInterface) {
-            if (token.kind == TokenKind.IDENTIFIER) {
-                if (token.name().startsWith(dollar)) {
-                    com.sun.tools.javac.util.Name name = token.name();
-
-                    Token peeked = S.token(1);
-
-                    if (peeked.kind == TokenKind.SEMI) {
-                        nextToken();
-                        nextToken();
-                        
-                        return com.sun.tools.javac.util.List.<JCTree>of(F.Ident(name));
-                    }
-                }
-            }
-            return super.classOrInterfaceBodyDeclaration(className, isInterface);
-        }
-
         @Override
         protected JCExpression checkExprStat(JCExpression t) {
             if (t.getTag() == JCTree.Tag.IDENT) {
@@ -1525,8 +1472,7 @@ public class Utilities {
                         }
 
                         JCIdent identTree = F.at(pos).Ident(name);
-
-                        return JackpotTrees.createInstance(ctx, JCCase.class, name, identTree, new Class<?>[] {JCExpression.class, com.sun.tools.javac.util.List.class}, new Object[] {identTree, com.sun.tools.javac.util.List.nil()});
+                        return JackpotTrees.createJCCase(name, identTree, com.sun.tools.javac.util.List.nil());
                     }
                 }
             }
@@ -1555,17 +1501,9 @@ public class Utilities {
                             nextToken();
                         }
 
-                        @SuppressWarnings("rawtypes")
-                        Class caseKind = Class.forName("com.sun.source.tree.CaseTree$CaseKind", false, JCCase.class.getClassLoader());
-                        @SuppressWarnings("unchecked")
-                        Object statement = Enum.valueOf(caseKind, "STATEMENT");
-
                         JCIdent identTree = F.at(pos).Ident(name);
                         return com.sun.tools.javac.util.List.of(
-                                    JackpotTrees.createInstance(ctx, JCCase.class, name, identTree,
-                                        new Class<?>[] {caseKind, com.sun.tools.javac.util.List.class, com.sun.tools.javac.util.List.class, JCTree.class},
-                                        new Object[] {statement, com.sun.tools.javac.util.List.of(identTree), com.sun.tools.javac.util.List.nil(), null}
-                                    )
+                                    JackpotTrees.createJCCase(name, identTree, "STATEMENT", com.sun.tools.javac.util.List.of(identTree), com.sun.tools.javac.util.List.nil(), null)
                                 );
                     }
                 }

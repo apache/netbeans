@@ -96,7 +96,7 @@ public final class GradleDistributionManager {
         GradleVersion.version("6.3"), // JDK-14
         GradleVersion.version("6.7"), // JDK-15
         GradleVersion.version("7.0"), // JDK-16
-        GradleVersion.version("7.2"), // JDK-17
+        GradleVersion.version("7.3"), // JDK-17
     };
     private static final int JAVA_VERSION;
 
@@ -436,14 +436,24 @@ public final class GradleDistributionManager {
          * @return <code>true</code> if this version is supported with that JDK.
          */
         public boolean isCompatibleWithJava(int jdkMajorVersion) {
+            return jdkMajorVersion <= lastSupportedJava();
+        }
+
+        /**
+         * Returns the newest major JDK version that is supported with this
+         * distribution.
+         * @return the newest major JDK version that is supported with this
+         *    distribution.
+         * @since 2.22
+         */
+        public int lastSupportedJava() {
             int i = JDK_COMPAT.length - 1;
             while ((i >= 0) && version.compareTo(JDK_COMPAT[i]) < 0) {
                 i--;
             }
-            int maxSupportedJDK = i + 9;
-            return jdkMajorVersion <= maxSupportedJDK;
+            return i + 9;
         }
-
+        
         /**
          * Checks if this Gradle distribution is compatible the NetBeans
          * runtime JDK.

@@ -21,6 +21,7 @@ package org.netbeans.insane.live;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import org.netbeans.insane.hook.MakeAccessible;
 import org.netbeans.insane.impl.Root;
 import org.netbeans.insane.impl.Utils;
 
@@ -141,7 +142,7 @@ public final class Path {
                     Field act = flds[i];
 
                     if (act.getType().isPrimitive() || (act.getModifiers() & Modifier.STATIC) != 0) continue;
-                    act.setAccessible(true);
+                    MakeAccessible.setAccessible(act, true);
                     if (target == act.get(item)) return act.getName();
                 } catch (Exception e) {
                     return "<error>";

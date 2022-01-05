@@ -98,6 +98,20 @@ public class PHPStanReportParserTest extends NbTestCase {
         assertEquals(3, results.size());
     }
 
+    public void testParseWithHtmlEntities() throws Exception {
+        FileObject root = getDataDir("phpstan/PHPStanSupport");
+        FileObject workDir = root;
+        List<Result> results = PHPStanReportParser.parse(getLogFile("phpstan-log-html-entities.xml"), root, workDir);
+        assertNotNull(results);
+
+        assertEquals(1, results.size());
+        Result result = results.get(0);
+        assertEquals(FileUtil.toFile(root.getFileObject("HelloWorld.php")).getAbsolutePath(), result.getFilePath());
+        assertEquals(7, result.getLine());
+        assertEquals("error: Function count() should return int but returns array<string>.", result.getCategory());
+        assertEquals("Function count() should return int but returns array&lt;string&gt;.", result.getDescription());
+    }
+
     private File getLogFile(String name) throws Exception {
         assertNotNull(name);
         File phpstan = new File(getDataDir(), "phpstan");

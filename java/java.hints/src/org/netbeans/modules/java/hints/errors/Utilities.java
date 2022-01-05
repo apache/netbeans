@@ -149,6 +149,7 @@ import org.netbeans.api.java.source.CodeStyle;
 import org.netbeans.api.java.source.CodeStyleUtils;
 import org.netbeans.api.java.source.TreeMaker;
 import org.netbeans.modules.java.source.JavaSourceAccessor;
+import org.netbeans.modules.java.source.TreeShims;
 import org.netbeans.spi.java.hints.JavaFix;
 import org.netbeans.spi.java.hints.JavaFixUtilities;
 import org.openide.util.Pair;
@@ -3198,9 +3199,9 @@ public class Utilities {
             CaseTree ct = it.next();
             TreePath casePath = new TreePath(tp, ct);
             if(TreeShims.isPatternMatch(st)){
-                patterns.addAll(TreeShims.getLabels(ct));
+                patterns.addAll(ct.getLabels());
             }else{
-                patterns.addAll(TreeShims.getExpressions(ct));
+                patterns.addAll(ct.getExpressions());
             }
             List<StatementTree> statements;
             if (ct.getStatements() == null) {

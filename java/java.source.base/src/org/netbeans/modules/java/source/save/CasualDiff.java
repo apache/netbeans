@@ -173,6 +173,7 @@ import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import org.openide.util.NbCollections;
 import javax.lang.model.type.TypeKind;
+import org.netbeans.modules.java.source.TreeShims;
 import org.netbeans.modules.java.source.transform.TreeHelpers;
 
 public class CasualDiff {
@@ -1970,14 +1971,14 @@ public class CasualDiff {
         List<? extends JCTree> newPatterns;
         
         if(TreeShims.isJDKVersionRelease17_Or_Above() && 
-            !(getCaseLabelPatterns(oldT).size() == 1 && getCaseLabelPatterns(oldT).get(0).getKind().toString().equals(TreeShims.DEFAULT_CASE_LABEL))){
+            !(getCaseLabelPatterns(oldT).size() == 1 && getCaseLabelPatterns(oldT).get(0).getKind().toString().equals("DEFAULT_CASE_LABEL"))){
             oldPatterns = getCaseLabelPatterns(oldT);            
         }else{
             oldPatterns = getCasePatterns(oldT);           
         }
         
         if(TreeShims.isJDKVersionRelease17_Or_Above() && 
-            !(getCaseLabelPatterns(newT).size() == 1 && getCaseLabelPatterns(newT).get(0).getKind().toString().equals(TreeShims.DEFAULT_CASE_LABEL))){
+            !(getCaseLabelPatterns(newT).size() == 1 && getCaseLabelPatterns(newT).get(0).getKind().toString().equals("DEFAULT_CASE_LABEL"))){
             newPatterns = getCaseLabelPatterns(newT);            
         }else{
             newPatterns = getCasePatterns(newT);           

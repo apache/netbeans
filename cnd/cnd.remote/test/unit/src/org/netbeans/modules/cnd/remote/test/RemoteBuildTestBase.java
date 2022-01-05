@@ -24,20 +24,12 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 import javax.swing.SwingUtilities;
 import org.netbeans.api.annotations.common.SuppressWarnings;
 import org.netbeans.api.project.ProjectManager;
-import org.netbeans.modules.cnd.api.model.CsmFile;
-import org.netbeans.modules.cnd.api.model.CsmInclude;
-import org.netbeans.modules.cnd.api.model.CsmModel;
-import org.netbeans.modules.cnd.api.model.CsmModelAccessor;
-import org.netbeans.modules.cnd.api.model.CsmProject;
-import org.netbeans.modules.cnd.api.project.NativeProject;
 import org.netbeans.modules.cnd.api.remote.RemoteFileUtil;
 import org.netbeans.modules.cnd.api.remote.ServerList;
 import org.netbeans.modules.cnd.api.remote.ServerRecord;
@@ -56,7 +48,6 @@ import org.netbeans.modules.cnd.makeproject.api.configurations.MakeConfiguration
 import org.netbeans.modules.cnd.makeproject.api.configurations.MakeConfigurationDescriptor;
 import org.netbeans.modules.cnd.makeproject.api.ui.wizard.WizardConstants;
 import org.netbeans.modules.cnd.makeproject.ui.wizards.MakeSampleProjectIterator;
-import org.netbeans.modules.cnd.modelimpl.csm.core.ModelImpl;
 import org.netbeans.modules.cnd.remote.server.RemoteServerRecord;
 import org.netbeans.modules.cnd.spi.remote.RemoteSyncFactory;
 import org.netbeans.modules.cnd.utils.FSPath;
@@ -365,6 +356,10 @@ public class RemoteBuildTestBase extends RemoteTestBase {
         }
     }
 
+    /*
+    NOTE: Dependency with CSM (Code Source Model/code model api) has been
+    dropped during the migration to Apache NetBeans.
+
     protected CsmProject getCsmProject(MakeProject makeProject) throws Exception {
         NativeProject np = makeProject.getLookup().lookup(NativeProject.class);
         assertNotNull("Null NativeProject", np);
@@ -395,12 +390,12 @@ public class RemoteBuildTestBase extends RemoteTestBase {
             }
         }
     }
-
     protected void checkIncludes(CsmProject csmProject, boolean recursive) throws Exception {
         for (CsmFile csmFile : csmProject.getAllFiles()) {
             checkIncludes(csmFile, recursive, new HashSet<CsmFile>());
         }
     }
+    */
     
     protected void trace(String pattern, Object... args) {
         if (trace) {

@@ -28,7 +28,6 @@ import junit.framework.AssertionFailedError;
 import org.netbeans.modules.cnd.remote.test.RemoteBuildTestBase;
 import junit.framework.Test;
 import org.netbeans.api.project.ProjectManager;
-import org.netbeans.modules.cnd.api.model.CsmProject;
 import org.netbeans.modules.cnd.makeproject.api.MakeProject;
 import org.netbeans.modules.cnd.remote.test.RemoteDevelopmentTest;
 import org.netbeans.modules.nativeexecution.api.ExecutionEnvironment;
@@ -98,31 +97,6 @@ public class FullRemoteBuildTestCase extends RemoteBuildTestBase {
     }
 
     @ForAllEnvironments
-    public void test_iz_249533() throws Exception {
-        MakeProject makeProject = importProject("simple_make_project_to_import", false);
-        final String origHeaderName = "change_case.h";
-        final FileObject parentFO = makeProject.getProjectDirectory();
-        FileObject headerFO = parentFO.getFileObject(origHeaderName);
-        assertNotNull(headerFO);
-        headerFO.delete();
-        CsmProject csmProject = getCsmProject(makeProject);
-        AtomicReference<AssertionFailedError> exRef = new AtomicReference<>();
-        try {
-            checkCodeModel(makeProject);
-        } catch (AssertionFailedError ex) {
-            exRef.set(ex);
-        }
-        AssertionFailedError ex = exRef.get();
-        assertNotNull(ex);
-        String messageStart = "Unresolved include";
-        assertTrue("Unexpected exception " + ex.getMessage() + ", expected " + messageStart  , ex.getMessage().startsWith(messageStart));
-        headerFO = parentFO.createData(origHeaderName);
-        sleep(1);
-        csmProject.waitParse();
-        checkCodeModel(makeProject);
-    }
-
-    @ForAllEnvironments
     public void testFullRemoteBuildSimple() throws Exception {
         MakeProject makeProject = importProject("simple_make_project_to_import", false);
         buildProject(makeProject, ActionProvider.COMMAND_BUILD, getSampleBuildTimeout(), TimeUnit.SECONDS);
@@ -137,13 +111,11 @@ public class FullRemoteBuildTestCase extends RemoteBuildTestBase {
     @ForAllEnvironments
     public void testFullRemoteCodeModelSimple() throws Exception {
         MakeProject makeProject = importProject("simple_make_project_to_import", false);
-        checkCodeModel(makeProject);
     }
     
     @ForAllEnvironments
     public void testFullRemoteCodeModelLink() throws Exception {
         MakeProject makeProject = importProject("simple_make_project_to_import", true);
-        checkCodeModel(makeProject);
     }
     
     // hg filters out "nbproject/private", for that reason we have to rewname it and restore correct name while copying

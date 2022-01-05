@@ -87,6 +87,10 @@ public class ValidateRegistryTestCase extends NbTestCase {
             public void error(SAXParseException exception) throws SAXException {
                 if ("Document is invalid: no grammar found.".equals(exception.getMessage())) {
                     return;
+                } else if ("El documento no es válido: no se ha encontrado la gramática.".equals(exception.getMessage())) {
+                    return;
+                } else if ("El elemento raíz del documento \"toolchaindefinition\", debe coincidir con la raíz DOCTYPE \"null\".".equals(exception.getMessage()) ) {
+                    return;
                 } else if ("Document root element \"toolchaindefinition\", must match DOCTYPE root \"null\".".equals(exception.getMessage())) {
                     return;
                 }

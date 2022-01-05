@@ -33,7 +33,6 @@ import javax.swing.text.StyledDocument;
 import org.netbeans.editor.BaseDocument;
 import org.netbeans.editor.Utilities;
 import org.netbeans.junit.Manager;
-import org.netbeans.modules.cnd.modelutil.CsmUtilities;
 import org.openide.cookies.EditorCookie;
 import org.openide.filesystems.FileUtil;
 import org.openide.loaders.DataObject;
@@ -73,6 +72,31 @@ public class CndCoreTestUtils {
         } 
         return editor[0];
     }
+
+    /**
+     * This method taken from from contrib/cnd.modelutil:
+     * opens document even if it is very big by silently confirming open
+     * @param cookie
+     * @return
+     */
+    private static StyledDocument openDocument(EditorCookie cookie) {
+        if (cookie == null) {
+            return null;
+        }
+        StyledDocument document = null;
+        try {
+            try {
+                document = cookie.openDocument();
+            } catch (Exception e) {
+                document = cookie.openDocument();
+            }
+        } catch(Exception e) {
+            // no need to report
+        }
+        cookie.prepareDocument().waitFinished();
+        return document;
+    }
+
     
     public static BaseDocument getBaseDocument(final DataObject dob) throws Exception {
         EditorCookie  cookie = dob.getCookie(EditorCookie.class);
@@ -81,7 +105,7 @@ public class CndCoreTestUtils {
             throw new IllegalStateException("Given file (\"" + dob.getName() + "\") does not have EditorCookie."); // NOI18N
         }
         
-        StyledDocument doc = CsmUtilities.openDocument(cookie);
+        StyledDocument doc = openDocument(cookie);
         return doc instanceof BaseDocument ? (BaseDocument)doc : null;
     }
     

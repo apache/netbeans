@@ -58,6 +58,8 @@ import javax.imageio.ImageReader;
 import javax.imageio.stream.ImageInputStream;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
@@ -77,6 +79,18 @@ import org.openide.util.spi.SVGLoader;
  * @since 7.15
  */
 public final class ImageUtilities {
+
+    /**
+     * Property that holds URL of the image bits.
+     * @since 9.24
+     */
+    public static final String PROPERTY_URL = "url"; // NOI18N
+    
+    /**
+     * Property that holds ID of the image.
+     * @since 9.24
+     */
+    public static final String PROPERTY_ID = "imageID"; // NOI18N
 
     private static final Logger LOGGER = Logger.getLogger(ImageUtilities.class.getName());
 
@@ -117,18 +131,27 @@ public final class ImageUtilities {
      * {@link Icon#paintIcon(Component, Graphics, int, int)} when converting an {@code Icon} to an
      * {@code Image}. See comment in {@link #icon2ToolTipImage(Icon, URL)}.
      */
-    private static volatile Component dummyIconComponent;
+    private static volatile Component dummyIconComponentLabel;
+
+    /**
+     * Second dummy component. Some {@link Icon#paintIcon(java.awt.Component, java.awt.Graphics, int, int)} are very picky and downcast the
+     * Component to a specific subclass. JCheckBox will satisfy checkboxes, abstract buttons etc. Will not eliminate all cases, but helps.
+     * 
+     */
+    private static volatile Component dummyIconComponentButton;
 
     static {
         /* Could have used Mutex.EVENT.writeAccess here, but it doesn't seem to be available during
         testing. */
         if (EventQueue.isDispatchThread()) {
-            dummyIconComponent = new JLabel();
+            dummyIconComponentLabel = new JLabel();
+            dummyIconComponentButton = new JButton();
         } else {
             SwingUtilities.invokeLater(new Runnable() {
                 @Override
                 public void run() {
-                    dummyIconComponent = new JLabel();
+                    dummyIconComponentLabel = new JLabel();
+                    dummyIconComponentButton = new JCheckBox();
                 }
             });
         }
@@ -175,8 +198,8 @@ public final class ImageUtilities {
      * 
      * <p>Caching of loaded images can be used internally to improve performance.
      * <p> Since version 8.12 the returned image object responds to call
-     * <code>image.getProperty("url", null)</code> by returning the internal
-     * {@link URL} of the found and loaded <code>resource</code>.
+     * <code>image.getProperty({@link #PROPERTY_URL}, null)</code> by returning the internal
+     * {@link URL} of the found and loaded <code>resource</code>. See also {@link #findImageBaseURL}.
      * 
      * <p>If the current look and feel is 'dark' (<code>UIManager.getBoolean("nb.dark.theme")</code>)
      * then the method first attempts to load image <i>&lt;original file name&gt;<b>_dark</b>.&lt;original extension&gt;</i>.
@@ -352,7 +375,14 @@ public final class ImageUtilities {
         should really only be called on the Event Dispatch Thread. Constructing the component once
         on the EDT fixed the problem. Read-only operations from non-EDT threads shouldn't really be
         a problem; most Icon implementations won't ever access the component parameter anyway. */
-        icon.paintIcon(dummyIconComponent, g, 0, 0);
+        try {
+            icon.paintIcon(dummyIconComponentLabel, g, 0, 0);
+        } catch (ClassCastException ex) {
+            // java.desktop/javax.swing.plaf.metal.OceanTheme$IFIcon.paintIcon assumes a different component,
+            // so let's try second most used one type, it satisfies AbstractButton, JCheckbox. Not all cases are
+            // covered, however.
+            icon.paintIcon(dummyIconComponentButton, g, 0, 0);
+        }
         g.dispose();
         return image;
     }
@@ -382,7 +412,8 @@ public final class ImageUtilities {
                     return cached;
                 }
             }
-            cached = ToolTipImage.createNew(text, image, null);
+            Object id = image.getProperty(PROPERTY_ID, null);
+            cached = ToolTipImage.createNew(text, image, null, id instanceof String ? (String)id : null);
             imageToolTipCache.put(key, new ActiveRef<ToolTipImageKey>(cached, imageToolTipCache, key));
             return cached;
         }
@@ -447,6 +478,53 @@ public final class ImageUtilities {
         // Go through FilteredIcon to preserve scalable icons.
         return icon2Image(createDisabledIcon(image2Icon(image)));
     }
+    
+    /**
+     * Attempts to find image's URL, if it is defined. Image Observer features
+     * are not used during this call, the property is assumed to be populated. Note that
+     * the URL may be specific for a localization or branding, and may be the same for
+     * bare and badged icons.
+     * 
+     * @param image image to inspect
+     * @return image's URL or {@code null} if not defined.
+     * @since 9.24
+     */
+    public static URL findImageBaseURL(Image image) {
+      Object o = image.getProperty(PROPERTY_URL, null);
+      return o instanceof URL ? (URL)o : null;
+    }
+    
+    /**
+     * Attempts to find image's ID, if it is defined. The image may have an ID even
+     * though it has no URL. An image whose {@link #findImageBaseURL(java.awt.Image)} returns
+     * non-null has always an ID. Note that image IDs may be the same for bare and badged
+     * icons.
+     * 
+     * @param image image to inspect
+     * @return image's ID or {@code null}.
+     * @since 9.24
+     */
+    public static String findImageBaseId(Image image) {
+      Object o = image.getProperty(PROPERTY_ID, null);  
+      if (o instanceof String) {
+          return (String)o;
+      }
+      URL u = findImageBaseURL(image);
+      if (u == null) {
+          return null;
+      }
+      // special handling for JARs:
+      if (u.getProtocol().equals("jar")) { // NOI18N
+          String p = u.getPath();
+          int idx = p.indexOf("!/"); // NOI18N
+          if (idx > 0) {
+              // return just inner part, as if passed to loadImage().
+              return p.substring(idx + 2);
+          }
+      }
+      return u.toString();
+    }
+    
 
     /**
      * Get an SVG icon loader, if the appropriate service provider module is installed. To ensure
@@ -751,7 +829,7 @@ public final class ImageUtilities {
                 name = new String(name).intern(); // NOPMD
                 ToolTipImage toolTipImage = (result instanceof ToolTipImage)
                         ? (ToolTipImage) result
-                        : ToolTipImage.createNew("", result, url);
+                        : ToolTipImage.createNew("", result, url, null);
                 cache.put(name, new ActiveRef<String>(toolTipImage, cache, name));
                 return toolTipImage;
             } else { // no icon found
@@ -824,13 +902,16 @@ public final class ImageUtilities {
             }
             str.append(toolTip);
         }
-        Object firstUrl = image1.getProperty("url", null);
+        Object firstUrl = image1.getProperty(PROPERTY_URL, null);
+        Object firstId = image1.getProperty(PROPERTY_ID, null);
         
         ColorModel model = colorModel(bitmask? Transparency.BITMASK: Transparency.TRANSLUCENT);
         // Provide a delegate Icon for scalable rendering.
         Icon delegateIcon = new MergedIcon(image2Icon(image1), image2Icon(image2), x, y);
         ToolTipImage buffImage = new ToolTipImage(str.toString(), delegateIcon,
-                model, model.createCompatibleWritableRaster(w, h), model.isAlphaPremultiplied(), null, firstUrl instanceof URL ? (URL)firstUrl : null
+                model, model.createCompatibleWritableRaster(w, h), model.isAlphaPremultiplied(), null, 
+                firstUrl instanceof URL ? (URL)firstUrl : null,
+                firstId instanceof String ? (String)firstId : null
             );
 
         // Also provide an Image-based rendering for backwards-compatibility.
@@ -1057,27 +1138,34 @@ public final class ImageUtilities {
         final Icon delegateIcon;
         // May be null.
         final URL url;
+        
+        /**
+         * This is a better ID than URL, as it may not be openable, but it is just an ID.
+         */
+        final String imageId;
+        
         // May be null.
         ImageIcon imageIconVersion;
 
-        public static ToolTipImage createNew(String toolTipText, Image image, URL url) {
+        public static ToolTipImage createNew(String toolTipText, Image image, URL url, String imageId) {
             ImageUtilities.ensureLoaded(image);
             boolean bitmask = (image instanceof Transparency) && ((Transparency) image).getTransparency() != Transparency.TRANSLUCENT;
             ColorModel model = colorModel(bitmask ? Transparency.BITMASK : Transparency.TRANSLUCENT);
             int w = Math.max(1, image.getWidth(null));
             int h = Math.max(1, image.getHeight(null));
             if (url == null) {
-                Object value = image.getProperty("url", null);
+                Object value = image.getProperty(PROPERTY_URL, null);
                 url = (value instanceof URL) ? (URL) value : null;
-            }            
+            }
+
             Icon icon = (image instanceof ToolTipImage)
-                    ? ((ToolTipImage) image).getDelegateIcon() : null;
+                   ? ((ToolTipImage) image).getDelegateIcon() : null;
             ToolTipImage newImage = new ToolTipImage(
                 toolTipText,
                 icon,
                 model,
                 model.createCompatibleWritableRaster(w, h),
-                model.isAlphaPremultiplied(), null, url
+                model.isAlphaPremultiplied(), null, url, imageId
             );
 
             java.awt.Graphics g = newImage.createGraphics();
@@ -1088,12 +1176,13 @@ public final class ImageUtilities {
 
         public ToolTipImage(
             String toolTipText, Icon delegateIcon, ColorModel cm, WritableRaster raster,
-            boolean isRasterPremultiplied, Hashtable<?, ?> properties, URL url
+            boolean isRasterPremultiplied, Hashtable<?, ?> properties, URL url, String imageId
         ) {
             super(cm, raster, isRasterPremultiplied, properties);
             this.toolTipText = toolTipText;
             this.delegateIcon = delegateIcon;
             this.url = url;
+            this.imageId = imageId;
         }
 
         public synchronized ImageIcon asImageIcon() {
@@ -1112,6 +1201,7 @@ public final class ImageUtilities {
             this.delegateIcon = delegateIcon;
             this.toolTipText = toolTipText;
             this.url = url;
+            this.imageId = null;
         }
 
         /**
@@ -1178,13 +1268,14 @@ public final class ImageUtilities {
 
         @Override
         public Object getProperty(String name, ImageObserver observer) {
-            if ("url".equals(name)) { // NOI18N
+            if (PROPERTY_URL.equals(name) || PROPERTY_ID.equals(name)) { // NOI18N
                 /* In some cases it might strictly be more appropriate to return
                 Image.UndefinedProperty rather than null (see Javadoc spec for this method), but
                 retain the existing behavior and use null instead here. That way there won't be a
                 ClassCastException if someone tries to cast to URL. */
-                if (url != null) {
-                    return url;
+                Object v = PROPERTY_URL.equals(name) ? url : imageId;
+                if (v != null) {
+                    return v;
                 } else if (!(delegateIcon instanceof ImageIcon)) {
                     return null;
                 } else {
@@ -1192,7 +1283,7 @@ public final class ImageUtilities {
                     if (image == this || image == null) {
                         return null;
                     }
-                    return image.getProperty("url", observer);
+                    return image.getProperty(name, observer);
                 }
             }
             return super.getProperty(name, observer);

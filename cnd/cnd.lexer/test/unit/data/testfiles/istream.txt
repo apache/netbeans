@@ -1,0 +1,639 @@
+// -*- C++ -*-
+/***************************************************************************
+ *
+ * istream - Declarations for the Standard Library istreams
+ *
+ * $Id$
+ *
+ ***************************************************************************
+ *
+ * Licensed to the Apache Software  Foundation (ASF) under one or more
+ * contributor  license agreements.  See  the NOTICE  file distributed
+ * with  this  work  for  additional information  regarding  copyright
+ * ownership.   The ASF  licenses this  file to  you under  the Apache
+ * License, Version  2.0 (the  "License"); you may  not use  this file
+ * except in  compliance with the License.   You may obtain  a copy of
+ * the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the  License is distributed on an  "AS IS" BASIS,
+ * WITHOUT  WARRANTIES OR CONDITIONS  OF ANY  KIND, either  express or
+ * implied.   See  the License  for  the  specific language  governing
+ * permissions and limitations under the License.
+ *
+ * Copyright 1994-2006 Rogue Wave Software.
+ * 
+ **************************************************************************/
+
+// This file copied from http://svn.apache.org/repos/asf/stdcxx/trunk/include/istream
+
+#ifndef _RWSTD_ISTREAM_INCLUDED
+#define _RWSTD_ISTREAM_INCLUDED
+
+#if __GNUG__ >= 3
+#  pragma GCC system_header
+#endif   // gcc >= 3
+
+#ifndef _RWSTD_NO_REDUNDANT_DEFINITIONS
+#  include <ostream>
+#endif   // _RWSTD_NO_REDUNDANT_DEFINITIONS
+
+#include <loc/_num_get.h>
+#include <loc/_num_put.h>
+
+#include <rw/_basic_ios.h>
+#include <rw/_mutex.h>
+#include <rw/_traits.h>
+
+#include <rw/_defs.h>
+
+
+_RWSTD_NAMESPACE (__rw) {
+
+_EXPORT
+template <class _CharT, class _Traits, class _NativeType>
+_STD::basic_istream<_CharT, _Traits>&
+__rw_extract (_STD::basic_istream<_CharT, _Traits>&, _NativeType&);
+
+
+#ifdef _RWSTD_NO_EXT_NUM_GET
+
+template <class _CharT, class _Traits>
+inline _STD::basic_istream<_CharT, _Traits>&
+__rw_extract (_STD::basic_istream<_CharT, _Traits> &__strm,
+              short                                &__val)
+{
+    long __tmp = __val;
+    __rw_extract (__strm, __tmp);
+
+    _STD::ios_base::iostate __err = _STD::ios_base::goodbit;
+    __val = __rw_check_overflow_short (__tmp, __strm.flags (), __err);
+
+    if (_STD::ios_base::goodbit != __err)
+        __strm.setstate (__err);
+
+    return __strm;
+}
+
+template <class _CharT, class _Traits>
+inline _STD::basic_istream<_CharT, _Traits>&
+__rw_extract (_STD::basic_istream<_CharT, _Traits> &__strm,
+              int                                  &__val)
+{
+    long __tmp = __val;
+    __rw_extract (__strm, __tmp);
+
+    _STD::ios_base::iostate __err = _STD::ios_base::goodbit;
+    __val = __rw_check_overflow_int (__tmp, __strm.flags (), __err);
+
+    if (_STD::ios_base::goodbit != __err)
+        __strm.setstate (__err);
+
+    return __strm;
+}
+
+#endif   // _RWSTD_NO_EXT_NUM_GET
+
+}   // namespace __rw
+
+
+_RWSTD_NAMESPACE (std) {
+
+#ifndef _RWSTD_IOSFWD_INCLUDED
+
+_EXPORT
+template <class _CharT, class _Traits = char_traits<_CharT> >
+class basic_istream;
+
+_EXPORT
+template <class _CharT, class _Traits = char_traits<_CharT> >
+class basic_iostream;
+
+typedef basic_istream<char>  istream;
+typedef basic_iostream<char> iostream;
+
+#  ifndef _RWSTD_NO_WCHAR_T
+
+typedef basic_istream<wchar_t>  wistream;
+typedef basic_iostream<wchar_t> wiostream;
+
+#  endif   // _RWSTD_NO_WCHAR_T
+#endif   // _RWSTD_IOSFWD_INCLUDED
+
+
+_EXPORT
+template <class _CharT, class _Traits>
+class basic_istream: virtual public basic_ios<_CharT, _Traits>
+{
+public:
+
+    typedef _CharT                                    char_type;
+    typedef _Traits                                   traits_type;
+    typedef typename traits_type::int_type           int_type;
+    typedef typename traits_type::pos_type           pos_type;
+    typedef typename traits_type::off_type           off_type;
+      
+    // 27.6.1.1.1, p1
+    explicit basic_istream (basic_streambuf<char_type, traits_type> *__sb)
+        : _C_gcount (0) {
+        this->init (__sb);
+    }
+
+    // called from sentry's ctor to prepare stream before input
+    basic_istream&
+    _C_ipfx (bool, ios_base::iostate = ios_base::eofbit | ios_base::failbit);
+
+#ifdef _RWSTD_NO_NESTED_CLASS_ACCESS
+
+    // allow access to ios_base::_C_bufmutex() if the resolution
+    // of cwg issue 45 is not yet implemented
+    struct sentry;
+    friend struct sentry;
+
+#endif   // _RWSTD_NO_NESTED_CLASS_ACCESS
+
+    // 27.6.1.1.2
+    struct sentry: _RW::__rw_guard {
+
+        // 27.6.1.1.2, p2 - assumes 0 != __strm.rdbuf ()
+        explicit sentry (basic_istream &__strm, bool __noskipws = false)
+            : _RW::__rw_guard (__strm._C_bufmutex ()),
+              _C_ok (__strm._C_ipfx (__noskipws).good ()) { /* no-op */ }
+
+        // 27.6.1.1.2, p8
+        operator bool () const {
+            return _C_ok;
+        }
+
+    private:
+        bool _C_ok;
+
+        sentry (const sentry&);           // (normally) not defined
+        void operator= (const sentry&);   // (normally) not defined
+    };
+
+    // 27.6.1.2.3, p1, lwg issue 60
+    basic_istream& operator>> (basic_istream& (*__pf)(basic_istream&)) {
+        return (*__pf)(*this);
+    }
+
+    // 27.6.1.2.3, p2, lwg issue 60
+    basic_istream& operator>>(basic_ios<char_type, traits_type>& (*__pf)
+                              (basic_ios<char_type, traits_type>&)) {
+        return (*__pf)(*this), *this;
+    }
+
+    // 27.6.1.2.3, p4, lwg issue 60
+    basic_istream& operator>> (ios_base& (*__pf)(ios_base&)) {
+        return (*__pf)(*this), *this;
+    }
+
+
+    // 27.6.1.2.2 - Arithmetic Extractors
+
+#ifndef _RWSTD_NO_NATIVE_BOOL
+
+    basic_istream& operator>> (bool &__val) {
+        return _RW::__rw_extract (*this, __val);
+    }
+
+#endif   // _RWSTD_NO_NATIVE_BOOL
+
+    basic_istream& operator>>(short &__val) {
+        return _RW::__rw_extract (*this, __val);
+    }
+
+    basic_istream& operator>>(unsigned short &__val) {
+        return _RW::__rw_extract (*this, __val);
+    }
+
+    basic_istream& operator>>(int &__val) {
+        return _RW::__rw_extract (*this, __val);
+    }
+
+    basic_istream& operator>>(unsigned int &__val) {
+        return _RW::__rw_extract (*this, __val);
+    }
+
+    basic_istream& operator>>(long &__val) {
+        return _RW::__rw_extract (*this, __val);
+    }
+
+    basic_istream& operator>>(unsigned long &__val) {
+        return _RW::__rw_extract (*this, __val);
+    }
+
+    basic_istream& operator>>(float &__val) {
+        return _RW::__rw_extract (*this, __val);
+    }
+
+    basic_istream& operator>>(double &__val) {
+        return _RW::__rw_extract (*this, __val);
+    }
+
+    basic_istream& operator>>(long double &__val) {
+        return _RW::__rw_extract (*this, __val);
+    }
+
+#ifdef _RWSTD_LONG_LONG
+
+    basic_istream& operator>>(_RWSTD_LONG_LONG &__val) {
+        return _RW::__rw_extract (*this, __val);
+    }
+
+    basic_istream& operator>>(unsigned _RWSTD_LONG_LONG &__val) {
+        return _RW::__rw_extract (*this, __val);
+    }
+
+#endif   // _RWSTD_LONG_LONG
+
+    basic_istream& operator>>(void* &__val) {
+        return _RW::__rw_extract (*this, __val);
+    }
+
+    // 27.6.1.2.3, p13
+    basic_istream& operator>>(basic_streambuf<char_type, traits_type>*);
+
+    // 27.6.1.3 - Unformatted input functions
+
+    // 27.6.1.3, p3
+    int_type get ();
+
+    // 27.6.1.3, p5
+    basic_istream& get (char_type&);
+
+    // 27.6.1.3, p7: extract at most n - 1 chars, delim not extracted
+    //               always null-terminate, fail if no char extracted
+    basic_istream& get (char_type*, streamsize, char_type);
+
+    // 27.6.1.3, p9: extract at most n - 1 chars
+    //               always null-terminate, fail if no char extracted
+    basic_istream& get (char_type *__s, streamsize __n) {
+        return get (__s, __n, this->widen ('\n'));
+    }
+
+    // 27.6.1.3, p12: extract up to but not including delim or eof
+    basic_istream&
+    get (basic_streambuf<char_type, traits_type>& __sb, char_type __delim) {
+        return _C_get (__sb, traits_type::to_int_type (__delim));
+    }
+
+    // 27.6.1.3, p15
+    basic_istream& get (basic_streambuf<char_type, traits_type>& __sb) {
+        return get (__sb, this->widen ('\n'));
+    }
+
+    // 27.6.1.3, p16: extract at most n - 1, delim extracted but not stored
+    //                fail if either 0 or n - 1 chars have been extracted
+    basic_istream& getline (char_type*, streamsize, char_type);
+
+    // 27.6.1.3, p23
+    basic_istream& getline (char_type *__s, streamsize __n) {
+        return getline (__s, __n, this->widen ('\n'));
+    }
+
+    // 27.6.1.3, p24: extract at most n including delim
+    basic_istream& ignore (streamsize __n = 1,
+                           int_type __delim = traits_type::eof ()) {
+        // using extension - passing null pointer to ignore input
+        return read (0, __n, __delim, _C_eatdelim | _C_eatnull);
+    }
+
+    // extension
+    basic_istream& read (char_type*, streamsize, int_type, int);
+
+    // 27.6.1.3, p28: extract at most n, fail on eof
+    basic_istream& read (char_type*, streamsize);
+
+    // 27.6.1.3, p30: extract at most min (rdbuf()->in_avail(), n))
+    streamsize readsome (char_type*, streamsize);
+
+    // 27.6.1.3, p27
+    int_type peek ();
+      
+    // 27.6.1.3, p37
+    pos_type tellg ();
+
+    // 27.6.1.3, p38
+    basic_istream& seekg (pos_type);
+
+    // 27.6.1.3, p40
+    basic_istream& seekg (off_type, ios_base::seekdir);
+
+    // 27.6.1.3, p36
+    int sync ();
+
+    // 27.6.1.3, p32
+    basic_istream& putback (char_type);
+
+    // 27.6.1.3, p34
+    basic_istream& unget ();
+
+    // 27.6.1.3, p2
+    streamsize gcount () const {
+        return _C_gcount;
+    }
+
+    // flags used by read() extension, _C_ipfx(), and _C_unsafe_get()
+    enum {
+        _C_nullterm = 0x01,   // null-terminate input
+        _C_wsterm   = 0x02,   // terminate input on whitespace
+        _C_skipws   = 0x04,   // skip leading whitespace
+        _C_eatdelim = 0x08,   // extract delimiter
+        _C_faileof  = 0x10,   // set ios_base::failbit on eof
+        _C_failend  = 0x20,   // set ios_base::failbit on end of buffer
+        _C_failnoi  = 0x40,   // set ios_base::failbit on no input
+        _C_eatnull  = 0x80    // extract null char
+    };
+
+    // does not construct a sentry, does not affect gcount()
+    // extracts character unless it is equal to __delim
+    int_type _C_unsafe_get (streamsize* = 0,
+                            int_type    = traits_type::eof (),
+                            int         = 0);
+
+private:
+
+    basic_istream& _C_get (basic_streambuf<char_type, traits_type>&, int_type);
+
+    streamsize _C_gcount;   // number of chars extracted
+};
+
+
+
+template<class _CharT, class _Traits>
+inline typename basic_istream<_CharT, _Traits>::int_type
+basic_istream<_CharT, _Traits>::
+get ()
+{
+    const sentry __ipfx (*this, true /* noskipws */);
+
+    if (__ipfx)
+        return _C_unsafe_get (&_C_gcount, traits_type::eof (),
+                              _C_faileof | _C_eatnull);
+
+    return traits_type::eof ();
+}
+
+
+template<class _CharT, class _Traits>
+inline basic_istream<_CharT, _Traits>&
+basic_istream<_CharT, _Traits>::
+get (char_type &__ch)
+{
+    const int_type __c = get ();
+
+    if (!traits_type::eq_int_type (__c, traits_type::eof ()))
+        traits_type::assign (__ch, traits_type::to_char_type (__c));
+
+    return *this;
+}
+
+
+template<class _CharT, class _Traits>
+inline basic_istream<_CharT, _Traits>&
+basic_istream<_CharT, _Traits>::seekg (pos_type __pos)
+{
+    _RWSTD_ASSERT (0 != this->rdbuf ());
+
+    if (!this->fail ()) {
+        _RWSTD_MT_GUARD (this->_C_bufmutex ());
+
+        // 27.6.1.3, p 38 requires that pubseekpos be called with
+        // a single argument; the implemented behavior follows
+        // the proposed resolution of lwg issue 136
+        if (-1 == this->rdbuf ()->pubseekpos (__pos, ios_base::in))
+            this->setstate (ios_base::failbit);   // lwg issue 129
+    }
+
+    return *this;
+}
+
+
+template<class _CharT, class _Traits>
+inline basic_istream<_CharT, _Traits>&
+basic_istream<_CharT, _Traits>::seekg (off_type __off, ios_base::seekdir __dir)
+{
+    _RWSTD_ASSERT (0 != this->rdbuf ());
+
+    if (!this->fail ()) {
+        _RWSTD_MT_GUARD (this->_C_bufmutex ());
+
+        // 27.6.1.3, p 40 requires that pubseekoff be called with
+        // two arguments; the implemented behavior follows
+        // the proposed resolution of lwg issue 136
+        if (-1 == this->rdbuf ()->pubseekoff (__off, __dir, ios_base::in))
+            this->setstate (ios_base::failbit);   // lwg issue 129
+    }
+
+    return *this;
+}
+
+
+template<class _CharT, class _Traits>
+inline basic_istream<_CharT, _Traits>&
+basic_istream<_CharT, _Traits>::
+operator>>(basic_streambuf<char_type, traits_type> *__sb)
+{
+    // lwg issue 60: this is not a formatted input member function
+    if (__sb)
+        return _C_get (*__sb, traits_type::eof ());
+
+    this->setstate (ios_base::failbit);
+    return *this;
+}
+
+
+template<class _CharT, class _Traits>
+inline typename basic_istream<_CharT, _Traits>::int_type
+basic_istream<_CharT, _Traits>::peek ()
+{
+    _RWSTD_ASSERT (0 != this->rdbuf ());
+
+    const sentry __ipfx (*this, true /* noskipws */);
+
+    int_type __c = traits_type::eof ();
+
+    if (__ipfx) {
+        _TRY {
+            __c = this->rdbuf ()->sgetc ();
+        }
+        _CATCH (...) {
+            this->setstate (ios_base::badbit | _RW::__rw_rethrow);
+        }
+    }
+
+    if (traits_type::eq_int_type (__c, traits_type::eof ()))
+        this->setstate (ios_base::eofbit);
+
+    return __c;
+}
+
+
+// 27.6.1.2.3, p10
+template <class _Traits>
+inline basic_istream<char, _Traits>&
+operator>> (basic_istream<char, _Traits> &__strm, unsigned char &__c)
+{
+    return __strm >> _RWSTD_REINTERPRET_CAST (char&, __c);
+}
+
+template <class _Traits>
+inline basic_istream<char, _Traits>&
+operator>> (basic_istream<char, _Traits> &__strm,  signed char &__c)
+{
+    return __strm >> _RWSTD_REINTERPRET_CAST (char&, __c);
+}
+
+
+// 27.6.1.2.3, p6
+template <class _Traits>
+inline basic_istream<char, _Traits>&
+operator>> (basic_istream<char, _Traits> &__strm, unsigned char *__s)
+{
+    return __strm >> _RWSTD_REINTERPRET_CAST (char*, __s);
+}
+
+
+template <class _Traits>
+inline basic_istream<char, _Traits>&
+operator>> (basic_istream<char, _Traits> &__strm, signed char *__s)
+{
+    return __strm >> _RWSTD_REINTERPRET_CAST (char*, __s);
+}
+
+
+// 27.6.1.2.3, p10
+template<class _CharT, class _Traits>
+inline basic_istream<_CharT, _Traits>&
+operator>> (basic_istream<_CharT, _Traits> &__strm, _CharT &__c)
+{
+    // read the first non-space char, set failbit if none read
+    __strm.read (&__c, 1, _Traits::eof (),
+                 __strm._C_skipws | __strm._C_failnoi | __strm._C_eatnull);
+    return __strm;
+}
+
+
+// 27.6.1.2.3, p6
+template<class _CharT, class _Traits>
+inline basic_istream<_CharT, _Traits>&
+operator>> (basic_istream<_CharT, _Traits> &__strm, _CharT *__s)
+{
+    _RWSTD_ASSERT (0 != __s);
+
+    // store at most this many chars including terminating null
+    const streamsize __maxlen = __strm.width () ?
+        __strm.width () : streamsize (_RWSTD_LONG_MAX - 1);
+
+    // read at most __maxlen non-space chars up to the first whitespace
+    __strm.read (__s, __maxlen, _Traits::to_int_type (__strm.widen ('\n')),
+                   __strm._C_nullterm | __strm._C_wsterm
+                 | __strm._C_skipws   | __strm._C_failnoi);
+
+    __strm.width (0);
+
+    return __strm;
+}
+
+
+// 27.6.1.4, p1
+template<class _CharT, class _Traits>
+inline basic_istream<_CharT, _Traits>&
+ws (basic_istream<_CharT, _Traits> &__strm)
+{
+    // construct a sentry to flush tied stream (if any) and lock
+    const typename basic_istream<_CharT, _Traits>::sentry
+        __ipfx (__strm, true /* noskipws */);
+
+    // if sentry is okay, skip whitespace and set eofbit
+    // but not failbit if end-of-file is encountered
+    if (__ipfx) {
+        _TRY {
+            __strm._C_ipfx (false, ios_base::eofbit);
+        }
+        _CATCH (...) {
+            __strm.setstate (ios_base::badbit | _RW::__rw_rethrow);
+        }
+    }
+
+    return __strm;
+}
+
+
+// 27.6.1.5
+template<class _CharT, class _Traits /* = char_traits<_CharT> */>
+class basic_iostream
+    : public basic_istream<_CharT, _Traits>,
+      public basic_ostream<_CharT, _Traits> 
+{
+public:
+
+    // prevent ambiguity between types defined in the bases
+    typedef _CharT                          char_type;
+    typedef _Traits                         traits_type;
+    typedef typename traits_type::int_type int_type;
+    typedef typename traits_type::pos_type pos_type;
+    typedef typename traits_type::off_type off_type;
+
+    explicit basic_iostream (basic_streambuf<_CharT, _Traits> *__sb)
+        : basic_istream<_CharT, _Traits>(__sb), 
+          basic_ostream<_CharT, _Traits>(__sb)
+        { /* 27.6.1.5.1, p1 */ }
+};
+
+}   // namespace std
+
+
+#if _RWSTD_DEFINE_TEMPLATE_FIRST (_BASIC_ISTREAM)
+   // implementation file included here instead of at the end
+   // of the header to work around a IBM VAC++ 7.0 bug #448
+#  include <istream.cc>
+#endif   // _RWSTD_DEFINE_TEMPLATE_FIRST (_BASIC_ISTREAM)
+
+
+#ifdef _RWSTD_MSVC
+#  pragma warning (push)
+#  pragma warning (disable: 4231)
+#endif   // _RWSTD_MSVC
+
+
+_RWSTD_NAMESPACE (std) {
+
+#if _RWSTD_INSTANTIATE (_BASIC_ISTREAM, _CHAR)
+
+_RWSTD_INSTANTIATE_2 (class _RWSTD_TI_EXPORT
+                      basic_istream<char, char_traits<char> >);
+
+#endif   // _RWSTD_INSTANTIATE (_BASIC_ISTREAM, _CHAR)
+
+#if _RWSTD_INSTANTIATE (_BASIC_ISTREAM, _WCHAR_T)
+
+_RWSTD_INSTANTIATE_2 (class _RWSTD_TI_EXPORT
+                      basic_istream<wchar_t, char_traits<wchar_t> >);
+
+#endif   // _RWSTD_INSTANTIATE (_BASIC_ISTREAM, _WCHAR_T)
+
+}   // namespace std
+
+
+#ifdef _RWSTD_MSVC
+#  pragma warning (pop)
+#endif   // _RWSTD_MSVC
+
+
+#if _RWSTD_DEFINE_TEMPLATE_LAST (_BASIC_ISTREAM)
+#  include <istream.cc>
+#endif   // _RWSTD_DEFINE_TEMPLATE_LAST (_BASIC_ISTREAM)
+
+
+#ifndef _RWSTD_STRING_EXTRACTORS_INCLUDED
+#  define _RWSTD_INCLUDE_STRING_EXTRACTORS
+#  include <rw/_stringio.h>
+#endif   // _RWSTD_STRING_EXTRACTORS_INCLUDED
+
+
+#endif   // _RWSTD_ISTREAM_INCLUDED
+

@@ -870,12 +870,17 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
             }
 
             ArrayList<Diagnostic> diagnostics = new ArrayList<>(params.getContext().getDiagnostics());
-            diagnostics.addAll(computeDiags(params.getTextDocument().getUri(), startOffset, ErrorProvider.Kind.HINTS, documentVersion(doc)));
+            if (diagnostics.isEmpty()) {
+                diagnostics.addAll(computeDiags(params.getTextDocument().getUri(), startOffset, ErrorProvider.Kind.HINTS, documentVersion(doc)));
+            }
 
             Map<String, org.netbeans.api.lsp.Diagnostic> id2Errors = (Map<String, org.netbeans.api.lsp.Diagnostic>) doc.getProperty("lsp-errors");
             if (id2Errors != null) {
                 for (Entry<String, org.netbeans.api.lsp.Diagnostic> entry : id2Errors.entrySet()) {
                     org.netbeans.api.lsp.Diagnostic err = entry.getValue();
+                    if (err.getDescription() == null || err.getDescription().isEmpty()) {
+                        continue;
+                    }
                     if (err.getSeverity() == org.netbeans.api.lsp.Diagnostic.Severity.Error) {
                         if (err.getEndPosition().getOffset() < startOffset || err.getStartPosition().getOffset() > endOffset) {
                             continue;

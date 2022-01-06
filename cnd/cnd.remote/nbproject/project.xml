@@ -225,10 +225,6 @@
                         <test/>
                     </test-dependency>
                     <test-dependency>
-                        <code-name-base>org.netbeans.modules.cnd.api.model</code-name-base>
-                        <compile-dependency/>
-                    </test-dependency>
-                    <test-dependency>
                         <code-name-base>org.netbeans.modules.cnd.api.project</code-name-base>
                         <compile-dependency/>
                     </test-dependency>
@@ -244,19 +240,6 @@
                     <test-dependency>
                         <code-name-base>org.netbeans.modules.cnd.makeproject.ui</code-name-base>
                         <recursive/>
-                        <compile-dependency/>
-                    </test-dependency>
-                    <test-dependency>
-                        <code-name-base>org.netbeans.modules.cnd.modelimpl</code-name-base>
-                        <recursive/>
-                        <compile-dependency/>
-                    </test-dependency>
-                    <test-dependency>
-                        <code-name-base>org.netbeans.modules.cnd.repository</code-name-base>
-                        <compile-dependency/>
-                    </test-dependency>
-                    <test-dependency>
-                        <code-name-base>org.netbeans.modules.cnd.repository.api</code-name-base>
                         <compile-dependency/>
                     </test-dependency>
                     <test-dependency>

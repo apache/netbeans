@@ -26,16 +26,19 @@ import junit.framework.Test;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ui.OpenProjects;
 import org.netbeans.junit.RandomlyFails;
-import org.netbeans.modules.cnd.api.model.CsmModelAccessor;
-import org.netbeans.modules.cnd.indexing.impl.TextIndexStorageManager;
+//import org.netbeans.modules.cnd.api.model.CsmModelAccessor;
+//import org.netbeans.modules.cnd.indexing.impl.TextIndexStorageManager;
 import org.netbeans.modules.cnd.makeproject.api.MakeProject;
-import org.netbeans.modules.cnd.modelimpl.csm.core.ModelImpl;
-import org.netbeans.modules.cnd.modelimpl.platform.ModelSupport;
+//import org.netbeans.modules.cnd.modelimpl.csm.core.ModelImpl;
+//import org.netbeans.modules.cnd.modelimpl.platform.ModelSupport;
 import org.netbeans.modules.cnd.remote.test.RemoteDevelopmentTest;
-import org.netbeans.modules.cnd.repository.support.RepositoryTestUtils;
+//import org.netbeans.modules.cnd.repository.support.RepositoryTestUtils;
 import org.netbeans.modules.nativeexecution.api.ExecutionEnvironment;
 import org.netbeans.modules.nativeexecution.api.util.ConnectionManager;
 import org.netbeans.modules.nativeexecution.test.ForAllEnvironments;
+
+// NOTE: Some tests commented out since Apache NetBeans does not use the
+// donated "cnd.api.model, cnd.indexing, cnd.modelimpl and cnd.repository modules.
 
 /**
  *
@@ -51,7 +54,7 @@ public class RemoteCodeModelTestCase extends RemoteBuildTestBase {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        startupModel();
+//        startupModel();
         System.setProperty("cnd.mode.unittest", "true");
         System.setProperty("org.netbeans.modules.cnd.apt.level","OFF"); // NOI18N
         Logger.getLogger("org.netbeans.modules.editor.settings.storage.Utils").setLevel(Level.SEVERE);
@@ -60,24 +63,24 @@ public class RemoteCodeModelTestCase extends RemoteBuildTestBase {
     @Override
     protected void tearDown() throws Exception {
         super.tearDown(); 
-        shutdownModel();
+//        shutdownModel();
     }
     
     
-    private void shutdownModel() {
-        ModelImpl model = (ModelImpl) CsmModelAccessor.getModel();
-        model.shutdown();
-        ModelSupport.instance().shutdown();
-        TextIndexStorageManager.shutdown();
-        RepositoryTestUtils.deleteDefaultCacheLocation();
-    }    
-
-    private void startupModel() {
-        RepositoryTestUtils.deleteDefaultCacheLocation();
-        ModelImpl model = (ModelImpl) CsmModelAccessor.getModel();
-        model.startup();
-        ModelSupport.instance().startup();        
-    }
+//    private void shutdownModel() {
+//        ModelImpl model = (ModelImpl) CsmModelAccessor.getModel();
+//        model.shutdown();
+//        ModelSupport.instance().shutdown();
+//        TextIndexStorageManager.shutdown();
+//        RepositoryTestUtils.deleteDefaultCacheLocation();
+//    }    
+//
+//    private void startupModel() {
+//        RepositoryTestUtils.deleteDefaultCacheLocation();
+//        ModelImpl model = (ModelImpl) CsmModelAccessor.getModel();
+//        model.startup();
+//        ModelSupport.instance().startup();        
+//    }
 
     @Override
     protected void clearRemoteSyncRoot() {
@@ -97,7 +100,7 @@ public class RemoteCodeModelTestCase extends RemoteBuildTestBase {
         }
         OpenProjects.getDefault().open(new Project[]{ makeProject }, false);
         changeProjectHost(makeProject, execEnv);
-        checkCodeModel(makeProject);
+//        checkCodeModel(makeProject);
         if (testReconnect) {
             ConnectionManager.getInstance().connectTo(execEnv);
             assertTrue("Can not reconnect to host", ConnectionManager.getInstance().isConnectedTo(execEnv));

@@ -28,7 +28,7 @@ import junit.framework.AssertionFailedError;
 import org.netbeans.modules.cnd.remote.test.RemoteBuildTestBase;
 import junit.framework.Test;
 import org.netbeans.api.project.ProjectManager;
-import org.netbeans.modules.cnd.api.model.CsmProject;
+//import org.netbeans.modules.cnd.api.model.CsmProject;
 import org.netbeans.modules.cnd.makeproject.api.MakeProject;
 import org.netbeans.modules.cnd.remote.test.RemoteDevelopmentTest;
 import org.netbeans.modules.nativeexecution.api.ExecutionEnvironment;
@@ -39,6 +39,9 @@ import org.netbeans.modules.nativeexecution.test.ForAllEnvironments;
 import org.netbeans.modules.remote.spi.FileSystemProvider;
 import org.netbeans.spi.project.ActionProvider;
 import org.openide.filesystems.FileObject;
+
+// NOTE: Some tests commented out since Apache NetBeans does not use the
+// donated "cnd.api.model, cnd.indexing, cnd.modelimpl and cnd.repository modules.
 
 /**
  */
@@ -105,21 +108,21 @@ public class FullRemoteBuildTestCase extends RemoteBuildTestBase {
         FileObject headerFO = parentFO.getFileObject(origHeaderName);
         assertNotNull(headerFO);
         headerFO.delete();
-        CsmProject csmProject = getCsmProject(makeProject);
+//        CsmProject csmProject = getCsmProject(makeProject);
         AtomicReference<AssertionFailedError> exRef = new AtomicReference<>();
-        try {
-            checkCodeModel(makeProject);
-        } catch (AssertionFailedError ex) {
-            exRef.set(ex);
-        }
+//        try {
+//            checkCodeModel(makeProject);
+//        } catch (AssertionFailedError ex) {
+//            exRef.set(ex);
+//        }
         AssertionFailedError ex = exRef.get();
         assertNotNull(ex);
         String messageStart = "Unresolved include";
         assertTrue("Unexpected exception " + ex.getMessage() + ", expected " + messageStart  , ex.getMessage().startsWith(messageStart));
         headerFO = parentFO.createData(origHeaderName);
         sleep(1);
-        csmProject.waitParse();
-        checkCodeModel(makeProject);
+//        csmProject.waitParse();
+//        checkCodeModel(makeProject);
     }
 
     @ForAllEnvironments
@@ -137,13 +140,13 @@ public class FullRemoteBuildTestCase extends RemoteBuildTestBase {
     @ForAllEnvironments
     public void testFullRemoteCodeModelSimple() throws Exception {
         MakeProject makeProject = importProject("simple_make_project_to_import", false);
-        checkCodeModel(makeProject);
+//        checkCodeModel(makeProject);
     }
     
     @ForAllEnvironments
     public void testFullRemoteCodeModelLink() throws Exception {
         MakeProject makeProject = importProject("simple_make_project_to_import", true);
-        checkCodeModel(makeProject);
+//        checkCodeModel(makeProject);
     }
     
     // hg filters out "nbproject/private", for that reason we have to rewname it and restore correct name while copying

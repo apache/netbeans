@@ -32,11 +32,11 @@ import java.util.concurrent.atomic.AtomicReference;
 import javax.swing.SwingUtilities;
 import org.netbeans.api.annotations.common.SuppressWarnings;
 import org.netbeans.api.project.ProjectManager;
-import org.netbeans.modules.cnd.api.model.CsmFile;
-import org.netbeans.modules.cnd.api.model.CsmInclude;
-import org.netbeans.modules.cnd.api.model.CsmModel;
-import org.netbeans.modules.cnd.api.model.CsmModelAccessor;
-import org.netbeans.modules.cnd.api.model.CsmProject;
+//import org.netbeans.modules.cnd.api.model.CsmFile;
+//import org.netbeans.modules.cnd.api.model.CsmInclude;
+//import org.netbeans.modules.cnd.api.model.CsmModel;
+//import org.netbeans.modules.cnd.api.model.CsmModelAccessor;
+//import org.netbeans.modules.cnd.api.model.CsmProject;
 import org.netbeans.modules.cnd.api.project.NativeProject;
 import org.netbeans.modules.cnd.api.remote.RemoteFileUtil;
 import org.netbeans.modules.cnd.api.remote.ServerList;
@@ -56,7 +56,7 @@ import org.netbeans.modules.cnd.makeproject.api.configurations.MakeConfiguration
 import org.netbeans.modules.cnd.makeproject.api.configurations.MakeConfigurationDescriptor;
 import org.netbeans.modules.cnd.makeproject.api.ui.wizard.WizardConstants;
 import org.netbeans.modules.cnd.makeproject.ui.wizards.MakeSampleProjectIterator;
-import org.netbeans.modules.cnd.modelimpl.csm.core.ModelImpl;
+//import org.netbeans.modules.cnd.modelimpl.csm.core.ModelImpl;
 import org.netbeans.modules.cnd.remote.server.RemoteServerRecord;
 import org.netbeans.modules.cnd.spi.remote.RemoteSyncFactory;
 import org.netbeans.modules.cnd.utils.FSPath;
@@ -74,6 +74,9 @@ import org.openide.loaders.DataObject;
 import org.openide.loaders.DataObjectNotFoundException;
 import org.openide.loaders.TemplateWizard;
 import org.openide.nodes.Node;
+
+// NOTE: Some tests commented out since Apache NetBeans does not use the
+// donated cnd.api.model, cnd.indexing, cnd.modelimpl and cnd.repository modules.
 
 /**
  * A common base class for tests that build remote project
@@ -365,42 +368,42 @@ public class RemoteBuildTestBase extends RemoteTestBase {
         }
     }
 
-    protected CsmProject getCsmProject(MakeProject makeProject) throws Exception {
-        NativeProject np = makeProject.getLookup().lookup(NativeProject.class);
-        assertNotNull("Null NativeProject", np);
-        CsmModel model = CsmModelAccessor.getModel();
-        ((ModelImpl) model).enableProject(np);
-        CsmProject csmProject = model.getProject(makeProject);
-        return csmProject;
-    }
-    
-    protected void checkCodeModel(MakeProject makeProject) throws Exception {
-        CsmProject csmProject = getCsmProject(makeProject);
-        assertNotNull("Null CsmProject", csmProject);
-        csmProject.waitParse();
-        checkIncludes(csmProject, true);
-    }
-        
-    protected void checkIncludes(CsmFile csmFile, boolean recursive, Set<CsmFile> antiLoop) throws Exception {
-        if (!antiLoop.contains(csmFile)) {
-            antiLoop.add(csmFile);
-            trace("Checking %s\n", csmFile.getAbsolutePath());
-            for (CsmInclude incl : csmFile.getIncludes()) {
-                CsmFile includedFile = incl.getIncludeFile();
-                trace("\t%s -> %s\n", incl.getIncludeName(), includedFile);
-                assertNotNull("Unresolved include: " + incl.getIncludeName() + " in " + csmFile.getAbsolutePath(), includedFile);
-                if (recursive) {
-                    checkIncludes(includedFile, true, antiLoop);
-                }
-            }
-        }
-    }
-
-    protected void checkIncludes(CsmProject csmProject, boolean recursive) throws Exception {
-        for (CsmFile csmFile : csmProject.getAllFiles()) {
-            checkIncludes(csmFile, recursive, new HashSet<CsmFile>());
-        }
-    }
+//    protected CsmProject getCsmProject(MakeProject makeProject) throws Exception {
+//        NativeProject np = makeProject.getLookup().lookup(NativeProject.class);
+//        assertNotNull("Null NativeProject", np);
+//        CsmModel model = CsmModelAccessor.getModel();
+//        ((ModelImpl) model).enableProject(np);
+//        CsmProject csmProject = model.getProject(makeProject);
+//        return csmProject;
+//    }
+//    
+//    protected void checkCodeModel(MakeProject makeProject) throws Exception {
+//        CsmProject csmProject = getCsmProject(makeProject);
+//        assertNotNull("Null CsmProject", csmProject);
+//        csmProject.waitParse();
+//        checkIncludes(csmProject, true);
+//    }
+//        
+//    protected void checkIncludes(CsmFile csmFile, boolean recursive, Set<CsmFile> antiLoop) throws Exception {
+//        if (!antiLoop.contains(csmFile)) {
+//            antiLoop.add(csmFile);
+//            trace("Checking %s\n", csmFile.getAbsolutePath());
+//            for (CsmInclude incl : csmFile.getIncludes()) {
+//                CsmFile includedFile = incl.getIncludeFile();
+//                trace("\t%s -> %s\n", incl.getIncludeName(), includedFile);
+//                assertNotNull("Unresolved include: " + incl.getIncludeName() + " in " + csmFile.getAbsolutePath(), includedFile);
+//                if (recursive) {
+//                    checkIncludes(includedFile, true, antiLoop);
+//                }
+//            }
+//        }
+//    }
+//
+//    protected void checkIncludes(CsmProject csmProject, boolean recursive) throws Exception {
+//        for (CsmFile csmFile : csmProject.getAllFiles()) {
+//            checkIncludes(csmFile, recursive, new HashSet<CsmFile>());
+//        }
+//    }
     
     protected void trace(String pattern, Object... args) {
         if (trace) {

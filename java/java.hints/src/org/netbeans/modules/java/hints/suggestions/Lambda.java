@@ -181,7 +181,7 @@ public class Lambda {
     @Messages({
         "DN_expression2Return=Convert Lambda Body to Use a Block",
         "DESC_expression2Return=Converts lambda bodies to use blocks rather than expressions",
-        "ERR_expression2Return=",
+        "ERR_expression2Return=Block as the lambda's body can be used",
         "FIX_expression2Return=Use block as the lambda's body"
     })
     @TriggerPattern("($args$) -> $lambdaExpression")
@@ -202,7 +202,7 @@ public class Lambda {
     @Messages({
         "DN_memberReference2Lambda=Convert Member Reference to Lambda Expression",
         "DESC_memberReference2Lambda=Converts member references to lambda expressions",
-        "ERR_memberReference2Lambda=",
+        "ERR_memberReference2Lambda=Lambda expression can be used",
         "FIX_memberReference2Lambda=Use lambda expression"
     })
     @TriggerTreeKind(Kind.MEMBER_REFERENCE)
@@ -219,7 +219,7 @@ public class Lambda {
     @Messages({
         "DN_addExplicitLambdaParameters=Convert Lambda to Use Explicit Parameter Types",
         "DESC_addExplicitLambdaParameters=Converts lambdas to use explicit parameter types",
-        "ERR_addExplicitLambdaParameters=",
+        "ERR_addExplicitLambdaParameters=Explicit parameter types can be used",
         "FIX_addExplicitLambdaParameters=Use explicit parameter types"
     })
     @TriggerTreeKind(Kind.LAMBDA_EXPRESSION)

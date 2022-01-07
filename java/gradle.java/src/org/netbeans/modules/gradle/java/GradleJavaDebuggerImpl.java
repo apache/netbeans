@@ -30,12 +30,10 @@ import org.netbeans.api.debugger.jpda.JPDADebugger;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.platform.JavaPlatform;
 import org.netbeans.api.project.Project;
-import org.netbeans.modules.gradle.api.NbGradleProject;
 import org.netbeans.modules.gradle.java.api.ProjectSourcesClassPathProvider;
 import org.netbeans.modules.gradle.java.execute.JavaRunUtils;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.netbeans.spi.java.queries.SourceForBinaryQueryImplementation2;
-import org.netbeans.spi.project.ProjectServiceProvider;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Lookup;
@@ -48,7 +46,6 @@ import org.netbeans.modules.gradle.java.spi.debug.GradleJavaDebugger;
  * 
  * @author lkishalmi
  */
-@ProjectServiceProvider(service = GradleJavaDebugger.class, projectType = NbGradleProject.GRADLE_PLUGIN_TYPE + "/java-base")
 public final class GradleJavaDebuggerImpl implements GradleJavaDebugger {
 
     private final RequestProcessor RP = new RequestProcessor(GradleJavaDebuggerImpl.class);

@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.12
+#Version 1.20
 
 CLSS public java.lang.Object
 cons public init()
@@ -14,6 +14,10 @@ meth public final void wait(long) throws java.lang.InterruptedException
 meth public final void wait(long,int) throws java.lang.InterruptedException
 meth public int hashCode()
 meth public java.lang.String toString()
+
+CLSS public final org.netbeans.api.maven.MavenActions
+cons public init()
+supr java.lang.Object
 
 CLSS public final org.netbeans.api.maven.archetype.Archetype
 cons public init()

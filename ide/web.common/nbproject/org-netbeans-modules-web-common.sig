@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.106
+#Version 1.113
 
 CLSS public abstract interface java.io.Serializable
 
@@ -21,7 +21,6 @@ meth public final java.lang.String name()
 meth public java.lang.String toString()
 meth public static <%0 extends java.lang.Enum<{%%0}>> {%%0} valueOf(java.lang.Class<{%%0}>,java.lang.String)
 supr java.lang.Object
-hfds name,ordinal
 
 CLSS public java.lang.Object
 cons public init()
@@ -328,6 +327,7 @@ cons public init(java.util.Map<java.lang.String,?>)
 fld public final static java.lang.String MIMETYPE = "mimeType"
 meth public java.lang.Object value(java.lang.String)
 meth public java.util.Collection<java.lang.String> keys()
+meth public static java.lang.String getContentMimeType(org.netbeans.modules.parsing.spi.Parser$Result,boolean)
 meth public static org.netbeans.modules.web.common.api.WebPageMetadata getMetadata(org.openide.util.Lookup)
 supr java.lang.Object
 hfds metamap

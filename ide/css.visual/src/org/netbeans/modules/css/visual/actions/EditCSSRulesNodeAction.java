@@ -22,6 +22,7 @@ import org.netbeans.modules.css.visual.api.EditCSSRulesAction;
 import java.util.Collections;
 import org.netbeans.modules.css.visual.HtmlSourceElementHandle;
 import org.netbeans.modules.html.editor.api.gsf.HtmlParserResult;
+import org.netbeans.modules.html.editor.lib.api.HtmlParsingResult;
 import org.netbeans.modules.html.editor.lib.api.SourceElementHandle;
 import org.netbeans.modules.html.editor.lib.api.elements.OpenTag;
 import org.netbeans.modules.parsing.api.ParserManager;
@@ -29,6 +30,7 @@ import org.netbeans.modules.parsing.api.ResultIterator;
 import org.netbeans.modules.parsing.api.Source;
 import org.netbeans.modules.parsing.api.UserTask;
 import org.netbeans.modules.parsing.spi.ParseException;
+import org.netbeans.modules.parsing.spi.Parser;
 import org.netbeans.modules.web.common.api.WebUtils;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
@@ -71,14 +73,15 @@ public class EditCSSRulesNodeAction extends NodeAction {
                     public void run(ResultIterator resultIterator) throws Exception {
                         ResultIterator ri = WebUtils.getResultIterator(resultIterator, "text/html");
                         if (ri != null) {
-                            HtmlParserResult result = (HtmlParserResult)ri.getParserResult();
+                            Parser.Result parserResult = ri.getParserResult();
+                            HtmlParsingResult result = (HtmlParsingResult)parserResult;
                             
                             final EditCSSRulesAction action = new EditCSSRulesAction();
                             action.setContext(file);
                             
-                            org.netbeans.modules.html.editor.lib.api.elements.Node resolved = sourceElementHandle.resolve(result);
+                            org.netbeans.modules.html.editor.lib.api.elements.Node resolved = sourceElementHandle.resolve(parserResult);
                             if(resolved != null) {
-                                action.setHtmlSourceElementHandle((OpenTag)resolved, result.getSnapshot(), file);
+                                action.setHtmlSourceElementHandle((OpenTag)resolved, ri.getParserResult().getSnapshot(), file);
 
                                 RequestProcessor.getDefault().post(new Runnable() {
                                     @Override

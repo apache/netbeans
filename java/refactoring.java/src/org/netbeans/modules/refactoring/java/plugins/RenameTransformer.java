@@ -613,6 +613,10 @@ public class RenameTransformer extends RefactoringVisitor {
                 }
                 return super.visitClass(node, p);
             }
+            @Override
+            public Boolean reduce(Boolean r1, Boolean r2) {
+                return r1 != null ? r1 : r2;
+            }
         };
         return Boolean.TRUE == duplicateIds.scan(workingCopy.getCompilationUnit(), newName);
     }

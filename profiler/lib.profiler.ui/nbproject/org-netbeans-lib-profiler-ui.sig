@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.154
+#Version 1.160
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -272,8 +272,6 @@ meth public void transferFocusUpCycle()
 meth public void update(java.awt.Graphics)
 meth public void validate()
 supr java.lang.Object
-hfds FOCUS_TRAVERSABLE_DEFAULT,FOCUS_TRAVERSABLE_SET,FOCUS_TRAVERSABLE_UNKNOWN,LOCK,acc,actionListenerK,adjustmentListenerK,appContext,autoFocusTransferOnDisposal,background,backgroundEraseDisabled,boundsOp,bufferStrategy,changeSupport,coalesceEventsParams,coalesceMap,coalescingEnabled,componentListener,componentListenerK,componentOrientation,componentSerializedDataVersion,compoundShape,containerListenerK,cursor,dropTarget,enabled,eventCache,eventLog,eventMask,focusListener,focusListenerK,focusLog,focusTraversalKeyPropertyNames,focusTraversalKeys,focusTraversalKeysEnabled,focusable,font,foreground,graphicsConfig,height,hierarchyBoundsListener,hierarchyBoundsListenerK,hierarchyListener,hierarchyListenerK,ignoreRepaint,incRate,inputMethodListener,inputMethodListenerK,isAddNotifyComplete,isFocusTraversableOverridden,isInc,isPacked,itemListenerK,keyListener,keyListenerK,locale,log,maxSize,maxSizeSet,minSize,minSizeSet,mixingCutoutRegion,mixingLog,mouseListener,mouseListenerK,mouseMotionListener,mouseMotionListenerK,mouseWheelListener,mouseWheelListenerK,name,nameExplicitlySet,newEventsOnly,objectLock,ownedWindowK,parent,peer,peerFont,popups,prefSize,prefSizeSet,requestFocusController,serialVersionUID,textListenerK,valid,visible,width,windowClosingException,windowFocusListenerK,windowListenerK,windowStateListenerK,x,y
-hcls AWTTreeLock,BltSubRegionBufferStrategy,DummyRequestFocusController,FlipSubRegionBufferStrategy,ProxyCapabilities,SingleBufferStrategy
 
 CLSS protected abstract java.awt.Component$AccessibleAWTComponent
  outer java.awt.Component
@@ -324,7 +322,6 @@ meth public void setLocation(java.awt.Point)
 meth public void setSize(java.awt.Dimension)
 meth public void setVisible(boolean)
 supr javax.accessibility.AccessibleContext
-hfds propertyListenersCount,serialVersionUID
 
 CLSS public java.awt.Container
 cons public init()
@@ -409,8 +406,6 @@ meth public void transferFocusDownCycle()
 meth public void update(java.awt.Graphics)
 meth public void validate()
 supr java.awt.Component
-hfds EMPTY_ARRAY,INCLUDE_SELF,SEARCH_HEAVYWEIGHTS,component,containerListener,containerSerializedDataVersion,descendUnconditionallyWhenValidating,descendantsCount,dispatcher,eventLog,focusCycleRoot,focusTraversalPolicy,focusTraversalPolicyProvider,isJavaAwtSmartInvalidate,layoutMgr,listeningBoundsChildren,listeningChildren,log,mixingLog,modalAppContext,modalComp,numOfHWComponents,numOfLWComponents,preserveBackgroundColor,printing,printingThreads,serialPersistentFields,serialVersionUID
-hcls DropTargetEventTargetFilter,EventTargetFilter,MouseEventTargetFilter,WakingRunnable
 
 CLSS protected java.awt.Container$AccessibleAWTContainer
  outer java.awt.Container
@@ -423,7 +418,6 @@ meth public javax.accessibility.Accessible getAccessibleChild(int)
 meth public void addPropertyChangeListener(java.beans.PropertyChangeListener)
 meth public void removePropertyChangeListener(java.beans.PropertyChangeListener)
 supr java.awt.Component$AccessibleAWTComponent
-hfds propertyListenersCount,serialVersionUID
 
 CLSS public java.awt.FlowLayout
 cons public init()
@@ -451,7 +445,6 @@ meth public void setAlignment(int)
 meth public void setHgap(int)
 meth public void setVgap(int)
 supr java.lang.Object
-hfds align,alignOnBaseline,currentSerialVersion,hgap,newAlign,serialVersionOnStream,serialVersionUID,vgap
 
 CLSS public abstract java.awt.FocusTraversalPolicy
 cons public init()
@@ -557,7 +550,6 @@ meth public final java.lang.String name()
 meth public java.lang.String toString()
 meth public static <%0 extends java.lang.Enum<{%%0}>> {%%0} valueOf(java.lang.Class<{%%0}>,java.lang.String)
 supr java.lang.Object
-hfds name,ordinal
 
 CLSS public java.lang.Object
 cons public init()
@@ -659,7 +651,6 @@ meth public void setAccessibleDescription(java.lang.String)
 meth public void setAccessibleName(java.lang.String)
 meth public void setAccessibleParent(javax.accessibility.Accessible)
 supr java.lang.Object
-hfds accessibleChangeSupport,nativeAXResource,relationSet,targetAppContext
 
 CLSS public abstract interface javax.accessibility.AccessibleExtendedComponent
 intf javax.accessibility.AccessibleComponent
@@ -789,8 +780,6 @@ meth public void setVerticalAlignment(int)
 meth public void setVerticalTextPosition(int)
 meth public void updateUI()
 supr javax.swing.JComponent
-hfds action,actionPropertyChangeListener,borderPaintedSet,contentAreaFilled,contentAreaFilledSet,defaultCapable,defaultIcon,defaultMargin,disabledIcon,disabledSelectedIcon,handler,hideActionText,horizontalAlignment,horizontalTextPosition,iconTextGap,iconTextGapSet,margin,mnemonic,mnemonicIndex,multiClickThreshhold,paintBorder,paintFocus,pressedIcon,rolloverEnabled,rolloverEnabledSet,rolloverIcon,rolloverSelectedIcon,selectedIcon,setLayout,text,verticalAlignment,verticalTextPosition
-hcls ButtonActionPropertyChangeListener,Handler
 
 CLSS public javax.swing.ButtonGroup
 cons public init()
@@ -805,7 +794,6 @@ meth public void clearSelection()
 meth public void remove(javax.swing.AbstractButton)
 meth public void setSelected(javax.swing.ButtonModel,boolean)
 supr java.lang.Object
-hfds selection
 
 CLSS public abstract interface javax.swing.Icon
 meth public abstract int getIconHeight()
@@ -830,7 +818,6 @@ meth public void removeNotify()
 meth public void setDefaultCapable(boolean)
 meth public void updateUI()
 supr javax.swing.AbstractButton
-hfds uiClassID
 
 CLSS public javax.swing.JCheckBox
 cons public init()
@@ -851,7 +838,6 @@ meth public javax.accessibility.AccessibleContext getAccessibleContext()
 meth public void setBorderPaintedFlat(boolean)
 meth public void updateUI()
 supr javax.swing.JToggleButton
-hfds flat,uiClassID
 
 CLSS public javax.swing.JCheckBoxMenuItem
 cons public init()
@@ -871,7 +857,6 @@ meth public java.lang.String getUIClassID()
 meth public javax.accessibility.AccessibleContext getAccessibleContext()
 meth public void setState(boolean)
 supr javax.swing.JMenuItem
-hfds uiClassID
 
 CLSS public javax.swing.JComboBox<%0 extends java.lang.Object>
 cons public init()
@@ -965,8 +950,6 @@ meth public void updateUI()
 meth public {javax.swing.JComboBox%0} getItemAt(int)
 meth public {javax.swing.JComboBox%0} getPrototypeDisplayValue()
 supr javax.swing.JComponent
-hfds action,actionPropertyChangeListener,firingActionEvent,prototypeDisplayValue,selectingItem,uiClassID
-hcls ComboBoxActionPropertyChangeListener,DefaultKeySelectionManager
 
 CLSS public abstract javax.swing.JComponent
 cons public init()
@@ -1124,8 +1107,6 @@ meth public void unregisterKeyboardAction(javax.swing.KeyStroke)
 meth public void update(java.awt.Graphics)
 meth public void updateUI()
 supr java.awt.Container
-hfds ACTIONMAP_CREATED,ANCESTOR_INPUTMAP_CREATED,ANCESTOR_USING_BUFFER,AUTOSCROLLS_SET,COMPLETELY_OBSCURED,CREATED_DOUBLE_BUFFER,DEBUG_GRAPHICS_LOADED,FOCUS_INPUTMAP_CREATED,FOCUS_TRAVERSAL_KEYS_BACKWARD_SET,FOCUS_TRAVERSAL_KEYS_FORWARD_SET,INHERITS_POPUP_MENU,INPUT_VERIFIER_SOURCE_KEY,IS_DOUBLE_BUFFERED,IS_OPAQUE,IS_PAINTING_TILE,IS_PRINTING,IS_PRINTING_ALL,IS_REPAINTING,KEYBOARD_BINDINGS_KEY,KEY_EVENTS_ENABLED,NEXT_FOCUS,NOT_OBSCURED,OPAQUE_SET,PARTIALLY_OBSCURED,REQUEST_FOCUS_DISABLED,RESERVED_1,RESERVED_2,RESERVED_3,RESERVED_4,RESERVED_5,RESERVED_6,WHEN_IN_FOCUSED_WINDOW_BINDINGS,WIF_INPUTMAP_CREATED,WRITE_OBJ_COUNTER_FIRST,WRITE_OBJ_COUNTER_LAST,aaTextInfo,actionMap,alignmentX,alignmentY,ancestorInputMap,autoscrolls,border,clientProperties,componentObtainingGraphicsFrom,componentObtainingGraphicsFromLock,defaultLocale,flags,focusController,focusInputMap,inputVerifier,isAlignmentXSet,isAlignmentYSet,managingFocusBackwardTraversalKeys,managingFocusForwardTraversalKeys,paintingChild,popupMenu,readObjectCallbacks,revalidateRunnableScheduled,tempRectangles,uiClassID,verifyInputWhenFocusTarget,vetoableChangeSupport,windowInputMap
-hcls ActionStandin,IntVector,KeyboardState,ReadObjectCallback
 
 CLSS public abstract javax.swing.JComponent$AccessibleJComponent
  outer javax.swing.JComponent
@@ -1148,7 +1129,6 @@ meth public javax.accessibility.AccessibleStateSet getAccessibleStateSet()
 meth public void addPropertyChangeListener(java.beans.PropertyChangeListener)
 meth public void removePropertyChangeListener(java.beans.PropertyChangeListener)
 supr java.awt.Container$AccessibleAWTContainer
-hfds propertyListenersCount
 
 CLSS public javax.swing.JEditorPane
 cons public init()
@@ -1191,8 +1171,6 @@ meth public void setPage(java.lang.String) throws java.io.IOException
 meth public void setPage(java.net.URL) throws java.io.IOException
 meth public void setText(java.lang.String)
 supr javax.swing.text.JTextComponent
-hfds PostDataProperty,defaultEditorKitMap,isUserSetEditorKit,kit,kitLoaderRegistryKey,kitRegistryKey,kitTypeRegistryKey,pageLoader,pageProperties,typeHandlers,uiClassID
-hcls HeaderParser,PageLoader,PlainEditorKit
 
 CLSS public javax.swing.JLabel
 cons public init()
@@ -1238,7 +1216,6 @@ meth public void setVerticalAlignment(int)
 meth public void setVerticalTextPosition(int)
 meth public void updateUI()
 supr javax.swing.JComponent
-hfds LABELED_BY_PROPERTY,defaultIcon,disabledIcon,disabledIconSet,horizontalAlignment,horizontalTextPosition,iconTextGap,mnemonic,mnemonicIndex,text,uiClassID,verticalAlignment,verticalTextPosition
 
 CLSS public javax.swing.JMenuItem
 cons public init()
@@ -1285,8 +1262,6 @@ meth public void setModel(javax.swing.ButtonModel)
 meth public void setUI(javax.swing.plaf.MenuItemUI)
 meth public void updateUI()
 supr javax.swing.AbstractButton
-hfds DEBUG,TRACE,VERBOSE,accelerator,isMouseDragged,uiClassID
-hcls MenuItemFocusListener
 
 CLSS public javax.swing.JPanel
 cons public init()
@@ -1302,7 +1277,6 @@ meth public javax.swing.plaf.PanelUI getUI()
 meth public void setUI(javax.swing.plaf.PanelUI)
 meth public void updateUI()
 supr javax.swing.JComponent
-hfds uiClassID
 
 CLSS public javax.swing.JPopupMenu
 cons public init()
@@ -1369,7 +1343,6 @@ meth public void setVisible(boolean)
 meth public void show(java.awt.Component,int,int)
 meth public void updateUI()
 supr javax.swing.JComponent
-hfds DEBUG,TRACE,VERBOSE,classLock,defaultLWPopupEnabledKey,desiredLocationX,desiredLocationY,frame,invoker,label,lightWeightPopup,margin,paintBorder,popup,popupPostionFixDisabled,selectionModel,uiClassID
 
 CLSS public javax.swing.JRadioButton
 cons public init()
@@ -1387,7 +1360,6 @@ meth public java.lang.String getUIClassID()
 meth public javax.accessibility.AccessibleContext getAccessibleContext()
 meth public void updateUI()
 supr javax.swing.JToggleButton
-hfds uiClassID
 
 CLSS public javax.swing.JRadioButtonMenuItem
 cons public init()
@@ -1404,7 +1376,6 @@ meth protected java.lang.String paramString()
 meth public java.lang.String getUIClassID()
 meth public javax.accessibility.AccessibleContext getAccessibleContext()
 supr javax.swing.JMenuItem
-hfds uiClassID
 
 CLSS public javax.swing.JSpinner
 cons public init()
@@ -1435,8 +1406,6 @@ meth public void setUI(javax.swing.plaf.SpinnerUI)
 meth public void setValue(java.lang.Object)
 meth public void updateUI()
 supr javax.swing.JComponent
-hfds DISABLED_ACTION,changeEvent,editor,editorExplicitlySet,model,modelListener,uiClassID
-hcls DateEditorFormatter,DisabledAction,ModelListener,NumberEditorFormatter
 
 CLSS public javax.swing.JSplitPane
 cons public init()
@@ -1507,7 +1476,6 @@ meth public void setTopComponent(java.awt.Component)
 meth public void setUI(javax.swing.plaf.SplitPaneUI)
 meth public void updateUI()
 supr javax.swing.JComponent
-hfds dividerLocation,dividerSizeSet,oneTouchExpandableSet,resizeWeight,uiClassID
 
 CLSS public javax.swing.JTable
 cons public init()
@@ -1712,8 +1680,6 @@ meth public void tableChanged(javax.swing.event.TableModelEvent)
 meth public void updateUI()
 meth public void valueChanged(javax.swing.event.ListSelectionEvent)
 supr javax.swing.JComponent
-hfds autoCreateRowSorter,columnSelectionAdjusting,dragEnabled,dropLocation,dropMode,editorRemover,fillsViewportHeight,ignoreSortChange,isRowHeightSet,printError,rowModel,rowSelectionAdjusting,sortManager,sorterChanged,surrendersFocusOnKeystroke,uiClassID,updateSelectionOnSort
-hcls BooleanEditor,BooleanRenderer,CellEditorRemover,DateRenderer,DoubleRenderer,GenericEditor,IconRenderer,ModelChange,NumberEditor,NumberRenderer,Resizable2,Resizable3,SortManager,ThreadSafePrintable
 
 CLSS public javax.swing.JTextArea
 cons public init()
@@ -1752,7 +1718,6 @@ meth public void setRows(int)
 meth public void setTabSize(int)
 meth public void setWrapStyleWord(boolean)
 supr javax.swing.text.JTextComponent
-hfds columnWidth,columns,rowHeight,rows,uiClassID,word,wrap
 
 CLSS public javax.swing.JToggleButton
 cons public init()
@@ -1771,7 +1736,6 @@ meth public java.lang.String getUIClassID()
 meth public javax.accessibility.AccessibleContext getAccessibleContext()
 meth public void updateUI()
 supr javax.swing.AbstractButton
-hfds uiClassID
 
 CLSS public javax.swing.JToolBar
 cons public init()
@@ -1809,8 +1773,6 @@ meth public void setRollover(boolean)
 meth public void setUI(javax.swing.plaf.ToolBarUI)
 meth public void updateUI()
 supr javax.swing.JComponent
-hfds floatable,margin,orientation,paintBorder,uiClassID
-hcls DefaultToolBarLayout
 
 CLSS public javax.swing.JTree
 cons public init()
@@ -1993,8 +1955,6 @@ meth public void startEditingAtPath(javax.swing.tree.TreePath)
 meth public void treeDidChange()
 meth public void updateUI()
 supr javax.swing.JComponent
-hfds TEMP_STACK_SIZE,anchorPath,dragEnabled,dropLocation,dropMode,dropTimer,expandRow,expandedStack,expandedState,expandsSelectedPaths,leadPath,rowHeightSet,scrollsOnExpandSet,settingUI,showsRootHandlesSet,uiClassID,uiTreeExpansionListener
-hcls TreeTimer
 
 CLSS public abstract interface javax.swing.MenuElement
 meth public abstract java.awt.Component getComponent()
@@ -2378,8 +2338,6 @@ meth public void setUI(javax.swing.plaf.TextUI)
 meth public void updateUI()
 meth public void write(java.io.Writer) throws java.io.IOException
 supr javax.swing.JComponent
-hfds FOCUSED_COMPONENT,KEYMAP_TABLE,METHOD_OVERRIDDEN,caret,caretColor,caretEvent,checkedInputOverride,composedTextAttribute,composedTextCaret,composedTextContent,composedTextEnd,composedTextStart,defaultTransferHandler,disabledTextColor,dragEnabled,dropLocation,dropMode,editable,focusAccelerator,highlighter,inputMethodRequestsHandler,keymap,latestCommittedTextEnd,latestCommittedTextStart,margin,model,navigationFilter,needToSendKeyTypedEvent,originalCaret,selectedTextColor,selectionColor
-hcls ComposedTextCaret,DefaultKeymap,DefaultTransferHandler,DoSetCaretPosition,InputMethodRequestsHandler,KeymapActionMap,KeymapWrapper,MutableCaretEvent
 
 CLSS public javax.swing.tree.DefaultMutableTreeNode
 cons public init()
@@ -2445,8 +2403,6 @@ meth public void setAllowsChildren(boolean)
 meth public void setParent(javax.swing.tree.MutableTreeNode)
 meth public void setUserObject(java.lang.Object)
 supr java.lang.Object
-hfds serialVersionUID
-hcls BreadthFirstEnumeration,PathBetweenNodesEnumeration,PostorderEnumeration,PreorderEnumeration
 
 CLSS public abstract interface javax.swing.tree.MutableTreeNode
 intf javax.swing.tree.TreeNode

@@ -19,6 +19,8 @@
 package org.netbeans.modules.typescript.editor;
 
 import java.io.IOException;
+import org.netbeans.core.spi.multiview.MultiViewElement;
+import org.netbeans.core.spi.multiview.text.MultiViewEditorElement;
 import org.netbeans.modules.textmate.lexer.api.GrammarRegistration;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
@@ -29,20 +31,25 @@ import org.openide.loaders.DataObject;
 import org.openide.loaders.DataObjectExistsException;
 import org.openide.loaders.MultiDataObject;
 import org.openide.loaders.MultiFileLoader;
+import org.openide.util.Lookup;
 import org.openide.util.NbBundle.Messages;
+import org.openide.windows.TopComponent;
+
+import static org.netbeans.modules.typescript.editor.TypeScriptEditorKit.TYPESCRIPT_MIME_TYPE;
+import static org.netbeans.modules.typescript.editor.TypeScriptEditorKit.TYPESCRIPT_ICON;
 
 @Messages({
     "LBL_TypeScriptDataObject_LOADER=Files of TypeScriptDataObject"
 })
 @MIMEResolver.ExtensionRegistration(
         displayName = "#LBL_TypeScriptDataObject_LOADER",
-        mimeType = "application/x-typescript",
+        mimeType = TYPESCRIPT_MIME_TYPE,
         extension = {"ts"},
-        position = 600
+        position = 193 // lower than 218 as CND also recognizes .ts file
 )
 @DataObject.Registration(
-        mimeType = "application/x-typescript",
-        iconBase = "org/netbeans/modules/typescript/editor/icon.png",
+        mimeType = TYPESCRIPT_MIME_TYPE,
+        iconBase = TYPESCRIPT_ICON,
         displayName = "#LBL_TypeScriptDataObject_LOADER",
         position = 300
 )
@@ -96,14 +103,25 @@ import org.openide.util.NbBundle.Messages;
             path = "Loaders/application/x-typescript/Actions",
             id = @ActionID(category = "System", id = "org.openide.actions.PropertiesAction"),
             position = 1400
+    ),
+    @ActionReference(
+            path = "Editors/application/x-typescript/Popup",
+            id = @ActionID(category = "Refactoring", id = "org.netbeans.modules.refactoring.api.ui.WhereUsedAction"),
+            position = 1400
+    ),
+    @ActionReference(
+            path = "Editors/application/x-typescript/Popup",
+            id = @ActionID(category = "Refactoring", id = "org.netbeans.modules.refactoring.api.ui.RenameAction"),
+            position = 1500,
+            separatorAfter = 1550
     )
 })
-@GrammarRegistration(mimeType="application/x-typescript", grammar="TypeScript.tmLanguage.json")
+@GrammarRegistration(mimeType=TYPESCRIPT_MIME_TYPE, grammar="TypeScript.tmLanguage.json")
 public class TypeScriptDataObjectDataObject extends MultiDataObject {
 
     public TypeScriptDataObjectDataObject(FileObject pf, MultiFileLoader loader) throws DataObjectExistsException, IOException {
         super(pf, loader);
-        registerEditor("application/x-typescript", false);
+        registerEditor(TYPESCRIPT_MIME_TYPE, true);
     }
 
     @Override
@@ -111,4 +129,16 @@ public class TypeScriptDataObjectDataObject extends MultiDataObject {
         return 1;
     }
 
+    @Messages("Source=&Source")
+    @MultiViewElement.Registration(
+        displayName = "#Source",
+        iconBase = TYPESCRIPT_ICON,
+        persistenceType = TopComponent.PERSISTENCE_ONLY_OPENED,
+        mimeType = TYPESCRIPT_MIME_TYPE,
+        preferredID = "typescript.source",
+        position = 100
+    )
+    public static MultiViewEditorElement createEditor(Lookup lkp) {
+        return new MultiViewEditorElement(lkp);
+    }
 }

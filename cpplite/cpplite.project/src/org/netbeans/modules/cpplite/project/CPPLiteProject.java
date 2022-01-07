@@ -18,17 +18,24 @@
  */
 package org.netbeans.modules.cpplite.project;
 
+import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
+import javax.swing.Icon;
+import org.netbeans.api.java.classpath.ClassPath;
+import org.netbeans.api.java.classpath.GlobalPathRegistry;
 import org.netbeans.api.project.Project;
+import org.netbeans.api.project.ProjectInformation;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.modules.cpplite.project.ui.customizer.CustomizerProviderImpl;
+import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.netbeans.spi.project.ProjectFactory;
 import org.netbeans.spi.project.ProjectFactory2;
 import org.netbeans.spi.project.ProjectState;
 import org.netbeans.spi.project.ui.PrivilegedTemplates;
+import org.netbeans.spi.project.ui.ProjectOpenedHook;
 import org.netbeans.spi.project.ui.RecommendedTemplates;
 import org.openide.filesystems.FileObject;
 import org.openide.util.ImageUtilities;
@@ -92,6 +99,8 @@ public class CPPLiteProject implements Project {
                                     new CPPLiteCProjectConfigurationProvider(getRootPreferences(projectDirectory)),
                                     new RecommendedTemplatesImpl(),
                                     new PrivilegedTemplatesImpl(),
+                                    new ProjectInfo(this),
+                                    new ProjectOpenHookImpl(this),
                                     this);
         buildConfigurations.set(BuildConfiguration.read(getBuildPreferences(projectDirectory)));
     }
@@ -130,6 +139,10 @@ public class CPPLiteProject implements Project {
         getRootPreferences(projectDirectory).put(KEY_COMPILE_COMMANDS_EXECUTABLE, compileCommandsExecutable);
     }
 
+    private static Icon loadProjectIcon() {
+        return ImageUtilities.image2Icon(ImageUtilities.loadImage("org/netbeans/modules/cpplite/project/resources/project.gif"));
+    }
+
     @ServiceProvider(service=ProjectFactory.class)
     public static final class FactoryImpl implements ProjectFactory2 {
 
@@ -137,7 +150,7 @@ public class CPPLiteProject implements Project {
         public ProjectManager.Result isProject2(FileObject projectDirectory) {
             Preferences prefs = getRootPreferences(projectDirectory, false);
             if (prefs != null && prefs.getBoolean(KEY_IS_PROJECT, false)) {
-                return new ProjectManager.Result(ImageUtilities.image2Icon(ImageUtilities.loadImage("org/netbeans/modules/cpplite/project/resources/project.gif")));
+                return new ProjectManager.Result(loadProjectIcon());
             }
             return null;
         }
@@ -186,5 +199,61 @@ public class CPPLiteProject implements Project {
         public String[] getPrivilegedTemplates() {
             return TEMPLATES;
         }
+    }
+
+    private static final class ProjectInfo implements ProjectInformation {
+
+        private final Project prj;
+
+        public ProjectInfo(Project prj) {
+            this.prj = prj;
+        }
+
+        @Override
+        public String getName() {
+            return prj.getProjectDirectory().getNameExt();
+        }
+
+        @Override
+        public String getDisplayName() {
+            return prj.getProjectDirectory().getNameExt();
+        }
+
+        @Override
+        public Icon getIcon() {
+            return loadProjectIcon();
+        }
+
+        @Override
+        public Project getProject() {
+            return prj;
+        }
+
+        @Override
+        public void addPropertyChangeListener(PropertyChangeListener listener) {}
+
+        @Override
+        public void removePropertyChangeListener(PropertyChangeListener listener) {}
+
+    }
+
+    private static final class ProjectOpenHookImpl extends ProjectOpenedHook {
+
+        private final ClassPath source;
+
+        public ProjectOpenHookImpl(Project prj) {
+            this.source = ClassPathSupport.createClassPath(prj.getProjectDirectory());
+        }
+
+        @Override
+        protected void projectOpened() {
+            GlobalPathRegistry.getDefault().register(ClassPath.SOURCE, new ClassPath[] {source});
+        }
+
+        @Override
+        protected void projectClosed() {
+            GlobalPathRegistry.getDefault().unregister(ClassPath.SOURCE, new ClassPath[] {source});
+        }
+
     }
 }

@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.120
+#Version 1.126
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -272,8 +272,6 @@ meth public void transferFocusUpCycle()
 meth public void update(java.awt.Graphics)
 meth public void validate()
 supr java.lang.Object
-hfds FOCUS_TRAVERSABLE_DEFAULT,FOCUS_TRAVERSABLE_SET,FOCUS_TRAVERSABLE_UNKNOWN,LOCK,acc,actionListenerK,adjustmentListenerK,appContext,autoFocusTransferOnDisposal,background,backgroundEraseDisabled,boundsOp,bufferStrategy,changeSupport,coalesceEventsParams,coalesceMap,coalescingEnabled,componentListener,componentListenerK,componentOrientation,componentSerializedDataVersion,compoundShape,containerListenerK,cursor,dropTarget,enabled,eventCache,eventLog,eventMask,focusListener,focusListenerK,focusLog,focusTraversalKeyPropertyNames,focusTraversalKeys,focusTraversalKeysEnabled,focusable,font,foreground,graphicsConfig,height,hierarchyBoundsListener,hierarchyBoundsListenerK,hierarchyListener,hierarchyListenerK,ignoreRepaint,incRate,inputMethodListener,inputMethodListenerK,isAddNotifyComplete,isFocusTraversableOverridden,isInc,isPacked,itemListenerK,keyListener,keyListenerK,locale,log,maxSize,maxSizeSet,minSize,minSizeSet,mixingCutoutRegion,mixingLog,mouseListener,mouseListenerK,mouseMotionListener,mouseMotionListenerK,mouseWheelListener,mouseWheelListenerK,name,nameExplicitlySet,newEventsOnly,objectLock,ownedWindowK,parent,peer,peerFont,popups,prefSize,prefSizeSet,requestFocusController,serialVersionUID,textListenerK,valid,visible,width,windowClosingException,windowFocusListenerK,windowListenerK,windowStateListenerK,x,y
-hcls AWTTreeLock,BltSubRegionBufferStrategy,DummyRequestFocusController,FlipSubRegionBufferStrategy,ProxyCapabilities,SingleBufferStrategy
 
 CLSS public java.awt.Container
 cons public init()
@@ -358,8 +356,6 @@ meth public void transferFocusDownCycle()
 meth public void update(java.awt.Graphics)
 meth public void validate()
 supr java.awt.Component
-hfds EMPTY_ARRAY,INCLUDE_SELF,SEARCH_HEAVYWEIGHTS,component,containerListener,containerSerializedDataVersion,descendUnconditionallyWhenValidating,descendantsCount,dispatcher,eventLog,focusCycleRoot,focusTraversalPolicy,focusTraversalPolicyProvider,isJavaAwtSmartInvalidate,layoutMgr,listeningBoundsChildren,listeningChildren,log,mixingLog,modalAppContext,modalComp,numOfHWComponents,numOfLWComponents,preserveBackgroundColor,printing,printingThreads,serialPersistentFields,serialVersionUID
-hcls DropTargetEventTargetFilter,EventTargetFilter,MouseEventTargetFilter,WakingRunnable
 
 CLSS public abstract interface java.awt.MenuContainer
 meth public abstract boolean postEvent(java.awt.Event)
@@ -425,7 +421,6 @@ meth public void putValue(java.lang.String,java.lang.Object)
 meth public void removePropertyChangeListener(java.beans.PropertyChangeListener)
 meth public void setEnabled(boolean)
 supr java.lang.Object
-hfds RECONFIGURE_ON_NULL,arrayTable
 
 CLSS public abstract interface javax.swing.Action
 fld public final static java.lang.String ACCELERATOR_KEY = "AcceleratorKey"
@@ -603,8 +598,6 @@ meth public void unregisterKeyboardAction(javax.swing.KeyStroke)
 meth public void update(java.awt.Graphics)
 meth public void updateUI()
 supr java.awt.Container
-hfds ACTIONMAP_CREATED,ANCESTOR_INPUTMAP_CREATED,ANCESTOR_USING_BUFFER,AUTOSCROLLS_SET,COMPLETELY_OBSCURED,CREATED_DOUBLE_BUFFER,DEBUG_GRAPHICS_LOADED,FOCUS_INPUTMAP_CREATED,FOCUS_TRAVERSAL_KEYS_BACKWARD_SET,FOCUS_TRAVERSAL_KEYS_FORWARD_SET,INHERITS_POPUP_MENU,INPUT_VERIFIER_SOURCE_KEY,IS_DOUBLE_BUFFERED,IS_OPAQUE,IS_PAINTING_TILE,IS_PRINTING,IS_PRINTING_ALL,IS_REPAINTING,KEYBOARD_BINDINGS_KEY,KEY_EVENTS_ENABLED,NEXT_FOCUS,NOT_OBSCURED,OPAQUE_SET,PARTIALLY_OBSCURED,REQUEST_FOCUS_DISABLED,RESERVED_1,RESERVED_2,RESERVED_3,RESERVED_4,RESERVED_5,RESERVED_6,WHEN_IN_FOCUSED_WINDOW_BINDINGS,WIF_INPUTMAP_CREATED,WRITE_OBJ_COUNTER_FIRST,WRITE_OBJ_COUNTER_LAST,aaTextInfo,actionMap,alignmentX,alignmentY,ancestorInputMap,autoscrolls,border,clientProperties,componentObtainingGraphicsFrom,componentObtainingGraphicsFromLock,defaultLocale,flags,focusController,focusInputMap,inputVerifier,isAlignmentXSet,isAlignmentYSet,managingFocusBackwardTraversalKeys,managingFocusForwardTraversalKeys,paintingChild,popupMenu,readObjectCallbacks,revalidateRunnableScheduled,tempRectangles,uiClassID,verifyInputWhenFocusTarget,vetoableChangeSupport,windowInputMap
-hcls ActionStandin,IntVector,KeyboardState,ReadObjectCallback
 
 CLSS public javax.swing.JPanel
 cons public init()
@@ -620,7 +613,6 @@ meth public javax.swing.plaf.PanelUI getUI()
 meth public void setUI(javax.swing.plaf.PanelUI)
 meth public void updateUI()
 supr javax.swing.JComponent
-hfds uiClassID
 
 CLSS public javax.swing.tree.DefaultMutableTreeNode
 cons public init()
@@ -686,8 +678,6 @@ meth public void setAllowsChildren(boolean)
 meth public void setParent(javax.swing.tree.MutableTreeNode)
 meth public void setUserObject(java.lang.Object)
 supr java.lang.Object
-hfds serialVersionUID
-hcls BreadthFirstEnumeration,PathBetweenNodesEnumeration,PostorderEnumeration,PreorderEnumeration
 
 CLSS public javax.swing.tree.DefaultTreeModel
 cons public init(javax.swing.tree.TreeNode)
@@ -893,6 +883,7 @@ hcls ClassesComparator,DiffJavaClass
 
 CLSS public org.netbeans.modules.profiler.heapwalk.FieldsBrowserController
 cons public init(org.netbeans.modules.profiler.heapwalk.FieldsBrowserController$Handler,int)
+cons public init(org.netbeans.modules.profiler.heapwalk.FieldsBrowserController$Handler,int,boolean)
 fld public final static int ROOT_CLASS = 1
 fld public final static int ROOT_INSTANCE = 0
 fld public final static org.netbeans.modules.profiler.heapwalk.model.AbstractHeapWalkerNode EMPTY_CLASS_NODE
@@ -915,7 +906,7 @@ meth public void showInstance(org.netbeans.lib.profiler.heap.Instance)
 meth public void showJavaClass(org.netbeans.lib.profiler.heap.JavaClass)
 meth public void update()
 supr org.netbeans.modules.profiler.heapwalk.AbstractController
-hfds instance,instancesControllerHandler,javaClass,rootMode
+hfds instance,instancesControllerHandler,javaClass,rootMode,showClassLoaders
 
 CLSS public abstract interface static org.netbeans.modules.profiler.heapwalk.FieldsBrowserController$Handler
  outer org.netbeans.modules.profiler.heapwalk.FieldsBrowserController
@@ -936,6 +927,7 @@ innr public final static StateEvent
 meth public boolean isNavigationBackAvailable()
 meth public boolean isNavigationForwardAvailable()
 meth public final int computeRetainedSizes(boolean,boolean)
+meth public final int countClassLoaders()
 meth public final int getRetainedSizesStatus()
 meth public final void addStateListener(org.netbeans.modules.profiler.heapwalk.HeapFragmentWalker$StateListener)
 meth public final void removeStateListener(org.netbeans.modules.profiler.heapwalk.HeapFragmentWalker$StateListener)
@@ -966,7 +958,7 @@ meth public void switchToInstancesView()
 meth public void switchToOQLView()
 meth public void switchToSummaryView()
 supr java.lang.Object
-hfds analysisController,classesController,heapFragment,heapWalker,instancesController,navigationHistoryManager,oqlController,retainedSizesStatus,stateListeners,summaryController,walkerUI
+hfds analysisController,classLoaderCount,classesController,heapFragment,heapWalker,instancesController,navigationHistoryManager,oqlController,retainedSizesStatus,stateListeners,summaryController,walkerUI
 
 CLSS public final static org.netbeans.modules.profiler.heapwalk.HeapFragmentWalker$StateEvent
  outer org.netbeans.modules.profiler.heapwalk.HeapFragmentWalker
@@ -1130,6 +1122,7 @@ intf org.netbeans.modules.profiler.heapwalk.InstancesListController$InstancesLis
 meth protected javax.swing.ImageIcon computeIcon()
 meth public boolean currentlyHasChildren()
 meth public boolean isLeaf()
+meth public boolean isModeFields()
 meth public boolean isRoot()
 meth public int getIndexOfChild(java.lang.Object)
 meth public int getMode()
@@ -1488,6 +1481,7 @@ meth public boolean currentlyHasChildren()
 meth public boolean equals(java.lang.Object)
 meth public boolean isLeaf()
 meth public boolean isRoot()
+meth public final boolean isModeFields()
 meth public int getIndexOfChild(java.lang.Object)
 meth public int getMode()
 meth public int getNChildren()
@@ -1537,8 +1531,10 @@ supr org.netbeans.modules.profiler.heapwalk.model.ClassNode
 CLSS public abstract org.netbeans.modules.profiler.heapwalk.model.HeapWalkerNode
 cons public init()
 fld public final static int MODE_FIELDS = 1
+fld public final static int MODE_FIELDS_NO_CLASSLOADER = 3
 fld public final static int MODE_REFERENCES = 2
 meth public abstract boolean currentlyHasChildren()
+meth public abstract boolean isModeFields()
 meth public abstract boolean isRoot()
 meth public abstract int getMode()
 meth public abstract java.lang.Object getNodeID()

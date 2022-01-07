@@ -271,14 +271,14 @@ public class AddMethodTest extends AddMethodBase {
     }
 
     protected void setRemoteLocalCheckBox(NbDialogOperator dialog) {
-        if (remote != null && remote.booleanValue() && (local == null || !local.booleanValue())) {
-            new JRadioButtonOperator(dialog, "Remote").setSelected(remote.booleanValue());
+        if (remote != null && remote && (local == null || !local)) {
+            new JRadioButtonOperator(dialog, "Remote").setSelected(remote);
         }
-        if (local != null && local.booleanValue() && (remote == null || !remote.booleanValue())) {
-            new JRadioButtonOperator(dialog, "Local").setSelected(local.booleanValue());
+        if (local != null && local && (remote == null || !remote)) {
+            new JRadioButtonOperator(dialog, "Local").setSelected(local);
         }
-        if (local != null && local.booleanValue() && remote != null && remote.booleanValue()) {
-            new JRadioButtonOperator(dialog, "Both").setSelected(local.booleanValue());
+        if (local != null && local && remote != null && remote) {
+            new JRadioButtonOperator(dialog, "Both").setSelected(local);
         }
     }
 }

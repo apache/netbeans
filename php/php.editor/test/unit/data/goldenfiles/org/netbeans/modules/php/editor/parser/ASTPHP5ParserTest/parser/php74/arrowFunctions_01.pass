@@ -1337,7 +1337,7 @@
                                 <Identifier start='975' end='976' name='a'/>
                             </Variable>
                             <InfixExpression start='979' end='999' operator='MUL'>
-                                <MethodInvocation start='979' end='994'>
+                                <MethodInvocation start='979' end='994' isNullsafe='false'>
                                     <Variable start='979' end='981' isDollared='true'>
                                         <Identifier start='980' end='981' name='b'/>
                                     </Variable>
@@ -1848,8 +1848,8 @@
                     <Variable start='1804' end='1807' isDollared='true'>
                         <Identifier start='1805' end='1807' name='af'/>
                     </Variable>
-                    <MethodInvocation start='1810' end='1916'>
-                        <MethodInvocation start='1810' end='1868'>
+                    <MethodInvocation start='1810' end='1916' isNullsafe='false'>
+                        <MethodInvocation start='1810' end='1868' isNullsafe='false'>
                             <StaticMethodInvocation start='1810' end='1834'>
                                 <NamespaceName start='1810' end='1820' isCurrent='false' isGlobal='false'>
                                     <Identifier start='1810' end='1820' name='Collection'/>

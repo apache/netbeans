@@ -1,0 +1,17 @@
+[[905,911]-Syntax error
+ unexpected:	static
+ expected:	identifier, variable, array, callable, namespace, \, define, ?, &] 905-911:Syntax error
+ unexpected:	static
+ expected:	identifier, variable, array, callable, namespace, \, define, ?, &
+[[912,915]-POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	identifier 'int'] 912-915:POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	identifier 'int'
+[[916,918]-POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	variable '$x'] 916-918:POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	variable '$x'
+[[923,924]-POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	)] 923-924:POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	)
+[[933,934]-POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	}] 933-934:POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	}

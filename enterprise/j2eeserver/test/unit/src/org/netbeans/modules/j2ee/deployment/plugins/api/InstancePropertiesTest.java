@@ -131,7 +131,7 @@ public class InstancePropertiesTest extends ServerRegistryTestBase {
         try {
             InstanceProperties.createInstanceProperties(
                     url, TEST_USERNAME, TEST_PASSWORD, TEST_DISPLAY_NAME);
-            fail("the unknow serverplugin should be unknown at this point"); // NOI18N
+            fail("the unknown serverplugin should be unknown at this point"); // NOI18N
         } catch (InstanceCreationException ex) {
             // expected
         }

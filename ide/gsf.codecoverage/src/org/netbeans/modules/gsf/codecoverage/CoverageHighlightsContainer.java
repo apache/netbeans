@@ -33,13 +33,13 @@ import javax.swing.text.JTextComponent;
 import javax.swing.text.Position;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.editor.mimelookup.MimeLookup;
 import org.netbeans.api.editor.settings.AttributesUtilities;
 import org.netbeans.api.editor.settings.FontColorSettings;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.editor.BaseDocument;
-import org.netbeans.editor.Utilities;
 import org.netbeans.modules.csl.spi.GsfUtilities;
 import org.netbeans.modules.gsf.codecoverage.api.CoverageType;
 import org.netbeans.modules.gsf.codecoverage.api.FileCoverageDetails;
@@ -55,6 +55,7 @@ import org.openide.util.WeakListeners;
  * @author Tor Norbye
  */
 public class CoverageHighlightsContainer extends AbstractHighlightsContainer implements DocumentListener {
+
     private AttributeSet covered;
     private AttributeSet uncovered;
     private AttributeSet inferred;
@@ -70,10 +71,10 @@ public class CoverageHighlightsContainer extends AbstractHighlightsContainer imp
     private FileObject fileObject;
     private Project project;
 
-    private static final String COLORING_COVERED   = "coverage-covered"; //NOI18N
+    private static final String COLORING_COVERED = "coverage-covered"; //NOI18N
     private static final String COLORING_UNCOVERED = "coverage-uncovered"; //NOI18N
-    private static final String COLORING_INFERRED  = "coverage-inferred"; //NOI18N
-    private static final String COLORING_PARTIAL   = "coverage-partial"; //NOI18N
+    private static final String COLORING_INFERRED = "coverage-inferred"; //NOI18N
+    private static final String COLORING_PARTIAL = "coverage-partial"; //NOI18N
 
     CoverageHighlightsContainer(JTextComponent component) {
         this.component = component;
@@ -160,17 +161,17 @@ public class CoverageHighlightsContainer extends AbstractHighlightsContainer imp
         }
 
         covered = coveredBc == null ? SimpleAttributeSet.EMPTY : AttributesUtilities.createImmutable(
-                StyleConstants.Background, coveredBc,
-                ATTR_EXTENDS_EOL, Boolean.TRUE, ATTR_EXTENDS_EMPTY_LINE, Boolean.TRUE);
+            StyleConstants.Background, coveredBc,
+            ATTR_EXTENDS_EOL, Boolean.TRUE, ATTR_EXTENDS_EMPTY_LINE, Boolean.TRUE);
         uncovered = uncoveredBc == null ? SimpleAttributeSet.EMPTY : AttributesUtilities.createImmutable(
-                StyleConstants.Background, uncoveredBc,
-                ATTR_EXTENDS_EOL, Boolean.TRUE, ATTR_EXTENDS_EMPTY_LINE, Boolean.TRUE);
+            StyleConstants.Background, uncoveredBc,
+            ATTR_EXTENDS_EOL, Boolean.TRUE, ATTR_EXTENDS_EMPTY_LINE, Boolean.TRUE);
         inferred = inferredBc == null ? SimpleAttributeSet.EMPTY : AttributesUtilities.createImmutable(
-                StyleConstants.Background, inferredBc,
-                ATTR_EXTENDS_EOL, Boolean.TRUE, ATTR_EXTENDS_EMPTY_LINE, Boolean.TRUE);
+            StyleConstants.Background, inferredBc,
+            ATTR_EXTENDS_EOL, Boolean.TRUE, ATTR_EXTENDS_EMPTY_LINE, Boolean.TRUE);
         partial = partialBc == null ? SimpleAttributeSet.EMPTY : AttributesUtilities.createImmutable(
-                StyleConstants.Background, partialBc,
-                ATTR_EXTENDS_EOL, Boolean.TRUE, ATTR_EXTENDS_EMPTY_LINE, Boolean.TRUE);
+            StyleConstants.Background, partialBc,
+            ATTR_EXTENDS_EOL, Boolean.TRUE, ATTR_EXTENDS_EMPTY_LINE, Boolean.TRUE);
     }
 
     void refresh() {
@@ -197,25 +198,25 @@ public class CoverageHighlightsContainer extends AbstractHighlightsContainer imp
                 // add and subtract spaces to the document to implement
                 // smart-indent
                 if ((s.trim().length() == 0)) { // whitespace changes only?
-                    if (Utilities.isRowEmpty(doc, offset) ||
-                            (offset >= Utilities.getRowLastNonWhite(doc, offset) + 1) ||
-                            (offset <= Utilities.getRowFirstNonWhite(doc, offset))) {
+                    if (LineDocumentUtils.isLineEmpty(doc, offset)
+                        || (offset >= LineDocumentUtils.getLineLastNonWhitespace(doc, offset) + 1)
+                        || (offset <= LineDocumentUtils.getLineFirstNonWhitespace(doc, offset))) {
                         fireHighlightsChange(offset, offset + length);
                         return;
                     }
                 }
             }
 
-            int lineStart = Utilities.getRowFirstNonWhite(doc, offset);
+            int lineStart = LineDocumentUtils.getLineFirstNonWhitespace(doc, offset);
             if (lineStart == -1) {
-                lineStart = Utilities.getRowStart(doc, offset);
+                lineStart = LineDocumentUtils.getLineStart(doc, offset);
             }
             List<Position> positions = lastPositions;
             if (positions != null) {
                 int positionIndex = findPositionIndex(positions, lineStart);
                 if (positionIndex >= 0) {
                     // Create a new list to avoid sync problems
-                    List<Position> copy = new ArrayList<Position>(positions);
+                    List<Position> copy = new ArrayList<>(positions);
                     copy.remove(positionIndex);
                     lastPositions = copy;
                     fireHighlightsChange(offset, offset + length);
@@ -226,27 +227,32 @@ public class CoverageHighlightsContainer extends AbstractHighlightsContainer imp
         }
     }
 
+    @Override
     public void insertUpdate(DocumentEvent ev) {
         if (enabled) {
             handleEdits(ev.getOffset(), ev.getLength(), true);
         }
     }
 
+    @Override
     public void removeUpdate(DocumentEvent ev) {
         //if (enabled) {
         //    handleEdits(ev.getOffset(), ev.getLength(), false);
         //}
     }
 
+    @Override
     public void changedUpdate(DocumentEvent ev) {
     }
 
     private int findPositionIndex(List<Position> positions, final int target) {
         return Collections.binarySearch(positions, new Position() {
+            @Override
             public int getOffset() {
                 return target;
             }
         }, new Comparator<Position>() {
+            @Override
             public int compare(Position pos1, Position pos2) {
                 return pos1.getOffset() - pos2.getOffset();
             }
@@ -254,6 +260,7 @@ public class CoverageHighlightsContainer extends AbstractHighlightsContainer imp
     }
 
     private class Highlights implements HighlightsSequence {
+
         private final List<Position> positions;
         private final List<CoverageType> types;
         private final long version;
@@ -271,14 +278,14 @@ public class CoverageHighlightsContainer extends AbstractHighlightsContainer imp
             this.endOffsetBoundary = endOffset;
 
             if (lastPositions == null) {
-                positions = new ArrayList<Position>();
-                types = new ArrayList<CoverageType>();
+                positions = new ArrayList<>();
+                types = new ArrayList<>();
                 for (int lineno = 0, maxLines = details.getLineCount(); lineno < maxLines; lineno++) {
                     CoverageType type = details.getType(lineno);
-                    if (type == CoverageType.COVERED || type == CoverageType.INFERRED ||
-                            type == CoverageType.NOT_COVERED || type == CoverageType.PARTIAL) {
+                    if (type == CoverageType.COVERED || type == CoverageType.INFERRED
+                        || type == CoverageType.NOT_COVERED || type == CoverageType.PARTIAL) {
                         try {
-                            int offset = Utilities.getRowStartFromLineOffset(doc, lineno);
+                            int offset = LineDocumentUtils.getLineStartFromIndex(doc, lineno);
                             if (offset == -1) {
                                 continue;
                             }
@@ -286,7 +293,7 @@ public class CoverageHighlightsContainer extends AbstractHighlightsContainer imp
                             // that if we insert a new line at the beginning of a line (or in
                             // the whitespace region) the highlight will move down with the
                             // text
-                            int rowStart = Utilities.getRowFirstNonWhite(doc, offset);
+                            int rowStart = LineDocumentUtils.getLineFirstNonWhitespace(doc, offset);
                             if (rowStart != -1) {
                                 offset = rowStart;
                             }
@@ -306,9 +313,9 @@ public class CoverageHighlightsContainer extends AbstractHighlightsContainer imp
             }
 
             try {
-                int lineStart = Utilities.getRowFirstNonWhite(doc, startOffsetBoundary);
+                int lineStart = LineDocumentUtils.getLineFirstNonWhitespace(doc, startOffsetBoundary);
                 if (lineStart == -1) {
-                    lineStart = Utilities.getRowStart(doc, startOffsetBoundary);
+                    lineStart = LineDocumentUtils.getLineStart(doc, startOffsetBoundary);
                     index = findPositionIndex(positions, lineStart);
                     if (index < 0) {
                         index = -index;
@@ -322,18 +329,14 @@ public class CoverageHighlightsContainer extends AbstractHighlightsContainer imp
             for (; index < positions.size(); index++) {
                 Position pos = positions.get(index);
                 int offset = pos.getOffset();
-                try {
-                    offset = Utilities.getRowStart(doc, offset);
-                } catch (BadLocationException ex) {
-                    Exceptions.printStackTrace(ex);
-                }
+                offset = LineDocumentUtils.getLineStart(doc, offset);
                 if (offset > endOffsetBoundary) {
                     break;
                 }
                 if (offset >= startOffsetBoundary) {
                     startOffset = offset;
                     try {
-                        endOffset = Utilities.getRowEnd(doc, offset);
+                        endOffset = LineDocumentUtils.getLineEnd(doc, offset);
                         if (endOffset < doc.getLength()) {
                             endOffset++; // Include end of line
                         }
@@ -365,6 +368,7 @@ public class CoverageHighlightsContainer extends AbstractHighlightsContainer imp
             return false;
         }
 
+        @Override
         public boolean moveNext() {
             synchronized (CoverageHighlightsContainer.this) {
                 if (checkVersion()) {
@@ -378,6 +382,7 @@ public class CoverageHighlightsContainer extends AbstractHighlightsContainer imp
             return false;
         }
 
+        @Override
         public int getStartOffset() {
             synchronized (CoverageHighlightsContainer.this) {
                 if (finished) {
@@ -388,6 +393,7 @@ public class CoverageHighlightsContainer extends AbstractHighlightsContainer imp
             }
         }
 
+        @Override
         public int getEndOffset() {
             synchronized (CoverageHighlightsContainer.this) {
                 if (finished) {
@@ -398,6 +404,7 @@ public class CoverageHighlightsContainer extends AbstractHighlightsContainer imp
             }
         }
 
+        @Override
         public AttributeSet getAttributes() {
             synchronized (CoverageHighlightsContainer.this) {
                 if (finished) {

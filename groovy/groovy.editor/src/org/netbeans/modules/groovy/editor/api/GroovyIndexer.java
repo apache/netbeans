@@ -46,6 +46,9 @@ import org.netbeans.modules.groovy.editor.api.lexer.LexUtilities;
 import org.netbeans.modules.groovy.editor.api.elements.ast.ASTField;
 import org.netbeans.modules.groovy.editor.api.elements.ast.ASTMethod;
 import org.netbeans.modules.groovy.editor.compiler.ClassNodeCache;
+import org.netbeans.modules.groovy.editor.compiler.PerfData;
+import org.netbeans.modules.groovy.editor.utils.GroovyUtils;
+
 import org.netbeans.modules.parsing.spi.indexing.EmbeddingIndexer;
 import org.netbeans.modules.parsing.spi.indexing.EmbeddingIndexerFactory;
 import org.netbeans.modules.parsing.spi.indexing.support.IndexDocument;
@@ -88,9 +91,22 @@ public class GroovyIndexer extends EmbeddingIndexer {
     private static long filesIndexed = 0;
 
     private static final Logger LOG = Logger.getLogger(GroovyIndexer.class.getName());
-
+    
+    /**
+     * Disables completely Groovy indexing. Temporary options only for 12.5 release, will be hopefully
+     * removed after Groovy performance improves. Currently used reflectively from java.lsp.server module only.
+     * DO NOT expose as an API.
+     * @param enabled 
+     */
+    static void setIndexingEnabled(boolean enabled) {
+        GroovyUtils.setIndexingEnabled(enabled);
+    }
+    
     @Override
     protected void index(Indexable indexable, Result parserResult, Context context) {
+        if (!GroovyUtils.isIndexingEnabled()) {
+            return;
+        }
         long indexerThisStartTime = System.currentTimeMillis();
 
         if (indexerFirstRun == 0) {
@@ -123,6 +139,8 @@ public class GroovyIndexer extends EmbeddingIndexer {
         long indexerThisStopTime = System.currentTimeMillis();
         long indexerThisRunTime = indexerThisStopTime - indexerThisStartTime;
         indexerRunTime += indexerThisRunTime;
+        
+        PerfData.global.addPerfCounter("Indexer time", indexerThisRunTime);
 
         LOG.log(Level.FINEST, "Indexed File                : {0}", r.getSnapshot().getSource().getFileObject());
         LOG.log(Level.FINEST, "Indexing time (ms)          : {0}", indexerThisRunTime);
@@ -145,6 +163,9 @@ public class GroovyIndexer extends EmbeddingIndexer {
 
         @Override
         public EmbeddingIndexer createIndexer(Indexable indexable, Snapshot snapshot) {
+            if (!GroovyUtils.isIndexingEnabled()) {
+                return null;
+            }
             if (isIndexable(indexable, snapshot)) {
                 return new GroovyIndexer();
             } else {
@@ -163,6 +184,9 @@ public class GroovyIndexer extends EmbeddingIndexer {
         }
 
         private boolean isIndexable(Indexable indexable, Snapshot snapshot) {
+            if (!GroovyUtils.isIndexingEnabled()) {
+                return false;
+            }
             String extension = snapshot.getSource().getFileObject().getExt();
 
             if (extension.equals("groovy")) { // NOI18N
@@ -202,12 +226,18 @@ public class GroovyIndexer extends EmbeddingIndexer {
 
         @Override
         public boolean scanStarted(Context context) {
+            if (!GroovyUtils.isIndexingEnabled()) {
+                return false;
+            }
             ClassNodeCache.createThreadLocalInstance();
+            PerfData.global.clear();
             return super.scanStarted(context);
         }
 
         @Override
-        public void scanFinished(Context context) {            
+        public void scanFinished(Context context) {
+            PerfData.LOG.finer("***** Indexing statistics");
+            PerfData.global.dumpStatsAndMerge();
             ClassNodeCache.clearThreadLocalInstance();
             super.scanFinished(context);
         }
@@ -252,6 +282,7 @@ public class GroovyIndexer extends EmbeddingIndexer {
 
             for (ASTElement child : children) {
                 switch (child.getKind()) {
+                    case INTERFACE:
                     case CLASS:
                         analyzeClass((ASTClass) child);
                         break;
@@ -276,6 +307,10 @@ public class GroovyIndexer extends EmbeddingIndexer {
                     case FIELD:
                         indexField((ASTField) child, document);
                         break;
+                    case INTERFACE:
+                    case CLASS:
+                        analyzeClass((ASTClass) child);
+                        break;
                 }
             }
         }
@@ -295,7 +330,8 @@ public class GroovyIndexer extends EmbeddingIndexer {
             sb.append(';').append(org.netbeans.modules.groovy.editor.java.Utilities.translateClassLoaderTypeName(
                     node.getType().getName()));
 
-            int flags = getFieldModifiersFlag(child.getModifiers());
+            // maintain index compatibility; althogh
+            int flags = getFieldModifiersFlag(child.isProperty(), child.getModifiers());
             if (flags != 0 || child.isProperty()) {
                 sb.append(';');
                 sb.append(IndexedElement.flagToFirstChar(flags));
@@ -362,14 +398,17 @@ public class GroovyIndexer extends EmbeddingIndexer {
 
     }
 
-    // note that default field modifier is private
-    private static int getFieldModifiersFlag(Set<Modifier> modifiers) {
+    // note that no modifiers for field means it is a property, but that's
+    // declared with .isProperty that is indexed separately.
+    private static int getFieldModifiersFlag(boolean property, Set<Modifier> modifiers) {
         int flags = modifiers.contains(Modifier.STATIC) ? Opcodes.ACC_STATIC : 0;
         if (modifiers.contains(Modifier.PUBLIC)) {
             flags |= Opcodes.ACC_PUBLIC;
         } else if (modifiers.contains(Modifier.PROTECTED)) {
             flags |= Opcodes.ACC_PROTECTED;
-        }
+        } else if (!property && modifiers.contains(Modifier.PRIVATE)) {
+            flags |= Opcodes.ACC_PRIVATE;
+        }   
 
         return flags;
     }
@@ -381,6 +420,8 @@ public class GroovyIndexer extends EmbeddingIndexer {
             flags |= Opcodes.ACC_PRIVATE;
         } else if (modifiers.contains(Modifier.PROTECTED)) {
             flags |= Opcodes.ACC_PROTECTED;
+        } else if (modifiers.contains(Modifier.PUBLIC)) {
+            flags |= Opcodes.ACC_PUBLIC;
         }
 
         return flags;

@@ -1,0 +1,16 @@
+            int|float $number,
+            -----------------
+HINT:Initialize Field: $number
+FIX:Initialize Field: $number
+            ?Foo $nullabl^e,
+            --------------
+HINT:Initialize Field: $nullable
+FIX:Initialize Field: $nullable
+            Bar $bar,
+            --------
+HINT:Initialize Field: $bar
+FIX:Initialize Field: $bar
+            \Test\Foo|Bar $mixed,
+            --------------------
+HINT:Initialize Field: $mixed
+FIX:Initialize Field: $mixed

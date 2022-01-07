@@ -39,6 +39,7 @@ import org.netbeans.modules.maven.embedder.EmbedderFactory;
 import org.netbeans.modules.maven.options.MavenSettings;
 import org.openide.filesystems.FileObject;
 import org.openide.util.Exceptions;
+import org.openide.util.Lookup;
 
 
 
@@ -70,11 +71,17 @@ public class BeanRunConfig implements RunConfig {
     private MavenProject mp;
     private RunConfig preexecution;
     private ReactorStyle reactor = ReactorStyle.NONE;
+    private Lookup actionContext = Lookup.EMPTY;
     
     /** Creates a new instance of BeanRunConfig */
     public BeanRunConfig() {
     }
 
+    @Override
+    public Lookup getActionContext() {
+        return actionContext;
+    }
+    
     /**
      * create a new instance that wraps around the parent instance, allowing
      * to change values while delegating to originals if not changed.
@@ -90,7 +97,13 @@ public class BeanRunConfig implements RunConfig {
         setShowError(parent.isShowError());
         setUpdateSnapshots(parent.isUpdateSnapshots());
         setReactorStyle(parent.getReactorStyle());
+        setActionContext(parent.getActionContext());
     }
+    
+    public void setActionContext(Lookup actionContext) {
+        this.actionContext = actionContext;
+    }
+    
     //#243897 MavenCommoandLineExecutor needs to reuse the maven project from the parent config to prevent repoading MP many times during one execution..
     public void reassignMavenProjectFromParent() {
         if (parent instanceof BeanRunConfig) {

@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 0.22
+#Version 0.28
 
 CLSS public com.jcraft.jsch.agentproxy.AgentProxy
 cons public init(com.jcraft.jsch.agentproxy.Connector)
@@ -205,7 +205,7 @@ meth public void writeField(java.lang.String)
 meth public void writeField(java.lang.String,java.lang.Object)
 supr java.lang.Object
 hfds LOG,PLACEHOLDER_MEMORY,actualAlignType,alignType,array,autoRead,autoWrite,busy,encoding,fieldOrder,layoutInfo,memory,nativeStrings,readCalled,reads,size,structAlignment,structFields,typeInfo,typeMapper
-hcls AutoAllocated,FFIType,LayoutInfo,StructureSet
+hcls AutoAllocated,FFIType,LayoutInfo,NativeStringTracking,StructureSet
 
 CLSS public abstract interface com.sun.jna.platform.win32.BaseTSD
 innr public static DWORD_PTR
@@ -228,6 +228,7 @@ intf com.sun.jna.platform.win32.WinNT
 intf com.sun.jna.platform.win32.WinUser
 intf com.sun.jna.win32.StdCallLibrary
 meth public abstract boolean AttachThreadInput(com.sun.jna.platform.win32.WinDef$DWORD,com.sun.jna.platform.win32.WinDef$DWORD,boolean)
+meth public abstract boolean BringWindowToTop(com.sun.jna.platform.win32.WinDef$HWND)
 meth public abstract boolean CloseWindow(com.sun.jna.platform.win32.WinDef$HWND)
 meth public abstract boolean DestroyIcon(com.sun.jna.platform.win32.WinDef$HICON)
 meth public abstract boolean DestroyWindow(com.sun.jna.platform.win32.WinDef$HWND)
@@ -294,10 +295,12 @@ meth public abstract com.sun.jna.platform.win32.WinDef$HWND GetActiveWindow()
 meth public abstract com.sun.jna.platform.win32.WinDef$HWND GetAncestor(com.sun.jna.platform.win32.WinDef$HWND,int)
 meth public abstract com.sun.jna.platform.win32.WinDef$HWND GetDesktopWindow()
 meth public abstract com.sun.jna.platform.win32.WinDef$HWND GetForegroundWindow()
+meth public abstract com.sun.jna.platform.win32.WinDef$HWND GetParent(com.sun.jna.platform.win32.WinDef$HWND)
 meth public abstract com.sun.jna.platform.win32.WinDef$HWND GetWindow(com.sun.jna.platform.win32.WinDef$HWND,com.sun.jna.platform.win32.WinDef$DWORD)
 meth public abstract com.sun.jna.platform.win32.WinDef$HWND SetFocus(com.sun.jna.platform.win32.WinDef$HWND)
 meth public abstract com.sun.jna.platform.win32.WinDef$HWND SetParent(com.sun.jna.platform.win32.WinDef$HWND,com.sun.jna.platform.win32.WinDef$HWND)
 meth public abstract com.sun.jna.platform.win32.WinDef$LRESULT CallNextHookEx(com.sun.jna.platform.win32.WinUser$HHOOK,int,com.sun.jna.platform.win32.WinDef$WPARAM,com.sun.jna.platform.win32.WinDef$LPARAM)
+meth public abstract com.sun.jna.platform.win32.WinDef$LRESULT CallWindowProc(com.sun.jna.Pointer,com.sun.jna.platform.win32.WinDef$HWND,int,com.sun.jna.platform.win32.WinDef$WPARAM,com.sun.jna.platform.win32.WinDef$LPARAM)
 meth public abstract com.sun.jna.platform.win32.WinDef$LRESULT DefWindowProc(com.sun.jna.platform.win32.WinDef$HWND,int,com.sun.jna.platform.win32.WinDef$WPARAM,com.sun.jna.platform.win32.WinDef$LPARAM)
 meth public abstract com.sun.jna.platform.win32.WinDef$LRESULT DispatchMessage(com.sun.jna.platform.win32.WinUser$MSG)
 meth public abstract com.sun.jna.platform.win32.WinDef$LRESULT SendMessage(com.sun.jna.platform.win32.WinDef$HWND,int,com.sun.jna.platform.win32.WinDef$WPARAM,com.sun.jna.platform.win32.WinDef$LPARAM)
@@ -5112,7 +5115,7 @@ fld public final static int IO_REPARSE_TAG_MOUNT_POINT = -1610612733
 fld public final static int IO_REPARSE_TAG_SIS = -2147483641
 fld public final static int IO_REPARSE_TAG_SYMLINK = -1610612724
 fld public final static int IO_REPARSE_TAG_WIM = -2147483640
-fld public final static int KEY_ALL_ACCESS = 2031679
+fld public final static int KEY_ALL_ACCESS = 983103
 fld public final static int KEY_CREATE_LINK = 32
 fld public final static int KEY_CREATE_SUB_KEY = 4
 fld public final static int KEY_ENUMERATE_SUB_KEYS = 8
@@ -5213,12 +5216,21 @@ fld public final static int MAXLONG = 2147483647
 fld public final static int MAXSHORT = 32767
 fld public final static int MAXWORD = 65535
 fld public final static int MAX_ACL_REVISION = 4
+fld public final static int MEM_COALESCE_PLACEHOLDERS = 1
 fld public final static int MEM_COMMIT = 4096
+fld public final static int MEM_DECOMMIT = 16384
 fld public final static int MEM_FREE = 65536
 fld public final static int MEM_IMAGE = 16777216
+fld public final static int MEM_LARGE_PAGES = 536870912
 fld public final static int MEM_MAPPED = 262144
+fld public final static int MEM_PHYSICAL = 4194304
+fld public final static int MEM_PRESERVE_PLACEHOLDER = 2
 fld public final static int MEM_PRIVATE = 131072
+fld public final static int MEM_RELEASE = 32768
 fld public final static int MEM_RESERVE = 8192
+fld public final static int MEM_RESET = 524288
+fld public final static int MEM_RESET_UNDO = 16777216
+fld public final static int MEM_TOP_DOWN = 1048576
 fld public final static int MINCHAR = 128
 fld public final static int MINLONG = -2147483648
 fld public final static int MINSHORT = 32768
@@ -5270,7 +5282,7 @@ fld public final static int REG_HIVE_EXACT_FILE_GROWTH = 128
 fld public final static int REG_HIVE_NO_RM = 256
 fld public final static int REG_HIVE_SINGLE_LOG = 512
 fld public final static int REG_LATEST_FORMAT = 2
-fld public final static int REG_LEGAL_CHANGE_FILTER = 15
+fld public final static int REG_LEGAL_CHANGE_FILTER = 268435471
 fld public final static int REG_LEGAL_OPTION = 15
 fld public final static int REG_LINK = 6
 fld public final static int REG_MULTI_SZ = 7
@@ -5279,6 +5291,7 @@ fld public final static int REG_NOTIFY_CHANGE_ATTRIBUTES = 2
 fld public final static int REG_NOTIFY_CHANGE_LAST_SET = 4
 fld public final static int REG_NOTIFY_CHANGE_NAME = 1
 fld public final static int REG_NOTIFY_CHANGE_SECURITY = 8
+fld public final static int REG_NOTIFY_THREAD_AGNOSTIC = 268435456
 fld public final static int REG_NO_COMPRESSION = 4
 fld public final static int REG_NO_LAZY_FLUSH = 4
 fld public final static int REG_OPENED_EXISTING_KEY = 2
@@ -5615,8 +5628,10 @@ innr public static SYSTEM_POWER_LEVEL
 innr public static SYSTEM_POWER_POLICY
 innr public static TOKEN_GROUPS
 innr public static TOKEN_OWNER
+innr public static TOKEN_PRIMARY_GROUP
 innr public static TOKEN_PRIVILEGES
 innr public static TOKEN_USER
+innr public static UNKNOWN_RELATIONSHIP
 intf com.sun.jna.platform.win32.BaseTSD
 intf com.sun.jna.platform.win32.WinBase
 intf com.sun.jna.platform.win32.WinDef
@@ -5998,6 +6013,7 @@ fld public final static int WS_VISIBLE = 268435456
 fld public final static int WS_VSCROLL = 2097152
 innr public abstract interface static HOOKPROC
 innr public abstract interface static LowLevelKeyboardProc
+innr public abstract interface static LowLevelMouseProc
 innr public abstract interface static MONITORENUMPROC
 innr public abstract interface static WNDENUMPROC
 innr public abstract interface static WinEventProc
@@ -6019,6 +6035,7 @@ innr public static MONITORINFO
 innr public static MONITORINFOEX
 innr public static MOUSEINPUT
 innr public static MSG
+innr public static MSLLHOOKSTRUCT
 innr public static RAWINPUTDEVICELIST
 innr public static SIZE
 innr public static WINDOWINFO
@@ -6056,7 +6073,6 @@ meth public final java.lang.String name()
 meth public java.lang.String toString()
 meth public static <%0 extends java.lang.Enum<{%%0}>> {%%0} valueOf(java.lang.Class<{%%0}>,java.lang.String)
 supr java.lang.Object
-hfds name,ordinal
 
 CLSS public java.lang.Exception
 cons protected init(java.lang.String,java.lang.Throwable,boolean,boolean)
@@ -6065,7 +6081,6 @@ cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.Throwable)
 cons public init(java.lang.Throwable)
 supr java.lang.Throwable
-hfds serialVersionUID
 
 CLSS public java.lang.Object
 cons public init()
@@ -6102,8 +6117,6 @@ meth public void printStackTrace(java.io.PrintStream)
 meth public void printStackTrace(java.io.PrintWriter)
 meth public void setStackTrace(java.lang.StackTraceElement[])
 supr java.lang.Object
-hfds CAUSE_CAPTION,EMPTY_THROWABLE_ARRAY,NULL_CAUSE_MESSAGE,SELF_SUPPRESSION_MESSAGE,SUPPRESSED_CAPTION,SUPPRESSED_SENTINEL,UNASSIGNED_STACK,backtrace,cause,detailMessage,serialVersionUID,stackTrace,suppressedExceptions
-hcls PrintStreamOrWriter,SentinelHolder,WrappedPrintStream,WrappedPrintWriter
 
 CLSS public org.netbeans.libs.jsch.agentproxy.ConnectorFactory
 innr public final static !enum ConnectorKind

@@ -328,7 +328,7 @@ class ClassScopeImpl extends TypeScopeImpl implements ClassScope, VariableNameFa
             }
         }
         for (TraitScope traitScope : new HashSet<>(getTraits())) {
-            Set<org.netbeans.modules.php.editor.api.elements.FieldElement> indexedFields = filterForPrivate.filter(index.getAlllFields(traitScope));
+            Set<org.netbeans.modules.php.editor.api.elements.FieldElement> indexedFields = index.getAlllFields(traitScope);
             for (org.netbeans.modules.php.editor.api.elements.FieldElement field : indexedFields) {
                 allFields.add(new FieldElementImpl(traitScope, field));
             }
@@ -341,9 +341,10 @@ class ClassScopeImpl extends TypeScopeImpl implements ClassScope, VariableNameFa
         Set<ClassConstantElement> allConstants = new HashSet<>();
         IndexScope indexScope = ModelUtils.getIndexScope(this);
         ElementQuery.Index index = indexScope.getIndex();
+        org.netbeans.modules.php.editor.api.elements.ElementFilter filterForPrivate = org.netbeans.modules.php.editor.api.elements.ElementFilter.forPrivateModifiers(false);
         Set<ClassScope> superClasses = new HashSet<>(getSuperClasses());
         for (ClassScope classScope : superClasses) {
-            Set<TypeConstantElement> indexedConstants = index.getAllTypeConstants(classScope);
+            Set<TypeConstantElement> indexedConstants = filterForPrivate.filter(index.getAllTypeConstants(classScope));
             for (TypeConstantElement classMember : indexedConstants) {
                 TypeConstantElement constant = classMember;
                 allConstants.add(new ClassConstantElementImpl(classScope, constant));
@@ -352,7 +353,7 @@ class ClassScopeImpl extends TypeScopeImpl implements ClassScope, VariableNameFa
         Set<InterfaceScope> interfaceScopes = new HashSet<>();
         interfaceScopes.addAll(getSuperInterfaceScopes());
         for (InterfaceScope iface : interfaceScopes) {
-            Collection<TypeConstantElement> indexedConstants = index.getInheritedTypeConstants(iface);
+            Collection<TypeConstantElement> indexedConstants = filterForPrivate.filter(index.getInheritedTypeConstants(iface));
             for (TypeConstantElement classMember : indexedConstants) {
                 TypeConstantElement constant = classMember;
                 allConstants.add(new ClassConstantElementImpl(iface, constant));
@@ -458,7 +459,7 @@ class ClassScopeImpl extends TypeScopeImpl implements ClassScope, VariableNameFa
         final QualifiedName superClassName = getSuperClassName();
         if (superClassName != null) {
             sb.append(superClassName.toString());
-            sb.append("|");
+            sb.append(Type.SEPARATOR);
             boolean first = true;
             for (QualifiedName qualifiedName : possibleFQSuperClassNames) {
                 if (!first) {
@@ -483,7 +484,7 @@ class ClassScopeImpl extends TypeScopeImpl implements ClassScope, VariableNameFa
         }
         sb.append(ifaceSb);
         if (ifaceSb.length() > 0) {
-            sb.append("|"); //NOI18N
+            sb.append(Type.SEPARATOR);
             StringBuilder fqIfaceSb = new StringBuilder();
             Collection<QualifiedName> fQSuperInterfaceNames = getFQSuperInterfaceNames();
             for (QualifiedName fQSuperInterfaceName : fQSuperInterfaceNames) {

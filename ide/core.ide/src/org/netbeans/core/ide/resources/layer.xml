@@ -21,11 +21,6 @@
 -->
 <!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
 <filesystem>
-    <folder name="Actions">
-        <folder name="System">
-            <file name="org-openide-actions-SaveAsTemplateAction.instance"/>
-        </folder>
-    </folder>
     <folder name="Menu">
         <folder name="GoTo">
             <file name="org-netbeans-core-actions-JumpNextAction.shadow">

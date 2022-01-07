@@ -89,7 +89,7 @@ public class SchemaElement extends DBElement implements Node.Cookie {
     }
 
     /** Cache for read schemas. */
-    protected static Map schemaCache = new HashMap();
+    protected static Map<String, SchemaElement> schemaCache = new HashMap<>();
     
     /** Last used schema. */
     private static SchemaElement lastSchema;

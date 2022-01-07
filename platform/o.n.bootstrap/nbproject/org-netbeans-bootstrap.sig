@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.86
+#Version 2.92
 
 CLSS public java.awt.datatransfer.Clipboard
 cons public init(java.lang.String)
@@ -15,7 +15,6 @@ meth public void addFlavorListener(java.awt.datatransfer.FlavorListener)
 meth public void removeFlavorListener(java.awt.datatransfer.FlavorListener)
 meth public void setContents(java.awt.datatransfer.Transferable,java.awt.datatransfer.ClipboardOwner)
 supr java.lang.Object
-hfds currentDataFlavors,flavorListeners,name
 
 CLSS public abstract interface java.awt.datatransfer.FlavorListener
 intf java.util.EventListener
@@ -31,7 +30,6 @@ cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.Throwable)
 cons public init(java.lang.Throwable)
 supr java.lang.Exception
-hfds serialVersionUID
 
 CLSS public abstract interface java.io.Serializable
 
@@ -71,8 +69,6 @@ meth public void setClassAssertionStatus(java.lang.String,boolean)
 meth public void setDefaultAssertionStatus(boolean)
 meth public void setPackageAssertionStatus(java.lang.String,boolean)
 supr java.lang.Object
-hfds assertionLock,classAssertionStatus,classes,defaultAssertionStatus,defaultDomain,loadedLibraryNames,nativeLibraries,nativeLibraryContext,nocerts,package2certs,packageAssertionStatus,packages,parallelLockMap,parent,scl,sclSet,sys_paths,systemNativeLibraries,usr_paths
-hcls NativeLibrary,ParallelLoaders
 
 CLSS public java.lang.Exception
 cons protected init(java.lang.String,java.lang.Throwable,boolean,boolean)
@@ -81,7 +77,6 @@ cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.Throwable)
 cons public init(java.lang.Throwable)
 supr java.lang.Throwable
-hfds serialVersionUID
 
 CLSS public java.lang.Object
 cons public init()
@@ -155,7 +150,6 @@ meth public void checkSystemClipboardAccess()
 meth public void checkWrite(java.io.FileDescriptor)
 meth public void checkWrite(java.lang.String)
 supr java.lang.Object
-hfds initialized,packageAccess,packageAccessLock,packageAccessValid,packageDefinition,packageDefinitionLock,packageDefinitionValid,rootGroup
 
 CLSS public java.lang.Throwable
 cons protected init(java.lang.String,java.lang.Throwable,boolean,boolean)
@@ -178,8 +172,6 @@ meth public void printStackTrace(java.io.PrintStream)
 meth public void printStackTrace(java.io.PrintWriter)
 meth public void setStackTrace(java.lang.StackTraceElement[])
 supr java.lang.Object
-hfds CAUSE_CAPTION,EMPTY_THROWABLE_ARRAY,NULL_CAUSE_MESSAGE,SELF_SUPPRESSION_MESSAGE,SUPPRESSED_CAPTION,SUPPRESSED_SENTINEL,UNASSIGNED_STACK,backtrace,cause,detailMessage,serialVersionUID,stackTrace,suppressedExceptions
-hcls PrintStreamOrWriter,SentinelHolder,WrappedPrintStream,WrappedPrintWriter
 
 CLSS public abstract interface java.net.URLStreamHandlerFactory
 meth public abstract java.net.URLStreamHandler createURLStreamHandler(java.lang.String)
@@ -378,7 +370,7 @@ meth public org.netbeans.ModuleManager getManager()
 meth public org.openide.modules.SpecificationVersion getSpecificationVersion()
 meth public void releaseManifest()
 supr org.openide.modules.ModuleInfo
-hfds DATA_LOCK,autoload,data,eager,enabled,findResources,history,instr
+hfds DATA_LOCK,autoload,data,eager,enabled,history,instr
 
 CLSS public final static org.netbeans.Module$PackageExport
  outer org.netbeans.Module

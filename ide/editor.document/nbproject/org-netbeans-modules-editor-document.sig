@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.17.0
+#Version 1.23.0
 
 CLSS public abstract interface java.io.Serializable
 
@@ -26,7 +26,6 @@ intf java.io.Serializable
 meth public java.lang.Object getSource()
 meth public java.lang.String toString()
 supr java.lang.Object
-hfds serialVersionUID
 
 CLSS public abstract interface javax.swing.text.Document
 fld public final static java.lang.String StreamDescriptionProperty = "stream"

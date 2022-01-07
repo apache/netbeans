@@ -31,6 +31,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.swing.event.ChangeListener;
+import javax.tools.Diagnostic.Kind;
 import javax.tools.DiagnosticListener;
 import javax.tools.JavaFileObject;
 import org.junit.Before;
@@ -221,6 +222,28 @@ public class JavaSourceUtilImplTest extends NbTestCase {
                     "foo"       //NOI18N
                 })),
                 methods);
+    }
+
+    @Test
+    public void testGenerateWrongContent() throws Exception {
+        MockLookup.setInstances(new SourceLevelQueryImplementation() {
+            @Override
+            public String getSourceLevel(FileObject javaFile) {
+                return "1.8";
+            }
+        });
+        assertNotNull(root);
+        assertNotNull(java);
+        int[] errorCount = new int[1];
+        DiagnosticListener<JavaFileObject> errors = d -> {
+            if (d.getKind() == Kind.ERROR) {
+                errorCount[0]++;
+            }
+        };
+        final Map<String, byte[]> res = new JavaSourceUtilImpl().generate(root, java, "package nb;\n class A { void foo(){ Unknown unknown;}}", errors);   //NOI18N
+        assertNotNull(res);
+        assertEquals(0, res.size());
+        assertEquals(1, errorCount[0]);
     }
 
     private static FileObject createFile(

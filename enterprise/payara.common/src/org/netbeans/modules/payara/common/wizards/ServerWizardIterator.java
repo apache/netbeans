@@ -19,13 +19,14 @@
 
 package org.netbeans.modules.payara.common.wizards;
 
-import org.netbeans.modules.payara.common.ServerDetails;
+import org.netbeans.modules.payara.common.PayaraPlatformDetails;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import static java.util.stream.Collectors.toList;
 import javax.swing.JComponent;
 import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
@@ -33,7 +34,6 @@ import javax.swing.event.ChangeListener;
 import org.netbeans.api.server.ServerInstance;
 import org.netbeans.modules.payara.common.CreateDomain;
 import org.netbeans.modules.payara.common.PayaraInstance;
-import org.netbeans.modules.payara.spi.RegisteredDerbyServer;
 import org.netbeans.modules.payara.spi.ServerUtilities;
 import org.netbeans.modules.payara.spi.Utils;
 import org.openide.DialogDisplayer;
@@ -46,7 +46,9 @@ import org.openide.util.NbPreferences;
 import org.openide.util.Utilities;
 import org.netbeans.modules.payara.common.PayaraInstanceProvider;
 import org.netbeans.modules.payara.common.PortCollection;
+import static org.netbeans.modules.payara.common.PayaraPlatformDetails.getVersionFromInstallDirectory;
 import org.netbeans.modules.payara.spi.PayaraModule;
+import org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI;
 
 
 /**
@@ -68,10 +70,10 @@ public class ServerWizardIterator extends PortCollection implements WizardDescri
     private final transient List<ChangeListener> listeners = new CopyOnWriteArrayList<>();
     private String domainsDir;
     private String domainName;
-    private ServerDetails serverDetails;
+    private PayaraPlatformVersionAPI serverDetails;
     private final PayaraInstanceProvider instanceProvider;
-    ServerDetails[] acceptedValues;
-    ServerDetails[] downloadableValues;
+    final List<PayaraPlatformVersionAPI> acceptedValues;
+    final List<PayaraPlatformVersionAPI> downloadableValues;
     private String targetValue;
 
     public String getTargetValue() {
@@ -82,12 +84,12 @@ public class ServerWizardIterator extends PortCollection implements WizardDescri
         this.targetValue = targetValue;
     }
 
-    public ServerWizardIterator(ServerDetails[] possibleValues) {
+    public ServerWizardIterator(List<PayaraPlatformVersionAPI> possibleValues) {
         this.acceptedValues = possibleValues;
-        this.downloadableValues = Arrays.stream(possibleValues)
-                .filter(ServerDetails::isDownloadable)
+        this.downloadableValues = possibleValues
+                .stream()
                 .sorted(Collections.reverseOrder())
-                .toArray(ServerDetails[]::new);
+                .collect(toList());
         this.instanceProvider = PayaraInstanceProvider.getProvider();
         this.hostName = "localhost"; // NOI18N
     }
@@ -147,14 +149,6 @@ public class ServerWizardIterator extends PortCollection implements WizardDescri
             handleLocalDomains(result, ir);
         } else {
             handleRemoteDomains(result,ir);
-        }
-        // lookup the javadb register service here and use it.
-        RegisteredDerbyServer db = Lookup.getDefault().lookup(RegisteredDerbyServer.class);
-        if (null != db) {
-            File f = new File(ir, "javadb");
-            if (f.exists() && f.isDirectory() && f.canRead()) {
-                db.initialize(f.getAbsolutePath());
-            }
         }
         NbPreferences.forModule(this.getClass()).put("INSTALL_ROOT_KEY", installRoot); // NOI18N
         return result;
@@ -341,7 +335,7 @@ public class ServerWizardIterator extends PortCollection implements WizardDescri
         return instanceProvider.hasServer(uri);
     }
 
-    ServerDetails isValidInstall(File installDir, File payaraDir, WizardDescriptor wizard) {
+    PayaraPlatformVersionAPI isValidInstall(File installDir, File payaraDir, WizardDescriptor wizard) {
         String errMsg = NbBundle.getMessage(AddServerLocationPanel.class, "ERR_InstallationInvalid", // NOI18N
                 FileUtil.normalizeFile(installDir).getPath());
         wizard.putProperty(WizardDescriptor.PROP_ERROR_MESSAGE, errMsg); // getSanitizedPath(installDir)));
@@ -354,15 +348,13 @@ public class ServerWizardIterator extends PortCollection implements WizardDescri
         if (!containerRef.exists()) {
             return null;
         }
-        for (ServerDetails candidate : acceptedValues) {
-            if (candidate.isInstalledInDirectory(payaraDir)) {
-                wizard.putProperty(WizardDescriptor.PROP_ERROR_MESSAGE, "   ");
-                this.serverDetails = candidate;
-                return candidate;
-            }
+        Optional<PayaraPlatformVersionAPI> serverDetails = getVersionFromInstallDirectory(payaraDir);
+        if (serverDetails.isPresent()) {
+            wizard.putProperty(WizardDescriptor.PROP_ERROR_MESSAGE, "   ");
+            this.serverDetails = serverDetails.get();
+            return serverDetails.get();
         }
         return null;
-
     }
 
     /**

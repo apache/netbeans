@@ -75,7 +75,7 @@ final class MultiFileObject extends AbstractFolder implements FileObject.Priorit
     /** list of objects that we delegate to and that already
     * has been created.
     */
-    private Set delegates;
+    private Set<FileObject> delegates;
 
     /** current delegate (the first object to delegate to), never null */
     private FileObject leader;
@@ -170,7 +170,7 @@ final class MultiFileObject extends AbstractFolder implements FileObject.Priorit
         MultiFileSystem mfs = getMultiFileSystem();
         FileSystem[] arr = mfs.getDelegates();
 
-        Set now = (delegates == null) ? Collections.emptySet(): delegates;
+        Set<FileObject> now = (delegates == null) ? Collections.emptySet() : delegates;
         Set<FileObject> del = new HashSet<FileObject>(arr.length * 2);
         Number maxWeight = 0;
         FileObject led = null;
@@ -1292,8 +1292,10 @@ final class MultiFileObject extends AbstractFolder implements FileObject.Priorit
                       System.out.println ("Old : " + oldName);
                 */
 
-                /** [PENDING] expected to delete*/
-                parent.refresh(name, oldName);
+                if (parent instanceof AbstractFolder) {
+                    /** [PENDING] expected to delete*/
+                    ((AbstractFolder) parent).refresh(name, oldName);
+                }
 
                 //!!!      getMultiFileSystem ().attr.renameAttributes (oldFullName, newFullName);
                 if (hasAtLeastOneListeners()) {
@@ -1333,9 +1335,11 @@ final class MultiFileObject extends AbstractFolder implements FileObject.Priorit
                 String n = name;
                 validFlag = false;
 
-                /** [PENDING] expected rename of some refresh method */
-                //parent.internalRefresh (null, n, true, false, null);
-                parent.refresh(null, n, true, false);
+                if (parent instanceof AbstractFolder) {
+                    /** [PENDING] expected rename of some refresh method */
+                    //parent.internalRefresh (null, n, true, false, null);
+                    ((AbstractFolder) parent).refresh(null, n, true, false);
+                }
 
                 if (hasAtLeastOneListeners()) {
                     fileDeleted0(new FileEvent(this));

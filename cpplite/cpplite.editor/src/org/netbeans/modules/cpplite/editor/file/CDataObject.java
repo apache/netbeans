@@ -19,6 +19,9 @@
 package org.netbeans.modules.cpplite.editor.file;
 
 import java.io.IOException;
+import org.netbeans.api.annotations.common.StaticResource;
+import org.netbeans.core.spi.multiview.MultiViewElement;
+import org.netbeans.core.spi.multiview.text.MultiViewEditorElement;
 import org.netbeans.modules.textmate.lexer.api.GrammarRegistration;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
@@ -29,7 +32,9 @@ import org.openide.loaders.DataObject;
 import org.openide.loaders.DataObjectExistsException;
 import org.openide.loaders.MultiDataObject;
 import org.openide.loaders.MultiFileLoader;
+import org.openide.util.Lookup;
 import org.openide.util.NbBundle.Messages;
+import org.openide.windows.TopComponent;
 
 @Messages({
     "LBL_C_LOADER=Files of C"
@@ -42,7 +47,7 @@ import org.openide.util.NbBundle.Messages;
 )
 @DataObject.Registration(
         mimeType = MIMETypes.C,
-        iconBase = "org/netbeans/modules/cpplite/editor/file/resources/CSrcIcon.gif",
+        iconBase = CDataObject.ICON,
         displayName = "#LBL_C_LOADER",
         position = 300
 )
@@ -96,14 +101,28 @@ import org.openide.util.NbBundle.Messages;
             path = "Loaders/" + MIMETypes.C + "/Actions",
             id = @ActionID(category = "System", id = "org.openide.actions.PropertiesAction"),
             position = 1400
+    ),
+    @ActionReference(
+            path = "Editors/" + MIMETypes.CPP + "/Popup",
+            id = @ActionID(category = "Refactoring", id = "org.netbeans.modules.refactoring.api.ui.WhereUsedAction"),
+            position = 1400
+    ),
+    @ActionReference(
+            path = "Editors/" + MIMETypes.CPP + "/Popup",
+            id = @ActionID(category = "Refactoring", id = "org.netbeans.modules.refactoring.api.ui.RenameAction"),
+            position = 1500,
+            separatorAfter = 1550
     )
 })
 @GrammarRegistration(grammar="resources/c.tmLanguage.json", mimeType=MIMETypes.C)
 public class CDataObject extends MultiDataObject {
 
+    @StaticResource
+    static final String ICON = "org/netbeans/modules/cpplite/editor/file/resources/CSrcIcon.gif";
+
     public CDataObject(FileObject pf, MultiFileLoader loader) throws DataObjectExistsException, IOException {
         super(pf, loader);
-        registerEditor(MIMETypes.C, false);
+        registerEditor(MIMETypes.C, true);
     }
 
     @Override
@@ -111,4 +130,15 @@ public class CDataObject extends MultiDataObject {
         return 1;
     }
 
+    @MultiViewElement.Registration(
+        displayName = "#Source",
+        iconBase = CDataObject.ICON,
+        persistenceType = TopComponent.PERSISTENCE_ONLY_OPENED,
+        mimeType = MIMETypes.C,
+        preferredID = "c.source",
+        position = 100
+    )
+    public static MultiViewEditorElement createEditor(Lookup lkp) {
+        return new MultiViewEditorElement(lkp);
+    }
 }

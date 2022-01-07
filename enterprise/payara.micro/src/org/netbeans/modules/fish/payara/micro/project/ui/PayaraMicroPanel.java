@@ -18,16 +18,18 @@
  */
 package org.netbeans.modules.fish.payara.micro.project.ui;
 
-import org.netbeans.modules.fish.payara.micro.project.VersionRepository;
+import java.util.Collections;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JPanel;
 import static org.netbeans.modules.fish.payara.micro.plugin.Constants.PROP_AUTO_BIND_HTTP;
 import static org.netbeans.modules.fish.payara.micro.plugin.Constants.PROP_PAYARA_MICRO_VERSION;
-import org.netbeans.modules.fish.payara.micro.project.MicroVersion;
 import org.netbeans.modules.j2ee.deployment.devmodules.api.J2eeModule;
 import org.openide.WizardDescriptor;
 import static org.openide.util.NbBundle.getMessage;
 import static org.netbeans.modules.fish.payara.micro.plugin.Constants.PROP_CONTEXT_ROOT;
+import org.netbeans.modules.payara.tooling.data.PayaraPlatformVersion;
+import org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI;
+import org.openide.util.NbBundle;
 
 /**
  *
@@ -48,10 +50,9 @@ class PayaraMicroPanel extends JPanel {
     void readSettings(WizardDescriptor descriptor) {
         String microVersionText = (String) descriptor.getProperty(PROP_PAYARA_MICRO_VERSION);
         if (microVersionText != null) {
-            VersionRepository.toMicroVersion(microVersionText)
-                    .ifPresent(microVersion -> microVersionCombobox.setSelectedItem(microVersion));
+            microVersionCombobox.setSelectedItem(PayaraPlatformVersion.toValue(microVersionText));
         }
-        
+
         String autoBindHTTP = (String)descriptor.getProperty(PROP_AUTO_BIND_HTTP);
         if(autoBindHTTP == null){
             autoBindHTTP = Boolean.TRUE.toString();
@@ -66,7 +67,9 @@ class PayaraMicroPanel extends JPanel {
     }
 
     void storeSettings(WizardDescriptor descriptor) {
-        descriptor.putProperty(PROP_PAYARA_MICRO_VERSION, ((MicroVersion)microVersionCombobox.getSelectedItem()).getVersion());
+        if (microVersionCombobox.getSelectedItem() != null) {
+            descriptor.putProperty(PROP_PAYARA_MICRO_VERSION, microVersionCombobox.getSelectedItem().toString());
+        }
         descriptor.putProperty(PROP_AUTO_BIND_HTTP, String.valueOf(autoBindHttpCheckBox.isSelected()));
         descriptor.putProperty(PROP_CONTEXT_ROOT, String.valueOf(contextRootTextField.getText().trim()));
     }
@@ -75,14 +78,25 @@ class PayaraMicroPanel extends JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        microVersionCombobox = new javax.swing.JComboBox();
+        microVersionCombobox = new javax.swing.JComboBox<>();
         microVersionLabel = new javax.swing.JLabel();
         autoBindHttpLabel = new javax.swing.JLabel();
         autoBindHttpCheckBox = new javax.swing.JCheckBox();
         contextRootLabel = new javax.swing.JLabel();
         contextRootTextField = new javax.swing.JTextField();
+        statusMessage = new javax.swing.JLabel();
 
-        microVersionCombobox.setModel(new DefaultComboBoxModel(VersionRepository.getInstance().getMicroVersion().toArray()));
+        microVersionCombobox.setModel(new DefaultComboBoxModel(
+            PayaraPlatformVersion.getVersions()
+            .stream()
+            .sorted(Collections.reverseOrder())
+            .toArray(PayaraPlatformVersionAPI[]::new)
+        ));
+        if(PayaraPlatformVersion.getVersions().isEmpty()) {
+            statusMessage.setText(NbBundle.getMessage(PayaraMicroPanel.class, "LBL_UnableToConnectPayaraMavenRepo"));
+        } else {
+            statusMessage.setText("");
+        }
 
         org.openide.awt.Mnemonics.setLocalizedText(microVersionLabel, org.openide.util.NbBundle.getMessage(PayaraMicroPanel.class, "PayaraMicroPanel.microVersionLabel.text")); // NOI18N
 
@@ -103,16 +117,21 @@ class PayaraMicroPanel extends JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(microVersionLabel)
-                    .addComponent(autoBindHttpLabel)
-                    .addComponent(contextRootLabel))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(autoBindHttpCheckBox)
-                        .addGap(0, 91, Short.MAX_VALUE))
-                    .addComponent(microVersionCombobox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(contextRootTextField, javax.swing.GroupLayout.Alignment.TRAILING))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(microVersionLabel)
+                            .addComponent(autoBindHttpLabel)
+                            .addComponent(contextRootLabel))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(autoBindHttpCheckBox)
+                                .addGap(0, 91, Short.MAX_VALUE))
+                            .addComponent(microVersionCombobox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(contextRootTextField, javax.swing.GroupLayout.Alignment.TRAILING)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(statusMessage, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -129,7 +148,9 @@ class PayaraMicroPanel extends JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(contextRootLabel)
                     .addComponent(contextRootTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(217, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 188, Short.MAX_VALUE)
+                .addComponent(statusMessage, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -138,8 +159,9 @@ class PayaraMicroPanel extends JPanel {
     private javax.swing.JLabel autoBindHttpLabel;
     private javax.swing.JLabel contextRootLabel;
     private javax.swing.JTextField contextRootTextField;
-    private javax.swing.JComboBox microVersionCombobox;
+    private javax.swing.JComboBox<PayaraPlatformVersionAPI> microVersionCombobox;
     private javax.swing.JLabel microVersionLabel;
+    private javax.swing.JLabel statusMessage;
     // End of variables declaration//GEN-END:variables
 
 }

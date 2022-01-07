@@ -49,7 +49,7 @@ import org.openide.util.NbBundle;
 @OptionsPanelController.Keywords(keywords={"php", "debugger", "debugging", "xdebug", "#KW_DebuggerOptions"}, location=UiUtils.OPTIONS_PATH, tabTitle= "#LBL_DebuggerOptions")
 public class PhpDebuggerPanel extends JPanel {
 
-    private static final long serialVersionUID = 165768454654687L;
+    private static final long serialVersionUID = -6341327437203454463L;
 
     private final ChangeSupport changeSupport = new ChangeSupport(this);
     private final WatchesAndEvalListener watchesAndEvalListener;
@@ -149,6 +149,14 @@ public class PhpDebuggerPanel extends JPanel {
         debuggerConsoleCheckBox.setSelected(showConsole);
     }
 
+    public boolean isResolveBreakpoints() {
+        return resolveBreakpointsCheckBox.isSelected();
+    }
+
+    public void setResolveBreakpoints(boolean resolveBreakpoints) {
+        resolveBreakpointsCheckBox.setSelected(resolveBreakpoints);
+    }
+
     public void setError(String message) {
         errorLabel.setText(" "); // NOI18N
         errorLabel.setForeground(UIManager.getColor("nb.errorForeground")); // NOI18N
@@ -198,6 +206,8 @@ public class PhpDebuggerPanel extends JPanel {
         debuggerConsoleCheckBox = new JCheckBox();
         debuggerConsoleInfoLabel = new JLabel();
         errorLabel = new JLabel();
+        resolveBreakpointsCheckBox = new JCheckBox();
+        resolveBreakpointsInfoLabel = new JLabel();
 
         portLabel.setLabelFor(portTextField);
         Mnemonics.setLocalizedText(portLabel, NbBundle.getMessage(PhpDebuggerPanel.class, "PhpDebuggerPanel.portLabel.text")); // NOI18N
@@ -227,10 +237,13 @@ public class PhpDebuggerPanel extends JPanel {
         errorLabel.setLabelFor(debuggerConsoleCheckBox);
         Mnemonics.setLocalizedText(errorLabel, "ERROR"); // NOI18N
 
+        Mnemonics.setLocalizedText(resolveBreakpointsCheckBox, NbBundle.getMessage(PhpDebuggerPanel.class, "PhpDebuggerPanel.resolveBreakpointsCheckBox.text")); // NOI18N
+
+        Mnemonics.setLocalizedText(resolveBreakpointsInfoLabel, NbBundle.getMessage(PhpDebuggerPanel.class, "PhpDebuggerPanel.resolveBreakpointsInfoLabel.text")); // NOI18N
+
         GroupLayout layout = new GroupLayout(this);
         this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(Alignment.LEADING)
+        layout.setHorizontalGroup(layout.createParallelGroup(Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(Alignment.LEADING)
                     .addComponent(stopAtTheFirstLineCheckBox)
@@ -238,6 +251,17 @@ public class PhpDebuggerPanel extends JPanel {
                     .addComponent(requestedUrlsCheckBox)
                     .addComponent(debuggerConsoleCheckBox)
                     .addComponent(errorLabel)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(Alignment.LEADING)
+                            .addComponent(portLabel)
+                            .addComponent(sessionIdLabel)
+                            .addComponent(maxDataLengthLabel))
+                        .addPreferredGap(ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(Alignment.LEADING, false)
+                            .addComponent(portTextField, GroupLayout.PREFERRED_SIZE, 50, GroupLayout.PREFERRED_SIZE)
+                            .addComponent(sessionIdTextField, GroupLayout.PREFERRED_SIZE, 176, GroupLayout.PREFERRED_SIZE)
+                            .addComponent(maxDataLengthTextField, GroupLayout.PREFERRED_SIZE, 50, GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(resolveBreakpointsCheckBox)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(21, 21, 21)
                         .addGroup(layout.createParallelGroup(Alignment.LEADING)
@@ -249,26 +273,14 @@ public class PhpDebuggerPanel extends JPanel {
                                 .addPreferredGap(ComponentPlacement.RELATED)
                                 .addGroup(layout.createParallelGroup(Alignment.LEADING, false)
                                     .addComponent(maxChildrenTextField)
-                                    .addComponent(maxStructuresDepthTextField, GroupLayout.PREFERRED_SIZE, 50, GroupLayout.PREFERRED_SIZE)))))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(Alignment.LEADING)
-                            .addComponent(portLabel)
-                            .addComponent(sessionIdLabel)
-                            .addComponent(maxDataLengthLabel))
-                        .addPreferredGap(ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(Alignment.LEADING, false)
-                            .addComponent(portTextField, GroupLayout.PREFERRED_SIZE, 50, GroupLayout.PREFERRED_SIZE)
-                            .addComponent(sessionIdTextField, GroupLayout.PREFERRED_SIZE, 176, GroupLayout.PREFERRED_SIZE)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(maxDataLengthTextField, GroupLayout.PREFERRED_SIZE, 50, GroupLayout.PREFERRED_SIZE)
-                                .addGap(97, 97, 97)))))
+                                    .addComponent(maxStructuresDepthTextField, GroupLayout.PREFERRED_SIZE, 50, GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(resolveBreakpointsInfoLabel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         layout.linkSize(SwingConstants.HORIZONTAL, new Component[] {maxChildrenTextField, maxDataLengthTextField, maxStructuresDepthTextField, portTextField});
 
-        layout.setVerticalGroup(
-            layout.createParallelGroup(Alignment.LEADING)
+        layout.setVerticalGroup(layout.createParallelGroup(Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(Alignment.BASELINE)
                     .addComponent(portLabel)
@@ -299,6 +311,10 @@ public class PhpDebuggerPanel extends JPanel {
                 .addComponent(debuggerConsoleCheckBox)
                 .addPreferredGap(ComponentPlacement.RELATED)
                 .addComponent(debuggerConsoleInfoLabel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(ComponentPlacement.RELATED)
+                .addComponent(resolveBreakpointsCheckBox)
+                .addPreferredGap(ComponentPlacement.RELATED)
+                .addComponent(resolveBreakpointsInfoLabel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(errorLabel))
         );
@@ -349,6 +365,8 @@ public class PhpDebuggerPanel extends JPanel {
     private JLabel portLabel;
     private JTextField portTextField;
     private JCheckBox requestedUrlsCheckBox;
+    private JCheckBox resolveBreakpointsCheckBox;
+    private JLabel resolveBreakpointsInfoLabel;
     private JLabel sessionIdLabel;
     private JTextField sessionIdTextField;
     private JCheckBox stopAtTheFirstLineCheckBox;

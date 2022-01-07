@@ -29,10 +29,13 @@ import java.util.logging.Level;
 import static junit.framework.TestCase.assertEquals;
 import org.netbeans.api.annotations.common.SuppressWarnings;
 import org.netbeans.api.java.queries.SourceLevelQuery;
+import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.junit.RandomlyFails;
+import org.netbeans.modules.maven.api.NbMavenProject;
+import org.netbeans.modules.maven.debug.MavenJPDAStart;
 import org.netbeans.modules.projectapi.nb.TimedWeakReference;
 import org.netbeans.spi.project.LookupMerger;
 import org.netbeans.spi.project.ProjectServiceProvider;
@@ -63,7 +66,18 @@ public class NbMavenProjectImplTest extends NbTestCase {
     protected @Override String logRoot() {
         return "org.netbeans.modules.maven";
     }
-
+    
+    public void testMavenJPDAStartInLookup() throws Exception {
+        assertLookupObject("[base, jar]", "jar");
+        assertLookupObject("[base, war]", "war");
+        assertLookupObject("[base]", "ear");
+        // Now test dynamic changes to packaging:
+        FileObject pd = wd.getFileObject("prj-war");
+        Project prj = ProjectManager.getDefault().findProject(pd);
+        MavenJPDAStart jpda = prj.getLookup().lookup(MavenJPDAStart.class);
+        assertNotNull("Single MavenJPDAStart instance per project", jpda);
+    }
+    
     public void testPackagingTypeSpecificLookup() throws Exception {
         assertLookupObject("[base, jar]", "jar");
         assertLookupObject("[base, war]", "war");
@@ -77,6 +91,7 @@ public class NbMavenProjectImplTest extends NbTestCase {
                 + "<packaging>jar</packaging><version>1.0</version></project>");
         assertEquals("[base, jar]", prj.getLookup().lookup(I.class).m());
     }
+    
     private void assertLookupObject(String result, String packaging) throws Exception {
         FileObject pd = wd.createFolder("prj-" + packaging);
         TestFileUtils.writeFile(pd, "pom.xml", "<project><modelVersion>4.0.0</modelVersion>"
@@ -219,4 +234,41 @@ public class NbMavenProjectImplTest extends NbTestCase {
         TestFileUtils.touch(TestFileUtils.writeFile(wd, ".mvn/maven.config", text), null);
     }
 
+    public static interface PS {
+        public String m();
+    }
+
+    // BEGIN:ProjectServiceProvider.pluginSpecific
+    @ProjectServiceProvider(service=PS.class, 
+            projectType=NbMavenProject.TYPE + "/org.netbeans.modules.maven:test.plugin")
+    public static class PluginService implements PS {
+        public @Override String m() {
+            return "special";
+        }
+    }
+    // END:ProjectServiceProvider.pluginSpecific
+    
+    /**
+     * Checks that a service registered against a maven plugin is not present by default.
+     */
+    public void testPluginServiceNotPresent() throws Exception {
+        TestFileUtils.writeFile(wd, "pom.xml", "<project><modelVersion>4.0.0</modelVersion>"
+                + "<groupId>test</groupId><artifactId>parent</artifactId><version>1.0</version><packaging>pom</packaging>"
+                + "</project>");
+        
+        Project p = FileOwnerQuery.getOwner(wd);
+        assertNull(p.getLookup().lookup(PS.class));
+    }
+    
+    public void testPluginServicePresentWithPlugin() throws Exception {
+        TestFileUtils.writeFile(wd, "pom.xml", "<project><modelVersion>4.0.0</modelVersion>"
+                + "<groupId>test</groupId><artifactId>parent</artifactId><version>1.0</version><packaging>pom</packaging>"
+                + "<build><plugins><plugin><artifactId>test.plugin</artifactId><groupId>org.netbeans.modules.maven</groupId></plugin></plugins></build>"
+                + "</project>");
+        
+        Project p = FileOwnerQuery.getOwner(wd);
+        PS ps = p.getLookup().lookup(PS.class);
+        assertNotNull(ps);
+        assertEquals("special", ps.m());
+    }
 }

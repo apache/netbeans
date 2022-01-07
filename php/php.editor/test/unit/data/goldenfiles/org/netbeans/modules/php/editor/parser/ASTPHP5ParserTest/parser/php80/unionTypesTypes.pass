@@ -1,0 +1,1172 @@
+<testresult testFile='unionTypesTypes.php'>
+    <scanner>
+        <token id='T_CLASS' start='815' end='820'>
+            <text>class</text>
+        </token>
+        <token id='T_STRING' start='821' end='836'>
+            <text>UnionTypesClass</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='837' end='838'>
+            <text>{</text>
+        </token>
+        <token id='T_PRIVATE' start='843' end='850'>
+            <text>private</text>
+        </token>
+        <token id='T_STRING' start='851' end='854'>
+            <text>int</text>
+        </token>
+        <token id='T_OR' start='854' end='855'>
+            <text>|</text>
+        </token>
+        <token id='T_STRING' start='855' end='860'>
+            <text>float</text>
+        </token>
+        <token id='T_VARIABLE' start='861' end='870'>
+            <text>$property</text>
+        </token>
+        <token id='T_SEMICOLON' start='870' end='871'>
+            <text>;</text>
+        </token>
+        <token id='T_PROTECTED' start='876' end='885'>
+            <text>protected</text>
+        </token>
+        <token id='T_STATIC' start='886' end='892'>
+            <text>static</text>
+        </token>
+        <token id='T_STRING' start='893' end='899'>
+            <text>string</text>
+        </token>
+        <token id='T_OR' start='899' end='900'>
+            <text>|</text>
+        </token>
+        <token id='T_STRING' start='900' end='904'>
+            <text>bool</text>
+        </token>
+        <token id='T_OR' start='904' end='905'>
+            <text>|</text>
+        </token>
+        <token id='T_STRING' start='905' end='909'>
+            <text>null</text>
+        </token>
+        <token id='T_VARIABLE' start='910' end='925'>
+            <text>$staticProperty</text>
+        </token>
+        <token id='T_SEMICOLON' start='925' end='926'>
+            <text>;</text>
+        </token>
+        <token id='T_PUBLIC' start='932' end='938'>
+            <text>public</text>
+        </token>
+        <token id='T_FUNCTION' start='939' end='947'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='948' end='954'>
+            <text>method</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='954' end='955'>
+            <text>(</text>
+        </token>
+        <token id='T_STRING' start='955' end='958'>
+            <text>int</text>
+        </token>
+        <token id='T_OR' start='958' end='959'>
+            <text>|</text>
+        </token>
+        <token id='T_STRING' start='959' end='964'>
+            <text>float</text>
+        </token>
+        <token id='T_VARIABLE' start='965' end='972'>
+            <text>$number</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='972' end='973'>
+            <text>)</text>
+        </token>
+        <token id='T_NEKUDOTAIM' start='973' end='974'>
+            <text>:</text>
+        </token>
+        <token id='T_STRING' start='975' end='978'>
+            <text>Foo</text>
+        </token>
+        <token id='T_OR' start='978' end='979'>
+            <text>|</text>
+        </token>
+        <token id='T_STRING' start='979' end='982'>
+            <text>Bar</text>
+        </token>
+        <token id='T_OR' start='982' end='983'>
+            <text>|</text>
+        </token>
+        <token id='T_STRING' start='983' end='987'>
+            <text>null</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='988' end='989'>
+            <text>{</text>
+        </token>
+        <token id='T_RETURN' start='998' end='1004'>
+            <text>return</text>
+        </token>
+        <token id='T_STRING' start='1005' end='1009'>
+            <text>null</text>
+        </token>
+        <token id='T_SEMICOLON' start='1009' end='1010'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1015' end='1016'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='1022' end='1028'>
+            <text>public</text>
+        </token>
+        <token id='T_STATIC' start='1029' end='1035'>
+            <text>static</text>
+        </token>
+        <token id='T_FUNCTION' start='1036' end='1044'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='1045' end='1057'>
+            <text>staticMethod</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1057' end='1058'>
+            <text>(</text>
+        </token>
+        <token id='T_STRING' start='1058' end='1066'>
+            <text>iterable</text>
+        </token>
+        <token id='T_OR' start='1066' end='1067'>
+            <text>|</text>
+        </token>
+        <token id='T_STRING' start='1067' end='1071'>
+            <text>null</text>
+        </token>
+        <token id='T_VARIABLE' start='1072' end='1081'>
+            <text>$iterable</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1081' end='1082'>
+            <text>)</text>
+        </token>
+        <token id='T_NEKUDOTAIM' start='1082' end='1083'>
+            <text>:</text>
+        </token>
+        <token id='T_NS_SEPARATOR' start='1084' end='1085'>
+            <text>\</text>
+        </token>
+        <token id='T_STRING' start='1085' end='1089'>
+            <text>Test</text>
+        </token>
+        <token id='T_NS_SEPARATOR' start='1089' end='1090'>
+            <text>\</text>
+        </token>
+        <token id='T_STRING' start='1090' end='1093'>
+            <text>Foo</text>
+        </token>
+        <token id='T_OR' start='1093' end='1094'>
+            <text>|</text>
+        </token>
+        <token id='T_STRING' start='1094' end='1097'>
+            <text>Bar</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1098' end='1099'>
+            <text>{</text>
+        </token>
+        <token id='T_RETURN' start='1108' end='1114'>
+            <text>return</text>
+        </token>
+        <token id='T_NEW' start='1115' end='1118'>
+            <text>new</text>
+        </token>
+        <token id='T_STRING' start='1119' end='1122'>
+            <text>Bar</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1122' end='1123'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1123' end='1124'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='1124' end='1125'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1130' end='1131'>
+            <text>}</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1132' end='1133'>
+            <text>}</text>
+        </token>
+        <token id='T_ABSTRACT' start='1135' end='1143'>
+            <text>abstract</text>
+        </token>
+        <token id='T_CLASS' start='1144' end='1149'>
+            <text>class</text>
+        </token>
+        <token id='T_STRING' start='1150' end='1173'>
+            <text>UnionTypesAbstractClass</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1174' end='1175'>
+            <text>{</text>
+        </token>
+        <token id='T_PRIVATE' start='1180' end='1187'>
+            <text>private</text>
+        </token>
+        <token id='T_STRING' start='1188' end='1191'>
+            <text>int</text>
+        </token>
+        <token id='T_OR' start='1191' end='1192'>
+            <text>|</text>
+        </token>
+        <token id='T_STRING' start='1192' end='1197'>
+            <text>float</text>
+        </token>
+        <token id='T_VARIABLE' start='1198' end='1207'>
+            <text>$property</text>
+        </token>
+        <token id='T_SEMICOLON' start='1207' end='1208'>
+            <text>;</text>
+        </token>
+        <token id='T_PROTECTED' start='1213' end='1222'>
+            <text>protected</text>
+        </token>
+        <token id='T_STATIC' start='1223' end='1229'>
+            <text>static</text>
+        </token>
+        <token id='T_STRING' start='1230' end='1236'>
+            <text>string</text>
+        </token>
+        <token id='T_OR' start='1236' end='1237'>
+            <text>|</text>
+        </token>
+        <token id='T_STRING' start='1237' end='1241'>
+            <text>bool</text>
+        </token>
+        <token id='T_OR' start='1241' end='1242'>
+            <text>|</text>
+        </token>
+        <token id='T_STRING' start='1242' end='1246'>
+            <text>null</text>
+        </token>
+        <token id='T_VARIABLE' start='1247' end='1262'>
+            <text>$staticProperty</text>
+        </token>
+        <token id='T_SEMICOLON' start='1262' end='1263'>
+            <text>;</text>
+        </token>
+        <token id='T_ABSTRACT' start='1269' end='1277'>
+            <text>abstract</text>
+        </token>
+        <token id='T_PUBLIC' start='1278' end='1284'>
+            <text>public</text>
+        </token>
+        <token id='T_FUNCTION' start='1285' end='1293'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='1294' end='1300'>
+            <text>method</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1300' end='1301'>
+            <text>(</text>
+        </token>
+        <token id='T_STRING' start='1301' end='1304'>
+            <text>int</text>
+        </token>
+        <token id='T_OR' start='1304' end='1305'>
+            <text>|</text>
+        </token>
+        <token id='T_STRING' start='1305' end='1310'>
+            <text>float</text>
+        </token>
+        <token id='T_VARIABLE' start='1311' end='1318'>
+            <text>$number</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1318' end='1319'>
+            <text>)</text>
+        </token>
+        <token id='T_NEKUDOTAIM' start='1319' end='1320'>
+            <text>:</text>
+        </token>
+        <token id='T_STRING' start='1321' end='1324'>
+            <text>Foo</text>
+        </token>
+        <token id='T_OR' start='1324' end='1325'>
+            <text>|</text>
+        </token>
+        <token id='T_STRING' start='1325' end='1328'>
+            <text>Bar</text>
+        </token>
+        <token id='T_OR' start='1328' end='1329'>
+            <text>|</text>
+        </token>
+        <token id='T_STRING' start='1329' end='1333'>
+            <text>null</text>
+        </token>
+        <token id='T_SEMICOLON' start='1333' end='1334'>
+            <text>;</text>
+        </token>
+        <token id='T_ABSTRACT' start='1340' end='1348'>
+            <text>abstract</text>
+        </token>
+        <token id='T_PROTECTED' start='1349' end='1358'>
+            <text>protected</text>
+        </token>
+        <token id='T_STATIC' start='1359' end='1365'>
+            <text>static</text>
+        </token>
+        <token id='T_FUNCTION' start='1366' end='1374'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='1375' end='1387'>
+            <text>staticMethod</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1387' end='1388'>
+            <text>(</text>
+        </token>
+        <token id='T_STRING' start='1388' end='1396'>
+            <text>iterable</text>
+        </token>
+        <token id='T_OR' start='1396' end='1397'>
+            <text>|</text>
+        </token>
+        <token id='T_STRING' start='1397' end='1401'>
+            <text>null</text>
+        </token>
+        <token id='T_VARIABLE' start='1402' end='1411'>
+            <text>$iterable</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1411' end='1412'>
+            <text>)</text>
+        </token>
+        <token id='T_NEKUDOTAIM' start='1412' end='1413'>
+            <text>:</text>
+        </token>
+        <token id='T_NS_SEPARATOR' start='1414' end='1415'>
+            <text>\</text>
+        </token>
+        <token id='T_STRING' start='1415' end='1419'>
+            <text>Test</text>
+        </token>
+        <token id='T_NS_SEPARATOR' start='1419' end='1420'>
+            <text>\</text>
+        </token>
+        <token id='T_STRING' start='1420' end='1423'>
+            <text>Foo</text>
+        </token>
+        <token id='T_OR' start='1423' end='1424'>
+            <text>|</text>
+        </token>
+        <token id='T_STRING' start='1424' end='1427'>
+            <text>Bar</text>
+        </token>
+        <token id='T_SEMICOLON' start='1427' end='1428'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1429' end='1430'>
+            <text>}</text>
+        </token>
+        <token id='T_INTERFACE' start='1432' end='1441'>
+            <text>interface</text>
+        </token>
+        <token id='T_STRING' start='1442' end='1461'>
+            <text>UnionTypesInterface</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1462' end='1463'>
+            <text>{</text>
+        </token>
+        <token id='T_PUBLIC' start='1468' end='1474'>
+            <text>public</text>
+        </token>
+        <token id='T_FUNCTION' start='1475' end='1483'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='1484' end='1490'>
+            <text>method</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1490' end='1491'>
+            <text>(</text>
+        </token>
+        <token id='T_STRING' start='1491' end='1494'>
+            <text>int</text>
+        </token>
+        <token id='T_OR' start='1494' end='1495'>
+            <text>|</text>
+        </token>
+        <token id='T_STRING' start='1495' end='1500'>
+            <text>float</text>
+        </token>
+        <token id='T_VARIABLE' start='1501' end='1508'>
+            <text>$number</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1508' end='1509'>
+            <text>)</text>
+        </token>
+        <token id='T_NEKUDOTAIM' start='1509' end='1510'>
+            <text>:</text>
+        </token>
+        <token id='T_STRING' start='1511' end='1514'>
+            <text>Foo</text>
+        </token>
+        <token id='T_OR' start='1514' end='1515'>
+            <text>|</text>
+        </token>
+        <token id='T_STRING' start='1515' end='1518'>
+            <text>Bar</text>
+        </token>
+        <token id='T_OR' start='1518' end='1519'>
+            <text>|</text>
+        </token>
+        <token id='T_STRING' start='1519' end='1523'>
+            <text>null</text>
+        </token>
+        <token id='T_SEMICOLON' start='1523' end='1524'>
+            <text>;</text>
+        </token>
+        <token id='T_PUBLIC' start='1530' end='1536'>
+            <text>public</text>
+        </token>
+        <token id='T_STATIC' start='1537' end='1543'>
+            <text>static</text>
+        </token>
+        <token id='T_FUNCTION' start='1544' end='1552'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='1553' end='1565'>
+            <text>staticMethod</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1565' end='1566'>
+            <text>(</text>
+        </token>
+        <token id='T_STRING' start='1566' end='1574'>
+            <text>iterable</text>
+        </token>
+        <token id='T_OR' start='1574' end='1575'>
+            <text>|</text>
+        </token>
+        <token id='T_STRING' start='1575' end='1579'>
+            <text>null</text>
+        </token>
+        <token id='T_VARIABLE' start='1580' end='1589'>
+            <text>$iterable</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1589' end='1590'>
+            <text>)</text>
+        </token>
+        <token id='T_NEKUDOTAIM' start='1590' end='1591'>
+            <text>:</text>
+        </token>
+        <token id='T_NS_SEPARATOR' start='1592' end='1593'>
+            <text>\</text>
+        </token>
+        <token id='T_STRING' start='1593' end='1597'>
+            <text>Test</text>
+        </token>
+        <token id='T_NS_SEPARATOR' start='1597' end='1598'>
+            <text>\</text>
+        </token>
+        <token id='T_STRING' start='1598' end='1601'>
+            <text>Foo</text>
+        </token>
+        <token id='T_OR' start='1601' end='1602'>
+            <text>|</text>
+        </token>
+        <token id='T_STRING' start='1602' end='1605'>
+            <text>Bar</text>
+        </token>
+        <token id='T_SEMICOLON' start='1605' end='1606'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1607' end='1608'>
+            <text>}</text>
+        </token>
+        <token id='T_TRAIT' start='1610' end='1615'>
+            <text>trait</text>
+        </token>
+        <token id='T_STRING' start='1616' end='1631'>
+            <text>UnionTypesTrait</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1632' end='1633'>
+            <text>{</text>
+        </token>
+        <token id='T_PRIVATE' start='1638' end='1645'>
+            <text>private</text>
+        </token>
+        <token id='T_STRING' start='1646' end='1649'>
+            <text>int</text>
+        </token>
+        <token id='T_OR' start='1649' end='1650'>
+            <text>|</text>
+        </token>
+        <token id='T_STRING' start='1650' end='1655'>
+            <text>float</text>
+        </token>
+        <token id='T_VARIABLE' start='1656' end='1665'>
+            <text>$property</text>
+        </token>
+        <token id='T_SEMICOLON' start='1665' end='1666'>
+            <text>;</text>
+        </token>
+        <token id='T_PROTECTED' start='1671' end='1680'>
+            <text>protected</text>
+        </token>
+        <token id='T_STATIC' start='1681' end='1687'>
+            <text>static</text>
+        </token>
+        <token id='T_STRING' start='1688' end='1694'>
+            <text>string</text>
+        </token>
+        <token id='T_OR' start='1694' end='1695'>
+            <text>|</text>
+        </token>
+        <token id='T_STRING' start='1695' end='1699'>
+            <text>bool</text>
+        </token>
+        <token id='T_OR' start='1699' end='1700'>
+            <text>|</text>
+        </token>
+        <token id='T_STRING' start='1700' end='1704'>
+            <text>null</text>
+        </token>
+        <token id='T_VARIABLE' start='1705' end='1720'>
+            <text>$staticProperty</text>
+        </token>
+        <token id='T_SEMICOLON' start='1720' end='1721'>
+            <text>;</text>
+        </token>
+        <token id='T_PUBLIC' start='1727' end='1733'>
+            <text>public</text>
+        </token>
+        <token id='T_FUNCTION' start='1734' end='1742'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='1743' end='1749'>
+            <text>method</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1749' end='1750'>
+            <text>(</text>
+        </token>
+        <token id='T_STRING' start='1750' end='1753'>
+            <text>int</text>
+        </token>
+        <token id='T_OR' start='1753' end='1754'>
+            <text>|</text>
+        </token>
+        <token id='T_STRING' start='1754' end='1759'>
+            <text>float</text>
+        </token>
+        <token id='T_VARIABLE' start='1760' end='1767'>
+            <text>$number</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1767' end='1768'>
+            <text>)</text>
+        </token>
+        <token id='T_NEKUDOTAIM' start='1768' end='1769'>
+            <text>:</text>
+        </token>
+        <token id='T_STRING' start='1770' end='1773'>
+            <text>Foo</text>
+        </token>
+        <token id='T_OR' start='1773' end='1774'>
+            <text>|</text>
+        </token>
+        <token id='T_STRING' start='1774' end='1777'>
+            <text>Bar</text>
+        </token>
+        <token id='T_OR' start='1777' end='1778'>
+            <text>|</text>
+        </token>
+        <token id='T_STRING' start='1778' end='1782'>
+            <text>null</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1783' end='1784'>
+            <text>{</text>
+        </token>
+        <token id='T_RETURN' start='1793' end='1799'>
+            <text>return</text>
+        </token>
+        <token id='T_STRING' start='1800' end='1804'>
+            <text>null</text>
+        </token>
+        <token id='T_SEMICOLON' start='1804' end='1805'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1810' end='1811'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='1817' end='1823'>
+            <text>public</text>
+        </token>
+        <token id='T_STATIC' start='1824' end='1830'>
+            <text>static</text>
+        </token>
+        <token id='T_FUNCTION' start='1831' end='1839'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='1840' end='1852'>
+            <text>staticMethod</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1852' end='1853'>
+            <text>(</text>
+        </token>
+        <token id='T_STRING' start='1853' end='1861'>
+            <text>iterable</text>
+        </token>
+        <token id='T_OR' start='1861' end='1862'>
+            <text>|</text>
+        </token>
+        <token id='T_STRING' start='1862' end='1866'>
+            <text>null</text>
+        </token>
+        <token id='T_VARIABLE' start='1867' end='1876'>
+            <text>$iterable</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1876' end='1877'>
+            <text>)</text>
+        </token>
+        <token id='T_NEKUDOTAIM' start='1877' end='1878'>
+            <text>:</text>
+        </token>
+        <token id='T_NS_SEPARATOR' start='1879' end='1880'>
+            <text>\</text>
+        </token>
+        <token id='T_STRING' start='1880' end='1884'>
+            <text>Test</text>
+        </token>
+        <token id='T_NS_SEPARATOR' start='1884' end='1885'>
+            <text>\</text>
+        </token>
+        <token id='T_STRING' start='1885' end='1888'>
+            <text>Foo</text>
+        </token>
+        <token id='T_OR' start='1888' end='1889'>
+            <text>|</text>
+        </token>
+        <token id='T_STRING' start='1889' end='1892'>
+            <text>Bar</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1893' end='1894'>
+            <text>{</text>
+        </token>
+        <token id='T_RETURN' start='1903' end='1909'>
+            <text>return</text>
+        </token>
+        <token id='T_NEW' start='1910' end='1913'>
+            <text>new</text>
+        </token>
+        <token id='T_STRING' start='1914' end='1917'>
+            <text>Bar</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1917' end='1918'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1918' end='1919'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='1919' end='1920'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1925' end='1926'>
+            <text>}</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1927' end='1928'>
+            <text>}</text>
+        </token>
+        <token id='EOF' start='1929' end='1929'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='1929'>
+        <Comments>
+            <Comment start='6' end='813' commentType='multiLine'/>
+            <Comment start='6' end='813' commentType='multiLine'/>
+        </Comments>
+        <Statements>
+            <ClassDeclaration start='815' end='1133' modifier='NONE'>
+                <ClassName>
+                    <Identifier start='821' end='836' name='UnionTypesClass'/>
+                </ClassName>
+                <SuperClassName>
+                </SuperClassName>
+                <Interfaces>
+                </Interfaces>
+                <Block start='837' end='1133' isCurly='true'>
+                    <FieldsDeclaration start='843' end='871' modifier='private'>
+                        <FieldType>
+                            <UnionType start='851' end='860'>
+                                <NamespaceName start='851' end='854' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='851' end='854' name='int'/>
+                                </NamespaceName>
+                                <NamespaceName start='855' end='860' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='855' end='860' name='float'/>
+                                </NamespaceName>
+                            </UnionType>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='861' end='870' isDollared='true'>
+                                <Identifier start='862' end='870' name='property'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='876' end='926' modifier='protected static'>
+                        <FieldType>
+                            <UnionType start='893' end='909'>
+                                <NamespaceName start='893' end='899' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='893' end='899' name='string'/>
+                                </NamespaceName>
+                                <NamespaceName start='900' end='904' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='900' end='904' name='bool'/>
+                                </NamespaceName>
+                                <NamespaceName start='905' end='909' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='905' end='909' name='null'/>
+                                </NamespaceName>
+                            </UnionType>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='910' end='925' isDollared='true'>
+                                <Identifier start='911' end='925' name='staticProperty'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <MethodDeclaration start='932' end='1016' modifiers='public'>
+                        <FunctionDeclaration start='939' end='1016' isReference='false'>
+                            <Identifier start='948' end='954' name='method'/>
+                            <FormalParameters>
+                                <FormalParameter start='955' end='972' isMandatory='true' isVariadic='false'>
+                                    <ParametrType>
+                                        <UnionType start='955' end='964'>
+                                            <NamespaceName start='955' end='958' isCurrent='false' isGlobal='false'>
+                                                <Identifier start='955' end='958' name='int'/>
+                                            </NamespaceName>
+                                            <NamespaceName start='959' end='964' isCurrent='false' isGlobal='false'>
+                                                <Identifier start='959' end='964' name='float'/>
+                                            </NamespaceName>
+                                        </UnionType>
+                                    </ParametrType>
+                                    <ParametrName>
+                                        <Variable start='965' end='972' isDollared='true'>
+                                            <Identifier start='966' end='972' name='number'/>
+                                        </Variable>
+                                    </ParametrName>
+                                    <DefaultValue>
+                                    </DefaultValue>
+                                </FormalParameter>
+                            </FormalParameters>
+                            <UnionType start='975' end='987'>
+                                <NamespaceName start='975' end='978' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='975' end='978' name='Foo'/>
+                                </NamespaceName>
+                                <NamespaceName start='979' end='982' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='979' end='982' name='Bar'/>
+                                </NamespaceName>
+                                <NamespaceName start='983' end='987' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='983' end='987' name='null'/>
+                                </NamespaceName>
+                            </UnionType>
+                            <Block start='988' end='1016' isCurly='true'>
+                                <ReturnStatement start='998' end='1010'>
+                                    <NamespaceName start='1005' end='1009' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='1005' end='1009' name='null'/>
+                                    </NamespaceName>
+                                </ReturnStatement>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='1022' end='1131' modifiers='public static'>
+                        <FunctionDeclaration start='1036' end='1131' isReference='false'>
+                            <Identifier start='1045' end='1057' name='staticMethod'/>
+                            <FormalParameters>
+                                <FormalParameter start='1058' end='1081' isMandatory='true' isVariadic='false'>
+                                    <ParametrType>
+                                        <UnionType start='1058' end='1071'>
+                                            <NamespaceName start='1058' end='1066' isCurrent='false' isGlobal='false'>
+                                                <Identifier start='1058' end='1066' name='iterable'/>
+                                            </NamespaceName>
+                                            <NamespaceName start='1067' end='1071' isCurrent='false' isGlobal='false'>
+                                                <Identifier start='1067' end='1071' name='null'/>
+                                            </NamespaceName>
+                                        </UnionType>
+                                    </ParametrType>
+                                    <ParametrName>
+                                        <Variable start='1072' end='1081' isDollared='true'>
+                                            <Identifier start='1073' end='1081' name='iterable'/>
+                                        </Variable>
+                                    </ParametrName>
+                                    <DefaultValue>
+                                    </DefaultValue>
+                                </FormalParameter>
+                            </FormalParameters>
+                            <UnionType start='1084' end='1097'>
+                                <NamespaceName start='1084' end='1093' isCurrent='false' isGlobal='true'>
+                                    <Identifier start='1085' end='1089' name='Test'/>
+                                    <Identifier start='1090' end='1093' name='Foo'/>
+                                </NamespaceName>
+                                <NamespaceName start='1094' end='1097' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='1094' end='1097' name='Bar'/>
+                                </NamespaceName>
+                            </UnionType>
+                            <Block start='1098' end='1131' isCurly='true'>
+                                <ReturnStatement start='1108' end='1125'>
+                                    <ClassInstanceCreation start='1115' end='1124' anonymous='false'>
+                                        <ClassName start='1119' end='1122'>
+                                            <NamespaceName start='1119' end='1122' isCurrent='false' isGlobal='false'>
+                                                <Identifier start='1119' end='1122' name='Bar'/>
+                                            </NamespaceName>
+                                        </ClassName>
+                                        <Parameters>
+                                        </Parameters>
+                                    </ClassInstanceCreation>
+                                </ReturnStatement>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                </Block>
+            </ClassDeclaration>
+            <ClassDeclaration start='1135' end='1430' modifier='ABSTRACT'>
+                <ClassName>
+                    <Identifier start='1150' end='1173' name='UnionTypesAbstractClass'/>
+                </ClassName>
+                <SuperClassName>
+                </SuperClassName>
+                <Interfaces>
+                </Interfaces>
+                <Block start='1174' end='1430' isCurly='true'>
+                    <FieldsDeclaration start='1180' end='1208' modifier='private'>
+                        <FieldType>
+                            <UnionType start='1188' end='1197'>
+                                <NamespaceName start='1188' end='1191' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='1188' end='1191' name='int'/>
+                                </NamespaceName>
+                                <NamespaceName start='1192' end='1197' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='1192' end='1197' name='float'/>
+                                </NamespaceName>
+                            </UnionType>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='1198' end='1207' isDollared='true'>
+                                <Identifier start='1199' end='1207' name='property'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='1213' end='1263' modifier='protected static'>
+                        <FieldType>
+                            <UnionType start='1230' end='1246'>
+                                <NamespaceName start='1230' end='1236' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='1230' end='1236' name='string'/>
+                                </NamespaceName>
+                                <NamespaceName start='1237' end='1241' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='1237' end='1241' name='bool'/>
+                                </NamespaceName>
+                                <NamespaceName start='1242' end='1246' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='1242' end='1246' name='null'/>
+                                </NamespaceName>
+                            </UnionType>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='1247' end='1262' isDollared='true'>
+                                <Identifier start='1248' end='1262' name='staticProperty'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <MethodDeclaration start='1269' end='1334' modifiers='public abstract'>
+                        <FunctionDeclaration start='1285' end='1334' isReference='false'>
+                            <Identifier start='1294' end='1300' name='method'/>
+                            <FormalParameters>
+                                <FormalParameter start='1301' end='1318' isMandatory='true' isVariadic='false'>
+                                    <ParametrType>
+                                        <UnionType start='1301' end='1310'>
+                                            <NamespaceName start='1301' end='1304' isCurrent='false' isGlobal='false'>
+                                                <Identifier start='1301' end='1304' name='int'/>
+                                            </NamespaceName>
+                                            <NamespaceName start='1305' end='1310' isCurrent='false' isGlobal='false'>
+                                                <Identifier start='1305' end='1310' name='float'/>
+                                            </NamespaceName>
+                                        </UnionType>
+                                    </ParametrType>
+                                    <ParametrName>
+                                        <Variable start='1311' end='1318' isDollared='true'>
+                                            <Identifier start='1312' end='1318' name='number'/>
+                                        </Variable>
+                                    </ParametrName>
+                                    <DefaultValue>
+                                    </DefaultValue>
+                                </FormalParameter>
+                            </FormalParameters>
+                            <UnionType start='1321' end='1333'>
+                                <NamespaceName start='1321' end='1324' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='1321' end='1324' name='Foo'/>
+                                </NamespaceName>
+                                <NamespaceName start='1325' end='1328' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='1325' end='1328' name='Bar'/>
+                                </NamespaceName>
+                                <NamespaceName start='1329' end='1333' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='1329' end='1333' name='null'/>
+                                </NamespaceName>
+                            </UnionType>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='1340' end='1428' modifiers='protected abstract static'>
+                        <FunctionDeclaration start='1366' end='1428' isReference='false'>
+                            <Identifier start='1375' end='1387' name='staticMethod'/>
+                            <FormalParameters>
+                                <FormalParameter start='1388' end='1411' isMandatory='true' isVariadic='false'>
+                                    <ParametrType>
+                                        <UnionType start='1388' end='1401'>
+                                            <NamespaceName start='1388' end='1396' isCurrent='false' isGlobal='false'>
+                                                <Identifier start='1388' end='1396' name='iterable'/>
+                                            </NamespaceName>
+                                            <NamespaceName start='1397' end='1401' isCurrent='false' isGlobal='false'>
+                                                <Identifier start='1397' end='1401' name='null'/>
+                                            </NamespaceName>
+                                        </UnionType>
+                                    </ParametrType>
+                                    <ParametrName>
+                                        <Variable start='1402' end='1411' isDollared='true'>
+                                            <Identifier start='1403' end='1411' name='iterable'/>
+                                        </Variable>
+                                    </ParametrName>
+                                    <DefaultValue>
+                                    </DefaultValue>
+                                </FormalParameter>
+                            </FormalParameters>
+                            <UnionType start='1414' end='1427'>
+                                <NamespaceName start='1414' end='1423' isCurrent='false' isGlobal='true'>
+                                    <Identifier start='1415' end='1419' name='Test'/>
+                                    <Identifier start='1420' end='1423' name='Foo'/>
+                                </NamespaceName>
+                                <NamespaceName start='1424' end='1427' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='1424' end='1427' name='Bar'/>
+                                </NamespaceName>
+                            </UnionType>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                </Block>
+            </ClassDeclaration>
+            <InterfaceDeclaration start='1432' end='1608'>
+                <Name>
+                    <Identifier start='1442' end='1461' name='UnionTypesInterface'/>
+                </Name>
+                <Block start='1462' end='1608' isCurly='true'>
+                    <MethodDeclaration start='1468' end='1524' modifiers='public'>
+                        <FunctionDeclaration start='1475' end='1524' isReference='false'>
+                            <Identifier start='1484' end='1490' name='method'/>
+                            <FormalParameters>
+                                <FormalParameter start='1491' end='1508' isMandatory='true' isVariadic='false'>
+                                    <ParametrType>
+                                        <UnionType start='1491' end='1500'>
+                                            <NamespaceName start='1491' end='1494' isCurrent='false' isGlobal='false'>
+                                                <Identifier start='1491' end='1494' name='int'/>
+                                            </NamespaceName>
+                                            <NamespaceName start='1495' end='1500' isCurrent='false' isGlobal='false'>
+                                                <Identifier start='1495' end='1500' name='float'/>
+                                            </NamespaceName>
+                                        </UnionType>
+                                    </ParametrType>
+                                    <ParametrName>
+                                        <Variable start='1501' end='1508' isDollared='true'>
+                                            <Identifier start='1502' end='1508' name='number'/>
+                                        </Variable>
+                                    </ParametrName>
+                                    <DefaultValue>
+                                    </DefaultValue>
+                                </FormalParameter>
+                            </FormalParameters>
+                            <UnionType start='1511' end='1523'>
+                                <NamespaceName start='1511' end='1514' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='1511' end='1514' name='Foo'/>
+                                </NamespaceName>
+                                <NamespaceName start='1515' end='1518' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='1515' end='1518' name='Bar'/>
+                                </NamespaceName>
+                                <NamespaceName start='1519' end='1523' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='1519' end='1523' name='null'/>
+                                </NamespaceName>
+                            </UnionType>
+                            <Block start='1523' end='1524' isCurly='flase'>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='1530' end='1606' modifiers='public static'>
+                        <FunctionDeclaration start='1544' end='1606' isReference='false'>
+                            <Identifier start='1553' end='1565' name='staticMethod'/>
+                            <FormalParameters>
+                                <FormalParameter start='1566' end='1589' isMandatory='true' isVariadic='false'>
+                                    <ParametrType>
+                                        <UnionType start='1566' end='1579'>
+                                            <NamespaceName start='1566' end='1574' isCurrent='false' isGlobal='false'>
+                                                <Identifier start='1566' end='1574' name='iterable'/>
+                                            </NamespaceName>
+                                            <NamespaceName start='1575' end='1579' isCurrent='false' isGlobal='false'>
+                                                <Identifier start='1575' end='1579' name='null'/>
+                                            </NamespaceName>
+                                        </UnionType>
+                                    </ParametrType>
+                                    <ParametrName>
+                                        <Variable start='1580' end='1589' isDollared='true'>
+                                            <Identifier start='1581' end='1589' name='iterable'/>
+                                        </Variable>
+                                    </ParametrName>
+                                    <DefaultValue>
+                                    </DefaultValue>
+                                </FormalParameter>
+                            </FormalParameters>
+                            <UnionType start='1592' end='1605'>
+                                <NamespaceName start='1592' end='1601' isCurrent='false' isGlobal='true'>
+                                    <Identifier start='1593' end='1597' name='Test'/>
+                                    <Identifier start='1598' end='1601' name='Foo'/>
+                                </NamespaceName>
+                                <NamespaceName start='1602' end='1605' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='1602' end='1605' name='Bar'/>
+                                </NamespaceName>
+                            </UnionType>
+                            <Block start='1605' end='1606' isCurly='flase'>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                </Block>
+            </InterfaceDeclaration>
+            <TraitDeclaration start='1610' end='1928'>
+                <TraitName>
+                    <Identifier start='1616' end='1631' name='UnionTypesTrait'/>
+                </TraitName>
+                <Block start='1632' end='1928' isCurly='true'>
+                    <FieldsDeclaration start='1638' end='1666' modifier='private'>
+                        <FieldType>
+                            <UnionType start='1646' end='1655'>
+                                <NamespaceName start='1646' end='1649' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='1646' end='1649' name='int'/>
+                                </NamespaceName>
+                                <NamespaceName start='1650' end='1655' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='1650' end='1655' name='float'/>
+                                </NamespaceName>
+                            </UnionType>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='1656' end='1665' isDollared='true'>
+                                <Identifier start='1657' end='1665' name='property'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='1671' end='1721' modifier='protected static'>
+                        <FieldType>
+                            <UnionType start='1688' end='1704'>
+                                <NamespaceName start='1688' end='1694' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='1688' end='1694' name='string'/>
+                                </NamespaceName>
+                                <NamespaceName start='1695' end='1699' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='1695' end='1699' name='bool'/>
+                                </NamespaceName>
+                                <NamespaceName start='1700' end='1704' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='1700' end='1704' name='null'/>
+                                </NamespaceName>
+                            </UnionType>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='1705' end='1720' isDollared='true'>
+                                <Identifier start='1706' end='1720' name='staticProperty'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <MethodDeclaration start='1727' end='1811' modifiers='public'>
+                        <FunctionDeclaration start='1734' end='1811' isReference='false'>
+                            <Identifier start='1743' end='1749' name='method'/>
+                            <FormalParameters>
+                                <FormalParameter start='1750' end='1767' isMandatory='true' isVariadic='false'>
+                                    <ParametrType>
+                                        <UnionType start='1750' end='1759'>
+                                            <NamespaceName start='1750' end='1753' isCurrent='false' isGlobal='false'>
+                                                <Identifier start='1750' end='1753' name='int'/>
+                                            </NamespaceName>
+                                            <NamespaceName start='1754' end='1759' isCurrent='false' isGlobal='false'>
+                                                <Identifier start='1754' end='1759' name='float'/>
+                                            </NamespaceName>
+                                        </UnionType>
+                                    </ParametrType>
+                                    <ParametrName>
+                                        <Variable start='1760' end='1767' isDollared='true'>
+                                            <Identifier start='1761' end='1767' name='number'/>
+                                        </Variable>
+                                    </ParametrName>
+                                    <DefaultValue>
+                                    </DefaultValue>
+                                </FormalParameter>
+                            </FormalParameters>
+                            <UnionType start='1770' end='1782'>
+                                <NamespaceName start='1770' end='1773' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='1770' end='1773' name='Foo'/>
+                                </NamespaceName>
+                                <NamespaceName start='1774' end='1777' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='1774' end='1777' name='Bar'/>
+                                </NamespaceName>
+                                <NamespaceName start='1778' end='1782' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='1778' end='1782' name='null'/>
+                                </NamespaceName>
+                            </UnionType>
+                            <Block start='1783' end='1811' isCurly='true'>
+                                <ReturnStatement start='1793' end='1805'>
+                                    <NamespaceName start='1800' end='1804' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='1800' end='1804' name='null'/>
+                                    </NamespaceName>
+                                </ReturnStatement>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='1817' end='1926' modifiers='public static'>
+                        <FunctionDeclaration start='1831' end='1926' isReference='false'>
+                            <Identifier start='1840' end='1852' name='staticMethod'/>
+                            <FormalParameters>
+                                <FormalParameter start='1853' end='1876' isMandatory='true' isVariadic='false'>
+                                    <ParametrType>
+                                        <UnionType start='1853' end='1866'>
+                                            <NamespaceName start='1853' end='1861' isCurrent='false' isGlobal='false'>
+                                                <Identifier start='1853' end='1861' name='iterable'/>
+                                            </NamespaceName>
+                                            <NamespaceName start='1862' end='1866' isCurrent='false' isGlobal='false'>
+                                                <Identifier start='1862' end='1866' name='null'/>
+                                            </NamespaceName>
+                                        </UnionType>
+                                    </ParametrType>
+                                    <ParametrName>
+                                        <Variable start='1867' end='1876' isDollared='true'>
+                                            <Identifier start='1868' end='1876' name='iterable'/>
+                                        </Variable>
+                                    </ParametrName>
+                                    <DefaultValue>
+                                    </DefaultValue>
+                                </FormalParameter>
+                            </FormalParameters>
+                            <UnionType start='1879' end='1892'>
+                                <NamespaceName start='1879' end='1888' isCurrent='false' isGlobal='true'>
+                                    <Identifier start='1880' end='1884' name='Test'/>
+                                    <Identifier start='1885' end='1888' name='Foo'/>
+                                </NamespaceName>
+                                <NamespaceName start='1889' end='1892' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='1889' end='1892' name='Bar'/>
+                                </NamespaceName>
+                            </UnionType>
+                            <Block start='1893' end='1926' isCurly='true'>
+                                <ReturnStatement start='1903' end='1920'>
+                                    <ClassInstanceCreation start='1910' end='1919' anonymous='false'>
+                                        <ClassName start='1914' end='1917'>
+                                            <NamespaceName start='1914' end='1917' isCurrent='false' isGlobal='false'>
+                                                <Identifier start='1914' end='1917' name='Bar'/>
+                                            </NamespaceName>
+                                        </ClassName>
+                                        <Parameters>
+                                        </Parameters>
+                                    </ClassInstanceCreation>
+                                </ReturnStatement>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                </Block>
+            </TraitDeclaration>
+        </Statements>
+    </Program>
+</testresult>

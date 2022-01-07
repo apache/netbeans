@@ -31,6 +31,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.netbeans.modules.glassfish.javaee.SunMessageDestination;
 import org.netbeans.modules.payara.spi.PayaraModule;
 import org.netbeans.modules.payara.common.parser.TreeParser;
 import org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException;
@@ -58,6 +59,7 @@ public class Hk2MessageDestinationManager implements  MessageDestinationDeployme
     public static final String QUEUE_CNTN_FACTORY = "javax.jms.QueueConnectionFactory"; // NOI18N
     public static final String TOPIC_CNTN_FACTORY = "javax.jms.TopicConnectionFactory"; // NOI18N
 
+    private static final Logger LOG = Logger.getLogger("payara-jakartaee");
     
     public Hk2MessageDestinationManager(Hk2DeploymentManager dm) {
         this.dm = dm;
@@ -104,7 +106,7 @@ public class Hk2MessageDestinationManager implements  MessageDestinationDeployme
             try {
                 TreeParser.readXml(xmlFile, pathList);
             } catch(IllegalStateException ex) {
-                Logger.getLogger("payara-jakartaee").log(Level.INFO, ex.getLocalizedMessage(), ex);
+                LOG.log(Level.INFO, ex.getLocalizedMessage(), ex);
             }
 
             for(AdminObjectResource adminObj: aoResourceMap.values()) {
@@ -148,7 +150,7 @@ public class Hk2MessageDestinationManager implements  MessageDestinationDeployme
             createConnectorConnectionPool(xmlFile, connectionFactoryPoolName, type);
             createConnector(xmlFile, connectionFactoryJndiName, connectionFactoryPoolName);
         } catch (IOException ex) {
-            Logger.getLogger("payara-jakartaee").log(Level.WARNING, ex.getLocalizedMessage(), ex); // NOI18N
+            LOG.log(Level.WARNING, ex.getLocalizedMessage(), ex); // NOI18N
             throw new ConfigurationException(ex.getLocalizedMessage(), ex);
         }
 
@@ -188,7 +190,7 @@ public class Hk2MessageDestinationManager implements  MessageDestinationDeployme
         }
         xmlBuilder.append(AO_TAG_3);
         String xmlFragment = xmlBuilder.toString();
-        Logger.getLogger("payara-jakartaee").log(Level.FINER, "New Connector resource:\n" + xmlFragment);
+        LOG.log(Level.FINER, "New Connector resource:\n" + xmlFragment);
         ResourceModifier.appendResource(sunResourcesXml, xmlFragment);
     }
 
@@ -211,7 +213,7 @@ public class Hk2MessageDestinationManager implements  MessageDestinationDeployme
         xmlBuilder.append(CONNECTOR_POOL_TAG_2);
 
         String xmlFragment = xmlBuilder.toString();
-        Logger.getLogger("payara-jakartaee").log(Level.FINER, "New Connector Connection Pool resource:\n" + xmlFragment);
+        LOG.log(Level.FINER, "New Connector Connection Pool resource:\n" + xmlFragment);
         ResourceModifier.appendResource(sunResourcesXml, xmlFragment);
     }
 
@@ -228,7 +230,7 @@ public class Hk2MessageDestinationManager implements  MessageDestinationDeployme
         xmlBuilder.append(CONNECTOR_TAG_2);
 
         String xmlFragment = xmlBuilder.toString();
-        Logger.getLogger("payara-jakartaee").log(Level.FINER, "New Connector resource:\n" + xmlFragment);
+        LOG.log(Level.FINER, "New Connector resource:\n" + xmlFragment);
         ResourceModifier.appendResource(sunResourcesXml, xmlFragment);
     }
     
@@ -308,7 +310,7 @@ public class Hk2MessageDestinationManager implements  MessageDestinationDeployme
             String jndiName = attributes.getValue("jndi-name");
             if(targetJndiName.equals(jndiName)) {
                 if(duplicate) {
-                    Logger.getLogger("payara-jakartaee").log(Level.WARNING,
+                    LOG.log(Level.WARNING,
                             "Duplicate jndi-names defined for Admin Object resources.");
                 }
                 duplicate = true;
@@ -342,7 +344,7 @@ public class Hk2MessageDestinationManager implements  MessageDestinationDeployme
             String jndiName = attributes.getValue("jndi-name");
             if(targetJndiName.equals(jndiName)) {
                 if(duplicate) {
-                    Logger.getLogger("payara-jakartaee").log(Level.WARNING,
+                    LOG.log(Level.WARNING,
                             "Duplicate jndi-names defined for Connector resources.");
                 }
                 duplicate = true;
@@ -374,7 +376,7 @@ public class Hk2MessageDestinationManager implements  MessageDestinationDeployme
                     properties.put("raname", attributes.getValue("resource-adapter-name")); // NOI18N
                     properties.put("conndefname", attributes.getValue("connection-definition-name")); // NOI18N
                 } else {
-                    Logger.getLogger("payara-jakartaee").log(Level.WARNING, // NOI18N
+                    LOG.log(Level.WARNING, // NOI18N
                             "Duplicate pool-names defined for Resource Adapter Pools: "+poolName); // NOI18N
                 }
             }

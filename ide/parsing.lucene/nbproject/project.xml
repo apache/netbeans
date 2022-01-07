@@ -85,6 +85,7 @@
             </test-dependencies>
             <friend-packages>
                 <friend>org.netbeans.modules.cnd.indexing</friend>
+                <friend>org.netbeans.modules.java.lsp.server</friend>
                 <friend>org.netbeans.modules.java.source.base</friend>
                 <friend>org.netbeans.modules.java.sourceui</friend>
                 <friend>org.netbeans.modules.jumpto</friend>

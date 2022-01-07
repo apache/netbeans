@@ -160,6 +160,10 @@ public class ElementDescription {
         }
     }
 
+    public ClasspathInfo getOriginalCPInfo() {
+        return originalCPInfo;
+    }
+
     public ElementHandle<Element> getHandle() {
         return handle;
     }

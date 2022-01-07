@@ -14,4 +14,5 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-BC6C7B5786F53AD8CCC6B8E4AE57AF601269E947 gradle-tooling-api-6.3.jar
+
+526C85998C50C960237920A9D98580F35801525D https://repo.gradle.org/public/org/gradle/gradle-tooling-api/7.3/gradle-tooling-api-7.3.jar gradle-tooling-api-7.3.jar

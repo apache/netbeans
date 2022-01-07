@@ -32,9 +32,9 @@ import org.netbeans.modules.debugger.jpda.truffle.access.CurrentPCInfo;
 import org.netbeans.modules.debugger.jpda.truffle.access.TruffleAccess;
 import org.netbeans.modules.debugger.jpda.truffle.access.TruffleStrataProvider;
 import org.netbeans.modules.debugger.jpda.truffle.frames.TruffleStackFrame;
-import org.netbeans.modules.debugger.jpda.truffle.vars.TruffleScope;
+import org.netbeans.modules.debugger.jpda.truffle.vars.impl.TruffleScope;
 import org.netbeans.modules.debugger.jpda.truffle.vars.TruffleVariable;
-import org.netbeans.modules.debugger.jpda.truffle.vars.TruffleVariableImpl;
+import org.netbeans.modules.debugger.jpda.truffle.vars.impl.TruffleVariableImpl;
 import org.netbeans.spi.debugger.ContextProvider;
 import org.netbeans.spi.debugger.DebuggerServiceRegistration;
 import org.netbeans.spi.debugger.DebuggerServiceRegistrations;
@@ -153,7 +153,7 @@ public class TruffleVariablesTableModel implements TableModelFilter, TableHTMLMo
                         CurrentPCInfo currentPCInfo = TruffleAccess.getCurrentPCInfo(debugger.getCurrentThread());
                         if (currentPCInfo != null) {
                             TruffleStackFrame selectedStackFrame = currentPCInfo.getSelectedStackFrame();
-                            frameLanguage = selectedStackFrame.getLanguage();
+                            frameLanguage = selectedStackFrame != null ? selectedStackFrame.getLanguage() : LanguageName.NONE;
                         }
                         LanguageName valueLanguage = tv.getLanguage();
                         if (!LanguageName.NONE.equals(valueLanguage) && !frameLanguage.equals(valueLanguage)) {

@@ -139,9 +139,10 @@ public final class Util {
                 sampleName = packageName + '.' + sampleName;
             }
         }
+        Class<?> sampleClass = null;
         if (sampleName != null) {
             try {
-                cl.loadClass(sampleName);
+                sampleClass = cl.loadClass(sampleName);
             } catch (ClassNotFoundException cnfe) {
                 if (packageName == null) {
                     // This was all we were relying on, so it is an error.
@@ -169,6 +170,9 @@ public final class Util {
                 pkg = ((ProxyClassLoader) cl).getPackage(packageName);
             } else {
                 pkg = Package.getPackage(packageName);
+            }
+            if (pkg == null && sampleClass != null) {
+                pkg = sampleClass.getPackage();
             }
             if (pkg == null) {
                 err.fine("No package with the name " + packageName + " found");
@@ -286,9 +290,12 @@ public final class Util {
                     fragmentDep.add(m1);
                     for (Dependency dep : f.getDependenciesArray()) {
                         if (dep.getType() == Dependency.TYPE_REQUIRES) {
-                            List<Module> providers = providersOf.get(dep.getName());
-
+                            Collection<Module> providers = providersOf.get(dep.getName());
                             if (providers != null) {
+                                if (providers.contains(m1)) {
+                                    providers = new ArrayList<>(providers);
+                                    providers.remove(m1);
+                                }
                                 l = fillMapSlot(m, m1);
                                 l.addAll(providers);
                             }
@@ -297,7 +304,7 @@ public final class Util {
                             String cnb = (String) parseCodeName(dep.getName())[0];
                             Module m2 = modulesByName.get(cnb);
 
-                            if (m2 != null && modulesSet.contains(m2)) {
+                            if (m2 != null && m2 != m1 && modulesSet.contains(m2)) {
                                 l = fillMapSlot(m, m1);
                                 l.add(m2);
                             }
@@ -312,6 +319,7 @@ public final class Util {
                 m.put(m1, l);
             }
         }
+
         return m;
     }
 

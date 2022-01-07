@@ -25,6 +25,7 @@ import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.prefs.Preferences;
+import javax.lang.model.SourceVersion;
 import javax.swing.text.Document;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.lexer.JavaTokenId;
@@ -70,7 +71,6 @@ public class ErrorHintsProviderTest extends NbTestCase {
     @Override
     protected void setUp() throws Exception {
         SourceUtilsTestUtil.prepareTest(new String[] {"org/netbeans/modules/java/editor/resources/layer.xml"}, new Object[0]);
-
         clearWorkDir();
         
         if (cache == null) {
@@ -230,6 +230,13 @@ public class ErrorHintsProviderTest extends NbTestCase {
     }
     
     public void testTestUnicodeError() throws Exception {
+        //only run this test with javac 17 and higher, there were adjustments to the
+        //diagnostics in previous versions:
+        try {
+            SourceVersion.valueOf("RELEASE_17");
+        } catch (IllegalArgumentException ex) {
+            return ;
+        }
         performTest("TestUnicodeError", false);
     }
     

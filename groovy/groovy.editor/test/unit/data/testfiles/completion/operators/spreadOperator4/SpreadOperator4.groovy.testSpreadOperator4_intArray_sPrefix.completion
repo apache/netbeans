@@ -11,5 +11,6 @@ METHOD     split(Closure)                             Collection
 METHOD     sprintf(String, Object)                    String
 METHOD     sprintf(String, Object)                    String
 METHOD     step(Number, Number, Closure)              void
+METHOD     stream()                                   Stream
 METHOD     stringSize(int)                 [STATIC]   int
 METHOD     sum(int, int)                   [STATIC,   int

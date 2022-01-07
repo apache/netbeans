@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.gradle.htmlui;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
@@ -34,10 +35,14 @@ import org.netbeans.api.project.ui.OpenProjects;
 import org.netbeans.junit.NbModuleSuite;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.gradle.spi.actions.AfterBuildActionHook;
+import org.netbeans.modules.gradle.spi.newproject.TemplateOperation;
+import org.netbeans.spi.project.ActionProgress;
 import org.netbeans.spi.project.ActionProvider;
+import org.netbeans.spi.project.ui.LogicalViewProvider;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.LocalFileSystem;
+import org.openide.nodes.Node;
 import org.openide.util.lookup.Lookups;
 
 public class CreateArchetypeTest extends NbTestCase {
@@ -70,12 +75,15 @@ public class CreateArchetypeTest extends NbTestCase {
         FileObject dir = FileUtil.getConfigFile("Templates/Project/Gradle/org-netbeans-modules-gradle-htmlui-HtmlJavaApplicationProjectWizard");
         assertNotNull("Templates directory found", dir);
 
-        FileObject dest = FileUtil.createFolder(workFo, "sample/dest");
+        File rootDir = new File(getWorkDir(), "sample/dest");
 
         Map<String,Object> map = new HashMap<>();
         map.put("packageBase", "my.pkg.x");
-        GradleArchetype ga = new GradleArchetype(dir, dest, map);
-        ga.copyTemplates();
+        TemplateOperation ops = new TemplateOperation();
+        GradleArchetype ga = new GradleArchetype(dir, rootDir, map);
+        ga.copyTemplates(ops);
+        ops.run();
+        FileObject dest = FileUtil.toFileObject(rootDir);
         assertFile("Build script found", dest, "build.gradle");
         assertFile("Main class found", dest, "src", "main", "java", "my", "pkg", "x", "Demo.java").
                 assertPackage("my.pkg.x").
@@ -113,6 +121,7 @@ public class CreateArchetypeTest extends NbTestCase {
         assertTrue(Arrays.asList(actions.getSupportedActions()).contains(ActionProvider.COMMAND_BUILD));
         actions.isActionEnabled(ActionProvider.COMMAND_BUILD, mainPrj.getLookup());
 
+        assertLogicalView(mainPrj);
 
         invokeCommand(actions, ActionProvider.COMMAND_BUILD, mainPrj);
         assertFile("JAR created", dest, "build", "libs", "dest-1.0-SNAPSHOT.jar");
@@ -134,13 +143,41 @@ public class CreateArchetypeTest extends NbTestCase {
         assertFile("Main script created", dest, "web", "build", "web", "bck2brwsr.js");
     }
 
+    private void assertLogicalView(Project mainPrj) {
+        LogicalViewProvider lvp = mainPrj.getLookup().lookup(LogicalViewProvider.class);
+        assertNotNull("Logical view found", lvp);
+        Node logicalView = lvp.createLogicalView();
+        final Node[] children = logicalView.getChildren().getNodes(true);
+        for (Node ch : children) {
+            if (ch.getName().equals("pages") && "Frontend UI Pages".equals(ch.getDisplayName())) {
+                FileObject pages = ch.getLookup().lookup(FileObject.class);
+                assertNotNull("Pages node provides FileObject: " + ch, pages);
+                assertNotNull("There is index.html", pages.getFileObject("index.html"));
+                return;
+            }
+        }
+        fail("Cannot find Frontend Pages in " + Arrays.toString(children));
+    }
+
     protected void invokeCommand(ActionProvider actions, String cmd, Project prj) throws IllegalArgumentException, InterruptedException {
         CountDownLatch waiter = new CountDownLatch(1);
-        AfterBuildActionHook notifier = (action, context, res, out) -> {
-            waiter.countDown();
+        boolean[] status = { false, false };
+        ActionProgress ap = new ActionProgress() {
+            @Override
+            protected void started() {
+                status[0] = true;
+            }
+
+            @Override
+            public void finished(boolean success) {
+                status[1] = success;
+                waiter.countDown();
+            }
         };
-        actions.invokeAction(cmd, Lookups.fixed(prj, notifier));
+        actions.invokeAction(cmd, Lookups.fixed(prj, ap));
+        assertTrue("ActionProgress was started", status[0]);
         waiter.await();
+        assertTrue("ActionProgress was successfully finished", status[1]);
     }
 
     private AssertContent assertFile(String msg, FileObject root, String... path) throws IOException {

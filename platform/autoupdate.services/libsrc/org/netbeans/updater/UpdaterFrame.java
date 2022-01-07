@@ -66,18 +66,6 @@ implements UpdatingContext {
         XMLUtil.LOG.info("Entering updater.jar .................................................................... ");
     }
     
-
-    /** Operating system is Windows x */
-    public static final int OS_WIN = 1;
-    /** Operating system is Solaris. */
-    public static final int OS_SOLARIS = 8;
-    /** Operating system is Linux. */
-    public static final int OS_LINUX = 16;
-    /** Operating system is OS/2. */
-    public static final int OS_OS2 = 1024;
-    /** Operating system is unknown. */
-    public static final int OS_OTHER = 65536;
-    
     private static final String SPLASH_PATH = "org/netbeans/updater/resources/updatersplash"; // NOI18N
     private static final String[] ICONS_PATHS = {"org/netbeans/updater/resources/frame",
         "org/netbeans/updater/resources/frame32",
@@ -309,27 +297,6 @@ implements UpdatingContext {
                 progressBar.setValue( bb ? (int)(value / 1024) : (int)value );
             }
         });
-    }
-    
-    /** Get the operating system on which the IDE is running.
-    * @return one of the <code>OS_*</code> constants (such as {@link #OS_WINNT})
-    */
-    private static int getOperatingSystem () {
-        int operatingSystem;
-        String osName = System.getProperty ("os.name");
-        if ( osName != null && osName.startsWith("Windows")) // NOI18N
-            operatingSystem = OS_WIN;
-        else if ("Solaris".equals (osName)) // NOI18N
-            operatingSystem = OS_SOLARIS;
-        else if (osName.startsWith ("SunOS")) // NOI18N
-            operatingSystem = OS_SOLARIS;
-        else if ("Linux".equals (osName)) // NOI18N
-            operatingSystem = OS_LINUX;
-        else if ("OS/2".equals (osName)) // NOI18N
-            operatingSystem = OS_OS2;
-        else
-            operatingSystem = OS_OTHER;
-        return operatingSystem;
     }
     
     @Override

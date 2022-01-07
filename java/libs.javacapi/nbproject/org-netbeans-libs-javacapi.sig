@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 8.29.0
+#Version 8.35.0
 
 CLSS public abstract interface com.sun.source.doctree.AttributeTree
 innr public final static !enum ValueKind
@@ -197,7 +197,9 @@ meth public abstract java.lang.String getSignature()
 
 CLSS public abstract interface com.sun.source.doctree.ReturnTree
 intf com.sun.source.doctree.BlockTagTree
+intf com.sun.source.doctree.InlineTagTree
 meth public abstract java.util.List<? extends com.sun.source.doctree.DocTree> getDescription()
+meth public boolean isInline()
 
 CLSS public abstract interface com.sun.source.doctree.SeeTree
 intf com.sun.source.doctree.BlockTagTree
@@ -265,8 +267,6 @@ CLSS public abstract interface com.sun.source.doctree.VersionTree
 intf com.sun.source.doctree.BlockTagTree
 meth public abstract java.util.List<? extends com.sun.source.doctree.DocTree> getBody()
 
-CLSS abstract interface com.sun.source.doctree.package-info
-
 CLSS public abstract interface com.sun.source.tree.AnnotatedTypeTree
 intf com.sun.source.tree.ExpressionTree
 meth public abstract com.sun.source.tree.ExpressionTree getUnderlyingType()
@@ -301,6 +301,10 @@ intf com.sun.source.tree.ExpressionTree
 meth public abstract com.sun.source.tree.ExpressionTree getLeftOperand()
 meth public abstract com.sun.source.tree.ExpressionTree getRightOperand()
 
+CLSS public abstract interface com.sun.source.tree.BindingPatternTree
+intf com.sun.source.tree.PatternTree
+meth public abstract com.sun.source.tree.VariableTree getVariable()
+
 CLSS public abstract interface com.sun.source.tree.BlockTree
 intf com.sun.source.tree.StatementTree
 meth public abstract boolean isStatic()
@@ -310,21 +314,25 @@ CLSS public abstract interface com.sun.source.tree.BreakTree
 intf com.sun.source.tree.StatementTree
 meth public abstract javax.lang.model.element.Name getLabel()
 
+CLSS public abstract interface com.sun.source.tree.CaseLabelTree
+intf com.sun.source.tree.Tree
+
 CLSS public abstract interface com.sun.source.tree.CaseTree
 innr public final static !enum CaseKind
 intf com.sun.source.tree.Tree
 meth public abstract com.sun.source.tree.ExpressionTree getExpression()
-meth public abstract java.util.List<? extends com.sun.source.tree.ExpressionTree> getExpressions()
  anno 0 java.lang.Deprecated()
+meth public abstract java.util.List<? extends com.sun.source.tree.CaseLabelTree> getLabels()
+meth public abstract java.util.List<? extends com.sun.source.tree.ExpressionTree> getExpressions()
 meth public abstract java.util.List<? extends com.sun.source.tree.StatementTree> getStatements()
 meth public com.sun.source.tree.CaseTree$CaseKind getCaseKind()
- anno 0 java.lang.Deprecated()
 meth public com.sun.source.tree.Tree getBody()
  anno 0 java.lang.Deprecated()
+meth public abstract java.util.List getLabels()
+ anno 0 jdk.internal.PreviewFeature(boolean reflective=true, jdk.internal.PreviewFeature$Feature feature=SWITCH_PATTERN_MATCHING)
 
 CLSS public final static !enum com.sun.source.tree.CaseTree$CaseKind
  outer com.sun.source.tree.CaseTree
- anno 0 java.lang.Deprecated()
 fld public final static com.sun.source.tree.CaseTree$CaseKind RULE
 fld public final static com.sun.source.tree.CaseTree$CaseKind STATEMENT
 meth public static com.sun.source.tree.CaseTree$CaseKind valueOf(java.lang.String)
@@ -344,6 +352,7 @@ meth public abstract java.util.List<? extends com.sun.source.tree.Tree> getImple
 meth public abstract java.util.List<? extends com.sun.source.tree.Tree> getMembers()
 meth public abstract java.util.List<? extends com.sun.source.tree.TypeParameterTree> getTypeParameters()
 meth public abstract javax.lang.model.element.Name getSimpleName()
+meth public java.util.List<? extends com.sun.source.tree.Tree> getPermitsClause()
 
 CLSS public abstract interface com.sun.source.tree.CompilationUnitTree
 intf com.sun.source.tree.Tree
@@ -354,6 +363,7 @@ meth public abstract java.util.List<? extends com.sun.source.tree.AnnotationTree
 meth public abstract java.util.List<? extends com.sun.source.tree.ImportTree> getImports()
 meth public abstract java.util.List<? extends com.sun.source.tree.Tree> getTypeDecls()
 meth public abstract javax.tools.JavaFileObject getSourceFile()
+meth public com.sun.source.tree.ModuleTree getModule()
 
 CLSS public abstract interface com.sun.source.tree.CompoundAssignmentTree
 intf com.sun.source.tree.ExpressionTree
@@ -369,6 +379,9 @@ meth public abstract com.sun.source.tree.ExpressionTree getTrueExpression()
 CLSS public abstract interface com.sun.source.tree.ContinueTree
 intf com.sun.source.tree.StatementTree
 meth public abstract javax.lang.model.element.Name getLabel()
+
+CLSS public abstract interface com.sun.source.tree.DefaultCaseLabelTree
+intf com.sun.source.tree.CaseLabelTree
 
 CLSS public abstract interface com.sun.source.tree.DirectiveTree
 intf com.sun.source.tree.Tree
@@ -401,6 +414,7 @@ intf com.sun.source.tree.StatementTree
 meth public abstract com.sun.source.tree.ExpressionTree getExpression()
 
 CLSS public abstract interface com.sun.source.tree.ExpressionTree
+intf com.sun.source.tree.CaseLabelTree
 intf com.sun.source.tree.Tree
 
 CLSS public abstract interface com.sun.source.tree.ForLoopTree
@@ -409,6 +423,11 @@ meth public abstract com.sun.source.tree.ExpressionTree getCondition()
 meth public abstract com.sun.source.tree.StatementTree getStatement()
 meth public abstract java.util.List<? extends com.sun.source.tree.ExpressionStatementTree> getUpdate()
 meth public abstract java.util.List<? extends com.sun.source.tree.StatementTree> getInitializer()
+
+CLSS public abstract interface com.sun.source.tree.GuardedPatternTree
+intf com.sun.source.tree.PatternTree
+meth public abstract com.sun.source.tree.ExpressionTree getExpression()
+meth public abstract com.sun.source.tree.PatternTree getPattern()
 
 CLSS public abstract interface com.sun.source.tree.IdentifierTree
 intf com.sun.source.tree.ExpressionTree
@@ -428,6 +447,7 @@ meth public abstract com.sun.source.tree.Tree getQualifiedIdentifier()
 CLSS public abstract interface com.sun.source.tree.InstanceOfTree
 intf com.sun.source.tree.ExpressionTree
 meth public abstract com.sun.source.tree.ExpressionTree getExpression()
+meth public abstract com.sun.source.tree.PatternTree getPattern()
 meth public abstract com.sun.source.tree.Tree getType()
 
 CLSS public abstract interface com.sun.source.tree.IntersectionTypeTree
@@ -555,9 +575,17 @@ intf com.sun.source.tree.Tree
 meth public abstract com.sun.source.tree.Tree getType()
 meth public abstract java.util.List<? extends com.sun.source.tree.Tree> getTypeArguments()
 
+CLSS public abstract interface com.sun.source.tree.ParenthesizedPatternTree
+intf com.sun.source.tree.PatternTree
+meth public abstract com.sun.source.tree.PatternTree getPattern()
+
 CLSS public abstract interface com.sun.source.tree.ParenthesizedTree
 intf com.sun.source.tree.ExpressionTree
 meth public abstract com.sun.source.tree.ExpressionTree getExpression()
+
+CLSS public abstract interface com.sun.source.tree.PatternTree
+intf com.sun.source.tree.CaseLabelTree
+intf com.sun.source.tree.Tree
 
 CLSS public abstract interface com.sun.source.tree.PrimitiveTypeTree
 intf com.sun.source.tree.Tree
@@ -588,7 +616,6 @@ CLSS public abstract interface com.sun.source.tree.StatementTree
 intf com.sun.source.tree.Tree
 
 CLSS public abstract interface com.sun.source.tree.SwitchExpressionTree
- anno 0 java.lang.Deprecated()
 intf com.sun.source.tree.ExpressionTree
 meth public abstract com.sun.source.tree.ExpressionTree getExpression()
 meth public abstract java.util.List<? extends com.sun.source.tree.CaseTree> getCases()
@@ -623,6 +650,7 @@ fld public final static com.sun.source.tree.Tree$Kind ARRAY_ACCESS
 fld public final static com.sun.source.tree.Tree$Kind ARRAY_TYPE
 fld public final static com.sun.source.tree.Tree$Kind ASSERT
 fld public final static com.sun.source.tree.Tree$Kind ASSIGNMENT
+fld public final static com.sun.source.tree.Tree$Kind BINDING_PATTERN
 fld public final static com.sun.source.tree.Tree$Kind BITWISE_COMPLEMENT
 fld public final static com.sun.source.tree.Tree$Kind BLOCK
 fld public final static com.sun.source.tree.Tree$Kind BOOLEAN_LITERAL
@@ -636,6 +664,7 @@ fld public final static com.sun.source.tree.Tree$Kind CONDITIONAL_AND
 fld public final static com.sun.source.tree.Tree$Kind CONDITIONAL_EXPRESSION
 fld public final static com.sun.source.tree.Tree$Kind CONDITIONAL_OR
 fld public final static com.sun.source.tree.Tree$Kind CONTINUE
+fld public final static com.sun.source.tree.Tree$Kind DEFAULT_CASE_LABEL
 fld public final static com.sun.source.tree.Tree$Kind DIVIDE
 fld public final static com.sun.source.tree.Tree$Kind DIVIDE_ASSIGNMENT
 fld public final static com.sun.source.tree.Tree$Kind DOUBLE_LITERAL
@@ -652,6 +681,7 @@ fld public final static com.sun.source.tree.Tree$Kind FLOAT_LITERAL
 fld public final static com.sun.source.tree.Tree$Kind FOR_LOOP
 fld public final static com.sun.source.tree.Tree$Kind GREATER_THAN
 fld public final static com.sun.source.tree.Tree$Kind GREATER_THAN_EQUAL
+fld public final static com.sun.source.tree.Tree$Kind GUARDED_PATTERN
 fld public final static com.sun.source.tree.Tree$Kind IDENTIFIER
 fld public final static com.sun.source.tree.Tree$Kind IF
 fld public final static com.sun.source.tree.Tree$Kind IMPORT
@@ -688,6 +718,7 @@ fld public final static com.sun.source.tree.Tree$Kind OTHER
 fld public final static com.sun.source.tree.Tree$Kind PACKAGE
 fld public final static com.sun.source.tree.Tree$Kind PARAMETERIZED_TYPE
 fld public final static com.sun.source.tree.Tree$Kind PARENTHESIZED
+fld public final static com.sun.source.tree.Tree$Kind PARENTHESIZED_PATTERN
 fld public final static com.sun.source.tree.Tree$Kind PLUS
 fld public final static com.sun.source.tree.Tree$Kind PLUS_ASSIGNMENT
 fld public final static com.sun.source.tree.Tree$Kind POSTFIX_DECREMENT
@@ -696,6 +727,7 @@ fld public final static com.sun.source.tree.Tree$Kind PREFIX_DECREMENT
 fld public final static com.sun.source.tree.Tree$Kind PREFIX_INCREMENT
 fld public final static com.sun.source.tree.Tree$Kind PRIMITIVE_TYPE
 fld public final static com.sun.source.tree.Tree$Kind PROVIDES
+fld public final static com.sun.source.tree.Tree$Kind RECORD
 fld public final static com.sun.source.tree.Tree$Kind REMAINDER
 fld public final static com.sun.source.tree.Tree$Kind REMAINDER_ASSIGNMENT
 fld public final static com.sun.source.tree.Tree$Kind REQUIRES
@@ -706,7 +738,6 @@ fld public final static com.sun.source.tree.Tree$Kind STRING_LITERAL
 fld public final static com.sun.source.tree.Tree$Kind SUPER_WILDCARD
 fld public final static com.sun.source.tree.Tree$Kind SWITCH
 fld public final static com.sun.source.tree.Tree$Kind SWITCH_EXPRESSION
- anno 0 java.lang.Deprecated()
 fld public final static com.sun.source.tree.Tree$Kind SYNCHRONIZED
 fld public final static com.sun.source.tree.Tree$Kind THROW
 fld public final static com.sun.source.tree.Tree$Kind TRY
@@ -725,7 +756,6 @@ fld public final static com.sun.source.tree.Tree$Kind WHILE_LOOP
 fld public final static com.sun.source.tree.Tree$Kind XOR
 fld public final static com.sun.source.tree.Tree$Kind XOR_ASSIGNMENT
 fld public final static com.sun.source.tree.Tree$Kind YIELD
- anno 0 java.lang.Deprecated()
 meth public java.lang.Class<? extends com.sun.source.tree.Tree> asInterface()
 meth public static com.sun.source.tree.Tree$Kind valueOf(java.lang.String)
 meth public static com.sun.source.tree.Tree$Kind[] values()
@@ -740,6 +770,7 @@ meth public abstract {com.sun.source.tree.TreeVisitor%0} visitArrayType(com.sun.
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitAssert(com.sun.source.tree.AssertTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitAssignment(com.sun.source.tree.AssignmentTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitBinary(com.sun.source.tree.BinaryTree,{com.sun.source.tree.TreeVisitor%1})
+meth public abstract {com.sun.source.tree.TreeVisitor%0} visitBindingPattern(com.sun.source.tree.BindingPatternTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitBlock(com.sun.source.tree.BlockTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitBreak(com.sun.source.tree.BreakTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitCase(com.sun.source.tree.CaseTree,{com.sun.source.tree.TreeVisitor%1})
@@ -749,6 +780,7 @@ meth public abstract {com.sun.source.tree.TreeVisitor%0} visitCompilationUnit(co
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitCompoundAssignment(com.sun.source.tree.CompoundAssignmentTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitConditionalExpression(com.sun.source.tree.ConditionalExpressionTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitContinue(com.sun.source.tree.ContinueTree,{com.sun.source.tree.TreeVisitor%1})
+meth public abstract {com.sun.source.tree.TreeVisitor%0} visitDefaultCaseLabel(com.sun.source.tree.DefaultCaseLabelTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitDoWhileLoop(com.sun.source.tree.DoWhileLoopTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitEmptyStatement(com.sun.source.tree.EmptyStatementTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitEnhancedForLoop(com.sun.source.tree.EnhancedForLoopTree,{com.sun.source.tree.TreeVisitor%1})
@@ -756,6 +788,7 @@ meth public abstract {com.sun.source.tree.TreeVisitor%0} visitErroneous(com.sun.
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitExports(com.sun.source.tree.ExportsTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitExpressionStatement(com.sun.source.tree.ExpressionStatementTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitForLoop(com.sun.source.tree.ForLoopTree,{com.sun.source.tree.TreeVisitor%1})
+meth public abstract {com.sun.source.tree.TreeVisitor%0} visitGuardedPattern(com.sun.source.tree.GuardedPatternTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitIdentifier(com.sun.source.tree.IdentifierTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitIf(com.sun.source.tree.IfTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitImport(com.sun.source.tree.ImportTree,{com.sun.source.tree.TreeVisitor%1})
@@ -777,13 +810,13 @@ meth public abstract {com.sun.source.tree.TreeVisitor%0} visitOther(com.sun.sour
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitPackage(com.sun.source.tree.PackageTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitParameterizedType(com.sun.source.tree.ParameterizedTypeTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitParenthesized(com.sun.source.tree.ParenthesizedTree,{com.sun.source.tree.TreeVisitor%1})
+meth public abstract {com.sun.source.tree.TreeVisitor%0} visitParenthesizedPattern(com.sun.source.tree.ParenthesizedPatternTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitPrimitiveType(com.sun.source.tree.PrimitiveTypeTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitProvides(com.sun.source.tree.ProvidesTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitRequires(com.sun.source.tree.RequiresTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitReturn(com.sun.source.tree.ReturnTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitSwitch(com.sun.source.tree.SwitchTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitSwitchExpression(com.sun.source.tree.SwitchExpressionTree,{com.sun.source.tree.TreeVisitor%1})
- anno 0 java.lang.Deprecated()
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitSynchronized(com.sun.source.tree.SynchronizedTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitThrow(com.sun.source.tree.ThrowTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitTry(com.sun.source.tree.TryTree,{com.sun.source.tree.TreeVisitor%1})
@@ -796,7 +829,12 @@ meth public abstract {com.sun.source.tree.TreeVisitor%0} visitVariable(com.sun.s
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitWhileLoop(com.sun.source.tree.WhileLoopTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitWildcard(com.sun.source.tree.WildcardTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitYield(com.sun.source.tree.YieldTree,{com.sun.source.tree.TreeVisitor%1})
- anno 0 java.lang.Deprecated()
+meth public abstract {com.sun.source.tree.TreeVisitor%0} visitParenthesizedPattern(com.sun.source.tree.ParenthesizedPatternTree,{com.sun.source.tree.TreeVisitor%1})
+ anno 0 jdk.internal.PreviewFeature(boolean reflective=true, jdk.internal.PreviewFeature$Feature feature=SWITCH_PATTERN_MATCHING)
+meth public abstract {com.sun.source.tree.TreeVisitor%0} visitGuardedPattern(com.sun.source.tree.GuardedPatternTree,{com.sun.source.tree.TreeVisitor%1})
+ anno 0 jdk.internal.PreviewFeature(boolean reflective=true, jdk.internal.PreviewFeature$Feature feature=SWITCH_PATTERN_MATCHING)
+meth public abstract {com.sun.source.tree.TreeVisitor%0} visitDefaultCaseLabel(com.sun.source.tree.DefaultCaseLabelTree,{com.sun.source.tree.TreeVisitor%1})
+ anno 0 jdk.internal.PreviewFeature(boolean reflective=true, jdk.internal.PreviewFeature$Feature feature=SWITCH_PATTERN_MATCHING)
 
 CLSS public abstract interface com.sun.source.tree.TryTree
 intf com.sun.source.tree.StatementTree
@@ -846,11 +884,8 @@ intf com.sun.source.tree.Tree
 meth public abstract com.sun.source.tree.Tree getBound()
 
 CLSS public abstract interface com.sun.source.tree.YieldTree
- anno 0 java.lang.Deprecated()
 intf com.sun.source.tree.StatementTree
 meth public abstract com.sun.source.tree.ExpressionTree getValue()
-
-CLSS abstract interface com.sun.source.tree.package-info
 
 CLSS public abstract interface com.sun.source.util.DocSourcePositions
 intf com.sun.source.util.SourcePositions
@@ -898,6 +933,7 @@ meth public abstract com.sun.source.doctree.ValueTree newValueTree(com.sun.sourc
 meth public abstract com.sun.source.doctree.VersionTree newVersionTree(java.util.List<? extends com.sun.source.doctree.DocTree>)
 meth public abstract com.sun.source.util.DocTreeFactory at(int)
 meth public abstract java.util.List<com.sun.source.doctree.DocTree> getFirstSentence(java.util.List<? extends com.sun.source.doctree.DocTree>)
+meth public com.sun.source.doctree.ReturnTree newReturnTree(boolean,java.util.List<? extends com.sun.source.doctree.DocTree>)
 meth public com.sun.source.doctree.SummaryTree newSummaryTree(java.util.List<? extends com.sun.source.doctree.DocTree>)
 
 CLSS public com.sun.source.util.DocTreePath
@@ -975,9 +1011,11 @@ meth public abstract com.sun.source.doctree.DocCommentTree getDocCommentTree(jav
 meth public abstract com.sun.source.util.DocSourcePositions getSourcePositions()
 meth public abstract com.sun.source.util.DocTreeFactory getDocTreeFactory()
 meth public abstract com.sun.source.util.DocTreePath getDocTreePath(javax.tools.FileObject,javax.lang.model.element.PackageElement)
+meth public abstract java.lang.String getCharacters(com.sun.source.doctree.EntityTree)
 meth public abstract java.text.BreakIterator getBreakIterator()
 meth public abstract java.util.List<com.sun.source.doctree.DocTree> getFirstSentence(java.util.List<? extends com.sun.source.doctree.DocTree>)
 meth public abstract javax.lang.model.element.Element getElement(com.sun.source.util.DocTreePath)
+meth public abstract javax.lang.model.type.TypeMirror getType(com.sun.source.util.DocTreePath)
 meth public abstract void printMessage(javax.tools.Diagnostic$Kind,java.lang.CharSequence,com.sun.source.doctree.DocTree,com.sun.source.doctree.DocCommentTree,com.sun.source.tree.CompilationUnitTree)
 meth public abstract void setBreakIterator(java.text.BreakIterator)
 meth public static com.sun.source.util.DocTrees instance(javax.annotation.processing.ProcessingEnvironment)
@@ -1006,6 +1044,7 @@ meth public abstract java.lang.CharSequence getParameterName(javax.lang.model.el
 CLSS public abstract interface com.sun.source.util.Plugin
 meth public abstract !varargs void init(com.sun.source.util.JavacTask,java.lang.String[])
 meth public abstract java.lang.String getName()
+meth public boolean autoStart()
 
 CLSS public com.sun.source.util.SimpleDocTreeVisitor<%0 extends java.lang.Object, %1 extends java.lang.Object>
 cons protected init()
@@ -1068,6 +1107,7 @@ meth public {com.sun.source.util.SimpleTreeVisitor%0} visitArrayType(com.sun.sou
 meth public {com.sun.source.util.SimpleTreeVisitor%0} visitAssert(com.sun.source.tree.AssertTree,{com.sun.source.util.SimpleTreeVisitor%1})
 meth public {com.sun.source.util.SimpleTreeVisitor%0} visitAssignment(com.sun.source.tree.AssignmentTree,{com.sun.source.util.SimpleTreeVisitor%1})
 meth public {com.sun.source.util.SimpleTreeVisitor%0} visitBinary(com.sun.source.tree.BinaryTree,{com.sun.source.util.SimpleTreeVisitor%1})
+meth public {com.sun.source.util.SimpleTreeVisitor%0} visitBindingPattern(com.sun.source.tree.BindingPatternTree,{com.sun.source.util.SimpleTreeVisitor%1})
 meth public {com.sun.source.util.SimpleTreeVisitor%0} visitBlock(com.sun.source.tree.BlockTree,{com.sun.source.util.SimpleTreeVisitor%1})
 meth public {com.sun.source.util.SimpleTreeVisitor%0} visitBreak(com.sun.source.tree.BreakTree,{com.sun.source.util.SimpleTreeVisitor%1})
 meth public {com.sun.source.util.SimpleTreeVisitor%0} visitCase(com.sun.source.tree.CaseTree,{com.sun.source.util.SimpleTreeVisitor%1})
@@ -1077,6 +1117,7 @@ meth public {com.sun.source.util.SimpleTreeVisitor%0} visitCompilationUnit(com.s
 meth public {com.sun.source.util.SimpleTreeVisitor%0} visitCompoundAssignment(com.sun.source.tree.CompoundAssignmentTree,{com.sun.source.util.SimpleTreeVisitor%1})
 meth public {com.sun.source.util.SimpleTreeVisitor%0} visitConditionalExpression(com.sun.source.tree.ConditionalExpressionTree,{com.sun.source.util.SimpleTreeVisitor%1})
 meth public {com.sun.source.util.SimpleTreeVisitor%0} visitContinue(com.sun.source.tree.ContinueTree,{com.sun.source.util.SimpleTreeVisitor%1})
+meth public {com.sun.source.util.SimpleTreeVisitor%0} visitDefaultCaseLabel(com.sun.source.tree.DefaultCaseLabelTree,{com.sun.source.util.SimpleTreeVisitor%1})
 meth public {com.sun.source.util.SimpleTreeVisitor%0} visitDoWhileLoop(com.sun.source.tree.DoWhileLoopTree,{com.sun.source.util.SimpleTreeVisitor%1})
 meth public {com.sun.source.util.SimpleTreeVisitor%0} visitEmptyStatement(com.sun.source.tree.EmptyStatementTree,{com.sun.source.util.SimpleTreeVisitor%1})
 meth public {com.sun.source.util.SimpleTreeVisitor%0} visitEnhancedForLoop(com.sun.source.tree.EnhancedForLoopTree,{com.sun.source.util.SimpleTreeVisitor%1})
@@ -1084,6 +1125,7 @@ meth public {com.sun.source.util.SimpleTreeVisitor%0} visitErroneous(com.sun.sou
 meth public {com.sun.source.util.SimpleTreeVisitor%0} visitExports(com.sun.source.tree.ExportsTree,{com.sun.source.util.SimpleTreeVisitor%1})
 meth public {com.sun.source.util.SimpleTreeVisitor%0} visitExpressionStatement(com.sun.source.tree.ExpressionStatementTree,{com.sun.source.util.SimpleTreeVisitor%1})
 meth public {com.sun.source.util.SimpleTreeVisitor%0} visitForLoop(com.sun.source.tree.ForLoopTree,{com.sun.source.util.SimpleTreeVisitor%1})
+meth public {com.sun.source.util.SimpleTreeVisitor%0} visitGuardedPattern(com.sun.source.tree.GuardedPatternTree,{com.sun.source.util.SimpleTreeVisitor%1})
 meth public {com.sun.source.util.SimpleTreeVisitor%0} visitIdentifier(com.sun.source.tree.IdentifierTree,{com.sun.source.util.SimpleTreeVisitor%1})
 meth public {com.sun.source.util.SimpleTreeVisitor%0} visitIf(com.sun.source.tree.IfTree,{com.sun.source.util.SimpleTreeVisitor%1})
 meth public {com.sun.source.util.SimpleTreeVisitor%0} visitImport(com.sun.source.tree.ImportTree,{com.sun.source.util.SimpleTreeVisitor%1})
@@ -1105,13 +1147,13 @@ meth public {com.sun.source.util.SimpleTreeVisitor%0} visitOther(com.sun.source.
 meth public {com.sun.source.util.SimpleTreeVisitor%0} visitPackage(com.sun.source.tree.PackageTree,{com.sun.source.util.SimpleTreeVisitor%1})
 meth public {com.sun.source.util.SimpleTreeVisitor%0} visitParameterizedType(com.sun.source.tree.ParameterizedTypeTree,{com.sun.source.util.SimpleTreeVisitor%1})
 meth public {com.sun.source.util.SimpleTreeVisitor%0} visitParenthesized(com.sun.source.tree.ParenthesizedTree,{com.sun.source.util.SimpleTreeVisitor%1})
+meth public {com.sun.source.util.SimpleTreeVisitor%0} visitParenthesizedPattern(com.sun.source.tree.ParenthesizedPatternTree,{com.sun.source.util.SimpleTreeVisitor%1})
 meth public {com.sun.source.util.SimpleTreeVisitor%0} visitPrimitiveType(com.sun.source.tree.PrimitiveTypeTree,{com.sun.source.util.SimpleTreeVisitor%1})
 meth public {com.sun.source.util.SimpleTreeVisitor%0} visitProvides(com.sun.source.tree.ProvidesTree,{com.sun.source.util.SimpleTreeVisitor%1})
 meth public {com.sun.source.util.SimpleTreeVisitor%0} visitRequires(com.sun.source.tree.RequiresTree,{com.sun.source.util.SimpleTreeVisitor%1})
 meth public {com.sun.source.util.SimpleTreeVisitor%0} visitReturn(com.sun.source.tree.ReturnTree,{com.sun.source.util.SimpleTreeVisitor%1})
 meth public {com.sun.source.util.SimpleTreeVisitor%0} visitSwitch(com.sun.source.tree.SwitchTree,{com.sun.source.util.SimpleTreeVisitor%1})
 meth public {com.sun.source.util.SimpleTreeVisitor%0} visitSwitchExpression(com.sun.source.tree.SwitchExpressionTree,{com.sun.source.util.SimpleTreeVisitor%1})
- anno 0 java.lang.Deprecated()
 meth public {com.sun.source.util.SimpleTreeVisitor%0} visitSynchronized(com.sun.source.tree.SynchronizedTree,{com.sun.source.util.SimpleTreeVisitor%1})
 meth public {com.sun.source.util.SimpleTreeVisitor%0} visitThrow(com.sun.source.tree.ThrowTree,{com.sun.source.util.SimpleTreeVisitor%1})
 meth public {com.sun.source.util.SimpleTreeVisitor%0} visitTry(com.sun.source.tree.TryTree,{com.sun.source.util.SimpleTreeVisitor%1})
@@ -1124,7 +1166,12 @@ meth public {com.sun.source.util.SimpleTreeVisitor%0} visitVariable(com.sun.sour
 meth public {com.sun.source.util.SimpleTreeVisitor%0} visitWhileLoop(com.sun.source.tree.WhileLoopTree,{com.sun.source.util.SimpleTreeVisitor%1})
 meth public {com.sun.source.util.SimpleTreeVisitor%0} visitWildcard(com.sun.source.tree.WildcardTree,{com.sun.source.util.SimpleTreeVisitor%1})
 meth public {com.sun.source.util.SimpleTreeVisitor%0} visitYield(com.sun.source.tree.YieldTree,{com.sun.source.util.SimpleTreeVisitor%1})
- anno 0 java.lang.Deprecated()
+meth public {com.sun.source.util.SimpleTreeVisitor%0} visitParenthesizedPattern(com.sun.source.tree.ParenthesizedPatternTree,{com.sun.source.util.SimpleTreeVisitor%1})
+ anno 0 jdk.internal.PreviewFeature(boolean reflective=true, jdk.internal.PreviewFeature$Feature feature=SWITCH_PATTERN_MATCHING)
+meth public {com.sun.source.util.SimpleTreeVisitor%0} visitGuardedPattern(com.sun.source.tree.GuardedPatternTree,{com.sun.source.util.SimpleTreeVisitor%1})
+ anno 0 jdk.internal.PreviewFeature(boolean reflective=true, jdk.internal.PreviewFeature$Feature feature=SWITCH_PATTERN_MATCHING)
+meth public {com.sun.source.util.SimpleTreeVisitor%0} visitDefaultCaseLabel(com.sun.source.tree.DefaultCaseLabelTree,{com.sun.source.util.SimpleTreeVisitor%1})
+ anno 0 jdk.internal.PreviewFeature(boolean reflective=true, jdk.internal.PreviewFeature$Feature feature=SWITCH_PATTERN_MATCHING)
 supr java.lang.Object
 
 CLSS public abstract interface com.sun.source.util.SourcePositions
@@ -1196,6 +1243,7 @@ meth public {com.sun.source.util.TreeScanner%0} visitArrayType(com.sun.source.tr
 meth public {com.sun.source.util.TreeScanner%0} visitAssert(com.sun.source.tree.AssertTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitAssignment(com.sun.source.tree.AssignmentTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitBinary(com.sun.source.tree.BinaryTree,{com.sun.source.util.TreeScanner%1})
+meth public {com.sun.source.util.TreeScanner%0} visitBindingPattern(com.sun.source.tree.BindingPatternTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitBlock(com.sun.source.tree.BlockTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitBreak(com.sun.source.tree.BreakTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitCase(com.sun.source.tree.CaseTree,{com.sun.source.util.TreeScanner%1})
@@ -1205,6 +1253,7 @@ meth public {com.sun.source.util.TreeScanner%0} visitCompilationUnit(com.sun.sou
 meth public {com.sun.source.util.TreeScanner%0} visitCompoundAssignment(com.sun.source.tree.CompoundAssignmentTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitConditionalExpression(com.sun.source.tree.ConditionalExpressionTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitContinue(com.sun.source.tree.ContinueTree,{com.sun.source.util.TreeScanner%1})
+meth public {com.sun.source.util.TreeScanner%0} visitDefaultCaseLabel(com.sun.source.tree.DefaultCaseLabelTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitDoWhileLoop(com.sun.source.tree.DoWhileLoopTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitEmptyStatement(com.sun.source.tree.EmptyStatementTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitEnhancedForLoop(com.sun.source.tree.EnhancedForLoopTree,{com.sun.source.util.TreeScanner%1})
@@ -1212,6 +1261,7 @@ meth public {com.sun.source.util.TreeScanner%0} visitErroneous(com.sun.source.tr
 meth public {com.sun.source.util.TreeScanner%0} visitExports(com.sun.source.tree.ExportsTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitExpressionStatement(com.sun.source.tree.ExpressionStatementTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitForLoop(com.sun.source.tree.ForLoopTree,{com.sun.source.util.TreeScanner%1})
+meth public {com.sun.source.util.TreeScanner%0} visitGuardedPattern(com.sun.source.tree.GuardedPatternTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitIdentifier(com.sun.source.tree.IdentifierTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitIf(com.sun.source.tree.IfTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitImport(com.sun.source.tree.ImportTree,{com.sun.source.util.TreeScanner%1})
@@ -1233,13 +1283,13 @@ meth public {com.sun.source.util.TreeScanner%0} visitOther(com.sun.source.tree.T
 meth public {com.sun.source.util.TreeScanner%0} visitPackage(com.sun.source.tree.PackageTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitParameterizedType(com.sun.source.tree.ParameterizedTypeTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitParenthesized(com.sun.source.tree.ParenthesizedTree,{com.sun.source.util.TreeScanner%1})
+meth public {com.sun.source.util.TreeScanner%0} visitParenthesizedPattern(com.sun.source.tree.ParenthesizedPatternTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitPrimitiveType(com.sun.source.tree.PrimitiveTypeTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitProvides(com.sun.source.tree.ProvidesTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitRequires(com.sun.source.tree.RequiresTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitReturn(com.sun.source.tree.ReturnTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitSwitch(com.sun.source.tree.SwitchTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitSwitchExpression(com.sun.source.tree.SwitchExpressionTree,{com.sun.source.util.TreeScanner%1})
- anno 0 java.lang.Deprecated()
 meth public {com.sun.source.util.TreeScanner%0} visitSynchronized(com.sun.source.tree.SynchronizedTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitThrow(com.sun.source.tree.ThrowTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitTry(com.sun.source.tree.TryTree,{com.sun.source.util.TreeScanner%1})
@@ -1252,7 +1302,10 @@ meth public {com.sun.source.util.TreeScanner%0} visitVariable(com.sun.source.tre
 meth public {com.sun.source.util.TreeScanner%0} visitWhileLoop(com.sun.source.tree.WhileLoopTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitWildcard(com.sun.source.tree.WildcardTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitYield(com.sun.source.tree.YieldTree,{com.sun.source.util.TreeScanner%1})
- anno 0 java.lang.Deprecated()
+meth public {com.sun.source.util.TreeScanner%0} visitParenthesizedPattern(com.sun.source.tree.ParenthesizedPatternTree,{com.sun.source.util.TreeScanner%1})
+meth public {com.sun.source.util.TreeScanner%0} visitGuardedPattern(com.sun.source.tree.GuardedPatternTree,{com.sun.source.util.TreeScanner%1})
+meth public {com.sun.source.util.TreeScanner%0} visitDefaultCaseLabel(com.sun.source.tree.DefaultCaseLabelTree,{com.sun.source.util.TreeScanner%1})
+ anno 0 jdk.internal.PreviewFeature(boolean reflective=true, jdk.internal.PreviewFeature$Feature feature=SWITCH_PATTERN_MATCHING)
 supr java.lang.Object
 
 CLSS public abstract com.sun.source.util.Trees
@@ -1280,8 +1333,6 @@ meth public static com.sun.source.util.Trees instance(javax.annotation.processin
 meth public static com.sun.source.util.Trees instance(javax.tools.JavaCompiler$CompilationTask)
 supr java.lang.Object
 
-CLSS abstract interface com.sun.source.util.package-info
-
 CLSS public abstract interface java.io.Closeable
 intf java.lang.AutoCloseable
 meth public abstract void close() throws java.io.IOException
@@ -1295,7 +1346,6 @@ cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.Throwable)
 cons public init(java.lang.Throwable)
 supr java.lang.Exception
-hfds serialVersionUID
 
 CLSS public abstract interface java.io.Serializable
 
@@ -1313,12 +1363,6 @@ meth public java.util.stream.IntStream codePoints()
 CLSS public abstract interface java.lang.Comparable<%0 extends java.lang.Object>
 meth public abstract int compareTo({java.lang.Comparable%0})
 
-CLSS public abstract interface !annotation java.lang.Deprecated
- anno 0 java.lang.annotation.Documented()
- anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
- anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[CONSTRUCTOR, FIELD, LOCAL_VARIABLE, METHOD, PACKAGE, PARAMETER, TYPE])
-intf java.lang.annotation.Annotation
-
 CLSS public abstract java.lang.Enum<%0 extends java.lang.Enum<{java.lang.Enum%0}>>
 cons protected init(java.lang.String,int)
 intf java.io.Serializable
@@ -1334,7 +1378,6 @@ meth public final java.lang.String name()
 meth public java.lang.String toString()
 meth public static <%0 extends java.lang.Enum<{%%0}>> {%%0} valueOf(java.lang.Class<{%%0}>,java.lang.String)
 supr java.lang.Object
-hfds name,ordinal
 
 CLSS public java.lang.Exception
 cons protected init(java.lang.String,java.lang.Throwable,boolean,boolean)
@@ -1343,7 +1386,6 @@ cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.Throwable)
 cons public init(java.lang.Throwable)
 supr java.lang.Throwable
-hfds serialVersionUID
 
 CLSS public abstract interface !annotation java.lang.FunctionalInterface
  anno 0 java.lang.annotation.Documented()
@@ -1377,7 +1419,6 @@ cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.Throwable)
 cons public init(java.lang.Throwable)
 supr java.lang.Exception
-hfds serialVersionUID
 
 CLSS public java.lang.Throwable
 cons protected init(java.lang.String,java.lang.Throwable,boolean,boolean)
@@ -1400,8 +1441,6 @@ meth public void printStackTrace(java.io.PrintStream)
 meth public void printStackTrace(java.io.PrintWriter)
 meth public void setStackTrace(java.lang.StackTraceElement[])
 supr java.lang.Object
-hfds CAUSE_CAPTION,EMPTY_THROWABLE_ARRAY,NULL_CAUSE_MESSAGE,SELF_SUPPRESSION_MESSAGE,SUPPRESSED_CAPTION,SUPPRESSED_SENTINEL,UNASSIGNED_STACK,backtrace,cause,detailMessage,serialVersionUID,stackTrace,suppressedExceptions
-hcls PrintStreamOrWriter,SentinelHolder,WrappedPrintStream,WrappedPrintWriter
 
 CLSS public abstract interface java.lang.annotation.Annotation
 meth public abstract boolean equals(java.lang.Object)
@@ -1531,8 +1570,6 @@ CLSS public abstract interface !annotation javax.annotation.processing.Supported
 intf java.lang.annotation.Annotation
 meth public abstract javax.lang.model.SourceVersion value()
 
-CLSS abstract interface javax.annotation.processing.package-info
-
 CLSS public abstract interface javax.lang.model.AnnotatedConstruct
 meth public abstract <%0 extends java.lang.annotation.Annotation> {%%0} getAnnotation(java.lang.Class<{%%0}>)
 meth public abstract <%0 extends java.lang.annotation.Annotation> {%%0}[] getAnnotationsByType(java.lang.Class<{%%0}>)
@@ -1545,6 +1582,10 @@ fld public final static javax.lang.model.SourceVersion RELEASE_10
 fld public final static javax.lang.model.SourceVersion RELEASE_11
 fld public final static javax.lang.model.SourceVersion RELEASE_12
 fld public final static javax.lang.model.SourceVersion RELEASE_13
+fld public final static javax.lang.model.SourceVersion RELEASE_14
+fld public final static javax.lang.model.SourceVersion RELEASE_15
+fld public final static javax.lang.model.SourceVersion RELEASE_16
+fld public final static javax.lang.model.SourceVersion RELEASE_17
 fld public final static javax.lang.model.SourceVersion RELEASE_2
 fld public final static javax.lang.model.SourceVersion RELEASE_3
 fld public final static javax.lang.model.SourceVersion RELEASE_4
@@ -1601,6 +1642,7 @@ CLSS public abstract interface javax.lang.model.element.Element
 intf javax.lang.model.AnnotatedConstruct
 meth public abstract <%0 extends java.lang.Object, %1 extends java.lang.Object> {%%0} accept(javax.lang.model.element.ElementVisitor<{%%0},{%%1}>,{%%1})
 meth public abstract <%0 extends java.lang.annotation.Annotation> {%%0} getAnnotation(java.lang.Class<{%%0}>)
+meth public abstract <%0 extends java.lang.annotation.Annotation> {%%0}[] getAnnotationsByType(java.lang.Class<{%%0}>)
 meth public abstract boolean equals(java.lang.Object)
 meth public abstract int hashCode()
 meth public abstract java.util.List<? extends javax.lang.model.element.AnnotationMirror> getAnnotationMirrors()
@@ -1613,6 +1655,7 @@ meth public abstract javax.lang.model.type.TypeMirror asType()
 
 CLSS public final !enum javax.lang.model.element.ElementKind
 fld public final static javax.lang.model.element.ElementKind ANNOTATION_TYPE
+fld public final static javax.lang.model.element.ElementKind BINDING_VARIABLE
 fld public final static javax.lang.model.element.ElementKind CLASS
 fld public final static javax.lang.model.element.ElementKind CONSTRUCTOR
 fld public final static javax.lang.model.element.ElementKind ENUM
@@ -1627,6 +1670,8 @@ fld public final static javax.lang.model.element.ElementKind MODULE
 fld public final static javax.lang.model.element.ElementKind OTHER
 fld public final static javax.lang.model.element.ElementKind PACKAGE
 fld public final static javax.lang.model.element.ElementKind PARAMETER
+fld public final static javax.lang.model.element.ElementKind RECORD
+fld public final static javax.lang.model.element.ElementKind RECORD_COMPONENT
 fld public final static javax.lang.model.element.ElementKind RESOURCE_VARIABLE
 fld public final static javax.lang.model.element.ElementKind STATIC_INIT
 fld public final static javax.lang.model.element.ElementKind TYPE_PARAMETER
@@ -1647,6 +1692,7 @@ meth public abstract {javax.lang.model.element.ElementVisitor%0} visitUnknown(ja
 meth public abstract {javax.lang.model.element.ElementVisitor%0} visitVariable(javax.lang.model.element.VariableElement,{javax.lang.model.element.ElementVisitor%1})
 meth public {javax.lang.model.element.ElementVisitor%0} visit(javax.lang.model.element.Element)
 meth public {javax.lang.model.element.ElementVisitor%0} visitModule(javax.lang.model.element.ModuleElement,{javax.lang.model.element.ElementVisitor%1})
+meth public {javax.lang.model.element.ElementVisitor%0} visitRecordComponent(javax.lang.model.element.RecordComponentElement,{javax.lang.model.element.ElementVisitor%1})
 
 CLSS public abstract interface javax.lang.model.element.ExecutableElement
 intf javax.lang.model.element.Element
@@ -1662,14 +1708,16 @@ meth public abstract javax.lang.model.type.TypeMirror asType()
 meth public abstract javax.lang.model.type.TypeMirror getReceiverType()
 meth public abstract javax.lang.model.type.TypeMirror getReturnType()
 
-CLSS public final !enum javax.lang.model.element.Modifier
+CLSS public !enum javax.lang.model.element.Modifier
 fld public final static javax.lang.model.element.Modifier ABSTRACT
 fld public final static javax.lang.model.element.Modifier DEFAULT
 fld public final static javax.lang.model.element.Modifier FINAL
 fld public final static javax.lang.model.element.Modifier NATIVE
+fld public final static javax.lang.model.element.Modifier NON_SEALED
 fld public final static javax.lang.model.element.Modifier PRIVATE
 fld public final static javax.lang.model.element.Modifier PROTECTED
 fld public final static javax.lang.model.element.Modifier PUBLIC
+fld public final static javax.lang.model.element.Modifier SEALED
 fld public final static javax.lang.model.element.Modifier STATIC
 fld public final static javax.lang.model.element.Modifier STRICTFP
 fld public final static javax.lang.model.element.Modifier SYNCHRONIZED
@@ -1791,6 +1839,12 @@ CLSS public abstract interface javax.lang.model.element.QualifiedNameable
 intf javax.lang.model.element.Element
 meth public abstract javax.lang.model.element.Name getQualifiedName()
 
+CLSS public abstract interface javax.lang.model.element.RecordComponentElement
+intf javax.lang.model.element.Element
+meth public abstract javax.lang.model.element.Element getEnclosingElement()
+meth public abstract javax.lang.model.element.ExecutableElement getAccessor()
+meth public abstract javax.lang.model.element.Name getSimpleName()
+
 CLSS public abstract interface javax.lang.model.element.TypeElement
 intf javax.lang.model.element.Element
 intf javax.lang.model.element.Parameterizable
@@ -1804,6 +1858,8 @@ meth public abstract javax.lang.model.element.Name getSimpleName()
 meth public abstract javax.lang.model.element.NestingKind getNestingKind()
 meth public abstract javax.lang.model.type.TypeMirror asType()
 meth public abstract javax.lang.model.type.TypeMirror getSuperclass()
+meth public java.util.List<? extends javax.lang.model.element.RecordComponentElement> getRecordComponents()
+meth public java.util.List<? extends javax.lang.model.type.TypeMirror> getPermittedSubclasses()
 
 CLSS public abstract interface javax.lang.model.element.TypeParameterElement
 intf javax.lang.model.element.Element
@@ -1839,10 +1895,6 @@ meth public abstract java.lang.Object getConstantValue()
 meth public abstract javax.lang.model.element.Element getEnclosingElement()
 meth public abstract javax.lang.model.element.Name getSimpleName()
 meth public abstract javax.lang.model.type.TypeMirror asType()
-
-CLSS abstract interface javax.lang.model.element.package-info
-
-CLSS abstract interface javax.lang.model.package-info
 
 CLSS public abstract interface javax.lang.model.type.ArrayType
 intf javax.lang.model.type.ReferenceType
@@ -1924,9 +1976,12 @@ supr java.lang.Enum<javax.lang.model.type.TypeKind>
 CLSS public abstract interface javax.lang.model.type.TypeMirror
 intf javax.lang.model.AnnotatedConstruct
 meth public abstract <%0 extends java.lang.Object, %1 extends java.lang.Object> {%%0} accept(javax.lang.model.type.TypeVisitor<{%%0},{%%1}>,{%%1})
+meth public abstract <%0 extends java.lang.annotation.Annotation> {%%0} getAnnotation(java.lang.Class<{%%0}>)
+meth public abstract <%0 extends java.lang.annotation.Annotation> {%%0}[] getAnnotationsByType(java.lang.Class<{%%0}>)
 meth public abstract boolean equals(java.lang.Object)
 meth public abstract int hashCode()
 meth public abstract java.lang.String toString()
+meth public abstract java.util.List<? extends javax.lang.model.element.AnnotationMirror> getAnnotationMirrors()
 meth public abstract javax.lang.model.type.TypeKind getKind()
 
 CLSS public abstract interface javax.lang.model.type.TypeVariable
@@ -1967,7 +2022,10 @@ intf javax.lang.model.type.TypeMirror
 meth public abstract javax.lang.model.type.TypeMirror getExtendsBound()
 meth public abstract javax.lang.model.type.TypeMirror getSuperBound()
 
-CLSS abstract interface javax.lang.model.type.package-info
+CLSS public abstract javax.lang.model.util.AbstractAnnotationValueVisitor14<%0 extends java.lang.Object, %1 extends java.lang.Object>
+ anno 0 javax.annotation.processing.SupportedSourceVersion(javax.lang.model.SourceVersion value=RELEASE_17)
+cons protected init()
+supr javax.lang.model.util.AbstractAnnotationValueVisitor9<{javax.lang.model.util.AbstractAnnotationValueVisitor14%0},{javax.lang.model.util.AbstractAnnotationValueVisitor14%1}>
 
 CLSS public abstract javax.lang.model.util.AbstractAnnotationValueVisitor6<%0 extends java.lang.Object, %1 extends java.lang.Object>
  anno 0 javax.annotation.processing.SupportedSourceVersion(javax.lang.model.SourceVersion value=RELEASE_6)
@@ -1991,9 +2049,15 @@ cons protected init()
 supr javax.lang.model.util.AbstractAnnotationValueVisitor7<{javax.lang.model.util.AbstractAnnotationValueVisitor8%0},{javax.lang.model.util.AbstractAnnotationValueVisitor8%1}>
 
 CLSS public abstract javax.lang.model.util.AbstractAnnotationValueVisitor9<%0 extends java.lang.Object, %1 extends java.lang.Object>
- anno 0 javax.annotation.processing.SupportedSourceVersion(javax.lang.model.SourceVersion value=RELEASE_13)
+ anno 0 javax.annotation.processing.SupportedSourceVersion(javax.lang.model.SourceVersion value=RELEASE_14)
 cons protected init()
 supr javax.lang.model.util.AbstractAnnotationValueVisitor8<{javax.lang.model.util.AbstractAnnotationValueVisitor9%0},{javax.lang.model.util.AbstractAnnotationValueVisitor9%1}>
+
+CLSS public abstract javax.lang.model.util.AbstractElementVisitor14<%0 extends java.lang.Object, %1 extends java.lang.Object>
+ anno 0 javax.annotation.processing.SupportedSourceVersion(javax.lang.model.SourceVersion value=RELEASE_17)
+cons protected init()
+meth public abstract {javax.lang.model.util.AbstractElementVisitor14%0} visitRecordComponent(javax.lang.model.element.RecordComponentElement,{javax.lang.model.util.AbstractElementVisitor14%1})
+supr javax.lang.model.util.AbstractElementVisitor9<{javax.lang.model.util.AbstractElementVisitor14%0},{javax.lang.model.util.AbstractElementVisitor14%1}>
 
 CLSS public abstract javax.lang.model.util.AbstractElementVisitor6<%0 extends java.lang.Object, %1 extends java.lang.Object>
  anno 0 javax.annotation.processing.SupportedSourceVersion(javax.lang.model.SourceVersion value=RELEASE_6)
@@ -2003,6 +2067,7 @@ intf javax.lang.model.element.ElementVisitor<{javax.lang.model.util.AbstractElem
 meth public final {javax.lang.model.util.AbstractElementVisitor6%0} visit(javax.lang.model.element.Element)
 meth public final {javax.lang.model.util.AbstractElementVisitor6%0} visit(javax.lang.model.element.Element,{javax.lang.model.util.AbstractElementVisitor6%1})
 meth public {javax.lang.model.util.AbstractElementVisitor6%0} visitModule(javax.lang.model.element.ModuleElement,{javax.lang.model.util.AbstractElementVisitor6%1})
+meth public {javax.lang.model.util.AbstractElementVisitor6%0} visitRecordComponent(javax.lang.model.element.RecordComponentElement,{javax.lang.model.util.AbstractElementVisitor6%1})
 meth public {javax.lang.model.util.AbstractElementVisitor6%0} visitUnknown(javax.lang.model.element.Element,{javax.lang.model.util.AbstractElementVisitor6%1})
 supr java.lang.Object
 
@@ -2018,10 +2083,15 @@ cons protected init()
 supr javax.lang.model.util.AbstractElementVisitor7<{javax.lang.model.util.AbstractElementVisitor8%0},{javax.lang.model.util.AbstractElementVisitor8%1}>
 
 CLSS public abstract javax.lang.model.util.AbstractElementVisitor9<%0 extends java.lang.Object, %1 extends java.lang.Object>
- anno 0 javax.annotation.processing.SupportedSourceVersion(javax.lang.model.SourceVersion value=RELEASE_13)
+ anno 0 javax.annotation.processing.SupportedSourceVersion(javax.lang.model.SourceVersion value=RELEASE_14)
 cons protected init()
 meth public abstract {javax.lang.model.util.AbstractElementVisitor9%0} visitModule(javax.lang.model.element.ModuleElement,{javax.lang.model.util.AbstractElementVisitor9%1})
 supr javax.lang.model.util.AbstractElementVisitor8<{javax.lang.model.util.AbstractElementVisitor9%0},{javax.lang.model.util.AbstractElementVisitor9%1}>
+
+CLSS public abstract javax.lang.model.util.AbstractTypeVisitor14<%0 extends java.lang.Object, %1 extends java.lang.Object>
+ anno 0 javax.annotation.processing.SupportedSourceVersion(javax.lang.model.SourceVersion value=RELEASE_17)
+cons protected init()
+supr javax.lang.model.util.AbstractTypeVisitor9<{javax.lang.model.util.AbstractTypeVisitor14%0},{javax.lang.model.util.AbstractTypeVisitor14%1}>
 
 CLSS public abstract javax.lang.model.util.AbstractTypeVisitor6<%0 extends java.lang.Object, %1 extends java.lang.Object>
  anno 0 javax.annotation.processing.SupportedSourceVersion(javax.lang.model.SourceVersion value=RELEASE_6)
@@ -2049,7 +2119,7 @@ meth public abstract {javax.lang.model.util.AbstractTypeVisitor8%0} visitInterse
 supr javax.lang.model.util.AbstractTypeVisitor7<{javax.lang.model.util.AbstractTypeVisitor8%0},{javax.lang.model.util.AbstractTypeVisitor8%1}>
 
 CLSS public abstract javax.lang.model.util.AbstractTypeVisitor9<%0 extends java.lang.Object, %1 extends java.lang.Object>
- anno 0 javax.annotation.processing.SupportedSourceVersion(javax.lang.model.SourceVersion value=RELEASE_13)
+ anno 0 javax.annotation.processing.SupportedSourceVersion(javax.lang.model.SourceVersion value=RELEASE_14)
 cons protected init()
 supr javax.lang.model.util.AbstractTypeVisitor8<{javax.lang.model.util.AbstractTypeVisitor9%0},{javax.lang.model.util.AbstractTypeVisitor9%1}>
 
@@ -2063,16 +2133,27 @@ meth public static java.util.List<javax.lang.model.element.ModuleElement$Require
 meth public static java.util.List<javax.lang.model.element.ModuleElement$UsesDirective> usesIn(java.lang.Iterable<? extends javax.lang.model.element.ModuleElement$Directive>)
 meth public static java.util.List<javax.lang.model.element.ModuleElement> modulesIn(java.lang.Iterable<? extends javax.lang.model.element.Element>)
 meth public static java.util.List<javax.lang.model.element.PackageElement> packagesIn(java.lang.Iterable<? extends javax.lang.model.element.Element>)
+meth public static java.util.List<javax.lang.model.element.RecordComponentElement> recordComponentsIn(java.lang.Iterable<? extends javax.lang.model.element.Element>)
 meth public static java.util.List<javax.lang.model.element.TypeElement> typesIn(java.lang.Iterable<? extends javax.lang.model.element.Element>)
 meth public static java.util.List<javax.lang.model.element.VariableElement> fieldsIn(java.lang.Iterable<? extends javax.lang.model.element.Element>)
 meth public static java.util.Set<javax.lang.model.element.ExecutableElement> constructorsIn(java.util.Set<? extends javax.lang.model.element.Element>)
 meth public static java.util.Set<javax.lang.model.element.ExecutableElement> methodsIn(java.util.Set<? extends javax.lang.model.element.Element>)
 meth public static java.util.Set<javax.lang.model.element.ModuleElement> modulesIn(java.util.Set<? extends javax.lang.model.element.Element>)
 meth public static java.util.Set<javax.lang.model.element.PackageElement> packagesIn(java.util.Set<? extends javax.lang.model.element.Element>)
+meth public static java.util.Set<javax.lang.model.element.RecordComponentElement> recordComponentsIn(java.util.Set<? extends javax.lang.model.element.Element>)
 meth public static java.util.Set<javax.lang.model.element.TypeElement> typesIn(java.util.Set<? extends javax.lang.model.element.Element>)
 meth public static java.util.Set<javax.lang.model.element.VariableElement> fieldsIn(java.util.Set<? extends javax.lang.model.element.Element>)
 supr java.lang.Object
-hfds CONSTRUCTOR_KIND,FIELD_KINDS,METHOD_KIND,MODULE_KIND,PACKAGE_KIND,TYPE_KINDS
+hfds CONSTRUCTOR_KIND,FIELD_KINDS,METHOD_KIND,MODULE_KIND,PACKAGE_KIND,RECORD_COMPONENT_KIND,TYPE_KINDS
+
+CLSS public javax.lang.model.util.ElementKindVisitor14<%0 extends java.lang.Object, %1 extends java.lang.Object>
+ anno 0 javax.annotation.processing.SupportedSourceVersion(javax.lang.model.SourceVersion value=RELEASE_17)
+cons protected init()
+cons protected init({javax.lang.model.util.ElementKindVisitor14%0})
+meth public {javax.lang.model.util.ElementKindVisitor14%0} visitRecordComponent(javax.lang.model.element.RecordComponentElement,{javax.lang.model.util.ElementKindVisitor14%1})
+meth public {javax.lang.model.util.ElementKindVisitor14%0} visitTypeAsRecord(javax.lang.model.element.TypeElement,{javax.lang.model.util.ElementKindVisitor14%1})
+meth public {javax.lang.model.util.ElementKindVisitor14%0} visitVariableAsBindingVariable(javax.lang.model.element.VariableElement,{javax.lang.model.util.ElementKindVisitor14%1})
+supr javax.lang.model.util.ElementKindVisitor9<{javax.lang.model.util.ElementKindVisitor14%0},{javax.lang.model.util.ElementKindVisitor14%1}>
 
 CLSS public javax.lang.model.util.ElementKindVisitor6<%0 extends java.lang.Object, %1 extends java.lang.Object>
  anno 0 javax.annotation.processing.SupportedSourceVersion(javax.lang.model.SourceVersion value=RELEASE_6)
@@ -2091,8 +2172,10 @@ meth public {javax.lang.model.util.ElementKindVisitor6%0} visitTypeAsAnnotationT
 meth public {javax.lang.model.util.ElementKindVisitor6%0} visitTypeAsClass(javax.lang.model.element.TypeElement,{javax.lang.model.util.ElementKindVisitor6%1})
 meth public {javax.lang.model.util.ElementKindVisitor6%0} visitTypeAsEnum(javax.lang.model.element.TypeElement,{javax.lang.model.util.ElementKindVisitor6%1})
 meth public {javax.lang.model.util.ElementKindVisitor6%0} visitTypeAsInterface(javax.lang.model.element.TypeElement,{javax.lang.model.util.ElementKindVisitor6%1})
+meth public {javax.lang.model.util.ElementKindVisitor6%0} visitTypeAsRecord(javax.lang.model.element.TypeElement,{javax.lang.model.util.ElementKindVisitor6%1})
 meth public {javax.lang.model.util.ElementKindVisitor6%0} visitTypeParameter(javax.lang.model.element.TypeParameterElement,{javax.lang.model.util.ElementKindVisitor6%1})
 meth public {javax.lang.model.util.ElementKindVisitor6%0} visitVariable(javax.lang.model.element.VariableElement,{javax.lang.model.util.ElementKindVisitor6%1})
+meth public {javax.lang.model.util.ElementKindVisitor6%0} visitVariableAsBindingVariable(javax.lang.model.element.VariableElement,{javax.lang.model.util.ElementKindVisitor6%1})
 meth public {javax.lang.model.util.ElementKindVisitor6%0} visitVariableAsEnumConstant(javax.lang.model.element.VariableElement,{javax.lang.model.util.ElementKindVisitor6%1})
 meth public {javax.lang.model.util.ElementKindVisitor6%0} visitVariableAsExceptionParameter(javax.lang.model.element.VariableElement,{javax.lang.model.util.ElementKindVisitor6%1})
 meth public {javax.lang.model.util.ElementKindVisitor6%0} visitVariableAsField(javax.lang.model.element.VariableElement,{javax.lang.model.util.ElementKindVisitor6%1})
@@ -2117,11 +2200,20 @@ cons protected init({javax.lang.model.util.ElementKindVisitor8%0})
 supr javax.lang.model.util.ElementKindVisitor7<{javax.lang.model.util.ElementKindVisitor8%0},{javax.lang.model.util.ElementKindVisitor8%1}>
 
 CLSS public javax.lang.model.util.ElementKindVisitor9<%0 extends java.lang.Object, %1 extends java.lang.Object>
- anno 0 javax.annotation.processing.SupportedSourceVersion(javax.lang.model.SourceVersion value=RELEASE_13)
+ anno 0 javax.annotation.processing.SupportedSourceVersion(javax.lang.model.SourceVersion value=RELEASE_14)
 cons protected init()
 cons protected init({javax.lang.model.util.ElementKindVisitor9%0})
 meth public {javax.lang.model.util.ElementKindVisitor9%0} visitModule(javax.lang.model.element.ModuleElement,{javax.lang.model.util.ElementKindVisitor9%1})
 supr javax.lang.model.util.ElementKindVisitor8<{javax.lang.model.util.ElementKindVisitor9%0},{javax.lang.model.util.ElementKindVisitor9%1}>
+
+CLSS public javax.lang.model.util.ElementScanner14<%0 extends java.lang.Object, %1 extends java.lang.Object>
+ anno 0 javax.annotation.processing.SupportedSourceVersion(javax.lang.model.SourceVersion value=RELEASE_17)
+cons protected init()
+cons protected init({javax.lang.model.util.ElementScanner14%0})
+meth public {javax.lang.model.util.ElementScanner14%0} visitExecutable(javax.lang.model.element.ExecutableElement,{javax.lang.model.util.ElementScanner14%1})
+meth public {javax.lang.model.util.ElementScanner14%0} visitRecordComponent(javax.lang.model.element.RecordComponentElement,{javax.lang.model.util.ElementScanner14%1})
+meth public {javax.lang.model.util.ElementScanner14%0} visitType(javax.lang.model.element.TypeElement,{javax.lang.model.util.ElementScanner14%1})
+supr javax.lang.model.util.ElementScanner9<{javax.lang.model.util.ElementScanner14%0},{javax.lang.model.util.ElementScanner14%1}>
 
 CLSS public javax.lang.model.util.ElementScanner6<%0 extends java.lang.Object, %1 extends java.lang.Object>
  anno 0 javax.annotation.processing.SupportedSourceVersion(javax.lang.model.SourceVersion value=RELEASE_6)
@@ -2156,7 +2248,7 @@ cons protected init({javax.lang.model.util.ElementScanner8%0})
 supr javax.lang.model.util.ElementScanner7<{javax.lang.model.util.ElementScanner8%0},{javax.lang.model.util.ElementScanner8%1}>
 
 CLSS public javax.lang.model.util.ElementScanner9<%0 extends java.lang.Object, %1 extends java.lang.Object>
- anno 0 javax.annotation.processing.SupportedSourceVersion(javax.lang.model.SourceVersion value=RELEASE_13)
+ anno 0 javax.annotation.processing.SupportedSourceVersion(javax.lang.model.SourceVersion value=RELEASE_14)
 cons protected init()
 cons protected init({javax.lang.model.util.ElementScanner9%0})
 meth public {javax.lang.model.util.ElementScanner9%0} visitModule(javax.lang.model.element.ModuleElement,{javax.lang.model.util.ElementScanner9%1})
@@ -2179,6 +2271,7 @@ meth public abstract javax.lang.model.element.Name getName(java.lang.CharSequenc
 meth public abstract javax.lang.model.element.PackageElement getPackageElement(java.lang.CharSequence)
 meth public abstract javax.lang.model.element.PackageElement getPackageOf(javax.lang.model.element.Element)
 meth public abstract javax.lang.model.element.TypeElement getTypeElement(java.lang.CharSequence)
+meth public boolean isAutomaticModule(javax.lang.model.element.ModuleElement)
 meth public boolean isBridge(javax.lang.model.element.ExecutableElement)
 meth public java.util.Set<? extends javax.lang.model.element.ModuleElement> getAllModuleElements()
 meth public java.util.Set<? extends javax.lang.model.element.PackageElement> getAllPackageElements(java.lang.CharSequence)
@@ -2186,6 +2279,7 @@ meth public java.util.Set<? extends javax.lang.model.element.TypeElement> getAll
 meth public javax.lang.model.element.ModuleElement getModuleElement(java.lang.CharSequence)
 meth public javax.lang.model.element.ModuleElement getModuleOf(javax.lang.model.element.Element)
 meth public javax.lang.model.element.PackageElement getPackageElement(javax.lang.model.element.ModuleElement,java.lang.CharSequence)
+meth public javax.lang.model.element.RecordComponentElement recordComponentFor(javax.lang.model.element.ExecutableElement)
 meth public javax.lang.model.element.TypeElement getTypeElement(javax.lang.model.element.ModuleElement,java.lang.CharSequence)
 meth public javax.lang.model.util.Elements$Origin getOrigin(javax.lang.model.AnnotatedConstruct,javax.lang.model.element.AnnotationMirror)
 meth public javax.lang.model.util.Elements$Origin getOrigin(javax.lang.model.element.Element)
@@ -2200,6 +2294,12 @@ meth public boolean isDeclared()
 meth public static javax.lang.model.util.Elements$Origin valueOf(java.lang.String)
 meth public static javax.lang.model.util.Elements$Origin[] values()
 supr java.lang.Enum<javax.lang.model.util.Elements$Origin>
+
+CLSS public javax.lang.model.util.SimpleAnnotationValueVisitor14<%0 extends java.lang.Object, %1 extends java.lang.Object>
+ anno 0 javax.annotation.processing.SupportedSourceVersion(javax.lang.model.SourceVersion value=RELEASE_17)
+cons protected init()
+cons protected init({javax.lang.model.util.SimpleAnnotationValueVisitor14%0})
+supr javax.lang.model.util.SimpleAnnotationValueVisitor9<{javax.lang.model.util.SimpleAnnotationValueVisitor14%0},{javax.lang.model.util.SimpleAnnotationValueVisitor14%1}>
 
 CLSS public javax.lang.model.util.SimpleAnnotationValueVisitor6<%0 extends java.lang.Object, %1 extends java.lang.Object>
  anno 0 javax.annotation.processing.SupportedSourceVersion(javax.lang.model.SourceVersion value=RELEASE_6)
@@ -2239,10 +2339,17 @@ cons protected init({javax.lang.model.util.SimpleAnnotationValueVisitor8%0})
 supr javax.lang.model.util.SimpleAnnotationValueVisitor7<{javax.lang.model.util.SimpleAnnotationValueVisitor8%0},{javax.lang.model.util.SimpleAnnotationValueVisitor8%1}>
 
 CLSS public javax.lang.model.util.SimpleAnnotationValueVisitor9<%0 extends java.lang.Object, %1 extends java.lang.Object>
- anno 0 javax.annotation.processing.SupportedSourceVersion(javax.lang.model.SourceVersion value=RELEASE_13)
+ anno 0 javax.annotation.processing.SupportedSourceVersion(javax.lang.model.SourceVersion value=RELEASE_14)
 cons protected init()
 cons protected init({javax.lang.model.util.SimpleAnnotationValueVisitor9%0})
 supr javax.lang.model.util.SimpleAnnotationValueVisitor8<{javax.lang.model.util.SimpleAnnotationValueVisitor9%0},{javax.lang.model.util.SimpleAnnotationValueVisitor9%1}>
+
+CLSS public javax.lang.model.util.SimpleElementVisitor14<%0 extends java.lang.Object, %1 extends java.lang.Object>
+ anno 0 javax.annotation.processing.SupportedSourceVersion(javax.lang.model.SourceVersion value=RELEASE_17)
+cons protected init()
+cons protected init({javax.lang.model.util.SimpleElementVisitor14%0})
+meth public {javax.lang.model.util.SimpleElementVisitor14%0} visitRecordComponent(javax.lang.model.element.RecordComponentElement,{javax.lang.model.util.SimpleElementVisitor14%1})
+supr javax.lang.model.util.SimpleElementVisitor9<{javax.lang.model.util.SimpleElementVisitor14%0},{javax.lang.model.util.SimpleElementVisitor14%1}>
 
 CLSS public javax.lang.model.util.SimpleElementVisitor6<%0 extends java.lang.Object, %1 extends java.lang.Object>
  anno 0 javax.annotation.processing.SupportedSourceVersion(javax.lang.model.SourceVersion value=RELEASE_6)
@@ -2275,11 +2382,17 @@ cons protected init({javax.lang.model.util.SimpleElementVisitor8%0})
 supr javax.lang.model.util.SimpleElementVisitor7<{javax.lang.model.util.SimpleElementVisitor8%0},{javax.lang.model.util.SimpleElementVisitor8%1}>
 
 CLSS public javax.lang.model.util.SimpleElementVisitor9<%0 extends java.lang.Object, %1 extends java.lang.Object>
- anno 0 javax.annotation.processing.SupportedSourceVersion(javax.lang.model.SourceVersion value=RELEASE_13)
+ anno 0 javax.annotation.processing.SupportedSourceVersion(javax.lang.model.SourceVersion value=RELEASE_14)
 cons protected init()
 cons protected init({javax.lang.model.util.SimpleElementVisitor9%0})
 meth public {javax.lang.model.util.SimpleElementVisitor9%0} visitModule(javax.lang.model.element.ModuleElement,{javax.lang.model.util.SimpleElementVisitor9%1})
 supr javax.lang.model.util.SimpleElementVisitor8<{javax.lang.model.util.SimpleElementVisitor9%0},{javax.lang.model.util.SimpleElementVisitor9%1}>
+
+CLSS public javax.lang.model.util.SimpleTypeVisitor14<%0 extends java.lang.Object, %1 extends java.lang.Object>
+ anno 0 javax.annotation.processing.SupportedSourceVersion(javax.lang.model.SourceVersion value=RELEASE_17)
+cons protected init()
+cons protected init({javax.lang.model.util.SimpleTypeVisitor14%0})
+supr javax.lang.model.util.SimpleTypeVisitor9<{javax.lang.model.util.SimpleTypeVisitor14%0},{javax.lang.model.util.SimpleTypeVisitor14%1}>
 
 CLSS public javax.lang.model.util.SimpleTypeVisitor6<%0 extends java.lang.Object, %1 extends java.lang.Object>
  anno 0 javax.annotation.processing.SupportedSourceVersion(javax.lang.model.SourceVersion value=RELEASE_6)
@@ -2317,10 +2430,16 @@ meth public {javax.lang.model.util.SimpleTypeVisitor8%0} visitIntersection(javax
 supr javax.lang.model.util.SimpleTypeVisitor7<{javax.lang.model.util.SimpleTypeVisitor8%0},{javax.lang.model.util.SimpleTypeVisitor8%1}>
 
 CLSS public javax.lang.model.util.SimpleTypeVisitor9<%0 extends java.lang.Object, %1 extends java.lang.Object>
- anno 0 javax.annotation.processing.SupportedSourceVersion(javax.lang.model.SourceVersion value=RELEASE_13)
+ anno 0 javax.annotation.processing.SupportedSourceVersion(javax.lang.model.SourceVersion value=RELEASE_14)
 cons protected init()
 cons protected init({javax.lang.model.util.SimpleTypeVisitor9%0})
 supr javax.lang.model.util.SimpleTypeVisitor8<{javax.lang.model.util.SimpleTypeVisitor9%0},{javax.lang.model.util.SimpleTypeVisitor9%1}>
+
+CLSS public javax.lang.model.util.TypeKindVisitor14<%0 extends java.lang.Object, %1 extends java.lang.Object>
+ anno 0 javax.annotation.processing.SupportedSourceVersion(javax.lang.model.SourceVersion value=RELEASE_17)
+cons protected init()
+cons protected init({javax.lang.model.util.TypeKindVisitor14%0})
+supr javax.lang.model.util.TypeKindVisitor9<{javax.lang.model.util.TypeKindVisitor14%0},{javax.lang.model.util.TypeKindVisitor14%1}>
 
 CLSS public javax.lang.model.util.TypeKindVisitor6<%0 extends java.lang.Object, %1 extends java.lang.Object>
  anno 0 javax.annotation.processing.SupportedSourceVersion(javax.lang.model.SourceVersion value=RELEASE_6)
@@ -2361,7 +2480,7 @@ meth public {javax.lang.model.util.TypeKindVisitor8%0} visitIntersection(javax.l
 supr javax.lang.model.util.TypeKindVisitor7<{javax.lang.model.util.TypeKindVisitor8%0},{javax.lang.model.util.TypeKindVisitor8%1}>
 
 CLSS public javax.lang.model.util.TypeKindVisitor9<%0 extends java.lang.Object, %1 extends java.lang.Object>
- anno 0 javax.annotation.processing.SupportedSourceVersion(javax.lang.model.SourceVersion value=RELEASE_13)
+ anno 0 javax.annotation.processing.SupportedSourceVersion(javax.lang.model.SourceVersion value=RELEASE_14)
 cons protected init()
 cons protected init({javax.lang.model.util.TypeKindVisitor9%0})
 meth public {javax.lang.model.util.TypeKindVisitor9%0} visitNoTypeAsModule(javax.lang.model.type.NoType,{javax.lang.model.util.TypeKindVisitor9%1})
@@ -2387,8 +2506,6 @@ meth public abstract javax.lang.model.type.TypeMirror asMemberOf(javax.lang.mode
 meth public abstract javax.lang.model.type.TypeMirror capture(javax.lang.model.type.TypeMirror)
 meth public abstract javax.lang.model.type.TypeMirror erasure(javax.lang.model.type.TypeMirror)
 meth public abstract javax.lang.model.type.WildcardType getWildcardType(javax.lang.model.type.TypeMirror,javax.lang.model.type.TypeMirror)
-
-CLSS abstract interface javax.lang.model.util.package-info
 
 CLSS public abstract interface javax.tools.Diagnostic<%0 extends java.lang.Object>
 fld public final static long NOPOS = -1
@@ -2602,7 +2719,6 @@ supr java.lang.Object
 
 CLSS public abstract interface javax.tools.StandardJavaFileManager
 innr public abstract interface static PathFactory
-innr public static Util
 intf javax.tools.JavaFileManager
 meth public !varargs java.lang.Iterable<? extends javax.tools.JavaFileObject> getJavaFileObjects(java.nio.file.Path[])
 meth public abstract !varargs java.lang.Iterable<? extends javax.tools.JavaFileObject> getJavaFileObjects(java.io.File[])
@@ -2624,11 +2740,6 @@ meth public void setPathFactory(javax.tools.StandardJavaFileManager$PathFactory)
 CLSS public abstract interface static javax.tools.StandardJavaFileManager$PathFactory
  outer javax.tools.StandardJavaFileManager
 meth public abstract !varargs java.nio.file.Path getPath(java.lang.String,java.lang.String[])
-
-CLSS public static javax.tools.StandardJavaFileManager$Util
- outer javax.tools.StandardJavaFileManager
-cons public init()
-supr java.lang.Object
 
 CLSS public final !enum javax.tools.StandardLocation
 fld public final static javax.tools.StandardLocation ANNOTATION_PROCESSOR_MODULE_PATH
@@ -2660,13 +2771,10 @@ meth public abstract java.util.Set<javax.lang.model.SourceVersion> getSourceVers
 meth public java.lang.String name()
 
 CLSS public javax.tools.ToolProvider
-cons public init()
 meth public static java.lang.ClassLoader getSystemToolClassLoader()
  anno 0 java.lang.Deprecated()
 meth public static javax.tools.DocumentationTool getSystemDocumentationTool()
 meth public static javax.tools.JavaCompiler getSystemJavaCompiler()
 supr java.lang.Object
 hfds systemDocumentationToolModule,systemDocumentationToolName,systemJavaCompilerModule,systemJavaCompilerName
-
-CLSS abstract interface javax.tools.package-info
 

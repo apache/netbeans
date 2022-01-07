@@ -563,7 +563,7 @@ public class Analyzer {
  */
 
                 // Set the line limit document property
-// [PENDING]                doc.putProperty(BaseDocument.LINE_LIMIT_PROP, new Integer(maxLineLength));
+// [PENDING]                doc.putProperty(BaseDocument.LINE_LIMIT_PROP, Integer.valueOf(maxLineLength));
 
         }
     }

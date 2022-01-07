@@ -61,7 +61,7 @@ public class ThreadsCollectorImpl extends ThreadsCollector {
     @Override
     public List<JPDAThread> getAllThreads() {
         synchronized (threads) {
-            return Collections.unmodifiableList(new ArrayList(threads));
+            return Collections.unmodifiableList(new ArrayList<JPDAThread>(threads));
         }
     }
 

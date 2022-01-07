@@ -10,8 +10,13 @@ CLASS      TestClass                       [PUBLIC]   Trest
 KEYWORD    array                                      null
 KEYWORD    bool                                       null
 KEYWORD    callable                                   null
+KEYWORD    false                                      null
 KEYWORD    float                                      null
 KEYWORD    int                                        null
 KEYWORD    iterable                                   null
+KEYWORD    mixed                                      null
+KEYWORD    null                                       null
 KEYWORD    object                                     null
+KEYWORD    parent                                     null
+KEYWORD    self                                       null
 KEYWORD    string                                     null

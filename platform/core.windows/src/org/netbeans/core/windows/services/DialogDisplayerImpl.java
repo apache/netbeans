@@ -154,6 +154,9 @@ public class DialogDisplayerImpl extends DialogDisplayer {
      * @return the option that has been choosen in the notification.
      */
     private Object notify (final NotifyDescriptor descriptor, final boolean noParent) {
+        if (GraphicsEnvironment.isHeadless()) {
+            return NotifyDescriptor.CLOSED_OPTION;
+        }
         class AWTQuery implements Runnable {
             public Object result;
             public boolean running;

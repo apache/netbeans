@@ -91,7 +91,7 @@ public class ProgressUI implements ProgressListener {
             progressComponent = ProgressHandleFactory.createProgressComponent(handle);
         }
         if (delay != null) {
-            handle.setInitialDelay(delay.intValue());
+            handle.setInitialDelay(delay);
         }        
         handle.start();
     }

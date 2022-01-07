@@ -60,8 +60,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.WeakHashMap;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.security.auth.Refreshable;
@@ -107,10 +110,12 @@ import org.netbeans.modules.debugger.jpda.jdi.IllegalThreadStateExceptionWrapper
 import org.netbeans.modules.debugger.jpda.jdi.IntegerValueWrapper;
 import org.netbeans.modules.debugger.jpda.jdi.InternalExceptionWrapper;
 import org.netbeans.modules.debugger.jpda.jdi.InvalidStackFrameExceptionWrapper;
+import org.netbeans.modules.debugger.jpda.jdi.LocalVariableWrapper;
 import org.netbeans.modules.debugger.jpda.jdi.MirrorWrapper;
 import org.netbeans.modules.debugger.jpda.jdi.ObjectCollectedExceptionWrapper;
 import org.netbeans.modules.debugger.jpda.jdi.StackFrameWrapper;
 import org.netbeans.modules.debugger.jpda.jdi.ThreadReferenceWrapper;
+import org.netbeans.modules.debugger.jpda.jdi.TypeComponentWrapper;
 import org.netbeans.modules.debugger.jpda.jdi.VMDisconnectedExceptionWrapper;
 import org.netbeans.modules.debugger.jpda.jdi.ValueWrapper;
 import org.netbeans.modules.debugger.jpda.jdi.VirtualMachineWrapper;
@@ -173,7 +178,6 @@ public class JPDADebuggerImpl extends JPDADebugger {
     private AbstractDICookie            attachingCookie;
     private JavaEngineProvider          javaEngineProvider;
     private Set<String>                 languages;
-    private String                      lastStratumn;
     private ContextProvider             lookupProvider;
     private ObjectTranslation           threadsTranslation;
     private ObjectTranslation           localsTranslation;
@@ -185,6 +189,8 @@ public class JPDADebuggerImpl extends JPDADebugger {
     private final Map<Long, String>     markedObjects = new LinkedHashMap<Long, String>();
     private final Map<String, ObjectVariable> markedObjectLabels = new LinkedHashMap<String, ObjectVariable>();
     private final Map<ClassType, List>  allInterfacesMap = new WeakHashMap<ClassType, List>();
+    private static final int            RP_THROUGHPUT = 10;
+    private final RequestProcessor      rpCreateThreads = new RequestProcessor(JPDADebuggerImpl.class.getName()+"_newJPDAThreads", RP_THROUGHPUT); // NOI18N
 
     private StackFrame      altCSF = null;  //PATCH 48174
 
@@ -885,12 +891,16 @@ public class JPDADebuggerImpl extends JPDADebugger {
                 }
             }
         }
-        if (csf == null) {
-            throw new InvalidExpressionException
-                (NbBundle.getMessage(JPDADebuggerImpl.class, "MSG_NoCurrentContextStackFrame"));
+        JPDAThread frameThread;
+        if (csf != null) {
+            frameThread = csf.getThread();
+        } else {
+            frameThread = getCurrentThread();
         }
-
-        JPDAThread frameThread = csf.getThread();
+        if (frameThread == null) {
+            throw new InvalidExpressionException
+                (NbBundle.getMessage(JPDADebuggerImpl.class, "MSG_NoCurrentContext"));
+        }
         JPDAThreadImpl frameThreadImpl = (JPDAThreadImpl) frameThread;
         //Object pendingAction = frameThreadImpl.getPendingAction();
         //if (pendingAction != null) { For the case that evaluation should be blocked by pending action
@@ -919,8 +929,8 @@ public class JPDADebuggerImpl extends JPDADebugger {
             Evaluator.Result result;
             final JPDAThreadImpl[] resumedThread = new JPDAThreadImpl[] { null };
             try {
-                StackFrame sf = csf.getStackFrame();
-                int stackDepth = csf.getFrameDepth();
+                StackFrame sf = csf != null ? csf.getStackFrame() : null;
+                int stackDepth = csf != null ? csf.getFrameDepth() : -1;
                 final ThreadReference tr = frameThreadImpl.getThreadReference();
                 Runnable methodToBeInvokedNotifier = new Runnable() {
                         @Override
@@ -941,16 +951,21 @@ public class JPDADebuggerImpl extends JPDADebugger {
                             }
                         }
                     };
-                Lookup context;
-                if (var != null) {
-                    if (v != null) {
-                        context = Lookups.fixed(csf, var, sf, stackDepth, v, methodToBeInvokedNotifier);
-                    } else {
-                        context = Lookups.fixed(csf, var, sf, stackDepth, methodToBeInvokedNotifier);
-                    }
-                } else {
-                    context = Lookups.fixed(csf, sf, stackDepth, methodToBeInvokedNotifier);
+                List<Object> lookupVars = new ArrayList<>();
+                lookupVars.add(frameThread);
+                lookupVars.add(stackDepth);
+                if (csf != null) {
+                    lookupVars.add(csf);
+                    lookupVars.add(sf);
                 }
+                if (var != null) {
+                    lookupVars.add(var);
+                }
+                if (v != null) {
+                    lookupVars.add(v);
+                }
+                lookupVars.add(methodToBeInvokedNotifier);
+                Lookup context = Lookups.fixed(lookupVars.toArray());
                 result = expression.evaluate(e, new Evaluator.Context(context));
             } catch (InternalExceptionWrapper ex) {
                 return null;
@@ -1155,11 +1170,21 @@ public class JPDADebuggerImpl extends JPDADebugger {
         }
     }
 
+    private Method stringLengthMethod;
+    private Method stringSubstringMethod;
+    private final Object stringMethodsLock = new Object();
+
     private Value cutLength(StringReference sr, int maxLength, ThreadReference tr) throws InvalidExpressionException {
         try {
             Method stringLengthMethod;
-                stringLengthMethod = ClassTypeWrapper.concreteMethodByName(
-                        (ClassType) ValueWrapper.type (sr), "length", "()I"); // NOI18N
+            synchronized (stringMethodsLock) {
+                stringLengthMethod = this.stringLengthMethod;
+                if (stringLengthMethod == null) {
+                    stringLengthMethod = ClassTypeWrapper.concreteMethodByName(
+                            (ClassType) ValueWrapper.type (sr), "length", "()I"); // NOI18N
+                    this.stringLengthMethod = stringLengthMethod;
+                }
+            }
             List<Value> emptyArgs = Collections.emptyList();
             IntegerValue lengthValue = (IntegerValue) org.netbeans.modules.debugger.jpda.expr.TreeEvaluator.
                 invokeVirtual (
@@ -1170,8 +1195,15 @@ public class JPDADebuggerImpl extends JPDADebugger {
                     this
                 );
                 if (IntegerValueWrapper.value(lengthValue) > maxLength) {
-                    Method subStringMethod = ClassTypeWrapper.concreteMethodByName(
-                            (ClassType) ValueWrapper.type (sr), "substring", "(II)Ljava/lang/String;");  // NOI18N
+                    Method subStringMethod;
+                    synchronized (stringMethodsLock) {
+                        subStringMethod = this.stringSubstringMethod;
+                        if (subStringMethod == null) {
+                            subStringMethod = ClassTypeWrapper.concreteMethodByName(
+                                (ClassType) ValueWrapper.type (sr), "substring", "(II)Ljava/lang/String;");  // NOI18N
+                            this.stringSubstringMethod = subStringMethod;
+                        }
+                    }
                     if (subStringMethod != null) {
                         sr = (StringReference) org.netbeans.modules.debugger.jpda.expr.TreeEvaluator.
                             invokeVirtual (
@@ -1193,34 +1225,25 @@ public class JPDADebuggerImpl extends JPDADebugger {
     }
 
     public static String getGenericSignature (TypeComponent component) {
-        if (tcGenericSignatureMethod == null) {
-            return null;
-        }
         try {
-            return (String) tcGenericSignatureMethod.invoke
-                (component, new Object[0]);
-        } catch (IllegalAccessException e) {
-            Exceptions.printStackTrace(e);
-            return null;    // should not happen
-        } catch (InvocationTargetException e) {
-            Exceptions.printStackTrace(e);
-            return null;    // should not happen
+            return TypeComponentWrapper.genericSignature(component);
+        } catch (InternalExceptionWrapper ex) {
+            Exceptions.printStackTrace(ex);
+        } catch (VMDisconnectedExceptionWrapper ex) {
+            // Disconnected
         }
+        return null;
     }
 
     public static String getGenericSignature (LocalVariable component) {
-        if (lvGenericSignatureMethod == null) {
-            return null;
-        }
         try {
-            return (String) lvGenericSignatureMethod.invoke(component, new Object[0]);
-        } catch (IllegalAccessException e) {
-            Exceptions.printStackTrace(e);
-            return null;    // should not happen
-        } catch (InvocationTargetException e) {
-            Exceptions.printStackTrace(e);
-            return null;    // should not happen
+            return LocalVariableWrapper.genericSignature(component);
+        } catch (InternalExceptionWrapper ex) {
+            Exceptions.printStackTrace(ex);
+        } catch (VMDisconnectedExceptionWrapper ex) {
+            // Disconnected
         }
+        return null;
     }
 
     public VirtualMachine getVirtualMachine () {
@@ -1262,7 +1285,6 @@ public class JPDADebuggerImpl extends JPDADebugger {
             canBeModified = null; // Reset the can be modified flag
         }
 
-        initGenericsSupport ();
         EditorContextBridge.getContext().createTimeStamp(this);
 
 
@@ -1846,20 +1868,21 @@ public class JPDADebuggerImpl extends JPDADebugger {
     }
 
     public void notifyToBeResumedAll() {
-        Collection threads = threadsTranslation.getTranslated();
-        for (Iterator it = threads.iterator(); it.hasNext(); ) {
-            Object threadOrGroup = it.next();
-            if (threadOrGroup instanceof JPDAThreadImpl) {
-                int status = ((JPDAThreadImpl) threadOrGroup).getState();
+        List<? extends JPDAThreadImpl> threads = threadsTranslation.getTranslated((o) -> (o instanceof JPDAThreadImpl) ? (JPDAThreadImpl) o : null);
+        int n = threads.size();
+        if (n > 0) {
+            processInParallel(n, (i) -> {
+                JPDAThreadImpl thread = threads.get(i);
+                int status = thread.getState();
                 boolean invalid = (status == JPDAThread.STATE_NOT_STARTED ||
                                    status == JPDAThread.STATE_UNKNOWN ||
                                    status == JPDAThread.STATE_ZOMBIE);
                 if (!invalid) {
-                    ((JPDAThreadImpl) threadOrGroup).notifyToBeResumed();
+                    thread.notifyToBeResumed();
                 } else if (status == JPDAThread.STATE_UNKNOWN || status == JPDAThread.STATE_ZOMBIE) {
-                    threadsTranslation.remove(((JPDAThreadImpl) threadOrGroup).getThreadReference());
+                    threadsTranslation.remove(thread.getThreadReference());
                 }
-            }
+            });
         }
     }
 
@@ -1868,20 +1891,17 @@ public class JPDADebuggerImpl extends JPDADebugger {
     }
     
     public void notifyToBeResumedAllNoFire(Set<ThreadReference> ignoredThreads) {
-        Collection threads = threadsTranslation.getTranslated();
-        for (Iterator it = threads.iterator(); it.hasNext(); ) {
-            Object threadOrGroup = it.next();
-            if (threadOrGroup instanceof JPDAThreadImpl &&
-                    (ignoredThreads == null || !ignoredThreads.contains(threadOrGroup))) {
-                int status = ((JPDAThreadImpl) threadOrGroup).getState();
-                boolean invalid = (status == JPDAThread.STATE_NOT_STARTED ||
-                                   status == JPDAThread.STATE_UNKNOWN ||
-                                   status == JPDAThread.STATE_ZOMBIE);
-                if (!invalid) {
-                    ((JPDAThreadImpl) threadOrGroup).notifyToBeResumedNoFire();
-                } else if (status == JPDAThread.STATE_UNKNOWN || status == JPDAThread.STATE_ZOMBIE) {
-                    threadsTranslation.remove(((JPDAThreadImpl) threadOrGroup).getThreadReference());
-                }
+        List<? extends JPDAThreadImpl> threads = threadsTranslation.getTranslated((o) ->
+                (o instanceof JPDAThreadImpl && (ignoredThreads == null || !ignoredThreads.contains(o))) ? (JPDAThreadImpl) o : null);
+        for (JPDAThreadImpl thread : threads) {
+            int status = thread.getState();
+            boolean invalid = (status == JPDAThread.STATE_NOT_STARTED ||
+                               status == JPDAThread.STATE_UNKNOWN ||
+                               status == JPDAThread.STATE_ZOMBIE);
+            if (!invalid) {
+                thread.notifyToBeResumedNoFire();
+            } else if (status == JPDAThread.STATE_UNKNOWN || status == JPDAThread.STATE_ZOMBIE) {
+                threadsTranslation.remove(thread.getThreadReference());
             }
         }
     }
@@ -1908,16 +1928,24 @@ public class JPDADebuggerImpl extends JPDADebugger {
                     //  Re-fire the changes
                     @Override
                     public void propertyChange(PropertyChangeEvent evt) {
-                        String propertyName = evt.getPropertyName();
-                        if (ThreadsCache.PROP_THREAD_STARTED.equals(propertyName)) {
-                            firePropertyChange(PROP_THREAD_STARTED, null, getThread((ThreadReference) evt.getNewValue()));
-                        }
-                        if (ThreadsCache.PROP_THREAD_DIED.equals(propertyName)) {
-                            firePropertyChange(PROP_THREAD_DIED, getThread((ThreadReference) evt.getOldValue()), null);
-                        }
-                        if (ThreadsCache.PROP_GROUP_ADDED.equals(propertyName)) {
-                            firePropertyChange(PROP_THREAD_GROUP_ADDED, null, getThreadGroup((ThreadGroupReference) evt.getNewValue()));
-                        }
+                        rpCreateThreads.post(() -> {
+                            String propertyName = evt.getPropertyName();
+                            if (ThreadsCache.PROP_THREAD_STARTED.equals(propertyName)) {
+                                JPDAThreadImpl thread = getThread((ThreadReference) evt.getNewValue());
+                                if (!thread.getName().contains(ThreadsCache.THREAD_NAME_FILTER_PATTERN)) {
+                                    firePropertyChange(PROP_THREAD_STARTED, null, thread);
+                                }
+                            }
+                            if (ThreadsCache.PROP_THREAD_DIED.equals(propertyName)) {
+                                JPDAThreadImpl thread = getThread((ThreadReference) evt.getOldValue());
+                                if (!thread.getName().contains(ThreadsCache.THREAD_NAME_FILTER_PATTERN)) {
+                                    firePropertyChange(PROP_THREAD_DIED, thread, null);
+                                }
+                            }
+                            if (ThreadsCache.PROP_GROUP_ADDED.equals(propertyName)) {
+                                firePropertyChange(PROP_THREAD_GROUP_ADDED, null, getThreadGroup((ThreadGroupReference) evt.getNewValue()));
+                            }
+                        });
                     }
                 });
             }
@@ -1953,11 +1981,59 @@ public class JPDADebuggerImpl extends JPDADebugger {
             }
         }
         int n = threadList.size();
-        List<JPDAThread> threads = new ArrayList<JPDAThread>(n);
-        for (int i = 0; i < n; i++) {
-            threads.add(getThread(threadList.get(i)));
+        final List<ThreadReference> tl = threadList;
+
+        // Create threads in parallel.
+        // Constructor of JPDAThreadImpl calls getName() and getStatus(), which take time on slow connection during remote debugging.
+        JPDAThread[] threads = new JPDAThread[n];
+        if (n > 0) {
+            processInParallel(n, (i) -> {
+                JPDAThreadImpl thread = getThread(tl.get(i));
+                if (!thread.getName().contains(ThreadsCache.THREAD_NAME_FILTER_PATTERN)) {
+                    threads[i] = thread;
+                } else {
+                    threads[i] = null;
+                }
+            });
+            List<JPDAThread> threadsFiltered = new ArrayList<>(n);
+            for (JPDAThread t : threads) {
+                if (t != null) {
+                    threadsFiltered.add(t);
+                }
+            }
+            return Collections.unmodifiableList(threadsFiltered);
+        } else {
+            return Collections.emptyList();
         }
-        return Collections.unmodifiableList(threads);
+    }
+
+    private void processInParallel(int n, Consumer<Integer> task) {
+        // Run by chunks:
+        int chunks = Math.min(RP_THROUGHPUT, n);
+        int chn = n / chunks + ((n % chunks) > 0 ? 1 : 0);
+        class TranslateThreads implements Runnable {
+
+            private final int ch;
+
+            private TranslateThreads(int ch) {
+                this.ch = ch;
+            }
+
+            @Override
+            public void run() {
+                int i0 = ch*chn;
+                for (int i = i0; i < i0 + chn && i < n; i++) {
+                    task.accept(i);
+                }
+            }
+        }
+        RequestProcessor.Task[] tasks = new RequestProcessor.Task[chunks];
+        for (int ch = 0; ch < chunks; ch++) {
+            tasks[ch] = rpCreateThreads.post(new TranslateThreads(ch));
+        }
+        for (int ch = 0; ch < chunks; ch++) {
+            tasks[ch].waitFinished();
+        }
     }
 
     public JPDAThreadGroup[] getTopLevelThreadGroups() {
@@ -2126,43 +2202,6 @@ public class JPDADebuggerImpl extends JPDADebugger {
 
 
     // private helper methods ..................................................
-
-    private static final java.util.regex.Pattern jvmVersionPattern =
-            java.util.regex.Pattern.compile ("(\\d+)\\.(\\d+)\\.(\\d+)(_\\d+)?(-\\w+)?");
-    private static java.lang.reflect.Method  tcGenericSignatureMethod;
-    private static java.lang.reflect.Method  lvGenericSignatureMethod;
-
-
-    private void initGenericsSupport () {
-        tcGenericSignatureMethod = null;
-        if (Bootstrap.virtualMachineManager ().minorInterfaceVersion () >= 5) {
-            VirtualMachine vm;
-            synchronized (virtualMachineLock) {
-                vm = virtualMachine;
-            }
-            if (vm == null) {
-                return ;
-            }
-            try {
-                java.util.regex.Matcher m = jvmVersionPattern.matcher(VirtualMachineWrapper.version(vm));
-                if (m.matches ()) {
-                    int minor = Integer.parseInt (m.group (2));
-                    if (minor >= 5) {
-                        try {
-                            tcGenericSignatureMethod = TypeComponent.class.
-                                getMethod ("genericSignature", new Class [0]);
-                            lvGenericSignatureMethod = LocalVariable.class.
-                                getMethod ("genericSignature", new Class [0]);
-                        } catch (NoSuchMethodException e) {
-                            // the method is not available, ignore generics
-                        }
-                    }
-                }
-            } catch (InternalExceptionWrapper e) {
-            } catch (VMDisconnectedExceptionWrapper e) {
-            }
-        }
-    }
 
     private PropertyChangeEvent setStateNoFire (int state) {
         int o;
@@ -2387,12 +2426,9 @@ public class JPDADebuggerImpl extends JPDADebugger {
                 languages.add (language);
             }
         } // for
-        if ( (stratum != null) &&
-             (!stratum.equals (lastStratumn))
-        ) {
+        if (stratum != null) {
             javaEngineProvider.getSession ().setCurrentLanguage (stratum);
         }
-        lastStratumn = stratum;
     }
 
     private Set<JSR45DebuggerEngineProvider> jsr45EngineProviders;

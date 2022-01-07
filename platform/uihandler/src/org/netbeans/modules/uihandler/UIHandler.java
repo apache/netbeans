@@ -23,8 +23,6 @@ import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeSupport;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -39,7 +37,6 @@ import org.netbeans.modules.uihandler.api.Controller;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
-import org.openide.awt.HtmlBrowser;
 import org.openide.awt.Mnemonics;
 import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
@@ -65,7 +62,6 @@ implements ActionListener, Runnable, Callable<JButton> {
     private final SlownessReporter reporter;
 
     private final AtomicBoolean someRecordsScheduled = new AtomicBoolean(false);
-    private static final String ISSUE_REPORTER_LINK = "https://issues.apache.org/jira/projects/NETBEANS"; //NOI18N
 
     private static boolean exceptionHandler;
     public static void registerExceptionHandler(boolean enable) {

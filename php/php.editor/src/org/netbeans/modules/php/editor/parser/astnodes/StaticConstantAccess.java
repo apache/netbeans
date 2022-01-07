@@ -19,9 +19,13 @@
 package org.netbeans.modules.php.editor.parser.astnodes;
 
 /**
- * Represents a constant class access
- * <pre>e.g.<pre> MyClass::CONST
+ * Represents a constant class access.
+ *
+ * e.g.
+ * <pre>
+ * MyClass::CONST
  * MyClass::CONSTANT[0]
+ * </pre>
  */
 public class StaticConstantAccess extends StaticDispatch {
 

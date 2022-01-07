@@ -82,7 +82,6 @@ copy_to_release() {
    cp ${LWDIR}/Linux_x86/GNU-Linux-x86/ptysupport ../release/bin/nativeexecution/Linux-x86/pty
    cp ${LWDIR}/Linux_x64/GNU-Linux-x86/ptysupport ../release/bin/nativeexecution/Linux-x86_64/pty
    cp ${LWDIR}/Linux_sparc64/GNU-Linux-Sparc/ptysupport ../release/bin/nativeexecution/Linux-sparc_64/pty
-   cp ${LWDIR}/Solaris_sparc/GNU-Solaris-Sparc/ptysupport ../release/bin/nativeexecution/SunOS-sparc/pty
    cp ${LWDIR}/Solaris_sparc64/GNU-Solaris-Sparc/ptysupport ../release/bin/nativeexecution/SunOS-sparc_64/pty
    # Only 32-bit version for Windows...
    cp ${LWDIR}/Windows_x86/Cygwin-Windows/ptysupport.exe ../release/bin/nativeexecution/Windows-x86/pty

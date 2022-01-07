@@ -59,7 +59,7 @@ public class TargetModule implements WebTargetModuleID, java.io.Serializable {
     
     public TargetModule(String id, String url, String targetName, long timestamp, String contentDir, String contextRoot) {
         if (id == null || url == null || targetName == null || timestamp < 0) {
-            java.util.List args = Arrays.asList(new Object[] { id, url, targetName, Long.valueOf(timestamp)});
+            java.util.List args = Arrays.asList(new Object[] { id, url, targetName, timestamp});
             throw new IllegalArgumentException(NbBundle.getMessage(TargetModule.class, "MSG_BadTargetModuleAttributes", args));
         }
         this.id = id;

@@ -28,7 +28,6 @@ import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -43,7 +42,6 @@ import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
-import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -163,15 +161,21 @@ public class MenuBar extends JMenuBar implements Externalizable {
             return !UIManager.getBoolean("NbMainWindow.showCustomBackground"); //NOI18N
         return super.isOpaque();
     }
-    
+
     @Override
     public void updateUI() {
         if (EventQueue.isDispatchThread()) {
             super.updateUI();
-            boolean GTK = "GTK".equals(UIManager.getLookAndFeel().getID());
-            if (!GTK) { //Let GTK supply some border, or mnemonic underlines
-                //will be flush and look ugly
+            String laf = UIManager.getLookAndFeel().getID();
+            // Let GTK supply some border, or mnemonic underlines.
+            boolean gtk = laf.equals("GTK");
+            boolean windows = laf.equals("Windows");
+            if (!(gtk || windows)) {
                 setBorder(BorderFactory.createEmptyBorder());
+            }
+            if (windows) {
+                // Ensure that Windows8LFCustoms can provide a custom border here.
+                setBorderPainted(true);
             }
         }
     }

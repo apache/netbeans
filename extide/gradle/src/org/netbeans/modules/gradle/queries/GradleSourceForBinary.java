@@ -19,7 +19,6 @@
 
 package org.netbeans.modules.gradle.queries;
 
-import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -27,7 +26,8 @@ import java.util.HashMap;
 import java.util.Map;
 import javax.swing.event.ChangeListener;
 import org.netbeans.api.java.queries.SourceForBinaryQuery;
-import org.netbeans.modules.gradle.api.execute.RunUtils;
+import org.netbeans.modules.gradle.api.execute.GradleDistributionManager;
+import org.netbeans.modules.gradle.spi.GradleSettings;
 import org.netbeans.spi.java.queries.SourceForBinaryQueryImplementation;
 import org.netbeans.spi.java.queries.SourceForBinaryQueryImplementation2;
 import org.openide.filesystems.FileObject;
@@ -56,9 +56,9 @@ public class GradleSourceForBinary implements SourceForBinaryQueryImplementation
     @Override
     public Result findSourceRoots2(URL binaryRoot) {
         Res ret = cache.get(binaryRoot);
-        File dist = RunUtils.evaluateGradleDistribution(null, false);
-        if ((ret == null) && (dist != null)) {
-            FileObject distDir = FileUtil.toFileObject(dist);
+        GradleDistributionManager.GradleDistribution dist = GradleDistributionManager.get(GradleSettings.getDefault().getGradleUserHome()).defaultDistribution();
+        if ((ret == null) && (dist.isAvailable())) {
+            FileObject distDir = FileUtil.toFileObject(dist.getDistributionDir());
             FileObject srcDir = distDir == null ? null : distDir.getFileObject("src"); //NOI18N
             if ((srcDir != null) && ("jar".equals(binaryRoot.getProtocol()))) {  //NOI18N
 

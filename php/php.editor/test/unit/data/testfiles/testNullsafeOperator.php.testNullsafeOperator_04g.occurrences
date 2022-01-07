@@ -1,0 +1,7 @@
+        $test = $this?->address?->|>MARK_OCCURRENCES:country<|;
+    public Country $|>MARK_OCCURRENCES:country<|;
+        $this->|>MARK_OCCURRENCES:country<| = new Country();
+$country = $session?->user?->getAddress()?->|>MARK_OCCURRENCES:country<|;
+$country = User::create("test")?->getAddress()?->|>MARK_OCCURRENCES:country<|;
+$country = $session->getUser()::create("test")?->getAddress()->|>MARK_OCCURRENCES:country<|;
+$country = (new User("test"))?->getAddress()->|>MARK_OCCURRENCES:countr^y<|;

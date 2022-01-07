@@ -2,7 +2,7 @@ Name: Spring Framework
 Description: Java/J2EE application framework
 Version: 3.2.18.RELEASE
 Origin: SpringSource
-License: Apache-2.0-spring3.2.18
+License: Apache-2.0-spring3
 Files: spring-aop-3.2.18.RELEASE.jar spring-aspects-3.2.18.RELEASE.jar spring-beans-3.2.18.RELEASE.jar spring-context-3.2.18.RELEASE.jar spring-context-support-3.2.18.RELEASE.jar spring-core-3.2.18.RELEASE.jar spring-expression-3.2.18.RELEASE.jar spring-instrument-3.2.18.RELEASE.jar spring-instrument-tomcat-3.2.18.RELEASE.jar spring-jdbc-3.2.18.RELEASE.jar spring-jms-3.2.18.RELEASE.jar spring-orm-3.2.18.RELEASE.jar spring-oxm-3.2.18.RELEASE.jar spring-struts-3.2.18.RELEASE.jar spring-test-3.2.18.RELEASE.jar spring-tx-3.2.18.RELEASE.jar spring-web-3.2.18.RELEASE.jar spring-webmvc-3.2.18.RELEASE.jar spring-webmvc-portlet-3.2.18.RELEASE.jar
 URL: https://spring.io/projects/spring-framework
 

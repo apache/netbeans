@@ -23,6 +23,7 @@ import java.beans.PropertyVetoException;
 import java.beans.VetoableChangeListener;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 /** Extends the functionality of <CODE>SystemOption</CODE>
@@ -45,11 +46,11 @@ public abstract class VetoSystemOption extends SystemOption {
     /** Lazy getter for veto hashtable.
     * @return the hashtable
     */
-    private HashSet getVeto() {
-        HashSet set = (HashSet) getProperty(PROP_VETO_SUPPORT);
+    private Set<VetoableChangeListener> getVeto() {
+        Set<VetoableChangeListener> set = (HashSet<VetoableChangeListener>)getProperty(PROP_VETO_SUPPORT);
 
         if (set == null) {
-            set = new HashSet();
+            set = new HashSet<>();
             putProperty(PROP_VETO_SUPPORT, set);
         }
 
@@ -84,14 +85,14 @@ public abstract class VetoSystemOption extends SystemOption {
     throws PropertyVetoException {
         PropertyChangeEvent ev = new PropertyChangeEvent(this, name, oldValue, newValue);
 
-        Iterator en;
+        Iterator<VetoableChangeListener> en;
 
         synchronized (getLock()) {
-            en = ((HashSet) getVeto().clone()).iterator();
+            en = getVeto().stream().collect(Collectors.toSet()).iterator();
         }
 
         while (en.hasNext()) {
-            ((VetoableChangeListener) en.next()).vetoableChange(ev);
+            en.next().vetoableChange(ev);
         }
     }
 }

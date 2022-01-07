@@ -227,7 +227,7 @@ public class XMLWizardIterator implements TemplateWizard.Iterator {
         if (panel.getComponent() instanceof JComponent) {
             ((JComponent)panel.getComponent()).putClientProperty(
                 WizardDescriptor.PROP_CONTENT_SELECTED_INDEX,                             // NOI18N
-                new Integer(current)
+                Integer.valueOf(current)
             );        
         }
         return panel;

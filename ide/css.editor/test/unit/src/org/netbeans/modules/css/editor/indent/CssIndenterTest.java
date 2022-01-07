@@ -27,6 +27,7 @@ import javax.swing.text.DefaultEditorKit;
 import javax.swing.text.Document;
 import junit.framework.Test;
 import junit.framework.TestSuite;
+import org.netbeans.api.actions.Closable;
 import org.netbeans.api.editor.mimelookup.MimePath;
 import org.netbeans.api.editor.mimelookup.test.MockMimeLookup;
 import org.netbeans.api.html.lexer.HTMLTokenId;
@@ -42,6 +43,7 @@ import org.openide.cookies.EditorCookie;
 import org.openide.filesystems.FileObject;
 import org.openide.loaders.DataObject;
 import org.openide.util.Exceptions;
+import org.openide.util.Lookup;
 
 public class CssIndenterTest extends TestBase {
 
@@ -115,7 +117,7 @@ public class CssIndenterTest extends TestBase {
         format("a{\nbackground: red,\nblue;\n  }\n",
                 "a{\n    background: red,\n        blue;\n}\n", null);
         format("a{     background: green,\nyellow;\n      }\n",
-                "a{     background: green,\n           yellow;\n}\n", null);
+                "a{\n    background: green,\n        yellow;\n}\n", null);
 
         // comments formatting:
         format("a{\n/*comme\n  *dddsd\n nt*/\nbackground: red;\n}",
@@ -124,7 +126,7 @@ public class CssIndenterTest extends TestBase {
         // even though lines are preserved they will be indented according to indent of previous line;
         // I'm not sure it is OK but leaving like that for now:
         format("a{\ncolor: red; /* start\n   comment\n end*/ background: blue;\n}",
-                "a{\n    color: red; /* start\n       comment\n     end*/ background: blue;\n}", null);
+                "a{\n    color: red; /* start\n       comment\n     end*/\n    background: blue;\n}", null);
 
         // formatting of last line:
         format("a{\nbackground: red,",
@@ -141,6 +143,9 @@ public class CssIndenterTest extends TestBase {
         // #218884
         format("/**\n    *\n  */",
                 "/**\n    *\n  */", null);
+
+        format("h1{font-face: 12pt;font-family: sans-serif;}h2{font-face: 10pt;font-family: sans-serif;}",
+            "h1{\n    font-face: 12pt;\n    font-family: sans-serif;\n}\nh2{\n    font-face: 10pt;\n    font-family: sans-serif;\n}", null);
     }
 
     public void testNativeEmbeddingFormattingCase1() throws Exception {
@@ -176,6 +181,32 @@ public class CssIndenterTest extends TestBase {
 
     public void testFormattingNetBeansCSS() throws Exception {
         reformatFileContents("testfiles/netbeans.css", new IndentPrefs(4, 4));
+    }
+
+    public void testPartitialFormatting() throws Exception {
+        IndentPrefs preferences = new IndentPrefs(4, 4);
+        String file = "testfiles/partialformatting.css";
+
+        FileObject fo = getTestFile(file);
+        assertNotNull(fo);
+        BaseDocument doc = getDocument(fo);
+        assertNotNull(doc);
+
+        Formatter formatter = getFormatter(preferences);
+
+        setupDocumentIndentation(doc, preferences);
+        format(doc, formatter, 1056, 1173, false);
+
+        String after = doc.getText(0, doc.getLength());
+        assertDescriptionMatches(file, after, false, ".formatted");
+
+        DataObject.find(fo).getLookup().lookup(Closable.class).close();
+
+        doc = getDocument(fo);
+        setupDocumentIndentation(doc, preferences);
+        format(doc, formatter, 857, 904, false);
+        after = doc.getText(0, doc.getLength());
+        assertDescriptionMatches(file, after, false, ".formatted2");
     }
 
     public void testIndentation() throws Exception {

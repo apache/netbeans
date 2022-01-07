@@ -20,8 +20,7 @@
     under the License.
 
 -->
-<!DOCTYPE library PUBLIC "-//NetBeans//DTD Library Declaration 1.0//EN" "http://www.netbeans.org/dtds/library-declaration-1_0.dtd">
-<library version="1.0">
+<library version="3.0" xmlns="http://www.netbeans.org/ns/library-declaration/3">
     <name>javaee-endorsed-api-6.0</name>
     <type>j2se</type>
     <localizing-bundle>org/netbeans/modules/javaee/api/Bundle</localizing-bundle>

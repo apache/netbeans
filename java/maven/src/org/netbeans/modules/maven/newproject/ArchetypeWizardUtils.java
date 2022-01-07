@@ -77,7 +77,10 @@ public class ArchetypeWizardUtils {
         BeanRunConfig config = new BeanRunConfig();
         config.setProperty("archetypeGroupId", arch.getGroupId()); //NOI18N
         config.setProperty("archetypeArtifactId", arch.getArtifactId()); //NOI18N
-        config.setProperty("archetypeVersion", arch.getVersion()); //NOI18N
+        if (arch.getVersion() != null
+                && !arch.getVersion().isEmpty()) {
+            config.setProperty("archetypeVersion", arch.getVersion()); //NOI18N
+        }
         String repo = arch.getRepository();
         config.setProperty("archetypeRepository", repo != null ? repo : RepositorySystem.DEFAULT_REMOTE_REPO_URL); //NOI18N
         config.setProperty("groupId", vi.groupId); //NOI18N
@@ -113,6 +116,7 @@ public class ArchetypeWizardUtils {
         //ExecutionRequest.setInteractive seems to have no influence on archetype plugin.
         config.setInteractive(false);
         config.setProperty("archetype.interactive", "false");//NOI18N
+        config.setProperty("archetypeCatalog", "local");//NOI18N
         //#136853 make sure to get the latest snapshot always..
         if (arch.getVersion().contains("SNAPSHOT")) { //NOI18N
             config.setUpdateSnapshots(true);

@@ -31,6 +31,8 @@ import java.util.List;
  * const MY_CONST = 5, YOUR_CONSTANT = 8;
  * const CONSTANT = [0, 1];
  * private const CONSTANT = 1; // PHP7.1
+ * #[A("attribute")]
+ * const MY_CONST = "const"; // PHP8.0
  * </pre>
  */
 public class ConstantDeclaration extends BodyDeclaration {
@@ -59,6 +61,13 @@ public class ConstantDeclaration extends BodyDeclaration {
         this.isGlobal = isGlobal;
     }
 
+    private ConstantDeclaration(int start, int end, int modifier, List<Identifier> names, List<Expression> initializers, boolean isGlobal, List<Attribute> attributes) {
+        super(start, end, modifier, false, attributes);
+        this.names.addAll(names);
+        this.initializers.addAll(initializers);
+        this.isGlobal = isGlobal;
+    }
+
     public ConstantDeclaration(int start, int end, int modifier, List variablesAndDefaults, boolean isGlobal) {
         super(start, end, modifier);
         if (variablesAndDefaults == null || variablesAndDefaults.isEmpty()) {
@@ -73,6 +82,20 @@ public class ConstantDeclaration extends BodyDeclaration {
             this.initializers.add((Expression) element[1]);
         }
         this.isGlobal = isGlobal;
+    }
+
+    public static ConstantDeclaration create(ConstantDeclaration declaration, List<Attribute> attributes) {
+        assert attributes != null;
+        int start = attributes.isEmpty() ? declaration.getStartOffset() : attributes.get(0).getStartOffset();
+        return new ConstantDeclaration(
+                start,
+                declaration.getEndOffset(),
+                declaration.getModifier(),
+                declaration.getNames(),
+                declaration.getInitializers(),
+                declaration.isGlobal(),
+                attributes
+        );
     }
 
     public boolean isGlobal() {
@@ -100,11 +123,13 @@ public class ConstantDeclaration extends BodyDeclaration {
 
     @Override
     public String toString() {
+        StringBuilder sbAttributes = new StringBuilder();
+        getAttributes().forEach(attribute -> sbAttributes.append(attribute).append(" ")); // NOI18N
         StringBuilder sb = new StringBuilder();
         for (Expression expression : getInitializers()) {
             sb.append(expression).append(","); //NOI18N
         }
-        return "const " + sb; //NOI18N
+        return sbAttributes.toString() + getModifierString() + "const " + sb; //NOI18N
     }
 
 }

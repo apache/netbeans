@@ -19,9 +19,10 @@
 
 package org.netbeans.modules.java.hints.perf;
 
+import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.LiteralTree;
 import com.sun.source.tree.MemberSelectTree;
-import com.sun.source.tree.MethodInvocationTree;
+import com.sun.source.tree.NewArrayTree;
 import com.sun.source.tree.ParameterizedTypeTree;
 import com.sun.source.tree.ParenthesizedTree;
 import com.sun.source.tree.Tree;
@@ -41,7 +42,6 @@ import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Types;
-import org.netbeans.api.java.source.TreePathHandle;
 import org.netbeans.api.java.source.WorkingCopy;
 import org.netbeans.modules.java.hints.errors.CreateElementUtilities;
 import org.netbeans.modules.java.hints.errors.Utilities;
@@ -67,6 +67,18 @@ import org.openide.util.NbBundle;
  * @author lahvac
  */
 public class Tiny {
+
+    private static final SourceVersion RELEASE_11;
+
+    static {
+        SourceVersion tmp;
+        try {
+            tmp = SourceVersion.valueOf("RELEASE_11");
+        } catch (IllegalArgumentException ex) {
+            tmp = null;
+        }
+        RELEASE_11 = tmp;
+    }
 
     static final boolean SC_IGNORE_SUBSTRING_DEFAULT = true;
     @BooleanOption(displayName = "#LBL_org.netbeans.modules.java.hints.perf.Tiny.SC_IGNORE_SUBSTRING", tooltip = "#TP_org.netbeans.modules.java.hints.perf.Tiny.SC_IGNORE_SUBSTRING", defaultValue=SC_IGNORE_SUBSTRING_DEFAULT)
@@ -164,25 +176,34 @@ public class Tiny {
         final String literal = ctx.getInfo().getText().substring(start, end);
 
         Fix f = new JavaFix(ctx.getInfo(), toSearch) {
-@Override protected String getText() {
-return NbBundle.getMessage(Tiny.class, "FIX_LengthOneStringIndexOf");
-}
-@Override protected void performRewrite(TransformationContext ctx) {
-WorkingCopy wc = ctx.getWorkingCopy();
-TreePath tp = ctx.getPath();
-String content;
+            @Override
+            protected String getText() {
+                return NbBundle.getMessage(Tiny.class, "FIX_LengthOneStringIndexOf");
+            }
 
-if ("'".equals(data)) content = "\\'";
-else if ("\"".equals(data)) content = "\"";
-else {
-content = literal;
-if (content.length() > 0 && content.charAt(0) == '"') content = content.substring(1);
-if (content.length() > 0 && content.charAt(content.length() - 1) == '"') content = content.substring(0, content.length() - 1);
-}
+            @Override
+            protected void performRewrite(TransformationContext ctx) {
+                WorkingCopy wc = ctx.getWorkingCopy();
+                TreePath tp = ctx.getPath();
+                String content;
 
-wc.rewrite(tp.getLeaf(), wc.getTreeMaker().Identifier("'" + content + "'"));
-}
-}.toEditorFix();
+                if ("'".equals(data)) {
+                    content = "\\'";
+                } else if ("\"".equals(data)) {
+                    content = "\"";
+                } else {
+                    content = literal;
+                    if (content.length() > 0 && content.charAt(0) == '"') {
+                        content = content.substring(1);
+                    }
+                    if (content.length() > 0 && content.charAt(content.length() - 1) == '"') {
+                        content = content.substring(0, content.length() - 1);
+                    }
+                }
+
+                wc.rewrite(tp.getLeaf(), wc.getTreeMaker().Identifier("'" + content + "'"));
+            }
+        }.toEditorFix();
         
         String displayName = NbBundle.getMessage(Tiny.class, "ERR_LengthOneStringIndexOf", literal);
         
@@ -314,15 +335,22 @@ wc.rewrite(tp.getLeaf(), wc.getTreeMaker().Identifier("'" + content + "'"));
     @Hint(displayName = "#DN_org.netbeans.modules.java.hints.perf.Tiny.collectionsToArray",
           description = "#DESC_org.netbeans.modules.java.hints.perf.Tiny.collectionsToArray",
           category="performance",
-          enabled=false,
+          enabled=true,
           suppressWarnings="CollectionsToArray")
-    @TriggerPattern(value = "$collection.toArray(new $clazz[0])",
-                    constraints=@ConstraintVariableType(variable="$collection",
-                                                        type="java.util.Collection"))
+    @TriggerPatterns({
+        @TriggerPattern(value = "$collection.toArray(new $clazz[$collection.size()])",
+                        constraints = @ConstraintVariableType(variable="$collection", type="java.util.Collection")),
+        @TriggerPattern(value = "$collection.toArray(new $clazz[0])",
+                        constraints = @ConstraintVariableType(variable="$collection", type="java.util.Collection")),
+        @TriggerPattern(value = "$collection.toArray(new $clazz[]{})",
+                        constraints = @ConstraintVariableType(variable="$collection", type="java.util.Collection"))
+    })
     public static ErrorDescription collectionsToArray(HintContext ctx) {
+
         boolean pureMemberSelect = true;
         TreePath tp = ctx.getVariables().get("$collection");
         if (tp == null) return null;
+
         Tree msTest = tp.getLeaf();
         OUTER: while (true) {
             switch (msTest.getKind()) {
@@ -337,11 +365,24 @@ wc.rewrite(tp.getLeaf(), wc.getTreeMaker().Identifier("'" + content + "'"));
         Fix[] fixes;
 
         if (pureMemberSelect) {
-            String fixDisplayName = NbBundle.getMessage(Tiny.class, "FIX_Tiny_collectionsToArray");
 
-            fixes = new Fix[] {
-                JavaFixUtilities.rewriteFix(ctx, fixDisplayName, ctx.getPath(), "$collection.toArray(new $clazz[$collection.size()])")
-            };
+            SourceVersion version = ctx.getInfo().getSourceVersion();
+            TreePath type = ctx.getVariables().get("$clazz");
+            String typeName = type.getLeaf().toString();
+            
+            if (RELEASE_11 != null && version.compareTo(RELEASE_11) >= 0) {
+                String byRef = NbBundle.getMessage(Tiny.class, "FIX_Tiny_collectionsToArrayByMethodRef", typeName);
+                fixes = new Fix[] {
+                    JavaFixUtilities.rewriteFix(ctx, byRef, ctx.getPath(), "$collection.toArray($clazz[]::new)"),
+                };
+            } else if (isNewArrayWithSize(type)) {
+                String byZero = NbBundle.getMessage(Tiny.class, "FIX_Tiny_collectionsToArrayByZeroArray", typeName);
+                fixes = new Fix[] {
+                    JavaFixUtilities.rewriteFix(ctx, byZero, ctx.getPath(), "$collection.toArray(new $clazz[0])")
+                };
+            } else {
+                return null; // new T[0] or new T[]{} and version < 11 -> nothing to do
+            }
         } else {
             fixes = new Fix[0];
         }
@@ -349,6 +390,15 @@ wc.rewrite(tp.getLeaf(), wc.getTreeMaker().Identifier("'" + content + "'"));
         String displayName = NbBundle.getMessage(Tiny.class, "ERR_Tiny_collectionsToArray");
 
         return ErrorDescriptionFactory.forName(ctx, ctx.getPath(), displayName, fixes);
+    }
+
+    private static boolean isNewArrayWithSize(TreePath type) {
+        Tree parent = type.getParentPath().getLeaf();
+        if (parent instanceof NewArrayTree) {
+            List<? extends ExpressionTree> dim = ((NewArrayTree) parent).getDimensions();
+            return dim.isEmpty() ? false : dim.get(0).getKind() == Kind.METHOD_INVOCATION; // size()
+        }
+        return false;
     }
     
     @NbBundle.Messages({
@@ -369,7 +419,7 @@ wc.rewrite(tp.getLeaf(), wc.getTreeMaker().Identifier("'" + content + "'"));
                 JavaFixUtilities.rewriteFix(ctx, Bundle.FIX_RedundantToString(), ctx.getPath(), "$v"));
     }
     
-    private static final Map<TypeKind, String[]> PARSE_METHODS = new HashMap<TypeKind, String[]>(7);
+    private static final Map<TypeKind, String[]> PARSE_METHODS = new HashMap<>(7);
     static {
         PARSE_METHODS.put(TypeKind.BOOLEAN, new String[] { "Boolean", "parseBoolean" }); // NOI18N
         PARSE_METHODS.put(TypeKind.BYTE, new String[] { "Byte", "parseByte"}); // NOI18N

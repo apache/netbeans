@@ -130,6 +130,46 @@
 
 
  <answer id="exec-property">
+     <api category="devel" group="branding" name="org.netbeans.modules.gradle.spi.DEFAULT_REUSE_OUTPUT" type="export">
+         Brand the <code>DEFAULT_REUSE_OUTPUT</code> key in a 
+         <code>org.netbeans.modules.gradle.spi.Bundle</code> file
+         with one of the values <code>true</code> or <code>false</code>
+         to specify the default behavior of reusing output by your application.
+         Use <code>never</code> value, if the reuse shall never be done,
+         regardless of the settings value.
+     </api>
+     <api category="devel" group="branding" name="org.netbeans.modules.gradle.api.execute.TrustProjectOption" type="export">
+         Brand the <code>org.netbeans.modules.gradle.api.execute.TrustProjectOption.*</code> keys in <code>org.netbeans.modules.gradle.api.execution</code>
+         to enable/disable/reorder options in 'trust project' confirmation dialog.
+         For more details, see <a href="@TOP@/org/netbeans/modules/gradle/api/execute/RunUtils.html#isProjectTrusted-org.netbeans.api.project.Project-boolean-">RunUtils.isProjectTrusted</a>.
+     </api>
+     <api category="devel" group="systemproperty" name="netbeans.debug.gradle.info.action" type="export" >
+         Starting NetBeans with <code>netbeans.debug.gradle.info.action=true</code>
+         would make the Gradle project information loading into a debugabble JVM
+         where the debugging port is <code>5006</code>. A new debugger session
+         can be attached to that port, make the <code>netbeans-gradle-tooling</code>
+         project debuggable in action.
+     </api>
+     <api category="friend" group="property" name="runJvmArgs" type="export">
+         NetBeans Tooling plugin recognizes <code>runJvmArgs</code> project property, and injects
+         specified JVM arguments into JavaExec executing the user code. Use <code>-PrunJvmArgs=...</code>.
+         If passing more arguments, the whole -P must be properly quoted. Arguments that contain spaces must
+         also use quoting or escapes.
+     </api>
+     <api category="friend" group="property" name="runWorkingDir" type="export">
+         NetBeans Tooling plugin recognizes <code>runWorkingDir</code> project property, and injects
+         specified working directory into JavaExec executing the user code. Use <code>-PrunWorkingDir=...</code>.
+         If the working directory contain spaces, it must also use quoting or escapes.
+     </api>
+     <api category="friend" group="property" name="runEnvironment" type="export">
+         NetBeans Tooling plugin recognizes <code>runEnvironment</code> project property, and injects
+         specified environmental variables into JavaExec executing the user code. Use <code>-PrunEnvironment=...</code>.
+         The value consists of expressions of <code>VAR_NAME=VAR_VALUE</code>, or <code>!VAR_NAME</code>.
+         The <code>VAR_NAME=VAR_VALUE</code> sets environment variable <code>VAR_NAME</code> to value <code>VAR_VALUE</code>
+         and <code>!VAR_NAME</code> removes variable <code>VAR_NAME</code> from the set of environment variables.
+         If passing more arguments, the whole -P must be properly quoted. Variables whose values contain spaces must
+         also use quoting or escapes.
+     </api>
  </answer>
 
  <answer id="resources-file">
@@ -241,6 +281,13 @@ publishPlugins&lt;/args&gt;
 
 &lt;/actions&gt;
              </pre>
+         </api>
+         <api category="devel" group="java.io.File" name="nb-actions-config.xml" type="export">
+             <p>
+                 An extension of <a href="#nb-actions-config.xml">nb-actions.config</a> is a per-Configuration action mapping.
+                 It can be placed in <b>nb-actions-</b><i>configurationID</i><b>.xml</b> with the same format and will apply only
+                 if that specific Project Configuration is in effect.
+             </p>
          </api>
      </p>
  </answer>
@@ -882,6 +929,10 @@ publishPlugins&lt;/args&gt;
          can be placed into <code>lookup</code>. It is then notified when the
          execution of the action is finished. Useful when writing tests.
      </p>
+    </api>
+    <api group="lookup" name="project-actions" type="export" category="private">
+        The <a href="@TOP@/org/netbeans/modules/gradle/spi/actions/GradleActionsProvider.html">GradleActionProviders</a> can be also activated for individual Plugins; 
+        register them for project type <code>org-netbeans-modules-gradle/Plugins/&lt;plugin-id></code>. 
     </api>
   </p>
  </answer>

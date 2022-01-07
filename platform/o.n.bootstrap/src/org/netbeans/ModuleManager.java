@@ -1275,11 +1275,19 @@ public final class ModuleManager extends Modules {
             if (! testing.containsAll(modules)) {
                 Set<Module> bogus = new HashSet<Module>(modules);
                 bogus.removeAll(testing);
-                throw new IllegalModuleException(IllegalModuleException.Reason.ENABLE_MISSING, bogus);
+                Map<Module, Set<Union2<Dependency,InvalidException>>> errors = new HashMap<>();
+                for (Module b : bogus) {
+                    errors.put(b, missingDependencies(b));
+                }
+                throw new IllegalModuleException(IllegalModuleException.Reason.ENABLE_MISSING, errors);
             }
             for (Module m : testing) {
                 if (!modules.contains(m) && !m.isAutoload() && !m.isEager()) {
-                    throw new IllegalModuleException(IllegalModuleException.Reason.ENABLE_TESTING, m);
+                    // it is acceptable if the module is a non-autoload host fragment, and its host enabled (thus enabled the fragment):
+                    Module maybeHost =  attachModuleFragment(m);
+                    if (maybeHost == null && !testing.contains(maybeHost)) {
+                        throw new IllegalModuleException(IllegalModuleException.Reason.ENABLE_TESTING, m);
+                    }
                 }
             }
         }
@@ -1694,7 +1702,8 @@ public final class ModuleManager extends Modules {
     private void maybeAddToEnableList(Set<Module> willEnable, Set<Module> mightEnable, Module m, boolean okToFail) {
         if (! missingDependencies(m).isEmpty()) {
             if (!okToFail) {
-                Util.err.warning("Module " + m + " had unexpected problems: " + missingDependencies(m) + " (willEnable: " + willEnable + " mightEnable: " + mightEnable + ")");
+                Util.err.warning("Module " + m + " had unexpected problems: " + missingDependencies(m));
+                Util.err.fine(" (willEnable: " + willEnable + " mightEnable: " + mightEnable + ")");
             }
             // Cannot satisfy its dependencies, exclude it.
             return;
@@ -1761,7 +1770,7 @@ public final class ModuleManager extends Modules {
         Collection<Module> frags = getAttachedFragments(m);
         for (Module fragMod : frags) {
             if (! fragMod.isEnabled()) {
-                maybeAddToEnableList(willEnable, mightEnable, fragMod, fragMod.isEager());
+                maybeAddToEnableList(willEnable, mightEnable, fragMod, fragMod.isAutoload() || fragMod.isEager());
             }
         }
     }

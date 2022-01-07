@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<svg xmlns="http://www.w3.org/2000/svg"
+    xmlns:xlink="http://www.w3.org/1999/xlink" width="16" height="16" viewBox="0 0 16 16">
+    <defs>
+        <linearGradient id="a" x1="11.018" y1="2.049" x2="11.018" y2="14.51" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stop-color="#d7e8f5"/>
+            <stop offset="1" stop-color="#a1cae9"/>
+        </linearGradient>
+        <linearGradient id="b" x1="11.018" y1="1.049" x2="11.018" y2="15.51" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stop-color="#5e7f98"/>
+            <stop offset="1" stop-color="#435e73"/>
+        </linearGradient>
+        <linearGradient id="c" x1="3.971" y1="2.049" x2="3.971" y2="14.51" xlink:href="#a"/>
+        <linearGradient id="d" x1="3.971" y1="1.049" x2="3.971" y2="15.51" xlink:href="#b"/>
+    </defs>
+    <g style="isolation:isolate">
+        <path d="M9.167,13.779a1.992,1.992,0,0,0,1.281-2.1v-1.4a2.013,2.013,0,0,1,1.1-2,2,2,0,0,1-1.1-2V5q0-1.791-1.274-2.216l.231-.73a3.026,3.026,0,0,1,1.622,1.032,3.061,3.061,0,0,1,.549,1.888V6.3q0,1.517,1.293,1.517v.92q-1.292,0-1.293,1.543v1.282a3.047,3.047,0,0,1-.552,1.911A3.074,3.074,0,0,1,9.4,14.51Z" fill="url(#a)"/>
+        <path d="M9.4,2.049a3.026,3.026,0,0,1,1.622,1.032,3.061,3.061,0,0,1,.549,1.888V6.3q0,1.517,1.293,1.517v.92q-1.292,0-1.293,1.543v1.282a3.047,3.047,0,0,1-.552,1.911A3.074,3.074,0,0,1,9.4,14.51l-.238-.731a1.992,1.992,0,0,0,1.281-2.1v-1.4a2.013,2.013,0,0,1,1.1-2,2,2,0,0,1-1.1-2V5q0-1.791-1.274-2.216l.231-.73m0-1a1,1,0,0,0-.953.7l-.231.73a1,1,0,0,0,.636,1.251c.192.064.591.2.591,1.267V6.283a3.331,3.331,0,0,0,.574,2,3.321,3.321,0,0,0-.574,2v1.4c-.024.961-.411,1.09-.6,1.151a1,1,0,0,0-.636,1.259l.239.731a1,1,0,0,0,.95.69.986.986,0,0,0,.286-.042,4.058,4.058,0,0,0,2.126-1.384,4.023,4.023,0,0,0,.759-2.52V10.282a.977.977,0,0,1,.09-.515h0a.506.506,0,0,1,.2-.028,1,1,0,0,0,1-1v-.92a1,1,0,0,0-1-1,.471.471,0,0,1-.212-.031.981.981,0,0,1-.081-.486V4.969a4.048,4.048,0,0,0-.753-2.494A4.011,4.011,0,0,0,9.687,1.09.987.987,0,0,0,9.4,1.049Z" fill="url(#b)"/>
+        <path d="M5.587,14.51a3.021,3.021,0,0,1-1.625-1.044,3.122,3.122,0,0,1-.546-1.921V10.282q0-1.542-1.293-1.543v-.92q1.293,0,1.293-1.536V4.963a3.109,3.109,0,0,1,.546-1.876A3.017,3.017,0,0,1,5.587,2.049l.232.73Q4.544,3.205,4.544,5V6.277A2.091,2.091,0,0,1,3.525,8.282a2.12,2.12,0,0,1,1.019,2.026v1.307a2.016,2.016,0,0,0,1.275,2.164Z" fill="url(#c)"/>
+        <path d="M5.587,2.049l.232.73Q4.544,3.205,4.544,5V6.277A2.091,2.091,0,0,1,3.525,8.282a2.12,2.12,0,0,1,1.019,2.026v1.307a2.016,2.016,0,0,0,1.275,2.164l-.232.731a3.021,3.021,0,0,1-1.625-1.044,3.122,3.122,0,0,1-.546-1.921V10.282q0-1.542-1.293-1.543v-.92q1.293,0,1.293-1.536V4.963a3.109,3.109,0,0,1,.546-1.876A3.017,3.017,0,0,1,5.587,2.049m0-1a.963.963,0,0,0-.284.042,4,4,0,0,0-2.142,1.4,4.1,4.1,0,0,0-.745,2.465v1.33a.973.973,0,0,1-.088.509h0a.541.541,0,0,1-.2.027,1,1,0,0,0-1,1v.92a1,1,0,0,0,1,1,.427.427,0,0,1,.206.031,1,1,0,0,1,.087.512v1.263a4.1,4.1,0,0,0,.746,2.521,4.013,4.013,0,0,0,2.142,1.4,1,1,0,0,0,1.236-.656l.232-.73a1,1,0,0,0-.636-1.252c-.189-.063-.581-.194-.592-1.227v-1.3a3.466,3.466,0,0,0-.561-2.022,3.43,3.43,0,0,0,.561-2.009V5c0-1.07.4-1.2.592-1.267a1,1,0,0,0,.636-1.252l-.232-.73a1,1,0,0,0-.953-.7Z" fill="url(#d)"/>
+    </g>
+</svg>

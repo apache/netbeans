@@ -107,7 +107,6 @@ import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.TreeUtilities;
 import org.netbeans.modules.java.source.JavaSourceAccessor;
-import org.netbeans.modules.java.source.TreeShims;
 
 /**TODO: tested by CopyFinderTest in java.hints module.
  *
@@ -1111,7 +1110,10 @@ public class CopyFinder extends ErrorAwareTreeScanner<Boolean, TreePath> {
         if (!checkLists(node.getTypeParameters(), t.getTypeParameters(), p))
             return false;
 
-        if (!scan(node.getReturnType(), t.getReturnType(), p))
+        Tree normalizedReturnType = "<init>".contentEquals(node.getName()) ? null : node.getReturnType();
+        Tree normalizedReturnTypePattern = "<init>".contentEquals(t.getName()) ? null : t.getReturnType();
+
+        if (!scan(normalizedReturnType, normalizedReturnTypePattern, p))
             return false;
 
         String name = t.getName().toString();
@@ -1837,8 +1839,8 @@ public class CopyFinder extends ErrorAwareTreeScanner<Boolean, TreePath> {
                 CaseTree caseTree = (CaseTree) firstLeaf.getParentPath().getLeaf();
                 if (caseTree.getStatements() != null) {
                     return caseTree.getStatements();
-                } else if (TreeShims.getBody(caseTree) instanceof StatementTree) {
-                    return Collections.singletonList((StatementTree) TreeShims.getBody(caseTree));
+                } else if (caseTree.getBody() instanceof StatementTree) {
+                    return Collections.singletonList((StatementTree) caseTree.getBody());
                 } else {
                     return null;
                 }

@@ -767,8 +767,11 @@ public class ModuleNamesTest extends NbTestCase {
             if (javaBaseModInfo != null && "java.base".equals(modLoc.getModuleName()) && packageName.isEmpty()) {
                 final JavaFileObject jfo = new MemJFO("module-info");
                 try(OutputStream out = jfo.openOutputStream()) {
+                    assertNotNull("output stream cannot be null", out);
                     final byte[] data = javaBaseModInfo.get();
-                    out.write(data, 0, data.length);
+                    if (data != null) {
+                        out.write(data, 0, data.length);
+                    }
                 }
                 res.add(jfo);
             }

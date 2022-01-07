@@ -134,7 +134,7 @@ public final class ClusteredIndexables {
     private final List<Indexable> indexables;
     private final BitSet sorted;
     private final Map<String, BitSet> mimeTypeClusters = new HashMap<String, BitSet>();
-    private IndexedIterator currentIt;
+    private IndexedIterator<Indexable> currentIt;
 
 
     @NonNull

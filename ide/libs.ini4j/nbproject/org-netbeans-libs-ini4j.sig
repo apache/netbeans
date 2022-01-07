@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.42
+#Version 1.48
 
 CLSS public java.io.IOException
 cons public init()
@@ -7,7 +7,6 @@ cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.Throwable)
 cons public init(java.lang.Throwable)
 supr java.lang.Exception
-hfds serialVersionUID
 
 CLSS public abstract interface java.io.Serializable
 
@@ -31,7 +30,6 @@ meth public final java.lang.String name()
 meth public java.lang.String toString()
 meth public static <%0 extends java.lang.Enum<{%%0}>> {%%0} valueOf(java.lang.Class<{%%0}>,java.lang.String)
 supr java.lang.Object
-hfds name,ordinal
 
 CLSS public java.lang.Exception
 cons protected init(java.lang.String,java.lang.Throwable,boolean,boolean)
@@ -40,7 +38,6 @@ cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.Throwable)
 cons public init(java.lang.Throwable)
 supr java.lang.Throwable
-hfds serialVersionUID
 
 CLSS public java.lang.Object
 cons public init()
@@ -77,8 +74,6 @@ meth public void printStackTrace(java.io.PrintStream)
 meth public void printStackTrace(java.io.PrintWriter)
 meth public void setStackTrace(java.lang.StackTraceElement[])
 supr java.lang.Object
-hfds CAUSE_CAPTION,EMPTY_THROWABLE_ARRAY,NULL_CAUSE_MESSAGE,SELF_SUPPRESSION_MESSAGE,SUPPRESSED_CAPTION,SUPPRESSED_SENTINEL,UNASSIGNED_STACK,backtrace,cause,detailMessage,serialVersionUID,stackTrace,suppressedExceptions
-hcls PrintStreamOrWriter,SentinelHolder,WrappedPrintStream,WrappedPrintWriter
 
 CLSS public abstract interface java.lang.reflect.InvocationHandler
 meth public abstract java.lang.Object invoke(java.lang.Object,java.lang.reflect.Method,java.lang.Object[]) throws java.lang.Throwable
@@ -162,8 +157,6 @@ meth public void removeNodeChangeListener(java.util.prefs.NodeChangeListener)
 meth public void removePreferenceChangeListener(java.util.prefs.PreferenceChangeListener)
 meth public void sync() throws java.util.prefs.BackingStoreException
 supr java.util.prefs.Preferences
-hfds EMPTY_ABSTRACT_PREFS_ARRAY,EMPTY_STRING_ARRAY,absolutePath,eventDispatchThread,eventQueue,kidCache,name,nodeListeners,parent,prefListeners,removed,root
-hcls EventDispatchThread,NodeAddedEvent,NodeRemovedEvent
 
 CLSS public abstract java.util.prefs.Preferences
 cons protected init()
@@ -210,7 +203,6 @@ meth public static java.util.prefs.Preferences userNodeForPackage(java.lang.Clas
 meth public static java.util.prefs.Preferences userRoot()
 meth public static void importPreferences(java.io.InputStream) throws java.io.IOException,java.util.prefs.InvalidPreferencesFormatException
 supr java.lang.Object
-hfds factory,prefsPerm
 
 CLSS public abstract interface java.util.prefs.PreferencesFactory
 meth public abstract java.util.prefs.Preferences systemRoot()

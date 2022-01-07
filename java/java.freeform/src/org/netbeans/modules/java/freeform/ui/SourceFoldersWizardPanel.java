@@ -106,7 +106,7 @@ public class SourceFoldersWizardPanel implements WizardDescriptor.Panel, ChangeL
             pm = ProjectModel.createEmptyModel(projectLocation, projectFolder, evaluator);
             wizardDescriptor.putProperty(NewJ2SEFreeformProjectWizardIterator.PROP_PROJECT_MODEL, pm);
         }
-        List l = (List)wizardDescriptor.getProperty(NewJavaFreeformProjectSupport.PROP_EXTRA_JAVA_SOURCE_FOLDERS);
+        List<String> l = (List)wizardDescriptor.getProperty(NewJavaFreeformProjectSupport.PROP_EXTRA_JAVA_SOURCE_FOLDERS);
         if (l != null) {
             Iterator<String> it = l.iterator();
             while (it.hasNext()) {

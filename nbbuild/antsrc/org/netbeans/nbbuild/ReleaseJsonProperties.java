@@ -114,6 +114,9 @@ public class ReleaseJsonProperties extends Task {
         } catch (ParseException | IOException ex) {
             throw new BuildException(ex);
         }
+        
+        // remove empty api doc 
+        ri.removeIf(e -> e.apidocurl.isEmpty());
         // sort all information
         Collections.sort(ri);
         // build a sorted xml

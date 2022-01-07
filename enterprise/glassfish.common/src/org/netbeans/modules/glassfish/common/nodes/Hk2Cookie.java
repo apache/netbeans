@@ -352,7 +352,7 @@ public class Hk2Cookie {
         public RequestProcessor.Task refresh(String expected, String unexpected) {
             if (children instanceof Refreshable) {
                 ((Refreshable) children).updateKeys();
-                boolean foundExpected = expected == null ? true : false;
+                boolean foundExpected = expected == null;
                 boolean foundUnexpected = false;
                 for (Node node : children.getNodes()) {
                     if (!foundExpected

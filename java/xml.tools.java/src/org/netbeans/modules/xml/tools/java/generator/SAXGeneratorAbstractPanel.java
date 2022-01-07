@@ -61,7 +61,7 @@ public abstract class SAXGeneratorAbstractPanel extends JPanel implements Custom
         private Object bean;
         private Integer index;
         
-        private Vector listeners = new Vector(); 
+        private Vector<ChangeListener> listeners = new Vector<>(); 
         private final ChangeEvent EVENT = new ChangeEvent(this);
         private boolean valid = true;
         

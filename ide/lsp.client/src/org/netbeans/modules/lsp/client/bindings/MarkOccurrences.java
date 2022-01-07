@@ -33,8 +33,8 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
 import org.eclipse.lsp4j.DocumentHighlight;
+import org.eclipse.lsp4j.DocumentHighlightParams;
 import org.eclipse.lsp4j.TextDocumentIdentifier;
-import org.eclipse.lsp4j.TextDocumentPositionParams;
 import org.netbeans.api.editor.mimelookup.MimeLookup;
 import org.netbeans.api.editor.mimelookup.MimeRegistration;
 import org.netbeans.api.editor.settings.AttributesUtilities;
@@ -99,8 +99,11 @@ public class MarkOccurrences implements BackgroundTask, CaretListener, PropertyC
         }
         String uri = Utils.toURI(file);
         try {
-            List<? extends DocumentHighlight> highlights =
-                    server.getTextDocumentService().documentHighlight(new TextDocumentPositionParams(new TextDocumentIdentifier(uri), Utils.createPosition(doc, caretPos))).get();
+            List<? extends DocumentHighlight> highlights
+                    = server.getTextDocumentService().documentHighlight(new DocumentHighlightParams(new TextDocumentIdentifier(uri), Utils.createPosition(doc, caretPos))).get();
+            if (highlights == null) {
+                return result;
+            }
             for (DocumentHighlight h : highlights) {
                 result.addHighlight(Utils.getOffset(doc, h.getRange().getStart()), Utils.getOffset(doc, h.getRange().getEnd()), attr);
             }
@@ -113,14 +116,14 @@ public class MarkOccurrences implements BackgroundTask, CaretListener, PropertyC
 
     private AttributeSet getColoring(Document doc) {
         FontColorSettings fcs = MimeLookup.getLookup(NbEditorUtilities.getMimeType(doc)).lookup(FontColorSettings.class);
-        
+
         if (fcs == null) {
             //in tests:
             return AttributesUtilities.createImmutable();
         }
-        
+
         assert fcs != null;
-        
+
         return fcs.getTokenFontColors("mark-occurrences");
     }
 
@@ -155,31 +158,33 @@ public class MarkOccurrences implements BackgroundTask, CaretListener, PropertyC
                 public void insertUpdate(DocumentEvent e) {
                     bagFin.removeHighlights(e.getOffset(), e.getOffset(), false);
                 }
+
                 public void removeUpdate(DocumentEvent e) {
                     bagFin.removeHighlights(e.getOffset(), e.getOffset(), false);
                 }
-                public void changedUpdate(DocumentEvent e) {}
+
+                public void changedUpdate(DocumentEvent e) {
+                }
             };
 
             doc.addDocumentListener(l);
 
             if (stream instanceof DataObject) {
-                Logger.getLogger("TIMER").log(Level.FINE, "LSP Client MarkOccurrences Highlights Bag", new Object[] {((DataObject) stream).getPrimaryFile(), bag}); //NOI18N
-                Logger.getLogger("TIMER").log(Level.FINE, "LSP Client MarkOccurrences Highlights Bag Listener", new Object[] {((DataObject) stream).getPrimaryFile(), l}); //NOI18N
+                Logger.getLogger("TIMER").log(Level.FINE, "LSP Client MarkOccurrences Highlights Bag", new Object[]{((DataObject) stream).getPrimaryFile(), bag}); //NOI18N
+                Logger.getLogger("TIMER").log(Level.FINE, "LSP Client MarkOccurrences Highlights Bag Listener", new Object[]{((DataObject) stream).getPrimaryFile(), l}); //NOI18N
             }
         }
 
         return bag;
     }
-    
-    @MimeRegistration(mimeType="", service=HighlightsLayerFactory.class)
+
+    @MimeRegistration(mimeType = "", service = HighlightsLayerFactory.class)
     public static class HighlightsLayerFactoryImpl implements HighlightsLayerFactory {
 
         public HighlightsLayer[] createLayers(HighlightsLayerFactory.Context context) {
-            return new HighlightsLayer[] {
+            return new HighlightsLayer[]{
                 //the mark occurrences layer should be "above" current row and "below" the search layers:
-                HighlightsLayer.create(MarkOccurrences.class.getName(), ZOrder.SHOW_OFF_RACK.forPosition(20), true, MarkOccurrences.getHighlightsBag(context.getDocument())),
-            };
+                HighlightsLayer.create(MarkOccurrences.class.getName(), ZOrder.SHOW_OFF_RACK.forPosition(20), true, MarkOccurrences.getHighlightsBag(context.getDocument())),};
         }
 
     }

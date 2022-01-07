@@ -1,0 +1,309 @@
+<testresult testFile='attributeSyntax_02.php'>
+    <scanner>
+        <token id='T_NAMESPACE' start='815' end='824'>
+            <text>namespace</text>
+        </token>
+        <token id='T_STRING' start='825' end='829'>
+            <text>Test</text>
+        </token>
+        <token id='T_NS_SEPARATOR' start='829' end='830'>
+            <text>\</text>
+        </token>
+        <token id='T_STRING' start='830' end='845'>
+            <text>AttributeSyntax</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='846' end='847'>
+            <text>{</text>
+        </token>
+        <token id='T_USE' start='852' end='855'>
+            <text>use</text>
+        </token>
+        <token id='T_STRING' start='856' end='865'>
+            <text>Attribute</text>
+        </token>
+        <token id='T_SEMICOLON' start='865' end='866'>
+            <text>;</text>
+        </token>
+        <token id='T_ATTRIBUTE' start='872' end='874'>
+            <text>#[</text>
+        </token>
+        <token id='T_STRING' start='874' end='883'>
+            <text>Attribute</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='883' end='884'>
+            <text>]</text>
+        </token>
+        <token id='T_CLASS' start='889' end='894'>
+            <text>class</text>
+        </token>
+        <token id='T_STRING' start='895' end='908'>
+            <text>AttributeTest</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='909' end='910'>
+            <text>{</text>
+        </token>
+        <token id='T_PRIVATE' start='919' end='926'>
+            <text>private</text>
+        </token>
+        <token id='T_VARIABLE' start='927' end='932'>
+            <text>$test</text>
+        </token>
+        <token id='T_SEMICOLON' start='932' end='933'>
+            <text>;</text>
+        </token>
+        <token id='T_PUBLIC' start='943' end='949'>
+            <text>public</text>
+        </token>
+        <token id='T_FUNCTION' start='950' end='958'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='959' end='970'>
+            <text>__construct</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='970' end='971'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='971' end='976'>
+            <text>$test</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='976' end='977'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='978' end='979'>
+            <text>{</text>
+        </token>
+        <token id='T_VARIABLE' start='992' end='997'>
+            <text>$this</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='997' end='999'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='999' end='1003'>
+            <text>test</text>
+        </token>
+        <token id='T_EQUAL' start='1004' end='1005'>
+            <text>=</text>
+        </token>
+        <token id='T_VARIABLE' start='1006' end='1011'>
+            <text>$test</text>
+        </token>
+        <token id='T_SEMICOLON' start='1011' end='1012'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1021' end='1022'>
+            <text>}</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1027' end='1028'>
+            <text>}</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1029' end='1030'>
+            <text>}</text>
+        </token>
+        <token id='T_NAMESPACE' start='1032' end='1041'>
+            <text>namespace</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1042' end='1043'>
+            <text>{</text>
+        </token>
+        <token id='T_USE' start='1048' end='1051'>
+            <text>use</text>
+        </token>
+        <token id='T_STRING' start='1052' end='1056'>
+            <text>Test</text>
+        </token>
+        <token id='T_NS_SEPARATOR' start='1056' end='1057'>
+            <text>\</text>
+        </token>
+        <token id='T_STRING' start='1057' end='1072'>
+            <text>AttributeSyntax</text>
+        </token>
+        <token id='T_NS_SEPARATOR' start='1072' end='1073'>
+            <text>\</text>
+        </token>
+        <token id='T_STRING' start='1073' end='1086'>
+            <text>AttributeTest</text>
+        </token>
+        <token id='T_SEMICOLON' start='1086' end='1087'>
+            <text>;</text>
+        </token>
+        <token id='T_ATTRIBUTE' start='1093' end='1095'>
+            <text>#[</text>
+        </token>
+        <token id='T_STRING' start='1095' end='1108'>
+            <text>AttributeTest</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1108' end='1109'>
+            <text>(</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='1109' end='1115'>
+            <text>"test"</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1115' end='1116'>
+            <text>)</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='1116' end='1117'>
+            <text>]</text>
+        </token>
+        <token id='T_CLASS' start='1122' end='1127'>
+            <text>class</text>
+        </token>
+        <token id='T_STRING' start='1128' end='1132'>
+            <text>Test</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1133' end='1134'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1139' end='1140'>
+            <text>}</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1141' end='1142'>
+            <text>}</text>
+        </token>
+        <token id='EOF' start='1143' end='1143'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='1143'>
+        <Comments>
+            <Comment start='6' end='813' commentType='multiLine'/>
+            <Comment start='6' end='813' commentType='multiLine'/>
+        </Comments>
+        <Statements>
+            <NamespaceDeclaration start='815' end='1030' isBracketed='true'>
+                <NamespaceName start='825' end='845' isCurrent='false' isGlobal='false'>
+                    <Identifier start='825' end='829' name='Test'/>
+                    <Identifier start='830' end='845' name='AttributeSyntax'/>
+                </NamespaceName>
+                <Block start='846' end='1030' isCurly='true'>
+                    <UseStatement start='852' end='866' type='TYPE'>
+                        <SingleUseStatementPart start='856' end='865'>
+                            <Name>
+                                <NamespaceName start='856' end='865' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='856' end='865' name='Attribute'/>
+                                </NamespaceName>
+                            </Name>
+                            <Alias>
+                            </Alias>
+                        </SingleUseStatementPart>
+                    </UseStatement>
+                    <ClassDeclaration start='872' end='1028' modifier='NONE'>
+                        <Attributes>
+                            <Attribute start='872' end='884'>
+                                <AttributeDeclarations>
+                                    <AttributeDeclaration start='874' end='883'>
+                                        <AttributeName>
+                                            <NamespaceName start='874' end='883' isCurrent='false' isGlobal='false'>
+                                                <Identifier start='874' end='883' name='Attribute'/>
+                                            </NamespaceName>
+                                        </AttributeName>
+                                    </AttributeDeclaration>
+                                </AttributeDeclarations>
+                            </Attribute>
+                        </Attributes>
+                        <ClassName>
+                            <Identifier start='895' end='908' name='AttributeTest'/>
+                        </ClassName>
+                        <SuperClassName>
+                        </SuperClassName>
+                        <Interfaces>
+                        </Interfaces>
+                        <Block start='909' end='1028' isCurly='true'>
+                            <FieldsDeclaration start='919' end='933' modifier='private'>
+                                <FieldType>
+                                </FieldType>
+                                <VariableNames>
+                                    <Variable start='927' end='932' isDollared='true'>
+                                        <Identifier start='928' end='932' name='test'/>
+                                    </Variable>
+                                </VariableNames>
+                                <InitialValues>
+                                </InitialValues>
+                            </FieldsDeclaration>
+                            <MethodDeclaration start='943' end='1022' modifiers='public'>
+                                <FunctionDeclaration start='950' end='1022' isReference='false'>
+                                    <Identifier start='959' end='970' name='__construct'/>
+                                    <FormalParameters>
+                                        <FormalParameter start='971' end='976' isMandatory='true' isVariadic='false'>
+                                            <ParametrType>
+                                            </ParametrType>
+                                            <ParametrName>
+                                                <Variable start='971' end='976' isDollared='true'>
+                                                    <Identifier start='972' end='976' name='test'/>
+                                                </Variable>
+                                            </ParametrName>
+                                            <DefaultValue>
+                                            </DefaultValue>
+                                        </FormalParameter>
+                                    </FormalParameters>
+                                    <Block start='978' end='1022' isCurly='true'>
+                                        <ExpressionStatement start='992' end='1012'>
+                                            <Assignment start='992' end='1011' operator='EQUAL'>
+                                                <FieldAccess start='992' end='1003' isNullsafe='false'>
+                                                    <Variable start='992' end='997' isDollared='true'>
+                                                        <Identifier start='993' end='997' name='this'/>
+                                                    </Variable>
+                                                    <Field>
+                                                        <Variable start='999' end='1003' isDollared='false'>
+                                                            <Identifier start='999' end='1003' name='test'/>
+                                                        </Variable>
+                                                    </Field>
+                                                </FieldAccess>
+                                                <Variable start='1006' end='1011' isDollared='true'>
+                                                    <Identifier start='1007' end='1011' name='test'/>
+                                                </Variable>
+                                            </Assignment>
+                                        </ExpressionStatement>
+                                    </Block>
+                                </FunctionDeclaration>
+                            </MethodDeclaration>
+                        </Block>
+                    </ClassDeclaration>
+                </Block>
+            </NamespaceDeclaration>
+            <NamespaceDeclaration start='1032' end='1142' isBracketed='true'>
+                <Block start='1042' end='1142' isCurly='true'>
+                    <UseStatement start='1048' end='1087' type='TYPE'>
+                        <SingleUseStatementPart start='1052' end='1086'>
+                            <Name>
+                                <NamespaceName start='1052' end='1086' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='1052' end='1056' name='Test'/>
+                                    <Identifier start='1057' end='1072' name='AttributeSyntax'/>
+                                    <Identifier start='1073' end='1086' name='AttributeTest'/>
+                                </NamespaceName>
+                            </Name>
+                            <Alias>
+                            </Alias>
+                        </SingleUseStatementPart>
+                    </UseStatement>
+                    <ClassDeclaration start='1093' end='1140' modifier='NONE'>
+                        <Attributes>
+                            <Attribute start='1093' end='1117'>
+                                <AttributeDeclarations>
+                                    <AttributeDeclaration start='1095' end='1116'>
+                                        <AttributeName>
+                                            <NamespaceName start='1095' end='1108' isCurrent='false' isGlobal='false'>
+                                                <Identifier start='1095' end='1108' name='AttributeTest'/>
+                                            </NamespaceName>
+                                        </AttributeName>
+                                        <AttributeParameters>
+                                            <Scalar start='1109' end='1115' type='STRING' value='"test"'/>
+                                        </AttributeParameters>
+                                    </AttributeDeclaration>
+                                </AttributeDeclarations>
+                            </Attribute>
+                        </Attributes>
+                        <ClassName>
+                            <Identifier start='1128' end='1132' name='Test'/>
+                        </ClassName>
+                        <SuperClassName>
+                        </SuperClassName>
+                        <Interfaces>
+                        </Interfaces>
+                        <Block start='1133' end='1140' isCurly='true'>
+                        </Block>
+                    </ClassDeclaration>
+                </Block>
+            </NamespaceDeclaration>
+        </Statements>
+    </Program>
+</testresult>

@@ -200,7 +200,7 @@ public class TomcatModuleConfig {
                         loggerDir = ctx.getLoggerDirectory();
                         loggerPrefix = ctx.getLoggerPrefix();
                         loggerSuffix = ctx.getLoggerSuffix();
-                        loggerTimestamp = Boolean.valueOf(ctx.getLoggerTimestamp()).booleanValue();
+                        loggerTimestamp = Boolean.valueOf(ctx.getLoggerTimestamp());
                         return;
                     }
                 }
@@ -218,7 +218,7 @@ public class TomcatModuleConfig {
                         loggerPrefix = sCtx.getAttributeValue(SContext.LOGGER, "prefix"); // NOI18N
                         loggerSuffix = sCtx.getAttributeValue(SContext.LOGGER, "suffix"); // NOI18N
                         String timestamp = sCtx.getAttributeValue(SContext.LOGGER, "timestamp"); // NOI18N
-                        loggerTimestamp = Boolean.valueOf(timestamp).booleanValue();
+                        loggerTimestamp = Boolean.valueOf(timestamp);
                     }
                 }
             }

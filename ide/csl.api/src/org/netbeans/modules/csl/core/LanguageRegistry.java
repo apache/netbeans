@@ -28,11 +28,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.text.Document;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.editor.mimelookup.MimePath;
 import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenSequence;
-import org.netbeans.editor.BaseDocument;
 import org.netbeans.modules.csl.editor.codetemplates.CslCorePackageAccessor;
 import org.openide.filesystems.FileAttributeEvent;
 import org.openide.filesystems.FileChangeListener;
@@ -146,32 +146,31 @@ public final class LanguageRegistry implements Iterable<Language> {
         return result;
     }
 
-    public List<Language> getEmbeddedLanguages(BaseDocument doc, int offset) {
+    public List<Language> getEmbeddedLanguages(Document doc, int offset) {
         List<Language> result = new ArrayList<Language>();
 
-        doc.readLock(); // Read-lock due to Token hierarchy use
-        try {
-            // TODO - I should only do this for languages which CAN have it
-            /*
-     at org.netbeans.lib.lexer.inc.IncTokenList.reinit(IncTokenList.java:113)
-        at org.netbeans.lib.lexer.TokenHierarchyOperation.setActiveImpl(TokenHierarchyOperation.java:257)
-        at org.netbeans.lib.lexer.TokenHierarchyOperation.isActiveImpl(TokenHierarchyOperation.java:308)
-        at org.netbeans.lib.lexer.TokenHierarchyOperation.tokenSequence(TokenHierarchyOperation.java:344)
-        at org.netbeans.lib.lexer.TokenHierarchyOperation.tokenSequence(TokenHierarchyOperation.java:338)
-        at org.netbeans.api.lexer.TokenHierarchy.tokenSequence(TokenHierarchy.java:183)
-        at org.netbeans.modules.csl.LanguageRegistry.getEmbeddedLanguages(LanguageRegistry.java:336)
-        at org.netbeans.modules.gsfret.hints.infrastructure.SuggestionsTask.getHintsProviderLanguage(SuggestionsTask.java:70)
-        at org.netbeans.modules.gsfret.hints.infrastructure.SuggestionsTask.run(SuggestionsTask.java:94)
-        at org.netbeans.modules.gsfret.hints.infrastructure.SuggestionsTask.run(SuggestionsTask.java:63)
-[catch] at org.netbeans.napi.gsfret.source.Source$CompilationJob.run(Source.java:1272)             * 
-             */
-            TokenSequence ts = TokenHierarchy.get(doc).tokenSequence();
-            if (ts != null) {
-                addLanguages(result, ts, offset);
+        doc.render(
+            () -> {
+                // Read-lock due to Token hierarchy use
+                /*
+         at org.netbeans.lib.lexer.inc.IncTokenList.reinit(IncTokenList.java:113)
+            at org.netbeans.lib.lexer.TokenHierarchyOperation.setActiveImpl(TokenHierarchyOperation.java:257)
+            at org.netbeans.lib.lexer.TokenHierarchyOperation.isActiveImpl(TokenHierarchyOperation.java:308)
+            at org.netbeans.lib.lexer.TokenHierarchyOperation.tokenSequence(TokenHierarchyOperation.java:344)
+            at org.netbeans.lib.lexer.TokenHierarchyOperation.tokenSequence(TokenHierarchyOperation.java:338)
+            at org.netbeans.api.lexer.TokenHierarchy.tokenSequence(TokenHierarchy.java:183)
+            at org.netbeans.modules.csl.LanguageRegistry.getEmbeddedLanguages(LanguageRegistry.java:336)
+            at org.netbeans.modules.gsfret.hints.infrastructure.SuggestionsTask.getHintsProviderLanguage(SuggestionsTask.java:70)
+            at org.netbeans.modules.gsfret.hints.infrastructure.SuggestionsTask.run(SuggestionsTask.java:94)
+            at org.netbeans.modules.gsfret.hints.infrastructure.SuggestionsTask.run(SuggestionsTask.java:63)
+    [catch] at org.netbeans.napi.gsfret.source.Source$CompilationJob.run(Source.java:1272)             * 
+                 */
+                TokenSequence ts = TokenHierarchy.get(doc).tokenSequence();
+                if (ts != null) {
+                    addLanguages(result, ts, offset);
+                }
             }
-        } finally {
-            doc.readUnlock();
-        }
+        );
 
         String mimeType = (String) doc.getProperty("mimeType"); // NOI18N
         if (mimeType != null) {

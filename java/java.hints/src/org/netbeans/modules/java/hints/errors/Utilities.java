@@ -39,6 +39,7 @@ import com.sun.source.tree.ArrayTypeTree;
 import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.BlockTree;
+import com.sun.source.tree.CaseLabelTree;
 import com.sun.source.tree.CaseTree;
 import com.sun.source.tree.CatchTree;
 import com.sun.source.tree.ClassTree;
@@ -63,6 +64,7 @@ import com.sun.source.tree.ParenthesizedTree;
 import com.sun.source.tree.PrimitiveTypeTree;
 import com.sun.source.tree.Scope;
 import com.sun.source.tree.StatementTree;
+import com.sun.source.tree.SwitchExpressionTree;
 import com.sun.source.tree.SwitchTree;
 import com.sun.source.tree.SynchronizedTree;
 import com.sun.source.tree.Tree;
@@ -147,7 +149,6 @@ import org.netbeans.api.java.source.CodeStyle;
 import org.netbeans.api.java.source.CodeStyleUtils;
 import org.netbeans.api.java.source.TreeMaker;
 import org.netbeans.modules.java.source.JavaSourceAccessor;
-import org.netbeans.modules.java.source.TreeShims;
 import org.netbeans.spi.java.hints.JavaFix;
 import org.netbeans.spi.java.hints.JavaFixUtilities;
 import org.openide.util.Pair;
@@ -449,10 +450,13 @@ public class Utilities {
             return null;
         }
         
+        diff.commit();
+        return computeChangeInfo(target, diff, tag);
+    }
+        
+    public static ChangeInfo computeChangeInfo(FileObject target, final ModificationResult diff, final Object tag) {
         List<? extends Difference> differences = diff.getDifferences(target);
         ChangeInfo result = null;
-        
-        diff.commit();
         
         try {
             if (differences != null) {
@@ -3134,7 +3138,8 @@ public class Utilities {
                             }
                             break;
                         } else {
-                            if (leftTreeName != null && leftTreeName.contentEquals(getLeftTreeName(statements.get(0)))) {
+                            Name exprTree = getLeftTreeName(statements.get(0));
+                            if (leftTreeName != null && exprTree != null && leftTreeName.contentEquals(exprTree)) {
                                 break;
                             } else {
                                 return false;
@@ -3152,7 +3157,8 @@ public class Utilities {
                             }
                             firstCase = false;
                         }
-                        if (leftTreeName != null && leftTreeName.contentEquals(getLeftTreeName(statements.get(0)))) {
+                        Name exprTree = getLeftTreeName(statements.get(0));
+                        if (leftTreeName != null && exprTree != null && leftTreeName.contentEquals(exprTree)) {
                             break;
                         } else {
                             return false;
@@ -3173,21 +3179,24 @@ public class Utilities {
         List<CaseTree> newCases = new ArrayList<>();
         SWITCH_TYPE switchType = SWITCH_TYPE.TRADITIONAL_SWITCH;
         Tree typeCastTree = null;
+        ExpressionTree switchExpr;
         List<? extends CaseTree> cases;
         Set<VariableElement> variablesDeclaredInOtherCases = new HashSet<>();
-        List<ExpressionTree> patterns = new ArrayList<>();
+        List<CaseLabelTree> patterns = new ArrayList<>();
         Tree leftVariable = null;
-        boolean ruleSwitchFlag = st.getKind().toString().equals(TreeShims.SWITCH_EXPRESSION);
+        boolean ruleSwitchFlag = st.getKind() == Kind.SWITCH_EXPRESSION;
         if (ruleSwitchFlag) {
-            cases = TreeShims.getCases(st);
+            switchExpr = ((SwitchExpressionTree) st).getExpression();
+            cases = ((SwitchExpressionTree) st).getCases();
             switchType = SWITCH_TYPE.RULE_SWITCH;
         } else {
+            switchExpr = ((SwitchTree) st).getExpression();
             cases = ((SwitchTree) st).getCases();
         }
         for (Iterator<? extends CaseTree> it = cases.iterator(); it.hasNext();) {
             CaseTree ct = it.next();
             TreePath casePath = new TreePath(tp, ct);
-            patterns.addAll(TreeShims.getExpressions(ct));
+            patterns.addAll(ct.getLabels());
             List<StatementTree> statements;
             if (ct.getStatements() == null) {
                 statements = new ArrayList<>(((JCTree.JCCase) ct).stats);
@@ -3274,9 +3283,9 @@ public class Utilities {
                         typeCastTree = ((JCTree.JCTypeCast)body).getType();
                         body = ((JCTree.JCTypeCast)body).getExpression();
                     }
-                newCases.add(make.Case(patterns, make.ExpressionStatement((ExpressionTree) body)));
+                newCases.add(make.CasePatterns(patterns, make.ExpressionStatement((ExpressionTree) body)));
             } else {
-                newCases.add(make.Case(patterns, body));
+                newCases.add(make.CasePatterns(patterns, body));
             }
 
             patterns = new ArrayList<>();
@@ -3289,7 +3298,7 @@ public class Utilities {
         ExpressionTree et = null;
         switch (switchType) {
             case SWITCH_EXPRESSION:
-                et = (ExpressionTree) make.SwitchExpression(TreeShims.getExpressions(st).get(0), newCases);
+                et = (ExpressionTree) make.SwitchExpression(switchExpr, newCases);
                 if (typeCastTree != null) {
                     et = make.Parenthesized(et);
                     et = make.TypeCast(typeCastTree, et);
@@ -3301,10 +3310,10 @@ public class Utilities {
                 }
                 break;
             case RULE_SWITCH:
-                wc.rewrite(st, make.SwitchExpression(TreeShims.getExpressions(st).get(0), newCases));
+                wc.rewrite(st, make.SwitchExpression(switchExpr, newCases));
                 break;
             case TRADITIONAL_SWITCH:
-                wc.rewrite((SwitchTree) st, make.Switch(((SwitchTree) st).getExpression(), newCases));
+                wc.rewrite((SwitchTree) st, make.Switch(switchExpr, newCases));
                 break;
             default:
                 break;

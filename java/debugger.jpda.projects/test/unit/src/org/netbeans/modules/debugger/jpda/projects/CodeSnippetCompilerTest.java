@@ -21,8 +21,6 @@ package org.netbeans.modules.debugger.jpda.projects;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.util.SourcePositions;
 import com.sun.source.util.TreePath;
-import com.sun.tools.classfile.ClassFile;
-import com.sun.tools.classfile.Method;
 import java.io.ByteArrayInputStream;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.source.CompilationController;
@@ -31,8 +29,11 @@ import org.netbeans.api.java.source.JavaSource.Phase;
 import org.netbeans.api.java.source.SourceUtilsTestUtil;
 import org.netbeans.api.java.source.TestUtilities;
 import org.netbeans.junit.NbTestCase;
+import org.netbeans.modules.classfile.ClassFile;
+import org.netbeans.modules.classfile.Method;
 import org.netbeans.spi.java.classpath.ClassPathProvider;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
+import org.netbeans.spi.java.queries.SourceLevelQueryImplementation;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 
@@ -62,6 +63,12 @@ public class CodeSnippetCompilerTest extends NbTestCase {
                     }
                     return null;
                 }
+            },
+            new SourceLevelQueryImplementation() {
+                @Override
+                public String getSourceLevel(FileObject javaFile) {
+                    return "8";
+                }
             }
         });
         wd = FileUtil.toFileObject(FileUtil.normalizeFile(getWorkDir()));
@@ -79,25 +86,30 @@ public class CodeSnippetCompilerTest extends NbTestCase {
 
     public void testInferResultType() throws Exception {
         String code = "package test;\n class A { public void test(java.util.List<String> l) { } }";
-        String watch = "l.stream().map(s -> s.length()).collect(java.util.stream.Collectors.toList());";
         int pos = code.indexOf("{", code.indexOf("{") + 1);
         FileObject java = createFile(root, "test/A.java", code);    //NOI18N
         JavaSource.forFileObject(java).runUserActionTask((CompilationController cc) -> {
             cc.toPhase(Phase.RESOLVED);
             TreePath posPath = cc.getTreeUtilities().pathFor(pos);
-            StatementTree tree = cc.getTreeUtilities().parseStatement(
-                watch,
-                new SourcePositions[1]
-            );
-            cc.getTreeUtilities().attributeTree(tree, cc.getTrees().getScope(posPath));
-            TreePath tp = new TreePath(posPath, tree);
-            ClassToInvoke cti = CodeSnippetCompiler.compileToClass(cc, watch, 0, cc.getJavaSource(), java, -1, tp, tree, false);
+            for (String watch : new String[] {
+                "l.stream().map(s -> s.length()).collect(java.util.stream.Collectors.toList());",
+                "l.stream().map(s -> s.length()).collect(java.util.stream.Collectors.toList())",
+                "l.stream().map(s -> s.length()).collect(java.util.stream.Collectors.toList()); \t\n",
+            }) {
+                StatementTree tree = cc.getTreeUtilities().parseStatement(
+                    watch,
+                    new SourcePositions[1]
+                );
+                cc.getTreeUtilities().attributeTree(tree, cc.getTrees().getScope(posPath));
+                TreePath tp = new TreePath(posPath, tree);
+                ClassToInvoke cti = CodeSnippetCompiler.compileToClass(cc, watch, 0, cc.getJavaSource(), java, -1, tp, tree, false);
 
-            ClassFile cf = ClassFile.read(new ByteArrayInputStream(cti.bytecode));
+                ClassFile cf = new ClassFile(new ByteArrayInputStream(cti.bytecode));
 
-            for (Method m : cf.methods) {
-                if (cf.constant_pool.getUTF8Value(m.name_index).equals("invoke")) {
-                    assertEquals("(Ljava/util/List;)Ljava/util/List;", cf.constant_pool.getUTF8Value(m.descriptor.index));
+                for (Method m : cf.getMethods()) {
+                    if (m.getName().equals("invoke")) {
+                        assertEquals("(Ljava/util/List;)Ljava/util/List;", m.getDescriptor());
+                    }
                 }
             }
         }, true);

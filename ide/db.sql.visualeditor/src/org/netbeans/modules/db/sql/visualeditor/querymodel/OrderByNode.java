@@ -19,6 +19,7 @@
 package org.netbeans.modules.db.sql.visualeditor.querymodel;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Collection;
 
 import org.netbeans.api.db.sql.support.SQLIdentifiers;
@@ -32,7 +33,7 @@ public class OrderByNode implements OrderBy {
 
     // A vector of generalized column objects (JoinTables)
 
-    ArrayList _sortSpecificationList;
+    List<SortSpecification> _sortSpecificationList;
 
 
     // Constructors
@@ -40,7 +41,7 @@ public class OrderByNode implements OrderBy {
     public OrderByNode() {
     }
 
-    public OrderByNode(ArrayList sortSpecificationList) {
+    public OrderByNode(List sortSpecificationList) {
         _sortSpecificationList = sortSpecificationList;
     }
 
@@ -112,7 +113,7 @@ public class OrderByNode implements OrderBy {
         SortSpecification sortSpec = new SortSpecification(new ColumnNode(tableSpec, columnName), direction);
         // Insert the new one in an appropriate place
         if (_sortSpecificationList == null)
-            _sortSpecificationList = new ArrayList();
+            _sortSpecificationList = new ArrayList<>();
         _sortSpecificationList.add(order-1, sortSpec);
     }
 

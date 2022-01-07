@@ -199,6 +199,8 @@ public final class GraalEnginesTest {
 
     @Test
     public void returnArrayInJS() throws Exception {
+        Assume.assumeFalse("Broken in GraalVM 20.3.0 fixed in GraalVM 21.1.0", "25.272-b10-jvmci-20.3-b06".equals(System.getProperty("java.vm.version")));
+
         ScriptEngine js = Scripting.createManager().getEngineByName("GraalVM:js");
         Object fn = js.eval("(function(obj) {\n"
                 + "  return [ 1, 2, 'a', Math.PI, obj ];\n"

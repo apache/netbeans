@@ -19,8 +19,10 @@
 package org.netbeans.modules.java.hints.errors;
 
 import com.sun.source.tree.CaseTree;
+import com.sun.source.tree.SwitchExpressionTree;
 import com.sun.source.tree.SwitchTree;
 import com.sun.source.tree.Tree;
+import com.sun.source.tree.Tree.Kind;
 import com.sun.source.util.TreePath;
 import java.util.Arrays;
 import java.util.Collections;
@@ -30,7 +32,6 @@ import java.util.Set;
 import org.netbeans.api.java.queries.CompilerOptionsQuery;
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.modules.java.hints.spi.ErrorRule;
-import org.netbeans.modules.java.source.TreeShims;
 import org.netbeans.spi.editor.hints.Fix;
 import org.netbeans.spi.java.hints.JavaFix;
 import org.netbeans.spi.java.hints.JavaFix.TransformationContext;
@@ -60,10 +61,13 @@ public class DifferentCaseKindsFix implements ErrorRule<Void> {
             return null;
         }
         TreePath parentPath = treePath.getParentPath();
+        if(parentPath.getLeaf() instanceof CaseTree){
+            parentPath = parentPath.getParentPath();
+        }
         List<? extends CaseTree> caseTrees = null;
         boolean flag = false;
-        if(parentPath.getLeaf().getKind().toString().equals(TreeShims.SWITCH_EXPRESSION)){
-            caseTrees = TreeShims.getCases(parentPath.getLeaf());            
+        if(parentPath.getLeaf().getKind() == Kind.SWITCH_EXPRESSION) {
+            caseTrees = ((SwitchExpressionTree) parentPath.getLeaf()).getCases();
         } else {
             flag = true;
             caseTrees = ((SwitchTree) treePath.getParentPath().getLeaf()).getCases();
@@ -72,7 +76,7 @@ public class DifferentCaseKindsFix implements ErrorRule<Void> {
             boolean wasDefault = false;
             boolean wasEmpty = false;
             for (CaseTree ct : caseTrees) {
-                if (ct.getStatements() == null && TreeShims.getBody(ct) == null) {
+                if (ct.getStatements() == null && ct.getBody() == null) {
                     return null;
                 } else if (flag && ct.getStatements() != null) {
                     if (completesNormally) {
@@ -136,7 +140,11 @@ public class DifferentCaseKindsFix implements ErrorRule<Void> {
         @Override
         protected void performRewrite(TransformationContext ctx) {
             TreePath tp = ctx.getPath();
-            Tree switchBlock = tp.getParentPath().getLeaf();
+            TreePath switchPath = tp.getParentPath();
+            if(switchPath.getLeaf() instanceof CaseTree){
+                switchPath = switchPath.getParentPath();
+            }
+            Tree switchBlock = switchPath.getLeaf();
             Utilities.performRewriteRuleSwitch(ctx, tp, switchBlock, false);
         }
 

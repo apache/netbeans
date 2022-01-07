@@ -1,0 +1,91 @@
+token #0 PHP_OPENTAG <?php
+token #1 WHITESPACE \n\n
+token #2 PHP_COMMENT_START /*
+token #3 PHP_COMMENT \n * Licensed to the Apache Software Foundation (ASF) under one\n * or more contributor license agreements.  See the NOTICE file\n * distributed with this work for additional information\n * regarding copyright ownership.  The ASF licenses this file\n * to you under the Apache License, Version 2.0 (the\n * "License"); you may not use this file except in compliance\n * with the License.  You may obtain a copy of the License at\n *\n *   http://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing,\n * software distributed under the License is distributed on an\n * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY\n * KIND, either express or implied.  See the License for the\n * specific language governing permissions and limitations\n * under the License.\n 
+token #4 PHP_COMMENT_END */
+token #5 WHITESPACE \n
+token #6 PHP_VARIABLE $test
+token #7 WHITESPACE  
+token #8 PHP_OPERATOR =
+token #9 WHITESPACE  
+token #10 PHP_NUMBER 0
+token #11 PHP_SEMICOLON ;
+token #12 WHITESPACE \n
+token #13 PHP_CLOSETAG ?>
+token #14 T_INLINE_HTML \n
+token #15 PHP_OPENTAG <?php
+token #16 WHITESPACE  
+token #17 PHP_IF if
+token #18 WHITESPACE  
+token #19 PHP_TOKEN (
+token #20 PHP_VARIABLE $test
+token #21 WHITESPACE  
+token #22 PHP_OPERATOR ===
+token #23 WHITESPACE  
+token #24 PHP_NUMBER 0
+token #25 PHP_TOKEN )
+token #26 PHP_TOKEN :
+token #27 WHITESPACE  
+token #28 PHP_CLOSETAG ?>
+token #29 T_INLINE_HTML \n    0\n
+token #30 PHP_OPENTAG <?php
+token #31 WHITESPACE  
+token #32 PHP_ELSEIF elseif
+token #33 WHITESPACE  
+token #34 PHP_TOKEN (
+token #35 PHP_VARIABLE $test
+token #36 WHITESPACE  
+token #37 PHP_OPERATOR ===
+token #38 WHITESPACE  
+token #39 PHP_NUMBER 5
+token #40 PHP_TOKEN )
+token #41 PHP_TOKEN :
+token #42 WHITESPACE  
+token #43 PHP_CLOSETAG ?>
+token #44 T_INLINE_HTML \n    5\n
+token #45 PHP_OPENTAG <?php
+token #46 WHITESPACE  
+token #47 PHP_ELSE else
+token #48 WHITESPACE  
+token #49 PHP_TOKEN :
+token #50 WHITESPACE  
+token #51 PHP_CLOSETAG ?>
+token #52 T_INLINE_HTML \n    else:\n    
+token #53 PHP_OPENTAG <?php
+token #54 WHITESPACE  
+token #55 PHP_STRING test
+token #56 PHP_TOKEN (
+token #57 PHP_STRING else
+token #58 PHP_TOKEN :
+token #59 WHITESPACE  
+token #60 PHP_CONSTANT_ENCAPSED_STRING "else"
+token #61 PHP_TOKEN )
+token #62 PHP_SEMICOLON ;
+token #63 WHITESPACE  
+token #64 PHP_CLOSETAG ?>
+token #65 T_INLINE_HTML \n    
+token #66 PHP_OPENTAG <?php
+token #67 WHITESPACE  
+token #68 PHP_STRING test
+token #69 PHP_TOKEN (
+token #70 PHP_STRING if
+token #71 PHP_TOKEN :
+token #72 WHITESPACE  
+token #73 PHP_CONSTANT_ENCAPSED_STRING "if"
+token #74 PHP_TOKEN ,
+token #75 WHITESPACE  
+token #76 PHP_STRING else
+token #77 PHP_TOKEN :
+token #78 WHITESPACE  
+token #79 PHP_CONSTANT_ENCAPSED_STRING "else"
+token #80 PHP_TOKEN )
+token #81 PHP_SEMICOLON ;
+token #82 WHITESPACE  
+token #83 PHP_CLOSETAG ?>
+token #84 T_INLINE_HTML \n
+token #85 PHP_OPENTAG <?php
+token #86 WHITESPACE  
+token #87 PHP_ENDIF endif
+token #88 PHP_SEMICOLON ;
+token #89 WHITESPACE  
+token #90 PHP_CLOSETAG ?>\n

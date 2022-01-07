@@ -788,6 +788,47 @@ public class PHPNewLineIndenterTest extends PHPTestBase {
         testIndentInFile("testfiles/indent/objectOperatorContinue_11.php");
     }
 
+    // NETBEANS-4443 PHP 8.0 Support
+    public void testNullsafeObjectOperatorContinue01() throws Exception {
+        testIndentInFile("testfiles/indent/php80/nullsafeObjectOperatorContinue_01.php");
+    }
+
+    public void testNullsafeObjectOperatorContinue02() throws Exception {
+        testIndentInFile("testfiles/indent/php80/nullsafeObjectOperatorContinue_02.php");
+    }
+
+    public void testNullsafeObjectOperatorContinue03() throws Exception {
+        testIndentInFile("testfiles/indent/php80/nullsafeObjectOperatorContinue_03.php");
+    }
+
+    public void testNullsafeObjectOperatorContinue04() throws Exception {
+        testIndentInFile("testfiles/indent/php80/nullsafeObjectOperatorContinue_04.php");
+    }
+
+    public void testNullsafeObjectOperatorContinue05() throws Exception {
+        testIndentInFile("testfiles/indent/php80/nullsafeObjectOperatorContinue_05.php");
+    }
+
+    public void testNullsafeObjectOperatorContinue06() throws Exception {
+        testIndentInFile("testfiles/indent/php80/nullsafeObjectOperatorContinue_06.php");
+    }
+
+    public void testNullsafeObjectOperatorContinue07() throws Exception {
+        testIndentInFile("testfiles/indent/php80/nullsafeObjectOperatorContinue_07.php");
+    }
+
+    public void testNullsafeObjectOperatorContinue09() throws Exception {
+        testIndentInFile("testfiles/indent/php80/nullsafeObjectOperatorContinue_09.php");
+    }
+
+    public void testNullsafeObjectOperatorContinue10() throws Exception {
+        testIndentInFile("testfiles/indent/php80/nullsafeObjectOperatorContinue_10.php");
+    }
+
+    public void testNullsafeObjectOperatorContinue11() throws Exception {
+        testIndentInFile("testfiles/indent/php80/nullsafeObjectOperatorContinue_11.php");
+    }
+
     public void test174835_01()throws Exception {
         testIndentInFile("testfiles/indent/issue174835_01.php");
     }
@@ -1054,6 +1095,119 @@ public class PHPNewLineIndenterTest extends PHPTestBase {
 
     public void testIssue268621_06() throws Exception {
         testIndentInFile("testfiles/indent/issue268621_06.php");
+    }
+
+    // PHP 8.0
+    public void testMatchExpression_01() throws Exception {
+        testIndentInFile("testfiles/indent/php80/matchExpression_01.php");
+    }
+
+    public void testMatchExpression_02() throws Exception {
+        testIndentInFile("testfiles/indent/php80/matchExpression_02.php");
+    }
+
+    public void testMatchExpression_03() throws Exception {
+        testIndentInFile("testfiles/indent/php80/matchExpression_03.php");
+    }
+
+    public void testMatchExpression_04() throws Exception {
+        testIndentInFile("testfiles/indent/php80/matchExpression_04.php");
+    }
+
+    public void testMatchExpression_05() throws Exception {
+        testIndentInFile("testfiles/indent/php80/matchExpression_05.php");
+    }
+
+    public void testMatchExpression_06() throws Exception {
+        testIndentInFile("testfiles/indent/php80/matchExpression_06.php");
+    }
+
+    public void testMatchExpression_07() throws Exception {
+        testIndentInFile("testfiles/indent/php80/matchExpression_07.php");
+    }
+
+    public void testMatchExpression_08() throws Exception {
+        testIndentInFile("testfiles/indent/php80/matchExpression_08.php");
+    }
+
+    public void testMatchExpression_09() throws Exception {
+        testIndentInFile("testfiles/indent/php80/matchExpression_09.php");
+    }
+
+    public void testMatchExpression_10() throws Exception {
+        testIndentInFile("testfiles/indent/php80/matchExpression_10.php");
+    }
+
+    public void testMatchExpression_11() throws Exception {
+        testIndentInFile("testfiles/indent/php80/matchExpression_11.php");
+    }
+
+    public void testMatchExpression_12() throws Exception {
+        testIndentInFile("testfiles/indent/php80/matchExpression_12.php");
+    }
+
+    public void testAttributeSyntax_01() throws Exception {
+        testIndentInFile("testfiles/indent/php80/attributeSyntax_01.php");
+    }
+
+    public void testAttributeSyntax_02() throws Exception {
+        testIndentInFile("testfiles/indent/php80/attributeSyntax_02.php");
+    }
+
+    public void testAttributeSyntax_03() throws Exception {
+        testIndentInFile("testfiles/indent/php80/attributeSyntax_03.php");
+    }
+
+    public void testAttributeSyntax_04() throws Exception {
+        testIndentInFile("testfiles/indent/php80/attributeSyntax_04.php");
+    }
+
+    public void testAttributeSyntax_05() throws Exception {
+        testIndentInFile("testfiles/indent/php80/attributeSyntax_05.php");
+    }
+
+    public void testAttributeSyntax_06() throws Exception {
+        testIndentInFile("testfiles/indent/php80/attributeSyntax_06.php");
+    }
+
+    public void testAttributeSyntax_07() throws Exception {
+        testIndentInFile("testfiles/indent/php80/attributeSyntax_07.php");
+    }
+
+    public void testAttributeSyntax_08() throws Exception {
+        testIndentInFile("testfiles/indent/php80/attributeSyntax_08.php");
+    }
+
+    public void testConstructorPropertyPromotion_01() throws Exception {
+        testIndentInFile("testfiles/indent/php80/constructorPropertyPromotion_01.php");
+    }
+
+    public void testConstructorPropertyPromotion_02() throws Exception {
+        testIndentInFile("testfiles/indent/php80/constructorPropertyPromotion_02.php");
+    }
+
+    public void testConstructorPropertyPromotion_03() throws Exception {
+        testIndentInFile("testfiles/indent/php80/constructorPropertyPromotion_03.php");
+    }
+
+    public void testConstructorPropertyPromotion_04() throws Exception {
+        testIndentInFile("testfiles/indent/php80/constructorPropertyPromotion_04.php");
+    }
+
+    public void testConstructorPropertyPromotion_05() throws Exception {
+        testIndentInFile("testfiles/indent/php80/constructorPropertyPromotion_05.php");
+    }
+
+    public void testConstructorPropertyPromotion_06() throws Exception {
+        testIndentInFile("testfiles/indent/php80/constructorPropertyPromotion_06.php");
+    }
+
+    public void testConstructorPropertyPromotion_07() throws Exception {
+        testIndentInFile("testfiles/indent/php80/constructorPropertyPromotion_07.php");
+    }
+
+    public void testConstructorPropertyPromotion_08() throws Exception {
+        testIndentInFile("testfiles/indent/php80/constructorPropertyPromotion_08.php");
     }
 
     @Override

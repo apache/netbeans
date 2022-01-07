@@ -1166,6 +1166,23 @@ public class InstallSupportImpl {
                         break;
                 }
             }
+
+            List<String> pack200Entries = Utilities.getNbmPack200Entries(nbmFile);
+            if (!pack200Entries.isEmpty()) {
+                OperationContainer<InstallSupport> operationContainer = support.getContainer();
+                OperationContainerImpl ocImpl = Trampoline.API.impl(operationContainer);
+                File unpack200 = ocImpl.getUnpack200();
+                if (unpack200 == null || !unpack200.canExecute()) {
+                    StringBuilder sb = new StringBuilder();
+                    for (String entry : pack200Entries) {
+                        sb.append("\n").append(entry);
+                    }
+                    throw new OperationException(OperationException.ERROR_TYPE.MISSING_UNPACK200,
+                        NbBundle.getMessage(InstallSupportImpl.class, "InstallSupportImpl_Validate_MissingUnpack200", nbmFile, sb.toString()) // NOI18N
+                    );
+                }
+            }
+
             updateFragmentStatus(impl, nbmFile);
             
         } catch (IOException ioe) {

@@ -18,6 +18,8 @@
  */
 package org.netbeans.lib.nbjavac.services;
 
+import com.sun.tools.javac.code.Symbol.ClassSymbol;
+import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.comp.Attr;
 import com.sun.tools.javac.comp.AttrContext;
 import com.sun.tools.javac.comp.Env;
@@ -30,6 +32,7 @@ import com.sun.tools.javac.tree.JCTree.JCMethodDecl;
 import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
 import com.sun.tools.javac.tree.TreeMaker;
 import com.sun.tools.javac.util.Context;
+import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
 import com.sun.tools.javac.util.List;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
@@ -83,6 +86,12 @@ public class NBAttr extends Attr {
     }
 
     @Override
+    public Type attribType(JCTree tree, Env<AttrContext> env) {
+        cancelService.abortIfCanceled();
+        return super.attribType(tree, env);
+    }
+
+    @Override
     public void visitCatch(JCCatch that) {
         super.visitBlock(tm.Block(0, List.of(that.param, that.body)));
     }
@@ -98,6 +107,20 @@ public class NBAttr extends Attr {
                 MethodHandles.lookup()
                              .findSpecial(Attr.class, "breakTreeFound", MethodType.methodType(void.class, Env.class), NBAttr.class)
                              .invokeExact(this, env);
+            } catch (Throwable ex) {
+                sneakyThrows(ex);
+            }
+        }
+    }
+
+    protected void breakTreeFound(Env<AttrContext> env, Type result) {
+        if (fullyAttribute) {
+            fullyAttributeResult = env;
+        } else {
+            try {
+                MethodHandles.lookup()
+                             .findSpecial(Attr.class, "breakTreeFound", MethodType.methodType(void.class, Env.class, Type.class), NBAttr.class)
+                             .invokeExact(this, env, result);
             } catch (Throwable ex) {
                 sneakyThrows(ex);
             }

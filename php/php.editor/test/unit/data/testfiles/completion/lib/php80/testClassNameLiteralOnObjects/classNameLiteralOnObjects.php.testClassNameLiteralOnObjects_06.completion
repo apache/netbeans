@@ -1,0 +1,4 @@
+Code completion result for source line:
+var_dump($this::|class); // test6
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CONSTANT   class \Test                     [PUBLIC]   Magic Constant

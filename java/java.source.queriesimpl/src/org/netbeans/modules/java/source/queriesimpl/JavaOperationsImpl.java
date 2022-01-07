@@ -530,6 +530,12 @@ nextM:  for (ExecutableElement me : ElementFilter.methodsIn(te.getEnclosedElemen
                     return super.visitClass(node, p);
                 }
             }
+
+            @Override
+            public TreePath reduce(TreePath r1, TreePath r2) {
+                return r1 != null ? r1 : r2;
+            }
+
             @Override
             public TreePath visitMethod(MethodTree node, Void p) {
                 return null;

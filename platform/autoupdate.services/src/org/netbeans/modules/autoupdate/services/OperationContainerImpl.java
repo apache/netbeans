@@ -19,6 +19,7 @@
 
 package org.netbeans.modules.autoupdate.services;
 
+import java.io.File;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
@@ -41,6 +42,7 @@ import org.openide.modules.ModuleInfo;
  */
 public final class OperationContainerImpl<Support> {
     private boolean upToDate = false;
+    private File unpack200;
     private OperationContainerImpl () {}
     public static final Logger LOGGER = Logger.getLogger (OperationContainerImpl.class.getName ());    
     private final List<OperationInfo<Support>> operations = new CopyOnWriteArrayList<OperationInfo<Support>>();
@@ -530,4 +532,33 @@ public final class OperationContainerImpl<Support> {
     }
     private OperationType type;
     private OperationContainer delegate;
+
+    /**
+     * @return the unpack200 executable or {@code null}
+     */
+    public final File getUnpack200() {
+        NO_PACK: if (unpack200 == null) {
+            final String jreHome = System.getProperty("java.home"); // NOI18N
+            if (jreHome == null) {
+                break NO_PACK;
+            }
+            File javaHome = new File(jreHome);
+            File pack200ux = new File(new File(javaHome, "bin"), "unpack200"); // NOI18N
+            if (pack200ux.canExecute()) {
+                return pack200ux;
+            }
+            File pack200exe = new File(new File(javaHome, "bin"), "unpack200.exe"); // NOI18N
+            if (pack200exe.canExecute()) {
+                return pack200exe;
+            }
+        }
+        return unpack200;
+    }
+
+    /**
+     * @param pack200 the pack200 to set
+     */
+    public final void setUnpack200(File pack200) {
+        this.unpack200 = pack200;
+    }
 }

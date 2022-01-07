@@ -139,6 +139,11 @@ public class TypeVisitor extends ClassCodeVisitorSupport {
                         visitClosureListExpression((ClosureListExpression) scope);
                         return;
                     }
+                } else if (scope instanceof ClassNode) {
+                    ClassNode classNode = (ClassNode) scope;
+                    for (FieldNode fieldNode: classNode.getFields()) {
+                        visitField(fieldNode);
+                    }
                 }
                 else if (scope instanceof VariableExpression) {
                     visitVariableExpression((VariableExpression)scope);
@@ -148,8 +153,8 @@ public class TypeVisitor extends ClassCodeVisitorSupport {
 
         if (visitOtherClasses) {
             ModuleNode moduleNode = (ModuleNode) path.root();
-            for (Object object : moduleNode.getClasses()) {
-                visitClass((ClassNode) object);
+            for (ClassNode classNode : moduleNode.getClasses()) {
+                visitClass(classNode);
             }
         }
     }

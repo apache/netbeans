@@ -75,7 +75,7 @@ class DBMemoryCollection {
             switch (action) {
                 case DBElement.Impl.ADD:
                     if (newLength > 0) {
-                        list = ((oldLength == 0) ? new ArrayList() : new ArrayList(Arrays.asList(oldElements)));
+                        list = ((oldLength == 0) ? new ArrayList<DBElement>() : new ArrayList<DBElement>(Arrays.asList(oldElements)));
                         list.addAll(c);
                         hasChange = true;
                     }

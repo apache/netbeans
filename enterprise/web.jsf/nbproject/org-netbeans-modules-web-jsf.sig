@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.77.0
+#Version 1.83.0
 
 CLSS public abstract interface java.beans.PropertyChangeListener
 intf java.util.EventListener
@@ -25,7 +25,6 @@ meth public final java.lang.String name()
 meth public java.lang.String toString()
 meth public static <%0 extends java.lang.Enum<{%%0}>> {%%0} valueOf(java.lang.Class<{%%0}>,java.lang.String)
 supr java.lang.Object
-hfds name,ordinal
 
 CLSS public java.lang.Object
 cons public init()
@@ -1127,6 +1126,7 @@ fld public final static org.netbeans.modules.web.jsf.api.facesmodel.JSFVersion J
 fld public final static org.netbeans.modules.web.jsf.api.facesmodel.JSFVersion JSF_2_1
 fld public final static org.netbeans.modules.web.jsf.api.facesmodel.JSFVersion JSF_2_2
 fld public final static org.netbeans.modules.web.jsf.api.facesmodel.JSFVersion JSF_2_3
+fld public final static org.netbeans.modules.web.jsf.api.facesmodel.JSFVersion JSF_3_0
 meth public boolean isAtLeast(org.netbeans.modules.web.jsf.api.facesmodel.JSFVersion)
  anno 1 org.netbeans.api.annotations.common.NonNull()
 meth public java.lang.String getShortName()

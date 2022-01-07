@@ -32,7 +32,11 @@ import org.netbeans.modules.gradle.spi.Utils;
 import org.netbeans.modules.gradle.spi.customizer.support.FilterPanelProvider;
 import java.io.File;
 import javax.swing.JComponent;
+import javax.swing.JTabbedPane;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import org.netbeans.api.project.Project;
+import org.netbeans.modules.gradle.java.customizer.SourceSetPanel.Details;
 import org.netbeans.spi.project.ui.support.ProjectCustomizer;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
@@ -43,18 +47,32 @@ import org.openide.util.NbBundle;
  */
 public class SourcesPanel extends javax.swing.JPanel {
 
+    Details activeDetail = Details.SOURCES;
+
     /**
      * Creates new form SourcesPanel
      */
     public SourcesPanel(Project project) {
         initComponents();
         GradleJavaProject gjp = GradleJavaProject.get(project);
+        ChangeListener chl = (ChangeEvent evt) -> {
+            JTabbedPane details = (JTabbedPane) evt.getSource();
+            int selected = details.getSelectedIndex() != -1 ? details.getSelectedIndex() : 0;
+            activeDetail = Details.values()[selected];
+        };
         if (gjp != null) {
             for (GradleJavaSourceSet sourceSet : gjp.getSourceSets().values()) {
                 File rootDir = GradleBaseProject.get(project).getRootDir();
                 SourceSetPanel panel = new SourceSetPanel(sourceSet, rootDir);
                 tbSourceSets.addTab(Utils.camelCaseToTitle(sourceSet.getName()), null, panel, sourceSet.getName());
+                panel.addDetailsChangeListener(chl);
             }
+            tbSourceSets.addChangeListener((ChangeEvent evt) -> {
+                SourceSetPanel selected = (SourceSetPanel) tbSourceSets.getSelectedComponent();
+                if (selected != null) {
+                    selected.setActiveDetails(activeDetail);
+                }
+            });
         }
     }
 
@@ -75,7 +93,7 @@ public class SourcesPanel extends javax.swing.JPanel {
                 return customizer;
             }
         };
-        return new FilterPanelProvider(provider, "java-base");
+        return new FilterPanelProvider(provider, "java-base"); //NOI18N
     }
 
     /**

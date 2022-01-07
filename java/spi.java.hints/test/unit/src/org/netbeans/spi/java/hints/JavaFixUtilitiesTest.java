@@ -403,12 +403,19 @@ public class JavaFixUtilitiesTest extends TestBase {
     public void testRewriteCatchMultiVariable() throws Exception {
         performRewriteTest("package test;\n" +
                            "public class Test {\n" +
-                           "    { try { } catch (NullPointerException ex) { } }\n" +
+                           "    {\n" +
+                           "        try {\n" +
+                           "        } catch (NullPointerException ex) { }\n" +
+                           "    }\n" +
                            "}\n",
                            "try { } catch $catches$ => try { new Object(); } catch $catches$",
                            "package test;\n" +
                            "public class Test {\n" +
-                           "    { try { new Object();\n } catch (NullPointerException ex) { } }\n" +
+                           "    {\n" +
+                           "        try {\n" +
+                           "            new Object();\n" +
+                           "        } catch (NullPointerException ex) { }\n" +
+                           "    }\n" +
 		           "}\n");
     }
 

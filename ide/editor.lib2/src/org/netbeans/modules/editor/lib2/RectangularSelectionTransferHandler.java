@@ -129,7 +129,7 @@ public class RectangularSelectionTransferHandler extends TransferHandler {
                     "exportDone", // NOI18N
                     new Class[]{javax.swing.JComponent.class, Transferable.class, int.class});
             method.setAccessible(true);
-            method.invoke(delegate, new Object[]{source, data, new Integer(action)});
+            method.invoke(delegate, new Object[]{source, data, Integer.valueOf(action)});
         } catch (NoSuchMethodException ex) {
             ex.printStackTrace();
         } catch (IllegalAccessException ex) {

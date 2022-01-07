@@ -22,8 +22,10 @@ package org.netbeans.modules.autoupdate.ui;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.util.prefs.Preferences;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JTextPane;
 import org.netbeans.api.autoupdate.OperationException;
 import org.netbeans.api.autoupdate.UpdateElement;
@@ -33,6 +35,7 @@ import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.awt.Mnemonics;
+import org.openide.util.BaseUtilities;
 import org.openide.util.NbBundle;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.NbPreferences;
@@ -50,19 +53,19 @@ public class ProblemPanel extends javax.swing.JPanel {
     public ProblemPanel(OperationException ex, boolean warning, JButton... buttons) {
         this (ex, null, null, warning, buttons);
     }
-        
+
     public ProblemPanel(OperationException ex, UpdateElement culprit, boolean warning, JButton... buttons) {
         this (ex, culprit, null, warning, buttons);
     }
-    
+
     public ProblemPanel (OperationException ex, String problemDescription, boolean warning, JButton... buttons) {
         this (ex, null, problemDescription, true, buttons);
     }
-    
+
     public ProblemPanel (String problemDescription, JButton... buttons) {
         this (null, null, problemDescription, true, buttons);
     }
-    
+
     private ProblemPanel (OperationException ex, UpdateElement culprit, String problemDescription, boolean warning, JButton... buttons) {
         this.ex = ex;
         this.buttons = buttons;
@@ -78,6 +81,7 @@ public class ProblemPanel extends javax.swing.JPanel {
                     initWriteProblem(culprit, problemDescription);
                     break;
                 case INSTALL:
+                case MISSING_UNPACK200:
                     initInstallProblem(ex);
                     break;
                 case MODIFIED:
@@ -91,10 +95,10 @@ public class ProblemPanel extends javax.swing.JPanel {
             b.getAccessibleContext ().setAccessibleDescription (b.getText ());
         }
     }
-    
+
     @Messages({
         "# {0} - plugin name",
-        "modified_taTitle_Text=Module {0} has been modified and cannot be installed.", // Module {0} cannot be installed beacase has been 
+        "modified_taTitle_Text=Module {0} has been modified and cannot be installed.", // Module {0} cannot be installed beacase has been
         "# {0} - message of exception",
         "modified_taMessage_ErrorText=The installation of download plugins cannot be completed, cause: {0}"})
     private void initModifiedProblem(OperationException ex, String problemDescription) {
@@ -105,7 +109,7 @@ public class ProblemPanel extends javax.swing.JPanel {
         taTitle.setToolTipText (problem);
         tpMessage.setText(modified_taMessage_ErrorText(ex.getLocalizedMessage())); // NOI18N
     }
-    
+
     @Messages({"proxy_taTitle_Text=Unable to connect to the Update Center",
         "proxy_taMessage_WarningTextWithReload=Check your proxy settings or try again later. The server may be unavailable at the moment. \n\nYou may also want to make sure that your firewall is not blocking network traffic. \n\nYour cache may be out of date. Please click Check for Updates to refresh content.",
         "proxy_taMessage_WarningText=Check your proxy settings or try again later. The server may be unavailable at the moment. \n\nYou may also want to make sure that your firewall is not blocking network traffic.",
@@ -131,7 +135,7 @@ public class ProblemPanel extends javax.swing.JPanel {
             tpMessage.setText(proxy_taMessage_ErrorText()); // NOI18N
         }
     }
-    
+
     @Messages({
         "# {0} - plugin_name",
         "write_taTitle_Text=You don''t have permission to install plugin <b>{0}</b> into the installation directory.",
@@ -148,11 +152,11 @@ public class ProblemPanel extends javax.swing.JPanel {
         taTitle.setToolTipText (problem);
         tpMessage.setText(write_taMessage_WarningText()); // NOI18N
     }
-    
+
     @Messages({
-        "install_taTitle_Text=Cannot complete the validation of download plugins",
+        "install_taTitle_Text=Cannot complete the validation of downloaded plugins",
         "# {0} - message of exception",
-        "install_taMessage_ErrorText=The validation of download plugins cannot be completed, cause: {0}"})
+        "install_taMessage_ErrorText=The validation of downloaded plugins cannot be completed, cause: {0}"})
     private void initInstallProblem(OperationException ex) {
         problem = install_taTitle_Text();
         enhancedInitComponents();
@@ -161,7 +165,7 @@ public class ProblemPanel extends javax.swing.JPanel {
         taTitle.setToolTipText (problem);
         tpMessage.setText(install_taMessage_ErrorText(ex.getLocalizedMessage())); // NOI18N
     }
-    
+
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -218,8 +222,8 @@ public class ProblemPanel extends javax.swing.JPanel {
         // TODO add your handling code here:
         getPreferences().putBoolean(Utilities.PLUGIN_MANAGER_DONT_CARE_WRITE_PERMISSION, cbShowAgain.isSelected());
     }//GEN-LAST:event_cbShowAgainActionPerformed
-    
-    
+
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     javax.swing.JCheckBox cbShowAgain;
     javax.swing.JScrollPane jScrollPane1;
@@ -227,31 +231,38 @@ public class ProblemPanel extends javax.swing.JPanel {
     javax.swing.JTextPane taTitle;
     javax.swing.JTextPane tpMessage;
     // End of variables declaration//GEN-END:variables
-    
+
     public Object showNetworkProblemDialog () {
         DialogDescriptor dd = getNetworkProblemDescriptor ();
         DialogDisplayer.getDefault ().createDialog (dd).setVisible (true);
         return dd.getValue ();
     }
-    
+
+    public File showUnpack200ProblemDialog () {
+        File[] unpack200 = { null };
+        DialogDescriptor dd = getUnpack200ProblemDescriptor(unpack200);
+        DialogDisplayer.getDefault ().createDialog (dd).setVisible (true);
+        return unpack200[0];
+    }
+
     public Object showWriteProblemDialog () {
         DialogDescriptor dd = getWriteProblemDescriptor();
         DialogDisplayer.getDefault().createDialog(dd).setVisible(true);
         return dd.getValue();
     }
-    
+
     public Object showModifiedProblemDialog(String detail) {
         DialogDescriptor dd = getModifiedProblemDescriptor();
         DialogDisplayer.getDefault().createDialog(dd).setVisible(true);
         return dd.getValue();
     }
-    
+
     private DialogDescriptor getNetworkProblemDescriptor() {
         DialogDescriptor descriptor = getProblemDesriptor(NbBundle.getMessage(ProblemPanel.class, "CTL_ShowProxyOptions"));
 
         JButton showProxyOptions = new JButton ();
         Mnemonics.setLocalizedText (showProxyOptions, NbBundle.getMessage(ProblemPanel.class, "CTL_ShowProxyOptions"));
-        
+
         showProxyOptions.getAccessibleContext ().setAccessibleDescription (NbBundle.getMessage(ProblemPanel.class, "ACSD_ShowProxyOptions"));
         showProxyOptions.addActionListener (new ActionListener () {
             @Override
@@ -259,24 +270,78 @@ public class ProblemPanel extends javax.swing.JPanel {
                 OptionsDisplayer.getDefault ().open ("General"); // NOI18N
             }
         });
-                
+
         if (isWarning) {
             descriptor.setAdditionalOptions(new Object [] {showProxyOptions});
         }
-        
+
         return descriptor;
     }
-    
+
+    private DialogDescriptor getUnpack200ProblemDescriptor(File[] unpack200) {
+        DialogDescriptor descriptor = getProblemDesriptor(NbBundle.getMessage(ProblemPanel.class, "CTL_ShowUnpack200Options"));
+
+        JButton chooseUnpack200 = new JButton ();
+        Mnemonics.setLocalizedText (chooseUnpack200, NbBundle.getMessage(ProblemPanel.class, "CTL_ShowUnpack200Options"));
+
+        chooseUnpack200.getAccessibleContext ().setAccessibleDescription (NbBundle.getMessage(ProblemPanel.class, "ACSD_ShowUnpack200Options"));
+        chooseUnpack200.addActionListener ((ev) -> {
+            String unpackName = BaseUtilities.isWindows() ? "unpack200.exe" : "unpack200"; // NOI18N
+            final JFileChooser choose = new JFileChooser(unpackName);
+            choose.setSelectedFile(findUnpackLocation(unpackName));
+            choose.setDialogTitle(NbBundle.getMessage(ProblemPanel.class, "CTL_ShowUnpack200Title"));
+            for (;;) {
+                if (choose.showOpenDialog(chooseUnpack200) == JFileChooser.APPROVE_OPTION) {
+                    File f = choose.getSelectedFile();
+                    if (f.canExecute()) {
+                        unpack200[0] = f;
+                        Containers.defineUnpack200(f);
+                        return;
+                    }
+                } else {
+                    return;
+                }
+            }
+        });
+
+        if (isWarning) {
+            descriptor.setAdditionalOptions(new Object [] {chooseUnpack200});
+        }
+
+        return descriptor;
+    }
+
+    private static File findUnpackLocation(String unpackName) {
+        final File jreHome = new File(System.getProperty("java.home"));
+        File defaultJreUnpack = relativeUnpackFile(jreHome, unpackName);
+        if (!defaultJreUnpack.canExecute()) {
+            for (File otherJre : jreHome.getParentFile().listFiles()) {
+                File otherJreUnpack = relativeUnpackFile(otherJre, unpackName);
+                if (otherJreUnpack.canExecute()) {
+                    return otherJreUnpack;
+                }
+            }
+        }
+
+        return defaultJreUnpack;
+    }
+
+    private static File relativeUnpackFile(final File jreHome, String unpackName) {
+        final File binDir = new File(jreHome, "bin");
+        final File expUnpack = new File(binDir, unpackName);
+        return expUnpack;
+    }
+
     @Messages("CTL_WriteError=Write Permissions Problem")
     private DialogDescriptor getWriteProblemDescriptor() {
         return getProblemDesriptor(CTL_WriteError());
     }
-    
+
     @Messages("CTL_ModifiedError=Module Archive Modified")
     private DialogDescriptor getModifiedProblemDescriptor() {
         return getProblemDesriptor(CTL_ModifiedError());
     }
-    
+
     private DialogDescriptor getProblemDesriptor(String message) {
         Object [] options;
         if (buttons == null || buttons.length == 0) {
@@ -299,11 +364,11 @@ public class ProblemPanel extends javax.swing.JPanel {
         descriptor.setClosingOptions(null);
         return descriptor;
     }
-    
+
     private static Preferences getPreferences() {
         return NbPreferences.forModule(Utilities.class);
     }
-    
+
     private void enhancedInitComponents() {
         initComponents();
         taTitle.setBackground(new Color(0, 0, 0, 0));

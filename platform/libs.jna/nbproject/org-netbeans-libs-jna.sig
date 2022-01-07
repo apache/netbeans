@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.3
+#Version 2.9
 
 CLSS public abstract interface com.sun.jna.AltCallingConvention
 
@@ -32,7 +32,7 @@ meth public com.sun.jna.Pointer getTrampoline()
 meth public static com.sun.jna.Callback getCallback(java.lang.Class<?>,com.sun.jna.Pointer)
 meth public static com.sun.jna.Pointer getFunctionPointer(com.sun.jna.Callback)
 supr java.lang.ref.WeakReference<com.sun.jna.Callback>
-hfds PROXY_CALLBACK_METHOD,allocatedMemory,allocations,callbackMap,callingConvention,cbstruct,directCallbackMap,initializers,method,pointerCallbackMap,proxy,trampoline
+hfds DLL_CALLBACK_CLASS,PROXY_CALLBACK_METHOD,allocatedMemory,allocations,callbackMap,callingConvention,cbstruct,directCallbackMap,initializers,method,pointerCallbackMap,proxy,trampoline
 hcls AttachOptions,DefaultCallbackProxy,NativeFunctionHandler
 
 CLSS public com.sun.jna.CallbackResultContext
@@ -221,6 +221,7 @@ meth public static void purge()
 meth public void clear()
 meth public void read(long,byte[],int,int)
 meth public void read(long,char[],int,int)
+meth public void read(long,com.sun.jna.Pointer[],int,int)
 meth public void read(long,double[],int,int)
 meth public void read(long,float[],int,int)
 meth public void read(long,int[],int,int)
@@ -238,14 +239,15 @@ meth public void setString(long,java.lang.String,java.lang.String)
 meth public void setWideString(long,java.lang.String)
 meth public void write(long,byte[],int,int)
 meth public void write(long,char[],int,int)
+meth public void write(long,com.sun.jna.Pointer[],int,int)
 meth public void write(long,double[],int,int)
 meth public void write(long,float[],int,int)
 meth public void write(long,int[],int,int)
 meth public void write(long,long[],int,int)
 meth public void write(long,short[],int,int)
 supr com.sun.jna.Pointer
-hfds allocatedMemory,buffers
-hcls SharedMemory
+hfds HEAD,QUEUE,buffers,reference
+hcls LinkedReference,SharedMemory
 
 CLSS public com.sun.jna.MethodParameterContext
 meth public java.lang.reflect.Method getMethod()
@@ -267,8 +269,8 @@ fld public final static int POINTER_SIZE
 fld public final static int SIZE_T_SIZE
 fld public final static int WCHAR_SIZE
 fld public final static java.lang.String DEFAULT_ENCODING
-fld public final static java.lang.String VERSION = "5.4.0"
-fld public final static java.lang.String VERSION_NATIVE = "6.1.0"
+fld public final static java.lang.String VERSION = "5.9.0"
+fld public final static java.lang.String VERSION_NATIVE = "6.1.1"
 fld public final static java.nio.charset.Charset DEFAULT_CHARSET
 innr public abstract interface static ffi_callback
 meth public static <%0 extends com.sun.jna.Library> {%%0} load(java.lang.Class<{%%0}>)
@@ -606,7 +608,7 @@ meth public void writeField(java.lang.String)
 meth public void writeField(java.lang.String,java.lang.Object)
 supr java.lang.Object
 hfds LOG,PLACEHOLDER_MEMORY,actualAlignType,alignType,array,autoRead,autoWrite,busy,encoding,fieldOrder,layoutInfo,memory,nativeStrings,readCalled,reads,size,structAlignment,structFields,typeInfo,typeMapper
-hcls AutoAllocated,FFIType,LayoutInfo,StructureSet
+hcls AutoAllocated,FFIType,LayoutInfo,NativeStringTracking,StructureSet
 
 CLSS public abstract interface static com.sun.jna.Structure$ByReference
  outer com.sun.jna.Structure
@@ -708,12 +710,14 @@ hfds backingMap,referenceQueue
 
 CLSS public abstract com.sun.jna.ptr.ByReference
 cons protected init(int)
+meth public java.lang.String toString()
 supr com.sun.jna.PointerType
 
 CLSS public com.sun.jna.ptr.ByteByReference
 cons public init()
 cons public init(byte)
 meth public byte getValue()
+meth public java.lang.String toString()
 meth public void setValue(byte)
 supr com.sun.jna.ptr.ByReference
 
@@ -721,6 +725,7 @@ CLSS public com.sun.jna.ptr.DoubleByReference
 cons public init()
 cons public init(double)
 meth public double getValue()
+meth public java.lang.String toString()
 meth public void setValue(double)
 supr com.sun.jna.ptr.ByReference
 
@@ -728,6 +733,7 @@ CLSS public com.sun.jna.ptr.FloatByReference
 cons public init()
 cons public init(float)
 meth public float getValue()
+meth public java.lang.String toString()
 meth public void setValue(float)
 supr com.sun.jna.ptr.ByReference
 
@@ -735,12 +741,14 @@ CLSS public com.sun.jna.ptr.IntByReference
 cons public init()
 cons public init(int)
 meth public int getValue()
+meth public java.lang.String toString()
 meth public void setValue(int)
 supr com.sun.jna.ptr.ByReference
 
 CLSS public com.sun.jna.ptr.LongByReference
 cons public init()
 cons public init(long)
+meth public java.lang.String toString()
 meth public long getValue()
 meth public void setValue(long)
 supr com.sun.jna.ptr.ByReference
@@ -749,6 +757,7 @@ CLSS public com.sun.jna.ptr.NativeLongByReference
 cons public init()
 cons public init(com.sun.jna.NativeLong)
 meth public com.sun.jna.NativeLong getValue()
+meth public java.lang.String toString()
 meth public void setValue(com.sun.jna.NativeLong)
 supr com.sun.jna.ptr.ByReference
 
@@ -762,6 +771,7 @@ supr com.sun.jna.ptr.ByReference
 CLSS public com.sun.jna.ptr.ShortByReference
 cons public init()
 cons public init(short)
+meth public java.lang.String toString()
 meth public short getValue()
 meth public void setValue(short)
 supr com.sun.jna.ptr.ByReference
@@ -834,7 +844,6 @@ cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.Throwable)
 cons public init(java.lang.Throwable)
 supr java.lang.Throwable
-hfds serialVersionUID
 
 CLSS public abstract java.lang.Number
 cons public init()
@@ -846,7 +855,6 @@ meth public abstract long longValue()
 meth public byte byteValue()
 meth public short shortValue()
 supr java.lang.Object
-hfds serialVersionUID
 
 CLSS public java.lang.Object
 cons public init()
@@ -869,7 +877,6 @@ cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.Throwable)
 cons public init(java.lang.Throwable)
 supr java.lang.Exception
-hfds serialVersionUID
 
 CLSS public java.lang.Throwable
 cons protected init(java.lang.String,java.lang.Throwable,boolean,boolean)
@@ -892,8 +899,6 @@ meth public void printStackTrace(java.io.PrintStream)
 meth public void printStackTrace(java.io.PrintWriter)
 meth public void setStackTrace(java.lang.StackTraceElement[])
 supr java.lang.Object
-hfds CAUSE_CAPTION,EMPTY_THROWABLE_ARRAY,NULL_CAUSE_MESSAGE,SELF_SUPPRESSION_MESSAGE,SUPPRESSED_CAPTION,SUPPRESSED_SENTINEL,UNASSIGNED_STACK,backtrace,cause,detailMessage,serialVersionUID,stackTrace,suppressedExceptions
-hcls PrintStreamOrWriter,SentinelHolder,WrappedPrintStream,WrappedPrintWriter
 
 CLSS public abstract interface java.lang.annotation.Annotation
 meth public abstract boolean equals(java.lang.Object)
@@ -927,8 +932,6 @@ meth public boolean isEnqueued()
 meth public void clear()
 meth public {java.lang.ref.Reference%0} get()
 supr java.lang.Object
-hfds discovered,lock,next,pending,queue,referent
-hcls Lock,ReferenceHandler
 
 CLSS public java.lang.ref.WeakReference<%0 extends java.lang.Object>
 cons public init({java.lang.ref.WeakReference%0})

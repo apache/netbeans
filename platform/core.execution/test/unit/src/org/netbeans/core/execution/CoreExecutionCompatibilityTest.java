@@ -21,6 +21,7 @@ package org.netbeans.core.execution;
 
 import junit.framework.Test;
 import org.openide.execution.ExecutionCompatibilityTest;
+import org.openide.execution.ExecutionEngineHid;
 
 /** Reuses ExecutionCompatibilityTest to check compatibility of the behaviour
  * of core implementation.
@@ -30,7 +31,7 @@ import org.openide.execution.ExecutionCompatibilityTest;
 public class CoreExecutionCompatibilityTest {
 
     public static Test suite() {
-        return ExecutionCompatibilityTest.suite(new ExecutionEngine());
+        return ExecutionCompatibilityTest.suite(new ExecutionEngine(), ExecutionEngineHid.WithLookup.class);
     }
 
 }

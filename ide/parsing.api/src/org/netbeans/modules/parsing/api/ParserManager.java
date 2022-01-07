@@ -20,10 +20,12 @@
 package org.netbeans.modules.parsing.api;
 
 import java.lang.ref.Reference;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Future;
 import org.netbeans.api.annotations.common.NonNull;
@@ -138,20 +140,21 @@ public final class ParserManager {
     private static class MultiUserTaskAction implements Mutex.ExceptionAction<Void> {
 
         private final UserTask userTask;
-        private final Collection<Source> sources;
+        private final List<Source> sources;
 
         public MultiUserTaskAction (final Collection<Source> sources, final UserTask userTask) {
             assert sources != null;
             assert userTask != null;
             this.userTask = userTask;
-            this.sources = sources;
+            this.sources = new ArrayList<>(sources);
         }
 
         public Void run () throws Exception {
             final LowMemoryWatcher lMListener = LowMemoryWatcher.getInstance();
             Parser parser = null;
             final Collection<Snapshot> snapShots = new LazySnapshots(sources);
-            for (Source source : sources) {
+            for (int i = 0; i < sources.size(); ) {
+                Source source = sources.get(i);
                 if (parser == null) {
                     Lookup lookup = MimeLookup.getLookup (source.getMimeType ());
                     ParserFactory parserFactory = lookup.lookup (ParserFactory.class);
@@ -165,6 +168,9 @@ public final class ParserManager {
                 try {
                     TaskProcessor.callUserTask(userTask, resultIterator);
                 } finally {
+                    if (ParserAccessor.getINSTANCE().processingFinished(resultIterator.getParserResult())) {
+                        i++;
+                    }
                     ResultIteratorAccessor.getINSTANCE().invalidate(resultIterator);
                     SourceAccessor.getINSTANCE().getAndSetCache(source, origCache);
                 }

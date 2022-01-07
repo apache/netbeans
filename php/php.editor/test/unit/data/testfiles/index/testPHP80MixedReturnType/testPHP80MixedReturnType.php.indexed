@@ -1,0 +1,30 @@
+
+
+Document 0
+Searchable Keys:
+  base : mixedreturntype;mixedReturnType;824;;mixed;;0;<TESTURL>/testPHP80MixedReturnType.php;0;
+  top : mixedreturntype
+
+Not Searchable Keys:
+
+
+Document 1
+Searchable Keys:
+  clz : mixedtype;MixedType;877;;;;1;;0;<TESTURL>/testPHP80MixedReturnType.php;;
+  method : mixedreturntype;mixedReturnType;909;;mixed;1;0;<TESTURL>/testPHP80MixedReturnType.php;0;
+  top : mixedtype
+
+Not Searchable Keys:
+
+
+Document 2
+Searchable Keys:
+  identifier_used : mixed;
+  identifier_used : mixed;
+  identifier_used : mixedreturntype;
+  identifier_used : mixedreturntype;
+  identifier_used : mixedtype;
+  identifier_used : null;
+  identifier_used : null;
+
+Not Searchable Keys:

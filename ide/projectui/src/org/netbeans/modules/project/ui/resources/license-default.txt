@@ -1,9 +1,4 @@
-<#if licenseFirst??>
-${licenseFirst}
-</#if>
-${licensePrefix}To change this license header, choose License Headers in Project Properties.
-${licensePrefix}To change this template file, choose Tools | Templates
-${licensePrefix}and open the template in the editor.
-<#if licenseLast??>
-${licenseLast}
-</#if>
+${licenseFirst!""}
+${licensePrefix}Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+${licensePrefix}Click nbfs://nbhost/SystemFileSystem/${.data_model["org.openide.filesystems.FileObject"].getPath()} to edit this template
+${licenseLast!""}

@@ -21,6 +21,8 @@ package org.netbeans.modules.java.source.usages;
 
 import java.io.IOException;
 import java.io.Reader;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
@@ -115,12 +117,13 @@ public class DocumentUtil {
     }
 
     @NonNull
-    public static Convertor<Document,ElementHandle<TypeElement>> typeElementConvertor() {
-        return new ElementHandleConvertor<> (
-                ElementKind.CLASS,
-                ElementKind.ENUM,
-                ElementKind.INTERFACE,
-                ElementKind.ANNOTATION_TYPE);
+    public static Convertor<Document, ElementHandle<TypeElement>> typeElementConvertor() {
+        List<ElementKind> eleKindList = new ArrayList<>();
+        ElementKind[] otherElekinds = {ElementKind.ENUM, ElementKind.INTERFACE, ElementKind.ANNOTATION_TYPE, ElementKind.RECORD};
+        eleKindList.addAll(Arrays.asList(otherElekinds));
+        return new ElementHandleConvertor<>(
+                ElementKind.CLASS, eleKindList.toArray(new ElementKind[0]));
+
     }
     
     @NonNull

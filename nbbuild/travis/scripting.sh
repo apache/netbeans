@@ -19,10 +19,14 @@
 
 set -e
 
+
 if [ -z "$GRAALVM" ]; then
-  VERSION=19.3.1
-  BASE=graalvm-ce-java8-$VERSION
-  URL=https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-$VERSION/graalvm-ce-java8-linux-amd64-$VERSION.tar.gz
+  if [ -z "$GRAAL_VERSION" ]; then
+        echo "GraalVM version not set. Please specify a valid $GRAAL_VERSION string."
+        exit 1
+  fi
+  BASE=graalvm-ce-java8-$GRAAL_VERSION
+  URL=https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-$GRAAL_VERSION/graalvm-ce-java8-linux-amd64-$GRAAL_VERSION.tar.gz
   curl -L $URL --output graalvm.tgz
   tar fxz graalvm.tgz
   ls -l

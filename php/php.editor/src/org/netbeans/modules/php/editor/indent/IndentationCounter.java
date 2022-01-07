@@ -105,6 +105,15 @@ public class IndentationCounter {
                     }
                     return result;
                 }
+
+                if (isAttributeCloseBracket(ts)) {
+                    // e.g.
+                    // #[A(1, "param")]
+                    //                 ^ Enter here
+                    int attributeIndent = Utilities.getRowIndent(doc, caretLineStart);
+                    return new IndentationImpl(attributeIndent < 0 ? 0 : attributeIndent);
+                }
+
                 if (ts.token().id() == PHPTokenId.WHITESPACE && ts.moveNext()) {
                     movePrevious = true;
                 }
@@ -215,7 +224,12 @@ public class IndentationCounter {
                             }
                             break;
                         } else if (delimiter.tokenId == PHPTokenId.PHP_CURLY_OPEN && ts.movePrevious()) {
-                            int startExpression = LexUtilities.findStartTokenOfExpression(ts);
+                            int startExpression;
+                            if (isInMatchExpression(ts.offset(), ts)) {
+                                startExpression = findMatchExpressionStart(ts);
+                            } else {
+                                startExpression = LexUtilities.findStartTokenOfExpression(ts);
+                            }
                             newIndent = Utilities.getRowIndent(doc, startExpression) + indentSize;
                             break;
                         }
@@ -225,6 +239,7 @@ public class IndentationCounter {
                         break;
                     } else {
                         if (ts.token().id() == PHPTokenId.PHP_TOKEN
+                                || ts.token().id() == PHPTokenId.PHP_ATTRIBUTE
                                 || (ts.token().id() == PHPTokenId.PHP_OPERATOR && TokenUtilities.textEquals("=", ts.token().text()))) { // NOI18N
                             char ch = ts.token().text().charAt(0);
                             boolean continualIndent = false;
@@ -267,6 +282,12 @@ public class IndentationCounter {
                                 default:
                                     //no-op
                             }
+                            if (ts.token().id() == PHPTokenId.PHP_ATTRIBUTE) { // #[
+                                if (squaredBalance == 0) {
+                                    indent = true;
+                                }
+                                squaredBalance--;
+                            }
                             if (continualIndent || indent) {
                                 ts.move(caretOffset);
                                 ts.movePrevious();
@@ -278,6 +299,11 @@ public class IndentationCounter {
                                             newIndent = Utilities.getRowIndent(doc, offsetArrayDeclaration) + itemsArrayDeclararionSize;
                                         } else if (inGroupUse(startExpression, ts)) {
                                             newIndent = Utilities.getRowIndent(doc, startExpression);
+                                        } else if (isInMatchExpression(startExpression, ts)
+                                                && isFirstCommaAfterDoubleArrow(startExpression, caretOffset, ts)) {
+                                            newIndent = Utilities.getRowIndent(doc, startExpression);
+                                        } else if (isInAttributeExpression(caretOffset, ts)) {
+                                            newIndent = Utilities.getRowIndent(doc, startExpression) + indentSize;
                                         } else {
                                             newIndent = Utilities.getRowIndent(doc, startExpression) + continuationSize;
                                         }
@@ -289,7 +315,9 @@ public class IndentationCounter {
                                 break;
                             }
                         } else if ((previousTokenId == PHPTokenId.PHP_OBJECT_OPERATOR
+                                || previousTokenId == PHPTokenId.PHP_NULLSAFE_OBJECT_OPERATOR
                                 || ts.token().id() == PHPTokenId.PHP_OBJECT_OPERATOR
+                                || ts.token().id() == PHPTokenId.PHP_NULLSAFE_OBJECT_OPERATOR
                                 || ts.token().id() == PHPTokenId.PHP_PAAMAYIM_NEKUDOTAYIM) && bracketBalance <= 0) {
                             int startExpression = LexUtilities.findStartTokenOfExpression(ts);
                             if (startExpression != -1) {
@@ -480,6 +508,152 @@ public class IndentationCounter {
         return result;
     }
 
+    private boolean isInMatchExpression(int startExpression, TokenSequence ts) {
+        boolean result = false;
+        int originalOffset = ts.offset();
+        ts.move(startExpression);
+        if (ts.moveNext() && ts.movePrevious()) {
+            while (ts.movePrevious()) {
+                TokenId tokenId = ts.token().id();
+                if (tokenId == PHPTokenId.PHP_SEMICOLON) {
+                    break;
+                }
+                if (tokenId == PHPTokenId.PHP_MATCH) {
+                    result = true;
+                    break;
+                }
+            }
+        }
+        ts.move(originalOffset);
+        ts.moveNext();
+        return result;
+    }
+
+    private boolean isInAttributeExpression(int caretOffset, TokenSequence ts) {
+        boolean result = false;
+        int originalOffset = ts.offset();
+        ts.move(caretOffset);
+        if (ts.moveNext()) {
+            if (ts.token().id() == PHPTokenId.PHP_ATTRIBUTE
+                    && ts.offset() + ts.token().length() <= caretOffset) {
+                result = true;
+            }
+        }
+        // check brakets balance for param list
+        // e.g.
+        // function foo(#[A(1)] $a, #[A(2)] $b, #[A(3)] $c) {}
+        //                                          ^ Enter here
+        // #[A("foo")]
+        // function foo(#[A(1)] $a, #[A(2)] $b, #[A(3)] $c) {}
+        //                         ^ Enter here
+        int bracketBalance = 0;
+        int parenBlance = 0;
+        while (!result && ts.movePrevious()) {
+            TokenId tokenId = ts.token().id();
+            if (isCloseBracket(ts.token())) {
+                bracketBalance--;
+            } else if (isOpenBracket(ts.token())) {
+                bracketBalance++;
+            } else if (isCloseParen(ts.token())) {
+                parenBlance--;
+            } else if (isOpenParen(ts.token())) {
+                parenBlance++;
+            }
+            if (tokenId == PHPTokenId.PHP_SEMICOLON
+                    || tokenId == PHPTokenId.PHP_CURLY_CLOSE) {
+                break;
+            }
+            if (tokenId == PHPTokenId.PHP_ATTRIBUTE) {
+                bracketBalance++;
+                if (bracketBalance != 0 && parenBlance == 0) {
+                    result = true;
+                }
+                break;
+            }
+        }
+        ts.move(originalOffset);
+        ts.moveNext();
+        return result;
+    }
+
+    private int findMatchExpressionStart(TokenSequence<? extends PHPTokenId> ts) {
+        int originalOffset = ts.offset();
+        Token<? extends PHPTokenId> matchToken = LexUtilities.findPreviousToken(ts, Arrays.asList(PHPTokenId.PHP_MATCH));
+        assert matchToken != null;
+        int startExpression = ts.offset();
+        ts.move(originalOffset);
+        ts.moveNext();
+        return startExpression;
+    }
+
+    private boolean isFirstCommaAfterDoubleArrow(int startExpression, int caretOffset, TokenSequence ts) {
+        boolean result = false;
+        int originalOffset = ts.offset();
+        ts.move(caretOffset);
+        int parenBalance = 0; // ()
+        int bracketBalance = 0; // []
+        int curlyBalance = 0; // {}
+        int commaCount = 0;
+        if (ts.moveNext() && ts.movePrevious()) {
+            for (;;) {
+                if (ts.offset() < startExpression) {
+                    break;
+                }
+                TokenId tokenId = ts.token().id();
+                if (tokenId == PHPTokenId.PHP_SEMICOLON) {
+                    break;
+                }
+                if (tokenId == PHPTokenId.PHP_TOKEN) {
+                    char c = ts.token().text().charAt(0);
+                    switch (c) {
+                        case '(':
+                            parenBalance++;
+                            break;
+                        case ')':
+                            parenBalance--;
+                            break;
+                        case '[':
+                            bracketBalance++;
+                            break;
+                        case ']':
+                            bracketBalance--;
+                            break;
+                        case ',':
+                            if (parenBalance == 0
+                                    && bracketBalance == 0
+                                    && curlyBalance == 0) {
+                                commaCount++;
+                            }
+                            break;
+                        default:
+                            break;
+                    }
+                } else if (tokenId == PHPTokenId.PHP_CURLY_OPEN) {
+                    curlyBalance++;
+                } else if (tokenId == PHPTokenId.PHP_CURLY_CLOSE) {
+                    curlyBalance--;
+                } else if (isDoubleArrowOperator(ts.token())) {
+                    result = parenBalance == 0
+                            && bracketBalance == 0
+                            && curlyBalance == 0
+                            && commaCount == 1;
+                    break;
+                }
+                if (!ts.movePrevious()) {
+                    break;
+                }
+            }
+        }
+        ts.move(originalOffset);
+        ts.moveNext();
+        return result;
+    }
+
+    private static boolean isDoubleArrowOperator(Token<PHPTokenId> token) {
+        return token.id() == PHPTokenId.PHP_OPERATOR
+                && TokenUtilities.textEquals("=>", token.text()); // NOI18N
+    }
+
     /**
      *
      * @param ts
@@ -545,6 +719,74 @@ public class IndentationCounter {
         return null;
     }
 
+    /**
+     * Check whether the token on the caret is an attribute close bracket for
+     * class, method/function, or feilds.
+     *
+     * @param ts the token sequence
+     * @return {@code true} if the token is an attribute close bracket,
+     * otherwise {@code false}
+     */
+    private boolean isAttributeCloseBracket(TokenSequence ts) {
+        int originalOffset = ts.offset();
+        boolean result = false;
+        Token findPrevious = LexUtilities.findPrevious(ts, Arrays.asList(PHPTokenId.WHITESPACE));
+        if (findPrevious != null && isCloseBracket(findPrevious)) {
+            int balance = -1;
+            while (ts.movePrevious()) {
+                if (isOpenBracket(ts.token())) {
+                    balance++;
+                } else if (isCloseBracket(ts.token())) {
+                    balance--;
+                } else if (ts.token().id() == PHPTokenId.PHP_ATTRIBUTE) {
+                    balance++;
+                    if (balance == 0) {
+                        result = true;
+                    }
+                    break;
+                }
+                if (balance == 0) {
+                    break;
+                }
+            }
+        }
+        if (result) {
+            // check whether there is tokens other than whitespace for parameters, anonymous function/class
+            int lineStart = LineDocumentUtils.getLineStart(doc, LineDocumentUtils.getLineStart(doc, ts.offset()) - 1);
+            while (ts.movePrevious() && ts.offset() >= lineStart) {
+                if (ts.token().id() != PHPTokenId.WHITESPACE) {
+                    result = false;
+                    break;
+                }
+            }
+        }
+
+        ts.move(originalOffset);
+        ts.moveNext();
+        return result;
+    }
+
+    private static boolean isOpenBracket(Token token) {
+        return token.id() == PHPTokenId.PHP_TOKEN
+                && TokenUtilities.textEquals(token.text(), "["); // NOI18N
+    }
+
+    private static boolean isCloseBracket(Token token) {
+        return token.id() == PHPTokenId.PHP_TOKEN
+                && TokenUtilities.textEquals(token.text(), "]"); // NOI18N
+    }
+
+    private static boolean isOpenParen(Token token) {
+        return token.id() == PHPTokenId.PHP_TOKEN
+                && TokenUtilities.textEquals(token.text(), "("); // NOI18N
+    }
+
+    private static boolean isCloseParen(Token token) {
+        return token.id() == PHPTokenId.PHP_TOKEN
+                && TokenUtilities.textEquals(token.text(), ")"); // NOI18N
+    }
+
+    //~ Inner classes
     private static class CodeB4BreakData {
         int expressionStartOffset;
         boolean processedByControlStmt;
@@ -633,4 +875,3 @@ public class IndentationCounter {
     }
 
 }
-

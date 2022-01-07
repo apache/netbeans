@@ -423,4 +423,11 @@ public abstract class LFCustoms {
     public static final String PROGRESS_CANCEL_BUTTON_ICON = "nb.progress.cancel.icon";
     public static final String PROGRESS_CANCEL_BUTTON_ROLLOVER_ICON = "nb.progress.cancel.icon.mouseover";
     public static final String PROGRESS_CANCEL_BUTTON_PRESSED_ICON = "nb.progress.cancel.icon.pressed";
+
+    /**
+     * Keys used by the options dialog module.
+     */
+    public static final String OPTIONS_USE_UI_DEFAULT_COLORS = "nb.options.useUIDefaultsColors";
+    public static final String OPTIONS_CATEGORIES_SEPARATOR_COLOR = "nb.options.categories.separatorColor";
+    public static final String OPTIONS_CATEGORIES_BUTTON_USE_NIMBUS = "nb.options.categories.button.useNimbusCategoryButton";
 }

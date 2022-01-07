@@ -39,6 +39,7 @@ import org.netbeans.modules.parsing.spi.Parser;
 import org.netbeans.modules.parsing.spi.SourceModificationEvent;
 import org.netbeans.modules.php.api.util.FileUtils;
 import org.netbeans.modules.php.editor.CodeUtils;
+import org.netbeans.modules.php.editor.model.impl.Type;
 import org.netbeans.modules.php.editor.parser.astnodes.ASTError;
 import org.netbeans.modules.php.editor.parser.astnodes.Comment;
 import org.netbeans.modules.php.editor.parser.astnodes.NamespaceDeclaration;
@@ -331,6 +332,13 @@ public class GSFPHPParser extends Parser implements PropertyChangeListener {
                     removeComma = false;
                 }
 
+                // check (union) type
+                if (currentReplace.equals(")")) { // NOI18N
+                    if (sanitizeUnionType(source, context, start, replace, currentStart)) {
+                        return true;
+                    }
+                }
+
                 // check nullable type prefix(?)
                 if (CodeUtils.NULLABLE_TYPE_PREFIX.equals(replace)) {
                     start = sanitizingStartPositionForNullableTypes(start, source, removeComma);
@@ -417,6 +425,58 @@ public class GSFPHPParser extends Parser implements PropertyChangeListener {
             }
         }
         return false;
+    }
+
+    private boolean sanitizeUnionType(String source, Context context, int previousStart, String previousError, int end) {
+        int unionTypeStart = previousStart - 1;
+        int start = -1;
+        if (unionTypeStart >= 0) {
+            char c = source.charAt(unionTypeStart);
+            if (previousError.equals(Type.SEPARATOR) || previousError.equals("\\")) { // NOI18N
+                // function test(Foo|){}, function test(Foo $param, Foo|\Test\){}
+                start = sanitizingStartPositionForUnionType(unionTypeStart, source);
+            } else {
+                // function test(Foo|Ba){}, function test(Foo | Ba ){}
+                while (c == ' ' || c == '\t' || c == '\n' || c == '\r') {
+                    unionTypeStart--;
+                    if (unionTypeStart < 0) {
+                        break;
+                    }
+                    c = source.charAt(unionTypeStart);
+                }
+                if (c == '|') {
+                    start = sanitizingStartPositionForUnionType(unionTypeStart, source);
+                }
+            }
+        }
+        if (start >= 0) {
+            context.setSanitizedPart(new SanitizedPartImpl(new OffsetRange(start, end), Utils.getSpaces(end - start)));
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Get the start position of the (union) type for sanitizing.
+     *
+     * @param start the start offset
+     * @param source the source
+     * @return the start positon for sanitizing if it is found, otherwise -1
+     */
+    private int sanitizingStartPositionForUnionType(int start, String source) {
+        int sanitizingStart = start;
+        char c = source.charAt(start);
+        while (c != '(' && c != ',') {
+            sanitizingStart--;
+            if (sanitizingStart < 0) {
+                break;
+            }
+            c = source.charAt(sanitizingStart);
+        }
+        if (c == '(' || c == ',') {
+            return sanitizingStart + 1;
+        }
+        return -1;
     }
 
     private int sanitizingStartPositionForNullableTypes(int start, String source, boolean removeComma) {

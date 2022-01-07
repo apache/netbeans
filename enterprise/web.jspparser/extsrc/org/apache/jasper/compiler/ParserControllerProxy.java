@@ -113,7 +113,7 @@ public class ParserControllerProxy {
             determineSyntaxAndEncodingM.invoke(pc, new Object[] {absFileName, jarFile, jspConfigPageEnc});
             
             // now the isXml and sourceEnc variables of ParserController have values
-            isXml = ((Boolean)isXmlF.get(pc)).booleanValue();
+            isXml = ((Boolean)isXmlF.get(pc));
             sourceEnc = (String)sourceEncF.get(pc);
         } catch (IllegalAccessException e) {
             LOGGER.log(Level.INFO, null, e);

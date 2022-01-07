@@ -25,6 +25,21 @@
 <apidef name="text">Text API</apidef>
 </apidefs>
 <changes>
+      <change id="ask.on.document.reload">
+          <api name="text"/>
+          <summary>Rebrand defaults for Reload Editor Dialog</summary>
+          <version major="6" minor="80"/>
+          <date day="22" month="1" year="2021"/>
+          <author login="dbalek"/>
+          <compatibility addition="yes" binary="compatible" source="compatible"
+                         semantic="incompatible" deletion="no"
+                         modification="no"/>
+          <description>
+              A branding API to disable showing reload externally modified document dialog
+              - <a href="architecture-summary.html#group-branding">ASK_OnReload</a>.
+          </description>
+          <class package="org.openide.text" name="CloneableEditorSupport"/>
+      </change>
     <change id="PositionRef.Position">
         <api name="text"/>
         <summary>Implement Position interface for compatibility</summary>

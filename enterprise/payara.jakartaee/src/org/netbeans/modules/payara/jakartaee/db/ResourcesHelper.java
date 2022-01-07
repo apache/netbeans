@@ -46,8 +46,10 @@ import org.openide.util.Utilities;
  */
 public class ResourcesHelper {
 
+    private static final Logger LOG = Logger.getLogger("payara-jakartaee");
+
     private static RequestProcessor RP = new RequestProcessor("Sample Datasource work");
-    
+
     public static void addSampleDatasource(final J2eeModule module , final DeploymentManager dmParam) {
         RP.post(new Runnable() {
 
@@ -79,10 +81,10 @@ public class ResourcesHelper {
                             }
                         }
                     } else {
-                        Logger.getLogger("payara-jakartaee").finer("Could not find project for J2eeModule");   // NOI18N
+                        LOG.finer("Could not find project for J2eeModule");   // NOI18N
                     }
                 } else {
-                    Logger.getLogger("payara-jakartaee").finer("Could not find project root directory for J2eeModule");   // NOI18N
+                    LOG.finer("Could not find project root directory for J2eeModule");   // NOI18N
                 }
             }
         });
@@ -98,17 +100,12 @@ public class ResourcesHelper {
     }
 
     static private void registerSampleResource(PayaraModule commonSupport) {
-        String sample_poolname = "SamplePool"; //NOI18N
-        String sample_jdbc = "jdbc/sample"; //NOI18N
-        String sample_classname = "org.apache.derby.jdbc.ClientDataSource"; //NOI18N
+        String sample_poolname = "H2Pool"; //NOI18N
+        String sample_jdbc = "jdbc/__default"; //NOI18N
+        String sample_classname = "org.h2.jdbcx.JdbcDataSource"; //NOI18N
         String sample_restype = "javax.sql.DataSource"; //NOI18N
-        Map<String, String> sample_props = new HashMap<String, String>();
-        sample_props.put("DatabaseName", "sample");
-        sample_props.put("User", "app");
-        sample_props.put("Password", "app");
-        sample_props.put("PortNumber", "1527");
-        sample_props.put("serverName", "localhost");
-        sample_props.put("URL", "jdbc\\:derby\\://localhost\\:1527/sample");
+        Map<String, String> sample_props = new HashMap<>();
+        sample_props.put("URL", "jdbc:h2:${com.sun.aas.instanceRoot}/lib/databases/embedded_default;AUTO_SERVER=TRUE");
         Map<String, ResourceDesc> jdbcsMap = commonSupport.getResourcesMap(PayaraModule.JDBC_RESOURCE);
         if (!jdbcsMap.containsKey(sample_jdbc)) {
             try {
@@ -118,9 +115,8 @@ public class ResourcesHelper {
                 CommandCreateJDBCResource.createJDBCResource(
                         commonSupport.getInstance(), sample_poolname,
                         sample_jdbc, null, null, 60000);
-            } catch (PayaraIdeException gfie) {
-                Logger.getLogger("payara-jakartaee").log(
-                        Level.SEVERE, gfie.getLocalizedMessage(), gfie);
+            } catch (PayaraIdeException ex) {
+                LOG.log(Level.SEVERE, ex.getLocalizedMessage(), ex);
             }
         }
     }

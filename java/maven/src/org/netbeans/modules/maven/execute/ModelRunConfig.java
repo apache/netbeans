@@ -19,6 +19,7 @@
 
 package org.netbeans.modules.maven.execute;
 
+import org.netbeans.modules.maven.runjar.MavenExecuteUtils;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
@@ -32,7 +33,6 @@ import org.netbeans.modules.maven.NbMavenProjectImpl;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.modules.maven.api.PluginPropertyUtils;
-import org.netbeans.modules.maven.customizer.ActionMappings;
 import org.netbeans.modules.maven.execute.model.NetbeansActionMapping;
 import org.openide.filesystems.FileObject;
 import org.openide.util.Lookup;
@@ -50,8 +50,7 @@ public final class ModelRunConfig extends BeanRunConfig {
     
     public static final String EXEC_MERGED = "exec.args.merged";
     private static final String CP_PLACEHOLDER = "___CP___";
-    private static final String EXEC_ARGS = "exec.args"; // NOI18N
-    private static final String DEFAULT_EXEC_ARGS_CLASSPATH = "-classpath %classpath ${packageClassName}"; // NOI18N
+    private static final String EXEC_ARGS = MavenExecuteUtils.RUN_PARAMS;
     
     public ModelRunConfig(Project proj, NetbeansActionMapping mod, String actionName, FileObject selectedFile, Lookup lookup, boolean fallback) {
         model = mod;
@@ -64,12 +63,13 @@ public final class ModelRunConfig extends BeanRunConfig {
         for (Map.Entry<String,String> entry : model.getProperties().entrySet()) {
             String key = entry.getKey();
             String value = entry.getValue();
-            if(EXEC_ARGS.equals(key)) {                                
-                if(value != null && value.trim().equals(DEFAULT_EXEC_ARGS_CLASSPATH)) {
+            if(EXEC_ARGS.equals(key)) {     
+                String defaultArgsTemplate = MavenExecuteUtils.doesNotSpecifyCustomExecArgs(model);
+                if (defaultArgsTemplate != null) {
                     String execArgsByPom = getExecArgsByPom(model, proj);
                     if(execArgsByPom != null) {
                         if(execArgsByPom.contains(CP_PLACEHOLDER)) {
-                            value = execArgsByPom.replace(CP_PLACEHOLDER, DEFAULT_EXEC_ARGS_CLASSPATH);                            
+                            value = execArgsByPom.replace(CP_PLACEHOLDER, defaultArgsTemplate);                            
                         } else {
                             value = execArgsByPom; 
                         }  
@@ -85,6 +85,7 @@ public final class ModelRunConfig extends BeanRunConfig {
         setActivatedProfiles(mod.getActivatedProfiles());
         setActionName(actionName);
         setFileObject(selectedFile);
+        setActionContext(lookup);
         if (mod.getPreAction() != null) {
             setPreExecution(ActionToGoalUtils.createRunConfig(mod.getPreAction(), nbprj, lookup));
         }

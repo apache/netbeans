@@ -36,5 +36,5 @@ public interface EscapeProcessor {
      * Text without ANSI control characters.
      * @param text 
      */
-    void processText(String text);
+    void processText(String text, boolean forceOutput);
 }

@@ -843,13 +843,13 @@ public final class J2eePlatform implements Lookup.Provider {
     private String getEntrySuffix(String realName, Map<String, Integer> usages) {
         Integer value = usages.get(realName);
         if (value == null) {
-            value = Integer.valueOf(0);
+            value = 0;
         } else {
-            value = Integer.valueOf(value.intValue() + 1);
+            value = value + 1;
         }
 
         usages.put(realName, value);
-        if (value.intValue() == 0) {
+        if (value == 0) {
             return ""; // NOI18N
         }
         return "-" + value.toString();

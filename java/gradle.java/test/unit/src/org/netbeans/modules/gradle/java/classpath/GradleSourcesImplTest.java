@@ -18,12 +18,16 @@
  */
 package org.netbeans.modules.gradle.java.classpath;
 
+import java.io.IOException;
+import static junit.framework.TestCase.assertEquals;
 import org.netbeans.api.java.project.JavaProjectConstants;
 import org.netbeans.api.project.Project;
+import org.netbeans.api.project.ProjectManager;
 import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.project.SourceGroup;
 import org.netbeans.api.project.Sources;
-import org.netbeans.modules.gradle.java.AbstractGradleJavaTestCase;
+import org.netbeans.modules.gradle.AbstractGradleProjectTestCase;
+import org.netbeans.modules.gradle.ProjectTrust;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 
@@ -31,16 +35,16 @@ import org.openide.filesystems.FileUtil;
  *
  * @author lkishalmi
  */
-public class GradleSourcesImplTest extends AbstractGradleJavaTestCase {
+public class GradleSourcesImplTest extends AbstractGradleProjectTestCase {
 
     public GradleSourcesImplTest(String name) {
         super(name);
     }
 
     public void testGeneratedSources() throws Exception { // #187595
-        FileObject d = createGradleProject(
+        FileObject d = createGradleProject(null,
                 "apply plugin: 'java'\n" +
-                "sourceSets { main { java { srcDirs = [ 'src', 'build/gen-src' ] }}}");
+                "sourceSets { main { java { srcDirs = [ 'src', 'build/gen-src' ] }}}", "");
         FileObject src = FileUtil.createFolder(d, "src/");
         FileObject gsrc = FileUtil.createFolder(d, "build/gen-src");
         FileObject source = src.createData("Whatever.java");
@@ -55,4 +59,37 @@ public class GradleSourcesImplTest extends AbstractGradleJavaTestCase {
         assertFalse(groups[1].contains(source));
     }
 
+    public void testRootProjectSourceGroup() throws IOException {
+        FileObject d = createGradleProject(null,
+                "apply plugin: 'java'\n" +
+                "sourceSets { main { java { srcDirs = [ 'src', 'build/gen-src' ] }}}", "");
+        Project p = ProjectManager.getDefault().findProject(d);
+        SourceGroup[] groups = ProjectUtils.getSources(p).getSourceGroups(Sources.TYPE_GENERIC);
+        assertEquals(1, groups.length);
+    }
+
+    public void testSourceProviderChange() throws Exception {
+        FileObject d = createGradleProject(null, "", "");
+        Project p = ProjectManager.getDefault().findProject(d);
+        ProjectTrust.getDefault().trustProject(p);
+        SourceGroup[] groups = ProjectUtils.getSources(p).getSourceGroups(Sources.TYPE_GENERIC);
+        assertEquals(1, groups.length);
+        groups = ProjectUtils.getSources(p).getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA);
+        assertEquals(0, groups.length);
+        FileObject src = FileUtil.createFolder(d, "src/");
+        FileObject gsrc = FileUtil.createFolder(d, "build/gen-src");
+        FileObject source = src.createData("Whatever.java");
+        FileObject generated = gsrc.createData("WhateverGen.java");
+        createGradleProject(null,
+                "apply plugin: 'java'\n" +
+                "sourceSets { main { java { srcDirs = [ 'src', 'build/gen-src' ] }}}", "");
+        reloadProject(p);
+        Sources srcs = ProjectUtils.getSources(p);
+        groups = srcs.getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA);
+        assertEquals(2, groups.length);
+        assertTrue(groups[0].contains(source));
+        assertFalse(groups[0].contains(generated));
+        assertTrue(groups[1].contains(generated));
+        assertFalse(groups[1].contains(source));
+    }
 }

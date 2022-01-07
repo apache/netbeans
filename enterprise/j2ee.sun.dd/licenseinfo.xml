@@ -46,7 +46,9 @@
         <file>src/org/netbeans/modules/j2ee/sun/dd/impl/resources/sun-ejb-jar_3_0-1.dtd</file>
         <file>src/org/netbeans/modules/j2ee/sun/dd/impl/resources/sun-ejb-jar_3_1-0.dtd</file>
         <file>src/org/netbeans/modules/j2ee/sun/dd/impl/resources/sun-resources_1_0.dtd</file>
+        <file>src/org/netbeans/modules/j2ee/sun/dd/impl/resources/sun-resources_1_2.dtd</file>
         <file>src/org/netbeans/modules/j2ee/sun/dd/impl/resources/sun-resources_1_3.dtd</file>
+        <file>src/org/netbeans/modules/j2ee/sun/dd/impl/resources/sun-resources_1_4.dtd</file>
         <file>src/org/netbeans/modules/j2ee/sun/dd/impl/resources/sun-web-app_2_3-0.dtd</file>
         <file>src/org/netbeans/modules/j2ee/sun/dd/impl/resources/sun-web-app_2_4-0.dtd</file>
         <file>src/org/netbeans/modules/j2ee/sun/dd/impl/resources/sun-web-app_2_4-1.dtd</file>

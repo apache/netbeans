@@ -36,9 +36,9 @@ public class StringPrefixTreeTest extends CommonTest {
     @Test
     public void testStringPrefixMatch() {
         StringPrefixTree<Integer> pt = new StringPrefixTree<Integer>(false);
-        pt.add("ABC", new Integer(1));
-        pt.add("ABCDE", new Integer(2));
-        pt.add("ABE", new Integer(3));
+        pt.add("ABC", 1);
+        pt.add("ABCDE", 2);
+        pt.add("ABE", 3);
         Integer v1 = pt.prefixMatch("abc");
         Integer v2 = pt.prefixMatch("abcde");
         Integer v3 = pt.prefixMatch("abe");
@@ -59,9 +59,9 @@ public class StringPrefixTreeTest extends CommonTest {
     @Test
     public void testStringExactMatch() {
         StringPrefixTree<Integer> pt = new StringPrefixTree<Integer>(true);
-        pt.add("ABC", new Integer(1));
-        pt.add("ABCDE", new Integer(2));
-        pt.add("ABE", new Integer(3));
+        pt.add("ABC", 1);
+        pt.add("ABCDE", 2);
+        pt.add("ABE", 3);
         Integer v1 = pt.match("ABC");
         Integer v2 = pt.match("ABCDE");
         Integer v3 = pt.match("ABE");
@@ -88,11 +88,11 @@ public class StringPrefixTreeTest extends CommonTest {
     @Test
     public void testStringRemoval() {
         StringPrefixTree<Integer> pt = new StringPrefixTree<Integer>(false);
-        pt.add("HelloKitty", new Integer(1));
-        pt.add("HelloPuppy", new Integer(2));
-        pt.add("Hello", new Integer(3));
-        pt.add("HelpWhales", new Integer(4));
-        pt.add("HelpDolphins", new Integer(5));
+        pt.add("HelloKitty", 1);
+        pt.add("HelloPuppy", 2);
+        pt.add("Hello", 3);
+        pt.add("HelpWhales", 4);
+        pt.add("HelpDolphins", 5);
         Integer r1 = pt.remove("HelpWhales");
         Integer r2 = pt.remove("HelpDolphins");
         Integer r3 = pt.remove("Hello");
@@ -113,11 +113,11 @@ public class StringPrefixTreeTest extends CommonTest {
     @Test
     public void testClear() {
         StringPrefixTree<Integer> pt = new StringPrefixTree<Integer>(false);
-        pt.add("HelloKitty", new Integer(1));
-        pt.add("HelloPuppy", new Integer(2));
-        pt.add("Hello", new Integer(3));
-        pt.add("HelpWhales", new Integer(4));
-        pt.add("HelpDolphins", new Integer(5));
+        pt.add("HelloKitty", 1);
+        pt.add("HelloPuppy", 2);
+        pt.add("Hello", 3);
+        pt.add("HelpWhales", 4);
+        pt.add("HelpDolphins", 5);
         pt.clear();
         assertTrue(pt.size() == 0);
     }

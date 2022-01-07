@@ -207,7 +207,7 @@ public class Task extends Object implements Runnable {
                 return;
             }
 
-            it = ((HashSet) list.clone()).iterator();
+            it = ((HashSet<TaskListener>) list.clone()).iterator();
         }
 
         while (it.hasNext()) {

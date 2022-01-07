@@ -21,6 +21,7 @@ package org.netbeans.modules.settings;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -93,24 +94,49 @@ public final class RecognizeInstanceObjects extends NamedServicesProvider {
         return null;
     }
     
-    private static final class OverObjects extends ProxyLookup 
-    implements PropertyChangeListener, FileChangeListener {
-        private final String path;
-        
-        public OverObjects(String path) {
-            super(delegates(null, path));
-            this.path = path;
+    private static final class MSL implements PropertyChangeListener {
+        private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
+        public static final MSL DEFAULT = new MSL();
+        static {
             try {
                 ModuleSystem ms = Main.getModuleSystem(false);
                 if (ms != null) {
                     ModuleManager man = ms.getManager();
-                    man.addPropertyChangeListener(WeakListeners.propertyChange(this, man));
+                    man.addPropertyChangeListener(WeakListeners.propertyChange(DEFAULT, man));
                 } else {
                     LOG.log(Level.WARNING, "Not listening on module system");
                 }
             } catch (Throwable e) {
                 LOG.log(Level.WARNING, "Can't listen on module system", e);
             }
+        }
+        private MSL() {
+        }
+
+        public void addPropertyChangeListener(PropertyChangeListener listener) {
+            pcs.addPropertyChangeListener(listener);
+        }
+
+        public void removePropertyChangeListener(PropertyChangeListener listener) {
+            pcs.removePropertyChangeListener(listener);
+        }
+
+        @Override
+        public void propertyChange(PropertyChangeEvent evt) {
+            pcs.firePropertyChange(evt);
+        }
+    }
+
+    private static final class OverObjects extends ProxyLookup
+    implements PropertyChangeListener, FileChangeListener {
+        private final String path;
+
+        public OverObjects(String path) {
+            super(delegates(null, path));
+            this.path = path;
+            MSL.DEFAULT.addPropertyChangeListener(
+                WeakListeners.propertyChange(this, MSL.DEFAULT)
+            );
             try {
                 FileSystem sfs = FileUtil.getConfigRoot().getFileSystem();
                 sfs.addFileChangeListener(FileUtil.weakFileChangeListener(this, sfs));

@@ -63,4 +63,15 @@ public final class TextRegionManagerEvent extends EventObject {
         return previousTextSync;
     }
 
+    /**
+     * Returns text sync for which the document modifications are being replicated across the respective regions.
+     * 
+     * @return active text sync, can be {@code null}.
+     * 
+     * @since 1.53
+     */
+    public TextSync activeTextSync() {
+        return textRegionManager().activeTextSync();
+    }
+
 }

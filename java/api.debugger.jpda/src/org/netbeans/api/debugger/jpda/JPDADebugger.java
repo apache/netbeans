@@ -19,7 +19,6 @@
 
 package org.netbeans.api.debugger.jpda;
 
-import com.sun.jdi.VirtualMachine;
 import com.sun.jdi.connect.Connector.Argument;
 import com.sun.jdi.connect.ListeningConnector;
 import com.sun.jdi.request.EventRequest;
@@ -38,6 +37,7 @@ import java.util.Map;
 import org.netbeans.api.debugger.DebuggerEngine;
 import org.netbeans.api.debugger.DebuggerInfo;
 import org.netbeans.api.debugger.DebuggerManager;
+import org.netbeans.api.debugger.Session;
 import org.netbeans.api.debugger.jpda.event.JPDABreakpointEvent;
 import org.netbeans.api.java.classpath.ClassPath;
 
@@ -552,7 +552,7 @@ public abstract class JPDADebugger {
     public boolean canGetInstanceInfo() {
         return false;
     }
-    
+
     /**
      * Get the list of all classes in the debuggee.
      * @return The list of all classes.
@@ -614,7 +614,15 @@ public abstract class JPDADebugger {
     public ThreadsCollector getThreadsCollector() {
         return null;
     }
-    
+
+    /**
+     * Get the session associated with this debugger.
+     * @since 3.19
+     */
+    public Session getSession() {
+        throw new AbstractMethodError();
+    }
+
     /**
      * Creates a deadlock detector.
      * @return deadlock detector with automatic detection of deadlock among suspended threads
@@ -746,7 +754,6 @@ public abstract class JPDADebugger {
             String serviceName = (String) attrs.get(DebuggerProcessor.SERVICE_NAME);
             return new ContextAware(serviceName);
         }
-
     }
 
 }

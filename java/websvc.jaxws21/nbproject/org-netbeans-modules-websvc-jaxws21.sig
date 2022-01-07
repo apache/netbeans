@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.40
+#Version 1.46
 
 CLSS public abstract com.sun.codemodel.CodeWriter
 cons public init()
@@ -19,293 +19,6 @@ meth public java.io.OutputStream openBinary(com.sun.codemodel.JPackage,java.lang
 meth public void close() throws java.io.IOException
 supr com.sun.codemodel.CodeWriter
 hfds readOnly,readonlyFiles,target
-
-CLSS public abstract com.sun.org.apache.xerces.internal.dom.ChildNode
-cons protected init(com.sun.org.apache.xerces.internal.dom.CoreDocumentImpl)
-cons public init()
-fld protected com.sun.org.apache.xerces.internal.dom.ChildNode nextSibling
-fld protected com.sun.org.apache.xerces.internal.dom.ChildNode previousSibling
-meth public org.w3c.dom.Node cloneNode(boolean)
-meth public org.w3c.dom.Node getNextSibling()
-meth public org.w3c.dom.Node getParentNode()
-meth public org.w3c.dom.Node getPreviousSibling()
-supr com.sun.org.apache.xerces.internal.dom.NodeImpl
-hfds fBufferStr,serialVersionUID
-
-CLSS public com.sun.org.apache.xerces.internal.dom.CoreDocumentImpl
-cons public init()
-cons public init(boolean)
-cons public init(org.w3c.dom.DocumentType)
-cons public init(org.w3c.dom.DocumentType,boolean)
-fld protected boolean allowGrammarAccess
-fld protected boolean ancestorChecking
-fld protected boolean errorChecking
-fld protected boolean standalone
-fld protected boolean xmlVersionChanged
-fld protected com.sun.org.apache.xerces.internal.dom.DocumentTypeImpl docType
-fld protected com.sun.org.apache.xerces.internal.dom.ElementImpl docElement
-fld protected int changes
-fld protected java.lang.String actualEncoding
-fld protected java.lang.String encoding
-fld protected java.lang.String fDocumentURI
-fld protected java.lang.String version
-fld protected java.util.Map<java.lang.String,org.w3c.dom.Node> identifiers
-intf org.w3c.dom.Document
-meth protected boolean dispatchEvent(com.sun.org.apache.xerces.internal.dom.NodeImpl,org.w3c.dom.events.Event)
-meth protected boolean isKidOK(org.w3c.dom.Node,org.w3c.dom.Node)
-meth protected final void checkDOMNSErr(java.lang.String,java.lang.String)
-meth protected final void checkNamespaceWF(java.lang.String,int,int)
-meth protected final void checkQName(java.lang.String,java.lang.String)
-meth protected final void clearIdentifiers()
-meth protected int changes()
-meth protected int getNodeNumber()
-meth protected int getNodeNumber(org.w3c.dom.Node)
-meth protected java.lang.Object getUserData(com.sun.org.apache.xerces.internal.dom.NodeImpl)
-meth protected java.util.Map<java.lang.String,com.sun.org.apache.xerces.internal.dom.ParentNode$UserDataRecord> getUserDataRecord(org.w3c.dom.Node)
-meth protected void addEventListener(com.sun.org.apache.xerces.internal.dom.NodeImpl,java.lang.String,org.w3c.dom.events.EventListener,boolean)
-meth protected void changed()
-meth protected void cloneNode(com.sun.org.apache.xerces.internal.dom.CoreDocumentImpl,boolean)
-meth protected void copyEventListeners(com.sun.org.apache.xerces.internal.dom.NodeImpl,com.sun.org.apache.xerces.internal.dom.NodeImpl)
-meth protected void removeEventListener(com.sun.org.apache.xerces.internal.dom.NodeImpl,java.lang.String,org.w3c.dom.events.EventListener,boolean)
-meth protected void setUserData(com.sun.org.apache.xerces.internal.dom.NodeImpl,java.lang.Object)
-meth protected void undeferChildren(org.w3c.dom.Node)
-meth public boolean getAsync()
-meth public boolean getErrorChecking()
-meth public boolean getStandalone()
-meth public boolean getStrictErrorChecking()
-meth public boolean getXmlStandalone()
-meth public boolean load(java.lang.String)
-meth public boolean loadXML(java.lang.String)
-meth public com.sun.org.apache.xerces.internal.dom.ElementDefinitionImpl createElementDefinition(java.lang.String)
-meth public final org.w3c.dom.Document getOwnerDocument()
-meth public final static boolean isValidQName(java.lang.String,java.lang.String,boolean)
-meth public final static boolean isXMLName(java.lang.String,boolean)
-meth public java.lang.Object clone() throws java.lang.CloneNotSupportedException
-meth public java.lang.Object getFeature(java.lang.String,java.lang.String)
-meth public java.lang.Object getUserData(org.w3c.dom.Node,java.lang.String)
-meth public java.lang.Object setUserData(org.w3c.dom.Node,java.lang.String,java.lang.Object,org.w3c.dom.UserDataHandler)
-meth public java.lang.String getBaseURI()
-meth public java.lang.String getDocumentURI()
-meth public java.lang.String getEncoding()
-meth public java.lang.String getInputEncoding()
-meth public java.lang.String getNodeName()
-meth public java.lang.String getTextContent()
-meth public java.lang.String getVersion()
-meth public java.lang.String getXmlEncoding()
-meth public java.lang.String getXmlVersion()
-meth public java.lang.String saveXML(org.w3c.dom.Node)
-meth public org.w3c.dom.Attr createAttribute(java.lang.String)
-meth public org.w3c.dom.Attr createAttributeNS(java.lang.String,java.lang.String)
-meth public org.w3c.dom.Attr createAttributeNS(java.lang.String,java.lang.String,java.lang.String)
-meth public org.w3c.dom.CDATASection createCDATASection(java.lang.String)
-meth public org.w3c.dom.Comment createComment(java.lang.String)
-meth public org.w3c.dom.DOMConfiguration getDomConfig()
-meth public org.w3c.dom.DOMImplementation getImplementation()
-meth public org.w3c.dom.DocumentFragment createDocumentFragment()
-meth public org.w3c.dom.DocumentType createDocumentType(java.lang.String,java.lang.String,java.lang.String)
-meth public org.w3c.dom.DocumentType getDoctype()
-meth public org.w3c.dom.Element createElement(java.lang.String)
-meth public org.w3c.dom.Element createElementNS(java.lang.String,java.lang.String)
-meth public org.w3c.dom.Element createElementNS(java.lang.String,java.lang.String,java.lang.String)
-meth public org.w3c.dom.Element getDocumentElement()
-meth public org.w3c.dom.Element getElementById(java.lang.String)
-meth public org.w3c.dom.Element getIdentifier(java.lang.String)
-meth public org.w3c.dom.Entity createEntity(java.lang.String)
-meth public org.w3c.dom.EntityReference createEntityReference(java.lang.String)
-meth public org.w3c.dom.Node adoptNode(org.w3c.dom.Node)
-meth public org.w3c.dom.Node cloneNode(boolean)
-meth public org.w3c.dom.Node importNode(org.w3c.dom.Node,boolean)
-meth public org.w3c.dom.Node insertBefore(org.w3c.dom.Node,org.w3c.dom.Node)
-meth public org.w3c.dom.Node removeChild(org.w3c.dom.Node)
-meth public org.w3c.dom.Node renameNode(org.w3c.dom.Node,java.lang.String,java.lang.String)
-meth public org.w3c.dom.Node replaceChild(org.w3c.dom.Node,org.w3c.dom.Node)
-meth public org.w3c.dom.NodeList getElementsByTagName(java.lang.String)
-meth public org.w3c.dom.NodeList getElementsByTagNameNS(java.lang.String,java.lang.String)
-meth public org.w3c.dom.Notation createNotation(java.lang.String)
-meth public org.w3c.dom.ProcessingInstruction createProcessingInstruction(java.lang.String,java.lang.String)
-meth public org.w3c.dom.Text createTextNode(java.lang.String)
-meth public short getNodeType()
-meth public void abort()
-meth public void normalizeDocument()
-meth public void putIdentifier(java.lang.String,org.w3c.dom.Element)
-meth public void removeIdentifier(java.lang.String)
-meth public void setAsync(boolean)
-meth public void setDocumentURI(java.lang.String)
-meth public void setEncoding(java.lang.String)
-meth public void setErrorChecking(boolean)
-meth public void setInputEncoding(java.lang.String)
-meth public void setStandalone(boolean)
-meth public void setStrictErrorChecking(boolean)
-meth public void setTextContent(java.lang.String)
-meth public void setVersion(java.lang.String)
-meth public void setXmlEncoding(java.lang.String)
-meth public void setXmlStandalone(boolean)
-meth public void setXmlVersion(java.lang.String)
-supr com.sun.org.apache.xerces.internal.dom.ParentNode
-hfds documentNumber,domNormalizer,fConfiguration,fFreeNLCache,fXPathEvaluator,kidOK,nodeCounter,nodeTable,nodeUserData,serialPersistentFields,serialVersionUID,xml11Version
-
-CLSS public com.sun.org.apache.xerces.internal.dom.DocumentFragmentImpl
-cons public init()
-cons public init(com.sun.org.apache.xerces.internal.dom.CoreDocumentImpl)
-intf org.w3c.dom.DocumentFragment
-meth public java.lang.String getNodeName()
-meth public short getNodeType()
-meth public void normalize()
-supr com.sun.org.apache.xerces.internal.dom.ParentNode
-hfds serialVersionUID
-
-CLSS public com.sun.org.apache.xerces.internal.dom.DocumentImpl
-cons public init()
-cons public init(boolean)
-cons public init(org.w3c.dom.DocumentType)
-cons public init(org.w3c.dom.DocumentType,boolean)
-fld protected boolean mutationEvents
-fld protected java.util.List<org.w3c.dom.ranges.Range> ranges
-fld protected java.util.List<org.w3c.dom.traversal.NodeIterator> iterators
-fld protected java.util.Map<com.sun.org.apache.xerces.internal.dom.NodeImpl,java.util.List<com.sun.org.apache.xerces.internal.dom.DocumentImpl$LEntry>> eventListeners
-intf org.w3c.dom.events.DocumentEvent
-intf org.w3c.dom.ranges.DocumentRange
-intf org.w3c.dom.traversal.DocumentTraversal
-meth protected boolean dispatchEvent(com.sun.org.apache.xerces.internal.dom.NodeImpl,org.w3c.dom.events.Event)
-meth protected void addEventListener(com.sun.org.apache.xerces.internal.dom.NodeImpl,java.lang.String,org.w3c.dom.events.EventListener,boolean)
-meth protected void copyEventListeners(com.sun.org.apache.xerces.internal.dom.NodeImpl,com.sun.org.apache.xerces.internal.dom.NodeImpl)
-meth protected void dispatchAggregateEvents(com.sun.org.apache.xerces.internal.dom.NodeImpl,com.sun.org.apache.xerces.internal.dom.AttrImpl,java.lang.String,short)
-meth protected void dispatchAggregateEvents(com.sun.org.apache.xerces.internal.dom.NodeImpl,com.sun.org.apache.xerces.internal.dom.DocumentImpl$EnclosingAttr)
-meth protected void dispatchEventToSubtree(org.w3c.dom.Node,org.w3c.dom.events.Event)
-meth protected void dispatchingEventToSubtree(org.w3c.dom.Node,org.w3c.dom.events.Event)
-meth protected void removeEventListener(com.sun.org.apache.xerces.internal.dom.NodeImpl,java.lang.String,org.w3c.dom.events.EventListener,boolean)
-meth protected void saveEnclosingAttr(com.sun.org.apache.xerces.internal.dom.NodeImpl)
-meth public org.w3c.dom.DOMImplementation getImplementation()
-meth public org.w3c.dom.Node cloneNode(boolean)
-meth public org.w3c.dom.events.Event createEvent(java.lang.String)
-meth public org.w3c.dom.ranges.Range createRange()
-meth public org.w3c.dom.traversal.NodeIterator createNodeIterator(org.w3c.dom.Node,int,org.w3c.dom.traversal.NodeFilter,boolean)
-meth public org.w3c.dom.traversal.NodeIterator createNodeIterator(org.w3c.dom.Node,short,org.w3c.dom.traversal.NodeFilter)
-meth public org.w3c.dom.traversal.TreeWalker createTreeWalker(org.w3c.dom.Node,int,org.w3c.dom.traversal.NodeFilter,boolean)
-meth public org.w3c.dom.traversal.TreeWalker createTreeWalker(org.w3c.dom.Node,short,org.w3c.dom.traversal.NodeFilter)
-supr com.sun.org.apache.xerces.internal.dom.CoreDocumentImpl
-hfds savedEnclosingAttr,serialPersistentFields,serialVersionUID
-hcls EnclosingAttr,LEntry
-
-CLSS public abstract com.sun.org.apache.xerces.internal.dom.NodeImpl
-cons protected init(com.sun.org.apache.xerces.internal.dom.CoreDocumentImpl)
-cons public init()
-fld protected com.sun.org.apache.xerces.internal.dom.NodeImpl ownerNode
-fld protected final static short FIRSTCHILD = 16
-fld protected final static short HASSTRING = 128
-fld protected final static short ID = 512
-fld protected final static short IGNORABLEWS = 64
-fld protected final static short NORMALIZED = 256
-fld protected final static short OWNED = 8
-fld protected final static short READONLY = 1
-fld protected final static short SPECIFIED = 32
-fld protected final static short SYNCCHILDREN = 4
-fld protected final static short SYNCDATA = 2
-fld protected short flags
-fld public final static short DOCUMENT_POSITION_CONTAINS = 8
-fld public final static short DOCUMENT_POSITION_DISCONNECTED = 1
-fld public final static short DOCUMENT_POSITION_FOLLOWING = 4
-fld public final static short DOCUMENT_POSITION_IMPLEMENTATION_SPECIFIC = 32
-fld public final static short DOCUMENT_POSITION_IS_CONTAINED = 16
-fld public final static short DOCUMENT_POSITION_PRECEDING = 2
-fld public final static short ELEMENT_DEFINITION_NODE = 21
-fld public final static short TREE_POSITION_ANCESTOR = 4
-fld public final static short TREE_POSITION_DESCENDANT = 8
-fld public final static short TREE_POSITION_DISCONNECTED = 0
-fld public final static short TREE_POSITION_EQUIVALENT = 16
-fld public final static short TREE_POSITION_FOLLOWING = 2
-fld public final static short TREE_POSITION_PRECEDING = 1
-fld public final static short TREE_POSITION_SAME_NODE = 32
-intf java.io.Serializable
-intf java.lang.Cloneable
-intf org.w3c.dom.Node
-intf org.w3c.dom.NodeList
-intf org.w3c.dom.events.EventTarget
-meth protected int changes()
-meth protected int getNodeNumber()
-meth protected java.util.Map<java.lang.String,com.sun.org.apache.xerces.internal.dom.ParentNode$UserDataRecord> getUserDataRecord()
-meth protected org.w3c.dom.Node getContainer()
-meth protected void changed()
-meth protected void synchronizeData()
-meth public abstract java.lang.String getNodeName()
-meth public abstract short getNodeType()
-meth public boolean dispatchEvent(org.w3c.dom.events.Event)
-meth public boolean getReadOnly()
-meth public boolean hasAttributes()
-meth public boolean hasChildNodes()
-meth public boolean isDefaultNamespace(java.lang.String)
-meth public boolean isEqualNode(org.w3c.dom.Node)
-meth public boolean isSameNode(org.w3c.dom.Node)
-meth public boolean isSupported(java.lang.String,java.lang.String)
-meth public final void needsSyncChildren(boolean)
-meth public int getLength()
-meth public java.lang.Object getFeature(java.lang.String,java.lang.String)
-meth public java.lang.Object getUserData()
-meth public java.lang.Object getUserData(java.lang.String)
-meth public java.lang.Object setUserData(java.lang.String,java.lang.Object,org.w3c.dom.UserDataHandler)
-meth public java.lang.String getBaseURI()
-meth public java.lang.String getLocalName()
-meth public java.lang.String getNamespaceURI()
-meth public java.lang.String getNodeValue()
-meth public java.lang.String getPrefix()
-meth public java.lang.String getTextContent()
-meth public java.lang.String lookupNamespaceURI(java.lang.String)
-meth public java.lang.String lookupPrefix(java.lang.String)
-meth public java.lang.String toString()
-meth public org.w3c.dom.Document getOwnerDocument()
-meth public org.w3c.dom.NamedNodeMap getAttributes()
-meth public org.w3c.dom.Node appendChild(org.w3c.dom.Node)
-meth public org.w3c.dom.Node cloneNode(boolean)
-meth public org.w3c.dom.Node getFirstChild()
-meth public org.w3c.dom.Node getLastChild()
-meth public org.w3c.dom.Node getNextSibling()
-meth public org.w3c.dom.Node getParentNode()
-meth public org.w3c.dom.Node getPreviousSibling()
-meth public org.w3c.dom.Node insertBefore(org.w3c.dom.Node,org.w3c.dom.Node)
-meth public org.w3c.dom.Node item(int)
-meth public org.w3c.dom.Node removeChild(org.w3c.dom.Node)
-meth public org.w3c.dom.Node replaceChild(org.w3c.dom.Node,org.w3c.dom.Node)
-meth public org.w3c.dom.NodeList getChildNodes()
-meth public short compareDocumentPosition(org.w3c.dom.Node)
-meth public short compareTreePosition(org.w3c.dom.Node)
-meth public void addEventListener(java.lang.String,org.w3c.dom.events.EventListener,boolean)
-meth public void normalize()
-meth public void removeEventListener(java.lang.String,org.w3c.dom.events.EventListener,boolean)
-meth public void setNodeValue(java.lang.String)
-meth public void setPrefix(java.lang.String)
-meth public void setReadOnly(boolean,boolean)
-meth public void setTextContent(java.lang.String)
-meth public void setUserData(java.lang.Object)
-supr java.lang.Object
-hfds serialVersionUID
-
-CLSS public abstract com.sun.org.apache.xerces.internal.dom.ParentNode
-cons protected init(com.sun.org.apache.xerces.internal.dom.CoreDocumentImpl)
-cons public init()
-fld protected com.sun.org.apache.xerces.internal.dom.ChildNode firstChild
-fld protected com.sun.org.apache.xerces.internal.dom.CoreDocumentImpl ownerDocument
-fld protected java.io.Serializable fNodeListCache
-innr protected UserDataRecord
-meth protected final org.w3c.dom.NodeList getChildNodesUnoptimized()
-meth protected void synchronizeChildren()
-meth public boolean hasChildNodes()
-meth public boolean isEqualNode(org.w3c.dom.Node)
-meth public int getLength()
-meth public java.lang.String getTextContent()
-meth public org.w3c.dom.Document getOwnerDocument()
-meth public org.w3c.dom.Node cloneNode(boolean)
-meth public org.w3c.dom.Node getFirstChild()
-meth public org.w3c.dom.Node getLastChild()
-meth public org.w3c.dom.Node insertBefore(org.w3c.dom.Node,org.w3c.dom.Node)
-meth public org.w3c.dom.Node item(int)
-meth public org.w3c.dom.Node removeChild(org.w3c.dom.Node)
-meth public org.w3c.dom.Node replaceChild(org.w3c.dom.Node,org.w3c.dom.Node)
-meth public org.w3c.dom.NodeList getChildNodes()
-meth public void normalize()
-meth public void setReadOnly(boolean,boolean)
-meth public void setTextContent(java.lang.String)
-supr com.sun.org.apache.xerces.internal.dom.ChildNode
-hfds serialVersionUID
 
 CLSS public abstract com.sun.tools.ws.api.TJavaGeneratorExtension
 cons public init()
@@ -2971,37 +2684,8 @@ meth public abstract com.sun.xml.messaging.saaj.soap.SOAPDocumentImpl getDocumen
 meth public abstract com.sun.xml.messaging.saaj.soap.SOAPPartImpl getSOAPPart()
 
 CLSS public com.sun.xml.messaging.saaj.soap.SOAPDocumentFragment
-cons public init()
-cons public init(com.sun.org.apache.xerces.internal.dom.CoreDocumentImpl)
-supr com.sun.org.apache.xerces.internal.dom.DocumentFragmentImpl
 
 CLSS public com.sun.xml.messaging.saaj.soap.SOAPDocumentImpl
-cons public init(com.sun.xml.messaging.saaj.soap.SOAPPartImpl)
-fld protected final static java.util.logging.Logger log
-intf com.sun.xml.messaging.saaj.soap.SOAPDocument
-meth protected org.w3c.dom.Element doGetDocumentElement()
-meth public com.sun.xml.messaging.saaj.soap.SOAPDocumentImpl getDocument()
-meth public com.sun.xml.messaging.saaj.soap.SOAPPartImpl getSOAPPart()
-meth public org.w3c.dom.Attr createAttribute(java.lang.String)
-meth public org.w3c.dom.Attr createAttributeNS(java.lang.String,java.lang.String)
-meth public org.w3c.dom.CDATASection createCDATASection(java.lang.String)
-meth public org.w3c.dom.Comment createComment(java.lang.String)
-meth public org.w3c.dom.DOMImplementation getImplementation()
-meth public org.w3c.dom.DocumentFragment createDocumentFragment()
-meth public org.w3c.dom.DocumentType getDoctype()
-meth public org.w3c.dom.Element createElement(java.lang.String)
-meth public org.w3c.dom.Element createElementNS(java.lang.String,java.lang.String)
-meth public org.w3c.dom.Element getDocumentElement()
-meth public org.w3c.dom.Element getElementById(java.lang.String)
-meth public org.w3c.dom.EntityReference createEntityReference(java.lang.String)
-meth public org.w3c.dom.Node cloneNode(boolean)
-meth public org.w3c.dom.Node importNode(org.w3c.dom.Node,boolean)
-meth public org.w3c.dom.NodeList getElementsByTagName(java.lang.String)
-meth public org.w3c.dom.NodeList getElementsByTagNameNS(java.lang.String,java.lang.String)
-meth public org.w3c.dom.ProcessingInstruction createProcessingInstruction(java.lang.String,java.lang.String)
-meth public org.w3c.dom.Text createTextNode(java.lang.String)
-meth public void cloneNode(com.sun.xml.messaging.saaj.soap.SOAPDocumentImpl,boolean)
-supr com.sun.org.apache.xerces.internal.dom.DocumentImpl
 hfds XMLNS,enclosingSOAPPart
 
 CLSS public abstract com.sun.xml.messaging.saaj.soap.SOAPFactoryImpl
@@ -5536,8 +5220,6 @@ meth public void transferFocusUpCycle()
 meth public void update(java.awt.Graphics)
 meth public void validate()
 supr java.lang.Object
-hfds FOCUS_TRAVERSABLE_DEFAULT,FOCUS_TRAVERSABLE_SET,FOCUS_TRAVERSABLE_UNKNOWN,LOCK,acc,actionListenerK,adjustmentListenerK,appContext,autoFocusTransferOnDisposal,background,backgroundEraseDisabled,boundsOp,bufferStrategy,changeSupport,coalesceEventsParams,coalesceMap,coalescingEnabled,componentListener,componentListenerK,componentOrientation,componentSerializedDataVersion,compoundShape,containerListenerK,cursor,dropTarget,enabled,eventCache,eventLog,eventMask,focusListener,focusListenerK,focusLog,focusTraversalKeyPropertyNames,focusTraversalKeys,focusTraversalKeysEnabled,focusable,font,foreground,graphicsConfig,height,hierarchyBoundsListener,hierarchyBoundsListenerK,hierarchyListener,hierarchyListenerK,ignoreRepaint,incRate,inputMethodListener,inputMethodListenerK,isAddNotifyComplete,isFocusTraversableOverridden,isInc,isPacked,itemListenerK,keyListener,keyListenerK,locale,log,maxSize,maxSizeSet,minSize,minSizeSet,mixingCutoutRegion,mixingLog,mouseListener,mouseListenerK,mouseMotionListener,mouseMotionListenerK,mouseWheelListener,mouseWheelListenerK,name,nameExplicitlySet,newEventsOnly,objectLock,ownedWindowK,parent,peer,peerFont,popups,prefSize,prefSizeSet,requestFocusController,serialVersionUID,textListenerK,valid,visible,width,windowClosingException,windowFocusListenerK,windowListenerK,windowStateListenerK,x,y
-hcls AWTTreeLock,BltSubRegionBufferStrategy,DummyRequestFocusController,FlipSubRegionBufferStrategy,ProxyCapabilities,SingleBufferStrategy
 
 CLSS public abstract interface java.awt.MenuContainer
 meth public abstract boolean postEvent(java.awt.Event)
@@ -5571,7 +5253,6 @@ meth public void write(char[],int,int) throws java.io.IOException
 meth public void write(int) throws java.io.IOException
 meth public void write(java.lang.String,int,int) throws java.io.IOException
 supr java.io.Writer
-hfds cb,defaultCharBufferSize,lineSeparator,nChars,nextChar,out
 
 CLSS public abstract interface java.io.Closeable
 intf java.lang.AutoCloseable
@@ -5610,7 +5291,6 @@ cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.Throwable)
 cons public init(java.lang.Throwable)
 supr java.lang.Exception
-hfds serialVersionUID
 
 CLSS public abstract java.io.InputStream
 cons public init()
@@ -5625,7 +5305,6 @@ meth public void close() throws java.io.IOException
 meth public void mark(int)
 meth public void reset() throws java.io.IOException
 supr java.lang.Object
-hfds MAX_SKIP_BUFFER_SIZE
 
 CLSS public abstract java.io.OutputStream
 cons public init()
@@ -5658,7 +5337,6 @@ meth public void write(int) throws java.io.IOException
 meth public void write(java.lang.String) throws java.io.IOException
 meth public void write(java.lang.String,int,int) throws java.io.IOException
 supr java.lang.Object
-hfds WRITE_BUFFER_SIZE,writeBuffer
 
 CLSS public abstract interface java.lang.Appendable
 meth public abstract java.lang.Appendable append(char) throws java.io.IOException
@@ -5688,7 +5366,6 @@ meth public final java.lang.String name()
 meth public java.lang.String toString()
 meth public static <%0 extends java.lang.Enum<{%%0}>> {%%0} valueOf(java.lang.Class<{%%0}>,java.lang.String)
 supr java.lang.Object
-hfds name,ordinal
 
 CLSS public java.lang.Error
 cons protected init(java.lang.String,java.lang.Throwable,boolean,boolean)
@@ -5697,7 +5374,6 @@ cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.Throwable)
 cons public init(java.lang.Throwable)
 supr java.lang.Throwable
-hfds serialVersionUID
 
 CLSS public java.lang.Exception
 cons protected init(java.lang.String,java.lang.Throwable,boolean,boolean)
@@ -5706,7 +5382,6 @@ cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.Throwable)
 cons public init(java.lang.Throwable)
 supr java.lang.Throwable
-hfds serialVersionUID
 
 CLSS public java.lang.IllegalArgumentException
 cons public init()
@@ -5714,7 +5389,6 @@ cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.Throwable)
 cons public init(java.lang.Throwable)
 supr java.lang.RuntimeException
-hfds serialVersionUID
 
 CLSS public abstract interface java.lang.Iterable<%0 extends java.lang.Object>
 meth public abstract java.util.Iterator<{java.lang.Iterable%0}> iterator()
@@ -5742,7 +5416,6 @@ cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.Throwable)
 cons public init(java.lang.Throwable)
 supr java.lang.Exception
-hfds serialVersionUID
 
 CLSS public java.lang.Throwable
 cons protected init(java.lang.String,java.lang.Throwable,boolean,boolean)
@@ -5765,8 +5438,6 @@ meth public void printStackTrace(java.io.PrintStream)
 meth public void printStackTrace(java.io.PrintWriter)
 meth public void setStackTrace(java.lang.StackTraceElement[])
 supr java.lang.Object
-hfds CAUSE_CAPTION,EMPTY_THROWABLE_ARRAY,NULL_CAUSE_MESSAGE,SELF_SUPPRESSION_MESSAGE,SUPPRESSED_CAPTION,SUPPRESSED_SENTINEL,UNASSIGNED_STACK,backtrace,cause,detailMessage,serialVersionUID,stackTrace,suppressedExceptions
-hcls PrintStreamOrWriter,SentinelHolder,WrappedPrintStream,WrappedPrintWriter
 
 CLSS public abstract interface java.lang.annotation.Annotation
 meth public abstract boolean equals(java.lang.Object)
@@ -5811,7 +5482,6 @@ meth public static java.net.PasswordAuthentication requestPasswordAuthentication
 meth public static java.net.PasswordAuthentication requestPasswordAuthentication(java.net.InetAddress,int,java.lang.String,java.lang.String,java.lang.String)
 meth public static void setDefault(java.net.Authenticator)
 supr java.lang.Object
-hfds requestingAuthType,requestingHost,requestingPort,requestingPrompt,requestingProtocol,requestingScheme,requestingSite,requestingURL,theAuthenticator
 
 CLSS public abstract java.util.AbstractCollection<%0 extends java.lang.Object>
 cons protected init()
@@ -5831,7 +5501,6 @@ meth public java.lang.Object[] toArray()
 meth public java.lang.String toString()
 meth public void clear()
 supr java.lang.Object
-hfds MAX_ARRAY_SIZE
 
 CLSS public abstract java.util.AbstractList<%0 extends java.lang.Object>
 cons protected init()
@@ -5854,7 +5523,6 @@ meth public void clear()
 meth public {java.util.AbstractList%0} remove(int)
 meth public {java.util.AbstractList%0} set(int,{java.util.AbstractList%0})
 supr java.util.AbstractCollection<{java.util.AbstractList%0}>
-hcls Itr,ListItr
 
 CLSS public abstract java.util.AbstractMap<%0 extends java.lang.Object, %1 extends java.lang.Object>
 cons protected init()
@@ -5878,7 +5546,6 @@ meth public {java.util.AbstractMap%1} get(java.lang.Object)
 meth public {java.util.AbstractMap%1} put({java.util.AbstractMap%0},{java.util.AbstractMap%1})
 meth public {java.util.AbstractMap%1} remove(java.lang.Object)
 supr java.lang.Object
-hfds keySet,values
 
 CLSS public java.util.ArrayList<%0 extends java.lang.Object>
 cons public init()
@@ -5920,8 +5587,6 @@ meth public {java.util.ArrayList%0} get(int)
 meth public {java.util.ArrayList%0} remove(int)
 meth public {java.util.ArrayList%0} set(int,{java.util.ArrayList%0})
 supr java.util.AbstractList<{java.util.ArrayList%0}>
-hfds DEFAULTCAPACITY_EMPTY_ELEMENTDATA,DEFAULT_CAPACITY,EMPTY_ELEMENTDATA,MAX_ARRAY_SIZE,elementData,serialVersionUID,size
-hcls ArrayListSpliterator,Itr,ListItr,SubList
 
 CLSS public abstract interface java.util.Collection<%0 extends java.lang.Object>
 intf java.lang.Iterable<{java.util.Collection%0}>
@@ -5978,8 +5643,6 @@ meth public {java.util.HashMap%1} putIfAbsent({java.util.HashMap%0},{java.util.H
 meth public {java.util.HashMap%1} remove(java.lang.Object)
 meth public {java.util.HashMap%1} replace({java.util.HashMap%0},{java.util.HashMap%1})
 supr java.util.AbstractMap<{java.util.HashMap%0},{java.util.HashMap%1}>
-hfds DEFAULT_INITIAL_CAPACITY,DEFAULT_LOAD_FACTOR,MAXIMUM_CAPACITY,MIN_TREEIFY_CAPACITY,TREEIFY_THRESHOLD,UNTREEIFY_THRESHOLD,entrySet,loadFactor,modCount,serialVersionUID,size,table,threshold
-hcls EntryIterator,EntrySet,EntrySpliterator,HashIterator,HashMapSpliterator,KeyIterator,KeySet,KeySpliterator,Node,TreeNode,ValueIterator,ValueSpliterator,Values
 
 CLSS public abstract interface java.util.Iterator<%0 extends java.lang.Object>
 meth public abstract boolean hasNext()
@@ -6083,7 +5746,7 @@ meth public static void setDataContentHandlerFactory(javax.activation.DataConten
 meth public void setCommandMap(javax.activation.CommandMap)
 meth public void writeTo(java.io.OutputStream) throws java.io.IOException
 supr java.lang.Object
-hfds class$javax$activation$DataHandler,currentCommandMap,dataContentHandler,dataSource,emptyFlavors,factory,factoryDCH,objDataSource,object,objectMimeType,oldFactory,shortType,transferFlavors
+hfds currentCommandMap,dataContentHandler,dataSource,emptyFlavors,factory,factoryDCH,objDataSource,object,objectMimeType,oldFactory,shortType,transferFlavors
 
 CLSS public abstract interface javax.activation.DataSource
 meth public abstract java.io.InputStream getInputStream() throws java.io.IOException
@@ -6103,7 +5766,6 @@ meth public java.util.Set<java.lang.String> getSupportedOptions()
 meth public javax.lang.model.SourceVersion getSupportedSourceVersion()
 meth public void init(javax.annotation.processing.ProcessingEnvironment)
 supr java.lang.Object
-hfds initialized
 
 CLSS public abstract interface javax.annotation.processing.Processor
 meth public abstract boolean process(java.util.Set<? extends javax.lang.model.element.TypeElement>,javax.annotation.processing.RoundEnvironment)
@@ -6584,7 +6246,6 @@ meth public void setHandler(org.xml.sax.ContentHandler)
 meth public void setLexicalHandler(org.xml.sax.ext.LexicalHandler)
 meth public void setSystemId(java.lang.String)
 supr java.lang.Object
-hfds handler,lexhandler,systemId
 
 CLSS public javax.xml.transform.sax.SAXSource
 cons public init()
@@ -6600,7 +6261,6 @@ meth public void setInputSource(org.xml.sax.InputSource)
 meth public void setSystemId(java.lang.String)
 meth public void setXMLReader(org.xml.sax.XMLReader)
 supr java.lang.Object
-hfds inputSource,reader
 
 CLSS public abstract interface javax.xml.ws.Binding
 meth public abstract java.lang.String getBindingID()
@@ -6768,9 +6428,6 @@ meth public abstract void setStrictErrorChecking(boolean)
 meth public abstract void setXmlStandalone(boolean)
 meth public abstract void setXmlVersion(java.lang.String)
 
-CLSS public abstract interface org.w3c.dom.DocumentFragment
-intf org.w3c.dom.Node
-
 CLSS public abstract interface org.w3c.dom.Element
 intf org.w3c.dom.Node
 meth public abstract boolean hasAttribute(java.lang.String)
@@ -6850,25 +6507,6 @@ meth public abstract void normalize()
 meth public abstract void setNodeValue(java.lang.String)
 meth public abstract void setPrefix(java.lang.String)
 meth public abstract void setTextContent(java.lang.String)
-
-CLSS public abstract interface org.w3c.dom.NodeList
-meth public abstract int getLength()
-meth public abstract org.w3c.dom.Node item(int)
-
-CLSS public abstract interface org.w3c.dom.events.DocumentEvent
-meth public abstract org.w3c.dom.events.Event createEvent(java.lang.String)
-
-CLSS public abstract interface org.w3c.dom.events.EventTarget
-meth public abstract boolean dispatchEvent(org.w3c.dom.events.Event)
-meth public abstract void addEventListener(java.lang.String,org.w3c.dom.events.EventListener,boolean)
-meth public abstract void removeEventListener(java.lang.String,org.w3c.dom.events.EventListener,boolean)
-
-CLSS public abstract interface org.w3c.dom.ranges.DocumentRange
-meth public abstract org.w3c.dom.ranges.Range createRange()
-
-CLSS public abstract interface org.w3c.dom.traversal.DocumentTraversal
-meth public abstract org.w3c.dom.traversal.NodeIterator createNodeIterator(org.w3c.dom.Node,int,org.w3c.dom.traversal.NodeFilter,boolean)
-meth public abstract org.w3c.dom.traversal.TreeWalker createTreeWalker(org.w3c.dom.Node,int,org.w3c.dom.traversal.NodeFilter,boolean)
 
 CLSS public abstract interface org.xml.sax.ContentHandler
 meth public abstract void characters(char[],int,int) throws org.xml.sax.SAXException
@@ -6983,5 +6621,4 @@ meth public void startPrefixMapping(java.lang.String,java.lang.String) throws or
 meth public void unparsedEntityDecl(java.lang.String,java.lang.String,java.lang.String,java.lang.String) throws org.xml.sax.SAXException
 meth public void warning(org.xml.sax.SAXParseException) throws org.xml.sax.SAXException
 supr java.lang.Object
-hfds contentHandler,dtdHandler,entityResolver,errorHandler,locator,parent
 

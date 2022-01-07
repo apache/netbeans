@@ -19,8 +19,10 @@
 
 package org.netbeans.api.java.source;
 
+import com.sun.source.tree.Tree;
 import com.sun.tools.javac.api.JavacTaskImpl;
 import com.sun.tools.javac.code.Symbol.CompletionFailure;
+import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.util.Log;
 import java.io.IOException;
 import java.lang.ref.Reference;
@@ -174,7 +176,7 @@ public final class JavaSource {
      * and classpath represented by given {@link ClasspathInfo}.
      * @param cpInfo the classpaths to be used.
      * @param files for which the {@link JavaSource} should be created
-     * @return a new {@link JavaSource}
+     * @return a new {@link JavaSource} or {@code null} if the essential infrastructure is missing
      * @throws IllegalArgumentException if fileObject or cpInfo is null
      */
     public static @NullUnknown JavaSource create(final @NonNull ClasspathInfo cpInfo, final @NonNull Collection<? extends FileObject> files) throws IllegalArgumentException {

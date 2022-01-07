@@ -496,7 +496,7 @@ public final class DeployOnSaveManager {
 
                 ProgressUI ui = new ProgressUI(NbBundle.getMessage(TargetServer.class,
                         "MSG_DeployOnSave", provider.getDeploymentName()), false);
-                ui.start(Integer.valueOf(PROGRESS_DELAY));
+                ui.start(PROGRESS_DELAY);
                 try {
                     DeploymentHelper.deployServerLibraries(provider);
                     DeploymentHelper.deployDatasources(provider);

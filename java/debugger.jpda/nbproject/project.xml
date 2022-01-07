@@ -49,7 +49,7 @@
                     <compile-dependency/>
                     <run-dependency>
                         <release-version>2</release-version>
-                        <specification-version>3.7</specification-version>
+                        <specification-version>3.18</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -188,11 +188,6 @@
                     <test-dependency>
                         <code-name-base>org.netbeans.modules.java.source</code-name-base>
                         <recursive/>
-                    </test-dependency>
-                    <test-dependency>
-                        <code-name-base>org.netbeans.modules.java.source.nbjavac</code-name-base>
-                        <compile-dependency/>
-                        <test/>
                     </test-dependency>
                     <test-dependency>
                         <code-name-base>org.netbeans.modules.nbjunit</code-name-base>

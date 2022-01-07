@@ -3,6 +3,7 @@ protected f|unction meth_bb() {}
 (QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
 ------------------------------------
 CLASS      ForClsCtxCodeCompletion         [PUBLIC]   insideClass3.php
+KEYWORD    false                                      null
 KEYWORD    final                                      null
 KEYWORD    float                                      null
 KEYWORD    function                                   null

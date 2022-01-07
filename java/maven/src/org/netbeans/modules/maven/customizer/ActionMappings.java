@@ -19,6 +19,8 @@
 
 package org.netbeans.modules.maven.customizer;
 
+import java.awt.Color;
+import org.netbeans.modules.maven.runjar.PropertySplitter;
 import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -41,7 +43,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
-import javax.swing.BorderFactory;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
@@ -331,6 +332,7 @@ public class ActionMappings extends javax.swing.JPanel implements HelpCtx.Provid
         lblPackagings = new javax.swing.JLabel();
         txtPackagings = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
+        btnDisable = new javax.swing.JButton();
 
         setLayout(new java.awt.GridBagLayout());
 
@@ -575,6 +577,16 @@ public class ActionMappings extends javax.swing.JPanel implements HelpCtx.Provid
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.insets = new java.awt.Insets(6, 6, 0, 12);
         add(jButton1, gridBagConstraints);
+
+        org.openide.awt.Mnemonics.setLocalizedText(btnDisable, org.openide.util.NbBundle.getMessage(ActionMappings.class, "ActionMappings.btnDisable.text")); // NOI18N
+        btnDisable.setName(""); // NOI18N
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 10;
+        gridBagConstraints.gridy = 6;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(6, 6, 0, 12);
+        add(btnDisable, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
     
 //GEN-FIRST:event_btnAddActionPerformed
@@ -640,16 +652,42 @@ private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-HEADER
         }
     }//GEN-LAST:event_btnRemoveActionPerformed
     
-    private void lstMappingsValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_lstMappingsValueChanged
-        Object obj = lstMappings.getSelectedValue();//GEN-HEADEREND:event_lstMappingsValueChanged
-        if (obj == null) {
-            clearFields();
-        } else {
-            MappingWrapper wr = (MappingWrapper)obj;
-            NetbeansActionMapping mapp = wr.getMapping();
+    private void updateEnabledControls(MappingWrapper wr) {
+        boolean notEmpty = wr != null;
+        boolean enable = notEmpty && !ActionToGoalUtils.isDisabledMapping(wr.getMapping());
+
+        if (enable) {
+            lblGoals.setEnabled(true);
+            lblHint.setEnabled(true);
+            lblPackagings.setEnabled(true);
+            lblProfiles.setEnabled(true);
+            lblProperties.setEnabled(true);
+            
             txtGoals.setEnabled(true);
             epProperties.setEnabled(true);
             txtProfiles.setEnabled(true);
+            cbRecursively.setEnabled(true);
+            cbBuildWithDeps.setEnabled(true);
+            btnAddProps.setEnabled(true);
+            btnDisable.setEnabled(true);
+            if (isGlobal()) {
+                txtPackagings.setEnabled(true);
+            }
+        } else {
+            clearFields();
+        }
+        if (notEmpty) {
+            btnRemove.setEnabled(true);
+        } else {
+            btnRemove.setEnabled(false);
+        }
+    }
+    
+    private void lstMappingsValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_lstMappingsValueChanged
+        MappingWrapper wr = (MappingWrapper)lstMappings.getSelectedValue();
+        updateEnabledControls(wr);
+        if (wr != null) {
+            NetbeansActionMapping mapp = wr.getMapping();
             
             txtGoals.getDocument().removeDocumentListener(goalsListener);
             txtProfiles.getDocument().removeDocumentListener(profilesListener);
@@ -658,7 +696,6 @@ private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-HEADER
             cbBuildWithDeps.removeActionListener(depsListener);
             
             if (isGlobal()) {
-                txtPackagings.setEnabled(true);
                 txtPackagings.getDocument().removeDocumentListener(packagingsListener);
                 txtPackagings.setText(createSpaceSeparatedList(mapp != null ? mapp.getPackagings() : Collections.<String>emptyList()));
                 txtPackagings.getDocument().addDocumentListener(packagingsListener);
@@ -866,12 +903,20 @@ private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-HEADER
         txtPackagings.setEnabled(false);
         updateColor(null);
         cbRecursively.setEnabled(false);
+        cbBuildWithDeps.setEnabled(false);
         btnAddProps.setEnabled(false);
+        btnDisable.setEnabled(false);
         if (handle == null) { //only global settings
             jButton1.setEnabled(false);
             jButton1.setIcon(null);
             jButton1.setText(BTN_ShowToolbar());
         }
+        
+        lblGoals.setEnabled(false);
+        lblHint.setEnabled(false);
+        lblPackagings.setEnabled(false);
+        lblProfiles.setEnabled(false);
+        lblProperties.setEnabled(false);
     }
     
     private void updateColor(MappingWrapper wr) {
@@ -908,6 +953,7 @@ private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-HEADER
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAdd;
     private javax.swing.JButton btnAddProps;
+    private javax.swing.JButton btnDisable;
     private javax.swing.JButton btnRemove;
     private javax.swing.JCheckBox cbBuildWithDeps;
     private javax.swing.JCheckBox cbRecursively;
@@ -1012,7 +1058,11 @@ private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-HEADER
                 
                 
     }
-    
+
+    @NbBundle.Messages({
+        "# {0} - disabled action name",
+        "FMT_DisabledAction={0} - disabled"
+    })
     private static class Renderer extends DefaultListCellRenderer {
         
     
@@ -1028,6 +1078,10 @@ private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-HEADER
                     lbl.setFont(lbl.getFont().deriveFont(Font.BOLD));
                 } else {
                     lbl.setFont(lbl.getFont().deriveFont(Font.PLAIN));
+                }
+                if (ActionToGoalUtils.isDisabledMapping(wr.getMapping())) {
+                    lbl.setForeground(Color.lightGray);
+                    lbl.setText(Bundle.FMT_DisabledAction(lbl.getText()));
                 }
             }
             return supers;

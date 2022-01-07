@@ -19,6 +19,7 @@
 package org.netbeans.modules.cpplite.editor.spi;
 
 import java.util.List;
+import javax.swing.event.ChangeListener;
 
 /**
  *
@@ -27,22 +28,32 @@ import java.util.List;
 public interface CProjectConfigurationProvider {
 
     public ProjectConfiguration getProjectConfiguration();
+    public void addChangeListener(ChangeListener listener);
+    public void removeChangeListener(ChangeListener listener);
 
     //TODO: factory, accessor
     //TODO: listen on changes
     public static class ProjectConfiguration {
         public final String commandJsonPath;
         public final List<String> commandJsonCommand;
+        public final String commandJsonContent;
 
         public ProjectConfiguration(String commandJsonPath) {
             this.commandJsonPath = commandJsonPath;
             this.commandJsonCommand = null;
+            this.commandJsonContent = null;
         }
 
         public ProjectConfiguration(List<String> commandJsonCommand) {
             this.commandJsonPath = null;
             this.commandJsonCommand = commandJsonCommand;
+            this.commandJsonContent = null;
         }
-        
+
+        public ProjectConfiguration(String commandJsonContent, boolean content) {
+            this.commandJsonPath = null;
+            this.commandJsonCommand = null;
+            this.commandJsonContent = commandJsonContent;
+        }
     }
 }

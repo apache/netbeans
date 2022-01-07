@@ -66,7 +66,7 @@ public class JsonLanguage extends DefaultLanguageConfig {
     )
     @NbBundle.Messages("JsonResolver=JSON Files")
     @MultiViewElement.Registration(displayName = "#LBL_JsonEditorTab",
-        iconBase = "org/netbeans/modules/javascript2/editor/resources/javascript.png",
+        iconBase = "org/netbeans/modules/javascript2/editor/resources/json.png",
         persistenceType = TopComponent.PERSISTENCE_ONLY_OPENED,
         preferredID = "json.source",
         mimeType = JsTokenId.JSON_MIME_TYPE,

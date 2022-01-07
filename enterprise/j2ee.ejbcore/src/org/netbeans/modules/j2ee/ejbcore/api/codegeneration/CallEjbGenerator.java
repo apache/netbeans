@@ -436,7 +436,7 @@ public class CallEjbGenerator {
             }
         }
         if (!throwCheckedExceptions) {
-            Iterator exIt = exceptions.iterator();
+            Iterator<String> exIt = exceptions.iterator();
             StringBuffer catchBody = new StringBuffer("try {\n" + body + "}\n"); // NOI18N
             while (exIt.hasNext()) {
                 String exceptionName = (String) exIt.next();
@@ -517,7 +517,7 @@ public class CallEjbGenerator {
             body = sls.genLocalEjbStringLookup(refName, homeName, referencingFO, referencingClassName, genCreate);
         }
         if (!throwCheckedExceptions) {
-            Iterator exIt = exceptions.iterator();
+            Iterator<String> exIt = exceptions.iterator();
             StringBuffer catchBody = new StringBuffer("try {\n" + body + "\n}"); // NOI18N
             while (exIt.hasNext()) {
                 String exceptionName = (String) exIt.next();

@@ -68,7 +68,7 @@ public final class CompleteElementHandler {
 
     public Map<MethodSignature, CompletionItem> getMethods() {
         final ClassNode source = context.getSurroundingClass();
-        final ClassNode node = context.declaringClass;
+        final ClassNode node = context.rawDseclaringClass;
         
         if (node == null) {
             return Collections.emptyMap();
@@ -79,7 +79,7 @@ public final class CompleteElementHandler {
                 node,
                 context.getPrefix(), 
                 context.getAnchor(),
-                0,
+                context.getAddSortOverride() == 0 ? 0 : 1,
                 AccessLevel.create(source, node),
                 context.dotContext != null && context.dotContext.isMethodsOnly());
 
@@ -88,7 +88,7 @@ public final class CompleteElementHandler {
 
     public Map<FieldSignature, CompletionItem> getFields() {
         final ClassNode source = context.getSurroundingClass();
-        final ClassNode node = context.declaringClass;
+        final ClassNode node = context.rawDseclaringClass;
         
         if (node == null) {
             return Collections.emptyMap();
@@ -99,7 +99,8 @@ public final class CompleteElementHandler {
                 node,
                 context.getPrefix(), 
                 context.getAnchor(),
-                0);
+                context.getAddSortOverride() == 0 ? 0 : 1
+        );
 
         return result;
     }
@@ -162,10 +163,23 @@ public final class CompleteElementHandler {
         
         // we can't go groovy and java - helper methods would be visible
         if (result.isEmpty()) {
-            String[] typeParameters = new String[(typeNode.isUsingGenerics() && typeNode.getGenericsTypes() != null)
-                    ? typeNode.getGenericsTypes().length : 0];
+            ClassNode redirected = typeNode.redirect();
+
+            String[] typeParameters = new String[(redirected.isUsingGenerics() && redirected.getGenericsTypes() != null)
+                    ? redirected.getGenericsTypes().length : 0];
+            GenericsType[] origTypes = typeNode.getGenericsTypes();
             for (int i = 0; i < typeParameters.length; i++) {
-                GenericsType genType = typeNode.getGenericsTypes()[i];
+                GenericsType genType = redirected.getGenericsTypes()[i];
+                
+                // a generic type with some explicit type parameters may redirect to a real type that specifies placeholders
+                // in place of the explicit type parameter values. So continue to take placeholders from the real type,
+                // byt replace actual type parameters.
+                if (origTypes != null && i < origTypes.length) {
+                    if (genType.getType() != null && genType.isPlaceholder() &&
+                        !origTypes[i].isPlaceholder()) {
+                        genType = origTypes[i];
+                    }
+                }
                 if (genType.getUpperBounds() != null) {
                     typeParameters[i] = Utilities.translateClassLoaderTypeName(genType.getUpperBounds()[0].getName());
                 } else {
@@ -173,7 +187,7 @@ public final class CompleteElementHandler {
                 }
             }
 
-            fillSuggestions(JavaElementHandler.forCompilationInfo(info)
+            fillSuggestions(JavaElementHandler.forCompilationInfo(info, context)
                     .getMethods(typeName, prefix, anchor, typeParameters,
                             leaf, modifiedAccess, nameOnly), result);
         }
@@ -185,7 +199,8 @@ public final class CompleteElementHandler {
         if (typeNode.getSuperClass() != null) {
             fillSuggestions(getMethodsInner(source, typeNode.getSuperClass(), prefix, anchor, level + 1, modifiedAccess, nameOnly), result);
         } else if (leaf) {
-            fillSuggestions(JavaElementHandler.forCompilationInfo(info).getMethods("java.lang.Object", prefix, anchor, new String[]{}, false, modifiedAccess, nameOnly), result); // NOI18N
+            fillSuggestions(JavaElementHandler.forCompilationInfo(info, context).
+                    getMethods("java.lang.Object", prefix, anchor, new String[]{}, false, modifiedAccess, nameOnly), result); // NOI18N
         }
 
         for (ClassNode inter : typeNode.getInterfaces()) {
@@ -217,7 +232,8 @@ public final class CompleteElementHandler {
         fillSuggestions(groovyProvider.getFields(context), result);
         fillSuggestions(groovyProvider.getStaticFields(context), result);
 
-        fillSuggestions(JavaElementHandler.forCompilationInfo(info).getFields(typeNode.getName(), prefix, anchor, leaf), result);
+        fillSuggestions(JavaElementHandler.forCompilationInfo(info, context).
+                getFields(typeNode.getName(), prefix, anchor, leaf), result);
 
         CompletionProviderHandler providerHandler = new CompletionProviderHandler();
         fillSuggestions(providerHandler.getFields(context), result);
@@ -226,7 +242,8 @@ public final class CompleteElementHandler {
         if (typeNode.getSuperClass() != null) {
             fillSuggestions(getFieldsInner(source, typeNode.getSuperClass(), prefix, anchor, level + 1), result);
         } else if (leaf) {
-            fillSuggestions(JavaElementHandler.forCompilationInfo(info).getFields("java.lang.Object", prefix, anchor, false), result); // NOI18N
+            fillSuggestions(JavaElementHandler.forCompilationInfo(info, context).
+                    getFields("java.lang.Object", prefix, anchor, false), result); // NOI18N
         }
 
         for (ClassNode inter : typeNode.getInterfaces()) {
@@ -256,9 +273,15 @@ public final class CompleteElementHandler {
         return new ClassDefinition(node, null);
     }
 
-    private static <T> void fillSuggestions(Map<T, ? extends CompletionItem> input, Map<T, ? super CompletionItem> result) {
+    private <T> void fillSuggestions(Map<T, ? extends CompletionItem> input, Map<T, ? super CompletionItem> result) {
         for (Map.Entry<T, ? extends CompletionItem> entry : input.entrySet()) {
             if (!result.containsKey(entry.getKey())) {
+                CompletionItem item = entry.getValue();
+                if (context.getAddSortOverride() > 0) {
+                    CompletionAccessor.instance().sortOverride(
+                        item,
+                        item.getSortPrioOverride() + context.getAddSortOverride());
+                }
                 result.put(entry.getKey(), entry.getValue());
             }
         }

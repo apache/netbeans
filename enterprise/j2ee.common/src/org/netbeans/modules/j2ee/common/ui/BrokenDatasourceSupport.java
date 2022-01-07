@@ -134,7 +134,7 @@ public class BrokenDatasourceSupport {
         }
         
         Set<Datasource> brokenDatasources = new HashSet<Datasource>();
-        Iterator it = dss.iterator();
+        Iterator<Datasource> it = dss.iterator();
         while (it.hasNext()) {
             Datasource ds = (Datasource)it.next();
             if(!isFound(ds)){

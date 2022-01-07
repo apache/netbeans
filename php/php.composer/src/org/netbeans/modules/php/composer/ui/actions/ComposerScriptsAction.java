@@ -47,7 +47,7 @@ import org.openide.util.actions.Presenter;
 
 @ActionID(id = "org.netbeans.modules.php.composer.ui.actions.ComposerScriptsAction", category = "Project")
 @ActionRegistration(displayName = "#ComposerScriptsAction.name", lazy = false)
-@ActionReference(path = "Projects/org-netbeans-modules-php-project/Actions", position = 1051)
+@ActionReference(path = "Projects/org-netbeans-modules-php-project/Actions", position = 1051, separatorAfter = 1052)
 @NbBundle.Messages("ComposerScriptsAction.name=Composer Scripts")
 public class ComposerScriptsAction extends AbstractAction implements ContextAwareAction, Presenter.Popup {
 

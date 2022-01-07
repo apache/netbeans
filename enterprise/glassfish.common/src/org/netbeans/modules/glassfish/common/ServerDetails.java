@@ -40,6 +40,8 @@ import static org.netbeans.modules.glassfish.tooling.data.GlassFishVersion.GF_4;
 import static org.netbeans.modules.glassfish.tooling.data.GlassFishVersion.GF_4_0_1;
 import static org.netbeans.modules.glassfish.tooling.data.GlassFishVersion.GF_5;
 import static org.netbeans.modules.glassfish.tooling.data.GlassFishVersion.GF_5_0_1;
+import static org.netbeans.modules.glassfish.tooling.data.GlassFishVersion.GF_6;
+import static org.netbeans.modules.glassfish.tooling.data.GlassFishVersion.GF_6_1_0;
 import org.netbeans.modules.glassfish.tooling.utils.ServerUtils;
 import org.openide.WizardDescriptor;
 import org.openide.util.NbBundle;
@@ -51,7 +53,7 @@ import org.xml.sax.SAXException;
  * @author vkraemer
  */
 public enum ServerDetails {
-    
+
     /**
      * details for an instance of GlassFish Server 3.0/3.0.x
      */
@@ -135,7 +137,7 @@ public enum ServerDetails {
         "https://download.oracle.com/glassfish/4.0.1/release/glassfish-4.0.1-ml.zip", // NOI18N
         "https://javaee.github.io/glassfish/LICENSE" //NOI18N"
     ),
-    
+
     /**
      * details for an instance of GlassFish Server 4.1 and dev 4.2
      */
@@ -157,7 +159,7 @@ public enum ServerDetails {
         "https://download.oracle.com/glassfish/4.1.1/release/glassfish-4.1.1.zip", // NOI18N
         "https://javaee.github.io/glassfish/LICENSE" //NOI18N
     ),
-    
+
     /**
      * details for an instance of GlassFish Server 4.1.2
      */
@@ -168,7 +170,7 @@ public enum ServerDetails {
         "https://download.oracle.com/glassfish/4.1.2/release/glassfish-4.1.2.zip", // NOI18N
         "https://javaee.github.io/glassfish/LICENSE" //NOI18N
     ),
-    
+
     /**
      * details for an instance of GlassFish Server 5
      */
@@ -179,7 +181,7 @@ public enum ServerDetails {
         "https://download.oracle.com/glassfish/5.0/release/glassfish-5.0.zip", // NOI18N
         "https://javaee.github.io/glassfish/LICENSE" //NOI18N
     ),
-    
+
     /**
      * details for an instance of GlassFish Server 5
      */
@@ -195,10 +197,43 @@ public enum ServerDetails {
      * details for an instance of GlassFish Server 5
      */
     GLASSFISH_SERVER_5_1_0(NbBundle.getMessage(ServerDetails.class, "STR_510_SERVER_NAME", new Object[]{}), // NOI18N
-        "deployer:gfv5ee8", // NOI18N
+        "deployer:gfv510ee8", // NOI18N
         510,
         "https://repo1.maven.org/maven2/org/glassfish/main/distributions/glassfish/5.1.0/glassfish-5.1.0.zip", // NOI18N
         "https://repo1.maven.org/maven2/org/glassfish/main/distributions/glassfish/5.1.0/glassfish-5.1.0.zip", // NOI18N
+        "http://www.eclipse.org/legal/epl-2.0" //NOI18N
+    ),
+
+    /**
+     * details for an instance of GlassFish Server 6
+     */
+    GLASSFISH_SERVER_6(NbBundle.getMessage(ServerDetails.class, "STR_6_SERVER_NAME", new Object[]{}), // NOI18N
+        "deployer:gfv6ee9", // NOI18N
+        600,
+        "https://repo1.maven.org/maven2/org/glassfish/main/distributions/glassfish/6.0.0/glassfish-6.0.0.zip", // NOI18N
+        "https://repo1.maven.org/maven2/org/glassfish/main/distributions/glassfish/6.0.0/glassfish-6.0.0.zip", // NOI18N
+        "http://www.eclipse.org/legal/epl-2.0" //NOI18N
+    ),
+
+    /**
+     * details for an instance of GlassFish Server 6.1.0
+     */
+    GLASSFISH_SERVER_6_1_0(NbBundle.getMessage(ServerDetails.class, "STR_610_SERVER_NAME", new Object[]{}), // NOI18N
+        "deployer:gfv610ee9", // NOI18N
+        610,
+        "https://repo1.maven.org/maven2/org/glassfish/main/distributions/glassfish/6.1.0/glassfish-6.1.0.zip", // NOI18N
+        "https://repo1.maven.org/maven2/org/glassfish/main/distributions/glassfish/6.1.0/glassfish-6.1.0.zip", // NOI18N
+        "http://www.eclipse.org/legal/epl-2.0" //NOI18N
+    ),
+
+    /**
+     * details for an instance of GlassFish Server 6.2.1
+     */
+    GLASSFISH_SERVER_6_2_1(NbBundle.getMessage(ServerDetails.class, "STR_621_SERVER_NAME", new Object[]{}), // NOI18N
+        "deployer:gfv610ee9", // NOI18N
+        621,
+        "https://repo1.maven.org/maven2/org/glassfish/main/distributions/glassfish/6.2.1/glassfish-6.2.1.zip", // NOI18N
+        "https://repo1.maven.org/maven2/org/glassfish/main/distributions/glassfish/6.2.1/glassfish-6.2.1.zip", // NOI18N
         "http://www.eclipse.org/legal/epl-2.0" //NOI18N
     );
 
@@ -211,6 +246,9 @@ public enum ServerDetails {
     public static WizardDescriptor.InstantiatingIterator
             getInstantiatingIterator() {
         return new ServerWizardIterator(new ServerDetails[]{
+                    GLASSFISH_SERVER_6_2_1,
+                    GLASSFISH_SERVER_6_1_0,
+                    GLASSFISH_SERVER_6,
                     GLASSFISH_SERVER_5_1_0,
                     GLASSFISH_SERVER_5_0_1,
                     GLASSFISH_SERVER_5_0,
@@ -226,6 +264,9 @@ public enum ServerDetails {
                     GLASSFISH_SERVER_3_0_1,
                     GLASSFISH_SERVER_3},
                 new ServerDetails[]{
+                    GLASSFISH_SERVER_6_2_1,
+                    GLASSFISH_SERVER_6_1_0,
+                    GLASSFISH_SERVER_6,
                     GLASSFISH_SERVER_5_1_0,
                     GLASSFISH_SERVER_5_0_1,
                     GLASSFISH_SERVER_5_0,
@@ -268,6 +309,9 @@ public enum ServerDetails {
                 case GF_5:       return GLASSFISH_SERVER_5_0.getVersion();
                 case GF_5_0_1:   return GLASSFISH_SERVER_5_0_1.getVersion();
                 case GF_5_1_0:   return GLASSFISH_SERVER_5_1_0.getVersion();
+                case GF_6:       return GLASSFISH_SERVER_6.getVersion();
+                case GF_6_1_0:   return GLASSFISH_SERVER_6_1_0.getVersion();
+                case GF_6_2_1:   return GLASSFISH_SERVER_6_2_1.getVersion();
                 default:         return -1;
             }
         }
@@ -276,7 +320,7 @@ public enum ServerDetails {
 
     /**
      * Determine the version of the GlassFish Server that wrote the domain.xml file
-     * 
+     *
      * @param domainXml the file to analyze
      * @return -1 if domainXml is null, unreadable or not a directory
      * @throws IllegalStateException if domainXml cannot be parsed
@@ -296,14 +340,14 @@ public enum ServerDetails {
         TreeParser.readXml(domainXml, paths);
         return dp.hasDefaultConfig();
     }
-    
+
     private String displayName;
     private String uriFragment;
     private String indirectUrl;
     private String directUrl;
     private String licenseUrl;
     private int versionInt;
-    
+
 
     ServerDetails(String displayName, String uriFragment, int versionInt,
             String directUrl, String indirectUrl, String licenseUrl) {
@@ -314,8 +358,8 @@ public enum ServerDetails {
             this.versionInt = versionInt;
             this.licenseUrl = licenseUrl;
     }
-    
-    @Override 
+
+    @Override
     public String toString() {
         return displayName;
     }

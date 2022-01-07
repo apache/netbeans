@@ -40,10 +40,8 @@ import org.openide.util.Lookup;
  *
  * @author sdedic
  */
-@StartupExtenderImplementation.Registration(displayName = "Java Shell", position = 10000, startMode = {
-    StartMode.DEBUG,
-    StartMode.NORMAL,
-})
+@StartupExtenderImplementation.Registration(displayName = "Java Shell", position = 10000, argumentsQuoted = false,
+    startMode = { StartMode.DEBUG, StartMode.NORMAL })
 public class JShellStartupExtender implements StartupExtenderImplementation {
     private static final Logger LOG = Logger.getLogger(JShellStartupExtender.class.getName());
     
@@ -77,9 +75,7 @@ public class JShellStartupExtender implements StartupExtenderImplementation {
         
         J2SEPropertyEvaluator  prjEval = p.getLookup().lookup(J2SEPropertyEvaluator.class);
         JavaPlatform platform = ShellProjectUtils.findPlatform(p);
-        List<String> args = ShellProjectUtils.quoteCmdArgs(
-                ShellLaunchManager.buildLocalJVMAgentArgs(platform, agent, prjEval.evaluator()::getProperty)
-        );
+        List<String> args = ShellLaunchManager.buildLocalJVMAgentArgs(platform, agent, prjEval.evaluator()::getProperty);
 
         args.addAll(ShellProjectUtils.launchVMOptions(p));
 

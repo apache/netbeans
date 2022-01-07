@@ -48,8 +48,10 @@ public class JavaProjectNature implements ProjectNature {
     public static final String NS_JAVA_2 = "http://www.netbeans.org/ns/freeform-project-java/2"; // NOI18N
     public static final String NS_JAVA_3 = "http://www.netbeans.org/ns/freeform-project-java/3"; //NOI18N
     public static final String NS_JAVA_4 = "http://www.netbeans.org/ns/freeform-project-java/4"; //NOI18N
-    public static final String NS_JAVA_LASTEST = NS_JAVA_4;
+    public static final String NS_JAVA_5 = "http://www.netbeans.org/ns/freeform-project-java/5"; //NOI18N
+    public static final String NS_JAVA_LASTEST = NS_JAVA_5;
     public static final String[] JAVA_NAMESPACES = {
+        NS_JAVA_5,
         NS_JAVA_4,
         NS_JAVA_3,
         NS_JAVA_2,

@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.util.concurrent.Callable;
 
 import javax.lang.model.element.Element;
+import javax.lang.model.element.ElementKind;
 
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
@@ -83,6 +84,7 @@ public final class JavaDocumentationTask<T> extends BaseTask {
                 case CLASS:
                 case ENUM:
                 case INTERFACE:
+                case RECORD:
                 case CONSTRUCTOR:
                 case ENUM_CONSTANT:
                 case FIELD:
@@ -104,4 +106,5 @@ public final class JavaDocumentationTask<T> extends BaseTask {
         }
         return path;
     }    
+
 }

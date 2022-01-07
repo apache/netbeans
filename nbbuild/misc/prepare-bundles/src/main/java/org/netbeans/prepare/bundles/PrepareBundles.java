@@ -94,14 +94,19 @@ public class PrepareBundles {
             }
         }
 
+        StringBuilder sb = new StringBuilder();
         Map<List<String>, LicenseUses> tokens2Projects = new HashMap<>();
         Map<String, LicenseDescription> project2License = new HashMap<>();
         Map<String, String> project2Notice = new HashMap<>();
         try (DirectoryStream<Path> ds = Files.newDirectoryStream(packagesDir.resolve("node_modules"));
-             Writer binariesList = new OutputStreamWriter(Files.newOutputStream(bundlesDir.resolve("binaries-list")), "UTF-8")) {
+            Writer binariesList = new OutputStreamWriter(Files.newOutputStream(bundlesDir.resolve("binaries-list")), "UTF-8")) {
             for (Path module : ds) {
                 if (".bin".equals(module.getFileName().toString())) continue;
+                if (".package-lock.json".equals(module.getFileName().toString())) continue;
                 if ("@types".equals(module.getFileName().toString())) continue;
+                if ("@ungap".equals(module.getFileName().toString())) {
+                    module = module.resolve("promise-all-settled");
+                }
                 Path packageJson = module.resolve("package.json");
 
                 if (!Files.isReadable(packageJson)) {
@@ -114,7 +119,7 @@ public class PrepareBundles {
                 String version = (String) packageJsonData.get("version");
                 String description = (String) packageJsonData.get("description");
                 String homepage = (String) packageJsonData.get("homepage");
-                String licenseKey = (String) packageJsonData.get("license");
+                String licenseKey = packageJsonData.get("license").toString();
 
                 String licenseText = null;
 
@@ -142,9 +147,14 @@ public class PrepareBundles {
                     }
                     licenseText = licenseTextBuffer.toString();
                 } else if (licenseText == null) {
-                    throw new IllegalStateException("Cannot find license for: " + module.getFileName());
+                    sb.append("Cannot find license for: ").
+                        append(module.getFileName()).
+                        append(" in ").
+                        append(hardcodedLicenseName).
+                        append("\n");
+                    continue;
                 }
-                
+
                 Path thirdpartynoticestxt = module.resolve("thirdpartynotices.txt");
 
                 if (Files.isReadable(thirdpartynoticestxt)) {
@@ -165,11 +175,12 @@ public class PrepareBundles {
 
                 Path bundle = bundlesDir.resolve(module.getFileName() + "-" + version + ".zip");
                 try (JarOutputStream out = new JarOutputStream(Files.newOutputStream(bundle));
-                     Stream<Path> files = Files.walk(module, FileVisitOption.FOLLOW_LINKS)) {
+                    Stream<Path> files = Files.walk(module, FileVisitOption.FOLLOW_LINKS)) {
+                    Path moduleFinal = module;
                     files.forEach(p -> {
-                        if (p == module) return ;
+                        if (p == moduleFinal) return ;
                         try {
-                            String relative = module.getParent().relativize(p).toString();
+                            String relative = moduleFinal.getParent().relativize(p).toString();
                             boolean isDir = Files.isDirectory(p);
                             ZipEntry ze = new ZipEntry(relative + (isDir ? "/" : ""));
                             out.putNextEntry(ze);
@@ -196,7 +207,10 @@ public class PrepareBundles {
                 binariesList.write(hash + " " + bundle.getFileName().toString() + nl);
             }
         }
-        
+        if (sb.length() > 0) {
+            throw new IllegalStateException(sb.toString());
+        }
+
         Map<String, String> project2LicenseKey = new HashMap<>();
 
         Map<List<String>, String> knownLicenseTokens2LicenseKey = new HashMap<>();
@@ -241,6 +255,8 @@ public class PrepareBundles {
                 }
             }
         }
+
+
     }
 
     private static String readString(Path p) throws IOException {
@@ -283,6 +299,6 @@ public class PrepareBundles {
             this.key = key;
             this.licenseText = licenseText;
         }
-        
+
     }
 }

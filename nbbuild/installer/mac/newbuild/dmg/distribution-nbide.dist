@@ -62,17 +62,12 @@ function checkMemsize() {
 function checkJavaVersion() {
     var JDK_ENABLED = false;
     var result = false;
-    var java8_or_newer = false;
     var jdkFound = false;
     var jreFound = false;
     try {
         if(system.files.fileExistsAtPath('/usr/libexec/java_home')) {
-           var res = system.run("/usr/libexec/java_home", "--version", "1.8+", "--failfast");                       
-           java8_or_newer = (0 == res);
-           if(!java8_or_newer) {
-               var res = system.run("/usr/libexec/java_home", "--version", "1.5", "--failfast");                       
-               jdkFound = (0 == res);
-           }
+           var res = system.run("/usr/libexec/java_home", "--failfast");                       
+           jdkFound = (0 == res);
         }
     } catch (e) {}
 
@@ -80,14 +75,10 @@ function checkJavaVersion() {
         jreFound = true;
     }
 
-    if (java8_or_newer || JDK_ENABLED &amp;&amp; jreFound) {
+    if (jdkFound || JDK_ENABLED &amp;&amp; jreFound) {
         result = true;
     } else {
-        if (jdkFound) {
-            my.result.type = 'Fatal';
-            my.result.title = system.localizedStringWithFormat('ERR_OLDER_JAVA8_TITLE');
-            my.result.message = system.localizedStringWithFormat('ERR_OLDER_JAVA8_TITLE');
-        } else if (jreFound) {
+        if (jreFound) {
             my.result.type = 'Fatal';
             my.result.title = system.localizedStringWithFormat('ERR_NO_JDK_TITLE');
             my.result.message = system.localizedStringWithFormat('ERR_NO_JDK_MSG');            

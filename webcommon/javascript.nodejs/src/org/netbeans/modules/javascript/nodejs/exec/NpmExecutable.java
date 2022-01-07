@@ -215,6 +215,7 @@ public class NpmExecutable {
         List<String> params = new ArrayList<>();
         params.add("search"); // NOI18N
         params.add("--long"); // NOI18N
+        params.add("--parseable"); // NOI18N
         params.add(searchTerm);
         String result = null;
         StringBuilderInputProcessorFactory factory = new StringBuilderInputProcessorFactory();

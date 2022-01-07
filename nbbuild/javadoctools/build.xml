@@ -125,7 +125,7 @@
         <echo file="${export.interfaces}/footer.gen">
             &lt;/alldata&gt;
         </echo>
-        <concat destfile="${netbeans.javadoc.dir}/alldatas.xml">
+        <concat destfile="${netbeans.javadoc.dir}/alldatas.xml" encoding="UTF-8" outputencoding="UTF-8">
             <fileset dir="${export.interfaces}" includes="header.gen"/>
             <fileset file="${netbeans.javadoc.dir}/allclasses.xml"/>
             <fileset file="${netbeans.javadoc.dir}/modules.xml"/>

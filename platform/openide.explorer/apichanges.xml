@@ -26,6 +26,20 @@
 <apidef name="explorer">Explorer API</apidef>
 </apidefs>
 <changes>
+    <change id="ScrollOnExpand">
+        <api name="explorer"/>
+        <summary>Expose scrollOnExpand property on TreeView.</summary>
+        <version major="6" minor="73"/>
+        <date day="13" month="12" year="2020"/>
+        <author login="lkishalmi"/>
+        <compatibility binary="compatible" source="compatible" deprecation="no" deletion="no" addition="yes"/>
+        <description>
+            It is now possible to set/get the <code>scrollOnExpand</code> property
+            in TreeView.
+        </description>
+        <class package="org.openide.explorer.view" name="TreeView"/>
+        <issue number="NETBEANS-5146"/>
+    </change>
     <change id="HideIcons">
         <api name="explorer"/>
         <summary>Hide node icons in OutlineView and TreeView.</summary>

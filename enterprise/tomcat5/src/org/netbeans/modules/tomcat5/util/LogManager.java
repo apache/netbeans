@@ -215,7 +215,7 @@ public class LogManager {
                 juliJarExist = Boolean.FALSE;
             }
         }
-        return juliJarExist.booleanValue();
+        return juliJarExist;
     }
     
     public void openJuliLog() {        

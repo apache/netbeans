@@ -130,7 +130,6 @@ public class ValidateClassLinkageTest extends NbTestCase {
         }
         MemoryMXBean memoryBean = ManagementFactory.getMemoryMXBean();
         MemoryUsage usage = memoryBean.getNonHeapMemoryUsage();
-        // Note MaxPermSize in project.properties:
         System.err.println("Non-heap memory usage: " + (usage.getUsed() / 1024 / 1024) + "/" + (usage.getMax() / 1024 / 1024) + "M");
         if (!errorsByClazz.isEmpty()) {
             for (Map.Entry<String,Throwable> entry : errorsByClazz.entrySet()) {

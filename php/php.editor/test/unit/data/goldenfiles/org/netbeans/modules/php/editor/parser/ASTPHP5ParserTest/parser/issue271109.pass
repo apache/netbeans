@@ -360,7 +360,7 @@
                                             </ArrayDimension>
                                             <DereferencableVariable start='101' end='124'>
                                                 <CastExpression start='102' end='123' castingType='STRING'>
-                                                    <FieldAccess start='110' end='123'>
+                                                    <FieldAccess start='110' end='123' isNullsafe='false'>
                                                         <Variable start='110' end='115' isDollared='true'>
                                                             <Identifier start='111' end='115' name='this'/>
                                                         </Variable>
@@ -393,7 +393,7 @@
                                             </ArrayDimension>
                                             <DereferencableVariable start='151' end='174'>
                                                 <CastExpression start='152' end='173' castingType='STRING'>
-                                                    <FieldAccess start='160' end='173'>
+                                                    <FieldAccess start='160' end='173' isNullsafe='false'>
                                                         <Variable start='160' end='165' isDollared='true'>
                                                             <Identifier start='161' end='165' name='this'/>
                                                         </Variable>
@@ -418,7 +418,7 @@
                                         <DereferencableVariable start='194' end='219'>
                                             <CastExpression start='195' end='218' castingType='STRING'>
                                                 <DereferencableVariable start='203' end='218'>
-                                                    <FieldAccess start='204' end='217'>
+                                                    <FieldAccess start='204' end='217' isNullsafe='false'>
                                                         <Variable start='204' end='209' isDollared='true'>
                                                             <Identifier start='205' end='209' name='this'/>
                                                         </Variable>
@@ -449,7 +449,7 @@
                                             <DereferencableVariable start='236' end='261'>
                                                 <CastExpression start='237' end='260' castingType='STRING'>
                                                     <DereferencableVariable start='245' end='260'>
-                                                        <FieldAccess start='246' end='259'>
+                                                        <FieldAccess start='246' end='259' isNullsafe='false'>
                                                             <Variable start='246' end='251' isDollared='true'>
                                                                 <Identifier start='247' end='251' name='this'/>
                                                             </Variable>

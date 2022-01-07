@@ -127,17 +127,16 @@ public class SearchComboBoxEditor implements ComboBoxEditor {
                 // selection is not removed when text is input via IME
                 // so, just remove it when the caret is changed
                 if ("caret".equals(evt.getPropertyName())) { // NOI18N
-                    if (evt.getOldValue() instanceof Caret) {
+                    if (evt.getOldValue() instanceof Caret
+                            && evt.getNewValue() instanceof Caret) { // NETBEANS-4620 check new value is not null but Caret
                         Caret oldCaret = (Caret) evt.getOldValue();
-                        if (oldCaret != null) {
-                            int dotPosition = oldCaret.getDot();
-                            int markPosition = oldCaret.getMark();
-                            if (dotPosition != markPosition) {
-                                try {
-                                    editorPane.getDocument().remove(Math.min(markPosition, dotPosition), Math.abs(markPosition - dotPosition));
-                                } catch (BadLocationException ex) {
-                                    LOG.log(Level.WARNING, "Invalid removal offset: {0}", ex.offsetRequested()); // NOI18N
-                                }
+                        int dotPosition = oldCaret.getDot();
+                        int markPosition = oldCaret.getMark();
+                        if (dotPosition != markPosition) {
+                            try {
+                                editorPane.getDocument().remove(Math.min(markPosition, dotPosition), Math.abs(markPosition - dotPosition));
+                            } catch (BadLocationException ex) {
+                                LOG.log(Level.WARNING, "Invalid removal offset: {0}", ex.offsetRequested()); // NOI18N
                             }
                         }
                     }

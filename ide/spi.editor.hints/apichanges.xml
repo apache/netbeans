@@ -83,6 +83,18 @@ is the proper place.
 
     <changes>
 
+        <change id="open-settings">
+             <api name="EditorHintsSPI"/>
+             <summary>Added FileHintPreferences.openFilePreferences to open settings</summary>
+             <version major="1" minor="57"/>
+             <date day="11" month="9" year="2021"/>
+             <author login="jlahoda"/>
+             <compatibility addition="yes" binary="compatible" deletion="no" deprecation="no" modification="no" semantic="compatible" source="compatible"/>
+             <description>
+                 Added FileHintPreferences.openFilePreferences that opens hints settings.
+             </description>
+             <class name="FileHintPreferences" package="org.netbeans.spi.editor.hints.settings"/>
+        </change>
         <change id="per-project-hints">
              <api name="EditorHintsSPI"/>
              <summary>Added a new overload for ErrorDescriptionFactory.createErrorDescription taking PositionBounds</summary>

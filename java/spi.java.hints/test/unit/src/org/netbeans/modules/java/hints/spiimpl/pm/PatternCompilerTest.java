@@ -37,6 +37,7 @@ import org.openide.util.Pair;
  *
  * @author Jan Lahoda
  */
+@SuppressWarnings({"unchecked", "rawtypes"})
 public class PatternCompilerTest extends TestBase {
 
     public PatternCompilerTest(String name) {

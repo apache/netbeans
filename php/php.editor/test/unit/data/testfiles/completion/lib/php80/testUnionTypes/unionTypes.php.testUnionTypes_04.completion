@@ -1,0 +1,7 @@
+Code completion result for source line:
+self::|$publicStaticFieldInterfaceImpl->publicMethodClass1();
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     publicStaticMethodTrait1()      [STATIC]   \UnionTypes1\Trait1
+VARIABLE   mixed $publicStaticFieldInterf  [STATIC]   \UnionTypes1\InterfaceImpl
+VARIABLE   mixed $publicStaticFieldTrait1  [STATIC]   \UnionTypes1\Trait1
+CONSTANT   class \UnionTypes1\InterfaceIm  [PUBLIC]   Magic Constant

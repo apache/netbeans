@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.6
+#Version 1.15
 
 CLSS public abstract interface java.io.Serializable
 
@@ -21,7 +21,6 @@ meth public final java.lang.String name()
 meth public java.lang.String toString()
 meth public static <%0 extends java.lang.Enum<{%%0}>> {%%0} valueOf(java.lang.Class<{%%0}>,java.lang.String)
 supr java.lang.Object
-hfds name,ordinal
 
 CLSS public java.lang.Object
 cons public init()
@@ -74,18 +73,22 @@ meth public final java.util.Collection<java.io.File> getAvailableDirs()
 meth public final java.util.Collection<java.io.File> getAvailableDirs(boolean)
 meth public final java.util.Set<java.io.File> getGroovyDirs()
 meth public final java.util.Set<java.io.File> getJavaDirs()
+meth public final java.util.Set<java.io.File> getKotlinDirs()
 meth public final java.util.Set<java.io.File> getResourcesDirs()
 meth public final java.util.Set<java.io.File> getScalaDirs()
 meth public int hashCode()
 meth public java.io.File findResource(java.lang.String)
 meth public java.io.File getOutputResources()
+meth public java.lang.String getAnnotationProcessorConfigurationName()
 meth public java.lang.String getBuildTaskName(org.netbeans.modules.gradle.java.api.GradleJavaSourceSet$SourceType)
 meth public java.lang.String getClassesTaskName()
 meth public java.lang.String getCompileConfigurationName()
+ anno 0 java.lang.Deprecated()
 meth public java.lang.String getCompileTaskName(java.lang.String)
 meth public java.lang.String getName()
 meth public java.lang.String getProcessResourcesTaskName()
 meth public java.lang.String getRuntimeConfigurationName()
+ anno 0 java.lang.Deprecated()
 meth public java.lang.String getSourcesCompatibility()
  anno 0 java.lang.Deprecated()
 meth public java.lang.String getSourcesCompatibility(org.netbeans.modules.gradle.java.api.GradleJavaSourceSet$SourceType)
@@ -96,7 +99,9 @@ meth public java.lang.String getTaskName(java.lang.String,java.lang.String)
 meth public java.lang.String relativePath(java.io.File)
 meth public java.lang.String toString()
 meth public java.util.List<java.lang.String> getCompilerArgs(org.netbeans.modules.gradle.java.api.GradleJavaSourceSet$SourceType)
+meth public java.util.Set<java.io.File> getAnnotationProcessorPath()
 meth public java.util.Set<java.io.File> getCompileClassPath()
+meth public java.util.Set<java.io.File> getGeneratedSourcesDirs()
 meth public java.util.Set<java.io.File> getOutputClassDirs()
 meth public java.util.Set<java.io.File> getRuntimeClassPath()
 meth public java.util.Set<java.io.File> getSourceDirs(org.netbeans.modules.gradle.java.api.GradleJavaSourceSet$SourceType)
@@ -104,7 +109,7 @@ meth public java.util.Set<org.netbeans.modules.gradle.java.api.GradleJavaSourceS
 meth public java.util.Set<org.netbeans.modules.gradle.java.api.GradleJavaSourceSet> getSourceDependencies()
 meth public org.netbeans.modules.gradle.java.api.GradleJavaSourceSet$SourceType getSourceType(java.io.File)
 supr java.lang.Object
-hfds DEFAULT_SOURCE_COMPATIBILITY,compileClassPath,compileConfigurationName,compilerArgs,name,outputClassDirs,outputResources,runtimeClassPath,runtimeConfigurationName,sourceDependencies,sources,sourcesCompatibility,targetCompatibility,testSourceSet,webApp
+hfds DEFAULT_SOURCE_COMPATIBILITY,annotationProcessorConfigurationName,annotationProcessorPath,compileClassPath,compileConfigurationName,compilerArgs,name,outputClassDirs,outputResources,runtimeClassPath,runtimeConfigurationName,sourceDependencies,sources,sourcesCompatibility,targetCompatibility,testSourceSet,webApp
 
 CLSS public final static !enum org.netbeans.modules.gradle.java.api.GradleJavaSourceSet$ClassPathType
  outer org.netbeans.modules.gradle.java.api.GradleJavaSourceSet
@@ -116,14 +121,23 @@ supr java.lang.Enum<org.netbeans.modules.gradle.java.api.GradleJavaSourceSet$Cla
 
 CLSS public final static !enum org.netbeans.modules.gradle.java.api.GradleJavaSourceSet$SourceType
  outer org.netbeans.modules.gradle.java.api.GradleJavaSourceSet
+fld public final static org.netbeans.modules.gradle.java.api.GradleJavaSourceSet$SourceType GENERATED
 fld public final static org.netbeans.modules.gradle.java.api.GradleJavaSourceSet$SourceType GROOVY
 fld public final static org.netbeans.modules.gradle.java.api.GradleJavaSourceSet$SourceType JAVA
+fld public final static org.netbeans.modules.gradle.java.api.GradleJavaSourceSet$SourceType KOTLIN
 fld public final static org.netbeans.modules.gradle.java.api.GradleJavaSourceSet$SourceType RESOURCES
 fld public final static org.netbeans.modules.gradle.java.api.GradleJavaSourceSet$SourceType SCALA
 meth public java.lang.String toString()
 meth public static org.netbeans.modules.gradle.java.api.GradleJavaSourceSet$SourceType valueOf(java.lang.String)
 meth public static org.netbeans.modules.gradle.java.api.GradleJavaSourceSet$SourceType[] values()
 supr java.lang.Enum<org.netbeans.modules.gradle.java.api.GradleJavaSourceSet$SourceType>
+
+CLSS public final org.netbeans.modules.gradle.java.api.ProjectActions
+fld public static java.lang.String TOKEN_JAVAEXEC_ARGS
+fld public static java.lang.String TOKEN_JAVAEXEC_CWD
+fld public static java.lang.String TOKEN_JAVAEXEC_ENV
+fld public static java.lang.String TOKEN_JAVAEXEC_JVMARGS
+supr java.lang.Object
 
 CLSS public abstract interface org.netbeans.modules.gradle.java.api.ProjectSourcesClassPathProvider
 meth public abstract org.netbeans.api.java.classpath.ClassPath getProjectSourcesClassPath(java.lang.String)

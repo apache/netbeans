@@ -34,7 +34,6 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
 import javax.swing.Icon;
-import javax.swing.SwingUtilities;
 import javax.swing.text.StyledDocument;
 import org.netbeans.modules.java.source.pretty.VeryPretty;
 import org.netbeans.modules.java.source.save.DiffContext;
@@ -50,6 +49,7 @@ import org.openide.text.Line;
 import org.openide.text.Line.ShowOpenType;
 import org.openide.text.Line.ShowVisibilityType;
 import org.openide.text.NbDocument;
+import org.openide.util.Mutex;
 import org.openide.util.NbBundle;
 import org.openide.util.UserQuestionException;
 
@@ -377,27 +377,13 @@ public final class  UiUtils {
     }
     
     private static void doShow(final Line l, final int column) {
-        if (SwingUtilities.isEventDispatchThread()) {
-            l.show(ShowOpenType.OPEN, ShowVisibilityType.FOCUS, column);
-        } else {
-            SwingUtilities.invokeLater(new Runnable() {
-                public void run() {
-                    l.show(ShowOpenType.OPEN, ShowVisibilityType.FOCUS, column);
-                }
-            });
-        }
+        Mutex.EVENT.readAccess(() ->
+            l.show(ShowOpenType.OPEN, ShowVisibilityType.FOCUS, column)
+        );
     }
 
     private static void doOpen(final OpenCookie oc) {
-        if (SwingUtilities.isEventDispatchThread()) {
-            oc.open();
-        } else {
-            SwingUtilities.invokeLater(new Runnable() {
-                public void run() {
-                    oc.open();
-                }
-            });
-        }
+        Mutex.EVENT.readAccess(oc::open);
     }
     
     private static int getOffset(FileObject fo, final ElementHandle<? extends Element> handle) throws IOException {

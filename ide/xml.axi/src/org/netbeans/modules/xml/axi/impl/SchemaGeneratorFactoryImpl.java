@@ -180,7 +180,7 @@ public class SchemaGeneratorFactoryImpl extends SchemaGeneratorFactory {
             AXIComponent e = (AXIComponent) cs.get(i);
             if(!SchemaGeneratorUtil.fromSameSchemaModel(
                     e.getPeer(), am.getSchemaModel()))
-                removeList.add(new Integer(i));
+                removeList.add(Integer.valueOf(i));
         }
         //finally remove components from other model
         for(int i=removeList.size()-1;i>=0;i--) {

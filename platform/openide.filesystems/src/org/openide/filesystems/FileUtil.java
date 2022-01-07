@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.SyncFailedException;
+import java.util.regex.Pattern;
 import java.lang.ref.Reference;
 import java.lang.ref.SoftReference;
 import java.lang.reflect.Method;
@@ -34,6 +35,9 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLStreamHandler;
+import java.nio.file.InvalidPathException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -52,6 +56,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.BiFunction;
 import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
 import java.util.logging.Level;
@@ -922,7 +927,7 @@ public final class FileUtil extends Object {
 
         return retVal;
     }
-
+    
     /** Copies attributes from one file to another.
     * Note: several special attributes will not be copied, as they should
     * semantically be transient. These include attributes used by the
@@ -933,14 +938,48 @@ public final class FileUtil extends Object {
     */
     public static void copyAttributes(FileObject source, FileObject dest)
     throws IOException {
+        copyAttributes(source, dest, defaultAttributesTransformer());
+    }
+    
+    private static final BiFunction<String, Object, Object> DEFAULT_ATTR_TRANSFORMER = (n, v) -> {
+        return transientAttributes.contains(n) ? null : v;
+    };
+
+    /**
+     * Default attribute transformer for {@link #copyAttributes(org.openide.filesystems.FileObject, org.openide.filesystems.FileObject, java.util.function.BiFunction)} that
+     * skips common transient attributes defined or used by the Platform. Custom Attribute Transformers should delegate to this instance.
+     * @return default attribute transformer instance.
+     * @since 9.27
+     */
+    public static BiFunction<String, Object, Object> defaultAttributesTransformer() {
+        return DEFAULT_ATTR_TRANSFORMER;
+    }
+
+    
+    /** Copies attributes from one file to another.
+    * Note: several special attributes will not be copied, as they should
+    * semantically be transient. These include attributes used by the
+    * template wizard (but not the template attribute itself). If {@code attrTransformer} is specified,
+    * it is called for each attribute that is about to be copied. The returned value will be
+    * written to the target. If {@code attrTransformer} returns {@code null}, the attribute will be skipped. 
+    * The Transformer should delegate to {@link #defaultAttributesTransformer()} to conform to the usual transient attribute
+    * conventions - unless it really intends to copy such otherwise transient attributes.
+    * @param source source file object
+    * @param dest destination file object
+    * @param attrTransformer callback to transform or filter attribute values. Can be {@code null}.
+    * @exception IOException if the copying failed
+    * @since 9.27
+    */
+    public static void copyAttributes(FileObject source, FileObject dest, BiFunction<String, Object, Object> attrTransformer) 
+        throws IOException {
         Enumeration<String> attrKeys = source.getAttributes();
+        
+        if (attrTransformer == null) {
+            attrTransformer = defaultAttributesTransformer();
+        }
 
         while (attrKeys.hasMoreElements()) {
             String key = attrKeys.nextElement();
-
-            if (transientAttributes.contains(key)) {
-                continue;
-            }
 
             if (isTransient(source, key)) {
                 continue;
@@ -954,12 +993,17 @@ public final class FileUtil extends Object {
             // by mistake in code. So it should happen only if you import some
             // settings from old version.
             if (value != null && !(value instanceof MultiFileObject.VoidValue)) {
-                if (isRawValue.get() && value instanceof Method) {
-                    dest.setAttribute("methodvalue:" + key, value); // NOI18N
-                } else if (isRawValue.get() && value instanceof Class) {
-                    dest.setAttribute("newvalue:" + key, value); // NOI18N
-                } else {
-                    dest.setAttribute(key, value);
+                if (attrTransformer != null) {
+                    value = attrTransformer.apply(key, value);
+                }
+                if (value != null) {
+                    if (isRawValue.get() && value instanceof Method) {
+                        dest.setAttribute("methodvalue:" + key, value); // NOI18N
+                    } else if (isRawValue.get() && value instanceof Class) {
+                        dest.setAttribute("newvalue:" + key, value); // NOI18N
+                    } else {
+                        dest.setAttribute(key, value);
+                    }
                 }
             }
         }
@@ -1666,7 +1710,7 @@ public final class FileUtil extends Object {
     private static File normalizeFileOnUnixAlike(File file) {
         // On Unix, do not want to traverse symlinks.
         // URI.normalize removes ../ and ./ sequences nicely.
-        file = BaseUtilities.toFile(BaseUtilities.toURI(file).normalize()).getAbsoluteFile();
+        file = BaseUtilities.toFile(BaseUtilities.normalizeURI(BaseUtilities.toURI(file))).getAbsoluteFile();
         while (file.getAbsolutePath().startsWith("/../")) { // NOI18N
             file = new File(file.getAbsolutePath().substring(3));
         }
@@ -1680,7 +1724,7 @@ public final class FileUtil extends Object {
     private static File normalizeFileOnMac(final File file) {
         File retVal = file;
 
-        File absoluteFile = BaseUtilities.toFile(BaseUtilities.toURI(file).normalize());
+        File absoluteFile = BaseUtilities.toFile(BaseUtilities.normalizeURI(BaseUtilities.toURI(file)));
         String absolutePath = absoluteFile.getAbsolutePath();
         if (absolutePath.equals("/..")) { // NOI18N
             // Special treatment.
@@ -2161,7 +2205,7 @@ public final class FileUtil extends Object {
      * </pre>
      * <p/>
      * In multi-user setup, this method returns instance specific for the executing user.
-     * <b>Important<b>: it returns user-specific instance even though the object is configured in
+     * <b>Important</b>: it returns user-specific instance even though the object is configured in
      * a XML layer, or system-wide configuration; still, the instance will be tied to the user-specific
      * file as served by {@link #getConfigFile}.
      * 
@@ -2336,6 +2380,30 @@ public final class FileUtil extends Object {
             archiveRootProviderCache = new LinkedList<>(res.allInstances());
         }
         return archiveRootProviderCache;
+    }
+    
+    /**
+     * Hardcoded offending filename characters. Windows are more picky than Unixes; relying
+     * on just the current host OS will limit file portability when shared through VCS.
+     */
+    private static final Pattern ILLEGAL_FILENAME_CHARACTERS = Pattern.compile("[\\/:\"*?<>|]");
+    
+    /**
+     * Determines whether the string forms a valid filename (without a path component).
+     * @param fileName candidate string
+     * @return true, if the string can be used to name a file.
+     * @since 9.24
+     */
+    public static boolean isValidFileName(String fileName) {
+        if (ILLEGAL_FILENAME_CHARACTERS.matcher(fileName).find()) {
+            return false;
+        }
+        try {
+            Path p = Paths.get(fileName);
+            return p.getNameCount() == 1;
+        } catch (InvalidPathException ex) {
+            return false;
+        }
     }
 
     private static volatile Iterable<? extends ArchiveRootProvider> archiveRootProviderCache;

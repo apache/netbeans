@@ -61,6 +61,14 @@ public final class Profile {
 
     public static final Profile JAVA_EE_8_WEB  = new Profile(9, "1.8", "web", "JavaEE8Web.displayName");
 
+    public static final Profile JAKARTA_EE_8_FULL  = new Profile(10, "8.0", null, "JakartaEE8Full.displayName");
+
+    public static final Profile JAKARTA_EE_8_WEB  = new Profile(11, "8.0", "web", "JakartaEE8Web.displayName");
+
+    public static final Profile JAKARTA_EE_9_WEB  = new Profile(12, "9.0", "web", "JakartaEE9Web.displayName");
+
+    public static final Profile JAKARTA_EE_9_FULL  = new Profile(13, "9.0", null, "JakartaEE9Full.displayName");
+
     private final int order;
 
     // cache
@@ -152,8 +160,20 @@ public final class Profile {
         } else if (JAVA_EE_8_WEB.toPropertiesString().equals(valueMinusQuotes)
                 || "EE_8_WEB".equals(value)) {
             return JAVA_EE_8_WEB;
+        } else if (JAKARTA_EE_8_FULL.toPropertiesString().equals(valueMinusQuotes)
+                || "JAKARTA_EE_8_FULL".equals(value)) {
+            return JAKARTA_EE_8_FULL;
+        } else if (JAKARTA_EE_8_WEB.toPropertiesString().equals(valueMinusQuotes)
+                || "JAKARTA_EE_8_WEB".equals(value)) {
+            return JAKARTA_EE_8_WEB;
+        } else if (JAKARTA_EE_9_FULL.toPropertiesString().equals(valueMinusQuotes)
+                || "JAKARTA_EE_9_FULL".equals(value)) {
+            return JAKARTA_EE_9_FULL;
+        } else if (JAKARTA_EE_9_WEB.toPropertiesString().equals(valueMinusQuotes)
+                || "JAKARTA_EE_9_WEB".equals(value)) {
+            return JAKARTA_EE_9_WEB;
         } else {
-            return null;
+          return null;
         }
     }
 
@@ -224,12 +244,8 @@ public final class Profile {
             if (profileToCompareVersion.equals(comparingProfileVersion)) {
                 return compareWebAndFull(profileToCompare, comparingVersion);
             } else {
-                if (comparisonResult > 0) {
-                    // profileToCompare has lower version than comparingVersion
-                    return false;
-                } else {
-                    return true;
-                }
+                // profileToCompare has lower version than comparingVersion
+                return comparisonResult <= 0;
             }
         }
     }

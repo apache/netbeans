@@ -1,0 +1,82 @@
+<testresult testFile='attributeSyntaxError_02.php'>
+    <scanner>
+        <token id='T_ATTRIBUTE' start='815' end='817'>
+            <text>#[</text>
+        </token>
+        <token id='T_STRING' start='817' end='823'>
+            <text>Class1</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='823' end='824'>
+            <text>(</text>
+        </token>
+        <token id='T_LNUMBER' start='824' end='825'>
+            <text>1</text>
+        </token>
+        <token id='T_COMMA' start='825' end='826'>
+            <text>,</text>
+        </token>
+        <token id='T_STRING' start='827' end='831'>
+            <text>self</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='831' end='833'>
+            <text>::</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='833' end='834'>
+            <text>)</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='834' end='835'>
+            <text>]</text>
+        </token>
+        <token id='T_CLASS' start='836' end='841'>
+            <text>class</text>
+        </token>
+        <token id='T_STRING' start='842' end='857'>
+            <text>AttributeSyntax</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='858' end='859'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='860' end='861'>
+            <text>}</text>
+        </token>
+        <token id='EOF' start='862' end='862'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='862'>
+        <Comments>
+            <Comment start='6' end='813' commentType='multiLine'/>
+            <Comment start='6' end='813' commentType='multiLine'/>
+        </Comments>
+        <Statements>
+            <ClassDeclaration start='815' end='861' modifier='NONE'>
+                <Attributes>
+                    <Attribute start='815' end='835'>
+                        <AttributeDeclarations>
+                            <AttributeDeclaration start='817' end='834'>
+                                <AttributeName>
+                                    <NamespaceName start='817' end='823' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='817' end='823' name='Class1'/>
+                                    </NamespaceName>
+                                </AttributeName>
+                                <AttributeParameters>
+                                    <Scalar start='824' end='825' type='INT' value='1'/>
+                                    <ASTErrorExpression start='827' end='833'/>
+                                </AttributeParameters>
+                            </AttributeDeclaration>
+                        </AttributeDeclarations>
+                    </Attribute>
+                </Attributes>
+                <ClassName>
+                    <Identifier start='842' end='857' name='AttributeSyntax'/>
+                </ClassName>
+                <SuperClassName>
+                </SuperClassName>
+                <Interfaces>
+                </Interfaces>
+                <Block start='858' end='861' isCurly='true'>
+                </Block>
+            </ClassDeclaration>
+        </Statements>
+    </Program>
+</testresult>

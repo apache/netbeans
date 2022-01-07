@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.47
+#Version 1.54
 
 CLSS public java.lang.Object
 cons public init()
@@ -27,6 +27,7 @@ supr java.lang.Object
 CLSS public final org.netbeans.modules.groovy.support.api.GroovySettings
 fld public final static java.lang.String GROOVY_DOC_PROPERTY = "groovy.doc"
 fld public final static java.lang.String GROOVY_OPTIONS_CATEGORY = "Advanced/org-netbeans-modules-groovy-support-api-GroovySettings"
+meth public boolean isHonourAccessModifiers()
 meth public java.lang.String getDisplayName()
 meth public java.lang.String getGroovyDoc()
 meth public java.lang.String getTooltip()
@@ -35,8 +36,9 @@ meth public static org.netbeans.modules.groovy.support.api.GroovySettings getIns
 meth public void addPropertyChangeListener(java.beans.PropertyChangeListener)
 meth public void removePropertyChangeListener(java.beans.PropertyChangeListener)
 meth public void setGroovyDoc(java.lang.String)
+meth public void setHonourAccessModifiers(boolean)
 supr org.netbeans.spi.options.AdvancedOption
-hfds GROOVY_DOC,instance,propertyChangeSupport
+hfds ACCESS_MODIFIERS,DEFAULT_ACCESS_MODIFIERS,GROOVY_DOC,instance,propertyChangeSupport
 
 CLSS public org.netbeans.modules.groovy.support.api.GroovySources
 cons public init()

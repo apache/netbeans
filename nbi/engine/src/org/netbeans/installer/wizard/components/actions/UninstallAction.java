@@ -109,7 +109,7 @@ public class UninstallAction extends WizardAction {
                 // do not override already set exit code
                 if (System.getProperties().get(Installer.EXIT_CODE_PROPERTY) == null) {
                      System.getProperties().put(Installer.EXIT_CODE_PROPERTY, 
-                             new Integer(UNINSTALLATION_ERROR_CODE));
+                             Integer.valueOf(UNINSTALLATION_ERROR_CODE));
                 }
                 // adjust the component's status and save this error - it will
                 // be reused later at the PostInstallSummary

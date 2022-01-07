@@ -24,10 +24,12 @@ import org.netbeans.modules.gradle.NbGradleProjectImpl;
 import org.netbeans.modules.gradle.api.NbGradleProject;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.File;
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 import org.netbeans.api.project.Project;
+import org.netbeans.modules.gradle.GradleProject;
 import org.netbeans.spi.project.ui.support.NodeFactory;
 import org.netbeans.spi.project.ui.support.NodeList;
 import org.openide.nodes.Node;
@@ -39,15 +41,13 @@ import org.openide.nodes.Node;
 @NodeFactory.Registration(projectType = NbGradleProject.GRADLE_PROJECT_TYPE, position = 400)
 public class SubProjectsNodeFactory implements NodeFactory {
 
-    private static final String KEY_SUBPROJECTS = "subprojects"; //NOI18N
-
     @Override
     public NodeList<?> createNodes(Project project) {
         NbGradleProjectImpl prj = project.getLookup().lookup(NbGradleProjectImpl.class);
         return new NList(prj);
     }
 
-    private static class NList extends AbstractGradleNodeList<String> implements PropertyChangeListener {
+    private static class NList extends AbstractGradleNodeList<GradleProject> implements PropertyChangeListener {
 
         private final NbGradleProjectImpl project;
 
@@ -63,13 +63,13 @@ public class SubProjectsNodeFactory implements NodeFactory {
         }
 
         @Override
-        public List<String> keys() {
-            Set<String> subProjects = project.getGradleProject().getBaseProject().getSubProjects().keySet();
-            return subProjects.isEmpty() ? Collections.<String>emptyList() : Collections.singletonList(KEY_SUBPROJECTS);
+        public List<GradleProject> keys() {
+            Map<String, File> subProjects = project.getGradleProject().getBaseProject().getSubProjects();
+            return subProjects.isEmpty() ? Collections.<GradleProject>emptyList() : Collections.singletonList(project.getGradleProject());
         }
 
         @Override
-        public Node node(String key) {
+        public Node node(GradleProject key) {
             return new SubProjectsNode(project);
         }
 

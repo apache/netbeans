@@ -28,16 +28,22 @@
 
 package org.netbeans.modules.xml.schema.completion;
 
+import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URI;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.text.Document;
 import org.netbeans.api.xml.services.UserCatalog;
 import org.netbeans.modules.xml.xam.ModelSource;
 import org.netbeans.modules.xml.xam.dom.AbstractDocumentModel;
 import org.netbeans.modules.xml.xam.locator.CatalogModel;
 import org.netbeans.modules.xml.xam.locator.CatalogModelException;
+import org.netbeans.modules.xml.xam.spi.ModelAccessProvider;
+import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileUtil;
+import org.openide.filesystems.URLMapper;
 import org.openide.util.lookup.Lookups;
 import org.w3c.dom.ls.LSInput;
 import org.xml.sax.EntityResolver;
@@ -50,9 +56,14 @@ import org.xml.sax.SAXException;
  */
 @org.openide.util.lookup.ServiceProvider(service=org.netbeans.modules.xml.xam.locator.CatalogModel.class)
 public class RuntimeCatalogModel implements CatalogModel{
-    
+    private URL baseUrl;
+
     /** Creates a new instance of RuntimeCatalogModel */
     public RuntimeCatalogModel() {
+    }
+
+    private RuntimeCatalogModel(URL baseUrl) {
+        this.baseUrl = baseUrl;
     }
     
     public ModelSource getModelSource(URI locationURI) throws CatalogModelException {
@@ -61,7 +72,7 @@ public class RuntimeCatalogModel implements CatalogModel{
     
     public ModelSource getModelSource(URI locationURI,
             ModelSource modelSourceOfSourceDocument) throws CatalogModelException {
-        InputStream inputStream = null;
+        URL inputURL = null;
         try {
             UserCatalog cat = UserCatalog.getDefault();
             // mainly for unit tests
@@ -69,17 +80,25 @@ public class RuntimeCatalogModel implements CatalogModel{
                 return null;
             }
             EntityResolver resolver = cat.getEntityResolver();
-            InputSource src = resolver.resolveEntity(null, locationURI.toString());
-            if(src != null) {
-                inputStream = new URL(src.getSystemId()).openStream();
-            } else {
-                javax.xml.transform.Source isrc = ((javax.xml.transform.URIResolver)resolver).
-                        resolve(locationURI.toString(), null);
-                if(isrc != null)
-                    inputStream = new URL(isrc.getSystemId()).openStream();
+            if (inputURL == null) {
+                InputSource src = resolver.resolveEntity(null, locationURI.toString());
+                if (src != null) {
+                    inputURL = new URL(src.getSystemId());
+                }
             }
-            if(inputStream != null)
-                return createModelSource(inputStream);
+
+            if (inputURL == null) {
+                javax.xml.transform.Source isrc = ((javax.xml.transform.URIResolver) resolver).
+                    resolve(locationURI.toString(), null);
+                if (isrc != null) {
+                    inputURL = new URL(isrc.getSystemId());
+                }
+            }
+            if(inputURL == null && baseUrl != null && (!locationURI.isAbsolute())) {
+                inputURL = new URL(baseUrl, locationURI.toString());
+            }
+            if(inputURL != null)
+                return createModelSource(inputURL);
         } catch (Exception ex) {
             throw new CatalogModelException(ex);
         }
@@ -87,15 +106,29 @@ public class RuntimeCatalogModel implements CatalogModel{
         return null;
     }
     
-    private ModelSource createModelSource(InputStream is) throws CatalogModelException{
+    private ModelSource createModelSource(URL url) throws CatalogModelException{
         try {
-            Document d = AbstractDocumentModel.getAccessProvider().loadSwingDocument(is);
-            if(d != null)
-                return new ModelSource(Lookups.fixed(new Object[]{this,d}), false);
+            Document d = AbstractDocumentModel.getAccessProvider().loadSwingDocument(url.openStream());
+            if (d != null) {
+                List<Object> lookup = new ArrayList<>(5);
+                FileObject fo = URLMapper.findFileObject(url);
+                if(fo != null) {
+                    lookup.add(fo);
+                    lookup.add(fileObjectBasedModel);
+                    File file = FileUtil.toFile(fo);
+                    if(file != null) {
+                        lookup.add(file);
+                    }
+                }
+                RuntimeCatalogModel rcm = new RuntimeCatalogModel(url);
+                lookup.add(rcm);
+                lookup.add(d);
+                return new ModelSource(Lookups.fixed(lookup.toArray()), false);
+            }
         } catch (Exception ex) {
             throw new CatalogModelException(ex);
         }
-                
+
         return null;
     }
     
@@ -108,5 +141,13 @@ public class RuntimeCatalogModel implements CatalogModel{
             String publicId, String systemId, String baseURI) {
         throw new RuntimeException("Method not implemented"); //NOI18N
     }
-    
+
+    private static final ModelAccessProvider fileObjectBasedModel = new ModelAccessProvider() {
+
+        @Override
+        public Object getModelSourceKey(ModelSource source) {
+            return source.getLookup().lookup(FileObject.class);
+        }
+
+    };
 }

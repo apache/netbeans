@@ -153,7 +153,7 @@ public class JDBCDriverDeployHelper {
 
         private final ProgressEventSupport eventSupport;
         private final File driverLoc;
-        private List jdbcDriverURLs;
+        private List<URL> jdbcDriverURLs;
 
         public JDBCDriversProgressObject(File driverLoc, List jdbcDriverURLs) {
             eventSupport = new ProgressEventSupport(this); //JDBCDriverDeployHelper.this);
@@ -168,7 +168,7 @@ public class JDBCDriverDeployHelper {
             if (jdbcDriverURLs.size() > 0) {
                 boolean success = true;
                 for (int i = 0; i < jdbcDriverURLs.size(); i++) {
-                    URL jarUrl = (URL) jdbcDriverURLs.get(i);
+                    URL jarUrl = jdbcDriverURLs.get(i);
                     File libsDir = driverLoc;
                     try {
                         File toJar = new File(libsDir, new File(jarUrl.toURI()).getName());

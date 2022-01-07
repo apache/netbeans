@@ -66,6 +66,7 @@ import javax.tools.JavaFileObject;
 
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
@@ -73,7 +74,6 @@ import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenSequence;
 
 import org.netbeans.api.java.lexer.JavaTokenId;
-import org.netbeans.modules.java.source.TreeShims;
 
 import org.netbeans.modules.java.source.builder.ASTService;
 import org.netbeans.modules.java.source.query.CommentSet;
@@ -111,6 +111,7 @@ import org.openide.util.Parameters;
  * 
  * @since 0.44.0
  */
+
 public final class TreeMaker {
     
     private TreeFactory delegate;
@@ -264,6 +265,30 @@ public final class TreeMaker {
      */
     public CaseTree Case(List<? extends ExpressionTree> patterns, Tree body) {
         return delegate.Case(patterns, body);
+    }
+    
+    /**
+     * Creates a new CaseTree for a rule case (case &lt;constants&gt; -> &lt;body&gt;).
+     *
+     * @param patterns the labels for this case statement.
+     * @param body the case's body
+     * @see com.sun.source.tree.CaseTree
+     * @since 2.39
+     */
+    public CaseTree CasePatterns(List<? extends Tree> patterns, Tree body) {
+        return delegate.CaseMultiplePatterns(patterns.stream().map(p -> (CaseLabelTree) p).collect(Collectors.toList()), body);
+    }
+    
+    /**
+     * Creates a new CaseTree.
+     *
+     * @param patterns the labels for this case statement.
+     * @param statements the list of statements.
+     * @see com.sun.source.tree.CaseTree
+     * @since 2.39
+     */
+    public CaseTree CasePatterns(List<? extends Tree> patterns, List<? extends StatementTree> statements) {
+        return delegate.CaseMultiplePatterns(patterns.stream().map(p -> (CaseLabelTree) p).collect(Collectors.toList()), statements);
     }
     
     /**
@@ -1213,16 +1238,29 @@ public final class TreeMaker {
     
     /**
      * Creates a new BindingPatternTree.
-     *
+     * @deprecated
      * @param name name of the binding variable
      * @param type the type of the pattern
      * @return the newly created BindingPatternTree
      * @throws NoSuchMethodException if the used javac does not support
      *                               BindingPatternTree.
      */
+    @Deprecated
     public Tree BindingPattern(CharSequence name,
                                Tree type) {
         return delegate.BindingPattern(name, type);
+    }
+    
+      /**
+     * Creates a new Tree for a given VariableTree
+     * @specication : 15.20.2
+     * @param vt the VariableTree of the pattern
+     * @see com.sun.source.tree.BindingPatternTree
+     * @return the newly created BindingPatternTree
+     * @since 16
+     */
+    public Tree BindingPattern(VariableTree vt) {
+        return delegate.BindingPattern(vt);
     }
 
     /**
@@ -2870,9 +2908,7 @@ public final class TreeMaker {
         // todo (#pf): Shouldn't here be check that names are not the same?
         // i.e. node label == aLabel? -- every case branch has to check itself
         // This will improve performance, no change was done by API user.
-        Tree.Kind kind = TreeShims.isRecord(node) ? Kind.CLASS : node.getKind();
-       
-        switch (kind) {
+        switch (node.getKind()) {
             case BREAK: {
                 BreakTree t = (BreakTree) node;
                 N clone = (N) Break(
@@ -2883,7 +2919,8 @@ public final class TreeMaker {
             case ANNOTATION_TYPE:
             case CLASS:
             case ENUM:
-            case INTERFACE: {
+            case INTERFACE:
+            case RECORD: {
                 ClassTree t = (ClassTree) node;
                 // copy all the members, for constructor change their name
                 // too!
@@ -3356,6 +3393,10 @@ public final class TreeMaker {
     }
     
     private void mapComments(BlockTree block, String inputText, WorkingCopy copy, CommentHandler comments, SourcePositions positions) {
+        if (copy.getFileObject() == null) {
+            // prevent IllegalStateException thrown form AssignComments constructor below
+            return;
+        }
         TokenSequence<JavaTokenId> seq = TokenHierarchy.create(inputText, JavaTokenId.language()).tokenSequence(JavaTokenId.language());
         AssignComments ti = new AssignComments(copy, block, seq, positions);
         ti.scan(block, null);

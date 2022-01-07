@@ -781,6 +781,11 @@ public final class EditorRegistry {
         }
 
         @Override
+        public void forceRelease(JTextComponent c) {
+            EditorRegistry.releasedByCloneableEditor(c);
+        }
+
+        @Override
         public void setIgnoredAncestorClass(Class ignoredAncestorClass) {
             EditorRegistry.setIgnoredAncestorClass(ignoredAncestorClass);
         }

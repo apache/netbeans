@@ -64,8 +64,8 @@ import org.openide.util.RequestProcessor;
  * @author Ondrej Brejla <obrejla@netbeans.org>
  */
 @Messages({
-    "FixUsesLabel=Fix Uses...",
-    "LongName=Fix Uses in Current Namespace"
+    "FixUsesLabel=Fix Imports...",
+    "LongName=Fix Imports in Current Namespace"
 })
 @EditorActionRegistration(
     name = FixUsesAction.ACTION_NAME,
@@ -155,7 +155,7 @@ public class FixUsesAction extends BaseAction {
     private static ImportData computeUses(final PHPParseResult parserResult, final int caretPosition) {
         Map<String, List<UsedNamespaceName>> filteredExistingNames = new UsedNamesCollector(parserResult, caretPosition).collectNames();
         Index index = parserResult.getModel().getIndexScope().getIndex();
-        NamespaceScope namespaceScope = ModelUtils.getNamespaceScope(parserResult.getModel().getFileScope(), caretPosition);
+        NamespaceScope namespaceScope = ModelUtils.getNamespaceScope(parserResult, caretPosition);
         assert namespaceScope != null;
         ImportData importData = new ImportDataCreator(filteredExistingNames, index, namespaceScope.getNamespaceName(), createOptions(parserResult)).create();
         importData.caretPosition = caretPosition;

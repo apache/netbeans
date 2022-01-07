@@ -70,6 +70,7 @@ public class JavaCodeTemplateProcessor implements CodeTemplateProcessor {
     public static final String CURRENT_CLASS_FULLY_QUALIFIED_NAME = "currClassFQName"; //NOI18N
     public static final String CURRENT_PACKAGE_NAME = "currPackageName"; //NOI18N
     public static final String CURRENT_METHOD_NAME = "currMethodName"; //NOI18N
+    public static final String STATIC_IMPORT = "staticImport"; //NOI18N
 
     private static final String TRUE = "true"; //NOI18N
     private static final String NULL = "null"; //NOI18N
@@ -122,7 +123,8 @@ public class JavaCodeTemplateProcessor implements CodeTemplateProcessor {
                         || CURRENT_PACKAGE_NAME.equals(hint)
                         || CURRENT_METHOD_NAME.equals(hint)
                         || ITERABLE_ELEMENT_TYPE.equals(hint)
-                        || UNCAUGHT_EXCEPTION_TYPE.equals(hint)) {
+                        || UNCAUGHT_EXCEPTION_TYPE.equals(hint)
+                        || STATIC_IMPORT.equals(hint)) {
                     needsParsing = true;
                 }
             }
@@ -539,9 +541,45 @@ public class JavaCodeTemplateProcessor implements CodeTemplateProcessor {
                         return value;
                     }
                 }
+            } else if (STATIC_IMPORT.equals(entry.getKey())) {
+                String qualifiedIdentifier = (String) entry.getValue();
+                param2hints.put(param, STATIC_IMPORT);
+                if (!qualifiedIdentifier.contains(".")) { //NOI18N
+                    return qualifiedIdentifier;
+                }
+                staticImport(qualifiedIdentifier);
+                return qualifiedIdentifier.substring(qualifiedIdentifier.lastIndexOf('.') + 1);
             }
         }
         return name;
+    }
+    
+    private void staticImport(String qualifiedIdentifier) {
+        JTextComponent component = request.getComponent();
+        Document document = component.getDocument();
+        JavaSource javaSource = JavaSource.forDocument(document);
+        if (javaSource != null) {
+            try {
+                javaSource.runModificationTask(copy  -> {
+                    JavaSource.Phase phase = copy.toPhase(JavaSource.Phase.RESOLVED);
+                    if (phase.compareTo(JavaSource.Phase.RESOLVED) == 0) {
+                        TreeMaker make = copy.getTreeMaker();
+                        CompilationUnitTree compilationUnit = copy.getCompilationUnit();
+                        List<? extends ImportTree> imports = compilationUnit.getImports();
+                        for (ImportTree importTree : imports) {
+                            if (importTree.getQualifiedIdentifier().toString().equals(qualifiedIdentifier)) {
+                                return;
+                            }
+                        }
+                        CompilationUnitTree newCompilationUnit = make.addCompUnitImport(
+                                compilationUnit, make.Import(make.Identifier(qualifiedIdentifier), true));
+                        copy.rewrite(compilationUnit, newCompilationUnit);
+                    }
+                }).commit();
+            } catch (IOException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+        }
     }
     
     private VariableElement instanceOf(String typeName, String name) {

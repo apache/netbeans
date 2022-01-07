@@ -58,7 +58,6 @@ import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.JavaSource.Phase;
 import org.netbeans.api.java.source.ModificationResult;
 import org.netbeans.api.java.source.ModificationResult.Difference;
-import org.netbeans.api.java.source.Task;
 import org.netbeans.api.java.source.WorkingCopy;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
@@ -102,7 +101,7 @@ public class BatchUtilities {
     private static final Logger LOG = Logger.getLogger(BatchUtilities.class.getName());
     
     public static Collection<ModificationResult> applyFixes(BatchResult candidates, @NonNull final ProgressHandleWrapper progress, AtomicBoolean cancel, final Collection<? super MessageImpl> problems) {
-        return applyFixes(candidates, progress, cancel, new ArrayList<RefactoringElementImplementation>(), problems);
+        return applyFixes(candidates, progress, cancel, new ArrayList<>(), problems);
     }
     
     public static Collection<ModificationResult> applyFixes(BatchResult candidates, @NonNull final ProgressHandleWrapper progress, AtomicBoolean cancel, final Collection<? super RefactoringElementImplementation> fileChanges, final Collection<? super MessageImpl> problems) {
@@ -112,17 +111,20 @@ public class BatchUtilities {
     public static Collection<ModificationResult> applyFixes(BatchResult candidates, @NonNull final ProgressHandleWrapper progress, AtomicBoolean cancel, final Collection<? super RefactoringElementImplementation> fileChanges, final Map<JavaFix, ModificationResult> changesPerFix, final Collection<? super MessageImpl> problems) {
         return applyFixes(candidates, progress, cancel, fileChanges, changesPerFix, false, problems);
     }
-    
+
+    @SuppressWarnings("unchecked")
     public static Collection<ModificationResult> applyFixes(BatchResult candidates, @NonNull final ProgressHandleWrapper progress, AtomicBoolean cancel, final Collection<? super RefactoringElementImplementation> fileChanges, final Map<JavaFix, ModificationResult> changesPerFix, boolean doNotRegisterClassPath, final Collection<? super MessageImpl> problems) {
-        final Map<Project, Set<String>> processedDependencyChanges = new IdentityHashMap<Project, Set<String>>();
-        final Map<FileObject, List<ModificationResult.Difference>> result = new LinkedHashMap<FileObject, List<ModificationResult.Difference>>();
-        final Map<FileObject, byte[]> resourceContentChanges = new HashMap<FileObject, byte[]>();
+        final Map<Project, Set<String>> processedDependencyChanges = new IdentityHashMap<>();
+        final Map<FileObject, List<ModificationResult.Difference>> result = new LinkedHashMap<>();
+        final Map<FileObject, byte[]> resourceContentChanges = new HashMap<>();
 
         BatchSearch.VerifiedSpansCallBack callback = new BatchSearch.VerifiedSpansCallBack() {
             private ElementOverlay overlay;
+            @Override
             public void groupStarted() {
                 overlay = ElementOverlay.getOrCreateOverlay();
             }
+            @Override
             public boolean spansVerified(CompilationController wc, Resource r, Collection<? extends ErrorDescription> hints) throws Exception {
                 if (hints.isEmpty()) return true;
                 
@@ -158,10 +160,12 @@ public class BatchUtilities {
                 return true;
             }
 
+            @Override
             public void groupFinished() {
                 overlay = null;
             }
 
+            @Override
             public void cannotVerifySpan(Resource r) {
                 problems.add(new MessageImpl(MessageKind.WARNING, "Cannot parse: " + r.getRelativePath()));
             }
@@ -182,14 +186,12 @@ public class BatchUtilities {
                 final String[] origContent = new String[1];
                 final Source[] s = new Source[1];
                 if (originalDocument != null) {
-                    originalDocument.render(new Runnable() {
-                        @Override public void run() {
-                            try {
-                                origContent[0] = originalDocument.getText(0, originalDocument.getLength());
-                                s[0] = Source.create(originalDocument);
-                            } catch (BadLocationException ex) {
-                                Exceptions.printStackTrace(ex);
-                            }
+                    originalDocument.render(() -> {
+                        try {
+                            origContent[0] = originalDocument.getText(0, originalDocument.getLength());
+                            s[0] = Source.create(originalDocument);
+                        } catch (BadLocationException ex) {
+                            Exceptions.printStackTrace(ex);
                         }
                     });
                 }
@@ -270,8 +272,9 @@ public class BatchUtilities {
         return applyFixes(copy, processedDependencyChanges, hints, resourceContentChanges, fileChanges, null, problems);
     }
     
+    @SuppressWarnings("unchecked")
     public static boolean applyFixes(WorkingCopy copy, Map<Project, Set<String>> processedDependencyChanges, Collection<? extends ErrorDescription> hints, Map<FileObject, byte[]> resourceContentChanges, Collection<? super RefactoringElementImplementation> fileChanges, Map<JavaFix, ModificationResult> changesPerFix, Collection<? super MessageImpl> problems) throws IllegalStateException, Exception {
-        Set<JavaFix> fixes = new LinkedHashSet<JavaFix>();
+        Set<JavaFix> fixes = new LinkedHashSet<>();
         for (ErrorDescription ed : hints) {
             if (!ed.getFixes().isComputed()) {
                 throw new IllegalStateException();//TODO: should be problem
@@ -326,16 +329,16 @@ public class BatchUtilities {
 
                 perFixCopy.toPhase(Phase.RESOLVED);
                 
-                final Map<FileObject, byte[]> perFixResourceContentChanges = new HashMap<FileObject, byte[]>();
+                final Map<FileObject, byte[]> perFixResourceContentChanges = new HashMap<>();
         
-                JavaFixImpl.Accessor.INSTANCE.process(f, perFixCopy, false, perFixResourceContentChanges, new ArrayList<RefactoringElementImplementation>());
+                JavaFixImpl.Accessor.INSTANCE.process(f, perFixCopy, false, perFixResourceContentChanges, new ArrayList<>());
                 
                 final JavacTaskImpl jt = JavaSourceAccessor.getINSTANCE().getJavacTask(perFixCopy);
                 Log.instance(jt.getContext()).nerrors = 0;
                 Method getChanges = WorkingCopy.class.getDeclaredMethod("getChanges", Map.class);
                 getChanges.setAccessible(true);
                 
-                Map<FileObject, List<Difference>> changes = new HashMap<FileObject, List<Difference>>();
+                Map<FileObject, List<Difference>> changes = new HashMap<>();
                 
                 changes.put(perFixCopy.getFileObject(), (List<ModificationResult.Difference>) getChanges.invoke(perFixCopy, new HashMap<Object, int[]>()));
                 
@@ -356,20 +359,17 @@ public class BatchUtilities {
     }
     
     public static Collection<ModificationResult> applyFixes(final Map<FileObject, Collection<JavaFix>> toRun) {
-        final Map<FileObject, List<ModificationResult.Difference>> result = new LinkedHashMap<FileObject, List<ModificationResult.Difference>>();
-        final Map<FileObject, byte[]> resourceContentChanges = new HashMap<FileObject, byte[]>();
+        final Map<FileObject, List<ModificationResult.Difference>> result = new LinkedHashMap<>();
+        final Map<FileObject, byte[]> resourceContentChanges = new HashMap<>();
         Map<ClasspathInfo, Collection<FileObject>> cp2Files = BatchUtilities.sortFiles(toRun.keySet());
 
         for (Entry<ClasspathInfo, Collection<FileObject>> e : cp2Files.entrySet()) {
             try {
-                ModificationResult mr = JavaSource.create(e.getKey(), e.getValue()).runModificationTask(new Task<WorkingCopy>() {
-                    @Override
-                    public void run(WorkingCopy parameter) throws Exception {
-                        if (parameter.toPhase(Phase.RESOLVED).compareTo(Phase.RESOLVED) < 0) return ;
-
-                        for (JavaFix jf : toRun.get(parameter.getFileObject())) {
-                            JavaFixImpl.Accessor.INSTANCE.process(jf, parameter, false, resourceContentChanges, new ArrayList<RefactoringElementImplementation>());
-                        }
+                ModificationResult mr = JavaSource.create(e.getKey(), e.getValue()).runModificationTask((WorkingCopy parameter) -> {
+                    if (parameter.toPhase(Phase.RESOLVED).compareTo(Phase.RESOLVED) < 0) return ;
+                    
+                    for (JavaFix jf : toRun.get(parameter.getFileObject())) {
+                        JavaFixImpl.Accessor.INSTANCE.process(jf, parameter, false, resourceContentChanges, new ArrayList<>());
                     }
                 });
                 
@@ -385,7 +385,7 @@ public class BatchUtilities {
     }
 
     public static Collection<FileObject> getSourceGroups(Iterable<? extends Project> prjs) {
-        List<FileObject> result = new LinkedList<FileObject>();
+        List<FileObject> result = new LinkedList<>();
         
         for (Project p : prjs) {
             Sources s = ProjectUtils.getSources(p);
@@ -399,7 +399,7 @@ public class BatchUtilities {
     }
 
     public static Map<ClasspathInfo, Collection<FileObject>> sortFiles(Collection<? extends FileObject> from) {
-        Map<CPCategorizer, Collection<FileObject>> m = new HashMap<CPCategorizer, Collection<FileObject>>();
+        Map<CPCategorizer, Collection<FileObject>> m = new HashMap<>();
 
         for (FileObject f : from) {
             CPCategorizer cpCategorizer = new CPCategorizer(f);
@@ -407,13 +407,13 @@ public class BatchUtilities {
             Collection<FileObject> files = m.get(cpCategorizer);
 
             if (files == null) {
-                m.put(cpCategorizer, files = new LinkedList<FileObject>());
+                m.put(cpCategorizer, files = new LinkedList<>());
             }
 
             files.add(f);
         }
         
-        Map<ClasspathInfo, Collection<FileObject>> result = new IdentityHashMap<ClasspathInfo, Collection<FileObject>>();
+        Map<ClasspathInfo, Collection<FileObject>> result = new IdentityHashMap<>();
 
         for (Entry<CPCategorizer, Collection<FileObject>> e : m.entrySet()) {
             ClasspathInfo cpInfo = new ClasspathInfo.Builder(e.getKey().boot)
@@ -521,7 +521,7 @@ public class BatchUtilities {
                         Set<String> seen = alreadyProcessed.get(p);
 
                         if (seen == null) {
-                            alreadyProcessed.put(p, seen = new HashSet<String>());
+                            alreadyProcessed.put(p, seen = new HashSet<>());
                         }
 
                         if (seen.add(updateTo)) {

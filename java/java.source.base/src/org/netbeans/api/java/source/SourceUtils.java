@@ -66,6 +66,7 @@ import java.io.InputStreamReader;
 import java.io.InterruptedIOException;
 import java.io.Reader;
 import java.util.function.Predicate;
+import javax.lang.model.util.ElementScanner14;
 
 import javax.swing.SwingUtilities;
 import javax.swing.text.ChangedCharSetException;
@@ -102,9 +103,9 @@ import org.netbeans.modules.java.source.ElementHandleAccessor;
 import org.netbeans.modules.java.source.ElementUtils;
 import org.netbeans.modules.java.source.JavadocHelper;
 import org.netbeans.modules.java.source.ModuleNames;
-import org.netbeans.modules.java.source.TreeShims;
 import org.netbeans.modules.java.source.indexing.FQN2Files;
 import org.netbeans.modules.java.source.indexing.JavaCustomIndexer;
+import org.netbeans.modules.java.source.parsing.ClassParser;
 import org.netbeans.modules.java.source.parsing.ClasspathInfoProvider;
 import org.netbeans.modules.java.source.parsing.FileObjects;
 import org.netbeans.modules.java.source.parsing.Hacks;
@@ -196,11 +197,7 @@ public class SourceUtils {
     
     public static TypeMirror getBound(WildcardType wildcardType) {
         Type.TypeVar bound = ((Type.WildcardType)wildcardType).bound;
-        try {
-            return bound != null ? bound.bound : null;
-        } catch (NoSuchFieldError err) {
-            return bound != null ? bound.getUpperBound() : null;
-        }
+        return bound != null ? bound.getUpperBound() : null;
     }
 
     /**
@@ -834,7 +831,17 @@ public class SourceUtils {
     }
         
     //Helper methods
-    
+
+    /**
+     * Returns true if the given file is a class file
+     * @param file
+     * @return true if the given file is a class file
+     * @since 2.51
+     */
+    public static boolean isClassFile(@NonNull final FileObject file) {
+        return FileObjects.CLASS.equals(file.getExt()) || ClassParser.MIME_TYPE.equals(file.getMIMEType(ClassParser.MIME_TYPE));
+    }
+
     /**
      * Returns classes declared in the given source file which have the main method.
      * @param fo source file
@@ -860,7 +867,7 @@ public class SourceUtils {
                 public void run(final CompilationController control) throws Exception {
                     if (control.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED).compareTo (JavaSource.Phase.ELEMENTS_RESOLVED)>=0) {
                         final List<TypeElement>  types = new ArrayList<>();
-                        final ElementScanner6<Void,Void> visitor = new ElementScanner6<Void, Void>() {
+                        final ElementScanner6<Void,Void> visitor = new ElementScanner14<Void, Void>() {
                             @Override
                             public Void visitType(TypeElement e, Void p) {
                                 if (e.getEnclosingElement().getKind() == ElementKind.PACKAGE
@@ -872,14 +879,6 @@ public class SourceUtils {
                                 }
                             }
 
-                            @Override
-                            public Void scan(Element e, Void p) {
-                                if (TreeShims.isRecordComponent(e)) {
-                                    return visitVariable((VariableElement) e, p);
-                                } else {
-                                    return super.scan(e, p);
-                                }
-                            }
                         };
                         visitor.scan(control.getTopLevelElements(), null);
                         for (TypeElement type : types) {

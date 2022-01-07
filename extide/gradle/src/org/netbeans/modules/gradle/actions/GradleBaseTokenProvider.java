@@ -47,6 +47,7 @@ public class GradleBaseTokenProvider implements ReplaceTokenProvider {
             "rootDir",
             "buildDir",
             "projectName",
+            "projectPath",
             "group",
             "version",
             "status",
@@ -74,6 +75,7 @@ public class GradleBaseTokenProvider implements ReplaceTokenProvider {
         ret.put("rootDir", gbp.getRootDir().getAbsolutePath()); //NOI18N
         ret.put("buildDir", gbp.getBuildDir().getAbsolutePath()); //NOI18N
         ret.put("projectName", gbp.getName()); //NOI18N
+        ret.put("projectPath", gbp.getPath()); //NOI18N
         ret.put("group", gbp.getGroup()); //NOI18N
         ret.put("version", gbp.getVersion()); //NOI18N
         ret.put("status", gbp.getStatus());  //NOI18N

@@ -63,7 +63,7 @@ public class AppClientMetadataModelImpl implements MetadataModelImplementation<A
             }
         }
         if (ddRoot != null && ddRoot.getVersion() != null 
-                && ddRoot.getVersion().doubleValue() < Double.valueOf(AppClient.VERSION_5_0).doubleValue() ) {
+                && ddRoot.getVersion().doubleValue() < Double.valueOf(AppClient.VERSION_5_0) ) {
             root = ddRoot;
         } else {
             root = new AppClientImpl(helper);            

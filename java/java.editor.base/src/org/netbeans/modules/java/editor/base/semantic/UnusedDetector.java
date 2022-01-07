@@ -241,18 +241,7 @@ public class UnusedDetector {
 
     private static final Set<ElementKind> LOCAL_VARIABLES = EnumSet.of(
             ElementKind.LOCAL_VARIABLE, ElementKind.RESOURCE_VARIABLE,
-            ElementKind.EXCEPTION_PARAMETER);
-    private static final ElementKind BINDING_VARIABLE;
-
-    static {
-        ElementKind bindingVariable;
-        try {
-            LOCAL_VARIABLES.add(bindingVariable = ElementKind.valueOf(TreeShims.BINDING_VARIABLE));
-        } catch (IllegalArgumentException ex) {
-            bindingVariable = null;
-        }
-        BINDING_VARIABLE = bindingVariable;
-    }
+            ElementKind.EXCEPTION_PARAMETER, ElementKind.BINDING_VARIABLE);
 
     private static boolean isLocalVariableClosure(Element el) {
         return el.getKind() == ElementKind.PARAMETER ||
@@ -398,14 +387,6 @@ public class UnusedDetector {
             }
         }
 
-        @Override
-        public Void scan(Tree tree, Void p) {
-            if (tree != null && TreeShims.BINDING_PATTERN.equals(tree.getKind().name())) {
-                handleDeclaration(new TreePath(getCurrentPath(), tree));
-            }
-            return super.scan(tree, p);
-        }
-
         private void handleDeclaration(TreePath path) {
             Element el = info.getTrees().getElement(path);
 
@@ -437,7 +418,7 @@ public class UnusedDetector {
                 //it makes sense to no use it:
                 addUse(el, UseTypes.READ);
                 addUse(el, UseTypes.WRITTEN);
-            } else if (el.getKind() == BINDING_VARIABLE) {
+            } else if (el.getKind() == ElementKind.BINDING_VARIABLE) {
                 addUse(el, UseTypes.WRITTEN);
             } else if (el.getKind() == ElementKind.LOCAL_VARIABLE) {
                 Tree parent = path.getParentPath().getLeaf();
@@ -445,7 +426,7 @@ public class UnusedDetector {
                     ((EnhancedForLoopTree) parent).getVariable() == path.getLeaf()) {
                     addUse(el, UseTypes.WRITTEN);
                 }
-            } else if (TreeShims.isRecordComponent(Utilities.toRecordComponent(el).getKind())) {
+            } else if (Utilities.toRecordComponent(el).getKind() == ElementKind.RECORD_COMPONENT) {
                 addUse(el, UseTypes.READ);
                 addUse(el, UseTypes.WRITTEN);
             } else if (el.getKind().isField()) {

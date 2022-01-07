@@ -1517,6 +1517,64 @@ public class GoToSupportTest extends NbTestCase {
         }
     }
 
+    public void testSnippetJavadoc() throws Exception {
+        if (!TreeShims.isJDKVersionRelease18_Or_Above()) {
+            return;
+        }
+       
+        if (!hasRecords()) return ;
+        this.sourceLevel = getLatestSourceVersion();
+        EXTRA_OPTIONS.add("--enable-preview");
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
+        final String code = "package test;\n"
+                + "public class Test {\n"
+                + "    public record R(int ff) {}\n"
+                + " /**\n"
+                + " * A simple program.\n"
+                + " * {@link System#out}\n"
+                + " * {@snippet :\n"
+                + " * class HelloWorld {\n"
+                + " *     public static void main(String... args) {\n"
+                + " *         System.out.println(\"Hello World!\");      // @highlight substring=\"println\"\n"
+                + " *     }\n"
+                + " * }\n"
+                + " * }\n"
+                + " */"
+                + "    private static void me|thod(R r) {\n"
+                + "        int i = r.ff();\n"
+                + "    }\n"
+                + "}\n";
+
+        String toolTip = performTest(code, new UiUtilsCaller() {
+            @Override public boolean open(FileObject fo, int pos) {
+                fail("Should not be called.");
+                return true;
+            }
+
+            @Override public void beep(boolean goToSource, boolean goToJavadoc) {
+                fail("Should not be called.");
+            }
+            @Override public boolean open(ClasspathInfo info, ElementHandle<?> el) {
+                fail("Should not be called.");
+                return true;
+            }
+            @Override public void warnCannotOpen(String displayName) {
+                fail("Should not be called.");
+            }
+        }, true, false);
+
+        toolTip = toolTip.replace(source.toURI().toString(), "FILE");
+        assertEquals("<html><body><base href=\"FILE\"></base><font size='+0'><b><a href='*0'>test.&#x200B;Test</a></b></font><pre>private static void <b>method</b>(<a href='*1'>R</a> r)</pre><p>A simple program.\n"
+                + " <code><a href='*2'>System.out</a></code>\n"
+                + " <pre><code> class HelloWorld {\n"
+                + "     public static void main(String... args) {\n"
+                + "         System.out.<b>p</b><b>r</b><b>i</b><b>n</b><b>t</b><b>l</b><b>n</b>(\"Hello World!\");      \n"
+                + "     }\n"
+                + " }\n"
+                + " \n"
+                + "</code></pre><p>", toolTip);
+    }
+    
     private static final List<String> EXTRA_OPTIONS = new ArrayList<>();
     @ServiceProvider(service = CompilerOptionsQueryImplementation.class, position = 100)
     public static class TestCompilerOptionsQueryImplementation implements CompilerOptionsQueryImplementation {

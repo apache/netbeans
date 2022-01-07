@@ -9,7 +9,7 @@ apply plugin: '${plugin}'
 
 description = '${description}'
 </#if>
-<#if group != "">
+<#if group?? && group != "">
     group = '${group}'
 </#if>
 <#if mainClassName??>
@@ -22,7 +22,7 @@ sourceCompatibility = ${javaVersion}
 targetCompatibility = ${javaVersion}
 </#if>
 repositories {
-    jcenter()
+    mavenCentral()
 }
 
 <#if dependencies??>

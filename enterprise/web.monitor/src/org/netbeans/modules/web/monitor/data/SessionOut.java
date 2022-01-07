@@ -33,14 +33,19 @@
 
 package org.netbeans.modules.web.monitor.data;
 
-import org.w3c.dom.*;
-import org.netbeans.modules.schema2beans.*;
-import java.beans.*;
-import java.util.*;
+import java.beans.PropertyChangeListener;
+import java.util.Vector;
+
+import org.netbeans.modules.schema2beans.AttrProp;
+import org.netbeans.modules.schema2beans.BaseBean;
+import org.netbeans.modules.schema2beans.BeanComparator;
+import org.netbeans.modules.schema2beans.BeanProp;
+import org.netbeans.modules.schema2beans.Common;
+import org.netbeans.modules.schema2beans.Version;
 
 public class SessionOut extends BaseBean {
 
-    static Vector comparators = new Vector();
+    static Vector<BeanComparator> comparators = new Vector<>();
 
     static public final String PARAM = "Param"; //NOI18N
 
@@ -49,7 +54,7 @@ public class SessionOut extends BaseBean {
     }
 
     public SessionOut(int options) {
-	super(SessionOut.comparators, new org.netbeans.modules.schema2beans.Version(1, 0, 6));
+	super(SessionOut.comparators, new Version(1, 0, 6));
 	// Properties (see root bean comments for the bean graph)
 	this.createProperty("Param", PARAM,  //NOI18N
 			    Common.TYPE_0_N | Common.TYPE_BEAN | Common.TYPE_KEY, 

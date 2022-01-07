@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.5
+#Version 1.11
 
 CLSS public abstract interface java.io.Serializable
 
@@ -21,7 +21,6 @@ meth public final java.lang.String name()
 meth public java.lang.String toString()
 meth public static <%0 extends java.lang.Enum<{%%0}>> {%%0} valueOf(java.lang.Class<{%%0}>,java.lang.String)
 supr java.lang.Object
-hfds name,ordinal
 
 CLSS public abstract interface !annotation java.lang.FunctionalInterface
  anno 0 java.lang.annotation.Documented()
@@ -103,28 +102,21 @@ CLSS public abstract interface !annotation org.junit.jupiter.api.AfterAll
  anno 0 java.lang.annotation.Documented()
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE, METHOD])
- anno 0 org.apiguardian.api.API(null since="5.0", null status=STABLE)
 intf java.lang.annotation.Annotation
 
 CLSS public abstract interface !annotation org.junit.jupiter.api.AfterEach
  anno 0 java.lang.annotation.Documented()
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE, METHOD])
- anno 0 org.apiguardian.api.API(null since="5.0", null status=STABLE)
 intf java.lang.annotation.Annotation
 
 CLSS public org.junit.jupiter.api.Assertions
- anno 0 org.apiguardian.api.API(null since="5.0", null status=STABLE)
 cons protected init()
- anno 0 org.apiguardian.api.API(null since="5.3", null status=STABLE)
 meth public !varargs static void assertAll(java.lang.String,org.junit.jupiter.api.function.Executable[]) throws org.opentest4j.MultipleFailuresError
 meth public !varargs static void assertAll(org.junit.jupiter.api.function.Executable[]) throws org.opentest4j.MultipleFailuresError
 meth public static <%0 extends java.lang.Object> {%%0} assertDoesNotThrow(org.junit.jupiter.api.function.ThrowingSupplier<{%%0}>)
- anno 0 org.apiguardian.api.API(null since="5.2", null status=STABLE)
 meth public static <%0 extends java.lang.Object> {%%0} assertDoesNotThrow(org.junit.jupiter.api.function.ThrowingSupplier<{%%0}>,java.lang.String)
- anno 0 org.apiguardian.api.API(null since="5.2", null status=STABLE)
 meth public static <%0 extends java.lang.Object> {%%0} assertDoesNotThrow(org.junit.jupiter.api.function.ThrowingSupplier<{%%0}>,java.util.function.Supplier<java.lang.String>)
- anno 0 org.apiguardian.api.API(null since="5.2", null status=STABLE)
 meth public static <%0 extends java.lang.Object> {%%0} assertTimeout(java.time.Duration,org.junit.jupiter.api.function.ThrowingSupplier<{%%0}>)
 meth public static <%0 extends java.lang.Object> {%%0} assertTimeout(java.time.Duration,org.junit.jupiter.api.function.ThrowingSupplier<{%%0}>,java.lang.String)
 meth public static <%0 extends java.lang.Object> {%%0} assertTimeout(java.time.Duration,org.junit.jupiter.api.function.ThrowingSupplier<{%%0}>,java.util.function.Supplier<java.lang.String>)
@@ -177,11 +169,8 @@ meth public static void assertArrayEquals(short[],short[])
 meth public static void assertArrayEquals(short[],short[],java.lang.String)
 meth public static void assertArrayEquals(short[],short[],java.util.function.Supplier<java.lang.String>)
 meth public static void assertDoesNotThrow(org.junit.jupiter.api.function.Executable)
- anno 0 org.apiguardian.api.API(null since="5.2", null status=STABLE)
 meth public static void assertDoesNotThrow(org.junit.jupiter.api.function.Executable,java.lang.String)
- anno 0 org.apiguardian.api.API(null since="5.2", null status=STABLE)
 meth public static void assertDoesNotThrow(org.junit.jupiter.api.function.Executable,java.util.function.Supplier<java.lang.String>)
- anno 0 org.apiguardian.api.API(null since="5.2", null status=STABLE)
 meth public static void assertEquals(byte,byte)
 meth public static void assertEquals(byte,byte,java.lang.String)
 meth public static void assertEquals(byte,byte,java.util.function.Supplier<java.lang.String>)
@@ -222,53 +211,35 @@ meth public static void assertEquals(java.lang.Byte,byte)
 meth public static void assertEquals(java.lang.Byte,byte,java.lang.String)
 meth public static void assertEquals(java.lang.Byte,byte,java.util.function.Supplier<java.lang.String>)
 meth public static void assertEquals(java.lang.Byte,java.lang.Byte)
- anno 0 org.apiguardian.api.API(null since="5.4", null status=STABLE)
 meth public static void assertEquals(java.lang.Byte,java.lang.Byte,java.lang.String)
- anno 0 org.apiguardian.api.API(null since="5.4", null status=STABLE)
 meth public static void assertEquals(java.lang.Byte,java.lang.Byte,java.util.function.Supplier<java.lang.String>)
- anno 0 org.apiguardian.api.API(null since="5.4", null status=STABLE)
 meth public static void assertEquals(java.lang.Character,char)
 meth public static void assertEquals(java.lang.Character,char,java.lang.String)
 meth public static void assertEquals(java.lang.Character,char,java.util.function.Supplier<java.lang.String>)
 meth public static void assertEquals(java.lang.Character,java.lang.Character)
- anno 0 org.apiguardian.api.API(null since="5.4", null status=STABLE)
 meth public static void assertEquals(java.lang.Character,java.lang.Character,java.lang.String)
- anno 0 org.apiguardian.api.API(null since="5.4", null status=STABLE)
 meth public static void assertEquals(java.lang.Character,java.lang.Character,java.util.function.Supplier<java.lang.String>)
- anno 0 org.apiguardian.api.API(null since="5.4", null status=STABLE)
 meth public static void assertEquals(java.lang.Double,double)
 meth public static void assertEquals(java.lang.Double,double,java.lang.String)
 meth public static void assertEquals(java.lang.Double,double,java.util.function.Supplier<java.lang.String>)
 meth public static void assertEquals(java.lang.Double,java.lang.Double)
- anno 0 org.apiguardian.api.API(null since="5.4", null status=STABLE)
 meth public static void assertEquals(java.lang.Double,java.lang.Double,java.lang.String)
- anno 0 org.apiguardian.api.API(null since="5.4", null status=STABLE)
 meth public static void assertEquals(java.lang.Double,java.lang.Double,java.util.function.Supplier<java.lang.String>)
- anno 0 org.apiguardian.api.API(null since="5.4", null status=STABLE)
 meth public static void assertEquals(java.lang.Float,float)
 meth public static void assertEquals(java.lang.Float,float,java.lang.String)
 meth public static void assertEquals(java.lang.Float,float,java.util.function.Supplier<java.lang.String>)
 meth public static void assertEquals(java.lang.Float,java.lang.Float)
- anno 0 org.apiguardian.api.API(null since="5.4", null status=STABLE)
 meth public static void assertEquals(java.lang.Float,java.lang.Float,java.lang.String)
- anno 0 org.apiguardian.api.API(null since="5.4", null status=STABLE)
 meth public static void assertEquals(java.lang.Float,java.lang.Float,java.util.function.Supplier<java.lang.String>)
- anno 0 org.apiguardian.api.API(null since="5.4", null status=STABLE)
 meth public static void assertEquals(java.lang.Integer,int)
 meth public static void assertEquals(java.lang.Integer,int,java.lang.String)
 meth public static void assertEquals(java.lang.Integer,int,java.util.function.Supplier<java.lang.String>)
 meth public static void assertEquals(java.lang.Integer,java.lang.Integer)
- anno 0 org.apiguardian.api.API(null since="5.4", null status=STABLE)
 meth public static void assertEquals(java.lang.Integer,java.lang.Integer,java.lang.String)
- anno 0 org.apiguardian.api.API(null since="5.4", null status=STABLE)
 meth public static void assertEquals(java.lang.Integer,java.lang.Integer,java.util.function.Supplier<java.lang.String>)
- anno 0 org.apiguardian.api.API(null since="5.4", null status=STABLE)
 meth public static void assertEquals(java.lang.Long,java.lang.Long)
- anno 0 org.apiguardian.api.API(null since="5.4", null status=STABLE)
 meth public static void assertEquals(java.lang.Long,java.lang.Long,java.lang.String)
- anno 0 org.apiguardian.api.API(null since="5.4", null status=STABLE)
 meth public static void assertEquals(java.lang.Long,java.lang.Long,java.util.function.Supplier<java.lang.String>)
- anno 0 org.apiguardian.api.API(null since="5.4", null status=STABLE)
 meth public static void assertEquals(java.lang.Long,long)
 meth public static void assertEquals(java.lang.Long,long,java.lang.String)
 meth public static void assertEquals(java.lang.Long,long,java.util.function.Supplier<java.lang.String>)
@@ -276,11 +247,8 @@ meth public static void assertEquals(java.lang.Object,java.lang.Object)
 meth public static void assertEquals(java.lang.Object,java.lang.Object,java.lang.String)
 meth public static void assertEquals(java.lang.Object,java.lang.Object,java.util.function.Supplier<java.lang.String>)
 meth public static void assertEquals(java.lang.Short,java.lang.Short)
- anno 0 org.apiguardian.api.API(null since="5.4", null status=STABLE)
 meth public static void assertEquals(java.lang.Short,java.lang.Short,java.lang.String)
- anno 0 org.apiguardian.api.API(null since="5.4", null status=STABLE)
 meth public static void assertEquals(java.lang.Short,java.lang.Short,java.util.function.Supplier<java.lang.String>)
- anno 0 org.apiguardian.api.API(null since="5.4", null status=STABLE)
 meth public static void assertEquals(java.lang.Short,short)
 meth public static void assertEquals(java.lang.Short,short,java.lang.String)
 meth public static void assertEquals(java.lang.Short,short,java.util.function.Supplier<java.lang.String>)
@@ -309,188 +277,98 @@ meth public static void assertLinesMatch(java.util.List<java.lang.String>,java.u
 meth public static void assertLinesMatch(java.util.List<java.lang.String>,java.util.List<java.lang.String>,java.lang.String)
 meth public static void assertLinesMatch(java.util.List<java.lang.String>,java.util.List<java.lang.String>,java.util.function.Supplier<java.lang.String>)
 meth public static void assertNotEquals(byte,byte)
- anno 0 org.apiguardian.api.API(null since="5.4", null status=STABLE)
 meth public static void assertNotEquals(byte,byte,java.lang.String)
- anno 0 org.apiguardian.api.API(null since="5.4", null status=STABLE)
 meth public static void assertNotEquals(byte,byte,java.util.function.Supplier<java.lang.String>)
- anno 0 org.apiguardian.api.API(null since="5.4", null status=STABLE)
 meth public static void assertNotEquals(byte,java.lang.Byte)
- anno 0 org.apiguardian.api.API(null since="5.4", null status=STABLE)
 meth public static void assertNotEquals(byte,java.lang.Byte,java.lang.String)
- anno 0 org.apiguardian.api.API(null since="5.4", null status=STABLE)
 meth public static void assertNotEquals(byte,java.lang.Byte,java.util.function.Supplier<java.lang.String>)
- anno 0 org.apiguardian.api.API(null since="5.4", null status=STABLE)
 meth public static void assertNotEquals(char,char)
- anno 0 org.apiguardian.api.API(null since="5.4", null status=STABLE)
 meth public static void assertNotEquals(char,char,java.lang.String)
- anno 0 org.apiguardian.api.API(null since="5.4", null status=STABLE)
 meth public static void assertNotEquals(char,char,java.util.function.Supplier<java.lang.String>)
- anno 0 org.apiguardian.api.API(null since="5.4", null status=STABLE)
 meth public static void assertNotEquals(char,java.lang.Character)
- anno 0 org.apiguardian.api.API(null since="5.4", null status=STABLE)
 meth public static void assertNotEquals(char,java.lang.Character,java.lang.String)
- anno 0 org.apiguardian.api.API(null since="5.4", null status=STABLE)
 meth public static void assertNotEquals(char,java.lang.Character,java.util.function.Supplier<java.lang.String>)
- anno 0 org.apiguardian.api.API(null since="5.4", null status=STABLE)
 meth public static void assertNotEquals(double,double)
- anno 0 org.apiguardian.api.API(null since="5.4", null status=STABLE)
 meth public static void assertNotEquals(double,double,double)
- anno 0 org.apiguardian.api.API(null since="5.4", null status=STABLE)
 meth public static void assertNotEquals(double,double,double,java.lang.String)
- anno 0 org.apiguardian.api.API(null since="5.4", null status=STABLE)
 meth public static void assertNotEquals(double,double,double,java.util.function.Supplier<java.lang.String>)
- anno 0 org.apiguardian.api.API(null since="5.4", null status=STABLE)
 meth public static void assertNotEquals(double,double,java.lang.String)
- anno 0 org.apiguardian.api.API(null since="5.4", null status=STABLE)
 meth public static void assertNotEquals(double,double,java.util.function.Supplier<java.lang.String>)
- anno 0 org.apiguardian.api.API(null since="5.4", null status=STABLE)
 meth public static void assertNotEquals(double,java.lang.Double)
- anno 0 org.apiguardian.api.API(null since="5.4", null status=STABLE)
 meth public static void assertNotEquals(double,java.lang.Double,java.lang.String)
- anno 0 org.apiguardian.api.API(null since="5.4", null status=STABLE)
 meth public static void assertNotEquals(double,java.lang.Double,java.util.function.Supplier<java.lang.String>)
- anno 0 org.apiguardian.api.API(null since="5.4", null status=STABLE)
 meth public static void assertNotEquals(float,float)
- anno 0 org.apiguardian.api.API(null since="5.4", null status=STABLE)
 meth public static void assertNotEquals(float,float,float)
- anno 0 org.apiguardian.api.API(null since="5.4", null status=STABLE)
 meth public static void assertNotEquals(float,float,float,java.lang.String)
- anno 0 org.apiguardian.api.API(null since="5.4", null status=STABLE)
 meth public static void assertNotEquals(float,float,float,java.util.function.Supplier<java.lang.String>)
- anno 0 org.apiguardian.api.API(null since="5.4", null status=STABLE)
 meth public static void assertNotEquals(float,float,java.lang.String)
- anno 0 org.apiguardian.api.API(null since="5.4", null status=STABLE)
 meth public static void assertNotEquals(float,float,java.util.function.Supplier<java.lang.String>)
- anno 0 org.apiguardian.api.API(null since="5.4", null status=STABLE)
 meth public static void assertNotEquals(float,java.lang.Float)
- anno 0 org.apiguardian.api.API(null since="5.4", null status=STABLE)
 meth public static void assertNotEquals(float,java.lang.Float,java.lang.String)
- anno 0 org.apiguardian.api.API(null since="5.4", null status=STABLE)
 meth public static void assertNotEquals(float,java.lang.Float,java.util.function.Supplier<java.lang.String>)
- anno 0 org.apiguardian.api.API(null since="5.4", null status=STABLE)
 meth public static void assertNotEquals(int,int)
- anno 0 org.apiguardian.api.API(null since="5.4", null status=STABLE)
 meth public static void assertNotEquals(int,int,java.lang.String)
- anno 0 org.apiguardian.api.API(null since="5.4", null status=STABLE)
 meth public static void assertNotEquals(int,int,java.util.function.Supplier<java.lang.String>)
- anno 0 org.apiguardian.api.API(null since="5.4", null status=STABLE)
 meth public static void assertNotEquals(int,java.lang.Integer)
- anno 0 org.apiguardian.api.API(null since="5.4", null status=STABLE)
 meth public static void assertNotEquals(int,java.lang.Integer,java.lang.String)
- anno 0 org.apiguardian.api.API(null since="5.4", null status=STABLE)
 meth public static void assertNotEquals(int,java.lang.Integer,java.util.function.Supplier<java.lang.String>)
- anno 0 org.apiguardian.api.API(null since="5.4", null status=STABLE)
 meth public static void assertNotEquals(java.lang.Byte,byte)
- anno 0 org.apiguardian.api.API(null since="5.4", null status=STABLE)
 meth public static void assertNotEquals(java.lang.Byte,byte,java.lang.String)
- anno 0 org.apiguardian.api.API(null since="5.4", null status=STABLE)
 meth public static void assertNotEquals(java.lang.Byte,byte,java.util.function.Supplier<java.lang.String>)
- anno 0 org.apiguardian.api.API(null since="5.4", null status=STABLE)
 meth public static void assertNotEquals(java.lang.Byte,java.lang.Byte)
- anno 0 org.apiguardian.api.API(null since="5.4", null status=STABLE)
 meth public static void assertNotEquals(java.lang.Byte,java.lang.Byte,java.lang.String)
- anno 0 org.apiguardian.api.API(null since="5.4", null status=STABLE)
 meth public static void assertNotEquals(java.lang.Byte,java.lang.Byte,java.util.function.Supplier<java.lang.String>)
- anno 0 org.apiguardian.api.API(null since="5.4", null status=STABLE)
 meth public static void assertNotEquals(java.lang.Character,char)
- anno 0 org.apiguardian.api.API(null since="5.4", null status=STABLE)
 meth public static void assertNotEquals(java.lang.Character,char,java.lang.String)
- anno 0 org.apiguardian.api.API(null since="5.4", null status=STABLE)
 meth public static void assertNotEquals(java.lang.Character,char,java.util.function.Supplier<java.lang.String>)
- anno 0 org.apiguardian.api.API(null since="5.4", null status=STABLE)
 meth public static void assertNotEquals(java.lang.Character,java.lang.Character)
- anno 0 org.apiguardian.api.API(null since="5.4", null status=STABLE)
 meth public static void assertNotEquals(java.lang.Character,java.lang.Character,java.lang.String)
- anno 0 org.apiguardian.api.API(null since="5.4", null status=STABLE)
 meth public static void assertNotEquals(java.lang.Character,java.lang.Character,java.util.function.Supplier<java.lang.String>)
- anno 0 org.apiguardian.api.API(null since="5.4", null status=STABLE)
 meth public static void assertNotEquals(java.lang.Double,double)
- anno 0 org.apiguardian.api.API(null since="5.4", null status=STABLE)
 meth public static void assertNotEquals(java.lang.Double,double,java.lang.String)
- anno 0 org.apiguardian.api.API(null since="5.4", null status=STABLE)
 meth public static void assertNotEquals(java.lang.Double,double,java.util.function.Supplier<java.lang.String>)
- anno 0 org.apiguardian.api.API(null since="5.4", null status=STABLE)
 meth public static void assertNotEquals(java.lang.Double,java.lang.Double)
- anno 0 org.apiguardian.api.API(null since="5.4", null status=STABLE)
 meth public static void assertNotEquals(java.lang.Double,java.lang.Double,java.lang.String)
- anno 0 org.apiguardian.api.API(null since="5.4", null status=STABLE)
 meth public static void assertNotEquals(java.lang.Double,java.lang.Double,java.util.function.Supplier<java.lang.String>)
- anno 0 org.apiguardian.api.API(null since="5.4", null status=STABLE)
 meth public static void assertNotEquals(java.lang.Float,float)
- anno 0 org.apiguardian.api.API(null since="5.4", null status=STABLE)
 meth public static void assertNotEquals(java.lang.Float,float,java.lang.String)
- anno 0 org.apiguardian.api.API(null since="5.4", null status=STABLE)
 meth public static void assertNotEquals(java.lang.Float,float,java.util.function.Supplier<java.lang.String>)
- anno 0 org.apiguardian.api.API(null since="5.4", null status=STABLE)
 meth public static void assertNotEquals(java.lang.Float,java.lang.Float)
- anno 0 org.apiguardian.api.API(null since="5.4", null status=STABLE)
 meth public static void assertNotEquals(java.lang.Float,java.lang.Float,java.lang.String)
- anno 0 org.apiguardian.api.API(null since="5.4", null status=STABLE)
 meth public static void assertNotEquals(java.lang.Float,java.lang.Float,java.util.function.Supplier<java.lang.String>)
- anno 0 org.apiguardian.api.API(null since="5.4", null status=STABLE)
 meth public static void assertNotEquals(java.lang.Integer,int)
- anno 0 org.apiguardian.api.API(null since="5.4", null status=STABLE)
 meth public static void assertNotEquals(java.lang.Integer,int,java.lang.String)
- anno 0 org.apiguardian.api.API(null since="5.4", null status=STABLE)
 meth public static void assertNotEquals(java.lang.Integer,int,java.util.function.Supplier<java.lang.String>)
- anno 0 org.apiguardian.api.API(null since="5.4", null status=STABLE)
 meth public static void assertNotEquals(java.lang.Integer,java.lang.Integer)
- anno 0 org.apiguardian.api.API(null since="5.4", null status=STABLE)
 meth public static void assertNotEquals(java.lang.Integer,java.lang.Integer,java.lang.String)
- anno 0 org.apiguardian.api.API(null since="5.4", null status=STABLE)
 meth public static void assertNotEquals(java.lang.Integer,java.lang.Integer,java.util.function.Supplier<java.lang.String>)
- anno 0 org.apiguardian.api.API(null since="5.4", null status=STABLE)
 meth public static void assertNotEquals(java.lang.Long,java.lang.Long)
- anno 0 org.apiguardian.api.API(null since="5.4", null status=STABLE)
 meth public static void assertNotEquals(java.lang.Long,java.lang.Long,java.lang.String)
- anno 0 org.apiguardian.api.API(null since="5.4", null status=STABLE)
 meth public static void assertNotEquals(java.lang.Long,java.lang.Long,java.util.function.Supplier<java.lang.String>)
- anno 0 org.apiguardian.api.API(null since="5.4", null status=STABLE)
 meth public static void assertNotEquals(java.lang.Long,long)
- anno 0 org.apiguardian.api.API(null since="5.4", null status=STABLE)
 meth public static void assertNotEquals(java.lang.Long,long,java.lang.String)
- anno 0 org.apiguardian.api.API(null since="5.4", null status=STABLE)
 meth public static void assertNotEquals(java.lang.Long,long,java.util.function.Supplier<java.lang.String>)
- anno 0 org.apiguardian.api.API(null since="5.4", null status=STABLE)
 meth public static void assertNotEquals(java.lang.Object,java.lang.Object)
 meth public static void assertNotEquals(java.lang.Object,java.lang.Object,java.lang.String)
 meth public static void assertNotEquals(java.lang.Object,java.lang.Object,java.util.function.Supplier<java.lang.String>)
 meth public static void assertNotEquals(java.lang.Short,java.lang.Short)
- anno 0 org.apiguardian.api.API(null since="5.4", null status=STABLE)
 meth public static void assertNotEquals(java.lang.Short,java.lang.Short,java.lang.String)
- anno 0 org.apiguardian.api.API(null since="5.4", null status=STABLE)
 meth public static void assertNotEquals(java.lang.Short,java.lang.Short,java.util.function.Supplier<java.lang.String>)
- anno 0 org.apiguardian.api.API(null since="5.4", null status=STABLE)
 meth public static void assertNotEquals(java.lang.Short,short)
- anno 0 org.apiguardian.api.API(null since="5.4", null status=STABLE)
 meth public static void assertNotEquals(java.lang.Short,short,java.lang.String)
- anno 0 org.apiguardian.api.API(null since="5.4", null status=STABLE)
 meth public static void assertNotEquals(java.lang.Short,short,java.util.function.Supplier<java.lang.String>)
- anno 0 org.apiguardian.api.API(null since="5.4", null status=STABLE)
 meth public static void assertNotEquals(long,java.lang.Long)
- anno 0 org.apiguardian.api.API(null since="5.4", null status=STABLE)
 meth public static void assertNotEquals(long,java.lang.Long,java.lang.String)
- anno 0 org.apiguardian.api.API(null since="5.4", null status=STABLE)
 meth public static void assertNotEquals(long,java.lang.Long,java.util.function.Supplier<java.lang.String>)
- anno 0 org.apiguardian.api.API(null since="5.4", null status=STABLE)
 meth public static void assertNotEquals(long,long)
- anno 0 org.apiguardian.api.API(null since="5.4", null status=STABLE)
 meth public static void assertNotEquals(long,long,java.lang.String)
- anno 0 org.apiguardian.api.API(null since="5.4", null status=STABLE)
 meth public static void assertNotEquals(long,long,java.util.function.Supplier<java.lang.String>)
- anno 0 org.apiguardian.api.API(null since="5.4", null status=STABLE)
 meth public static void assertNotEquals(short,java.lang.Short)
- anno 0 org.apiguardian.api.API(null since="5.4", null status=STABLE)
 meth public static void assertNotEquals(short,java.lang.Short,java.lang.String)
- anno 0 org.apiguardian.api.API(null since="5.4", null status=STABLE)
 meth public static void assertNotEquals(short,java.lang.Short,java.util.function.Supplier<java.lang.String>)
- anno 0 org.apiguardian.api.API(null since="5.4", null status=STABLE)
 meth public static void assertNotEquals(short,short)
- anno 0 org.apiguardian.api.API(null since="5.4", null status=STABLE)
 meth public static void assertNotEquals(short,short,java.lang.String)
- anno 0 org.apiguardian.api.API(null since="5.4", null status=STABLE)
 meth public static void assertNotEquals(short,short,java.util.function.Supplier<java.lang.String>)
- anno 0 org.apiguardian.api.API(null since="5.4", null status=STABLE)
 meth public static void assertNotNull(java.lang.Object)
 meth public static void assertNotNull(java.lang.Object,java.lang.String)
 meth public static void assertNotNull(java.lang.Object,java.util.function.Supplier<java.lang.String>)
@@ -518,91 +396,39 @@ meth public static void assertTrue(java.util.function.BooleanSupplier,java.util.
 supr java.lang.Object
 
 CLSS public final org.junit.jupiter.api.AssertionsKt
- anno 0 kotlin.Metadata(null bv=[1, 0, 3], null d1=["\u0000R\n\u0000\n\u0002\u0010\u0002\n\u0000\n\u0002\u0010\u0011\n\u0002\u0018\u0002\n\u0002\u0008\u0002\n\u0002\u0010\u000e\n\u0000\n\u0002\u0010\u001e\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\u0008\u0009\n\u0002\u0010\u0003\n\u0002\u0008\u0005\n\u0002\u0018\u0002\n\u0002\u0008\u0005\n\u0002\u0010\u0001\n\u0002\u0008\u0002\n\u0002\u0010 \n\u0002\u0018\u0002\n\u0002\u0008\u0004\u001a+\u0010\u0000\u001a\u00020\u00012\u001e\u0010\u0002\u001a\u0010\u0012\u000c\u0008\u0001\u0012\u0008\u0012\u0004\u0012\u00020\u00010\u00040\u0003\u0022\u0008\u0012\u0004\u0012\u00020\u00010\u0004\u00a2\u0006\u0002\u0010\u0005\u001a5\u0010\u0000\u001a\u00020\u00012\u0008\u0010\u0006\u001a\u0004\u0018\u00010\u00072\u001e\u0010\u0002\u001a\u0010\u0012\u000c\u0008\u0001\u0012\u0008\u0012\u0004\u0012\u00020\u00010\u00040\u0003\u0022\u0008\u0012\u0004\u0012\u00020\u00010\u0004\u00a2\u0006\u0002\u0010\u0008\u001a(\u0010\u0000\u001a\u00020\u00012\u0008\u0010\u0006\u001a\u0004\u0018\u00010\u00072\u0016\u0010\u0002\u001a\u0012\u0012\n\u0012\u0008\u0012\u0004\u0012\u00020\u00010\u00040\u0009j\u0002`\n\u001a(\u0010\u0000\u001a\u00020\u00012\u0008\u0010\u0006\u001a\u0004\u0018\u00010\u00072\u0016\u0010\u0002\u001a\u0012\u0012\n\u0012\u0008\u0012\u0004\u0012\u00020\u00010\u00040\u000bj\u0002`\u000c\u001a\u001e\u0010\u0000\u001a\u00020\u00012\u0016\u0010\u0002\u001a\u0012\u0012\n\u0012\u0008\u0012\u0004\u0012\u00020\u00010\u00040\u0009j\u0002`\n\u001a\u001e\u0010\u0000\u001a\u00020\u00012\u0016\u0010\u0002\u001a\u0012\u0012\n\u0012\u0008\u0012\u0004\u0012\u00020\u00010\u00040\u000bj\u0002`\u000c\u001a!\u0010\r\u001a\u0002H\u000e\u0022\u0004\u0008\u0000\u0010\u000e2\u000c\u0010\u000f\u001a\u0008\u0012\u0004\u0012\u0002H\u000e0\u0004H\u0007\u00a2\u0006\u0002\u0010\u0010\u001a/\u0010\r\u001a\u0002H\u000e\u0022\u0004\u0008\u0000\u0010\u000e2\u000c\u0010\u0011\u001a\u0008\u0012\u0004\u0012\u00020\u00070\u00042\u000c\u0010\u000f\u001a\u0008\u0012\u0004\u0012\u0002H\u000e0\u0004H\u0007\u00a2\u0006\u0002\u0010\u0012\u001a)\u0010\r\u001a\u0002H\u000e\u0022\u0004\u0008\u0000\u0010\u000e2\u0006\u0010\u0011\u001a\u00020\u00072\u000c\u0010\u000f\u001a\u0008\u0012\u0004\u0012\u0002H\u000e0\u0004H\u0007\u00a2\u0006\u0002\u0010\u0013\u001a:\u0010\u0014\u001a\u0002H\u0015\u0022\n\u0008\u0000\u0010\u0015\u0018\u0001*\u00020\u00162\u000e\u0008\u0008\u0010\u0011\u001a\u0008\u0012\u0004\u0012\u00020\u00070\u00042\u000e\u0008\u0008\u0010\u000f\u001a\u0008\u0012\u0004\u0012\u00020\u00010\u0004H\u0086\u0008\u00a2\u0006\u0002\u0010\u0017\u001a*\u0010\u0014\u001a\u0002H\u0015\u0022\n\u0008\u0000\u0010\u0015\u0018\u0001*\u00020\u00162\u000e\u0008\u0008\u0010\u000f\u001a\u0008\u0012\u0004\u0012\u00020\u00010\u0004H\u0086\u0008\u00a2\u0006\u0002\u0010\u0018\u001a2\u0010\u0014\u001a\u0002H\u0015\u0022\n\u0008\u0000\u0010\u0015\u0018\u0001*\u00020\u00162\u0006\u0010\u0011\u001a\u00020\u00072\u000e\u0008\u0008\u0010\u000f\u001a\u0008\u0012\u0004\u0012\u00020\u00010\u0004H\u0086\u0008\u00a2\u0006\u0002\u0010\u0019\u001a)\u0010\u001a\u001a\u0002H\u000e\u0022\u0004\u0008\u0000\u0010\u000e2\u0006\u0010\u001b\u001a\u00020\u001c2\u000c\u0010\u000f\u001a\u0008\u0012\u0004\u0012\u0002H\u000e0\u0004H\u0007\u00a2\u0006\u0002\u0010\u001d\u001a7\u0010\u001a\u001a\u0002H\u000e\u0022\u0004\u0008\u0000\u0010\u000e2\u0006\u0010\u001b\u001a\u00020\u001c2\u000c\u0010\u0011\u001a\u0008\u0012\u0004\u0012\u00020\u00070\u00042\u000c\u0010\u000f\u001a\u0008\u0012\u0004\u0012\u0002H\u000e0\u0004H\u0007\u00a2\u0006\u0002\u0010\u001e\u001a1\u0010\u001a\u001a\u0002H\u000e\u0022\u0004\u0008\u0000\u0010\u000e2\u0006\u0010\u001b\u001a\u00020\u001c2\u0006\u0010\u0011\u001a\u00020\u00072\u000c\u0010\u000f\u001a\u0008\u0012\u0004\u0012\u0002H\u000e0\u0004H\u0007\u00a2\u0006\u0002\u0010\u001f\u001a)\u0010 \u001a\u0002H\u000e\u0022\u0004\u0008\u0000\u0010\u000e2\u0006\u0010\u001b\u001a\u00020\u001c2\u000c\u0010\u000f\u001a\u0008\u0012\u0004\u0012\u0002H\u000e0\u0004H\u0007\u00a2\u0006\u0002\u0010\u001d\u001a7\u0010 \u001a\u0002H\u000e\u0022\u0004\u0008\u0000\u0010\u000e2\u0006\u0010\u001b\u001a\u00020\u001c2\u000c\u0010\u0011\u001a\u0008\u0012\u0004\u0012\u00020\u00070\u00042\u000c\u0010\u000f\u001a\u0008\u0012\u0004\u0012\u0002H\u000e0\u0004H\u0007\u00a2\u0006\u0002\u0010\u001e\u001a1\u0010 \u001a\u0002H\u000e\u0022\u0004\u0008\u0000\u0010\u000e2\u0006\u0010\u001b\u001a\u00020\u001c2\u0006\u0010\u0011\u001a\u00020\u00072\u000c\u0010\u000f\u001a\u0008\u0012\u0004\u0012\u0002H\u000e0\u0004H\u0007\u00a2\u0006\u0002\u0010\u001f\u001a\u0016\u0010!\u001a\u00020\u00222\u000e\u0010\u0011\u001a\n\u0012\u0004\u0012\u00020\u0007\u0018\u00010\u0004\u001a\u001c\u0010!\u001a\u00020\u00222\u0008\u0010\u0011\u001a\u0004\u0018\u00010\u00072\n\u0008\u0002\u0010#\u001a\u0004\u0018\u00010\u0016\u001a\u0010\u0010!\u001a\u00020\u00222\u0008\u0010#\u001a\u0004\u0018\u00010\u0016\u001a\u0022\u0010$\u001a\u0008\u0012\u0004\u0012\u00020&0%*\u0012\u0012\n\u0012\u0008\u0012\u0004\u0012\u00020\u00010\u00040\u0009j\u0002`\nH\u0002\u001a@\u0010$\u001a&\u0012\u000c\u0012\n '*\u0004\u0018\u00010&0& '*\u0012\u0012\u000c\u0012\n '*\u0004\u0018\u00010&0&\u0018\u00010\u000b0\u000b*\u0012\u0012\n\u0012\u0008\u0012\u0004\u0012\u00020\u00010\u00040\u000bj\u0002`\u000cH\u0002*$\u0008\u0002\u0010(\u0022\u000e\u0012\n\u0012\u0008\u0012\u0004\u0012\u00020\u00010\u00040\u00092\u000e\u0012\n\u0012\u0008\u0012\u0004\u0012\u00020\u00010\u00040\u0009*$\u0008\u0002\u0010)\u0022\u000e\u0012\n\u0012\u0008\u0012\u0004\u0012\u00020\u00010\u00040\u000b2\u000e\u0012\n\u0012\u0008\u0012\u0004\u0012\u00020\u00010\u00040\u000b\u00a8\u0006*"], null d2=["assertAll", "", "executables", "", "Lkotlin/Function0;", "([Lkotlin/jvm/functions/Function0;)V", "heading", "", "(Ljava/lang/String;[Lkotlin/jvm/functions/Function0;)V", "", "Lorg/junit/jupiter/api/ExecutableCollection;", "Ljava/util/stream/Stream;", "Lorg/junit/jupiter/api/ExecutableStream;", "assertDoesNotThrow", "R", "executable", "(Lkotlin/jvm/functions/Function0;)Ljava/lang/Object;", "message", "(Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;)Ljava/lang/Object;", "(Ljava/lang/String;Lkotlin/jvm/functions/Function0;)Ljava/lang/Object;", "assertThrows", "T", "", "(Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;)Ljava/lang/Throwable;", "(Lkotlin/jvm/functions/Function0;)Ljava/lang/Throwable;", "(Ljava/lang/String;Lkotlin/jvm/functions/Function0;)Ljava/lang/Throwable;", "assertTimeout", "timeout", "Ljava/time/Duration;", "(Ljava/time/Duration;Lkotlin/jvm/functions/Function0;)Ljava/lang/Object;", "(Ljava/time/Duration;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;)Ljava/lang/Object;", "(Ljava/time/Duration;Ljava/lang/String;Lkotlin/jvm/functions/Function0;)Ljava/lang/Object;", "assertTimeoutPreemptively", "fail", "", "throwable", "convert", "", "Lorg/junit/jupiter/api/function/Executable;", "kotlin.jvm.PlatformType", "ExecutableCollection", "ExecutableStream", "junit-jupiter-api"], null k=2, null mv=[1, 1, 16])
- anno 0 org.apiguardian.api.API(null since="5.1", null status=EXPERIMENTAL)
 meth public !varargs final static void assertAll(java.lang.String,kotlin.jvm.functions.Function0<kotlin.Unit>[])
- anno 1 org.jetbrains.annotations.Nullable()
- anno 2 org.jetbrains.annotations.NotNull()
 meth public !varargs final static void assertAll(kotlin.jvm.functions.Function0<kotlin.Unit>[])
- anno 1 org.jetbrains.annotations.NotNull()
 meth public final static <%0 extends java.lang.Object> {%%0} assertDoesNotThrow(java.lang.String,kotlin.jvm.functions.Function0<? extends {%%0}>)
- anno 0 org.apiguardian.api.API(null since="5.5", null status=EXPERIMENTAL)
- anno 1 org.jetbrains.annotations.NotNull()
- anno 2 org.jetbrains.annotations.NotNull()
 meth public final static <%0 extends java.lang.Object> {%%0} assertDoesNotThrow(kotlin.jvm.functions.Function0<? extends {%%0}>)
- anno 0 org.apiguardian.api.API(null since="5.5", null status=EXPERIMENTAL)
- anno 1 org.jetbrains.annotations.NotNull()
 meth public final static <%0 extends java.lang.Object> {%%0} assertDoesNotThrow(kotlin.jvm.functions.Function0<java.lang.String>,kotlin.jvm.functions.Function0<? extends {%%0}>)
- anno 0 org.apiguardian.api.API(null since="5.5", null status=EXPERIMENTAL)
- anno 1 org.jetbrains.annotations.NotNull()
- anno 2 org.jetbrains.annotations.NotNull()
 meth public final static <%0 extends java.lang.Object> {%%0} assertTimeout(java.time.Duration,java.lang.String,kotlin.jvm.functions.Function0<? extends {%%0}>)
- anno 0 org.apiguardian.api.API(null since="5.5", null status=EXPERIMENTAL)
- anno 1 org.jetbrains.annotations.NotNull()
- anno 2 org.jetbrains.annotations.NotNull()
- anno 3 org.jetbrains.annotations.NotNull()
 meth public final static <%0 extends java.lang.Object> {%%0} assertTimeout(java.time.Duration,kotlin.jvm.functions.Function0<? extends {%%0}>)
- anno 0 org.apiguardian.api.API(null since="5.5", null status=EXPERIMENTAL)
- anno 1 org.jetbrains.annotations.NotNull()
- anno 2 org.jetbrains.annotations.NotNull()
 meth public final static <%0 extends java.lang.Object> {%%0} assertTimeout(java.time.Duration,kotlin.jvm.functions.Function0<java.lang.String>,kotlin.jvm.functions.Function0<? extends {%%0}>)
- anno 0 org.apiguardian.api.API(null since="5.5", null status=EXPERIMENTAL)
- anno 1 org.jetbrains.annotations.NotNull()
- anno 2 org.jetbrains.annotations.NotNull()
- anno 3 org.jetbrains.annotations.NotNull()
 meth public final static <%0 extends java.lang.Object> {%%0} assertTimeoutPreemptively(java.time.Duration,java.lang.String,kotlin.jvm.functions.Function0<? extends {%%0}>)
- anno 0 org.apiguardian.api.API(null since="5.5", null status=EXPERIMENTAL)
- anno 1 org.jetbrains.annotations.NotNull()
- anno 2 org.jetbrains.annotations.NotNull()
- anno 3 org.jetbrains.annotations.NotNull()
 meth public final static <%0 extends java.lang.Object> {%%0} assertTimeoutPreemptively(java.time.Duration,kotlin.jvm.functions.Function0<? extends {%%0}>)
- anno 0 org.apiguardian.api.API(null since="5.5", null status=EXPERIMENTAL)
- anno 1 org.jetbrains.annotations.NotNull()
- anno 2 org.jetbrains.annotations.NotNull()
 meth public final static <%0 extends java.lang.Object> {%%0} assertTimeoutPreemptively(java.time.Duration,kotlin.jvm.functions.Function0<java.lang.String>,kotlin.jvm.functions.Function0<? extends {%%0}>)
- anno 0 org.apiguardian.api.API(null since="5.5", null status=EXPERIMENTAL)
- anno 1 org.jetbrains.annotations.NotNull()
- anno 2 org.jetbrains.annotations.NotNull()
- anno 3 org.jetbrains.annotations.NotNull()
 meth public final static java.lang.Void fail(java.lang.String,java.lang.Throwable)
- anno 0 org.jetbrains.annotations.NotNull()
- anno 1 org.jetbrains.annotations.Nullable()
- anno 2 org.jetbrains.annotations.Nullable()
 meth public final static java.lang.Void fail(java.lang.Throwable)
- anno 0 org.jetbrains.annotations.NotNull()
- anno 1 org.jetbrains.annotations.Nullable()
 meth public final static java.lang.Void fail(kotlin.jvm.functions.Function0<java.lang.String>)
- anno 0 org.jetbrains.annotations.NotNull()
- anno 1 org.jetbrains.annotations.Nullable()
 meth public final static void assertAll(java.lang.String,java.util.Collection<? extends kotlin.jvm.functions.Function0<kotlin.Unit>>)
- anno 1 org.jetbrains.annotations.Nullable()
- anno 2 org.jetbrains.annotations.NotNull()
 meth public final static void assertAll(java.lang.String,java.util.stream.Stream<kotlin.jvm.functions.Function0<kotlin.Unit>>)
- anno 1 org.jetbrains.annotations.Nullable()
- anno 2 org.jetbrains.annotations.NotNull()
 meth public final static void assertAll(java.util.Collection<? extends kotlin.jvm.functions.Function0<kotlin.Unit>>)
- anno 1 org.jetbrains.annotations.NotNull()
 meth public final static void assertAll(java.util.stream.Stream<kotlin.jvm.functions.Function0<kotlin.Unit>>)
- anno 1 org.jetbrains.annotations.NotNull()
 supr java.lang.Object
 
 CLSS public final static org.junit.jupiter.api.AssertionsKt$assertThrows$1
- anno 0 kotlin.Metadata(null bv=[1, 0, 3], null d1=["\u0000\u000e\n\u0000\n\u0002\u0010\u000e\n\u0000\n\u0002\u0010\u0003\n\u0000\u0010\u0000\u001a\u00020\u0001\u0022\n\u0008\u0000\u0010\u0002\u0018\u0001*\u00020\u0003H\n\u00a2\u0006\u0002\u0008\u0004"], null d2=["<anonymous>", "", "T", "", "invoke"], null k=3, null mv=[1, 1, 16])
 
 CLSS public final org.junit.jupiter.api.AssertionsKt$sam$i$java_util_function_Supplier$0
- anno 0 kotlin.Metadata(null bv=[1, 0, 3], null k=3, null mv=[1, 1, 16])
 cons public init(kotlin.jvm.functions.Function0)
 intf java.util.function.Supplier
 supr java.lang.Object
 
 CLSS public final org.junit.jupiter.api.AssertionsKt$sam$i$org_junit_jupiter_api_function_Executable$0
- anno 0 kotlin.Metadata(null bv=[1, 0, 3], null k=3, null mv=[1, 1, 16])
 cons public init(kotlin.jvm.functions.Function0)
 intf org.junit.jupiter.api.function.Executable
 supr java.lang.Object
 
 CLSS public org.junit.jupiter.api.Assumptions
- anno 0 org.apiguardian.api.API(null since="5.0", null status=STABLE)
 cons protected init()
 meth public static void assumeFalse(boolean) throws org.opentest4j.TestAbortedException
 meth public static void assumeFalse(boolean,java.lang.String) throws org.opentest4j.TestAbortedException
@@ -624,21 +450,18 @@ CLSS public abstract interface !annotation org.junit.jupiter.api.BeforeAll
  anno 0 java.lang.annotation.Documented()
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE, METHOD])
- anno 0 org.apiguardian.api.API(null since="5.0", null status=STABLE)
 intf java.lang.annotation.Annotation
 
 CLSS public abstract interface !annotation org.junit.jupiter.api.BeforeEach
  anno 0 java.lang.annotation.Documented()
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE, METHOD])
- anno 0 org.apiguardian.api.API(null since="5.0", null status=STABLE)
 intf java.lang.annotation.Annotation
 
 CLSS public abstract interface !annotation org.junit.jupiter.api.Disabled
  anno 0 java.lang.annotation.Documented()
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE, METHOD])
- anno 0 org.apiguardian.api.API(null since="5.0", null status=STABLE)
 intf java.lang.annotation.Annotation
 meth public abstract !hasdefault java.lang.String value()
 
@@ -646,7 +469,6 @@ CLSS public abstract interface !annotation org.junit.jupiter.api.DisplayName
  anno 0 java.lang.annotation.Documented()
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE, METHOD])
- anno 0 org.apiguardian.api.API(null since="5.0", null status=STABLE)
 intf java.lang.annotation.Annotation
 meth public abstract java.lang.String value()
 
@@ -655,12 +477,10 @@ CLSS public abstract interface !annotation org.junit.jupiter.api.DisplayNameGene
  anno 0 java.lang.annotation.Inherited()
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE])
- anno 0 org.apiguardian.api.API(null since="5.4", null status=EXPERIMENTAL)
 intf java.lang.annotation.Annotation
 meth public abstract java.lang.Class<? extends org.junit.jupiter.api.DisplayNameGenerator> value()
 
 CLSS public abstract interface org.junit.jupiter.api.DisplayNameGenerator
- anno 0 org.apiguardian.api.API(null since="5.4", null status=EXPERIMENTAL)
 innr public static ReplaceUnderscores
 innr public static Standard
 meth public abstract java.lang.String generateDisplayNameForClass(java.lang.Class<?>)
@@ -686,7 +506,6 @@ meth public java.lang.String generateDisplayNameForNestedClass(java.lang.Class<?
 supr java.lang.Object
 
 CLSS public org.junit.jupiter.api.DynamicContainer
- anno 0 org.apiguardian.api.API(null since="5.3", null status=MAINTAINED)
 meth public java.util.stream.Stream<? extends org.junit.jupiter.api.DynamicNode> getChildren()
 meth public static org.junit.jupiter.api.DynamicContainer dynamicContainer(java.lang.String,java.lang.Iterable<? extends org.junit.jupiter.api.DynamicNode>)
 meth public static org.junit.jupiter.api.DynamicContainer dynamicContainer(java.lang.String,java.net.URI,java.util.stream.Stream<? extends org.junit.jupiter.api.DynamicNode>)
@@ -695,7 +514,6 @@ supr org.junit.jupiter.api.DynamicNode
 hfds children
 
 CLSS public abstract org.junit.jupiter.api.DynamicNode
- anno 0 org.apiguardian.api.API(null since="5.3", null status=MAINTAINED)
 meth public java.lang.String getDisplayName()
 meth public java.lang.String toString()
 meth public java.util.Optional<java.net.URI> getTestSourceUri()
@@ -703,7 +521,6 @@ supr java.lang.Object
 hfds displayName,testSourceUri
 
 CLSS public org.junit.jupiter.api.DynamicTest
- anno 0 org.apiguardian.api.API(null since="5.3", null status=MAINTAINED)
 meth public org.junit.jupiter.api.function.Executable getExecutable()
 meth public static <%0 extends java.lang.Object> java.util.stream.Stream<org.junit.jupiter.api.DynamicTest> stream(java.util.Iterator<{%%0}>,java.util.function.Function<? super {%%0},java.lang.String>,org.junit.jupiter.api.function.ThrowingConsumer<? super {%%0}>)
 meth public static org.junit.jupiter.api.DynamicTest dynamicTest(java.lang.String,java.net.URI,org.junit.jupiter.api.function.Executable)
@@ -712,14 +529,12 @@ supr org.junit.jupiter.api.DynamicNode
 hfds executable
 
 CLSS public abstract interface org.junit.jupiter.api.MethodDescriptor
- anno 0 org.apiguardian.api.API(null since="5.4", null status=EXPERIMENTAL)
 meth public abstract <%0 extends java.lang.annotation.Annotation> java.util.List<{%%0}> findRepeatableAnnotations(java.lang.Class<{%%0}>)
 meth public abstract <%0 extends java.lang.annotation.Annotation> java.util.Optional<{%%0}> findAnnotation(java.lang.Class<{%%0}>)
 meth public abstract boolean isAnnotated(java.lang.Class<? extends java.lang.annotation.Annotation>)
 meth public abstract java.lang.reflect.Method getMethod()
 
 CLSS public abstract interface org.junit.jupiter.api.MethodOrderer
- anno 0 org.apiguardian.api.API(null since="5.4", null status=EXPERIMENTAL)
 innr public static Alphanumeric
 innr public static OrderAnnotation
 innr public static Random
@@ -751,7 +566,6 @@ supr java.lang.Object
 hfds DEFAULT_SEED,logger
 
 CLSS public abstract interface org.junit.jupiter.api.MethodOrdererContext
- anno 0 org.apiguardian.api.API(null since="5.4", null status=EXPERIMENTAL)
 meth public abstract java.lang.Class<?> getTestClass()
 meth public abstract java.util.List<? extends org.junit.jupiter.api.MethodDescriptor> getMethodDescriptors()
 meth public abstract java.util.Optional<java.lang.String> getConfigurationParameter(java.lang.String)
@@ -760,16 +574,13 @@ CLSS public abstract interface !annotation org.junit.jupiter.api.Nested
  anno 0 java.lang.annotation.Documented()
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE])
- anno 0 org.apiguardian.api.API(null since="5.0", null status=STABLE)
 intf java.lang.annotation.Annotation
 
 CLSS public abstract interface !annotation org.junit.jupiter.api.Order
  anno 0 java.lang.annotation.Documented()
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[FIELD, METHOD])
- anno 0 org.apiguardian.api.API(null since="5.4", null status=EXPERIMENTAL)
 fld public final static int DEFAULT = 1073741823
- anno 0 org.apiguardian.api.API(null since="5.6", null status=EXPERIMENTAL)
 intf java.lang.annotation.Annotation
 meth public abstract int value()
 
@@ -777,7 +588,6 @@ CLSS public abstract interface !annotation org.junit.jupiter.api.RepeatedTest
  anno 0 java.lang.annotation.Documented()
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE, METHOD])
- anno 0 org.apiguardian.api.API(null since="5.0", null status=STABLE)
  anno 0 org.junit.jupiter.api.TestTemplate()
 fld public final static java.lang.String CURRENT_REPETITION_PLACEHOLDER = "{currentRepetition}"
 fld public final static java.lang.String DISPLAY_NAME_PLACEHOLDER = "{displayName}"
@@ -789,7 +599,6 @@ meth public abstract !hasdefault java.lang.String name()
 meth public abstract int value()
 
 CLSS public abstract interface org.junit.jupiter.api.RepetitionInfo
- anno 0 org.apiguardian.api.API(null since="5.0", null status=STABLE)
 meth public abstract int getCurrentRepetition()
 meth public abstract int getTotalRepetitions()
 
@@ -799,7 +608,6 @@ CLSS public abstract interface !annotation org.junit.jupiter.api.Tag
  anno 0 java.lang.annotation.Repeatable(java.lang.Class<? extends java.lang.annotation.Annotation> value=class org.junit.jupiter.api.Tags)
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE, METHOD])
- anno 0 org.apiguardian.api.API(null since="5.0", null status=STABLE)
 intf java.lang.annotation.Annotation
 meth public abstract java.lang.String value()
 
@@ -808,7 +616,6 @@ CLSS public abstract interface !annotation org.junit.jupiter.api.Tags
  anno 0 java.lang.annotation.Inherited()
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE, METHOD])
- anno 0 org.apiguardian.api.API(null since="5.0", null status=STABLE)
 intf java.lang.annotation.Annotation
 meth public abstract org.junit.jupiter.api.Tag[] value()
 
@@ -816,20 +623,15 @@ CLSS public abstract interface !annotation org.junit.jupiter.api.Test
  anno 0 java.lang.annotation.Documented()
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE, METHOD])
- anno 0 org.apiguardian.api.API(null since="5.0", null status=STABLE)
- anno 0 org.junit.platform.commons.annotation.Testable()
 intf java.lang.annotation.Annotation
 
 CLSS public abstract interface !annotation org.junit.jupiter.api.TestFactory
  anno 0 java.lang.annotation.Documented()
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE, METHOD])
- anno 0 org.apiguardian.api.API(null since="5.3", null status=MAINTAINED)
- anno 0 org.junit.platform.commons.annotation.Testable()
 intf java.lang.annotation.Annotation
 
 CLSS public abstract interface org.junit.jupiter.api.TestInfo
- anno 0 org.apiguardian.api.API(null since="5.0", null status=STABLE)
 meth public abstract java.lang.String getDisplayName()
 meth public abstract java.util.Optional<java.lang.Class<?>> getTestClass()
 meth public abstract java.util.Optional<java.lang.reflect.Method> getTestMethod()
@@ -840,7 +642,6 @@ CLSS public abstract interface !annotation org.junit.jupiter.api.TestInstance
  anno 0 java.lang.annotation.Inherited()
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE])
- anno 0 org.apiguardian.api.API(null since="5.0", null status=STABLE)
 innr public final static !enum Lifecycle
 intf java.lang.annotation.Annotation
 meth public abstract org.junit.jupiter.api.TestInstance$Lifecycle value()
@@ -858,24 +659,19 @@ CLSS public abstract interface !annotation org.junit.jupiter.api.TestMethodOrder
  anno 0 java.lang.annotation.Inherited()
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE])
- anno 0 org.apiguardian.api.API(null since="5.4", null status=EXPERIMENTAL)
 intf java.lang.annotation.Annotation
 meth public abstract java.lang.Class<? extends org.junit.jupiter.api.MethodOrderer> value()
 
 CLSS public abstract interface org.junit.jupiter.api.TestReporter
  anno 0 java.lang.FunctionalInterface()
- anno 0 org.apiguardian.api.API(null since="5.0", null status=STABLE)
 meth public abstract void publishEntry(java.util.Map<java.lang.String,java.lang.String>)
 meth public void publishEntry(java.lang.String)
- anno 0 org.apiguardian.api.API(null since="5.3", null status=STABLE)
 meth public void publishEntry(java.lang.String,java.lang.String)
 
 CLSS public abstract interface !annotation org.junit.jupiter.api.TestTemplate
  anno 0 java.lang.annotation.Documented()
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE, METHOD])
- anno 0 org.apiguardian.api.API(null since="5.0", null status=STABLE)
- anno 0 org.junit.platform.commons.annotation.Testable()
 intf java.lang.annotation.Annotation
 
 CLSS public abstract interface !annotation org.junit.jupiter.api.Timeout
@@ -883,7 +679,6 @@ CLSS public abstract interface !annotation org.junit.jupiter.api.Timeout
  anno 0 java.lang.annotation.Inherited()
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE, METHOD])
- anno 0 org.apiguardian.api.API(null since="5.5", null status=EXPERIMENTAL)
 intf java.lang.annotation.Annotation
 meth public abstract !hasdefault java.util.concurrent.TimeUnit unit()
 meth public abstract long value()
@@ -892,7 +687,6 @@ CLSS public abstract interface !annotation org.junit.jupiter.api.condition.Disab
  anno 0 java.lang.annotation.Documented()
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE, METHOD])
- anno 0 org.apiguardian.api.API(null since="5.6", null status=STABLE)
  anno 0 org.junit.jupiter.api.extension.ExtendWith(java.lang.Class<? extends org.junit.jupiter.api.extension.Extension>[] value=[class org.junit.jupiter.api.condition.DisabledForJreRangeCondition])
 intf java.lang.annotation.Annotation
 meth public abstract !hasdefault org.junit.jupiter.api.condition.JRE max()
@@ -903,7 +697,6 @@ CLSS public abstract interface !annotation org.junit.jupiter.api.condition.Disab
  anno 0 java.lang.annotation.Repeatable(java.lang.Class<? extends java.lang.annotation.Annotation> value=class org.junit.jupiter.api.condition.DisabledIfEnvironmentVariables)
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE, METHOD])
- anno 0 org.apiguardian.api.API(null since="5.1", null status=STABLE)
  anno 0 org.junit.jupiter.api.extension.ExtendWith(java.lang.Class<? extends org.junit.jupiter.api.extension.Extension>[] value=[class org.junit.jupiter.api.condition.DisabledIfEnvironmentVariableCondition])
 intf java.lang.annotation.Annotation
 meth public abstract java.lang.String matches()
@@ -913,7 +706,6 @@ CLSS public abstract interface !annotation org.junit.jupiter.api.condition.Disab
  anno 0 java.lang.annotation.Documented()
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE, METHOD])
- anno 0 org.apiguardian.api.API(null since="5.6", null status=STABLE)
 intf java.lang.annotation.Annotation
 meth public abstract org.junit.jupiter.api.condition.DisabledIfEnvironmentVariable[] value()
 
@@ -921,7 +713,6 @@ CLSS public abstract interface !annotation org.junit.jupiter.api.condition.Disab
  anno 0 java.lang.annotation.Documented()
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE, METHOD])
- anno 0 org.apiguardian.api.API(null since="5.6", null status=STABLE)
 intf java.lang.annotation.Annotation
 meth public abstract org.junit.jupiter.api.condition.DisabledIfSystemProperty[] value()
 
@@ -930,7 +721,6 @@ CLSS public abstract interface !annotation org.junit.jupiter.api.condition.Disab
  anno 0 java.lang.annotation.Repeatable(java.lang.Class<? extends java.lang.annotation.Annotation> value=class org.junit.jupiter.api.condition.DisabledIfSystemProperties)
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE, METHOD])
- anno 0 org.apiguardian.api.API(null since="5.1", null status=STABLE)
  anno 0 org.junit.jupiter.api.extension.ExtendWith(java.lang.Class<? extends org.junit.jupiter.api.extension.Extension>[] value=[class org.junit.jupiter.api.condition.DisabledIfSystemPropertyCondition])
 intf java.lang.annotation.Annotation
 meth public abstract java.lang.String matches()
@@ -940,7 +730,6 @@ CLSS public abstract interface !annotation org.junit.jupiter.api.condition.Disab
  anno 0 java.lang.annotation.Documented()
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE, METHOD])
- anno 0 org.apiguardian.api.API(null since="5.1", null status=STABLE)
  anno 0 org.junit.jupiter.api.extension.ExtendWith(java.lang.Class<? extends org.junit.jupiter.api.extension.Extension>[] value=[class org.junit.jupiter.api.condition.DisabledOnJreCondition])
 intf java.lang.annotation.Annotation
 meth public abstract org.junit.jupiter.api.condition.JRE[] value()
@@ -949,7 +738,6 @@ CLSS public abstract interface !annotation org.junit.jupiter.api.condition.Disab
  anno 0 java.lang.annotation.Documented()
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE, METHOD])
- anno 0 org.apiguardian.api.API(null since="5.1", null status=STABLE)
  anno 0 org.junit.jupiter.api.extension.ExtendWith(java.lang.Class<? extends org.junit.jupiter.api.extension.Extension>[] value=[class org.junit.jupiter.api.condition.DisabledOnOsCondition])
 intf java.lang.annotation.Annotation
 meth public abstract org.junit.jupiter.api.condition.OS[] value()
@@ -958,7 +746,6 @@ CLSS public abstract interface !annotation org.junit.jupiter.api.condition.Enabl
  anno 0 java.lang.annotation.Documented()
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE, METHOD])
- anno 0 org.apiguardian.api.API(null since="5.6", null status=STABLE)
  anno 0 org.junit.jupiter.api.extension.ExtendWith(java.lang.Class<? extends org.junit.jupiter.api.extension.Extension>[] value=[class org.junit.jupiter.api.condition.EnabledForJreRangeCondition])
 intf java.lang.annotation.Annotation
 meth public abstract !hasdefault org.junit.jupiter.api.condition.JRE max()
@@ -969,7 +756,6 @@ CLSS public abstract interface !annotation org.junit.jupiter.api.condition.Enabl
  anno 0 java.lang.annotation.Repeatable(java.lang.Class<? extends java.lang.annotation.Annotation> value=class org.junit.jupiter.api.condition.EnabledIfEnvironmentVariables)
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE, METHOD])
- anno 0 org.apiguardian.api.API(null since="5.1", null status=STABLE)
  anno 0 org.junit.jupiter.api.extension.ExtendWith(java.lang.Class<? extends org.junit.jupiter.api.extension.Extension>[] value=[class org.junit.jupiter.api.condition.EnabledIfEnvironmentVariableCondition])
 intf java.lang.annotation.Annotation
 meth public abstract java.lang.String matches()
@@ -979,7 +765,6 @@ CLSS public abstract interface !annotation org.junit.jupiter.api.condition.Enabl
  anno 0 java.lang.annotation.Documented()
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE, METHOD])
- anno 0 org.apiguardian.api.API(null since="5.6", null status=STABLE)
 intf java.lang.annotation.Annotation
 meth public abstract org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable[] value()
 
@@ -987,7 +772,6 @@ CLSS public abstract interface !annotation org.junit.jupiter.api.condition.Enabl
  anno 0 java.lang.annotation.Documented()
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE, METHOD])
- anno 0 org.apiguardian.api.API(null since="5.6", null status=STABLE)
 intf java.lang.annotation.Annotation
 meth public abstract org.junit.jupiter.api.condition.EnabledIfSystemProperty[] value()
 
@@ -996,7 +780,6 @@ CLSS public abstract interface !annotation org.junit.jupiter.api.condition.Enabl
  anno 0 java.lang.annotation.Repeatable(java.lang.Class<? extends java.lang.annotation.Annotation> value=class org.junit.jupiter.api.condition.EnabledIfSystemProperties)
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE, METHOD])
- anno 0 org.apiguardian.api.API(null since="5.1", null status=STABLE)
  anno 0 org.junit.jupiter.api.extension.ExtendWith(java.lang.Class<? extends org.junit.jupiter.api.extension.Extension>[] value=[class org.junit.jupiter.api.condition.EnabledIfSystemPropertyCondition])
 intf java.lang.annotation.Annotation
 meth public abstract java.lang.String matches()
@@ -1006,7 +789,6 @@ CLSS public abstract interface !annotation org.junit.jupiter.api.condition.Enabl
  anno 0 java.lang.annotation.Documented()
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE, METHOD])
- anno 0 org.apiguardian.api.API(null since="5.1", null status=STABLE)
  anno 0 org.junit.jupiter.api.extension.ExtendWith(java.lang.Class<? extends org.junit.jupiter.api.extension.Extension>[] value=[class org.junit.jupiter.api.condition.EnabledOnJreCondition])
 intf java.lang.annotation.Annotation
 meth public abstract org.junit.jupiter.api.condition.JRE[] value()
@@ -1015,23 +797,17 @@ CLSS public abstract interface !annotation org.junit.jupiter.api.condition.Enabl
  anno 0 java.lang.annotation.Documented()
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE, METHOD])
- anno 0 org.apiguardian.api.API(null since="5.1", null status=STABLE)
  anno 0 org.junit.jupiter.api.extension.ExtendWith(java.lang.Class<? extends org.junit.jupiter.api.extension.Extension>[] value=[class org.junit.jupiter.api.condition.EnabledOnOsCondition])
 intf java.lang.annotation.Annotation
 meth public abstract org.junit.jupiter.api.condition.OS[] value()
 
 CLSS public final !enum org.junit.jupiter.api.condition.JRE
- anno 0 org.apiguardian.api.API(null since="5.1", null status=STABLE)
 fld public final static org.junit.jupiter.api.condition.JRE JAVA_10
 fld public final static org.junit.jupiter.api.condition.JRE JAVA_11
 fld public final static org.junit.jupiter.api.condition.JRE JAVA_12
- anno 0 org.apiguardian.api.API(null since="5.4", null status=STABLE)
 fld public final static org.junit.jupiter.api.condition.JRE JAVA_13
- anno 0 org.apiguardian.api.API(null since="5.4", null status=STABLE)
 fld public final static org.junit.jupiter.api.condition.JRE JAVA_14
- anno 0 org.apiguardian.api.API(null since="5.5", null status=STABLE)
 fld public final static org.junit.jupiter.api.condition.JRE JAVA_15
- anno 0 org.apiguardian.api.API(null since="5.6", null status=STABLE)
 fld public final static org.junit.jupiter.api.condition.JRE JAVA_8
 fld public final static org.junit.jupiter.api.condition.JRE JAVA_9
 fld public final static org.junit.jupiter.api.condition.JRE OTHER
@@ -1042,9 +818,7 @@ supr java.lang.Enum<org.junit.jupiter.api.condition.JRE>
 hfds CURRENT_VERSION,logger
 
 CLSS public final !enum org.junit.jupiter.api.condition.OS
- anno 0 org.apiguardian.api.API(null since="5.1", null status=STABLE)
 fld public final static org.junit.jupiter.api.condition.OS AIX
- anno 0 org.apiguardian.api.API(null since="5.3", null status=STABLE)
 fld public final static org.junit.jupiter.api.condition.OS LINUX
 fld public final static org.junit.jupiter.api.condition.OS MAC
 fld public final static org.junit.jupiter.api.condition.OS OTHER
@@ -1058,42 +832,35 @@ hfds CURRENT_OS,logger
 
 CLSS public abstract interface org.junit.jupiter.api.extension.AfterAllCallback
  anno 0 java.lang.FunctionalInterface()
- anno 0 org.apiguardian.api.API(null since="5.0", null status=STABLE)
 intf org.junit.jupiter.api.extension.Extension
 meth public abstract void afterAll(org.junit.jupiter.api.extension.ExtensionContext) throws java.lang.Exception
 
 CLSS public abstract interface org.junit.jupiter.api.extension.AfterEachCallback
  anno 0 java.lang.FunctionalInterface()
- anno 0 org.apiguardian.api.API(null since="5.0", null status=STABLE)
 intf org.junit.jupiter.api.extension.Extension
 meth public abstract void afterEach(org.junit.jupiter.api.extension.ExtensionContext) throws java.lang.Exception
 
 CLSS public abstract interface org.junit.jupiter.api.extension.AfterTestExecutionCallback
  anno 0 java.lang.FunctionalInterface()
- anno 0 org.apiguardian.api.API(null since="5.0", null status=STABLE)
 intf org.junit.jupiter.api.extension.Extension
 meth public abstract void afterTestExecution(org.junit.jupiter.api.extension.ExtensionContext) throws java.lang.Exception
 
 CLSS public abstract interface org.junit.jupiter.api.extension.BeforeAllCallback
  anno 0 java.lang.FunctionalInterface()
- anno 0 org.apiguardian.api.API(null since="5.0", null status=STABLE)
 intf org.junit.jupiter.api.extension.Extension
 meth public abstract void beforeAll(org.junit.jupiter.api.extension.ExtensionContext) throws java.lang.Exception
 
 CLSS public abstract interface org.junit.jupiter.api.extension.BeforeEachCallback
  anno 0 java.lang.FunctionalInterface()
- anno 0 org.apiguardian.api.API(null since="5.0", null status=STABLE)
 intf org.junit.jupiter.api.extension.Extension
 meth public abstract void beforeEach(org.junit.jupiter.api.extension.ExtensionContext) throws java.lang.Exception
 
 CLSS public abstract interface org.junit.jupiter.api.extension.BeforeTestExecutionCallback
  anno 0 java.lang.FunctionalInterface()
- anno 0 org.apiguardian.api.API(null since="5.0", null status=STABLE)
 intf org.junit.jupiter.api.extension.Extension
 meth public abstract void beforeTestExecution(org.junit.jupiter.api.extension.ExtensionContext) throws java.lang.Exception
 
 CLSS public org.junit.jupiter.api.extension.ConditionEvaluationResult
- anno 0 org.apiguardian.api.API(null since="5.0", null status=STABLE)
 meth public boolean isDisabled()
 meth public java.lang.String toString()
 meth public java.util.Optional<java.lang.String> getReason()
@@ -1104,7 +871,6 @@ hfds enabled,reason
 
 CLSS public abstract interface org.junit.jupiter.api.extension.ExecutionCondition
  anno 0 java.lang.FunctionalInterface()
- anno 0 org.apiguardian.api.API(null since="5.0", null status=STABLE)
 intf org.junit.jupiter.api.extension.Extension
 meth public abstract org.junit.jupiter.api.extension.ConditionEvaluationResult evaluateExecutionCondition(org.junit.jupiter.api.extension.ExtensionContext)
 
@@ -1114,19 +880,15 @@ CLSS public abstract interface !annotation org.junit.jupiter.api.extension.Exten
  anno 0 java.lang.annotation.Repeatable(java.lang.Class<? extends java.lang.annotation.Annotation> value=class org.junit.jupiter.api.extension.Extensions)
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE, METHOD])
- anno 0 org.apiguardian.api.API(null since="5.0", null status=STABLE)
 intf java.lang.annotation.Annotation
 meth public abstract java.lang.Class<? extends org.junit.jupiter.api.extension.Extension>[] value()
 
 CLSS public abstract interface org.junit.jupiter.api.extension.Extension
- anno 0 org.apiguardian.api.API(null since="5.0", null status=STABLE)
 
 CLSS public org.junit.jupiter.api.extension.ExtensionConfigurationException
- anno 0 org.apiguardian.api.API(null since="5.0", null status=STABLE)
 hfds serialVersionUID
 
 CLSS public abstract interface org.junit.jupiter.api.extension.ExtensionContext
- anno 0 org.apiguardian.api.API(null since="5.0", null status=STABLE)
 innr public abstract interface static Store
 innr public static Namespace
 meth public abstract java.lang.String getDisplayName()
@@ -1134,15 +896,12 @@ meth public abstract java.lang.String getUniqueId()
 meth public abstract java.util.Optional<java.lang.Class<?>> getTestClass()
 meth public abstract java.util.Optional<java.lang.Object> getTestInstance()
 meth public abstract java.util.Optional<java.lang.String> getConfigurationParameter(java.lang.String)
- anno 0 org.apiguardian.api.API(null since="5.1", null status=STABLE)
 meth public abstract java.util.Optional<java.lang.Throwable> getExecutionException()
 meth public abstract java.util.Optional<java.lang.reflect.AnnotatedElement> getElement()
 meth public abstract java.util.Optional<java.lang.reflect.Method> getTestMethod()
 meth public abstract java.util.Optional<org.junit.jupiter.api.TestInstance$Lifecycle> getTestInstanceLifecycle()
- anno 0 org.apiguardian.api.API(null since="5.1", null status=STABLE)
 meth public abstract java.util.Optional<org.junit.jupiter.api.extension.ExtensionContext> getParent()
 meth public abstract java.util.Optional<org.junit.jupiter.api.extension.TestInstances> getTestInstances()
- anno 0 org.apiguardian.api.API(null since="5.4", null status=EXPERIMENTAL)
 meth public abstract java.util.Set<java.lang.String> getTags()
 meth public abstract org.junit.jupiter.api.extension.ExtensionContext getRoot()
 meth public abstract org.junit.jupiter.api.extension.ExtensionContext$Store getStore(org.junit.jupiter.api.extension.ExtensionContext$Namespace)
@@ -1151,9 +910,7 @@ meth public java.lang.Class<?> getRequiredTestClass()
 meth public java.lang.Object getRequiredTestInstance()
 meth public java.lang.reflect.Method getRequiredTestMethod()
 meth public org.junit.jupiter.api.extension.TestInstances getRequiredTestInstances()
- anno 0 org.apiguardian.api.API(null since="5.4", null status=EXPERIMENTAL)
 meth public void publishReportEntry(java.lang.String)
- anno 0 org.apiguardian.api.API(null since="5.3", null status=STABLE)
 meth public void publishReportEntry(java.lang.String,java.lang.String)
 
 CLSS public static org.junit.jupiter.api.extension.ExtensionContext$Namespace
@@ -1169,9 +926,7 @@ CLSS public abstract interface static org.junit.jupiter.api.extension.ExtensionC
  outer org.junit.jupiter.api.extension.ExtensionContext
 innr public abstract interface static CloseableResource
 meth public <%0 extends java.lang.Object> {%%0} getOrComputeIfAbsent(java.lang.Class<{%%0}>)
- anno 0 org.apiguardian.api.API(null since="5.1", null status=STABLE)
 meth public <%0 extends java.lang.Object> {%%0} getOrDefault(java.lang.Object,java.lang.Class<{%%0}>,{%%0})
- anno 0 org.apiguardian.api.API(null since="5.5", null status=STABLE)
 meth public abstract <%0 extends java.lang.Object, %1 extends java.lang.Object> java.lang.Object getOrComputeIfAbsent({%%0},java.util.function.Function<{%%0},{%%1}>)
 meth public abstract <%0 extends java.lang.Object, %1 extends java.lang.Object> {%%1} getOrComputeIfAbsent({%%0},java.util.function.Function<{%%0},{%%1}>,java.lang.Class<{%%1}>)
 meth public abstract <%0 extends java.lang.Object> {%%0} get(java.lang.Object,java.lang.Class<{%%0}>)
@@ -1182,11 +937,9 @@ meth public abstract void put(java.lang.Object,java.lang.Object)
 
 CLSS public abstract interface static org.junit.jupiter.api.extension.ExtensionContext$Store$CloseableResource
  outer org.junit.jupiter.api.extension.ExtensionContext$Store
- anno 0 org.apiguardian.api.API(null since="5.1", null status=STABLE)
 meth public abstract void close() throws java.lang.Throwable
 
 CLSS public org.junit.jupiter.api.extension.ExtensionContextException
- anno 0 org.apiguardian.api.API(null since="5.0", null status=STABLE)
 hfds serialVersionUID
 
 CLSS public abstract interface !annotation org.junit.jupiter.api.extension.Extensions
@@ -1194,12 +947,10 @@ CLSS public abstract interface !annotation org.junit.jupiter.api.extension.Exten
  anno 0 java.lang.annotation.Inherited()
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE, METHOD])
- anno 0 org.apiguardian.api.API(null since="5.0", null status=STABLE)
 intf java.lang.annotation.Annotation
 meth public abstract org.junit.jupiter.api.extension.ExtendWith[] value()
 
 CLSS public abstract interface org.junit.jupiter.api.extension.InvocationInterceptor
- anno 0 org.apiguardian.api.API(null since="5.5", null status=EXPERIMENTAL)
 innr public abstract interface static Invocation
 intf org.junit.jupiter.api.extension.Extension
 meth public <%0 extends java.lang.Object> {%%0} interceptTestClassConstructor(org.junit.jupiter.api.extension.InvocationInterceptor$Invocation<{%%0}>,org.junit.jupiter.api.extension.ReflectiveInvocationContext<java.lang.reflect.Constructor<{%%0}>>,org.junit.jupiter.api.extension.ExtensionContext) throws java.lang.Throwable
@@ -1214,13 +965,10 @@ meth public void interceptTestTemplateMethod(org.junit.jupiter.api.extension.Inv
 
 CLSS public abstract interface static org.junit.jupiter.api.extension.InvocationInterceptor$Invocation<%0 extends java.lang.Object>
  outer org.junit.jupiter.api.extension.InvocationInterceptor
- anno 0 org.apiguardian.api.API(null since="5.5", null status=EXPERIMENTAL)
 meth public abstract {org.junit.jupiter.api.extension.InvocationInterceptor$Invocation%0} proceed() throws java.lang.Throwable
 meth public void skip()
- anno 0 org.apiguardian.api.API(null since="5.6", null status=EXPERIMENTAL)
 
 CLSS public abstract interface org.junit.jupiter.api.extension.LifecycleMethodExecutionExceptionHandler
- anno 0 org.apiguardian.api.API(null since="5.5", null status=EXPERIMENTAL)
 intf org.junit.jupiter.api.extension.Extension
 meth public void handleAfterAllMethodExecutionException(org.junit.jupiter.api.extension.ExtensionContext,java.lang.Throwable) throws java.lang.Throwable
 meth public void handleAfterEachMethodExecutionException(org.junit.jupiter.api.extension.ExtensionContext,java.lang.Throwable) throws java.lang.Throwable
@@ -1228,7 +976,6 @@ meth public void handleBeforeAllMethodExecutionException(org.junit.jupiter.api.e
 meth public void handleBeforeEachMethodExecutionException(org.junit.jupiter.api.extension.ExtensionContext,java.lang.Throwable) throws java.lang.Throwable
 
 CLSS public abstract interface org.junit.jupiter.api.extension.ParameterContext
- anno 0 org.apiguardian.api.API(null since="5.0", null status=STABLE)
 meth public abstract <%0 extends java.lang.annotation.Annotation> java.util.List<{%%0}> findRepeatableAnnotations(java.lang.Class<{%%0}>)
 meth public abstract <%0 extends java.lang.annotation.Annotation> java.util.Optional<{%%0}> findAnnotation(java.lang.Class<{%%0}>)
 meth public abstract boolean isAnnotated(java.lang.Class<? extends java.lang.annotation.Annotation>)
@@ -1238,17 +985,14 @@ meth public abstract java.util.Optional<java.lang.Object> getTarget()
 meth public java.lang.reflect.Executable getDeclaringExecutable()
 
 CLSS public org.junit.jupiter.api.extension.ParameterResolutionException
- anno 0 org.apiguardian.api.API(null since="5.0", null status=STABLE)
 hfds serialVersionUID
 
 CLSS public abstract interface org.junit.jupiter.api.extension.ParameterResolver
- anno 0 org.apiguardian.api.API(null since="5.0", null status=STABLE)
 intf org.junit.jupiter.api.extension.Extension
 meth public abstract boolean supportsParameter(org.junit.jupiter.api.extension.ParameterContext,org.junit.jupiter.api.extension.ExtensionContext) throws org.junit.jupiter.api.extension.ParameterResolutionException
 meth public abstract java.lang.Object resolveParameter(org.junit.jupiter.api.extension.ParameterContext,org.junit.jupiter.api.extension.ExtensionContext) throws org.junit.jupiter.api.extension.ParameterResolutionException
 
 CLSS public abstract interface org.junit.jupiter.api.extension.ReflectiveInvocationContext<%0 extends java.lang.reflect.Executable>
- anno 0 org.apiguardian.api.API(null since="5.5", null status=EXPERIMENTAL)
 meth public abstract java.lang.Class<?> getTargetClass()
 meth public abstract java.util.List<java.lang.Object> getArguments()
 meth public abstract java.util.Optional<java.lang.Object> getTarget()
@@ -1258,62 +1002,51 @@ CLSS public abstract interface !annotation org.junit.jupiter.api.extension.Regis
  anno 0 java.lang.annotation.Documented()
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[FIELD])
- anno 0 org.apiguardian.api.API(null since="5.1", null status=STABLE)
 intf java.lang.annotation.Annotation
 
 CLSS public abstract interface org.junit.jupiter.api.extension.TestExecutionExceptionHandler
  anno 0 java.lang.FunctionalInterface()
- anno 0 org.apiguardian.api.API(null since="5.0", null status=STABLE)
 intf org.junit.jupiter.api.extension.Extension
 meth public abstract void handleTestExecutionException(org.junit.jupiter.api.extension.ExtensionContext,java.lang.Throwable) throws java.lang.Throwable
 
 CLSS public abstract interface org.junit.jupiter.api.extension.TestInstanceFactory
  anno 0 java.lang.FunctionalInterface()
- anno 0 org.apiguardian.api.API(null since="5.3", null status=EXPERIMENTAL)
 intf org.junit.jupiter.api.extension.Extension
 meth public abstract java.lang.Object createTestInstance(org.junit.jupiter.api.extension.TestInstanceFactoryContext,org.junit.jupiter.api.extension.ExtensionContext) throws org.junit.jupiter.api.extension.TestInstantiationException
 
 CLSS public abstract interface org.junit.jupiter.api.extension.TestInstanceFactoryContext
- anno 0 org.apiguardian.api.API(null since="5.3", null status=EXPERIMENTAL)
 meth public abstract java.lang.Class<?> getTestClass()
 meth public abstract java.util.Optional<java.lang.Object> getOuterInstance()
 
 CLSS public abstract interface org.junit.jupiter.api.extension.TestInstancePostProcessor
  anno 0 java.lang.FunctionalInterface()
- anno 0 org.apiguardian.api.API(null since="5.0", null status=STABLE)
 intf org.junit.jupiter.api.extension.Extension
 meth public abstract void postProcessTestInstance(java.lang.Object,org.junit.jupiter.api.extension.ExtensionContext) throws java.lang.Exception
 
 CLSS public abstract interface org.junit.jupiter.api.extension.TestInstancePreDestroyCallback
  anno 0 java.lang.FunctionalInterface()
- anno 0 org.apiguardian.api.API(null since="5.6", null status=EXPERIMENTAL)
 intf org.junit.jupiter.api.extension.Extension
 meth public abstract void preDestroyTestInstance(org.junit.jupiter.api.extension.ExtensionContext) throws java.lang.Exception
 
 CLSS public abstract interface org.junit.jupiter.api.extension.TestInstances
- anno 0 org.apiguardian.api.API(null since="5.4", null status=EXPERIMENTAL)
 meth public abstract <%0 extends java.lang.Object> java.util.Optional<{%%0}> findInstance(java.lang.Class<{%%0}>)
 meth public abstract java.lang.Object getInnermostInstance()
 meth public abstract java.util.List<java.lang.Object> getAllInstances()
 meth public abstract java.util.List<java.lang.Object> getEnclosingInstances()
 
 CLSS public org.junit.jupiter.api.extension.TestInstantiationException
- anno 0 org.apiguardian.api.API(null since="5.3", null status=EXPERIMENTAL)
 hfds serialVersionUID
 
 CLSS public abstract interface org.junit.jupiter.api.extension.TestTemplateInvocationContext
- anno 0 org.apiguardian.api.API(null since="5.0", null status=STABLE)
 meth public java.lang.String getDisplayName(int)
 meth public java.util.List<org.junit.jupiter.api.extension.Extension> getAdditionalExtensions()
 
 CLSS public abstract interface org.junit.jupiter.api.extension.TestTemplateInvocationContextProvider
- anno 0 org.apiguardian.api.API(null since="5.0", null status=STABLE)
 intf org.junit.jupiter.api.extension.Extension
 meth public abstract boolean supportsTestTemplate(org.junit.jupiter.api.extension.ExtensionContext)
 meth public abstract java.util.stream.Stream<org.junit.jupiter.api.extension.TestTemplateInvocationContext> provideTestTemplateInvocationContexts(org.junit.jupiter.api.extension.ExtensionContext)
 
 CLSS public abstract interface org.junit.jupiter.api.extension.TestWatcher
- anno 0 org.apiguardian.api.API(null since="5.4", null status=EXPERIMENTAL)
 intf org.junit.jupiter.api.extension.Extension
 meth public void testAborted(org.junit.jupiter.api.extension.ExtensionContext,java.lang.Throwable)
 meth public void testDisabled(org.junit.jupiter.api.extension.ExtensionContext,java.util.Optional<java.lang.String>)
@@ -1322,77 +1055,51 @@ meth public void testSuccessful(org.junit.jupiter.api.extension.ExtensionContext
 
 CLSS public abstract interface org.junit.jupiter.api.function.Executable
  anno 0 java.lang.FunctionalInterface()
- anno 0 org.apiguardian.api.API(null since="5.0", null status=STABLE)
 meth public abstract void execute() throws java.lang.Throwable
 
 CLSS public abstract interface org.junit.jupiter.api.function.ThrowingConsumer<%0 extends java.lang.Object>
  anno 0 java.lang.FunctionalInterface()
- anno 0 org.apiguardian.api.API(null since="5.0", null status=STABLE)
 meth public abstract void accept({org.junit.jupiter.api.function.ThrowingConsumer%0}) throws java.lang.Throwable
 
 CLSS public abstract interface org.junit.jupiter.api.function.ThrowingSupplier<%0 extends java.lang.Object>
  anno 0 java.lang.FunctionalInterface()
- anno 0 org.apiguardian.api.API(null since="5.0", null status=STABLE)
 meth public abstract {org.junit.jupiter.api.function.ThrowingSupplier%0} get() throws java.lang.Throwable
 
 CLSS public final org.junit.jupiter.engine.Constants
- anno 0 org.apiguardian.api.API(null since="5.0", null status=STABLE)
 fld public final static java.lang.String DEACTIVATE_ALL_CONDITIONS_PATTERN = "*"
 fld public final static java.lang.String DEACTIVATE_CONDITIONS_PATTERN_PROPERTY_NAME = "junit.jupiter.conditions.deactivate"
 fld public final static java.lang.String DEFAULT_AFTER_ALL_METHOD_TIMEOUT_PROPERTY_NAME = "junit.jupiter.execution.timeout.afterall.method.default"
- anno 0 org.apiguardian.api.API(null since="5.5", null status=EXPERIMENTAL)
 fld public final static java.lang.String DEFAULT_AFTER_EACH_METHOD_TIMEOUT_PROPERTY_NAME = "junit.jupiter.execution.timeout.aftereach.method.default"
- anno 0 org.apiguardian.api.API(null since="5.5", null status=EXPERIMENTAL)
 fld public final static java.lang.String DEFAULT_BEFORE_ALL_METHOD_TIMEOUT_PROPERTY_NAME = "junit.jupiter.execution.timeout.beforeall.method.default"
- anno 0 org.apiguardian.api.API(null since="5.5", null status=EXPERIMENTAL)
 fld public final static java.lang.String DEFAULT_BEFORE_EACH_METHOD_TIMEOUT_PROPERTY_NAME = "junit.jupiter.execution.timeout.beforeeach.method.default"
- anno 0 org.apiguardian.api.API(null since="5.5", null status=EXPERIMENTAL)
 fld public final static java.lang.String DEFAULT_CLASSES_EXECUTION_MODE_PROPERTY_NAME = "junit.jupiter.execution.parallel.mode.classes.default"
- anno 0 org.apiguardian.api.API(null since="5.5", null status=EXPERIMENTAL)
 fld public final static java.lang.String DEFAULT_DISPLAY_NAME_GENERATOR_PROPERTY_NAME = "junit.jupiter.displayname.generator.default"
 fld public final static java.lang.String DEFAULT_LIFECYCLE_METHOD_TIMEOUT_PROPERTY_NAME = "junit.jupiter.execution.timeout.lifecycle.method.default"
- anno 0 org.apiguardian.api.API(null since="5.5", null status=EXPERIMENTAL)
 fld public final static java.lang.String DEFAULT_PARALLEL_EXECUTION_MODE = "junit.jupiter.execution.parallel.mode.default"
- anno 0 org.apiguardian.api.API(null since="5.4", null status=EXPERIMENTAL)
 fld public final static java.lang.String DEFAULT_TESTABLE_METHOD_TIMEOUT_PROPERTY_NAME = "junit.jupiter.execution.timeout.testable.method.default"
- anno 0 org.apiguardian.api.API(null since="5.5", null status=EXPERIMENTAL)
 fld public final static java.lang.String DEFAULT_TEST_FACTORY_METHOD_TIMEOUT_PROPERTY_NAME = "junit.jupiter.execution.timeout.testfactory.method.default"
- anno 0 org.apiguardian.api.API(null since="5.5", null status=EXPERIMENTAL)
 fld public final static java.lang.String DEFAULT_TEST_INSTANCE_LIFECYCLE_PROPERTY_NAME = "junit.jupiter.testinstance.lifecycle.default"
 fld public final static java.lang.String DEFAULT_TEST_METHOD_TIMEOUT_PROPERTY_NAME = "junit.jupiter.execution.timeout.test.method.default"
- anno 0 org.apiguardian.api.API(null since="5.5", null status=EXPERIMENTAL)
 fld public final static java.lang.String DEFAULT_TEST_TEMPLATE_METHOD_TIMEOUT_PROPERTY_NAME = "junit.jupiter.execution.timeout.testtemplate.method.default"
- anno 0 org.apiguardian.api.API(null since="5.5", null status=EXPERIMENTAL)
 fld public final static java.lang.String DEFAULT_TIMEOUT_PROPERTY_NAME = "junit.jupiter.execution.timeout.default"
- anno 0 org.apiguardian.api.API(null since="5.5", null status=EXPERIMENTAL)
 fld public final static java.lang.String EXTENSIONS_AUTODETECTION_ENABLED_PROPERTY_NAME = "junit.jupiter.extensions.autodetection.enabled"
 fld public final static java.lang.String PARALLEL_CONFIG_CUSTOM_CLASS_PROPERTY_NAME = "junit.jupiter.execution.parallel.config.custom.class"
- anno 0 org.apiguardian.api.API(null since="5.3", null status=EXPERIMENTAL)
 fld public final static java.lang.String PARALLEL_CONFIG_DYNAMIC_FACTOR_PROPERTY_NAME = "junit.jupiter.execution.parallel.config.dynamic.factor"
- anno 0 org.apiguardian.api.API(null since="5.3", null status=EXPERIMENTAL)
 fld public final static java.lang.String PARALLEL_CONFIG_FIXED_PARALLELISM_PROPERTY_NAME = "junit.jupiter.execution.parallel.config.fixed.parallelism"
- anno 0 org.apiguardian.api.API(null since="5.3", null status=EXPERIMENTAL)
 fld public final static java.lang.String PARALLEL_CONFIG_STRATEGY_PROPERTY_NAME = "junit.jupiter.execution.parallel.config.strategy"
- anno 0 org.apiguardian.api.API(null since="5.3", null status=EXPERIMENTAL)
 fld public final static java.lang.String PARALLEL_EXECUTION_ENABLED_PROPERTY_NAME = "junit.jupiter.execution.parallel.enabled"
- anno 0 org.apiguardian.api.API(null since="5.3", null status=EXPERIMENTAL)
 fld public final static java.lang.String TIMEOUT_MODE_PROPERTY_NAME = "junit.jupiter.execution.timeout.mode"
- anno 0 org.apiguardian.api.API(null since="5.6", null status=EXPERIMENTAL)
 supr java.lang.Object
 hfds PARALLEL_CONFIG_PREFIX
 
 CLSS public final org.junit.jupiter.engine.JupiterTestEngine
- anno 0 org.apiguardian.api.API(null since="5.0", null status=INTERNAL)
 
 CLSS public abstract org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor
- anno 0 org.apiguardian.api.API(null since="5.5", null status=INTERNAL)
 hfds afterAllMethods,beforeAllMethods,defaultChildExecutionMode,executableInvoker,testClass,testInstanceFactory
 
 CLSS public org.junit.jupiter.engine.descriptor.ClassTestDescriptor
- anno 0 org.apiguardian.api.API(null since="5.0", null status=INTERNAL)
 
 CLSS public org.junit.jupiter.engine.descriptor.DynamicDescendantFilter
- anno 0 org.apiguardian.api.API(null since="5.1", null status=INTERNAL)
 cons public init()
 intf java.util.function.Predicate<org.junit.platform.engine.UniqueId>
 meth public boolean test(org.junit.platform.engine.UniqueId)
@@ -1403,48 +1110,37 @@ hfds allowed,mode
 hcls Mode
 
 CLSS public abstract interface org.junit.jupiter.engine.descriptor.Filterable
- anno 0 org.apiguardian.api.API(null since="5.1", null status=INTERNAL)
 meth public abstract org.junit.jupiter.engine.descriptor.DynamicDescendantFilter getDynamicDescendantFilter()
 
 CLSS public org.junit.jupiter.engine.descriptor.JupiterEngineDescriptor
- anno 0 org.apiguardian.api.API(null since="5.0", null status=INTERNAL)
 hfds configuration
 
 CLSS public abstract org.junit.jupiter.engine.descriptor.JupiterTestDescriptor
- anno 0 org.apiguardian.api.API(null since="5.0", null status=INTERNAL)
 hfds conditionEvaluator,configuration,logger
 hcls ExceptionHandlerInvoker
 
 CLSS public abstract org.junit.jupiter.engine.descriptor.MethodBasedTestDescriptor
- anno 0 org.apiguardian.api.API(null since="5.0", null status=INTERNAL)
 hfds tags,testClass,testMethod
 
 CLSS public org.junit.jupiter.engine.descriptor.NestedClassTestDescriptor
- anno 0 org.apiguardian.api.API(null since="5.0", null status=INTERNAL)
 
 CLSS public org.junit.jupiter.engine.descriptor.TestFactoryTestDescriptor
- anno 0 org.apiguardian.api.API(null since="5.0", null status=INTERNAL)
 hfds dynamicDescendantFilter,executableInvoker,interceptorCall
 
 CLSS public final org.junit.jupiter.engine.descriptor.TestInstanceLifecycleUtils
- anno 0 org.apiguardian.api.API(null since="5.0", null status=INTERNAL)
 supr java.lang.Object
 
 CLSS public org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor
- anno 0 org.apiguardian.api.API(null since="5.0", null status=INTERNAL)
 hfds defaultInterceptorCall,executableInvoker,interceptorCall,logger
 hcls CallbackInvoker
 
 CLSS public org.junit.jupiter.engine.descriptor.TestTemplateInvocationTestDescriptor
- anno 0 org.apiguardian.api.API(null since="5.0", null status=INTERNAL)
 hfds index,interceptorCall,invocationContext
 
 CLSS public org.junit.jupiter.engine.descriptor.TestTemplateTestDescriptor
- anno 0 org.apiguardian.api.API(null since="5.0", null status=INTERNAL)
 hfds dynamicDescendantFilter
 
 CLSS public org.junit.jupiter.engine.discovery.DiscoverySelectorResolver
- anno 0 org.apiguardian.api.API(null since="5.0", null status=INTERNAL)
 cons public init()
 meth public void resolveSelectors(org.junit.platform.engine.EngineDiscoveryRequest,org.junit.jupiter.engine.descriptor.JupiterEngineDescriptor)
 supr java.lang.Object
@@ -1452,25 +1148,21 @@ hfds resolver
 
 CLSS public abstract interface org.junit.jupiter.engine.execution.AfterEachMethodAdapter
  anno 0 java.lang.FunctionalInterface()
- anno 0 org.apiguardian.api.API(null since="5.0", null status=INTERNAL)
 intf org.junit.jupiter.api.extension.Extension
 meth public abstract void invokeAfterEachMethod(org.junit.jupiter.api.extension.ExtensionContext,org.junit.jupiter.engine.extension.ExtensionRegistry) throws java.lang.Throwable
 
 CLSS public abstract interface org.junit.jupiter.engine.execution.BeforeEachMethodAdapter
  anno 0 java.lang.FunctionalInterface()
- anno 0 org.apiguardian.api.API(null since="5.0", null status=INTERNAL)
 intf org.junit.jupiter.api.extension.Extension
 meth public abstract void invokeBeforeEachMethod(org.junit.jupiter.api.extension.ExtensionContext,org.junit.jupiter.engine.extension.ExtensionRegistry) throws java.lang.Throwable
 
 CLSS public org.junit.jupiter.engine.execution.ConditionEvaluator
- anno 0 org.apiguardian.api.API(null since="5.0", null status=INTERNAL)
 cons public init()
 meth public org.junit.jupiter.api.extension.ConditionEvaluationResult evaluate(org.junit.jupiter.engine.extension.ExtensionRegistry,org.junit.jupiter.engine.config.JupiterConfiguration,org.junit.jupiter.api.extension.ExtensionContext)
 supr java.lang.Object
 hfds ENABLED,logger
 
 CLSS public org.junit.jupiter.engine.execution.DefaultTestInstances
- anno 0 org.apiguardian.api.API(null since="5.4", null status=INTERNAL)
 intf org.junit.jupiter.api.extension.TestInstances
 meth public <%0 extends java.lang.Object> java.util.Optional<{%%0}> findInstance(java.lang.Class<{%%0}>)
 meth public java.lang.Object getInnermostInstance()
@@ -1482,7 +1174,6 @@ supr java.lang.Object
 hfds instances
 
 CLSS public org.junit.jupiter.engine.execution.ExecutableInvoker
- anno 0 org.apiguardian.api.API(null since="5.0", null status=INTERNAL)
 cons public init()
 innr public abstract interface static ReflectiveInterceptorCall
 meth public <%0 extends java.lang.Object> {%%0} invoke(java.lang.reflect.Constructor<{%%0}>,java.util.Optional<java.lang.Object>,org.junit.jupiter.api.extension.ExtensionContext,org.junit.jupiter.engine.extension.ExtensionRegistry,org.junit.jupiter.engine.execution.ExecutableInvoker$ReflectiveInterceptorCall<java.lang.reflect.Constructor<{%%0}>,{%%0}>)
@@ -1501,7 +1192,6 @@ CLSS public abstract interface static org.junit.jupiter.engine.execution.Executa
 meth public abstract void apply(org.junit.jupiter.api.extension.InvocationInterceptor,org.junit.jupiter.api.extension.InvocationInterceptor$Invocation<java.lang.Void>,org.junit.jupiter.api.extension.ReflectiveInvocationContext<java.lang.reflect.Method>,org.junit.jupiter.api.extension.ExtensionContext) throws java.lang.Throwable
 
 CLSS public org.junit.jupiter.engine.execution.ExtensionValuesStore
- anno 0 org.apiguardian.api.API(null since="5.0", null status=INTERNAL)
 cons public init(org.junit.jupiter.engine.execution.ExtensionValuesStore)
 meth public void closeAllStoredCloseableValues()
 supr java.lang.Object
@@ -1509,7 +1199,6 @@ hfds parentStore,storedValues
 hcls CompositeKey,MemoizingSupplier
 
 CLSS public org.junit.jupiter.engine.execution.InvocationInterceptorChain
- anno 0 org.apiguardian.api.API(null since="5.5", null status=INTERNAL)
 cons public init()
 innr public abstract interface static InterceptorCall
 innr public abstract interface static VoidInterceptorCall
@@ -1529,7 +1218,6 @@ CLSS public abstract interface static org.junit.jupiter.engine.execution.Invocat
 meth public abstract void apply(org.junit.jupiter.api.extension.InvocationInterceptor,org.junit.jupiter.api.extension.InvocationInterceptor$Invocation<java.lang.Void>) throws java.lang.Throwable
 
 CLSS public org.junit.jupiter.engine.execution.JupiterEngineExecutionContext
- anno 0 org.apiguardian.api.API(null since="5.0", null status=INTERNAL)
 hfds beforeAllCallbacksExecuted,beforeAllMethodsExecuted,logger,state
 hcls State
 
@@ -1544,7 +1232,6 @@ supr java.lang.Object
 hfds newState,originalState
 
 CLSS public org.junit.jupiter.engine.execution.NamespaceAwareStore
- anno 0 org.apiguardian.api.API(null since="5.0", null status=INTERNAL)
 cons public init(org.junit.jupiter.engine.execution.ExtensionValuesStore,org.junit.jupiter.api.extension.ExtensionContext$Namespace)
 intf org.junit.jupiter.api.extension.ExtensionContext$Store
 meth public <%0 extends java.lang.Object, %1 extends java.lang.Object> java.lang.Object getOrComputeIfAbsent({%%0},java.util.function.Function<{%%0},{%%1}>)
@@ -1559,22 +1246,18 @@ hfds namespace,valuesStore
 
 CLSS public abstract interface org.junit.jupiter.engine.execution.TestInstancesProvider
  anno 0 java.lang.FunctionalInterface()
- anno 0 org.apiguardian.api.API(null since="5.0", null status=INTERNAL)
 meth public abstract org.junit.jupiter.api.extension.TestInstances getTestInstances(org.junit.jupiter.engine.extension.ExtensionRegistry,org.junit.jupiter.engine.extension.ExtensionRegistrar)
 meth public org.junit.jupiter.api.extension.TestInstances getTestInstances(org.junit.jupiter.engine.extension.MutableExtensionRegistry)
 
 CLSS public abstract interface org.junit.jupiter.engine.extension.ExtensionRegistrar
- anno 0 org.apiguardian.api.API(null since="5.5", null status=INTERNAL)
 meth public abstract void registerExtension(org.junit.jupiter.api.extension.Extension,java.lang.Object)
 
 CLSS public abstract interface org.junit.jupiter.engine.extension.ExtensionRegistry
- anno 0 org.apiguardian.api.API(null since="5.0", null status=INTERNAL)
 meth public <%0 extends org.junit.jupiter.api.extension.Extension> java.util.List<{%%0}> getExtensions(java.lang.Class<{%%0}>)
 meth public <%0 extends org.junit.jupiter.api.extension.Extension> java.util.List<{%%0}> getReversedExtensions(java.lang.Class<{%%0}>)
 meth public abstract <%0 extends org.junit.jupiter.api.extension.Extension> java.util.stream.Stream<{%%0}> stream(java.lang.Class<{%%0}>)
 
 CLSS public org.junit.jupiter.engine.extension.MutableExtensionRegistry
- anno 0 org.apiguardian.api.API(null since="5.5", null status=INTERNAL)
 intf org.junit.jupiter.engine.extension.ExtensionRegistrar
 intf org.junit.jupiter.engine.extension.ExtensionRegistry
 meth public <%0 extends org.junit.jupiter.api.extension.Extension> java.util.stream.Stream<{%%0}> stream(java.lang.Class<{%%0}>)
@@ -1588,40 +1271,30 @@ CLSS public abstract interface !annotation org.junit.jupiter.params.Parameterize
  anno 0 java.lang.annotation.Documented()
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE, METHOD])
- anno 0 org.apiguardian.api.API(null since="5.0", null status=EXPERIMENTAL)
  anno 0 org.junit.jupiter.api.TestTemplate()
  anno 0 org.junit.jupiter.api.extension.ExtendWith(java.lang.Class<? extends org.junit.jupiter.api.extension.Extension>[] value=[class org.junit.jupiter.params.ParameterizedTestExtension])
 fld public final static java.lang.String ARGUMENTS_PLACEHOLDER = "{arguments}"
- anno 0 org.apiguardian.api.API(null since="5.3", null status=EXPERIMENTAL)
 fld public final static java.lang.String ARGUMENTS_WITH_NAMES_PLACEHOLDER = "{argumentsWithNames}"
- anno 0 org.apiguardian.api.API(null since="5.6", null status=EXPERIMENTAL)
 fld public final static java.lang.String DEFAULT_DISPLAY_NAME = "[{index}] {argumentsWithNames}"
- anno 0 org.apiguardian.api.API(null since="5.3", null status=EXPERIMENTAL)
 fld public final static java.lang.String DISPLAY_NAME_PLACEHOLDER = "{displayName}"
- anno 0 org.apiguardian.api.API(null since="5.3", null status=EXPERIMENTAL)
 fld public final static java.lang.String INDEX_PLACEHOLDER = "{index}"
- anno 0 org.apiguardian.api.API(null since="5.3", null status=EXPERIMENTAL)
 intf java.lang.annotation.Annotation
 meth public abstract !hasdefault java.lang.String name()
 
 CLSS public org.junit.jupiter.params.converter.ArgumentConversionException
- anno 0 org.apiguardian.api.API(null since="5.0", null status=EXPERIMENTAL)
 hfds serialVersionUID
 
 CLSS public abstract interface org.junit.jupiter.params.converter.ArgumentConverter
- anno 0 org.apiguardian.api.API(null since="5.0", null status=EXPERIMENTAL)
 meth public abstract java.lang.Object convert(java.lang.Object,org.junit.jupiter.api.extension.ParameterContext) throws org.junit.jupiter.params.converter.ArgumentConversionException
 
 CLSS public abstract interface !annotation org.junit.jupiter.params.converter.ConvertWith
  anno 0 java.lang.annotation.Documented()
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE, PARAMETER])
- anno 0 org.apiguardian.api.API(null since="5.0", null status=EXPERIMENTAL)
 intf java.lang.annotation.Annotation
 meth public abstract java.lang.Class<? extends org.junit.jupiter.params.converter.ArgumentConverter> value()
 
 CLSS public org.junit.jupiter.params.converter.DefaultArgumentConverter
- anno 0 org.apiguardian.api.API(null since="5.0", null status=INTERNAL)
 fld public final static org.junit.jupiter.params.converter.DefaultArgumentConverter INSTANCE
 meth public java.lang.Object convert(java.lang.Object,java.lang.Class<?>)
 supr org.junit.jupiter.params.converter.SimpleArgumentConverter
@@ -1632,13 +1305,11 @@ CLSS public abstract interface !annotation org.junit.jupiter.params.converter.Ja
  anno 0 java.lang.annotation.Documented()
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE, PARAMETER])
- anno 0 org.apiguardian.api.API(null since="5.0", null status=EXPERIMENTAL)
  anno 0 org.junit.jupiter.params.converter.ConvertWith(java.lang.Class<? extends org.junit.jupiter.params.converter.ArgumentConverter> value=class org.junit.jupiter.params.converter.JavaTimeArgumentConverter)
 intf java.lang.annotation.Annotation
 meth public abstract java.lang.String value()
 
 CLSS public abstract org.junit.jupiter.params.converter.SimpleArgumentConverter
- anno 0 org.apiguardian.api.API(null since="5.0", null status=EXPERIMENTAL)
 cons public init()
 intf org.junit.jupiter.params.converter.ArgumentConverter
 meth protected abstract java.lang.Object convert(java.lang.Object,java.lang.Class<?>) throws org.junit.jupiter.params.converter.ArgumentConversionException
@@ -1646,14 +1317,11 @@ meth public final java.lang.Object convert(java.lang.Object,org.junit.jupiter.ap
 supr java.lang.Object
 
 CLSS public abstract interface org.junit.jupiter.params.provider.Arguments
- anno 0 org.apiguardian.api.API(null since="5.0", null status=EXPERIMENTAL)
 meth public !varargs static org.junit.jupiter.params.provider.Arguments arguments(java.lang.Object[])
- anno 0 org.apiguardian.api.API(null since="5.3", null status=EXPERIMENTAL)
 meth public !varargs static org.junit.jupiter.params.provider.Arguments of(java.lang.Object[])
 meth public abstract java.lang.Object[] get()
 
 CLSS public abstract interface org.junit.jupiter.params.provider.ArgumentsProvider
- anno 0 org.apiguardian.api.API(null since="5.0", null status=EXPERIMENTAL)
 meth public abstract java.util.stream.Stream<? extends org.junit.jupiter.params.provider.Arguments> provideArguments(org.junit.jupiter.api.extension.ExtensionContext) throws java.lang.Exception
 
 CLSS public abstract interface !annotation org.junit.jupiter.params.provider.ArgumentsSource
@@ -1661,7 +1329,6 @@ CLSS public abstract interface !annotation org.junit.jupiter.params.provider.Arg
  anno 0 java.lang.annotation.Repeatable(java.lang.Class<? extends java.lang.annotation.Annotation> value=class org.junit.jupiter.params.provider.ArgumentsSources)
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE, METHOD])
- anno 0 org.apiguardian.api.API(null since="5.0", null status=EXPERIMENTAL)
 intf java.lang.annotation.Annotation
 meth public abstract java.lang.Class<? extends org.junit.jupiter.params.provider.ArgumentsProvider> value()
 
@@ -1669,7 +1336,6 @@ CLSS public abstract interface !annotation org.junit.jupiter.params.provider.Arg
  anno 0 java.lang.annotation.Documented()
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD])
- anno 0 org.apiguardian.api.API(null since="5.0", null status=EXPERIMENTAL)
 intf java.lang.annotation.Annotation
 meth public abstract org.junit.jupiter.params.provider.ArgumentsSource[] value()
 
@@ -1677,47 +1343,36 @@ CLSS public abstract interface !annotation org.junit.jupiter.params.provider.Csv
  anno 0 java.lang.annotation.Documented()
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE, METHOD])
- anno 0 org.apiguardian.api.API(null since="5.0", null status=EXPERIMENTAL)
  anno 0 org.junit.jupiter.params.provider.ArgumentsSource(java.lang.Class<? extends org.junit.jupiter.params.provider.ArgumentsProvider> value=class org.junit.jupiter.params.provider.CsvFileArgumentsProvider)
 intf java.lang.annotation.Annotation
 meth public abstract !hasdefault char delimiter()
 meth public abstract !hasdefault int numLinesToSkip()
- anno 0 org.apiguardian.api.API(null since="5.1", null status=EXPERIMENTAL)
 meth public abstract !hasdefault java.lang.String delimiterString()
- anno 0 org.apiguardian.api.API(null since="5.6", null status=EXPERIMENTAL)
 meth public abstract !hasdefault java.lang.String emptyValue()
- anno 0 org.apiguardian.api.API(null since="5.5", null status=EXPERIMENTAL)
 meth public abstract !hasdefault java.lang.String encoding()
 meth public abstract !hasdefault java.lang.String lineSeparator()
 meth public abstract !hasdefault java.lang.String[] nullValues()
- anno 0 org.apiguardian.api.API(null since="5.6", null status=EXPERIMENTAL)
 meth public abstract java.lang.String[] resources()
 
 CLSS public org.junit.jupiter.params.provider.CsvParsingException
- anno 0 org.apiguardian.api.API(null since="5.3", null status=EXPERIMENTAL)
 hfds serialVersionUID
 
 CLSS public abstract interface !annotation org.junit.jupiter.params.provider.CsvSource
  anno 0 java.lang.annotation.Documented()
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE, METHOD])
- anno 0 org.apiguardian.api.API(null since="5.0", null status=EXPERIMENTAL)
  anno 0 org.junit.jupiter.params.provider.ArgumentsSource(java.lang.Class<? extends org.junit.jupiter.params.provider.ArgumentsProvider> value=class org.junit.jupiter.params.provider.CsvArgumentsProvider)
 intf java.lang.annotation.Annotation
 meth public abstract !hasdefault char delimiter()
 meth public abstract !hasdefault java.lang.String delimiterString()
- anno 0 org.apiguardian.api.API(null since="5.6", null status=EXPERIMENTAL)
 meth public abstract !hasdefault java.lang.String emptyValue()
- anno 0 org.apiguardian.api.API(null since="5.5", null status=EXPERIMENTAL)
 meth public abstract !hasdefault java.lang.String[] nullValues()
- anno 0 org.apiguardian.api.API(null since="5.6", null status=EXPERIMENTAL)
 meth public abstract java.lang.String[] value()
 
 CLSS public abstract interface !annotation org.junit.jupiter.params.provider.EmptySource
  anno 0 java.lang.annotation.Documented()
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE, METHOD])
- anno 0 org.apiguardian.api.API(null since="5.4", null status=EXPERIMENTAL)
  anno 0 org.junit.jupiter.params.provider.ArgumentsSource(java.lang.Class<? extends org.junit.jupiter.params.provider.ArgumentsProvider> value=class org.junit.jupiter.params.provider.EmptyArgumentsProvider)
 intf java.lang.annotation.Annotation
 
@@ -1725,7 +1380,6 @@ CLSS public abstract interface !annotation org.junit.jupiter.params.provider.Enu
  anno 0 java.lang.annotation.Documented()
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE, METHOD])
- anno 0 org.apiguardian.api.API(null since="5.0", null status=EXPERIMENTAL)
  anno 0 org.junit.jupiter.params.provider.ArgumentsSource(java.lang.Class<? extends org.junit.jupiter.params.provider.ArgumentsProvider> value=class org.junit.jupiter.params.provider.EnumArgumentsProvider)
 innr public final static !enum Mode
 intf java.lang.annotation.Annotation
@@ -1749,7 +1403,6 @@ CLSS public abstract interface !annotation org.junit.jupiter.params.provider.Met
  anno 0 java.lang.annotation.Documented()
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE, METHOD])
- anno 0 org.apiguardian.api.API(null since="5.0", null status=EXPERIMENTAL)
  anno 0 org.junit.jupiter.params.provider.ArgumentsSource(java.lang.Class<? extends org.junit.jupiter.params.provider.ArgumentsProvider> value=class org.junit.jupiter.params.provider.MethodArgumentsProvider)
 intf java.lang.annotation.Annotation
 meth public abstract !hasdefault java.lang.String[] value()
@@ -1758,13 +1411,11 @@ CLSS public abstract interface !annotation org.junit.jupiter.params.provider.Nul
  anno 0 java.lang.annotation.Documented()
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE, METHOD])
- anno 0 org.apiguardian.api.API(null since="5.4", null status=EXPERIMENTAL)
  anno 0 org.junit.jupiter.params.provider.EmptySource()
  anno 0 org.junit.jupiter.params.provider.NullSource()
 intf java.lang.annotation.Annotation
 
 CLSS public final !enum org.junit.jupiter.params.provider.NullEnum
- anno 0 org.apiguardian.api.API(null since="5.6", null status=EXPERIMENTAL)
 meth public static org.junit.jupiter.params.provider.NullEnum valueOf(java.lang.String)
 meth public static org.junit.jupiter.params.provider.NullEnum[] values()
 supr java.lang.Enum<org.junit.jupiter.params.provider.NullEnum>
@@ -1773,7 +1424,6 @@ CLSS public abstract interface !annotation org.junit.jupiter.params.provider.Nul
  anno 0 java.lang.annotation.Documented()
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE, METHOD])
- anno 0 org.apiguardian.api.API(null since="5.4", null status=EXPERIMENTAL)
  anno 0 org.junit.jupiter.params.provider.ArgumentsSource(java.lang.Class<? extends org.junit.jupiter.params.provider.ArgumentsProvider> value=class org.junit.jupiter.params.provider.NullArgumentsProvider)
 intf java.lang.annotation.Annotation
 
@@ -1781,7 +1431,6 @@ CLSS public abstract interface !annotation org.junit.jupiter.params.provider.Val
  anno 0 java.lang.annotation.Documented()
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE, METHOD])
- anno 0 org.apiguardian.api.API(null since="5.0", null status=EXPERIMENTAL)
  anno 0 org.junit.jupiter.params.provider.ArgumentsSource(java.lang.Class<? extends org.junit.jupiter.params.provider.ArgumentsProvider> value=class org.junit.jupiter.params.provider.ValueArgumentsProvider)
 intf java.lang.annotation.Annotation
 meth public abstract !hasdefault boolean[] booleans()
@@ -1797,11 +1446,9 @@ meth public abstract !hasdefault short[] shorts()
 
 CLSS public abstract interface org.junit.jupiter.params.support.AnnotationConsumer<%0 extends java.lang.annotation.Annotation>
  anno 0 java.lang.FunctionalInterface()
- anno 0 org.apiguardian.api.API(null since="5.0", null status=EXPERIMENTAL)
 intf java.util.function.Consumer<{org.junit.jupiter.params.support.AnnotationConsumer%0}>
 
 CLSS public final org.junit.jupiter.params.support.AnnotationConsumerInitializer
- anno 0 org.apiguardian.api.API(null since="5.0", null status=INTERNAL)
 meth public static <%0 extends java.lang.Object> {%%0} initialize(java.lang.reflect.AnnotatedElement,{%%0})
 supr java.lang.Object
 hfds isAnnotationConsumerAcceptMethod

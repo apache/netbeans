@@ -28,7 +28,6 @@ import com.sun.jdi.connect.Transport;
 import com.sun.jdi.connect.Connector;
 import java.util.Iterator;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.netbeans.api.debugger.jpda.DebuggerStartException;
 
@@ -50,7 +49,6 @@ public class JPDAStart implements Runnable {
 
     private static final RequestProcessor RP = new RequestProcessor(JPDAStart.class);
     private static final String TRANSPORT = "dt_socket"; //NOI18N
-    private static final Logger LOG = Logger.getLogger(JPDAStart.class.getName());
 
     private final Object[] lock = new Object[2];
     private final InputOutput io;
@@ -64,13 +62,13 @@ public class JPDAStart implements Runnable {
     /**
      * returns the port that the debugger listens to..
      */
-    public String execute() throws Throwable {
-        LOG.log(Level.INFO, "JPDA Listening Start"); //NOI18N
+    public String execute() throws Exception {
+        SingleSourceFileUtil.LOG.log(Level.INFO, "JPDA Listening Start"); //NOI18N
         synchronized (lock) {
             RP.post(this);
             lock.wait();
             if (lock[1] != null) {
-                throw ((Throwable) lock[1]); //NOI18N
+                throw ((Exception) lock[1]); //NOI18N
             }
         }
         return (String) lock[0];
@@ -106,7 +104,7 @@ public class JPDAStart implements Runnable {
                 } catch (NumberFormatException e) {
                     lock[0] = address;
                 }
-                LOG.log(Level.INFO, "Debug Port:{0}", lock[0]);  //NOI18N
+                SingleSourceFileUtil.LOG.log(Level.INFO, "Debug Port:{0}", lock[0]);  //NOI18N
 
                 final Map properties = new HashMap();
 
@@ -125,7 +123,7 @@ public class JPDAStart implements Runnable {
                                 new Object[]{properties});
                     } catch (DebuggerStartException ex) {
                         io.getErr().println("Debugger Start Error."); //NOI18N
-                        LOG.log(Level.SEVERE, "Debugger Start Error.", ex);
+                        SingleSourceFileUtil.LOG.log(Level.SEVERE, "Debugger Start Error.", ex);
                     }
                 });
             } catch (java.io.IOException ioex) {

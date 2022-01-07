@@ -24,7 +24,6 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.text.MessageFormat;
 
-import org.netbeans.modules.j2ee.sun.validation.constraints.ConstraintFailure;
 import org.netbeans.modules.j2ee.sun.validation.util.BundleReader;
 
 

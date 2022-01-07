@@ -25,6 +25,9 @@
 
 package org.netbeans.modules.j2ee.dd.impl.common;
 
+import java.util.Map;
+import java.util.HashMap;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.netbeans.modules.schema2beans.Version;
@@ -77,7 +80,7 @@ public abstract class DescriptionBeanMultiple extends EnclosingBean implements D
         }
     }
     
-    public void setAllDescriptions(java.util.Map descriptions) throws VersionNotSupportedException {
+    public void setAllDescriptions(Map descriptions) throws VersionNotSupportedException {
         removeAllDescriptions();
         if (descriptions!=null) {
             java.util.Iterator keys = descriptions.keySet().iterator();
@@ -106,8 +109,8 @@ public abstract class DescriptionBeanMultiple extends EnclosingBean implements D
             return null;
         }
     }
-    public java.util.Map getAllDescriptions() {
-        java.util.Map map =new java.util.HashMap();
+    public Map getAllDescriptions() {
+        Map<String, String> map =new HashMap<>();
         for (int i=0;i<sizeDescription();i++) {
             String desc=getDescription(i);
             String loc=getDescriptionXmlLang(i);
@@ -117,7 +120,7 @@ public abstract class DescriptionBeanMultiple extends EnclosingBean implements D
     }
     
     public void removeDescriptionForLocale(String locale) throws VersionNotSupportedException {
-        java.util.Map map = new java.util.HashMap();
+        Map<String, String> map = new HashMap<>();
         for (int i=0;i<sizeDescription();i++) {
             String desc=getDescription(i);
             String loc=getDescriptionXmlLang(i);

@@ -583,20 +583,16 @@ public class InspectAndRefactorPanel extends javax.swing.JPanel implements Popup
         return toRet;
     }
     
-    private void storeFileList(Set files, String basekey) throws BackingStoreException {
+    private void storeFileList(Set<?> files, String basekey) throws BackingStoreException {
         Preferences pref = NbPreferences.forModule(JavaScopeBuilder.class).node(PREF_SCOPE).node(basekey);
         assert files != null;
         pref.clear();
         int count = 0;
         for (Object next : files) {
-            try {
-                if (next instanceof FileObject) {
-                    pref.put(basekey + count++, ((FileObject) next).getURL().toExternalForm());
-                } else {
-                    pref.put(basekey + count++, ((NonRecursiveFolder) next).getFolder().getURL().toExternalForm());
-                }
-            } catch (FileStateInvalidException ex) {
-                Exceptions.printStackTrace(ex);
+            if (next instanceof FileObject) {
+                pref.put(basekey + count++, ((FileObject)next).toURL().toExternalForm());
+            } else {
+                pref.put(basekey + count++, ((NonRecursiveFolder)next).getFolder().toURL().toExternalForm());
             }
         }
         pref.flush();

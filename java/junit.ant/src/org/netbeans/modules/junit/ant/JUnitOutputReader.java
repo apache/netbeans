@@ -692,7 +692,8 @@ final class JUnitOutputReader {
         int addFail = failures;
         int addError = errors;
         int addPass = total - failures - errors;
-        for(Testcase tc: testSession.getCurrentSuite().getTestcases()){
+        TestSuite suite = testSession.getCurrentSuite();
+        for(Testcase tc: suite.getTestcases()){
             switch(tc.getStatus()){
                 case ERROR: addError--;break;
                 case FAILED: addFail--;break;
@@ -717,6 +718,7 @@ final class JUnitOutputReader {
 
         lastSuiteTime = time;
         state = State.SUITE_FINISHED;
+        testSession.finishSuite(suite);
     }
 
     private void testCaseStarted(String name){

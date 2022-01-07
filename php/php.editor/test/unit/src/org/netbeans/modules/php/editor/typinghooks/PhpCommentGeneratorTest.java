@@ -139,8 +139,8 @@ public class PhpCommentGeneratorTest extends PHPNavTestBase {
                             "<?php\n" +
                             "class foo {\n" +
                             "    /**\n" +
-                            "     *\n" +
-                            "     * @var " + PhpCommentGenerator.TYPE_PLACEHOLDER + " ^\n" +
+                            "     * \n" +
+                            "     * @var " + PhpCommentGenerator.TYPE_PLACEHOLDER + "^\n" +
                             "     */\n" +
                             "    var $bar = \"\";\n" +
                             "}\n" +
@@ -444,7 +444,7 @@ public class PhpCommentGeneratorTest extends PHPNavTestBase {
                 + "/**\n"
                 + " * \n"
                 + " * @param string|null $string\n"
-                + " * @return \\Foo|null^\n"
+                + " * @return Foo|null^\n"
                 + " */\n"
                 + "function test(?string $string): ?Foo {\n"
                 + "    \n"
@@ -469,7 +469,7 @@ public class PhpCommentGeneratorTest extends PHPNavTestBase {
                 + "    /**\n"
                 + "     * \n"
                 + "     * @param int|null $int\n"
-                + "     * @return \\Foo|null^\n"
+                + "     * @return Foo|null^\n"
                 + "     */\n"
                 + "    public function test(?int $int) : ?Foo;\n"
                 + "}"
@@ -498,6 +498,241 @@ public class PhpCommentGeneratorTest extends PHPNavTestBase {
         );
     }
 
+    public void testThrowExpression() throws Exception {
+        insertBreak(
+                // original
+                ""
+                + "<?php\n"
+                + "/**^\n"
+                + "function test(?string $string): void {\n"
+                + "    throw new Exception();\n"
+                + "}",
+
+                // expected
+                ""
+                + "<?php\n"
+                + "/**\n"
+                + " * \n"
+                + " * @param string|null $string\n"
+                + " * @return void\n"
+                + " * @throws Exception^\n"
+                + " */\n"
+                + "function test(?string $string): void {\n"
+                + "    throw new Exception();\n"
+                + "}"
+        );
+    }
+
+    public void testUnionTypes01() throws Exception {
+        insertBreak(
+                // original
+                ""
+                + "<?php\n"
+                + "class Class1{}\n"
+                + "class Class2{}\n"
+                + "/**^\n"
+                + "function test(Class1|Class2|false|null $param): Class1|Class2|false|null {\n"
+                + "}",
+
+                // expected
+                ""
+                + "<?php\n"
+                + "class Class1{}\n"
+                + "class Class2{}\n"
+                + "/**\n"
+                + " * \n"
+                + " * @param Class1|Class2|false|null $param\n"
+                + " * @return Class1|Class2|false|null^\n"
+                + " */\n"
+                + "function test(Class1|Class2|false|null $param): Class1|Class2|false|null {\n"
+                + "}"
+        );
+    }
+
+    public void testUnionTypes02() throws Exception {
+        insertBreak(
+                // original
+                ""
+                + "<?php\n"
+                + "namespace Test1;\n"
+                + "/**^\n"
+                + "function test(Class1|Class2|false|null $param): Class1|Class2|false|null {\n"
+                + "}\n\n"
+                + "namespace Test2;\n"
+                + "class Class1{}\n"
+                + "class Class2{}\n",
+                // expected
+                ""
+                + "<?php\n"
+                + "namespace Test1;\n"
+                + "/**\n"
+                + " * \n"
+                + " * @param Class1|Class2|false|null $param\n"
+                + " * @return Class1|Class2|false|null^\n"
+                + " */\n"
+                + "function test(Class1|Class2|false|null $param): Class1|Class2|false|null {\n"
+                + "}\n\n"
+                + "namespace Test2;\n"
+                + "class Class1{}\n"
+                + "class Class2{}\n"
+        );
+    }
+
+    public void testUnionTypes03() throws Exception {
+        insertBreak(
+                // original
+                ""
+                + "<?php\n"
+                + "namespace Test1;\n"
+                + "use Test0\\Class0;\n"
+                + "\n"
+                + "class Class1 extends Class0 {\n"
+                + "\n"
+                + "    /**^\n"
+                + "    public function create(parent|self $object): self|parent {\n"
+                + "        return new Class1;\n"
+                + "    }\n"
+                + "\n"
+                + "}\n"
+                + "\n"
+                + "namespace Test0;\n"
+                + "class Class0 {}",
+                // expected
+                ""
+                + "<?php\n"
+                + "namespace Test1;\n"
+                + "use Test0\\Class0;\n"
+                + "\n"
+                + "class Class1 extends Class0 {\n"
+                + "\n"
+                + "    /**\n"
+                + "     * \n"
+                + "     * @param parent|self $object\n"
+                + "     * @return self|parent^\n"
+                + "     */\n"
+                + "    public function create(parent|self $object): self|parent {\n"
+                + "        return new Class1;\n"
+                + "    }\n"
+                + "\n"
+                + "}\n"
+                + "\n"
+                + "namespace Test0;\n"
+                + "class Class0 {}"
+        );
+    }
+
+    public void testUnionTypes04() throws Exception {
+        insertBreak(
+                // original
+                ""
+                + "<?php\n"
+                + "namespace Test1;\n"
+                + "use Test2\\Class2;\n"
+                + "\n"
+                + "class Class1 {\n"
+                + "\n"
+                + "    /**^\n"
+                + "    public Class2|string|int $test;\n"
+                + "\n"
+                + "}\n"
+                + "\n"
+                + "\n"
+                + "namespace Test2;\n"
+                + "class Class2 {}",
+                // expected
+                ""
+                + "<?php\n"
+                + "namespace Test1;\n"
+                + "use Test2\\Class2;\n"
+                + "\n"
+                + "class Class1 {\n"
+                + "\n"
+                + "    /**\n"
+                + "     * \n"
+                + "     * @var Class2|string|int^\n"
+                + "     */\n"
+                + "    public Class2|string|int $test;\n"
+                + "\n"
+                + "}\n"
+                + "\n"
+                + "\n"
+                + "namespace Test2;\n"
+                + "class Class2 {}"
+        );
+    }
+
+    public void testStaicReturnType() throws Exception {
+        insertBreak(
+                // original
+                ""
+                + "<?php\n"
+                + "class StaticReturnType {\n"
+                + "    /**^\n"
+                + "    public function test(): static {\n"
+                + "    }\n"
+                + "}",
+                // expected
+                ""
+                + "<?php\n"
+                + "class StaticReturnType {\n"
+                + "    /**\n"
+                + "     * \n"
+                + "     * @return static^\n"
+                + "     */\n"
+                + "    public function test(): static {\n"
+                + "    }\n"
+                + "}"
+        );
+    }
+
+    public void testStaicReturnTypeWithNullableType() throws Exception {
+        insertBreak(
+                // original
+                ""
+                + "<?php\n"
+                + "class StaticReturnType {\n"
+                + "    /**^\n"
+                + "    public function testNullable(): ?static {\n"
+                + "    }\n"
+                + "}",
+                // expected
+                ""
+                + "<?php\n"
+                + "class StaticReturnType {\n"
+                + "    /**\n"
+                + "     * \n"
+                + "     * @return static|null^\n"
+                + "     */\n"
+                + "    public function testNullable(): ?static {\n"
+                + "    }\n"
+                + "}"
+        );
+    }
+
+    public void testStaicReturnTypeWithUnionType() throws Exception {
+        insertBreak(
+                // original
+                ""
+                + "<?php\n"
+                + "class StaticReturnType {\n"
+                + "    /**^\n"
+                + "    public function testUnionType(): static|null|string {\n"
+                + "    }\n"
+                + "}",
+                // expected
+                ""
+                + "<?php\n"
+                + "class StaticReturnType {\n"
+                + "    /**\n"
+                + "     * \n"
+                + "     * @return static|null|string^\n"
+                + "     */\n"
+                + "    public function testUnionType(): static|null|string {\n"
+                + "    }\n"
+                + "}"
+        );
+    }
+
     @Override
     public void insertNewline(String source, String reformatted, IndentPrefs preferences) throws Exception {
         int sourcePos = source.indexOf('^');
@@ -522,11 +757,7 @@ public class PhpCommentGeneratorTest extends PHPNavTestBase {
         runKitAction(ta, DefaultEditorKit.insertBreakAction, "\n");
 
         // wait for generating comment
-        Future<?> future = PhpCommentGenerator.RP.submit(new Runnable() {
-            @Override
-            public void run() {
-            }
-        });
+        Future<?> future = PhpCommentGenerator.RP.submit(() -> {});
         future.get();
 
         String formatted = doc.getText(0, doc.getLength());

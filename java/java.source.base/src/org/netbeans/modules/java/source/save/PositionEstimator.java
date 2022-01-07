@@ -22,7 +22,6 @@ import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.ImportTree;
 import com.sun.source.tree.Tree;
-import org.netbeans.modules.java.source.TreeShims;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.SourcePositions;
 import com.sun.tools.javac.code.Flags;
@@ -314,7 +313,7 @@ public abstract class PositionEstimator {
                 do {
                     Tree t = cut.getTypeDecls().get(tdpos);
                     typeDeclStart = (int) positions.getStartPosition(cut, t);
-                    if (TreeUtilities.CLASS_TREE_KINDS.contains(t.getKind()) || t.getKind().toString().equals(TreeShims.RECORD)) {
+                    if (TreeUtilities.CLASS_TREE_KINDS.contains(t.getKind())) {
                         break;
                     }
                     tdpos++;
@@ -969,7 +968,7 @@ public abstract class PositionEstimator {
                     if (seq.movePrevious() && seq.offset() >= sectionStart && nonRelevant.contains(seq.token().id())) {
                         moveToSrcRelevantBounded(seq, Direction.BACKWARD);
                         seq.moveNext();
-                        treeEnd = seq.offset();
+                        treeEnd = Math.max(seq.offset(), treeStart);
                     }
                 }
 

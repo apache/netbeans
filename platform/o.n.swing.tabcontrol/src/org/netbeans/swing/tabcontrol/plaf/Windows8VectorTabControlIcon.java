@@ -90,7 +90,7 @@ final class Windows8VectorTabControlIcon extends VectorIcon {
     }
 
     private Windows8VectorTabControlIcon(int buttonId, int buttonState) {
-        super(14, 14);
+        super(14, buttonId == TabControlButton.ID_CLOSE_BUTTON ? 15 : 14);
         this.buttonId = buttonId;
         this.buttonState = buttonState;
     }
@@ -118,10 +118,14 @@ final class Windows8VectorTabControlIcon extends VectorIcon {
                 bgColor = closeColor != null ? closeColor : new Color(57, 100, 178, 255);
                 fgColor = Color.WHITE;
             } else if (buttonState == TabControlButton.STATE_ROLLOVER) {
-                bgColor = closeColor != null ? closeColor
-                        // Grey (via transparent black to work well on any background).
-                        : new Color(0, 0, 0, 70);
-                fgColor = Color.WHITE;
+                if (closeColor != null) {
+                    bgColor = closeColor;
+                    fgColor = Color.WHITE;
+                } else {
+                    /* Light blue, via transparency to work well on any background. In the grey
+                    toolbar, it comes out similar to the hover background used for toolbar buttons. */
+                    bgColor = new Color(0, 132, 247, 49);
+                }
             }
         }
         if (bgColor.getAlpha() > 0) {
@@ -142,7 +146,7 @@ final class Windows8VectorTabControlIcon extends VectorIcon {
                 strokeWidth *= 1.5f;
             }
             double marginX = 3.5 * scaling; // Don't round this one.
-            int topMarginY = round(3 * scaling);
+            int topMarginY = round(4 * scaling);
             int botMarginY = round(4 * scaling);
             // Flatten the top and bottom.
             g.clip(new Rectangle2D.Double(0, topMarginY, width, height - topMarginY - botMarginY));

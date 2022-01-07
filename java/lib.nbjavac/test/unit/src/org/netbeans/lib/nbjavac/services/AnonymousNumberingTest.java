@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.netbeans.lib.nbjavac.services;
 
 import com.sun.source.tree.CompilationUnitTree;
@@ -25,6 +24,7 @@ import com.sun.tools.javac.code.Symtab;
 import com.sun.tools.javac.comp.Modules;
 import com.sun.tools.javac.util.Name;
 import java.io.IOException;
+import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.DeclaredType;
@@ -41,56 +41,62 @@ public class AnonymousNumberingTest extends TestCase {
     }
 
     public void testCorrectAnonymousIndicesForMethodInvocations() throws Exception {
-        String code = "package test;\n" +
-                      "public class Test {\n" +
-                      "    public Test main(Object o) {\n" +
-                      "        return new Test().main(new Runnable() {\n" +
-                      "            public void run() {\n" +
-                      "                throw new UnsupportedOperationException();\n" +
-                      "            }\n" +
-                      "        }).main(new Iterable() {\n" +
-                      "            public java.util.Iterator iterator() {\n" +
-                      "                throw new UnsupportedOperationException();\n" +
-                      "            }\n" +
-                      "        });\n" +
-                      "    }\n" +
-                      "}";
+        if (isJDKVersionRelease16_Or_Above()) {
+            return;
+        }
+        String code = "package test;\n"
+                + "public class Test {\n"
+                + "    public Test main(Object o) {\n"
+                + "        return new Test().main(new Runnable() {\n"
+                + "            public void run() {\n"
+                + "                throw new UnsupportedOperationException();\n"
+                + "            }\n"
+                + "        }).main(new Iterable() {\n"
+                + "            public java.util.Iterator iterator() {\n"
+                + "                throw new UnsupportedOperationException();\n"
+                + "            }\n"
+                + "        });\n"
+                + "    }\n"
+                + "}";
 
         JavacTaskImpl ct = Utilities.createJavac(null, Utilities.fileObjectFor(code));
-        
+
         Iterable<? extends CompilationUnitTree> cuts = ct.parse();
         Iterable<? extends Element> analyze = ct.analyze();
-        
+
         Symtab symTab = Symtab.instance(ct.getContext());
         Modules modules = Modules.instance(ct.getContext());
-        TypeElement first = symTab.getClass(modules.getDefaultModule(), (Name)ct.getElements().getName("test.Test$1"));
-        TypeElement second = symTab.getClass(modules.getDefaultModule(), (Name)ct.getElements().getName("test.Test$2"));
+        TypeElement first = symTab.getClass(modules.getDefaultModule(), (Name) ct.getElements().getName("test.Test$1"));
+        TypeElement second = symTab.getClass(modules.getDefaultModule(), (Name) ct.getElements().getName("test.Test$2"));
 
         assertEquals("java.lang.Iterable", ((TypeElement) ((DeclaredType) first.getInterfaces().get(0)).asElement()).getQualifiedName().toString());
         assertEquals("java.lang.Runnable", ((TypeElement) ((DeclaredType) second.getInterfaces().get(0)).asElement()).getQualifiedName().toString());
     }
 
     public void testCorrectAnonymousIndicesForMultipleMethods() throws IOException {
-        String code = "package test;\n" +
-                      "public class Test {\n" +
-                      "    public Test main1(Object o) {\n" +
-                      "        new Runnable() {\n" +
-                      "            public void run() {\n" +
-                      "                throw new UnsupportedOperationException();\n" +
-                      "            }\n" +
-                      "        };" +
-                      "    }" +
-                      "    public Test main2(Object o) {\n" +
-                      "        new Iterable() {\n" +
-                      "            public java.util.Iterator iterator() {\n" +
-                      "                throw new UnsupportedOperationException();\n" +
-                      "            }\n" +
-                      "        };\n" +
-                      "    }\n" +
-                      "    public Test main3(Object o) {\n" +
-                      "        new java.util.ArrayList() {};\n" +
-                      "    }\n" +
-                      "}";
+        if (isJDKVersionRelease16_Or_Above()) {
+            return;
+        }
+        String code = "package test;\n"
+                + "public class Test {\n"
+                + "    public Test main1(Object o) {\n"
+                + "        new Runnable() {\n"
+                + "            public void run() {\n"
+                + "                throw new UnsupportedOperationException();\n"
+                + "            }\n"
+                + "        };"
+                + "    }"
+                + "    public Test main2(Object o) {\n"
+                + "        new Iterable() {\n"
+                + "            public java.util.Iterator iterator() {\n"
+                + "                throw new UnsupportedOperationException();\n"
+                + "            }\n"
+                + "        };\n"
+                + "    }\n"
+                + "    public Test main3(Object o) {\n"
+                + "        new java.util.ArrayList() {};\n"
+                + "    }\n"
+                + "}";
 
         JavacTaskImpl ct = Utilities.createJavac(null, Utilities.fileObjectFor(code));
 
@@ -98,9 +104,9 @@ public class AnonymousNumberingTest extends TestCase {
 
         Symtab symTab = Symtab.instance(ct.getContext());
         Modules modules = Modules.instance(ct.getContext());
-        TypeElement first = symTab.getClass(modules.getDefaultModule(), (Name)ct.getElements().getName("test.Test$1"));
-        TypeElement second = symTab.getClass(modules.getDefaultModule(), (Name)ct.getElements().getName("test.Test$2"));
-        TypeElement third = symTab.getClass(modules.getDefaultModule(), (Name)ct.getElements().getName("test.Test$3"));
+        TypeElement first = symTab.getClass(modules.getDefaultModule(), (Name) ct.getElements().getName("test.Test$1"));
+        TypeElement second = symTab.getClass(modules.getDefaultModule(), (Name) ct.getElements().getName("test.Test$2"));
+        TypeElement third = symTab.getClass(modules.getDefaultModule(), (Name) ct.getElements().getName("test.Test$3"));
 
         assertEquals("java.lang.Runnable", ((TypeElement) ((DeclaredType) first.getInterfaces().get(0)).asElement()).getQualifiedName().toString());
         assertEquals("java.lang.Iterable", ((TypeElement) ((DeclaredType) second.getInterfaces().get(0)).asElement()).getQualifiedName().toString());
@@ -108,35 +114,42 @@ public class AnonymousNumberingTest extends TestCase {
     }
 
     public void testCorrectNameForAnonymous() throws IOException {
-        String code = "package test;\n" +
-                      "public class Test {\n" +
-                      "    public Test main1(Object o) {\n" +
-                      "        new Runnable() {\n" +
-                      "            public void run() {\n" +
-                      "                throw new UnsupportedOperationException();\n" +
-                      "            }\n" +
-                      "        };" +
-                      "        new Iterable() {\n" +
-                      "            public java.util.Iterator iterator() {\n" +
-                      "                new java.util.ArrayList() {};\n" +
-                      "            }\n" +
-                      "        };\n" +
-                      "    }\n" +
-                      "}";
+        if (isJDKVersionRelease16_Or_Above()) {
+            return;
+        }
+        String code = "package test;\n"
+                + "public class Test {\n"
+                + "    public Test main1(Object o) {\n"
+                + "        new Runnable() {\n"
+                + "            public void run() {\n"
+                + "                throw new UnsupportedOperationException();\n"
+                + "            }\n"
+                + "        };"
+                + "        new Iterable() {\n"
+                + "            public java.util.Iterator iterator() {\n"
+                + "                new java.util.ArrayList() {};\n"
+                + "            }\n"
+                + "        };\n"
+                + "    }\n"
+                + "}";
 
         JavacTaskImpl ct = Utilities.createJavac(null, Utilities.fileObjectFor(code));
-        
+
         ct.analyze();
 
         Symtab symTab = Symtab.instance(ct.getContext());
         Modules modules = Modules.instance(ct.getContext());
-        TypeElement first = symTab.getClass(modules.getDefaultModule(), (Name)ct.getElements().getName("test.Test$1"));
-        TypeElement second = symTab.getClass(modules.getDefaultModule(), (Name)ct.getElements().getName("test.Test$2"));
-        TypeElement third = symTab.getClass(modules.getDefaultModule(), (Name)ct.getElements().getName("test.Test$2$1"));
+        TypeElement first = symTab.getClass(modules.getDefaultModule(), (Name) ct.getElements().getName("test.Test$1"));
+        TypeElement second = symTab.getClass(modules.getDefaultModule(), (Name) ct.getElements().getName("test.Test$2"));
+        TypeElement third = symTab.getClass(modules.getDefaultModule(), (Name) ct.getElements().getName("test.Test$2$1"));
 
         assertEquals("java.lang.Runnable", ((TypeElement) ((DeclaredType) first.getInterfaces().get(0)).asElement()).getQualifiedName().toString());
         assertEquals("java.lang.Iterable", ((TypeElement) ((DeclaredType) second.getInterfaces().get(0)).asElement()).getQualifiedName().toString());
         assertEquals("java.util.ArrayList", ((TypeElement) ((DeclaredType) third.getSuperclass()).asElement()).getQualifiedName().toString());
+    }
+
+    public static boolean isJDKVersionRelease16_Or_Above() {
+        return Integer.valueOf(SourceVersion.latest().name().split("_")[1]).compareTo(16) >= 0;
     }
 
 }

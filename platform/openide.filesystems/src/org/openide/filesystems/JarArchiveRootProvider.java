@@ -25,7 +25,9 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.WeakHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -45,6 +47,8 @@ final class JarArchiveRootProvider implements ArchiveRootProvider {
     private static final Logger LOG = Logger.getLogger(JarArchiveRootProvider.class.getName());
     /** Cache for {@link #isArchiveFile(FileObject)}. */
     private static final Map</*@GuardedBy("archiveFileCache")*/FileObject, Boolean> archiveFileCache = Collections.synchronizedMap(new WeakHashMap<FileObject,Boolean>());
+
+    private static final Set<String> KNOWN_ZIP_EXTENSIONS = new HashSet<>(Arrays.asList("jar", "war", "zip", "ear", "sar", "rar")); //NOI18N
 
     @Override
     public boolean isArchiveFile(URL url, boolean strict) {
@@ -181,11 +185,13 @@ final class JarArchiveRootProvider implements ArchiveRootProvider {
     /**
      * Tests if a non existent path represents a file.
      * @param path to be tested, separated by '/'.
-     * @return true if the file has '.' after last '/'.
+     * @return true if the file has '.' after last '/' and the text after 
+     *         the '.' is a known zip extension.
      */
     private static boolean isArchiveFile (final String path) {
-        int index = path.lastIndexOf('.');  //NOI18N
-        return (index != -1) && (index > path.lastIndexOf('/') + 1);    //NOI18N
+        int dot = path.lastIndexOf('.');   //NOI18N
+        int slash = path.lastIndexOf('/'); //NOI18N
+        return (dot != -1) && (dot > slash + 1) && KNOWN_ZIP_EXTENSIONS.contains(path.substring(dot + 1));
     }
 
 }

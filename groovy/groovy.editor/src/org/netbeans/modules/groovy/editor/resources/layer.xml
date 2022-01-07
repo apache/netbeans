@@ -71,7 +71,14 @@
                         <attr name="originalFile" stringvalue="Actions/Groovy/org-netbeans-modules-groovy-editor-actions-FixImportsAction.instance"/>
                     </file>
                 </folder>
-
+                <folder name="Parser">
+                    <file name="org.spockframework.compiler.SpockTransform.instance">
+                        <attr name="instanceOf" stringvalue="org.netbeans.modules.groovy.editor.compiler.ParsingCompilerCustomizer"/>
+                        <attr
+                            methodvalue="org.netbeans.modules.groovy.editor.api.parser.GroovyParser.customizeTransformsFromLayer" name="instanceCreate"/>
+                        <attr name="disable" stringvalue="org.spockframework.compiler.SpockTransform"/>
+                    </file>
+                </folder>
                 <folder name="Popup">
                     <file name="fix-groovy-imports">
                         <attr name="position" intvalue="801"/>
@@ -119,14 +126,17 @@
                     </folder>
                 </folder>
 
+                <!-- Commented out because Groovy completiont tests are failing with JavaIndexer properly in place.
+                     Groovy maintainers must address this issue appropriately, see NETBEANS-4826
                 <file name="JavaIndexer.shadow">
-                    <attr name="originalFile" stringvalue="Editors/text/x-java/JavaIndexer.instance"/>
+                    <!- - Ugly hack to make commit-validation work. Must change when NETBEANS-4795 is implemented - ->
+                    <attr name="originalFile" stringvalue="Editors/text/x-java/org-netbeans-modules-java-source-indexing-JavaCustomIndexer$Factory-register.instance"/>
                 </file>
+                          -->
 
             </folder>
             <folder name="x-gradle+x-groovy">
                 <file name="org-netbeans-modules-csl-core-GsfParserFactory-create.instance">
-                    <attr name="position" intvalue="100"/>
                     <attr methodvalue="org.netbeans.modules.csl.core.GsfParserFactory.create" name="instanceCreate"/>
                     <attr name="instanceOf" stringvalue="org.netbeans.modules.parsing.spi.ParserFactory"/>
                 </file>

@@ -19,7 +19,6 @@
 
 package org.netbeans.modules.gradle.spi.newproject;
 
-import org.netbeans.modules.gradle.GradleProjectCache;
 import org.netbeans.modules.gradle.NbGradleProjectImpl;
 import java.io.File;
 import java.io.IOException;
@@ -29,6 +28,7 @@ import java.io.Reader;
 import java.io.Writer;
 import java.nio.charset.Charset;
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -52,18 +52,19 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
+import org.netbeans.modules.gradle.GradleProjectLoader;
 import org.netbeans.modules.gradle.ProjectTrust;
 import org.netbeans.modules.gradle.api.GradleProjects;
 import org.netbeans.modules.gradle.api.NbGradleProject.Quality;
 import org.openide.loaders.DataFolder;
 import org.openide.loaders.DataObject;
+import org.openide.util.NbBundle;
 
 /**
  *
  * @author Laszlo Kishalmi
  */
 public final class TemplateOperation implements Runnable {
-
     public interface ProjectConfigurator {
         void configure(Project project);
     }
@@ -146,6 +147,157 @@ public final class TemplateOperation implements Runnable {
 
     public void addWrapperInit(File target) {
         steps.add(new InitGradleWrapper(target));
+    }
+
+    /** *  Begin creation of new project using Gradle's 
+     * <a target="_blank" href="https://docs.gradle.org/current/userguide/build_init_plugin.html">gradle init</a>
+     * functionality. Use the returned {@link InitOperation} object to specify 
+     * additional properties and then call  
+     * {@link InitOperation#add()} to finish the request.
+     * 
+     * 
+     * @param target the directory to place the project at
+     * @param type either {@code java-application}, {@code java-library}, etc.
+     * @return the {@link InitOperation} builder to finish the request
+     * @since 2.20
+     */
+    public InitOperation createGradleInit(File target, String type) {
+        return new InitStep(target, type);
+    }
+
+    /** Builder to specify additional parameters for the {@link #createGradleInit(java.io.File, java.lang.String)}
+     * operation. At the end call {@link #add()} to finish the operation and 
+     * add it to the list of {@link OperationStep}s to perform.
+     * 
+     * @since 2.20
+     */
+    public abstract class InitOperation {
+        InitOperation() {
+        }
+
+        /** Add the operation to the list of {@link OperationStep}s to perform.
+         * @since 2.20
+         */
+        public final void add() {
+            steps.add((OperationStep) this);
+        }
+
+        /** Specify the type of DSL to use.
+         * @param dsl either {@code groovy} or {@code kotlin}
+         * @return this builder to chain the calls.
+         * @since 2.20
+         */
+        public abstract InitOperation dsl(String dsl);
+
+        /** Specify the type of test framework.
+         * @param testFramework {@code junit-jupiter}, {@code spock}, {@code testng}
+         * @return this builder to chain the calls.
+         * @since 2.20
+         */
+        public abstract InitOperation testFramework(String testFramework);
+
+        /** Specify base package of the project
+         * @param pkg base package for the sources
+         * @return this builder to chain the calls.
+         * @since 2.20
+         */
+        public abstract InitOperation basePackage(String pkg);
+
+        /** Specify project name.
+         * @param name the (logical) name of the project
+         * @return this builder to chain the calls.
+         * @since 2.20
+         */
+        public abstract InitOperation projectName(String name);
+    }
+
+    private final class InitStep extends InitOperation implements OperationStep {
+        private final File target;
+        private final String type;
+        private String dsl;
+        private String testFramework;
+        private String basePackage;
+        private String projectName;
+
+        InitStep(File target, String type) {
+            this.target = target;
+            this.type = type;
+        }
+
+        @Override
+        public InitStep dsl(String dsl) {
+            this.dsl = dsl;
+            return this;
+        }
+
+        @Override
+        public InitStep testFramework(String testFramework) {
+            this.testFramework = testFramework;
+            return this;
+        }
+
+        @Override
+        public InitStep basePackage(String pkg) {
+            this.basePackage = pkg;
+            return this;
+        }
+
+        @Override
+        public InitStep projectName(String name) {
+            this.projectName = name;
+            return this;
+        }
+
+        @NbBundle.Messages({
+            "MSG_INIT_GRADLE=Initializing {0} in {1}"
+        })
+        @Override
+        public String getMessage() {
+            return Bundle.MSG_INIT_GRADLE(type, target);
+        }
+
+        @Override
+        public Set<FileObject> execute() {
+            GradleConnector gconn = GradleConnector.newConnector();
+            target.mkdirs();
+            ProjectConnection pconn = gconn.forProjectDirectory(target).connect();
+            try {
+                List<String> args = new ArrayList<>();
+                args.add("init");
+                // gradle init --type java-application --test-framework junit-jupiter --dsl groovy --package com.example --project-name example
+                args.add("--type");
+                args.add(type);
+                // --test-framework junit-jupiter
+                if (testFramework != null) {
+                    args.add("--test-framework");
+                    args.add(testFramework);
+                }
+                // --dsl groovy
+                if (dsl != null) {
+                    args.add("--dsl");
+                    args.add(dsl);
+                }
+                // --package com.example
+                if (basePackage != null) {
+                    args.add("--package");
+                    args.add(basePackage);
+                }
+
+                // --project-name example
+                if (projectName != null) {
+                    args.add("--project-name");
+                    args.add(projectName);
+                }
+
+                pconn.newBuild().withArguments("--offline").forTasks(args.toArray(new String[0])).run(); //NOI18N
+            } catch (GradleConnectionException | IllegalStateException ex) {
+                // Well for some reason we were  not able to load Gradle.
+                // Ignoring that for now
+            } finally {
+                pconn.close();
+            }
+            return Collections.singleton(FileUtil.toFileObject(target));
+        }
     }
 
     public void copyFromFile(String templateName, File target, Map<String, ? extends Object> tokens) {
@@ -263,7 +415,10 @@ public final class TemplateOperation implements Runnable {
                         NbGradleProjectImpl nbProject = project.getLookup().lookup(NbGradleProjectImpl.class);
                         if (nbProject != null) {
                             //Just load the project into the cache.
-                            GradleProjectCache.loadProject(nbProject, Quality.FULL_ONLINE, true, false);
+                            GradleProjectLoader loader = nbProject.getLookup().lookup(GradleProjectLoader.class);
+                            if (loader != null) {
+                                loader.loadProject(Quality.FULL_ONLINE, null, true, false);
+                            }
                         }
                         return Collections.singleton(projectDir);
                     }
@@ -397,7 +552,7 @@ public final class TemplateOperation implements Runnable {
                     FileObject targetParent = FileUtil.createFolder(target.getParentFile());
                     DataFolder targetFolder = DataFolder.findFolder(targetParent);
                     DataObject o = DataObject.find(template);
-                    DataObject newData = o.createFromTemplate(targetFolder,targetName, tokens);
+                    DataObject newData = o.createFromTemplate(targetFolder, targetName, tokens);
                     return important ? Collections.singleton(newData.getPrimaryFile()) : null;
                 } catch (IOException ex) {
 

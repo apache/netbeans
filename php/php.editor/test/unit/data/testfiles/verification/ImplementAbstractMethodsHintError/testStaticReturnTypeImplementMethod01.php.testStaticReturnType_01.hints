@@ -1,0 +1,5 @@
+class TestClass implements TestInterface {
+      ---------
+HINT:\TestClass is not abstract and does not override abstract method  testSimple() in \TestInterface
+FIX:Implement All Abstract Methods
+FIX:Declare Abstract Class

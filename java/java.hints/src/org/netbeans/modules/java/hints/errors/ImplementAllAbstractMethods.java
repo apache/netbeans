@@ -66,7 +66,6 @@ import org.netbeans.api.java.source.WorkingCopy;
 import org.netbeans.editor.GuardedException;
 import org.netbeans.modules.java.editor.codegen.ImplementOverrideMethodGenerator;
 import org.netbeans.modules.java.hints.spi.ErrorRule;
-import org.netbeans.modules.java.source.TreeShims;
 import org.netbeans.spi.editor.hints.ChangeInfo;
 import org.netbeans.spi.editor.hints.Fix;
 import org.netbeans.spi.java.hints.JavaFix;
@@ -283,7 +282,7 @@ public final class ImplementAllAbstractMethods implements ErrorRule<Object>, Ove
         return basic;
     }
     
-    static abstract class ImplementFixBase implements Fix, Task<WorkingCopy>, DebugFix {
+    static abstract class ImplementFixBase extends CreateFixBase implements Task<WorkingCopy>, DebugFix {
         protected final JavaSource      source;
         protected final TreePathHandle  handle;
         protected final ElementHandle<TypeElement>  implementType;
@@ -426,7 +425,13 @@ public final class ImplementAllAbstractMethods implements ErrorRule<Object>, Ove
         public String getText() {
             return Bundle.LBL_FIX_Impl_Methods_Enum_Values2();
         }
-        
+
+        @Override
+        public ModificationResult getModificationResult() throws IOException {
+            return source.runModificationTask(parameter -> {
+            });
+        }
+
         @Override
         protected boolean executeRound(Element el, int round) throws Exception {
             if (el.getKind() != ElementKind.ENUM) {
@@ -534,6 +539,37 @@ public final class ImplementAllAbstractMethods implements ErrorRule<Object>, Ove
         @Override
         public String getText() {
             return NbBundle.getMessage(ImplementAbstractMethodsFix.class, "LBL_FIX_Impl_Abstract_Methods"); // MOI18N 
+        }
+
+        @Override
+        public ModificationResult getModificationResult() throws IOException {
+            return source.runModificationTask(parameter -> {
+                this.copy = parameter;
+                parameter.toPhase(Phase.RESOLVED);
+                TreePath tp = handle.resolve(parameter);
+                if (tp != null) {
+                    Element e = parameter.getTrees().getElement(tp);
+                    if (e != null) {
+                        if (e.getKind().isClass() || e.getKind().isInterface()) {
+                            if (implementType.equals(ElementHandle.create(e))) {
+                                generateImplementation(e, tp);
+                            }
+                        }
+                        if (e.getKind() == ElementKind.ENUM_CONSTANT) {
+                            VariableTree var = (VariableTree) tp.getLeaf();
+                            if (var.getInitializer() != null && var.getInitializer().getKind() == Kind.NEW_CLASS) {
+                                NewClassTree nct = (NewClassTree) var.getInitializer();
+                                if (nct.getClassBody() != null) {
+                                    Element el = implementType.resolve(parameter);
+                                    if (el != null) {
+                                        generateImplementation(el, tp);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            });
         }
 
         @Override

@@ -310,6 +310,48 @@ public class FixUsesPerformerTest extends PHPTestBase {
         performTest("$f = f($someVar);^", selections, false, options);
     }
 
+    public void testNB4978_01() throws Exception {
+        String[] selections = new String[] {"\\Foo\\Foo\\Foo"};
+        Options options = new Options(false, false, false, false, true);
+        performTest("// test^", createSelections(selections, ItemVariant.Type.CLASS), true, options);
+    }
+
+    public void testNB4978_02() throws Exception {
+        String[] selections = new String[] {"\\Foo\\Foo\\Foo"};
+        Options options = new Options(false, false, false, false, true);
+        performTest("// test^", createSelections(selections, ItemVariant.Type.CLASS), true, options);
+    }
+
+    public void testNB4978_03() throws Exception {
+        String[] selections = new String[] {"\\Foo\\Foo\\Foo"};
+        Options options = new Options(false, false, false, false, true);
+        performTest("// test^", createSelections(selections, ItemVariant.Type.CLASS), true, options);
+    }
+
+    public void testNB4978_04() throws Exception {
+        String[] selections = new String[] {"\\Foo\\Foo\\Foo"};
+        Options options = new Options(false, false, false, false, true);
+        performTest("// test^", createSelections(selections, ItemVariant.Type.CLASS), true, options);
+    }
+
+    public void testNB4978_05() throws Exception {
+        String[] selections = new String[] {"\\Foo\\Foo\\Foo"};
+        Options options = new Options(false, false, false, false, true);
+        performTest("public funct^ion test(?Foo $foo): ?Foo", createSelections(selections, ItemVariant.Type.CLASS), true, options);
+    }
+
+    public void testNB4978_06() throws Exception {
+        String[] selections = new String[] {"\\Foo\\Foo\\Foo"};
+        Options options = new Options(false, false, false, false, true);
+        performTest("public funct^ion test(?Foo $foo): ?Foo", createSelections(selections, ItemVariant.Type.CLASS), true, options);
+    }
+
+    public void testNB4978_07() throws Exception {
+        String[] selections = new String[] {"\\Foo\\Foo\\Foo"};
+        Options options = new Options(false, false, false, false, true);
+        performTest("// test^", createSelections(selections, ItemVariant.Type.CLASS), true, options);
+    }
+
     private String getTestResult(final String fileName, final String caretLine, final List<Selection> selections, final boolean removeUnusedUses, final Options options) throws Exception {
         FileObject testFile = getTestFile(fileName);
 

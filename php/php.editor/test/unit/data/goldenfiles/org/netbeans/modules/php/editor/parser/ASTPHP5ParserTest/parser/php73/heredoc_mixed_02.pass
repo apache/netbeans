@@ -260,7 +260,7 @@
                                 <Scalar start='1149' end='1153' type='STRING' value='test'/>
                             </ReflectionVariable>
                             <Scalar start='1154' end='1180' type='STRING' value=' variable test.\n    test. '/>
-                            <FieldAccess start='1180' end='1194'>
+                            <FieldAccess start='1180' end='1194' isNullsafe='false'>
                                 <Variable start='1180' end='1187' isDollared='true'>
                                     <Identifier start='1181' end='1187' name='object'/>
                                 </Variable>
@@ -297,7 +297,7 @@
                                 <Scalar start='1344' end='1348' type='STRING' value='test'/>
                             </ReflectionVariable>
                             <Scalar start='1349' end='1373' type='STRING' value=' variable test.\n\t\ttest. '/>
-                            <FieldAccess start='1373' end='1387'>
+                            <FieldAccess start='1373' end='1387' isNullsafe='false'>
                                 <Variable start='1373' end='1380' isDollared='true'>
                                     <Identifier start='1374' end='1380' name='object'/>
                                 </Variable>

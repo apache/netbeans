@@ -36,7 +36,7 @@ import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
 import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenSequence;
-import org.netbeans.api.progress.ProgressUtils;
+import org.netbeans.api.progress.BaseProgressUtils;
 import org.netbeans.modules.csl.api.DeclarationFinder.DeclarationLocation;
 import org.netbeans.modules.csl.core.Language;
 import org.netbeans.modules.csl.core.LanguageRegistry;
@@ -57,12 +57,11 @@ import org.openide.text.Line;
 import org.openide.text.NbDocument;
 import org.openide.util.NbBundle;
 
-
-/** 
- * This file is originally from Retouche, the Java Support 
+/**
+ * This file is originally from Retouche, the Java Support
  * infrastructure in NetBeans. I have modified the file as little
  * as possible to make merging Retouche fixes back as simple as
- * possible. 
+ * possible.
  *
  * This class contains various methods bound to visualization of Java model
  * elements. It was formerly included under SourceUtils
@@ -92,7 +91,7 @@ public final class UiUtils {
 
     public static boolean open(final FileObject fo, final int offset) {
         assert fo != null;
-        
+
         if (!SwingUtilities.isEventDispatchThread()) {
             SwingUtilities.invokeLater(new Runnable() {
                 public @Override void run() {
@@ -101,7 +100,7 @@ public final class UiUtils {
             });
             return true; // not exactly accurate, but....
         }
-        
+
         return doOpen(fo, offset);
     }
 
@@ -240,89 +239,98 @@ public final class UiUtils {
         if (fileObject != null && fileObject != source.getFileObject()) {
             // The element is not in the parse tree for this parse job; it is
             // probably something like an indexed element
+            // NETBEANS-3362 inherited items may be in another file
+            DeclarationLocation location = getDeclarationLocation(Source.create(fileObject), handle);
+            if (location != DeclarationLocation.NONE) {
+                return location;
+            }
             return new DeclarationLocation(fileObject, -1);
         }
+        return getDeclarationLocation(source, handle);
+    }
 
-        final DeclarationLocation[] result = new DeclarationLocation[] { null };
+    private static DeclarationLocation getDeclarationLocation(final Source source, final ElementHandle handle) {
+        final DeclarationLocation[] result = new DeclarationLocation[]{null};
         final AtomicBoolean cancel = new AtomicBoolean();
         final UserTask t = new UserTask() {
-            public @Override void run(ResultIterator resultIterator) throws ParseException {
-                    if (cancel.get()) {
-                        return;
-                    }
-                    if (resultIterator.getSnapshot().getMimeType().equals(handle.getMimeType())) {
-                        Parser.Result r = resultIterator.getParserResult();
-                        if (r instanceof ParserResult) {
-                            ParserResult info = (ParserResult) r;
-                            OffsetRange range = handle.getOffsetRange(info);
-                            if (range != OffsetRange.NONE && range != null) {
-                                result[0] = new DeclarationLocation(info.getSnapshot().getSource().getFileObject(), range.getStart());
-                                return;
-                            }
-                        }
-                    }
-
-                    for(Embedding e : resultIterator.getEmbeddings()) {
-                        run(resultIterator.getResultIterator(e));
-                        if (result[0] != null) {
-                            break;
+            @Override
+            public void run(ResultIterator resultIterator) throws ParseException {
+                if (cancel.get()) {
+                    return;
+                }
+                if (resultIterator.getSnapshot().getMimeType().equals(handle.getMimeType())) {
+                    Parser.Result r = resultIterator.getParserResult();
+                    if (r instanceof ParserResult) {
+                        ParserResult info = (ParserResult) r;
+                        OffsetRange range = handle.getOffsetRange(info);
+                        if (range != OffsetRange.NONE && range != null) {
+                            result[0] = new DeclarationLocation(info.getSnapshot().getSource().getFileObject(), range.getStart());
+                            return;
                         }
                     }
                 }
-            };
 
-            if (IndexingManager.getDefault().isIndexing()) {
-                int timeout = SwingUtilities.isEventDispatchThread() ? AWT_TIMEOUT : NON_AWT_TIMEOUT;
-                Future<Void> f;
-                try {
-                    f = ParserManager.parseWhenScanFinished(Collections.singleton(source), t);
-                } catch (ParseException ex) {
-                    LOG.log(Level.WARNING, null, ex);
-                    return DeclarationLocation.NONE;
+                for (Embedding e : resultIterator.getEmbeddings()) {
+                    run(resultIterator.getResultIterator(e));
+                    if (result[0] != null) {
+                        break;
+                    }
                 }
+            }
+        };
 
-                try {
-                    f.get(timeout, TimeUnit.MILLISECONDS);
-                } catch (InterruptedException ex) {
-                    LOG.log(Level.INFO, null, ex);
-                    return DeclarationLocation.NONE;
-                } catch (ExecutionException ex) {
-                    LOG.log(Level.INFO, null, ex);
-                    return DeclarationLocation.NONE;
-                } catch (TimeoutException ex) {
-                    f.cancel(true);
-                    LOG.info("Skipping location of element offset within file, Scannig in progress"); // NOI18N
-                    return DeclarationLocation.NONE; //we are opening @ 0 position. Fix #160478
-                }
+        if (IndexingManager.getDefault().isIndexing()) {
+            int timeout = SwingUtilities.isEventDispatchThread() ? AWT_TIMEOUT : NON_AWT_TIMEOUT;
+            Future<Void> f;
+            try {
+                f = ParserManager.parseWhenScanFinished(Collections.singleton(source), t);
+            } catch (ParseException ex) {
+                LOG.log(Level.WARNING, null, ex);
+                return DeclarationLocation.NONE;
+            }
 
-                if (!f.isDone()) {
-                    f.cancel(true);
-                    LOG.info("Skipping location of element offset within file, Scannig in progress"); // NOI18N
-                    return DeclarationLocation.NONE; //we are opening @ 0 position. Fix #160478
-                }
-            } else if (SwingUtilities.isEventDispatchThread()) {
-                ProgressUtils.runOffEventDispatchThread(
+            try {
+                f.get(timeout, TimeUnit.MILLISECONDS);
+            } catch (InterruptedException ex) {
+                LOG.log(Level.INFO, null, ex);
+                return DeclarationLocation.NONE;
+            } catch (ExecutionException ex) {
+                LOG.log(Level.INFO, null, ex);
+                return DeclarationLocation.NONE;
+            } catch (TimeoutException ex) {
+                f.cancel(true);
+                LOG.info("Skipping location of element offset within file, Scannig in progress"); // NOI18N
+                return DeclarationLocation.NONE; //we are opening @ 0 position. Fix #160478
+            }
+
+            if (!f.isDone()) {
+                f.cancel(true);
+                LOG.info("Skipping location of element offset within file, Scannig in progress"); // NOI18N
+                return DeclarationLocation.NONE; //we are opening @ 0 position. Fix #160478
+            }
+        } else if (SwingUtilities.isEventDispatchThread()) {
+            BaseProgressUtils.runOffEventDispatchThread(
                     new Runnable() {
-                        @Override
-                        public void run() {
-                            try {
-                                ParserManager.parse(Collections.singleton(source), t);
-                            } catch (ParseException ex) {
-                                LOG.log(Level.WARNING, null, ex);
-                            }
-                        }
-                    },
+                @Override
+                public void run() {
+                    try {
+                        ParserManager.parse(Collections.singleton(source), t);
+                    } catch (ParseException ex) {
+                        LOG.log(Level.WARNING, null, ex);
+                    }
+                }
+            },
                     NbBundle.getMessage(UiUtils.class, "TXT_CalculatingDeclPos"),
                     cancel,
                     false);
-            } else {
-                try {
-                    ParserManager.parse(Collections.singleton(source), t);
-                } catch (ParseException ex) {
-                    LOG.log(Level.WARNING, null, ex);
-                    return DeclarationLocation.NONE;
-                }
+        } else {
+            try {
+                ParserManager.parse(Collections.singleton(source), t);
+            } catch (ParseException ex) {
+                LOG.log(Level.WARNING, null, ex);
+                return DeclarationLocation.NONE;
             }
-            return result[0] != null ? result[0] : DeclarationLocation.NONE;
         }
+        return result[0] != null ? result[0] : DeclarationLocation.NONE;
     }
+}

@@ -289,9 +289,6 @@ final class EventSupport extends SourceEnvironment {
                     resetState(true, false, -1, -1, false);
                 } catch (DataObjectNotFoundException e) {
                     //Ignore - invalidated after fobj.isValid () was called
-                } catch (IOException ex) {
-                    // should not occur
-                    Exceptions.printStackTrace(ex);
                 }
             }
         }        

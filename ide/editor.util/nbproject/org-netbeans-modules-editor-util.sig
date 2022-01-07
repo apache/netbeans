@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.73
+#Version 1.79
 
 CLSS public abstract interface java.io.Serializable
 
@@ -82,7 +82,6 @@ meth public java.lang.Object[] toArray()
 meth public java.lang.String toString()
 meth public void clear()
 supr java.lang.Object
-hfds MAX_ARRAY_SIZE
 
 CLSS public abstract java.util.AbstractList<%0 extends java.lang.Object>
 cons protected init()
@@ -105,7 +104,6 @@ meth public void clear()
 meth public {java.util.AbstractList%0} remove(int)
 meth public {java.util.AbstractList%0} set(int,{java.util.AbstractList%0})
 supr java.util.AbstractCollection<{java.util.AbstractList%0}>
-hcls Itr,ListItr
 
 CLSS public abstract interface java.util.Collection<%0 extends java.lang.Object>
 intf java.lang.Iterable<{java.util.Collection%0}>
@@ -270,7 +268,6 @@ meth public void die()
 meth public void redo()
 meth public void undo()
 supr java.lang.Object
-hfds alive,hasBeenDone
 
 CLSS public abstract interface javax.swing.undo.UndoableEdit
 meth public abstract boolean addEdit(javax.swing.undo.UndoableEdit)

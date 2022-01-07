@@ -42,7 +42,7 @@ import static org.netbeans.modules.gradle.api.NbGradleProject.Quality.FULL_ONLIN
  * @author lkishalmi
  */
 @SuppressWarnings(value = "serial")
-@ActionID(id = "org.netbeans.modules.maven.refresh", category = "Project")
+@ActionID(id = "org.netbeans.modules.gradle.refresh", category = "Project")
 @ActionRegistration(displayName = "#ACT_Reload_Project", lazy=false)
 @ActionReference(position = 1700, path = "Projects/" + NbGradleProject.GRADLE_PROJECT_TYPE + "/Actions")
 @NbBundle.Messages("ACT_Reload_Project=Reload Project")
@@ -65,6 +65,9 @@ public class ReloadAction  extends AbstractAction implements ContextAwareAction 
         }
     }
 
+    @NbBundle.Messages({
+        "ACT_ReloadingProject=Reloading"
+    })
     @Override public void actionPerformed(ActionEvent event) {
         Set<Project> reload = new LinkedHashSet<>();
         for (NbGradleProjectImpl prj : context.lookupAll(NbGradleProjectImpl.class)) {
@@ -74,12 +77,7 @@ public class ReloadAction  extends AbstractAction implements ContextAwareAction 
         for (Project project : reload) {
             if (project instanceof NbGradleProjectImpl) {
                 NbGradleProjectImpl impl = (NbGradleProjectImpl) project;
-                NbGradleProjectImpl.RELOAD_RP.submit(() -> {
-                    // A bit low level calls, just to allow UI interaction to
-                    // Trust the project.
-                    impl.project = GradleProjectCache.loadProject(impl, FULL_ONLINE, true, true);
-                    NbGradleProjectImpl.ACCESSOR.doFireReload(NbGradleProject.get(impl));
-                });
+                impl.forceReloadProject(ACT_ReloadingProject(), true, FULL_ONLINE);
             }
         }
     }
@@ -87,6 +85,5 @@ public class ReloadAction  extends AbstractAction implements ContextAwareAction 
     @Override public Action createContextAwareInstance(Lookup actionContext) {
         return new ReloadAction(actionContext);
     }
-
 
 }

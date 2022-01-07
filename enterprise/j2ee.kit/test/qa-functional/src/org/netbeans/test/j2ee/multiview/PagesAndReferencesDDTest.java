@@ -169,10 +169,10 @@ public class PagesAndReferencesDDTest extends J2eeTestCase {
         DDBeanTableModel model = (DDBeanTableModel) ((ErrorPagesTablePanel) comp[1]).getTable().getModel();
         assertEquals("Wrong count of error pages", 1, model.getRowCount());
         assertEquals("Error wrong error page parameter.", "/index.jsp", model.getValueAt(0, 0));
-        assertEquals("Error wrong error page parameter.", new Integer(404), model.getValueAt(0, 1));
+        assertEquals("Error wrong error page parameter.", 404, model.getValueAt(0, 1));
         assertEquals("Error wrong error page parameter.", null, model.getValueAt(0, 2));
         ErrorPage[] errorPage = webapp.getErrorPage();
-        utils.testProperties(errorPage[0], new String[]{"Location", "ErrorCode", "ExceptionType"}, new Object[]{"/index.jsp", new Integer(404), null});
+        utils.testProperties(errorPage[0], new String[]{"Location", "ErrorCode", "ExceptionType"}, new Object[]{"/index.jsp", 404, null});
     }
 
     public void testAddErrorPage() throws Exception {

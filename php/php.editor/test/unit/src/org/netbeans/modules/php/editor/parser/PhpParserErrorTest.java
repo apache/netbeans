@@ -1053,4 +1053,179 @@ public class PhpParserErrorTest extends PHPTestBase {
         checkErrors("testfiles/parser/php74/arrowFunctionsParseError_04.php");
     }
 
+    // PHP 8.0
+    public void testNonCapturingCatches_01() throws Exception {
+        checkErrors("testfiles/parser/php80/nonCapturingCatches_01.php");
+    }
+
+    public void testAllowTrailinCommaInParameterList_01() throws Exception {
+        checkErrors("testfiles/parser/php80/allowTrailingCommaInParameterList_01.php");
+    }
+
+    public void testThrowExpression_01() throws Exception {
+        checkErrors("testfiles/parser/php80/throwExpression_01.php");
+    }
+
+    public void testClassNameLiteralOnObjects_01() throws Exception {
+        checkErrors("testfiles/parser/php80/classNameLiteralOnObjects_01.php");
+    }
+
+    public void testMatchExpression_01() throws Exception {
+        checkErrors("testfiles/parser/php80/matchExpression_01.php");
+    }
+
+    public void testMatchExpression_02() throws Exception {
+        // nested match
+        checkErrors("testfiles/parser/php80/matchExpression_02.php");
+    }
+
+    public void testMatchExpression_03() throws Exception {
+        // multiple conditions
+        checkErrors("testfiles/parser/php80/matchExpression_03.php");
+    }
+
+    public void testMatchExpression_04() throws Exception {
+        checkErrors("testfiles/parser/php80/matchExpression_04.php");
+    }
+
+    public void testMatchExpression_05() throws Exception {
+        checkErrors("testfiles/parser/php80/matchExpression_05.php");
+    }
+
+    public void testMatchExpressionError_01() throws Exception {
+        checkErrors("testfiles/parser/php80/matchExpressionError_01.php");
+    }
+
+    public void testMatchExpressionError_02() throws Exception {
+        checkErrors("testfiles/parser/php80/matchExpressionError_02.php");
+    }
+
+    public void testMatchExpressionError_03() throws Exception {
+        checkErrors("testfiles/parser/php80/matchExpressionError_03.php");
+    }
+
+    public void testMatchExpressionError_04() throws Exception {
+        checkErrors("testfiles/parser/php80/matchExpressionError_04.php");
+    }
+
+    public void testMatchExpressionError_05() throws Exception {
+        checkErrors("testfiles/parser/php80/matchExpressionError_05.php");
+    }
+
+    public void testMatchExpressionError_06() throws Exception {
+        checkErrors("testfiles/parser/php80/matchExpressionError_06.php");
+    }
+
+    public void testUnionTypesTypes() throws Exception {
+        checkErrors("testfiles/parser/php80/unionTypesTypes.php");
+    }
+
+    public void testUnionTypesFunctions() throws Exception {
+        checkErrors("testfiles/parser/php80/unionTypesFunctions.php");
+    }
+
+    public void testUnionTypesError_01() throws Exception {
+        checkErrors("testfiles/parser/php80/unionTypesError_01.php");
+    }
+
+    public void testUnionTypesError_02() throws Exception {
+        checkErrors("testfiles/parser/php80/unionTypesError_02.php");
+    }
+
+    public void testUnionTypesError_03() throws Exception {
+        checkErrors("testfiles/parser/php80/unionTypesError_03.php");
+    }
+
+    public void testStaticReturnType_01() throws Exception {
+        checkErrors("testfiles/parser/php80/staticReturnType_01.php");
+    }
+
+    public void testStaticReturnTypeErrorWithFieldType_01() throws Exception {
+        // nullable type
+        checkErrors("testfiles/parser/php80/staticReturnTypeErrorWithFieldType_01.php");
+    }
+
+    public void testStaticReturnTypeErrorWithFieldType_02() throws Exception {
+        // union type
+        checkErrors("testfiles/parser/php80/staticReturnTypeErrorWithFieldType_02.php");
+    }
+
+    public void testStaticReturnTypeErrorWithParameterType_01() throws Exception {
+        checkErrors("testfiles/parser/php80/staticReturnTypeErrorWithParameterType_01.php");
+    }
+
+    public void testStaticReturnTypeErrorWithParameterType_02() throws Exception {
+        // nullable type
+        checkErrors("testfiles/parser/php80/staticReturnTypeErrorWithParameterType_02.php");
+    }
+
+    public void testStaticReturnTypeErrorWithParameterType_03() throws Exception {
+        // union type
+        checkErrors("testfiles/parser/php80/staticReturnTypeErrorWithParameterType_03.php");
+    }
+
+    public void testMixedType_01() throws Exception {
+        checkErrors("testfiles/parser/php80/mixedType_01.php");
+    }
+
+    public void testMixedError_01() throws Exception {
+        checkErrors("testfiles/parser/php80/mixedTypeError_01.php");
+    }
+
+    public void testNullsafeOperator_01() throws Exception {
+        checkErrors("testfiles/parser/php80/nullsafeOperator_01.php");
+    }
+
+    public void testNullsafeOperator_02() throws Exception {
+        checkErrors("testfiles/parser/php80/nullsafeOperator_02.php");
+    }
+
+    public void testNullsafeOperator_03() throws Exception {
+        checkErrors("testfiles/parser/php80/nullsafeOperator_03.php");
+    }
+
+    public void testAttributeSyntax_01() throws Exception {
+        checkErrors("testfiles/parser/php80/attributeSyntax_01.php");
+    }
+
+    public void testAttributeSyntax_02() throws Exception {
+        checkErrors("testfiles/parser/php80/attributeSyntax_02.php");
+    }
+
+    // [NETBEANS-6193] attributes of interface constants and methods
+    public void testAttributeSyntax_03() throws Exception {
+        checkErrors("testfiles/parser/php80/attributeSyntax_03.php");
+    }
+
+    public void testAttributeSyntaxError_01() throws Exception {
+        checkErrors("testfiles/parser/php80/attributeSyntaxError_01.php");
+    }
+
+    public void testAttributeSyntaxError_02() throws Exception {
+        checkErrors("testfiles/parser/php80/attributeSyntaxError_02.php");
+    }
+
+    public void testConstructorPropertyPromotion_01() throws Exception {
+        checkErrors("testfiles/parser/php80/constructorPropertyPromotion_01.php");
+    }
+
+    public void testConstructorPropertyPromotion_02() throws Exception {
+        checkErrors("testfiles/parser/php80/constructorPropertyPromotion_02.php");
+    }
+
+    public void testConstructorPropertyPromotionErrorWithStatic() throws Exception {
+        checkErrors("testfiles/parser/php80/constructorPropertyPromotionErrorWithStatic.php");
+    }
+
+    public void testAllowTrailingCommaInClosureUseLists_01() throws Exception {
+        checkErrors("testfiles/parser/php80/allowTrailingCommaInClosureUseLists_01.php");
+    }
+
+    public void testNamedArguments_01() throws Exception {
+        checkErrors("testfiles/parser/php80/namedArguments_01.php");
+    }
+
+    public void testNamedArgumentsWithAttribute_01() throws Exception {
+        checkErrors("testfiles/parser/php80/namedArgumentsWithAttribute_01.php");
+    }
 }

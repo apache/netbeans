@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+Modifications:
+
+- Reference xml.xsd with a relative path
+-->
 <xsd:schema targetNamespace="http://xmlns.jcp.org/xml/ns/javaee"
             xmlns:javaee="http://xmlns.jcp.org/xml/ns/javaee"
             xmlns:xsd="http://www.w3.org/2001/XMLSchema"
@@ -73,7 +78,7 @@
   </xsd:annotation>
 
   <xsd:import namespace="http://www.w3.org/XML/1998/namespace"
-              schemaLocation="http://www.w3.org/2001/xml.xsd"/>
+              schemaLocation="xml.xsd"/>
 
   <xsd:include schemaLocation="javaee_web_services_client_1_4.xsd"/>
 

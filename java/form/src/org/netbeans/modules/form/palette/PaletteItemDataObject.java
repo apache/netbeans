@@ -168,7 +168,7 @@ public class PaletteItemDataObject extends MultiDataObject implements CookieSet.
             XMLReader reader = XMLUtil.createXMLReader();
             PaletteItemHandler handler = new PaletteItemHandler();
             reader.setContentHandler(handler);
-            InputSource input = new InputSource(getPrimaryFile().getURL().toExternalForm());
+            InputSource input = new InputSource(getPrimaryFile().toURL().toExternalForm());
             reader.parse(input);
             // TODO report errors, validate using DTD?
             

@@ -21,10 +21,8 @@ package org.netbeans.modules.html.editor.lib;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import org.netbeans.editor.BaseElement;
 import org.netbeans.modules.html.editor.lib.api.ProblemDescription;
 import org.netbeans.modules.html.editor.lib.api.elements.*;
-import org.netbeans.modules.html.editor.lib.plain.TextElement;
 import org.netbeans.modules.web.common.api.LexerUtils;
 import org.openide.util.CharSequences;
 

@@ -67,12 +67,12 @@ public final class NbProxySelector extends ProxySelector {
         int proxyType = ProxySettings.getProxyType ();
         switch (proxyType) {
             case ProxySettings.DIRECT_CONNECTION:
-                res = Collections.singletonList (Proxy.NO_PROXY);
+                res.add(Proxy.NO_PROXY);
                 break;
             case ProxySettings.AUTO_DETECT_PROXY:
                 if (useSystemProxies ()) {
                     if (original != null) {
-                        res = original.select(uri);                   
+                        res.addAll(original.select(uri));
                     }
                 } else {                    
                     String protocol = uri.getScheme ();
@@ -145,7 +145,7 @@ public final class NbProxySelector extends ProxySelector {
             case ProxySettings.AUTO_DETECT_PAC:
                 if (useSystemProxies ()) {
                     if (original != null) {
-                        res = original.select(uri);                   
+                        res.addAll(original.select(uri));
                     }
                 } else {
                     ProxyAutoConfig pac = ProxyAutoConfig.get(getPacFile());

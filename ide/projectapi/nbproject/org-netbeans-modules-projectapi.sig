@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.75
+#Version 1.82
 
 CLSS public java.lang.Object
 cons public init()
@@ -117,6 +117,10 @@ meth public static java.util.Set<org.netbeans.api.project.Project> getDependency
 meth public static java.util.prefs.Preferences getPreferences(org.netbeans.api.project.Project,java.lang.Class,boolean)
  anno 1 org.netbeans.api.annotations.common.NonNull()
  anno 2 org.netbeans.api.annotations.common.NonNull()
+meth public static org.netbeans.api.project.Project parentOf(org.netbeans.api.project.Project)
+ anno 1 org.netbeans.api.annotations.common.NonNull()
+meth public static org.netbeans.api.project.Project rootOf(org.netbeans.api.project.Project)
+ anno 1 org.netbeans.api.annotations.common.NonNull()
 meth public static org.netbeans.api.project.ProjectInformation getInformation(org.netbeans.api.project.Project)
  anno 1 org.netbeans.api.annotations.common.NonNull()
 meth public static org.netbeans.api.project.Sources getSources(org.netbeans.api.project.Project)
@@ -180,6 +184,7 @@ fld public final static java.lang.String COMMAND_DEBUG_STEP_INTO = "debug.stepin
 fld public final static java.lang.String COMMAND_DEBUG_TEST_SINGLE = "debug.test.single"
 fld public final static java.lang.String COMMAND_DELETE = "delete"
 fld public final static java.lang.String COMMAND_MOVE = "move"
+fld public final static java.lang.String COMMAND_PRIME = "prime"
 fld public final static java.lang.String COMMAND_PROFILE = "profile"
 fld public final static java.lang.String COMMAND_PROFILE_SINGLE = "profile.single"
 fld public final static java.lang.String COMMAND_PROFILE_TEST_SINGLE = "profile.test.single"
@@ -287,6 +292,9 @@ intf org.netbeans.spi.project.MoveOperationImplementation
 meth public abstract void notifyRenamed(java.lang.String) throws java.io.IOException
 meth public abstract void notifyRenaming() throws java.io.IOException
 
+CLSS public abstract interface org.netbeans.spi.project.ParentProjectProvider
+meth public abstract org.netbeans.api.project.Project getPartentProject()
+
 CLSS public abstract interface org.netbeans.spi.project.ProjectConfiguration
 meth public abstract java.lang.String getDisplayName()
 
@@ -388,6 +396,9 @@ meth public abstract java.lang.Class<?>[] service()
 CLSS public abstract interface org.netbeans.spi.project.ProjectState
 meth public abstract void markModified()
 meth public abstract void notifyDeleted()
+
+CLSS public abstract interface org.netbeans.spi.project.RootProjectProvider
+meth public abstract org.netbeans.api.project.Project getRootProject()
 
 CLSS public final org.netbeans.spi.project.SingleMethod
 cons public init(org.openide.filesystems.FileObject,java.lang.String)

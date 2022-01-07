@@ -22,6 +22,7 @@ package org.netbeans.core.windows.model;
 
 
 import java.awt.*;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -232,7 +233,23 @@ final class DefaultModeModel implements ModeModel {
     }
 
     private int compareFullFilePath(FileObject f1, FileObject f2) {
-        return FileUtil.toFile(f1).compareTo(FileUtil.toFile(f2));
+        return toFullFilePath(f1).compareToIgnoreCase(toFullFilePath(f2));
+    }
+
+    private String toFullFilePath(FileObject fo) {
+        File f = FileUtil.toFile(fo);
+
+        if (f != null) {
+            return f.getAbsolutePath();
+        }
+
+        FileObject rootFO = FileUtil.getArchiveFile(fo);
+
+        if (rootFO != null) {
+            return toFullFilePath(rootFO) + "/" + fo.getPath();
+        }
+
+        return fo.toURL().getPath();
     }
 
     private int compareFileName(FileObject f1, FileObject f2) {

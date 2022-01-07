@@ -18,6 +18,9 @@
  */
 package org.netbeans.modules.cpplite.editor.lsp.options;
 
+import java.io.File;
+import javax.swing.JFileChooser;
+import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import org.netbeans.modules.cpplite.editor.Utils;
@@ -29,7 +32,7 @@ final class CPPLitePanel extends javax.swing.JPanel {
     CPPLitePanel(CPPLiteOptionsPanelController controller) {
         this.controller = controller;
         initComponents();
-        cclsPath.getDocument().addDocumentListener(new DocumentListener() {
+        DocumentListener pathsModified = new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
                 controller.changed();
@@ -42,8 +45,9 @@ final class CPPLitePanel extends javax.swing.JPanel {
             public void changedUpdate(DocumentEvent e) {
                 controller.changed();
             }
-        });
-        // TODO listen to changes in form fields and call controller.changed()
+        };
+        cclsPath.getDocument().addDocumentListener(pathsModified);
+        clangdPath.getDocument().addDocumentListener(pathsModified);
     }
 
     /**
@@ -56,40 +60,101 @@ final class CPPLitePanel extends javax.swing.JPanel {
 
         jLabel1 = new javax.swing.JLabel();
         cclsPath = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
+        cclsBrowse = new javax.swing.JButton();
+        jLabel2 = new javax.swing.JLabel();
+        clangdPath = new javax.swing.JTextField();
+        clangdBrowse = new javax.swing.JButton();
+        jLabel3 = new javax.swing.JLabel();
 
         org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(CPPLitePanel.class, "CPPLitePanel.jLabel1.text")); // NOI18N
 
         cclsPath.setText(org.openide.util.NbBundle.getMessage(CPPLitePanel.class, "CPPLitePanel.cclsPath.text")); // NOI18N
 
-        org.openide.awt.Mnemonics.setLocalizedText(jButton1, org.openide.util.NbBundle.getMessage(CPPLitePanel.class, "CPPLitePanel.jButton1.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(cclsBrowse, org.openide.util.NbBundle.getMessage(CPPLitePanel.class, "CPPLitePanel.cclsBrowse.text")); // NOI18N
+        cclsBrowse.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cclsBrowseActionPerformed(evt);
+            }
+        });
+
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel2, org.openide.util.NbBundle.getMessage(CPPLitePanel.class, "CPPLitePanel.jLabel2.text")); // NOI18N
+
+        clangdPath.setText(org.openide.util.NbBundle.getMessage(CPPLitePanel.class, "CPPLitePanel.clangdPath.text")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(clangdBrowse, org.openide.util.NbBundle.getMessage(CPPLitePanel.class, "CPPLitePanel.clangdBrowse.text")); // NOI18N
+        clangdBrowse.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                clangdBrowseActionPerformed(evt);
+            }
+        });
+
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel3, org.openide.util.NbBundle.getMessage(CPPLitePanel.class, "CPPLitePanel.jLabel3.text")); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(cclsPath)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton1))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel1)
+                            .addComponent(jLabel2))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(cclsPath)
+                            .addComponent(clangdPath))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(clangdBrowse)
+                            .addComponent(cclsBrowse)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                .addComponent(jLabel1)
-                .addComponent(cclsPath, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addComponent(jButton1))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(cclsPath, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cclsBrowse))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel2)
+                    .addComponent(clangdPath, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(clangdBrowse))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void cclsBrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cclsBrowseActionPerformed
+        showFileChooser(cclsPath);
+    }//GEN-LAST:event_cclsBrowseActionPerformed
+
+    private void clangdBrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clangdBrowseActionPerformed
+        showFileChooser(clangdPath);
+    }//GEN-LAST:event_clangdBrowseActionPerformed
+
+    private void showFileChooser(JTextField path) {
+        JFileChooser fc = new JFileChooser();
+        fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        fc.setSelectedFile(new File(path.getText()));
+        if (fc.showDialog(this, "Select") == JFileChooser.APPROVE_OPTION) {
+            path.setText(fc.getSelectedFile().getAbsolutePath());
+        }
+    }
     void load() {
-        cclsPath.setText(Utils.settings().get(Utils.KEY_CCLS_PATH, ""));
+        cclsPath.setText(Utils.getCCLSPath());
+        clangdPath.setText(Utils.getCLANGDPath());
     }
 
     void store() {
         Utils.settings().put(Utils.KEY_CCLS_PATH, cclsPath.getText());
+        Utils.settings().put(Utils.KEY_CLANGD_PATH, clangdPath.getText());
     }
 
     boolean valid() {
@@ -98,8 +163,12 @@ final class CPPLitePanel extends javax.swing.JPanel {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton cclsBrowse;
     private javax.swing.JTextField cclsPath;
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton clangdBrowse;
+    private javax.swing.JTextField clangdPath;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     // End of variables declaration//GEN-END:variables
 }

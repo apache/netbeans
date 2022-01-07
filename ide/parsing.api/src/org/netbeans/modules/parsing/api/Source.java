@@ -537,7 +537,6 @@ public final class Source implements Lookup.Provider {
             @NonNull final Lookup context) {
         synchronized (Source.class) {
             final Source source = SourceFactory.getDefault().createSource(fileObject, mimeType, context);
-            assert source.context == context;
             return source;
         }
     }
@@ -909,7 +908,7 @@ public final class Source implements Lookup.Provider {
             final boolean oldChanged = sourceChanged();
             if (oldChanged == changed) {
                 start = Math.min(start, startOffset);
-                end = Math.min(end, endOffset);
+                end = Math.max(end, endOffset);
                 return new ASourceModificationEvent (getSource(), oldChanged, start, end);
             } else {
                 final ASourceModificationEvent other = new ASourceModificationEvent(getSource(), changed, start, end);

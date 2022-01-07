@@ -24,6 +24,7 @@ import java.util.Map;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
 import org.openide.filesystems.FileObject;
+import org.openide.util.Lookup;
 
 /**
  * Describes file creation request. The description is produced by the
@@ -63,6 +64,11 @@ public final class CreateDescriptor {
 
     private final FileObject      template;
     private final FileObject      target;
+
+    /**
+     * Lookup that may carry additional information for handlers or decorators.
+     */
+    private  Lookup       contextLookup = Lookup.EMPTY;
     
     /**
      * The originally specified name for the new file
@@ -180,5 +186,18 @@ public final class CreateDescriptor {
     
     public boolean isPreformatted() {
         return preformatted;
+    }
+
+    void setLookup(Lookup contextLookup) {
+        this.contextLookup = contextLookup;
+    }
+
+    /**
+     * Lookup that may contain additional services or instructions for
+     * the template creation.
+     * @since 1.23
+     */
+    public Lookup getLookup() {
+        return contextLookup;
     }
 }

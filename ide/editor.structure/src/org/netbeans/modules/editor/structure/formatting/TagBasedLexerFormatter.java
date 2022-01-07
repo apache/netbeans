@@ -485,7 +485,7 @@ public abstract class TagBasedLexerFormatter {
             BaseDocument doc = (BaseDocument) context.document();
             
             if (isTopLevelLanguage(doc)) {
-                doc.putProperty(TransferData.ORG_CARET_OFFSET_DOCPROPERTY, new Integer(context.caretOffset()));
+                doc.putProperty(TransferData.ORG_CARET_OFFSET_DOCPROPERTY, Integer.valueOf(context.caretOffset()));
             }
 
             Integer dotPos = (Integer) doc.getProperty(TransferData.ORG_CARET_OFFSET_DOCPROPERTY);

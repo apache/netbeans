@@ -28,6 +28,7 @@ import java.util.Set;
 import java.util.WeakHashMap;
 import org.netbeans.api.debugger.jpda.CallStackFrame;
 import org.netbeans.api.debugger.jpda.JPDADebugger;
+import org.netbeans.api.debugger.jpda.JPDAThread;
 import org.netbeans.modules.debugger.jpda.ui.debugging.JPDADVThread;
 import org.netbeans.modules.debugger.jpda.ui.debugging.JPDADVThreadGroup;
 import org.netbeans.spi.debugger.ContextProvider;
@@ -135,6 +136,13 @@ public class DebuggingTreeExpansionModelFilter implements TreeExpansionModelFilt
         if (node instanceof JPDADVThread) {
             if (((JPDADVThread) node).getCurrentBreakpoint() != null) {
                 return true;
+            }
+            JPDAThread currentThread = debugger.getCurrentThread();
+            if (currentThread != null) {
+                JPDAThread thread = ((JPDADVThread) node).get();
+                if (currentThread == thread && thread.isSuspended()) {
+                    return true;
+                }
             }
         }
         if (node instanceof CallStackFrame) {

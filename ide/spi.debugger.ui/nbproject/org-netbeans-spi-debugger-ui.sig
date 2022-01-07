@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.62
+#Version 2.72
 
 CLSS public abstract interface java.awt.event.ActionListener
 intf java.util.EventListener
@@ -27,7 +27,14 @@ meth public final java.lang.String name()
 meth public java.lang.String toString()
 meth public static <%0 extends java.lang.Enum<{%%0}>> {%%0} valueOf(java.lang.Class<{%%0}>,java.lang.String)
 supr java.lang.Object
-hfds name,ordinal
+
+CLSS public java.lang.Exception
+cons protected init(java.lang.String,java.lang.Throwable,boolean,boolean)
+cons public init()
+cons public init(java.lang.String)
+cons public init(java.lang.String,java.lang.Throwable)
+cons public init(java.lang.Throwable)
+supr java.lang.Throwable
 
 CLSS public java.lang.Object
 cons public init()
@@ -42,6 +49,28 @@ meth public final void wait(long) throws java.lang.InterruptedException
 meth public final void wait(long,int) throws java.lang.InterruptedException
 meth public int hashCode()
 meth public java.lang.String toString()
+
+CLSS public java.lang.Throwable
+cons protected init(java.lang.String,java.lang.Throwable,boolean,boolean)
+cons public init()
+cons public init(java.lang.String)
+cons public init(java.lang.String,java.lang.Throwable)
+cons public init(java.lang.Throwable)
+intf java.io.Serializable
+meth public final java.lang.Throwable[] getSuppressed()
+meth public final void addSuppressed(java.lang.Throwable)
+meth public java.lang.StackTraceElement[] getStackTrace()
+meth public java.lang.String getLocalizedMessage()
+meth public java.lang.String getMessage()
+meth public java.lang.String toString()
+meth public java.lang.Throwable fillInStackTrace()
+meth public java.lang.Throwable getCause()
+meth public java.lang.Throwable initCause(java.lang.Throwable)
+meth public void printStackTrace()
+meth public void printStackTrace(java.io.PrintStream)
+meth public void printStackTrace(java.io.PrintWriter)
+meth public void setStackTrace(java.lang.StackTraceElement[])
+supr java.lang.Object
 
 CLSS public abstract interface java.lang.annotation.Annotation
 meth public abstract boolean equals(java.lang.Object)
@@ -91,7 +120,6 @@ meth public void putValue(java.lang.String,java.lang.Object)
 meth public void removePropertyChangeListener(java.beans.PropertyChangeListener)
 meth public void setEnabled(boolean)
 supr java.lang.Object
-hfds RECONFIGURE_ON_NULL,arrayTable
 
 CLSS public abstract interface javax.swing.Action
 fld public final static java.lang.String ACCELERATOR_KEY = "AcceleratorKey"
@@ -292,11 +320,13 @@ meth public abstract void addPropertyChangeListener(java.beans.PropertyChangeLis
 meth public abstract void removePropertyChangeListener(java.beans.PropertyChangeListener)
 
 CLSS public final org.netbeans.spi.debugger.ui.DebuggingView
+innr public abstract interface static DVFrame
 innr public abstract interface static DVThread
 innr public abstract interface static DVThreadGroup
 innr public abstract static DVSupport
 innr public final static DVFilter
 innr public final static Deadlock
+innr public final static PopException
 meth public org.openide.windows.TopComponent getViewTC()
 meth public static org.netbeans.spi.debugger.ui.DebuggingView getDefault()
 supr java.lang.Object
@@ -342,6 +372,17 @@ meth public java.util.List<org.netbeans.spi.debugger.ui.DebuggingView$DVFilter> 
 supr java.lang.Object
 hfds items
 
+CLSS public abstract interface static org.netbeans.spi.debugger.ui.DebuggingView$DVFrame
+ outer org.netbeans.spi.debugger.ui.DebuggingView
+meth public abstract int getColumn()
+meth public abstract int getLine()
+meth public abstract java.lang.String getName()
+meth public abstract java.net.URI getSourceURI()
+meth public abstract org.netbeans.spi.debugger.ui.DebuggingView$DVThread getThread()
+meth public abstract void makeCurrent()
+meth public java.lang.String getSourceMimeType()
+meth public void popOff() throws org.netbeans.spi.debugger.ui.DebuggingView$PopException
+
 CLSS public abstract static org.netbeans.spi.debugger.ui.DebuggingView$DVSupport
  outer org.netbeans.spi.debugger.ui.DebuggingView
 cons protected init()
@@ -370,6 +411,7 @@ meth public abstract void resume()
 meth public final javax.swing.Action[] getFilterActions()
 meth public final void addPropertyChangeListener(java.beans.PropertyChangeListener)
 meth public final void removePropertyChangeListener(java.beans.PropertyChangeListener)
+meth public java.lang.String getDisplayName(org.netbeans.spi.debugger.ui.DebuggingView$DVFrame)
 supr java.lang.Object
 hfds pcs
 
@@ -406,6 +448,9 @@ meth public abstract void removePropertyChangeListener(java.beans.PropertyChange
 meth public abstract void resume()
 meth public abstract void resumeBlockingThreads()
 meth public abstract void suspend()
+meth public int getFrameCount()
+meth public java.util.List<org.netbeans.spi.debugger.ui.DebuggingView$DVFrame> getFrames()
+meth public java.util.List<org.netbeans.spi.debugger.ui.DebuggingView$DVFrame> getFrames(int,int)
 
 CLSS public abstract interface static org.netbeans.spi.debugger.ui.DebuggingView$DVThreadGroup
  outer org.netbeans.spi.debugger.ui.DebuggingView
@@ -419,6 +464,11 @@ CLSS public final static org.netbeans.spi.debugger.ui.DebuggingView$Deadlock
 meth public java.util.Collection<org.netbeans.spi.debugger.ui.DebuggingView$DVThread> getThreads()
 supr java.lang.Object
 hfds threads
+
+CLSS public final static org.netbeans.spi.debugger.ui.DebuggingView$PopException
+ outer org.netbeans.spi.debugger.ui.DebuggingView
+cons public init(java.lang.String)
+supr java.lang.Exception
 
 CLSS public final org.netbeans.spi.debugger.ui.EditorContextDispatcher
 fld public final static java.lang.String PROP_EDITOR = "editor"

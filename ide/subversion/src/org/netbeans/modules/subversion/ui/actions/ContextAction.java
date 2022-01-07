@@ -231,13 +231,13 @@ public abstract class ContextAction extends NodeAction {
             if (projectsOnly) {
                 try {
                     return MessageFormat.format(NbBundle.getBundle(this.getClass()).getString(baseName + "_Projects"),  // NOI18N
-                                                new Object [] { new Integer(objectCount) });
+                                                new Object [] { Integer.valueOf(objectCount) });
                 } catch (MissingResourceException ex) {
                     // ignore use files alternative bellow
                 }
             }
             return MessageFormat.format(NbBundle.getBundle(this.getClass()).getString(baseName + "_Context_Multiple"),  // NOI18N
-                                        new Object [] { new Integer(objectCount) });
+                                        new Object [] { Integer.valueOf(objectCount) });
         }
     }
     
@@ -290,13 +290,13 @@ public abstract class ContextAction extends NodeAction {
             if (projectsOnly) {
                 try {
                     return MessageFormat.format(NbBundle.getBundle(ContextAction.class).getString("MSG_ActionContext_MultipleProjects"),  // NOI18N
-                                                new Object [] { new Integer(objectCount) });
+                                                new Object [] { Integer.valueOf(objectCount) });
                 } catch (MissingResourceException ex) {
                     // ignore use files alternative bellow
                 }
             }
             return MessageFormat.format(NbBundle.getBundle(ContextAction.class).getString("MSG_ActionContext_MultipleFiles"),  // NOI18N
-                                        new Object [] { new Integer(objectCount) });
+                                        new Object [] { Integer.valueOf(objectCount) });
         }
     }    
         

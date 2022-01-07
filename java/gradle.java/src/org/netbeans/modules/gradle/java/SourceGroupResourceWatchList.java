@@ -20,7 +20,6 @@
 package org.netbeans.modules.gradle.java;
 
 import org.netbeans.modules.gradle.java.api.GradleJavaSourceSet;
-import org.netbeans.modules.gradle.api.NbGradleProject;
 import org.netbeans.modules.gradle.java.api.GradleJavaProject;
 import org.netbeans.modules.gradle.spi.WatchedResourceProvider;
 import java.io.File;
@@ -29,13 +28,11 @@ import java.util.HashSet;
 import java.util.Set;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.gradle.java.classpath.ClassPathProviderImpl;
-import org.netbeans.spi.project.ProjectServiceProvider;
 
 /**
  *
  * @author Laszlo Kishalmi
  */
-@ProjectServiceProvider(service = {WatchedResourceProvider.class}, projectType = NbGradleProject.GRADLE_PLUGIN_TYPE + "/java-base")
 public class SourceGroupResourceWatchList implements WatchedResourceProvider {
 
     private final Project project;

@@ -84,22 +84,14 @@ public class NotifyExceptionTest extends NbTestCase {
         NotifyExcPanel.cleanInstance();
     }
     
-    /**
-     * A simple test to ensure that error dialog window is not created modal
-     * until the MainWindow is visible.
-     */
-    public void testNoModalErrorDialog() throws Exception {
+    public void testNoErrorDialog() throws Exception {
         Frame mainWindow = WindowManager.getDefault().getMainWindow();
         final JDialog modalDialog = new HiddenDialog( mainWindow, true );
         DD.toReturn = modalDialog;
 
         Logger.global.log(Level.WARNING, "Something is wrong", new NullPointerException("npe"));
         waitEQ();
-        assertNotNull("Really returned", DD.lastDescriptor);
-        assertEquals("It is DialogDescriptor", DialogDescriptor.class, DD.lastDescriptor.getClass());
-        DialogDescriptor dd = (DialogDescriptor)DD.lastDescriptor;
-        assertFalse( "The request is for non-modal dialog", dd.isModal());
-        assertFalse("Main window is not visible", mainWindow.isVisible());
+        assertNull("No dialog shown", DD.lastDescriptor);
     }
 
     public void testExceptionWillGetTheLevelFromAnnoatation() throws Exception {
@@ -110,8 +102,7 @@ public class NotifyExceptionTest extends NbTestCase {
         Exceptions.printStackTrace(npe);
 
         waitEQ();
-        assertNotNull("We are going to display a warning", DD.lastDescriptor);
-
+        assertNull("No dialogs shown", DD.lastDescriptor);
     }
 
     public void testDirectlyLoggingAnExceptionWithALocalizedMessageAndTheRightLevelShowsItInADialog() throws Exception {

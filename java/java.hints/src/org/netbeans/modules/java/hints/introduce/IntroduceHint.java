@@ -23,7 +23,6 @@ import com.sun.source.tree.CaseTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
-import com.sun.source.tree.LambdaExpressionTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.ModifiersTree;
@@ -40,7 +39,6 @@ import org.netbeans.api.java.source.support.ErrorAwareTreeScanner;
 import java.awt.Color;
 import java.awt.Rectangle;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.EnumMap;
@@ -48,8 +46,6 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.IdentityHashMap;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -64,10 +60,8 @@ import javax.lang.model.element.Name;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.ErrorType;
-import javax.lang.model.type.ExecutableType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
-import javax.lang.model.util.ElementFilter;
 import javax.swing.SwingUtilities;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
@@ -79,8 +73,6 @@ import org.netbeans.api.editor.settings.AttributesUtilities;
 import org.netbeans.api.java.source.CancellableTask;
 import org.netbeans.api.java.source.CodeStyle;
 import org.netbeans.api.java.source.CompilationInfo;
-import org.netbeans.api.java.source.ElementHandle;
-import org.netbeans.api.java.source.ElementUtilities.ElementAcceptor;
 import org.netbeans.api.java.source.SourceUtils;
 import org.netbeans.api.java.source.TreeMaker;
 import org.netbeans.api.java.source.TreePathHandle;
@@ -254,13 +246,10 @@ public class IntroduceHint implements CancellableTask<CompilationInfo> {
         if (guessedName == null) guessedName = "name"; // NOI18N
         Scope s = info.getTrees().getScope(resolved);
         CodeStyle cs = CodeStyle.getDefault(info.getFileObject());
-        Fix variable = isVariable ? new IntroduceVariableFix(h, info.getJavaSource(), 
-                variableRewrite ? 
-                        guessedName : 
-                        Utilities.makeNameUnique(info, s, guessedName, cs.getLocalVarNamePrefix(), cs.getLocalVarNameSuffix()), 
+        Fix variable = isVariable ? new IntroduceVariableFix(h, info.getSnapshot().getSource(),
+                variableRewrite ? guessedName : Utilities.makeNameUnique(info, s, guessedName, cs.getLocalVarNamePrefix(), cs.getLocalVarNameSuffix()),
                 duplicatesForVariable.size() + 1, IntroduceKind.CREATE_VARIABLE, TreePathHandle.create(method, info), end) : null;
-        Fix constant = IntroduceConstantFix.createConstant(resolved, info, value, guessedName, 
-                        duplicatesForConstant.size() + 1, end, variableRewrite, cancel);
+        Fix constant = IntroduceConstantFix.createConstant(resolved, info, value, guessedName, duplicatesForConstant.size() + 1, end, variableRewrite, cancel);
 
 
         Fix parameter = isVariable ? new IntroduceParameterFix(h) : null;
@@ -297,7 +286,7 @@ public class IntroduceHint implements CancellableTask<CompilationInfo> {
             }
             Element el = info.getTrees().getElement(pathToClass);
             if (pathToClass != null && el != null && (el.getKind().isClass() || el.getKind().isInterface())) {
-                field = new IntroduceFieldFix(h, info.getJavaSource(), guessedName, duplicatesForConstant.size() + 1, initilizeIn, 
+                field = new IntroduceFieldFix(h, info.getSnapshot().getSource(), guessedName, duplicatesForConstant.size() + 1, initilizeIn,
                         statik, allowFinalInCurrentMethod, end, !variableRewrite, TreePathHandle.create(pathToClass, info));
             }
 
@@ -354,10 +343,8 @@ public class IntroduceHint implements CancellableTask<CompilationInfo> {
                                 Utilities.convertIfAnonymous(Utilities.resolveCapturedType(info, 
                                         resolveType(info, resolved)));
                         if (Utilities.isValidType(returnType)) {
-                            methodFix = new IntroduceExpressionBasedMethodFix(info.getJavaSource(), 
-                                    h, params, TypeMirrorHandle.create(returnType), 
-                                    exceptionHandles, duplicatesCount, typeVars, end, 
-                                    viableTargets);
+                            methodFix = new IntroduceExpressionBasedMethodFix(info.getSnapshot().getSource(), h, params, TypeMirrorHandle.create(returnType),
+                                    exceptionHandles, duplicatesCount, typeVars, end, viableTargets);
                             methodFix.setTargetIsInterface(allIfaces.get());
                         }
                     }

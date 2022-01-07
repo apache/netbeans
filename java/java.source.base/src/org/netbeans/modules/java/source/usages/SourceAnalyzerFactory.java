@@ -57,6 +57,7 @@ import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.java.source.SourceUtils;
 import org.netbeans.modules.java.source.ElementHandleAccessor;
+import org.netbeans.modules.java.source.builder.ElementsService;
 import org.netbeans.modules.java.source.indexing.JavaCustomIndexer;
 import org.netbeans.modules.java.source.parsing.FileObjects;
 import org.netbeans.modules.java.source.parsing.OutputFileManager;
@@ -280,6 +281,7 @@ public final class SourceAnalyzerFactory {
         private final Stack<Pair<BinaryName,String>> activeClass;
         private final Names names;
         private final Trees trees;
+        private final ElementsService elementsService;
         private final CompilationUnitTree cu;
         private final URL siblingUrl;
         private final String sourceName;
@@ -364,6 +366,7 @@ public final class SourceAnalyzerFactory {
             this.packageAnnotations = new HashSet<>();
             this.names = Names.instance(jt.getContext());
             this.trees = Trees.instance(jt);
+            this.elementsService = ElementsService.instance(jt.getContext());
             this.state = State.OTHER;
             this.cu = cu;
             this.signatureFiles = sigFiles;
@@ -400,6 +403,7 @@ public final class SourceAnalyzerFactory {
                 state=oldState;
             }
             scan(node.getTypeDecls(),p);
+            scan(cu.getModule(),p);
 
             Pair<BinaryName,String> name = null;
             if (!imports.isEmpty() ||
@@ -645,7 +649,7 @@ public final class SourceAnalyzerFactory {
                             resourceName = activeClass.peek().second();
                         }
                         name = Pair.<BinaryName,String>of(
-                                BinaryName.create(className, sym.getKind(), sym.isLocal(), simpleNameStart),
+                                BinaryName.create(className, sym.getKind(), elementsService.isLocal(sym), simpleNameStart),
                                 resourceName);
                         nameFrom = 2;
                     } else {

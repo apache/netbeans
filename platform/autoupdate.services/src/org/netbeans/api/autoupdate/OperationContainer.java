@@ -19,6 +19,7 @@
 
 package org.netbeans.api.autoupdate;
 
+import java.io.File;
 import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -352,6 +353,17 @@ public final class OperationContainer<Support> {
         impl.removeAll ();
     }
     
+    /** Specifies location of unpack200 executable. {@code unpack200} has been
+     * removed from JDK 14. As such it is not possible to unpack older NBM
+     * files without providing alternative JDK implementation of this file.
+     *
+     * @param executable path to the executable
+     * @since 1.65
+     */
+    public final void setUnpack200(File executable) {
+        this.impl.setUnpack200(executable);
+    }
+
     /**
      * Provides additional information
      * @param <Support> the type of support for performing chosen operation like 
@@ -398,7 +410,7 @@ public final class OperationContainer<Support> {
         this.support = t;
     }
     
-    OperationContainerImpl<Support> impl;
+    final OperationContainerImpl<Support> impl;
     private final Support support;
     private Boolean upToDate = null;
     

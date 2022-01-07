@@ -32,7 +32,6 @@ import javax.swing.SwingUtilities;
 import org.netbeans.api.java.classpath.GlobalPathRegistry;
 import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.JavaSource;
-import org.netbeans.api.java.source.Task;
 import org.openide.cookies.LineCookie;
 import org.openide.filesystems.FileObject;
 import org.openide.loaders.DataObject;
@@ -45,14 +44,7 @@ import org.openide.text.Line;
  */
 public final class LocationOpener {
 
-    public static final Location.Finder GLOBAL_FINDER = new Location.Finder() {
-
-        @Override
-        public FileObject findFileObject(Location loc) {
-            return GlobalPathRegistry.getDefault().findResource(loc.getFileName());
-        }
-
-    };
+    public static final Location.Finder GLOBAL_FINDER = (Location loc) -> GlobalPathRegistry.getDefault().findResource(loc.getFileName());
     final Location location;
     final Location.Finder finder;
 
@@ -80,7 +72,17 @@ public final class LocationOpener {
         }
     }
 
-    private int getMethodLine(final FileObject fo, final String methodName) {
+   private static String stripMethodParams(String methodNameWithParams) {
+        final int paramsIndex = methodNameWithParams.indexOf('(');
+        String cleanName = methodNameWithParams;
+        if (paramsIndex > 0) {
+            cleanName = methodNameWithParams.substring(0, paramsIndex);
+        }
+        return cleanName;
+    }
+
+    private int getMethodLine(final FileObject fo, final String methodNameWithParams) {
+        String methodName = stripMethodParams(methodNameWithParams);
         final int[] line = new int[1];
         JavaSource javaSource = JavaSource.forFileObject(fo);
         if (javaSource != null) {

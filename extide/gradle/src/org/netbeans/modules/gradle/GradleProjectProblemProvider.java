@@ -26,7 +26,7 @@ import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.concurrent.Callable;
+import java.util.Set;
 import java.util.concurrent.Future;
 import org.netbeans.api.project.Project;
 import org.netbeans.spi.project.ProjectServiceProvider;
@@ -35,7 +35,6 @@ import org.netbeans.spi.project.ui.ProjectProblemsProvider;
 
 import static org.netbeans.modules.gradle.api.NbGradleProject.Quality.*;
 import org.openide.util.NbBundle;
-import org.openide.util.RequestProcessor;
 
 /**
  *
@@ -43,9 +42,7 @@ import org.openide.util.RequestProcessor;
  */
 @ProjectServiceProvider(service = ProjectProblemsProvider.class, projectType = NbGradleProject.GRADLE_PROJECT_TYPE)
 public class GradleProjectProblemProvider implements ProjectProblemsProvider {
-
-    static final RequestProcessor GRADLE_RESOLVER_RP = new RequestProcessor("gradle-project-resolver", 1); //NOI18N
-
+    
     private final PropertyChangeSupport support = new PropertyChangeSupport(this);
     private final Project project;
     private final PropertyChangeListener listener;
@@ -85,31 +82,31 @@ public class GradleProjectProblemProvider implements ProjectProblemsProvider {
         GradleProject gp = project.getLookup().lookup(NbGradleProjectImpl.class).getGradleProject();
         if (gp.getQuality().notBetterThan(EVALUATED)) {
             ret.add(ProjectProblem.createError(Bundle.LBL_PrimingRequired(), Bundle.TXT_PrimingRequired(), resolver));
-        }
-        for (String problem : gp.getProblems()) {
-            String[] lines = problem.split("\\n"); //NOI18N
-            ret.add(ProjectProblem.createWarning(lines[0], problem.replaceAll("\\n", "<br/>"), resolver)); //NOI18N
+        } else {
+            for (String problem : gp.getProblems()) {
+                String[] lines = problem.split("\\n"); //NOI18N
+                ret.add(ProjectProblem.createWarning(lines[0], problem.replaceAll("\\n", "<br/>"), resolver)); //NOI18N
+            }
         }
         return ret;
     }
-
-    private class GradleProjectProblemResolver implements ProjectProblemResolver, Callable<Result> {
+    
+    private class GradleProjectProblemResolver implements ProjectProblemResolver {
 
         @Override
         public Future<Result> resolve() {
-            return GRADLE_RESOLVER_RP.submit(this);
-        }
-
-        @Override
-        public Result call() throws Exception {
             NbGradleProjectImpl impl = project.getLookup().lookup(NbGradleProjectImpl.class);
-            GradleProject gradleProject = GradleProjectCache.loadProject(impl, FULL_ONLINE, true, true);
-            impl.fireProjectReload(false);
-            Quality q = gradleProject.getQuality();
-            Status st = q.worseThan(SIMPLE) ? Status.UNRESOLVED
-                    : q.worseThan(FULL) ? Status.RESOLVED_WITH_WARNING : Status.RESOLVED;
-            return Result.create(st);
-        }
-
+            return impl.primeProject().thenApply(gradleProject -> {
+                Quality q = gradleProject.getQuality();
+                Status st = q.worseThan(SIMPLE) ? Status.UNRESOLVED
+                        : q.worseThan(FULL) ? Status.RESOLVED_WITH_WARNING : Status.RESOLVED;
+                Set<String> problems = gradleProject.getProblems();
+                if (problems.isEmpty()) {
+                    return Result.create(st);
+                } else {
+                    return Result.create(st, problems.iterator().next());
+                }
+            });
+       }
     }
 }

@@ -40,6 +40,8 @@ import javax.annotation.processing.Filer;
 import javax.annotation.processing.Processor;
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
+import javax.annotation.processing.SupportedSourceVersion;
+import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.PackageElement;
@@ -50,6 +52,7 @@ import org.openide.util.lookup.ServiceProvider;
 
 @ServiceProvider(service=Processor.class)
 @SupportedAnnotationTypes("*")
+@SupportedSourceVersion(SourceVersion.RELEASE_8)
 public class TreeShimsCopier extends AbstractProcessor {
 
     @Override
@@ -95,7 +98,7 @@ public class TreeShimsCopier extends AbstractProcessor {
 
     private static final Map<String, String> ALLOWED_CLASSES2TARGET_PACKAGE = new HashMap<String, String>() {{
         put("org.netbeans.modules.java.hints.infrastructure.ErrorHintsProvider", "org.netbeans.modules.java.hints");
-        put("org.netbeans.modules.java.completion.JavaCompletionTask", "org.netbeans.modules.java.completion");
+        put("org.netbeans.modules.java.completion.JavaCompletionTask", "org.netbeans.modules.java.completion.impl");
         put("org.netbeans.modules.editor.java.GoToSupport", "org.netbeans.modules.editor.java");
         put("org.netbeans.modules.java.editor.base.semantic.SemanticHighlighterBase", "org.netbeans.modules.java.editor.base.semantic");
     }};

@@ -167,6 +167,8 @@ public class JavaViewHierarchyRandomTest extends NbTestCase {
                     int endOffset = doc.getLength() + 1;
                     modelToView(startOffset);
                     modelToView(endOffset);
+                    if(System.getProperty("java.specification.version").compareTo("1.8") > 0)
+                        endOffset = doc.getLength();
                     getNextVisualPositionFrom(startOffset);
                     getNextVisualPositionFrom(endOffset);
                 } catch (BadLocationException e) {

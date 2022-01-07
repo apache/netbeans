@@ -309,13 +309,7 @@ public class CssIndex {
         String keyName = type.getIndexKey();
         Map<FileObject, Collection<String>> map = new HashMap<>();
         try {
-            Collection<? extends IndexResult> results;
-            if(prefix.length() == 0) {
-                results = querySupport.query(keyName, "", QuerySupport.Kind.PREFIX, keyName);
-            } else {
-                String searchExpression = ".*("+encodeValueForRegexp(prefix)+").*"; //NOI18N
-                results = querySupport.query(keyName, searchExpression, QuerySupport.Kind.REGEXP, keyName);
-            }
+            Collection<? extends IndexResult> results = querySupport.query(keyName, prefix, QuerySupport.Kind.PREFIX, keyName);
             for (IndexResult result : results) {
                 String[] elements = result.getValues(keyName);
                 for(String e : elements) {
@@ -380,8 +374,8 @@ public class CssIndex {
      *
      * @param type
      * @param value
-     * @return returns a collection of files which contains the keyName key and the
-     * value matches the value regular expression
+     * @return returns a collection of files which contains elements with the
+     * given name and with the given type
      */
     public Collection<FileObject> find(RefactoringElementType type, String value) {
         return find(type, value, true);
@@ -391,13 +385,11 @@ public class CssIndex {
         String keyName = type.getIndexKey();
         try {
             StringBuilder searchExpression = new StringBuilder();
-            searchExpression.append(".*("); //NOI18N
             searchExpression.append(encodeValueForRegexp(value));
             if(includeVirtualElements) {
                 searchExpression.append(CssIndexer.VIRTUAL_ELEMENT_MARKER);
                 searchExpression.append('?'); //!?
             }
-            searchExpression.append(")[,;].*"); //NOI18N
 
             Collection<FileObject> matchedFiles = new LinkedList<>();
             Collection<? extends IndexResult> results = querySupport.query(keyName, searchExpression.toString(), QuerySupport.Kind.REGEXP, keyName);

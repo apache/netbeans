@@ -852,4 +852,15 @@ public class GrammarResolverTest extends CssTestBase {
     }
     
 
+    public void testGlobalValuesAreResolved() {
+        String grammar = "a";
+
+        // Baseline matching - validate, that grammar works
+        assertResolve(grammar, "a");
+
+        // Verify that the global values unset, inherit and initial are matched
+        assertResolve(grammar, "unset");
+        assertResolve(grammar, "inherit");
+        assertResolve(grammar, "initial");
+    }
 }

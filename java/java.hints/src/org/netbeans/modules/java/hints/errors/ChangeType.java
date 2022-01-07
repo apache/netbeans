@@ -20,7 +20,6 @@
 package org.netbeans.modules.java.hints.errors;
 
 import com.sun.source.tree.EnhancedForLoopTree;
-import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.VariableTree;
@@ -30,10 +29,6 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import javax.lang.model.element.TypeElement;
-import javax.lang.model.type.ArrayType;
-import javax.lang.model.type.DeclaredType;
-import javax.lang.model.type.ErrorType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import org.netbeans.api.java.source.CompilationInfo;
@@ -166,9 +161,9 @@ public final class ChangeType implements ErrorRule<Void> {
                 //anonymous class?
                 expressionType[0] = org.netbeans.modules.java.hints.errors.Utilities.convertIfAnonymous(expressionType[0]);
 
-                result.add(new ChangeTypeFix(info.getJavaSource(),
+                result.add(new ChangeTypeFix(info, treePath,
                         ((VariableTree) leaf[0]).getName().toString(), 
-                        Utilities.getTypeName(info, expressionType[0], false).toString(), offset));
+                        Utilities.getTypeName(info, expressionType[0], false).toString(), offset).toEditorFix());
             }
         }
         

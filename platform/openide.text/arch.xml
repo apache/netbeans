@@ -430,6 +430,13 @@ in methods
     <code>-J-Dorg.openide.text.CloneableEditor.oldInitialization=true</code>.
     This property may be discontiued anytime.
 </api>
+<api name="org.netbeans.modules.openide.text.ASK_OnReload" group="branding" type="export" category="stable">
+    Control on reload yes/no dialog in
+    <a href="@TOP@/org/openide/text/CloneableEditorSupport.html">CloneableEditorSupport</a>
+    by setting the <code>ASK_OnReload</code> key in
+    <code>org/netbeans/modules/openide/text/Bundle.properties</code>
+    to <code>yes</code> or <code>no</code> in a branding file in your application.
+</api>
 </answer>
 
 

@@ -32,6 +32,9 @@
         <file>src/org/netbeans/modules/db/dataview/images/row_commit.png</file>
         <file>src/org/netbeans/modules/db/dataview/images/row_add.png</file>
         <file>src/org/netbeans/modules/db/dataview/images/navigate_end.png</file>
+        <file>test/unit/data/goldenfiles/org/netbeans/modules/db/dataview/output/dataexport/CSVDataExporterTest/testFileCreation.pass</file>
+        <file>test/unit/data/goldenfiles/org/netbeans/modules/db/dataview/output/dataexport/TSVDataExporterTest/testFileCreation.pass</file>
+        <file>test/unit/data/goldenfiles/org/netbeans/modules/db/dataview/output/dataexport/XLSXDataExporterTest/testFileCreation.pass</file>
         <license ref="Apache-2.0-ASF" />
         <comment type="COMMENT_UNSUPPORTED" />
     </fileset>

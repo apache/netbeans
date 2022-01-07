@@ -487,6 +487,11 @@ public class InstancesListController extends AbstractController {
             return 0;
         }
 
+        @Override
+        public boolean isModeFields() {
+            return false;
+        }
+
         public int getNChildren() {
             return 0;
         }

@@ -42,34 +42,33 @@ public class DebuggerAnnotation extends Annotation {
     /** Annotation type constant. */
     public static final String CALL_STACK_FRAME_ANNOTATION_TYPE = "CallSite";
 
-    private Annotatable annotatable;
-    private String      type;
-    
-    
+    private final String type;
+
     public DebuggerAnnotation (String type, Annotatable annotatable) {
         this.type = type;
-        this.annotatable = annotatable;
         attach (annotatable);
     }
-    
+
     @Override
     public String getAnnotationType () {
         return type;
     }
-    
+
     @Override
+    @NbBundle.Messages({"TTP_CurrentPC=Current Program Counter",
+                        "TTP_CurrentPC2=Current Target",
+                        "TTP_Callsite=Call Stack Line"})
     public String getShortDescription () {
-        if (type == CURRENT_LINE_ANNOTATION_TYPE)
-            return NbBundle.getMessage(DebuggerAnnotation.class, "TOOLTIP_CURRENT_PC");
-        else
-        if (type == CURRENT_LINE_ANNOTATION_TYPE2)
-            return NbBundle.getMessage(DebuggerAnnotation.class, "TOOLTIP_CURRENT_PC_2");
-        else
-        if (type == CURRENT_LINE_PART_ANNOTATION_TYPE)
-            return NbBundle.getMessage(DebuggerAnnotation.class, "TOOLTIP_CURRENT_PC");
-        else
-        if (type == CALL_STACK_FRAME_ANNOTATION_TYPE)
-            return NbBundle.getMessage(DebuggerAnnotation.class, "TOOLTIP_CALLSITE");
-        return null;
+        switch (type) {
+            case CURRENT_LINE_ANNOTATION_TYPE:
+            case CURRENT_LINE_PART_ANNOTATION_TYPE:
+                return Bundle.TTP_CurrentPC();
+            case CURRENT_LINE_ANNOTATION_TYPE2:
+                return Bundle.TTP_CurrentPC2();
+            case CALL_STACK_FRAME_ANNOTATION_TYPE:
+                return Bundle.TTP_Callsite();
+            default:
+                throw new IllegalStateException(type);
+        }
     }
 }

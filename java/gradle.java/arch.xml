@@ -98,6 +98,30 @@
 
 
  <answer id="exec-property">
+     <api category="stable" group="property" name="javaExec.jvmArgs" type="export">
+         {@code ${javaExec.jvmArgs}} token is replaced in action mappings for JVM arguments collected
+         from <a href="@org-netbeans-modules-extexecution-base@/org/netbeans/api/extexecution/base/ExplicitProcessParameters.html">ExplicitProcessParameters</a>
+         in action's context Lookup. See <a href="@TOP@/org/netbeans/modules/gradle/java/api/ProjectActions.html#TOKEN_JAVAEXEC_JVMARGS">ProjectActions.TOKEN_JAVAEXEC_JVMARGS</a>
+         for more details.
+     </api>
+     <api category="stable" group="property" name="javaExec.args" type="export">
+         {@code ${javaExec.args}} token is replaced in action mappings for <b>application</b> parameters collected
+         from <a href="@org-netbeans-modules-extexecution-base@/org/netbeans/api/extexecution/base/ExplicitProcessParameters.html">ExplicitProcessParameters</a>
+         in action's context Lookup. See <a href="@TOP@/org/netbeans/modules/gradle/java/api/ProjectActions.html#TOKEN_JAVAEXEC_ARGS">ProjectActions.TOKEN_JAVAEXEC_ARGS</a>
+         for more details.
+     </api>
+     <api category="stable" group="property" name="javaExec.runWorkingDir" type="export">
+         {@code ${javaExec.runWorkingDir}} token is replaced in action mappings with working directory retrieved
+         from <a href="@org-netbeans-modules-extexecution-base@/org/netbeans/api/extexecution/base/ExplicitProcessParameters.html">ExplicitProcessParameters</a>
+         in action's context Lookup. See <a href="@TOP@/org/netbeans/modules/gradle/java/api/ProjectActions.html#TOKEN_JAVAEXEC_CWD">ProjectActions.TOKEN_JAVAEXEC_CWD</a>
+         for more details.
+     </api>
+     <api category="stable" group="property" name="javaExec.runEnvironment" type="export">
+         {@code ${javaExec.runEnvironment}} token is replaced in action mappings with environment variables retrieved
+         from <a href="@org-netbeans-modules-extexecution-base@/org/netbeans/api/extexecution/base/ExplicitProcessParameters.html">ExplicitProcessParameters</a>
+         in action's context Lookup. See <a href="@TOP@/org/netbeans/modules/gradle/java/api/ProjectActions.html#TOKEN_JAVAEXEC_ENV">ProjectActions.TOKEN_JAVAEXEC_ENV</a>
+         for more details.
+     </api>
  </answer>
 
  <answer id="resources-file">

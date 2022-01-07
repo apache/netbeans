@@ -49,6 +49,7 @@ import org.netbeans.modules.php.editor.parser.astnodes.ASTNode;
 import org.netbeans.modules.php.editor.parser.astnodes.ArrowFunctionDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.Assignment;
 import org.netbeans.modules.php.editor.parser.astnodes.Block;
+import org.netbeans.modules.php.editor.parser.astnodes.BodyDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.CastExpression;
 import org.netbeans.modules.php.editor.parser.astnodes.CatchClause;
 import org.netbeans.modules.php.editor.parser.astnodes.ClassDeclaration;
@@ -77,6 +78,7 @@ import org.netbeans.modules.php.editor.parser.astnodes.Include;
 import org.netbeans.modules.php.editor.parser.astnodes.InstanceOfExpression;
 import org.netbeans.modules.php.editor.parser.astnodes.InterfaceDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.LambdaFunctionDeclaration;
+import org.netbeans.modules.php.editor.parser.astnodes.MatchExpression;
 import org.netbeans.modules.php.editor.parser.astnodes.MethodDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.MethodInvocation;
 import org.netbeans.modules.php.editor.parser.astnodes.NamespaceDeclaration;
@@ -97,7 +99,7 @@ import org.netbeans.modules.php.editor.parser.astnodes.SingleUseStatementPart;
 import org.netbeans.modules.php.editor.parser.astnodes.StaticFieldAccess;
 import org.netbeans.modules.php.editor.parser.astnodes.StaticMethodInvocation;
 import org.netbeans.modules.php.editor.parser.astnodes.SwitchStatement;
-import org.netbeans.modules.php.editor.parser.astnodes.ThrowStatement;
+import org.netbeans.modules.php.editor.parser.astnodes.ThrowExpression;
 import org.netbeans.modules.php.editor.parser.astnodes.UnaryOperation;
 import org.netbeans.modules.php.editor.parser.astnodes.UseStatement;
 import org.netbeans.modules.php.editor.parser.astnodes.Variable;
@@ -624,7 +626,18 @@ public class UnusedVariableHint extends HintRule implements CustomisableRule {
         }
 
         @Override
-        public void visit(ThrowStatement node) {
+        public void visit(MatchExpression node) {
+            if (CancelSupport.getDefault().isCancelled()) {
+                return;
+            }
+            forceVariableAsUsed = true;
+            scan(node.getExpression());
+            forceVariableAsUsed = false;
+            scan(node.getMatchArms());
+        }
+
+        @Override
+        public void visit(ThrowExpression node) {
             if (CancelSupport.getDefault().isCancelled()) {
                 return;
             }
@@ -724,7 +737,12 @@ public class UnusedVariableHint extends HintRule implements CustomisableRule {
             if (CancelSupport.getDefault().isCancelled()) {
                 return;
             }
-            if (checkUnusedFormalParameters(preferences) && !isInInheritedMethod) {
+            if (BodyDeclaration.Modifier.isVisibilityModifier(node.getModifier())) {
+                // [NETBEANS-4443] PHP 8.0 Construcotr Property Promotion
+                forceVariableAsUsed = true;
+                scan(node.getParameterName());
+                forceVariableAsUsed = false;
+            } else if (checkUnusedFormalParameters(preferences) && !isInInheritedMethod) {
                 scan(node.getParameterName());
             } else {
                 forceVariableAsUsed = true;

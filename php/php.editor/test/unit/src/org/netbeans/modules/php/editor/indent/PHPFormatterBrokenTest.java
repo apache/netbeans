@@ -36,6 +36,17 @@ public class PHPFormatterBrokenTest extends PHPFormatterTestBase {
         reformatFileContents("testfiles/formatting/broken/issue197074_01.php", options);
     }
 
+    public void testIssue197074_01_psr12() throws Exception {
+        HashMap<String, Object> options = new HashMap<String, Object>(FmtOptions.getDefaults());
+        options.put(FmtOptions.CONTINUATION_INDENT_SIZE, 4);
+        options.put(FmtOptions.WRAP_METHOD_CALL_ARGS_AFTER_LEFT_PAREN, true);
+        options.put(FmtOptions.WRAP_METHOD_CALL_ARGS_RIGHT_PAREN, true);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_AFTER_LEFT_PAREN, true);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_RIGHT_PAREN, true);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_KEEP_PAREN_AND_BRACE_ON_THE_SAME_LINE, true);
+        reformatFileContents("testfiles/formatting/broken/issue197074_01_psr12.php", options);
+    }
+
     public void testIssue197074_02() throws Exception {
         HashMap<String, Object> options = new HashMap<String, Object>(FmtOptions.getDefaults());
         options.put(FmtOptions.CONTINUATION_INDENT_SIZE, 4);
@@ -72,5 +83,10 @@ public class PHPFormatterBrokenTest extends PHPFormatterTestBase {
     public void testNetBeans3103SelectedParent_02() throws Exception {
         HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
         reformatFileContents("testfiles/formatting/broken/netbeans3103_parent_02.php", options);
+    }
+
+    public void testConstructorPropertyPromotion() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        reformatFileContents("testfiles/formatting/broken/constructorPropertyPromotion.php", options);
     }
 }

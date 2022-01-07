@@ -32,4 +32,5 @@ GLOBAL     table-footer-group                         <font color=999999>display
 GLOBAL     table-header-group                         <font color=999999>display</font>
 GLOBAL     table-row                                  <font color=999999>display</font>
 GLOBAL     table-row-group                            <font color=999999>display</font>
+GLOBAL     unset                                      <font color=999999>display</font>
 GLOBAL     var                                        <font color=999999>display</font>

@@ -31,17 +31,37 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JTree;
+import javax.swing.event.ChangeListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 import org.openide.util.ImageUtilities;
+import org.openide.util.NbBundle;
+import org.openide.util.NbBundle.Messages;
 
 /**
  *
  * @author Laszlo Kishalmi
  */
 public class SourceSetPanel extends javax.swing.JPanel {
+
+    @Messages({
+        "sourceSetDetail.SOURCES=Sources",
+        "sourceSetDetail.COMPILE_CP=Compile Classpath",
+        "sourceSetDetail.RUNTIME_CP=Runtime Classpath",
+        "sourceSetDetail.ANNOTATION_PROC=Annotation Processors",
+        "sourceSetDetail.COMPILER_ARGS=Compiler Args",
+    })
+    enum Details {
+        SOURCES, COMPILE_CP, RUNTIME_CP, ANNOTATION_PROC, COMPILER_ARGS;
+
+        @Override
+        public String toString() {
+            return NbBundle.getMessage(SourceSetPanel.class, "sourceSetDetail." + name()); //NOI18N
+        }
+    }
+
     private static final String PROJECT_ICON = "org.netbeans.modules/gradle/resources/gradle.png"; //NOI18N
     private static final String ARTIFACT_ICON = "org.netbeans.modules/gradle/resources/module-artifact.png"; //NOI18N
 
@@ -51,7 +71,10 @@ public class SourceSetPanel extends javax.swing.JPanel {
 
     final Path relativeRoot;
     final GradleJavaSourceSet sourceSet;
-    DefaultMutableTreeNode sourcesRoot = new DefaultMutableTreeNode(new Object());
+    private final DefaultMutableTreeNode sourcesRoot = new DefaultMutableTreeNode(new Object());
+    private final DefaultTreeModel sourcesModel = new DefaultTreeModel(sourcesRoot, true);
+    private final DefaultMutableTreeNode argumentsRoot = new DefaultMutableTreeNode(new Object());
+    private final DefaultTreeModel argumentsModel = new DefaultTreeModel(argumentsRoot, true);
 
     /**
      * Creates new form SourceSetPanel
@@ -82,20 +105,21 @@ public class SourceSetPanel extends javax.swing.JPanel {
         for (GradleJavaSourceSet.SourceType type : GradleJavaSourceSet.SourceType.values()) {
             if (!sourceSet.getSourceDirs(type).isEmpty()) {
                 DefaultMutableTreeNode typeNode = new DefaultMutableTreeNode(type);
-                sourcesRoot.add(typeNode);
+                sourcesModel.insertNodeInto(typeNode, sourcesRoot, sourcesRoot.getChildCount());
                 for (File dir : sourceSet.getSourceDirs(type)) {
-                    typeNode.add(new DefaultMutableTreeNode(dir, false));
+                    sourcesModel.insertNodeInto(new DefaultMutableTreeNode(dir, false), typeNode, typeNode.getChildCount());
                 }
+                trSources.expandPath(new TreePath(typeNode.getPath()));
+            }
+            if (!sourceSet.getCompilerArgs(type).isEmpty()) {
+                DefaultMutableTreeNode typeNode = new DefaultMutableTreeNode(type, true);
+                argumentsModel.insertNodeInto(typeNode, argumentsRoot, argumentsRoot.getChildCount());
+                for (String compilerArg : sourceSet.getCompilerArgs(type)) {
+                    argumentsModel.insertNodeInto(new DefaultMutableTreeNode(compilerArg, false), typeNode, typeNode.getChildCount());
+                }
+                trCompilerArgs.expandPath(new TreePath(typeNode.getPath()));
             }
         }
-        trSources.setModel(new DefaultTreeModel(sourcesRoot, true));
-        DefaultMutableTreeNode currentNode = sourcesRoot;
-        do {
-            if (currentNode.getLevel() <= 1) {
-                trSources.expandPath(new TreePath(currentNode.getPath()));
-            }
-            currentNode = currentNode.getNextNode();
-        } while (currentNode != null);
         trSources.setCellRenderer(new MyTreeCellRenderer());
 
         DefaultListModel<File> compileModel = new DefaultListModel<>();
@@ -120,6 +144,14 @@ public class SourceSetPanel extends javax.swing.JPanel {
         lsAnnotationProcessors.setCellRenderer(new MyListCellRenderer());
     }
 
+    void addDetailsChangeListener(ChangeListener l) {
+        tpDetails.addChangeListener(l);
+    }
+
+    void setActiveDetails(Details detail) {
+        tpDetails.setSelectedIndex(detail.ordinal());
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -132,7 +164,7 @@ public class SourceSetPanel extends javax.swing.JPanel {
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        jTabbedPane1 = new javax.swing.JTabbedPane();
+        tpDetails = new javax.swing.JTabbedPane();
         jScrollPane1 = new javax.swing.JScrollPane();
         trSources = new javax.swing.JTree();
         jScrollPane2 = new javax.swing.JScrollPane();
@@ -141,6 +173,8 @@ public class SourceSetPanel extends javax.swing.JPanel {
         lsRuntime = new javax.swing.JList<>();
         jScrollPane4 = new javax.swing.JScrollPane();
         lsAnnotationProcessors = new javax.swing.JList<>();
+        jScrollPane6 = new javax.swing.JScrollPane();
+        trCompilerArgs = new javax.swing.JTree();
         tfSourceLevel = new javax.swing.JTextField();
         tfOutputResources = new javax.swing.JTextField();
         tfOutputClasses = new javax.swing.JTextField();
@@ -151,29 +185,34 @@ public class SourceSetPanel extends javax.swing.JPanel {
 
         org.openide.awt.Mnemonics.setLocalizedText(jLabel3, org.openide.util.NbBundle.getMessage(SourceSetPanel.class, "SourceSetPanel.jLabel3.text")); // NOI18N
 
-        jTabbedPane1.setTabPlacement(javax.swing.JTabbedPane.BOTTOM);
+        tpDetails.setTabPlacement(javax.swing.JTabbedPane.RIGHT);
+        tpDetails.setMinimumSize(new java.awt.Dimension(150, 32));
 
-        javax.swing.tree.DefaultMutableTreeNode treeNode1 = new javax.swing.tree.DefaultMutableTreeNode("root");
-        trSources.setModel(new javax.swing.tree.DefaultTreeModel(treeNode1));
+        trSources.setModel(sourcesModel);
         trSources.setRootVisible(false);
         jScrollPane1.setViewportView(trSources);
 
-        jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(SourceSetPanel.class, "SourceSetPanel.jScrollPane1.TabConstraints.tabTitle"), jScrollPane1); // NOI18N
+        tpDetails.addTab(Details.SOURCES.toString(), jScrollPane1);
 
         jScrollPane2.setViewportView(lsCompile);
 
-        jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(SourceSetPanel.class, "SourceSetPanel.jScrollPane2.TabConstraints.tabTitle"), jScrollPane2); // NOI18N
+        tpDetails.addTab(Details.COMPILE_CP.toString(), jScrollPane2);
 
         jScrollPane3.setViewportView(lsRuntime);
 
-        jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(SourceSetPanel.class, "SourceSetPanel.jScrollPane3.TabConstraints.tabTitle"), jScrollPane3); // NOI18N
+        tpDetails.addTab(Details.RUNTIME_CP.toString(), jScrollPane3);
 
         jScrollPane4.setViewportView(lsAnnotationProcessors);
 
-        jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(SourceSetPanel.class, "SourceSetPanel.jScrollPane4.TabConstraints.tabTitle"), jScrollPane4); // NOI18N
+        tpDetails.addTab(Details.ANNOTATION_PROC.toString(), jScrollPane4);
+
+        trCompilerArgs.setModel(argumentsModel);
+        trCompilerArgs.setRootVisible(false);
+        jScrollPane6.setViewportView(trCompilerArgs);
+
+        tpDetails.addTab(Details.COMPILER_ARGS.toString(), jScrollPane6);
 
         tfSourceLevel.setEditable(false);
-        tfSourceLevel.setText(org.openide.util.NbBundle.getMessage(SourceSetPanel.class, "SourceSetPanel.tfSourceLevel.text")); // NOI18N
 
         tfOutputResources.setEditable(false);
 
@@ -186,11 +225,11 @@ public class SourceSetPanel extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 494, Short.MAX_VALUE)
+                    .addComponent(tpDetails, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(tfSourceLevel))
+                        .addComponent(tfSourceLevel, javax.swing.GroupLayout.DEFAULT_SIZE, 402, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -209,7 +248,7 @@ public class SourceSetPanel extends javax.swing.JPanel {
                     .addComponent(jLabel3)
                     .addComponent(tfSourceLevel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 232, Short.MAX_VALUE)
+                .addComponent(tpDetails, javax.swing.GroupLayout.DEFAULT_SIZE, 232, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel1)
@@ -269,7 +308,7 @@ public class SourceSetPanel extends javax.swing.JPanel {
         }
 
     }
-
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -278,13 +317,15 @@ public class SourceSetPanel extends javax.swing.JPanel {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
-    private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JList<File> lsAnnotationProcessors;
     private javax.swing.JList<File> lsCompile;
     private javax.swing.JList<File> lsRuntime;
     private javax.swing.JTextField tfOutputClasses;
     private javax.swing.JTextField tfOutputResources;
     private javax.swing.JTextField tfSourceLevel;
+    private javax.swing.JTabbedPane tpDetails;
+    private javax.swing.JTree trCompilerArgs;
     private javax.swing.JTree trSources;
     // End of variables declaration//GEN-END:variables
 }

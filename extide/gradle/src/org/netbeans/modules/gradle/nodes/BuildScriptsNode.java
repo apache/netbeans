@@ -27,10 +27,17 @@ import java.awt.Image;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.prefs.PreferenceChangeEvent;
 import java.util.prefs.PreferenceChangeListener;
 import org.netbeans.api.annotations.common.StaticResource;
+import org.netbeans.api.project.FileOwnerQuery;
+import org.netbeans.api.project.Project;
+import org.netbeans.api.project.ProjectManager;
+import org.netbeans.modules.gradle.spi.GradleFiles.Kind;
 import org.netbeans.modules.gradle.spi.GradleSettings;
 import org.openide.filesystems.FileChangeAdapter;
 import org.openide.filesystems.FileEvent;
@@ -47,12 +54,17 @@ import org.openide.util.NbBundle.Messages;
 import org.openide.util.Pair;
 import org.openide.util.lookup.Lookups;
 
+import static org.netbeans.modules.gradle.spi.GradleFiles.Kind.*;
+import org.netbeans.spi.project.ui.PathFinder;
+import org.openide.util.Exceptions;
 /**
  *
  * @author Laszlo Kishalmi
  */
 public final class BuildScriptsNode extends AnnotatedAbstractNode {
 
+    private static final Logger LOG = Logger.getLogger(BuildScriptsNode.class.getName());
+    
     @StaticResource
     private static final String BS_BADGE
             = "org/netbeans/modules/gradle/resources/buildscripts-badge.png";
@@ -60,10 +72,15 @@ public final class BuildScriptsNode extends AnnotatedAbstractNode {
     @NbBundle.Messages("LBL_Build_Scripts=Build Scripts")
     public BuildScriptsNode(NbGradleProjectImpl prj) {
         super(Children.create(new ProjectFilesChildren(prj), true),
-                Lookups.fixed(prj.getProjectDirectory()));
+                Lookups.fixed(prj.getProjectDirectory(), new Finder(prj)));
         setName("buildscripts"); //NOI18N
         setDisplayName(Bundle.LBL_Build_Scripts());
     }
+
+    // The order in this array determines the order of the nodes under Build Scripts
+    private final static Kind[] SCRIPTS = new Kind[] {
+        BUILD_SRC, USER_PROPERTIES, SETTINGS_SCRIPT, ROOT_SCRIPT, ROOT_PROPERTIES, BUILD_SCRIPT, PROJECT_PROPERTIES
+    };
 
     @Override
     protected Image getIconImpl(int param) {
@@ -81,6 +98,34 @@ public final class BuildScriptsNode extends AnnotatedAbstractNode {
         return img;
     }
 
+    private static class Finder implements PathFinder {
+
+        final Project project;
+
+        public Finder(Project project) {
+            this.project = project;
+        }
+        
+        @Override
+        public Node findPath(Node node, Object target) {
+        if (target instanceof FileObject) {
+            FileObject fo = (FileObject) target;
+            if (project != FileOwnerQuery.getOwner(fo)) {
+                return null; // Don't waste time if project does not own the fo
+            }
+            Node[] nodes = node.getChildren().getNodes(true);
+            for (Node n : nodes) {
+                FileObject nf = n.getLookup().lookup(FileObject.class);
+                if ((nf != null) && (nf.equals(fo))) {
+                   return n;
+                }
+            }
+        }
+
+        return null;
+        }
+    }
+    
     private static class ProjectFilesChildren extends ChildFactory.Detachable<Pair<FileObject, GradleFiles.Kind>> implements PropertyChangeListener {
 
         private final NbGradleProjectImpl project;
@@ -116,40 +161,48 @@ public final class BuildScriptsNode extends AnnotatedAbstractNode {
         protected Node createNodeForKey(Pair<FileObject, GradleFiles.Kind> key) {
             // Do not show root script and property nodes on root project.
             boolean isRoot = project.getGradleProject().getBaseProject().isRoot();
-            if (isRoot
-                    && ((key.second() == GradleFiles.Kind.ROOT_SCRIPT)
-                    || (key.second() == GradleFiles.Kind.ROOT_PROPERTIES))) {
-                return null;
+            FileObject fo = key.first();
+            switch (key.second()) {
+                case ROOT_SCRIPT:
+                case ROOT_PROPERTIES:
+                    return isRoot ? null : createBuildFileNode(fo, Bundle.LBL_RootSuffix());
+                case BUILD_SCRIPT:
+                case PROJECT_PROPERTIES:
+                    return createBuildFileNode(fo, isRoot ? null : Bundle.LBL_ProjectSuffixt());
+                case USER_PROPERTIES:
+                    return createBuildFileNode(fo, Bundle.LBL_UserSuffix());
+                case SETTINGS_SCRIPT:
+                    return createBuildFileNode(fo, null);
+                case BUILD_SRC:
+                    return createSubProjectNode(fo);
+                default:
+                    return null;
             }
+        }
+
+        private static Node createSubProjectNode(FileObject fo) {
             try {
-                Node node = DataObject.find(key.first()).getNodeDelegate().cloneNode();
-                String nameSuffix = null;
-                if (key.second() != null) {
-                    if (key.second() == GradleFiles.Kind.USER_PROPERTIES) {
-                        nameSuffix = Bundle.LBL_UserSuffix();
-                    }
-                    if (!isRoot) {
-                        switch (key.second()) {
-                            case BUILD_SCRIPT:
-                            case PROJECT_PROPERTIES: {
-                                nameSuffix = Bundle.LBL_ProjectSuffixt();
-                                break;
-                            }
-                            case ROOT_SCRIPT:
-                            case ROOT_PROPERTIES: {
-                                nameSuffix = Bundle.LBL_RootSuffix();
-                                break;
-                            }
-                        }
-                    }
+                Project prj = ProjectManager.getDefault().findProject(fo);
+                if (prj != null) {
+                    return SubProjectsNode.createSubProjectNode(prj);
+                } else {
+                    LOG.log(Level.WARNING, "It seems {0} was not identified as a buildSrc project.", fo.getPath());
                 }
-                if (nameSuffix != null) {
-                    node.setDisplayName(key.first().getNameExt() + " [" + nameSuffix + "]");
-                }
-                return node;
-            } catch (DataObjectNotFoundException e) {
-                return null;
+            } catch (IOException | IllegalArgumentException ex) {
+                Exceptions.printStackTrace(ex);
             }
+            return null;
+        }
+
+        private static Node createBuildFileNode(FileObject fo, String nameSuffix) {
+            Node ret = null;
+            try {
+                ret = DataObject.find(fo).getNodeDelegate().cloneNode();
+                if (nameSuffix != null) {
+                    ret.setDisplayName(fo.getNameExt() + " [" + nameSuffix + "]");
+                }
+            } catch (DataObjectNotFoundException ex) {}
+            return ret;
         }
 
         public @Override
@@ -176,9 +229,9 @@ public final class BuildScriptsNode extends AnnotatedAbstractNode {
         @Override
         protected boolean createKeys(List<Pair<FileObject, GradleFiles.Kind>> keys) {
             GradleFiles gf = project.getGradleFiles();
-            for (GradleFiles.Kind kind : GradleFiles.Kind.values()) {
+            for (GradleFiles.Kind kind : SCRIPTS) {
                 File f = gf.getFile(kind);
-                if ((f != null) && f.isFile()) {
+                if ((f != null) && f.exists()) {
                     keys.add(Pair.of(FileUtil.toFileObject(f), kind));
                 }
             }

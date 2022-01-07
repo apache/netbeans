@@ -33,7 +33,7 @@ import javax.enterprise.deploy.spi.exceptions.BeanNotFoundException;
 import org.netbeans.modules.payara.eecommon.api.config.PayaraConfiguration;
 import org.netbeans.modules.payara.eecommon.api.config.J2eeModuleHelper;
 import org.netbeans.modules.payara.jakartaee.db.Hk2DatasourceManager;
-import org.netbeans.modules.payara.tooling.data.PayaraVersion;
+import org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI;
 import org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException;
 import org.netbeans.modules.j2ee.deployment.common.api.Datasource;
 import org.netbeans.modules.j2ee.deployment.common.api.DatasourceAlreadyExistsException;
@@ -44,8 +44,7 @@ import org.openide.filesystems.FileUtil;
 import org.openide.util.NbBundle;
 
 /**
- * Java EE server configuration API support for Payara servers before 3.1.
- * Covers Payara servers before 3.1. Old {@code sun-resources.xml} files are used.
+ * Java EE server configuration API support for Payara servers.
  * <p/>
  * @author Ludovic Champenois, Peter Williams, Tomas Kraus
  */
@@ -56,12 +55,12 @@ public class Hk2Configuration extends PayaraConfiguration implements DeploymentC
      * for Payara servers before 3.1.
      * <p/>
      * @param module Java EE module (project).
-     * @param version Payara server version.
+     * @param version Payara server platformVersion.
      * @throws ConfigurationException when there is a problem with Java EE server
      *         configuration initialization.
      */
     public Hk2Configuration(
-            final J2eeModule module, final PayaraVersion version
+            final J2eeModule module, final PayaraPlatformVersionAPI version
     ) throws ConfigurationException {
         super(module, J2eeModuleHelper.getPayaraDDModuleHelper(module.getType()), version);
     }
@@ -72,13 +71,13 @@ public class Hk2Configuration extends PayaraConfiguration implements DeploymentC
      * <p/>
      * @param module Java EE module (project).
      * @param moduleHelper Already existing {@link J2eeModuleHelper} instance.
-     * @param version Payara server version.
+     * @param version Payara server platformVersion.
      * @throws ConfigurationException when there is a problem with Java EE server
      * configuration initialization.
      */
     public Hk2Configuration(
             final J2eeModule module, final J2eeModuleHelper jmh,
-            final PayaraVersion version
+            final PayaraPlatformVersionAPI version
     ) throws ConfigurationException {
         super(module, jmh, version);
     }
@@ -93,7 +92,7 @@ public class Hk2Configuration extends PayaraConfiguration implements DeploymentC
     // ------------------------------------------------------------------------
     @Override
     public Set<Datasource> getDatasources() throws ConfigurationException {
-        return Hk2DatasourceManager.getDatasources(module, version);
+        return Hk2DatasourceManager.getDatasources(module, getPlatformVersion());
     }
 
     @Override
@@ -106,8 +105,7 @@ public class Hk2Configuration extends PayaraConfiguration implements DeploymentC
             final String jndiName, final String url, final String username,
             final String password, final String driver
     ) throws UnsupportedOperationException, ConfigurationException, DatasourceAlreadyExistsException {
-        return Hk2DatasourceManager.createDataSource(
-                jndiName, url, username, password, driver, module, version);
+        return Hk2DatasourceManager.createDataSource(jndiName, url, username, password, driver, module, getPlatformVersion());
     }
 
     // ------------------------------------------------------------------------
@@ -128,7 +126,7 @@ public class Hk2Configuration extends PayaraConfiguration implements DeploymentC
     public MessageDestination createMessageDestination(String name, MessageDestination.Type type) throws UnsupportedOperationException, org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException {
         File resourceDir = module.getResourceDirectory();
         if (resourceDir == null) {
-            Logger.getLogger("payara-jakartaee").log(Level.WARNING, "Null Resource Folder."); // NOI18N
+            Logger.getLogger("payara-jakartaee").log(Level.WARNING,"Resource Folder {0} does not exist.", resourceDir); // NOI18N
             throw new ConfigurationException(NbBundle.getMessage(
                     ModuleConfigurationImpl.class, "ERR_NoJMSResource", name, type)); // NOI18N
         }
@@ -174,24 +172,24 @@ public class Hk2Configuration extends PayaraConfiguration implements DeploymentC
         throw new UnsupportedOperationException("Not supported yet.");
     }
    
-    private static final String GLASSFISH_DASH = "glassfish-"; // NOI18N
+    protected static final String GLASSFISH_DASH = "glassfish-"; // NOI18N
 
     private String getResourceFileName() {
         return "glassfish-resources";
     }
 
     @Override
-    protected FileObject getPayaraDD(File sunDDFile, boolean create) throws IOException {
-        if (!sunDDFile.exists()) {
+    protected FileObject getPayaraDD(File payaraDDFile, boolean create) throws IOException {
+        if (!payaraDDFile.exists()) {
             if (create) {
-                createDefaultSunDD(sunDDFile);
+                createDefaultSunDD(payaraDDFile);
             }
         }
-        FileObject retVal = FileUtil.toFileObject(FileUtil.normalizeFile(sunDDFile));
+        FileObject retVal = FileUtil.toFileObject(FileUtil.normalizeFile(payaraDDFile));
         if (null == retVal) {
-            String fn = sunDDFile.getName();
-            if (fn.contains(GLASSFISH_DASH) && null != sunDDFile.getParentFile()) {
-                File alternate = new File(sunDDFile.getParentFile(), fn.replace(GLASSFISH_DASH, "sun-")); // NOI18N
+            String fn = payaraDDFile.getName();
+            if (fn.contains(GLASSFISH_DASH) && null != payaraDDFile.getParentFile()) {
+                File alternate = new File(payaraDDFile.getParentFile(), fn.replace(GLASSFISH_DASH, "sun-")); // NOI18N
                 retVal = FileUtil.toFileObject(FileUtil.normalizeFile(alternate));
             }
         }

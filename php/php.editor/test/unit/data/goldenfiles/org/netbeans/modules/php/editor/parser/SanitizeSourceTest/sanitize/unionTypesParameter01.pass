@@ -1,0 +1,14 @@
+<Program start='0' end='855'>
+    <Comments>
+        <Comment start='7' end='814' commentType='multiLine'/>
+    </Comments>
+    <Statements>
+        <FunctionDeclaration start='816' end='854' isReference='false'>
+            <Identifier start='825' end='836' name='union_types'/>
+            <FormalParameters>
+            </FormalParameters>
+            <Block start='846' end='854' isCurly='true'>
+            </Block>
+        </FunctionDeclaration>
+    </Statements>
+</Program>

@@ -19,6 +19,8 @@
 
 package org.netbeans.modules.gradle.execute;
 
+import java.awt.EventQueue;
+import java.awt.GraphicsEnvironment;
 import org.netbeans.modules.gradle.api.GradleBaseProject;
 import org.netbeans.modules.gradle.api.execute.RunConfig;
 import org.netbeans.modules.gradle.api.execute.RunUtils;
@@ -36,7 +38,6 @@ import org.openide.util.RequestProcessor;
 import static org.netbeans.modules.gradle.execute.Bundle.*;
 import java.io.File;
 import java.util.ArrayList;
-import javax.swing.SwingUtilities;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.gradle.api.execute.GradleCommandLine;
 import static org.netbeans.modules.gradle.api.execute.RunConfig.ExecFlag.REPEATABLE;
@@ -128,7 +129,7 @@ public abstract class AbstractGradleExecutor extends OutputTabMaintainer<Abstrac
     }
 
     protected final void actionStatesAtStart() {
-        SwingUtilities.invokeLater(new Runnable() {
+        invokeUILater(new Runnable() {
             @Override
             public void run() {
                 disableAction(tabContext.rerun);
@@ -139,7 +140,7 @@ public abstract class AbstractGradleExecutor extends OutputTabMaintainer<Abstrac
     }
 
     protected final void actionStatesAtFinish() {
-        SwingUtilities.invokeLater(new Runnable() {
+        invokeUILater(new Runnable() {
             @Override
             public void run() {
                 enableAction(tabContext.rerun);
@@ -194,7 +195,7 @@ public abstract class AbstractGradleExecutor extends OutputTabMaintainer<Abstrac
             if (debug) {
                 GradleExecutorOptionsPanel pnl = new GradleExecutorOptionsPanel(config.getProject());
                 DialogDescriptor dd = new DialogDescriptor(pnl, TIT_Run_Gradle());
-                pnl.setCommandLine(config.getCommandLine());
+                pnl.setCommandLine(config.getCommandLine(), config.getExecConfig());
                 Object retValue = DialogDisplayer.getDefault().notify(dd);
                 if (retValue == DialogDescriptor.OK_OPTION) {
                     GradleCommandLine cmd = pnl.getCommandLine();
@@ -297,5 +298,11 @@ public abstract class AbstractGradleExecutor extends OutputTabMaintainer<Abstrac
             AbstractGradleExecutor.this.cancel();
         }
 
+    }
+    private static void invokeUILater(Runnable runnable) {
+        if (GraphicsEnvironment.isHeadless()) {
+            return;
+        }
+        EventQueue.invokeLater(runnable);
     }
 }

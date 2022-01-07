@@ -101,15 +101,12 @@ public class GsfCompletionDoc implements CompletionDocumentation {
                 this.content = completer.document(controller, elementHandle);
             }
         }
-
-        if (this.content == null) {
-            Completion.get().hideDocumentation();
-        }
     }
 
     public static final GsfCompletionDoc create(ParserResult controller,
         ElementHandle elementHandle, Callable<Boolean> cancel) {
-        return new GsfCompletionDoc(controller, elementHandle, null, cancel);
+        GsfCompletionDoc doc = new GsfCompletionDoc(controller, elementHandle, null, cancel);
+        return doc.content != null ? doc : null;
     }
 
     public String getText() {

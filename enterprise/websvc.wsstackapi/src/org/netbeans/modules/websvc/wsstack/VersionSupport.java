@@ -47,25 +47,25 @@ public  class VersionSupport {
                 break;
             }
             case 1 : {
-                major = versionNumbers.get(0).intValue();
+                major = versionNumbers.get(0);
                 break;
             }
             case 2 : {
-                major = versionNumbers.get(0).intValue();
-                minor = versionNumbers.get(1).intValue();
+                major = versionNumbers.get(0);
+                minor = versionNumbers.get(1);
                 break;
             } 
             case 3 : {
-                major = versionNumbers.get(0).intValue();
-                minor = versionNumbers.get(1).intValue();
-                micro = versionNumbers.get(2).intValue();
+                major = versionNumbers.get(0);
+                minor = versionNumbers.get(1);
+                micro = versionNumbers.get(2);
                 break;
             } 
             default: {
-                major = versionNumbers.get(0).intValue();
-                minor = versionNumbers.get(1).intValue();
-                micro = versionNumbers.get(2).intValue();
-                update = versionNumbers.get(3).intValue();
+                major = versionNumbers.get(0);
+                minor = versionNumbers.get(1);
+                micro = versionNumbers.get(2);
+                update = versionNumbers.get(3);
             }
         }
         return WSStackVersion.valueOf(major, minor, micro, update);
@@ -83,6 +83,6 @@ public  class VersionSupport {
             }
             ++i;
         }
-        return buf.length() > 0 ? Integer.valueOf(buf.toString()) : Integer.valueOf(0);
+        return buf.length() > 0 ? Integer.valueOf(buf.toString()) : 0;
     }
 }

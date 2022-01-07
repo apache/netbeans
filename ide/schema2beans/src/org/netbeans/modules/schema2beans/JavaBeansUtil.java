@@ -536,7 +536,7 @@ public class JavaBeansUtil {
      * contents.
      */
     public static void copyBean(Object src, Object dest) throws java.beans.IntrospectionException {
-        copyBean(src, dest, Collections.EMPTY_MAP);
+        copyBean(src, dest, Collections.emptyMap());
     }
     
     /**

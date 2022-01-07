@@ -105,7 +105,7 @@ public class HtmlDeclarationFinder implements DeclarationFinder {
                         if (htmlRi != null) {
                             HtmlParserResult result = (HtmlParserResult) htmlRi.getParserResult();
                             if(result != null) {
-                                String sourceMimetype = Utils.getWebPageMimeType(result.getSyntaxAnalyzerResult());
+                                String sourceMimetype = WebPageMetadata.getContentMimeType(result, true);
                                 DOC_TO_WEB_MIMETYPE_CACHE.put(document, sourceMimetype);
                             }
                         }
@@ -125,7 +125,7 @@ public class HtmlDeclarationFinder implements DeclarationFinder {
         if (loc != null) {
             return loc;
         }
-        String sourceMimetype = Utils.getWebPageMimeType(result.getSyntaxAnalyzerResult());
+        String sourceMimetype = WebPageMetadata.getContentMimeType(result, true);
         for (HtmlExtension ext : HtmlExtensions.getRegisteredExtensions(sourceMimetype)) {
             loc = ext.findDeclaration(info, caretOffset);
             if (loc != null) {

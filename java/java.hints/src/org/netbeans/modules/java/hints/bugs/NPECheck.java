@@ -20,6 +20,7 @@
 package org.netbeans.modules.java.hints.bugs;
 
 import com.sun.source.tree.*;
+import com.sun.source.tree.CaseTree.CaseKind;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.util.TreePath;
 import java.util.ArrayList;
@@ -48,7 +49,7 @@ import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.ElementFilter;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.java.source.CompilationInfo;
-import org.netbeans.api.java.source.support.CancellableTreePathScanner;
+import org.netbeans.api.java.source.support.CancellableTreeScanner;
 import org.netbeans.spi.editor.hints.ErrorDescription;
 import org.openide.util.NbBundle;
 
@@ -542,7 +543,7 @@ public class NPECheck {
         public Iterable<? extends AnnotationMirror> getAnnotationMirrors(CompilationInfo info, Element el);
     }
         
-    private static final class VisitorImpl extends CancellableTreePathScanner<State, Void> {
+    private static final class VisitorImpl extends CancellableTreeScanner<State, Void> {
         
         private final HintContext ctx;
         private final CompilationInfo info;
@@ -564,6 +565,7 @@ public class NPECheck {
         private       Map<TypeMirror, Map<VariableElement, State>> resumeOnExceptionHandler = new IdentityHashMap<>();
         private final Map<Tree, State> expressionState = new IdentityHashMap<>();
         private final List<TreePath> pendingFinally = new LinkedList<>();
+        private       List<State> pendingYields = new ArrayList<>();
         private boolean not;
         private boolean doNotRecord;
         private final TypeElement throwableEl;
@@ -617,11 +619,39 @@ public class NPECheck {
                 
         }
 
+        private TreePath currentPath;
+
+        public TreePath getCurrentPath() {
+            return currentPath;
+        }
+
+        public State scan(TreePath path, Void p) {
+            TreePath oldPath = currentPath;
+            try {
+                currentPath = path;
+                return super.scan(path.getLeaf(), p);
+            } finally {
+                currentPath = oldPath;
+            }
+        }
+
         @Override
         public State scan(Tree tree, Void p) {
             resume(tree, resumeBefore);
 
-            State r = super.scan(tree, p);
+            State r;
+
+            if (tree != null) {
+                TreePath oldPath = currentPath;
+                try {
+                    currentPath = new TreePath(currentPath, tree);
+                    r = super.scan(tree, p);
+                } finally {
+                    currentPath = oldPath;
+                }
+            } else {
+                r = null;
+            }
             
             TypeMirror currentType = tree != null ? info.getTrees().getTypeMirror(new TreePath(getCurrentPath(), tree)) : null;
             
@@ -1223,27 +1253,55 @@ public class NPECheck {
 
         @Override
         public State visitSwitch(SwitchTree node, Void p) {
-            scan(node.getExpression(), null);
+            handleGeneralizedSwitch(node, node.getExpression(), node.getCases());
+            return null;
+        }
+
+        @Override
+        public State visitSwitchExpression(SwitchExpressionTree node, Void p) {
+            List<State> oldPendingYields = pendingYields;
+            try {
+                pendingYields = new ArrayList<>();
+                handleGeneralizedSwitch(node, node.getExpression(), node.getCases());
+                if (pendingYields.isEmpty()) {
+                    //should not happen (for valid source)
+                    return State.POSSIBLE_NULL;
+                }
+                State result = pendingYields.get(0);
+                for (State s : pendingYields.subList(1, pendingYields.size())) {
+                    result = State.collect(result, s);
+                }
+                return result;
+            } finally {
+                pendingYields = oldPendingYields;
+            }
+        }
+
+        private void handleGeneralizedSwitch(Tree switchTree, ExpressionTree expression, List<? extends CaseTree> cases) {
+            scan(expression, null);
 
             Map<VariableElement, State> origVariable2State = new HashMap<>(variable2State);
 
             boolean exhaustive = false;
 
-            for (CaseTree ct : node.getCases()) {
+            for (CaseTree ct : cases) {
                 mergeIntoVariable2State(origVariable2State);
 
                 if (ct.getExpression() == null) {
                     exhaustive = true;
                 }
 
-                scan(ct, null);
+                State caseResult = scan(ct, null);
+
+                if (ct.getCaseKind() == CaseKind.RULE) {
+                    pendingYields.add(caseResult);
+                    breakTo(switchTree);
+                }
             }
 
             if (!exhaustive) {
                 mergeIntoVariable2State(origVariable2State);
             }
-            
-            return null;
         }
 
         @Override
@@ -1252,11 +1310,26 @@ public class NPECheck {
 
             Tree target = info.getTreeUtilities().getBreakContinueTargetTree(getCurrentPath());
             
+            breakTo(target);
+
+            return null;
+        }
+
+        @Override
+        public State visitYield(YieldTree node, Void p) {
+            pendingYields.add(scan(node.getValue(), p));
+
+            Tree target = info.getTreeUtilities().getBreakContinueTargetTree(getCurrentPath());
+            
+            breakTo(target);
+
+            return null;
+        }
+
+        private void breakTo(Tree target) {
             resumeAfter(target, variable2State);
 
             variable2State = new HashMap<>(); //XXX: fields?
-            
-            return null;
         }
 
         @Override

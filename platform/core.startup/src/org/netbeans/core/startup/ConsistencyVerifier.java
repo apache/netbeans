@@ -152,7 +152,7 @@ public class ConsistencyVerifier {
             for (Object prob : probs) {
                 if (prob instanceof Dependency) {
                     Dependency d = (Dependency) prob;
-                    if (Dependency.TYPE_JAVA == d.getType() && m.isAutoload()) {
+                    if (Dependency.TYPE_JAVA == d.getType() && (m.isEager() || m.isAutoload())) {
                         continue;
                     }
                 }

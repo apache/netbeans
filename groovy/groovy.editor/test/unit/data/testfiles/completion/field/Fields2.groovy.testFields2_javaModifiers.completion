@@ -1,0 +1,3 @@
+Code completion result for source line:
+System.err.println(Helper.class.classL|oader)
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)

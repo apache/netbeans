@@ -66,7 +66,8 @@
             <isset property="has.javahelp"/>
         </condition>
         <property name="javac.source" value="1.7"/>
-        <property name="javac.target" value="${javac.source}"/>
+        <property name="javac.default.target" value="${javac.source}"/>
+        <property name="javac.target" value="${javac.default.target}"/>
         <property name="javac.compilerargs" value=""/>
         <property name="module.auto.deps.xml" location="module-auto-deps.xml"/>
         <condition property="has.module.auto.deps">
@@ -78,10 +79,12 @@
         <tstamp>
             <format property="module.build.started.time" pattern="yyyy-MM-dd'T'HH:mm:ss.SSSZ"/>
         </tstamp>
-        <condition property="asm.jar" value="${nbplatform.active.dir}/platform/core/asm-8.0.1.jar">
-            <available file="${nbplatform.active.dir}/platform/core/asm-8.0.1.jar"/>
+        <condition property="asm.jar" value="${nbplatform.active.dir}/platform/core/asm-9.2.jar">
+            <available file="${nbplatform.active.dir}/platform/core/asm-9.2.jar"/>
         </condition>
-        <property name="asm.jar" location="${platform/libs.asm.dir}/core/asm-8.0.1.jar"/>
+        <property name="asm.jar" location="${platform/libs.asm.dir}/core/asm-9.2.jar"/>
+        <property name="tsaurl" value=""/>
+        <property name="tsacert" value=""/>
     </target>
 
     <target name="-release.dir">
@@ -467,7 +470,7 @@
                  locales="${nbm.locales}"
                  >
             <license file="${license.file.override}"/>
-            <signature keystore="${keystore}" storepass="${storepass}" alias="${nbm_alias}"/>
+            <signature keystore="${keystore}" storepass="${storepass}" alias="${nbm_alias}" tsaurl="${tsaurl}" tsacert="${tsacert}"/>
             <updaterjar>
                 <pathfileset>
                     <path refid="cluster.path.id"/>
@@ -521,6 +524,14 @@
             <isset property="run.bootclasspath.prepend"/>
         </condition>
         <property name="test.bootclasspath.prepend.args" value="-Dno.netbeans.bootclasspath.prepend.needed=true"/>
+        <condition property="test.insane.prepend.args"
+                   value="--patch-module=java.base=${netbeans.dest.dir}/${nb.cluster.harness.dir}/modules/ext/org-netbeans-insane-hook.jar --add-exports=java.base/org.netbeans.insane.hook=ALL-UNNAMED"
+                   else="-Xbootclasspath/p:${netbeans.dest.dir}/${nb.cluster.harness.dir}/modules/ext/org-netbeans-insane-hook.jar">
+            <or>
+                <isset property="have-jdk-1.9"/>
+                <isset property="test-have-jdk-1.9"/>
+            </or>
+        </condition>
         <macrodef name="test-init">
             <attribute name="test.type"/>
             <sequential>
@@ -531,7 +542,7 @@
                 <property name="build.test.@{test.type}.classes.dir" location="${build.test.@{test.type}.dir}/classes"/>
                 <property name="build.test.@{test.type}.results.dir" location="${build.test.@{test.type}.dir}/results"/>
                 <property name="build.test.@{test.type}.work.dir" location="${build.test.@{test.type}.dir}/work"/>
-                <property name="test-@{test.type}-sys-prop.cluster.path.final" value="${cluster.path.final}:${cluster}"/> <!-- #153178, 176019 -->
+                <property name="test-@{test.type}-sys-prop.cluster.path.final" value="${cluster.path.final}${path.separator}${cluster}"/> <!-- #153178, 176019 -->
                 <property name="test.@{test.type}.cp.extra" value=""/>
                 <path id="test.@{test.type}.cp">
                     <!-- Cannot use <path refid="cp"/> since that uses ${module.classpath} and we want ${module.run.classpath}: -->
@@ -736,6 +747,7 @@
                     <classpath refid="test.@{test.type}.run.cp"/>
                     <syspropertyset refid="test.@{test.type}.properties"/>
                     <jvmarg value="${test.bootclasspath.prepend.args}"/>
+                    <jvmarg line="${test.insane.prepend.args}"/>
                     <jvmarg line="${test.run.args}"/>
                     <!--needed to have tests NOT to steal focus when running, works in latest apple jdk update only.-->
                     <sysproperty key="apple.awt.UIElement" value="@{disable.apple.ui}"/>
@@ -766,6 +778,7 @@
                     <propertyset refid="test.@{test.type}.properties"/>
                     <classpath refid="test.@{test.type}.run.cp"/>
                     <jvmarg value="${test.bootclasspath.prepend.args}"/>
+                    <jvmarg line="${test.insane.prepend.args}"/>
                     <jvmarg line="${test.run.args}"/>
                     <!-- needed to have tests NOT to steal focus when running, works in latest apple jdk update only.-->
                     <sysproperty key="apple.awt.UIElement" value="@{disable.apple.ui}"/>
@@ -837,6 +850,7 @@
                     <syspropertyset refid="test.@{test.type}.properties"/>
                     <jvmarg line="${test.run.args}"/>
                     <jvmarg value="${test.bootclasspath.prepend.args}"/>
+                    <jvmarg line="${test.insane.prepend.args}"/>
                     <jvmarg line="${run.args.ide}"/>
                     <jvmarg line="${run.jvmargs.ide}"/>
                     <formatter type="brief" usefile="false"/>
@@ -866,6 +880,7 @@
                     <propertyset refid="test.@{test.type}.properties"/>
                     <classpath refid="test.@{test.type}.run.cp"/>
                     <jvmarg value="${test.bootclasspath.prepend.args}"/>
+                    <jvmarg line="${test.insane.prepend.args}"/>
                     <jvmarg line="${test.run.args}"/>
                     <!-- needed to have tests NOT to steal focus when running, works in latest apple jdk update only.-->
                     <sysproperty key="apple.awt.UIElement" value="@{disable.apple.ui}"/>
@@ -894,6 +909,7 @@
                     <propertyset refid="test.@{test.type}.properties"/>
                     <classpath refid="test.@{test.type}.run.cp"/>
                     <jvmarg value="${test.bootclasspath.prepend.args}"/>
+                    <jvmarg line="${test.insane.prepend.args}"/>
                     <jvmarg line="${test.run.args}"/>
                     <!-- needed to have tests NOT to steal focus when running, works in latest apple jdk update only.-->
                     <sysproperty key="apple.awt.UIElement" value="@{disable.apple.ui}"/>
@@ -946,6 +962,7 @@
                         <pathelement location="${ant.home}/lib/ant-junit4.jar"/>
                     </classpath>
                     <jvmarg value="${test.bootclasspath.prepend.args}"/>
+                    <jvmarg line="${test.insane.prepend.args}"/>
                     <syspropertyset refid="test.@{test.type}.properties"/>
                     <arg value="${test.class}"/>
                     <arg value="showoutput=true"/>
@@ -973,6 +990,7 @@
                     <jvmarg value="-agentlib:jdwp=transport=dt_socket,address=${jpda.address}"/>
                     <jvmarg line="${test.run.args}"/>
                     <jvmarg value="${test.bootclasspath.prepend.args}"/>
+                    <jvmarg line="${test.insane.prepend.args}"/>
                     <classpath refid="test.@{test.type}.run.cp"/>
                     <syspropertyset refid="test.@{test.type}.properties"/>
                     <jvmarg value="-ea"/>
@@ -990,6 +1008,7 @@
                     <propertyset refid="test.@{test.type}.properties"/>
                     <classpath refid="test.@{test.type}.run.cp"/>
                     <jvmarg value="${test.bootclasspath.prepend.args}"/>
+                    <jvmarg line="${test.insane.prepend.args}"/>
                     <jvmarg line="${test.run.args}"/>
                     <jvmarg value="-agentlib:jdwp=transport=dt_socket,address=${jpda.address}"/>
                 </testng>
@@ -1017,6 +1036,7 @@
                     <propertyset refid="test.@{test.type}.properties"/>
                     <classpath refid="test.@{test.type}.run.cp"/>
                     <jvmarg value="${test.bootclasspath.prepend.args}"/>
+                    <jvmarg line="${test.insane.prepend.args}"/>
                     <jvmarg line="${test.run.args}"/>
                     <jvmarg value="-agentlib:jdwp=transport=dt_socket,address=${jpda.address}"/>
                     <!-- needed to have tests NOT to steal focus when running, works in latest apple jdk update only.-->
@@ -1080,6 +1100,7 @@
                     <syspropertyset refid="test.@{test.type}.properties"/>
                     <jvmarg line="${test.run.args}"/>
                     <jvmarg value="${test.bootclasspath.prepend.args}"/>
+                    <jvmarg line="${test.insane.prepend.args}"/>
                     <jvmarg line="${run.jvmargs.ide}"/>
                     <formatter type="brief" usefile="false"/>
                     <formatter type="xml"/>
@@ -1107,6 +1128,7 @@
                     <propertyset refid="test.@{test.type}.properties"/>
                     <classpath refid="test.@{test.type}.run.cp"/>
                     <jvmarg value="${test.bootclasspath.prepend.args}"/>
+                    <jvmarg line="${test.insane.prepend.args}"/>
                     <jvmarg line="${test.run.args}"/>
                     <!-- needed to have tests NOT to steal focus when running, works in latest apple jdk update only.-->
                     <sysproperty key="apple.awt.UIElement" value="@{disable.apple.ui}"/>
@@ -1229,6 +1251,7 @@
                     <test name="${profile.class}" todir="${build.test.@{test.type}.results.dir}"/>
                     <classpath refid="test.@{test.type}.run.cp"/>
                     <jvmarg value="${test.bootclasspath.prepend.args}"/>
+                    <jvmarg line="${test.insane.prepend.args}"/>
                     <syspropertyset refid="test.@{test.type}.properties"/>
                     <jvmarg line="${test.run.args}"/>
                     <formatter type="brief" usefile="false"/>

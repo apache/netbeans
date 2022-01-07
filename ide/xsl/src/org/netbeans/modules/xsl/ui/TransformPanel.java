@@ -114,11 +114,7 @@ public final class TransformPanel extends javax.swing.JPanel {
             ( xml_stylesheet != null ) ) {
                 setXSL(xml_stylesheet);
             }
-            try {
-                baseURL = xmlFileObject.getParent().getURL();
-            } catch (FileStateInvalidException exc) {
-                // ignore it
-            }
+            baseURL = xmlFileObject.getParent().toURL();
         }
         if ( xslDataObject != null ) {
             setXSL(TransformUtil.getURLName(xslDataObject.getPrimaryFile()));
@@ -128,11 +124,7 @@ public final class TransformPanel extends javax.swing.JPanel {
                 setInput(xslHistory.getLastXML());
             }
             if ( baseURL == null ) {
-                try {
-                    baseURL = xslFileObject.getParent().getURL();
-                } catch (FileStateInvalidException exc) {
-                    // ignore it
-                }
+                baseURL = xslFileObject.getParent().toURL();
             }
         }
         
@@ -151,10 +143,10 @@ public final class TransformPanel extends javax.swing.JPanel {
         
         if ( xmlHistory != null ) {
             setOverwriteOutput( xmlHistory.isOverwriteOutput());
-            setProcessOutput(new Integer(xmlHistory.getProcessOutput()));
+            setProcessOutput(Integer.valueOf(xmlHistory.getProcessOutput()));
         } else if ( xslHistory != null ) {
             setOverwriteOutput( xslHistory.isOverwriteOutput());
-            setProcessOutput(new Integer(xslHistory.getProcessOutput()));
+            setProcessOutput(Integer.valueOf(xslHistory.getProcessOutput()));
         }
         
         ownInitComponents();
@@ -792,7 +784,7 @@ public final class TransformPanel extends javax.swing.JPanel {
     private void showComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showComboBoxActionPerformed
         // Add your handling code here:
         if ( isInitialized() ) {
-            setProcessOutput(new Integer(showComboBox.getSelectedIndex()));
+            setProcessOutput(Integer.valueOf(showComboBox.getSelectedIndex()));
             userSetProcess = true;
             updateComponents();
         }
@@ -923,7 +915,7 @@ public final class TransformPanel extends javax.swing.JPanel {
             this.xsl       = xsl;
             this.output    = output;
             this.overwrite = overwrite ? Boolean.TRUE : Boolean.FALSE;
-            this.process   = process == -1 ? null : new Integer(process);
+            this.process   = process == -1 ? null : Integer.valueOf(process);
         }
         
         /**
@@ -992,7 +984,7 @@ public final class TransformPanel extends javax.swing.JPanel {
         }
         
         public void setProcessOutput(int processValue) {
-            setProcessOutput(new Integer(processValue));
+            setProcessOutput(Integer.valueOf(processValue));
         }
         
         public String toString() {

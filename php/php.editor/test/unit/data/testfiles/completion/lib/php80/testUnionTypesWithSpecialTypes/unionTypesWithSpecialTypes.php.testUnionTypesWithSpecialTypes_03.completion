@@ -1,0 +1,10 @@
+Code completion result for source line:
+$this->union->|parentMethod();
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     childMethod(self|parent $param  [PUBLIC]   \UnionTypes1\UnionChild
+METHOD     childMethodParent(parent|null   [PUBLIC]   \UnionTypes1\UnionChild
+METHOD     parentMethod()                  [PUBLIC]   \UnionTypes1\UnionParent
+METHOD     testMethod()                    [PUBLIC]   \UnionTypes1\UnionChild
+METHOD     traitMethod(self|parent $param  [PUBLIC]   \UnionTypes1\UnionTrait
+VARIABLE   mixed union                     [PRIVATE]  \UnionTypes1\UnionChild
+VARIABLE   object parentField              [PROTECTE  \UnionTypes1\UnionParent

@@ -1,0 +1,10 @@
+Code completion result for source line:
+$self1->|testMethod();
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     returnSelf()                    [STATIC]   Test2
+METHOD     returnSelfPHPDoc()              [STATIC]   Test2
+METHOD     returnSelfReturnType()          [STATIC]   Test2
+METHOD     returnStatic()                  [STATIC]   Test2
+METHOD     returnStaticPHPDoc()            [STATIC]   Test2
+METHOD     returnStaticReturnType()        [STATIC]   Test2
+METHOD     testMethod()                    [PUBLIC]   Test2

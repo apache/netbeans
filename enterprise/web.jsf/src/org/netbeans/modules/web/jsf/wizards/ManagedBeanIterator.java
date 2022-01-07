@@ -130,7 +130,7 @@ public class ManagedBeanIterator implements TemplateWizard.Iterator {
             if (steps[i] == null) {
                 steps[i] = jc.getName();
             }
-            jc.putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, new Integer(i)); // NOI18N
+            jc.putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, i); // NOI18N
             jc.putClientProperty(WizardDescriptor.PROP_CONTENT_DATA, steps); // NOI18N
         }
     }
@@ -174,6 +174,7 @@ public class ManagedBeanIterator implements TemplateWizard.Iterator {
                 switch (namedScope) {
                     case SESSION:
                     case CONVERSATION:
+                    case VIEW:
                         templateProperties.put("passivationCapable", "true");    //NOI18N
                         break;
                     default:
@@ -273,8 +274,7 @@ public class ManagedBeanIterator implements TemplateWizard.Iterator {
 
     @Override
     public String name() {
-        return NbBundle.getMessage(ManagedBeanIterator.class, "TITLE_x_of_y",
-                new Integer(index + 1), new Integer(panels.length));
+        return NbBundle.getMessage(ManagedBeanIterator.class, "TITLE_x_of_y", index + 1, panels.length);
     }
 
     @Override

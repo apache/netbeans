@@ -364,7 +364,7 @@ public final class DDUtils {
         for (int i=0;i<oldMaps.length;i++) {
             if (filterName.equals(oldMaps[i].getFilterName())) {
                 webApp.removeFilterMapping(oldMaps[i]);
-                deletedRows.push(new Integer(i));
+                deletedRows.push(i);
             }
         }
         return deletedRows;

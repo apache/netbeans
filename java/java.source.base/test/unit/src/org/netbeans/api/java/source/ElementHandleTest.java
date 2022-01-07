@@ -73,6 +73,7 @@ public class ElementHandleTest extends NbTestCase {
     
     private FileObject src;
     private FileObject data;
+    private String orignalNetbeansUsr;
     
     
     static {
@@ -129,9 +130,15 @@ public class ElementHandleTest extends NbTestCase {
         ClassPathProviderImpl.getDefault().setClassPaths(TestUtil.getBootClassPath(),
                                                          ClassPathSupport.createClassPath(new URL[0]),
                                                          ClassPathSupport.createClassPath(new FileObject[]{this.src}));
+        orignalNetbeansUsr = System.getProperty("netbeans.user");
+        System.setProperty("netbeans.user", getWorkDirPath());
     }
 
     protected void tearDown() throws Exception {
+        if (orignalNetbeansUsr != null)
+            System.setProperty("netbeans.user", orignalNetbeansUsr);
+        else
+            System.clearProperty("netbeans.user");
     }
 
 
@@ -424,7 +431,8 @@ public class ElementHandleTest extends NbTestCase {
             ElementKind.CLASS,
             ElementKind.INTERFACE,
             ElementKind.ENUM,
-            ElementKind.ANNOTATION_TYPE
+            ElementKind.ANNOTATION_TYPE,
+            ElementKind.RECORD
         }));
         for (ElementKind aek : allowed) {
             ElementHandle<TypeElement> eh = ElementHandle.createTypeElementHandle(aek, "org.me.Foo");    //NOI18N

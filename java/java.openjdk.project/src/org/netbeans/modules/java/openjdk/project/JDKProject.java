@@ -57,6 +57,7 @@ import org.netbeans.spi.project.support.ant.PropertyProvider;
 import org.netbeans.spi.project.support.ant.PropertyUtils;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
+import org.openide.util.BaseUtilities;
 import org.openide.util.ChangeSupport;
 import org.openide.util.Exceptions;
 import org.openide.util.ImageUtilities;
@@ -220,6 +221,7 @@ public class JDKProject implements Project {
                                     new CustomizerProviderImpl(this),
                                     new Settings(this),
                                     new BinaryForSourceQueryImpl(this, cpp.getSourceCP()),
+                                    CProjectConfigurationProviderImpl.create(this),
                                     this);
         this.lookup = LookupProviderSupport.createCompositeLookup(base, "Projects/" + PROJECT_KEY + "/Lookup");
         } catch (Throwable t) {
@@ -297,7 +299,7 @@ public class JDKProject implements Project {
         public URL getLocation() {
             if (location == null) {
                 try {
-                    location = new URL(evaluator.evaluate(relPath)).toURI().normalize().toURL();
+                    location = BaseUtilities.normalizeURI(new URL(evaluator.evaluate(relPath)).toURI()).toURL();
                 } catch (MalformedURLException | URISyntaxException ex) {
                     Exceptions.printStackTrace(ex); //XXX
                 }
@@ -374,7 +376,8 @@ public class JDKProject implements Project {
             Arrays.asList(Pair.<String, String>of("${basedir}/share/native/", null),
                           Pair.<String, String>of("${basedir}/${os}/native/", null),
                           Pair.<String, String>of("${basedir}/${generalized-os}/native/", null),
-                          Pair.<String, String>of("${outputRoot}/support/headers/${module}/", null)),
+                          Pair.<String, String>of("${outputRoot}/support/headers/${module}/", null),
+                          Pair.<String, String>of("${outputRoot}/support/modules_include/${module}/", null)),
             Arrays.<Pair<String, String>>asList()
     );
 

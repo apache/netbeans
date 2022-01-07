@@ -67,12 +67,13 @@ public class CreateLibraryPanel extends javax.swing.JPanel {
     @Messages("NAME_Library=Library Name")
     CreateLibraryPanel(DependencyNode root) {
         initComponents();
-        DefaultComboBoxModel mdl = new DefaultComboBoxModel();
+        DefaultComboBoxModel<LibraryManager> mdl = new DefaultComboBoxModel<>();
         SwingValidationGroup.setComponentName(txtName, NAME_Library());
 
         for (LibraryManager manager : LibraryManager.getOpenManagers()) {
             mdl.addElement(manager);
         }
+
         comManager.setModel(mdl);
         comManager.addActionListener(new ActionListener() {
             public @Override void actionPerformed(ActionEvent e) {

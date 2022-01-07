@@ -20,18 +20,20 @@ package org.netbeans.modules.javascript2.editor.doc;
 
 import java.util.Collections;
 import java.util.Set;
+import org.netbeans.modules.csl.api.Documentation;
 import org.netbeans.modules.csl.api.ElementHandle;
 import org.netbeans.modules.csl.api.ElementKind;
 import org.netbeans.modules.csl.api.Modifier;
 import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.csl.spi.ParserResult;
+import org.netbeans.modules.javascript2.editor.spi.ElementDocumentation;
 import org.openide.filesystems.FileObject;
 
 /**
  *
  * @author Martin Fousek <marfous@netbeans.org>
  */
-public class JsDocumentationElement implements ElementHandle {
+public class JsDocumentationElement implements ElementHandle, ElementDocumentation {
 
     private final String name;
     private final String documentation;
@@ -81,9 +83,9 @@ public class JsDocumentationElement implements ElementHandle {
         return OffsetRange.NONE;
     }
 
-    // XXX csl Documentation usage ?
-    public String getDocumentation() {
-        return documentation;
+    @Override
+    public Documentation getDocumentation() {
+        return Documentation.create(documentation);
     }
 
 }

@@ -100,7 +100,10 @@
             <attribute name="enabled" value="true"/>
         </node>
         <node name="org.netbeans.modules.java.hints.bugs.BroadCatchBlock.broadCatch"/>
-        <node name="org.netbeans.modules.java.hints.jdk.mapreduce.ForLoopToFunctionalHint"/>
+        <node name="org.netbeans.modules.java.hints.jdk.mapreduce.ForLoopToFunctionalHint">
+            <attribute name="enabled" value="true"/>
+            <attribute name="hintSeverity" value="HINT"/>
+        </node>
         <node name="org.netbeans.modules.java.hints.ShiftOutOfRange"/>
         <node name="org.netbeans.modules.java.hints.suggestions.Move.moveInitialization"/>
         <node name="org.netbeans.modules.java.hints.AssignResultToVariable"/>

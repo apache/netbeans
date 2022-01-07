@@ -85,6 +85,30 @@ is the proper place.
     <changes>
         <change>
             <api name="database_explorer_api"/>
+            <summary>Concept of preferred connection introduced</summary>
+            <version major="1" minor="83"/>
+            <author login="sdedic"/>
+            <compatibility addition="yes"/>
+            <description>
+                Preferred connection can be defined to be used throughout the IDE as the default
+                or fallback one.
+            </description>
+            <class package="org.netbeans.api.db.explorer" name="ConnectionManager"/>
+        </change>
+        <change>
+            <api name="database_explorer_api"/>
+            <summary>Provided access to connection nodes list.</summary>
+            <version major="1" minor="82"/>
+            <author login="sdedic"/>
+            <compatibility addition="yes"/>
+            <description>
+                A utility that provides a Node hierarchy for defined database connections,
+                including disconnected (but defined) ones. Usable for selectors etc.
+            </description>
+            <class package="org.netbeans.api.db.explorer.support" name="DatabaseExplorerUIs"/>
+        </change>
+        <change>
+            <api name="database_explorer_api"/>
             <summary>
                 Configure usage of scrollable cursors.
             </summary>

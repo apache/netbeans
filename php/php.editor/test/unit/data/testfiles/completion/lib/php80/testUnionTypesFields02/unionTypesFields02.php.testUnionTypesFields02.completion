@@ -1,0 +1,5 @@
+Code completion result for source line:
+private int|\Test1\|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CLASS      UnionTypes1                     [PUBLIC]   Test1
+CLASS      UnionTypes2                     [PUBLIC]   Test1

@@ -157,7 +157,7 @@ public class TomcatManager implements DeploymentManager {
             return false;
         }
         String val = ip.getProperty(PROP_BUNDLED_TOMCAT);
-        return val != null ? Boolean.valueOf(val).booleanValue()
+        return val != null ? Boolean.valueOf(val)
                            : false;
     }
 

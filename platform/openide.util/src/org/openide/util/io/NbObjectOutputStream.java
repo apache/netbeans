@@ -54,7 +54,7 @@ public class NbObjectOutputStream extends ObjectOutputStream {
     }
 
     private static Map<String,Boolean> examinedClasses = new WeakHashMap<String,Boolean>(250);
-    private final List<Class> serializing = new ArrayList<Class>(50);
+    private final List<Class> serializing = new ArrayList<>(50);
 
     /** Create a new object output.
     * @param os the underlying output stream

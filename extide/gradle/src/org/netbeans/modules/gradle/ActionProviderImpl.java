@@ -47,7 +47,7 @@ import static org.netbeans.modules.gradle.Bundle.*;
 import org.netbeans.modules.gradle.actions.KeyValueTableModel;
 import org.netbeans.modules.gradle.api.execute.ActionMapping;
 import org.netbeans.modules.gradle.api.execute.GradleCommandLine;
-import org.netbeans.modules.gradle.actions.ProjectActionMappingProvider;
+import org.netbeans.modules.gradle.spi.actions.ProjectActionMappingProvider;
 import org.netbeans.modules.gradle.customizer.CustomActionMapping;
 import org.netbeans.modules.gradle.spi.actions.AfterBuildActionHook;
 import org.netbeans.modules.gradle.spi.actions.BeforeBuildActionHook;
@@ -60,7 +60,7 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.EnumSet;
-import java.util.Map;
+import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import static javax.swing.Action.NAME;
@@ -76,7 +76,10 @@ import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.modules.gradle.api.GradleBaseProject;
+import org.netbeans.modules.gradle.api.execute.GradleExecConfiguration;
 import org.netbeans.modules.gradle.api.execute.RunConfig.ExecFlag;
+import org.netbeans.modules.gradle.execute.ProjectConfigurationSupport;
+import org.netbeans.spi.project.ActionProgress;
 import org.netbeans.spi.project.support.ProjectOperations;
 import org.netbeans.spi.project.ui.support.DefaultProjectOperations;
 import org.openide.awt.ActionID;
@@ -87,7 +90,6 @@ import org.openide.awt.DynamicMenuContent;
 import org.openide.execution.ExecutorTask;
 import org.openide.filesystems.FileObject;
 import org.openide.loaders.DataObject;
-import org.openide.util.BaseUtilities;
 import org.openide.util.ContextAwareAction;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.actions.Presenter;
@@ -119,22 +121,51 @@ public class ActionProviderImpl implements ActionProvider {
 
     @Override
     public String[] getSupportedActions() {
-        List<? extends GradleActionsProvider> providers = ActionToTaskUtils.actionProviders(project);
-        Set<String> actions = new HashSet<>();
-        for (GradleActionsProvider provider : providers) {
-            actions.addAll(provider.getSupportedActions());
-        }
+        Set<String> actions = new HashSet<>(ActionToTaskUtils.getAllSupportedActions(project));
+        // add a fixed 'prime build' action
+        actions.add(ActionProvider.COMMAND_PRIME);
+        actions.add(COMMAND_DL_SOURCES);
+        actions.add(COMMAND_DL_JAVADOC);
         return actions.toArray(new String[actions.size()]);
     }
-
+    
     @Override
     public void invokeAction(String command, Lookup context) throws IllegalArgumentException {
         if (COMMAND_DELETE.equals(command)) {
             DefaultProjectOperations.performDefaultDeleteOperation(project);
             return;
         }
-        ActionMapping mapping = ActionToTaskUtils.getActiveMapping(command, project);
-        invokeProjectAction(project, mapping, context, false);
+        if (ActionProvider.COMMAND_PRIME.equals(command)) {
+            // delegate to prooblem provider we know exists & is registered
+            NbGradleProjectImpl prjImpl = project.getLookup().lookup(NbGradleProjectImpl.class);
+            ActionProgress prg = ActionProgress.start(context);
+            LOG.log(Level.FINER, "Priming build starting for {0}", project);
+            if (prjImpl.isProjectPrimingRequired()) {
+                prjImpl.primeProject().
+                        thenAccept(gp -> {
+                            LOG.log(Level.FINER, "Priming build of {0} finished with status {1}, ", new Object[] { project, prjImpl.isProjectPrimingRequired() });
+                            prg.finished(!prjImpl.isProjectPrimingRequired());
+                        }).
+                        exceptionally((e) -> { 
+                            LOG.log(Level.FINER, e, () -> String.format("Priming build errored: %s", project));
+                            prg.finished(false);
+                            return null;
+                        });
+                return;
+            } else {
+                // no action, but report finish to unblock potential observers
+                LOG.log(Level.FINER, "Priming build unncessary for {0}", project);
+                prg.finished(true);
+                return;
+            }
+            
+        }
+        NbGradleProject gp = NbGradleProject.get(project);
+        GradleExecConfiguration execCfg = ProjectConfigurationSupport.getEffectiveConfiguration(project, context);
+        ProjectConfigurationSupport.executeWithConfiguration(project, execCfg, () -> {
+            ActionMapping mapping = ActionToTaskUtils.getActiveMapping(command, project, context);
+            invokeProjectAction2(project, mapping, execCfg, context, false);
+        });
     }
 
     @Override
@@ -143,7 +174,13 @@ public class ActionProviderImpl implements ActionProvider {
             GradleBaseProject gbp = GradleBaseProject.get(project);
             return gbp != null && gbp.getSubProjects().isEmpty() && ProjectOperations.isDeleteOperationSupported(project);
         }
-        return ActionToTaskUtils.isActionEnabled(command, project, context);
+        if (ActionProvider.COMMAND_PRIME.equals(command)) {
+            NbGradleProjectImpl prjImpl = project.getLookup().lookup(NbGradleProjectImpl.class);
+            boolean enabled = prjImpl.isProjectPrimingRequired();
+            LOG.log(Level.FINEST, "Priming build action for {0} is: {1}", new Object[] { project, enabled });
+            return enabled;
+        }
+        return ActionToTaskUtils.isActionEnabled(command, null, project, context);
     }
 
     @NbBundle.Messages({
@@ -202,36 +239,59 @@ public class ActionProviderImpl implements ActionProvider {
     }
 
     private static void invokeProjectAction(final Project project, final ActionMapping mapping, Lookup context, boolean showUI) {
+        GradleExecConfiguration execCfg = ProjectConfigurationSupport.getEffectiveConfiguration(project, context);
+        ProjectConfigurationSupport.executeWithConfiguration(project, execCfg, () ->  {
+            if (!invokeProjectAction2(project, mapping, execCfg, context, showUI)) {
+                // the caller may wait on the action not knowing that it's not going to be executed at all. Report a failure.
+                ActionProgress prg = ActionProgress.start(context);
+                prg.finished(false);
+            }
+        });
+    }
+    
+    private static boolean invokeProjectAction2(final Project project, final ActionMapping mapping, final GradleExecConfiguration execCfg, Lookup context, boolean showUI) {
         final String action = mapping.getName();
+        if (ActionMapping.isDisabled(mapping)) {
+            LOG.log(Level.FINE, "Attempt to run a config-disabled action: {0}", action);
+            return false;
+        }
+        if (!ActionToTaskUtils.isActionEnabled(action, mapping, project, context)) {
+            LOG.log(Level.FINE, "Attempt to run action that is not enabled: {0}", action);
+            return false;
+        }
         String argLine = askInputArgs(mapping.getDisplayName(), mapping.getArgs());
         if (argLine == null) {
-            return;
+            return false;
         }
-
         final StringWriter writer = new StringWriter();
-
         PrintWriter out = new PrintWriter(writer);
         Lookup ctx = project.getLookup().lookup(BeforeBuildActionHook.class).beforeAction(action, context, out);
 
         final NbGradleProjectImpl prj = project.getLookup().lookup(NbGradleProjectImpl.class);
-        final String[] args = evalueteArgs(project, action, argLine, ctx);
+        final String[] args = RunUtils.evaluateActionArgs(project, action, argLine, ctx);
         Set<ExecFlag> flags = mapping.isRepeatable() ? EnumSet.of(ExecFlag.REPEATABLE) : EnumSet.noneOf(ExecFlag.class);
-        RunConfig cfg = RunUtils.createRunConfig(project, action, taskName(project, action, ctx), flags, args);
+        RunConfig cfg = RunUtils.createRunConfig(project, action, taskName(project, action, ctx), ctx, execCfg, flags, args);
 
         if (showUI) {
             GradleExecutorOptionsPanel pnl = new GradleExecutorOptionsPanel(project);
             DialogDescriptor dd = new DialogDescriptor(pnl, TIT_Run_Gradle());
-            pnl.setCommandLine(cfg.getCommandLine());
+            pnl.setCommandLine(cfg.getCommandLine(), execCfg);
             Object retValue = DialogDisplayer.getDefault().notify(dd);
 
             if (retValue == DialogDescriptor.OK_OPTION) {
                 pnl.rememberAs();
                 cfg = cfg.withCommandLine(pnl.getCommandLine());
             } else {
-                return;
+                return false;
             }
         }
-
+        
+        final String loadReason;
+        if  (mapping.getDisplayName() != null && !mapping.getDisplayName().equals(mapping.getName())) {
+            loadReason = mapping.getDisplayName();
+        } else {
+            loadReason = null;
+        }
 
         boolean reloadOnly = !showUI && (args.length == 0);
         if (!reloadOnly) {
@@ -259,30 +319,40 @@ public class ActionProviderImpl implements ActionProvider {
         if (reloadOnly) {
             boolean canReload = project.getLookup().lookup(BeforeReloadActionHook.class).beforeReload(action, ctx, 0, null);
             if (needReload && canReload) {
-                String[] reloadArgs = evalueteArgs(project, mapping.getName(), mapping.getReloadArgs(), ctx);
-                prj.reloadProject(true, maxQualily, reloadArgs);
+                String[] reloadArgs = RunUtils.evaluateActionArgs(project, mapping.getName(), mapping.getReloadArgs(), ctx);
+                final ActionProgress g = ActionProgress.start(context);
+                RequestProcessor.Task reloadTask = prj.forceReloadProject(loadReason, false, maxQualily, reloadArgs);
+                reloadTask.addTaskListener((t) -> {
+                    g.finished(true);
+                });
             }
         } else {
             final ExecutorTask task = RunUtils.executeGradle(cfg, writer.toString());
+            final ActionProgress g = ActionProgress.start(context);
             final Lookup outerCtx = ctx;
             task.addTaskListener((Task t) -> {
-                try {
-                    OutputWriter out1 = task.getInputOutput().getOut();
-                    boolean canReload = project.getLookup().lookup(BeforeReloadActionHook.class).beforeReload(action, outerCtx, task.result(), out1);
-                    if (needReload && canReload) {
-                        String[] reloadArgs = evalueteArgs(project, mapping.getName(), mapping.getReloadArgs(), outerCtx);
-                        prj.reloadProject(true, maxQualily, reloadArgs);
+                ProjectConfigurationSupport.executeWithConfiguration(project, execCfg, () -> {
+                    try {
+                        OutputWriter out1 = task.getInputOutput().getOut();
+                        boolean canReload = project.getLookup().lookup(BeforeReloadActionHook.class).beforeReload(action, outerCtx, task.result(), out1);
+                        if (needReload && canReload) {
+                            String[] reloadArgs = RunUtils.evaluateActionArgs(project, mapping.getName(), mapping.getReloadArgs(), outerCtx);
+                            RequestProcessor.Task reloadTask = prj.forceReloadProject(null, true, maxQualily, reloadArgs);
+                            reloadTask.waitFinished();
+                        }
+                        project.getLookup().lookup(AfterBuildActionHook.class).afterAction(action, outerCtx, task.result(), out1);
+                        for (AfterBuildActionHook l : context.lookupAll(AfterBuildActionHook.class)) {
+                            l.afterAction(action, outerCtx, task.result(), out1);
+                        }
+                    } finally {
+                        task.getInputOutput().getOut().close();
+                        task.getInputOutput().getErr().close();
+                        g.finished(task.result() == 0);
                     }
-                    project.getLookup().lookup(AfterBuildActionHook.class).afterAction(action, outerCtx, task.result(), out1);
-                    for (AfterBuildActionHook l : context.lookupAll(AfterBuildActionHook.class)) {
-                        l.afterAction(action, outerCtx, task.result(), out1);
-                    }
-                } finally {
-                    task.getInputOutput().getOut().close();
-                    task.getInputOutput().getErr().close();
-                }
+                });
             });
         }
+        return true;
     }
 
     public static Action createCustomGradleAction(Project project, String name, ActionMapping mapping, Lookup context, boolean showUI) {
@@ -290,7 +360,7 @@ public class ActionProviderImpl implements ActionProvider {
     }
 
     public static Action createCustomGradleAction(Project project, String name, String command, Lookup context, boolean showUI) {
-        ActionMapping mapping = ActionToTaskUtils.getActiveMapping(command, project);
+        ActionMapping mapping = ActionToTaskUtils.getActiveMapping(command, project, context);
         return new CustomAction(project, name, mapping, context, showUI);
     }
 
@@ -324,11 +394,6 @@ public class ActionProviderImpl implements ActionProvider {
             invokeProjectAction(project, mapping, context, showUI);
         }
 
-    }
-
-    private static String[] evalueteArgs(Project project, String action, String args, Lookup context) {
-        String argLine = replaceTokens(project, args, action, context);
-        return BaseUtilities.parseParameters(argLine);
     }
 
     // Copied from the Maven Plugin with minimal changes applied.
@@ -416,9 +481,9 @@ public class ActionProviderImpl implements ActionProvider {
         @ActionReference(position = 250, path = "Loaders/text/x-gradle+x-groovy/Actions"),
         @ActionReference(position = 250, path = "Loaders/text/x-gradle+x-kotlin/Actions"),
         @ActionReference(position = 1295, path = "Loaders/text/x-java/Actions"),
-        @ActionReference(position = 1821, path = "Editors/text/x-java/Popup"),
+        @ActionReference(position = 1825, path = "Editors/text/x-java/Popup"),
         @ActionReference(position = 1295, path = "Loaders/text/x-groovy/Actions"),
-        @ActionReference(position = 1821, path = "Editors/text/x-groovy/Popup")
+        @ActionReference(position = 1825, path = "Editors/text/x-groovy/Popup")
     })
     @NbBundle.Messages({"LBL_Custom_Run=Run Gradle", "LBL_Custom_Run_File=Run Gradle"})
     public static ContextAwareAction customPopupActions() {
@@ -466,12 +531,17 @@ public class ActionProviderImpl implements ActionProvider {
 
                 @Override
                 public void run() {
+                    // should also handle the active configuration.
                     ProjectActionMappingProvider provider = project.getLookup().lookup(ProjectActionMappingProvider.class);
 
                     final List<Action> acts = new ArrayList<>();
                     for (String action : provider.customizedActions()) {
                         if (action.startsWith(CustomActionMapping.CUSTOM_PREFIX)) {
                             ActionMapping mapp = provider.findMapping(action);
+                            if (ActionMapping.isDisabled(mapp)) {
+                                // action is disabled.
+                                continue;
+                            }
                             Action act = createCustomGradleAction(project, mapp.getName(), mapp, lookup, false);
                             String displayName = INPUT_PROP_REGEXP.matcher(mapp.getArgs()).find() ? mapp.getDisplayName() + "..." : mapp.getDisplayName();
 
@@ -531,36 +601,12 @@ public class ActionProviderImpl implements ActionProvider {
 
             DialogDescriptor dlg = new DialogDescriptor(panel, TIT_BuildParameters(command));
             if (DialogDescriptor.OK_OPTION == DialogDisplayer.getDefault().notify(dlg)) {
-                ret = replaceTokens(argLine, kvModel.getProperties());
+                ret = ReplaceTokenProvider.replaceTokens(argLine, kvModel.getProperties());
             } else {
                 //Mark Cancel is pressed, so build shall be aborted.
                 ret = null;
             }
         }
         return ret;
-    }
-
-    private static String replaceTokens(String argLine, Map<String, String> replaceMap) {
-        StringBuilder sb = new StringBuilder(argLine);
-        int start = sb.indexOf("${");
-        while (start >= 0) {
-            int end = sb.indexOf("}", start);
-            int comma = sb.indexOf(",", start);
-            int keyEnd = comma > start && comma < end ? comma : end;
-            String key = sb.substring(start + 2, keyEnd);
-            String value = replaceMap.get(key);
-            if (value != null) {
-                sb.replace(start, end + 1, value);
-                start = sb.indexOf("${");
-            } else {
-                start = sb.indexOf("${", end);
-            }
-        }
-        return sb.toString();
-    }
-
-    private static String replaceTokens(Project project, String argLine, String action, Lookup context) {
-        ReplaceTokenProvider tokenProvider = project.getLookup().lookup(ReplaceTokenProvider.class);
-        return replaceTokens(argLine, tokenProvider.createReplacements(action, context));
     }
 }

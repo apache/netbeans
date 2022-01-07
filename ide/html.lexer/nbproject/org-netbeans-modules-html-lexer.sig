@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.46
+#Version 1.52
 
 CLSS public abstract interface java.io.Serializable
 
@@ -21,7 +21,6 @@ meth public final java.lang.String name()
 meth public java.lang.String toString()
 meth public static <%0 extends java.lang.Enum<{%%0}>> {%%0} valueOf(java.lang.Class<{%%0}>,java.lang.String)
 supr java.lang.Object
-hfds name,ordinal
 
 CLSS public java.lang.Object
 cons public init()
@@ -71,7 +70,7 @@ meth public static org.netbeans.api.html.lexer.HTMLTokenId valueOf(java.lang.Str
 meth public static org.netbeans.api.html.lexer.HTMLTokenId[] values()
 meth public static org.netbeans.api.lexer.Language<org.netbeans.api.html.lexer.HTMLTokenId> language()
 supr java.lang.Enum<org.netbeans.api.html.lexer.HTMLTokenId>
-hfds BABEL_MIMETYPE,JAVASCRIPT_MIMETYPE,LOG,LOGGER,STYLE_MIMETYPE,language,primaryCategory
+hfds BABEL_MIMETYPE,JAVASCRIPT_MIMETYPE,LOG,LOGGER,SCRIPT_TYPE_MODULE,STYLE_MIMETYPE,language,primaryCategory
 
 CLSS public abstract org.netbeans.api.html.lexer.HtmlLexerPlugin
 cons public init()

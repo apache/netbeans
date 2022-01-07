@@ -19,7 +19,7 @@
 package org.netbeans.modules.javascript2.editor.spi;
 
 /**
- *
+ * Type of completion for {@link CompletionProviderEx}.
  * @author Petr Hejl
  */
 public enum CompletionContext {

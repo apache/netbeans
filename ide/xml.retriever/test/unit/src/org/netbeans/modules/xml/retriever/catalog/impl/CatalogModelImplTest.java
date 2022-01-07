@@ -31,16 +31,16 @@ public class CatalogModelImplTest {
     @Test
     public void testUriDecoding() throws URISyntaxException {
         URI[] inputUri = new URI[] {
-            new URI("http://netbeans.apache.org/dummy?queryString=1"),
-            new URI("http://netbeans.apache.org/dummy?queryString=1&fetch=false&sync=true"),
+            new URI("https://netbeans.apache.org/dummy?queryString=1"),
+            new URI("https://netbeans.apache.org/dummy?queryString=1&fetch=false&sync=true"),
             new URI("file:///localfile"),
             new URI("file:///localfile?fetch=false&sync=true"),
             new URI("urn:demo:urn"),
             new URI("urn:demo:urn?fetch=false&sync=false"),
         };
         URI[] outputURI = new URI[] {
-            new URI("http://netbeans.apache.org/dummy?queryString=1"),
-            new URI("http://netbeans.apache.org/dummy?queryString=1"),
+            new URI("https://netbeans.apache.org/dummy?queryString=1"),
+            new URI("https://netbeans.apache.org/dummy?queryString=1"),
             new URI("file:///localfile"),
             new URI("file:///localfile"),
             new URI("urn:demo:urn"),

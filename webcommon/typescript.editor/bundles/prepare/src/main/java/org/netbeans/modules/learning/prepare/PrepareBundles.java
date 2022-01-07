@@ -21,10 +21,12 @@ package org.netbeans.modules.learning.prepare;
 import com.google.gson.Gson;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.UncheckedIOException;
 import java.io.Writer;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.DirectoryStream;
 import java.nio.file.FileVisitOption;
 import java.nio.file.Files;
@@ -38,6 +40,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.TreeMap;
 import java.util.jar.JarOutputStream;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -55,7 +58,7 @@ public class PrepareBundles {
         "License.txt",
         "LICENSE.md"
     };
-    private static final String nl = System.getProperty("line.separator");
+    private static final String nl = "\n";
 
     public static void main(String... args) throws IOException, InterruptedException, NoSuchAlgorithmException {
         if (args.length != 2) {
@@ -92,8 +95,8 @@ public class PrepareBundles {
 
         Map<List<String>, LicenseUses> tokens2Projects = new HashMap<>();
         Map<String, LicenseDescription> project2License = new HashMap<>();
-        try (DirectoryStream<Path> ds = Files.newDirectoryStream(packagesDir.resolve("node_modules"));
-             Writer binariesList = new OutputStreamWriter(Files.newOutputStream(bundlesDir.resolve("binaries-list")), "UTF-8")) {
+        Map<String, String> binaries = new TreeMap<>();
+        try (DirectoryStream<Path> ds = Files.newDirectoryStream(packagesDir.resolve("node_modules"))) {
             for (Path module : ds) {
                 if (".bin".equals(module.getFileName().toString())) continue;
                 Path packageJson = module.resolve("package.json");
@@ -114,9 +117,9 @@ public class PrepareBundles {
                 if (license == null) {
                     throw new IllegalStateException("Cannot find license for: " + module.getFileName());
                 }
-                
+
                 Path thirdpartynoticestxt = module.resolve("thirdpartynotices.txt");
-                String packageJsonText = Files.readString(packageJson);
+                String packageJsonText = readFileIntoString(packageJson);
                 Map<String, Object> packageJsonData = new Gson().fromJson(packageJsonText, HashMap.class);
                 String name = (String) packageJsonData.get("name");
                 String version = (String) packageJsonData.get("version");
@@ -127,12 +130,12 @@ public class PrepareBundles {
 
                 if (Files.isReadable(thirdpartynoticestxt)) {
                     licenseText = "Parts of this work are licensed:\n" +
-                                  Files.readString(license) +
+                                  readFileIntoString(license) +
                                   "\n\n" +
                                   "Parts of this work are licensed:\n" +
-                                  Files.readString(thirdpartynoticestxt);
+                                  readFileIntoString(thirdpartynoticestxt);
                 } else {
-                    licenseText = Files.readString(license);
+                    licenseText = readFileIntoString(license);
                 }
 
                 List<String> tokens = licenseTextToTokens(licenseText);
@@ -163,19 +166,24 @@ public class PrepareBundles {
                     });
                 }
                 MessageDigest md = MessageDigest.getInstance("SHA1");
-                try (InputStream in = Files.newInputStream(bundle)) {
-                    md.update(in.readAllBytes());
-                }
+                md.update(Files.readAllBytes(bundle));
                 StringBuilder hash = new StringBuilder();
                 for (byte b : md.digest()) {
                     hash.append(String.format("%02X", b));
                 }
                 Path external = externalDir.resolve(hash + "-" + bundle.getFileName());
                 Files.copy(bundle, external);
-                binariesList.write(hash + " " + bundle.getFileName().toString() + nl);
+                binaries.put(bundle.getFileName().toString(), hash.toString());
             }
         }
-        
+
+        try(Writer binariesList = new OutputStreamWriter(Files.newOutputStream(bundlesDir.resolve("binaries-list")), "UTF-8")) {
+            binariesList.write(readResourceIntoString("ALv2Header.txt"));
+            for(Entry<String,String> e: binaries.entrySet()) {
+                binariesList.write(e.getValue() + " " + e.getKey() + nl);
+            }
+        }
+
         Map<String, String> project2LicenseKey = new HashMap<>();
 
         Map<List<String>, String> knownLicenseTokens2LicenseKey = new HashMap<>();
@@ -183,7 +191,7 @@ public class PrepareBundles {
 
         try (DirectoryStream<Path> ds = Files.newDirectoryStream(nb_all.resolve("nbbuild").resolve("licenses"))) {
             for (Path license : ds) {
-                knownLicenseTokens2LicenseKey.put(licenseTextToTokens(Files.readString(license)), license.getFileName().toString());
+                knownLicenseTokens2LicenseKey.put(licenseTextToTokens(readFileIntoString(license)), license.getFileName().toString());
             }
         }
 
@@ -215,9 +223,28 @@ public class PrepareBundles {
         }
     }
 
+    private static String readFileIntoString(Path file) throws IOException {
+        byte[] fileData = Files.readAllBytes(file);
+        return new String(fileData, StandardCharsets.UTF_8);
+    }
+
+    private static String readResourceIntoString(String path) throws IOException {
+        try(InputStream is = PrepareBundles.class.getResourceAsStream(path);
+            InputStreamReader isr = new InputStreamReader(is, StandardCharsets.UTF_8)) {
+            StringBuilder result = new StringBuilder();
+            char[] buffer = new char[2048];
+            int read;
+            while((read = isr.read(buffer)) >= 0) {
+                result.append(buffer, 0, read);
+            }
+            return result.toString();
+        }
+    }
+
     private static List<String> licenseTextToTokens(String licenseText) {
         return Arrays.asList(licenseText.replaceAll("[ \n\r\t]+", " ").split(" "));
     }
+
     private static class LicenseDescription {
         private final String name;
         private final String version;
@@ -242,6 +269,7 @@ public class PrepareBundles {
         }
 
     }
+
     private static class LicenseUses {
         private final String key;
         private final String licenseText;
@@ -251,6 +279,5 @@ public class PrepareBundles {
             this.key = key;
             this.licenseText = licenseText;
         }
-        
     }
 }

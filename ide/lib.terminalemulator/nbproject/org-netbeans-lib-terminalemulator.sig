@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.45
+#Version 1.51
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -272,8 +272,6 @@ meth public void transferFocusUpCycle()
 meth public void update(java.awt.Graphics)
 meth public void validate()
 supr java.lang.Object
-hfds FOCUS_TRAVERSABLE_DEFAULT,FOCUS_TRAVERSABLE_SET,FOCUS_TRAVERSABLE_UNKNOWN,LOCK,acc,actionListenerK,adjustmentListenerK,appContext,autoFocusTransferOnDisposal,background,backgroundEraseDisabled,boundsOp,bufferStrategy,changeSupport,coalesceEventsParams,coalesceMap,coalescingEnabled,componentListener,componentListenerK,componentOrientation,componentSerializedDataVersion,compoundShape,containerListenerK,cursor,dropTarget,enabled,eventCache,eventLog,eventMask,focusListener,focusListenerK,focusLog,focusTraversalKeyPropertyNames,focusTraversalKeys,focusTraversalKeysEnabled,focusable,font,foreground,graphicsConfig,height,hierarchyBoundsListener,hierarchyBoundsListenerK,hierarchyListener,hierarchyListenerK,ignoreRepaint,incRate,inputMethodListener,inputMethodListenerK,isAddNotifyComplete,isFocusTraversableOverridden,isInc,isPacked,itemListenerK,keyListener,keyListenerK,locale,log,maxSize,maxSizeSet,minSize,minSizeSet,mixingCutoutRegion,mixingLog,mouseListener,mouseListenerK,mouseMotionListener,mouseMotionListenerK,mouseWheelListener,mouseWheelListenerK,name,nameExplicitlySet,newEventsOnly,objectLock,ownedWindowK,parent,peer,peerFont,popups,prefSize,prefSizeSet,requestFocusController,serialVersionUID,textListenerK,valid,visible,width,windowClosingException,windowFocusListenerK,windowListenerK,windowStateListenerK,x,y
-hcls AWTTreeLock,BltSubRegionBufferStrategy,DummyRequestFocusController,FlipSubRegionBufferStrategy,ProxyCapabilities,SingleBufferStrategy
 
 CLSS protected abstract java.awt.Component$AccessibleAWTComponent
  outer java.awt.Component
@@ -324,7 +322,6 @@ meth public void setLocation(java.awt.Point)
 meth public void setSize(java.awt.Dimension)
 meth public void setVisible(boolean)
 supr javax.accessibility.AccessibleContext
-hfds propertyListenersCount,serialVersionUID
 
 CLSS public java.awt.Container
 cons public init()
@@ -409,8 +406,6 @@ meth public void transferFocusDownCycle()
 meth public void update(java.awt.Graphics)
 meth public void validate()
 supr java.awt.Component
-hfds EMPTY_ARRAY,INCLUDE_SELF,SEARCH_HEAVYWEIGHTS,component,containerListener,containerSerializedDataVersion,descendUnconditionallyWhenValidating,descendantsCount,dispatcher,eventLog,focusCycleRoot,focusTraversalPolicy,focusTraversalPolicyProvider,isJavaAwtSmartInvalidate,layoutMgr,listeningBoundsChildren,listeningChildren,log,mixingLog,modalAppContext,modalComp,numOfHWComponents,numOfLWComponents,preserveBackgroundColor,printing,printingThreads,serialPersistentFields,serialVersionUID
-hcls DropTargetEventTargetFilter,EventTargetFilter,MouseEventTargetFilter,WakingRunnable
 
 CLSS protected java.awt.Container$AccessibleAWTContainer
  outer java.awt.Container
@@ -423,7 +418,6 @@ meth public javax.accessibility.Accessible getAccessibleChild(int)
 meth public void addPropertyChangeListener(java.beans.PropertyChangeListener)
 meth public void removePropertyChangeListener(java.beans.PropertyChangeListener)
 supr java.awt.Component$AccessibleAWTComponent
-hfds propertyListenersCount,serialVersionUID
 
 CLSS public abstract interface java.awt.MenuContainer
 meth public abstract boolean postEvent(java.awt.Event)
@@ -462,7 +456,6 @@ meth public final java.lang.String name()
 meth public java.lang.String toString()
 meth public static <%0 extends java.lang.Enum<{%%0}>> {%%0} valueOf(java.lang.Class<{%%0}>,java.lang.String)
 supr java.lang.Object
-hfds name,ordinal
 
 CLSS public java.lang.Exception
 cons protected init(java.lang.String,java.lang.Throwable,boolean,boolean)
@@ -471,7 +464,6 @@ cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.Throwable)
 cons public init(java.lang.Throwable)
 supr java.lang.Throwable
-hfds serialVersionUID
 
 CLSS public java.lang.Object
 cons public init()
@@ -508,8 +500,6 @@ meth public void printStackTrace(java.io.PrintStream)
 meth public void printStackTrace(java.io.PrintWriter)
 meth public void setStackTrace(java.lang.StackTraceElement[])
 supr java.lang.Object
-hfds CAUSE_CAPTION,EMPTY_THROWABLE_ARRAY,NULL_CAUSE_MESSAGE,SELF_SUPPRESSION_MESSAGE,SUPPRESSED_CAPTION,SUPPRESSED_SENTINEL,UNASSIGNED_STACK,backtrace,cause,detailMessage,serialVersionUID,stackTrace,suppressedExceptions
-hcls PrintStreamOrWriter,SentinelHolder,WrappedPrintStream,WrappedPrintWriter
 
 CLSS public abstract interface javax.accessibility.Accessible
 meth public abstract javax.accessibility.AccessibleContext getAccessibleContext()
@@ -595,7 +585,6 @@ meth public void setAccessibleDescription(java.lang.String)
 meth public void setAccessibleName(java.lang.String)
 meth public void setAccessibleParent(javax.accessibility.Accessible)
 supr java.lang.Object
-hfds accessibleChangeSupport,nativeAXResource,relationSet,targetAppContext
 
 CLSS public abstract interface javax.accessibility.AccessibleExtendedComponent
 intf javax.accessibility.AccessibleComponent
@@ -759,8 +748,6 @@ meth public void unregisterKeyboardAction(javax.swing.KeyStroke)
 meth public void update(java.awt.Graphics)
 meth public void updateUI()
 supr java.awt.Container
-hfds ACTIONMAP_CREATED,ANCESTOR_INPUTMAP_CREATED,ANCESTOR_USING_BUFFER,AUTOSCROLLS_SET,COMPLETELY_OBSCURED,CREATED_DOUBLE_BUFFER,DEBUG_GRAPHICS_LOADED,FOCUS_INPUTMAP_CREATED,FOCUS_TRAVERSAL_KEYS_BACKWARD_SET,FOCUS_TRAVERSAL_KEYS_FORWARD_SET,INHERITS_POPUP_MENU,INPUT_VERIFIER_SOURCE_KEY,IS_DOUBLE_BUFFERED,IS_OPAQUE,IS_PAINTING_TILE,IS_PRINTING,IS_PRINTING_ALL,IS_REPAINTING,KEYBOARD_BINDINGS_KEY,KEY_EVENTS_ENABLED,NEXT_FOCUS,NOT_OBSCURED,OPAQUE_SET,PARTIALLY_OBSCURED,REQUEST_FOCUS_DISABLED,RESERVED_1,RESERVED_2,RESERVED_3,RESERVED_4,RESERVED_5,RESERVED_6,WHEN_IN_FOCUSED_WINDOW_BINDINGS,WIF_INPUTMAP_CREATED,WRITE_OBJ_COUNTER_FIRST,WRITE_OBJ_COUNTER_LAST,aaTextInfo,actionMap,alignmentX,alignmentY,ancestorInputMap,autoscrolls,border,clientProperties,componentObtainingGraphicsFrom,componentObtainingGraphicsFromLock,defaultLocale,flags,focusController,focusInputMap,inputVerifier,isAlignmentXSet,isAlignmentYSet,managingFocusBackwardTraversalKeys,managingFocusForwardTraversalKeys,paintingChild,popupMenu,readObjectCallbacks,revalidateRunnableScheduled,tempRectangles,uiClassID,verifyInputWhenFocusTarget,vetoableChangeSupport,windowInputMap
-hcls ActionStandin,IntVector,KeyboardState,ReadObjectCallback
 
 CLSS public abstract javax.swing.JComponent$AccessibleJComponent
  outer javax.swing.JComponent
@@ -783,7 +770,6 @@ meth public javax.accessibility.AccessibleStateSet getAccessibleStateSet()
 meth public void addPropertyChangeListener(java.beans.PropertyChangeListener)
 meth public void removePropertyChangeListener(java.beans.PropertyChangeListener)
 supr java.awt.Container$AccessibleAWTContainer
-hfds propertyListenersCount
 
 CLSS public javax.swing.JPanel
 cons public init()
@@ -799,7 +785,6 @@ meth public javax.swing.plaf.PanelUI getUI()
 meth public void setUI(javax.swing.plaf.PanelUI)
 meth public void updateUI()
 supr javax.swing.JComponent
-hfds uiClassID
 
 CLSS public abstract org.netbeans.lib.terminalemulator.AbstractInterp
 cons protected init(org.netbeans.lib.terminalemulator.Ops)
@@ -1235,7 +1220,7 @@ meth public void setTrackCursor(boolean)
 meth public void setWordDelineator(org.netbeans.lib.terminalemulator.WordDelineator)
 meth public void visitLogicalLines(org.netbeans.lib.terminalemulator.Coord,org.netbeans.lib.terminalemulator.Coord,org.netbeans.lib.terminalemulator.LogicalLineVisitor)
 supr javax.swing.JComponent
-hfds CULL_FREQUENCY,DO_MARGINS,ESC,MODULO,TRANSPARENT,accessible_context,active_color,actual_background,actual_foreground,allowedActions,altSendsEscape,anchored,base_stream,bot_margin,buf,charsInPrehistory,check_selection,click_to_type,completedSequences,cull_count,cursor_visible,dce_end,debug,debug_gutter_width,default_word_delineator,delimiters,drag_point,dte_end,firsta,fixedFont,glyph_gutter_width,glyph_images,has_focus,history_size,horizontally_scrollable,hscroll_bar,hscroll_count,hscroll_wrapper,input_listeners,interp,keymap,keystroke_set,lastMemUse,left_down_point,listeners,metrics,n_linefeeds,n_paint,n_putchar,n_putchars,n_repaint,newp,old_extent,old_rows,onMac,ops,palette,passOn,read_only,refresh_enabled,region_manager,renderingHints,reverse_video,screen,scroll_on_input,scroll_on_output,scroller,scrolling_direction,sel,selection_xor,sequenceLogging,size_rounded,st,systemClipboard,systemSelection,tab_size,top_margin,totcols,track_cursor,unrecognizedSequences,vscroll_bar,word_delineator,xferBuf
+hfds CULL_FREQUENCY,DEFAULT_DEBUG,DO_MARGINS,ESC,MODULO,TRANSPARENT,accessible_context,active_color,actual_background,actual_foreground,allowedActions,altSendsEscape,anchored,base_stream,bot_margin,buf,charsInPrehistory,check_selection,click_to_type,completedSequences,cull_count,cursor_visible,dce_end,debug,debug_gutter_width,default_word_delineator,delimiters,drag_point,dte_end,firsta,fixedFont,glyph_gutter_width,glyph_images,has_focus,history_size,horizontally_scrollable,hscroll_bar,hscroll_count,hscroll_wrapper,input_listeners,interp,keymap,keystroke_set,lastMemUse,left_down_point,listeners,metrics,n_linefeeds,n_paint,n_putchar,n_putchars,n_repaint,newp,old_extent,old_rows,onMac,ops,palette,passOn,read_only,refresh_enabled,region_manager,renderingHints,reverse_video,screen,scroll_on_input,scroll_on_output,scroller,scrolling_direction,sel,selection_xor,sequenceLogging,size_rounded,st,systemClipboard,systemSelection,tab_size,top_margin,totcols,track_cursor,unrecognizedSequences,vscroll_bar,word_delineator,xferBuf
 hcls BaseTermStream,MemUse,MouseWheelHandler,OpsImpl,ScrollWrapper,Scroller
 
 CLSS protected org.netbeans.lib.terminalemulator.Term$AccessibleTerm

@@ -221,8 +221,8 @@ public class WSDLModelTest extends NbTestCase {
     
     private boolean comp(int x, int y) {
         if (x!=y) {
-            expectedValue = new Integer(x);
-            realValue = new Integer(y);
+            expectedValue = x;
+            realValue = y;
             return false;
         } else {
             return true;

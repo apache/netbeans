@@ -106,7 +106,7 @@ public class CallEjbDialog {
                 if (evt.getPropertyName().equals(CallEjbPanel.IS_VALID)) {
                     Object newvalue = evt.getNewValue();
                     if ((newvalue != null) && (newvalue instanceof Boolean)) {
-                        dialogDescriptor.setValid(((Boolean)newvalue).booleanValue());
+                        dialogDescriptor.setValid(((Boolean)newvalue));
                     }
                 }
             }

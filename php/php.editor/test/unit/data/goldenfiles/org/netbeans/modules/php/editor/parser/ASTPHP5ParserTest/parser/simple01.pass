@@ -54,7 +54,7 @@
         </Comments>
         <Statements>
             <ExpressionStatement start='31' end='49'>
-                <MethodInvocation start='31' end='48'>
+                <MethodInvocation start='31' end='48' isNullsafe='false'>
                     <Variable start='31' end='37' isDollared='true'>
                         <Identifier start='32' end='37' name='hello'/>
                     </Variable>

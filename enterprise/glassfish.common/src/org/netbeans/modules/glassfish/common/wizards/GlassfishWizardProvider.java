@@ -36,21 +36,42 @@ public class GlassfishWizardProvider implements ServerWizardProvider {
                 "STR_V3_FAMILY_NAME", new Object[]{}) // NOI18N
                 );
     }
-    
+
     public static GlassfishWizardProvider createEe7() {
         return new GlassfishWizardProvider(
                 org.openide.util.NbBundle.getMessage(GlassfishWizardProvider.class,
                 "STR_V4_FAMILY_NAME", new Object[]{}) // NOI18N
                 );
     }
-    
+
     public static GlassfishWizardProvider createEe8() {
         return new GlassfishWizardProvider(
                 org.openide.util.NbBundle.getMessage(GlassfishWizardProvider.class,
                 "STR_V5_FAMILY_NAME", new Object[]{}) // NOI18N
                 );
     }
-    
+
+    public static GlassfishWizardProvider createJakartaEe8() {
+        return new GlassfishWizardProvider(
+                org.openide.util.NbBundle.getMessage(GlassfishWizardProvider.class,
+                "STR_V5_FAMILY_NAME", new Object[]{}) // NOI18N
+                );
+    }
+
+    public static GlassfishWizardProvider createJakartaEe9() {
+        return new GlassfishWizardProvider(
+                org.openide.util.NbBundle.getMessage(GlassfishWizardProvider.class,
+                "STR_V6_FAMILY_NAME", new Object[]{}) // NOI18N
+                );
+    }
+
+    public static GlassfishWizardProvider createJakartaEe91() {
+        return new GlassfishWizardProvider(
+                org.openide.util.NbBundle.getMessage(GlassfishWizardProvider.class,
+                "STR_V6_FAMILY_NAME", new Object[]{}) // NOI18N
+                );
+    }
+
     private final String displayName;
 
     private GlassfishWizardProvider(

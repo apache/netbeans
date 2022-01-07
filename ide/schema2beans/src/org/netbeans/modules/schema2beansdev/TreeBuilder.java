@@ -57,7 +57,7 @@ public class TreeBuilder implements DocDefHandler, TreeParser, HasPrefixGuesser 
 
     void pushLevel() {
         curParentGroupStack.push(curParentGroup);
-        curElementTypeStack.push(new Integer(curElementType));
+        curElementTypeStack.push(Integer.valueOf(curElementType));
         curAttrStack.push(curAttr);
     }
 

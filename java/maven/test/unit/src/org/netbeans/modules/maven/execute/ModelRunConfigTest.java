@@ -260,7 +260,7 @@ public class ModelRunConfigTest extends NbTestCase {
                 + "            <plugin>\n"
                 + "                <groupId>org.codehaus.mojo</groupId>\n"
                 + "                <artifactId>exec-maven-plugin</artifactId>\n"
-                + "                <version>1.4.0</version>\n"
+                + "                <version>3.0.0</version>\n"
                 + "                <configuration>\n"
                 + "                    <executable>${java.home}/bin/java</executable>\n"
                 +                      argsString 

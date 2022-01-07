@@ -66,7 +66,7 @@ public class ProjectChooserAccessoryTest extends NbTestCase {
         
         List<Project> result = new ArrayList<Project>();
         //#101227
-        ProjectChooserAccessory acc = new ProjectChooserAccessory(new JFileChooser(), false);
+        ProjectChooserAccessory acc = new ProjectChooserAccessory(new JFileChooser(), false, true);
         acc.modelUpdater.addSubprojects(p1, result, new HashMap<Project,Set<? extends Project>>());
         
         assertTrue(new HashSet<Project>(Arrays.asList(p1, p2)).equals(new HashSet<Project>(result)));

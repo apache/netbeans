@@ -152,7 +152,7 @@ public class LoggerGenerator implements CodeGenerator {
         }
     }
 
-    private static VariableTree createLoggerField(TreeMaker make, ClassTree cls, CharSequence name, Set<Modifier> mods) {
+    public static VariableTree createLoggerField(TreeMaker make, ClassTree cls, CharSequence name, Set<Modifier> mods) {
         ModifiersTree modifiers = make.Modifiers(mods, Collections.<AnnotationTree>emptyList());
         final List<ExpressionTree> none = Collections.<ExpressionTree>emptyList();
         IdentifierTree className = make.Identifier(cls.getSimpleName());

@@ -96,7 +96,7 @@ public final class J2eeProjectCapabilities {
     public boolean isEjb30Supported() {
         J2eeModule.Type moduleType = provider.getJ2eeModule().getType();
         boolean eeOk = ejbJarProfile != null && (ejbJarProfile.equals(Profile.JAVA_EE_5) ||
-                ejbJarProfile.equals(Profile.JAVA_EE_6_FULL) || ejbJarProfile.equals(Profile.JAVA_EE_7_FULL) || ejbJarProfile.equals(Profile.JAVA_EE_8_FULL));
+                ejbJarProfile.equals(Profile.JAVA_EE_6_FULL) || ejbJarProfile.equals(Profile.JAVA_EE_7_FULL) || ejbJarProfile.equals(Profile.JAVA_EE_8_FULL) || ejbJarProfile.equals(Profile.JAKARTA_EE_8_FULL) || ejbJarProfile.equals(Profile.JAKARTA_EE_9_FULL));
         return J2eeModule.Type.EJB.equals(moduleType) && eeOk;
     }
 
@@ -106,7 +106,7 @@ public final class J2eeProjectCapabilities {
      */
     public boolean isEjb31Supported() {
         J2eeModule.Type moduleType = provider.getJ2eeModule().getType();
-        boolean ee6or7 = ejbJarProfile != null && (ejbJarProfile.equals(Profile.JAVA_EE_6_FULL) || ejbJarProfile.equals(Profile.JAVA_EE_7_FULL) || ejbJarProfile.equals(Profile.JAVA_EE_8_FULL));
+        boolean ee6or7 = ejbJarProfile != null && (ejbJarProfile.equals(Profile.JAVA_EE_6_FULL) || ejbJarProfile.equals(Profile.JAVA_EE_7_FULL) || ejbJarProfile.equals(Profile.JAVA_EE_8_FULL) || ejbJarProfile.equals(Profile.JAKARTA_EE_8_FULL) || ejbJarProfile.equals(Profile.JAKARTA_EE_9_FULL));
         return ee6or7 && (J2eeModule.Type.EJB.equals(moduleType) ||
                 J2eeModule.Type.WAR.equals(moduleType));
     }
@@ -117,7 +117,7 @@ public final class J2eeProjectCapabilities {
      */
     public boolean isEjb31LiteSupported() {
         J2eeModule.Type moduleType = provider.getJ2eeModule().getType();
-        boolean ee6or7Web = ejbJarProfile != null && (ejbJarProfile.equals(Profile.JAVA_EE_6_WEB) || ejbJarProfile.equals(Profile.JAVA_EE_7_WEB) || ejbJarProfile.equals(Profile.JAVA_EE_8_WEB));
+        boolean ee6or7Web = ejbJarProfile != null && (ejbJarProfile.equals(Profile.JAVA_EE_6_WEB) || ejbJarProfile.equals(Profile.JAVA_EE_7_WEB) || ejbJarProfile.equals(Profile.JAVA_EE_8_WEB) || ejbJarProfile.equals(Profile.JAKARTA_EE_8_WEB) || ejbJarProfile.equals(Profile.JAKARTA_EE_9_WEB));
         return isEjb31Supported() || (J2eeModule.Type.WAR.equals(moduleType) && ee6or7Web);
     }
 
@@ -130,7 +130,7 @@ public final class J2eeProjectCapabilities {
      */
     public boolean isEjb32Supported() {
         J2eeModule.Type moduleType = provider.getJ2eeModule().getType();
-        boolean ee7 = ejbJarProfile != null && (ejbJarProfile.equals(Profile.JAVA_EE_7_FULL) || ejbJarProfile.equals(Profile.JAVA_EE_8_FULL));
+        boolean ee7 = ejbJarProfile != null && (ejbJarProfile.equals(Profile.JAVA_EE_7_FULL) || ejbJarProfile.equals(Profile.JAVA_EE_8_FULL) || ejbJarProfile.equals(Profile.JAKARTA_EE_8_FULL) || ejbJarProfile.equals(Profile.JAKARTA_EE_9_FULL));
         return ee7 && (J2eeModule.Type.EJB.equals(moduleType) || J2eeModule.Type.WAR.equals(moduleType));
     }
 
@@ -143,22 +143,50 @@ public final class J2eeProjectCapabilities {
      */
     public boolean isEjb32LiteSupported() {
         J2eeModule.Type moduleType = provider.getJ2eeModule().getType();
-        boolean ee7Web = ejbJarProfile != null && (ejbJarProfile.equals(Profile.JAVA_EE_7_WEB) || ejbJarProfile.equals(Profile.JAVA_EE_8_WEB));
+        boolean ee7Web = ejbJarProfile != null && (ejbJarProfile.equals(Profile.JAVA_EE_7_WEB) || ejbJarProfile.equals(Profile.JAVA_EE_8_WEB) || ejbJarProfile.equals(Profile.JAKARTA_EE_8_WEB) || ejbJarProfile.equals(Profile.JAKARTA_EE_9_WEB));
         return isEjb32Supported() || (J2eeModule.Type.WAR.equals(moduleType) && ee7Web);
     }
 
+    /**
+     * Is CDI 1.0 supported in this project?
+     * @return {@code true} if the project targets EE6 profile, {@code false} otherwise
+     * @since 1.113
+     */
+    public boolean isCdi10Supported() {
+        return Profile.JAVA_EE_6_FULL.equals(ejbJarProfile) ||
+            Profile.JAVA_EE_6_WEB.equals(webProfile) ||
+            Profile.JAVA_EE_6_FULL.equals(ejbJarProfile);
+    }
+    
     /**
      * Is CDI 1.1 supported in this project?
      * @return {@code true} if the project targets EE7 profile, {@code false} otherwise
      * @since 1.86
      */
     public boolean isCdi11Supported() {
-        return Profile.JAVA_EE_8_FULL.equals(ejbJarProfile) ||
+        return 
+            Profile.JAKARTA_EE_9_FULL.equals(ejbJarProfile) ||
+            Profile.JAKARTA_EE_8_FULL.equals(ejbJarProfile) ||
+            Profile.JAVA_EE_8_FULL.equals(ejbJarProfile) ||
             Profile.JAVA_EE_8_WEB.equals(webProfile) ||
             Profile.JAVA_EE_7_FULL.equals(ejbJarProfile) ||
             Profile.JAVA_EE_7_WEB.equals(webProfile) ||
             Profile.JAVA_EE_7_FULL.equals(carProfile) ||
             Profile.JAVA_EE_8_FULL.equals(carProfile);
+    }
+    
+    /**
+     * Is CDI 2.0 supported in this project?
+     * @return {@code true} if the project targets EE8 profile, {@code false} otherwise
+     * @since 1.113
+     */
+    public boolean isCdi20Supported() {
+        return Profile.JAVA_EE_8_FULL.equals(ejbJarProfile) ||
+            Profile.JAVA_EE_8_WEB.equals(webProfile) ||
+            Profile.JAVA_EE_8_FULL.equals(carProfile) ||
+            Profile.JAKARTA_EE_8_FULL.equals(ejbJarProfile) ||
+            Profile.JAKARTA_EE_8_WEB.equals(webProfile) ||
+            Profile.JAKARTA_EE_8_FULL.equals(carProfile);
     }
 
     /**

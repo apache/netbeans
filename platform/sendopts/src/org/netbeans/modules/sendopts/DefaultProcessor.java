@@ -191,6 +191,8 @@ public final class DefaultProcessor extends OptionProcessor {
             if (inst instanceof ArgsProcessor) {
                 ((ArgsProcessor)inst).process(env);
             }
+        } catch (CommandException exception) {
+            throw exception;
         } catch (Exception exception) {
             throw (CommandException)new CommandException(10, exception.getLocalizedMessage()).initCause(exception);
         }

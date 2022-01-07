@@ -37,7 +37,9 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.UUID;
+import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
@@ -54,10 +56,14 @@ import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.IOUtil;
 import org.codehaus.plexus.util.cli.CommandLineUtils;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
+import org.netbeans.api.annotations.common.NonNull;
+import org.netbeans.api.extexecution.base.ExplicitProcessParameters;
 import org.netbeans.api.extexecution.base.Processes;
+import org.netbeans.api.extexecution.startup.StartupExtender;
 import org.netbeans.api.java.platform.JavaPlatform;
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
+import org.netbeans.api.project.Project;
+import org.netbeans.modules.maven.NbMavenProjectImpl;
 import org.netbeans.modules.maven.api.Constants;
 import org.netbeans.modules.maven.api.FileUtilities;
 import org.netbeans.modules.maven.api.NbMavenProject;
@@ -75,6 +81,7 @@ import org.netbeans.modules.maven.execute.cmd.ShellConstructor;
 import org.netbeans.modules.maven.indexer.api.RepositoryIndexer;
 import org.netbeans.modules.maven.indexer.api.RepositoryPreferences;
 import org.netbeans.modules.maven.options.MavenSettings;
+import org.netbeans.modules.maven.runjar.MavenExecuteUtils;
 import org.netbeans.spi.project.ui.support.BuildExecutionSupport;
 import org.openide.LifecycleManager;
 import org.openide.awt.HtmlBrowser;
@@ -99,25 +106,43 @@ import org.openide.windows.OutputListener;
 
 /**
  * support for executing maven, externally on the command line.
+ * <b>Since 2/1.144</b>, the {@link LateBoundPrerequisitesChecker} registered in Maven projects for JAR packaging by default supports 
+ * {@link ExplicitProcessParameters} API. The caller of the execute-type action can request to append or replace VM or user
+ * application parameters. The parameters recorded in the POM.xml or NetBeans action mappings are augmented according to that
+ * instructions:
+ * <ul>
+ * <li><b>launcherArgs</b> are mapped to VM arguments (precede main class name)
+ * <li><b>args</b> are mapped to user application arguments (after main class name)
+ * </ul>
+ * VM parameters injected by {@link StartupExtender} API are not affected by this feature. 
+ * <p>
+ * Example use:
+ * {@codesnippet MavenExecutionTestBase#samplePassAdditionalVMargs}
+ * The example will <b>append</b> <code>-DvmArg2=2</code> to VM arguments and <b>replaces</b> all user
+ * program arguments with <code>"paramY"</code>. Append mode can be controlled using {@link ExplicitProcessParameters.Builder#appendArgs} or
+ * {@link ExplicitProcessParameters.Builder#appendPriorityArgs}.
+ *
  * @author  Milos Kleint (mkleint@codehaus.org)
+ * @author  Svata Dedic (svatopluk.dedic@gmail.com)
  */
 public class MavenCommandLineExecutor extends AbstractMavenExecutor {
-    static final String ENV_PREFIX = "Env."; //NOI18N
-    static final String ENV_JAVAHOME = "Env.JAVA_HOME"; //NOI18N
+    static final String ENV_PREFIX = MavenExecuteUtils.ENV_PREFIX;
+    static final String INTERNAL_PREFIX = "NbIde."; //NOI18N
+    static final String ENV_JAVAHOME = ENV_PREFIX + "JAVA_HOME"; //NOI18N
 
     private static final String KEY_UUID = "NB_EXEC_MAVEN_PROCESS_UUID"; //NOI18N
-    
+
     private static final String NETBEANS_MAVEN_COMMAND_LINE = "NETBEANS_MAVEN_COMMAND_LINE"; //NOI18N
-    
+
     private Process process;
     private String processUUID;
     private Process preProcess;
     private String preProcessUUID;
     private static final SpecificationVersion VER17 = new SpecificationVersion("1.7"); //NOI18N
     private static final Logger LOGGER = Logger.getLogger(MavenCommandLineExecutor.class.getName());
-    
+
     private static final RequestProcessor RP = new RequestProcessor(MavenCommandLineExecutor.class.getName(),1);
-    
+
     private final static RequestProcessor UPDATE_INDEX_RP = new RequestProcessor(RunUtils.class.getName(), 5);
     /**
      * Execute maven build in NetBeans execution engine.
@@ -136,7 +161,7 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
         }
         return runner.execute(config, io, tc);
     }
-    
+
     /**
      * Hooks for tests to mock the Maven execution.
      */
@@ -170,12 +195,12 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
             return task;
         }
     }
-    
+
     public MavenCommandLineExecutor(RunConfig conf, InputOutput io, TabContext tc) {
         super(conf, tc);
         this.io = io;
     }
-    
+
     /**
      * not to be called directly.. use execute();
      */
@@ -200,9 +225,8 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
         }
         int executionresult = -10;
         final InputOutput ioput = getInputOutput();
-        
-        final ProgressHandle handle = ProgressHandleFactory.createHandle(clonedConfig.getTaskDisplayName(), this, new AbstractAction() {
 
+        final ProgressHandle handle = ProgressHandle.createHandle(clonedConfig.getTaskDisplayName(), this, new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 ioput.select();
@@ -225,7 +249,7 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
                 }
                 if (clonedConfig.getPreExecution() != null) {
                     if (!elem.checkRunConfig(clonedConfig.getPreExecution(), exCon)) {
-                         //#238360 when the check says don't execute, we still need to close the output and mark it for reuse
+                        //#238360 when the check says don't execute, we still need to close the output and mark it for reuse
                         ioput.getOut().close();
                         ioput.getErr().close();
                         actionStatesAtFinish(null, null);
@@ -236,9 +260,8 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
                 }
             }
         }
-        
+
 //        final Properties originalProperties = clonedConfig.getProperties();
-        
         handle.start();
         processInitialMessage();
         boolean isMaven3 = !isMaven2();
@@ -251,7 +274,6 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
             }
         }
 
-        
         CommandLineOutputHandler out = new CommandLineOutputHandler(ioput, clonedConfig.getProject(), handle, clonedConfig, isMaven3 && singlethreaded);
         try {
             BuildExecutionSupport.registerRunningItem(item);
@@ -262,12 +284,7 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
                 ProcessBuilder builder = constructBuilder(clonedConfig.getPreExecution(), ioput);
                 preProcessUUID = UUID.randomUUID().toString();
                 builder.environment().put(KEY_UUID, preProcessUUID);
-                preProcess = builder.start();
-                out.setStdOut(preProcess.getInputStream());
-                out.setStdIn(preProcess.getOutputStream());
-                executionresult = preProcess.waitFor();
-                out.waitFor();
-                if (executionresult != 0) {
+                if (executeProcess(out, builder, (p) -> preProcess = p) != 0) {
                     return;
                 }
             }
@@ -281,11 +298,7 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
             printCoSWarning(clonedConfig, ioput);
             processUUID = UUID.randomUUID().toString();
             builder.environment().put(KEY_UUID, processUUID);
-            process = builder.start();
-            out.setStdOut(process.getInputStream());
-            out.setStdIn(process.getOutputStream());
-            executionresult = process.waitFor();
-            out.waitFor();
+            executionresult = executeProcess(out, builder, (p) -> process = p);
         } catch (IOException x) {
             if (Utilities.isWindows()) { //#153101
                 processIssue153101(x, ioput);
@@ -318,18 +331,15 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
                 ioput.getErr().close();
                 actionStatesAtFinish(out.createResumeFromFinder(), out.getExecutionTree());
                 markFreeTab();
-                RP.post(new Runnable() { //#103460
-                    @Override
-                    public void run() {
-                        //TODO we eventually know the coordinates of all built projects via EventSpy.
-                        if (clonedConfig.getProject() != null) {
-                            NbMavenProject.fireMavenProjectReload(clonedConfig.getProject());
-                        }
+                final Project prj = clonedConfig.getProject();
+                if (prj != null) {
+                    NbMavenProjectImpl impl = prj.getLookup().lookup(NbMavenProjectImpl.class);
+                    if (impl != null) {
+                        RequestProcessor.Task reloadTask = impl.fireProjectReload();
+                        reloadTask.waitFinished();
                     }
-                });
-                
+                }
             }
-            
         }
     }
 
@@ -344,12 +354,25 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
         }
     }
 
+    /**
+     * Overridable by tests.
+     */
+    int executeProcess(CommandLineOutputHandler out, ProcessBuilder builder, Consumer<Process> processSetter) throws IOException, InterruptedException {
+        Process p = builder.start();
+        processSetter.accept(p);
+        out.setStdOut(p.getInputStream());
+        out.setStdIn(p.getOutputStream());
+        int executionresult = p.waitFor();
+        out.waitFor();
+        return executionresult;
+    }
+    
     private void kill(Process prcs, String uuid) {
         Map<String, String> env = new HashMap<String, String>();
         env.put(KEY_UUID, uuid);
         Processes.killTree(prcs, env);
     }
-    
+
     @Override
     public boolean cancel() {
         final Process pre = preProcess;
@@ -369,7 +392,7 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
         });
         return true;
     }
-        
+
     private static List<String> createMavenExecutionCommand(RunConfig config, Constructor base) {
         List<String> toRet = new ArrayList<String>(base.construct());
 
@@ -393,21 +416,20 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
         String quote = "\"";
         // the command line parameters with space in them need to be quoted and escaped to arrive
         // correctly to the java runtime on windows
-        String escaped = "\\" + quote;        
-        for (Map.Entry<? extends String,? extends String> entry : config.getProperties().entrySet()) {
-            if (!entry.getKey().startsWith(ENV_PREFIX)) {
-                //skip envs, these get filled in later.
-                //#228901 since u21 we need to use cmd /c to execute on windows, quotes get escaped and when there is space in value, the value gets wrapped in quotes.
-                String value = (Utilities.isWindows() ? entry.getValue().replace(quote, escaped) : entry.getValue().replace(quote, "'"));
-                if (Utilities.isWindows() && value.endsWith("\"")) {
-                    //#201132 property cannot end with 2 double quotes, add a space to the end after our quote to prevent the state
-                    value = value + " ";
-                }
-                String s = "-D" + entry.getKey() + "=" + (Utilities.isWindows() && value.contains(" ") ? quote + value + quote : value);            
-                toRet.add(s);
+        for (Map.Entry<? extends String, ? extends String> entry : config.getProperties().entrySet()) {
+            String k = entry.getKey();
+            // filter out env vars AND internal properties.
+            if (k.startsWith(ENV_PREFIX) || k.startsWith(INTERNAL_PREFIX)) {
+                continue;
             }
+            //skip envs, these get filled in later.
+            //#228901 since u21 we need to use cmd /c to execute on windows, quotes get escaped and when there is space in value, the value gets wrapped in quotes.
+            String value = quote2apos(entry.getValue());
+            String p = "-D" + entry.getKey() + "=" + value;
+            String s = (Utilities.isWindows() && value.contains(" ") ? quote + p + quote : p);
+            toRet.add(s);
         }
-        
+
         //TODO based on a property? or UI option? can this backfire?
         //#224526 
         //execute in encoding that is based on project.build.sourceEncoding to have the output of exec:exec, surefire:test and others properly encoded.
@@ -424,7 +446,7 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
         if (!config.isInteractive()) {
             toRet.add("--batch-mode"); //NOI18N
         }
-        
+
         if (!config.isRecursive()) {
             toRet.add("--non-recursive");//NOI18N
         }
@@ -484,7 +506,7 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
         }
 
         String profiles = "";//NOI18N
-        
+
         for (Object profile : config.getActivatedProfiles()) {
             profiles = profiles + "," + profile;//NOI18N
         }
@@ -492,12 +514,58 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
             profiles = profiles.substring(1);
             toRet.add("-P" + profiles);//NOI18N
         }
-        
+
         for (String goal : config.getGoals()) {
             toRet.add(goal);
         }
-        
+
         return toRet;
+    }
+   
+    /**
+     * Quotes the parameter string using apostrohphes. As Maven does not understand \' escape in quoted string, work around by terminating single-quote
+     * and pass the apostrophe as double-quoted single-character string, then open single-quote again.
+     * @param s
+     * @return quoted string
+     */
+    private static String quote2apos(String s) {
+        boolean inQuote = false;
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+            if (c == '\\') {
+                i++;
+                if (i < s.length()) {
+                    char c2 = s.charAt(i);
+                    if (inQuote) {
+                        if (c2 == '\'') {
+                            sb.append("'\"'\"'");
+                            continue;
+                        } else if (c2 == '\"') {
+                            sb.append(c2);
+                            continue;
+                        }
+                    }
+                    sb.append(c);
+                    sb.append(c2);
+                } else {
+                    sb.append(c);
+                }
+            } else if (c == '\'') {
+                if (inQuote) {
+                    sb.append("'\"'\"'");
+                } else {
+                    inQuote = !inQuote;
+                    sb.append('\'');
+                }
+            } else if (c == '"') {
+                inQuote = !inQuote;
+                sb.append('\'');
+            } else {
+                sb.append(c);
+            }
+        }
+        return sb.toString();
     }
 
     private ProcessBuilder constructBuilder(final RunConfig clonedConfig, InputOutput ioput) {
@@ -553,22 +621,32 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
             }
         }
 
-        File mavenHome = EmbedderFactory.getEffectiveMavenHome();
-        if (MavenSettings.getDefault().isUseBestMaven()) {
-            File n = guessBestMaven(clonedConfig, ioput);
-            if (n != null) {
-                mavenHome = n;
-            }
+        Constructor constructeur;
+        File mavenHome = null;
+        File wrapper = null;
+        if (MavenSettings.getDefault().isPreferMavenWrapper()) {
+            wrapper = searchMavenWrapper(config);
         }
-        Constructor constructeur = new ShellConstructor(mavenHome);
-
-        List<String> cmdLine = createMavenExecutionCommand(clonedConfig, constructeur);
+        if (wrapper != null) {
+            constructeur = new WrapperShellConstructor(wrapper);
+        } else {
+            mavenHome = EmbedderFactory.getEffectiveMavenHome();
+            if (MavenSettings.getDefault().isUseBestMaven()) {
+                File n = guessBestMaven(clonedConfig, ioput);
+                if (n != null) {
+                    mavenHome = n;
+                }
+            }
+            constructeur = new ShellConstructor(mavenHome);
+        }
         
+        List<String> cmdLine = createMavenExecutionCommand(clonedConfig, constructeur);
+
         //#228901 on windows, since u21 we must use cmd /c
         // the working format is ""C:\Users\mkleint\space in path\apache-maven-3.0.4\bin\mvn.bat"
-                           //-Dexec.executable=java -Dexec.args="-jar
-                           //C:\Users\mkleint\Documents\NetBeansProjects\JavaApplication13\dist\JavaApplication13.jar
-                           //-Dxx=\"space path\" -Dfoo=bar" exec:exec""
+        //-Dexec.executable=java -Dexec.args="-jar
+        //C:\Users\mkleint\Documents\NetBeansProjects\JavaApplication13\dist\JavaApplication13.jar
+        //-Dxx=\"space path\" -Dfoo=bar" exec:exec""
         if (cmdLine.get(0).equals("cmd")) {
             //merge all items after cmd /c into one string and quote it.
             StringBuilder sb = new StringBuilder();
@@ -577,12 +655,12 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
             it.next(); //cmd
             it.next(); //c
             String m = it.next();
-            
+
             sb.append(m);
             while (it.hasNext()) {
                 sb.append(" ").append(it.next());
             }
-            
+
             // NETBEANS-3251, NETBEANS-3254: 
             // JDK-8221858 (non public) / CVE-2019-2958 changed the way cmd 
             // command lines are verified and made it "difficult" to have embedded 
@@ -609,18 +687,24 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
                 continue;// #191374: would prevent bin/mvn from using selected installation
             }
             // TODO: do we really put *all* the env vars there? maybe filter, M2_HOME and JDK_HOME?
-            builder.environment().put(env, val);
+            if (MavenExecuteUtils.isEnvRemovedValue(val)) {
+                builder.environment().remove(env);
+            } else {
+                builder.environment().put(env, val);
+            }
             if (!env.equals(CosChecker.NETBEANS_PROJECT_MAPPINGS)
-                && !env.equals(NETBEANS_MAVEN_COMMAND_LINE)) { //don't show to user
+                    && !env.equals(NETBEANS_MAVEN_COMMAND_LINE)) { //don't show to user
                 display.append(Utilities.escapeParameters(new String[] {env + "=" + val})).append(' '); // NOI18N
             }
         }
-       
-        //#195039
-        builder.environment().put("M2_HOME", mavenHome.getAbsolutePath());
-        if (!mavenHome.equals(EmbedderFactory.getDefaultMavenHome())) {
-            //only relevant display when using the non-default maven installation.
-            display.append(Utilities.escapeParameters(new String[] {"M2_HOME=" + mavenHome.getAbsolutePath()})).append(' '); // NOI18N
+
+        if (mavenHome != null) {
+            //#195039
+            builder.environment().put("M2_HOME", mavenHome.getAbsolutePath());
+            if (!mavenHome.equals(EmbedderFactory.getDefaultMavenHome())) {
+                //only relevant display when using the non-default maven installation.
+                display.append(Utilities.escapeParameters(new String[] {"M2_HOME=" + mavenHome.getAbsolutePath()})).append(' '); // NOI18N
+            }
         }
 
         // hide the bypass command and output the command as it used to be (before the bypass command was added)
@@ -638,9 +722,9 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
             }
             display.append(Utilities.escapeParameters(command.toArray(new String[command.size()])));
         }
-        
+
         printGray(ioput, display.toString());
-        
+
         return builder;
     }
 
@@ -700,14 +784,14 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
             if (isMaven2()) {
                 printGray(ioput, "WARNING: Using Maven 2.x for execution, NetBeans cannot establish links between current project and output directories of dependency projects with Compile on Save turned on. Only works with Maven 3.0+.");
             }
-            
+
         }
         if (clonedConfig.getProperties().containsKey(ModelRunConfig.EXEC_MERGED)) {
             printGray(ioput, "\nDefault '" + clonedConfig.getActionName() + "' action exec.args merged with maven-exec-plugin arguments declared in pom.xml.");
         }
-        
+
     }
-    
+
     boolean isMaven2() {
         File mvnHome = EmbedderFactory.getEffectiveMavenHome();
         String version = MavenSettings.getCommandLineMavenVersion(mvnHome);
@@ -718,6 +802,9 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
         //TEMP 
         String mavenPath = clonedConfig.getProperties().get(CosChecker.MAVENEXTCLASSPATH);
         File jar = InstalledFileLocator.getDefault().locate("maven-nblib/netbeans-eventspy.jar", "org.netbeans.modules.maven", false);
+        if (jar == null) {
+            return;
+        }
         if (mavenPath == null) {
             mavenPath = "";
         } else {
@@ -744,7 +831,7 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
             }
         }
         return list.contains("-T") || list.contains("--threads");
-    } 
+    }
 
     private File guessBestMaven(RunConfig clonedConfig, InputOutput ioput) {
         MavenProject mp = clonedConfig.getMavenProject();
@@ -831,8 +918,8 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
         if (ver == null) {
             return null;
         }
-        
-        File f = getAltMavenLocation(); 
+
+        File f = getAltMavenLocation();
         File child = FileUtil.normalizeFile(new File(f, "apache-maven-" + ver));
         if (child.exists()) {
             return child;
@@ -844,7 +931,7 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
                 //this url pattern works for all versions except the last one 3.2.3
                 //which is only under <mirror>/apache/maven/maven-3/3.2.3/binaries/
                 URL[] urls = new URL[] {new URL("http://archive.apache.org/dist/maven/binaries/apache-maven-" + ver + "-bin.zip"),
-                                        new URL("http://archive.apache.org/dist/maven/maven-3/" + ver + "/binaries/apache-maven-" + ver + "-bin.zip")};
+                    new URL("http://archive.apache.org/dist/maven/maven-3/" + ver + "/binaries/apache-maven-" + ver + "-bin.zip")};
                 InputStream is = null;
                 for (URL u : urls) {
                     try {
@@ -913,5 +1000,61 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
             }
         }
         return Places.getCacheSubdirectory("downloaded-mavens");
+    }
+    
+    private File searchMavenWrapper(RunConfig config) {
+        String fileName = Utilities.isWindows() ? "mvnw.cmd" : "mvnw"; //NOI18N
+        MavenProject project = config.getMavenProject();
+        while (project != null) {
+            File baseDir = project.getBasedir();
+            if (baseDir != null) {
+                File mvnw = new File(baseDir, fileName);
+                if (mvnw.exists()) {
+                    return mvnw;
+                }
+            }
+            project = project.getParent();
+        }
+        return null;
+    }
+
+    // part copied from ShellConstructor - @TODO consolidate here
+    private static class WrapperShellConstructor implements Constructor {
+
+        private final @NonNull File wrapper;
+
+        WrapperShellConstructor(@NonNull File wrapper) {
+            this.wrapper = wrapper;
+        }
+
+        @Override
+        public List<String> construct() {
+            //#164234
+            //if maven.bat file is in space containing path, we need to quote with simple quotes.
+            String quote = "\"";
+            List<String> toRet = new ArrayList<>();
+            toRet.add(quoteSpaces(wrapper.getAbsolutePath(), quote));
+
+            if (Utilities.isWindows()) { //#153101, since #228901 always on windows use cmd /c
+                toRet.add(0, "/c"); //NOI18N
+                toRet.add(0, "cmd"); //NOI18N
+            }
+            return toRet;
+        }
+
+        // we run the shell/bat script in the process, on windows we need to quote any spaces
+        //once/if we get rid of shell/bat execution, we might need to remove this
+        //#164234
+        private static String quoteSpaces(String val, String quote) {
+            if (Utilities.isWindows()) {
+                //since #228901 always quote
+                //#208065 not only space but a few other characters are to be quoted..
+                //if (val.indexOf(' ') != -1 || val.indexOf('=') != -1 || val.indexOf(";") != -1 || val.indexOf(",") != -1) { //NOI18N
+                return quote + val + quote;
+                //}
+            }
+            return val;
+        }
+
     }
 }

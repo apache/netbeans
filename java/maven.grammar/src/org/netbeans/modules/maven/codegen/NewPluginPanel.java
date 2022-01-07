@@ -562,7 +562,7 @@ public class NewPluginPanel extends javax.swing.JPanel implements ChangeListener
     }
 
     private void updateGoals() {
-        DefaultListModel m = (DefaultListModel) goalsList.getModel();
+        DefaultListModel<GoalEntry> m = (DefaultListModel<GoalEntry>) goalsList.getModel();
         m.clear();
 
         if (selVi != null) {

@@ -29,6 +29,8 @@ import org.netbeans.modules.php.editor.parser.astnodes.ClassDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.Comment;
 import org.netbeans.modules.php.editor.parser.astnodes.FunctionName;
 import org.netbeans.modules.php.editor.parser.astnodes.Identifier;
+import org.netbeans.modules.php.editor.parser.astnodes.NamespaceName;
+import org.netbeans.modules.php.editor.parser.astnodes.NullableType;
 import org.netbeans.modules.php.editor.parser.astnodes.PHPDocBlock;
 import org.netbeans.modules.php.editor.parser.astnodes.PHPDocMethodTag;
 import org.netbeans.modules.php.editor.parser.astnodes.PHPDocTag;
@@ -36,6 +38,7 @@ import org.netbeans.modules.php.editor.parser.astnodes.PHPDocTypeTag;
 import org.netbeans.modules.php.editor.parser.astnodes.PHPDocVarTypeTag;
 import org.netbeans.modules.php.editor.parser.astnodes.Program;
 import org.netbeans.modules.php.editor.parser.astnodes.Scalar;
+import org.netbeans.modules.php.editor.parser.astnodes.UnionType;
 import org.netbeans.modules.php.editor.parser.astnodes.Variable;
 import org.netbeans.modules.php.editor.parser.astnodes.visitors.DefaultTreePathVisitor;
 import org.netbeans.modules.php.editor.parser.astnodes.visitors.DefaultVisitor;
@@ -70,8 +73,8 @@ public final class Utils {
             if (possible != null && (possible.getEndOffset() + 1 < node.getStartOffset())) {
                 List<ASTNode> nodes = (new NodeRangeLocator()).locate(root, new OffsetRange(possible.getEndOffset() + 1, node.getStartOffset() - 1));
                 if (!nodes.isEmpty()) {
-                    boolean isConstant = isConstantDeclaration(nodes, node);
-                    if (!isConstant) {
+                    if (!isConstantDeclaration(nodes, node)
+                            && !isFieldDeclaration(nodes, node)) {
                         possible = null;
                     }
                 }
@@ -94,6 +97,19 @@ public final class Utils {
             }
         }
         return isConstantDeclaration;
+    }
+
+    private static boolean isFieldDeclaration(List<ASTNode> nodes, ASTNode node) {
+        boolean isFieldDeclaration = false;
+        if (nodes.size() == 1 && (node instanceof Identifier)) {
+            ASTNode next = nodes.iterator().next();
+            if (next instanceof NamespaceName
+                    || next instanceof NullableType
+                    || next instanceof UnionType) {
+                isFieldDeclaration = true;
+            }
+        }
+        return isFieldDeclaration;
     }
 
     public static Program getRoot(ParserResult result) {

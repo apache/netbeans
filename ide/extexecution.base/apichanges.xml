@@ -87,6 +87,18 @@ is the proper place.
 
     <changes>
         <change>
+            <api name="extexecution_base_api"/>
+            <summary>Define API to augment parameters for external launches</summary>
+            <version major="2" minor="17"/>
+            <author login="sdedic"/>
+            <compatibility addition="yes" semantic="compatible"/>
+            <description>
+                <a href="@TOP@/org/netbeans/api/extexecution/base/ExplicitProcessParameters.html">ExplicitProcessParameters</a>
+                instructions and builder is defined. Instructions can be placed into effective default Lookup to augment
+                parameters or switches passed to external processes, if the launcher implementation supports this feature.
+            </description>
+        </change>
+        <change>
             <api name="extexecution_base_spi"/>
             <summary>Advice to throw UnsupportedOperationException</summary>
             <version major="1" minor="4"/>

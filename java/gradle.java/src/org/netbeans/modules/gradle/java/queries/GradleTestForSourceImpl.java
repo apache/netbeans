@@ -19,7 +19,6 @@
 
 package org.netbeans.modules.gradle.java.queries;
 
-import org.netbeans.modules.gradle.api.NbGradleProject;
 import org.netbeans.modules.gradle.java.api.GradleJavaSourceSet;
 import org.netbeans.modules.gradle.java.api.GradleJavaSourceSet.SourceType;
 import org.netbeans.modules.gradle.java.api.GradleJavaProject;
@@ -33,7 +32,6 @@ import java.util.List;
 import java.util.Map;
 import org.netbeans.api.project.Project;
 import org.netbeans.spi.java.queries.MultipleRootsUnitTestForSourceQueryImplementation;
-import org.netbeans.spi.project.ProjectServiceProvider;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Utilities;
@@ -42,11 +40,10 @@ import org.openide.util.Utilities;
  *
  * @author Laszlo Kishalmi
  */
-@ProjectServiceProvider(service = MultipleRootsUnitTestForSourceQueryImplementation.class, projectType = NbGradleProject.GRADLE_PLUGIN_TYPE + "/java-base")
 public class GradleTestForSourceImpl implements MultipleRootsUnitTestForSourceQueryImplementation {
 
     private static final SourceType[] MAIN_SOURCES = new SourceType[]{
-        SourceType.JAVA, SourceType.GROOVY, SourceType.SCALA
+        SourceType.JAVA, SourceType.GROOVY, SourceType.SCALA, SourceType.KOTLIN
     };
 
     private final Project project;

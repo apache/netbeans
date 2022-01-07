@@ -302,17 +302,20 @@ public class TextRegexpUtilTest extends NbTestCase {
     }
     
     public void testCanBeMultilinePattern() {
-        assertFalse(TextRegexpUtil.canBeMultilinePattern("a\\d\\d\\da"));
-        assertFalse(TextRegexpUtil.canBeMultilinePattern(".*"));
-        assertFalse(TextRegexpUtil.canBeMultilinePattern("(?m)^x.*y$"));
-        assertTrue(TextRegexpUtil.canBeMultilinePattern("(?ms-x)test.*test"));
-        assertTrue(TextRegexpUtil.canBeMultilinePattern("test\\ntest"));
-        assertTrue(TextRegexpUtil.canBeMultilinePattern("test\\rtest"));
-        assertTrue(TextRegexpUtil.canBeMultilinePattern("test\\r\\ntest"));
-        assertTrue(TextRegexpUtil.canBeMultilinePattern("test\\ftest"));
-        assertTrue(TextRegexpUtil.canBeMultilinePattern("test\\u000Btest"));
-        assertTrue(TextRegexpUtil.canBeMultilinePattern("test\\x85test"));
-        assertTrue(TextRegexpUtil.canBeMultilinePattern("test\\s*86test"));
+        assertFalse(TextRegexpUtil.isMultilineOrMatchesMultiline("a\\d\\d\\da"));
+        assertFalse(TextRegexpUtil.isMultilineOrMatchesMultiline(".*"));
+        assertFalse(TextRegexpUtil.isMultilineOrMatchesMultiline("(?m)^x.*y$"));
+        assertTrue(TextRegexpUtil.isMultilineOrMatchesMultiline("(?ms-x)test.*test"));
+        assertTrue(TextRegexpUtil.isMultilineOrMatchesMultiline("test\\ntest"));
+        assertTrue(TextRegexpUtil.isMultilineOrMatchesMultiline("test\\rtest"));
+        assertTrue(TextRegexpUtil.isMultilineOrMatchesMultiline("test\\r\\ntest"));
+        assertTrue(TextRegexpUtil.isMultilineOrMatchesMultiline("test\\ftest"));
+        assertTrue(TextRegexpUtil.isMultilineOrMatchesMultiline("test\\u000Btest"));
+        assertTrue(TextRegexpUtil.isMultilineOrMatchesMultiline("test\\x85test"));
+        assertTrue(TextRegexpUtil.isMultilineOrMatchesMultiline("test\\s*86test"));
+        assertTrue(TextRegexpUtil.isMultilineOrMatchesMultiline("test\ntest"));
+        assertTrue(TextRegexpUtil.isMultilineOrMatchesMultiline("test\rtest"));
+        assertTrue(TextRegexpUtil.isMultilineOrMatchesMultiline("test\r\ntest"));
     }
 
     public void testLiteralMatches() {

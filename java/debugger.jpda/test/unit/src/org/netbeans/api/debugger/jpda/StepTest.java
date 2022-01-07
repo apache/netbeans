@@ -229,6 +229,56 @@ public class StepTest extends NbTestCase {
         }
     }
 
+    public void testStepAndContinueOnBP() throws Exception {
+        String app = "org.netbeans.api.debugger.jpda.testapps.StepAndContinueApp";
+        try {
+            JPDASupport.removeAllBreakpoints();
+            Utils.BreakPositions bp = Utils.getBreakPositions(sourceRoot + app.replace('.', '/') + ".java");
+            LineBreakpoint lb = bp.getLineBreakpoints().get(0);
+            dm.addBreakpoint(lb);
+            support = JPDASupport.attach(app);
+            support.waitState (JPDADebugger.STATE_STOPPED);
+            dm.removeBreakpoint(lb);
+            assertEquals (
+                "Execution stopped in wrong class",
+                support.getDebugger().getCurrentCallStackFrame().getClassName(),
+                app
+            );
+            assertEquals (
+                "Execution stopped at wrong line",
+                lb.getLineNumber(),
+                support.getDebugger().getCurrentCallStackFrame().getLineNumber(null)
+            );
+            lb = bp.getLineBreakpoints().get(1);
+            dm.addBreakpoint(lb);
+            support.stepOver();
+            suspendedLineCheck(bp.getStopLine("Over1"));
+            support.stepOver();
+            breakpointCheckEvalCont(lb.getLineNumber());
+            suspendedLineCheck(bp.getStopLine("Over2"));
+            support.stepOver();
+            breakpointCheckEvalCont(lb.getLineNumber());
+            suspendedLineCheck(bp.getStopLine("Over3"));
+            support.stepOver();
+            suspendedLineCheck(bp.getStopLine("Over4"));
+            support.stepOver();
+            suspendedLineCheck(bp.getStopLine("Over5"));
+            support.stepInto();
+            suspendedLineCheck(bp.getStopLine("Into6"));
+            support.stepOut();
+            breakpointCheckEvalCont(lb.getLineNumber());
+            support.stepOver();
+            suspendedLineCheck(bp.getStopLine("Out7"));
+            support.stepInto();
+            suspendedLineCheck(bp.getStopLine("Into8"));
+            support.stepOut();
+            breakpointCheckEvalCont(lb.getLineNumber());
+            suspendedLineCheck(bp.getStopLine("Out7"));
+        } finally {
+            support.doFinish ();
+        }
+    }
+
     private void stepCheck (
         Object stepType, 
         String clsExpected, 
@@ -245,6 +295,27 @@ public class StepTest extends NbTestCase {
             lineExpected, 
             support.getDebugger ().getCurrentCallStackFrame ().
                 getLineNumber (null)
+        );
+    }
+
+    private void breakpointCheckEvalCont(int lineExpected) {
+        suspendedLineCheck(lineExpected);
+        // We invoke a method:
+        try {
+            assertEquals("10", support.getDebugger().evaluate("m1()").getValue());
+        } catch (InvalidExpressionException ex) {
+            throw new AssertionError(ex);
+        }
+        // Then we do Continue to finish the original step:
+        support.doContinue();
+        support.waitState(JPDADebugger.STATE_STOPPED);
+    }
+
+    private void suspendedLineCheck(int lineExpected) {
+        assertEquals (
+            "Execution stopped at wrong line",
+            lineExpected,
+            support.getDebugger().getCurrentCallStackFrame().getLineNumber(null)
         );
     }
 }

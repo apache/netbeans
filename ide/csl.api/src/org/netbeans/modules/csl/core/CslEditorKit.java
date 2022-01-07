@@ -324,7 +324,7 @@ public final class CslEditorKit extends NbEditorKit {
                         int newOffset = bracketCompletion.beforeBreak(doc, caret.getDot(), target);
 
                         if (newOffset >= 0) {
-                            return new Integer(newOffset);
+                            return Integer.valueOf(newOffset);
                         }
                     } catch (BadLocationException ble) {
                         Exceptions.printStackTrace(ble);

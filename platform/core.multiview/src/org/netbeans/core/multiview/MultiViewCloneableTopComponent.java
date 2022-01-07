@@ -285,7 +285,7 @@ public final class MultiViewCloneableTopComponent extends CloneableTopComponent
         }
         // now try a best guess.. iterate the already created elements and check if any of
         // them is a Pane
-        Collection col = peer.model.getCreatedElements();
+        Collection<MultiViewElement> col = peer.model.getCreatedElements();
         Iterator<MultiViewElement> it = col.iterator();
         while (it.hasNext()) {
             el = it.next();

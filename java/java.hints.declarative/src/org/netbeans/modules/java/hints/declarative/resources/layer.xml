@@ -26,6 +26,10 @@
         <folder name="text">
             <folder name="x-javahints">
                 <folder name="Actions">
+                    <file name="RunFile.shadow">
+                        <attr name="originalFile" stringvalue="Actions/Project/org-netbeans-modules-project-ui-RunSingle.instance"/>
+                        <attr name="position" intvalue="490"/>
+                    </file>
                     <file name="org-openide-actions-CopyAction.shadow">
                         <attr name="originalFile" stringvalue="Actions/Edit/org-openide-actions-CopyAction.instance"/>
                         <attr name="position" intvalue="400"/>
@@ -81,6 +85,10 @@
                     <file name="sep-5.instance">
                         <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
                         <attr name="position" intvalue="1200"/>
+                    </file>
+                    <file name="sep-6.instance">
+                        <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                        <attr name="position" intvalue="410"/>
                     </file>
                 </folder>
                 <folder name="Factories">

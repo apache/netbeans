@@ -92,7 +92,7 @@ public class EarDataObject extends DD2beansDataObject
     private boolean unparsable=true;
     
     /** List of updates to ejbs that should be processed */
-    private Vector updates;
+    private Vector<DDChangeEvent> updates;
     
     private RequestProcessor.Task updateTask;
 
@@ -142,7 +142,7 @@ public class EarDataObject extends DD2beansDataObject
     }
 
     private void refreshSourceFolders () {
-        ArrayList srcRootList = new ArrayList ();
+        List<FileObject> srcRootList = new ArrayList<>();
         
         Project project = FileOwnerQuery.getOwner (getPrimaryFile ());
         if (project != null) {
@@ -235,7 +235,7 @@ public class EarDataObject extends DD2beansDataObject
      * @return String for node delegate
     */
     public String getStringForInvalidDocument(SAXParseError error) {
-        return NbBundle.getMessage (EarDataObject.class, "TXT_errorOnLine", new Integer(error.getErrorLine()));
+        return NbBundle.getMessage (EarDataObject.class, "TXT_errorOnLine", error.getErrorLine());
     }
                     
     /** Create document from the Node. This method is called after Node (Node properties)is changed.
@@ -353,7 +353,7 @@ public class EarDataObject extends DD2beansDataObject
     public void deploymentChange (DDChangeEvent evt) {
         synchronized (this) {
             if (updates == null) {
-                updates = new Vector ();
+                updates = new Vector<>();
             }
             updates.addElement (evt);
         }
@@ -498,12 +498,12 @@ public class EarDataObject extends DD2beansDataObject
 
     private RequestProcessor.Task elementTask;
     private List deletedEjbNames;
-    private List newFileNames;
+    private List<String> newFileNames;
     
     private void elementCreated(final String elementName) {
         synchronized (this) {
             if (newFileNames==null) {
-                newFileNames=new ArrayList();
+                newFileNames=new ArrayList<>();
             }
             newFileNames.add(elementName);
         }

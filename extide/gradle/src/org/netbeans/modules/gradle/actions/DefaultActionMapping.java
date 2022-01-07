@@ -145,5 +145,10 @@ public class DefaultActionMapping implements ActionMapping {
         }
         return Objects.equals(this.withPlugins, other.withPlugins);
     }
+
+    public static DefaultActionMapping DISABLED = new DefaultActionMapping();
     
+    static {
+        DISABLED.reloadRule =  ReloadRule.NEVER;
+    }
 }

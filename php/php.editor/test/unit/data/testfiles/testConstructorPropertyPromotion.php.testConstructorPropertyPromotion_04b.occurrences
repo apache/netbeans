@@ -1,0 +1,2 @@
+            protected int|string|\Test2\|>MARK_OCCURRENCES:Foo<| $field2,
+    class |>MARK_OCCURRENCES:F^oo<| {}

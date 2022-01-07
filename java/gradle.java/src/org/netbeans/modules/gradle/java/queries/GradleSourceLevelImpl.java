@@ -30,7 +30,6 @@ import javax.swing.event.ChangeListener;
 import org.netbeans.api.java.queries.SourceLevelQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.spi.java.queries.SourceLevelQueryImplementation2;
-import org.netbeans.spi.project.ProjectServiceProvider;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.ChangeSupport;
@@ -40,8 +39,6 @@ import org.openide.util.WeakListeners;
  *
  * @author Laszlo Kishalmi
  */
-@ProjectServiceProvider(service =  SourceLevelQueryImplementation2.class,
-        projectType = NbGradleProject.GRADLE_PLUGIN_TYPE + "/java-base")
 public class GradleSourceLevelImpl implements SourceLevelQueryImplementation2 {
 
     final Project project;

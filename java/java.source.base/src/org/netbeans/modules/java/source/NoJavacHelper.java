@@ -24,6 +24,7 @@ import java.security.ProtectionDomain;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.lang.model.SourceVersion;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Opcodes;
 import org.openide.modules.OnStart;
@@ -41,9 +42,9 @@ public class NoJavacHelper {
             return res;
         }
         try {
-            Class.forName("javax.lang.model.element.ModuleElement");
+            SourceVersion.valueOf("RELEASE_17");
             res = true;
-        } catch (ClassNotFoundException ex) {
+        } catch (IllegalArgumentException ex) {
             //OK
             res = false;
         }

@@ -20,12 +20,10 @@
 package org.netbeans.modules.gradle.java.execute;
 
 import org.netbeans.modules.gradle.api.GradleBaseProject;
-import org.netbeans.modules.gradle.api.NbGradleProject;
 import org.netbeans.modules.gradle.spi.actions.AfterBuildActionHook;
 import java.io.File;
 import java.io.PrintWriter;
 import org.netbeans.api.project.Project;
-import org.netbeans.spi.project.ProjectServiceProvider;
 import org.openide.util.Lookup;
 
 import static org.netbeans.api.java.project.JavaProjectConstants.*;
@@ -37,10 +35,6 @@ import org.openide.filesystems.FileUtil;
  *
  * @author Laszlo Kishalmi
  */
-@ProjectServiceProvider(
-        service = AfterBuildActionHook.class,
-        projectType = NbGradleProject.GRADLE_PLUGIN_TYPE + "/java-base"
-)
 public class ShowJavadocHook implements AfterBuildActionHook {
 
     final Project project;

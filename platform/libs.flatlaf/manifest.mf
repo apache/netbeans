@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 OpenIDE-Module-Localizing-Bundle: org/netbeans/libs/flatlaf/Bundle.properties
-OpenIDE-Module: org.netbeans.libs.flatlaf
-OpenIDE-Module-Specification-Version: 1.2
+OpenIDE-Module: org.netbeans.libs.flatlaf/1
+OpenIDE-Module-Specification-Version: 1.9
 AutoUpdate-Show-In-Client: false
 

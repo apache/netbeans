@@ -636,7 +636,7 @@ public abstract class Runner implements Callable<Result> {
         String adminUser = server.getAdminUser();
         String adminPassword = server.getAdminPassword();
         LOGGER.log(Level.FINEST, METHOD, "setting", new Object[] {
-                    new Integer(HTTP_CONNECTION_TIMEOUT), adminUser,
+            HTTP_CONNECTION_TIMEOUT, adminUser,
                     adminPassword});
         try {
             conn.setRequestMethod(getRequestMethod());

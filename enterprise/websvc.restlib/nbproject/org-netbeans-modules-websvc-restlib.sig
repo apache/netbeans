@@ -1,22 +1,5 @@
 #Signature file v4.1
-#Version 2.16
-
-CLSS public abstract interface !annotation com.google.common.annotations.GwtCompatible
- anno 0 com.google.common.annotations.GwtCompatible(boolean emulated=false, boolean serializable=false)
- anno 0 java.lang.annotation.Documented()
- anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=CLASS)
- anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE, METHOD])
-intf java.lang.annotation.Annotation
-meth public abstract !hasdefault boolean emulated()
-meth public abstract !hasdefault boolean serializable()
-
-CLSS public abstract interface com.google.common.base.Function<%0 extends java.lang.Object, %1 extends java.lang.Object>
- anno 0 com.google.common.annotations.GwtCompatible(boolean emulated=false, boolean serializable=false)
-meth public abstract boolean equals(java.lang.Object)
- anno 1 javax.annotation.Nullable()
-meth public abstract {com.google.common.base.Function%1} apply({com.google.common.base.Function%0})
- anno 0 javax.annotation.Nullable()
- anno 1 javax.annotation.Nullable()
+#Version 2.22
 
 CLSS public abstract interface java.io.Closeable
 intf java.lang.AutoCloseable
@@ -28,7 +11,6 @@ cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.Throwable)
 cons public init(java.lang.Throwable)
 supr java.lang.Exception
-hfds serialVersionUID
 
 CLSS public abstract interface java.io.Serializable
 
@@ -53,7 +35,6 @@ meth public final java.lang.String name()
 meth public java.lang.String toString()
 meth public static <%0 extends java.lang.Enum<{%%0}>> {%%0} valueOf(java.lang.Class<{%%0}>,java.lang.String)
 supr java.lang.Object
-hfds name,ordinal
 
 CLSS public java.lang.Exception
 cons protected init(java.lang.String,java.lang.Throwable,boolean,boolean)
@@ -62,7 +43,12 @@ cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.Throwable)
 cons public init(java.lang.Throwable)
 supr java.lang.Throwable
-hfds serialVersionUID
+
+CLSS public abstract interface !annotation java.lang.FunctionalInterface
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE])
+intf java.lang.annotation.Annotation
 
 CLSS public java.lang.Object
 cons public init()
@@ -85,7 +71,6 @@ cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.Throwable)
 cons public init(java.lang.Throwable)
 supr java.lang.Exception
-hfds serialVersionUID
 
 CLSS public java.lang.Throwable
 cons protected init(java.lang.String,java.lang.Throwable,boolean,boolean)
@@ -108,8 +93,6 @@ meth public void printStackTrace(java.io.PrintStream)
 meth public void printStackTrace(java.io.PrintWriter)
 meth public void setStackTrace(java.lang.StackTraceElement[])
 supr java.lang.Object
-hfds CAUSE_CAPTION,EMPTY_THROWABLE_ARRAY,NULL_CAUSE_MESSAGE,SELF_SUPPRESSION_MESSAGE,SUPPRESSED_CAPTION,SUPPRESSED_SENTINEL,UNASSIGNED_STACK,backtrace,cause,detailMessage,serialVersionUID,stackTrace,suppressedExceptions
-hcls PrintStreamOrWriter,SentinelHolder,WrappedPrintStream,WrappedPrintWriter
 
 CLSS public abstract interface java.lang.annotation.Annotation
 meth public abstract boolean equals(java.lang.Object)
@@ -170,6 +153,19 @@ meth public {java.util.Map%1} getOrDefault(java.lang.Object,{java.util.Map%1})
 meth public {java.util.Map%1} merge({java.util.Map%0},{java.util.Map%1},java.util.function.BiFunction<? super {java.util.Map%1},? super {java.util.Map%1},? extends {java.util.Map%1}>)
 meth public {java.util.Map%1} putIfAbsent({java.util.Map%0},{java.util.Map%1})
 meth public {java.util.Map%1} replace({java.util.Map%0},{java.util.Map%1})
+
+CLSS public abstract interface java.util.function.Function<%0 extends java.lang.Object, %1 extends java.lang.Object>
+ anno 0 java.lang.FunctionalInterface()
+meth public <%0 extends java.lang.Object> java.util.function.Function<{%%0},{java.util.function.Function%1}> compose(java.util.function.Function<? super {%%0},? extends {java.util.function.Function%0}>)
+meth public <%0 extends java.lang.Object> java.util.function.Function<{java.util.function.Function%0},{%%0}> andThen(java.util.function.Function<? super {java.util.function.Function%1},? extends {%%0}>)
+meth public abstract {java.util.function.Function%1} apply({java.util.function.Function%0})
+meth public static <%0 extends java.lang.Object> java.util.function.Function<{%%0},{%%0}> identity()
+
+CLSS public abstract interface !annotation javax.inject.Qualifier
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE])
+intf java.lang.annotation.Annotation
 
 CLSS public abstract interface !annotation javax.ws.rs.ApplicationPath
  anno 0 java.lang.annotation.Documented()
@@ -302,6 +298,7 @@ fld public final static java.lang.String DELETE = "DELETE"
 fld public final static java.lang.String GET = "GET"
 fld public final static java.lang.String HEAD = "HEAD"
 fld public final static java.lang.String OPTIONS = "OPTIONS"
+fld public final static java.lang.String PATCH = "PATCH"
 fld public final static java.lang.String POST = "POST"
 fld public final static java.lang.String PUT = "PUT"
 intf java.lang.annotation.Annotation
@@ -398,6 +395,13 @@ CLSS public abstract interface !annotation javax.ws.rs.OPTIONS
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD])
  anno 0 javax.ws.rs.HttpMethod(java.lang.String value="OPTIONS")
+intf java.lang.annotation.Annotation
+
+CLSS public abstract interface !annotation javax.ws.rs.PATCH
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD])
+ anno 0 javax.ws.rs.HttpMethod(java.lang.String value="PATCH")
 intf java.lang.annotation.Annotation
 
 CLSS public abstract interface !annotation javax.ws.rs.POST
@@ -585,8 +589,12 @@ cons protected init()
 fld public final static java.lang.String JAXRS_DEFAULT_CLIENT_BUILDER_PROPERTY = "javax.ws.rs.client.ClientBuilder"
 intf javax.ws.rs.core.Configurable<javax.ws.rs.client.ClientBuilder>
 meth public abstract javax.ws.rs.client.Client build()
+meth public abstract javax.ws.rs.client.ClientBuilder connectTimeout(long,java.util.concurrent.TimeUnit)
+meth public abstract javax.ws.rs.client.ClientBuilder executorService(java.util.concurrent.ExecutorService)
 meth public abstract javax.ws.rs.client.ClientBuilder hostnameVerifier(javax.net.ssl.HostnameVerifier)
 meth public abstract javax.ws.rs.client.ClientBuilder keyStore(java.security.KeyStore,char[])
+meth public abstract javax.ws.rs.client.ClientBuilder readTimeout(long,java.util.concurrent.TimeUnit)
+meth public abstract javax.ws.rs.client.ClientBuilder scheduledExecutorService(java.util.concurrent.ScheduledExecutorService)
 meth public abstract javax.ws.rs.client.ClientBuilder sslContext(javax.net.ssl.SSLContext)
 meth public abstract javax.ws.rs.client.ClientBuilder trustStore(java.security.KeyStore)
 meth public abstract javax.ws.rs.client.ClientBuilder withConfig(javax.ws.rs.core.Configuration)
@@ -658,8 +666,39 @@ meth public abstract void setStatusInfo(javax.ws.rs.core.Response$StatusType)
 CLSS public abstract interface javax.ws.rs.client.ClientResponseFilter
 meth public abstract void filter(javax.ws.rs.client.ClientRequestContext,javax.ws.rs.client.ClientResponseContext) throws java.io.IOException
 
+CLSS public abstract interface javax.ws.rs.client.CompletionStageRxInvoker
+intf javax.ws.rs.client.RxInvoker<java.util.concurrent.CompletionStage>
+meth public abstract <%0 extends java.lang.Object> java.util.concurrent.CompletionStage<{%%0}> delete(java.lang.Class<{%%0}>)
+meth public abstract <%0 extends java.lang.Object> java.util.concurrent.CompletionStage<{%%0}> delete(javax.ws.rs.core.GenericType<{%%0}>)
+meth public abstract <%0 extends java.lang.Object> java.util.concurrent.CompletionStage<{%%0}> get(java.lang.Class<{%%0}>)
+meth public abstract <%0 extends java.lang.Object> java.util.concurrent.CompletionStage<{%%0}> get(javax.ws.rs.core.GenericType<{%%0}>)
+meth public abstract <%0 extends java.lang.Object> java.util.concurrent.CompletionStage<{%%0}> method(java.lang.String,java.lang.Class<{%%0}>)
+meth public abstract <%0 extends java.lang.Object> java.util.concurrent.CompletionStage<{%%0}> method(java.lang.String,javax.ws.rs.client.Entity<?>,java.lang.Class<{%%0}>)
+meth public abstract <%0 extends java.lang.Object> java.util.concurrent.CompletionStage<{%%0}> method(java.lang.String,javax.ws.rs.client.Entity<?>,javax.ws.rs.core.GenericType<{%%0}>)
+meth public abstract <%0 extends java.lang.Object> java.util.concurrent.CompletionStage<{%%0}> method(java.lang.String,javax.ws.rs.core.GenericType<{%%0}>)
+meth public abstract <%0 extends java.lang.Object> java.util.concurrent.CompletionStage<{%%0}> options(java.lang.Class<{%%0}>)
+meth public abstract <%0 extends java.lang.Object> java.util.concurrent.CompletionStage<{%%0}> options(javax.ws.rs.core.GenericType<{%%0}>)
+meth public abstract <%0 extends java.lang.Object> java.util.concurrent.CompletionStage<{%%0}> post(javax.ws.rs.client.Entity<?>,java.lang.Class<{%%0}>)
+meth public abstract <%0 extends java.lang.Object> java.util.concurrent.CompletionStage<{%%0}> post(javax.ws.rs.client.Entity<?>,javax.ws.rs.core.GenericType<{%%0}>)
+meth public abstract <%0 extends java.lang.Object> java.util.concurrent.CompletionStage<{%%0}> put(javax.ws.rs.client.Entity<?>,java.lang.Class<{%%0}>)
+meth public abstract <%0 extends java.lang.Object> java.util.concurrent.CompletionStage<{%%0}> put(javax.ws.rs.client.Entity<?>,javax.ws.rs.core.GenericType<{%%0}>)
+meth public abstract <%0 extends java.lang.Object> java.util.concurrent.CompletionStage<{%%0}> trace(java.lang.Class<{%%0}>)
+meth public abstract <%0 extends java.lang.Object> java.util.concurrent.CompletionStage<{%%0}> trace(javax.ws.rs.core.GenericType<{%%0}>)
+meth public abstract java.util.concurrent.CompletionStage<javax.ws.rs.core.Response> delete()
+meth public abstract java.util.concurrent.CompletionStage<javax.ws.rs.core.Response> get()
+meth public abstract java.util.concurrent.CompletionStage<javax.ws.rs.core.Response> head()
+meth public abstract java.util.concurrent.CompletionStage<javax.ws.rs.core.Response> method(java.lang.String)
+meth public abstract java.util.concurrent.CompletionStage<javax.ws.rs.core.Response> method(java.lang.String,javax.ws.rs.client.Entity<?>)
+meth public abstract java.util.concurrent.CompletionStage<javax.ws.rs.core.Response> options()
+meth public abstract java.util.concurrent.CompletionStage<javax.ws.rs.core.Response> post(javax.ws.rs.client.Entity<?>)
+meth public abstract java.util.concurrent.CompletionStage<javax.ws.rs.core.Response> put(javax.ws.rs.client.Entity<?>)
+meth public abstract java.util.concurrent.CompletionStage<javax.ws.rs.core.Response> trace()
+
 CLSS public final javax.ws.rs.client.Entity<%0 extends java.lang.Object>
+meth public boolean equals(java.lang.Object)
+meth public int hashCode()
 meth public java.lang.String getEncoding()
+meth public java.lang.String toString()
 meth public java.lang.annotation.Annotation[] getAnnotations()
 meth public java.util.Locale getLanguage()
 meth public javax.ws.rs.core.MediaType getMediaType()
@@ -699,7 +738,9 @@ meth public abstract !varargs javax.ws.rs.client.Invocation$Builder accept(javax
 meth public abstract !varargs javax.ws.rs.client.Invocation$Builder acceptEncoding(java.lang.String[])
 meth public abstract !varargs javax.ws.rs.client.Invocation$Builder acceptLanguage(java.lang.String[])
 meth public abstract !varargs javax.ws.rs.client.Invocation$Builder acceptLanguage(java.util.Locale[])
+meth public abstract <%0 extends javax.ws.rs.client.RxInvoker> {%%0} rx(java.lang.Class<{%%0}>)
 meth public abstract javax.ws.rs.client.AsyncInvoker async()
+meth public abstract javax.ws.rs.client.CompletionStageRxInvoker rx()
 meth public abstract javax.ws.rs.client.Invocation build(java.lang.String)
 meth public abstract javax.ws.rs.client.Invocation build(java.lang.String,javax.ws.rs.client.Entity<?>)
 meth public abstract javax.ws.rs.client.Invocation buildDelete()
@@ -724,6 +765,37 @@ cons public init(javax.ws.rs.core.Response,java.lang.Throwable)
 meth public javax.ws.rs.core.Response getResponse()
 supr javax.ws.rs.ProcessingException
 hfds response,serialVersionUID
+
+CLSS public abstract interface javax.ws.rs.client.RxInvoker<%0 extends java.lang.Object>
+meth public abstract <%0 extends java.lang.Object> {javax.ws.rs.client.RxInvoker%0} delete(java.lang.Class<{%%0}>)
+meth public abstract <%0 extends java.lang.Object> {javax.ws.rs.client.RxInvoker%0} delete(javax.ws.rs.core.GenericType<{%%0}>)
+meth public abstract <%0 extends java.lang.Object> {javax.ws.rs.client.RxInvoker%0} get(java.lang.Class<{%%0}>)
+meth public abstract <%0 extends java.lang.Object> {javax.ws.rs.client.RxInvoker%0} get(javax.ws.rs.core.GenericType<{%%0}>)
+meth public abstract <%0 extends java.lang.Object> {javax.ws.rs.client.RxInvoker%0} method(java.lang.String,java.lang.Class<{%%0}>)
+meth public abstract <%0 extends java.lang.Object> {javax.ws.rs.client.RxInvoker%0} method(java.lang.String,javax.ws.rs.client.Entity<?>,java.lang.Class<{%%0}>)
+meth public abstract <%0 extends java.lang.Object> {javax.ws.rs.client.RxInvoker%0} method(java.lang.String,javax.ws.rs.client.Entity<?>,javax.ws.rs.core.GenericType<{%%0}>)
+meth public abstract <%0 extends java.lang.Object> {javax.ws.rs.client.RxInvoker%0} method(java.lang.String,javax.ws.rs.core.GenericType<{%%0}>)
+meth public abstract <%0 extends java.lang.Object> {javax.ws.rs.client.RxInvoker%0} options(java.lang.Class<{%%0}>)
+meth public abstract <%0 extends java.lang.Object> {javax.ws.rs.client.RxInvoker%0} options(javax.ws.rs.core.GenericType<{%%0}>)
+meth public abstract <%0 extends java.lang.Object> {javax.ws.rs.client.RxInvoker%0} post(javax.ws.rs.client.Entity<?>,java.lang.Class<{%%0}>)
+meth public abstract <%0 extends java.lang.Object> {javax.ws.rs.client.RxInvoker%0} post(javax.ws.rs.client.Entity<?>,javax.ws.rs.core.GenericType<{%%0}>)
+meth public abstract <%0 extends java.lang.Object> {javax.ws.rs.client.RxInvoker%0} put(javax.ws.rs.client.Entity<?>,java.lang.Class<{%%0}>)
+meth public abstract <%0 extends java.lang.Object> {javax.ws.rs.client.RxInvoker%0} put(javax.ws.rs.client.Entity<?>,javax.ws.rs.core.GenericType<{%%0}>)
+meth public abstract <%0 extends java.lang.Object> {javax.ws.rs.client.RxInvoker%0} trace(java.lang.Class<{%%0}>)
+meth public abstract <%0 extends java.lang.Object> {javax.ws.rs.client.RxInvoker%0} trace(javax.ws.rs.core.GenericType<{%%0}>)
+meth public abstract {javax.ws.rs.client.RxInvoker%0} delete()
+meth public abstract {javax.ws.rs.client.RxInvoker%0} get()
+meth public abstract {javax.ws.rs.client.RxInvoker%0} head()
+meth public abstract {javax.ws.rs.client.RxInvoker%0} method(java.lang.String)
+meth public abstract {javax.ws.rs.client.RxInvoker%0} method(java.lang.String,javax.ws.rs.client.Entity<?>)
+meth public abstract {javax.ws.rs.client.RxInvoker%0} options()
+meth public abstract {javax.ws.rs.client.RxInvoker%0} post(javax.ws.rs.client.Entity<?>)
+meth public abstract {javax.ws.rs.client.RxInvoker%0} put(javax.ws.rs.client.Entity<?>)
+meth public abstract {javax.ws.rs.client.RxInvoker%0} trace()
+
+CLSS public abstract interface javax.ws.rs.client.RxInvokerProvider<%0 extends javax.ws.rs.client.RxInvoker>
+meth public abstract boolean isProviderFor(java.lang.Class<?>)
+meth public abstract {javax.ws.rs.client.RxInvokerProvider%0} getRxInvoker(javax.ws.rs.client.SyncInvoker,java.util.concurrent.ExecutorService)
 
 CLSS public abstract interface javax.ws.rs.client.SyncInvoker
 meth public abstract <%0 extends java.lang.Object> {%%0} delete(java.lang.Class<{%%0}>)
@@ -1043,6 +1115,7 @@ meth public final java.lang.Class<?> getRawType()
 meth public final java.lang.reflect.Type getType()
 meth public int hashCode()
 meth public java.lang.String toString()
+meth public static javax.ws.rs.core.GenericType forInstance(java.lang.Object)
 supr java.lang.Object
 hfds rawType,type
 
@@ -1070,6 +1143,7 @@ fld public final static java.lang.String IF_MATCH = "If-Match"
 fld public final static java.lang.String IF_MODIFIED_SINCE = "If-Modified-Since"
 fld public final static java.lang.String IF_NONE_MATCH = "If-None-Match"
 fld public final static java.lang.String IF_UNMODIFIED_SINCE = "If-Unmodified-Since"
+fld public final static java.lang.String LAST_EVENT_ID_HEADER = "Last-Event-ID"
 fld public final static java.lang.String LAST_MODIFIED = "Last-Modified"
 fld public final static java.lang.String LINK = "Link"
 fld public final static java.lang.String LOCATION = "Location"
@@ -1143,6 +1217,8 @@ CLSS public static javax.ws.rs.core.Link$JaxbLink
 cons public init()
 cons public init(java.net.URI)
 cons public init(java.net.URI,java.util.Map<javax.xml.namespace.QName,java.lang.Object>)
+meth public boolean equals(java.lang.Object)
+meth public int hashCode()
 meth public java.net.URI getUri()
 meth public java.util.Map<javax.xml.namespace.QName,java.lang.Object> getParams()
 supr java.lang.Object
@@ -1156,6 +1232,7 @@ cons public init(java.lang.String,java.lang.String,java.util.Map<java.lang.Strin
 fld public final static java.lang.String APPLICATION_ATOM_XML = "application/atom+xml"
 fld public final static java.lang.String APPLICATION_FORM_URLENCODED = "application/x-www-form-urlencoded"
 fld public final static java.lang.String APPLICATION_JSON = "application/json"
+fld public final static java.lang.String APPLICATION_JSON_PATCH_JSON = "application/json-patch+json"
 fld public final static java.lang.String APPLICATION_OCTET_STREAM = "application/octet-stream"
 fld public final static java.lang.String APPLICATION_SVG_XML = "application/svg+xml"
 fld public final static java.lang.String APPLICATION_XHTML_XML = "application/xhtml+xml"
@@ -1163,18 +1240,21 @@ fld public final static java.lang.String APPLICATION_XML = "application/xml"
 fld public final static java.lang.String CHARSET_PARAMETER = "charset"
 fld public final static java.lang.String MEDIA_TYPE_WILDCARD = "*"
 fld public final static java.lang.String MULTIPART_FORM_DATA = "multipart/form-data"
+fld public final static java.lang.String SERVER_SENT_EVENTS = "text/event-stream"
 fld public final static java.lang.String TEXT_HTML = "text/html"
 fld public final static java.lang.String TEXT_PLAIN = "text/plain"
 fld public final static java.lang.String TEXT_XML = "text/xml"
 fld public final static java.lang.String WILDCARD = "*/*"
 fld public final static javax.ws.rs.core.MediaType APPLICATION_ATOM_XML_TYPE
 fld public final static javax.ws.rs.core.MediaType APPLICATION_FORM_URLENCODED_TYPE
+fld public final static javax.ws.rs.core.MediaType APPLICATION_JSON_PATCH_JSON_TYPE
 fld public final static javax.ws.rs.core.MediaType APPLICATION_JSON_TYPE
 fld public final static javax.ws.rs.core.MediaType APPLICATION_OCTET_STREAM_TYPE
 fld public final static javax.ws.rs.core.MediaType APPLICATION_SVG_XML_TYPE
 fld public final static javax.ws.rs.core.MediaType APPLICATION_XHTML_XML_TYPE
 fld public final static javax.ws.rs.core.MediaType APPLICATION_XML_TYPE
 fld public final static javax.ws.rs.core.MediaType MULTIPART_FORM_DATA_TYPE
+fld public final static javax.ws.rs.core.MediaType SERVER_SENT_EVENTS_TYPE
 fld public final static javax.ws.rs.core.MediaType TEXT_HTML_TYPE
 fld public final static javax.ws.rs.core.MediaType TEXT_PLAIN_TYPE
 fld public final static javax.ws.rs.core.MediaType TEXT_XML_TYPE
@@ -1260,6 +1340,7 @@ cons protected init()
 innr public abstract interface static StatusType
 innr public abstract static ResponseBuilder
 innr public final static !enum Status
+intf java.lang.AutoCloseable
 meth public abstract <%0 extends java.lang.Object> {%%0} readEntity(java.lang.Class<{%%0}>)
 meth public abstract <%0 extends java.lang.Object> {%%0} readEntity(java.lang.Class<{%%0}>,java.lang.annotation.Annotation[])
 meth public abstract <%0 extends java.lang.Object> {%%0} readEntity(javax.ws.rs.core.GenericType<{%%0}>)
@@ -1304,6 +1385,7 @@ meth public static javax.ws.rs.core.Response$ResponseBuilder ok(java.lang.Object
 meth public static javax.ws.rs.core.Response$ResponseBuilder seeOther(java.net.URI)
 meth public static javax.ws.rs.core.Response$ResponseBuilder serverError()
 meth public static javax.ws.rs.core.Response$ResponseBuilder status(int)
+meth public static javax.ws.rs.core.Response$ResponseBuilder status(int,java.lang.String)
 meth public static javax.ws.rs.core.Response$ResponseBuilder status(javax.ws.rs.core.Response$Status)
 meth public static javax.ws.rs.core.Response$ResponseBuilder status(javax.ws.rs.core.Response$StatusType)
 meth public static javax.ws.rs.core.Response$ResponseBuilder temporaryRedirect(java.net.URI)
@@ -1335,6 +1417,7 @@ meth public abstract javax.ws.rs.core.Response$ResponseBuilder link(java.net.URI
 meth public abstract javax.ws.rs.core.Response$ResponseBuilder location(java.net.URI)
 meth public abstract javax.ws.rs.core.Response$ResponseBuilder replaceAll(javax.ws.rs.core.MultivaluedMap<java.lang.String,java.lang.Object>)
 meth public abstract javax.ws.rs.core.Response$ResponseBuilder status(int)
+meth public abstract javax.ws.rs.core.Response$ResponseBuilder status(int,java.lang.String)
 meth public abstract javax.ws.rs.core.Response$ResponseBuilder tag(java.lang.String)
 meth public abstract javax.ws.rs.core.Response$ResponseBuilder tag(javax.ws.rs.core.EntityTag)
 meth public abstract javax.ws.rs.core.Response$ResponseBuilder type(java.lang.String)
@@ -1362,6 +1445,7 @@ fld public final static javax.ws.rs.core.Response$Status INTERNAL_SERVER_ERROR
 fld public final static javax.ws.rs.core.Response$Status LENGTH_REQUIRED
 fld public final static javax.ws.rs.core.Response$Status METHOD_NOT_ALLOWED
 fld public final static javax.ws.rs.core.Response$Status MOVED_PERMANENTLY
+fld public final static javax.ws.rs.core.Response$Status NETWORK_AUTHENTICATION_REQUIRED
 fld public final static javax.ws.rs.core.Response$Status NOT_ACCEPTABLE
 fld public final static javax.ws.rs.core.Response$Status NOT_FOUND
 fld public final static javax.ws.rs.core.Response$Status NOT_IMPLEMENTED
@@ -1371,15 +1455,18 @@ fld public final static javax.ws.rs.core.Response$Status OK
 fld public final static javax.ws.rs.core.Response$Status PARTIAL_CONTENT
 fld public final static javax.ws.rs.core.Response$Status PAYMENT_REQUIRED
 fld public final static javax.ws.rs.core.Response$Status PRECONDITION_FAILED
+fld public final static javax.ws.rs.core.Response$Status PRECONDITION_REQUIRED
 fld public final static javax.ws.rs.core.Response$Status PROXY_AUTHENTICATION_REQUIRED
 fld public final static javax.ws.rs.core.Response$Status REQUESTED_RANGE_NOT_SATISFIABLE
 fld public final static javax.ws.rs.core.Response$Status REQUEST_ENTITY_TOO_LARGE
+fld public final static javax.ws.rs.core.Response$Status REQUEST_HEADER_FIELDS_TOO_LARGE
 fld public final static javax.ws.rs.core.Response$Status REQUEST_TIMEOUT
 fld public final static javax.ws.rs.core.Response$Status REQUEST_URI_TOO_LONG
 fld public final static javax.ws.rs.core.Response$Status RESET_CONTENT
 fld public final static javax.ws.rs.core.Response$Status SEE_OTHER
 fld public final static javax.ws.rs.core.Response$Status SERVICE_UNAVAILABLE
 fld public final static javax.ws.rs.core.Response$Status TEMPORARY_REDIRECT
+fld public final static javax.ws.rs.core.Response$Status TOO_MANY_REQUESTS
 fld public final static javax.ws.rs.core.Response$Status UNAUTHORIZED
 fld public final static javax.ws.rs.core.Response$Status UNSUPPORTED_MEDIA_TYPE
 fld public final static javax.ws.rs.core.Response$Status USE_PROXY
@@ -1413,6 +1500,7 @@ CLSS public abstract interface static javax.ws.rs.core.Response$StatusType
 meth public abstract int getStatusCode()
 meth public abstract java.lang.String getReasonPhrase()
 meth public abstract javax.ws.rs.core.Response$Status$Family getFamily()
+meth public javax.ws.rs.core.Response$Status toEnum()
 
 CLSS public abstract interface javax.ws.rs.core.SecurityContext
 fld public final static java.lang.String BASIC_AUTH = "BASIC"
@@ -1557,8 +1645,8 @@ meth public abstract {javax.ws.rs.ext.MessageBodyReader%0} readFrom(java.lang.Cl
 
 CLSS public abstract interface javax.ws.rs.ext.MessageBodyWriter<%0 extends java.lang.Object>
 meth public abstract boolean isWriteable(java.lang.Class<?>,java.lang.reflect.Type,java.lang.annotation.Annotation[],javax.ws.rs.core.MediaType)
-meth public abstract long getSize({javax.ws.rs.ext.MessageBodyWriter%0},java.lang.Class<?>,java.lang.reflect.Type,java.lang.annotation.Annotation[],javax.ws.rs.core.MediaType)
 meth public abstract void writeTo({javax.ws.rs.ext.MessageBodyWriter%0},java.lang.Class<?>,java.lang.reflect.Type,java.lang.annotation.Annotation[],javax.ws.rs.core.MediaType,javax.ws.rs.core.MultivaluedMap<java.lang.String,java.lang.Object>,java.io.OutputStream) throws java.io.IOException
+meth public long getSize({javax.ws.rs.ext.MessageBodyWriter%0},java.lang.Class<?>,java.lang.reflect.Type,java.lang.annotation.Annotation[],javax.ws.rs.core.MediaType)
 
 CLSS public abstract interface javax.ws.rs.ext.ParamConverter<%0 extends java.lang.Object>
 innr public abstract interface static !annotation Lazy
@@ -1629,6 +1717,85 @@ meth public abstract void proceed() throws java.io.IOException
 meth public abstract void setEntity(java.lang.Object)
 meth public abstract void setOutputStream(java.io.OutputStream)
 
+CLSS public abstract interface javax.ws.rs.sse.InboundSseEvent
+intf javax.ws.rs.sse.SseEvent
+meth public abstract <%0 extends java.lang.Object> {%%0} readData(java.lang.Class<{%%0}>)
+meth public abstract <%0 extends java.lang.Object> {%%0} readData(java.lang.Class<{%%0}>,javax.ws.rs.core.MediaType)
+meth public abstract <%0 extends java.lang.Object> {%%0} readData(javax.ws.rs.core.GenericType<{%%0}>)
+meth public abstract <%0 extends java.lang.Object> {%%0} readData(javax.ws.rs.core.GenericType<{%%0}>,javax.ws.rs.core.MediaType)
+meth public abstract boolean isEmpty()
+meth public abstract java.lang.String readData()
+
+CLSS public abstract interface javax.ws.rs.sse.OutboundSseEvent
+innr public abstract interface static Builder
+intf javax.ws.rs.sse.SseEvent
+meth public abstract java.lang.Class<?> getType()
+meth public abstract java.lang.Object getData()
+meth public abstract java.lang.reflect.Type getGenericType()
+meth public abstract javax.ws.rs.core.MediaType getMediaType()
+
+CLSS public abstract interface static javax.ws.rs.sse.OutboundSseEvent$Builder
+ outer javax.ws.rs.sse.OutboundSseEvent
+meth public abstract javax.ws.rs.sse.OutboundSseEvent build()
+meth public abstract javax.ws.rs.sse.OutboundSseEvent$Builder comment(java.lang.String)
+meth public abstract javax.ws.rs.sse.OutboundSseEvent$Builder data(java.lang.Class,java.lang.Object)
+meth public abstract javax.ws.rs.sse.OutboundSseEvent$Builder data(java.lang.Object)
+meth public abstract javax.ws.rs.sse.OutboundSseEvent$Builder data(javax.ws.rs.core.GenericType,java.lang.Object)
+meth public abstract javax.ws.rs.sse.OutboundSseEvent$Builder id(java.lang.String)
+meth public abstract javax.ws.rs.sse.OutboundSseEvent$Builder mediaType(javax.ws.rs.core.MediaType)
+meth public abstract javax.ws.rs.sse.OutboundSseEvent$Builder name(java.lang.String)
+meth public abstract javax.ws.rs.sse.OutboundSseEvent$Builder reconnectDelay(long)
+
+CLSS public abstract interface javax.ws.rs.sse.Sse
+meth public abstract javax.ws.rs.sse.OutboundSseEvent$Builder newEventBuilder()
+meth public abstract javax.ws.rs.sse.SseBroadcaster newBroadcaster()
+meth public javax.ws.rs.sse.OutboundSseEvent newEvent(java.lang.String)
+meth public javax.ws.rs.sse.OutboundSseEvent newEvent(java.lang.String,java.lang.String)
+
+CLSS public abstract interface javax.ws.rs.sse.SseBroadcaster
+intf java.lang.AutoCloseable
+meth public abstract java.util.concurrent.CompletionStage<?> broadcast(javax.ws.rs.sse.OutboundSseEvent)
+meth public abstract void close()
+meth public abstract void onClose(java.util.function.Consumer<javax.ws.rs.sse.SseEventSink>)
+meth public abstract void onError(java.util.function.BiConsumer<javax.ws.rs.sse.SseEventSink,java.lang.Throwable>)
+meth public abstract void register(javax.ws.rs.sse.SseEventSink)
+
+CLSS public abstract interface javax.ws.rs.sse.SseEvent
+fld public final static long RECONNECT_NOT_SET = -1
+meth public abstract boolean isReconnectDelaySet()
+meth public abstract java.lang.String getComment()
+meth public abstract java.lang.String getId()
+meth public abstract java.lang.String getName()
+meth public abstract long getReconnectDelay()
+
+CLSS public abstract interface javax.ws.rs.sse.SseEventSink
+intf java.lang.AutoCloseable
+meth public abstract boolean isClosed()
+meth public abstract java.util.concurrent.CompletionStage<?> send(javax.ws.rs.sse.OutboundSseEvent)
+meth public abstract void close()
+
+CLSS public abstract interface javax.ws.rs.sse.SseEventSource
+innr public abstract static Builder
+intf java.lang.AutoCloseable
+meth public abstract boolean close(long,java.util.concurrent.TimeUnit)
+meth public abstract boolean isOpen()
+meth public abstract void open()
+meth public abstract void register(java.util.function.Consumer<javax.ws.rs.sse.InboundSseEvent>)
+meth public abstract void register(java.util.function.Consumer<javax.ws.rs.sse.InboundSseEvent>,java.util.function.Consumer<java.lang.Throwable>)
+meth public abstract void register(java.util.function.Consumer<javax.ws.rs.sse.InboundSseEvent>,java.util.function.Consumer<java.lang.Throwable>,java.lang.Runnable)
+meth public static javax.ws.rs.sse.SseEventSource$Builder target(javax.ws.rs.client.WebTarget)
+meth public void close()
+
+CLSS public abstract static javax.ws.rs.sse.SseEventSource$Builder
+ outer javax.ws.rs.sse.SseEventSource
+cons protected init()
+fld public final static java.lang.String JAXRS_DEFAULT_SSE_BUILDER_PROPERTY = "javax.ws.rs.sse.SseEventSource.Builder"
+meth protected abstract javax.ws.rs.sse.SseEventSource$Builder target(javax.ws.rs.client.WebTarget)
+meth public abstract javax.ws.rs.sse.SseEventSource build()
+meth public abstract javax.ws.rs.sse.SseEventSource$Builder reconnectingEvery(long,java.util.concurrent.TimeUnit)
+supr java.lang.Object
+hfds JAXRS_DEFAULT_SSE_BUILDER
+
 CLSS public abstract javax.xml.bind.annotation.adapters.XmlAdapter<%0 extends java.lang.Object, %1 extends java.lang.Object>
 cons protected init()
 meth public abstract {javax.xml.bind.annotation.adapters.XmlAdapter%0} marshal({javax.xml.bind.annotation.adapters.XmlAdapter%1}) throws java.lang.Exception
@@ -1641,12 +1808,57 @@ CLSS public abstract interface !annotation org.glassfish.jersey.Beta
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE, TYPE, CONSTRUCTOR, METHOD, FIELD, PACKAGE])
 intf java.lang.annotation.Annotation
 
+CLSS public abstract interface org.glassfish.jersey.ExtendedConfig
+intf javax.ws.rs.core.Configuration
+meth public abstract boolean isProperty(java.lang.String)
+
+CLSS public org.glassfish.jersey.InjectionManagerProvider
+cons public init()
+meth public static org.glassfish.jersey.internal.inject.InjectionManager getInjectionManager(javax.ws.rs.core.FeatureContext)
+meth public static org.glassfish.jersey.internal.inject.InjectionManager getInjectionManager(javax.ws.rs.ext.ReaderInterceptorContext)
+meth public static org.glassfish.jersey.internal.inject.InjectionManager getInjectionManager(javax.ws.rs.ext.WriterInterceptorContext)
+supr java.lang.Object
+
+CLSS public abstract org.glassfish.jersey.client.AbstractRxInvoker<%0 extends java.lang.Object>
+cons public init(javax.ws.rs.client.SyncInvoker,java.util.concurrent.ExecutorService)
+intf javax.ws.rs.client.RxInvoker<{org.glassfish.jersey.client.AbstractRxInvoker%0}>
+meth protected java.util.concurrent.ExecutorService getExecutorService()
+meth protected javax.ws.rs.client.SyncInvoker getSyncInvoker()
+meth public <%0 extends java.lang.Object> {org.glassfish.jersey.client.AbstractRxInvoker%0} delete(java.lang.Class<{%%0}>)
+meth public <%0 extends java.lang.Object> {org.glassfish.jersey.client.AbstractRxInvoker%0} delete(javax.ws.rs.core.GenericType<{%%0}>)
+meth public <%0 extends java.lang.Object> {org.glassfish.jersey.client.AbstractRxInvoker%0} get(java.lang.Class<{%%0}>)
+meth public <%0 extends java.lang.Object> {org.glassfish.jersey.client.AbstractRxInvoker%0} get(javax.ws.rs.core.GenericType<{%%0}>)
+meth public <%0 extends java.lang.Object> {org.glassfish.jersey.client.AbstractRxInvoker%0} method(java.lang.String,java.lang.Class<{%%0}>)
+meth public <%0 extends java.lang.Object> {org.glassfish.jersey.client.AbstractRxInvoker%0} method(java.lang.String,javax.ws.rs.core.GenericType<{%%0}>)
+meth public <%0 extends java.lang.Object> {org.glassfish.jersey.client.AbstractRxInvoker%0} options(java.lang.Class<{%%0}>)
+meth public <%0 extends java.lang.Object> {org.glassfish.jersey.client.AbstractRxInvoker%0} options(javax.ws.rs.core.GenericType<{%%0}>)
+meth public <%0 extends java.lang.Object> {org.glassfish.jersey.client.AbstractRxInvoker%0} post(javax.ws.rs.client.Entity<?>,java.lang.Class<{%%0}>)
+meth public <%0 extends java.lang.Object> {org.glassfish.jersey.client.AbstractRxInvoker%0} post(javax.ws.rs.client.Entity<?>,javax.ws.rs.core.GenericType<{%%0}>)
+meth public <%0 extends java.lang.Object> {org.glassfish.jersey.client.AbstractRxInvoker%0} put(javax.ws.rs.client.Entity<?>,java.lang.Class<{%%0}>)
+meth public <%0 extends java.lang.Object> {org.glassfish.jersey.client.AbstractRxInvoker%0} put(javax.ws.rs.client.Entity<?>,javax.ws.rs.core.GenericType<{%%0}>)
+meth public <%0 extends java.lang.Object> {org.glassfish.jersey.client.AbstractRxInvoker%0} trace(java.lang.Class<{%%0}>)
+meth public <%0 extends java.lang.Object> {org.glassfish.jersey.client.AbstractRxInvoker%0} trace(javax.ws.rs.core.GenericType<{%%0}>)
+meth public abstract <%0 extends java.lang.Object> {org.glassfish.jersey.client.AbstractRxInvoker%0} method(java.lang.String,javax.ws.rs.client.Entity<?>,java.lang.Class<{%%0}>)
+meth public abstract <%0 extends java.lang.Object> {org.glassfish.jersey.client.AbstractRxInvoker%0} method(java.lang.String,javax.ws.rs.client.Entity<?>,javax.ws.rs.core.GenericType<{%%0}>)
+meth public {org.glassfish.jersey.client.AbstractRxInvoker%0} delete()
+meth public {org.glassfish.jersey.client.AbstractRxInvoker%0} get()
+meth public {org.glassfish.jersey.client.AbstractRxInvoker%0} head()
+meth public {org.glassfish.jersey.client.AbstractRxInvoker%0} method(java.lang.String)
+meth public {org.glassfish.jersey.client.AbstractRxInvoker%0} method(java.lang.String,javax.ws.rs.client.Entity<?>)
+meth public {org.glassfish.jersey.client.AbstractRxInvoker%0} options()
+meth public {org.glassfish.jersey.client.AbstractRxInvoker%0} post(javax.ws.rs.client.Entity<?>)
+meth public {org.glassfish.jersey.client.AbstractRxInvoker%0} put(javax.ws.rs.client.Entity<?>)
+meth public {org.glassfish.jersey.client.AbstractRxInvoker%0} trace()
+supr java.lang.Object<{org.glassfish.jersey.client.AbstractRxInvoker%0}>
+hfds executorService,syncInvoker
+
 CLSS public abstract interface org.glassfish.jersey.client.ChunkParser
 meth public abstract byte[] readChunk(java.io.InputStream) throws java.io.IOException
 
 CLSS public org.glassfish.jersey.client.ChunkedInput<%0 extends java.lang.Object>
 cons protected init(java.lang.reflect.Type,java.io.InputStream,java.lang.annotation.Annotation[],javax.ws.rs.core.MediaType,javax.ws.rs.core.MultivaluedMap<java.lang.String,java.lang.String>,org.glassfish.jersey.message.MessageBodyWorkers,org.glassfish.jersey.internal.PropertiesDelegate)
 intf java.io.Closeable
+meth public !varargs static org.glassfish.jersey.client.ChunkParser createMultiParser(java.lang.String[])
 meth public boolean isClosed()
 meth public javax.ws.rs.core.MediaType getChunkType()
 meth public org.glassfish.jersey.client.ChunkParser getParser()
@@ -1659,19 +1871,53 @@ meth public void setParser(org.glassfish.jersey.client.ChunkParser)
 meth public {org.glassfish.jersey.client.ChunkedInput%0} read()
 supr javax.ws.rs.core.GenericType<{org.glassfish.jersey.client.ChunkedInput%0}>
 hfds LOGGER,annotations,closed,headers,inputStream,mediaType,messageBodyWorkers,parser,propertiesDelegate
-hcls FixedBoundaryParser
+hcls AbstractBoundaryParser,FixedBoundaryParser,FixedMultiBoundaryParser
+
+CLSS public abstract interface !annotation org.glassfish.jersey.client.ClientAsyncExecutor
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Inherited()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[PARAMETER, FIELD, METHOD, TYPE])
+ anno 0 javax.inject.Qualifier()
+intf java.lang.annotation.Annotation
+
+CLSS public final org.glassfish.jersey.client.ClientAsyncExecutorLiteral
+fld public final static org.glassfish.jersey.client.ClientAsyncExecutor INSTANCE
+intf org.glassfish.jersey.client.ClientAsyncExecutor
+supr org.glassfish.jersey.internal.inject.AnnotationLiteral<org.glassfish.jersey.client.ClientAsyncExecutor>
+
+CLSS public abstract interface !annotation org.glassfish.jersey.client.ClientBackgroundScheduler
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Inherited()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[PARAMETER, FIELD, METHOD, TYPE])
+ anno 0 javax.inject.Qualifier()
+intf java.lang.annotation.Annotation
+
+CLSS public final org.glassfish.jersey.client.ClientBackgroundSchedulerLiteral
+fld public final static org.glassfish.jersey.client.ClientBackgroundScheduler INSTANCE
+intf org.glassfish.jersey.client.ClientBackgroundScheduler
+supr org.glassfish.jersey.internal.inject.AnnotationLiteral<org.glassfish.jersey.client.ClientBackgroundScheduler>
+
+CLSS public org.glassfish.jersey.client.ClientBootstrapBag
+cons public init()
+meth public org.glassfish.jersey.client.inject.ParameterUpdaterProvider getParameterUpdaterProvider()
+meth public void setParameterUpdaterProvider(org.glassfish.jersey.client.inject.ParameterUpdaterProvider)
+supr org.glassfish.jersey.internal.BootstrapBag
+hfds componentProviders,parameterUpdaterProvider
 
 CLSS public org.glassfish.jersey.client.ClientConfig
 cons public !varargs init(java.lang.Class<?>[])
 cons public !varargs init(java.lang.Object[])
 cons public init()
 intf javax.ws.rs.core.Configurable<org.glassfish.jersey.client.ClientConfig>
-intf javax.ws.rs.core.Configuration
+intf org.glassfish.jersey.ExtendedConfig
 meth public !varargs org.glassfish.jersey.client.ClientConfig register(java.lang.Class<?>,java.lang.Class<?>[])
 meth public !varargs org.glassfish.jersey.client.ClientConfig register(java.lang.Object,java.lang.Class<?>[])
 meth public boolean equals(java.lang.Object)
 meth public boolean isEnabled(java.lang.Class<? extends javax.ws.rs.core.Feature>)
 meth public boolean isEnabled(javax.ws.rs.core.Feature)
+meth public boolean isProperty(java.lang.String)
 meth public boolean isRegistered(java.lang.Class<?>)
 meth public boolean isRegistered(java.lang.Object)
 meth public int hashCode()
@@ -1681,8 +1927,11 @@ meth public java.util.Map<java.lang.Class<?>,java.lang.Integer> getContracts(jav
 meth public java.util.Map<java.lang.String,java.lang.Object> getProperties()
 meth public java.util.Set<java.lang.Class<?>> getClasses()
 meth public java.util.Set<java.lang.Object> getInstances()
+meth public java.util.concurrent.ExecutorService getExecutorService()
+meth public java.util.concurrent.ScheduledExecutorService getScheduledExecutorService()
 meth public javax.ws.rs.RuntimeType getRuntimeType()
 meth public org.glassfish.jersey.client.ClientConfig connectorProvider(org.glassfish.jersey.client.spi.ConnectorProvider)
+meth public org.glassfish.jersey.client.ClientConfig executorService(java.util.concurrent.ExecutorService)
 meth public org.glassfish.jersey.client.ClientConfig getConfiguration()
 meth public org.glassfish.jersey.client.ClientConfig loadFrom(javax.ws.rs.core.Configuration)
 meth public org.glassfish.jersey.client.ClientConfig property(java.lang.String,java.lang.Object)
@@ -1692,43 +1941,72 @@ meth public org.glassfish.jersey.client.ClientConfig register(java.lang.Class<?>
 meth public org.glassfish.jersey.client.ClientConfig register(java.lang.Object)
 meth public org.glassfish.jersey.client.ClientConfig register(java.lang.Object,int)
 meth public org.glassfish.jersey.client.ClientConfig register(java.lang.Object,java.util.Map<java.lang.Class<?>,java.lang.Integer>)
+meth public org.glassfish.jersey.client.ClientConfig scheduledExecutorService(java.util.concurrent.ScheduledExecutorService)
+meth public org.glassfish.jersey.client.ClientExecutor getClientExecutor()
 meth public org.glassfish.jersey.client.JerseyClient getClient()
 meth public org.glassfish.jersey.client.spi.Connector getConnector()
 meth public org.glassfish.jersey.client.spi.ConnectorProvider getConnectorProvider()
 supr java.lang.Object
 hfds state
-hcls State
+hcls RuntimeConfigConfigurator,State
+
+CLSS public abstract interface org.glassfish.jersey.client.ClientExecutor
+meth public abstract <%0 extends java.lang.Object> java.util.concurrent.Future<{%%0}> submit(java.lang.Runnable,{%%0})
+meth public abstract <%0 extends java.lang.Object> java.util.concurrent.Future<{%%0}> submit(java.util.concurrent.Callable<{%%0}>)
+meth public abstract <%0 extends java.lang.Object> java.util.concurrent.ScheduledFuture<{%%0}> schedule(java.util.concurrent.Callable<{%%0}>,long,java.util.concurrent.TimeUnit)
+meth public abstract java.util.concurrent.Future<?> submit(java.lang.Runnable)
+meth public abstract java.util.concurrent.ScheduledFuture<?> schedule(java.lang.Runnable,long,java.util.concurrent.TimeUnit)
+
+CLSS public abstract interface org.glassfish.jersey.client.ClientLifecycleListener
+ anno 0 javax.ws.rs.ConstrainedTo(javax.ws.rs.RuntimeType value=CLIENT)
+ anno 0 org.glassfish.jersey.spi.Contract()
+meth public abstract void onClose()
+meth public abstract void onInit()
 
 CLSS public final org.glassfish.jersey.client.ClientProperties
+fld public final static int DEFAULT_CHUNK_SIZE = 4096
+fld public final static java.lang.Long DEFAULT_EXPECT_100_CONTINUE_THRESHOLD_SIZE
 fld public final static java.lang.String ASYNC_THREADPOOL_SIZE = "jersey.config.client.async.threadPoolSize"
+fld public final static java.lang.String BACKGROUND_SCHEDULER_THREADPOOL_SIZE = "jersey.config.client.backgroundScheduler.threadPoolSize"
 fld public final static java.lang.String CHUNKED_ENCODING_SIZE = "jersey.config.client.chunkedEncodingSize"
 fld public final static java.lang.String CONNECT_TIMEOUT = "jersey.config.client.connectTimeout"
 fld public final static java.lang.String DIGESTAUTH_URI_CACHE_SIZELIMIT = "jersey.config.client.digestAuthUriCacheSizeLimit"
-fld public final static java.lang.String FEATURE_AUTO_DISCOVERY_DISABLE = "jersey.config.disableAutoDiscovery.client"
+fld public final static java.lang.String EXPECT_100_CONTINUE = "jersey.config.client.request.expect.100.continue.processing"
+fld public final static java.lang.String EXPECT_100_CONTINUE_THRESHOLD_SIZE = "jersey.config.client.request.expect.100.continue.threshold.size"
+fld public final static java.lang.String FEATURE_AUTO_DISCOVERY_DISABLE = "jersey.config.client.disableAutoDiscovery"
 fld public final static java.lang.String FOLLOW_REDIRECTS = "jersey.config.client.followRedirects"
-fld public final static java.lang.String JSON_PROCESSING_FEATURE_DISABLE = "jersey.config.disableJsonProcessing.client"
-fld public final static java.lang.String METAINF_SERVICES_LOOKUP_DISABLE = "jersey.config.disableMetainfServicesLookup.client"
-fld public final static java.lang.String MOXY_JSON_FEATURE_DISABLE = "jersey.config.disableMoxyJson.client"
-fld public final static java.lang.String OUTBOUND_CONTENT_LENGTH_BUFFER = "jersey.config.contentLength.buffer.client"
+fld public final static java.lang.String IGNORE_EXCEPTION_RESPONSE = "jersey.config.client.ignoreExceptionResponse"
+fld public final static java.lang.String JSON_PROCESSING_FEATURE_DISABLE = "jersey.config.client.disableJsonProcessing"
+fld public final static java.lang.String METAINF_SERVICES_LOOKUP_DISABLE = "jersey.config.client.disableMetainfServicesLookup"
+fld public final static java.lang.String MOXY_JSON_FEATURE_DISABLE = "jersey.config.client.disableMoxyJson"
+fld public final static java.lang.String OUTBOUND_CONTENT_LENGTH_BUFFER = "jersey.config.client.contentLength.buffer"
 fld public final static java.lang.String PROXY_PASSWORD = "jersey.config.client.proxy.password"
 fld public final static java.lang.String PROXY_URI = "jersey.config.client.proxy.uri"
 fld public final static java.lang.String PROXY_USERNAME = "jersey.config.client.proxy.username"
+fld public final static java.lang.String QUERY_PARAM_STYLE = "jersey.config.client.uri.query.param.style"
 fld public final static java.lang.String READ_TIMEOUT = "jersey.config.client.readTimeout"
 fld public final static java.lang.String REQUEST_ENTITY_PROCESSING = "jersey.config.client.request.entity.processing"
 fld public final static java.lang.String SUPPRESS_HTTP_COMPLIANCE_VALIDATION = "jersey.config.client.suppressHttpComplianceValidation"
 fld public final static java.lang.String USE_ENCODING = "jersey.config.client.useEncoding"
+meth public static <%0 extends java.lang.Object> {%%0} getValue(java.util.Map<java.lang.String,?>,java.lang.String,java.lang.Class<{%%0}>)
+meth public static <%0 extends java.lang.Object> {%%0} getValue(java.util.Map<java.lang.String,?>,java.lang.String,{%%0})
+meth public static <%0 extends java.lang.Object> {%%0} getValue(java.util.Map<java.lang.String,?>,java.lang.String,{%%0},java.lang.Class<{%%0}>)
 supr java.lang.Object
 
 CLSS public org.glassfish.jersey.client.ClientRequest
 cons protected init(java.net.URI,org.glassfish.jersey.client.ClientConfig,org.glassfish.jersey.internal.PropertiesDelegate)
 cons public init(org.glassfish.jersey.client.ClientRequest)
 intf javax.ws.rs.client.ClientRequestContext
+intf javax.ws.rs.core.HttpHeaders
+intf org.glassfish.jersey.internal.PropertiesResolver
+intf org.glassfish.jersey.internal.inject.InjectionManagerSupplier
 meth public !varargs void accept(java.lang.String[])
 meth public !varargs void accept(javax.ws.rs.core.MediaType[])
 meth public !varargs void acceptLanguage(java.lang.String[])
 meth public !varargs void acceptLanguage(java.util.Locale[])
 meth public <%0 extends java.lang.Object> {%%0} resolveProperty(java.lang.String,java.lang.Class<{%%0}>)
 meth public <%0 extends java.lang.Object> {%%0} resolveProperty(java.lang.String,{%%0})
+meth public boolean ignoreUserAgent()
 meth public boolean isAsynchronous()
 meth public java.lang.Iterable<javax.ws.rs.ext.ReaderInterceptor> getReaderInterceptors()
 meth public java.lang.Iterable<javax.ws.rs.ext.WriterInterceptor> getWriterInterceptors()
@@ -1736,16 +2014,20 @@ meth public java.lang.Object getProperty(java.lang.String)
 meth public java.lang.String getMethod()
 meth public java.net.URI getUri()
 meth public java.util.Collection<java.lang.String> getPropertyNames()
+meth public java.util.List<java.lang.String> getRequestHeader(java.lang.String)
 meth public java.util.Map<java.lang.String,javax.ws.rs.core.Cookie> getCookies()
 meth public javax.ws.rs.core.Configuration getConfiguration()
+meth public javax.ws.rs.core.MultivaluedMap<java.lang.String,java.lang.String> getRequestHeaders()
 meth public javax.ws.rs.core.Response getAbortResponse()
 meth public org.glassfish.jersey.client.JerseyClient getClient()
+meth public org.glassfish.jersey.internal.inject.InjectionManager getInjectionManager()
 meth public org.glassfish.jersey.message.MessageBodyWorkers getWorkers()
 meth public void abortWith(javax.ws.rs.core.Response)
 meth public void cacheControl(javax.ws.rs.core.CacheControl)
 meth public void cookie(javax.ws.rs.core.Cookie)
 meth public void enableBuffering()
 meth public void encoding(java.lang.String)
+meth public void ignoreUserAgent(boolean)
 meth public void language(java.lang.String)
 meth public void language(java.util.Locale)
 meth public void removeProperty(java.lang.String)
@@ -1758,12 +2040,15 @@ meth public void type(javax.ws.rs.core.MediaType)
 meth public void variant(javax.ws.rs.core.Variant)
 meth public void writeEntity() throws java.io.IOException
 supr org.glassfish.jersey.message.internal.OutboundMessageContext
-hfds LOGGER,abortResponse,asynchronous,clientConfig,entityWritten,httpMethod,propertiesDelegate,readerInterceptors,requestUri,workers,writerInterceptors
+hfds LOGGER,abortResponse,asynchronous,clientConfig,entityWritten,httpMethod,ignoreUserAgent,propertiesDelegate,propertiesResolver,readerInterceptors,requestUri,workers,writerInterceptors
 
 CLSS public org.glassfish.jersey.client.ClientResponse
 cons public init(javax.ws.rs.core.Response$StatusType,org.glassfish.jersey.client.ClientRequest)
+cons public init(javax.ws.rs.core.Response$StatusType,org.glassfish.jersey.client.ClientRequest,java.net.URI)
 cons public init(org.glassfish.jersey.client.ClientRequest,javax.ws.rs.core.Response)
 intf javax.ws.rs.client.ClientResponseContext
+intf org.glassfish.jersey.internal.inject.InjectionManagerSupplier
+meth protected java.lang.Iterable<javax.ws.rs.ext.ReaderInterceptor> getReaderInterceptors()
 meth public <%0 extends java.lang.Object> {%%0} readEntity(java.lang.Class<{%%0}>)
 meth public <%0 extends java.lang.Object> {%%0} readEntity(java.lang.Class<{%%0}>,java.lang.annotation.Annotation[])
 meth public <%0 extends java.lang.Object> {%%0} readEntity(javax.ws.rs.core.GenericType<{%%0}>)
@@ -1771,14 +2056,17 @@ meth public <%0 extends java.lang.Object> {%%0} readEntity(javax.ws.rs.core.Gene
 meth public int getStatus()
 meth public java.lang.Object getEntity()
 meth public java.lang.String toString()
+meth public java.net.URI getResolvedRequestUri()
 meth public java.util.Map<java.lang.String,javax.ws.rs.core.NewCookie> getCookies()
 meth public java.util.Set<javax.ws.rs.core.Link> getLinks()
 meth public javax.ws.rs.core.Response$StatusType getStatusInfo()
 meth public org.glassfish.jersey.client.ClientRequest getRequestContext()
+meth public org.glassfish.jersey.internal.inject.InjectionManager getInjectionManager()
+meth public void setResolvedRequestUri(java.net.URI)
 meth public void setStatus(int)
 meth public void setStatusInfo(javax.ws.rs.core.Response$StatusType)
 supr org.glassfish.jersey.message.internal.InboundMessageContext
-hfds requestContext,status
+hfds requestContext,resolvedUri,status
 
 CLSS public org.glassfish.jersey.client.CustomProvidersFeature
 cons public init(java.util.Collection<java.lang.Class<?>>)
@@ -1793,6 +2081,7 @@ fld public final static java.lang.String SET_METHOD_WORKAROUND = "jersey.config.
 fld public final static java.lang.String USE_FIXED_LENGTH_STREAMING = "jersey.config.client.httpUrlConnector.useFixedLengthStreaming"
 innr public abstract interface static ConnectionFactory
 intf org.glassfish.jersey.client.spi.ConnectorProvider
+meth protected org.glassfish.jersey.client.spi.Connector createHttpUrlConnector(javax.ws.rs.client.Client,org.glassfish.jersey.client.HttpUrlConnectorProvider$ConnectionFactory,int,boolean,boolean)
 meth public boolean equals(java.lang.Object)
 meth public int hashCode()
 meth public org.glassfish.jersey.client.HttpUrlConnectorProvider chunkSize(int)
@@ -1801,21 +2090,37 @@ meth public org.glassfish.jersey.client.HttpUrlConnectorProvider useFixedLengthS
 meth public org.glassfish.jersey.client.HttpUrlConnectorProvider useSetMethodWorkaround()
 meth public org.glassfish.jersey.client.spi.Connector getConnector(javax.ws.rs.client.Client,javax.ws.rs.core.Configuration)
 supr java.lang.Object
-hfds DEFAULT_CONNECTION_FACTORY,DEFAULT_HTTP_CHUNK_SIZE,LOGGER,chunkSize,connectionFactory,useFixedLengthStreaming,useSetMethodWorkaround
+hfds DEFAULT_CONNECTION_FACTORY,LOGGER,chunkSize,connectionFactory,useFixedLengthStreaming,useSetMethodWorkaround
 hcls DefaultConnectionFactory
 
 CLSS public abstract interface static org.glassfish.jersey.client.HttpUrlConnectorProvider$ConnectionFactory
  outer org.glassfish.jersey.client.HttpUrlConnectorProvider
 meth public abstract java.net.HttpURLConnection getConnection(java.net.URL) throws java.io.IOException
 
+CLSS public abstract interface org.glassfish.jersey.client.Initializable<%0 extends org.glassfish.jersey.client.Initializable<{org.glassfish.jersey.client.Initializable%0}>>
+meth public abstract org.glassfish.jersey.client.ClientConfig getConfiguration()
+meth public abstract {org.glassfish.jersey.client.Initializable%0} preInitialize()
+
+CLSS public org.glassfish.jersey.client.InjectionManagerClientProvider
+cons public init()
+meth public static org.glassfish.jersey.internal.inject.InjectionManager getInjectionManager(javax.ws.rs.client.ClientRequestContext)
+meth public static org.glassfish.jersey.internal.inject.InjectionManager getInjectionManager(javax.ws.rs.client.ClientResponseContext)
+supr org.glassfish.jersey.InjectionManagerProvider
+
 CLSS public org.glassfish.jersey.client.JerseyClient
 cons protected init()
 cons protected init(javax.ws.rs.core.Configuration,javax.net.ssl.SSLContext,javax.net.ssl.HostnameVerifier)
+cons protected init(javax.ws.rs.core.Configuration,javax.net.ssl.SSLContext,javax.net.ssl.HostnameVerifier,org.glassfish.jersey.client.spi.DefaultSslContextProvider)
 cons protected init(javax.ws.rs.core.Configuration,org.glassfish.jersey.internal.util.collection.UnsafeValue<javax.net.ssl.SSLContext,java.lang.IllegalStateException>,javax.net.ssl.HostnameVerifier)
+cons protected init(javax.ws.rs.core.Configuration,org.glassfish.jersey.internal.util.collection.UnsafeValue<javax.net.ssl.SSLContext,java.lang.IllegalStateException>,javax.net.ssl.HostnameVerifier,org.glassfish.jersey.client.spi.DefaultSslContextProvider)
 intf javax.ws.rs.client.Client
+intf org.glassfish.jersey.client.Initializable<org.glassfish.jersey.client.JerseyClient>
 meth public !varargs org.glassfish.jersey.client.JerseyClient register(java.lang.Class<?>,java.lang.Class<?>[])
 meth public !varargs org.glassfish.jersey.client.JerseyClient register(java.lang.Object,java.lang.Class<?>[])
 meth public boolean isClosed()
+meth public boolean isDefaultSslContext()
+meth public java.util.concurrent.ExecutorService getExecutorService()
+meth public java.util.concurrent.ScheduledExecutorService getScheduledExecutorService()
 meth public javax.net.ssl.HostnameVerifier getHostnameVerifier()
 meth public javax.net.ssl.SSLContext getSslContext()
 meth public org.glassfish.jersey.client.ClientConfig getConfiguration()
@@ -1832,16 +2137,19 @@ meth public org.glassfish.jersey.client.JerseyWebTarget target(java.lang.String)
 meth public org.glassfish.jersey.client.JerseyWebTarget target(java.net.URI)
 meth public org.glassfish.jersey.client.JerseyWebTarget target(javax.ws.rs.core.Link)
 meth public org.glassfish.jersey.client.JerseyWebTarget target(javax.ws.rs.core.UriBuilder)
-meth public void addListener(org.glassfish.jersey.client.JerseyClient$LifecycleListener)
 meth public void close()
 supr java.lang.Object
-hfds closedFlag,config,hostnameVerifier,listeners,sslContext
-hcls LifecycleListener
+hfds DEFAULT_SSL_CONTEXT_PROVIDER,LOG,closedFlag,config,hostnameVerifier,isDefaultSslContext,shReferenceQueue,shutdownHooks,sslContext
+hcls ShutdownHook
 
 CLSS public org.glassfish.jersey.client.JerseyClientBuilder
 cons public init()
 meth public !varargs org.glassfish.jersey.client.JerseyClientBuilder register(java.lang.Class<?>,java.lang.Class<?>[])
 meth public !varargs org.glassfish.jersey.client.JerseyClientBuilder register(java.lang.Object,java.lang.Class<?>[])
+meth public javax.ws.rs.client.ClientBuilder connectTimeout(long,java.util.concurrent.TimeUnit)
+meth public javax.ws.rs.client.ClientBuilder executorService(java.util.concurrent.ExecutorService)
+meth public javax.ws.rs.client.ClientBuilder readTimeout(long,java.util.concurrent.TimeUnit)
+meth public javax.ws.rs.client.ClientBuilder scheduledExecutorService(java.util.concurrent.ScheduledExecutorService)
 meth public org.glassfish.jersey.client.ClientConfig getConfiguration()
 meth public org.glassfish.jersey.client.JerseyClient build()
 meth public org.glassfish.jersey.client.JerseyClientBuilder hostnameVerifier(javax.net.ssl.HostnameVerifier)
@@ -1859,7 +2167,46 @@ meth public org.glassfish.jersey.client.JerseyClientBuilder withConfig(javax.ws.
 meth public static org.glassfish.jersey.client.JerseyClient createClient()
 meth public static org.glassfish.jersey.client.JerseyClient createClient(javax.ws.rs.core.Configuration)
 supr javax.ws.rs.client.ClientBuilder
-hfds config,hostnameVerifier,sslConfigurator,sslContext
+hfds CLIENT_BUILDER_LISTENERS,config,hostnameVerifier,sslConfigurator,sslContext
+
+CLSS public org.glassfish.jersey.client.JerseyCompletionStageRxInvoker
+intf javax.ws.rs.client.AsyncInvoker
+intf javax.ws.rs.client.CompletionStageRxInvoker
+meth public <%0 extends java.lang.Object> java.util.concurrent.CompletableFuture delete(java.lang.Class<{%%0}>)
+meth public <%0 extends java.lang.Object> java.util.concurrent.CompletableFuture delete(javax.ws.rs.core.GenericType<{%%0}>)
+meth public <%0 extends java.lang.Object> java.util.concurrent.CompletableFuture get(java.lang.Class<{%%0}>)
+meth public <%0 extends java.lang.Object> java.util.concurrent.CompletableFuture get(javax.ws.rs.core.GenericType<{%%0}>)
+meth public <%0 extends java.lang.Object> java.util.concurrent.CompletableFuture options(java.lang.Class<{%%0}>)
+meth public <%0 extends java.lang.Object> java.util.concurrent.CompletableFuture options(javax.ws.rs.core.GenericType<{%%0}>)
+meth public <%0 extends java.lang.Object> java.util.concurrent.CompletableFuture post(javax.ws.rs.client.Entity<?>,java.lang.Class<{%%0}>)
+meth public <%0 extends java.lang.Object> java.util.concurrent.CompletableFuture post(javax.ws.rs.client.Entity<?>,javax.ws.rs.core.GenericType<{%%0}>)
+meth public <%0 extends java.lang.Object> java.util.concurrent.CompletableFuture put(javax.ws.rs.client.Entity<?>,java.lang.Class<{%%0}>)
+meth public <%0 extends java.lang.Object> java.util.concurrent.CompletableFuture put(javax.ws.rs.client.Entity<?>,javax.ws.rs.core.GenericType<{%%0}>)
+meth public <%0 extends java.lang.Object> java.util.concurrent.CompletableFuture trace(java.lang.Class<{%%0}>)
+meth public <%0 extends java.lang.Object> java.util.concurrent.CompletableFuture trace(javax.ws.rs.core.GenericType<{%%0}>)
+meth public <%0 extends java.lang.Object> java.util.concurrent.CompletableFuture<{%%0}> delete(javax.ws.rs.client.InvocationCallback<{%%0}>)
+meth public <%0 extends java.lang.Object> java.util.concurrent.CompletableFuture<{%%0}> get(javax.ws.rs.client.InvocationCallback<{%%0}>)
+meth public <%0 extends java.lang.Object> java.util.concurrent.CompletableFuture<{%%0}> method(java.lang.String,java.lang.Class<{%%0}>)
+meth public <%0 extends java.lang.Object> java.util.concurrent.CompletableFuture<{%%0}> method(java.lang.String,javax.ws.rs.client.Entity<?>,java.lang.Class<{%%0}>)
+meth public <%0 extends java.lang.Object> java.util.concurrent.CompletableFuture<{%%0}> method(java.lang.String,javax.ws.rs.client.Entity<?>,javax.ws.rs.client.InvocationCallback<{%%0}>)
+meth public <%0 extends java.lang.Object> java.util.concurrent.CompletableFuture<{%%0}> method(java.lang.String,javax.ws.rs.client.Entity<?>,javax.ws.rs.core.GenericType<{%%0}>)
+meth public <%0 extends java.lang.Object> java.util.concurrent.CompletableFuture<{%%0}> method(java.lang.String,javax.ws.rs.client.InvocationCallback<{%%0}>)
+meth public <%0 extends java.lang.Object> java.util.concurrent.CompletableFuture<{%%0}> method(java.lang.String,javax.ws.rs.core.GenericType<{%%0}>)
+meth public <%0 extends java.lang.Object> java.util.concurrent.CompletableFuture<{%%0}> options(javax.ws.rs.client.InvocationCallback<{%%0}>)
+meth public <%0 extends java.lang.Object> java.util.concurrent.CompletableFuture<{%%0}> post(javax.ws.rs.client.Entity<?>,javax.ws.rs.client.InvocationCallback<{%%0}>)
+meth public <%0 extends java.lang.Object> java.util.concurrent.CompletableFuture<{%%0}> put(javax.ws.rs.client.Entity<?>,javax.ws.rs.client.InvocationCallback<{%%0}>)
+meth public <%0 extends java.lang.Object> java.util.concurrent.CompletableFuture<{%%0}> trace(javax.ws.rs.client.InvocationCallback<{%%0}>)
+meth public java.util.concurrent.CompletableFuture delete()
+meth public java.util.concurrent.CompletableFuture get()
+meth public java.util.concurrent.CompletableFuture head()
+meth public java.util.concurrent.CompletableFuture options()
+meth public java.util.concurrent.CompletableFuture post(javax.ws.rs.client.Entity<?>)
+meth public java.util.concurrent.CompletableFuture put(javax.ws.rs.client.Entity<?>)
+meth public java.util.concurrent.CompletableFuture trace()
+meth public java.util.concurrent.CompletableFuture<javax.ws.rs.core.Response> head(javax.ws.rs.client.InvocationCallback<javax.ws.rs.core.Response>)
+meth public java.util.concurrent.CompletableFuture<javax.ws.rs.core.Response> method(java.lang.String)
+meth public java.util.concurrent.CompletableFuture<javax.ws.rs.core.Response> method(java.lang.String,javax.ws.rs.client.Entity<?>)
+supr java.lang.Object
 
 CLSS public org.glassfish.jersey.client.JerseyInvocation
 innr public static Builder
@@ -1867,14 +2214,16 @@ intf javax.ws.rs.client.Invocation
 meth public <%0 extends java.lang.Object> java.util.concurrent.Future<{%%0}> submit(java.lang.Class<{%%0}>)
 meth public <%0 extends java.lang.Object> java.util.concurrent.Future<{%%0}> submit(javax.ws.rs.client.InvocationCallback<{%%0}>)
 meth public <%0 extends java.lang.Object> java.util.concurrent.Future<{%%0}> submit(javax.ws.rs.core.GenericType<{%%0}>)
+meth public <%0 extends java.lang.Object> java.util.concurrent.Future<{%%0}> submit(javax.ws.rs.core.GenericType<{%%0}>,javax.ws.rs.client.InvocationCallback<{%%0}>)
 meth public <%0 extends java.lang.Object> {%%0} invoke(java.lang.Class<{%%0}>)
 meth public <%0 extends java.lang.Object> {%%0} invoke(javax.ws.rs.core.GenericType<{%%0}>)
+meth public java.lang.String toString()
 meth public java.util.concurrent.Future<javax.ws.rs.core.Response> submit()
 meth public javax.ws.rs.core.Response invoke()
 meth public org.glassfish.jersey.client.JerseyInvocation property(java.lang.String,java.lang.Object)
 supr java.lang.Object
-hfds LOGGER,METHODS,requestContext
-hcls AsyncInvoker,EntityPresence
+hfds LOGGER,METHODS,copyRequestContext,ignoreResponseException,requestContext
+hcls AsyncInvoker,EntityPresence,InvocationResponseCallback
 
 CLSS public static org.glassfish.jersey.client.JerseyInvocation$Builder
  outer org.glassfish.jersey.client.JerseyInvocation
@@ -1901,7 +2250,9 @@ meth public <%0 extends java.lang.Object> {%%0} put(javax.ws.rs.client.Entity<?>
 meth public <%0 extends java.lang.Object> {%%0} put(javax.ws.rs.client.Entity<?>,javax.ws.rs.core.GenericType<{%%0}>)
 meth public <%0 extends java.lang.Object> {%%0} trace(java.lang.Class<{%%0}>)
 meth public <%0 extends java.lang.Object> {%%0} trace(javax.ws.rs.core.GenericType<{%%0}>)
+meth public <%0 extends javax.ws.rs.client.RxInvoker> {%%0} rx(java.lang.Class<{%%0}>)
 meth public javax.ws.rs.client.AsyncInvoker async()
+meth public javax.ws.rs.client.CompletionStageRxInvoker rx()
 meth public javax.ws.rs.core.Response delete()
 meth public javax.ws.rs.core.Response get()
 meth public javax.ws.rs.core.Response head()
@@ -1925,17 +2276,20 @@ meth public org.glassfish.jersey.client.JerseyInvocation$Builder headers(javax.w
 meth public org.glassfish.jersey.client.JerseyInvocation$Builder property(java.lang.String,java.lang.Object)
 supr java.lang.Object
 hfds requestContext
+hcls BestServiceHolder
 
 CLSS public org.glassfish.jersey.client.JerseyWebTarget
 cons protected init(javax.ws.rs.core.UriBuilder,org.glassfish.jersey.client.ClientConfig)
 cons protected init(javax.ws.rs.core.UriBuilder,org.glassfish.jersey.client.JerseyWebTarget)
 intf javax.ws.rs.client.WebTarget
+intf org.glassfish.jersey.client.Initializable<org.glassfish.jersey.client.JerseyWebTarget>
 meth public !varargs org.glassfish.jersey.client.JerseyInvocation$Builder request(java.lang.String[])
 meth public !varargs org.glassfish.jersey.client.JerseyInvocation$Builder request(javax.ws.rs.core.MediaType[])
 meth public !varargs org.glassfish.jersey.client.JerseyWebTarget matrixParam(java.lang.String,java.lang.Object[])
 meth public !varargs org.glassfish.jersey.client.JerseyWebTarget queryParam(java.lang.String,java.lang.Object[])
 meth public !varargs org.glassfish.jersey.client.JerseyWebTarget register(java.lang.Class<?>,java.lang.Class<?>[])
 meth public !varargs org.glassfish.jersey.client.JerseyWebTarget register(java.lang.Object,java.lang.Class<?>[])
+meth public java.lang.String toString()
 meth public java.net.URI getUri()
 meth public javax.ws.rs.core.UriBuilder getUriBuilder()
 meth public org.glassfish.jersey.client.ClientConfig getConfiguration()
@@ -1966,12 +2320,67 @@ meth public static org.glassfish.jersey.client.RequestEntityProcessing[] values(
 supr java.lang.Enum<org.glassfish.jersey.client.RequestEntityProcessing>
 
 CLSS public org.glassfish.jersey.client.RequestProcessingInitializationStage
-cons public init(javax.inject.Provider<org.glassfish.jersey.internal.util.collection.Ref<org.glassfish.jersey.client.ClientRequest>>,javax.inject.Provider<org.glassfish.jersey.message.MessageBodyWorkers>,org.glassfish.hk2.api.ServiceLocator)
- anno 0 javax.inject.Inject()
-intf com.google.common.base.Function<org.glassfish.jersey.client.ClientRequest,org.glassfish.jersey.client.ClientRequest>
+cons public init(javax.inject.Provider<org.glassfish.jersey.internal.util.collection.Ref<org.glassfish.jersey.client.ClientRequest>>,org.glassfish.jersey.message.MessageBodyWorkers,org.glassfish.jersey.internal.inject.InjectionManager)
+intf java.util.function.Function<org.glassfish.jersey.client.ClientRequest,org.glassfish.jersey.client.ClientRequest>
 meth public org.glassfish.jersey.client.ClientRequest apply(org.glassfish.jersey.client.ClientRequest)
 supr java.lang.Object
 hfds readerInterceptors,requestRefProvider,workersProvider,writerInterceptors
+
+CLSS public org.glassfish.jersey.client.authentication.HttpAuthenticationFeature
+fld public final static java.lang.String HTTP_AUTHENTICATION_BASIC_PASSWORD = "jersey.config.client.http.auth.basic.password"
+fld public final static java.lang.String HTTP_AUTHENTICATION_BASIC_USERNAME = "jersey.config.client.http.auth.basic.username"
+fld public final static java.lang.String HTTP_AUTHENTICATION_DIGEST_PASSWORD = "jersey.config.client.http.auth.digest.password"
+fld public final static java.lang.String HTTP_AUTHENTICATION_DIGEST_USERNAME = "jersey.config.client.http.auth.digest.username"
+fld public final static java.lang.String HTTP_AUTHENTICATION_PASSWORD = "jersey.config.client.http.auth.password"
+fld public final static java.lang.String HTTP_AUTHENTICATION_USERNAME = "jersey.config.client.http.auth.username"
+innr public abstract interface static BasicBuilder
+innr public abstract interface static Builder
+innr public abstract interface static UniversalBuilder
+intf javax.ws.rs.core.Feature
+meth public boolean configure(javax.ws.rs.core.FeatureContext)
+meth public static org.glassfish.jersey.client.authentication.HttpAuthenticationFeature basic(java.lang.String,byte[])
+meth public static org.glassfish.jersey.client.authentication.HttpAuthenticationFeature basic(java.lang.String,java.lang.String)
+meth public static org.glassfish.jersey.client.authentication.HttpAuthenticationFeature digest()
+meth public static org.glassfish.jersey.client.authentication.HttpAuthenticationFeature digest(java.lang.String,byte[])
+meth public static org.glassfish.jersey.client.authentication.HttpAuthenticationFeature digest(java.lang.String,java.lang.String)
+meth public static org.glassfish.jersey.client.authentication.HttpAuthenticationFeature universal(java.lang.String,byte[])
+meth public static org.glassfish.jersey.client.authentication.HttpAuthenticationFeature universal(java.lang.String,java.lang.String)
+meth public static org.glassfish.jersey.client.authentication.HttpAuthenticationFeature$BasicBuilder basicBuilder()
+meth public static org.glassfish.jersey.client.authentication.HttpAuthenticationFeature$UniversalBuilder universalBuilder()
+supr java.lang.Object
+hfds basicCredentials,digestCredentials,mode
+hcls BuilderImpl,Mode
+
+CLSS public abstract interface static org.glassfish.jersey.client.authentication.HttpAuthenticationFeature$BasicBuilder
+ outer org.glassfish.jersey.client.authentication.HttpAuthenticationFeature
+intf org.glassfish.jersey.client.authentication.HttpAuthenticationFeature$Builder
+meth public abstract org.glassfish.jersey.client.authentication.HttpAuthenticationFeature$BasicBuilder nonPreemptive()
+
+CLSS public abstract interface static org.glassfish.jersey.client.authentication.HttpAuthenticationFeature$Builder
+ outer org.glassfish.jersey.client.authentication.HttpAuthenticationFeature
+meth public abstract org.glassfish.jersey.client.authentication.HttpAuthenticationFeature build()
+meth public abstract org.glassfish.jersey.client.authentication.HttpAuthenticationFeature$Builder credentials(java.lang.String,byte[])
+meth public abstract org.glassfish.jersey.client.authentication.HttpAuthenticationFeature$Builder credentials(java.lang.String,java.lang.String)
+
+CLSS public abstract interface static org.glassfish.jersey.client.authentication.HttpAuthenticationFeature$UniversalBuilder
+ outer org.glassfish.jersey.client.authentication.HttpAuthenticationFeature
+intf org.glassfish.jersey.client.authentication.HttpAuthenticationFeature$Builder
+meth public abstract org.glassfish.jersey.client.authentication.HttpAuthenticationFeature$UniversalBuilder credentialsForBasic(java.lang.String,byte[])
+meth public abstract org.glassfish.jersey.client.authentication.HttpAuthenticationFeature$UniversalBuilder credentialsForBasic(java.lang.String,java.lang.String)
+meth public abstract org.glassfish.jersey.client.authentication.HttpAuthenticationFeature$UniversalBuilder credentialsForDigest(java.lang.String,byte[])
+meth public abstract org.glassfish.jersey.client.authentication.HttpAuthenticationFeature$UniversalBuilder credentialsForDigest(java.lang.String,java.lang.String)
+
+CLSS public org.glassfish.jersey.client.authentication.RequestAuthenticationException
+cons public init(java.lang.String)
+cons public init(java.lang.String,java.lang.Throwable)
+cons public init(java.lang.Throwable)
+supr javax.ws.rs.ProcessingException
+
+CLSS public org.glassfish.jersey.client.authentication.ResponseAuthenticationException
+cons public init(javax.ws.rs.core.Response,java.lang.String)
+cons public init(javax.ws.rs.core.Response,java.lang.String,java.lang.Throwable)
+cons public init(javax.ws.rs.core.Response,java.lang.Throwable)
+supr javax.ws.rs.client.ResponseProcessingException
 
 CLSS public org.glassfish.jersey.client.filter.CsrfProtectionFilter
 cons public init()
@@ -1995,30 +2404,39 @@ cons public init()
 intf javax.ws.rs.client.ClientRequestFilter
 meth public void filter(javax.ws.rs.client.ClientRequestContext) throws java.io.IOException
 supr java.lang.Object
-hfds serviceLocator,supportedEncodings
+hfds injectionManager,supportedEncodings
 
-CLSS public final org.glassfish.jersey.client.filter.HttpBasicAuthFilter
-cons public init(java.lang.String,byte[])
-cons public init(java.lang.String,java.lang.String)
-intf javax.ws.rs.client.ClientRequestFilter
-meth public void filter(javax.ws.rs.client.ClientRequestContext) throws java.io.IOException
+CLSS public org.glassfish.jersey.client.http.Expect100ContinueFeature
+cons public init()
+intf javax.ws.rs.core.Feature
+meth public boolean configure(javax.ws.rs.core.FeatureContext)
+meth public static org.glassfish.jersey.client.http.Expect100ContinueFeature basic()
+meth public static org.glassfish.jersey.client.http.Expect100ContinueFeature withCustomThreshold(long)
 supr java.lang.Object
-hfds CHARACTER_SET,authentication
+hfds thresholdSize
 
-CLSS public org.glassfish.jersey.client.filter.HttpDigestAuthFilter
- anno 0 javax.ws.rs.ext.Provider()
-cons public init(java.lang.String,java.lang.String)
-intf javax.ws.rs.client.ClientRequestFilter
-intf javax.ws.rs.client.ClientResponseFilter
-meth public void filter(javax.ws.rs.client.ClientRequestContext) throws java.io.IOException
-meth public void filter(javax.ws.rs.client.ClientRequestContext,javax.ws.rs.client.ClientResponseContext) throws java.io.IOException
-supr java.lang.Object
-hfds CHARACTER_SET,CLIENT_NONCE_BYTE_COUNT,HEADER_DIGEST_SCHEME,HEX_ARRAY,KEY_VALUE_PAIR_PATTERN,MAXIMUM_DIGEST_CACHE_SIZE,config,digestCache,logger,password,randomGenerator,username
-hcls Algorithm,DigestScheme,QOP
+CLSS public abstract interface org.glassfish.jersey.client.inject.ParameterUpdater<%0 extends java.lang.Object, %1 extends java.lang.Object>
+meth public abstract java.lang.String getDefaultValueString()
+meth public abstract java.lang.String getName()
+meth public abstract {org.glassfish.jersey.client.inject.ParameterUpdater%1} update({org.glassfish.jersey.client.inject.ParameterUpdater%0})
+
+CLSS public abstract interface org.glassfish.jersey.client.inject.ParameterUpdaterProvider
+meth public abstract org.glassfish.jersey.client.inject.ParameterUpdater<?,?> get(org.glassfish.jersey.model.Parameter)
 
 CLSS public abstract interface org.glassfish.jersey.client.spi.AsyncConnectorCallback
 meth public abstract void failure(java.lang.Throwable)
 meth public abstract void response(org.glassfish.jersey.client.ClientResponse)
+
+CLSS public org.glassfish.jersey.client.spi.CachingConnectorProvider
+cons public init(org.glassfish.jersey.client.spi.ConnectorProvider)
+intf org.glassfish.jersey.client.spi.ConnectorProvider
+meth public org.glassfish.jersey.client.spi.Connector getConnector(javax.ws.rs.client.Client,javax.ws.rs.core.Configuration)
+supr java.lang.Object
+hfds connector,delegate
+
+CLSS public abstract interface org.glassfish.jersey.client.spi.ClientBuilderListener
+ anno 0 org.glassfish.jersey.Beta()
+meth public abstract void onNewBuilder(javax.ws.rs.client.ClientBuilder)
 
 CLSS public abstract interface org.glassfish.jersey.client.spi.Connector
 intf org.glassfish.jersey.process.Inflector<org.glassfish.jersey.client.ClientRequest,org.glassfish.jersey.client.ClientResponse>
@@ -2028,12 +2446,115 @@ meth public abstract org.glassfish.jersey.client.ClientResponse apply(org.glassf
 meth public abstract void close()
 
 CLSS public abstract interface org.glassfish.jersey.client.spi.ConnectorProvider
- anno 0 org.glassfish.jersey.Beta()
 meth public abstract org.glassfish.jersey.client.spi.Connector getConnector(javax.ws.rs.client.Client,javax.ws.rs.core.Configuration)
 
-CLSS public org.glassfish.jersey.message.internal.InboundMessageContext
+CLSS public abstract interface org.glassfish.jersey.client.spi.DefaultSslContextProvider
+meth public abstract javax.net.ssl.SSLContext getDefaultSslContext()
+
+CLSS public abstract interface org.glassfish.jersey.client.spi.InvocationBuilderListener
+ anno 0 javax.ws.rs.ConstrainedTo(javax.ws.rs.RuntimeType value=CLIENT)
+ anno 0 org.glassfish.jersey.Beta()
+ anno 0 org.glassfish.jersey.spi.Contract()
+innr public abstract interface static InvocationBuilderContext
+meth public abstract void onNewBuilder(org.glassfish.jersey.client.spi.InvocationBuilderListener$InvocationBuilderContext)
+
+CLSS public abstract interface static org.glassfish.jersey.client.spi.InvocationBuilderListener$InvocationBuilderContext
+ outer org.glassfish.jersey.client.spi.InvocationBuilderListener
+meth public abstract !varargs org.glassfish.jersey.client.spi.InvocationBuilderListener$InvocationBuilderContext accept(java.lang.String[])
+meth public abstract !varargs org.glassfish.jersey.client.spi.InvocationBuilderListener$InvocationBuilderContext accept(javax.ws.rs.core.MediaType[])
+meth public abstract !varargs org.glassfish.jersey.client.spi.InvocationBuilderListener$InvocationBuilderContext acceptEncoding(java.lang.String[])
+meth public abstract !varargs org.glassfish.jersey.client.spi.InvocationBuilderListener$InvocationBuilderContext acceptLanguage(java.lang.String[])
+meth public abstract !varargs org.glassfish.jersey.client.spi.InvocationBuilderListener$InvocationBuilderContext acceptLanguage(java.util.Locale[])
+meth public abstract java.lang.Object getProperty(java.lang.String)
+meth public abstract java.net.URI getUri()
+meth public abstract java.util.Collection<java.lang.String> getPropertyNames()
+meth public abstract java.util.List<java.lang.String> getAccepted()
+meth public abstract java.util.List<java.lang.String> getAcceptedLanguages()
+meth public abstract java.util.List<java.lang.String> getEncodings()
+meth public abstract java.util.List<java.lang.String> getHeader(java.lang.String)
+meth public abstract java.util.List<javax.ws.rs.core.CacheControl> getCacheControls()
+meth public abstract java.util.Map<java.lang.String,javax.ws.rs.core.Cookie> getCookies()
+meth public abstract javax.ws.rs.core.Configuration getConfiguration()
+meth public abstract javax.ws.rs.core.MultivaluedMap<java.lang.String,java.lang.Object> getHeaders()
+meth public abstract org.glassfish.jersey.client.spi.InvocationBuilderListener$InvocationBuilderContext cacheControl(javax.ws.rs.core.CacheControl)
+meth public abstract org.glassfish.jersey.client.spi.InvocationBuilderListener$InvocationBuilderContext cookie(java.lang.String,java.lang.String)
+meth public abstract org.glassfish.jersey.client.spi.InvocationBuilderListener$InvocationBuilderContext cookie(javax.ws.rs.core.Cookie)
+meth public abstract org.glassfish.jersey.client.spi.InvocationBuilderListener$InvocationBuilderContext header(java.lang.String,java.lang.Object)
+meth public abstract org.glassfish.jersey.client.spi.InvocationBuilderListener$InvocationBuilderContext headers(javax.ws.rs.core.MultivaluedMap<java.lang.String,java.lang.Object>)
+meth public abstract org.glassfish.jersey.client.spi.InvocationBuilderListener$InvocationBuilderContext property(java.lang.String,java.lang.Object)
+meth public abstract void removeProperty(java.lang.String)
+
+CLSS public abstract interface org.glassfish.jersey.client.spi.PostInvocationInterceptor
+ anno 0 javax.ws.rs.ConstrainedTo(javax.ws.rs.RuntimeType value=CLIENT)
+ anno 0 org.glassfish.jersey.Beta()
+ anno 0 org.glassfish.jersey.spi.Contract()
+innr public abstract interface static ExceptionContext
+meth public abstract void afterRequest(javax.ws.rs.client.ClientRequestContext,javax.ws.rs.client.ClientResponseContext)
+meth public abstract void onException(javax.ws.rs.client.ClientRequestContext,org.glassfish.jersey.client.spi.PostInvocationInterceptor$ExceptionContext)
+
+CLSS public abstract interface static org.glassfish.jersey.client.spi.PostInvocationInterceptor$ExceptionContext
+ outer org.glassfish.jersey.client.spi.PostInvocationInterceptor
+meth public abstract java.util.Deque<java.lang.Throwable> getThrowables()
+meth public abstract java.util.Optional<javax.ws.rs.client.ClientResponseContext> getResponseContext()
+meth public abstract void resolve(javax.ws.rs.core.Response)
+
+CLSS public abstract interface org.glassfish.jersey.client.spi.PreInvocationInterceptor
+ anno 0 javax.ws.rs.ConstrainedTo(javax.ws.rs.RuntimeType value=CLIENT)
+ anno 0 org.glassfish.jersey.Beta()
+ anno 0 org.glassfish.jersey.spi.Contract()
+meth public abstract void beforeRequest(javax.ws.rs.client.ClientRequestContext)
+
+CLSS public org.glassfish.jersey.internal.BootstrapBag
 cons public init()
+meth protected static void requireNonNull(java.lang.Object,java.lang.reflect.Type)
+meth public java.util.List<org.glassfish.jersey.internal.spi.AutoDiscoverable> getAutoDiscoverables()
+meth public javax.ws.rs.core.Configuration getConfiguration()
+meth public org.glassfish.jersey.message.MessageBodyWorkers getMessageBodyWorkers()
+meth public org.glassfish.jersey.model.internal.ManagedObjectsFinalizer getManagedObjectsFinalizer()
+meth public org.glassfish.jersey.process.internal.RequestScope getRequestScope()
+meth public org.glassfish.jersey.spi.ContextResolvers getContextResolvers()
+meth public org.glassfish.jersey.spi.ExceptionMappers getExceptionMappers()
+meth public void setAutoDiscoverables(java.util.List<org.glassfish.jersey.internal.spi.AutoDiscoverable>)
+meth public void setConfiguration(javax.ws.rs.core.Configuration)
+meth public void setContextResolvers(org.glassfish.jersey.spi.ContextResolvers)
+meth public void setExceptionMappers(org.glassfish.jersey.spi.ExceptionMappers)
+meth public void setManagedObjectsFinalizer(org.glassfish.jersey.model.internal.ManagedObjectsFinalizer)
+meth public void setMessageBodyWorkers(org.glassfish.jersey.message.MessageBodyWorkers)
+meth public void setRequestScope(org.glassfish.jersey.process.internal.RequestScope)
+supr java.lang.Object
+hfds autoDiscoverables,configuration,contextResolvers,exceptionMappers,managedObjectsFinalizer,messageBodyWorkers,requestScope
+
+CLSS public abstract interface org.glassfish.jersey.internal.PropertiesResolver
+meth public abstract <%0 extends java.lang.Object> {%%0} resolveProperty(java.lang.String,java.lang.Class<{%%0}>)
+meth public abstract <%0 extends java.lang.Object> {%%0} resolveProperty(java.lang.String,{%%0})
+meth public static org.glassfish.jersey.internal.PropertiesResolver create(javax.ws.rs.core.Configuration,org.glassfish.jersey.internal.PropertiesDelegate)
+
+CLSS public abstract org.glassfish.jersey.internal.inject.AnnotationLiteral<%0 extends java.lang.annotation.Annotation>
+cons protected init()
+intf java.io.Serializable
+intf java.lang.annotation.Annotation
+meth public boolean equals(java.lang.Object)
+meth public int hashCode()
+meth public java.lang.Class<? extends java.lang.annotation.Annotation> annotationType()
+supr java.lang.Object
+hfds annotationType,members,serialVersionUID
+
+CLSS public abstract interface org.glassfish.jersey.internal.inject.InjectionManagerSupplier
+meth public abstract org.glassfish.jersey.internal.inject.InjectionManager getInjectionManager()
+
+CLSS public abstract interface !annotation org.glassfish.jersey.internal.util.PropertiesClass
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE])
+intf java.lang.annotation.Annotation
+
+CLSS public abstract org.glassfish.jersey.message.internal.InboundMessageContext
+cons public init()
+ anno 0 java.lang.Deprecated()
 cons public init(boolean)
+ anno 0 java.lang.Deprecated()
+cons public init(javax.ws.rs.core.Configuration)
+cons public init(javax.ws.rs.core.Configuration,boolean)
+meth protected abstract java.lang.Iterable<javax.ws.rs.ext.ReaderInterceptor> getReaderInterceptors()
 meth public !varargs org.glassfish.jersey.message.internal.InboundMessageContext headers(java.lang.String,java.lang.Object[])
 meth public <%0 extends java.lang.Object> {%%0} readEntity(java.lang.Class<{%%0}>,java.lang.annotation.Annotation[],org.glassfish.jersey.internal.PropertiesDelegate)
 meth public <%0 extends java.lang.Object> {%%0} readEntity(java.lang.Class<{%%0}>,java.lang.reflect.Type,java.lang.annotation.Annotation[],org.glassfish.jersey.internal.PropertiesDelegate)
@@ -2059,6 +2580,7 @@ meth public java.util.Set<java.lang.String> getAllowedMethods()
 meth public java.util.Set<javax.ws.rs.core.Link> getLinks()
 meth public java.util.Set<org.glassfish.jersey.message.internal.MatchingEntityTag> getIfMatch()
 meth public java.util.Set<org.glassfish.jersey.message.internal.MatchingEntityTag> getIfNoneMatch()
+meth public javax.ws.rs.core.Configuration getConfiguration()
 meth public javax.ws.rs.core.EntityTag getEntityTag()
 meth public javax.ws.rs.core.Link getLink(java.lang.String)
 meth public javax.ws.rs.core.Link$Builder getLinkBuilder(java.lang.String)
@@ -2072,14 +2594,15 @@ meth public org.glassfish.jersey.message.internal.InboundMessageContext headers(
 meth public org.glassfish.jersey.message.internal.InboundMessageContext remove(java.lang.String)
 meth public void close()
 meth public void setEntityStream(java.io.InputStream)
-meth public void setReaderInterceptors(org.glassfish.jersey.internal.util.collection.Value<java.lang.Iterable<javax.ws.rs.ext.ReaderInterceptor>>)
 meth public void setWorkers(org.glassfish.jersey.message.MessageBodyWorkers)
 supr java.lang.Object
-hfds EMPTY,EMPTY_ANNOTATIONS,entityContent,headers,readerInterceptors,translateNce,workers
+hfds EMPTY,EMPTY_ANNOTATIONS,WILDCARD_ACCEPTABLE_TYPE_SINGLETON_LIST,configuration,entityContent,headers,translateNce,workers
 hcls EntityContent
 
 CLSS public org.glassfish.jersey.message.internal.OutboundMessageContext
 cons public init()
+ anno 0 java.lang.Deprecated()
+cons public init(javax.ws.rs.core.Configuration)
 cons public init(org.glassfish.jersey.message.internal.OutboundMessageContext)
 innr public abstract interface static StreamProvider
 meth public boolean hasEntity()
@@ -2102,12 +2625,14 @@ meth public java.util.Map<java.lang.String,javax.ws.rs.core.Cookie> getRequestCo
 meth public java.util.Map<java.lang.String,javax.ws.rs.core.NewCookie> getResponseCookies()
 meth public java.util.Set<java.lang.String> getAllowedMethods()
 meth public java.util.Set<javax.ws.rs.core.Link> getLinks()
+meth public javax.ws.rs.core.Configuration getConfiguration()
 meth public javax.ws.rs.core.EntityTag getEntityTag()
 meth public javax.ws.rs.core.Link getLink(java.lang.String)
 meth public javax.ws.rs.core.Link$Builder getLinkBuilder(java.lang.String)
 meth public javax.ws.rs.core.MediaType getMediaType()
 meth public javax.ws.rs.core.MultivaluedMap<java.lang.String,java.lang.Object> getHeaders()
 meth public javax.ws.rs.core.MultivaluedMap<java.lang.String,java.lang.String> getStringHeaders()
+meth public long getLengthLong()
 meth public void close()
 meth public void commitStream() throws java.io.IOException
 meth public void enableBuffering(javax.ws.rs.core.Configuration)
@@ -2122,8 +2647,14 @@ meth public void setEntityType(java.lang.reflect.Type)
 meth public void setMediaType(javax.ws.rs.core.MediaType)
 meth public void setStreamProvider(org.glassfish.jersey.message.internal.OutboundMessageContext$StreamProvider)
 supr java.lang.Object
-hfds EMPTY_ANNOTATIONS,committingOutputStream,entity,entityAnnotations,entityStream,entityType,headers
+hfds EMPTY_ANNOTATIONS,WILDCARD_ACCEPTABLE_TYPE_SINGLETON_LIST,committingOutputStream,configuration,entity,entityAnnotations,entityStream,entityType,headers
 
 CLSS public abstract interface org.glassfish.jersey.process.Inflector<%0 extends java.lang.Object, %1 extends java.lang.Object>
 meth public abstract {org.glassfish.jersey.process.Inflector%1} apply({org.glassfish.jersey.process.Inflector%0})
+
+CLSS public abstract interface !annotation org.glassfish.jersey.spi.Contract
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE])
+intf java.lang.annotation.Annotation
 

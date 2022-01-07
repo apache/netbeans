@@ -62,7 +62,7 @@ public class DeleteOperationImpl implements DeleteOperationImplementation {
         "LBL_Clean4Delete=Clean Before Delete ({0})"
     })
     public void notifyDeleting() throws IOException {
-        ActionMapping mapping = ActionToTaskUtils.getActiveMapping(COMMAND_DELETE, project);
+        ActionMapping mapping = ActionToTaskUtils.getActiveMapping(COMMAND_DELETE, project, Lookup.EMPTY);
         RunConfig config = RunUtils.createRunConfig(project, COMMAND_DELETE,
                 ActionProviderImpl.taskName(project, COMMAND_DELETE, Lookup.EMPTY),
                 mapping.isRepeatable() ? EnumSet.of(REPEATABLE) : EnumSet.noneOf(ExecFlag.class),

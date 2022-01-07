@@ -83,6 +83,121 @@ is the proper place.
     <!-- ACTUAL CHANGES BEGIN HERE: -->
 
     <changes>
+        <change id="plugin.conf.paths">
+            <api name="general"/>
+            <summary>Added helper method to get artifact paths from build plugin configurations.</summary>
+            <version major="2" minor="151"/>
+            <date day="24" month="9" year="2021"/>
+            <author login="sdedic"/>
+            <compatibility addition="yes" semantic="compatible"/>
+            <description>
+                In addition to String property values, or String lists, artifact-based paths, that are convertible to
+                files, are sometimes present in plugin configuration. The new helper function 
+                <a href="@TOP@/org/netbeans/modules/maven/api/PluginPropertyUtils.html#getPluginPathProperty-org.netbeans.api.project.Project-org.netbeans.modules.maven.api.PluginPropertyUtils.PluginConfigPathParams-boolean-java.util.List-">getPluginPathProperty</a>
+                resolves a list of artifacts from the POM configuration and reports errors encountered.
+            </description>
+        </change>
+        <change id="disable-actions">
+            <api name="general"/>
+            <summary>Plugin-dependent Lookup</summary>
+            <version major="2" minor="149"/>
+            <date day="24" month="6" year="2021"/>
+            <author login="sdedic"/>
+            <compatibility addition="yes" semantic="compatible"/>
+            <description>
+                <p>
+                    Actions can be <b>disabled</b> by the MavenActionsProvider for a configuration.
+                </p>
+            </description>
+            <class name="ActionToGoalUtils" package="org.netbeans.modules.maven.execute"/>
+        </change>
+        <change id="plugin-lookup">
+            <api name="general"/>
+            <summary>Plugin-dependent Lookup</summary>
+            <version major="2" minor="148"/>
+            <date day="15" month="5" year="2021"/>
+            <author login="sdedic"/>
+            <compatibility addition="yes" semantic="compatible"/>
+            <description>
+                <p>
+                    Register services for a specific <i>maven plugin</i>
+                    used in the project. See <a href="@TOP@/architecture-summary.html#layer-PluginLookup">PluginLookup</a>.
+                </p>
+            </description>
+        </change>
+        <change id="disable-maven-repo-indexing">
+            <api name="general"/>
+            <summary>Default for frequency of indexing</summary>
+            <version major="2" minor="147"/>
+            <date day="1" month="4" year="2021"/>
+            <author login="jtulach"/>
+            <compatibility semantic="compatible"/>
+            <description>
+                <p>
+                    Introducing <a href="@TOP@architecture-summary.html#group-branding">branding APIs</a>
+                    specify default frequency for downloading Maven index.
+                </p>
+            </description>
+        </change>
+        <change id="ProjectLookup.fallback">
+            <api name="general"/>
+            <summary>Allow project services, that are ordered <b>after</b> specific packaging type</summary>
+            <version major="2" minor="144"/>
+            <date day="10" month="2" year="2021"/>
+            <author login="sdedic"/>
+            <compatibility addition="yes" binary="compatible" semantic="compatible"/>
+            <description>
+                <p>
+                    Project lookup consists of base services, plus services for the project's packaging type. This change allows for
+                    generic post-processing after packaging-specific service. See <a href="@TOP@/architecture-summary.html#layer-MavenPackagingLookup">MavenPackagingLookup</a>
+                    for more details.
+                </p>
+            </description>
+        </change>
+        <change id="RunConfig.getActionLookup">
+            <api name="general"/>
+            <summary>RunConfig provides access to action lookup for parameters extensibility</summary>
+            <version major="2" minor="144"/>
+            <date day="10" month="2" year="2021"/>
+            <author login="sdedic"/>
+            <compatibility addition="yes" source="incompatible" binary="compatible" semantic="compatible"/>
+            <description>
+                <p>
+                    RunConfig now serves the originating action's context Lookup from <a href="@TOP@/org/netbeans/modules/maven/api/execute/RunConfig.html#getActionContext--">RunConfig.getActionContext()</a>
+                    so that the caller can pass extended one-time configuration for the action.
+                </p>
+            </description>
+            <class package="org.netbeans.modules.maven.api.execute" name="RunConfig"/>
+        </change>
+        <change id="execution.explicitParameters">
+            <api name="general"/>
+            <summary>Allow to extend or override parameters for user execution from action caller</summary>
+            <version major="2" minor="144"/>
+            <date day="10" month="2" year="2021"/>
+            <author login="sdedic"/>
+            <compatibility semantic="compatible"/>
+            <description>
+                Added support for <a href="@org-netbeans-modules-extexecution-base@/org/netbeans/api/extexecution/base/ExplicitProcessParameters.html">ExplicitProcessParameters</a>
+                for Maven-nature projects. The <code>ExternaProcessParameterss</code> instructions now append to or replace VM argsuments or 
+                user program arguments. See <a href="@TOP@/org/netbeans/modules/maven/execute/MavenCommandLineExecutor.html">MavenCommandLineExecutor</a>
+                for more details.
+            </description>
+        </change>
+        <change id="reusetabs-cos">
+           <api name="general"/>
+           <summary>Default for reusing tabs and compile on save</summary>
+           <version major="2" minor="141"/>
+           <date day="12" month="10" year="2020"/>
+           <author login="jtulach"/>
+           <compatibility semantic="compatible"/>
+           <description>
+               <p>
+                   Introducing <a href="@TOP@architecture-summary.html#group-branding">branding APIs</a>
+                   to configure default value for <b>reusing tabs</b> and also for
+                   <b>compile on save behavior</b> in Maven projects.
+               </p>
+           </description>
+        </change>
         <change id="jpda-attach-trigger">
            <api name="general"/>
            <summary>Attach to Debugger on triggers</summary>

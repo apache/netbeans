@@ -70,6 +70,7 @@ import com.sun.source.doctree.UsesTree;
 import com.sun.source.doctree.ValueTree;
 import com.sun.source.doctree.VersionTree;
 import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.SwitchExpressionTree;
 
 import com.sun.tools.javac.api.JavacTaskImpl;
 import com.sun.tools.javac.api.JavacTrees;
@@ -107,7 +108,6 @@ import org.netbeans.api.java.source.Comment;
 import org.netbeans.api.java.source.Comment.Style;
 import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenSequence;
-import org.netbeans.modules.java.source.TreeShims;
 import org.netbeans.modules.java.source.builder.CommentHandlerService;
 import org.netbeans.modules.java.source.query.CommentHandler;
 import org.netbeans.modules.java.source.query.CommentSet;
@@ -191,7 +191,7 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
         out.addTrimObserver(this);
         this.indentSize = cs.getIndentSize();
         this.tree2Tag = tree2Tag;
-        this.tree2Doc = tree2Doc == null ? Collections.EMPTY_MAP : tree2Doc;
+        this.tree2Doc = tree2Doc == null ? Collections.<Tree, DocCommentTree>emptyMap(): tree2Doc;
         this.tag2Span = (Map<Object, int[]>) tag2Span;//XXX
         this.origText = origText;
         this.comments = CommentHandlerService.instance(context);
@@ -411,15 +411,7 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
             } else {
                 boolean saveComments = this.commentsEnabled;
                 this.commentsEnabled = printComments;
-                if (t.getKind().toString().equals(TreeShims.SWITCH_EXPRESSION)) {
-                    visitSwitchExpression(t);
-                } 
-                else if (t.getKind().toString().equals(TreeShims.YIELD)) {
-                    visitYield(t);
-                }
-                else {
-                    t.accept(this);
-                }
+                t.accept(this);
                 this.commentsEnabled = saveComments;
             }
 
@@ -1292,13 +1284,14 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
 	print('}');
     }
 
-    public void visitSwitchExpression(Tree tree) {
+    @Override
+    public void visitSwitchExpression(JCSwitchExpression tree) {
         print("switch");
         print(cs.spaceBeforeSwitchParen() ? " (" : "(");
         if (cs.spaceWithinSwitchParens()) {
             print(' ');
         }
-        printNoParenExpr((JCTree) TreeShims.getExpressions(tree).get(0));
+        printNoParenExpr(tree.selector);
         print(cs.spaceWithinSwitchParens() ? " )" : ")");
         int bcol = out.leftMargin;
         switch (cs.getOtherBracePlacement()) {
@@ -1321,10 +1314,10 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
             needSpace();
         }
         print('{');
-        if (!TreeShims.getCases(tree).isEmpty()) {
+        if (!tree.getCases().isEmpty()) {
             newline();
             ListBuffer<JCTree.JCCase> newTcases = new ListBuffer<JCTree.JCCase>();
-            for (CaseTree t : TreeShims.getCases(tree)) {
+            for (CaseTree t : tree.getCases()) {
                 newTcases.append((JCTree.JCCase) t);
             }
             printStats(newTcases.toList());
@@ -1337,18 +1330,18 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
     public void visitCase(JCCase tree) {
         int old = cs.indentCasesFromSwitch() ? indent() : out.leftMargin;
         toLeftMargin();
-        java.util.List<JCExpression> patterns = CasualDiff.getCasePatterns(tree);
-	if (patterns.isEmpty()) {
-	    print("default");
-	} else {
-	    print("case ");
+        java.util.List<JCCaseLabel> labels = tree.labels;
+        if (labels.size() == 1 && labels.get(0).hasTag(Tag.DEFAULTCASELABEL)) {
+            print("default");
+        } else {
+            print("case ");
             String sep = "";
-            for (JCExpression pat : patterns) {
+            for (JCTree lab : labels) {
                 print(sep);
-                printNoParenExpr(pat);
+                printNoParenExpr(lab);
                 sep = ", "; //TODO: space or not should be a configuration setting
             }
-	}
+        }
         Object caseKind = CasualDiff.getCaseKind(tree);
         if (caseKind == null || !String.valueOf(caseKind).equals("RULE")) {
             print(':');
@@ -1502,19 +1495,16 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
     @Override
     public void visitBreak(JCBreak tree) {
         print("break");
-        if (TreeShims.getValue(tree) != null) {
-            needSpace();
-            print((JCTree) TreeShims.getValue(tree));
-        } else if (tree.getLabel() != null) {
+        if (tree.getLabel() != null) {
             needSpace();
             print(tree.getLabel());
         }
         print(';');
     }
 
-    public void visitYield(Tree tree) {
+    public void visitYield(JCYield tree) {
         print("yield");
-        ExpressionTree expr = TreeShims.getYieldValue(tree);
+        ExpressionTree expr = tree.getValue();
         if (expr != null) {
             needSpace();
             print((JCTree) expr);
@@ -2064,6 +2054,18 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
     }
 
     @Override
+    public void visitBindingPattern(JCBindingPattern tree) {
+        print((JCTree) tree.var.vartype);
+        print(' ');
+        print((Name) tree.var.name);
+    }
+
+    @Override
+    public void visitDefaultCaseLabel(JCDefaultCaseLabel that) {
+        print("default");
+    }
+
+    @Override
     public void visitLetExpr(LetExpr tree) {
 	print("(let " + tree.defs + " in " + tree.expr + ")");
     }
@@ -2075,19 +2077,6 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
 
     @Override
     public void visitTree(JCTree tree) {
-        if ("BINDING_PATTERN".equals(tree.getKind().name())) {
-            try {
-                Class bindingPatternClass = Class.forName("com.sun.source.tree.BindingPatternTree");
-                Method getBinding = bindingPatternClass.getMethod("getBinding");
-                Method getType = bindingPatternClass.getMethod("getType");
-                print((JCTree) getType.invoke(tree));
-                print(' ');
-                print((Name) getBinding.invoke(tree));
-                return ;
-            } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | ClassNotFoundException ex) {
-                Exceptions.printStackTrace(ex);
-            }
-        }
 	print("(UNKNOWN: " + tree + ")");
 	newline();
     }

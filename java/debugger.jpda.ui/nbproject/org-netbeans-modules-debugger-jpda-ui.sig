@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.62
+#Version 1.68
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -272,8 +272,6 @@ meth public void transferFocusUpCycle()
 meth public void update(java.awt.Graphics)
 meth public void validate()
 supr java.lang.Object
-hfds FOCUS_TRAVERSABLE_DEFAULT,FOCUS_TRAVERSABLE_SET,FOCUS_TRAVERSABLE_UNKNOWN,LOCK,acc,actionListenerK,adjustmentListenerK,appContext,autoFocusTransferOnDisposal,background,backgroundEraseDisabled,boundsOp,bufferStrategy,changeSupport,coalesceEventsParams,coalesceMap,coalescingEnabled,componentListener,componentListenerK,componentOrientation,componentSerializedDataVersion,compoundShape,containerListenerK,cursor,dropTarget,enabled,eventCache,eventLog,eventMask,focusListener,focusListenerK,focusLog,focusTraversalKeyPropertyNames,focusTraversalKeys,focusTraversalKeysEnabled,focusable,font,foreground,graphicsConfig,height,hierarchyBoundsListener,hierarchyBoundsListenerK,hierarchyListener,hierarchyListenerK,ignoreRepaint,incRate,inputMethodListener,inputMethodListenerK,isAddNotifyComplete,isFocusTraversableOverridden,isInc,isPacked,itemListenerK,keyListener,keyListenerK,locale,log,maxSize,maxSizeSet,minSize,minSizeSet,mixingCutoutRegion,mixingLog,mouseListener,mouseListenerK,mouseMotionListener,mouseMotionListenerK,mouseWheelListener,mouseWheelListenerK,name,nameExplicitlySet,newEventsOnly,objectLock,ownedWindowK,parent,peer,peerFont,popups,prefSize,prefSizeSet,requestFocusController,serialVersionUID,textListenerK,valid,visible,width,windowClosingException,windowFocusListenerK,windowListenerK,windowStateListenerK,x,y
-hcls AWTTreeLock,BltSubRegionBufferStrategy,DummyRequestFocusController,FlipSubRegionBufferStrategy,ProxyCapabilities,SingleBufferStrategy
 
 CLSS public java.awt.Container
 cons public init()
@@ -358,8 +356,6 @@ meth public void transferFocusDownCycle()
 meth public void update(java.awt.Graphics)
 meth public void validate()
 supr java.awt.Component
-hfds EMPTY_ARRAY,INCLUDE_SELF,SEARCH_HEAVYWEIGHTS,component,containerListener,containerSerializedDataVersion,descendUnconditionallyWhenValidating,descendantsCount,dispatcher,eventLog,focusCycleRoot,focusTraversalPolicy,focusTraversalPolicyProvider,isJavaAwtSmartInvalidate,layoutMgr,listeningBoundsChildren,listeningChildren,log,mixingLog,modalAppContext,modalComp,numOfHWComponents,numOfLWComponents,preserveBackgroundColor,printing,printingThreads,serialPersistentFields,serialVersionUID
-hcls DropTargetEventTargetFilter,EventTargetFilter,MouseEventTargetFilter,WakingRunnable
 
 CLSS public abstract interface java.awt.ItemSelectable
 meth public abstract java.lang.Object[] getSelectedObjects()
@@ -398,6 +394,12 @@ meth public abstract void propertyChange(java.beans.PropertyChangeEvent)
 
 CLSS public abstract interface java.io.Serializable
 
+CLSS public abstract interface !annotation java.lang.FunctionalInterface
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE])
+intf java.lang.annotation.Annotation
+
 CLSS public java.lang.Object
 cons public init()
 meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
@@ -412,7 +414,88 @@ meth public final void wait(long,int) throws java.lang.InterruptedException
 meth public int hashCode()
 meth public java.lang.String toString()
 
+CLSS public abstract interface java.lang.annotation.Annotation
+meth public abstract boolean equals(java.lang.Object)
+meth public abstract int hashCode()
+meth public abstract java.lang.Class<? extends java.lang.annotation.Annotation> annotationType()
+meth public abstract java.lang.String toString()
+
+CLSS public abstract interface !annotation java.lang.annotation.Documented
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE])
+intf java.lang.annotation.Annotation
+
+CLSS public abstract interface !annotation java.lang.annotation.Retention
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE])
+intf java.lang.annotation.Annotation
+meth public abstract java.lang.annotation.RetentionPolicy value()
+
+CLSS public abstract interface !annotation java.lang.annotation.Target
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE])
+intf java.lang.annotation.Annotation
+meth public abstract java.lang.annotation.ElementType[] value()
+
+CLSS public abstract java.util.AbstractMap<%0 extends java.lang.Object, %1 extends java.lang.Object>
+cons protected init()
+innr public static SimpleEntry
+innr public static SimpleImmutableEntry
+intf java.util.Map<{java.util.AbstractMap%0},{java.util.AbstractMap%1}>
+meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
+meth public abstract java.util.Set<java.util.Map$Entry<{java.util.AbstractMap%0},{java.util.AbstractMap%1}>> entrySet()
+meth public boolean containsKey(java.lang.Object)
+meth public boolean containsValue(java.lang.Object)
+meth public boolean equals(java.lang.Object)
+meth public boolean isEmpty()
+meth public int hashCode()
+meth public int size()
+meth public java.lang.String toString()
+meth public java.util.Collection<{java.util.AbstractMap%1}> values()
+meth public java.util.Set<{java.util.AbstractMap%0}> keySet()
+meth public void clear()
+meth public void putAll(java.util.Map<? extends {java.util.AbstractMap%0},? extends {java.util.AbstractMap%1}>)
+meth public {java.util.AbstractMap%1} get(java.lang.Object)
+meth public {java.util.AbstractMap%1} put({java.util.AbstractMap%0},{java.util.AbstractMap%1})
+meth public {java.util.AbstractMap%1} remove(java.lang.Object)
+supr java.lang.Object
+
 CLSS public abstract interface java.util.EventListener
+
+CLSS public abstract interface java.util.Map<%0 extends java.lang.Object, %1 extends java.lang.Object>
+innr public abstract interface static Entry
+meth public abstract boolean containsKey(java.lang.Object)
+meth public abstract boolean containsValue(java.lang.Object)
+meth public abstract boolean equals(java.lang.Object)
+meth public abstract boolean isEmpty()
+meth public abstract int hashCode()
+meth public abstract int size()
+meth public abstract java.util.Collection<{java.util.Map%1}> values()
+meth public abstract java.util.Set<java.util.Map$Entry<{java.util.Map%0},{java.util.Map%1}>> entrySet()
+meth public abstract java.util.Set<{java.util.Map%0}> keySet()
+meth public abstract void clear()
+meth public abstract void putAll(java.util.Map<? extends {java.util.Map%0},? extends {java.util.Map%1}>)
+meth public abstract {java.util.Map%1} get(java.lang.Object)
+meth public abstract {java.util.Map%1} put({java.util.Map%0},{java.util.Map%1})
+meth public abstract {java.util.Map%1} remove(java.lang.Object)
+meth public boolean remove(java.lang.Object,java.lang.Object)
+meth public boolean replace({java.util.Map%0},{java.util.Map%1},{java.util.Map%1})
+meth public void forEach(java.util.function.BiConsumer<? super {java.util.Map%0},? super {java.util.Map%1}>)
+meth public void replaceAll(java.util.function.BiFunction<? super {java.util.Map%0},? super {java.util.Map%1},? extends {java.util.Map%1}>)
+meth public {java.util.Map%1} compute({java.util.Map%0},java.util.function.BiFunction<? super {java.util.Map%0},? super {java.util.Map%1},? extends {java.util.Map%1}>)
+meth public {java.util.Map%1} computeIfAbsent({java.util.Map%0},java.util.function.Function<? super {java.util.Map%0},? extends {java.util.Map%1}>)
+meth public {java.util.Map%1} computeIfPresent({java.util.Map%0},java.util.function.BiFunction<? super {java.util.Map%0},? super {java.util.Map%1},? extends {java.util.Map%1}>)
+meth public {java.util.Map%1} getOrDefault(java.lang.Object,{java.util.Map%1})
+meth public {java.util.Map%1} merge({java.util.Map%0},{java.util.Map%1},java.util.function.BiFunction<? super {java.util.Map%1},? super {java.util.Map%1},? extends {java.util.Map%1}>)
+meth public {java.util.Map%1} putIfAbsent({java.util.Map%0},{java.util.Map%1})
+meth public {java.util.Map%1} replace({java.util.Map%0},{java.util.Map%1})
+
+CLSS public abstract interface java.util.function.Supplier<%0 extends java.lang.Object>
+ anno 0 java.lang.FunctionalInterface()
+meth public abstract {java.util.function.Supplier%0} get()
 
 CLSS public abstract interface javax.accessibility.Accessible
 meth public abstract javax.accessibility.AccessibleContext getAccessibleContext()
@@ -509,8 +592,6 @@ meth public void updateUI()
 meth public {javax.swing.JComboBox%0} getItemAt(int)
 meth public {javax.swing.JComboBox%0} getPrototypeDisplayValue()
 supr javax.swing.JComponent
-hfds action,actionPropertyChangeListener,firingActionEvent,prototypeDisplayValue,selectingItem,uiClassID
-hcls ComboBoxActionPropertyChangeListener,DefaultKeySelectionManager
 
 CLSS public abstract javax.swing.JComponent
 cons public init()
@@ -668,8 +749,6 @@ meth public void unregisterKeyboardAction(javax.swing.KeyStroke)
 meth public void update(java.awt.Graphics)
 meth public void updateUI()
 supr java.awt.Container
-hfds ACTIONMAP_CREATED,ANCESTOR_INPUTMAP_CREATED,ANCESTOR_USING_BUFFER,AUTOSCROLLS_SET,COMPLETELY_OBSCURED,CREATED_DOUBLE_BUFFER,DEBUG_GRAPHICS_LOADED,FOCUS_INPUTMAP_CREATED,FOCUS_TRAVERSAL_KEYS_BACKWARD_SET,FOCUS_TRAVERSAL_KEYS_FORWARD_SET,INHERITS_POPUP_MENU,INPUT_VERIFIER_SOURCE_KEY,IS_DOUBLE_BUFFERED,IS_OPAQUE,IS_PAINTING_TILE,IS_PRINTING,IS_PRINTING_ALL,IS_REPAINTING,KEYBOARD_BINDINGS_KEY,KEY_EVENTS_ENABLED,NEXT_FOCUS,NOT_OBSCURED,OPAQUE_SET,PARTIALLY_OBSCURED,REQUEST_FOCUS_DISABLED,RESERVED_1,RESERVED_2,RESERVED_3,RESERVED_4,RESERVED_5,RESERVED_6,WHEN_IN_FOCUSED_WINDOW_BINDINGS,WIF_INPUTMAP_CREATED,WRITE_OBJ_COUNTER_FIRST,WRITE_OBJ_COUNTER_LAST,aaTextInfo,actionMap,alignmentX,alignmentY,ancestorInputMap,autoscrolls,border,clientProperties,componentObtainingGraphicsFrom,componentObtainingGraphicsFromLock,defaultLocale,flags,focusController,focusInputMap,inputVerifier,isAlignmentXSet,isAlignmentYSet,managingFocusBackwardTraversalKeys,managingFocusForwardTraversalKeys,paintingChild,popupMenu,readObjectCallbacks,revalidateRunnableScheduled,tempRectangles,uiClassID,verifyInputWhenFocusTarget,vetoableChangeSupport,windowInputMap
-hcls ActionStandin,IntVector,KeyboardState,ReadObjectCallback
 
 CLSS public javax.swing.JPanel
 cons public init()
@@ -685,7 +764,6 @@ meth public javax.swing.plaf.PanelUI getUI()
 meth public void setUI(javax.swing.plaf.PanelUI)
 meth public void updateUI()
 supr javax.swing.JComponent
-hfds uiClassID
 
 CLSS public abstract interface javax.swing.border.Border
 meth public abstract boolean isBorderOpaque()
@@ -1211,6 +1289,77 @@ meth public java.lang.String getTypeDisplayName()
 meth public javax.swing.JComponent getCustomizer()
 supr org.netbeans.spi.debugger.ui.BreakpointType
 
+CLSS public org.netbeans.modules.debugger.jpda.ui.debugging.DebuggingViewSupportImpl
+cons public init(org.netbeans.spi.debugger.ContextProvider)
+meth protected int getFrameCount(org.netbeans.modules.debugger.jpda.ui.debugging.JPDADVThread)
+meth protected java.util.List<org.netbeans.spi.debugger.ui.DebuggingView$DVFilter> getFilters()
+meth protected java.util.List<org.netbeans.spi.debugger.ui.DebuggingView$DVFrame> getFrames(org.netbeans.modules.debugger.jpda.ui.debugging.JPDADVThread,int,int)
+meth public java.awt.Image getIcon(org.netbeans.spi.debugger.ui.DebuggingView$DVThread)
+meth public java.lang.String getDisplayName(org.netbeans.spi.debugger.ui.DebuggingView$DVThread)
+meth public java.util.List<org.netbeans.spi.debugger.ui.DebuggingView$DVThread> getAllThreads()
+meth public java.util.Set<org.netbeans.spi.debugger.ui.DebuggingView$Deadlock> getDeadlocks()
+meth public org.netbeans.api.debugger.Session getSession()
+meth public org.netbeans.modules.debugger.jpda.ui.debugging.JPDADVThread get(org.netbeans.api.debugger.jpda.JPDAThread)
+meth public org.netbeans.modules.debugger.jpda.ui.debugging.JPDADVThreadGroup get(org.netbeans.api.debugger.jpda.JPDAThreadGroup)
+meth public org.netbeans.modules.debugger.jpda.ui.debugging.JPDADVThreadGroup[] get(org.netbeans.api.debugger.jpda.JPDAThreadGroup[])
+meth public org.netbeans.modules.debugger.jpda.ui.debugging.JPDADVThread[] get(org.netbeans.api.debugger.jpda.JPDAThread[])
+meth public org.netbeans.spi.debugger.ui.DebuggingView$DVSupport$STATE getState()
+meth public org.netbeans.spi.debugger.ui.DebuggingView$DVThread getCurrentThread()
+meth public static java.util.prefs.Preferences getFilterPreferences()
+meth public void resume()
+supr org.netbeans.spi.debugger.ui.DebuggingView$DVSupport
+hfds debugger,preferences,threadGroupsMap,threadsMap
+hcls ChangeListener
+
+CLSS public final org.netbeans.modules.debugger.jpda.ui.debugging.JPDADVFrame
+intf org.netbeans.spi.debugger.ui.DebuggingView$DVFrame
+meth public int getColumn()
+meth public int getLine()
+meth public java.lang.String getName()
+meth public java.net.URI getSourceURI()
+meth public org.netbeans.api.debugger.jpda.CallStackFrame getCallStackFrame()
+meth public org.netbeans.spi.debugger.ui.DebuggingView$DVThread getThread()
+meth public void makeCurrent()
+meth public void popOff() throws org.netbeans.spi.debugger.ui.DebuggingView$PopException
+supr java.lang.Object
+hfds stackFrame,thread
+
+CLSS public final org.netbeans.modules.debugger.jpda.ui.debugging.JPDADVThread
+intf java.util.function.Supplier<org.netbeans.api.debugger.jpda.JPDAThread>
+intf org.netbeans.modules.debugger.jpda.util.WeakCacheMap$KeyedValue<org.netbeans.modules.debugger.jpda.models.JPDAThreadImpl>
+intf org.netbeans.spi.debugger.ui.DebuggingView$DVThread
+meth public boolean isInStep()
+meth public boolean isSuspended()
+meth public int getFrameCount()
+meth public java.lang.String getName()
+meth public java.util.List<org.netbeans.spi.debugger.ui.DebuggingView$DVFrame> getFrames()
+meth public java.util.List<org.netbeans.spi.debugger.ui.DebuggingView$DVFrame> getFrames(int,int)
+meth public java.util.List<org.netbeans.spi.debugger.ui.DebuggingView$DVThread> getLockerThreads()
+meth public org.netbeans.api.debugger.Breakpoint getCurrentBreakpoint()
+meth public org.netbeans.api.debugger.jpda.JPDAThread get()
+meth public org.netbeans.modules.debugger.jpda.models.JPDAThreadImpl getKey()
+meth public org.netbeans.spi.debugger.ui.DebuggingView$DVSupport getDVSupport()
+meth public void addPropertyChangeListener(java.beans.PropertyChangeListener)
+meth public void makeCurrent()
+meth public void removePropertyChangeListener(java.beans.PropertyChangeListener)
+meth public void resume()
+meth public void resumeBlockingThreads()
+meth public void suspend()
+supr java.lang.Object
+hfds dvSupport,proxyListener,t
+hcls PropertyChangeProxyListener,ThreadListDelegate
+
+CLSS public org.netbeans.modules.debugger.jpda.ui.debugging.JPDADVThreadGroup
+intf org.netbeans.modules.debugger.jpda.util.WeakCacheMap$KeyedValue<org.netbeans.modules.debugger.jpda.models.JPDAThreadGroupImpl>
+intf org.netbeans.spi.debugger.ui.DebuggingView$DVThreadGroup
+meth public java.lang.String getName()
+meth public org.netbeans.modules.debugger.jpda.models.JPDAThreadGroupImpl getKey()
+meth public org.netbeans.spi.debugger.ui.DebuggingView$DVThreadGroup getParentThreadGroup()
+meth public org.netbeans.spi.debugger.ui.DebuggingView$DVThreadGroup[] getThreadGroups()
+meth public org.netbeans.spi.debugger.ui.DebuggingView$DVThread[] getThreads()
+supr java.lang.Object
+hfds dvSupport,tg
+
 CLSS public org.netbeans.modules.debugger.jpda.ui.options.DisablingCellRenderer
 cons public init(javax.swing.table.TableCellRenderer,javax.swing.JTable)
 cons public init(javax.swing.table.TableCellRenderer,javax.swing.JTable,java.awt.Color)
@@ -1263,6 +1412,25 @@ meth public void load(org.netbeans.modules.debugger.jpda.expr.formatters.Variabl
 meth public void store(org.netbeans.modules.debugger.jpda.expr.formatters.VariablesFormatter)
 supr javax.swing.JPanel
 hfds addVarButton,childrenButtonGroup,childrenCodeEditorPane,childrenCodeRadioButton,childrenCodeScrollPane,childrenFormatCheckBox,childrenVariablesRadioButton,childrenVariablesTable,classTypesLabel,classTypesTextField,continualValidityChecks,formatterNames,jPanel1,jPanel2,jPanel3,jScrollPane1,moveDownVarButton,moveUpVarButton,nameLabel,nameTextField,removeVarButton,subtypesCheckBox,tableColumnNames,testChildrenCheckBox,testChildrenEditorPane,testChildrenScrollPane,validityDescriptor,validityNotificationSupport,valueEditorPane,valueFormatCheckBox,valueScrollPane
+
+CLSS public final org.netbeans.modules.debugger.jpda.util.WeakCacheMap<%0 extends java.lang.Object, %1 extends org.netbeans.modules.debugger.jpda.util.WeakCacheMap$KeyedValue<{org.netbeans.modules.debugger.jpda.util.WeakCacheMap%0}>>
+cons public init()
+innr public abstract interface static KeyedValue
+meth public boolean containsKey(java.lang.Object)
+meth public boolean containsValue(java.lang.Object)
+meth public boolean isEmpty()
+meth public int size()
+meth public java.util.Set<java.util.Map$Entry<{org.netbeans.modules.debugger.jpda.util.WeakCacheMap%0},{org.netbeans.modules.debugger.jpda.util.WeakCacheMap%1}>> entrySet()
+meth public void clear()
+meth public {org.netbeans.modules.debugger.jpda.util.WeakCacheMap%1} get(java.lang.Object)
+meth public {org.netbeans.modules.debugger.jpda.util.WeakCacheMap%1} put({org.netbeans.modules.debugger.jpda.util.WeakCacheMap%0},{org.netbeans.modules.debugger.jpda.util.WeakCacheMap%1})
+meth public {org.netbeans.modules.debugger.jpda.util.WeakCacheMap%1} remove(java.lang.Object)
+supr java.util.AbstractMap<{org.netbeans.modules.debugger.jpda.util.WeakCacheMap%0},{org.netbeans.modules.debugger.jpda.util.WeakCacheMap%1}>
+hfds cache
+
+CLSS public abstract interface static org.netbeans.modules.debugger.jpda.util.WeakCacheMap$KeyedValue<%0 extends java.lang.Object>
+ outer org.netbeans.modules.debugger.jpda.util.WeakCacheMap
+meth public abstract {org.netbeans.modules.debugger.jpda.util.WeakCacheMap$KeyedValue%0} getKey()
 
 CLSS public abstract org.netbeans.spi.debugger.jpda.SmartSteppingCallback
 cons public init()
@@ -1328,6 +1496,90 @@ meth public abstract boolean isValid()
 meth public abstract boolean ok()
 meth public abstract void addPropertyChangeListener(java.beans.PropertyChangeListener)
 meth public abstract void removePropertyChangeListener(java.beans.PropertyChangeListener)
+
+CLSS public final org.netbeans.spi.debugger.ui.DebuggingView
+innr public abstract interface static DVFrame
+innr public abstract interface static DVThread
+innr public abstract interface static DVThreadGroup
+innr public abstract static DVSupport
+innr public final static DVFilter
+innr public final static Deadlock
+innr public final static PopException
+meth public org.openide.windows.TopComponent getViewTC()
+meth public static org.netbeans.spi.debugger.ui.DebuggingView getDefault()
+supr java.lang.Object
+hfds INSTANCE,dvcRef
+
+CLSS public abstract interface static org.netbeans.spi.debugger.ui.DebuggingView$DVFrame
+ outer org.netbeans.spi.debugger.ui.DebuggingView
+meth public abstract int getColumn()
+meth public abstract int getLine()
+meth public abstract java.lang.String getName()
+meth public abstract java.net.URI getSourceURI()
+meth public abstract org.netbeans.spi.debugger.ui.DebuggingView$DVThread getThread()
+meth public abstract void makeCurrent()
+meth public java.lang.String getSourceMimeType()
+meth public void popOff() throws org.netbeans.spi.debugger.ui.DebuggingView$PopException
+
+CLSS public abstract static org.netbeans.spi.debugger.ui.DebuggingView$DVSupport
+ outer org.netbeans.spi.debugger.ui.DebuggingView
+cons protected init()
+fld public final static java.lang.String PROP_CURRENT_THREAD = "currentThread"
+fld public final static java.lang.String PROP_DEADLOCK = "deadlock"
+fld public final static java.lang.String PROP_STATE = "state"
+fld public final static java.lang.String PROP_THREAD_DIED = "threadDied"
+fld public final static java.lang.String PROP_THREAD_GROUP_ADDED = "threadGroupAdded"
+fld public final static java.lang.String PROP_THREAD_RESUMED = "threadResumed"
+fld public final static java.lang.String PROP_THREAD_STARTED = "threadStarted"
+fld public final static java.lang.String PROP_THREAD_SUSPENDED = "threadSuspended"
+innr public abstract interface static !annotation Registration
+innr public final static !enum STATE
+meth protected abstract java.util.List<org.netbeans.spi.debugger.ui.DebuggingView$DVFilter> getFilters()
+meth protected final org.netbeans.spi.debugger.ui.DebuggingView$Deadlock createDeadlock(java.util.Collection<org.netbeans.spi.debugger.ui.DebuggingView$DVThread>)
+meth protected final void firePropertyChange(java.beans.PropertyChangeEvent)
+meth protected final void firePropertyChange(java.lang.String,java.lang.Object,java.lang.Object)
+meth public abstract java.awt.Image getIcon(org.netbeans.spi.debugger.ui.DebuggingView$DVThread)
+meth public abstract java.lang.String getDisplayName(org.netbeans.spi.debugger.ui.DebuggingView$DVThread)
+meth public abstract java.util.List<org.netbeans.spi.debugger.ui.DebuggingView$DVThread> getAllThreads()
+meth public abstract java.util.Set<org.netbeans.spi.debugger.ui.DebuggingView$Deadlock> getDeadlocks()
+meth public abstract org.netbeans.api.debugger.Session getSession()
+meth public abstract org.netbeans.spi.debugger.ui.DebuggingView$DVSupport$STATE getState()
+meth public abstract org.netbeans.spi.debugger.ui.DebuggingView$DVThread getCurrentThread()
+meth public abstract void resume()
+meth public final javax.swing.Action[] getFilterActions()
+meth public final void addPropertyChangeListener(java.beans.PropertyChangeListener)
+meth public final void removePropertyChangeListener(java.beans.PropertyChangeListener)
+meth public java.lang.String getDisplayName(org.netbeans.spi.debugger.ui.DebuggingView$DVFrame)
+supr java.lang.Object
+hfds pcs
+
+CLSS public abstract interface static org.netbeans.spi.debugger.ui.DebuggingView$DVThread
+ outer org.netbeans.spi.debugger.ui.DebuggingView
+fld public final static java.lang.String PROP_BREAKPOINT = "currentBreakpoint"
+fld public final static java.lang.String PROP_LOCKER_THREADS = "lockerThreads"
+fld public final static java.lang.String PROP_SUSPENDED = "suspended"
+meth public abstract boolean isInStep()
+meth public abstract boolean isSuspended()
+meth public abstract java.lang.String getName()
+meth public abstract java.util.List<org.netbeans.spi.debugger.ui.DebuggingView$DVThread> getLockerThreads()
+meth public abstract org.netbeans.api.debugger.Breakpoint getCurrentBreakpoint()
+meth public abstract org.netbeans.spi.debugger.ui.DebuggingView$DVSupport getDVSupport()
+meth public abstract void addPropertyChangeListener(java.beans.PropertyChangeListener)
+meth public abstract void makeCurrent()
+meth public abstract void removePropertyChangeListener(java.beans.PropertyChangeListener)
+meth public abstract void resume()
+meth public abstract void resumeBlockingThreads()
+meth public abstract void suspend()
+meth public int getFrameCount()
+meth public java.util.List<org.netbeans.spi.debugger.ui.DebuggingView$DVFrame> getFrames()
+meth public java.util.List<org.netbeans.spi.debugger.ui.DebuggingView$DVFrame> getFrames(int,int)
+
+CLSS public abstract interface static org.netbeans.spi.debugger.ui.DebuggingView$DVThreadGroup
+ outer org.netbeans.spi.debugger.ui.DebuggingView
+meth public abstract java.lang.String getName()
+meth public abstract org.netbeans.spi.debugger.ui.DebuggingView$DVThreadGroup getParentThreadGroup()
+meth public abstract org.netbeans.spi.debugger.ui.DebuggingView$DVThreadGroup[] getThreadGroups()
+meth public abstract org.netbeans.spi.debugger.ui.DebuggingView$DVThread[] getThreads()
 
 CLSS public abstract interface org.netbeans.spi.debugger.ui.PersistentController
 intf org.netbeans.spi.debugger.ui.Controller

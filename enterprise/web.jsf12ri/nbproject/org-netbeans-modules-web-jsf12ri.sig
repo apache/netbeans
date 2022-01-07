@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.32.0
+#Version 1.38.0
 
 CLSS public com.sun.faces.RIConstants
 fld public final static java.lang.Class[] EMPTY_CLASS_ARGS
@@ -3155,7 +3155,6 @@ meth public void setAsText(java.lang.String)
 meth public void setSource(java.lang.Object)
 meth public void setValue(java.lang.Object)
 supr java.lang.Object
-hfds listeners,source,value
 
 CLSS public abstract interface java.io.Closeable
 intf java.lang.AutoCloseable
@@ -3194,7 +3193,6 @@ meth public void close() throws java.io.IOException
 meth public void mark(int)
 meth public void reset() throws java.io.IOException
 supr java.lang.Object
-hfds MAX_SKIP_BUFFER_SIZE
 
 CLSS public abstract interface java.io.ObjectInput
 intf java.io.DataInput
@@ -3246,8 +3244,6 @@ meth public void readFully(byte[]) throws java.io.IOException
 meth public void readFully(byte[],int,int) throws java.io.IOException
 meth public void registerValidation(java.io.ObjectInputValidation,int) throws java.io.InvalidObjectException,java.io.NotActiveException
 supr java.io.InputStream
-hfds NULL_HANDLE,bin,closed,curContext,defaultDataEnd,depth,enableOverride,enableResolve,handles,passHandle,primClasses,primVals,serialFilter,totalObjectRefs,unsharedMarker,validator,vlist
-hcls BlockDataInputStream,Caches,FilterValues,GetFieldImpl,HandleTable,Logging,PeekInputStream,ValidationList
 
 CLSS public abstract interface java.io.ObjectStreamConstants
 fld public final static byte SC_BLOCK_DATA = 8
@@ -3338,7 +3334,6 @@ meth public void write(int)
 meth public void write(java.lang.String)
 meth public void write(java.lang.String,int,int)
 supr java.io.Writer
-hfds autoFlush,formatter,lineSeparator,psOut,trouble
 
 CLSS public abstract interface java.io.Serializable
 
@@ -3360,7 +3355,6 @@ meth public void write(int) throws java.io.IOException
 meth public void write(java.lang.String) throws java.io.IOException
 meth public void write(java.lang.String,int,int) throws java.io.IOException
 supr java.lang.Object
-hfds WRITE_BUFFER_SIZE,writeBuffer
 
 CLSS public abstract interface java.lang.Appendable
 meth public abstract java.lang.Appendable append(char) throws java.io.IOException
@@ -3390,7 +3384,6 @@ meth public final java.lang.String name()
 meth public java.lang.String toString()
 meth public static <%0 extends java.lang.Enum<{%%0}>> {%%0} valueOf(java.lang.Class<{%%0}>,java.lang.String)
 supr java.lang.Object
-hfds name,ordinal
 
 CLSS public java.lang.Exception
 cons protected init(java.lang.String,java.lang.Throwable,boolean,boolean)
@@ -3399,7 +3392,6 @@ cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.Throwable)
 cons public init(java.lang.Throwable)
 supr java.lang.Throwable
-hfds serialVersionUID
 
 CLSS public java.lang.Object
 cons public init()
@@ -3422,7 +3414,6 @@ cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.Throwable)
 cons public init(java.lang.Throwable)
 supr java.lang.Exception
-hfds serialVersionUID
 
 CLSS public java.lang.Throwable
 cons protected init(java.lang.String,java.lang.Throwable,boolean,boolean)
@@ -3445,8 +3436,6 @@ meth public void printStackTrace(java.io.PrintStream)
 meth public void printStackTrace(java.io.PrintWriter)
 meth public void setStackTrace(java.lang.StackTraceElement[])
 supr java.lang.Object
-hfds CAUSE_CAPTION,EMPTY_THROWABLE_ARRAY,NULL_CAUSE_MESSAGE,SELF_SUPPRESSION_MESSAGE,SUPPRESSED_CAPTION,SUPPRESSED_SENTINEL,UNASSIGNED_STACK,backtrace,cause,detailMessage,serialVersionUID,stackTrace,suppressedExceptions
-hcls PrintStreamOrWriter,SentinelHolder,WrappedPrintStream,WrappedPrintWriter
 
 CLSS public abstract java.util.AbstractMap<%0 extends java.lang.Object, %1 extends java.lang.Object>
 cons protected init()
@@ -3470,7 +3459,6 @@ meth public {java.util.AbstractMap%1} get(java.lang.Object)
 meth public {java.util.AbstractMap%1} put({java.util.AbstractMap%0},{java.util.AbstractMap%1})
 meth public {java.util.AbstractMap%1} remove(java.lang.Object)
 supr java.lang.Object
-hfds keySet,values
 
 CLSS public abstract interface java.util.EventListener
 
@@ -3507,8 +3495,6 @@ meth public {java.util.HashMap%1} putIfAbsent({java.util.HashMap%0},{java.util.H
 meth public {java.util.HashMap%1} remove(java.lang.Object)
 meth public {java.util.HashMap%1} replace({java.util.HashMap%0},{java.util.HashMap%1})
 supr java.util.AbstractMap<{java.util.HashMap%0},{java.util.HashMap%1}>
-hfds DEFAULT_INITIAL_CAPACITY,DEFAULT_LOAD_FACTOR,MAXIMUM_CAPACITY,MIN_TREEIFY_CAPACITY,TREEIFY_THRESHOLD,UNTREEIFY_THRESHOLD,entrySet,loadFactor,modCount,serialVersionUID,size,table,threshold
-hcls EntryIterator,EntrySet,EntrySpliterator,HashIterator,HashMapSpliterator,KeyIterator,KeySet,KeySpliterator,Node,TreeNode,ValueIterator,ValueSpliterator,Values
 
 CLSS public java.util.LinkedHashMap<%0 extends java.lang.Object, %1 extends java.lang.Object>
 cons public init()
@@ -3528,8 +3514,6 @@ meth public void replaceAll(java.util.function.BiFunction<? super {java.util.Lin
 meth public {java.util.LinkedHashMap%1} get(java.lang.Object)
 meth public {java.util.LinkedHashMap%1} getOrDefault(java.lang.Object,{java.util.LinkedHashMap%1})
 supr java.util.HashMap<{java.util.LinkedHashMap%0},{java.util.LinkedHashMap%1}>
-hfds accessOrder,head,serialVersionUID,tail
-hcls Entry,LinkedEntryIterator,LinkedEntrySet,LinkedHashIterator,LinkedKeyIterator,LinkedKeySet,LinkedValueIterator,LinkedValues
 
 CLSS public abstract interface java.util.Map<%0 extends java.lang.Object, %1 extends java.lang.Object>
 innr public abstract interface static Entry

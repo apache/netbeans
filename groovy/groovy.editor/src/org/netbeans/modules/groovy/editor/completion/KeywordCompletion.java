@@ -20,7 +20,7 @@
 package org.netbeans.modules.groovy.editor.completion;
 
 import java.util.EnumSet;
-import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenSequence;
@@ -47,7 +47,7 @@ class KeywordCompletion extends BaseCompletion {
 
 
     @Override
-    public boolean complete(List<CompletionProposal> proposals, CompletionContext request, int anchor) {
+    public boolean complete(Map<Object, CompletionProposal> proposals, CompletionContext request, int anchor) {
         this.request = request;
 
         LOG.log(Level.FINEST, "-> completeKeywords"); // NOI18N
@@ -82,7 +82,19 @@ class KeywordCompletion extends BaseCompletion {
         // filter-out keywords in a step-by-step approach
         filterPackageStatement(havePackage);
         filterPrefix(prefix);
-        filterLocation(request.location);
+        if (keywords.contains(GroovyKeyword.KEYWORD_package) && isFirstStatement(request)) {
+            // This is a hack for offering package keyword in the script as the first statement.
+            // The current implementation use INSIDE_LOCATION for the top context in script, which is OK, 
+            // but package is only above class keyword and will not be displayed here. 
+            // This covers case, when you have empty file and you want to write package as the first. 
+            filterLocation(request.location);
+            if (!keywords.contains(GroovyKeyword.KEYWORD_package)) {
+                // the package is only above class keyword, but on the first position we should offer it
+                keywords.add(GroovyKeyword.KEYWORD_package);
+            }
+        } else {
+            filterLocation(request.location);
+        }
         filterClassInterfaceOrdering(request.context);
         filterMethodDefinitions(request.context);
         filterKeywordsNextToEachOther(request.context);
@@ -91,12 +103,34 @@ class KeywordCompletion extends BaseCompletion {
 
         for (GroovyKeyword groovyKeyword : keywords) {
             LOG.log(Level.FINEST, "Adding keyword proposal : {0}", groovyKeyword.getName()); // NOI18N
-            proposals.add(new CompletionItem.KeywordItem(groovyKeyword.getName(), null, anchor, request.getParserResult(), groovyKeyword.isGroovyKeyword()));
+            proposals.put("keyword:" + groovyKeyword.getName(), 
+                    new CompletionItem.KeywordItem(groovyKeyword.getName(), null, anchor, request.getParserResult(), groovyKeyword.isGroovyKeyword()));
         }
 
         return true;
     }
 
+    boolean isFirstStatement(final CompletionContext request) {
+        TokenSequence<GroovyTokenId> ts = LexUtilities.getGroovyTokenSequence(request.doc, 1);
+
+        if (ts != null) {
+            ts.move(request.lexOffset);
+            if (ts.movePrevious()) {
+                while (ts.isValid() && ts.movePrevious() && ts.offset() >= 0) {
+                    Token<GroovyTokenId> t = ts.token();
+                    if (!(t.id() == GroovyTokenId.NLS || t.id() == GroovyTokenId.WHITESPACE 
+                            || t.id() == GroovyTokenId.SH_COMMENT || t.id() == GroovyTokenId.SL_COMMENT
+                            || t.id() == GroovyTokenId.BLOCK_COMMENT || t.id() == GroovyTokenId.LINE_COMMENT)) {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+
+        return false;
+    }
+    
     boolean checkForPackageStatement(final CompletionContext request) {
         TokenSequence<GroovyTokenId> ts = LexUtilities.getGroovyTokenSequence(request.doc, 1);
 

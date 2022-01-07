@@ -28,7 +28,8 @@ import java.util.List;
 import java.util.prefs.PreferenceChangeEvent;
 import java.util.prefs.PreferenceChangeListener;
 import java.util.prefs.Preferences;
-import org.netbeans.modules.gradle.api.execute.RunUtils;
+import org.netbeans.modules.gradle.api.execute.GradleDistributionManager;
+import org.netbeans.modules.gradle.api.execute.GradleDistributionManager.GradleDistribution;
 import org.netbeans.spi.java.classpath.ClassPathImplementation;
 import org.netbeans.spi.java.classpath.PathResourceImplementation;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
@@ -48,7 +49,7 @@ abstract class AbstractGradleScriptClassPath implements ClassPathImplementation 
     File distDir;
 
     public AbstractGradleScriptClassPath() {
-        distDir = RunUtils.evaluateGradleDistribution(null, false);
+        changeDistDir();
 
         prefListener = (PreferenceChangeEvent evt) -> {
             switch (evt.getKey()) {
@@ -91,8 +92,9 @@ abstract class AbstractGradleScriptClassPath implements ClassPathImplementation 
     }
 
     private void changeDistDir() {
-        File newDistDir = RunUtils.evaluateGradleDistribution(null, false);
-        if (!distDir.equals(newDistDir)) {
+        GradleDistribution dist = GradleDistributionManager.get(GradleSettings.getDefault().getGradleUserHome()).defaultDistribution();
+        File newDistDir = dist.getDistributionDir();
+        if (distDir != null && !distDir.equals(newDistDir)) {
             distDir = newDistDir;
             resources = null;
             cs.firePropertyChange(ClassPathImplementation.PROP_RESOURCES, null, null);

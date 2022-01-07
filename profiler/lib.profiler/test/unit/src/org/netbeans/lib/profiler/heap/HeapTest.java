@@ -36,15 +36,16 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
+import java.util.Set;
 import java.util.TimeZone;
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -53,18 +54,9 @@ import static org.junit.Assert.*;
  * @author Tomas Hurka
  */
 public class HeapTest {
-
-    private Heap heap;
+    Heap heap;
 
     public HeapTest() {
-    }
-
-    @BeforeClass
-    public static void setUpClass() throws Exception {
-    }
-
-    @AfterClass
-    public static void tearDownClass() throws Exception {
     }
 
     @Before
@@ -102,8 +94,13 @@ public class HeapTest {
      */
     @Test
     public void testGetGCRoots() {
-        Collection result = heap.getGCRoots();
-        assertEquals(429, result.size());
+        Collection<GCRoot> result = heap.getGCRoots();
+        Set<Instance> unique = new HashSet<>();
+        for (GCRoot r : result) {
+            unique.add(r.getInstance());
+        }
+        assertEquals("Unique root instances", 429, unique.size());
+        assertEquals("Roots with duplicted instances", 453, result.size());
     }
 
     /**
@@ -332,13 +329,15 @@ public class HeapTest {
                 }
             }
         }
-        Collection roots = heap.getGCRoots();
+        Collection<GCRoot> roots = heap.getGCRoots();
         out.println("GC roots " + roots.size());
 
-        for (Object g : roots) {
-            GCRoot root = (GCRoot) g;
-            Instance i = root.getInstance();
-
+        Set<Instance> unique = new LinkedHashSet<>();
+        for (GCRoot r : roots) {
+            unique.add(r.getInstance());
+        }
+        for (Instance i : unique) {
+            GCRoot root = heap.getGCRoot(i);
             out.println("Root kind " + root.getKind() + " Class " + i.getJavaClass().getName() + "#" + i.getInstanceNumber());
         }
         out.close();

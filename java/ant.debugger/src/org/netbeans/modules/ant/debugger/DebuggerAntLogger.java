@@ -284,7 +284,7 @@ public class DebuggerAntLogger extends AntLogger {
     private Map<AntDebugger, AntSession> runningDebuggers2 = new HashMap<>();
     private Set<File> filesToDebug = new HashSet<>();
     /** File => WeakReference -> ExecutorTask */
-    private Map fileExecutors = new HashMap();
+    private Map<File, WeakReference> fileExecutors = new HashMap<>();
     
     void debugFile (File f) {
         filesToDebug.add (f);

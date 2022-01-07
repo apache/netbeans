@@ -1,10 +1,16 @@
 #Signature file v4.1
-#Version 2.56
+#Version 2.62
 
 CLSS public abstract interface java.io.Serializable
 
 CLSS public abstract interface java.lang.Comparable<%0 extends java.lang.Object>
 meth public abstract int compareTo({java.lang.Comparable%0})
+
+CLSS public abstract interface !annotation java.lang.Deprecated
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[CONSTRUCTOR, FIELD, LOCAL_VARIABLE, METHOD, PACKAGE, PARAMETER, TYPE])
+intf java.lang.annotation.Annotation
 
 CLSS public abstract java.lang.Enum<%0 extends java.lang.Enum<{java.lang.Enum%0}>>
 cons protected init(java.lang.String,int)
@@ -21,7 +27,6 @@ meth public final java.lang.String name()
 meth public java.lang.String toString()
 meth public static <%0 extends java.lang.Enum<{%%0}>> {%%0} valueOf(java.lang.Class<{%%0}>,java.lang.String)
 supr java.lang.Object
-hfds name,ordinal
 
 CLSS public java.lang.Object
 cons public init()
@@ -36,6 +41,32 @@ meth public final void wait(long) throws java.lang.InterruptedException
 meth public final void wait(long,int) throws java.lang.InterruptedException
 meth public int hashCode()
 meth public java.lang.String toString()
+
+CLSS public abstract interface java.lang.annotation.Annotation
+meth public abstract boolean equals(java.lang.Object)
+meth public abstract int hashCode()
+meth public abstract java.lang.Class<? extends java.lang.annotation.Annotation> annotationType()
+meth public abstract java.lang.String toString()
+
+CLSS public abstract interface !annotation java.lang.annotation.Documented
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE])
+intf java.lang.annotation.Annotation
+
+CLSS public abstract interface !annotation java.lang.annotation.Retention
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE])
+intf java.lang.annotation.Annotation
+meth public abstract java.lang.annotation.RetentionPolicy value()
+
+CLSS public abstract interface !annotation java.lang.annotation.Target
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE])
+intf java.lang.annotation.Annotation
+meth public abstract java.lang.annotation.ElementType[] value()
 
 CLSS public abstract interface javax.accessibility.Accessible
 meth public abstract javax.accessibility.AccessibleContext getAccessibleContext()
@@ -745,6 +776,7 @@ meth public static org.netbeans.api.visual.border.Border createEmptyBorder(int)
 meth public static org.netbeans.api.visual.border.Border createEmptyBorder(int,int)
 meth public static org.netbeans.api.visual.border.Border createEmptyBorder(int,int,int,int)
 meth public static org.netbeans.api.visual.border.Border createFancyDashedBorder(java.awt.Color,int,int)
+ anno 0 java.lang.Deprecated()
 meth public static org.netbeans.api.visual.border.Border createImageBorder(java.awt.Insets,java.awt.Image)
 meth public static org.netbeans.api.visual.border.Border createImageBorder(java.awt.Insets,java.awt.Insets,java.awt.Image)
 meth public static org.netbeans.api.visual.border.Border createLineBorder()
@@ -941,10 +973,10 @@ hfds checker,horizontalGap,verticalGap
 CLSS public org.netbeans.api.visual.graph.layout.TreeGraphLayout<%0 extends java.lang.Object, %1 extends java.lang.Object>
 cons public init(org.netbeans.api.visual.graph.GraphScene<{org.netbeans.api.visual.graph.layout.TreeGraphLayout%0},{org.netbeans.api.visual.graph.layout.TreeGraphLayout%1}>,int,int,int,int,boolean)
 meth protected java.util.Collection<{org.netbeans.api.visual.graph.layout.TreeGraphLayout%0}> resolveChildren({org.netbeans.api.visual.graph.layout.TreeGraphLayout%0})
-meth protected void performGraphLayout(org.netbeans.api.visual.graph.layout.UniversalGraph)
-meth protected void performNodesLayout(org.netbeans.api.visual.graph.layout.UniversalGraph,java.util.Collection)
+meth protected void performGraphLayout(org.netbeans.api.visual.graph.layout.UniversalGraph<{org.netbeans.api.visual.graph.layout.TreeGraphLayout%0},{org.netbeans.api.visual.graph.layout.TreeGraphLayout%1}>)
+meth protected void performNodesLayout(org.netbeans.api.visual.graph.layout.UniversalGraph<{org.netbeans.api.visual.graph.layout.TreeGraphLayout%0},{org.netbeans.api.visual.graph.layout.TreeGraphLayout%1}>,java.util.Collection<{org.netbeans.api.visual.graph.layout.TreeGraphLayout%0}>)
 meth public final void layout({org.netbeans.api.visual.graph.layout.TreeGraphLayout%0})
-supr org.netbeans.api.visual.graph.layout.GraphLayout
+supr org.netbeans.api.visual.graph.layout.GraphLayout<{org.netbeans.api.visual.graph.layout.TreeGraphLayout%0},{org.netbeans.api.visual.graph.layout.TreeGraphLayout%1}>
 hfds horizontalGap,originX,originY,scene,vertical,verticalGap
 hcls Node
 
@@ -1003,15 +1035,20 @@ meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> or
 meth public static org.netbeans.api.visual.layout.Layout createAbsoluteLayout()
 meth public static org.netbeans.api.visual.layout.Layout createCardLayout(org.netbeans.api.visual.widget.Widget)
 meth public static org.netbeans.api.visual.layout.Layout createFillLayout()
+ anno 0 java.lang.Deprecated()
 meth public static org.netbeans.api.visual.layout.Layout createHorizontalFlowLayout()
 meth public static org.netbeans.api.visual.layout.Layout createHorizontalFlowLayout(org.netbeans.api.visual.layout.LayoutFactory$SerialAlignment,int)
 meth public static org.netbeans.api.visual.layout.Layout createHorizontalLayout()
+ anno 0 java.lang.Deprecated()
 meth public static org.netbeans.api.visual.layout.Layout createHorizontalLayout(org.netbeans.api.visual.layout.LayoutFactory$SerialAlignment,int)
+ anno 0 java.lang.Deprecated()
 meth public static org.netbeans.api.visual.layout.Layout createOverlayLayout()
 meth public static org.netbeans.api.visual.layout.Layout createVerticalFlowLayout()
 meth public static org.netbeans.api.visual.layout.Layout createVerticalFlowLayout(org.netbeans.api.visual.layout.LayoutFactory$SerialAlignment,int)
 meth public static org.netbeans.api.visual.layout.Layout createVerticalLayout()
+ anno 0 java.lang.Deprecated()
 meth public static org.netbeans.api.visual.layout.Layout createVerticalLayout(org.netbeans.api.visual.layout.LayoutFactory$SerialAlignment,int)
+ anno 0 java.lang.Deprecated()
 meth public static org.netbeans.api.visual.layout.SceneLayout createDevolveWidgetLayout(org.netbeans.api.visual.widget.Widget,org.netbeans.api.visual.layout.Layout,boolean)
 meth public static org.netbeans.api.visual.widget.Widget getActiveCard(org.netbeans.api.visual.widget.Widget)
 meth public static void setActiveCard(org.netbeans.api.visual.widget.Widget,org.netbeans.api.visual.widget.Widget)
@@ -1734,11 +1771,13 @@ meth public static org.netbeans.api.visual.widget.general.IconNodeWidget$TextOri
 supr java.lang.Enum<org.netbeans.api.visual.widget.general.IconNodeWidget$TextOrientation>
 
 CLSS public org.netbeans.api.visual.widget.general.ListItemWidget
+ anno 0 java.lang.Deprecated()
 cons public init(org.netbeans.api.visual.widget.Scene)
 meth public void notifyStateChanged(org.netbeans.api.visual.model.ObjectState,org.netbeans.api.visual.model.ObjectState)
 supr org.netbeans.api.visual.widget.LabelWidget
 
 CLSS public org.netbeans.api.visual.widget.general.ListWidget
+ anno 0 java.lang.Deprecated()
 cons public init(org.netbeans.api.visual.widget.Scene)
 meth public final org.netbeans.api.visual.widget.ImageWidget getImageWidget()
 meth public final org.netbeans.api.visual.widget.LabelWidget getLabelWidget()

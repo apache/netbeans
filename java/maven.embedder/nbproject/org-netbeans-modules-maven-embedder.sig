@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.61
+#Version 2.67
 
 CLSS public abstract interface !annotation com.google.common.annotations.Beta
  anno 0 com.google.common.annotations.GwtCompatible(boolean emulated=false, boolean serializable=false)
@@ -216,25 +216,14 @@ CLSS public abstract com.google.common.base.Converter<%0 extends java.lang.Objec
 cons protected init()
 intf com.google.common.base.Function<{com.google.common.base.Converter%0},{com.google.common.base.Converter%1}>
 meth protected abstract {com.google.common.base.Converter%0} doBackward({com.google.common.base.Converter%1})
- anno 0 com.google.errorprone.annotations.ForOverride()
 meth protected abstract {com.google.common.base.Converter%1} doForward({com.google.common.base.Converter%0})
- anno 0 com.google.errorprone.annotations.ForOverride()
 meth public boolean equals(java.lang.Object)
- anno 1 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public com.google.common.base.Converter<{com.google.common.base.Converter%1},{com.google.common.base.Converter%0}> reverse()
- anno 0 com.google.errorprone.annotations.CanIgnoreReturnValue()
 meth public final <%0 extends java.lang.Object> com.google.common.base.Converter<{com.google.common.base.Converter%0},{%%0}> andThen(com.google.common.base.Converter<{com.google.common.base.Converter%1},{%%0}>)
 meth public final {com.google.common.base.Converter%1} apply({com.google.common.base.Converter%0})
- anno 0 com.google.errorprone.annotations.CanIgnoreReturnValue()
  anno 0 java.lang.Deprecated()
- anno 0 org.checkerframework.checker.nullness.compatqual.NullableDecl()
- anno 1 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public final {com.google.common.base.Converter%1} convert({com.google.common.base.Converter%0})
- anno 0 com.google.errorprone.annotations.CanIgnoreReturnValue()
- anno 0 org.checkerframework.checker.nullness.compatqual.NullableDecl()
- anno 1 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public java.lang.Iterable<{com.google.common.base.Converter%1}> convertAll(java.lang.Iterable<? extends {com.google.common.base.Converter%0}>)
- anno 0 com.google.errorprone.annotations.CanIgnoreReturnValue()
 meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> com.google.common.base.Converter<{%%0},{%%1}> from(com.google.common.base.Function<? super {%%0},? extends {%%1}>,com.google.common.base.Function<? super {%%1},? extends {%%0}>)
 meth public static <%0 extends java.lang.Object> com.google.common.base.Converter<{%%0},{%%0}> identity()
 supr java.lang.Object
@@ -244,7 +233,6 @@ hcls ConverterComposition,FunctionBasedConverter,IdentityConverter,ReverseConver
 CLSS public final com.google.common.base.Defaults
  anno 0 com.google.common.annotations.GwtIncompatible(java.lang.String value="")
 meth public static <%0 extends java.lang.Object> {%%0} defaultValue(java.lang.Class<{%%0}>)
- anno 0 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 supr java.lang.Object
 hfds DOUBLE_DEFAULT,FLOAT_DEFAULT
 
@@ -263,21 +251,14 @@ CLSS public abstract com.google.common.base.Equivalence<%0 extends java.lang.Obj
 cons protected init()
 innr public final static Wrapper
 meth protected abstract boolean doEquivalent({com.google.common.base.Equivalence%0},{com.google.common.base.Equivalence%0})
- anno 0 com.google.errorprone.annotations.ForOverride()
 meth protected abstract int doHash({com.google.common.base.Equivalence%0})
- anno 0 com.google.errorprone.annotations.ForOverride()
 meth public final <%0 extends java.lang.Object> com.google.common.base.Equivalence<{%%0}> onResultOf(com.google.common.base.Function<{%%0},? extends {com.google.common.base.Equivalence%0}>)
 meth public final <%0 extends {com.google.common.base.Equivalence%0}> com.google.common.base.Equivalence$Wrapper<{%%0}> wrap({%%0})
- anno 1 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public final <%0 extends {com.google.common.base.Equivalence%0}> com.google.common.base.Equivalence<java.lang.Iterable<{%%0}>> pairwise()
  anno 0 com.google.common.annotations.GwtCompatible(boolean emulated=false, boolean serializable=true)
 meth public final boolean equivalent({com.google.common.base.Equivalence%0},{com.google.common.base.Equivalence%0})
- anno 1 org.checkerframework.checker.nullness.compatqual.NullableDecl()
- anno 2 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public final com.google.common.base.Predicate<{com.google.common.base.Equivalence%0}> equivalentTo({com.google.common.base.Equivalence%0})
- anno 1 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public final int hash({com.google.common.base.Equivalence%0})
- anno 1 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public static com.google.common.base.Equivalence<java.lang.Object> equals()
 meth public static com.google.common.base.Equivalence<java.lang.Object> identity()
 supr java.lang.Object
@@ -287,11 +268,9 @@ CLSS public final static com.google.common.base.Equivalence$Wrapper<%0 extends j
  outer com.google.common.base.Equivalence
 intf java.io.Serializable
 meth public boolean equals(java.lang.Object)
- anno 1 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public int hashCode()
 meth public java.lang.String toString()
 meth public {com.google.common.base.Equivalence$Wrapper%0} get()
- anno 0 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 supr java.lang.Object
 hfds equivalence,reference,serialVersionUID
 
@@ -329,20 +308,14 @@ supr java.lang.ref.WeakReference<{com.google.common.base.FinalizableWeakReferenc
 CLSS public abstract interface com.google.common.base.Function<%0 extends java.lang.Object, %1 extends java.lang.Object>
  anno 0 com.google.common.annotations.GwtCompatible(boolean emulated=false, boolean serializable=false)
 meth public abstract boolean equals(java.lang.Object)
- anno 1 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public abstract {com.google.common.base.Function%1} apply({com.google.common.base.Function%0})
- anno 0 com.google.errorprone.annotations.CanIgnoreReturnValue()
- anno 0 org.checkerframework.checker.nullness.compatqual.NullableDecl()
- anno 1 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 
 CLSS public final com.google.common.base.Functions
  anno 0 com.google.common.annotations.GwtCompatible(boolean emulated=false, boolean serializable=false)
 meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object, %2 extends java.lang.Object> com.google.common.base.Function<{%%0},{%%2}> compose(com.google.common.base.Function<{%%1},{%%2}>,com.google.common.base.Function<{%%0},? extends {%%1}>)
 meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> com.google.common.base.Function<{%%0},{%%1}> forMap(java.util.Map<{%%0},? extends {%%1}>,{%%1})
- anno 2 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> com.google.common.base.Function<{%%0},{%%1}> forMap(java.util.Map<{%%0},{%%1}>)
 meth public static <%0 extends java.lang.Object> com.google.common.base.Function<java.lang.Object,{%%0}> constant({%%0})
- anno 1 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public static <%0 extends java.lang.Object> com.google.common.base.Function<java.lang.Object,{%%0}> forSupplier(com.google.common.base.Supplier<{%%0}>)
 meth public static <%0 extends java.lang.Object> com.google.common.base.Function<{%%0},java.lang.Boolean> forPredicate(com.google.common.base.Predicate<{%%0}>)
 meth public static <%0 extends java.lang.Object> com.google.common.base.Function<{%%0},{%%0}> identity()
@@ -354,35 +327,21 @@ CLSS public com.google.common.base.Joiner
  anno 0 com.google.common.annotations.GwtCompatible(boolean emulated=false, boolean serializable=false)
 innr public final static MapJoiner
 meth public !varargs final <%0 extends java.lang.Appendable> {%%0} appendTo({%%0},java.lang.Object,java.lang.Object,java.lang.Object[]) throws java.io.IOException
- anno 0 com.google.errorprone.annotations.CanIgnoreReturnValue()
- anno 2 org.checkerframework.checker.nullness.compatqual.NullableDecl()
- anno 3 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public !varargs final java.lang.String join(java.lang.Object,java.lang.Object,java.lang.Object[])
- anno 1 org.checkerframework.checker.nullness.compatqual.NullableDecl()
- anno 2 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public !varargs final java.lang.StringBuilder appendTo(java.lang.StringBuilder,java.lang.Object,java.lang.Object,java.lang.Object[])
- anno 0 com.google.errorprone.annotations.CanIgnoreReturnValue()
- anno 2 org.checkerframework.checker.nullness.compatqual.NullableDecl()
- anno 3 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public <%0 extends java.lang.Appendable> {%%0} appendTo({%%0},java.lang.Iterable<?>) throws java.io.IOException
- anno 0 com.google.errorprone.annotations.CanIgnoreReturnValue()
 meth public <%0 extends java.lang.Appendable> {%%0} appendTo({%%0},java.util.Iterator<?>) throws java.io.IOException
- anno 0 com.google.errorprone.annotations.CanIgnoreReturnValue()
 meth public com.google.common.base.Joiner skipNulls()
 meth public com.google.common.base.Joiner useForNull(java.lang.String)
 meth public com.google.common.base.Joiner$MapJoiner withKeyValueSeparator(char)
 meth public com.google.common.base.Joiner$MapJoiner withKeyValueSeparator(java.lang.String)
 meth public final <%0 extends java.lang.Appendable> {%%0} appendTo({%%0},java.lang.Object[]) throws java.io.IOException
- anno 0 com.google.errorprone.annotations.CanIgnoreReturnValue()
 meth public final java.lang.String join(java.lang.Iterable<?>)
 meth public final java.lang.String join(java.lang.Object[])
 meth public final java.lang.String join(java.util.Iterator<?>)
 meth public final java.lang.StringBuilder appendTo(java.lang.StringBuilder,java.lang.Iterable<?>)
- anno 0 com.google.errorprone.annotations.CanIgnoreReturnValue()
 meth public final java.lang.StringBuilder appendTo(java.lang.StringBuilder,java.lang.Object[])
- anno 0 com.google.errorprone.annotations.CanIgnoreReturnValue()
 meth public final java.lang.StringBuilder appendTo(java.lang.StringBuilder,java.util.Iterator<?>)
- anno 0 com.google.errorprone.annotations.CanIgnoreReturnValue()
 meth public static com.google.common.base.Joiner on(char)
 meth public static com.google.common.base.Joiner on(java.lang.String)
 supr java.lang.Object
@@ -392,12 +351,9 @@ CLSS public final static com.google.common.base.Joiner$MapJoiner
  outer com.google.common.base.Joiner
 meth public <%0 extends java.lang.Appendable> {%%0} appendTo({%%0},java.lang.Iterable<? extends java.util.Map$Entry<?,?>>) throws java.io.IOException
  anno 0 com.google.common.annotations.Beta()
- anno 0 com.google.errorprone.annotations.CanIgnoreReturnValue()
 meth public <%0 extends java.lang.Appendable> {%%0} appendTo({%%0},java.util.Iterator<? extends java.util.Map$Entry<?,?>>) throws java.io.IOException
  anno 0 com.google.common.annotations.Beta()
- anno 0 com.google.errorprone.annotations.CanIgnoreReturnValue()
 meth public <%0 extends java.lang.Appendable> {%%0} appendTo({%%0},java.util.Map<?,?>) throws java.io.IOException
- anno 0 com.google.errorprone.annotations.CanIgnoreReturnValue()
 meth public com.google.common.base.Joiner$MapJoiner useForNull(java.lang.String)
 meth public java.lang.String join(java.lang.Iterable<? extends java.util.Map$Entry<?,?>>)
  anno 0 com.google.common.annotations.Beta()
@@ -406,12 +362,9 @@ meth public java.lang.String join(java.util.Iterator<? extends java.util.Map$Ent
 meth public java.lang.String join(java.util.Map<?,?>)
 meth public java.lang.StringBuilder appendTo(java.lang.StringBuilder,java.lang.Iterable<? extends java.util.Map$Entry<?,?>>)
  anno 0 com.google.common.annotations.Beta()
- anno 0 com.google.errorprone.annotations.CanIgnoreReturnValue()
 meth public java.lang.StringBuilder appendTo(java.lang.StringBuilder,java.util.Iterator<? extends java.util.Map$Entry<?,?>>)
  anno 0 com.google.common.annotations.Beta()
- anno 0 com.google.errorprone.annotations.CanIgnoreReturnValue()
 meth public java.lang.StringBuilder appendTo(java.lang.StringBuilder,java.util.Map<?,?>)
- anno 0 com.google.errorprone.annotations.CanIgnoreReturnValue()
 supr java.lang.Object
 hfds joiner,keyValueSeparator
 
@@ -419,8 +372,6 @@ CLSS public final com.google.common.base.MoreObjects
  anno 0 com.google.common.annotations.GwtCompatible(boolean emulated=false, boolean serializable=false)
 innr public final static ToStringHelper
 meth public static <%0 extends java.lang.Object> {%%0} firstNonNull({%%0},{%%0})
- anno 1 org.checkerframework.checker.nullness.compatqual.NullableDecl()
- anno 2 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public static com.google.common.base.MoreObjects$ToStringHelper toStringHelper(java.lang.Class<?>)
 meth public static com.google.common.base.MoreObjects$ToStringHelper toStringHelper(java.lang.Object)
 meth public static com.google.common.base.MoreObjects$ToStringHelper toStringHelper(java.lang.String)
@@ -429,37 +380,20 @@ supr java.lang.Object
 CLSS public final static com.google.common.base.MoreObjects$ToStringHelper
  outer com.google.common.base.MoreObjects
 meth public com.google.common.base.MoreObjects$ToStringHelper add(java.lang.String,boolean)
- anno 0 com.google.errorprone.annotations.CanIgnoreReturnValue()
 meth public com.google.common.base.MoreObjects$ToStringHelper add(java.lang.String,char)
- anno 0 com.google.errorprone.annotations.CanIgnoreReturnValue()
 meth public com.google.common.base.MoreObjects$ToStringHelper add(java.lang.String,double)
- anno 0 com.google.errorprone.annotations.CanIgnoreReturnValue()
 meth public com.google.common.base.MoreObjects$ToStringHelper add(java.lang.String,float)
- anno 0 com.google.errorprone.annotations.CanIgnoreReturnValue()
 meth public com.google.common.base.MoreObjects$ToStringHelper add(java.lang.String,int)
- anno 0 com.google.errorprone.annotations.CanIgnoreReturnValue()
 meth public com.google.common.base.MoreObjects$ToStringHelper add(java.lang.String,java.lang.Object)
- anno 0 com.google.errorprone.annotations.CanIgnoreReturnValue()
- anno 2 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public com.google.common.base.MoreObjects$ToStringHelper add(java.lang.String,long)
- anno 0 com.google.errorprone.annotations.CanIgnoreReturnValue()
 meth public com.google.common.base.MoreObjects$ToStringHelper addValue(boolean)
- anno 0 com.google.errorprone.annotations.CanIgnoreReturnValue()
 meth public com.google.common.base.MoreObjects$ToStringHelper addValue(char)
- anno 0 com.google.errorprone.annotations.CanIgnoreReturnValue()
 meth public com.google.common.base.MoreObjects$ToStringHelper addValue(double)
- anno 0 com.google.errorprone.annotations.CanIgnoreReturnValue()
 meth public com.google.common.base.MoreObjects$ToStringHelper addValue(float)
- anno 0 com.google.errorprone.annotations.CanIgnoreReturnValue()
 meth public com.google.common.base.MoreObjects$ToStringHelper addValue(int)
- anno 0 com.google.errorprone.annotations.CanIgnoreReturnValue()
 meth public com.google.common.base.MoreObjects$ToStringHelper addValue(java.lang.Object)
- anno 0 com.google.errorprone.annotations.CanIgnoreReturnValue()
- anno 1 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public com.google.common.base.MoreObjects$ToStringHelper addValue(long)
- anno 0 com.google.errorprone.annotations.CanIgnoreReturnValue()
 meth public com.google.common.base.MoreObjects$ToStringHelper omitNullValues()
- anno 0 com.google.errorprone.annotations.CanIgnoreReturnValue()
 meth public java.lang.String toString()
 supr java.lang.Object
 hfds className,holderHead,holderTail,omitNullValues
@@ -468,10 +402,7 @@ hcls ValueHolder
 CLSS public final com.google.common.base.Objects
  anno 0 com.google.common.annotations.GwtCompatible(boolean emulated=false, boolean serializable=false)
 meth public !varargs static int hashCode(java.lang.Object[])
- anno 1 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public static boolean equal(java.lang.Object,java.lang.Object)
- anno 1 org.checkerframework.checker.nullness.compatqual.NullableDecl()
- anno 2 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 supr java.lang.Object
 
 CLSS public abstract com.google.common.base.Optional<%0 extends java.lang.Object>
@@ -479,7 +410,6 @@ CLSS public abstract com.google.common.base.Optional<%0 extends java.lang.Object
 intf java.io.Serializable
 meth public abstract <%0 extends java.lang.Object> com.google.common.base.Optional<{%%0}> transform(com.google.common.base.Function<? super {com.google.common.base.Optional%0},{%%0}>)
 meth public abstract boolean equals(java.lang.Object)
- anno 1 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public abstract boolean isPresent()
 meth public abstract com.google.common.base.Optional<{com.google.common.base.Optional%0}> or(com.google.common.base.Optional<? extends {com.google.common.base.Optional%0}>)
 meth public abstract int hashCode()
@@ -490,10 +420,8 @@ meth public abstract {com.google.common.base.Optional%0} or(com.google.common.ba
  anno 0 com.google.common.annotations.Beta()
 meth public abstract {com.google.common.base.Optional%0} or({com.google.common.base.Optional%0})
 meth public abstract {com.google.common.base.Optional%0} orNull()
- anno 0 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public static <%0 extends java.lang.Object> com.google.common.base.Optional<{%%0}> absent()
 meth public static <%0 extends java.lang.Object> com.google.common.base.Optional<{%%0}> fromNullable({%%0})
- anno 1 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public static <%0 extends java.lang.Object> com.google.common.base.Optional<{%%0}> of({%%0})
 meth public static <%0 extends java.lang.Object> java.lang.Iterable<{%%0}> presentInstances(java.lang.Iterable<? extends com.google.common.base.Optional<? extends {%%0}>>)
  anno 0 com.google.common.annotations.Beta()
@@ -503,248 +431,91 @@ hfds serialVersionUID
 CLSS public final com.google.common.base.Preconditions
  anno 0 com.google.common.annotations.GwtCompatible(boolean emulated=false, boolean serializable=false)
 meth public !varargs static <%0 extends java.lang.Object> {%%0} checkNotNull({%%0},java.lang.String,java.lang.Object[])
- anno 0 com.google.errorprone.annotations.CanIgnoreReturnValue()
- anno 2 org.checkerframework.checker.nullness.compatqual.NullableDecl()
- anno 3 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public !varargs static void checkArgument(boolean,java.lang.String,java.lang.Object[])
- anno 2 org.checkerframework.checker.nullness.compatqual.NullableDecl()
- anno 3 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public !varargs static void checkState(boolean,java.lang.String,java.lang.Object[])
- anno 2 org.checkerframework.checker.nullness.compatqual.NullableDecl()
- anno 3 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public static <%0 extends java.lang.Object> {%%0} checkNotNull({%%0})
- anno 0 com.google.errorprone.annotations.CanIgnoreReturnValue()
 meth public static <%0 extends java.lang.Object> {%%0} checkNotNull({%%0},java.lang.Object)
- anno 0 com.google.errorprone.annotations.CanIgnoreReturnValue()
- anno 2 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public static <%0 extends java.lang.Object> {%%0} checkNotNull({%%0},java.lang.String,char)
- anno 0 com.google.errorprone.annotations.CanIgnoreReturnValue()
- anno 2 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public static <%0 extends java.lang.Object> {%%0} checkNotNull({%%0},java.lang.String,char,char)
- anno 0 com.google.errorprone.annotations.CanIgnoreReturnValue()
- anno 2 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public static <%0 extends java.lang.Object> {%%0} checkNotNull({%%0},java.lang.String,char,int)
- anno 0 com.google.errorprone.annotations.CanIgnoreReturnValue()
- anno 2 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public static <%0 extends java.lang.Object> {%%0} checkNotNull({%%0},java.lang.String,char,java.lang.Object)
- anno 0 com.google.errorprone.annotations.CanIgnoreReturnValue()
- anno 2 org.checkerframework.checker.nullness.compatqual.NullableDecl()
- anno 4 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public static <%0 extends java.lang.Object> {%%0} checkNotNull({%%0},java.lang.String,char,long)
- anno 0 com.google.errorprone.annotations.CanIgnoreReturnValue()
- anno 2 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public static <%0 extends java.lang.Object> {%%0} checkNotNull({%%0},java.lang.String,int)
- anno 0 com.google.errorprone.annotations.CanIgnoreReturnValue()
- anno 2 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public static <%0 extends java.lang.Object> {%%0} checkNotNull({%%0},java.lang.String,int,char)
- anno 0 com.google.errorprone.annotations.CanIgnoreReturnValue()
- anno 2 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public static <%0 extends java.lang.Object> {%%0} checkNotNull({%%0},java.lang.String,int,int)
- anno 0 com.google.errorprone.annotations.CanIgnoreReturnValue()
- anno 2 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public static <%0 extends java.lang.Object> {%%0} checkNotNull({%%0},java.lang.String,int,java.lang.Object)
- anno 0 com.google.errorprone.annotations.CanIgnoreReturnValue()
- anno 2 org.checkerframework.checker.nullness.compatqual.NullableDecl()
- anno 4 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public static <%0 extends java.lang.Object> {%%0} checkNotNull({%%0},java.lang.String,int,long)
- anno 0 com.google.errorprone.annotations.CanIgnoreReturnValue()
- anno 2 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public static <%0 extends java.lang.Object> {%%0} checkNotNull({%%0},java.lang.String,java.lang.Object)
- anno 0 com.google.errorprone.annotations.CanIgnoreReturnValue()
- anno 2 org.checkerframework.checker.nullness.compatqual.NullableDecl()
- anno 3 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public static <%0 extends java.lang.Object> {%%0} checkNotNull({%%0},java.lang.String,java.lang.Object,char)
- anno 0 com.google.errorprone.annotations.CanIgnoreReturnValue()
- anno 2 org.checkerframework.checker.nullness.compatqual.NullableDecl()
- anno 3 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public static <%0 extends java.lang.Object> {%%0} checkNotNull({%%0},java.lang.String,java.lang.Object,int)
- anno 0 com.google.errorprone.annotations.CanIgnoreReturnValue()
- anno 2 org.checkerframework.checker.nullness.compatqual.NullableDecl()
- anno 3 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public static <%0 extends java.lang.Object> {%%0} checkNotNull({%%0},java.lang.String,java.lang.Object,java.lang.Object)
- anno 0 com.google.errorprone.annotations.CanIgnoreReturnValue()
- anno 2 org.checkerframework.checker.nullness.compatqual.NullableDecl()
- anno 3 org.checkerframework.checker.nullness.compatqual.NullableDecl()
- anno 4 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public static <%0 extends java.lang.Object> {%%0} checkNotNull({%%0},java.lang.String,java.lang.Object,java.lang.Object,java.lang.Object)
- anno 0 com.google.errorprone.annotations.CanIgnoreReturnValue()
- anno 2 org.checkerframework.checker.nullness.compatqual.NullableDecl()
- anno 3 org.checkerframework.checker.nullness.compatqual.NullableDecl()
- anno 4 org.checkerframework.checker.nullness.compatqual.NullableDecl()
- anno 5 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public static <%0 extends java.lang.Object> {%%0} checkNotNull({%%0},java.lang.String,java.lang.Object,java.lang.Object,java.lang.Object,java.lang.Object)
- anno 0 com.google.errorprone.annotations.CanIgnoreReturnValue()
- anno 2 org.checkerframework.checker.nullness.compatqual.NullableDecl()
- anno 3 org.checkerframework.checker.nullness.compatqual.NullableDecl()
- anno 4 org.checkerframework.checker.nullness.compatqual.NullableDecl()
- anno 5 org.checkerframework.checker.nullness.compatqual.NullableDecl()
- anno 6 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public static <%0 extends java.lang.Object> {%%0} checkNotNull({%%0},java.lang.String,java.lang.Object,long)
- anno 0 com.google.errorprone.annotations.CanIgnoreReturnValue()
- anno 2 org.checkerframework.checker.nullness.compatqual.NullableDecl()
- anno 3 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public static <%0 extends java.lang.Object> {%%0} checkNotNull({%%0},java.lang.String,long)
- anno 0 com.google.errorprone.annotations.CanIgnoreReturnValue()
- anno 2 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public static <%0 extends java.lang.Object> {%%0} checkNotNull({%%0},java.lang.String,long,char)
- anno 0 com.google.errorprone.annotations.CanIgnoreReturnValue()
- anno 2 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public static <%0 extends java.lang.Object> {%%0} checkNotNull({%%0},java.lang.String,long,int)
- anno 0 com.google.errorprone.annotations.CanIgnoreReturnValue()
- anno 2 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public static <%0 extends java.lang.Object> {%%0} checkNotNull({%%0},java.lang.String,long,java.lang.Object)
- anno 0 com.google.errorprone.annotations.CanIgnoreReturnValue()
- anno 2 org.checkerframework.checker.nullness.compatqual.NullableDecl()
- anno 4 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public static <%0 extends java.lang.Object> {%%0} checkNotNull({%%0},java.lang.String,long,long)
- anno 0 com.google.errorprone.annotations.CanIgnoreReturnValue()
- anno 2 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public static int checkElementIndex(int,int)
- anno 0 com.google.errorprone.annotations.CanIgnoreReturnValue()
 meth public static int checkElementIndex(int,int,java.lang.String)
- anno 0 com.google.errorprone.annotations.CanIgnoreReturnValue()
- anno 3 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public static int checkPositionIndex(int,int)
- anno 0 com.google.errorprone.annotations.CanIgnoreReturnValue()
 meth public static int checkPositionIndex(int,int,java.lang.String)
- anno 0 com.google.errorprone.annotations.CanIgnoreReturnValue()
- anno 3 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public static void checkArgument(boolean)
 meth public static void checkArgument(boolean,java.lang.Object)
- anno 2 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public static void checkArgument(boolean,java.lang.String,char)
- anno 2 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public static void checkArgument(boolean,java.lang.String,char,char)
- anno 2 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public static void checkArgument(boolean,java.lang.String,char,int)
- anno 2 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public static void checkArgument(boolean,java.lang.String,char,java.lang.Object)
- anno 2 org.checkerframework.checker.nullness.compatqual.NullableDecl()
- anno 4 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public static void checkArgument(boolean,java.lang.String,char,long)
- anno 2 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public static void checkArgument(boolean,java.lang.String,int)
- anno 2 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public static void checkArgument(boolean,java.lang.String,int,char)
- anno 2 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public static void checkArgument(boolean,java.lang.String,int,int)
- anno 2 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public static void checkArgument(boolean,java.lang.String,int,java.lang.Object)
- anno 2 org.checkerframework.checker.nullness.compatqual.NullableDecl()
- anno 4 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public static void checkArgument(boolean,java.lang.String,int,long)
- anno 2 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public static void checkArgument(boolean,java.lang.String,java.lang.Object)
- anno 2 org.checkerframework.checker.nullness.compatqual.NullableDecl()
- anno 3 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public static void checkArgument(boolean,java.lang.String,java.lang.Object,char)
- anno 2 org.checkerframework.checker.nullness.compatqual.NullableDecl()
- anno 3 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public static void checkArgument(boolean,java.lang.String,java.lang.Object,int)
- anno 2 org.checkerframework.checker.nullness.compatqual.NullableDecl()
- anno 3 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public static void checkArgument(boolean,java.lang.String,java.lang.Object,java.lang.Object)
- anno 2 org.checkerframework.checker.nullness.compatqual.NullableDecl()
- anno 3 org.checkerframework.checker.nullness.compatqual.NullableDecl()
- anno 4 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public static void checkArgument(boolean,java.lang.String,java.lang.Object,java.lang.Object,java.lang.Object)
- anno 2 org.checkerframework.checker.nullness.compatqual.NullableDecl()
- anno 3 org.checkerframework.checker.nullness.compatqual.NullableDecl()
- anno 4 org.checkerframework.checker.nullness.compatqual.NullableDecl()
- anno 5 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public static void checkArgument(boolean,java.lang.String,java.lang.Object,java.lang.Object,java.lang.Object,java.lang.Object)
- anno 2 org.checkerframework.checker.nullness.compatqual.NullableDecl()
- anno 3 org.checkerframework.checker.nullness.compatqual.NullableDecl()
- anno 4 org.checkerframework.checker.nullness.compatqual.NullableDecl()
- anno 5 org.checkerframework.checker.nullness.compatqual.NullableDecl()
- anno 6 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public static void checkArgument(boolean,java.lang.String,java.lang.Object,long)
- anno 2 org.checkerframework.checker.nullness.compatqual.NullableDecl()
- anno 3 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public static void checkArgument(boolean,java.lang.String,long)
- anno 2 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public static void checkArgument(boolean,java.lang.String,long,char)
- anno 2 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public static void checkArgument(boolean,java.lang.String,long,int)
- anno 2 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public static void checkArgument(boolean,java.lang.String,long,java.lang.Object)
- anno 2 org.checkerframework.checker.nullness.compatqual.NullableDecl()
- anno 4 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public static void checkArgument(boolean,java.lang.String,long,long)
- anno 2 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public static void checkPositionIndexes(int,int,int)
 meth public static void checkState(boolean)
 meth public static void checkState(boolean,java.lang.Object)
- anno 2 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public static void checkState(boolean,java.lang.String,char)
- anno 2 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public static void checkState(boolean,java.lang.String,char,char)
- anno 2 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public static void checkState(boolean,java.lang.String,char,int)
- anno 2 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public static void checkState(boolean,java.lang.String,char,java.lang.Object)
- anno 2 org.checkerframework.checker.nullness.compatqual.NullableDecl()
- anno 4 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public static void checkState(boolean,java.lang.String,char,long)
- anno 2 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public static void checkState(boolean,java.lang.String,int)
- anno 2 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public static void checkState(boolean,java.lang.String,int,char)
- anno 2 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public static void checkState(boolean,java.lang.String,int,int)
- anno 2 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public static void checkState(boolean,java.lang.String,int,java.lang.Object)
- anno 2 org.checkerframework.checker.nullness.compatqual.NullableDecl()
- anno 4 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public static void checkState(boolean,java.lang.String,int,long)
- anno 2 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public static void checkState(boolean,java.lang.String,java.lang.Object)
- anno 2 org.checkerframework.checker.nullness.compatqual.NullableDecl()
- anno 3 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public static void checkState(boolean,java.lang.String,java.lang.Object,char)
- anno 2 org.checkerframework.checker.nullness.compatqual.NullableDecl()
- anno 3 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public static void checkState(boolean,java.lang.String,java.lang.Object,int)
- anno 2 org.checkerframework.checker.nullness.compatqual.NullableDecl()
- anno 3 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public static void checkState(boolean,java.lang.String,java.lang.Object,java.lang.Object)
- anno 2 org.checkerframework.checker.nullness.compatqual.NullableDecl()
- anno 3 org.checkerframework.checker.nullness.compatqual.NullableDecl()
- anno 4 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public static void checkState(boolean,java.lang.String,java.lang.Object,java.lang.Object,java.lang.Object)
- anno 2 org.checkerframework.checker.nullness.compatqual.NullableDecl()
- anno 3 org.checkerframework.checker.nullness.compatqual.NullableDecl()
- anno 4 org.checkerframework.checker.nullness.compatqual.NullableDecl()
- anno 5 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public static void checkState(boolean,java.lang.String,java.lang.Object,java.lang.Object,java.lang.Object,java.lang.Object)
- anno 2 org.checkerframework.checker.nullness.compatqual.NullableDecl()
- anno 3 org.checkerframework.checker.nullness.compatqual.NullableDecl()
- anno 4 org.checkerframework.checker.nullness.compatqual.NullableDecl()
- anno 5 org.checkerframework.checker.nullness.compatqual.NullableDecl()
- anno 6 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public static void checkState(boolean,java.lang.String,java.lang.Object,long)
- anno 2 org.checkerframework.checker.nullness.compatqual.NullableDecl()
- anno 3 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public static void checkState(boolean,java.lang.String,long)
- anno 2 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public static void checkState(boolean,java.lang.String,long,char)
- anno 2 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public static void checkState(boolean,java.lang.String,long,int)
- anno 2 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public static void checkState(boolean,java.lang.String,long,java.lang.Object)
- anno 2 org.checkerframework.checker.nullness.compatqual.NullableDecl()
- anno 4 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public static void checkState(boolean,java.lang.String,long,long)
- anno 2 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 supr java.lang.Object
 
 CLSS public abstract interface com.google.common.base.Predicate<%0 extends java.lang.Object>
  anno 0 com.google.common.annotations.GwtCompatible(boolean emulated=false, boolean serializable=false)
 meth public abstract boolean apply({com.google.common.base.Predicate%0})
- anno 0 com.google.errorprone.annotations.CanIgnoreReturnValue()
- anno 1 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public abstract boolean equals(java.lang.Object)
- anno 1 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 
 CLSS public final com.google.common.base.Predicates
  anno 0 com.google.common.annotations.GwtCompatible(boolean emulated=true, boolean serializable=false)
@@ -760,7 +531,6 @@ meth public static <%0 extends java.lang.Object> com.google.common.base.Predicat
 meth public static <%0 extends java.lang.Object> com.google.common.base.Predicate<{%%0}> and(com.google.common.base.Predicate<? super {%%0}>,com.google.common.base.Predicate<? super {%%0}>)
 meth public static <%0 extends java.lang.Object> com.google.common.base.Predicate<{%%0}> and(java.lang.Iterable<? extends com.google.common.base.Predicate<? super {%%0}>>)
 meth public static <%0 extends java.lang.Object> com.google.common.base.Predicate<{%%0}> equalTo({%%0})
- anno 1 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public static <%0 extends java.lang.Object> com.google.common.base.Predicate<{%%0}> in(java.util.Collection<? extends {%%0}>)
 meth public static <%0 extends java.lang.Object> com.google.common.base.Predicate<{%%0}> isNull()
  anno 0 com.google.common.annotations.GwtCompatible(boolean emulated=false, boolean serializable=true)
@@ -849,7 +619,6 @@ fld public final static com.google.common.base.StandardSystemProperty USER_NAME
 meth public java.lang.String key()
 meth public java.lang.String toString()
 meth public java.lang.String value()
- anno 0 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public static com.google.common.base.StandardSystemProperty valueOf(java.lang.String)
 meth public static com.google.common.base.StandardSystemProperty[] values()
 supr java.lang.Enum<com.google.common.base.StandardSystemProperty>
@@ -859,11 +628,8 @@ CLSS public final com.google.common.base.Stopwatch
  anno 0 com.google.common.annotations.GwtCompatible(boolean emulated=false, boolean serializable=false)
 meth public boolean isRunning()
 meth public com.google.common.base.Stopwatch reset()
- anno 0 com.google.errorprone.annotations.CanIgnoreReturnValue()
 meth public com.google.common.base.Stopwatch start()
- anno 0 com.google.errorprone.annotations.CanIgnoreReturnValue()
 meth public com.google.common.base.Stopwatch stop()
- anno 0 com.google.errorprone.annotations.CanIgnoreReturnValue()
 meth public java.lang.String toString()
 meth public long elapsed(java.util.concurrent.TimeUnit)
 meth public static com.google.common.base.Stopwatch createStarted()
@@ -876,17 +642,11 @@ hfds elapsedNanos,isRunning,startTick,ticker
 CLSS public final com.google.common.base.Strings
  anno 0 com.google.common.annotations.GwtCompatible(boolean emulated=false, boolean serializable=false)
 meth public !varargs static java.lang.String lenientFormat(java.lang.String,java.lang.Object[])
- anno 1 org.checkerframework.checker.nullness.compatqual.NullableDecl()
- anno 2 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public static boolean isNullOrEmpty(java.lang.String)
- anno 1 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public static java.lang.String commonPrefix(java.lang.CharSequence,java.lang.CharSequence)
 meth public static java.lang.String commonSuffix(java.lang.CharSequence,java.lang.CharSequence)
 meth public static java.lang.String emptyToNull(java.lang.String)
- anno 0 org.checkerframework.checker.nullness.compatqual.NullableDecl()
- anno 1 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public static java.lang.String nullToEmpty(java.lang.String)
- anno 1 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public static java.lang.String padEnd(java.lang.String,int,char)
 meth public static java.lang.String padStart(java.lang.String,int,char)
 meth public static java.lang.String repeat(java.lang.String,int)
@@ -895,7 +655,6 @@ supr java.lang.Object
 CLSS public abstract interface com.google.common.base.Supplier<%0 extends java.lang.Object>
  anno 0 com.google.common.annotations.GwtCompatible(boolean emulated=false, boolean serializable=false)
 meth public abstract {com.google.common.base.Supplier%0} get()
- anno 0 com.google.errorprone.annotations.CanIgnoreReturnValue()
 
 CLSS public final com.google.common.base.Suppliers
  anno 0 com.google.common.annotations.GwtCompatible(boolean emulated=false, boolean serializable=false)
@@ -904,7 +663,6 @@ meth public static <%0 extends java.lang.Object> com.google.common.base.Function
 meth public static <%0 extends java.lang.Object> com.google.common.base.Supplier<{%%0}> memoize(com.google.common.base.Supplier<{%%0}>)
 meth public static <%0 extends java.lang.Object> com.google.common.base.Supplier<{%%0}> memoizeWithExpiration(com.google.common.base.Supplier<{%%0}>,long,java.util.concurrent.TimeUnit)
 meth public static <%0 extends java.lang.Object> com.google.common.base.Supplier<{%%0}> ofInstance({%%0})
- anno 1 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public static <%0 extends java.lang.Object> com.google.common.base.Supplier<{%%0}> synchronizedSupplier(com.google.common.base.Supplier<{%%0}>)
 supr java.lang.Object
 hcls ExpiringMemoizingSupplier,MemoizingSupplier,NonSerializableMemoizingSupplier,SupplierComposition,SupplierFunction,SupplierFunctionImpl,SupplierOfInstance,ThreadSafeSupplier
@@ -913,14 +671,11 @@ CLSS public final com.google.common.base.Throwables
  anno 0 com.google.common.annotations.GwtCompatible(boolean emulated=true, boolean serializable=false)
 meth public static <%0 extends java.lang.Throwable, %1 extends java.lang.Throwable> void propagateIfPossible(java.lang.Throwable,java.lang.Class<{%%0}>,java.lang.Class<{%%1}>) throws {%%0},{%%1}
  anno 0 com.google.common.annotations.GwtIncompatible(java.lang.String value="")
- anno 1 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public static <%0 extends java.lang.Throwable> void propagateIfInstanceOf(java.lang.Throwable,java.lang.Class<{%%0}>) throws {%%0}
  anno 0 com.google.common.annotations.GwtIncompatible(java.lang.String value="")
  anno 0 java.lang.Deprecated()
- anno 1 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public static <%0 extends java.lang.Throwable> void propagateIfPossible(java.lang.Throwable,java.lang.Class<{%%0}>) throws {%%0}
  anno 0 com.google.common.annotations.GwtIncompatible(java.lang.String value="")
- anno 1 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public static <%0 extends java.lang.Throwable> void throwIfInstanceOf(java.lang.Throwable,java.lang.Class<{%%0}>) throws {%%0}
  anno 0 com.google.common.annotations.GwtIncompatible(java.lang.String value="")
 meth public static <%0 extends java.lang.Throwable> {%%0} getCauseAs(java.lang.Throwable,java.lang.Class<{%%0}>)
@@ -931,7 +686,6 @@ meth public static boolean lazyStackTraceIsLazy()
  anno 0 com.google.common.annotations.GwtIncompatible(java.lang.String value="")
 meth public static java.lang.RuntimeException propagate(java.lang.Throwable)
  anno 0 com.google.common.annotations.GwtIncompatible(java.lang.String value="")
- anno 0 com.google.errorprone.annotations.CanIgnoreReturnValue()
  anno 0 java.lang.Deprecated()
 meth public static java.lang.String getStackTraceAsString(java.lang.Throwable)
  anno 0 com.google.common.annotations.GwtIncompatible(java.lang.String value="")
@@ -944,7 +698,6 @@ meth public static java.util.List<java.lang.Throwable> getCausalChain(java.lang.
 meth public static void propagateIfPossible(java.lang.Throwable)
  anno 0 com.google.common.annotations.GwtIncompatible(java.lang.String value="")
  anno 0 java.lang.Deprecated()
- anno 1 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public static void throwIfUnchecked(java.lang.Throwable)
 supr java.lang.Object
 hfds JAVA_LANG_ACCESS_CLASSNAME,SHARED_SECRETS_CLASSNAME,getStackTraceDepthMethod,getStackTraceElementMethod,jla
@@ -954,7 +707,6 @@ CLSS public abstract com.google.common.base.Ticker
  anno 0 com.google.common.annotations.GwtCompatible(boolean emulated=false, boolean serializable=false)
 cons protected init()
 meth public abstract long read()
- anno 0 com.google.errorprone.annotations.CanIgnoreReturnValue()
 meth public static com.google.common.base.Ticker systemTicker()
 supr java.lang.Object
 hfds SYSTEM_TICKER
@@ -970,94 +722,42 @@ supr java.lang.Object
 CLSS public final com.google.common.base.Verify
  anno 0 com.google.common.annotations.GwtCompatible(boolean emulated=false, boolean serializable=false)
 meth public !varargs static <%0 extends java.lang.Object> {%%0} verifyNotNull({%%0},java.lang.String,java.lang.Object[])
- anno 0 com.google.errorprone.annotations.CanIgnoreReturnValue()
- anno 1 org.checkerframework.checker.nullness.compatqual.NullableDecl()
- anno 2 org.checkerframework.checker.nullness.compatqual.NullableDecl()
- anno 3 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public !varargs static void verify(boolean,java.lang.String,java.lang.Object[])
- anno 2 org.checkerframework.checker.nullness.compatqual.NullableDecl()
- anno 3 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public static <%0 extends java.lang.Object> {%%0} verifyNotNull({%%0})
- anno 0 com.google.errorprone.annotations.CanIgnoreReturnValue()
- anno 1 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public static void verify(boolean)
 meth public static void verify(boolean,java.lang.String,char)
- anno 2 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public static void verify(boolean,java.lang.String,char,char)
- anno 2 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public static void verify(boolean,java.lang.String,char,int)
- anno 2 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public static void verify(boolean,java.lang.String,char,java.lang.Object)
- anno 2 org.checkerframework.checker.nullness.compatqual.NullableDecl()
- anno 4 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public static void verify(boolean,java.lang.String,char,long)
- anno 2 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public static void verify(boolean,java.lang.String,int)
- anno 2 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public static void verify(boolean,java.lang.String,int,char)
- anno 2 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public static void verify(boolean,java.lang.String,int,int)
- anno 2 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public static void verify(boolean,java.lang.String,int,java.lang.Object)
- anno 2 org.checkerframework.checker.nullness.compatqual.NullableDecl()
- anno 4 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public static void verify(boolean,java.lang.String,int,long)
- anno 2 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public static void verify(boolean,java.lang.String,java.lang.Object)
- anno 2 org.checkerframework.checker.nullness.compatqual.NullableDecl()
- anno 3 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public static void verify(boolean,java.lang.String,java.lang.Object,char)
- anno 2 org.checkerframework.checker.nullness.compatqual.NullableDecl()
- anno 3 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public static void verify(boolean,java.lang.String,java.lang.Object,int)
- anno 2 org.checkerframework.checker.nullness.compatqual.NullableDecl()
- anno 3 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public static void verify(boolean,java.lang.String,java.lang.Object,java.lang.Object)
- anno 2 org.checkerframework.checker.nullness.compatqual.NullableDecl()
- anno 3 org.checkerframework.checker.nullness.compatqual.NullableDecl()
- anno 4 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public static void verify(boolean,java.lang.String,java.lang.Object,java.lang.Object,java.lang.Object)
- anno 2 org.checkerframework.checker.nullness.compatqual.NullableDecl()
- anno 3 org.checkerframework.checker.nullness.compatqual.NullableDecl()
- anno 4 org.checkerframework.checker.nullness.compatqual.NullableDecl()
- anno 5 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public static void verify(boolean,java.lang.String,java.lang.Object,java.lang.Object,java.lang.Object,java.lang.Object)
- anno 2 org.checkerframework.checker.nullness.compatqual.NullableDecl()
- anno 3 org.checkerframework.checker.nullness.compatqual.NullableDecl()
- anno 4 org.checkerframework.checker.nullness.compatqual.NullableDecl()
- anno 5 org.checkerframework.checker.nullness.compatqual.NullableDecl()
- anno 6 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public static void verify(boolean,java.lang.String,java.lang.Object,long)
- anno 2 org.checkerframework.checker.nullness.compatqual.NullableDecl()
- anno 3 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public static void verify(boolean,java.lang.String,long)
- anno 2 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public static void verify(boolean,java.lang.String,long,char)
- anno 2 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public static void verify(boolean,java.lang.String,long,int)
- anno 2 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public static void verify(boolean,java.lang.String,long,java.lang.Object)
- anno 2 org.checkerframework.checker.nullness.compatqual.NullableDecl()
- anno 4 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 meth public static void verify(boolean,java.lang.String,long,long)
- anno 2 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 supr java.lang.Object
 
 CLSS public com.google.common.base.VerifyException
  anno 0 com.google.common.annotations.GwtCompatible(boolean emulated=false, boolean serializable=false)
 cons public init()
 cons public init(java.lang.String)
- anno 1 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 cons public init(java.lang.String,java.lang.Throwable)
- anno 1 org.checkerframework.checker.nullness.compatqual.NullableDecl()
- anno 2 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 cons public init(java.lang.Throwable)
- anno 1 org.checkerframework.checker.nullness.compatqual.NullableDecl()
 supr java.lang.RuntimeException
 
 CLSS abstract interface com.google.common.base.package-info
- anno 0 com.google.errorprone.annotations.CheckReturnValue()
- anno 0 javax.annotation.ParametersAreNonnullByDefault()
 
 CLSS public abstract com.google.inject.AbstractModule
 cons public init()
@@ -1379,7 +1079,6 @@ cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.Throwable)
 cons public init(java.lang.Throwable)
 supr java.lang.Exception
-hfds serialVersionUID
 
 CLSS public abstract java.io.InputStream
 cons public init()
@@ -1394,7 +1093,6 @@ meth public void close() throws java.io.IOException
 meth public void mark(int)
 meth public void reset() throws java.io.IOException
 supr java.lang.Object
-hfds MAX_SKIP_BUFFER_SIZE
 
 CLSS public abstract java.io.OutputStream
 cons public init()
@@ -1424,7 +1122,6 @@ meth public long skip(long) throws java.io.IOException
 meth public void mark(int) throws java.io.IOException
 meth public void reset() throws java.io.IOException
 supr java.lang.Object
-hfds maxSkipBufferSize,skipBuffer
 
 CLSS public abstract interface java.io.Serializable
 
@@ -1446,7 +1143,6 @@ meth public void write(int) throws java.io.IOException
 meth public void write(java.lang.String) throws java.io.IOException
 meth public void write(java.lang.String,int,int) throws java.io.IOException
 supr java.lang.Object
-hfds WRITE_BUFFER_SIZE,writeBuffer
 
 CLSS public abstract interface java.lang.Appendable
 meth public abstract java.lang.Appendable append(char) throws java.io.IOException
@@ -1492,8 +1188,6 @@ meth public void setClassAssertionStatus(java.lang.String,boolean)
 meth public void setDefaultAssertionStatus(boolean)
 meth public void setPackageAssertionStatus(java.lang.String,boolean)
 supr java.lang.Object
-hfds assertionLock,classAssertionStatus,classes,defaultAssertionStatus,defaultDomain,loadedLibraryNames,nativeLibraries,nativeLibraryContext,nocerts,package2certs,packageAssertionStatus,packages,parallelLockMap,parent,scl,sclSet,sys_paths,systemNativeLibraries,usr_paths
-hcls NativeLibrary,ParallelLoaders
 
 CLSS public abstract interface java.lang.Cloneable
 
@@ -1521,7 +1215,6 @@ meth public final java.lang.String name()
 meth public java.lang.String toString()
 meth public static <%0 extends java.lang.Enum<{%%0}>> {%%0} valueOf(java.lang.Class<{%%0}>,java.lang.String)
 supr java.lang.Object
-hfds name,ordinal
 
 CLSS public java.lang.Error
 cons protected init(java.lang.String,java.lang.Throwable,boolean,boolean)
@@ -1530,7 +1223,6 @@ cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.Throwable)
 cons public init(java.lang.Throwable)
 supr java.lang.Throwable
-hfds serialVersionUID
 
 CLSS public java.lang.Exception
 cons protected init(java.lang.String,java.lang.Throwable,boolean,boolean)
@@ -1539,7 +1231,6 @@ cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.Throwable)
 cons public init(java.lang.Throwable)
 supr java.lang.Throwable
-hfds serialVersionUID
 
 CLSS public abstract interface !annotation java.lang.FunctionalInterface
  anno 0 java.lang.annotation.Documented()
@@ -1553,7 +1244,6 @@ cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.Throwable)
 cons public init(java.lang.Throwable)
 supr java.lang.RuntimeException
-hfds serialVersionUID
 
 CLSS public abstract interface java.lang.Iterable<%0 extends java.lang.Object>
 meth public abstract java.util.Iterator<{java.lang.Iterable%0}> iterator()
@@ -1588,7 +1278,6 @@ cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.Throwable)
 cons public init(java.lang.Throwable)
 supr java.lang.Exception
-hfds serialVersionUID
 
 CLSS public java.lang.Thread
 cons public init()
@@ -1655,8 +1344,6 @@ meth public void setContextClassLoader(java.lang.ClassLoader)
 meth public void setUncaughtExceptionHandler(java.lang.Thread$UncaughtExceptionHandler)
 meth public void start()
 supr java.lang.Object
-hfds EMPTY_STACK_TRACE,SUBCLASS_IMPLEMENTATION_PERMISSION,blocker,blockerLock,contextClassLoader,daemon,defaultUncaughtExceptionHandler,eetop,group,inheritableThreadLocals,inheritedAccessControlContext,name,nativeParkEventPointer,parkBlocker,priority,single_step,stackSize,stillborn,target,threadInitNumber,threadLocalRandomProbe,threadLocalRandomSecondarySeed,threadLocalRandomSeed,threadLocals,threadQ,threadSeqNumber,threadStatus,tid,uncaughtExceptionHandler
-hcls Caches,WeakClassKey
 
 CLSS public java.lang.Throwable
 cons protected init(java.lang.String,java.lang.Throwable,boolean,boolean)
@@ -1679,8 +1366,6 @@ meth public void printStackTrace(java.io.PrintStream)
 meth public void printStackTrace(java.io.PrintWriter)
 meth public void setStackTrace(java.lang.StackTraceElement[])
 supr java.lang.Object
-hfds CAUSE_CAPTION,EMPTY_THROWABLE_ARRAY,NULL_CAUSE_MESSAGE,SELF_SUPPRESSION_MESSAGE,SUPPRESSED_CAPTION,SUPPRESSED_SENTINEL,UNASSIGNED_STACK,backtrace,cause,detailMessage,serialVersionUID,stackTrace,suppressedExceptions
-hcls PrintStreamOrWriter,SentinelHolder,WrappedPrintStream,WrappedPrintWriter
 
 CLSS public abstract interface java.lang.annotation.Annotation
 meth public abstract boolean equals(java.lang.Object)
@@ -1725,15 +1410,12 @@ meth public boolean isEnqueued()
 meth public void clear()
 meth public {java.lang.ref.Reference%0} get()
 supr java.lang.Object
-hfds discovered,lock,next,pending,queue,referent
-hcls Lock,ReferenceHandler
 
 CLSS public java.lang.ref.SoftReference<%0 extends java.lang.Object>
 cons public init({java.lang.ref.SoftReference%0})
 cons public init({java.lang.ref.SoftReference%0},java.lang.ref.ReferenceQueue<? super {java.lang.ref.SoftReference%0}>)
 meth public {java.lang.ref.SoftReference%0} get()
 supr java.lang.ref.Reference<{java.lang.ref.SoftReference%0}>
-hfds clock,timestamp
 
 CLSS public java.lang.ref.WeakReference<%0 extends java.lang.Object>
 cons public init({java.lang.ref.WeakReference%0})
@@ -1757,7 +1439,6 @@ meth public static java.net.URLClassLoader newInstance(java.net.URL[])
 meth public static java.net.URLClassLoader newInstance(java.net.URL[],java.lang.ClassLoader)
 meth public void close() throws java.io.IOException
 supr java.security.SecureClassLoader
-hfds acc,closeables,ucp
 
 CLSS public java.security.SecureClassLoader
 cons protected init()
@@ -1766,7 +1447,6 @@ meth protected final java.lang.Class<?> defineClass(java.lang.String,byte[],int,
 meth protected final java.lang.Class<?> defineClass(java.lang.String,java.nio.ByteBuffer,java.security.CodeSource)
 meth protected java.security.PermissionCollection getPermissions(java.security.CodeSource)
 supr java.lang.ClassLoader
-hfds debug,initialized,pdcache
 
 CLSS public abstract java.util.AbstractMap<%0 extends java.lang.Object, %1 extends java.lang.Object>
 cons protected init()
@@ -1790,7 +1470,6 @@ meth public {java.util.AbstractMap%1} get(java.lang.Object)
 meth public {java.util.AbstractMap%1} put({java.util.AbstractMap%0},{java.util.AbstractMap%1})
 meth public {java.util.AbstractMap%1} remove(java.lang.Object)
 supr java.lang.Object
-hfds keySet,values
 
 CLSS public java.util.EventObject
 cons public init(java.lang.Object)
@@ -1799,7 +1478,6 @@ intf java.io.Serializable
 meth public java.lang.Object getSource()
 meth public java.lang.String toString()
 supr java.lang.Object
-hfds serialVersionUID
 
 CLSS public java.util.HashMap<%0 extends java.lang.Object, %1 extends java.lang.Object>
 cons public init()
@@ -1834,8 +1512,6 @@ meth public {java.util.HashMap%1} putIfAbsent({java.util.HashMap%0},{java.util.H
 meth public {java.util.HashMap%1} remove(java.lang.Object)
 meth public {java.util.HashMap%1} replace({java.util.HashMap%0},{java.util.HashMap%1})
 supr java.util.AbstractMap<{java.util.HashMap%0},{java.util.HashMap%1}>
-hfds DEFAULT_INITIAL_CAPACITY,DEFAULT_LOAD_FACTOR,MAXIMUM_CAPACITY,MIN_TREEIFY_CAPACITY,TREEIFY_THRESHOLD,UNTREEIFY_THRESHOLD,entrySet,loadFactor,modCount,serialVersionUID,size,table,threshold
-hcls EntryIterator,EntrySet,EntrySpliterator,HashIterator,HashMapSpliterator,KeyIterator,KeySet,KeySpliterator,Node,TreeNode,ValueIterator,ValueSpliterator,Values
 
 CLSS public abstract interface java.util.Iterator<%0 extends java.lang.Object>
 meth public abstract boolean hasNext()
@@ -13345,5 +13021,4 @@ meth public void setLineNumber(int)
 meth public void setPublicId(java.lang.String)
 meth public void setSystemId(java.lang.String)
 supr java.lang.Object
-hfds columnNumber,lineNumber,publicId,systemId
 

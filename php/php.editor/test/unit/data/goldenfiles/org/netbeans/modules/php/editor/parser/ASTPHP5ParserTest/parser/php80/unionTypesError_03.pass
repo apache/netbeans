@@ -1,0 +1,77 @@
+<testresult testFile='unionTypesError_03.php'>
+    <scanner>
+        <token id='T_CLASS' start='815' end='820'>
+            <text>class</text>
+        </token>
+        <token id='T_STRING' start='821' end='831'>
+            <text>UnionTypes</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='832' end='833'>
+            <text>{</text>
+        </token>
+        <token id='T_PUBLIC' start='838' end='844'>
+            <text>public</text>
+        </token>
+        <token id='T_FUNCTION' start='845' end='853'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='854' end='858'>
+            <text>test</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='858' end='859'>
+            <text>(</text>
+        </token>
+        <token id='T_STRING' start='859' end='862'>
+            <text>int</text>
+        </token>
+        <token id='T_OR' start='862' end='863'>
+            <text>|</text>
+        </token>
+        <token id='T_STRING' start='863' end='868'>
+            <text>float</text>
+        </token>
+        <token id='T_VARIABLE' start='869' end='875'>
+            <text>$param</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='875' end='876'>
+            <text>)</text>
+        </token>
+        <token id='T_NEKUDOTAIM' start='876' end='877'>
+            <text>:</text>
+        </token>
+        <token id='T_STRING' start='878' end='881'>
+            <text>int</text>
+        </token>
+        <token id='T_OR' start='881' end='882'>
+            <text>|</text>
+        </token>
+        <token id='T_QUESTION_MARK' start='882' end='883'>
+            <text>?</text>
+        </token>
+        <token id='T_STRING' start='883' end='888'>
+            <text>float</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='889' end='890'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='895' end='896'>
+            <text>}</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='897' end='898'>
+            <text>}</text>
+        </token>
+        <token id='EOF' start='899' end='899'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='899'>
+        <Comments>
+            <Comment start='6' end='813' commentType='multiLine'/>
+            <Comment start='6' end='813' commentType='multiLine'/>
+        </Comments>
+        <Statements>
+            <ASTError start='815' end='882'/>
+            <ASTError start='883' end='896'/>
+        </Statements>
+    </Program>
+</testresult>

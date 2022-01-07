@@ -35,6 +35,7 @@ public final class TextSync {
     
     private static int EDITABLE_FLAG = 1;
     private static int CARET_MARKER_FLAG = 2;
+    private static int COMPLETION_INVOKE_FLAG = 4;
 
     private TextSyncGroup<?> textSyncGroup;
     
@@ -138,6 +139,32 @@ public final class TextSync {
             flags |= CARET_MARKER_FLAG;
         else
             flags &= ~CARET_MARKER_FLAG;
+    }
+
+    /**
+     * Returns whether the code completion should be invoked when this text sync becomes active.
+     * 
+     * @return  {@code true} if the code completion should be invoked, {@code false} otherwise.
+     * 
+     * @since 1.53
+     */
+    public boolean isCompletionInvoke() {
+        return (flags & COMPLETION_INVOKE_FLAG) != 0;
+    }
+
+    /**
+     * Sets whether the code completion should be invoked when this text sync becomes active.
+     * 
+     * @param completionInvoke determines whether the code completion should be invoked.
+     * 
+     * @since 1.53
+     */
+    public void setCompletionInvoke(boolean completionInvoke) {
+        if (completionInvoke) {
+            flags |= COMPLETION_INVOKE_FLAG;
+        } else {
+            flags &= ~COMPLETION_INVOKE_FLAG;
+        }
     }
 
     public void addRegion(TextRegion<?> region) {

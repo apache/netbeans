@@ -365,7 +365,7 @@ final class CodeTemplatesModel {
                         abbreviation,
                         getDescription(idx),
                         getText(idx),
-                        new ArrayList(getContexts(idx)),
+                        new ArrayList<String>(getContexts(idx)),
                         getUniqueId(idx),
                         mimeType
                 );

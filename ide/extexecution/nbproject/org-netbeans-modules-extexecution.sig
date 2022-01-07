@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.56
+#Version 1.63
 
 CLSS public abstract interface java.io.Closeable
 intf java.lang.AutoCloseable
@@ -28,7 +28,6 @@ meth public final java.lang.String name()
 meth public java.lang.String toString()
 meth public static <%0 extends java.lang.Enum<{%%0}>> {%%0} valueOf(java.lang.Class<{%%0}>,java.lang.String)
 supr java.lang.Object
-hfds name,ordinal
 
 CLSS public abstract interface !annotation java.lang.FunctionalInterface
  anno 0 java.lang.annotation.Documented()
@@ -149,6 +148,10 @@ meth public org.netbeans.api.extexecution.ExecutionDescriptor outProcessorFactor
  anno 0 org.netbeans.api.annotations.common.NonNull()
  anno 1 org.netbeans.api.annotations.common.NullAllowed()
 meth public org.netbeans.api.extexecution.ExecutionDescriptor postExecution(java.lang.Runnable)
+ anno 0 org.netbeans.api.annotations.common.CheckReturnValue()
+ anno 0 org.netbeans.api.annotations.common.NonNull()
+ anno 1 org.netbeans.api.annotations.common.NullAllowed()
+meth public org.netbeans.api.extexecution.ExecutionDescriptor postExecution(java.util.function.Consumer<java.lang.Integer>)
  anno 0 org.netbeans.api.annotations.common.CheckReturnValue()
  anno 0 org.netbeans.api.annotations.common.NonNull()
  anno 1 org.netbeans.api.annotations.common.NullAllowed()
@@ -461,12 +464,13 @@ meth public java.lang.String getDescription()
  anno 0 org.netbeans.api.annotations.common.NonNull()
 meth public java.util.List<java.lang.String> getArguments()
  anno 0 org.netbeans.api.annotations.common.NonNull()
+meth public java.util.List<java.lang.String> getRawArguments()
 meth public static java.util.List<org.netbeans.api.extexecution.startup.StartupExtender> getExtenders(org.openide.util.Lookup,org.netbeans.api.extexecution.startup.StartupExtender$StartMode)
  anno 0 org.netbeans.api.annotations.common.NonNull()
  anno 1 org.netbeans.api.annotations.common.NonNull()
  anno 2 org.netbeans.api.annotations.common.NonNull()
 supr java.lang.Object
-hfds LOG,arguments,description
+hfds LOG,arguments,description,rawArguments
 
 CLSS public final static !enum org.netbeans.api.extexecution.startup.StartupExtender$StartMode
  outer org.netbeans.api.extexecution.startup.StartupExtender
@@ -530,6 +534,7 @@ CLSS public abstract interface static !annotation org.netbeans.spi.extexecution.
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=SOURCE)
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE, METHOD])
 intf java.lang.annotation.Annotation
+meth public abstract !hasdefault boolean argumentsQuoted()
 meth public abstract !hasdefault int position()
 meth public abstract java.lang.String displayName()
 meth public abstract org.netbeans.api.extexecution.startup.StartupExtender$StartMode[] startMode()

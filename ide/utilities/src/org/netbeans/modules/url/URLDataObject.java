@@ -130,9 +130,6 @@ public class URLDataObject extends MultiDataObject
         } catch (FileNotFoundException fne) {
             ErrorManager.getDefault().notify(ErrorManager.WARNING, fne);
             return null;
-        } catch (IOException ioe) {
-            ErrorManager.getDefault().notify(ErrorManager.WARNING, ioe);
-            return null;
         } finally {
             if (is != null) {
                 try {

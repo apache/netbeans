@@ -16,7 +16,7 @@ METHOD     collect(Closure)                           List
 METHOD     collect(Collection, Closure)               Collection
 METHOD     collectEntries(Closure)                    Map
 METHOD     collectEntries(Map, Closure)               Map
-METHOD     collectMany(Closure)                       Collection
+METHOD     collectMany(Closure)                       List
 METHOD     collectMany(Collection, Closur             Collection
 METHOD     compute(K, BiFunction<? super   [PUBLIC]   V
 METHOD     computeIfAbsent(K, Function<?   [PUBLIC]   V
@@ -48,7 +48,7 @@ METHOD     findLastIndexOf(int, Closure)              int
 METHOD     findResult(Closure)                        Object
 METHOD     findResult(Object, Closure)                Object
 METHOD     findResults(Closure)                       Collection
-METHOD     forEach(BiConsumer<? super K,?  [PUBLIC]   void
+METHOD     forEach(BiConsumer<? super K,   [PUBLIC]   void
 METHOD     get(Object)                     [PUBLIC]   V
 METHOD     get(Object, Object)                        Object
 METHOD     getAt(Object)                              Object
@@ -97,7 +97,7 @@ METHOD     println(Object)                            void
 METHOD     println(PrintWriter)                       void
 METHOD     put(K, V)                       [PUBLIC]   V
 METHOD     putAll(Collection)                         Map
-METHOD     putAll(Map<? extends K,? exten  [PUBLIC]   void
+METHOD     putAll(Map<? extends K, ? exte  [PUBLIC]   void
 METHOD     putAt(Object, Object)                      Object
 METHOD     putAt(String, Object)                      void
 METHOD     putIfAbsent(K, V)               [PUBLIC]   V
@@ -122,6 +122,7 @@ METHOD     split(Closure)                             Collection
 METHOD     spread()                                   SpreadMap
 METHOD     sprintf(String, Object)                    String
 METHOD     sprintf(String, Object)                    String
+METHOD     stream()                                   Stream
 METHOD     subMap(Collection)                         Map
 METHOD     subMap(Object[])                           Map
 METHOD     take(int)                                  Map

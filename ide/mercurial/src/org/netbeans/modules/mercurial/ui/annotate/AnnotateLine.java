@@ -149,7 +149,7 @@ public class AnnotateLine {
      * Returns the line's number.
      */
     public Integer getLineNumInteger() {
-        return new Integer(lineNum);
+        return Integer.valueOf(lineNum);
     }
 
     /**

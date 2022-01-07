@@ -55,6 +55,27 @@ public class AstPath implements Iterable<ASTNode> {
     }
 
     public AstPath(ASTNode root, int caretOffset, BaseDocument document) {
+        this(root, caretOffset, document, false);
+    }
+    
+    /**
+     * Constructs AST path up to the specified position. Path starts at root, and 
+     * leads up to and including the node that contains the `caretOffset'. If `dot` 
+     * is false, the path leads to the deepest node that spans the offset. If true,
+     * terminates at outer expression for method call, property access. The behaviour is different
+     * just for the last character of an expression, as the boundary is common for several nodes
+     * in the AST hierarchy; has no effects for other offsets. dot=true is suitable 
+     * for working with the result type/value, not the symbol itself.
+     * <p>
+     * <b>Note: this method is implementation detail and is not intended to be called from
+     * other modules.</b>
+     * @param root root of the path
+     * @param caretOffset offset that identifies the leaf node
+     * @param document the document
+     * @param dot if true, terminate the returned path at outer expression node.
+     * @since 1.80
+     */
+    public AstPath(ASTNode root, int caretOffset, BaseDocument document, boolean dot) {
         try {
             // make sure offset is not higher than document length, see #138353
             int length = document.getLength();
@@ -74,7 +95,7 @@ public class AstPath implements Iterable<ASTNode> {
             this.lineNumber = line;
             this.columnNumber = column;
 
-            findPathTo(root, line, column);
+            findPathTo(root, line, column, dot);
         } catch (BadLocationException ble) {
             Exceptions.printStackTrace(ble);
         }
@@ -87,7 +108,7 @@ public class AstPath implements Iterable<ASTNode> {
         this.lineNumber = line;
         this.columnNumber = column;
 
-        findPathTo(root, line, column);
+        findPathTo(root, line, column, false);
     }
 
     /**
@@ -125,14 +146,14 @@ public class AstPath implements Iterable<ASTNode> {
      * passed in path list.
      */
     @SuppressWarnings("unchecked")
-    private ASTNode findPathTo(ASTNode node, int line, int column) {
+    private ASTNode findPathTo(ASTNode node, int line, int column, boolean outermost) {
         
         assert node != null : "ASTNode should not be null";
         assert node instanceof ModuleNode : "ASTNode must be a ModuleNode";
         assert line >=0 : "line number was negative: " + line + " on the ModuleNode node with main class name: " + ((ModuleNode)node).getMainClassName();
         assert column >=0 : "column number was negative: " + column;
         
-        path.addAll(find(node, line, column));
+        path.addAll(find(node, line, column, outermost));
 
         // in scripts ClassNode is not in path, let's add it
         // find class that has same name as the file
@@ -182,7 +203,7 @@ public class AstPath implements Iterable<ASTNode> {
     }
 
     @SuppressWarnings("unchecked")
-    private List<ASTNode> find(ASTNode node, int line, int column) {
+    private List<ASTNode> find(ASTNode node, int line, int column, boolean outermost) {
         
         assert line >=0 : "line number was negative: " + line;
         assert column >=0 : "column number was negative: " + column;
@@ -190,7 +211,7 @@ public class AstPath implements Iterable<ASTNode> {
         assert node instanceof ModuleNode : "ASTNode must be a ModuleNode";
         
         ModuleNode moduleNode = (ModuleNode) node;
-        PathFinderVisitor pathFinder = new PathFinderVisitor(moduleNode.getContext(), line, column);
+        PathFinderVisitor pathFinder = new PathFinderVisitor(moduleNode.getContext(), line, column, outermost);
 
         for (ClassNode classNode : moduleNode.getClasses()) {
             pathFinder.visitClass(classNode);

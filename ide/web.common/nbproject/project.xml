@@ -211,6 +211,7 @@
                 <friend>org.netbeans.modules.html.custom</friend>
                 <friend>org.netbeans.modules.html.editor</friend>
                 <friend>org.netbeans.modules.html.editor.lib</friend>
+                <friend>org.netbeans.modules.html.indexing</friend>
                 <friend>org.netbeans.modules.html.knockout</friend>
                 <friend>org.netbeans.modules.html.ojet</friend>
                 <friend>org.netbeans.modules.html.parser</friend>

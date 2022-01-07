@@ -95,7 +95,7 @@ public class JvmOptions extends ModuleMBean implements Constants{
                 //ludo    Util.setStatusBar(bundle.getString("Msg_SolarisShmem"));
                     Attribute newAttr = new Attribute(DEBUG_OPTIONS, DEF_DEUG_OPTIONS_SOCKET);
                     this.setAttribute(newAttr);
-                    Integer value = new Integer(11000);
+                    Integer value = 11000;
                     jpdaAttr = new Attribute(JPDA_PORT, value);
                 }
             }else{ 
@@ -246,10 +246,10 @@ public class JvmOptions extends ModuleMBean implements Constants{
                 value = new Integer(addrValue);
             }catch(Exception ex){
                 if(this.isServerEightOne){
-                    value = new Integer(9009);
+                    value = 9009;
                     setAddressValue("9009"); //NOI18N
                 }else{
-                    value = new Integer(1044);
+                    value = 1044;
                     setAddressValue("1044"); //NOI18N
                 }    
             }

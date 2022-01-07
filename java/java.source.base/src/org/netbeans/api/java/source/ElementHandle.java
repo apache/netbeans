@@ -46,7 +46,6 @@ import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.modules.java.source.ElementHandleAccessor;
 import org.netbeans.modules.java.source.ElementUtils;
-import org.netbeans.modules.java.source.TreeShims;
 import org.netbeans.modules.java.source.usages.ClassFileUtil;
 import org.openide.util.Parameters;
 import org.openide.util.WeakSet;
@@ -470,12 +469,6 @@ public final class ElementHandle<T extends Element> {
         Parameters.notNull("element", element);
         ElementKind kind = element.getKind();
         ElementKind simplifiedKind = kind;
-        if (TreeShims.isRecord(element)) {
-            simplifiedKind = ElementKind.CLASS;
-        }
-        if (TreeShims.isRecordComponent(element)) {
-            simplifiedKind = ElementKind.FIELD;
-        }
         String[] signatures;
         switch (simplifiedKind) {
             case PACKAGE:
@@ -486,6 +479,7 @@ public final class ElementHandle<T extends Element> {
             case INTERFACE:
             case ENUM:
             case ANNOTATION_TYPE:
+            case RECORD:
                 assert element instanceof TypeElement;
                 signatures = new String[] {ClassFileUtil.encodeClassNameOrArray((TypeElement)element)};
                 break;
@@ -498,6 +492,7 @@ public final class ElementHandle<T extends Element> {
                 break;
             case FIELD:
             case ENUM_CONSTANT:
+            case RECORD_COMPONENT:
                 assert element instanceof VariableElement;
                 signatures = ClassFileUtil.createFieldDescriptor((VariableElement)element);
                 break;
@@ -610,6 +605,7 @@ public final class ElementHandle<T extends Element> {
                 case INTERFACE:
                 case ENUM:
                 case ANNOTATION_TYPE:
+                case RECORD:
                 case OTHER:
                     if (descriptors.length != 1) {
                         throw new IllegalArgumentException ();
@@ -634,7 +630,8 @@ public final class ElementHandle<T extends Element> {
                     }
                     return new ElementHandle<VariableElement> (kind, descriptors);
                 default:
-                    throw new IllegalArgumentException ();
+                    throw new IllegalArgumentException();
+                    
             }            
         }
 

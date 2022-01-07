@@ -454,7 +454,7 @@ public class GraphManager extends Object {
 
         if (this.bindingsMap.get(node) == null) {
             throw new Schema2BeansException(Common.getMessage(
-                                                              "CurrentNodeHasNoBinding_msg", new Integer(node.hashCode())));
+                                                              "CurrentNodeHasNoBinding_msg", Integer.valueOf(node.hashCode())));
         }
 
         // Store the property's dtdName's into a map for fast lookup,
@@ -894,7 +894,7 @@ public class GraphManager extends Object {
 	    case Common.TYPE_SHORT:
 		return new Short((short)0);
 	    case Common.TYPE_INT:
-		return new Integer(0);
+		return Integer.valueOf(0);
 	    case Common.TYPE_LONG:
 		return new Long(0);
 	    case Common.TYPE_FLOAT:

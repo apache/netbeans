@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 3.92.0
+#Version 3.98.0
 
 CLSS public java.beans.FeatureDescriptor
 cons public init()
@@ -20,7 +20,6 @@ meth public void setPreferred(boolean)
 meth public void setShortDescription(java.lang.String)
 meth public void setValue(java.lang.String,java.lang.Object)
 supr java.lang.Object
-hfds TRANSIENT,classRef,displayName,expert,hidden,name,preferred,shortDescription,table
 
 CLSS public abstract interface java.io.Closeable
 intf java.lang.AutoCloseable

@@ -104,7 +104,7 @@ public class SimpleGradleWizardIterator extends BaseGradleWizardIterator {
         ops.addProjectPreload(root);
 
         Boolean initWrapper = (Boolean) params.get(PROP_INIT_WRAPPER);
-        if ((initWrapper != null) && initWrapper) {
+        if (initWrapper == null || initWrapper) {
             ops.addWrapperInit(root);
         }
     }

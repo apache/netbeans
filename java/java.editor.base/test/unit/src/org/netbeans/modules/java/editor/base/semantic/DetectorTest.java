@@ -575,6 +575,85 @@ public class DetectorTest extends TestBase {
                     "[PUBLIC, RECORD_COMPONENT, DECLARATION], 4:40-4:41",
                     "[STATIC, PUBLIC, INTERFACE], 4:54-4:59");
     }
+    
+    public void testSealed() throws Exception {
+        try {
+            SourceVersion.valueOf("RELEASE_15"); //NOI18N
+        } catch (IllegalArgumentException ex) {
+            //OK, no RELEASE_14, skip tests
+            return;
+        }
+        enablePreview();
+        performTest("SealedTest",
+                "sealed class Test{}\n"
+                + "non-sealed class Child extends Test{}\n",
+                "[KEYWORD], 0:0-0:6",
+                "[PACKAGE_PRIVATE, CLASS, DECLARATION], 0:13-0:17",
+                "[KEYWORD], 1:0-1:3",
+                "[KEYWORD], 1:4-1:10",
+                "[PACKAGE_PRIVATE, CLASS, DECLARATION], 1:17-1:22",
+                "[PACKAGE_PRIVATE, CLASS], 1:31-1:35");
+    }
+
+    public void testSealed2() throws Exception {
+        try {
+            SourceVersion.valueOf("RELEASE_15"); //NOI18N
+        } catch (IllegalArgumentException ex) {
+            //OK, no RELEASE_14, skip tests
+            return;
+        }
+        enablePreview();
+        performTest("SealedTest",
+                "sealed class Test permits Child{}\n"
+                + "non-sealed class Child extends Test{}\n",
+                "[KEYWORD], 0:0-0:6",
+                "[PACKAGE_PRIVATE, CLASS, DECLARATION], 0:13-0:17",
+                "[KEYWORD], 0:18-0:25",
+                "[PACKAGE_PRIVATE, CLASS], 0:26-0:31",
+                "[KEYWORD], 1:0-1:3",
+                "[KEYWORD], 1:4-1:10",
+                "[PACKAGE_PRIVATE, CLASS, DECLARATION], 1:17-1:22",
+                "[PACKAGE_PRIVATE, CLASS], 1:31-1:35");
+    }
+
+    public void testSwitchPattern() throws Exception {
+        try {
+            SourceVersion.valueOf("RELEASE_17"); //NOI18N
+        } catch (IllegalArgumentException ex) {
+            //OK, no RELEASE_17, skip tests
+            return;
+        }
+        enablePreview();
+        performTest("TestSwitchPattern.java",
+                "public class TestSwitchPattern {\n"
+                + "    String strColor = \"color\";\n"
+                + "    void m1() {\n"
+                + "        Object obj = \"test\";\n"
+                + "        switch (obj) {\n"
+                + "            case String s && s.equals(strColor) -> System.out.println(\"same\");\n"
+                + "            case default -> System.out.println(\"default\");\n"
+                + "        }\n"
+                + "    }\n"
+                + "}",
+                "[PUBLIC, CLASS, DECLARATION], 0:13-0:30\n"
+                + "[PUBLIC, CLASS], 1:4-1:10\n"
+                + "[PACKAGE_PRIVATE, FIELD, DECLARATION], 1:11-1:19\n"
+                + "[PACKAGE_PRIVATE, METHOD, DECLARATION], 2:9-2:11\n"
+                + "[PUBLIC, CLASS], 3:8-3:14\n"
+                + "[LOCAL_VARIABLE, DECLARATION], 3:15-3:18\n"
+                + "[LOCAL_VARIABLE], 4:16-4:19\n"
+                + "[PUBLIC, CLASS], 5:17-5:23\n"
+                + "[LOCAL_VARIABLE, DECLARATION], 5:24-5:25\n"
+                + "[LOCAL_VARIABLE], 5:29-5:30\n"
+                + "[PUBLIC, METHOD], 5:31-5:37\n"
+                + "[PACKAGE_PRIVATE, FIELD], 5:38-5:46\n"
+                + "[PUBLIC, CLASS], 5:51-5:57\n"
+                + "[STATIC, PUBLIC, FIELD], 5:58-5:61\n"
+                + "[PUBLIC, METHOD], 5:62-5:69\n"
+                + "[PUBLIC, CLASS], 6:28-6:34\n"
+                + "[STATIC, PUBLIC, FIELD], 6:35-6:38\n"
+                + "[PUBLIC, METHOD], 6:39-6:46\n");
+    }
 
     public void testYield() throws Exception {
         enablePreview();
@@ -593,12 +672,12 @@ public class DetectorTest extends TestBase {
 
     public void testRawStringLiteral() throws Exception {
         try {
-            SourceVersion.valueOf("RELEASE_13");
+            SourceVersion.valueOf("RELEASE_15");
         } catch (IllegalArgumentException iae) {
             //OK, presumably no support for raw string literals
             return ;
         }
-        setSourceLevel("13");
+        setSourceLevel("15");
         performTest("RawStringLiteral",
                     "public class RawStringLiteral {\n" +
                     "    String s1 = \"\"\"\n" +
@@ -623,12 +702,12 @@ public class DetectorTest extends TestBase {
 
     public void testBindingPattern() throws Exception {
         try {
-            SourceVersion.valueOf("RELEASE_14");
+            SourceVersion.valueOf("RELEASE_16");
         } catch (IllegalArgumentException iae) {
             //OK, presumably no support for pattern matching
             return ;
         }
-        setSourceLevel("14");
+        setSourceLevel("16");
         performTest("BindingPattern",
                     "public class BindingPattern {\n" +
                     "    public boolean test(Object o) {\n" +
@@ -662,6 +741,82 @@ public class DetectorTest extends TestBase {
                     "[PUBLIC, CLASS], 1:54-1:60",
                     "[PACKAGE_PRIVATE, FIELD, DECLARATION], 1:61-1:65",
                     "[PACKAGE_PRIVATE, CONSTRUCTOR], 2:19-2:25");
+    }
+
+    public void testChainTypes() throws Exception {
+        setShowPrependedText(true);
+        performTest("Test.java",
+                    "package test;\n" +
+                    "public class Test<T> {\n" +
+                    "    public void test(Test<String> t) {\n" +
+                    "        t.run1()\n" +
+                    "         .run2()\n" +
+                    "         .run3()\n" +
+                    "         .run4();\n" +
+                    "    }\n" +
+                    "    private Test<Integer> run1() {\n" +
+                    "        return null;\n" +
+                    "    }\n" +
+                    "    private Test<String> run2() {\n" +
+                    "        return null;\n" +
+                    "    }\n" +
+                    "    private Test<Integer> run3() {\n" +
+                    "        return null;\n" +
+                    "    }\n" +
+                    "    private Test<String> run4() {\n" +
+                    "        return null;\n" +
+                    "    }\n" +
+                    "}\n",
+                    "[PUBLIC, CLASS, DECLARATION], 1:13-1:17",
+                    "[PUBLIC, METHOD, DECLARATION], 2:16-2:20",
+                    "[PUBLIC, CLASS], 2:21-2:25",
+                    "[PUBLIC, CLASS], 2:26-2:32",
+                    "[PARAMETER, DECLARATION], 2:34-2:35",
+                    "[PARAMETER], 3:8-3:9",
+                    "[PRIVATE, METHOD], 3:10-3:14",
+                    "[  Test<Integer>], 3:16-4:0",
+                    "[PRIVATE, METHOD], 4:10-4:14",
+                    "[  Test<String>], 4:16-5:0",
+                    "[PRIVATE, METHOD], 5:10-5:14",
+                    "[  Test<Integer>], 5:16-6:0",
+                    "[PRIVATE, METHOD], 6:10-6:14",
+                    "[PUBLIC, CLASS], 8:12-8:16",
+                    "[PUBLIC, CLASS], 8:17-8:24",
+                    "[PRIVATE, METHOD, DECLARATION], 8:26-8:30",
+                    "[PUBLIC, CLASS], 11:12-11:16",
+                    "[PUBLIC, CLASS], 11:17-11:23",
+                    "[PRIVATE, METHOD, DECLARATION], 11:25-11:29",
+                    "[PUBLIC, CLASS], 14:12-14:16",
+                    "[PUBLIC, CLASS], 14:17-14:24",
+                    "[PRIVATE, METHOD, DECLARATION], 14:26-14:30",
+                    "[PUBLIC, CLASS], 17:12-17:16",
+                    "[PUBLIC, CLASS], 17:17-17:23",
+                    "[PRIVATE, METHOD, DECLARATION], 17:25-17:29");
+    }
+
+    public void testRawStringLiteralNETBEANS_5118() throws Exception {
+        try {
+            SourceVersion.valueOf("RELEASE_15");
+        } catch (IllegalArgumentException iae) {
+            //OK, presumably no support for raw string literals
+            return ;
+        }
+        setSourceLevel("15");
+        performTest("RawStringLiteral",
+                    "public class RawStringLiteral {\n" +
+                    "    String s1 = \"\"\"\n" +
+                    "                int i1 = 1;    \n" +
+                    "\n" +
+                    "     \n" +
+                    "     \t\n" +
+                    "                  int i2 = 2;\n" +
+                    "             \"\"\";\n" +
+                    "}\n",
+                    "[PUBLIC, CLASS, DECLARATION], 0:13-0:29",
+                    "[PUBLIC, CLASS], 1:4-1:10",
+                    "[PACKAGE_PRIVATE, FIELD, DECLARATION], 1:11-1:13",
+                    "[UNINDENTED_TEXT_BLOCK], 2:13-2:27",
+                    "[UNINDENTED_TEXT_BLOCK], 6:13-6:29");
     }
 
     private void performTest(String fileName) throws Exception {

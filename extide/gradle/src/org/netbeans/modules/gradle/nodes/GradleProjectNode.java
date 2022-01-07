@@ -76,20 +76,14 @@ public class GradleProjectNode extends AbstractNode {
         });
         ProjectProblemsProvider problems = proj.getLookup().lookup(ProjectProblemsProvider.class);
         if (problems != null) {
-            problems.addPropertyChangeListener(new PropertyChangeListener() {
-                @Override
-                public void propertyChange(PropertyChangeEvent evt) {
-                    if (ProjectProblemsProvider.PROP_PROBLEMS.equals(evt.getPropertyName())) {
-                        SwingUtilities.invokeLater(new Runnable() {
-                            @Override
-                            public void run() {
-                                fireNameChange(null, getName());
-                                fireDisplayNameChange(null, getDisplayName());
-                                fireShortDescriptionChange(null, getShortDescription());
-                            }
-                        });
+            problems.addPropertyChangeListener((PropertyChangeEvent evt) -> {
+                if (ProjectProblemsProvider.PROP_PROBLEMS.equals(evt.getPropertyName())) {
+                    SwingUtilities.invokeLater(() -> {
+                        fireNameChange(null, getName());
+                        fireDisplayNameChange(null, getDisplayName());
+                        fireShortDescriptionChange(null, getShortDescription());
+                    });
 
-                    }
                 }
             });
         }
@@ -98,7 +92,7 @@ public class GradleProjectNode extends AbstractNode {
 
     public @Override
     String getName() {
-        return project.getProjectDirectory().toURI().toString();
+        return info.getName();
     }
 
     @Override

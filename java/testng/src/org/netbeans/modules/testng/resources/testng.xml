@@ -26,17 +26,18 @@
     <localizing-bundle>org.netbeans.modules.testng.Bundle</localizing-bundle>
     <volume>
         <type>classpath</type>
-        <resource>jar:nbinst://org.netbeans.libs.testng/modules/ext/testng-6.8.1-dist.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.libs.testng/modules/ext/testng-6.14.3.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.libs.testng/modules/ext/jcommander-1.78.jar!/</resource>
     </volume>
     <volume>
         <type>javadoc</type>
-        <resource>jar:nbinst://org.netbeans.libs.testng/docs/testng-6.8.1-javadoc.zip!/</resource>
+        <resource>jar:nbinst://org.netbeans.libs.testng/docs/testng-6.13.1-javadoc.jar!/</resource>
     </volume>
     <properties>
         <!-- please check with mkleint@netbeans.org before/after updating this or "classpath" section -->
         <property>
             <name>maven-dependencies</name>
-            <value>org.testng:testng:6.8.1:jar</value>
+            <value>org.testng:testng:6.14.3:jar</value>
         </property>
     </properties>    
 </library>

@@ -134,7 +134,7 @@ public class JaxWsServiceCreator implements ServiceCreator {
 
     @Override
     public void createService() throws IOException {
-        serviceType = ((Integer) wiz.getProperty(WizardProperties.WEB_SERVICE_TYPE)).intValue();
+        serviceType = ((Integer) wiz.getProperty(WizardProperties.WEB_SERVICE_TYPE));
 
         // Use Progress API to display generator messages.
         final ProgressHandle handle = ProgressHandleFactory.createHandle(NbBundle.getMessage(JaxWsServiceCreator.class, "TXT_WebServiceGeneration")); //NOI18N
@@ -227,7 +227,7 @@ public class JaxWsServiceCreator implements ServiceCreator {
         //if (wsdlUrl==null) wsdlUrl = "file:"+(filePath.startsWith("/")?filePath:"/"+filePath); //NOI18N
 
         if(wsdlUrl == null) {
-            wsdlUrl = FileUtil.toFileObject(FileUtil.normalizeFile(new File(filePath))).getURL().toExternalForm();
+            wsdlUrl = FileUtil.toFileObject(FileUtil.normalizeFile(new File(filePath))).toURL().toExternalForm();
         }
         FileObject localWsdlFolder = jaxWsSupport.getWsdlFolder(true);
 

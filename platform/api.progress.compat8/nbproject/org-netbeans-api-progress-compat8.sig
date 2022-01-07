@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.55
+#Version 1.61
 
 CLSS public java.lang.Object
 cons public init()
@@ -54,7 +54,7 @@ meth public org.netbeans.modules.progress.spi.TaskModel getModel()
 meth public static org.netbeans.modules.progress.spi.Controller getDefault()
 meth public void runNow()
 supr java.lang.Object
-hfds RQ,TIMER_QUANTUM,component,dispatchRunning,eventQueue,model,task,taskDelay,timerStart
+hfds LOG,RQ,TIMER_QUANTUM,component,dispatchRunning,eventQueue,model,task,taskDelay,timerStart
 
 CLSS public org.netbeans.modules.progress.spi.ControllerCompat
 cons public init()
@@ -70,11 +70,13 @@ fld public final static int STATE_FINISHED = 2
 fld public final static int STATE_INITIALIZED = 0
 fld public final static int STATE_REQUEST_STOP = 3
 fld public final static int STATE_RUNNING = 1
+meth protected final void markCustomPlaced()
 meth protected final void setController(org.netbeans.modules.progress.spi.Controller)
 meth public boolean isAllowCancel()
 meth public boolean isAllowView()
 meth public boolean isCustomPlaced()
 meth public boolean isInSleepMode()
+meth public boolean requestAction(java.lang.String,javax.swing.Action)
 meth public double getPercentageDone()
 meth public final boolean isUserInitialized()
 meth public final org.netbeans.api.progress.ProgressHandle createProgressHandle()
@@ -82,6 +84,7 @@ meth public int getInitialDelay()
 meth public int getState()
 meth public int getTotalUnits()
 meth public java.lang.String getDisplayName()
+meth public java.lang.String toString()
 meth public long getLastPingTime()
 meth public long getTimeStampStarted()
 meth public org.netbeans.modules.progress.spi.ProgressEvent requestStateSnapshot()
@@ -97,7 +100,7 @@ meth public void toDeterminate(int,long)
 meth public void toIndeterminate()
 meth public void toSilent(java.lang.String)
 supr java.lang.Object
-hfds LOG,cancelable,compatInit,controller,currentUnit,del,displayName,initialDelay,initialEstimate,lastMessage,state,timeLastProgress,timeSleepy,timeStarted,totalUnits,userInitiated
+hfds LOG,cancelable,compatInit,controller,currentUnit,customPlaced,del,displayName,handle,initialDelay,initialEstimate,lastMessage,state,timeLastProgress,timeSleepy,timeStarted,totalUnits,userInitiated
 
 CLSS public org.netbeans.modules.progress.spi.InternalHandleCompat
 cons public init()
@@ -131,6 +134,7 @@ meth public int getType()
 meth public int getWorkunitsDone()
 meth public java.lang.String getDisplayName()
 meth public java.lang.String getMessage()
+meth public java.lang.String toString()
 meth public long getEstimatedCompletion()
 meth public org.netbeans.modules.progress.spi.InternalHandle getSource()
 meth public void copyMessageFromEarlier(org.netbeans.modules.progress.spi.ProgressEvent)

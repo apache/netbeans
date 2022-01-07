@@ -175,7 +175,8 @@ public final class LexUtilities {
             Token<?extends PHPTokenId> token = ts.token();
 
             if ((token.id() == tokenUpId && textEquals(token.text(), up))
-                    || (tokenUpId == PHPTokenId.PHP_CURLY_OPEN && token.id() == PHPTokenId.PHP_TOKEN && token.text().charAt(token.text().length() - 1) == '{')) {
+                    || (tokenUpId == PHPTokenId.PHP_CURLY_OPEN && token.id() == PHPTokenId.PHP_TOKEN && token.text().charAt(token.text().length() - 1) == '{')
+                    || (up == '[' && token.id() == PHPTokenId.PHP_ATTRIBUTE)) /* #[ */ {
                 balance++;
             } else if (token.id() == tokenDownId && textEquals(token.text(), down)) {
                 if (balance == 0) {
@@ -198,7 +199,8 @@ public final class LexUtilities {
             TokenId id = token.id();
 
             if (token.id() == tokenUpId && textEquals(token.text(), up)
-                    || (tokenUpId == PHPTokenId.PHP_CURLY_OPEN && token.id() == PHPTokenId.PHP_TOKEN && token.text().charAt(token.text().length() - 1) == '{')) {
+                    || (tokenUpId == PHPTokenId.PHP_CURLY_OPEN && token.id() == PHPTokenId.PHP_TOKEN && token.text().charAt(token.text().length() - 1) == '{')
+                    || (up == '[' && token.id() == PHPTokenId.PHP_ATTRIBUTE)) /* #[ */ {
                 if (balance == 0) {
                     return new OffsetRange(ts.offset(), ts.offset() + token.length());
                 }

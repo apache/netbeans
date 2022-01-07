@@ -26,6 +26,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.ItemSelectable;
+import java.awt.KeyboardFocusManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -34,6 +35,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.*;
@@ -213,7 +215,9 @@ final class BasicSearchForm extends JPanel implements ChangeListener,
     private void initComponents(final boolean searchAndReplace) {
 
         lblTextToFind = new JLabel();
-        cboxTextToFind = ComponentUtils.adjustComboForSearchPattern(new JComboBox<String>());
+        JComboBox<String> box = new JComboBox<>();
+        box.setEditor(new MultiLineComboBoxEditor());
+        cboxTextToFind = ComponentUtils.adjustComboForSearchPattern(box);
         lblTextToFind.setLabelFor(cboxTextToFind.getComponent());
         btnTestTextToFind = new JButton();
         lblTextToFindHint = new JLabel();
@@ -222,7 +226,8 @@ final class BasicSearchForm extends JPanel implements ChangeListener,
 
         if (searchAndReplace) {
             lblReplacement = new JLabel();
-            cboxReplacement = new JComboBox<ReplaceModelItem>();
+            cboxReplacement = new JComboBox<>();
+            cboxReplacement.setEditor(new MultiLineComboBoxEditor());
             cboxReplacement.setEditable(true);
             cboxReplacement.setRenderer(new ShorteningCellRenderer());
             lblReplacement.setLabelFor(cboxReplacement);
@@ -271,22 +276,20 @@ final class BasicSearchForm extends JPanel implements ChangeListener,
     protected void initFormPanel(boolean searchAndReplace) {
 
         formPanel = new SearchFormPanel();
-        formPanel.addRow(lblTextToFind, cboxTextToFind.getComponent());
+        formPanel.addRow(lblTextToFind, cboxTextToFind.getComponent(), true);
         JPanel hintAndButtonPanel = initHintAndButtonPanel();
         formPanel.addRow(new JLabel(), hintAndButtonPanel);
         initContainingTextOptionsRow(searchAndReplace);
         if (searchAndReplace) {
-            formPanel.addRow(lblReplacement, cboxReplacement);
+            formPanel.addRow(lblReplacement, cboxReplacement, true);
         }
         formPanel.addSeparator();
         formPanel.addRow(lblScope, cboxScope.getComponent());
         initScopeOptionsRow(searchAndReplace);
         formPanel.addSeparator();
-        formPanel.addRow(lblFileNamePattern,
-                cboxFileNamePattern.getComponent());
+        formPanel.addRow(lblFileNamePattern, cboxFileNamePattern.getComponent());
         formPanel.addRow(new JLabel(), lblFileNameHint);
-        formPanel.addRow(new JLabel(),
-                scopeSettingsPanel.getFileNameComponent());
+        formPanel.addRow(new JLabel(), scopeSettingsPanel.getFileNameComponent());
         formPanel.addEmptyLine();
     }
 
@@ -365,6 +368,7 @@ final class BasicSearchForm extends JPanel implements ChangeListener,
     private void initValuesFromCriteria(BasicSearchCriteria initialCriteria,
             boolean searchAndReplace) {
         cboxTextToFind.setSearchPattern(initialCriteria.getSearchPattern());
+        cboxTextToFind.getComponent().setSelectedIndex(0);
         if (cboxReplacement != null) {
             cboxReplacement.setSelectedItem(new ReplaceModelItem(
                     ReplacePattern.create(initialCriteria.getReplaceExpr(),
@@ -839,7 +843,6 @@ final class BasicSearchForm extends JPanel implements ChangeListener,
      */
     private final class SearchFormPanel extends JPanel {
 
-        private FormLayoutHelper flh;
         private int row = 0;
 
         public SearchFormPanel() {
@@ -849,7 +852,10 @@ final class BasicSearchForm extends JPanel implements ChangeListener,
         }
 
         public void addRow(JComponent label, JComponent component) {
+            addRow(label, component, false);
+        }
 
+        public void addRow(JComponent label, JComponent component, boolean fillVertical) {
             GridBagConstraints c = new GridBagConstraints();
             c.gridx = 0;
             c.anchor = GridBagConstraints.NORTHWEST;
@@ -861,7 +867,13 @@ final class BasicSearchForm extends JPanel implements ChangeListener,
 
             c.gridx = 1;
             c.weightx = 1;
-            c.fill = GridBagConstraints.HORIZONTAL;
+            if (fillVertical) {
+                c.weighty = 1;
+                c.fill = GridBagConstraints.BOTH;
+            } else {
+                c.weighty = 0;
+                c.fill = GridBagConstraints.HORIZONTAL;
+            }
             add(component, c);
 
             row++;
@@ -886,7 +898,7 @@ final class BasicSearchForm extends JPanel implements ChangeListener,
             c.gridy = row;
             c.gridwidth = 2;
             c.fill = GridBagConstraints.HORIZONTAL;
-            c.weighty = 1;
+            c.weighty = 0;
             c.weightx = 0.1;
             JLabel emptyLabel = new JLabel();
             emptyLabel.setPreferredSize(new Dimension(0, 0));
@@ -1098,5 +1110,45 @@ final class BasicSearchForm extends JPanel implements ChangeListener,
             Logger.getLogger(BasicSearchForm.class.getName())
                     .log(Level.INFO, msg);
         }
+    }
+
+    final static class MultiLineComboBoxEditor implements ComboBoxEditor {
+
+        private final JTextArea area = new JTextArea();
+
+        public MultiLineComboBoxEditor() {
+            area.setWrapStyleWord(false);
+            area.setLineWrap(false);
+            area.setFocusTraversalKeys(KeyboardFocusManager.FORWARD_TRAVERS‌​AL_KEYS, null);
+            area.setFocusTraversalKeys(KeyboardFocusManager.BACKWARD_TRAVERS‌​AL_KEYS, null);
+        }
+
+        @Override
+        public void setItem(Object item) {
+            area.setText(Objects.toString(item, ""));
+        }
+
+        @Override
+        public Object getItem() {
+            return area.getText();
+        }
+
+        @Override
+        public Component getEditorComponent() {
+            return area;
+        }
+
+        @Override
+        public void selectAll() {
+            area.selectAll();
+            area.requestFocus();
+        }
+
+        @Override
+        public void addActionListener(ActionListener l) { }
+
+        @Override
+        public void removeActionListener(ActionListener l) { }
+
     }
 }

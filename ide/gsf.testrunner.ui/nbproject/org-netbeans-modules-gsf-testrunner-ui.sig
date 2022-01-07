@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.18
+#Version 1.29.0
 
 CLSS public abstract interface java.awt.event.ActionListener
 intf java.util.EventListener
@@ -24,7 +24,6 @@ meth public void setPreferred(boolean)
 meth public void setShortDescription(java.lang.String)
 meth public void setValue(java.lang.String,java.lang.Object)
 supr java.lang.Object
-hfds TRANSIENT,classRef,displayName,expert,hidden,name,preferred,shortDescription,table
 
 CLSS public abstract interface java.io.Serializable
 
@@ -66,7 +65,6 @@ meth public void putValue(java.lang.String,java.lang.Object)
 meth public void removePropertyChangeListener(java.beans.PropertyChangeListener)
 meth public void setEnabled(boolean)
 supr java.lang.Object
-hfds RECONFIGURE_ON_NULL,arrayTable
 
 CLSS public abstract interface javax.swing.Action
 fld public final static java.lang.String ACCELERATOR_KEY = "AcceleratorKey"
@@ -153,6 +151,29 @@ CLSS public static org.netbeans.modules.gsf.testrunner.ui.api.TestCreatorPanelDi
 cons public init(org.netbeans.api.project.Project)
 supr java.lang.Object
 
+CLSS public org.netbeans.modules.gsf.testrunner.ui.api.TestMethodController
+cons public init()
+innr public final static TestMethod
+meth public static void setTestMethods(javax.swing.text.Document,java.util.List<org.netbeans.modules.gsf.testrunner.ui.api.TestMethodController$TestMethod>)
+supr java.lang.Object
+
+CLSS public final static org.netbeans.modules.gsf.testrunner.ui.api.TestMethodController$TestMethod
+ outer org.netbeans.modules.gsf.testrunner.ui.api.TestMethodController
+cons public init(java.lang.String,javax.swing.text.Position,org.netbeans.spi.project.SingleMethod,javax.swing.text.Position,javax.swing.text.Position,javax.swing.text.Position)
+cons public init(java.lang.String,org.netbeans.spi.project.SingleMethod,javax.swing.text.Position,javax.swing.text.Position)
+cons public init(java.lang.String,org.netbeans.spi.project.SingleMethod,javax.swing.text.Position,javax.swing.text.Position,javax.swing.text.Position)
+cons public init(org.netbeans.spi.project.SingleMethod,javax.swing.text.Position,javax.swing.text.Position)
+meth public boolean equals(java.lang.Object)
+meth public int hashCode()
+meth public java.lang.String getTestClassName()
+meth public javax.swing.text.Position end()
+meth public javax.swing.text.Position getTestClassPosition()
+meth public javax.swing.text.Position preferred()
+meth public javax.swing.text.Position start()
+meth public org.netbeans.spi.project.SingleMethod method()
+supr java.lang.Object
+hfds end,method,preferred,start,testClassName,testClassPosition
+
 CLSS public abstract org.netbeans.modules.gsf.testrunner.ui.api.TestMethodDebuggerProvider
 cons public init()
 meth public abstract boolean canHandle(org.openide.nodes.Node)
@@ -161,6 +182,11 @@ meth public boolean isTestClass(org.openide.nodes.Node)
 meth public final void debugTestMethod(org.openide.nodes.Node)
 supr java.lang.Object
 hfds command,singleMethod,singleMethodTask
+
+CLSS public final org.netbeans.modules.gsf.testrunner.ui.api.TestMethodFinder
+cons public init()
+meth public static java.util.Map<org.openide.filesystems.FileObject,java.util.Collection<org.netbeans.modules.gsf.testrunner.ui.api.TestMethodController$TestMethod>> findTestMethods(java.lang.Iterable<org.openide.filesystems.FileObject>,java.util.function.BiConsumer<org.openide.filesystems.FileObject,java.util.Collection<org.netbeans.modules.gsf.testrunner.ui.api.TestMethodController$TestMethod>>)
+supr java.lang.Object
 
 CLSS public org.netbeans.modules.gsf.testrunner.ui.api.TestMethodNode
 cons protected init(org.netbeans.modules.gsf.testrunner.api.Testcase,org.netbeans.api.project.Project,org.openide.util.Lookup)
@@ -192,6 +218,30 @@ cons public init()
 meth protected abstract void doActionPerformed(java.awt.event.ActionEvent)
 meth public final void actionPerformed(java.awt.event.ActionEvent)
 supr javax.swing.AbstractAction
+
+CLSS public abstract org.netbeans.modules.gsf.testrunner.ui.api.TestResultDisplayHandler
+innr public abstract interface static Spi
+meth public abstract int getTotalTests()
+meth public abstract void displayMessage(java.lang.String)
+meth public abstract void displayMessageSessionFinished(java.lang.String)
+meth public abstract void displayOutput(java.lang.String,boolean)
+meth public abstract void displayReport(org.netbeans.modules.gsf.testrunner.api.Report)
+meth public abstract void displaySuiteRunning(java.lang.String)
+meth public abstract void displaySuiteRunning(org.netbeans.modules.gsf.testrunner.api.TestSuite)
+meth public final static org.netbeans.modules.gsf.testrunner.ui.api.TestResultDisplayHandler create(org.netbeans.modules.gsf.testrunner.api.TestSession)
+supr java.lang.Object
+hcls Impl
+
+CLSS public abstract interface static org.netbeans.modules.gsf.testrunner.ui.api.TestResultDisplayHandler$Spi<%0 extends java.lang.Object>
+ outer org.netbeans.modules.gsf.testrunner.ui.api.TestResultDisplayHandler
+meth public abstract int getTotalTests({org.netbeans.modules.gsf.testrunner.ui.api.TestResultDisplayHandler$Spi%0})
+meth public abstract void displayMessage({org.netbeans.modules.gsf.testrunner.ui.api.TestResultDisplayHandler$Spi%0},java.lang.String)
+meth public abstract void displayMessageSessionFinished({org.netbeans.modules.gsf.testrunner.ui.api.TestResultDisplayHandler$Spi%0},java.lang.String)
+meth public abstract void displayOutput({org.netbeans.modules.gsf.testrunner.ui.api.TestResultDisplayHandler$Spi%0},java.lang.String,boolean)
+meth public abstract void displayReport({org.netbeans.modules.gsf.testrunner.ui.api.TestResultDisplayHandler$Spi%0},org.netbeans.modules.gsf.testrunner.api.Report)
+meth public abstract void displaySuiteRunning({org.netbeans.modules.gsf.testrunner.ui.api.TestResultDisplayHandler$Spi%0},java.lang.String)
+meth public abstract void displaySuiteRunning({org.netbeans.modules.gsf.testrunner.ui.api.TestResultDisplayHandler$Spi%0},org.netbeans.modules.gsf.testrunner.api.TestSuite)
+meth public abstract {org.netbeans.modules.gsf.testrunner.ui.api.TestResultDisplayHandler$Spi%0} create(org.netbeans.modules.gsf.testrunner.api.TestSession)
 
 CLSS public abstract org.netbeans.modules.gsf.testrunner.ui.api.TestRunnerNodeFactory
 cons public init()
@@ -231,6 +281,9 @@ meth public static void notifyUser(java.lang.String)
 meth public static void notifyUser(java.lang.String,int)
 supr java.lang.Object
 hfds LOG
+
+CLSS public abstract interface org.netbeans.modules.gsf.testrunner.ui.spi.ComputeTestMethods
+meth public abstract java.util.List<org.netbeans.modules.gsf.testrunner.ui.api.TestMethodController$TestMethod> computeTestMethods(org.netbeans.modules.parsing.spi.Parser$Result,java.util.concurrent.atomic.AtomicBoolean)
 
 CLSS public abstract org.netbeans.modules.gsf.testrunner.ui.spi.TestCreatorConfiguration
 cons public init()

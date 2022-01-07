@@ -1,0 +1,998 @@
+<testresult testFile='classNameLiteralOnObjects_01.php'>
+    <scanner>
+        <token id='T_VARIABLE' start='909' end='918'>
+            <text>$stdClass</text>
+        </token>
+        <token id='T_EQUAL' start='919' end='920'>
+            <text>=</text>
+        </token>
+        <token id='T_NEW' start='921' end='924'>
+            <text>new</text>
+        </token>
+        <token id='T_STRING' start='925' end='933'>
+            <text>stdClass</text>
+        </token>
+        <token id='T_SEMICOLON' start='933' end='934'>
+            <text>;</text>
+        </token>
+        <token id='T_STRING' start='935' end='943'>
+            <text>var_dump</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='943' end='944'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='944' end='953'>
+            <text>$stdClass</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='953' end='955'>
+            <text>::</text>
+        </token>
+        <token id='T_CLASS' start='955' end='960'>
+            <text>class</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='960' end='961'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='961' end='962'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='963' end='973'>
+            <text>$reference</text>
+        </token>
+        <token id='T_EQUAL' start='974' end='975'>
+            <text>=</text>
+        </token>
+        <token id='T_REFERENCE' start='975' end='976'>
+            <text>&amp;</text>
+        </token>
+        <token id='T_VARIABLE' start='977' end='986'>
+            <text>$stdClass</text>
+        </token>
+        <token id='T_SEMICOLON' start='986' end='987'>
+            <text>;</text>
+        </token>
+        <token id='T_STRING' start='988' end='996'>
+            <text>var_dump</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='996' end='997'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='997' end='1007'>
+            <text>$reference</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='1007' end='1009'>
+            <text>::</text>
+        </token>
+        <token id='T_CLASS' start='1009' end='1014'>
+            <text>class</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1014' end='1015'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='1015' end='1016'>
+            <text>;</text>
+        </token>
+        <token id='T_STRING' start='1017' end='1025'>
+            <text>var_dump</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1025' end='1026'>
+            <text>(</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1026' end='1027'>
+            <text>(</text>
+        </token>
+        <token id='T_NEW' start='1027' end='1030'>
+            <text>new</text>
+        </token>
+        <token id='T_STRING' start='1031' end='1039'>
+            <text>stdClass</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1039' end='1040'>
+            <text>)</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='1040' end='1042'>
+            <text>::</text>
+        </token>
+        <token id='T_CLASS' start='1042' end='1047'>
+            <text>class</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1047' end='1048'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='1048' end='1049'>
+            <text>;</text>
+        </token>
+        <token id='T_STRING' start='1050' end='1058'>
+            <text>var_dump</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1058' end='1059'>
+            <text>(</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1059' end='1060'>
+            <text>(</text>
+        </token>
+        <token id='T_CLONE' start='1060' end='1065'>
+            <text>clone</text>
+        </token>
+        <token id='T_NEW' start='1066' end='1069'>
+            <text>new</text>
+        </token>
+        <token id='T_STRING' start='1070' end='1074'>
+            <text>Test</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1074' end='1075'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1075' end='1076'>
+            <text>)</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1076' end='1077'>
+            <text>)</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='1077' end='1079'>
+            <text>::</text>
+        </token>
+        <token id='T_CLASS' start='1079' end='1084'>
+            <text>class</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1084' end='1085'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='1085' end='1086'>
+            <text>;</text>
+        </token>
+        <token id='T_FUNCTION' start='1088' end='1096'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='1097' end='1101'>
+            <text>test</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1101' end='1102'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1102' end='1103'>
+            <text>)</text>
+        </token>
+        <token id='T_NEKUDOTAIM' start='1103' end='1104'>
+            <text>:</text>
+        </token>
+        <token id='T_STRING' start='1105' end='1113'>
+            <text>stdClass</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1114' end='1115'>
+            <text>{</text>
+        </token>
+        <token id='T_RETURN' start='1120' end='1126'>
+            <text>return</text>
+        </token>
+        <token id='T_NEW' start='1127' end='1130'>
+            <text>new</text>
+        </token>
+        <token id='T_STRING' start='1131' end='1139'>
+            <text>stdClass</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1139' end='1140'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1140' end='1141'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='1141' end='1142'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1143' end='1144'>
+            <text>}</text>
+        </token>
+        <token id='T_STRING' start='1146' end='1154'>
+            <text>var_dump</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1154' end='1155'>
+            <text>(</text>
+        </token>
+        <token id='T_STRING' start='1155' end='1159'>
+            <text>test</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1159' end='1160'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1160' end='1161'>
+            <text>)</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='1161' end='1163'>
+            <text>::</text>
+        </token>
+        <token id='T_CLASS' start='1163' end='1168'>
+            <text>class</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1168' end='1169'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='1169' end='1170'>
+            <text>;</text>
+        </token>
+        <token id='T_CLASS' start='1172' end='1177'>
+            <text>class</text>
+        </token>
+        <token id='T_STRING' start='1178' end='1182'>
+            <text>Test</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1183' end='1184'>
+            <text>{</text>
+        </token>
+        <token id='T_PUBLIC' start='1189' end='1195'>
+            <text>public</text>
+        </token>
+        <token id='T_FUNCTION' start='1196' end='1204'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='1205' end='1218'>
+            <text>noReturnTypes</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1218' end='1219'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1219' end='1220'>
+            <text>)</text>
+        </token>
+        <token id='T_NEKUDOTAIM' start='1220' end='1221'>
+            <text>:</text>
+        </token>
+        <token id='T_STRING' start='1222' end='1226'>
+            <text>void</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1227' end='1228'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1233' end='1234'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='1240' end='1246'>
+            <text>public</text>
+        </token>
+        <token id='T_FUNCTION' start='1247' end='1255'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='1256' end='1267'>
+            <text>newInstance</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1267' end='1268'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1268' end='1269'>
+            <text>)</text>
+        </token>
+        <token id='T_NEKUDOTAIM' start='1269' end='1270'>
+            <text>:</text>
+        </token>
+        <token id='T_STRING' start='1271' end='1275'>
+            <text>Test</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1276' end='1277'>
+            <text>{</text>
+        </token>
+        <token id='T_RETURN' start='1286' end='1292'>
+            <text>return</text>
+        </token>
+        <token id='T_VARIABLE' start='1293' end='1298'>
+            <text>$this</text>
+        </token>
+        <token id='T_SEMICOLON' start='1298' end='1299'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1304' end='1305'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='1311' end='1317'>
+            <text>public</text>
+        </token>
+        <token id='T_FUNCTION' start='1318' end='1326'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='1327' end='1335'>
+            <text>withThis</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1335' end='1336'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1336' end='1337'>
+            <text>)</text>
+        </token>
+        <token id='T_NEKUDOTAIM' start='1337' end='1338'>
+            <text>:</text>
+        </token>
+        <token id='T_STRING' start='1339' end='1343'>
+            <text>void</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1344' end='1345'>
+            <text>{</text>
+        </token>
+        <token id='T_STRING' start='1354' end='1362'>
+            <text>var_dump</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1362' end='1363'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='1363' end='1368'>
+            <text>$this</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='1368' end='1370'>
+            <text>::</text>
+        </token>
+        <token id='T_CLASS' start='1370' end='1375'>
+            <text>class</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1375' end='1376'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='1376' end='1377'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1382' end='1383'>
+            <text>}</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1384' end='1385'>
+            <text>}</text>
+        </token>
+        <token id='T_VARIABLE' start='1387' end='1392'>
+            <text>$test</text>
+        </token>
+        <token id='T_EQUAL' start='1393' end='1394'>
+            <text>=</text>
+        </token>
+        <token id='T_NEW' start='1395' end='1398'>
+            <text>new</text>
+        </token>
+        <token id='T_STRING' start='1399' end='1403'>
+            <text>Test</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1403' end='1404'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1404' end='1405'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='1405' end='1406'>
+            <text>;</text>
+        </token>
+        <token id='T_TRY' start='1407' end='1410'>
+            <text>try</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1411' end='1412'>
+            <text>{</text>
+        </token>
+        <token id='T_STRING' start='1417' end='1425'>
+            <text>var_dump</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1425' end='1426'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='1426' end='1431'>
+            <text>$test</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='1431' end='1433'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='1433' end='1446'>
+            <text>noReturnTypes</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1446' end='1447'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1447' end='1448'>
+            <text>)</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='1448' end='1450'>
+            <text>::</text>
+        </token>
+        <token id='T_CLASS' start='1450' end='1455'>
+            <text>class</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1455' end='1456'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='1456' end='1457'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1472' end='1473'>
+            <text>}</text>
+        </token>
+        <token id='T_CATCH' start='1474' end='1479'>
+            <text>catch</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1480' end='1481'>
+            <text>(</text>
+        </token>
+        <token id='T_STRING' start='1481' end='1490'>
+            <text>TypeError</text>
+        </token>
+        <token id='T_VARIABLE' start='1491' end='1494'>
+            <text>$ex</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1494' end='1495'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1496' end='1497'>
+            <text>{</text>
+        </token>
+        <token id='T_ECHO' start='1502' end='1506'>
+            <text>echo</text>
+        </token>
+        <token id='T_VARIABLE' start='1507' end='1510'>
+            <text>$ex</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='1510' end='1512'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='1512' end='1522'>
+            <text>getMessage</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1522' end='1523'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1523' end='1524'>
+            <text>)</text>
+        </token>
+        <token id='T_NEKUDA' start='1525' end='1526'>
+            <text>.</text>
+        </token>
+        <token id='T_STRING' start='1527' end='1534'>
+            <text>PHP_EOL</text>
+        </token>
+        <token id='T_SEMICOLON' start='1534' end='1535'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1536' end='1537'>
+            <text>}</text>
+        </token>
+        <token id='T_STRING' start='1539' end='1547'>
+            <text>var_dump</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1547' end='1548'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='1548' end='1553'>
+            <text>$test</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='1553' end='1555'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='1555' end='1566'>
+            <text>newInstance</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1566' end='1567'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1567' end='1568'>
+            <text>)</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='1568' end='1570'>
+            <text>::</text>
+        </token>
+        <token id='T_CLASS' start='1570' end='1575'>
+            <text>class</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1575' end='1576'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='1576' end='1577'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='1579' end='1585'>
+            <text>$array</text>
+        </token>
+        <token id='T_OPEN_RECT' start='1585' end='1586'>
+            <text>[</text>
+        </token>
+        <token id='T_LNUMBER' start='1586' end='1587'>
+            <text>0</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='1587' end='1588'>
+            <text>]</text>
+        </token>
+        <token id='T_EQUAL' start='1589' end='1590'>
+            <text>=</text>
+        </token>
+        <token id='T_NEW' start='1591' end='1594'>
+            <text>new</text>
+        </token>
+        <token id='T_STRING' start='1595' end='1599'>
+            <text>Test</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1599' end='1600'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1600' end='1601'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='1601' end='1602'>
+            <text>;</text>
+        </token>
+        <token id='T_STRING' start='1603' end='1611'>
+            <text>var_dump</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1611' end='1612'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='1612' end='1618'>
+            <text>$array</text>
+        </token>
+        <token id='T_OPEN_RECT' start='1618' end='1619'>
+            <text>[</text>
+        </token>
+        <token id='T_LNUMBER' start='1619' end='1620'>
+            <text>0</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='1620' end='1621'>
+            <text>]</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='1621' end='1623'>
+            <text>::</text>
+        </token>
+        <token id='T_CLASS' start='1623' end='1628'>
+            <text>class</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1628' end='1629'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='1629' end='1630'>
+            <text>;</text>
+        </token>
+        <token id='EOF' start='1631' end='1631'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='1631'>
+        <Comments>
+            <Comment start='6' end='813' commentType='multiLine'/>
+            <Comment start='815' end='851' commentType='singleLine'/>
+            <Comment start='851' end='908' commentType='singleLine'/>
+            <Comment start='1458' end='1472' commentType='singleLine'/>
+            <Comment start='6' end='813' commentType='multiLine'/>
+            <Comment start='815' end='851' commentType='singleLine'/>
+            <Comment start='851' end='908' commentType='singleLine'/>
+            <Comment start='1458' end='1472' commentType='singleLine'/>
+        </Comments>
+        <Statements>
+            <ExpressionStatement start='909' end='934'>
+                <Assignment start='909' end='933' operator='EQUAL'>
+                    <Variable start='909' end='918' isDollared='true'>
+                        <Identifier start='910' end='918' name='stdClass'/>
+                    </Variable>
+                    <ClassInstanceCreation start='921' end='933' anonymous='false'>
+                        <ClassName start='925' end='933'>
+                            <NamespaceName start='925' end='933' isCurrent='false' isGlobal='false'>
+                                <Identifier start='925' end='933' name='stdClass'/>
+                            </NamespaceName>
+                        </ClassName>
+                        <Parameters>
+                        </Parameters>
+                    </ClassInstanceCreation>
+                </Assignment>
+            </ExpressionStatement>
+            <ExpressionStatement start='935' end='962'>
+                <FunctionInvocation start='935' end='961'>
+                    <FucntionName start='935' end='943'>
+                        <NamespaceName start='935' end='943' isCurrent='false' isGlobal='false'>
+                            <Identifier start='935' end='943' name='var_dump'/>
+                        </NamespaceName>
+                    </FucntionName>
+                    <Parameters>
+                        <StaticConstantAccess start='944' end='960'>
+                            <Variable start='944' end='953' isDollared='true'>
+                                <Identifier start='945' end='953' name='stdClass'/>
+                            </Variable>
+                            <Constant>
+                                <Identifier start='955' end='960' name='class'/>
+                            </Constant>
+                            <Member>
+                                <Identifier start='955' end='960' name='class'/>
+                            </Member>
+                        </StaticConstantAccess>
+                    </Parameters>
+                </FunctionInvocation>
+            </ExpressionStatement>
+            <ExpressionStatement start='963' end='987'>
+                <Assignment start='963' end='986' operator='EQUAL'>
+                    <Variable start='963' end='973' isDollared='true'>
+                        <Identifier start='964' end='973' name='reference'/>
+                    </Variable>
+                    <Reference start='975' end='986'>
+                        <Variable start='977' end='986' isDollared='true'>
+                            <Identifier start='978' end='986' name='stdClass'/>
+                        </Variable>
+                    </Reference>
+                </Assignment>
+            </ExpressionStatement>
+            <ExpressionStatement start='988' end='1016'>
+                <FunctionInvocation start='988' end='1015'>
+                    <FucntionName start='988' end='996'>
+                        <NamespaceName start='988' end='996' isCurrent='false' isGlobal='false'>
+                            <Identifier start='988' end='996' name='var_dump'/>
+                        </NamespaceName>
+                    </FucntionName>
+                    <Parameters>
+                        <StaticConstantAccess start='997' end='1014'>
+                            <Variable start='997' end='1007' isDollared='true'>
+                                <Identifier start='998' end='1007' name='reference'/>
+                            </Variable>
+                            <Constant>
+                                <Identifier start='1009' end='1014' name='class'/>
+                            </Constant>
+                            <Member>
+                                <Identifier start='1009' end='1014' name='class'/>
+                            </Member>
+                        </StaticConstantAccess>
+                    </Parameters>
+                </FunctionInvocation>
+            </ExpressionStatement>
+            <ExpressionStatement start='1017' end='1049'>
+                <FunctionInvocation start='1017' end='1048'>
+                    <FucntionName start='1017' end='1025'>
+                        <NamespaceName start='1017' end='1025' isCurrent='false' isGlobal='false'>
+                            <Identifier start='1017' end='1025' name='var_dump'/>
+                        </NamespaceName>
+                    </FucntionName>
+                    <Parameters>
+                        <StaticConstantAccess start='1026' end='1047'>
+                            <AnonymousObjectVariable start='1026' end='1040'>
+                                <ClassInstanceCreation start='1027' end='1039' anonymous='false'>
+                                    <ClassName start='1031' end='1039'>
+                                        <NamespaceName start='1031' end='1039' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='1031' end='1039' name='stdClass'/>
+                                        </NamespaceName>
+                                    </ClassName>
+                                    <Parameters>
+                                    </Parameters>
+                                </ClassInstanceCreation>
+                            </AnonymousObjectVariable>
+                            <Constant>
+                                <Identifier start='1042' end='1047' name='class'/>
+                            </Constant>
+                            <Member>
+                                <Identifier start='1042' end='1047' name='class'/>
+                            </Member>
+                        </StaticConstantAccess>
+                    </Parameters>
+                </FunctionInvocation>
+            </ExpressionStatement>
+            <ExpressionStatement start='1050' end='1086'>
+                <FunctionInvocation start='1050' end='1085'>
+                    <FucntionName start='1050' end='1058'>
+                        <NamespaceName start='1050' end='1058' isCurrent='false' isGlobal='false'>
+                            <Identifier start='1050' end='1058' name='var_dump'/>
+                        </NamespaceName>
+                    </FucntionName>
+                    <Parameters>
+                        <StaticConstantAccess start='1059' end='1084'>
+                            <AnonymousObjectVariable start='1059' end='1077'>
+                                <CloneExpression start='1060' end='1076'>
+                                    <ClassInstanceCreation start='1066' end='1076' anonymous='false'>
+                                        <ClassName start='1070' end='1074'>
+                                            <NamespaceName start='1070' end='1074' isCurrent='false' isGlobal='false'>
+                                                <Identifier start='1070' end='1074' name='Test'/>
+                                            </NamespaceName>
+                                        </ClassName>
+                                        <Parameters>
+                                        </Parameters>
+                                    </ClassInstanceCreation>
+                                </CloneExpression>
+                            </AnonymousObjectVariable>
+                            <Constant>
+                                <Identifier start='1079' end='1084' name='class'/>
+                            </Constant>
+                            <Member>
+                                <Identifier start='1079' end='1084' name='class'/>
+                            </Member>
+                        </StaticConstantAccess>
+                    </Parameters>
+                </FunctionInvocation>
+            </ExpressionStatement>
+            <FunctionDeclaration start='1088' end='1144' isReference='false'>
+                <Identifier start='1097' end='1101' name='test'/>
+                <FormalParameters>
+                </FormalParameters>
+                <NamespaceName start='1105' end='1113' isCurrent='false' isGlobal='false'>
+                    <Identifier start='1105' end='1113' name='stdClass'/>
+                </NamespaceName>
+                <Block start='1114' end='1144' isCurly='true'>
+                    <ReturnStatement start='1120' end='1142'>
+                        <ClassInstanceCreation start='1127' end='1141' anonymous='false'>
+                            <ClassName start='1131' end='1139'>
+                                <NamespaceName start='1131' end='1139' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='1131' end='1139' name='stdClass'/>
+                                </NamespaceName>
+                            </ClassName>
+                            <Parameters>
+                            </Parameters>
+                        </ClassInstanceCreation>
+                    </ReturnStatement>
+                </Block>
+            </FunctionDeclaration>
+            <ExpressionStatement start='1146' end='1170'>
+                <FunctionInvocation start='1146' end='1169'>
+                    <FucntionName start='1146' end='1154'>
+                        <NamespaceName start='1146' end='1154' isCurrent='false' isGlobal='false'>
+                            <Identifier start='1146' end='1154' name='var_dump'/>
+                        </NamespaceName>
+                    </FucntionName>
+                    <Parameters>
+                        <StaticConstantAccess start='1155' end='1168'>
+                            <FunctionInvocation start='1155' end='1161'>
+                                <FucntionName start='1155' end='1159'>
+                                    <NamespaceName start='1155' end='1159' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='1155' end='1159' name='test'/>
+                                    </NamespaceName>
+                                </FucntionName>
+                                <Parameters>
+                                </Parameters>
+                            </FunctionInvocation>
+                            <Constant>
+                                <Identifier start='1163' end='1168' name='class'/>
+                            </Constant>
+                            <Member>
+                                <Identifier start='1163' end='1168' name='class'/>
+                            </Member>
+                        </StaticConstantAccess>
+                    </Parameters>
+                </FunctionInvocation>
+            </ExpressionStatement>
+            <ClassDeclaration start='1172' end='1385' modifier='NONE'>
+                <ClassName>
+                    <Identifier start='1178' end='1182' name='Test'/>
+                </ClassName>
+                <SuperClassName>
+                </SuperClassName>
+                <Interfaces>
+                </Interfaces>
+                <Block start='1183' end='1385' isCurly='true'>
+                    <MethodDeclaration start='1189' end='1234' modifiers='public'>
+                        <FunctionDeclaration start='1196' end='1234' isReference='false'>
+                            <Identifier start='1205' end='1218' name='noReturnTypes'/>
+                            <FormalParameters>
+                            </FormalParameters>
+                            <NamespaceName start='1222' end='1226' isCurrent='false' isGlobal='false'>
+                                <Identifier start='1222' end='1226' name='void'/>
+                            </NamespaceName>
+                            <Block start='1227' end='1234' isCurly='true'>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='1240' end='1305' modifiers='public'>
+                        <FunctionDeclaration start='1247' end='1305' isReference='false'>
+                            <Identifier start='1256' end='1267' name='newInstance'/>
+                            <FormalParameters>
+                            </FormalParameters>
+                            <NamespaceName start='1271' end='1275' isCurrent='false' isGlobal='false'>
+                                <Identifier start='1271' end='1275' name='Test'/>
+                            </NamespaceName>
+                            <Block start='1276' end='1305' isCurly='true'>
+                                <ReturnStatement start='1286' end='1299'>
+                                    <Variable start='1293' end='1298' isDollared='true'>
+                                        <Identifier start='1294' end='1298' name='this'/>
+                                    </Variable>
+                                </ReturnStatement>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='1311' end='1383' modifiers='public'>
+                        <FunctionDeclaration start='1318' end='1383' isReference='false'>
+                            <Identifier start='1327' end='1335' name='withThis'/>
+                            <FormalParameters>
+                            </FormalParameters>
+                            <NamespaceName start='1339' end='1343' isCurrent='false' isGlobal='false'>
+                                <Identifier start='1339' end='1343' name='void'/>
+                            </NamespaceName>
+                            <Block start='1344' end='1383' isCurly='true'>
+                                <ExpressionStatement start='1354' end='1377'>
+                                    <FunctionInvocation start='1354' end='1376'>
+                                        <FucntionName start='1354' end='1362'>
+                                            <NamespaceName start='1354' end='1362' isCurrent='false' isGlobal='false'>
+                                                <Identifier start='1354' end='1362' name='var_dump'/>
+                                            </NamespaceName>
+                                        </FucntionName>
+                                        <Parameters>
+                                            <StaticConstantAccess start='1363' end='1375'>
+                                                <Variable start='1363' end='1368' isDollared='true'>
+                                                    <Identifier start='1364' end='1368' name='this'/>
+                                                </Variable>
+                                                <Constant>
+                                                    <Identifier start='1370' end='1375' name='class'/>
+                                                </Constant>
+                                                <Member>
+                                                    <Identifier start='1370' end='1375' name='class'/>
+                                                </Member>
+                                            </StaticConstantAccess>
+                                        </Parameters>
+                                    </FunctionInvocation>
+                                </ExpressionStatement>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                </Block>
+            </ClassDeclaration>
+            <ExpressionStatement start='1387' end='1406'>
+                <Assignment start='1387' end='1405' operator='EQUAL'>
+                    <Variable start='1387' end='1392' isDollared='true'>
+                        <Identifier start='1388' end='1392' name='test'/>
+                    </Variable>
+                    <ClassInstanceCreation start='1395' end='1405' anonymous='false'>
+                        <ClassName start='1399' end='1403'>
+                            <NamespaceName start='1399' end='1403' isCurrent='false' isGlobal='false'>
+                                <Identifier start='1399' end='1403' name='Test'/>
+                            </NamespaceName>
+                        </ClassName>
+                        <Parameters>
+                        </Parameters>
+                    </ClassInstanceCreation>
+                </Assignment>
+            </ExpressionStatement>
+            <TryStatement start='1407' end='1537'>
+                <CatchClauses>
+                    <CatchClause start='1474' end='1537'>
+                        <ClassNames>
+                            <NamespaceName start='1481' end='1490' isCurrent='false' isGlobal='false'>
+                                <Identifier start='1481' end='1490' name='TypeError'/>
+                            </NamespaceName>
+                        </ClassNames>
+                        <Variable start='1491' end='1494' isDollared='true'>
+                            <Identifier start='1492' end='1494' name='ex'/>
+                        </Variable>
+                        <Block start='1496' end='1537' isCurly='true'>
+                            <EchoStatement start='1502' end='1535'>
+                                <InfixExpression start='1507' end='1534' operator='CONCAT'>
+                                    <MethodInvocation start='1507' end='1524' isNullsafe='false'>
+                                        <Variable start='1507' end='1510' isDollared='true'>
+                                            <Identifier start='1508' end='1510' name='ex'/>
+                                        </Variable>
+                                        <Method>
+                                            <FunctionInvocation start='1512' end='1524'>
+                                                <FucntionName start='1512' end='1522'>
+                                                    <Variable start='1512' end='1522' isDollared='false'>
+                                                        <Identifier start='1512' end='1522' name='getMessage'/>
+                                                    </Variable>
+                                                </FucntionName>
+                                                <Parameters>
+                                                </Parameters>
+                                            </FunctionInvocation>
+                                        </Method>
+                                    </MethodInvocation>
+                                    <NamespaceName start='1527' end='1534' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='1527' end='1534' name='PHP_EOL'/>
+                                    </NamespaceName>
+                                </InfixExpression>
+                            </EchoStatement>
+                        </Block>
+                    </CatchClause>
+                </CatchClauses>
+                <Block start='1411' end='1473' isCurly='true'>
+                    <ExpressionStatement start='1417' end='1457'>
+                        <FunctionInvocation start='1417' end='1456'>
+                            <FucntionName start='1417' end='1425'>
+                                <NamespaceName start='1417' end='1425' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='1417' end='1425' name='var_dump'/>
+                                </NamespaceName>
+                            </FucntionName>
+                            <Parameters>
+                                <StaticConstantAccess start='1426' end='1455'>
+                                    <MethodInvocation start='1426' end='1448' isNullsafe='false'>
+                                        <Variable start='1426' end='1431' isDollared='true'>
+                                            <Identifier start='1427' end='1431' name='test'/>
+                                        </Variable>
+                                        <Method>
+                                            <FunctionInvocation start='1433' end='1448'>
+                                                <FucntionName start='1433' end='1446'>
+                                                    <Variable start='1433' end='1446' isDollared='false'>
+                                                        <Identifier start='1433' end='1446' name='noReturnTypes'/>
+                                                    </Variable>
+                                                </FucntionName>
+                                                <Parameters>
+                                                </Parameters>
+                                            </FunctionInvocation>
+                                        </Method>
+                                    </MethodInvocation>
+                                    <Constant>
+                                        <Identifier start='1450' end='1455' name='class'/>
+                                    </Constant>
+                                    <Member>
+                                        <Identifier start='1450' end='1455' name='class'/>
+                                    </Member>
+                                </StaticConstantAccess>
+                            </Parameters>
+                        </FunctionInvocation>
+                    </ExpressionStatement>
+                </Block>
+            </TryStatement>
+            <ExpressionStatement start='1539' end='1577'>
+                <FunctionInvocation start='1539' end='1576'>
+                    <FucntionName start='1539' end='1547'>
+                        <NamespaceName start='1539' end='1547' isCurrent='false' isGlobal='false'>
+                            <Identifier start='1539' end='1547' name='var_dump'/>
+                        </NamespaceName>
+                    </FucntionName>
+                    <Parameters>
+                        <StaticConstantAccess start='1548' end='1575'>
+                            <MethodInvocation start='1548' end='1568' isNullsafe='false'>
+                                <Variable start='1548' end='1553' isDollared='true'>
+                                    <Identifier start='1549' end='1553' name='test'/>
+                                </Variable>
+                                <Method>
+                                    <FunctionInvocation start='1555' end='1568'>
+                                        <FucntionName start='1555' end='1566'>
+                                            <Variable start='1555' end='1566' isDollared='false'>
+                                                <Identifier start='1555' end='1566' name='newInstance'/>
+                                            </Variable>
+                                        </FucntionName>
+                                        <Parameters>
+                                        </Parameters>
+                                    </FunctionInvocation>
+                                </Method>
+                            </MethodInvocation>
+                            <Constant>
+                                <Identifier start='1570' end='1575' name='class'/>
+                            </Constant>
+                            <Member>
+                                <Identifier start='1570' end='1575' name='class'/>
+                            </Member>
+                        </StaticConstantAccess>
+                    </Parameters>
+                </FunctionInvocation>
+            </ExpressionStatement>
+            <ExpressionStatement start='1579' end='1602'>
+                <Assignment start='1579' end='1601' operator='EQUAL'>
+                    <ArrayAccess start='1579' end='1588' type='VARIABLE_ARRAY' isDollared='false'>
+                        <ArrayDimension start='1585' end='1588'>
+                            <Index>
+                                <Scalar start='1586' end='1587' type='INT' value='0'/>
+                            </Index>
+                        </ArrayDimension>
+                        <Name>
+                            <Variable start='1579' end='1585' isDollared='true'>
+                                <Identifier start='1580' end='1585' name='array'/>
+                            </Variable>
+                        </Name>
+                    </ArrayAccess>
+                    <ClassInstanceCreation start='1591' end='1601' anonymous='false'>
+                        <ClassName start='1595' end='1599'>
+                            <NamespaceName start='1595' end='1599' isCurrent='false' isGlobal='false'>
+                                <Identifier start='1595' end='1599' name='Test'/>
+                            </NamespaceName>
+                        </ClassName>
+                        <Parameters>
+                        </Parameters>
+                    </ClassInstanceCreation>
+                </Assignment>
+            </ExpressionStatement>
+            <ExpressionStatement start='1603' end='1630'>
+                <FunctionInvocation start='1603' end='1629'>
+                    <FucntionName start='1603' end='1611'>
+                        <NamespaceName start='1603' end='1611' isCurrent='false' isGlobal='false'>
+                            <Identifier start='1603' end='1611' name='var_dump'/>
+                        </NamespaceName>
+                    </FucntionName>
+                    <Parameters>
+                        <StaticConstantAccess start='1612' end='1628'>
+                            <ArrayAccess start='1612' end='1621' type='VARIABLE_ARRAY' isDollared='false'>
+                                <ArrayDimension start='1618' end='1621'>
+                                    <Index>
+                                        <Scalar start='1619' end='1620' type='INT' value='0'/>
+                                    </Index>
+                                </ArrayDimension>
+                                <Name>
+                                    <Variable start='1612' end='1618' isDollared='true'>
+                                        <Identifier start='1613' end='1618' name='array'/>
+                                    </Variable>
+                                </Name>
+                            </ArrayAccess>
+                            <Constant>
+                                <Identifier start='1623' end='1628' name='class'/>
+                            </Constant>
+                            <Member>
+                                <Identifier start='1623' end='1628' name='class'/>
+                            </Member>
+                        </StaticConstantAccess>
+                    </Parameters>
+                </FunctionInvocation>
+            </ExpressionStatement>
+        </Statements>
+    </Program>
+</testresult>

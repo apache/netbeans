@@ -231,7 +231,7 @@ public final class GenerationUtils {
         if (constructor != null) {
             if (!constructor.getModifiers().contains(Modifier.PUBLIC)) {
                 ModifiersTree oldModifiersTree = constructorTree.getModifiers();
-                Set newModifiers = EnumSet.of(Modifier.PUBLIC);
+                Set<Modifier> newModifiers = EnumSet.of(Modifier.PUBLIC);
            //     for (Modifier modifier : oldModifiersTree.getFlags()) {
              //       if (!Modifier.PROTECTED.equals(modifier) && !Modifier.PRIVATE.equals(modifier)) {
                //         newModifiers.add(modifier);

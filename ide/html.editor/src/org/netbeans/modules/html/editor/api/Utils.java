@@ -106,7 +106,7 @@ public class Utils {
 
         return null;
     }
-
+    
     //and now the magic...
     //the method returns an artificial mimetype so the user can enable/disable the error checks
     //for particular content. For example the text/facelets+xhtml mimetype is returned for
@@ -114,6 +114,14 @@ public class Utils {
     //even if their mimetype is text/html
     //sure the correct solution would be to let the mimeresolver to create different mimetype,
     //but since the resolution can be pretty complex it is not done this way
+    /**
+     * Computes MIME type based on the content.
+     * @param result
+     * @return
+     * @deprecated for most usages, it should
+     * be possible to use {@link WebPageMetadata#getContentMimeType}.
+     */
+    @Deprecated
     public static String getWebPageMimeType(SyntaxAnalyzerResult result) {
         InstanceContent ic = new InstanceContent();
         ic.add(result);

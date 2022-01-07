@@ -244,6 +244,55 @@
         <issue number="262312"/>
     </change>
 
+    <change id="DebuggingViewFrames">
+        <api name="DebuggerCoreSPI"/>
+        <summary>Frames added into DebuggingView.</summary>
+        <version major="2" minor="65"/>
+        <date day="09" month="10" year="2020"/>
+        <author login="mentlicher"/>
+        <compatibility binary="compatible" source="compatible" addition="yes" semantic="compatible"/>
+        <description>
+            <p>
+                DebuggingView is enhanced with stack frames.
+                <code>DVSupport.DVFrame</code> interface was added together with getters on
+                <code>DVThread</code> class.
+            </p>
+        </description>
+        <class package="org.netbeans.spi.debugger.ui" name="DebuggingView"/>
+    </change>
+
+    <change id="DVFrameSourceMimeType">
+        <api name="DebuggerCoreSPI"/>
+        <summary>Source MIME type added to DVFrame.</summary>
+        <version major="2" minor="67"/>
+        <date day="30" month="11" year="2020"/>
+        <author login="mentlicher"/>
+        <compatibility binary="compatible" source="compatible" addition="yes" semantic="compatible"/>
+        <description>
+            <p>
+                <code>DebuggingView.DVFrame</code> provides source MIME type.
+            </p>
+        </description>
+        <class package="org.netbeans.spi.debugger.ui" name="DebuggingView"/>
+    </change>
+
+    <change id="debugger.persistence">
+        <api name="DebuggerCoreSPI"/>
+        <summary>Add a way not to persist breakpoints and watches.</summary>
+        <version major="2" minor="72"/>
+        <date day="04" month="10" year="2021"/>
+        <author login="entlicher"/>
+        <compatibility binary="compatible" source="compatible" addition="yes" semantic="compatible"/>
+	<description>
+            Class <code>org.netbeans.api.debugger.Properties</code> is used to persistently store
+            debugger settings. In order to be able to decide which particular settings should be
+            persistent and which not, <code>debugger.persistence</code> properties namespace is
+            introduced. In particular, <code>debugger.persistence.breakpoints</code> boolean property
+            determines the persistence of breakpoints and <code>debugger.persistence.watches</code>
+            boolean property determines the persistence of watches.
+        </description>
+    </change>
+
 </changes>
 
   <!-- Now the surrounding HTML text and document structure: -->

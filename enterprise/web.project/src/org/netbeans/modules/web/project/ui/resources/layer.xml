@@ -31,7 +31,7 @@
                 
 
                 <!-- Add template for the J2SE project -->
-                <attr name="position" intvalue="200"/>
+                <attr name="position" intvalue="220"/>
                 <file name="emptyWeb.xml">
                     <attr name="position" intvalue="100"/>
                     <attr name="template" boolvalue="true"/>

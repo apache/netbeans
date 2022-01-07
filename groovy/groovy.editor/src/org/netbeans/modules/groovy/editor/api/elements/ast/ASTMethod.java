@@ -25,7 +25,9 @@ import org.codehaus.groovy.ast.ASTNode;
 import org.codehaus.groovy.ast.ConstructorNode;
 import org.codehaus.groovy.ast.MethodNode;
 import org.codehaus.groovy.ast.Parameter;
+import org.codehaus.groovy.reflection.CachedClass;
 import org.netbeans.modules.csl.api.ElementKind;
+import org.netbeans.modules.groovy.editor.api.ASTUtils;
 import org.netbeans.modules.groovy.editor.api.elements.common.MethodElement;
 
 public class ASTMethod extends ASTElement implements MethodElement {
@@ -71,12 +73,26 @@ public class ASTMethod extends ASTElement implements MethodElement {
     public List<MethodParameter> getParameters() {
         if (parameters == null) {
             parameters = new ArrayList<>();
-            for (Parameter parameter : ((MethodNode) node).getParameters()) {
-                String paramName = parameter.getName();
-                String fqnType = parameter.getType().getName();
-                String type = parameter.getType().getNameWithoutPackage();
+            if (method != null) {
+                for (CachedClass pt : method.getParameterTypes()) {
+                    String n = pt.getName();
+                    int idx = n.lastIndexOf('$');
+                    if (idx > 0) {
+                        n = n.substring(idx + 1);
+                    } else if ((idx = n.lastIndexOf('.')) > 0) {
+                        n = n.substring(idx + 1);
+                    }
+                    MethodParameter mp = new MethodParameter(pt.getName(), n, null);
+                    parameters.add(mp);
+                }
+            } else {
+                for (Parameter parameter : ((MethodNode) node).getParameters()) {
+                    String paramName = parameter.getName();
+                    String fqnType = parameter.getType().getName();
+                    String type = ASTUtils.getSimpleName(parameter.getType());
 
-                parameters.add(new MethodParameter(fqnType, type, paramName));
+                    parameters.add(new MethodParameter(fqnType, type, paramName));
+                }
             }
         }
         return parameters;
@@ -95,18 +111,24 @@ public class ASTMethod extends ASTElement implements MethodElement {
     @Override
     public String getSignature() {
         if (signature == null) {
-            StringBuilder builder = new StringBuilder(super.getSignature());
-            List<MethodParameter> params = getParameters();
-            if (params.size() > 0) {
-                builder.append("("); // NOI18N
-                for (MethodParameter parameter : params) {
-                    builder.append(parameter.getFqnType());
-                    builder.append(","); // NOI18N
+            if (method != null) {
+                String s = method.getSignature();
+                int sp = s.indexOf(' ');
+                signature = sp == -1 ? s : s.substring(sp + 1).trim();
+            } else {
+                StringBuilder builder = new StringBuilder(super.getSignature());
+                List<MethodParameter> params = getParameters();
+                if (params.size() > 0) {
+                    builder.append("("); // NOI18N
+                    for (MethodParameter parameter : params) {
+                        builder.append(parameter.getFqnType());
+                        builder.append(","); // NOI18N
+                    }
+                    builder.setLength(builder.length() - 1);
+                    builder.append(")"); // NOI18N
                 }
-                builder.setLength(builder.length() - 1);
-                builder.append(")"); // NOI18N
+                signature = builder.toString();
             }
-            signature = builder.toString();
         }
         return signature;
     }
@@ -115,11 +137,11 @@ public class ASTMethod extends ASTElement implements MethodElement {
     public String getName() {
         if (name == null) {
             if (node instanceof ConstructorNode) {
-                name = ((ConstructorNode) node).getDeclaringClass().getNameWithoutPackage();
+                name = ASTUtils.getSimpleName(((ConstructorNode) node).getDeclaringClass());
             } else if (node instanceof MethodNode) {
                 name = ((MethodNode) node).getName();
             }
-
+            
             if (name == null) {
                 name = node.toString();
             }
@@ -130,7 +152,7 @@ public class ASTMethod extends ASTElement implements MethodElement {
     @Override
     public String getReturnType() {
         if (returnType == null) {
-            returnType = ((MethodNode) node).getReturnType().getNameWithoutPackage();
+            returnType = ASTUtils.getSimpleName(((MethodNode) node).getReturnType());
         }
         return returnType;
     }

@@ -34,6 +34,7 @@ import org.netbeans.modules.csl.api.Hint;
 import org.netbeans.modules.csl.api.HintFix;
 import org.netbeans.modules.csl.api.HintSeverity;
 import org.netbeans.modules.csl.api.OffsetRange;
+import org.netbeans.modules.csl.api.PreviewableFix;
 import org.netbeans.modules.csl.api.RuleContext;
 import org.netbeans.modules.groovy.editor.api.lexer.GroovyTokenId;
 import org.netbeans.modules.groovy.editor.api.lexer.LexUtilities;
@@ -69,7 +70,7 @@ public final class MakeClassAbstractHint extends GroovyErrorRule {
         if (range != null) {
             HintFix fix = new MakeClassAbstractFix(error);
             
-            result.add(new Hint(this, fix.getDescription(), error.getFile(), range, Collections.singletonList(fix), 200));
+            result.add(new Hint(this, error.getDescription(), error.getFile(), range, Collections.singletonList(fix), 200));
         }
     }
     
@@ -94,7 +95,7 @@ public final class MakeClassAbstractHint extends GroovyErrorRule {
         return HintSeverity.ERROR;
     }
     
-    private static class MakeClassAbstractFix implements HintFix {
+    private static class MakeClassAbstractFix implements PreviewableFix {
 
         private final GroovyError error;
 
@@ -105,20 +106,22 @@ public final class MakeClassAbstractHint extends GroovyErrorRule {
 
         @Override
         public void implement() throws Exception {
-            BaseDocument baseDoc = LexUtilities.getDocument(error.getFile(), true);
-            if (baseDoc == null) {
-                return;
-            }
-            EditList edits = new EditList(baseDoc);
-            
-            int classPosition = getInsertPosition(baseDoc);
-            if (classPosition != 0) {
-                edits.replace(classPosition, 0, "abstract ", false, 0);
-            }
-            
-            edits.apply();
+            getEditList().apply();
         }
-        
+
+        @Override
+        public EditList getEditList() throws Exception {
+            BaseDocument baseDoc = LexUtilities.getDocument(error.getFile(), true);
+            EditList edits = new EditList(baseDoc);
+            if (baseDoc != null) {
+                int classPosition = getInsertPosition(baseDoc);
+                if (classPosition != 0) {
+                    edits.replace(classPosition, 0, "abstract ", false, 0);
+                }
+            }
+            return edits;
+        }
+
         private int getInsertPosition(BaseDocument doc) {
             TokenSequence<GroovyTokenId> ts = LexUtilities.getGroovyTokenSequence(doc, 1);
 
@@ -183,6 +186,11 @@ public final class MakeClassAbstractHint extends GroovyErrorRule {
         @Override
         public boolean isInteractive() {
             return false;
+        }
+
+        @Override
+        public boolean canPreview() {
+            return true;
         }
     }
 }

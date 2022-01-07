@@ -27,7 +27,7 @@
         The vocabulary for an editor fonts and colors settings file.
 
     PUBLIC ID  : -//NetBeans//DTD Editor Fonts and Colors settings 1.2//EN
-    SYSTEM ID  : http://netbeans.apache.org/dtds/EditorFontsColors-1_2.dtd
+    SYSTEM ID  : https://netbeans.apache.org/dtds/EditorFontsColors-1_2.dtd
 -->
 
 <!ELEMENT fontscolors ( colordef*, fontcolor* ) >

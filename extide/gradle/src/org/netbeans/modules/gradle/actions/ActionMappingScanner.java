@@ -24,12 +24,18 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
+import java.util.Map;
 import java.util.Set;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import org.netbeans.modules.gradle.api.execute.GradleExecConfiguration;
+import org.netbeans.modules.gradle.execute.ConfigPersistenceUtils;
+import org.netbeans.modules.gradle.execute.GradleExecAccessor;
+import org.openide.xml.XMLUtil;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -64,12 +70,15 @@ public final class ActionMappingScanner {
     DefaultActionMapping mapping;
 
     Set<ActionMapping> mappings = new HashSet<>();
+    
+    Map<GradleExecConfiguration, Set<ActionMapping>> configs;
 
     /**
      * Create new ActionMappingScanner with Document.
      */
-    ActionMappingScanner(Document document) {
+    ActionMappingScanner(Document document, Map<GradleExecConfiguration, Set<ActionMapping>> configs) {
         this.document = document;
+        this.configs = configs;
     }
 
     /**
@@ -83,10 +92,14 @@ public final class ActionMappingScanner {
     }
 
     public static Set<ActionMapping> loadMappings(InputStream is) throws SAXException, IOException, ParserConfigurationException {
+        return loadMappings(is, new HashMap<>());
+    }
+    
+    public static Set<ActionMapping> loadMappings(InputStream is, Map<GradleExecConfiguration, Set<ActionMapping>> configs) throws SAXException, IOException, ParserConfigurationException {
         DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
         builder.setEntityResolver(DTD_RESOLVER);
         Document document = builder.parse(is);
-        ActionMappingScanner scanner = new ActionMappingScanner(document);
+        ActionMappingScanner scanner = new ActionMappingScanner(document, configs);
         scanner.visitDocument();
         return Collections.unmodifiableSet(scanner.mappings);
     }
@@ -106,6 +119,9 @@ public final class ActionMappingScanner {
                         break;
                     case "action":
                         visitElement_action(nodeElement);
+                        break;
+                    case "profiles":
+                        visitElement_profiles(nodeElement);
                         break;
                 }
             }
@@ -214,5 +230,58 @@ public final class ActionMappingScanner {
     String visitElement_args(Element element) {
         return element.hasChildNodes() ? ((Text) element.getFirstChild()).getData() : null;
     }
-
+    
+    void visitElement_profiles(Element element) {
+        NodeList nodes = element.getChildNodes();
+        for (int i = 0; i < nodes.getLength(); i++) {
+            Node node = nodes.item(i);
+            if (node.getNodeType() == Node.ELEMENT_NODE) {
+                Element nodeElement = (Element) node;
+                switch (nodeElement.getTagName()) {
+                    case "profile":
+                        visitElement_profile(nodeElement);
+                        break;
+                }
+            }
+        }
+    }
+    
+    void visitElement_profile(Element profileEl) {
+        String id = profileEl.getAttribute(ConfigPersistenceUtils.CONFIG_ATTRIBUTE_ID);
+        if (id == null) {
+            return;
+        } else if ("".equals(id)) {
+            id = GradleExecConfiguration.DEFAULT;
+        }
+        String displayName = profileEl.getAttribute(ConfigPersistenceUtils.CONFIG_ATTRIBUTE_DISPLAY);
+        Map<String, String> props = new HashMap<>();
+        NodeList propNodes = profileEl.getElementsByTagName(ConfigPersistenceUtils.CONFIG_ELEMENT_PROPERTY);
+        for (int i = 0; i < propNodes.getLength(); i++) {
+            Element p = (Element)propNodes.item(i);
+            String pn = p.getAttribute(ConfigPersistenceUtils.CONFIG_ATTRIBUTE_NAME);
+            if (pn == null || pn.trim().isEmpty()) {
+                continue;
+            }
+            String pv = p.getTextContent();
+            props.put(pn.trim(), pv.trim());
+        }
+        Element argsEl = XMLUtil.findElement(profileEl, ConfigPersistenceUtils.CONFIG_ELEMENT_ARGS, null);
+        String args = argsEl == null ? "" : argsEl.getTextContent().trim();
+        
+        GradleExecConfiguration exec = GradleExecAccessor.instance().create(id, displayName, props, args);
+        Set<ActionMapping> m = new HashSet<>();
+        configs.put(exec, m);
+        
+        Element actionsEl = XMLUtil.findElement(profileEl, "actions", null); // NOI18N
+        if (actionsEl == null) {
+            return;
+        }
+        Set<ActionMapping> saved = mappings;
+        try {
+            mappings = m;
+            visitElement_actions(actionsEl);
+        } finally {
+            mappings = saved;
+        }
+    }
 }

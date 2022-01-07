@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.53.0
+#Version 1.60.0
 
 CLSS public abstract interface !annotation java.lang.Deprecated
  anno 0 java.lang.annotation.Documented()
@@ -86,9 +86,9 @@ meth public javax.swing.Action getGotoSourceAction()
 meth public org.netbeans.api.java.source.ui.ElementJavadoc resolveLink(java.lang.String)
 supr java.lang.Object
 hfds API,APINOTE_TAG,ASSOCIATE_JDOC,IMPLNOTE_TAG,IMPLSPEC_TAG,LANGS,RP,cancel,content,cpInfo,docRoot,docURL,fileObject,goToSource,handle,linkCounter,links
-hcls Now
 
 CLSS public final org.netbeans.api.java.source.ui.ElementOpen
+innr public final static Location
 meth public static boolean open(org.netbeans.api.java.source.ClasspathInfo,javax.lang.model.element.Element)
 meth public static boolean open(org.netbeans.api.java.source.ClasspathInfo,org.netbeans.api.java.source.ElementHandle<? extends javax.lang.model.element.Element>)
 meth public static boolean open(org.openide.filesystems.FileObject,org.netbeans.api.java.source.ElementHandle<? extends javax.lang.model.element.Element>)
@@ -97,9 +97,18 @@ meth public static boolean open(org.openide.filesystems.FileObject,org.netbeans.
 meth public static boolean open(org.openide.filesystems.FileObject,org.netbeans.api.java.source.TreePathHandle)
  anno 1 org.netbeans.api.annotations.common.NonNull()
  anno 2 org.netbeans.api.annotations.common.NonNull()
+meth public static java.util.concurrent.CompletableFuture<org.netbeans.api.java.source.ui.ElementOpen$Location> getLocation(org.netbeans.api.java.source.ClasspathInfo,org.netbeans.api.java.source.ElementHandle<? extends javax.lang.model.element.Element>,java.lang.String)
 supr java.lang.Object
 hfds AWT_TIMEOUT,NON_AWT_TIMEOUT,log
 hcls FindDeclarationVisitor
+
+CLSS public final static org.netbeans.api.java.source.ui.ElementOpen$Location
+ outer org.netbeans.api.java.source.ui.ElementOpen
+meth public int getEndOffset()
+meth public int getStartOffset()
+meth public org.openide.filesystems.FileObject getFileObject()
+supr java.lang.Object
+hfds endOffset,fileObject,startOffset
 
 CLSS public org.netbeans.api.java.source.ui.ScanDialog
 meth public static boolean runWhenScanFinished(java.lang.Runnable,java.lang.String)

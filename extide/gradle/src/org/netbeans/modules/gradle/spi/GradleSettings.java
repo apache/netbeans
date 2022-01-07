@@ -24,6 +24,7 @@ import java.util.prefs.Preferences;
 import org.gradle.util.GradleVersion;
 import org.netbeans.modules.gradle.api.execute.GradleCommandLine.LogLevel;
 import org.netbeans.modules.gradle.api.execute.GradleCommandLine.StackTrace;
+import org.openide.util.NbBundle;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.NbPreferences;
 
@@ -117,7 +118,9 @@ public final class GradleSettings {
     public static final String PROP_DISPLAY_DESCRIPTION = "displayDescription";
     public static final String PROP_REUSE_EDITOR_ON_STACKTRACE = "reuseEditorOnStackTace";
 
+    @Deprecated
     public static final String PROP_DISABLE_CACHE = "disableCache";
+    @Deprecated
     public static final String PROP_LAZY_OPEN_GROUPS = "lazyOpen";
     public static final String PROP_PREFER_MAVEN = "preferMaven";
 
@@ -190,8 +193,17 @@ public final class GradleSettings {
         getPreferences().putBoolean(PROP_REUSE_OUTPUT_TABS, b);
     }
 
+    @NbBundle.Messages({
+        "#reuse output tabs: true, false, never",
+        "#NOI18N",
+        "DEFAULT_REUSE_OUTPUT=true"
+    })
     public boolean isReuseOutputTabs() {
-        return getPreferences().getBoolean(PROP_REUSE_OUTPUT_TABS, true);
+        String def = Bundle.DEFAULT_REUSE_OUTPUT();
+        if ("never".equals(def)) { // NOI18N
+            return false;
+        }
+        return getPreferences().getBoolean(PROP_REUSE_OUTPUT_TABS, "true".equals(def)); // NOI18N
     }
 
     public void setOffline(boolean b) {
@@ -308,20 +320,54 @@ public final class GradleSettings {
         return getPreferences().getBoolean(PROP_REUSE_EDITOR_ON_STACKTRACE, false);
     }
 
+    /**
+     * This experimental setting shouldn't have been exposed to the SPI. The
+     * method remains here for binary compatibility, but it won't have any
+     * effect.
+     *
+     * @param b
+     * @deprecated since version 2.7
+     */
+    @Deprecated
     public void setOpenLazy(boolean b) {
-        getPreferences().putBoolean(PROP_LAZY_OPEN_GROUPS, b);
     }
 
+    /**
+     * This experimental setting shouldn't have been exposed to the SPI. The
+     * method remains here for binary compatibility, returning its former
+     * default value.
+     *
+     * @return <code>true</code>
+     * @deprecated since version 2.7
+     */
+    @Deprecated
     public boolean isOpenLazy() {
-        return getPreferences().getBoolean(PROP_LAZY_OPEN_GROUPS, false);
+        return true;
     }
 
+    /**
+     * This experimental setting shouldn't have been exposed to the SPI. The
+     * method remains here for binary compatibility, but it won't have any
+     * effect.
+     *
+     * @param b
+     * @deprecated since version 2.7
+     */
+    @Deprecated
     public void setCacheDisabled(boolean b) {
-        getPreferences().putBoolean(PROP_DISABLE_CACHE, b);
     }
 
+    /**
+     * This experimental setting shouldn't have been exposed to the SPI. The
+     * method remains here for binary compatibility, returning its former
+     * default value.
+     *
+     * @return <code>false</code>
+     * @deprecated since version 2.7
+     */
+    @Deprecated
     public boolean isCacheDisabled() {
-        return getPreferences().getBoolean(PROP_DISABLE_CACHE, false);
+        return false;
     }
 
     public void setPreferMaven(boolean b) {

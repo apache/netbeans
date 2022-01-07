@@ -22,14 +22,23 @@ package org.netbeans.modules.maven.classpath;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+import org.junit.Assert;
+import static org.junit.Assert.assertNotEquals;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.classpath.JavaClassPathConstants;
 import org.netbeans.api.java.platform.JavaPlatform;
@@ -41,12 +50,15 @@ import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.api.project.Sources;
+import org.netbeans.api.project.ui.OpenProjects;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.java.api.common.TestJavaPlatform;
 import org.netbeans.modules.java.platform.implspi.JavaPlatformProvider;
 import org.netbeans.modules.maven.api.classpath.ProjectSourcesClassPathProvider;
 import org.netbeans.modules.maven.configurations.M2ConfigProvider;
 import org.netbeans.modules.maven.configurations.M2Configuration;
+import org.netbeans.modules.maven.embedder.EmbedderFactory;
+import org.netbeans.modules.project.ui.actions.OpenProject;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.test.TestFileUtils;
@@ -64,6 +76,9 @@ public class ClassPathProviderImplTest extends NbTestCase {
 
     private ClassPath systemModules;    
     private FileObject d;
+    private File repo;
+    private FileObject repoFO;
+    private FileObject dataFO;
     
     protected @Override void setUp() throws Exception {
         clearWorkDir();
@@ -75,6 +90,18 @@ public class ClassPathProviderImplTest extends NbTestCase {
         if(platforms != null && platforms.length > 0) {
             systemModules = platforms[0].getBootstrapLibraries();
         }        
+        
+        repo = EmbedderFactory.getProjectEmbedder().getLocalRepositoryFile();
+        repoFO = FileUtil.toFileObject(repo);
+        dataFO = FileUtil.toFileObject(getDataDir());
+    }
+
+    @Override
+    protected void tearDown() throws Exception {
+        FileObject nbtest = repoFO.getFileObject("nbtest");
+        if (nbtest != null && nbtest.isValid()) {
+            nbtest.delete();
+        }
     }
 
     public void testClassPath() throws Exception {
@@ -163,6 +190,10 @@ public class ClassPathProviderImplTest extends NbTestCase {
                 "<packaging>jar</packaging>" +
                 "<version>1.0-SNAPSHOT</version>" +
                 "<name>Test</name>" +
+                "    <properties>" +
+                "        <maven.compiler.source>11</maven.compiler.source>" +
+                "        <maven.compiler.target>11</maven.compiler.target>" +
+                "    </properties>" +
                 "</project>");
         FileObject src = FileUtil.createFolder(d, "src/main/java");
         FileObject mi = FileUtil.createData(src, "module-info.java");
@@ -188,6 +219,10 @@ public class ClassPathProviderImplTest extends NbTestCase {
                 "<packaging>jar</packaging>" +
                 "<version>1.0-SNAPSHOT</version>" +
                 "<name>Test</name>" +
+                "    <properties>" +
+                "        <maven.compiler.source>11</maven.compiler.source>" +
+                "        <maven.compiler.target>11</maven.compiler.target>" +
+                "    </properties>" +
                 "</project>");
         FileObject src = FileUtil.createFolder(d, "src/main/java");
         Project prj = FileOwnerQuery.getOwner(src);
@@ -347,6 +382,189 @@ public class ClassPathProviderImplTest extends NbTestCase {
         assertFalse(entries.get(1).includes("archetype-resources/src/main/"));
         assertFalse(entries.get(1).includes("archetype-resources/src/main/java/"));
         assertFalse(entries.get(1).includes("archetype-resources/src/main/java/X.java"));
+    }
+    
+    private void installCompileResources() throws Exception {
+        FileUtil.copyFile(dataFO.getFileObject("projects/processors/repo"), repoFO, "nbtest");
+    }
+    
+    /**
+     * Checks that annotation processor's classpath default to compile classpath,
+     * if nothing special is provided. The annotation library should be on that classpath
+     */
+    public void testDefaultAnnotationClasspath() throws Exception {
+        clearWorkDir();
+        FileUtil.toFileObject(getWorkDir()).refresh();
+        installCompileResources();
+        
+        FileObject testApp = dataFO.getFileObject("projects/processors/src/test-app");
+        FileObject prjCopy = FileUtil.copyFile(testApp, FileUtil.toFileObject(getWorkDir()), "test-app");
+        
+        Project p = ProjectManager.getDefault().findProject(prjCopy);
+        assertNotNull(p);
+        FileObject mainSrc = prjCopy.getFileObject("src/main/java");
+        FileObject testSrc = prjCopy.getFileObject("src/test/java");
+        
+        ClassPath procPath = ClassPath.getClassPath(mainSrc, JavaClassPathConstants.PROCESSOR_PATH);
+        ClassPath compilePath = ClassPath.getClassPath(mainSrc, ClassPath.COMPILE);
+        assertEquals("Processor path defaults to compile classpath", Arrays.asList(compilePath.getRoots()), Arrays.asList(procPath.getRoots()));
+        
+        ClassPath testProcPath = ClassPath.getClassPath(testSrc, JavaClassPathConstants.PROCESSOR_PATH);
+        ClassPath testCompilePath = ClassPath.getClassPath(testSrc, ClassPath.COMPILE);
+        assertEquals("Processor test path defaults to test classpath", Arrays.asList(testCompilePath.getRoots()), Arrays.asList(testProcPath.getRoots()));
+    }
+
+    /**
+     * Checks that if compiler plugin has annotationProcessorPath property directly in its configuration, it is used
+     * <b>instead of</b> compile path. Annotation processor and application contain different set of libraries, so app should not see
+     * the ones for annotation processor and vice versa. The same AP path is used for tests.
+     */
+    public void testExplicitAnnotationClasspath() throws Exception {
+        clearWorkDir();
+        FileUtil.toFileObject(getWorkDir()).refresh();
+        installCompileResources();
+        
+        FileObject testApp = dataFO.getFileObject("projects/processors/src/test-app");
+        FileObject prjCopy = FileUtil.copyFile(testApp, FileUtil.toFileObject(getWorkDir()), "test-app");
+        prjCopy.getFileObject("pom.xml").delete();
+        FileUtil.copyFile(prjCopy.getFileObject("pom-with-processor.xml"), prjCopy, "pom");
+        
+        Project p = ProjectManager.getDefault().findProject(prjCopy);
+        assertNotNull(p);
+        FileObject mainSrc = prjCopy.getFileObject("src/main/java");
+        FileObject testSrc = prjCopy.getFileObject("src/test/java");
+        
+        ClassPath procPath = ClassPath.getClassPath(mainSrc, JavaClassPathConstants.PROCESSOR_PATH);
+        ClassPath compilePath = ClassPath.getClassPath(mainSrc, ClassPath.COMPILE);
+        
+        Collection<FileObject> compileRoots = Arrays.asList(compilePath.getRoots());
+        Collection<FileObject> procRoots = Arrays.asList(procPath.getRoots());
+        
+        Collection<FileObject> diff = new ArrayList<>(compileRoots);
+        diff.removeAll(procRoots);
+        assertFalse("Processor path must not contain app libraries", diff.isEmpty());
+        
+        diff = new ArrayList<>(procRoots);
+        diff.removeAll(compileRoots);
+        assertFalse("Processor path contains extra proc libraries", diff.isEmpty());
+        
+        ClassPath testProcPath = ClassPath.getClassPath(testSrc, JavaClassPathConstants.PROCESSOR_PATH);
+        ClassPath testCompilePath = ClassPath.getClassPath(testSrc, ClassPath.COMPILE);
+        assertEquals("Processor path same for compilation and tests", Arrays.asList(procPath.getRoots()), Arrays.asList(testProcPath.getRoots()));
+        assertNotEquals("App path different for compilation and tests", Arrays.asList(compilePath.getRoots()), Arrays.asList(testCompilePath.getRoots()));
+    }
+    
+    public void testBrokenAnnotationPath() throws Exception {
+        clearWorkDir();
+        FileUtil.toFileObject(getWorkDir()).refresh();
+        installCompileResources();
+        
+        FileObject testApp = dataFO.getFileObject("projects/processors/src/test-app");
+        FileObject prjCopy = FileUtil.copyFile(testApp, FileUtil.toFileObject(getWorkDir()), "test-app");
+        prjCopy.getFileObject("pom.xml").delete();
+        FileUtil.copyFile(prjCopy.getFileObject("pom-with-processor-broken.xml"), prjCopy, "pom");
+        
+        Project p = ProjectManager.getDefault().findProject(prjCopy);
+        
+        FileObject mainSrc = prjCopy.getFileObject("src/main/java");
+        
+        ClassPath procPath = ClassPath.getClassPath(mainSrc, JavaClassPathConstants.PROCESSOR_PATH);
+        assertTrue("Contains broken items", procPath.getFlags().contains(ClassPath.Flag.INCOMPLETE));
+    }
+
+    /**
+     * Checks that if compiler plugin has annotationProcessorPath property directly in its configuration, it is used
+     * <b>instead of</b> compile path. Annotation processor and application contain different set of libraries, so app should not see
+     * the ones for annotation processor and vice versa. The same AP path is used for tests.
+     */
+    public void testDifferentAnnotationClasspathForTests() throws Exception {
+        clearWorkDir();
+        FileUtil.toFileObject(getWorkDir()).refresh();
+        installCompileResources();
+        
+        FileObject testApp = dataFO.getFileObject("projects/processors/src/test-app");
+        FileObject prjCopy = FileUtil.copyFile(testApp, FileUtil.toFileObject(getWorkDir()), "test-app");
+        prjCopy.getFileObject("pom.xml").delete();
+        FileUtil.copyFile(prjCopy.getFileObject("pom-with-separateProcessors.xml"), prjCopy, "pom");
+        
+        Project p = ProjectManager.getDefault().findProject(prjCopy);
+        assertNotNull(p);
+        FileObject mainSrc = prjCopy.getFileObject("src/main/java");
+        FileObject testSrc = prjCopy.getFileObject("src/test/java");
+        
+        ClassPath procPath = ClassPath.getClassPath(mainSrc, JavaClassPathConstants.PROCESSOR_PATH);
+        ClassPath compilePath = ClassPath.getClassPath(mainSrc, ClassPath.COMPILE);
+        
+        Collection<FileObject> compileRoots = Arrays.asList(compilePath.getRoots());
+        Collection<FileObject> procRoots = Arrays.asList(procPath.getRoots());
+        
+        Collection<FileObject> diff = new ArrayList<>(compileRoots);
+        diff.removeAll(procRoots);
+        assertFalse("Processor path must not contain app libraries", diff.isEmpty());
+        
+        diff = new ArrayList<>(procRoots);
+        diff.removeAll(compileRoots);
+        assertFalse("Processor path contains extra proc libraries", diff.isEmpty());
+        
+        ClassPath testProcPath = ClassPath.getClassPath(testSrc, JavaClassPathConstants.PROCESSOR_PATH);
+        ClassPath testCompilePath = ClassPath.getClassPath(testSrc, ClassPath.COMPILE);
+        assertNotEquals("Processor path different for compilation and tests", Arrays.asList(procPath.getRoots()), Arrays.asList(testProcPath.getRoots()));
+        assertNotEquals("App path different for compilation and tests", Arrays.asList(compilePath.getRoots()), Arrays.asList(testCompilePath.getRoots()));
+
+        diff = new ArrayList<>(Arrays.asList(testCompilePath.getRoots()));
+        diff.removeAll(Arrays.asList(testProcPath.getRoots()));
+        assertFalse("Processor path must not contain test libraries", diff.isEmpty());
+        
+        diff = new ArrayList<>(Arrays.asList(testProcPath.getRoots()));
+        diff.removeAll(Arrays.asList(testCompilePath.getRoots()));
+        assertFalse("Processor path contains extra libraries not in tests", diff.isEmpty());
+    }
+    
+    /**
+     * Checks that the processor path respects potential changes to the project's POM even while Classpath is already
+     * loaded/initialized.
+     */
+    public void testChangeProcessorsFromImplicitToExplicit() throws Exception {
+        clearWorkDir();
+        FileUtil.toFileObject(getWorkDir()).refresh();
+        installCompileResources();
+        
+        FileObject testApp = dataFO.getFileObject("projects/processors/src/test-app");
+        FileObject prjCopy = FileUtil.copyFile(testApp, FileUtil.toFileObject(getWorkDir()), "test-app");
+        FileObject pom = prjCopy.getFileObject("pom.xml");
+        
+        Project p = ProjectManager.getDefault().findProject(prjCopy);
+        OpenProjects.getDefault().open(new Project[] { p }, false);
+        OpenProjects.getDefault().openProjects().get();
+
+        FileObject mainSrc = prjCopy.getFileObject("src/main/java");
+        FileObject testSrc = prjCopy.getFileObject("src/test/java");
+
+        ClassPath procPath = ClassPath.getClassPath(mainSrc, JavaClassPathConstants.PROCESSOR_PATH);
+        ClassPath testProcPath = ClassPath.getClassPath(testSrc, JavaClassPathConstants.PROCESSOR_PATH);
+        
+        Collection<FileObject> origProcRoots = Arrays.asList(procPath.getRoots());
+        Collection<FileObject> origTestProcRoots = Arrays.asList(testProcPath.getRoots());
+    
+        CountDownLatch l = new CountDownLatch(2);
+        PropertyChangeListener pl = (e) -> {
+            l.countDown();
+        };
+        testProcPath.addPropertyChangeListener(pl);
+        procPath.addPropertyChangeListener(pl);
+       
+        pom.getFileSystem().runAtomicAction(() -> {
+            // rewrite the file in place
+            try (InputStream is = prjCopy.getFileObject("pom-with-processor.xml").getInputStream();
+                 OutputStream os = pom.getOutputStream()) {
+                FileUtil.copy(is, os);
+            }
+        });
+        
+        l.await(5000, TimeUnit.MILLISECONDS);
+        
+        assertNotEquals("Annotation processor path must change", origProcRoots, Arrays.asList(procPath.getRoots()));
+        assertNotEquals("Test Annotation processor tpath must change", origTestProcRoots, Arrays.asList(testProcPath.getRoots()));
     }
 
     private void assertRtJar(ClassPath cp, boolean shouldBeThere) {

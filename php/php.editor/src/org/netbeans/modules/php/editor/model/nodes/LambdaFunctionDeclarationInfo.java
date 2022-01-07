@@ -23,13 +23,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.php.editor.api.QualifiedName;
 import org.netbeans.modules.php.editor.api.elements.ParameterElement;
 import org.netbeans.modules.php.editor.parser.astnodes.Expression;
 import org.netbeans.modules.php.editor.parser.astnodes.FormalParameter;
 import org.netbeans.modules.php.editor.parser.astnodes.LambdaFunctionDeclaration;
+import org.netbeans.modules.php.editor.parser.astnodes.UnionType;
 import org.openide.util.Pair;
 
 /**
@@ -81,13 +81,16 @@ public class LambdaFunctionDeclarationInfo extends ASTNodeInfo<LambdaFunctionDec
         return retval;
     }
 
-    @CheckForNull
-    public QualifiedName getReturnType() {
+    public List<QualifiedName> getReturnTypes() {
         Expression returnType = getOriginalNode().getReturnType();
         if (returnType == null) {
-            return null;
+            return Collections.emptyList();
         }
-        return QualifiedName.create(returnType);
+        if (returnType instanceof UnionType) {
+            return QualifiedName.create((UnionType) returnType);
+        } else {
+            return Collections.singletonList(QualifiedName.create(returnType));
+        }
     }
 
 }

@@ -1,0 +1,6 @@
+Manifest-Version: 1.0
+OpenIDE-Module: org.foo.client
+OpenIDE-Module-Name: Client that needs broken fragment
+OpenIDE-Module-Module-Dependencies: org.foo.fragment.missing.token
+OpenIDE-Module-Public-Packages: -
+

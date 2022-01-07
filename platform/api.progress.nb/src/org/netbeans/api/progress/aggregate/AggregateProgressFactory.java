@@ -22,6 +22,7 @@ package org.netbeans.api.progress.aggregate;
 import javax.swing.Action;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
+import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.progress.ProgressHandleFactory;
 import org.openide.util.Cancellable;
 
@@ -47,12 +48,12 @@ public final class AggregateProgressFactory extends BasicAggregateProgressFactor
      *                   to an output of the task. The action is assumed to open the apropriate component with the task's output.
      * @param displayName to be shown in the progress UI
      * @return an instance of <code>ProgressHandle</code>, initialized but not started.
-     *
+     * @deprecated use {@link BasicAggregateProgressFactory#createHandle(java.lang.String, org.netbeans.api.progress.aggregate.ProgressContributor[], org.openide.util.Cancellable, javax.swing.Action)}.
      */
+    @Deprecated
     public static AggregateProgressHandle createHandle(String displayName, ProgressContributor[] contributors, 
                                                        Cancellable allowToCancel, Action linkOutput) {
-        return doCreateHandle(displayName, contributors, allowToCancel, false,
-                ProgressHandleFactory.createHandle(displayName, allowToCancel, linkOutput));
+        return BasicAggregateProgressFactory.createHandle(displayName, contributors, allowToCancel, linkOutput);
     }
     
     /**
@@ -65,12 +66,12 @@ public final class AggregateProgressFactory extends BasicAggregateProgressFactor
      *                   to an output of the task. The action is assumed to open the apropriate component with the task's output.
      * @param displayName to be shown in the progress UI
      * @return an instance of <code>ProgressHandle</code>, initialized but not started.
-     *
+     * @deprecated use {@link BasicAggregateProgressFactory#createSystemHandle(java.lang.String, org.netbeans.api.progress.aggregate.ProgressContributor[], org.openide.util.Cancellable, javax.swing.Action)}.
      */
+    @Deprecated
     public static AggregateProgressHandle createSystemHandle(String displayName, ProgressContributor[] contributors, 
                                                        Cancellable allowToCancel, Action linkOutput) {
-        return doCreateHandle(displayName, contributors, allowToCancel, true,
-                ProgressHandleFactory.createSystemHandle(displayName, allowToCancel, linkOutput));
+        return BasicAggregateProgressFactory.createSystemHandle(displayName, contributors, allowToCancel, linkOutput);
     }  
     
     /**

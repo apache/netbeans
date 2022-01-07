@@ -1,0 +1,817 @@
+<testresult testFile='matchExpression_04.php'>
+    <scanner>
+        <token id='T_CLASS' start='815' end='820'>
+            <text>class</text>
+        </token>
+        <token id='T_STRING' start='821' end='836'>
+            <text>MatchExpression</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='837' end='838'>
+            <text>{</text>
+        </token>
+        <token id='T_PUBLIC' start='843' end='849'>
+            <text>public</text>
+        </token>
+        <token id='T_CONST' start='850' end='855'>
+            <text>const</text>
+        </token>
+        <token id='T_STRING' start='856' end='861'>
+            <text>START</text>
+        </token>
+        <token id='T_EQUAL' start='862' end='863'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='864' end='871'>
+            <text>"start"</text>
+        </token>
+        <token id='T_SEMICOLON' start='871' end='872'>
+            <text>;</text>
+        </token>
+        <token id='T_PUBLIC' start='877' end='883'>
+            <text>public</text>
+        </token>
+        <token id='T_CONST' start='884' end='889'>
+            <text>const</text>
+        </token>
+        <token id='T_STRING' start='890' end='897'>
+            <text>SUSPEND</text>
+        </token>
+        <token id='T_EQUAL' start='898' end='899'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='900' end='909'>
+            <text>"suspend"</text>
+        </token>
+        <token id='T_SEMICOLON' start='909' end='910'>
+            <text>;</text>
+        </token>
+        <token id='T_PUBLIC' start='915' end='921'>
+            <text>public</text>
+        </token>
+        <token id='T_CONST' start='922' end='927'>
+            <text>const</text>
+        </token>
+        <token id='T_STRING' start='928' end='932'>
+            <text>STOP</text>
+        </token>
+        <token id='T_EQUAL' start='933' end='934'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='935' end='941'>
+            <text>"stop"</text>
+        </token>
+        <token id='T_SEMICOLON' start='941' end='942'>
+            <text>;</text>
+        </token>
+        <token id='T_PRIVATE' start='948' end='955'>
+            <text>private</text>
+        </token>
+        <token id='T_STATIC' start='956' end='962'>
+            <text>static</text>
+        </token>
+        <token id='T_VARIABLE' start='963' end='969'>
+            <text>$start</text>
+        </token>
+        <token id='T_EQUAL' start='970' end='971'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='972' end='985'>
+            <text>"start state"</text>
+        </token>
+        <token id='T_SEMICOLON' start='985' end='986'>
+            <text>;</text>
+        </token>
+        <token id='T_PRIVATE' start='991' end='998'>
+            <text>private</text>
+        </token>
+        <token id='T_VARIABLE' start='999' end='1007'>
+            <text>$suspend</text>
+        </token>
+        <token id='T_EQUAL' start='1008' end='1009'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='1010' end='1025'>
+            <text>"suspend state"</text>
+        </token>
+        <token id='T_SEMICOLON' start='1025' end='1026'>
+            <text>;</text>
+        </token>
+        <token id='T_PRIVATE' start='1031' end='1038'>
+            <text>private</text>
+        </token>
+        <token id='T_CONST' start='1039' end='1044'>
+            <text>const</text>
+        </token>
+        <token id='T_MATCH' start='1045' end='1050'>
+            <text>match</text>
+        </token>
+        <token id='T_EQUAL' start='1051' end='1052'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='1053' end='1060'>
+            <text>"match"</text>
+        </token>
+        <token id='T_SEMICOLON' start='1060' end='1061'>
+            <text>;</text>
+        </token>
+        <token id='T_PUBLIC' start='1094' end='1100'>
+            <text>public</text>
+        </token>
+        <token id='T_FUNCTION' start='1101' end='1109'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='1110' end='1113'>
+            <text>run</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1113' end='1114'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1114' end='1115'>
+            <text>)</text>
+        </token>
+        <token id='T_NEKUDOTAIM' start='1115' end='1116'>
+            <text>:</text>
+        </token>
+        <token id='T_STRING' start='1117' end='1123'>
+            <text>string</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1124' end='1125'>
+            <text>{</text>
+        </token>
+        <token id='T_VARIABLE' start='1134' end='1140'>
+            <text>$state</text>
+        </token>
+        <token id='T_EQUAL' start='1141' end='1142'>
+            <text>=</text>
+        </token>
+        <token id='T_STRING' start='1143' end='1147'>
+            <text>self</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='1147' end='1149'>
+            <text>::</text>
+        </token>
+        <token id='T_STRING' start='1149' end='1153'>
+            <text>STOP</text>
+        </token>
+        <token id='T_SEMICOLON' start='1153' end='1154'>
+            <text>;</text>
+        </token>
+        <token id='T_RETURN' start='1163' end='1169'>
+            <text>return</text>
+        </token>
+        <token id='T_MATCH' start='1170' end='1175'>
+            <text>match</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1175' end='1176'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='1176' end='1182'>
+            <text>$state</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1182' end='1183'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1184' end='1185'>
+            <text>{</text>
+        </token>
+        <token id='T_STRING' start='1198' end='1213'>
+            <text>MatchExpression</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='1213' end='1215'>
+            <text>::</text>
+        </token>
+        <token id='T_STRING' start='1215' end='1220'>
+            <text>START</text>
+        </token>
+        <token id='T_DOUBLE_ARROW' start='1221' end='1223'>
+            <text>=&gt;</text>
+        </token>
+        <token id='T_STRING' start='1224' end='1228'>
+            <text>self</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='1228' end='1230'>
+            <text>::</text>
+        </token>
+        <token id='T_VARIABLE' start='1230' end='1236'>
+            <text>$start</text>
+        </token>
+        <token id='T_COMMA' start='1236' end='1237'>
+            <text>,</text>
+        </token>
+        <token id='T_STRING' start='1250' end='1265'>
+            <text>MatchExpression</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='1265' end='1267'>
+            <text>::</text>
+        </token>
+        <token id='T_STRING' start='1267' end='1274'>
+            <text>SUSPEND</text>
+        </token>
+        <token id='T_DOUBLE_ARROW' start='1275' end='1277'>
+            <text>=&gt;</text>
+        </token>
+        <token id='T_VARIABLE' start='1278' end='1283'>
+            <text>$this</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='1283' end='1285'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='1285' end='1292'>
+            <text>suspend</text>
+        </token>
+        <token id='T_COMMA' start='1292' end='1293'>
+            <text>,</text>
+        </token>
+        <token id='T_STRING' start='1306' end='1321'>
+            <text>MatchExpression</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='1321' end='1323'>
+            <text>::</text>
+        </token>
+        <token id='T_STRING' start='1323' end='1327'>
+            <text>STOP</text>
+        </token>
+        <token id='T_DOUBLE_ARROW' start='1328' end='1330'>
+            <text>=&gt;</text>
+        </token>
+        <token id='T_VARIABLE' start='1331' end='1336'>
+            <text>$this</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='1336' end='1338'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='1338' end='1347'>
+            <text>stopState</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1347' end='1348'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1348' end='1349'>
+            <text>)</text>
+        </token>
+        <token id='T_COMMA' start='1349' end='1350'>
+            <text>,</text>
+        </token>
+        <token id='T_DEFAULT' start='1363' end='1370'>
+            <text>default</text>
+        </token>
+        <token id='T_DOUBLE_ARROW' start='1371' end='1373'>
+            <text>=&gt;</text>
+        </token>
+        <token id='T_STRING' start='1374' end='1389'>
+            <text>MatchExpression</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='1389' end='1391'>
+            <text>::</text>
+        </token>
+        <token id='T_DEFAULT' start='1391' end='1398'>
+            <text>default</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1398' end='1399'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1399' end='1400'>
+            <text>)</text>
+        </token>
+        <token id='T_COMMA' start='1400' end='1401'>
+            <text>,</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1410' end='1411'>
+            <text>}</text>
+        </token>
+        <token id='T_SEMICOLON' start='1411' end='1412'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1417' end='1418'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='1424' end='1430'>
+            <text>public</text>
+        </token>
+        <token id='T_FUNCTION' start='1431' end='1439'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='1440' end='1449'>
+            <text>stopState</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1449' end='1450'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1450' end='1451'>
+            <text>)</text>
+        </token>
+        <token id='T_NEKUDOTAIM' start='1451' end='1452'>
+            <text>:</text>
+        </token>
+        <token id='T_STRING' start='1453' end='1459'>
+            <text>string</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1460' end='1461'>
+            <text>{</text>
+        </token>
+        <token id='T_RETURN' start='1470' end='1476'>
+            <text>return</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='1477' end='1489'>
+            <text>"stop state"</text>
+        </token>
+        <token id='T_SEMICOLON' start='1489' end='1490'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1495' end='1496'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='1502' end='1508'>
+            <text>public</text>
+        </token>
+        <token id='T_STATIC' start='1509' end='1515'>
+            <text>static</text>
+        </token>
+        <token id='T_FUNCTION' start='1516' end='1524'>
+            <text>function</text>
+        </token>
+        <token id='T_DEFAULT' start='1525' end='1532'>
+            <text>default</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1532' end='1533'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1533' end='1534'>
+            <text>)</text>
+        </token>
+        <token id='T_NEKUDOTAIM' start='1534' end='1535'>
+            <text>:</text>
+        </token>
+        <token id='T_STRING' start='1536' end='1542'>
+            <text>string</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1543' end='1544'>
+            <text>{</text>
+        </token>
+        <token id='T_RETURN' start='1553' end='1559'>
+            <text>return</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='1560' end='1569'>
+            <text>"default"</text>
+        </token>
+        <token id='T_SEMICOLON' start='1569' end='1570'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1575' end='1576'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='1582' end='1588'>
+            <text>public</text>
+        </token>
+        <token id='T_FUNCTION' start='1589' end='1597'>
+            <text>function</text>
+        </token>
+        <token id='T_MATCH' start='1598' end='1603'>
+            <text>match</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1603' end='1604'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1604' end='1605'>
+            <text>)</text>
+        </token>
+        <token id='T_NEKUDOTAIM' start='1605' end='1606'>
+            <text>:</text>
+        </token>
+        <token id='T_STRING' start='1607' end='1611'>
+            <text>void</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1612' end='1613'>
+            <text>{</text>
+        </token>
+        <token id='T_ECHO' start='1622' end='1626'>
+            <text>echo</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='1627' end='1652'>
+            <text>"Context Sensitive Lexer"</text>
+        </token>
+        <token id='T_NEKUDA' start='1653' end='1654'>
+            <text>.</text>
+        </token>
+        <token id='T_STRING' start='1655' end='1662'>
+            <text>PHP_EOL</text>
+        </token>
+        <token id='T_SEMICOLON' start='1662' end='1663'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1668' end='1669'>
+            <text>}</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1670' end='1671'>
+            <text>}</text>
+        </token>
+        <token id='T_VARIABLE' start='1673' end='1682'>
+            <text>$instance</text>
+        </token>
+        <token id='T_EQUAL' start='1683' end='1684'>
+            <text>=</text>
+        </token>
+        <token id='T_NEW' start='1685' end='1688'>
+            <text>new</text>
+        </token>
+        <token id='T_STRING' start='1689' end='1704'>
+            <text>MatchExpression</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1704' end='1705'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1705' end='1706'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='1706' end='1707'>
+            <text>;</text>
+        </token>
+        <token id='T_STRING' start='1708' end='1716'>
+            <text>var_dump</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1716' end='1717'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='1717' end='1726'>
+            <text>$instance</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='1726' end='1728'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='1728' end='1731'>
+            <text>run</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1731' end='1732'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1732' end='1733'>
+            <text>)</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1733' end='1734'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='1734' end='1735'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='1736' end='1745'>
+            <text>$instance</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='1745' end='1747'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='1747' end='1752'>
+            <text>match</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1752' end='1753'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1753' end='1754'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='1754' end='1755'>
+            <text>;</text>
+        </token>
+        <token id='EOF' start='1756' end='1756'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='1756'>
+        <Comments>
+            <Comment start='6' end='813' commentType='multiLine'/>
+            <Comment start='1062' end='1089' commentType='singleLine'/>
+            <Comment start='6' end='813' commentType='multiLine'/>
+            <Comment start='1062' end='1089' commentType='singleLine'/>
+        </Comments>
+        <Statements>
+            <ClassDeclaration start='815' end='1671' modifier='NONE'>
+                <ClassName>
+                    <Identifier start='821' end='836' name='MatchExpression'/>
+                </ClassName>
+                <SuperClassName>
+                </SuperClassName>
+                <Interfaces>
+                </Interfaces>
+                <Block start='837' end='1671' isCurly='true'>
+                    <ClassConstantDeclaration start='843' end='872' modifier='public'>
+                        <Names>
+                            <Identifier start='856' end='861' name='START'/>
+                        </Names>
+                        <Initializers>
+                            <Scalar start='864' end='871' type='STRING' value='"start"'/>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='877' end='910' modifier='public'>
+                        <Names>
+                            <Identifier start='890' end='897' name='SUSPEND'/>
+                        </Names>
+                        <Initializers>
+                            <Scalar start='900' end='909' type='STRING' value='"suspend"'/>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='915' end='942' modifier='public'>
+                        <Names>
+                            <Identifier start='928' end='932' name='STOP'/>
+                        </Names>
+                        <Initializers>
+                            <Scalar start='935' end='941' type='STRING' value='"stop"'/>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <FieldsDeclaration start='948' end='986' modifier='private static'>
+                        <FieldType>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='963' end='969' isDollared='true'>
+                                <Identifier start='964' end='969' name='start'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                            <Scalar start='972' end='985' type='STRING' value='"start state"'/>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='991' end='1026' modifier='private'>
+                        <FieldType>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='999' end='1007' isDollared='true'>
+                                <Identifier start='1000' end='1007' name='suspend'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                            <Scalar start='1010' end='1025' type='STRING' value='"suspend state"'/>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <ClassConstantDeclaration start='1031' end='1061' modifier='private'>
+                        <Names>
+                            <Identifier start='1045' end='1050' name='match'/>
+                        </Names>
+                        <Initializers>
+                            <Scalar start='1053' end='1060' type='STRING' value='"match"'/>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <MethodDeclaration start='1094' end='1418' modifiers='public'>
+                        <FunctionDeclaration start='1101' end='1418' isReference='false'>
+                            <Identifier start='1110' end='1113' name='run'/>
+                            <FormalParameters>
+                            </FormalParameters>
+                            <NamespaceName start='1117' end='1123' isCurrent='false' isGlobal='false'>
+                                <Identifier start='1117' end='1123' name='string'/>
+                            </NamespaceName>
+                            <Block start='1124' end='1418' isCurly='true'>
+                                <ExpressionStatement start='1134' end='1154'>
+                                    <Assignment start='1134' end='1153' operator='EQUAL'>
+                                        <Variable start='1134' end='1140' isDollared='true'>
+                                            <Identifier start='1135' end='1140' name='state'/>
+                                        </Variable>
+                                        <StaticConstantAccess start='1143' end='1153'>
+                                            <NamespaceName start='1143' end='1147' isCurrent='false' isGlobal='false'>
+                                                <Identifier start='1143' end='1147' name='self'/>
+                                            </NamespaceName>
+                                            <Constant>
+                                                <Identifier start='1149' end='1153' name='STOP'/>
+                                            </Constant>
+                                            <Member>
+                                                <Identifier start='1149' end='1153' name='STOP'/>
+                                            </Member>
+                                        </StaticConstantAccess>
+                                    </Assignment>
+                                </ExpressionStatement>
+                                <ReturnStatement start='1163' end='1412'>
+                                    <MatchExpression start='1170' end='1411'>
+                                        <Variable start='1176' end='1182' isDollared='true'>
+                                            <Identifier start='1177' end='1182' name='state'/>
+                                        </Variable>
+                                        <MatchArms>
+                                            <MatchArm start='1198' end='1236' isDefault='false'>
+                                                <Conditions>
+                                                    <StaticConstantAccess start='1198' end='1220'>
+                                                        <NamespaceName start='1198' end='1213' isCurrent='false' isGlobal='false'>
+                                                            <Identifier start='1198' end='1213' name='MatchExpression'/>
+                                                        </NamespaceName>
+                                                        <Constant>
+                                                            <Identifier start='1215' end='1220' name='START'/>
+                                                        </Constant>
+                                                        <Member>
+                                                            <Identifier start='1215' end='1220' name='START'/>
+                                                        </Member>
+                                                    </StaticConstantAccess>
+                                                </Conditions>
+                                                <StaticFieldAccess start='1224' end='1236'>
+                                                    <NamespaceName start='1224' end='1228' isCurrent='false' isGlobal='false'>
+                                                        <Identifier start='1224' end='1228' name='self'/>
+                                                    </NamespaceName>
+                                                    <Field>
+                                                        <Variable start='1230' end='1236' isDollared='true'>
+                                                            <Identifier start='1231' end='1236' name='start'/>
+                                                        </Variable>
+                                                    </Field>
+                                                    <Member>
+                                                        <Variable start='1230' end='1236' isDollared='true'>
+                                                            <Identifier start='1231' end='1236' name='start'/>
+                                                        </Variable>
+                                                    </Member>
+                                                </StaticFieldAccess>
+                                            </MatchArm>
+                                            <MatchArm start='1250' end='1292' isDefault='false'>
+                                                <Conditions>
+                                                    <StaticConstantAccess start='1250' end='1274'>
+                                                        <NamespaceName start='1250' end='1265' isCurrent='false' isGlobal='false'>
+                                                            <Identifier start='1250' end='1265' name='MatchExpression'/>
+                                                        </NamespaceName>
+                                                        <Constant>
+                                                            <Identifier start='1267' end='1274' name='SUSPEND'/>
+                                                        </Constant>
+                                                        <Member>
+                                                            <Identifier start='1267' end='1274' name='SUSPEND'/>
+                                                        </Member>
+                                                    </StaticConstantAccess>
+                                                </Conditions>
+                                                <FieldAccess start='1278' end='1292' isNullsafe='false'>
+                                                    <Variable start='1278' end='1283' isDollared='true'>
+                                                        <Identifier start='1279' end='1283' name='this'/>
+                                                    </Variable>
+                                                    <Field>
+                                                        <Variable start='1285' end='1292' isDollared='false'>
+                                                            <Identifier start='1285' end='1292' name='suspend'/>
+                                                        </Variable>
+                                                    </Field>
+                                                </FieldAccess>
+                                            </MatchArm>
+                                            <MatchArm start='1306' end='1349' isDefault='false'>
+                                                <Conditions>
+                                                    <StaticConstantAccess start='1306' end='1327'>
+                                                        <NamespaceName start='1306' end='1321' isCurrent='false' isGlobal='false'>
+                                                            <Identifier start='1306' end='1321' name='MatchExpression'/>
+                                                        </NamespaceName>
+                                                        <Constant>
+                                                            <Identifier start='1323' end='1327' name='STOP'/>
+                                                        </Constant>
+                                                        <Member>
+                                                            <Identifier start='1323' end='1327' name='STOP'/>
+                                                        </Member>
+                                                    </StaticConstantAccess>
+                                                </Conditions>
+                                                <MethodInvocation start='1331' end='1349' isNullsafe='false'>
+                                                    <Variable start='1331' end='1336' isDollared='true'>
+                                                        <Identifier start='1332' end='1336' name='this'/>
+                                                    </Variable>
+                                                    <Method>
+                                                        <FunctionInvocation start='1338' end='1349'>
+                                                            <FucntionName start='1338' end='1347'>
+                                                                <Variable start='1338' end='1347' isDollared='false'>
+                                                                    <Identifier start='1338' end='1347' name='stopState'/>
+                                                                </Variable>
+                                                            </FucntionName>
+                                                            <Parameters>
+                                                            </Parameters>
+                                                        </FunctionInvocation>
+                                                    </Method>
+                                                </MethodInvocation>
+                                            </MatchArm>
+                                            <MatchArm start='1363' end='1400' isDefault='true'>
+                                                <Conditions>
+                                                    <Identifier start='1363' end='1370' name='default'/>
+                                                </Conditions>
+                                                <StaticMethodInvocation start='1374' end='1400'>
+                                                    <NamespaceName start='1374' end='1389' isCurrent='false' isGlobal='false'>
+                                                        <Identifier start='1374' end='1389' name='MatchExpression'/>
+                                                    </NamespaceName>
+                                                    <Member>
+                                                        <FunctionInvocation start='1391' end='1400'>
+                                                            <FucntionName start='1391' end='1398'>
+                                                                <Identifier start='1391' end='1398' name='default'/>
+                                                            </FucntionName>
+                                                            <Parameters>
+                                                            </Parameters>
+                                                        </FunctionInvocation>
+                                                    </Member>
+                                                    <FunctionInvocation start='1391' end='1400'>
+                                                        <FucntionName start='1391' end='1398'>
+                                                            <Identifier start='1391' end='1398' name='default'/>
+                                                        </FucntionName>
+                                                        <Parameters>
+                                                        </Parameters>
+                                                    </FunctionInvocation>
+                                                </StaticMethodInvocation>
+                                            </MatchArm>
+                                        </MatchArms>
+                                    </MatchExpression>
+                                </ReturnStatement>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='1424' end='1496' modifiers='public'>
+                        <FunctionDeclaration start='1431' end='1496' isReference='false'>
+                            <Identifier start='1440' end='1449' name='stopState'/>
+                            <FormalParameters>
+                            </FormalParameters>
+                            <NamespaceName start='1453' end='1459' isCurrent='false' isGlobal='false'>
+                                <Identifier start='1453' end='1459' name='string'/>
+                            </NamespaceName>
+                            <Block start='1460' end='1496' isCurly='true'>
+                                <ReturnStatement start='1470' end='1490'>
+                                    <Scalar start='1477' end='1489' type='STRING' value='"stop state"'/>
+                                </ReturnStatement>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='1502' end='1576' modifiers='public static'>
+                        <FunctionDeclaration start='1516' end='1576' isReference='false'>
+                            <Identifier start='1525' end='1532' name='default'/>
+                            <FormalParameters>
+                            </FormalParameters>
+                            <NamespaceName start='1536' end='1542' isCurrent='false' isGlobal='false'>
+                                <Identifier start='1536' end='1542' name='string'/>
+                            </NamespaceName>
+                            <Block start='1543' end='1576' isCurly='true'>
+                                <ReturnStatement start='1553' end='1570'>
+                                    <Scalar start='1560' end='1569' type='STRING' value='"default"'/>
+                                </ReturnStatement>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='1582' end='1669' modifiers='public'>
+                        <FunctionDeclaration start='1589' end='1669' isReference='false'>
+                            <Identifier start='1598' end='1603' name='match'/>
+                            <FormalParameters>
+                            </FormalParameters>
+                            <NamespaceName start='1607' end='1611' isCurrent='false' isGlobal='false'>
+                                <Identifier start='1607' end='1611' name='void'/>
+                            </NamespaceName>
+                            <Block start='1612' end='1669' isCurly='true'>
+                                <EchoStatement start='1622' end='1663'>
+                                    <InfixExpression start='1627' end='1662' operator='CONCAT'>
+                                        <Scalar start='1627' end='1652' type='STRING' value='"Context Sensitive Lexer"'/>
+                                        <NamespaceName start='1655' end='1662' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='1655' end='1662' name='PHP_EOL'/>
+                                        </NamespaceName>
+                                    </InfixExpression>
+                                </EchoStatement>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                </Block>
+            </ClassDeclaration>
+            <ExpressionStatement start='1673' end='1707'>
+                <Assignment start='1673' end='1706' operator='EQUAL'>
+                    <Variable start='1673' end='1682' isDollared='true'>
+                        <Identifier start='1674' end='1682' name='instance'/>
+                    </Variable>
+                    <ClassInstanceCreation start='1685' end='1706' anonymous='false'>
+                        <ClassName start='1689' end='1704'>
+                            <NamespaceName start='1689' end='1704' isCurrent='false' isGlobal='false'>
+                                <Identifier start='1689' end='1704' name='MatchExpression'/>
+                            </NamespaceName>
+                        </ClassName>
+                        <Parameters>
+                        </Parameters>
+                    </ClassInstanceCreation>
+                </Assignment>
+            </ExpressionStatement>
+            <ExpressionStatement start='1708' end='1735'>
+                <FunctionInvocation start='1708' end='1734'>
+                    <FucntionName start='1708' end='1716'>
+                        <NamespaceName start='1708' end='1716' isCurrent='false' isGlobal='false'>
+                            <Identifier start='1708' end='1716' name='var_dump'/>
+                        </NamespaceName>
+                    </FucntionName>
+                    <Parameters>
+                        <MethodInvocation start='1717' end='1733' isNullsafe='false'>
+                            <Variable start='1717' end='1726' isDollared='true'>
+                                <Identifier start='1718' end='1726' name='instance'/>
+                            </Variable>
+                            <Method>
+                                <FunctionInvocation start='1728' end='1733'>
+                                    <FucntionName start='1728' end='1731'>
+                                        <Variable start='1728' end='1731' isDollared='false'>
+                                            <Identifier start='1728' end='1731' name='run'/>
+                                        </Variable>
+                                    </FucntionName>
+                                    <Parameters>
+                                    </Parameters>
+                                </FunctionInvocation>
+                            </Method>
+                        </MethodInvocation>
+                    </Parameters>
+                </FunctionInvocation>
+            </ExpressionStatement>
+            <ExpressionStatement start='1736' end='1755'>
+                <MethodInvocation start='1736' end='1754' isNullsafe='false'>
+                    <Variable start='1736' end='1745' isDollared='true'>
+                        <Identifier start='1737' end='1745' name='instance'/>
+                    </Variable>
+                    <Method>
+                        <FunctionInvocation start='1747' end='1754'>
+                            <FucntionName start='1747' end='1752'>
+                                <Variable start='1747' end='1752' isDollared='false'>
+                                    <Identifier start='1747' end='1752' name='match'/>
+                                </Variable>
+                            </FucntionName>
+                            <Parameters>
+                            </Parameters>
+                        </FunctionInvocation>
+                    </Method>
+                </MethodInvocation>
+            </ExpressionStatement>
+        </Statements>
+    </Program>
+</testresult>

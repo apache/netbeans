@@ -264,10 +264,6 @@ public class PartialReparseTest extends NbTestCase {
     }
 
     public void testDocComments() throws Exception {
-        if (NoJavacHelper.hasNbJavac()) {
-            //this test fails with nb-javac on coupling abort, skip
-            return ;
-        }
         doRunTest("package test;\n" +
                   "public class Test {\n" +
                   "        /**javadoc1*/" +

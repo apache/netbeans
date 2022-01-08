@@ -369,6 +369,7 @@
                 </test-type>
             </test-dependencies>
             <friend-packages>
+                <friend>org.netbeans.modules.cpplite.editor</friend>
                 <friend>com.sun.tools.cnd.accessor</friend>
                 <friend>org.netbeans.modules.cnd.completion</friend>
                 <friend>org.netbeans.modules.cnd.highlight</friend>

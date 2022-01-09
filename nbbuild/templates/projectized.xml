@@ -257,7 +257,7 @@
     <target name="-process.release.files"/>
     
     <target name="-download.release.files" depends="-define-downloadbinaries-task">
-        <downloadbinaries cache="${binaries.cache}" server="${binaries.server}">
+        <downloadbinaries cache="${binaries.cache}" server="${binaries.server}" repos="${binaries.repos}">
             <manifest dir=".">
                 <include name="external/binaries-list"/>
             </manifest>

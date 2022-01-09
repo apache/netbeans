@@ -31,6 +31,7 @@ import org.openide.text.*;
  * @version
  * @deprecated in favour of URLEnvironment. It can reopen the stream.
  */
+@Deprecated
 public abstract class StreamEnvironment implements CloneableEditorSupport.Env {
 
     /** Serial Version UID */

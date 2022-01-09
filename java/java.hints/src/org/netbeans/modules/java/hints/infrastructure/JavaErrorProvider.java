@@ -147,7 +147,13 @@ public class JavaErrorProvider implements ErrorProvider {
                 default: diagBuilder.setSeverity(Diagnostic.Severity.Information); break;
             }
 
-            String id = key(errorKind) + ":" + idx++ + "-" + err.getId();
+            String rangeString;
+            try {
+                rangeString = (range.getBegin().getLine()+1) + ":" + (range.getBegin().getColumn()+1) + "-" + (range.getEnd().getLine()+1) + ":" + (range.getEnd().getColumn()+1);
+            } catch (IOException ex) {
+                rangeString = null;
+            }
+            String id = key(errorKind) + "(" + ++idx + "): " + (rangeString != null ? rangeString : "");
 
             diagBuilder.setCode(id);
             diagBuilder.addActions(errorReporter -> convertFixes(err, errorReporter));
@@ -185,7 +191,8 @@ public class JavaErrorProvider implements ErrorProvider {
 
         for (Fix f : fixes) {
             if (f instanceof IncompleteClassPath.ResolveFix) {
-                CodeAction action = new CodeAction(f.getText(), new Command(f.getText(), "XXX"/*Server.JAVA_BUILD_WORKSPACE*/));
+                // We know that this is a project problem and that the problems reported by ProjectProblemsProvider should be resolved
+                CodeAction action = new CodeAction(f.getText(), new Command(f.getText(), "java.project.resolveProjectProblems"));
                 result.add(action);
             }
             if (f instanceof ImportClass.FixImport) {

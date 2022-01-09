@@ -152,8 +152,8 @@ public abstract class NbLaunchDelegate {
                 }
             }
         };
-        Project prj = FileOwnerQuery.getOwner(toRun);
         if (nativeImageFile == null) {
+            Project prj = FileOwnerQuery.getOwner(toRun);
             class W extends Writer {
                 @Override
                 public void write(char[] cbuf, int off, int len) throws IOException {

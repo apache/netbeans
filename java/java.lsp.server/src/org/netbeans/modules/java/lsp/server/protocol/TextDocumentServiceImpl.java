@@ -870,12 +870,17 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
             }
 
             ArrayList<Diagnostic> diagnostics = new ArrayList<>(params.getContext().getDiagnostics());
-            diagnostics.addAll(computeDiags(params.getTextDocument().getUri(), startOffset, ErrorProvider.Kind.HINTS, documentVersion(doc)));
+            if (diagnostics.isEmpty()) {
+                diagnostics.addAll(computeDiags(params.getTextDocument().getUri(), startOffset, ErrorProvider.Kind.HINTS, documentVersion(doc)));
+            }
 
             Map<String, org.netbeans.api.lsp.Diagnostic> id2Errors = (Map<String, org.netbeans.api.lsp.Diagnostic>) doc.getProperty("lsp-errors");
             if (id2Errors != null) {
                 for (Entry<String, org.netbeans.api.lsp.Diagnostic> entry : id2Errors.entrySet()) {
                     org.netbeans.api.lsp.Diagnostic err = entry.getValue();
+                    if (err.getDescription() == null || err.getDescription().isEmpty()) {
+                        continue;
+                    }
                     if (err.getSeverity() == org.netbeans.api.lsp.Diagnostic.Severity.Error) {
                         if (err.getEndPosition().getOffset() < startOffset || err.getStartPosition().getOffset() > endOffset) {
                             continue;
@@ -895,7 +900,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                             }
                             action.setKind(kind(err.getSeverity()));
                             if (inputAction.getCommand() != null) {
-                                action.setCommand(new Command(inputAction.getCommand().getTitle(), inputAction.getCommand().getCommand()));
+                                action.setCommand(new Command(inputAction.getCommand().getTitle(), inputAction.getCommand().getCommand(), Arrays.asList(params.getTextDocument().getUri())));
                             }
                             if (inputAction.getEdit() != null) {
                                 org.netbeans.api.lsp.WorkspaceEdit edit = inputAction.getEdit();
@@ -1478,7 +1483,9 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                 try {
                     List<TextEdit> edits = TextDocumentServiceImpl.modify2TextEdits(js, wc -> {
                         wc.toPhase(JavaSource.Phase.RESOLVED);
-                        OrganizeImports.doOrganizeImports(wc, null, false);
+                        if (wc.getDiagnostics().isEmpty()) {
+                            OrganizeImports.doOrganizeImports(wc, null, false);
+                        }
                     });
                     return edits;
                 } catch (IOException ex) {}

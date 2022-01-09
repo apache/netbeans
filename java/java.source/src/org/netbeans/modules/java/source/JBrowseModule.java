@@ -29,12 +29,9 @@ import org.netbeans.modules.autoupdate.ui.api.PluginManager;
 import org.netbeans.modules.java.source.usages.ClassIndexManager;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
-import org.openide.awt.NotificationDisplayer;
-import org.openide.awt.NotificationDisplayer.Priority;
 import org.openide.modules.ModuleInstall;
 import org.openide.util.Exceptions;
 import org.openide.util.HelpCtx;
-import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
 import org.openide.windows.WindowManager;
@@ -86,7 +83,7 @@ public class JBrowseModule extends ModuleInstall {
                         Dialog[] d = new Dialog[1];
                         DialogDescriptor dd = new DialogDescriptor(Bundle.DESC_FeaturesLimited(), Bundle.TITLE_FeaturesLimited(), true, new Object[] {install, DialogDescriptor.CANCEL_OPTION}, install, DialogDescriptor.DEFAULT_ALIGN, HelpCtx.DEFAULT_HELP, evt -> {
                             if (install.equals(evt.getActionCommand())) {
-                                PluginManager.installSingle("org.netbeans.modules.nbjavac", Bundle.DN_nbjavac());
+                                PluginManager.installSingle("org.netbeans.lib.nbjavac", Bundle.DN_nbjavac());
                             }
                             d[0].setVisible(false);
                         });
@@ -95,13 +92,6 @@ public class JBrowseModule extends ModuleInstall {
                     } catch (HeadlessException ex) {
                         Exceptions.printStackTrace(Exceptions.attachSeverity(ex, Level.FINE));
                     }
-                    prefs.putBoolean(KEY_WARNING_SHOWN, true);
-                }
-
-                if (!NoJavacHelper.hasNbJavac()) {
-                    NotificationDisplayer.getDefault().notify("Install nb-javac Library", ImageUtilities.loadImageIcon(WARNING_ICON, false), Bundle.DESC_InstallNbJavac(), evt -> {
-                        PluginManager.installSingle("org.netbeans.modules.nbjavac", Bundle.DN_nbjavac());
-                    }, prefs.getBoolean(KEY_WARNING_SHOWN, false) ? Priority.SILENT : Priority.HIGH);
                     prefs.putBoolean(KEY_WARNING_SHOWN, true);
                 }
             });

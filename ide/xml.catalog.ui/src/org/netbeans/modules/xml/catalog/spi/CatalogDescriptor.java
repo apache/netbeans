@@ -28,6 +28,7 @@ import java.awt.Image;
  * @version 1.0
  * @deprecated Use {@link CatalogDescriptor2}
  */
+@Deprecated
 public interface CatalogDescriptor extends CatalogDescriptorBase {
     /**
      * Return visuaized state of given catalog.

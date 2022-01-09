@@ -18,8 +18,6 @@
  */
 package org.netbeans.modules.java.source.remote.projects;
 
-import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.WeakHashMap;
@@ -38,6 +36,7 @@ import org.openide.filesystems.FileUtil;
 import org.openide.util.ChangeSupport;
 import org.openide.util.lookup.ServiceProvider;
 import org.netbeans.spi.java.source.RemoteEditorPlatform;
+import org.openide.modules.SpecificationVersion;
 
 /**
  *
@@ -108,9 +107,12 @@ public class RemotePlatformImpl implements RemoteEditorPlatform {
                 SourceGroup[] sg = ProjectUtils.getSources(prj).getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA);
                 if (sg != null && sg.length > 0) {
                     ClassPath boot = ClassPath.getClassPath(sg[0].getRootFolder(), ClassPath.BOOT);
+                    FileObject jlObject = boot.findResource("java/lang/Object.class");
                     for (JavaPlatform jp : JavaPlatformManager.getDefault().getInstalledPlatforms()) {
-                        if (Objects.equals(jp.getBootstrapLibraries().findResource("java/lang/Object.class"), boot.findResource("java/lang/Object.class"))) { //XXX
-                            foundPlatform = jp;
+                        if (Objects.equals(jp.getBootstrapLibraries().findResource("java/lang/Object.class"), jlObject)) {
+                            if (hasUsableJavac(jp.getSpecification().getVersion())) {
+                                foundPlatform = jp;
+                            }
                             break;
                         }
                     }
@@ -120,5 +122,11 @@ public class RemotePlatformImpl implements RemoteEditorPlatform {
             return rpi;
         }
         
+        private static final SpecificationVersion MINIMAL_JAVAC_VERSION = new SpecificationVersion("17");
+
+        private static boolean hasUsableJavac(SpecificationVersion sv) {
+            return sv.compareTo(MINIMAL_JAVAC_VERSION) >= 0;
+        }
+
     }
 }

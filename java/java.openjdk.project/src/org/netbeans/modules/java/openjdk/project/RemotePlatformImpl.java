@@ -21,14 +21,10 @@ package org.netbeans.modules.java.openjdk.project;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import javax.swing.event.ChangeListener;
 import org.netbeans.api.annotations.common.NonNull;
-import org.netbeans.modules.java.openjdk.project.JDKProject.Root;
-import org.netbeans.modules.java.openjdk.project.JDKProject.RootKind;
 import org.netbeans.spi.project.ProjectConfigurationProvider;
 import org.openide.filesystems.FileChangeAdapter;
 import org.openide.filesystems.FileChangeListener;
@@ -109,9 +105,9 @@ public class RemotePlatformImpl implements RemoteEditorPlatform {
                 switch (project.getLookup().lookup(Settings.class).getUseRemotePlatform()) {
                     case JAVA_COMPILER:
                         if (!"java.compiler".equals(project.getProjectDirectory().getNameExt())) {
-                            System.err.println("not java.compiler: " + project.getProjectDirectory().getNameExt());
                             return null;
                         }
+                        //fall-through:
                     case ALWAYS:
                         return RemotePlatformImpl.getProvider(jdkRoot, project.configurations);
                     default:

@@ -19,6 +19,7 @@
 package org.netbeans.modules.java.source.remote;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -72,6 +73,10 @@ public class LanguageServerProviderImpl implements LanguageServerProvider {
                 digest.append(String.format("%02X", b));
             }
             File cache = Places.getCacheSubdirectory("java-lsp-server/" + digest.toString());
+            //disable nb-javac:
+            File disable_nbjavacapi = new File(new File(new File(cache, "config"), "Modules"), "org-netbeans-libs-nbjavacapi.xml_hidden");
+            disable_nbjavacapi.getParentFile().mkdirs();
+            new FileOutputStream(disable_nbjavacapi).close();
             Process process = new ProcessBuilder(launcher.getAbsolutePath(), "--jdkhome", jdkHome, "--installdir", launcher.getParentFile().getParentFile().getParentFile().getParentFile().getParentFile().getParentFile().getAbsolutePath(), "--userdir", cache.getAbsolutePath(), "-J-Dremote.editor.platform.running=true").redirectError(ProcessBuilder.Redirect.INHERIT).start();
             return LanguageServerDescription.create(new InputStreamWrapper(process.getInputStream()), new OutputStreamWrapper(process.getOutputStream()), process);
         } catch (Throwable t) {

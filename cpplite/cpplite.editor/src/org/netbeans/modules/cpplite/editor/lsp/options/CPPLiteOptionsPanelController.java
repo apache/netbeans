@@ -32,7 +32,7 @@ import org.openide.util.Lookup;
         keywords = "#OptionsCategory_Keywords_CPPLite",
         keywordsCategory = "CPPLite",
         location = "CPlusPlus",
-        position = 1000,
+        position = 1000
 )
 @org.openide.util.NbBundle.Messages({"OptionsCategory_DisplayName=ccls configuration", "OptionsCategory_Keywords_CPPLite=C C++ ccls"})
 public final class CPPLiteOptionsPanelController extends OptionsPanelController {

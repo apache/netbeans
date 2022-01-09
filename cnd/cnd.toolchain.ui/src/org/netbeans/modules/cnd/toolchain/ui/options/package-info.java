@@ -17,13 +17,15 @@
  * under the License.
  */
 
-@OptionsPanelController.ContainerRegistration(
-    id=CndUIConstants.TOOLS_OPTIONS_CND_CATEGORY_ID,
-    categoryName="#CndOptionsCategory_Name", // NOI18N
-//    title="#CndOptions_Title"
-    iconBase="org/netbeans/modules/cnd/toolchain/ui/options/cnd_32.png", // NOI18N
-    position=700
-)
+// Overriden with a manually generated layer.xml file.
+// See https://issues.apache.org/jira/browse/NETBEANS-6372
+//@OptionsPanelController.ContainerRegistration(
+//    id=CndUIConstants.TOOLS_OPTIONS_CND_CATEGORY_ID,
+//    categoryName="#CndOptionsCategory_Name", // NOI18N
+////    title="#CndOptions_Title"
+//    iconBase="org/netbeans/modules/cnd/toolchain/ui/options/cnd_32.png", // NOI18N
+//    position=700
+//)
 package org.netbeans.modules.cnd.toolchain.ui.options;
 
 import org.netbeans.modules.cnd.utils.ui.CndUIConstants;

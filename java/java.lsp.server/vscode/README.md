@@ -52,6 +52,11 @@ Apache NetBeans Language Server brings full featured Java development (edit-comp
 * __Test Explorer__ for Java tests results visualization and execution including editor code Lenses.
 * Maven and Gradle support including multi-project projects, subprojects opening and Gradle priming builds.
 
+## Project Explorer
+Project Explorer is introduced, as a counterpart for File Explorer. The Project Explorer follows logical project's structure, groups sources together and in case of Java, simplifies package structure view. In the future, Project Explorer will offer build, execute and build system (gradle/maven) oriented 
+actions.
+![Project Explorer](images/project-explorer.png)
+
 ## Debugger and Launch Configurations
 Language Server __Java 8+ ...__ launch configuration supports debugging and running Java applications using JDK8 or newer. 
 1. The launch configuration (debugger) is invoked when `Run main | Debug main` code lense is selected in the code.
@@ -66,6 +71,12 @@ Language Server __Java 8+ ...__ launch configuration supports debugging and runn
     * __Attach to Shared Memory__ is available on Windows in addtion to above mentioned _Attach..._
 
 Default launch configurations provided by Language Server can modified in `launch.json` file using intellisense for available options.
+
+### Run Configurations panel
+Program arguments, VM options, evironment,... can be set in Run Configuration panel, part of Explorer instead of in `launch.json`.
+
+![Run Configuration](images/run_config.png) 
+This simplifies setting these parameters when debugging the project in VSCode.  `launch.json` settings take precedence over those set in Run Configuration panel.
 ## Supported Refactorings
 
 Class level refactorings as well as variable refactorings are supported in VSCode via Apache NetBeans extension. See following screenshots:
@@ -85,6 +96,11 @@ Class level refactorings as well as variable refactorings are supported in VSCod
 Some refactorings are two steps with like Override method ... where method to be overriden is selected in 2nd step:
 
 ![Override refactoring](images/Override_refactoring.png)
+
+### Change Method Parameters refactoring
+Change method parameters refactoring is provided using dedidacated form allowing to change, add, move, remove method parameters.
+![Change method parameters refactoring](images/change_method_params.png)
+
 ### Some of supported refactorings:
 * Convert to static import 
 * Rename 	
@@ -95,13 +111,19 @@ Some refactorings are two steps with like Override method ... where method to be
 * Assign to variable
 * Generate hashCode/equals
 * Generate toString()
-* Change method signature
 * Surround With refactoring
 * For cycle refactoring
 * try-catch refactoring
 * switch() statement
 * while() cycle
 
+## Organize Imports
+It is possible to organize imports in Java classes. There are several settings to help developers to set this feature up to their expectations. Go to VSCode `Preferences | Settings`  and search for _NetBeans_.
+There are following settings related to Java imports in `Netbeans > Java > Imports:`
+* `Count For Using Star Import` - Class count to use a star-import, 999 means any number 
+* `Count For Using Static Star Import` - Members count to use a static star-import, 999 means any number
+* `Groups` - Groups of import statements (specified by their package prefixes) and their sorting order. Import statements within a group are ordered alphabetically
+and `Netbeans > Java > On Save: Organize Imports` - Enable organize imports action on a document save
 ## Test Explorer
 NetBeans Language Server provides Test Explorer view which allows to run all tests in a project, examine the results, go to source code and  run particular test.
 ![Test Explorer](images/Test_explorer.png)
@@ -148,6 +170,10 @@ following locations:
 
 As soon as one of the settings is changed, the Language Server is restarted.
 
+## Running Language Server per VSCode workspace or for user
+It is possible to run Apache NetBeans Language Server per workspace (VSCode window). This allows separation of Language Server for given project as Language Server JVM is not shared for more VSCode open workspaces (projects).
+It is possible to change this in `Preferences | Settings | Netbeans: Userdir`. Set to `local` to use dedicated Language Server per workspace or set to `global` (this is default) to have one Language Server for all VSCode workspaces.
+
 ## Conflicts with other Java Extensions
 
 Apache NetBeans Language Server extension isn't the only Java supporting
@@ -156,12 +182,6 @@ the extension disables certain functionality known to cause problems, this is do
 
 This behavior can be disabled by setting `netbeans.conflict.check` setting to `false`.
 
-## Project Explorer
-Very simple Project Explorer is introduced, as a counterpart for File Explorer. The Project Explorer 
-follows logical project's structure, groups sources together and in case of Java, simplifies package structure
-view. In the future, Project Explorer will offer build, execute and build system (gradle/maven) oriented 
-actions.
-![Project Explorer](images/project-explorer.png)
 ## Contributing
 
 Read [building instructions](BUILD.md) to help Apache community to

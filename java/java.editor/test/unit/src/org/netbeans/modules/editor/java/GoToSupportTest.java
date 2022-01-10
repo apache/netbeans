@@ -19,12 +19,20 @@
 package org.netbeans.modules.editor.java;
 import java.beans.PropertyVetoException;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.Writer;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.regex.Pattern;
 import javax.lang.model.SourceVersion;
+
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
@@ -33,8 +41,11 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
+import javax.swing.JEditorPane;
+import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeListener;
 import javax.swing.text.Document;
+import static junit.framework.TestCase.assertNotNull;
 
 import org.netbeans.api.java.lexer.JavaTokenId;
 import org.netbeans.api.java.source.ClasspathInfo;
@@ -45,12 +56,19 @@ import org.netbeans.api.java.source.SourceUtilsTestUtil;
 import org.netbeans.api.java.source.SourceUtilsTestUtil2;
 import org.netbeans.api.java.source.Task;
 import org.netbeans.api.java.source.TestUtilities;
+import org.netbeans.api.java.source.gen.WhitespaceIgnoringDiff;
 import org.netbeans.api.lexer.Language;
 import org.netbeans.junit.NbTestCase;
+import static org.netbeans.junit.NbTestCase.assertFile;
+import org.netbeans.modules.editor.completion.CompletionItemComparator;
 import org.netbeans.modules.editor.java.GoToSupport.UiUtilsCaller;
 //import org.netbeans.modules.java.source.TreeLoader;
 import org.netbeans.modules.java.source.parsing.JavacParser;
+import org.netbeans.modules.parsing.api.Source;
+import org.netbeans.spi.editor.completion.CompletionItem;
+import org.netbeans.spi.editor.completion.CompletionProvider;
 import org.netbeans.spi.java.queries.CompilerOptionsQueryImplementation;
+import org.openide.LifecycleManager;
 import org.openide.cookies.EditorCookie;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -1258,7 +1276,63 @@ public class GoToSupportTest extends NbTestCase {
         
         return null;
     }
+    
+    protected void performTest(String source, int caretPos, String textToInsert, String goldenFileName, String sourceLevel) throws Exception {
+        
+        clearWorkDir();
+        FileUtil.refreshFor(getWorkDir());
 
+        FileObject wd = FileUtil.toFileObject(getWorkDir());
+        FileObject sourceDir = FileUtil.createFolder(wd, "src");
+        FileObject buildDir = FileUtil.createFolder(wd, "build");
+        FileObject cacheDir = FileUtil.createFolder(wd, "cache");
+        
+        File testSource = new File(getWorkDir(), "test/Test.java");
+        testSource.getParentFile().mkdirs();
+        copyToWorkDir(new File(getDataDir(), "org/netbeans/modules/java/editor/javadocsnippet/data/" + source + ".java"), testSource);
+        FileObject testSourceFO = FileUtil.toFileObject(testSource);
+        
+        SourceUtilsTestUtil.setSourceLevel(testSourceFO, sourceLevel);
+        SourceUtilsTestUtil.prepareTest(sourceDir, buildDir, cacheDir, new FileObject[0]);
+        assertNotNull(testSourceFO);
+        DataObject testSourceDO = DataObject.find(testSourceFO);
+        assertNotNull(testSourceDO);
+        EditorCookie ec = testSourceDO.getCookie(EditorCookie.class);
+        assertNotNull(ec);
+        final Document doc = ec.openDocument();
+        assertNotNull(doc);
+        doc.putProperty(Language.class, JavaTokenId.language());
+        doc.putProperty("mimeType", "text/x-java");
+        int textToInsertLength = textToInsert != null ? textToInsert.length() : 0;
+        if (textToInsertLength > 0)
+            doc.insertString(caretPos, textToInsert, null);
+        
+        String docText = GoToSupport.getGoToElementTooltip(doc, caretPos, false, null);
+        assertNotNull(goldenFileName);            
+
+        File output = new File(getWorkDir(), getName() + ".out2");
+        Writer out = new FileWriter(output);            
+        out.write(docText);
+        out.close();
+
+        File goldenFile = getGoldenFile(goldenFileName);
+        File diffFile = new File(getWorkDir(), getName() + ".diff");
+
+        assertFile(output, goldenFile, diffFile, new WhitespaceIgnoringDiff());
+        
+        LifecycleManager.getDefault().saveAll();
+    }
+
+    protected void copyToWorkDir(File resource, File toFile) throws IOException {
+        InputStream is = new FileInputStream(resource);
+        OutputStream outs = new FileOutputStream(toFile);
+        int read;
+        while ((read = is.read()) != (-1)) {
+            outs.write(read);
+        }
+        outs.close();
+        is.close();
+    }
     /**Copied from org.netbeans.api.project.
      * Create a scratch directory for tests.
      * Will be in /tmp or whatever, and will be empty.
@@ -1517,62 +1591,19 @@ public class GoToSupportTest extends NbTestCase {
         }
     }
 
-    public void testSnippetJavadoc() throws Exception {
+    public void testJavadocSnippetHighlightMarkupTag() throws Exception {
         if (!TreeShims.isJDKVersionRelease18_Or_Above()) {
             return;
         }
-       
-        if (!hasRecords()) return ;
+
+        if (!hasRecords()) {
+            return;
+        }
         this.sourceLevel = getLatestSourceVersion();
         EXTRA_OPTIONS.add("--enable-preview");
         JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
-        final String code = "package test;\n"
-                + "public class Test {\n"
-                + "    public record R(int ff) {}\n"
-                + " /**\n"
-                + " * A simple program.\n"
-                + " * {@link System#out}\n"
-                + " * {@snippet :\n"
-                + " * class HelloWorld {\n"
-                + " *     public static void main(String... args) {\n"
-                + " *         System.out.println(\"Hello World!\");      // @highlight substring=\"println\"\n"
-                + " *     }\n"
-                + " * }\n"
-                + " * }\n"
-                + " */"
-                + "    private static void me|thod(R r) {\n"
-                + "        int i = r.ff();\n"
-                + "    }\n"
-                + "}\n";
-
-        String toolTip = performTest(code, new UiUtilsCaller() {
-            @Override public boolean open(FileObject fo, int pos) {
-                fail("Should not be called.");
-                return true;
-            }
-
-            @Override public void beep(boolean goToSource, boolean goToJavadoc) {
-                fail("Should not be called.");
-            }
-            @Override public boolean open(ClasspathInfo info, ElementHandle<?> el) {
-                fail("Should not be called.");
-                return true;
-            }
-            @Override public void warnCannotOpen(String displayName) {
-                fail("Should not be called.");
-            }
-        }, true, false);
-
-        toolTip = toolTip.replace(source.toURI().toString(), "FILE");
-        assertEquals("<html><body><base href=\"FILE\"></base><font size='+0'><b><a href='*0'>test.&#x200B;Test</a></b></font><pre>private static void <b>method</b>(<a href='*1'>R</a> r)</pre><p>A simple program.\n"
-                + " <code><a href='*2'>System.out</a></code>\n"
-                + " <pre><code> class HelloWorld {\n"
-                + "     public static void main(String... args) {\n"
-                + "         System.out.<b>p</b><b>r</b><b>i</b><b>n</b><b>t</b><b>l</b><b>n</b>(\"Hello World!\");      \n"
-                + "     }\n"
-                + " }\n"
-                + " \n"
-                + "</code></pre><p>", toolTip);
+        
+        performTest("HighlightTag", 333, null, "javadocsnippet_highlight_markuptag.pass", this.sourceLevel);
     }
     
     private static final List<String> EXTRA_OPTIONS = new ArrayList<>();

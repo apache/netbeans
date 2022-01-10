@@ -826,7 +826,6 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
         
             // create project explorer:
             c.findTreeViewService().createView('foundProjects', 'Projects', { canSelectMany : false });
-            createDatabaseView(c);
         }).catch(setClient[1]);
     }).catch((reason) => {
         activationPending = false;
@@ -869,17 +868,6 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
         dispose() {
             this.setCommand?.dispose();
         }
-    }
-
-    function createDatabaseView(c : NbLanguageClient) {
-        let decoRegister : CustomizableTreeDataProvider<Visualizer>;
-        c.findTreeViewService().createView('database.connections', undefined , { 
-            canSelectMany : true,  
-            
-            providerInitializer : (customizable) => 
-                customizable.addItemDecorator(new Decorator(customizable, c))
-        });
-        
     }
 
     async function showHtmlPage(params : HtmlPageParams): Promise<string> {

@@ -26,14 +26,6 @@ import org.netbeans.spi.options.OptionsPanelController;
 import org.openide.util.HelpCtx;
 import org.openide.util.Lookup;
 
-// Overriden with a manually generated layer.xml file.
-// See https://issues.apache.org/jira/browse/NETBEANS-6372
-//@OptionsPanelController.SubRegistration(
-//    id=CndUIConstants.TOOLS_OPTIONS_CND_CODE_ASSISTANCE_ID,
-//    location=CndUIConstants.TOOLS_OPTIONS_CND_CATEGORY_ID,
-//    displayName="#TAB_CodeAssistanceTab", // NOI18N
-//    position=300
-//)
 public final class CodeAssistancePanelController extends OptionsPanelController {
     public static final boolean TRACE_CODEASSIST = Boolean.getBoolean("trace.codeassist.controller");
 //    private CodeAssistancePanel panel = new CodeAssistancePanel();

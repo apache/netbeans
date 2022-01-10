@@ -21,6 +21,17 @@
 -->
 <!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN"
                             "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
+
+<!--
+  NOTE: The definitions of CodeAssistanceTab.instance, ToolsTab.instance and
+  CPlusPlus.instance were moved from annotations to this layer.xml file because
+  the annotations @OptionsPanelController.ContainerRegistration and
+  @OptionsPanelController.SubRegistration do not currently support the
+  'weight' attribute.
+  See https://issues.apache.org/jira/browse/NETBEANS-6372 and
+  https://bz.apache.org/netbeans/show_bug.cgi?id=141925 for more information.
+-->
+
 <filesystem>
     <folder name="OptionsDialog">
         <folder name="CPlusPlus">

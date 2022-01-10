@@ -26,14 +26,6 @@ import org.netbeans.spi.options.OptionsPanelController;
 import org.openide.util.HelpCtx;
 import org.openide.util.Lookup;
 
-// Overriden with a manually generated layer.xml file.
-// See https://issues.apache.org/jira/browse/NETBEANS-6372
-//@OptionsPanelController.SubRegistration(
-//    id=CndUIConstants.TOOLS_OPTIONS_CND_TOOLS_ID,
-//    location=CndUIConstants.TOOLS_OPTIONS_CND_CATEGORY_ID,
-//    displayName="#TAB_ToolsTab", // NOI18N
-//    position=100
-//)
 public final class ToolsPanelController extends OptionsPanelController {
 
     private ToolsPanel panel = new ToolsPanel("ConfiguringBuildTools"); // NOI18N

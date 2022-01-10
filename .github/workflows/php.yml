@@ -25,6 +25,7 @@ jobs:
   linux-php:
     name: PHP on Linux
     runs-on: ubuntu-18.04
+    if: ${{ false }}
     env:
       DISPLAY: ":99.0"
       ANT_OPTS: -Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json

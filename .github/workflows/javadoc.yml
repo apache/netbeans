@@ -25,6 +25,7 @@ jobs:
   linux-javadoc:
     name: Check Javadoc
     runs-on: ubuntu-18.04
+    if: ${{ false }}
     env:
       ANT_OPTS: -Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json
     steps:

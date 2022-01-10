@@ -25,6 +25,7 @@ jobs:
   jdk11-jdk8:
     name: "Compile with JDK-11 and test something on JDK-8"
     runs-on: ubuntu-18.04
+    if: ${{ false }}
     env:
       OPTS: -Dcluster.config=basic -Dtest-unit-sys-prop.ignore.random.failures=true
     steps:

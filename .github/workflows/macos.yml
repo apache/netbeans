@@ -25,6 +25,7 @@ jobs:
   macos:
     name: Commit-validation (on Mac OS X)
     runs-on: macos-10.15
+    if: ${{ false }}
     env:
       ANT_OPTS: -Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json
     steps:

@@ -107,7 +107,11 @@ public final class ChangeMethodParametersRefactoring extends CodeRefactoring {
             if (element == null || element.asType().getKind() == TypeKind.ERROR) {
                 return Collections.emptyList();
             }
-            elementSource = SourceUtils.getFile(ElementHandle.create(element), info.getClasspathInfo());
+            ElementHandle<Element> handle = ElementHandle.create(element);
+            if (JavaRefactoringUtils.isFromLibrary(handle, info.getClasspathInfo())) {
+                return Collections.emptyList();
+            }
+            elementSource = SourceUtils.getFile(handle, info.getClasspathInfo());
         }
         if (elementSource == null) {
             return Collections.emptyList();

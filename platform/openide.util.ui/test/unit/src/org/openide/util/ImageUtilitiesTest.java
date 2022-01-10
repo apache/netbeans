@@ -553,4 +553,77 @@ public class ImageUtilitiesTest extends TestCase {
         icon = ImageUtilities.loadImageIcon("org/openide/util/darkicon.png", true);
         assertEquals("The default icon is 16x16 pixels", 16, icon.getIconWidth());
     }
+    
+    /**
+     * Checks that an image loaded from URL reports an URL
+     */
+    public void testLoadedImageHasUrl() {
+        Image img = ImageUtilities.loadImage("org/openide/util/darkimage.png");
+        // contract since 8.24
+        assertNotNull(img.getProperty(ImageUtilities.PROPERTY_URL, null));
+        URL u = ImageUtilities.findImageBaseURL(img);
+        assertNotNull(u);
+        assertTrue(u.toString().endsWith("org/openide/util/darkimage.png"));
+    }
+
+    /**
+     * Checks that an image loaded from URL reports an URL
+     */
+    public void testLoadedImageHasId() {
+        Image img = ImageUtilities.loadImage("org/openide/util/progress-cursor-mac.gif");
+        String id = ImageUtilities.findImageBaseId(img);
+        assertNotNull(id);
+        assertEquals("org/openide/util/progress-cursor-mac.gif", id);
+    }
+
+    /**
+     * Checks that an icon created from an ephemeral image still reports ID
+     * from deep inside.
+     */
+    public void testEphemeralImageWithId() throws Exception {
+        final String u = "ephemeral:netbeans.org";
+        // test if merged image preserves alpha (#90862)
+        BufferedImage img1 = new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB) {
+            @Override
+            public Object getProperty(String name) {
+                if (ImageUtilities.PROPERTY_ID.equals(name)) {
+                    return u;
+                }
+                return super.getProperty(name);
+            }
+        };
+        Icon icon = ImageUtilities.image2Icon(img1);
+        assertTrue(icon instanceof Image);
+        Image converted = ((Image)icon);
+        
+        assertNull(ImageUtilities.findImageBaseURL(converted));
+        assertEquals(u, ImageUtilities.findImageBaseId(converted));
+        
+        // and turn the icon back to an image:
+        Image convertedBack = ImageUtilities.icon2Image(icon);
+        assertNull(ImageUtilities.findImageBaseURL(convertedBack));
+        assertEquals(u, ImageUtilities.findImageBaseId(convertedBack));
+    }
+    
+    /**
+     * Checks the ID is preserved in a merged image.
+     */
+    public void testEphemeralBadgedImageHasId() {
+        final String u = "ephemeral:netbeans.org";
+        // test if merged image preserves alpha (#90862)
+        BufferedImage img1 = new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB) {
+            @Override
+            public Object getProperty(String name) {
+                if (ImageUtilities.PROPERTY_ID.equals(name)) {
+                    return u;
+                }
+                return super.getProperty(name);
+            }
+        };
+        Image b = ImageUtilities.loadImage("org/openide/util/darkimage.png");
+        Image merged = ImageUtilities.mergeImages(img1, b, 0, 0);
+        
+        assertNull(ImageUtilities.findImageBaseURL(merged));
+        assertEquals(u, ImageUtilities.findImageBaseId(merged));
+    }
 }

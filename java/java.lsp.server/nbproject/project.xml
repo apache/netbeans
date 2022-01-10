@@ -617,7 +617,7 @@
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
-                        <specification-version>9.14</specification-version>
+                        <specification-version>9.24</specification-version>
                     </run-dependency>
                 </dependency>
             </module-dependencies>

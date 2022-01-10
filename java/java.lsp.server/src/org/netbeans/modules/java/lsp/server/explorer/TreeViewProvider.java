@@ -24,6 +24,10 @@ import org.netbeans.modules.java.lsp.server.explorer.api.TreeItemData;
 import org.netbeans.modules.java.lsp.server.explorer.api.TreeDataEvent;
 import org.netbeans.modules.java.lsp.server.explorer.api.TreeDataProvider;
 import java.beans.PropertyChangeEvent;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -40,6 +44,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.netbeans.modules.java.lsp.server.explorer.TreeItem.IconDescriptor;
 import org.openide.explorer.ExplorerManager;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
@@ -385,6 +390,16 @@ public abstract class TreeViewProvider {
             if (idoi != null) {
                 ti.iconIndex = idoi.imageIndex;
                 ti.iconUri = idoi.imageURI;
+                ti.iconDescriptor = new IconDescriptor();
+                try {
+                    URI baseURI = builtinURI2URI(idoi.baseURI);
+                    if (baseURI != null) {
+                        ti.iconDescriptor.baseUri = baseURI;
+                        ti.iconDescriptor.composition = idoi.composition;
+                    }
+                } catch (URISyntaxException ex) {
+                    LOG.log(Level.WARNING, "Cannot convert URL: {0}", idoi.baseURI);
+                }
             }
         } else if (data.getIconURI() != null) {
             ti.iconUri = data.getIconURI();
@@ -620,4 +635,27 @@ public abstract class TreeViewProvider {
         protected void onDidChangeTreeData(Node n, int id) {
         }
     };
+    
+    static URI builtinURI2URI(URI u) throws URISyntaxException {
+        if (u == null) {
+            return null;
+        }
+        // I could work through URLMapper + FileUtil, but that would open the JAR
+        // as filesystem, which gives some perf overhead:
+        try {
+            if ("jar".equals(u.getScheme())) { // NOI18N
+                URL u2 = u.toURL();
+                String s = u2.getPath();
+                int i = s.indexOf('!');
+                // I don't want to send file: / jar: URLs over LSP wire,
+                // let's have just resource path
+                if (i != -1) {
+                    return new URI("nbres", s.substring(i + 1), null); // NOI18N
+                }
+            }
+        } catch (MalformedURLException ex) {
+            throw new URISyntaxException(u.toString(), ex.getMessage());
+        }
+        return u;
+    }
 }

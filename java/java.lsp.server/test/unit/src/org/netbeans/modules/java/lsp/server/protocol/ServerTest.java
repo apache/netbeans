@@ -4857,19 +4857,25 @@ public class ServerTest extends NbTestCase {
             
             @Override
             public void notifyProgress(ProgressParams params) {
-                assertEquals(token, params.getToken().getLeft());
+                System.err.println("testCancelProgressHandle: Got progress notification: " + params);
+                String t = token;
+                System.err.println("testCancelProgressHandle: expecting token " + t);
+                assertEquals(t, params.getToken().getLeft());
                 assertTrue(params.getValue().isLeft());
                 if (params.getValue().getLeft() instanceof WorkDoneProgressReport) {
                     WorkDoneProgressReport rep = (WorkDoneProgressReport)params.getValue().getLeft();
                     perCent = Math.max(perCent, rep.getPercentage());
+                    System.err.println("testCancelProgressHandle: updating perCent = " + perCent);
                 }
                 if (params.getValue().getLeft().getKind() == WorkDoneProgressKind.end) {
+                    System.err.println("testCancelProgressHandle: percent at end = " + perCent);
                     progressEnd.countDown();
                 }
             }
 
             @Override
             public CompletableFuture<Void> createProgress(WorkDoneProgressCreateParams params) {
+                System.err.println("testCancelProgressHandle: Got progress create: " + params);
                 assertNull(params.getToken().getRight());
                 assertNotNull(params.getToken().getLeft());
                 token = params.getToken().getLeft();
@@ -4883,6 +4889,7 @@ public class ServerTest extends NbTestCase {
 
             @Override
             public void showMessage(MessageParams params) {
+                System.err.println("testCancelProgressHandle: Got message: " + params.getMessage());
                 if (!Server.INDEXING_COMPLETED.equals(params.getMessage())) {
                     throw new UnsupportedOperationException("Unexpected message.");
                 }
@@ -4906,6 +4913,8 @@ public class ServerTest extends NbTestCase {
         ));
         // force initialization, so that System.err / out are captured in their original state.
         
+        System.err.println("testCancelProgressHandle starting");
+        
         IOProvider prov = IOProvider.getDefault();
         Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(lc, client.getInputStream(), client.getOutputStream());
         serverLauncher.startListening();
@@ -4926,6 +4935,7 @@ public class ServerTest extends NbTestCase {
         lc.progressEnd.await();
         
         // and finally check that the build interrupted before reaching 100%
+        System.err.println("Current percent: " + lc.perCent);
         assertTrue(lc.perCent < 100);
     }
 

@@ -508,6 +508,9 @@ public class DeclarativeHintsParser {
                         case STRING_LITERAL:
                             params.put(((LiteralTree) t).getValue().toString(), ParameterKind.STRING_LITERAL);
                             break;
+                        case INT_LITERAL:
+                            params.put(((LiteralTree) t).getValue().toString(), ParameterKind.INT_LITERAL);
+                            break;
                         case IDENTIFIER:
                             String name = ((IdentifierTree) t).getName().toString();
 

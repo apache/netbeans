@@ -68,11 +68,6 @@
 					"when": "nbJavaLSReady"
 				},
 				{
-					"id": "database.connections",
-					"name": "Databases",
-					"when": "nbJavaLSReady"
-				},
-				{
 					"id": "run-config",
 					"name": "Run Configuration",
 					"contextualTitle": "Run Configuration",
@@ -432,19 +427,6 @@
 				"title": "Delete"
 			},
 			{
-				"command": "db.add.connection",
-				"title": "Add Database Connection",
-				"category": "Database"
-			},
-			{
-				"command": "nbls:Database:netbeans.db.explorer.action.Connect",
-				"title": "Connect to Database"
-			},
-			{
-				"command": "nbls:Database:netbeans.db.explorer.action.Disconnect",
-				"title": "Disconnect"
-			},
-			{
 				"command": "nbls:Edit:org.openide.actions.DeleteAction",
 				"title": "Delete"
 			},
@@ -560,14 +542,6 @@
 					"when": "false"
 				},
 				{
-					"command": "nbls:Database:netbeans.db.explorer.action.Connect",
-					"when": "false"
-				},
-				{
-					"command": "nbls:Database:netbeans.db.explorer.action.Disconnect",
-					"when": "false"
-				},
-				{
 					"command": "nbls:Edit:org.openide.actions.DeleteAction",
 					"when": "false"
 				},
@@ -611,14 +585,6 @@
 				{
 					"command": "foundProjects.deleteEntry",
 					"when": "view == foundProjects && viewItem == node"
-				},
-				{
-					"command": "nbls:Database:netbeans.db.explorer.action.Connect",
-					"when": "viewItem =~ /class:ddl.DBConnection/"
-				},
-				{
-					"command": "nbls:Database:netbeans.db.explorer.action.Disconnect",
-					"when": "viewItem =~ /class:ddl.DBConnection/"
 				},
 				{
 					"command": "nbls:Edit:org.openide.actions.DeleteAction",

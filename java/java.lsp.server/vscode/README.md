@@ -53,8 +53,8 @@ Apache NetBeans Language Server brings full featured Java development (edit-comp
 * Maven and Gradle support including multi-project projects, subprojects opening and Gradle priming builds.
 
 ## Project Explorer
-Project Explorer is introduced, as a counterpart for File Explorer. The Project Explorer follows logical project's structure, groups sources together and in case of Java, simplifies package structure view. In the future, Project Explorer will offer build, execute and build system (gradle/maven) oriented 
-actions.
+Project Explorer provides an overview of logical project structure, groups sources together and greatly simplifies Java package structure exploration. Project Explorer is an addition to the classical workspace explorer. Use it to build, test, execute and operate your Maven and Gradle Java projects.
+
 ![Project Explorer](images/project-explorer.png)
 
 ## Debugger and Launch Configurations
@@ -73,10 +73,10 @@ Language Server __Java 8+ ...__ launch configuration supports debugging and runn
 Default launch configurations provided by Language Server can modified in `launch.json` file using intellisense for available options.
 
 ### Run Configurations panel
-Program arguments, VM options, evironment,... can be set in Run Configuration panel, part of Explorer instead of in `launch.json`.
+Program arguments, VM options, evironment variables,... can be set in Run Configuration panel a part of Explorer. The panel is sufficient for all typical use-cases Java programmer faces. Only advanced, expert scenarios may require touching of `launch.json` (which still takes precedence).
 
 ![Run Configuration](images/run_config.png) 
-This simplifies setting these parameters when debugging the project in VSCode.  `launch.json` settings take precedence over those set in Run Configuration panel.
+
 ## Supported Refactorings
 
 Class level refactorings as well as variable refactorings are supported in VSCode via Apache NetBeans extension. See following screenshots:
@@ -118,12 +118,14 @@ Change method parameters refactoring is provided using dedidacated form allowing
 * while() cycle
 
 ## Organize Imports
-It is possible to organize imports in Java classes. There are several settings to help developers to set this feature up to their expectations. Go to VSCode `Preferences | Settings`  and search for _NetBeans_.
-There are following settings related to Java imports in `Netbeans > Java > Imports:`
+Out of the box support for organizing imports in Java sources is available. It removes unused imports, groups imports by packages and updates your imports whenever a file is saved. In addition to the defaults, there is a rich set of configuration options. 
+
+Go to VSCode `Preferences | Settings`  and search for _NetBeans_ to set `Netbeans > Java > Imports:` options:
 * `Count For Using Star Import` - Class count to use a star-import, 999 means any number 
 * `Count For Using Static Star Import` - Members count to use a static star-import, 999 means any number
 * `Groups` - Groups of import statements (specified by their package prefixes) and their sorting order. Import statements within a group are ordered alphabetically
-and `Netbeans > Java > On Save: Organize Imports` - Enable organize imports action on a document save
+
+And `Netbeans > Java > On Save: Organize Imports` - Enable organize imports action on a document save
 ## Test Explorer
 NetBeans Language Server provides Test Explorer view which allows to run all tests in a project, examine the results, go to source code and  run particular test.
 ![Test Explorer](images/Test_explorer.png)

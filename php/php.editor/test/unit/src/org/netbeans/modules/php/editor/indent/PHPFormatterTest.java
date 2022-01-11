@@ -1044,4 +1044,14 @@ public class PHPFormatterTest extends PHPFormatterTestBase {
         HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
         reformatFileContents("testfiles/formatting/php81/readonlyProperties_01.php", options);
     }
+
+    public void testNewInInitializers_01() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        reformatFileContents("testfiles/formatting/php81/newInInitializers_01.php", options);
+    }
+
+    public void testNewInInitializers_02() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        reformatFileContents("testfiles/formatting/php81/newInInitializers_02.php", options);
+    }
 }

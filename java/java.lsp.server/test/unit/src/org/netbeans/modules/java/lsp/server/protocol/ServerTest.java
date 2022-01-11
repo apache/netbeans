@@ -36,7 +36,6 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -59,6 +58,7 @@ import javax.swing.Icon;
 import javax.swing.event.ChangeListener;
 import javax.swing.text.Document;
 import javax.swing.text.StyledDocument;
+import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertNotNull;
 import static junit.framework.TestCase.assertNull;
 import org.eclipse.lsp4j.ApplyWorkspaceEditParams;
@@ -117,6 +117,7 @@ import org.eclipse.lsp4j.TextDocumentItem;
 import org.eclipse.lsp4j.TextEdit;
 import org.eclipse.lsp4j.TypeDefinitionParams;
 import org.eclipse.lsp4j.VersionedTextDocumentIdentifier;
+import org.eclipse.lsp4j.WorkDoneProgressBegin;
 import org.eclipse.lsp4j.WorkDoneProgressCancelParams;
 import org.eclipse.lsp4j.WorkDoneProgressCreateParams;
 import org.eclipse.lsp4j.WorkDoneProgressKind;
@@ -137,6 +138,7 @@ import org.netbeans.api.java.project.JavaProjectConstants;
 import org.netbeans.api.java.queries.AnnotationProcessingQuery.Result;
 import org.netbeans.api.java.queries.AnnotationProcessingQuery.Trigger;
 import org.netbeans.api.java.source.JavaSource;
+import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectUtils;
@@ -151,6 +153,7 @@ import org.netbeans.modules.java.lsp.server.refactoring.ChangeMethodParameterUI;
 import org.netbeans.modules.java.lsp.server.refactoring.ParameterUI;
 import org.netbeans.modules.java.lsp.server.ui.MockHtmlViewer;
 import org.netbeans.modules.java.source.BootClassPathUtil;
+import org.netbeans.modules.parsing.api.ResultIterator;
 import org.netbeans.modules.parsing.impl.indexing.implspi.CacheFolderProvider;
 import org.netbeans.spi.java.classpath.ClassPathProvider;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
@@ -4846,8 +4849,85 @@ public class ServerTest extends NbTestCase {
         }
     }
     
-    public void testCancelProgressHandle() throws Exception {
+    private static volatile ProgressCommand progressCommandInstance;
+    
+    @ServiceProvider(service = CodeActionsProvider.class)
+    public static class ProgressCommand extends CodeActionsProvider {
         
+        // command will block before checking for cancel (before return/ terminate)
+        CountDownLatch beforeCancel = new CountDownLatch(1);
+        
+        CountDownLatch progressReported = new CountDownLatch(1);
+        
+        /**
+         * True, if the command has received a cancel
+         */
+        AtomicBoolean cancel = new AtomicBoolean(false);
+        
+        /**
+         * True, if the command has finished (normally or abruptly)
+         */
+        AtomicBoolean finished = new AtomicBoolean(false);
+        
+        
+        volatile Throwable exception;
+        
+        public ProgressCommand() {
+            progressCommandInstance = this;
+        }
+        
+        @Override
+        public List<CodeAction> getCodeActions(ResultIterator resultIterator, CodeActionParams params) throws Exception {
+            return Collections.emptyList();
+        }
+        
+        boolean cancel() {
+            return !this.cancel.getAndSet(true);
+        }
+        
+        @Override
+        public CompletableFuture<Object> processCommand(NbCodeLanguageClient client, String command, List<Object> arguments) {
+            if (!command.equals("_progressCommand")) {
+                return null;
+            }
+
+            return CompletableFuture.<Object>supplyAsync(() -> {
+                ProgressHandle h = ProgressHandle.createHandle("Test Command", this::cancel);
+                try {
+                    h.start(100, 100);
+                    h.progress(20);
+                    // The Progress infra sometimes coalesces events, so definitely deliver begin + progress before
+                    // waking up the client controller that will issue cancel. Otherwise begin / cancel could be merged into
+                    // a no-op.
+                    Thread.sleep(1000);
+                    progressReported.countDown();
+                    beforeCancel.await();
+                    
+                    // teribolak: after beforeCancel releases, the "cancel" command is somewhere between
+                    // the server and the client.
+                    Thread.sleep(1000);
+                    if (!cancel.get()) {
+                        h.progress(40);
+                        Thread.sleep(600);
+                    }
+                } catch (Exception | Error ex) {
+                    exception = ex;
+                } finally {
+                    finished.set(true);
+                    h.finish();
+                }
+               return null; 
+            });
+        }
+
+        @Override
+        public Set<String> getCommands() {
+            return Collections.singleton("_progressCommand");
+        }
+
+
+    }
+    public void testCancelProgressHandle() throws Exception {
         class LC extends LspClient {
             CountDownLatch progressStart = new CountDownLatch(1);
             CountDownLatch progressEnd = new CountDownLatch(1);
@@ -4857,13 +4937,24 @@ public class ServerTest extends NbTestCase {
             
             @Override
             public void notifyProgress(ProgressParams params) {
-                assertEquals(token, params.getToken().getLeft());
+                String t = token;
                 assertTrue(params.getValue().isLeft());
                 if (params.getValue().getLeft() instanceof WorkDoneProgressReport) {
+                    assertEquals(t, params.getToken().getLeft());
                     WorkDoneProgressReport rep = (WorkDoneProgressReport)params.getValue().getLeft();
                     perCent = Math.max(perCent, rep.getPercentage());
                 }
+                if (params.getValue().getLeft() instanceof WorkDoneProgressBegin) {
+                    WorkDoneProgressBegin rep = (WorkDoneProgressBegin)params.getValue().getLeft();
+                    // there may be different things that create handles
+                    if ("Test Command".equals(rep.getTitle())) {
+                        perCent = Math.max(perCent, rep.getPercentage());
+                        token = params.getToken().getLeft();
+                        progressStart.countDown();
+                    }
+                }
                 if (params.getValue().getLeft().getKind() == WorkDoneProgressKind.end) {
+                    assertEquals(t, params.getToken().getLeft());
                     progressEnd.countDown();
                 }
             }
@@ -4872,8 +4963,6 @@ public class ServerTest extends NbTestCase {
             public CompletableFuture<Void> createProgress(WorkDoneProgressCreateParams params) {
                 assertNull(params.getToken().getRight());
                 assertNotNull(params.getToken().getLeft());
-                token = params.getToken().getLeft();
-                progressStart.countDown();
                 return CompletableFuture.completedFuture(null);
             }
             
@@ -4890,22 +4979,8 @@ public class ServerTest extends NbTestCase {
         };
         LC lc = new LC();
         File wdBase = getWorkDir();
-        Path srcDir = Files.createDirectories(wdBase.toPath().resolve(Paths.get("src", "main", "java")));
-        Files.write(srcDir.resolve("Test.java"), Arrays.asList(
-                "public class Test { }"
-        ));
         
-        Path pomFile = wdBase.toPath().resolve("pom.xml");
-        Files.write(pomFile, Arrays.asList(
-            "<project xmlns='http://maven.apache.org/POM/4.0.0'>",
-            "   <modelVersion>4.0.0</modelVersion>",
-            "   <artifactId>m</artifactId>" +
-            "   <groupId>g</groupId>" +
-            "   <version>1.0-SNAPSHOT</version>" +
-            "</project>"
-        ));
-        // force initialization, so that System.err / out are captured in their original state.
-        
+        Lookup d = Lookup.getDefault();
         IOProvider prov = IOProvider.getDefault();
         Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(lc, client.getInputStream(), client.getOutputStream());
         serverLauncher.startListening();
@@ -4917,16 +4992,23 @@ public class ServerTest extends NbTestCase {
         
         // now invoke the build
         ExecuteCommandParams ecp = new ExecuteCommandParams();
-        ecp.setCommand("java.build.workspace");
+        ecp.setCommand("_progressCommand");
         CompletableFuture<Object> buildF = server.getWorkspaceService().executeCommand(ecp);
-        lc.progressStart.await();
-        // let's cancel in the middle
-        assertNotNull(lc.token);
-        server.cancelProgress(new WorkDoneProgressCancelParams(Either.forLeft(lc.token)));
-        lc.progressEnd.await();
         
+        // the progress must be received at the client w/ the token, we need the token to issue cancel
+        lc.progressStart.await();
+        assertNotNull("Cancel token must not be null", lc.token);
+        
+        // let's cancel in the middle, then release the command to proceed.
+        server.cancelProgress(new WorkDoneProgressCancelParams(Either.forLeft(lc.token)));
+        progressCommandInstance.beforeCancel.countDown();
+
+        // wait until the command terminates
+        lc.progressEnd.await();
         // and finally check that the build interrupted before reaching 100%
-        assertTrue(lc.perCent < 100);
+        assertEquals(20, lc.perCent);
+        assertTrue(progressCommandInstance.cancel.get());
+        assertTrue(progressCommandInstance.finished.get());
     }
 
     public void testFileModificationDiags() throws Exception {

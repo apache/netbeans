@@ -82,7 +82,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 import javax.lang.model.element.*;
 import javax.lang.model.type.ArrayType;
 import javax.lang.model.type.TypeKind;
@@ -242,14 +241,17 @@ public class TreeFactory {
     }
     
     public CaseTree Case(List<? extends ExpressionTree> expressions, List<? extends StatementTree> statements) {
-        return CaseMultiplePatterns(expressions.isEmpty() ? Collections.singletonList(DefaultCaseLabel()) : expressions.stream().map(e -> ConstantCaseLabel(e)).collect(Collectors.toList()), null, statements);
+        return CaseMultiplePatterns(expressions.stream().map(this::ConstantCaseLabel).toList(), null, statements);
     }
     
     public CaseTree Case(List<? extends ExpressionTree> expressions, Tree body) {
-        return CaseMultiplePatterns(expressions.isEmpty() ? Collections.singletonList(DefaultCaseLabel()) : expressions.stream().map(e -> ConstantCaseLabel(e)).collect(Collectors.toList()), null, body);
+        return CaseMultiplePatterns(expressions.stream().map(this::ConstantCaseLabel).toList(), null, body);
     }
     
     public CaseTree CaseMultiplePatterns(List<? extends CaseLabelTree> expressions, ExpressionTree guard, Tree body) {
+        if (expressions.isEmpty()) {
+            expressions = Collections.singletonList(DefaultCaseLabel());
+        }
         ListBuffer<JCStatement> lb = new ListBuffer<>();
         lb.append(body instanceof ExpressionTree ? (JCStatement) Yield((ExpressionTree) body) : (JCStatement) body);
         ListBuffer<JCCaseLabel> exprs = new ListBuffer<>();
@@ -257,10 +259,12 @@ public class TreeFactory {
             exprs.append((JCCaseLabel)t);
         return make.at(NOPOS).Case(CaseKind.RULE, exprs.toList(), (JCExpression) guard, lb.toList(), (JCTree) body);
     }
-    
 
     public CaseTree CaseMultiplePatterns(List<? extends CaseLabelTree> expressions, ExpressionTree guard, List<? extends StatementTree> statements) {
-        ListBuffer<JCStatement> lb = new ListBuffer<JCStatement>();
+        if (expressions.isEmpty()) {
+            expressions = Collections.singletonList(DefaultCaseLabel());
+        }
+        ListBuffer<JCStatement> lb = new ListBuffer<>();
         for (StatementTree t : statements)
             lb.append((JCStatement)t);
         ListBuffer<JCCaseLabel> exprs = new ListBuffer<>();

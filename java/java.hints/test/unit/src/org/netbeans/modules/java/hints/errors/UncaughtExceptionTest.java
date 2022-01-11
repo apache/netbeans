@@ -20,9 +20,7 @@ package org.netbeans.modules.java.hints.errors;
 
 import java.util.Collections;
 import java.util.Set;
-import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.modules.java.hints.infrastructure.ErrorHintsTestBase;
-import org.netbeans.spi.editor.hints.Fix;
 import org.openide.util.NbBundle;
 
 /**
@@ -210,12 +208,6 @@ public class UncaughtExceptionTest extends ErrorHintsTestBase {
                 "        }\n" +
                 "    }\n" +
                 "}").replaceAll("\\s+", " "));
-    }
-    
-
-    @Override
-    protected String toDebugString(CompilationInfo info, Fix f) {
-        return f.getText();
     }
 
     static {

@@ -119,13 +119,8 @@ public class DifferentCaseKindsFix implements ErrorRule<Void> {
 
     private static final class FixImpl extends JavaFix {
 
-        CompilationInfo info;
-        TreePath path;
-
         public FixImpl(CompilationInfo info, TreePath path) {
             super(info, path);
-            this.info = info;
-            this.path = path;
         }
 
         @Override

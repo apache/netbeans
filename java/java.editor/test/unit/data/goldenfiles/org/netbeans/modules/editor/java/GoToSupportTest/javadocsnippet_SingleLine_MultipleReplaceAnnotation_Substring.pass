@@ -1,0 +1,8 @@
+<html><body><font size='+0'><b><a href='*0'>test.&#x200B;Test</a></b></font><pre>public void <b>testSingleLine_MultipleReplaceAnnotation_Substring</b>()</pre><p><pre><code> class HelloWorld {
+     public static void main(String... args) {
+         System.out.println("Hi World!" + "Hi Morning");  
+         System.out.println("Hiiiiii World!" + "Hiiiiii Morning");  
+ }
+ }
+ 
+</code></pre><p>

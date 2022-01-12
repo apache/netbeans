@@ -1,0 +1,6 @@
+<html><body><font size='+0'><b><a href='*0'>test.&#x200B;Test</a></b></font><pre>public void <b>highlightTagRegexWithAllCharacterChangeUsingDot</b>()</pre><p><pre><code>   public static void main(String... args) {
+      
+     <b>S</b><b>y</b><b>s</b><b>t</b><b>e</b><b>m</b><b>.</b><b>o</b><b>u</b><b>t</b><b>.</b><b>p</b><b>r</b><b>i</b><b>n</b><b>t</b><b>l</b><b>n</b><b>(</b><b>"</b><b>a</b><b>r</b><b>g</b><b>s</b><b>"</b><b>)</b><b>;</b> <b>/</b><b>/</b> <b>t</b><b>o</b><b>-</b><b>d</b><b>o</b> <b>a</b><b>r</b><b>g</b><b>s</b>
+ }
+ 
+</code></pre><p>

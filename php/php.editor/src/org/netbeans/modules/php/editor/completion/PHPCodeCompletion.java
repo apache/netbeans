@@ -212,7 +212,8 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
         "self::", "parent::", "static::" //NOI18N
     };
     static final List<String> PHP_GLOBAL_CONST_KEYWORDS = Arrays.asList(
-            "array" // NOI18N
+            "array", // NOI18N
+            "new" // NOI18N
     );
     static final List<String> PHP_CLASS_CONST_KEYWORDS = Arrays.asList(
             "array", // NOI18N
@@ -360,7 +361,7 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
         switch (context) {
             case DEFAULT_PARAMETER_VALUE:
                 final CaseInsensitivePrefix nameKindPrefix = NameKind.caseInsensitivePrefix(request.prefix);
-                autoCompleteKeywords(completionResult, request, Arrays.asList("array")); //NOI18N
+                autoCompleteKeywords(completionResult, request, Arrays.asList("array", "new")); //NOI18N
                 autoCompleteNamespaces(completionResult, request);
                 autoCompleteTypeNames(completionResult, request, null, true);
                 if (CancelSupport.getDefault().isCancelled()) {

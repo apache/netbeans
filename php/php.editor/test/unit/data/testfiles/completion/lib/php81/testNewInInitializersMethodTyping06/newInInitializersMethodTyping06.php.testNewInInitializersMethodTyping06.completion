@@ -1,0 +1,4 @@
+Code completion result for source line:
+$param = new Fo|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CONSTRUCTO Foo()                           [PUBLIC]   Foo

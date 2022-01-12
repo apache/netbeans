@@ -962,6 +962,7 @@ final class CompletionContextFinder {
                 // check reference character (&) [unfortunately, cannot distinguish & as a operator and as a reference mark]
                 // check "..." (is it really operator?)
                 if (!isReference(cToken)
+                        && !isNew(cToken)
                         && !isVariadic(cToken)
                         && !isInitilizerToken(cToken) // ($param = '')
                         && !isVerticalBar(cToken) // int|false
@@ -1018,7 +1019,7 @@ final class CompletionContextFinder {
                         }
                         isNamespaceSeparator = false;
                         continue;
-                    } else if (!isCommentToken(tokenSequence)) {
+                    } else if (!isCommentToken(tokenSequence) && !isNew(cToken)) {
                         testCompletionSeparator = false;
                     }
                 } else if (checkReturnTypeSeparator) {
@@ -1058,7 +1059,11 @@ final class CompletionContextFinder {
     }
 
     private static boolean isVariable(Token<PHPTokenId> token) {
-        return token.id().equals(PHPTokenId.PHP_VARIABLE); //NOI18N
+        return token.id().equals(PHPTokenId.PHP_VARIABLE);
+    }
+
+    private static boolean isNew(Token<PHPTokenId> token) {
+        return token.id().equals(PHPTokenId.PHP_NEW);
     }
 
     private static boolean isReference(Token<PHPTokenId> token) {

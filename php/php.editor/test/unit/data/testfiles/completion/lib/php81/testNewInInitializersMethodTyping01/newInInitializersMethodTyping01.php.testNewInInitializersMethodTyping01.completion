@@ -1,7 +1,8 @@
 Code completion result for source line:
-public function __construct(private string|int $param1, protected ?string $param2 = |) {
+public $prop = |,
 (QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
-CLASS      ConstructorPropertyPromotion    [PUBLIC]   constructorPropertyPromotion08a.php
+CLASS      Foo                             [PUBLIC]   newInInitializersMethodTyping01.php
+CLASS      Test                            [PUBLIC]   newInInitializersMethodTyping01.php
 KEYWORD    parent::                                   null
 KEYWORD    self::                                     null
 KEYWORD    static::                                   null

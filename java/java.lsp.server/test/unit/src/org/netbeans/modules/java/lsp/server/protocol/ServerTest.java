@@ -3506,7 +3506,7 @@ public class ServerTest extends NbTestCase {
         }
         List<Diagnostic>[] diags = new List[1];
         CountDownLatch indexingComplete = new CountDownLatch(1);
-        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new LanguageClient() {
+        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new LspClient() {
             @Override
             public void telemetryEvent(Object arg0) {
                 throw new UnsupportedOperationException("Not supported yet.");
@@ -4453,7 +4453,7 @@ public class ServerTest extends NbTestCase {
         }
         Map<String, List<Integer>> publishedDiagnostics = new HashMap<>();
         FileUtil.refreshFor(getWorkDir());
-        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new LanguageClient() {
+        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new LspClient() {
             @Override
             public void telemetryEvent(Object arg0) {
                 throw new UnsupportedOperationException("Not supported yet.");
@@ -4522,7 +4522,7 @@ public class ServerTest extends NbTestCase {
         try (Writer w = new FileWriter(src)) {
             w.write(code);
         }
-        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new LanguageClient() {
+        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new LspClient() {
             @Override
             public void telemetryEvent(Object arg0) {
                 throw new UnsupportedOperationException("Not supported yet.");

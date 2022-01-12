@@ -1331,6 +1331,18 @@ public class ASTPHP5ParserTest extends ParserTestBase {
         performTest("parser/php81/readonlyPropertiesWithStaticError");
     }
 
+    public void testNewInInitializers_01() throws Exception {
+        performTest("parser/php81/newInInitializers_01");
+    }
+
+    public void testNewInInitializersWithClassConstantError() throws Exception {
+        performTest("parser/php81/newInInitializersWithClassConstantError");
+    }
+
+    public void testNewInInitializersWithPropertyError() throws Exception {
+        performTest("parser/php81/newInInitializersWithPropertyError");
+    }
+
     @Override
     protected String getTestResult(String filename) throws Exception {
         // the same <Comment /> is shown twice becase the scanner is used twice

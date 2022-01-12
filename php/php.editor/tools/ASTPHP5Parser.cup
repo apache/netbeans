@@ -473,7 +473,9 @@ non terminal Expression exit_expr;
 non terminal List ctor_arguments;
 non terminal Expression common_scalar;
 non terminal Expression static_scalar;
+non terminal Expression static_scalar_with_class_instance;
 non terminal Expression static_scalar_value;
+non terminal Expression static_scalar_value_with_class_instance;
 non terminal Expression static_operation;
 non terminal Expression scalar;
 non terminal List static_array_pair_list;
@@ -2430,7 +2432,7 @@ optional_property_modifiers:modifier optional_class_type_without_static:classTyp
     RESULT = parameter;
 :}
 
-| optional_property_modifiers:modifier optional_class_type_without_static:classType is_reference:isReference is_variadic:isVariadic T_VARIABLE:var T_EQUAL static_scalar:scalar
+| optional_property_modifiers:modifier optional_class_type_without_static:classType is_reference:isReference is_variadic:isVariadic T_VARIABLE:var T_EQUAL static_scalar_with_class_instance:expr
 {:
     int start = varleft;
     if (isVariadic) {
@@ -2457,7 +2459,7 @@ optional_property_modifiers:modifier optional_class_type_without_static:classTyp
             argument = new Reference(isReferenceleft, varright, v);
         }
     }
-    FormalParameter parameter = new FormalParameter(start, scalarright, modifier, classType, argument, scalar);
+    FormalParameter parameter = new FormalParameter(start, exprright, modifier, classType, argument, expr);
     RESULT = parameter;
 :}
 ;
@@ -2732,7 +2734,7 @@ static_var_list:list T_COMMA T_VARIABLE:var
     RESULT = list;
 :}
 
-| T_VARIABLE:var T_EQUAL static_scalar:expr
+| T_VARIABLE:var T_EQUAL static_scalar_with_class_instance:expr
 {:
     Variable v = new Variable(varleft, varright, var);
     Assignment assignment = new Assignment(varleft, exprright, v, Assignment.Type.EQUAL, expr);
@@ -3285,7 +3287,7 @@ constant_declaration:list T_COMMA string_st:constName T_EQUAL static_scalar_valu
     RESULT = list;
 :}
 
-| T_CONST string_st:constName T_EQUAL static_scalar_value:expr
+| T_CONST string_st:constName T_EQUAL static_scalar_value_with_class_instance:expr
 {:
     List list = new LinkedList();
     Identifier constId = new Identifier(constNameleft, constNameright, constName);
@@ -4310,6 +4312,19 @@ common_scalar:scalar
 :}
 ;
 
+/* PHP 8.1: New in initializer */
+static_scalar_value_with_class_instance ::=
+static_scalar_value:scalar
+{:
+    RESULT = scalar;
+:}
+
+| T_NEW:n class_name_reference:className ctor_arguments:ctor
+{:
+    RESULT = new ClassInstanceCreation(nleft, ctorright, className, ctor);;
+:}
+;
+
 static_operation ::=
 /*static_scalar_value T_OPEN_RECT static_scalar_value T_CLOSE_RECT
 {:
@@ -4518,6 +4533,14 @@ static_array_creation:arrayCreation
 
 static_scalar ::=  /* compile-time evaluated scalars */
 static_scalar_value:scalar
+{:
+    RESULT = scalar;
+:}
+;
+
+/* PHP 8.1: New in initializer */
+static_scalar_with_class_instance ::=
+static_scalar_value_with_class_instance:scalar
 {:
     RESULT = scalar;
 :}

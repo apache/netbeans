@@ -284,4 +284,132 @@ public class PHP81CodeCompletionTest extends PHPCodeCompletionTestBase {
         checkCompletion("readonlyProperties", "        readonly protected ?stri^ng $promotedReadonlyProtected = \"test\",");
     }
 
+    public void testNewInInitializers_01() throws Exception {
+        checkCompletion("newInInitializers", "static $staticVariable = ne^w StaticVariable;");
+    }
+
+    public void testNewInInitializers_02() throws Exception {
+        checkCompletion("newInInitializers", "static $staticVariable = new StaticVa^riable;");
+    }
+
+    public void testNewInInitializers_03() throws Exception {
+        checkCompletion("newInInitializers", "const CONSTANT = n^ew Constant();");
+    }
+
+    public void testNewInInitializers_04() throws Exception {
+        checkCompletion("newInInitializers", "const CONSTANT = new Constan^t();");
+    }
+
+    public void testNewInInitializers_05() throws Exception {
+        checkCompletion("newInInitializers", "function func1($param = ^new Func) {}");
+    }
+
+    public void testNewInInitializers_06() throws Exception {
+        checkCompletion("newInInitializers", "function func1($param = ne^w Func) {}");
+    }
+
+    public void testNewInInitializers_07() throws Exception {
+        checkCompletion("newInInitializers", "function func1($param = new Fun^c) {}");
+    }
+
+    public void testNewInInitializers_08() throws Exception {
+        checkCompletion("newInInitializers", "#[AnAttribute(n^ew Foo(x: 1))]");
+    }
+
+    public void testNewInInitializers_09() throws Exception {
+        checkCompletion("newInInitializers", "#[AnAttribute(new Fo^o(x: 1))]");
+    }
+
+    public void testNewInInitializers_10() throws Exception {
+        checkCompletion("newInInitializers", "        public $prop = ^new Foo(\"test\"),");
+    }
+
+    public void testNewInInitializers_11() throws Exception {
+        checkCompletion("newInInitializers", "        public $prop = ne^w Foo(\"test\"),");
+    }
+
+    public void testNewInInitializers_12() throws Exception {
+        checkCompletion("newInInitializers", "        public $prop = new Fo^o(\"test\"),");
+    }
+
+    public void testNewInInitializers_13() throws Exception {
+        checkCompletion("newInInitializers", "        $param = ne^w Foo(test: \"test\"),");
+    }
+
+    public void testNewInInitializers_14() throws Exception {
+        checkCompletion("newInInitializers", "        $param = new Fo^o(test: \"test\"),");
+    }
+
+    public void testNewInInitializersStaticVariableTyping01() throws Exception {
+        checkCompletion("newInInitializersStaticVariableTyping01", "static $staticVariable = ^");
+    }
+
+    public void testNewInInitializersStaticVariableTyping02() throws Exception {
+        checkCompletion("newInInitializersStaticVariableTyping02", "static $staticVariable = ne^");
+    }
+
+    public void testNewInInitializersStaticVariableTyping03() throws Exception {
+        checkCompletion("newInInitializersStaticVariableTyping03", "static $staticVariable = new Stati^");
+    }
+
+    public void testNewInInitializersConstantTyping01() throws Exception {
+        checkCompletion("newInInitializersConstantTyping01", "const CONSTANT = ^");
+    }
+
+    public void testNewInInitializersConstantTyping02() throws Exception {
+        checkCompletion("newInInitializersConstantTyping02", "const CONSTANT = ne^");
+    }
+
+    public void testNewInInitializersConstantTyping03() throws Exception {
+        checkCompletion("newInInitializersConstantTyping03", "const CONSTANT = new Consta^");
+    }
+
+    public void testNewInInitializersFuncTyping01() throws Exception {
+        checkCompletion("newInInitializersFuncTyping01", "function func1($param = ^) {}");
+    }
+
+    public void testNewInInitializersFuncTyping02() throws Exception {
+        checkCompletion("newInInitializersFuncTyping02", "function func1($param = ne^) {}");
+    }
+
+    public void testNewInInitializersFuncTyping03() throws Exception {
+        checkCompletion("newInInitializersFuncTyping03", "function func1($param = new Fun^) {}");
+    }
+
+    public void testNewInInitializersMethodTyping01() throws Exception {
+        checkCompletion("newInInitializersMethodTyping01", "public $prop = ^,");
+    }
+
+    public void testNewInInitializersMethodTyping02() throws Exception {
+        checkCompletion("newInInitializersMethodTyping02", "public $prop = ne^,");
+    }
+
+    public void testNewInInitializersMethodTyping03() throws Exception {
+        checkCompletion("newInInitializersMethodTyping03", "public $prop = new Fo^,");
+    }
+
+    public void testNewInInitializersMethodTyping04() throws Exception {
+        checkCompletion("newInInitializersMethodTyping04", "$param = ^");
+    }
+
+    public void testNewInInitializersMethodTyping05() throws Exception {
+        checkCompletion("newInInitializersMethodTyping05", "$param = ne^");
+    }
+
+    public void testNewInInitializersMethodTyping06() throws Exception {
+        checkCompletion("newInInitializersMethodTyping06", "$param = new Fo^");
+    }
+
+    public void testNewInInitializersAttributeTyping01() throws Exception {
+        checkCompletion("newInInitializersAttributeTyping01", "#[AnAttribute(^)]");
+    }
+
+    public void testNewInInitializersAttributeTyping02() throws Exception {
+        checkCompletion("newInInitializersAttributeTyping02", "#[AnAttribute(ne^)]");
+    }
+
+    public void testNewInInitializersAttributeTyping03() throws Exception {
+        checkCompletion("newInInitializersAttributeTyping03", "#[AnAttribute(new Fo^)]");
+    }
+
 }

@@ -115,8 +115,6 @@ public class ReleaseJsonProperties extends Task {
             throw new BuildException(ex);
         }
 
-        // remove empty api doc 
-        //ri.removeIf(e -> e.apidocurl.isEmpty());
         // sort all information
         Collections.sort(ri);
         // build a sorted xml
@@ -140,7 +138,8 @@ public class ReleaseJsonProperties extends Task {
         }
         List<String> updateValues = new ArrayList<>();
         for (ReleaseInfo releaseInfo : ri) {
-            if (releaseInfo.position < requiredbranchinfo.position) {
+            // take previous version of Apache NetBeans only if published, need for scan for old NetBeans version
+            if (releaseInfo.position < requiredbranchinfo.position && releaseInfo.publishapi ) {
                 updateValues.add(releaseInfo.version);
             }
         }

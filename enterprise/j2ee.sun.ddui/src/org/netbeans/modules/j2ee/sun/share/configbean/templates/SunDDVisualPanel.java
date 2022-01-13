@@ -41,6 +41,7 @@ public final class SunDDVisualPanel extends JPanel {
     private String sunDDFileName;
     private File sunDDFile;
     private File sunDDLocation;
+    private static final String STANDARD_DD_NAME = "web.xml";
 
     public SunDDVisualPanel() {
         initComponents();
@@ -58,10 +59,10 @@ public final class SunDDVisualPanel extends JPanel {
         J2eeModule j2eeModule = provider.getJ2eeModule();
         sunDDFileName = getConfigFileName(j2eeModule,provider.getServerInstanceID());
 
-        // Calculate location:
-        sunDDFile = (sunDDFileName != null) ? j2eeModule.getDeploymentConfigurationFile(sunDDFileName) : null;
-        sunDDLocation = (sunDDFile != null) ? sunDDFile.getParentFile() : null;
-        
+        // Calculate location:        
+        sunDDLocation = j2eeModule.getDeploymentConfigurationFile(STANDARD_DD_NAME).getParentFile();
+        sunDDFile = (sunDDFileName != null) ? new File(sunDDLocation, sunDDFileName) : null;
+
         // initialize visual components
         textFileName.setText(sunDDFileName); // NOI18N
         textProjectName.setText(ProjectUtils.getInformation(project).getDisplayName());

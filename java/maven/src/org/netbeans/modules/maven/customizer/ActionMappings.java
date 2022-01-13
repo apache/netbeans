@@ -580,6 +580,11 @@ public class ActionMappings extends javax.swing.JPanel implements HelpCtx.Provid
 
         org.openide.awt.Mnemonics.setLocalizedText(btnDisable, org.openide.util.NbBundle.getMessage(ActionMappings.class, "ActionMappings.btnDisable.text")); // NOI18N
         btnDisable.setName(""); // NOI18N
+        btnDisable.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDisableActionPerformed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 10;
         gridBagConstraints.gridy = 6;
@@ -669,7 +674,8 @@ private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-HEADER
             cbRecursively.setEnabled(true);
             cbBuildWithDeps.setEnabled(true);
             btnAddProps.setEnabled(true);
-            btnDisable.setEnabled(true);
+            // custom actions cannot be disabled at the moment, see NETBEANS-6387
+            btnDisable.setEnabled(!wr.getActionName().startsWith(CUSTOM_ACTION_PREFIX));
             if (isGlobal()) {
                 txtPackagings.setEnabled(true);
             }
@@ -790,6 +796,13 @@ private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-HEADER
             }
         }
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void btnDisableActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDisableActionPerformed
+        MappingWrapper wr = initUserWrapper();
+        wr.getMapping().setGoals(Collections.emptyList());
+        txtGoals.setText(""); // NOI18N
+        updateEnabledControls(wr);
+    }//GEN-LAST:event_btnDisableActionPerformed
     
     @Messages({"LBL_SetIcon=Set Icon:",
                "LBL_No_More_Icons=<No more slots available>",
@@ -1162,6 +1175,27 @@ private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-HEADER
         
     }
     
+    private MappingWrapper initUserWrapper() {
+        MappingWrapper map = (MappingWrapper)lstMappings.getSelectedValue();
+        if (map != null) {
+            if (!map.isUserDefined()) {
+                NetbeansActionMapping mapping = map.getMapping();
+                if (mapping == null) {
+                    mapping = new NetbeansActionMapping();
+                    mapping.setActionName(map.getActionName());
+                    map.setMapping(mapping);
+                }
+                getActionMappings().addAction(mapping);
+                if (handle != null) {
+                    handle.markAsModified(getActionMappings());
+                }
+                map.setUserDefined(true);
+                updateColor(map);
+            }
+        }
+        return map;
+    }
+    
     private abstract class TextFieldListener implements DocumentListener {
         @Override public void insertUpdate(DocumentEvent e) {
             doUpdate();
@@ -1176,24 +1210,7 @@ private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-HEADER
         }
         
         protected MappingWrapper doUpdate() {
-            MappingWrapper map = (MappingWrapper)lstMappings.getSelectedValue();
-            if (map != null) {
-                if (!map.isUserDefined()) {
-                    NetbeansActionMapping mapping = map.getMapping();
-                    if (mapping == null) {
-                        mapping = new NetbeansActionMapping();
-                        mapping.setActionName(map.getActionName());
-                        map.setMapping(mapping);
-                    }
-                    getActionMappings().addAction(mapping);
-                    if (handle != null) {
-                        handle.markAsModified(getActionMappings());
-                    }
-                    map.setUserDefined(true);
-                    updateColor(map);
-                }
-            }
-            return map;
+            return initUserWrapper();
         }
     }
     

@@ -24,6 +24,7 @@ import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.Tree;
 import java.io.File;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 import javax.lang.model.element.ModuleElement;
 import javax.lang.model.element.TypeElement;
 import javax.tools.JavaFileObject;
@@ -42,7 +43,14 @@ import org.netbeans.modules.parsing.spi.indexing.Indexable;
  */
 public abstract class CompileWorker {
 
-    protected abstract ParsingOutput compile(ParsingOutput previous, Context context, JavaParsingContext javaContext, Collection<? extends CompileTuple> files);
+    private final AtomicBoolean lowMemory = new AtomicBoolean();
+
+    final ParsingOutput compile(ParsingOutput previous, Context context, JavaParsingContext javaContext, Collection<? extends CompileTuple> files) {
+        lowMemory.set(false);
+        return doCompile(previous, context, javaContext, files);
+    }
+
+    protected abstract ParsingOutput doCompile(ParsingOutput previous, Context context, JavaParsingContext javaContext, Collection<? extends CompileTuple> files);
 
     protected void computeFQNs(final Map<JavaFileObject, List<String>> file2FQNs, CompilationUnitTree cut, CompileTuple tuple) {
         String pack;
@@ -74,11 +82,17 @@ public abstract class CompileWorker {
     }
 
     protected final boolean isLowMemory(final boolean[] tryToFree) {
+        if (lowMemory.get()) {
+            return true;
+        }
         final LowMemoryWatcher lm = LowMemoryWatcher.getInstance();
         boolean ilm = lm.isLowMemory();
         if (ilm && tryToFree != null && tryToFree[0]) {
             lm.free();
             ilm = lm.isLowMemory();
+            if (ilm) {
+                lowMemory.set(true);
+            }
             tryToFree[0] = false;
         }
         return ilm;

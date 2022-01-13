@@ -136,7 +136,7 @@ import org.openide.util.Exceptions;
 final class VanillaCompileWorker extends CompileWorker {
 
     @Override
-    protected ParsingOutput compile(
+    protected ParsingOutput doCompile(
             final ParsingOutput previous,
             final Context context,
             final JavaParsingContext javaContext,

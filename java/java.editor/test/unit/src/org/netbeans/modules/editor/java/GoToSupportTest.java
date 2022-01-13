@@ -1857,6 +1857,119 @@ public class GoToSupportTest extends NbTestCase {
         performTest("ReplaceTag", 6926, null, "javadocsnippet_HighlightAndReplace_cornercase.pass", this.sourceLevel);
     }
 
+    public void testLinkTag() throws Exception {
+        if (!TreeShims.isJDKVersionRelease18_Or_Above()) {
+            return;
+        }
+        this.sourceLevel = getLatestSourceVersion();
+        EXTRA_OPTIONS.add("--enable-preview");
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
+        performTest("LinkTag", 558, null, "javadocsnippet_LinkTag.pass", this.sourceLevel);
+
+    }
+
+    public void testLinkTag_With_RegexAndRegion() throws Exception {
+        if (!TreeShims.isJDKVersionRelease18_Or_Above()) {
+            return;
+        }
+        this.sourceLevel = getLatestSourceVersion();
+        EXTRA_OPTIONS.add("--enable-preview");
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
+        performTest("LinkTag", 999, null, "javadocsnippet_LinkTag_With_RegexAndRegion.pass", this.sourceLevel);
+
+    }
+
+    public void testLinkTag_AppliesToNextLine() throws Exception {
+        if (!TreeShims.isJDKVersionRelease18_Or_Above()) {
+            return;
+        }
+        this.sourceLevel = getLatestSourceVersion();
+        EXTRA_OPTIONS.add("--enable-preview");
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
+        performTest("LinkTag", 1350, null, "javadocsnippet_LinkTag_AppliesToNextLine.pass", this.sourceLevel);
+
+    }
+
+    public void testLink_MultipleTag_OnSameLine() throws Exception {
+        if (!TreeShims.isJDKVersionRelease18_Or_Above()) {
+            return;
+        }
+        this.sourceLevel = getLatestSourceVersion();
+        EXTRA_OPTIONS.add("--enable-preview");
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
+        performTest("LinkTag", 1737, null, "javadocsnippet_Link_MultipleTag_OnSameLine.pass", this.sourceLevel);
+    }
+
+    public void testLinkTag_With_RegionAttribute() throws Exception {
+        if (!TreeShims.isJDKVersionRelease18_Or_Above()) {
+            return;
+        }
+        this.sourceLevel = getLatestSourceVersion();
+        EXTRA_OPTIONS.add("--enable-preview");
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
+        performTest("LinkTag", 2420, null, "javadocsnippet_LinkTag_With_RegionAttribute.pass", this.sourceLevel);
+    }
+
+    public void testLinkTag_Ref_ToThisClass_UsingHash() throws Exception {
+        if (!TreeShims.isJDKVersionRelease18_Or_Above()) {
+            return;
+        }
+        this.sourceLevel = getLatestSourceVersion();
+        EXTRA_OPTIONS.add("--enable-preview");
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
+        performTest("LinkTag", 2752, null, "javadocsnippet_LinkTag_Ref_ToThisClass_UsingHash.pass", this.sourceLevel);
+    }
+
+    public void testLinkTag_FieldRef_ToThisClass_UsingHash() throws Exception {
+        if (!TreeShims.isJDKVersionRelease18_Or_Above()) {
+            return;
+        }
+        this.sourceLevel = getLatestSourceVersion();
+        EXTRA_OPTIONS.add("--enable-preview");
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
+        performTest("LinkTag", 3074, null, "javadocsnippet_LinkTag_FieldRef_ToThisClass_UsingHash.pass", this.sourceLevel);
+    }
+
+    public void testLinkTag_AlongWith_HighlightTag() throws Exception {
+        if (!TreeShims.isJDKVersionRelease18_Or_Above()) {
+            return;
+        }
+        this.sourceLevel = getLatestSourceVersion();
+        EXTRA_OPTIONS.add("--enable-preview");
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
+        performTest("LinkTag", 3492, null, "javadocsnippet_LinkTag_AlongWith_HighlightTag.pass", this.sourceLevel);
+    }
+
+    public void testLinkTag_AlongWith_ReplaceTag() throws Exception {
+        if (!TreeShims.isJDKVersionRelease18_Or_Above()) {
+            return;
+        }
+        this.sourceLevel = getLatestSourceVersion();
+        EXTRA_OPTIONS.add("--enable-preview");
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
+        performTest("LinkTag", 3895, null, "javadocsnippet_LinkTag_AlongWith_ReplaceTag.pass", this.sourceLevel);
+    }
+
+    public void testLinkTag_AlongWith_SubStringAndReplaceTag() throws Exception {
+        if (!TreeShims.isJDKVersionRelease18_Or_Above()) {
+            return;
+        }
+        this.sourceLevel = getLatestSourceVersion();
+        EXTRA_OPTIONS.add("--enable-preview");
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
+        performTest("LinkTag", 4353, null, "javadocsnippet_LinkTag_AlongWith_SubStringAndReplaceTag.pass", this.sourceLevel);
+    }
+
+    public void testLinkTag_EmptyReplacementValue() throws Exception {
+        if (!TreeShims.isJDKVersionRelease18_Or_Above()) {
+            return;
+        }
+        this.sourceLevel = getLatestSourceVersion();
+        EXTRA_OPTIONS.add("--enable-preview");
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
+        performTest("LinkTag", 4758, null, "javadocsnippet_LinkTag_EmptyReplacementValue.pass", this.sourceLevel);
+    }
+    
     private static final List<String> EXTRA_OPTIONS = new ArrayList<>();
     @ServiceProvider(service = CompilerOptionsQueryImplementation.class, position = 100)
     public static class TestCompilerOptionsQueryImplementation implements CompilerOptionsQueryImplementation {

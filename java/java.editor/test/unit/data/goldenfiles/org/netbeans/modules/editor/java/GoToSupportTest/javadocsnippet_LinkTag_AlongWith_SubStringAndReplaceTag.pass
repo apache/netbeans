@@ -1,0 +1,10 @@
+<html><body><font size='+0'><b><a href='*0'>test.&#x200B;Test</a></b></font><pre>public void <b>testLinkTag_AlongWith_SubStringAndReplaceTag</b>()</pre><p>A simple program
+
+ <pre><code> class HelloWorld {
+     public static void main(String... args) {
+         
+         System.<span style="background-color:yellow;">r</span><span style="background-color:yellow;">e</span><span style="background-color:yellow;">p</span><span style="background-color:yellow;">l</span><span style="background-color:yellow;">a</span><span style="background-color:yellow;">c</span><span style="background-color:yellow;">e</span><span style="background-color:yellow;">d</span>out.println("Hello World!");
+ }
+ }
+ 
+</code></pre><p>

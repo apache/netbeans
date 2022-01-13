@@ -1455,7 +1455,9 @@ public class ElementJavadoc {
     }
     
     private String applyReplaceTag(String codeLine, String tagAction, String replacement, String tagActionValue, List<SourceLineCharterMapperToHtmlTag> eachCharList){
-        
+        if(replacement == null || replacement.isEmpty()){//To-do handle error here
+            return codeLine;
+        }
         if (tagAction.equals("substring")) {
             int fromIndex = 0;
             while (fromIndex != -1) {
@@ -1473,11 +1475,7 @@ public class ElementJavadoc {
                     }
                     formattedLine.replace(fromIndex, fromIndex + tagActionValue.length(), replacement);
                     
-                    if (fromIndex == 0) {
-                        fromIndex += replacement.length();
-                    } else {
-                        fromIndex += Integer.compare(replacement.length(), tagActionValue.length());
-                    }
+                    fromIndex += replacement.length();
                     codeLine = formattedLine.toString();
                 }
             }
@@ -1491,9 +1489,6 @@ public class ElementJavadoc {
                 matcher.appendReplacement(formattedLine, replacement);
                 start = start + matcher.start();
                 end = formattedLine.length();
-                System.out.println("For list deleting : " + start + ":" + (start + matcher.end() - matcher.start()));
-                System.out.println("For list adding : " + start + ":" + end);
-               
                 for (int i = start; i < (start + matcher.end() - matcher.start()); i++) {
                     eachCharList.remove(start);
                 }

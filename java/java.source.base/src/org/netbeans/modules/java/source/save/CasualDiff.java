@@ -68,6 +68,7 @@ import com.sun.tools.javac.tree.JCTree.JCAssert;
 import com.sun.tools.javac.tree.JCTree.JCAssign;
 import com.sun.tools.javac.tree.JCTree.JCAssignOp;
 import com.sun.tools.javac.tree.JCTree.JCBinary;
+import com.sun.tools.javac.tree.JCTree.JCBindingPattern;
 import com.sun.tools.javac.tree.JCTree.JCBlock;
 import com.sun.tools.javac.tree.JCTree.JCBreak;
 import com.sun.tools.javac.tree.JCTree.JCCase;
@@ -107,6 +108,7 @@ import com.sun.tools.javac.tree.JCTree.JCRequires;
 import com.sun.tools.javac.tree.JCTree.JCReturn;
 import com.sun.tools.javac.tree.JCTree.JCStatement;
 import com.sun.tools.javac.tree.JCTree.JCSwitch;
+import com.sun.tools.javac.tree.JCTree.JCSwitchExpression;
 import com.sun.tools.javac.tree.JCTree.JCSynchronized;
 import com.sun.tools.javac.tree.JCTree.JCThrow;
 import com.sun.tools.javac.tree.JCTree.JCTry;
@@ -171,7 +173,6 @@ import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import org.openide.util.NbCollections;
 import javax.lang.model.type.TypeKind;
-import org.netbeans.modules.java.source.TreeShims;
 import org.netbeans.modules.java.source.transform.TreeHelpers;
 
 public class CasualDiff {
@@ -1934,24 +1935,24 @@ public class CasualDiff {
         return bounds[1];
     }
 
-    protected int diffSwitchExpression(Tree oldT, Tree newT, int[] bounds) {
+    protected int diffSwitchExpression(JCSwitchExpression oldT, JCSwitchExpression newT, int[] bounds) {
         int localPointer = bounds[0];
 
         // rename in switch
-        int[] selectorBounds = getBounds((JCTree)TreeShims.getExpressions(oldT).get(0));
+        int[] selectorBounds = getBounds(oldT.selector);
         copyTo(localPointer, selectorBounds[0]);
-        localPointer = diffTree((JCTree)TreeShims.getExpressions(oldT).get(0), (JCTree)TreeShims.getExpressions(newT).get(0), selectorBounds);
+        localPointer = diffTree(oldT.selector, newT.selector, selectorBounds);
 
         tokenSequence.move(selectorBounds[1]);
         do { } while (tokenSequence.moveNext() && JavaTokenId.LBRACE != tokenSequence.token().id());
         tokenSequence.moveNext();
         copyTo(localPointer, localPointer = tokenSequence.offset());
-        PositionEstimator est = EstimatorFactory.cases(TreeShims.getCases(oldT), TreeShims.getCases(newT), diffContext);
+        PositionEstimator est = EstimatorFactory.cases(oldT.cases, newT.cases, diffContext);
         ListBuffer<JCTree.JCCase> oldTcases = new ListBuffer<JCTree.JCCase>();
-        for (CaseTree t : TreeShims.getCases(oldT))
+        for (CaseTree t : oldT.getCases())
             oldTcases.append((JCTree.JCCase)t);
         ListBuffer<JCTree.JCCase> newTcases = new ListBuffer<JCTree.JCCase>();
-        for (CaseTree t : TreeShims.getCases(newT))
+        for (CaseTree t : newT.getCases())
             newTcases.append((JCTree.JCCase)t);
         localPointer = diffList(oldTcases.toList(), newTcases.toList(), localPointer, est, Measure.MEMBER, printer);
 
@@ -1959,21 +1960,8 @@ public class CasualDiff {
         return bounds[1];
     }
 
-    protected int diffBindingPattern(Tree oldT, Tree newT, int[] bounds) {
-        VariableTree oldVar = getBindingVariableTree(oldT);
-        VariableTree newVar = getBindingVariableTree(newT);
-
-        return diffTree((JCTree) oldVar, (JCTree) newVar, bounds);
-    }
-
-    @NbBundle.Messages("ERR_PatternMatchingInstanceOf=Transformation for pattern matching in instanceof not supported on this version of JDK. Please run on JDK 16 or newer, or install nb-javac.")
-    public static VariableTree getBindingVariableTree(Tree node) {
-        try {
-            Class bpt = Class.forName("com.sun.source.tree.BindingPatternTree"); //NOI18N
-            return (VariableTree)bpt.getDeclaredMethod("getVariable").invoke(node); //NOI18N
-        } catch (NoSuchMethodException | ClassNotFoundException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
-            throw TreeShims.<RuntimeException>throwAny(Exceptions.attachLocalizedMessage(ex, Bundle.ERR_PatternMatchingInstanceOf()));
-        }
+    protected int diffBindingPattern(JCBindingPattern oldT, JCBindingPattern newT, int[] bounds) {
+        return diffTree((JCTree) oldT.var, (JCTree) newT.var, bounds);
     }
 
     protected int diffCase(JCCase oldT, JCCase newT, int[] bounds) {
@@ -5744,20 +5732,18 @@ public class CasualDiff {
           case ANNOTATED_TYPE:
               retVal = diffAnnotatedType((JCAnnotatedType)oldT, (JCAnnotatedType)newT, elementBounds);
               break;
+          case SWITCH_EXPRESSION:
+              retVal = diffSwitchExpression((JCSwitchExpression) oldT, (JCSwitchExpression) newT, elementBounds);
+              break;
+          case BINDINGPATTERN:
+              retVal = diffBindingPattern((JCBindingPattern) oldT, (JCBindingPattern) newT, elementBounds);
+              break;
           default:
               // handle special cases like field groups and enum constants
               if (oldT.getKind() == Kind.OTHER) {
                   if (oldT instanceof FieldGroupTree) {
                       return diffFieldGroup((FieldGroupTree) oldT, (FieldGroupTree) newT, elementBounds);
                   }
-                  break;
-              }
-              if(oldT.getKind().toString().equals(TreeShims.SWITCH_EXPRESSION)){
-                  retVal = diffSwitchExpression(oldT, newT, elementBounds);
-                  break;
-              }
-              if(oldT.getKind().toString().equals(TreeShims.BINDING_PATTERN)){
-                  retVal = diffBindingPattern(oldT, newT, elementBounds);
                   break;
               }
               String msg = "Diff not implemented: " +
@@ -5875,7 +5861,7 @@ public class CasualDiff {
     }
 
     private boolean matchCase(JCCase t1, JCCase t2) {
-        return treesMatch(t1.pat, t2.pat) && listsMatch(t1.stats, t2.stats);
+        return listsMatch(t1.labels, t2.labels) && listsMatch(t1.stats, t2.stats);
     }
 
     private boolean matchSynchronized(JCSynchronized t1, JCSynchronized t2) {

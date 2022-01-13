@@ -20,6 +20,7 @@ package org.netbeans.modules.java.lsp.server.explorer;
 
 import java.awt.Image;
 import java.net.URI;
+import java.util.concurrent.CompletionStage;
 import org.openide.nodes.Node;
 
 /**
@@ -35,6 +36,8 @@ public interface TreeNodeRegistry {
     Node findNode(int id);
     TreeViewProvider providerOf(int id);
     ImageDataOrIndex imageOrIndex(Image im);
+    
+    CompletionStage<TreeViewProvider> createProvider(String id);
     
     public class ImageDataOrIndex {
         public final URI    imageURI;

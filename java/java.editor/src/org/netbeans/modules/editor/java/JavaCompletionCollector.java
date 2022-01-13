@@ -904,9 +904,7 @@ public class JavaCompletionCollector implements CompletionCollector {
             StringBuilder insertText = new StringBuilder();
             StringBuilder sortParams = new StringBuilder();
             label.append(simpleName).append("(");
-            if (elem.getKind() == ElementKind.METHOD || offset - substitutionOffset == simpleName.length()) {
-                insertText.append(simpleName);
-            }
+            insertText.append(simpleName);
             if (!inImport && !memberRef) {
                 insertText.append(CodeStyle.getDefault(doc).spaceBeforeMethodCallParen() ? " (" : "(");
             }

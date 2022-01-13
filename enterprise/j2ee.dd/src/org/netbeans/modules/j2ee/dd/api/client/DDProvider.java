@@ -198,6 +198,7 @@ public final class DDProvider {
      * or the implementation in j2eeserver gets changed.
      * @deprecated do not use - temporary workaround that exposes the schema2beans implementation
      */
+    @Deprecated
     public BaseBean getBaseBean(CommonDDBean bean) {
         BaseBean result;
         if (bean instanceof BaseBean) {

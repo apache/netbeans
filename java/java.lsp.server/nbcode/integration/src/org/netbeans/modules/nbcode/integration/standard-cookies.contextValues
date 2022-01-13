@@ -23,3 +23,4 @@
 # Names will be converted to "class:<name>" tokens.
 
 org.netbeans.api.actions.Openable
+[org.netbeans.api.]project.Project

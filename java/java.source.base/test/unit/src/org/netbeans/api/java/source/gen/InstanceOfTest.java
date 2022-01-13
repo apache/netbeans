@@ -40,7 +40,6 @@ import org.netbeans.api.java.source.TestUtilities;
 import org.netbeans.api.java.source.TreeMaker;
 import org.netbeans.api.java.source.WorkingCopy;
 import org.netbeans.junit.NbTestSuite;
-import org.netbeans.modules.java.completion.TreeShims;
 
 /**
  * Tests correct adding cast to statement.
@@ -94,13 +93,8 @@ public class InstanceOfTest extends GeneratorTestMDRCompat {
                 MethodTree method = (MethodTree) clazz.getMembers().get(1);
                 IfTree ift = (IfTree) method.getBody().getStatements().get(0);
                 InstanceOfTree it = (InstanceOfTree) ((ParenthesizedTree) ift.getCondition()).getExpression();
-                InstanceOfTree nue = null;
-                if (TreeShims.isJDKVersionSupportEnablePreview()) {
-                    nue = make.InstanceOf(it.getExpression(), make.BindingPattern("t", it.getType()));
-                } else {
-                    VariableTree var = make.Variable(make.Modifiers(EnumSet.noneOf(Modifier.class)), "t", it.getType(), null);
-                    nue = make.InstanceOf(it.getExpression(), make.BindingPattern(var));
-                }
+                VariableTree var = make.Variable(make.Modifiers(EnumSet.noneOf(Modifier.class)), "t", it.getType(), null);
+                InstanceOfTree nue = make.InstanceOf(it.getExpression(), make.BindingPattern(var));
                 workingCopy.rewrite(it, nue);
             }
 

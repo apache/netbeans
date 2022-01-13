@@ -53,7 +53,6 @@ import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.java.source.BootClassPathUtil;
 import org.netbeans.modules.java.source.ElementUtils;
 import org.netbeans.modules.java.source.TestUtil;
-import org.netbeans.modules.java.source.TreeShims;
 import org.netbeans.modules.java.source.usages.IndexUtil;
 import org.netbeans.spi.java.classpath.ClassPathProvider;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
@@ -432,11 +431,9 @@ public class ElementHandleTest extends NbTestCase {
             ElementKind.CLASS,
             ElementKind.INTERFACE,
             ElementKind.ENUM,
-            ElementKind.ANNOTATION_TYPE
+            ElementKind.ANNOTATION_TYPE,
+            ElementKind.RECORD
         }));
-        ElementKind recordKind = TreeShims.getRecordKind();
-        if (recordKind != null)
-            allowed.add(recordKind);
         for (ElementKind aek : allowed) {
             ElementHandle<TypeElement> eh = ElementHandle.createTypeElementHandle(aek, "org.me.Foo");    //NOI18N
             assertEquals(aek, eh.getKind());

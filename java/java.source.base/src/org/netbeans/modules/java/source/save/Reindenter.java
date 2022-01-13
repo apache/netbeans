@@ -35,6 +35,7 @@ import com.sun.source.tree.ModuleTree;
 import com.sun.source.tree.NewArrayTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.StatementTree;
+import com.sun.source.tree.SwitchExpressionTree;
 import com.sun.source.tree.SwitchTree;
 import com.sun.source.tree.SynchronizedTree;
 import com.sun.source.tree.Tree;
@@ -81,7 +82,6 @@ import org.netbeans.modules.editor.indent.spi.Context.Region;
 import org.netbeans.modules.editor.indent.spi.ExtraLock;
 import org.netbeans.modules.editor.indent.spi.IndentTask;
 import org.netbeans.modules.java.source.NoJavacHelper;
-import org.netbeans.modules.java.source.TreeShims;
 import org.netbeans.modules.java.source.TreeUtilitiesAccessor;
 import org.netbeans.modules.java.source.parsing.FileObjects;
 import org.netbeans.modules.java.source.parsing.JavacParser;
@@ -692,7 +692,7 @@ public class Reindenter implements IndentTask {
                 if (statements != null) {
                     tokenId = JavaTokenId.COLON;
                 } else {
-                    Tree caseBody = TreeShims.getBody((CaseTree) last);
+                    Tree caseBody = ((CaseTree) last).getBody();
                     if (caseBody instanceof StatementTree) {
                         statements = Collections.singletonList((StatementTree) caseBody);
                         tokenId = JavaTokenId.ARROW;
@@ -813,14 +813,14 @@ public class Reindenter implements IndentTask {
                     currentIndent += cs.getLabelIndent();
                 }
                 break;
+            case SWITCH_EXPRESSION:
+                currentIndent = getSwitchIndent(startOffset, endOffset,nextTokenId,lastPos,currentIndent) ;
+                break;
+            case RECORD:
+                currentIndent = getRecordIndent(startOffset, endOffset, nextTokenId, lastPos, currentIndent);
+                break;
             default:
-                if (last.getKind().toString().equals(TreeShims.SWITCH_EXPRESSION)) {
-                   currentIndent = getSwitchIndent(startOffset, endOffset,nextTokenId,lastPos,currentIndent) ;
-                }
-                else if (last.getKind().toString().equals(TreeShims.RECORD)) {
-                    currentIndent = getRecordIndent(startOffset, endOffset, nextTokenId, lastPos, currentIndent);
-                }
-                else currentIndent = getContinuationIndent(path, currentIndent);
+                currentIndent = getContinuationIndent(path, currentIndent);
                 break;
         }
         return currentIndent;
@@ -845,7 +845,13 @@ public class Reindenter implements IndentTask {
             }
         } else {
             Tree t = null;
-            for (CaseTree ct : TreeShims.getCases(last)) {
+            List<? extends CaseTree> cases;
+            if (last.getKind() == Tree.Kind.SWITCH) {
+                cases = ((SwitchTree) last).getCases();
+            } else {
+                cases = ((SwitchExpressionTree) last).getCases();
+            }
+            for (CaseTree ct : cases) {
                 if (getEndPosition(ct) > startOffset) {
                     break;
                 }
@@ -858,7 +864,7 @@ public class Reindenter implements IndentTask {
                     List<? extends StatementTree> statements = ct.getStatements();
                     if(statements == null)
                     {
-                        Tree caseBody = TreeShims.getBody(ct);
+                        Tree caseBody = ct.getBody();
                         if (caseBody instanceof StatementTree) {
                             statements = Collections.singletonList((StatementTree) caseBody);
                         }
@@ -893,7 +899,7 @@ public class Reindenter implements IndentTask {
                     if (last.getKind() == Tree.Kind.SWITCH) {
                         currentIndent = getStmtIndent(startOffset, endOffset, EnumSet.of(JavaTokenId.RPAREN), getEndPosition(((SwitchTree) last).getExpression()) - 1, currentIndent);
                     } else {
-                        currentIndent = getStmtIndent(startOffset, endOffset, EnumSet.of(JavaTokenId.RPAREN), getEndPosition(TreeShims.getExpressions(last).get(0)) - 1, currentIndent);
+                        currentIndent = getStmtIndent(startOffset, endOffset, EnumSet.of(JavaTokenId.RPAREN), getEndPosition(((SwitchExpressionTree) last).getExpression()) - 1, currentIndent);
                     }
                 }
             }

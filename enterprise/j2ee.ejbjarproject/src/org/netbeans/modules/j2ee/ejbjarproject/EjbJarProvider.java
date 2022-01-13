@@ -112,6 +112,7 @@ public final class EjbJarProvider extends J2eeModuleProvider
     }
     
     /** @deprecated use getJavaSources */
+    @Deprecated
     public ClassPath getClassPath() {
         ClassPathProvider cpp = project.getClassPathProvider();
         if (cpp != null) {

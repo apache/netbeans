@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.bugzilla.exceptionreporter;
+package org.netbeans.modules.utilities;
 
 import org.openide.util.actions.SystemAction;
 import org.openide.util.HelpCtx;
@@ -35,7 +35,7 @@ import org.openide.util.NbBundle;
  * 
  * @author Tomas Stupka
  */
-@ActionID(id = "org.netbeans.modules.bugzilla.exceptionreporter.ReportNBIssueAction", category = "Help")
+@ActionID(id = "org.netbeans.modules.utilities.ReportNBIssueAction", category = "Help")
 @ActionRegistration(lazy = false, displayName = "#CTL_ReportIssueAction")
 @ActionReference(path = "Menu/Help", position = 450)
 public class ReportNBIssueAction extends SystemAction {

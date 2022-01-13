@@ -31,6 +31,7 @@
                 <attr name="instanceCreate" methodvalue="org.netbeans.modules.java.lsp.server.explorer.NodeActionsProvider.forFile"/>
                 <attr name="action:netbeans.db.explorer.action.Connect" stringvalue="Database"/>
                 <attr name="action:netbeans.db.explorer.action.Disconnect" stringvalue="Database"/>
+                <attr name="action:netbeans.db.explorer.action.makepreferred" stringvalue="Database"/>
             </file>
         </folder>
     </folder>
@@ -40,6 +41,9 @@
         </folder>
         <folder name="database.connections">
             <file name="database-cookies.contextValues" url="database-cookies.contextValues"/>
+        </folder>
+        <folder name="foundProjects">
+            <attr name="explorerConfirmsDelete" boolvalue="true"/>
         </folder>
     </folder>
     <folder name="Debugger">
@@ -52,6 +56,10 @@
         </folder>
     </folder>
     <folder name="Templates">
+        <folder name="Classes">
+            <attr name="new.sourceGroup" stringvalue="java"/>
+            <attr name="new.sourceHint" stringvalue="main"/>
+        </folder>
         <folder name="Project">
             <file name="AntJava_hidden"/>
             <file name="ClientSide_hidden"/>
@@ -76,6 +84,8 @@
             <file name="Samples_hidden"/>
         </folder>
         <folder name="UnitTests">
+            <attr name="new.sourceGroup" stringvalue="java"/>
+            <attr name="new.sourceHint" stringvalue="test"/>
             <file name="EmptyJUnitTest.java_hidden"/>
             <file name="TestSuite.java_hidden"/>
             <file name="org-netbeans-modules-junit-ui-wizards-SimpleTestCaseWizardIterator_hidden"/>

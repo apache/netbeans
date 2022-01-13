@@ -152,8 +152,8 @@ public abstract class NbLaunchDelegate {
                 }
             }
         };
-        Project prj = FileOwnerQuery.getOwner(toRun);
         if (nativeImageFile == null) {
+            Project prj = FileOwnerQuery.getOwner(toRun);
             class W extends Writer {
                 @Override
                 public void write(char[] cbuf, int off, int len) throws IOException {
@@ -186,7 +186,14 @@ public abstract class NbLaunchDelegate {
                         context.setProcessExecutorHandle(e.getProgressHandle());
                     }
                 });
-                Object contextObject = (preferProjActions && prj != null) ? prj : toRun;
+                boolean singleFile = !(preferProjActions && prj != null);
+                if (!singleFile) {
+                    String command = providerAndCommand.second();
+                    if (ActionProvider.COMMAND_DEBUG_TEST_SINGLE.equals(command)) {
+                        singleFile = true;
+                    }
+                }
+                Object contextObject = (singleFile) ? toRun : prj;
                 TestProgressHandler testProgressHandler = ctx.getClient().getNbCodeCapabilities().hasTestResultsSupport() ? new TestProgressHandler(ctx.getClient(), context.getClient(), Utils.toUri(toRun)) : null;
                 Lookup launchCtx = new ProxyLookup(
                         testProgressHandler != null ? Lookups.fixed(contextObject, ioContext, progress, testProgressHandler) : Lookups.fixed(contextObject, ioContext, progress),
@@ -542,17 +549,22 @@ public abstract class NbLaunchDelegate {
         ActionProvider provider = null;
         String command = null;
         Collection<ActionProvider> actionProviders = findActionProviders(prj);
-        Lookup testLookup = preferProjActions ? Lookups.singleton(prj) : (singleMethod != null) ? Lookups.fixed(toRun, singleMethod) : Lookups.singleton(toRun);
+        Lookup testLookup = preferProjActions && prj != null ? Lookups.singleton(prj) : (singleMethod != null) ? Lookups.fixed(toRun, singleMethod) : Lookups.singleton(toRun);
         String[] actions;
         if (!mainSource && singleMethod != null) {
             actions = debug ? new String[] {SingleMethod.COMMAND_DEBUG_SINGLE_METHOD}
                             : new String[] {SingleMethod.COMMAND_RUN_SINGLE_METHOD};
         } else {
-            if (preferProjActions) {
+            if (preferProjActions && prj != null) {
                 actions = debug ? mainSource ? new String[] {ActionProvider.COMMAND_DEBUG}
-                                             : new String[] {ActionProvider.COMMAND_DEBUG_TEST_SINGLE, ActionProvider.COMMAND_DEBUG}
+                                             : new String[] {ActionProvider.COMMAND_DEBUG_TEST_SINGLE, ActionProvider.COMMAND_DEBUG} //TODO: COMMAND_DEBUG_TEST is missing
                                 : mainSource ? new String[] {ActionProvider.COMMAND_RUN}
                                              : new String[] {ActionProvider.COMMAND_TEST, ActionProvider.COMMAND_RUN};
+                if (debug && !mainSource) {
+                    // We are calling COMMAND_DEBUG_TEST_SINGLE instead of a missing COMMAND_DEBUG_TEST
+                    // This is why we need to add the file to the lookup
+                    testLookup = (singleMethod != null) ? Lookups.fixed(toRun, singleMethod) : Lookups.singleton(toRun);
+                }
             } else {
                 actions = debug ? mainSource ? new String[] {ActionProvider.COMMAND_DEBUG_SINGLE}
                                              : new String[] {ActionProvider.COMMAND_DEBUG_TEST_SINGLE, ActionProvider.COMMAND_DEBUG_SINGLE}

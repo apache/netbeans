@@ -745,6 +745,7 @@ public final class PayaraDDProvider {
      * determined.
      * @deprecated
      */
+    @Deprecated
     public static ASDDVersion getASDDVersion(RootInterface rootDD) {
         return getASDDVersion(rootDD, null);
     }

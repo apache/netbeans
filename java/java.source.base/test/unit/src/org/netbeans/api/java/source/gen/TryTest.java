@@ -1039,15 +1039,6 @@ public class TryTest extends GeneratorTestMDRCompat {
             "    }\n" +
             "}\n"
             );
-        String extraSemicolon;
-        //XXX: a difference between vanilla javac and nb-javac:
-        if (NoJavacHelper.hasNbJavac()) {
-            //with nb-javac wil preserve the semicolon:
-            extraSemicolon = ";";
-        } else {
-            //with vanilla javac, we don't:
-            extraSemicolon = "";
-        }
         String golden =
             "package hierbas.del.litoral;\n" +
             "\n" +
@@ -1055,7 +1046,7 @@ public class TryTest extends GeneratorTestMDRCompat {
             "\n" +
             "public class Test {\n" +
             "    public void taragui() {\n" +
-            "        try (InputStream in = new FileInputStream(\"\")" + extraSemicolon + ") {\n" +
+            "        try (InputStream in = new FileInputStream(\"\")) {\n" +
             "        }\n" +
             "    }\n" +
             "}\n";

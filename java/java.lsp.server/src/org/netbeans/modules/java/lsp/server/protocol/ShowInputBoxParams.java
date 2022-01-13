@@ -42,14 +42,24 @@ public class ShowInputBoxParams {
      */
     @NonNull
     private String value;
+    
+    /**
+     * Controls if a password input is shown. Password input hides the typed text.
+     */
+    private boolean password = false;
 
     public ShowInputBoxParams() {
         this("", "");
     }
 
     public ShowInputBoxParams(@NonNull final String prompt, @NonNull final String value) {
+        this(prompt, value, false);
+    }
+    
+    public ShowInputBoxParams(@NonNull final String prompt, @NonNull final String value, final boolean password) {
         this.prompt = Preconditions.checkNotNull(prompt, "prompt");
         this.value = Preconditions.checkNotNull(value, "value");
+        this.password = password;
     }
 
     /**
@@ -82,6 +92,26 @@ public class ShowInputBoxParams {
      */
     public void setValue(@NonNull final String value) {
         this.value = Preconditions.checkNotNull(value, "value");
+    }
+    
+    /**
+     * Controls if a password input is shown. Password input hides the typed text.
+     * 
+     * @since 1.16
+     */
+    @Pure
+    @NonNull
+    public boolean isPassword() {
+        return password;
+    }
+
+    /**
+     * Controls if a password input is shown. Password input hides the typed text.
+     * 
+     * @since 1.16
+     */
+    public void setPassword(boolean password) {
+        this.password = password;
     }
 
     @Override

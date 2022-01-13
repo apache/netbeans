@@ -24,7 +24,6 @@ import com.sun.source.tree.*;
 import org.netbeans.api.java.source.*;
 import static org.netbeans.api.java.source.JavaSource.*;
 import org.netbeans.junit.NbTestSuite;
-import org.netbeans.modules.java.source.TreeShims;
 
 /**
  *
@@ -61,7 +60,7 @@ public class ModuleInfoTest extends GeneratorTestMDRCompat {
                 CompilationUnitTree cut = workingCopy.getCompilationUnit();
                 TreeMaker make = workingCopy.getTreeMaker();
 
-                ModuleTree moduleTree = TreeShims.getModule(cut);
+                ModuleTree moduleTree = cut.getModule();
                 ExpressionTree nju = make.QualIdent("hierbas.test");
                 workingCopy.rewrite(moduleTree.getName(), nju);
             }
@@ -95,7 +94,7 @@ public class ModuleInfoTest extends GeneratorTestMDRCompat {
                 workingCopy.toPhase(Phase.RESOLVED);
                 CompilationUnitTree cut = workingCopy.getCompilationUnit();
                 TreeMaker make = workingCopy.getTreeMaker();
-                ModuleTree moduleTree = TreeShims.getModule(cut);
+                ModuleTree moduleTree = cut.getModule();
                 ModuleTree nju = moduleTree;
                 for (DirectiveTree tree : moduleTree.getDirectives()) {
                     nju = make.removeModuleDirective(nju, tree);
@@ -131,7 +130,7 @@ public class ModuleInfoTest extends GeneratorTestMDRCompat {
                 CompilationUnitTree cut = workingCopy.getCompilationUnit();
                 TreeMaker make = workingCopy.getTreeMaker();
 
-                ModuleTree moduleTree = TreeShims.getModule(cut);
+                ModuleTree moduleTree = cut.getModule();
                 ExpressionTree name = make.QualIdent("java.base");
                 ModuleTree copy = make.insertModuleDirective(moduleTree, 0, make.Requires(false, false, name));
                 workingCopy.rewrite(moduleTree, copy);
@@ -164,7 +163,7 @@ public class ModuleInfoTest extends GeneratorTestMDRCompat {
                 workingCopy.toPhase(Phase.RESOLVED);
                 CompilationUnitTree cut = workingCopy.getCompilationUnit();
                 TreeMaker make = workingCopy.getTreeMaker();
-                ModuleTree moduleTree = TreeShims.getModule(cut);
+                ModuleTree moduleTree = cut.getModule();
                 ExpressionTree pkgName = make.QualIdent("hierbas.del.litoral");
                 ModuleTree copy = make.addModuleDirective(moduleTree, make.Exports(pkgName, Collections.emptyList()));
                 workingCopy.rewrite(moduleTree, copy);
@@ -196,7 +195,7 @@ public class ModuleInfoTest extends GeneratorTestMDRCompat {
                 CompilationUnitTree cut = workingCopy.getCompilationUnit();
                 TreeMaker make = workingCopy.getTreeMaker();
 
-                ModuleTree moduleTree = TreeShims.getModule(cut);
+                ModuleTree moduleTree = cut.getModule();
                 ExpressionTree pkgName = make.QualIdent("hierbas.del.litoral");
                 ModuleTree copy = make.addModuleDirective(moduleTree, make.Exports(pkgName, Collections.emptyList()));
                 workingCopy.rewrite(moduleTree, copy);

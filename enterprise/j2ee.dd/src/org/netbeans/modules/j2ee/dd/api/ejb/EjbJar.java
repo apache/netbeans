@@ -43,6 +43,7 @@ public interface EjbJar extends org.netbeans.modules.j2ee.dd.api.common.RootInte
      * @since 1.29
      */
     public static final String VERSION_3_2 = "3.2"; //NOI18N
+    public static final String VERSION_4_0 = "4.0"; //NOI18N
     public static final int STATE_VALID=0;
     public static final int STATE_INVALID_PARSABLE=1;
     public static final int STATE_INVALID_UNPARSABLE=2;
@@ -52,7 +53,7 @@ public interface EjbJar extends org.netbeans.modules.j2ee.dd.api.common.RootInte
     public static final String RELATIONSHIPS = "Relationships";	// NOI18N
     public static final String ASSEMBLY_DESCRIPTOR = "AssemblyDescriptor";	// NOI18N
     public static final String EJB_CLIENT_JAR = "EjbClientJar";	// NOI18N
-    
+
     /** Setter for version property.
      * Warning : Only the upgrade from lower to higher version is supported.
      * @param version ejb-jar version value

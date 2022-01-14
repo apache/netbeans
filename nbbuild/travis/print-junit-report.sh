@@ -52,9 +52,9 @@ for file in $realfiles ; do
         echo "      $err FAILED : $msg"
         xmllint --xpath "//testsuite/testcase[@classname='${classname}' and @name='${err}']/failure/text()" $file 2> /dev/null | sed -r 's/^(.*$)/          \1/g'
     done 
-    text=$(xmllint --nocdata --xpath "//testsuite//system-out/text()" $file)
+    text=$(xmllint --nocdata --xpath "//testsuite//system-out/text()" $file 2> /dev/null)
     [ -n "$text" ] && { echo "Stdout ----------%<----------%<-------------%<-------------%<---------------" ; echo "$text" ; }
-    text=$(xmllint --nocdata --xpath "//testsuite//system-err/text()" $file)
+    text=$(xmllint --nocdata --xpath "//testsuite//system-err/text()" $file 2> /dev/null)
     [ -n "$text" ] && { echo "Stderr ----------%<----------%<-------------%<-------------%<---------------" ; echo "$text" ; }
     echo "------------- End suite $classname ------------"
     

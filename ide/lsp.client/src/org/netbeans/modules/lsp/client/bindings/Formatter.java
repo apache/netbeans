@@ -73,11 +73,11 @@ public class Formatter implements ReformatTask {
         if (file != null) {
             LSPBindings bindings = LSPBindings.getBindings(file);
             if (bindings != null) {
-                Boolean documentFormatting = bindings.getInitResult().getCapabilities().getDocumentFormattingProvider();
-                Boolean rangeFormatting = bindings.getInitResult().getCapabilities().getDocumentRangeFormattingProvider();
-                if (rangeFormatting != null && rangeFormatting) {
+                boolean documentFormatting = Utils.isEnabled(bindings.getInitResult().getCapabilities().getDocumentFormattingProvider());
+                boolean rangeFormatting = Utils.isEnabled(bindings.getInitResult().getCapabilities().getDocumentRangeFormattingProvider());
+                if (rangeFormatting) {
                     rangeFormat(file, bindings);
-                } else if (documentFormatting != null && documentFormatting) {
+                } else if (documentFormatting) {
                     documentFormat(file, bindings);
                 }
             }

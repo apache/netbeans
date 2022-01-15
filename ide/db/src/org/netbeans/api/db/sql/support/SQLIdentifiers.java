@@ -24,6 +24,7 @@ import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 import org.openide.util.Lookup;
 import org.openide.util.Parameters;
 
@@ -48,7 +49,11 @@ public final class SQLIdentifiers {
      * @return a {@code Quoter} instance.
      */
     public static Quoter createQuoter(DatabaseMetaData dbmd) {
-        return new DatabaseMetaDataQuoter(dbmd);
+        if(dbmd == null) {
+            return new FallbackQuoter();
+        } else {
+            return new DatabaseMetaDataQuoter(dbmd);
+        }
     }
 
 
@@ -365,4 +370,66 @@ public final class SQLIdentifiers {
         }
     }
 
+    private static class FallbackQuoter extends Quoter {
+
+        private static final Pattern ASCII_IDENTIFIER = Pattern.compile("[a-zA-z][a-zA-Z0-9_]+");
+
+        public FallbackQuoter() {
+            super("\"");
+        }
+
+        @Override
+        boolean alreadyQuoted(String identifier) {
+            Parameters.notNull("identifier", identifier);
+            return getEndQuoteString(identifier) != null;
+        }
+
+        @Override
+        public String quoteIfNeeded(String identifier) {
+            Parameters.notNull("identifier", identifier);
+            if (!alreadyQuoted(identifier) && !ASCII_IDENTIFIER.matcher(identifier).matches()) {
+                return doQuote(identifier);
+            } else {
+                return identifier;
+            }
+        }
+
+        @Override
+        public String quoteAlways(String identifier) {
+            Parameters.notNull("identifier", identifier);
+            if (!alreadyQuoted(identifier)) {
+                return doQuote(identifier);
+            } else {
+                return identifier;
+            }
+        }
+
+        private String getEndQuoteString(String identifier) {
+            if (identifier.startsWith("\"") && identifier.endsWith("\"")) {
+                return "\"";
+            } else if (identifier.startsWith("`") && identifier.endsWith("`")) {
+                return "`";
+            } else if (identifier.startsWith("[") && identifier.endsWith("]")) {
+                return "]";
+            }
+            return null;
+        }
+
+        @Override
+        public String unquote(String identifier) {
+            Parameters.notNull("identifier", identifier);
+            String workidentifier = identifier.trim();
+            String endQuoteString = getEndQuoteString(identifier);
+            if(endQuoteString == null) {
+                return workidentifier;
+            }
+
+            String result = workidentifier;
+            // Extract the contents of the quoted string
+            result = result.substring(1, result.length() - 1);
+            // remove potentially present quotes
+            result = result.replace(endQuoteString + endQuoteString, endQuoteString);
+            return result;
+        }
+    }
 }

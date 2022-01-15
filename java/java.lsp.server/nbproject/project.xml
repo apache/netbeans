@@ -462,6 +462,17 @@
                         <specification-version>1.101</specification-version>
                     </run-dependency>
                 </dependency>
+
+                <dependency>
+                    <code-name-base>org.netbeans.modules.projectuiapi</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <release-version>1</release-version>
+                        <implementation-version/>
+                    </run-dependency>
+                </dependency>
+
                 <dependency>
                     <code-name-base>org.netbeans.modules.queries</code-name-base>
                     <build-prerequisite/>
@@ -738,6 +749,7 @@
                     <test-dependency>
                         <code-name-base>org.netbeans.modules.projectui</code-name-base>
                         <recursive/>
+                        <compile-dependency/>
                     </test-dependency>
                     <test-dependency>
                         <code-name-base>org.netbeans.modules.settings</code-name-base>

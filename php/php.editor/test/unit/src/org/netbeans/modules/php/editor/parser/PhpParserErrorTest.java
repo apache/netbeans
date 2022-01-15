@@ -1270,4 +1270,20 @@ public class PhpParserErrorTest extends PHPTestBase {
         checkErrors("testfiles/parser/php81/newInInitializersWithPropertyError.php");
     }
 
+    public void testPureIntersectionTypes_01() throws Exception {
+        checkErrors("testfiles/parser/php81/pureIntersectionTypes_01.php");
+    }
+
+    public void testPureIntersectionTypesWithUnionTypeError_01() throws Exception {
+        checkErrors("testfiles/parser/php81/pureIntersectionTypesWithUnionTypeError_01.php");
+    }
+
+    public void testPureIntersectionTypesWithUnionTypeError_02() throws Exception {
+        checkErrors("testfiles/parser/php81/pureIntersectionTypesWithUnionTypeError_02.php");
+    }
+
+    public void testPureIntersectionTypesWithUnionTypeError_03() throws Exception {
+        checkErrors("testfiles/parser/php81/pureIntersectionTypesWithUnionTypeError_03.php");
+    }
+
 }

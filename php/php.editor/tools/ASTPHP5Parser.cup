@@ -412,6 +412,7 @@ terminal T_COALESCE;
 terminal T_COALESCE_EQUAL;
 terminal T_ATTRIBUTE;
 terminal String T_READONLY;
+terminal T_AMPERSAND_NOT_FOLLOWED_BY_VAR_OR_VARARG; /* & */
 
 /* Non terminals */
 
@@ -578,6 +579,9 @@ non terminal Expression class_type;
 non terminal Expression class_type_without_static;
 non terminal List<Expression> union_type;
 non terminal List<Expression> union_type_without_static;
+non terminal List<Expression> intersection_type;
+non terminal List<Expression> intersection_type_without_static;
+non terminal ampersand;
 non terminal Expression optional_return_type;
 non terminal VariableBase r_variable;
 non terminal Integer variable_modifiers;
@@ -648,6 +652,7 @@ precedence left T_BOOLEAN_AND;
 precedence left T_OR;
 precedence left T_KOVA;
 precedence left T_REFERENCE;
+precedence left T_AMPERSAND_NOT_FOLLOWED_BY_VAR_OR_VARARG;
 precedence left T_ELLIPSIS;
 precedence left T_COALESCE;
 
@@ -1825,7 +1830,7 @@ is_reference ::=
     RESULT = Boolean.FALSE;
 :}
 
-| T_REFERENCE
+| ampersand
 {:
     RESULT = Boolean.TRUE;
 :}
@@ -2092,7 +2097,7 @@ variable:var
     RESULT = var;
 :}
 
-| T_REFERENCE:start variable:var
+| ampersand:start variable:var
 {:
     Reference reference = new Reference (startleft, varright, var);
     RESULT = reference;
@@ -2503,6 +2508,11 @@ class_type:type
 {:
     RESULT = new UnionType(listleft, listright, list);
 :}
+
+| intersection_type:list
+{:
+    RESULT = new IntersectionType(listleft, listright, list);
+:}
 ;
 
 class_type ::=
@@ -2553,6 +2563,22 @@ class_type:type1 T_OR class_type:type2
 :}
 ;
 
+intersection_type ::=
+class_type:type1 T_AMPERSAND_NOT_FOLLOWED_BY_VAR_OR_VARARG class_type:type2
+{:
+    List list = new ArrayList<>();
+    list.add(type1);
+    list.add(type2);
+    RESULT = list;
+:}
+
+| intersection_type:list T_AMPERSAND_NOT_FOLLOWED_BY_VAR_OR_VARARG class_type:type
+{:
+    list.add(type);
+    RESULT = list;
+:}
+;
+
 type_expr_without_static ::=
 class_type_without_static:type
 {:
@@ -2568,6 +2594,11 @@ class_type_without_static:type
 {:
     RESULT = new UnionType(listleft, listright, list);
 :}
+
+| intersection_type_without_static:list
+{:
+    RESULT = new IntersectionType(listleft, listright, list);
+:}
 ;
 
 union_type_without_static ::=
@@ -2580,6 +2611,22 @@ class_type_without_static:type1 T_OR class_type_without_static:type2
 :}
 
 | union_type_without_static:list T_OR class_type_without_static:type
+{:
+    list.add(type);
+    RESULT = list;
+:}
+;
+
+intersection_type_without_static ::=
+class_type_without_static:type1 T_AMPERSAND_NOT_FOLLOWED_BY_VAR_OR_VARARG class_type_without_static:type2
+{:
+    List list = new ArrayList<>();
+    list.add(type1);
+    list.add(type2);
+    RESULT = list;
+:}
+
+| intersection_type_without_static:list T_AMPERSAND_NOT_FOLLOWED_BY_VAR_OR_VARARG class_type_without_static:type
 {:
     list.add(type);
     RESULT = list;
@@ -3396,12 +3443,12 @@ T_LIST:start T_OPEN_PARENTHESE array_pair_list:varList T_CLOSE_PARENTHESE:close 
     RESULT = new Assignment(varleft, exprright, var, Assignment.Type.EQUAL, expr);
 :}
 
-| variable:var T_EQUAL T_REFERENCE:reftoken variable:refvar
+| variable:var T_EQUAL ampersand:reftoken variable:refvar
 {:
     RESULT = new Assignment(varleft, refvarright, var, Assignment.Type.EQUAL, new Reference(reftokenleft, refvarright, refvar));
 :}
 
-| variable:var T_EQUAL T_REFERENCE:reftoken T_NEW:start class_name_reference:className ctor_arguments:ctor
+| variable:var T_EQUAL ampersand:reftoken T_NEW:start class_name_reference:className ctor_arguments:ctor
 {:
     ClassInstanceCreation classInstanceCreation = new ClassInstanceCreation(startleft, ctorright, className, ctor);
     Reference reference = new Reference(reftokenleft, ctorright, classInstanceCreation);
@@ -3527,6 +3574,11 @@ T_LIST:start T_OPEN_PARENTHESE array_pair_list:varList T_CLOSE_PARENTHESE:close 
 :}
 
 | expr:expr1 T_REFERENCE expr:expr2
+{:
+    RESULT = new InfixExpression(expr1left, expr2right, expr1 , InfixExpression.OperatorType.AND, expr2);
+:}
+
+| expr:expr1 T_AMPERSAND_NOT_FOLLOWED_BY_VAR_OR_VARARG expr:expr2
 {:
     RESULT = new InfixExpression(expr1left, expr2right, expr1 , InfixExpression.OperatorType.AND, expr2);
 :}
@@ -3910,7 +3962,7 @@ lexical_var_list:list T_COMMA T_VARIABLE:var
     RESULT = list;
 :}
 
-| lexical_var_list:list T_COMMA T_REFERENCE:ref T_VARIABLE:var
+| lexical_var_list:list T_COMMA ampersand:ref T_VARIABLE:var
 {:
     list.add(new Reference (refleft, varright, new Variable(varleft, varright, var)));
     RESULT = list;
@@ -3923,7 +3975,7 @@ lexical_var_list:list T_COMMA T_VARIABLE:var
     RESULT = list;
 :}
 
-| T_REFERENCE:ref T_VARIABLE:var
+| ampersand:ref T_VARIABLE:var
 {:
     List list = new LinkedList();
     list.add(new Reference (refleft, varright, new Variable(varleft, varright, var)));
@@ -4321,7 +4373,7 @@ static_scalar_value:scalar
 
 | T_NEW:n class_name_reference:className ctor_arguments:ctor
 {:
-    RESULT = new ClassInstanceCreation(nleft, ctorright, className, ctor);;
+    RESULT = new ClassInstanceCreation(nleft, ctorright, className, ctor);
 :}
 ;
 
@@ -4404,6 +4456,11 @@ static_array_creation:arrayCreation
 :}
 
 | static_scalar_value:expr1 T_REFERENCE static_scalar_value:expr2
+{:
+    RESULT = new InfixExpression(expr1left, expr2right, expr1 , InfixExpression.OperatorType.AND, expr2);
+:}
+
+| static_scalar_value:expr1 T_AMPERSAND_NOT_FOLLOWED_BY_VAR_OR_VARARG static_scalar_value:expr2
 {:
     RESULT = new InfixExpression(expr1left, expr2right, expr1 , InfixExpression.OperatorType.AND, expr2);
 :}
@@ -4698,6 +4755,11 @@ static_array_pair_list ::=
 possible_comma ::=
 /* empty */
 | T_COMMA
+;
+
+ampersand ::=
+T_REFERENCE
+| T_AMPERSAND_NOT_FOLLOWED_BY_VAR_OR_VARARG
 ;
 
 non_empty_static_array_pair_list ::=
@@ -5357,7 +5419,7 @@ expr:key T_DOUBLE_ARROW expr:value
     RESULT = unpack;
 :}
 
-| expr:expr T_DOUBLE_ARROW T_REFERENCE:start w_variable:var
+| expr:expr T_DOUBLE_ARROW ampersand:start w_variable:var
 {:
     Reference value = new Reference(startleft, varright, var);
     ArrayElement element = new ArrayElement(exprleft, varright, expr, value);
@@ -5365,7 +5427,7 @@ expr:key T_DOUBLE_ARROW expr:value
 :}
 
 
-| T_REFERENCE:start w_variable:var
+| ampersand:start w_variable:var
 {:
     Reference ref = new Reference(startleft, varright, var);
     ArrayElement element = new ArrayElement(startleft, varright, ref);

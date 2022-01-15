@@ -33,6 +33,7 @@ import org.netbeans.modules.php.editor.parser.astnodes.ASTNode;
 import org.netbeans.modules.php.editor.parser.astnodes.BodyDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.ConstantDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.Identifier;
+import org.netbeans.modules.php.editor.parser.astnodes.IntersectionType;
 import org.netbeans.modules.php.editor.parser.astnodes.visitors.DefaultVisitor;
 import org.openide.filesystems.FileObject;
 import org.openide.util.NbBundle;
@@ -96,6 +97,12 @@ public final class PHP81UnhandledError extends UnhandledErrorRule {
                 return;
             }
             checkConstantDeclaration(node);
+            super.visit(node);
+        }
+
+        @Override
+        public void visit(IntersectionType node) {
+            createError(node);
             super.visit(node);
         }
 

@@ -42,6 +42,9 @@ public final class Utils {
             case ASTPHP5Symbols.T_ABSTRACT:
                 name = "T_ABSTRACT"; //NOI18N
                 break;
+            case ASTPHP5Symbols.T_AMPERSAND_NOT_FOLLOWED_BY_VAR_OR_VARARG:
+                name = "T_AMPERSAND_NOT_FOLLOWED_BY_VAR_OR_VARARG"; //NOI18N
+                break;
             case ASTPHP5Symbols.T_AND_EQUAL:
                 name = "T_AND_EQUAL"; //NOI18N
                 break;

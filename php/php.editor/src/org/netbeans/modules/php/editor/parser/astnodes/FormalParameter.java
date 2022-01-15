@@ -129,6 +129,10 @@ public class FormalParameter extends ASTNode implements Attributed {
         return getParameterType() instanceof UnionType;
     }
 
+    public boolean isIntersectionType() {
+        return getParameterType() instanceof IntersectionType;
+    }
+
     public Expression getParameterName() {
         return parameterName;
     }

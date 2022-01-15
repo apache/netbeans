@@ -1,0 +1,165 @@
+<testresult testFile='pureIntersectionTypesWithUnionTypeError_03.php'>
+    <scanner>
+        <token id='T_CLASS' start='814' end='819'>
+            <text>class</text>
+        </token>
+        <token id='T_STRING' start='820' end='821'>
+            <text>X</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='822' end='823'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='823' end='824'>
+            <text>}</text>
+        </token>
+        <token id='T_CLASS' start='825' end='830'>
+            <text>class</text>
+        </token>
+        <token id='T_STRING' start='831' end='832'>
+            <text>Y</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='833' end='834'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='834' end='835'>
+            <text>}</text>
+        </token>
+        <token id='T_CLASS' start='836' end='841'>
+            <text>class</text>
+        </token>
+        <token id='T_STRING' start='842' end='843'>
+            <text>Z</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='844' end='845'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='845' end='846'>
+            <text>}</text>
+        </token>
+        <token id='T_CLASS' start='848' end='853'>
+            <text>class</text>
+        </token>
+        <token id='T_STRING' start='854' end='858'>
+            <text>Test</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='859' end='860'>
+            <text>{</text>
+        </token>
+        <token id='T_PUBLIC' start='866' end='872'>
+            <text>public</text>
+        </token>
+        <token id='T_FUNCTION' start='873' end='881'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='882' end='889'>
+            <text>getTest</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='889' end='890'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='890' end='891'>
+            <text>)</text>
+        </token>
+        <token id='T_NEKUDOTAIM' start='891' end='892'>
+            <text>:</text>
+        </token>
+        <token id='T_STRING' start='893' end='894'>
+            <text>X</text>
+        </token>
+        <token id='T_AMPERSAND_NOT_FOLLOWED_BY_VAR_OR_VARARG' start='894' end='895'>
+            <text>&amp;</text>
+        </token>
+        <token id='T_STRING' start='895' end='896'>
+            <text>Y</text>
+        </token>
+        <token id='T_OR' start='896' end='897'>
+            <text>|</text>
+        </token>
+        <token id='T_STRING' start='897' end='898'>
+            <text>Z</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='899' end='900'>
+            <text>{</text>
+        </token>
+        <token id='T_RETURN' start='909' end='915'>
+            <text>return</text>
+        </token>
+        <token id='T_VARIABLE' start='916' end='921'>
+            <text>$this</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='921' end='923'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='923' end='927'>
+            <text>test</text>
+        </token>
+        <token id='T_SEMICOLON' start='927' end='928'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='933' end='934'>
+            <text>}</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='935' end='936'>
+            <text>}</text>
+        </token>
+        <token id='EOF' start='937' end='937'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='937'>
+        <Comments>
+            <Comment start='6' end='813' commentType='multiLine'/>
+            <Comment start='6' end='813' commentType='multiLine'/>
+        </Comments>
+        <Statements>
+            <ClassDeclaration start='814' end='824' modifier='NONE'>
+                <ClassName>
+                    <Identifier start='820' end='821' name='X'/>
+                </ClassName>
+                <SuperClassName>
+                </SuperClassName>
+                <Interfaces>
+                </Interfaces>
+                <Block start='822' end='824' isCurly='true'>
+                </Block>
+            </ClassDeclaration>
+            <ClassDeclaration start='825' end='835' modifier='NONE'>
+                <ClassName>
+                    <Identifier start='831' end='832' name='Y'/>
+                </ClassName>
+                <SuperClassName>
+                </SuperClassName>
+                <Interfaces>
+                </Interfaces>
+                <Block start='833' end='835' isCurly='true'>
+                </Block>
+            </ClassDeclaration>
+            <ClassDeclaration start='836' end='846' modifier='NONE'>
+                <ClassName>
+                    <Identifier start='842' end='843' name='Z'/>
+                </ClassName>
+                <SuperClassName>
+                </SuperClassName>
+                <Interfaces>
+                </Interfaces>
+                <Block start='844' end='846' isCurly='true'>
+                </Block>
+            </ClassDeclaration>
+            <ASTError start='848' end='896'/>
+            <ASTError start='897' end='900'/>
+            <ReturnStatement start='909' end='928'>
+                <FieldAccess start='916' end='927' isNullsafe='false'>
+                    <Variable start='916' end='921' isDollared='true'>
+                        <Identifier start='917' end='921' name='this'/>
+                    </Variable>
+                    <Field>
+                        <Variable start='923' end='927' isDollared='false'>
+                            <Identifier start='923' end='927' name='test'/>
+                        </Variable>
+                    </Field>
+                </FieldAccess>
+            </ReturnStatement>
+            <ASTError start='0' end='928'/>
+        </Statements>
+    </Program>
+</testresult>

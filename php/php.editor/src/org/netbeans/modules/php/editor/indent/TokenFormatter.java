@@ -114,6 +114,7 @@ public class TokenFormatter {
         public boolean spaceAroundNullsafeObjectOp;
         public boolean spaceAroundDeclareEqual;
         public boolean spaceAroundUnionTypeSeparator;
+        public boolean spaceAroundIntersectionTypeSeparator;
         public boolean spaceAroundStringConcatOp;
         public boolean spaceAroundUnaryOps;
         public boolean spaceAroundBinaryOps;
@@ -273,6 +274,7 @@ public class TokenFormatter {
             spaceAroundNullsafeObjectOp = codeStyle.spaceAroundNullsafeObjectOps();
             spaceAroundDeclareEqual = codeStyle.spaceAroundDeclareEqual();
             spaceAroundUnionTypeSeparator = codeStyle.spaceAroundUnionTypeSeparator();
+            spaceAroundIntersectionTypeSeparator = codeStyle.spaceAroundIntersectionTypeSeparator();
             spaceAroundStringConcatOp = codeStyle.spaceAroundStringConcatOps();
             spaceAroundUnaryOps = codeStyle.spaceAroundUnaryOps();
             spaceAroundBinaryOps = codeStyle.spaceAroundBinaryOps();
@@ -1069,6 +1071,9 @@ public class TokenFormatter {
                                         break;
                                     case WHITESPACE_AROUND_UNION_TYPE_SEPARATOR:
                                         countSpaces = docOptions.spaceAroundUnionTypeSeparator ? 1 : 0;
+                                        break;
+                                    case WHITESPACE_AROUND_INTERSECTION_TYPE_SEPARATOR:
+                                        countSpaces = docOptions.spaceAroundIntersectionTypeSeparator ? 1 : 0;
                                         break;
                                     case WHITESPACE_AROUND_CONCAT_OP:
                                         countSpaces = docOptions.spaceAroundStringConcatOp ? 1 : 0;

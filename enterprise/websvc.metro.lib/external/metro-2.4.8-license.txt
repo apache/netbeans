@@ -1,9 +1,9 @@
 Name: Eclipse Metro
-Version: 2.4.4
+Version: 2.4.8
 Description: Eclipse Metro
 License: EDL-1.0
 Origin: Eclipse Foundation (https://eclipse-ee4j.github.io/metro-wsit/)
-Files: webservices-api-2.4.4.jar, webservices-extra-2.4.4.jar, webservices-extra-api-2.4.4.jar, webservices-rt-2.4.4.jar, webservices-tools-2.4.4.jar, webservices-api-2.4.4-javadoc.jar, webservices-extra-2.4.4-javadoc.jar, webservices-extra-api-2.4.4-javadoc.jar, webservices-rt-2.4.4-javadoc.jar, webservices-tools-2.4.4-javadoc.jar
+Files: webservices-api-2.4.8.jar, webservices-extra-2.4.8.jar, webservices-extra-api-2.4.8.jar, webservices-rt-2.4.8.jar, webservices-tools-2.4.8.jar, webservices-api-2.4.8-javadoc.jar, webservices-extra-2.4.8-javadoc.jar, webservices-extra-api-2.4.8-javadoc.jar, webservices-rt-2.4.8-javadoc.jar, webservices-tools-2.4.8-javadoc.jar
 
 Eclipse Distribution License - v 1.0
 

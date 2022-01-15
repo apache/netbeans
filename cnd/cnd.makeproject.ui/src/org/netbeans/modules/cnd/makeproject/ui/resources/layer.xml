@@ -27,7 +27,7 @@
                 <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.cnd.makeproject.ui.wizards.Bundle"/>
                 <attr name="instantiatingWizardURL" urlvalue="nbresloc:/org/netbeans/modules/cnd/makeproject/ui/resources/desktop.html"/>
 
-                <attr name="position" intvalue="850"/>
+                <attr name="position" intvalue="650"/>
                 <file name="makefile.xml">
                     <attr name="position" intvalue="100"/>
                     <attr name="template" boolvalue="true"/>

@@ -26,12 +26,6 @@ import org.netbeans.spi.options.OptionsPanelController;
 import org.openide.util.HelpCtx;
 import org.openide.util.Lookup;
 
-@OptionsPanelController.SubRegistration(
-    id=CndUIConstants.TOOLS_OPTIONS_CND_TOOLS_ID,
-    location=CndUIConstants.TOOLS_OPTIONS_CND_CATEGORY_ID,
-    displayName="#TAB_ToolsTab", // NOI18N
-    position=100
-)
 public final class ToolsPanelController extends OptionsPanelController {
 
     private ToolsPanel panel = new ToolsPanel("ConfiguringBuildTools"); // NOI18N

@@ -24,7 +24,7 @@ import java.nio.CharBuffer;
 import java.nio.charset.CharsetDecoder;
 import java.nio.charset.CoderResult;
 import java.nio.charset.CodingErrorAction;
-import sun.nio.cs.ThreadLocalCoders;
+import java.nio.charset.StandardCharsets;
 
 /**
  *
@@ -414,7 +414,7 @@ public class PathUtilities {
         StringBuffer sb = new StringBuffer(n);
         ByteBuffer bb = ByteBuffer.allocate(n);
         CharBuffer cb = CharBuffer.allocate(n);
-        CharsetDecoder dec = ThreadLocalCoders.decoderFor("UTF-8") // NOI18N
+        CharsetDecoder dec = StandardCharsets.UTF_8.newDecoder()
                 .onMalformedInput(CodingErrorAction.REPLACE)
                 .onUnmappableCharacter(CodingErrorAction.REPLACE);
 

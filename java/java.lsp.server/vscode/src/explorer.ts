@@ -1,23 +1,61 @@
 import { disconnect } from 'process';
 import * as vscode from 'vscode';
+import { ThemeIcon } from 'vscode';
 import {  LanguageClient } from 'vscode-languageclient/node';
 import { NbLanguageClient } from './extension';
 import { NodeChangedParams, NodeInfoNotification, NodeInfoRequest } from './protocol';
 
 const doLog : boolean = false;
+
+/**
+ * Cached image information.
+ */
+class CachedImage {
+  constructor(
+    /**
+     * Base URI of the image, if available.
+     */
+    public baseUri? : string,
+
+    /**
+     * Icon URI as sent by the LSP server. Images translated to ThemeIcons have this field undefined.
+     */
+    public iconUri? : vscode.Uri,
+
+    /**
+     * Local resource or theme icon.
+     */
+    public icon? : string | ThemeIcon,
+
+    /**
+     * Additional matched values
+     */
+    public values? : string[],
+  ) {}
+}
+
 export class TreeViewService extends vscode.Disposable {  
   
   private handler : vscode.Disposable | undefined;
   private client : NbLanguageClient;
   private trees : Map<string, vscode.TreeView<Visualizer>> = new Map();
-  private images : Map<number, vscode.Uri> = new Map();
+  private images : Map<number, CachedImage> = new Map();
   private providers : Map<number, VisualizerProvider> = new Map();
   log : vscode.OutputChannel;
-  
-  constructor (log : vscode.OutputChannel, c : NbLanguageClient, disposeFunc : () => void) {
-    super(() => { this.disposeAllViews(); disposeFunc(); });
+  private entries : ImageEntry[] = [];
+
+  constructor (log : vscode.OutputChannel, c : NbLanguageClient, dd : vscode.Disposable[]) {
+    super(() => { 
+      this.disposeAllViews(); 
+      for (const d of dd) {
+        d?.dispose();
+      }
+    });
     this.log = log;
     this.client = c;
+
+    this.refreshImages();
+    dd.push(vscode.extensions.onDidChange(() => this.refreshImages()));
   }
 
   getClient() : NbLanguageClient {
@@ -73,14 +111,99 @@ export class TreeViewService extends vscode.Disposable {
     }
   }
 
-  imageUri(nodeData : NodeInfoRequest.Data) : vscode.Uri | undefined {
-    if (nodeData.iconUri) {
-      const uri : vscode.Uri = vscode.Uri.parse(nodeData.iconUri)
-      this.images.set(nodeData.iconIndex, uri);
-      return uri;
-    } else {
-      return this.images.get(nodeData.iconIndex);
+  imageUri(nodeData : NodeInfoRequest.Data) : vscode.Uri | string | ThemeIcon | undefined {
+    let ci : CachedImage | undefined;
+    if (nodeData.iconIndex) {
+      ci = this.images.get(nodeData.iconIndex);
+      if (ci && ci.baseUri) {
+        // hack because of bad protocol: will be fixed when client actively asks for icon data and server will not cache icons.
+        const r = this.findProductIcon(ci.baseUri, nodeData.name, nodeData.contextValue);
+        if (r) {
+          return r;
+        }
+      }
     }
+
+    if (!ci) {
+      if (nodeData.iconDescriptor?.baseUri) {
+        const r = this.findProductIcon(nodeData.iconDescriptor.baseUri, nodeData.name, nodeData.contextValue);
+        // override the icon with local.
+        if (r) {
+          ci = new CachedImage(nodeData.iconDescriptor.baseUri, undefined, r, [ nodeData.name, nodeData.contextValue ]);
+          this.images.set(nodeData.iconIndex, ci);
+        }
+      }
+      if (!ci) {
+        // hardcode visual vscode's File icons for regular files:
+        if (nodeData.resourceUri && nodeData.contextValue.includes('is:file')) {
+          const uri : vscode.Uri | undefined  = nodeData.iconUri ? vscode.Uri.parse(nodeData.iconUri) : undefined;
+          // do not cache
+          return ThemeIcon.File;
+        }
+      }
+      if (!ci && nodeData.iconUri) {
+          const uri : vscode.Uri = vscode.Uri.parse(nodeData.iconUri);
+          ci = new CachedImage(nodeData?.iconDescriptor?.baseUri, uri, undefined);
+          this.images.set(nodeData.iconIndex, ci);
+      }
+    }
+    return ci?.icon ? ci.icon : ci?.iconUri;
+  }
+
+  public setTranslations(entries : ImageEntry[]) {
+    this.entries = entries;
+  }
+
+  public findProductIcon(res : string, ...values: string[]) : string | ThemeIcon | undefined {
+  outer: for (let e of this.entries) {
+      if (e.uriRegexp.exec(res)) {
+        if (e.valueRegexps) {
+          let s : string = " " + values.join(" ") + " ";
+          for (let vr of e.valueRegexps) {
+            if (!vr.exec(s)) {
+              continue outer;
+            }
+          }
+        }
+        if (e.codeicon === '*file') {
+          return ThemeIcon.File;
+        } else if (e.codeicon == '*folder') {
+          return ThemeIcon.Folder;
+        } else if (e.iconPath) {
+          return e.iconPath;
+        }
+        return new ThemeIcon(e.codeicon);
+      }
+    }
+    return undefined;
+  }
+
+  public refreshImages() {
+    let newEntries : ImageEntry[] = [];
+    for (const ext of vscode.extensions.all) {
+      const iconMapping = ext.packageJSON?.contributes && ext.packageJSON?.contributes['netbeans.iconMapping'];
+      if (Array.isArray(iconMapping)) {
+        for (const m of iconMapping) {
+          const reString = m?.uriExpression;
+          if (reString) {
+            try {
+              let re : RegExp = new RegExp(reString);
+              let vals = [];
+              if (m?.valueMatch) {
+                for (const vm of m.valueMatch) {
+                  const re = new RegExp(vm);
+                  vals.push(re);
+                }
+              }
+              newEntries.push(new ImageEntry(re, m?.codeicon, m?.iconPath, vals));
+            } catch (e) {
+              console.log("Invalid icon mapping in extension %s: %s -> %s", ext.id, reString, m?.codicon);
+            }
+          }
+        }
+      }
+    }
+    this.setTranslations(newEntries);
   }
 }
 
@@ -369,7 +492,7 @@ export class Visualizer extends vscode.TreeItem {
   pendingChange : boolean = false;
   constructor(
     public data : NodeInfoRequest.Data,
-    public image : vscode.Uri | undefined
+    public image : vscode.Uri | string | ThemeIcon | undefined
   ) {
     super(data.label, data.collapsibleState);
     this.visId = visualizerSerial++;
@@ -449,6 +572,31 @@ export class Visualizer extends vscode.TreeItem {
   }
 }
 
+class ImageEntry {
+  constructor(
+    readonly uriRegexp : RegExp,
+    readonly codeicon : string,
+    readonly iconPath? : string,
+    readonly valueRegexps? : RegExp[]
+    ) {}
+}
+class ImageTranslator {
+  private entries : ImageEntry[] = [];
+
+  public setTranslations(entries : ImageEntry[]) {
+    this.entries = entries;
+  }
+
+  public findProductIcon(res : string) : string | undefined {
+    for (let e of this.entries) {
+      if (e.uriRegexp.exec(res)) {
+        return e.codeicon;
+      }
+    }
+    return undefined;
+  }
+}
+
 export async function createViewProvider(c : NbLanguageClient, id : string) : Promise<VisualizerProvider> {
   const ts = c.findTreeViewService();
   const client = ts.getClient();
@@ -487,9 +635,7 @@ export function createTreeViewService(log : vscode.OutputChannel, c : NbLanguage
             vscode.window.showErrorMessage('Cannot delete node ' + v.label);
         }
     });
-    const ts : TreeViewService = new TreeViewService(log, c, () => {
-      d.dispose()
-    });
+    const ts : TreeViewService = new TreeViewService(log, c, [ d ]);
     return ts;
 }
 

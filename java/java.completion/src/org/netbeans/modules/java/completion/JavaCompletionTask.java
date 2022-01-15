@@ -119,7 +119,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
     }
     
     public static interface LambdaItemFactory<T> extends ItemFactory<T> {
-        T createLambdaItem(CompilationInfo info, TypeElement elem, DeclaredType type, int substitutionOffset, boolean addSemicolon);
+        T createLambdaItem(CompilationInfo info, TypeElement elem, DeclaredType type, int substitutionOffset, boolean expression, boolean addSemicolon);
     }
     
     public static interface ModuleItemFactory<T> extends ItemFactory<T> {
@@ -3344,7 +3344,8 @@ public final class JavaCompletionTask<T> extends BaseTask {
                             addTypeDotClassMembers(env, type);
                         } else if (controller.getSourceVersion().compareTo(SourceVersion.RELEASE_8) >= 0
                                 && elements.isFunctionalInterface(element) && itemFactory instanceof LambdaItemFactory) {
-                            results.add(((LambdaItemFactory<T>)itemFactory).createLambdaItem(env.getController(), element, type, anchorOffset, env.addSemicolon()));
+                            results.add(((LambdaItemFactory<T>)itemFactory).createLambdaItem(env.getController(), element, type, anchorOffset, true, env.addSemicolon()));
+                            results.add(((LambdaItemFactory<T>)itemFactory).createLambdaItem(env.getController(), element, type, anchorOffset, false, env.addSemicolon()));
                         }
                         final boolean startsWith = startsWith(env, element.getSimpleName().toString());
                         final boolean withinScope = withinScope(env, element);

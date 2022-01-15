@@ -177,7 +177,7 @@ public final class JavaCompletionItemFactory implements JavaCompletionTask.TypeC
     }
 
     @Override
-    public JavaCompletionItem createLambdaItem(CompilationInfo info, TypeElement elem, DeclaredType type, int substitutionOffset, boolean addSemicolon) {
-        return JavaCompletionItem.createLambdaItem(info, elem, type, substitutionOffset, addSemicolon);
+    public JavaCompletionItem createLambdaItem(CompilationInfo info, TypeElement elem, DeclaredType type, int substitutionOffset, boolean expression, boolean addSemicolon) {
+        return JavaCompletionItem.createLambdaItem(info, elem, type, substitutionOffset, expression, addSemicolon);
     }
 }

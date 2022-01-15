@@ -86,6 +86,8 @@ import org.openide.util.NbBundle;
 import org.openide.xml.XMLUtil;
 import org.netbeans.swing.plaf.LFCustoms;
 
+import static javax.lang.model.type.TypeKind.VOID;
+
 /**
  *
  * @author Dusan Balek
@@ -256,8 +258,8 @@ public abstract class JavaCompletionItem implements CompletionItem {
         return new InitializeAllConstructorItem(info, isDefault, fields, superConstructor, parent, substitutionOffset);
     }
 
-    public static JavaCompletionItem createLambdaItem(CompilationInfo info, TypeElement elem, DeclaredType type, int substitutionOffset, boolean addSemicolon) {
-        return new LambdaCompletionItem(info, elem, type, substitutionOffset, addSemicolon);
+    public static JavaCompletionItem createLambdaItem(CompilationInfo info, TypeElement elem, DeclaredType type, int substitutionOffset, boolean expression, boolean addSemicolon) {
+        return new LambdaCompletionItem(info, elem, type, substitutionOffset, expression, addSemicolon);
     }
 
     private static CompletionItem createExcludeItem(CharSequence name) {
@@ -993,6 +995,7 @@ public abstract class JavaCompletionItem implements CompletionItem {
             return simpleName;
         }
 
+        @Override
         public List<CompletionItem> getSubItems() {
             return subItems;
         }
@@ -4147,13 +4150,14 @@ public abstract class JavaCompletionItem implements CompletionItem {
 
         private ElementHandle<ExecutableElement> handle;
         private ArrayList<ParamDesc> params;
-        private boolean addSemicolon;
-        private String typeName;
+        private final boolean expression;
+        private final boolean addSemicolon;
+        private final String typeName;
         private String sortText;
         private String leftText;
         private String rightText;
         
-        public LambdaCompletionItem(CompilationInfo info, TypeElement elem, DeclaredType type, int substitutionOffset, boolean addSemicolon) {
+        public LambdaCompletionItem(CompilationInfo info, TypeElement elem, DeclaredType type, int substitutionOffset, boolean expression, boolean addSemicolon) {
             super(substitutionOffset);
             ExecutableElement desc = info.getElementUtilities().getDescriptorElement(elem);
             this.handle = ElementHandle.create(desc);
@@ -4171,6 +4175,7 @@ public abstract class JavaCompletionItem implements CompletionItem {
             TypeMirror retType = descType.getReturnType();
             this.addSemicolon = addSemicolon && retType.getKind() == TypeKind.VOID;
             this.typeName = Utilities.getTypeName(info, retType, false).toString();
+            this.expression = expression;
         }
 
         @Override
@@ -4215,7 +4220,11 @@ public abstract class JavaCompletionItem implements CompletionItem {
                         lText.append(", "); //NOI18N
                     }
                 }
-                lText.append(") -> {...}"); //NOI18N
+                if (expression) {
+                    lText.append(") -> expr."); //NOI18N
+                } else {
+                    lText.append(") -> {...}"); //NOI18N
+                }
                 return lText.toString();
             }
             return leftText;
@@ -4249,8 +4258,8 @@ public abstract class JavaCompletionItem implements CompletionItem {
             boolean spaceAroundLambdaArrow = CodeStyle.getDefault(c.getDocument()).spaceAroundLambdaArrow();
             sb.append(spaceAroundLambdaArrow ? " ->" : "->"); //NOI18N
             sb.append(getIndent(c, spaceAroundLambdaArrow, false));                        
-            sb.append("{\n"); //NOI18N
-            sb.append(getIndent(c));
+            sb.append("{"); //NOI18N
+//            sb.append(getIndent(c));
             sb.append(addSemicolon ? "};" : "}"); //NOI18N
             return sb;
         }
@@ -4289,7 +4298,12 @@ public abstract class JavaCompletionItem implements CompletionItem {
                                     while (method != null && path.getLeaf() != path.getCompilationUnit()) {
                                         Tree tree = path.getLeaf();
                                         if (tree.getKind() == Tree.Kind.LAMBDA_EXPRESSION) {
-                                            BlockTree body = GeneratorUtilities.get(copy).createDefaultLambdaBody((LambdaExpressionTree)tree, method);
+                                            Tree body;
+                                            if (expression && method.getReturnType().getKind() != VOID) {
+                                                body = GeneratorUtilities.get(copy).createDefaultLambdaExpression((LambdaExpressionTree)tree, method);
+                                            } else {
+                                                body = GeneratorUtilities.get(copy).createDefaultLambdaBody((LambdaExpressionTree)tree, method);
+                                            }
                                             copy.rewrite(((LambdaExpressionTree)tree).getBody(), body);
                                             break;
                                         }

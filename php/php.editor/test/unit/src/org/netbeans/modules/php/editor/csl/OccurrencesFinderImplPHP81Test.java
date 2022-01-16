@@ -145,4 +145,140 @@ public class OccurrencesFinderImplPHP81Test extends OccurrencesFinderImplTestBas
         checkOccurrences(getTestPath(), "#[AnAttribute(new F^oo(x: 1))]", true);
     }
 
+    public void testPureIntersectionType_01a() throws Exception {
+        checkOccurrences(getTestPath(), "class Fo^o {}", true);
+    }
+
+    public void testPureIntersectionType_02a() throws Exception {
+        checkOccurrences(getTestPath(), "function paramType(F^oo&Bar $test): void {", true);
+    }
+
+    public void testPureIntersectionType_03a() throws Exception {
+        checkOccurrences(getTestPath(), "function returnType(): Fo^o&Bar {", true);
+    }
+
+    public void testPureIntersectionType_04a() throws Exception {
+        checkOccurrences(getTestPath(), "private Fo^o&Bar $test; // class", true);
+    }
+
+    public void testPureIntersectionType_05a() throws Exception {
+        checkOccurrences(getTestPath(), "public function paramType(F^oo&Bar $test): void { // class", true);
+    }
+
+    public void testPureIntersectionType_06a() throws Exception {
+        checkOccurrences(getTestPath(), "public function returnType(): Fo^o&Bar { // class", true);
+    }
+
+    public void testPureIntersectionType_07a() throws Exception {
+        checkOccurrences(getTestPath(), "private F^oo&Bar $test; // trait", true);
+    }
+
+    public void testPureIntersectionType_08a() throws Exception {
+        checkOccurrences(getTestPath(), "public function paramType(Fo^o&Bar $test1, Foo&Bar $test2): void { // trait", true);
+    }
+
+    public void testPureIntersectionType_09a() throws Exception {
+        checkOccurrences(getTestPath(), "public function paramType(Foo&Bar $test1, Fo^o&Bar $test2): void { // trait", true);
+    }
+
+    public void testPureIntersectionType_10a() throws Exception {
+        checkOccurrences(getTestPath(), "public function returnType(): F^oo&Bar { // trait", true);
+    }
+
+    public void testPureIntersectionType_11a() throws Exception {
+        checkOccurrences(getTestPath(), "public function paramType(F^oo&Bar $test);", true);
+    }
+
+    public void testPureIntersectionType_12a() throws Exception {
+        checkOccurrences(getTestPath(), "public function returnType(): Fo^o&Bar;", true);
+    }
+
+    public void testPureIntersectionType_13a() throws Exception {
+        checkOccurrences(getTestPath(), "$closure = function(F^oo&Bar $test1, $test2): void {};", true);
+    }
+
+    public void testPureIntersectionType_14a() throws Exception {
+        checkOccurrences(getTestPath(), "$closure = function(int $test): Fo^o&Bar {};", true);
+    }
+
+    public void testPureIntersectionType_15a() throws Exception {
+        checkOccurrences(getTestPath(), "$arrow = fn(F^oo&Bar $test) => $test;", true);
+    }
+
+    public void testPureIntersectionType_16a() throws Exception {
+        checkOccurrences(getTestPath(), "$arrow = fn(Fo^o&Bar $test): Foo&Bar => $test;", true);
+    }
+
+    public void testPureIntersectionType_17a() throws Exception {
+        checkOccurrences(getTestPath(), "$arrow = fn(Foo&Bar $test): Fo^o&Bar => $test;", true);
+    }
+
+    public void testPureIntersectionType_01b() throws Exception {
+        checkOccurrences(getTestPath(), "class B^ar {}", true);
+    }
+
+    public void testPureIntersectionType_02b() throws Exception {
+        checkOccurrences(getTestPath(), "function paramType(Foo&Ba^r $test): void {", true);
+    }
+
+    public void testPureIntersectionType_03b() throws Exception {
+        checkOccurrences(getTestPath(), "function returnType(): Foo&B^ar {", true);
+    }
+
+    public void testPureIntersectionType_04b() throws Exception {
+        checkOccurrences(getTestPath(), "private Foo&Ba^r $test; // class", true);
+    }
+
+    public void testPureIntersectionType_05b() throws Exception {
+        checkOccurrences(getTestPath(), "public function paramType(Foo&Ba^r $test): void { // class", true);
+    }
+
+    public void testPureIntersectionType_06b() throws Exception {
+        checkOccurrences(getTestPath(), "public function returnType(): Foo&B^ar { // class", true);
+    }
+
+    public void testPureIntersectionType_07b() throws Exception {
+        checkOccurrences(getTestPath(), "private Foo&B^ar $test; // trait", true);
+    }
+
+    public void testPureIntersectionType_08b() throws Exception {
+        checkOccurrences(getTestPath(), "public function paramType(Foo&B^ar $test1, Foo&Bar $test2): void { // trait", true);
+    }
+
+    public void testPureIntersectionType_09b() throws Exception {
+        checkOccurrences(getTestPath(), "public function paramType(Foo&Bar $test1, Foo&B^ar $test2): void { // trait", true);
+    }
+
+    public void testPureIntersectionType_10b() throws Exception {
+        checkOccurrences(getTestPath(), "public function returnType(): Foo&Ba^r { // trait", true);
+    }
+
+    public void testPureIntersectionType_11b() throws Exception {
+        checkOccurrences(getTestPath(), "public function paramType(Foo&B^ar $test);", true);
+    }
+
+    public void testPureIntersectionType_12b() throws Exception {
+        checkOccurrences(getTestPath(), "public function returnType(): Foo&B^ar;", true);
+    }
+
+    public void testPureIntersectionType_13b() throws Exception {
+        checkOccurrences(getTestPath(), "$closure = function(Foo&Ba^r $test1, $test2): void {};", true);
+    }
+
+    public void testPureIntersectionType_14b() throws Exception {
+        checkOccurrences(getTestPath(), "$closure = function(int $test): Foo&B^ar {};", true);
+    }
+
+    public void testPureIntersectionType_15b() throws Exception {
+        checkOccurrences(getTestPath(), "$arrow = fn(Foo&B^ar $test) => $test;", true);
+    }
+
+    public void testPureIntersectionType_16b() throws Exception {
+        checkOccurrences(getTestPath(), "$arrow = fn(Foo&B^ar $test): Foo&Bar => $test;", true);
+    }
+
+    public void testPureIntersectionType_17b() throws Exception {
+        checkOccurrences(getTestPath(), "$arrow = fn(Foo&Bar $test): Foo&B^ar => $test;", true);
+    }
+
 }

@@ -32,6 +32,7 @@ public final class Type {
     private Type() {
     }
 
+    public static final String SEPARATOR_INTERSECTION = "&"; // NOI18N
     public static final String SEPARATOR = "|"; // NOI18N
     public static final String STRING = "string"; //NOI18N
     public static final String REAL = "real"; //NOI18N
@@ -156,7 +157,27 @@ public final class Type {
         return StringUtils.implode(types, SEPARATOR);
     }
 
+    /**
+     * Create types separated by "&". e.g. T1&T2&T3
+     *
+     * @param types types
+     * @return types separated by "&"
+     */
+    public static String asIntersectionType(Collection<String> types) {
+        return StringUtils.implode(types, SEPARATOR_INTERSECTION);
+    }
+
     public static List<String> getMixedType() {
         return MIXED_TYPE;
+    }
+
+    /**
+     * Get the type separator.
+     *
+     * @param isIntersection
+     * @return "&" if it's intersection type, otherwise "|"
+     */
+    public static String getTypeSeparator(boolean isIntersection) {
+        return isIntersection ? SEPARATOR_INTERSECTION : SEPARATOR;
     }
 }

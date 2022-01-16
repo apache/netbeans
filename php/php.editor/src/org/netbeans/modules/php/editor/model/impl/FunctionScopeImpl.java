@@ -65,6 +65,7 @@ import org.netbeans.modules.php.editor.parser.astnodes.ASTErrorExpression;
 import org.netbeans.modules.php.editor.parser.astnodes.ArrowFunctionDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.Block;
 import org.netbeans.modules.php.editor.parser.astnodes.Expression;
+import org.netbeans.modules.php.editor.parser.astnodes.IntersectionType;
 import org.netbeans.modules.php.editor.parser.astnodes.LambdaFunctionDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.UnionType;
 import org.netbeans.modules.php.editor.parser.astnodes.Variable;
@@ -78,11 +79,13 @@ class FunctionScopeImpl extends ScopeImpl implements FunctionScope, VariableName
 
     private static final Logger LOGGER = Logger.getLogger(FunctionScopeImpl.class.getName());
     private static final String TYPE_SEPARATOR_REGEXP = "\\|"; //NOI18N
+    private static final String TYPE_SEPARATOR_INTERSECTION_REGEXP = "\\&"; //NOI18N
     private List<? extends ParameterElement> paremeters;
     private final boolean declaredReturnType;
     //@GuardedBy("this")
     private String returnType;
     private final boolean isReturnUnionType;
+    private final boolean isReturnIntersectionType;
 
     //new contructors
     FunctionScopeImpl(Scope inScope, FunctionDeclarationInfo info, String returnType, boolean isDeprecated) {
@@ -91,28 +94,31 @@ class FunctionScopeImpl extends ScopeImpl implements FunctionScope, VariableName
         this.returnType = returnType;
         declaredReturnType = !info.getReturnTypes().isEmpty();
         isReturnUnionType = info.getOriginalNode().getReturnType() instanceof UnionType;
+        isReturnIntersectionType = info.getOriginalNode().getReturnType() instanceof IntersectionType;
     }
 
     FunctionScopeImpl(Scope inScope, LambdaFunctionDeclarationInfo info) {
         super(inScope, info, PhpModifiers.fromBitMask(PhpModifiers.PUBLIC), info.getOriginalNode().getBody(), inScope.isDeprecated());
         this.paremeters = info.getParameters();
+        isReturnUnionType = info.getOriginalNode().getReturnType() instanceof UnionType;
+        isReturnIntersectionType = info.getOriginalNode().getReturnType() instanceof IntersectionType;
         List<QualifiedName> retTypes = info.getReturnTypes();
         if (!retTypes.isEmpty()) {
-            this.returnType = asUnionType(retTypes);
-        }
+           this.returnType = isReturnIntersectionType ? asIntersectionType(retTypes) : asUnionType(retTypes);
+         }
         declaredReturnType = !retTypes.isEmpty();
-        isReturnUnionType = info.getOriginalNode().getReturnType() instanceof UnionType;
     }
 
     FunctionScopeImpl(Scope inScope, ArrowFunctionDeclarationInfo info, Block block) {
         super(inScope, info, PhpModifiers.fromBitMask(PhpModifiers.PUBLIC), block, inScope.isDeprecated());
         this.paremeters = info.getParameters();
+        isReturnUnionType = info.getOriginalNode().getReturnType() instanceof UnionType;
+        isReturnIntersectionType = info.getOriginalNode().getReturnType() instanceof IntersectionType;
         List<QualifiedName> retTypes = info.getReturnTypes();
         if (!retTypes.isEmpty()) {
-            this.returnType = asUnionType(retTypes);
+            this.returnType = isReturnIntersectionType ? asIntersectionType(retTypes) : asUnionType(retTypes);
         }
         declaredReturnType = !retTypes.isEmpty();
-        isReturnUnionType = info.getOriginalNode().getReturnType() instanceof UnionType;
     }
 
     protected FunctionScopeImpl(Scope inScope, MethodDeclarationInfo info, String returnType, boolean isDeprecated) {
@@ -121,6 +127,7 @@ class FunctionScopeImpl extends ScopeImpl implements FunctionScope, VariableName
         this.returnType = returnType;
         declaredReturnType = info.getOriginalNode().getFunction().getReturnType() != null;
         isReturnUnionType = info.getOriginalNode().getFunction().getReturnType() instanceof UnionType;
+        isReturnIntersectionType = info.getOriginalNode().getFunction().getReturnType() instanceof IntersectionType;
     }
 
     protected FunctionScopeImpl(Scope inScope, MagicMethodDeclarationInfo info, String returnType, boolean isDeprecated) {
@@ -129,6 +136,7 @@ class FunctionScopeImpl extends ScopeImpl implements FunctionScope, VariableName
         this.returnType = returnType;
         declaredReturnType = false;
         isReturnUnionType = false;
+        isReturnIntersectionType = false;
     }
 
     FunctionScopeImpl(Scope inScope, BaseFunctionElement indexedFunction) {
@@ -142,6 +150,7 @@ class FunctionScopeImpl extends ScopeImpl implements FunctionScope, VariableName
         // XXX ???
         declaredReturnType = false;
         isReturnUnionType = element.isReturnUnionType();
+        isReturnIntersectionType = element.isReturnIntersectionType();
     }
 
     public static FunctionScopeImpl createElement(Scope scope, LambdaFunctionDeclaration node) {
@@ -232,7 +241,8 @@ class FunctionScopeImpl extends ScopeImpl implements FunctionScope, VariableName
         String type = getReturnType();
         if (type != null && type.length() > 0) {
             retval = new ArrayList<>();
-            for (String typeName : type.split(TYPE_SEPARATOR_REGEXP)) {
+            String[] typeNames = isReturnIntersectionType ? type.split(TYPE_SEPARATOR_INTERSECTION_REGEXP) : type.split(TYPE_SEPARATOR_REGEXP);
+            for (String typeName : typeNames) {
                 if (!VariousUtils.isSemiType(typeName)) {
                     retval.add(typeName);
                 }
@@ -248,7 +258,7 @@ class FunctionScopeImpl extends ScopeImpl implements FunctionScope, VariableName
         // NETBEANS-5062
         Scope inScope = getInScope();
         Set<TypeScope> cTypes = new HashSet<>();
-        List<String> typeNames = StringUtils.explode(types, Type.SEPARATOR);
+        List<String> typeNames = StringUtils.explode(types, Type.getTypeSeparator(isReturnIntersectionType));
         if (typeNames.contains(Type.STATIC)
                 && inScope instanceof TypeScope) {
             TypeScope typeScope = (TypeScope) inScope;
@@ -274,6 +284,11 @@ class FunctionScopeImpl extends ScopeImpl implements FunctionScope, VariableName
         return isReturnUnionType;
     }
 
+    @Override
+    public boolean isReturnIntersectionType() {
+        return isReturnIntersectionType;
+    }
+
     private static Set<String> recursionDetection = new HashSet<>(); //#168868
 
     private ReturnTypesDescriptor getReturnTypesDescriptor(String types, boolean resolveSemiTypes) {
@@ -283,7 +298,7 @@ class FunctionScopeImpl extends ScopeImpl implements FunctionScope, VariableName
     private ReturnTypesDescriptor getReturnTypesDescriptor(String types, boolean resolveSemiTypes, Collection<? extends TypeScope> callerTypes) {
         ReturnTypesDescriptor result = ReturnTypesDescriptor.NONE;
         if (StringUtils.hasText(types)) {
-            final String[] typeNames = types.split(TYPE_SEPARATOR_REGEXP);
+            final String[] typeNames = types.split(isReturnIntersectionType ? TYPE_SEPARATOR_INTERSECTION_REGEXP : TYPE_SEPARATOR_REGEXP);
             Collection<TypeScope> retval = new HashSet<>();
             for (int i = 0; i < typeNames.length; i++) {
                 String typeName = typeNames[i];
@@ -387,6 +402,12 @@ class FunctionScopeImpl extends ScopeImpl implements FunctionScope, VariableName
         return Type.asUnionType(types);
     }
 
+    private String asIntersectionType(List<QualifiedName> qualifiedNames) {
+        List<String> types = new ArrayList<>();
+        qualifiedNames.forEach(type -> types.add(type.toString()));
+        return Type.asIntersectionType(types);
+    }
+
     @org.netbeans.api.annotations.common.SuppressWarnings("SE_COMPARATOR_SHOULD_BE_SERIALIZABLE")
     private static final class ModelElementsPositionComparator implements Comparator<ModelElement> {
 
@@ -486,7 +507,7 @@ class FunctionScopeImpl extends ScopeImpl implements FunctionScope, VariableName
                 first = false;
                 sb.append(' '); // NOI18N
             } else {
-                sb.append(Type.SEPARATOR);
+                sb.append(Type.getTypeSeparator(isReturnIntersectionType));
             }
             sb.append(typeScope.getName());
         }
@@ -543,6 +564,7 @@ class FunctionScopeImpl extends ScopeImpl implements FunctionScope, VariableName
         sb.append(isDeprecated() ? 1 : 0).append(Signature.ITEM_DELIMITER);
         sb.append(getFilenameUrl()).append(Signature.ITEM_DELIMITER);
         sb.append(isReturnUnionType() ? 1 : 0).append(Signature.ITEM_DELIMITER);
+        sb.append(isReturnIntersectionType()? 1 : 0).append(Signature.ITEM_DELIMITER);
         return sb.toString();
     }
 

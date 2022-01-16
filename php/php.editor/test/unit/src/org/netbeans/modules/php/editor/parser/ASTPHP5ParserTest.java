@@ -1343,6 +1343,22 @@ public class ASTPHP5ParserTest extends ParserTestBase {
         performTest("parser/php81/newInInitializersWithPropertyError");
     }
 
+    public void testPureIntersectionTypes_01() throws Exception {
+        performTest("parser/php81/pureIntersectionTypes_01");
+    }
+
+    public void testPureIntersectionTypesWithUnionTypeError_01() throws Exception {
+        performTest("parser/php81/pureIntersectionTypesWithUnionTypeError_01");
+    }
+
+    public void testPureIntersectionTypesWithUnionTypeError_02() throws Exception {
+        performTest("parser/php81/pureIntersectionTypesWithUnionTypeError_02");
+    }
+
+    public void testPureIntersectionTypesWithUnionTypeError_03() throws Exception {
+        performTest("parser/php81/pureIntersectionTypesWithUnionTypeError_03");
+    }
+
     @Override
     protected String getTestResult(String filename) throws Exception {
         // the same <Comment /> is shown twice becase the scanner is used twice

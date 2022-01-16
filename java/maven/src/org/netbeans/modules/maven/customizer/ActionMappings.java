@@ -135,21 +135,19 @@ public class ActionMappings extends javax.swing.JPanel implements HelpCtx.Provid
             @Override public void focusGained(FocusEvent e) {
                 if (e.getComponent() == txtGoals) {
                     lblHint.setText(NbBundle.getMessage(ActionMappings.class, "ActionMappings.txtGoals.hint"));
-                } else if (e.getComponent() == txtProfiles) {
-                    lblHint.setText(NbBundle.getMessage(ActionMappings.class, "ActinMappings.txtProfiles.hint"));
-                } else if (e.getComponent() == epProperties) {
-                    lblHint.setText(NbBundle.getMessage(ActionMappings.class, "ActinMappings.txtProperties.hint"));
-                } else if (e.getComponent() == txtPackagings) {
-                    lblHint.setText(NbBundle.getMessage(ActionMappings.class, "ActinMappings.txtPackagings.hint"));
-                } else {
-                    hintLabel.setVisible(false);
-                    return;
                 }
-                hintLabel.setVisible(true);
+                if (e.getComponent() == txtProfiles) {
+                    lblHint.setText(NbBundle.getMessage(ActionMappings.class, "ActinMappings.txtProfiles.hint"));
+                }
+                if (e.getComponent() == epProperties) {
+                    lblHint.setText(NbBundle.getMessage(ActionMappings.class, "ActinMappings.txtProperties.hint"));
+                }
+                if (e.getComponent() == txtPackagings) {
+                    lblHint.setText(NbBundle.getMessage(ActionMappings.class, "ActinMappings.txtPackagings.hint"));
+                }
             }
             @Override public void focusLost(FocusEvent e) {
                 lblHint.setText(""); //NOI18N
-                hintLabel.setVisible(false);
             }
         };
         txtGoals.addFocusListener(focus);
@@ -158,7 +156,6 @@ public class ActionMappings extends javax.swing.JPanel implements HelpCtx.Provid
         txtPackagings.addFocusListener(focus);
         goalcompleter = new TextValueCompleter(Collections.<String>emptyList(), txtGoals, " "); //NOI18N
         profilecompleter = new TextValueCompleter(Collections.<String>emptyList(), txtProfiles, " "); //NOI18N
-        hintLabel.setVisible(false);
         if( "Aqua".equals(UIManager.getLookAndFeel().getID()) ) { //NOI18N
             this.lblHint.setOpaque(true);
             jScrollPane2.setBorder(null);
@@ -334,8 +331,6 @@ public class ActionMappings extends javax.swing.JPanel implements HelpCtx.Provid
         lblPackagings = new javax.swing.JLabel();
         txtPackagings = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
-        btnDisable = new javax.swing.JButton();
-        hintLabel = new javax.swing.JLabel();
 
         setLayout(new java.awt.GridBagLayout());
 
@@ -488,8 +483,7 @@ public class ActionMappings extends javax.swing.JPanel implements HelpCtx.Provid
 
         jScrollPane2.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
 
-        lblHint.setVerticalAlignment(javax.swing.SwingConstants.TOP);
-        lblHint.setVerticalTextPosition(javax.swing.SwingConstants.TOP);
+        lblHint.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
         jScrollPane2.setViewportView(lblHint);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -501,7 +495,7 @@ public class ActionMappings extends javax.swing.JPanel implements HelpCtx.Provid
         gridBagConstraints.ipady = 120;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.weighty = 0.3;
+        gridBagConstraints.weighty = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(2, 18, 0, 12);
         add(jScrollPane2, gridBagConstraints);
 
@@ -581,31 +575,6 @@ public class ActionMappings extends javax.swing.JPanel implements HelpCtx.Provid
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.insets = new java.awt.Insets(6, 6, 0, 12);
         add(jButton1, gridBagConstraints);
-
-        org.openide.awt.Mnemonics.setLocalizedText(btnDisable, org.openide.util.NbBundle.getMessage(ActionMappings.class, "ActionMappings.btnDisable.text")); // NOI18N
-        btnDisable.setName(""); // NOI18N
-        btnDisable.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnDisableActionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 10;
-        gridBagConstraints.gridy = 6;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(6, 6, 0, 12);
-        add(btnDisable, gridBagConstraints);
-
-        hintLabel.setFont(new java.awt.Font("Dialog", 2, 12)); // NOI18N
-        org.openide.awt.Mnemonics.setLocalizedText(hintLabel, org.openide.util.NbBundle.getMessage(ActionMappings.class, "ActionMappings.hintLabel.text")); // NOI18N
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 17;
-        gridBagConstraints.gridwidth = 7;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(6, 12, 8, 0);
-        add(hintLabel, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
     
 //GEN-FIRST:event_btnAddActionPerformed
@@ -673,9 +642,7 @@ private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-HEADER
     
     private void updateEnabledControls(MappingWrapper wr) {
         boolean notEmpty = wr != null;
-        boolean enable = notEmpty && !ActionToGoalUtils.isDisabledMapping(wr.getMapping());
-
-        if (enable) {
+        if (notEmpty) {
             lblGoals.setEnabled(true);
             lblHint.setEnabled(true);
             lblPackagings.setEnabled(true);
@@ -688,17 +655,12 @@ private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-HEADER
             cbRecursively.setEnabled(true);
             cbBuildWithDeps.setEnabled(true);
             btnAddProps.setEnabled(true);
-            // custom actions cannot be disabled at the moment, see NETBEANS-6387
-            btnDisable.setEnabled(!wr.getActionName().startsWith(CUSTOM_ACTION_PREFIX));
+            btnRemove.setEnabled(true);
             if (isGlobal()) {
                 txtPackagings.setEnabled(true);
-            }
+            }            
         } else {
             clearFields();
-        }
-        if (notEmpty) {
-            btnRemove.setEnabled(true);
-        } else {
             btnRemove.setEnabled(false);
         }
     }
@@ -810,13 +772,6 @@ private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-HEADER
             }
         }
     }//GEN-LAST:event_jButton1ActionPerformed
-
-    private void btnDisableActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDisableActionPerformed
-        MappingWrapper wr = initUserWrapper();
-        wr.getMapping().setGoals(Collections.emptyList());
-        txtGoals.setText(""); // NOI18N
-        updateEnabledControls(wr);
-    }//GEN-LAST:event_btnDisableActionPerformed
     
     @Messages({"LBL_SetIcon=Set Icon:",
                "LBL_No_More_Icons=<No more slots available>",
@@ -932,7 +887,6 @@ private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-HEADER
         cbRecursively.setEnabled(false);
         cbBuildWithDeps.setEnabled(false);
         btnAddProps.setEnabled(false);
-        btnDisable.setEnabled(false);
         if (handle == null) { //only global settings
             jButton1.setEnabled(false);
             jButton1.setIcon(null);
@@ -980,13 +934,11 @@ private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-HEADER
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAdd;
     private javax.swing.JButton btnAddProps;
-    private javax.swing.JButton btnDisable;
     private javax.swing.JButton btnRemove;
     private javax.swing.JCheckBox cbBuildWithDeps;
     private javax.swing.JCheckBox cbRecursively;
     private javax.swing.JComboBox comConfiguration;
     private javax.swing.JEditorPane epProperties;
-    private javax.swing.JLabel hintLabel;
     private javax.swing.JButton jButton1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
@@ -1190,27 +1142,6 @@ private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-HEADER
         
     }
     
-    private MappingWrapper initUserWrapper() {
-        MappingWrapper map = (MappingWrapper)lstMappings.getSelectedValue();
-        if (map != null) {
-            if (!map.isUserDefined()) {
-                NetbeansActionMapping mapping = map.getMapping();
-                if (mapping == null) {
-                    mapping = new NetbeansActionMapping();
-                    mapping.setActionName(map.getActionName());
-                    map.setMapping(mapping);
-                }
-                getActionMappings().addAction(mapping);
-                if (handle != null) {
-                    handle.markAsModified(getActionMappings());
-                }
-                map.setUserDefined(true);
-                updateColor(map);
-            }
-        }
-        return map;
-    }
-    
     private abstract class TextFieldListener implements DocumentListener {
         @Override public void insertUpdate(DocumentEvent e) {
             doUpdate();
@@ -1225,7 +1156,24 @@ private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-HEADER
         }
         
         protected MappingWrapper doUpdate() {
-            return initUserWrapper();
+            MappingWrapper map = (MappingWrapper)lstMappings.getSelectedValue();
+            if (map != null) {
+                if (!map.isUserDefined()) {
+                    NetbeansActionMapping mapping = map.getMapping();
+                    if (mapping == null) {
+                        mapping = new NetbeansActionMapping();
+                        mapping.setActionName(map.getActionName());
+                        map.setMapping(mapping);
+                    }
+                    getActionMappings().addAction(mapping);
+                    if (handle != null) {
+                        handle.markAsModified(getActionMappings());
+                    }
+                    map.setUserDefined(true);
+                    updateColor(map);
+                }
+            }
+            return map;
         }
     }
     
@@ -1233,6 +1181,7 @@ private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-HEADER
         @Override
         protected MappingWrapper doUpdate() {
             MappingWrapper wr = super.doUpdate();
+            boolean wasEnabled = ActionToGoalUtils.isDisabledMapping(wr.getMapping());
             if (wr != null) {
                 String text = txtGoals.getText();
                 StringTokenizer tok = new StringTokenizer(text, " "); //NOI18N
@@ -1245,6 +1194,9 @@ private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-HEADER
                 mapp.setGoals(goals);
                 if (handle != null) {
                     handle.markAsModified(getActionMappings());
+                }
+                if (ActionToGoalUtils.isDisabledMapping(wr.getMapping()) != wasEnabled) {
+                    lstMappings.repaint();
                 }
             }
             return wr;

@@ -597,7 +597,8 @@ public abstract class PHPCompletionItem implements CompletionProposal {
                             param.isReference(),
                             param.isVariadic(),
                             param.isUnionType(),
-                            param.getModifier()
+                            param.getModifier(),
+                            param.isIntersectionType()
                     );
                 }
             }

@@ -340,6 +340,8 @@ PHP_ITERABLE=[i][t][e][r][a][b][l][e]
 PHP_TYPE_OBJECT=[o][b][j][e][c][t]
 // NETBEANS-4443 PHP8.0
 PHP_TYPE_MIXED=[m][i][x][e][d]
+// NETBEANS-5599 PHP8.1
+PHP_TYPE_NEVER=[n][e][v][e][r]
 
 
 
@@ -683,6 +685,10 @@ PHP_TYPE_MIXED=[m][i][x][e][d]
     return PHPTokenId.PHP_TYPE_MIXED;
 }
 
+<ST_PHP_IN_SCRIPTING>{PHP_TYPE_NEVER} {
+    return PHPTokenId.PHP_TYPE_NEVER;
+}
+
 <ST_PHP_IN_SCRIPTING>"->" {
     pushState(ST_PHP_LOOKING_FOR_PROPERTY);
     return PHPTokenId.PHP_OBJECT_OPERATOR;
@@ -883,6 +889,10 @@ PHP_TYPE_MIXED=[m][i][x][e][d]
 
 <ST_PHP_IN_SCRIPTING>"public" {
     return PHPTokenId.PHP_PUBLIC;
+}
+
+<ST_PHP_IN_SCRIPTING>"readonly" {
+    return PHPTokenId.PHP_READONLY;
 }
 
 <ST_PHP_IN_SCRIPTING>"unset" {

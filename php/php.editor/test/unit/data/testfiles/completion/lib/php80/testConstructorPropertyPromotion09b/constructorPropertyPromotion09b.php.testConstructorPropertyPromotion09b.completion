@@ -7,3 +7,4 @@ KEYWORD    self::                                     null
 KEYWORD    static::                                   null
 ------------------------------------
 KEYWORD    array                                      null
+KEYWORD    new                                        null

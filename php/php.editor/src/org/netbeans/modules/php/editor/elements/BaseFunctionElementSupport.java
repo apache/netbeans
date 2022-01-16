@@ -38,6 +38,9 @@ import org.netbeans.modules.php.editor.api.elements.TypeMemberElement;
 import org.netbeans.modules.php.editor.api.elements.TypeNameResolver;
 import org.netbeans.modules.php.editor.api.elements.TypeResolver;
 import org.netbeans.modules.php.editor.model.impl.Type;
+import org.netbeans.modules.php.editor.parser.astnodes.ASTNode;
+import org.netbeans.modules.php.editor.parser.astnodes.IntersectionType;
+import org.netbeans.modules.php.editor.parser.astnodes.UnionType;
 
 /**
  * @author Radek Matous
@@ -63,6 +66,10 @@ public class BaseFunctionElementSupport  {
 
     public final boolean isReturnUnionType() {
         return returnTypes.isUnionType();
+    }
+
+    public final boolean isReturnIntersectionType() {
+        return returnTypes.isIntersectionType();
     }
 
     public final String asString(PrintAs as, BaseFunctionElement element, TypeNameResolver typeNameResolver) {
@@ -320,24 +327,32 @@ public class BaseFunctionElementSupport  {
             public boolean isUnionType() {
                 return false;
             }
+
+            @Override
+            public boolean isIntersectionType() {
+                return false;
+            }
         };
 
         Set<TypeResolver> getReturnTypes();
         boolean isUnionType();
+        boolean isIntersectionType();
     }
 
     public static final class ReturnTypesImpl implements ReturnTypes {
 
         private final Set<TypeResolver> returnTypes;
         private final boolean isUnionType;
+        private final boolean isIntersectionType;
 
-        public static ReturnTypes create(Set<TypeResolver> returnTypes, boolean isUnionType) {
-            return new ReturnTypesImpl(returnTypes, isUnionType);
+        public static ReturnTypes create(Set<TypeResolver> returnTypes, ASTNode node) {
+            return new ReturnTypesImpl(returnTypes, node);
         }
 
-        private ReturnTypesImpl(Set<TypeResolver> returnTypes, boolean isUnionType) {
+        private ReturnTypesImpl(Set<TypeResolver> returnTypes, ASTNode node) {
             this.returnTypes = returnTypes;
-            this.isUnionType = isUnionType;
+            this.isUnionType = node instanceof UnionType;
+            this.isIntersectionType = node instanceof IntersectionType;
         }
 
         @Override
@@ -348,6 +363,11 @@ public class BaseFunctionElementSupport  {
         @Override
         public boolean isUnionType() {
             return isUnionType;
+        }
+
+        @Override
+        public boolean isIntersectionType() {
+            return isIntersectionType;
         }
 
     }

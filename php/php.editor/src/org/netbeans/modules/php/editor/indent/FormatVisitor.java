@@ -74,6 +74,7 @@ import org.netbeans.modules.php.editor.parser.astnodes.Identifier;
 import org.netbeans.modules.php.editor.parser.astnodes.IfStatement;
 import org.netbeans.modules.php.editor.parser.astnodes.InfixExpression;
 import org.netbeans.modules.php.editor.parser.astnodes.InterfaceDeclaration;
+import org.netbeans.modules.php.editor.parser.astnodes.IntersectionType;
 import org.netbeans.modules.php.editor.parser.astnodes.LambdaFunctionDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.ListVariable;
 import org.netbeans.modules.php.editor.parser.astnodes.MatchArm;
@@ -1537,8 +1538,7 @@ public class FormatVisitor extends DefaultVisitor {
             return;
         }
         int endPosition = returnType.getEndOffset();
-        if (returnType instanceof NullableType
-                || returnType instanceof UnionType) {
+        if (isMultipleTypeNode(returnType)) {
             endPosition = returnType.getStartOffset();
         }
         while (ts.moveNext()
@@ -1547,10 +1547,15 @@ public class FormatVisitor extends DefaultVisitor {
             addFormatToken(formatTokens);
         }
         ts.movePrevious();
-        if (returnType instanceof NullableType
-                || returnType instanceof UnionType) {
+        if (isMultipleTypeNode(returnType)) {
             scan(returnType);
         }
+    }
+
+    private boolean isMultipleTypeNode(Expression type) {
+        return type instanceof NullableType
+                || type instanceof UnionType
+                || type instanceof IntersectionType;
     }
 
     @Override
@@ -2313,7 +2318,15 @@ public class FormatVisitor extends DefaultVisitor {
 
     @Override
     public void visit(UnionType node) {
-        List<Expression> types = node.getTypes();
+        processUnionOrIntersectionType(node.getTypes());
+    }
+
+    @Override
+    public void visit(IntersectionType node) {
+        processUnionOrIntersectionType(node.getTypes());
+    }
+
+    private void processUnionOrIntersectionType(List<Expression> types) {
         assert !types.isEmpty();
         final Expression lastType = types.get(types.size() - 1);
         for (int i = 0; i < types.size(); i++) {
@@ -2321,7 +2334,7 @@ public class FormatVisitor extends DefaultVisitor {
             scan(type);
             if (type != lastType) {
                 Expression nextType = types.get(i + 1);
-                // add "|"
+                // add "|" or "&"
                 addAllUntilOffset(nextType.getStartOffset());
             }
         }
@@ -2636,6 +2649,14 @@ public class FormatVisitor extends DefaultVisitor {
                     tokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_AROUND_UNION_TYPE_SEPARATOR, ts.offset()));
                     tokens.add(new FormatToken(FormatToken.Kind.TEXT, ts.offset(), txt2.toString()));
                     tokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_AROUND_UNION_TYPE_SEPARATOR, ts.offset() + ts.token().length()));
+                    break;
+                }
+                if (TokenUtilities.equals(txt2, Type.SEPARATOR_INTERSECTION)
+                        && path.get(0) instanceof IntersectionType) {
+                    // NETBEANS-5599 PHP 8.1 Pure intersection types
+                    tokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_AROUND_INTERSECTION_TYPE_SEPARATOR, ts.offset()));
+                    tokens.add(new FormatToken(FormatToken.Kind.TEXT, ts.offset(), txt2.toString()));
+                    tokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_AROUND_INTERSECTION_TYPE_SEPARATOR, ts.offset() + ts.token().length()));
                     break;
                 }
                 if (!TokenUtilities.startsWith(txt2, "==") // NOI18N NETBEANS-2149

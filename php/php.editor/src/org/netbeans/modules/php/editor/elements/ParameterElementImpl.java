@@ -47,6 +47,7 @@ public final class ParameterElementImpl implements ParameterElement {
     private final boolean isReference;
     private final boolean isVariadic;
     private final boolean isUnionType;
+    private final boolean isIntersectionType;
     private final int modifier;
 
     public ParameterElementImpl(
@@ -59,7 +60,9 @@ public final class ParameterElementImpl implements ParameterElement {
             final boolean isReference,
             final boolean isVariadic,
             final boolean isUnionType,
-            final int modifier) {
+            final int modifier,
+            final boolean isIntersectionType
+    ) {
         this.name = name;
         this.isMandatory = isMandatory;
         this.defaultValue = (!isMandatory && defaultValue != null) ? decode(defaultValue) : ""; //NOI18N
@@ -69,6 +72,7 @@ public final class ParameterElementImpl implements ParameterElement {
         this.isReference = isReference;
         this.isVariadic = isVariadic;
         this.isUnionType = isUnionType;
+        this.isIntersectionType = isIntersectionType;
         this.modifier = modifier;
     }
 
@@ -106,9 +110,10 @@ public final class ParameterElementImpl implements ParameterElement {
             boolean isVariadic = Integer.parseInt(parts[6]) > 0;
             boolean isUnionType = Integer.parseInt(parts[7]) > 0;
             int modifier = Integer.parseInt(parts[8]);
+            boolean isIntersectionType = Integer.parseInt(parts[9]) > 0;
             String defValue = parts.length > 3 ? parts[3] : null;
             retval = new ParameterElementImpl(
-                    paramName, defValue, -1, types, isMandatory, isRawType, isReference, isVariadic, isUnionType, modifier);
+                    paramName, defValue, -1, types, isMandatory, isRawType, isReference, isVariadic, isUnionType, modifier, isIntersectionType);
         }
         return retval;
     }
@@ -122,7 +127,7 @@ public final class ParameterElementImpl implements ParameterElement {
         for (TypeResolver typeResolver : getTypes()) {
             TypeResolverImpl resolverImpl = (TypeResolverImpl) typeResolver;
             if (typeBuilder.length() > 0) {
-                typeBuilder.append(Separator.PIPE);
+                typeBuilder.append(Type.getTypeSeparator(isIntersectionType));
             }
             typeBuilder.append(resolverImpl.getSignature());
         }
@@ -146,6 +151,8 @@ public final class ParameterElementImpl implements ParameterElement {
         sb.append(isUnionType ? 1 : 0);
         sb.append(Separator.COLON);
         sb.append(modifier);
+        sb.append(Separator.COLON);
+        sb.append(isIntersectionType ? 1 : 0);
         checkSignature(sb);
         return sb.toString();
     }
@@ -274,6 +281,7 @@ public final class ParameterElementImpl implements ParameterElement {
                 assert isVariadic() == parsedParameter.isVariadic() : signature;
                 assert isUnionType() == parsedParameter.isUnionType() : signature;
                 assert getModifier() == parsedParameter.getModifier() : signature;
+                assert isIntersectionType() == parsedParameter.isIntersectionType() : signature;
             } catch (NumberFormatException originalException) {
                 final String message = String.format("%s [for signature: %s]", originalException.getMessage(), signature); //NOI18N
                 final NumberFormatException formatException = new NumberFormatException(message);
@@ -312,20 +320,20 @@ public final class ParameterElementImpl implements ParameterElement {
             }
         }
         if (forDeclaration && hasDeclaredType()) {
-            if (isUnionType) {
+            if (isUnionType || isIntersectionType) {
                 boolean firstType = true;
                 for (TypeResolver typeResolver : typesResolvers) {
                     if (typeResolver.isResolved()) {
                         if (firstType) {
                             firstType = false;
                         } else {
-                            sb.append(Type.SEPARATOR);
+                            sb.append(Type.getTypeSeparator(isIntersectionType));
                         }
                         sb.append(typeNameResolver.resolve(typeResolver.getTypeName(false)));
                     }
                 }
                 sb.append(' ');
-            } else if (typesResolvers.size() > 1 && !isUnionType) {
+            } else if (typesResolvers.size() > 1 && !isUnionType && !isIntersectionType) {
                 sb.append(Type.MIXED).append(' ');
             } else {
                 for (TypeResolver typeResolver : typesResolvers) {
@@ -381,5 +389,10 @@ public final class ParameterElementImpl implements ParameterElement {
     @Override
     public int getModifier() {
         return modifier;
+    }
+
+    @Override
+    public boolean isIntersectionType() {
+        return isIntersectionType;
     }
 }

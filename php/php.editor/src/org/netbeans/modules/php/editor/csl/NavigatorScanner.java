@@ -391,7 +391,7 @@ public final class NavigatorScanner {
                                 QualifiedName typeName = typeResolver.getTypeName(false);
                                 if (typeName != null) {
                                     if (i > 1) {
-                                        formatter.appendText(Type.SEPARATOR);
+                                        formatter.appendText(Type.getTypeSeparator(formalParameter.isIntersectionType()));
                                     }
                                     if (typeResolver.isNullableType()) {
                                         formatter.appendText(CodeUtils.NULLABLE_TYPE_PREFIX);
@@ -423,7 +423,7 @@ public final class NavigatorScanner {
                 if (!ignoredTypes.contains(type)) {
                     i++;
                     if (i > 1) {
-                        formatter.appendText(", "); //NOI18N
+                        formatter.appendText(Type.getTypeSeparator(function.isReturnIntersectionType()));
                     }
                     processTypeName(type, function, formatter);
                 }
@@ -510,13 +510,14 @@ public final class NavigatorScanner {
                 formatter.deprecated(false);
             }
             Collection<? extends String> types = field.getDefaultTypeNames();
+            boolean isIntersectionType = field.getDefaultType() != null && field.getDefaultType().contains(Type.SEPARATOR_INTERSECTION);
             if (!types.isEmpty()) {
                 formatter.appendHtml(FONT_GRAY_COLOR + ":"); //NOI18N
                 int i = 0;
                 for (String type : types) {
                     i++;
                     if (i > 1) {
-                        formatter.appendText(", "); //NOI18N
+                        formatter.appendText(Type.getTypeSeparator(isIntersectionType));
                     }
                     processTypeName(type, field, formatter);
                 }

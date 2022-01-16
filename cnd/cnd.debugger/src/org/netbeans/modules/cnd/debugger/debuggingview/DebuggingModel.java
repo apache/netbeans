@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.cpplite.debugger.debuggingview;
+package org.netbeans.modules.cnd.debugger.debuggingview;
 
 import java.awt.datatransfer.Transferable;
 import java.beans.PropertyChangeEvent;
@@ -30,10 +30,10 @@ import java.util.Set;
 import java.util.WeakHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import org.netbeans.modules.cpplite.debugger.CPPFrame;
-import org.netbeans.modules.cpplite.debugger.CPPLiteDebugger;
-import org.netbeans.modules.cpplite.debugger.CPPThread;
-import org.netbeans.modules.cpplite.debugger.ThreadsCollector;
+import org.netbeans.modules.cnd.debugger.CPPFrame;
+import org.netbeans.modules.cnd.debugger.CPPLiteDebugger;
+import org.netbeans.modules.cnd.debugger.CPPThread;
+import org.netbeans.modules.cnd.debugger.ThreadsCollector;
 import org.netbeans.spi.debugger.ContextProvider;
 import org.netbeans.spi.debugger.DebuggerServiceRegistration;
 import org.netbeans.spi.debugger.ui.DebuggingView.DVThread;

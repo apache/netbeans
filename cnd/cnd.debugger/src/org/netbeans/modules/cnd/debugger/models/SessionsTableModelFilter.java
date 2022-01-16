@@ -16,16 +16,16 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.cpplite.debugger.models;
+package org.netbeans.modules.cnd.debugger.models;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import org.netbeans.api.debugger.DebuggerEngine;
 import org.netbeans.api.debugger.Session;
-import org.netbeans.modules.cpplite.debugger.CPPFrame;
-import org.netbeans.modules.cpplite.debugger.CPPLiteDebugger;
-import org.netbeans.modules.cpplite.debugger.CPPThread;
+import org.netbeans.modules.cnd.debugger.CPPFrame;
+import org.netbeans.modules.cnd.debugger.CPPLiteDebugger;
+import org.netbeans.modules.cnd.debugger.CPPThread;
 import org.netbeans.spi.debugger.DebuggerServiceRegistration;
 import org.netbeans.spi.debugger.ui.Constants;
 import org.netbeans.spi.viewmodel.ModelEvent;

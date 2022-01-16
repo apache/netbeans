@@ -32,7 +32,7 @@
                     </file>
                 </folder>
                 <folder name="ToolTips">
-                    <file name="org-netbeans-modules-cpplite-debugger-ToolTipAnnotation.instance"/>
+                    <file name="org-netbeans-modules-cnd-debugger-ToolTipAnnotation.instance"/>
                 </folder>
                 <folder name="Popup">
                     <file name="AfterToolsSeparator.instance"><attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>    <attr name="position" intvalue="3333"/>
@@ -55,7 +55,7 @@
                     </file>
                 </folder>
                 <folder name="ToolTips">
-                    <file name="org-netbeans-modules-cpplite-debugger-ToolTipAnnotation.instance"/>
+                    <file name="org-netbeans-modules-cnd-debugger-ToolTipAnnotation.instance"/>
                 </folder>
                 <folder name="Popup">
                     <file name="AfterToolsSeparator.instance"><attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>    <attr name="position" intvalue="3333"/>
@@ -78,7 +78,7 @@
                     </file>
                 </folder>
                 <folder name="ToolTips">
-                    <file name="org-netbeans-modules-cpplite-debugger-ToolTipAnnotation.instance"/>
+                    <file name="org-netbeans-modules-cnd-debugger-ToolTipAnnotation.instance"/>
                 </folder>
                 <folder name="Popup">
                     <file name="AfterToolsSeparator.instance"><attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>    <attr name="position" intvalue="3333"/>
@@ -101,7 +101,7 @@
                     </file>
                 </folder>
                 <folder name="ToolTips">
-                    <file name="org-netbeans-modules-cpplite-debugger-ToolTipAnnotation.instance"/>
+                    <file name="org-netbeans-modules-cnd-debugger-ToolTipAnnotation.instance"/>
                 </folder>
                 <folder name="Popup">
                     <file name="AfterToolsSeparator.instance"><attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>    <attr name="position" intvalue="3333"/>

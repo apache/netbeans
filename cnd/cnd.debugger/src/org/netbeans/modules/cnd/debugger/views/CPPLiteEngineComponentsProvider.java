@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package org.netbeans.modules.cpplite.debugger.views;
+package org.netbeans.modules.cnd.debugger.views;
 
 import java.awt.Component;
 import java.util.ArrayList;

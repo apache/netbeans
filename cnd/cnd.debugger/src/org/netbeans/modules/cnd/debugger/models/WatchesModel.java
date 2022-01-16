@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package org.netbeans.modules.cpplite.debugger.models;
+package org.netbeans.modules.cnd.debugger.models;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -28,10 +28,10 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.netbeans.api.debugger.Watch;
-import org.netbeans.modules.cpplite.debugger.CPPFrame;
-import org.netbeans.modules.cpplite.debugger.CPPLiteDebugger;
-import org.netbeans.modules.cpplite.debugger.CPPLiteDebugger.StateListener;
-import org.netbeans.modules.cpplite.debugger.CPPThread;
+import org.netbeans.modules.cnd.debugger.CPPFrame;
+import org.netbeans.modules.cnd.debugger.CPPLiteDebugger;
+import org.netbeans.modules.cnd.debugger.CPPLiteDebugger.StateListener;
+import org.netbeans.modules.cnd.debugger.CPPThread;
 import org.netbeans.modules.nativeimage.api.debug.EvaluateException;
 import org.netbeans.modules.nativeimage.api.debug.NIVariable;
 import org.netbeans.spi.debugger.ContextProvider;

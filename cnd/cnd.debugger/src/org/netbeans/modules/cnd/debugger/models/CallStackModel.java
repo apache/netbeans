@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package org.netbeans.modules.cpplite.debugger.models;
+package org.netbeans.modules.cnd.debugger.models;
 
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -25,11 +25,11 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import javax.swing.Action;
 
-import org.netbeans.modules.cpplite.debugger.CPPLiteDebugger;
-import org.netbeans.modules.cpplite.debugger.CPPFrame;
-import org.netbeans.modules.cpplite.debugger.CPPLiteDebugger.StateListener;
-import org.netbeans.modules.cpplite.debugger.CPPThread;
-import org.netbeans.modules.cpplite.debugger.Utils;
+import org.netbeans.modules.cnd.debugger.CPPLiteDebugger;
+import org.netbeans.modules.cnd.debugger.CPPFrame;
+import org.netbeans.modules.cnd.debugger.CPPLiteDebugger.StateListener;
+import org.netbeans.modules.cnd.debugger.CPPThread;
+import org.netbeans.modules.cnd.debugger.Utils;
 
 import org.netbeans.spi.debugger.ContextProvider;
 import org.netbeans.spi.debugger.DebuggerServiceRegistration;

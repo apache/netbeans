@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.cpplite.debugger.ni;
+package org.netbeans.modules.cnd.debugger.ni;
 
 import java.util.ArrayList;
 import java.util.IdentityHashMap;
@@ -25,7 +25,7 @@ import java.util.Map;
 
 import org.netbeans.api.debugger.Breakpoint;
 import org.netbeans.api.debugger.DebuggerManager;
-import org.netbeans.modules.cpplite.debugger.breakpoints.CPPLiteBreakpoint;
+import org.netbeans.modules.cnd.debugger.breakpoints.CPPLiteBreakpoint;
 import org.netbeans.modules.nativeimage.api.debug.NILineBreakpointDescriptor;
 
 /**

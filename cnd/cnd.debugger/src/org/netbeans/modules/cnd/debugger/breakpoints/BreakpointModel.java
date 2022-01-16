@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package org.netbeans.modules.cpplite.debugger.breakpoints;
+package org.netbeans.modules.cnd.debugger.breakpoints;
 
 import java.io.File;
 import java.util.List;
@@ -25,8 +25,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.netbeans.api.debugger.DebuggerEngine;
 import org.netbeans.api.debugger.DebuggerManager;
-import org.netbeans.modules.cpplite.debugger.CPPLiteDebugger;
-import org.netbeans.modules.cpplite.debugger.Utils;
+import org.netbeans.modules.cnd.debugger.CPPLiteDebugger;
+import org.netbeans.modules.cnd.debugger.Utils;
 import org.netbeans.spi.debugger.DebuggerServiceRegistration;
 import org.netbeans.spi.viewmodel.ModelEvent;
 import org.netbeans.spi.viewmodel.NodeModel;

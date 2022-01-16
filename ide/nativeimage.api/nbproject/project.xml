@@ -113,7 +113,7 @@
                 </test-type>
             </test-dependencies>
             <friend-packages>
-                <friend>org.netbeans.modules.cpplite.debugger</friend>
+                <friend>org.netbeans.modules.cnd.debugger</friend>
                 <friend>org.netbeans.modules.gradle.java</friend>
                 <friend>org.netbeans.modules.java.lsp.server</friend>
                 <friend>org.netbeans.modules.java.nativeimage.debugger</friend>

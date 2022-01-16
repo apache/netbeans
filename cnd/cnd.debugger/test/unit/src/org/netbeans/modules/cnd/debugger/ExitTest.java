@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.cpplite.debugger;
+package org.netbeans.modules.cnd.debugger;
 
 import java.io.File;
 import java.io.OutputStream;
@@ -27,8 +27,8 @@ import static junit.framework.TestCase.assertNotNull;
 import org.netbeans.api.debugger.ActionsManager;
 import org.netbeans.api.debugger.DebuggerManager;
 import org.netbeans.junit.NbModuleSuite;
-import static org.netbeans.modules.cpplite.debugger.AbstractDebugTest.compileCPP;
-import org.netbeans.modules.cpplite.debugger.breakpoints.CPPLiteBreakpoint;
+import static org.netbeans.modules.cnd.debugger.AbstractDebugTest.compileCPP;
+import org.netbeans.modules.cnd.debugger.breakpoints.CPPLiteBreakpoint;
 import org.openide.cookies.LineCookie;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;

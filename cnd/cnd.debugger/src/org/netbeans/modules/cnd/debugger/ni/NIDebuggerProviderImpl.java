@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.cpplite.debugger.ni;
+package org.netbeans.modules.cnd.debugger.ni;
 
 import java.io.File;
 import java.io.IOException;
@@ -32,10 +32,10 @@ import org.netbeans.api.debugger.DebuggerEngine;
 import org.netbeans.api.extexecution.ExecutionDescriptor;
 import org.netbeans.api.extexecution.ExecutionService;
 import org.netbeans.api.extexecution.base.ExplicitProcessParameters;
-import org.netbeans.modules.cpplite.debugger.CPPFrame;
-import org.netbeans.modules.cpplite.debugger.CPPLiteDebugger;
-import org.netbeans.modules.cpplite.debugger.CPPLiteDebuggerConfig;
-import org.netbeans.modules.cpplite.debugger.CPPThread;
+import org.netbeans.modules.cnd.debugger.CPPFrame;
+import org.netbeans.modules.cnd.debugger.CPPLiteDebugger;
+import org.netbeans.modules.cnd.debugger.CPPLiteDebuggerConfig;
+import org.netbeans.modules.cnd.debugger.CPPThread;
 import org.netbeans.modules.nativeimage.api.Location;
 import org.netbeans.modules.nativeimage.api.SourceInfo;
 import org.netbeans.modules.nativeimage.api.Symbol;

@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package org.netbeans.modules.cpplite.debugger.breakpoints;
+package org.netbeans.modules.cnd.debugger.breakpoints;
 
 import java.net.MalformedURLException;
 import java.net.URL;

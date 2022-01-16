@@ -17,16 +17,16 @@
  * under the License.
  */
 
-package org.netbeans.modules.cpplite.debugger.models;
+package org.netbeans.modules.cnd.debugger.models;
 
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
-import org.netbeans.modules.cpplite.debugger.CPPFrame;
+import org.netbeans.modules.cnd.debugger.CPPFrame;
 
-import org.netbeans.modules.cpplite.debugger.CPPLiteDebugger;
-import org.netbeans.modules.cpplite.debugger.CPPLiteDebugger.StateListener;
-import org.netbeans.modules.cpplite.debugger.CPPThread;
+import org.netbeans.modules.cnd.debugger.CPPLiteDebugger;
+import org.netbeans.modules.cnd.debugger.CPPLiteDebugger.StateListener;
+import org.netbeans.modules.cnd.debugger.CPPThread;
 import org.netbeans.modules.nativeimage.api.debug.NIVariable;
 
 import org.netbeans.spi.debugger.ContextProvider;

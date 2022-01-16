@@ -30,7 +30,7 @@ import org.netbeans.api.extexecution.ExecutionService;
 import org.netbeans.api.extexecution.print.ConvertedLine;
 import org.netbeans.api.extexecution.print.LineConvertor;
 import org.netbeans.api.project.ProjectUtils;
-import org.netbeans.modules.cpplite.debugger.api.Debugger;
+import org.netbeans.modules.cnd.debugger.api.Debugger;
 import org.netbeans.modules.cpplite.project.runner.Runner;
 import org.netbeans.spi.project.ActionProvider;
 import org.openide.LifecycleManager;

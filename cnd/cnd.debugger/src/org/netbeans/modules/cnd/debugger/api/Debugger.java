@@ -16,15 +16,15 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.cpplite.debugger.api;
+package org.netbeans.modules.cnd.debugger.api;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import org.netbeans.api.extexecution.base.ExplicitProcessParameters;
 
-import org.netbeans.modules.cpplite.debugger.CPPLiteDebugger;
-import org.netbeans.modules.cpplite.debugger.CPPLiteDebuggerConfig;
+import org.netbeans.modules.cnd.debugger.CPPLiteDebugger;
+import org.netbeans.modules.cnd.debugger.CPPLiteDebuggerConfig;
 
 /**
  *

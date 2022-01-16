@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.cpplite.debugger.ni;
+package org.netbeans.modules.cnd.debugger.ni;
 
 import org.netbeans.modules.nativeimage.spi.debug.NIDebuggerProvider;
 import org.netbeans.modules.nativeimage.spi.debug.NIDebuggerServiceProvider;

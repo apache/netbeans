@@ -23,7 +23,7 @@
     <type>org.netbeans.modules.apisupport.project</type>
     <configuration>
         <data xmlns="http://www.netbeans.org/ns/nb-module-project/3">
-            <code-name-base>org.netbeans.modules.cpplite.debugger</code-name-base>
+            <code-name-base>org.netbeans.modules.cnd.debugger</code-name-base>
             <module-dependencies>
                 <dependency>
                     <code-name-base>org.netbeans.api.annotations.common</code-name-base>
@@ -214,7 +214,7 @@
             </test-dependencies>
             <friend-packages>
                 <friend>org.netbeans.modules.cpplite.project</friend>
-                <package>org.netbeans.modules.cpplite.debugger.api</package>
+                <package>org.netbeans.modules.cnd.debugger.api</package>
             </friend-packages>
             <class-path-extension>
                 <runtime-relative-path>ext/cpplite-mi-f8f8250283be.jar</runtime-relative-path>

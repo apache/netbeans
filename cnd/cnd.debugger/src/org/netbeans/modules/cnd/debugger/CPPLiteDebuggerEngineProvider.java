@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package org.netbeans.modules.cpplite.debugger;
+package org.netbeans.modules.cnd.debugger;
 
 import org.netbeans.api.debugger.DebuggerEngine;
 import org.netbeans.spi.debugger.DebuggerEngineProvider;

@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package org.netbeans.modules.cpplite.debugger.breakpoints;
+package org.netbeans.modules.cnd.debugger.breakpoints;
 
 import java.io.File;
 import java.io.IOException;
@@ -35,7 +35,7 @@ import org.netbeans.api.debugger.DebuggerManagerAdapter;
 import org.netbeans.api.debugger.DebuggerManagerListener;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
-import org.netbeans.modules.cpplite.debugger.CPPLiteDebugger;
+import org.netbeans.modules.cnd.debugger.CPPLiteDebugger;
 import org.openide.cookies.LineCookie;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;

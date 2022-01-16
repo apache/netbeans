@@ -15,7 +15,7 @@ meth public final void wait(long,int) throws java.lang.InterruptedException
 meth public int hashCode()
 meth public java.lang.String toString()
 
-CLSS public org.netbeans.modules.cpplite.debugger.api.Debugger
+CLSS public org.netbeans.modules.cnd.debugger.api.Debugger
 cons public init()
 meth public static java.lang.Process startInDebugger(java.util.List<java.lang.String>) throws java.io.IOException
  anno 0 java.lang.Deprecated()

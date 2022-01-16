@@ -327,7 +327,7 @@ public class NIAttachCustomizer extends javax.swing.JPanel {
         return controller;
     }
 
-    private static final String CPPLITE_DEBUGGER = "org.netbeans.modules.cpplite.debugger"; // NOI18N
+    private static final String CPPLITE_DEBUGGER = "org.netbeans.modules.cnd.debugger"; // NOI18N
 
     @NbBundle.Messages({"# {0} - Name of the module that needs to be enabled.",
                         "MSG_EnableNativeDebugger=Enable {0} in Plugins Manager",

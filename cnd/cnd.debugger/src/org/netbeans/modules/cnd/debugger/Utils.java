@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package org.netbeans.modules.cpplite.debugger;
+package org.netbeans.modules.cnd.debugger;
 
 import java.util.logging.Logger;
 import javax.swing.SwingUtilities;

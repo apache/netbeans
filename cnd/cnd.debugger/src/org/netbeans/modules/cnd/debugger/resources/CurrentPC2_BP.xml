@@ -24,7 +24,7 @@
 <type
     name='CurrentPC2_BP'
     description_key='HINT_CURRENT_PC2_BP'
-    localizing_bundle='org.netbeans.modules.cpplite.debugger.resources.Bundle'
+    localizing_bundle='org.netbeans.modules.cnd.debugger.resources.Bundle'
     visible='true'
     glyph='nbresloc:/org/netbeans/modules/debugger/resources/editor/Breakpoint.png'
     highlight='0xFC9D9F'

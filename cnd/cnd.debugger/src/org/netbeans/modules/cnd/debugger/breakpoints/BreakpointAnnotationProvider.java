@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package org.netbeans.modules.cpplite.debugger.breakpoints;
+package org.netbeans.modules.cnd.debugger.breakpoints;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -32,7 +32,7 @@ import org.netbeans.api.debugger.Breakpoint;
 import org.netbeans.api.debugger.Breakpoint.VALIDITY;
 import org.netbeans.api.debugger.DebuggerManager;
 import org.netbeans.api.debugger.DebuggerManagerAdapter;
-import org.netbeans.modules.cpplite.debugger.DebuggerBreakpointAnnotation;
+import org.netbeans.modules.cnd.debugger.DebuggerBreakpointAnnotation;
 
 import org.openide.filesystems.FileObject;
 import org.openide.loaders.DataObject;

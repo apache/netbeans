@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.cpplite.debugger.debuggingview;
+package org.netbeans.modules.cnd.debugger.debuggingview;
 
 import java.awt.Image;
 import java.util.Collections;
@@ -24,10 +24,10 @@ import java.util.List;
 import java.util.Set;
 import org.netbeans.api.debugger.ActionsManager;
 import org.netbeans.api.debugger.Session;
-import org.netbeans.modules.cpplite.debugger.CPPFrame;
-import org.netbeans.modules.cpplite.debugger.CPPLiteDebugger;
-import org.netbeans.modules.cpplite.debugger.CPPThread;
-import org.netbeans.modules.cpplite.debugger.ThreadsCollector;
+import org.netbeans.modules.cnd.debugger.CPPFrame;
+import org.netbeans.modules.cnd.debugger.CPPLiteDebugger;
+import org.netbeans.modules.cnd.debugger.CPPThread;
+import org.netbeans.modules.cnd.debugger.ThreadsCollector;
 import org.netbeans.spi.debugger.ContextProvider;
 import org.netbeans.spi.debugger.ui.DebuggingView;
 import org.openide.util.ImageUtilities;

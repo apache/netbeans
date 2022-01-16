@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package org.netbeans.modules.cpplite.debugger;
+package org.netbeans.modules.cnd.debugger;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -25,7 +25,7 @@ import org.netbeans.api.annotations.common.CheckForNull;
 
 import org.netbeans.api.debugger.Breakpoint;
 import org.netbeans.api.debugger.Breakpoint.HIT_COUNT_FILTERING_STYLE;
-import org.netbeans.modules.cpplite.debugger.breakpoints.CPPLiteBreakpoint;
+import org.netbeans.modules.cnd.debugger.breakpoints.CPPLiteBreakpoint;
 import org.netbeans.spi.debugger.ui.BreakpointAnnotation;
 import org.openide.text.Annotatable;
 import org.openide.text.Line;

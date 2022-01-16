@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.cpplite.debugger;
+package org.netbeans.modules.cnd.debugger;
 
 import java.util.concurrent.atomic.AtomicInteger;
 import org.netbeans.modules.cnd.debugger.gdb2.mi.MICommand;

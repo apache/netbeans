@@ -31,11 +31,6 @@ import java.util.logging.Level;
 
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.*;
-import static javax.lang.model.element.ElementKind.*;
-import static javax.lang.model.element.Modifier.*;
-import static javax.lang.model.SourceVersion.RELEASE_10;
-import static javax.lang.model.SourceVersion.RELEASE_11;
-import static javax.lang.model.SourceVersion.RELEASE_13;
 import javax.lang.model.type.*;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.ElementFilter;
@@ -55,6 +50,13 @@ import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.api.lexer.TokenUtilities;
 import org.netbeans.modules.parsing.api.Source;
 import org.openide.util.Pair;
+
+import static javax.lang.model.element.ElementKind.*;
+import static javax.lang.model.element.Modifier.*;
+import static javax.lang.model.SourceVersion.RELEASE_10;
+import static javax.lang.model.SourceVersion.RELEASE_11;
+import static javax.lang.model.SourceVersion.RELEASE_13;
+import static javax.lang.model.type.TypeKind.VOID;
 
 /**
  *
@@ -3345,7 +3347,9 @@ public final class JavaCompletionTask<T> extends BaseTask {
                         } else if (controller.getSourceVersion().compareTo(SourceVersion.RELEASE_8) >= 0
                                 && elements.isFunctionalInterface(element) && itemFactory instanceof LambdaItemFactory) {
                             results.add(((LambdaItemFactory<T>)itemFactory).createLambdaItem(env.getController(), element, type, anchorOffset, true, env.addSemicolon()));
-                            results.add(((LambdaItemFactory<T>)itemFactory).createLambdaItem(env.getController(), element, type, anchorOffset, false, env.addSemicolon()));
+                            if (controller.getElementUtilities().getDescriptorElement(element).getReturnType().getKind() != VOID) {
+                                results.add(((LambdaItemFactory<T>)itemFactory).createLambdaItem(env.getController(), element, type, anchorOffset, false, env.addSemicolon()));
+                            }
                         }
                         final boolean startsWith = startsWith(env, element.getSimpleName().toString());
                         final boolean withinScope = withinScope(env, element);

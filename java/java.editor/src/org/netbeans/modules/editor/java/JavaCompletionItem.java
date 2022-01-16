@@ -4180,7 +4180,7 @@ public abstract class JavaCompletionItem implements CompletionItem {
 
         @Override
         public int getSortPriority() {
-            return 50 - SMART_TYPE;
+            return 50 - SMART_TYPE - (expression ? 1 : 0);
         }
 
         @Override
@@ -4296,15 +4296,15 @@ public abstract class JavaCompletionItem implements CompletionItem {
                                     final int embeddedOffset = copy.getSnapshot().getEmbeddedOffset(off);
                                     TreePath path = copy.getTreeUtilities().pathFor(embeddedOffset);
                                     while (method != null && path.getLeaf() != path.getCompilationUnit()) {
-                                        Tree tree = path.getLeaf();
-                                        if (tree.getKind() == Tree.Kind.LAMBDA_EXPRESSION) {
-                                            Tree body;
+                                        if (path.getLeaf().getKind() == Tree.Kind.LAMBDA_EXPRESSION) {
+                                            LambdaExpressionTree tree = (LambdaExpressionTree) path.getLeaf();
+                                            Tree newBody;
                                             if (expression && method.getReturnType().getKind() != VOID) {
-                                                body = GeneratorUtilities.get(copy).createDefaultLambdaExpression((LambdaExpressionTree)tree, method);
+                                                newBody = GeneratorUtilities.get(copy).createDefaultLambdaExpression(tree, method);
                                             } else {
-                                                body = GeneratorUtilities.get(copy).createDefaultLambdaBody((LambdaExpressionTree)tree, method);
+                                                newBody = GeneratorUtilities.get(copy).createDefaultLambdaBody(tree, method);
                                             }
-                                            copy.rewrite(((LambdaExpressionTree)tree).getBody(), body);
+                                            copy.rewrite(tree.getBody(), newBody);
                                             break;
                                         }
                                         path = path.getParentPath();
@@ -4325,8 +4325,26 @@ public abstract class JavaCompletionItem implements CompletionItem {
                                     sb.append(", "); //NOI18N
                                 }
                             }
-                            c.select(startPos.getOffset() + toAddText.indexOf('(') + 1, endPos.getOffset());
-                            sb.append(c.getSelectedText());
+                        }
+                        c.select(startPos.getOffset() + toAddText.indexOf('(') + 1, endPos.getOffset());
+                        String selected = c.getSelectedText();
+
+                        if (expression && selected.indexOf('{') == -1) {
+                            int n = selected.indexOf('>') + 1;
+                            sb.append(selected.substring(0, n));
+                            sb.append("${");
+                            sb.append(selected.substring(n));
+                            sb.append("}");
+                        } else {
+                            if (selected.contains("return ")) {
+                                selected = selected.replace("return ", "return ${")
+                                                   .replace(";", "};");
+                            }
+                            if (params.isEmpty()) {
+                                c.setCaretPosition(startPos.getOffset() + toAddText.indexOf('{') + 1); // between {}
+                            } else {
+                                sb.append(selected);
+                            }
                         }
                     }
                 }

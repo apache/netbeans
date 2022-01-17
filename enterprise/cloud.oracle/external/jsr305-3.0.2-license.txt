@@ -1,9 +1,9 @@
-Name: Apache Commons Codec
-Origin: Apache Software Foundation
-Version: 1.13
+Name: JSR 305
+Description: Annotations for Software Defect Detection in Java
+Origin: https://code.google.com/archive/p/jsr-305
+Version: 3.0.2
 License: Apache-2.0
-Description: Provides implementations of common encoders and decoders.
-URL: https://commons.apache.org/proper/commons-codec/
+
 
                                  Apache License
                            Version 2.0, January 2004
@@ -206,3 +206,7 @@ URL: https://commons.apache.org/proper/commons-codec/
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
+
+
+
+

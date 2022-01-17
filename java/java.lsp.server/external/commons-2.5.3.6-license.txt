@@ -4,7 +4,7 @@ Origin: Apache Software Foundation
 License: Apache-2.0
 Version: 2.5.3.6
 URL: https://commons.apache.org/
-Files: commons-io-2.5.jar commons-lang3-3.6.jar
+Files: commons-io-2.5.jar
 
 
 

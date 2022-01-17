@@ -124,3 +124,10 @@ harness/apisupport.harness/external/launcher-12.5-distribution.zip platform/o.n.
 # only one is part of the product:
 java/libs.javacapi/external/nb-javac-jdk-17.0.1-ga-api.jar java/libs.nbjavacapi/external/nb-javac-jdk-17.0.1-ga-api.jar
 java/libs.javacapi/external/nb-javac-jdk-17.0.1-ga.jar java/libs.nbjavacapi/external/nb-javac-jdk-17.0.1-ga.jar
+
+# Maven and Gradle are self-contained distributions - ignoring overlaps
+enterprise/cloud.oracle/external/jsr305-3.0.2.jar extide/gradle/external/gradle-7.3-bin.zip
+ide/bcpkix/external/bcpkix-jdk15on-1.68.jar extide/gradle/external/gradle-7.3-bin.zip
+ide/bcprov/external/bcprov-jdk15on-1.68.jar extide/gradle/external/gradle-7.3-bin.zip
+platform/o.apache.commons.codec/external/commons-codec-1.15.jar extide/gradle/external/gradle-7.3-bin.zip
+platform/o.apache.commons.lang3/external/commons-lang3-3.8.1.jar java/maven.embedder/external/apache-maven-3.8.4-bin.zip

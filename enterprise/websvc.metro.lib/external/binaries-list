@@ -14,13 +14,13 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-5AC4C523E54635598BEA4AE2E022B6AAEB0EF033 org.glassfish.metro:webservices-api:2.4.4
-D4B7C3207D05825E189E59943857FE56DFD77A65 org.glassfish.metro:webservices-extra:2.4.4
-96BDAE9907C1E75B0271C0E076D3D0F8330F7EF9 org.glassfish.metro:webservices-extra-api:2.4.4
-1DBCB66DC136E51536C92DC8C510888B853F6A34 org.glassfish.metro:webservices-rt:2.4.4
-339CBADE626F7C4B6DB3AD3B243A6E076579E8A7 org.glassfish.metro:webservices-tools:2.4.4
-741C18AA0D8349936C06A9D829750EB940105EB1 org.glassfish.metro:webservices-api:2.4.4:javadoc
-B4CCA91692603CE46234A8B6974E31746B78451C org.glassfish.metro:webservices-extra:2.4.4:javadoc
-76CDDDC0CC849450124BFCB11954145C95B64B36 org.glassfish.metro:webservices-extra-api:2.4.4:javadoc
-B4BE508CDFC0E0BA9DE8E26C16D97CC4F145C96E org.glassfish.metro:webservices-rt:2.4.4:javadoc
-40CC537B25BC564E4CDA3D8E99C90DCBCB1D2A29 org.glassfish.metro:webservices-tools:2.4.4:javadoc
+796194E3AE3A45E544A88C99E4628D3331F2418C org.glassfish.metro:webservices-api:2.4.8
+3A6CC32500211DC25EA3595BF38CA6898ECF3AD7 org.glassfish.metro:webservices-extra:2.4.8
+4AB48619E622704862F426AEB7B46E749902C0D3 org.glassfish.metro:webservices-extra-api:2.4.8
+94A2077E07311E485DA930EEE026D7808F3548D7 org.glassfish.metro:webservices-rt:2.4.8
+B0A0484A019F17D76A445F8DDC868B444037465B org.glassfish.metro:webservices-tools:2.4.8
+8EC006B42CEBB1AB534ADBA8CF8E26359A72A07D org.glassfish.metro:webservices-api:2.4.8:javadoc
+CB0A821527B2F22A2B1F4515AEF333AA5F7F5799 org.glassfish.metro:webservices-extra:2.4.8:javadoc
+3A967426FA319664F3CC82687BB3ACAB137302F1 org.glassfish.metro:webservices-extra-api:2.4.8:javadoc
+DBD843C09A61A9AE8962AB06D0B4BDECA8041015 org.glassfish.metro:webservices-rt:2.4.8:javadoc
+30BA11A9C15F6FA31EAF2A36F6C84292F03D777D org.glassfish.metro:webservices-tools:2.4.8:javadoc

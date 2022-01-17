@@ -1157,7 +1157,9 @@ class NetBeansConfigurationResolver implements vscode.DebugConfigurationProvider
         if (!config.request) {
             config.request = 'launch';
         }
-        config.file = '${file}';
+        if (vscode.window.activeTextEditor) {
+            config.file = '${file}';
+        }
         if (!config.classPaths) {
             config.classPaths = ['any'];
         }

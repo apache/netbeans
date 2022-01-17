@@ -18,6 +18,7 @@
  */
 package org.netbeans.swing.laf.flatlaf.ui;
 
+import com.formdev.flatlaf.FlatLaf;
 import com.formdev.flatlaf.util.UIScale;
 import org.openide.util.VectorIcon;
 import java.awt.BasicStroke;
@@ -54,14 +55,25 @@ import org.netbeans.swing.tabcontrol.plaf.TabControlButton;
  */
 @SuppressWarnings("serial")
 public final class FlatTabControlIcon extends VectorIcon {
-    private static final boolean chevron = "chevron".equals(UIManager.getString("Component.arrowType")); // NOI18N
-    private static final int arc = UIManager.getInt("TabControlIcon.arc"); // NOI18N
-    private static final Color foreground = UIManager.getColor("TabControlIcon.foreground"); // NOI18N
-    private static final Color disabledForeground = UIManager.getColor("TabControlIcon.disabledForeground"); // NOI18N
-    private static final Color rolloverBackground = UIManager.getColor("TabControlIcon.rolloverBackground"); // NOI18N
-    private static final Color pressedBackground = UIManager.getColor("TabControlIcon.pressedBackground"); // NOI18N
-    private static final Color closeRolloverBackground = UIManager.getColor("TabControlIcon.close.rolloverBackground"); // NOI18N
-    private static final Color closeRolloverForeground = UIManager.getColor("TabControlIcon.close.rolloverForeground"); // NOI18N
+    private static boolean chevron;
+    private static int arc;
+    private static Color foreground;
+    private static Color disabledForeground;
+    private static Color rolloverBackground;
+    private static Color pressedBackground;
+    private static Color closeRolloverBackground;
+    private static Color closeRolloverForeground;
+
+    private static void updateUI() {
+        chevron = "chevron".equals(UIManager.getString("Component.arrowType")); // NOI18N
+        arc = UIManager.getInt("TabControlIcon.arc"); // NOI18N
+        foreground = UIManager.getColor("TabControlIcon.foreground"); // NOI18N
+        disabledForeground = UIManager.getColor("TabControlIcon.disabledForeground"); // NOI18N
+        rolloverBackground = UIManager.getColor("TabControlIcon.rolloverBackground"); // NOI18N
+        pressedBackground = UIManager.getColor("TabControlIcon.pressedBackground"); // NOI18N
+        closeRolloverBackground = UIManager.getColor("TabControlIcon.close.rolloverBackground"); // NOI18N
+        closeRolloverForeground = UIManager.getColor("TabControlIcon.close.rolloverForeground"); // NOI18N
+    }
 
     private static final Map<Entry<Integer,Integer>,Icon> INSTANCES = populateInstances();
     private final int buttonId;
@@ -76,6 +88,13 @@ public final class FlatTabControlIcon extends VectorIcon {
     }
 
     private static Map<Entry<Integer,Integer>,Icon> populateInstances() {
+        updateUI();
+        UIManager.addPropertyChangeListener(e -> {
+            if ("lookAndFeel".equals(e.getPropertyName()) && e.getNewValue() instanceof FlatLaf) {
+                updateUI();
+            }
+        });
+
         // The string keys of these maps aren't currently used, but are useful for debugging.
         Map<String, Integer> buttonIDs = new LinkedHashMap<String, Integer>();
         // ViewTabDisplayerUI

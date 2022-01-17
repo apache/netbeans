@@ -63,6 +63,13 @@ public class FlatSlidingButtonUI extends SlidingButtonUI {
     }
 
     @Override
+    protected void uninstallDefaults(AbstractButton b) {
+        super.uninstallDefaults(b);
+
+        defaults_initialized = false;
+    }
+
+    @Override
     public void paint(Graphics g, JComponent c) {
         if (((SlidingButton) c).isBlinkState()) {
             g.setColor(attentionBackground);

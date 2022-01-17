@@ -937,12 +937,10 @@ final class ViewHierarchy {
     }
     
     public void updateUI() {
-        SwingUtilities.updateComponentTreeUI(mainWindow.getFrame());
-        if(editorAreaFrame != null) {
-            SwingUtilities.updateComponentTreeUI(editorAreaFrame);
-        }
-        for(ModeView mv: separateModeViews.keySet()) {
-            SwingUtilities.updateComponentTreeUI(mv.getComponent());
+        // Update all windows in application.
+        // This includes the mainWindow, editorAreaFrame and separateModeViews.
+        for (Window w : Window.getWindows()) {
+            SwingUtilities.updateComponentTreeUI(w);
         }
     }
     

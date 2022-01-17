@@ -28,8 +28,13 @@ import org.openide.awt.ActionRegistration;
 import com.formdev.flatlaf.FlatLaf;
 import com.formdev.flatlaf.FlatLightLaf;
 import java.awt.EventQueue;
+import java.lang.reflect.Method;
+import java.util.Collection;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JComponent;
+import javax.swing.LookAndFeel;
 import javax.swing.UIManager;
 import org.openide.awt.DynamicMenuContent;
 import org.openide.awt.Mnemonics;
@@ -124,5 +129,59 @@ public final class ToggleDarkModeAction extends SystemAction implements DynamicM
         // update UI
         WindowManager wmgr = Lookup.getDefault().lookup(WindowManager.class);
         wmgr.updateUI();
+
+        // update editor colors
+        switchEditorColorsProfile();
+    }
+
+    // Following methods are copied from class org.netbeans.core.windows.options.LafPanel
+
+    //Use reflection to instantiate ColorModel class and get/set the current profile.
+    private static final String COLOR_MODEL_CLASS_NAME = "org.netbeans.modules.options.colors.ColorModel"; //NOI18N
+
+    private boolean isChangeEditorColorsPossible() {
+        String preferredProfile = getPreferredColorProfile();
+        if( preferredProfile == null )
+            return false;
+        ClassLoader cl = Lookup.getDefault().lookup( ClassLoader.class );
+        if( null == cl )
+            cl = getClass().getClassLoader();
+        try {
+            Class klz = cl.loadClass( COLOR_MODEL_CLASS_NAME );
+            Object colorModel = klz.newInstance();
+            Method m = klz.getDeclaredMethod( "getCurrentProfile", new Class[0] ); //NOI18N
+            Object res = m.invoke( colorModel, new Object[0] );
+            return res != null && !preferredProfile.equals( res );
+        } catch( Exception ex ) {
+            //ignore
+        }
+        return false;
+    }
+
+    private void switchEditorColorsProfile() {
+        if( !isChangeEditorColorsPossible() )
+            return;
+        String preferredProfile = getPreferredColorProfile();
+
+        ClassLoader cl = Lookup.getDefault().lookup( ClassLoader.class );
+        if( null == cl )
+            cl = getClass().getClassLoader();
+        try {
+            Class klz = cl.loadClass( COLOR_MODEL_CLASS_NAME );
+            Object colorModel = klz.newInstance();
+            Method m = klz.getDeclaredMethod( "getAnnotations", String.class ); //NOI18N
+            Object annotations = m.invoke( colorModel, preferredProfile );
+            m = klz.getDeclaredMethod( "setAnnotations", String.class, Collection.class ); //NOI18N
+            m.invoke( colorModel, preferredProfile, annotations );
+            m = klz.getDeclaredMethod( "setCurrentProfile", String.class ); //NOI18N
+            m.invoke( colorModel, preferredProfile );
+        } catch( Exception ex ) {
+            //ignore
+            Logger.getLogger( getClass().getName() ).log( Level.INFO, "Cannot change editor colors profile.", ex ); //NOI18N
+        }
+    }
+
+    private String getPreferredColorProfile() {
+        return UIManager.getString("nb.preferred.color.profile"); //NOI18N
     }
 }

@@ -201,7 +201,6 @@ public class ConnectorPanel extends JPanel implements ActionListener, HelpCtx.Pr
     @Override
     public void actionPerformed (ActionEvent e) {
         if (doNotListen) return;
-        if (e.getActionCommand ().equals ("SwitchMe!")); // NOI18N
         removeAll ();
         refresh (((JComboBox) e.getSource ()).getSelectedIndex ());
         Component w = getParent ();

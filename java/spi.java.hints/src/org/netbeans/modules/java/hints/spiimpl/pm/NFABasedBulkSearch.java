@@ -448,7 +448,7 @@ public class NFABasedBulkSearch extends BulkSearch {
                 throw new IllegalStateException(ex);
             }
         }
-        if (cancel.get());
+
         new CollectIdentifiers<Void, Void>(new HashSet<>(), cancel) {
             private boolean encode = true;
             @Override
@@ -511,7 +511,6 @@ public class NFABasedBulkSearch extends BulkSearch {
 
         ctx.setIdentifiers(identifiers);
         ctx.setContent(content);
-        if (cancel.get());
     }
 
     @Override

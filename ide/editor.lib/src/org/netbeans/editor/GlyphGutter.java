@@ -462,8 +462,6 @@ public class GlyphGutter extends JComponent implements Annotations.AnnotationsLi
         return (int)comp.getSize().getHeight(); // + highestLineNumber * eui.getLineHeight()
     }
     
-    private static final Color DEFAULT_GUTTER_LINE = UIManager.getColor("controlShadow");
-    
     /** Paint the gutter itself */
     public @Override void paintComponent(final Graphics g) {
         super.paintComponent(g);
@@ -494,7 +492,7 @@ public class GlyphGutter extends JComponent implements Annotations.AnnotationsLi
         g.fillRect(clip.x, clip.y, clip.width, clip.height);
         
         //painting gutter line
-        g.setColor(DEFAULT_GUTTER_LINE);
+        g.setColor(UIManager.getColor("controlShadow"));
         g.drawLine(glyphGutterWidth-1, clip.y, glyphGutterWidth-1, clip.height + clip.y);
 
         final Document doc = component.getDocument();

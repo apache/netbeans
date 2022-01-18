@@ -25,6 +25,7 @@ import java.io.Externalizable;
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
+import javax.swing.BorderFactory;
 import javax.swing.JComponent;
 import javax.swing.JToolBar;
 import javax.swing.UIManager;
@@ -94,18 +95,20 @@ public class View extends TopComponent implements org.openide.util.HelpCtx.Provi
                 contentComponent.setName (NbBundle.getMessage (View.class, toolTipResource));
             }
             add (contentComponent, BorderLayout.CENTER);  //NOI18N
-            JToolBar toolBar = new JToolBar(JToolBar.VERTICAL);
+            JToolBar toolBar = new JToolBar(JToolBar.VERTICAL) {
+                @Override
+                public void updateUI() {
+                    super.updateUI();
+                    setBorder(BorderFactory.createMatteBorder(0, 0, 0, 1,
+                        UIManager.getDefaults().getColor("Separator.foreground")));
+                }
+            };
             toolBar.setFloatable(false);
             toolBar.setRollover(true);
             toolBar.setBorderPainted(true);
             if( "Aqua".equals(UIManager.getLookAndFeel().getID()) ) { //NOI18N
                 toolBar.setBackground(UIManager.getColor("NbExplorerView.background")); //NOI18N
             }
-            toolBar.setBorder(javax.swing.BorderFactory.createCompoundBorder(
-                    javax.swing.BorderFactory.createMatteBorder(0, 0, 0, 1,
-                    javax.swing.UIManager.getDefaults().getColor("Separator.background")),
-                    javax.swing.BorderFactory.createMatteBorder(0, 0, 0, 1,
-                    javax.swing.UIManager.getDefaults().getColor("Separator.foreground"))));
             add(toolBar, BorderLayout.WEST);
             buttonsPane = toolBar;
         } else {

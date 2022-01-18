@@ -30,6 +30,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
@@ -49,6 +50,7 @@ import org.openide.explorer.ExplorerUtils;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.nodes.Node;
+import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
 import org.openide.util.lookup.Lookups;
 import org.openide.util.lookup.ProxyLookup;
@@ -220,7 +222,6 @@ public class TreeNodeRegistryImpl implements TreeNodeRegistry {
                 if (h == -1 || w == -1) {
                     try {
                         observer.cdl.await();
-                        Thread.sleep(1000);
                     } catch (InterruptedException ex) {
                     }
                     synchronized (observer) {
@@ -248,10 +249,31 @@ public class TreeNodeRegistryImpl implements TreeNodeRegistry {
         }
         synchronized (this) {
             if (res == null) {
-                res = new ImageDataOrIndex(imageURI, imageCounter++);
+                res = new ImageDataOrIndex(imageURI, imageCounter++).
+                        baseURL(findImageURI(i));
             }
             images.put(i, res);
         }
         return res;
     }
+
+
+    public static URI findImageURI(Image i) {
+        URL u = ImageUtilities.findImageBaseURL(i);
+        if (u == null) {
+            return null;
+        }
+        String s = u.toString();
+        try {
+            if (s.contains(":")) {
+                return new URI(s);
+            } else {
+                return new URI("nbres:/" + s);
+            }
+        } catch (URISyntaxException ex) {
+            LOG.log(Level.WARNING, "Unable to interpret image ID: {0}", s);
+            return null;
+        }
+    }
+    
 }

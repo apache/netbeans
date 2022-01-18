@@ -17,9 +17,46 @@
     KIND, either express or implied.  See the License for the
     specific language governing permissions and limitations
     under the License.
-
--->
+    
+    -->
 <project name="org.netbeans.modules.nbcode.integration" default="netbeans" basedir=".">
-    <description>Builds, tests, and runs the project org.netbeans.modules.nbcode.integration.</description>
-    <import file="nbproject/build-impl.xml"/>
+<description>Builds, tests, and runs the project org.netbeans.modules.nbcode.integration.</description>
+<import file="nbproject/build-impl.xml"/>
+
+<property name="nbantext.jar" location="${harness.dir}/../../build/nbantext.jar"/>
+<target name="copy-icon-files" depends="init">
+    <!-- load the properties as plain text into a property -->
+    <loadfile property="_imagelist" srcfile="${src.dir}/org/netbeans/modules/nbcode/integration/resources/uimanager-icons.properties">
+        <!-- only load affirmative values of properties -->
+        <filterchain>
+            <linecontainsregexp negate="true">
+                <regexp pattern="^#|^\s*$|=" />
+            </linecontainsregexp>
+            <tokenfilter>
+                <replaceregex pattern="(.+)$" replace="\1,"/>
+            </tokenfilter>
+            <!--
+            <prefixlines prefix="copyicons." />
+            -->
+        </filterchain>
+    </loadfile>
+    
+    <echo message="${_imagelist}"/>
+    
+    <mkdir dir="${build.dir}/org/netbeans/modules/nbcode/integration/resources/uidefaults"/>
+    <taskdef name="repeat" classname="org.netbeans.nbbuild.Repeat" classpath="${nbantext.jar}"/>
+    <repeat target="-copy-single-file" name="copy.icon.name" values="${_imagelist}" />
+</target>
+
+    <target name="-copy-single-file">
+        <condition property="empty">
+            <equals arg1="${copy.icon.name}" arg2="" trim="true"/>
+        </condition>
+        <antcall target="-copy-single-file2"/>
+    </target>
+    <target name="-copy-single-file2" unless="${empty}">
+        <copy file="${src.dir}/org/netbeans/modules/nbcode/integration/resources/empty.png" tofile="${build.classes.dir}/org/netbeans/modules/nbcode/integration/resources/uidefaults/${copy.icon.name}.png"/>
+    </target>
+    
+    <target name="-pre-release" depends="projectized-common.-pre-release, copy-icon-files"/>
 </project>

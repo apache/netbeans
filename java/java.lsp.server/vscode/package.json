@@ -73,6 +73,11 @@
 					"when": "nbJavaLSReady"
 				},
 				{
+					"id": "cloud.resources",
+					"name": "Cloud",
+					"when": "nbJavaLSReady"
+				},
+				{
 					"id": "run-config",
 					"name": "Run Configuration",
 					"contextualTitle": "Run Configuration",

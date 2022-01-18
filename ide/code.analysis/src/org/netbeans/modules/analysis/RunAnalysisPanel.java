@@ -21,6 +21,7 @@ package org.netbeans.modules.analysis;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.GridBagConstraints;
@@ -682,6 +683,7 @@ public final class RunAnalysisPanel extends javax.swing.JPanel implements Lookup
             }
         };
         AdjustConfigurationPanel panel = new AdjustConfigurationPanel(analyzers, preselectedAnalyzer, preselected, configurationToSelect, errorListener);
+        panel.setPreferredSize(new Dimension(700, 300));
         DialogDescriptor nd = new DialogDescriptor(panel, Bundle.LBL_Configurations(), true, NotifyDescriptor.OK_CANCEL_OPTION, NotifyDescriptor.OK_OPTION, null);
         
         nls[0] = nd.createNotificationLineSupport();

@@ -96,7 +96,7 @@
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
-                        <implementation-version/>
+                        <specification-version>1.82</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>

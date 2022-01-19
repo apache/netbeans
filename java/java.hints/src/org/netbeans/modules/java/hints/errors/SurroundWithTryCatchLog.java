@@ -112,7 +112,7 @@ public class SurroundWithTryCatchLog extends javax.swing.JPanel {
                             .addComponent(printStackTrace)
                             .addComponent(rethrowRuntime)
                             .addComponent(rethrow))))
-                .addGap(221, 221, 221))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -129,7 +129,7 @@ public class SurroundWithTryCatchLog extends javax.swing.JPanel {
                 .addComponent(rethrowRuntime)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(rethrow)
-                .addContainerGap(134, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 

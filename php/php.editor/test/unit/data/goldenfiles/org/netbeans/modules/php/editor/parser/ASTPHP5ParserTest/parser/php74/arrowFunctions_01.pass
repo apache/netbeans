@@ -327,7 +327,7 @@
         <token id='T_FN' start='1199' end='1201'>
             <text>fn</text>
         </token>
-        <token id='T_REFERENCE' start='1201' end='1202'>
+        <token id='T_AMPERSAND_NOT_FOLLOWED_BY_VAR_OR_VARARG' start='1201' end='1202'>
             <text>&amp;</text>
         </token>
         <token id='T_OPEN_PARENTHESE' start='1202' end='1203'>
@@ -351,7 +351,7 @@
         <token id='T_FN' start='1228' end='1230'>
             <text>fn</text>
         </token>
-        <token id='T_REFERENCE' start='1230' end='1231'>
+        <token id='T_AMPERSAND_NOT_FOLLOWED_BY_VAR_OR_VARARG' start='1230' end='1231'>
             <text>&amp;</text>
         </token>
         <token id='T_OPEN_PARENTHESE' start='1231' end='1232'>

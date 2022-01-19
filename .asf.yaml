@@ -22,8 +22,8 @@ github:
     - hacktoberfest # Hacktoberfest topic
   features:
     wiki: false
-    issues: false
-    projects: false
+    issues: true
+    projects: true
   enabled_merge_buttons:
     squash:  true
     merge:   true

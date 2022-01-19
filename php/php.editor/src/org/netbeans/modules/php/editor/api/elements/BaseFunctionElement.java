@@ -48,6 +48,13 @@ public interface BaseFunctionElement extends PhpElement {
      * type, {@code false} otherwise
      */
     boolean isReturnUnionType();
+    /**
+     * Check whether return type is an intersection type.
+     *
+     * @return {@code true} if not phpdoc but actual return type is an
+     * intersection type, {@code false} otherwise
+     */
+    boolean isReturnIntersectionType();
     String asString(PrintAs as);
     String asString(PrintAs as, TypeNameResolver typeNameResolver);
     String asString(PrintAs as, TypeNameResolver typeNameResolver, PhpVersion phpVersion);

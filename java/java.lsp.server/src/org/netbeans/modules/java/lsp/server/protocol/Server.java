@@ -18,10 +18,12 @@
  */
 package org.netbeans.modules.java.lsp.server.protocol;
 
+import com.google.gson.InstanceCreator;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Method;
+import java.lang.reflect.Type;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -60,8 +62,10 @@ import org.eclipse.lsp4j.MessageType;
 import org.eclipse.lsp4j.PublishDiagnosticsParams;
 import org.eclipse.lsp4j.RenameOptions;
 import org.eclipse.lsp4j.SemanticTokensCapabilities;
+import org.eclipse.lsp4j.SemanticTokensParams;
 import org.eclipse.lsp4j.ServerCapabilities;
 import org.eclipse.lsp4j.ShowMessageRequestParams;
+import org.eclipse.lsp4j.TextDocumentIdentifier;
 import org.eclipse.lsp4j.TextDocumentSyncKind;
 import org.eclipse.lsp4j.TextDocumentSyncOptions;
 import org.eclipse.lsp4j.WorkDoneProgressCancelParams;
@@ -148,13 +152,23 @@ public final class Server {
     private static Launcher<NbCodeLanguageClient> createLauncher(LanguageServerImpl server, Pair<InputStream, OutputStream> io,
             Function<MessageConsumer, MessageConsumer> processor) {
         return new LSPLauncher.Builder<NbCodeLanguageClient>()
-            .configureGson(gb -> gb.registerTypeAdapter(SemanticTokensCapabilities.class, (InstanceCreator<SemanticTokensCapabilities>) type -> new SemanticTokensCapabilities(false)))
             .setLocalService(server)
             .setRemoteInterface(NbCodeLanguageClient.class)
             .setInput(io.first())
             .setOutput(io.second())
             .wrapMessages(processor)
-//                .traceMessages(new java.io.PrintWriter(System.err))
+            .configureGson(gb -> {
+                gb.registerTypeAdapter(SemanticTokensCapabilities.class, new InstanceCreator<SemanticTokensCapabilities>() {
+                    @Override public SemanticTokensCapabilities createInstance(Type type) {
+                        return new SemanticTokensCapabilities(null);
+                    }
+                });
+                gb.registerTypeAdapter(SemanticTokensParams.class, new InstanceCreator<SemanticTokensParams>() {
+                    @Override public SemanticTokensParams createInstance(Type type) {
+                        return new SemanticTokensParams(new TextDocumentIdentifier(""));
+                    }
+                });
+            })
             .create();
     }
 
@@ -673,7 +687,7 @@ public final class Server {
             }
         }
 
-        private InitializeResult constructInitResponse(JavaSource src) {
+        private InitializeResult constructInitResponse(InitializeParams init, JavaSource src) {
             ServerCapabilities capabilities = new ServerCapabilities();
             if (src != null) {
                 TextDocumentSyncOptions textDocumentSyncOptions = new TextDocumentSyncOptions();
@@ -725,6 +739,7 @@ public final class Server {
                 capabilities.setRenameProvider(renOpt);
                 FoldingRangeProviderOptions foldingOptions = new FoldingRangeProviderOptions();
                 capabilities.setFoldingRangeProvider(foldingOptions);
+                textDocumentService.init(init.getCapabilities(), capabilities);
             }
             return new InitializeResult(capabilities);
         }
@@ -769,7 +784,7 @@ public final class Server {
             // but complete the InitializationRequest independently of the project initialization.
             return CompletableFuture.completedFuture(
                     finishInitialization(
-                        constructInitResponse(checkJavaSupport())
+                        constructInitResponse(init, checkJavaSupport())
                     )
             );
         }

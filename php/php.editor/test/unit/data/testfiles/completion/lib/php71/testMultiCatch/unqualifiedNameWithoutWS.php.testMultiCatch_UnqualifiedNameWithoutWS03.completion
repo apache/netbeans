@@ -75,6 +75,7 @@ KEYWORD    print '';                                  Language Construct
 KEYWORD    private                                    null
 KEYWORD    protected                                  null
 KEYWORD    public                                     null
+KEYWORD    readonly                                   null
 KEYWORD    require '';                                Language Construct
 KEYWORD    require_once '';                           Language Construct
 KEYWORD    return ;                                   Language Construct

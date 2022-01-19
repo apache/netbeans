@@ -189,7 +189,13 @@ public class CompletionProviderImpl implements CompletionProvider {
                                 commit("");
                             }
                             private void commit(String appendText) {
-                                TextEdit te = i.getTextEdit();
+                                if (i.getTextEdit().isRight()) {
+                                    //TODO: the NetBeans client does not current support InsertReplaceEdits, should not happen
+                                    Completion.get().hideDocumentation();
+                                    Completion.get().hideCompletion();
+                                    return ;
+                                }
+                                TextEdit te = i.getTextEdit().getLeft();
                                 NbDocument.runAtomic((StyledDocument) doc, () -> {
                                     try {
                                         int endPos;

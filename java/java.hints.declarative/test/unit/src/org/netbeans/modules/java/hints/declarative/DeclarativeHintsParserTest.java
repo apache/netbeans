@@ -20,7 +20,6 @@
 package org.netbeans.modules.java.hints.declarative;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -39,7 +38,6 @@ import org.netbeans.modules.java.hints.declarative.Condition.Instanceof;
 import org.netbeans.modules.java.hints.declarative.Condition.MethodInvocation;
 import org.netbeans.modules.java.hints.declarative.Condition.MethodInvocation.ParameterKind;
 import org.netbeans.modules.java.hints.declarative.DeclarativeHintsParser.FixTextDescription;
-import static org.junit.Assert.*;
 import org.netbeans.modules.java.hints.declarative.DeclarativeHintsParser.HintTextDescription;
 import org.netbeans.modules.java.hints.declarative.DeclarativeHintsParser.Result;
 import org.netbeans.modules.java.hints.declarative.conditionapi.Variable;
@@ -106,6 +104,19 @@ public class DeclarativeHintsParserTest extends NbTestCase {
         m.put("javax.lang.model.SourceVersion.RELEASE_6", ParameterKind.ENUM_CONSTANT);
 
         performTest("'test': $1 + $2 :: test($1, Modifier.VOLATILE, SourceVersion.RELEASE_6) => 1 + 1;;",
+                    StringHintDescription.create("$1 + $2 ")
+                                         .addCondition(new MethodInvocation(false, "test", m, null))
+                                         .addTos(" 1 + 1")
+                                         .setDisplayName("test"));
+    }
+
+    public void testMethodInvocationCondition3() throws Exception {
+        Map<String, ParameterKind> m = new LinkedHashMap<>();
+
+        m.put("$1", ParameterKind.VARIABLE);
+        m.put("42", ParameterKind.INT_LITERAL);
+
+        performTest("'test': $1 + $2 :: test($1, 42) => 1 + 1;;",
                     StringHintDescription.create("$1 + $2 ")
                                          .addCondition(new MethodInvocation(false, "test", m, null))
                                          .addTos(" 1 + 1")
@@ -506,6 +517,7 @@ public class DeclarativeHintsParserTest extends NbTestCase {
 
     public static final class TestConditionClass {
         public boolean test(String s, Variable v1, Variable v2) { return false; }
+        public boolean test(Variable var, int i) { return false; }
         public boolean test(Variable var, Modifier mod, SourceVersion sv) { return false; }
         public boolean test(Variable var, String... strings) { return false; }
    }

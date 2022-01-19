@@ -1,10 +1,10 @@
 [[54,62]-Syntax error
  unexpected:	abstract
  after:	final
- expected:	function, static, private, protected, public] 54-62:Syntax error
+ expected:	function, const, static, private, protected, public] 54-62:Syntax error
  unexpected:	abstract
  after:	final
- expected:	function, static, private, protected, public
+ expected:	function, const, static, private, protected, public
 [[63,71]-POSSIBLE Syntax Error (check preceding valid syntax error)
  unexpected:	function] 63-71:POSSIBLE Syntax Error (check preceding valid syntax error)
  unexpected:	function

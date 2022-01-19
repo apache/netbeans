@@ -29,6 +29,7 @@ import org.netbeans.modules.php.editor.api.QualifiedName;
 import org.netbeans.modules.php.editor.model.impl.VariousUtils;
 import org.netbeans.modules.php.editor.parser.astnodes.Expression;
 import org.netbeans.modules.php.editor.parser.astnodes.FieldsDeclaration;
+import org.netbeans.modules.php.editor.parser.astnodes.IntersectionType;
 import org.netbeans.modules.php.editor.parser.astnodes.NullableType;
 import org.netbeans.modules.php.editor.parser.astnodes.SingleFieldDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.UnionType;
@@ -80,6 +81,9 @@ public final class SingleFieldDeclarationInfo extends ASTNodeInfo<SingleFieldDec
         if (fieldType != null) {
             if (fieldType instanceof UnionType) {
                 return VariousUtils.getUnionType((UnionType) fieldType);
+            }
+            if (fieldType instanceof IntersectionType) {
+                return VariousUtils.getIntersectionType((IntersectionType) fieldType);
             }
             boolean isNullableType = fieldType instanceof NullableType;
             QualifiedName fieldTypeName = QualifiedName.create(fieldType);

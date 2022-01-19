@@ -1,0 +1,9 @@
+class |>MARK_OCCURRENCES:Method<| {}
+        public $prop1 = new |>MARK_OCCURRENCES:Method<|,
+        public $prop2 = new |>MARK_OCCURRENCES:Method<|(),
+        public $prop3 = new |>MARK_OCCURRENCES:Method<|("test"),
+        public $prop4 = new |>MARK_OCCURRENCES:Method<|(test: "test"),
+        $param = new |>MARK_OCCURRENCES:Method<|,
+        $param = new |>MARK_OCCURRENCES:M^ethod<|(),
+        $param = new |>MARK_OCCURRENCES:Method<|("test"),
+        $param = new |>MARK_OCCURRENCES:Method<|(test: "test"),

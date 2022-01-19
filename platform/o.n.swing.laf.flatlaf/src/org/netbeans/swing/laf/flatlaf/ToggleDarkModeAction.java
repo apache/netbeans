@@ -126,12 +126,13 @@ public final class ToggleDarkModeAction extends SystemAction implements DynamicM
         // remember laf
         NbPreferences.root().node( "laf" ).put( "laf", UIManager.getLookAndFeel().getClass().getName() );
 
+        // update editor colors
+        // (before updateUI() otherwise caret color in open editors is wrong)
+        switchEditorColorsProfile();
+
         // update UI
         WindowManager wmgr = Lookup.getDefault().lookup(WindowManager.class);
         wmgr.updateUI();
-
-        // update editor colors
-        switchEditorColorsProfile();
     }
 
     // Following methods are copied from class org.netbeans.core.windows.options.LafPanel

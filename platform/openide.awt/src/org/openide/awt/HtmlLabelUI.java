@@ -55,6 +55,14 @@ class HtmlLabelUI extends LabelUI {
                 //do nothing
             }
         }
+
+        // clear colors when look and feel changed
+        UIManager.addPropertyChangeListener(evt -> {
+           if( "lookAndFeel".equals(evt.getPropertyName())) {
+               unfocusedSelBg = null;
+               unfocusedSelFg = null;
+           }
+        });
     }
 
     private static Color unfocusedSelBg;

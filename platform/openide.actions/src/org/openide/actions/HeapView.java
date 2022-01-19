@@ -71,22 +71,22 @@ class HeapView extends JComponent {
     /**
      * Foreground color for the chart.
      */
-    private static final Color CHART_COLOR;
+    private Color chartColor;
 
     /**
      * Color for text.
      */
-    private static final Color TEXT_COLOR;
+    private Color textColor;
 
     /**
      * Color for an outline around the text.
      */
-    private static final Color OUTLINE_COLOR;
+    private Color outlineColor;
 
     /**
      * Color for the background.
      */
-    private static final Color BACKGROUND_COLOR;
+    private Color backgroundColor;
 
     /**
      * Number of samples to retain in history.
@@ -97,36 +97,6 @@ class HeapView extends JComponent {
      * Key for the Show Text preference.
      */
     private static final String SHOW_TEXT = "showText";
-
-    static {
-        //init colors
-        Color c = UIManager.getColor("nb.heapview.chart"); //NOI18N
-        if (null == c) {
-            c = new Color(0x2E90E8);
-        }
-        CHART_COLOR = c;
-
-        c = UIManager.getColor("nb.heapview.foreground"); //NOI18N
-        if (null == c) {
-            c = Color.DARK_GRAY;
-        }
-        TEXT_COLOR = c;
-
-        c = UIManager.getColor("nb.heapview.background"); //NOI18N
-        if (null == c) {
-            c = new Color(0xCEDBE6);
-        }
-        BACKGROUND_COLOR = c;
-
-        c = UIManager.getColor("nb.heapview.highlight"); //NOI18N
-        if (null == c) {
-            c = new Color(BACKGROUND_COLOR.getRed(),
-                    BACKGROUND_COLOR.getGreen(),
-                    BACKGROUND_COLOR.getBlue(),
-                    192);
-        }
-        OUTLINE_COLOR = c;
-    }
 
     /**
      * MessageFormat used to generate text.
@@ -185,6 +155,34 @@ class HeapView extends JComponent {
         /* Setting this true seems to cause some painting artifacts on 150% scaling, as we don't
         always manage to fill every device pixel with the background color. So leave it off. */
         setOpaque(false);
+
+        //init colors
+        Color c = UIManager.getColor("nb.heapview.chart"); //NOI18N
+        if (null == c) {
+            c = new Color(0x2E90E8);
+        }
+        chartColor = c;
+
+        c = UIManager.getColor("nb.heapview.foreground"); //NOI18N
+        if (null == c) {
+            c = Color.DARK_GRAY;
+        }
+        textColor = c;
+
+        c = UIManager.getColor("nb.heapview.background"); //NOI18N
+        if (null == c) {
+            c = new Color(0xCEDBE6);
+        }
+        backgroundColor = c;
+
+        c = UIManager.getColor("nb.heapview.highlight"); //NOI18N
+        if (null == c) {
+            c = new Color(backgroundColor.getRed(),
+                    backgroundColor.getGreen(),
+                    backgroundColor.getBlue(),
+                    192);
+        }
+        outlineColor = c;
     }
 
     /**
@@ -296,10 +294,10 @@ class HeapView extends JComponent {
                 g2.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
                 g2.clipRect(0, 0, width, height);
                 // Draw background.
-                g2.setColor(BACKGROUND_COLOR);
+                g2.setColor(backgroundColor);
                 g2.fillRect(0, 0, width, height);
                 // Draw samples
-                g2.setColor(CHART_COLOR);
+                g2.setColor(chartColor);
                 paintSamples(g2, width, height);
                 // Draw text if enabled
                 if (getShowText()) {
@@ -327,10 +325,10 @@ class HeapView extends JComponent {
         double y = h / 2.0 + fm.getAscent() / 2.0 - 2.0;
         AffineTransform oldTransform = g.getTransform();
         g.translate(x, y);
-        g.setColor(OUTLINE_COLOR);
+        g.setColor(outlineColor);
         g.setStroke(new BasicStroke(2.5f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
         g.draw(outline);
-        g.setColor(TEXT_COLOR);
+        g.setColor(textColor);
         g.fill(outline);
         g.setTransform(oldTransform);
     }

@@ -22,6 +22,8 @@ package org.netbeans.modules.options.advanced;
 import java.beans.PropertyChangeListener;
 import java.util.List;
 import javax.swing.JComponent;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 import org.netbeans.spi.options.OptionsPanelController;
 import org.openide.util.HelpCtx;
 import org.openide.util.Lookup;
@@ -72,6 +74,18 @@ public final class AdvancedPanelController extends OptionsPanelController {
     
     public JComponent getComponent (Lookup masterLookup) {
 	AdvancedPanel p = getAdvancedPanel();
+
+        // Update look and feel of advanced panel (if necessary).
+        // Because the advanced panel was created very early from getLookup()
+        // when showing the Options dialog, but was not yet added to OptionsPanel,
+        // it may have wrong LaF.
+        String currentLaf = UIManager.getLookAndFeel().getClass().getName();
+        Object componentLaf = p.getClientProperty("nb.internal.componentLaf"); //NOI18N
+        if (componentLaf != null && !componentLaf.equals(currentLaf)) {
+            SwingUtilities.updateComponentTreeUI(p);
+        }
+        p.putClientProperty("nb.internal.componentLaf", null); //NOI18N
+
 	p.init();
 	return p;
     }
@@ -103,8 +117,13 @@ public final class AdvancedPanelController extends OptionsPanelController {
     private AdvancedPanel advancedPanel;
     
     private synchronized AdvancedPanel getAdvancedPanel () {
-        if (advancedPanel == null)
+        if (advancedPanel == null) {
             advancedPanel = new AdvancedPanel(subpath);
+
+            // Remember look and feel used to create the advanced panel.
+            String currentLaf = UIManager.getLookAndFeel().getClass().getName();
+            advancedPanel.putClientProperty("nb.internal.componentLaf", currentLaf); //NOI18N
+        }
         return advancedPanel;
     }
 }

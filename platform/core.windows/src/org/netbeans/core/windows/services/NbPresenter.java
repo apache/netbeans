@@ -56,6 +56,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
+import java.util.function.BiConsumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.AbstractAction;
@@ -248,11 +249,71 @@ implements PropertyChangeListener, WindowListener, Mutex.Action<Void>, Comparato
                 KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), ESCAPE_COMMAND);
         getRootPane().getActionMap().put(ESCAPE_COMMAND, new EscapeAction());
 
+        updateUIifNecessary();
         initializePresenter();
 
         pack();
 
         initBounds();
+    }
+
+    /**
+     * Update look and feel of all components in descriptor (if necessary).
+     * <p>
+     * Needed for descriptors that are reused. E.g. Options dialog stores its
+     * descriptor in a static field and reuses it each time the Options dialog
+     * is shown. If the Options dialog is not shown when the look and feel is 
+     * changed, then the components in its descriptor are not immediately updated.
+     * Therefore it may be necessary to update them before showing.
+     * <p>
+     * Uses a client property to decide whether it is necessary to update.
+     * If the client property is null, then the component was just created
+     * and has the current look and feel. If its value, which is a look and feel
+     * class name, is different to current look and feel, then update the UI.
+     * Always stores the class name of the current look and feel in the client property.
+     */
+    private void updateUIifNecessary() {
+        walkDescriptorComponents((c, currentLaf) -> {
+            Object componentLaf = c.getClientProperty("nb.internal.componentLaf"); //NOI18N
+            if (componentLaf != null && !componentLaf.equals(currentLaf)) {
+                SwingUtilities.updateComponentTreeUI(c);
+            }
+            c.putClientProperty("nb.internal.componentLaf", currentLaf); //NOI18N
+        });
+
+        // For modeless dialogs (e.g. Options dialog), update client property
+        // if look and feel changed while dialog is open.
+        getRootPane().addPropertyChangeListener("UI", evt -> {
+            if (currentMessage != null) {
+                walkDescriptorComponents((c, currentLaf) -> {
+                    if (c.getClientProperty("nb.internal.componentLaf") != null) { //NOI18N
+                        c.putClientProperty("nb.internal.componentLaf", currentLaf); //NOI18N
+                    }
+                });                
+            }
+        });
+    }
+
+    /**
+     * Invokes the given action on all components in the descriptor.
+     */
+    private void walkDescriptorComponents(BiConsumer<JComponent, String> action) {
+        String currentLaf = UIManager.getLookAndFeel().getClass().getName();
+
+        Object message = descriptor.getMessage();
+        if (message instanceof JComponent) {
+            action.accept((JComponent) message, currentLaf);
+        }
+
+        for (Object[] options : new Object[][]{descriptor.getOptions(), descriptor.getAdditionalOptions()}) {
+            if (options != null) {
+                for (Object option : options) {
+                    if (option instanceof JComponent) {
+                        action.accept((JComponent) option, currentLaf);
+                    }
+                }
+            }
+        }
     }
 
     /** Requests focus for <code>currentMessage</code> component.
@@ -433,7 +494,7 @@ implements PropertyChangeListener, WindowListener, Mutex.Action<Void>, Comparato
     }
 
     /** Descriptor can be cached and reused. We need to remove listeners
-     *  from descriptor, buttons and disconnect componets from container hierarchy.
+     *  from descriptor, buttons and disconnect components from container hierarchy.
      */
     private void uninitializePresenter() {
         descriptor.removePropertyChangeListener(this);

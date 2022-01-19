@@ -77,7 +77,7 @@ public class KeymapPanel extends javax.swing.JPanel implements ActionListener, P
     private static final int SEARCH_DELAY_TIME_LONG = 300; // < 3 chars
     private static final int SEARCH_DELAY_TIME_SHORT = 20; // >= 3 chars
 
-    private volatile KeymapViewModel keymapModel;
+    private final KeymapViewModel keymapModel;
     private TableSorter sorter;
 
     private JPopupMenu popup = new JPopupMenu();
@@ -90,7 +90,10 @@ public class KeymapPanel extends javax.swing.JPanel implements ActionListener, P
 
 
     /** Creates new form KeymapPanel */
-    public KeymapPanel() {
+    public KeymapPanel(KeymapViewModel model) {
+        keymapModel = model;
+        keymapModel.getMutableModel().addChangeListener(this);
+
         sorter = new TableSorter(getModel());
         initComponents();
         specialkeyList = new SpecialkeyPanel(this, searchSCField);
@@ -320,15 +323,6 @@ public class KeymapPanel extends javax.swing.JPanel implements ActionListener, P
     }
 
     KeymapViewModel getModel() {
-        if (keymapModel == null) {
-            KeymapViewModel tmpModel = new KeymapViewModel();
-            synchronized (this) {
-                if (keymapModel == null) {
-                    keymapModel = tmpModel;
-                    tmpModel.getMutableModel().addChangeListener(this);
-                }
-            }
-        }
         return keymapModel;
     }
     

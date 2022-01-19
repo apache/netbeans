@@ -101,9 +101,13 @@ public final class NotificationCenterTopComponent extends TopComponent {
 
     private void init() {
         initComponents();
-        detailsPanel = new JPanel(new GridLayout(1, 1));
-        Color color = Utils.getTextBackground();
-        detailsPanel.setBackground(new Color(color.getRed(), color.getGreen(), color.getBlue()));
+        detailsPanel = new JPanel(new GridLayout(1, 1)) {
+            @Override
+            public void updateUI() {
+                super.updateUI();
+                setBackground(Utils.getTextBackground());
+            }
+        };
         lblEmptyDetails = new JLabel(NbBundle.getMessage(NotificationCenterTopComponent.class, "LBL_EmptyDetails"), JLabel.CENTER);
         lblEmptyDetails.setFont(italicFont);
         lblEmptyDetails.setEnabled(false);
@@ -210,6 +214,30 @@ public final class NotificationCenterTopComponent extends TopComponent {
             return ((NotificationTableModel) notificationTable.getModel()).getEntry(selectedRowIndex);
         }
         return null;
+    }
+
+    @Override
+    public void updateUI() {
+        super.updateUI();
+
+        if (notificationTable == null) {
+            return; // not yet created; invoked from constructor
+        }
+
+        // update look and feel of notification components that are currently not shown
+        NotificationTableModel model = (NotificationTableModel) notificationTable.getModel();
+        int rowCount = model.getRowCount();
+        for (int i = 0; i < rowCount; i++) {
+            NotificationImpl entry = model.getEntry(i);
+            JComponent balloonComp = entry.getBalloonComp();
+            JComponent detailsComp = entry.getDetailsComponent();
+            if (balloonComp != null && !balloonComp.isDisplayable()) {
+                SwingUtilities.updateComponentTreeUI(balloonComp);
+            }
+            if (detailsComp != null && !detailsComp.isDisplayable()) {
+                SwingUtilities.updateComponentTreeUI(detailsComp);
+            }
+        }
     }
 
     private void scheduleDetailsRefresh() {

@@ -299,6 +299,10 @@ final class CommandManager implements ActionListener {
         return slidingTabbed;
     }
     
+    Component getSlidingTabbedComponent() {
+        return (slidingTabbed != null) ? slidingTabbed.getComponent() : null;
+    }
+
     private Tabbed updateSlidedTabContainer(int tabIndex) {
         Tabbed container = getSlidingTabbed();
 //        TabDataModel containerModel = container.getModel();

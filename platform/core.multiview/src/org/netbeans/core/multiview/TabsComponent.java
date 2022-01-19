@@ -166,6 +166,26 @@ class TabsComponent extends JPanel {
     }
 
     @Override
+    public void updateUI() {
+        super.updateUI();
+
+        if (model == null) {
+            return; // not yet created; invoked from constructor
+        }
+
+        // update view toolbars that are currently not displayed (only toolbar of active view is displayed)
+        for (MultiViewDescription desc : model.getDescriptions()) {
+            MultiViewElement element = model.getElementForDescription(desc, false);
+            if (element != null) {
+                JComponent toolbar = element.getToolbarRepresentation();
+                if (toolbar != null && !toolbar.isDisplayable()) {
+                    SwingUtilities.updateComponentTreeUI(toolbar);
+                }
+            }
+        }
+    }
+
+    @Override
     public void removeNotify() {
         super.removeNotify();
         if( null != awtEventListener ) {

@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 import static java.util.logging.Level.FINE;
@@ -48,6 +49,7 @@ import static org.netbeans.modules.gradle.loaders.GradleDaemon.INIT_SCRIPT;
 import static org.netbeans.modules.gradle.loaders.GradleDaemon.TOOLING_JAR;
 import org.netbeans.modules.gradle.api.GradleBaseProject;
 import org.netbeans.modules.gradle.api.NbGradleProject;
+import org.netbeans.modules.gradle.api.NbGradleProject.Quality;
 import static org.netbeans.modules.gradle.api.NbGradleProject.Quality.EVALUATED;
 import static org.netbeans.modules.gradle.api.NbGradleProject.Quality.FULL_ONLINE;
 import static org.netbeans.modules.gradle.api.NbGradleProject.Quality.SIMPLE;
@@ -142,7 +144,8 @@ public class LegacyProjectLoader extends AbstractProjectLoader {
         try {
 
             errors.clear();
-            info = retrieveProjectInfo(goOnline, pconn, cmd, token, pl);
+            AtomicBoolean onlineResult = new AtomicBoolean();
+            info = retrieveProjectInfo(goOnline, pconn, cmd, token, pl, onlineResult);
 
             if (!info.getProblems().isEmpty()) {
                 errors.openNotification(
@@ -155,7 +158,8 @@ public class LegacyProjectLoader extends AbstractProjectLoader {
                     // If we do not have exception, but seen some problems the we mark the quality as SIMPLE
                     quality = SIMPLE;
                 } else {
-                    quality = ctx.aim;
+                    // the project has been either fully loaded, or online checked
+                    quality = onlineResult.get() ? Quality.FULL_ONLINE : Quality.FULL;
                 }
             } else {
                 if (info.getProblems().isEmpty()) {
@@ -215,7 +219,7 @@ public class LegacyProjectLoader extends AbstractProjectLoader {
         return ret;
     }
 
-    private static NbProjectInfo retrieveProjectInfo(GoOnline goOnline, ProjectConnection pconn, GradleCommandLine cmd, CancellationToken token, ProgressListener pl) throws GradleConnectionException, IllegalStateException {
+    private static NbProjectInfo retrieveProjectInfo(GoOnline goOnline, ProjectConnection pconn, GradleCommandLine cmd, CancellationToken token, ProgressListener pl, AtomicBoolean wasOnline) throws GradleConnectionException, IllegalStateException {
         NbProjectInfo ret;
 
         GradleSettings settings = GradleSettings.getDefault();
@@ -235,6 +239,7 @@ public class LegacyProjectLoader extends AbstractProjectLoader {
 
         if (goOnline == GoOnline.NEVER || goOnline == GoOnline.ON_DEMAND) {
             BuildActionExecuter<NbProjectInfo> action = createInfoAction(pconn, offline, token, pl);
+            wasOnline.set(!offline.hasFlag(GradleCommandLine.Flag.OFFLINE));
             try {
                 ret = action.run();
                 if (goOnline == GoOnline.NEVER || !ret.hasException()) {
@@ -246,8 +251,9 @@ public class LegacyProjectLoader extends AbstractProjectLoader {
                 }
             }
         }
-
+        
         BuildActionExecuter<NbProjectInfo> action = createInfoAction(pconn, online, token, pl);
+        wasOnline.set(true);
         ret = action.run();
         return ret;
     }

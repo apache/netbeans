@@ -83,7 +83,7 @@ public final class TreeItemData {
         this.contextValues = contextValues;
         return this;
     }
-
+    
     public String getCommand() {
         return command;
     }

@@ -666,8 +666,79 @@
 					"group": "inline@1"
 				}
 			]
-		}
+		},
+		
+		"netbeans.iconMapping" : [
+			{
+				"uriExpression": "nbres:/org/netbeans/modules/gradle/resources/gradle.png",
+				"codeicon": "project"
+			},
+			{
+				"uriExpression": "nbres:/org/netbeans/modules/gradle/java/resources/javaseProjectIcon.png",
+				"codeicon": "project"
+			},
+			{
+				"uriExpression": "nbres:/org/netbeans/modules/maven/resources/jaricon.png",
+				"codeicon": "project"
+			},
+
+			{
+				"uriExpression": "nbres:/org/netbeans/modules/gradle/resources/libraries.png",
+				"codeicon": "settings-gear"
+			},
+			{
+				"uriExpression": "nbres:/org/netbeans/modules/gradle/resources/(empty.png|module-artifact.png)",
+				"codeicon": "file-zip"
+			},
+			{
+				"uriExpression": "nbres:/org/netbeans/modules/maven/DependencyIcon.png",
+				"codeicon": "file-zip"
+			},
+			{
+				"uriExpression": "nbres:/org/netbeans/modules/maven/TransitiveDependencyIcon.png",
+				"codeicon": "library"
+			},
+			{
+				"uriExpression": "nbres:/org/netbeans/spi/java/project/support/ui/package(Empty)?.gif",
+				"codeicon": "file-submodule"
+			},
+			{
+				"uriExpression": "nbres:/org/netbeans/modules/java/resources/(abstract_class_file|class|enum_file).png",
+				"codeicon": "symbol-class"
+			},
+			{
+				"uriExpression": "nbres:/org/netbeans/modules/java/resources/(annotation_file|interface_file).png",
+				"codeicon": "symbol-interface"
+			},
+			{
+				"uriExpression": "nbres:/org/netbeans/modules/nbcode/integration/resources/uidefaults/Tree.(open|closed)Icon",
+				"valueMatch": [ " [0-9]+([A-Z][A-z]+)?SourceRoot | Dependencies[A-Z]+ | OtherRoots | projectfiles | BootCPNode " ],
+				"codeicon": "file-submodule"
+			},
+			{
+				"uriExpression": "nbres:/org/netbeans/modules/nbcode/integration/resources/uidefaults/Tree.(open|closed)Icon",
+				"valueMatch": [ " [0-9]+([A-z]+).(java|groovy|generated|resources) " ],
+				"codeicon": "file-submodule"
+			},
+			{
+				"uriExpression": "nbres:/org/netbeans/modules/nbcode/integration/resources/uidefaults/Tree.(open|closed)Icon",
+				"codeicon": "*folder"
+			},
+			{
+				"uriExpression": "nbres:/org/netbeans/modules/java/api/common/project/ui/resources/platform.gif",
+				"codeicon": "vm"
+			}
+		],
+	
+		"jsonValidation": [
+			{
+				"fileMatch": "package.json",
+				"url": "./schemas/package.schema.json"
+			}
+		]
 	},
+
+
 	"scripts": {
 		"vscode:prepublish": "npm run compile",
 		"compile": "tsc -p ./",

@@ -103,6 +103,15 @@ public class QuickSearchPopup extends javax.swing.JPanel
         setVisible(false);
     }
 
+    @Override
+    public void updateUI() {
+        super.updateUI();
+        setBorder(javax.swing.BorderFactory.createLineBorder(QuickSearchComboBar.getPopupBorderColor()));
+        if (jList1 != null && jList1.getCellRenderer() instanceof SearchResultRender) {
+            ((SearchResultRender)jList1.getCellRenderer()).updateUI();
+        }
+    }
+
     void invoke() {
         ItemResult result = ((ItemResult) jList1.getModel().getElementAt(jList1.getSelectedIndex()));
         if (result != null) {
@@ -209,7 +218,6 @@ public class QuickSearchPopup extends javax.swing.JPanel
         hintSep = new javax.swing.JSeparator();
         hintLabel = new javax.swing.JLabel();
 
-        setBorder(javax.swing.BorderFactory.createLineBorder(QuickSearchComboBar.getPopupBorderColor()));
         setLayout(new java.awt.BorderLayout());
 
         jScrollPane1.setBorder(null);

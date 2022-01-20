@@ -43,6 +43,7 @@ import javax.swing.JComponent.AccessibleJComponent;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JRadioButtonMenuItem;
+import javax.swing.SwingUtilities;
 import org.netbeans.modules.openide.loaders.AWTTask;
 import org.netbeans.modules.openide.loaders.DataObjectAccessor;
 import org.openide.cookies.InstanceCookie;
@@ -143,6 +144,16 @@ public final class ToolbarPool extends JComponent implements Accessible {
 
         getAccessibleContext().setAccessibleName(instance.instanceName());
         getAccessibleContext().setAccessibleDescription(instance.instanceName());
+    }
+
+    @Override
+    public void updateUI() {
+        // update toolbars that are currently not visible when look and feel changed
+        for (Toolbar tb : getToolbars()) {
+            if (!tb.isDisplayable()) {
+                SwingUtilities.updateComponentTreeUI(tb);
+            }
+        }
     }
     
     /**

@@ -92,6 +92,13 @@ public class ToolbarTabDisplayerUI extends AbstractTabDisplayerUI {
             syncButtonsWithModel();
         }
     }
+
+    @Override
+    protected void uninstall() {
+        displayer.remove(toolbar);
+        toolbar.removeAll();
+        toolbar = null;
+    }
     
     protected void modelChanged() {
         if (syncButtonsWithModel()) {

@@ -37,7 +37,7 @@ public class ShorteningCellRenderer extends DefaultListCellRenderer {
     @Override
     public Component getListCellRendererComponent(JList<?> list, Object value,
             int index, boolean isSelected, boolean cellHasFocus) {
-        String s = value == null ? null : value.toString();
+        String s = value == null ? null : value.toString().replaceAll("[\r\n]+", " ");
         Component component = super.getListCellRendererComponent(list,
                 s, index, isSelected, cellHasFocus);
         if (s != null && s.length() > COMBO_TEXT_LENGHT_LIMIT

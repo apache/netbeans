@@ -82,7 +82,7 @@ public abstract class PatternSandbox extends JPanel
     protected void initComponents() {
 
         cboxPattern = new JComboBox<String>();
-        cboxPattern.setEditor(new BasicSearchForm.MultiLineComboBoxEditor());
+        cboxPattern.setEditor(new BasicSearchForm.MultiLineComboBoxEditor(cboxPattern));
         cboxPattern.setEditable(true);
         cboxPattern.setRenderer(new ShorteningCellRenderer());
         lblPattern = new JLabel();

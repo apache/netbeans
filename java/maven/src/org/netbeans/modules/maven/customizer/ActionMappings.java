@@ -580,6 +580,11 @@ public class ActionMappings extends javax.swing.JPanel implements HelpCtx.Provid
 
         org.openide.awt.Mnemonics.setLocalizedText(btnDisable, org.openide.util.NbBundle.getMessage(ActionMappings.class, "ActionMappings.btnDisable.text")); // NOI18N
         btnDisable.setName(""); // NOI18N
+        btnDisable.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDisableActionPerformed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 10;
         gridBagConstraints.gridy = 6;
@@ -617,8 +622,16 @@ private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-HEADER
         MappingWrapper wr = (MappingWrapper)obj;
         NetbeansActionMapping mapp = wr.getMapping();
         if (mapp != null) {
+            int removeIndex = lstMappings.getSelectedIndex();
             if (mapp.getActionName().startsWith(CUSTOM_ACTION_PREFIX)) { 
                 ((DefaultListModel)lstMappings.getModel()).removeElement(wr);
+                if (removeIndex > 0) {
+                    lstMappings.setSelectedIndex(removeIndex - 1);
+                    lstMappings.ensureIndexIsVisible(removeIndex - 1);
+                } else if (lstMappings.getModel().getSize() > 0) {
+                    lstMappings.setSelectedIndex(0);
+                    lstMappings.ensureIndexIsVisible(0);
+                }
             }
             //remove toolbar if associated. //TODO remove somehow in apply()
             if (wr.getToolbarIconPath() != null) {
@@ -650,6 +663,7 @@ private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-HEADER
                 }
             }
         }
+       
     }//GEN-LAST:event_btnRemoveActionPerformed
     
     private void updateEnabledControls(MappingWrapper wr) {
@@ -669,12 +683,18 @@ private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-HEADER
             cbRecursively.setEnabled(true);
             cbBuildWithDeps.setEnabled(true);
             btnAddProps.setEnabled(true);
-            btnDisable.setEnabled(true);
+            if (notEmpty && wr.isUserDefined()
+                    && ActionToGoalUtils.getDefaultMapping(wr.getActionName(), project) == null) {
+                btnDisable.setEnabled(true);
+            } else {
+                btnDisable.setEnabled(false);
+            }
             if (isGlobal()) {
                 txtPackagings.setEnabled(true);
             }
+            updateColor(wr);
         } else {
-            clearFields();
+            clearFields(wr);
         }
         if (notEmpty) {
             btnRemove.setEnabled(true);
@@ -790,6 +810,17 @@ private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-HEADER
             }
         }
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void btnDisableActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDisableActionPerformed
+        MappingWrapper wr = (MappingWrapper) lstMappings.getSelectedValue();
+        if (wr != null) {
+            if (wr.isUserDefined()) {
+                wr.getMapping().setGoals(null);
+                updateEnabledControls(wr);
+                lstMappings.updateUI();
+            }
+        }
+    }//GEN-LAST:event_btnDisableActionPerformed
     
     @Messages({"LBL_SetIcon=Set Icon:",
                "LBL_No_More_Icons=<No more slots available>",
@@ -798,7 +829,6 @@ private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-HEADER
     })
     private void loadMappings() {
         DefaultListModel model = new DefaultListModel();
-
         if (handle != null) {
             boolean isWar = NbMavenProject.TYPE_WAR.equalsIgnoreCase(project.getProjectWatcher().getPackagingType());
             addSingleAction(ActionProvider.COMMAND_BUILD, model);
@@ -878,30 +908,38 @@ private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-HEADER
     @Override
     public HelpCtx getHelpCtx() {
         return CustomizerProviderImpl.HELP_CTX;
-    }    
+    }
     
     private void clearFields() {
-        comConfiguration.removeActionListener(comboListener);
+        clearFields(null);
+    }
+    
+    private void clearFields(MappingWrapper wr) {
+        if (wr == null) {
+            comConfiguration.removeActionListener(comboListener);
+        }
         txtGoals.getDocument().removeDocumentListener(goalsListener);
         txtProfiles.getDocument().removeDocumentListener(profilesListener);
         epProperties.getDocument().removeDocumentListener(propertiesListener);
         txtPackagings.getDocument().removeDocumentListener(packagingsListener);
         
         txtGoals.setText(""); //NOI18N
-        txtProfiles.setText(""); //NOI18N
-        epProperties.setText(""); //NOI18N
-        txtPackagings.setText("");
+        if (wr == null) {
+            txtProfiles.setText(""); //NOI18N
+            epProperties.setText(""); //NOI18N
+            txtPackagings.setText("");
+        }
         
         txtGoals.getDocument().addDocumentListener(goalsListener);
         txtProfiles.getDocument().addDocumentListener(profilesListener);
         epProperties.getDocument().addDocumentListener(propertiesListener);
         txtPackagings.getDocument().addDocumentListener(packagingsListener);
         
-        txtGoals.setEnabled(false);
+        //txtGoals.setEnabled(false);   // NETBEANS-6058: txtGoals must be kept enabled to prevent permanently disabled user action
         epProperties.setEnabled(false);
         txtProfiles.setEnabled(false);
         txtPackagings.setEnabled(false);
-        updateColor(null);
+        updateColor(wr);
         cbRecursively.setEnabled(false);
         cbBuildWithDeps.setEnabled(false);
         btnAddProps.setEnabled(false);
@@ -912,7 +950,7 @@ private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-HEADER
             jButton1.setText(BTN_ShowToolbar());
         }
         
-        lblGoals.setEnabled(false);
+        //lblGoals.setEnabled(false);
         lblHint.setEnabled(false);
         lblPackagings.setEnabled(false);
         lblProfiles.setEnabled(false);
@@ -1213,6 +1251,10 @@ private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-HEADER
                 mapp.setGoals(goals);
                 if (handle != null) {
                     handle.markAsModified(getActionMappings());
+                }
+                if (wr.isUserDefined()) {
+                    updateEnabledControls(wr);
+                    lstMappings.updateUI();
                 }
             }
             return wr;

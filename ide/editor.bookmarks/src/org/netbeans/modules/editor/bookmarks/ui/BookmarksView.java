@@ -173,6 +173,19 @@ implements BookmarkManagerListener, PropertyChangeListener, ExplorerManager.Prov
     }
     
     @Override
+    public void updateUI() {
+        super.updateUI();
+
+        // Update tree or table view that is not shown when look and feel changed.
+        if (treeView != null && !treeView.isDisplayable()) {
+            SwingUtilities.updateComponentTreeUI(treeView.getParent() != null ? treeView.getParent() : treeView);
+        }
+        if (tableView != null && !tableView.isDisplayable()) {
+            SwingUtilities.updateComponentTreeUI(tableView.getParent() != null ? tableView.getParent() : treeView);
+        }
+    }
+
+    @Override
     public ExplorerManager getExplorerManager() {
         return explorerManager;
     }

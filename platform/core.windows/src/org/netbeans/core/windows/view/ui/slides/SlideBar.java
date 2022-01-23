@@ -147,34 +147,6 @@ public final class SlideBar extends JPanel implements ComplexListDataListener,
         return selModel;
     }
     
-    @Override
-    public void updateUI() {
-        super.updateUI();
-
-        if (dataModel == null) {
-            return; // not yet created; invoked from constructor
-        }
-
-        // Update tabbed component, which is (temporary) shown when pressing
-        // a sliding button or hover mouse over a sliding button.
-        Component slidingTabbedComponent = commandMgr.getSlidingTabbedComponent();
-        if (slidingTabbedComponent != null && !slidingTabbedComponent.isDisplayable()) {
-            SwingUtilities.updateComponentTreeUI(slidingTabbedComponent);
-        }
-
-        // Update views that are currently not shown.
-        // Note that a view component may be a descendent of slidingTabbedComponent
-        // if it was shown once in the past. Therefore exclude it here.
-        for (TabData tab : dataModel.getTabs()) {
-            Component c = tab.getComponent();
-            if (c != null && !c.isDisplayable() && 
-                (slidingTabbedComponent == null || !SwingUtilities.isDescendingFrom(c, slidingTabbedComponent)))
-            {
-                SwingUtilities.updateComponentTreeUI(c);
-            }
-        }
-    }
-
     /***** reactions to changes in data model, synchronizes AWT hierarchy and display ***/
     
     @Override

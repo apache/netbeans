@@ -210,6 +210,22 @@ final class PropUtils {
 
     private static Graphics scratchGraphics = null;
 
+    static {
+        // reset colors when look and feel changed
+        UIManager.addPropertyChangeListener(evt -> {
+            disFg = null;
+            tfFg = null;
+            tfBg = null;
+            selectedSetRendererColor = null;
+            setRendererColor = null;
+            controlColor = null;
+            shadowColor = null;
+            altBg = null;
+            setForegroundColor = null;
+            selectedSetForegroundColor = null;
+        });
+    }
+
     //Comparators copied from original propertysheet implementation
 
     /** Comparator which compares types */

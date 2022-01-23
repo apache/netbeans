@@ -427,7 +427,10 @@ public class EditorUI implements ChangeListener, PropertyChangeListener, MouseLi
                 modelChanged(doc, null);
             }
 
-            extComponent = null;
+            // Note: Do not set extComponent to null because otherwise
+            // BaseTextUI.UIWatcher.propertyChange() would not recreate
+            // a new extComponent when changing look and feel.
+//            extComponent = null;
             component = null;
             putProperty(COMPONENT_PROPERTY, null);
             

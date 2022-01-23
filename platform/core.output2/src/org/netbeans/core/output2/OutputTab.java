@@ -108,6 +108,12 @@ final class OutputTab extends AbstractOutputTab implements IOContainer.CallBacks
         loadAndInitActions();
     }
 
+    @Override
+    public void updateUI() {
+        // update colors when look and feel changed
+        applyOptions();
+    }
+
     private void applyOptions() {
         Lines lines = getDocumentLines();
         if (lines != null) {
@@ -135,7 +141,9 @@ final class OutputTab extends AbstractOutputTab implements IOContainer.CallBacks
      * Set text view background color correctly. See bug #225829.
      */
     private void setTextViewBackground(JTextComponent textView, Color bg) {
-        getOutputPane().getTextView().setBackground(bg);
+        // Use non-UIResource color for text view background to avoid
+        // that it is replaced when look and feel changed.
+        getOutputPane().getTextView().setBackground(new Color(bg.getRGB(), true));
         getOutputPane().getFoldingSideBar().setBackground(bg);
         if ("Nimbus".equals(UIManager.getLookAndFeel().getName())) { //NOI18N
             UIDefaults defaults = new UIDefaults();

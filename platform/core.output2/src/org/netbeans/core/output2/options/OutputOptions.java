@@ -159,6 +159,20 @@ public class OutputOptions {
 
     public void loadFrom(Preferences preferences) {
         assert !EventQueue.isDispatchThread();
+        final OutputOptions diskData = loadFromImpl(preferences);
+        EventQueue.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                assign(diskData);
+                synchronized (OutputOptions.this) {
+                    initialized = true;
+                }
+                pcs.firePropertyChange(PROP_INITIALIZED, false, true);
+            }
+        });
+    }
+
+    private OutputOptions loadFromImpl(Preferences preferences) {
         final OutputOptions diskData = new OutputOptions(false);
         String fontFamily = preferences.get(PREFIX + PROP_FONT_FAMILY,
                 getDefaultFont().getFamily());
@@ -179,16 +193,7 @@ public class OutputOptions {
         } catch (Exception e) {
             LOG.log(Level.INFO, "Invalid link style {0}", linkStyleStr);//NOI18N
         }
-        EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                assign(diskData);
-                synchronized (OutputOptions.this) {
-                    initialized = true;
-                }
-                pcs.firePropertyChange(PROP_INITIALIZED, false, true);
-            }
-        });
+        return diskData;
     }
 
     private void loadColors(final Preferences preferences,
@@ -573,8 +578,25 @@ public class OutputOptions {
     public static synchronized OutputOptions getDefault() {
         if (DEFAULT == null) {
             DEFAULT = new OutputOptions(true);
+
+            // Update output options when look and feel changed.
+            UIManager.addPropertyChangeListener(evt -> {
+                if( "lookAndFeel".equals(evt.getPropertyName())) {
+                    DEFAULT.lafChanged();
+                }
+            });
         }
         return DEFAULT;
+    }
+
+    private void lafChanged() {
+        // Reload output options, which first creates a new instance with default
+        // values based on new look and feel, and then loads modified values from preferences.
+        OutputOptions newOptions = loadFromImpl(NbPreferences.forModule(Controller.class));
+
+        // update output controller and default output options
+        Controller.getDefault().updateOptions(newOptions);
+        assign(newOptions);
     }
 
     public void addPropertyChangeListener(

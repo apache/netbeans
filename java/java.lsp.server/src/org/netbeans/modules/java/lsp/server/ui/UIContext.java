@@ -27,6 +27,7 @@ import org.eclipse.lsp4j.MessageType;
 import org.eclipse.lsp4j.ShowMessageRequestParams;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.modules.java.lsp.server.protocol.HtmlPageParams;
+import org.netbeans.modules.java.lsp.server.protocol.ShowInputBoxParams;
 import org.netbeans.modules.java.lsp.server.protocol.ShowStatusMessageParams;
 import org.openide.awt.StatusDisplayer.Message;
 import org.openide.util.Lookup;
@@ -85,6 +86,9 @@ public abstract class UIContext {
     protected abstract CompletableFuture<MessageActionItem> showMessageRequest(ShowMessageRequestParams msg);
     protected abstract void logMessage(MessageParams msg);
     protected abstract Message showStatusMessage(ShowStatusMessageParams msg);
+    protected CompletableFuture<String> showInputBox(ShowInputBoxParams params) {
+        throw new AbstractMethodError();
+    }
 
 
     private static final class LogImpl extends UIContext {
@@ -125,6 +129,13 @@ public abstract class UIContext {
         protected CompletableFuture<String> showHtmlPage(HtmlPageParams msg) {
             System.out.println("Open in browser: " + msg.getUri());
             return CompletableFuture.completedFuture(null);
+        }
+
+        @Override
+        protected CompletableFuture<String> showInputBox(ShowInputBoxParams params) {
+            System.err.println("input: " + params.getPrompt());
+            CompletableFuture<String> ai = CompletableFuture.completedFuture(null);
+            return ai;
         }
     }
 }

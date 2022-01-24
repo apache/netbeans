@@ -52,6 +52,12 @@ class WorkspaceUIContext extends UIContext {
     }
 
     @Override
+    protected CompletableFuture<String> showInputBox(ShowInputBoxParams params) {
+        return client.showInputBox(params);
+    }
+
+
+    @Override
     protected void logMessage(MessageParams msg) {
         client.logMessage(msg);
     }

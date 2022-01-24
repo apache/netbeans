@@ -19,6 +19,7 @@
 package org.netbeans.modules.cloud.oracle;
 
 import java.awt.Dialog;
+import java.awt.GraphicsEnvironment;
 import java.io.File;
 import java.util.Arrays;
 import java.util.Optional;
@@ -28,6 +29,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
+import org.openide.NotifyDescriptor;
 import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
 import org.openide.util.Pair;
@@ -69,19 +71,29 @@ final class DownloadWalletDialog extends javax.swing.JPanel {
     static Optional<Pair<String, char[]>> showDialog(OCIItem db) {
         File home = new File(System.getProperty("user.home")); //NOI18N
         String lastUsedDir = NbPreferences.forModule(DownloadWalletAction.class).get(LAST_USED_DIR, home.getAbsolutePath()); //NOI18N
-        
-        DownloadWalletDialog dlgPanel = new DownloadWalletDialog();
-        dlgPanel.jTextFieldLocation.setText(lastUsedDir);
-        DialogDescriptor descriptor = new DialogDescriptor(dlgPanel, Bundle.DownloadTitle()); //NOI18N
-        dlgPanel.setDescriptor(descriptor);
-        descriptor.createNotificationLineSupport();
-        Dialog dialog = DialogDisplayer.getDefault().createDialog(descriptor);
-        dialog.setMinimumSize(dlgPanel.getPreferredSize());
-        dialog.setVisible(true);
-        if (DialogDescriptor.OK_OPTION == descriptor.getValue()) {
-            String path = dlgPanel.jTextFieldLocation.getText();
-            NbPreferences.forModule(DownloadWalletAction.class).put(LAST_USED_DIR, path); //NOI18N
-            return Optional.of(Pair.of(path, dlgPanel.jPasswordField.getPassword()));
+
+        if (!GraphicsEnvironment.isHeadless()) {
+            DownloadWalletDialog dlgPanel = new DownloadWalletDialog();
+            dlgPanel.jTextFieldLocation.setText(lastUsedDir);
+            DialogDescriptor descriptor = new DialogDescriptor(dlgPanel, Bundle.DownloadTitle()); //NOI18N
+            dlgPanel.setDescriptor(descriptor);
+            descriptor.createNotificationLineSupport();
+            Dialog dialog = DialogDisplayer.getDefault().createDialog(descriptor);
+            dialog.setMinimumSize(dlgPanel.getPreferredSize());
+            dialog.setVisible(true);
+            if (DialogDescriptor.OK_OPTION == descriptor.getValue()) {
+                String path = dlgPanel.jTextFieldLocation.getText();
+                char[] passwd = dlgPanel.jPasswordField.getPassword();
+                NbPreferences.forModule(DownloadWalletAction.class).put(LAST_USED_DIR, path); //NOI18N
+                return Optional.of(Pair.of(path, passwd));
+            }
+        } else {
+            NotifyDescriptor.InputLine inp = new NotifyDescriptor.InputLine(Bundle.WalletText(), Bundle.DownloadTitle());
+            Object selected = DialogDisplayer.getDefault().notify(inp);
+            if (DialogDescriptor.OK_OPTION == selected) {
+                char[] passwd = inp.getInputText().toCharArray();
+                return Optional.of(Pair.of(null, passwd));
+            }
         }
         return Optional.empty();
     }

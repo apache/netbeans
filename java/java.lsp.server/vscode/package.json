@@ -504,6 +504,10 @@
 				"command": "testing.runAll",
 				"title": "Run All Tests",
 				"category": "Test"
+			},
+                        {
+				"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.DownloadWalletAction",
+				"title": "Add DB Connection"
 			}
 		],
 		"keybindings": [
@@ -578,6 +582,10 @@
 				},
 				{
 					"command": "java.local.db.set.preferred.connection",
+					"when": "false"
+				},
+				{
+					"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.DownloadWalletAction",
 					"when": "false"
 				},
 				{
@@ -659,6 +667,10 @@
 				{
 					"command": "java.local.db.set.preferred.connection",
 					"when": "viewItem =~ /class:ddl.DBConnection/"
+				},
+				{
+					"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.DownloadWalletAction",
+					"when": "viewItem =~ /class:oracle.DatabaseItem/"
 				},
 				{
 					"command": "java.workspace.configureRunSettings",

@@ -15,5 +15,5 @@
 # specific language governing permissions and limitations
 # under the License.
 
-[org.netbeans.lib.=]
-org.netbeans.lib.ddl.DBConnection
+[org.netbeans.modules.cloud.=]
+org.netbeans.modules.cloud.oracle.DatabaseItem

@@ -68,12 +68,14 @@ public class Utils {
             case ENUM:
                 return SymbolKind.Enum;
             case CLASS:
+            case RECORD:
                 return SymbolKind.Class;
             case ANNOTATION_TYPE:
                 return SymbolKind.Interface;
             case INTERFACE:
                 return SymbolKind.Interface;
             case ENUM_CONSTANT:
+            case RECORD_COMPONENT:
                 return SymbolKind.EnumMember;
             case FIELD:
                 return SymbolKind.Field; //TODO: constant
@@ -110,6 +112,7 @@ public class Utils {
             case INTERFACE:
             case ENUM:
             case ANNOTATION_TYPE:
+            case RECORD:
                 TypeElement te = (TypeElement) e;
                 StringBuilder sb = new StringBuilder();
                 sb.append(fqn ? te.getQualifiedName() : te.getSimpleName());
@@ -140,6 +143,7 @@ public class Utils {
                 return sb.toString();
             case FIELD:
             case ENUM_CONSTANT:
+            case RECORD_COMPONENT:
                 return e.getSimpleName().toString();
             case CONSTRUCTOR:
             case METHOD:

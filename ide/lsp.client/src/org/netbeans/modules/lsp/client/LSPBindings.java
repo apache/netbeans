@@ -37,6 +37,7 @@ import java.util.HashSet;
 import java.util.IdentityHashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -56,6 +57,8 @@ import org.eclipse.lsp4j.InitializeParams;
 import org.eclipse.lsp4j.InitializeResult;
 import org.eclipse.lsp4j.ResourceOperationKind;
 import org.eclipse.lsp4j.SemanticTokens;
+import org.eclipse.lsp4j.SemanticTokensCapabilities;
+import org.eclipse.lsp4j.SemanticTokensClientCapabilitiesRequests;
 import org.eclipse.lsp4j.SemanticTokensLegend;
 import org.eclipse.lsp4j.ServerCapabilities;
 import org.eclipse.lsp4j.SymbolCapabilities;
@@ -367,6 +370,7 @@ public class LSPBindings {
        dsc.setHierarchicalDocumentSymbolSupport(true);
        dsc.setSymbolKind(new SymbolKindCapabilities(Arrays.asList(SymbolKind.values())));
        tdcc.setDocumentSymbol(dsc);
+       tdcc.setSemanticTokens(new SemanticTokensCapabilities(new SemanticTokensClientCapabilitiesRequests(true), KNOWN_TOKEN_TYPES, KNOWN_TOKEN_MODIFIERS, Arrays.asList()));
        WorkspaceClientCapabilities wcc = new WorkspaceClientCapabilities();
        wcc.setWorkspaceEdit(new WorkspaceEditCapabilities());
        wcc.getWorkspaceEdit().setDocumentChanges(true);
@@ -387,6 +391,15 @@ public class LSPBindings {
            }
        }
     }
+    private static final List<String> KNOWN_TOKEN_TYPES = Collections.unmodifiableList(Arrays.asList(
+            "namespace", "package", "function", "method", "macro", "parameter",
+            "variable", "struct", "enum", "class", "typeAlias", "typeParameter",
+            "field", "enumMember", "keyword"
+    ));
+
+    private static final List<String> KNOWN_TOKEN_MODIFIERS = Collections.unmodifiableList(Arrays.asList(
+            "static", "definition", "declaration"
+    ));
 
     public static synchronized Set<LSPBindings> getAllBindings() {
         Set<LSPBindings> allBindings = Collections.newSetFromMap(new IdentityHashMap<>());

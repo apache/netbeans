@@ -32,7 +32,7 @@ import org.netbeans.api.java.source.ui.ElementJavadoc;
  */
 public class MarkupTagProcessor {
     
-    private static final List<String> SUPPORTED_SNIPPET_MARKUP_TAGS = Arrays.asList("highlight", "replace", "link");
+    private static final List<String> SUPPORTED_SNIPPET_MARKUP_TAGS = Arrays.asList("highlight", "replace", "link", "start");
 
     public ProcessedTags process(List<SourceLineMeta> parseResult ){
         Map<Integer, List<ApplicableMarkupTag>> markUpTagOnLine = new TreeMap<>();
@@ -80,8 +80,7 @@ public class MarkupTagProcessor {
                             markupAttribute.remove("region");
                             Region region = new Region(regionVal, markupAttribute, markUpTag.getTagName());
                             regionList.add(region);
-                            List<Region> newRegionList = new ArrayList<>();
-                            newRegionList.add(region);
+                            List<Region> newRegionList = new ArrayList<>(regionList);
                             regionTagOnLine.put(markUpTag.isTagApplicableToNextLine() ? nextLine : thisLine, newRegionList);
                             //markUpTagOnLine.put(markUpTag.isTagApplicableToNextLine() ? nextLine : thisLine, transformRegionAttributeToMarkupTag(newRegionList));
                             if(!markUpTag.isTagApplicableToNextLine()){

@@ -61,6 +61,7 @@ import com.sun.tools.javac.code.TypeTag;
 import com.sun.tools.javac.jvm.ClassReader;
 import com.sun.tools.javac.model.JavacElements;
 import com.sun.tools.javac.model.JavacTypes;
+import com.sun.tools.javac.tree.DCTree;
 import com.sun.tools.javac.tree.DocTreeMaker;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.*;
@@ -1772,6 +1773,14 @@ public class TreeFactory {
     
     public DocCommentTree DocComment(List<? extends DocTree> fullBody, List<? extends DocTree> tags) {
         return docMake.at(NOPOS).newDocCommentTree(fullBody, tags);
+    }
+    
+    public DocTree Snippet(List<? extends DocTree> attributes, TextTree text){
+        try {
+            return (DocTree) docMake.getClass().getMethod("newSnippetTree", List.class, TextTree.class).invoke(docMake.at(NOPOS), attributes, text);
+        } catch (Throwable t) {
+            throw throwAny(t);
+        }
     }
     
     public DocCommentTree DocComment(List<? extends DocTree> firstSentence, List<? extends DocTree> body, List<? extends DocTree> tags) {

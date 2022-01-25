@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.9
+#Version 2.10
 
 CLSS public abstract interface java.io.Closeable
 intf java.lang.AutoCloseable
@@ -1091,12 +1091,16 @@ CLSS public org.netbeans.modules.payara.tooling.admin.ServerAdmin
 cons public init()
 meth public !varargs static <%0 extends org.netbeans.modules.payara.tooling.admin.Result> java.util.concurrent.Future<{%%0}> exec(java.util.concurrent.ExecutorService,org.netbeans.modules.payara.tooling.data.PayaraServer,org.netbeans.modules.payara.tooling.admin.Command,org.netbeans.modules.payara.tooling.TaskStateListener[])
 meth public !varargs static <%0 extends org.netbeans.modules.payara.tooling.admin.Result> java.util.concurrent.Future<{%%0}> exec(java.util.concurrent.ExecutorService,org.netbeans.modules.payara.tooling.data.PayaraServer,org.netbeans.modules.payara.tooling.admin.Command,org.netbeans.modules.payara.tooling.data.IdeContext,org.netbeans.modules.payara.tooling.TaskStateListener[])
+ anno 0 java.lang.Deprecated()
 meth public !varargs static <%0 extends org.netbeans.modules.payara.tooling.admin.Result> java.util.concurrent.Future<{%%0}> exec(org.netbeans.modules.payara.tooling.data.PayaraServer,org.netbeans.modules.payara.tooling.admin.Command,org.netbeans.modules.payara.tooling.TaskStateListener[])
 meth public !varargs static <%0 extends org.netbeans.modules.payara.tooling.admin.Result> java.util.concurrent.Future<{%%0}> exec(org.netbeans.modules.payara.tooling.data.PayaraServer,org.netbeans.modules.payara.tooling.admin.Command,org.netbeans.modules.payara.tooling.data.IdeContext,org.netbeans.modules.payara.tooling.TaskStateListener[])
+ anno 0 java.lang.Deprecated()
 meth public static <%0 extends org.netbeans.modules.payara.tooling.admin.Result> java.util.concurrent.Future<{%%0}> exec(java.util.concurrent.ExecutorService,org.netbeans.modules.payara.tooling.data.PayaraServer,org.netbeans.modules.payara.tooling.admin.Command)
 meth public static <%0 extends org.netbeans.modules.payara.tooling.admin.Result> java.util.concurrent.Future<{%%0}> exec(java.util.concurrent.ExecutorService,org.netbeans.modules.payara.tooling.data.PayaraServer,org.netbeans.modules.payara.tooling.admin.Command,org.netbeans.modules.payara.tooling.data.IdeContext)
+ anno 0 java.lang.Deprecated()
 meth public static <%0 extends org.netbeans.modules.payara.tooling.admin.Result> java.util.concurrent.Future<{%%0}> exec(org.netbeans.modules.payara.tooling.data.PayaraServer,org.netbeans.modules.payara.tooling.admin.Command)
 meth public static <%0 extends org.netbeans.modules.payara.tooling.admin.Result> java.util.concurrent.Future<{%%0}> exec(org.netbeans.modules.payara.tooling.data.PayaraServer,org.netbeans.modules.payara.tooling.admin.Command,org.netbeans.modules.payara.tooling.data.IdeContext)
+ anno 0 java.lang.Deprecated()
 meth public static java.util.concurrent.ExecutorService executor(int)
 meth public static void init(java.net.Authenticator)
 supr java.lang.Object

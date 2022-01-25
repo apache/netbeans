@@ -97,7 +97,7 @@
         <exec executable="npm" failonerror="true" dir="${build.dir}/vsce">
             <arg value="install" />
             <arg value="--save" />
-            <arg value="vsce@1.100.2" />
+            <arg value="vsce@2.6.4" />
         </exec>
         <exec executable="${build.dir}/vsce/node_modules/vsce/vsce" failonerror="true" dir="${basedir}/vscode">
             <arg value="package" />

@@ -67,6 +67,7 @@
     <fontcolor name="mod-typeParameter" default="identifier"/>
     <fontcolor name="mod-field" default="field"/>
     <fontcolor name="mod-enumMember" default="field"/>
+    <fontcolor name="mod-keyword" default="keyword"/>
 
     <fontcolor name="mod-namespace-declaration" default="identifier"/>
     <fontcolor name="mod-package-declaration" default="identifier"/>
@@ -82,6 +83,7 @@
     <fontcolor name="mod-typeParameter-declaration" default="identifier"/>
     <fontcolor name="mod-field-declaration" default="field"/>
     <fontcolor name="mod-enumMember-declaration" default="field"/>
+    <fontcolor name="mod-keyword-declaration" default="keyword"/>
 
     <fontcolor name="mod-static" >
         <font style="italic" />

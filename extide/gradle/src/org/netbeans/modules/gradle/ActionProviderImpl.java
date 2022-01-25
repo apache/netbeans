@@ -549,7 +549,8 @@ public class ActionProviderImpl implements ActionProvider {
                             acts.add(act);
                         }
                     }
-                    acts.add(createCustomGradleAction(project, LBL_Custom_run_tasks(), new CustomActionMapping("name"), lookup, true));
+                    acts.add(createCustomGradleAction(project, LBL_Custom_run_tasks(),
+                            new CustomActionMapping(ActionMapping.CUSTOM_PREFIX), lookup, true));
                     SwingUtilities.invokeLater(() -> {
                         boolean selected = menu.isSelected();
                         menu.remove(loading);

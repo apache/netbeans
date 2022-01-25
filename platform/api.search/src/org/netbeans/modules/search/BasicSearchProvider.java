@@ -226,7 +226,8 @@ public class BasicSearchProvider extends SearchProvider {
                     notifySupport.setInformationMessage(UiUtils.getText(
                             "BasicSearchForm.txtInfoNoWildcards"));     //NOI18N
                 } else {
-                    notifySupport.clearMessages();
+                    notifySupport.setInformationMessage(UiUtils.getText(
+                            "BasicSearchForm.txtInfoMultiline"));     //NOI18N
                 }
             }
             return usable;

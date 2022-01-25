@@ -1947,8 +1947,8 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
     static BiConsumer<String, Object> HOOK_NOTIFICATION = null;
 
     private static final Map<ColoringAttributes, List<String>> COLORING_TO_TOKEN_TYPE_CANDIDATES = new HashMap<ColoringAttributes, List<String>>() {{
-        put(ColoringAttributes.FIELD, Arrays.asList("member"));
-        put(ColoringAttributes.RECORD_COMPONENT, Arrays.asList("member"));
+        put(ColoringAttributes.FIELD, Arrays.asList("field", "member"));
+        put(ColoringAttributes.RECORD_COMPONENT, Arrays.asList("field", "member"));
         put(ColoringAttributes.LOCAL_VARIABLE, Arrays.asList("variable"));
         put(ColoringAttributes.PARAMETER, Arrays.asList("parameter"));
         put(ColoringAttributes.METHOD, Arrays.asList("method", "function"));
@@ -1959,6 +1959,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         put(ColoringAttributes.ANNOTATION_TYPE, Arrays.asList("interface"));
         put(ColoringAttributes.ENUM, Arrays.asList("enum"));
         put(ColoringAttributes.TYPE_PARAMETER_DECLARATION, Arrays.asList("typeParameter"));
+        put(ColoringAttributes.KEYWORD, Arrays.asList("keyword"));
     }};
 
     private static final Map<ColoringAttributes, List<String>> COLORING_TO_TOKEN_MODIFIERS_CANDIDATES = new HashMap<ColoringAttributes, List<String>>() {{
@@ -2011,7 +2012,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                                                 modifiers |= mod;
                                             }
                                         }
-                                        if (tokenType.isPresent()) {
+                                        if (tokenType.isPresent() && tokenType.get() >= 0) {
                                             result.add(line - lastLine);
                                             result.add((int) (currentOffset - currentLineStart - column));
                                             result.add(e.getKey().length());

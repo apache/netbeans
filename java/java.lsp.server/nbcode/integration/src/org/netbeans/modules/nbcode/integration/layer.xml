@@ -36,14 +36,8 @@
         </folder>
     </folder>
     <folder name="Explorers">
-        <folder name="_all">
-            <file name="standard-cookies.contextValues" url="standard-cookies.contextValues"/>
-        </folder>
         <folder name="database.connections">
             <file name="database-cookies.contextValues" url="database-cookies.contextValues"/>
-        </folder>
-        <folder name="foundProjects">
-            <attr name="explorerConfirmsDelete" boolvalue="true"/>
         </folder>
     </folder>
     <folder name="Debugger">

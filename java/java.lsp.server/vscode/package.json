@@ -667,8 +667,7 @@
 				}
 			]
 		},
-		
-		"netbeans.iconMapping" : [
+		"netbeans.iconMapping": [
 			{
 				"uriExpression": "nbres:/org/netbeans/modules/gradle/resources/gradle.png",
 				"codeicon": "project"
@@ -681,7 +680,6 @@
 				"uriExpression": "nbres:/org/netbeans/modules/maven/resources/jaricon.png",
 				"codeicon": "project"
 			},
-
 			{
 				"uriExpression": "nbres:/org/netbeans/modules/gradle/resources/libraries.png",
 				"codeicon": "settings-gear"
@@ -712,12 +710,16 @@
 			},
 			{
 				"uriExpression": "nbres:/org/netbeans/modules/nbcode/integration/resources/uidefaults/Tree.(open|closed)Icon",
-				"valueMatch": [ " [0-9]+([A-Z][A-z]+)?SourceRoot | Dependencies[A-Z]+ | OtherRoots | projectfiles | BootCPNode " ],
+				"valueMatch": [
+					" [0-9]+([A-Z][A-z]+)?SourceRoot | Dependencies[A-Z]+ | OtherRoots | projectfiles | BootCPNode "
+				],
 				"codeicon": "file-submodule"
 			},
 			{
 				"uriExpression": "nbres:/org/netbeans/modules/nbcode/integration/resources/uidefaults/Tree.(open|closed)Icon",
-				"valueMatch": [ " [0-9]+([A-z]+).(java|groovy|generated|resources) " ],
+				"valueMatch": [
+					" [0-9]+([A-z]+).(java|groovy|generated|resources) "
+				],
 				"codeicon": "file-submodule"
 			},
 			{
@@ -729,7 +731,6 @@
 				"codeicon": "vm"
 			}
 		],
-	
 		"jsonValidation": [
 			{
 				"fileMatch": "package.json",
@@ -737,8 +738,6 @@
 			}
 		]
 	},
-
-
 	"scripts": {
 		"vscode:prepublish": "npm run compile",
 		"compile": "tsc -p ./",

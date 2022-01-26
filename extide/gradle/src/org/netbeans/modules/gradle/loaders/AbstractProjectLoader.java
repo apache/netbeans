@@ -71,7 +71,7 @@ public abstract class AbstractProjectLoader {
 
         public ReloadContext(NbGradleProjectImpl project, NbGradleProject.Quality aim, GradleCommandLine cmd, String description) {
             this.project = project;
-            this.previous = project.isGradleProjectLoaded() ? project.getGradleProject() : FallbackProjectLoader.createFallbackProject(project.getGradleFiles());
+            this.previous = project.isGradleProjectLoaded() ? project.projectWithQuality(null, FALLBACK, false, false) : FallbackProjectLoader.createFallbackProject(project.getGradleFiles());
             this.aim = aim;
             this.cmd = cmd;
             this.description = description;

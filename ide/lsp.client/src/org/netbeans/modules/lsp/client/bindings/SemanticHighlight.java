@@ -18,12 +18,12 @@
  */
 package org.netbeans.modules.lsp.client.bindings;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
+import java.util.Collection;
+import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.Document;
@@ -32,11 +32,9 @@ import org.eclipse.lsp4j.Position;
 import org.eclipse.lsp4j.SemanticTokens;
 import org.eclipse.lsp4j.SemanticTokensLegend;
 import org.eclipse.lsp4j.SemanticTokensParams;
+import org.eclipse.lsp4j.SemanticTokensWithRegistrationOptions;
 import org.eclipse.lsp4j.TextDocumentIdentifier;
-import org.eclipse.lsp4j.generator.JsonRpcData;
-import org.eclipse.lsp4j.jsonrpc.services.JsonRequest;
 import org.netbeans.api.editor.mimelookup.MimeLookup;
-import org.netbeans.api.editor.mimelookup.MimePath;
 import org.netbeans.api.editor.mimelookup.MimeRegistration;
 import org.netbeans.api.editor.settings.AttributesUtilities;
 import org.netbeans.api.editor.settings.FontColorSettings;
@@ -65,6 +63,10 @@ public class SemanticHighlight implements BackgroundTask {
     @Override
     public void run(LSPBindings bindings, FileObject file) {
         try {
+            SemanticTokensWithRegistrationOptions options = bindings.getInitResult().getCapabilities().getSemanticTokensProvider();
+            if (options == null) {
+                return ;
+            }
             OffsetsBag target = new OffsetsBag(doc);
             SemanticTokensParams params = new SemanticTokensParams(new TextDocumentIdentifier(Utils.toURI(file)));
             SemanticTokens tokens = bindings.getTextDocumentService().semanticTokensFull(params).get();
@@ -130,7 +132,7 @@ public class SemanticHighlight implements BackgroundTask {
             AttributeSet statik = isStatic ? fcs.getTokenFontColors("mod-static") : null;
 
             if (colors != null && statik != null) {
-                return AttributesUtilities.createComposite(colors, statik);
+                return AttributesUtilities.createComposite(adjustAttributes(colors), adjustAttributes(statik));
             } else if (colors != null) {
                 return colors;
             } else if (statik != null) {
@@ -153,6 +155,22 @@ public class SemanticHighlight implements BackgroundTask {
         return bag;
     }
 
+    private static AttributeSet adjustAttributes(AttributeSet as) {
+        Collection<Object> attrs = new LinkedList<Object>();
+
+        for (Enumeration<?> e = as.getAttributeNames(); e.hasMoreElements(); ) {
+            Object key = e.nextElement();
+            Object value = as.getAttribute(key);
+
+            if (value != Boolean.FALSE) {
+                attrs.add(key);
+                attrs.add(value);
+            }
+        }
+
+        return AttributesUtilities.createImmutable(attrs.toArray());
+    }
+
     @MimeRegistration(mimeType="", service=HighlightsLayerFactory.class)
     public static final class HighlightsLayerFactoryImpl implements HighlightsLayerFactory {
 
@@ -164,44 +182,5 @@ public class SemanticHighlight implements BackgroundTask {
         }
         
     }
-    
-//    @JsonRpcData
-//    public static class SemanticTokensParams {
-//
-//        private TextDocumentIdentifier textDocument;
-//
-//        public SemanticTokensParams() {
-//        }
-//
-//        public SemanticTokensParams(TextDocumentIdentifier textDocument) {
-//            this.textDocument = textDocument;
-//        }
-//
-//        public TextDocumentIdentifier getTextDocument() {
-//            return textDocument;
-//        }
-//
-//        public void setTextDocument(TextDocumentIdentifier textDocument) {
-//            this.textDocument = textDocument;
-//        }
-// 
-//    }
-//
-//    @JsonRpcData
-//    public static class SemanticTokens {
-//        private List<Number> data;
-//
-//        public List<Number> getData() {
-//            return data;
-//        }
-//
-//        public void setData(List<Number> data) {
-//            this.data = data;
-//        }
-//
-//    }
-//    public interface SemanticService {
-//        @JsonRequest("textDocument/semanticTokens/full")
-//        public CompletableFuture<SemanticTokens> semanticTokensFull(SemanticTokensParams params);
-//    }
+
 }

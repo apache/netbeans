@@ -159,11 +159,13 @@ import org.netbeans.modules.java.lsp.server.refactoring.ChangeMethodParameterUI;
 import org.netbeans.modules.java.lsp.server.refactoring.ParameterUI;
 import org.netbeans.modules.java.lsp.server.ui.MockHtmlViewer;
 import org.netbeans.modules.java.source.BootClassPathUtil;
+import org.netbeans.modules.java.source.parsing.JavacParser;
 import org.netbeans.modules.parsing.api.ResultIterator;
 import org.netbeans.modules.parsing.impl.indexing.implspi.CacheFolderProvider;
 import org.netbeans.spi.java.classpath.ClassPathProvider;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.netbeans.spi.java.queries.AnnotationProcessingQueryImplementation;
+import org.netbeans.spi.java.queries.SourceLevelQueryImplementation;
 import org.netbeans.spi.lsp.ErrorProvider;
 import org.netbeans.spi.project.ProjectFactory;
 import org.netbeans.spi.project.ProjectState;
@@ -710,10 +712,12 @@ public class ServerTest extends NbTestCase {
                       "        public void innerMethod() {\n" +
                       "        }\n" +
                       "    }\n" +
+                      "    record R(int i) {}\n" +
                       "}\n";
         try (Writer w = new FileWriter(src)) {
             w.write(code);
         }
+        file2SourceLevel.put(FileUtil.toFileObject(src.getParentFile()), "17");
         FileUtil.refreshFor(getWorkDir());
         Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new LspClient() {
             @Override
@@ -758,7 +762,7 @@ public class ServerTest extends NbTestCase {
                           "    character = 0\n" +
                           "  ]\n" +
                           "  end = Position [\n" +
-                          "    line = 8\n" +
+                          "    line = 9\n" +
                           "    character = 1\n" +
                           "  ]\n" +
                           "]:(Class:Inner:Range [\n" +
@@ -778,6 +782,24 @@ public class ServerTest extends NbTestCase {
                           "  end = Position [\n" +
                           "    line = 6\n" +
                           "    character = 9\n" +
+                          "  ]\n" +
+                          "]:()), Class:R:Range [\n" +
+                          "  start = Position [\n" +
+                          "    line = 8\n" +
+                          "    character = 4\n" +
+                          "  ]\n" +
+                          "  end = Position [\n" +
+                          "    line = 8\n" +
+                          "    character = 22\n" +
+                          "  ]\n" +
+                          "]:(Field:i:Range [\n" +
+                          "  start = Position [\n" +
+                          "    line = 8\n" +
+                          "    character = 13\n" +
+                          "  ]\n" +
+                          "  end = Position [\n" +
+                          "    line = 8\n" +
+                          "    character = 18\n" +
                           "  ]\n" +
                           "]:()), Field:field:Range [\n" +
                           "  start = Position [\n" +
@@ -4713,6 +4735,66 @@ public class ServerTest extends NbTestCase {
                        "3:20-26:method:[]");
     }
 
+    public void testSemanticHighlighting2() throws Exception {
+        File src = new File(getWorkDir(), "Test.java");
+        src.getParentFile().mkdirs();
+        String code = "public class Test {\n" +
+                      "    private static final int C = 0;\n" +
+                      "    public int method(int p) {\n" +
+                      "        int l = p + method(0);\n" +
+                      "    }\n" +
+                      "}\n";
+        try (Writer w = new FileWriter(src)) {
+            w.write(code);
+        }
+        FileUtil.refreshFor(getWorkDir());
+        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new LanguageClient() {
+            @Override
+            public void telemetryEvent(Object arg0) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void publishDiagnostics(PublishDiagnosticsParams params) {
+            }
+
+            @Override
+            public void showMessage(MessageParams arg0) {
+            }
+
+            @Override
+            public CompletableFuture<MessageActionItem> showMessageRequest(ShowMessageRequestParams arg0) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void logMessage(MessageParams arg0) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+        }, client.getInputStream(), client.getOutputStream());
+        serverLauncher.startListening();
+        LanguageServer server = serverLauncher.getRemoteProxy();
+        ClientCapabilities clientCaps = new ClientCapabilities();
+        TextDocumentClientCapabilities textCaps = new TextDocumentClientCapabilities();
+        clientCaps.setTextDocument(textCaps);
+        SemanticTokensCapabilities sematicTokensCapabilities = new SemanticTokensCapabilities(true);
+        sematicTokensCapabilities.setTokenTypes(Arrays.asList("field", "method", "function", "class", "interface", "enum", "typeParameter"));
+        sematicTokensCapabilities.setTokenModifiers(Arrays.asList("declaration", "static"));
+        textCaps.setSemanticTokens(sematicTokensCapabilities);
+        InitializeParams initParams = new InitializeParams();
+        initParams.setCapabilities(clientCaps);
+        InitializeResult result = server.initialize(initParams).get();
+        assertNotNull(result.getCapabilities().getSemanticTokensProvider());
+        SemanticTokensLegend legend = result.getCapabilities().getSemanticTokensProvider().getLegend();
+        server.getTextDocumentService().didOpen(new DidOpenTextDocumentParams(new TextDocumentItem(toURI(src), "java", 0, code)));
+        assertColoring(legend,
+                       server.getTextDocumentService().semanticTokensFull(new SemanticTokensParams(new TextDocumentIdentifier(toURI(src)))).get(),
+                       "0:13-17:class:[declaration]",
+                       "1:29-30:field:[declaration, static]",
+                       "2:15-21:method:[declaration]",
+                       "3:20-26:method:[]");
+    }
+
     private void assertColoring(SemanticTokensLegend legend, SemanticTokens tokens, String... expected) {
         List<String> coloring = new ArrayList<>();
         int line = 0;
@@ -4943,7 +5025,19 @@ public class ServerTest extends NbTestCase {
         public void saveProject(Project project) throws IOException, ClassCastException {
         }
     }
-    
+
+    private static final Map<FileObject, String> file2SourceLevel = new HashMap<>();
+
+    @ServiceProvider(service=SourceLevelQueryImplementation.class)
+    public static final class SourceLevelImpl implements SourceLevelQueryImplementation {
+
+        @Override
+        public String getSourceLevel(FileObject javaFile) {
+            return file2SourceLevel.getOrDefault(javaFile, "1.8");
+        }
+
+    }
+
     private static volatile ProgressCommand progressCommandInstance;
     
     @ServiceProvider(service = CodeActionsProvider.class)
@@ -5183,5 +5277,6 @@ public class ServerTest extends NbTestCase {
 
     static {
         System.setProperty("SourcePath.no.source.filter", "true");
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
     }
 }

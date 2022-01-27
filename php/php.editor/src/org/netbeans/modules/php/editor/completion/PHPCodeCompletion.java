@@ -1347,6 +1347,7 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
             List<String> invalidProposalsForClsMembers = INVALID_PROPOSALS_FOR_CLS_MEMBERS;
             Model model = request.result.getModel();
 
+            boolean parentContext = false;
             boolean selfContext = false;
             boolean staticLateBindingContext = false;
             boolean specialVariable = false;
@@ -1361,6 +1362,7 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
                 staticContext = true;
                 instanceContext = true;
                 specialVariable = true;
+                parentContext = true;
             } else if (TokenUtilities.textEquals(varName, "static")) { // NOI18N
                 staticContext = true;
                 instanceContext = false;
@@ -1381,7 +1383,7 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
                         return;
                     }
                     final ElementFilter staticFlagFilter = !completeAccessPrefix
-                            ? new StaticOrInstanceMembersFilter(staticContext, instanceContext, selfContext, staticLateBindingContext)
+                            ? new StaticOrInstanceMembersFilter(staticContext, instanceContext, selfContext, staticLateBindingContext, parentContext)
                             : new ElementFilter() { // NETBEANS-1855
                         @Override
                         public boolean isAccepted(PhpElement element) {
@@ -1495,6 +1497,7 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
                 List<String> invalidProposalsForClsMembers = INVALID_PROPOSALS_FOR_CLS_MEMBERS;
                 Model model = request.result.getModel();
 
+                boolean parentContext = false;
                 boolean selfContext = false;
                 boolean staticLateBindingContext = false;
                 boolean specialVariable = false;
@@ -1509,6 +1512,7 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
                     isStaticContext = true;
                     isInstanceContext = true;
                     specialVariable = true;
+                    parentContext = true;
                 } else if (TokenUtilities.textEquals(varName, "static")) { // NOI18N
                     isStaticContext = true;
                     isInstanceContext = false;
@@ -1523,7 +1527,7 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
                     if (CancelSupport.getDefault().isCancelled()) {
                         return;
                     }
-                    final ElementFilter staticFlagFilter = new StaticOrInstanceMembersFilter(isStaticContext, isInstanceContext, selfContext, staticLateBindingContext);
+                    final ElementFilter staticFlagFilter = new StaticOrInstanceMembersFilter(isStaticContext, isInstanceContext, selfContext, staticLateBindingContext, true);
                     final ElementFilter methodsFilter = ElementFilter.allOf(
                             ElementFilter.forKind(PhpElementKind.METHOD),
                             ElementFilter.forName(NameKind.exact(functionName.text().toString())),
@@ -2321,15 +2325,17 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
         private final boolean staticAllowed;
         private final boolean nonstaticAllowed;
         private final boolean forStaticLateBinding;
+        private final boolean forParentContext;
 
         public StaticOrInstanceMembersFilter(final boolean forStaticContext, final boolean forInstanceContext,
-                final boolean forSelfContext, final boolean forStaticLateBinding) {
+                final boolean forSelfContext, final boolean forStaticLateBinding, final boolean forParentContext) {
             this.forStaticContext = forStaticContext;
             this.forInstanceContext = forInstanceContext;
             this.forSelfContext = forSelfContext;
             this.forStaticLateBinding = forStaticLateBinding;
             this.staticAllowed = OptionsUtils.codeCompletionStaticMethods();
             this.nonstaticAllowed = OptionsUtils.codeCompletionNonStaticMethods();
+            this.forParentContext = forParentContext;
         }
 
         @Override
@@ -2348,6 +2354,13 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
 
         private boolean isAcceptedForNotStaticContext(final PhpElement element) {
             final boolean isStatic = element.getPhpModifiers().isStatic();
+            if (forParentContext
+                    && !isStatic
+                    && element.getPhpElementKind().equals(PhpElementKind.FIELD)) {
+                // parent::fieldName is invalid
+                // this is constant
+                return false;
+            }
             return !isStatic || (staticAllowed && element.getPhpElementKind().equals(PhpElementKind.METHOD));
         }
 

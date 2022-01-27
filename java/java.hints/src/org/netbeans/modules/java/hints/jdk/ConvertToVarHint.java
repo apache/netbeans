@@ -204,6 +204,8 @@ public class ConvertToVarHint {
                     break;
                 case LAMBDA_EXPRESSION:
                     return false;
+                case MEMBER_REFERENCE:
+                    return false;
                 default:
                     break;
             }

@@ -312,7 +312,7 @@ public final class NbGradleProjectImpl implements Project {
         RELOAD_RP.post(() -> 
             loadOwnProject0(desc, false, interactive, aim, false, force)
                 .handle((p, e) -> {
-                   if (e != null) {
+                   if (e == null) {
                        toRet.complete(p);
                    } else {
                        toRet.completeExceptionally(e);
@@ -474,12 +474,13 @@ public final class NbGradleProjectImpl implements Project {
 
     @Override
     public String toString() {
-        synchronized (this) {
-            if (isGradleProjectLoaded()) {
-                return "Gradle: " + project.getBaseProject().getName() + "[" + project.getQuality() + "]";
-            } else {
-                return "Unloaded Gradle Project: " + gradleFiles.toString();
-            }
+        // synchronized was here, but is it may be called during Logger.log(), it may completely cause a deadlock
+        // between LogHandler (that calls this toString() and other thread that locked this and tries to use Logger).
+        GradleProject p = project;
+        if (p != null) {
+            return "Gradle: " + p.getBaseProject().getName() + "[" + p.getQuality() + "]";
+        } else {
+            return "Unloaded Gradle Project: " + gradleFiles.toString();
         }
     }
     

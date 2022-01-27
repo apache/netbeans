@@ -41,19 +41,36 @@ public final class ProjectInfoDiskCache extends AbstractDiskCache<GradleFiles, Q
     // Increase this number if new info is gathered from the projects.
     private static final int COMPATIBLE_CACHE_VERSION = 19;
     private static final String INFO_CACHE_FILE_NAME = "project-info.ser"; //NOI18N
-    private static final Map<GradleFiles, ProjectInfoDiskCache> DISK_CACHES = new WeakHashMap<>();
+    private static final Map<GradleFiles, ProjectInfoDiskCache> DISK_CACHES = Collections.synchronizedMap(new WeakHashMap<>());
 
     public static ProjectInfoDiskCache get(GradleFiles gf) {
-        ProjectInfoDiskCache ret = DISK_CACHES.get(gf);
-        if (ret == null) {
-            ret = new ProjectInfoDiskCache(gf);
-            DISK_CACHES.put(gf, ret);
-        }
+        // get & put synchronized
+        ProjectInfoDiskCache ret = DISK_CACHES.computeIfAbsent(gf, (k) -> new ProjectInfoDiskCache(k));
         return ret;
     }
     
     private ProjectInfoDiskCache(GradleFiles gf) {
         super(gf);
+    }
+    
+    /**
+     * For testing only. Test that wants to ensure the data is loaded from the
+     * disk anew instead of 
+     */
+    public static void testFlushCaches() {
+        DISK_CACHES.clear();
+    }
+    
+    /**
+     * For testing only. Destroys disk cache for the given project.
+     */
+    public static boolean testDestroyCache(GradleFiles gf) {
+        ProjectInfoDiskCache cache = ProjectInfoDiskCache.get(gf);
+        if (cache == null) {
+            return false;
+        }
+        File f = cache.cacheFile();
+        return f.exists() && f.delete();
     }
     
     @Override

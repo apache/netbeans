@@ -172,6 +172,9 @@ export namespace NodeInfoRequest {
     export const destroy = new ProtocolRequestType<NodeOperationParams, boolean, never, void, void>('nodes/delete');
     export const collapsed = new ProtocolNotificationType<NodeOperationParams, void>('nodes/collapsed');
     
+    export interface IconDescriptor {
+        baseUri : string;
+    }
     export interface Data {
         id : number; /* numeric ID of the node */
         name : string; /* Node.getName() */
@@ -182,6 +185,7 @@ export namespace NodeInfoRequest {
         collapsibleState : vscode.TreeItemCollapsibleState;
         canDestroy : boolean; /* Node.canDestroy() */
         contextValue : string; /* Node.getCookies() */
+        iconDescriptor? : IconDescriptor;
         iconUri : string | null;
         iconIndex : number;
         command? : string;

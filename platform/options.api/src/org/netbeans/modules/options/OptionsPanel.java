@@ -225,6 +225,13 @@ public class OptionsPanel extends JPanel {
                 category.update(controllerListener, false);
                 final Dimension size = component.getSize();
                 if (component.getParent() == null || !pOptions.equals(component.getParent())) {
+                    // update component UI if components were created using a different look and feel
+                    Object componentLaf = component.getClientProperty("nb.internal.componentLaf"); //NOI18N
+                    if (componentLaf != null && !componentLaf.equals(UIManager.getLookAndFeel().getClass().getName())) {
+                        SwingUtilities.updateComponentTreeUI(component);
+                    }
+                    component.putClientProperty("nb.internal.componentLaf", null); //NOI18N
+
                     pOptions.add(component, category.getCategoryName());
                 }
                 cLayout.show(pOptions, category.getCategoryName());
@@ -453,6 +460,12 @@ public class OptionsPanel extends JPanel {
         categoryid2tabs = new HashMap<String, HashMap<Integer, TabInfo>>();
         for (Map.Entry<String, CategoryModel.Category> set : categories) {
             JComponent jcomp = set.getValue().getComponent();
+
+            // remember look and feel used to create component
+            if (!jcomp.isDisplayable() && jcomp.getClientProperty("nb.internal.componentLaf") == null) { //NOI18N
+                jcomp.putClientProperty("nb.internal.componentLaf", UIManager.getLookAndFeel().getClass().getName()); //NOI18N
+            }
+
             String id = set.getValue().getID();
             if(jcomp instanceof JTabbedPane) {
                 categoryid2tabbedpane.put(id, (JTabbedPane)jcomp);

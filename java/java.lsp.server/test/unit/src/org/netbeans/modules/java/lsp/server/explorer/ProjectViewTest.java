@@ -55,6 +55,8 @@ import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ui.OpenProjects;
 import org.netbeans.api.sendopts.CommandLine;
+import org.netbeans.api.templates.CreateDescriptor;
+import org.netbeans.api.templates.FileBuilder;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.java.lsp.server.explorer.api.CreateExplorerParams;
 import org.netbeans.modules.java.lsp.server.explorer.api.NodeChangedParams;
@@ -73,6 +75,7 @@ import org.netbeans.modules.java.lsp.server.protocol.TestProgressParams;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.URLMapper;
+import org.openide.modules.DummyInstalledFileLocator;
 import org.openide.util.Utilities;
 import org.openide.util.test.MockLookup;
 
@@ -274,10 +277,23 @@ public class ProjectViewTest extends NbTestCase {
     FileObject projectDir;
     Project project;
     
+    @org.openide.util.lookup.ServiceProvider(service=org.openide.modules.InstalledFileLocator.class, position = 1000)
+    public static class InstalledFileLocator extends DummyInstalledFileLocator {
+        public InstalledFileLocator() {
+            registerDestDir(new File(System.getProperty("test.netbeans.dest.dir")));
+        }
+    }
+
     private void createSimpleProject() throws IOException {
+        FileObject template = FileUtil.getConfigFile("Templates/Project/Gradle/org-netbeans-modules-gradle-java-newproject-SimpleApplicationProjectWizard");
         FileObject from = FileUtil.toFileObject(getDataDir()).getFileObject("gradle-hello/app");
         FileObject dest = FileUtil.toFileObject(getWorkDir());
-        projectDir = deepCopy(from, dest);
+        FileBuilder b = new FileBuilder(template, dest).name("app").param("packageBase", "gradle.hello");
+        List<FileObject> projectFiles = b.build();
+        // the template will create a parent project with 'app' application subproject.
+        projectDir = projectFiles.get(0).getFileObject("app");
+                
+        deepCopy(from, projectDir.getParent());
         project = FileOwnerQuery.getOwner(projectDir);
         OpenProjects.getDefault().open(new Project[] { project } , true);
         try {
@@ -290,8 +306,14 @@ public class ProjectViewTest extends NbTestCase {
     private FileObject deepCopy(FileObject from, FileObject to) throws IOException {
         if (from.isData()) {
             return FileUtil.copyFile(from, to, from.getName());
+        } 
+        
+        FileObject d = to.getFileObject(from.getNameExt());
+        if (d == null) {
+            d = to.createFolder(from.getNameExt());
+        } else if (!d.isFolder()) {
+            throw new IllegalStateException();
         }
-        FileObject d = to.createFolder(from.getNameExt());
         for (FileObject f : from.getChildren()) {
             deepCopy(f, d);
         }
@@ -361,7 +383,7 @@ public class ProjectViewTest extends NbTestCase {
 
     public void testProjectExplorerExists() throws Exception {
         TreeItem projectNode = createAndFindProjectNode();
-        assertEquals("app", projectNode.label);
+        assertEquals("app:app", projectNode.label);
     }
     
     public void testProjectSourcePackages() throws Exception {

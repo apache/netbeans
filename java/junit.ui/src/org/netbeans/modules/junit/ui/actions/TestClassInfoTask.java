@@ -262,14 +262,10 @@ public final class TestClassInfoTask implements Task<CompilationController> {
         public List<TestMethod> computeTestMethods(Parser.Result parserResult, AtomicBoolean cancel) {
             try {
                 CompilationController cc = CompilationController.get(parserResult);
-                if (isTestSource(cc.getFileObject())) {
-                    if (cc.toPhase(Phase.ELEMENTS_RESOLVED).compareTo(Phase.ELEMENTS_RESOLVED) < 0) {
-                        ErrorManager.getDefault().log(ErrorManager.WARNING, "Unable to resolve " + cc.getFileObject() + " to phase " + Phase.ELEMENTS_RESOLVED + ", current phase = " + cc.getPhase()); //NOI18N
-                    } else {
-                        return TestClassInfoTask.doComputeTestMethods(cc, cancel, -1);
-                    }
+                if (isTestSource(cc.getFileObject()) && cc.toPhase(Phase.ELEMENTS_RESOLVED).compareTo(Phase.ELEMENTS_RESOLVED) >= 0) {
+                    return TestClassInfoTask.doComputeTestMethods(cc, cancel, -1);
                 }
-            } catch (IOException ex) {
+            } catch (Exception ex) {
                 Exceptions.printStackTrace(ex);
             }
             return Collections.emptyList();

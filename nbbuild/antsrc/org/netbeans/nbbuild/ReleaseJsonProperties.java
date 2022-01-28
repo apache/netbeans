@@ -114,6 +114,7 @@ public class ReleaseJsonProperties extends Task {
         } catch (ParseException | IOException ex) {
             throw new BuildException(ex);
         }
+
         // sort all information
         Collections.sort(ri);
         // build a sorted xml
@@ -133,11 +134,12 @@ public class ReleaseJsonProperties extends Task {
         }
 
         if (requiredbranchinfo == null) {
-            throw new BuildException("No Release Information found for branch '" + branch + "', update json file section");
+            throw new BuildException("No Release Information found for branch '" + branch + "', update json file section with ant -Dneedjsondownload=true");
         }
         List<String> updateValues = new ArrayList<>();
         for (ReleaseInfo releaseInfo : ri) {
-            if (releaseInfo.position < requiredbranchinfo.position) {
+            // take previous version of Apache NetBeans only if published, need for scan for old NetBeans version
+            if (releaseInfo.position < requiredbranchinfo.position && releaseInfo.publishapi ) {
                 updateValues.add(releaseInfo.version);
             }
         }
@@ -191,7 +193,7 @@ public class ReleaseJsonProperties extends Task {
             throw new BuildException("Properties File for release cannot be created");
         }
 
-        log("Writing releasinfo file " + xmlFile);
+        log("Writing release info file " + xmlFile);
 
         xmlFile.getParentFile().mkdirs();
         try (OutputStream config = new FileOutputStream(xmlFile)) {
@@ -218,6 +220,7 @@ public class ReleaseJsonProperties extends Task {
         releasesxml.setAttribute("position", Integer.toString(releaseInfo.position));
         releasesxml.setAttribute("version", releaseInfo.version);
         releasesxml.setAttribute("apidocurl", releaseInfo.apidocurl);
+        releasesxml.setAttribute("pubapidoc", Boolean.toString(releaseInfo.publishapi));
     }
 
     private ReleaseInfo manageRelease(String key, Object arelease) {
@@ -246,6 +249,8 @@ public class ReleaseJsonProperties extends Task {
         ri.setJavaApiDocurl((String) getJSONInfo(jsonrelease, "jdk_apidoc", "Apidoc: javadoc for java jdk"));
         ri.setUpdateUrl((String) getJSONInfo(jsonrelease, "update_url", "Update catalog"));
         ri.setPluginsUrl((String) getJSONInfo(jsonrelease, "plugin_url", "Plugin URL"));
+        //
+        ri.setPublishApi(Boolean.parseBoolean((String) getJSONInfo(jsonrelease, "publish_apidoc", "Should we publish this Apidoc")));
         // optional section
         JSONObject milestone = (JSONObject) jsonrelease.get("milestones");
         if (milestone != null) {
@@ -281,7 +286,6 @@ public class ReleaseJsonProperties extends Task {
 
     private Object getJSONInfo(JSONObject json, String key, String info) {
         Object result = json.get(key);
-        //log("Retriving " + key);
         if (result == null) {
             throw new BuildException("Cannot retrieve key " + key + ", this is for" + info);
         }
@@ -338,6 +342,7 @@ public class ReleaseJsonProperties extends Task {
         private String javaapidocurl;
         private String updateurl;
         private String pluginsurl;
+        private boolean publishapi;
         private List<MileStone> milestones;
 
         public ReleaseInfo(String key) {
@@ -406,6 +411,10 @@ public class ReleaseJsonProperties extends Task {
 
         private void addMileStone(MileStone milestone) {
             this.milestones.add(milestone);
+        }
+
+        private void setPublishApi(boolean publishok) {
+            this.publishapi = publishok;
         }
 
     }

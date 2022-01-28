@@ -263,28 +263,21 @@ committed to the repository for legal reasons. You need to download it:
                 <xsl:for-each select="document($releaseinfo)//release">
                     <xsl:sort data-type="number" select="@position" order="descending" />
                     <xsl:choose>
-                        <xsl:when test="$currentversion = @position">
+                        <xsl:when test="$currentversion = @position  and @pubapidoc='true'  ">
                             <span>
                                 <xsl:value-of select="@version"/>
                             </span>
                         </xsl:when>
-                        <xsl:otherwise>
+                        <xsl:when test="$currentversion != @position  and @pubapidoc='true'  ">
                             <xsl:element name="a">
                                 <xsl:attribute name="class">apacheversion</xsl:attribute>
                                 <xsl:attribute name="href">
                                     <xsl:value-of select="@apidocurl"/><xsl:text>/</xsl:text><xsl:value-of select="$menukey"/><xsl:text>.html</xsl:text></xsl:attribute>
                                 <xsl:value-of select="@version"/>
-                            </xsl:element>                 
-                        </xsl:otherwise>
+                            </xsl:element>
+                        </xsl:when>
                     </xsl:choose>
-                    
                 </xsl:for-each>
-                <xsl:element name="a">
-                    <xsl:attribute name="href">
-                        <xsl:text>http://bits.netbeans.org/</xsl:text>
-                    </xsl:attribute>
-                    8.2 and previous
-                </xsl:element>           
             </div>
         </div>
     </xsl:template>

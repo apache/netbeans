@@ -20,6 +20,7 @@ package org.netbeans.libs.git.jgit.commands;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
@@ -34,6 +35,9 @@ import org.eclipse.jgit.dircache.DirCacheEntry;
 import org.eclipse.jgit.dircache.DirCacheIterator;
 import org.eclipse.jgit.errors.CorruptObjectException;
 import org.eclipse.jgit.errors.NoWorkTreeException;
+import org.eclipse.jgit.errors.UnsupportedCredentialItem;
+import org.eclipse.jgit.lib.Config;
+import org.eclipse.jgit.lib.ConfigConstants;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.FileMode;
 import org.eclipse.jgit.lib.ObjectId;
@@ -42,13 +46,20 @@ import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.lib.RepositoryState;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevWalk;
+import org.eclipse.jgit.transport.CredentialItem;
+import org.eclipse.jgit.transport.CredentialItem.CharArrayType;
+import org.eclipse.jgit.transport.CredentialsProvider;
+import org.eclipse.jgit.transport.URIish;
 import org.eclipse.jgit.treewalk.EmptyTreeIterator;
 import org.eclipse.jgit.treewalk.TreeWalk;
 import org.eclipse.jgit.treewalk.filter.TreeFilter;
+import org.netbeans.libs.git.GitClientCallback;
 import org.netbeans.libs.git.GitException;
 import org.netbeans.libs.git.GitRevisionInfo;
 import org.netbeans.libs.git.GitUser;
 import org.netbeans.libs.git.jgit.GitClassFactory;
+import org.netbeans.libs.git.jgit.JGitCommitCredentialsProvider;
+import org.netbeans.libs.git.jgit.JGitCredentialsProvider;
 import org.netbeans.libs.git.jgit.Utils;
 import org.netbeans.libs.git.progress.ProgressMonitor;
 
@@ -65,8 +76,9 @@ public class CommitCommand extends GitCommand {
     private final GitUser commiter;
     public GitRevisionInfo revision;
     private final boolean amend;
+    private final String gpgPrivateKeyPassphase;
 
-    public CommitCommand (Repository repository, GitClassFactory gitFactory, File[] roots, String message, GitUser author, GitUser commiter, boolean amend, ProgressMonitor monitor) {
+    public CommitCommand (Repository repository, GitClassFactory gitFactory, File[] roots, String message, GitUser author, GitUser commiter, boolean amend, String gpgPrivateKeyPassphase, ProgressMonitor monitor) {
         super(repository, gitFactory, monitor);
         this.roots = roots;
         this.message = message;
@@ -74,6 +86,7 @@ public class CommitCommand extends GitCommand {
         this.author = author;
         this.commiter = commiter;
         this.amend = amend;
+        this.gpgPrivateKeyPassphase = gpgPrivateKeyPassphase;
     }
 
     @Override
@@ -135,6 +148,19 @@ public class CommitCommand extends GitCommand {
                 
                 commit.setMessage(message);
                 commit.setAmend(amend);
+                
+                JGitCommitCredentialsProvider credentialsProvider = new JGitCommitCredentialsProvider(gpgPrivateKeyPassphase);
+                Config cfg = repository.getConfig();
+                boolean signCommit = cfg.getBoolean(ConfigConstants.CONFIG_COMMIT_SECTION, null, ConfigConstants.CONFIG_KEY_GPGSIGN, false);
+
+                if(signCommit) {
+                    commit.setSign(signCommit);
+                    String signingPublicKey = cfg.getString(ConfigConstants.CONFIG_USER_SECTION, null, ConfigConstants.CONFIG_KEY_SIGNINGKEY);
+                    /** @todo check for signing key and throw exception describing signing set true but no key provided */
+                    commit.setSigningKey(signingPublicKey);
+                    commit.setCredentialsProvider(credentialsProvider);
+                }
+
                 RevCommit rev = commit.call();
                 revision = getClassFactory().createRevisionInfo(rev, repository);
             } finally {

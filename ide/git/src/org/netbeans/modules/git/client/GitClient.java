@@ -285,16 +285,16 @@ public final class GitClient {
         }, "clean", roots); //NOI18N
     }
     
-    public GitRevisionInfo commit (final File[] roots, final String commitMessage, final GitUser author, final GitUser commiter, final ProgressMonitor monitor) throws GitException {
-        return commit(roots, commitMessage, author, commiter, false, monitor);
+    public GitRevisionInfo commit (final File[] roots, final String commitMessage, final GitUser author, final GitUser commiter, final String gpgPrivateKeyPassphase, final ProgressMonitor monitor) throws GitException {
+        return commit(roots, commitMessage, author, commiter, false, gpgPrivateKeyPassphase, monitor);
     }
     
-    public GitRevisionInfo commit (final File[] roots, final String commitMessage, final GitUser author, final GitUser commiter, final boolean amend, final ProgressMonitor monitor) throws GitException {
+    public GitRevisionInfo commit (final File[] roots, final String commitMessage, final GitUser author, final GitUser commiter, final boolean amend, final String gpgPrivateKeyPassphase, final ProgressMonitor monitor) throws GitException {
         return new CommandInvoker().runMethod(new Callable<GitRevisionInfo>() {
 
             @Override
             public GitRevisionInfo call () throws Exception {
-                return delegate.commit(roots, commitMessage, author, commiter, amend, monitor);
+                return delegate.commit(roots, commitMessage, author, commiter, amend, gpgPrivateKeyPassphase, monitor);
             }
         }, "commit", roots); //NOI18N
     }

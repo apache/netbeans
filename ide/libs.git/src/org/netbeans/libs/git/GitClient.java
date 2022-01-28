@@ -460,8 +460,8 @@ public final class GitClient {
      * @param monitor progress monitor
      * @throws GitException an unexpected error occurs
      */
-    public GitRevisionInfo commit(File[] roots, String commitMessage, GitUser author, GitUser commiter, ProgressMonitor monitor) throws GitException {
-        return commit(roots, commitMessage, author, commiter, false, monitor);
+    public GitRevisionInfo commit(File[] roots, String commitMessage, GitUser author, GitUser commiter, String gpgPrivateKeyPassphase, ProgressMonitor monitor) throws GitException {
+        return commit(roots, commitMessage, author, commiter, false, gpgPrivateKeyPassphase, monitor);
     }
     
     /**
@@ -474,9 +474,9 @@ public final class GitClient {
      * @param monitor progress monitor
      * @throws GitException an unexpected error occurs
      */
-    public GitRevisionInfo commit(File[] roots, String commitMessage, GitUser author, GitUser commiter, boolean amend, ProgressMonitor monitor) throws GitException {
+    public GitRevisionInfo commit(File[] roots, String commitMessage, GitUser author, GitUser commiter, boolean amend, String gpgPrivateKeyPassphase, ProgressMonitor monitor) throws GitException {
         Repository repository = gitRepository.getRepository();
-        CommitCommand cmd = new CommitCommand(repository, getClassFactory(), roots, commitMessage, author, commiter, amend, monitor);
+        CommitCommand cmd = new CommitCommand(repository, getClassFactory(), roots, commitMessage, author, commiter, amend, gpgPrivateKeyPassphase, monitor);
         cmd.execute();
         return cmd.revision;
     }

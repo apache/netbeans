@@ -32,6 +32,7 @@ import javax.swing.event.DocumentListener;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.Document;
 import org.netbeans.api.java.source.CompilationInfo;
+import org.netbeans.api.java.source.SourceUtils;
 import org.netbeans.api.java.source.support.CaretAwareJavaSourceTaskFactory;
 import org.netbeans.lib.editor.util.swing.DocumentUtilities;
 import org.netbeans.modules.editor.NbEditorUtilities;
@@ -63,6 +64,11 @@ public class MarkOccurrencesHighlighter extends MarkOccurrencesHighlighterBase {
     static ColoringAttributes.Coloring MO = ColoringAttributes.add(ColoringAttributes.empty(), ColoringAttributes.MARK_OCCURRENCES);
 
     protected void process(CompilationInfo info, Document doc, SchedulerEvent event) {
+        FileObject file = info.getFileObject();
+        if (file != null && SourceUtils.hasRemoteEditorPlatform(file)) {
+            clearHighlights(doc);
+            return ;
+        }
         if (doc == null) {
             Logger.getLogger(MarkOccurrencesHighlighter.class.getName()).log(Level.FINE, "SemanticHighlighter: Cannot get document!");
             return ;
@@ -80,8 +86,7 @@ public class MarkOccurrencesHighlighter extends MarkOccurrencesHighlighterBase {
         Preferences node = MarkOccurencesSettings.getCurrentNode();
 
         if (!node.getBoolean(MarkOccurencesSettingsNames.ON_OFF, true)) {
-            getHighlightsBag(doc).clear();
-            OccurrencesMarkProvider.get(doc).setOccurrences(Collections.<Mark>emptySet());
+            clearHighlights(doc);
             return ;
         }
 
@@ -153,6 +158,11 @@ public class MarkOccurrencesHighlighter extends MarkOccurrencesHighlighterBase {
         getHighlightsBag(doc).setHighlights(obag);
         OccurrencesMarkProvider.get(doc).setOccurrences(OccurrencesMarkProvider.createMarks(doc, bag, ES_COLOR, NbBundle.getMessage(MarkOccurrencesHighlighter.class, "LBL_ES_TOOLTIP")));
         
+    }
+
+    private void clearHighlights(Document doc) {
+        getHighlightsBag(doc).clear();
+        OccurrencesMarkProvider.get(doc).setOccurrences(Collections.<Mark>emptySet());
     }
 
     static OffsetsBag getHighlightsBag(Document doc) {

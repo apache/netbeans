@@ -28,8 +28,8 @@
     <change id="RemotePlatform">
         <api name="javasource_base" />
         <summary>Adding org.netbeans.spi.java.source.RemotePlatform</summary>
-        <version major="1" minor="2.54"/>
-        <date day="14" month="10" year="2021"/>
+        <version major="1" minor="2.56"/>
+        <date day="27" month="1" year="2022"/>
         <author login="jlahoda"/>
         <compatibility addition="yes" binary="compatible" source="compatible"/>
         <description>

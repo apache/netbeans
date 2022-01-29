@@ -19,6 +19,7 @@
 package org.netbeans.modules.java.editor.semantic;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.IdentityHashMap;
 import java.util.List;
@@ -33,6 +34,7 @@ import javax.swing.text.Document;
 import org.netbeans.api.editor.settings.AttributesUtilities;
 
 import org.netbeans.api.java.source.CompilationInfo;
+import org.netbeans.api.java.source.SourceUtils;
 import org.netbeans.api.java.source.TreePathHandle;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.modules.editor.NbEditorUtilities;
@@ -42,6 +44,7 @@ import org.netbeans.modules.java.editor.base.semantic.SemanticHighlighterBase;
 import org.netbeans.modules.java.editor.base.semantic.SemanticHighlighterBase.ErrorDescriptionSetter;
 import org.netbeans.spi.editor.highlighting.support.OffsetsBag;
 import org.netbeans.spi.editor.hints.ErrorDescription;
+import org.openide.filesystems.FileObject;
 import org.openide.loaders.DataObject;
 import org.openide.util.Pair;
 
@@ -52,6 +55,12 @@ import org.openide.util.Pair;
 public class SemanticHighlighter extends SemanticHighlighterBase {
 
     protected boolean process(final CompilationInfo info, final Document doc) {
+        FileObject file = info.getFileObject();
+        if (file != null && SourceUtils.hasRemoteEditorPlatform(file)) {
+            ERROR_DESCRIPTION_SETTER.setColorings(doc, Collections.emptyMap());
+            ERROR_DESCRIPTION_SETTER.setHighlights(doc, Collections.emptyList(), Collections.emptyMap());
+            return false;
+        }
         long start = System.currentTimeMillis();
         boolean ret = process(info, doc, ERROR_DESCRIPTION_SETTER);
         Logger.getLogger("TIMER").log(Level.FINE, "Semantic",

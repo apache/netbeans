@@ -1376,7 +1376,7 @@ public class SourceUtils {
      *
      * @param source to test
      * @return true iff the remote platform is enabled for the given source
-     * @since 2.54
+     * @since 2.56
      */
     public static boolean hasRemoteEditorPlatform(FileObject source) {
         if (!RemoteEditorPlatform.isRemoteEditorPlatformSupported()) {

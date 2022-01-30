@@ -341,6 +341,9 @@ public abstract class TreeViewProvider {
         if (n == null) {
             return -1;
         }
+        if (nodeRegistry == null) {
+            return -1;
+        }
         synchronized (this) {
             Integer lspId = idMap.get(n);
             if (lspId != null) {
@@ -605,20 +608,21 @@ public abstract class TreeViewProvider {
     
     static final Node DUMMY_NODE = new AbstractNode(Children.LEAF);
 
+    private static ExplorerManager dummyManager() {
+        ExplorerManager m = new ExplorerManager();
+        m.setRootContext(DUMMY_NODE);
+        return m;
+    }
+
     /**
      * Dummy provider that serves root, no children and sinks all events.
      */
-    static final TreeViewProvider NONE = new TreeViewProvider("", new ExplorerManager(), null, Lookup.EMPTY) {
-        final Node root = DUMMY_NODE;
+    static final TreeViewProvider NONE = new TreeViewProvider("", dummyManager(), null, Lookup.EMPTY) {
+        final Node root = super.manager.getRootContext();
         
         @Override
         public CompletionStage<TreeItem> getRootInfo() {
             return super.getRootInfo();
-        }
-
-        @Override
-        public TreeItem findTreeItem(Node n) {
-            return super.findTreeItem(n);
         }
 
         @Override
@@ -628,7 +632,8 @@ public abstract class TreeViewProvider {
 
         @Override
         protected int findId(Node n) {
-            return super.findId(root);
+            // there are no nodes at all
+            return -1; 
         }
         
         @Override

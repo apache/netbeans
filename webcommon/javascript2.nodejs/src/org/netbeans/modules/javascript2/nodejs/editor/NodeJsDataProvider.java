@@ -452,7 +452,9 @@ public class NodeJsDataProvider {
                                 }
                             }
                             JsObject object = factory.newFunction(scope, toObject, methodName, paramNames, NodeJsUtils.NODEJS_NAME);
-                            object.setDocumentation(Documentation.create(doc, getDocumentationURL(methodName, paramNames)));
+                            if(doc != null) {
+                                object.setDocumentation(Documentation.create(doc, getDocumentationURL(methodName, paramNames)));
+                            }
                             toObject.addProperty(object.getName(), object);
                             addProperties(factory, object, (DeclarationScope) object, method);
                             addMethods(factory, object, (DeclarationScope) object, method);
@@ -469,7 +471,9 @@ public class NodeJsDataProvider {
             JsObject object = factory.newObject(parent, propertyName, OffsetRange.NONE, true, NodeJsUtils.NODEJS_NAME);
             parent.addProperty(object.getName(), object);
             String doc = getJSONStringProperty(jsonObject, DESCRIPTION);
-            object.setDocumentation(Documentation.create(doc, getDocumentationURL(propertyName)));
+            if(doc != null) {
+                object.setDocumentation(Documentation.create(doc, getDocumentationURL(propertyName)));
+            }
             return object;
         }
         return null;

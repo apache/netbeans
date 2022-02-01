@@ -371,8 +371,8 @@ public class PayaraInstance implements ServerInstanceImplementation,
      
     /** 
      * Creates a PayaraInstance object for a server installation.This
- instance should be added to the the provider registry if the caller wants
- it to be persisted for future sessions or searchable.<p/>
+     * instance should be added to the the provider registry if the caller wants
+     * it to be persisted for future sessions or searchable.<p/>
      * @param displayName Display name for this server instance.
      * @param installRoot Payara installation root directory.
      * @param payaraRoot Payara server home directory.

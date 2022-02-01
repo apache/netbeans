@@ -16,6 +16,11 @@
 ~ See the License for the specific language governing permissions and
 ~ limitations under the License.
 -->
+<!--
+Modifications:
+
+- Reference javaee_6.xsd with a relative path
+-->
 <xsd:schema xmlns="http://www.w3.org/2001/XMLSchema"
             targetNamespace="http://www.jboss.com/xml/ns/javaee"
             xmlns:javaee="http://java.sun.com/xml/ns/javaee"
@@ -61,7 +66,7 @@
          consistency with the Servlet API. </xsd:documentation>
    </xsd:annotation>
 
-   <xsd:import namespace="http://java.sun.com/xml/ns/javaee" schemaLocation="http://java.sun.com/xml/ns/javaee/javaee_6.xsd"/>
+   <xsd:import namespace="http://java.sun.com/xml/ns/javaee" schemaLocation="javaee_6.xsd"/>
 
    <xsd:group name="descriptionGroup">
       <xsd:sequence>

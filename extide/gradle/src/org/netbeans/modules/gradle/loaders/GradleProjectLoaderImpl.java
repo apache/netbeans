@@ -30,6 +30,7 @@ import org.netbeans.modules.gradle.api.NbGradleProject;
 import org.netbeans.modules.gradle.api.execute.GradleCommandLine;
 import org.netbeans.modules.gradle.api.execute.RunUtils;
 import org.netbeans.modules.gradle.options.GradleExperimentalSettings;
+import org.openide.util.NbBundle;
 
 /**
  *
@@ -45,6 +46,9 @@ public class GradleProjectLoaderImpl implements GradleProjectLoader {
     }
 
     @Override
+    @NbBundle.Messages({
+        "ERR_ProjectNotTrusted=Gradle execution is not trusted on this project."
+    })
     public GradleProject loadProject(NbGradleProject.Quality aim, String descriptionOpt, boolean ignoreCache, boolean interactive, String... args) {
         LOGGER.info("Load aiming " +aim + " for "+ project);
         GradleCommandLine cmd = new GradleCommandLine(args);
@@ -76,7 +80,7 @@ public class GradleProjectLoaderImpl implements GradleProjectLoader {
                     } else {
                         ret = ctx.getPrevious();
                         if (ret != null) {
-                            ret = ret.invalidate("Gradle execution is not trusted on this project.");
+                            ret = ret.invalidate(Bundle.ERR_ProjectNotTrusted());
                         }
                         LOGGER.log(Level.FINER, "Execution not allowed, invalidated {0}", ret);
                     }

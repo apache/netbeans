@@ -28,16 +28,19 @@ import java.io.IOException;
  */
 class CacheDirectory {
     
-    private static final String DIR_EXT = ".hwcache";   // NOI18N
+    private static final String DIR_EXT = ".nbcache";   // NOI18N
     private static final String DUMP_AUX_FILE = "NBProfiler.nphd";   // NOI18N
     
     private final File.Factory io;
     private File cacheDirectory;
     
-    static CacheDirectory getHeapDumpCacheDirectory(File.Factory io, File heapDump) {
+    static CacheDirectory getHeapDumpCacheDirectory(File.Factory io, File heapDump, int segment) {
         String dumpName = heapDump.getName();
+        if (segment != 0) {
+            dumpName += "_" + segment;
+        }
         File parent = heapDump.getParentFile();
-        File dir = io.newFile(parent, dumpName+DIR_EXT);
+        File dir = io.newFile(parent, dumpName + DIR_EXT);
         return new CacheDirectory(io, dir);
     }
     

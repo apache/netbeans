@@ -1182,8 +1182,11 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
     </condition>
     
     <!-- architecture of jvm on which app will run -->
-    <condition property="jvm.arch.string" value="64" else="">
-      <available file="${nbjdk.home}\jre\lib\amd64" />
+    <condition property="jvm.arch.string" value="" else="64">
+        <or>
+            <available file="${nbjdk.home}\bin\javaaccessbridge-32.dll" />      <!-- 32-bit Java 9+ -->
+            <available file="${nbjdk.home}\jre\bin\JavaAccessBridge-32.dll" />  <!-- 32-bit Java 8 -->
+        </or>
     </condition>
 
     <condition property="tryme.launcher.prefix" value="${netbeans.dest.dir}/bin/netbeans" else="${netbeans.dest.dir}/platform/lib/nbexec">

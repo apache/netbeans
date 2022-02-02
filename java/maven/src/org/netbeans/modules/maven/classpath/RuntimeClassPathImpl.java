@@ -27,7 +27,6 @@ import org.apache.maven.artifact.Artifact;
 import org.apache.maven.model.Build;
 import org.apache.maven.project.MavenProject;
 import org.netbeans.modules.maven.NbMavenProjectImpl;
-import org.netbeans.modules.maven.api.FileUtilities;
 import org.openide.util.Utilities;
 
 /**
@@ -57,7 +56,7 @@ public class RuntimeClassPathImpl extends AbstractProjectClassPathImpl {
         if (build != null) {
             String outputDirectory = build.getOutputDirectory();
             if (outputDirectory != null) {
-                lst.add(FileUtilities.convertStringToUri(outputDirectory));
+                lst.add(NbMavenProjectImpl.convertStringToUri(outputDirectory, true));
             }
         }
         List<Artifact> arts = prj.getRuntimeArtifacts();

@@ -87,6 +87,7 @@ import org.openide.util.NbBundle;
 public class OverviewController extends AbstractController {
 
     public static final String SHOW_SYSPROPS_URL = "file:/sysprops"; // NOI18N
+    public static final String SHOW_NEXT_SEGMENT_URL = "file:/next"; // NOI18N
     public static final String SHOW_THREADS_URL = "file:/threads"; // NOI18N
     private static final String OPEN_THREADS_URL = "file:/stackframe/";     // NOI18N
     private static final String CLASS_URL_PREFIX = "file://class/"; // NOI18N
@@ -178,6 +179,9 @@ public class OverviewController extends AbstractController {
                           Bundle.OverviewController_NotAvailableMsg()
                 );
 
+        String segmentInfo = LINE_PREFIX + "<b>Segment:</b> " + heapFragmentWalker.getHeapSegment() +  " try " // NOI18N
+                + "<a href='" + SHOW_NEXT_SEGMENT_URL + "'>next</a>...<br>&nbsp;";
+
         String oomeString = "";
         if (oome != null) {
             Instance thread = oome.getInstance();
@@ -190,7 +194,8 @@ public class OverviewController extends AbstractController {
         String memoryRes = Icons.getResource(ProfilerIcons.HEAP_DUMP);
         return "<b><img border='0' align='bottom' src='nbresloc:/" + memoryRes + "'>&nbsp;&nbsp;" // NOI18N
                 + Bundle.OverviewController_SummaryString() + "</b><br><hr>" + dateTaken + "<br>" + filename + "<br>" + filesize + "<br><br>" + liveBytes // NOI18N
-                + "<br>" + liveClasses + "<br>" + liveInstances + "<br>" + classloaders + "<br>" + gcroots + "<br>" + finalizersInfo + oomeString; // NOI18N
+                + "<br>" + liveClasses + "<br>" + liveInstances + "<br>" + classloaders + "<br>" + gcroots + "<br>" + finalizersInfo + oomeString // NOI18N
+                + "<br>" + segmentInfo; // NOI18N
     }
 
     public String computeEnvironment() {
@@ -644,4 +649,11 @@ public class OverviewController extends AbstractController {
     private final static int JVMTI_THREAD_STATE_BLOCKED_ON_MONITOR_ENTER = 0x0400;
     private final static int JVMTI_THREAD_STATE_WAITING_INDEFINITELY = 0x0010;
     private final static int JVMTI_THREAD_STATE_WAITING_WITH_TIMEOUT = 0x0020;
+
+    public void showNextSegment() {
+        HeapWalkerManager.getDefault().openHeapWalker(
+            heapFragmentWalker.getHeapDumpFile(),
+            heapFragmentWalker.getHeapSegment() + 1
+        );
+    }
 }

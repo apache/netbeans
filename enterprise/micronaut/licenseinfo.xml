@@ -1,4 +1,5 @@
-<#--
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
 
     Licensed to the Apache Software Foundation (ASF) under one
     or more contributor license agreements.  See the NOTICE file
@@ -18,18 +19,11 @@
     under the License.
 
 -->
-${doctype!""}
-<#assign licenseFirst = "<!--">
-<#assign licensePrefix = "">
-<#assign licenseLast = "-->">
-<#include "${project.licensePath}">
-<html>
-  <head>
-    <title>TODO supply a title</title>
-    <meta charset="${encoding}">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  </head>
-  <body>
-      <div>TODO write content</div>
-  </body>
-</html>
+<licenseinfo>
+    <fileset>
+        <file>src/org/netbeans/modules/micronaut/resources/warning.png</file>
+        <file>src/org/netbeans/modules/micronaut/resources/micronaut.png</file>
+        <license ref="Apache-2.0-ASF" />
+        <comment type="COMMENT_UNSUPPORTED" />
+    </fileset>
+</licenseinfo>

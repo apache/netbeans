@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.cloud.oracle;
 
+import org.netbeans.modules.cloud.oracle.items.DatabaseItem;
 import java.awt.Desktop;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.cloud.oracle;
 
+import org.netbeans.modules.cloud.oracle.items.OCIItem;
 import javax.swing.JComponent;
 import org.netbeans.spi.server.ServerInstanceImplementation;
 import org.openide.nodes.Node;

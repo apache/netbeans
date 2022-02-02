@@ -22,7 +22,16 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.text.MessageFormat;
 import java.util.Optional;
+import org.netbeans.api.db.explorer.ConnectionManager;
+import org.netbeans.api.db.explorer.DatabaseConnection;
+import org.netbeans.api.db.explorer.DatabaseException;
+import org.netbeans.api.db.explorer.JDBCDriver;
+import org.netbeans.api.db.explorer.JDBCDriverManager;
+import org.netbeans.modules.cloud.oracle.items.DatabaseItem;
+import org.openide.DialogDisplayer;
+import org.openide.NotifyDescriptor;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
@@ -30,7 +39,6 @@ import org.openide.awt.ActionRegistration;
 import org.openide.awt.StatusDisplayer;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
-import org.openide.util.Pair;
 
 /**
  *
@@ -51,25 +59,48 @@ import org.openide.util.Pair;
 @NbBundle.Messages({
     "LBL_SaveWallet=Save DB Wallet",
     "CTL_DownloadWalletAction=Download Wallet",
-    "MSG_WalletDownloaded=Database Wallet was downloaded to {0}"
+    "MSG_WalletDownloaded=Database Wallet was downloaded to {0}",
+    "MSG_WalletDownloadedPassword=Database Wallet was downloaded. \nGenerated wallet password is: {0}"
     
 })
 public class DownloadWalletAction implements ActionListener {
     
-    private final OCIItem context;
+    private static final String URL_TEMPLATE = "jdbc:oracle:thin:@{0}?TNS_ADMIN=\"{1}\""; //NOI18N
+    private final DatabaseItem context;
 
-    public DownloadWalletAction(OCIItem context) {
+    public DownloadWalletAction(DatabaseItem context) {
         this.context = context;
     }
 
     @Override
     public void actionPerformed(ActionEvent ev) {
-        Optional<Pair<String, char[]>> result = DownloadWalletDialog.showDialog(context);
+        Optional<DownloadWalletDialog.WalletInfo> result = DownloadWalletDialog.showDialog(context);
         result.ifPresent((p) -> {
             try {
-                Path walletPath = OCIManager.getDefault().downloadWallet(context, new String(p.second()), p.first());
-                StatusDisplayer.getDefault().setStatusText(Bundle.MSG_WalletDownloaded(walletPath.toString()));
-            } catch (IOException ex) {
+                Path walletPath = OCIManager.getDefault().downloadWallet(context, new String(p.getWalletPassword()), p.getPath());
+                if (p.getDbUser() != null && p.getDbPassword() != null) {
+                    
+                    JDBCDriver[] drivers = JDBCDriverManager.getDefault().getDrivers("oracle.jdbc.OracleDriver"); //NOI18N
+                    if (drivers.length > 0) {
+                        String dbUrl = MessageFormat.format(URL_TEMPLATE, context.getConnectionName(), walletPath);
+                        DatabaseConnection dbConn = DatabaseConnection.create(
+                                drivers[0], 
+                                dbUrl, 
+                                p.getDbUser(), 
+                                null, 
+                                new String(p.getDbPassword()), 
+                                true, 
+                                context.getName());
+                        ConnectionManager.getDefault().addConnection(dbConn);
+                    }
+                    DialogDisplayer.getDefault().notifyLater(
+                            new NotifyDescriptor.Message(
+                                    Bundle.MSG_WalletDownloadedPassword(
+                                            new String(p.getWalletPassword()))));
+                } else {
+                    StatusDisplayer.getDefault().setStatusText(Bundle.MSG_WalletDownloaded(walletPath.toString()));
+                }
+            } catch (DatabaseException | IOException ex) {
                 Exceptions.printStackTrace(ex);
             }
         });

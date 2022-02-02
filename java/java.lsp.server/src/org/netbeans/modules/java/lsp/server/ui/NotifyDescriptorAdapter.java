@@ -280,6 +280,7 @@ class NotifyDescriptorAdapter {
             ShowInputBoxParams params = new ShowInputBoxParams();
             params.setPrompt(descriptor.getTitle());
             params.setValue(inp.getInputText());
+            params.setPassword(descriptor instanceof NotifyDescriptor.PasswordLine);
             CompletableFuture<String> newText = client.showInputBox(params);
             return newText.thenApply((item) -> {
                 if (item == null) {

@@ -18,11 +18,14 @@
  */
 package org.netbeans.modules.cloud.oracle;
 
+import org.netbeans.modules.cloud.oracle.items.OCIItem;
 import java.awt.Dialog;
 import java.awt.GraphicsEnvironment;
 import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Optional;
+import java.util.Random;
 import java.util.function.Consumer;
 import javax.swing.JFileChooser;
 import javax.swing.event.DocumentEvent;
@@ -30,9 +33,11 @@ import javax.swing.event.DocumentListener;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
+import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileUtil;
+import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
-import org.openide.util.Pair;
 import org.openide.windows.WindowManager;
 
 /**
@@ -48,11 +53,17 @@ import org.openide.windows.WindowManager;
     "SelectButton=Select",
     "Lenght=The wallet download password should be at least 8 characters long.",
     "Match=Passwords don't match.",
-    "OneNumber=The wallet download password should contain at least 1 number or special character.",
-    "OneLetter=The wallet download password should contain at least 1 letter."
+    "OneNumber=The wallet download password should contain at least 1 number.",
+    "OneSpecial=The wallet download password should contain at least 1 special character.",
+    "OneLetter=The wallet download password should contain at least 1 letter.",
+    "WalletPassword=Enter the wallet password",
+    "WalletReEnterPassword=Re-enter the wallet password",
+    "JDBCUsername=Enter the conenction username",
+    "JDBCPassword=Enter the conenction password"
 })
 final class DownloadWalletDialog extends javax.swing.JPanel {
 
+    public static final String WALLETS_PATH = "Databases/Wallets"; // NOI18N
     private static final String LAST_USED_DIR = "lastUsedDir";
     private static final String SPECIAL_CHARACTERS = "/!#$^?:.(){}[]~-_.";
     
@@ -68,10 +79,10 @@ final class DownloadWalletDialog extends javax.swing.JPanel {
         jPasswordFieldConfirm.getDocument().addDocumentListener(docListener);
     }
     
-    static Optional<Pair<String, char[]>> showDialog(OCIItem db) {
+    static Optional<WalletInfo> showDialog(OCIItem db) {
         File home = new File(System.getProperty("user.home")); //NOI18N
         String lastUsedDir = NbPreferences.forModule(DownloadWalletAction.class).get(LAST_USED_DIR, home.getAbsolutePath()); //NOI18N
-
+                
         if (!GraphicsEnvironment.isHeadless()) {
             DownloadWalletDialog dlgPanel = new DownloadWalletDialog();
             dlgPanel.jTextFieldLocation.setText(lastUsedDir);
@@ -85,17 +96,45 @@ final class DownloadWalletDialog extends javax.swing.JPanel {
                 String path = dlgPanel.jTextFieldLocation.getText();
                 char[] passwd = dlgPanel.jPasswordField.getPassword();
                 NbPreferences.forModule(DownloadWalletAction.class).put(LAST_USED_DIR, path); //NOI18N
-                return Optional.of(Pair.of(path, passwd));
+                return Optional.of(new WalletInfo(path, passwd, null, null));
             }
         } else {
-            NotifyDescriptor.InputLine inp = new NotifyDescriptor.InputLine(Bundle.WalletText(), Bundle.DownloadTitle());
-            Object selected = DialogDisplayer.getDefault().notify(inp);
-            if (DialogDescriptor.OK_OPTION == selected) {
-                char[] passwd = inp.getInputText().toCharArray();
-                return Optional.of(Pair.of(null, passwd));
+            try {
+                File walletsDir = getWalletsDir();
+                NotifyDescriptor.InputLine inp = new NotifyDescriptor.InputLine(Bundle.JDBCUsername(), Bundle.JDBCUsername());
+                Object selected = DialogDisplayer.getDefault().notify(inp);
+                
+                if (DialogDescriptor.OK_OPTION != selected) {
+                    return Optional.empty();
+                }
+                String username = inp.getInputText();
+                
+                inp = new NotifyDescriptor.PasswordLine(Bundle.JDBCPassword(), Bundle.JDBCPassword());
+                selected = DialogDisplayer.getDefault().notify(inp);
+                if (DialogDescriptor.OK_OPTION != selected) {
+                    return Optional.empty();
+                }
+                char[] password = inp.getInputText().toCharArray();
+                return Optional.of(new WalletInfo(walletsDir.getAbsolutePath(), generatePassword(), username, password));
+            } catch (IOException ex) {
+                Exceptions.printStackTrace(ex);
             }
         }
         return Optional.empty();
+    }
+    
+    static char[] generatePassword() {
+        Random rnd = new Random();
+        char[] password = new char[12];
+        for (int i = 0; i < 4; i++) {
+            password[i] = (char) (65 + rnd.nextInt(25));
+        }
+        password[4] = SPECIAL_CHARACTERS.charAt(rnd.nextInt(SPECIAL_CHARACTERS.length()));
+        for (int i = 5; i < password.length - 1; i++) {
+            password[i] = (char) (97 + rnd.nextInt(25));
+        }
+        password[password.length - 1] = (char) (48 + rnd.nextInt(9));
+        return password;
     }
     
     private void setDescriptor(DialogDescriptor descriptor) {
@@ -240,29 +279,42 @@ final class DownloadWalletDialog extends javax.swing.JPanel {
         checkPasswordLogic(passwd1, passwd2, (m) -> errorMessage(m));
     }
     
-    static void checkPasswordLogic(char[] passwd1, char[] passwd2, Consumer<String> message) {
+    static boolean checkPasswordLogic(char[] passwd1, char[] passwd2, Consumer<String> message) {
+        boolean result = false;
         if (passwd1.length < 8) {
             message.accept(Bundle.Lenght());
-            return;
+            return result;
         } 
         int nSpecialCharacters = 0;
         int nLetters = 0;
+        int nDigits = 0;
         for (int i = 0; i < passwd1.length; i++) {
             if (Character.isLetter(passwd1[i])) {
                 nLetters++;
-            } else if (SPECIAL_CHARACTERS.indexOf(passwd1[i]) >= 0 || Character.isDigit(passwd1[i])) {
+            } else if (Character.isDigit(passwd1[i])) {
+                nDigits++;
+            } else if (SPECIAL_CHARACTERS.indexOf(passwd1[i]) >= 0) {
                 nSpecialCharacters++;
             }
         }
-        if (nSpecialCharacters < 1) {
-            message.accept(Bundle.OneNumber());
-        } else if (nLetters < 1) {
+        if (nLetters < 1) {
             message.accept(Bundle.OneLetter());
+        } else if (nSpecialCharacters < 1) {
+            message.accept(Bundle.OneSpecial());
+        } else if (nDigits < 1) {
+            message.accept(Bundle.OneNumber());
         } else if (!Arrays.equals(passwd1, passwd2)) {
             message.accept(Bundle.Match());
         } else {
             message.accept(null);
+            result = true;
         }
+        return result;
+    }
+    
+    private static File getWalletsDir() throws IOException {
+        FileObject fo = FileUtil.createFolder(FileUtil.getConfigRoot(), WALLETS_PATH);
+        return FileUtil.toFile(fo);
     }
     
     private class PasswordListener implements DocumentListener {
@@ -279,6 +331,37 @@ final class DownloadWalletDialog extends javax.swing.JPanel {
         @Override
         public void changedUpdate(DocumentEvent e) {
             checkPassword();
+        }
+        
+    }
+    
+    static class WalletInfo {
+        private String path;
+        private char[] walletPassword;
+        private String dbUser;
+        private char[] dbPassword;
+
+        public WalletInfo(String path, char[] walletPassword, String dbUser, char[] dbPassword) {
+            this.path = path;
+            this.walletPassword = walletPassword;
+            this.dbUser = dbUser;
+            this.dbPassword = dbPassword;
+        }
+
+        public String getPath() {
+            return path;
+        }
+
+        public char[] getWalletPassword() {
+            return walletPassword;
+        }
+
+        public String getDbUser() {
+            return dbUser;
+        }
+
+        public char[] getDbPassword() {
+            return dbPassword;
         }
         
     }

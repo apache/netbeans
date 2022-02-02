@@ -18,11 +18,13 @@
  */
 package org.netbeans.modules.cloud.oracle;
 
+import org.netbeans.modules.cloud.oracle.items.OCIItem;
 import java.awt.Image;
 import java.util.List;
 import javax.swing.Action;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import org.openide.loaders.DataNode;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
 import org.openide.nodes.Node;
@@ -41,6 +43,7 @@ public class TenancyNode extends AbstractNode {
         setName(tenancy.getName()); 
         setDisplayName(tenancy.getName());
         setIconBaseWithExtension(ORCL_ICON);
+        setShortDescription(tenancy.getDescription());
     }
     
     @Override

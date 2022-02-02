@@ -670,7 +670,7 @@
 				},
 				{
 					"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.DownloadWalletAction",
-					"when": "viewItem =~ /class:oracle.DatabaseItem/"
+					"when": "viewItem =~ /class:oracle.items.DatabaseItem/"
 				},
 				{
 					"command": "java.workspace.configureRunSettings",

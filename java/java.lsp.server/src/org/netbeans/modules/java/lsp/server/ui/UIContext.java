@@ -86,6 +86,14 @@ public abstract class UIContext {
     protected abstract CompletableFuture<MessageActionItem> showMessageRequest(ShowMessageRequestParams msg);
     protected abstract void logMessage(MessageParams msg);
     protected abstract Message showStatusMessage(ShowStatusMessageParams msg);
+    
+    /**
+     * Shows an input box to ask the user for a text input.
+     *
+     * @param params properties of input to display
+     * @return future that yields the entered value
+     * @since 1.18
+     */
     protected CompletableFuture<String> showInputBox(ShowInputBoxParams params) {
         throw new AbstractMethodError();
     }

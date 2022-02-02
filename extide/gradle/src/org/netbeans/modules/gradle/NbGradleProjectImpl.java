@@ -402,7 +402,20 @@ public final class NbGradleProjectImpl implements Project {
             }
             loadedProjectSerial = s;
             this.attemptedQuality = aim;
-            if (project != null && !force && project.getQuality().atLeast(prj.getQuality())) {
+            
+            boolean replace = project == null;
+            if (project != null) {
+                if (prj.getQuality().betterThan(project.getQuality())) {
+                    replace = true;
+                } else if (
+                        project.getQuality().equals(prj.getQuality()) && 
+                        !project.getProblems().equals(prj.getProblems()) &&
+                        !prj.getProblems().isEmpty()) {
+                    // exception: if the new project is the same quality fallback, but contains (different) problem info, use it
+                    replace = true;
+                }
+            }
+            if (!replace) {
                 // avoid replacing a project when nothing has changed.
                 LOG.log(Level.FINER, "Current project {1} sufficient for attempted quality {0}", new Object[] { this.project, aim });
                 return CompletableFuture.completedFuture(this.project);
@@ -495,7 +508,7 @@ public final class NbGradleProjectImpl implements Project {
 
     GradleProject getPrimedProject() {
         GradleProject gp = projectWithQuality(null, EVALUATED, false, false);
-        return !(gp.getQuality().notBetterThan(EVALUATED) || !gp.getProblems().isEmpty()) ? gp : null;
+        return gp.getQuality().betterThan(EVALUATED) ? gp : null;
     }
     
     /**

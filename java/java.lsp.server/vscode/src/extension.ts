@@ -274,17 +274,15 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
 
     let conf = workspace.getConfiguration();
     if (conf.get("netbeans.conflict.check")) {
-        let e = vscode.extensions.getExtension('redhat.java');
+        const id = 'redhat.java';
+        let e = vscode.extensions.getExtension(id);
         function disablingFailed(reason: any) {
             handleLog(log, 'Disabling some services failed ' + reason);
         }
         if (e && workspace.name) {
-            vscode.window.showInformationMessage(`redhat.java found at ${e.extensionPath} - Suppressing some services to not clash with Apache NetBeans Language Server.`);
-            conf.update('java.completion.enabled', false, false).then(() => {
-                vscode.window.showInformationMessage('Usage of only one Java extension is recommended. Certain services of redhat.java have been disabled. ');
-                conf.update('java.debug.settings.enableRunDebugCodeLens', false, false).then(() => {}, disablingFailed);
-                conf.update('java.test.editor.enableShortcuts', false, false).then(() => {}, disablingFailed);
-            }, disablingFailed);
+            vscode.window.showInformationMessage(`Another Java support extension is already installed. It is recommended to use only one Java support per workspace.`, `Manually disable`).then(() => {
+                vscode.commands.executeCommand('workbench.extensions.action.showInstalledExtensions');
+            });
         }
     }
 

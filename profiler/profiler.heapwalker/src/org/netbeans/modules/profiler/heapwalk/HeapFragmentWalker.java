@@ -64,6 +64,7 @@ public class HeapFragmentWalker {
 
     private List<StateListener> stateListeners;
     private int retainedSizesStatus;
+    private final int heapSegment;
 
     //~ Constructors -------------------------------------------------------------------------------------------------------------
 
@@ -73,7 +74,12 @@ public class HeapFragmentWalker {
     }
 
     public HeapFragmentWalker(Heap heapFragment, HeapWalker heapWalker, boolean supportsRetainedSizes) {
+        this(heapFragment, 0, heapWalker, supportsRetainedSizes);
+    }
+
+    HeapFragmentWalker(Heap heapFragment, int heapSegment, HeapWalker heapWalker, boolean supportsRetainedSizes) {
         this.heapFragment = heapFragment;
+        this.heapSegment = heapSegment;
         this.heapWalker = heapWalker;
 
         this.retainedSizesStatus = supportsRetainedSizes ? RETAINED_SIZES_UNKNOWN :
@@ -193,6 +199,10 @@ public class HeapFragmentWalker {
 
     public Heap getHeapFragment() {
         return heapFragment;
+    }
+    
+    public int getHeapSegment() {
+        return heapSegment;
     }
 
     public InstancesController getInstancesController() {

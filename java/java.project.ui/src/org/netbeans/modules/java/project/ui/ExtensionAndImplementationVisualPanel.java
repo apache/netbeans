@@ -240,14 +240,15 @@ public class ExtensionAndImplementationVisualPanel extends JPanel implements Doc
     }
 
     private boolean isNotFinalExceptionType(ElementHandle<TypeElement> typeHandle) {
+        // TODO: this should not use Class.forName!
         try {
             Class<?> clazz = Class.forName(typeHandle.getQualifiedName());
             return typeHandle.getKind() == ElementKind.CLASS
                     && Exception.class.isAssignableFrom(clazz)
                     && !Modifier.isFinal(clazz.getModifiers());
         } catch (ClassNotFoundException ex) {
+            return true; // we don't know
         }
-        return false;
     }
 
     private boolean isInterface(ElementHandle<TypeElement> typeHandle) {
@@ -255,12 +256,13 @@ public class ExtensionAndImplementationVisualPanel extends JPanel implements Doc
     }
 
     private boolean isNotFinalClass(ElementHandle<TypeElement> typeHandle) {
+        // TODO: this should not use Class.forName!
         try {
             Class<?> clazz = Class.forName(typeHandle.getQualifiedName());
             return typeHandle.getKind() == ElementKind.CLASS && !Modifier.isFinal(clazz.getModifiers());
         } catch (ClassNotFoundException ex) {
+            return true; // we don't know
         }
-        return false;
     }
 
     private void browseInterfacesButtonActionPerformed(ActionEvent evt) {

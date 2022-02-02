@@ -301,7 +301,7 @@ public final class Server {
         };
     }
 
-    public static class LanguageServerImpl implements LanguageServer, LanguageClientAware, LspServerState {
+    public static class LanguageServerImpl implements LanguageServer, LanguageClientAware, LspServerState, NbLanguageServer {
 
         private static final String NETBEANS_JAVA_IMPORTS = "netbeans.java.imports";
 

@@ -129,6 +129,10 @@ export class TreeViewService extends vscode.Disposable {
   }
 
   imageUri(nodeData : NodeInfoRequest.Data) : vscode.Uri | string | ThemeIcon | undefined {
+    if (nodeData.id < 0) {
+      return undefined;
+    }
+
     let ci : CachedImage | undefined;
     if (nodeData.iconIndex) {
       ci = this.images.get(nodeData.iconIndex);
@@ -246,7 +250,7 @@ class VisualizerProvider extends vscode.Disposable implements CustomizableTreeDa
     rootData : NodeInfoRequest.Data
   ) {
     super(() => this.disconnect());
-    this.root = new Visualizer(rootData, ts.imageUri(rootData));
+    this.root = new Visualizer(rootData.id, rootData, ts.imageUri(rootData));
     this.treeData.set(rootData.id, this.root);
   }
 
@@ -432,7 +436,7 @@ class VisualizerProvider extends vscode.Disposable implements CustomizableTreeDa
 
   async fetchItem(n : number) : Promise<Visualizer> {
     let d = await this.client.sendRequest(NodeInfoRequest.info, { nodeId : n });
-    let v = new Visualizer(d, this.ts.imageUri(d));
+    let v = new Visualizer(n, d, this.ts.imageUri(d));
     if (d.command) {
       // PENDING: provide an API to register command (+ parameters) -> command translators.
       if (d.command === 'vscode.open') {
@@ -507,13 +511,15 @@ export class Visualizer extends vscode.TreeItem {
   visId : number;
   pendingQueries : number = 0;
   pendingChange : boolean = false;
+
   constructor(
+    explicitId : number,
     public data : NodeInfoRequest.Data,
     public image : vscode.Uri | string | ThemeIcon | undefined
   ) {
-    super(data.label, data.collapsibleState);
+    super(data.id < 0 ? "< obsolete >" : data.label, data.collapsibleState);
     this.visId = visualizerSerial++;
-    this.id = "" + data.id;
+    this.id = "" + explicitId;
     this.label = data.label;
     this.description = data.description;
     this.tooltip = data.tooltip;
@@ -526,7 +532,7 @@ export class Visualizer extends vscode.TreeItem {
   }
 
   copy() : Visualizer {
-    let v : Visualizer = new Visualizer(this.data, this.image);
+    let v : Visualizer = new Visualizer(Number(this.id), this.data, this.image);
     v.id = this.id;
     v.label = this.label;
     v.description = this.description;

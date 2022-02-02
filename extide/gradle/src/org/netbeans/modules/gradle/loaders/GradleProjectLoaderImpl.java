@@ -49,6 +49,8 @@ public class GradleProjectLoaderImpl implements GradleProjectLoader {
         LOGGER.info("Load aiming " +aim + " for "+ project);
         GradleCommandLine cmd = new GradleCommandLine(args);
         AbstractProjectLoader.ReloadContext ctx = new AbstractProjectLoader.ReloadContext((NbGradleProjectImpl) project, aim, cmd, descriptionOpt);
+        LOGGER.log(Level.FINER, "Load context: project = {0}, prev = {1}, aim = {2}, args = {3}", new Object[] { 
+            project, ctx.previous, aim, cmd});
         List<AbstractProjectLoader> loaders = new LinkedList<>();
 
         if (!ignoreCache) loaders.add(new DiskCacheProjectLoader(ctx));
@@ -85,6 +87,8 @@ public class GradleProjectLoaderImpl implements GradleProjectLoader {
                 if (ret != null) {
                     break;
                 }
+            } else {
+                LOGGER.log(Level.FINER, "Loaded disabled: {0}", loader);
             }
         }
         if (ret == null) {

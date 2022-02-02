@@ -57,7 +57,9 @@ import org.netbeans.modules.java.testrunner.ui.spi.ComputeTestMethods;
 import org.netbeans.modules.java.testrunner.ui.spi.ComputeTestMethods.Factory;
 import org.netbeans.modules.parsing.spi.Parser;
 import org.netbeans.spi.project.SingleMethod;
+import org.openide.ErrorManager;
 import org.openide.filesystems.FileObject;
+import org.openide.util.Exceptions;
 import org.openide.util.lookup.ServiceProvider;
 
 public final class TestClassInfoTask implements Task<CompilationController> {
@@ -86,6 +88,10 @@ public final class TestClassInfoTask implements Task<CompilationController> {
         if (!isTestSource(fileObject)) {
             return Collections.emptyList();
         }
+        return doComputeTestMethods(info, cancel, caretPosIfAny);
+    }
+
+    private static List<TestMethod> doComputeTestMethods(CompilationInfo info, AtomicBoolean cancel, int caretPosIfAny) {
         List<TestMethod> result = new ArrayList<>();
         if (caretPosIfAny == (-1)) {
             Optional<? extends Tree> anyClass = info.getCompilationUnit().getTypeDecls().stream().filter(t -> t.getKind() == Kind.CLASS).findAny();
@@ -256,9 +262,12 @@ public final class TestClassInfoTask implements Task<CompilationController> {
         public List<TestMethod> computeTestMethods(Parser.Result parserResult, AtomicBoolean cancel) {
             try {
                 CompilationController cc = CompilationController.get(parserResult);
-                cc.toPhase(Phase.ELEMENTS_RESOLVED);
-                return TestClassInfoTask.computeTestMethods(cc, cancel, -1);
-            } catch (IOException ex) {}
+                if (isTestSource(cc.getFileObject()) && cc.toPhase(Phase.ELEMENTS_RESOLVED).compareTo(Phase.ELEMENTS_RESOLVED) >= 0) {
+                    return TestClassInfoTask.doComputeTestMethods(cc, cancel, -1);
+                }
+            } catch (Exception ex) {
+                Exceptions.printStackTrace(ex);
+            }
             return Collections.emptyList();
         }
     }

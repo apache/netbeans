@@ -140,6 +140,7 @@ public final class FormatTokenStream implements Iterable<FormatToken> {
                     ret.addToken(FormatToken.forText(ts.offset(), token.text(), id));
                     ret.addToken(FormatToken.forFormat(FormatToken.Kind.AFTER_COMMA));
                     break;
+                case OPERATOR_OPTIONAL_ACCESS:
                 case OPERATOR_DOT:
                     ret.addToken(FormatToken.forFormat(FormatToken.Kind.BEFORE_DOT));
                     ret.addToken(FormatToken.forText(ts.offset(), token.text(), id));

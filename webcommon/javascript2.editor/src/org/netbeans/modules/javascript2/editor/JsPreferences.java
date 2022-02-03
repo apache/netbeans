@@ -28,7 +28,7 @@ import org.netbeans.api.project.ProjectUtils;
 
 public class JsPreferences {
 
-    private static final JsVersion DEFAULT_JS_VERSION = JsVersion.ECMA6;
+    private static final JsVersion DEFAULT_JS_VERSION = JsVersion.EMCANEXT;
 
     private static final String JS_PREF_TAG = "jsversion"; // NOI18N
 

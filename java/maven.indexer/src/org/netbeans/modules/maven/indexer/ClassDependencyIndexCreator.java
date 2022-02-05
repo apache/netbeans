@@ -42,8 +42,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.CRC32;
 import org.apache.lucene.document.Document;
-import org.apache.lucene.document.Field.Index;
-import org.apache.lucene.document.Field.Store;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
@@ -73,7 +71,9 @@ class ClassDependencyIndexCreator extends AbstractIndexCreator {
     private static final Logger LOG = Logger.getLogger(ClassDependencyIndexCreator.class.getName());
 
     private static final String NB_DEPENDENCY_CLASSES = "nbdc";
-    private static final IndexerField FLD_NB_DEPENDENCY_CLASS = new IndexerField(new Field(null, "urn:NbClassDependenciesIndexCreator", NB_DEPENDENCY_CLASSES, "Java dependencies"), IndexerFieldVersion.V3, NB_DEPENDENCY_CLASSES, "Java dependencies", Store.YES, Index.ANALYZED);
+    private static final IndexerField FLD_NB_DEPENDENCY_CLASS = new IndexerField(
+            new Field(null, "urn:NbClassDependenciesIndexCreator", NB_DEPENDENCY_CLASSES, "Java dependencies"),
+            IndexerFieldVersion.V3, NB_DEPENDENCY_CLASSES, "Java dependencies", IndexerField.ANALYZED_STORED);
 
     ClassDependencyIndexCreator() {
         super(ClassDependencyIndexCreator.class.getName(), Arrays.asList(MinimalArtifactInfoIndexCreator.ID));
@@ -170,7 +170,7 @@ class ClassDependencyIndexCreator extends AbstractIndexCreator {
     static void search(String className, Indexer indexer, Collection<IndexingContext> contexts, List<? super ClassUsage> results) throws IOException {
         String searchString = crc32base64(className.replace('.', '/'));
         Query refClassQuery = indexer.constructQuery(ClassDependencyIndexCreator.FLD_NB_DEPENDENCY_CLASS.getOntology(), new StringSearchExpression(searchString));
-        TopScoreDocCollector collector = TopScoreDocCollector.create(NexusRepositoryIndexerImpl.MAX_RESULT_COUNT, null);
+        TopScoreDocCollector collector = TopScoreDocCollector.create(NexusRepositoryIndexerImpl.MAX_RESULT_COUNT, Integer.MAX_VALUE);
         for (IndexingContext context : contexts) {
             IndexSearcher searcher = context.acquireIndexSearcher();
             try {
@@ -253,7 +253,7 @@ class ClassDependencyIndexCreator extends AbstractIndexCreator {
         "javax/transaction", "javax/transaction/xa", "javax/xml", "javax/xml/bind", "javax/xml/crypto",
         "javax/xml/datatype", "javax/xml/namespace", "javax/xml/parsers", "javax/xml/soap",
         "javax/xml/stream", "javax/xml/transform", "javax/xml/validation", "javax/xml/ws",
-        "javax/xml/xpath", "jdk/internal/cmm", "jdk/internal/instrumentation", "jdk/internal/org",
+        "javax/xml/xpath", "jdk/incubator", "jdk/internal/cmm", "jdk/internal/instrumentation", "jdk/internal/org",
         "jdk/internal/util", "jdk/management/cmm", "jdk/management/resource", "jdk/net",
         "jdk/xml/internal", "org/ietf/jgss", "org/jcp/xml", "org/omg/CORBA", "org/omg/CORBA_2_3",
         "org/omg/CosNaming", "org/omg/Dynamic", "org/omg/DynamicAny", "org/omg/IOP", "org/omg/Messaging",

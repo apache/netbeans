@@ -146,7 +146,7 @@ public class NexusRepositoryIndexerImpl implements RepositoryIndexerImplementati
     
     private boolean inited = false;
     /**
-     * any reads, writes from/to index shal be done under mutex access.
+     * any reads, writes from/to index shall be done under mutex access.
      */
     private static final HashMap<String,Mutex> repoMutexMap = new HashMap<String, Mutex>(4);
 
@@ -395,9 +395,9 @@ public class NexusRepositoryIndexerImpl implements RepositoryIndexerImplementati
         int MAX_MAX_CLAUSE = 1<<11;  // conservative maximum for too general queries, like "c:*class*"
 
         if (q instanceof BooleanQuery) {
-            BooleanClause[] c = ((BooleanQuery)q).getClauses();
-            if (c.length==1) {
-                Query q1 = c[0].getQuery();
+            List<BooleanClause> list = ((BooleanQuery)q).clauses();
+            if (list.size() == 1) {
+                Query q1 = list.get(0).getQuery();
                 if (q1 instanceof PrefixQuery && "u".equals(((PrefixQuery)q1).getPrefix().field())) {
                     // increase for queries like "+u:org.netbeans.modules|*" to succeed
                     MAX_MAX_CLAUSE = 1<<16;
@@ -722,7 +722,7 @@ public class NexusRepositoryIndexerImpl implements RepositoryIndexerImplementati
             tmpContext = new DefaultIndexingContext( context.getId() + "-tmp", //
                                                      context.getRepositoryId(), //
                                                      context.getRepository(), //
-                                                     directory, //
+                                                     tmpDir, //
                                                      context.getRepositoryUrl(), //
                                                      context.getIndexUpdateUrl(), //
                                                      context.getIndexCreators(), //
@@ -797,9 +797,10 @@ public class NexusRepositoryIndexerImpl implements RepositoryIndexerImplementati
                             //#229296 don't reindex stuff that is already in the index, with exception of snapshots
                             boolean add = artifact.isSnapshot();
                             if (!artifact.isSnapshot()) {
-                                BooleanQuery bq = new BooleanQuery();
                                 String id = artifact.getGroupId() + ArtifactInfo.FS + artifact.getArtifactId() + ArtifactInfo.FS + artifact.getVersion() + ArtifactInfo.FS + ArtifactInfo.nvl(artifact.getClassifier());
-                                bq.add(new BooleanClause(new PrefixQuery(new Term(ArtifactInfo.UINFO, id)), BooleanClause.Occur.MUST));
+                                BooleanQuery bq = new BooleanQuery.Builder()
+                                        .add(new BooleanClause(new PrefixQuery(new Term(ArtifactInfo.UINFO, id)), BooleanClause.Occur.MUST))
+                                        .build();
                                 IteratorSearchResponse response = repeatedPagedSearch(bq, Collections.singletonList(indexingContext), MAX_RESULT_COUNT);
                                 add = response == null || response.getTotalHitsCount() == 0;
                                 if (response != null) {
@@ -1037,10 +1038,11 @@ public class NexusRepositoryIndexerImpl implements RepositoryIndexerImplementati
                                              List<RepositoryInfo> repos, final boolean skipUnIndexed) {
         final List<String> infos = new ArrayList<String>(result.getResults());
         final SkippedAction skipAction = new SkippedAction(result);
+        BooleanQuery bq = new BooleanQuery.Builder()
+                .add(new BooleanClause(new TermQuery(new Term(ArtifactInfo.PACKAGING, packaging)), BooleanClause.Occur.MUST))
+                .build();
         iterate(repos, new RepoAction() {
             @Override public void run(RepositoryInfo repo, IndexingContext context) throws IOException {
-                BooleanQuery bq = new BooleanQuery();
-                bq.add(new BooleanClause(new TermQuery(new Term(ArtifactInfo.PACKAGING, packaging)), BooleanClause.Occur.MUST));
                 IteratorSearchResponse response = repeatedPagedSearch(bq, Collections.singletonList(context), NO_CAP_RESULT_COUNT);
                 if (response != null) {
                    try {
@@ -1077,11 +1079,12 @@ public class NexusRepositoryIndexerImpl implements RepositoryIndexerImplementati
                                              List<RepositoryInfo> repos, final boolean skipUnIndexed) {
         final List<NBVersionInfo> infos = new ArrayList<NBVersionInfo>(result.getResults());
         final SkippedAction skipAction = new SkippedAction(result);
+        String id = groupId + ArtifactInfo.FS + artifactId + ArtifactInfo.FS + version + ArtifactInfo.FS;
+        BooleanQuery bq = new BooleanQuery.Builder()
+                .add(new BooleanClause(new PrefixQuery(new Term(ArtifactInfo.UINFO, id)), BooleanClause.Occur.MUST))
+                .build();
         iterate(repos, new RepoAction() {
             @Override public void run(RepositoryInfo repo, IndexingContext context) throws IOException {
-                BooleanQuery bq = new BooleanQuery();
-                String id = groupId + ArtifactInfo.FS + artifactId + ArtifactInfo.FS + version + ArtifactInfo.FS;
-                bq.add(new BooleanClause(new PrefixQuery(new Term(ArtifactInfo.UINFO, id)), BooleanClause.Occur.MUST));
                 IteratorSearchResponse response = repeatedPagedSearch(bq, Collections.singletonList(context), MAX_RESULT_COUNT);
                 if (response != null) {
                    try {
@@ -1115,11 +1118,12 @@ public class NexusRepositoryIndexerImpl implements RepositoryIndexerImplementati
     private  ResultImplementation<String> getArtifacts(final String groupId, final ResultImpl<String> result, final List<RepositoryInfo> repos, final boolean skipUnIndexed) {
         final Set<String> artifacts = new TreeSet<String>(result.getResults());
         final SkippedAction skipAction = new SkippedAction(result);
+        String id = groupId + ArtifactInfo.FS;
+        BooleanQuery bq = new BooleanQuery.Builder()
+                .add(new BooleanClause(setBooleanRewrite(new PrefixQuery(new Term(ArtifactInfo.UINFO, id))), BooleanClause.Occur.MUST))
+                .build();
         iterate(repos, new RepoAction() {
             @Override public void run(RepositoryInfo repo, IndexingContext context) throws IOException {
-                BooleanQuery bq = new BooleanQuery();
-                String id = groupId + ArtifactInfo.FS;
-                bq.add(new BooleanClause(setBooleanRewrite(new PrefixQuery(new Term(ArtifactInfo.UINFO, id))), BooleanClause.Occur.MUST));
                 //mkleint: this is not capped, because only a string is collected (and collapsed), the rest gets CGed fast
                 IteratorSearchResponse response = repeatedPagedSearch(bq, Collections.singletonList(context), NO_CAP_RESULT_COUNT);
                 if (response != null) {
@@ -1150,11 +1154,12 @@ public class NexusRepositoryIndexerImpl implements RepositoryIndexerImplementati
     private ResultImplementation<NBVersionInfo> getVersions(final String groupId, final String artifactId, final ResultImpl<NBVersionInfo> result, List<RepositoryInfo> repos, final boolean skipUnIndexed) {
         final List<NBVersionInfo> infos = new ArrayList<NBVersionInfo>(result.getResults());
         final SkippedAction skipAction = new SkippedAction(result);
+        String id = groupId + ArtifactInfo.FS + artifactId + ArtifactInfo.FS;
+        BooleanQuery bq = new BooleanQuery.Builder()
+                .add(new BooleanClause(setBooleanRewrite(new PrefixQuery(new Term(ArtifactInfo.UINFO, id))), BooleanClause.Occur.MUST))
+                .build();
         iterate(repos, new RepoAction() {
             @Override public void run(RepositoryInfo repo, IndexingContext context) throws IOException {
-                BooleanQuery bq = new BooleanQuery();
-                String id = groupId + ArtifactInfo.FS + artifactId + ArtifactInfo.FS;
-                bq.add(new BooleanClause(setBooleanRewrite(new PrefixQuery(new Term(ArtifactInfo.UINFO, id))), BooleanClause.Occur.MUST));
                 IteratorSearchResponse response = repeatedPagedSearch(bq, Collections.singletonList(context), MAX_RESULT_COUNT);
                 if (response != null) {
                    try {
@@ -1368,10 +1373,11 @@ public class NexusRepositoryIndexerImpl implements RepositoryIndexerImplementati
     private ResultImplementation<NBVersionInfo> findBySHA1(final String sha1, final ResultImpl<NBVersionInfo> result, List<RepositoryInfo> repos, final boolean skipUnIndexed) {
         final List<NBVersionInfo> infos = new ArrayList<NBVersionInfo>(result.getResults());
         final SkippedAction skipAction = new SkippedAction(result);
+        BooleanQuery bq = new BooleanQuery.Builder()
+                .add(new BooleanClause((setBooleanRewrite(constructQuery(MAVEN.SHA1, sha1))), BooleanClause.Occur.SHOULD))
+                .build();
         iterate(repos, new RepoAction() {
             @Override public void run(RepositoryInfo repo, IndexingContext context) throws IOException {
-                BooleanQuery bq = new BooleanQuery();
-                bq.add(new BooleanClause((setBooleanRewrite(constructQuery(MAVEN.SHA1, sha1))), BooleanClause.Occur.SHOULD));
                 IteratorSearchResponse response = repeatedPagedSearch(bq, Collections.singletonList(context), MAX_RESULT_COUNT);
                 if (response != null) {
                     try {
@@ -1405,13 +1411,14 @@ public class NexusRepositoryIndexerImpl implements RepositoryIndexerImplementati
     private ResultImplementation<NBVersionInfo> findArchetypes(final ResultImpl<NBVersionInfo> result, List<RepositoryInfo> repos, final boolean skipUnIndexed) {
         final List<NBVersionInfo> infos = new ArrayList<NBVersionInfo>(result.getResults());
         final SkippedAction skipAction = new SkippedAction(result);
+        BooleanQuery bq = new BooleanQuery.Builder()
+                // XXX also consider using NexusArchetypeDataSource
+                .add(new BooleanClause(new TermQuery(new Term(ArtifactInfo.PACKAGING, "maven-archetype")), BooleanClause.Occur.MUST)) //NOI18N
+                .build();
         iterate(repos, new RepoAction() {
             @Override public void run(RepositoryInfo repo, IndexingContext context) throws IOException {
-                BooleanQuery bq = new BooleanQuery();
-                // XXX also consider using NexusArchetypeDataSource
-                bq.add(new BooleanClause(new TermQuery(new Term(ArtifactInfo.PACKAGING, "maven-archetype")), BooleanClause.Occur.MUST)); //NOI18N
-                FlatSearchRequest fsr = new FlatSearchRequest(bq, ArtifactInfo.VERSION_COMPARATOR);
                 /* There are >512 archetypes in Central, and we want them all in ChooseArchetypePanel
+                FlatSearchRequest fsr = new FlatSearchRequest(bq, ArtifactInfo.VERSION_COMPARATOR);
                 fsr.setCount(MAX_RESULT_COUNT);
                 */
                 IteratorSearchResponse response = repeatedPagedSearch(bq, Collections.singletonList(context), NO_CAP_RESULT_COUNT);
@@ -1447,12 +1454,13 @@ public class NexusRepositoryIndexerImpl implements RepositoryIndexerImplementati
     private ResultImplementation<String> filterPluginArtifactIds(final String groupId, final String prefix, ResultImpl<String> result, List<RepositoryInfo> repos, final boolean skipUnIndexed) {
         final Set<String> artifacts = new TreeSet<String>(result.getResults());
         final SkippedAction skipAction = new SkippedAction(result);
+        String id = groupId + ArtifactInfo.FS + prefix;
+        BooleanQuery bq = new BooleanQuery.Builder()
+                .add(new BooleanClause(new TermQuery(new Term(ArtifactInfo.PACKAGING, "maven-plugin")), BooleanClause.Occur.MUST))
+                .add(new BooleanClause(setBooleanRewrite(new PrefixQuery(new Term(ArtifactInfo.UINFO, id))), BooleanClause.Occur.MUST))
+                .build();
         iterate(repos, new RepoAction() {
             @Override public void run(RepositoryInfo repo, IndexingContext context) throws IOException {
-                BooleanQuery bq = new BooleanQuery();
-                String id = groupId + ArtifactInfo.FS + prefix;
-                bq.add(new BooleanClause(new TermQuery(new Term(ArtifactInfo.PACKAGING, "maven-plugin")), BooleanClause.Occur.MUST));
-                bq.add(new BooleanClause(setBooleanRewrite(new PrefixQuery(new Term(ArtifactInfo.UINFO, id))), BooleanClause.Occur.MUST));
                 //mkleint: this is not capped, because only a string is collected (and collapsed), the rest gets CGed fast
                 IteratorSearchResponse response = repeatedPagedSearch(bq, Collections.singletonList(context), NO_CAP_RESULT_COUNT);
                 if (response != null) {
@@ -1484,13 +1492,14 @@ public class NexusRepositoryIndexerImpl implements RepositoryIndexerImplementati
     private ResultImplementation<String> filterPluginGroupIds(final String prefix, ResultImpl<String> result, List<RepositoryInfo> repos, final boolean skipUnIndexed) {
         final Set<String> artifacts = new TreeSet<String>(result.getResults());
         final SkippedAction skipAction = new SkippedAction(result);
+        BooleanQuery.Builder builder = new BooleanQuery.Builder();
+        builder.add(new BooleanClause(new TermQuery(new Term(ArtifactInfo.PACKAGING, "maven-plugin")), BooleanClause.Occur.MUST));
+        if (!prefix.isEmpty()) { //heap out of memory otherwise
+            builder.add(new BooleanClause(setBooleanRewrite(new PrefixQuery(new Term(ArtifactInfo.GROUP_ID, prefix))), BooleanClause.Occur.MUST));
+        }
+        BooleanQuery bq = builder.build();
         iterate(repos, new RepoAction() {
             @Override public void run(RepositoryInfo repo, IndexingContext context) throws IOException {
-                BooleanQuery bq = new BooleanQuery();
-                bq.add(new BooleanClause(new TermQuery(new Term(ArtifactInfo.PACKAGING, "maven-plugin")), BooleanClause.Occur.MUST));
-                if (prefix.length() > 0) { //heap out of memory otherwise
-                    bq.add(new BooleanClause(setBooleanRewrite(new PrefixQuery(new Term(ArtifactInfo.GROUP_ID, prefix))), BooleanClause.Occur.MUST));
-                }
                 //mkleint: this is not capped, because only a string is collected (and collapsed), the rest gets CGed fast
                 IteratorSearchResponse response = repeatedPagedSearch(bq, Collections.singletonList(context), NO_CAP_RESULT_COUNT);
                 if (response != null) {
@@ -1523,7 +1532,7 @@ public class NexusRepositoryIndexerImpl implements RepositoryIndexerImplementati
         final SkippedAction skipAction = new SkippedAction(result);
         iterate(repos, new RepoAction() {
             @Override public void run(RepositoryInfo repo, IndexingContext context) throws IOException {
-                BooleanQuery bq = new BooleanQuery();
+                BooleanQuery.Builder bq = new BooleanQuery.Builder();
                 for (QueryField field : fields) {
                     BooleanClause.Occur occur = field.getOccur() == QueryField.OCCUR_SHOULD ? BooleanClause.Occur.SHOULD : BooleanClause.Occur.MUST;
                     String fieldName = toNexusField(field.getField());
@@ -1591,7 +1600,7 @@ public class NexusRepositoryIndexerImpl implements RepositoryIndexerImplementati
                         //queries for each field.
                     }
                 }
-                IteratorSearchResponse resp = repeatedPagedSearch(bq, Collections.singletonList(context), MAX_RESULT_COUNT);
+                IteratorSearchResponse resp = repeatedPagedSearch(bq.build(), Collections.singletonList(context), MAX_RESULT_COUNT);
                 if (resp != null) {
                     try {
                         for (ArtifactInfo ai : resp.iterator()) {
@@ -1732,9 +1741,9 @@ public class NexusRepositoryIndexerImpl implements RepositoryIndexerImplementati
     
     private static Query setBooleanRewrite (final Query q) {
         if (q instanceof MultiTermQuery) {
-            ((MultiTermQuery)q).setRewriteMethod(MultiTermQuery.CONSTANT_SCORE_BOOLEAN_QUERY_REWRITE);
+            ((MultiTermQuery)q).setRewriteMethod(MultiTermQuery.CONSTANT_SCORE_REWRITE);
         } else if (q instanceof BooleanQuery) {
-            for (BooleanClause c : ((BooleanQuery)q).getClauses()) {
+            for (BooleanClause c : ((BooleanQuery)q).clauses()) {
                 setBooleanRewrite(c.getQuery());
             }
         }

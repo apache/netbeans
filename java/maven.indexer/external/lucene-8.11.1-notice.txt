@@ -1,5 +1,8 @@
 Apache Lucene
-Copyright 2014 The Apache Software Foundation
+Copyright 2001-2021 The Apache Software Foundation
+
+This product includes software developed at
+The Apache Software Foundation (http://www.apache.org/).
 
 Includes software from other Apache Software Foundation projects,
 including, but not limited to:
@@ -15,17 +18,22 @@ Some data files (under analysis/icu/src/data) are derived from Unicode data such
 as the Unicode Character Database. See http://unicode.org/copyright.html for more
 details.
 
-Brics Automaton (under core/src/java/org/apache/lucene/util/automaton) is 
+Brics Automaton (under core/src/java/org/apache/lucene/util/automaton) is
 BSD-licensed, created by Anders Møller. See http://www.brics.dk/automaton/
 
 The levenshtein automata tables (under core/src/java/org/apache/lucene/util/automaton) were
 automatically generated with the moman/finenight FSA library, created by
 Jean-Philippe Barrette-LaPierre. This library is available under an MIT license,
-see http://sites.google.com/site/rrettesite/moman and 
+see http://sites.google.com/site/rrettesite/moman and
 http://bitbucket.org/jpbarrette/moman/overview/
 
 The class org.apache.lucene.util.WeakIdentityMap was derived from
 the Apache CXF project and is Apache License 2.0.
+
+The class org.apache.lucene.util.compress.LZ4 is a Java rewrite of the LZ4
+compression library (https://github.com/lz4/lz4/tree/dev/lib) that is licensed
+under the 2-clause BSD license.
+(https://opensource.org/licenses/bsd-license.php)
 
 The Google Code Prettify is Apache License 2.0.
 See http://code.google.com/p/google-code-prettify/
@@ -51,13 +59,14 @@ The KStem stemmer in
 was developed by Bob Krovetz and Sergio Guzman-Lara (CIIR-UMass Amherst)
 under the BSD-license.
 
-The Arabic,Persian,Romanian,Bulgarian, and Hindi analyzers (common) come with a default
+The Arabic,Persian,Romanian,Bulgarian, Hindi and Bengali analyzers (common) come with a default
 stopword list that is BSD-licensed created by Jacques Savoy.  These files reside in:
 analysis/common/src/resources/org/apache/lucene/analysis/ar/stopwords.txt,
 analysis/common/src/resources/org/apache/lucene/analysis/fa/stopwords.txt,
 analysis/common/src/resources/org/apache/lucene/analysis/ro/stopwords.txt,
 analysis/common/src/resources/org/apache/lucene/analysis/bg/stopwords.txt,
-analysis/common/src/resources/org/apache/lucene/analysis/hi/stopwords.txt
+analysis/common/src/resources/org/apache/lucene/analysis/hi/stopwords.txt,
+analysis/common/src/resources/org/apache/lucene/analysis/bn/stopwords.txt
 See http://members.unine.ch/jacques.savoy/clef/index.html.
 
 The German,Spanish,Finnish,French,Hungarian,Italian,Portuguese,Russian and Swedish light stemmers
@@ -75,7 +84,7 @@ analysis/common/src/java/org/apache/lucene/analysis/pt/PortugueseLightStemmer.ja
 analysis/common/src/java/org/apache/lucene/analysis/ru/RussianLightStemmer.java
 analysis/common/src/java/org/apache/lucene/analysis/sv/SwedishLightStemmer.java
 
-The Stempel analyzer (stempel) includes BSD-licensed software developed 
+The Stempel analyzer (stempel) includes BSD-licensed software developed
 by the Egothor project http://egothor.sf.net/, created by Leo Galambos, Martin Kvapil,
 and Edmond Nolan.
 
@@ -87,8 +96,8 @@ See http://project.carrot2.org/license.html.
 The SmartChineseAnalyzer source code (smartcn) was
 provided by Xiaoping Gao and copyright 2009 by www.imdict.net.
 
-WordBreakTestUnicode_*.java (under modules/analysis/common/src/test/) 
-is derived from Unicode data such as the Unicode Character Database. 
+WordBreakTestUnicode_*.java (under modules/analysis/common/src/test/)
+is derived from Unicode data such as the Unicode Character Database.
 See http://unicode.org/copyright.html for more details.
 
 The Morfologik analyzer (morfologik) includes BSD-licensed software
@@ -186,3 +195,15 @@ grants independently of ICOT any specific warranty to the user in
 writing, such person, organization or entity, will also be exempted
 from and not be held liable to the user for any such damages as noted
 above as far as the program is concerned.
+
+===========================================================================
+Nori Korean Morphological Analyzer - Apache Lucene Integration
+===========================================================================
+
+This software includes a binary and/or source version of data from
+
+  mecab-ko-dic-2.0.3-20170922
+
+which can be obtained from
+
+  https://bitbucket.org/eunjeon/mecab-ko-dic/downloads/mecab-ko-dic-2.0.3-20170922.tar.gz

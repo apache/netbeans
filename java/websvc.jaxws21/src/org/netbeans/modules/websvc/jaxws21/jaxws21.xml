@@ -43,10 +43,9 @@
         <resource>jar:nbinst://org.netbeans.modules.websvc.jaxws21/modules/ext/jaxws22/stax2-api.jar!/</resource>
         <resource>jar:nbinst://org.netbeans.modules.websvc.jaxws21/modules/ext/jaxws22/streambuffer.jar!/</resource>
         <resource>jar:nbinst://org.netbeans.modules.websvc.jaxws21/modules/ext/jaxws22/woodstox-core-asl.jar!/</resource>
-        <resource>jar:nbinst://org.netbeans.modules.websvc.jaxws21api/modules/ext/jaxws22/api/jaxws-api.jar!/</resource>
-        <resource>jar:nbinst://org.netbeans.modules.websvc.jaxws21api/modules/ext/jaxws22/api/jsr181-api.jar!/</resource>
-        <resource>jar:nbinst://org.netbeans.modules.websvc.jaxws21api/modules/ext/jaxws22/api/javax.annotation.jar!/</resource>
-        <resource>jar:nbinst://org.netbeans.modules.websvc.jaxws21api/modules/ext/jaxws22/api/saaj-api.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.modules.websvc.jaxws21api/modules/ext/jaxws22/api/jakarta.jws-api.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.modules.websvc.jaxws21api/modules/ext/jaxws22/api/jakarta.xml.soap-api.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.modules.websvc.jaxws21api/modules/ext/jaxws22/api/jakarta.xml.ws-api.jar!/</resource>
         <resource>jar:nbinst://org.netbeans.modules.xml.jaxb.api/modules/ext/jaxb/activation.jar!/</resource>
         <resource>jar:nbinst://org.netbeans.modules.xml.jaxb.api/modules/ext/jaxb/api/jaxb-api.jar!/</resource>
     </volume>

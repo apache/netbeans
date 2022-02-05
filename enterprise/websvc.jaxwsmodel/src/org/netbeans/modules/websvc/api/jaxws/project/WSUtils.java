@@ -360,7 +360,7 @@ public class WSUtils {
     }
     
     private static String getJaxWsApiDir() {
-        File jaxwsApi = InstalledFileLocator.getDefault().locate("modules/ext/jaxws22/api/jaxws-api.jar", null, false); // NOI18N
+        File jaxwsApi = InstalledFileLocator.getDefault().locate("modules/ext/jaxws22/api/jakarta.xml.ws-api.jar", null, false); // NOI18N
         if (jaxwsApi!=null) {
             File jaxbApi =  InstalledFileLocator.getDefault().locate("modules/ext/jaxb/api/jaxb-api.jar", null, false); // NOI18N
             return jaxwsApi.getParent()+(jaxbApi != null? ":"+jaxbApi.getParent() : ""); //NOI18N
@@ -408,9 +408,9 @@ public class WSUtils {
 
     private static List<URL> getJaxWsApiJars() throws IOException {
         List<URL> urls = new ArrayList<URL>();
-        File apiJar = InstalledFileLocator.getDefault().locate("modules/ext/jaxws22/api/jaxws-api.jar", null, false); // NOI18N
+        File apiJar = InstalledFileLocator.getDefault().locate("modules/ext/jaxws22/api/jakarta.xml.ws-api.jar", null, false); // NOI18N
         if (apiJar != null) {
-            URL url = new URL("jar:nbinst://org.netbeans.modules.websvc.jaxws21api/modules/ext/jaxws22/api/jaxws-api.jar!/");
+            URL url = new URL("jar:nbinst://org.netbeans.modules.websvc.jaxws21api/modules/ext/jaxws22/api/jakarta.xml.ws-api.jar!/");
             /*URL url = apiJar.toURI().toURL();
             if (FileUtil.isArchiveFile(url)) {
                 urls.add(FileUtil.getArchiveRoot(url));

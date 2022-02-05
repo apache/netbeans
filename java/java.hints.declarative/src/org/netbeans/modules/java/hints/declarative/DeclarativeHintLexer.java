@@ -45,6 +45,7 @@ class DeclarativeHintLexer implements Lexer<DeclarativeHintTokenId> {
         fact  = info.tokenFactory();
     }
 
+    @Override
     public Token<DeclarativeHintTokenId> nextToken() {
         int read = input.read();
 
@@ -181,10 +182,12 @@ class DeclarativeHintLexer implements Lexer<DeclarativeHintTokenId> {
         return fact.createToken(DeclarativeHintTokenId.JAVA_SNIPPET);
     }
 
+    @Override
     public Object state() {
         return null;
     }
 
+    @Override
     public void release() {}
 
     private Token<DeclarativeHintTokenId> testToken(String toTest, int whitespaceLength, boolean eof) {
@@ -274,7 +277,7 @@ class DeclarativeHintLexer implements Lexer<DeclarativeHintTokenId> {
     private static final Map<DeclarativeHintTokenId, String> BLOCK_TOKEN_END;
 
     static {
-        Map<String, DeclarativeHintTokenId> map = new HashMap<String, DeclarativeHintTokenId>();
+        Map<String, DeclarativeHintTokenId> map = new HashMap<>();
 
         map.put("=>", DeclarativeHintTokenId.LEADS_TO);
         map.put("&&", DeclarativeHintTokenId.AND);
@@ -287,7 +290,7 @@ class DeclarativeHintLexer implements Lexer<DeclarativeHintTokenId> {
 
         TOKENS = Collections.unmodifiableMap(map);
 
-        Map<String, DeclarativeHintTokenId> blockStartMap = new HashMap<String, DeclarativeHintTokenId>();
+        Map<String, DeclarativeHintTokenId> blockStartMap = new HashMap<>();
 
         blockStartMap.put("/*", DeclarativeHintTokenId.BLOCK_COMMENT);
         blockStartMap.put("//", DeclarativeHintTokenId.LINE_COMMENT);
@@ -298,7 +301,7 @@ class DeclarativeHintLexer implements Lexer<DeclarativeHintTokenId> {
 
         BLOCK_TOKEN_START = Collections.unmodifiableMap(blockStartMap);
 
-        Map<DeclarativeHintTokenId, String> blockEndMap = new HashMap<DeclarativeHintTokenId, String>();
+        Map<DeclarativeHintTokenId, String> blockEndMap = new HashMap<>();
 
         blockEndMap.put(DeclarativeHintTokenId.BLOCK_COMMENT, "*/");
         blockEndMap.put(DeclarativeHintTokenId.LINE_COMMENT, "\n");

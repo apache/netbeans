@@ -87,7 +87,7 @@ class DeclarativeHintsWorker implements Worker {
             }
         }
         
-        List<Fix> editorFixes = new LinkedList<Fix>();
+        List<Fix> editorFixes = new LinkedList<>();
 
         OUTER: for (DeclarativeFix fix : fixes) {
             context.enterScope();

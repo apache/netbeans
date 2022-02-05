@@ -19,7 +19,6 @@
 
 package org.netbeans.modules.gradle;
 
-import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -36,8 +35,9 @@ import org.openide.util.lookup.InstanceContent;
  *
  * @author Laszlo Kishalmi
  */
-public final class GradleProject implements Serializable, Lookup.Provider {
+public final class GradleProject implements Lookup.Provider {
 
+    final int sequence;
     final Set<String> problems;
     final Quality quality;
     final long evaluationTime = System.currentTimeMillis();
@@ -45,7 +45,8 @@ public final class GradleProject implements Serializable, Lookup.Provider {
     final GradleBaseProject baseProject;
 
     @SuppressWarnings("rawtypes")
-    public GradleProject(Quality quality, Set<String> problems, Collection infos) {
+    public GradleProject(int sequence, Quality quality, Set<String> problems, Collection infos) {
+        this.sequence = sequence;
         this.quality = quality;
         Set<String> probs = new LinkedHashSet<>();
         for (String prob : problems) {
@@ -62,6 +63,7 @@ public final class GradleProject implements Serializable, Lookup.Provider {
     }
 
     private GradleProject(Quality quality, Set<String> problems, GradleProject origin) {
+        this.sequence = origin.sequence;
         this.quality = quality;
         Set<String> probs = new LinkedHashSet<>();
         for (String prob : problems) {
@@ -90,6 +92,14 @@ public final class GradleProject implements Serializable, Lookup.Provider {
         return evaluationTime;
     }
 
+    public boolean isNewerThan(GradleProject gp) {
+        return gp != null ? sequence > gp.sequence : true;
+    }
+
+    public boolean isOlderThan(GradleProject gp) {
+        return gp != null ? sequence < gp.sequence : false;
+    }
+    
     @NonNull
     public GradleBaseProject getBaseProject() {
         return baseProject;
@@ -101,15 +111,15 @@ public final class GradleProject implements Serializable, Lookup.Provider {
     }
 
     public final GradleProject invalidate(String... reasons) {
-        Set<String> problems = reasons.length > 0 ? new LinkedHashSet<>(Arrays.asList(reasons)) : Collections.emptySet();
+        Set<String> plist = reasons.length > 0 ? new LinkedHashSet<>(Arrays.asList(reasons)) : Collections.emptySet();
         if (getQuality().worseThan(Quality.EVALUATED)) {
-            if (!problems.isEmpty()) {
-                return new GradleProject(getQuality(), problems, this);
+            if (!plist.isEmpty()) {
+                return new GradleProject(getQuality(), plist, this);
             } else {
                 return this;
             }
         } else {
-            return new GradleProject(Quality.EVALUATED, problems, this);
+            return new GradleProject(Quality.EVALUATED, plist, this);
         }
     }
 

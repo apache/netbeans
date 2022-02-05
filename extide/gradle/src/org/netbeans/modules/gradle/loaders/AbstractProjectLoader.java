@@ -52,13 +52,13 @@ public abstract class AbstractProjectLoader {
     }
 
     abstract GradleProject load();
- 
+
     abstract boolean isEnabled();
 
     boolean needsTrust() {
         return true;
     }
-    
+
     static final class ReloadContext {
 
         final NbGradleProjectImpl project;
@@ -69,7 +69,7 @@ public abstract class AbstractProjectLoader {
 
         public ReloadContext(NbGradleProjectImpl project, NbGradleProject.Quality aim, GradleCommandLine cmd, String description) {
             this.project = project;
-            this.previous = project.isGradleProjectLoaded() ? project.projectWithQuality(null, FALLBACK, false, false) : FallbackProjectLoader.createFallbackProject(project.getGradleFiles());
+            this.previous = project.isGradleProjectLoaded() ? project.projectWithQuality(GradleLoadOptions.AIM_FALLBACK) : FallbackProjectLoader.createFallbackProject(project.getGradleFiles());
             this.aim = aim;
             this.cmd = cmd;
             this.description = description;
@@ -109,7 +109,7 @@ public abstract class AbstractProjectLoader {
             }
 
         }
-        return new GradleProject(info.getQuality(), problems, results.values());
+        return new GradleProject(0, info.getQuality(), problems, results.values());
 
     }
 

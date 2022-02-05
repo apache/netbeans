@@ -58,6 +58,7 @@ import org.netbeans.modules.gradle.GradleProjectLoader;
 import org.netbeans.modules.gradle.ProjectTrust;
 import org.netbeans.modules.gradle.api.GradleProjects;
 import org.netbeans.modules.gradle.api.NbGradleProject.Quality;
+import org.netbeans.modules.gradle.loaders.GradleLoadOptions;
 import org.openide.loaders.DataFolder;
 import org.openide.loaders.DataObject;
 import org.openide.util.NbBundle;
@@ -68,7 +69,7 @@ import org.openide.util.NbBundle;
  */
 public final class TemplateOperation implements Runnable {
     private static final Logger LOG = Logger.getLogger(TemplateOperation.class.getName());
-    
+
     public interface ProjectConfigurator {
         void configure(Project project);
     }
@@ -154,13 +155,13 @@ public final class TemplateOperation implements Runnable {
         steps.add(new InitGradleWrapper(target));
     }
 
-    /** *  Begin creation of new project using Gradle's 
+    /** *  Begin creation of new project using Gradle's
      * <a target="_blank" href="https://docs.gradle.org/current/userguide/build_init_plugin.html">gradle init</a>
-     * functionality. Use the returned {@link InitOperation} object to specify 
-     * additional properties and then call  
+     * functionality. Use the returned {@link InitOperation} object to specify
+     * additional properties and then call
      * {@link InitOperation#add()} to finish the request.
-     * 
-     * 
+     *
+     *
      * @param target the directory to place the project at
      * @param type either {@code java-application}, {@code java-library}, etc.
      * @return the {@link InitOperation} builder to finish the request
@@ -171,9 +172,9 @@ public final class TemplateOperation implements Runnable {
     }
 
     /** Builder to specify additional parameters for the {@link #createGradleInit(java.io.File, java.lang.String)}
-     * operation. At the end call {@link #add()} to finish the operation and 
+     * operation. At the end call {@link #add()} to finish the operation and
      * add it to the list of {@link OperationStep}s to perform.
-     * 
+     *
      * @since 2.20
      */
     public abstract class InitOperation {
@@ -328,7 +329,7 @@ public final class TemplateOperation implements Runnable {
             return "Step: " + getMessage();
         }
     }
-    
+
     private static final class CreateDirStep extends BaseOperationStep {
 
         final String message;
@@ -353,7 +354,7 @@ public final class TemplateOperation implements Runnable {
             }
             return null;
         }
-        
+
     }
 
     private static final class ConfigureProjectStep extends BaseOperationStep {
@@ -380,7 +381,7 @@ public final class TemplateOperation implements Runnable {
                     ProjectTrust.getDefault().trustProject(project);
                     NbGradleProjectImpl impl = project != null ? project.getLookup().lookup(NbGradleProjectImpl.class): null;
                     if (impl != null) {
-                        impl.projectWithQuality(null, Quality.FULL, false, false);
+                        impl.projectWithQuality(GradleLoadOptions.AIM_FULL);
                         configurator.configure(project);
                     }
 
@@ -428,7 +429,7 @@ public final class TemplateOperation implements Runnable {
                             //Just load the project into the cache.
                             GradleProjectLoader loader = nbProject.getLookup().lookup(GradleProjectLoader.class);
                             if (loader != null) {
-                                loader.loadProject(Quality.FULL_ONLINE, null, true, false);
+                                loader.loadProject(GradleLoadOptions.AIM_FULL_ONLINE.ignoreCache());
                             }
                         }
                         return Collections.singleton(projectDir);

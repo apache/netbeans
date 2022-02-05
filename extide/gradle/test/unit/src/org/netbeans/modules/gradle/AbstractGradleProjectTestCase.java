@@ -26,7 +26,7 @@ import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.api.project.ui.OpenProjects;
 import org.netbeans.junit.NbTestCase;
-import static org.netbeans.modules.gradle.api.NbGradleProject.Quality.FULL_ONLINE;
+import org.netbeans.modules.gradle.loaders.GradleLoadOptions;
 import org.netbeans.modules.gradle.options.GradleExperimentalSettings;
 import org.netbeans.modules.project.uiapi.ProjectOpenedTrampoline;
 import org.netbeans.spi.project.ui.ProjectOpenedHook;
@@ -83,15 +83,15 @@ public class AbstractGradleProjectTestCase extends NbTestCase {
         NbGradleProjectImpl.RELOAD_RP.submit(() -> {
             // A bit low level calls, just to allow UI interaction to
             // Trust the project.
-            impl.loadOwnProject(null, true, true, FULL_ONLINE);
+            impl.loadOwnProject(GradleLoadOptions.AIM_FULL_ONLINE.ignoreCache().interactive());
         }).get();
     }
-    
+
     protected void dumpProject(Project project){
         NbGradleProjectImpl impl = (NbGradleProjectImpl) project;
         impl.dumpProject();
     }
-    
+
     protected FileObject createGradleProject(String path, String buildScript, String settingsScript) throws IOException {
         FileObject ret = FileUtil.toFileObject(getWorkDir());
         if (path != null) {

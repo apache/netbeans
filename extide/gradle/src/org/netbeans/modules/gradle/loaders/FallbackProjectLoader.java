@@ -62,9 +62,9 @@ public class FallbackProjectLoader extends AbstractProjectLoader {
             }
 
         }
-        return new GradleProject(NbGradleProject.Quality.FALLBACK, problems, infos.values());        
+        return new GradleProject(0, NbGradleProject.Quality.FALLBACK, problems, infos.values());
     }
-    
+
     @Override
     boolean isEnabled() {
         return true;

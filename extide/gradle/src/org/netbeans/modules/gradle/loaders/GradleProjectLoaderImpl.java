@@ -26,7 +26,6 @@ import org.netbeans.api.project.Project;
 import org.netbeans.modules.gradle.GradleProject;
 import org.netbeans.modules.gradle.GradleProjectLoader;
 import org.netbeans.modules.gradle.NbGradleProjectImpl;
-import org.netbeans.modules.gradle.api.NbGradleProject;
 import org.netbeans.modules.gradle.api.execute.GradleCommandLine;
 import org.netbeans.modules.gradle.api.execute.RunUtils;
 import org.netbeans.modules.gradle.options.GradleExperimentalSettings;
@@ -49,15 +48,15 @@ public class GradleProjectLoaderImpl implements GradleProjectLoader {
     @NbBundle.Messages({
         "ERR_ProjectNotTrusted=Gradle execution is not trusted on this project."
     })
-    public GradleProject loadProject(NbGradleProject.Quality aim, String descriptionOpt, boolean ignoreCache, boolean interactive, String... args) {
-        LOGGER.info("Load aiming " +aim + " for "+ project);
-        GradleCommandLine cmd = new GradleCommandLine(args);
-        AbstractProjectLoader.ReloadContext ctx = new AbstractProjectLoader.ReloadContext((NbGradleProjectImpl) project, aim, cmd, descriptionOpt);
-        LOGGER.log(Level.FINER, "Load context: project = {0}, prev = {1}, aim = {2}, args = {3}", new Object[] { 
-            project, ctx.previous, aim, cmd});
+    public GradleProject loadProject(GradleLoadOptions opts) {
+        LOGGER.info("Load aiming " + opts.aim + " for "+ project);
+        GradleCommandLine cmd = new GradleCommandLine(opts.args);
+        AbstractProjectLoader.ReloadContext ctx = new AbstractProjectLoader.ReloadContext((NbGradleProjectImpl) project, opts.aim, cmd, opts.message);
+        LOGGER.log(Level.FINER, "Load context: project = {0}, prev = {1}, aim = {2}, args = {3}", new Object[] {
+            project, ctx.previous, opts.aim, cmd});
         List<AbstractProjectLoader> loaders = new LinkedList<>();
 
-        if (!ignoreCache) loaders.add(new DiskCacheProjectLoader(ctx));
+        if (!opts.ignoreCache) loaders.add(new DiskCacheProjectLoader(ctx));
         if (GradleExperimentalSettings.getDefault().isBundledLoading()) {
             loaders.add(new BundleProjectLoader(ctx));
             loaders.add(new DiskCacheProjectLoader(ctx));
@@ -72,7 +71,7 @@ public class GradleProjectLoaderImpl implements GradleProjectLoader {
             if (loader.isEnabled()) {
                 if (loader.needsTrust()) {
                     if (trust == null) {
-                        trust = RunUtils.isProjectTrusted(ctx.project, interactive);
+                        trust = RunUtils.isProjectTrusted(ctx.project, opts.interactive);
                     }
                     if (trust) {
                         ret = loader.load();

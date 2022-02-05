@@ -38,6 +38,7 @@ import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.api.annotations.common.StaticResource;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectUtils;
+import org.netbeans.modules.gradle.loaders.GradleLoadOptions;
 import org.openide.filesystems.FileAttributeEvent;
 import org.openide.filesystems.FileChangeListener;
 import org.openide.filesystems.FileEvent;
@@ -210,7 +211,7 @@ public final class NbGradleProject {
     public boolean isUnloadable() {
         return getQuality().worseThan(Quality.SIMPLE);
     }
-    
+
     /**
      * Attempts to refresh the project to at least the desired quality. The project information
      * may be reloaded, if the project is currently loaded with lower {@link Quality} than {@code q}.
@@ -223,16 +224,19 @@ public final class NbGradleProject {
      * <p/>
      * Note that the loading may fail, so the returned Quality may be <b>less than requested</b>. For example
      * if the project is not trusted, its Gradle build will not be executed, so the returned quality can be {@link Quality#EVALUATED}.
-     * 
+     *
      * @param reason reason for reload, may be {@code null}.
      * @param q the desired quality of project information
      * @param forceLoad force load even though the current info quality is sufficient.
-     * @return {@link CompletionStage} with the reloaded project. Use {@link CompletionStage#toCompletableFuture()}.{@link CompletableFuture#get get()} 
+     * @return {@link CompletionStage} with the reloaded project. Use {@link CompletionStage#toCompletableFuture()}.{@link CompletableFuture#get get()}
      * to block waiting for the result.
      * @since 2.11
      */
     public @NonNull CompletionStage<NbGradleProject> toQuality(@NullAllowed String reason, @NonNull Quality q, boolean forceLoad) {
-        return project.projectWithQualityTask(reason, q, false, forceLoad).thenApply(p -> this);
+        GradleLoadOptions opts = GradleLoadOptions.loadForQuality(q);
+        opts.withMessage(reason);
+        opts = forceLoad ? opts.force() : opts;
+        return project.projectWithQualityTask(opts).thenApply(p -> this);
     }
 
     public Preferences getPreferences(boolean shared) {

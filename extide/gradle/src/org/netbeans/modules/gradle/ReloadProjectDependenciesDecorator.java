@@ -25,6 +25,7 @@ import org.netbeans.modules.gradle.spi.actions.AfterBuildActionHook;
 import java.io.PrintWriter;
 import java.util.Map;
 import org.netbeans.api.project.Project;
+import org.netbeans.modules.gradle.loaders.GradleLoadOptions;
 import org.netbeans.spi.project.ProjectServiceProvider;
 import org.openide.util.Lookup;
 
@@ -47,7 +48,7 @@ public class ReloadProjectDependenciesDecorator implements AfterBuildActionHook 
         for (Project dep : dependencies.values()) {
             NbGradleProjectImpl impl = dep.getLookup().lookup(NbGradleProjectImpl.class);
             if ((impl != null) && impl.getAimedQuality().betterThan(impl.getGradleProject().getQuality())) {
-                impl.forceReloadProject(null, false, impl.getAimedQuality());
+                impl.forceReloadProject(GradleLoadOptions.loadForQuality(impl.getAimedQuality()));
             }
         }
     }

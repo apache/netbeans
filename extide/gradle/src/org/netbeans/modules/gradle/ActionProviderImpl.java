@@ -26,7 +26,6 @@ import org.netbeans.modules.gradle.api.execute.RunConfig;
 import org.netbeans.modules.gradle.api.execute.RunUtils;
 import org.netbeans.modules.gradle.actions.ActionToTaskUtils;
 import org.netbeans.modules.gradle.execute.GradleExecutorOptionsPanel;
-import org.netbeans.modules.gradle.spi.actions.GradleActionsProvider;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -79,6 +78,7 @@ import org.netbeans.modules.gradle.api.GradleBaseProject;
 import org.netbeans.modules.gradle.api.execute.GradleExecConfiguration;
 import org.netbeans.modules.gradle.api.execute.RunConfig.ExecFlag;
 import org.netbeans.modules.gradle.execute.ProjectConfigurationSupport;
+import org.netbeans.modules.gradle.loaders.GradleLoadOptions;
 import org.netbeans.spi.project.ActionProgress;
 import org.netbeans.spi.project.support.ProjectOperations;
 import org.netbeans.spi.project.ui.support.DefaultProjectOperations;
@@ -126,9 +126,9 @@ public class ActionProviderImpl implements ActionProvider {
         actions.add(ActionProvider.COMMAND_PRIME);
         actions.add(COMMAND_DL_SOURCES);
         actions.add(COMMAND_DL_JAVADOC);
-        return actions.toArray(new String[actions.size()]);
+        return actions.toArray(new String[0]);
     }
-    
+
     @Override
     public void invokeAction(String command, Lookup context) throws IllegalArgumentException {
         if (COMMAND_DELETE.equals(command)) {
@@ -146,7 +146,7 @@ public class ActionProviderImpl implements ActionProvider {
                             LOG.log(Level.FINER, "Priming build of {0} finished with status {1}, ", new Object[] { project, prjImpl.isProjectPrimingRequired() });
                             prg.finished(!prjImpl.isProjectPrimingRequired());
                         }).
-                        exceptionally((e) -> { 
+                        exceptionally((e) -> {
                             LOG.log(Level.FINER, e, () -> String.format("Priming build errored: %s", project));
                             prg.finished(false);
                             return null;
@@ -158,7 +158,7 @@ public class ActionProviderImpl implements ActionProvider {
                 prg.finished(true);
                 return;
             }
-            
+
         }
         NbGradleProject gp = NbGradleProject.get(project);
         GradleExecConfiguration execCfg = ProjectConfigurationSupport.getEffectiveConfiguration(project, context);
@@ -248,7 +248,7 @@ public class ActionProviderImpl implements ActionProvider {
             }
         });
     }
-    
+
     private static boolean invokeProjectAction2(final Project project, final ActionMapping mapping, final GradleExecConfiguration execCfg, Lookup context, boolean showUI) {
         final String action = mapping.getName();
         if (ActionMapping.isDisabled(mapping)) {
@@ -285,7 +285,7 @@ public class ActionProviderImpl implements ActionProvider {
                 return false;
             }
         }
-        
+
         final String loadReason;
         if  (mapping.getDisplayName() != null && !mapping.getDisplayName().equals(mapping.getName())) {
             loadReason = mapping.getDisplayName();
@@ -319,9 +319,12 @@ public class ActionProviderImpl implements ActionProvider {
         if (reloadOnly) {
             boolean canReload = project.getLookup().lookup(BeforeReloadActionHook.class).beforeReload(action, ctx, 0, null);
             if (needReload && canReload) {
-                String[] reloadArgs = RunUtils.evaluateActionArgs(project, mapping.getName(), mapping.getReloadArgs(), ctx);
                 final ActionProgress g = ActionProgress.start(context);
-                RequestProcessor.Task reloadTask = prj.forceReloadProject(loadReason, false, maxQualily, reloadArgs);
+                GradleLoadOptions opts = GradleLoadOptions
+                        .loadForQuality(maxQualily)
+                        .withMessage(loadReason)
+                        .withArgs(RunUtils.evaluateActionArgs(project, mapping.getName(), mapping.getReloadArgs(), ctx));
+                RequestProcessor.Task reloadTask = prj.forceReloadProject(opts);
                 reloadTask.addTaskListener((t) -> {
                     g.finished(true);
                 });
@@ -336,8 +339,11 @@ public class ActionProviderImpl implements ActionProvider {
                         OutputWriter out1 = task.getInputOutput().getOut();
                         boolean canReload = project.getLookup().lookup(BeforeReloadActionHook.class).beforeReload(action, outerCtx, task.result(), out1);
                         if (needReload && canReload) {
-                            String[] reloadArgs = RunUtils.evaluateActionArgs(project, mapping.getName(), mapping.getReloadArgs(), outerCtx);
-                            RequestProcessor.Task reloadTask = prj.forceReloadProject(null, true, maxQualily, reloadArgs);
+                            GradleLoadOptions opts = GradleLoadOptions
+                                    .loadForQuality(maxQualily)
+                                    .interactive()
+                                    .withArgs(RunUtils.evaluateActionArgs(project, mapping.getName(), mapping.getReloadArgs(), outerCtx));
+                            RequestProcessor.Task reloadTask = prj.forceReloadProject(opts);
                             reloadTask.waitFinished();
                         }
                         project.getLookup().lookup(AfterBuildActionHook.class).afterAction(action, outerCtx, task.result(), out1);
@@ -584,8 +590,8 @@ public class ActionProviderImpl implements ActionProvider {
 
         if (!keys.isEmpty()) {
             KeyValueTableModel kvModel = new KeyValueTableModel("input:",
-                    keys.toArray(new String[keys.size()]),
-                    defaults.toArray(new String[defaults.size()])
+                    keys.toArray(new String[0]),
+                    defaults.toArray(new String[0])
             );
             JPanel panel = new JPanel(new BorderLayout());
             JTable table = new JTable(kvModel);

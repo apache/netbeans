@@ -37,9 +37,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.CompletionStage;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import org.netbeans.api.project.Project;
 import org.netbeans.spi.project.ProjectState;
@@ -62,6 +60,8 @@ import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.SuppressWarnings;
 import org.netbeans.api.project.ui.ProjectProblems;
 import org.netbeans.modules.gradle.api.GradleBaseProject;
+import org.netbeans.modules.gradle.loaders.GradleLoadContext;
+import org.netbeans.modules.gradle.loaders.GradleLoadOptions;
 import org.netbeans.modules.gradle.options.GradleExperimentalSettings;
 import org.netbeans.spi.project.CacheDirectoryProvider;
 import org.netbeans.spi.project.support.LookupProviderSupport;
@@ -81,20 +81,19 @@ public final class NbGradleProjectImpl implements Project {
     private final RequestProcessor.Task reloadTask = RELOAD_RP.create(new Runnable() {
         @Override
         public void run() {
-            loadOwnProject(null, false, false, aimedQuality);
+            loadOwnProject(GradleLoadOptions.loadForQuality(aimedQuality));
         }
     });
 
     private final FileObject projectDir;
-    private final ProjectState projectState;
     private final Lookup lookup;
     private final Lookup basicLookup;
     private final Lookup completeLookup;
     private Updater openedProjectUpdater;
-    
+
     // @GuardedBy(this)
     private volatile Quality aimedQuality = FALLBACK;
-    
+
     private final @NonNull NbGradleProject watcher;
     @SuppressWarnings("MS_SHOULD_BE_FINAL")
     public static WatcherAccessor ACCESSOR = null;
@@ -135,7 +134,6 @@ public final class NbGradleProjectImpl implements Project {
     @java.lang.SuppressWarnings("LeakingThisInConstructor")
     public NbGradleProjectImpl(final FileObject projectDir, ProjectState projectState) {
         this.projectDir = projectDir;
-        this.projectState = projectState;
         this.gradleFiles = new GradleFiles(FileUtil.normalizeFile(FileUtil.toFile(projectDir)), true);
         lookup = Lookups.proxy(new Lookup.Provider() {
             @Override
@@ -188,9 +186,9 @@ public final class NbGradleProjectImpl implements Project {
                 state
         );
     }
-    
+
     public GradleProject getGradleProject() {
-        return projectWithQuality(null, EVALUATED, false, false);
+        return projectWithQuality(GradleLoadOptions.AIM_EVALUATED);
     }
 
     public void fireProjectReload(boolean wait) {
@@ -233,7 +231,6 @@ public final class NbGradleProjectImpl implements Project {
     synchronized void dumpProject() {
         project = null;
         attemptedQuality = null;
-        loadedProjectSerial = 0;
         aimedQuality = FALLBACK;
     }
 
@@ -244,7 +241,11 @@ public final class NbGradleProjectImpl implements Project {
     public NbGradleProject getProjectWatcher() {
         return watcher;
     }
-    
+
+    public GradleLoadContext createLoadContext(GradleLoadOptions ops) {
+        return new GradleLoadContext(this, ops);
+    }
+
     /**
      * Obtains a project attempting at least the defined quality, without setting
      * that quality level for subsequent loads. Same as {@link #projectWithQualityTask}
@@ -255,29 +256,29 @@ public final class NbGradleProjectImpl implements Project {
      * @param force to force load even though the quality does not change.
      * @return project instance
      */
-    public GradleProject projectWithQuality(String desc, Quality aim, boolean interactive, boolean force) {
+    public GradleProject projectWithQuality(GradleLoadOptions opts) {
        synchronized (this) {
             GradleProject c = project;
             if (c != null) {
-                if (c.getQuality().atLeast(aim)) {
-                    LOG.log(Level.FINER, "Asked for {0}, got {1} already: ", new Object[] { aim, c.getQuality() });
+                if (c.getQuality().atLeast(opts.aim)) {
+                    LOG.log(Level.FINER, "Asked for {0}, got {1} already: ", new Object[] { opts.aim, c.getQuality() });
                     return c;
                 }
-                if (!force && attemptedQuality.atLeast(aim)) {
-                    LOG.log(Level.FINER, "Attempted quality was {0}, ignoring request to get {1}", new Object[] { attemptedQuality, aim });
+                if (!opts.force && attemptedQuality.atLeast(opts.aim)) {
+                    LOG.log(Level.FINER, "Attempted quality was {0}, ignoring request to get {1}", new Object[] { attemptedQuality, opts.aim });
                     return c;
                 }
             }
         }
         try {
-            return loadOwnProject0(desc, false, interactive, aim, true, force).get();
+            return loadOwnProject0(opts.sync()).get();
         } catch (InterruptedException | ExecutionException ex) {
             // should not happen, the event dispatch + potential issues happen
             // synchronously
             return null;
         }
     }
-    
+
     /**
      * Obtains a project attempting at least the defined quality, without setting
      * that quality level for subsequent loads. Note that the returned project's quality
@@ -296,21 +297,21 @@ public final class NbGradleProjectImpl implements Project {
      * @param force to force load even though the quality does not change.
      * @return project instance
      */
-    public CompletableFuture<GradleProject> projectWithQualityTask(String desc, Quality aim, boolean interactive, boolean force) {
+    public CompletableFuture<GradleProject> projectWithQualityTask(GradleLoadOptions opts) {
         synchronized (this) {
             GradleProject c = project;
             if (c != null) {
-                if (c.getQuality().atLeast(aim)) {
+                if (c.getQuality().atLeast(opts.aim)) {
                     return CompletableFuture.completedFuture(c);
                 }
-                if (!force && attemptedQuality.atLeast(aim)) {
+                if (!opts.force && attemptedQuality.atLeast(opts.aim)) {
                     return CompletableFuture.completedFuture(c);
                 }
             }
         }
         CompletableFuture<GradleProject> toRet = new CompletableFuture<>();
-        RELOAD_RP.post(() -> 
-            loadOwnProject0(desc, false, interactive, aim, false, force)
+        RELOAD_RP.post(() ->
+            loadOwnProject0(opts)
                 .handle((p, e) -> {
                    if (e == null) {
                        toRet.complete(p);
@@ -350,24 +351,13 @@ public final class NbGradleProjectImpl implements Project {
                 return;
             }
         }
-        loadOwnProject0(null, false, false, aimedQuality, true, false);
+        loadOwnProject0(GradleLoadOptions.loadForQuality(aim).sync());
     }
 
-    /**
-     * Increasing stamp of load attempts.
-     */
-    private final AtomicInteger currentSerial = new AtomicInteger();
-    
-    /**
-     * Stamp of the currently loaded project.
-     */
-    // @GuardedBy(this)
-    private int loadedProjectSerial;
-    
-    CompletableFuture<GradleProject> loadOwnProject(String desc, boolean ignoreCache, boolean interactive, Quality aim, String... args) {
-        return loadOwnProject0(desc, ignoreCache, interactive, aim, false, true, args);
+    CompletableFuture<GradleProject> loadOwnProject(GradleLoadOptions opts) {
+        return loadOwnProject0(opts.force());
     }
-    
+
     /**
      * Loads a project. After load, dispatches reload events. If "sync" is false (= asynchronous), dispatches events
      * and does possible fixups in {@link #RELOAD_RP}. The returned future completes only after all the event
@@ -375,7 +365,7 @@ public final class NbGradleProjectImpl implements Project {
      * <p/>
      * If "sync" is true, everything happens synchronously and the returned Future is always completed. Errors from the
      * project load and reload listeners are thrown from this method.
-     * 
+     *
      * @param desc description of the reload, can be {@code null}.
      * @param ignoreCache true to ignore cached data
      * @param interactive true, if displaying UI is permitted (i.e. security questions)
@@ -384,31 +374,29 @@ public final class NbGradleProjectImpl implements Project {
      * @param args optional arguments for the reload
      * @return Future for the new GradleProject state. See notes about sync/async differences.
      */
-    /* nonprivate: tests only */CompletableFuture<GradleProject> loadOwnProject0(String desc, boolean ignoreCache, boolean interactive, Quality aim, boolean sync, boolean force, String... args) {
+    CompletableFuture<GradleProject> loadOwnProject0(GradleLoadOptions opts) {
         GradleProjectLoader loader = getLookup().lookup(GradleProjectLoader.class);
         if (loader == null) {
             throw new IllegalStateException("No loader implementation is present!");
         }
 
-        int s = currentSerial.incrementAndGet();
         // do not block during project load.
-        LOG.log(Level.FINER, "Starting project {2} load, serial {0}, attempted quality {1}", new Object[] { s, aim, this });
-        GradleProject prj = loader.loadProject(aim, desc, ignoreCache, interactive, args);
+        LOG.log(Level.FINER, "Starting project {1} load, attempted quality {0}", new Object[] { opts.aim, this });
+        GradleProject prj = loader.loadProject(opts);
         synchronized (this) {
-            if (loadedProjectSerial > s && project != null) {
+            if (prj.isOlderThan(project) && project != null) {
                 // the load started LATER than this one: return that project, and do not replace anything as this.project is newer
                 LOG.log(Level.FINER, "Future finished project load, returing {0} throwing away {1}", new Object[] { project, prj });
                 return CompletableFuture.completedFuture(this.project);
             }
-            loadedProjectSerial = s;
-            this.attemptedQuality = aim;
-            
-            boolean replace = project == null || force;
+            this.attemptedQuality = opts.aim;
+
+            boolean replace = (project == null) || opts.force;
             if (project != null) {
                 if (prj.getQuality().betterThan(project.getQuality())) {
                     replace = true;
                 } else if (
-                        project.getQuality().equals(prj.getQuality()) && 
+                        project.getQuality().equals(prj.getQuality()) &&
                         !project.getProblems().equals(prj.getProblems()) &&
                         !prj.getProblems().isEmpty()) {
                     // exception: if the new project is the same quality fallback, but contains (different) problem info, use it
@@ -417,14 +405,14 @@ public final class NbGradleProjectImpl implements Project {
             }
             if (!replace) {
                 // avoid replacing a project when nothing has changed.
-                LOG.log(Level.FINER, "Current project {1} sufficient for attempted quality {0}", new Object[] { this.project, aim });
+                LOG.log(Level.FINER, "Current project {1} sufficient for attempted quality {0}", new Object[] { this.project, opts.aim });
                 return CompletableFuture.completedFuture(this.project);
             }
             LOG.log(Level.FINER, "Replacing {0} with {1}, attempted quality {2}", new Object[] { this.project, prj, attemptedQuality });
             this.project = prj;
         }
         // notify the project has been changed.
-        if (sync || RELOAD_RP.isRequestProcessorThread()) {
+        if (opts.sync || RELOAD_RP.isRequestProcessorThread()) {
             LOG.log(Level.FINER, "Firing changes/reload synchronously");
             ACCESSOR.doFireReload(watcher);
             return CompletableFuture.completedFuture(prj);
@@ -435,7 +423,7 @@ public final class NbGradleProjectImpl implements Project {
             return f;
         }
     }
-    
+
     private CompletableFuture<GradleProject> callAccessorReload(CompletableFuture<GradleProject> f, GradleProject prj) {
         try {
             ACCESSOR.doFireReload(watcher);
@@ -451,22 +439,22 @@ public final class NbGradleProjectImpl implements Project {
         }
         return f;
     }
-    
+
     /**
      * Forces project reload with the given quality, ignoring caches. The 'aim' quality does not become the {@link #getAimedQuality() aimed one}, just
-     * forces appropriate load scope. 
+     * forces appropriate load scope.
      * @param reloadReason optional reason for the reload operation
      * @param interactive true, if the originating action is interactive and UI can be displayed
      * @param aim the aimed quality
      * @param args optional argument for reload
      * @return Task representing the reloading process
      */
-    RequestProcessor.Task forceReloadProject(String reloadReason, boolean interactive, final Quality aim, final String... args) {
-        return reloadProject(reloadReason, true, interactive, aim, args);
+    RequestProcessor.Task forceReloadProject(GradleLoadOptions opts) {
+        return reloadProject(opts.force());
     }
-    
-    private RequestProcessor.Task reloadProject(String desc, final boolean ignoreCache, final boolean interactive, final Quality aim, final String... args) {
-        return RELOAD_RP.post(() -> loadOwnProject(desc, ignoreCache, interactive, aim, args));
+
+    private RequestProcessor.Task reloadProject(GradleLoadOptions opts) {
+        return RELOAD_RP.post(() -> loadOwnProject(opts));
     }
 
     @Override
@@ -496,27 +484,27 @@ public final class NbGradleProjectImpl implements Project {
             return "Unloaded Gradle Project: " + gradleFiles.toString();
         }
     }
-    
+
     final RequestProcessor GRADLE_PRIMING_RP = new RequestProcessor("gradle-project-resolver", 1); //NOI18N
 
     // @GuardedBy(this)
     private CompletableFuture<GradleProject>    primingBuild;
-    
+
     boolean isProjectPrimingRequired() {
         return getPrimedProject() == null;
     }
 
     GradleProject getPrimedProject() {
-        GradleProject gp = projectWithQuality(null, EVALUATED, false, false);
+        GradleProject gp = projectWithQuality(GradleLoadOptions.AIM_EVALUATED);
         return gp.getQuality().betterThan(EVALUATED) ? gp : null;
     }
-    
+
     /**
      * The core implementation is tied to project quality itself, so it is extracted here from
-     * {@link GradleProjectProblemProvider}. 
+     * {@link GradleProjectProblemProvider}.
      * <p>
      * <b>Note: Priming build makes the project trusted</b>
-     * 
+     *
      * @return future that produces the result.
      */
     @NbBundle.Messages({
@@ -547,8 +535,8 @@ public final class NbGradleProjectImpl implements Project {
                     return;
                 }
                 // get at least something to extract project name from:
-                GradleProject fallback = projectWithQuality(null, FALLBACK, false, false);
-                loadOwnProject0(Bundle.ACT_PrimingProject(fallback.getBaseProject().getName()), true, true, FULL_ONLINE, false, true).
+                GradleProject fallback = projectWithQuality(GradleLoadOptions.AIM_FALLBACK);
+                loadOwnProject0(GradleLoadOptions.AIM_FULL_ONLINE.withMessage(Bundle.ACT_PrimingProject(fallback.getBaseProject().getName())).ignoreCache().interactive().force()).
                         // wait until after reload event is fired.
                         thenApply(p -> ret.complete(p)).
                         exceptionally((e) -> ret.completeExceptionally(e));
@@ -563,7 +551,7 @@ public final class NbGradleProjectImpl implements Project {
         });
         return ret;
     }
-    
+
     public static File getCacheDir(GradleFiles gf) {
         return getCacheDir(gf.getRootDir(), gf.getProjectDir());
     }
@@ -624,10 +612,10 @@ public final class NbGradleProjectImpl implements Project {
     private static class PluginDependentLookup extends ProxyLookup implements PropertyChangeListener {
         private static final String NB_ROOT_PLUGIN = "root"; //NOI18N
         private final WeakReference<NbGradleProject> watcherRef;
-        
+
         // @GuardedBy(this)
         private Map<String, Lookup> pluginLookups = Collections.emptyMap();
-        
+
         // @GuardedBy(this)
         private List<String> pluginOrder = Collections.emptyList();
 
@@ -639,22 +627,22 @@ public final class NbGradleProjectImpl implements Project {
             check();
             watcher.addPropertyChangeListener(WeakListeners.propertyChange(this, watcher));
         }
-        
+
         /**
          * Path for the default Gradle project lookup contents
          */
         private static final String GRADLE_DEFAULT_LOOKUP = "Projects/" + NbGradleProject.GRADLE_PROJECT_TYPE + "/Lookup";
-        
+
         /**
          * Path for the default Gradle project lookup contents
          */
         private static final String GRADLE_ANY_PLUGIN_LOOKUP = "Projects/" + NbGradleProject.GRADLE_PLUGIN_TYPE + "/_any/Lookup";
-        
+
         /**
          * Root for plugin lookup registrations. Individual Plugins must register in "&lt;GRADLE_PLUGINS_ROOT>/&lt;plugin-id>/Lookup".
          */
         private static final String GRADLE_PLUGINS_ROOT = "Projects/" + NbGradleProject.GRADLE_PLUGIN_TYPE;
-        
+
         private void check() {
             NbGradleProject watcher = watcherRef.get();
             if (watcher == null) {
@@ -662,7 +650,7 @@ public final class NbGradleProjectImpl implements Project {
                 return;
             }
             List<String> orderedPaths = new ArrayList<>();
-            
+
             orderedPaths.add(GRADLE_DEFAULT_LOOKUP);
             if (watcher.isGradleProjectLoaded()) {
                 GradleBaseProject prj = watcher.projectLookup(GradleBaseProject.class);

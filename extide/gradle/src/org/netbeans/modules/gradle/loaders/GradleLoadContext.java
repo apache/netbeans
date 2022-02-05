@@ -16,15 +16,34 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.gradle;
+package org.netbeans.modules.gradle.loaders;
 
-import org.netbeans.modules.gradle.loaders.GradleLoadOptions;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.atomic.AtomicInteger;
+import org.netbeans.api.project.Project;
+import org.netbeans.modules.gradle.GradleProject;
 
 /**
  *
- * @author lkishalmi
+ * @author Laszlo Kishalmi
  */
-public interface GradleProjectLoader {
+public final class GradleLoadContext {
+    private static final AtomicInteger SEQ = new AtomicInteger();
+    private final int sequence;
 
-    GradleProject loadProject(GradleLoadOptions opts);
+    public final Project project;
+
+    public final GradleLoadOptions options;
+
+    public GradleLoadContext(Project project, GradleLoadOptions options) {
+        sequence = SEQ.getAndIncrement();
+        this.project = project;
+        this.options = options;
+    }
+
+
+    CompletableFuture<GradleProject> loadProjectFuture() {
+        return null;
+    }
+
 }

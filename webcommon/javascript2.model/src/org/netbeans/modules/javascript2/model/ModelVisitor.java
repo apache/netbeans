@@ -1050,6 +1050,10 @@ public class ModelVisitor extends PathNodeVisitor implements ModelResolver {
                 } else {
                     jsFunction.setJsKind(JsElement.Kind.METHOD);
                 }
+                if(pNode.getKey() instanceof IdentNode
+                        && ((IdentNode) pNode.getKey()).isPrivate()) {
+                    isPrivilage = true;
+                }
             }
         } else if (lastVisited instanceof BinaryNode) {
             BinaryNode bNode = (BinaryNode)lastVisited;
@@ -2136,6 +2140,12 @@ public class ModelVisitor extends PathNodeVisitor implements ModelResolver {
 //                    }
                     property.getParent().addProperty(name.getName(), property);
                     property.setDeclared(true);
+                    if(key instanceof IdentNode
+                            && ((IdentNode) key).isPrivate()
+                            && property.getModifiers().contains(Modifier.PUBLIC)) {
+                        property.getModifiers().remove(Modifier.PUBLIC);
+                        property.getModifiers().add(Modifier.PROTECTED);
+                    }
                     if(value instanceof CallNode) {
                         // TODO for now, don't continue. There shoudl be handled cases liek
                         // in the testFiles/model/property02.js file

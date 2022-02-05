@@ -56,6 +56,7 @@ import org.netbeans.modules.javascript2.editor.spi.CompletionProviderEx;
 import org.netbeans.modules.javascript2.editor.spi.ElementDocumentation;
 import org.netbeans.modules.javascript2.editor.spi.ProposalRequest;
 import org.netbeans.modules.javascript2.model.api.Index;
+import org.netbeans.modules.javascript2.model.api.JsElement.Kind;
 import org.netbeans.modules.javascript2.types.api.Identifier;
 import org.netbeans.modules.javascript2.types.api.TypeUsage;
 import org.netbeans.modules.parsing.api.ParserManager;
@@ -969,7 +970,8 @@ class JsCodeCompletion implements CodeCompletionHandler2 {
 
     private void completeObjectMembers(JsObject jsObject, CompletionRequest request, Map<String, List<JsElement>> properties, boolean includePrivate) {
         if (jsObject.getJSKind() == JsElement.Kind.OBJECT || jsObject.getJSKind() == JsElement.Kind.CONSTRUCTOR
-                || jsObject.getJSKind() == JsElement.Kind.OBJECT_LITERAL) {
+                || jsObject.getJSKind() == JsElement.Kind.OBJECT_LITERAL
+                || jsObject.getJSKind() == JsElement.Kind.CLASS) {
             for (JsObject property : jsObject.getProperties().values()) {
                 if(!(request.completionContext == OBJECT_MEMBERS && property.getModifiers().contains(Modifier.PRIVATE) && !includePrivate && property.getModifiers().size() == 1) && !property.isAnonymous()) {
                     addPropertyToMap(request, properties, property);
@@ -1186,8 +1188,15 @@ class JsCodeCompletion implements CodeCompletionHandler2 {
                 if (!ModelUtils.PROTOTYPE.equals(name)) {
                     if (elements == null || elements.isEmpty()) {
                         List<JsElement> properties = new ArrayList<>(1);
-                        properties.add(property);
-                        addedProperties.put(name, properties);
+                        if(isPrivateInClass(property)) {
+                            if (((JsObject) property).getParent().getOffsetRange().containsInclusive(request.anchor)) {
+                                properties.add(property);
+                                addedProperties.put(name, properties);
+                            }
+                        } else {
+                            properties.add(property);
+                            addedProperties.put(name, properties);
+                        }
                     } else {
                         if (property.isDeclared()) {
                             boolean addAsNew = true;
@@ -1228,7 +1237,19 @@ class JsCodeCompletion implements CodeCompletionHandler2 {
         }
     }
 
-
+    private boolean isPrivateInClass(JsElement element) {
+        if(element instanceof JsObject) {
+            JsObject eo = (JsObject) element;
+            if(eo.getParent().getJSKind() != Kind.CLASS) {
+                return false;
+            } else {
+                return element.getModifiers().contains(Modifier.PRIVATE)
+                        || element.getModifiers().contains(Modifier.PROTECTED);
+            }
+        } else {
+            return false;
+        }
+    }
 
     private Map<String, List<JsElement>> getDomCompletionResults(CompletionRequest request) {
         Map<String, List<JsElement>> result = new HashMap<>(1);

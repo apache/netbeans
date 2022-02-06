@@ -17,27 +17,45 @@
  * under the License.
  */
 
-package org.netbeans.modules.debugger.jpda.truffle.testapps;
-
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-
-import org.graalvm.polyglot.Context;
-import org.graalvm.polyglot.Source;
-import org.graalvm.polyglot.Value;
-import static org.junit.Assert.assertEquals;
-
-public class SLAppFromFile {
-    public static void main(String... args) throws Exception {
-        ByteArrayOutputStream os = new ByteArrayOutputStream();
-        Context context = Context.newBuilder().out(os).build();
-
-        String path = args[0];
-        Source src = Source.newBuilder("sl", new File(path)).build();
-        
-        Value result = context.eval(src); // LBREAKPOINT
-
-        assertEquals("Expected result", 42L, result.asLong());
-        assertEquals("Expected output", "42\n", os.toString("UTF-8"));
-    }
+function typesTest() {
+  let a1 = [];
+  let a2 = [1, 2, [3, 4]];
+  let b1 = true;
+  let b2 = false;
+  let c1 = new TestClass();
+  let i1 = 0;
+  let i2 = 42;
+  let i3 = 42.42;
+  let i4 = -0.0;
+  let i5 = 1/i4;
+  let i6 = 1/0.0;
+  let i7 = -1/0.0;
+  let i8 = 0.0/0.0;
+  let aSparse = [1, 2];
+  aSparse[10] = 10;
+  let s1 = "String";
+  let f1 = function pow2(x) {
+    return x*x;
+  };
+  let d1 = new Date(1000000000);
+  let undef;
+  let nul = null;
+  let sy = Symbol('symbolic');
+  let o1 = {};
+  let o2 = new TestFncProp();
+  o2.fncProp = "Property";
+  o2.a = "A";
+  let map = new Map();
+  map.set("key1", 42);
+  map.set("key2", "v24");
+  debugger;
+  f1(5);
 }
+
+function TestFncProp() {
+}
+
+class TestClass {
+}
+
+typesTest();

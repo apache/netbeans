@@ -16,9 +16,23 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+package org.netbeans.modules.debugger.jpda.truffle.testapps;
 
-function main() {
-    x = 42;
-    println(x); // LBREAKPOINT
-    return x;
+import java.io.File;
+import java.io.IOException;
+import org.graalvm.polyglot.Context;
+import org.graalvm.polyglot.Source;
+import org.graalvm.polyglot.Value;
+
+public class PolyglotWeatherApp {
+
+    public static void main(String[] args) throws IOException {
+        Context context = Context.newBuilder().allowAllAccess(true).build();
+        File script = new File(new File("").getAbsolutePath(), "org/netbeans/modules/debugger/jpda/truffle/scripts/Weather.js");
+        Source source = Source.newBuilder("js", script).build();
+        Value result = context.eval(source);
+        double t = result.asDouble();
+        System.out.println("Mean temperature = "+t);
+    }
+
 }

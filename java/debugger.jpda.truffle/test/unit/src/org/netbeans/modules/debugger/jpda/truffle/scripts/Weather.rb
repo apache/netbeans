@@ -1,3 +1,4 @@
+#
 # Licensed to the Apache Software Foundation (ASF) under one
 # or more contributor license agreements.  See the NOTICE file
 # distributed with this work for additional information
@@ -14,14 +15,15 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
+#
 
-javac.compilerargs=-Xlint:unchecked
-javac.source=1.8
-javadoc.arch=${basedir}/arch.xml
-nbm.module.author=Martin Entlicher
-requires.nb.javac=true
-truffle.sl=external/antlr4-runtime-4.7.2.jar:external/truffle-sl-1.0.0-rc6.jar
-cp.extra=${tools.jar}:${truffle.sl}
-test-unit-sys-prop.test.dir.src=${basedir}/test/unit/src/
-test-unit-sys-prop.test.dir.classes=${basedir}/build/test/unit/classes
-test-unit-sys-prop.netbeans.user=${basedir}/work/nb_user_dir
+module Weather
+  def self.temperature_in_city(name)
+    name = Truffle::Interop.from_java_string(name)
+    cityArray = name.bytes
+    citySum = cityArray.reduce(0, :+)
+    weatherTemperature = citySum.modulo(36)
+  end
+end
+
+Truffle::Interop.export :weather, Weather

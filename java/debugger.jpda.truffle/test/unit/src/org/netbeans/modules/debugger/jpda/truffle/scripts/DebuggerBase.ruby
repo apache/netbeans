@@ -1,3 +1,4 @@
+#
 # Licensed to the Apache Software Foundation (ASF) under one
 # or more contributor license agreements.  See the NOTICE file
 # distributed with this work for additional information
@@ -14,14 +15,35 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
+#
 
-javac.compilerargs=-Xlint:unchecked
-javac.source=1.8
-javadoc.arch=${basedir}/arch.xml
-nbm.module.author=Martin Entlicher
-requires.nb.javac=true
-truffle.sl=external/antlr4-runtime-4.7.2.jar:external/truffle-sl-1.0.0-rc6.jar
-cp.extra=${tools.jar}:${truffle.sl}
-test-unit-sys-prop.test.dir.src=${basedir}/test/unit/src/
-test-unit-sys-prop.test.dir.classes=${basedir}/build/test/unit/classes
-test-unit-sys-prop.netbeans.user=${basedir}/work/nb_user_dir
+statement = "First Statement"
+
+def fnc1()
+  a = 20
+  o = Object.new
+  o.instance_variable_set :@ao, "AO"
+  arr = []
+  arr = [5, 4, 3, 2, 1]
+
+  30
+end
+
+def fnc2(n)
+
+  n1 = n + 1
+  f2 = 0
+  if (n1 <= 10)
+    f2 = fnc2(n1) + 1
+  end
+  f2
+end
+
+$ga = 6
+fnc1()
+
+for i in 1..10 do
+
+  fnc2(i)
+
+end

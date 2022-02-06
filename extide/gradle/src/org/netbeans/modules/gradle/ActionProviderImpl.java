@@ -322,9 +322,10 @@ public class ActionProviderImpl implements ActionProvider {
                 final ActionProgress g = ActionProgress.start(context);
                 GradleLoadOptions opts = GradleLoadOptions
                         .loadForQuality(maxQualily)
+                        .force()
                         .withMessage(loadReason)
                         .withArgs(RunUtils.evaluateActionArgs(project, mapping.getName(), mapping.getReloadArgs(), ctx));
-                RequestProcessor.Task reloadTask = prj.forceReloadProject(opts);
+                RequestProcessor.Task reloadTask = prj.reloadProject(opts);
                 reloadTask.addTaskListener((t) -> {
                     g.finished(true);
                 });
@@ -341,9 +342,10 @@ public class ActionProviderImpl implements ActionProvider {
                         if (needReload && canReload) {
                             GradleLoadOptions opts = GradleLoadOptions
                                     .loadForQuality(maxQualily)
+                                    .force()
                                     .interactive()
                                     .withArgs(RunUtils.evaluateActionArgs(project, mapping.getName(), mapping.getReloadArgs(), outerCtx));
-                            RequestProcessor.Task reloadTask = prj.forceReloadProject(opts);
+                            RequestProcessor.Task reloadTask = prj.reloadProject(opts);
                             reloadTask.waitFinished();
                         }
                         project.getLookup().lookup(AfterBuildActionHook.class).afterAction(action, outerCtx, task.result(), out1);

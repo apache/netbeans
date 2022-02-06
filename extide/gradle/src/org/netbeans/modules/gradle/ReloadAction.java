@@ -35,7 +35,6 @@ import org.openide.util.NbBundle;
 import org.netbeans.modules.gradle.api.GradleProjects;
 
 import static org.netbeans.modules.gradle.Bundle.*;
-import static org.netbeans.modules.gradle.api.NbGradleProject.Quality.FULL_ONLINE;
 import org.netbeans.modules.gradle.loaders.GradleLoadOptions;
 
 /**
@@ -79,9 +78,10 @@ public class ReloadAction  extends AbstractAction implements ContextAwareAction 
             if (project instanceof NbGradleProjectImpl) {
                 NbGradleProjectImpl impl = (NbGradleProjectImpl) project;
                 GradleLoadOptions opts = GradleLoadOptions.AIM_FULL_ONLINE
+                        .force()
                         .interactive()
                         .withMessage(ACT_ReloadingProject());
-                impl.forceReloadProject(opts);
+                impl.reloadProject(opts);
             }
         }
     }

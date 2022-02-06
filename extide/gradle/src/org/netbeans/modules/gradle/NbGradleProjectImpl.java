@@ -449,11 +449,7 @@ public final class NbGradleProjectImpl implements Project {
      * @param args optional argument for reload
      * @return Task representing the reloading process
      */
-    RequestProcessor.Task forceReloadProject(GradleLoadOptions opts) {
-        return reloadProject(opts.force());
-    }
-
-    private RequestProcessor.Task reloadProject(GradleLoadOptions opts) {
+    RequestProcessor.Task reloadProject(GradleLoadOptions opts) {
         return RELOAD_RP.post(() -> loadOwnProject(opts));
     }
 

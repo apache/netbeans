@@ -62,12 +62,7 @@ public class JsPreferences {
         return ProjectUtils.getPreferences(project, JsPreferences.class, true);
     }
 
-    public static boolean isPreECMAScript6(Project project) {
-        return getECMAScriptVersion(project).ordinal() < JsVersion.ECMA6.ordinal();
+    public static boolean isPreECMAVersion(Project project, JsVersion target) {
+        return getECMAScriptVersion(project).ordinal() < target.ordinal();
     }
-
-    public static boolean isPreECMAScript7(Project project) {
-        return getECMAScriptVersion(project).ordinal() < JsVersion.ECMA7.ordinal();
-    }
-
 }

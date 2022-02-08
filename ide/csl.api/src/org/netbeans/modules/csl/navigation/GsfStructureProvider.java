@@ -21,7 +21,6 @@ package org.netbeans.modules.csl.navigation;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -54,134 +53,58 @@ public class GsfStructureProvider implements StructureProvider {
 
     private static final Logger LOGGER = Logger.getLogger(GsfStructureProvider.class.getName());
     
-    /** The structure element implementation. Some properties are counted lazy. 
-     * 
-     */
-    private static class GsfStructureElement implements StructureElement {
-        
-        private final static Set<StructureElement.Tag> DEPRECATED_TAG = Collections.singleton(StructureElement.Tag.Deprecated);
-        
-        private final Document doc;         // The children are counted lazily and we need the document for it. 
-        private final StructureItem origItem;
-        private List<GsfStructureElement> children;
-        private String signature;
-        private int expandedStartOffset;
-        private int expandedEndOffset;
-        
-
-        public GsfStructureElement(Document doc, StructureItem origItem) {
-            this.doc = doc;
-            this.origItem = origItem;
-            this.signature = null;
-            this.children = null;
-            this.expandedStartOffset = (int)origItem.getPosition();
-            this.expandedEndOffset = (int)origItem.getEndPosition();
+    private static StructureElement.Kind convertKind(ElementKind elementKind) {
+        switch(elementKind) {
+            case ATTRIBUTE: return StructureElement.Kind.Property;
+            case CALL: return StructureElement.Kind.Event;
+            case CLASS: return StructureElement.Kind.Class;
+            case CONSTANT: return StructureElement.Kind.Constant;
+            case CONSTRUCTOR: return StructureElement.Kind.Constructor;
+            case DB: return StructureElement.Kind.File;
+            case ERROR: return StructureElement.Kind.Event;
+            case METHOD: return StructureElement.Kind.Method;
+            case FILE: return StructureElement.Kind.File;
+            case FIELD: return StructureElement.Kind.Field;
+            case MODULE: return StructureElement.Kind.Module;
+            case VARIABLE: return StructureElement.Kind.Variable;
+            case GLOBAL: return StructureElement.Kind.Module;
+            case INTERFACE: return StructureElement.Kind.Interface;
+            case KEYWORD: return StructureElement.Kind.Key;
+            case OTHER: return StructureElement.Kind.Object;
+            case PACKAGE: return StructureElement.Kind.Package;
+            case PARAMETER: return StructureElement.Kind.TypeParameter;
+            case PROPERTY: return StructureElement.Kind.Property;
+            case RULE: return StructureElement.Kind.Event;
+            case TAG: return StructureElement.Kind.Operator;
+            case TEST: return StructureElement.Kind.Function;
         }
-        
-        @Override
-        public String getName() {
-            return origItem.getName();
+        return StructureElement.Kind.Object;
+    }
+    
+    private static void  createDetail(StructureItem item, Builder builder) {
+        NoHtmlFormatter formatter = new NoHtmlFormatter();
+        String s = item.getHtml(formatter);
+        s = s.substring(item.getName().length()).trim();
+        if (!s.trim().isEmpty()) {
+            builder.detail(s);
         }
-
-        @Override
-        public int getSelectionStartOffset() {
-            return (int)origItem.getPosition();
+    }
+    
+    private static void createTags(StructureItem item, Builder builder) {
+        if (item.getModifiers().contains(Modifier.DEPRECATED)) {
+            builder.addTag(StructureElement.Tag.Deprecated);
         }
-
-        @Override
-        public int getSelectionEndOffset() {
-            return (int)origItem.getEndPosition();
-        }
-        
-        @Override
-        public int getExpandedStartOffset() {
-            return expandedStartOffset;
-        }
-
-        protected void setExpandedStartOffset(int enclosedStartOffset) {
-            this.expandedStartOffset = enclosedStartOffset;
-        }
-
-        @Override
-        public int getExpandedEndOffset() {
-            return expandedEndOffset;
-        }
-        
-        protected void setExpandedEndOffset(int enclosedEndOffset) {
-            this.expandedEndOffset = enclosedEndOffset;
-        }
-
-        
-        @Override
-        public String getDetail() { 
-            if (signature == null) {
-                createSignature();
+    }
+    
+    private static void createChildren(Document doc, StructureItem item, Builder builder) {
+        if (!item.isLeaf()) {
+            List <? extends StructureItem> origChildren = item.getNestedItems();
+            if (!origChildren.isEmpty()) {
+                List<StructureElement> children = new ArrayList<>(origChildren.size());
+                convertStructureItems(doc, origChildren, children);
+                builder.children(children);
             }
-            return signature;
         }
-
-        private void createSignature() {
-            NoHtmlFormatter formatter = new NoHtmlFormatter();
-            String s = origItem.getHtml(formatter);
-            signature = s.substring(getName().length()).trim();
-        }
-        
-        @Override
-        public StructureElement.Kind getKind() {
-            switch(origItem.getKind()) {
-                case ATTRIBUTE: return Kind.Property;
-                case CALL: return Kind.Event;
-                case CLASS: return Kind.Class;
-                case CONSTANT: return Kind.Constant;
-                case CONSTRUCTOR: return Kind.Constructor;
-                case DB: return Kind.File;
-                case ERROR: return Kind.Event;
-                case METHOD: return Kind.Method;
-                case FILE: return Kind.File;
-                case FIELD: return Kind.Field;
-                case MODULE: return Kind.Module;
-                case VARIABLE: return Kind.Variable;
-                case GLOBAL: return Kind.Module;
-                case INTERFACE: return Kind.Interface;
-                case KEYWORD: return Kind.Key;
-                case OTHER: return Kind.Object;
-                case PACKAGE: return Kind.Package;
-                case PARAMETER: return Kind.TypeParameter;
-                case PROPERTY: return Kind.Property;
-                case RULE: return Kind.Event;
-                case TAG: return Kind.Operator;
-                case TEST: return Kind.Function;
-            }
-            return Kind.Object;
-        }
-        
-        @Override
-        public Set<Tag> getTags() {
-            if (origItem.getModifiers().contains(Modifier.DEPRECATED)) {
-                return DEPRECATED_TAG;
-            }
-            return null;
-        }
-        
-        @Override
-        public List<? extends StructureElement> getChildren() {
-            if (children == null) {
-                if (origItem.isLeaf()) {
-                    children = Collections.EMPTY_LIST;
-                } else {
-                    List <? extends StructureItem> origChildren = origItem.getNestedItems();
-                    if (origChildren.isEmpty()) {
-                        children = Collections.EMPTY_LIST;
-                    } else {
-                        children = new ArrayList<>(origChildren.size());
-                        convertStructureItems(doc, origChildren, children);
-                    }
-                    
-                }
-            }
-            return children;
-        }
-        
     }
     
     /** A formatter that strips the html elements from the text */
@@ -249,8 +172,8 @@ public class GsfStructureProvider implements StructureProvider {
     }
     
     @Override
-    public CompletableFuture<List<? extends StructureElement>> getStructure(Document doc) {
-        final List<GsfStructureElement> sElements = new ArrayList<>();
+    public CompletableFuture<List<StructureElement>> getStructure(Document doc) {
+        final List<StructureElement> sElements = new ArrayList<>();
         try {
             ParserManager.parse(Collections.singletonList(Source.create(doc)), new UserTask() {
                 @Override
@@ -277,8 +200,8 @@ public class GsfStructureProvider implements StructureProvider {
         }
     }
     
-    private static void convertStructureItems(Document doc, List<? extends StructureItem> items, List<GsfStructureElement> sElements) {
-        GsfStructureElement lastElement = null;
+    private static void convertStructureItems(Document doc, List<? extends StructureItem> items, List<StructureElement> sElements) {
+        StructureElement lastElement = null;
         if (doc instanceof LineDocument) {
             //  if it's line document, we can set the enclosing range for whole line
             LineDocument ldoc = (LineDocument)doc;
@@ -286,6 +209,11 @@ public class GsfStructureProvider implements StructureProvider {
                 int startOffset = (int)item.getPosition();
                 int lineStart = startOffset;
                 int lineEnd = (int)item.getEndPosition();
+                Builder builder = StructureProvider.newBuilder(item.getName(), convertKind(item.getKind()));
+                builder.selectionStartOffset(startOffset).selectionEndOffset(lineEnd);
+                createDetail(item, builder);
+                createTags(item, builder);
+
                 try {
                     String prefix = doc.getText(lineStart, startOffset);
                     lineStart = LineDocumentUtils.getLineStart(ldoc, lineStart);
@@ -299,28 +227,40 @@ public class GsfStructureProvider implements StructureProvider {
                     lineStart = (int)item.getPosition();
                     lineEnd = (int)item.getEndPosition();
                 }
-                GsfStructureElement el = new GsfStructureElement(ldoc, item);
-                sElements.add(el);
                 if (lastElement == null) {
-                    el.setExpandedStartOffset(lineStart);
-                    el.setExpandedEndOffset(lineEnd);
+                    builder.expandedStartOffset(lineStart);
+                    builder.expandedEndOffset(lineEnd);
                 } else {
                     if (lastElement.getExpandedEndOffset() < lineStart) {
-                        el.setExpandedStartOffset(lineStart);
-                        el.setExpandedEndOffset(lineEnd);
+                        builder.expandedStartOffset(lineStart);
+                        builder.expandedEndOffset(lineEnd);
                     } else if (lastElement.getExpandedStartOffset() <= lineStart && lineEnd == lastElement.getExpandedEndOffset()) {
                         // The same line
-                        lastElement.setExpandedEndOffset(el.getSelectionStartOffset() - 1);
-                        lineStart = el.getSelectionStartOffset();
+                        sElements.remove(lastElement);
+                        Builder leBuilder = StructureProvider.newBuilder(lastElement.getName(), lastElement.getKind());
+                        leBuilder.detail(lastElement.getDetail());
+                        leBuilder.selectionStartOffset(lastElement.getSelectionStartOffset()).selectionEndOffset(lastElement.getSelectionEndOffset());
+                        leBuilder.expandedStartOffset(lastElement.getExpandedStartOffset()).expandedEndOffset(startOffset - 1);
+                        leBuilder.children(lastElement.getChildren()).tags(lastElement.getTags());
+                        sElements.add(leBuilder.build());
                     }
                 }
-                el.setExpandedStartOffset(lineStart);
-                el.setExpandedEndOffset(lineEnd);
-                lastElement = el;
+                builder.expandedStartOffset(lineStart).expandedEndOffset(lineEnd);
+                createChildren(doc, item, builder);
+                lastElement = builder.build();
+                sElements.add(lastElement);
             }
         } else {
             for (StructureItem item : items) {
-                sElements.add(new GsfStructureElement(null, item));
+                int selectionStart = (int)item.getPosition();
+                int selectionEnd = (int)item.getEndPosition();
+                Builder builder = StructureProvider.newBuilder(item.getName(), convertKind(item.getKind()));
+                builder.selectionStartOffset(selectionStart).selectionEndOffset(selectionEnd);
+                builder.expandedStartOffset(selectionStart).expandedEndOffset(selectionEnd);
+                createDetail(item, builder);
+                createTags(item, builder);
+                createChildren(doc, item, builder);
+                sElements.add(builder.build());
             }
         }
     }

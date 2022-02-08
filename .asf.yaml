@@ -19,7 +19,10 @@ github:
   homepage: https://netbeans.apache.org/
   labels:
     - netbeans
-    - hacktoberfest # Hacktoberfest topic
+    - netbeans-platform
+    - ide
+    - code-editor
+    - java
   features:
     wiki: false
     issues: true

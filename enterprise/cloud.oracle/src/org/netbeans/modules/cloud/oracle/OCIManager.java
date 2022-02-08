@@ -18,9 +18,13 @@
  */
 package org.netbeans.modules.cloud.oracle;
 
+import org.netbeans.modules.cloud.oracle.items.OCIItem;
+import org.netbeans.modules.cloud.oracle.items.DatabaseItem;
 import com.oracle.bmc.ConfigFileReader;
 import com.oracle.bmc.auth.ConfigFileAuthenticationDetailsProvider;
 import com.oracle.bmc.database.DatabaseClient;
+import com.oracle.bmc.database.model.AutonomousDatabaseSummary;
+import com.oracle.bmc.database.model.DatabaseConnectionStringProfile;
 import com.oracle.bmc.database.model.GenerateAutonomousDatabaseWalletDetails;
 import com.oracle.bmc.database.requests.GenerateAutonomousDatabaseWalletRequest;
 import com.oracle.bmc.database.requests.ListAutonomousDatabasesRequest;
@@ -44,12 +48,19 @@ import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import org.openide.util.Exceptions;
+import org.openide.util.NbBundle;
 
 /**
  * Manages access to Oracle Cloud Resources
  * 
  * @author Jan Horvath
  */
+@NbBundle.Messages({
+    "LBL_HomeRegion=Home Region: {0}",
+    "LBL_WorkloadType=Workload Type: {0}\n",
+    "LBL_DatabaseVersion=Database version: {0}\n",
+    "LBL_Storage=Storage: {0}TB"
+})
 public final class OCIManager {
 
     
@@ -97,6 +108,7 @@ public final class OCIManager {
             GetTenancyResponse response = identityClient.getTenancy(gtr);
             Tenancy tenancy = response.getTenancy();
             OCIItem item = new OCIItem(tenancy.getId(), tenancy.getName());
+            item.setDescription(Bundle.LBL_HomeRegion(tenancy.getHomeRegionKey()));
             return Optional.of(item);
         } catch (Throwable t) {
             Exceptions.printStackTrace(t);
@@ -151,8 +163,26 @@ public final class OCIManager {
         return client.listAutonomousDatabases(listAutonomousDatabasesRequest)
                 .getItems()
                 .stream()
-                .map(d -> new DatabaseItem(d.getId(), d.getDbName(), d.getServiceConsoleUrl()))
+                .map(d -> {
+                    DatabaseItem item = new DatabaseItem(d.getId(), d.getDbName(), d.getServiceConsoleUrl(), getConnectionName(d));
+                    StringBuilder sb = new StringBuilder();
+                    sb.append(Bundle.LBL_WorkloadType(d.getDbWorkload().getValue()));
+                    sb.append(Bundle.LBL_DatabaseVersion(d.getDbVersion()));
+                    sb.append(Bundle.LBL_Storage(d.getDataStorageSizeInTBs()));
+                    item.setDescription(sb.toString());
+                    return item;
+                })
                 .collect(Collectors.toList());
+    }
+    
+    private String getConnectionName(AutonomousDatabaseSummary summary) {
+        List<DatabaseConnectionStringProfile> profiles = summary.getConnectionStrings().getProfiles();
+        for (DatabaseConnectionStringProfile profile : profiles) {
+            if (profile.getDisplayName().contains("high")) { //NOI18N
+                return profile.getDisplayName();
+            }
+        }
+        return null;
     }
 
     /**

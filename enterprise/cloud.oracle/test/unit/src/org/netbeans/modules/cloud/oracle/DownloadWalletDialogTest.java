@@ -37,7 +37,11 @@ public class DownloadWalletDialogTest {
     public void testCheckPassword() {
         char[] passwd1 = "abcdefgh".toCharArray();
         DownloadWalletDialog.checkPasswordLogic(passwd1, passwd1, (m) -> 
-                assertEquals("The wallet download password should contain at least 1 number or special character.", m));
+                assertEquals("The wallet download password should contain at least 1 special character.", m));
+        
+        passwd1 = "abcdefgh!".toCharArray();
+        DownloadWalletDialog.checkPasswordLogic(passwd1, passwd1, (m) -> 
+                assertEquals("The wallet download password should contain at least 1 number.", m));
         
         passwd1 = "11111".toCharArray();
         DownloadWalletDialog.checkPasswordLogic(passwd1, passwd1, (m) -> 
@@ -47,12 +51,20 @@ public class DownloadWalletDialogTest {
         DownloadWalletDialog.checkPasswordLogic(passwd1, passwd1, (m) -> 
                 assertEquals("The wallet download password should contain at least 1 letter.", m));
         
-        char[] passwd2 = "abcdefg1".toCharArray();
+        char[] passwd2 = "abcdefg1!".toCharArray();
         DownloadWalletDialog.checkPasswordLogic(passwd2, passwd2, (m) -> 
                 assertEquals(m, null));
         
         DownloadWalletDialog.checkPasswordLogic(passwd2, passwd1, (m) -> 
                 assertEquals("Passwords don't match.", m));
+    }
+    
+    @Test
+    public void testGeneratePassword() {
+        char[] passwd = DownloadWalletDialog.generatePassword();
+        System.out.println(new String(passwd));
+        DownloadWalletDialog.checkPasswordLogic(passwd, passwd, (m) -> 
+                assertEquals(m, null));
     }
     
 }

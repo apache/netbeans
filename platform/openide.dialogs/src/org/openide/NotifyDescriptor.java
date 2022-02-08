@@ -32,6 +32,7 @@ import javax.swing.GroupLayout.Alignment;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.LayoutStyle;
@@ -993,6 +994,25 @@ public class NotifyDescriptor extends Object {
         }
     }
 
+    /**
+     * Notification providing a password input.
+     */
+    public static final class PasswordLine extends InputLine {
+        
+        /** Construct dialog with the specified title and label text.
+        * @param text label text
+        * @param title title of the dialog
+        */
+        public PasswordLine(String text, String title) {
+            super(text, title);
+        }
+        
+        JTextField createTextField() {
+            return new JPasswordField(25);
+        }
+        
+    }
+    
     /** Notification providing for a line of text input.
     * @author Dafe Simonek
     */
@@ -1006,7 +1026,7 @@ public class NotifyDescriptor extends Object {
         * @param text label text
         * @param title title of the dialog
         */
-        public InputLine(final String text, final String title) {
+            public InputLine(final String text, final String title) {
             this(text, title, OK_CANCEL_OPTION, PLAIN_MESSAGE);
         }
 
@@ -1051,7 +1071,7 @@ public class NotifyDescriptor extends Object {
             Mnemonics.setLocalizedText(textLabel, text);
 
             boolean longText = text.length () > 80;
-            textField = new JTextField(25);
+            textField = createTextField(); 
             textLabel.setLabelFor(textField);
             
             textField.requestFocus();
@@ -1126,6 +1146,10 @@ public class NotifyDescriptor extends Object {
             );
             
             return panel;
+        }
+        
+        JTextField createTextField() {
+            return new JTextField(25);
         }
     }
      // end of InputLine

@@ -18,9 +18,11 @@
  */
 package org.netbeans.modules.cloud.oracle;
 
+import org.netbeans.modules.cloud.oracle.items.OCIItem;
 import java.util.List;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import org.netbeans.modules.cloud.oracle.items.DatabaseItem;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
 import org.openide.nodes.Node;
@@ -40,7 +42,7 @@ public class CompartmentNode extends AbstractNode {
         setIconBaseWithExtension(COMPARTMENT_ICON);
     }
     
-    public static class CompartmentChildFactory extends org.openide.nodes.ChildFactory<OCIItem>
+    public static class CompartmentChildFactory extends org.openide.nodes.ChildFactory<DatabaseItem>
             implements ChangeListener {
 
         private final String compartmentId;
@@ -50,7 +52,7 @@ public class CompartmentNode extends AbstractNode {
         }
 
         @Override
-        protected boolean createKeys(List<OCIItem> toPopulate) {
+        protected boolean createKeys(List<DatabaseItem> toPopulate) {
             toPopulate.addAll(OCIManager.getDefault().getDatabases(compartmentId));
             return true;
         }
@@ -61,7 +63,7 @@ public class CompartmentNode extends AbstractNode {
         }
 
         @Override
-        protected Node createNodeForKey(OCIItem key) {
+        protected Node createNodeForKey(DatabaseItem key) {
             AbstractNode node = new DatabaseNode(key);
             return node;
         }

@@ -26,7 +26,21 @@
 <apidef name="dialogs">Dialogs API</apidef>
 </apidefs>
 <changes>
-
+    <change>
+         <api name="dialogs"/>
+         <summary>Allow vetoable Next/Finish validation in wizard</summary>
+         <version major="7" minor="59"/>
+         <date day="31" month="1" year="2022"/>
+         <author login="jhorvath"/>
+         <compatibility addition="yes" binary="compatible" source="compatible" semantic="compatible" deprecation="no" deletion="no" modification="no"/>
+         <description>
+             <p>
+                 Added <code>PasswordLine</code>, which is implementation of <code>InputLine</code> 
+                 intended for password entry.
+             </p>
+         </description>
+         <class package="org.openide" name="NotifyDescriptor"/>
+    </change>
     <change id="DialogParent">
         <api name="dialogs"/>
         <summary>Allow to specify dialog parent window when using DialogDisplayer.</summary>

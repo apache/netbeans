@@ -19,6 +19,7 @@
 package org.netbeans.modules.cloud.oracle;
 
 import javax.swing.Action;
+import org.netbeans.modules.cloud.oracle.items.DatabaseItem;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
 import org.openide.util.Utilities;
@@ -32,11 +33,12 @@ public class DatabaseNode extends AbstractNode {
     
     private static final String DB_ICON = "org/netbeans/modules/cloud/oracle/resources/database.svg"; // NOI18N
     
-    public DatabaseNode(OCIItem dbSummary) {
+    public DatabaseNode(DatabaseItem dbSummary) {
         super(Children.LEAF, Lookups.fixed(dbSummary));
         setName(dbSummary.getName()); 
         setDisplayName(dbSummary.getName());
         setIconBaseWithExtension(DB_ICON);
+        setShortDescription(dbSummary.getDescription());
     }
    
     @Override

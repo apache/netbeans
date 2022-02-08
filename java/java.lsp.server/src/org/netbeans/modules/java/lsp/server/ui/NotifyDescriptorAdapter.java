@@ -42,6 +42,7 @@ import javax.swing.JButton;
 import org.eclipse.lsp4j.MessageActionItem;
 import org.eclipse.lsp4j.MessageType;
 import org.eclipse.lsp4j.ShowMessageRequestParams;
+import org.netbeans.modules.java.lsp.server.protocol.ShowInputBoxParams;
 import org.openide.NotifyDescriptor;
 import org.openide.awt.Actions;
 import org.openide.util.NbBundle;
@@ -134,7 +135,7 @@ class NotifyDescriptorAdapter {
         return ac.getAccessibleName();
     }
     
-    public ShowMessageRequestParams createShowMessageRequest() {
+    private ShowMessageRequestParams createShowMessageRequest() {
         if (this.request != null) {
             return request;
         }
@@ -274,14 +275,30 @@ class NotifyDescriptorAdapter {
     }
     
     public CompletableFuture<Object> clientNotifyLater() {
-        ShowMessageRequestParams params = createShowMessageRequest();
-        if (params == null) {
-            CompletableFuture<Object> x = new CompletableFuture<>();
-            x.complete(NotifyDescriptor.CLOSED_OPTION);
-            return x;
+        if (descriptor instanceof NotifyDescriptor.InputLine) {
+            NotifyDescriptor.InputLine inp = (NotifyDescriptor.InputLine) descriptor;
+            ShowInputBoxParams params = new ShowInputBoxParams();
+            params.setPrompt(descriptor.getTitle());
+            params.setValue(inp.getInputText());
+            params.setPassword(descriptor instanceof NotifyDescriptor.PasswordLine);
+            CompletableFuture<String> newText = client.showInputBox(params);
+            return newText.thenApply((item) -> {
+                if (item == null) {
+                    return NotifyDescriptor.CLOSED_OPTION;
+                }
+                inp.setInputText(item);
+                return NotifyDescriptor.OK_OPTION;
+            });
+        } else {
+            ShowMessageRequestParams params = createShowMessageRequest();
+            if (params == null) {
+                CompletableFuture<Object> x = new CompletableFuture<>();
+                x.complete(NotifyDescriptor.CLOSED_OPTION);
+                return x;
+            }
+            CompletableFuture<MessageActionItem> resultItem =  client.showMessageRequest(request);
+            return resultItem /*.exceptionally(this::handleClientException) */.thenApply(this::processActivatedOption);
         }
-        CompletableFuture<MessageActionItem> resultItem =  client.showMessageRequest(request);
-        return resultItem /*.exceptionally(this::handleClientException) */.thenApply(this::processActivatedOption);
     }
     
     MessageActionItem handleClientException(Throwable t) {

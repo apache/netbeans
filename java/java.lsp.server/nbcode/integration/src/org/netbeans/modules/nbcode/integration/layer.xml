@@ -33,11 +33,18 @@
                 <attr name="action:netbeans.db.explorer.action.Disconnect" stringvalue="Database"/>
                 <attr name="action:netbeans.db.explorer.action.makepreferred" stringvalue="Database"/>
             </file>
+            <file name="cloud-resources-commands.instance">
+                <attr name="instanceCreate" methodvalue="org.netbeans.modules.java.lsp.server.explorer.NodeActionsProvider.forFile"/>
+                <attr name="action:org.netbeans.modules.cloud.oracle.DownloadWalletAction" stringvalue="Tools"/>
+            </file>
         </folder>
     </folder>
     <folder name="Explorers">
         <folder name="database.connections">
             <file name="database-cookies.contextValues" url="database-cookies.contextValues"/>
+        </folder>
+        <folder name="cloud.resources">
+            <file name="cloud-cookies.contextValues" url="cloud-cookies.contextValues"/>
         </folder>
     </folder>
     <folder name="Debugger">

@@ -265,7 +265,12 @@ fld protected javax.swing.JTextField textField
 meth protected java.awt.Component createDesign(java.lang.String)
 meth public java.lang.String getInputText()
 meth public void setInputText(java.lang.String)
+meth javax.swing.JTextField createTextField()
 supr org.openide.NotifyDescriptor
+
+CLSS public static org.openide.NotifyDescriptor$PasswordLine
+ outer org.openide.NotifyDescriptor
+cons public init(java.lang.String,java.lang.String)
 
 CLSS public static org.openide.NotifyDescriptor$Message
  outer org.openide.NotifyDescriptor

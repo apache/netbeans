@@ -29,6 +29,7 @@ import org.eclipse.lsp4j.MessageType;
 import org.eclipse.lsp4j.ShowMessageRequestParams;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.java.lsp.server.protocol.HtmlPageParams;
+import org.netbeans.modules.java.lsp.server.protocol.ShowInputBoxParams;
 import org.netbeans.modules.java.lsp.server.protocol.ShowStatusMessageParams;
 import org.openide.NotifyDescriptor;
 import org.openide.awt.StatusDisplayer;
@@ -55,6 +56,11 @@ public class AbstractDialogDisplayerTest extends NbTestCase {
 
         @Override
         protected CompletableFuture<MessageActionItem> showMessageRequest(ShowMessageRequestParams msg) {
+            return CompletableFuture.completedFuture(null);
+        }
+
+        @Override
+        protected CompletableFuture<String> showInputBox(ShowInputBoxParams params) {
             return CompletableFuture.completedFuture(null);
         }
 

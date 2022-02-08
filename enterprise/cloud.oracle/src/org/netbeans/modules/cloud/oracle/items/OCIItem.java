@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.cloud.oracle;
+package org.netbeans.modules.cloud.oracle.items;
 
 /**
  * Represents Oracle Cloud Resource identified by Oracle Cloud Identifier (OCID)
@@ -26,6 +26,7 @@ package org.netbeans.modules.cloud.oracle;
 public class OCIItem {
     final String id;
     final String name;
+    String description;
 
     /**
     * Construct a new {@code OCIItem}.
@@ -33,7 +34,7 @@ public class OCIItem {
     * @param id OCID of the item
     * @param name Name of the item
     */
-    OCIItem(String id, String name) {
+    public OCIItem(String id, String name) {
         this.id = id;
         this.name = name;
     }
@@ -55,5 +56,22 @@ public class OCIItem {
     public String getName() {
         return name;
     }
+    
+    /**
+     * Returns short description of the item.
+     * 
+     * @return Description
+     */
+    public String getDescription() {
+        return description;
+    }
 
+    /**
+     * Short description of the item.
+     * 
+     * @return Name
+     */
+    public void setDescription(String description) {
+        this.description = description;
+    }
 }

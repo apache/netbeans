@@ -43,4 +43,21 @@
             </folder>
         </folder>
     </folder>
+    <folder name="Templates">
+        <folder name="Micronaut">
+            <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.micronaut.db.Bundle"/>
+            <attr name="templateWizardURL" urlvalue="nbresloc:/org/netbeans/modules/micronaut/resources/Micronaut.html"/>
+            <attr name="position" intvalue="1280"/>
+
+            <file name="Entity">
+                <attr name="position" intvalue="220"/>
+                <attr name="template" boolvalue="true"/>
+                <attr name="instantiatingIterator" methodvalue="org.netbeans.modules.micronaut.db.MicronautEntity.createForMicronaut"/>
+                <attr name="templateCategory" stringvalue="persistence"/>
+                <attr name="templateWizardURL" urlvalue="nbresloc:/org/netbeans/modules/micronaut/resources/EntityDatabase.html"/>
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.micronaut.db.Bundle"/>
+                <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/java/resources/class.gif"/>
+            </file>
+        </folder>
+    </folder>
 </filesystem>

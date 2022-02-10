@@ -33,4 +33,12 @@
             <attr name="explorerConfirmsDelete" boolvalue="true"/>
         </folder>
     </folder>
+    <folder name="Templates">
+        <folder name="Micronaut">
+            <file name="Entity">
+                <attr name="lspInstanceCreator" methodvalue="org.netbeans.modules.java.lsp.server.db.MDEntityClassFromDB.create"/>
+            </file>
+        </folder>
+    </folder>
+
 </filesystem>

@@ -34,6 +34,15 @@
                     </run-dependency>
                 </dependency>
                 <dependency>
+                    <code-name-base>org.netbeans.api.java</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <release-version>1</release-version>
+                        <specification-version>1.82</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
                     <code-name-base>org.netbeans.api.java.classpath</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
@@ -80,9 +89,7 @@
                     <code-name-base>org.netbeans.libs.javacapi</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
-                    <run-dependency>
-                        <specification-version>8.33</specification-version>
-                    </run-dependency>
+                    <run-dependency/>
                 </dependency>
                 <dependency>
                     <code-name-base>org.netbeans.modules.csl.api</code-name-base>
@@ -162,6 +169,23 @@
                     <run-dependency>
                         <release-version>1</release-version>
                         <specification-version>1.76</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.netbeans.modules.j2ee.core.utilities</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <release-version>0-1</release-version>
+                        <specification-version>1.50</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.netbeans.modules.j2ee.persistence</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>1.71</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>

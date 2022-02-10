@@ -34,6 +34,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
+import java.util.concurrent.ExecutionException;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -79,7 +81,7 @@ abstract class LspTemplateUI {
      * for the client's response.
      */
     private static final RequestProcessor    CREATION_RP = new RequestProcessor(LspTemplateUI.class);
-    
+    private static final String LSP_CREATOR = "lspInstanceCreator"; // NOI18N
     private static final Logger LOG = Logger.getLogger(LspTemplateUI.class.getName()); 
     
     private LspTemplateUI() {
@@ -115,12 +117,24 @@ abstract class LspTemplateUI {
         CompletionStage<DataObject> findTemplate = findTemplate(templates, client);
         CompletionStage<Pair<DataFolder, String>> findTargetFolderAndName = findTargetAndName(findTemplate, client, params);
         return findTargetFolderAndName.thenCombineAsync(findTemplate, (targetAndName, source) -> {
+            final DataFolder target = targetAndName.first();
             final String name = targetAndName.second();
             if (name == null || name.isEmpty()) {
+                Object creator = source.getPrimaryFile().getAttribute(LSP_CREATOR);
+                if (creator instanceof BiFunction) {
+                    Object result = ((BiFunction) creator).apply(target, client);
+                    if (result instanceof CompletableFuture) {
+                        try {
+                            return ((CompletableFuture) result).get();
+                        } catch (InterruptedException | ExecutionException ex) {
+                            throw raise(RuntimeException.class, ex);
+                        }
+                    }
+                    return result;
+                }
                 throw raise(RuntimeException.class, new UserCancelException());
             }
             try {
-                DataFolder target = targetAndName.first();
                 Map<String,String> prjParams = new HashMap<>();
                 DataObject newObject = source.createFromTemplate(target, name, prjParams);
                 return (Object) newObject.getPrimaryFile().toURI().toString();
@@ -198,7 +212,8 @@ abstract class LspTemplateUI {
                 return client.showInputBox(new ShowInputBoxParams(Bundle.CTL_TemplateUI_SelectTarget(), suggestion.getPrimaryFile().getPath())).thenCompose(new VerifyPath());
         });
         CompletionStage<String> findTargetName = findTarget.thenCombine(findTemplate, (target, source) -> source).thenCompose((source) -> {
-            return client.showInputBox(new ShowInputBoxParams(Bundle.CTL_TemplateUI_SelectName(), source.getName()));
+            Object creator = source.getPrimaryFile().getAttribute(LSP_CREATOR);
+            return creator == null ? client.showInputBox(new ShowInputBoxParams(Bundle.CTL_TemplateUI_SelectName(), source.getName())) : CompletableFuture.completedFuture(null);
         }).thenCombine(findTemplate, (nameWithExtension, source) -> {
             String templateExtension = source.getPrimaryFile().getExt();
             return removeExtensionFromFileName(nameWithExtension, templateExtension);

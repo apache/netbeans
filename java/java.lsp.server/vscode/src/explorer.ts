@@ -128,7 +128,12 @@ export class TreeViewService extends vscode.Disposable {
     }
   }
 
-  async fetchImageUri(nodeData : NodeInfoRequest.Data) : Promise<vscode.Uri | string | ThemeIcon | undefined> {
+  /**
+   * Requests an image data from the LSP server. 
+   * @param nodeData 
+   * @returns icon specification or undefined
+   */
+   async fetchImageUri(nodeData : NodeInfoRequest.Data) : Promise<vscode.Uri | string | ThemeIcon | undefined> {
     let res : vscode.Uri | string | ThemeIcon | undefined = this.imageUri(nodeData);
 
     if (res) {
@@ -143,6 +148,7 @@ export class TreeViewService extends vscode.Disposable {
       return ci?.iconUri;
     }
     const p : GetResourceParams = {
+      acceptEncoding: [ 'base64' ],
       uri : nodeData.iconDescriptor.baseUri
     };
     let iconData = await this.client.sendRequest(NodeInfoRequest.getresource, p);
@@ -161,38 +167,20 @@ export class TreeViewService extends vscode.Disposable {
     }
 
     let ci : CachedImage | undefined;
-    if (nodeData.iconIndex > 0) {
-      ci = this.images.get(nodeData.iconIndex);
-      if (ci && ci.baseUri) {
-        // hack because of bad protocol: will be fixed when client actively asks for icon data and server will not cache icons.
-        const r = this.findProductIcon(ci.baseUri, nodeData.name, nodeData.contextValue);
-        if (r) {
-          return r;
-        }
+    if (nodeData.iconDescriptor?.baseUri) {
+      const r = this.findProductIcon(nodeData.iconDescriptor.baseUri, nodeData.name, nodeData.contextValue);
+      // override the icon with local.
+      if (r) {
+        ci = new CachedImage(nodeData.iconDescriptor.baseUri, undefined, r, [ nodeData.name, nodeData.contextValue ]);
+        this.images.set(nodeData.iconIndex, ci);
       }
     }
-
     if (!ci) {
-      if (nodeData.iconDescriptor?.baseUri) {
-        const r = this.findProductIcon(nodeData.iconDescriptor.baseUri, nodeData.name, nodeData.contextValue);
-        // override the icon with local.
-        if (r) {
-          ci = new CachedImage(nodeData.iconDescriptor.baseUri, undefined, r, [ nodeData.name, nodeData.contextValue ]);
-          this.images.set(nodeData.iconIndex, ci);
-        }
-      }
-      if (!ci) {
-        // hardcode visual vscode's File icons for regular files:
-        if (nodeData.resourceUri && nodeData.contextValue.includes('is:file')) {
-          const uri : vscode.Uri | undefined  = nodeData.iconUri ? vscode.Uri.parse(nodeData.iconUri) : undefined;
-          // do not cache
-          return ThemeIcon.File;
-        }
-      }
-      if (!ci && nodeData.iconUri) {
-          const uri : vscode.Uri = vscode.Uri.parse(nodeData.iconUri);
-          ci = new CachedImage(nodeData?.iconDescriptor?.baseUri, uri, undefined);
-          this.images.set(nodeData.iconIndex, ci);
+      // hardcode visual vscode's File icons for regular files:
+      if (nodeData.resourceUri && nodeData.contextValue.includes('is:file')) {
+        const uri : vscode.Uri | undefined  = nodeData.iconUri ? vscode.Uri.parse(nodeData.iconUri) : undefined;
+        // do not cache
+        return ThemeIcon.File;
       }
     }
     return ci?.icon ? ci.icon : ci?.iconUri;

@@ -39,6 +39,8 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.file.Files;
+import java.nio.file.StandardOpenOption;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
@@ -280,10 +282,18 @@ public class TreeNodeRegistryImpl implements TreeNodeRegistry {
                 byte[] dg = md.digest(data);
                 base64Content = Base64.getUrlEncoder().encodeToString(dg).replace("\\n", ""); // NOI18N
                 String fname = base64Content + EXT_PNG; // NOI18N
-                FileObject iconsDir = FileUtil.createFolder(FileUtil.toFileObject(URITranslator.getCacheDir()), CACHE_ICONS_NAME); // NOI18N
-                FileObject fo = iconsDir.getFileObject(fname);
-                try (OutputStream ostm = fo == null ? iconsDir.createAndOpen(fname) : fo.getOutputStream()) {
-                    ostm.write(data);
+                File iconsDir = new File(URITranslator.getCacheDir(), CACHE_ICONS_NAME);
+                if (iconsDir.mkdirs() || iconsDir.isDirectory()) {
+                    // in case the dir/file creation fails, it's still possible to serve the data bits from the memory.
+                    File nf = new File(iconsDir, fname);
+                    if (!nf.exists()) {
+                        try (OutputStream ostm = Files.newOutputStream(nf.toPath(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)) {
+                            ostm.write(data);
+                        } catch (IOException ex) {
+                            LOG.log(Level.FINE, "Error creating disk image cache {0}", nf);
+                            LOG.log(Level.FINE, "Exception creating file/content:", ex);
+                        }
+                    }
                 }
                 res = new ImageDataOrIndex(new URI(URLPREFIX_LSPCACHE + fname)).
                         imageData(ENCODING_BASE64, data);

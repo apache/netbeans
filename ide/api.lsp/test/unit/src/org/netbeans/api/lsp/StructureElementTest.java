@@ -141,13 +141,13 @@ public class StructureElementTest extends NbTestCase {
            child1.selectionStartOffset(20).selectionEndOffset(25);
            child1.expandedStartOffset(15).expandedEndOffset(25);
            child1.addTag(StructureElement.Tag.Deprecated);
-           root.addChild(child1.build());
+           root.children(child1.build());
            
            Builder child2 = StructureProvider.newBuilder("method1", StructureElement.Kind.Method);
            child2.selectionStartOffset(30).selectionEndOffset(45);
            child2.expandedStartOffset(26).expandedEndOffset(46);
            child2.detail(": int");
-           root.addChild(child2.build());
+           root.children(child2.build());
            elements.add(root.build());
         }
         

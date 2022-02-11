@@ -33,7 +33,7 @@ import org.netbeans.modules.lsp.StructureElementAccessor;
  * Implementations of the interface should be registered in MimeLookup.
  * <pre>
  *
- *  {@code @MimeRegistration(mimeType = "text/foo", service = StructureProvider.class)
+ *  {@codesnippet @MimeRegistration(mimeType = "text/foo", service = StructureProvider.class)
  *   public class FooStructureProvider implements StructureProvider {
  *     ...
  *   }
@@ -207,11 +207,13 @@ public interface StructureProvider {
          * @since 1.8
          */
         @NonNull
-        public Builder addChild(@NonNull StructureElement child) {
+        public Builder children(@NonNull StructureElement ... children) {
             if (this.children == null) {
                 this.children = new ArrayList<>();
             }
-            this.children.add(child);
+            for (StructureElement structureElement : children) {
+                this.children.add(structureElement);
+            }
             return this;
         }
         
@@ -222,7 +224,10 @@ public interface StructureProvider {
          */
         @NonNull
         public Builder children(@NonNull List<StructureElement> children) {
-            this.children = children;
+            if (this.children == null) {
+                this.children = new ArrayList<>();
+            }
+            this.children.addAll(children);
             return this;
             
         }

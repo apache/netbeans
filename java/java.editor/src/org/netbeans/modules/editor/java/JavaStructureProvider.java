@@ -118,7 +118,7 @@ public class JavaStructureProvider implements StructureProvider {
         for (Element child : el.getEnclosedElements()) {
             StructureElement jse = element2StructureElement(info, child);
             if (jse != null) {
-                builder.addChild(jse);
+                builder.children(jse);
             }
         }
         if (path.getLeaf().getKind() == Tree.Kind.METHOD || path.getLeaf().getKind() == Tree.Kind.VARIABLE) {
@@ -302,7 +302,7 @@ public class JavaStructureProvider implements StructureProvider {
                         if (te != null) {
                             StructureElement jse = element2StructureElement(info, te);
                             if (jse != null) {
-                                builder.addChild(jse);
+                                builder.children(jse);
                             }
                         }
                     }

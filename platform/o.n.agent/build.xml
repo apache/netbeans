@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir="." default="netbeans" name="platform/o.n.agent">
+    <description>Builds, tests, and runs the project org.netbeans.agent</description>
+    <import file="../../nbbuild/templates/projectized.xml"/>
+</project>

@@ -20,15 +20,14 @@
 package org.netbeans.core.startup.layers;
 
 import java.io.File;
-import java.io.FileDescriptor;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.reflect.Field;
-import java.security.Permission;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
@@ -38,6 +37,8 @@ import java.util.concurrent.Callable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import junit.framework.Assert;
+import org.netbeans.TopSecurityManager;
+import org.netbeans.agent.hooks.TrackingHooks;
 import org.netbeans.core.startup.InstalledFileLocatorImpl;
 import org.openide.modules.Places;
 import org.openide.util.Exceptions;
@@ -47,14 +48,14 @@ import org.openide.util.Utilities;
  *
  * @author Jaroslav Tulach <jaroslav.tulach@netbeans.org>
  */
-final class CountingSecurityManager extends SecurityManager implements Callable<Integer> {
+final class CountingSecurityManager extends TrackingHooks implements Callable<Integer> {
     private static int cnt;
     private static StringWriter msgs;
     private static PrintWriter pw;
     private static String prefix;
     private static Map<String,Exception> who = new HashMap<String, Exception>();
     private static Set<String> allowed = Collections.emptySet();
-    private static SecurityManager man;
+    private static CountingSecurityManager instance;
     private static Mode mode;
     static boolean acceptAll;
 
@@ -66,11 +67,10 @@ final class CountingSecurityManager extends SecurityManager implements Callable<
         System.setProperty("counting.security.disabled", "true");
         inSubtree("", "");
 
-        if (System.getSecurityManager() instanceof CountingSecurityManager) {
-            // ok
-        } else {
-            System.setSecurityManager(new CountingSecurityManager());
+        if (instance == null) {
+            TrackingHooks.register(instance = new CountingSecurityManager(), 0, TrackingHooks.HOOK_IO);
         }
+
         setCnt(0);
         msgs = new StringWriter();
         pw = new PrintWriter(msgs);
@@ -85,37 +85,8 @@ final class CountingSecurityManager extends SecurityManager implements Callable<
 
     static void assertReflection(int maxCount, String whitelist) {
         System.setProperty("counting.reflection.whitelist", whitelist);
-        System.getSecurityManager().checkPermission(new MaxCountCheck(maxCount, "MaxCountCheck"));
+        instance.checkMemberAccess(null, maxCount);
         System.getProperties().remove("counting.reflection.whitelist");
-    }
-
-    private static final class MaxCountCheck extends Permission {
-        final int maxCount;
-
-        MaxCountCheck(int maxCount, String name) {
-            super(name);
-            this.maxCount = maxCount;
-        }
-
-        @Override
-        public boolean implies(Permission permission) {
-            return false;
-        }
-
-        @Override
-        public boolean equals(Object obj) {
-            return this == obj;
-        }
-
-        @Override
-        public int hashCode() {
-            return this.hashCode();
-        }
-
-        @Override
-        public String getActions() {
-            return "MaxCountCheck";
-        }
     }
 
     @Override
@@ -128,12 +99,12 @@ final class CountingSecurityManager extends SecurityManager implements Callable<
     }
 
     public static boolean isEnabled() {
-        return System.getSecurityManager() instanceof Callable<?>;
+        return instance != null;
     }
     
     public static void assertCounts(String msg, int expectedCnt) throws Exception {
-        int c = (Integer)((Callable<?>)System.getSecurityManager()).call();
-        Assert.assertEquals(msg + "\n" + System.getSecurityManager().toString(), expectedCnt, c);
+        int c = instance.call();
+        Assert.assertEquals(msg + "\n" + instance.toString(), expectedCnt, c);
         setCnt(0);
         msgs = new StringWriter();
         pw = new PrintWriter(msgs);
@@ -154,36 +125,7 @@ final class CountingSecurityManager extends SecurityManager implements Callable<
     }
 
     @Override
-    public void checkPermission(Permission p) {
-        if (p instanceof MaxCountCheck) {
-            checkMemberAccess(null, ((MaxCountCheck) p).maxCount);
-            return;
-        }
-
-        if (isDisabled()) {
-            return;
-        }
-        if (p instanceof RuntimePermission && "setSecurityManager".equals(p.getName())) {
-            try {
-                ClassLoader l = Thread.currentThread().getContextClassLoader();
-                Class<?> manClass = Class.forName("org.netbeans.TopSecurityManager", false, l);
-                man = (SecurityManager) manClass.newInstance();
-            } catch (Exception ex) {
-                throw new IllegalStateException(ex);
-            }
-            throw new SecurityException();
-        }
-    }
-
-    @Override
-    public final void checkPropertyAccess(String x) {
-        if (man != null) {
-            man.checkPropertyAccess(x);
-        }
-    }
-    
-    @Override
-    public void checkRead(String file) {
+    public void checkFileRead(String file) {
         if (mode == Mode.CHECK_READ && acceptFileRead(file)) {
             String off = System.getProperty("counting.off");
             if ("true".equals(off)) {
@@ -216,16 +158,6 @@ final class CountingSecurityManager extends SecurityManager implements Callable<
                 pw.flush();
             }
         }
-    }
-
-    @Override
-    public void checkRead(String file, Object context) {
-        /*
-        if (inSubtree(file, prefix)) {
-            cnt++;
-            pw.println("checkRead2: " + file);
-        }
-         */
     }
 
     private void assertMembers(int cnt) {
@@ -401,13 +333,7 @@ final class CountingSecurityManager extends SecurityManager implements Callable<
     }
 
     @Override
-    public void checkWrite(FileDescriptor fd) {
-        //setCnt(getCnt() + 1);
-        //pw.println("Fd: " + fd);
-    }
-
-    @Override
-    public void checkWrite(String file) {
+    public void checkFileWrite(String file) {
         if (mode == Mode.CHECK_WRITE && acceptFileWrite(file)) {
             setCnt(getCnt() + 1);
             pw.println("checkWrite: " + file);
@@ -479,7 +405,7 @@ final class CountingSecurityManager extends SecurityManager implements Callable<
         if (file.contains("jna")) {
             return false;
         }
-        for (Class c : this.getClassContext()) {
+        for (Class c : TopSecurityManager.getStack()) {
             if (c.getName().equals(InstalledFileLocatorImpl.class.getName())) {
                 if (inSubtree(file, Places.getCacheDirectory().getPath())) {
                     return false;
@@ -554,7 +480,8 @@ final class CountingSecurityManager extends SecurityManager implements Callable<
     }
 
     @Override
-    public void checkExec(String cmd) {
+    public void checkExec(List<String> cmds) {
+        String cmd = cmds.get(0);
         if (cmd.contains("chmod")) {
             return;
         }
@@ -568,14 +495,9 @@ final class CountingSecurityManager extends SecurityManager implements Callable<
             return;
         }
 
-        super.checkExec(cmd);
         setCnt(getCnt() + 1);
         pw.println("checkExec: " + cmd);
         new Exception().printStackTrace(pw);
-    }
-
-    @Override
-    public void checkPermission(Permission perm, Object context) {
     }
 
     /**

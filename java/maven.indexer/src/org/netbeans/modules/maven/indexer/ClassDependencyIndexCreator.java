@@ -24,7 +24,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -62,6 +62,7 @@ import org.netbeans.modules.classfile.ClassFile;
 import org.netbeans.modules.classfile.ClassName;
 import org.netbeans.modules.maven.indexer.api.NBVersionInfo;
 import org.netbeans.modules.maven.indexer.api.RepositoryQueries.ClassUsage;
+
 
 /**
  * Scans classes in (local) JARs for their Java dependencies.
@@ -111,7 +112,7 @@ class ClassDependencyIndexCreator extends AbstractIndexCreator {
         classDeps = new HashMap<>();
         read(jar, (String name, InputStream stream, Set<String> classes) -> {
             try {
-                addDependenciesToMap(name, stream, classDeps, classes, jar);
+                addDependenciesToMap(name, stream, classDeps, classes);
             } catch (IOException ex) {
                 LOG.log(Level.INFO, "Exception indexing " + jar, ex);
             }
@@ -120,12 +121,9 @@ class ClassDependencyIndexCreator extends AbstractIndexCreator {
 
     // adapted from FileUtil, since we do not want to have to use FileObject's here
     private static boolean isArchiveFile(File jar) throws IOException {
-        InputStream in = new FileInputStream(jar);
-        try {
+        try (InputStream in = new FileInputStream(jar)) {
             byte[] buffer = new byte[4];
             return in.read(buffer, 0, 4) == 4 && (Arrays.equals(ZIP_HEADER_1, buffer) || Arrays.equals(ZIP_HEADER_2, buffer));
-        } finally {
-            in.close();
         }
     }
     private static final byte[] ZIP_HEADER_1 = {80, 75, 3, 4};
@@ -169,38 +167,37 @@ class ClassDependencyIndexCreator extends AbstractIndexCreator {
 
     static void search(String className, Indexer indexer, Collection<IndexingContext> contexts, List<? super ClassUsage> results) throws IOException {
         String searchString = crc32base32(className.replace('.', '/'));
-        Query refClassQuery = indexer.constructQuery(ClassDependencyIndexCreator.FLD_NB_DEPENDENCY_CLASS.getOntology(), new StringSearchExpression(searchString));
+        Query refClassQuery = indexer.constructQuery(FLD_NB_DEPENDENCY_CLASS.getOntology(), new StringSearchExpression(searchString));
         TopScoreDocCollector collector = TopScoreDocCollector.create(NexusRepositoryIndexerImpl.MAX_RESULT_COUNT, Integer.MAX_VALUE);
         for (IndexingContext context : contexts) {
             IndexSearcher searcher = context.acquireIndexSearcher();
             try {
-        searcher.search(refClassQuery, collector);
-        ScoreDoc[] hits = collector.topDocs().scoreDocs;
-        LOG.log(Level.FINER, "for {0} ~ {1} found {2} hits", new Object[] {className, searchString, hits.length});
-        for (ScoreDoc hit : hits) {
-            int docId = hit.doc;
-            Document d = searcher.doc(docId);
-            String fldValue = d.get(ClassDependencyIndexCreator.NB_DEPENDENCY_CLASSES);
-            LOG.log(Level.FINER, "{0} uses: {1}", new Object[] {className, fldValue});
-            Set<String> refClasses = parseField(searchString, fldValue, d.get(ArtifactInfo.NAMES));
-            if (!refClasses.isEmpty()) {
-                ArtifactInfo ai = IndexUtils.constructArtifactInfo(d, context);
-                if (ai != null) {
-                    ai.setRepository(context.getRepositoryId());
-                    List<NBVersionInfo> version = NexusRepositoryIndexerImpl.convertToNBVersionInfo(Collections.singleton(ai));
-                    if (!version.isEmpty()) {
-                        results.add(new ClassUsage(version.get(0), refClasses));
+                searcher.search(refClassQuery, collector);
+                ScoreDoc[] hits = collector.topDocs().scoreDocs;
+                LOG.log(Level.FINER, "for {0} ~ {1} found {2} hits", new Object[] {className, searchString, hits.length});
+                for (ScoreDoc hit : hits) {
+                    Document d = searcher.doc(hit.doc);
+                    String fldValue = d.get(NB_DEPENDENCY_CLASSES);
+                    LOG.log(Level.FINER, "{0} uses: {1}", new Object[] {className, fldValue});
+                    Set<String> refClasses = parseField(searchString, fldValue, d.get(ArtifactInfo.NAMES));
+                    if (!refClasses.isEmpty()) {
+                        ArtifactInfo ai = IndexUtils.constructArtifactInfo(d, context);
+                        if (ai != null) {
+                            ai.setRepository(context.getRepositoryId());
+                            List<NBVersionInfo> version = NexusRepositoryIndexerImpl.convertToNBVersionInfo(Collections.singleton(ai));
+                            if (!version.isEmpty()) {
+                                results.add(new ClassUsage(version.get(0), refClasses));
+                            }
+                        }
                     }
                 }
+            } finally {
+                context.releaseIndexSearcher(searcher);
             }
-        }
-        } finally {
-            context.releaseIndexSearcher(searcher);
-        }
         }
     }
     private static Set<String> parseField(String refereeCRC, String field, String referrersNL) {
-        Set<String> referrers = new TreeSet<String>();
+        Set<String> referrers = new TreeSet<>();
         int p = 0;
         for (String referrer : referrersNL.split("\n")) {
             while (true) {
@@ -266,12 +263,11 @@ class ClassDependencyIndexCreator extends AbstractIndexCreator {
      * @param data its bytecode
      * @param depsMap map from referring outer classes (as {@code pkg/Outer}) to referred-to classes (as {@code pkg/Outer$Inner})
      * @param siblings other referring classes in the same artifact (including this one), as {@code pkg/Outer$Inner}
-     * @param jar the jar file, for diagnostics
      */
-    private static void addDependenciesToMap(String referrer, InputStream data, Map<String, Set<String>> depsMap, Set<String> siblings, File jar) throws IOException {
+    private static void addDependenciesToMap(String referrer, InputStream data, Map<String, Set<String>> depsMap, Set<String> siblings) throws IOException {
         int shell = referrer.indexOf('$', referrer.lastIndexOf('/') + 1);
         String referrerTopLevel = shell == -1 ? referrer : referrer.substring(0, shell);
-        for (String referee : dependencies(data, jar)) {
+        for (String referee : dependencies(data)) {
             if (referrer.equals(referee)) {
                 continue;
             }
@@ -364,11 +360,9 @@ class ClassDependencyIndexCreator extends AbstractIndexCreator {
     }
 
     // adapted from org.netbeans.nbbuild.VerifyClassLinkage
-    private static Collection<String> dependencies(InputStream data, File jar) throws IOException {
-        Set<String> result = new HashSet<String>();
-        ClassFile cf = new ClassFile(data);
-
-        Set<ClassName> cl = cf.getAllClassNames();
+    private static Collection<String> dependencies(InputStream data) throws IOException {
+        Set<ClassName> cl = new ClassFile(data).getAllClassNames();
+        Set<String> result = new HashSet<>(cl.size());
         for (ClassName className : cl) {
             result.add(className.getInternalName());
         }
@@ -387,15 +381,15 @@ class ClassDependencyIndexCreator extends AbstractIndexCreator {
      */
     static String crc32base32(String s) {
         crc.reset();
-        crc.update(s.getBytes(UTF8));
+        crc.update(s.getBytes(StandardCharsets.UTF_8));
         long v = crc.getValue();
         byte[] b32 = base32.encode(new byte[] {(byte) (v >> 24 & 0xFF), (byte) (v >> 16 & 0xFF), (byte) (v >> 8 & 0xFF), (byte) (v & 0xFF)});
         assert b32.length == 8;
         assert b32[7] == '=';
-        return new String(b32, 0, 7, LATIN1).toLowerCase();
+        return new String(b32, 0, 7, StandardCharsets.ISO_8859_1).toLowerCase();
     }
+
     private static final CRC32 crc = new CRC32();
     private static final Base32 base32 = new Base32();
-    private static final Charset UTF8 = Charset.forName("UTF-8");
-    private static final Charset LATIN1 = Charset.forName("ISO-8859-1");
+
 }

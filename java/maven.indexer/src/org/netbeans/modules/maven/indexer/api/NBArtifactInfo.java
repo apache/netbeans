@@ -32,8 +32,10 @@ import org.netbeans.api.annotations.common.NonNull;
  * @author Anuradha
  */
 public class NBArtifactInfo {
- private String name;
- private List<NBVersionInfo> versionInfos=new  ArrayList<NBVersionInfo>();
+
+    private final String name;
+    private final List<NBVersionInfo> versionInfos = new ArrayList<>();
+
     public NBArtifactInfo(String name) {
         this.name = name;
     }
@@ -51,7 +53,7 @@ public class NBArtifactInfo {
     }
 
     public @NonNull List<NBVersionInfo> getVersionInfos() {
-        return new  ArrayList<NBVersionInfo>(versionInfos);
+        return new ArrayList<>(versionInfos);
     }
 
     public String getName() {

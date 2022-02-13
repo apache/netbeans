@@ -68,7 +68,7 @@ class ArtifactDependencyIndexCreator extends AbstractIndexCreator {
     private static final IndexerField FLD_NB_DEPENDENCY_VERSION = new IndexerField(new Field(null, NS, NB_DEPENDENCY_VERSION, "Dependency version"), IndexerFieldVersion.V3, NB_DEPENDENCY_VERSION, "Dependency version", IndexerField.KEYWORD_NOT_STORED);
 
     private final List<ArtifactRepository> remoteRepos;
-    private final Map<ArtifactInfo, List<Dependency>> dependenciesByArtifact = new WeakHashMap<ArtifactInfo, List<Dependency>>();
+    private final Map<ArtifactInfo, List<Dependency>> dependenciesByArtifact = new WeakHashMap<>();
     private final MavenEmbedder embedder;
 
     ArtifactDependencyIndexCreator() {

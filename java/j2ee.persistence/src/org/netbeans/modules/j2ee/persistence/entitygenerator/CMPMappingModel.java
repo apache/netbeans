@@ -178,7 +178,7 @@ public class CMPMappingModel {
             return false;
         }
         
-        Iterator keyIt = cmrFieldMapping.keySet().iterator();
+        Iterator<String> keyIt = cmrFieldMapping.keySet().iterator();
         while (keyIt.hasNext()) {
             String key = (String) keyIt.next();
             ColumnData[] value = (ColumnData[]) cmrFieldMapping.get(key);

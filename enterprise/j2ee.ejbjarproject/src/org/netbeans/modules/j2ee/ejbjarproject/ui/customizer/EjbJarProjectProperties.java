@@ -606,7 +606,7 @@ final public class EjbJarProjectProperties {
         
         // 1. first remove all project references. The method will modify
         // project property files, so it must be done separately
-        for( Iterator it = removed.iterator(); it.hasNext(); ) {
+        for (Iterator<ClassPathSupport.Item> it = removed.iterator(); it.hasNext(); ) {
             ClassPathSupport.Item item = (ClassPathSupport.Item)it.next();
             if ( item.getType() == ClassPathSupport.Item.TYPE_ARTIFACT ||
                     item.getType() == ClassPathSupport.Item.TYPE_JAR ) {
@@ -621,7 +621,7 @@ final public class EjbJarProjectProperties {
         EditableProperties ep = updateHelper.getProperties( AntProjectHelper.PROJECT_PROPERTIES_PATH );
         boolean changed = false;
         
-        for( Iterator it = removed.iterator(); it.hasNext(); ) {
+        for (Iterator<ClassPathSupport.Item> it = removed.iterator(); it.hasNext(); ) {
             ClassPathSupport.Item item = (ClassPathSupport.Item)it.next();
             if (item.getType() == ClassPathSupport.Item.TYPE_LIBRARY) {
                 // remove helper property pointing to library jar if there is any

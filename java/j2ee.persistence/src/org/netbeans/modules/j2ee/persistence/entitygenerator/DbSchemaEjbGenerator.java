@@ -49,7 +49,7 @@ import org.netbeans.modules.j2ee.persistence.entitygenerator.EntityRelation.Coll
 public class DbSchemaEjbGenerator {
     
     private GeneratedTables genTables;
-    private Map beans = new HashMap();
+    private Map<String, EntityClass> beans = new HashMap<>();
     private List<EntityRelation> relations = new ArrayList<>();
     private SchemaElement schemaElement;
     private Set<String> tablesReferecedByOtherTables;
@@ -551,8 +551,8 @@ public class DbSchemaEjbGenerator {
     private void buildCMPSet() {
         reset();
         addAllTables();
-        for (Iterator it = beans.keySet().iterator(); it.hasNext();) {
-            String tableName = it.next().toString();
+        for (Iterator<String> it = beans.keySet().iterator(); it.hasNext();) {
+            String tableName = it.next();
             TableElement table = schemaElement.getTable(DBIdentifier.create(tableName));
             ColumnElement[] cols = table.getColumns();
             UniqueKeyElement pk = getPrimaryOrCandidateKey(table);
@@ -584,11 +584,11 @@ public class DbSchemaEjbGenerator {
     
     private List getFieldNames(EntityClass bean) {
         List<String> result = new ArrayList<>();
-        for (Iterator i = bean.getFields().iterator(); i.hasNext();) {
+        for (Iterator<EntityMember> i = bean.getFields().iterator(); i.hasNext();) {
             EntityMember member = (EntityMember)i.next();
             result.add(member.getMemberName());
         }
-        for (Iterator i = bean.getRoles().iterator(); i.hasNext();) {
+        for (Iterator<RelationshipRole> i = bean.getRoles().iterator(); i.hasNext();) {
             RelationshipRole role = (RelationshipRole)i.next();
             result.add(role.getFieldName());
         }

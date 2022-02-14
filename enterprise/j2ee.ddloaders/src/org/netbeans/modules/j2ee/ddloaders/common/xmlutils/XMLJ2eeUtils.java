@@ -301,7 +301,7 @@ public class XMLJ2eeUtils {
        
         //if (elementPath.size()==0) return false;
         if (elementPath==null) return false;
-        Iterator it = elementPath.iterator();
+        Iterator<ElementAttrInfo> it = elementPath.iterator();
         Element element = root;
         String keyAttributeName=null;
         NodeList lastNodeList=null;
@@ -354,7 +354,7 @@ public class XMLJ2eeUtils {
     public static boolean changeAttribute (Element root, List elementPath, String elementName, int index, String attrName, String attrValue)
     throws org.w3c.dom.DOMException {
         if (elementPath.size()==0) return false;
-        Iterator it = elementPath.iterator();
+        Iterator<ElementAttrInfo> it = elementPath.iterator();
         Element element = root;
         //String keyAttributeName=null;
         NodeList lastNodeList=null;
@@ -402,7 +402,7 @@ public class XMLJ2eeUtils {
     public static boolean deleteElement (Element root, List elementPath)
     throws org.w3c.dom.DOMException {
         if (elementPath.size()==0) return false;
-        Iterator it = elementPath.iterator();
+        Iterator<ElementAttrInfo> it = elementPath.iterator();
         Element parent = null;
         Element element = root;
         while (it.hasNext()){
@@ -460,7 +460,7 @@ public class XMLJ2eeUtils {
      * @return true if method was succesful, false otherwise
      */ 
     public static boolean addElement (Element root, List elementPath, String elementName, String keyAttribute, String[] attrNames, String[] attrValues){
-        Iterator it = elementPath.iterator();
+        Iterator<ElementAttrInfo> it = elementPath.iterator();
         Element element = root;
         while (it.hasNext()){
             ElementAttrInfo info = (ElementAttrInfo)it.next();
@@ -553,7 +553,7 @@ public class XMLJ2eeUtils {
      * @return true if method was succesful, false otherwise
      */ 
     public static boolean addStringElement (Element root, List elementPath, String elementName, String elementValue){
-        Iterator it = elementPath.iterator();
+        Iterator<ElementAttrInfo> it = elementPath.iterator();
         Element element = root;
         
         while (it.hasNext()){
@@ -629,7 +629,7 @@ public class XMLJ2eeUtils {
     public static boolean deleteAllElements (Element root, List elementPath, String elementName)
     throws org.w3c.dom.DOMException {
         if (elementPath.size()==0) return false;
-        Iterator it = elementPath.iterator();
+        Iterator<ElementAttrInfo> it = elementPath.iterator();
         Element parent = null;
         Element element = root;
         while (it.hasNext()){

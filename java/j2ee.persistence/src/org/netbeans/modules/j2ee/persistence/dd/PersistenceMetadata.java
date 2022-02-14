@@ -38,10 +38,10 @@ import org.xml.sax.SAXException;
 public final class PersistenceMetadata {
     
     private static final PersistenceMetadata DEFAULT = new PersistenceMetadata();
-    private Map ddMap;
+    private Map<FileObject, Persistence> ddMap;
     
     private PersistenceMetadata() {
-        ddMap = new WeakHashMap(5);
+        ddMap = new WeakHashMap<>(5);
     }
     
     /**

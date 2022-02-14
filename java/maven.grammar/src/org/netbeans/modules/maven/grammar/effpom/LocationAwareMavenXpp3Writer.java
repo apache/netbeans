@@ -458,7 +458,7 @@ public class LocationAwareMavenXpp3Writer {
             flush(serializer);
             int start2 = b.length();
             InputLocationTracker propTracker = contributor.getLocation("properties");
-            for (Iterator iter = contributor.getProperties().keySet().iterator(); iter.hasNext();) {
+            for (Iterator<?> iter = contributor.getProperties().keySet().iterator(); iter.hasNext();) {
                 String key = (String) iter.next();
                 String value = (String) contributor.getProperties().get(key);
                 writeValue(serializer, key, value, propTracker);
@@ -603,7 +603,7 @@ public class LocationAwareMavenXpp3Writer {
             flush(serializer);
             int start2 = b.length();
             InputLocationTracker propTracker = developer.getLocation("properties");
-            for (Iterator iter = developer.getProperties().keySet().iterator(); iter.hasNext();) {
+            for (Iterator<?> iter = developer.getProperties().keySet().iterator(); iter.hasNext();) {
                 String key = (String)iter.next();
                 String value = (String) developer.getProperties().get(key);
                 writeValue(serializer, key, value, propTracker);
@@ -862,7 +862,7 @@ public class LocationAwareMavenXpp3Writer {
             flush(serializer);
             int start2 = b.length();
             InputLocation tracker = model.getLocation("properties");
-            for (Iterator iter = model.getProperties().keySet().iterator(); iter.hasNext();) {
+            for (Iterator<?> iter = model.getProperties().keySet().iterator(); iter.hasNext();) {
                 String key = (String) iter.next();
                 String value = (String) model.getProperties().get(key);
                 writeValue(serializer, key, value, tracker);
@@ -943,7 +943,7 @@ public class LocationAwareMavenXpp3Writer {
         }
         if ((notifier.getConfiguration() != null) && (notifier.getConfiguration().size() > 0)) {
             serializer.startTag(NAMESPACE, "configuration");
-            for (Iterator iter = notifier.getConfiguration().keySet().iterator(); iter.hasNext();) {
+            for (Iterator<Object> iter = notifier.getConfiguration().keySet().iterator(); iter.hasNext();) {
                 String key = (String) iter.next();
                 String value = (String) notifier.getConfiguration().get(key);
                 serializer.startTag(NAMESPACE, "" + key + "").text(value).endTag(NAMESPACE, "" + key + "");
@@ -1020,7 +1020,7 @@ public class LocationAwareMavenXpp3Writer {
         }
         if ((plugin.getDependencies() != null) && (plugin.getDependencies().size() > 0)) {
             serializer.startTag(NAMESPACE, "dependencies");
-            for (Iterator iter = plugin.getDependencies().iterator(); iter.hasNext();) {
+            for (Iterator<Dependency> iter = plugin.getDependencies().iterator(); iter.hasNext();) {
                 Dependency o = (Dependency) iter.next();
                 writeDependency(o, "dependency", serializer);
             }
@@ -1084,7 +1084,7 @@ public class LocationAwareMavenXpp3Writer {
         int start = b.length();
         if ((pluginManagement.getPlugins() != null) && (pluginManagement.getPlugins().size() > 0)) {
             serializer.startTag(NAMESPACE, "plugins");
-            for (Iterator iter = pluginManagement.getPlugins().iterator(); iter.hasNext();) {
+            for (Iterator<Plugin> iter = pluginManagement.getPlugins().iterator(); iter.hasNext();) {
                 Plugin o = (Plugin) iter.next();
                 writePlugin(o, "plugin", serializer);
             }
@@ -1128,7 +1128,7 @@ public class LocationAwareMavenXpp3Writer {
             int start2 = b.length();
             int index = 0;
             InputLocation tracker = profile.getLocation("modules");
-            for (Iterator iter = profile.getModules().iterator(); iter.hasNext();) {
+            for (Iterator<String> iter = profile.getModules().iterator(); iter.hasNext();) {
                 String module = (String) iter.next();
                 writeValue(serializer, "module", module, tracker, index);
                 index = index + 1;
@@ -1144,7 +1144,7 @@ public class LocationAwareMavenXpp3Writer {
             flush(serializer);
             int start2 = b.length();
             InputLocation tracker = profile.getLocation("properties");
-            for (Iterator iter = profile.getProperties().keySet().iterator(); iter.hasNext();) {
+            for (Iterator<?> iter = profile.getProperties().keySet().iterator(); iter.hasNext();) {
                 String key = (String) iter.next();
                 String value = (String) profile.getProperties().get(key);
                 writeValue(serializer, key, value, tracker);
@@ -1173,7 +1173,7 @@ public class LocationAwareMavenXpp3Writer {
         }
         if ((profile.getPluginRepositories() != null) && (profile.getPluginRepositories().size() > 0)) {
             serializer.startTag(NAMESPACE, "pluginRepositories");
-            for (Iterator iter = profile.getPluginRepositories().iterator(); iter.hasNext();) {
+            for (Iterator<Repository> iter = profile.getPluginRepositories().iterator(); iter.hasNext();) {
                 Repository o = (Repository) iter.next();
                 writeRepository(o, "pluginRepository", serializer);
             }
@@ -1228,7 +1228,7 @@ public class LocationAwareMavenXpp3Writer {
         }
         if ((reportPlugin.getReportSets() != null) && (reportPlugin.getReportSets().size() > 0)) {
             serializer.startTag(NAMESPACE, "reportSets");
-            for (Iterator iter = reportPlugin.getReportSets().iterator(); iter.hasNext();) {
+            for (Iterator<ReportSet> iter = reportPlugin.getReportSets().iterator(); iter.hasNext();) {
                 ReportSet o = (ReportSet) iter.next();
                 writeReportSet(o, "reportSet", serializer);
             }
@@ -1259,7 +1259,7 @@ public class LocationAwareMavenXpp3Writer {
             int start2 = b.length();
             InputLocation tracker = reportSet.getLocation("reports");
             int index = 0;
-            for (Iterator iter = reportSet.getReports().iterator(); iter.hasNext();) {
+            for (Iterator<String> iter = reportSet.getReports().iterator(); iter.hasNext();) {
                 String report = (String) iter.next();
                 writeValue(serializer, "report", report, tracker, index);
                 index = index + 1;
@@ -1291,7 +1291,7 @@ public class LocationAwareMavenXpp3Writer {
         }
         if ((reporting.getPlugins() != null) && (reporting.getPlugins().size() > 0)) {
             serializer.startTag(NAMESPACE, "plugins");
-            for (Iterator iter = reporting.getPlugins().iterator(); iter.hasNext();) {
+            for (Iterator<ReportPlugin> iter = reporting.getPlugins().iterator(); iter.hasNext();) {
                 ReportPlugin o = (ReportPlugin) iter.next();
                 writeReportPlugin(o, "plugin", serializer);
             }
@@ -1369,7 +1369,7 @@ public class LocationAwareMavenXpp3Writer {
             int start2 = b.length();
             InputLocation inclTracker = resource.getLocation("includes");
             int index = 0;
-            for (Iterator iter = resource.getIncludes().iterator(); iter.hasNext();) {
+            for (Iterator<String> iter = resource.getIncludes().iterator(); iter.hasNext();) {
                 String include = (String) iter.next();
                 writeValue(serializer, "include", include, inclTracker, index);
                 index = index + 1;
@@ -1383,7 +1383,7 @@ public class LocationAwareMavenXpp3Writer {
             int start2 = b.length();
             InputLocation inclTracker = resource.getLocation("excludes");
             int index = 0;
-            for (Iterator iter = resource.getExcludes().iterator(); iter.hasNext();) {
+            for (Iterator<String> iter = resource.getExcludes().iterator(); iter.hasNext();) {
                 String exclude = (String) iter.next();
                 writeValue(serializer, "exclude", exclude, inclTracker, index);
                 index = index + 1;

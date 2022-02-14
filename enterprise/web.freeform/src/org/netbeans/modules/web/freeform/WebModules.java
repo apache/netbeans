@@ -150,7 +150,7 @@ public class WebModules implements WebModuleProvider, AntProjectListener, ClassP
             return mods;
         }
         List<Element> webModules = XMLUtil.findSubElements(web);
-        Iterator it = webModules.iterator();
+        Iterator<Element> it = webModules.iterator();
         while (it.hasNext()) {
             Element webModulesEl = (Element)it.next();
             assert webModulesEl.getLocalName().equals("web-module") : webModulesEl;

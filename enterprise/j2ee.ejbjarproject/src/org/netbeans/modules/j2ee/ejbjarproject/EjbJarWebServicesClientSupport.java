@@ -166,7 +166,7 @@ public class EjbJarWebServicesClientSupport implements WebServicesClientSupportI
             
             if(newWscJars) {
                 StringBuffer newClasspathBuf = new StringBuffer(256);
-                for(Iterator iter = wscJars.iterator(); iter.hasNext(); ) {
+                for(Iterator<String> iter = wscJars.iterator(); iter.hasNext(); ) {
                     newClasspathBuf.append(iter.next().toString());
                     if(iter.hasNext()) {
                         newClasspathBuf.append(":"); // NOI18N

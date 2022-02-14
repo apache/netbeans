@@ -200,7 +200,7 @@ public final class MultiTargetChooserPanel implements WizardDescriptor.Panel, Ch
 
     private void fireChange() {
         ChangeEvent e = new ChangeEvent(this);
-        Iterator it = listeners.iterator();
+        Iterator<ChangeListener> it = listeners.iterator();
         while (it.hasNext()) {
             ((ChangeListener)it.next()).stateChanged(e);
         }

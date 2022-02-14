@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Logger;
 import org.netbeans.modules.schema2beans.Version;
@@ -93,7 +94,7 @@ public abstract class ComponentBeanMultiple extends DescriptionBeanMultiple impl
     public void setAllDisplayNames(Map displayNames) throws VersionNotSupportedException {
         removeAllDisplayNames();
         if (displayNames!=null) {
-            java.util.Iterator entries = displayNames.entrySet().iterator();
+            Iterator<Map.Entry> entries = displayNames.entrySet().iterator();
             int i=0;
             while (entries.hasNext()) {
                 Map.Entry entry = (Map.Entry) entries.next();

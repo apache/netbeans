@@ -64,7 +64,7 @@ public class CCPaintComponent extends JPanel {
     
     private int ascent;
     
-    private Map widths;
+    private Map<String, Integer> widths;
     
     private FontMetrics fontMetrics;
     

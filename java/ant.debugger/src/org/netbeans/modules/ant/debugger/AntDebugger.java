@@ -106,7 +106,7 @@ public class AntDebugger extends ActionsProviderSupport {
             (null, DebuggerEngineProvider.class);
                 
         // init actions
-        for (Iterator it = actions.iterator(); it.hasNext(); ) {
+        for (Iterator<Object> it = actions.iterator(); it.hasNext(); ) {
             setEnabled (it.next(), true);
         }
                 

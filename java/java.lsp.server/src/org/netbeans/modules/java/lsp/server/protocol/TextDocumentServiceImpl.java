@@ -813,30 +813,32 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
 
     @Override
     public CompletableFuture<List<Either<SymbolInformation, DocumentSymbol>>> documentSymbol(DocumentSymbolParams params) {
-        return server.openedProjects().thenCompose(projects -> {
+        final CompletableFuture<List<Either<SymbolInformation, DocumentSymbol>>> resultFuture = new CompletableFuture<>();
+
+        BACKGROUND_TASKS.post(() -> {
+
             List<Either<SymbolInformation, DocumentSymbol>> result = new ArrayList<>();
-        
             String uri = params.getTextDocument().getUri();
             FileObject file = fromURI(uri);
             Document doc = server.getOpenedDocuments().getDocument(uri);
-            if (file == null || !(doc instanceof LineDocument)) {
-                return CompletableFuture.completedFuture(Collections.emptyList());
-            }
-            StructureProvider structureProvider = MimeLookup.getLookup(DocumentUtilities.getMimeType(doc)).lookup(StructureProvider.class);
-            if (structureProvider != null) {
-                return structureProvider.getStructure(doc).thenApply(structureElements -> {
-                    LineDocument lDoc = (LineDocument)doc;
-                    for (StructureElement structureElement : structureElements) {
-                        DocumentSymbol ds = structureElement2DocumentSymbol(lDoc, structureElement);
-                        if (ds != null){
-                            result.add(Either.forRight(ds));
+            if (file != null && (doc instanceof LineDocument)) {
+                StructureProvider structureProvider = MimeLookup.getLookup(DocumentUtilities.getMimeType(doc)).lookup(StructureProvider.class);
+                if (structureProvider != null) {
+                    structureProvider.getStructure(doc).thenApply(structureElements -> {
+                        LineDocument lDoc = (LineDocument) doc;
+                        for (StructureElement structureElement : structureElements) {
+                            DocumentSymbol ds = structureElement2DocumentSymbol(lDoc, structureElement);
+                            if (ds != null) {
+                                result.add(Either.forRight(ds));
+                            }
                         }
-                    }
-                    return result;
-                });
+                        return resultFuture.complete(result);
+                    });
+                }
             }
-            return CompletableFuture.completedFuture(result);
+            
         });
+        return resultFuture;
     }
 
     private static DocumentSymbol structureElement2DocumentSymbol (LineDocument doc, StructureElement el) {

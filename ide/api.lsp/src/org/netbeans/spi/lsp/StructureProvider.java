@@ -70,6 +70,20 @@ public interface StructureProvider {
     }
 
     /**
+     * Create builder for {@link StructureElement} instances from copy of input element. 
+     * 
+     * @param from element that is copied
+     * @return newly created builder with all attributes as input structure element
+     */
+    public static Builder copy(@NonNull StructureElement from) {
+        Builder builder = new Builder(from.getName(), from.getKind());
+        builder.detail(from.getDetail()).children(from.getChildren());
+        builder.selectionStartOffset(from.getSelectionStartOffset()).selectionEndOffset(from.getSelectionEndOffset());
+        builder.expandedStartOffset(from.getExpandedStartOffset()).expandedEndOffset(from.getExpandedEndOffset());
+        builder.tags(from.getTags());
+        return builder;
+    }
+    /**
      * Builder for {@link StructureElement} instances.
      *
      * @since 1.8

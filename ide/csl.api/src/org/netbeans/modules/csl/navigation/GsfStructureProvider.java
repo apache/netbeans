@@ -219,12 +219,9 @@ public class GsfStructureProvider implements StructureProvider {
                     lineStart = LineDocumentUtils.getLineStart(ldoc, lineStart);
                     if (prefix.trim().isEmpty()) {
                         lineEnd = LineDocumentUtils.getLineEnd(ldoc, lineEnd);
-                    } else {
-                        lineStart = startOffset;
                     }
-                    
                 } catch (BadLocationException ex) {
-                    lineStart = (int)item.getPosition();
+                    lineStart = startOffset;
                     lineEnd = (int)item.getEndPosition();
                 }
                 if (lastElement == null) {
@@ -237,11 +234,8 @@ public class GsfStructureProvider implements StructureProvider {
                     } else if (lastElement.getExpandedStartOffset() <= lineStart && lineEnd == lastElement.getExpandedEndOffset()) {
                         // The same line
                         sElements.remove(lastElement);
-                        Builder leBuilder = StructureProvider.newBuilder(lastElement.getName(), lastElement.getKind());
-                        leBuilder.detail(lastElement.getDetail());
-                        leBuilder.selectionStartOffset(lastElement.getSelectionStartOffset()).selectionEndOffset(lastElement.getSelectionEndOffset());
-                        leBuilder.expandedStartOffset(lastElement.getExpandedStartOffset()).expandedEndOffset(startOffset - 1);
-                        leBuilder.children(lastElement.getChildren()).tags(lastElement.getTags());
+                        Builder leBuilder = StructureProvider.copy(lastElement);
+                        leBuilder.expandedEndOffset(startOffset - 1);
                         sElements.add(leBuilder.build());
                     }
                 }

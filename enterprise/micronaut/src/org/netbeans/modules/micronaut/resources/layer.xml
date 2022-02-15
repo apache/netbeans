@@ -52,11 +52,12 @@
             <file name="Entity">
                 <attr name="position" intvalue="220"/>
                 <attr name="template" boolvalue="true"/>
-                <attr name="instantiatingIterator" methodvalue="org.netbeans.modules.micronaut.db.MicronautEntity.createForMicronaut"/>
+                <attr name="instantiatingIterator" methodvalue="org.netbeans.modules.micronaut.db.MicronautEntity.create"/>
+                <attr name="lspInstanceCreator" methodvalue="org.netbeans.modules.micronaut.db.MicronautEntity.lspCreate"/>
                 <attr name="templateCategory" stringvalue="persistence"/>
                 <attr name="templateWizardURL" urlvalue="nbresloc:/org/netbeans/modules/micronaut/resources/EntityDatabase.html"/>
                 <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.micronaut.db.Bundle"/>
-                <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/java/resources/class.gif"/>
+                <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/java/resources/class.png"/>
             </file>
         </folder>
     </folder>

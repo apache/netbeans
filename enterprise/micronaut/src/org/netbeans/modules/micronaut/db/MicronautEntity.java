@@ -25,6 +25,8 @@ import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumSet;
@@ -33,26 +35,38 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
+import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.ModuleElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeMirror;
+import org.netbeans.api.db.explorer.ConnectionManager;
+import org.netbeans.api.db.explorer.DatabaseConnection;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.classpath.JavaClassPathConstants;
+import org.netbeans.api.java.project.JavaProjectConstants;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.TreeMaker;
 import org.netbeans.api.java.source.WorkingCopy;
+import org.netbeans.api.progress.aggregate.BasicAggregateProgressFactory;
 import org.netbeans.api.progress.aggregate.ProgressContributor;
+import org.netbeans.api.project.FileOwnerQuery;
+import org.netbeans.api.project.Project;
+import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.project.SourceGroup;
 import org.netbeans.modules.j2ee.core.api.support.SourceGroups;
 import org.netbeans.modules.j2ee.core.api.support.java.GenerationUtils;
 import org.netbeans.modules.j2ee.core.api.support.java.SourceUtils;
+import org.netbeans.modules.j2ee.persistence.api.entity.generator.EntitiesFromDBGenerator;
 import org.netbeans.modules.j2ee.persistence.dd.PersistenceUtils;
 import org.netbeans.modules.j2ee.persistence.entitygenerator.CMPMappingModel;
 import org.netbeans.modules.j2ee.persistence.entitygenerator.EntityClass;
 import org.netbeans.modules.j2ee.persistence.entitygenerator.EntityMember;
+import org.netbeans.modules.j2ee.persistence.entitygenerator.EntityRelation;
 import org.netbeans.modules.j2ee.persistence.entitygenerator.RelationshipRole;
 import org.netbeans.modules.j2ee.persistence.util.JPAClassPathHelper;
 import org.netbeans.modules.j2ee.persistence.wizard.fromdb.JavaPersistenceGenerator;
@@ -62,8 +76,12 @@ import org.netbeans.modules.j2ee.persistence.wizard.fromdb.ProgressPanel;
 import org.netbeans.modules.j2ee.persistence.wizard.fromdb.RelatedCMPHelper;
 import org.netbeans.modules.j2ee.persistence.wizard.fromdb.RelatedCMPWizard;
 import org.netbeans.modules.j2ee.persistence.wizard.fromdb.UpdateType;
+import org.openide.DialogDescriptor;
+import org.openide.DialogDisplayer;
+import org.openide.NotifyDescriptor;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
+import org.openide.loaders.DataFolder;
 import org.openide.loaders.DataObject;
 import org.openide.loaders.TemplateWizard;
 import org.openide.util.NbBundle;
@@ -76,8 +94,67 @@ public class MicronautEntity extends RelatedCMPWizard {
 
     private static final String TYPE_MICRONAUT = "micronaut"; // NOI18N
 
-    public static MicronautEntity createForMicronaut() {
+    public static MicronautEntity create() {
         return new MicronautEntity(TYPE_MICRONAUT);
+    }
+
+    @NbBundle.Messages({
+        "MSG_NoDbConn=No database connection found",
+        "MSG_NoProject=No project found for {0}",
+        "MSG_NoSourceGroup=No source group found for {0}",
+        "MSG_SelectTables=Select Database Tables",
+        "MSG_NoDbTables=No database table found for {0}"
+    })
+    public static Function<DataFolder, CompletableFuture<Object>> lspCreate() {
+        return (target) -> {
+            try {
+                FileObject folder = target.getPrimaryFile();
+                Project project = FileOwnerQuery.getOwner(folder);
+                if (project == null) {
+                    DialogDisplayer.getDefault().notifyLater(new NotifyDescriptor.Message(Bundle.MSG_NoProject(folder.getPath()), NotifyDescriptor.ERROR_MESSAGE));
+                    return CompletableFuture.completedFuture(null);
+                }
+                SourceGroup sourceGroup = SourceGroups.getFolderSourceGroup(ProjectUtils.getSources(project).getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA), folder);
+                if (sourceGroup == null) {
+                    DialogDisplayer.getDefault().notifyLater(new NotifyDescriptor.Message(Bundle.MSG_NoSourceGroup(folder.getPath()), NotifyDescriptor.ERROR_MESSAGE));
+                    return CompletableFuture.completedFuture(null);
+                }
+                DatabaseConnection connection = ConnectionManager.getDefault().getPreferredConnection(true);
+                if (connection == null) {
+                    DialogDisplayer.getDefault().notifyLater(new NotifyDescriptor.Message(Bundle.MSG_NoDbConn(), NotifyDescriptor.ERROR_MESSAGE));
+                    return CompletableFuture.completedFuture(null);
+                }
+                ConnectionManager.getDefault().connect(connection);
+                Connection conn = connection.getJDBCConnection();
+                ResultSet rs = conn.getMetaData().getTables(conn.getCatalog(), conn.getSchema(), "%", new String[]{"TABLE", "VIEW"}); //NOI18N
+                List<NotifyDescriptor.QuickPick.Item> dbItems = new ArrayList<>();
+                while (rs.next()) {
+                    dbItems.add(new NotifyDescriptor.QuickPick.Item(rs.getString("TABLE_NAME"))); //NOI18N
+                }
+                if (dbItems.isEmpty()) {
+                    DialogDisplayer.getDefault().notifyLater(new NotifyDescriptor.Message(Bundle.MSG_NoDbTables(connection.getDisplayName()), NotifyDescriptor.ERROR_MESSAGE));
+                    return CompletableFuture.completedFuture(null);
+                }
+                NotifyDescriptor.QuickPick qp = new NotifyDescriptor.QuickPick(Bundle.MSG_SelectTables(), Bundle.MSG_SelectTables(), dbItems, true);
+                if (DialogDescriptor.OK_OPTION == DialogDisplayer.getDefault().notify(qp)) {
+                    List<String> selectedItems = qp.getItems().stream().filter(item -> item.isSelected()).map(item -> item.getLabel()).collect(Collectors.toList());
+                    EntitiesFromDBGenerator generator = new EntitiesFromDBGenerator(selectedItems, false, false, false,
+                            EntityRelation.FetchType.DEFAULT, EntityRelation.CollectionType.COLLECTION,
+                            SourceGroups.getPackageForFolder(sourceGroup, folder), sourceGroup, connection, project, null, new Generator());
+                    ProgressContributor pc = BasicAggregateProgressFactory.createProgressContributor("entity"); //NOI18N\
+                    List<String> generated = new ArrayList<>();
+                    for (FileObject fo : generator.generate(pc)) {
+                        if (fo != null) {
+                            generated.add(fo.toURI().toString());
+                        }
+                    }
+                    return CompletableFuture.completedFuture(generated);
+                }
+            } catch (Exception ex) {
+                DialogDisplayer.getDefault().notifyLater(new NotifyDescriptor.Message(ex.getMessage(), NotifyDescriptor.ERROR_MESSAGE));
+            }
+            return CompletableFuture.completedFuture(null);
+        };
     }
 
     private MicronautEntity(String type) {
@@ -135,7 +212,7 @@ public class MicronautEntity extends RelatedCMPWizard {
                 SourceGroups.getFolderForPackage(helper.getLocation(), helper.getPackageName());
             }
 
-            final boolean jpaSupported = isJPASupported(helper.getLocation());
+            final boolean jpaSupported = Utils.isJPASupported(helper.getLocation());
             final boolean beanValidationSupported = isBeanValidationSupported(helper.getLocation());
 
             EntityClass[] entityClasses = helper.getBeans();
@@ -181,7 +258,7 @@ public class MicronautEntity extends RelatedCMPWizard {
                             while (packageFileObject.getFileObject(newName, "java") != null && count<1000) {
                                 newName = entityClassName + "_" + count;
                             }
-                            entity = GenerationUtils.createClass(packageFileObject, newName, NbBundle.getMessage(Generator.class, "MSG_Entity_Class"));
+                            entity = GenerationUtils.createClass(packageFileObject, newName, NbBundle.getMessage(Generator.class, "MSG_Entity_Class", newName));
                             if (!newName.equals(entityClassName)) {
                                 replacedNames.put(entityClassName, newName);
                                 replacedTypeNames.put(entityClass.getPackage() + "." + entityClassName , entityClass.getPackage() + "." + newName);
@@ -257,18 +334,6 @@ public class MicronautEntity extends RelatedCMPWizard {
             return classPaths;
         }
 
-        private static boolean isJPASupported(SourceGroup sg) {
-            if (sg == null) {
-                return false;
-            }
-            ClassPath compile = ClassPath.getClassPath(sg.getRootFolder(), ClassPath.COMPILE);
-            if (compile == null) {
-                return false;
-            }
-            final String notNullAnnotation = "io.micronaut.data.jpa.repository.JpaRepository"; //NOI18N
-            return compile.findResource(notNullAnnotation.replace('.', '/') + ".class") != null; //NOI18N
-        }
-
         private static boolean isBeanValidationSupported(SourceGroup sg) {
             if (sg == null) {
                 return false;
@@ -323,7 +388,7 @@ public class MicronautEntity extends RelatedCMPWizard {
                             " in " + FileUtil.getFileDisplayName(copy.getFileObject())); // NOI18N
                 }
                 moduleElement = copy.getElements().getModuleOf(typeElement);
-                originalClassTree = (ClassTree) copy.getTrees().getTree(typeElement);
+                originalClassTree = copy.getTrees().getTree(typeElement);
                 assert originalClassTree != null;
                 newClassTree = originalClassTree;
                 genUtils = GenerationUtils.newInstance(copy);
@@ -378,7 +443,7 @@ public class MicronautEntity extends RelatedCMPWizard {
                 String memberName = m.getMemberName();
                 String memberType = getMemberType(m);
 
-                String columnName = (String) dbMappings.getCMPFieldMapping().get(memberName);
+                String columnName = dbMappings.getCMPFieldMapping().get(memberName);
                 if (!memberName.equalsIgnoreCase(columnName)){
                     columnAnnArguments.add(genUtils.createAnnotationArgument("name", columnName)); //NOI18N
                 }
@@ -585,7 +650,7 @@ public class MicronautEntity extends RelatedCMPWizard {
                 Property property;
                 if (isPKMember) {
                     pkProperty = property = createProperty(m);
-                    String pkColumnName = (String) dbMappings.getCMPFieldMapping().get(memberName);
+                    String pkColumnName = dbMappings.getCMPFieldMapping().get(memberName);
                     pkColumnNames.add(pkColumnName);
                     pkGenerated = m.isAutoIncrement();
                 } else {
@@ -631,7 +696,7 @@ public class MicronautEntity extends RelatedCMPWizard {
                 } else if (generateJPA) {  // Role A
                     if (role.isMany() && role.isToMany()) { // ManyToMany
                         List<ExpressionTree> joinTableAnnArguments = new ArrayList<>();
-                        String jTN =  (String) dbMappings.getJoinTableMapping().get(role.getFieldName());
+                        String jTN = dbMappings.getJoinTableMapping().get(role.getFieldName());
                         joinTableAnnArguments.add(genUtils.createAnnotationArgument("name", jTN)); //NOI18N
                         CMPMappingModel.JoinTableColumnMapping joinColumnMap = dbMappings.getJoinTableColumnMppings().get(role.getFieldName());
                         List<AnnotationTree> joinCols = new ArrayList<>();
@@ -656,9 +721,9 @@ public class MicronautEntity extends RelatedCMPWizard {
                         joinTableAnnArguments.add(genUtils.createAnnotationArgument("inverseJoinColumns", inverseCols)); // NOI18N
                         annotations.add(genUtils.createAnnotation("javax.persistence.JoinTable", joinTableAnnArguments)); // NOI18N
                     } else { // ManyToOne, OneToMany, OneToOne
-                        CMPMappingModel.ColumnData[] columns = (CMPMappingModel.ColumnData[]) dbMappings.getCmrFieldMapping().get(role.getFieldName());
+                        CMPMappingModel.ColumnData[] columns = dbMappings.getCmrFieldMapping().get(role.getFieldName());
                         CMPMappingModel relatedMappings = beanMap.get(role.getParent().getRoleB().getEntityName()).getCMPMapping();
-                        CMPMappingModel.ColumnData[] invColumns = (CMPMappingModel.ColumnData[]) relatedMappings.getCmrFieldMapping().get(role.getParent().getRoleB().getFieldName());
+                        CMPMappingModel.ColumnData[] invColumns = relatedMappings.getCmrFieldMapping().get(role.getParent().getRoleB().getFieldName());
                         if (columns.length == 1) {
                             List<ExpressionTree> attrs = new ArrayList<>();
                             attrs.add(genUtils.createAnnotationArgument("name", columns[0].getColumnName())); //NOI18N

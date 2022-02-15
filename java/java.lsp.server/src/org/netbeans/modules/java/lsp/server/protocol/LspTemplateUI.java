@@ -35,7 +35,6 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.concurrent.ExecutionException;
-import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -121,8 +120,8 @@ abstract class LspTemplateUI {
             final String name = targetAndName.second();
             if (name == null || name.isEmpty()) {
                 Object creator = source.getPrimaryFile().getAttribute(LSP_CREATOR);
-                if (creator instanceof BiFunction) {
-                    Object result = ((BiFunction) creator).apply(target, client);
+                if (creator instanceof Function) {
+                    Object result = ((Function) creator).apply(target);
                     if (result instanceof CompletableFuture) {
                         try {
                             return ((CompletableFuture) result).get();

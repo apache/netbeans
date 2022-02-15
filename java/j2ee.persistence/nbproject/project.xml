@@ -626,7 +626,6 @@
                 <friend>org.netbeans.modules.j2ee.ejbjarproject</friend>
                 <friend>org.netbeans.modules.j2ee.jpa.refactoring</friend>
                 <friend>org.netbeans.modules.j2ee.jpa.verification</friend>
-                <friend>org.netbeans.modules.java.lsp.server</friend>
                 <friend>org.netbeans.modules.javaee.project</friend>
                 <friend>org.netbeans.modules.javaee.specs.support</friend>
                 <friend>org.netbeans.modules.maven.j2ee</friend>

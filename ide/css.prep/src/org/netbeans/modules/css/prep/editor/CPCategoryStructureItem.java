@@ -28,9 +28,12 @@ import org.netbeans.modules.csl.api.ElementHandle;
 import org.netbeans.modules.csl.api.ElementKind;
 import org.netbeans.modules.csl.api.HtmlFormatter;
 import org.netbeans.modules.csl.api.Modifier;
+import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.csl.api.StructureItem;
+import org.netbeans.modules.csl.spi.ParserResult;
 import org.netbeans.modules.css.editor.module.spi.FeatureContext;
 import org.netbeans.modules.parsing.api.Snapshot;
+import org.openide.filesystems.FileObject;
 import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle;
 
@@ -42,7 +45,18 @@ public abstract class CPCategoryStructureItem implements StructureItem {
 
     //let the CP items to be at the top of the navigator
     private static final String SORT_TEXT_PREFIX = "0_"; //NOI18N
-    
+
+    private final ElementHandle elementHandle;
+
+    public CPCategoryStructureItem(ElementHandle elementHandle) {
+        this.elementHandle = elementHandle;
+    }
+
+    @Override
+    public String getName() {
+        return this.elementHandle.getName();
+    }
+
     @Override
     public String getSortText() {
         return new StringBuilder().append(SORT_TEXT_PREFIX).append(getName()).toString();
@@ -55,17 +69,17 @@ public abstract class CPCategoryStructureItem implements StructureItem {
 
     @Override
     public ElementHandle getElementHandle() {
-        return null;
+        return elementHandle;
     }
 
     @Override
     public ElementKind getKind() {
-        return ElementKind.PACKAGE; //xxx fix - add mode categories to csl
+        return elementHandle.getKind();
     }
 
     @Override
     public Set<Modifier> getModifiers() {
-        return Collections.emptySet();
+        return elementHandle.getModifiers();
     }
 
     @Override
@@ -104,12 +118,12 @@ public abstract class CPCategoryStructureItem implements StructureItem {
         return true;
     }
 
-
     public abstract static class ChildrenSetStructureItem extends CPCategoryStructureItem {
 
-        private Collection<StructureItem> items;
+        private final Collection<StructureItem> items;
 
-        public ChildrenSetStructureItem(Collection<StructureItem> items) {
+        public ChildrenSetStructureItem(ElementHandle elementHandle, Collection<StructureItem> items) {
+            super(elementHandle);
             this.items = items;
         }
 
@@ -123,19 +137,14 @@ public abstract class CPCategoryStructureItem implements StructureItem {
     public static class Variables extends ChildrenSetStructureItem {
 
         private static final ImageIcon ICON = new ImageIcon(ImageUtilities.loadImage("org/netbeans/modules/css/prep/editor/resources/variables.gif")); //NOI18N
-        
-        public Variables(Set<StructureItem> children) {
-            super(children);
+
+        public Variables(Set<StructureItem> children, FeatureContext context) {
+            super(new DummyElementHandle(context.getFileObject(), Bundle.navigator_item_name_variables()), children);
         }
 
         @Override
         public ImageIcon getCustomIcon() {
             return ICON;
-        }
-        
-        @Override
-        public String getName() {
-            return Bundle.navigator_item_name_variables();
         }
     }
 
@@ -143,22 +152,17 @@ public abstract class CPCategoryStructureItem implements StructureItem {
     public static class Mixins extends ChildrenSetStructureItem {
 
         private static final ImageIcon ICON = new ImageIcon(ImageUtilities.loadImage("org/netbeans/modules/css/prep/editor/resources/methods.gif")); //NOI18N
-        
-        private FeatureContext context;
+
+        private final FeatureContext context;
 
         public Mixins(Collection<StructureItem> items, FeatureContext context) {
-            super(items);
+            super(new DummyElementHandle(context.getFileObject(), Bundle.navigator_item_name_mixins()), items);
             this.context = context;
         }
 
         @Override
         public ImageIcon getCustomIcon() {
             return ICON;
-        }
-
-        @Override
-        public String getName() {
-            return Bundle.navigator_item_name_mixins();
         }
 
         //return the element range 0 - source lenght to ensure the recursive
@@ -173,6 +177,56 @@ public abstract class CPCategoryStructureItem implements StructureItem {
         public long getEndPosition() {
             Snapshot s = context.getSnapshot();
             return s.getOriginalOffset(s.getText().length());
+        }
+    }
+
+    private static class DummyElementHandle implements ElementHandle {
+        private final FileObject fileObject;
+        private final String name;
+
+        public DummyElementHandle(FileObject fileObject, String name) {
+            this.fileObject = fileObject;
+            this.name = name;
+        }
+
+        @Override
+        public FileObject getFileObject() {
+            return fileObject;
+        }
+
+        @Override
+        public String getMimeType() {
+            return "text/css";
+        }
+
+        @Override
+        public String getName() {
+            return name;
+        }
+
+        @Override
+        public String getIn() {
+            return null;
+        }
+
+        @Override
+        public ElementKind getKind() {
+            return ElementKind.PACKAGE;  //xxx fix - add mode categories to csl
+        }
+
+        @Override
+        public Set<Modifier> getModifiers() {
+            return Collections.emptySet();
+        }
+
+        @Override
+        public boolean signatureEquals(ElementHandle handle) {
+            return false;
+        }
+
+        @Override
+        public OffsetRange getOffsetRange(ParserResult result) {
+            return new OffsetRange(-1, -1);
         }
     }
 }

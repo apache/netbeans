@@ -103,7 +103,7 @@
         <Property name="lineWrap" type="boolean" value="true"/>
         <Property name="rows" type="int" value="5"/>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="org/netbeans/modules/cloud/oracle/Bundle.properties" key="DownloadWalletDialog.jTextArea1.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+          <ResourceString bundle="org/netbeans/modules/cloud/oracle/actions/Bundle.properties" key="DownloadWalletDialog.jTextArea1.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
         <Property name="wrapStyleWord" type="boolean" value="true"/>
         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
@@ -128,7 +128,7 @@
           <ComponentRef name="jPasswordField"/>
         </Property>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="org/netbeans/modules/cloud/oracle/Bundle.properties" key="DownloadWalletDialog.jLabel1.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+          <ResourceString bundle="org/netbeans/modules/cloud/oracle/actions/Bundle.properties" key="DownloadWalletDialog.jLabel1.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
       </Properties>
     </Component>
@@ -138,7 +138,7 @@
           <ComponentRef name="jPasswordFieldConfirm"/>
         </Property>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="org/netbeans/modules/cloud/oracle/Bundle.properties" key="DownloadWalletDialog.jLabel2.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+          <ResourceString bundle="org/netbeans/modules/cloud/oracle/actions/Bundle.properties" key="DownloadWalletDialog.jLabel2.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
       </Properties>
     </Component>
@@ -148,35 +148,35 @@
           <ComponentRef name="jTextFieldLocation"/>
         </Property>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="org/netbeans/modules/cloud/oracle/Bundle.properties" key="DownloadWalletDialog.jLabel3.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+          <ResourceString bundle="org/netbeans/modules/cloud/oracle/actions/Bundle.properties" key="DownloadWalletDialog.jLabel3.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="jTextFieldLocation">
       <Properties>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="org/netbeans/modules/cloud/oracle/Bundle.properties" key="DownloadWalletDialog.jTextFieldLocation.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+          <ResourceString bundle="org/netbeans/modules/cloud/oracle/actions/Bundle.properties" key="DownloadWalletDialog.jTextFieldLocation.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
       </Properties>
     </Component>
     <Component class="javax.swing.JPasswordField" name="jPasswordFieldConfirm">
       <Properties>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="org/netbeans/modules/cloud/oracle/Bundle.properties" key="DownloadWalletDialog.jPasswordFieldConfirm.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+          <ResourceString bundle="org/netbeans/modules/cloud/oracle/actions/Bundle.properties" key="DownloadWalletDialog.jPasswordFieldConfirm.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
       </Properties>
     </Component>
     <Component class="javax.swing.JPasswordField" name="jPasswordField">
       <Properties>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="org/netbeans/modules/cloud/oracle/Bundle.properties" key="DownloadWalletDialog.jPasswordField.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+          <ResourceString bundle="org/netbeans/modules/cloud/oracle/actions/Bundle.properties" key="DownloadWalletDialog.jPasswordField.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
       </Properties>
     </Component>
     <Component class="javax.swing.JButton" name="jButtonBrowse">
       <Properties>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="org/netbeans/modules/cloud/oracle/Bundle.properties" key="DownloadWalletDialog.jButtonBrowse.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+          <ResourceString bundle="org/netbeans/modules/cloud/oracle/actions/Bundle.properties" key="DownloadWalletDialog.jButtonBrowse.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
       </Properties>
       <Events>

@@ -16,19 +16,15 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.cloud.oracle;
+package org.netbeans.modules.cloud.oracle.actions;
 
 import org.netbeans.modules.cloud.oracle.items.OCIItem;
 import java.awt.Dialog;
 import java.awt.GraphicsEnvironment;
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Optional;
-import java.util.Random;
-import java.util.function.Consumer;
 import javax.swing.JFileChooser;
-import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
@@ -61,14 +57,11 @@ import org.openide.windows.WindowManager;
     "JDBCUsername=Enter the conenction username",
     "JDBCPassword=Enter the conenction password"
 })
-final class DownloadWalletDialog extends javax.swing.JPanel {
+final class DownloadWalletDialog extends AbstractPasswordPanel {
 
     public static final String WALLETS_PATH = "Databases/Wallets"; // NOI18N
     private static final String LAST_USED_DIR = "lastUsedDir";
-    private static final String SPECIAL_CHARACTERS = "/!#$^?:.(){}[]~-_.";
     
-    private DialogDescriptor descriptor;
-
     /**
      * Creates new form NewJPanel
      */
@@ -123,28 +116,7 @@ final class DownloadWalletDialog extends javax.swing.JPanel {
         return Optional.empty();
     }
     
-    static char[] generatePassword() {
-        Random rnd = new Random();
-        char[] password = new char[12];
-        for (int i = 0; i < 4; i++) {
-            password[i] = (char) (65 + rnd.nextInt(25));
-        }
-        password[4] = SPECIAL_CHARACTERS.charAt(rnd.nextInt(SPECIAL_CHARACTERS.length()));
-        for (int i = 5; i < password.length - 1; i++) {
-            password[i] = (char) (97 + rnd.nextInt(25));
-        }
-        password[password.length - 1] = (char) (48 + rnd.nextInt(9));
-        return password;
-    }
     
-    private void setDescriptor(DialogDescriptor descriptor) {
-        if (this.descriptor != null) {
-            throw new IllegalStateException(
-                    "DialogDescriptor has been already set."); //NOI18N
-        }
-        this.descriptor = descriptor;
-        descriptor.setValid(false);
-    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -263,76 +235,16 @@ final class DownloadWalletDialog extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_jButtonBrowseActionPerformed
 
-    private void errorMessage(String message) {
-        if (message == null) {
-            descriptor.getNotificationLineSupport().clearMessages();
-            descriptor.setValid(true);
-        } else {
-            descriptor.setValid(false);
-            descriptor.getNotificationLineSupport().setErrorMessage(message);
-        }
-    }
-    
-    private void checkPassword() {
+    @Override
+    protected void checkPassword() {
         char[] passwd1 = jPasswordField.getPassword();
         char[] passwd2 = jPasswordFieldConfirm.getPassword();
         checkPasswordLogic(passwd1, passwd2, (m) -> errorMessage(m));
     }
     
-    static boolean checkPasswordLogic(char[] passwd1, char[] passwd2, Consumer<String> message) {
-        boolean result = false;
-        if (passwd1.length < 8) {
-            message.accept(Bundle.Lenght());
-            return result;
-        } 
-        int nSpecialCharacters = 0;
-        int nLetters = 0;
-        int nDigits = 0;
-        for (int i = 0; i < passwd1.length; i++) {
-            if (Character.isLetter(passwd1[i])) {
-                nLetters++;
-            } else if (Character.isDigit(passwd1[i])) {
-                nDigits++;
-            } else if (SPECIAL_CHARACTERS.indexOf(passwd1[i]) >= 0) {
-                nSpecialCharacters++;
-            }
-        }
-        if (nLetters < 1) {
-            message.accept(Bundle.OneLetter());
-        } else if (nSpecialCharacters < 1) {
-            message.accept(Bundle.OneSpecial());
-        } else if (nDigits < 1) {
-            message.accept(Bundle.OneNumber());
-        } else if (!Arrays.equals(passwd1, passwd2)) {
-            message.accept(Bundle.Match());
-        } else {
-            message.accept(null);
-            result = true;
-        }
-        return result;
-    }
-    
     private static File getWalletsDir() throws IOException {
         FileObject fo = FileUtil.createFolder(FileUtil.getConfigRoot(), WALLETS_PATH);
         return FileUtil.toFile(fo);
-    }
-    
-    private class PasswordListener implements DocumentListener {
-        @Override
-        public void insertUpdate(DocumentEvent e) {
-            checkPassword();
-        }
-
-        @Override
-        public void removeUpdate(DocumentEvent e) {
-            checkPassword();
-        }
-
-        @Override
-        public void changedUpdate(DocumentEvent e) {
-            checkPassword();
-        }
-        
     }
     
     static class WalletInfo {

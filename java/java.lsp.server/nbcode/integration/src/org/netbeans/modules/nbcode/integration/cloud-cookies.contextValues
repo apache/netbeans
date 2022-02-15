@@ -17,3 +17,4 @@
 
 [org.netbeans.modules.cloud.=]
 org.netbeans.modules.cloud.oracle.items.DatabaseItem
+org.netbeans.modules.cloud.oracle.items.CompartmentItem

@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.cloud.oracle;
+package org.netbeans.modules.cloud.oracle.actions;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -29,6 +29,7 @@ import org.netbeans.api.db.explorer.DatabaseConnection;
 import org.netbeans.api.db.explorer.DatabaseException;
 import org.netbeans.api.db.explorer.JDBCDriver;
 import org.netbeans.api.db.explorer.JDBCDriverManager;
+import org.netbeans.modules.cloud.oracle.OCIManager;
 import org.netbeans.modules.cloud.oracle.items.DatabaseItem;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
@@ -46,7 +47,7 @@ import org.openide.util.NbBundle;
  */
 @ActionID(
         category = "Tools",
-        id = "org.netbeans.modules.cloud.oracle.DownloadWalletAction"
+        id = "org.netbeans.modules.cloud.oracle.actions.DownloadWalletAction"
 )
 @ActionRegistration( 
         displayName = "#CTL_DownloadWalletAction", 
@@ -87,7 +88,7 @@ public class DownloadWalletAction implements ActionListener {
                                 drivers[0], 
                                 dbUrl, 
                                 p.getDbUser(), 
-                                null, 
+                                p.getDbUser(), 
                                 new String(p.getDbPassword()), 
                                 true, 
                                 context.getName());

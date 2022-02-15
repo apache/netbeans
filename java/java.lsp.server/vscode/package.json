@@ -506,8 +506,12 @@
 				"category": "Test"
 			},
                         {
-				"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.DownloadWalletAction",
+				"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.DownloadWalletAction",
 				"title": "Add DB Connection"
+			},
+                        {
+				"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.CreateAutonomousDBAction",
+				"title": "Create Autonomous Database"
 			}
 		],
 		"keybindings": [
@@ -585,7 +589,11 @@
 					"when": "false"
 				},
 				{
-					"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.DownloadWalletAction",
+					"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.DownloadWalletAction",
+					"when": "false"
+				},
+				{
+					"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.CreateAutonomousDBAction",
 					"when": "false"
 				},
 				{
@@ -669,8 +677,12 @@
 					"when": "viewItem =~ /class:ddl.DBConnection/"
 				},
 				{
-					"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.DownloadWalletAction",
+					"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.DownloadWalletAction",
 					"when": "viewItem =~ /class:oracle.items.DatabaseItem/"
+				},
+				{
+					"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.CreateAutonomousDBAction",
+					"when": "viewItem =~ /class:oracle.items.CompartmentItem/"
 				},
 				{
 					"command": "java.workspace.configureRunSettings",

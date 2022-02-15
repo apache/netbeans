@@ -22,19 +22,29 @@ package org.openide;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Window;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import javax.swing.BorderFactory;
+import javax.swing.ButtonGroup;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
+import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
+import javax.swing.JRadioButton;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.JToggleButton;
 import javax.swing.LayoutStyle;
 import javax.swing.UIManager;
 import org.openide.awt.Mnemonics;
@@ -1153,4 +1163,209 @@ public class NotifyDescriptor extends Object {
         }
     }
      // end of InputLine
+    
+    /** Notification providing a selection list allowing multiple selections.
+    * @since 7.60
+    */
+    public static final class QuickPick extends NotifyDescriptor {
+
+        private final Map<JToggleButton, Item> btn2items = new LinkedHashMap<JToggleButton, Item>();
+        private final boolean multipleSelection;
+
+        /**
+         * Construct dialog with the specified title and label text.
+         * @param text label text
+         * @param title title of the dialog
+         * @param items a list of items
+         * @param multipleSelection true if multiple selection allowed
+         * @since 7.60
+         */
+        public QuickPick(final String text, final String title, final List<Item> items, final boolean multipleSelection) {
+            super(null, title, OK_CANCEL_OPTION, PLAIN_MESSAGE, null, null);
+            this.multipleSelection = multipleSelection;
+            super.setMessage(createDesign(text, items));
+        }
+
+        /**
+         * Make a component representing the selection list.
+         * @param text a label for the selection list
+         * @param items a list of items
+         * @return the component
+         * @since 7.60
+         */
+        protected Component createDesign(final String text, final List<Item> items) {
+            JPanel panel = new JPanel();
+            panel.setOpaque (false);
+
+            javax.swing.GroupLayout layout = new javax.swing.GroupLayout(panel);
+            panel.setLayout(layout);
+
+            JLabel label = new JLabel();
+            Mnemonics.setLocalizedText(label, text);
+
+            GroupLayout.ParallelGroup hGroup = layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(label);
+            GroupLayout.SequentialGroup vGroup = layout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(label);
+
+            ItemListener listener = new ItemListener() {
+                @Override
+                public void itemStateChanged(ItemEvent e) {
+                    JToggleButton btn = (JToggleButton) e.getItemSelectable();
+                    Item item = btn2items.get(btn);
+                    if (item != null) {
+                        item.setSelected(btn.isSelected());
+                    }
+                }
+            };
+
+            ButtonGroup buttonGroup = this.multipleSelection ? null : new ButtonGroup();
+            for (Item item : items) {
+                JToggleButton btn;
+                if (buttonGroup != null) {
+                    btn = new JRadioButton();
+                    buttonGroup.add(btn);
+                } else {
+                    btn = new JCheckBox();
+                }
+                btn.setText(item.getDescription() != null ? item.getLabel() + " - " + item.getDescription() : item.getLabel()); //NOI18N
+                btn.setToolTipText(item.getDetail());
+                btn.setSelected(item.isSelected());
+                hGroup.addComponent(btn);
+                vGroup.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btn);
+                btn.addItemListener(listener);
+                btn2items.put(btn, item);
+            }
+
+            layout.setHorizontalGroup(layout.createParallelGroup(Alignment.LEADING)
+                .addGroup(layout.createSequentialGroup()
+                    .addContainerGap()
+                    .addGroup(hGroup)
+                    .addContainerGap())
+            );
+            layout.setVerticalGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(vGroup.addContainerGap())
+            );
+
+            return panel;
+        }
+
+        /**
+         * Get the list of selection items.
+         * @return selection items
+         * @since 7.60
+         */
+        public List<Item> getItems() {
+            return new ArrayList<Item>(btn2items.values());
+        }
+
+        /**
+         * Check if the picker accepts multiple selections.
+         * @return true if multiple selection allowed
+         * @since 7.60
+         */
+        public boolean isMultipleSelection() {
+            return multipleSelection;
+        }
+
+        /**
+         * Item that can be selected from a list of items.
+         * @since 7.60
+         */
+        public static final class Item {
+
+            private final String label;
+            private String description;
+            private String detail;
+            private boolean selected;
+            private Object userData;
+
+            /**
+             * Creates item that can be selected from a list of items.
+             * @param label an item's label
+             * @since 7.60
+             */
+            public Item(String label) {
+                this.label = label;
+            }
+
+            /**
+             * Item's label.
+             * @since 7.60
+             */
+            public String getLabel() {
+                return label;
+            }
+
+            /**
+             * Item's description.
+             * @since 7.60
+             */
+            public String getDescription() {
+                return description;
+            }
+
+            /**
+             * Sets item's description.
+             * @since 7.60
+             */
+            public Item setDescription(String description) {
+                this.description = description;
+                return this;
+            }
+
+            /**
+             * Item's detail.
+             * @since 7.60
+             */
+            public String getDetail() {
+                return detail;
+            }
+
+            /**
+             * Sets item's detail.
+             * @since 7.60
+             */
+            public Item setDetail(String detail) {
+                this.detail = detail;
+                return this;
+            }
+
+            /**
+             * Flag indicating if this item is selected.
+             * @since 7.60
+             */
+            public boolean isSelected() {
+                return selected;
+            }
+
+            /**
+             * Marks item as selected.
+             * @since 7.60
+             */
+            public Item setSelected(boolean selected) {
+                this.selected = selected;
+                return this;
+            }
+
+            /**
+             * Optional user data.
+             * @since 7.60
+             */
+            public Object getUserData() {
+                return userData;
+            }
+
+            /**
+             * Optional user data.
+             * @since 7.60
+             */
+            public Item setUserData(Object userData) {
+                this.userData = userData;
+                return this;
+            }
+        }
+    }
 }

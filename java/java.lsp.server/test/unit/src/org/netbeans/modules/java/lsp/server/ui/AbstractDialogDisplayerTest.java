@@ -18,7 +18,9 @@
  */
 package org.netbeans.modules.java.lsp.server.ui;
 
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import javax.swing.JPanel;
@@ -29,7 +31,9 @@ import org.eclipse.lsp4j.MessageType;
 import org.eclipse.lsp4j.ShowMessageRequestParams;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.java.lsp.server.protocol.HtmlPageParams;
+import org.netbeans.modules.java.lsp.server.protocol.QuickPickItem;
 import org.netbeans.modules.java.lsp.server.protocol.ShowInputBoxParams;
+import org.netbeans.modules.java.lsp.server.protocol.ShowQuickPickParams;
 import org.netbeans.modules.java.lsp.server.protocol.ShowStatusMessageParams;
 import org.openide.NotifyDescriptor;
 import org.openide.awt.StatusDisplayer;
@@ -62,6 +66,11 @@ public class AbstractDialogDisplayerTest extends NbTestCase {
         @Override
         protected CompletableFuture<String> showInputBox(ShowInputBoxParams params) {
             return CompletableFuture.completedFuture(null);
+        }
+
+        @Override
+        protected CompletableFuture<List<QuickPickItem>> showQuickPick(ShowQuickPickParams params) {
+            return CompletableFuture.completedFuture(Collections.emptyList());
         }
 
         @Override

@@ -54,7 +54,7 @@ public interface StructureProvider {
      * @since 1.8
      */
     @NonNull
-    CompletableFuture<List<StructureElement>> getStructure(@NonNull Document doc);
+    List<StructureElement> getStructure(@NonNull Document doc);
 
     /**
      * Create builder for {@link StructureElement} instances.

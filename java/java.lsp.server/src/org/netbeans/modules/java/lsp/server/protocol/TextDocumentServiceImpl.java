@@ -814,9 +814,8 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
     @Override
     public CompletableFuture<List<Either<SymbolInformation, DocumentSymbol>>> documentSymbol(DocumentSymbolParams params) {
         final CompletableFuture<List<Either<SymbolInformation, DocumentSymbol>>> resultFuture = new CompletableFuture<>();
-
+        
         BACKGROUND_TASKS.post(() -> {
-
             List<Either<SymbolInformation, DocumentSymbol>> result = new ArrayList<>();
             String uri = params.getTextDocument().getUri();
             FileObject file = fromURI(uri);
@@ -824,7 +823,8 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
             if (file != null && (doc instanceof LineDocument)) {
                 StructureProvider structureProvider = MimeLookup.getLookup(DocumentUtilities.getMimeType(doc)).lookup(StructureProvider.class);
                 if (structureProvider != null) {
-                    structureProvider.getStructure(doc).thenApply(structureElements -> {
+                    List<StructureElement> structureElements = structureProvider.getStructure(doc);
+                    if (!structureElements.isEmpty()) {
                         LineDocument lDoc = (LineDocument) doc;
                         for (StructureElement structureElement : structureElements) {
                             DocumentSymbol ds = structureElement2DocumentSymbol(lDoc, structureElement);
@@ -832,11 +832,10 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                                 result.add(Either.forRight(ds));
                             }
                         }
-                        return resultFuture.complete(result);
-                    });
+                    };
                 }
             }
-            
+            resultFuture.complete(result);
         });
         return resultFuture;
     }

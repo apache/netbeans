@@ -61,9 +61,8 @@ public class StructureElementTest extends NbTestCase {
         
         StructureProvider structureProvider = MimeLookup.getLookup(DocumentUtilities.getMimeType(doc)).lookup(StructureProvider.class);
         
-        CompletableFuture<List<StructureElement>> future = structureProvider.getStructure(doc);
+        List<StructureElement> structure = structureProvider.getStructure(doc);
         
-        List<StructureElement> structure = future.getNow(null);
         assertNotNull(structure);
         assertEquals(1, structure.size());
         
@@ -127,8 +126,8 @@ public class StructureElementTest extends NbTestCase {
         }
         
         @Override
-        public CompletableFuture<List<StructureElement>> getStructure(Document doc) {
-            return CompletableFuture.completedFuture(elements);
+        public List<StructureElement> getStructure(Document doc) {
+            return elements;
         }
         
         private void addStructure() {

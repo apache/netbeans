@@ -172,7 +172,7 @@ public class GsfStructureProvider implements StructureProvider {
     }
     
     @Override
-    public CompletableFuture<List<StructureElement>> getStructure(Document doc) {
+    public List<StructureElement> getStructure(Document doc) {
         final List<StructureElement> sElements = new ArrayList<>();
         try {
             ParserManager.parse(Collections.singletonList(Source.create(doc)), new UserTask() {
@@ -193,10 +193,10 @@ public class GsfStructureProvider implements StructureProvider {
                 }
 
             });
-            return CompletableFuture.completedFuture(sElements);
+            return sElements;
         } catch (ParseException ex) {
             LOGGER.log(Level.FINE, null, ex);
-            return CompletableFuture.completedFuture(null);
+            return Collections.EMPTY_LIST;
         }
     }
     

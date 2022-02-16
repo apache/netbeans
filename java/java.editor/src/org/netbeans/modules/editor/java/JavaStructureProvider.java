@@ -29,9 +29,9 @@ import com.sun.source.util.TreePathScanner;
 import com.sun.source.util.Trees;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.lang.model.element.Element;
@@ -64,7 +64,7 @@ public class JavaStructureProvider implements StructureProvider {
     private static final Logger LOGGER = Logger.getLogger(JavaStructureProvider.class.getName());
 
     @Override
-    public CompletableFuture<List<StructureElement>> getStructure(Document doc) {
+    public List<StructureElement> getStructure(Document doc) {
         JavaSource js = JavaSource.forDocument(doc);
 
         if (js != null) {
@@ -94,9 +94,9 @@ public class JavaStructureProvider implements StructureProvider {
             } catch (IOException ex) {
                 LOGGER.log(Level.FINE, null, ex);
             }
-            return CompletableFuture.completedFuture(result);
+            return result;
         }
-        return CompletableFuture.completedFuture(null);
+        return Collections.EMPTY_LIST;
     }
 
     private static StructureElement element2StructureElement(CompilationInfo info, Element el) {
@@ -136,6 +136,7 @@ public class JavaStructureProvider implements StructureProvider {
             case INTERFACE:
             case ENUM:
             case ANNOTATION_TYPE:
+            case RECORD:
                 TypeElement te = (TypeElement) original;
                 StringBuilder sb = new StringBuilder();
                 sb.append(te.getSimpleName());
@@ -166,6 +167,7 @@ public class JavaStructureProvider implements StructureProvider {
                 return sb.toString();
             case FIELD:
             case ENUM_CONSTANT:
+            case RECORD_COMPONENT:
                 return original.getSimpleName().toString();
             case CONSTRUCTOR:
             case METHOD:
@@ -204,12 +206,14 @@ public class JavaStructureProvider implements StructureProvider {
             case ENUM:
                 return StructureElement.Kind.Enum;
             case CLASS:
+            case RECORD:
                 return StructureElement.Kind.Class;
             case ANNOTATION_TYPE:
                 return StructureElement.Kind.Interface;
             case INTERFACE:
                 return StructureElement.Kind.Interface;
             case ENUM_CONSTANT:
+            case RECORD_COMPONENT:
                 return StructureElement.Kind.EnumMember;
             case FIELD:
                 return StructureElement.Kind.Field; //TODO: constant

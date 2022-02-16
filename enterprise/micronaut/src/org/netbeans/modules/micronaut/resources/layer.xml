@@ -59,6 +59,16 @@
                 <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.micronaut.db.Bundle"/>
                 <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/java/resources/class.png"/>
             </file>
+            <file name="Repository">
+                <attr name="position" intvalue="320"/>
+                <attr name="template" boolvalue="true"/>
+                <attr name="instantiatingIterator" methodvalue="org.netbeans.modules.micronaut.db.MicronautRepository.create"/>
+                <attr name="lspInstanceCreator" methodvalue="org.netbeans.modules.micronaut.db.MicronautRepository.lspCreate"/>
+                <attr name="templateCategory" stringvalue="persistence"/>
+                <attr name="templateWizardURL" urlvalue="nbresloc:/org/netbeans/modules/micronaut/resources/Repository.html"/>
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.micronaut.db.Bundle"/>
+                <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/java/resources/interface_file.png"/>
+            </file>
         </folder>
     </folder>
 </filesystem>

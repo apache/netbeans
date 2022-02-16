@@ -83,7 +83,7 @@ public class JBrowseModule extends ModuleInstall {
                         Dialog[] d = new Dialog[1];
                         DialogDescriptor dd = new DialogDescriptor(Bundle.DESC_FeaturesLimited(), Bundle.TITLE_FeaturesLimited(), true, new Object[] {install, DialogDescriptor.CANCEL_OPTION}, install, DialogDescriptor.DEFAULT_ALIGN, HelpCtx.DEFAULT_HELP, evt -> {
                             if (install.equals(evt.getActionCommand())) {
-                                PluginManager.installSingle("org.netbeans.lib.nbjavac", Bundle.DN_nbjavac());
+                                PluginManager.installSingle("org.netbeans.libs.nbjavacapi", Bundle.DN_nbjavac());
                             }
                             d[0].setVisible(false);
                         });
@@ -92,7 +92,7 @@ public class JBrowseModule extends ModuleInstall {
                     } catch (HeadlessException ex) {
                         Exceptions.printStackTrace(Exceptions.attachSeverity(ex, Level.FINE));
                     }
-                    prefs.putBoolean(KEY_WARNING_SHOWN, true);
+//                    prefs.putBoolean(KEY_WARNING_SHOWN, true); // show warning on every boot until fixed
                 }
             });
         });

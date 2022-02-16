@@ -32,7 +32,7 @@
 // Rebuild the lexer and parser:
 // 1. Update Css3.g
 // 2. Update the lexer/parser sources by running
-//    ant -Dantlr.jar=<PATH_TO_ANTLR3_JAR> generate-antlr-parser
+//    ant generate-antlr-parser
 //    from the module directory (ide/css.lib)
 // 3. Rerun unittests
 // 4. Commit Css3.g together with generated Css3Lexer.java and Css3Parser.java
@@ -44,7 +44,7 @@ grammar Css3;
 //}
 
 @header {
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -120,7 +120,7 @@ package org.netbeans.modules.css.lib;
             && input.LT(1).getText().startsWith(prefix);
     }
 
-/**
+    /**
      * Use the current stacked followset to work out the valid tokens that
      * can follow on from the current point in the parse, then recover by
      * eating tokens that are not a member of the follow set we compute.
@@ -197,7 +197,7 @@ package org.netbeans.modules.css.lib;
         }
     }
 
-    /**
+        /**
          * synces to next RBRACE "}" taking nesting into account
          */
         protected void syncToRBRACE(int nest)
@@ -250,7 +250,7 @@ package org.netbeans.modules.css.lib;
 }
 
 @lexer::header {
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information

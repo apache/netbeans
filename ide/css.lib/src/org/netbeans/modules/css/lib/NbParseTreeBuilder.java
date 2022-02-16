@@ -203,7 +203,7 @@ public class NbParseTreeBuilder extends BlankDebugEventListener {
 
         RuleNode ruleNode = callStack.peek();
         TokenNode elementNode = new TokenNode(source, (CommonToken) token);
-        elementNode.hiddenTokens = this.hiddenTokens;
+        elementNode.hiddenTokens = (List<Token>) (List<?>) this.hiddenTokens;
         hiddenTokens.clear();
         ruleNode.addChild(elementNode);
 

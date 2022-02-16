@@ -1,6 +1,6 @@
-// $ANTLR 3.5.2 /home/matthias/src/netbeans/ide/css.lib/src/org/netbeans/modules/css/lib/Css3.g 2021-12-07 21:14:57
+// $ANTLR 3.5.2 /home/matthias/src/netbeans/ide/css.lib/src/org/netbeans/modules/css/lib/Css3.g 2022-02-19 22:44:20
 
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -400,7 +400,7 @@ public class Css3Parser extends DebugParser {
 	            && input.LT(1).getText().startsWith(prefix);
 	    }
 
-	/**
+	    /**
 	     * Use the current stacked followset to work out the valid tokens that
 	     * can follow on from the current point in the parse, then recover by
 	     * eating tokens that are not a member of the follow set we compute.
@@ -477,7 +477,7 @@ public class Css3Parser extends DebugParser {
 	        }
 	    }
 
-	    /**
+	        /**
 	         * synces to next RBRACE "}" taking nesting into account
 	         */
 	        protected void syncToRBRACE(int nest)

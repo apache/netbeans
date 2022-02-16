@@ -41,9 +41,9 @@ public class ClassDependencyIndexCreatorTest extends NexusTestBase {
         super(n);
     }
 
-    public void testCrc32base64() throws Exception {
-        assertEquals("ThFDsw", ClassDependencyIndexCreator.crc32base64("whatever"));
-        assertEquals("tqQ_oA", ClassDependencyIndexCreator.crc32base64("mod1/Stuff"));
+    public void testCrc32base32() throws Exception {
+        assertEquals("jyiuhmy", ClassDependencyIndexCreator.crc32base32("whatever"));
+        assertEquals("w2sd5ia", ClassDependencyIndexCreator.crc32base32("mod1/Stuff"));
     }
 
     public void testFindClassUsages() throws Exception {

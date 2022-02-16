@@ -41,6 +41,7 @@ import java.util.jar.JarFile;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.CRC32;
+import org.apache.commons.codec.binary.Base32;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
@@ -57,7 +58,6 @@ import org.apache.maven.index.context.IndexingContext;
 import org.apache.maven.index.creator.AbstractIndexCreator;
 import org.apache.maven.index.creator.MinimalArtifactInfoIndexCreator;
 import org.apache.maven.index.expr.StringSearchExpression;
-import org.codehaus.plexus.util.Base64;
 import org.netbeans.modules.classfile.ClassFile;
 import org.netbeans.modules.classfile.ClassName;
 import org.netbeans.modules.maven.indexer.api.NBVersionInfo;
@@ -150,7 +150,7 @@ class ClassDependencyIndexCreator extends AbstractIndexCreator {
             Set<String> referees = classDeps.remove(referrerTopLevel.substring(1));
             if (referees != null) {
                 for (String referee : referees) {
-                    b.append(crc32base64(referee));
+                    b.append(crc32base32(referee));
                     b.append(' ');
                 }
             }
@@ -168,7 +168,7 @@ class ClassDependencyIndexCreator extends AbstractIndexCreator {
     }
 
     static void search(String className, Indexer indexer, Collection<IndexingContext> contexts, List<? super ClassUsage> results) throws IOException {
-        String searchString = crc32base64(className.replace('.', '/'));
+        String searchString = crc32base32(className.replace('.', '/'));
         Query refClassQuery = indexer.constructQuery(ClassDependencyIndexCreator.FLD_NB_DEPENDENCY_CLASS.getOntology(), new StringSearchExpression(searchString));
         TopScoreDocCollector collector = TopScoreDocCollector.create(NexusRepositoryIndexerImpl.MAX_RESULT_COUNT, Integer.MAX_VALUE);
         for (IndexingContext context : contexts) {
@@ -208,10 +208,10 @@ class ClassDependencyIndexCreator extends AbstractIndexCreator {
                     p++;
                     break;
                 }
-                if (field.substring(p, p + 6).equals(refereeCRC)) {
+                if (field.substring(p, p + 7).equals(refereeCRC)) {
                     referrers.add(referrer.substring(1).replace('/', '.'));
                 }
-                p += 7;
+                p += 8;
             }
         }
         return referrers;
@@ -382,21 +382,20 @@ class ClassDependencyIndexCreator extends AbstractIndexCreator {
     }
 
     /**
-     * @param s a string, such as a class name
-     * @return the CRC-32 of its UTF-8 representation, as big-endian Base-64 without padding (so six chars), with _ for + (safer for Lucene)
+     * @param s a String, such as a class name
+     * @return the CRC-32 of its UTF-8 representation, as big-endian Base-32 without padding (so seven chars), lower case (to not confuse maven-indexer)
      */
-    static String crc32base64(String s) {
+    static String crc32base32(String s) {
         crc.reset();
         crc.update(s.getBytes(UTF8));
         long v = crc.getValue();
-        byte[] b64 = Base64.encodeBase64(new byte[] {(byte) (v >> 24 & 0xFF), (byte) (v >> 16 & 0xFF), (byte) (v >> 8 & 0xFF), (byte) (v & 0xFF)});
-        assert b64.length == 8;
-        assert b64[6] == '=';
-        assert b64[7] == '=';
-        return new String(b64, 0, 6, LATIN1).replace('+', '_');
+        byte[] b32 = base32.encode(new byte[] {(byte) (v >> 24 & 0xFF), (byte) (v >> 16 & 0xFF), (byte) (v >> 8 & 0xFF), (byte) (v & 0xFF)});
+        assert b32.length == 8;
+        assert b32[7] == '=';
+        return new String(b32, 0, 7, LATIN1).toLowerCase();
     }
     private static final CRC32 crc = new CRC32();
+    private static final Base32 base32 = new Base32();
     private static final Charset UTF8 = Charset.forName("UTF-8");
     private static final Charset LATIN1 = Charset.forName("ISO-8859-1");
-
 }

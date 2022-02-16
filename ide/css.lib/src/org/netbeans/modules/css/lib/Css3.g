@@ -889,10 +889,9 @@ pseudo
                     )?
                 )
                 | {isScssSource()}? sass_interpolation_expression_var
-                |
-                ( NOT ws? LPAREN ws? (simpleSelectorSequence ws?)? RPAREN )
-                | 
-                ({isLessSource()}? {tokenNameEquals("extend")}? IDENT ws? LPAREN ws? selectorsGroup? RPAREN)
+                | ( NOT ws? LPAREN ws? ( selectorsGroup ws?)? RPAREN )
+                | {tokenNameEquals("is") || tokenNameEquals("where")}? ( IDENT ws? LPAREN ws? ( selectorsGroup ws?)? RPAREN )
+                | ({isLessSource()}? {tokenNameEquals("extend")}? IDENT ws? LPAREN ws? selectorsGroup? RPAREN)
              ) 
     ;
 

@@ -1593,4 +1593,18 @@ public class Css3ParserTest extends CssTestBase {
             + "margin: var(--demoVar, 3ex 2em);"
             + "}");
     }
+
+    public void testParseSelectorListCSS4() {
+        assertParses("h1:not(.dummy) {}");
+        assertParses("h1:not( .h2:visible ) {}");
+        assertParses("h1:not( .h2, .h3:visible ) {}");
+        assertParses("h1:not(.h2,:visible,h2) {}");
+        assertParses("h1:not(.h2,:visible, h1 > h2) {}");
+        assertParses("html|*:not(:link):not(:visited) {}");
+        assertParses("html|*:not(:link, :visited) {}");
+        assertParses("*|*:is(:hover, :focus) {}");
+        assertParses("*|*:is(*:hover, *:focus) {}");
+        assertParses("a:where(:valid, :unsupported) {}");
+        assertParses("a:where(:not(:hover)) {text-decoration: none;}");
+    }
 }

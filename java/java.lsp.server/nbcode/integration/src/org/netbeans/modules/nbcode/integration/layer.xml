@@ -35,7 +35,8 @@
             </file>
             <file name="cloud-resources-commands.instance">
                 <attr name="instanceCreate" methodvalue="org.netbeans.modules.java.lsp.server.explorer.NodeActionsProvider.forFile"/>
-                <attr name="action:org.netbeans.modules.cloud.oracle.DownloadWalletAction" stringvalue="Tools"/>
+                <attr name="action:org.netbeans.modules.cloud.oracle.actions.DownloadWalletAction" stringvalue="Tools"/>
+                <attr name="action:org.netbeans.modules.cloud.oracle.actions.CreateAutonomousDBAction" stringvalue="Tools"/>
             </file>
         </folder>
     </folder>

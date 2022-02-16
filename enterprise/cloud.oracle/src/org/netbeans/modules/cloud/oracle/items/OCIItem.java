@@ -18,6 +18,9 @@
  */
 package org.netbeans.modules.cloud.oracle.items;
 
+import javax.swing.event.ChangeListener;
+import org.openide.util.ChangeSupport;
+
 /**
  * Represents Oracle Cloud Resource identified by Oracle Cloud Identifier (OCID)
  * 
@@ -27,6 +30,7 @@ public class OCIItem {
     final String id;
     final String name;
     String description;
+    ChangeSupport changeSupport;
 
     /**
     * Construct a new {@code OCIItem}.
@@ -37,6 +41,7 @@ public class OCIItem {
     public OCIItem(String id, String name) {
         this.id = id;
         this.name = name;
+        changeSupport = new ChangeSupport(this);
     }
 
     /**
@@ -73,5 +78,30 @@ public class OCIItem {
      */
     public void setDescription(String description) {
         this.description = description;
+    }
+    
+    /**
+     * Triggers node refresh.
+     */
+    public void refresh() {
+        changeSupport.fireChange();
+    }
+    
+    /**
+     * Adds a <code>ChangeListener</code> to the listener list.
+     * 
+     * @param listener the <code>ChangeListener</code> to be added.
+     */
+    public void addChangeListener(ChangeListener listener) {
+        changeSupport.addChangeListener(listener);
+    }
+    
+    /**
+     * Removes a <code>ChangeListener</code> from the listener list.
+     * 
+     * @param listener the <code>ChangeListener</code> to be removed.
+     */
+    public void removeChangeListener(ChangeListener listener) {
+        changeSupport.removeChangeListener(listener);
     }
 }

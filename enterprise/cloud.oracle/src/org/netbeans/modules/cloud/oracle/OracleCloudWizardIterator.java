@@ -53,6 +53,7 @@ import org.openide.util.NbBundle;
 public class OracleCloudWizardIterator implements WizardDescriptor.AsynchronousInstantiatingIterator {
 
     private static final String TENANCY = "TENANCY";
+    private Panel panel;
 
     public OracleCloudWizardIterator() {
     }
@@ -74,7 +75,10 @@ public class OracleCloudWizardIterator implements WizardDescriptor.AsynchronousI
 
     @Override
     public WizardDescriptor.Panel current() {
-        return new Panel();
+        if (panel == null) {
+            panel = new Panel();
+        }
+        return panel;
     }
 
     @Override
@@ -161,8 +165,10 @@ public class OracleCloudWizardIterator implements WizardDescriptor.AsynchronousI
             CompletionStage<Optional<OCIItem>> cs = (CompletionStage<Optional<OCIItem>>) o;
             cs.thenAccept(t -> {
                 if (t.isPresent()) {
-                    valid = true;
-                    changeSupport.fireChange();
+                    if (!valid) {
+                        valid = true;
+                        changeSupport.fireChange();
+                    }
                     text.setText(Bundle.MSG_TenancyFound(t.get().getName()));
                 } else {
                     text.setText(Bundle.MSG_OCI_Setup(Bundle.URL_OCI_Setup()));

@@ -1343,7 +1343,7 @@ public class ElementJavadoc {
     
     private void applyTags(List<SourceLineMeta> parseResult, MarkupTagProcessor.ProcessedTags tags, StringBuilder sb) {
         
-        if(tags.getErrorList().size() > 0){
+        if(!tags.getErrorList().isEmpty()){
             reportError(tags.getErrorList(), sb);
             return;
         }
@@ -1372,11 +1372,6 @@ public class ElementJavadoc {
             }
             
             for (SourceLineCharterMapperToHtmlTag charMapper : eachCharList) {
-                //dont process any html tag for blank character
-//                if(charMapper.getSourceChar() == ' '){
-//                    sb.append(charMapper.getSourceChar());
-//                    continue;
-//                }
                 for (String startTag : charMapper.getStartTag()) {
                     sb.append(startTag);
                 }
@@ -1423,11 +1418,9 @@ public class ElementJavadoc {
         if (tagAttributes.get(tagAction) == null || tagAttributes.get(tagAction).isEmpty()) {
             String error = String.format("error: snippet markup: Invalid value <sub>^</sub><b><i>%s</b></i> for <sub>^</sub><b><i>%s</b></i> tag mark up attribute <sub>^</sub><b><i>%s</b></i>",(tagAttributes.get(tagAction).trim().equals("") ? "Blank" : tagAttributes.get(tagAction)), markupTagName, tagAction);
             errors.add(error);
-            //"error: snippet markup: Invalid value <sub>^</sub><b><i>%s</i></b> for attribute type.<br>Valid values, such as bold, italic, or highlighted"
         } else if (markupTagName.equals("highlight")) {
             List<String> validAttributeValues = Arrays.asList("italic", "bold", "highlighted");
             if (tagAttributes.containsKey("type") && !validAttributeValues.contains(tagAttributes.get("type"))) {
-                //errors.add(String.format(NbBundle.getMessage(ElementJavadoc.class, "INVALID_VALUE_FOR_HIGHLIGHT_TAG_ATTRIBUTE_TYPE"), tagAttributes.get("type")));
                 errors.add( String.format("error: snippet markup: Invalid value <sub>^</sub><b><i>%s</b></i> for <sub>^</sub><b><i>%s</b></i> tag mark up attribute <sub>^</sub><b><i>%s</b></i>.<br>Valid values, such as bold, italic, or highlighted", tagAttributes.get("type"), markupTagName, "type"));
             } else {
                 return true;
@@ -1456,11 +1449,9 @@ public class ElementJavadoc {
     
     private String getTagAction(Map<String, String> tagAttributes) {
         if (tagAttributes.containsKey("regex")) {
-            //return tagAttributes.get("regex") != null && !tagAttributes.get("regex").trim().isEmpty() ? "regex" : null;
             return "regex";
         }
         if (tagAttributes.containsKey("substring")) {
-            //return tagAttributes.get("substring") != null && !tagAttributes.get("substring").trim().isEmpty() ? "substring" : null;
             return "substring";
         }
         

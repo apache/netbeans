@@ -44,12 +44,10 @@ public class MarkupTagProcessor {
         
         main:
         for(SourceLineMeta fullLineInfo : parseResult){
-            //List<ApplicableMarkupTag> attribList = new ArrayList<>();
             nextLine++;
             if (!regionList.isEmpty()) {
                 List<Region> newRegionList = new ArrayList<>(regionList);
                 regionTagOnLine.put(thisLine, newRegionList);
-                //markUpTagOnLine.put(thisLine, transformRegionAttributeToMarkupTag(newRegionList));
                 addMarkupTags(thisLine, transformRegionAttributeToMarkupTag(newRegionList), markUpTagOnLine);
             }
             //checkng no attribute on this line
@@ -82,23 +80,19 @@ public class MarkupTagProcessor {
                             List<Region> newRegionList = new ArrayList<>();
                             newRegionList.add(region);
                             regionTagOnLine.put(markUpTag.isTagApplicableToNextLine() ? nextLine : thisLine, newRegionList);
-                            //markUpTagOnLine.put(markUpTag.isTagApplicableToNextLine() ? nextLine : thisLine, transformRegionAttributeToMarkupTag(newRegionList));
                             if(!markUpTag.isTagApplicableToNextLine()){
                                 addMarkupTags(thisLine, transformRegionAttributeToMarkupTag(newRegionList), markUpTagOnLine);
                             }
                         } else {
                             ApplicableMarkupTag markupTag = new ApplicableMarkupTag(markupAttribute, markUpTag.getTagName());
-                            //attribList.add(markupTag);
                             List<ApplicableMarkupTag> markupTagList = new ArrayList<>();
                             markupTagList.add(markupTag);
-                            //markUpTagOnLine.put(markUpTag.isTagApplicableToNextLine() ? nextLine : thisLine, newAttribList);
                             addMarkupTags(markUpTag.isTagApplicableToNextLine() ? nextLine : thisLine, markupTagList, markUpTagOnLine);
                         }
                     }
                     if (markUpTag.getTagName().equals("end")) {
                         List<Region> newRegionList = new ArrayList<>(regionList);
                         regionTagOnLine.put(thisLine, newRegionList);
-                        //markUpTagOnLine.put(thisLine, transformRegionAttributeToMarkupTag(newRegionList));
                         addMarkupTags(thisLine, transformRegionAttributeToMarkupTag(newRegionList), markUpTagOnLine);
 
                         Map<String, String> eAttrib = new HashMap<>();

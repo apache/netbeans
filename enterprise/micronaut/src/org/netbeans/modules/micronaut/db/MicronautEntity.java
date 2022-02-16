@@ -201,7 +201,9 @@ public class MicronautEntity extends RelatedCMPWizard {
             } catch (IOException e) {
                 Logger.getLogger(Generator.class.getName()).log(Level.INFO, "IOException, remove generated."); //NOI18N
                 for (FileObject generatedFO : generatedEntityFOs) {
-                    generatedFO.delete();
+                    try {
+                        generatedFO.delete();
+                    } catch (IOException ioe) {}
                 }
                 throw e;
             }
@@ -216,7 +218,7 @@ public class MicronautEntity extends RelatedCMPWizard {
             final boolean beanValidationSupported = isBeanValidationSupported(helper.getLocation());
 
             EntityClass[] entityClasses = helper.getBeans();
-            int progressMax = entityClasses.length * 3;
+            int progressMax = entityClasses.length * 2;
             progressContributor.start(progressMax);
 
             beanMap.clear();
@@ -255,13 +257,17 @@ public class MicronautEntity extends RelatedCMPWizard {
                         try {
                             String newName = entityClassName;
                             int count = 1;
-                            while (packageFileObject.getFileObject(newName, "java") != null && count<1000) {
+                            while (packageFileObject.getFileObject(newName, "java") != null && count < 1000) {
                                 newName = entityClassName + "_" + count;
+                                count++;
                             }
                             entity = GenerationUtils.createClass(packageFileObject, newName, NbBundle.getMessage(Generator.class, "MSG_Entity_Class", newName));
                             if (!newName.equals(entityClassName)) {
                                 replacedNames.put(entityClassName, newName);
-                                replacedTypeNames.put(entityClass.getPackage() + "." + entityClassName , entityClass.getPackage() + "." + newName);
+                                String pkg = entityClass.getPackage();
+                                String entityClassFQN = pkg == null || pkg.isEmpty() ? entityClassName : pkg + "." + entityClassName;
+                                String newFQN = pkg == null || pkg.isEmpty() ? newName : pkg + "." + newName;
+                                replacedTypeNames.put(entityClassFQN, newFQN);
                                 generatedEntityClasses.remove(entityClassName);
                                 generatedEntityClasses.add(newName);
                             }
@@ -293,14 +299,12 @@ public class MicronautEntity extends RelatedCMPWizard {
                     continue;
                 }
                 String progressMsg = NbBundle.getMessage(Generator.class, "TXT_GeneratingClass", entityClassName);
-                progressContributor.progress(progressMsg, 2 * entityClasses.length + i);
+                progressContributor.progress(progressMsg, entityClasses.length + i);
                 if (progressPanel != null) {
                     progressPanel.setText(progressMsg);
                 }
                 FileObject entityClassPackageFO = entityClass.getPackageFileObject();
-                FileObject entityClassFO0 = entityClassPackageFO.getFileObject( entityClassName, "java"); // NOI18N
-
-                final FileObject entityClassFO = entityClassFO0;
+                FileObject entityClassFO = entityClassPackageFO.getFileObject( entityClassName, "java"); // NOI18N
                 try {
                     JavaSource javaSource = JavaSource.create(cpHelper.createClasspathInfo(), entityClassFO);
                     javaSource.runModificationTask(copy -> {
@@ -633,10 +637,8 @@ public class MicronautEntity extends RelatedCMPWizard {
                         newClassTree = genUtils.addAnnotation(newClassTree, genUtils.createAnnotation("javax.persistence.Table", tableAnnArgs)); //NOI18N
                     }
                 } else if (dbMappings.getTableName() != null && !entityClassName.equalsIgnoreCase(dbMappings.getTableName())) {
-                    if (dbMappings.getTableName() != null && !entityClassName.equalsIgnoreCase(dbMappings.getTableName())) {
-                        List<ExpressionTree> tableAnnArgs = Collections.singletonList(genUtils.createAnnotationArgument(null, dbMappings.getTableName())); //NOI18N
-                        newClassTree = genUtils.addAnnotation(newClassTree, genUtils.createAnnotation("io.micronaut.data.annotation.MappedEntity", tableAnnArgs)); //NOI18N
-                    }
+                    List<ExpressionTree> tableAnnArgs = Collections.singletonList(genUtils.createAnnotationArgument(null, dbMappings.getTableName())); //NOI18N
+                    newClassTree = genUtils.addAnnotation(newClassTree, genUtils.createAnnotation("io.micronaut.data.annotation.MappedEntity", tableAnnArgs)); //NOI18N
                 } else {
                     newClassTree = genUtils.addAnnotation(newClassTree, genUtils.createAnnotation("io.micronaut.data.annotation.MappedEntity")); //NOI18N
                 }
@@ -699,26 +701,12 @@ public class MicronautEntity extends RelatedCMPWizard {
                         String jTN = dbMappings.getJoinTableMapping().get(role.getFieldName());
                         joinTableAnnArguments.add(genUtils.createAnnotationArgument("name", jTN)); //NOI18N
                         CMPMappingModel.JoinTableColumnMapping joinColumnMap = dbMappings.getJoinTableColumnMppings().get(role.getFieldName());
-                        List<AnnotationTree> joinCols = new ArrayList<>();
                         CMPMappingModel.ColumnData[] columns = joinColumnMap.getColumns();
                         CMPMappingModel.ColumnData[] refColumns = joinColumnMap.getReferencedColumns();
-                        for (int colIndex = 0; colIndex < columns.length; colIndex++) {
-                            List<ExpressionTree> attrs = new ArrayList<>();
-                            attrs.add(genUtils.createAnnotationArgument("name", columns[colIndex].getColumnName())); //NOI18N
-                            attrs.add(genUtils.createAnnotationArgument("referencedColumnName", refColumns[colIndex].getColumnName())); //NOI18N
-                            joinCols.add(genUtils.createAnnotation("javax.persistence.JoinColumn", attrs)); //NOI18N
-                        }
-                        joinTableAnnArguments.add(genUtils.createAnnotationArgument("joinColumns", joinCols)); // NOI18N
-                        List<AnnotationTree> inverseCols = new ArrayList<>();
+                        joinTableAnnArguments.add(genUtils.createAnnotationArgument("joinColumns", createJoinColumnAnnotations(columns, refColumns, null))); // NOI18N
                         CMPMappingModel.ColumnData[] invColumns = joinColumnMap.getInverseColumns();
                         CMPMappingModel.ColumnData[] refInvColumns = joinColumnMap.getReferencedInverseColumns();
-                        for (int colIndex = 0; colIndex < invColumns.length; colIndex++) {
-                            List<ExpressionTree> attrs = new ArrayList<>();
-                            attrs.add(genUtils.createAnnotationArgument("name", invColumns[colIndex].getColumnName())); //NOI18N
-                            attrs.add(genUtils.createAnnotationArgument("referencedColumnName", refInvColumns[colIndex].getColumnName())); //NOI18N
-                            inverseCols.add(genUtils.createAnnotation("javax.persistence.JoinColumn", attrs)); // NOI18N
-                        }
-                        joinTableAnnArguments.add(genUtils.createAnnotationArgument("inverseJoinColumns", inverseCols)); // NOI18N
+                        joinTableAnnArguments.add(genUtils.createAnnotationArgument("inverseJoinColumns", createJoinColumnAnnotations(invColumns, refInvColumns, null))); // NOI18N
                         annotations.add(genUtils.createAnnotation("javax.persistence.JoinTable", joinTableAnnArguments)); // NOI18N
                     } else { // ManyToOne, OneToMany, OneToOne
                         CMPMappingModel.ColumnData[] columns = dbMappings.getCmrFieldMapping().get(role.getFieldName());
@@ -731,15 +719,7 @@ public class MicronautEntity extends RelatedCMPWizard {
                             makeReadOnlyIfNecessary(pkColumnNames, columns[0].getColumnName(), attrs);
                             annotations.add(genUtils.createAnnotation("javax.persistence.JoinColumn", attrs)); //NOI18N
                         } else {
-                            List<AnnotationTree> joinCols = new ArrayList<>();
-                            for (int colIndex = 0; colIndex < columns.length; colIndex++) {
-                                List<ExpressionTree> attrs = new ArrayList<>();
-                                attrs.add(genUtils.createAnnotationArgument("name", columns[colIndex].getColumnName())); //NOI18N
-                                attrs.add(genUtils.createAnnotationArgument("referencedColumnName", invColumns[colIndex].getColumnName())); //NOI18N
-                                makeReadOnlyIfNecessary(pkColumnNames, columns[colIndex].getColumnName(), attrs);
-                                joinCols.add(genUtils.createAnnotation("javax.persistence.JoinColumn", attrs)); // NOI18N
-                            }
-                            ExpressionTree joinColumnsNameAttrValue = genUtils.createAnnotationArgument(null, joinCols);
+                            ExpressionTree joinColumnsNameAttrValue = genUtils.createAnnotationArgument(null, createJoinColumnAnnotations(columns, invColumns, pkColumnNames));
                             AnnotationTree joinColumnsAnnotation = genUtils.createAnnotation("javax.persistence.JoinColumns", Collections.singletonList(joinColumnsNameAttrValue)); //NOI18N
                             annotations.add(joinColumnsAnnotation);
                         }
@@ -799,6 +779,20 @@ public class MicronautEntity extends RelatedCMPWizard {
                     }
                     constructors.add(genUtils.createAssignmentConstructor(genUtils.createModifiers(Modifier.PUBLIC), entityClassName, nonNullableParams));
                 }
+            }
+
+            private List<AnnotationTree> createJoinColumnAnnotations(CMPMappingModel.ColumnData[] columns, CMPMappingModel.ColumnData[] refColumns, List<String> pkcNames) {
+                List<AnnotationTree> joinCols = new ArrayList<>();
+                for (int colIndex = 0; colIndex < columns.length; colIndex++) {
+                    List<ExpressionTree> attrs = new ArrayList<>();
+                    attrs.add(genUtils.createAnnotationArgument("name", columns[colIndex].getColumnName())); //NOI18N
+                    attrs.add(genUtils.createAnnotationArgument("referencedColumnName", refColumns[colIndex].getColumnName())); //NOI18N
+                    if (pkcNames != null) {
+                        makeReadOnlyIfNecessary(pkcNames, columns[colIndex].getColumnName(), attrs);
+                    }
+                    joinCols.add(genUtils.createAnnotation("javax.persistence.JoinColumn", attrs)); //NOI18N
+                }
+                return joinCols;
             }
 
             private String getRelationshipFieldType(RelationshipRole role, String pkg) {

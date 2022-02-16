@@ -1969,6 +1969,55 @@ public class GoToSupportTest extends NbTestCase {
         JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
         performTest("LinkTag", 4758, null, "javadocsnippet_LinkTag_EmptyReplacementValue.pass", this.sourceLevel);
     }
+    public void testError_HighlightTag() throws Exception {
+        if (!TreeShims.isJDKVersionRelease18_Or_Above()) {
+            return;
+        }
+        this.sourceLevel = getLatestSourceVersion();
+        EXTRA_OPTIONS.add("--enable-preview");
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
+        performTest("Errors", 1331, null, "javadocsnippet_TestError_HighlightTag.pass", this.sourceLevel);
+    }
+    
+    public void testError_ReplaceTag() throws Exception {
+        if (!TreeShims.isJDKVersionRelease18_Or_Above()) {
+            return;
+        }
+        this.sourceLevel = getLatestSourceVersion();
+        EXTRA_OPTIONS.add("--enable-preview");
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
+        performTest("Errors", 2613, null, "javadocsnippet_TestError_ReplaceTag.pass", this.sourceLevel);
+    }
+    
+    public void testError_LinkTag() throws Exception {
+        if (!TreeShims.isJDKVersionRelease18_Or_Above()) {
+            return;
+        }
+        this.sourceLevel = getLatestSourceVersion();
+        EXTRA_OPTIONS.add("--enable-preview");
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
+        performTest("Errors", 4069, null, "javadocsnippet_TestError_LinkTag.pass", this.sourceLevel);
+    }
+    
+    public void testError_UnpairedRegion() throws Exception {
+        if (!TreeShims.isJDKVersionRelease18_Or_Above()) {
+            return;
+        }
+        this.sourceLevel = getLatestSourceVersion();
+        EXTRA_OPTIONS.add("--enable-preview");
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
+        performTest("Errors", 4740, null, "javadocsnippet_TestError_UnpairedRegion.pass", this.sourceLevel);
+    }
+    
+    public void testError_NoRegionToEnd() throws Exception {
+        if (!TreeShims.isJDKVersionRelease18_Or_Above()) {
+            return;
+        }
+        this.sourceLevel = getLatestSourceVersion();
+        EXTRA_OPTIONS.add("--enable-preview");
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
+        performTest("Errors", 4906, null, "javadocsnippet_TestError_NoRegionToEnd.pass", this.sourceLevel);
+    }
     
     private static final List<String> EXTRA_OPTIONS = new ArrayList<>();
     @ServiceProvider(service = CompilerOptionsQueryImplementation.class, position = 100)

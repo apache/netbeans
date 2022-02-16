@@ -170,6 +170,13 @@ public class ElementJavadoc {
         HTML_TAGS.put("highlighted", new HtmlStartEndTag("<span style=\"background-color:yellow;\">", "</span>"));
     }
     
+    private static final Map<String, String> MARKUPTAG_MANDATORY_ATTRIBUTE = new HashMap<>();
+    
+    static{
+        MARKUPTAG_MANDATORY_ATTRIBUTE.put("link", "target");
+        MARKUPTAG_MANDATORY_ATTRIBUTE.put("replace", "replacement");
+    }
+    
     /** Creates an object describing the Javadoc of given element. The object
      * is capable of getting the text formated into HTML, resolve the links,
      * jump to external javadoc.
@@ -1354,20 +1361,22 @@ public class ElementJavadoc {
             }
             
             List<MarkupTagProcessor.ApplicableMarkupTag> attributes = tags.getMarkUpTagLineMapper().get(lineCounter);
-            List<MarkupTagProcessor.Region> regions = tags.getRegionTagLineMapper().get(lineCounter);
 
             if (attributes != null) {
                 for (MarkupTagProcessor.ApplicableMarkupTag attrib : attributes) {
                     codeLine = applyTagsToHTML(codeLine, attrib.getAttributes(), attrib.getMarkupTagName(), sb, eachCharList);
+                    if(codeLine == null){//its error
+                        return;
+                    }
                 }
             }
             
             for (SourceLineCharterMapperToHtmlTag charMapper : eachCharList) {
                 //dont process any html tag for blank character
-                if(charMapper.getSourceChar() == ' '){
-                    sb.append(charMapper.getSourceChar());
-                    continue;
-                }
+//                if(charMapper.getSourceChar() == ' '){
+//                    sb.append(charMapper.getSourceChar());
+//                    continue;
+//                }
                 for (String startTag : charMapper.getStartTag()) {
                     sb.append(startTag);
                 }
@@ -1384,23 +1393,23 @@ public class ElementJavadoc {
      private String applyTagsToHTML(String codeLine, Map<String, String> tagAttributes, String markupTagName, StringBuilder sb, List<SourceLineCharterMapperToHtmlTag> eachCharList) {
         
         String tagAction = getTagAction(tagAttributes);
-        //if no substring or regex defined in markup tag then not process
-        if (tagAction == null) {
-            return codeLine;
-        }
         
+        //validate markup tag mandatory attribute
+        if(!validateMarkupTagAttribute(markupTagName, tagAttributes, sb, tagAction)){
+            return null;
+        }
         switch(markupTagName){
             case "highlight":
                 String htmlHighlightType = tagAttributes.get("type") != null && !tagAttributes.get("type").trim().isEmpty() ? tagAttributes.get("type") : "bold";
                 applyHighlightTag(codeLine, tagAction, htmlHighlightType, tagAttributes.get(tagAction), eachCharList);
                 break;
             case "replace":
-                String replacement = tagAttributes.get("replacement") != null && !tagAttributes.get("replacement").trim().isEmpty() ? tagAttributes.get("replacement") : null;
-                codeLine = applyReplaceTag(codeLine, tagAction, replacement, tagAttributes.get(tagAction), eachCharList);
+                //String replacement = tagAttributes.get("replacement") != null && !tagAttributes.get("replacement").trim().isEmpty() ? tagAttributes.get("replacement") : null;
+                codeLine = applyReplaceTag(codeLine, tagAction, tagAttributes.get("replacement"), tagAttributes.get(tagAction), eachCharList);
                 break;
             case "link":
-                String linkTarget = tagAttributes.get("target") != null && !tagAttributes.get("target").trim().isEmpty() ? tagAttributes.get("target") : null;
-                applyLinkTag(codeLine, tagAction, linkTarget, tagAttributes.get(tagAction), eachCharList);
+                //String linkTarget = tagAttributes.get("target") != null && !tagAttributes.get("target").trim().isEmpty() ? tagAttributes.get("target") : null;
+                applyLinkTag(codeLine, tagAction, tagAttributes.get("target"), tagAttributes.get(tagAction), eachCharList);
                 break;
             default:
                 break;
@@ -1408,18 +1417,56 @@ public class ElementJavadoc {
         return codeLine;
     }
 
+    private boolean validateMarkupTagAttribute(String markupTagName, Map<String, String> tagAttributes, StringBuilder sb, String tagAction) {
+        List<String> errors = new ArrayList<>();
+        
+        if (tagAttributes.get(tagAction) == null || tagAttributes.get(tagAction).isEmpty()) {
+            String error = String.format("error: snippet markup: Invalid value <sub>^</sub><b><i>%s</b></i> for <sub>^</sub><b><i>%s</b></i> tag mark up attribute <sub>^</sub><b><i>%s</b></i>",(tagAttributes.get(tagAction).trim().equals("") ? "Blank" : tagAttributes.get(tagAction)), markupTagName, tagAction);
+            errors.add(error);
+            //"error: snippet markup: Invalid value <sub>^</sub><b><i>%s</i></b> for attribute type.<br>Valid values, such as bold, italic, or highlighted"
+        } else if (markupTagName.equals("highlight")) {
+            List<String> validAttributeValues = Arrays.asList("italic", "bold", "highlighted");
+            if (tagAttributes.containsKey("type") && !validAttributeValues.contains(tagAttributes.get("type"))) {
+                //errors.add(String.format(NbBundle.getMessage(ElementJavadoc.class, "INVALID_VALUE_FOR_HIGHLIGHT_TAG_ATTRIBUTE_TYPE"), tagAttributes.get("type")));
+                errors.add( String.format("error: snippet markup: Invalid value <sub>^</sub><b><i>%s</b></i> for <sub>^</sub><b><i>%s</b></i> tag mark up attribute <sub>^</sub><b><i>%s</b></i>.<br>Valid values, such as bold, italic, or highlighted", tagAttributes.get("type"), markupTagName, "type"));
+            } else {
+                return true;
+            }
+        } else if (!tagAttributes.containsKey(MARKUPTAG_MANDATORY_ATTRIBUTE.get(markupTagName))) {
+            // mandatory mark up tag not present
+            String error = String.format("error: snippet markup: Missing <sub>^</sub><b><i>%s</b></i> tag attribute : <sub>^</sub><b><i>%s</b></i>", markupTagName, MARKUPTAG_MANDATORY_ATTRIBUTE.get(markupTagName));
+            errors.add(error);
+        } else if (!tagAttributes.containsKey("replacement")//no value related check for replacement. Value could be empty, its means replace by empty or blank.
+                && tagAttributes.get(MARKUPTAG_MANDATORY_ATTRIBUTE.get(markupTagName)) != null
+                && tagAttributes.get(MARKUPTAG_MANDATORY_ATTRIBUTE.get(markupTagName)).trim().isEmpty()) {
+            // no attribute value
+            String error = String.format("error: snippet markup: Invalid <sub>^</sub><b><i>%s</b></i> tag <sub>^</sub><b><i>%s</b></i> attribute value", markupTagName, MARKUPTAG_MANDATORY_ATTRIBUTE.get(markupTagName));
+            errors.add(error);
+        }
+        
+        if(!errors.isEmpty()){
+            reportError(errors, sb);
+            return false;
+        }
+        return true;
+    }
     private void reportError(List<String> errorList, StringBuilder sb){
         errorList.iterator().forEachRemaining(error -> sb.append("<span style=\"color:red;\">"+error +"</span>").append("\n"));
     }
     
     private String getTagAction(Map<String, String> tagAttributes) {
         if (tagAttributes.containsKey("regex")) {
-            return tagAttributes.get("regex") != null && !tagAttributes.get("regex").trim().isEmpty() ? "regex" : null;
+            //return tagAttributes.get("regex") != null && !tagAttributes.get("regex").trim().isEmpty() ? "regex" : null;
+            return "regex";
         }
         if (tagAttributes.containsKey("substring")) {
-            return tagAttributes.get("substring") != null && !tagAttributes.get("substring").trim().isEmpty() ? "substring" : null;
+            //return tagAttributes.get("substring") != null && !tagAttributes.get("substring").trim().isEmpty() ? "substring" : null;
+            return "substring";
         }
-        return null;
+        
+         //if no substring or regex defined put default as whole line
+        tagAttributes.put("regex",".*");
+        return "regex";
     }
     
     private void applyHighlightTag(String codeLine, String tagAction, String htmlHighlightType, String tagActionValue, List<SourceLineCharterMapperToHtmlTag> eachCharList){
@@ -1455,9 +1502,6 @@ public class ElementJavadoc {
     }
     
     private String applyReplaceTag(String codeLine, String tagAction, String replacement, String tagActionValue, List<SourceLineCharterMapperToHtmlTag> eachCharList){
-        if(replacement == null || replacement.isEmpty()){//To-do handle error here
-            return codeLine;
-        }
         if (tagAction.equals("substring")) {
             int fromIndex = 0;
             while (fromIndex != -1) {

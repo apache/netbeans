@@ -134,7 +134,7 @@ public class Inflector {
      * <p>The singleton instance returned by the default <code>getInstance()</code>
      * method.</p>
      */
-    private transient static Inflector instance = null;
+    private static transient Inflector instance = null;
 
 
     /**

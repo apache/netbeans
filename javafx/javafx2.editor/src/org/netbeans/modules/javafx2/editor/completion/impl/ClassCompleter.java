@@ -62,7 +62,7 @@ import org.netbeans.spi.editor.completion.CompletionProvider;
  * @author sdedic
  */
 @MimeRegistration(mimeType=JavaFXEditorUtils.FXML_MIME_TYPE, service=Completer.Factory.class)
-final public class ClassCompleter implements Completer, Completer.Factory {
+public final class ClassCompleter implements Completer, Completer.Factory {
     private static final Logger LOG = Logger.getLogger(ClassCompleter.class.getName());
     
     private static final int IMPORTED_PRIORITY = 50;

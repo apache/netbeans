@@ -37,8 +37,8 @@ keywordsCategory = JavaOptions.JAVA + "/JavaFX",
 id=SBOptionsPanelController.SUBREG_ID)
 @org.openide.util.NbBundle.Messages({"AdvancedOption_DisplayName_SB=JavaFX", "AdvancedOption_Keywords_SB=javafx"})
 public final class SBOptionsPanelController extends OptionsPanelController {
-    final public static String SUBREG_CAT = JavaOptions.JAVA;
-    final public static String SUBREG_ID = "SceneBuilder"; // NOI18N
+    public static final String SUBREG_CAT = JavaOptions.JAVA;
+    public static final String SUBREG_ID = "SceneBuilder"; // NOI18N
     private SBOptionsPanel panel;
     private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
     private boolean changed;

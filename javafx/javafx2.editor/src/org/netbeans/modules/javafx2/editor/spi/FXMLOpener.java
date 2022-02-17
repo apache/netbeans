@@ -27,7 +27,7 @@ import org.openide.util.Lookup;
  * 
  * @since 1.3.1
  */
-abstract public class FXMLOpener {
-    abstract public boolean isEnabled(Lookup context);
-    abstract public boolean open(Lookup context);
+public abstract class FXMLOpener {
+    public abstract boolean isEnabled(Lookup context);
+    public abstract boolean open(Lookup context);
 }

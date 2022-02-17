@@ -21,6 +21,10 @@ package org.netbeans.modules.java.lsp.server.explorer;
 import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.SortedMap;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionStage;
+import java.util.concurrent.TimeUnit;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.openide.explorer.ExplorerManager;
@@ -118,6 +122,37 @@ public class TreeViewProviderTest {
         assertEquals(item.resourceUri, URLMapper.findURL(fo, URLMapper.EXTERNAL).toString());
     }
 
+
+    /**
+     * A call to getNodeId for a nested node should materialize & register parents
+     * in the TreeViewProvider.
+     */
+    @Test
+    public void getNodeIdRegistersParents() throws Exception {
+        ExplorerManager em = new ExplorerManager();
+        Node r = new FibNode(10);
+        em.setRootContext(r);
+        
+        Node[] firstLevel = r.getChildren().getNodes(true);
+        Node[] secondLevel = firstLevel[0].getChildren().getNodes(true);
+        Node[] thirdLevel = secondLevel[1].getChildren().getNodes(true);
+        
+        Node toFind = thirdLevel[0];
+        
+        TreeViewProviderImpl tvp = new TreeViewProviderImpl(em, registry);
+        
+        CompletionStage<Integer> nodeId = tvp.getNodeId(toFind);
+        int id = nodeId.toCompletableFuture().get(30, TimeUnit.SECONDS);
+        assertSame(toFind, tvp.findNode(id));
+        
+        // make clone of the map before asking for node IDs.
+        SortedMap<Integer, TreeViewProvider.NodeHolder> map = tvp.getHolders();
+        int parentId = tvp.findId(toFind.getParentNode());
+        int grandParentId = tvp.findId(toFind.getParentNode().getParentNode());
+        
+        assertNotNull(map.get(parentId));
+        assertNotNull(map.get(grandParentId));
+    }
 
     final static class TreeViewProviderImpl extends TreeViewProvider {
         private Set<Node> changed = new HashSet<>();

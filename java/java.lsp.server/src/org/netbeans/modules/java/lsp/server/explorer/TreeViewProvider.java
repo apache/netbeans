@@ -34,6 +34,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -474,6 +475,7 @@ public abstract class TreeViewProvider {
     public CompletionStage<Integer> getNodeId(Node n) {
         Integer i;
         List<Node> toExpand = new ArrayList<>();
+        toExpand.add(n);
         synchronized (this) {
             i = idMap.get(n);
             if (i != null) {
@@ -486,20 +488,26 @@ public abstract class TreeViewProvider {
                 if (i != null) {
                     break;
                 }
+                parent = parent.getParentNode();
             }
             if (parent == null) {
                 return CompletableFuture.completedFuture(null);
             }
         }
-        CompletionStage<Node[]> stage = null;
-        for (Node p : toExpand) {
-            if (stage == null) {
+        CompletionStage<Integer> nextStage = null;
+        // do not iterate index #0
+        for (int idx = toExpand.size() - 1; idx > 0; idx--) {
+            CompletionStage<Node[]> stage = null;
+            Node p = toExpand.get(idx);
+            if (nextStage == null) {
                 stage = getChildren(p);
             } else {
-                stage = stage.thenCompose((nodes) -> getChildren(p));
+                stage = nextStage.thenCompose((x) -> getChildren(p));
             }
+            final int fidx = idx - 1;
+            nextStage = stage.thenApply((ch) -> findId(toExpand.get(fidx)));
         }
-        return stage.thenCompose((any) -> getNodeId(n));
+        return nextStage;
     }
 
     public final CompletionStage<TreeItem> getTreeItem(int id) {
@@ -680,4 +688,9 @@ public abstract class TreeViewProvider {
         }
     }
     
+    /* testing */ SortedMap<Integer, NodeHolder> getHolders() {
+        synchronized (this) {
+            return new TreeMap<>(holdChildren);
+        }
+    }
 }

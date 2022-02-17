@@ -34,11 +34,12 @@ public final class CPPLiteDebuggerConfig {
 
     private final List<String> executable;
     private final ExplicitProcessParameters processParameters;
+    private final boolean printObjects;
     @NullAllowed
     private final Long processId;
     private final String debugger;
 
-    public CPPLiteDebuggerConfig(List<String> executable, ExplicitProcessParameters processParameters, @NullAllowed Long processId, String debugger) {
+    public CPPLiteDebuggerConfig(List<String> executable, ExplicitProcessParameters processParameters, boolean printObjects, @NullAllowed Long processId, String debugger) {
         this.processParameters = processParameters;
         this.processId = processId;
         this.debugger = debugger;
@@ -60,6 +61,7 @@ public final class CPPLiteDebuggerConfig {
         if (processParameters.getLauncherArguments() != null) {
             Exceptions.printStackTrace(new IllegalStateException("Launcher arguments " + processParameters.getLauncherArguments() + " can not be accepted by CPPLite debugger"));
         }
+        this.printObjects = printObjects;
     }
 
     public String getDisplayName() {
@@ -103,5 +105,9 @@ public final class CPPLiteDebuggerConfig {
 
     public String getDebugger() {
         return debugger;
+    }
+
+    public boolean isPrintObjects() {
+        return printObjects;
     }
 }

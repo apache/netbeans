@@ -83,7 +83,7 @@ public abstract class AbstractDebugTest extends NbTestCase {
 
     protected final void startDebugging(List<String> executable, ExplicitProcessParameters processParameters) throws IOException {
         this.process = CPPLiteDebugger.startDebugging(
-                new CPPLiteDebuggerConfig(executable, processParameters, null, "gdb"),
+                new CPPLiteDebuggerConfig(executable, processParameters, true, null, "gdb"),
                 engine -> this.engine = engine);
         stdOut = outputFrom(process.getInputStream());
         stdErr = outputFrom(process.getErrorStream());

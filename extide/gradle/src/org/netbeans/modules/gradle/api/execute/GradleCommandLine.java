@@ -999,6 +999,7 @@ public final class GradleCommandLine implements Serializable {
         ret.setFlag(Flag.OFFLINE, settings.isOffline());
         ret.setFlag(Flag.CONFIGURE_ON_DEMAND, settings.isConfigureOnDemand());
         ret.setFlag(Flag.NO_REBUILD, settings.getNoRebuild());
+        ret.setFlag(Flag.CONFIGURATION_CACHE, settings.getUseConfigCache());
 
         ret.setLogLevel(settings.getDefaultLogLevel());
         ret.setStackTrace(settings.getDefaultStackTrace());

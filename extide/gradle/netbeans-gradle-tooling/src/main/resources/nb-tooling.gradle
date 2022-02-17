@@ -19,7 +19,7 @@
 
 initscript {
     dependencies {
-        classpath files(System.getProperty('NETBEANS_TOOLING_JAR'))
+        classpath files('NETBEANS_TOOLING_JAR')
     }
 }
 

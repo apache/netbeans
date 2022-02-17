@@ -28,8 +28,12 @@ import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.awt.font.TextAttribute;
 import java.net.URL;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.Action;
@@ -63,6 +67,15 @@ import org.openide.util.ImageUtilities;
 public class GradleCliCompletionProvider implements CompletionProvider {
     private static final Pattern PROP_INPUT = Pattern.compile("\\$\\{([\\w.]*)$"); //NOI18N
     private static final String INPUT_TOKEN = "input:"; //NOI18N
+    private static final Set<GradleCommandLine.GradleOptionItem> GRADLE_OPTIONS;
+    
+    static {
+        Set<GradleCommandLine.GradleOptionItem> all = new HashSet<>();
+        GRADLE_OPTIONS = Collections.unmodifiableSet(all);
+        all.addAll(Arrays.asList(GradleCommandLine.Flag.values()));
+        all.addAll(Arrays.asList(GradleCommandLine.Parameter.values()));
+        all.addAll(Arrays.asList(GradleCommandLine.Property.values()));
+    }
     
     @Override
     public CompletionTask createTask(int queryType, JTextComponent component) {
@@ -114,11 +127,11 @@ public class GradleCliCompletionProvider implements CompletionProvider {
                         }
                     }
                     if (filter.isEmpty() || filter.startsWith("-")) {
-                        for (GradleCommandLine.Flag flag : GradleCommandLine.Flag.values()) {
-                            if (cli.canAdd(flag)) {
-                                for (String f : flag.getFlags()) {
+                        for (GradleCommandLine.GradleOptionItem item : GRADLE_OPTIONS) {
+                            if (cli.canAdd(item)) {
+                                for (String f : item.getFlags()) {
                                     if (f.startsWith(filter)) {
-                                        resultSet.addItem(new GradleFlagCompletionItem(flag, f, startOffset, caretOffset));
+                                        resultSet.addItem(new GradleOptionCompletionItem(item, f, startOffset, caretOffset));
                                     }
                                 }
                             }
@@ -323,13 +336,13 @@ public class GradleCliCompletionProvider implements CompletionProvider {
         }
     }
     
-    private static class GradleFlagCompletionItem extends AbstractGradleCompletionItem {
-        private final GradleCommandLine.Flag flag;
+    private static class GradleOptionCompletionItem extends AbstractGradleCompletionItem {
+        private final GradleCommandLine.GradleOptionItem item;
         private final String value;
 
-        public GradleFlagCompletionItem(GradleCommandLine.Flag flag, String value, int startOffset, int caretOffset) {
+        public GradleOptionCompletionItem(GradleCommandLine.GradleOptionItem item, String value, int startOffset, int caretOffset) {
             super(startOffset, caretOffset);
-            this.flag = flag;
+            this.item = item;
             this.value = value;
         }
 
@@ -348,7 +361,7 @@ public class GradleCliCompletionProvider implements CompletionProvider {
         @Override
         public void render(Graphics g, Font defaultFont, Color defaultColor, Color backgroundColor, int width, int height, boolean selected) {
             Map<TextAttribute, Object> attributes = new HashMap<>(defaultFont.getAttributes());
-            if (!flag.isSupported()) {
+            if (!item.isSupported()) {
                 attributes.put(TextAttribute.STRIKETHROUGH, TextAttribute.STRIKETHROUGH_ON);
             }
             Font font = new Font(attributes);
@@ -360,22 +373,22 @@ public class GradleCliCompletionProvider implements CompletionProvider {
             return new AsyncCompletionTask(new AsyncCompletionQuery() {
                 @Override
                 protected void query(CompletionResultSet resultSet, Document doc, int caretOffset) {
-                    resultSet.setDocumentation(new GradleFlagCompletionDocumentation());
+                    resultSet.setDocumentation(new GradleItemCompletionDocumentation());
                     resultSet.finish();
                 }
             });
         }
         
-        private class GradleFlagCompletionDocumentation implements CompletionDocumentation {
+        private class GradleItemCompletionDocumentation implements CompletionDocumentation {
 
             @Override
             public String getText() {
                 StringBuilder sb = new StringBuilder();
                 sb.append("<html>");
-                if (!flag.isSupported()) {
-                    sb.append("<b>Unsupported:</b> This argument will be ignored<p>");
+                if (!item.isSupported()) {
+                    sb.append("<b>Unsupported:</b> This argument will be ignored");
                 }
-                sb.append(flag.getDescription());
+                sb.append(item.getDescription());
                 return sb.toString();
             }
 

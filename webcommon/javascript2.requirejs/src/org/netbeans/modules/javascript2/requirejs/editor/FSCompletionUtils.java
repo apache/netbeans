@@ -50,7 +50,7 @@ import org.openide.util.Utilities;
  */
 public class FSCompletionUtils {
 
-    final static String GO_UP = "../"; //NOI18N
+    static final String GO_UP = "../"; //NOI18N
     private static final String SLASH = "/"; //NOI18N
     private static final String FILE = "file"; // URI scheme
     

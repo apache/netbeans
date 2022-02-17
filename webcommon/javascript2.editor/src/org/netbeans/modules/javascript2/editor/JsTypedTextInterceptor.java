@@ -52,10 +52,10 @@ public class JsTypedTextInterceptor implements TypedTextInterceptor {
     private static final TokenId[] REGEXP_TOKENS = { JsTokenId.REGEXP, JsTokenId.REGEXP_END };
 
     /** Tokens which indicate that we're within a literal string */
-    private final static TokenId[] STRING_TOKENS = { JsTokenId.STRING, JsTokenId.STRING_END };
+    private static final TokenId[] STRING_TOKENS = { JsTokenId.STRING, JsTokenId.STRING_END };
 
     /** Tokens which indicate that we're within a template string */
-    private final static TokenId[] TEMPLATE_TOKENS = { JsTokenId.TEMPLATE, JsTokenId.TEMPLATE_END };
+    private static final TokenId[] TEMPLATE_TOKENS = { JsTokenId.TEMPLATE, JsTokenId.TEMPLATE_END };
     
     private final Language<JsTokenId> language;
 

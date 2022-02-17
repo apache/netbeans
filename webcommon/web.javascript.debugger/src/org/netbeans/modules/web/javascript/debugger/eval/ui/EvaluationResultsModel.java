@@ -51,7 +51,7 @@ public class EvaluationResultsModel extends VariablesModel {
     private static final String ICON_EVAL_RESULT =
         "org/netbeans/modules/debugger/resources/evaluator/evaluator_result_16.png"; // NOI18N
 
-    private final static RequestProcessor RP = new RequestProcessor(EvaluationResultsModel.class);
+    private static final RequestProcessor RP = new RequestProcessor(EvaluationResultsModel.class);
     private final CodeEvaluator.Result result;
     private EvaluatorListener evalListener = new EvaluatorListener();
     

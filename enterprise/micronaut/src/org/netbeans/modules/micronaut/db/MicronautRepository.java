@@ -18,13 +18,21 @@
  */
 package org.netbeans.modules.micronaut.db;
 
+import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.MethodTree;
+import com.sun.source.tree.ModifiersTree;
 import com.sun.source.tree.ParameterizedTypeTree;
 import com.sun.source.tree.Tree;
+import com.sun.source.tree.TypeParameterTree;
+import com.sun.source.tree.VariableTree;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -39,6 +47,9 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.util.ElementFilter;
 import javax.swing.event.ChangeListener;
+import org.netbeans.api.db.explorer.ConnectionManager;
+import org.netbeans.api.db.explorer.DatabaseConnection;
+import org.netbeans.api.db.explorer.DatabaseException;
 import org.netbeans.api.java.project.JavaProjectConstants;
 import org.netbeans.api.java.source.ClassIndex;
 import org.netbeans.api.java.source.ClasspathInfo;
@@ -111,11 +122,12 @@ public class MicronautRepository implements TemplateWizard.Iterator {
                 }
                 NotifyDescriptor.QuickPick qp = new NotifyDescriptor.QuickPick(Bundle.MSG_SelectEntities(), Bundle.MSG_SelectEntities(), entities, true);
                 if (DialogDescriptor.OK_OPTION == DialogDisplayer.getDefault().notify(qp)) {
+                    String dialect = getDialect(jpaSupported);
                     List<String> generated = new ArrayList<>();
                     for (NotifyDescriptor.QuickPick.Item item : qp.getItems()) {
                         if (item.isSelected()) {
                             String fqn = item.getDescription() != null ? item.getDescription() + '.' + item.getLabel() : item.getLabel();
-                            FileObject fo = generate(folder, item.getLabel(), fqn, (String) item.getUserData(), jpaSupported);
+                            FileObject fo = generate(folder, item.getLabel(), fqn, (String) item.getUserData(), dialect);
                             if (fo != null) {
                                 generated.add(fo.toURI().toString());
                             }
@@ -139,13 +151,14 @@ public class MicronautRepository implements TemplateWizard.Iterator {
 
     @Override
     public Set<DataObject> instantiate(TemplateWizard wiz) throws IOException {
+        String dialect = getDialect(jpaSupported);
         Set<DataObject> generated = new HashSet<>();
         Map<String, String> selectedEntities = (Map<String, String>) wiz.getProperty(PROP_SELECTED_ENTITIES);
         for (Map.Entry<String, String> entry : selectedEntities.entrySet()) {
             String fqn = entry.getKey();
             int idx = fqn.lastIndexOf('.');
             String label = idx < 0 ? fqn : fqn.substring(idx + 1);
-            FileObject fo = generate(targetFolder, label, fqn, entry.getValue(), jpaSupported);
+            FileObject fo = generate(targetFolder, label, fqn, entry.getValue(), dialect);
             if (fo != null) {
                 generated.add(DataObject.find(fo));
             }
@@ -221,7 +234,7 @@ public class MicronautRepository implements TemplateWizard.Iterator {
         JavaSource js = JavaSource.create(ClasspathInfo.create(sg.getRootFolder()));
         if (js != null) {
             try {
-                js.runUserActionTask(cc -> {
+                js.runWhenScanFinished(cc -> {
                     TypeElement typeElement = cc.getElements().getTypeElement(jpaSupported ? "javax.persistence.Entity" : "io.micronaut.data.annotation.MappedEntity"); //NOI18N
                     if (typeElement != null) {
                         TypeElement idTypeElement = cc.getElements().getTypeElement(jpaSupported ? "javax.persistence.Id" : "io.micronaut.data.annotation.Id"); //NOI18N
@@ -264,10 +277,38 @@ public class MicronautRepository implements TemplateWizard.Iterator {
         return entities;
     }
 
+    private static String getDialect(boolean jpaSupported) {
+        if (!jpaSupported) {
+            DatabaseConnection connection = ConnectionManager.getDefault().getPreferredConnection(true);
+            if (connection != null) {
+                try {
+                    ConnectionManager.getDefault().connect(connection);
+                    Connection conn = connection.getJDBCConnection();
+                    String name = conn.getMetaData().getDatabaseProductName();
+                    if (name.matches("(?i).*h2.*")) { //NOI18N
+                        return "H2"; //NOI18N
+                    } else if (name.matches("(?i).*mysql.*")) { //NOI18N
+                        return "MYSQL"; //NOI18N
+                    } else if (name.matches("(?i).*oracle.*")) { //NOI18N
+                        return "ORACLE"; //NOI18N
+                    } else if (name.matches("(?i).*postgresql.*")) { //NOI18N
+                        return "POSTGRES"; //NOI18N
+                    } else if (name.matches("(?i).*microsoft.*")) { //NOI18N
+                        return "SQL_SERVER"; //NOI18N
+                    }
+                } catch (SQLException | DatabaseException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
+            }
+            return ""; //NOI18N
+        }
+        return null;
+    }
+
     @NbBundle.Messages({
         "MSG_Repository_Interface=Repository interface {0}\n"
     })
-    private static FileObject generate(FileObject folder, String entityName, String entityFQN, String entityIdType, boolean jpaSupported) {
+    private static FileObject generate(FileObject folder, String entityName, String entityFQN, String entityIdType, String dialect) {
         try {
             String name = entityName + "Repository"; // NOI18N
             FileObject fo = GenerationUtils.createInterface(folder, name, Bundle.MSG_Repository_Interface(name));
@@ -281,9 +322,20 @@ public class MicronautRepository implements TemplateWizard.Iterator {
                             GenerationUtils gu = GenerationUtils.newInstance(copy);
                             TreeMaker tm = copy.getTreeMaker();
                             List<ExpressionTree> args = Arrays.asList(tm.QualIdent(entityFQN), tm.QualIdent(entityIdType));
-                            ParameterizedTypeTree type = tm.ParameterizedType(tm.QualIdent("io.micronaut.data.repository.CrudRepository"), args);
+                            ParameterizedTypeTree type = tm.ParameterizedType(tm.QualIdent("io.micronaut.data.repository.CrudRepository"), args); //NOI18N
                             ClassTree cls = tm.addClassImplementsClause((ClassTree) origTree, type);
-                            cls = gu.addAnnotation(cls, gu.createAnnotation(jpaSupported ? "io.micronaut.data.annotation.Repository" : "io.micronaut.data.jdbc.annotation.JdbcRepository"));
+                            if (dialect == null) {
+                                cls = gu.addAnnotation(cls, gu.createAnnotation("io.micronaut.data.annotation.Repository")); //NOI18N
+                            } else if (dialect.isEmpty()) {
+                                cls = gu.addAnnotation(cls, gu.createAnnotation("io.micronaut.data.jdbc.annotation.JdbcRepository")); //NOI18N
+                            } else {
+                                List<ExpressionTree> annArgs = Collections.singletonList(gu.createAnnotationArgument("dialect", "io.micronaut.data.model.query.builder.sql.Dialect", dialect)); //NOI18N
+                                cls = gu.addAnnotation(cls, gu.createAnnotation("io.micronaut.data.jdbc.annotation.JdbcRepository", annArgs)); //NOI18N
+                            }
+                            ModifiersTree mods = tm.Modifiers(Collections.emptySet(), Arrays.asList(gu.createAnnotation("java.lang.Override"), gu.createAnnotation("io.micronaut.core.annotation.NonNull"))); //NOI18N
+                            ParameterizedTypeTree retType = tm.ParameterizedType(tm.QualIdent("java.util.List"), Collections.singletonList(tm.QualIdent(entityFQN))); //NOI18N
+                            MethodTree findAllMethod = tm.Method(mods, "findAll", retType, Collections.<TypeParameterTree>emptyList(), Collections.<VariableTree>emptyList(), Collections.<ExpressionTree>emptyList(), (BlockTree)null, null); //NOI18N
+                            cls = tm.addClassMember(cls, findAllMethod);
                             copy.rewrite(origTree, cls);
                         }
                     }).commit();

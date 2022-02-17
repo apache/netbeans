@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.java.lsp.server.explorer;
 
+import java.awt.Image;
 import java.beans.BeanInfo;
 import org.netbeans.modules.java.lsp.server.explorer.api.TreeDataListener;
 import org.netbeans.modules.java.lsp.server.explorer.api.TreeItemData;
@@ -53,6 +54,7 @@ import org.openide.nodes.NodeEvent;
 import org.openide.nodes.NodeListener;
 import org.openide.nodes.NodeMemberEvent;
 import org.openide.nodes.NodeReorderEvent;
+import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
 import org.openide.util.RequestProcessor;
 
@@ -391,12 +393,10 @@ public abstract class TreeViewProvider {
         if (data.getIconImage() != null && data.getIconImage() != DUMMY_NODE.getIcon(BeanInfo.ICON_COLOR_16x16)) {
             TreeNodeRegistry.ImageDataOrIndex idoi = nodeRegistry.imageOrIndex(data.getIconImage());
             if (idoi != null) {
-                ti.iconIndex = idoi.imageIndex;
-                ti.iconUri = idoi.imageURI;
-                ti.iconDescriptor = new IconDescriptor();
                 try {
                     URI baseURI = builtinURI2URI(idoi.baseURI);
                     if (baseURI != null) {
+                        ti.iconDescriptor = new IconDescriptor();
                         ti.iconDescriptor.baseUri = baseURI;
                         ti.iconDescriptor.composition = idoi.composition;
                     }
@@ -404,8 +404,6 @@ public abstract class TreeViewProvider {
                     LOG.log(Level.WARNING, "Cannot convert URL: {0}", idoi.baseURI);
                 }
             }
-        } else if (data.getIconURI() != null) {
-            ti.iconUri = data.getIconURI();
         }
         ti.contextValue = v;
         ti.command = data.getCommand();
@@ -663,4 +661,23 @@ public abstract class TreeViewProvider {
         }
         return u;
     }
+
+    public static URI findImageURI(Image i) {
+        URL u = ImageUtilities.findImageBaseURL(i);
+        if (u == null) {
+            return null;
+        }
+        String s = u.toString();
+        try {
+            if (s.contains(":")) {
+                return new URI(s);
+            } else {
+                return new URI("nbres:/" + s);
+            }
+        } catch (URISyntaxException ex) {
+            LOG.log(Level.WARNING, "Unable to interpret image ID: {0}", s);
+            return null;
+        }
+    }
+    
 }

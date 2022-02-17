@@ -84,8 +84,21 @@ public class UIDefaultsIconMetadata implements Runnable {
                     LOG.log(Level.INFO, "Icon not used: {0}", uiKey);
                     continue;
                 }
-                String resImage = RESOURCE_PREFIX + uiKey + ".png"; // NOI18N
-                URL u = l.getResource(resImage);
+                String v = p.getProperty(uiKey);
+                String resImage;
+                URL u = null;
+                if (v == null || v.trim().isEmpty()) {
+                    String r = RESOURCE_PREFIX + uiKey + ".png"; // NOI18N
+                    u = l.getResource(r);
+                    if (u == null) {
+                        r = RESOURCE_PREFIX + uiKey + ".gif"; // NOI18N
+                    }
+                    resImage = r;
+                } else {
+                    resImage = v;
+                    u = l.getResource(resImage);
+                }
+                 
                 if (u == null) {
                     LOG.log(Level.WARNING, "Resource missing: {0}", resImage);
                     continue;

@@ -129,7 +129,7 @@ public class MicronautEntity extends RelatedCMPWizard {
                 ResultSet rs = conn.getMetaData().getTables(conn.getCatalog(), conn.getSchema(), "%", new String[]{"TABLE", "VIEW"}); //NOI18N
                 List<NotifyDescriptor.QuickPick.Item> dbItems = new ArrayList<>();
                 while (rs.next()) {
-                    dbItems.add(new NotifyDescriptor.QuickPick.Item(rs.getString("TABLE_NAME"))); //NOI18N
+                    dbItems.add(new NotifyDescriptor.QuickPick.Item(rs.getString("TABLE_NAME"), null)); //NOI18N
                 }
                 if (dbItems.isEmpty()) {
                     DialogDisplayer.getDefault().notifyLater(new NotifyDescriptor.Message(Bundle.MSG_NoDbTables(connection.getDisplayName()), NotifyDescriptor.ERROR_MESSAGE));

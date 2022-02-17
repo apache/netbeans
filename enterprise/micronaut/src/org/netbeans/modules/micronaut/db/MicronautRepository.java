@@ -105,15 +105,14 @@ public class MicronautRepository implements TemplateWizard.Iterator {
                     return CompletableFuture.completedFuture(null);
                 }
                 final boolean jpaSupported = Utils.isJPASupported(sourceGroup);
+                final Map<String, String> entity2idTypes = getEntityClasses(sourceGroup, jpaSupported);
                 final List<NotifyDescriptor.QuickPick.Item> entities = new ArrayList<>();
-                for (Map.Entry<String, String> entry : getEntityClasses(sourceGroup, jpaSupported).entrySet()) {
-                    String entityFQN = entry.getKey();
-                    String entityIdType = entry.getValue();
+                for (String entityFQN : entity2idTypes.keySet()) {
                     int idx = entityFQN.lastIndexOf('.');
                     if (idx < 0) {
-                        entities.add(new NotifyDescriptor.QuickPick.Item(entityFQN).setUserData(entityIdType));
+                        entities.add(new NotifyDescriptor.QuickPick.Item(entityFQN, null));
                     } else {
-                        entities.add(new NotifyDescriptor.QuickPick.Item(entityFQN.substring(idx + 1)).setDescription(entityFQN.substring(0, idx)).setUserData(entityIdType));
+                        entities.add(new NotifyDescriptor.QuickPick.Item(entityFQN.substring(idx + 1), entityFQN.substring(0, idx)));
                     }
                 }
                 if (entities.isEmpty()) {
@@ -127,7 +126,8 @@ public class MicronautRepository implements TemplateWizard.Iterator {
                     for (NotifyDescriptor.QuickPick.Item item : qp.getItems()) {
                         if (item.isSelected()) {
                             String fqn = item.getDescription() != null ? item.getDescription() + '.' + item.getLabel() : item.getLabel();
-                            FileObject fo = generate(folder, item.getLabel(), fqn, (String) item.getUserData(), dialect);
+                            String entityIdType = entity2idTypes.get(fqn);
+                            FileObject fo = generate(folder, item.getLabel(), fqn, entityIdType, dialect);
                             if (fo != null) {
                                 generated.add(fo.toURI().toString());
                             }

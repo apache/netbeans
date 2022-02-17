@@ -28,7 +28,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -1169,7 +1169,8 @@ public class NotifyDescriptor extends Object {
     */
     public static final class QuickPick extends NotifyDescriptor {
 
-        private final Map<JToggleButton, Item> btn2items = new LinkedHashMap<JToggleButton, Item>();
+        private final String text;
+        private final List<Item> items;
         private final boolean multipleSelection;
 
         /**
@@ -1182,18 +1183,17 @@ public class NotifyDescriptor extends Object {
          */
         public QuickPick(final String text, final String title, final List<Item> items, final boolean multipleSelection) {
             super(null, title, OK_CANCEL_OPTION, PLAIN_MESSAGE, null, null);
+            this.text = text;
+            this.items = items;
             this.multipleSelection = multipleSelection;
-            super.setMessage(createDesign(text, items));
         }
 
-        /**
-         * Make a component representing the selection list.
-         * @param text a label for the selection list
-         * @param items a list of items
-         * @return the component
-         * @since 7.60
-         */
-        protected Component createDesign(final String text, final List<Item> items) {
+        @Override
+        public Object getMessage() {
+            Object msg = super.getMessage();
+            if (msg != null) {
+                return msg;
+            }
             JPanel panel = new JPanel();
             panel.setOpaque (false);
 
@@ -1209,6 +1209,7 @@ public class NotifyDescriptor extends Object {
                     .addContainerGap()
                     .addComponent(label);
 
+            final Map<JToggleButton, Item> btn2items = new LinkedHashMap<JToggleButton, Item>();
             ItemListener listener = new ItemListener() {
                 @Override
                 public void itemStateChanged(ItemEvent e) {
@@ -1229,8 +1230,8 @@ public class NotifyDescriptor extends Object {
                 } else {
                     btn = new JCheckBox();
                 }
-                btn.setText(item.getDescription() != null ? item.getLabel() + " - " + item.getDescription() : item.getLabel()); //NOI18N
-                btn.setToolTipText(item.getDetail());
+                btn.setText(item.getLabel());
+                btn.setToolTipText(item.getDescription());
                 btn.setSelected(item.isSelected());
                 hGroup.addComponent(btn);
                 vGroup.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -1249,16 +1250,17 @@ public class NotifyDescriptor extends Object {
                 .addGroup(vGroup.addContainerGap())
             );
 
+            this.setMessage(panel);
             return panel;
         }
 
         /**
          * Get the list of selection items.
-         * @return selection items
+         * @return unmodifiable list of items
          * @since 7.60
          */
         public List<Item> getItems() {
-            return new ArrayList<Item>(btn2items.values());
+            return Collections.unmodifiableList(items);
         }
 
         /**
@@ -1277,18 +1279,18 @@ public class NotifyDescriptor extends Object {
         public static final class Item {
 
             private final String label;
-            private String description;
-            private String detail;
+            private final String description;
             private boolean selected;
-            private Object userData;
 
             /**
              * Creates item that can be selected from a list of items.
-             * @param label an item's label
+             * @param label item's label
+             * @param description item's description
              * @since 7.60
              */
-            public Item(String label) {
+            public Item(String label, String description) {
                 this.label = label;
+                this.description = description;
             }
 
             /**
@@ -1308,32 +1310,6 @@ public class NotifyDescriptor extends Object {
             }
 
             /**
-             * Sets item's description.
-             * @since 7.60
-             */
-            public Item setDescription(String description) {
-                this.description = description;
-                return this;
-            }
-
-            /**
-             * Item's detail.
-             * @since 7.60
-             */
-            public String getDetail() {
-                return detail;
-            }
-
-            /**
-             * Sets item's detail.
-             * @since 7.60
-             */
-            public Item setDetail(String detail) {
-                this.detail = detail;
-                return this;
-            }
-
-            /**
              * Flag indicating if this item is selected.
              * @since 7.60
              */
@@ -1345,26 +1321,8 @@ public class NotifyDescriptor extends Object {
              * Marks item as selected.
              * @since 7.60
              */
-            public Item setSelected(boolean selected) {
+            public void setSelected(boolean selected) {
                 this.selected = selected;
-                return this;
-            }
-
-            /**
-             * Optional user data.
-             * @since 7.60
-             */
-            public Object getUserData() {
-                return userData;
-            }
-
-            /**
-             * Optional user data.
-             * @since 7.60
-             */
-            public Item setUserData(Object userData) {
-                this.userData = userData;
-                return this;
             }
         }
     }

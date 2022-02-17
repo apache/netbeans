@@ -295,7 +295,7 @@ class NotifyDescriptorAdapter {
             NotifyDescriptor.QuickPick qp = (NotifyDescriptor.QuickPick) descriptor;
             Map<QuickPickItem, NotifyDescriptor.QuickPick.Item> items = new HashMap<>();
             for (NotifyDescriptor.QuickPick.Item item : qp.getItems()) {
-                items.put(new QuickPickItem(item.getLabel(), item.getDescription(), item.getDetail(), item.isSelected(), item.getUserData()), item);
+                items.put(new QuickPickItem(item.getLabel(), item.getDescription(), null, item.isSelected(), null), item);
             }
             ShowQuickPickParams params = new ShowQuickPickParams(qp.getTitle(), qp.isMultipleSelection(), new ArrayList<>(items.keySet()));
             return client.showQuickPick(params).thenApply(selected -> {

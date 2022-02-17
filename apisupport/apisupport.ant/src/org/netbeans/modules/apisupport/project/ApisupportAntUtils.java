@@ -474,7 +474,7 @@ public class ApisupportAntUtils {
      * Property provider which computes one or more properties based on some properties coming
      * from an intermediate evaluator, and is capable of firing changes correctly.
      */
-    public static abstract class ComputedPropertyProvider implements PropertyProvider, PropertyChangeListener {
+    public abstract static class ComputedPropertyProvider implements PropertyProvider, PropertyChangeListener {
         private final PropertyEvaluator eval;
         private final ChangeSupport cs = new ChangeSupport(this);
         protected ComputedPropertyProvider(PropertyEvaluator eval) {

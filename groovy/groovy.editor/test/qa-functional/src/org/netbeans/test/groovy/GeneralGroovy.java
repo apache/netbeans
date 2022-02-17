@@ -45,7 +45,7 @@ public class GeneralGroovy extends JellyTestCase {
     static final String JAVA_CATEGORY_NAME = "Java";
     static final String GROOVY_CATEGORY_NAME = "Groovy";
     static final String JAVA_PROJECT_NAME = "Java Application";
-    static protected final int COMPLETION_LIST_THRESHOLD = 5000;
+    protected static final int COMPLETION_LIST_THRESHOLD = 5000;
     protected static final String GROOVY_EXTENSION = ".groovy";
     protected static final String SAMPLES = "Samples";
     protected static final String SAMPLES_CATEGORY = "Groovy";

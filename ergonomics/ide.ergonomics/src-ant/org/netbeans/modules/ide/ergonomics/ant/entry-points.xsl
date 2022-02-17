@@ -217,6 +217,12 @@
             <xsl:attribute name="methodvalue">org.netbeans.modules.ide.ergonomics.api.Factory.newProject</xsl:attribute>
         </xsl:element>
     </xsl:template>
+    <xsl:template match="attr[@name='lspInstanceCreator']" mode="project-wizard">
+        <xsl:element name="attr">
+            <xsl:attribute name="name">lspInstanceCreator</xsl:attribute>
+            <xsl:attribute name="boolvalue">false</xsl:attribute>
+        </xsl:element>
+    </xsl:template>
     <xsl:template match="attr[@name='urlvalue']" mode="project-wizard">
         <xsl:element name="attr">
             <xsl:attribute name="name"><xsl:value-of select="@name"/></xsl:attribute>

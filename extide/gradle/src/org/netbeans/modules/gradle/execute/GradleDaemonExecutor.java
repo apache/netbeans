@@ -203,8 +203,7 @@ public final class GradleDaemonExecutor extends AbstractGradleExecutor {
 
             if (RunUtils.isAugmentedBuildEnabled(config.getProject())) {
                 augmented = new GradleCommandLine(cmd);
-                augmented.addParameter(GradleCommandLine.Parameter.INIT_SCRIPT, GradleDaemon.INIT_SCRIPT);
-                augmented.addSystemProperty(GradleDaemon.PROP_TOOLING_JAR, GradleDaemon.TOOLING_JAR);
+                augmented.addParameter(GradleCommandLine.Parameter.INIT_SCRIPT, GradleDaemon.initScript());
             }
             GradleBaseProject gbp = GradleBaseProject.get(config.getProject());
             augmented.configure(buildLauncher, gbp != null ? gbp.getRootDir() : null);

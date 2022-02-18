@@ -49,8 +49,8 @@ import org.openide.filesystems.FileObject;
 public class AngularModuleInterceptor implements FunctionInterceptor{
 
     //private static Pattern PATTERN = Pattern.compile("angular\\.module(\\..*)*\\.controller");
-    private final static Pattern PATTERN = Pattern.compile("(.)*\\.controller");
-    private final static List<String> KNOWN_TYPES = Arrays.asList(
+    private static final Pattern PATTERN = Pattern.compile("(.)*\\.controller");
+    private static final List<String> KNOWN_TYPES = Arrays.asList(
             TypeUsage.ARRAY, TypeUsage.BOOLEAN, TypeUsage.FUNCTION, TypeUsage.NULL,
             TypeUsage.NUMBER, TypeUsage.OBJECT, TypeUsage.REGEXP, TypeUsage.STRING,
             TypeUsage.UNDEFINED, TypeUsage.UNRESOLVED);

@@ -691,7 +691,7 @@ public final class CodeStyle {
         WRAP_NEVER
     }
 
-    final static class Holder {
+    static final class Holder {
 
         final boolean expandTabsToSpaces;
 

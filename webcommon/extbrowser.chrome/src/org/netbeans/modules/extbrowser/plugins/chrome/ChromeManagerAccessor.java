@@ -563,7 +563,7 @@ public class ChromeManagerAccessor implements ExtensionManagerAccessor {
             return result[0];
         }
 
-        static private class FileFinder implements FileFilter {
+        private static class FileFinder implements FileFilter {
             FileFinder(String name){
                 this( name, false );
             }

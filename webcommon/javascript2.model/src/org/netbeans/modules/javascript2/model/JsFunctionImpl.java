@@ -45,9 +45,9 @@ import org.openide.filesystems.FileObject;
  */
 public class JsFunctionImpl extends DeclarationScopeImpl implements JsFunction {
 
-    final private HashMap <String, JsObject> parametersByName;
-    final private List<JsObject> parameters;
-    final private Set<TypeUsage> returnTypes;
+    private final HashMap <String, JsObject> parametersByName;
+    private final List<JsObject> parameters;
+    private final Set<TypeUsage> returnTypes;
     private boolean isStrict;
 
     public JsFunctionImpl(DeclarationScope scope, JsObject parentObject, Identifier name,

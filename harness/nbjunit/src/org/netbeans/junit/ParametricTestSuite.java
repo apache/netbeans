@@ -54,7 +54,7 @@ public abstract class ParametricTestSuite extends MultiTestSuite{
      * Factory method returns a new instance of a testcases.
      * Overrides the basic method so that it's needless any more.
      */
-    final protected MultiTestCase nextTestCase(){
+    protected final MultiTestCase nextTestCase(){
         return null;
     }
     

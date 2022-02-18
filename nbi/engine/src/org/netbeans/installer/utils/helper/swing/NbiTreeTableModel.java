@@ -52,7 +52,7 @@ public abstract class NbiTreeTableModel implements TableModel {
     
     public abstract int getTreeColumnIndex();
     
-    final public TreeModel getTreeModel() {
+    public final TreeModel getTreeModel() {
         return treeModel;
     }
     
@@ -62,7 +62,7 @@ public abstract class NbiTreeTableModel implements TableModel {
         addTreeModelListener();
     }
     
-    final public JTree getTree() {
+    public final JTree getTree() {
         return tree;
     }
     
@@ -81,7 +81,7 @@ public abstract class NbiTreeTableModel implements TableModel {
     }
     
     // partial TableModel implementation ////////////////////////////////////////////
-    final public int getRowCount() {
+    public final int getRowCount() {
         return tree.getRowCount();
     }
     

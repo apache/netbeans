@@ -304,7 +304,7 @@ implements UpdatingContext {
         return false;
     }
 
-    static private Color stringToColor( String key, Color defcolor ) {
+    private static Color stringToColor( String key, Color defcolor ) {
         try {
             String str = Localization.getBrandedString( key + "_R" );  // NOI18N
             int re = Integer.parseInt( str );
@@ -321,7 +321,7 @@ implements UpdatingContext {
         }
     }
     
-    static private Dimension stringToDimension (String key, Dimension defaultSize) {
+    private static Dimension stringToDimension (String key, Dimension defaultSize) {
         try {
             String str = Localization.getBrandedString( key + "_X" );  // NOI18N
             int x = Integer.parseInt( str );
@@ -335,15 +335,15 @@ implements UpdatingContext {
         }
     }
     
-    static private boolean addBorder() {
+    private static boolean addBorder() {
         return "true".equals( Localization.getBrandedString( "UpdaterFrame.hasBorder" ) ); // NOI18N
     }
     
-    static private boolean isGradient () {
+    private static boolean isGradient () {
         return "true".equals (Localization.getBrandedString ("UpdaterFrame.isGradient")); // NOI18N
     }
 
-    static private boolean isGradientVertical () {
+    private static boolean isGradientVertical () {
         return "true".equals (Localization.getBrandedString ("UpdaterFrame.isGradientVertical")); // NOI18N
     }    
     

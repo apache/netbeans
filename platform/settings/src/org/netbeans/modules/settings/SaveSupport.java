@@ -38,9 +38,9 @@ import org.openide.util.Exceptions;
  */
 final class SaveSupport {
     /** property means setting is changed and should be changed */
-    public final static String PROP_SAVE = "savecookie"; //NOI18N
+    public static final String PROP_SAVE = "savecookie"; //NOI18N
     /** property means setting file content is changed */
-    public final static String PROP_FILE_CHANGED = "fileChanged"; //NOI18N
+    public static final String PROP_FILE_CHANGED = "fileChanged"; //NOI18N
     /** data object name cached in the attribute to prevent instance creation when
      * its node is displayed.
      * @see org.openide.loaders.InstanceDataObject#EA_NAME

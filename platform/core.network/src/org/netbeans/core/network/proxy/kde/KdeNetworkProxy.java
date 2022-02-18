@@ -44,29 +44,29 @@ import org.netbeans.core.network.proxy.NetworkProxySettings;
  */
 public class KdeNetworkProxy implements NetworkProxyResolver {
     
-    private final static Logger LOGGER = Logger.getLogger(KdeNetworkProxy.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(KdeNetworkProxy.class.getName());
 
-    private final static String EMPTY_STRING = ""; //NOI18N
-    private final static String SPACE = " "; //NOI18N
-    private final static String EQUALS = "="; //NOI18N
-    private final static String COLON = ":"; //NOI18N
-    private final static String COMMA = ","; //NOI18N
-    private final static String SQ_BRACKET_LEFT = "["; //NOI18N
-    private final static String HOME = "HOME"; //NOI18N
-    private final static String KIOSLAVERC_PROXY_SETTINGS_GROUP = "[Proxy Settings]"; //NOI18N
-    private final static String KIOSLAVERC_PROXY_TYPE = "ProxyType"; //NOI18N
-    private final static String KIOSLAVERC_PROXY_CONFIG_SCRIPT = "Proxy Config Script"; //NOI18N
-    private final static String KIOSLAVERC_HTTP_PROXY = "httpProxy"; //NOI18N
-    private final static String KIOSLAVERC_HTTPS_PROXY = "httpsProxy"; //NOI18N
-    private final static String KIOSLAVERC_SOCKS_PROXY = "socksProxy"; //NOI18N
-    private final static String KIOSLAVERC_NO_PROXY_FOR = "NoProxyFor"; //NOI18N
-    private final static String KIOSLAVERC_PROXY_TYPE_NONE = "0"; //NOI18N
-    private final static String KIOSLAVERC_PROXY_TYPE_MANUAL = "1"; //NOI18N
-    private final static String KIOSLAVERC_PROXY_TYPE_PAC = "2"; //NOI18N
-    private final static String KIOSLAVERC_PROXY_TYPE_AUTO = "3"; //NOI18N
-    private final static String KIOSLAVERC_PROXY_TYPE_SYSTEM = "4"; //NOI18N    
-    private final static String KIOSLAVERC_PATH_IN_HOME = ".config/kioslaverc"; //NOI18N 
-    private final static String KIOSLAVERC_PATH_IN_HOME_KDE4 = ".kde/share/config/kioslaverc"; //NOI18N 
+    private static final String EMPTY_STRING = ""; //NOI18N
+    private static final String SPACE = " "; //NOI18N
+    private static final String EQUALS = "="; //NOI18N
+    private static final String COLON = ":"; //NOI18N
+    private static final String COMMA = ","; //NOI18N
+    private static final String SQ_BRACKET_LEFT = "["; //NOI18N
+    private static final String HOME = "HOME"; //NOI18N
+    private static final String KIOSLAVERC_PROXY_SETTINGS_GROUP = "[Proxy Settings]"; //NOI18N
+    private static final String KIOSLAVERC_PROXY_TYPE = "ProxyType"; //NOI18N
+    private static final String KIOSLAVERC_PROXY_CONFIG_SCRIPT = "Proxy Config Script"; //NOI18N
+    private static final String KIOSLAVERC_HTTP_PROXY = "httpProxy"; //NOI18N
+    private static final String KIOSLAVERC_HTTPS_PROXY = "httpsProxy"; //NOI18N
+    private static final String KIOSLAVERC_SOCKS_PROXY = "socksProxy"; //NOI18N
+    private static final String KIOSLAVERC_NO_PROXY_FOR = "NoProxyFor"; //NOI18N
+    private static final String KIOSLAVERC_PROXY_TYPE_NONE = "0"; //NOI18N
+    private static final String KIOSLAVERC_PROXY_TYPE_MANUAL = "1"; //NOI18N
+    private static final String KIOSLAVERC_PROXY_TYPE_PAC = "2"; //NOI18N
+    private static final String KIOSLAVERC_PROXY_TYPE_AUTO = "3"; //NOI18N
+    private static final String KIOSLAVERC_PROXY_TYPE_SYSTEM = "4"; //NOI18N    
+    private static final String KIOSLAVERC_PATH_IN_HOME = ".config/kioslaverc"; //NOI18N 
+    private static final String KIOSLAVERC_PATH_IN_HOME_KDE4 = ".kde/share/config/kioslaverc"; //NOI18N 
     
     private final List<Path> KIOSLAVERC_PATHS;
 

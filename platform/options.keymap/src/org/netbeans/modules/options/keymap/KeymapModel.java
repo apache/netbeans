@@ -76,7 +76,7 @@ public class KeymapModel {
                                     
     private static volatile List<KeymapManager> managers = null;
     
-    private volatile static KeymapModel INSTANCE;
+    private static volatile KeymapModel INSTANCE;
     
     static KeymapModel create() {
         if (INSTANCE != null) {

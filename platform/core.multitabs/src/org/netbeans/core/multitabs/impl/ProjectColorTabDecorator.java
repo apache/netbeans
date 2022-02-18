@@ -53,7 +53,7 @@ public class ProjectColorTabDecorator extends TabDecorator {
     private static final Map<TabData, Color> tab2color = new WeakHashMap<>(10);
     private static final List<Color> backGroundColors;
     private static Color foregroundColor;
-    private final static ChangeListener projectsListener = (ChangeEvent e) -> updateColorMapping();
+    private static final ChangeListener projectsListener = (ChangeEvent e) -> updateColorMapping();
 
     static {
         backGroundColors = new ArrayList<>( 10 );

@@ -37,12 +37,12 @@ import org.openide.util.Lookup.Result;
  */
 public class FileObjectTestHid extends TestBaseHid {
 
-    private final static String FOLDER_CHILD_NAME= "testFolder";
-    private final static String FOLDER_CHILD= "/"+FOLDER_CHILD_NAME;
+    private static final String FOLDER_CHILD_NAME= "testFolder";
+    private static final String FOLDER_CHILD= "/"+FOLDER_CHILD_NAME;
 
-    private final static String FILE_CHILD_NAME= "test";
-    private final static String FILE_CHILD_EXT= "txt";
-    private final static String FILE_CHILD= "/"+FILE_CHILD_NAME+"." +FILE_CHILD_EXT;
+    private static final String FILE_CHILD_NAME= "test";
+    private static final String FILE_CHILD_EXT= "txt";
+    private static final String FILE_CHILD= "/"+FILE_CHILD_NAME+"." +FILE_CHILD_EXT;
     
     /**Should be deleted and testedFS renamed to fs*/
     private FileSystem fs;

@@ -38,7 +38,7 @@ import java.util.Arrays;
 public final class NbMarshalledObject implements Serializable {
     /** serial version UID */
     private static final long serialVersionUID = 7842398740921434354L;
-    private final static char[] HEX = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' }; // NOI18N
+    private static final char[] HEX = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' }; // NOI18N
 
     /**
      * @serial Bytes of serialized representation.  If <code>objBytes</code> is

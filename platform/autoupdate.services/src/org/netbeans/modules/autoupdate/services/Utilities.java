@@ -380,7 +380,7 @@ public class Utilities {
         }
     }
     
-    static private class KeyStoreProviderListener implements LookupListener {
+    private static class KeyStoreProviderListener implements LookupListener {
         private KeyStoreProviderListener () {
         }
         

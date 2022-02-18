@@ -444,7 +444,7 @@ public abstract class Lookup {
      * Also permits listening to changes in the result.
      * Result can contain duplicate items.
      */
-    public static abstract class Result<T> extends Object {
+    public abstract static class Result<T> extends Object {
         /** Registers a listener that is invoked when there is a possible
          * change in this result. 
          * <p>
@@ -528,7 +528,7 @@ public abstract class Lookup {
      *
      * @since 1.25
      */
-    public static abstract class Item<T> extends Object {
+    public abstract static class Item<T> extends Object {
         /** Get the instance itself.
          * @return the instance or null if the instance cannot be created
          */

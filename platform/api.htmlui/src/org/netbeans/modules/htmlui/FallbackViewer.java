@@ -92,7 +92,7 @@ final class FallbackViewer implements HTMLViewerSpi<FallbackViewer.UI, JButton> 
         EventQueue.invokeLater(r);
     }
 
-    final static class UI {
+    static final class UI {
         final Context context;
 
         UI(Context context) {

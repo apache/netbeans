@@ -176,7 +176,7 @@ public final class Utilities {
     private static int operatingSystem = -1;
     
     // only for UtilitiesTest purposes
-    final static void resetOperatingSystem () {
+    static final void resetOperatingSystem () {
         operatingSystem = -1;
     }
 

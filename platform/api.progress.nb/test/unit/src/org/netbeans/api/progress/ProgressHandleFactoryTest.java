@@ -116,7 +116,7 @@ public class ProgressHandleFactoryTest extends NbTestCase {
         synchronized void wakeup() {
             notify();
         }
-        volatile public boolean blocking = false;
+        public volatile boolean blocking = false;
         private int blockingTime;
     }
 

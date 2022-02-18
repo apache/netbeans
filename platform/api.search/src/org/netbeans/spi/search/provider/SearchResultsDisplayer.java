@@ -85,7 +85,7 @@ public abstract class SearchResultsDisplayer<T> {
     /**
      * Helper class for transforming matching objects to nodes.
      */
-    public static abstract class NodeDisplayer<T> {
+    public abstract static class NodeDisplayer<T> {
         
         /** Constructor for subclasses. */
         protected NodeDisplayer() {}

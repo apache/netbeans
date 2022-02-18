@@ -132,7 +132,7 @@ public class MouseUtils extends Object {
      * Please note that older implementation which used treshold is now
      * deprecated, please use default constructor.
     */
-    public static abstract class PopupMouseAdapter extends MouseAdapter {
+    public abstract static class PopupMouseAdapter extends MouseAdapter {
         /** @deprecated Obsoleted as of 3.4, PopupMouseAdapter now uses isPopupTrigger properly.
             Threshold does nothing, please use default constructor without treshold.
          */
@@ -175,6 +175,6 @@ public class MouseUtils extends Object {
         * param evt The mouse release event - should be used to obtain the
         *           position of the popup menu
         */
-        abstract protected void showPopup(MouseEvent evt);
+        protected abstract void showPopup(MouseEvent evt);
     }
 }

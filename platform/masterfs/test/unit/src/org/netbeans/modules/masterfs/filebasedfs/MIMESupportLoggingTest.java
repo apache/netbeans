@@ -158,7 +158,7 @@ public class MIMESupportLoggingTest extends NbTestCase {
         
     }
 
-    public final static File copyStringToFile (File f, String content) throws Exception {
+    public static final File copyStringToFile (File f, String content) throws Exception {
         FileOutputStream os = new FileOutputStream(f);
         InputStream is = new ByteArrayInputStream(content.getBytes("UTF-8"));
         FileUtil.copy(is, os);

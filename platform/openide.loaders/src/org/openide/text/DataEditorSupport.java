@@ -731,7 +731,7 @@ public class DataEditorSupport extends CloneableEditorSupport {
 
     /** Environment that connects the data object and the CloneableEditorSupport.
     */
-    public static abstract class Env extends OpenSupport.Env implements CloneableEditorSupport.Env {
+    public abstract static class Env extends OpenSupport.Env implements CloneableEditorSupport.Env {
         /** generated Serialized Version UID */
         private static final long serialVersionUID = -2945098431098324441L;
 
@@ -748,9 +748,9 @@ public class DataEditorSupport extends CloneableEditorSupport {
         
         /** did we warned about the size of the file?
          */
-        private transient static Set<FileObject> warnedFiles = new HashSet<FileObject>();
+        private static transient Set<FileObject> warnedFiles = new HashSet<FileObject>();
 
-        private transient static boolean sentBigFileInfo;
+        private static transient boolean sentBigFileInfo;
 
         /** Atomic action used to ignore fileChange event from FileObject.refresh */
         private transient FileSystem.AtomicAction action = null;
@@ -839,7 +839,7 @@ public class DataEditorSupport extends CloneableEditorSupport {
         /**
          * default threshold for big file to warn user (default is 1MB)
          */
-        private transient final long BIG_FILE_THRESHOLD_MB = Integer.getInteger("org.openide.text.big.file.size", 1) * 1024 * 1024;
+        private final transient long BIG_FILE_THRESHOLD_MB = Integer.getInteger("org.openide.text.big.file.size", 1) * 1024 * 1024;
         
         /** Obtains the input stream.
         * @exception IOException if an I/O error occurs

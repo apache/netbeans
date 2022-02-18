@@ -69,13 +69,13 @@ public class ChoiceView extends JComboBox implements Externalizable {
 
     /** The local reference to the explorerManager. It is transient
     * because it will be reset in initializeManager() after deserialization.*/
-    transient private ExplorerManager manager;
+    private transient ExplorerManager manager;
 
     /** Listens on ExplorerManager. */
-    transient private PropertyIL iListener;
+    private transient PropertyIL iListener;
 
     /** model to use */
-    transient private NodeListModel model;
+    private transient NodeListModel model;
 
     /** Value of property showExploredContext. */
     private boolean showExploredContext = true;

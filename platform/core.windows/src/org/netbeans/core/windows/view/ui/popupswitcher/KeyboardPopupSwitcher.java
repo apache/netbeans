@@ -94,8 +94,8 @@ public final class KeyboardPopupSwitcher implements WindowFocusListener {
     /** Indicates whether an item to be selected is previous or next one. */
     private boolean fwd = true;
 
-    private final static AWTKeyStroke CTRL_TAB = AWTKeyStroke.getAWTKeyStroke( KeyEvent.VK_TAB, KeyEvent.CTRL_DOWN_MASK );
-    private final static AWTKeyStroke CTRL_SHIFT_TAB = AWTKeyStroke.getAWTKeyStroke( KeyEvent.VK_TAB, KeyEvent.CTRL_DOWN_MASK+KeyEvent.SHIFT_DOWN_MASK );
+    private static final AWTKeyStroke CTRL_TAB = AWTKeyStroke.getAWTKeyStroke( KeyEvent.VK_TAB, KeyEvent.CTRL_DOWN_MASK );
+    private static final AWTKeyStroke CTRL_SHIFT_TAB = AWTKeyStroke.getAWTKeyStroke( KeyEvent.VK_TAB, KeyEvent.CTRL_DOWN_MASK+KeyEvent.SHIFT_DOWN_MASK );
         
     /**
      * Tries to process given <code>KeyEvent</code> and returns true is event

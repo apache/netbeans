@@ -808,7 +808,7 @@ public class AbstractLookup extends Lookup implements Serializable {
     /** Extension to the default lookup item that offers additional information
      * for the data structures use in AbstractLookup
      */
-    public static abstract class Pair<T> extends Lookup.Item<T> implements Serializable {
+    public abstract static class Pair<T> extends Lookup.Item<T> implements Serializable {
         private static final long serialVersionUID = 1L;
 
         /** possition of this item in the lookup, manipulated in addPair, removePair, setPairs methods */
@@ -1305,7 +1305,7 @@ public class AbstractLookup extends Lookup implements Serializable {
 
     /** Just a holder for index & modified values.
      */
-    final static class Info extends Object {
+    static final class Info extends Object {
         public int index;
         public Object transaction;
 

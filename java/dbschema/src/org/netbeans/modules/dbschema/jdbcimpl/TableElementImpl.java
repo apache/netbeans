@@ -33,7 +33,7 @@ public class TableElementImpl extends DBElementImpl implements TableElement.Impl
     private DBElementsCollection columns;
     private DBElementsCollection indexes;
     private DBElementsCollection keys;
-    transient private DBElementsCollection columnPairs;
+    private transient DBElementsCollection columnPairs;
 
     private String table;
 

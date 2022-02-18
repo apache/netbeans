@@ -180,7 +180,7 @@ public class TestPerformer {
      * @param content the contents of the returned file.
      * @return the created file
      */
-    private final static FileObject copyStringToFile (FileObject f, String content) throws Exception {
+    private static final FileObject copyStringToFile (FileObject f, String content) throws Exception {
         OutputStream os = f.getOutputStream();
         InputStream is = new ByteArrayInputStream(content.getBytes("UTF-8"));
         FileUtil.copy(is, os);

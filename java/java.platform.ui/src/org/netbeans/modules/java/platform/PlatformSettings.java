@@ -89,7 +89,7 @@ public class PlatformSettings {
     }
 
 
-    public synchronized static PlatformSettings getDefault () {
+    public static synchronized PlatformSettings getDefault () {
         return INSTANCE;
     }
 }

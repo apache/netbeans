@@ -39,10 +39,10 @@ public class GlobalClassPathProviderImpl extends ProjectOpenedHook implements Pr
 
     final Project project;
 
-    private final static int BOOT = 0;
-    private final static int SOURCE = 2;
-    private final static int COMPILE = 4;
-    private final static int RUNTIME = 6;
+    private static final int BOOT = 0;
+    private static final int SOURCE = 2;
+    private static final int COMPILE = 4;
+    private static final int RUNTIME = 6;
 
     final ClassPath[] cache = new ClassPath[RUNTIME + 2];
 

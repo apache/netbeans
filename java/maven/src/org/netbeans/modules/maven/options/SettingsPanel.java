@@ -93,7 +93,7 @@ public class SettingsPanel extends javax.swing.JPanel {
     private final DefaultComboBoxModel jdkHomeDataModel = new DefaultComboBoxModel();
     private String             mavenRuntimeHome = null;
     private int                lastSelected = -1;
-    private final static RequestProcessor RP = new RequestProcessor(SettingsPanel.class);
+    private static final RequestProcessor RP = new RequestProcessor(SettingsPanel.class);
 
     private static class ComboBoxRenderer extends DefaultListCellRenderer {
 

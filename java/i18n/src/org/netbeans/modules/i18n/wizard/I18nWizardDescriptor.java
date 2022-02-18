@@ -68,7 +68,7 @@ final class I18nWizardDescriptor extends WizardDescriptor {
      *
      * @see org.openide.WizardDescriptor.Panel
      */
-    public static abstract class Panel
+    public abstract static class Panel
             implements WizardDescriptor.Panel<I18nWizardDescriptor.Settings> {
 
         /** Reference to panel. */
@@ -83,7 +83,7 @@ final class I18nWizardDescriptor extends WizardDescriptor {
 
         /** Gets component to display. Implements <code>WizardDescriptor.Panel</code> interface method. 
          * @return this instance */
-        public synchronized final Component getComponent() {
+        public final synchronized Component getComponent() {
             if (component == null) {
                 component = createComponent();
             }

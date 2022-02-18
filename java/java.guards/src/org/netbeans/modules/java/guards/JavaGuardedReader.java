@@ -40,7 +40,7 @@ import org.openide.util.NbBundle;
 final class JavaGuardedReader {
 
     /** The prefix of all magic strings */
-    final static String MAGIC_PREFIX = "//GEN-"; // NOI18N
+    static final String MAGIC_PREFIX = "//GEN-"; // NOI18N
     
     Pattern magicsAsRE;
     

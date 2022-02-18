@@ -1012,7 +1012,7 @@ public class FileObjects {
     //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="JavaFileObject implementation">
-    public static abstract class Base implements InferableJavaFileObject {
+    public abstract static class Base implements InferableJavaFileObject {
 
         protected final JavaFileObject.Kind kind;
         protected final String pkgName;
@@ -1163,7 +1163,7 @@ public class FileObjects {
         }
     }
 
-    public static abstract class PrefetchableBase extends Base implements PrefetchableJavaFileObject {
+    public abstract static class PrefetchableBase extends Base implements PrefetchableJavaFileObject {
 
         private volatile CharSequence data;
 
@@ -1348,7 +1348,7 @@ public class FileObjects {
         }
     }
 
-    private static abstract class PathBase extends Base {
+    private abstract static class PathBase extends Base {
 
         private volatile URI uriCache;
 

@@ -1441,7 +1441,7 @@ public final class EditorContextSupport {
     }
 
 
-    private static abstract class ScanRunnable <E extends Throwable> implements Runnable {
+    private abstract static class ScanRunnable <E extends Throwable> implements Runnable {
         
         private Future<Void>[] resultPtr;
         private E[] excPtr;

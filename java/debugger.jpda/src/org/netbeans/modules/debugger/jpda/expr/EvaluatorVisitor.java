@@ -4624,7 +4624,7 @@ public class EvaluatorVisitor extends ErrorAwareTreePathScanner<Mirror, Evaluati
         public UnsuitableArgumentsException() {}
     }
 
-    static abstract class ArtificialMirror implements Mirror {
+    abstract static class ArtificialMirror implements Mirror {
 
         @Override
         public VirtualMachine virtualMachine() {
@@ -4635,7 +4635,7 @@ public class EvaluatorVisitor extends ErrorAwareTreePathScanner<Mirror, Evaluati
 
     }
 
-    private static abstract class CommandMirror extends ArtificialMirror {
+    private abstract static class CommandMirror extends ArtificialMirror {
 
     }
 

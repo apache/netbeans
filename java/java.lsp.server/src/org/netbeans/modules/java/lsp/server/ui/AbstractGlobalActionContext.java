@@ -38,7 +38,7 @@ public class AbstractGlobalActionContext implements ContextGlobalProvider, Looku
     /**
      * Holder class that is inserted & looked up in the default Lookup.
      */
-    final static class ContextHolder {
+    static final class ContextHolder {
         final Lookup context;
 
         public ContextHolder(Lookup context) {

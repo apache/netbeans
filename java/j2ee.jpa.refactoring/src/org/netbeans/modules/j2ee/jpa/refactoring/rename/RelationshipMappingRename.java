@@ -77,7 +77,7 @@ import org.openide.util.lookup.Lookups;
 public final class RelationshipMappingRename extends JavaRefactoringPlugin {
     
     private final RenameRefactoring rename;
-    private final static Logger LOG = Logger.getLogger(RelationshipMappingRename.class.getName());
+    private static final Logger LOG = Logger.getLogger(RelationshipMappingRename.class.getName());
     
     public RelationshipMappingRename(RenameRefactoring rename) {
         this.rename = rename;

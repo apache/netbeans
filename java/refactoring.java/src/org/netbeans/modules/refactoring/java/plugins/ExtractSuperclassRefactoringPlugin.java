@@ -272,7 +272,7 @@ public final class ExtractSuperclassRefactoringPlugin extends JavaRefactoringPlu
         return problem;
     }
     
-    private final static class ExtractSuperclassTransformer extends RefactoringVisitor {
+    private static final class ExtractSuperclassTransformer extends RefactoringVisitor {
         private final ExtractSuperclassRefactoring refactoring;
         private final ElementHandle<TypeElement> sourceType;
         private List<Tree> members;

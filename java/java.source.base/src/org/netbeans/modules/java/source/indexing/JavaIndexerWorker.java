@@ -178,7 +178,7 @@ public final class JavaIndexerWorker {
         }
     }
     
-    private static abstract class SuspendableIterator implements Iterator<CompileTuple> {
+    private abstract static class SuspendableIterator implements Iterator<CompileTuple> {
         
         private final SuspendStatus suspendStatus;
         

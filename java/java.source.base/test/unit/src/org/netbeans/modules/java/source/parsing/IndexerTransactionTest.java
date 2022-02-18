@@ -640,8 +640,8 @@ public class IndexerTransactionTest extends NbTestCase {
 
     public static class SFBQImpl implements SourceForBinaryQueryImplementation {
 
-        final static Map<URL,FileObject> map = new HashMap<URL,FileObject> ();
-        final static Map<URL,Result> results = new HashMap<URL,Result> ();
+        static final Map<URL,FileObject> map = new HashMap<URL,FileObject> ();
+        static final Map<URL,Result> results = new HashMap<URL,Result> ();
 
         public SFBQImpl () {
 

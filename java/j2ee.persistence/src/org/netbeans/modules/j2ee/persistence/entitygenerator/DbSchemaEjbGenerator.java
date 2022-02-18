@@ -55,7 +55,7 @@ public class DbSchemaEjbGenerator {
     private Set<String> tablesReferecedByOtherTables;
     private Set<String> primaryKeyIsForeignKeyTables;
     private final CollectionType colectionType;
-    private final static Logger LOGGER = Logger.getLogger(DbSchemaEjbGenerator.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(DbSchemaEjbGenerator.class.getName());
     private boolean useColumNamesInRelations = false;
     //private ArrayList<String> warningMessages;
     private final boolean generateUnresolvedRelationships;

@@ -786,7 +786,7 @@ public class Util {
      * @return true if the given <code>candidate</code> represents a unique
      * name within the names of the given <code>punits</code>, false otherwise.
      */
-    static private boolean isUnique(String candidate, PersistenceUnit[] punits) {
+    private static boolean isUnique(String candidate, PersistenceUnit[] punits) {
         for (PersistenceUnit punit : punits) {
             if (candidate.equals(punit.getName())) {
                 return false;

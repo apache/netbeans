@@ -1322,7 +1322,7 @@ final class ModuleClassPaths {
         }
     }
 
-    private static abstract class BaseClassPathImplementation implements ClassPathImplementation {
+    private abstract static class BaseClassPathImplementation implements ClassPathImplementation {
 
         private final PropertyChangeSupport listeners;
         //@GuardedBy("this")

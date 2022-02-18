@@ -396,8 +396,8 @@ public class RemoteAWTService {
         
         private static class ComponentInfo {
             
-            private final static int INT_DATA_LENGTH = 8;
-            private final static ComponentInfo[] NO_SUBCOMPONENTS = new ComponentInfo[] {};
+            private static final int INT_DATA_LENGTH = 8;
+            private static final ComponentInfo[] NO_SUBCOMPONENTS = new ComponentInfo[] {};
             
             private Component c;
             private String name;

@@ -154,7 +154,7 @@ public class TreeViewProviderTest {
         assertNotNull(map.get(grandParentId));
     }
 
-    final static class TreeViewProviderImpl extends TreeViewProvider {
+    static final class TreeViewProviderImpl extends TreeViewProvider {
         private Set<Node> changed = new HashSet<>();
 
         TreeViewProviderImpl(ExplorerManager em, TreeNodeRegistry r) {

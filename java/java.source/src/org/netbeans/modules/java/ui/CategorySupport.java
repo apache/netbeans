@@ -555,7 +555,7 @@ public class CategorySupport implements ActionListener, ChangeListener, ListData
         }
     }
 
-    static abstract class DocumentCategorySupport extends CategorySupport {
+    abstract static class DocumentCategorySupport extends CategorySupport {
         /**
          * Two Sources are used. While one Source document is displayed by the preview JEditorPane, 
          * the other source may be formatted in the RP. The editor then switch between those sources.

@@ -412,7 +412,7 @@ public final class ScanUtils {
      */
     private static final ThreadLocal<Boolean> retryGuard = new ThreadLocal<Boolean>();
     
-    private final static class FinishedFuture implements Future<Void> {
+    private static final class FinishedFuture implements Future<Void> {
         @Override
         public boolean cancel(boolean mayInterruptIfRunning) {
             return false;

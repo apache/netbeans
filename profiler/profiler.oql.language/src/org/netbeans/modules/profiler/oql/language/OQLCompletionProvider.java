@@ -41,9 +41,9 @@ import org.netbeans.spi.editor.completion.support.AsyncCompletionTask;
  * @author Jaroslav Bachorik
  */
 public class OQLCompletionProvider implements CompletionProvider {
-    final private Set<String> keywords = new HashSet<String>();
-    final private Set<String> functions = new HashSet<String>();
-    final private Set<String> heapMethods = new HashSet<String>();
+    private final Set<String> keywords = new HashSet<String>();
+    private final Set<String> functions = new HashSet<String>();
+    private final Set<String> heapMethods = new HashSet<String>();
     
     public OQLCompletionProvider() {
         keywords.add("select"); // NOI18N

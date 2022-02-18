@@ -35,8 +35,8 @@ import org.openide.util.lookup.ProxyLookup;
  */
 public class ProjectSensitivePerformer implements ProjectActionPerformer {
     
-    final private String command;
-    final private boolean attach;
+    private final String command;
+    private final boolean attach;
     
     public static ProjectSensitivePerformer profileProject(String command) {
         return new ProjectSensitivePerformer(command, false);

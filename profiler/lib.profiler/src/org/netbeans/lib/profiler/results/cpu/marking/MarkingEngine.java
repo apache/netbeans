@@ -58,7 +58,7 @@ public class MarkingEngine {
 
     private final Object markGuard = new Object();
 
-    final private MarkMapper mapper;
+    private final MarkMapper mapper;
 
     // @GuardedBy markGuard
     private MarkMapping[] marks;

@@ -45,7 +45,7 @@ import org.openide.util.NbBundle;
  * @author J. Bachorik
  */
 public class OQLEngineImpl {
-    final private static Logger LOGGER = Logger.getLogger(OQLEngineImpl.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(OQLEngineImpl.class.getName());
 
     private static boolean oqlSupported;
 
@@ -376,7 +376,7 @@ public class OQLEngineImpl {
         return null;
     }
 
-    final private AtomicBoolean cancelled = new AtomicBoolean(false);
+    private final AtomicBoolean cancelled = new AtomicBoolean(false);
     private void init(Snapshot snapshot) throws RuntimeException {
         this.snapshot = snapshot;
         try {

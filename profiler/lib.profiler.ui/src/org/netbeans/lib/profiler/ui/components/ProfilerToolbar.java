@@ -80,7 +80,7 @@ public abstract class ProfilerToolbar {
     protected ProfilerToolbar() {}
     
     
-    public static abstract class Provider {
+    public abstract static class Provider {
         
         public abstract ProfilerToolbar create(boolean showSeparator);
         

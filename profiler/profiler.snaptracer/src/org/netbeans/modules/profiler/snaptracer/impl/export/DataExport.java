@@ -247,7 +247,7 @@ public final class DataExport {
     }
 
     
-    private static abstract class Filter extends FileFilter {
+    private abstract static class Filter extends FileFilter {
 
         abstract String getExt();
 

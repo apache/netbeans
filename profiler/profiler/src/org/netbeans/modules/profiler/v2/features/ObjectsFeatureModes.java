@@ -120,14 +120,14 @@ import org.openide.util.NbPreferences;
 })
 final class ObjectsFeatureModes {
     
-    private static abstract class MemoryMode extends FeatureMode {
+    private abstract static class MemoryMode extends FeatureMode {
         
         void configureSettings(ProfilingSettings settings) {
         }
         
     }
     
-    private static abstract class SampledMemoryMode extends MemoryMode {
+    private abstract static class SampledMemoryMode extends MemoryMode {
         
         void configureSettings(ProfilingSettings settings) {
             super.configureSettings(settings);
@@ -145,7 +145,7 @@ final class ObjectsFeatureModes {
         
     }
     
-    static abstract class AllClassesMode extends SampledMemoryMode {
+    abstract static class AllClassesMode extends SampledMemoryMode {
         
         String getID() {
             return "AllClassesMode"; // NOI18N
@@ -163,7 +163,7 @@ final class ObjectsFeatureModes {
         
     }
     
-    static abstract class ProjectClassesMode extends SampledMemoryMode {
+    abstract static class ProjectClassesMode extends SampledMemoryMode {
         
         private final Collection<Lookup.Provider> selectedProjects;
         
@@ -376,7 +376,7 @@ final class ObjectsFeatureModes {
         
     }
     
-    static abstract class SelectedClassesMode extends MemoryMode {
+    abstract static class SelectedClassesMode extends MemoryMode {
         
         // --- External implementation -----------------------------------------
         
@@ -682,7 +682,7 @@ final class ObjectsFeatureModes {
     }
     
     
-    static abstract class CustomClassesMode extends MemoryMode {
+    abstract static class CustomClassesMode extends MemoryMode {
         
         private static final String LIFECYCLE_FLAG = "LIFECYCLE_FLAG"; // NOI18N
         private static final String ALLOCATIONS_FLAG = "ALLOCATIONS_FLAG"; // NOI18N

@@ -98,7 +98,7 @@ final class TextComponentBuilders {
         
     }
     
-    private static abstract class JTextComponentBuilder<T extends JTextComponent> extends JComponentBuilder<T> {
+    private abstract static class JTextComponentBuilder<T extends JTextComponent> extends JComponentBuilder<T> {
         
         private final DocumentTextBuilder model;
         private final boolean isEditable;

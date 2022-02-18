@@ -51,7 +51,7 @@ public class Snapshot {
     private JavaClass weakReferenceClass;
     private int referentFieldIndex;
     private ReachableExcludes reachableExcludes;
-    final private OQLEngine engine;
+    private final OQLEngine engine;
     
     public Snapshot(Heap heap, OQLEngine engine) {
         this.delegate = heap;

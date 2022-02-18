@@ -16,12 +16,13 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.java.lsp.server.protocol;
+package org.netbeans.api.lsp.server;
 
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import org.eclipse.lsp4j.ClientCapabilities;
 import org.eclipse.lsp4j.InitializeParams;
+import org.netbeans.modules.java.lsp.server.protocol.WorkspaceUIContext;
 import org.netbeans.modules.java.lsp.server.ui.UIContext;
 
 /**

@@ -18,7 +18,8 @@
  */
 package org.netbeans.modules.java.lsp.server.protocol;
 
-import com.google.gson.InstanceCreator;
+import org.netbeans.api.lsp.server.NbCodeClientCapabilities;
+import org.netbeans.api.lsp.server.NbCodeLanguageClient;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -105,6 +106,7 @@ import org.netbeans.modules.java.lsp.server.explorer.api.TreeViewService;
 import org.netbeans.modules.java.lsp.server.files.OpenedDocuments;
 import org.netbeans.modules.java.lsp.server.progress.OperationContext;
 import org.netbeans.modules.progress.spi.InternalHandle;
+import org.netbeans.spi.lsp.server.ClientCommandProvider;
 import org.netbeans.spi.project.ActionProgress;
 import org.netbeans.spi.project.ActionProvider;
 import org.openide.filesystems.FileObject;
@@ -728,7 +730,7 @@ public final class Server {
                         JAVA_SOURCE_FOR,
                         JAVA_CLEAR_PROJECT_CACHES,
                         NATIVE_IMAGE_FIND_DEBUG_PROCESS_TO_ATTACH));
-                for (CodeActionsProvider codeActionsProvider : Lookup.getDefault().lookupAll(CodeActionsProvider.class)) {
+                for (ClientCommandProvider codeActionsProvider : Lookup.getDefault().lookupAll(ClientCommandProvider.class)) {
                     commands.addAll(codeActionsProvider.getCommands());
                 }
                 capabilities.setExecuteCommandProvider(new ExecuteCommandOptions(commands));

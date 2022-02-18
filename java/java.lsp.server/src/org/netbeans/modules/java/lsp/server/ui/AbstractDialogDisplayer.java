@@ -20,7 +20,7 @@ package org.netbeans.modules.java.lsp.server.ui;
 
 import java.awt.Dialog;
 import java.awt.HeadlessException;
-import org.netbeans.modules.java.lsp.server.LspServerUtils;
+import org.netbeans.api.lsp.server.LspServerUtils;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;

@@ -18,6 +18,8 @@
  */
 package org.netbeans.modules.java.lsp.server.protocol;
 
+import org.netbeans.api.lsp.server.NbCodeClientCapabilities;
+import org.netbeans.api.lsp.server.NbCodeLanguageClient;
 import java.util.concurrent.CompletableFuture;
 import org.eclipse.lsp4j.MessageActionItem;
 import org.eclipse.lsp4j.MessageParams;
@@ -29,7 +31,7 @@ import org.openide.awt.StatusDisplayer;
  *
  * @author sdedic
  */
-class WorkspaceUIContext extends UIContext {
+public class WorkspaceUIContext extends UIContext {
     private final NbCodeLanguageClient client;
 
     public WorkspaceUIContext(NbCodeLanguageClient client) {

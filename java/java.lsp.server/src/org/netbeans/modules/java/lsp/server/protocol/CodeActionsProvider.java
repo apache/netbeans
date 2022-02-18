@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.java.lsp.server.protocol;
 
+import org.netbeans.api.lsp.server.NbCodeLanguageClient;
 import com.sun.source.tree.LineMap;
 import java.util.Arrays;
 import java.util.Collections;
@@ -42,12 +43,13 @@ import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.modules.java.lsp.server.Utils;
 import org.netbeans.modules.java.source.ElementHandleAccessor;
 import org.netbeans.modules.parsing.api.ResultIterator;
+import org.netbeans.spi.lsp.server.ClientCommandProvider;
 
 /**
  *
  * @author Dusan Balek
  */
-public abstract class CodeActionsProvider {
+public abstract class CodeActionsProvider implements ClientCommandProvider {
 
     public static final String CODE_GENERATOR_KIND = "source.generate";
     public static final String CODE_ACTIONS_PROVIDER_CLASS = "providerClass";
@@ -60,10 +62,12 @@ public abstract class CodeActionsProvider {
         return CompletableFuture.completedFuture(codeAction);
     }
 
+    @Override
     public Set<String> getCommands() {
         return Collections.emptySet();
     }
 
+    @Override
     public CompletableFuture<Object> processCommand(NbCodeLanguageClient client, String command, List<Object> arguments) {
         return CompletableFuture.completedFuture(false);
     }

@@ -43,7 +43,7 @@ import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.ActionMap;
 import javax.swing.text.DefaultEditorKit;
-import org.netbeans.modules.java.lsp.server.protocol.NbCodeLanguageClient;
+import org.netbeans.api.lsp.server.NbCodeLanguageClient;
 import org.netbeans.modules.java.lsp.server.explorer.api.NodeChangedParams;
 import org.openide.explorer.ExplorerManager;
 import org.openide.explorer.ExplorerUtils;

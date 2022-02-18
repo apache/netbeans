@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.java.lsp.server.protocol;
 
+import org.netbeans.api.lsp.server.NbCodeLanguageClient;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -160,13 +161,13 @@ import org.netbeans.modules.java.lsp.server.refactoring.ParameterUI;
 import org.netbeans.modules.java.lsp.server.ui.MockHtmlViewer;
 import org.netbeans.modules.java.source.BootClassPathUtil;
 import org.netbeans.modules.java.source.parsing.JavacParser;
-import org.netbeans.modules.parsing.api.ResultIterator;
 import org.netbeans.modules.parsing.impl.indexing.implspi.CacheFolderProvider;
 import org.netbeans.spi.java.classpath.ClassPathProvider;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.netbeans.spi.java.queries.AnnotationProcessingQueryImplementation;
 import org.netbeans.spi.java.queries.SourceLevelQueryImplementation;
 import org.netbeans.spi.lsp.ErrorProvider;
+import org.netbeans.spi.lsp.server.ClientCommandProvider;
 import org.netbeans.spi.project.ProjectFactory;
 import org.netbeans.spi.project.ProjectState;
 import org.netbeans.spi.project.ui.ProjectOpenedHook;
@@ -5040,8 +5041,8 @@ public class ServerTest extends NbTestCase {
 
     private static volatile ProgressCommand progressCommandInstance;
     
-    @ServiceProvider(service = CodeActionsProvider.class)
-    public static class ProgressCommand extends CodeActionsProvider {
+    @ServiceProvider(service = ClientCommandProvider.class)
+    public static class ProgressCommand implements ClientCommandProvider {
         
         // command will block before checking for cancel (before return/ terminate)
         CountDownLatch beforeCancel = new CountDownLatch(1);
@@ -5063,11 +5064,6 @@ public class ServerTest extends NbTestCase {
         
         public ProgressCommand() {
             progressCommandInstance = this;
-        }
-        
-        @Override
-        public List<CodeAction> getCodeActions(ResultIterator resultIterator, CodeActionParams params) throws Exception {
-            return Collections.emptyList();
         }
         
         boolean cancel() {

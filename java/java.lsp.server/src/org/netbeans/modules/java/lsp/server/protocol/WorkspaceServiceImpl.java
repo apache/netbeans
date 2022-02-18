@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.java.lsp.server.protocol;
 
+import org.netbeans.api.lsp.server.NbCodeLanguageClient;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -110,6 +111,7 @@ import org.netbeans.modules.java.source.ui.JavaTypeProvider;
 import org.netbeans.modules.java.source.usages.ClassIndexImpl;
 import org.netbeans.modules.parsing.lucene.support.Queries;
 import org.netbeans.spi.jumpto.type.SearchType;
+import org.netbeans.spi.lsp.server.ClientCommandProvider;
 import org.netbeans.spi.project.ActionProgress;
 import org.netbeans.spi.project.ActionProvider;
 import org.netbeans.spi.project.ProjectConfiguration;
@@ -571,7 +573,7 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                 return (CompletableFuture<Object>) (CompletableFuture<?>)result;
             }
             default:
-                for (CodeActionsProvider codeActionsProvider : Lookup.getDefault().lookupAll(CodeActionsProvider.class)) {
+                for (ClientCommandProvider codeActionsProvider : Lookup.getDefault().lookupAll(ClientCommandProvider.class)) {
                     if (codeActionsProvider.getCommands().contains(command)) {
                         return codeActionsProvider.processCommand(client, command, params.getArguments());
                     }

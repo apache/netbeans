@@ -54,7 +54,7 @@ import org.netbeans.api.java.source.TreeUtilities;
 import org.netbeans.modules.java.lsp.server.files.OpenedDocuments;
 import org.netbeans.modules.java.lsp.server.progress.OperationContext;
 import org.netbeans.modules.java.lsp.server.protocol.DecorationRenderOptions;
-import org.netbeans.modules.java.lsp.server.protocol.NbCodeLanguageClient;
+import org.netbeans.api.lsp.server.NbCodeLanguageClient;
 import org.netbeans.modules.java.lsp.server.protocol.SetTextEditorDecorationParams;
 import org.netbeans.modules.nativeimage.api.Location;
 import org.netbeans.modules.nativeimage.api.SourceInfo;

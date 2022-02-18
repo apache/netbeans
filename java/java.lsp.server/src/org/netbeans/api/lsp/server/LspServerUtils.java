@@ -16,11 +16,10 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.java.lsp.server;
+package org.netbeans.api.lsp.server;
 
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
-import org.netbeans.modules.java.lsp.server.protocol.NbCodeLanguageClient;
 import org.netbeans.modules.java.lsp.server.protocol.Server;
 import org.openide.util.Lookup;
 
@@ -28,7 +27,10 @@ import org.openide.util.Lookup;
  *
  * @author sdedic
  */
-public class LspServerUtils {
+public final class LspServerUtils {
+
+    private LspServerUtils() {
+    }
     
     /**
      * Locates the client associated with the current context. Use this method as a

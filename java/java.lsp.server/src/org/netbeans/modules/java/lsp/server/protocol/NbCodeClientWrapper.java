@@ -18,6 +18,8 @@
  */
 package org.netbeans.modules.java.lsp.server.protocol;
 
+import org.netbeans.api.lsp.server.NbCodeClientCapabilities;
+import org.netbeans.api.lsp.server.NbCodeLanguageClient;
 import org.netbeans.modules.java.lsp.server.explorer.api.NodeChangedParams;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;

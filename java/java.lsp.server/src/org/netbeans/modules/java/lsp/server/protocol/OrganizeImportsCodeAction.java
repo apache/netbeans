@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.java.lsp.server.protocol;
 
+import org.netbeans.api.lsp.server.NbCodeLanguageClient;
 import com.google.gson.JsonPrimitive;
 import java.io.IOException;
 import java.util.Collections;

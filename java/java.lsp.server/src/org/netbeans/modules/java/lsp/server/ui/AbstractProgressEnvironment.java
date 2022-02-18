@@ -23,7 +23,7 @@ import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.modules.java.lsp.server.progress.LspInternalHandle;
 import org.netbeans.modules.java.lsp.server.progress.LspProgressUIWorker;
 import org.netbeans.modules.java.lsp.server.progress.OperationContext;
-import org.netbeans.modules.java.lsp.server.protocol.NbCodeLanguageClient;
+import org.netbeans.api.lsp.server.NbCodeLanguageClient;
 import org.netbeans.modules.progress.spi.Controller;
 import org.netbeans.modules.progress.spi.InternalHandle;
 import org.netbeans.modules.progress.spi.ProgressEnvironment;

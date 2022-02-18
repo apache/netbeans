@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.java.lsp.server.protocol;
+package org.netbeans.api.lsp.server;
 
 import org.netbeans.modules.java.lsp.server.explorer.api.NodeChangedParams;
 import java.util.List;
@@ -26,10 +26,18 @@ import org.eclipse.lsp4j.jsonrpc.services.JsonNotification;
 import org.eclipse.lsp4j.jsonrpc.services.JsonRequest;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
 import org.eclipse.lsp4j.services.LanguageClient;
+import org.netbeans.modules.java.lsp.server.protocol.DecorationRenderOptions;
+import org.netbeans.modules.java.lsp.server.protocol.HtmlPageParams;
+import org.netbeans.modules.java.lsp.server.protocol.QuickPickItem;
+import org.netbeans.modules.java.lsp.server.protocol.SetTextEditorDecorationParams;
+import org.netbeans.modules.java.lsp.server.protocol.ShowInputBoxParams;
+import org.netbeans.modules.java.lsp.server.protocol.ShowQuickPickParams;
+import org.netbeans.modules.java.lsp.server.protocol.ShowStatusMessageParams;
+import org.netbeans.modules.java.lsp.server.protocol.TestProgressParams;
 
 /**
  * An extension to the standard LanguageClient that adds several messages missing
- * from the official LSP protocol.s
+ * from the official LSP protocol.
  * @author sdedic
  */
 public interface NbCodeLanguageClient extends LanguageClient {
@@ -117,7 +125,12 @@ public interface NbCodeLanguageClient extends LanguageClient {
      */
     public NbCodeClientCapabilities getNbCodeCapabilities();
 
+    /**
+     * Determines if the current thread is the one that receives & dispatches LSP
+     * requests. Such thread must not be blocked by long computations.
+     * @return true, if the current thread is the request dispathing one.
+     */
     public default boolean isRequestDispatcherThread() {
-        return Boolean.TRUE.equals(Server.DISPATCHERS.get());
+        return LspServerUtils.isClientResponseThread(this);
     }
 }

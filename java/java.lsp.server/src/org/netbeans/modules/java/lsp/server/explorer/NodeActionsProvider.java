@@ -24,18 +24,14 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import java.awt.event.ActionEvent;
 import java.beans.PropertyVetoException;
-import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import javax.swing.Action;
-import org.eclipse.lsp4j.CodeAction;
-import org.eclipse.lsp4j.CodeActionParams;
-import org.netbeans.modules.java.lsp.server.protocol.CodeActionsProvider;
-import org.netbeans.modules.java.lsp.server.protocol.NbCodeLanguageClient;
-import org.netbeans.modules.parsing.api.ResultIterator;
+import org.netbeans.api.lsp.server.NbCodeLanguageClient;
+import org.netbeans.spi.lsp.server.ClientCommandProvider;
 import org.openide.awt.Actions;
 import org.openide.filesystems.FileObject;
 import org.openide.nodes.Node;
@@ -53,7 +49,7 @@ import org.openide.util.lookup.ProxyLookup;
  * 
  * @author sdedic
  */
-public class NodeActionsProvider extends CodeActionsProvider {
+public class NodeActionsProvider implements ClientCommandProvider {
     private static final String ATTRIBUTE_ACTION_PREFIX = "action:"; // NOI18N
     private static final String NBLS_ACTION_PREFIX = "nbls:"; // NOI18N
     private static final String CATEGORY_SEPARATOR = ":"; // NOI18N
@@ -87,11 +83,6 @@ public class NodeActionsProvider extends CodeActionsProvider {
         return new NodeActionsProvider(commandNames);
     }
 
-    @Override
-    public List<CodeAction> getCodeActions(ResultIterator resultIterator, CodeActionParams params) throws Exception {
-        return Collections.emptyList();
-    }
-    
     @Override
     public CompletableFuture<Object> processCommand(NbCodeLanguageClient client, String command, List<Object> arguments) {
         if (!command.startsWith(NBLS_ACTION_PREFIX)) {

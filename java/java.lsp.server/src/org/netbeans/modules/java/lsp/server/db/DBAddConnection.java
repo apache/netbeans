@@ -28,8 +28,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
-import org.eclipse.lsp4j.CodeAction;
-import org.eclipse.lsp4j.CodeActionParams;
 import org.eclipse.lsp4j.MessageParams;
 import org.eclipse.lsp4j.MessageType;
 import org.netbeans.api.db.explorer.ConnectionManager;
@@ -37,12 +35,11 @@ import org.netbeans.api.db.explorer.DatabaseConnection;
 import org.netbeans.api.db.explorer.DatabaseException;
 import org.netbeans.api.db.explorer.JDBCDriver;
 import org.netbeans.api.db.explorer.JDBCDriverManager;
-import org.netbeans.modules.java.lsp.server.protocol.CodeActionsProvider;
-import org.netbeans.modules.java.lsp.server.protocol.NbCodeLanguageClient;
+import org.netbeans.api.lsp.server.NbCodeLanguageClient;
 import org.netbeans.modules.java.lsp.server.protocol.QuickPickItem;
 import org.netbeans.modules.java.lsp.server.protocol.ShowInputBoxParams;
 import org.netbeans.modules.java.lsp.server.protocol.ShowQuickPickParams;
-import org.netbeans.modules.parsing.api.ResultIterator;
+import org.netbeans.spi.lsp.server.ClientCommandProvider;
 import org.openide.awt.StatusDisplayer;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.URLMapper;
@@ -63,8 +60,8 @@ import org.openide.util.lookup.ServiceProvider;
     "MSG_ConnectionFailed=Connection failed",
     "MSG_SelectSchema=Select Database Schema"
 })
-@ServiceProvider(service = CodeActionsProvider.class)
-public class DBAddConnection extends CodeActionsProvider {
+@ServiceProvider(service = ClientCommandProvider.class)
+public class DBAddConnection implements ClientCommandProvider {
     public static final String DB_ADD_CONNECTION =  "db.add.connection"; // NOI18N
 
     @Override
@@ -174,10 +171,4 @@ public class DBAddConnection extends CodeActionsProvider {
     public Set<String> getCommands() {
         return Collections.singleton(DB_ADD_CONNECTION);
     }
-
-    @Override
-    public List<CodeAction> getCodeActions(ResultIterator resultIterator, CodeActionParams params) throws Exception {
-        return Collections.emptyList();
-    }
-    
 }

@@ -757,6 +757,9 @@
             </test-dependencies>
             <public-packages>
                 <package>org.netbeans.modules.java.lsp.server.ui</package>
+                <package>org.netbeans.api.lsp.server</package>
+                <package>org.netbeans.spi.lsp.server</package>
+                <package>org.netbeans.modules.java.lsp.server.ui</package>
             </public-packages>
             <class-path-extension>
                 <runtime-relative-path>ext/org.eclipse.lsp4j.debug-0.12.0.jar</runtime-relative-path>

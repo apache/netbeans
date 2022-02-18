@@ -27,7 +27,7 @@ import org.eclipse.lsp4j.services.LanguageClient;
 import org.eclipse.lsp4j.services.LanguageClientAware;
 import org.netbeans.modules.java.lsp.server.explorer.api.ConfigureExplorerParams;
 import org.netbeans.modules.java.lsp.server.explorer.api.CreateExplorerParams;
-import org.netbeans.modules.java.lsp.server.protocol.NbCodeLanguageClient;
+import org.netbeans.api.lsp.server.NbCodeLanguageClient;
 import org.netbeans.modules.java.lsp.server.explorer.api.NodeChangedParams;
 import org.netbeans.modules.java.lsp.server.explorer.api.NodeOperationParams;
 import org.openide.nodes.Node;

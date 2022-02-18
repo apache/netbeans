@@ -403,10 +403,10 @@ public class JsStructureScanner implements StructureScanner {
 
         private JsObject modelElement;
         
-        final private List<? extends StructureItem> children;
-        final private String sortPrefix;
-        final protected ParserResult parserResult;
-        final private String fqn;
+        private final List<? extends StructureItem> children;
+        private final String sortPrefix;
+        protected final ParserResult parserResult;
+        private final String fqn;
         
         public JsStructureItem(JsObject elementHandle, List<? extends StructureItem> children, String sortPrefix, ParserResult parserResult) {
             this.modelElement = elementHandle;

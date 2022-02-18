@@ -35,7 +35,7 @@ import org.netbeans.modules.javascript2.types.api.TypeUsage;
  */
 public class CatchBlockImpl extends DeclarationScopeImpl implements JsFunction {
 
-    final private List<JsObject> parameters;
+    private final List<JsObject> parameters;
     
     public CatchBlockImpl(DeclarationScope inFunction, Identifier exception, OffsetRange range, String mimeType) {
         super(inFunction, (JsObject)inFunction, new Identifier(getBlockName((JsObject)inFunction), OffsetRange.NONE),

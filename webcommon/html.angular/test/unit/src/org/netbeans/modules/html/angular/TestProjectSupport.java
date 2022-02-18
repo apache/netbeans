@@ -70,7 +70,7 @@ public class TestProjectSupport {
         
     }
     
-    static public class FileOwnerQueryImpl implements FileOwnerQueryImplementation {
+    public static class FileOwnerQueryImpl implements FileOwnerQueryImplementation {
 
         private Project testProject1;
 

@@ -63,7 +63,7 @@ public class EvaluationResultsModel extends VariablesModel {
     private static final String ICON_WRONG_PASS =
         "org/netbeans/modules/debugger/resources/wrong_pass.png"; // NOI18N
 
-    private final static RequestProcessor RP = new RequestProcessor(EvaluationResultsModel.class);
+    private static final RequestProcessor RP = new RequestProcessor(EvaluationResultsModel.class);
     private final org.netbeans.spi.debugger.ui.CodeEvaluator.Result result;
     private EvaluatorListener evalListener = new EvaluatorListener();
     

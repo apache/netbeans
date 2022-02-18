@@ -30,8 +30,8 @@ import org.netbeans.modules.php.editor.parser.astnodes.*;
 public class PrintASTVisitor implements Visitor {
 
     private StringBuffer buffer;
-    private final static String NEW_LINE = "\n";
-    private final static String TAB = "    ";
+    private static final String NEW_LINE = "\n";
+    private static final String TAB = "    ";
     private int indent;
 
     private class XMLPrintNode {

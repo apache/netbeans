@@ -174,11 +174,11 @@ public class LineBreakpoint extends AbstractBreakpoint {
         return myFileUrl;
     }
 
-    public synchronized final String getCondition() {
+    public final synchronized String getCondition() {
         return condition;
     }
 
-    public synchronized final void setCondition(String condition) {
+    public final synchronized void setCondition(String condition) {
         String oldCondition = this.condition;
         if ((condition != null && condition.equals(oldCondition))
                 || (condition == null && oldCondition == null)) {
@@ -188,7 +188,7 @@ public class LineBreakpoint extends AbstractBreakpoint {
         firePropertyChange(PROP_CONDITION, oldCondition, condition);
     }
 
-    public synchronized final boolean isConditional() {
+    public final synchronized boolean isConditional() {
         return condition != null && !condition.isEmpty();
     }
 

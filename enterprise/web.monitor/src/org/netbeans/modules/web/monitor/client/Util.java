@@ -40,7 +40,7 @@ import org.netbeans.modules.web.monitor.data.*;
 
 public class Util  {
 
-    private final static boolean debug = false;
+    private static final boolean debug = false;
 
     public Util() {}
 

@@ -1523,11 +1523,11 @@ public class EjbJarProject implements Project, FileChangeListener {
     };
 
     private final class RecommendedTemplatesImpl implements RecommendedTemplates, PrivilegedTemplates {
-        transient private boolean isEE5 = false;
-        transient private boolean isEE6Plus = false;//if project support ee6 full version or above
-        transient private boolean checked = false;
-        transient private boolean isArchive = false;
-        transient private UpdateHelper helper = null;
+        private transient boolean isEE5 = false;
+        private transient boolean isEE6Plus = false;//if project support ee6 full version or above
+        private transient boolean checked = false;
+        private transient boolean isArchive = false;
+        private transient UpdateHelper helper = null;
 
         RecommendedTemplatesImpl(UpdateHelper helper) {
             this.helper = helper;

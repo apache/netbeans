@@ -53,7 +53,7 @@ public class RESTExplorerPanel extends JPanel implements ExplorerManager.Provide
     private Node selectedResourceNode;
     private ProjectNodeFactory factory;
     
-    private final static ProjectNodeFactory REST_FACTORY = new RestProjectNodeFactory();
+    private static final ProjectNodeFactory REST_FACTORY = new RestProjectNodeFactory();
     
     public RESTExplorerPanel() {
         this( REST_FACTORY );

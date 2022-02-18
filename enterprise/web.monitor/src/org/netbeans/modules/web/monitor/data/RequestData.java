@@ -38,17 +38,17 @@ public class RequestData extends BaseBean {
 
     static Vector<BeanComparator> comparators = new Vector<>();
 
-    static public final String PARAM = "Param"; //NOI18N
-    static public final String HEADERS = "Headers"; //NOI18N
-    static public final String REQUESTATTRIBUTESIN =
+    public static final String PARAM = "Param"; //NOI18N
+    public static final String HEADERS = "Headers"; //NOI18N
+    public static final String REQUESTATTRIBUTESIN =
 	"RequestAttributesIn"; //NOI18N
-    static public final String REQUESTATTRIBUTESOUT =
+    public static final String REQUESTATTRIBUTESOUT =
 	"RequestAttributesOut"; //NOI18N
-    static public final String REQUESTDATA = "RequestData"; //NOI18N
+    public static final String REQUESTDATA = "RequestData"; //NOI18N
 
-    public final static String JSESSIONID = "JSESSIONID"; // NOI18N
-    public final static String COOKIE = "cookie"; // NOI18N
-    static private final boolean debug = false;
+    public static final String JSESSIONID = "JSESSIONID"; // NOI18N
+    public static final String COOKIE = "cookie"; // NOI18N
+    private static final boolean debug = false;
     
 
     public RequestData() {
@@ -235,7 +235,7 @@ public class RequestData extends BaseBean {
     
 	    
 
-    static public String findSessionID(String cookieStr) {
+    public static String findSessionID(String cookieStr) {
 
 	if(cookieStr == null || cookieStr.equals("")) //NOI18N
 	    return ""; //NOI18N
@@ -550,13 +550,13 @@ public class RequestData extends BaseBean {
     }
 
     //
-    static public void addComparator(BeanComparator c)
+    public static void addComparator(BeanComparator c)
     {
 	RequestData.comparators.add(c);
     }
 
     //
-    static public void removeComparator(BeanComparator c)
+    public static void removeComparator(BeanComparator c)
     {
 	RequestData.comparators.remove(c);
     }

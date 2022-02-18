@@ -97,7 +97,7 @@ import org.openide.util.Parameters;
  * @author Chris Webster
  * @author Andrei Badea
  */
-final public class EjbJarProjectProperties {
+public final class EjbJarProjectProperties {
     
     // Special properties of the project
     public static final String EJB_PROJECT_NAME = "j2ee.ejbjarproject.name"; // NOI18N

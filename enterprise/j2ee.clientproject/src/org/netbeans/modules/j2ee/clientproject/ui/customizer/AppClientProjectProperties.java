@@ -86,7 +86,7 @@ import org.openide.util.*;
 /**
  * @author Petr Hrebejk
  */
-final public class AppClientProjectProperties {
+public final class AppClientProjectProperties {
     
     //Hotfix of the issue #70058
     //Should be removed when the StoreGroup SPI will be extended to allow false default value in ToggleButtonModel

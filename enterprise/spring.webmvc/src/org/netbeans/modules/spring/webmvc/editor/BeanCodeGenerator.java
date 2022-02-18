@@ -55,10 +55,10 @@ import org.openide.util.NbBundle;
  */
 public class BeanCodeGenerator implements CodeGenerator {
 
-    private final static String BEANS_END_TAG = "</beans>";   //NOI18N
-    private final static String CONTEXT_CONFIG_LOCATION = "contextConfigLocation";    //NOI18N
-    private final static String DISPATCHER_SERVLET_NAME = "dispatcher-servlet";    //NOI18N
-    private final static String JAVA_MIME = "text/x-java";    //NOI18N
+    private static final String BEANS_END_TAG = "</beans>";   //NOI18N
+    private static final String CONTEXT_CONFIG_LOCATION = "contextConfigLocation";    //NOI18N
+    private static final String DISPATCHER_SERVLET_NAME = "dispatcher-servlet";    //NOI18N
+    private static final String JAVA_MIME = "text/x-java";    //NOI18N
     private Document document;
     private FileObject fileObject;
 

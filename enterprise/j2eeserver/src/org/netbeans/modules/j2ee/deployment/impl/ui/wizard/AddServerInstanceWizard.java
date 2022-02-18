@@ -43,15 +43,15 @@ import org.openide.util.NbBundle;
  * @author Andrei Badea
  */
 public class AddServerInstanceWizard extends WizardDescriptor {
-    public final static String PROP_DISPLAY_NAME = "ServInstWizard_displayName"; // NOI18N
-    public final static String PROP_SERVER = "ServInstWizard_server"; // NOI18N
+    public static final String PROP_DISPLAY_NAME = "ServInstWizard_displayName"; // NOI18N
+    public static final String PROP_SERVER = "ServInstWizard_server"; // NOI18N
 
-    private final static String PROP_AUTO_WIZARD_STYLE = WizardDescriptor.PROP_AUTO_WIZARD_STYLE; // NOI18N
-    private final static String PROP_CONTENT_DISPLAYED = WizardDescriptor.PROP_CONTENT_DISPLAYED; // NOI18N
-    private final static String PROP_CONTENT_NUMBERED = WizardDescriptor.PROP_CONTENT_NUMBERED; // NOI18N
-    private final static String PROP_CONTENT_DATA = WizardDescriptor.PROP_CONTENT_DATA; // NOI18N
-    private final static String PROP_CONTENT_SELECTED_INDEX = WizardDescriptor.PROP_CONTENT_SELECTED_INDEX; // NOI18N
-    private final static String PROP_ERROR_MESSAGE = WizardDescriptor.PROP_ERROR_MESSAGE; // NOI18N
+    private static final String PROP_AUTO_WIZARD_STYLE = WizardDescriptor.PROP_AUTO_WIZARD_STYLE; // NOI18N
+    private static final String PROP_CONTENT_DISPLAYED = WizardDescriptor.PROP_CONTENT_DISPLAYED; // NOI18N
+    private static final String PROP_CONTENT_NUMBERED = WizardDescriptor.PROP_CONTENT_NUMBERED; // NOI18N
+    private static final String PROP_CONTENT_DATA = WizardDescriptor.PROP_CONTENT_DATA; // NOI18N
+    private static final String PROP_CONTENT_SELECTED_INDEX = WizardDescriptor.PROP_CONTENT_SELECTED_INDEX; // NOI18N
+    private static final String PROP_ERROR_MESSAGE = WizardDescriptor.PROP_ERROR_MESSAGE; // NOI18N
 
     private AddServerInstanceWizardIterator iterator;
     private ServerChooserPanel chooser;

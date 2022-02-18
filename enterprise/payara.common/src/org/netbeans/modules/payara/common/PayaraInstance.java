@@ -752,7 +752,7 @@ public class PayaraInstance implements ServerInstanceImplementation,
     private transient volatile Process process;
 
     /** Configuration changes listener watching <code>domain.xml</code> file. */
-    private transient final DomainXMLChangeListener domainXMLListener;
+    private final transient DomainXMLChangeListener domainXMLListener;
 
     private transient InstanceContent ic;
     private transient Lookup localLookup;
@@ -763,7 +763,7 @@ public class PayaraInstance implements ServerInstanceImplementation,
             currentFactories = Collections.emptyList();
     
     /** Payara server support API for this instance. */
-    private transient final CommonServerSupport commonSupport;
+    private final transient CommonServerSupport commonSupport;
     // API instance
     private ServerInstance commonInstance;
     private PayaraInstanceProvider instanceProvider;

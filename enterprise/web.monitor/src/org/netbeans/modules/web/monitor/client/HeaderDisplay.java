@@ -48,7 +48,7 @@ import java.util.*;
 
 public class HeaderDisplay extends DataDisplay {
     
-    private final static boolean debug = false;
+    private static final boolean debug = false;
 
     private DisplayTable dt = null; 
         

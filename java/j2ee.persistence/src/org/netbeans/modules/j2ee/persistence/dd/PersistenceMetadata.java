@@ -69,7 +69,7 @@ public final class PersistenceMetadata {
         }
         Persistence persistence = null;
         synchronized (ddMap) {
-            persistence = (Persistence) ddMap.get(fo);
+            persistence = ddMap.get(fo);
             if (persistence == null) {
                 InputStream is=fo.getInputStream();
                 String version=Persistence.VERSION_1_0;

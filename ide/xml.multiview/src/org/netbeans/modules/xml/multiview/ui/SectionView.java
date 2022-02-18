@@ -86,7 +86,7 @@ public class SectionView extends PanelView implements SectionFocusCookie, Contai
     }
     
     protected void openSection(Node node){
-        NodeSectionPanel panel = (NodeSectionPanel) map.get(node);
+        NodeSectionPanel panel = map.get(node);
         if (panel != null) {
             focusSection(panel);
         }
@@ -122,7 +122,7 @@ public class SectionView extends PanelView implements SectionFocusCookie, Contai
      * @return the corresponding panel or null.
      */
     public NodeSectionPanel getSection(Node key){
-        return (NodeSectionPanel)map.get(key);
+        return map.get(key);
     }
     
     /**
@@ -281,7 +281,7 @@ public class SectionView extends PanelView implements SectionFocusCookie, Contai
     public SectionPanel findSectionPanel(Object key) {
         java.util.Enumeration en = map.keys();
         while (en.hasMoreElements()) {
-            NodeSectionPanel pan = (NodeSectionPanel)map.get(en.nextElement());
+            NodeSectionPanel pan = map.get(en.nextElement());
             if (pan instanceof SectionPanel) {
                 SectionPanel p = (SectionPanel)pan;
                 if (key==p.getKey()) {

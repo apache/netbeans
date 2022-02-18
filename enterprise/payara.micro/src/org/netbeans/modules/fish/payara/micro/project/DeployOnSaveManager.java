@@ -549,7 +549,7 @@ public final class DeployOnSaveManager {
                     if (checkFile != null && file != null) {
                         String relative = FileUtil.getRelativePath(contentDirectory, checkFile);
                         if (relative != null) {
-                            FileObject targetFO = (FileObject) destMap.get(relative);
+                            FileObject targetFO = destMap.get(relative);
                             if (file.isFolder()) {
                                 destMap.remove(relative);
                                 //continue;

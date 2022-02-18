@@ -198,7 +198,7 @@ public class WebProjectGenerator {
             WebModule wm = new WebModule();
             Iterator<Element> it2 = XMLUtil.findSubElements(wmEl).iterator();
             while (it2.hasNext()) {
-                Element el = (Element)it2.next();
+                Element el = it2.next();
                 if (el.getLocalName().equals("doc-root")) { // NOI18N
                     wm.docRoot = XMLUtil.findText(el);
                     continue;

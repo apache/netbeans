@@ -112,7 +112,7 @@ public final class DDProvider {
                     }
                 } else {
                     version = original.getVersion();
-                    error = (SAXParseException) errorMap.get(fo.toURL());
+                    error = errorMap.get(fo.toURL());
                 }
             }
             if (version != null) {

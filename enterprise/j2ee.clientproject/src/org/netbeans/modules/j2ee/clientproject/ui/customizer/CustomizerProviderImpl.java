@@ -87,7 +87,7 @@ public class CustomizerProviderImpl implements CustomizerProvider, ProjectSharab
             return;
         }
         else {
-            AppClientProjectProperties uiProperties = new AppClientProjectProperties( (AppClientProject)project, updateHelper, evaluator, refHelper, genFileHelper );        
+            AppClientProjectProperties uiProperties = new AppClientProjectProperties(project, updateHelper, evaluator, refHelper, genFileHelper);        
             Lookup context = Lookups.fixed(new Object[] {
                 project,
                 uiProperties,

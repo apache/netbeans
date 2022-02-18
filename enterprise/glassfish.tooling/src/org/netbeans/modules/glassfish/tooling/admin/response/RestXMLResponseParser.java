@@ -120,7 +120,7 @@ public class RestXMLResponseParser extends RestResponseParser {
         HashMap<String, String> entryMap = new HashMap<>();
         Iterator<Attribute> iter = entry.getAttributes();
         while (iter.hasNext()) {
-            Attribute att = (Attribute) iter.next();
+            Attribute att = iter.next();
             entryMap.put(att.getName().getLocalPart(), att.getValue());
         }
         return entryMap;

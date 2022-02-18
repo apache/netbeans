@@ -536,10 +536,10 @@ public class LocationAwareMavenXpp3Writer {
             writeValue(serializer, "uniqueVersion", String.valueOf(deploymentRepository.isUniqueVersion()), deploymentRepository);
         }
         if (deploymentRepository.getReleases() != null) {
-            writeRepositoryPolicy((RepositoryPolicy) deploymentRepository.getReleases(), "releases", serializer);
+            writeRepositoryPolicy(deploymentRepository.getReleases(), "releases", serializer);
         }
         if (deploymentRepository.getSnapshots() != null) {
-            writeRepositoryPolicy((RepositoryPolicy) deploymentRepository.getSnapshots(), "snapshots", serializer);
+            writeRepositoryPolicy(deploymentRepository.getSnapshots(), "snapshots", serializer);
         }
         if (deploymentRepository.getId() != null) {
             writeValue(serializer, "id", deploymentRepository.getId(), deploymentRepository);
@@ -623,19 +623,19 @@ public class LocationAwareMavenXpp3Writer {
         int start = b.length();
 
         if (distributionManagement.getRepository() != null) {
-            writeDeploymentRepository((DeploymentRepository) distributionManagement.getRepository(), "repository", serializer);
+            writeDeploymentRepository(distributionManagement.getRepository(), "repository", serializer);
         }
         if (distributionManagement.getSnapshotRepository() != null) {
-            writeDeploymentRepository((DeploymentRepository) distributionManagement.getSnapshotRepository(), "snapshotRepository", serializer);
+            writeDeploymentRepository(distributionManagement.getSnapshotRepository(), "snapshotRepository", serializer);
         }
         if (distributionManagement.getSite() != null) {
-            writeSite((Site) distributionManagement.getSite(), "site", serializer);
+            writeSite(distributionManagement.getSite(), "site", serializer);
         }
         if (distributionManagement.getDownloadUrl() != null) {
             writeValue(serializer, "downloadUrl", distributionManagement.getDownloadUrl(), distributionManagement);
         }
         if (distributionManagement.getRelocation() != null) {
-            writeRelocation((Relocation) distributionManagement.getRelocation(), "relocation", serializer);
+            writeRelocation(distributionManagement.getRelocation(), "relocation", serializer);
         }
         if (distributionManagement.getStatus() != null) {
             writeValue(serializer, "status", distributionManagement.getStatus(), distributionManagement);
@@ -767,7 +767,7 @@ public class LocationAwareMavenXpp3Writer {
             writeValue(serializer, "modelVersion", model.getModelVersion(), model);
         }
         if (model.getParent() != null) {
-            writeParent((Parent) model.getParent(), "parent", serializer);
+            writeParent(model.getParent(), "parent", serializer);
         }
         if (model.getGroupId() != null) {
             writeValue(serializer, "groupId", model.getGroupId(), model);
@@ -829,7 +829,7 @@ public class LocationAwareMavenXpp3Writer {
             serializer.endTag(NAMESPACE, "mailingLists");
         }
         if (model.getPrerequisites() != null) {
-            writePrerequisites((Prerequisites) model.getPrerequisites(), "prerequisites", serializer);
+            writePrerequisites(model.getPrerequisites(), "prerequisites", serializer);
         }
         if ((model.getModules() != null) && (model.getModules().size() > 0)) {
             serializer.startTag(NAMESPACE, "modules");
@@ -846,16 +846,16 @@ public class LocationAwareMavenXpp3Writer {
             logLocation(model, "modules", start2, b.length());
         }
         if (model.getScm() != null) {
-            writeScm((Scm) model.getScm(), "scm", serializer);
+            writeScm(model.getScm(), "scm", serializer);
         }
         if (model.getIssueManagement() != null) {
-            writeIssueManagement((IssueManagement) model.getIssueManagement(), "issueManagement", serializer);
+            writeIssueManagement(model.getIssueManagement(), "issueManagement", serializer);
         }
         if (model.getCiManagement() != null) {
-            writeCiManagement((CiManagement) model.getCiManagement(), "ciManagement", serializer);
+            writeCiManagement(model.getCiManagement(), "ciManagement", serializer);
         }
         if (model.getDistributionManagement() != null) {
-            writeDistributionManagement((DistributionManagement) model.getDistributionManagement(), "distributionManagement", serializer);
+            writeDistributionManagement(model.getDistributionManagement(), "distributionManagement", serializer);
         }
         if ((model.getProperties() != null) && (model.getProperties().size() > 0)) {
             serializer.startTag(NAMESPACE, "properties");
@@ -871,7 +871,7 @@ public class LocationAwareMavenXpp3Writer {
             logLocation(model, "properties", start2, b.length());
         }
         if (model.getDependencyManagement() != null) {
-            writeDependencyManagement((DependencyManagement) model.getDependencyManagement(), "dependencyManagement", serializer);
+            writeDependencyManagement(model.getDependencyManagement(), "dependencyManagement", serializer);
         }
         if ((model.getDependencies() != null) && (model.getDependencies().size() > 0)) {
             serializer.startTag(NAMESPACE, "dependencies");
@@ -898,13 +898,13 @@ public class LocationAwareMavenXpp3Writer {
             serializer.endTag(NAMESPACE, "pluginRepositories");
         }
         if (model.getBuild() != null) {
-            writeBuild((Build) model.getBuild(), "build", serializer);
+            writeBuild(model.getBuild(), "build", serializer);
         }
         if (model.getReports() != null) {
              writeXpp3DOM(serializer, (Xpp3Dom)model.getReports(), model);
         }
         if (model.getReporting() != null) {
-            writeReporting((Reporting) model.getReporting(), "reporting", serializer);
+            writeReporting(model.getReporting(), "reporting", serializer);
         }
         if ((model.getProfiles() != null) && (model.getProfiles().size() > 0)) {
             serializer.startTag(NAMESPACE, "profiles");
@@ -1021,7 +1021,7 @@ public class LocationAwareMavenXpp3Writer {
         if ((plugin.getDependencies() != null) && (plugin.getDependencies().size() > 0)) {
             serializer.startTag(NAMESPACE, "dependencies");
             for (Iterator<Dependency> iter = plugin.getDependencies().iterator(); iter.hasNext();) {
-                Dependency o = (Dependency) iter.next();
+                Dependency o = iter.next();
                 writeDependency(o, "dependency", serializer);
             }
             serializer.endTag(NAMESPACE, "dependencies");
@@ -1085,7 +1085,7 @@ public class LocationAwareMavenXpp3Writer {
         if ((pluginManagement.getPlugins() != null) && (pluginManagement.getPlugins().size() > 0)) {
             serializer.startTag(NAMESPACE, "plugins");
             for (Iterator<Plugin> iter = pluginManagement.getPlugins().iterator(); iter.hasNext();) {
-                Plugin o = (Plugin) iter.next();
+                Plugin o = iter.next();
                 writePlugin(o, "plugin", serializer);
             }
             serializer.endTag(NAMESPACE, "plugins");
@@ -1117,10 +1117,10 @@ public class LocationAwareMavenXpp3Writer {
             writeValue(serializer, "id", profile.getId(), profile);
         }
         if (profile.getActivation() != null) {
-            writeActivation((Activation) profile.getActivation(), "activation", serializer);
+            writeActivation(profile.getActivation(), "activation", serializer);
         }
         if (profile.getBuild() != null) {
-            writeBuildBase((BuildBase) profile.getBuild(), "build", serializer);
+            writeBuildBase(profile.getBuild(), "build", serializer);
         }
         if ((profile.getModules() != null) && (profile.getModules().size() > 0)) {
             serializer.startTag(NAMESPACE, "modules");
@@ -1129,7 +1129,7 @@ public class LocationAwareMavenXpp3Writer {
             int index = 0;
             InputLocation tracker = profile.getLocation("modules");
             for (Iterator<String> iter = profile.getModules().iterator(); iter.hasNext();) {
-                String module = (String) iter.next();
+                String module = iter.next();
                 writeValue(serializer, "module", module, tracker, index);
                 index = index + 1;
             }
@@ -1137,7 +1137,7 @@ public class LocationAwareMavenXpp3Writer {
             logLocation(profile, "modules", start2, b.length());
         }
         if (profile.getDistributionManagement() != null) {
-            writeDistributionManagement((DistributionManagement) profile.getDistributionManagement(), "distributionManagement", serializer);
+            writeDistributionManagement(profile.getDistributionManagement(), "distributionManagement", serializer);
         }
         if ((profile.getProperties() != null) && (profile.getProperties().size() > 0)) {
             serializer.startTag(NAMESPACE, "properties");
@@ -1153,7 +1153,7 @@ public class LocationAwareMavenXpp3Writer {
             logLocation(profile, "properties", start2, b.length());
         }
         if (profile.getDependencyManagement() != null) {
-            writeDependencyManagement((DependencyManagement) profile.getDependencyManagement(), "dependencyManagement", serializer);
+            writeDependencyManagement(profile.getDependencyManagement(), "dependencyManagement", serializer);
         }
         if ((profile.getDependencies() != null) && (profile.getDependencies().size() > 0)) {
             serializer.startTag(NAMESPACE, "dependencies");
@@ -1174,7 +1174,7 @@ public class LocationAwareMavenXpp3Writer {
         if ((profile.getPluginRepositories() != null) && (profile.getPluginRepositories().size() > 0)) {
             serializer.startTag(NAMESPACE, "pluginRepositories");
             for (Iterator<Repository> iter = profile.getPluginRepositories().iterator(); iter.hasNext();) {
-                Repository o = (Repository) iter.next();
+                Repository o = iter.next();
                 writeRepository(o, "pluginRepository", serializer);
             }
             serializer.endTag(NAMESPACE, "pluginRepositories");
@@ -1183,7 +1183,7 @@ public class LocationAwareMavenXpp3Writer {
             writeXpp3DOM(serializer, (Xpp3Dom)profile.getReports(), profile);
         }
         if (profile.getReporting() != null) {
-            writeReporting((Reporting) profile.getReporting(), "reporting", serializer);
+            writeReporting(profile.getReporting(), "reporting", serializer);
         }
         serializer.endTag(NAMESPACE, tagName).flush();
         logLocation(profile, "", start, b.length());
@@ -1229,7 +1229,7 @@ public class LocationAwareMavenXpp3Writer {
         if ((reportPlugin.getReportSets() != null) && (reportPlugin.getReportSets().size() > 0)) {
             serializer.startTag(NAMESPACE, "reportSets");
             for (Iterator<ReportSet> iter = reportPlugin.getReportSets().iterator(); iter.hasNext();) {
-                ReportSet o = (ReportSet) iter.next();
+                ReportSet o = iter.next();
                 writeReportSet(o, "reportSet", serializer);
             }
             serializer.endTag(NAMESPACE, "reportSets");
@@ -1260,7 +1260,7 @@ public class LocationAwareMavenXpp3Writer {
             InputLocation tracker = reportSet.getLocation("reports");
             int index = 0;
             for (Iterator<String> iter = reportSet.getReports().iterator(); iter.hasNext();) {
-                String report = (String) iter.next();
+                String report = iter.next();
                 writeValue(serializer, "report", report, tracker, index);
                 index = index + 1;
             }
@@ -1292,7 +1292,7 @@ public class LocationAwareMavenXpp3Writer {
         if ((reporting.getPlugins() != null) && (reporting.getPlugins().size() > 0)) {
             serializer.startTag(NAMESPACE, "plugins");
             for (Iterator<ReportPlugin> iter = reporting.getPlugins().iterator(); iter.hasNext();) {
-                ReportPlugin o = (ReportPlugin) iter.next();
+                ReportPlugin o = iter.next();
                 writeReportPlugin(o, "plugin", serializer);
             }
             serializer.endTag(NAMESPACE, "plugins");
@@ -1308,10 +1308,10 @@ public class LocationAwareMavenXpp3Writer {
         StringBuffer b = b(serializer);
         int start = b.length();
         if (repository.getReleases() != null) {
-            writeRepositoryPolicy((RepositoryPolicy) repository.getReleases(), "releases", serializer);
+            writeRepositoryPolicy(repository.getReleases(), "releases", serializer);
         }
         if (repository.getSnapshots() != null) {
-            writeRepositoryPolicy((RepositoryPolicy) repository.getSnapshots(), "snapshots", serializer);
+            writeRepositoryPolicy(repository.getSnapshots(), "snapshots", serializer);
         }
         if (repository.getId() != null) {
             writeValue(serializer, "id", repository.getId(), repository);
@@ -1370,7 +1370,7 @@ public class LocationAwareMavenXpp3Writer {
             InputLocation inclTracker = resource.getLocation("includes");
             int index = 0;
             for (Iterator<String> iter = resource.getIncludes().iterator(); iter.hasNext();) {
-                String include = (String) iter.next();
+                String include = iter.next();
                 writeValue(serializer, "include", include, inclTracker, index);
                 index = index + 1;
             }
@@ -1384,7 +1384,7 @@ public class LocationAwareMavenXpp3Writer {
             InputLocation inclTracker = resource.getLocation("excludes");
             int index = 0;
             for (Iterator<String> iter = resource.getExcludes().iterator(); iter.hasNext();) {
-                String exclude = (String) iter.next();
+                String exclude = iter.next();
                 writeValue(serializer, "exclude", exclude, inclTracker, index);
                 index = index + 1;
             }

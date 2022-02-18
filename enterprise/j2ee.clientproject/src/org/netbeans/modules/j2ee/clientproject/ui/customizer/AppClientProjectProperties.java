@@ -550,7 +550,7 @@ public final class AppClientProjectProperties {
         updateHelper.putProperties( AntProjectHelper.PROJECT_PROPERTIES_PATH, projectProperties );
         updateHelper.putProperties( AntProjectHelper.PRIVATE_PROPERTIES_PATH, privateProperties );        
         
-        String value = (String)additionalProperties.get(SOURCE_ENCODING);
+        String value = additionalProperties.get(SOURCE_ENCODING);
         if (value != null) {
             try {
                 FileEncodingQuery.setDefaultEncoding(Charset.forName(value));
@@ -602,7 +602,7 @@ public final class AppClientProjectProperties {
         // 1. first remove all project references. The method will modify
         // project property files, so it must be done separately
         for (Iterator<ClassPathSupport.Item> it = removed.iterator(); it.hasNext(); ) {
-            ClassPathSupport.Item item = (ClassPathSupport.Item)it.next();
+            ClassPathSupport.Item item = it.next();
             if ( item.getType() == ClassPathSupport.Item.TYPE_ARTIFACT ||
                     item.getType() == ClassPathSupport.Item.TYPE_JAR ) {
                 refHelper.destroyReference(item.getReference());
@@ -617,7 +617,7 @@ public final class AppClientProjectProperties {
         boolean changed = false;
         
         for (Iterator<ClassPathSupport.Item> it = removed.iterator(); it.hasNext(); ) {
-            ClassPathSupport.Item item = (ClassPathSupport.Item)it.next();
+            ClassPathSupport.Item item = it.next();
             if (item.getType() == ClassPathSupport.Item.TYPE_LIBRARY) {
                 // remove helper property pointing to library jar if there is any
                 String prop = item.getReference();

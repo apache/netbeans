@@ -397,14 +397,14 @@ class RadioInplaceEditor extends JPanel implements InplaceEditor, ActionListener
                 new Runnable() {
                     public void run() {
                         for (int i = 0; i < theList.size(); i++) {
-                            ((java.awt.event.ActionListener) theList.get(i)).actionPerformed(event);
+                            theList.get(i).actionPerformed(event);
                         }
                     }
                 }
             );
         } else {
             for (int i = 0; i < list.size(); i++) {
-                ((java.awt.event.ActionListener) theList.get(i)).actionPerformed(event);
+                theList.get(i).actionPerformed(event);
             }
         }
     }

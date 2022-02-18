@@ -69,7 +69,7 @@ public class Snapshot {
             int fldsCount = flds.size();
 
             for (int i = 0; i < fldsCount; i++) {
-                if ("referent".equals(((Field) flds.get(i)).getName())) { // NOI18N
+                if ("referent".equals(flds.get(i).getName())) { // NOI18N
                     referentFieldIndex = i;
                     break;
                 }
@@ -319,7 +319,7 @@ public class Snapshot {
 
     public GCRoot[] getRootsArray() {
         List<GCRoot> rootList = getRootsList();
-        return (GCRoot[]) rootList.toArray(new GCRoot[0]);
+        return rootList.toArray(new GCRoot[0]);
     }
    
     public ReferenceChain[] rootsetReferencesTo(Instance target, boolean includeWeak) {

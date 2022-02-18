@@ -2247,7 +2247,7 @@ public class ETable extends JTable {
                 if (currentSelectionIndex >= sz) {
                     currentSelectionIndex = sz - 1;
                 }
-                int selRow = ((Integer)results.get(currentSelectionIndex)).intValue();
+                int selRow = results.get(currentSelectionIndex).intValue();
                 setRowSelectionInterval(selRow, selRow);
                 Rectangle rect = getCellRect(selRow, 0, true);
                 scrollRectToVisible(rect);

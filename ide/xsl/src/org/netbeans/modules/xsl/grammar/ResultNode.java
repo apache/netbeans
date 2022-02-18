@@ -239,7 +239,7 @@ public class ResultNode implements Node {
         }
         
         public Node item(int index) {
-            return (Node)nodeVector.elementAt(index);
+            return nodeVector.elementAt(index);
         }
     }
     

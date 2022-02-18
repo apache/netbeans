@@ -61,7 +61,7 @@ public class AppClientProxy implements AppClient {
     public void setOriginal(AppClient app) {
         if (this.app != app) {
             for (Iterator<PropertyChangeListener> i = listeners.iterator(); i.hasNext();) {
-                PropertyChangeListener pcl = (PropertyChangeListener) i.next();
+                PropertyChangeListener pcl = i.next();
                 if (this.app != null) this.app.removePropertyChangeListener(pcl);
                 if (app != null) app.addPropertyChangeListener(pcl);
                 
@@ -84,7 +84,7 @@ public class AppClientProxy implements AppClient {
                     new java.beans.PropertyChangeEvent(this, PROPERTY_VERSION, version, value);
             version=value;
             for (Iterator<PropertyChangeListener> i = listeners.iterator(); i.hasNext();) {
-                ((PropertyChangeListener) i.next()).propertyChange(evt);
+                i.next().propertyChange(evt);
             }
         }
     }
@@ -189,7 +189,7 @@ public class AppClientProxy implements AppClient {
                     new java.beans.PropertyChangeEvent(this, PROPERTY_STATUS, ddStatus, value);
             ddStatus=value;
             for (Iterator<PropertyChangeListener> i = listeners.iterator(); i.hasNext();) {
-                ((PropertyChangeListener) i.next()).propertyChange(evt);
+                i.next().propertyChange(evt);
             }
         }
     }

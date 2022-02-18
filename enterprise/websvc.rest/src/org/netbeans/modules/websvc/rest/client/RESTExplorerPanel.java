@@ -191,8 +191,7 @@ public class RESTExplorerPanel extends JPanel implements ExplorerManager.Provide
          */
         @Override
         public Node createNode( Project project ) {
-            LogicalViewProvider logicalProvider = (LogicalViewProvider)project.
-                getLookup().lookup(LogicalViewProvider.class);
+            LogicalViewProvider logicalProvider = project.getLookup().lookup(LogicalViewProvider.class);
             if (logicalProvider!=null) {
                 Node rootNode = logicalProvider.createLogicalView();
                 Node restResourcesNode = RESTResourcesView.

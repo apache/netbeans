@@ -36,10 +36,10 @@ import org.netbeans.modules.nativeexecution.spi.support.PasswordProviderFactory;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 
-final public class RemoteUserInfo implements UserInfo, UIKeyboardInteractive {
+public final class RemoteUserInfo implements UserInfo, UIKeyboardInteractive {
 
-    private final static Object lock = RemoteUserInfo.class.getName() + "Lock"; // NOI18N
-    private final static PasswordManager pm = PasswordManager.getInstance();
+    private static final Object lock = RemoteUserInfo.class.getName() + "Lock"; // NOI18N
+    private static final PasswordManager pm = PasswordManager.getInstance();
 //    private final Component parent;
     private final ExecutionEnvironment env;
   //  private volatile Component parentWindow = null;

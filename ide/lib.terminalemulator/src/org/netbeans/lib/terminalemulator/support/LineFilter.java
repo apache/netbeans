@@ -131,7 +131,7 @@ public abstract class LineFilter {
      * Sink for processed lines.
      * Line should <u>not</u> be terminated with '\r' or '\n'.
      */
-    static protected interface LineSink {
+    protected static interface LineSink {
         public void forwardLine(String line);
     };
 

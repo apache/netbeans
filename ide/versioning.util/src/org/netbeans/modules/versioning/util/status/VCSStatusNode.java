@@ -89,7 +89,7 @@ public abstract class VCSStatusNode<T extends VCSFileNode> extends AbstractNode 
 
     public abstract void refresh ();
 
-    protected static abstract class NodeProperty<T> extends ReadOnly<T> {
+    protected abstract static class NodeProperty<T> extends ReadOnly<T> {
         protected NodeProperty (String name, Class<T> type, String displayName, String description) {
             super(name, type, displayName, description);
         }

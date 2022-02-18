@@ -78,7 +78,7 @@ class ToDoCustomizer extends javax.swing.JPanel implements DocumentListener{
     private boolean detailsValid;
     /* Contains all modified comments and is used to enable/disable the Apply button.
        All the mappings are saved when OK or Apply buttons are pressed.*/
-    private final static Map<String, CommentTags> id2comments = new HashMap<String, CommentTags>();
+    private static final Map<String, CommentTags> id2comments = new HashMap<String, CommentTags>();
     
     /** Creates new form ToDoCustomizer */
     public ToDoCustomizer() {

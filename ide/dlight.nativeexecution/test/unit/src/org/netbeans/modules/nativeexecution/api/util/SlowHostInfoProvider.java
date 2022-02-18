@@ -29,7 +29,7 @@ import org.openide.util.Lookup;
 import org.openide.util.lookup.ServiceProvider;
 
 @ServiceProvider(service = org.netbeans.modules.nativeexecution.support.hostinfo.HostInfoProvider.class, position = 10)
-final public class SlowHostInfoProvider implements HostInfoProvider {
+public final class SlowHostInfoProvider implements HostInfoProvider {
 
     private static final java.util.logging.Logger log = Logger.getInstance();
 

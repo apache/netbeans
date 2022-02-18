@@ -506,7 +506,7 @@ public abstract class TokenAcceptor {
         
     }
 
-    public static abstract class TokenImageAcceptor extends TokenAcceptor {
+    public abstract static class TokenImageAcceptor extends TokenAcceptor {
 
         public TokenImageAcceptor(String id) {
             super(id);

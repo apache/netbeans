@@ -60,7 +60,7 @@ public abstract class CollectSystemAction extends SystemAction implements Presen
         return registeredAction;
     }
 
-    abstract protected void addRegisteredAction();
+    protected abstract void addRegisteredAction();
 
     protected void addRegisteredAction(String folderPath) {
         List<String> actionClassNames = new ArrayList<String>();

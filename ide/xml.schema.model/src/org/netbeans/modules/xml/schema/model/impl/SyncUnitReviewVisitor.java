@@ -42,7 +42,7 @@ public class SyncUnitReviewVisitor extends DefaultSchemaVisitor {
         return unit;
     }
     
-    static private SchemaModelImpl getSchemaModel(SchemaComponent c) {
+    private static SchemaModelImpl getSchemaModel(SchemaComponent c) {
         return (SchemaModelImpl) c.getModel();
     }
     

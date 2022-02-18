@@ -401,7 +401,7 @@ class DTDGrammar implements ExtendedGrammarQuery {
     // Result classes ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     
     
-    private static abstract class AbstractResultNode extends AbstractNode implements GrammarResult {
+    private abstract static class AbstractResultNode extends AbstractNode implements GrammarResult {
         
         public Icon getIcon(int kind) {
             return null;

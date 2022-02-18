@@ -58,11 +58,11 @@ import org.openide.util.NbBundle;
 
 public abstract class AbstractNativeProcess extends NativeProcess implements ExProcessInfoProvider {
 
-    protected final static java.util.logging.Logger LOG = Logger.getInstance();
-    private final static Integer PID_TIMEOUT =
+    protected static final java.util.logging.Logger LOG = Logger.getInstance();
+    private static final Integer PID_TIMEOUT =
             Integer.valueOf(System.getProperty(
             "dlight.nativeexecutor.pidtimeout", "70")); // NOI18N
-    private final static Integer SIGKILL_TIMEOUT =
+    private static final Integer SIGKILL_TIMEOUT =
             Integer.valueOf(System.getProperty(
             "dlight.nativeexecutor.forcekill.timeout", "5")); // NOI18N
     /*package*/ static final Boolean FIX_ERASE_KEY_IN_TERMINAL = Boolean.valueOf(System.getProperty("fixEraseKeyInTerminal", "true")); // NOI18N;
@@ -193,7 +193,7 @@ public abstract class AbstractNativeProcess extends NativeProcess implements ExP
         }
     }
 
-    abstract protected void create() throws Throwable;
+    protected abstract void create() throws Throwable;
 
     protected final boolean isInterrupted() {
         try {

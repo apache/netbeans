@@ -23,7 +23,7 @@ public class BaseBeansFactory implements CodeGeneratorFactory {
     private BaseBeansFactory() {
     }
 
-    static public BaseBeansFactory newInstance() {
+    public static BaseBeansFactory newInstance() {
         return new BaseBeansFactory();
     }
 

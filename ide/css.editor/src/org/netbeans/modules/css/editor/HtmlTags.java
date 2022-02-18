@@ -26,7 +26,7 @@ package org.netbeans.modules.css.editor;
  * to avoid css.editor to html.parser or html.lib dependency
  */
 
-final public class HtmlTags {
+public final class HtmlTags {
 
     private static String[] tags = {
         "a", "abbr", "abs", "address", "and", "animate", "animateColor",

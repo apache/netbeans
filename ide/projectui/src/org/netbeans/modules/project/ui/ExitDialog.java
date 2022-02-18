@@ -54,7 +54,7 @@ import org.openide.util.NbBundle;
  *
  * @author  Ian Formanek, Petr Hrebejk
  */
-final public class ExitDialog extends JPanel implements ActionListener {
+public final class ExitDialog extends JPanel implements ActionListener {
 
     /*for tests only!*/static boolean SAVE_ALL_UNCONDITIONALLY = false;
 

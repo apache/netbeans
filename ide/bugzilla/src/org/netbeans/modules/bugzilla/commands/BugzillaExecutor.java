@@ -332,7 +332,7 @@ public class BugzillaExecutor {
         return true;
     }
 
-    private static abstract class ExceptionHandler {
+    private abstract static class ExceptionHandler {
 
         protected String errroMsg;
         protected CoreException ce;

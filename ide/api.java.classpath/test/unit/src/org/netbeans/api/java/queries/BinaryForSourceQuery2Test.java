@@ -74,7 +74,7 @@ public class BinaryForSourceQuery2Test extends NbTestCase {
     @SuppressWarnings("PackageVisibleField")
     // BEGIN: org.netbeans.api.java.queries.BinaryForSourceQuery2Test.SampleQuery
     @ServiceProvider(service = BinaryForSourceQueryImplementation.class)
-    public final static class SampleQuery
+    public static final class SampleQuery
     implements BinaryForSourceQueryImplementation2<SampleQuery.PrivateData> {
         public SampleQuery() {
         }

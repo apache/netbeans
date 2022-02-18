@@ -105,7 +105,7 @@ public abstract class YamlStructureItem implements StructureItem {
         return "" + getPosition() + ": " + getName();
     }
 
-    public final static class Simple extends YamlStructureItem {
+    public static final class Simple extends YamlStructureItem {
 
         final String name;
         final long endMark;
@@ -133,7 +133,7 @@ public abstract class YamlStructureItem implements StructureItem {
         
     }
     
-    public final static class Collection extends YamlStructureItem {
+    public static final class Collection extends YamlStructureItem {
         private final List<YamlStructureItem> children = new ArrayList<>();
         private long endMark;
         
@@ -171,7 +171,7 @@ public abstract class YamlStructureItem implements StructureItem {
         }
     }
     
-    public final static class MapEntry extends YamlStructureItem {
+    public static final class MapEntry extends YamlStructureItem {
         final YamlStructureItem keyItem;
         final YamlStructureItem valueItem;
 

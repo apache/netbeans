@@ -40,8 +40,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
-import java.util.concurrent.CompletableFuture;
-import java.util.function.Function;
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
@@ -61,6 +59,8 @@ import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.project.SourceGroup;
+import org.netbeans.api.templates.CreateDescriptor;
+import org.netbeans.api.templates.CreateFromTemplateHandler;
 import org.netbeans.modules.j2ee.core.api.support.SourceGroups;
 import org.netbeans.modules.j2ee.core.api.support.java.GenerationUtils;
 import org.netbeans.modules.j2ee.core.api.support.wizard.Wizards;
@@ -70,7 +70,6 @@ import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.WizardDescriptor;
 import org.openide.filesystems.FileObject;
-import org.openide.loaders.DataFolder;
 import org.openide.loaders.DataObject;
 import org.openide.loaders.TemplateWizard;
 import org.openide.util.Exceptions;
@@ -90,55 +89,63 @@ public class MicronautRepository implements TemplateWizard.Iterator {
         "MSG_SelectEntities=Select Entity Classes",
         "MSG_NoEntities=No entity class found in {0}"
     })
-    public static Function<DataFolder, CompletableFuture<Object>> lspCreate() {
-        return (target) -> {
-            try {
-                final FileObject folder = target.getPrimaryFile();
-                final Project project = FileOwnerQuery.getOwner(folder);
-                if (project == null) {
-                    DialogDisplayer.getDefault().notifyLater(new NotifyDescriptor.Message(Bundle.MSG_NoProject(folder.getPath()), NotifyDescriptor.ERROR_MESSAGE));
-                    return null;
-                }
-                final SourceGroup sourceGroup = SourceGroups.getFolderSourceGroup(ProjectUtils.getSources(project).getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA), folder);
-                if (sourceGroup == null) {
-                    DialogDisplayer.getDefault().notifyLater(new NotifyDescriptor.Message(Bundle.MSG_NoSourceGroup(folder.getPath()), NotifyDescriptor.ERROR_MESSAGE));
-                    return CompletableFuture.completedFuture(null);
-                }
-                final boolean jpaSupported = Utils.isJPASupported(sourceGroup);
-                final Map<String, String> entity2idTypes = getEntityClasses(sourceGroup, jpaSupported);
-                final List<NotifyDescriptor.QuickPick.Item> entities = new ArrayList<>();
-                for (String entityFQN : entity2idTypes.keySet()) {
-                    int idx = entityFQN.lastIndexOf('.');
-                    if (idx < 0) {
-                        entities.add(new NotifyDescriptor.QuickPick.Item(entityFQN, null));
-                    } else {
-                        entities.add(new NotifyDescriptor.QuickPick.Item(entityFQN.substring(idx + 1), entityFQN.substring(0, idx)));
+    public static CreateFromTemplateHandler handler() {
+        return new CreateFromTemplateHandler() {
+            @Override
+            protected boolean accept(CreateDescriptor desc) {
+                return true;
+            }
+
+            @Override
+            protected List<FileObject> createFromTemplate(CreateDescriptor desc) throws IOException {
+                try {
+                    final FileObject folder = desc.getTarget();
+                    final Project project = FileOwnerQuery.getOwner(folder);
+                    if (project == null) {
+                        DialogDisplayer.getDefault().notifyLater(new NotifyDescriptor.Message(Bundle.MSG_NoProject(folder.getPath()), NotifyDescriptor.ERROR_MESSAGE));
+                        return Collections.emptyList();
                     }
-                }
-                if (entities.isEmpty()) {
-                    DialogDisplayer.getDefault().notifyLater(new NotifyDescriptor.Message(Bundle.MSG_NoEntities(sourceGroup.getRootFolder().getPath()), NotifyDescriptor.ERROR_MESSAGE));
-                    return CompletableFuture.completedFuture(null);
-                }
-                NotifyDescriptor.QuickPick qp = new NotifyDescriptor.QuickPick(Bundle.MSG_SelectEntities(), Bundle.MSG_SelectEntities(), entities, true);
-                if (DialogDescriptor.OK_OPTION == DialogDisplayer.getDefault().notify(qp)) {
-                    String dialect = getDialect(jpaSupported);
-                    List<String> generated = new ArrayList<>();
-                    for (NotifyDescriptor.QuickPick.Item item : qp.getItems()) {
-                        if (item.isSelected()) {
-                            String fqn = item.getDescription() != null ? item.getDescription() + '.' + item.getLabel() : item.getLabel();
-                            String entityIdType = entity2idTypes.get(fqn);
-                            FileObject fo = generate(folder, item.getLabel(), fqn, entityIdType, dialect);
-                            if (fo != null) {
-                                generated.add(fo.toURI().toString());
-                            }
+                    final SourceGroup sourceGroup = SourceGroups.getFolderSourceGroup(ProjectUtils.getSources(project).getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA), folder);
+                    if (sourceGroup == null) {
+                        DialogDisplayer.getDefault().notifyLater(new NotifyDescriptor.Message(Bundle.MSG_NoSourceGroup(folder.getPath()), NotifyDescriptor.ERROR_MESSAGE));
+                        return Collections.emptyList();
+                    }
+                    final boolean jpaSupported = Utils.isJPASupported(sourceGroup);
+                    final Map<String, String> entity2idTypes = getEntityClasses(sourceGroup, jpaSupported);
+                    final List<NotifyDescriptor.QuickPick.Item> entities = new ArrayList<>();
+                    for (String entityFQN : entity2idTypes.keySet()) {
+                        int idx = entityFQN.lastIndexOf('.');
+                        if (idx < 0) {
+                            entities.add(new NotifyDescriptor.QuickPick.Item(entityFQN, null));
+                        } else {
+                            entities.add(new NotifyDescriptor.QuickPick.Item(entityFQN.substring(idx + 1), entityFQN.substring(0, idx)));
                         }
                     }
-                    return CompletableFuture.completedFuture(generated);
+                    if (entities.isEmpty()) {
+                        DialogDisplayer.getDefault().notifyLater(new NotifyDescriptor.Message(Bundle.MSG_NoEntities(sourceGroup.getRootFolder().getPath()), NotifyDescriptor.ERROR_MESSAGE));
+                        return Collections.emptyList();
+                    }
+                    NotifyDescriptor.QuickPick qp = new NotifyDescriptor.QuickPick(Bundle.MSG_SelectEntities(), Bundle.MSG_SelectEntities(), entities, true);
+                    if (DialogDescriptor.OK_OPTION == DialogDisplayer.getDefault().notify(qp)) {
+                        String dialect = getDialect(jpaSupported);
+                        List<FileObject> generated = new ArrayList<>();
+                        for (NotifyDescriptor.QuickPick.Item item : qp.getItems()) {
+                            if (item.isSelected()) {
+                                String fqn = item.getDescription() != null ? item.getDescription() + '.' + item.getLabel() : item.getLabel();
+                                String entityIdType = entity2idTypes.get(fqn);
+                                FileObject fo = generate(folder, item.getLabel(), fqn, entityIdType, dialect);
+                                if (fo != null) {
+                                    generated.add(fo);
+                                }
+                            }
+                        }
+                        return generated;
+                    }
+                } catch (Exception ex) {
+                    DialogDisplayer.getDefault().notifyLater(new NotifyDescriptor.Message(ex.getMessage(), NotifyDescriptor.ERROR_MESSAGE));
                 }
-            } catch (Exception ex) {
-                DialogDisplayer.getDefault().notifyLater(new NotifyDescriptor.Message(ex.getMessage(), NotifyDescriptor.ERROR_MESSAGE));
+                return Collections.emptyList();
             }
-            return CompletableFuture.completedFuture(null);
         };
     }
 

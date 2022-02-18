@@ -53,7 +53,7 @@
                 <attr name="position" intvalue="220"/>
                 <attr name="template" boolvalue="true"/>
                 <attr name="instantiatingIterator" methodvalue="org.netbeans.modules.micronaut.db.MicronautEntity.create"/>
-                <attr name="lspInstanceCreator" methodvalue="org.netbeans.modules.micronaut.db.MicronautEntity.lspCreate"/>
+                <attr name="template.createTemplateHandler" methodvalue="org.netbeans.modules.micronaut.db.MicronautEntity.handler"/>
                 <attr name="templateCategory" stringvalue="persistence"/>
                 <attr name="templateWizardURL" urlvalue="nbresloc:/org/netbeans/modules/micronaut/resources/EntityDatabase.html"/>
                 <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.micronaut.db.Bundle"/>
@@ -63,7 +63,7 @@
                 <attr name="position" intvalue="320"/>
                 <attr name="template" boolvalue="true"/>
                 <attr name="instantiatingIterator" methodvalue="org.netbeans.modules.micronaut.db.MicronautRepository.create"/>
-                <attr name="lspInstanceCreator" methodvalue="org.netbeans.modules.micronaut.db.MicronautRepository.lspCreate"/>
+                <attr name="template.createTemplateHandler" methodvalue="org.netbeans.modules.micronaut.db.MicronautRepository.handler"/>
                 <attr name="templateCategory" stringvalue="persistence"/>
                 <attr name="templateWizardURL" urlvalue="nbresloc:/org/netbeans/modules/micronaut/resources/Repository.html"/>
                 <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.micronaut.db.Bundle"/>

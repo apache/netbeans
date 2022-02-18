@@ -27,6 +27,7 @@ import com.sun.source.tree.VariableTree;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumSet;
@@ -35,8 +36,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.CompletableFuture;
-import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -46,6 +45,7 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeMirror;
 import org.netbeans.api.db.explorer.ConnectionManager;
 import org.netbeans.api.db.explorer.DatabaseConnection;
+import org.netbeans.api.db.explorer.DatabaseException;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.classpath.JavaClassPathConstants;
 import org.netbeans.api.java.project.JavaProjectConstants;
@@ -58,6 +58,8 @@ import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.project.SourceGroup;
+import org.netbeans.api.templates.CreateDescriptor;
+import org.netbeans.api.templates.CreateFromTemplateHandler;
 import org.netbeans.modules.j2ee.core.api.support.SourceGroups;
 import org.netbeans.modules.j2ee.core.api.support.java.GenerationUtils;
 import org.netbeans.modules.j2ee.core.api.support.java.SourceUtils;
@@ -81,7 +83,6 @@ import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
-import org.openide.loaders.DataFolder;
 import org.openide.loaders.DataObject;
 import org.openide.loaders.TemplateWizard;
 import org.openide.util.NbBundle;
@@ -105,55 +106,63 @@ public class MicronautEntity extends RelatedCMPWizard {
         "MSG_SelectTables=Select Database Tables",
         "MSG_NoDbTables=No database table found for {0}"
     })
-    public static Function<DataFolder, CompletableFuture<Object>> lspCreate() {
-        return (target) -> {
-            try {
-                FileObject folder = target.getPrimaryFile();
-                Project project = FileOwnerQuery.getOwner(folder);
-                if (project == null) {
-                    DialogDisplayer.getDefault().notifyLater(new NotifyDescriptor.Message(Bundle.MSG_NoProject(folder.getPath()), NotifyDescriptor.ERROR_MESSAGE));
-                    return CompletableFuture.completedFuture(null);
-                }
-                SourceGroup sourceGroup = SourceGroups.getFolderSourceGroup(ProjectUtils.getSources(project).getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA), folder);
-                if (sourceGroup == null) {
-                    DialogDisplayer.getDefault().notifyLater(new NotifyDescriptor.Message(Bundle.MSG_NoSourceGroup(folder.getPath()), NotifyDescriptor.ERROR_MESSAGE));
-                    return CompletableFuture.completedFuture(null);
-                }
-                DatabaseConnection connection = ConnectionManager.getDefault().getPreferredConnection(true);
-                if (connection == null) {
-                    DialogDisplayer.getDefault().notifyLater(new NotifyDescriptor.Message(Bundle.MSG_NoDbConn(), NotifyDescriptor.ERROR_MESSAGE));
-                    return CompletableFuture.completedFuture(null);
-                }
-                ConnectionManager.getDefault().connect(connection);
-                Connection conn = connection.getJDBCConnection();
-                ResultSet rs = conn.getMetaData().getTables(conn.getCatalog(), conn.getSchema(), "%", new String[]{"TABLE", "VIEW"}); //NOI18N
-                List<NotifyDescriptor.QuickPick.Item> dbItems = new ArrayList<>();
-                while (rs.next()) {
-                    dbItems.add(new NotifyDescriptor.QuickPick.Item(rs.getString("TABLE_NAME"), null)); //NOI18N
-                }
-                if (dbItems.isEmpty()) {
-                    DialogDisplayer.getDefault().notifyLater(new NotifyDescriptor.Message(Bundle.MSG_NoDbTables(connection.getDisplayName()), NotifyDescriptor.ERROR_MESSAGE));
-                    return CompletableFuture.completedFuture(null);
-                }
-                NotifyDescriptor.QuickPick qp = new NotifyDescriptor.QuickPick(Bundle.MSG_SelectTables(), Bundle.MSG_SelectTables(), dbItems, true);
-                if (DialogDescriptor.OK_OPTION == DialogDisplayer.getDefault().notify(qp)) {
-                    List<String> selectedItems = qp.getItems().stream().filter(item -> item.isSelected()).map(item -> item.getLabel()).collect(Collectors.toList());
-                    EntitiesFromDBGenerator generator = new EntitiesFromDBGenerator(selectedItems, false, false, false,
-                            EntityRelation.FetchType.DEFAULT, EntityRelation.CollectionType.COLLECTION,
-                            SourceGroups.getPackageForFolder(sourceGroup, folder), sourceGroup, connection, project, null, new Generator());
-                    ProgressContributor pc = BasicAggregateProgressFactory.createProgressContributor("entity"); //NOI18N\
-                    List<String> generated = new ArrayList<>();
-                    for (FileObject fo : generator.generate(pc)) {
-                        if (fo != null) {
-                            generated.add(fo.toURI().toString());
-                        }
-                    }
-                    return CompletableFuture.completedFuture(generated);
-                }
-            } catch (Exception ex) {
-                DialogDisplayer.getDefault().notifyLater(new NotifyDescriptor.Message(ex.getMessage(), NotifyDescriptor.ERROR_MESSAGE));
+    public static CreateFromTemplateHandler handler() {
+        return new CreateFromTemplateHandler() {
+            @Override
+            protected boolean accept(CreateDescriptor desc) {
+                return true;
             }
-            return CompletableFuture.completedFuture(null);
+
+            @Override
+            protected List<FileObject> createFromTemplate(CreateDescriptor desc) throws IOException {
+                try {
+                    FileObject folder = desc.getTarget();
+                    Project project = FileOwnerQuery.getOwner(folder);
+                    if (project == null) {
+                        DialogDisplayer.getDefault().notifyLater(new NotifyDescriptor.Message(Bundle.MSG_NoProject(folder.getPath()), NotifyDescriptor.ERROR_MESSAGE));
+                        return Collections.emptyList();
+                    }
+                    SourceGroup sourceGroup = SourceGroups.getFolderSourceGroup(ProjectUtils.getSources(project).getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA), folder);
+                    if (sourceGroup == null) {
+                        DialogDisplayer.getDefault().notifyLater(new NotifyDescriptor.Message(Bundle.MSG_NoSourceGroup(folder.getPath()), NotifyDescriptor.ERROR_MESSAGE));
+                        return Collections.emptyList();
+                    }
+                    DatabaseConnection connection = ConnectionManager.getDefault().getPreferredConnection(true);
+                    if (connection == null) {
+                        DialogDisplayer.getDefault().notifyLater(new NotifyDescriptor.Message(Bundle.MSG_NoDbConn(), NotifyDescriptor.ERROR_MESSAGE));
+                        return Collections.emptyList();
+                    }
+                    ConnectionManager.getDefault().connect(connection);
+                    Connection conn = connection.getJDBCConnection();
+                    ResultSet rs = conn.getMetaData().getTables(conn.getCatalog(), conn.getSchema(), "%", new String[]{"TABLE", "VIEW"}); //NOI18N
+                    List<NotifyDescriptor.QuickPick.Item> dbItems = new ArrayList<>();
+                    while (rs.next()) {
+                        dbItems.add(new NotifyDescriptor.QuickPick.Item(rs.getString("TABLE_NAME"), null)); //NOI18N
+                    }
+                    if (dbItems.isEmpty()) {
+                        DialogDisplayer.getDefault().notifyLater(new NotifyDescriptor.Message(Bundle.MSG_NoDbTables(connection.getDisplayName()), NotifyDescriptor.ERROR_MESSAGE));
+                        return Collections.emptyList();
+                    }
+                    NotifyDescriptor.QuickPick qp = new NotifyDescriptor.QuickPick(Bundle.MSG_SelectTables(), Bundle.MSG_SelectTables(), dbItems, true);
+                    if (DialogDescriptor.OK_OPTION == DialogDisplayer.getDefault().notify(qp)) {
+                        List<String> selectedItems = qp.getItems().stream().filter(item -> item.isSelected()).map(item -> item.getLabel()).collect(Collectors.toList());
+                        EntitiesFromDBGenerator generator = new EntitiesFromDBGenerator(selectedItems, false, false, false,
+                                EntityRelation.FetchType.DEFAULT, EntityRelation.CollectionType.COLLECTION,
+                                SourceGroups.getPackageForFolder(sourceGroup, folder), sourceGroup, connection, project, null, new Generator());
+                        ProgressContributor pc = BasicAggregateProgressFactory.createProgressContributor("entity"); //NOI18N\
+                        List<FileObject> generated = new ArrayList<>();
+                        for (FileObject fo : generator.generate(pc)) {
+                            if (fo != null) {
+                                generated.add(fo);
+                            }
+                        }
+                        return generated;
+                    }
+                } catch (IOException | SQLException | DatabaseException ex) {
+                    DialogDisplayer.getDefault().notifyLater(new NotifyDescriptor.Message(ex.getMessage(), NotifyDescriptor.ERROR_MESSAGE));
+                }
+                return Collections.emptyList();
+            }
         };
     }
 

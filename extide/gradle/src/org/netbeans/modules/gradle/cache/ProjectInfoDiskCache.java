@@ -94,7 +94,7 @@ public final class ProjectInfoDiskCache extends AbstractDiskCache<GradleFiles, Q
 
         private final Quality quality;
         private final Map<String, Object> info;
-        private transient final Map<String, Object> ext;
+        private final transient Map<String, Object> ext;
         private final Set<String> problems;
         private final String gradleException;
 

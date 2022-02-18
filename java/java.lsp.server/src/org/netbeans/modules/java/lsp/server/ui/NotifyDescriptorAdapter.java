@@ -42,7 +42,9 @@ import javax.swing.JButton;
 import org.eclipse.lsp4j.MessageActionItem;
 import org.eclipse.lsp4j.MessageType;
 import org.eclipse.lsp4j.ShowMessageRequestParams;
+import org.netbeans.modules.java.lsp.server.protocol.QuickPickItem;
 import org.netbeans.modules.java.lsp.server.protocol.ShowInputBoxParams;
+import org.netbeans.modules.java.lsp.server.protocol.ShowQuickPickParams;
 import org.openide.NotifyDescriptor;
 import org.openide.awt.Actions;
 import org.openide.util.NbBundle;
@@ -287,6 +289,22 @@ class NotifyDescriptorAdapter {
                     return NotifyDescriptor.CLOSED_OPTION;
                 }
                 inp.setInputText(item);
+                return NotifyDescriptor.OK_OPTION;
+            });
+        } else if (descriptor instanceof NotifyDescriptor.QuickPick) {
+            NotifyDescriptor.QuickPick qp = (NotifyDescriptor.QuickPick) descriptor;
+            Map<QuickPickItem, NotifyDescriptor.QuickPick.Item> items = new HashMap<>();
+            for (NotifyDescriptor.QuickPick.Item item : qp.getItems()) {
+                items.put(new QuickPickItem(item.getLabel(), item.getDescription(), null, item.isSelected(), null), item);
+            }
+            ShowQuickPickParams params = new ShowQuickPickParams(qp.getTitle(), qp.isMultipleSelection(), new ArrayList<>(items.keySet()));
+            return client.showQuickPick(params).thenApply(selected -> {
+                if (selected == null) {
+                    return NotifyDescriptor.CLOSED_OPTION;
+                }
+                for (Map.Entry<QuickPickItem, NotifyDescriptor.QuickPick.Item> entry : items.entrySet()) {
+                    entry.getValue().setSelected(selected.contains(entry.getKey()));
+                }
                 return NotifyDescriptor.OK_OPTION;
             });
         } else {

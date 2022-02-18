@@ -341,7 +341,14 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
 
             if (typeof res === 'string') {
                 let newFile = vscode.Uri.parse(res as string);
-                await vscode.window.showTextDocument(newFile);
+                await vscode.window.showTextDocument(newFile, { preview: false });
+            } else if (Array.isArray(res)) {
+                for(let r of res) {
+                    if (typeof r === 'string') {
+                        let newFile = vscode.Uri.parse(r as string);
+                        await vscode.window.showTextDocument(newFile, { preview: false });
+                    }
+                }
             }
         } else {
             throw `Client ${c} doesn't support new from template`;

@@ -50,8 +50,8 @@ import org.openide.util.lookup.ServiceProvider;
 @SuppressWarnings("unchecked")
 class GradleBaseProjectBuilder implements ProjectInfoExtractor.Result {
 
-    final static Map<String, List<String>> DEPENDENCY_TO_PLUGIN = new LinkedHashMap<>();
-    final static Logger LOG = Logger.getLogger(GradleBaseProjectBuilder.class.getName());
+    static final Map<String, List<String>> DEPENDENCY_TO_PLUGIN = new LinkedHashMap<>();
+    static final Logger LOG = Logger.getLogger(GradleBaseProjectBuilder.class.getName());
 
     static {
         addDependencyPlugin("javax:javaee-api:.*", "ejb", "jpa");

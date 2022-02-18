@@ -121,7 +121,7 @@ public final class NbGradleProjectImpl implements Project {
         return project != null;
     }
 
-    public static abstract class WatcherAccessor {
+    public abstract static class WatcherAccessor {
 
         public abstract NbGradleProject createWatcher(NbGradleProjectImpl proj);
 

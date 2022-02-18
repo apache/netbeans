@@ -59,7 +59,7 @@ public class SettingsPanel extends javax.swing.JPanel {
     @StaticResource
     private static final String RESTART_ICON = "org/netbeans/modules/gradle/resources/restart.png"; //NOI18
 
-    private final static String[] CARDS = {"Execution", "Appearance", "Dependencies", "Experimental"}; //NOI18N
+    private static final String[] CARDS = {"Execution", "Appearance", "Dependencies", "Experimental"}; //NOI18N
 
     private GradleDistributionManager gdm = GradleDistributionManager.get(GradleSettings.getDefault().getGradleUserHome());
 

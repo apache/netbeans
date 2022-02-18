@@ -193,7 +193,7 @@ public class GradleCliCompletionProvider implements CompletionProvider {
         return -1;
     }
 
-    private static abstract class AbstractGradleCompletionItem implements CompletionItem {
+    private abstract static class AbstractGradleCompletionItem implements CompletionItem {
         private final int startOffset;
         private final int caretOffset;
 

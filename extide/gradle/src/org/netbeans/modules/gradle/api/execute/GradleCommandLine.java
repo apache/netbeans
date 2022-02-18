@@ -884,7 +884,7 @@ public final class GradleCommandLine implements Serializable {
         }
     }
 
-    final static void addGradleSettingJvmargs(File rootDir, List<String> jvmargs) {
+    static final void addGradleSettingJvmargs(File rootDir, List<String> jvmargs) {
         List<File> propFiles = new ArrayList<>();
         propFiles.add(new File(GradleSettings.getDefault().getGradleUserHome(), GradleFiles.GRADLE_PROPERTIES_NAME));
 

@@ -43,7 +43,7 @@ import org.openide.util.lookup.ServiceProviders;
 })
 public final class FoDLayersProvider extends Repository.LayerProvider
 implements LookupListener, Runnable {
-    final static Logger LOG = Logger.getLogger (FoDLayersProvider.class.getPackage().getName());
+    static final Logger LOG = Logger.getLogger (FoDLayersProvider.class.getPackage().getName());
     private RequestProcessor.Task refresh = FeatureManager.getInstance().create(this, true);
     private Lookup.Result<ProjectFactory> factories;
     private Lookup.Result<?> ants;

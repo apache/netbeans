@@ -36,7 +36,7 @@ import java.util.Calendar;
  */
 class DateRange {
 
-    private final static int UNDEFINED = -1;
+    private static final int UNDEFINED = -1;
     private final int yearMin;
     private final int yearMax;
     private final int monthMin;

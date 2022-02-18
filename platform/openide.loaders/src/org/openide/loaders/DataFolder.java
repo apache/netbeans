@@ -193,7 +193,7 @@ public class DataFolder extends MultiDataObject implements DataObject.Container 
     * @param mode an constant from {@link DataFolder.SortMode}
     * @exception IOException if the mode cannot be set
     */
-    public synchronized final void setSortMode (SortMode mode) throws IOException {
+    public final synchronized void setSortMode (SortMode mode) throws IOException {
         SortMode old = getOrder ().getSortMode ();
         getOrder ().setSortMode (mode);
         firePropertyChange (PROP_SORT_MODE, old, getOrder ().getSortMode ());
@@ -220,7 +220,7 @@ public class DataFolder extends MultiDataObject implements DataObject.Container 
     * @exception IOException if the order cannot be set
     *
     */
-    public synchronized final void setOrder (DataObject[] arr) throws IOException {
+    public final synchronized void setOrder (DataObject[] arr) throws IOException {
         getOrder ().setOrder (arr);
         firePropertyChange (PROP_ORDER, null, null);
     }
@@ -380,8 +380,8 @@ public class DataFolder extends MultiDataObject implements DataObject.Container 
 
         }
     }
-    private final static class ClonedFilterHandle implements Node.Handle {
-        private final static long serialVersionUID = 24234097765186L;
+    private static final class ClonedFilterHandle implements Node.Handle {
+        private static final long serialVersionUID = 24234097765186L;
         private DataObject folder;
         private DataFilter filter;
         public ClonedFilterHandle (DataFolder folder, DataFilter filter) {

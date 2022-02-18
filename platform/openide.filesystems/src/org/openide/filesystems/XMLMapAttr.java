@@ -442,7 +442,7 @@ final class XMLMapAttr implements Map {
      * attribute a returns it as Object. Each Attr contains pair key and value. Key is type. Value is real value (in textual form) of this type.
      * Detailed describtion is in <A HREF="XMLMapAttr.html">XMLMapAttr<A>
      */
-    final static class Attr extends java.lang.Object {
+    static final class Attr extends java.lang.Object {
         // static final long serialVersionUID = -62733358015297232L;
         private static final String[] ALLOWED_ATTR_KEYS = {
             "bytevalue", "shortvalue", "intvalue", "longvalue", "floatvalue", "doublevalue", "boolvalue", "charvalue",
@@ -1060,7 +1060,7 @@ final class XMLMapAttr implements Map {
          * Checks if key is valid
          * @return Index to array of allowed keys or -1 which means error.
          */
-        final static int isValid(String key) {
+        static final int isValid(String key) {
             int index = -1;
             int i;
             String[] strArray = getAttrTypes();
@@ -1108,7 +1108,7 @@ final class XMLMapAttr implements Map {
     static class ModifiedAttribute implements java.io.Serializable {
         /** generated Serialized Version UID */
         static final long serialVersionUID = 84214031923497718L;
-        private final static String[] fragments = new String[] { "transient:" }; //NOI18N
+        private static final String[] fragments = new String[] { "transient:" }; //NOI18N
         private int modifier = 0;
         private Object origAttrValue = null;
 

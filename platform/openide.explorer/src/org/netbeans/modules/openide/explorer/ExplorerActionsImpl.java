@@ -594,7 +594,7 @@ public final class ExplorerActionsImpl {
         }
     }
     
-    private static abstract class BaseAction extends AbstractAction {
+    private abstract static class BaseAction extends AbstractAction {
         private static final int NO_CHANGE = 0;
         private static final int ENABLED = 1;
         private static final int DISABLED = 2;

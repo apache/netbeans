@@ -44,13 +44,13 @@ import org.openide.util.Parameters;
  */
 final class DropGlassPane extends JPanel {
     private static HashMap<Integer, DropGlassPane> map = new HashMap<Integer, DropGlassPane>();
-    final static private int MIN_X = 5;
-    final static private int MIN_Y = 3;
-    final static private int MIN_WIDTH = 10;
-    final static private int MIN_HEIGTH = 3;
-    transient static private Component oldPane;
-    transient static private JComponent originalSource;
-    transient static private boolean wasVisible;
+    private static final int MIN_X = 5;
+    private static final int MIN_Y = 3;
+    private static final int MIN_WIDTH = 10;
+    private static final int MIN_HEIGTH = 3;
+    private static transient Component oldPane;
+    private static transient JComponent originalSource;
+    private static transient boolean wasVisible;
     Line2D line = null;
 
     private DropGlassPane() {
@@ -60,7 +60,7 @@ final class DropGlassPane extends JPanel {
      * calculate the new bounds in current pane's boundary.
      * @param comp
      * @return  */
-    synchronized static public DropGlassPane getDefault(JComponent comp) {
+    public static synchronized DropGlassPane getDefault(JComponent comp) {
         Integer id = new Integer(System.identityHashCode(comp));
 
         if ((map.get(id)) == null) {

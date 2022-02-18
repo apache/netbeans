@@ -57,7 +57,7 @@ import org.xml.sax.XMLReader;
  */
 abstract class ParsingLayerCacheManager extends LayerCacheManager implements ContentHandler, ErrorHandler, EntityResolver {
     
-    private final static String[] ATTR_TYPES = {
+    private static final String[] ATTR_TYPES = {
         "boolvalue",
         "bundlevalue",
         "bytevalue",
@@ -74,9 +74,9 @@ abstract class ParsingLayerCacheManager extends LayerCacheManager implements Con
         "urlvalue",
     };
     
-    private final static String DTD_1_0 = "-//NetBeans//DTD Filesystem 1.0//EN";
-    private final static String DTD_1_1 = "-//NetBeans//DTD Filesystem 1.1//EN";
-    private final static String DTD_1_2 = "-//NetBeans//DTD Filesystem 1.2//EN";
+    private static final String DTD_1_0 = "-//NetBeans//DTD Filesystem 1.0//EN";
+    private static final String DTD_1_1 = "-//NetBeans//DTD Filesystem 1.1//EN";
+    private static final String DTD_1_2 = "-//NetBeans//DTD Filesystem 1.2//EN";
     
     private Locator locator;
     private MemFolder root;
@@ -427,7 +427,7 @@ abstract class ParsingLayerCacheManager extends LayerCacheManager implements Con
 
     /** Struct for <file> or <folder>.
      */
-    protected static abstract class MemFileOrFolder {
+    protected abstract static class MemFileOrFolder {
         public String name;
         public List<MemAttr> attrs = null; // {null | List<MemAttr>}
         private Object base;

@@ -82,14 +82,14 @@ implements Runnable, ExplorerManager.Provider {
     /* private */ static transient Tab DEFAULT; // package-private for unit tests
 
     /** composited view */
-    transient protected TreeView view;
+    protected transient TreeView view;
     /** listeners to the root context and IDE settings */
-    transient private PropertyChangeListener weakRcL;
-    transient private NodeListener weakNRcL;
+    private transient PropertyChangeListener weakRcL;
+    private transient NodeListener weakNRcL;
 
-    transient private NodeListener rcListener;
+    private transient NodeListener rcListener;
     /** validity flag */
-    transient private boolean valid = true;
+    private transient boolean valid = true;
 
     private ExplorerManager manager;
     

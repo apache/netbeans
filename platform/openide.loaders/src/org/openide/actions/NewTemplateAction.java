@@ -877,7 +877,7 @@ public class NewTemplateAction extends NodeAction {
     
     private void updateAction () {}
     
-    static private final synchronized Node[] getNodesFromLookup (Lookup lookup) {
+    private static final synchronized Node[] getNodesFromLookup (Lookup lookup) {
         if (lookup != null) {
             return lookup.lookupAll(Node.class).toArray(EMPTY_NODE_ARRAY);
         }

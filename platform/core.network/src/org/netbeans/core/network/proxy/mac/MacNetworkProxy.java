@@ -32,27 +32,27 @@ import org.netbeans.core.network.proxy.NetworkProxySettings;
  */
 public class MacNetworkProxy implements NetworkProxyResolver {
     
-    private final static Logger LOGGER = Logger.getLogger(MacNetworkProxy.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(MacNetworkProxy.class.getName());
     
-    private final static MacNetworkProxyLibrary cfNetworkLibrary = MacNetworkProxyLibrary.LIBRARY;
-    private final static MacCoreFoundationLibrary cfLibrary = MacCoreFoundationLibrary.LIBRARY;
+    private static final MacNetworkProxyLibrary cfNetworkLibrary = MacNetworkProxyLibrary.LIBRARY;
+    private static final MacCoreFoundationLibrary cfLibrary = MacCoreFoundationLibrary.LIBRARY;
     
-    private final static String COMMA = ","; //NOI18N
+    private static final String COMMA = ","; //NOI18N
     
-    private final static NativeLibrary NETWORK_LIBRARY = NativeLibrary.getInstance("CoreServices"); //NOI18N
-    private final static String KEY_AUTO_DISCOVERY_ENABLE = "kCFNetworkProxiesProxyAutoDiscoveryEnable"; //NOI18N
-    private final static String KEY_PAC_ENABLE = "kCFNetworkProxiesProxyAutoConfigEnable"; //NOI18N
-    private final static String KEY_PAC_URL = "kCFNetworkProxiesProxyAutoConfigURLString"; //NOI18N
-    private final static String KEY_HTTP_ENABLE = "kCFNetworkProxiesHTTPEnable"; //NOI18N
-    private final static String KEY_HTTP_HOST = "kCFNetworkProxiesHTTPProxy"; //NOI18N
-    private final static String KEY_HTTP_PORT = "kCFNetworkProxiesHTTPPort"; //NOI18N
-    private final static String KEY_HTTPS_ENABLE = "kCFNetworkProxiesHTTPSEnable"; //NOI18N
-    private final static String KEY_HTTPS_HOST = "kCFNetworkProxiesHTTPSProxy"; //NOI18N
-    private final static String KEY_HTTPS_PORT = "kCFNetworkProxiesHTTPSPort"; //NOI18N
-    private final static String KEY_SOCKS_ENABLE = "kCFNetworkProxiesSOCKSEnable"; //NOI18N
-    private final static String KEY_SOCKS_HOST = "kCFNetworkProxiesSOCKSProxy"; //NOI18N
-    private final static String KEY_SOCKS_PORT = "kCFNetworkProxiesSOCKSPort"; //NOI18N
-    private final static String KEY_EXCEPTIONS_LIST = "kCFNetworkProxiesExceptionsList"; //NOI18N
+    private static final NativeLibrary NETWORK_LIBRARY = NativeLibrary.getInstance("CoreServices"); //NOI18N
+    private static final String KEY_AUTO_DISCOVERY_ENABLE = "kCFNetworkProxiesProxyAutoDiscoveryEnable"; //NOI18N
+    private static final String KEY_PAC_ENABLE = "kCFNetworkProxiesProxyAutoConfigEnable"; //NOI18N
+    private static final String KEY_PAC_URL = "kCFNetworkProxiesProxyAutoConfigURLString"; //NOI18N
+    private static final String KEY_HTTP_ENABLE = "kCFNetworkProxiesHTTPEnable"; //NOI18N
+    private static final String KEY_HTTP_HOST = "kCFNetworkProxiesHTTPProxy"; //NOI18N
+    private static final String KEY_HTTP_PORT = "kCFNetworkProxiesHTTPPort"; //NOI18N
+    private static final String KEY_HTTPS_ENABLE = "kCFNetworkProxiesHTTPSEnable"; //NOI18N
+    private static final String KEY_HTTPS_HOST = "kCFNetworkProxiesHTTPSProxy"; //NOI18N
+    private static final String KEY_HTTPS_PORT = "kCFNetworkProxiesHTTPSPort"; //NOI18N
+    private static final String KEY_SOCKS_ENABLE = "kCFNetworkProxiesSOCKSEnable"; //NOI18N
+    private static final String KEY_SOCKS_HOST = "kCFNetworkProxiesSOCKSProxy"; //NOI18N
+    private static final String KEY_SOCKS_PORT = "kCFNetworkProxiesSOCKSPort"; //NOI18N
+    private static final String KEY_EXCEPTIONS_LIST = "kCFNetworkProxiesExceptionsList"; //NOI18N
     
     @Override
     public NetworkProxySettings getNetworkProxySettings() {

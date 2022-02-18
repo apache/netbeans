@@ -138,7 +138,7 @@ class ResultViewPanel extends JPanel implements Lookup.Provider {
         resultViewCards.show(this, CARD_NAME_RESULTS);
     }
 
-    public synchronized final GraphicalSearchListener createListener() {
+    public final synchronized GraphicalSearchListener createListener() {
         if (searchListener == null) {
             searchListener = new GraphicalSearchListener(
                     searchComposition, this);

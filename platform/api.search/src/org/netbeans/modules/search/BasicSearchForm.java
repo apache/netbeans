@@ -1113,7 +1113,7 @@ final class BasicSearchForm extends JPanel implements ChangeListener,
         }
     }
 
-    final static class MultiLineComboBoxEditor implements ComboBoxEditor {
+    static final class MultiLineComboBoxEditor implements ComboBoxEditor {
 
         private final JTextArea area = new JTextArea();
 

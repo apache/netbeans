@@ -81,7 +81,7 @@ public class EarDataObject extends DD2beansDataObject
     implements DDChangeListener, ApplicationProxy.OutputProvider, FileChangeListener, ChangeListener {
     private Application ejbJar;
     private FileObject srcRoots[];
-    private final static RequestProcessor RP2 = new RequestProcessor();   // NOI18N
+    private static final RequestProcessor RP2 = new RequestProcessor();   // NOI18N
 
     private static final long serialVersionUID = 8857563089355069362L;
     

@@ -66,17 +66,17 @@ import org.netbeans.modules.web.monitor.data.*;
 class Controller  {
 
     // REPLAY strings - must be coordinated with server.MonitorFilter
-    final static String REPLAY="netbeans.replay"; //NOI18N
-    final static String PORT="netbeans.replay.port"; //NOI18N
-    final static String REPLAYSTATUS="netbeans.replay.status"; //NOI18N
-    final static String REPLAYSESSION="netbeans.replay.session"; //NOI18N
+    static final String REPLAY="netbeans.replay"; //NOI18N
+    static final String PORT="netbeans.replay.port"; //NOI18N
+    static final String REPLAYSTATUS="netbeans.replay.status"; //NOI18N
+    static final String REPLAYSESSION="netbeans.replay.session"; //NOI18N
     static final boolean debug = false;
     //private transient static boolean starting = true;
 
     // Test server location and port
     // Should use InetAddress.getLocalhost() instead
-    private transient static String server = "localhost"; //NOI18N
-    private transient static int port = 8080;
+    private static transient String server = "localhost"; //NOI18N
+    private static transient int port = 8080;
 
     // Location of the files
     private static FileObject monDir = null;
@@ -84,10 +84,10 @@ class Controller  {
     private static FileObject saveDir = null;
     private static FileObject replayDir = null;
 
-    final static String monDirStr = "HTTPMonitor"; // NOI18N
-    final static String currDirStr = "current"; // NOI18N
-    final static String saveDirStr = "save"; // NOI18N
-    final static String replayDirStr = "replay"; // NOI18N
+    static final String monDirStr = "HTTPMonitor"; // NOI18N
+    static final String currDirStr = "current"; // NOI18N
+    static final String saveDirStr = "save"; // NOI18N
+    static final String replayDirStr = "replay"; // NOI18N
 
     // Constant nodes etc we need to know about
     private transient  NavigateNode root = null;

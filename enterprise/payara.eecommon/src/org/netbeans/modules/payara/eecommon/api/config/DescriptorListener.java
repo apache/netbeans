@@ -669,7 +669,7 @@ public class DescriptorListener implements PropertyChangeListener {
                 Object sourceDD, Object oldValue, Object newValue);
     }
     
-    public static abstract class AbstractBeanVisitor implements BeanVisitor {
+    public abstract static class AbstractBeanVisitor implements BeanVisitor {
         public void beanCreated(PayaraConfiguration config, String xpath,
                 CommonDDBean sourceDD, CommonDDBean newDD) {
         }

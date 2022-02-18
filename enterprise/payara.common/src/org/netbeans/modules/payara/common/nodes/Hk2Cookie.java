@@ -87,7 +87,7 @@ public class Hk2Cookie {
     /**
      * Common node cookie.
      */
-    protected static abstract class Cookie {
+    protected abstract static class Cookie {
 
         /** Task status. */
         protected volatile WeakReference<Future<ResultString>> status;

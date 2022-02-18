@@ -70,8 +70,8 @@ class TransactionView extends TopComponent implements ExplorerManager.Provider,
 				     PropertyChangeListener, ChangeListener {
 
     // Handles all the files etc. 
-    private transient static TransactionView instance = null; 
-    private transient static Controller controller = null;
+    private static transient TransactionView instance = null; 
+    private static transient Controller controller = null;
 
     // Misc
     private transient JToggleButton timeAButton, 	timeDButton,
@@ -85,7 +85,7 @@ class TransactionView extends TopComponent implements ExplorerManager.Provider,
     private transient  Dimension tabD = new Dimension(500,472);
     
     // Display stuff 
-    private transient static ExplorerManager mgr = null;
+    private static transient ExplorerManager mgr = null;
     private transient JPanel logPanel = null; 
     private transient JPanel dataPanel = null; 
     private transient JSplitPane splitPanel = null; 

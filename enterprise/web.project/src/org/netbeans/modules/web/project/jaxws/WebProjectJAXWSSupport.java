@@ -71,8 +71,8 @@ import org.openide.util.NbBundle;
 public class WebProjectJAXWSSupport extends ProjectJAXWSSupport /*implements JAXWSSupportImpl*/ {
     private WebProject project;
     //servlet name and servlet listener for non-JSR 109 web services
-    private final static String servletClassName = "com.sun.xml.ws.transport.http.servlet.WSServlet"; //NOI18N
-    private final static String servletListener = "com.sun.xml.ws.transport.http.servlet.WSServletContextListener"; //NOI18N
+    private static final String servletClassName = "com.sun.xml.ws.transport.http.servlet.WSServlet"; //NOI18N
+    private static final String servletListener = "com.sun.xml.ws.transport.http.servlet.WSServletContextListener"; //NOI18N
 
     /** Creates a new instance of JAXWSSupport */
     public WebProjectJAXWSSupport(WebProject project, AntProjectHelper antProjectHelper) {

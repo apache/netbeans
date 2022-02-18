@@ -78,21 +78,21 @@ public class DomainEditor {
     private static String CONST_SID = "SID"; // NOI18N
     private static String CONST_SERVER_NAME = "serverName"; // NOI18N
     private static String CONST_DRIVER_CLASS = "driverClass"; // NOI18N
-    static private String CONST_NAME = "name"; // NOI18N
-    static private String CONST_VALUE = "value"; // NOI18N
-    static private String CONST_DS_CLASS = "datasource-classname"; // NOI18N
-    static private String CONST_RES_TYPE = "res-type"; // NOI18N
-    static private String CONST_JVM_OPTIONS = "jvm-options"; // NOI18N
-    static private String CONST_DERBY_CONN_ATTRS = "connectionAttributes"; // NOI18N
-    static private String CONST_JNDINAME = "jndi-name"; // NOI18N
-    static private String CONST_PROP = "property"; // NOI18N
-    static private String CONST_POOLNAME = "pool-name"; // NOI18N
-    static private String CONST_ENABLED = "enabled"; // NOI18N
-    static private String CONST_OBJTYPE = "object-type"; // NOI18N
-    static private String CONST_JDBC = "jdbc-resource"; // NOI18N
-    static private String CONST_CP = "jdbc-connection-pool"; // NOI18N
-    static private String CONST_AO = "admin-object-resource"; // NOI18N
-    static private String XML_ENTITY = "<?xml version=\"1.0\" encoding=\"{0}\"?>";
+    private static String CONST_NAME = "name"; // NOI18N
+    private static String CONST_VALUE = "value"; // NOI18N
+    private static String CONST_DS_CLASS = "datasource-classname"; // NOI18N
+    private static String CONST_RES_TYPE = "res-type"; // NOI18N
+    private static String CONST_JVM_OPTIONS = "jvm-options"; // NOI18N
+    private static String CONST_DERBY_CONN_ATTRS = "connectionAttributes"; // NOI18N
+    private static String CONST_JNDINAME = "jndi-name"; // NOI18N
+    private static String CONST_PROP = "property"; // NOI18N
+    private static String CONST_POOLNAME = "pool-name"; // NOI18N
+    private static String CONST_ENABLED = "enabled"; // NOI18N
+    private static String CONST_OBJTYPE = "object-type"; // NOI18N
+    private static String CONST_JDBC = "jdbc-resource"; // NOI18N
+    private static String CONST_CP = "jdbc-connection-pool"; // NOI18N
+    private static String CONST_AO = "admin-object-resource"; // NOI18N
+    private static String XML_ENTITY = "<?xml version=\"1.0\" encoding=\"{0}\"?>";
     
     private String dmLoc;
     private String dmName;

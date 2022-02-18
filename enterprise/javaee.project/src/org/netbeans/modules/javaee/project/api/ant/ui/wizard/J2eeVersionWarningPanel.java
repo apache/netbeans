@@ -37,19 +37,19 @@ import org.openide.util.NbBundle;
  */
 final class J2eeVersionWarningPanel extends javax.swing.JPanel {
 
-    public final static String WARN_SET_JDK_15 = "warnSetJdk15"; // NOI18N
-    public final static String WARN_SET_JDK_6 = "warnSetJdk6"; // NOI18N
-    public final static String WARN_SET_JDK_7 = "warnSetJdk7"; // NOI18N
-    public final static String WARN_SET_JDK_8 = "warnSetJdk8"; // NOI18N
+    public static final String WARN_SET_JDK_15 = "warnSetJdk15"; // NOI18N
+    public static final String WARN_SET_JDK_6 = "warnSetJdk6"; // NOI18N
+    public static final String WARN_SET_JDK_7 = "warnSetJdk7"; // NOI18N
+    public static final String WARN_SET_JDK_8 = "warnSetJdk8"; // NOI18N
 
-    public final static String WARN_SET_SOURCE_LEVEL_15 = "warnSetSourceLevel15"; // NOI18N
-    public final static String WARN_SET_SOURCE_LEVEL_6 = "warnSetSourceLevel6"; // NOI18N
-    public final static String WARN_SET_SOURCE_LEVEL_7 = "warnSetSourceLevel7"; // NOI18N
-    public final static String WARN_SET_SOURCE_LEVEL_8 = "warnSetSourceLevel8";
+    public static final String WARN_SET_SOURCE_LEVEL_15 = "warnSetSourceLevel15"; // NOI18N
+    public static final String WARN_SET_SOURCE_LEVEL_6 = "warnSetSourceLevel6"; // NOI18N
+    public static final String WARN_SET_SOURCE_LEVEL_7 = "warnSetSourceLevel7"; // NOI18N
+    public static final String WARN_SET_SOURCE_LEVEL_8 = "warnSetSourceLevel8";
 
-    public final static String WARN_JDK_6_REQUIRED = "warnJdk6Required"; // NOI18N
-    public final static String WARN_JDK_7_REQUIRED = "warnJdk7Required"; // NOI18N
-    public final static String WARN_JDK_8_REQUIRED = "warnJdk8Required"; // NOI18N
+    public static final String WARN_JDK_6_REQUIRED = "warnJdk6Required"; // NOI18N
+    public static final String WARN_JDK_7_REQUIRED = "warnJdk7Required"; // NOI18N
+    public static final String WARN_JDK_8_REQUIRED = "warnJdk8Required"; // NOI18N
 
     private String warningType;
 

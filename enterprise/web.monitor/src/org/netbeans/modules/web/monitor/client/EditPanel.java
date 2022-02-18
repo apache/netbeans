@@ -108,10 +108,10 @@ class EditPanel extends javax.swing.JPanel implements
     //private JToggleButton browserCookieButton, savedCookieButton; 
     //private static boolean useBrowserCookie = true;
     
-    final static String METHOD = "method"; //NOI18N
-    final static String GET = "GET";       //NOI18N
-    final static String POST = "POST";     //NOI18N
-    final static String PUT = "PUT";       //NOI18N
+    static final String METHOD = "method"; //NOI18N
+    static final String GET = "GET";       //NOI18N
+    static final String POST = "POST";     //NOI18N
+    static final String PUT = "PUT";       //NOI18N
 
     private static EditPanel instance = null; 
 

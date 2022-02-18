@@ -54,7 +54,7 @@ import org.openide.awt.Mnemonics;
 
 class EditPanelCookies extends DataDisplay {
 
-    private final static boolean debug = false;
+    private static final boolean debug = false;
     
     private DisplayTable cookieTable = null;    
     private MonitorData monitorData = null;

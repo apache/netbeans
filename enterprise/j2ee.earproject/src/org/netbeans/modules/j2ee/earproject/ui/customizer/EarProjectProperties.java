@@ -492,7 +492,7 @@ public final class EarProjectProperties {
         }
     }
     
-    static private void removeItemFromAppDD(EarProject project, Application dd, ClassPathSupport.Item item) {
+    private static void removeItemFromAppDD(EarProject project, Application dd, ClassPathSupport.Item item) {
         String pathInEAR = getCompletePathInArchive(project, item);
         Module m = searchForModule(dd, pathInEAR);
         if (null != m) {
@@ -821,7 +821,7 @@ public final class EarProjectProperties {
         return projects;
     }
     
-    static public List getSortedSubprojectsList(EarProject project) {
+    public static List getSortedSubprojectsList(EarProject project) {
         List<Project> subprojects = new ArrayList<Project>();
         addSubprojects( project, subprojects ); // Find the projects recursively
         String[] displayNames = new String[subprojects.size()];
@@ -837,7 +837,7 @@ public final class EarProjectProperties {
     
     /** Gets all subprojects recursively
      */
-    static private void addSubprojects( Project project, List<Project> result ) {
+    private static void addSubprojects( Project project, List<Project> result ) {
         SubprojectProvider spp = project.getLookup().lookup( SubprojectProvider.class );
         
         if ( spp == null ) {

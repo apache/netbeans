@@ -69,7 +69,7 @@ import org.openide.util.NbBundle.Messages;
  */
 public final class UseDatabaseGenerator {
 
-    private final static Logger LOGGER = Logger.getLogger(UseDatabaseGenerator.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(UseDatabaseGenerator.class.getName());
 
     public UseDatabaseGenerator() {
     }

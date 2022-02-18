@@ -29,7 +29,7 @@ import java.util.Stack;
  * Provides an iterator over instances of <I> using instances of <T> for traversal
  * @author Jaroslav Bachorik
  */
-abstract public class TreeIterator<I, T> implements Iterator<I> {
+public abstract class TreeIterator<I, T> implements Iterator<I> {
     private Stack<T> toInspect = new Stack<T>();
     private Set<T> inspected = new HashSet<T>();
 
@@ -61,8 +61,8 @@ abstract public class TreeIterator<I, T> implements Iterator<I> {
         throw new UnsupportedOperationException("Not supported yet."); // NOI18N
     }
 
-    abstract protected Iterator<I> getSameLevelIterator(T popped);
-    abstract protected Iterator<T> getTraversingIterator(T popped);
+    protected abstract Iterator<I> getSameLevelIterator(T popped);
+    protected abstract Iterator<T> getTraversingIterator(T popped);
 
     private void setupIterator() {
         while (!toInspect.isEmpty() && (inspecting == null || !inspecting.hasNext())) {

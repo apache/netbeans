@@ -42,7 +42,7 @@ public enum OQLTokenId implements TokenId {
     CLAZZ_E("clazz-typo"),
     ERROR("error");
 
-    final private String primaryCategory;
+    private final String primaryCategory;
 
     OQLTokenId(String primaryCategory) {
         this.primaryCategory = primaryCategory;

@@ -125,7 +125,7 @@ public class HeapFragmentWalker {
         }
     }
 
-    public synchronized final int getRetainedSizesStatus() {
+    public final synchronized int getRetainedSizesStatus() {
         return retainedSizesStatus;
     }
 

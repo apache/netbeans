@@ -28,7 +28,7 @@ import org.netbeans.api.annotations.common.NonNull;
  * to obtain this class instances.
  * @author Jaroslav Bachorik
  */
-final public class OQLQueryCategory {
+public final class OQLQueryCategory {
     private final String id;
     private final String name;
     private final String description;

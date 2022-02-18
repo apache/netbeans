@@ -50,7 +50,7 @@ import org.openide.modules.InstalledFileLocator;
                             @ProjectType(id="org-netbeans-modules-java-j2semodule",position=550)
                         }) // NOI18N
 public class J2SEProjectProfilingSupportProvider extends JavaProjectProfilingSupportProvider {
-    final private static Logger LOG = Logger.getLogger(J2SEProjectProfilingSupportProvider.class.getName());
+    private static final Logger LOG = Logger.getLogger(J2SEProjectProfilingSupportProvider.class.getName());
 
     private static class MyPropertyProvider implements PropertyProvider {
         //~ Instance fields ------------------------------------------------------------------------------------------------------

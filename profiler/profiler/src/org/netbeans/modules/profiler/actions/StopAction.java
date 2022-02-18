@@ -48,10 +48,10 @@ import org.openide.util.HelpCtx;
     "HINT_DetachAction=Detach from the Profiled Application"
 })
 public final class StopAction extends ProfilingAwareAction {
-    final private static int[] enabledStates = new int[]{Profiler.PROFILING_PAUSED, Profiler.PROFILING_RUNNING, Profiler.PROFILING_STARTED};
+    private static final int[] enabledStates = new int[]{Profiler.PROFILING_PAUSED, Profiler.PROFILING_RUNNING, Profiler.PROFILING_STARTED};
     
-    final private static class Singleton {
-        final private static StopAction INSTANCE = new StopAction();
+    private static final class Singleton {
+        private static final StopAction INSTANCE = new StopAction();
     }
     
     //~ Instance fields ----------------------------------------------------------------------------------------------------------

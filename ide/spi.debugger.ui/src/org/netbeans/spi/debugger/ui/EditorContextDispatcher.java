@@ -884,7 +884,7 @@ public final class EditorContextDispatcher {
      * Therefore it can block EventQueue for an unpredictable amount of time.
      * This is why doing it in AWT can block UI. Use this class not to block the UI.
      */
-    private final static class AddRemoveFileListenerInEQThread implements Runnable {
+    private static final class AddRemoveFileListenerInEQThread implements Runnable {
         
         private enum AddRemove { ADD, REMOVE }
         private static final Queue<Work> work = new LinkedList<Work>();
@@ -924,7 +924,7 @@ public final class EditorContextDispatcher {
             }
         }
         
-        private synchronized static Work getWork() {
+        private static synchronized Work getWork() {
             return work.poll();
         }
 

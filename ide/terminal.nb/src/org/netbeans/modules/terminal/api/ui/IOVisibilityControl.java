@@ -105,7 +105,7 @@ public abstract class IOVisibilityControl {
         return find(cbs) != null;
     }
 
-    abstract protected boolean isClosable();
-    abstract protected boolean okToClose();
+    protected abstract boolean isClosable();
+    protected abstract boolean okToClose();
 
 }

@@ -57,8 +57,8 @@ import org.openide.util.Utilities;
  */
 public final class TerminalLocalNativeProcess extends AbstractNativeProcess {
 
-    private final static java.util.logging.Logger log = Logger.getInstance();
-    private final static File dorunScript;
+    private static final java.util.logging.Logger log = Logger.getInstance();
+    private static final File dorunScript;
     private ExternalTerminal terminal;
     private File resultFile;
     private final OSFamily osFamily;

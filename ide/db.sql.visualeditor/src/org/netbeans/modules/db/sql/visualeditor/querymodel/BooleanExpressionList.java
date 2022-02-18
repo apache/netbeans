@@ -123,7 +123,7 @@ abstract class BooleanExpressionList implements ExpressionList {
         }
     }
 
-    static protected void flattenExpression(List expressionsToFlatten, Class typeToLookFor, List expressions) {
+    protected static void flattenExpression(List expressionsToFlatten, Class typeToLookFor, List expressions) {
         int size = expressionsToFlatten.size();
         for (int i = 0; i < size; i++) {
             Object expr = expressionsToFlatten.get(i);

@@ -417,7 +417,7 @@ public class FileStorage {
     }
     
     /** Locks the file and disable other threads to write */
-    public synchronized final void lockFile() {
+    public final synchronized void lockFile() {
         if ((currentLock == null) || (Thread.currentThread() != currentLock)) {
             try{
                 if (currentLock == null){
@@ -437,7 +437,7 @@ public class FileStorage {
     }
 
     /** Unlocks the file and notifies wqiting threads */
-    public synchronized final void unlockFile() {
+    public final synchronized void unlockFile() {
         if (Thread.currentThread() != currentLock) {
             throw new RuntimeException(WRITE_LOCK_MISSING);
         }

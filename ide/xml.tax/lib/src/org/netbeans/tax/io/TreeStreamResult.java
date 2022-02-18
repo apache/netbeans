@@ -135,7 +135,7 @@ public class TreeStreamResult implements TreeOutputResult {
     /**
      *
      */
-    public final static class TreeStreamWriter
+    public static final class TreeStreamWriter
     implements TreeWriter,
     AttlistDecl.Writer,
     Attribute.Writer,

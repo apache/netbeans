@@ -1266,7 +1266,7 @@ public final class RepositoryUpdater implements PathRegistryListener, PropertyCh
     /* test */ static final List<URL> UNKNOWN_ROOT = Collections.unmodifiableList(new LinkedList<>());
     /* test */ static final List<URL> NONEXISTENT_ROOT = Collections.unmodifiableList(new LinkedList<>());
     /* test */@SuppressWarnings("PackageVisibleField")
-    volatile static Source unitTestActiveSource;
+    static volatile Source unitTestActiveSource;
 
     @org.netbeans.api.annotations.common.SuppressWarnings(
         value="DMI_COLLECTION_OF_URLS",
@@ -2142,7 +2142,7 @@ public final class RepositoryUpdater implements PathRegistryListener, PropertyCh
 
 
     /* test */
-    static abstract class Work {
+    abstract static class Work {
 
         //@GuardedBy("org.netbeans.modules.parsing.impl.Taskprocessor.parserLock")
         private static long lastScanEnded = -1L;
@@ -5270,7 +5270,7 @@ public final class RepositoryUpdater implements PathRegistryListener, PropertyCh
 
     } // End of RootsScanningWork class
 
-    private static abstract class AbstractRootsWork extends Work {
+    private abstract static class AbstractRootsWork extends Work {
 
         private boolean logStatistics;
 

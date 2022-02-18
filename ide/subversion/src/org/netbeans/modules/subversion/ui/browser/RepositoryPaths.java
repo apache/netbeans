@@ -54,7 +54,7 @@ import org.tigris.subversion.svnclientadapter.SVNUrl;
  */
 public class RepositoryPaths implements ActionListener, DocumentListener {
     
-    private final static RepositoryFile[] EMPTY_REPOSITORY_FILES = new RepositoryFile[0];
+    private static final RepositoryFile[] EMPTY_REPOSITORY_FILES = new RepositoryFile[0];
 
     private RepositoryFile repositoryFile;
 

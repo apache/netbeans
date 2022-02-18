@@ -174,8 +174,8 @@ public final class DatabaseConnection implements DBConnection {
     private volatile JDBCDriver jdbcdrv = null;
     private JDBCDriver[] drivers = null;
 
-    static private final Lookup.Result<OpenConnectionInterface> openConnectionLookupResult;
-    static private Collection<? extends OpenConnectionInterface> openConnectionServices = null;
+    private static final Lookup.Result<OpenConnectionInterface> openConnectionLookupResult;
+    private static Collection<? extends OpenConnectionInterface> openConnectionServices = null;
     static {
         openConnectionLookupResult = Lookup.getDefault().lookup(new Lookup.Template<>(OpenConnectionInterface.class));
         openConnectionLookupResult.addLookupListener(new LookupListener() {

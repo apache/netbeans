@@ -191,7 +191,7 @@ public abstract class CachedChildrenTreeModel extends Object implements TreeMode
         }
     }
     
-    private final static class ChildrenTree {
+    private static final class ChildrenTree {
         
         //private Object node;
         private Object[] ch;

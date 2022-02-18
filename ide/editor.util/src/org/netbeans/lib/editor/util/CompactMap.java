@@ -350,7 +350,7 @@ public class CompactMap<K,V> implements Map<K,V> {
      * This is suitable for the cases when e.g. the value is a primitive
      * data type.
      */
-    public static abstract class MapEntry<K,V> implements Map.Entry<K,V> {
+    public abstract static class MapEntry<K,V> implements Map.Entry<K,V> {
         
         private MapEntry<K,V> nextMapEntry; // 12 bytes (8-Object + 4)
         

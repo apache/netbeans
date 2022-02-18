@@ -32,7 +32,7 @@ import org.netbeans.modules.nativeexecution.api.util.HostInfoUtils;
  * The configuration of the environment for a {@link NativeProcess} execution.
  * ExecutionEnvirenment is about "<b>where</b>" to start a native process.
  */
-final public class ExecutionEnvironmentImpl implements ExecutionEnvironment, Serializable {
+public final class ExecutionEnvironmentImpl implements ExecutionEnvironment, Serializable {
 
     private final String user;
     private final String host;

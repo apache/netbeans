@@ -71,10 +71,10 @@ public class SchemaPanel extends AbstractPanel implements ActionListener, TableM
     private TemplateWizard templateWizard;
     private FileObject primarySchema=null;
     private Vector rows;
-    private final static int PRIMARY_COL = 0;
-    private final static int SCHEMA_COL = 1;
-    private final static int ROOT_COL = 2;
-    private final static int PREFIX_COL = 3;
+    private static final int PRIMARY_COL = 0;
+    private static final int SCHEMA_COL = 1;
+    private static final int ROOT_COL = 2;
+    private static final int PREFIX_COL = 3;
     private SchemaTableModel tableModel;
     private SchemaImportGUI gui;
     private static String startString;

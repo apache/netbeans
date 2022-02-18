@@ -119,7 +119,7 @@ public class ProjectCustomizerTest extends NbTestCase {
         assertEquals("Four", subcategories[0].getDisplayName());
         assertEquals("four", dcp.create(subcategories[0]).getName());
     }
-    private static abstract class TestCCP implements CompositeCategoryProvider {
+    private abstract static class TestCCP implements CompositeCategoryProvider {
         final String name;
         TestCCP(String name) {
             this.name = name;

@@ -143,7 +143,7 @@ public class VariableMirrorTranslator {
         return null;
     }
     
-    static private Object createPristineInstanceOf(Class clazz) {
+    private static Object createPristineInstanceOf(Class clazz) {
         try {
             //return clazz.newInstance(); - not sufficient
             Constructor constructor;
@@ -185,7 +185,7 @@ public class VariableMirrorTranslator {
         }
     }
     
-    static private Object createMirrorObject(ObjectReference value, ReferenceType type,
+    private static Object createMirrorObject(ObjectReference value, ReferenceType type,
                                              Class clazz, Map<Value, Object> mirrorsMap)
                                              throws ClassNotPreparedExceptionWrapper,
                                                     InternalExceptionWrapper,

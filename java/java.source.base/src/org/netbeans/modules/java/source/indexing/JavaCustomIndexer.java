@@ -1438,7 +1438,7 @@ public class JavaCustomIndexer extends CustomIndexer {
         }
     }
     
-    private static abstract class Check implements Callable<Boolean> {
+    private abstract static class Check implements Callable<Boolean> {
         
         protected final Context ctx;
         

@@ -52,11 +52,11 @@ abstract class HttpServer<Request, Response, WebSocket, Runner> {
     abstract Runner initializeRunner(String id);
     abstract void runSafe(Runner runner, Runnable code, Fn.Presenter presenter);
 
-    static abstract class Handler {
+    abstract static class Handler {
         abstract <Request, Response> void service(HttpServer<Request, Response, ?, ?> server, Request rqst, Response rspns) throws IOException;
     }
 
-    static abstract class WebSocketApplication {
+    abstract static class WebSocketApplication {
         abstract <WebSocket> void onMessage(HttpServer<?, ?, WebSocket, ?> server, WebSocket socket, String text);
     }
 }

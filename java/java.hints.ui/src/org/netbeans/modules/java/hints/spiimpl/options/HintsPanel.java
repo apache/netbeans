@@ -111,7 +111,7 @@ public final class HintsPanel extends javax.swing.JPanel   {
     private static final String DECLARATIVE_HINT_TEMPLATE_LOCATION = "org-netbeans-modules-java-hints/templates/Inspection.hint";
             static final String[] EXTRA_NODE_KEYWORDS = new String[] {"CTL_DepScanning", "CTL_Scope_Desc", "CTL_Scope_Label"};
 
-    private final static RequestProcessor WORKER = new RequestProcessor(HintsPanel.class.getName(), 1, false, false);
+    private static final RequestProcessor WORKER = new RequestProcessor(HintsPanel.class.getName(), 1, false, false);
 
     private HintsPanelLogic logic;
     private DefaultTreeModel errorTreeModel;

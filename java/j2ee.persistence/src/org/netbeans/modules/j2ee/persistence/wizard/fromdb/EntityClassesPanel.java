@@ -76,7 +76,7 @@ import org.openide.util.NbBundle;
  */
 public class EntityClassesPanel extends javax.swing.JPanel {
 
-    private final static Logger LOGGER = Logger.getLogger(EntityClassesPanel.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(EntityClassesPanel.class.getName());
 
     private final ChangeSupport changeSupport = new ChangeSupport(this);
 

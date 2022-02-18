@@ -371,7 +371,7 @@ public final class JavaActionProvider implements ActionProvider {
     }
 
 
-    public static abstract class ScriptAction implements Action {
+    public abstract static class ScriptAction implements Action {
         private final String command;
         private final String displayName;
         private final Set<ActionProviderSupport.ActionFlag> actionFlags;

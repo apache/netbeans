@@ -50,10 +50,10 @@ import org.openide.util.datatransfer.PasteType;
 
 public class RADComponentNode extends FormNode
         implements RADComponentCookie, FormPropertyCookie {
-    private final static MessageFormat nodeNameFormat =
+    private static final MessageFormat nodeNameFormat =
             new MessageFormat(
             FormUtils.getBundleString("FMT_ComponentNodeName")); // NOI18N
-    private final static MessageFormat nodeNoNameFormat =
+    private static final MessageFormat nodeNoNameFormat =
             new MessageFormat(
             FormUtils.getBundleString("FMT_UnnamedComponentNodeName")); // NOI18N
     

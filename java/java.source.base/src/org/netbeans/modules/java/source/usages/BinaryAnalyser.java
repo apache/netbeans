@@ -155,7 +155,7 @@ public class BinaryAnalyser {
 
     }
 
-    public static abstract class Config {
+    public abstract static class Config {
 
         public enum UsagesLevel {
             BASIC("basic"), //NOI18N
@@ -1147,7 +1147,7 @@ public class BinaryAnalyser {
     //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="RootProcessor implementations">
-    private static abstract class RootProcessor {
+    private abstract static class RootProcessor {
         private static final Comparator<Pair<ElementHandle<TypeElement>,Long>> COMPARATOR = new Comparator<Pair<ElementHandle<TypeElement>,Long>>() {
                 @Override
                 public int compare(

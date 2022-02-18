@@ -98,7 +98,7 @@ public class ConvertTextBlockToString {
             ctx.getWorkingCopy().rewrite(ctx.getPath().getLeaf(), ext);
         }
 
-        static private ExpressionTree buildTree(String textBlockLines[], int currentLine, TransformationContext ctx) {
+        private static ExpressionTree buildTree(String textBlockLines[], int currentLine, TransformationContext ctx) {
             if (currentLine == 0) {
                 return ctx.getWorkingCopy().getTreeMaker().Literal(textBlockLines[0] + "\n");// NOI18N
             }

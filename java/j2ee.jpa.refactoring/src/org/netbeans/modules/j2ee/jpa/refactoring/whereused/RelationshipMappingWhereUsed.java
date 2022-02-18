@@ -73,7 +73,7 @@ import org.openide.util.lookup.Lookups;
 public final class RelationshipMappingWhereUsed extends JavaRefactoringPlugin {
     
     private final WhereUsedQuery whereUsedQuery;
-    private final static Logger LOG = Logger.getLogger(RelationshipMappingWhereUsed.class.getName());
+    private static final Logger LOG = Logger.getLogger(RelationshipMappingWhereUsed.class.getName());
     
     public RelationshipMappingWhereUsed(WhereUsedQuery refactoring) {
         this.whereUsedQuery = refactoring;

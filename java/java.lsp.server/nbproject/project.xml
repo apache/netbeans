@@ -545,7 +545,7 @@
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
-                        <specification-version>7.60</specification-version>
+                        <specification-version>7.61</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>

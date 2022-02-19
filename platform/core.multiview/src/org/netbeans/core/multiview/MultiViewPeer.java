@@ -813,14 +813,14 @@ public final class MultiViewPeer implements PropertyChangeListener {
         }
         if (badOnes.size() > 0) {
             CloseOperationState[] states = new CloseOperationState[badOnes.size()];
-            states = (CloseOperationState[])badOnes.toArray(states);
+            states = badOnes.toArray(states);
             boolean res = closeHandler.resolveCloseOperation(states);
             if( res && SpiAccessor.DEFAULT.shouldCheckCanCloseAgain(closeHandler) ) {
                 //#236369 - check if everything saved ok
                 col = model.getCreatedElements();
                 it = col.iterator();
                 while (it.hasNext()) {
-                   MultiViewElement el = (MultiViewElement)it.next();
+                   MultiViewElement el = it.next();
                    CloseOperationState state = el.canCloseElement();
                    if (!state.canClose()) {
                        res = false;

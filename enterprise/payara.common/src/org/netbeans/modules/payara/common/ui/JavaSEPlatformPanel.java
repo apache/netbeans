@@ -134,7 +134,7 @@ public class JavaSEPlatformPanel extends JPanel {
             Iterator<FileObject> platformIterator
                     = selectedPlatform.getInstallFolders().iterator();
             if (platformIterator.hasNext()) {
-                selectedJavaHome = (FileObject)platformIterator.next();
+                selectedJavaHome = platformIterator.next();
             }
         }
         if (selectedJavaHome != null && panel.updateProperties()) {

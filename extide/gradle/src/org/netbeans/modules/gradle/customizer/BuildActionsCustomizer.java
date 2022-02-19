@@ -531,7 +531,7 @@ public class BuildActionsCustomizer extends javax.swing.JPanel {
             // try to insert at the same position:
             List<String> items = new ArrayList<>();
             for (int i = 1; i < availableActionsModel.getSize(); i++) {
-                items.add((String)availableActionsModel.getElementAt(i));
+                items.add(availableActionsModel.getElementAt(i));
             }
             items.add(action);
             Collections.sort(items);

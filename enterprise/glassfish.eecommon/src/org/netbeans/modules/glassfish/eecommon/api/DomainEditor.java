@@ -516,13 +516,13 @@ public class DomainEditor {
             }
         } // connection-pool properties
 
-        pValues.put(CONST_LOWER_DATABASE_NAME, (String) map.get(CONST_LOWER_DATABASE_NAME));
-        pValues.put(CONST_PORT_NUMBER, (String) map.get(CONST_PORT_NUMBER));
-        pValues.put(CONST_LOWER_PORT_NUMBER, (String) map.get(CONST_LOWER_PORT_NUMBER));
-        pValues.put(CONST_DATABASE_NAME, (String) map.get(CONST_DATABASE_NAME));
-        pValues.put(CONST_SID, (String) map.get(CONST_SID));
-        pValues.put(CONST_DRIVER_CLASS, (String) map.get(CONST_DRIVER_CLASS));
-        pValues.put(CONST_DERBY_CONN_ATTRS, (String) map.get(CONST_DERBY_CONN_ATTRS));
+        pValues.put(CONST_LOWER_DATABASE_NAME, map.get(CONST_LOWER_DATABASE_NAME));
+        pValues.put(CONST_PORT_NUMBER, map.get(CONST_PORT_NUMBER));
+        pValues.put(CONST_LOWER_PORT_NUMBER, map.get(CONST_LOWER_PORT_NUMBER));
+        pValues.put(CONST_DATABASE_NAME, map.get(CONST_DATABASE_NAME));
+        pValues.put(CONST_SID, map.get(CONST_SID));
+        pValues.put(CONST_DRIVER_CLASS, map.get(CONST_DRIVER_CLASS));
+        pValues.put(CONST_DERBY_CONN_ATTRS, map.get(CONST_DERBY_CONN_ATTRS));
         if (dsClassName != null) {
             pValues.put("dsClassName", dsClassName.getNodeValue());
         }

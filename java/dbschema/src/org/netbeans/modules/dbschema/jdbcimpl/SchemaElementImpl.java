@@ -609,8 +609,8 @@ public class SchemaElementImpl extends DBElementImpl implements SchemaElement.Im
                                     else
                                         fkName = fkName.trim();
 //                                    schemas = ((rset.get(new Integer(6)) == rset.get(new Integer(2))) || rset.get(new Integer(6)).equals(rset.get(new Integer(2)))) ? true : false;                                    
-                                    local.add(fkName + "." + ((String) rset.get(new Integer(7))) + "." + ((String) rset.get(new Integer(8)))); //NOI18N
-                                    ref.add(fkName + "." + ((String) rset.get(new Integer(3))) + "." + ((String) rset.get(new Integer(4)))); //NOI18N
+                                    local.add(fkName + "." + rset.get(new Integer(7)) + "." + rset.get(new Integer(8))); //NOI18N
+                                    ref.add(fkName + "." + rset.get(new Integer(3)) + "." + rset.get(new Integer(4))); //NOI18N
                                     if (! fk.contains(fkName))
                                         fk.add(fkName);
                                     rset.clear();

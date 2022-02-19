@@ -81,7 +81,7 @@ public abstract class DescriptionBeanMultiple extends EnclosingBean implements D
             Iterator<String> keys = descriptions.keySet().iterator();
             int i=0;
             while (keys.hasNext()) {
-                String key = (String) keys.next();
+                String key = keys.next();
                 addDescription((String)descriptions.get(key));
                 setDescriptionXmlLang(i++, key);
             }

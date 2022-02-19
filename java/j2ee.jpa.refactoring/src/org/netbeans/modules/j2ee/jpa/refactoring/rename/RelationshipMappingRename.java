@@ -320,7 +320,7 @@ public final class RelationshipMappingRename extends JavaRefactoringPlugin {
             try {
                 DataObject dobj = DataObject.find(getParentFile());
                 if (dobj != null) {
-                    EditorCookie.Observable obs = (EditorCookie.Observable)dobj.getLookup().lookup(EditorCookie.Observable.class);
+                    EditorCookie.Observable obs = dobj.getLookup().lookup(EditorCookie.Observable.class);
                     if (obs != null && obs instanceof CloneableEditorSupport) {
                         CloneableEditorSupport supp = (CloneableEditorSupport)obs;
 

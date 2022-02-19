@@ -3094,7 +3094,7 @@ public class ModelVisitor extends PathNodeVisitor implements ModelResolver {
         JsDocumentationHolder holder = JsDocumentationSupport.getDocumentationHolder(parserResult);
         if (holder.getOccurencesMap().containsKey(jsObject.getName())) {
             for (OffsetRange offsetRange : holder.getOccurencesMap().get(jsObject.getName())) {
-                ((JsObjectImpl)jsObject).addOccurrence(offsetRange);
+                jsObject.addOccurrence(offsetRange);
             }
         }
     }

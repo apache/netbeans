@@ -1599,7 +1599,7 @@ private void serverLibrariesActionPerformed(java.awt.event.ActionEvent evt) {//G
         }
 
         private JSFComponentModelItem getItem(int index) {
-            return (JSFComponentModelItem) model.get(index);
+            return model.get(index);
         }
 
         public void addItem(JSFComponentModelItem item){

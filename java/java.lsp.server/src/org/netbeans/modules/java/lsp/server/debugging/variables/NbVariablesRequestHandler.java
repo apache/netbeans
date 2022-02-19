@@ -149,7 +149,7 @@ public final class NbVariablesRequestHandler {
             return future;
         }
 
-        Session session = ((NbDebugSession) context.getDebugSession()).getSession();
+        Session session = context.getDebugSession().getSession();
         Models.CompoundModel localsModel = localsModelProvider.getModel(session);
 
         int threadId;

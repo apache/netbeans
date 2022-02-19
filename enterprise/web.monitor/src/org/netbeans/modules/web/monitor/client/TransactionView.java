@@ -587,7 +587,7 @@ class TransactionView extends TopComponent implements ExplorerManager.Provider,
 	splitPanel.setDividerLocation((int)(logD.getWidth()));
 
 	try { 
-	    Container o = (Container)this.getParent(); 
+	    Container o = this.getParent(); 
 	    while(true) { 
 		if(o instanceof JFrame) { 
 		    JFrame parent = (JFrame)o; 

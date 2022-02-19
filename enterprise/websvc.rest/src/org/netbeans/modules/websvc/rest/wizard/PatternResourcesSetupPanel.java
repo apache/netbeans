@@ -237,7 +237,7 @@ final class PatternResourcesSetupPanel extends AbstractPanel {
 
         @Override
         public boolean valid(WizardDescriptor wizard) {
-            boolean isValid = ((AbstractPanel.Settings)mainPanel).valid(wizard);
+            boolean isValid = mainPanel.valid(wizard);
             if ( isValid && hasJaxRsConfigurationPanel() ){
                 return jaxRsConfigurationPanel.valid(wizard);
             }

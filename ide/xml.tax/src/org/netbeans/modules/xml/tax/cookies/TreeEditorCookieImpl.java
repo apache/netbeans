@@ -335,7 +335,7 @@ public class TreeEditorCookieImpl implements TreeEditorCookie, UpdateDocumentCoo
             
             if ( Util.THIS.isLoggable() ) /* then */ Util.THIS.debug("PARSING: " + input.getSystemId()); // NOI18N
 
-            TreeDocumentRoot doc = (TreeDocumentRoot) parser.parse(input);
+            TreeDocumentRoot doc = parser.parse(input);
             
             annotation = Util.THIS.getString ("MSG_Unexpected_exception_in_merge");
             setTreeAndStatus (doc, STATUS_OK);
@@ -418,7 +418,7 @@ public class TreeEditorCookieImpl implements TreeEditorCookie, UpdateDocumentCoo
     // it MUST respect synchronization atomicity
     public void updateDocumentRoot() {
 
-        TreeDocumentCookie cookie = (TreeDocumentCookie) xmlDO.getCookie(TreeDocumentCookie.class);
+        TreeDocumentCookie cookie = xmlDO.getCookie(TreeDocumentCookie.class);
         if (cookie != null && cookie.getDocumentRoot() != null) {
             Task task = new Task( new Runnable() {
                 public void run() {

@@ -199,18 +199,18 @@ final class XMLMapAttr implements Map {
         attrName = (String) keyValuePair[0];
 
         synchronized (this) {
-            attr = (Attr) map.get(attrName);
+            attr = map.get(attrName);
         }
 
         Object retVal = null;
         if (attr == null && origAttrName.startsWith("class:")) { // NOI18N
             synchronized (this) {
-                attr = (Attr) map.get(origAttrName.substring(6));
+                attr = map.get(origAttrName.substring(6));
             }
             retVal = attr != null ? attr.getType(params) : null;
         } else if (attr == null && origAttrName.startsWith("raw:")) { // NOI18N
             synchronized (this) {
-                attr = (Attr) map.get(origAttrName.substring(4));
+                attr = map.get(origAttrName.substring(4));
             }
             if (attr != null && attr.keyIndex == 9) {
                 return attr.methodValue(attr.value, params).getMethod();
@@ -343,7 +343,7 @@ final class XMLMapAttr implements Map {
 
         while (entryIter.hasNext()) {
             String attrName = (String) entryIter.next();
-            Attr attr = (Attr) map.get(attrName);
+            Attr attr = map.get(attrName);
 
             if (attr != null) {
                 attr.transformMe();

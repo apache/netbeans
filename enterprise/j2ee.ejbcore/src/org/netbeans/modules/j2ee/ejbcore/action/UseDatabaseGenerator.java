@@ -218,7 +218,7 @@ public final class UseDatabaseGenerator {
                         Collections.singleton(Modifier.PRIVATE)
                         );
                 MethodTree methodTree = MethodModelSupport.createMethodTree(workingCopy, methodModel);
-                methodTree = (MethodTree) GeneratorUtilities.get(workingCopy).importFQNs(methodTree);
+                methodTree = GeneratorUtilities.get(workingCopy).importFQNs(methodTree);
                 ClassTree classTree = workingCopy.getTrees().getTree(typeElement);
                 ClassTree modifiedClassTree = workingCopy.getTreeMaker().addClassMember(classTree, methodTree);
                 workingCopy.rewrite(classTree, modifiedClassTree);

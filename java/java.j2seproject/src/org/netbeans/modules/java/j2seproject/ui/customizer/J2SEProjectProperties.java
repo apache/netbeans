@@ -780,13 +780,13 @@ public class J2SEProjectProperties {
         final LinkedList<String> oldRootProps = new LinkedList<String>(Arrays.asList (roots.getRootProperties()));
         boolean rootsAreSame = true;
         for (int i=0; i<data.size();i++) {
-            File f = (File) ((Vector)data.elementAt(i)).elementAt(0);
+            File f = (File)data.elementAt(i).elementAt(0);
             rootURLs[i] = Utilities.toURI(f).toURL();
             if (!rootURLs[i].toExternalForm().endsWith("/")) {  //NOI18N
                 rootURLs[i] = new URL(rootURLs[i]+"/");
             }
             validateURL(rootURLs[i],f);
-            rootLabels[i] = (String) ((Vector)data.elementAt(i)).elementAt(1);
+            rootLabels[i] = (String)data.elementAt(i).elementAt(1);
             rootsAreSame &= !oldRootURLs.isEmpty() &&
                             oldRootURLs.removeFirst().equals(rootURLs[i]) &&
                             roots.getRootDisplayName(oldRootLabels.removeFirst(), oldRootProps.removeFirst()).equals(rootLabels[i]);

@@ -254,15 +254,15 @@ public final class EarProjectProperties {
         }
         EditableProperties projectProperties = updateHelper.getProperties( AntProjectHelper.PROJECT_PROPERTIES_PATH );                
         EditableProperties privateProperties = updateHelper.getProperties( AntProjectHelper.PRIVATE_PROPERTIES_PATH );
-        DEBUG_CLASSPATH_MODEL = ClassPathUiSupport.createListModel( cs.itemsIterator( (String)projectProperties.get( ProjectProperties.RUN_CLASSPATH ), null ) );
-        ENDORSED_CLASSPATH_MODEL = ClassPathUiSupport.createListModel( cs.itemsIterator( (String)projectProperties.get( ProjectProperties.ENDORSED_CLASSPATH ), null ) );
+        DEBUG_CLASSPATH_MODEL = ClassPathUiSupport.createListModel( cs.itemsIterator(projectProperties.get( ProjectProperties.RUN_CLASSPATH ), null ) );
+        ENDORSED_CLASSPATH_MODEL = ClassPathUiSupport.createListModel( cs.itemsIterator(projectProperties.get( ProjectProperties.ENDORSED_CLASSPATH ), null ) );
         CLASS_PATH_LIST_RENDERER = ClassPathListCellRenderer.createClassPathListRenderer(evaluator, project.getProjectDirectory());
 
         // CustomizerJarContent
         ARCHIVE_COMPRESS_MODEL = projectGroup.createToggleButtonModel( evaluator, JAR_COMPRESS );
         ARCHIVE_NAME_MODEL = projectGroup.createStringDocument( evaluator, JAR_NAME );
         BUILD_CLASSES_EXCLUDES_MODEL = projectGroup.createStringDocument( evaluator, BUILD_CLASSES_EXCLUDES );
-        EAR_CONTENT_ADDITIONAL_MODEL = AdditionalContentTableModel.createTableModel( cs.itemsIterator( (String)projectProperties.get( JAR_CONTENT_ADDITIONAL ), TAG_WEB_MODULE__ADDITIONAL_LIBRARIES) );
+        EAR_CONTENT_ADDITIONAL_MODEL = AdditionalContentTableModel.createTableModel( cs.itemsIterator(projectProperties.get( JAR_CONTENT_ADDITIONAL ), TAG_WEB_MODULE__ADDITIONAL_LIBRARIES) );
         EAR_CONTENT_ADDITIONAL_MODEL.getDefaultListModel().addListDataListener(new ListDataListener() {
             public void intervalAdded(ListDataEvent e) {
                 CLIENT_MODULE_MODEL.refresh(ClassPathUiSupport.getList( EAR_CONTENT_ADDITIONAL_MODEL.getDefaultListModel()));

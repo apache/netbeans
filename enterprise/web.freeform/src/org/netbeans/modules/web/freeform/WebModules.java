@@ -152,7 +152,7 @@ public class WebModules implements WebModuleProvider, AntProjectListener, ClassP
         List<Element> webModules = XMLUtil.findSubElements(web);
         Iterator<Element> it = webModules.iterator();
         while (it.hasNext()) {
-            Element webModulesEl = (Element)it.next();
+            Element webModulesEl = it.next();
             assert webModulesEl.getLocalName().equals("web-module") : webModulesEl;
             FileObject docRootFO = getFile (webModulesEl, "doc-root"); //NOI18N
             Element j2eeSpecEl = XMLUtil.findElement (webModulesEl, "j2ee-spec-level", WebProjectNature.NS_WEB_2);

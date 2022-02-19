@@ -133,7 +133,7 @@ public class ClientDataObject extends  DDMultiViewDataObject
                 }
             }
         }
-        srcRoots = (FileObject []) srcRootList.toArray(new FileObject [srcRootList.size()]);
+        srcRoots = srcRootList.toArray(new FileObject[srcRootList.size()]);
     }
 
     @Override

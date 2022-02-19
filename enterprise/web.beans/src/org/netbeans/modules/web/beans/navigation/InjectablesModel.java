@@ -248,9 +248,9 @@ public final class InjectablesModel extends DefaultTreeModel
                     .create(element), controller.getClasspathInfo());
             // Type declaration
             TypeTreeNode node = new TypeTreeNode(fileObject,
-                    (TypeElement) element, disabledBeans.contains( element),
+                    element, disabledBeans.contains( element),
                     controller);
-            insertTreeNode(elementMap, (TypeElement) element, node, root, 
+            insertTreeNode(elementMap, element, node, root, 
                     disabledBeans.contains(element), controller);
         }
         

@@ -217,7 +217,7 @@ public class JPACodeCompletionProvider implements CompletionProvider {
                 }
                 results = new ArrayList<JPACompletionItem>();
                 while (resolversItr.hasNext()) {
-                    CompletionContextResolver resolver = (CompletionContextResolver) resolversItr.next();
+                    CompletionContextResolver resolver = resolversItr.next();
                     TaskUserAction task = new TaskUserAction(controller, resolver, startOffset);
                     try {
                         EntityClassScope scope = EntityClassScope.getEntityClassScope(URLMapper.findFileObject(controller.getCompilationUnit().getSourceFile().toUri().toURL()));

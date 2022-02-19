@@ -187,7 +187,7 @@ public final class DDProvider {
     }
 
     private ApplicationProxy getFromCache (FileObject fo) {
-        return (ApplicationProxy) ddMap.get(fo);
+        return ddMap.get(fo);
     }
     
     /**

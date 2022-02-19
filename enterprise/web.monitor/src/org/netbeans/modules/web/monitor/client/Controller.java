@@ -961,7 +961,7 @@ class Controller  {
             public void run() {
                 for (Iterator<FileObject> it = fileObjectsToDelete.iterator(); it.hasNext(); ) {
                     try {
-                        ((FileObject) it.next()).delete();
+                        it.next().delete();
                     } catch (IOException e) {
                         Logger.getLogger("global").log(Level.INFO, null, e);
                     }
@@ -972,7 +972,7 @@ class Controller  {
 	numtns = nodes.size();
  	tns = new TransactionNode[numtns]; 
 	for(int i=0;i<numtns;++i) 
-	    tns[i] = (TransactionNode)nodes.elementAt(i);
+	    tns[i] = nodes.elementAt(i);
 	currTrans.add(tns);
 
 
@@ -995,7 +995,7 @@ class Controller  {
 	numtns = nodes.size();
 	tns = new TransactionNode[numtns]; 
 	for(int i=0;i<numtns;++i) {
-	    tns[i] = (TransactionNode)nodes.elementAt(i);
+	    tns[i] = nodes.elementAt(i);
 	    if(debug) 
 		log("Adding saved node" + tns[i].toString()); //NOI18N 
 		    

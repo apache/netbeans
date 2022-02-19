@@ -294,7 +294,7 @@ public class RequestData extends BaseBean {
 	int numCookies = cookies.size();
 	Param[] params = new Param[numCookies]; 
 	for(int k=0; k<numCookies; ++k) 
-	    params[k] = (Param)cookies.elementAt(k);
+	    params[k] = cookies.elementAt(k);
 	
 	return params;
     }

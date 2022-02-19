@@ -73,7 +73,7 @@ public abstract class DD2beansDataObject extends XMLJ2eeDataObject implements or
                             XMLJ2eeUtils.replaceDocument(doc, newDoc, prefixMark);
                             setDocumentValid(true);
                             if (saveAfterNodeChanges) {
-                                SaveCookie savec = (SaveCookie) getCookie(SaveCookie.class);
+                                SaveCookie savec = getCookie(SaveCookie.class);
                                 if (savec != null) {
                                     savec.save();
                                 }

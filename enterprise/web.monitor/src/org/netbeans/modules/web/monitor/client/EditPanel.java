@@ -119,7 +119,7 @@ class EditPanel extends javax.swing.JPanel implements
 	MonitorData md = null;	    
         // We retrieve the data from the file system, not from the 
         // cache
-        md = Controller.getInstance().getMonitorData((TransactionNode)node, 
+        md = Controller.getInstance().getMonitorData(node, 
                                                      false,  // from file
                                                      false); // don't cache
         if (md == null) {

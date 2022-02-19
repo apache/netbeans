@@ -308,7 +308,7 @@ public class XMLJ2eeUtils {
         int elementIndex=-1; 
         while (it.hasNext()){
             elementIndex=-1;
-            ElementAttrInfo info = (ElementAttrInfo)it.next();
+            ElementAttrInfo info = it.next();
             String attributeName = info.getAttributeName();
             String attributeValue = info.getAttributeValue();
             NodeList nodeList = element.getElementsByTagName(info.getElementName());
@@ -361,7 +361,7 @@ public class XMLJ2eeUtils {
         int elementIndex=-1;
         while (it.hasNext()){
             elementIndex=-1;
-            ElementAttrInfo info = (ElementAttrInfo)it.next();
+            ElementAttrInfo info = it.next();
             String attributeName = info.getAttributeName();
             String attributeValue = info.getAttributeValue();
             NodeList nodeList = element.getElementsByTagName(info.getElementName());
@@ -406,7 +406,7 @@ public class XMLJ2eeUtils {
         Element parent = null;
         Element element = root;
         while (it.hasNext()){
-            ElementAttrInfo info = (ElementAttrInfo)it.next();
+            ElementAttrInfo info = it.next();
             String attributeName = info.getAttributeName();
             String attributeValue = info.getAttributeValue();
             NodeList nodeList = element.getElementsByTagName(info.getElementName());
@@ -463,7 +463,7 @@ public class XMLJ2eeUtils {
         Iterator<ElementAttrInfo> it = elementPath.iterator();
         Element element = root;
         while (it.hasNext()){
-            ElementAttrInfo info = (ElementAttrInfo)it.next();
+            ElementAttrInfo info = it.next();
             String attributeName = info.getAttributeName();
             String attributeValue = info.getAttributeValue();
             NodeList nodeList = element.getElementsByTagName(info.getElementName());
@@ -557,7 +557,7 @@ public class XMLJ2eeUtils {
         Element element = root;
         
         while (it.hasNext()){
-            ElementAttrInfo info = (ElementAttrInfo)it.next();
+            ElementAttrInfo info = it.next();
             String attributeName = info.getAttributeName();
             String attributeValue = info.getAttributeValue();
             NodeList nodeList = element.getElementsByTagName(info.getElementName());
@@ -633,7 +633,7 @@ public class XMLJ2eeUtils {
         Element parent = null;
         Element element = root;
         while (it.hasNext()){
-            ElementAttrInfo info = (ElementAttrInfo)it.next();
+            ElementAttrInfo info = it.next();
             String attributeName = info.getAttributeName();
             String attributeValue = info.getAttributeValue();
             NodeList nodeList = element.getElementsByTagName(info.getElementName());

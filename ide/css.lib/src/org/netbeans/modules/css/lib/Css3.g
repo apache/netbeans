@@ -596,11 +596,16 @@ webkitKeyframeSelectors
 	;
 
 page
+@init {
+    boolean semiRequired = false;
+}
     : PAGE_SYM ws? ( IDENT ws? )? (pseudoPage ws?)?
-        LBRACE ws?
+        LBRACE
             //the grammar in the http://www.w3.org/TR/css3-page/ says the declaration/margins should be delimited by the semicolon,
             //but there's no such char in the examples => making it arbitrary
-            ((propertyDeclaration|margin) ws?)? (SEMI ws? ((propertyDeclaration|margin) ws?)?)*
+            ( ws? ({semiRequired}? (SEMI ws?) | (SEMI ws?)?) (propertyDeclaration{semiRequired=true;}|margin{semiRequired=false;}))*
+            SEMI?
+            ws?
         RBRACE
     ;
 

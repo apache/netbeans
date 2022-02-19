@@ -1607,4 +1607,17 @@ public class Css3ParserTest extends CssTestBase {
         assertParses("a:where(:valid, :unsupported) {}");
         assertParses("a:where(:not(:hover)) {text-decoration: none;}");
     }
+
+    public void testParsePage() {
+        assertParses("@page {  @top-left { content: attr(test) }; color: red; @bottom-center { content: attr(test2) } }");
+        assertParses("@page {  @top-left { content: attr(test) } }");
+        assertParses("@page {  @top-left { content: attr(test); }; }");
+        assertParses("@page {  ; @top-left { content: attr(test) } }");
+        assertParses("@page {  @top-left { content: attr(test) } ; text-align: right }");
+        assertParses("@page {  @top-left { content: attr(test) } text-align: right }");
+        assertParses("@page {  @top-left { content: attr(test) } text-align: right; background-color: green }");
+        assertParses("@page {  @top-center { content: attr(test) } @bottom-center { content: attr(test2) } background-color: red; }");
+        assertParses("@page {  background-color: red; @top-center { content: attr(test) } @bottom-center { content: attr(test2) } }");
+        assertParses("@page{@top-left{content: attr(test)}}");
+    }
 }

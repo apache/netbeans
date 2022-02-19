@@ -655,7 +655,7 @@ public class J2SEModularProjectProperties {
         projectProperties.put(ProjectProperties.EXCLUDES, excludes);
 
         StringBuilder sb = new StringBuilder();
-        for (Enumeration elements = ANNOTATION_PROCESSORS_MODEL.elements(); elements.hasMoreElements();) {
+        for (Enumeration<String> elements = ANNOTATION_PROCESSORS_MODEL.elements(); elements.hasMoreElements();) {
             sb.append(elements.nextElement());
             if (elements.hasMoreElements())
                 sb.append(',');

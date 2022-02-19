@@ -200,8 +200,8 @@ public final class FindComponentModules extends Task {
         Preferences pref = FindComponentModules.getPreferences ();
         String value = pref.get (ENABLE_LATER, null);
         if (value != null && value.trim ().length () > 0) {
-            StringTokenizer st = new StringTokenizer (value, ","); // NOI18N
-            while (st.hasMoreElements ()) {
+            StringTokenizer st = new StringTokenizer(value, ","); // NOI18N
+            while (st.hasMoreElements()) {
                 String codeName = st.nextToken().trim();
                 UpdateElement el = findUpdateElement(codeName, true);
                 if (el != null) {

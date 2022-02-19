@@ -1,0 +1,44 @@
+    readonly int $withDefaultValue0 = 1; // error
+                 ------------------
+HINT:Readonly property "$withDefaultValue0" can't have default value
+    public readonly int $withDefaultValue1 = 1; // error
+                        ------------------
+HINT:Readonly property "$withDefaultValue1" can't have default value
+    public readonly int $withDefaultValue2 = 1, $withDefaultValue3 = 2; // error
+                                                ------------------
+HINT:Readonly property "$withDefaultValue2" can't have default value
+HINT:Readonly property "$withDefaultValue3" can't have default value
+    readonly $noType1;
+              -------
+HINT:Readonly property "$noType1" must have type
+    protected readonly $noType2;
+                        -------
+HINT:Readonly property "$noType2" must have type
+        readonly $promotedPublicReadonly = 0,
+                  ----------------------
+HINT:Readonly property "$promotedPublicReadonly" must have type
+        public readonly $promotedPublicReadonly1 = 0,
+                         -----------------------
+HINT:Readonly property "$promotedPublicReadonly1" must have type
+    readonly int $withDefaultValue0 = 1; // error
+                 ------------------
+HINT:Readonly property "$withDefaultValue0" can't have default value
+    public readonly int $withDefaultValue = 1; // error
+                        -----------------
+HINT:Readonly property "$withDefaultValue" can't have default value
+    public readonly int $withDefaultValue2 = 1, $withDefaultValue3 = 2; // error
+                                                ------------------
+HINT:Readonly property "$withDefaultValue2" can't have default value
+HINT:Readonly property "$withDefaultValue3" can't have default value
+    readonly $noType1;
+              -------
+HINT:Readonly property "$noType1" must have type
+    protected readonly $noType2;
+                        -------
+HINT:Readonly property "$noType2" must have type
+        readonly $promotedPublicReadonly = 0,
+                  ----------------------
+HINT:Readonly property "$promotedPublicReadonly" must have type
+        public readonly $promotedPublicReadonly1 = 0,
+                         -----------------------
+HINT:Readonly property "$promotedPublicReadonly1" must have type

@@ -649,7 +649,7 @@ public class AttachmentsPanel extends JPanel {
 
     }
 
-    public static abstract class AbstractAttachment implements Attachment {
+    public abstract static class AbstractAttachment implements Attachment {
         private OpenAttachmentAction openAttachmentAction;
         private SaveAttachmentAction saveAttachmentAction;
         private ApplyPatchAction applyPatchAction;

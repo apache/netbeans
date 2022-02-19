@@ -847,7 +847,7 @@ public class SettingsRecognizer  extends org.xml.sax.helpers.DefaultHandler {
         }
     }
     
-    final static class StopSAXException extends SAXException {
+    static final class StopSAXException extends SAXException {
         public StopSAXException() {
             super("Parser stopped"); // NOI18N
         }

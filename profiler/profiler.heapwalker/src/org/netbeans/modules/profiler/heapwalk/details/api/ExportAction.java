@@ -249,7 +249,7 @@ public final class ExportAction extends AbstractAction {
         if (!checkFileExists(file)) return; // user doesn't want to overwrite existing file or it can't be overwritten
 
         new NBSwingWorker(true) {
-            final private ProgressHandle ph = ProgressHandle.createHandle(Bundle.ExportAction_ExportingViewMsg());
+            private final ProgressHandle ph = ProgressHandle.createHandle(Bundle.ExportAction_ExportingViewMsg());
             @Override
             protected void doInBackground() {
                 ph.setInitialDelay(500);

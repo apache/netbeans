@@ -292,11 +292,11 @@ public class RuntimeComboBox extends javax.swing.JPanel {
         getModel().setGrowAction(growAction);
     }
 
-    final public static class RuntimeListModel<T> implements ComboBoxModel {
+    public static final class RuntimeListModel<T> implements ComboBoxModel {
 
-        final private Set<ListDataListener> listeners = new CopyOnWriteArraySet<ListDataListener>();
-        final private List<T> predefinedList = new ArrayList<T>();
-        final private List<T> userList = new ArrayList<T>();
+        private final Set<ListDataListener> listeners = new CopyOnWriteArraySet<ListDataListener>();
+        private final List<T> predefinedList = new ArrayList<T>();
+        private final List<T> userList = new ArrayList<T>();
         
         private T selected = null;
         private Action growAction;
@@ -372,11 +372,11 @@ public class RuntimeComboBox extends javax.swing.JPanel {
             listeners.remove(l);
         }
 
-        final public List<T> getPredefined() {
+        public final List<T> getPredefined() {
             return Collections.unmodifiableList(predefinedList);
         }
         
-        final public List<T> getUserDefined() {
+        public final List<T> getUserDefined() {
             return Collections.unmodifiableList(userList);
         }
                 
@@ -400,7 +400,7 @@ public class RuntimeComboBox extends javax.swing.JPanel {
             }
         }
         
-        final public void setPredefined(T ... predefined) {
+        public final void setPredefined(T ... predefined) {
             int stop;
             if(!predefinedList.isEmpty()) {
                 stop = predefinedList.size();
@@ -413,7 +413,7 @@ public class RuntimeComboBox extends javax.swing.JPanel {
             fireDataAdded(0, stop);
         }
         
-        final public void setUserDefined(T ... user) {
+        public final void setUserDefined(T ... user) {
             int stop;
             int start = predefinedList.isEmpty() ? 0 : predefinedList.size();
             if(!userList.isEmpty()) {
@@ -427,7 +427,7 @@ public class RuntimeComboBox extends javax.swing.JPanel {
             fireDataAdded(start, start + stop);
         }
         
-        final public void addPredefined(T ... predefined) {
+        public final void addPredefined(T ... predefined) {
             int stop1 = predefinedList.isEmpty() ? 0 : predefinedList.size();
             predefinedList.addAll(Arrays.asList(predefined));
             int stop2 = predefinedList.isEmpty() ? 0 : predefinedList.size();
@@ -435,7 +435,7 @@ public class RuntimeComboBox extends javax.swing.JPanel {
             fireDataAdded(stop1, stop2);
         }
         
-        final public void addUserDefined(T ... userdefined)  {
+        public final void addUserDefined(T ... userdefined)  {
             int start = predefinedList.isEmpty() ? 0 : predefinedList.size();
             int stop1 = userList.isEmpty() ? 0 : userList.size();
             userList.addAll(Arrays.asList(userdefined));

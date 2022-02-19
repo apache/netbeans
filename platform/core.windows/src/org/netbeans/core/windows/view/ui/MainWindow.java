@@ -476,7 +476,7 @@ public final class MainWindow {
         }
     }
 
-   static private class StatusLineElementsListener implements LookupListener {
+   private static class StatusLineElementsListener implements LookupListener {
        private JPanel decoratingPanel;
        StatusLineElementsListener (JPanel decoratingPanel) {
            this.decoratingPanel = decoratingPanel;

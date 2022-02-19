@@ -35,7 +35,7 @@ public class ProjectEntityClassScopeProvider implements EntityClassScopeProvider
     public EntityClassScope findEntityClassScope(FileObject fo) {
         Project project = FileOwnerQuery.getOwner(fo);
         if (project != null) {
-            EntityClassScopeProvider provider = (EntityClassScopeProvider)project.getLookup().lookup(EntityClassScopeProvider.class);
+            EntityClassScopeProvider provider = project.getLookup().lookup(EntityClassScopeProvider.class);
             if (provider != null) {
                 return provider.findEntityClassScope(fo);
             }

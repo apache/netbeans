@@ -57,21 +57,21 @@ public abstract class NativeUtils {
     private static HashSet<File> forbiddenDeletingFiles = new HashSet<File>();
     private static List <LauncherResource> uninstallerJVMs = new ArrayList <LauncherResource> ();
     private static Platform currentPlatform;    
-    public final static String NATIVE_RESOURCE_SUFFIX = "native/"; // NOI18N
-    public final static String NATIVE_JNILIB_RESOURCE_SUFFIX =
+    public static final String NATIVE_RESOURCE_SUFFIX = "native/"; // NOI18N
+    public static final String NATIVE_JNILIB_RESOURCE_SUFFIX =
             NATIVE_RESOURCE_SUFFIX +
             "jnilib/"; // NOI18N
-    public final static String NATIVE_LAUNCHER_RESOURCE_SUFFIX =
+    public static final String NATIVE_LAUNCHER_RESOURCE_SUFFIX =
             NATIVE_RESOURCE_SUFFIX +
             "launcher/"; // NOI18N
-    public final static String NATIVE_CLEANER_RESOURCE_SUFFIX =
+    public static final String NATIVE_CLEANER_RESOURCE_SUFFIX =
             NATIVE_RESOURCE_SUFFIX +
             "cleaner/"; // NOI18N
     private static OnExitCleanerHandler cleanerHandler;
     
     protected abstract Platform getPlatform();
     
-    final public Platform getCurrentPlatform() {
+    public final Platform getCurrentPlatform() {
         if (currentPlatform == null) {
             currentPlatform = getPlatform();
         }        
@@ -295,7 +295,7 @@ public abstract class NativeUtils {
         return !(forbiddenDeletingFiles.contains(file));
     }
     
-    public final  static int FA_MODE_SET = 1;
-    public final  static int FA_MODE_ADD = 2;
-    public final  static int FA_MODE_REMOVE = 4;
+    public static  final int FA_MODE_SET = 1;
+    public static  final int FA_MODE_ADD = 2;
+    public static  final int FA_MODE_REMOVE = 4;
 }

@@ -59,7 +59,7 @@ public class ExtJsCodeCompletion implements CompletionProvider {
     
     private static HashMap<String, Collection<ExtJsDataItem>> ccData = null;
        
-    private synchronized static Map<String, Collection<ExtJsDataItem>> getData() {
+    private static synchronized Map<String, Collection<ExtJsDataItem>> getData() {
         return DataLoader.getData(getDataFile());
     }
     

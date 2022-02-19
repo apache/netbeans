@@ -196,7 +196,7 @@ public final class PayaraDDProvider {
         }
     }
 
-    final private Map<Object, RootInterface> ddMap = new WeakHashMap<>();
+    private final Map<Object, RootInterface> ddMap = new WeakHashMap<>();
     private Map<FileObject, DDProviderDataObject> dObjMap = new WeakHashMap<>();
 
     /**
@@ -342,12 +342,12 @@ public final class PayaraDDProvider {
         }
     }
 
-    final private static Map<Class, Map<String, VersionInfo>> apiToVersionMap = new HashMap<Class, Map<String, VersionInfo>>(11);
-    final private static Map<String, VersionInfo> sunWebAppVersionMap = new HashMap<String, VersionInfo>(11);
-    final private static Map<String, VersionInfo> sunEjbJarVersionMap = new HashMap<String, VersionInfo>(11);
-    final private static Map<String, VersionInfo> sunApplicationVersionMap = new HashMap<String, VersionInfo>(11);
-    final private static Map<String, VersionInfo> sunAppClientVersionMap = new HashMap<String, VersionInfo>(11);
-    final private static Map<String, VersionInfo> sunResourcesVersionMap = new HashMap<String, VersionInfo>(11);
+    private static final Map<Class, Map<String, VersionInfo>> apiToVersionMap = new HashMap<Class, Map<String, VersionInfo>>(11);
+    private static final Map<String, VersionInfo> sunWebAppVersionMap = new HashMap<String, VersionInfo>(11);
+    private static final Map<String, VersionInfo> sunEjbJarVersionMap = new HashMap<String, VersionInfo>(11);
+    private static final Map<String, VersionInfo> sunApplicationVersionMap = new HashMap<String, VersionInfo>(11);
+    private static final Map<String, VersionInfo> sunAppClientVersionMap = new HashMap<String, VersionInfo>(11);
+    private static final Map<String, VersionInfo> sunResourcesVersionMap = new HashMap<String, VersionInfo>(11);
 
     static {
         sunWebAppVersionMap.put(SunWebApp.VERSION_2_3_0, new VersionInfo(
@@ -1005,7 +1005,7 @@ public final class PayaraDDProvider {
 
     /* Maps DOCTYPE to { version, proxy class, impl class, dtd path } info.
      */
-    final private static Map<String, DocTypeInfo> publicIdToInfoMap = new HashMap<String, DocTypeInfo>(37);
+    private static final Map<String, DocTypeInfo> publicIdToInfoMap = new HashMap<String, DocTypeInfo>(37);
 
     static {
 

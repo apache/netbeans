@@ -676,7 +676,7 @@ public class WSITModelSupport {
         save(model);
     }
 
-    public synchronized static void save(WSDLModel model) {
+    public static synchronized void save(WSDLModel model) {
         Set<FileObject> traversedModels = new HashSet();
         save(model, traversedModels);
     }

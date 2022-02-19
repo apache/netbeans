@@ -121,10 +121,10 @@ public class ListView extends JScrollPane implements Externalizable {
     private transient ExplorerManager manager;
 
     /** The actual JList list */
-    transient protected JList list;
+    protected transient JList list;
 
     /** model to use */
-    transient protected NodeListModel model;
+    protected transient NodeListModel model;
 
     //
     // listeners
@@ -175,8 +175,8 @@ public class ListView extends JScrollPane implements Externalizable {
     transient ListViewDropSupport dropSupport;
 
     // default DnD actions
-    transient private int allowedDragActions = DnDConstants.ACTION_COPY_OR_MOVE | DnDConstants.ACTION_REFERENCE;
-    transient private int allowedDropActions = DnDConstants.ACTION_COPY_OR_MOVE | DnDConstants.ACTION_REFERENCE;
+    private transient int allowedDragActions = DnDConstants.ACTION_COPY_OR_MOVE | DnDConstants.ACTION_REFERENCE;
+    private transient int allowedDropActions = DnDConstants.ACTION_COPY_OR_MOVE | DnDConstants.ACTION_REFERENCE;
 
     /** True, if the selection listener is attached. */
     transient boolean listenerActive;
@@ -815,7 +815,7 @@ public class ListView extends JScrollPane implements Externalizable {
                 }
             };
 
-        final private int heightOfTextField = searchTextField.getPreferredSize().height;
+        private final int heightOfTextField = searchTextField.getPreferredSize().height;
         private int originalScrollMode;
         private JPanel searchpanel = null;
 

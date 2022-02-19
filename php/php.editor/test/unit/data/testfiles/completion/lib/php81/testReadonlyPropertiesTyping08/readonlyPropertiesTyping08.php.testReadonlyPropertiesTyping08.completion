@@ -1,0 +1,6 @@
+Code completion result for source line:
+public read|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CLASS      ReadonlyProperties              [PUBLIC]   readonlyPropertiesTyping08.php
+------------------------------------
+KEYWORD    readonly                                   null

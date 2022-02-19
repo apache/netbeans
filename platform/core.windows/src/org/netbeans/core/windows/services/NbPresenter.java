@@ -139,7 +139,7 @@ implements PropertyChangeListener, WindowListener, Mutex.Action<Void>, Comparato
         /** Initilizes accessible contexts */
         initAccessibility();
     }
-    private final static String ESCAPE_COMMAND = "Escape"; // NOI18N
+    private static final String ESCAPE_COMMAND = "Escape"; // NOI18N
 
     private Component currentMessage;
     private JScrollPane currentScrollPane;

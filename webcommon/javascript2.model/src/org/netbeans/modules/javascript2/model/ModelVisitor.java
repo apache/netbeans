@@ -125,7 +125,7 @@ public class ModelVisitor extends PathNodeVisitor implements ModelResolver {
     private final String scriptName;
     private LexicalContext lc;
 
-    private final static String BLOCK_OBJECT_NAME_PREFIX = "block-"; //NOI18N
+    private static final String BLOCK_OBJECT_NAME_PREFIX = "block-"; //NOI18N
 
     public ModelVisitor(ParserResult parserResult, OccurrenceBuilder occurrenceBuilder) {
         super();
@@ -3094,7 +3094,7 @@ public class ModelVisitor extends PathNodeVisitor implements ModelResolver {
         JsDocumentationHolder holder = JsDocumentationSupport.getDocumentationHolder(parserResult);
         if (holder.getOccurencesMap().containsKey(jsObject.getName())) {
             for (OffsetRange offsetRange : holder.getOccurencesMap().get(jsObject.getName())) {
-                ((JsObjectImpl)jsObject).addOccurrence(offsetRange);
+                jsObject.addOccurrence(offsetRange);
             }
         }
     }

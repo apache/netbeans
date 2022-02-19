@@ -496,7 +496,7 @@ final class TaskListTopComponent extends TopComponent {
         statusSeparator.setVisible( !useFoldingModel );
     }
     
-    static private Logger getLogger() {
+    private static Logger getLogger() {
         return Logger.getLogger( TaskListTopComponent.class.getName() );
     }
 
@@ -530,7 +530,7 @@ final class TaskListTopComponent extends TopComponent {
         };
     }
     
-    final static class ResolvableHelper implements Serializable {
+    static final class ResolvableHelper implements Serializable {
         private static final long serialVersionUID = 1L;
         public Object readResolve() {
             return TaskListTopComponent.getDefault();

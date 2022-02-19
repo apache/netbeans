@@ -36,6 +36,8 @@ import java.io.File;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.Map.Entry;
 import java.util.concurrent.*;
@@ -1147,7 +1149,16 @@ public class CommonServerSupport
                 }
                 if (path.startsWith("file:")) {  // NOI18N
                     path = path.substring(5);
-                    path = (new File(path)).getAbsolutePath();
+                    if (getInstance().isDocker()
+                            && getInstance().getHostPath() != null
+                            && !getInstance().getHostPath().isEmpty()
+                            && getInstance().getContainerPath() != null
+                            && !getInstance().getContainerPath().isEmpty()) {
+                        Path relativePath = Paths.get(getInstance().getContainerPath()).relativize(Paths.get(path));
+                        path = Paths.get(getInstance().getHostPath(), relativePath.toString()).toString();
+                    } else {
+                        path = (new File(path)).getAbsolutePath();
+                    }
                 }
 
                 String enabledKey = "servers.server.server.application-ref."

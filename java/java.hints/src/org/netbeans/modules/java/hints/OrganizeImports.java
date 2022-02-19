@@ -281,6 +281,7 @@ public class OrganizeImports {
                             break;
                         case ANNOTATION_TYPE:
                         case CLASS:
+                        case RECORD:
                         case ENUM:
                         case INTERFACE:
                             Element glob = global(element, starImports);

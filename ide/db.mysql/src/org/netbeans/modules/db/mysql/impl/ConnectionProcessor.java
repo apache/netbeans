@@ -56,7 +56,7 @@ public final class ConnectionProcessor implements Runnable {
         setQuoter();
     }
     
-    synchronized private void setQuoter() throws DatabaseException {
+    private synchronized void setQuoter() throws DatabaseException {
         // Enforces the invariant relationship between the database connection
         // and the quoter 
         try {

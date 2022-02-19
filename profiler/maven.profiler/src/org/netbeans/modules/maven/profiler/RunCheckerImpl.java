@@ -55,7 +55,7 @@ public class RunCheckerImpl implements LateBoundPrerequisitesChecker {
 //    private static final String PROFILER_JDKHOME_OPT = "${profiler.jdkhome.opt}"; // NOI18N
     
     @ProjectServiceProvider(service=ProfilerLauncher.LauncherFactory.class, projectType="org-netbeans-modules-maven")
-    final public static class MavenLauncherFactory implements ProfilerLauncher.LauncherFactory {
+    public static final class MavenLauncherFactory implements ProfilerLauncher.LauncherFactory {
         @Override
         public Launcher createLauncher(final Session session) {
             return new Launcher() {

@@ -558,9 +558,9 @@ public class SelectionPanel extends JPanel implements HelpCtx.Provider {
      */
     static class VersionColumnRenderer extends DefaultTableCellRenderer {
 
-        final static Object UP_TO_DATE = new Object();
-        final static Object CHECKING = new Object();
-        final static Object UNKNOWN = new Object();
+        static final Object UP_TO_DATE = new Object();
+        static final Object CHECKING = new Object();
+        static final Object UNKNOWN = new Object();
 
         @StaticResource
         private static final String UP_TO_DATE_ICON = "org/netbeans/modules/javascript/cdnjs/ui/resources/uptodate.gif"; // NOI18N

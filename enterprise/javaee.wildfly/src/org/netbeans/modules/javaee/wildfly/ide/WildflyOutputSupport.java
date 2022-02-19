@@ -113,7 +113,7 @@ public final class WildflyOutputSupport {
         this.props = props;
     }
 
-    public synchronized static WildflyOutputSupport getInstance(InstanceProperties props, boolean create) {
+    public static synchronized WildflyOutputSupport getInstance(InstanceProperties props, boolean create) {
         WildflyOutputSupport instance = INSTANCE_CACHE.get(props);
         if (instance == null && create) {
             instance = new WildflyOutputSupport(props);

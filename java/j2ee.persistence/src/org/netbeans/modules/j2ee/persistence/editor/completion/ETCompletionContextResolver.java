@@ -90,7 +90,7 @@ public class ETCompletionContextResolver implements CompletionContextResolver {
 
     private List<JPACompletionItem> completecreateNamedQueryparameters(JPACodeCompletionProvider.Context ctx, List<JPACompletionItem> results) {
         Project prj = FileOwnerQuery.getOwner(ctx.getFileObject());
-        EntityClassScopeProvider provider = (EntityClassScopeProvider) prj.getLookup().lookup(EntityClassScopeProvider.class);
+        EntityClassScopeProvider provider = prj.getLookup().lookup(EntityClassScopeProvider.class);
         EntityClassScope ecs = null;
         Entity[] entities = null;
         if (provider != null) {

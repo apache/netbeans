@@ -43,11 +43,11 @@ public final class ClassName implements Comparable<ClassName>, Comparator<ClassN
 
     private final String type;
     private final transient String internalName;
-    private volatile transient String externalName;
-    private volatile transient String packageName;
-    private volatile transient String simpleName;
+    private transient volatile String externalName;
+    private transient volatile String packageName;
+    private transient volatile String simpleName;
 
-    private final static WeakHashMap<String,WeakReference<ClassName>> cache = 
+    private static final WeakHashMap<String,WeakReference<ClassName>> cache = 
             new WeakHashMap<String,WeakReference<ClassName>>();
 
     /**

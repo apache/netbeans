@@ -262,6 +262,7 @@ public class TruffleBreakpointsHandler {
                     setLineBreakpointMethod,
                     args,
                     ObjectReference.INVOKE_SINGLE_THREADED);
+            ret.disableCollection();
             return ret;
         } catch (VMDisconnectedExceptionWrapper | InternalExceptionWrapper |
                  ClassNotLoadedException | ClassNotPreparedExceptionWrapper |
@@ -396,6 +397,7 @@ public class TruffleBreakpointsHandler {
                                 Exceptions.printStackTrace(ex);
                             }
                             TruffleBreakpointsRegistry.getDefault().remove(debugger, bpImpl);
+                            bpImpl.enableCollection();
                         }
                     } catch (VMDisconnectedExceptionWrapper ex) {}
                 }

@@ -84,7 +84,7 @@ public class FolderObjTest extends NbTestCase {
             Level.FINEST : Level.OFF;
     }
 
-    static abstract class IntrusiveLogHandler extends Handler {
+    abstract static class IntrusiveLogHandler extends Handler {
         private String message;
         IntrusiveLogHandler(final String message) {
             this.message = message;
@@ -96,7 +96,7 @@ public class FolderObjTest extends NbTestCase {
             }
         }
 
-        abstract protected void processLogRecord(final LogRecord record);
+        protected abstract void processLogRecord(final LogRecord record);
         public void flush() {}
         public void close() { flush(); }
     }

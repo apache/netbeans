@@ -238,7 +238,7 @@ final class CallHierarchyTasks {
         
     }
     
-    private static abstract class CallTaskBase implements Runnable, CancellableTask<CompilationController> {
+    private abstract static class CallTaskBase implements Runnable, CancellableTask<CompilationController> {
         
         protected final Call elmDesc;
         private final Runnable resultHandler;

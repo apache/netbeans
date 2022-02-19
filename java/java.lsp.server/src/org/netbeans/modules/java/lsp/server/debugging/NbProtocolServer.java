@@ -523,6 +523,11 @@ public final class NbProtocolServer implements IDebugProtocolServer, LspSession.
                 evaluateJPDA(debugger, expression, threadId, response);
             } else {
                 NIDebugger niDebugger = context.getDebugSession().getNIDebugger();
+                if (niDebugger == null) {
+                    throw ErrorUtilities.createResponseErrorException(
+                        "No active debugger is found.",
+                        ResponseErrorCode.RequestCancelled);
+                }
                 evaluateNative(niDebugger, expression, threadId, response);
             }
             return response;

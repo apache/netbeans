@@ -38,7 +38,7 @@ import org.netbeans.lib.profiler.results.memory.MemoryProfilingResultsListener;
 public class LockGraphBuilder extends BaseCallGraphBuilder implements LockProfilingResultListener, LockCCTProvider {
 
     static final Logger LOG = Logger.getLogger(LockGraphBuilder.class.getName());
-    final private ThreadInfos threadInfos = new ThreadInfos();
+    private final ThreadInfos threadInfos = new ThreadInfos();
     private Map<Integer, MonitorInfo> monitorInfos = new HashMap();
     private final TransactionalSupport transaction = new TransactionalSupport();
 

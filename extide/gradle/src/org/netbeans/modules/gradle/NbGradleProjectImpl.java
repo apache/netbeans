@@ -121,7 +121,7 @@ public final class NbGradleProjectImpl implements Project {
         return project != null;
     }
 
-    public static abstract class WatcherAccessor {
+    public abstract static class WatcherAccessor {
 
         public abstract NbGradleProject createWatcher(NbGradleProjectImpl proj);
 
@@ -312,7 +312,7 @@ public final class NbGradleProjectImpl implements Project {
         RELOAD_RP.post(() -> 
             loadOwnProject0(desc, false, interactive, aim, false, force)
                 .handle((p, e) -> {
-                   if (e != null) {
+                   if (e == null) {
                        toRet.complete(p);
                    } else {
                        toRet.completeExceptionally(e);
@@ -402,7 +402,20 @@ public final class NbGradleProjectImpl implements Project {
             }
             loadedProjectSerial = s;
             this.attemptedQuality = aim;
-            if (project != null && !force && project.getQuality().atLeast(prj.getQuality())) {
+            
+            boolean replace = project == null;
+            if (project != null) {
+                if (prj.getQuality().betterThan(project.getQuality())) {
+                    replace = true;
+                } else if (
+                        project.getQuality().equals(prj.getQuality()) && 
+                        !project.getProblems().equals(prj.getProblems()) &&
+                        !prj.getProblems().isEmpty()) {
+                    // exception: if the new project is the same quality fallback, but contains (different) problem info, use it
+                    replace = true;
+                }
+            }
+            if (!replace) {
                 // avoid replacing a project when nothing has changed.
                 LOG.log(Level.FINER, "Current project {1} sufficient for attempted quality {0}", new Object[] { this.project, aim });
                 return CompletableFuture.completedFuture(this.project);
@@ -474,12 +487,13 @@ public final class NbGradleProjectImpl implements Project {
 
     @Override
     public String toString() {
-        synchronized (this) {
-            if (isGradleProjectLoaded()) {
-                return "Gradle: " + project.getBaseProject().getName() + "[" + project.getQuality() + "]";
-            } else {
-                return "Unloaded Gradle Project: " + gradleFiles.toString();
-            }
+        // synchronized was here, but is it may be called during Logger.log(), it may completely cause a deadlock
+        // between LogHandler (that calls this toString() and other thread that locked this and tries to use Logger).
+        GradleProject p = project;
+        if (p != null) {
+            return "Gradle: " + p.getBaseProject().getName() + "[" + p.getQuality() + "]";
+        } else {
+            return "Unloaded Gradle Project: " + gradleFiles.toString();
         }
     }
     
@@ -494,7 +508,7 @@ public final class NbGradleProjectImpl implements Project {
 
     GradleProject getPrimedProject() {
         GradleProject gp = projectWithQuality(null, EVALUATED, false, false);
-        return !(gp.getQuality().notBetterThan(EVALUATED) || !gp.getProblems().isEmpty()) ? gp : null;
+        return gp.getQuality().betterThan(EVALUATED) ? gp : null;
     }
     
     /**

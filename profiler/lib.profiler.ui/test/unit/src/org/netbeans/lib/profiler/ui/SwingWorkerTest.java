@@ -210,9 +210,9 @@ public class SwingWorkerTest {
     }
 
     public class SwingWorkerImpl extends SwingWorker {
-        final private Runnable task, onDone, onCancel, waiting;
+        private final Runnable task, onDone, onCancel, waiting;
         
-        final private int warmup;
+        private final int warmup;
 
         public SwingWorkerImpl(int warmup, boolean forceEQ, Semaphore throughputSemaphore, Runnable task, Runnable onDone, Runnable onCancel, Runnable waiting) {
             super(forceEQ, throughputSemaphore);

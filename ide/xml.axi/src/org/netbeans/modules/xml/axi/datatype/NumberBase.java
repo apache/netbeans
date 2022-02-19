@@ -32,9 +32,9 @@ import org.netbeans.modules.xml.schema.model.Whitespace;
  */
 public abstract class NumberBase extends Datatype {
     
-    public final static Number UNBOUNDED_VALUE = Double.MAX_VALUE;
+    public static final Number UNBOUNDED_VALUE = Double.MAX_VALUE;
     
-    public final static String UNBOUNDED_STRING = "unbounded"; //NoI18n
+    public static final String UNBOUNDED_STRING = "unbounded"; //NoI18n
     
     static List<Facet> applicableFacets;
     

@@ -101,7 +101,7 @@ public class JsErrorManager extends ErrorManager implements ANTLRErrorListener {
 
     private List<JsParserError> convertedErrors;
 
-    private final static Map<String, JsTokenId> JS_TEXT_TOKENS = new HashMap<String, JsTokenId>();
+    private static final Map<String, JsTokenId> JS_TEXT_TOKENS = new HashMap<String, JsTokenId>();
 
     static {
         for (JsTokenId jsTokenId : JsTokenId.values()) {

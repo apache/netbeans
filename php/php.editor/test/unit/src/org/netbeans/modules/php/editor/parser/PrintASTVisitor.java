@@ -30,8 +30,8 @@ import org.netbeans.modules.php.editor.parser.astnodes.*;
 public class PrintASTVisitor implements Visitor {
 
     private StringBuffer buffer;
-    private final static String NEW_LINE = "\n";
-    private final static String TAB = "    ";
+    private static final String NEW_LINE = "\n";
+    private static final String TAB = "    ";
     private int indent;
 
     private class XMLPrintNode {
@@ -698,6 +698,13 @@ public class PrintASTVisitor implements Visitor {
         }
         printNode.addChild("Name", node.getName());
         printNode.addChild(node.getBody());
+        printNode.print(this);
+    }
+
+    @Override
+    public void visit(IntersectionType node) {
+        XMLPrintNode printNode = new XMLPrintNode(node, "IntersectionType");
+        printNode.addChildren(node.getTypes());
         printNode.print(this);
     }
 

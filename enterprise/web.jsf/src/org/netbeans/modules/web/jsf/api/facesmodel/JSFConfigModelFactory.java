@@ -42,7 +42,7 @@ public class JSFConfigModelFactory extends AbstractModelFactory<JSFConfigModel>{
     }
     
     public JSFConfigModel getModel(ModelSource source) {
-        return (JSFConfigModel) super.getModel(source);
+        return super.getModel(source);
     }
     
     private static final JSFConfigModelFactory INSTANCE = new JSFConfigModelFactory();

@@ -205,7 +205,7 @@ class DTDGrammar implements ExtendedGrammarQuery {
             }
             // simple fallback
             if (elements == null) {
-                elements = (Set) elementDecls.get(el.getTagName());
+                elements = elementDecls.get(el.getTagName());
             }
         } else if (node instanceof Document) {
             elements = elementDecls.keySet();  //??? should be one from DOCTYPE if exist
@@ -267,14 +267,14 @@ class DTDGrammar implements ExtendedGrammarQuery {
             
             String elementName = element.getNodeName();
             String key = elementName + " " + attributeName;
-            List values = (List) attrEnumerations.get(key);
+            List values = attrEnumerations.get(key);
             if (values == null) return org.openide.util.Enumerations.empty();
             
             String prefix = ctx.getCurrentPrefix();
             LinkedList en = new LinkedList ();
             Iterator<String> it = values.iterator();
             while (it.hasNext()) {
-                String next = (String) it.next();
+                String next = it.next();
                 if (next.startsWith(prefix)) {
                     en.add(new MyText(next, next));
                 }
@@ -302,7 +302,7 @@ class DTDGrammar implements ExtendedGrammarQuery {
             String elementName = element.getNodeName();
             String attributeName = attr.getNodeName();
             String key = elementName + " " + attributeName;                 // NOI18N
-            String def = (String) defaultAttributeValues.get(key);
+            String def = defaultAttributeValues.get(key);
             if (def == null) return null;
             return new MyText(def, def);
         }
@@ -401,7 +401,7 @@ class DTDGrammar implements ExtendedGrammarQuery {
     // Result classes ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     
     
-    private static abstract class AbstractResultNode extends AbstractNode implements GrammarResult {
+    private abstract static class AbstractResultNode extends AbstractNode implements GrammarResult {
         
         public Icon getIcon(int kind) {
             return null;

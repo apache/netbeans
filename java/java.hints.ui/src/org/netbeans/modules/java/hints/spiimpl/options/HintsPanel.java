@@ -39,16 +39,10 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.IdentityHashMap;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
 import java.util.Set;
-import java.util.TreeMap;
-import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.prefs.Preferences;
 import javax.swing.AbstractAction;
@@ -117,7 +111,7 @@ public final class HintsPanel extends javax.swing.JPanel   {
     private static final String DECLARATIVE_HINT_TEMPLATE_LOCATION = "org-netbeans-modules-java-hints/templates/Inspection.hint";
             static final String[] EXTRA_NODE_KEYWORDS = new String[] {"CTL_DepScanning", "CTL_Scope_Desc", "CTL_Scope_Label"};
 
-    private final static RequestProcessor WORKER = new RequestProcessor(HintsPanel.class.getName(), 1, false, false);
+    private static final RequestProcessor WORKER = new RequestProcessor(HintsPanel.class.getName(), 1, false, false);
 
     private HintsPanelLogic logic;
     private DefaultTreeModel errorTreeModel;
@@ -355,7 +349,7 @@ public final class HintsPanel extends javax.swing.JPanel   {
 
     private int getDividerLocation() {
         final int location = (int) ((jSplitPane1.getWidth() - jSplitPane1.getDividerSize()) * 0.4f);
-        return Math.min(320, location);
+        return Math.min(400, location);
     }
     
     /** This method is called from within the constructor to
@@ -405,7 +399,6 @@ public final class HintsPanel extends javax.swing.JPanel   {
         setBorder(javax.swing.BorderFactory.createEmptyBorder(8, 8, 8, 8));
         setLayout(new java.awt.GridBagLayout());
 
-        jSplitPane1.setBorder(null);
         jSplitPane1.setDividerLocation(320);
 
         treePanel.setOpaque(false);
@@ -516,7 +509,7 @@ public final class HintsPanel extends javax.swing.JPanel   {
             editingButtonsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, editingButtonsLayout.createSequentialGroup()
                 .addComponent(openInEditor)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 198, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 212, Short.MAX_VALUE)
                 .addComponent(saveButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(cancelEdit))
@@ -560,9 +553,9 @@ public final class HintsPanel extends javax.swing.JPanel   {
         detailsPanelLayout.setVerticalGroup(
             detailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(detailsPanelLayout.createSequentialGroup()
-                .addComponent(optionsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 97, Short.MAX_VALUE)
-                .addGap(12, 12, 12)
-                .addComponent(descriptionPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 175, Short.MAX_VALUE))
+                .addComponent(optionsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(descriptionPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 314, Short.MAX_VALUE))
         );
 
         jSplitPane1.setRightComponent(detailsPanel);
@@ -618,7 +611,7 @@ public final class HintsPanel extends javax.swing.JPanel   {
                 .addComponent(importButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(exportButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 329, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 292, Short.MAX_VALUE)
                 .addComponent(editScriptButton)
                 .addGap(35, 35, 35)
                 .addComponent(okButton)
@@ -660,7 +653,7 @@ public final class HintsPanel extends javax.swing.JPanel   {
             .addGroup(configurationsPanelLayout.createSequentialGroup()
                 .addComponent(configLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(configCombo, 0, 642, Short.MAX_VALUE))
+                .addComponent(configCombo, 0, 719, Short.MAX_VALUE))
         );
         configurationsPanelLayout.setVerticalGroup(
             configurationsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -684,7 +677,7 @@ public final class HintsPanel extends javax.swing.JPanel   {
             searchPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, searchPanelLayout.createSequentialGroup()
                 .addComponent(refactoringsLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 493, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 576, Short.MAX_VALUE)
                 .addComponent(searchLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(searchTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE))

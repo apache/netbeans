@@ -118,7 +118,7 @@ public abstract class AbstractTreeCustomizer extends JPanel implements Customize
     
     /**
      */
-    abstract protected void initComponentValues ();
+    protected abstract void initComponentValues ();
     
     /**
      */
@@ -133,7 +133,7 @@ public abstract class AbstractTreeCustomizer extends JPanel implements Customize
     
     /**
      */
-    abstract protected void updateReadOnlyStatus (boolean editable);
+    protected abstract void updateReadOnlyStatus (boolean editable);
     
     
     //

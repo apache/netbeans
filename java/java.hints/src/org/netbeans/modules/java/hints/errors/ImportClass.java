@@ -357,7 +357,7 @@ public final class ImportClass implements ErrorRule<Void>{
     }
     
     @Messages("WRN_FileInvalid=Cannot resolve file - already deleted?")
-    static abstract class FixBase implements EnhancedFix {
+    abstract static class FixBase implements EnhancedFix {
         static final Logger LOG = Logger.getLogger(FixImport.class.getName());
         protected final String fqn;
         protected final ElementHandle<Element> toImport;

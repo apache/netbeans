@@ -84,7 +84,7 @@ public abstract class ProfilerFeature {
     public abstract void removeChangeListener(ChangeListener listener);
     
     
-    public static abstract class Basic extends ProfilerFeature {
+    public abstract static class Basic extends ProfilerFeature {
         
         private Set<ChangeListener> listeners;
         
@@ -224,16 +224,16 @@ public abstract class ProfilerFeature {
         protected void lockContentionMonitoringChanged() {}
         
         
-        public synchronized final void addChangeListener(ChangeListener listener) {
+        public final synchronized void addChangeListener(ChangeListener listener) {
             if (listeners == null) listeners = new HashSet();
             listeners.add(listener);
         }
     
-        public synchronized final void removeChangeListener(ChangeListener listener) {
+        public final synchronized void removeChangeListener(ChangeListener listener) {
             if (listeners != null) listeners.remove(listener);
         }
         
-        protected synchronized final void fireChange() {
+        protected final synchronized void fireChange() {
             if (listeners == null) return;
             ChangeEvent e = new ChangeEvent(this);
             for (ChangeListener listener : listeners) listener.stateChanged(e);
@@ -244,7 +244,7 @@ public abstract class ProfilerFeature {
     
     // --- Provider ------------------------------------------------------------
     
-    public static abstract class Provider {
+    public abstract static class Provider {
         
         public abstract ProfilerFeature getFeature(ProfilerSession session);
         

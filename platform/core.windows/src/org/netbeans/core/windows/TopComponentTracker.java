@@ -50,7 +50,7 @@ public final class TopComponentTracker {
     /**
      * @return The one and only instance.
      */
-    public synchronized static TopComponentTracker getDefault() {
+    public static synchronized TopComponentTracker getDefault() {
         if( null == theInstance ) {
             theInstance = new TopComponentTracker();
         }

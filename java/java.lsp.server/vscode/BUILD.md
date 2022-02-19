@@ -20,13 +20,17 @@
     under the License.
 
 -->
+
 ## Prerequisities
-It is necessary to have installed:
+
+- JDK, version 11
 - Ant, latest version
 - Maven, latest version
 - node.js, latest LTS (to build VSIX)
 
-It is recommended to build using JDK 8.
+It is currently possible to use JDK 8 for the build and execution.
+However, as the Apache NetBeans project is slowly moving towards JDK 11,
+using JDK 11 may be the safest bet.
 
 ## Getting the Code
 
@@ -45,17 +49,10 @@ netbeans$ cd java/java.lsp.server
 java.lsp.server$ ant build-vscode-ext
 ```
 The resulting extension is then in the `build` directory, with the `.vsix` extension.
-#### Build Options
-- `-Dvsix.version=x.y.z`can be used to set release version. E.g. set this option to `12.3.0` to get proper NetBeans release version for extension.
-- `-D3rdparty.modules=` property can be set to different value than `.*nbjavac.*` to not inlcude nb-javac which allows extension to run out of the box on JDK8.
-
-The build of NetBeans VSCode extension with nb-javac included, for version 12.6.0 then looks like this:
-```bash
-netbeans$ ant build
-netbeans$ cd java/java.lsp.server
-java.lsp.server$ ant build-vscode-ext -Dvsix.version=12.6.0
-```
-
+The typical file name is `apache-netbeans-java-0.1.0.vsix` - the version can be
+changed by using the `-Dvsix.version=x.y.z` property - that's what
+[continuous integration server](https://ci-builds.apache.org/job/Netbeans/job/netbeans-vscode/)
+and release builders do.
 
 ### Building for Development
 
@@ -102,7 +99,7 @@ java.lsp.server$ npm_config_https_proxy=http://your.proxy.com:port ant test-vsco
 ```
 
 when executing the tests for the first time. That shall overcome the proxy
-and download an instance of `code` execute the tests on.
+and download an instance of `code` to execute the tests with.
 
 ### Eating our own Dog Food
 
@@ -120,28 +117,31 @@ one can open Apache NetBeans projects and work with them directly from VSCode.
 
 ## Running and Debugging
 
-Have a sample Maven project, open it in NetBeans first and select the main file for both
-the Run and Debug actions.
-
 To use the extension created for developement you can run VS Code with
 following parameter:
 
 ```bash
-vscode$ code --extensionDevelopmentPath=`pwd` path_to_the_maven_project
+vscode$ code --extensionDevelopmentPath=`pwd` path_to_project
 ```
 
 Or you can open the `vscode` folder in `code` directly and use **F5** to
 debug the extension's *typescript code*.
 
+To start from a clean state, following
+[CLI options](https://code.visualstudio.com/docs/editor/command-line)
+maybe of an interest:
+- `--user-data-dir` - clean any user settings with this option
+- `--extensions-dir` - avoid 3rd party extensions using this option
+
 To debug the *Java code*, launch the NetBeans part of the VS Code system first
 and specify suitable debug arguments:
 
 ```bash
-vscode$ npm run nbcode -- --jdkhome /jdk-14/ -J-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=8000
+vscode$ npm run nbcode -- --jdkhome /jdk -J-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=8000
 ```
 
 Connect to the process with Java debugger, setup all breakpoints. Then launch
-and connect from the VS Code extension:
+the VS Code extension (which connects to the already running Java process):
 
 ```bash
 vscode$ code --extensionDevelopmentPath=`pwd` path_to_the_maven_project

@@ -215,7 +215,7 @@ public class Node {
      * 
      * @param newChildren new children to add.
      */
-    synchronized final void addChildren(List<Node> newChildren) {
+    final synchronized void addChildren(List<Node> newChildren) {
         if (children == null) {
             initChildren();
         }
@@ -230,7 +230,7 @@ public class Node {
      * 
      * @param child child to remove.
      */
-    synchronized final void removeChild(Node child) {
+    final synchronized void removeChild(Node child) {
         children.remove(child);
         child.parent = null;
     }
@@ -242,7 +242,7 @@ public class Node {
      * @param previousChild previous child ({@code null} when the new child
      * should be the first one).
      */
-    synchronized final void insertChild(Node child, Node previousChild) {
+    final synchronized void insertChild(Node child, Node previousChild) {
         if (children == null) {
             initChildren();
         }
@@ -270,7 +270,7 @@ public class Node {
      * 
      * @param shadowRoot shadow root to add.
      */
-    synchronized final void addShadowRoot(Node shadowRoot) {
+    final synchronized void addShadowRoot(Node shadowRoot) {
         if (shadowRoots == null) {
             shadowRoots = new LinkedList<Node>();
         }
@@ -283,7 +283,7 @@ public class Node {
      * 
      * @param shadowRoot shadow root to remove.
      */
-    synchronized final void removeShadowRoot(Node shadowRoot) {
+    final synchronized void removeShadowRoot(Node shadowRoot) {
         shadowRoots.remove(shadowRoot);
     }
 

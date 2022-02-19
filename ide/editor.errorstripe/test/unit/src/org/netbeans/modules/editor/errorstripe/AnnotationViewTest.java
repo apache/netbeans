@@ -228,7 +228,7 @@ public class AnnotationViewTest extends NbTestCase {
         f.setVisible(false);
     }
     
-    private static abstract class Action {
+    private abstract static class Action {
         public abstract void test(AnnotationView aView, BaseDocument document) throws Exception;
     }
 

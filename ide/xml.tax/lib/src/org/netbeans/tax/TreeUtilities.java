@@ -1645,13 +1645,13 @@ public final class TreeUtilities {
     static class EncodingUtil {
         
         /** IANA to Java encoding mappings */
-        protected final static Map encodingIANA2JavaMap = new TreeMap ();
+        protected static final Map encodingIANA2JavaMap = new TreeMap ();
         
         /** */
-        protected final static Map encodingIANADescriptionMap = new TreeMap ();
+        protected static final Map encodingIANADescriptionMap = new TreeMap ();
         
         /** */
-        protected final static Map encodingIANAAliasesMap = new TreeMap ();
+        protected static final Map encodingIANAAliasesMap = new TreeMap ();
         
         //
         // Static initialization

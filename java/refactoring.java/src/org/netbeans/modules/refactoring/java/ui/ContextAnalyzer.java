@@ -183,7 +183,7 @@ public final class ContextAnalyzer {
         return !notOnlyFile;
     }
     
-    private static abstract class TreePathHandleTask implements Runnable, CancellableTask<CompilationController> {
+    private abstract static class TreePathHandleTask implements Runnable, CancellableTask<CompilationController> {
         private Collection<TreePathHandle> handles = new ArrayList<TreePathHandle>();
         private TreePathHandle current;
         private FileObject file;
@@ -277,7 +277,7 @@ public final class ContextAnalyzer {
         protected abstract RefactoringUI createRefactoringUI(Collection<TreePathHandle> handles);
     }    
     
-    private static abstract class TextComponentTask implements Runnable, CancellableTask<CompilationController> {
+    private abstract static class TextComponentTask implements Runnable, CancellableTask<CompilationController> {
         private JTextComponent textC;
         private int caret;
         private int start;
@@ -480,7 +480,7 @@ public final class ContextAnalyzer {
         return false;
     }
     
-    private static abstract class NodeToElementTask implements Runnable, CancellableTask<CompilationController>  {
+    private abstract static class NodeToElementTask implements Runnable, CancellableTask<CompilationController>  {
         private Node node;
         private RefactoringUI ui;
         
@@ -526,7 +526,7 @@ public final class ContextAnalyzer {
         protected abstract RefactoringUI createRefactoringUI(TreePathHandle selectedElement, CompilationInfo info);
     }
     
-    private static abstract class NodeToFileObjectTask implements Runnable, CancellableTask<CompilationController> {
+    private abstract static class NodeToFileObjectTask implements Runnable, CancellableTask<CompilationController> {
         private Collection<? extends Node> nodes;
         public ArrayList<NonRecursiveFolder> pkg;
         Collection<TreePathHandle> handles = new ArrayList<TreePathHandle>();

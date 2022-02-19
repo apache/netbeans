@@ -121,7 +121,7 @@ public class Common extends Object {
      * @param i
      * @return for i=1 "newMethod1"
      */
-    static public String getMethodName(int i){
+    public static String getMethodName(int i){
         return concat(METHODS,i);
     }
     

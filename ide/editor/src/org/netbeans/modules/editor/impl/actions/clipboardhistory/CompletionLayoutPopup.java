@@ -630,7 +630,7 @@ public class CompletionLayoutPopup {
         
         private static FullTextPopup instance;
         
-        public synchronized static FullTextPopup getInstance() {
+        public static synchronized FullTextPopup getInstance() {
             if (instance == null) {
                 instance = new FullTextPopup();
             }
@@ -679,7 +679,7 @@ public class CompletionLayoutPopup {
             }
         }
 
-        public synchronized static CompletionPopup getInstance() {
+        public static synchronized CompletionPopup getInstance() {
             if (instance == null) {
                 instance = new CompletionPopup();
             }

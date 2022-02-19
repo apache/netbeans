@@ -57,7 +57,7 @@ public interface TokenItem {
     public TokenItem getPrevious();
 
     /** Abstract implementation that doesn't contain chaining methods. */
-    public static abstract class AbstractItem implements TokenItem {
+    public abstract static class AbstractItem implements TokenItem {
 
         private TokenID tokenID;
 

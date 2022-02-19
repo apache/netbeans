@@ -32,6 +32,7 @@ public final class Type {
     private Type() {
     }
 
+    public static final String SEPARATOR_INTERSECTION = "&"; // NOI18N
     public static final String SEPARATOR = "|"; // NOI18N
     public static final String STRING = "string"; //NOI18N
     public static final String REAL = "real"; //NOI18N
@@ -56,9 +57,10 @@ public final class Type {
     public static final String SELF = "self"; //NOI18N
     public static final String PARENT = "parent"; //NOI18N
     public static final String STATIC = "static"; //NOI18N NETBEANS-4443 PHP 8.0
+    public static final String NEVER = "never"; //NOI18N NETBEANS-5599 PHP 8.1
 
     private static final List<String> TYPES_FOR_EDITOR = Arrays.asList(ARRAY, CALLABLE, ITERABLE, BOOL, FLOAT, INT, STRING, OBJECT, NULL, FALSE, MIXED);
-    private static final List<String> TYPES_FOR_RETURN_TYPE = Arrays.asList(ARRAY, CALLABLE, ITERABLE, BOOL, FLOAT, INT, STRING, VOID, OBJECT, NULL, FALSE, MIXED);
+    private static final List<String> TYPES_FOR_RETURN_TYPE = Arrays.asList(ARRAY, CALLABLE, ITERABLE, BOOL, FLOAT, INT, STRING, VOID, OBJECT, NULL, FALSE, MIXED, NEVER);
     private static final List<String> TYPES_FOR_FIELD_TYPE = Arrays.asList(ARRAY, ITERABLE, BOOL, FLOAT, INT, STRING, OBJECT, SELF, PARENT, NULL, FALSE, MIXED); // PHP 7.4 Typed Properties 2.0
     private static final List<String> SPECIAL_TYPES_FOR_TYPE = Arrays.asList(SELF, PARENT);
     private static final List<String> TYPES_FOR_PHP_DOC = Arrays.asList(STRING, INTEGER, INT, BOOLEAN, BOOL, FLOAT, DOUBLE, OBJECT, MIXED, ARRAY,
@@ -74,7 +76,7 @@ public final class Type {
                 || NUMBER.equals(typeName) || CALLBACK.equals(typeName) || RESOURCE.equals(typeName)
                 || DOUBLE.equals(typeName) || STRING.equals(typeName) || NULL.equals(typeName)
                 || VOID.equals(typeName) || CALLABLE.equals(typeName) || ITERABLE.equals(typeName)
-                || FALSE.equals(typeName) || STATIC.equals(typeName)) {
+                || FALSE.equals(typeName) || STATIC.equals(typeName) || NEVER.equals(typeName)) {
             retval = true;
         }
         return retval;
@@ -97,7 +99,8 @@ public final class Type {
     public static boolean isInvalidPropertyType(String typeName) {
         return VOID.equals(typeName)
                 || NULL.equals(typeName)
-                || STATIC.equals(typeName);
+                || STATIC.equals(typeName)
+                || NEVER.equals(typeName);
     }
 
     /**
@@ -154,7 +157,27 @@ public final class Type {
         return StringUtils.implode(types, SEPARATOR);
     }
 
+    /**
+     * Create types separated by "&". e.g. T1&T2&T3
+     *
+     * @param types types
+     * @return types separated by "&"
+     */
+    public static String asIntersectionType(Collection<String> types) {
+        return StringUtils.implode(types, SEPARATOR_INTERSECTION);
+    }
+
     public static List<String> getMixedType() {
         return MIXED_TYPE;
+    }
+
+    /**
+     * Get the type separator.
+     *
+     * @param isIntersection
+     * @return "&" if it's intersection type, otherwise "|"
+     */
+    public static String getTypeSeparator(boolean isIntersection) {
+        return isIntersection ? SEPARATOR_INTERSECTION : SEPARATOR;
     }
 }

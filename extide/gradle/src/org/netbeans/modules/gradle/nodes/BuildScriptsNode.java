@@ -78,7 +78,7 @@ public final class BuildScriptsNode extends AnnotatedAbstractNode {
     }
 
     // The order in this array determines the order of the nodes under Build Scripts
-    private final static Kind[] SCRIPTS = new Kind[] {
+    private static final Kind[] SCRIPTS = new Kind[] {
         BUILD_SRC, USER_PROPERTIES, SETTINGS_SCRIPT, ROOT_SCRIPT, ROOT_PROPERTIES, BUILD_SCRIPT, PROJECT_PROPERTIES
     };
 

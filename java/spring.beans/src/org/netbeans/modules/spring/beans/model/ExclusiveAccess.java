@@ -34,7 +34,7 @@ public final class ExclusiveAccess {
 
     // TODO improve the priority of runSyncTask() tasks.
 
-    private final static ExclusiveAccess INSTANCE = new ExclusiveAccess();
+    private static final ExclusiveAccess INSTANCE = new ExclusiveAccess();
 
     private final RequestProcessor rp = new RequestProcessor("Spring config file access thread", 1, false); // NOI18N
     private final ReentrantLock lock = new ReentrantLock();

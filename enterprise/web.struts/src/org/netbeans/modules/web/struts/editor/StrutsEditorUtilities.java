@@ -48,7 +48,7 @@ public class StrutsEditorUtilities {
     protected static int XML_ELEMENT = 4;
     protected static int XML_ATTRIBUTE_VALUE = 7;
     
-    static public String END_LINE = System.getProperty("line.separator");  //NOI18N
+    public static String END_LINE = System.getProperty("line.separator");  //NOI18N
     
     
     /** Returns the value of the path attribute, when there is an action

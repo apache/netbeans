@@ -104,6 +104,7 @@ import org.netbeans.modules.php.editor.parser.astnodes.IfStatement;
 import org.netbeans.modules.php.editor.parser.astnodes.Include;
 import org.netbeans.modules.php.editor.parser.astnodes.InstanceOfExpression;
 import org.netbeans.modules.php.editor.parser.astnodes.InterfaceDeclaration;
+import org.netbeans.modules.php.editor.parser.astnodes.IntersectionType;
 import org.netbeans.modules.php.editor.parser.astnodes.LambdaFunctionDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.MethodDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.MethodInvocation;
@@ -437,7 +438,7 @@ public final class ModelVisitor extends DefaultTreePathVisitor {
         } else if (!(parent instanceof ClassDeclaration) && !(parent instanceof InterfaceDeclaration)
                 && !(parent instanceof FormalParameter) && !(parent instanceof InstanceOfExpression)
                 && !(parent instanceof UseTraitStatementPart) && !(parent instanceof TraitConflictResolutionDeclaration)
-                && !(parent instanceof TraitMethodAliasDeclaration)) {
+                && !(parent instanceof TraitMethodAliasDeclaration) && !(parent instanceof IntersectionType)) {
             occurencesBuilder.prepare(Kind.CONSTANT, namespaceName, fileScope);
         }
         occurencesBuilder.prepare(namespaceName, modelBuilder.getCurrentScope());
@@ -1654,6 +1655,10 @@ public final class ModelVisitor extends DefaultTreePathVisitor {
             // NETBEANS-4443 PHP 8.0
             UnionType unionType = (UnionType) namespaceName;
             unionType.getTypes().forEach(t -> prepareType(t, scope));
+        } else if (namespaceName instanceof IntersectionType) {
+            // NETBEANS-5599 PHP 8.1
+            IntersectionType intersectionType = (IntersectionType) namespaceName;
+            intersectionType.getTypes().forEach(t -> prepareType(t, scope));
         }
         if (namespaceName instanceof NamespaceName) {
             Kind[] kinds = {Kind.CLASS, Kind.IFACE};

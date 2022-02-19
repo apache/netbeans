@@ -408,7 +408,7 @@ final class Worker implements Runnable {
         }
     }
 
-    private static abstract class Strategy {
+    private abstract static class Strategy {
         private volatile boolean cancelled;
 
         @CheckForNull

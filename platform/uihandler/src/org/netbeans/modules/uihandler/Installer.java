@@ -1661,7 +1661,7 @@ public class Installer extends ModuleInstall implements Runnable {
         return enc;
     }
 
-    private static abstract class Submit implements ActionListener, Runnable {
+    private abstract static class Submit implements ActionListener, Runnable {
 
         private enum DialogState {
 
@@ -1682,7 +1682,7 @@ public class Installer extends ModuleInstall implements Runnable {
         protected String errorURL = null;
         protected String errorMessage = null;
         protected DataType dataType = DataType.DATA_UIGESTURE;
-        final protected List<LogRecord> recs;
+        protected final List<LogRecord> recs;
         protected boolean isOOM = false;
         protected boolean isAfterRestart = false;
         protected ExceptionsSettings settings;
@@ -1899,7 +1899,7 @@ public class Installer extends ModuleInstall implements Runnable {
             LOG.log(Level.FINE, "doShow, dialogCreated, exiting");
         }
 
-        protected synchronized final void doCloseDialog() {
+        protected final synchronized void doCloseDialog() {
             dialogState = DialogState.NON_CREATED;
             closeDialog();
             notifyAll();

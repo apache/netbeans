@@ -236,7 +236,7 @@ public final class ModificationResult {
                     }
                 });
                 if (exceptions [0] != null) {
-                    LOG.log(Level.INFO, "ModificationResult commit failed with an exception: ", exceptions[0]);
+                    LOG.log(Level.INFO, "Cannot commit changes into " + fo, exceptions[0]);
                     int s = lastCommitted.size();
                     for (Throwable t : lastCommitted) {
                         LOG.log(Level.INFO, "Previous commit number " + s--, t);

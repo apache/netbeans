@@ -101,7 +101,7 @@ public final class RepositoryPreferences {
         return NbPreferences.root().node("org/netbeans/modules/maven/repositories");
     }
 
-    public synchronized static RepositoryPreferences getInstance() {
+    public static synchronized RepositoryPreferences getInstance() {
         if (instance == null) {
             instance = new RepositoryPreferences();
         }

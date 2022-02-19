@@ -73,6 +73,7 @@ import org.netbeans.modules.php.editor.parser.astnodes.Include;
 import org.netbeans.modules.php.editor.parser.astnodes.InfixExpression;
 import org.netbeans.modules.php.editor.parser.astnodes.InstanceOfExpression;
 import org.netbeans.modules.php.editor.parser.astnodes.InterfaceDeclaration;
+import org.netbeans.modules.php.editor.parser.astnodes.IntersectionType;
 import org.netbeans.modules.php.editor.parser.astnodes.LambdaFunctionDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.ListVariable;
 import org.netbeans.modules.php.editor.parser.astnodes.MatchArm;
@@ -424,6 +425,11 @@ public class DefaultVisitor implements Visitor {
         scan(node.getName());
         scan(node.getInterfaes());
         scan(node.getBody());
+    }
+
+    @Override
+    public void visit(IntersectionType node) {
+        scan(node.getTypes());
     }
 
     @Override

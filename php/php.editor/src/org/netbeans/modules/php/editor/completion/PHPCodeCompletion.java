@@ -159,6 +159,7 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
         PHP_KEYWORDS.put("private", KeywordCompletionType.ENDS_WITH_SPACE); //NOI18N
         PHP_KEYWORDS.put("protected", KeywordCompletionType.ENDS_WITH_SPACE); //NOI18N
         PHP_KEYWORDS.put("abstract", KeywordCompletionType.ENDS_WITH_SPACE); //NOI18N
+        PHP_KEYWORDS.put("readonly", KeywordCompletionType.ENDS_WITH_SPACE); //NOI18N
         PHP_KEYWORDS.put("clone", KeywordCompletionType.ENDS_WITH_SPACE); //NOI18N
         PHP_KEYWORDS.put("global", KeywordCompletionType.ENDS_WITH_SPACE); //NOI18N
         PHP_KEYWORDS.put("goto", KeywordCompletionType.ENDS_WITH_SPACE); //NOI18N
@@ -211,7 +212,8 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
         "self::", "parent::", "static::" //NOI18N
     };
     static final List<String> PHP_GLOBAL_CONST_KEYWORDS = Arrays.asList(
-            "array" // NOI18N
+            "array", // NOI18N
+            "new" // NOI18N
     );
     static final List<String> PHP_CLASS_CONST_KEYWORDS = Arrays.asList(
             "array", // NOI18N
@@ -249,7 +251,7 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
                 "__sleep", "__toString", "__unset", "__wakeup"}); //NOI18N
     private static final List<String> CLASS_CONTEXT_KEYWORD_PROPOSAL =
             Arrays.asList(new String[]{"abstract", "const", "function", "private", "final",
-                "protected", "public", "static", "var"}); //NOI18N
+                "protected", "public", "static", "var", "readonly"}); //NOI18N
     private static final List<String> INTERFACE_CONTEXT_KEYWORD_PROPOSAL =
             Arrays.asList(new String[]{"const", "function", "public", "static"}); //NOI18N
     private static final List<String> INHERITANCE_KEYWORDS =
@@ -359,7 +361,7 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
         switch (context) {
             case DEFAULT_PARAMETER_VALUE:
                 final CaseInsensitivePrefix nameKindPrefix = NameKind.caseInsensitivePrefix(request.prefix);
-                autoCompleteKeywords(completionResult, request, Arrays.asList("array")); //NOI18N
+                autoCompleteKeywords(completionResult, request, Arrays.asList("array", "new")); //NOI18N
                 autoCompleteNamespaces(completionResult, request);
                 autoCompleteTypeNames(completionResult, request, null, true);
                 if (CancelSupport.getDefault().isCancelled()) {
@@ -503,6 +505,7 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
                 break;
             case VISIBILITY_MODIFIER_OR_TYPE_NAME: // no break
                 autoCompleteKeywords(completionResult, request, PHP_VISIBILITY_KEYWORDS);
+                autoCompleteKeywords(completionResult, request, Arrays.asList("readonly")); // NOI18N
             case TYPE_NAME:
                 autoCompleteNamespaces(completionResult, request);
                 autoCompleteTypeNames(completionResult, request);
@@ -534,8 +537,10 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
                     typesForReturnTypeName.remove(Type.FALSE);
                     typesForReturnTypeName.remove(Type.NULL);
                     typesForReturnTypeName.remove(Type.VOID);
+                    typesForReturnTypeName.remove(Type.NEVER);
                 } else if (context == CompletionContext.RETURN_UNION_TYPE_NAME) {
                     typesForReturnTypeName.remove(Type.VOID);
+                    typesForReturnTypeName.remove(Type.NEVER);
                     typesForReturnTypeName.remove(Type.MIXED);
                 }
                 autoCompleteKeywords(completionResult, request, typesForReturnTypeName);
@@ -1201,16 +1206,35 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
             assert tokenSequence != null;
             tokenSequence.move(caretOffset);
             boolean addStaticKeyword = false;
+            boolean addReadonlyKeyword = false;
+            boolean addVisibilityKeyword = false;
             if (!(!tokenSequence.moveNext() && !tokenSequence.movePrevious())) {
                 Token<PHPTokenId> token = tokenSequence.token();
                 int tokenIdOffset = tokenSequence.token().offset(th);
                 addStaticKeyword = !CompletionContextFinder.lineContainsAny(token, caretOffset - tokenIdOffset, tokenSequence, Arrays.asList(
                         PHPTokenId.PHP_STATIC,
+                        PHPTokenId.PHP_READONLY,
+                        PHPTokenId.PHP_OPERATOR // "|"
+                ));
+                addReadonlyKeyword = !CompletionContextFinder.lineContainsAny(token, caretOffset - tokenIdOffset, tokenSequence, Arrays.asList(
+                        PHPTokenId.PHP_READONLY,
+                        PHPTokenId.PHP_OPERATOR // "|"
+                ));
+                addVisibilityKeyword = !CompletionContextFinder.lineContainsAny(token, caretOffset - tokenIdOffset, tokenSequence, Arrays.asList(
+                        PHPTokenId.PHP_PUBLIC,
+                        PHPTokenId.PHP_PRIVATE,
+                        PHPTokenId.PHP_PROTECTED,
                         PHPTokenId.PHP_OPERATOR // "|"
                 ));
             }
             if (addStaticKeyword) {
                 keywords.add("static"); // NOI18N
+            }
+            if (addReadonlyKeyword) {
+                keywords.add("readonly"); // NOI18N
+            }
+            if (addVisibilityKeyword) {
+                keywords.addAll(PHP_VISIBILITY_KEYWORDS);
             }
         }
         if (isNullableType) {
@@ -1236,7 +1260,8 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
                 PHPTokenId.PHP_ABSTRACT,
                 PHPTokenId.PHP_VAR,
                 PHPTokenId.PHP_STATIC,
-                PHPTokenId.PHP_CONST
+                PHPTokenId.PHP_CONST,
+                PHPTokenId.PHP_READONLY
             ));
         }
         return offerMagicAndInherited;
@@ -1322,6 +1347,7 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
             List<String> invalidProposalsForClsMembers = INVALID_PROPOSALS_FOR_CLS_MEMBERS;
             Model model = request.result.getModel();
 
+            boolean parentContext = false;
             boolean selfContext = false;
             boolean staticLateBindingContext = false;
             boolean specialVariable = false;
@@ -1336,6 +1362,7 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
                 staticContext = true;
                 instanceContext = true;
                 specialVariable = true;
+                parentContext = true;
             } else if (TokenUtilities.textEquals(varName, "static")) { // NOI18N
                 staticContext = true;
                 instanceContext = false;
@@ -1356,7 +1383,7 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
                         return;
                     }
                     final ElementFilter staticFlagFilter = !completeAccessPrefix
-                            ? new StaticOrInstanceMembersFilter(staticContext, instanceContext, selfContext, staticLateBindingContext)
+                            ? new StaticOrInstanceMembersFilter(staticContext, instanceContext, selfContext, staticLateBindingContext, parentContext)
                             : new ElementFilter() { // NETBEANS-1855
                         @Override
                         public boolean isAccepted(PhpElement element) {
@@ -1470,6 +1497,7 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
                 List<String> invalidProposalsForClsMembers = INVALID_PROPOSALS_FOR_CLS_MEMBERS;
                 Model model = request.result.getModel();
 
+                boolean parentContext = false;
                 boolean selfContext = false;
                 boolean staticLateBindingContext = false;
                 boolean specialVariable = false;
@@ -1484,6 +1512,7 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
                     isStaticContext = true;
                     isInstanceContext = true;
                     specialVariable = true;
+                    parentContext = true;
                 } else if (TokenUtilities.textEquals(varName, "static")) { // NOI18N
                     isStaticContext = true;
                     isInstanceContext = false;
@@ -1498,7 +1527,7 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
                     if (CancelSupport.getDefault().isCancelled()) {
                         return;
                     }
-                    final ElementFilter staticFlagFilter = new StaticOrInstanceMembersFilter(isStaticContext, isInstanceContext, selfContext, staticLateBindingContext);
+                    final ElementFilter staticFlagFilter = new StaticOrInstanceMembersFilter(isStaticContext, isInstanceContext, selfContext, staticLateBindingContext, true);
                     final ElementFilter methodsFilter = ElementFilter.allOf(
                             ElementFilter.forKind(PhpElementKind.METHOD),
                             ElementFilter.forName(NameKind.exact(functionName.text().toString())),
@@ -2296,15 +2325,17 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
         private final boolean staticAllowed;
         private final boolean nonstaticAllowed;
         private final boolean forStaticLateBinding;
+        private final boolean forParentContext;
 
         public StaticOrInstanceMembersFilter(final boolean forStaticContext, final boolean forInstanceContext,
-                final boolean forSelfContext, final boolean forStaticLateBinding) {
+                final boolean forSelfContext, final boolean forStaticLateBinding, final boolean forParentContext) {
             this.forStaticContext = forStaticContext;
             this.forInstanceContext = forInstanceContext;
             this.forSelfContext = forSelfContext;
             this.forStaticLateBinding = forStaticLateBinding;
             this.staticAllowed = OptionsUtils.codeCompletionStaticMethods();
             this.nonstaticAllowed = OptionsUtils.codeCompletionNonStaticMethods();
+            this.forParentContext = forParentContext;
         }
 
         @Override
@@ -2323,6 +2354,13 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
 
         private boolean isAcceptedForNotStaticContext(final PhpElement element) {
             final boolean isStatic = element.getPhpModifiers().isStatic();
+            if (forParentContext
+                    && !isStatic
+                    && element.getPhpElementKind().equals(PhpElementKind.FIELD)) {
+                // parent::fieldName is invalid
+                // this is constant
+                return false;
+            }
             return !isStatic || (staticAllowed && element.getPhpElementKind().equals(PhpElementKind.METHOD));
         }
 

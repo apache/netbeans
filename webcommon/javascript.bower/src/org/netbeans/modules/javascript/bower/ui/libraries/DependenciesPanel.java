@@ -684,10 +684,10 @@ public class DependenciesPanel extends javax.swing.JPanel {
      * Renderer of the version columns.
      */
     static class VersionColumnRenderer extends DefaultTableCellRenderer {
-        final static Object UP_TO_DATE = new Object();
-        final static Object CHECKING = new Object();
-        final static Object UNKNOWN = new Object();
-        final static Object NO_VERSION = new Object();
+        static final Object UP_TO_DATE = new Object();
+        static final Object CHECKING = new Object();
+        static final Object UNKNOWN = new Object();
+        static final Object NO_VERSION = new Object();
 
         @Override
         @NbBundle.Messages({

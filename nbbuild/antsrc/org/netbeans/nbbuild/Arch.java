@@ -685,7 +685,6 @@ public class Arch extends Task implements ErrorHandler, EntityResolver, URIResol
         String last = systemId.substring(idx + 1);
         
         if (localDTDs.contains(last)) {
-            log("Resolved to embedded DTD");
             InputSource is = new InputSource(Arch.class.getResourceAsStream(last));
             is.setSystemId(systemId);
             return is;

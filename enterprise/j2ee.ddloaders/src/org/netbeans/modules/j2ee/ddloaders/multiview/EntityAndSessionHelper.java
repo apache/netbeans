@@ -92,7 +92,7 @@ public abstract class EntityAndSessionHelper implements PropertyChangeListener, 
     
     protected void firePropertyChange(PropertyChangeEvent evt) {
         for (Iterator<PropertyChangeListener> iterator = listeners.iterator(); iterator.hasNext();) {
-            ((PropertyChangeListener) iterator.next()).propertyChange(evt);
+            iterator.next().propertyChange(evt);
         }
     }
     

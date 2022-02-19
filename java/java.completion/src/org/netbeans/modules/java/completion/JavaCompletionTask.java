@@ -33,6 +33,9 @@ import javax.lang.model.SourceVersion;
 import javax.lang.model.element.*;
 import static javax.lang.model.element.ElementKind.*;
 import static javax.lang.model.element.Modifier.*;
+import static javax.lang.model.SourceVersion.RELEASE_10;
+import static javax.lang.model.SourceVersion.RELEASE_11;
+import static javax.lang.model.SourceVersion.RELEASE_13;
 import javax.lang.model.type.*;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.ElementFilter;
@@ -237,49 +240,6 @@ public final class JavaCompletionTask<T> extends BaseTask {
         PUBLIC_KEYWORD, STATIC_KEYWORD, STRICT_KEYWORD, SYNCHRONIZED_KEYWORD,
         TRANSIENT_KEYWORD, VOID_KEYWORD, VOLATILE_KEYWORD
     };
-
-    private static final SourceVersion SOURCE_VERSION_RELEASE_10;
-    private static final SourceVersion SOURCE_VERSION_RELEASE_11;
-    private static final SourceVersion SOURCE_VERSION_RELEASE_13;
-    private static final SourceVersion SOURCE_VERSION_RELEASE_14;
-    private static final SourceVersion SOURCE_VERSION_RELEASE_15;
-
-    static {
-        SourceVersion r10, r11, r13, r14, r15;
-
-        try {
-            r10 = SourceVersion.valueOf("RELEASE_10");
-        } catch (IllegalArgumentException ex) {
-            r10 = null;
-        }
-        try {
-            r11 = SourceVersion.valueOf("RELEASE_11");
-        } catch (IllegalArgumentException ex) {
-            r11 = null;
-        }
-        try {
-            r13 = SourceVersion.valueOf("RELEASE_13");
-        } catch (IllegalArgumentException ex) {
-            r13 = null;
-        }
-         try {
-            r14 = SourceVersion.valueOf("RELEASE_14");
-        } catch (IllegalArgumentException ex) {
-            r14 = null;
-        }
-         
-        try {
-            r15 = SourceVersion.valueOf("RELEASE_15");
-        } catch (IllegalArgumentException ex) {
-            r15 = null;
-        }
-
-        SOURCE_VERSION_RELEASE_10 = r10;
-        SOURCE_VERSION_RELEASE_11 = r11;
-        SOURCE_VERSION_RELEASE_13 = r13;
-        SOURCE_VERSION_RELEASE_14 = r14;
-        SOURCE_VERSION_RELEASE_15 = r15;
-   }
 
     private final ItemFactory<T> itemFactory;
     private final Set<Options> options;
@@ -1585,8 +1545,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
         addKeywordsForBlock(env);
         
         String prefix = env.getPrefix();
-        if (SOURCE_VERSION_RELEASE_13 != null && env.getController().getSourceVersion().compareTo(SOURCE_VERSION_RELEASE_13) >= 0
-                && Utilities.startsWith(YIELD_KEYWORD, prefix)) {
+        if (env.getController().getSourceVersion().compareTo(RELEASE_13) >= 0 && Utilities.startsWith(YIELD_KEYWORD, prefix)) {
             TreePath parentPath = env.getPath().getParentPath();
             if (parentPath.getLeaf().getKind() == Tree.Kind.CASE && parentPath.getParentPath().getLeaf().getKind() == Kind.SWITCH_EXPRESSION) {
                 addKeyword(env, YIELD_KEYWORD, null, false);
@@ -4748,9 +4707,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
             }
             tp = tp.getParentPath();
         }
-        if (SOURCE_VERSION_RELEASE_10 != null &&
-            env.getController().getSourceVersion().compareTo(SOURCE_VERSION_RELEASE_10) >= 0 &&
-            Utilities.startsWith(VAR_KEYWORD, prefix)) {
+        if (env.getController().getSourceVersion().compareTo(RELEASE_10) >= 0 && Utilities.startsWith(VAR_KEYWORD, prefix)) {
             results.add(itemFactory.createKeywordItem(VAR_KEYWORD, SPACE, anchorOffset, false));
         }
     }
@@ -4862,7 +4819,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
             if (!modifiers.contains(ABSTRACT)) {
                 kws.add(ABSTRACT_KEYWORD);
             }
-            if (!contains(modifiers, "SEALED") && !contains(modifiers, "NON_SEALED")) {
+            if (!modifiers.contains(SEALED) && !modifiers.contains(NON_SEALED)) {
                 if (!modifiers.contains(ABSTRACT)) {
                     kws.add(FINAL_KEYWORD);
                 }
@@ -4882,14 +4839,6 @@ public final class JavaCompletionTask<T> extends BaseTask {
             if (Utilities.startsWith(kw, prefix)) {
                 results.add(itemFactory.createKeywordItem(kw, SPACE, anchorOffset, false));
             }
-        }
-    }
-
-    private static boolean contains(Set<Modifier> modifiers, String modifier) {
-        try {
-            return modifiers.contains(Modifier.valueOf(modifier));
-        } catch (IllegalArgumentException ex) {
-            return false;
         }
     }
 
@@ -6322,7 +6271,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
     }
 
     private void addVarTypeForLambdaParam(final Env env) throws IOException {
-        if (SOURCE_VERSION_RELEASE_11 == null || env.getController().getSourceVersion().compareTo(SOURCE_VERSION_RELEASE_11) < 0) {
+        if (env.getController().getSourceVersion().compareTo(RELEASE_11) < 0) {
             return;
         }
         results.add(itemFactory.createKeywordItem(VAR_KEYWORD, SPACE, anchorOffset, false));

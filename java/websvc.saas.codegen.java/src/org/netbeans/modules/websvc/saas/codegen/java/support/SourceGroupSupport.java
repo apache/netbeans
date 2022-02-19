@@ -72,7 +72,7 @@ public class SourceGroupSupport {
                 result.add(sourceGroups[i]);
             }
         }
-        return (SourceGroup[]) result.toArray(new SourceGroup[result.size()]);
+        return result.toArray(new SourceGroup[result.size()]);
     }
 
     public static boolean isValidPackageName(String packageName) {
@@ -181,7 +181,7 @@ public class SourceGroupSupport {
         return testGroups;
     }
 
-    private static List<SourceGroup> getTestTargets(SourceGroup sourceGroup, Map foldersToSourceGroupsMap) {
+    private static List<SourceGroup> getTestTargets(SourceGroup sourceGroup, Map<FileObject, SourceGroup> foldersToSourceGroupsMap) {
         final URL[] rootURLs = UnitTestForSourceQuery.findUnitTests(sourceGroup.getRootFolder());
         if (rootURLs.length == 0) {
             return new ArrayList<>();
@@ -190,7 +190,7 @@ public class SourceGroupSupport {
         List<FileObject> sourceRoots = getFileObjects(rootURLs, true);
         for (int i = 0; i < sourceRoots.size(); i++) {
             FileObject sourceRoot = sourceRoots.get(i);
-            SourceGroup srcGroup = (SourceGroup) foldersToSourceGroupsMap.get(sourceRoot);
+            SourceGroup srcGroup = foldersToSourceGroupsMap.get(sourceRoot);
             if (srcGroup != null) {
                 result.add(srcGroup);
             }

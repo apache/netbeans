@@ -376,7 +376,7 @@ public class CustomScopePanel extends javax.swing.JPanel implements ExplorerMana
         }
     }
 
-    private static abstract class CustomNode extends AbstractNode implements PropertyChangeListener {
+    private abstract static class CustomNode extends AbstractNode implements PropertyChangeListener {
 
         protected final CustomScopePanel panel;
         private final Data data;

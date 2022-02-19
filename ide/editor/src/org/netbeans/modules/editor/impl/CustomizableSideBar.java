@@ -218,7 +218,7 @@ public final class CustomizableSideBar {
      * the line with the editor component's background, so the divisor and editor's
      * graphics (i.e. brace ruler) are separated.
      */
-    private final static class WestSidebarHolder extends JPanel implements LookupListener, PropertyChangeListener, Runnable {
+    private static final class WestSidebarHolder extends JPanel implements LookupListener, PropertyChangeListener, Runnable {
         /**
          * The text editor, whose background will be used as a padding
          */

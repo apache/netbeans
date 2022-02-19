@@ -86,9 +86,9 @@ import org.openide.util.NbBundle;
 public class WSUtils {
 
     private static final String GENERATE_NON_JSR109 = "generate_nonjsr109"; //NOI18N
-    private final static String SERVLET_CLASS_NAME =
+    private static final String SERVLET_CLASS_NAME =
             "com.sun.xml.ws.transport.http.servlet.WSServlet"; //NOI18N
-    private final static String SERVLET_LISTENER =
+    private static final String SERVLET_LISTENER =
             "com.sun.xml.ws.transport.http.servlet.WSServletContextListener"; //NOI18N
     /** downloads XML resources from source URI to target folder
      * (USAGE : this method can download a wsdl file and all wsdl/XML schemas,

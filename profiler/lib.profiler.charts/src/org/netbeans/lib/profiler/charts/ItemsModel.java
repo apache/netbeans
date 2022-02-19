@@ -37,7 +37,7 @@ public interface ItemsModel {
     public void removeItemsListener(ItemsListener listener);
 
 
-    public static abstract class Abstract implements ItemsModel {
+    public abstract static class Abstract implements ItemsModel {
 
         private List<ItemsListener> listeners;
 

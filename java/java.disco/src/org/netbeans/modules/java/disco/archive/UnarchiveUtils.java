@@ -24,7 +24,7 @@ import org.openide.windows.InputOutput;
 
 public class UnarchiveUtils {
 
-    private final static Unarchiver[] zipUnarchivers = new Unarchiver[]{
+    private static final Unarchiver[] zipUnarchivers = new Unarchiver[]{
         new CommandLineUnzip(),
         new CommandLineUntar(),
         new JDKCommonsUnzip()

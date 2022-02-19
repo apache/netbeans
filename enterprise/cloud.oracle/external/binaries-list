@@ -1,0 +1,32 @@
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+
+19F36E3A7A4914A5B361F840D65EF00B670CE064 com.oracle.oci.sdk:oci-java-sdk-common:2.10.0
+3D4C9B62BDDFC86B154C78FA751257D6B2BB309A com.oracle.oci.sdk:oci-java-sdk-database:2.10.0
+9DE4EA6F96CFFB2C7EEDFA903AAA7A5A2D345F18 com.oracle.oci.sdk:oci-java-sdk-identity:2.10.0
+992769EA9FB96F0CB65B65B63DFCF785DEFFFC5F com.oracle.oci.sdk:oci-java-sdk-circuitbreaker:2.10.0
+F00ECE576884E10D5F2E4B34D1D1785ADE41211C com.oracle.oci.sdk:oci-java-sdk-workrequests:2.10.0
+CACECE66244150F252B5C58E0A38FEA0D5015665 com.nimbusds:nimbus-jose-jwt:9.11.1
+25EA2E8B0C338A877313BD4672D3FE056EA78F0D com.google.code.findbugs:jsr305:3.0.2
+52C3DCE0E910EB8F7CE649F44EFADA7E26D8996A org.glassfish.jersey.media:jersey-media-json-jackson:2.34
+FEC563E0FC3650846BA8D2A2B815569FFE0AB519 org.glassfish.jersey.connectors:jersey-apache-connector:2.34
+562A587FACE36EC7EFF2DB7F2FC95425C6602BC1 jakarta.activation:jakarta.activation-api:1.2.1
+
+EBEC09ED06111475434BC41D7B47BF51457E5D41 io.github.resilience4j:resilience4j-circuitbreaker:1.2.0
+82DCE5BA9F0CCA3BBB694581ABAE0124ECCEB828 io.github.resilience4j:resilience4j-core:1.2.0
+DFD5101B17DA36C32AE024B984E0B72712F01A35 io.vavr:vavr:0.10.2
+68F1AF10052713FDA01BFB1E5B831DCF6D826AB2 io.vavr:vavr-match:0.10.2

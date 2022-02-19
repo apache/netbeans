@@ -20,9 +20,11 @@ package org.netbeans.modules.gradle.loaders;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 import static java.util.logging.Level.FINE;
@@ -48,6 +50,7 @@ import static org.netbeans.modules.gradle.loaders.GradleDaemon.INIT_SCRIPT;
 import static org.netbeans.modules.gradle.loaders.GradleDaemon.TOOLING_JAR;
 import org.netbeans.modules.gradle.api.GradleBaseProject;
 import org.netbeans.modules.gradle.api.NbGradleProject;
+import org.netbeans.modules.gradle.api.NbGradleProject.Quality;
 import static org.netbeans.modules.gradle.api.NbGradleProject.Quality.EVALUATED;
 import static org.netbeans.modules.gradle.api.NbGradleProject.Quality.FULL_ONLINE;
 import static org.netbeans.modules.gradle.api.NbGradleProject.Quality.SIMPLE;
@@ -142,7 +145,8 @@ public class LegacyProjectLoader extends AbstractProjectLoader {
         try {
 
             errors.clear();
-            info = retrieveProjectInfo(goOnline, pconn, cmd, token, pl);
+            AtomicBoolean onlineResult = new AtomicBoolean();
+            info = retrieveProjectInfo(goOnline, pconn, cmd, token, pl, onlineResult);
 
             if (!info.getProblems().isEmpty()) {
                 errors.openNotification(
@@ -155,7 +159,8 @@ public class LegacyProjectLoader extends AbstractProjectLoader {
                     // If we do not have exception, but seen some problems the we mark the quality as SIMPLE
                     quality = SIMPLE;
                 } else {
-                    quality = ctx.aim;
+                    // the project has been either fully loaded, or online checked
+                    quality = onlineResult.get() ? Quality.FULL_ONLINE : Quality.FULL;
                 }
             } else {
                 if (info.getProblems().isEmpty()) {
@@ -170,12 +175,7 @@ public class LegacyProjectLoader extends AbstractProjectLoader {
             }
         } catch (GradleConnectionException | IllegalStateException ex) {
             LOG.log(FINE, "Failed to retrieve project information for: " + base.getProjectDir(), ex);
-            List<String> problems = new ArrayList<>();
-            Throwable th = ex;
-            while (th != null) {
-                problems.add(th.getMessage());
-                th = th.getCause();
-            }
+            List<String> problems = exceptionsToProblems(ex);
             errors.openNotification(TIT_LOAD_FAILED(base.getProjectDir()), ex.getMessage(), GradleProjectErrorNotifications.bulletedList(problems));
             return ctx.previous.invalidate(problems.toArray(new String[0]));
         } finally {
@@ -197,6 +197,82 @@ public class LegacyProjectLoader extends AbstractProjectLoader {
         }
         return ret;
     }
+    
+    private static List<String> causesToProblems(Throwable ex) {
+        List<String> problems = new ArrayList<>();
+        Throwable th = ex;
+        while (th != null) {
+            problems.add(th.getMessage());
+        }
+        return problems;
+    }
+    
+    @NbBundle.Messages({
+        "# {0} - previous part",
+        "# {1} - appended part",
+        "FMT_AppendMessage={0} {1}",
+        "# {0} - the error message",
+        "# {1} - the file / line",
+        "FMT_MessageWithLocation={0} ({1})"
+    })
+    /**
+     * Rearranges the exception stack messages to be more readable. A typical Gradle build exception is a 
+     * {@link GradleConnectionException} that wraps the actual exception. The message of this exception
+     * is completely useless except possibly for gradle wrapper/distribution path.
+     * 
+     * The next to rearrange is the positional information - the message should come first as it
+     * often appears in the title. The positional information holder is not a part of oficial tooling API
+     * so a little hack is used to extract the information from the exception chain.
+     * 
+     * The rest of messages is coalesced into one text. Location, if present, is appended at the end.
+     */
+    private static List<String> exceptionsToProblems(Throwable t) {
+        if (!(t instanceof GradleConnectionException)) {
+            return causesToProblems(t);
+        }
+        // skip Connection exception no useful info there.
+        Throwable cause = t.getCause();
+        if (cause == null || cause == t) {
+            // no cause - use exception message.
+            return Collections.singletonList(t.getMessage());
+        }
+        String msg = "";
+        String appendLocation = null;
+        // LocationAwareException is not part of APIs:
+        if (cause.getClass().getName().endsWith("LocationAwareException")) { // NOI18N
+            Throwable next = cause.getCause();
+            appendLocation = cause.getMessage();
+            if (next != null) {
+                String m = next.getMessage();
+                int i = appendLocation.indexOf(m);
+                if (i >= 0) {
+                    // the LocationAwareException may include the immediately nested exception's message.
+                    appendLocation = appendLocation.substring(0, i).trim();
+                }
+            }
+            cause = next;
+        }
+        while (cause != null) {
+            if (!msg.isEmpty()) {
+                msg = Bundle.FMT_AppendMessage(msg, cause.getMessage());
+            } else {
+                msg = cause.getMessage();
+            }
+            Throwable next = cause.getCause();
+            if (next == cause) {
+                break;
+            }
+            cause = next;
+        }
+        if (appendLocation != null) {
+            // if the message itself is multi-line, add the location info on a separate line:
+            if (msg.contains("\n")) { // NOI18N
+                msg = msg + "\n"; // NOI18N
+            }
+            msg = Bundle.FMT_MessageWithLocation(msg, appendLocation);
+        }
+        return Collections.singletonList(msg);
+    }
 
     private static BuildActionExecuter<NbProjectInfo> createInfoAction(ProjectConnection pconn, GradleCommandLine cmd, CancellationToken token, ProgressListener pl) {
         BuildActionExecuter<NbProjectInfo> ret = pconn.action(new NbProjectInfoAction());
@@ -215,7 +291,7 @@ public class LegacyProjectLoader extends AbstractProjectLoader {
         return ret;
     }
 
-    private static NbProjectInfo retrieveProjectInfo(GoOnline goOnline, ProjectConnection pconn, GradleCommandLine cmd, CancellationToken token, ProgressListener pl) throws GradleConnectionException, IllegalStateException {
+    private static NbProjectInfo retrieveProjectInfo(GoOnline goOnline, ProjectConnection pconn, GradleCommandLine cmd, CancellationToken token, ProgressListener pl, AtomicBoolean wasOnline) throws GradleConnectionException, IllegalStateException {
         NbProjectInfo ret;
 
         GradleSettings settings = GradleSettings.getDefault();
@@ -235,6 +311,7 @@ public class LegacyProjectLoader extends AbstractProjectLoader {
 
         if (goOnline == GoOnline.NEVER || goOnline == GoOnline.ON_DEMAND) {
             BuildActionExecuter<NbProjectInfo> action = createInfoAction(pconn, offline, token, pl);
+            wasOnline.set(!offline.hasFlag(GradleCommandLine.Flag.OFFLINE));
             try {
                 ret = action.run();
                 if (goOnline == GoOnline.NEVER || !ret.hasException()) {
@@ -246,8 +323,9 @@ public class LegacyProjectLoader extends AbstractProjectLoader {
                 }
             }
         }
-
+        
         BuildActionExecuter<NbProjectInfo> action = createInfoAction(pconn, online, token, pl);
+        wasOnline.set(true);
         ret = action.run();
         return ret;
     }

@@ -36,7 +36,7 @@ import org.openide.util.Utilities;
  */
 public class Asenv {
     
-    transient private final java.util.Properties props = new java.util.Properties();
+    private final transient java.util.Properties props = new java.util.Properties();
     
     /**
      * key for path to jdk stored in asenv file

@@ -36,6 +36,8 @@ import org.openide.windows.WindowManager;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.CancellationException;
+import java.util.concurrent.CompletableFuture;
 import javax.swing.JRootPane;
 import javax.swing.SwingUtilities;
 import org.netbeans.core.windows.view.ui.DefaultSeparateContainer;
@@ -145,116 +147,158 @@ public class DialogDisplayerImpl extends DialogDisplayer {
      * @return the option that has been choosen in the notification.
      */
     public Object notify (NotifyDescriptor descriptor) {
-        return notify(descriptor, false);
+        return notify(descriptor, new AWTQuery (descriptor));
     }
 
+
+    class AWTQuery implements Runnable {
+        public final NotifyDescriptor descriptor;
+        
+        public Object result;
+        public boolean running;
+        public volatile boolean noParent;
+        public volatile boolean cancelled;
+        
+        // @GuardedBy(this)
+        NbPresenter presenter;
+
+        public AWTQuery(NotifyDescriptor descriptor) {
+            this.descriptor = descriptor;
+        }
+
+        public void run () {
+            synchronized (this) {
+                notify ();   
+                running = true;
+            }
+
+            showDialog ();
+
+            synchronized (this) {
+                this.result = descriptor.getValue();
+                notifyAll ();
+            }
+        }
+        
+        public boolean cancel(boolean cancelIfRunning) {
+            NbPresenter p;
+            synchronized (this) {
+                if (cancelled) {
+                    return false;
+                }
+                if (running && !cancelIfRunning) {
+                    return false;
+                }
+                this.cancelled = true;
+                p = this.presenter;
+                if (p == null) {
+                    return true;
+                }
+            }
+            // attempt to cancel the dialog:
+            if (SwingUtilities.isEventDispatchThread()) {
+                p.setVisible(false);
+            } else {
+                SwingUtilities.invokeLater(() -> p.setVisible(false));
+            }
+            return true;
+        }
+
+        @SuppressWarnings("deprecation")
+        public void showDialog () {
+            if (cancelled) {
+                descriptor.setValue(NotifyDescriptor.CLOSED_OPTION);
+                return;
+            }
+            if (testResult != null) {
+                // running in Unit test
+                descriptor.setValue (testResult);
+                return;
+            }
+
+            Component focusOwner = null;
+            Component comp = org.openide.windows.TopComponent.getRegistry ().getActivated ();
+            Component win = comp;
+            while ((win != null) && (!(win instanceof Window))) win = win.getParent ();
+            if (win != null) focusOwner = ((Window)win).getFocusOwner ();
+
+            // if a modal dialog is active use it as parent
+            // otherwise use the main window
+
+            NbPresenter presenter = null;
+            if (descriptor instanceof DialogDescriptor) {
+                if (NbPresenter.currentModalDialog != null) {
+                    if (NbPresenter.currentModalDialog.isLeaf ()) {
+                        presenter = new NbDialog((DialogDescriptor) descriptor, WindowManager.getDefault ().getMainWindow ());
+                    } else {
+                        presenter = new NbDialog((DialogDescriptor) descriptor, NbPresenter.currentModalDialog);
+                    }
+                } else {
+                    Window w = KeyboardFocusManager.getCurrentKeyboardFocusManager ().getActiveWindow ();
+                    if (w instanceof NbPresenter && ((NbPresenter) w).isLeaf ()) {
+                        w = WindowManager.getDefault ().getMainWindow ();
+                    }
+                    Frame f = w instanceof Frame ? (Frame) w : WindowManager.getDefault().getMainWindow();
+                    if (noParent) {
+                        f = null;
+                    }
+                    presenter = new NbDialog((DialogDescriptor) descriptor, f);
+                }
+            } else {
+                if (NbPresenter.currentModalDialog != null) {
+                    if (NbPresenter.currentModalDialog.isLeaf()) {
+                        presenter = new NbPresenter(descriptor, WindowManager.getDefault().getMainWindow(), true);
+                    } else {
+                        presenter = new NbPresenter(descriptor, NbPresenter.currentModalDialog, true);
+                    }
+                } else {
+                    Frame f = KeyboardFocusManager.getCurrentKeyboardFocusManager().getActiveWindow() 
+                        instanceof Frame ? 
+                        (Frame) KeyboardFocusManager.getCurrentKeyboardFocusManager().getActiveWindow() 
+                        : WindowManager.getDefault().getMainWindow();
+
+                    if (noParent) {
+                        f = null;
+                    }
+                    presenter = new NbPresenter(descriptor, f, true);
+                }
+            }
+            
+            synchronized (this) {
+                this.presenter = presenter;
+            }
+
+            //#47150 - horrible hack for vcs module
+            if ("true".equals(System.getProperty("javahelp.ignore.modality"))) { //NOI18N
+                presenter.getRootPane().putClientProperty ("javahelp.ignore.modality", "true"); //NOI18N
+                System.setProperty("javahelp.ignore.modality", "false"); //NOI18N
+            }
+
+            customizeDlg(presenter);
+                
+            //Bugfix #8551
+            presenter.getRootPane().requestDefaultFocus();
+            presenter.setVisible(true);
+            
+            // dialog is gone, restore the focus
+
+            if (focusOwner != null) {
+                win.requestFocusInWindow();
+                comp.requestFocusInWindow();
+                if( !(focusOwner instanceof JRootPane ) ) //#85068
+                    focusOwner.requestFocusInWindow();
+            }
+        }
+    }
     /** Notifies user by a dialog.
      * @param descriptor description that contains needed informations
      * @param noParent don't set any window as parent of dialog, if flag is true
      * @return the option that has been choosen in the notification.
      */
-    private Object notify (final NotifyDescriptor descriptor, final boolean noParent) {
+    private Object notify (final NotifyDescriptor descriptor, AWTQuery query) {
         if (GraphicsEnvironment.isHeadless()) {
             return NotifyDescriptor.CLOSED_OPTION;
         }
-        class AWTQuery implements Runnable {
-            public Object result;
-            public boolean running;
-        
-            public void run () {
-                synchronized (this) {
-                    notify ();   
-                    running = true;
-                }
-                
-                showDialog ();
-
-                synchronized (this) {
-                    this.result = descriptor.getValue();
-                    notifyAll ();
-                }
-            }
-            
-            @SuppressWarnings("deprecation")
-            public void showDialog () {
-                if (testResult != null) {
-                    // running in Unit test
-                    descriptor.setValue (testResult);
-                    return;
-                }
-                
-                Component focusOwner = null;
-                Component comp = org.openide.windows.TopComponent.getRegistry ().getActivated ();
-                Component win = comp;
-                while ((win != null) && (!(win instanceof Window))) win = win.getParent ();
-                if (win != null) focusOwner = ((Window)win).getFocusOwner ();
-
-                // if a modal dialog is active use it as parent
-                // otherwise use the main window
-
-                NbPresenter presenter = null;
-                if (descriptor instanceof DialogDescriptor) {
-                    if (NbPresenter.currentModalDialog != null) {
-                        if (NbPresenter.currentModalDialog.isLeaf ()) {
-                            presenter = new NbDialog((DialogDescriptor) descriptor, WindowManager.getDefault ().getMainWindow ());
-                        } else {
-                            presenter = new NbDialog((DialogDescriptor) descriptor, NbPresenter.currentModalDialog);
-                        }
-                    } else {
-                        Window w = KeyboardFocusManager.getCurrentKeyboardFocusManager ().getActiveWindow ();
-                        if (w instanceof NbPresenter && ((NbPresenter) w).isLeaf ()) {
-                            w = WindowManager.getDefault ().getMainWindow ();
-                        }
-                        Frame f = w instanceof Frame ? (Frame) w : WindowManager.getDefault().getMainWindow();
-                        if (noParent) {
-                            f = null;
-                        }
-                        presenter = new NbDialog((DialogDescriptor) descriptor, f);
-                    }
-                } else {
-                    if (NbPresenter.currentModalDialog != null) {
-                        if (NbPresenter.currentModalDialog.isLeaf()) {
-                            presenter = new NbPresenter(descriptor, WindowManager.getDefault().getMainWindow(), true);
-                        } else {
-                            presenter = new NbPresenter(descriptor, NbPresenter.currentModalDialog, true);
-                        }
-                    } else {
-                        Frame f = KeyboardFocusManager.getCurrentKeyboardFocusManager().getActiveWindow() 
-                            instanceof Frame ? 
-                            (Frame) KeyboardFocusManager.getCurrentKeyboardFocusManager().getActiveWindow() 
-                            : WindowManager.getDefault().getMainWindow();
-                        
-                        if (noParent) {
-                            f = null;
-                        }
-                        presenter = new NbPresenter(descriptor, f, true);
-                    }
-                }
-                
-                //#47150 - horrible hack for vcs module
-                if ("true".equals(System.getProperty("javahelp.ignore.modality"))) { //NOI18N
-                    presenter.getRootPane().putClientProperty ("javahelp.ignore.modality", "true"); //NOI18N
-                    System.setProperty("javahelp.ignore.modality", "false"); //NOI18N
-                }
-                
-                customizeDlg(presenter);
-
-                //Bugfix #8551
-                presenter.getRootPane().requestDefaultFocus();
-                presenter.setVisible(true);
-
-                // dialog is gone, restore the focus
-
-                if (focusOwner != null) {
-                    win.requestFocusInWindow();
-                    comp.requestFocusInWindow();
-                    if( !(focusOwner instanceof JRootPane ) ) //#85068
-                        focusOwner.requestFocusInWindow();
-                }
-            }
-        }
-        
-        AWTQuery query = new AWTQuery ();
         
         if (javax.swing.SwingUtilities.isEventDispatchThread ()) {
             query.showDialog ();
@@ -289,26 +333,74 @@ public class DialogDisplayerImpl extends DialogDisplayer {
      */  
     @Override
     public void notifyLater(final NotifyDescriptor descriptor) {
-        class R implements Runnable {
-            public boolean noParent;
-            
-            public void run() {
-                DialogDisplayerImpl.this.notify(descriptor, noParent);
-            }
-        }
-        R r = new R();
+        notifyLater(new AWTQuery(descriptor));
+    }
+    
+    private void notifyLater(final AWTQuery q) {
+        Runnable r = () -> DialogDisplayerImpl.this.notify(q.descriptor, q);
         
         List<Runnable> local = run;
         if (local != null) {
-            r.noParent = true;
+            q.noParent = true;
             local.add(r);
         } else {
-            EventQueue.invokeLater(r);
+            Mutex.EVENT.postReadRequest(r);
         }
     }
+    
     private static void customizeDlg(NbPresenter presenter) {
         for (PresenterDecorator p : Lookup.getDefault().lookupAll(PresenterDecorator.class)) {
             p.customizePresenter(presenter);
         }
+    }
+
+    @Override
+    public <T extends NotifyDescriptor> CompletableFuture<T> notifyFuture(T descriptor) {
+        class AWTQuery2 extends AWTQuery {
+            volatile CompletableFuture res;
+
+            public AWTQuery2(NotifyDescriptor descriptor) {
+                super(descriptor);
+            }
+
+            @Override
+            public void showDialog() {
+                try {
+                    super.showDialog();
+                    Object r = descriptor.getValue();
+                    if (cancelled || r == NotifyDescriptor.CLOSED_OPTION || r == NotifyDescriptor.CANCEL_OPTION) {
+                        res.completeExceptionally(new CancellationException());
+                    } else {
+                        res.complete(descriptor);
+                    }
+                } catch (ThreadDeath td) {
+                    throw td;
+                } catch (Throwable t) {
+                    res.completeExceptionally(t);
+                }
+            }
+        }
+        
+        final AWTQuery2 q = new AWTQuery2(descriptor);
+        
+        class CF extends CompletableFuture<T> {
+            {
+                q.res = this;
+            }
+            
+            @Override
+            public boolean cancel(boolean mayInterruptIfRunning) {
+                if (isDone()) {
+                    return false;
+                }
+                q.cancel(mayInterruptIfRunning);
+                return super.cancel(mayInterruptIfRunning); 
+            }
+        }
+        
+        CompletableFuture<T> cf =  new CF();
+        q.res = cf;
+        notifyLater(q);
+        return cf;
     }
 }

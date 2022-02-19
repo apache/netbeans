@@ -192,7 +192,7 @@ public class EjbContainerChildren extends Children.Keys<EjbContainerChildren.Key
         updateKeys();
     }
 
-    final static class Key {
+    static final class Key {
         public static final Key SCANNING = new Key(null, null, null, null, false);
 
         private enum EjbType { SESSION, ENTITY, MESSAGE_DRIVEN }

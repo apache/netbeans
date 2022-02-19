@@ -1,0 +1,11 @@
+[[876,877]-Syntax error
+ unexpected:	|
+ expected:	variable, &] 876-877:Syntax error
+ unexpected:	|
+ expected:	variable, &
+[[879,884]-POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	variable '$test'] 879-884:POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	variable '$test'
+[[887,888]-POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	}] 887-888:POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	}

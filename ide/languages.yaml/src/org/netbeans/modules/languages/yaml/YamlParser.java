@@ -130,7 +130,7 @@ public class YamlParser extends org.netbeans.modules.parsing.spi.Parser {
         replaceWithSpaces(source, "{{", "}}");
     }
 
-    final static Pattern[] SPEC_PATTERN_REPLACEMENTS = new Pattern[]{
+    static final Pattern[] SPEC_PATTERN_REPLACEMENTS = new Pattern[]{
         Pattern.compile("@"),
         Pattern.compile("\\?"),
         Pattern.compile("!(?!(omap|!omap))"),};

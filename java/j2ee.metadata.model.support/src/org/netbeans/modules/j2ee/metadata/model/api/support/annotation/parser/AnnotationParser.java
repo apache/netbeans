@@ -78,7 +78,7 @@ import org.openide.util.Parameters;
  */
 public final class AnnotationParser {
 
-    private final static Set<Class<?>> PRIMITIVE_WRAPPERS = new HashSet<Class<?>>();
+    private static final Set<Class<?>> PRIMITIVE_WRAPPERS = new HashSet<Class<?>>();
 
     private final Map<String, ValueProvider> providers = new HashMap<String, ValueProvider>();
     private final AnnotationHelper helper;
@@ -343,7 +343,7 @@ public final class AnnotationParser {
     /**
      * Simple <code>DefaultProvider</code> implementation.
      */
-    private final static class DefaultProviderImpl implements DefaultProvider {
+    private static final class DefaultProviderImpl implements DefaultProvider {
 
         private final Object defaultValue;
 

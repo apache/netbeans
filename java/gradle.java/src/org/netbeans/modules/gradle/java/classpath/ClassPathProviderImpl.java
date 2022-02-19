@@ -185,6 +185,7 @@ public final class ClassPathProviderImpl extends ProjectOpenedHook implements Cl
     }
 
     private void updateGroups(Set<String> newGroups) {
+        // Note: ClassPathProviderImplTest timing relies on the provider instance locked
         synchronized(this) {
             Map<String, SourceSetCP> g = new HashMap<>(groups);
             Iterator<Map.Entry<String, SourceSetCP>> it = g.entrySet().iterator();
@@ -251,6 +252,7 @@ public final class ClassPathProviderImpl extends ProjectOpenedHook implements Cl
             }
         }
 
+        // Note: ClassPathProviderImplTest timing relies on the provider instance locked
         private synchronized ClassPath getCompileTimeClasspath() {
             if (compileTime == null) {
                 compileTime = createMultiplexClassPath(

@@ -115,9 +115,11 @@ public class ClassConstantDeclarationInfo extends ASTNodeInfo<Identifier> {
         return null;
     }
 
-    @NbBundle.Messages("MoreElementsDesc={0} more")
+    @NbBundle.Messages({
+        "# {0} - undisplayed size",
+        "MoreElementsDesc={0} more"
+    })
     private static String getConstantValue(ArrayCreation expr) {
-        String debug = expr.toString();
         StringBuilder sb = new StringBuilder("["); //NOI18N
         Integer displayedElements = 0;
         List<ArrayElement> elements = expr.getElements();

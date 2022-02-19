@@ -1388,7 +1388,7 @@ public final class CharSequences {
      * it is still more efficient than String, because string stores length in field
      * and it costs 20 bytes aligned into 24
      */
-    private final static class CharBasedSequence implements CompactCharSequence, Comparable<CharSequence> {
+    private static final class CharBasedSequence implements CompactCharSequence, Comparable<CharSequence> {
 
         private final char[] value;
         private int hash;
@@ -1457,7 +1457,7 @@ public final class CharSequences {
      * compact char sequence implementation based on byte[]
      * size: 8 + 4 + 4 (= 16 bytes) + sizeof ('value')
      */
-    private final static class ByteBasedSequence implements CompactCharSequence, Comparable<CharSequence> {
+    private static final class ByteBasedSequence implements CompactCharSequence, Comparable<CharSequence> {
 
         private final byte[] value;
         private int hash;

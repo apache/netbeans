@@ -62,7 +62,7 @@ public final class JpaProviderFactory {
         });
     } 
     
-    public static abstract class Accessor {
+    public abstract static class Accessor {
 
         private static volatile Accessor accessor;
 

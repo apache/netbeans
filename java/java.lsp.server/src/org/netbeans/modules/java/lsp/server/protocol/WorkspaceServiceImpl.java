@@ -950,7 +950,7 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
             checkStatus();
         }
 
-        synchronized final void checkStatus() {
+        final synchronized void checkStatus() {
             if (running == 0) {
                 try {
                     wait(100);

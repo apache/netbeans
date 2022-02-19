@@ -113,7 +113,7 @@ public abstract class AbstractDocumentComponent<C extends DocumentComponent<C>>
         fireValueChanged();
     }
     
-    abstract protected Object getAttributeValueOf(Attribute attr, String stringValue);
+    protected abstract Object getAttributeValueOf(Attribute attr, String stringValue);
     
     /**
      * Returns string value of the attribute from different namespace

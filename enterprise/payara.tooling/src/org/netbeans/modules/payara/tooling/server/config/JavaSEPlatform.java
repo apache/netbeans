@@ -49,7 +49,9 @@ public enum JavaSEPlatform {
     /** JavaSE 1.8. */
     v1_8,
     /** JavaSE 11. */
-    v11;
+    v11,
+    /** JavaSE 17. */
+    v17;
 
     ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
@@ -87,6 +89,9 @@ public enum JavaSEPlatform {
 
     /**  A <code>String</code> representation of v11 value. */
     static final String V11_STR = "11";
+
+    /**  A <code>String</code> representation of v17 value. */
+    static final String V17_STR = "17";
 
     /** 
      * Stored <code>String</code> values for backward <code>String</code>
@@ -148,6 +153,7 @@ public enum JavaSEPlatform {
             case v1_7:     return V1_7_STR;
             case v1_8:     return V1_8_STR;
             case v11:     return V11_STR;
+            case v17:     return V17_STR;
             // This is unrecheable. Being here means this class does not handle
             // all possible values correctly.
             default:   throw new ServerConfigException(

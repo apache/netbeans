@@ -873,7 +873,7 @@ public class GraphManager extends Object {
     //
     /////////////////////////////
     
-    static public void debug(boolean d) {
+    public static void debug(boolean d) {
 	DDLogFlags.debug = d;
     }
     

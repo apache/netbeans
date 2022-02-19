@@ -425,7 +425,7 @@ public class ProfilerTreeTable extends ProfilerTable {
 //        tree.updateUI();
 //    }
     
-    public static abstract class NodeExpansionEvaluator {
+    public abstract static class NodeExpansionEvaluator {
         
         public abstract Boolean hasBeenExpanded(TreePath path);
         

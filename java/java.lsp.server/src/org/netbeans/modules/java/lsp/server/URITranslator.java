@@ -177,7 +177,11 @@ public final class URITranslator {
         });
     }
 
-    private static File getCacheDir() {
+    /**
+     * Root of caches for NBLS server.
+     * @return cache root.
+     */
+    public static File getCacheDir() {
         return Places.getCacheSubfile("java-server");   // NOI18N
     }
 

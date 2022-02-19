@@ -41,9 +41,9 @@ public class IndexedElement implements JsElement {
     private final boolean isAnonymous;
     private final boolean isPlatform;
     private final Collection<TypeUsage> assignments;
-    public final static char ANONYMOUS_POSFIX = 'A';
-    public final static char OBJECT_POSFIX = 'O';
-    public final static char PARAMETER_POSTFIX = 'P';
+    public static final char ANONYMOUS_POSFIX = 'A';
+    public static final char OBJECT_POSFIX = 'O';
+    public static final char PARAMETER_POSTFIX = 'P';
     private final FileObject fileObject;
     private final String name;
     private final boolean isDeclared;

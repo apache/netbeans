@@ -107,7 +107,7 @@ public class MenuView extends JPanel {
         };
 
     /** The explorerManager that manages this view */
-    transient private ExplorerManager explorerManager;
+    private transient ExplorerManager explorerManager;
 
     /** button to open root view */
     private JButton root;
@@ -116,7 +116,7 @@ public class MenuView extends JPanel {
     private JButton current;
 
     /** property change listener */
-    transient private Listener listener;
+    private transient Listener listener;
 
     /* This is the constructor implementation
     * recommended by ExplorerView class that only calls the inherited

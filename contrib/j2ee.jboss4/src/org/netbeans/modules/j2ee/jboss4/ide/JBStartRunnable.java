@@ -64,35 +64,35 @@ class JBStartRunnable implements Runnable {
     
     private static final int START_TIMEOUT = 300000;
     
-    private final static String CONF_FILE_NAME = 
+    private static final String CONF_FILE_NAME = 
             "run.conf.bat";                             // NOI18N
     
-    private final static String RUN_FILE_NAME = 
+    private static final String RUN_FILE_NAME = 
             "run.bat";                                  // NOI18N
     
-    private final static String JBOSS_HOME 
+    private static final String JBOSS_HOME 
             = "JBOSS_HOME";                             // NOI18N
 
-    private final static String STARTUP_SH = File.separator + 
+    private static final String STARTUP_SH = File.separator + 
             "bin" + File.separator + "run.sh";          // NOI18N
-    private final static String STANDALONE_SH = File.separator + 
+    private static final String STANDALONE_SH = File.separator + 
             "bin" + File.separator + "standalone.sh";          // NOI18N
-    private final static String STARTUP_BAT = File.separator + 
+    private static final String STARTUP_BAT = File.separator + 
             "bin" + File.separator + RUN_FILE_NAME;     // NOI18N
-    private final static String STANDALONE_BAT = File.separator + 
+    private static final String STANDALONE_BAT = File.separator + 
             "bin" + File.separator + "standalone.bat";     // NOI18N
                              
-    private final static String CONF_BAT = File.separator + 
+    private static final String CONF_BAT = File.separator + 
             "bin" + File.separator + CONF_FILE_NAME;    // NOI18N
     
-    private final static String JAVA_OPTS = "JAVA_OPTS";// NOI18N   
+    private static final String JAVA_OPTS = "JAVA_OPTS";// NOI18N   
     
-    private final static Pattern IF_JAVA_OPTS_PATTERN =
+    private static final Pattern IF_JAVA_OPTS_PATTERN =
         Pattern.compile(".*if(\\s+not)?\\s+(\"x%"+JAVA_OPTS+
                 "%\"\\s+==\\s+\"x\")\\s+.*",            // NOI18N 
                 Pattern.DOTALL);
     
-    private final static String NEW_IF_CONDITION_STRING = 
+    private static final String NEW_IF_CONDITION_STRING = 
                 "\"xx\" == \"x\"";                      // NOI18N 
     
     private static final SpecificationVersion 

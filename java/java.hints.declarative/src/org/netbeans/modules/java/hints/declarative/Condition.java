@@ -122,6 +122,7 @@ public abstract class Condition {
         public enum ParameterKind {
             VARIABLE,
             STRING_LITERAL,
+            INT_LITERAL,
             ENUM_CONSTANT;
         }
     }

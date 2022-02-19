@@ -77,7 +77,7 @@ public final class ActionToGoalUtils {
     }
 
 
-    public static abstract class ContextAccessor {
+    public abstract static class ContextAccessor {
 
         public abstract ExecutionContext createContext(InputOutput inputoutput, ProgressHandle handle);
     }

@@ -354,11 +354,25 @@ public class PayaraInstance implements ServerInstanceImplementation,
         }
     }
 
+    @Deprecated
+    public static PayaraInstance create(String displayName,
+            String installRoot, String payaraRoot, String domainsDir,
+            String domainName, int httpPort, int adminPort,
+            String userName, String password, String target, String url,
+            PayaraInstanceProvider pip) {
+        return create(displayName,
+                installRoot, payaraRoot, domainsDir,
+                domainName, httpPort, adminPort,
+                userName, password,
+                false, null, null,
+                target, url,
+                pip);
+    }
+     
     /** 
-     * Creates a PayaraInstance object for a server installation.  This
+     * Creates a PayaraInstance object for a server installation.This
      * instance should be added to the the provider registry if the caller wants
-     * it to be persisted for future sessions or searchable.
-     * <p/>
+     * it to be persisted for future sessions or searchable.<p/>
      * @param displayName Display name for this server instance.
      * @param installRoot Payara installation root directory.
      * @param payaraRoot Payara server home directory.
@@ -368,6 +382,9 @@ public class PayaraInstance implements ServerInstanceImplementation,
      * @param adminPort Payara server HTTP port for administration.
      * @param userName Payara server administrator's user name.
      * @param password Payara server administrator's password.
+     * @param docker info about Payara server instance is running in docker container
+     * @param hostPath The docker volume host path
+     * @param containerPath The docker container path
      * @param url Payara server URL (Java EE SPI unique identifier).
      * @param pip Payara instance provider.
      * @return PayaraInstance object for this server instance.
@@ -375,7 +392,9 @@ public class PayaraInstance implements ServerInstanceImplementation,
     public static PayaraInstance create(String displayName,
             String installRoot, String payaraRoot, String domainsDir,
             String domainName, int httpPort, int adminPort,
-            String userName, String password, String target, String url,
+            String userName, String password,
+            boolean docker, String hostPath, String containerPath,
+            String target, String url,
             PayaraInstanceProvider pip) {
         Map<String, String> ip = new HashMap<>();
         ip.put(PayaraModule.DISPLAY_NAME_ATTR, displayName);
@@ -391,6 +410,13 @@ public class PayaraInstance implements ServerInstanceImplementation,
                 ? userName : DEFAULT_ADMIN_NAME);
         if (password != null) {
             ip.put(PayaraModule.PASSWORD_ATTR, password);
+        }
+        ip.put(PayaraModule.DOCKER_ATTR, String.valueOf(docker));
+        if(hostPath != null) {
+            ip.put(PayaraModule.HOST_PATH_ATTR, hostPath);
+        }
+        if(containerPath != null) {
+            ip.put(PayaraModule.CONTAINER_PATH_ATTR, containerPath);
         }
         ip.put(PayaraModule.URL_ATTR, url);
         // extract the host from the URL
@@ -726,7 +752,7 @@ public class PayaraInstance implements ServerInstanceImplementation,
     private transient volatile Process process;
 
     /** Configuration changes listener watching <code>domain.xml</code> file. */
-    private transient final DomainXMLChangeListener domainXMLListener;
+    private final transient DomainXMLChangeListener domainXMLListener;
 
     private transient InstanceContent ic;
     private transient Lookup localLookup;
@@ -737,7 +763,7 @@ public class PayaraInstance implements ServerInstanceImplementation,
             currentFactories = Collections.emptyList();
     
     /** Payara server support API for this instance. */
-    private transient final CommonServerSupport commonSupport;
+    private final transient CommonServerSupport commonSupport;
     // API instance
     private ServerInstance commonInstance;
     private PayaraInstanceProvider instanceProvider;
@@ -996,6 +1022,55 @@ public class PayaraInstance implements ServerInstanceImplementation,
     @Override
     public String getAdminPassword() {
         return properties.get(PayaraModule.PASSWORD_ATTR);
+    }
+
+    /**
+     * Get information if this Payara server instance is running in docker container.
+     * <p/>
+     * @return Value of <code>true</code> when this Payara server instance
+     *         is docker instance or <code>false</code> otherwise.
+     */
+    @Override
+    public boolean isDocker() {
+        return Boolean.valueOf(properties.getOrDefault(PayaraModule.DOCKER_ATTR, "false"));
+    }
+
+    /**
+     * Get the docker volume host path.
+     * <p/>
+     * @return The host path.
+     */
+    @Override
+    public String getHostPath() {
+        return properties.get(PayaraModule.HOST_PATH_ATTR);
+    }
+
+    /**
+     * Set the docker volume host path from stored properties.
+     * <p/>
+     * @param hostPath the docker volume host path.
+     */
+    public void setHostPath(final String hostPath) {
+        properties.put(PayaraModule.HOST_PATH_ATTR, hostPath);
+    }
+
+    /**
+     * Get the docker volume container path.
+     * <p/>
+     * @return The container path.
+     */
+    @Override
+    public String getContainerPath() {
+        return properties.get(PayaraModule.CONTAINER_PATH_ATTR);
+    }
+
+    /**
+     * Set the docker volume container path from stored properties.
+     * <p/>
+     * @param containerPath the docker volume container path.
+     */
+    public void setContainerPath(final String containerPath) {
+        properties.put(PayaraModule.CONTAINER_PATH_ATTR, containerPath);
     }
 
     /**

@@ -393,7 +393,7 @@ private void jMenuItemScopeActionPerformed(java.awt.event.ActionEvent evt) {//GE
         return beanTreeView.requestFocusInWindow();
     }
     
-    final static class ResolvableHelper implements Serializable {
+    static final class ResolvableHelper implements Serializable {
 
         private static final long serialVersionUID = 1L;
 

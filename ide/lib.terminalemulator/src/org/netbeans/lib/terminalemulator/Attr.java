@@ -42,31 +42,31 @@ enum Attr {
     // we get complaints from the compiler.
     UNSET(30, 1);
 
-    public final static int ALT;
+    public static final int ALT;
 
     //
     // Bases of various color ranges.
     // These are indexes into Term.palette
     //
     // First 8 colors
-    public final static int PAL_ANSI = 0;
+    public static final int PAL_ANSI = 0;
 
     // Second "bright" 8 colors
-    public final static int PAL_BRIGHT = 8;
+    public static final int PAL_BRIGHT = 8;
 
     // 6x6x6 RGB cube (number = 16 + 36 * r + 6 * g + b)
     // where r, g and b are in the range 0-5
-    public final static int PAL_RGB = 16;
+    public static final int PAL_RGB = 16;
 
     // 24 shades of grey from dark to light
-    public final static int PAL_GREY = 232;
+    public static final int PAL_GREY = 232;
 
     // Default foreground color
-    public final static int PAL_FG = 256;
+    public static final int PAL_FG = 256;
     // Default background color
-    public final static int PAL_BG = 257;
+    public static final int PAL_BG = 257;
     // Default bold color
-    public final static int PAL_BOLD = 258;
+    public static final int PAL_BOLD = 258;
 
     public static final int PAL_SIZE = 259;
 

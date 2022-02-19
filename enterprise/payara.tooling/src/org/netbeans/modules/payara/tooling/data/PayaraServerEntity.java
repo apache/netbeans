@@ -59,6 +59,18 @@ public class PayaraServerEntity implements PayaraServer {
      *  (PayaraModule.PASSWORD_ATTR). */
     private String adminPassword;
 
+    /** Docker instance
+     *  (PayaraModule.DOCKER_ATTR). */
+    private boolean docker;
+
+    /** Docker instance
+     *  (PayaraModule.HOST_PATH_ATTR). */
+    private String hostPath;
+
+    /** Docker instance
+     *  (PayaraModule.CONTAINER_PATH_ATTR). */
+    private String containerPath;
+
     /** Payara server domains folder. (PayaraModule.DOMAINS_FOLDER_ATTR) */
     private String domainsFolder;
 
@@ -435,6 +447,33 @@ public class PayaraServerEntity implements PayaraServer {
     @Override
     public boolean isRemote() {
         return domainsFolder == null;
+    }
+
+    @Override
+    public boolean isDocker() {
+        return docker;
+    }
+
+    public void setDocker(boolean docker) {
+        this.docker = docker;
+    }
+
+    @Override
+    public String getHostPath() {
+        return hostPath;
+    }
+
+    public void setHostPath(String hostPath) {
+        this.hostPath = hostPath;
+    }
+
+    @Override
+    public String getContainerPath() {
+        return containerPath;
+    }
+
+    public void setContainerPath(String containerPath) {
+        this.containerPath = containerPath;
     }
 
 }

@@ -81,9 +81,9 @@ import org.openide.util.RequestProcessor;
 public class CommentsPanel extends JPanel {
     static final RequestProcessor RP = new RequestProcessor("Bugzilla Comments Panel", 5, false); // NOI18N
     private static final DateFormat dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm"); // NOI18N
-    private final static String REPLY_TO_PROPERTY = "replyTo"; // NOI18N
-    private final static String QUOTE_PREFIX = "> "; // NOI18N
-    private final static int MAX_COMMENT_HEIGHT = 10000;
+    private static final String REPLY_TO_PROPERTY = "replyTo"; // NOI18N
+    private static final String QUOTE_PREFIX = "> "; // NOI18N
+    private static final int MAX_COMMENT_HEIGHT = 10000;
     
     private static Color blueBackground = null;
     private static Color greyForeground = null;
@@ -524,8 +524,8 @@ public class CommentsPanel extends JPanel {
         }
     }    
     
-    private final static Icon ei;
-    private final static Icon ci;
+    private static final Icon ei;
+    private static final Icon ci;
     private static final int ICON_WIDTH;
     static {
         JTree tv = new JTree();

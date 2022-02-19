@@ -34,7 +34,6 @@ import java.util.Map.Entry;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.java.classpath.ClassPath;
-import org.netbeans.api.java.platform.JavaPlatform;
 import org.netbeans.modules.java.hints.declarative.Condition.MethodInvocation.ParameterKind;
 import org.netbeans.modules.java.hints.declarative.conditionapi.Context;
 import org.netbeans.modules.java.hints.declarative.conditionapi.DefaultRuleUtilities;
@@ -67,6 +66,9 @@ public class MethodInvocationContext {
                     break;
                 case STRING_LITERAL:
                     paramTypes.add(String.class);
+                    break;
+                case INT_LITERAL:
+                    paramTypes.add(int.class);
                     break;
                 case ENUM_CONSTANT:
                     Enum<?> constant = loadEnumConstant(e.getKey());
@@ -139,6 +141,9 @@ public class MethodInvocationContext {
                     break;
                 case STRING_LITERAL:
                     toAdd = e.getKey();
+                    break;
+                case INT_LITERAL:
+                    toAdd = Integer.valueOf(e.getKey());
                     break;
                 case ENUM_CONSTANT:
                     Enum<?> constant = loadEnumConstant(e.getKey());

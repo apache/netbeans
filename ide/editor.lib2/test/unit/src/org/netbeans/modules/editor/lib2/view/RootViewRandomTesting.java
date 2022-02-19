@@ -110,7 +110,7 @@ public class RootViewRandomTesting {
         }
     }
 
-    final static class PaneOp extends RandomTestContainer.Op {
+    static final class PaneOp extends RandomTestContainer.Op {
 
         public PaneOp(String name) {
             super(name);

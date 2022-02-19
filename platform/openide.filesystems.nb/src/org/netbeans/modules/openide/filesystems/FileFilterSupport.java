@@ -279,7 +279,7 @@ public final class FileFilterSupport {
     /**
      * Element of File Filter. One accepted extension or file name pattern.
      */
-    private static abstract class FilterElement {
+    private abstract static class FilterElement {
 
         public abstract String getName();
 

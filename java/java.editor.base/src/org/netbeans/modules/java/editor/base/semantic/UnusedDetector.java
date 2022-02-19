@@ -130,7 +130,7 @@ public class UnusedDetector {
     }
 
     /** Detects static final long SerialVersionUID
-     * @return true if element is final static long serialVersionUID
+     * @return true if element is static final long serialVersionUID
      */
     private static boolean isSerialSpecField(CompilationInfo info, Element el) {
         if (el.getModifiers().contains(Modifier.FINAL)

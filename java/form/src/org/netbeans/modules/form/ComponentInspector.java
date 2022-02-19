@@ -621,7 +621,7 @@ public class ComponentInspector extends JPanel
 //        }
 //    }
 
-    final public static class ResolvableHelper implements java.io.Serializable {
+    public static final class ResolvableHelper implements java.io.Serializable {
         static final long serialVersionUID = 7424646018839457544L;
         public Object readResolve() {
             return new TopComponent() {

@@ -531,7 +531,7 @@ public class BatchSearch {
         public IndexEnquirer findIndex(FileObject root, ProgressHandleWrapper progress, boolean recursive);
     }
 
-    public static abstract class IndexEnquirer {
+    public abstract static class IndexEnquirer {
         final FileObject src;
         public IndexEnquirer(FileObject src) {
             this.src = src;
@@ -541,7 +541,7 @@ public class BatchSearch {
 //        public int[] getEstimatedSpan(Resource r);
     }
 
-    public static abstract class LocalIndexEnquirer extends IndexEnquirer {
+    public abstract static class LocalIndexEnquirer extends IndexEnquirer {
         public LocalIndexEnquirer(FileObject src) {
             super(src);
         }

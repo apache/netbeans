@@ -46,6 +46,8 @@ import org.openide.filesystems.URLMapper;
  */
 public class JPDABreakpointsHandler extends DebuggerManagerAdapter implements PropertyChangeListener {
 
+    private static final String SOURCES_FOLDER = "sources"; // NOI18N
+
     private final File niFileSources;
     private final NIDebugger debugger;
     private final Set<JPDABreakpoint> attachedBreakpoints = new HashSet<>();
@@ -62,7 +64,7 @@ public class JPDABreakpointsHandler extends DebuggerManagerAdapter implements Pr
     }
 
     private static File getNativeSources(File niFile) {
-        File sources = new File(niFile.getParentFile(), "sources");
+        File sources = new File(niFile.getParentFile(), SOURCES_FOLDER);
         if (sources.isDirectory()) {
             return sources;
         } else {
@@ -124,16 +126,12 @@ public class JPDABreakpointsHandler extends DebuggerManagerAdapter implements Pr
                 return null;
             }
             String filePath = null;
-            if (niFileSources != null) {
-                FileObject fo;
-                fo = URLMapper.findFileObject(url);
-                for (FileObject root : GlobalPathRegistry.getDefault().getSourceRoots()) {
-                    if (FileUtil.isParentOf(root, fo)) {
-                        String path = FileUtil.getRelativePath(root, fo);
-                        File sourcesFile = new File(niFileSources, path);
-                        filePath = sourcesFile.getAbsolutePath();
-                        break;
-                    }
+            FileObject fo = URLMapper.findFileObject(url);
+            for (FileObject root : GlobalPathRegistry.getDefault().getSourceRoots()) {
+                if (FileUtil.isParentOf(root, fo)) {
+                    String path = FileUtil.getRelativePath(root, fo);
+                    filePath = SOURCES_FOLDER + File.separator + path;
+                    break;
                 }
             }
             if (filePath == null) {

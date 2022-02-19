@@ -178,14 +178,14 @@ public class CMPMappingModel {
             return false;
         }
         
-        Iterator keyIt = cmrFieldMapping.keySet().iterator();
+        Iterator<String> keyIt = cmrFieldMapping.keySet().iterator();
         while (keyIt.hasNext()) {
-            String key = (String) keyIt.next();
-            ColumnData[] value = (ColumnData[]) cmrFieldMapping.get(key);
+            String key = keyIt.next();
+            ColumnData[] value = cmrFieldMapping.get(key);
             List l = Arrays.asList(value);
             Object otherValue = other.cmrFieldMapping.get(key);
             if (otherValue == null || 
-                !l.equals(Arrays.asList((ColumnData[])other.cmrFieldMapping.get(key)))) {
+                !l.equals(Arrays.asList(other.cmrFieldMapping.get(key)))) {
                 return false;
             }
         }

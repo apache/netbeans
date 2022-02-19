@@ -52,10 +52,10 @@ public final class JDKVersion {
      */
     private final Optional<String> vm;
 
-    private final static int MAJOR_INDEX = 0;
-    private final static int MINOR_INDEX = 1;
-    private final static int SUBMINOR_INDEX = 2;
-    private final static int UPDATE_INDEX = 3;
+    private static final int MAJOR_INDEX = 0;
+    private static final int MINOR_INDEX = 1;
+    private static final int SUBMINOR_INDEX = 2;
+    private static final int UPDATE_INDEX = 3;
 
     private static JDKVersion IDE_JDK_VERSION;
 

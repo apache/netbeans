@@ -703,6 +703,10 @@ NOWDOC_CHARS=({NEWLINE}*(([^a-zA-Z_\x7f-\xff\n\r][^\n\r]*)|({LABEL}[^a-zA-Z0-9_\
     return createFullSymbol(ASTPHP5Symbols.T_PUBLIC);
 }
 
+<ST_IN_SCRIPTING>"readonly" {
+    return createFullSymbol(ASTPHP5Symbols.T_READONLY);
+}
+
 <ST_IN_SCRIPTING>"unset" {
     return createFullSymbol(ASTPHP5Symbols.T_UNSET);
 }
@@ -851,6 +855,11 @@ NOWDOC_CHARS=({NEWLINE}*(([^a-zA-Z_\x7f-\xff\n\r][^\n\r]*)|({LABEL}[^a-zA-Z0-9_\
     return createSymbol(ASTPHP5Symbols.T_COALESCE_EQUAL);
 }
 
+<ST_IN_SCRIPTING>"&"{TABS_AND_SPACES}("$"|"...") {
+    yypushback(yylength() - 1);
+    return createSymbol(ASTPHP5Symbols.T_REFERENCE);
+}
+
 // TOKENS
 <ST_IN_SCRIPTING> {
     ";"                     {return createSymbol(ASTPHP5Symbols.T_SEMICOLON);}
@@ -863,7 +872,7 @@ NOWDOC_CHARS=({NEWLINE}*(([^a-zA-Z_\x7f-\xff\n\r][^\n\r]*)|({LABEL}[^a-zA-Z0-9_\
     ")"                     {return createSymbol(ASTPHP5Symbols.T_CLOSE_PARENTHESE);}
     "|"                     {return createSymbol(ASTPHP5Symbols.T_OR);}
     "^"                     {return createSymbol(ASTPHP5Symbols.T_KOVA);}
-    "&"                     {return createSymbol(ASTPHP5Symbols.T_REFERENCE);}
+    "&"                     {return createSymbol(ASTPHP5Symbols.T_AMPERSAND_NOT_FOLLOWED_BY_VAR_OR_VARARG);}
     "+"                     {return createSymbol(ASTPHP5Symbols.T_PLUS);}
     "-"                     {return createSymbol(ASTPHP5Symbols.T_MINUS);}
     "/"                     {return createSymbol(ASTPHP5Symbols.T_DIV);}

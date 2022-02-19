@@ -38,7 +38,7 @@ import org.openide.filesystems.URLMapper;
  * @version 1.1
  */
 public class CommonTestUtil {
-    static private final String JAVA_SOURCES_SUFFIX = "java"; //NOI18N
+    private static final String JAVA_SOURCES_SUFFIX = "java"; //NOI18N
 
     /**
      */

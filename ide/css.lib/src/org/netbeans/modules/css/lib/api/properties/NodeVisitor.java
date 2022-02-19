@@ -29,7 +29,7 @@ public interface NodeVisitor {
     
     public void unvisit(Node node);
     
-    public static abstract class Adapter implements NodeVisitor {
+    public abstract static class Adapter implements NodeVisitor {
 
         @Override
         public boolean visit(Node node) {

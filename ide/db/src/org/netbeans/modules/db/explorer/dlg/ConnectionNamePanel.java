@@ -23,7 +23,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 public class ConnectionNamePanel extends javax.swing.JPanel {
-    public final static String PROP_CONNECTION_NAME = "ConnectionName";
+    public static final String PROP_CONNECTION_NAME = "ConnectionName";
 
     /**
      * Creates a new form SchemaPanel

@@ -33,30 +33,30 @@ import static org.netbeans.core.network.proxy.gnome.GnomeNetworkProxy.executeCom
  */
 public class GconfNetworkProxy {
     
-    private final static Logger LOGGER = Logger.getLogger(GconfNetworkProxy.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(GconfNetworkProxy.class.getName());
     
-    private final static String EQUALS = "="; //NOI18N
-    private final static String COLON = ","; //NOI18N
-    private final static String SQ_BRACKET_LEFT = "["; //NOI18N
-    private final static String SQ_BRACKET_RIGHT = "]"; //NOI18N
+    private static final String EQUALS = "="; //NOI18N
+    private static final String COLON = ","; //NOI18N
+    private static final String SQ_BRACKET_LEFT = "["; //NOI18N
+    private static final String SQ_BRACKET_RIGHT = "]"; //NOI18N
     
-    protected final static String GCONF_PATH = "/usr/bin/gconftool-2"; //NOI18N
-    private final static String GCONF_ARGUMENT_LIST_RECURSIVELY = " -R "; //NOI18N
-    private final static String GCONF_NODE_PROXY = "/system/proxy"; //NOI18N
-    private final static String GCONF_NODE_HTTP_PROXY = "/system/http_proxy"; //NOI18N
-    private final static String GCONF_KEY_MODE = "mode"; //NOI18N
-    private final static String GCONF_KEY_PAC_URL = "autoconfig_url"; //NOI18N
-    private final static String GCONF_KEY_HTTP_ALL = "use_http_proxy"; //NOI18N
-    private final static String GCONF_KEY_HTTP_HOST = "host"; //NOI18N
-    private final static String GCONF_KEY_HTTP_PORT = "port"; //NOI18N
-    private final static String GCONF_KEY_HTTPS_HOST = "secure_host"; //NOI18N
-    private final static String GCONF_KEY_HTTPS_PORT = "secure_port"; //NOI18N
-    private final static String GCONF_KEY_SOCKS_HOST = "socks_host"; //NOI18N
-    private final static String GCONF_KEY_SOCKS_PORT = "socks_port"; //NOI18N
-    private final static String GCONF_KEY_IGNORE_HOSTS = "ignore_hosts"; //NOI18N
-    private final static String GCONF_VALUE_NONE = "none"; //NOI18N
-    private final static String GCONF_VALUE_AUTO = "auto"; //NOI18N
-    private final static String GCONF_VALUE_MANUAL = "manual"; //NOI18N
+    protected static final String GCONF_PATH = "/usr/bin/gconftool-2"; //NOI18N
+    private static final String GCONF_ARGUMENT_LIST_RECURSIVELY = " -R "; //NOI18N
+    private static final String GCONF_NODE_PROXY = "/system/proxy"; //NOI18N
+    private static final String GCONF_NODE_HTTP_PROXY = "/system/http_proxy"; //NOI18N
+    private static final String GCONF_KEY_MODE = "mode"; //NOI18N
+    private static final String GCONF_KEY_PAC_URL = "autoconfig_url"; //NOI18N
+    private static final String GCONF_KEY_HTTP_ALL = "use_http_proxy"; //NOI18N
+    private static final String GCONF_KEY_HTTP_HOST = "host"; //NOI18N
+    private static final String GCONF_KEY_HTTP_PORT = "port"; //NOI18N
+    private static final String GCONF_KEY_HTTPS_HOST = "secure_host"; //NOI18N
+    private static final String GCONF_KEY_HTTPS_PORT = "secure_port"; //NOI18N
+    private static final String GCONF_KEY_SOCKS_HOST = "socks_host"; //NOI18N
+    private static final String GCONF_KEY_SOCKS_PORT = "socks_port"; //NOI18N
+    private static final String GCONF_KEY_IGNORE_HOSTS = "ignore_hosts"; //NOI18N
+    private static final String GCONF_VALUE_NONE = "none"; //NOI18N
+    private static final String GCONF_VALUE_AUTO = "auto"; //NOI18N
+    private static final String GCONF_VALUE_MANUAL = "manual"; //NOI18N
 
     /**
      * Returns network proxy settings - retrieved via gconftool.

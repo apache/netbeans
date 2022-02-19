@@ -27,7 +27,7 @@ import org.netbeans.modules.gsf.codecoverage.CoverageManagerImpl;
  * @author Tor Norbye
  */
 public interface CoverageManager {
-    public final static CoverageManager INSTANCE = new CoverageManagerImpl();
+    public static final CoverageManager INSTANCE = new CoverageManagerImpl();
 
     public boolean isEnabled(Project project);
     public boolean isAggregating(Project project);

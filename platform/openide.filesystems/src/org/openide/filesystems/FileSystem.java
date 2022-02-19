@@ -134,7 +134,7 @@ public abstract class FileSystem implements Serializable {
 
     /** Used for synchronization purpose*/
     private static final Object internLock = new Object();
-    private transient static ThreadLocal<EventControl> thrLocal = new ThreadLocal<EventControl>();
+    private static transient ThreadLocal<EventControl> thrLocal = new ThreadLocal<EventControl>();
 
     /** Empty status */
     private static final StatusDecorator STATUS_NONE = new StatusDecorator() {
@@ -152,7 +152,7 @@ public abstract class FileSystem implements Serializable {
     * It can be invalid if there is another filesystem with the
     * same name in the filesystem pool.
     */
-    transient private boolean valid = false;
+    private transient boolean valid = false;
 
     /** True if the filesystem is assigned to pool.
     * Is modified from Repository methods.
@@ -765,7 +765,7 @@ public abstract class FileSystem implements Serializable {
 
     /** Class used to notify events for the filesystem.
     */
-    static abstract class EventDispatcher extends Object implements Runnable {
+    abstract static class EventDispatcher extends Object implements Runnable {
         public final void run() {
             dispatch(false, null);
         }

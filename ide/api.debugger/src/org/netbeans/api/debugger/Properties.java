@@ -404,7 +404,7 @@ public abstract class Properties {
     }
 
 
-    private final static class PrimitiveRegister {
+    private static final class PrimitiveRegister {
 
         private HashMap properties = new HashMap ();
         private boolean isInitialized = false;
@@ -689,7 +689,7 @@ public abstract class Properties {
         ServicesHolder<Reader>      readers      = new ReaderHolder();
         ServicesHolder<Initializer> initializers = new InitializerHolder();
 
-        private static abstract class ServicesHolder<T> {
+        private abstract static class ServicesHolder<T> {
 
             private Class<T> clazz;
             // Holds the list to prevent from garbage-collect. Do not remove!

@@ -25,7 +25,7 @@ import org.netbeans.modules.j2ee.sun.ide.editors.BooleanEditor;
 
 public class PersistenceManagerBeanBeanInfo extends SimpleBeanInfo {
 
-    static private String getLabel(String key){
+    private static String getLabel(String key){
         return NbBundle.getMessage(PersistenceManagerBean.class,key);
     }
 

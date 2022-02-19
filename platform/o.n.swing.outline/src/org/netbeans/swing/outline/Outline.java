@@ -459,7 +459,7 @@ public class Outline extends ETable {
     }
     
     private transient Map<TreePath, RowMapping> tempSortMap = null;
-    private transient final Object tempSortMapLock = new Object();
+    private final transient Object tempSortMapLock = new Object();
 
     /**
      * Sorts the rows of the tree table.

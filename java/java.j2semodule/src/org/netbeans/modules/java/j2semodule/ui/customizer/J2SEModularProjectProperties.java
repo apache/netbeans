@@ -778,13 +778,13 @@ public class J2SEModularProjectProperties {
         final LinkedList<String> oldRootPathProps = new LinkedList<>(Arrays.asList (roots.getRootPathProperties()));
         boolean rootsAreSame = true;
         for (int i=0; i<data.size();i++) {
-            File f = (File) ((Vector)data.elementAt(i)).elementAt(0);
+            File f = (File)data.elementAt(i).elementAt(0);
             rootURLs[i] = Utilities.toURI(f).toURL();
             if (!rootURLs[i].toExternalForm().endsWith("/")) {  //NOI18N
                 rootURLs[i] = new URL(rootURLs[i]+"/");
             }
             validateURL(rootURLs[i],f);
-            rootPaths[i] = (String) ((Vector)data.elementAt(i)).elementAt(1);
+            rootPaths[i] = (String)data.elementAt(i).elementAt(1);
             rootsAreSame &= !oldRootURLs.isEmpty() &&
                             oldRootURLs.removeFirst().equals(rootURLs[i]) &&
                             roots.getRootPath(oldRootPathProps.removeFirst()).equals(rootPaths[i]);

@@ -225,7 +225,7 @@ public abstract class ChildFactory <T> {
      * @param <T> The key type for this child factory
      * @since org.openide.nodes 7.7
      */
-    public static abstract class Detachable<T> extends ChildFactory<T>{
+    public abstract static class Detachable<T> extends ChildFactory<T>{
         /**
          * Called immediately before the first call to createKeys().  Override
          * to set up listening for changes, allocating expensive-to-create

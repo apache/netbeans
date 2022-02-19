@@ -137,7 +137,7 @@ public class CatalogAction implements ActionListener {
         }
     }
     
-    static private Set<Node> getNodes2Open (Node [] nodes) {
+    private static Set<Node> getNodes2Open (Node [] nodes) {
         Set<Node> nodes2open = new HashSet<Node> (nodes.length);
         for (int i = 0; i < nodes.length; i++) {
             if (nodes [i].isLeaf ()) {

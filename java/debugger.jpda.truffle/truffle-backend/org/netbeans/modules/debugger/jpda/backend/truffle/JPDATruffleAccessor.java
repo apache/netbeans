@@ -501,6 +501,7 @@ public class JPDATruffleAccessor extends Object {
             bb.resolveListener(new Breakpoint.ResolveListener() {
                 @Override
                 public void breakpointResolved(Breakpoint breakpoint, SourceSection section) {
+                    trace("JPDATruffleAccessor breakpointResolved({0}, {1})", breakpoint, section);
                     // Notify breakpoint resolution after we actually install it.
                     // Resolution that is performed synchronously with the breakpoint installation
                     // would block doSetLineBreakpoint() method invocation on breakpointResolvedAccess breakpoint

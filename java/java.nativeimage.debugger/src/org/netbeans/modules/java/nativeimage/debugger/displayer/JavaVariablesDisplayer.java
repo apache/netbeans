@@ -49,6 +49,7 @@ public final class JavaVariablesDisplayer implements VariableDisplayer {
     private static final String STRING_VALUE = "value";
     private static final String STRING_CODER = "coder";
     private static final String HASH = "hash";
+    private static final String NAME = "name";
     private static final String UNSET = "<optimized out>";
 
     private static final String[] STRING_TYPES = new String[] { String.class.getName(), StringBuilder.class.getName(), StringBuffer.class.getName() };
@@ -271,6 +272,15 @@ public final class JavaVariablesDisplayer implements VariableDisplayer {
         return restrictChildren(children, from, to);
     }
 
+    private static NIVariable findChild(String name, NIVariable[] children) {
+        for (NIVariable var : children) {
+            if (name.equals(var.getName())) {
+                return var;
+            }
+        }
+        return null;
+    }
+
     private class StringVar implements NIVariable {
 
         private final NIVariable var;
@@ -306,7 +316,14 @@ public final class JavaVariablesDisplayer implements VariableDisplayer {
             arrayInfo = getVarsByName(arrayInfo.get(PUBLIC).getChildren());
             NIVariable arrayVariable = arrayInfo.get(ARRAY);
             NIVariable lengthVariable = arrayInfo.get(ARRAY_LENGTH);
-            int length = Integer.parseInt(lengthVariable.getValue());
+            String lengthStr = lengthVariable.getValue();
+            if (lengthStr.isEmpty()) {
+                return "";
+            }
+            int length = Integer.parseInt(lengthStr);
+            if (length <= 0) {
+                return "";
+            }
             NIVariable coderVar = varChildren.get(STRING_CODER);
             int coder = -1;
             if (coderVar != null) {
@@ -336,7 +353,8 @@ public final class JavaVariablesDisplayer implements VariableDisplayer {
                 try {
                     for (int i = 0; i < length; i++) {
                         NIVariable charVar = debugger.evaluate(arrayExpression + "[" + i + "]", null, var.getFrame());
-                        characters[i] = charVar.getValue().charAt(1);
+                        String charStr = charVar.getValue();
+                        characters[i] = charStr.charAt(charStr.length() > 1 ? 1 : 0);
                     }
                 } catch (EvaluateException ex) {
                     return ex.getLocalizedMessage();
@@ -555,7 +573,7 @@ public final class JavaVariablesDisplayer implements VariableDisplayer {
 
         @Override
         public String getType() {
-            return displayType(var.getType());
+            return displayType(findRuntimeType());
         }
 
         @Override
@@ -588,6 +606,21 @@ public final class JavaVariablesDisplayer implements VariableDisplayer {
         @Override
         public String getExpressionPath() {
             return var.getExpressionPath();
+        }
+
+        private String findRuntimeType() {
+            NIVariable hub = findChild(HUB, children);
+            if (hub != null) {
+                NIVariable pub = findChild(PUBLIC, hub.getChildren());
+                NIVariable nameVar = findChild(NAME, pub.getChildren());
+                if (nameVar != null) {
+                    String name = new StringVar(nameVar, null, null).getValue();
+                    if (!name.isEmpty()) {
+                        return name;
+                    }
+                }
+            }
+            return var.getType();
         }
     }
 

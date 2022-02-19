@@ -297,12 +297,12 @@ public class DebuggerAntLogger extends AntLogger {
     private void finishDebugging (
         AntDebugger debugger
     ) {
-        AntSession session = (AntSession) runningDebuggers2.remove (debugger);
+        AntSession session = runningDebuggers2.remove (debugger);
         runningDebuggers.remove (session);
     }
     
     private AntDebugger getDebugger (AntSession s, AntEvent antEvent) {
-        AntDebugger d = (AntDebugger) runningDebuggers.get (s);
+        AntDebugger d = runningDebuggers.get(s);
         if (d != null) return d;
         
         if (!filesToDebug.contains (s.getOriginatingScript ())) 

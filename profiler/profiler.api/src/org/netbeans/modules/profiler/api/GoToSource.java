@@ -34,7 +34,7 @@ import org.openide.util.RequestProcessor;
  * @author Jaroslav Bachorik
  * @author Tomas Hurka
  */
-final public class GoToSource {
+public final class GoToSource {
 
     private static final RequestProcessor srcOpenerRP = new RequestProcessor("Profiler Source Opener"); // NOI18N  
      

@@ -236,7 +236,7 @@ public class WsitWidget extends AbstractTitledWidget {
         }
     }
     
-    final static class WSConfigurationListener implements PropertyChangeListener {
+    static final class WSConfigurationListener implements PropertyChangeListener {
 
         private WsitWidget widget;
         private WSConfigurationListener(WsitWidget widget) {

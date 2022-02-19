@@ -32,7 +32,7 @@ import org.openide.util.NbPreferences;
  *
  * @author Jaroslav Bachorik <jaroslav.bachorik@oracle.com>
  */
-final public class Settings {
+public final class Settings {
     private static final String SAVE_BEFORE_LAUNCH = "saveBeforeLaunch";
     private static final String SELECTED_HOME = "selectedHome";
     private static final String USER_DEFINED_HOMES = "userDefinedHomes";
@@ -47,10 +47,10 @@ final public class Settings {
     }
 
     private static class Singleton {
-        final private static Settings INSTANCE = new Settings();
+        private static final Settings INSTANCE = new Settings();
     }
     
-    static public Settings getInstance() {
+    public static Settings getInstance() {
         return Singleton.INSTANCE;
     }
     

@@ -69,7 +69,7 @@ public class AbstractLookupArrayStorageTest extends AbstractLookupBaseHid {
         
     }
     
-    private static abstract class ArrayTestSuite extends NbTestSuite 
+    private abstract static class ArrayTestSuite extends NbTestSuite 
     implements AbstractLookupBaseHid.Impl {
         private int trash;
         

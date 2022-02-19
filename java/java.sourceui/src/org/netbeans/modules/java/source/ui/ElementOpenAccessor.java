@@ -32,11 +32,11 @@ public abstract class ElementOpenAccessor {
     
     private static ElementOpenAccessor instance;
 
-    public synchronized static ElementOpenAccessor getInstance() {
+    public static synchronized ElementOpenAccessor getInstance() {
         return instance;
     }
 
-    public synchronized static void setInstance(ElementOpenAccessor instance) {
+    public static synchronized void setInstance(ElementOpenAccessor instance) {
         ElementOpenAccessor.instance = instance;
     }
     

@@ -156,7 +156,7 @@ public final class ResultView extends TopComponent {
     }
 
     @Deprecated
-    final public static class ResolvableHelper implements java.io.Serializable {
+    public static final class ResolvableHelper implements java.io.Serializable {
         static final long serialVersionUID = 7398708142639457544L;
         public Object readResolve() {
             return null;

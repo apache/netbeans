@@ -70,8 +70,11 @@ class RunConfigurationProvider implements vscode.DebugConfigurationProvider {
 					config.env = {};
 				}
 				for (let val of envs) {
-					const vals = val.trim().split('=');
-					config.env[vals[0]] = vals[1];
+					val = val.trim();
+					const div = val.indexOf('=');
+					if (div > 0) { // div === 0 means bad format (no ENV name)
+						config.env[val.substring(0, div)] = val.substring(div + 1, val.length);
+					}
 				}
 			}
 

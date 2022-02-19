@@ -88,7 +88,7 @@ public class ClassIndexTest extends NbTestCase {
         suite.addTest(new ClassIndexTest("testholdsWriteLock"));    //NOI18N
         suite.addTest(new ClassIndexTest("testGetElementsScopes"));    //NOI18N
         suite.addTest(new ClassIndexTest("testGetDeclaredTypesScopes"));    //NOI18N
-        suite.addTest(new ClassIndexTest("testPackageUdages"));    //NOI18N
+        suite.addTest(new ClassIndexTest("testPackageUsages"));    //NOI18N
         suite.addTest(new ClassIndexTest("testNullRootPassedToClassIndexEvent"));    //NOI18N
         suite.addTest(new ClassIndexTest("testFindSymbols"));    //NOI18N
         return suite;
@@ -454,7 +454,8 @@ public class ClassIndexTest extends NbTestCase {
         assertElementHandles(new String[]{}, r);
     }
 
-    public void testPackageUdages() throws Exception {
+    @RandomlyFails
+    public void testPackageUsages() throws Exception {
         final FileObject wd = FileUtil.toFileObject(getWorkDir());
         final FileObject root = FileUtil.createFolder(wd,"src");    //NOI18N
         sourcePath = ClassPathSupport.createClassPath(root);

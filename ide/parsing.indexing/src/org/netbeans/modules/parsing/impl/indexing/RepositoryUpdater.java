@@ -70,6 +70,7 @@ import org.netbeans.lib.editor.util.swing.DocumentUtilities;
 import org.netbeans.modules.parsing.api.Embedding;
 import org.netbeans.modules.parsing.api.ParserManager;
 import org.netbeans.modules.parsing.api.ResultIterator;
+import org.netbeans.modules.parsing.api.Snapshot;
 import org.netbeans.modules.parsing.api.Source;
 import org.netbeans.modules.parsing.api.UserTask;
 import org.netbeans.modules.parsing.impl.*;
@@ -1265,7 +1266,7 @@ public final class RepositoryUpdater implements PathRegistryListener, PropertyCh
     /* test */ static final List<URL> UNKNOWN_ROOT = Collections.unmodifiableList(new LinkedList<>());
     /* test */ static final List<URL> NONEXISTENT_ROOT = Collections.unmodifiableList(new LinkedList<>());
     /* test */@SuppressWarnings("PackageVisibleField")
-    volatile static Source unitTestActiveSource;
+    static volatile Source unitTestActiveSource;
 
     @org.netbeans.api.annotations.common.SuppressWarnings(
         value="DMI_COLLECTION_OF_URLS",
@@ -2141,7 +2142,7 @@ public final class RepositoryUpdater implements PathRegistryListener, PropertyCh
 
 
     /* test */
-    static abstract class Work {
+    abstract static class Work {
 
         //@GuardedBy("org.netbeans.modules.parsing.impl.Taskprocessor.parserLock")
         private static long lastScanEnded = -1L;
@@ -2648,8 +2649,8 @@ public final class RepositoryUpdater implements PathRegistryListener, PropertyCh
                     ClusteredIndexables allCi = null;
                     boolean ae = false;
                     assert ae = true;
+                    Set<String> rootMimeTypes = PathRegistry.getDefault().getMimeTypesFor(root);
                     for(IndexerCache.IndexerInfo<CustomIndexerFactory> cifInfo : indexers.cifInfos) {
-                        Set<String> rootMimeTypes = PathRegistry.getDefault().getMimeTypesFor(root);
                         if (rootMimeTypes != null && !cifInfo.isAllMimeTypesIndexer() && !Util.containsAny(rootMimeTypes, cifInfo.getMimeTypes())) {
                             // ignore roots that are not marked to be scanned by the cifInfo indexer
                             if (LOGGER.isLoggable(Level.FINE)) {
@@ -2857,7 +2858,7 @@ public final class RepositoryUpdater implements PathRegistryListener, PropertyCh
                         allIndexblesSentToIndexers.add(indexables);
 
                         long tm1 = System.currentTimeMillis();
-                        boolean f = indexEmbedding(indexers.eifInfosMap, cacheRoot, root, indexables, usedCi, contexts, sourceForBinaryRoot);
+                        boolean f = indexEmbedding(indexers.eifInfosMap, cacheRoot, root, mimeType, indexables, usedCi, contexts, sourceForBinaryRoot);
                         long tm2 = System.currentTimeMillis();
 
                         if (!f) {
@@ -3117,175 +3118,146 @@ public final class RepositoryUpdater implements PathRegistryListener, PropertyCh
                 final Map<String, Collection<IndexerCache.IndexerInfo<EmbeddingIndexerFactory>>> eifInfosMap,
                 final FileObject cache,
                 final URL rootURL,
+                final String mimeType,
                 Iterable<? extends Indexable> files,
                 final ClusteredIndexables usedCi,
                 final Map<Pair<String,Integer>,Pair<SourceIndexerFactory,Context>> transactionContexts,
                 final boolean sourceForBinaryRoot
         ) throws IOException {
-            IndexabilityQuery iq = IndexabilityQuery.getInstance();
+            final IndexabilityQuery iq = IndexabilityQuery.getInstance();
+            final Map<Source, Indexable> sources = new LinkedHashMap<>();
             for (final Indexable dirty : files) {
-                parkWhileSuspended();
-                if (getCancelRequest().isRaised()) {
-                    return false;
-                }
-
-                Collection<? extends IndexerCache.IndexerInfo<EmbeddingIndexerFactory>> allIndexers =
-                        getIndexerInfos(eifInfosMap, dirty.getMimeType());
-                Collection<? extends IndexerCache.IndexerInfo<EmbeddingIndexerFactory>> infos =
-                        allIndexers
-                            .stream()
-                            .filter(i -> ! iq.preventIndexing(
-                                    i.getIndexerName(),
-                                    dirty.getURL(),
-                                    rootURL
-                                )
-                            )
-                            .collect(Collectors.toList());
-
-                allIndexers
-                        .stream()
-                        .filter(i -> iq.preventIndexing(
-                                i.getIndexerName(),
-                                dirty.getURL(),
-                                rootURL
-                            )
-                        )
-                        .forEach(i -> {
-                            try {
-                                final Context context = SPIAccessor.getInstance().createContext(
-                                        cache,
-                                        rootURL,
-                                        i.getIndexerName(),
-                                        i.getIndexerVersion(),
-                                        null,
-                                        followUpJob,
-                                        checkEditor,
-                                        sourceForBinaryRoot,
-                                        getSuspendStatus(),
-                                        getCancelRequest(),
-                                        logCtx);
-                                i.getIndexerFactory().filesDeleted(Collections.singleton(dirty), context);
-                            } catch (IOException ex) {
-                                LOGGER.log(Level.WARNING, null, ex);
-                            }
-                        });
-
-                if (infos != null && !infos.isEmpty()) {
-                    final URL url = dirty.getURL();
-                    if (url == null) {
-                        continue;
-                    }
-
+                final URL url = dirty.getURL();
+                if (url != null) {
                     final FileObject fileObject = URLMapper.findFileObject(url);
-                    if (fileObject == null) {
-                        continue;
+                    if (fileObject != null) {
+                        Source src = Source.create(fileObject);
+                        if (src != null) {
+                            sources.put(src, dirty);
+                        }
                     }
+                }
+            }
+            parkWhileSuspended();
+            if (getCancelRequest().isRaised()) {
+                return false;
+            }
 
-                    Source src = Source.create(fileObject);
-                    try {
-                        // log parsing for the mimetype:
-                        logStartIndexer(src.getMimeType());
+            if (!sources.isEmpty()) {
+                // log parsing for the mimetype:
+                logStartIndexer(mimeType);
+                try {
+                    class T extends UserTask implements IndexingTask {
+                        @Override
+                        public void run(ResultIterator resultIterator) throws Exception {
+                            final Snapshot snapshot = resultIterator.getSnapshot();
+                            final Indexable dirty = sources.get(snapshot.getSource());
+                            final String mimeType = snapshot.getMimeType();
+                            final Collection<? extends IndexerCache.IndexerInfo<EmbeddingIndexerFactory>> infos = getIndexerInfos(eifInfosMap, mimeType);
 
-                        class T extends UserTask implements IndexingTask {
-                            @Override
-                            public void run(ResultIterator resultIterator) throws Exception {
-                                final String mimeType = resultIterator.getSnapshot().getMimeType();
-                                final Collection<? extends IndexerCache.IndexerInfo<EmbeddingIndexerFactory>> infos = getIndexerInfos(eifInfosMap, mimeType);
-
-                                if (infos != null && !infos.isEmpty()) {
-                                    boolean finished = false;
-                                    for (IndexerCache.IndexerInfo<EmbeddingIndexerFactory> info : infos) {
-                                        if (getCancelRequest().isRaised()) {
-                                            logFinishIndexer(mimeType);
-                                            return;
-                                        }
-
-                                        EmbeddingIndexerFactory indexerFactory = info.getIndexerFactory();
-                                        if (LOGGER.isLoggable(Level.FINE)) {
-                                            LOGGER.log(
-                                                Level.FINE,
-                                                "Indexing file {0} using {1}; mimeType=''{2}''",    //NOI18N
-                                                new Object[]{
-                                                    fileObject.getPath(),
-                                                    indexerFactory,
-                                                    mimeType
-                                                });
-                                        }
-
-                                        final Parser.Result pr;
-                                        try {
-                                             pr = resultIterator.getParserResult();
-                                            // must follow getParserResult(), as resultIterators are lazy
-                                        } finally {
-                                            if (!finished) {
-                                                logFinishIndexer(mimeType);
-                                                finished = true;
-                                            }
-                                        }
-                                        if (pr != null) {
-                                            final String indexerName = indexerFactory.getIndexerName();
-                                            final int indexerVersion = indexerFactory.getIndexVersion();
-                                            final Pair<String,Integer> key = Pair.of(indexerName,indexerVersion);
-                                            Pair<SourceIndexerFactory,Context> value = transactionContexts.get(key);
-                                            if (value == null) {
-                                                final Context context = SPIAccessor.getInstance().createContext(
-                                                        cache,
-                                                        rootURL,
-                                                        indexerName,
-                                                        indexerVersion,
-                                                        null,
-                                                        followUpJob,
-                                                        checkEditor,
-                                                        sourceForBinaryRoot,
-                                                        getSuspendStatus(),
-                                                        getCancelRequest(),
-                                                        logCtx);
-                                                value = Pair.<SourceIndexerFactory,Context>of(indexerFactory,context);
-                                                transactionContexts.put(key,value);
-                                            }
-
-                                            final EmbeddingIndexer indexer = indexerFactory.createIndexer(dirty, pr.getSnapshot());
-                                            if (indexer != null) {
-                                                SPIAccessor.getInstance().putProperty(value.second(), ClusteredIndexables.INDEX, usedCi);
-                                                long st = System.currentTimeMillis();
-                                                logStartIndexer(indexerName);
-                                                int estimate = estimateEmbeddingIndexer(indexerFactory);
-                                                SamplerInvoker.start(getLogContext(), indexerFactory.getIndexerName(), estimate, url);
-                                                try {
-                                                    SPIAccessor.getInstance().index(indexer, dirty, pr, value.second());
-                                                } catch (ThreadDeath td) {
-                                                    throw td;
-                                                } catch (Throwable t) {
-                                                    LOGGER.log(Level.WARNING, null, t);
-                                                } finally {
-                                                    SamplerInvoker.stop();
-                                                }
-                                                long et = System.currentTimeMillis();
-                                                logIndexerTime(indexerName, (int)(et-st));
-                                            }
-                                        }
-                                    }
-                                } else {
-                                    logFinishIndexer(mimeType);
-                                }
-
-                                for (Embedding embedding : resultIterator.getEmbeddings()) {
+                            if (infos != null && !infos.isEmpty()) {
+                                for (IndexerCache.IndexerInfo<EmbeddingIndexerFactory> info : infos) {
                                     if (getCancelRequest().isRaised()) {
                                         return;
                                     }
-                                    logStartIndexer(embedding.getMimeType());
-                                    run(resultIterator.getResultIterator(embedding));
+
+                                    if (iq.preventIndexing(info.getIndexerName(), dirty.getURL(), rootURL)) {
+                                        try {
+                                            final Context context = SPIAccessor.getInstance().createContext(
+                                                    cache,
+                                                    rootURL,
+                                                    info.getIndexerName(),
+                                                    info.getIndexerVersion(),
+                                                    null,
+                                                    followUpJob,
+                                                    checkEditor,
+                                                    sourceForBinaryRoot,
+                                                    getSuspendStatus(),
+                                                    getCancelRequest(),
+                                                    logCtx);
+                                            info.getIndexerFactory().filesDeleted(Collections.singleton(dirty), context);
+                                        } catch (IOException ex) {
+                                            LOGGER.log(Level.WARNING, null, ex);
+                                        }
+                                        return;
+                                    }
+
+                                    EmbeddingIndexerFactory indexerFactory = info.getIndexerFactory();
+                                    if (LOGGER.isLoggable(Level.FINE)) {
+                                        LOGGER.log(
+                                            Level.FINE,
+                                            "Indexing file {0} using {1}; mimeType=''{2}''",    //NOI18N
+                                            new Object[]{
+                                                snapshot.getSource().getFileObject().getPath(),
+                                                indexerFactory,
+                                                mimeType
+                                            });
+                                    }
+
+                                    final Parser.Result pr;
+                                    pr = resultIterator.getParserResult();
+                                    if (pr != null) {
+                                        final String indexerName = indexerFactory.getIndexerName();
+                                        final int indexerVersion = indexerFactory.getIndexVersion();
+                                        final Pair<String,Integer> key = Pair.of(indexerName,indexerVersion);
+                                        Pair<SourceIndexerFactory,Context> value = transactionContexts.get(key);
+                                        if (value == null) {
+                                            final Context context = SPIAccessor.getInstance().createContext(
+                                                    cache,
+                                                    rootURL,
+                                                    indexerName,
+                                                    indexerVersion,
+                                                    null,
+                                                    followUpJob,
+                                                    checkEditor,
+                                                    sourceForBinaryRoot,
+                                                    getSuspendStatus(),
+                                                    getCancelRequest(),
+                                                    logCtx);
+                                            value = Pair.<SourceIndexerFactory,Context>of(indexerFactory,context);
+                                            transactionContexts.put(key,value);
+                                        }
+
+                                        final EmbeddingIndexer indexer = indexerFactory.createIndexer(dirty, pr.getSnapshot());
+                                        if (indexer != null) {
+                                            SPIAccessor.getInstance().putProperty(value.second(), ClusteredIndexables.INDEX, usedCi);
+                                            long st = System.currentTimeMillis();
+                                            logStartIndexer(indexerName);
+                                            int estimate = estimateEmbeddingIndexer(indexerFactory);
+                                            SamplerInvoker.start(getLogContext(), indexerFactory.getIndexerName(), estimate, dirty.getURL());
+                                            try {
+                                                SPIAccessor.getInstance().index(indexer, dirty, pr, value.second());
+                                            } catch (ThreadDeath td) {
+                                                throw td;
+                                            } catch (Throwable t) {
+                                                LOGGER.log(Level.WARNING, null, t);
+                                            } finally {
+                                                SamplerInvoker.stop();
+                                            }
+                                            long et = System.currentTimeMillis();
+                                            logIndexerTime(indexerName, (int)(et-st));
+                                        }
+                                    }
                                 }
                             }
+
+                            for (Embedding embedding : resultIterator.getEmbeddings()) {
+                                if (getCancelRequest().isRaised()) {
+                                    return;
+                                }
+                                logStartIndexer(embedding.getMimeType());
+                                run(resultIterator.getResultIterator(embedding));
+                            }
                         }
-                        ParserManager.parse(Collections.singleton(src), new T());
-                    } catch (final ParseException e) {
-                        logFinishIndexer(src.getMimeType());
-                        LOGGER.log(Level.WARNING, null, e);
                     }
+                    ParserManager.parse(sources.keySet(), new T());
+                } catch (final ParseException e) {
+                    LOGGER.log(Level.WARNING, null, e);
+                } finally {
+                    logFinishIndexer(mimeType);
                 }
-                InjectedTasksSupport.execute();
             }
+            InjectedTasksSupport.execute();
 
             return !getCancelRequest().isRaised();
         }
@@ -4401,7 +4373,7 @@ public final class RepositoryUpdater implements PathRegistryListener, PropertyCh
                                                 allIndexblesSentToIndexers.add(indexables);
 
                                                 long tm1 = System.currentTimeMillis();
-                                                boolean f = indexEmbedding(eifInfosMap, cacheRoot, root, indexables, ci, transactionContexts, sourceForBinaryRoot);
+                                                boolean f = indexEmbedding(eifInfosMap, cacheRoot, root, mimeType, indexables, ci, transactionContexts, sourceForBinaryRoot);
                                                 long tm2 = System.currentTimeMillis();
                                                 if (!f) {
                                                     return false;
@@ -5298,7 +5270,7 @@ public final class RepositoryUpdater implements PathRegistryListener, PropertyCh
 
     } // End of RootsScanningWork class
 
-    private static abstract class AbstractRootsWork extends Work {
+    private abstract static class AbstractRootsWork extends Work {
 
         private boolean logStatistics;
 

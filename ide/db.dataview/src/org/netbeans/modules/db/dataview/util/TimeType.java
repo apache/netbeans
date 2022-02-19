@@ -84,7 +84,7 @@ public class TimeType {
         }
     }
 
-    private synchronized static Date doParse (String sVal) {
+    private static synchronized Date doParse (String sVal) {
         Date dVal = null;
         for (DateFormat format : TIME_PARSING_FORMATS) {
             try {

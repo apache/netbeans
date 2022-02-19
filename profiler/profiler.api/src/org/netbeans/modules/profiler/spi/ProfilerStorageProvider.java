@@ -103,7 +103,7 @@ public abstract class ProfilerStorageProvider {
     
     // --- Base implementation -------------------------------------------------
     
-    public static abstract class Abstract extends ProfilerStorageProvider {
+    public abstract static class Abstract extends ProfilerStorageProvider {
         
         protected String EXT = "xml"; // NOI18N
         

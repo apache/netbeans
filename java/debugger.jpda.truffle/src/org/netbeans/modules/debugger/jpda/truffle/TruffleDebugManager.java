@@ -146,7 +146,9 @@ public class TruffleDebugManager extends DebuggerManagerAdapter {
             @Override
             public void breakpointReached(JPDABreakpointEvent event) {
                 try {
-                    handleEngineBuilder(debugger, event);
+                    if (event.getDebugger() == debugger) {
+                        handleEngineBuilder(debugger, event);
+                    }
                 } finally {
                     event.resume();
                 }
@@ -193,6 +195,7 @@ public class TruffleDebugManager extends DebuggerManagerAdapter {
         builderExitBreakpoint.setBreakpointType(MethodBreakpoint.TYPE_METHOD_EXIT);
         builderExitBreakpoint.setThreadFilters(debugger, new JPDAThread[]{entryEvent.getThread()});
         builderExitBreakpoint.setSuspend(JPDABreakpoint.SUSPEND_EVENT_THREAD);
+        builderExitBreakpoint.setSession(debugger);
         builderExitBreakpoint.setHidden(true);
         builderExitBreakpoint.addJPDABreakpointListener(exitEvent -> {
             try {

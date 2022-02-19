@@ -62,7 +62,7 @@ public class ProfilerRuntime implements CommonConstants {
     protected static int globalEvBufPosThreshold;
     protected static volatile boolean sendingBuffer;
     private static boolean printEvents; // For debugging
-    private volatile static Set knownMonitors;
+    private static volatile Set knownMonitors;
 
     //~ Methods ------------------------------------------------------------------------------------------------------------------
 

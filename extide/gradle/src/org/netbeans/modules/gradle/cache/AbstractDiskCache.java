@@ -49,7 +49,7 @@ public abstract class AbstractDiskCache<K, T extends Serializable> {
         this.key = key;
     }
 
-    public synchronized final T loadData() {
+    public final synchronized T loadData() {
         CacheEntry<T> e = loadEntry();
         return e != null ? e.getData() : null;
     }
@@ -64,14 +64,14 @@ public abstract class AbstractDiskCache<K, T extends Serializable> {
         return e != null && e.isValid(this);        
     }
     
-    public synchronized final void storeData(T data) {
+    public final synchronized void storeData(T data) {
         CacheEntry<T> entry = new CacheEntry<>(this, data);
         if (doStoreEntry(entry)) {
             entryRef = new WeakReference(entry);        
         }
     }
 
-    public synchronized final void invalidate() {
+    public final synchronized void invalidate() {
         entryRef = null;
         File cacheFile = cacheFile();
         if (cacheFile.canRead()) {
@@ -79,7 +79,7 @@ public abstract class AbstractDiskCache<K, T extends Serializable> {
         }
     }
 
-    protected synchronized final CacheEntry<T> loadEntry() {
+    protected final synchronized CacheEntry<T> loadEntry() {
         CacheEntry<T> ret = entryRef != null ? entryRef.get() : null;
         if (ret == null && !GradleExperimentalSettings.getDefault().isCacheDisabled()) {
             ret = doLoadEntry();
@@ -123,7 +123,7 @@ public abstract class AbstractDiskCache<K, T extends Serializable> {
     protected abstract File cacheFile();
     protected abstract Set<File> cacheInvalidators();
 
-    public final static class CacheEntry <T extends Serializable> implements Serializable  {
+    public static final class CacheEntry <T extends Serializable> implements Serializable  {
         static final long serialVersionUID = 1L;
         
         int version;

@@ -140,13 +140,13 @@ public class VCSHyperlinkSupport {
         }
     }
 
-    public static abstract class Hyperlink {
+    public abstract static class Hyperlink {
         public abstract boolean mouseMoved(Point p, JComponent component);
         public abstract boolean mouseClicked(Point p);
         public abstract void computeBounds(JTextPane textPane);
     }
 
-    public static abstract class StyledDocumentHyperlink extends Hyperlink {
+    public abstract static class StyledDocumentHyperlink extends Hyperlink {
         public abstract void insertString(StyledDocument sd, Style style) throws BadLocationException;
     }
 

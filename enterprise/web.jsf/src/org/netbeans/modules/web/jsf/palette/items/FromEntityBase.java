@@ -495,7 +495,7 @@ public abstract class FromEntityBase {
 //        }
 //    }
 
-    public final static class FieldDesc {
+    public static final class FieldDesc {
 
         private ExecutableElement method;
         private String methodName;

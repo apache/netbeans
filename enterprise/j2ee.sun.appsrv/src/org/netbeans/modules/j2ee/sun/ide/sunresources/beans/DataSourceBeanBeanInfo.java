@@ -25,7 +25,7 @@ import org.openide.util.Exceptions;
 
 public class DataSourceBeanBeanInfo extends SimpleBeanInfo {
 
-    static private String getLabel(String key){
+    private static String getLabel(String key){
         return NbBundle.getMessage(DataSourceBean.class,key);
     }
 

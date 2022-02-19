@@ -465,7 +465,7 @@ public class XMLUtil {
     }
 
     // Given @param doc what should it's DOCTYPE name be.
-    static protected String getDocTypeName(Document doc) {
+    protected static String getDocTypeName(Document doc) {
         // First look for a DOCTYPE
         NodeList children = doc.getChildNodes();
         int length = children.getLength();

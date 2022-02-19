@@ -31,18 +31,18 @@ import org.netbeans.modules.schema2beans.Version;
 
 public class DispatchData extends BaseBean implements DataRecord {
 
-    private final static boolean debug = false;
+    private static final boolean debug = false;
 
     static Vector<BeanComparator> comparators = new Vector<>();
 
-    static public final String CLIENTDATA = "ClientData";   // NOI18N
-    static public final String SESSIONDATA = "SessionData"; // NOI18N
-    static public final String COOKIESDATA = "CookiesData"; // NOI18N
-    static public final String REQUESTDATA = "RequestData"; // NOI18N
-    static public final String SERVLETDATA = "ServletData"; // NOI18N
-    static public final String CONTEXTDATA = "ContextData"; // NOI18N
-    static public final String ENGINEDATA = "EngineData"; // NOI18N
-    static public final String DISPATCHES = "Dispatches"; // NOI18N
+    public static final String CLIENTDATA = "ClientData";   // NOI18N
+    public static final String SESSIONDATA = "SessionData"; // NOI18N
+    public static final String COOKIESDATA = "CookiesData"; // NOI18N
+    public static final String REQUESTDATA = "RequestData"; // NOI18N
+    public static final String SERVLETDATA = "ServletData"; // NOI18N
+    public static final String CONTEXTDATA = "ContextData"; // NOI18N
+    public static final String ENGINEDATA = "EngineData"; // NOI18N
+    public static final String DISPATCHES = "Dispatches"; // NOI18N
 
     public DispatchData() {
 	this(Common.USE_DEFAULT_VALUES);
@@ -422,12 +422,12 @@ public class DispatchData extends BaseBean implements DataRecord {
     
 
     //
-    static public void addComparator(BeanComparator c) {
+    public static void addComparator(BeanComparator c) {
 	MonitorData.comparators.add(c);
     }
 
     //
-    static public void removeComparator(BeanComparator c) {
+    public static void removeComparator(BeanComparator c) {
 	MonitorData.comparators.remove(c);
     }
     //

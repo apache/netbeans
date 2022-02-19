@@ -72,7 +72,7 @@ public final class VCSContext {
      * @param nodes array of Nodes
      * @return VCSContext containing nodes and corresponding files they represent
      */
-    public synchronized static VCSContext forNodes(Node[] nodes) {
+    public static synchronized VCSContext forNodes(Node[] nodes) {
         final org.netbeans.modules.versioning.core.spi.VCSContext delegate = org.netbeans.modules.versioning.core.spi.VCSContext.forNodes(nodes);
         return accept(delegate) ? new VCSContext(delegate) : EMPTY;
     }

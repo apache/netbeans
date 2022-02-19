@@ -68,7 +68,7 @@ public abstract class RefactoringTestCase extends JellyTestCase {
      * root then this values will be sorted before dumping to ref file
      */
     public static int sortLevel = 2;
-    protected final static String REFACTORING_TEST = "RefactoringTest";
+    protected static final String REFACTORING_TEST = "RefactoringTest";
 
     public RefactoringTestCase(String name) {
         super(name);

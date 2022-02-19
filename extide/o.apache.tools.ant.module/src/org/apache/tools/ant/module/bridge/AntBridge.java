@@ -251,7 +251,7 @@ public final class AntBridge {
         return getAntInstance().bridge;
     }
     
-    private synchronized static AntInstance getAntInstance() {
+    private static synchronized AntInstance getAntInstance() {
         AntInstance ai;
         if (antInstance != null) {
             ai = antInstance.get();

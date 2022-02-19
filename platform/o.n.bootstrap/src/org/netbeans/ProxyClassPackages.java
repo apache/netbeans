@@ -39,7 +39,7 @@ final class ProxyClassPackages {
      */
     private static final Map<String, Set<ProxyClassLoader>> packageCoverage = new HashMap<String, Set<ProxyClassLoader>>();
 
-    synchronized static void addCoveredPackages(
+    static synchronized void addCoveredPackages(
         ProxyClassLoader loader, Iterable<String> coveredPackages
     ) {
         for (String pkg : coveredPackages) {
@@ -57,7 +57,7 @@ final class ProxyClassPackages {
         }
     }
     
-    synchronized static void removeCoveredPakcages(
+    static synchronized void removeCoveredPakcages(
         ProxyClassLoader loader
     ) {
         for (Iterator<String> it = ProxyClassPackages.packageCoverage.keySet().iterator(); it.hasNext();) {
@@ -71,7 +71,7 @@ final class ProxyClassPackages {
         }
     }
 
-    synchronized static Set<ProxyClassLoader> findCoveredPkg(String pkg) {
+    static synchronized Set<ProxyClassLoader> findCoveredPkg(String pkg) {
         return packageCoverage.get(pkg);
     }
     

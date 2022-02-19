@@ -91,7 +91,7 @@ public abstract class CommonServersBase extends NbTestCase {
         }
     }
     
-    private final static Comparator<ServerWizardProvider> comparator = new Comparator<ServerWizardProvider>() {
+    private static final Comparator<ServerWizardProvider> comparator = new Comparator<ServerWizardProvider>() {
         @Override
         public int compare(ServerWizardProvider arg0, ServerWizardProvider arg1) {
             return arg0.getDisplayName().compareTo(arg1.getDisplayName());

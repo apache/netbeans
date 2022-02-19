@@ -93,6 +93,6 @@ public final class GradleTestMethodNode extends JUnitTestMethodNode implements L
     }
 
     Location getTestLocation() {
-        return new Location(getTestcase().getLocation());
+        return Location.parseLocation(getTestcase().getLocation());
     }
 }

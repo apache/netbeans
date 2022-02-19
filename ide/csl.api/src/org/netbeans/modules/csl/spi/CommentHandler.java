@@ -69,7 +69,7 @@ public interface CommentHandler {
      * Default implementation using simple document text search.
      * 
      */
-    public static abstract class DefaultCommentHandler implements CommentHandler {
+    public abstract static class DefaultCommentHandler implements CommentHandler {
 
         public int[] getAdjustedBlocks(@NonNull Document doc, int from, int to) {
             return new int[]{from,to};

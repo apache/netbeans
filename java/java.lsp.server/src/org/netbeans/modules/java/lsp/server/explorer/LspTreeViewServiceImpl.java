@@ -18,18 +18,29 @@
  */
 package org.netbeans.modules.java.lsp.server.explorer;
 
+import java.io.File;
 import org.netbeans.modules.java.lsp.server.explorer.api.TreeViewService;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.Arrays;
+import java.util.Base64;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
 import org.eclipse.lsp4j.jsonrpc.services.JsonSegment;
 import org.eclipse.lsp4j.services.LanguageClient;
 import org.eclipse.lsp4j.services.LanguageClientAware;
+import org.netbeans.modules.java.lsp.server.URITranslator;
 import org.netbeans.modules.java.lsp.server.explorer.api.ConfigureExplorerParams;
 import org.netbeans.modules.java.lsp.server.explorer.api.CreateExplorerParams;
+import org.netbeans.modules.java.lsp.server.explorer.api.GetResourceParams;
 import org.netbeans.modules.java.lsp.server.protocol.NbCodeLanguageClient;
 import org.netbeans.modules.java.lsp.server.explorer.api.NodeChangedParams;
 import org.netbeans.modules.java.lsp.server.explorer.api.NodeOperationParams;
+import org.netbeans.modules.java.lsp.server.explorer.api.ResourceData;
 import org.openide.nodes.Node;
 import org.openide.util.Lookup;
 
@@ -161,5 +172,16 @@ public class LspTreeViewServiceImpl implements TreeViewService, LanguageClientAw
             }
         }
         return CompletableFuture.completedFuture(false);
+    }
+    
+    @Override
+    public CompletableFuture<ResourceData> getResource(GetResourceParams params) {
+        URI uri = params.getUri();
+        if (params.getAcceptEncodings() != null) {
+            if (!Arrays.asList(params.getAcceptEncodings()).contains("base64")) { // NOI18N
+                throw new IllegalArgumentException("Base64 encoding must be accepted.");
+            }
+        }
+        return CompletableFuture.completedFuture(treeService.imageContents(uri));
     }
 }

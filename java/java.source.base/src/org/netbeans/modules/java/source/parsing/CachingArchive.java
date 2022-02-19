@@ -66,7 +66,7 @@ public class CachingArchive implements Archive, FileChangeListener {
     //@GuardedBy("this")
     byte[] names;// = new byte[16384];
     private int nameOffset = 0;
-    final static int[] EMPTY = new int[0];
+    static final int[] EMPTY = new int[0];
     //@GuardedBy("this")
     private Map<String, Folder> folders;
     private volatile Boolean multiRelease;

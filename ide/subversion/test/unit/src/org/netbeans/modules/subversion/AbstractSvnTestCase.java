@@ -66,7 +66,7 @@ public abstract class AbstractSvnTestCase extends NbTestCase {
     protected static final String SUBVERSION_1_6 = "1.6";
     protected static final String SUBVERSION_1_7 = "1.7";
     protected static final String SUBVERSION_1_8 = "1.8";
-    private final static String JAVAHL = "javahl";
+    private static final String JAVAHL = "javahl";
         
     public AbstractSvnTestCase(String testName) throws MalformedURLException, SVNClientException {
         super(testName);

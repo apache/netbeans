@@ -337,7 +337,7 @@ public abstract class CallbackSystemAction extends CallableSystemAction implemen
             resultChanged(null);
         }
 
-        public synchronized static GlobalManager getDefault() {
+        public static synchronized GlobalManager getDefault() {
             if (instance != null) {
                 return instance;
             }

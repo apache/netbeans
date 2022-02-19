@@ -24,13 +24,18 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import javax.swing.ImageIcon;
+import org.netbeans.lib.editor.util.StringEscapeUtils;
 import org.netbeans.modules.csl.api.ElementHandle;
 import org.netbeans.modules.csl.api.ElementKind;
 import org.netbeans.modules.csl.api.HtmlFormatter;
 import org.netbeans.modules.csl.api.Modifier;
+import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.csl.api.StructureItem;
+import org.netbeans.modules.csl.spi.ParserResult;
+import org.netbeans.modules.css.editor.csl.CssLanguage;
 import org.netbeans.modules.css.editor.module.spi.FeatureContext;
 import org.netbeans.modules.parsing.api.Snapshot;
+import org.openide.filesystems.FileObject;
 import org.openide.util.NbBundle;
 
 /**
@@ -39,29 +44,40 @@ import org.openide.util.NbBundle;
  */
 public abstract class TopLevelStructureItem implements StructureItem {
 
+    private final ElementHandle elementHandle;
+
+    public TopLevelStructureItem(String name, FileObject fileObject) {
+        this.elementHandle = new TopElementHandle(fileObject, name);
+    }
+
+    @Override
+    public String getName() {
+        return elementHandle.getName();
+    }
+
     @Override
     public String getSortText() {
-        return getName();
+        return this.elementHandle.getName();
     }
 
     @Override
     public String getHtml(HtmlFormatter formatter) {
-        return getName();
+        return StringEscapeUtils.escapeHtml(this.elementHandle.getName());
     }
 
     @Override
     public ElementHandle getElementHandle() {
-        return null;
+        return elementHandle;
     }
 
     @Override
     public ElementKind getKind() {
-        return ElementKind.PACKAGE; //xxx fix - add mode categories to csl
+        return elementHandle.getKind();
     }
 
     @Override
     public Set<Modifier> getModifiers() {
-        return Collections.emptySet();
+        return elementHandle.getModifiers();
     }
 
     @Override
@@ -102,9 +118,10 @@ public abstract class TopLevelStructureItem implements StructureItem {
 
     public abstract static class ChildrenSetStructureItem extends TopLevelStructureItem {
 
-        private Collection<StructureItem> items;
+        private final Collection<StructureItem> items;
 
-        public ChildrenSetStructureItem(Collection<StructureItem> items) {
+        public ChildrenSetStructureItem(String name, FileObject fileObject, Collection<StructureItem> items) {
+            super(name, fileObject);
             this.items = items;
         }
 
@@ -116,15 +133,17 @@ public abstract class TopLevelStructureItem implements StructureItem {
 
     public abstract static class ChildrenListStructureItem extends TopLevelStructureItem {
 
-        private List<StructureItem> items;
+        private final List<StructureItem> items;
 
-        public ChildrenListStructureItem(List<StructureItem> items) {
+        public ChildrenListStructureItem(String name, FileObject fileObject, List<StructureItem> items) {
+            super(name, fileObject);
             this.items = items;
         }
 
         @Override
+        @SuppressWarnings("ReturnOfCollectionOrArrayField")
         public List<? extends StructureItem> getNestedItems() {
-            return items;
+            return new ArrayList<>(items);
         }
     }
 
@@ -133,13 +152,10 @@ public abstract class TopLevelStructureItem implements StructureItem {
         private final Snapshot snapshot;
 
         public Rules(List<StructureItem> children, FeatureContext context) {
-            super(children);
+            super(NbBundle.getMessage(TopLevelStructureItem.class, "Rules"),  //NOI18N
+                    context.getSnapshot().getSource().getFileObject(),
+                    children);
             this.snapshot = context.getSnapshot();
-        }
-
-        @Override
-        public String getName() {
-            return NbBundle.getMessage(TopLevelStructureItem.class, "Rules"); //NOI18N
         }
 
         //return the element range 0 - source lenght to ensure the recursive
@@ -157,75 +173,91 @@ public abstract class TopLevelStructureItem implements StructureItem {
     }
 
     public static class Elements extends ChildrenSetStructureItem {
-
         public Elements(Collection<StructureItem> items) {
-            super(items);
-        }
-
-        @Override
-        public String getName() {
-            return NbBundle.getMessage(TopLevelStructureItem.class, "Elements"); //NOI18N
+            super(NbBundle.getMessage(TopLevelStructureItem.class, "Elements"), null, items); //NOI18N
         }
     }
 
     public static class Classes extends ChildrenSetStructureItem {
-
         public Classes(Collection<StructureItem> children) {
-            super(children);
-        }
-
-        @Override
-        public String getName() {
-            return NbBundle.getMessage(TopLevelStructureItem.class, "Classes"); //NOI18N
+            super(NbBundle.getMessage(TopLevelStructureItem.class, "Classes"), null, children);
         }
     }
 
     public static class Ids extends ChildrenSetStructureItem {
-
         public Ids(Collection<StructureItem> children) {
-            super(children);
-        }
-
-        @Override
-        public String getName() {
-            return NbBundle.getMessage(TopLevelStructureItem.class, "Ids"); //NOI18N
+            super(NbBundle.getMessage(TopLevelStructureItem.class, "Ids"), null, children); //NOI18N
         }
     }
 
     public static class Namespaces extends ChildrenListStructureItem {
 
         public Namespaces(List<StructureItem> children) {
-            super(children);
+            super(NbBundle.getMessage(TopLevelStructureItem.class, "Namespaces"), null, children);  //NOI18N
         }
 
-        @Override
-        public String getName() {
-            return NbBundle.getMessage(TopLevelStructureItem.class, "Namespaces"); //NOI18N
-        }
     }
 
     public static class AtRules extends ChildrenListStructureItem {
-
         public AtRules(List<StructureItem> children) {
-            super(children);
-        }
-
-        @Override
-        public String getName() {
-            return NbBundle.getMessage(TopLevelStructureItem.class, "AtRules"); //NOI18N
+            super(NbBundle.getMessage(TopLevelStructureItem.class, "AtRules"), null, children); //NOI18N
         }
     }
 
     @NbBundle.Messages("imports=Imports")
     public static class Imports extends ChildrenSetStructureItem {
-
         public Imports(Collection<StructureItem> children) {
-            super(children);
+            super(Bundle.imports(), null, children);
+        }
+    }
+
+    private static class TopElementHandle implements ElementHandle {
+        private final FileObject fileObject;
+        private final String name;
+
+        public TopElementHandle(FileObject fileObject, String name) {
+            this.fileObject = fileObject;
+            this.name = name;
+        }
+
+        @Override
+        public FileObject getFileObject() {
+            return fileObject;
+        }
+
+        @Override
+        public String getMimeType() {
+            return CssLanguage.CSS_MIME_TYPE;
         }
 
         @Override
         public String getName() {
-            return Bundle.imports();
+            return name;
+        }
+
+        @Override
+        public String getIn() {
+            return null;
+        }
+
+        @Override
+        public ElementKind getKind() {
+            return ElementKind.PACKAGE; //xxx fix - add mode categories to csl
+        }
+
+        @Override
+        public Set<Modifier> getModifiers() {
+            return Collections.emptySet();
+        }
+
+        @Override
+        public boolean signatureEquals(ElementHandle handle) {
+            return false;
+        }
+
+        @Override
+        public OffsetRange getOffsetRange(ParserResult result) {
+            return new OffsetRange(-1, -1);
         }
     }
 }

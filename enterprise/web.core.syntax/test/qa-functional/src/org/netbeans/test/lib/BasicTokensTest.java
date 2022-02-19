@@ -36,7 +36,7 @@ public abstract class BasicTokensTest extends JellyTestCase {
         super(name);
     }
 
-    abstract protected boolean generateGoldenFiles();
+    protected abstract boolean generateGoldenFiles();
 
     @Override
     public void tearDown() {

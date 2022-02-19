@@ -28,7 +28,7 @@ import org.openide.nodes.CookieSet;
 public abstract class CookieFactory implements CookieSet.Factory {
 
     /** */
-    abstract protected Class[] supportedCookies ();
+    protected abstract Class[] supportedCookies ();
 
     /**
      */

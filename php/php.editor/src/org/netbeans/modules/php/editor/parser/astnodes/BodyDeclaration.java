@@ -121,6 +121,10 @@ public abstract class BodyDeclaration extends Statement implements Attributed {
          */
         public static final int IMPLICIT_PUBLIC = 0x00000020;
         /**
+         * The <code>int</code> value representing the <code>readonly</code> modifier.
+         */
+        public static final int READONLY = 0x00000040;
+        /**
          * The <code>int</code> value representing the <code>abstract</code> modifier.
          */
         public static final int ABSTRACT = 0x00000400;
@@ -210,6 +214,18 @@ public abstract class BodyDeclaration extends Statement implements Attributed {
         }
 
         /**
+         * Return <tt>true</tt> if the integer argument includes the
+         * <tt>readonly</tt> modifer, <tt>false</tt> otherwise.
+         *
+         * @param mod a set of modifers
+         * @return <tt>true</tt> if <code>mod</code> includes the
+         * <tt>readonly</tt> modifier; <tt>false</tt> otherwise.
+         */
+        public static boolean isReadonly(int mod) {
+            return (mod & READONLY) != 0;
+        }
+
+        /**
          * Check whether the modifier is a visibility modifier(public,
          * protected, or private).
          *
@@ -234,6 +250,10 @@ public abstract class BodyDeclaration extends Statement implements Attributed {
             }
             if ((mod & PRIVATE) != 0) {
                 sb.append("private "); //$NON-NLS-1$
+            }
+
+            if ((mod & READONLY) != 0) {
+                sb.append("readonly "); // NOI18N
             }
 
             //Canonical order

@@ -233,6 +233,9 @@ public class ServerWizardIterator extends PortCollection implements WizardDescri
     private String userName;
     /** Payara server administrator's password. */
     private String password;
+    private boolean docker;
+    private String hostPath;
+    private String containerPath;
     private String installRoot;
     private String payaraRoot;
     private String hostName;
@@ -333,6 +336,30 @@ public class ServerWizardIterator extends PortCollection implements WizardDescri
 
     boolean hasServer(String uri) {
         return instanceProvider.hasServer(uri);
+    }
+
+    public boolean isDocker() {
+        return docker;
+    }
+
+    public void setDocker(boolean docker) {
+        this.docker = docker;
+    }
+
+    public String getHostPath() {
+        return hostPath;
+    }
+
+    public void setHostPath(String hostPath) {
+        this.hostPath = hostPath;
+    }
+
+    public String getContainerPath() {
+        return containerPath;
+    }
+
+    public void setContainerPath(String containerPath) {
+        this.containerPath = containerPath;
     }
 
     PayaraPlatformVersionAPI isValidInstall(File installDir, File payaraDir, WizardDescriptor wizard) {
@@ -490,14 +517,16 @@ public class ServerWizardIterator extends PortCollection implements WizardDescri
             cd.start();
             PayaraInstance instance = PayaraInstance.create((String) wizard.getProperty("ServInstWizard_displayName"),  // NOI18N
                     installRoot, payaraRoot, domainsDir, domainName, 
-                    newHttpPort, newAdminPort, userName, password, targetValue,
+                    newHttpPort, newAdminPort, userName, password,
+                    docker, hostPath, containerPath, targetValue,
                     formatUri(hostName, newAdminPort, getTargetValue(),domainsDir,domainName), 
                     instanceProvider);
             result.add(instance.getCommonInstance());
         } else {
             PayaraInstance instance = PayaraInstance.create((String) wizard.getProperty("ServInstWizard_displayName"),  // NOI18N
                     installRoot, payaraRoot, domainsDir, domainName,
-                    getHttpPort(), getAdminPort(), userName, password, targetValue,
+                    getHttpPort(), getAdminPort(), userName, password, 
+                    docker, hostPath, containerPath, targetValue,
                     formatUri(hostName, getAdminPort(), getTargetValue(), domainsDir, domainName),
                     instanceProvider);
             result.add(instance.getCommonInstance());
@@ -511,7 +540,8 @@ public class ServerWizardIterator extends PortCollection implements WizardDescri
         }
         PayaraInstance instance = PayaraInstance.create((String) wizard.getProperty("ServInstWizard_displayName"),   // NOI18N
                 installRoot, payaraRoot, null, domainName,
-                getHttpPort(), getAdminPort(), userName, password, targetValue,
+                getHttpPort(), getAdminPort(), userName, password, 
+                docker, hostPath, containerPath, targetValue,
                 formatUri(hn, getAdminPort(), getTargetValue(),null, domainName), 
                 instanceProvider);
         result.add(instance.getCommonInstance());

@@ -83,7 +83,7 @@ public abstract class SearchScopeDefinition {
      * @param l listener to be registered
      * @see #isApplicable
      */
-    public synchronized final void addChangeListener(
+    public final synchronized void addChangeListener(
             @NonNull ChangeListener l) {
         if (!changeListeners.contains(l)) {
             changeListeners.add(l);
@@ -99,7 +99,7 @@ public abstract class SearchScopeDefinition {
      * @see #addChangeListener
      * @see #isApplicable
      */
-    public synchronized final void removeChangeListener(
+    public final synchronized void removeChangeListener(
             @NonNull ChangeListener l) {
         changeListeners.remove(l);
     }

@@ -183,6 +183,9 @@ final class CompletionContextFinder {
             new Object[]{PHPTokenId.PHP_FINAL},
             new Object[]{PHPTokenId.PHP_FINAL, PHPTokenId.WHITESPACE},
             new Object[]{PHPTokenId.PHP_FINAL, PHPTokenId.WHITESPACE, PHPTokenId.PHP_STRING},
+            new Object[]{PHPTokenId.PHP_READONLY},
+            new Object[]{PHPTokenId.PHP_READONLY, PHPTokenId.WHITESPACE},
+            new Object[]{PHPTokenId.PHP_READONLY, PHPTokenId.WHITESPACE, PHPTokenId.PHP_STRING},
             new Object[]{PHPTokenId.PHP_CURLY_OPEN},
             new Object[]{PHPTokenId.WHITESPACE},
             new Object[]{PHPTokenId.WHITESPACE, PHPTokenId.PHP_STRING},
@@ -959,6 +962,7 @@ final class CompletionContextFinder {
                 // check reference character (&) [unfortunately, cannot distinguish & as a operator and as a reference mark]
                 // check "..." (is it really operator?)
                 if (!isReference(cToken)
+                        && !isNew(cToken)
                         && !isVariadic(cToken)
                         && !isInitilizerToken(cToken) // ($param = '')
                         && !isVerticalBar(cToken) // int|false
@@ -980,12 +984,16 @@ final class CompletionContextFinder {
                             || isNullableTypesPrefix(cToken)
                             || isVerticalBar(cToken)
                             || isOrOperator(cToken)
-                            || isVisibilityModifier(cToken)) {
+                            || isVisibilityModifier(cToken)
+                            || isReadonlyModifier(cToken)) {
                         isCompletionSeparator = true;
                         if (isVerticalBar(cToken) || isOrOperator(cToken)) {
                             isUnionType = true;
                         }
-                        if (isVisibilityModifier(token) || isVisibilityModifier(cToken)) {
+                        if (isVisibilityModifier(token)
+                                || isVisibilityModifier(cToken)
+                                || isReadonlyModifier(token)
+                                || isReadonlyModifier(cToken)) {
                             contextForSeparator = CompletionContext.VISIBILITY_MODIFIER_OR_TYPE_NAME;
                         } else {
                             contextForSeparator = CompletionContext.TYPE_NAME;
@@ -1011,7 +1019,7 @@ final class CompletionContextFinder {
                         }
                         isNamespaceSeparator = false;
                         continue;
-                    } else if (!isCommentToken(tokenSequence)) {
+                    } else if (!isCommentToken(tokenSequence) && !isNew(cToken)) {
                         testCompletionSeparator = false;
                     }
                 } else if (checkReturnTypeSeparator) {
@@ -1051,7 +1059,11 @@ final class CompletionContextFinder {
     }
 
     private static boolean isVariable(Token<PHPTokenId> token) {
-        return token.id().equals(PHPTokenId.PHP_VARIABLE); //NOI18N
+        return token.id().equals(PHPTokenId.PHP_VARIABLE);
+    }
+
+    private static boolean isNew(Token<PHPTokenId> token) {
+        return token.id().equals(PHPTokenId.PHP_NEW);
     }
 
     private static boolean isReference(Token<PHPTokenId> token) {
@@ -1136,6 +1148,7 @@ final class CompletionContextFinder {
                 || token.id() == PHPTokenId.PHP_PROTECTED
                 || token.id() == PHPTokenId.PHP_PUBLIC
                 || token.id() == PHPTokenId.PHP_STATIC
+                || token.id() == PHPTokenId.PHP_READONLY
                 || token.id() == PHPTokenId.PHP_VAR;
     }
 
@@ -1143,6 +1156,10 @@ final class CompletionContextFinder {
         return token.id() == PHPTokenId.PHP_PRIVATE
                 || token.id() == PHPTokenId.PHP_PROTECTED
                 || token.id() == PHPTokenId.PHP_PUBLIC;
+    }
+
+    private static boolean isReadonlyModifier(Token<PHPTokenId> token) {
+        return token.id() == PHPTokenId.PHP_READONLY;
     }
 
     private static boolean isConstructor(Token<PHPTokenId> token) {
@@ -1157,6 +1174,7 @@ final class CompletionContextFinder {
                 || id == PHPTokenId.PHP_TYPE_INT
                 || id == PHPTokenId.PHP_TYPE_STRING
                 || id == PHPTokenId.PHP_TYPE_VOID
+                || id == PHPTokenId.PHP_TYPE_NEVER
                 || id == PHPTokenId.PHP_TYPE_OBJECT
                 || id == PHPTokenId.PHP_TYPE_MIXED
                 || id == PHPTokenId.PHP_SELF

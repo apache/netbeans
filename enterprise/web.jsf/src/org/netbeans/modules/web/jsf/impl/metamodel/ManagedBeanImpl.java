@@ -186,7 +186,7 @@ class ManagedBeanImpl extends PersistentObject  implements FacesManagedBean,
         return result;
     }
     
-    private final static Map<String , ManagedBean.Scope> SCOPES 
+    private static final Map<String , ManagedBean.Scope> SCOPES 
                 = new HashMap<String, Scope>();
     static {
         SCOPES.put("javax.faces.bean.ApplicationScoped",    // NOI18N

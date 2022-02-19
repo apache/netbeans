@@ -730,7 +730,7 @@ public class CommitAction extends ContextAction {
         }
     }
 
-    private static abstract class Cmd {
+    private abstract static class Cmd {
         protected final Map<File, List<File>> m;
         protected final OutputLogger logger;
         protected final String logMsgFormat;

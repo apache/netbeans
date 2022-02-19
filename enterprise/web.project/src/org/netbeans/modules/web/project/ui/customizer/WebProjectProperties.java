@@ -105,7 +105,7 @@ import org.openide.util.Task;
  *
  * @author Petr Hrebejk, Radko Najman
  */
-final public class WebProjectProperties {
+public final class WebProjectProperties {
 
     // Special properties of the project
     public static final String WEB_PROJECT_NAME = "web.project.name"; //NOI18N

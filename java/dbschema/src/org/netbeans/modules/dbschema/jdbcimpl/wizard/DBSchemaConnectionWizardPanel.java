@@ -22,7 +22,7 @@ package org.netbeans.modules.dbschema.jdbcimpl.wizard;
 import java.awt.Component;
 import org.openide.util.HelpCtx;
 
-final public class DBSchemaConnectionWizardPanel extends DBSchemaPanel {
+public final class DBSchemaConnectionWizardPanel extends DBSchemaPanel {
 
   /** aggregation, instance of UI component of this wizard panel */
     private DBSchemaConnectionPanel panelUI;

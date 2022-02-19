@@ -289,7 +289,7 @@ public abstract class TreeListNode extends ListNode {
     }
 
     @Override
-    final protected void fireContentChanged() {
+    protected final void fireContentChanged() {
         synchronized (this) {
             renderer = null;
         }
@@ -297,18 +297,18 @@ public abstract class TreeListNode extends ListNode {
     }
 
     @Override
-    final protected void fireContentSizeChanged() {
+    protected final void fireContentSizeChanged() {
         synchronized (this) {
             renderer = null;
         }        
         super.fireContentSizeChanged(); 
     }
 
-    final protected ProgressLabel createProgressLabel() {
+    protected final ProgressLabel createProgressLabel() {
         return createProgressLabel(NbBundle.getMessage(TreeListNode.class, "LBL_LoadingInProgress")); //NOI18N
     }
 
-    final protected ProgressLabel createProgressLabel(String text) {
+    protected final ProgressLabel createProgressLabel(String text) {
         return new ProgressLabel(text, this);
     }
 

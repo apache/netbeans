@@ -106,16 +106,16 @@ public abstract class IOEmulation {
      * Return the terminal type supported by this IO.
      * @return terminal type.
      */
-    abstract protected String getEmulation();
+    protected abstract String getEmulation();
 
     /**
      * Return whether this IO implements it's own line discipline.
      * @return If true this IO implements it's own line discipline.
      */
-    abstract protected boolean isDisciplined();
+    protected abstract boolean isDisciplined();
 
     /**
      * Declare that this IO should implement it's own line discipline.
      */
-    abstract protected void setDisciplined();
+    protected abstract void setDisciplined();
 }

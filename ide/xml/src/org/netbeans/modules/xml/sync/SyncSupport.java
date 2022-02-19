@@ -190,7 +190,7 @@ public abstract class SyncSupport {
             }
             
             if (modified.size() > 1) {
-                master = selectMasterRepresentation((Representation[])modified.toArray(new Representation[0]));
+                master = selectMasterRepresentation(modified.toArray(new Representation[0]));
             }
 
             if ( Util.THIS.isLoggable() ) /* then */ Util.THIS.debug ("\t" + System.identityHashCode(this) + " master: " + master); // NOI18N

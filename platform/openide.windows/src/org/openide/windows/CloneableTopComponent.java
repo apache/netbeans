@@ -132,7 +132,7 @@ public abstract class CloneableTopComponent extends TopComponent implements Exte
     *
     * @return the clone registry for this component's group
     */
-    public synchronized final Ref getReference() {
+    public final synchronized Ref getReference() {
         if (ref == null) {
             ref = new Ref(this);
         }
@@ -143,7 +143,7 @@ public abstract class CloneableTopComponent extends TopComponent implements Exte
     /** Changes the reference to which this components belongs.
     * @param another the new reference this component should belong
     */
-    public synchronized final void setReference(Ref another) {
+    public final synchronized void setReference(Ref another) {
         if (another == EMPTY) {
             throw new IllegalArgumentException(
                 NbBundle.getBundle(CloneableTopComponent.class).getString("EXC_CannotAssign")

@@ -429,7 +429,7 @@ public final class Turbo {
     }
 
     /** Requests queue entry featuring value based identity. */
-    private final static class Request {
+    private static final class Request {
         private final Object key;
         private final String name;
 

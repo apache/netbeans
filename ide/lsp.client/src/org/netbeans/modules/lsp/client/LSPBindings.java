@@ -51,7 +51,6 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javax.swing.event.ChangeListener;
 import org.eclipse.lsp4j.ClientCapabilities;
-import org.eclipse.lsp4j.CompletionCapabilities;
 import org.eclipse.lsp4j.DocumentSymbolCapabilities;
 import org.eclipse.lsp4j.InitializeParams;
 import org.eclipse.lsp4j.InitializeResult;
@@ -346,9 +345,11 @@ public class LSPBindings {
 
                 lc.setBindings(bindings);
 
-                workspace2Extension2Server.put(root, 
-                    Arrays.stream(extensions)
-                    .collect(Collectors.toMap(k -> k, v -> bindings)));
+                synchronized(LSPBindings.class) {
+                    workspace2Extension2Server.put(root, 
+                        Arrays.stream(extensions)
+                        .collect(Collectors.toMap(k -> k, v -> bindings)));
+                }
                 WORKER.post(() -> cs.fireChange());
             } catch (InterruptedException | ExecutionException | IOException ex) {
                 Exceptions.printStackTrace(ex);
@@ -506,18 +507,20 @@ public class LSPBindings {
         @Override
         @SuppressWarnings("AccessingNonPublicFieldOfAnotherObject")
         public void run() {
-            for (Map<String, ServerDescription> mime2Bindings : project2MimeType2Server.values()) {
-                for (ServerDescription description : mime2Bindings.values()) {
-                    LSPBindings b = description.bindings != null ? description.bindings.get() : null;
-                    if (b != null && b.process != null) {
-                        b.process.destroy();
+            synchronized(LSPBindings.class) {
+                for (Map<String, ServerDescription> mime2Bindings : project2MimeType2Server.values()) {
+                    for (ServerDescription description : mime2Bindings.values()) {
+                        LSPBindings b = description.bindings != null ? description.bindings.get() : null;
+                        if (b != null && b.process != null) {
+                            b.process.destroy();
+                        }
                     }
                 }
-            }
-            for (Map<String, LSPBindings> mime2Bindings : workspace2Extension2Server.values()) {
-                for (LSPBindings b : mime2Bindings.values()) {
-                    if (b != null && b.process != null) {
-                        b.process.destroy();
+                for (Map<String, LSPBindings> mime2Bindings : workspace2Extension2Server.values()) {
+                    for (LSPBindings b : mime2Bindings.values()) {
+                        if (b != null && b.process != null) {
+                            b.process.destroy();
+                        }
                     }
                 }
             }

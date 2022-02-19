@@ -246,7 +246,6 @@
                 <friend>org.netbeans.modules.cnd.analysis.impl</friend>
                 <friend>org.netbeans.modules.cnd.api.remote</friend>
                 <friend>org.netbeans.modules.cnd.audit</friend>
-                <friend>org.netbeans.modules.cnd.jconvertwizard</friend>
                 <friend>org.netbeans.modules.cnd.classview</friend>
                 <friend>org.netbeans.modules.cnd.cncppunit</friend>
                 <friend>org.netbeans.modules.cnd.completion</friend>
@@ -259,6 +258,8 @@
                 <friend>org.netbeans.modules.cnd.dwarfdiscovery</friend>
                 <friend>org.netbeans.modules.cnd.gizmo</friend>
                 <friend>org.netbeans.modules.cnd.highlight</friend>
+                <friend>org.netbeans.modules.cnd.jconvertwizard</friend>
+                <friend>org.netbeans.modules.cnd.lsp</friend>
                 <friend>org.netbeans.modules.cnd.make2netbeans</friend>
                 <friend>org.netbeans.modules.cnd.makeproject</friend>
                 <friend>org.netbeans.modules.cnd.makeproject.ui</friend>

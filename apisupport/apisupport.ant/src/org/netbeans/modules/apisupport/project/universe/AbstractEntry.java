@@ -114,7 +114,7 @@ abstract class AbstractEntry implements ModuleEntry {
         }
         JarFile jf = new JarFile(jar);
         try {
-            Enumeration entries = jf.entries();
+            Enumeration<JarEntry> entries = jf.entries();
             ENTRY: while (entries.hasMoreElements()) {
                 JarEntry entry = (JarEntry) entries.nextElement();
                 String path = entry.getName();

@@ -202,7 +202,7 @@ public abstract class XmlMultiViewDataObject extends MultiDataObject implements 
     public boolean canClose() {
         final CloneableTopComponent topComponent = ((CloneableTopComponent) getEditorSupport().getMVTC());
         if (topComponent != null){
-            Enumeration enumeration = topComponent.getReference().getComponents();
+            Enumeration<CloneableTopComponent> enumeration = topComponent.getReference().getComponents();
             if (enumeration.hasMoreElements()) {
                 enumeration.nextElement();
                 if (enumeration.hasMoreElements()) {

@@ -343,7 +343,7 @@ public class ClientDataObject extends  DDMultiViewDataObject
                         processButton.setEnabled(false);
                     }
                 } else if (options[1].equals(e.getSource())) {
-                    Enumeration en = connectionPanel.listModel.elements();
+                    Enumeration<DDChangeEvent> en = connectionPanel.listModel.elements();
                     while (en.hasMoreElements()) {
                         processDDChangeEvent((DDChangeEvent)en.nextElement());
                     }

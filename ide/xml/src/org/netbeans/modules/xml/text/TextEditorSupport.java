@@ -559,7 +559,7 @@ public class TextEditorSupport extends DataEditorSupport implements EditorCookie
                 StatusDisplayer.getDefault().setStatusText(msg);
             }
 
-            Enumeration en = allEditors.getComponents();
+            Enumeration<CloneableTopComponent> en = allEditors.getComponents();
             while ( en.hasMoreElements() ) {
                 CloneableTopComponent editor = (CloneableTopComponent)en.nextElement();
                 if ( editor instanceof CloneableEditor ) {

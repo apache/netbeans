@@ -82,6 +82,7 @@ import org.netbeans.modules.lsp.client.options.MimeTypeInfo;
 import org.netbeans.modules.lsp.client.spi.ServerRestarter;
 import org.netbeans.modules.lsp.client.spi.LanguageServerProvider;
 import org.netbeans.modules.lsp.client.spi.LanguageServerProvider.LanguageServerDescription;
+import org.netbeans.modules.lsp.client.spi.MultiMimeLanguageServerProvider;
 import org.openide.awt.NotificationDisplayer;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -209,6 +210,12 @@ public class LSPBindings {
             if (bindings != null) {
                 description.bindings = new WeakReference<>(bindings);
                 description.lastStartTimeStamp = System.currentTimeMillis();
+                // If ServerDescription acknowledges another mimetypes, add these
+                // to project2MimeType2Server too.
+                Map<String, ServerDescription> mimeType2Server = project2MimeType2Server.get(uri);
+                for(String mt: description.mimeTypes) {
+                    mimeType2Server.put(mt, description);
+                }
                 WORKER.post(() -> cs.fireChange());
             }
         }
@@ -247,6 +254,10 @@ public class LSPBindings {
         ServerRestarter restarter = () -> {
             synchronized (LSPBindings.class) {
                 ServerDescription description = project2MimeType2Server.getOrDefault(baseUri, Collections.emptyMap()).remove(mt);
+                // Remove any other mimetypes as well.
+                for(String anotherMT: description.mimeTypes) {
+                    project2MimeType2Server.get(baseUri).remove(anotherMT);
+                }
                 Reference<LSPBindings> bRef = description != null ? description.bindings : null;
                 LSPBindings b = bRef != null ? bRef.get() : null;
 
@@ -269,6 +280,12 @@ public class LSPBindings {
 
         for (LanguageServerProvider provider : MimeLookup.getLookup(mt).lookupAll(LanguageServerProvider.class)) {
             final Lookup lkp = prj != null ? Lookups.fixed(prj, mimeTypeInfo, restarter) : Lookups.fixed(mimeTypeInfo, restarter);
+            inDescription.mimeTypes = Collections.singleton(mt);
+            // If this is a MultiMimeLanguageServerProvider, then retrieve all 
+            // mime types handled by this server.
+            if (provider instanceof MultiMimeLanguageServerProvider) {
+                inDescription.mimeTypes = ((MultiMimeLanguageServerProvider)provider).getMimeTypes();
+            }
             LanguageServerDescription desc = provider.startServer(lkp);
 
             if (desc != null) {
@@ -574,5 +591,6 @@ public class LSPBindings {
         public long lastStartTimeStamp;
         public int failedCount;
         public Reference<LSPBindings> bindings;
+        public Set<String> mimeTypes;
     }
 }

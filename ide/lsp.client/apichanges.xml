@@ -25,6 +25,18 @@
     <apidef name="lsp_client">LSP Client API</apidef>
 </apidefs>
 <changes>
+    <change id="MultiMimeLanguageServerProvider">
+        <api name="lsp_client" />
+        <summary>Adding MultiMimeLanguageServerProvider</summary>
+        <version major="0" minor="1.9" />
+        <date day="22" month="2" year="2022" />
+        <author login="vieiro" />
+        <compatibility addition="yes" binary="compatible" source="compatible" />
+        <description>
+               org.netbeans.modules.lsp.client.spi.MultiMimeLanguageServerProvider
+        </description>
+        <class name="MultiMimeLanguageServerProvider" package="org.netbeans.modules.lsp.client.spi"/>
+    </change>
     <change id="ServerRestarter">
         <api name="lsp_client" />
         <summary>Adding ServerRestarter</summary>

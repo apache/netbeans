@@ -339,25 +339,13 @@ public class ProfilerRuntimeCPU extends ProfilerRuntime {
         int sessionHash = -1;
 
         if (null != method) switch (method) {
-            case "GET":
-                // NOI18N
-                methodId = 1;
-                break;
+            case "GET": methodId = 1; break;    // NOI18N
                 
-            case "POST":
-                // NOI18N
-                methodId = 2;
-                break;
+            case "POST": methodId = 2; break;   // NOI18N
                 
-            case "PUT":
-                // NOI18N
-                methodId = 3;
-                break;
+            case "PUT": methodId = 3; break;    // NOI18N
                 
-            case "DELETE":
-                // NOI18N
-                methodId = 4;
-                break;
+            case "DELETE": methodId = 4; break; // NOI18N
                 
             default:
                 break;

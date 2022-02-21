@@ -243,105 +243,45 @@ class ClassDumpSegment extends TagBounds {
             Integer typeObj = null;
 
             switch (vmName) {
-                case "[Z":
-                    // NOI18N
-                    typeObj = HprofHeap.BOOLEAN;
-                    break;
+                case "[Z": typeObj = HprofHeap.BOOLEAN; break;            // NOI18N
                     
-                case "[C":
-                    // NOI18N
-                    typeObj = HprofHeap.CHAR;
-                    break;
+                case "[C": typeObj = HprofHeap.CHAR; break;               // NOI18N
                     
-                case "[F":
-                    // NOI18N
-                    typeObj = HprofHeap.FLOAT;
-                    break;
+                case "[F": typeObj = HprofHeap.FLOAT; break;              // NOI18N
                     
-                case "[D":
-                    // NOI18N
-                    typeObj = HprofHeap.DOUBLE;
-                    break;
+                case "[D": typeObj = HprofHeap.DOUBLE; break;             // NOI18N
                     
-                case "[B":
-                    // NOI18N
-                    typeObj = HprofHeap.BYTE;
-                    break;
+                case "[B": typeObj = HprofHeap.BYTE; break;               // NOI18N
                     
-                case "[S":
-                    // NOI18N
-                    typeObj = HprofHeap.SHORT;
-                    break;
+                case "[S": typeObj = HprofHeap.SHORT; break;              // NOI18N
                     
-                case "[I":
-                    // NOI18N
-                    typeObj = HprofHeap.INT;
-                    break;
+                case "[I": typeObj = HprofHeap.INT; break;                // NOI18N
                     
-                case "[J":
-                    // NOI18N
-                    typeObj = HprofHeap.LONG;
-                    break;
+                case "[J": typeObj = HprofHeap.LONG; break;               // NOI18N
                     
-                case "java/lang/Class":
-                    // NOI18N
-                    java_lang_Class = jcls;
-                    break;
+                case "java/lang/Class": java_lang_Class = jcls; break;    // NOI18N
                     
-                case "java/lang/Object":
-                    // NOI18N
-                    java_lang_Object = jcls;
-                    break;
+                case "java/lang/Object": java_lang_Object = jcls; break;  // NOI18N
                     
-                case "boolean[]":
-                    // NOI18N
-                    typeObj = HprofHeap.BOOLEAN;
-                    break;
+                case "boolean[]": typeObj = HprofHeap.BOOLEAN; break;     // NOI18N
                     
-                case "char[]":
-                    // NOI18N
-                    typeObj = HprofHeap.CHAR;
-                    break;
+                case "char[]": typeObj = HprofHeap.CHAR; break;           // NOI18N
                     
-                case "float[]":
-                    // NOI18N
-                    typeObj = HprofHeap.FLOAT;
-                    break;
+                case "float[]": typeObj = HprofHeap.FLOAT; break;         // NOI18N
                     
-                case "double[]":
-                    // NOI18N
-                    typeObj = HprofHeap.DOUBLE;
-                    break;
+                case "double[]": typeObj = HprofHeap.DOUBLE; break;       // NOI18N
                     
-                case "byte[]":
-                    // NOI18N
-                    typeObj = HprofHeap.BYTE;
-                    break;
+                case "byte[]": typeObj = HprofHeap.BYTE; break;           // NOI18N
                     
-                case "short[]":
-                    // NOI18N
-                    typeObj = HprofHeap.SHORT;
-                    break;
+                case "short[]": typeObj = HprofHeap.SHORT; break;         // NOI18N
                     
-                case "int[]":
-                    // NOI18N
-                    typeObj = HprofHeap.INT;
-                    break;
+                case "int[]": typeObj = HprofHeap.INT; break;             // NOI18N
                     
-                case "long[]":
-                    // NOI18N
-                    typeObj = HprofHeap.LONG;
-                    break;
+                case "long[]": typeObj = HprofHeap.LONG; break;           // NOI18N
                     
-                case "java.lang.Class":
-                    // NOI18N
-                    java_lang_Class = jcls;
-                    break;
+                case "java.lang.Class": java_lang_Class = jcls; break;    // NOI18N
                     
-                case "java.lang.Object":
-                    // NOI18N
-                    java_lang_Object = jcls;
-                    break;
+                case "java.lang.Object": java_lang_Object = jcls; break;  // NOI18N
                     
                 default:
                     break;

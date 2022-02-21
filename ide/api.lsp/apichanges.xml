@@ -51,6 +51,20 @@
 <!-- ACTUAL CHANGES BEGIN HERE: -->
 
 <changes>
+    <change id="StructureProvider">
+        <api name="LSP_API"/>
+        <summary>Adding StructeProvider and StructureElement</summary>
+        <version major="1" minor="8"/>
+        <date day="24" month="1" year="2022"/>
+        <author login="ppisl"/>
+        <compatibility binary="compatible" source="compatible" addition="yes" deletion="no"/>
+        <description>
+            A <code>StructureProvider</code> interface allows to compute structure (tree of <code>SourceElement</code>s)
+            of the given file. 
+        </description>
+        <class package="org.netbeans.api.lsp" name="StructureElement"/>
+        <class package="org.netbeans.spi.lsp" name="StructureProvider"/>
+    </change>
     <change id="ErrorProvider.Context.getOffset">
         <api name="LSP_API"/>
         <summary>Adding ErrorProvider.Context.getOffset() method</summary>

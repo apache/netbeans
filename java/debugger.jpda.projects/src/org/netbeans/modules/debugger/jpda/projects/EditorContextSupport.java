@@ -418,7 +418,7 @@ public final class EditorContextSupport {
                                             }
                                         }
                                     }
-                                    result.add(new Integer((int) lineMap.getLineNumber(pos)));
+                                    result.add((int)lineMap.getLineNumber(pos));
                                 }
                             }
                         }
@@ -602,7 +602,7 @@ public final class EditorContextSupport {
                         }
                     }
                     LineMap lineMap = ci.getCompilationUnit().getLineMap();
-                    result[0] = new Integer((int) lineMap.getLineNumber(pos));
+                    result[0] = (int)lineMap.getLineNumber(pos);
                 }
             });
             if (!f.isDone()) {

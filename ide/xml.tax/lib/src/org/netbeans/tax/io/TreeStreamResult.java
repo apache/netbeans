@@ -722,9 +722,9 @@ public class TreeStreamResult implements TreeOutputResult {
          * Autodetect quoting char giving highets priority to '"'.
          */
         private String createQuoteString (String value) {
-            Character quote = new Character (QUOTE);
+            Character quote = QUOTE;
             if ( value.indexOf (QUOTE) != -1 ) {
-                quote = new Character (APOSTROPHE);
+                quote = APOSTROPHE;
             }
             return createQuoteString (value, quote);
         }

@@ -1465,7 +1465,7 @@ abstract class AbstractTestGenerator implements CancellableTask<WorkingCopy>{
                     comparisonArgs.add(maker.Identifier(expectedValue.getName().toString()));
                     comparisonArgs.add(maker.Identifier(actualValue.getName().toString()));
                     if ((retTypeKind == TypeKind.DOUBLE) || (retTypeKind == TypeKind.FLOAT)){
-                        comparisonArgs.add(maker.Identifier(new Double(0).toString()));
+                        comparisonArgs.add(maker.Identifier(Integer.toString(0)));
                     }
 
                     MethodInvocationTree comparison = maker.MethodInvocation(

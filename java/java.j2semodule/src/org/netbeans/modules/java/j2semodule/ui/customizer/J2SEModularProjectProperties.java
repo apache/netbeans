@@ -103,9 +103,9 @@ public class J2SEModularProjectProperties {
     
     //Hotfix of the issue #70058
     //Should be removed when the StoreGroup SPI will be extended to allow false default value in ToggleButtonModel
-    private static final Integer BOOLEAN_KIND_TF = new Integer( 0 );
-    private static final Integer BOOLEAN_KIND_YN = new Integer( 1 );
-    private static final Integer BOOLEAN_KIND_ED = new Integer( 2 );
+    private static final Integer BOOLEAN_KIND_TF = 0;
+    private static final Integer BOOLEAN_KIND_YN = 1;
+    private static final Integer BOOLEAN_KIND_ED = 2;
     private static final String COS_MARK = ".netbeans_automatic_build";     //NOI18N
     private static final Logger LOG = Logger.getLogger(J2SEModularProjectProperties.class.getName());
     private Integer javacDebugBooleanKind;
@@ -478,6 +478,7 @@ public class J2SEModularProjectProperties {
             }
             // Store properties
             ProjectManager.mutex().writeAccess(new Mutex.ExceptionAction<Void>() {
+                @Override
                 public Void run() throws IOException {
                     storeProperties();
                     //Delete COS mark
@@ -706,7 +707,7 @@ public class J2SEModularProjectProperties {
     private void resolveProjectDependencies() {
             
         // Create a set of old and new artifacts.
-        Set<ClassPathSupport.Item> oldArtifacts = new HashSet<ClassPathSupport.Item>();
+        Set<ClassPathSupport.Item> oldArtifacts = new HashSet<>();
         EditableProperties projectProperties = updateHelper.getProperties( AntProjectHelper.PROJECT_PROPERTIES_PATH );        
         oldArtifacts.addAll( cs.itemsList( projectProperties.get( ProjectProperties.JAVAC_MODULEPATH ) ) );
         oldArtifacts.addAll( cs.itemsList( projectProperties.get( ProjectProperties.JAVAC_CLASSPATH ) ) );
@@ -720,7 +721,7 @@ public class J2SEModularProjectProperties {
         oldArtifacts.addAll( cs.itemsList( projectProperties.get( ProjectProperties.RUN_TEST_CLASSPATH ) ) );
         oldArtifacts.addAll( cs.itemsList( projectProperties.get( ProjectProperties.ENDORSED_CLASSPATH ) ) );
                    
-        Set<ClassPathSupport.Item> newArtifacts = new HashSet<ClassPathSupport.Item>();
+        Set<ClassPathSupport.Item> newArtifacts = new HashSet<>();
         newArtifacts.addAll( ClassPathUiSupport.getList( JAVAC_MODULEPATH_MODEL ) );
         newArtifacts.addAll( ClassPathUiSupport.getList( JAVAC_CLASSPATH_MODEL ) );
         newArtifacts.addAll( ClassPathUiSupport.getList( JAVAC_PROCESSORMODULEPATH_MODEL ) );
@@ -734,9 +735,9 @@ public class J2SEModularProjectProperties {
         newArtifacts.addAll( ClassPathUiSupport.getList( ENDORSED_CLASSPATH_MODEL ) );
                 
         // Create set of removed artifacts and remove them
-        Set<ClassPathSupport.Item> removed = new HashSet<ClassPathSupport.Item>(oldArtifacts);
+        Set<ClassPathSupport.Item> removed = new HashSet<>(oldArtifacts);
         removed.removeAll( newArtifacts );
-        Set<ClassPathSupport.Item> added = new HashSet<ClassPathSupport.Item>(newArtifacts);
+        Set<ClassPathSupport.Item> added = new HashSet<>(newArtifacts);
         added.removeAll(oldArtifacts);
         
         
@@ -878,7 +879,7 @@ public class J2SEModularProjectProperties {
                 return s1 != null ? (s2 != null ? s1.compareTo(s2) : 1) : (s2 != null ? -1 : 0);
             }
         });
-        Map<String,String> def = new TreeMap<String,String>();
+        Map<String,String> def = new TreeMap<>();
         for (String prop : CONFIG_AWARE_PROPERTIES) {
             String v = updateHelper.getProperties(AntProjectHelper.PRIVATE_PROPERTIES_PATH).getProperty(prop);
             if (v == null) {
@@ -897,7 +898,7 @@ public class J2SEModularProjectProperties {
                 }
                 final String relPath = FileUtil.getRelativePath(project.getProjectDirectory(), kid);
                 if (relPath != null) {
-                    m.put(kid.getName(), new TreeMap<String,String>(updateHelper.getProperties(relPath)));
+                    m.put(kid.getName(), new TreeMap<>(updateHelper.getProperties(relPath)));
                 }
             }
         }
@@ -913,7 +914,7 @@ public class J2SEModularProjectProperties {
                 }
                 final String relPath = FileUtil.getRelativePath(project.getProjectDirectory(), kid);
                 if (relPath != null) {
-                    c.putAll(new HashMap<String,String>(updateHelper.getProperties(relPath)));
+                    c.putAll(new HashMap<>(updateHelper.getProperties(relPath)));
                 }
             }
         }
@@ -993,7 +994,7 @@ public class J2SEModularProjectProperties {
     }
     
     void loadIncludesExcludes(IncludeExcludeVisualizer v) {
-        Set<File> roots = new HashSet<File>();
+        Set<File> roots = new HashSet<>();
         for (DefaultTableModel model : new DefaultTableModel[] {MODULE_ROOTS_MODEL, TEST_MODULE_ROOTS_MODEL}) {
             for (Object row : model.getDataVector()) {
                 File d = (File) ((Vector) row).elementAt(0);
@@ -1013,8 +1014,8 @@ public class J2SEModularProjectProperties {
     }
 
     boolean makeSharable() {
-        List<String> libs = new ArrayList<String>();
-        List<String> jars = new ArrayList<String>();
+        List<String> libs = new ArrayList<>();
+        List<String> jars = new ArrayList<>();
         collectLibs(JAVAC_CLASSPATH_MODEL, libs, jars);
         collectLibs(JAVAC_PROCESSORPATH_MODEL, libs, jars);
         collectLibs(JAVAC_TEST_CLASSPATH_MODEL, libs, jars);

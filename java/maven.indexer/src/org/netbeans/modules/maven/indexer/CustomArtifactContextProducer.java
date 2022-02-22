@@ -26,6 +26,7 @@ import org.apache.maven.index.ArtifactInfo;
 import org.apache.maven.index.ArtifactInfoRecord;
 import org.apache.maven.index.DefaultArtifactContextProducer;
 import org.apache.maven.index.artifact.ArtifactPackagingMapper;
+import org.apache.maven.index.artifact.Gav;
 import org.apache.maven.index.context.IndexingContext;
 
 /** Adapted from org.netbeans:nexus-for-netbeans. */
@@ -34,6 +35,16 @@ public final class CustomArtifactContextProducer extends DefaultArtifactContextP
     @Inject
     public CustomArtifactContextProducer(ArtifactPackagingMapper mapper) {
         super(mapper);
+    }
+
+    @Override
+    protected Gav getGavFromPath(IndexingContext context, String repositoryPath, String artifactPath) {
+        // filter out maven-metadata[-repo_name].xml to avoid IndexOutOfBoundsExceptions in
+        // org.apache.maven.index.artifact.M2GavCalculator.getSnapshotGav(M2GavCalculator.java:187)
+        if (artifactPath.endsWith(".xml") && artifactPath.substring(artifactPath.lastIndexOf("/")+1).startsWith("maven-metadata")) {
+            return null;
+        }
+        return super.getGavFromPath(context, repositoryPath, artifactPath);
     }
 
     @Override public ArtifactContext getArtifactContext(IndexingContext context, File file) {

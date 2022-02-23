@@ -105,7 +105,7 @@ public final class GradleFiles implements Serializable {
         List<File> ret = new ArrayList<>(3);
         for (Kind kind:Kind.PROPERTIES){
             File f = getFile(kind);
-            if (f.exists()){
+            if (f != null && f.exists()){
                 ret.add(f);
             }
         }

@@ -454,7 +454,7 @@ public class MoveMembersPanel extends javax.swing.JPanel implements CustomRefact
                     @Override
                     public void componentHidden(ComponentEvent e) {}
                 });
-                layeredPaneAbove.add(label, new Integer(JLayeredPane.POPUP_LAYER - 1));
+                layeredPaneAbove.add(label, (JLayeredPane.POPUP_LAYER - 1));
             }
         } else {
             JLayeredPane layeredPaneAbove = JLayeredPane.getLayeredPaneAbove(outlineView1);

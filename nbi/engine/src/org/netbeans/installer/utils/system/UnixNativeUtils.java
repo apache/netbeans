@@ -939,12 +939,12 @@ public class UnixNativeUtils extends NativeUtils {
                         throw new IOException();
                     }
 
-                    final long limit = new Long(numbers[2]).longValue();
-                    final long usage = new Long(numbers[0]).longValue();
+                    final long limit = Long.parseLong(numbers[2]);
+                    final long usage = Long.parseLong(numbers[0]);
                     final long freespace = (limit - usage) * 1024;
 
                     if (limit > 0 && freespace >= 0) {
-                        pathSpace.add(new Pair<String, Long>(quotedPath, freespace));
+                        pathSpace.add(new Pair<>(quotedPath, freespace));
                     }
                 }
             }
@@ -958,7 +958,7 @@ public class UnixNativeUtils extends NativeUtils {
                 final String s = p.getFirst();
                 if (s.length() > longestPath.length() && path.startsWith(s)) {
                     longestPath = s;
-                    freespace = p.getSecond().longValue();
+                    freespace = p.getSecond();
                 }
             }
             return freespace;
@@ -1144,7 +1144,6 @@ public class UnixNativeUtils extends NativeUtils {
         try {
             setEnvironmentVariable(
                     "LANG", "C", EnvironmentScope.PROCESS, false);
-
             setEnvironmentVariable(
                     "LC_COLLATE", "C", EnvironmentScope.PROCESS, false);
             setEnvironmentVariable(
@@ -1164,7 +1163,7 @@ public class UnixNativeUtils extends NativeUtils {
             // a quick and dirty solution - we assume that % is present only once in
             // each line - in the part where the percentage is reported, hence we
             // look for the percentage sign and then for the first slash
-            final List<File> roots = new LinkedList<File>();
+            final List<File> roots = new LinkedList<>();
             for (int i = 1; i < lines.length; i++) {
                 int index = lines[i].indexOf("%");
                 if (index != -1) {
@@ -1207,7 +1206,6 @@ public class UnixNativeUtils extends NativeUtils {
         try {
             setEnvironmentVariable(
                     "LANG", "C", EnvironmentScope.PROCESS, false);
-
             setEnvironmentVariable(
                     "LC_COLLATE", "C", EnvironmentScope.PROCESS, false);
             setEnvironmentVariable(
@@ -1236,13 +1234,11 @@ public class UnixNativeUtils extends NativeUtils {
                 if (index != -1) {                    
                     String parts[] = lines[i].substring(0, index).split("[ ]+");
                     if (parts.length > 1) {
-                        return new Long(parts[parts.length - 2]).longValue() * 1024L;
+                        return Long.parseLong(parts[parts.length - 2]) * 1024L;
                     }
                 }
             }
-        } catch (IOException e) {
-            LogManager.log(e);
-        } catch (NumberFormatException e) {
+        } catch (IOException | NumberFormatException e) {
             LogManager.log(e);
         }
         return 0L;
@@ -1263,17 +1259,17 @@ public class UnixNativeUtils extends NativeUtils {
                 Integer [] wModes = new Integer [] {FileAccessMode.WU, FileAccessMode.WG, FileAccessMode.WO };
                 Integer [] xModes = new Integer [] {FileAccessMode.EU, FileAccessMode.EG, FileAccessMode.EO };
                 
-                List <Pair <List <Integer>, String >> modes = new ArrayList <Pair <List <Integer> , String >>();
+                List <Pair <List <Integer>, String >> modes = new ArrayList<>();
                 
-                modes.add(new Pair <List <Integer>, String > (new ArrayList <Integer> (Arrays.asList(rModes)), "r"));
-                modes.add(new Pair <List <Integer>, String > (new ArrayList <Integer> (Arrays.asList(wModes)), "w"));
-                modes.add(new Pair <List <Integer>, String > (new ArrayList <Integer> (Arrays.asList(xModes)), "x"));
+                modes.add(new Pair< >(new ArrayList<>(Arrays.asList(rModes)), "r"));
+                modes.add(new Pair< >(new ArrayList<>(Arrays.asList(wModes)), "w"));
+                modes.add(new Pair< >(new ArrayList<>(Arrays.asList(xModes)), "x"));
                 
                 for (int i = 0; i < modes.size(); i++) {
                     String m = StringUtils.EMPTY_STRING;
                     List<Integer> list = modes.get(i).getFirst();
                     for (int j = 0; j < list.size(); j++) {
-                        if ((mode & list.get(j).intValue()) != 0) {
+                        if ((mode & list.get(j)) != 0) {
                             m += (j == 0 ? "u" : (j == 1 ? "g" : "o"));
                         }
                     }                    
@@ -1331,9 +1327,7 @@ public class UnixNativeUtils extends NativeUtils {
             }
 
             return permissions;
-        } catch (IOException e) {
-            return -1;
-        } catch (IndexOutOfBoundsException e) {
+        } catch (IOException | IndexOutOfBoundsException e) {
             return -1;
         }
     }
@@ -1348,7 +1342,6 @@ public class UnixNativeUtils extends NativeUtils {
             try {
                 setEnvironmentVariable(
                         "LANG", "C", EnvironmentScope.PROCESS, false);
-
                 setEnvironmentVariable(
                         "LC_COLLATE", "C", EnvironmentScope.PROCESS, false);
                 setEnvironmentVariable(
@@ -1372,9 +1365,7 @@ public class UnixNativeUtils extends NativeUtils {
             if (matcher.find()) {
                 adm = Integer.parseInt(matcher.group(1)) == 0;
             }
-        } catch (IOException e) {
-            LogManager.log(e);
-        } catch (NumberFormatException e) {
+        } catch (IOException | NumberFormatException e) {
             LogManager.log(e);
         }
         return adm;
@@ -1397,7 +1388,7 @@ public class UnixNativeUtils extends NativeUtils {
         protected void writeCleaningFileList(File listFile, List<String> files) throws IOException {
             // be sure that the list file contains end-of-line
             // otherwise the installer will run into Issue 104079
-            List<String> newList = new LinkedList<String> (files);
+            List<String> newList = new LinkedList<> (files);
             newList.add(SystemUtils.getLineSeparator());
             FileUtils.writeStringList(listFile, newList);
         }

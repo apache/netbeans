@@ -284,7 +284,7 @@ public class LSPBindings {
             // If this is a MultiMimeLanguageServerProvider, then retrieve all 
             // mime types handled by this server.
             if (provider instanceof MultiMimeLanguageServerProvider) {
-                inDescription.mimeTypes = ((MultiMimeLanguageServerProvider)provider).getMimeTypes();
+                inDescription.mimeTypes = new HashSet<>(((MultiMimeLanguageServerProvider)provider).getMimeTypes());
             }
             LanguageServerDescription desc = provider.startServer(lkp);
 

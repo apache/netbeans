@@ -403,7 +403,7 @@ public final class NbGradleProjectImpl implements Project {
             loadedProjectSerial = s;
             this.attemptedQuality = aim;
             
-            boolean replace = project == null;
+            boolean replace = project == null || force;
             if (project != null) {
                 if (prj.getQuality().betterThan(project.getQuality())) {
                     replace = true;

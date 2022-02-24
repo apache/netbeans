@@ -90,12 +90,12 @@ public final class NimbusEditorTabDisplayerUI extends BasicScrollingTabDisplayer
         Graphics2D g2d = (Graphics2D) g;
         int w = displayer.getWidth();
         int h = displayer.getHeight();
-        javax.swing.Painter painter = null;
+        javax.swing.Painter<?> painter = null;
         if (displayer.isActive()) {
-            painter = (javax.swing.Painter) UIManager.get("TabbedPane:TabbedPaneTabArea[Enabled+MouseOver].backgroundPainter");
+            painter = (javax.swing.Painter<?>) UIManager.get("TabbedPane:TabbedPaneTabArea[Enabled+MouseOver].backgroundPainter");
         }
         if (!displayer.isActive() || null == painter) {
-            painter = (javax.swing.Painter) UIManager.get("TabbedPane:TabbedPaneTabArea[Enabled].backgroundPainter");
+            painter = (javax.swing.Painter<?>) UIManager.get("TabbedPane:TabbedPaneTabArea[Enabled].backgroundPainter");
         }
         if( null != painter )
             painter.paint(g2d, null, w, h);
@@ -115,7 +115,7 @@ public final class NimbusEditorTabDisplayerUI extends BasicScrollingTabDisplayer
 
     private static void initIcons() {
         if( null == buttonIconPaths ) {
-            buttonIconPaths = new HashMap<Integer, String[]>(7);
+            buttonIconPaths = new HashMap<>(7);
             
             //left button
             String[] iconPaths = new String[4];

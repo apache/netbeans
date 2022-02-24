@@ -32,7 +32,7 @@ import javax.swing.ListCellRenderer;
 import javax.swing.UIManager;
 import org.openide.nodes.Node;
 
-final class IconPanel extends JPanel implements ListCellRenderer {
+final class IconPanel extends JPanel implements ListCellRenderer<Object> {
     private Image thumbImage;
     private boolean selected;
     private boolean focused;
@@ -42,7 +42,7 @@ final class IconPanel extends JPanel implements ListCellRenderer {
     }
   
     @Override
-    public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+    public Component getListCellRendererComponent(JList<? extends Object> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
         Node node = Visualizer.findNode(value);
         thumbImage = node.getIcon(BeanInfo.ICON_COLOR_32x32);
         this.selected = isSelected;

@@ -295,7 +295,7 @@ public abstract class TabDisplayerUI extends ComponentUI {
     private static Map<Integer, String[]> buttonIconPaths;
     private static void initIcons() {
         if( null == buttonIconPaths ) {
-            buttonIconPaths = new HashMap<Integer, String[]>(10);
+            buttonIconPaths = new HashMap<>(10);
             
             //close button
             String[] iconPaths = new String[4];

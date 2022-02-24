@@ -120,7 +120,7 @@ public class FileName implements FileNaming {
     }
 
     public final @Override int hashCode() {
-        return id.intValue();
+        return id;
     }
 
     public @Override boolean isFile() {
@@ -144,9 +144,9 @@ public class FileName implements FileNaming {
     public void dumpCreation(StringBuilder sb) {
         if (this.currentName instanceof Creation) {
             StringWriter sw = new StringWriter();
-            PrintWriter pw = new PrintWriter(sw);
-            ((Creation)this.currentName).printStackTrace(pw);
-            pw.close();
+            try (PrintWriter pw = new PrintWriter(sw)) {
+                ((Creation)this.currentName).printStackTrace(pw);
+            }
             sb.append(sw.toString());
         }
     }

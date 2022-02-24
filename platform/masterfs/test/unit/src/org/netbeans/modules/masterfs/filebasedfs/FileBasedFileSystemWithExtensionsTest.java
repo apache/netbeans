@@ -41,7 +41,7 @@ public class FileBasedFileSystemWithExtensionsTest extends FileBasedFileSystemTe
 
     @Override
     protected void setServices(Class<?>... services) {
-        List<Class<?>> arr = new ArrayList<Class<?>>();
+        List<Class<?>> arr = new ArrayList<>();
         arr.addAll(Arrays.asList(services));
         arr.add(FileBasedURLMapper.class);
         arr.add(ProvidedExtensionsTest.ProvidedExtensionsImpl.class);

@@ -35,6 +35,7 @@ import org.openide.util.Lookup.Result;
  *
  * @author  rm111737
  */
+@SuppressWarnings("deprecation")
 public class FileObjectTestHid extends TestBaseHid {
 
     private static final String FOLDER_CHILD_NAME= "testFolder";
@@ -48,7 +49,7 @@ public class FileObjectTestHid extends TestBaseHid {
     private FileSystem fs;
     
     private FileObject root;
-    private static Set res = null;
+    private static Set<String> res = null;
 
 
     /** Here add necessary resources. But prefered to use:
@@ -1900,7 +1901,7 @@ public class FileObjectTestHid extends TestBaseHid {
         FileObject fold1 = getTestFolder1(root);
         FileObject fold2 = getTestFolder2(root);
         
-        List list= makeList(root.getFolders(false));
+        List<? extends FileObject> list= makeList(root.getFolders(false));
         fsAssert("Expected that enumeration will include FileObjects according to TestSetup",list.contains(fold1));
         fsAssert("Expected that enumeration will include FileObjects according to TestSetup",list.contains(fold2));        
     }
@@ -1909,9 +1910,9 @@ public class FileObjectTestHid extends TestBaseHid {
     public void  testGetFolders1() {
         checkSetUp();
         
-        List childs = makeList(root.getChildren(false));
-        List folders = makeList(root.getFolders(false));
-        List datas = makeList(root.getData(false));
+        List<? extends FileObject> childs = makeList(root.getChildren(false));
+        List<? extends FileObject> folders = makeList(root.getFolders(false));
+        List<? extends FileObject> datas = makeList(root.getData(false));
         
         fsAssert("Expected that numbre of children equals number of folders + number of datas ",
         childs.size() == (folders.size() + datas.size()));
@@ -1921,9 +1922,9 @@ public class FileObjectTestHid extends TestBaseHid {
     public void  testGetFolders2() {
         checkSetUp();
         
-        List childs = makeList(root.getChildren(true));
-        List folders = makeList(root.getFolders(true));
-        List datas = makeList(root.getData(true));
+        List<? extends FileObject> childs = makeList(root.getChildren(true));
+        List<? extends FileObject> folders = makeList(root.getFolders(true));
+        List<? extends FileObject> datas = makeList(root.getData(true));
         
         fsAssert("Expected that numbre of children equals number of folders + number of datas ",
         childs.size() == (folders.size() + datas.size()));
@@ -1945,7 +1946,7 @@ public class FileObjectTestHid extends TestBaseHid {
         FileObject file1 = getTestFile1(root);
         FileObject file2 = getTestFile2(root);
         
-        List list= makeList(root.getData(false));
+        List<? extends FileObject> list= makeList(root.getData(false));
         fsAssert("Expected that enumeration will include FileObjects according to TestSetup",list.contains(file1));
         fsAssert("Expected that enumeration will include FileObjects according to TestSetup",list.contains(file2));
     }
@@ -2293,7 +2294,7 @@ public class FileObjectTestHid extends TestBaseHid {
     }
 
     public static void implOfTestGetFileObjectForSubversion(final FileObject folder, final String childName) throws InterruptedException {        
-        final List l = new ArrayList();
+        final List<FileObject> l = new ArrayList<>();
         folder.addFileChangeListener(new FileChangeAdapter(){
             @Override
             public void fileFolderCreated(FileEvent fe) {
@@ -2594,7 +2595,7 @@ public class FileObjectTestHid extends TestBaseHid {
     public void testGetAttributes() {
         checkSetUp();
         String[] names = new String[] {"name1","name2","name3","name4"};        
-        List namesList = Arrays.asList(names);
+        List<String> namesList = Arrays.asList(names);
         List<String> compareList = new ArrayList<String> ();                
         FileObject file1 = getTestFile1 (root);
                 
@@ -3662,7 +3663,7 @@ public class FileObjectTestHid extends TestBaseHid {
         }
         
         if (res == null ) {
-            res = new HashSet(Arrays.asList(resources));
+            res = new HashSet<>(Arrays.asList(resources));
             createResource("",0,3, true);
         }
         
@@ -3675,8 +3676,8 @@ public class FileObjectTestHid extends TestBaseHid {
     private static void createResource(String prevLevel, int level, int maxLevel, boolean folder) {
         if (level < maxLevel && prevLevel.indexOf('.') == -1) {
             for (int i = 0; i < 2; i++) {
-                createResource(prevLevel + FOLDER_CHILD + new Integer(i).toString(),level + 1, maxLevel, true);
-                createResource(prevLevel + FILE_CHILD + new Integer(i).toString(),level + 1, maxLevel, false);
+                createResource(prevLevel + FOLDER_CHILD + Integer.toString(i),level + 1, maxLevel, true);
+                createResource(prevLevel + FILE_CHILD + Integer.toString(i),level + 1, maxLevel, false);
             }
         }
         

@@ -424,7 +424,7 @@ public abstract class BasicScrollingTabDisplayerUI extends BasicTabDisplayerUI {
     into its own utility class, though this would require a new API to be exposed. */
     private static final class ScratchGraphics {
         private final GraphicsConfiguration configuration;
-        private Reference<Graphics2D> graphics = new SoftReference<Graphics2D>(null);
+        private Reference<Graphics2D> graphics = new SoftReference<>(null);
 
         public ScratchGraphics(GraphicsConfiguration configuration) {
             if (configuration == null) {
@@ -447,7 +447,7 @@ public abstract class BasicScrollingTabDisplayerUI extends BasicTabDisplayerUI {
                 WritableRaster raster = model.createCompatibleWritableRaster(1, 1);
                 BufferedImage img = new BufferedImage(model, raster, model.isAlphaPremultiplied(), null);
                 result = img.createGraphics();
-                this.graphics = new SoftReference<Graphics2D>(result);
+                this.graphics = new SoftReference<>(result);
             }
             // Restore state on every call, just in case a client modified it for some reason.
             result.setClip(null);

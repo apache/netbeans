@@ -141,7 +141,7 @@ public class FileSystemCapability extends Object {
     */
     @Deprecated
     public Enumeration<? extends FileObject> findAllResources(String name) {
-        Vector<FileObject> v = new Vector<FileObject>(8);
+        Vector<FileObject> v = new Vector<>(8);
         Enumeration<? extends FileSystem> en = fileSystems();
 
         while (en.hasMoreElements()) {
@@ -204,7 +204,7 @@ public class FileSystemCapability extends Object {
     @Deprecated
     public final Enumeration<? extends FileObject> findAll(String aPackage, String name, String ext) {
         Enumeration<? extends FileSystem> en = fileSystems();
-        Vector<FileObject> ret = new Vector<FileObject>();
+        Vector<FileObject> ret = new Vector<>();
 
         while (en.hasMoreElements()) {
             FileSystem fs = (FileSystem) en.nextElement();

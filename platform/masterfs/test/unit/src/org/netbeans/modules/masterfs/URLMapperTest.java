@@ -55,8 +55,8 @@ public class URLMapperTest extends NbTestCase {
         private static void testURLMapper() {            
             assertNotNull(mfs);
             FileObject[] children = mfs.getRoot().getChildren();
-            for (int i = 0; i < children.length; i++) {
-                java.io.File file = FileUtil.toFile(children[i]);
+            for (FileObject children1 : children) {
+                java.io.File file = FileUtil.toFile(children1);
                 assertNotNull(file);
                 assertNotNull(FileUtil.toFileObject(file));
             }

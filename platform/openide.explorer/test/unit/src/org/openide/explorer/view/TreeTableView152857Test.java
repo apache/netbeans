@@ -263,7 +263,7 @@ public class TreeTableView152857Test extends NbTestCase {
             setLayout (new BorderLayout ());
             manager.setRootContext (rootNode);
 
-            Node.Property[] props = rootNode.getPropertySets ()[0].getProperties ();
+            Node.Property<?>[] props = rootNode.getPropertySets ()[0].getProperties ();
             view = new TreeTableView ();
             view.setProperties (props);
 
@@ -282,10 +282,10 @@ public class TreeTableView152857Test extends NbTestCase {
 
         void sort(int column, boolean ascending) {
             try {
-                Method setSortingColumn = view.getClass().getDeclaredMethod("setSortingColumn", new Class[]{int.class});
+                Method setSortingColumn = view.getClass().getDeclaredMethod("setSortingColumn", new Class<?>[]{int.class});
                 setSortingColumn.setAccessible(true);
                 setSortingColumn.invoke(view, column);
-                Method setSortingOrder = view.getClass().getDeclaredMethod("setSortingOrder", new Class[]{boolean.class});
+                Method setSortingOrder = view.getClass().getDeclaredMethod("setSortingOrder", new Class<?>[]{boolean.class});
                 setSortingOrder.setAccessible(true);
                 setSortingOrder.invoke(view, ascending);
             } catch (IllegalAccessException ex) {
@@ -344,13 +344,13 @@ public class TreeTableView152857Test extends NbTestCase {
                 ss = Sheet.createPropertiesSet ();
                 s.put (ss);
             }
-            Property [] props = new Property [2];
+            Property<?>[] props = new Property<?>[2];
 
             DummyProperty dp = new DummyProperty (getName ());
             dp.setValue ("ComparableColumnTTV", Boolean.TRUE);
             props [0] = dp;
 
-            Property p_tree = new Node.Property<Boolean> (Boolean.class) {
+            Property<Boolean> p_tree = new Node.Property<Boolean> (Boolean.class) {
 
                 @Override
                 public boolean canRead () {

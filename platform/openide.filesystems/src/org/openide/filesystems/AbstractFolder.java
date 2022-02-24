@@ -837,7 +837,7 @@ abstract class AbstractFolder extends FileObject {
         }
     }
 
-    private void refreshChildren(final Enumeration<? extends AbstractFolder> subfiles, final Collection nameFilter, boolean expected) {
+    private void refreshChildren(final Enumeration<? extends AbstractFolder> subfiles, final Collection<String> nameFilter, boolean expected) {
         while (subfiles.hasMoreElements()) {
             AbstractFolder child = subfiles.nextElement();
 

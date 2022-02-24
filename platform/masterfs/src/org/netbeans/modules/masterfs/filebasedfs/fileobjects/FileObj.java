@@ -54,7 +54,7 @@ import org.openide.util.BaseUtilities;
  */
 public class FileObj extends BaseFileObj {
     static final long serialVersionUID = -1133540210876356809L;
-    private static final MutualExclusionSupport<FileObj> MUT_EXCL_SUPPORT = new MutualExclusionSupport<FileObj>();
+    private static final MutualExclusionSupport<FileObj> MUT_EXCL_SUPPORT = new MutualExclusionSupport<>();
     private long lastModified = -1;
     private boolean realLastModifiedCached;
     private static final Logger LOGGER = Logger.getLogger(FileObj.class.getName());
@@ -79,9 +79,10 @@ public class FileObj extends BaseFileObj {
         return getOutputStream(lock, extensions, this);
     }
     
-    @Messages(
+    @Messages({
+        "# {0} - invalidFileObject",
         "EXC_INVALID_FILE=File {0} is not valid"
-    )
+    })
     public OutputStream getOutputStream(final FileLock lock, ProvidedExtensions extensions, FileObject mfo) throws IOException {
         if (LOGGER.isLoggable(Level.FINE) && EventQueue.isDispatchThread()) {
             LOGGER.log(Level.WARNING, "writing " + this, new IllegalStateException("getOutputStream invoked in AWT"));
@@ -461,18 +462,12 @@ public class FileObj extends BaseFileObj {
                 if (lastMod == 0) {
                     lastMod = 1;
                 }
-            } catch (UnsupportedOperationException ex) {
+            } catch (UnsupportedOperationException | SecurityException ex) {
                 if (file.exists()) {
                     lastMod = 1;
                 }
-            } catch (SecurityException ex) {
-                if (file.exists()) {
-                    lastMod = 1;
-                }
-            } catch (IOException ex) {
-                // lastMod stays 0, the file is invalid.
-            } catch (InvalidPathException ex) {
-                // lastMod stays 0, the path is invalid.
+            } catch (IOException | InvalidPathException ex) {
+                // lastMod stays 0, the file/path is invalid.
             }
         }
         setLastModified(lastMod, file, readOnly);

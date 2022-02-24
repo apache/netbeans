@@ -57,6 +57,7 @@ public class TopComponentGetLookupOverridenTest extends TopComponentGetLookupTes
     }
 
 
+    @SuppressWarnings("serial") // Same-version serialization only
     private static class ListingYourComponent extends TopComponent
     implements java.beans.PropertyChangeListener {
         YourComponent delegate;
@@ -68,13 +69,13 @@ public class TopComponentGetLookupOverridenTest extends TopComponentGetLookupTes
             
             addPropertyChangeListener (this);
             delegate.getExplorerManager ().setRootContext (new AbstractNode (new Children.Array ()));
-            java.lang.ref.SoftReference ref = new java.lang.ref.SoftReference (new Object ());
+            java.lang.ref.SoftReference<?> ref = new java.lang.ref.SoftReference<>(new Object ());
             assertGC ("Trying to simulate issue 40842, to GC TopComponent$SynchronizeNodes", ref);
             
             delegate.getExplorerManager().addPropertyChangeListener(this);
         }
         
-        private ThreadLocal callbacks = new ThreadLocal ();
+        private ThreadLocal<Boolean> callbacks = new ThreadLocal<>();
         public void propertyChange (java.beans.PropertyChangeEvent ev) {
             ExplorerManager manager = delegate.getExplorerManager ();
 
@@ -96,9 +97,9 @@ public class TopComponentGetLookupOverridenTest extends TopComponentGetLookupTes
 
 
                     Children.Array ch = (Children.Array)manager.getRootContext ().getChildren ();
-                    for (int i = 0; i < arr.length; i++) {
-                        if (arr[i].getParentNode() != manager.getRootContext()) {
-                            assertTrue ("If this fails we are in troubles", ch.add (new Node[] { arr[i] }));
+                    for (Node arr1 : arr) {
+                        if (arr1.getParentNode() != manager.getRootContext()) {
+                            assertTrue("If this fails we are in troubles", ch.add(new Node[]{arr1}));
                         }
                     }
                     LOG.info("em setSelectedNodes: " + Arrays.asList(arr));
@@ -128,6 +129,7 @@ public class TopComponentGetLookupOverridenTest extends TopComponentGetLookupTes
     
     // The following class is copied from example in ExplorerUtils:
     //
+    @SuppressWarnings("serial") // Same-version serialization only
     public static class YourComponent extends TopComponent
     implements ExplorerManager.Provider, Lookup.Provider {
         private ExplorerManager manager;

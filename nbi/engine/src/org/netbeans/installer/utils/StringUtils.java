@@ -270,7 +270,7 @@ public abstract class StringUtils {
     }
     
     public static String asPath(
-            final Class clazz) {
+            final Class<?> clazz) {
         return clazz.getPackage().getName().replace('.', '/');
     }
     

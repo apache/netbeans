@@ -236,7 +236,7 @@ key:TabbedPane:TabbedPaneTab[Selected].backgroundPainter
         }
 
         if ((o != null) && (o instanceof javax.swing.Painter)) {
-            javax.swing.Painter painter = (javax.swing.Painter) o;
+            javax.swing.Painter<?> painter = (javax.swing.Painter<?>) o;
             BufferedImage bufIm = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
             Graphics2D g2d = bufIm.createGraphics();
             g2d.setBackground(UIManager.getColor("Panel.background"));
@@ -262,7 +262,7 @@ key:TabbedPane:TabbedPaneTab[Selected].backgroundPainter
         o = UIManager.get("TabbedPane:TabbedPaneTab[Enabled].backgroundPainter");
 
         if ((o != null) && (o instanceof javax.swing.Painter)) {
-            javax.swing.Painter painter = (javax.swing.Painter) o;
+            javax.swing.Painter<?> painter = (javax.swing.Painter<?>) o;
             BufferedImage bufIm = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
             Graphics2D g2d = bufIm.createGraphics();
             g2d.setBackground(UIManager.getColor("Panel.background"));
@@ -283,7 +283,7 @@ key:TabbedPane:TabbedPaneTab[Selected].backgroundPainter
     
     private static void initIcons() {
         if( null == buttonIconPaths ) {
-            buttonIconPaths = new HashMap<Integer, String[]>(7);
+            buttonIconPaths = new HashMap<>(7);
             
             //close button
             String[] iconPaths = new String[4];

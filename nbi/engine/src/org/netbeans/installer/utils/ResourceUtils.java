@@ -52,7 +52,7 @@ public final class ResourceUtils {
         return getBundleMessage(baseName, Locale.getDefault(), loader, key);
     }
 
-    public static String getString(final Class clazz, final String key) {
+    public static String getString(final Class<?> clazz, final String key) {
         return getBundleMessage(getBundleResource(clazz), Locale.getDefault(), clazz.getClassLoader(), key);
     }
 
@@ -72,7 +72,7 @@ public final class ResourceUtils {
     }
 
     public static String getString(
-            final Class clazz,
+            final Class<?> clazz,
             final String key,
             final Object... arguments) {
         return format(getString(clazz, key), arguments);
@@ -103,7 +103,7 @@ public final class ResourceUtils {
     }
 
     public static Map <Locale, String> getStrings(
-            final Class clazz,
+            final Class<?> clazz,
             final String key,
             final Object... arguments) {
         return getStrings(getBundleResource(clazz), key, clazz.getClassLoader(), arguments);
@@ -163,7 +163,7 @@ public final class ResourceUtils {
             final String resource) {
         return resource.substring(resource.lastIndexOf("/")+1);
     }
-    public static String getResourceClassName(Class c) {
+    public static String getResourceClassName(Class<?> c) {
         return getResourceClassName(c.getName());
     }
     public static String getResourceClassName(String className) {
@@ -177,7 +177,7 @@ public final class ResourceUtils {
         final String bundleId = loader.toString() + baseName +
                 (locale.toString().equals(StringUtils.EMPTY_STRING) ? StringUtils.EMPTY_STRING : ("_" + locale));
 
-        ResourceBundle bundle = (ResourceBundle) loadedBundles.get(bundleId);
+        ResourceBundle bundle = loadedBundles.get(bundleId);
 
         if (bundle == null && !loadedBundles.containsKey(bundleId)) {
             try {
@@ -237,7 +237,7 @@ public final class ResourceUtils {
         return map;
     }
     
-    private static String getBundleResource(final Class clazz) {
+    private static String getBundleResource(final Class<?> clazz) {
         return clazz.getPackage().getName() + BUNDLE_FILE_SUFFIX;
     }
     /////////////////////////////////////////////////////////////////////////////////

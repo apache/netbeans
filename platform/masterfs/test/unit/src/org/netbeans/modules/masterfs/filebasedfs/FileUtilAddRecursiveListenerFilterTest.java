@@ -42,7 +42,7 @@ import org.openide.filesystems.FileUtil;
 public class FileUtilAddRecursiveListenerFilterTest extends NbTestCase
 implements FileChangeListener {
     private FileObject root;
-    private final List<FileEvent> events = new ArrayList<FileEvent>();
+    private final List<FileEvent> events = new ArrayList<>();
     @SuppressWarnings("NonConstantLogger")
     private Logger LOG;
 

@@ -205,9 +205,7 @@ public class Attributes extends DefaultAttributes {
                 ExLocalFileSystem exLFs = null;
                 try {
                     exLFs = ExLocalFileSystem.getInstance(getRootForAttributes());                    
-                } catch (PropertyVetoException e) {
-                    Exceptions.printStackTrace(e);
-                } catch (IOException e) {
+                } catch (PropertyVetoException | IOException e) {
                     Exceptions.printStackTrace(e);
                 }
                 sharedUserAttributes = exLFs.getAttributes();

@@ -25,8 +25,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import junit.framework.Assert;
 import junit.framework.AssertionFailedError;
+import org.junit.Assert;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.masterfs.watcher.Watcher;
 import org.openide.filesystems.FileObject;
@@ -39,9 +39,10 @@ public class TestUtils {
         return f.getAbsolutePath().replace('\\','/');//NOI18N
     }
 
+    @SuppressWarnings("unchecked")
     public static void gcAll() {
         LOG.info("doing gcAll");
-        List<Reference<Object>> refs = new ArrayList<Reference<Object>>();
+        List<Reference<Object>> refs = new ArrayList<>();
         for (FileObjectFactory fbs : FileObjectFactory.getInstances()) {
             fbs.allIBaseLock.readLock().lock();
             try {
@@ -71,9 +72,10 @@ public class TestUtils {
         LOG.info("done gcAll");
     }
 
+    @SuppressWarnings("unchecked")
     public static void logAll() {
         LOG.info("all existing file objects");
-        List<Reference<Object>> refs = new ArrayList<Reference<Object>>();
+        List<Reference<Object>> refs = new ArrayList<>();
         for (FileObjectFactory fbs : FileObjectFactory.getInstances()) {
             fbs.allIBaseLock.readLock().lock();
             try {

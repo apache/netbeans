@@ -428,9 +428,9 @@ public class SwingFrameContainer extends NbiFrame implements SwingContainer {
 
     private boolean initializeMacJDK(String className) {
         try {
-            Class initializer = Class.forName(className);
+            Class<?> initializer = Class.forName(className);
             @SuppressWarnings("unchecked")
-            Method m = initializer.getDeclaredMethod("initialize", new Class[0] ); // NOI18N
+            Method m = initializer.getDeclaredMethod("initialize"); // NOI18N
             m.invoke(initializer, this);
             return true;
         }catch (NoClassDefFoundError e) {

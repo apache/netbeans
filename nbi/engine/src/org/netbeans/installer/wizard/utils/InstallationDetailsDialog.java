@@ -161,6 +161,7 @@ public class InstallationDetailsDialog extends NbiDialog {
                         for (Throwable warning: component.getUninstallationWarnings()) {
                             properties.add("<html><b>Warning:</b> " + warning.getMessage());
                         }
+                        break;
                     case UNINSTALLED_SUCCESSFULLY:
                         break;
                     case FAILED_TO_UNINSTALL:

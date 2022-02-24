@@ -56,7 +56,7 @@ interface PropertyDisplayer {
      * update the property */
     public static final int UPDATE_ON_EXPLICIT_REQUEST = 2;
 
-    public Property getProperty();
+    public Property<?> getProperty();
 
     public void refresh();
 

@@ -125,7 +125,7 @@ public final class RootObj<T extends FileObject> extends FileObject {
             File file = files[i];
             files[i] = FileUtil.normalizeFile(file);
         }
-        Map<FileObjectFactory, List<File>> files2Factory = new HashMap<FileObjectFactory, List<File>>();
+        Map<FileObjectFactory, List<File>> files2Factory = new HashMap<>();
         Map<File, ? extends FileObjectFactory> roots2Factory = FileBasedFileSystem.factories();
         Arrays.sort(files);
         for (File file : files) {
@@ -137,7 +137,7 @@ public final class RootObj<T extends FileObject> extends FileObject {
             if (factory != null) {
                 List<File> lf = files2Factory.get(factory);
                 if (lf == null) {
-                    lf = new ArrayList<File>();
+                    lf = new ArrayList<>();
                     files2Factory.put(factory, lf);
                 } else {
                     File tmp = file;

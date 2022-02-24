@@ -65,7 +65,7 @@ public interface PropertyModel {
      * The class of the property.
      * @return A class object
      */
-    public Class getPropertyType();
+    public Class<?> getPropertyType();
 
     /**
      * The class of the property editor or <CODE>null</CODE>
@@ -73,7 +73,7 @@ public interface PropertyModel {
      * @return the class of PropertyEditor that should be used to edit this
      * PropertyModel
      */
-    public Class getPropertyEditorClass();
+    public Class<?> getPropertyEditorClass();
 
     /** Add listener to change of the value.
     */

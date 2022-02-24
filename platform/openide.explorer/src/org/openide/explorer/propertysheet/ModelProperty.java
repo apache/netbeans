@@ -95,7 +95,7 @@ class ModelProperty extends Property {
         return super.getPropertyEditor();
     }
 
-    static Property toProperty(PropertyModel mdl) {
+    static Property<Object> toProperty(PropertyModel mdl) {
         if (mdl instanceof NodePropertyModel) {
             //System.err.println("Extracting prop from NodePropertyModel - " + ((NodePropertyModel) mdl).getProperty().getDisplayName());
             return ((NodePropertyModel) mdl).getProperty();

@@ -20,14 +20,10 @@
 package org.netbeans.installer.utils.helper.swing;
 
 import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.tree.TreePath;
-import org.netbeans.installer.utils.helper.ErrorLevel;
-import org.netbeans.installer.utils.LogManager;
 
 /**
  *

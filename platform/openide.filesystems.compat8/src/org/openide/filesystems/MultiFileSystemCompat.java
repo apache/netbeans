@@ -35,21 +35,19 @@ public abstract class MultiFileSystemCompat extends FileSystem {
     /** Merge actions from all delegates.
     */
     public SystemAction[] getActions() {
-        List<SystemAction> al = new ArrayList<SystemAction>(101); // randomly choosen constant
-        Set<SystemAction> uniq = new HashSet<SystemAction>(101); // not that randommly choosen
+        List<SystemAction> al = new ArrayList<>(101); // randomly choosen constant
+        Set<SystemAction> uniq = new HashSet<>(101); // not that randommly choosen
 
         FileSystem[] del = this.getDelegates();
 
-        for (int i = 0; i < del.length; i++) {
-            if (del[i] == null) {
+        for (FileSystem del1 : del) {
+            if (del1 == null) {
                 continue;
             }
-
-            SystemAction[] acts = compat(del[i]).getActions();
-
-            for (int j = 0; j < acts.length; j++) {
-                if (uniq.add(acts[j])) {
-                    al.add(acts[j]);
+            SystemAction[] acts = compat(del1).getActions();
+            for (SystemAction act : acts) {
+                if (uniq.add(act)) {
+                    al.add(act);
                 }
             }
         }
@@ -58,21 +56,19 @@ public abstract class MultiFileSystemCompat extends FileSystem {
     }
 
     public SystemAction[] getActions(final Set<FileObject> foSet) {
-        List<SystemAction> al = new ArrayList<SystemAction>(101); // randomly choosen constant
-        Set<SystemAction> uniq = new HashSet<SystemAction>(101); // not that randommly choosen
+        List<SystemAction> al = new ArrayList<>(101); // randomly choosen constant
+        Set<SystemAction> uniq = new HashSet<>(101); // not that randommly choosen
 
         final FileSystem[] del = this.getDelegates();
 
-        for (int i = 0; i < del.length; i++) {
-            if (del[i] == null) {
+        for (FileSystem del1 : del) {
+            if (del1 == null) {
                 continue;
             }
-
-            final SystemAction[] acts = compat(del[i]).getActions(foSet);
-
-            for (int j = 0; j < acts.length; j++) {
-                if (uniq.add(acts[j])) {
-                    al.add(acts[j]);
+            final SystemAction[] acts = compat(del1).getActions(foSet);
+            for (SystemAction act : acts) {
+                if (uniq.add(act)) {
+                    al.add(act);
                 }
             }
         }
@@ -94,11 +90,11 @@ public abstract class MultiFileSystemCompat extends FileSystem {
     throws EnvironmentNotSupportedException {
         FileSystem[] layers = getDelegates();
 
-        for (int i = 0; i < layers.length; i++) {
-            if (layers[i] != null) {
+        for (FileSystem layer : layers) {
+            if (layer != null) {
                 try {
-                    compat(layers[i]).prepareEnvironment(env);
-                } catch (EnvironmentNotSupportedException ense) {
+                    compat(layer).prepareEnvironment(env);
+                }catch (EnvironmentNotSupportedException ense) {
                     // Fine.
                 }
             }

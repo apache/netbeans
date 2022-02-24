@@ -58,7 +58,7 @@ public class StackLayoutTest extends NbTestCase {
         frame.getContentPane().remove(panel);
         panel = null;
         frame = null;
-        WeakReference<Component> weakTestLabel = new WeakReference<Component>(testLabel);
+        WeakReference<Component> weakTestLabel = new WeakReference<>(testLabel);
         testLabel = null;
         
         assertGC("visibleComp member of StackLayout still not GCed", weakTestLabel, Collections.singleton(layout));

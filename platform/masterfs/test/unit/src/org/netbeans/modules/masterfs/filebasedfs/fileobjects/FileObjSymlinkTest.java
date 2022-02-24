@@ -287,8 +287,7 @@ public class FileObjSymlinkTest extends NbTestCase {
             Files.createSymbolicLink(lk.toPath(), a.toPath());
             lk.delete();
             return true;
-        } catch (RuntimeException e) {
-        } catch (IOException ex) {
+        } catch (RuntimeException | IOException e) {
         }
         printSkipping();
         return false;

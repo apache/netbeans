@@ -75,14 +75,14 @@ public class TopComponentGetLookupTest extends NbTestCase {
     
     /** Test to find nodes.
      */
-    private void doTestNodes(Node[] arr, Class c, int cnt) {
+    private <T> void doTestNodes(Node[] arr, Class<T> c, int cnt) {
         if (arr != null) {
             top.setActivatedNodes(arr);
         }
         
         assertNotNull ("At least one node is registered", lookup.lookup (c));
-        Lookup.Result res = lookup.lookup (new Lookup.Template (c));
-        Collection coll = res.allItems();
+        Lookup.Result<T> res = lookup.lookup (new Lookup.Template<>(c));
+        Collection<? extends Lookup.Item<T>> coll = res.allItems();
         assertEquals ("Two registered: " + coll, cnt, coll.size ());
     }
     
@@ -91,7 +91,7 @@ public class TopComponentGetLookupTest extends NbTestCase {
         doTestNodes(new Node[] {new N("1"), new N("2")}, FeatureDescriptor.class, 2);
     }
     
-    private void doTestNodesWithChangesInLookup (Class c) {
+    private <T> void doTestNodesWithChangesInLookup (Class<T> c) {
         InstanceContent ic = new InstanceContent();
         
         Node[] arr = new Node[] {
@@ -108,11 +108,11 @@ public class TopComponentGetLookupTest extends NbTestCase {
         /* Huh? There should be both [0] and [1], how can you say which one will be returned?
         assertEquals ("Now the [1] is in lookup of [0]", arr[1], lookup.lookup (c));
          */
-        Collection all = lookup.lookup(new Lookup.Template(c)).allInstances();
+        Collection<? extends T> all = lookup.lookup(new Lookup.Template<>(c)).allInstances();
         assertEquals("Two nodes are in TC lookup", 2, all.size());
-        assertEquals("They are the ones we expect", new HashSet(Arrays.asList(arr)), new HashSet(all));
-        assertTrue("Lookup simple query gives one or the other", new HashSet(Arrays.asList(arr)).contains(lookup.lookup(c)));
-        assertEquals("Have two lookup items", 2, lookup.lookup(new Lookup.Template(c)).allItems().size());
+        assertEquals("They are the ones we expect", new HashSet<>(Arrays.asList(arr)), new HashSet<>(all));
+        assertTrue("Lookup simple query gives one or the other", new HashSet<>(Arrays.asList(arr)).contains(lookup.lookup(c)));
+        assertEquals("Have two lookup items", 2, lookup.lookup(new Lookup.Template<>(c)).allItems().size());
 
         doTestNodes (null, c, 2);
     }
@@ -139,7 +139,7 @@ public class TopComponentGetLookupTest extends NbTestCase {
         top.setActivatedNodes (new Node[] { fn });
         assertTrue ("CookieN is in FilterNode lookup", n == fn.getLookup ().lookup (CookieN.class));
         assertTrue ("CookieN is in TopComponent", n == lookup.lookup (CookieN.class));
-        assertEquals ("Just one node", 1, lookup.lookup (new Lookup.Template (Node.class)).allItems ().size ());
+        assertEquals ("Just one node", 1, lookup.lookup (new Lookup.Template<>(Node.class)).allItems ().size ());
         assertTrue ("Plain cookie found", n == lookup.lookup (Node.Cookie.class));
     }
     
@@ -153,7 +153,7 @@ public class TopComponentGetLookupTest extends NbTestCase {
         assertEquals ("Three nodes there", 3, get.getActivatedNodes ().length);
         
         L l = new L ();
-        Lookup.Result res = lookup.lookup(new Lookup.Template(OpenCookie.class));
+        Lookup.Result<OpenCookie> res = lookup.lookup(new Lookup.Template<>(OpenCookie.class));
         res.addLookupListener (l);
      
         assertEquals ("Empty now", res.allItems().size (), 0);
@@ -188,19 +188,19 @@ public class TopComponentGetLookupTest extends NbTestCase {
         assertEquals ("One node there", 1, get.getActivatedNodes ().length);
         assertEquals ("Is the right now", n1, get.getActivatedNodes ()[0]);
         
-        Lookup.Result res = lookup.lookup(new Lookup.Template(Node.class));
+        Lookup.Result<Node> res = lookup.lookup(new Lookup.Template<>(Node.class));
         L l = new L ();
         res.addLookupListener(l);
         
         l.check ("Nothing fired before first query", 0);
         res.allInstances ();
         l.check ("Nothing is fired on first query", 0);
-        lookup.lookup(new Lookup.Template(Node.class)).allInstances();
+        lookup.lookup(new Lookup.Template<>(Node.class)).allInstances();
         l.check ("And additional query does not change anything either", 0);
     }
    
     public void testNodesAreThereEvenIfTheyAreNotContainedInTheirOwnLookup () {
-        Lookup.Result res = lookup.lookup(new Lookup.Template(Node.class));
+        Lookup.Result<Node> res = lookup.lookup(new Lookup.Template<>(Node.class));
         
         AbstractNode n1 = new AbstractNode(Children.LEAF, Lookup.EMPTY);
         
@@ -227,7 +227,7 @@ public class TopComponentGetLookupTest extends NbTestCase {
         // then it contains only the one correct node..
         listener.check ("Node changed", 1);
         
-        Collection addedByTCLookup = res.allInstances();
+        Collection<? extends Node> addedByTCLookup = res.allInstances();
         assertEquals ("One item still", 1, addedByTCLookup.size ());
         
         content.add (n2);
@@ -247,9 +247,9 @@ public class TopComponentGetLookupTest extends NbTestCase {
         // this could be commented out if necessary:
         listener.check ("And nothing is fired", 0);
         // Change from former behavior (#36336): we don't *want* n1 in res.
-        Collection one = res.allInstances();
+        Collection<? extends Node> one = res.allInstances();
         assertEquals("Really just the activated node", 1, one.size());
-        Iterator it = one.iterator();
+        Iterator<? extends Node> it = one.iterator();
         assertEquals("It is the one added by the TC lookup", n2, it.next());
     }
     
@@ -264,14 +264,14 @@ public class TopComponentGetLookupTest extends NbTestCase {
     private void doTestNoChangeWhenSomethingIsChangedOnNotActivatedNode (int initialSize) {
         Object obj = new OpenCookie() { public void open() {} };
         
-        Lookup.Result res = lookup.lookup(new Lookup.Template(OpenCookie.class));
-        Lookup.Result nodeRes = lookup.lookup (new Lookup.Template(Node.class));
+        Lookup.Result<OpenCookie> res = lookup.lookup(new Lookup.Template<>(OpenCookie.class));
+        Lookup.Result<Node> nodeRes = lookup.lookup (new Lookup.Template<>(Node.class));
         
         InstanceContent ic = new InstanceContent ();
         CountingLookup cnt = new CountingLookup (ic);
         AbstractNode ac = new AbstractNode(Children.LEAF, cnt);
         for (int i = 0; i < initialSize; i++) {
-            ic.add (new Integer (i));
+            ic.add (i);
         }
         
         top.setActivatedNodes(new org.openide.nodes.Node[] { ac });
@@ -285,7 +285,7 @@ public class TopComponentGetLookupTest extends NbTestCase {
         nodeRes.allItems ();
         res.addLookupListener (listener);
         
-        Collection allListeners = cnt.listeners;
+        Collection<LookupListener> allListeners = cnt.listeners;
         
         assertEquals ("Has the cookie", 1, res.allItems ().size ());
         listener.check ("No changes yet", 0);
@@ -325,9 +325,9 @@ public class TopComponentGetLookupTest extends NbTestCase {
         Node node = new FilterNode (new FilterNode (ny, null, ny.getLookup ()));
         top.setActivatedNodes (new Node[] { node });
         
-        Lookup.Template nodeTemplate = new Lookup.Template(Node.class);
-        Lookup.Template saveTemplate = new Lookup.Template(SaveCookie.class);
-        java.util.Collection res;
+        Lookup.Template<Node> nodeTemplate = new Lookup.Template<>(Node.class);
+        Lookup.Template<SaveCookie> saveTemplate = new Lookup.Template<>(SaveCookie.class);
+        java.util.Collection<?> res;
         
         res = lookup.lookup (nodeTemplate).allInstances ();
         
@@ -362,6 +362,7 @@ public class TopComponentGetLookupTest extends NbTestCase {
         
         top.add(BorderLayout.CENTER, panel);
 
+        @SuppressWarnings("serial") // Same-version serialization only
         class Act extends AbstractAction {
             public void actionPerformed(ActionEvent ev) {
             }
@@ -377,7 +378,7 @@ public class TopComponentGetLookupTest extends NbTestCase {
         panel.getActionMap ().put ("focusedRegistration", act3);
         def.setC(panel);
 
-        ActionMap map = (ActionMap)top.getLookup ().lookup (ActionMap.class);
+        ActionMap map = top.getLookup ().lookup (ActionMap.class);
 
         assertEquals ("actions registered directly on TC are found", act1, map.get ("globalRegistration"));
         assertEquals ("even if they are provided by focused component", act2, map.get ("doubleRegistration"));
@@ -396,7 +397,7 @@ public class TopComponentGetLookupTest extends NbTestCase {
         node.state (0x00);
         top.setActivatedNodes(new Node[] { node });
         
-        Lookup.Result res = lookup.lookup (new Lookup.Template (ActionMap.class));
+        Lookup.Result<ActionMap> res = lookup.lookup (new Lookup.Template<>(ActionMap.class));
         assertEquals ("One item there", 1, res.allInstances ().size ());
         ActionMap map = (ActionMap)res.allInstances().toArray()[0];
         
@@ -455,56 +456,57 @@ public class TopComponentGetLookupTest extends NbTestCase {
         Node[] sel = new Node[] {n1, n2};
         assertEquals("First node in selection has CloseCookie",
             1,
-            n1.getLookup().lookup(new Lookup.Template(CloseCookie.class)).allInstances().size());
+            n1.getLookup().lookup(new Lookup.Template<>(CloseCookie.class)).allInstances().size());
         assertEquals("Second node in selection has OpenCookie",
             1,
-            n2.getLookup().lookup(new Lookup.Template(OpenCookie.class)).allInstances().size());
+            n2.getLookup().lookup(new Lookup.Template<>(OpenCookie.class)).allInstances().size());
         assertEquals("Second node in selection has ViewCookie (actually a Node)",
             1,
-            n2.getLookup().lookup(new Lookup.Template(ViewCookie.class)).allInstances().size());
-        ViewCookie v = (ViewCookie)n2.getCookie(ViewCookie.class);
+            n2.getLookup().lookup(new Lookup.Template<>(ViewCookie.class)).allInstances().size());
+        ViewCookie v = n2.getCookie(ViewCookie.class);
         assertNotNull(v);
         assertTrue(v instanceof Node);
         
-        HashSet queryJustOnce = new HashSet(n2.getLookup().lookup(new Lookup.Template(Node.class)).allInstances());
+        HashSet<Node> queryJustOnce = new HashSet<>(n2.getLookup().lookup(new Lookup.Template<>(Node.class)).allInstances());
         assertEquals("Second node in selection has two nodes in its own lookup",
-            new HashSet(Arrays.asList(new Object[] {n2, v})), queryJustOnce
+            new HashSet<>(Arrays.asList(new Object[] {n2, v})), queryJustOnce
         );
         assertEquals(2, queryJustOnce.size());
         top.setActivatedNodes(sel);
         assertEquals("CloseCookie propagated from one member of node selection to TC lookup",
             1,
-            lookup.lookup(new Lookup.Template(CloseCookie.class)).allInstances().size());
+            lookup.lookup(new Lookup.Template<>(CloseCookie.class)).allInstances().size());
         assertEquals("OpenCookie propagated from one member of node selection to TC lookup",
             1,
-            lookup.lookup(new Lookup.Template(OpenCookie.class)).allInstances().size());
+            lookup.lookup(new Lookup.Template<>(OpenCookie.class)).allInstances().size());
         assertEquals("ViewCookie propagated from one member of node selection to TC lookup",
             1,
-            lookup.lookup(new Lookup.Template(ViewCookie.class)).allInstances().size());
+            lookup.lookup(new Lookup.Template<>(ViewCookie.class)).allInstances().size());
         assertEquals("But TC lookup query on Node gives only selection, not cookie node",
-            new HashSet(Arrays.asList(sel)),
-            new HashSet(lookup.lookup(new Lookup.Template(Node.class)).allInstances()));
-        assertEquals(2, lookup.lookup(new Lookup.Template(Node.class)).allInstances().size());
+            new HashSet<>(Arrays.asList(sel)),
+            new HashSet<>(lookup.lookup(new Lookup.Template<>(Node.class)).allInstances()));
+        assertEquals(2, lookup.lookup(new Lookup.Template<>(Node.class)).allInstances().size());
         assertEquals("TC lookup query on FeatureDescriptor gives all three however",
             3,
-            lookup.lookup(new Lookup.Template(FeatureDescriptor.class)).allInstances().size());
+            lookup.lookup(new Lookup.Template<>(FeatureDescriptor.class)).allInstances().size());
         top.setActivatedNodes(new Node[] {n1});
         assertEquals("After setting node selection to one node, TC lookup has only that node",
             Collections.singleton(n1),
-            new HashSet(lookup.lookup(new Lookup.Template(Node.class)).allInstances()));
-        assertEquals(1, lookup.lookup(new Lookup.Template(Node.class)).allInstances().size());
+            new HashSet<>(lookup.lookup(new Lookup.Template<>(Node.class)).allInstances()));
+        assertEquals(1, lookup.lookup(new Lookup.Template<>(Node.class)).allInstances().size());
         assertEquals("And the OpenCookie is gone",
             0,
-            lookup.lookup(new Lookup.Template(OpenCookie.class)).allInstances().size());
+            lookup.lookup(new Lookup.Template<>(OpenCookie.class)).allInstances().size());
         assertEquals("And the ViewCookie is gone",
             0,
-            lookup.lookup(new Lookup.Template(ViewCookie.class)).allInstances().size());
+            lookup.lookup(new Lookup.Template<>(ViewCookie.class)).allInstances().size());
         assertEquals("But the CloseCookie remains",
             1,
-            lookup.lookup(new Lookup.Template(CloseCookie.class)).allInstances().size());
+            lookup.lookup(new Lookup.Template<>(CloseCookie.class)).allInstances().size());
     }
 
     public void testAssociateLookupCanBecalledJustOnce () throws Exception {
+        @SuppressWarnings("serial") // Same-version serialization only
         class TC extends TopComponent {
             public TC () {
             }
@@ -602,23 +604,23 @@ public class TopComponentGetLookupTest extends NbTestCase {
             fireCookieChange ();
         }
         
-        public Node.Cookie getCookie(Class c) {
+        @Override
+        public <T extends Node.Cookie> T getCookie(Class<T> c) {
             int mask = 0x01;
             
-            for (int i = 0; i < cookies.length; i++) {
-                if ((s & mask) != 0 && c.isInstance(cookies[i])) {
-                    return cookies[i];
+            for (Cookie cookie : cookies) {
+                if ((s & mask) != 0 && c.isInstance(cookie)) {
+                    return c.cast(cookie);
                 }
                 mask = mask << 1;
-
             }
             return null;
         }
     }
     
     private static final class CountingLookup extends Lookup {
-        private Lookup delegate;
-        public List listeners = new ArrayList();
+        private final Lookup delegate;
+        public List<LookupListener> listeners = new ArrayList<>();
         public int queries;
         
         public CountingLookup(InstanceContent ic) {
@@ -626,11 +628,12 @@ public class TopComponentGetLookupTest extends NbTestCase {
             
         }
         
-        public Object lookup(Class clazz) {
+        @Override
+        public <T> T lookup(Class<T> clazz) {
             return delegate.lookup (clazz);
         }
         
-        public Lookup.Result lookup(Lookup.Template template) {
+        public <T> Lookup.Result<T> lookup(Lookup.Template<T> template) {
             if (
                 !Node.Cookie.class.isAssignableFrom(template.getType()) &&
                 !Node.class.isAssignableFrom(template.getType())
@@ -639,27 +642,31 @@ public class TopComponentGetLookupTest extends NbTestCase {
             }
             
             
-            final Lookup.Result d = delegate.lookup (template);
+            final Lookup.Result<T> d = delegate.lookup (template);
             
-            class Wrap extends Lookup.Result {
+            class Wrap extends Lookup.Result<T> {
                 public void addLookupListener(LookupListener l) {
                     listeners.add (l);
                     d.addLookupListener (l);
                 }
                 
+                @Override
                 public void removeLookupListener(LookupListener l) {
                     listeners.remove (l);
                     d.removeLookupListener (l);
                 }
-                public Collection allInstances() {
+                @Override
+                public Collection<? extends T> allInstances() {
                     queries++;
                     return d.allInstances ();
                 }
-                public Collection allItems() {
+                @Override
+                public Collection<? extends Item<T>> allItems() {
                     queries++;
                     return d.allItems ();
                 }
-                public Set allClasses() {
+                @Override
+                public Set<Class<? extends T>> allClasses() {
                     queries++;
                     return d.allClasses ();
                 }

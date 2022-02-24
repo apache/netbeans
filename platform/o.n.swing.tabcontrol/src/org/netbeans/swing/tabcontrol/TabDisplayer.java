@@ -362,7 +362,7 @@ public final class TabDisplayer extends JComponent implements Accessible, Autosc
     private static boolean isXPLF () {
         Boolean isXP = (Boolean)Toolkit.getDefaultToolkit().
                         getDesktopProperty("win.xpstyle.themeActive"); //NOI18N
-        return isXP == null ? false : isXP.booleanValue();
+        return isXP == null ? false : isXP;
     }
     
 
@@ -548,7 +548,7 @@ public final class TabDisplayer extends JComponent implements Accessible, Autosc
      */
     public final synchronized void addActionListener(ActionListener listener) {
         if (actionListenerList == null) {
-            actionListenerList = new ArrayList<ActionListener>();
+            actionListenerList = new ArrayList<>();
         }
         actionListenerList.add(listener);
     }

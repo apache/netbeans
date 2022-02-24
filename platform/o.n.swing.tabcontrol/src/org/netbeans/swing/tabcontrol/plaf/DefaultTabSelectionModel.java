@@ -88,12 +88,12 @@ final class DefaultTabSelectionModel implements SingleSelectionModel,
     }
 
     private void adjustSelectionForEvent(ListDataEvent e) {
-        if (e.getType() == e.CONTENTS_CHANGED || sel == -1) {
+        if (e.getType() == ListDataEvent.CONTENTS_CHANGED || sel == -1) {
             return;
         }
         int start = e.getIndex0();
         int end = e.getIndex1() + 1;
-        if (e.getType() == e.INTERVAL_REMOVED) {
+        if (e.getType() == ListDataEvent.INTERVAL_REMOVED) {
             if (sel < start) {
                 return;
             } else {
@@ -201,7 +201,7 @@ final class DefaultTabSelectionModel implements SingleSelectionModel,
             Set<Integer> added = dif.getAddedIndices();
             
             //create an Integer to compare
-            Integer idx = new Integer(getSelectedIndex());
+            Integer idx = getSelectedIndex();
             
             //Don't iterate if everything was closed, we know what to do
             if (dataModel.size() == 0) {

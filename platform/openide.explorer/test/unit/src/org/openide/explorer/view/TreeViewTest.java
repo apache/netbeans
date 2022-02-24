@@ -183,7 +183,7 @@ public final class TreeViewTest extends NbTestCase {
             }
 
             @Override
-            protected Node[] createNodes(Object key) {
+            protected Node[] createNodes(String key) {
                 if (EventQueue.isDispatchThread()) {
                     noAWTCreateNodes = new Exception();
                 }
@@ -446,7 +446,7 @@ public final class TreeViewTest extends NbTestCase {
         // if the preferred action instanceof ContextAwareAction
         // calls its createContextAwareInstance() method
         Action a = TreeView.takeAction(node.getPreferredAction(), node);
-        int count = ((MyDelegateAction)a).contextLookup.lookup(new Lookup.Template(Node.class)).allInstances().size();
+        int count = ((MyDelegateAction)a).contextLookup.lookup(new Lookup.Template<>(Node.class)).allInstances().size();
         assertEquals("The context lookup created by TreeView.takeAction() should contain the node only once.", 1, count);
     }
 
@@ -740,7 +740,7 @@ public final class TreeViewTest extends NbTestCase {
 
     /** Sample keys.
     */
-    public static class Keys extends Children.Keys {
+    public static class Keys extends Children.Keys<String> {
         /** Constructor.
          */
         public Keys (boolean lazy, String... args) {
@@ -761,12 +761,12 @@ public final class TreeViewTest extends NbTestCase {
          * @return child nodes for this key or null if there should be no
          *   nodes for this key
          */
-        protected Node[] createNodes(Object key) {
-            if (key.toString().startsWith("-")) {
+        protected Node[] createNodes(String key) {
+            if (key.startsWith("-")) {
                 return null;
             }
             AbstractNode an = new AbstractNode (Children.LEAF);
-            an.setName (key.toString ());
+            an.setName(key);
 
             return new Node[] { an };
         }

@@ -30,7 +30,7 @@ public class MutualExclusionSupportTest extends NbTestCase {
 
     public void testAddResource() throws Exception  {
         String key = "key";
-        MutualExclusionSupport<String> mes = new MutualExclusionSupport<String>();
+        MutualExclusionSupport<String> mes = new MutualExclusionSupport<>();
         
         MutualExclusionSupport<String>.Closeable rem1 = mes.addResource(key, true);
         MutualExclusionSupport<String>.Closeable rem2 = mes.addResource(key, true);

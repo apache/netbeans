@@ -107,7 +107,7 @@ public class FolderObjCacheTest extends NbTestCase {
         assertFalse("No longer valid", gcFo.isValid());
         
         if (gc) {
-            WeakReference<Object> ref = new WeakReference<Object>(gcFo);
+            WeakReference<Object> ref = new WeakReference<>(gcFo);
             gcFo = null;
             assertGC("Can be GCed", ref);
         }
@@ -143,11 +143,11 @@ public class FolderObjCacheTest extends NbTestCase {
    
    private static boolean existsChild(final FileObject folder, final String childName) {
        FileObject[] childs = folder.getChildren();
-       for (int i = 0; i < childs.length; i++) {
-           if (childs[i].getNameExt().equals(childName)) {
-               return true;
-           } 
-       }
+        for (FileObject child : childs) {
+            if (child.getNameExt().equals(childName)) {
+                return true;
+            }
+        }
        return false;
    }
         

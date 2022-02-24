@@ -531,8 +531,8 @@ public class XMLFileSystemTestHid extends TestBaseHid {
 
         cnt = 0;
 
-        Map m1 = (Map)fo.getAttribute("map");
-        Map m2 = (Map)fo.getAttribute("map");
+        Map<?, ?> m1 = (Map<?, ?>) fo.getAttribute("map");
+        Map<?, ?> m2 = (Map<?, ?>) fo.getAttribute("map");
 
         if (m1 == m2) {
             fail("Surprise usually these two shall be different: " + m1);
@@ -566,14 +566,14 @@ public class XMLFileSystemTestHid extends TestBaseHid {
 
         cnt = 0;
 
-        Map m1 = (Map)realfo.getAttribute("map");
-        Map m2 = (Map)fo.getAttribute("map");
+        Map<?, ?> m1 = (Map<?, ?>) realfo.getAttribute("map");
+        Map<?, ?> m2 = (Map<?, ?>) fo.getAttribute("map");
 
         assertFalse("But they are not equal", m1.equals(m2));
         assertEquals("No calls to other attributes of the map", 0, cnt);
     }
 
-    static Map map(Map m) {
+    static Map<?, ?> map(Map<?, ?> m) {
         return m;
     }
     static int cnt;
@@ -603,8 +603,8 @@ public class XMLFileSystemTestHid extends TestBaseHid {
 
         cnt = 0;
 
-        Map m1 = (Map)fo.getAttribute("map");
-        Map m2 = (Map)snd.getAttribute("map");
+        Map<?, ?> m1 = (Map<?, ?>) fo.getAttribute("map");
+        Map<?, ?> m2 = (Map<?, ?>) snd.getAttribute("map");
 
         if (m1 == m2) {
             fail("Surprise usually these two shall be different: " + m1);
@@ -958,16 +958,16 @@ public class XMLFileSystemTestHid extends TestBaseHid {
         return icon;
     }
 
-    public static Object map1(Map map) {
+    public static Object map1(Map<String, Object> map) {
         return String.valueOf(map.get("x"));
     }
-    public static Object map2(Map map, String attr) {
+    public static Object map2(Map<String, Object> map, String attr) {
         return String.valueOf(map.get("x")) + "/" + attr;
     }
-    public static Object mapImage(Map map) {
+    public static Object mapImage(Map<String, Object> map) {
         return map.get("image");
     }
-    public static Object mapDisplayName(Map map) {
+    public static Object mapDisplayName(Map<String, Object> map) {
         return map.get("displayName");
     }
 
@@ -1108,7 +1108,7 @@ public class XMLFileSystemTestHid extends TestBaseHid {
         }
     }
     
-    static String computeToString(Map whatIsYourToString) {
+    static String computeToString(Map<?, ?> whatIsYourToString) {
         return whatIsYourToString.toString();
     }
 
@@ -1281,7 +1281,7 @@ public class XMLFileSystemTestHid extends TestBaseHid {
         return "";
     }
 
-    private static Object getObjectViaMethodValue6 (Map attrs) {
+    private static Object getObjectViaMethodValue6 (Map<String, Object> attrs) {
         try {
             attrs.keySet().iterator().remove();
             return "UnsupportedOperationException";

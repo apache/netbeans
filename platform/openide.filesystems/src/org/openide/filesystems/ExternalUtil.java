@@ -80,7 +80,7 @@ final class ExternalUtil {
      * @return the class
      * @exception ClassNotFoundException if class was not found
      */
-    public static Class findClass(String name) throws ClassNotFoundException {
+    public static Class<?> findClass(String name) throws ClassNotFoundException {
         ClassLoader c = Lookup.getDefault().lookup(ClassLoader.class);
 
         if (c == null) {

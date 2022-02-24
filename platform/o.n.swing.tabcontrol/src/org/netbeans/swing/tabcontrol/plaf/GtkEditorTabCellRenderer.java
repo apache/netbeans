@@ -104,7 +104,7 @@ final class GtkEditorTabCellRenderer extends AbstractTabCellRenderer {
             return; //#215311 - unsupported L&F installed
         }
         SynthLookAndFeel laf = (SynthLookAndFeel) UIManager.getLookAndFeel();
-        SynthStyleFactory sf = laf.getStyleFactory();
+        SynthStyleFactory sf = SynthLookAndFeel.getStyleFactory();
         SynthStyle style = sf.getStyle(dummyTab, region);
         SynthContext context =
             new SynthContext(dummyTab, region, style, 
@@ -229,7 +229,7 @@ final class GtkEditorTabCellRenderer extends AbstractTabCellRenderer {
                 
                 Rectangle r = new Rectangle(0, 0, c.getWidth(), c.getHeight());
                 Rectangle cbRect = new Rectangle();
-                getCloseButtonRectangle((JComponent) c, cbRect, r);
+                getCloseButtonRectangle(c, cbRect, r);
                 
                 //paint close button
                 String iconPath = findIconPath( (GtkEditorTabCellRenderer)c );

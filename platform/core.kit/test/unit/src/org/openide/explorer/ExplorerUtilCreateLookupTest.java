@@ -44,6 +44,7 @@ public class ExplorerUtilCreateLookupTest extends org.openide.explorer.windows.T
      */
     @Override
     protected void setUp () {
+        @SuppressWarnings("serial") // Same-version serialization only
         class ExTC extends org.openide.windows.TopComponent 
         implements java.beans.PropertyChangeListener {
             ExplorerManager em = new ExplorerManager ();
@@ -58,9 +59,9 @@ public class ExplorerUtilCreateLookupTest extends org.openide.explorer.windows.T
                     try {
                         Node[] arr = getActivatedNodes ();
                         Children.Array ch = (Children.Array)em.getRootContext ().getChildren ();
-                        for (int i = 0; i < arr.length; i++) {
-                            if (arr[i].getParentNode() != em.getRootContext()) {
-                                assertTrue ("If this fails we are in troubles", ch.add (new Node[] { arr[i] }));
+                        for (Node arr1 : arr) {
+                            if (arr1.getParentNode() != em.getRootContext()) {
+                                assertTrue("If this fails we are in troubles", ch.add(new Node[]{arr1}));
                             }
                         }
                         em.setSelectedNodes (getActivatedNodes ());

@@ -90,7 +90,7 @@ public class SlowRefreshAndPriorityIOTest extends NbTestCase {
 
         File file = FileUtil.toFile(fileObject1);
         assertNotNull("File found", file);
-        Reference<FileObject> ref = new WeakReference<FileObject>(fileObject1);
+        Reference<FileObject> ref = new WeakReference<>(fileObject1);
         arr = null;
         fileObject1 = null;
         assertGC("File Object can disappear", ref);
@@ -111,9 +111,9 @@ public class SlowRefreshAndPriorityIOTest extends NbTestCase {
         
         Thread.sleep(1000);
 
-        FileOutputStream os = new FileOutputStream(file);
-        os.write(10);
-        os.close();
+        try (FileOutputStream os = new FileOutputStream(file)) {
+            os.write(10);
+        }
 
         if (lm > file.lastModified() - 50) {
             fail("New modification time shall be at last 50ms after the original one: " + (file.lastModified() - lm));
@@ -125,7 +125,7 @@ public class SlowRefreshAndPriorityIOTest extends NbTestCase {
 
         Runnable r = (Runnable)obj;
         class AE extends ActionEvent implements Runnable {
-            List<FileObject> files = new ArrayList<FileObject>();
+            List<FileObject> files = new ArrayList<>();
             boolean boosted;
             boolean finished;
             int goingIdle;

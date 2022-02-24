@@ -105,7 +105,7 @@ public class WatcherTest extends NbTestCase {
         
         notify.assertRegistered("One path is being listened to", root.getPath());
         
-        Reference<FileObject> ref = new WeakReference<FileObject>(root);
+        Reference<FileObject> ref = new WeakReference<>(root);
         root = null;
         folder = null;
         assertGC("Root can be GCed", ref);
@@ -160,7 +160,7 @@ public class WatcherTest extends NbTestCase {
     }
     
     public static final class TestNotifier extends Notifier<Integer> {
-        final List<String> registered = new LinkedList<String>();
+        final List<String> registered = new LinkedList<>();
 
         @Override
         public Integer addWatch(String path) throws IOException {

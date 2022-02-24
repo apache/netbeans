@@ -25,7 +25,7 @@ import javax.swing.JComboBox;
  *
  * @author Kirill Sorokin
  */
-public class NbiComboBox extends JComboBox {
+public class NbiComboBox<E> extends JComboBox<E> {
     public NbiComboBox() {
         super();
         

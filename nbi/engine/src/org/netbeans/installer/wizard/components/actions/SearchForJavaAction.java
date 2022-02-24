@@ -366,12 +366,12 @@ public class SearchForJavaAction extends WizardAction {
                 nativeUtils.getWindowsRegistry();
         
         final int currentMode = registry.getMode();
-        List <Boolean> modes = new ArrayList <> ();
+        List<Boolean> modes = new ArrayList<>();
         modes.add(null); //default mode
         
         if(registry.isAlternativeModeSupported()) {
             LogManager.log("... alternative registry view is also supported");
-            modes.add(true);//alternative mode
+            modes.add(Boolean.TRUE);//alternative mode
         }        
         try {
           for (Boolean mode : modes) {

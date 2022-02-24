@@ -68,7 +68,7 @@ public class WatcherDeadlockTest extends NbTestCase {
         final FileObject r = FileUtil.toFileObject(root);
         r.refresh(true);
         
-        Set<FileObject> all = new HashSet<FileObject>();
+        Set<FileObject> all = new HashSet<>();
         Enumeration<? extends FileObject> en = r.getChildren(true);
         while (en.hasMoreElements()) {
             FileObject fileObject = en.nextElement();
@@ -104,7 +104,7 @@ public class WatcherDeadlockTest extends NbTestCase {
     
     private static class ProvidedExtensionsImpl extends ProvidedExtensions implements Runnable {
         private static final RequestProcessor RP = new RequestProcessor("refresh me");
-        private ThreadLocal<Boolean> STOP = new ThreadLocal<Boolean>();
+        private ThreadLocal<Boolean> STOP = new ThreadLocal<>();
         private FileObjectFactory fact;
         @Override
         public long refreshRecursively(File dir, long lastTimeStamp, List<? super File> children) {

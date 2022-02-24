@@ -103,11 +103,11 @@ public final class ArrayDiff {
      */
     public Set<Integer> getDeletedIndices() {
         if (deleted == null) {
-            HashSet<TabData> set = new HashSet<TabData>(Arrays.asList(nue));
-            HashSet<Integer> results = new HashSet<Integer>(old.length);
+            HashSet<TabData> set = new HashSet<>(Arrays.asList(nue));
+            HashSet<Integer> results = new HashSet<>(old.length);
             for (int i = 0; i < old.length; i++) {
                 if (!set.contains(old[i])) {
-                    results.add(new Integer(i));
+                    results.add(i);
                 }
             }
             deleted = results;
@@ -123,11 +123,11 @@ public final class ArrayDiff {
      */
     public Set<Integer> getAddedIndices() {
         if (added == null) {
-            HashSet<TabData> set = new HashSet<TabData>(Arrays.asList(old));
-            Set<Integer> results = new HashSet<Integer>(nue.length);
+            HashSet<TabData> set = new HashSet<>(Arrays.asList(old));
+            Set<Integer> results = new HashSet<>(nue.length);
             for (int i = 0; i < nue.length; i++) {
                 if (!set.contains(nue[i])) {
-                    results.add(new Integer(i));
+                    results.add(i);
                 }
             }
             added = results;
@@ -145,15 +145,15 @@ public final class ArrayDiff {
         //to prove useful.  getDeletedIndices() and getAddedIndices() are called
         //more than once, and the computation can be expensive.
         int max = Math.max(nue.length, old.length);
-        HashSet<Integer> results = new HashSet<Integer>(max);
+        HashSet<Integer> results = new HashSet<>(max);
 
         for (int i = 0; i < max; i++) {
             if (i < old.length && i < nue.length) {
                 if (!old[i].equals(nue[i])) {
-                    results.add(new Integer(i));
+                    results.add(i);
                 }
             } else {
-                results.add(new Integer(i));
+                results.add(i);
             }
         }
         return results;
@@ -165,8 +165,8 @@ public final class ArrayDiff {
      * indices into the old array.
      */
     public Set<Integer> getMovedIndices() {
-        HashSet<TabData> set = new HashSet<TabData>(Arrays.asList(nue));
-        HashSet<Integer> results = new HashSet<Integer>(old.length);
+        HashSet<TabData> set = new HashSet<>(Arrays.asList(nue));
+        HashSet<Integer> results = new HashSet<>(old.length);
 
         for (int i = 0; i < old.length; i++) {
             boolean isPresent = set.contains(old[i]);
@@ -174,7 +174,7 @@ public final class ArrayDiff {
                 boolean isMoved = (i < nue.length
                         && !nue[i].equals(old[i])) || i >= nue.length;
                 if (isMoved) {
-                    results.add(new Integer(i));
+                    results.add(i);
                 }
             }
         }
@@ -195,12 +195,12 @@ public final class ArrayDiff {
         return sb.toString();
     }
 
-    private static String outCol(Collection c) {
-        Iterator i = c.iterator();
-        StringBuffer result = new StringBuffer();
+    private static String outCol(Collection<Integer> c) {
+        Iterator<Integer> i = c.iterator();
+        StringBuilder result = new StringBuilder();
         while (i.hasNext()) {
-            Object o = i.next();
-            result.append(o.toString());
+            Integer o = i.next();
+            result.append(o);
             if (i.hasNext()) {
                 result.append(",");
             }

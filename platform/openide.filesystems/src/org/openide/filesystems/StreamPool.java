@@ -282,8 +282,8 @@ final class StreamPool extends Object {
     private static void closeOutputStream(AbstractFolder fo, OutputStream os, boolean fireFileChanged) {
         StreamPool foPool = find(fo);
         StreamPool fsPool = find(fo.getFileSystem());
-        Set foSet = (foPool != null) ? foPool.oStreams : null;
-        Set fsSet = (fsPool != null) ? fsPool.oStreams : null;
+        Set<OutputStream> foSet = (foPool != null) ? foPool.oStreams : null;
+        Set<OutputStream> fsSet = (fsPool != null) ? fsPool.oStreams : null;
 
         removeStreams(fsSet, foSet, os);
         removeStreamPools(fsPool, foPool, fo);
@@ -293,14 +293,14 @@ final class StreamPool extends Object {
     private static void closeInputStream(AbstractFolder fo, InputStream is) {
         StreamPool foPool = find(fo);
         StreamPool fsPool = find(fo.getFileSystem());
-        Set foSet = (foPool != null) ? foPool.iStreams : null;
-        Set fsSet = (fsPool != null) ? fsPool.iStreams : null;
+        Set<InputStream> foSet = (foPool != null) ? foPool.iStreams : null;
+        Set<InputStream> fsSet = (fsPool != null) ? fsPool.iStreams : null;
 
         removeStreams(fsSet, foSet, is);
         removeStreamPools(fsPool, foPool, fo);
     }
 
-    private static synchronized void removeStreams(Set fsSet, Set foSet, Object stream) {
+    private static synchronized <T> void removeStreams(Set<T> fsSet, Set<T> foSet, T stream) {
         if (foSet != null) {
             foSet.remove(stream);
         }

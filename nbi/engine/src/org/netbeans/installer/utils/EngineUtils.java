@@ -57,7 +57,7 @@ public final class EngineUtils {
 
         return cachedEngine;
     }
-    public static Class getEngineMainClass() {
+    public static Class<?> getEngineMainClass() {
         return Installer.class;
     }
 
@@ -120,7 +120,7 @@ public final class EngineUtils {
 
 
     public static void checkEngine() {
-        Class mainClass = getEngineMainClass();
+        Class<?> mainClass = getEngineMainClass();
         String thisClassResource = ResourceUtils.getResourceClassName(mainClass);
         InputStream is = mainClass.getClassLoader().getResourceAsStream(thisClassResource);
         ClassLoader cl = mainClass.getClassLoader();

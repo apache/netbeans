@@ -58,7 +58,7 @@ public class MIMESupport49418Test extends NbTestCase {
      * This is a pair that as a part of its instanceOf method queries the URL resolver.
      */
     @SuppressWarnings("unchecked")
-    private static class QueryingPair extends Pair {
+    private static class QueryingPair extends Pair<QueryingPair> {
         public boolean beBroken;
 
         public String getId() {
@@ -69,7 +69,7 @@ public class MIMESupport49418Test extends NbTestCase {
             return getId();
         }
 
-        public Class getType() {
+        public Class<? extends QueryingPair> getType() {
             return getClass();
         }
 
@@ -77,7 +77,7 @@ public class MIMESupport49418Test extends NbTestCase {
             return obj == this;
         }
 
-        protected boolean instanceOf(Class c) {
+        protected boolean instanceOf(Class<?> c) {
             if (beBroken) {
                 beBroken = false;
                 assertEquals("content/unknown", mimeFo.getMIMEType());
@@ -86,7 +86,7 @@ public class MIMESupport49418Test extends NbTestCase {
             return c.isAssignableFrom(getType());
         }
 
-        public Object getInstance() {
+        public QueryingPair getInstance() {
             return this;
         }
     }
@@ -101,7 +101,7 @@ public class MIMESupport49418Test extends NbTestCase {
 
         private Lkp(org.openide.util.lookup.InstanceContent ic) {
             super(ic);
-            this.ic = ic;
+            Lkp.ic = ic;
         }
 
         protected void initialize() {

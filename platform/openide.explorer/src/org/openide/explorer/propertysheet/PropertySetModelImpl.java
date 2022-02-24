@@ -186,7 +186,7 @@ class PropertySetModelImpl implements PropertySetModel, Runnable {
             return;
         }
 
-        Property[] p;
+        Property<?>[] p;
 
         for (int i = 0; i < sets.length; i++) {
             //Show the set expandable only if it's not the default set
@@ -256,7 +256,7 @@ class PropertySetModelImpl implements PropertySetModel, Runnable {
 
     private int lookupSet(FeatureDescriptor fd) {
         if (sets != null) {
-            List l = Arrays.asList(sets);
+            List<PropertySet> l = Arrays.asList(sets);
 
             return l.indexOf(fd);
         } else {
@@ -339,7 +339,7 @@ class PropertySetModelImpl implements PropertySetModel, Runnable {
             return;
         }
 
-        Iterator i = listenerList.iterator();
+        Iterator<PropertySetModelListener> i = listenerList.iterator();
         PropertySetModelListener curr;
         getEvent().type = PropertySetModelEvent.TYPE_WHOLESALE_CHANGE;
         event.start = start;
@@ -348,7 +348,7 @@ class PropertySetModelImpl implements PropertySetModel, Runnable {
         event.reordering = reordering;
 
         while (i.hasNext()) {
-            curr = (PropertySetModelListener) i.next();
+            curr = i.next();
             curr.pendingChange(event);
         }
     }

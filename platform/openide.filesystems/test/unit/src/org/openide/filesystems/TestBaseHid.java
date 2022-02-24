@@ -182,7 +182,7 @@ public abstract class TestBaseHid extends MultiThreadedTestCaseHid {
         fileEventAssert (fileAttrChangedL , message, expectedCount);        
     }
      
-    private void fileEventAssert  (List list, String message, int expectedCount) {
+    private void fileEventAssert  (List<?> list, String message, int expectedCount) {
         fsAssert (message+" Fired : " +list.size () + " ,but expected: " + expectedCount,expectedCount == list.size ()); 
     }
     

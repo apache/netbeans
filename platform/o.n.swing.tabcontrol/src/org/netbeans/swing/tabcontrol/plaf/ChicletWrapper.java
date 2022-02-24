@@ -38,6 +38,7 @@ import java.util.Date;
  * @deprecated The new brushed metal look and feel doesn't need this class anymore.
  * @author Tim Boudreau
  */
+@Deprecated
 public class ChicletWrapper implements Runnable {
     private boolean allowVertical = true;
     private boolean leftNotch = false;
@@ -106,10 +107,10 @@ public class ChicletWrapper implements Runnable {
             result *= 1951;
         }
 
-        return new Long(result);
+        return result;
     }
 
-    private static HashMap<CacheEntry,BufferedImage> cache = new HashMap<CacheEntry,BufferedImage>();
+    private static HashMap<CacheEntry,BufferedImage> cache = new HashMap<>();
 
     private BufferedImage findBufferedImage() {
         Long hash = hash();
@@ -144,9 +145,9 @@ public class ChicletWrapper implements Runnable {
         if (cache.size() < 5) {
             return;
         }
-        HashMap<CacheEntry,BufferedImage> newCache = new HashMap<CacheEntry,BufferedImage>( cache );
+        HashMap<CacheEntry,BufferedImage> newCache = new HashMap<>( cache );
         long startTime = System.currentTimeMillis();
-        CacheEntry[] entries = (CacheEntry[]) newCache.keySet().toArray(new CacheEntry[0]);
+        CacheEntry[] entries = newCache.keySet().toArray(new CacheEntry[0]);
         Arrays.sort (entries);
         for (int i=entries.length-1; i >= entries.length / 3; i--) {
             if (startTime - entries[i].timestamp > 240000) {
@@ -156,7 +157,7 @@ public class ChicletWrapper implements Runnable {
         cache = newCache;
     }
 
-    private static final class CacheEntry implements Comparable {
+    private static final class CacheEntry implements Comparable<CacheEntry> {
         private final Long hash;
         long timestamp = System.currentTimeMillis();
         public CacheEntry (Long hash) {
@@ -175,15 +176,14 @@ public class ChicletWrapper implements Runnable {
         }
 
         long hash() {
-            return hash.longValue();
+            return hash;
         }
 
         public int hashCode() {
             return hash.intValue();
         }
 
-        public int compareTo(Object o) {
-            CacheEntry other = (CacheEntry) o;
+        public int compareTo(CacheEntry other) {
             //Okay, every 4 days we might let an unused bitmap get old
             return (int) (timestamp - other.timestamp);
         }

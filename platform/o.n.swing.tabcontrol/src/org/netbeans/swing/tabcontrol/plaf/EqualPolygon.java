@@ -182,7 +182,7 @@ public final class EqualPolygon extends Polygon {
 
     private Point[] sortPoints(Point[] p) {
         //Prune duplicates
-        HashSet<Point> set = new HashSet<Point>(Arrays.asList(p));
+        HashSet<Point> set = new HashSet<>(Arrays.asList(p));
         p = new Point[set.size()];
         p = set.toArray(p);
         //Then sort

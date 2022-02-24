@@ -230,7 +230,7 @@ public class TestUtilHid {
             return add (new StringTokenizer (resource,"/"));
         }
         
-        Resource add (Enumeration en) {
+        Resource add (Enumeration<Object> en) {
             //StringTokenizer tokens = StringTokenizer (resource);
             if (en.hasMoreElements()) {
                 String chldElem = (String)en.nextElement();
@@ -246,9 +246,9 @@ public class TestUtilHid {
         ResourceElement[] getChildren () {
             int i = 0;
             ResourceElement[] retVal =  new ResourceElement[children.entrySet().size()];
-            Iterator it = children.entrySet().iterator();
+            Iterator<Map.Entry<String, ResourceElement>> it = children.entrySet().iterator();
             while (it.hasNext()) {
-                retVal[i++] = (ResourceElement)((Map.Entry)it.next()).getValue();
+                retVal[i++] = it.next().getValue();
             }
                         
             return retVal;
@@ -269,7 +269,7 @@ public class TestUtilHid {
 
     static class StatusFileSystem extends LocalFileSystem {
         StatusDecorator status = new StatusDecorator () {
-            public String annotateName (String name, java.util.Set files) {
+            public String annotateName (String name, Set<? extends FileObject> files) {
                 return name;
             }
 

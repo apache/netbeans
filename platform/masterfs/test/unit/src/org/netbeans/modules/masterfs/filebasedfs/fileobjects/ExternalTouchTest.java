@@ -72,7 +72,7 @@ public class ExternalTouchTest extends NbTestCase {
 
         File file = FileUtil.toFile(fileObject1);
         assertNotNull("File found", file);
-        Reference<FileObject> ref = new WeakReference<FileObject>(fileObject1);
+        Reference<FileObject> ref = new WeakReference<>(fileObject1);
         arr = null;
         fileObject1 = null;
         assertGC("File Object can disappear", ref);
@@ -94,9 +94,9 @@ public class ExternalTouchTest extends NbTestCase {
 
         Thread.sleep(1000);
 
-        FileOutputStream os = new FileOutputStream(file);
-        os.write(10);
-        os.close();
+        try (FileOutputStream os = new FileOutputStream(file)) {
+            os.write(10);
+        }
 
         if (lm > file.lastModified() - 50) {
             fail("New modification time shall be at last 50ms after the original one: " + (file.lastModified() - lm));
@@ -140,7 +140,7 @@ public class ExternalTouchTest extends NbTestCase {
         assertNotNull("File found", file);
         arr = null;
         fileObject1 = null;
-        Reference<FileObject> ref = new WeakReference<FileObject>(fileObject1);
+        Reference<FileObject> ref = new WeakReference<>(fileObject1);
         assertGC("File Object can disappear", ref);
 
         Thread.sleep(100);
@@ -177,7 +177,7 @@ public class ExternalTouchTest extends NbTestCase {
         assertNotNull("File found", file);
         arr = null;
         fileObject1 = null;
-        Reference<FileObject> ref = new WeakReference<FileObject>(fileObject1);
+        Reference<FileObject> ref = new WeakReference<>(fileObject1);
         assertGC("File Object can disappear", ref);
 
         Thread.sleep(100);
@@ -215,7 +215,7 @@ public class ExternalTouchTest extends NbTestCase {
             sub = obj.getParent().getParent();
             fsub = FileUtil.toFile(sub);
 
-            WeakReference<Object> ref = new WeakReference(obj);
+            WeakReference<FileObject> ref = new WeakReference<>(obj);
             obj = null;
             assertGC("File object can disappear", ref);
         }
@@ -279,9 +279,9 @@ public class ExternalTouchTest extends NbTestCase {
 
         Thread.sleep(1000);
 
-        final OutputStream os = new FileOutputStream(fo);
-        os.write(10);
-        os.close();
+        try (OutputStream os = new FileOutputStream(fo)) {
+            os.write(10);
+        }
         LOG.info("Before refresh");
         FileUtil.refreshAll();
         LOG.info("After refresh");
@@ -340,7 +340,7 @@ public class ExternalTouchTest extends NbTestCase {
         flat.assertMessages("Direct file notified", "DataCreated");
         recursive.assertMessages("No longer active", "");
 
-        WeakReference<L> ref = new WeakReference<L>(recursive);
+        WeakReference<L> ref = new WeakReference<>(recursive);
         recursive = null;
         assertGC("Listener can be GCed", ref);
     }

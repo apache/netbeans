@@ -124,7 +124,7 @@ public class VectorIconTester extends javax.swing.JFrame {
     }
 
     private static Map<String, Icon> getIcons() {
-        Map<String, Icon> ret = new LinkedHashMap<String, Icon>();
+        Map<String, Icon> ret = new LinkedHashMap<>();
         if (TEST_AQUA) {
             addTabDisplayerIcons(ret, "mac", (TabDisplayerUI) AquaViewTabDisplayerUI.createUI(new TabDisplayer()));
             addTabDisplayerIcons(ret, "mac", (TabDisplayerUI) AquaEditorTabDisplayerUI.createUI(new TabDisplayer()));
@@ -170,7 +170,7 @@ public class VectorIconTester extends javax.swing.JFrame {
     private static void addTabDisplayerIcons(
             Map<String, Icon> toMap, String prefix, TabDisplayerUI tabDisplayerUI)
     {
-        Map<String, Integer> buttonIDs = new LinkedHashMap<String, Integer>();
+        Map<String, Integer> buttonIDs = new LinkedHashMap<>();
         // ViewTabDisplayerUI
         buttonIDs.put("close", TabControlButton.ID_CLOSE_BUTTON);
         buttonIDs.put("slide_right", TabControlButton.ID_SLIDE_RIGHT_BUTTON);
@@ -186,7 +186,7 @@ public class VectorIconTester extends javax.swing.JFrame {
         buttonIDs.put("maximize", TabControlButton.ID_MAXIMIZE_BUTTON);
         buttonIDs.put("restore", TabControlButton.ID_RESTORE_BUTTON);
 
-        Map<String, Integer> buttonStates = new LinkedHashMap<String, Integer>();
+        Map<String, Integer> buttonStates = new LinkedHashMap<>();
         buttonStates.put("default", TabControlButton.STATE_DEFAULT);
         buttonStates.put("pressed", TabControlButton.STATE_PRESSED);
         buttonStates.put("disabled", TabControlButton.STATE_DISABLED);
@@ -276,8 +276,8 @@ public class VectorIconTester extends javax.swing.JFrame {
         }
 
         public IconPreviewPane(Map<String, Icon> icons) {
-            this.iconsByLAF = new LinkedHashMap<String, Map<String, Icon>>();
-            this.namesAfterLAF = new LinkedHashSet<String>();
+            this.iconsByLAF = new LinkedHashMap<>();
+            this.namesAfterLAF = new LinkedHashSet<>();
             for (Entry<String, Icon> iconEntry : icons.entrySet()) {
                 String name = iconEntry.getKey();
                 int pos = name.indexOf("_");
@@ -287,7 +287,7 @@ public class VectorIconTester extends javax.swing.JFrame {
                 String lafPrefix = name.substring(0, pos);
                 Map<String, Icon> inLAFmap = iconsByLAF.get(lafPrefix);
                 if (inLAFmap == null) {
-                    inLAFmap = new LinkedHashMap<String, Icon>();
+                    inLAFmap = new LinkedHashMap<>();
                     iconsByLAF.put(lafPrefix, inLAFmap);
                 }
                 String nameAfterLAF = name.substring(pos + 1);
@@ -358,7 +358,7 @@ public class VectorIconTester extends javax.swing.JFrame {
         }
 
         private void paintComponent(Graphics2D g, Graphics2D originalGraphics) {
-            List<String> columnsToShow = new ArrayList<String>(iconsByLAF.keySet());
+            List<String> columnsToShow = new ArrayList<>(iconsByLAF.keySet());
             if (columnsToShow.size() >= 2) {
                 columnsToShow.add(timerSwitchState ? columnsToShow.get(0) : columnsToShow.get(1));
             }

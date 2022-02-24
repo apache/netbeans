@@ -46,11 +46,11 @@ public class BrowserUtils {
         Object desktopObj = null;
         try {
             // Determine if java.awt.Desktop is supported
-            Class desktopCls = Class.forName("java.awt.Desktop", true, null);
+            Class<?> desktopCls = Class.forName("java.awt.Desktop", true, null);
             Method getDesktopM = desktopCls.getMethod("getDesktop");
             browseM = desktopCls.getMethod("browse", URI.class);
 
-            Class actionCls = Class.forName("java.awt.Desktop$Action", true, null);
+            Class<?> actionCls = Class.forName("java.awt.Desktop$Action", true, null);
             Method isDesktopSupportedMethod = desktopCls.getMethod("isDesktopSupported");
             Method isSupportedMethod = desktopCls.getMethod("isSupported", actionCls);
             Field browseField = actionCls.getField("BROWSE");
@@ -63,19 +63,13 @@ public class BrowserUtils {
                 result = (Boolean) isSupportedMethod.invoke(desktopObj, browseField.get(null));
                 supported = result.booleanValue();
             }
-        } catch (ClassNotFoundException e) {
-            LogManager.log("... browser not supported", e);
-        } catch (NoSuchMethodException e) {
-            LogManager.log("... browser not supported", e);
         } catch (NoSuchFieldException e) {
-            LogManager.log("... browser not supported", e);
-        } catch (IllegalAccessException e) {
             // should never reach here
             InternalError x =
                     new InternalError("Desktop.getDesktop() method not found");
             x.initCause(e);
             LogManager.log("... browser not supported", e);
-        } catch (InvocationTargetException e) {
+        } catch (ReflectiveOperationException e) {
             LogManager.log("... browser not supported", e);
         }
         isBrowseSupported = supported;

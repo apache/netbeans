@@ -779,7 +779,7 @@ public final class Product extends RegistryNode implements StatusInterface {
     }
     @Deprecated
     public List<Dependency> getDependencies(final DependencyType ... types) {
-        Class [] classes = new Class[types.length];
+        Class<?>[] classes = new Class<?>[types.length];
         for(int i=0;i<types.length;i++) {
             classes[i] = toDependencyClass(types[i]);
         }
@@ -800,11 +800,11 @@ public final class Product extends RegistryNode implements StatusInterface {
         }
     }
     
-    public List<Dependency> getDependencies(Class ... dependencyClasses) {
-        final List<Dependency> filtered = new ArrayList<Dependency>();
+    public List<Dependency> getDependencies(Class<?> ... dependencyClasses) {
+        final List<Dependency> filtered = new ArrayList<>();
         
         for (Dependency dependency: dependencies) {
-            for (Class clazz: dependencyClasses) {
+            for (Class<?> clazz: dependencyClasses) {
                 //if (clazz.isInstance(dependency)) {
                 if (clazz.isInstance(dependency)) {
                     filtered.add(dependency);

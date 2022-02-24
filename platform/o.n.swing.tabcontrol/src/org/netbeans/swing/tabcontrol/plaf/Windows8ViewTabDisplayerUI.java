@@ -127,7 +127,7 @@ public class Windows8ViewTabDisplayerUI extends AbstractWinViewTabDisplayerUI {
 
     private static void initIcons() {
         if( null == buttonIconPaths ) {
-            buttonIconPaths = new HashMap<Integer, String[]>(7);
+            buttonIconPaths = new HashMap<>(7);
 
             //close button
             String[] iconPaths = new String[4];

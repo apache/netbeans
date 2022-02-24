@@ -60,8 +60,8 @@ public abstract class BusyTabsSupport {
         }
     };
 
-    private final Set<Tabbed> containers = new WeakSet<Tabbed>(10);
-    private final Set<Tabbed> busyContainers = new WeakSet<Tabbed>(10);
+    private final Set<Tabbed> containers = new WeakSet<>(10);
+    private final Set<Tabbed> busyContainers = new WeakSet<>(10);
 
     /**
      * @return The default implementation registered in global Lookup.

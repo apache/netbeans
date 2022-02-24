@@ -113,7 +113,7 @@ public final class OutlineViewOrderingTest extends NbTestCase {
             setLayout (new BorderLayout ());
             manager.setRootContext (rootNode);
 
-            Node.Property[] props = rootNode.getPropertySets ()[0].getProperties ();
+            Node.Property<?>[] props = rootNode.getPropertySets()[0].getProperties();
             view = new OutlineView ("test-outline-view-component");
             view.setProperties (props);
 

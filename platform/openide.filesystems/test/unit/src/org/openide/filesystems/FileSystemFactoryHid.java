@@ -127,9 +127,9 @@ public abstract class FileSystemFactoryHid extends NbTestSetup {
 
     private void registerMap (Test test) {
         if (test instanceof TestSuite) {
-            Enumeration en = ((TestSuite)test).tests ();
+            Enumeration<Test> en = ((TestSuite)test).tests ();
             while (en.hasMoreElements()) {                
-                Test tst = (Test)en.nextElement();
+                Test tst = en.nextElement();
                 if (tst instanceof TestSuite) 
                     registerMap (tst);
                 else {
@@ -153,10 +153,10 @@ public abstract class FileSystemFactoryHid extends NbTestSetup {
         
 
     private static FileSystemFactoryHid getFromMap (Test test, boolean delete) {    
-        LinkedList s = (LinkedList)map.get (test);
+        LinkedList<FileSystemFactoryHid> s = (LinkedList<FileSystemFactoryHid>) map.get(test);
         FileSystemFactoryHid  retVal;
         try {
-            retVal = (FileSystemFactoryHid)s.getLast();
+            retVal = s.getLast();
         } catch (NoSuchElementException x ) {
             System.out.println("exc: "+ test + " : " );
             throw x;

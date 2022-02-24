@@ -111,9 +111,9 @@ public final class BasicSlidingTabDisplayerUI extends AbstractTabDisplayerUI {
                     changed = true;
                 }
                 Component[] c = displayer.getComponents();
-                for (int i=0; i < c.length; i++) {
-                    if (c[i] instanceof IndexButton) {
-                        changed |= ((IndexButton) c[i]).checkChanged();
+                for (Component c1 : c) {
+                    if (c1 instanceof IndexButton) {
+                        changed |= ((IndexButton) c1).checkChanged();
                     }
                 }
             }
@@ -189,9 +189,9 @@ public final class BasicSlidingTabDisplayerUI extends AbstractTabDisplayerUI {
     
     private IndexButton findButtonFor (int index) {
         Component[] c = displayer.getComponents();
-        for (int i=0; i < c.length; i++) {
-            if (c[i] instanceof IndexButton && ((IndexButton) c[i]).getIndex() == index) {
-                return (IndexButton) c[i];
+        for (Component c1 : c) {
+            if (c1 instanceof IndexButton && ((IndexButton) c1).getIndex() == index) {
+                return (IndexButton) c1;
             }
         }
         return null;
@@ -214,10 +214,10 @@ public final class BasicSlidingTabDisplayerUI extends AbstractTabDisplayerUI {
     @Override
     public int tabForCoordinate(Point p) {
         Component[] c = displayer.getComponents();
-        for (int i=0; i < c.length; i++) {
-            if (c[i] instanceof IndexButton) {
-                if (c[i].contains(p)) {
-                    return ((IndexButton) c[i]).getIndex();
+        for (Component c1 : c) {
+            if (c1 instanceof IndexButton) {
+                if (c1.contains(p)) {
+                    return ((IndexButton) c1).getIndex();
                 }
             }
         }
@@ -444,10 +444,10 @@ public final class BasicSlidingTabDisplayerUI extends AbstractTabDisplayerUI {
                 syncButtonsWithModel();
                 Component[] c = parent.getComponents();
                 Arrays.sort (c, BUTTON_COMPARATOR);
-                for (int i=0; i < c.length; i++) {
-                    if (c[i] instanceof IndexButton) {
-                        boundsFor ((IndexButton) c[i], scratch);
-                        c[i].setBounds (scratch);
+                for (Component c1 : c) {
+                    if (c1 instanceof IndexButton) {
+                        boundsFor((IndexButton) c1, scratch);
+                        c1.setBounds(scratch);
                     }
                 }
             }

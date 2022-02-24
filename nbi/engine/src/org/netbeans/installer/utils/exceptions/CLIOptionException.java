@@ -24,7 +24,7 @@ package org.netbeans.installer.utils.exceptions;
  * @author Dmitry Lipin
  */
 public class CLIOptionException extends Exception{
-/**
+    /**
      * 
      * @param message 
      */

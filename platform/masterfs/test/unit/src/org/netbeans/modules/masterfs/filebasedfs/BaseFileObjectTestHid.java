@@ -63,8 +63,8 @@ import org.openide.util.io.NbMarshalledObject;
 
 
 public class BaseFileObjectTestHid extends TestBaseHid{
-    public static final HashSet<String> AUTOMOUNT_SET = new HashSet<String>(Arrays.asList("set", "shared", "net", "java", "share", "home", "ws", "ade_autofs"));
-    private static final Set<String> REMOTE_FSTYPES = Collections.unmodifiableSet(new HashSet<String>(Arrays.asList(
+    public static final HashSet<String> AUTOMOUNT_SET = new HashSet<>(Arrays.asList("set", "shared", "net", "java", "share", "home", "ws", "ade_autofs"));
+    private static final Set<String> REMOTE_FSTYPES = Collections.unmodifiableSet(new HashSet<>(Arrays.asList(
     "nfs", "nfs4","autofs")));  //NOI18N
     private static final boolean CHECK_REMOTE_FSTYPES = true;
     private FileObject root;
@@ -380,9 +380,9 @@ public class BaseFileObjectTestHid extends TestBaseHid{
         
         f.createNewFile();
         
-        OutputStream os = fo.getOutputStream();
-        os.write("Ahoj".getBytes());
-        os.close();
+        try (OutputStream os = fo.getOutputStream()) {
+            os.write("Ahoj".getBytes());
+        }
         
         String newTxt = fo.asText("UTF-8");
         assertEquals("Text read even the file object is not valid anymore", "Ahoj", newTxt);
@@ -393,7 +393,7 @@ public class BaseFileObjectTestHid extends TestBaseHid{
         final File wDir = new File(getWorkDir(), getName());
         wDir.mkdir();
         final FileObject wDirFo = FileUtil.toFileObject(wDir);
-        final List<FileEvent> fileEvents = new ArrayList<FileEvent>();
+        final List<FileEvent> fileEvents = new ArrayList<>();
         FileSystem fs = wDirFo.getFileSystem();
         FileChangeListener fListener = new FileChangeAdapter(){
             @Override
@@ -432,7 +432,7 @@ public class BaseFileObjectTestHid extends TestBaseHid{
 
         FileSystem fs = fo.getFileSystem();
         assertNotNull(fs);
-        final Set<FileObject> s = new HashSet<FileObject>();
+        final Set<FileObject> s = new HashSet<>();
         fs.addFileChangeListener(new FileChangeAdapter(){
             @Override
             public void fileFolderCreated(FileEvent fe) {
@@ -466,7 +466,7 @@ public class BaseFileObjectTestHid extends TestBaseHid{
         FileUtil.createData(testFo, "f");        
         FileObject[] childs = testFo.getChildren();
         assertEquals(6, childs.length);
-        final List<FileObject> l = new ArrayList<FileObject>();
+        final List<FileObject> l = new ArrayList<>();
         FileChangeListener fclFS = new FileChangeAdapter(){
             @Override
             public void fileDeleted(FileEvent fe) {
@@ -488,8 +488,7 @@ public class BaseFileObjectTestHid extends TestBaseHid{
         };
         testFo.refresh();
         testFo.getFileSystem().refresh(false);                
-        for (int i = 0; i < childs.length; i++) {
-            FileObject fileObject = childs[i];
+        for (FileObject fileObject : childs) {
             fileObject.refresh();
         }
 
@@ -497,8 +496,7 @@ public class BaseFileObjectTestHid extends TestBaseHid{
         testFo.getFileSystem().addFileChangeListener(fclFS);
         try {
             File[] files = testFolder.listFiles();
-            for (int i = 0; i < files.length; i++) {
-                File file = files[i];
+            for (File file : files) {
                 assertTrue(file.delete());
             }
             assertEquals(0,testFolder.list().length);
@@ -512,8 +510,7 @@ public class BaseFileObjectTestHid extends TestBaseHid{
             testFo.getFileSystem().removeFileChangeListener(fclFS);
             testFo.refresh();
             testFo.getFileSystem().refresh(false);
-            for (int i = 0; i < childs.length; i++) {
-                FileObject fileObject = childs[i];
+            for (FileObject fileObject : childs) {
                 fileObject.refresh();
             }            
         }
@@ -683,7 +680,7 @@ public class BaseFileObjectTestHid extends TestBaseHid{
             LOG.log(Level.INFO, "Created file {0} exists: {1}", new Object[]{fileF, fileF.exists()});
             root.getFileSystem().refresh(false);
             final int validCntr = cntr;
-            final List<Boolean> valid = Collections.synchronizedList(new ArrayList<Boolean>());
+            final List<Boolean> valid = Collections.synchronizedList(new ArrayList<>());
             LOG.log(Level.INFO, "Valid for round {0} allocated {1}", new Object[]{validCntr, valid});
             FileObject fo = FileUtil.toFileObject(fileF);
             LOG.log(Level.INFO, "file object {0} for {1} found", new Object[]{fo, fileF});
@@ -761,10 +758,10 @@ public class BaseFileObjectTestHid extends TestBaseHid{
         thisTest.createNewFile();
         FileObject testf = FileUtil.toFileObject(thisTest);
         assertNotNull(testf);
-        assertGC("",new WeakReference<FileObject>(testf.getParent()));
+        assertGC("",new WeakReference<>(testf.getParent()));
         modifyFileObject(testf, "abc");
         FileSystem fs = testf.getFileSystem();
-        final List<FileEvent> l = new ArrayList<FileEvent>();
+        final List<FileEvent> l = new ArrayList<>();
         FileChangeListener fcl = new FileChangeAdapter() {
             @Override
             public void fileChanged(FileEvent fe) {
@@ -850,8 +847,8 @@ public class BaseFileObjectTestHid extends TestBaseHid{
         assertNotNull(fs);        
         FileObject main = root.createData("Main.java");
         FileUtil.createData(root,"subpackage/newclass.java");
-        final List<FileObject> fileObjects = new ArrayList<FileObject>();
-        final Set<FileObject> allSubPackages = new HashSet<FileObject>();
+        final List<FileObject> fileObjects = new ArrayList<>();
+        final Set<FileObject> allSubPackages = new HashSet<>();
         final TestListener tl = new TestListener(fileObjects);
         fs.addFileChangeListener(tl);
         try {
@@ -911,7 +908,7 @@ public class BaseFileObjectTestHid extends TestBaseHid{
     }
     
     public void testRefresh60479 () throws Exception {
-        final List<FileEvent> l = new ArrayList<FileEvent>();
+        final List<FileEvent> l = new ArrayList<>();
         File rootFile = FileUtil.toFile(root);
         assertTrue(rootFile.exists());
         
@@ -1031,7 +1028,6 @@ public class BaseFileObjectTestHid extends TestBaseHid{
     }
     
         
-    @SuppressWarnings("deprecation")
     public void testFileUtilFromFile () throws Exception {        
         assertNotNull(root);
         
@@ -1155,14 +1151,13 @@ public class BaseFileObjectTestHid extends TestBaseHid{
         FileSystemView fsv = FileSystemView.getFileSystemView();                
         File[] roots = File.listRoots();
         boolean validRoot = false;
-        for (int i = 0; i < roots.length; i++) {
-            FileObject root1 = FileUtil.toFileObject(roots[i]);
-            if (!roots[i].exists()) {
-               assertNull(root1);
-               continue; 
+        for (File root2 : roots) {
+            FileObject root1 = FileUtil.toFileObject(root2);
+            if (!root2.exists()) {
+                assertNull(root1);
+                continue; 
             }
-            
-            assertNotNull(roots[i].getAbsolutePath (),root1);
+            assertNotNull(root2.getAbsolutePath(), root1);
             assertTrue(root1.isValid());
             if (testedFS == root1.getFileSystem()) {
                 validRoot = true;
@@ -1182,8 +1177,7 @@ public class BaseFileObjectTestHid extends TestBaseHid{
     public void testNormalizeDrivesOnWindows48681 () {
         if ((Utilities.isWindows () || (Utilities.getOperatingSystem () == Utilities.OS_OS2))) {
             File[] roots = File.listRoots();
-            for (int i = 0; i < roots.length; i++) {
-                File file = roots[i];
+            for (File file : roots) {
                 if (FileSystemView.getFileSystemView().isFloppyDrive(file) || !file.exists()) {
                     continue;
                 }
@@ -1207,11 +1201,10 @@ public class BaseFileObjectTestHid extends TestBaseHid{
             f.getParentFile().mkdirs();
             f.createNewFile();
         }
-        JarOutputStream jos = new JarOutputStream (new FileOutputStream (f));        
-        jos.putNextEntry(new ZipEntry ("a/b/c/c.txt"));
-        jos.putNextEntry(new ZipEntry ("a/b/d/d.txt"));
-                        
-       jos.close();        
+        try (JarOutputStream jos = new JarOutputStream (new FileOutputStream (f))) {
+            jos.putNextEntry(new ZipEntry ("a/b/c/c.txt"));
+            jos.putNextEntry(new ZipEntry ("a/b/d/d.txt"));
+        }        
 
         FileObject parent = FileUtil.toFileObject(f.getParentFile());
         parent.getChildren();
@@ -1223,7 +1216,7 @@ public class BaseFileObjectTestHid extends TestBaseHid{
         }
         
 
-        ArrayList<FileObject> all = new ArrayList<FileObject>();
+        ArrayList<FileObject> all = new ArrayList<>();
         FileObject jfsRoot = jfs.getRoot();
         Enumeration<? extends FileObject> en = jfsRoot.getChildren(true);
         while (en.hasMoreElements()) {
@@ -1232,7 +1225,7 @@ public class BaseFileObjectTestHid extends TestBaseHid{
 
         assertTrue (all.size() > 0); 
         
-        final ArrayList<FileObject> deleted = new ArrayList<FileObject>();
+        final ArrayList<FileObject> deleted = new ArrayList<>();
         jfs.addFileChangeListener(new FileChangeAdapter() {
             @Override
             public void fileDeleted(FileEvent fe) {
@@ -1362,11 +1355,11 @@ public class BaseFileObjectTestHid extends TestBaseHid{
     private class IgnoreDirFileSystem extends LocalFileSystem {
         org.openide.filesystems.StatusDecorator status = new org.openide.filesystems.StatusDecorator() {
             @Override
-            public String annotateName (String name, java.util.Set files) {
+            public String annotateName (String name, Set<? extends FileObject> files) {
                 StringBuilder sb = new StringBuilder (name);
-                Iterator it = files.iterator ();
+                Iterator<? extends FileObject> it = files.iterator ();
                 while (it.hasNext()) {                    
-                    FileObject fo = (FileObject)it.next();
+                    FileObject fo = it.next();
                     try {
                         if (fo.getFileSystem() instanceof IgnoreDirFileSystem) {
                             sb.append(",").append (fo.getNameExt());//NOI18N
@@ -1380,7 +1373,7 @@ public class BaseFileObjectTestHid extends TestBaseHid{
             }
 
             @Override
-            public String annotateNameHtml(String name, Set files) {
+            public String annotateNameHtml(String name, Set<? extends FileObject> files) {
                 return annotateName (name, files);
             }            
             

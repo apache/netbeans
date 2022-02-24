@@ -154,9 +154,9 @@ public class FilesystemBugsTest extends NbTestCase {
         // delete all attributes
         FileObject fos[] = folder.getChildren();
         for (int i = 0; i < fos.length; i++) {
-            Enumeration keys = fos[i].getAttributes();
+            Enumeration<String> keys = fos[i].getAttributes();
             while (keys.hasMoreElements()) {
-                fos[i].setAttribute((String) keys.nextElement(), null);
+                fos[i].setAttribute(keys.nextElement(), null);
             }
         }
         // flush

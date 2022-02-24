@@ -195,7 +195,7 @@ final class WinClassicEditorTabCellRenderer extends AbstractTabCellRenderer {
                 
                 Rectangle r = new Rectangle(0, 0, c.getWidth(), c.getHeight());
                 Rectangle cbRect = new Rectangle();
-                getCloseButtonRectangle((JComponent) c, cbRect, r);
+                getCloseButtonRectangle(c, cbRect, r);
                 
                 //paint close button
                 String iconPath = findIconPath( (WinClassicEditorTabCellRenderer)c );

@@ -113,7 +113,7 @@ public class WatcherLoggingTest extends NbTestCase {
         }
     }
 
-    public static final class FailingNotifier extends Notifier {
+    public static final class FailingNotifier extends Notifier<Object> {
 
         @Override
         protected Object addWatch(String path) throws IOException {

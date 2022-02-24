@@ -95,7 +95,7 @@ public class MIMESupport68318Test extends NbTestCase {
             ic.add(c1);
         }
 
-        protected void beforeLookup(org.openide.util.Lookup.Template template) {
+        protected void beforeLookup(org.openide.util.Lookup.Template<?> template) {
             if (template.getType() == MIMEResolver.class) {
                 assertNull("First invocation to assign result", result);
                 result = MIMESupport.getResolvers();

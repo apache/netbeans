@@ -45,7 +45,7 @@ public class ReplaceForSerialization extends Object implements java.io.Serializa
 
     public final Object readResolve() {
         final File file = new File(absolutePath);
-        final FileObject retVal = FileBasedFileSystem.getInstance().getFileObject(file);               
+        final FileObject retVal = FileBasedFileSystem.getFileObject(file);               
         return (retVal != null) ? retVal : new Invalid (file);
     }
 

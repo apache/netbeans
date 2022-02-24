@@ -77,7 +77,7 @@ public abstract class BaseFileObj extends FileObject {
     private static final char EXT_SEP = '.';//NOI18N
     static final Logger LOG = Logger.getLogger(BaseFileObj.class.getName());
     static final ThreadLocal<Long> MOVED_FILE_TIMESTAMP //#244286: move in progress
-            = new ThreadLocal<Long>();
+            = new ThreadLocal<>();
 
     //static fields 
     static final long serialVersionUID = -1244650210876356809L;
@@ -169,7 +169,7 @@ public abstract class BaseFileObj extends FileObject {
     @Override
     public final String getPath() {
         FileNaming fileNaming = getFileName();
-        Deque<String> stack = new ArrayDeque<String>();
+        Deque<String> stack = new ArrayDeque<>();
         while (fileNaming != null) {
             stack.addFirst(fileNaming.getName());
             fileNaming = fileNaming.getParent();
@@ -442,7 +442,7 @@ public abstract class BaseFileObj extends FileObject {
             }
             assert allRenamed[0] != null;
             fileName = allRenamed[0];
-            Set<BaseFileObj> toRename = new HashSet<BaseFileObj>(allRenamed.length * 2);
+            Set<BaseFileObj> toRename = new HashSet<>(allRenamed.length * 2);
             toRename.add(this);
             BaseFileObj.attribs.renameAttributes(file.getAbsolutePath().replace('\\', '/'), file2Rename.getAbsolutePath().replace('\\', '/'));//NOI18N
             for (int i = 0; i < allRenamed.length; i++) {
@@ -930,7 +930,7 @@ public abstract class BaseFileObj extends FileObject {
     }
 
     private void updateFileName(FileNaming oldName, FileNaming oldRoot, FileNaming newRoot) {
-        Stack<String> names = new Stack<String>();
+        Stack<String> names = new Stack<>();
 
         while (oldRoot != oldName && oldName != null) {
             names.add(oldName.getName());
@@ -1075,8 +1075,7 @@ public abstract class BaseFileObj extends FileObject {
                 // first of all delete whole content
                 final File[] arr = file.listFiles();
                 if (arr != null) {  // check for null in case of I/O errors
-                    for (int i = 0; i < arr.length; i++) {
-                        final File f2Delete = arr[i];
+                    for (File f2Delete : arr) {
                         if (!deleteFolder(f2Delete)) {
                             return false;
                         }

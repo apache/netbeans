@@ -141,7 +141,7 @@ public class NodeTreeModelTest extends NbTestCase {
 
     /** Sample keys.
     */
-    public static class Keys extends Children.Keys {
+    public static class Keys extends Children.Keys<String> {
         int cnt;
 
         /** Constructor.
@@ -164,9 +164,9 @@ public class NodeTreeModelTest extends NbTestCase {
          * @return child nodes for this key or null if there should be no
          *   nodes for this key
          */
-        protected Node[] createNodes(Object key) {
+        protected Node[] createNodes(String key) {
             AbstractNode an = new AbstractNode (Children.LEAF);
-            an.setName (key.toString ());
+            an.setName(key);
 
             cnt++;
             return new Node[] { an };

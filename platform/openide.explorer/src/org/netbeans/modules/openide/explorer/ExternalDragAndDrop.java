@@ -59,7 +59,7 @@ public class ExternalDragAndDrop {
         Transferable res = multi;
         try {
             MultiTransferObject mto = (MultiTransferObject) multi.getTransferData(ExTransferable.multiFlavor);
-            final List fileList = new ArrayList<>( mto.getCount() );
+            final List<Object> fileList = new ArrayList<>( mto.getCount() );
             for( int i=0; i<mto.getCount(); i++ ) {
                 if( mto.isDataFlavorSupported( i, DataFlavor.javaFileListFlavor ) ) {
                     List<?> list = (List<?>)mto.getTransferData( i, DataFlavor.javaFileListFlavor );

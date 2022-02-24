@@ -60,9 +60,9 @@ public class URLMapperTestHidden extends TestBaseHid {
         assertNotNull(root);
         implTestIfReachable(root);
                 
-        Enumeration en = root.getChildren(true);
+        Enumeration<? extends FileObject> en = root.getChildren(true);
         while (en.hasMoreElements()) {
-            FileObject fileObject = (FileObject) en.nextElement();
+            FileObject fileObject = en.nextElement();
             implTestIfReachable(fileObject);            
         }
 
@@ -73,9 +73,9 @@ public class URLMapperTestHidden extends TestBaseHid {
         implTestConversions(root);
                 
 
-        Enumeration en = root.getChildren(true);
+        Enumeration<? extends FileObject> en = root.getChildren(true);
         while (en.hasMoreElements()) {
-            FileObject fileObject = (FileObject) en.nextElement();
+            FileObject fileObject = en.nextElement();
             implTestConversions(fileObject);            
         }
 
@@ -85,9 +85,9 @@ public class URLMapperTestHidden extends TestBaseHid {
         assertNotNull(root);
         implTestForSlashes(root);        
                 
-        Enumeration en = root.getChildren(true);
+        Enumeration<? extends FileObject> en = root.getChildren(true);
         while (en.hasMoreElements()) {
-            FileObject fileObject = (FileObject) en.nextElement();
+            FileObject fileObject = en.nextElement();
             implTestForSlashes(fileObject);                                
         }        
     }
@@ -96,10 +96,10 @@ public class URLMapperTestHidden extends TestBaseHid {
         assertNotNull(root);
         if (testedFS.isReadOnly() || root.isReadOnly()) return;
                 
-        List testedFileObjects = new ArrayList(); 
-        Enumeration en = root.getChildren(true);
+        List<FileObject> testedFileObjects = new ArrayList<>(); 
+        Enumeration<? extends FileObject> en = root.getChildren(true);
         while (en.hasMoreElements()) {
-            FileObject fileObject = (FileObject) en.nextElement();
+            FileObject fileObject = en.nextElement();
             testedFileObjects.add(fileObject);
             implTestForSlashes(fileObject);                                
         }   
@@ -111,7 +111,7 @@ public class URLMapperTestHidden extends TestBaseHid {
         }        
 
         for (int i = 0; i < testedFileObjects.size(); i++) {
-            FileObject fo = (FileObject) testedFileObjects.get(i);
+            FileObject fo = testedFileObjects.get(i);
             assertFalse (fo.isValid());
             implTestForSlashes(fo);            
         }
@@ -121,9 +121,9 @@ public class URLMapperTestHidden extends TestBaseHid {
         assertNotNull(root);
         implTestForSpaces(root);
                 
-        Enumeration en = root.getChildren(true);
+        Enumeration<? extends FileObject> en = root.getChildren(true);
         while (en.hasMoreElements()) {
-            FileObject fileObject = (FileObject) en.nextElement();
+            FileObject fileObject = en.nextElement();
             implTestForSpaces(fileObject);                                            
         }        
     }

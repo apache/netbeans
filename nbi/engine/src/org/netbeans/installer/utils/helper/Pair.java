@@ -53,7 +53,7 @@ public class Pair<F, S> {
       if (other == this) return true;
       if (other == null) return false;
       if (other instanceof Pair) {
-         Pair pair = (Pair) other;
+         Pair<?, ?> pair = (Pair<?, ?>) other;
          if (first != null ? first.equals(pair.first): pair.first == null)
             return second != null ? second.equals(pair.second): pair.second == null;
       }

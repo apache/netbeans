@@ -113,7 +113,7 @@ public class RecursiveListenerOnOffTest extends NbTestCase {
         class FL extends FileChangeAdapter {
 
             private final Semaphore sem = new Semaphore(0);
-            private final Queue<File> waitFor = new ArrayDeque<File>();
+            private final Queue<File> waitFor = new ArrayDeque<>();
 
             public synchronized void expect(final File... files) {
                 waitFor.addAll(Arrays.asList(files));
@@ -155,10 +155,8 @@ public class RecursiveListenerOnOffTest extends NbTestCase {
         FileUtil.addRecursiveListener(fl, newSrcDir);
         fl.expect(FileUtil.toFile(file));
         lck = file.lock();
-        try {
-            final OutputStream out = file.getOutputStream(lck);
+        try (OutputStream out = file.getOutputStream(lck)) {
             out.write(1);
-            out.close();
         } finally {
             lck.releaseLock();
         }

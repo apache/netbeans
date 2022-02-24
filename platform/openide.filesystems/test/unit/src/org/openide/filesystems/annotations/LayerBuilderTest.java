@@ -218,6 +218,7 @@ public class LayerBuilderTest extends NbTestCase {
             public @Override List<? extends Element> getEnclosedElements() {return null;}
             public @Override <R, P> R accept(ElementVisitor<R, P> v, P p) {return null;}
             @Override
+            @SuppressWarnings("unchecked")
             public <A extends Annotation> A[] getAnnotationsByType(Class<A> annotationType) {
                 return (A[]) Array.newInstance(annotationType, 0);
             }

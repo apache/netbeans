@@ -193,9 +193,9 @@ abstract class SheetCell extends AbstractCellEditor implements TableModelListene
 
     /** Null panel is used if cell value is null */
     private NullPanel nullPanel;
-    /** Two-tier cache for property panels 
-     * Map<TreeNode, WeakHashMap<Node.Property, Reference<FocusedPropertyPanel>> */
-    private Map panelCache = new WeakHashMap(); // weak! #31275
+//    /** Two-tier cache for property panels 
+//     * Map<TreeNode, WeakHashMap<Node.Property, Reference<FocusedPropertyPanel>> */
+//    private Map panelCache = new WeakHashMap<>(); // weak! #31275
 
     private FocusedPropertyPanel renderer = null;
     private FocusedPropertyPanel getRenderer (Property p, Node n) {

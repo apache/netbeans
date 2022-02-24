@@ -206,11 +206,11 @@ final class ViewTabLayoutModel2 implements TabLayoutModel, ChangeListener {
     
     private void updatePermutations () {
         int itemCount = displayer.getModel().size();
-        index2Pos = new ArrayList<Integer>(itemCount); 
-        pos2Index = new ArrayList<Integer>(itemCount); 
+        index2Pos = new ArrayList<>(itemCount); 
+        pos2Index = new ArrayList<>(itemCount); 
         for (int i = 0; i < itemCount; i++) {
-            index2Pos.add(Integer.valueOf(itemCount - i - 1));
-            pos2Index.add(0, Integer.valueOf(i));
+            index2Pos.add(itemCount - i - 1);
+            pos2Index.add(0, i);
         }
     }
 

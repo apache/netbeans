@@ -41,7 +41,7 @@ public class FileBasedFileSystemTest extends FileSystemFactoryHid {
     
     @Override
     protected void setServices(Class<?>... services) {
-        List<Class<?>> arr = new ArrayList<Class<?>>();
+        List<Class<?>> arr = new ArrayList<>();
         arr.addAll(Arrays.asList(services));
         arr.add(FileBasedURLMapper.class);
         MockServices.setServices(arr.toArray(new Class<?>[0]));
@@ -74,8 +74,7 @@ public class FileBasedFileSystemTest extends FileSystemFactoryHid {
         FileObjectFactory.reinitForTests();
         FileObject workFo = FileBasedFileSystem.getFileObject(getWorkDir());
         assertNotNull(workFo);
-        for (int i = 0; i < resources.length; i++) {
-            String res = resources[i];
+        for (String res : resources) {
             if (res.endsWith("/")) {
                 assertNotNull(FileUtil.createFolder(workFo,res));
             } else {

@@ -56,7 +56,7 @@ class StackLayout implements LayoutManager {
                 if (comp != null) {
                     comp.setVisible(false);
                 }
-                visibleComp = new WeakReference<Component>(c);
+                visibleComp = new WeakReference<>(c);
                 if (c != null) {
                     c.setVisible(true);
                 }

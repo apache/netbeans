@@ -32,6 +32,7 @@ import org.openide.util.lookup.ServiceProvider;
 public final class SharedClassObjectFactory implements CustomInstanceFactory {
 
     @Override
+    @SuppressWarnings("unchecked")
     public <T> T createInstance(Class<T> clazz) {
         if (SharedClassObject.class.isAssignableFrom(clazz)) {
             return (T)SharedClassObject.findObject(clazz.asSubclass(SharedClassObject.class), true);

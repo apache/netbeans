@@ -62,10 +62,10 @@ public class FileBasedFileSystem extends FileSystem {
     public FileBasedFileSystem() {
         if (BaseUtilities.isWindows()) {
             RootObjWindows realRoot = new RootObjWindows();
-            root = new RootObj<RootObjWindows>(realRoot);
+            root = new RootObj<>(realRoot);
         } else {
             FileObjectFactory factory = FileObjectFactory.getInstance(new File("/"));//NOI18N
-            root = new RootObj<BaseFileObj>(factory.getRoot());
+            root = new RootObj<>(factory.getRoot());
         }
     }
    
@@ -259,7 +259,7 @@ public class FileBasedFileSystem extends FileSystem {
             } catch (ClassNotFoundException e) {
                 //pass - no masterfs.ui module no @ServiceProvider(service=AnnotationProvider.class) hack needed.
             }
-            annotationProviders = Lookup.getDefault().lookup(new Lookup.Template<BaseAnnotationProvider>(BaseAnnotationProvider.class));
+            annotationProviders = Lookup.getDefault().lookup(new Lookup.Template<>(BaseAnnotationProvider.class));
             annotationProviders.addLookupListener(this);
             resultChanged(null);
         }
@@ -283,7 +283,7 @@ public class FileBasedFileSystem extends FileSystem {
                 add = new HashSet<BaseAnnotationProvider>(now);
                 add.removeAll(previousProviders);
 
-                HashSet<BaseAnnotationProvider> toRemove = new HashSet<BaseAnnotationProvider>(previousProviders);
+                HashSet<BaseAnnotationProvider> toRemove = new HashSet<>(previousProviders);
                 toRemove.removeAll(now);
                 for (BaseAnnotationProvider ap : toRemove) {
                     ap.removeFileStatusListener(this);
@@ -307,7 +307,7 @@ public class FileBasedFileSystem extends FileSystem {
         }
 
         public Lookup findExtrasFor(Set<FileObject> foSet) {
-            List<Lookup> arr = new ArrayList<Lookup>();
+            List<Lookup> arr = new ArrayList<>();
             for (BaseAnnotationProvider ap : annotationProviders.allInstances()) {
                 final Lookup lkp = ap.findExtrasFor(foSet);
                 if (lkp != null) {

@@ -129,7 +129,7 @@ final class ColorUtil {
         }
         
         if (gpCache == null) {
-            gpCache = new HashMap<Integer, GradientPaint>(20);
+            gpCache = new HashMap<>(20);
         }
         //Normalize any non-repeating gradients
         boolean horizontal = x1 == x2;
@@ -155,8 +155,8 @@ final class ColorUtil {
         int hash = ((((int) bits) ^ ((int) (bits >> 32)))
                 ^ upper.hashCode() ^ (lower.hashCode() * 17)) * (repeats ? 31 : 1);
 
-        Integer key = new Integer(hash);
-        GradientPaint result = (GradientPaint) gpCache.get(key);
+        Integer key = hash;
+        GradientPaint result = gpCache.get(key);
         if (result == null) {
             result =
                     new GradientPaint(x1, y1, upper, x2, y2, lower, repeats);
@@ -182,6 +182,7 @@ final class ColorUtil {
     /**
      * @deprecated Use {@link GraphicsUtils#configureDefaultRenderingHints(java.awt.Graphics)} instead.
      */
+    @Deprecated
     public static final boolean shouldAntialias() {
         return antialias;
     }

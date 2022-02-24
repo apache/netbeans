@@ -34,6 +34,7 @@ import javax.swing.Timer;
 import javax.swing.ToolTipManager;
 import javax.swing.UIManager;
 import javax.swing.plaf.ButtonUI;
+import javax.swing.plaf.ComponentUI;
 import org.netbeans.swing.tabcontrol.TabData;
 import org.netbeans.swing.tabcontrol.TabDisplayer;
 import org.netbeans.swing.tabcontrol.TabListPopupAction;
@@ -297,7 +298,7 @@ public class TabControlButtonFactory {
         @Override
         public void updateUI () {
             ButtonUI customUI = null;
-            Class uiClass = UIManager.getDefaults().getUIClass( getUIClassID() );
+            Class<? extends ComponentUI> uiClass = UIManager.getDefaults().getUIClass( getUIClassID() );
             if( null != uiClass ) {
                 customUI = (ButtonUI)UIManager.getUI(this);
             }
@@ -424,9 +425,9 @@ public class TabControlButtonFactory {
 
         @Override
         protected void processMouseEvent(MouseEvent me) {
-            if (isEnabled() && me.getID() == me.MOUSE_PRESSED) {
+            if (isEnabled() && me.getID() == MouseEvent.MOUSE_PRESSED) {
                 startTimer();
-            } else if (me.getID() == me.MOUSE_RELEASED) {
+            } else if (me.getID() == MouseEvent.MOUSE_RELEASED) {
                 stopTimer();
             }
             super.processMouseEvent(me);
@@ -435,7 +436,7 @@ public class TabControlButtonFactory {
         @Override
         protected void processFocusEvent(FocusEvent fe) {
             super.processFocusEvent(fe);
-            if (fe.getID() == fe.FOCUS_LOST) {
+            if (fe.getID() == FocusEvent.FOCUS_LOST) {
                 stopTimer();
             }
         }
@@ -462,13 +463,13 @@ public class TabControlButtonFactory {
         @Override
         protected void processMouseEvent(MouseEvent me) {
             super.processMouseEvent(me);
-            if (isEnabled() && me.getID() == me.MOUSE_PRESSED) {
+            if (isEnabled() && me.getID() == MouseEvent.MOUSE_PRESSED) {
                 forcePressedIcon = true;
                 repaint();
                 getAction().actionPerformed(new ActionEvent(this,
                                                             ActionEvent.ACTION_PERFORMED,
                                                             "pressed"));
-            } else if (isEnabled() && me.getID() == me.MOUSE_RELEASED) {
+            } else if (isEnabled() && me.getID() == MouseEvent.MOUSE_RELEASED) {
                 forcePressedIcon = false;
                 repaint();
             }

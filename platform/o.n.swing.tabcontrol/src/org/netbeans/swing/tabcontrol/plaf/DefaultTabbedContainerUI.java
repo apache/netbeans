@@ -599,10 +599,10 @@ public class DefaultTabbedContainerUI extends TabbedContainerUI {
      */
     protected void initDisplayer() {
         if (container.getContentPolicy() == TabbedContainer.CONTENT_POLICY_ADD_ALL) {
-            List tabs = container.getModel().getTabs();
+            List<TabData> tabs = container.getModel().getTabs();
             Component curC = null;
-            for (Iterator iter = tabs.iterator(); iter.hasNext();) {
-                curC = toComp ((TabData) iter.next());
+            for (Iterator<TabData> iter = tabs.iterator(); iter.hasNext();) {
+                curC = toComp(iter.next());
                 // string parameter is needed for StackLayout to kick in correctly
                 contentDisplayer.add(curC, "");
             }
@@ -1147,8 +1147,8 @@ public class DefaultTabbedContainerUI extends TabbedContainerUI {
             ComplexListDataEvent clde = (ComplexListDataEvent) e;
             TabData[] removedTabs = clde.getAffectedItems();
             Component curComp;
-            for (int i = 0; i < removedTabs.length; i++) {
-                curComp = toComp(removedTabs[i]);
+            for (TabData removedTab : removedTabs) {
+                curComp = toComp(removedTab);
                 contentDisplayer.remove(curComp);
             }
         }
@@ -1182,8 +1182,8 @@ public class DefaultTabbedContainerUI extends TabbedContainerUI {
                 ArrayDiff dif = ((VeryComplexListDataEvent) e).getDiff();
 
                 //Get the deleted and added indices
-                Set deleted = dif.getDeletedIndices();
-                Set added = dif.getAddedIndices();
+                Set<Integer> deleted = dif.getDeletedIndices();
+                Set<Integer> added = dif.getAddedIndices();
 
                 //Get the TabData array from before the change
                 TabData[] old = dif.getOldData();
@@ -1195,10 +1195,10 @@ public class DefaultTabbedContainerUI extends TabbedContainerUI {
                 //true if the text *and* the component match.  So if the winsys
                 //called setTabs just to change the title of a tab, we would
                 //end up removing and re-adding the component for no reason.
-                Set<Component> components = new HashSet<Component>();
+                Set<Component> components = new HashSet<>();
                 if (container.getContentPolicy() == TabbedContainer.CONTENT_POLICY_ADD_ALL) {
-                    for (int i = 0; i < nue.length; i++) {
-                        components.add(toComp(nue[i]));
+                    for (TabData nue1 : nue) {
+                        components.add(toComp(nue1));
                     }
                 }
                 boolean changed = false;
@@ -1206,12 +1206,12 @@ public class DefaultTabbedContainerUI extends TabbedContainerUI {
                 synchronized (contentDisplayer.getTreeLock()) {
                     //See if we've got anything to delete
                     if (!deleted.isEmpty()) {
-                        Iterator i = deleted.iterator();
+                        Iterator<Integer> i = deleted.iterator();
                         while (i.hasNext()) {
                             //Get the index into the old array of a deleted tab
-                            Integer idx = (Integer) i.next();
+                            Integer idx = i.next();
                             //Find the TabData object for it
-                            TabData del = old[idx.intValue()];
+                            TabData del = old[idx];
                             //Make sure its component is not one we'll be adding
                             if (!components.contains(toComp(del))) {
                                 //remove it
@@ -1225,12 +1225,12 @@ public class DefaultTabbedContainerUI extends TabbedContainerUI {
                     
                         //See if we've got anything to add
                         if (!added.isEmpty()) {
-                            Iterator i = added.iterator();
+                            Iterator<Integer> i = added.iterator();
                             while (i.hasNext()) {
                                 //Get the index into the new array of the added tab
-                                Integer idx = (Integer) i.next();
+                                Integer idx = i.next();
                                 //Find the TabData object that was added
-                                TabData add = nue[idx.intValue()];
+                                TabData add = nue[idx];
                                 //Make sure it's not already showing so we don't do
                                 //extra work
                                 if (!contentDisplayer.isAncestorOf(
@@ -1812,22 +1812,22 @@ public class DefaultTabbedContainerUI extends TabbedContainerUI {
             MouseEvent me2 = SwingUtilities.convertMouseEvent(
                 (Component) me.getSource(), me, c);
             
-            for (int i=0; i < ml.length; i++) {
+            for (MouseListener ml1 : ml) {
                 switch (me2.getID()) {
-                    case MouseEvent.MOUSE_ENTERED :
-                        ml[i].mouseEntered(me2);
+                    case MouseEvent.MOUSE_ENTERED:
+                        ml1.mouseEntered(me2);
                         break;
-                    case MouseEvent.MOUSE_EXITED :
-                        ml[i].mouseExited(me2);
+                    case MouseEvent.MOUSE_EXITED:
+                        ml1.mouseExited(me2);
                         break;
-                    case MouseEvent.MOUSE_PRESSED :
-                        ml[i].mousePressed(me2);
+                    case MouseEvent.MOUSE_PRESSED:
+                        ml1.mousePressed(me2);
                         break;
-                    case MouseEvent.MOUSE_RELEASED :
-                        ml[i].mouseReleased(me2);
+                    case MouseEvent.MOUSE_RELEASED:
+                        ml1.mouseReleased(me2);
                         break;
-                    case MouseEvent.MOUSE_CLICKED :
-                        ml[i].mouseClicked(me2);
+                    case MouseEvent.MOUSE_CLICKED:
+                        ml1.mouseClicked(me2);
                         break;
                     default :
                         assert false;

@@ -60,14 +60,14 @@ public class MIMESupport69049Test extends NbTestCase {
     public void testProblemWithRecursionInIssue69049() throws Throwable {
         Lkp lkp = (Lkp)Lookup.getDefault();
         @SuppressWarnings("unchecked")
-        class Pair extends AbstractLookup.Pair implements Runnable {
+        class Pair extends AbstractLookup.Pair<MIMEResolver> implements Runnable {
             public MIMEResolver[] all;
             public MIMEResolver[] all2;
             public Throwable ex;
             public RequestProcessor.Task wait;
             
             
-            protected boolean instanceOf(Class c) {
+            protected boolean instanceOf(Class<?> c) {
                 LOG.info("instanceOf: " + c);
                 return c.isAssignableFrom(getType());
             }
@@ -77,7 +77,7 @@ public class MIMESupport69049Test extends NbTestCase {
                 return false;
             }
 
-            public Object getInstance() {
+            public MIMEResolver getInstance() {
                 LOG.info("getInstance: " + all);
                 if (all == null) {
                     all = MIMESupport.getResolvers();
@@ -90,7 +90,7 @@ public class MIMESupport69049Test extends NbTestCase {
                 return null;
             }
 
-            public Class getType() {
+            public Class<? extends MIMEResolver> getType() {
                 return MIMEResolver.class;
             }
 

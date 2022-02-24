@@ -124,7 +124,7 @@ java.awt.IllegalComponentStateException: component must be showing on the screen
         dlg.setVisible(false);
     }
 
-    public static class Keys extends Children.Keys {
+    public static class Keys extends Children.Keys<String> {
 
         public Keys(boolean lazy, String... args) {
             super(lazy);
@@ -137,13 +137,13 @@ java.awt.IllegalComponentStateException: component must be showing on the screen
             super.setKeys(args);
         }
 
-        public void keys(Collection args) {
+        public void keys(Collection<String> args) {
             super.setKeys(args);
         }
 
         @Override
-        protected Node[] createNodes(Object key) {
-            return new Node[]{new TestNode(key.toString())};
+        protected Node[] createNodes(String key) {
+            return new Node[]{new TestNode(key)};
         }
     }
 
@@ -156,7 +156,7 @@ java.awt.IllegalComponentStateException: component must be showing on the screen
             setLayout(new BorderLayout());
             manager.setRootContext(rootNode);
             view = new TableView();
-            Node.Property[] props = rootNode.getPropertySets()[0].getProperties();
+            Node.Property<?>[] props = rootNode.getPropertySets()[0].getProperties();
             ((NodeTableModel) view.getTable().getModel()).setProperties(props);
             add(view, BorderLayout.CENTER);
         }

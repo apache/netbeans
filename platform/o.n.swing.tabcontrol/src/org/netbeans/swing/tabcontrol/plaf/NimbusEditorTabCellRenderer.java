@@ -116,7 +116,7 @@ final class NimbusEditorTabCellRenderer extends AbstractTabCellRenderer {
             o = UIManager.get("TabbedPane:TabbedPaneTab[Enabled].backgroundPainter");
         }
         if ((o != null) && (o instanceof javax.swing.Painter)) {
-            javax.swing.Painter painter = (javax.swing.Painter) o;
+            javax.swing.Painter<?> painter = (javax.swing.Painter<?>) o;
             BufferedImage bufIm = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
             Graphics2D g2d = bufIm.createGraphics();
             g2d.setBackground(UIManager.getColor("Panel.background"));
@@ -214,7 +214,7 @@ final class NimbusEditorTabCellRenderer extends AbstractTabCellRenderer {
                 
                 Rectangle r = new Rectangle(0, 0, c.getWidth(), c.getHeight());
                 Rectangle cbRect = new Rectangle();
-                getCloseButtonRectangle((JComponent) c, cbRect, r);
+                getCloseButtonRectangle(c, cbRect, r);
                 
                 //paint close button
                 String iconPath = findIconPath( (NimbusEditorTabCellRenderer)c  );

@@ -102,7 +102,7 @@ public final class TreeTableViewTest extends NbTestCase {
             nodeTableModel = testModel;
             nodeTableModel.setNodes(nodes);
 
-            Node.Property[] props = nodes[0].getPropertySets()[0].getProperties();
+            Node.Property<?>[] props = nodes[0].getPropertySets()[0].getProperties();
 
             nodeTableModel.setProperties(props);
             view = new TreeTableView(nodeTableModel);

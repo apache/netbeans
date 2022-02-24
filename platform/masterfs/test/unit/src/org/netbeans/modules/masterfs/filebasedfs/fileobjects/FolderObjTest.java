@@ -111,7 +111,7 @@ public class FolderObjTest extends NbTestCase {
         folder.rename(lock, "b", null);
         lock.releaseLock();
         assertEquals("Name is not b", "b", folder.getNameExt());
-        WeakReference<?> ref = new WeakReference<FileObject>(folder);
+        WeakReference<?> ref = new WeakReference<>(folder);
         folder = null;
         assertGC("Folder can disappear", ref);
         folder = workDirFo.getFileObject("b");
@@ -132,7 +132,7 @@ public class FolderObjTest extends NbTestCase {
         assertFalse("Invalidated", folder.isValid());
         lock.releaseLock();
         assertEquals("Name is not b", "b", newF.getNameExt());
-        WeakReference<?> ref = new WeakReference<FileObject>(newF);
+        WeakReference<?> ref = new WeakReference<>(newF);
         newF = null;
         assertGC("Folder can disappear", ref);
         folder = target.getFileObject("b");
@@ -300,7 +300,7 @@ public class FolderObjTest extends NbTestCase {
     public void testRefresh109490() throws Exception {
         final File wDir = getWorkDir();
         final FileObject wDirFo = FileBasedFileSystem.getFileObject(wDir);
-        final List<FileEvent> fileEvents = new ArrayList<FileEvent>();
+        final List<FileEvent> fileEvents = new ArrayList<>();
         FileSystem fs = wDirFo.getFileSystem();
         FileChangeListener fListener = new FileChangeAdapter() {
 
@@ -587,7 +587,7 @@ public class FolderObjTest extends NbTestCase {
     public void testRename() throws Exception {
         File f = testFile;
 
-        final List<FileEvent> l = new ArrayList<FileEvent>();
+        final List<FileEvent> l = new ArrayList<>();
         FileChangeListener fcl = new FileChangeAdapter () {
             @Override
              public void fileRenamed(FileRenameEvent fe) {
@@ -705,13 +705,13 @@ public class FolderObjTest extends NbTestCase {
                 assertTrue((fo.toString()+ "  " + System.identityHashCode(fo)),list.contains(fo));
 
                
-                WeakReference<FileObject> ref = new WeakReference<FileObject>(fo);
+                WeakReference<FileObject> ref = new WeakReference<>(fo);
                 String msg = fo.toString();
                 fo = null; fo0 = null; fo2 = null; parent = null;fos = null; list = null;
                 assertGC(msg, ref);                
             } else {
                 //disk roots are kept by hard reference
-                WeakReference<FileObject> ref = new WeakReference<FileObject>(fo);
+                WeakReference<FileObject> ref = new WeakReference<>(fo);
                 String msg = fo.toString();
                 fo = null; fo0 = null; 
                 assertNotNull(msg, ref.get());                                
@@ -734,14 +734,14 @@ public class FolderObjTest extends NbTestCase {
         assertTrue(new File(f,"child2").createNewFile());
         final File child3 = new File(f,"child3");
         assertTrue(child3.createNewFile());
-        final List<FileObject> keepThem = new ArrayList<FileObject>();
+        final List<FileObject> keepThem = new ArrayList<>();
         fo.addFileChangeListener(new FileChangeAdapter(){
             @Override
             public void fileDeleted(FileEvent fe) {
                 for (FileObject fodel : keepThem) {
                     FileObject[] all =  fo.getChildren();
-                    for (int i = 0; i < all.length; i++) {
-                        all[i].refresh();
+                    for (FileObject all1 : all) {
+                        all1.refresh();
                     }
                     
                 }
@@ -918,7 +918,7 @@ public class FolderObjTest extends NbTestCase {
         FileObject testFo = FileBasedFileSystem.getFileObject(testFile);
         assertNotNull(testFo);
         
-        final List<FileEvent> l = new ArrayList<FileEvent>();
+        final List<FileEvent> l = new ArrayList<>();
         FileChangeListener fcl = new FileChangeAdapter () {
             @Override
             public void fileDeleted(FileEvent fe) {
@@ -934,7 +934,7 @@ public class FolderObjTest extends NbTestCase {
 
         FileObject toGC = testFo.getFileObject("delete/the/whole/structure");
         assertNotNull(toGC);
-        Reference<FileObject> toGCRef = new WeakReference<FileObject>(toGC);
+        Reference<FileObject> toGCRef = new WeakReference<>(toGC);
         toGC.addFileChangeListener(fcl);
         toGC = null;
         
@@ -973,7 +973,7 @@ public class FolderObjTest extends NbTestCase {
         assertNotNull(testFo);
         assertTrue(testFo.isFolder());
 
-        final List<FileEvent> l = new ArrayList<FileEvent>();
+        final List<FileEvent> l = new ArrayList<>();
         FileChangeListener fcl = new FileChangeAdapter () {
             @Override
             public void fileDeleted(FileEvent fe) {
@@ -1007,7 +1007,7 @@ public class FolderObjTest extends NbTestCase {
         assertNotNull(testFo);
         assertTrue(testFo.isFolder());
 
-        final List<FileEvent> l = new ArrayList<FileEvent>();
+        final List<FileEvent> l = new ArrayList<>();
         FileChangeListener fcl = new FileChangeAdapter () {
             @Override
             public void fileDeleted(FileEvent fe) {
@@ -1042,7 +1042,7 @@ public class FolderObjTest extends NbTestCase {
         assertNotNull(testFo);
         assertTrue(testFo.isFolder());
 
-        final List<FileEvent> l = new ArrayList<FileEvent>();
+        final List<FileEvent> l = new ArrayList<>();
         FileChangeListener fcl = new FileChangeAdapter () {
             @Override
             public void fileDeleted(FileEvent fe) {
@@ -1078,7 +1078,7 @@ public class FolderObjTest extends NbTestCase {
         assertNotNull(testFo);
         assertTrue(testFo.isData());
 
-        final List<FileEvent> l = new ArrayList<FileEvent>();
+        final List<FileEvent> l = new ArrayList<>();
         FileChangeListener fcl = new FileChangeAdapter () {
             @Override
             public void fileDeleted(FileEvent fe) {
@@ -1122,7 +1122,7 @@ public class FolderObjTest extends NbTestCase {
         assertNotNull(testFo);
         assertTrue(testFo.isData());
 
-        final List<FileEvent> l = new ArrayList<FileEvent>();
+        final List<FileEvent> l = new ArrayList<>();
         FileChangeListener fcl = new FileChangeAdapter () {
             @Override
             public void fileDeleted(FileEvent fe) {
@@ -1161,7 +1161,7 @@ public class FolderObjTest extends NbTestCase {
         assertNotNull(testFo);
         assertTrue(testFo.isData());
 
-        final List<FileEvent> l = new ArrayList<FileEvent>();
+        final List<FileEvent> l = new ArrayList<>();
         FileChangeListener fcl = new FileChangeAdapter () {
             @Override
             public void fileDeleted(FileEvent fe) {
@@ -1204,7 +1204,7 @@ public class FolderObjTest extends NbTestCase {
         assertTrue(testFile1.isData());
                         
 
-        final List<FileEvent> l = new ArrayList<FileEvent>();
+        final List<FileEvent> l = new ArrayList<>();
         FileChangeListener fcl = new FileChangeAdapter () {
             @Override
             public void fileDeleted(FileEvent fe) {
@@ -1246,7 +1246,7 @@ public class FolderObjTest extends NbTestCase {
         assertTrue(testFile1.isData());
                         
 
-        final List<FileEvent> l = new ArrayList<FileEvent>();
+        final List<FileEvent> l = new ArrayList<>();
         FileChangeListener fcl = new FileChangeAdapter () {
             @Override
             public void fileDeleted(FileEvent fe) {
@@ -1290,7 +1290,7 @@ public class FolderObjTest extends NbTestCase {
         assertTrue(testFile1.isData());
                         
 
-        final List<FileEvent> l = new ArrayList<FileEvent>();
+        final List<FileEvent> l = new ArrayList<>();
         FileChangeListener fcl = new FileChangeAdapter () {
             @Override
             public void fileDeleted(FileEvent fe) {
@@ -1334,7 +1334,7 @@ public class FolderObjTest extends NbTestCase {
         assertTrue(testFile1.isData());
                         
 
-        final List<FileEvent> l = new ArrayList<FileEvent>();
+        final List<FileEvent> l = new ArrayList<>();
         FileChangeListener fcl = new FileChangeAdapter () {
             @Override
             public void fileDeleted(FileEvent fe) {
@@ -1389,7 +1389,7 @@ public class FolderObjTest extends NbTestCase {
         File thisTest = new File(getWorkDir(),getName());
         thisTest.createNewFile();
         FileObject testf = FileBasedFileSystem.getFileObject(thisTest);
-        final List<FileEvent> l = new ArrayList<FileEvent>();
+        final List<FileEvent> l = new ArrayList<>();
         testf.addFileChangeListener(new FileChangeAdapter(){
             @Override
             public void fileChanged(FileEvent fe) {
@@ -1420,10 +1420,10 @@ public class FolderObjTest extends NbTestCase {
         thisTest.createNewFile();
         FileObject testf = FileBasedFileSystem.getFileObject(thisTest);
         assertNotNull(testf);
-        assertGC("",new WeakReference<FileObject>(testf.getParent()));
+        assertGC("",new WeakReference<>(testf.getParent()));
         modifyFileObject(testf, "abc");
         FileSystem fs = testf.getFileSystem();
-        final List<FileEvent> l = new ArrayList<FileEvent>();
+        final List<FileEvent> l = new ArrayList<>();
         FileChangeListener fcl = new FileChangeAdapter() {
             @Override
             public void fileChanged(FileEvent fe) {
@@ -1488,8 +1488,8 @@ public class FolderObjTest extends NbTestCase {
         parent.getChildren();
         fs.refresh(true);
 
-        final ArrayList<FileObject> deleted = new ArrayList<FileObject>();
-        final ArrayList<FileObject> created = new ArrayList<FileObject>();
+        final ArrayList<FileObject> deleted = new ArrayList<>();
+        final ArrayList<FileObject> created = new ArrayList<>();
         
         FileChangeListener fcl = new FileChangeAdapter () {
             @Override
@@ -1535,12 +1535,12 @@ public class FolderObjTest extends NbTestCase {
         assertNotNull(parent);
 
 
-        final ArrayList<String> events = new ArrayList<String>();
+        final ArrayList<String> events = new ArrayList<>();
 
-        final ArrayList<String> deletedIncrement = new ArrayList<String>();
-        final ArrayList<String> createdIncrement = new ArrayList<String>();
+        final ArrayList<String> deletedIncrement = new ArrayList<>();
+        final ArrayList<String> createdIncrement = new ArrayList<>();
         
-        final ArrayList<FileObject> hardRef = new ArrayList<FileObject>();
+        final ArrayList<FileObject> hardRef = new ArrayList<>();
         final FileChangeListener fcl = new FileChangeAdapter () {
             @Override
             public void fileDeleted(FileEvent fe) {
@@ -1587,20 +1587,20 @@ public class FolderObjTest extends NbTestCase {
         parent.getFileObject(childName).addFileChangeListener(fcl);        
         parent = null;
         int stepsCount = 10;
-        Reference<FileObject> ref2 = new WeakReference<FileObject>(FileBasedFileSystem.getFileObject(file.getParentFile()));
+        Reference<FileObject> ref2 = new WeakReference<>(FileBasedFileSystem.getFileObject(file.getParentFile()));
         assertGC("", ref2);                                
         
         for (int i = 0; i < stepsCount; i++) {
             assertTrue(file.delete());
             fs.refresh(true);
-            Reference<FileObject> ref = new WeakReference<FileObject>(FileBasedFileSystem.getFileObject(file));
+            Reference<FileObject> ref = new WeakReference<>(FileBasedFileSystem.getFileObject(file));
             assertGC("", ref);                    
             
             
             assertTrue(file.createNewFile());
             fs.refresh(true);            
                         
-            ref = new WeakReference<FileObject>(FileBasedFileSystem.getFileObject(file.getParentFile()));
+            ref = new WeakReference<>(FileBasedFileSystem.getFileObject(file.getParentFile()));
             assertGC(file.getParentFile().getAbsolutePath(), ref);                                                
         }
         
@@ -1697,10 +1697,8 @@ public class FolderObjTest extends NbTestCase {
         BaseFileObj data = (BaseFileObj)fo.createData(dFile.getName());
                 
         FileLock lock = data.lock();
-        try {
-            OutputStream os = data.getOutputStream(lock);
+        try (OutputStream os = data.getOutputStream(lock)) {
             os.write(content.getBytes());            
-            os.close();
         } finally {
             lock.releaseLock();
         }
@@ -1719,7 +1717,7 @@ public class FolderObjTest extends NbTestCase {
         assertNotNull(fobj);
         //parent not exists + testFile not exists
         EventsEvaluator ev = new EventsEvaluator(fobj.getFileSystem());
-        Reference<FileObject> ref = new WeakReference<FileObject>(parent);
+        Reference<FileObject> ref = new WeakReference<>(parent);
         parent = null;
         assertGC("", ref);                                
         fobj.delete();

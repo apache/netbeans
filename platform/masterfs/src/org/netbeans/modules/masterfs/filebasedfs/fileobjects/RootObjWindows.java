@@ -138,7 +138,7 @@ public final class RootObjWindows extends FileObject {
 
     public final FileObject[] getChildren() {
         Collection<? extends FileObjectFactory> all = FileBasedFileSystem.factories().values();
-        ArrayList<FileObject> rootChildren = new ArrayList<FileObject>();         
+        ArrayList<FileObject> rootChildren = new ArrayList<>();         
         for (FileObjectFactory fs : all) {
             BaseFileObj root = fs.getRoot();
             if (root != null) { // #252580
@@ -163,8 +163,7 @@ public final class RootObjWindows extends FileObject {
     
     private FileObject getFileObjectImpl(String name, String ext) {
         FileObject[] rootChildren =  getChildren();
-        for (int i = 0; i < rootChildren.length; i++) {
-            FileObject fileObject = rootChildren[i];            
+        for (FileObject fileObject : rootChildren) {            
             // UNC absolute path
             if(name.startsWith("//")) { // NOI18N
                 // replace '/' by '\'

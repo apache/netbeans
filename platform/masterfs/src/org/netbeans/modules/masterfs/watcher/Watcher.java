@@ -54,7 +54,7 @@ import org.openide.util.lookup.ServiceProviders;
 })
 public final class Watcher extends BaseAnnotationProvider {
     static final Logger LOG = Logger.getLogger(Watcher.class.getName());
-    private static final Map<FileObject,int[]> MODIFIED = new WeakHashMap<FileObject, int[]>();
+    private static final Map<FileObject,int[]> MODIFIED = new WeakHashMap<>();
     private final Ext<?> ext;
     
     public Watcher() {
@@ -139,16 +139,14 @@ public final class Watcher extends BaseAnnotationProvider {
         if (isEnabled()) {
             try {
                 ext().shutdown();
-            } catch (IOException ex) {
-                LOG.log(Level.INFO, "Error on shutdown", ex);
-            } catch (InterruptedException ex) {
+            } catch (IOException | InterruptedException ex) {
                 LOG.log(Level.INFO, "Error on shutdown", ex);
             }
         }
     }
  
     private <KEY> Ext<KEY> make(Notifier<KEY> impl) {
-        return impl == null ? null : new Ext<KEY>(impl);
+        return impl == null ? null : new Ext<>(impl);
     }
 
     final void clearQueue() throws IOException {
@@ -199,7 +197,7 @@ public final class Watcher extends BaseAnnotationProvider {
                 LOG.log(Level.INFO, "Exception while clearing the queue", ex);
             }
             synchronized (LOCK) {
-                NotifierKeyRef<KEY> kr = new NotifierKeyRef<KEY>(fo, null, null, impl);
+                NotifierKeyRef<KEY> kr = new NotifierKeyRef<>(fo, null, null, impl);
                 return getReferences().contains(kr);
             }
         }
@@ -228,13 +226,13 @@ public final class Watcher extends BaseAnnotationProvider {
          */
         private void registerSynchronized(FileObject fo) {
             synchronized (LOCK) {
-                NotifierKeyRef<KEY> kr = new NotifierKeyRef<KEY>(fo, null, null, impl);
+                NotifierKeyRef<KEY> kr = new NotifierKeyRef<>(fo, null, null, impl);
                 if (getReferences().contains(kr)) {
                     return;
                 }
 
                 try {
-                    getReferences().add(new NotifierKeyRef<KEY>(fo, NotifierAccessor.getDefault().addWatch(impl, fo.getPath()), REF, impl));
+                    getReferences().add(new NotifierKeyRef<>(fo, NotifierAccessor.getDefault().addWatch(impl, fo.getPath()), REF, impl));
                 } catch (IOException ex) {
                     Level l = getLogLevelForRegisterException(fo);
                     // XXX: handle resource overflow gracefully
@@ -271,12 +269,16 @@ public final class Watcher extends BaseAnnotationProvider {
         final void unregister(FileObject fo) {
             assert !fo.isValid() || fo.isFolder() : "If valid, it should be a folder: " + fo + " clazz: " + fo.getClass();
             synchronized (LOCK) {
-                final NotifierKeyRef<KEY>[] equalOne = new NotifierKeyRef[1];
+                class EqualTwo {
+                    private NotifierKeyRef<KEY> ref;
+                }
+                final EqualTwo eo = new EqualTwo();
                 NotifierKeyRef<KEY> kr = new NotifierKeyRef<KEY>(fo, null, null, impl) {
                     @Override
+                    @SuppressWarnings("unchecked")
                     public boolean equals(Object obj) {
                         if (super.equals(obj)) {
-                            equalOne[0] = (NotifierKeyRef)obj;
+                            eo.ref = (NotifierKeyRef<KEY>) obj;
                             return true;
                         } else {
                             return false;
@@ -291,10 +293,10 @@ public final class Watcher extends BaseAnnotationProvider {
                 if (!references.contains(kr)) {
                     return;
                 }
-                assert equalOne[0] != null;
-                getReferences().remove(equalOne[0]);
+                assert eo.ref != null;
+                getReferences().remove(eo.ref);
                 try {
-                    equalOne[0].removeWatch();
+                    eo.ref.removeWatch();
                 } catch (IOException ex) {
                     LOG.log(Level.WARNING, "Cannot remove filesystem watch for {0}", fo.getPath());
                     LOG.log(Level.INFO, "Exception", ex);
@@ -304,7 +306,7 @@ public final class Watcher extends BaseAnnotationProvider {
         
         final void clearQueue() throws IOException {
             for (;;) {
-                NotifierKeyRef kr = (NotifierKeyRef)REF.poll();
+                NotifierKeyRef<?> kr = (NotifierKeyRef<?>)REF.poll();
                 if (kr == null) {
                     break;
                 }
@@ -322,9 +324,9 @@ public final class Watcher extends BaseAnnotationProvider {
                     String path = NotifierAccessor.getDefault().nextEvent(impl);
                     LOG.log(Level.FINEST, "nextEvent: {0}", path); 
                     if (path == null) { // all dirty
-                        Set<FileObject> set = new HashSet<FileObject>();
+                        Set<FileObject> set = new HashSet<>();
                         synchronized (LOCK) {
-                            for (NotifierKeyRef kr : getReferences()) {
+                            for (NotifierKeyRef<KEY> kr : getReferences()) {
                                 final FileObject ref = kr.get();
                                 if (ref != null) {
                                     set.add(ref);
@@ -342,7 +344,7 @@ public final class Watcher extends BaseAnnotationProvider {
                         }
                         if (fo != null) {
                             synchronized (LOCK) {
-                                NotifierKeyRef<KEY> kr = new NotifierKeyRef<KEY>(fo, null, null, impl);
+                                NotifierKeyRef<KEY> kr = new NotifierKeyRef<>(fo, null, null, impl);
                                 if (getReferences().contains(kr)) {
                                     enqueue(fo);
                                 }
@@ -426,7 +428,7 @@ public final class Watcher extends BaseAnnotationProvider {
         synchronized(lock) {
             if (pending == null) {
                 refreshTask.schedule(1500);
-                pending = new WeakSet<FileObject>();
+                pending = new WeakSet<>();
             }
             pending.add(fo);
         }
@@ -439,7 +441,7 @@ public final class Watcher extends BaseAnnotationProvider {
         synchronized(lock) {
             if (pending == null) {
                 refreshTask.schedule(1500);
-                pending = new WeakSet<FileObject>();
+                pending = new WeakSet<>();
             }
             pending.addAll(fos);
         }
@@ -450,6 +452,7 @@ public final class Watcher extends BaseAnnotationProvider {
      *
      * @return a suitable {@link Notifier} implementation or <code>null</code>.
      */
+    @SuppressWarnings("rawtypes") // Same-version serialization only
     private static Notifier<?> getNotifierForPlatform() {
         for (Item<Notifier> item : Lookup.getDefault().lookupResult(Notifier.class).allItems()) {
             try {

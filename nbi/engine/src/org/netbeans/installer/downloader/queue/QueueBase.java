@@ -52,6 +52,7 @@ public abstract class QueueBase implements PumpingsQueue {
     /**
      * @noinspection unchecked
      */
+    @SuppressWarnings({"unchecked", "rawtypes"})
     private static final WeakReference<DownloadListener>[] EMPTY_ARRAY = new WeakReference[0];
     
     /////////////////////////////////////////////////////////////////////////////////
@@ -94,12 +95,12 @@ public abstract class QueueBase implements PumpingsQueue {
     }
     
     public void fire(String methodName, Object... args) {
-        final List<Class> argsClasses = new ArrayList<Class>(args.length);
+        final List<Class<?>> argsClasses = new ArrayList<>(args.length);
         for (Object arg : args) {
             argsClasses.add(arg.getClass());
         }
         try {
-            final Method method = DownloadListener.class.getMethod(methodName, argsClasses.toArray(new Class[0]));
+            final Method method = DownloadListener.class.getMethod(methodName, argsClasses.toArray(new Class<?>[0]));
             notifyListeners(method, args);
         } catch (NoSuchMethodException ex) {
             throw new UnexpectedExceptionError("Listener contract was changed", ex);
@@ -113,9 +114,7 @@ public abstract class QueueBase implements PumpingsQueue {
             if (listener == null) continue;
             try {
                 mehtod.invoke(listener, args);
-            } catch (IllegalAccessException ignored) {
-                LogManager.log(ignored);
-            } catch (InvocationTargetException ignored) {
+            } catch (ReflectiveOperationException ignored) {
                 //undeline throw an exception.
                 //It's not headache of queue if listener throws exceptions - just log it for debug purpose
                 LogManager.log(ignored);

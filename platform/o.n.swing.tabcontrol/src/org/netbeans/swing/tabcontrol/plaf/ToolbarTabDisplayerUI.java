@@ -107,9 +107,9 @@ public class ToolbarTabDisplayerUI extends AbstractTabDisplayerUI {
     
     private IndexButton findButtonFor (int index) {
         Component[] c = toolbar.getComponents();
-        for (int i=0; i < c.length; i++) {
-            if (c[i] instanceof IndexButton && ((IndexButton) c[i]).getIndex() == index) {
-                return (IndexButton) c[i];
+        for (Component c1 : c) {
+            if (c1 instanceof IndexButton && ((IndexButton) c1).getIndex() == index) {
+                return (IndexButton) c1;
             }
         }
         return null;

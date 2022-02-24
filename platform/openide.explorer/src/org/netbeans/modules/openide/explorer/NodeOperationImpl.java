@@ -146,6 +146,6 @@ public final class NodeOperationImpl extends org.openide.nodes.NodeOperation {
     }
 
     public interface CustomEditorAccessor {
-        void showDialog(Node.Property property, Object[] beans);
+        void showDialog(Node.Property<? extends Object> property, Object[] beans);
     }
 }

@@ -96,7 +96,7 @@ class SwitcherTableModel extends AbstractTableModel {
         }
     }
     
-    public Class getColumnClass(int columnIndex) {
+    public Class<?> getColumnClass(int columnIndex) {
         return SwitcherTableItem.class;
     }
     

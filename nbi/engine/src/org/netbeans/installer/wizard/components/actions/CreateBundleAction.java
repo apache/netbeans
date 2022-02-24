@@ -168,10 +168,10 @@ public class CreateBundleAction extends WizardAction {
             output = new JarOutputStream(new FileOutputStream(targetFile));
             
             // transfer the engine, skipping existing bundled components
-            final Enumeration entries = engine.entries();
+            final Enumeration<JarEntry> entries = engine.entries();
             LogManager.log("... adding entries from the engine. Total : " + engine.size());
             while (entries.hasMoreElements()) {
-                final JarEntry entry = (JarEntry) entries.nextElement();
+                final JarEntry entry = entries.nextElement();
                 
                 // check for cancel status
                 if (isCanceled()) return;

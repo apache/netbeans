@@ -166,16 +166,16 @@ public class NodeTableModelTest extends NbTestCase {
             }
         }
         
-        Node.Property getProperty( int index ) {
+        Node.Property<Object> getProperty( int index ) {
             return allPropertyColumns[index].getProperty();
         }
         
-        void setProperty( int index, Node.Property p ) {
+        void setProperty( int index, Node.Property<?> p ) {
             allPropertyColumns[index].setProperty( p );
         }
     }
     
-    private static class MyProperty extends Node.Property {
+    private static class MyProperty extends Node.Property<Object> {
         public MyProperty() {
             super( Object.class );
         }

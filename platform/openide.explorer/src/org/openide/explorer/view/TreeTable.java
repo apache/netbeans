@@ -205,7 +205,7 @@ class TreeTable extends JTable implements Runnable {
     }
 
     @Override
-    public TableCellEditor getDefaultEditor(Class columnClass) {
+    public TableCellEditor getDefaultEditor(Class<?> columnClass) {
         if (!edCreated && (columnClass == TreeTableModelAdapter.class)) {
             //Creating this editor in the constructor can take > 100ms even
             //on a very fast machine, so do it lazily here to improve 

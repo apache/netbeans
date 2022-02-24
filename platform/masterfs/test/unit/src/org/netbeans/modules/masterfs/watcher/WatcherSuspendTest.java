@@ -142,8 +142,8 @@ public class WatcherSuspendTest extends NbTestCase {
     }
     
     public static final class TestNotifier extends Notifier<Integer> {
-        final List<String> registered = new LinkedList<String>();
-        final BlockingQueue<String> event = new ArrayBlockingQueue<String>(10);
+        final List<String> registered = new LinkedList<>();
+        final BlockingQueue<String> event = new ArrayBlockingQueue<>(10);
 
         @Override
         public Integer addWatch(String path) throws IOException {

@@ -27,7 +27,7 @@ import javax.swing.plaf.basic.BasicBorders;
  *
  * @author Kirill Sorokin
  */
-public class NbiList extends JList {
+public class NbiList extends JList<String> {
     public NbiList() {
         super();
         

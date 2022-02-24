@@ -236,11 +236,11 @@ public abstract class BasicTabDisplayerUI extends AbstractTabDisplayerUI {
     public Polygon getInsertTabIndication(int index) {
         Polygon p;
         if (index == getLastVisibleTab() + 1) {
-            p = (Polygon) getExactTabIndication (index-1);
+            p = getExactTabIndication (index-1);
             Rectangle r = getTabRect(index-1, scratch);
             p.translate(r.width/2, 0);
         } else {
-            p = (Polygon) getExactTabIndication (index);
+            p = getExactTabIndication (index);
             Rectangle r = getTabRect(index, scratch);
             p.translate(-(r.width/2), 0);
         }
@@ -351,6 +351,7 @@ public abstract class BasicTabDisplayerUI extends AbstractTabDisplayerUI {
     /**
      * @deprecated Use {@link GraphicsUtils#configureDefaultRenderingHints(java.awt.Graphics)} instead.
      */
+    @Deprecated
     protected boolean isAntialiased() {
         return ColorUtil.shouldAntialias();
     }

@@ -64,11 +64,11 @@ public class FileUtilTest extends NbTestCase {
     @RandomlyFails // NB-Core-Build #1738
     public void testCopy136308() throws Exception {
         File file = new File(getWorkDir(), "input");
-        FileWriter writer = new FileWriter(file);
-        for (int i = 0; i < 1000000; i++) {
-            writer.write(new Random(i).nextInt(255));
+        try (FileWriter writer = new FileWriter(file)) {
+            for (int i = 0; i < 1000000; i++) {
+                writer.write(new Random(i).nextInt(255));
+            }
         }
-        writer.close();
         FileObject fi = FileUtil.toFileObject(file);
         File fileOut = new File(getWorkDir(), "output");
         fileOut.createNewFile();
@@ -223,7 +223,7 @@ public class FileUtilTest extends NbTestCase {
         assertEquals("No other events should be fired in removed listener.", 0, fcl2.checkAll());
 
         // weakness
-        WeakReference<FileChangeListener> ref = new WeakReference<FileChangeListener>(fcl);
+        WeakReference<FileChangeListener> ref = new WeakReference<>(fcl);
         fcl = null;
         assertGC("FileChangeListener not collected.", ref);
     }
@@ -359,7 +359,7 @@ public class FileUtilTest extends NbTestCase {
         assertEquals("No other events should be fired in removed listener.", 0, fcl2.checkAll());
 
         // weakness
-        WeakReference<FileChangeListener> ref = new WeakReference<FileChangeListener>(fcl);
+        WeakReference<FileChangeListener> ref = new WeakReference<>(fcl);
         fcl = null;
         assertGC("FileChangeListener not collected.", ref);
     }
@@ -560,7 +560,7 @@ public class FileUtilTest extends NbTestCase {
         assertEquals("No other events should be fired in removed listener.", 0, fcl2.checkAll());
 
         // weakness
-        WeakReference<FileChangeListener> ref = new WeakReference<FileChangeListener>(fcl);
+        WeakReference<FileChangeListener> ref = new WeakReference<>(fcl);
         fcl = null;
         assertGC("FileChangeListener not collected.", ref);
     }
@@ -667,12 +667,12 @@ public class FileUtilTest extends NbTestCase {
     public static class TestFileChangeListener implements FileChangeListener {
         boolean disabled;
 
-        private final Map<EventType, List<FileEvent>> type2Event = new HashMap<EventType, List<FileEvent>>();
+        private final Map<EventType, List<FileEvent>> type2Event = new HashMap<>();
 
         public TestFileChangeListener() {
             super();
             for (EventType eventType : EventType.values()) {
-                type2Event.put(eventType, new ArrayList<FileEvent>());
+                type2Event.put(eventType, new ArrayList<>());
             }
         }
 

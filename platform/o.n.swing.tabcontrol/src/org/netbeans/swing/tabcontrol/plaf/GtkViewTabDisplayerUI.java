@@ -206,7 +206,7 @@ public final class GtkViewTabDisplayerUI extends AbstractViewTabDisplayerUI {
             return; //#215311 - unsupported L&F installed
         }
         SynthLookAndFeel laf = (SynthLookAndFeel) UIManager.getLookAndFeel();
-        SynthStyleFactory sf = laf.getStyleFactory();
+        SynthStyleFactory sf = SynthLookAndFeel.getStyleFactory();
         SynthStyle style = sf.getStyle(dummyTab, region);
         SynthContext context = new SynthContext(dummyTab, region, style, state);
         SynthPainter painter = style.getPainter(context);
@@ -261,7 +261,7 @@ public final class GtkViewTabDisplayerUI extends AbstractViewTabDisplayerUI {
     
     private static void initIcons() {
         if( null == buttonIconPaths ) {
-            buttonIconPaths = new HashMap<Integer, String[]>(7);
+            buttonIconPaths = new HashMap<>(7);
             
             //close button
             String[] iconPaths = new String[4];

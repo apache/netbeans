@@ -45,7 +45,7 @@ import org.openide.util.Exceptions;
 public class LockForFile extends FileLock {
 
     private static final ConcurrentHashMap<String, Namesakes> name2Namesakes =
-            new ConcurrentHashMap<String, Namesakes>();
+            new ConcurrentHashMap<>();
     private static final String PREFIX = ".LCK";
     private static final String SUFFIX = "~";
     private static final Logger LOGGER = Logger.getLogger(LockForFile.class.getName());
@@ -159,12 +159,9 @@ public class LockForFile extends FileLock {
         File hardLock = getLock();
         hardLock.getParentFile().mkdirs();
         hardLock.createNewFile();
-        OutputStream os = Files.newOutputStream(hardLock.toPath());
-        try {
+        try (OutputStream os = Files.newOutputStream(hardLock.toPath())) {
             os.write(getFile().getAbsolutePath().getBytes());
             return true;
-        } finally {
-            os.close();
         }
     }
 
@@ -282,7 +279,7 @@ public class LockForFile extends FileLock {
                 hardLock();
                 lock.hardLock();
             }
-            Reference<LockForFile> old = putIfAbsent(file, new WeakReference<LockForFile>(lock));
+            Reference<LockForFile> old = putIfAbsent(file, new WeakReference<>(lock));
             return (old != null) ? null : lock;
         }
 

@@ -125,7 +125,7 @@ public class FileChooserBuilder {
      * application sessions or invocations.
      * @param type A non-null class object, typically the calling class
      */
-    public FileChooserBuilder(Class type) {
+    public FileChooserBuilder(Class<?> type) {
         this(type.getName());
     }
 

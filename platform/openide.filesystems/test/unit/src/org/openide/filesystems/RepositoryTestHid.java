@@ -71,7 +71,7 @@ public class RepositoryTestHid extends TestBaseHid {
         repo.addFileSystem(testedFS);
         repo.addFileSystem(testedFS);        
         int count = 0;
-        java.util.Enumeration en = repo.getFileSystems();
+        java.util.Enumeration<? extends FileSystem> en = repo.getFileSystems();
         while (en.hasMoreElements()) {
             if (en.nextElement().equals(testedFS))
                 count++;
@@ -120,10 +120,10 @@ public class RepositoryTestHid extends TestBaseHid {
     /** Test of getFileSystems method, of class org.openide.filesystems.Repository. */
     public void testGetFileSystems() {
         repo.addFileSystem(testedFS);
-        java.util.Enumeration en = repo.getFileSystems();
+        java.util.Enumeration<? extends FileSystem> en = repo.getFileSystems();
         FileSystem[]  fss = new FileSystem[2];
         for (int i = 0; en.hasMoreElements(); i++) {
-            fss[i] = (FileSystem)en.nextElement();
+            fss[i] = en.nextElement();
         }
         fsAssert("Expected two elements in enumeration",fss.length == 2);                    
         fsAssert("Expected two different elements in enumeration",fss[0] != fss[1]);                            

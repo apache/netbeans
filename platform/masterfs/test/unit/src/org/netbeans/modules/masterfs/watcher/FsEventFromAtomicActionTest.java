@@ -125,7 +125,7 @@ public class FsEventFromAtomicActionTest extends NbTestCase {
 
         final AtomicAction atomicAction;
         final AtomicInteger events = new AtomicInteger();
-        final Collection<FileEvent> notFromAtomicAction = Collections.synchronizedList(new LinkedList<FileEvent>());
+        final Collection<FileEvent> notFromAtomicAction = Collections.synchronizedList(new LinkedList<>());
 
 
         public MyFileChangeListener(AtomicAction atomicAction) {

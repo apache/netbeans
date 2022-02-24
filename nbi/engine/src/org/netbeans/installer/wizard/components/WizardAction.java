@@ -383,7 +383,7 @@ public abstract class WizardAction extends WizardComponent {
                 
                 new NbiThread() {
                     public void run() {
-                        ((WizardAction) action).cancel();
+                        action.cancel();
                         action.getWizard().getFinishHandler().cancel();
                     }
                 }.start();

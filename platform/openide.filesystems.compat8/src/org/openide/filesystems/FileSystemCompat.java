@@ -235,13 +235,7 @@ public abstract class FileSystemCompat {
             f.setAccessible(true);
             StatusDecorator del = (StatusDecorator)f.get(null);
             f.set(null, new SystemStatus(del));
-        } catch (NoSuchFieldException ex) {
-            Exceptions.printStackTrace(ex);
-        } catch (SecurityException ex) {
-            Exceptions.printStackTrace(ex);
-        } catch (IllegalArgumentException ex) {
-            Exceptions.printStackTrace(ex);
-        } catch (IllegalAccessException ex) {
+        } catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException ex) {
             Exceptions.printStackTrace(ex);
         }
     }
@@ -367,11 +361,7 @@ public abstract class FileSystemCompat {
             }
             try {
                 return (Image)annotateIconDel.invoke(decorator, icon, iconType, files);
-            } catch (IllegalAccessException ex) {
-                Exceptions.printStackTrace(ex);
-            } catch (IllegalArgumentException ex) {
-                Exceptions.printStackTrace(ex);
-            } catch (InvocationTargetException ex) {
+            } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
                 Exceptions.printStackTrace(ex);
             }
             return icon;

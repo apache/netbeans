@@ -95,7 +95,7 @@ public class URLMapper50852Test extends NbTestCase {
             return ic;
         }
         
-        protected void beforeLookup(Template template) {
+        protected void beforeLookup(Template<?> template) {
             super.beforeLookup(template);
 
             synchronized (testURL) {

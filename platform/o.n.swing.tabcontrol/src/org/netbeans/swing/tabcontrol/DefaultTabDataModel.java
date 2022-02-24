@@ -79,24 +79,24 @@ public class DefaultTabDataModel implements TabDataModel {
 
     @Override
     public TabData getTab(int index) {
-        return (TabData) list.get(index);
+        return list.get(index);
     }
 
     @Override
     public void setTabs(TabData[] data) {
 
         TabData[] oldContents = new TabData[list.size()];
-        oldContents = (TabData[]) list.toArray(oldContents);
+        oldContents = list.toArray(oldContents);
         
         //No change, Peter says this will be the typical case
         if (Arrays.equals(data, oldContents)) {
             return;
         }
 
-        List newContents = Arrays.asList(data);
+        List<TabData> newContents = Arrays.asList(data);
 
         list.clear();
-        list.addAll(Arrays.asList(data));
+        list.addAll(newContents);
 
         VeryComplexListDataEvent vclde = new VeryComplexListDataEvent(this,
                                                                       oldContents,
@@ -251,7 +251,7 @@ public class DefaultTabDataModel implements TabDataModel {
                 //merge of the change data and fire that
                 int size = (iconsToFire != null ? iconsToFire.length : 0)
                         + (txtToFire != null ? txtToFire.length : 0);
-                Set<Integer> allIndicesToFire = new HashSet<Integer>(size);
+                Set<Integer> allIndicesToFire = new HashSet<>(size);
                 Integer[] o;
                 if (iconsToFire != null) {
                     o = toObjectArray(iconsToFire);
@@ -262,7 +262,7 @@ public class DefaultTabDataModel implements TabDataModel {
                     allIndicesToFire.addAll(Arrays.asList(o));
                 }
                 Integer[] all = new Integer[allIndicesToFire.size()];
-                all = (Integer[]) allIndicesToFire.toArray(all);
+                all = allIndicesToFire.toArray(all);
                 int[] allPrimitive = toPrimitiveArray(all);
                 ComplexListDataEvent clde = new ComplexListDataEvent(this,
                                                                      ComplexListDataEvent.CONTENTS_CHANGED,
@@ -350,7 +350,7 @@ public class DefaultTabDataModel implements TabDataModel {
 
     @Override
     public void removeTab(int index) {
-        TabData[] td = new TabData[]{(TabData) list.get(index)};
+        TabData[] td = new TabData[]{list.get(index)};
         list.remove(index);
         ComplexListDataEvent lde = new ComplexListDataEvent(this,
                                                             ListDataEvent.INTERVAL_REMOVED,
@@ -365,7 +365,7 @@ public class DefaultTabDataModel implements TabDataModel {
      */
     @Override
     public void removeTabs(int start, int end) {
-        java.util.List affected = new ArrayList(list.subList(start, end));
+        List<TabData> affected = new ArrayList<>(list.subList(start, end));
         if (start == end) {
             list.remove(start);
         } else {
@@ -374,19 +374,19 @@ public class DefaultTabDataModel implements TabDataModel {
         ComplexListDataEvent lde = new ComplexListDataEvent(this,
                                                             ListDataEvent.INTERVAL_REMOVED,
                                                             start, end);
-        lde.setAffectedItems((TabData[]) affected.toArray(new TabData[0]));
+        lde.setAffectedItems(affected.toArray(new TabData[0]));
         fireIntervalRemoved(lde);
     }
 
     @Override
     public void addTabs(int[] indices, TabData[] data) {
-        Map<Integer,TabData> m = new HashMap<Integer,TabData>(data.length);
+        Map<Integer,TabData> m = new HashMap<>(data.length);
         for (int i = 0; i < data.length; i++) {
-            m.put(new Integer(indices[i]), data[i]);
+            m.put(indices[i], data[i]);
         }
         Arrays.sort(indices);
         for (int i = 0; i < indices.length; i++) {
-            Integer key = new Integer(indices[i]);
+            Integer key = indices[i];
             TabData currData = m.get(key);
             list.add(indices[i], currData);
         }
@@ -402,7 +402,7 @@ public class DefaultTabDataModel implements TabDataModel {
         Arrays.sort(indices);
         TabData[] affected = new TabData[indices.length];
         for (int i = indices.length - 1; i >= 0; i--) {
-            affected[i] = (TabData) list.remove(indices[i]);
+            affected[i] = list.remove(indices[i]);
         }
         ComplexListDataEvent clde = new ComplexListDataEvent(this,
                                                              ComplexListDataEvent.ITEMS_REMOVED,
@@ -421,7 +421,7 @@ public class DefaultTabDataModel implements TabDataModel {
             ComplexListDataListener listener) {
         synchronized( LOCK ) {
             if (listenerList == null) {
-                listenerList = new ArrayList<ComplexListDataListener>();
+                listenerList = new ArrayList<>();
             }
             listenerList.add(listener);
         }
@@ -441,7 +441,7 @@ public class DefaultTabDataModel implements TabDataModel {
             if (listenerList == null) {
                 return;
             }
-            listeners = new ArrayList<ComplexListDataListener>(listenerList);
+            listeners = new ArrayList<>(listenerList);
         }
         for( ComplexListDataListener l : listeners ) {
             l.intervalAdded(event);
@@ -455,7 +455,7 @@ public class DefaultTabDataModel implements TabDataModel {
             if (listenerList == null) {
                 return;
             }
-            listeners = new ArrayList<ComplexListDataListener>(listenerList);
+            listeners = new ArrayList<>(listenerList);
         }
         for( ComplexListDataListener l : listeners ) {
             l.intervalRemoved(event);
@@ -469,7 +469,7 @@ public class DefaultTabDataModel implements TabDataModel {
             if (listenerList == null) {
                 return;
             }
-            listeners = new ArrayList<ComplexListDataListener>(listenerList);
+            listeners = new ArrayList<>(listenerList);
         }
         for( ComplexListDataListener l : listeners ) {
             l.contentsChanged(event);
@@ -483,7 +483,7 @@ public class DefaultTabDataModel implements TabDataModel {
             if (listenerList == null) {
                 return;
             }
-            listeners = new ArrayList<ComplexListDataListener>(listenerList);
+            listeners = new ArrayList<>(listenerList);
         }
         for( ComplexListDataListener l : listeners ) {
             l.indicesAdded(event);
@@ -497,7 +497,7 @@ public class DefaultTabDataModel implements TabDataModel {
             if (listenerList == null) {
                 return;
             }
-            listeners = new ArrayList<ComplexListDataListener>(listenerList);
+            listeners = new ArrayList<>(listenerList);
         }
         for( ComplexListDataListener l : listeners ) {
             l.indicesRemoved(event);
@@ -511,7 +511,7 @@ public class DefaultTabDataModel implements TabDataModel {
             if (listenerList == null) {
                 return;
             }
-            listeners = new ArrayList<ComplexListDataListener>(listenerList);
+            listeners = new ArrayList<>(listenerList);
         }
         for( ComplexListDataListener l : listeners ) {
             l.indicesChanged(event);
@@ -569,7 +569,7 @@ public class DefaultTabDataModel implements TabDataModel {
     private Integer[] toObjectArray(int[] o) {
         Integer[] result = new Integer[o.length];
         for (int i = 0; i < o.length; i++) {
-            result[i] = new Integer(o[i]);
+            result[i] = o[i];
         }
         return result;
     }
@@ -577,7 +577,7 @@ public class DefaultTabDataModel implements TabDataModel {
     private int[] toPrimitiveArray(Integer[] o) {
         int[] result = new int[o.length];
         for (int i = 0; i < o.length; i++) {
-            result[i] = o[i].intValue();
+            result[i] = o[i];
         }
         return result;
     }

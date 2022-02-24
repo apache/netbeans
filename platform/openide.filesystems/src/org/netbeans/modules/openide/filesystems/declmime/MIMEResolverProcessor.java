@@ -186,10 +186,8 @@ public class MIMEResolverProcessor extends LayerGeneratingProcessor {
         return unq(Arrays.asList(array));
     }
 
-    private Set<String> unq(Collection collection) {
-        Set<String> s = new TreeSet<>();
-        s.addAll(collection);
-        return s;
+    private Set<String> unq(Collection<String> collection) {
+        return new TreeSet<>(collection);
     }
 
     private void setFileChooserRelatedAttributes(Registration r,

@@ -524,7 +524,7 @@ public final class XMLFileSystem extends AbstractFileSystem {
 
         for (int i = 0; i < children.length; i++) {
             AbstractFolder fo2 = (AbstractFolder) fo.getFileObject(names[i]);
-            FileObjRef currentRef = (FileObjRef) findReference(fo2.getPath());
+            FileObjRef<?> currentRef = (FileObjRef<?>) findReference(fo2.getPath());
             int diff = initializeReference(currentRef, children[i]);
             fo2.lastModified();
 
@@ -547,7 +547,7 @@ public final class XMLFileSystem extends AbstractFileSystem {
      * @param resElem the new element
      * @return ret&0x01 if content changed, ret&0x02 if attributes changed.
      */
-    private int initializeReference(FileObjRef currentRef, ResourceElem resElem) {
+    private int initializeReference(FileObjRef<?> currentRef, ResourceElem resElem) {
         if (!currentRef.isInitialized()) {
             currentRef.initialize(resElem);
             return 0x00;
@@ -771,7 +771,7 @@ public final class XMLFileSystem extends AbstractFileSystem {
         }
 
         public Object readAttribute(String name, String attrName) {
-            FileObjRef ref = (FileObjRef) fs.findReference(name);
+            FileObjRef<?> ref = (FileObjRef<?>) fs.findReference(name);
 
             if ((ref == null) && (name.length() == 0) && (fs.rootRef != null)) {
                 ref = fs.rootRef;
@@ -861,10 +861,11 @@ public final class XMLFileSystem extends AbstractFileSystem {
                 foAttrs = new XMLMapAttr();
             }
 
-            Iterator<Map.Entry> it = attrs.entrySet().iterator();
+            @SuppressWarnings("unchecked")
+            Iterator<Map.Entry<String, Object>> it = attrs.entrySet().iterator();
             boolean ch = false;
             while (it.hasNext()) {
-                Map.Entry attrEntry = it.next();
+                Map.Entry<String, Object> attrEntry = it.next();
                 Object prev = foAttrs.put(attrEntry.getKey(), attrEntry.getValue());
                 
                 ch |= (prev == null && attrEntry.getValue() != null) || !prev.equals(attrEntry.getValue());
@@ -1122,13 +1123,13 @@ public final class XMLFileSystem extends AbstractFileSystem {
         Stack<ResourceElem> resElemStack = new Stack<ResourceElem>();
         Stack<String> elementStack = new Stack<String>();
         URL urlContext;
-        private Map dtdMap;
+        private Map<String, String> dtdMap;
         private ResourceElem topRE;
         private StringBuffer pcdata = new StringBuffer();
         private int weight;
         private String uri;
 
-        Handler(Map dtdMap, ResourceElem rootElem, boolean validate) {
+        Handler(Map<String, String> dtdMap, ResourceElem rootElem, boolean validate) {
             this.dtdMap = dtdMap;
             this.rootElem = rootElem;
             this.validate = validate;
@@ -1274,7 +1275,7 @@ public final class XMLFileSystem extends AbstractFileSystem {
         @Override
         public InputSource resolveEntity(String pid, String sid)
         throws SAXException {
-            String publicURL = (String) dtdMap.get(pid);
+            String publicURL = dtdMap.get(pid);
 
             if (publicURL != null) {
                 if (validate) {

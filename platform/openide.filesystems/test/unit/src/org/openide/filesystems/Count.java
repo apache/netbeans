@@ -44,8 +44,8 @@ public class Count implements Runnable {
         return new Count();
     }
 
-    public static Count createFromAttribs(Map m) {
-        return new Count((Integer)m.get("add")); // NOI18N
+    public static Count createFromAttribs(Map<String, Integer> m) {
+        return new Count(m.get("add")); // NOI18N
     }
 
     public void run() {

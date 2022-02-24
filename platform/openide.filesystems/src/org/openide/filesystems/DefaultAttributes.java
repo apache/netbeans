@@ -447,7 +447,7 @@ public class DefaultAttributes extends Object implements AbstractFileSystem.Attr
             split(oldName, arr);
 
             Table t = loadTable(arr[0]);
-            Map v = (Map) t.remove(arr[1]);
+            XMLMapAttr v = t.remove(arr[1]);
 
             //      System.out.println ("ARg[0] = " + arr[0] + " arr[1] = " + arr[1] + " value: " + v); // NOI18N
             if (v == null) {
@@ -458,10 +458,10 @@ public class DefaultAttributes extends Object implements AbstractFileSystem.Attr
             split(newName, arr);
 
             // Remove transient attributes:
-            Iterator<Map.Entry> it = v.entrySet().iterator();
+            Iterator<Map.Entry<String, Object>> it = v.entrySet().iterator();
 
             while (it.hasNext()) {
-                Map.Entry pair = it.next();
+                Map.Entry<String, Object> pair = it.next();
 
                 if (FileUtil.transientAttributes.contains(pair.getKey())) {
                     it.remove();
@@ -775,7 +775,7 @@ public class DefaultAttributes extends Object implements AbstractFileSystem.Attr
     /** Table that hold mapping between files and attributes.
     * Hold mapping of type (String, Map (String, Object))
     */
-    static final class Table extends HashMap implements Externalizable {
+    static final class Table extends HashMap<String, XMLMapAttr> implements Externalizable {
         static final long serialVersionUID = 2353458763249746934L;
 
         /** name of folder we belong to */
@@ -812,7 +812,7 @@ public class DefaultAttributes extends Object implements AbstractFileSystem.Attr
          * @return attribute or null (if not found)
          */
         public Object getAttr(String fileName, String attrName) {
-            XMLMapAttr m = (XMLMapAttr) get(fileName);
+            XMLMapAttr m = get(fileName);
 
             if (m != null) {
                 Object o = null;
@@ -862,7 +862,7 @@ public class DefaultAttributes extends Object implements AbstractFileSystem.Attr
          * @param obj - attribute
          */
         final void setAttr(String fileName, String attrName, Object obj) {
-            XMLMapAttr m = (XMLMapAttr) get(fileName);
+            XMLMapAttr m = get(fileName);
 
             if (m == null) {
                 m = new XMLMapAttr(); //HashMap (7);//XMLMapAttr();
@@ -882,7 +882,7 @@ public class DefaultAttributes extends Object implements AbstractFileSystem.Attr
         /** Enum of attributes for one file.
         */
         public Enumeration<String> attrs(String fileName) {
-            Map m = (Map) get(fileName);
+            XMLMapAttr m = get(fileName);
 
             if (m == null) {
                 return Enumerations.empty();
@@ -903,7 +903,7 @@ public class DefaultAttributes extends Object implements AbstractFileSystem.Attr
                     private final String[] MANDAT_ATTR_KEYS = { "VERSION" }; // NOI18N
 
                     @Override
-                    public void internalStartElement(String elemName, HashMap mapMandatory, HashMap mapAllowed)
+                    public void internalStartElement(String elemName, HashMap<String, String> mapMandatory, HashMap<String, String> mapAllowed)
                     throws SAXException {
                         // later can check version
                     }
@@ -933,14 +933,14 @@ public class DefaultAttributes extends Object implements AbstractFileSystem.Attr
                     private final String[] MANDAT_ATTR_KEYS = { "NAME" }; // NOI18N
 
                     @Override
-                    public void internalStartElement(String elemName, HashMap mapMandatory, HashMap mapAllowed)
+                    public void internalStartElement(String elemName, HashMap<String, String> mapMandatory, HashMap<String, String> mapAllowed)
                     throws SAXException {
                         String temp;
                         fileName.delete(0, fileName.length());
-                        temp = (String) mapMandatory.get("NAME"); // NOI18N
+                        temp = mapMandatory.get("NAME"); // NOI18N
 
                         if (temp == null) {
-                            temp = (String) mapMandatory.get("name"); // NOI18N
+                            temp = mapMandatory.get("name"); // NOI18N
                         }
 
                         if (temp != null) {
@@ -978,7 +978,7 @@ public class DefaultAttributes extends Object implements AbstractFileSystem.Attr
                     private final String[] MANDAT_ATTR_KEYS = { "NAME" }; // NOI18N
 
                     @Override
-                    public void internalStartElement(String elemName, HashMap mapMandatory, HashMap mapAllowed)
+                    public void internalStartElement(String elemName, HashMap<String, String> mapMandatory, HashMap<String, String> mapAllowed)
                     throws SAXException {
                         String attrName;
 
@@ -986,10 +986,10 @@ public class DefaultAttributes extends Object implements AbstractFileSystem.Attr
                             return;
                         }
 
-                        attrName = (String) mapMandatory.get("NAME"); // NOI18N
+                        attrName = mapMandatory.get("NAME"); // NOI18N
 
                         if (attrName == null) {
-                            attrName = (String) mapMandatory.get("name"); // NOI18N
+                            attrName = mapMandatory.get("name"); // NOI18N
                         }
 
                         if (attrName == null) {
@@ -1035,12 +1035,12 @@ public class DefaultAttributes extends Object implements AbstractFileSystem.Attr
          */
         public void writeToXML(PrintWriter pw) /*throws IOException */ {
             // list of names
-            Iterator<String> it = new TreeSet(keySet()).iterator();
+            Iterator<String> it = new TreeSet<>(keySet()).iterator();
             XMLMapAttr.writeHeading(pw);
 
             while (it.hasNext()) {
                 String file = it.next();
-                XMLMapAttr attr = (XMLMapAttr) get(file);
+                XMLMapAttr attr = get(file);
 
                 if ((attr != null) && !attr.isEmpty()) {
                     attr.write(pw, file, "    "); // NOI18N
@@ -1086,16 +1086,16 @@ public class DefaultAttributes extends Object implements AbstractFileSystem.Attr
 
             while (it.hasNext()) {
                 String file = it.next();
-                Map attr = (Map) get(file);
+                XMLMapAttr attr = get(file);
 
                 if ((attr != null) && !attr.isEmpty()) {
                     oo.writeObject(file);
 
-                    Iterator<Map.Entry> entries = attr.entrySet().iterator();
+                    Iterator<Map.Entry<String, Object>> entries = attr.entrySet().iterator();
 
                     while (entries.hasNext()) {
-                        Map.Entry entry = entries.next();
-                        String key = (String) entry.getKey();
+                        Map.Entry<String, Object> entry = entries.next();
+                        String key = entry.getKey();
                         Object value = entry.getValue();
 
                         if ((key != null) && (value != null)) {
@@ -1180,7 +1180,7 @@ public class DefaultAttributes extends Object implements AbstractFileSystem.Attr
          * @param mapAllowed map(String attributeName,String attributeValue) which holds pairs attributeName and attributeValue, which are optional for this element
          * @throws SAXException
          */
-        protected void internalStartElement(String elemName, HashMap mapMandatory, HashMap mapAllowed)
+        protected void internalStartElement(String elemName, HashMap<String, String> mapMandatory, HashMap<String, String> mapAllowed)
         throws SAXException {
         }
 

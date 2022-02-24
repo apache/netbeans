@@ -148,7 +148,7 @@ public class URLMapper50984Test extends NbTestCase {
     /** This is a pair that as a part of its instanceOf method queries the URL resolver.
      */
     @SuppressWarnings("unchecked")
-    private static class QueryingPair extends org.openide.util.lookup.AbstractLookup.Pair {
+    private static class QueryingPair extends org.openide.util.lookup.AbstractLookup.Pair<QueryingPair> {
         public static boolean beBroken;
         
         public java.lang.String getId() {
@@ -159,7 +159,7 @@ public class URLMapper50984Test extends NbTestCase {
             return getId ();
         }
 
-        public java.lang.Class getType() {
+        public java.lang.Class<? extends QueryingPair> getType() {
             return getClass ();
         }
 
@@ -167,7 +167,7 @@ public class URLMapper50984Test extends NbTestCase {
             return obj == this;
         }
 
-        protected boolean instanceOf(java.lang.Class c) {
+        protected boolean instanceOf(java.lang.Class<?> c) {
             if (beBroken) {
                 beBroken = false;
                 try {
@@ -183,7 +183,7 @@ public class URLMapper50984Test extends NbTestCase {
             return c.isAssignableFrom(getType ());
         }
 
-        public java.lang.Object getInstance() {
+        public QueryingPair getInstance() {
             return this;
         }
     }
@@ -200,7 +200,7 @@ public class URLMapper50984Test extends NbTestCase {
         
         private Lkp (org.openide.util.lookup.InstanceContent ic) {
             super (ic);
-            this.ic = ic;
+            Lkp.ic = ic;
         }
 
         protected void initialize() {
@@ -208,7 +208,7 @@ public class URLMapper50984Test extends NbTestCase {
             // because if the amount of elements in small, the ArrayStorage is 
             // used and it does not have the same problems like InheritanceTree
             for (int i = 0; i < 1000; i++) {
-                ic.add (new Integer (i));
+                ic.add (Integer.valueOf(i));
             }
 
             QueryingPair qp = new QueryingPair();
@@ -216,7 +216,7 @@ public class URLMapper50984Test extends NbTestCase {
             ic.add (new MyUM ());
         }
 
-        protected void beforeLookup (org.openide.util.Lookup.Template template) {
+        protected void beforeLookup (org.openide.util.Lookup.Template<?> template) {
             Runnable r = runnable;
             runnable = null;
             if (r != null) {

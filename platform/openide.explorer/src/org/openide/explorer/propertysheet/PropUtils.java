@@ -185,7 +185,7 @@ final class PropUtils {
     private static String bptn = null;
 
     /** Comparator used by property sheet */
-    private static Comparator comp = null;
+    private static Comparator<Node.Property<?>> comp = null;
 
     /** Left hand margin for properties in the right column of the sheet */
     private static int textMargin = -1;
@@ -213,55 +213,27 @@ final class PropUtils {
     //Comparators copied from original propertysheet implementation
 
     /** Comparator which compares types */
-    private static final Comparator<Node.Property> SORTER_TYPE = new Comparator<Node.Property>() {
-            @Override
-            public int compare(Node.Property l, Node.Property r) {
-
-                Class t1 = l.getValueType();
-                Class t2 = r.getValueType();
-                String s1 = (t1 != null) ? t1.getName() : ""; //NOI18N
-                String s2 = (t2 != null) ? t2.getName() : ""; //NOI18N
-
-                int s = s1.compareToIgnoreCase(s2);
-
-                if (s != 0) {
-                    return s;
-                }
-
-                s1 = l.getDisplayName();
-                s2 = r.getDisplayName();
-
-                return s1.compareToIgnoreCase(s2);
-            }
-
-            @Override
-            public String toString() {
-                return "Type comparator"; //NOI18N
-            }
-        };
+    private static final Comparator<Node.Property<?>> SORTER_TYPE = Comparator
+            .comparing(
+                    (Node.Property<?> np) -> {
+                        Class t = np.getValueType();
+                        return null == t ? "" : t.getName(); //NOI18N
+                    },
+                    String.CASE_INSENSITIVE_ORDER)
+            .thenComparing(Node.Property::getDisplayName, String.CASE_INSENSITIVE_ORDER);
 
     /** Comparator which compares PropertyDetils names */
-    private static final Comparator<Node.Property> SORTER_NAME = new Comparator<Node.Property>() {
-        @Override
-        public int compare(Node.Property l, Node.Property r) {
-            String s1 = l.getDisplayName();
-            String s2 = r.getDisplayName();
-
-            return String.CASE_INSENSITIVE_ORDER.compare(s1, s2);
-        }
-
-        @Override
-        public String toString() {
-            return "Name comparator"; //NOI18N
-        }
-    };
+    private static final Comparator<Node.Property<?>> SORTER_NAME = Comparator
+            .comparing(
+                    Node.Property::getDisplayName,
+                    String.CASE_INSENSITIVE_ORDER);
 
     private static java.util.List<String> missing = null;
 
     // #52179 don't affect just edited properties or their current
     // changes will be lost due to the firing PropertyChangeEvents to
     // theirs UI counterpart
-    private static Set<Property> externallyEdited = new HashSet<Property>(3);
+    private static Set<Property<?>> externallyEdited = new HashSet<>(3);
 
     /** Private constructor to hide from API */
     private PropUtils() {
@@ -287,7 +259,7 @@ final class PropUtils {
         return useOptimizedCustomButtonPainting.booleanValue();
     }
 
-    static void log(Class clazz, String msg, boolean dumpstack) {
+    static void log(Class<?> clazz, String msg, boolean dumpstack) {
         log(clazz, msg);
 
         if (dumpstack) {
@@ -296,11 +268,11 @@ final class PropUtils {
     }
 
     //logging code borrowed from winsys
-    static void log(Class clazz, String msg) {
+    static void log(Class<?> clazz, String msg) {
         Logger.getLogger(clazz.getName()).fine(msg);
     }
 
-    static void log(Class clazz, FocusEvent fe) {
+    static void log(Class<?> clazz, FocusEvent fe) {
         if (isLoggable(clazz)) {
             StringBuffer sb = new StringBuffer(30);
             focusEventToString(fe, sb);
@@ -308,11 +280,11 @@ final class PropUtils {
         }
     }
 
-    static boolean isLoggable(Class clazz) {
+    static boolean isLoggable(Class<?> clazz) {
         return Logger.getLogger(clazz.getName()).isLoggable(Level.FINE);
     }
 
-    static void logFocusOwner(Class clazz, String where) {
+    static void logFocusOwner(Class<?> clazz, String where) {
         if (isLoggable(clazz)) {
             StringBuffer sb = new StringBuffer(where);
             sb.append(" focus owner: "); //NOI18N
@@ -703,7 +675,7 @@ final class PropUtils {
 
     /** Utility method to fetch a comparator for properties
      *  based on sorting mode defined in PropertySheet.  */
-    static Comparator<Property> getComparator(int sortingMode) {
+    static Comparator<Property<?>> getComparator(int sortingMode) {
         switch (sortingMode) {
         case PropertySheet.UNSORTED:
             return null;

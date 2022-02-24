@@ -71,11 +71,8 @@ public final class FileBasedURLMapper extends URLMapper {
         File file;
         try {
             file = FileUtil.normalizeFile(BaseUtilities.toFile(url.toURI()));
-        } catch (URISyntaxException e) {
+        } catch (URISyntaxException | IllegalArgumentException e) {
             LOG.log(Level.INFO, "URL=" + url, e); // NOI18N
-            return null;
-        } catch (IllegalArgumentException iax) {
-            LOG.log(Level.INFO, "URL=" + url, iax); // NOI18N
             return null;
         }
         

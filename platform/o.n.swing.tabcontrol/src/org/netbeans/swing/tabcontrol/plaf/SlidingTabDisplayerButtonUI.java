@@ -191,6 +191,7 @@ public class SlidingTabDisplayerButtonUI extends BasicToggleButtonUI {
      * 
      * @deprecated No brushed metal look and feel doesn't need this class anymore.
      */
+    @Deprecated
     public static final class Aqua extends SlidingTabDisplayerButtonUI {
         public static ComponentUI createUI(JComponent c) {
             if (AQUA_INSTANCE == null) {
@@ -208,9 +209,9 @@ public class SlidingTabDisplayerButtonUI extends BasicToggleButtonUI {
         protected void paintBackground (Graphics2D g, BasicSlidingTabDisplayerUI.IndexButton b) {
             GenericGlowingChiclet chic = GenericGlowingChiclet.INSTANCE;
             int state = 0;
-            state |= b.isSelected() ? chic.STATE_SELECTED : 0;
-            state |= b.getModel().isPressed() ? chic.STATE_PRESSED : 0;
-            state |= b.isActive() ? chic.STATE_ACTIVE : 0;
+            state |= b.isSelected() ? GenericGlowingChiclet.STATE_SELECTED : 0;
+            state |= b.getModel().isPressed() ? GenericGlowingChiclet.STATE_PRESSED : 0;
+            state |= b.isActive() ? GenericGlowingChiclet.STATE_ACTIVE : 0;
 
             chic.setState(state);
             chic.setArcs(0.2f, 0.2f, 0.2f, 0.2f);

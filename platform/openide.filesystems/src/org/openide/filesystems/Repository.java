@@ -441,7 +441,7 @@ public class Repository implements Serializable {
             synchronized (Repository.class) {
                 if (lastDefLookup == c) {
                     lastLocalProvider = q;
-                    lastDefLookup = new WeakReference(lkp);
+                    lastDefLookup = new WeakReference<>(lkp);
                 }
             }
         }
@@ -459,7 +459,7 @@ public class Repository implements Serializable {
     static synchronized void reset() {
         repository = null;
         lastLocalProvider = null;
-        lastDefLookup = new WeakReference(null);
+        lastDefLookup = new WeakReference<>(null);
     }
     private static final ThreadLocal<FileSystem[]> ADD_FS = new ThreadLocal<FileSystem[]>();
     private static boolean addFileSystemDelayed(FileSystem fs) {

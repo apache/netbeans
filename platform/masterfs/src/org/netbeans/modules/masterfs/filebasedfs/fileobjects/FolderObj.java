@@ -134,7 +134,7 @@ public final class FolderObj extends BaseFileObj {
     
     private FileObject[] computeChildren(boolean onlyExisting) {
         LOOP: for (int counter = 0; ; counter++) {
-            final Map<FileNaming,FileObject> results = new LinkedHashMap<FileNaming,FileObject>();
+            final Map<FileNaming,FileObject> results = new LinkedHashMap<>();
 
             final ChildrenCache childrenCache = getChildrenCache();
             final Mutex.Privileged mutexPrivileged = childrenCache.getMutexPrivileged();
@@ -149,7 +149,7 @@ public final class FolderObj extends BaseFileObj {
                 try {
                     Set<FileNaming> res = childrenCache.getChildren(counter >= 10, task);
                     if (res != null) {
-                        fileNames = new HashSet<FileNaming>(res);
+                        fileNames = new HashSet<>(res);
                     }   
                 } finally {
                     mutexPrivileged.exitWriteAccess();
@@ -389,7 +389,7 @@ public final class FolderObj extends BaseFileObj {
 
     @Override
     public void delete(final FileLock lock, ProvidedExtensions.DeleteHandler deleteHandler) throws IOException {
-        final Deque<FileObject> all = new ArrayDeque<FileObject>();
+        final Deque<FileObject> all = new ArrayDeque<>();
 
         final File file = getFileName().getFile();
         if (!deleteFile(file, all, getFactory(), deleteHandler)) {
@@ -557,8 +557,7 @@ public final class FolderObj extends BaseFileObj {
             // first of all delete whole content
             final File[] arr = file.listFiles();
             if (arr != null) {  // check for null in case of I/O errors
-                for (int i = 0; i < arr.length; i++) {
-                    final File f2Delete = arr[i];
+                for (File f2Delete : arr) {
                     if (!deleteFile(f2Delete, all, factory, deleteHandler)) {
                         return false;
                     }

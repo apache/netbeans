@@ -580,11 +580,11 @@ public class OutlineView extends JScrollPane {
      */
     public final boolean removePropertyColumn(String name) {
         Parameters.notNull("name", name); //NOI18N
-        Property[] props = rowModel.getProperties();
-        List<Property> nue = new LinkedList<Property>(Arrays.asList(props));
+        Property<?>[] props = rowModel.getProperties();
+        List<Property<?>> nue = new LinkedList<>(Arrays.asList(props));
         boolean found = false;
-        for (Iterator<Property> i=nue.iterator(); i.hasNext();) {
-            Property p = i.next();
+        for (Iterator<Property<?>> i=nue.iterator(); i.hasNext();) {
+            Property<?> p = i.next();
             if (name.equals(p.getName())) {
                 found = true;
                 i.remove();
@@ -609,8 +609,8 @@ public class OutlineView extends JScrollPane {
      */
     public final void setPropertyColumnDescription(String columnName, String description) {
         Parameters.notNull ("columnName", columnName); //NOI18N
-        Property[] props = rowModel.getProperties();
-        for (Property p : props) {
+        Property<?>[] props = rowModel.getProperties();
+        for (Property<?> p : props) {
             if (columnName.equals(p.getName())) {
                 p.setShortDescription(description);
             }

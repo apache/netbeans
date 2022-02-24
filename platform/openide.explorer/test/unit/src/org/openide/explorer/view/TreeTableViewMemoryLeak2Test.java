@@ -118,7 +118,7 @@ public class TreeTableViewMemoryLeak2Test extends NbTestCase {
 
         Reference<Node> child1Ref = new WeakReference<Node>(child);
         Reference<Node> rootRef = new WeakReference<Node>(root);
-        Reference<Property> propRef = new WeakReference<Property>(fakeProp);
+        Reference<Property<?>> propRef = new WeakReference<Property<?>>(fakeProp);
         child = null;
         root = null;
         fakeProp = null;
@@ -132,9 +132,9 @@ public class TreeTableViewMemoryLeak2Test extends NbTestCase {
     }
 
     private class MyRunnable implements Runnable {
-        private Property fakeProp;
+        private Property<?> fakeProp;
 
-        public MyRunnable(Property fp) {
+        public MyRunnable(Property<?> fp) {
             this.fakeProp = fp;
         }
 
@@ -145,7 +145,7 @@ public class TreeTableViewMemoryLeak2Test extends NbTestCase {
             MyPanel panel = new MyPanel();
             panel.setLayout(new GridLayout(1, 2));
             ttv = new TreeTableView();
-            ttv.setProperties(new Property[]{fakeProp});
+            ttv.setProperties(new Property<?>[]{fakeProp});
             fakeProp = null;
             panel.add(ttv);
 
@@ -155,7 +155,7 @@ public class TreeTableViewMemoryLeak2Test extends NbTestCase {
             ttv.expandNode(root);
 
             //cleare property and root
-            ttv.setProperties(new Property[0]);
+            ttv.setProperties(new Property<?>[]{});
             panel.setExplorerManagerRoot(Node.EMPTY);
         }
     }

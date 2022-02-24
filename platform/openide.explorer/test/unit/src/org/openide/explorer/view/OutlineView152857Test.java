@@ -95,7 +95,7 @@ public final class OutlineView152857Test extends NbTestCase {
             setLayout (new BorderLayout ());
             manager.setRootContext (rootNode);
 
-            Node.Property[] props = rootNode.getPropertySets ()[0].getProperties ();
+            Node.Property<?>[] props = rootNode.getPropertySets()[0].getProperties();
             view = new OutlineView ("test-outline-view-component");
             view.setProperties (props);
 
@@ -151,13 +151,13 @@ public final class OutlineView152857Test extends NbTestCase {
                 ss = Sheet.createPropertiesSet ();
                 s.put (ss);
             }
-            Property [] props = new Property [2];
+            Property<?>[] props = new Property<?>[2];
 
             DummyProperty dp = new DummyProperty (getName ());
             dp.setValue ("ComparableColumnTTV", Boolean.TRUE);
             props [0] = dp;
 
-            Property p_tree = new Node.Property<Boolean> (Boolean.class) {
+            Property<Boolean> p_tree = new Node.Property<Boolean> (Boolean.class) {
 
                 @Override
                 public boolean canRead () {

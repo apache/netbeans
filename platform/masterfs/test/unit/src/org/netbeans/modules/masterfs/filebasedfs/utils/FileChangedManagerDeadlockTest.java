@@ -23,7 +23,7 @@ import java.io.IOException;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.atomic.AtomicBoolean;
-import static junit.framework.Assert.assertTrue;
+import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 import org.netbeans.junit.MockServices;

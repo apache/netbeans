@@ -782,7 +782,7 @@ public class NodeTableModel extends AbstractTableModel {
      */
     static class ArrayColumn {
         /** Property representing column */
-        private Property property;
+        private Property<?> property;
 
         /** Preferred width of column */
         private int width;
@@ -793,14 +793,14 @@ public class NodeTableModel extends AbstractTableModel {
         /** Getter for property property.
          * @return Value of property property.
          */
-        public Property getProperty() {
+        public Property<?> getProperty() {
             return this.property;
         }
 
         /** Setter for property property.
          * @param property New value of property property.
          */
-        public void setProperty(Property property) {
+        public void setProperty(Property<?> property) {
             this.property = property;
         }
 
@@ -831,7 +831,7 @@ public class NodeTableModel extends AbstractTableModel {
          * @param visibleIndex New value of property visibleIndex.
          */
         public void setVisibleIndex(int visibleIndex) {
-            property.setValue(ATTR_ORDER_NUMBER, new Integer(visibleIndex));
+            property.setValue(ATTR_ORDER_NUMBER, visibleIndex);
         }
     }
 }

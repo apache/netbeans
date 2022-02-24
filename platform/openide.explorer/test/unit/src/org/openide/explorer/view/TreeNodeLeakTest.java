@@ -98,7 +98,7 @@ public final class TreeNodeLeakTest extends NbTestCase {
         root.getChildren().remove(new Node[] {toSelect[0], toSelect[3]});
         clearAWTQueue();
 
-        WeakReference wr = new WeakReference(toSelect[0]);
+        WeakReference<Node> wr = new WeakReference<>(toSelect[0]);
         toSelect = null;
         assertGC("Node freed", wr);
     }
@@ -127,7 +127,7 @@ public final class TreeNodeLeakTest extends NbTestCase {
         Node n0 = Visualizer.findNode(ch0);
         assertNotNull("Node for visualizer " + ch0, n0);
         assertEquals("Name is OK", "A", n0.getName());
-        WeakReference wr = new WeakReference(n0);
+        WeakReference<Node> wr = new WeakReference<>(n0);
         n0 = null;
 
         keys.keys();

@@ -71,7 +71,7 @@ public class ProvidedExtensionsTest extends NbTestCase {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        BaseAnnotationProvider provider = (BaseAnnotationProvider)Lookups.metaInfServices(
+        BaseAnnotationProvider provider = Lookups.metaInfServices(
                 Thread.currentThread().getContextClassLoader()).lookup(BaseAnnotationProvider.class);
         assertNotNull(provider);
         iListener = lookupImpl(true);
@@ -83,7 +83,7 @@ public class ProvidedExtensionsTest extends NbTestCase {
     
     private ProvidedExtensionsImpl lookupImpl(boolean providesCanWrite) {
         Result<BaseAnnotationProvider> result = Lookup.getDefault().
-                       lookup(new Lookup.Template(BaseAnnotationProvider.class));
+                       lookup(new Lookup.Template<>(BaseAnnotationProvider.class));
         for (Item<BaseAnnotationProvider> item : result.allItems()) {
             if (!item.getId().contains(ProvidedExtensionsTest.class.getSimpleName())) {
                 continue;
@@ -158,13 +158,10 @@ public class ProvidedExtensionsTest extends NbTestCase {
         assertNotNull(iListener);
         FileObject toChange = fo.createData("aa");
         assertNotNull(toChange);
-        OutputStream os = toChange.getOutputStream();
-        try {
+        try (OutputStream os = toChange.getOutputStream()) {
+            os.write('H');
             assertEquals(1, iListener.implsBeforeChangeCalls);            
-        } finally {
-            os.close();
         }
-        
     }
 
     public void testImplsCanWrite() throws IOException {
@@ -191,17 +188,17 @@ public class ProvidedExtensionsTest extends NbTestCase {
         
         iListener.clear();
         FileLock lock = toMove.lock();
-        iListener.setLock(lock);
+        ProvidedExtensionsImpl.setLock(lock);
         try {
             assertEquals(0,iListener.implsMoveCalls);
             assertEquals(0,iListener.moveImplCalls);
-            iListener.setImplsMoveRetVal(true);
+            ProvidedExtensionsImpl.setImplsMoveRetVal(true);
             assertNotNull(toMove.move(lock, whereToMove, toMove.getName(), toMove.getExt()));
             assertEquals(1,iListener.implsMoveCalls);
             assertEquals(1,iListener.moveImplCalls);
         } finally {
             if (lock != null) {
-                iListener.setLock(null);
+                ProvidedExtensionsImpl.setLock(null);
                 lock.releaseLock();
             }
         }
@@ -218,17 +215,17 @@ public class ProvidedExtensionsTest extends NbTestCase {
         
         iListener.clear();
         FileLock lock = toMove.lock();
-        iListener.setLock(lock);
+        ProvidedExtensionsImpl.setLock(lock);
         try {
             assertEquals(0,iListener.implsMoveCalls);
             assertEquals(0,iListener.moveImplCalls);
-            iListener.setImplsMoveRetVal(false);
+            ProvidedExtensionsImpl.setImplsMoveRetVal(false);
             assertNotNull(toMove.move(lock, whereToMove, toMove.getName(), toMove.getExt()));
             assertEquals(1,iListener.implsMoveCalls);
             assertEquals(0,iListener.moveImplCalls);
         } finally {
             if (lock != null) {
-                iListener.setLock(null);
+                ProvidedExtensionsImpl.setLock(null);
                 lock.releaseLock();
             }
         }
@@ -243,11 +240,11 @@ public class ProvidedExtensionsTest extends NbTestCase {
         
         iListener.clear();
         FileLock lock = toRename.lock();
-        iListener.setLock(lock);
+        ProvidedExtensionsImpl.setLock(lock);
         try {
             assertEquals(0,iListener.implsRenameCalls);
             assertEquals(0,iListener.renameImplCalls);
-            iListener.setImplsRenameRetVal(true);
+            ProvidedExtensionsImpl.setImplsRenameRetVal(true);
             assertTrue(toRename.isValid());
             assertNull(toRename.getParent().getFileObject(toRename.getExt(), toRename.getName()));
             toRename.rename(lock,toRename.getExt(), toRename.getName());
@@ -255,7 +252,7 @@ public class ProvidedExtensionsTest extends NbTestCase {
             assertEquals(1,iListener.renameImplCalls);
         } finally {
             if (lock != null) {
-                iListener.setLock(null);
+                ProvidedExtensionsImpl.setLock(null);
                 lock.releaseLock();
             }
         }
@@ -270,11 +267,11 @@ public class ProvidedExtensionsTest extends NbTestCase {
         
         iListener.clear();
         FileLock lock = toRename.lock();
-        iListener.setLock(lock);
+        ProvidedExtensionsImpl.setLock(lock);
         try {
             assertEquals(0,iListener.implsRenameCalls);
             assertEquals(0,iListener.renameImplCalls);
-            iListener.setImplsRenameRetVal(true);
+            ProvidedExtensionsImpl.setImplsRenameRetVal(true);
             assertTrue(toRename.isValid());
             assertNull(toRename.getParent().getFileObject(toRename.getExt(), toRename.getName()));
             toRename.rename(lock,toRename.getName().toUpperCase(), toRename.getExt().toUpperCase());
@@ -282,7 +279,7 @@ public class ProvidedExtensionsTest extends NbTestCase {
             assertEquals(1,iListener.renameImplCalls);
         } finally {
             if (lock != null) {
-                iListener.setLock(null);
+                ProvidedExtensionsImpl.setLock(null);
                 lock.releaseLock();
             }
         }
@@ -370,13 +367,9 @@ public class ProvidedExtensionsTest extends NbTestCase {
         fo.refresh();
 
         iListener.clear();
-        FileOutputStream fos = null;
-        try {
-            fos = new FileOutputStream(FileUtil.toFile(file));
+        try (FileOutputStream fos = new FileOutputStream(FileUtil.toFile(file))) {
             fos.write("data".getBytes());
             fos.flush();
-        } finally {
-            if(fos != null) fos.close();
         }
         assertEquals(0, iListener.implsFileChangedCalls);
         fo.refresh();
@@ -458,7 +451,7 @@ public class ProvidedExtensionsTest extends NbTestCase {
     }
 
     public void testImplsRename2() throws IOException {
-        final List events = new ArrayList();
+        final List<FileRenameEvent> events = new ArrayList<>();
         FileObject fo = FileUtil.toFileObject(getWorkDir());
         assertNotNull(fo);
         final FileObject toRename = fo.createData(getName());
@@ -466,14 +459,14 @@ public class ProvidedExtensionsTest extends NbTestCase {
         
         iListener.clear();
         FileLock lock = toRename.lock();
-        iListener.setLock(lock);
+        ProvidedExtensionsImpl.setLock(lock);
         FileChangeListener fcl = null;
         try {
             final String origNameExt = toRename.getNameExt();
             final String origPath = toRename.getPath();
             final File origFile = FileUtil.toFile(toRename);
 
-            iListener.setImplsRenameRetVal(true);
+            ProvidedExtensionsImpl.setImplsRenameRetVal(true);
             fcl =  new FileChangeAdapter() {
                 public void fileRenamed(FileRenameEvent fe)  {
                     events.add(fe);
@@ -546,7 +539,7 @@ public class ProvidedExtensionsTest extends NbTestCase {
             toRename.getFileSystem().removeFileChangeListener(fcl);
 
             if (lock != null) {
-                iListener.setLock(null);
+                ProvidedExtensionsImpl.setLock(null);
                 lock.releaseLock();
             }
         }
@@ -562,7 +555,7 @@ public class ProvidedExtensionsTest extends NbTestCase {
         
         iListener.clear();
         FileLock lock = toRename.lock();
-        iListener.setLock(lock);
+        ProvidedExtensionsImpl.setLock(lock);
         try {
             final String origNameExt = toRename.getNameExt();
             final String origPath = toRename.getPath();
@@ -570,7 +563,7 @@ public class ProvidedExtensionsTest extends NbTestCase {
             final File newFile = new File(origFile.getParentFile(),FileInfo.composeName("bb", "ext"));
 
 
-            iListener.setImplsRenameRetVal(true);
+            ProvidedExtensionsImpl.setImplsRenameRetVal(true);
             fcl =  new FileChangeAdapter() {
                 @Override
                 public void fileRenamed(FileRenameEvent fe)  {
@@ -647,7 +640,7 @@ public class ProvidedExtensionsTest extends NbTestCase {
             toRename.rename(lock,"aa", "");
         } finally {
             if (lock != null) {
-                iListener.setLock(null);
+                ProvidedExtensionsImpl.setLock(null);
                 lock.releaseLock();
             }
             toRename.getParent().removeFileChangeListener(fcl);
@@ -860,7 +853,7 @@ public class ProvidedExtensionsTest extends NbTestCase {
         @Override
         public ProvidedExtensions.DeleteHandler getDeleteHandler(File f) {
             return (!isImplsDeleteRetVal()) ? null : new ProvidedExtensions.DeleteHandler(){
-                final Set s = new HashSet();
+                final Set<File> s = new HashSet<>();
                 @Override
                 public boolean delete(File file) {
                     if (file.isDirectory()) {

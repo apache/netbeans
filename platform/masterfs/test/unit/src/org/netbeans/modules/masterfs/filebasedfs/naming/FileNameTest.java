@@ -231,10 +231,10 @@ public class FileNameTest extends NbTestCase {
     }
     
     public void testWeakReferenced () throws Exception {
-        List l = new ArrayList ();
+        List<WeakReference<FileNaming>> l = new ArrayList<>();
         FileNaming current = n1;
         while (current != null) {
-            l.add(new WeakReference (current));
+            l.add(new WeakReference<>(current));
             current = current.getParent();
         }
         
@@ -244,8 +244,8 @@ public class FileNameTest extends NbTestCase {
         n3 = null;
         
         for (int i = 0; i < l.size(); i++) {
-            WeakReference weakReference = (WeakReference) l.get(i);
-            assertGC("Shoul be GCed: "+((FileNaming)weakReference.get()),  weakReference);
+            WeakReference<FileNaming> weakReference = l.get(i);
+            assertGC("Should be GCed: "+weakReference.get(),  weakReference);
         }        
     }
     
@@ -266,13 +266,12 @@ public class FileNameTest extends NbTestCase {
 
     public void testFileExist () throws Exception {
         FileNaming[] all = new FileNaming [] {n1, n2, n3};
-        for (int i = 0; i < all.length; i++) {
-            FileNaming current = all[i];
+        for (FileNaming current : all) {
             while (current != null) {
                 File file = current.getFile();
                 assertTrue(file.getAbsolutePath(), file.exists());
                 current = current.getParent();
-            }            
+            }
         }        
     }
 

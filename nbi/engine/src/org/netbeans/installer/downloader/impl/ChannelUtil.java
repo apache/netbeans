@@ -93,7 +93,7 @@ public class ChannelUtil {
       
       // close may be invoked asynchroniously so synchronized modifer really need
       public synchronized void flush() throws IOException {
-        final int written = this.channel.write((ByteBuffer) buffer.flip(), position);
+        final int written = this.channel.write(buffer.flip(), position);
         position += written;
         if (written > 0) section.shiftOffset(written);
         buffer.rewind();

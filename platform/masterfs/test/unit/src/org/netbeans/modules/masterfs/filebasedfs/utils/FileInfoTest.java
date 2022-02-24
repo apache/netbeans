@@ -47,8 +47,8 @@ public class FileInfoTest extends NbTestCase {
             {"D:\\a.txt", "D:\\"},
             {"D:\\", "D:\\"}
         };
-        for (int i = 0; i < files.length; i++) {
-            assertEquals("Wrong root for file "+files[i][0]+".", files[i][1], new FileInfo(new File(files[i][0])).getRoot().toString());
+        for (String[] file : files) {
+            assertEquals("Wrong root for file " + file[0] + ".", file[1], new FileInfo(new File(file[0])).getRoot().toString());
         }
     }
 

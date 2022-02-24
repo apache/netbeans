@@ -53,14 +53,14 @@ public class FileChangedManager extends SecurityManager {
     private static final int DELETE_HINT = 1;
     private static final int AMBIGOUS_HINT = 3;
 
-    private final ConcurrentHashMap<Integer,Integer> hints = new ConcurrentHashMap<Integer,Integer>();
+    private final ConcurrentHashMap<Integer,Integer> hints = new ConcurrentHashMap<>();
     private long shrinkTime = System.currentTimeMillis();
     private static volatile long ioTime = -1;
     private static volatile int ioLoad;
     private static final AtomicInteger priorityIO = new AtomicInteger();
-    private static final ThreadLocal<Integer> IDLE_IO = new ThreadLocal<Integer>();
-    private static final ThreadLocal<Runnable> IDLE_CALL = new ThreadLocal<Runnable>();
-    private static final ThreadLocal<AtomicBoolean> IDLE_ON = new ThreadLocal<AtomicBoolean>();
+    private static final ThreadLocal<Integer> IDLE_IO = new ThreadLocal<>();
+    private static final ThreadLocal<Runnable> IDLE_CALL = new ThreadLocal<>();
+    private static final ThreadLocal<AtomicBoolean> IDLE_ON = new ThreadLocal<>();
     
     public FileChangedManager() {
         if (isFine) {

@@ -51,11 +51,10 @@ public class InterceptionListenerTest extends NbTestCase  {
     }
 
     private InterceptionListenerImpl lookupImpl() {
-        Lookup.Result result = Lookups.metaInfServices(Thread.currentThread().getContextClassLoader()).
-                lookup(new Lookup.Template(BaseAnnotationProvider.class));
-        Collection all = result.allInstances();
-        for (Iterator it = all.iterator(); it.hasNext();) {
-            BaseAnnotationProvider ap = (BaseAnnotationProvider) it.next();
+        Lookup.Result<BaseAnnotationProvider> result = Lookups.metaInfServices(Thread.currentThread().getContextClassLoader()).
+                lookup(new Lookup.Template<>(BaseAnnotationProvider.class));
+        Collection<? extends BaseAnnotationProvider> all = result.allInstances();
+        for (BaseAnnotationProvider ap : all) {
             InterceptionListener iil = ap.getInterceptionListener();
             if (iil != null && !(iil instanceof ProvidedExtensions)) {
                 return (InterceptionListenerImpl)iil;
@@ -136,11 +135,11 @@ public class InterceptionListenerTest extends NbTestCase  {
         }
 
         private InterceptionListenerImpl impl = new InterceptionListenerImpl(this);
-        public String annotateName(String name, java.util.Set files) {
+        public String annotateName(String name, Set<? extends FileObject> files) {
             java.lang.StringBuffer sb = new StringBuffer(name);
-            Iterator it = files.iterator();
+            Iterator<? extends FileObject> it = files.iterator();
             while (it.hasNext()) {
-                FileObject fo = (FileObject)it.next();
+                FileObject fo = it.next();
                 try {
                     sb.append("," +fo.getNameExt());//NOI18N
                 } catch (Exception ex) {
@@ -151,16 +150,12 @@ public class InterceptionListenerTest extends NbTestCase  {
             return sb.toString() ;
         }
         
-        public java.awt.Image annotateIcon(java.awt.Image icon, int iconType, java.util.Set files) {
+        public java.awt.Image annotateIcon(java.awt.Image icon, int iconType, Set<? extends FileObject> files) {
             return icon;
         }
         
-        public String annotateNameHtml(String name, Set files) {
+        public String annotateNameHtml(String name, Set<? extends FileObject> files) {
             return annotateName(name, files);
-        }
-        
-        public Action[] actions(Set files) {
-            return new Action[]{};
         }
         
         public InterceptionListener getInterceptionListener() {

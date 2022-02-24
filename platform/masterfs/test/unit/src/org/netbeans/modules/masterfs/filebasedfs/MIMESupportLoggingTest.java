@@ -85,7 +85,8 @@ public class MIMESupportLoggingTest extends NbTestCase {
         private final String mime;
         private boolean read;
         
-        private TestResolver(String mime) {            
+        private TestResolver(String mime) {
+            super(mime);
             this.mime = mime;
         }
         
@@ -159,11 +160,10 @@ public class MIMESupportLoggingTest extends NbTestCase {
     }
 
     public static final File copyStringToFile (File f, String content) throws Exception {
-        FileOutputStream os = new FileOutputStream(f);
-        InputStream is = new ByteArrayInputStream(content.getBytes("UTF-8"));
-        FileUtil.copy(is, os);
-        os.close ();
-        is.close();
+        try (FileOutputStream os = new FileOutputStream(f);
+            InputStream is = new ByteArrayInputStream(content.getBytes("UTF-8"))) {
+            FileUtil.copy(is, os);
+        }
 
         return f;
     }

@@ -112,7 +112,7 @@ public class CLIHandler {
                             continue;
                         }
                         try {
-                            Class cl = Class.forName(classname);
+                            Class<?> cl = Class.forName(classname);
                             Object obj = cl.newInstance();
                             if (obj instanceof CLIOption) {
                                 LogManager.log(ErrorLevel.MESSAGE, "... adding CLI class : " + obj.getClass().getName());

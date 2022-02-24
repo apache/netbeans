@@ -152,7 +152,7 @@ final class ComboBoxAutoCompleteSupport {
         return -1;
     }
 
-    private static JList getPopupList( JComboBox combo ) {
+    private static JList<Object> getPopupList( JComboBox<Object> combo ) {
         Accessible a = combo.getUI().getAccessibleChild(combo, 0);
 
         if( a instanceof ComboPopup ) {

@@ -120,13 +120,13 @@ final class AquaVectorTabControlIcon extends VectorIcon {
             default:
                 throw new IllegalArgumentException();
         }
-        toMap.put(new SimpleEntry<Integer,Integer>(buttonId, buttonState),
+        toMap.put(new SimpleEntry<>(buttonId, buttonState),
                 new AquaVectorTabControlIcon(buttonId, buttonState, width, height));
     }
 
     private static Map<Entry<Integer,Integer>,Icon> populateInstances() {
         // The string keys of these maps aren't currently used, but are useful for debugging.
-        Map<String, Integer> buttonIDs = new LinkedHashMap<String, Integer>();
+        Map<String, Integer> buttonIDs = new LinkedHashMap<>();
         // ViewTabDisplayerUI
         buttonIDs.put("close", TabControlButton.ID_CLOSE_BUTTON);
         // These don't seem to be in use anymore.
@@ -142,12 +142,12 @@ final class AquaVectorTabControlIcon extends VectorIcon {
         buttonIDs.put("drop_down", TabControlButton.ID_DROP_DOWN_BUTTON);
         buttonIDs.put("maximize", TabControlButton.ID_MAXIMIZE_BUTTON);
         buttonIDs.put("restore", TabControlButton.ID_RESTORE_BUTTON);
-        Map<String, Integer> buttonStates = new LinkedHashMap<String, Integer>();
+        Map<String, Integer> buttonStates = new LinkedHashMap<>();
         buttonStates.put("default", TabControlButton.STATE_DEFAULT);
         buttonStates.put("pressed", TabControlButton.STATE_PRESSED);
         buttonStates.put("disabled", TabControlButton.STATE_DISABLED);
         buttonStates.put("rollover", TabControlButton.STATE_ROLLOVER);
-        Map<Entry<Integer,Integer>,Icon> ret = new LinkedHashMap<Entry<Integer,Integer>,Icon>();
+        Map<Entry<Integer,Integer>,Icon> ret = new LinkedHashMap<>();
         for (Entry<String,Integer> buttonID : buttonIDs.entrySet()) {
           for (Entry<String,Integer> buttonState : buttonStates.entrySet()) {
               populateOne(ret, buttonID.getValue(), buttonState.getValue());
@@ -167,7 +167,7 @@ final class AquaVectorTabControlIcon extends VectorIcon {
      * @return null if the requested icon is not available in vector format
      */
     public static Icon get(int buttonId, int buttonState) {
-        return INSTANCES.get(new SimpleEntry<Integer,Integer>(buttonId, buttonState));
+        return INSTANCES.get(new SimpleEntry<>(buttonId, buttonState));
     }
 
     @Override

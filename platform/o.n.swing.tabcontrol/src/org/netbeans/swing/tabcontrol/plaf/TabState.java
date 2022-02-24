@@ -26,6 +26,7 @@ import java.util.Iterator;
 import java.util.List;
 import javax.swing.Timer;
 import javax.swing.event.ListDataEvent;
+import org.netbeans.swing.tabcontrol.TabData;
 import org.netbeans.swing.tabcontrol.event.ArrayDiff;
 import org.netbeans.swing.tabcontrol.event.ComplexListDataEvent;
 import org.netbeans.swing.tabcontrol.event.VeryComplexListDataEvent;
@@ -421,19 +422,19 @@ public abstract class TabState {
     }
     
     private boolean isAlarmTab (int tab) {
-        return attentionToggle && alarmTabs.contains(new Integer(tab));
+        return attentionToggle && alarmTabs.contains(tab);
     }
     
-    private final HashSet<Integer> alarmTabs = new HashSet<Integer>(6);
+    private final HashSet<Integer> alarmTabs = new HashSet<>(6);
     
     /** Add a tab to the list of those which should "flash" or otherwise give
      * some notification to the user to get their attention */
     public final void addAlarmTab (int alarmTab) {
-        Integer in = new Integer(alarmTab);
+        Integer in = alarmTab;
         boolean added = alarmTabs.contains(in);
         boolean wasEmpty = alarmTabs.isEmpty();
         if (!added) {
-            alarmTabs.add (new Integer(alarmTab));
+            alarmTabs.add (alarmTab);
             repaintTab (alarmTab);
         }
         if (wasEmpty) {
@@ -443,7 +444,7 @@ public abstract class TabState {
         }
     }
 
-    private final HashSet<Integer> highlightTabs = new HashSet<Integer>(6);
+    private final HashSet<Integer> highlightTabs = new HashSet<>(6);
 
     private boolean isHighlightTab(int tab) {
         return highlightTabs.contains( tab ) && !alarmTabs.contains( tab );
@@ -464,7 +465,7 @@ public abstract class TabState {
     /** Remove a tab to the list of those which should "flash" or otherwise give
      * some notification to the user to get their attention */
     public final void removeAlarmTab (int alarmTab) {
-        Integer in = new Integer(alarmTab);
+        Integer in = alarmTab;
         boolean contained = alarmTabs.contains(in);
         if (contained) {
             alarmTabs.remove(in);
@@ -504,8 +505,8 @@ public abstract class TabState {
                         stopAlarmTimer();
                     }
                     attentionToggle = !attentionToggle;
-                    for (Iterator i=alarmTabs.iterator(); i.hasNext();) {
-                        repaintTab (((Integer) i.next()).intValue());
+                    for (Iterator<Integer> i=alarmTabs.iterator(); i.hasNext();) {
+                        repaintTab(i.next());
                     }
                 }
             };
@@ -546,13 +547,13 @@ public abstract class TabState {
         if (!(hasAlarmTabs() || hasHighlightTabs())) {
             return;
         }
-        for (Iterator i=alarmTabs.iterator(); i.hasNext();) {
-            if (((Integer) i.next()).intValue() >= max) {
+        for (Iterator<Integer> i=alarmTabs.iterator(); i.hasNext();) {
+            if (i.next() >= max) {
                 i.remove();
             }
         }
-        for (Iterator i=highlightTabs.iterator(); i.hasNext();) {
-            if (((Integer) i.next()).intValue() >= max) {
+        for (Iterator<Integer> i=highlightTabs.iterator(); i.hasNext();) {
+            if (i.next() >= max) {
                 i.remove();
             }
         }
@@ -562,7 +563,7 @@ public abstract class TabState {
     }
     
     int[] getAlarmTabs() {
-        int[] alarms = (int[]) Utilities.toPrimitiveArray((Integer[]) alarmTabs.toArray(new Integer[0]));
+        int[] alarms = (int[]) Utilities.toPrimitiveArray(alarmTabs.toArray(new Integer[0]));
         Arrays.sort(alarms);
         return alarms;
     }
@@ -573,7 +574,7 @@ public abstract class TabState {
         int start = evt.getIndex0();
         int end = evt.getIndex1();
         if (hasAlarmTabs()) {
-            int[] alarms = (int[]) Utilities.toPrimitiveArray((Integer[]) alarmTabs.toArray(new Integer[0]));
+            int[] alarms = (int[]) Utilities.toPrimitiveArray(alarmTabs.toArray(new Integer[0]));
             boolean changed = false;
             for (int i=0; i < alarms.length; i++) {
                 if (alarms[i] >= start) {
@@ -589,7 +590,7 @@ public abstract class TabState {
             }
         }
         if( hasHighlightTabs() ) {
-            int[] highlights = (int[]) Utilities.toPrimitiveArray((Integer[]) highlightTabs.toArray(new Integer[0]));
+            int[] highlights = (int[]) Utilities.toPrimitiveArray(highlightTabs.toArray(new Integer[0]));
             boolean changed = false;
             for (int i=0; i < highlights.length; i++) {
                 if (highlights[i] >= start) {
@@ -611,7 +612,7 @@ public abstract class TabState {
             int start = evt.getIndex0();
             int end = evt.getIndex1();
 
-            int[] alarms = (int[]) Utilities.toPrimitiveArray((Integer[]) alarmTabs.toArray(new Integer[0]));
+            int[] alarms = (int[]) Utilities.toPrimitiveArray(alarmTabs.toArray(new Integer[0]));
             Arrays.sort(alarms);
 
             if (end == start) {
@@ -671,7 +672,7 @@ public abstract class TabState {
             int start = evt.getIndex0();
             int end = evt.getIndex1();
 
-            int[] highlights = (int[]) Utilities.toPrimitiveArray((Integer[]) highlightTabs.toArray(new Integer[0]));
+            int[] highlights = (int[]) Utilities.toPrimitiveArray(highlightTabs.toArray(new Integer[0]));
             Arrays.sort(highlights);
 
             boolean changed = false;
@@ -700,7 +701,7 @@ public abstract class TabState {
     
     void indicesAdded (ComplexListDataEvent e) {
         if (hasAlarmTabs()) {
-            int[] alarms = (int[]) Utilities.toPrimitiveArray((Integer[]) alarmTabs.toArray(new Integer[0]));
+            int[] alarms = (int[]) Utilities.toPrimitiveArray(alarmTabs.toArray(new Integer[0]));
             java.util.Arrays.sort(alarms);
 
             int[] indices = e.getIndices();
@@ -725,7 +726,7 @@ public abstract class TabState {
             }
         }
         if( hasHighlightTabs() ) {
-            int[] highlights = (int[]) Utilities.toPrimitiveArray((Integer[]) highlightTabs.toArray(new Integer[0]));
+            int[] highlights = (int[]) Utilities.toPrimitiveArray(highlightTabs.toArray(new Integer[0]));
             java.util.Arrays.sort(highlights);
 
             int[] indices = e.getIndices();
@@ -756,7 +757,7 @@ public abstract class TabState {
             int[] indices = e.getIndices();
             java.util.Arrays.sort(indices);
 
-            int[] alarms = (int[]) Utilities.toPrimitiveArray((Integer[]) alarmTabs.toArray(new Integer[0]));
+            int[] alarms = (int[]) Utilities.toPrimitiveArray(alarmTabs.toArray(new Integer[0]));
             java.util.Arrays.sort(alarms);
 
             if (alarms[alarms.length -1] >= indices[0]) {
@@ -803,7 +804,7 @@ public abstract class TabState {
             int[] indices = e.getIndices();
             java.util.Arrays.sort(indices);
 
-            int[] highlights = (int[]) Utilities.toPrimitiveArray((Integer[]) highlightTabs.toArray(new Integer[0]));
+            int[] highlights = (int[]) Utilities.toPrimitiveArray(highlightTabs.toArray(new Integer[0]));
             java.util.Arrays.sort(highlights);
 
             if (highlights[highlights.length -1] >= indices[0]) {
@@ -849,10 +850,10 @@ public abstract class TabState {
 
                 ArrayDiff dif = ((VeryComplexListDataEvent) e).getDiff();
 
-                List old = Arrays.asList(dif.getOldData());
-                List nue = Arrays.asList(dif.getNewData());
+                List<TabData> old = Arrays.asList(dif.getOldData());
+                List<TabData> nue = Arrays.asList(dif.getNewData());
 
-                int[] alarms = (int[]) Utilities.toPrimitiveArray((Integer[]) alarmTabs.toArray(new Integer[0]));
+                int[] alarms = (int[]) Utilities.toPrimitiveArray(alarmTabs.toArray(new Integer[0]));
 
                 boolean changed = false;
                 for (int i=0; i < alarms.length; i++) {
@@ -879,13 +880,12 @@ public abstract class TabState {
         if( hasHighlightTabs() ) {
             if (e instanceof VeryComplexListDataEvent) { //it always will be
                 VeryComplexListDataEvent ve = (VeryComplexListDataEvent) e;
+                ArrayDiff dif = ve.getDiff();
 
-                ArrayDiff dif = ((VeryComplexListDataEvent) e).getDiff();
+                List<TabData> old = Arrays.asList(dif.getOldData());
+                List<TabData> nue = Arrays.asList(dif.getNewData());
 
-                List old = Arrays.asList(dif.getOldData());
-                List nue = Arrays.asList(dif.getNewData());
-
-                int[] highlights = (int[]) Utilities.toPrimitiveArray((Integer[]) highlightTabs.toArray(new Integer[0]));
+                int[] highlights = (int[]) Utilities.toPrimitiveArray(highlightTabs.toArray(new Integer[0]));
 
                 boolean changed = false;
                 for (int i=0; i < highlights.length; i++) {

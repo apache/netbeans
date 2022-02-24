@@ -28,7 +28,7 @@ import javax.swing.Icon;
  *
  * @author mkrauskopf
  */
-public class SwitcherTableItem implements Comparable {
+public class SwitcherTableItem implements Comparable<Object> {
 
     /** Item's name. Base name used by the <code>SwitcherTable</code> */
     private String name;

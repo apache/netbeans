@@ -360,7 +360,7 @@ public class TabbedContainer extends JComponent implements Accessible {
         updateUI();
         //A few borders and such will check this
         //@see org.netbeans.swing.plaf.gtk.AdaptiveMatteBorder
-        putClientProperty ("viewType", new Integer(type)); //NOI18N
+        putClientProperty("viewType", type); //NOI18N
     }
     
     /**
@@ -666,7 +666,7 @@ public class TabbedContainer extends JComponent implements Accessible {
      */
     public final synchronized void addActionListener(ActionListener listener) {
         if (actionListenerList == null) {
-            actionListenerList = new ArrayList<ActionListener>();
+            actionListenerList = new ArrayList<>();
         }
         actionListenerList.add(listener);
     }
@@ -931,7 +931,7 @@ public class TabbedContainer extends JComponent implements Accessible {
             Component c = getModel().getTab(0).getComponent();
             if( c instanceof JComponent ) {
                 Object val = ((JComponent)c).getClientProperty("isSliding"); //NOI18N
-                res = null != val && val instanceof Boolean && ((Boolean)val).booleanValue();
+                res = null != val && Boolean.TRUE.equals(val);
             }
         }
         return res;

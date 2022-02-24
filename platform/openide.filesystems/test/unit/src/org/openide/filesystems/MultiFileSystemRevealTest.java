@@ -56,6 +56,7 @@ public class MultiFileSystemRevealTest  extends NbTestCase {
                 "folder/file3",
             })
         );
+        @SuppressWarnings("unchecked")
         Collection<FileObject> fos = (Collection<FileObject>)fs.findResource("folder").getAttribute("revealEntries");
         assertTrue(fos.isEmpty());
     }
@@ -83,6 +84,7 @@ public class MultiFileSystemRevealTest  extends NbTestCase {
             TestUtilHid.createXMLFileSystem(getName() + "2", root2),
             TestUtilHid.createXMLFileSystem(getName() + "3", root3)
         );
+        @SuppressWarnings("unchecked")
         Collection<FileObject> fos = (Collection<FileObject>)fs.findResource("folder").getAttribute("revealEntries");
         FileObject f = findFile(fos, "file1");
         assertNotNull("Delete file1 should be revealed", f);
@@ -155,6 +157,7 @@ public class MultiFileSystemRevealTest  extends NbTestCase {
             TestUtilHid.createXMLFileSystem(getName() + "3", root3)
         );
         
+        @SuppressWarnings("unchecked")
         Collection<FileObject> fos = (Collection<FileObject>)fs.findResource("folder").getAttribute("revealEntries");
         FileObject f = findFile(fos, "file1");
         assertNotNull("Delete file1 should be revealed", f);
@@ -209,6 +212,7 @@ public class MultiFileSystemRevealTest  extends NbTestCase {
                 "folder/file3",
             })
         );
+        @SuppressWarnings("unchecked")
         Collection<FileObject> fos = (Collection<FileObject>)fs.findResource("folder").getAttribute("revealEntries");
         assertTrue(fos.isEmpty());
     }
@@ -232,7 +236,9 @@ public class MultiFileSystemRevealTest  extends NbTestCase {
                 "folder/file3",
             })
         );
-        Collection<FileObject> fos = (Collection<FileObject>)fs.findResource("folder").getAttribute("revealEntries");
+        @SuppressWarnings("unchecked")
+
+                Collection<FileObject> fos = (Collection<FileObject>)fs.findResource("folder").getAttribute("revealEntries");
         assertNull("Readonly MFS does not support revealEntries", fos);
     }
 }

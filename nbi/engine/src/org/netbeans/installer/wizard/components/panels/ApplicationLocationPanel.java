@@ -329,7 +329,7 @@ public abstract class ApplicationLocationPanel extends ErrorMessagePanel {
             final String value = locationField.getText().trim();
             
             for (int i = 0; i < model.getSize(); i++) {
-                final String element = (String) model.getLocationAt(i).getAbsolutePath();
+                final String element = model.getLocationAt(i).getAbsolutePath();
                 
                 if (value.equals(element)) {
                     locationsList.setSelectedIndex(i);
@@ -341,14 +341,14 @@ public abstract class ApplicationLocationPanel extends ErrorMessagePanel {
         }
     }
     
-    public static class LocationsListCellRenderer extends JLabel implements ListCellRenderer {
+    public static class LocationsListCellRenderer extends JLabel implements ListCellRenderer<String> {
         public LocationsListCellRenderer() {
             setBorder(new EmptyBorder(3, 3, 3, 3));
         }
         
-        public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-            setText(value.toString());
-            setToolTipText(value.toString());
+        public Component getListCellRendererComponent(JList<? extends String> list, String value, int index, boolean isSelected, boolean cellHasFocus) {
+            setText(value);
+            setToolTipText(value);
             
             if (isSelected) {
                 setBackground(list.getSelectionBackground());
@@ -364,7 +364,7 @@ public abstract class ApplicationLocationPanel extends ErrorMessagePanel {
         }
     }
     
-    public static class LocationsListModel implements ListModel {
+    public static class LocationsListModel implements ListModel<String> {
         private List<File> locations;
         private List<String> labels;
         
@@ -377,7 +377,7 @@ public abstract class ApplicationLocationPanel extends ErrorMessagePanel {
             return locations.size();
         }
         
-        public Object getElementAt(int index) {
+        public String getElementAt(int index) {
             return getLabelAt(index);
         }
         
@@ -481,7 +481,7 @@ public abstract class ApplicationLocationPanel extends ErrorMessagePanel {
         }
     }
     
-    public static class LocationsComboBoxModel implements ComboBoxModel {
+    public static class LocationsComboBoxModel implements ComboBoxModel<String> {
         private List<ListDataListener> listeners;
         
         private List<String> locations;
@@ -527,6 +527,7 @@ public abstract class ApplicationLocationPanel extends ErrorMessagePanel {
         }
         
         // comboboxmodel ////////////////////////////////////////////////////////////
+        @Override
         public void setSelectedItem(Object item) {
             selectedItem = (String) item;
             
@@ -547,7 +548,7 @@ public abstract class ApplicationLocationPanel extends ErrorMessagePanel {
             return labels.size();
         }
         
-        public Object getElementAt(int index) {
+        public String getElementAt(int index) {
             return labels.get(index);
         }
         

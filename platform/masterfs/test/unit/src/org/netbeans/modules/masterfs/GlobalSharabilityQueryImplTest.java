@@ -64,9 +64,9 @@ public class GlobalSharabilityQueryImplTest extends TestCase {
                     new File("/myroot/mydirectory/_svn")
         };
         
-        for (int i = 0; i < all.length; i++) {
-            boolean isNotSharable = sq.getSharability(Utilities.toURI(all[i])) == SharabilityQuery.Sharability.NOT_SHARABLE;
-            boolean isNotVisible = !vq.isVisible(all[i].getName());
+        for (File all1 : all) {
+            boolean isNotSharable = sq.getSharability(Utilities.toURI(all1)) == SharabilityQuery.Sharability.NOT_SHARABLE;
+            boolean isNotVisible = !vq.isVisible(all1.getName());
             assertEquals(isNotSharable, isNotVisible);
         }
     }

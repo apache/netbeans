@@ -41,7 +41,7 @@ import java.awt.*;
  * @see TabDataModel
  * @see DefaultTabDataModel
  */
-public final class TabData implements Comparable {
+public final class TabData implements Comparable<Object> {
     //Fields below are intentionally package-private, not private.
     Icon icon;
     String txt;

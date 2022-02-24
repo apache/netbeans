@@ -305,7 +305,7 @@ public class SwitcherTable extends JTable {
         }
         if (result == null) {
             result = new BufferedImage(10, 10, BufferedImage.TYPE_INT_RGB);
-            ctx = new SoftReference<BufferedImage>(result);
+            ctx = new SoftReference<>(result);
         }
         return (Graphics2D) result.getGraphics();
     }

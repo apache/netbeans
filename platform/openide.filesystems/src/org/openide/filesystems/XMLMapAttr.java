@@ -108,7 +108,7 @@ import org.openide.util.io.NbObjectInputStream;
  * @author rmatous
  */
 @SuppressWarnings("unchecked")
-final class XMLMapAttr implements Map {
+final class XMLMapAttr implements Map<String, Object> {
     Map<String, Attr> map;
 
     /** Creates new XMLMapAttr and delegetaor is instanced */
@@ -250,7 +250,7 @@ final class XMLMapAttr implements Map {
      * @return previous value associated with specified key, or null if there was no mapping for key.
      * A null return can also indicate that the HashMap previously associated null with the specified key.
      */
-    public synchronized Object put(final Object p1, final Object p2) {
+    public synchronized Object put(final String p1, final Object p2) {
         return put(p1, p2, true);
     }
 
@@ -320,13 +320,13 @@ final class XMLMapAttr implements Map {
 
         //pw.println(blockPrefix+"<fileobject name=\""+fileName+"\">");// NOI18N
         SortedSet<String> attrNames = new TreeSet<String>();
-        Iterator entryIter = map.entrySet().iterator();
+        Iterator<Map.Entry<String, Attr>> entryIter = map.entrySet().iterator();
 
         while (entryIter.hasNext()) {
-            Map.Entry entry = (Map.Entry) entryIter.next();
+            Map.Entry<String, Attr> entry = entryIter.next();
 
-            String attrName = (String) entry.getKey();
-            Attr attr = (Attr) entry.getValue();
+            String attrName = entry.getKey();
+            Attr attr = entry.getValue();
 
             if ((attrName == null) || (attr == null) || (attrName.length() == 0) || (attr.isValid() == -1)) {
                 if ((attrName != null) && (attrName.length() != 0) && ((attr == null) || (attr.isValid() == -1))) {
@@ -339,10 +339,10 @@ final class XMLMapAttr implements Map {
             attrNames.add(attrName);
         }
 
-        entryIter = attrNames.iterator();
+        Iterator<String> attrNamesIter = attrNames.iterator();
 
-        while (entryIter.hasNext()) {
-            String attrName = (String) entryIter.next();
+        while (attrNamesIter.hasNext()) {
+            String attrName = attrNamesIter.next();
             Attr attr = map.get(attrName);
 
             if (attr != null) {
@@ -403,15 +403,20 @@ final class XMLMapAttr implements Map {
         return map.keySet();
     }
 
+    // XXX this is wrong - values not translated
+    @SuppressWarnings("rawtypes")
     public synchronized java.util.Collection values() {
         return map.values();
     }
 
     // XXX this is wrong - values not translated
+    @SuppressWarnings("rawtypes")
     public synchronized java.util.Set entrySet() {
         return map.entrySet();
     }
 
+    // XXX this is wrong - values not translated
+    @SuppressWarnings("rawtypes")
     public synchronized void putAll(java.util.Map p1) {
         map.putAll(p1);
     }
@@ -946,7 +951,7 @@ final class XMLMapAttr implements Map {
                         return new URL(value);
                     case 12:
                         // special support for singletons
-                        Class cls = ExternalUtil.findClass(BaseUtilities.translate(value));
+                        Class<?> cls = ExternalUtil.findClass(BaseUtilities.translate(value));
                         return RecognizeInstanceFiles.createInstance(cls);
                     case 13:
                         String[] arr = value.split("#", 2); // NOI18N
@@ -991,7 +996,7 @@ final class XMLMapAttr implements Map {
             int sepIdx = value.lastIndexOf('.');
             if (sepIdx != -1) {
                 String methodName = value.substring(sepIdx + 1);
-                Class cls = ExternalUtil.findClass(value.substring(0, sepIdx));
+                Class<?> cls = ExternalUtil.findClass(value.substring(0, sepIdx));
                 FileObject fo = null;
                 String attrName = null;
 
@@ -1005,12 +1010,12 @@ final class XMLMapAttr implements Map {
                     }
                 }
 
-                Class[][] paramArray = {
+                Class<?>[][] paramArray = {
                         { FileObject.class, String.class }, { String.class, FileObject.class },
                         { FileObject.class }, { String.class }, {  },
                         { Map.class, String.class }, { Map.class },
                     };
-                for (Class[] paramTypes : paramArray) {
+                for (Class<?>[] paramTypes : paramArray) {
                     Method m;
                     try {
                         m = cls.getDeclaredMethod(methodName, paramTypes);
@@ -1034,7 +1039,7 @@ final class XMLMapAttr implements Map {
             throw new InstantiationException(value);
         }
 
-        static final Map wrapToMap(FileObject fo) {
+        static final Map<String, Object> wrapToMap(FileObject fo) {
             return fo == null ? Collections.emptyMap() : new FileMap(fo);
         }
 

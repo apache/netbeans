@@ -58,7 +58,7 @@ public class URLMapperLookupTest extends NbTestCase {
 
     /** This is a pair that as a part of its instanceOf method queries the URL resolver.
      */
-    private static class QueryingPair extends org.openide.util.lookup.AbstractLookup.Pair {
+    private static class QueryingPair extends org.openide.util.lookup.AbstractLookup.Pair<QueryingPair> {
         public boolean beBroken;
         
         public java.lang.String getId() {
@@ -69,7 +69,7 @@ public class URLMapperLookupTest extends NbTestCase {
             return getId ();
         }
 
-        public java.lang.Class getType() {
+        public java.lang.Class<? extends QueryingPair> getType() {
             return getClass ();
         }
 
@@ -77,7 +77,7 @@ public class URLMapperLookupTest extends NbTestCase {
             return obj == this;
         }
 
-        protected boolean instanceOf(java.lang.Class c) {
+        protected boolean instanceOf(java.lang.Class<?> c) {
             if (beBroken) {
                 beBroken = false;
                 try {
@@ -93,7 +93,7 @@ public class URLMapperLookupTest extends NbTestCase {
             return c.isAssignableFrom(getType ());
         }
 
-        public java.lang.Object getInstance() {
+        public QueryingPair getInstance() {
             return this;
         }
     }
@@ -121,7 +121,7 @@ public class URLMapperLookupTest extends NbTestCase {
         
         private Lkp (org.openide.util.lookup.InstanceContent ic) {
             super (ic);
-            this.ic = ic;
+            Lkp.ic = ic;
         }
 
         protected void initialize() {

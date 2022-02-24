@@ -423,8 +423,8 @@ public final class UiUtils {
             if (Boolean.getBoolean("nbi.look.and.feel.dump.defaults")) {
                 try {
                     LogManager.logIndent("... dumping UIManger L&F defaults: ");
-                    Hashtable hash = (Hashtable) UIManager.getLookAndFeelDefaults();
-                    Enumeration keys = hash.keys();
+                    Hashtable<Object, Object> hash = UIManager.getLookAndFeelDefaults();
+                    Enumeration<Object> keys = hash.keys();
                     while (keys.hasMoreElements()) {
                         Object key = keys.nextElement();
                         LogManager.log("" + key + " = " + hash.get(key));

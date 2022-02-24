@@ -23,7 +23,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
-import static junit.framework.Assert.*;
+import static org.junit.Assert.assertTrue;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 

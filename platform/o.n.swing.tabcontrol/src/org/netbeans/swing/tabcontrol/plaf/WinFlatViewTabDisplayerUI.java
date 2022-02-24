@@ -248,7 +248,7 @@ public class WinFlatViewTabDisplayerUI extends AbstractViewTabDisplayerUI {
 
             if (underlineHeight > 0) {
                 // paint underline if tab is selected
-                int underlineHeight = (int) Math.round(this.underlineHeight * scale);
+                int underlineHeight = (int) Math.round(WinFlatViewTabDisplayerUI.underlineHeight * scale);
                 g.setColor(isActive() ? underlineColor : inactiveUnderlineColor);
                 if (underlineAtTop) {
                     g.fillRect(0, 0, width - tabSeparatorWidth, underlineHeight);

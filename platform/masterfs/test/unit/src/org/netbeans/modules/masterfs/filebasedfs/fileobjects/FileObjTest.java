@@ -137,9 +137,9 @@ public class FileObjTest extends NbTestCase {
         TestFileChangeListener listener = new TestFileChangeListener();
         fo.addFileChangeListener(listener);
         
-        OutputStream os = fo.getOutputStream();
-        os.write("Ahoj everyone!\n".getBytes("UTF-8"));
-        os.close();
+        try (OutputStream os = fo.getOutputStream()) {
+            os.write("Ahoj everyone!\n".getBytes("UTF-8"));
+        }
 
         assertEquals("Only one change event should be fired.", 1, listener.check(EventType.CHANGED));
     }
@@ -239,11 +239,8 @@ public class FileObjTest extends NbTestCase {
             assertEquals(attValue, val);
 
             FileObject fob = FileUtil.toFileObject(f);
-            OutputStream os = fob.getOutputStream();
-            try {
+            try (OutputStream os = fob.getOutputStream()) {
                 os.write(55);
-            } finally {
-                os.close();
             }
 
             buffer.rewind();

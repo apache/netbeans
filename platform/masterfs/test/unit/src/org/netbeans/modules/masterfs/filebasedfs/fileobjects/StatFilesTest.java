@@ -74,7 +74,7 @@ public class StatFilesTest extends NbTestCase {
 
     public void testToFileObject() throws IOException {
         File workDir = getWorkDir();
-        assertGC("NamingFactory not cleared.", new WeakReference<FileNaming>(NamingFactory.fromFile(workDir)));
+        assertGC("NamingFactory not cleared.", new WeakReference<>(NamingFactory.fromFile(workDir)));
         monitor.reset();
         monitor();
         assertNotNull(FileUtil.toFileObject(workDir));
@@ -89,9 +89,9 @@ public class StatFilesTest extends NbTestCase {
     /** Tests it is not neccessary to create FileObjects for the whole path. */
     public void testGetFileObject23() throws IOException {
         File workDir = getWorkDir();
-        assertGC("NamingFactory not cleared.", new WeakReference<FileNaming>(NamingFactory.fromFile(workDir)));
+        assertGC("NamingFactory not cleared.", new WeakReference<>(NamingFactory.fromFile(workDir)));
         File rootFile = null;
-        Stack<String> stack = new Stack<String>();
+        Stack<String> stack = new Stack<>();
         while (workDir != null) {
             stack.push(workDir.getName());
             rootFile = workDir;
@@ -110,7 +110,7 @@ public class StatFilesTest extends NbTestCase {
     public void testGetCachedChildren() throws IOException {
         FileObject fobj = getFileObject(testFile);
         FileObject parent = fobj.getParent();
-        List<FileObject> l = new ArrayList<FileObject>();
+        List<FileObject> l = new ArrayList<>();
         parent = parent.createFolder("parent");
         for (int i = 0; i < 10; i++) {
             l.add(parent.createData("file" + i));
@@ -133,7 +133,7 @@ public class StatFilesTest extends NbTestCase {
     public void testGetChildrenCaches() throws IOException {
         FileObject fobj = getFileObject(testFile);
         FileObject parent = fobj.getParent();
-        List<FileObject> l = new ArrayList<FileObject>();
+        List<FileObject> l = new ArrayList<>();
         parent = parent.createFolder("parent");
         for (int i = 0; i < 20; i++) {
             l.add(parent.createData("file" + i + ".txt"));
@@ -200,11 +200,11 @@ public class StatFilesTest extends NbTestCase {
 
     public void testIssueFileObject() throws IOException {
         FileObject parent = FileBasedFileSystem.getFileObject(testFile).getParent();
-        assertGC("NamingFactory not cleared.", new WeakReference<FileNaming>(NamingFactory.fromFile(testFile)));
+        assertGC("NamingFactory not cleared.", new WeakReference<>(NamingFactory.fromFile(testFile)));
 
         //parent exists with cached info + testFile not exists
         monitor.reset();
-        assertGC("", new WeakReference<FileObject>(FileBasedFileSystem.getFileObject(testFile)));
+        assertGC("", new WeakReference<>(FileBasedFileSystem.getFileObject(testFile)));
         assertNotNull(FileBasedFileSystem.getFileObject(testFile));
         monitor.getResults().assertResult(2, StatFiles.ALL);
         monitor.getResults().assertResult(2, StatFiles.READ);
@@ -212,16 +212,16 @@ public class StatFilesTest extends NbTestCase {
         //parent not exists + testFile not exists
         monitor.reset();
         parent = null;
-        assertGC("", new WeakReference<FileObject>(parent));
-        assertGC("", new WeakReference<FileObject>(FileBasedFileSystem.getFileObject((testFile))));
-        assertGC("NamingFactory not cleared.", new WeakReference<FileNaming>(NamingFactory.fromFile(testFile)));
+        assertGC("", new WeakReference<>(parent));
+        assertGC("", new WeakReference<>(FileBasedFileSystem.getFileObject((testFile))));
+        assertGC("NamingFactory not cleared.", new WeakReference<>(NamingFactory.fromFile(testFile)));
         assertNotNull(FileBasedFileSystem.getFileObject((testFile)));
         monitor.getResults().assertResult(3, StatFiles.ALL);
         monitor.getResults().assertResult(3, StatFiles.READ);
 
 
         parent = FileBasedFileSystem.getFileObject((testFile)).getParent();
-        assertGC("NamingFactory not cleared.", new WeakReference<FileNaming>(NamingFactory.fromFile(testFile)));
+        assertGC("NamingFactory not cleared.", new WeakReference<>(NamingFactory.fromFile(testFile)));
         monitor.reset();
         FileObject fobj = FileBasedFileSystem.getFileObject((testFile));
         assertNotNull(fobj);

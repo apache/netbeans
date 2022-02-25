@@ -168,13 +168,10 @@ final class BasicSearchForm extends JPanel implements ChangeListener,
     private void setContextAwareOptions(boolean searchAndReplace) {
         if (!searchAndReplace) {
             updateSearchInGeneratedForActiveTopComponent();
-            topComponentRegistryListener = new PropertyChangeListener() {
-                @Override
-                public void propertyChange(PropertyChangeEvent evt) {
-                    if (evt.getPropertyName().equals(
-                            TopComponent.Registry.PROP_ACTIVATED)) {
-                        updateSearchInGeneratedForActiveTopComponent();
-                    }
+            topComponentRegistryListener = (PropertyChangeEvent evt) -> {
+                if (evt.getPropertyName().equals(
+                        TopComponent.Registry.PROP_ACTIVATED)) {
+                    updateSearchInGeneratedForActiveTopComponent();
                 }
             };
             TopComponent.getRegistry().addPropertyChangeListener(
@@ -237,7 +234,7 @@ final class BasicSearchForm extends JPanel implements ChangeListener,
         }
 
         lblScope = new JLabel();
-        cboxScope = ComponentUtils.adjustComboForScope(new JComboBox<Object>(),
+        cboxScope = ComponentUtils.adjustComboForScope(new JComboBox<>(),
                 preferredSearchScopeType, extraSearchScopes);
         lblScope.setLabelFor(cboxScope.getComponent());
 
@@ -415,11 +412,7 @@ final class BasicSearchForm extends JPanel implements ChangeListener,
         cboxTextToFind.bindMatchTypeComboBox(textToFindType);
         cboxTextToFind.bind(Option.MATCH_CASE, chkCaseSensitive);
         cboxTextToFind.bind(Option.WHOLE_WORDS, chkWholeWords);
-        textToFindType.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-            }
+        textToFindType.addActionListener((ActionEvent e) -> {
         });
 
         boolean regexp = textToFindType.isRegexp();
@@ -431,53 +424,35 @@ final class BasicSearchForm extends JPanel implements ChangeListener,
         }
         searchCriteria.setUsabilityChangeListener(this);
 
-        scopeSettingsPanel.addChangeListener(new ChangeListener() {
-
-            @Override
-            public void stateChanged(ChangeEvent e) {
-                searchCriteria.setSearchInArchives(
-                        scopeSettingsPanel.isSearchInArchives());
-                searchCriteria.setSearchInGenerated(
-                        scopeSettingsPanel.isSearchInGenerated());
-                searchCriteria.setUseIgnoreList(
-                        scopeSettingsPanel.isUseIgnoreList());
-            }
+        scopeSettingsPanel.addChangeListener((ChangeEvent e) -> {
+            searchCriteria.setSearchInArchives(
+                    scopeSettingsPanel.isSearchInArchives());
+            searchCriteria.setSearchInGenerated(
+                    scopeSettingsPanel.isSearchInGenerated());
+            searchCriteria.setUseIgnoreList(
+                    scopeSettingsPanel.isUseIgnoreList());
         });
 
-        cboxFileNamePattern.addChangeListener(new ChangeListener() {
-
-            @Override
-            public void stateChanged(ChangeEvent e) {
-                searchCriteria.setFileNamePattern(
-                        cboxFileNamePattern.getFileNamePattern());
-                searchCriteria.setFileNameRegexp(
-                        cboxFileNamePattern.isRegularExpression());
-                updateFileNamePatternInfo();
-            }
+        cboxFileNamePattern.addChangeListener((ChangeEvent e) -> {
+            searchCriteria.setFileNamePattern(
+                    cboxFileNamePattern.getFileNamePattern());
+            searchCriteria.setFileNameRegexp(
+                    cboxFileNamePattern.isRegularExpression());
+            updateFileNamePatternInfo();
         });
 
-        cboxTextToFind.addChangeListener(new ChangeListener() {
-            @Override
-            public void stateChanged(ChangeEvent e) {
-                SearchPattern sp = cboxTextToFind.getSearchPattern();
-                searchCriteria.setTextPattern(sp.getSearchExpression());
-                searchCriteria.setMatchType(sp.getMatchType());
-                searchCriteria.setWholeWords(sp.isWholeWords());
-                searchCriteria.setCaseSensitive(sp.isMatchCase());
-            }
+        cboxTextToFind.addChangeListener((ChangeEvent e) -> {
+            SearchPattern sp = cboxTextToFind.getSearchPattern();
+            searchCriteria.setTextPattern(sp.getSearchExpression());
+            searchCriteria.setMatchType(sp.getMatchType());
+            searchCriteria.setWholeWords(sp.isWholeWords());
+            searchCriteria.setCaseSensitive(sp.isMatchCase());
         });
         initButtonInteraction();
     }
 
     private void initButtonInteraction() {
-       
-        btnTestTextToFind.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                openTextPatternSandbox();
-            }
-        });
+        btnTestTextToFind.addActionListener((ActionEvent e) -> openTextPatternSandbox());
     }
 
     private void openTextPatternSandbox() {
@@ -504,14 +479,14 @@ final class BasicSearchForm extends JPanel implements ChangeListener,
      */
     private void initHistory() {
 
-        List<ReplaceModelItem> entries = new ArrayList<ReplaceModelItem>(10);
+        List<ReplaceModelItem> entries = new ArrayList<>(10);
         if (cboxReplacement != null) {
             for (ReplacePattern replacePattern
                     : SearchHistory.getDefault().getReplacePatterns()) {
                 entries.add(0, new ReplaceModelItem(replacePattern));
             }
             if (!entries.isEmpty()) {
-                cboxReplacement.setModel(new ListComboBoxModel<ReplaceModelItem>(entries, true));
+                cboxReplacement.setModel(new ListComboBoxModel<>(entries, true));
             }
         }
     }
@@ -1117,7 +1092,7 @@ final class BasicSearchForm extends JPanel implements ChangeListener,
 
         private final JTextArea area = new JTextArea();
 
-        public MultiLineComboBoxEditor(JComboBox reference) {
+        public MultiLineComboBoxEditor(JComboBox<?> reference) {
             area.setWrapStyleWord(false);
             area.setLineWrap(false);
 

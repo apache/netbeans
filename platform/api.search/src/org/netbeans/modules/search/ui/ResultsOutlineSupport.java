@@ -102,7 +102,7 @@ public class ResultsOutlineSupport {
     private List<FileObject> rootFiles = null;
     private Node infoNode;
     private Node invisibleRoot;
-    private List<TableColumn> allColumns = new ArrayList<TableColumn>(5);
+    private List<TableColumn> allColumns = new ArrayList<>(5);
     private ETableColumnModel columnModel;
     private List<MatchingObjectNode> matchingObjectNodes;
     private boolean closed = false;
@@ -119,7 +119,7 @@ public class ResultsOutlineSupport {
         this.resultsNode = new ResultsNode(resultModel);
         this.infoNode = infoNode;
         this.invisibleRoot = new RootNode(resultsNode, infoNode);
-        this.matchingObjectNodes = new LinkedList<MatchingObjectNode>();
+        this.matchingObjectNodes = new LinkedList<>();
         createOutlineView();
     }
 
@@ -133,14 +133,11 @@ public class ResultsOutlineSupport {
         outlineView.addTreeExpansionListener(
                 new ExpandingTreeExpansionListener());
         outlineView.getOutline().setRootVisible(false);
-        outlineView.addHierarchyListener(new HierarchyListener() {
-            @Override
-            public void hierarchyChanged(HierarchyEvent e) {
-                if ((e.getChangeFlags() & HierarchyEvent.DISPLAYABILITY_CHANGED)
-                        != 0) {
-                    if (outlineView.isDisplayable()) {
-                        outlineView.expandNode(resultsNode);
-                    }
+        outlineView.addHierarchyListener((HierarchyEvent e) -> {
+            if ((e.getChangeFlags() & HierarchyEvent.DISPLAYABILITY_CHANGED)
+                    != 0) {
+                if (outlineView.isDisplayable()) {
+                    outlineView.expandNode(resultsNode);
                 }
             }
         });
@@ -444,12 +441,7 @@ public class ResultsOutlineSupport {
 
         public FlatChildren() {
             resultModel.addPropertyChangeListener(ResultModel.PROP_RESULTS_EDIT,
-                    new PropertyChangeListener() {
-                @Override
-                public void propertyChange(PropertyChangeEvent evt) {
-                    update();
-                }
-            });
+                    (PropertyChangeEvent evt) -> update());
         }
 
         @Override
@@ -521,7 +513,7 @@ public class ResultsOutlineSupport {
     }
 
     private List<FileObject> getRelativePath(FileObject parent, FileObject fo) {
-        List<FileObject> l = new LinkedList<FileObject>();
+        List<FileObject> l = new LinkedList<>();
         FileObject part = fo;
         while (part != null) {
             l.add(0, part);
@@ -576,7 +568,7 @@ public class ResultsOutlineSupport {
         private DataObject folder = null;
         private MatchingObject matchingObject = null;
         private List<FolderTreeItem> children =
-                new LinkedList<FolderTreeItem>();
+                new LinkedList<>();
         private boolean selected = true;
         PropertyChangeSupport changeSupport = new PropertyChangeSupport(this);
 
@@ -591,17 +583,13 @@ public class ResultsOutlineSupport {
                 FolderTreeItem parent) {
             this.parent = parent;
             this.matchingObject = matchingObject;
-            matchingObject.addPropertyChangeListener(
-                    new PropertyChangeListener() {
-                @Override
-                public void propertyChange(PropertyChangeEvent evt) {
-                    String pn = evt.getPropertyName();
-                    if (pn.equals(MatchingObject.PROP_SELECTED)) {
-                        setSelected(FolderTreeItem.this.matchingObject
-                                .isSelected());
-                    } else if (pn.equals(MatchingObject.PROP_REMOVED)) {
-                        remove();
-                    }
+            matchingObject.addPropertyChangeListener((PropertyChangeEvent evt) -> {
+                String pn = evt.getPropertyName();
+                if (pn.equals(MatchingObject.PROP_SELECTED)) {
+                    setSelected(FolderTreeItem.this.matchingObject
+                            .isSelected());
+                } else if (pn.equals(MatchingObject.PROP_REMOVED)) {
+                    remove();
                 }
             });
         }
@@ -621,13 +609,13 @@ public class ResultsOutlineSupport {
         }
 
         public synchronized List<FolderTreeItem> getChildren() {
-            return new ArrayList<FolderTreeItem>(children);
+            return new ArrayList<>(children);
         }
 
         public synchronized void remove() {
             // remove children first, then...
             // NOTE uses a copy of the children to prevent a ConcurrentModifcationException
-            for (FolderTreeItem fti : new ArrayList<FolderTreeItem>(children)) {
+            for (FolderTreeItem fti : new ArrayList<>(children)) {
                 if (fti.isPathLeaf()) {
                     // remove the matching node
                     fti.getMatchingObject().remove();
@@ -715,17 +703,14 @@ public class ResultsOutlineSupport {
                     Lookups.fixed(pathItem,
                     new ReplaceCheckableNode(pathItem, replacing),
                     pathItem.getFolder().getPrimaryFile()));
-            pathItem.addPropertyChangeListener(new PropertyChangeListener() {
-                @Override
-                public void propertyChange(PropertyChangeEvent evt) {
-                    fireIconChange();
-                    String prop = evt.getPropertyName();
-                    if (prop.equals(FolderTreeItem.PROP_SELECTED)) {
-                        toggleParentSelected(
-                                FolderTreeNode.this.getParentNode());
-                    } else if (prop.equals(FolderTreeItem.PROP_CHILDREN)) {
-                        toggleParentSelected(FolderTreeNode.this);
-                    }
+            pathItem.addPropertyChangeListener((PropertyChangeEvent evt) -> {
+                fireIconChange();
+                String prop = evt.getPropertyName();
+                if (prop.equals(FolderTreeItem.PROP_SELECTED)) {
+                    toggleParentSelected(
+                            FolderTreeNode.this.getParentNode());
+                } else if (prop.equals(FolderTreeItem.PROP_CHILDREN)) {
+                    toggleParentSelected(FolderTreeNode.this);
                 }
             });
             if (!pathItem.isPathLeaf()) {
@@ -787,13 +772,10 @@ public class ResultsOutlineSupport {
 
         public FolderTreeChildren(FolderTreeItem pathItem) {
             this.item = pathItem;
-            pathItem.addPropertyChangeListener(new PropertyChangeListener() {
-                @Override
-                public void propertyChange(PropertyChangeEvent evt) {
-                    if (evt.getPropertyName().equals(
-                            FolderTreeItem.PROP_CHILDREN)) {
-                        update();
-                    }
+            pathItem.addPropertyChangeListener((PropertyChangeEvent evt) -> {
+                if (evt.getPropertyName().equals(
+                        FolderTreeItem.PROP_CHILDREN)) {
+                    update();
                 }
             });
         }

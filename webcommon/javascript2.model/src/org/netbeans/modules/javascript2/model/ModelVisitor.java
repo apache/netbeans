@@ -645,20 +645,18 @@ public class ModelVisitor extends PathNodeVisitor implements ModelResolver {
 
     @Override
     public boolean enterCatchNode(CatchNode catchNode) {
-        Identifier exception = ModelElementFactory.create(parserResult, catchNode.getException());
-        if (exception != null) {
-            DeclarationScopeImpl inScope = modelBuilder.getCurrentDeclarationScope();
-            CatchBlockImpl catchBlock  = new CatchBlockImpl(inScope, exception,
-                    new OffsetRange(catchNode.getStart(), catchNode.getFinish()), parserResult.getSnapshot().getMimeType());
-            inScope.addDeclaredScope(catchBlock);
-            modelBuilder.setCurrentObject(catchBlock);
-        }
+        Identifier exception = catchNode.getException() == null ? null : ModelElementFactory.create(parserResult, catchNode.getException());
+        DeclarationScopeImpl inScope = modelBuilder.getCurrentDeclarationScope();
+        CatchBlockImpl catchBlock  = new CatchBlockImpl(inScope, exception,
+                new OffsetRange(catchNode.getStart(), catchNode.getFinish()), parserResult.getSnapshot().getMimeType());
+        inScope.addDeclaredScope(catchBlock);
+        modelBuilder.setCurrentObject(catchBlock);
         return super.enterCatchNode(catchNode);
     }
 
     @Override
     public Node leaveCatchNode(CatchNode catchNode) {
-        if (!EmbeddingHelper.containsGeneratedIdentifier(catchNode.getException().getName())) {
+        if (catchNode.getException() == null || !EmbeddingHelper.containsGeneratedIdentifier(catchNode.getException().getName())) {
             modelBuilder.reset();
         }
         return super.leaveCatchNode(catchNode);
@@ -1049,6 +1047,10 @@ public class ModelVisitor extends PathNodeVisitor implements ModelResolver {
                     jsFunction.setJsKind(JsElement.Kind.PROPERTY_SETTER);
                 } else {
                     jsFunction.setJsKind(JsElement.Kind.METHOD);
+                }
+                if(pNode.getKey() instanceof IdentNode
+                        && ((IdentNode) pNode.getKey()).isPrivate()) {
+                    isPrivilage = true;
                 }
             }
         } else if (lastVisited instanceof BinaryNode) {
@@ -2136,6 +2138,12 @@ public class ModelVisitor extends PathNodeVisitor implements ModelResolver {
 //                    }
                     property.getParent().addProperty(name.getName(), property);
                     property.setDeclared(true);
+                    if(key instanceof IdentNode
+                            && ((IdentNode) key).isPrivate()
+                            && property.getModifiers().contains(Modifier.PUBLIC)) {
+                        property.getModifiers().remove(Modifier.PUBLIC);
+                        property.getModifiers().add(Modifier.PROTECTED);
+                    }
                     if(value instanceof CallNode) {
                         // TODO for now, don't continue. There shoudl be handled cases liek
                         // in the testFiles/model/property02.js file

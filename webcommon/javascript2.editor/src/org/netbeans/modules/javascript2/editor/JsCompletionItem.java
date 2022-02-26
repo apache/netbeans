@@ -345,7 +345,7 @@ public class JsCompletionItem implements CompletionProposal {
             if (ts != null) {
                 ts.move(offset);
                 if (ts.moveNext()) {
-                    Token<? extends JsTokenId> token = LexUtilities.findPrevious(ts, Arrays.asList(JsTokenId.IDENTIFIER, JsTokenId.OPERATOR_DOT, JsTokenId.BLOCK_COMMENT, JsTokenId.WHITESPACE, JsTokenId.LINE_COMMENT, JsTokenId.EOL));
+                    Token<? extends JsTokenId> token = LexUtilities.findPrevious(ts, Arrays.asList(JsTokenId.IDENTIFIER, JsTokenId.PRIVATE_IDENTIFIER, JsTokenId.OPERATOR_DOT, JsTokenId.OPERATOR_OPTIONAL_ACCESS, JsTokenId.BLOCK_COMMENT, JsTokenId.WHITESPACE, JsTokenId.LINE_COMMENT, JsTokenId.EOL));
                     if (token.id() == JsTokenId.KEYWORD_NEW) {
                         isAfterNew = true;
                     }

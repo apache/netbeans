@@ -148,7 +148,7 @@ public class JsTypedTextInterceptor implements TypedTextInterceptor {
                             }
                             TokenId id = token.id();
 
-                            if (((id == JsTokenId.IDENTIFIER) && (token.length() == 1))
+                            if (((token.id() == JsTokenId.IDENTIFIER || token.id() == JsTokenId.PRIVATE_IDENTIFIER) && (token.length() == 1))
                                     || (id == JsTokenId.BRACKET_LEFT_BRACKET) || (id == JsTokenId.BRACKET_RIGHT_BRACKET)
                                     || (id == JsTokenId.BRACKET_LEFT_CURLY) || (id == JsTokenId.BRACKET_RIGHT_CURLY)
                                     || (id == JsTokenId.BRACKET_LEFT_PAREN) || (id == JsTokenId.BRACKET_RIGHT_PAREN)) {

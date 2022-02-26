@@ -29,12 +29,12 @@ import java.util.regex.Matcher;
 import org.netbeans.api.diff.Difference;
 
 /**
- * Internal Diff algorithm.
+ * Diff algorithm.
  * 
  * @author Maros Sandor
  * @author Martin Entlicher
  */
-class HuntDiff {
+public final class HuntDiff {
 
     private static final Pattern spaces = Pattern.compile("(\\s+)");
     

@@ -255,8 +255,10 @@ public class LSPBindings {
             synchronized (LSPBindings.class) {
                 ServerDescription description = project2MimeType2Server.getOrDefault(baseUri, Collections.emptyMap()).remove(mt);
                 // Remove any other mimetypes as well.
-                for(String anotherMT: description.mimeTypes) {
-                    project2MimeType2Server.get(baseUri).remove(anotherMT);
+                if (description != null) {
+                    for(String anotherMT: description.mimeTypes) {
+                        project2MimeType2Server.get(baseUri).remove(anotherMT);
+                    }
                 }
                 Reference<LSPBindings> bRef = description != null ? description.bindings : null;
                 LSPBindings b = bRef != null ? bRef.get() : null;

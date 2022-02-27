@@ -52,12 +52,15 @@
             <friend-packages>
                 <friend>org.netbeans.modules.websvc.jaxwsmodel</friend>
                 <friend>org.netbeans.modules.websvc.manager</friend>
-                <package>org.netbeans.modules.websvc.jaxws21</package>
+                <package>com.sun.tools.ws.processor.model</package>
+                <package>com.sun.tools.ws.processor.model.java</package>
+                <package>com.sun.tools.ws.processor.modeler</package>
+                <package>com.sun.tools.ws.processor.modeler.wsdl</package>
+                <package>com.sun.tools.ws.wscompile</package>
+                <package>com.sun.tools.ws.wsdl.document.soap</package>
+                <package>com.sun.tools.ws.wsdl.parser</package>
+                <package>com.sun.xml.ws.util</package>
             </friend-packages>
-            <public-packages>
-                <subpackages>com.oracle</subpackages>
-                <subpackages>com.sun</subpackages>
-            </public-packages>
             <class-path-extension>
                 <runtime-relative-path>ext/jaxws22/FastInfoset.jar</runtime-relative-path>
             </class-path-extension>

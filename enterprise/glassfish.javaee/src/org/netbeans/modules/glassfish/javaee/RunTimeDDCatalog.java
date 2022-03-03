@@ -365,8 +365,7 @@ public class RunTimeDDCatalog extends GrammarQueryManager implements CatalogRead
     public void removeCatalogListener(CatalogListener l) {
         if (null == l)
             return;
-        if (catalogListeners.contains(l))
-            catalogListeners.remove(l);
+        catalogListeners.remove(l);
     }
     
     public  void fireCatalogListeners() {

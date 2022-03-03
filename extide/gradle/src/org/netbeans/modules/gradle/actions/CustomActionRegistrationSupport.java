@@ -203,8 +203,9 @@ public class CustomActionRegistrationSupport {
         ProjectManager.mutex().writeAccess(() -> {
             try {
                 project.getProjectDirectory().getFileSystem().runAtomicAction(() -> {
-                    for (String s : configHolders.keySet()) {
-                        ActionsHolder h = configHolders.get(s);
+                    for (Map.Entry<String, ActionsHolder> entry : configHolders.entrySet()) {
+                        String s = entry.getKey();
+                        ActionsHolder h = entry.getValue();
                         List<ActionMapping> actions = new ArrayList<>(h.customActions.values());
                         Collections.sort(actions, ActionMapping::compareTo);
                         try {

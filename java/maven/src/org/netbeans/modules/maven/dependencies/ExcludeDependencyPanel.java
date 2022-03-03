@@ -155,8 +155,9 @@ public class ExcludeDependencyPanel extends javax.swing.JPanel {
 
     public Map<Artifact, List<DependencyNode>> getDependencyExcludes() {
         Map<Artifact, List<DependencyNode>> toRet = new HashMap<Artifact, List<DependencyNode>>();
-        for (ChangeListener list : change2Trans.keySet()) {
-            CheckNode trans = change2Trans.get(list);
+        for (Map.Entry<ChangeListener, CheckNode> entry : change2Trans.entrySet()) {
+            ChangeListener list = entry.getKey();
+            CheckNode trans = entry.getValue();
             List<CheckNode> refs = change2Refs.get(list);
             List<DependencyNode> nds = new ArrayList<DependencyNode>();
             for (CheckNode ref : refs) {

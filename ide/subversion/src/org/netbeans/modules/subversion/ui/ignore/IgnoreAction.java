@@ -147,8 +147,9 @@ public class IgnoreAction extends ContextAction {
                         return;
                     }
                 }
-                for (File parent : names.keySet()) {
-                    Set<String> patterns = names.get(parent);
+                for (Map.Entry<File, Set<String>> entry : names.entrySet()) {
+                    File parent = entry.getKey();
+                    Set<String> patterns = entry.getValue();
                     if(isCanceled()) {
                         return;
                     }

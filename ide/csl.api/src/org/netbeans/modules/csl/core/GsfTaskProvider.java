@@ -313,8 +313,9 @@ public final class GsfTaskProvider extends PushTaskScanner  {
                 l.add(task);
             }
 
-            for (FileObject f : tasks.keySet()) {
-                List<Task> l = tasks.get(f);
+            for (Map.Entry<FileObject, List<Task>> entry : tasks.entrySet()) {
+                FileObject f = entry.getKey();
+                List<Task> l = entry.getValue();
                 LOG.log(Level.FINE, "Refreshing TL for {0} with {1}", new Object [] { f, l }); //NOI18N
                 callback.setTasks(f, l);
             }

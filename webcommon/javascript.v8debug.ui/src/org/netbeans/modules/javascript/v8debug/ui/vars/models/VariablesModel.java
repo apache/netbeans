@@ -142,8 +142,9 @@ public class VariablesModel extends ViewModelSupport implements TreeModel,
                 }
                 ch[i++] = new Variable(Variable.Kind.ARGUMENT, name, ref, v, incompleteValue);
             }
-            for (String name : localRefs.keySet()) {
-                ReferencedValue rv = localRefs.get(name);
+            for (Map.Entry<String, ReferencedValue> entry : localRefs.entrySet()) {
+                String name = entry.getKey();
+                ReferencedValue rv = entry.getValue();
                 long ref = rv.getReference();
                 V8Value v = rvals.getReferencedValue(ref);
                 boolean incompleteValue = false;
@@ -232,8 +233,9 @@ public class VariablesModel extends ViewModelSupport implements TreeModel,
             childrenRet = null;
         }
         int chi = 0;
-        for (String name : properties.keySet()) {
-            V8Object.Property property = properties.get(name);
+        for (Map.Entry<String, V8Object.Property> entry : properties.entrySet()) {
+            String name = entry.getKey();
+            V8Object.Property property = entry.getValue();
             Variable var = new Variable(Variable.Kind.PROPERTY, name, property.getReference(), null, true, scope);
             if (children != null) {
                 children.add(var);

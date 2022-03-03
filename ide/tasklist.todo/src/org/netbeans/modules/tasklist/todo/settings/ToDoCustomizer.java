@@ -152,8 +152,9 @@ class ToDoCustomizer extends javax.swing.JPanel implements DocumentListener{
             Settings.getDefault().setScanCommentsOnly(checkScanCommentsOnly.isSelected());            
             
             // make sure modified identifiers are saved
-            for (String id : id2comments.keySet()) {
-                CommentTags comments = id2comments.get(id);
+            for (Map.Entry<String, CommentTags> entry : id2comments.entrySet()) {
+                String id = entry.getKey();
+                CommentTags comments = entry.getValue();
                 for (int i = 0; i < extensionIdentifiers.size(); i++) {
                     ExtensionIdentifier identifier = extensionIdentifiers.get(i);
                     if (identifier.getId().equals(id)) {

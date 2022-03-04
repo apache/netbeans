@@ -32,7 +32,7 @@ import org.openide.util.CharSequences;
  */
 public class XmlSTElements {
     
-    static abstract class ElementBase implements Element {
+    abstract static class ElementBase implements Element {
 
         private CharSequence source;
         private int from, to;
@@ -89,7 +89,7 @@ public class XmlSTElements {
         }
     }
     
-    static abstract class NamedElement extends ElementBase  implements Named {
+    abstract static class NamedElement extends ElementBase  implements Named {
 
         private CharSequence name; //we can possibly use the original source code + pointer
         

@@ -89,7 +89,7 @@ public abstract class ComponentBeanMultiple extends DescriptionBeanMultiple impl
             Iterator<String> keys = displayNames.keySet().iterator();
             int i=0;
             while (keys.hasNext()) {
-                String key = (String) keys.next();
+                String key = keys.next();
                 addDisplayName((String)displayNames.get(key));
                 setDisplayNameXmlLang(i++, key);
             }
@@ -335,6 +335,6 @@ public abstract class ComponentBeanMultiple extends DescriptionBeanMultiple impl
             }
         }
         Iterator<Icon> it = iconList.iterator();
-        while(it.hasNext()) removeIcon((org.netbeans.modules.j2ee.dd.api.common.Icon)it.next());
+        while(it.hasNext()) removeIcon(it.next());
     }
 }

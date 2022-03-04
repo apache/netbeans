@@ -102,7 +102,7 @@ public class ExecSupport {
     
     
     /** This thread simply reads from given Reader and writes read chars to given Writer. */
-    static public  class OutputCopier extends Thread {
+    public static  class OutputCopier extends Thread {
         final Writer os;
         final Reader is;
         /** while set to false at streams that writes to the OutputWindow it must be

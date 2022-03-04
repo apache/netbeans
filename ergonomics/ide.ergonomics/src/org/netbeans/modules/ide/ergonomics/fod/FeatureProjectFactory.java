@@ -93,7 +93,7 @@ implements ProjectFactory, PropertyChangeListener, Runnable {
         );
     }
 
-    final static class Data {
+    static final class Data {
         private final boolean deepCheck;
         private final FileObject dir;
         private Map<String,String> data;

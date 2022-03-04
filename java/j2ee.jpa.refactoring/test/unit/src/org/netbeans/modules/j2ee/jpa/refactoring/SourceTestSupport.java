@@ -144,7 +144,7 @@ public abstract class SourceTestSupport extends NbTestCase{
         
     }
 
-    static private class JavaFileResolver extends MIMEResolver
+    private static class JavaFileResolver extends MIMEResolver
     {
 
         public JavaFileResolver() {

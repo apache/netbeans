@@ -38,5 +38,5 @@ public class GenericMethodInvocation {
 
     }
 
-    public static abstract class Joint implements CharSequence, Runnable {}
+    public abstract static class Joint implements CharSequence, Runnable {}
 }

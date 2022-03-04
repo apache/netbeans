@@ -55,7 +55,7 @@ public class DbSchemaEjbGenerator {
     private Set<String> tablesReferecedByOtherTables;
     private Set<String> primaryKeyIsForeignKeyTables;
     private final CollectionType colectionType;
-    private final static Logger LOGGER = Logger.getLogger(DbSchemaEjbGenerator.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(DbSchemaEjbGenerator.class.getName());
     private boolean useColumNamesInRelations = false;
     //private ArrayList<String> warningMessages;
     private final boolean generateUnresolvedRelationships;
@@ -195,16 +195,16 @@ public class DbSchemaEjbGenerator {
     }
     
     public EntityClass[] getBeans() {
-        return (EntityClass[])beans.values().toArray(new EntityClass[beans.size()]);
+        return beans.values().toArray(new EntityClass[beans.size()]);
     }
     
     public EntityRelation[] getRelations() {
-        return (EntityRelation[])relations.toArray(new EntityRelation[relations.size()]);
+        return relations.toArray(new EntityRelation[relations.size()]);
     }
     
     
     private EntityClass getBean(String tableName) {
-        return (EntityClass)beans.get(tableName);
+        return beans.get(tableName);
     }
     
     private EntityClass addBean(String tableName) {
@@ -585,11 +585,11 @@ public class DbSchemaEjbGenerator {
     private List getFieldNames(EntityClass bean) {
         List<String> result = new ArrayList<>();
         for (Iterator<EntityMember> i = bean.getFields().iterator(); i.hasNext();) {
-            EntityMember member = (EntityMember)i.next();
+            EntityMember member = i.next();
             result.add(member.getMemberName());
         }
         for (Iterator<RelationshipRole> i = bean.getRoles().iterator(); i.hasNext();) {
-            RelationshipRole role = (RelationshipRole)i.next();
+            RelationshipRole role = i.next();
             result.add(role.getFieldName());
         }
         return result;
@@ -640,7 +640,7 @@ public class DbSchemaEjbGenerator {
                 ret.put(fkc, key);
             }
         }
-        return (ForeignKeyElement[]) ret.values().toArray(new ForeignKeyElement[]{});
+        return ret.values().toArray(new ForeignKeyElement[]{});
     }
 
     /**

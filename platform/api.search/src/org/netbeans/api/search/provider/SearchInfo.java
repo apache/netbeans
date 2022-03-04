@@ -125,15 +125,7 @@ public abstract class SearchInfo {
             @NonNull final SearchScopeOptions options,
             @NonNull final SearchListener listener,
             @NonNull final AtomicBoolean terminated) {
-
-        return new Iterable<FileObject>() {
-
-            @Override
-            public Iterator<FileObject> iterator() {
-                return createFilesToSearchIterator(options, listener,
-                        terminated);
-            }
-        };
+        return () -> createFilesToSearchIterator(options, listener, terminated);
     }
 
     /**
@@ -169,14 +161,6 @@ public abstract class SearchInfo {
             @NonNull final SearchScopeOptions options,
             @NonNull final SearchListener listener,
             @NonNull final AtomicBoolean terminated) {
-
-        return new Iterable<URI>() {
-
-            @Override
-            public Iterator<URI> iterator() {
-                return createUrisToSearchIterator(options, listener,
-                        terminated);
-            }
-        };
+        return () -> createUrisToSearchIterator(options, listener, terminated);
     }
 }

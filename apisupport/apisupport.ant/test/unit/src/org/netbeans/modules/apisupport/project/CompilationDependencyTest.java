@@ -43,7 +43,7 @@ import org.openide.modules.SpecificationVersion;
  */
 public class CompilationDependencyTest extends TestBase {
     
-    private final static String WINDOWS = "org.openide.windows";
+    private static final String WINDOWS = "org.openide.windows";
     
     static {
         // #65461: do not try to load ModuleInfo instances from ant module

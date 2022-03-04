@@ -34,8 +34,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Level;
@@ -61,7 +59,6 @@ import org.netbeans.modules.java.hints.providers.spi.HintMetadata;
 import org.netbeans.modules.java.hints.providers.spi.HintMetadata.Options;
 import org.netbeans.modules.java.hints.providers.spi.Trigger.PatternDescription;
 import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileStateInvalidException;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
@@ -82,6 +79,7 @@ public class DeclarativeHintRegistry implements HintProvider, ClassPathBasedHint
     private static final RequestProcessor ASYNCHRONOUS = new RequestProcessor(DeclarativeHintRegistry.class.getName(), 10, false, false);
     private static final Logger LOG = Logger.getLogger(DeclarativeHintRegistry.class.getName());
 
+    @Override
     public Map<HintMetadata, Collection<? extends HintDescription>> computeHints() {
         return readHints(findGlobalFiles());
     }
@@ -90,11 +88,7 @@ public class DeclarativeHintRegistry implements HintProvider, ClassPathBasedHint
     public Collection<? extends HintDescription> computeHints(final ClassPath cp, AtomicBoolean cancel) {
         final AtomicReference<Collection<? extends FileObject>> foundFiles = new AtomicReference<>();
 
-        Task task = ASYNCHRONOUS.post(new Runnable() {
-            @Override public void run() {
-                foundFiles.set(findFiles(cp));
-            }
-        });
+        Task task = ASYNCHRONOUS.post(() -> foundFiles.set(findFiles(cp)));
 
         while ((cancel == null || !cancel.get()) && !task.isFinished()) {
             try {
@@ -112,7 +106,7 @@ public class DeclarativeHintRegistry implements HintProvider, ClassPathBasedHint
     }
 
     public static Collection<? extends HintDescription> join(Map<HintMetadata, Collection<? extends HintDescription>> hints) {
-        List<HintDescription> descs = new LinkedList<HintDescription>();
+        List<HintDescription> descs = new LinkedList<>();
 
         for (Collection<? extends HintDescription> c : hints.values()) {
             descs.addAll(c);
@@ -122,7 +116,7 @@ public class DeclarativeHintRegistry implements HintProvider, ClassPathBasedHint
     }
 
     private Map<HintMetadata, Collection<? extends HintDescription>> readHints(Iterable<? extends FileObject> files) {
-        Map<HintMetadata, Collection<? extends HintDescription>> result = new HashMap<HintMetadata, Collection<? extends HintDescription>>();
+        Map<HintMetadata, Collection<? extends HintDescription>> result = new HashMap<>();
 
         for (FileObject f : files) {
             result.putAll(parseHintFile(f));
@@ -132,7 +126,7 @@ public class DeclarativeHintRegistry implements HintProvider, ClassPathBasedHint
     }
 
     public static Collection<? extends FileObject> findAllFiles() {
-        List<FileObject> files = new LinkedList<FileObject>();
+        List<FileObject> files = new ArrayList<>();
 
         files.addAll(findGlobalFiles());
         files.addAll(findFiles(GlobalPathRegistry.getDefault().getPaths(ClassPath.BOOT)));
@@ -143,7 +137,7 @@ public class DeclarativeHintRegistry implements HintProvider, ClassPathBasedHint
     }
 
     private static Collection<? extends FileObject> findFiles(Iterable<? extends ClassPath> cps) {
-        List<FileObject> result = new LinkedList<FileObject>();
+        List<FileObject> result = new LinkedList<>();
 
         for (ClassPath cp : cps) {
             result.addAll(findFiles(cp));
@@ -182,7 +176,7 @@ public class DeclarativeHintRegistry implements HintProvider, ClassPathBasedHint
     }
 
     private static Collection<? extends FileObject> findGlobalFiles() {
-        Collection<FileObject> result = new ArrayList<FileObject>();
+        Collection<FileObject> result = new ArrayList<>();
         FileObject folder = FileUtil.getConfigFile("org-netbeans-modules-java-hints/declarative");
 
         if (folder != null) {
@@ -199,7 +193,7 @@ public class DeclarativeHintRegistry implements HintProvider, ClassPathBasedHint
     }
 
     private static Collection<? extends FileObject> findFiles(FileObject folder) {
-        List<FileObject> result = new LinkedList<FileObject>();
+        List<FileObject> result = new LinkedList<>();
 
         for (FileObject f : folder.getChildren()) {
             if (!"hint".equals(f.getExt())) {
@@ -212,8 +206,8 @@ public class DeclarativeHintRegistry implements HintProvider, ClassPathBasedHint
     }
 
     private static Collection<? extends FileObject> findFilesRecursive(FileObject folder) {
-        List<FileObject> todo = new LinkedList<FileObject>();
-        List<FileObject> result = new LinkedList<FileObject>();
+        List<FileObject> todo = new LinkedList<>();
+        List<FileObject> result = new LinkedList<>();
 
         todo.add(folder);
 
@@ -236,7 +230,7 @@ public class DeclarativeHintRegistry implements HintProvider, ClassPathBasedHint
     public static Map<HintMetadata, Collection<? extends HintDescription>> parseHintFile(@NonNull FileObject file) {
         String spec = Utilities.readFile(file);
 
-        return spec != null ? parseHints(file, spec) : Collections.<HintMetadata, Collection<? extends HintDescription>>emptyMap();
+        return spec != null ? parseHints(file, spec) : Collections.emptyMap();
     }
 
     public static Map<HintMetadata, Collection<? extends HintDescription>> parseHints(@NullAllowed FileObject file, String spec) {
@@ -257,7 +251,7 @@ public class DeclarativeHintRegistry implements HintProvider, ClassPathBasedHint
 
         TokenHierarchy<?> h = TokenHierarchy.create(spec, DeclarativeHintTokenId.language());
         TokenSequence<DeclarativeHintTokenId> ts = h.tokenSequence(DeclarativeHintTokenId.language());
-        Map<HintMetadata, Collection<HintDescription>> result = new LinkedHashMap<HintMetadata, Collection<HintDescription>>();
+        Map<HintMetadata, Collection<HintDescription>> result = new LinkedHashMap<>();
         Result parsed = new DeclarativeHintsParser().parse(file, spec, ts);
 
         HintMetadata meta;
@@ -299,21 +293,21 @@ public class DeclarativeHintRegistry implements HintProvider, ClassPathBasedHint
         int count = 0;
 
         for (HintTextDescription hint : parsed.hints) {
-            HintDescriptionFactory f = HintDescriptionFactory.create();
+            HintDescriptionFactory fac = HintDescriptionFactory.create();
             String displayName = resolveDisplayName(file, bundle, hint.displayName, true, "TODO: No display name");
             Map<String, String> constraints = Utilities.conditions2Constraints(hint.conditions);
             String imports = parsed.importsBlock != null ? spec.substring(parsed.importsBlock[0], parsed.importsBlock[1]) : "";
             String[] importsArray = parsed.importsBlock != null ? new String[] {spec.substring(parsed.importsBlock[0], parsed.importsBlock[1])} : new String[0];
             String pattern = spec.substring(hint.textStart, hint.textEnd);
 
-            f = f.setTrigger(PatternDescription.create(pattern, constraints, importsArray));
+            fac.setTrigger(PatternDescription.create(pattern, constraints, importsArray));
 
-            List<DeclarativeFix> fixes = new LinkedList<DeclarativeFix>();
+            List<DeclarativeFix> fixes = new LinkedList<>();
 
             for (FixTextDescription fix : hint.fixes) {
                 int[] fixRange = fix.fixSpan;
                 String fixDisplayName = resolveDisplayName(file, bundle, fix.displayName, false, null);
-                Map<String, String> options = new HashMap<String, String>(parsed.options);
+                Map<String, String> options = new HashMap<>(parsed.options);
 
                 options.putAll(fix.options);
 
@@ -354,26 +348,26 @@ public class DeclarativeHintRegistry implements HintProvider, ClassPathBasedHint
                 }
             }
 
-            Map<String, String> options = new HashMap<String, String>(parsed.options);
-
+            Map<String, String> options = new HashMap<>(parsed.options.size() + hint.options.size());
+            options.putAll(parsed.options);
             options.putAll(hint.options);
 
-            f = f.setWorker(new DeclarativeHintsWorker(displayName, pattern, hint.conditions, imports, fixes, options));
-            f = f.setMetadata(currentMeta);
-            f = f.setAdditionalConstraints(new AdditionalQueryConstraints(new HashSet<String>(constraints.values())));
-            f = f.setHintText(spec.substring(hint.textStart, hint.hintEnd));
+            fac.setWorker(new DeclarativeHintsWorker(displayName, pattern, hint.conditions, imports, fixes, options));
+            fac.setMetadata(currentMeta);
+            fac.setAdditionalConstraints(new AdditionalQueryConstraints(new HashSet<>(constraints.values())));
+            fac.setHintText(spec.substring(hint.textStart, hint.hintEnd));
 
             Collection<HintDescription> hints = result.get(currentMeta);
 
             if (hints == null) {
-                result.put(currentMeta, hints = new LinkedList<HintDescription>());
+                result.put(currentMeta, hints = new LinkedList<>());
             }
 
             if (fixes.isEmpty()) {
-                f.addOptions(Options.QUERY);
+                fac.addOptions(Options.QUERY);
             }
             
-            hints.add(f.produce());
+            hints.add(fac.produce());
 
             count++;
         }
@@ -382,7 +376,7 @@ public class DeclarativeHintRegistry implements HintProvider, ClassPathBasedHint
             result.put(meta, Collections.<HintDescription>emptyList());
         }
 
-        return new LinkedHashMap<HintMetadata, Collection<? extends HintDescription>>(result);
+        return new LinkedHashMap<>(result);
     }
 
     private static String[] suppressWarnings(Map<String, String> options) {

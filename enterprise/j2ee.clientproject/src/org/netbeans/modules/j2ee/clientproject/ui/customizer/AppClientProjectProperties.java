@@ -86,7 +86,7 @@ import org.openide.util.*;
 /**
  * @author Petr Hrebejk
  */
-final public class AppClientProjectProperties {
+public final class AppClientProjectProperties {
     
     //Hotfix of the issue #70058
     //Should be removed when the StoreGroup SPI will be extended to allow false default value in ToggleButtonModel
@@ -532,7 +532,7 @@ final public class AppClientProjectProperties {
         projectProperties.put(ProjectProperties.EXCLUDES, excludes);
         
         StringBuilder sb = new StringBuilder();
-        for (Enumeration elements = ANNOTATION_PROCESSORS_MODEL.elements(); elements.hasMoreElements();) {
+        for (Enumeration<String> elements = ANNOTATION_PROCESSORS_MODEL.elements(); elements.hasMoreElements();) {
             sb.append(elements.nextElement());
             if (elements.hasMoreElements())
                 sb.append(',');
@@ -550,7 +550,7 @@ final public class AppClientProjectProperties {
         updateHelper.putProperties( AntProjectHelper.PROJECT_PROPERTIES_PATH, projectProperties );
         updateHelper.putProperties( AntProjectHelper.PRIVATE_PROPERTIES_PATH, privateProperties );        
         
-        String value = (String)additionalProperties.get(SOURCE_ENCODING);
+        String value = additionalProperties.get(SOURCE_ENCODING);
         if (value != null) {
             try {
                 FileEncodingQuery.setDefaultEncoding(Charset.forName(value));
@@ -602,7 +602,7 @@ final public class AppClientProjectProperties {
         // 1. first remove all project references. The method will modify
         // project property files, so it must be done separately
         for (Iterator<ClassPathSupport.Item> it = removed.iterator(); it.hasNext(); ) {
-            ClassPathSupport.Item item = (ClassPathSupport.Item)it.next();
+            ClassPathSupport.Item item = it.next();
             if ( item.getType() == ClassPathSupport.Item.TYPE_ARTIFACT ||
                     item.getType() == ClassPathSupport.Item.TYPE_JAR ) {
                 refHelper.destroyReference(item.getReference());
@@ -617,7 +617,7 @@ final public class AppClientProjectProperties {
         boolean changed = false;
         
         for (Iterator<ClassPathSupport.Item> it = removed.iterator(); it.hasNext(); ) {
-            ClassPathSupport.Item item = (ClassPathSupport.Item)it.next();
+            ClassPathSupport.Item item = it.next();
             if (item.getType() == ClassPathSupport.Item.TYPE_LIBRARY) {
                 // remove helper property pointing to library jar if there is any
                 String prop = item.getReference();

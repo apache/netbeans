@@ -108,7 +108,7 @@ public class Repository implements Serializable {
      * 
      * @since 7.59
      */
-    public static abstract class LayerProvider {
+    public abstract static class LayerProvider {
         /** Allows providers to add their additions to the structure
          * beneath {@link FileUtil#getConfigRoot()}. The method is
          * supposed to collect all additional layers and {@link Collection#add(java.lang.Object) add}
@@ -1033,7 +1033,7 @@ public class Repository implements Serializable {
      * <p/>
      * @since 9.5
      */
-    public static abstract class LocalProvider {
+    public abstract static class LocalProvider {
         /**
          * Returns the local repository instance. The method can return {@code null} to indicate
          * the main Repository should be used. The method <b>must</b> return the very same instance

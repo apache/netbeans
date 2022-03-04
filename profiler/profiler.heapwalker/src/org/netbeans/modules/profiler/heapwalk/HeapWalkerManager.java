@@ -56,7 +56,7 @@ public class HeapWalkerManager {
     private Set dumpsBeingDeleted = new HashSet();
     private List<HeapWalker> heapWalkers = new ArrayList();
 
-    final private RequestProcessor heapwalkerRp = new RequestProcessor(HeapWalkerManager.class);
+    private final RequestProcessor heapwalkerRp = new RequestProcessor(HeapWalkerManager.class);
 
     //~ Constructors -------------------------------------------------------------------------------------------------------------
 
@@ -66,7 +66,7 @@ public class HeapWalkerManager {
     //~ Methods ------------------------------------------------------------------------------------------------------------------
 
     private static class Singleton {
-        final private static HeapWalkerManager INSTANCE = new HeapWalkerManager();
+        private static final HeapWalkerManager INSTANCE = new HeapWalkerManager();
     }
     
     public static HeapWalkerManager getDefault() {

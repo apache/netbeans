@@ -383,7 +383,7 @@ public class DebuggingTruffleActionsProvider implements NodeActionsProviderFilte
         );
     }
 
-    static abstract class LazyActionPerformer implements Models.ActionPerformer {
+    abstract static class LazyActionPerformer implements Models.ActionPerformer {
 
         private final RequestProcessor rp;
 

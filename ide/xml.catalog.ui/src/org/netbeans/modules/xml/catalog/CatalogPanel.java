@@ -54,9 +54,9 @@ public class CatalogPanel extends TopComponent implements ExplorerManager.Provid
     private ExplorerManager manager;
     private CatalogTreeView view;
     private JTree tree;
-    static private Set newlyCreatedFolders;
+    private static Set newlyCreatedFolders;
     
-    static private FileObject catalogRoot;
+    private static FileObject catalogRoot;
     
     /** Creates new form CatalogPanel */
     public CatalogPanel() {
@@ -143,7 +143,7 @@ public class CatalogPanel extends TopComponent implements ExplorerManager.Provid
         return new CatalogRootNode();
     }
     
-    static private final class TemplateFilter implements DataFilter {
+    private static final class TemplateFilter implements DataFilter {
         public boolean acceptDataObject(DataObject obj) {
             return acceptTemplate(obj);
         }
@@ -298,13 +298,13 @@ public class CatalogPanel extends TopComponent implements ExplorerManager.Provid
     private javax.swing.JPanel treePanel;
     // End of variables declaration//GEN-END:variables
     
-    static private DataObject getDOFromNode(Node n) {
+    private static DataObject getDOFromNode(Node n) {
         DataObject dobj = n.getLookup().lookup(DataObject.class);
         assert dobj != null : "DataObject for node " + n;
         return dobj;
     }
     
-    static private DataFolder getTargetFolder(Node [] nodes) {
+    private static DataFolder getTargetFolder(Node [] nodes) {
         DataFolder folder = null;
         if (nodes == null || nodes.length == 0) {
             folder = DataFolder.findFolder(getCatalogRoot());

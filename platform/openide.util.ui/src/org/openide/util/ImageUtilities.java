@@ -931,7 +931,7 @@ public final class ImageUtilities {
         return buffImage;
     }
     
-    static private ColorModel colorModel(int transparency) {
+    private static ColorModel colorModel(int transparency) {
         ColorModel model;
         try {
             model = java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment()

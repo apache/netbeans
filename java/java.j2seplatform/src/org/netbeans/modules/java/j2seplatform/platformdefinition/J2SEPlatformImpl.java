@@ -219,7 +219,7 @@ public class J2SEPlatformImpl extends JavaPlatform implements PropertyChangeList
      * of display name
      * @param name the new display name
      */
-    final protected void internalSetDisplayName (String name) {
+    protected final void internalSetDisplayName (String name) {
         this.displayName = name;
     }
 

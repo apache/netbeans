@@ -135,11 +135,11 @@ public class ProjectTab extends TopComponent
 
     private static Map<String, ProjectTab> tabs = new HashMap<String, ProjectTab>();                            
                             
-    private transient final ExplorerManager manager;
+    private final transient ExplorerManager manager;
     private transient Node rootNode;
     
     private String id;
-    private transient final ProjectTreeView btv;
+    private final transient ProjectTreeView btv;
 
     private final JLabel noProjectsLabel = new JLabel(NbBundle.getMessage(ProjectTab.class, "NO_PROJECT_OPEN"));
 

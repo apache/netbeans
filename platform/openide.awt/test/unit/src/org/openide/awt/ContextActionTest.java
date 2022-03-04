@@ -755,7 +755,7 @@ implements Lookup.Provider, ContextActionEnabler<ContextActionTest.Openable> {
             propertyChangeSupport.firePropertyChange(PROP_STATEVALUE, oldStateValue, stateValue);
         }
 
-        private transient final PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
+        private final transient PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
 
         public void addPropertyChangeListener(PropertyChangeListener listener) {
             propertyChangeSupport.addPropertyChangeListener(listener);

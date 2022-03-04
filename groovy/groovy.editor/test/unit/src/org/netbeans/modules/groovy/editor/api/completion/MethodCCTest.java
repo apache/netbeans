@@ -141,6 +141,31 @@ public class MethodCCTest extends GroovyCCTestBase {
     public void testCompletionNoDot1_3() throws Exception {
         checkCompletion(BASE + "CompletionNoDot1.groovy", "        n^", false);
     }
+    
+    public void testCompletionNoDot2_1() throws Exception {
+        checkCompletion(BASE + "CompletionNoDot2.groovy", "String a = meth^", false);
+    }
+    
+    public void testCompletionNoDot2_2() throws Exception {
+        checkCompletion(BASE + "CompletionNoDot2.groovy", "String a = this.meth^od1()", false);
+    }
+    
+    public void testCompletionNoDot2_3() throws Exception {
+        checkCompletion(BASE + "CompletionNoDot2.groovy", " return cas^e1()", false);
+    }
+    
+    public void testCompletionNoDot2_4() throws Exception {
+        checkCompletion(BASE + "CompletionNoDot2.groovy", "return case2() + cas^e1();", false);
+    }
+    
+    public void testCompletionNoDot2_5() throws Exception {
+        checkCompletion(BASE + "CompletionNoDot2.groovy", "if(cas^e1()) {", false);
+    }
+    
+    public void testCompletionNoDot2_6() throws Exception {
+        checkCompletion(BASE + "CompletionNoDot2.groovy", "cas^e3();", false);
+    }
+    
 
     public void testCompletionNoPrefixString1() throws Exception {
         checkCompletion(BASE + "CompletionNoPrefixString1.groovy", "println \"Hello $name!\".^", false);

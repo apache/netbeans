@@ -59,8 +59,8 @@ class OQLLexer implements Lexer<OQLTokenId> {
     private TokenFactory<OQLTokenId>
                                 tokenFactory;
     private State               state = State.INIT;
-    final private Pattern       classPattern = Pattern.compile("(\\[*)[a-z]+(?:[a-z 0-9]*)(?:[\\. \\$][a-z 0-9]+)*(\\[\\])*", Pattern.CASE_INSENSITIVE); // NOI18N
-    final private Pattern       classIdPattern = Pattern.compile("(0X)?([0-9 a-f A-F]+)");
+    private final Pattern       classPattern = Pattern.compile("(\\[*)[a-z]+(?:[a-z 0-9]*)(?:[\\. \\$][a-z 0-9]+)*(\\[\\])*", Pattern.CASE_INSENSITIVE); // NOI18N
+    private final Pattern       classIdPattern = Pattern.compile("(0X)?([0-9 a-f A-F]+)");
 
 
     OQLLexer (LexerRestartInfo<OQLTokenId> info) {
@@ -371,7 +371,7 @@ class OQLLexer implements Lexer<OQLTokenId> {
         }
     }
 
-    final private static boolean isEmpty(String string) {
+    private static final boolean isEmpty(String string) {
         return string == null || string.length() == 0;
     }
 

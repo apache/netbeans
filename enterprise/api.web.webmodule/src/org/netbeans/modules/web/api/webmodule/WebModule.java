@@ -107,7 +107,7 @@ public final class WebModule {
         Parameters.notNull("file", file); // NOI18N
         Iterator<WebModuleProvider> it = implementations.allInstances().iterator();
         while (it.hasNext()) {
-            WebModuleProvider impl = (WebModuleProvider)it.next();
+            WebModuleProvider impl = it.next();
             WebModule wm = impl.findWebModule (file);
             if (wm != null) {
                 return wm;

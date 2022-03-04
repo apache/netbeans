@@ -430,7 +430,7 @@ public class RepositoryRevision {
         }
     }
 
-    private static abstract class HistoryEventAction extends AbstractAction implements ContextAwareAction {
+    private abstract static class HistoryEventAction extends AbstractAction implements ContextAwareAction {
 
         public HistoryEventAction (String name) {
             super(name);

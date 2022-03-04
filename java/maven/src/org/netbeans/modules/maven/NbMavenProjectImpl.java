@@ -204,7 +204,7 @@ public final class NbMavenProjectImpl implements Project {
     }
 
 
-    public static abstract class WatcherAccessor {
+    public abstract static class WatcherAccessor {
 
         public abstract NbMavenProject createWatcher(NbMavenProjectImpl proj);
 

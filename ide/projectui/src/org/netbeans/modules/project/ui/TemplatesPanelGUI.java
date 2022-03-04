@@ -499,7 +499,7 @@ public class TemplatesPanelGUI extends javax.swing.JPanel implements PropertyCha
         return desc;
     }
     
-    private static abstract class ExplorerProviderPanel extends JPanel implements ExplorerManager.Provider, PropertyChangeListener, VetoableChangeListener {
+    private abstract static class ExplorerProviderPanel extends JPanel implements ExplorerManager.Provider, PropertyChangeListener, VetoableChangeListener {
         
         private ExplorerManager manager;
         

@@ -51,7 +51,7 @@ import org.xml.sax.SAXException;
  */
 public class XMLFile {
     
-    final protected Document doc;
+    protected final Document doc;
     private File file;
     private final XPath xPath;
 

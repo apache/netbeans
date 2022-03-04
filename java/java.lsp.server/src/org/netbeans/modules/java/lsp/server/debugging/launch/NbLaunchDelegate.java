@@ -436,6 +436,7 @@ public abstract class NbLaunchDelegate {
         List<String> command = join(nativeImageFile.getAbsolutePath(), args);
         StartDebugParameters.Builder parametersBuilder = StartDebugParameters.newBuilder(command)
                 .debugger(miDebugger)
+                .debuggerDisplayObjects(false)
                 .executionDescriptor(executionDescriptor)
                 .lookup(contextLookup);
         StartDebugParameters parameters = parametersBuilder.build();

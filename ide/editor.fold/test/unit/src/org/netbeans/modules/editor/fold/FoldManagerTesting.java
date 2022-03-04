@@ -155,7 +155,7 @@ public final class FoldManagerTesting {
         });
     }
     
-    final static class AddFoldsOp extends RandomTestContainer.Op {
+    static final class AddFoldsOp extends RandomTestContainer.Op {
 
         public AddFoldsOp() {
             super(ADD_FOLDS);
@@ -182,7 +182,7 @@ public final class FoldManagerTesting {
 
     }
 
-    final static class RemoveFoldsOp extends RandomTestContainer.Op {
+    static final class RemoveFoldsOp extends RandomTestContainer.Op {
 
         public RemoveFoldsOp() {
             super(REMOVE_FOLDS);

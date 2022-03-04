@@ -27,6 +27,7 @@ import java.lang.ref.WeakReference;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Enumeration;
 import static java.util.Collections.unmodifiableList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -518,7 +519,7 @@ public final class DeployOnSaveManager {
                 FileObject destRoot = FileUtil.createFolder(destDir);
 
                 // create target FOs map keyed by relative paths
-                java.util.Enumeration destFiles = destRoot.getChildren(true);
+                Enumeration<? extends FileObject> destFiles = destRoot.getChildren(true);
                 Map<String, FileObject> destMap = new HashMap<>();
                 int rootPathLen = destRoot.getPath().length();
                 for (; destFiles.hasMoreElements();) {
@@ -549,7 +550,7 @@ public final class DeployOnSaveManager {
                     if (checkFile != null && file != null) {
                         String relative = FileUtil.getRelativePath(contentDirectory, checkFile);
                         if (relative != null) {
-                            FileObject targetFO = (FileObject) destMap.get(relative);
+                            FileObject targetFO = destMap.get(relative);
                             if (file.isFolder()) {
                                 destMap.remove(relative);
                                 //continue;

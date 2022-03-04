@@ -166,8 +166,9 @@ public class IDENativeTemplateHandler extends CreateFromTemplateHandler {
         for (FileObject c : projectContents.getChildren()) {
             result.addAll(new FileBuilder(c, target).defaultMode(FileBuilder.Mode.COPY).withParameters(params).build());
         }
-        for (String k : params.keySet()) {
-            Object v = params.get(k);
+        for (Map.Entry<String, Object> entry : params.entrySet()) {
+            String k = entry.getKey();
+            Object v = entry.getValue();
             if (v != null) {
                 p.put(k, v);
             }

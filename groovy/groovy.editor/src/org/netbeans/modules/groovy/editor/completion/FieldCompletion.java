@@ -93,9 +93,7 @@ public class FieldCompletion extends BaseCompletion {
         Map<FieldSignature, CompletionItem> result = new CompleteElementHandler(context).getFields();
         
         FieldSignature prefixFieldSignature = new FieldSignature(context.getPrefix());
-        if (result.containsKey(prefixFieldSignature)) {
-            result.remove(prefixFieldSignature);
-        }
+        result.remove(prefixFieldSignature);
         for (Map.Entry<FieldSignature, CompletionItem> e :result.entrySet()) {
             proposals.putIfAbsent(e.getKey(), e.getValue());
         }

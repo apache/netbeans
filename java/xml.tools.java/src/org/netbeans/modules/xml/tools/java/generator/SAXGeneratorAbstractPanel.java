@@ -104,7 +104,7 @@ public abstract class SAXGeneratorAbstractPanel extends JPanel implements Custom
         }
         
         void setIndex(int index) {
-            this.index = new Integer(index);
+            this.index = index;
         }
         
         public void readSettings(java.lang.Object p1) {

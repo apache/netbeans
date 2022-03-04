@@ -489,8 +489,9 @@ public class DebuggerManagerListener extends DebuggerManagerAdapter {
                                     windowsToClose.remove(ci);
                                 }
                             }
-                            for (EngineComponentsProvider ecp : openedWindowsByProvider.keySet()) {
-                                List<? extends ComponentInfo> cis = openedWindowsByProvider.get(ecp);
+                            for (Map.Entry<EngineComponentsProvider, List<? extends ComponentInfo>> entry : openedWindowsByProvider.entrySet()) {
+                                EngineComponentsProvider ecp = entry.getKey();
+                                List<? extends ComponentInfo> cis = entry.getValue();
                                 List<ComponentInfo> closing = new ArrayList<ComponentInfo>(cis);
                                 closing.retainAll(windowsToClose);
                                 ecp.willCloseNotify(closing);

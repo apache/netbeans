@@ -348,7 +348,7 @@ public abstract class PropertySupport<T> extends Node.Property<T> {
     * Subclasses should implement
     * {@link #getValue} and {@link #setValue}.
     */
-    public static abstract class ReadWrite<T> extends PropertySupport<T> {
+    public abstract static class ReadWrite<T> extends PropertySupport<T> {
         /** Construct a new support.
         * @param name        the name of the property
         * @param type        the class type of the property
@@ -363,7 +363,7 @@ public abstract class PropertySupport<T> extends Node.Property<T> {
     /** A simple read-only property.
     * Subclasses should implement {@link #getValue}.
     */
-    public static abstract class ReadOnly<T> extends PropertySupport<T> {
+    public abstract static class ReadOnly<T> extends PropertySupport<T> {
         /** Construct a new support.
         * @param name        the name of the property
         * @param type        the class type of the property
@@ -390,7 +390,7 @@ public abstract class PropertySupport<T> extends Node.Property<T> {
     /** A simple write-only property.
     * Subclasses should implement {@link #setValue}.
     */
-    public static abstract class WriteOnly<T> extends PropertySupport<T> {
+    public abstract static class WriteOnly<T> extends PropertySupport<T> {
         /** Construct a new support.
         * @param name        the name of the property
         * @param type        the class type of the property

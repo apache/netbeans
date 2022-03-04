@@ -41,7 +41,7 @@ public final class HelpCtx extends Object {
     * This (hopefully) points to a note explaining to the user that no help is available.
     * Precisely, the Help ID is set to <code>org.openide.util.HelpCtx.DEFAULT_HELP</code>.
     */
-    public final static HelpCtx DEFAULT_HELP = new HelpCtx(HelpCtx.class.getName() + ".DEFAULT_HELP"); // NOI18N
+    public static final HelpCtx DEFAULT_HELP = new HelpCtx(HelpCtx.class.getName() + ".DEFAULT_HELP"); // NOI18N
 
     /** URL of the help page */
     private final URL helpCtx;

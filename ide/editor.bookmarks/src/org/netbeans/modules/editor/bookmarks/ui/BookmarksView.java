@@ -126,8 +126,8 @@ implements BookmarkManagerListener, PropertyChangeListener, ExplorerManager.Prov
         };
     }
 
-    private transient final BookmarksNodeTree nodeTree;
-    private transient final ExplorerManager explorerManager;
+    private final transient BookmarksNodeTree nodeTree;
+    private final transient ExplorerManager explorerManager;
     private transient boolean treeViewShowing; // Whether viewed as tree or as a table
     private transient JSplitPane splitPane;
     private transient BookmarksTableView tableView;

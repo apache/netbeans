@@ -371,11 +371,11 @@ public class BatchSearchTest extends NbTestCase {
 
         private static Collection<FileObject> sourceRoots;
 
-        public synchronized static void setSourceRoots(Collection<FileObject> sourceRoots) {
+        public static synchronized void setSourceRoots(Collection<FileObject> sourceRoots) {
             ClassPathProviderImpl.sourceRoots = sourceRoots;
         }
 
-        public synchronized static Collection<FileObject> getSourceRoots() {
+        public static synchronized Collection<FileObject> getSourceRoots() {
             return sourceRoots;
         }
 

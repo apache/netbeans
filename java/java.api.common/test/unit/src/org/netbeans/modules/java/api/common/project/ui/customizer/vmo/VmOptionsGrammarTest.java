@@ -18,14 +18,6 @@
  */
 package org.netbeans.modules.java.api.common.project.ui.customizer.vmo;
 
-import org.netbeans.modules.java.api.common.project.ui.customizer.vmo.JavaVMOption;
-import org.netbeans.modules.java.api.common.project.ui.customizer.vmo.VMOptionTreeAdaptor;
-import org.netbeans.modules.java.api.common.project.ui.customizer.vmo.OptionValue;
-import org.netbeans.modules.java.api.common.project.ui.customizer.vmo.ParametrizedNode;
-import org.netbeans.modules.java.api.common.project.ui.customizer.vmo.SwitchNode;
-import org.netbeans.modules.java.api.common.project.ui.customizer.vmo.UnrecognizedOption;
-import org.netbeans.modules.java.api.common.project.ui.customizer.vmo.UnknownOption;
-import org.netbeans.modules.java.api.common.project.ui.customizer.vmo.UserPropertyNode;
 import org.antlr.runtime.ANTLRStringStream;
 import org.antlr.runtime.CommonTokenStream;
 import org.antlr.runtime.RecognitionException;
@@ -57,7 +49,7 @@ public class VmOptionsGrammarTest extends NbTestCase {
     @Test
     public void testIndividualOption() {
         final List<JavaVMOption<?>> list = CommandLineParser.getAllOptions();
-        final List<JavaVMOption<?>> errors = new LinkedList<JavaVMOption<?>>();
+        final List<JavaVMOption<?>> errors = new LinkedList<>();
         for (JavaVMOption<?> option : list) {
             try {
                 verifyOption(option);
@@ -77,7 +69,7 @@ public class VmOptionsGrammarTest extends NbTestCase {
     @Test   
     public void testRandomOptionsSet() {
         final List<JavaVMOption<?>> list = CommandLineParser.getAllOptions();
-        final Set<JavaVMOption<?>> selection = new HashSet<JavaVMOption<?>>(10);
+        final Set<JavaVMOption<?>> selection = new HashSet<>(10);
         Random r = new Random(System.currentTimeMillis());
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < 10; i++) {
@@ -93,57 +85,54 @@ public class VmOptionsGrammarTest extends NbTestCase {
         parser.setTreeAdaptor(new VMOptionTreeAdaptor());
         CommandLineParser.vmOptions_return options_return;
         try {
-            Set<JavaVMOption<?>> result = new HashSet<JavaVMOption<?>>();
+            Set<JavaVMOption<?>> result = new HashSet<>();
             options_return = parser.vmOptions();
             CommonTree root = (CommonTree) options_return.getTree();
             if (root instanceof JavaVMOption<?>) {
                 result.add((JavaVMOption<?>) root);
             } else if (root != null) {
-                result.addAll(root.getChildren());
+                result.addAll((List<JavaVMOption<?>>) (List<?>) root.getChildren());
             }
             assertEquals("The result and selection are not same.", result, selection);
         } catch (RecognitionException e) {
-            fail(e.getMessage());           
+            fail(e.getMessage());
         }
 
     }
 
     @Test
-    public void testRecognitionErrors() {
+    public void testRecognitionErrors() throws RecognitionException {
         final String str = "-client -serv hello:dolly -version:hello";
         final CommandLineLexer lineLexer = new CommandLineLexer(new ANTLRStringStream(str));
-        try {
-            CommandLineParser parser = new CommandLineParser(new CommonTokenStream(lineLexer));
-            parser.setTreeAdaptor(new VMOptionTreeAdaptor());
-            final CommandLineParser.vmOptions_return options_return = parser.vmOptions();
-            final BaseTree tree = (BaseTree) options_return.getTree();
-            if (tree == null) fail("The options tree returned from parser is null.");
-            final List children = tree.getChildren();
-            if (children.isEmpty()) fail("The list of recognized options is empty");
+        final CommandLineParser parser = new CommandLineParser(new CommonTokenStream(lineLexer));
+        parser.setTreeAdaptor(new VMOptionTreeAdaptor());
+        final CommandLineParser.vmOptions_return options_return = parser.vmOptions();
+        final BaseTree tree = (BaseTree) options_return.getTree();
+        if (tree == null) fail("The options tree returned from parser is null.");
+        assert tree != null;
+        final List<JavaVMOption<?>> children = (List<JavaVMOption<?>>) tree.getChildren();
+        if (children.isEmpty()) fail("The list of recognized options is empty");
 
-            Set<JavaVMOption<?>> template = new HashSet<JavaVMOption<?>>();
-            template.add(setOptionValue(new SwitchNode("client")));
-            template.add(setOptionValue(new UnknownOption("hello:dolly")));
-            template.add(setOptionValue(new UnrecognizedOption("serv")));
-            template.add(setOptionValue(new ParametrizedNode("version", ":")));
+        Set<JavaVMOption<?>> template = new HashSet<>();
+        template.add(setOptionValue(new SwitchNode("client")));
+        template.add(setOptionValue(new UnknownOption("hello:dolly")));
+        template.add(setOptionValue(new UnrecognizedOption("serv")));
+        template.add(setOptionValue(new ParametrizedNode("version", ":")));
 
-            Iterator it = children.iterator();
-            while (it.hasNext()) {
-                Object child = it.next();
-                if (template.contains(child)) {
-                    it.remove();
-                }
+        Iterator<JavaVMOption<?>> it = children.iterator();
+        while (it.hasNext()) {
+            JavaVMOption<?> child = it.next();
+            if (template.contains(child)) {
+                it.remove();
             }
+        }
 
-            if (!children.isEmpty()) {
-                StringBuilder sb = new StringBuilder();
-                for (Object child : children) {
-                    ((JavaVMOption<?>)child).print(sb).append(" ");
-                }
-                fail("Following options are not in template: " + sb.toString() + ";\n\t where template is " + template);
+        if (!children.isEmpty()) {
+            StringBuilder sb = new StringBuilder();
+            for (Object child : children) {
+                ((JavaVMOption<?>)child).print(sb).append(" ");
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+            fail("Following options are not in template: " + sb.toString() + ";\n\t where template is " + template);
         }
     }
 
@@ -156,6 +145,7 @@ public class VmOptionsGrammarTest extends NbTestCase {
         }
     }
 
+    @SuppressWarnings("AssignmentToMethodParameter")
     private void verifyOption(JavaVMOption<?> option) throws Exception {
         option = setOptionValue(option);
         StringBuilder sb = new StringBuilder();

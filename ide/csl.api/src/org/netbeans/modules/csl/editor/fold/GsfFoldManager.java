@@ -253,7 +253,7 @@ public class GsfFoldManager implements FoldManager {
         }
 
         //XXX: this will hold JavaElementFoldTask as long as the FileObject exists:
-        private final static Map<FileObject, JavaElementFoldTask> file2Task = new WeakHashMap<FileObject, JavaElementFoldTask>();
+        private static final Map<FileObject, JavaElementFoldTask> file2Task = new WeakHashMap<FileObject, JavaElementFoldTask>();
         
         static JavaElementFoldTask getTask(FileObject file) {
             synchronized (file2Task) {

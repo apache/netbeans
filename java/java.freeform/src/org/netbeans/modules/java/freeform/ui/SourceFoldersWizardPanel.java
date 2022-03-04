@@ -112,7 +112,7 @@ public class SourceFoldersWizardPanel implements WizardDescriptor.Panel, ChangeL
             while (it.hasNext()) {
                 String path = it.next();
                 assert it.hasNext();
-                String label = (String)it.next();
+                String label = it.next();
                 // try to find if the model already contains this source folder
                 boolean found = false;
                 for (int i = 0; i < pm.getSourceFoldersCount(); i++) {

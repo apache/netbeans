@@ -1003,8 +1003,9 @@ public final class PersistenceManager implements PropertyChangeListener {
             return;
         }
 
-        for (Exception e : failedCompsMap.keySet()) {
-            String name = failedCompsMap.get(e);
+        for (Map.Entry<Exception, String> entry : failedCompsMap.entrySet()) {
+            Exception e = entry.getKey();
+            String name = entry.getValue();
             // create message
             String message = NbBundle.getMessage(PersistenceManager.class, 
                     (reading ? "FMT_TCReadError" : "FMT_TCWriteError"),

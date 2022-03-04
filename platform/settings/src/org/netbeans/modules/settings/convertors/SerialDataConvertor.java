@@ -836,7 +836,7 @@ implements PropertyChangeListener, FileSystem.AtomicAction {
     /** A provider for .settings files  containing serial data format
      * (hexa stream)
      */
-    public final static class Provider implements Environment.Provider {
+    public static final class Provider implements Environment.Provider {
         private final FileObject providerFO;
         
         public static Environment.Provider create(FileObject fo) {

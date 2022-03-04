@@ -624,7 +624,7 @@ public class SchemaRep implements PrefixGuesser {
             return result;
         }
     }
-    static private Map schemaValidSubElementTypeMap = null;
+    private static Map schemaValidSubElementTypeMap = null;
     static {
         schemaValidSubElementTypeMap = new HashMap();
         schemaValidSubElementTypeMap.put(Annotation.class, null);
@@ -729,7 +729,7 @@ public class SchemaRep implements PrefixGuesser {
             return result;
         }
     }
-    static private Map complexTypeValidSubElementTypeMap = null;
+    private static Map complexTypeValidSubElementTypeMap = null;
     static {
         complexTypeValidSubElementTypeMap = new HashMap();
         complexTypeValidSubElementTypeMap.put(Annotation.class, null);
@@ -779,7 +779,7 @@ public class SchemaRep implements PrefixGuesser {
             return simpleContentValidSubElementTypeMap;
         }
     }
-    static private Map simpleContentValidSubElementTypeMap = null;
+    private static Map simpleContentValidSubElementTypeMap = null;
     static {
         simpleContentValidSubElementTypeMap = new HashMap();
         simpleContentValidSubElementTypeMap.put(Annotation.class, null);
@@ -848,7 +848,7 @@ public class SchemaRep implements PrefixGuesser {
             return result;
         }
     }
-    static private Map complexContentValidSubElementTypeMap = null;
+    private static Map complexContentValidSubElementTypeMap = null;
     static {
         complexContentValidSubElementTypeMap = new HashMap();
         complexContentValidSubElementTypeMap.put(Annotation.class, null);
@@ -982,7 +982,7 @@ public class SchemaRep implements PrefixGuesser {
             return result;
         }
     }
-    static private Map simpleTypeValidSubElementTypeMap = null;
+    private static Map simpleTypeValidSubElementTypeMap = null;
     static {
         simpleTypeValidSubElementTypeMap = new HashMap();
         simpleTypeValidSubElementTypeMap.put(Annotation.class, null);
@@ -1116,7 +1116,7 @@ public class SchemaRep implements PrefixGuesser {
             return result;
         }
     }
-    static private Map unionTypeValidSubElementTypeMap = null;
+    private static Map unionTypeValidSubElementTypeMap = null;
     static {
         unionTypeValidSubElementTypeMap = new HashMap();
         unionTypeValidSubElementTypeMap.put(Annotation.class, null);
@@ -1258,7 +1258,7 @@ public class SchemaRep implements PrefixGuesser {
             return result;
         }
     }
-    static private Map restrictionValidSubElementTypeMap = null;
+    private static Map restrictionValidSubElementTypeMap = null;
     static {
         restrictionValidSubElementTypeMap = new HashMap();
         restrictionValidSubElementTypeMap.put(Annotation.class, null);
@@ -1358,7 +1358,7 @@ public class SchemaRep implements PrefixGuesser {
             return result;
         }
     }
-    static private Map extensionValidSubElementTypeMap = null;
+    private static Map extensionValidSubElementTypeMap = null;
     static {
         extensionValidSubElementTypeMap = new HashMap();
         extensionValidSubElementTypeMap.put(Annotation.class, null);
@@ -1445,7 +1445,7 @@ public class SchemaRep implements PrefixGuesser {
             return result;
         }
     }
-    static private Map listValidSubElementTypeMap = null;
+    private static Map listValidSubElementTypeMap = null;
     static {
         listValidSubElementTypeMap = new HashMap();
         listValidSubElementTypeMap.put(Annotation.class, null);
@@ -1515,7 +1515,7 @@ public class SchemaRep implements PrefixGuesser {
             return getName()+" ("+value+")";
         }
     }
-    static private Map restrictionTypeValidSubElementTypeMap = null;
+    private static Map restrictionTypeValidSubElementTypeMap = null;
     static {
         restrictionTypeValidSubElementTypeMap = new HashMap();
         restrictionTypeValidSubElementTypeMap.put(Annotation.class, null);
@@ -2017,7 +2017,7 @@ public class SchemaRep implements PrefixGuesser {
             return new Key();
         }
     }
-    static private Map keyValidSubElementTypeMap = null;
+    private static Map keyValidSubElementTypeMap = null;
     static {
         keyValidSubElementTypeMap = new HashMap();
         keyValidSubElementTypeMap.put(Annotation.class, null);
@@ -2042,7 +2042,7 @@ public class SchemaRep implements PrefixGuesser {
             return new Unique();
         }
     }
-    static private Map uniqueValidSubElementTypeMap = null;
+    private static Map uniqueValidSubElementTypeMap = null;
     static {
         uniqueValidSubElementTypeMap = new HashMap();
         uniqueValidSubElementTypeMap.put(Annotation.class, null);
@@ -2100,7 +2100,7 @@ public class SchemaRep implements PrefixGuesser {
             return new KeyRef();
         }
     }
-    static private Map keyrefValidSubElementTypeMap = null;
+    private static Map keyrefValidSubElementTypeMap = null;
     static {
         keyrefValidSubElementTypeMap = new HashMap();
         keyrefValidSubElementTypeMap.put(Annotation.class, null);
@@ -2213,7 +2213,7 @@ public class SchemaRep implements PrefixGuesser {
             return new Selector();
         }
     }
-    static private Map selectorValidSubElementTypeMap = null;
+    private static Map selectorValidSubElementTypeMap = null;
     static {
         selectorValidSubElementTypeMap = new HashMap();
         selectorValidSubElementTypeMap.put(Annotation.class, null);
@@ -2235,7 +2235,7 @@ public class SchemaRep implements PrefixGuesser {
             return new Field();
         }
     }
-    static private Map fieldValidSubElementTypeMap = null;
+    private static Map fieldValidSubElementTypeMap = null;
     static {
         fieldValidSubElementTypeMap = new HashMap();
         fieldValidSubElementTypeMap.put(Annotation.class, null);
@@ -2567,7 +2567,7 @@ public class SchemaRep implements PrefixGuesser {
             return new Sequence();
         }
     }
-    static private Map sequenceValidSubElementTypeMap = null;
+    private static Map sequenceValidSubElementTypeMap = null;
     static {
         sequenceValidSubElementTypeMap = new HashMap();
         sequenceValidSubElementTypeMap.put(Annotation.class, null);
@@ -2595,7 +2595,7 @@ public class SchemaRep implements PrefixGuesser {
             return new Choice();
         }
     }
-    static private Map choiceValidSubElementTypeMap = null;
+    private static Map choiceValidSubElementTypeMap = null;
     static {
         choiceValidSubElementTypeMap = new HashMap();
         choiceValidSubElementTypeMap.put(Annotation.class, null);
@@ -2623,7 +2623,7 @@ public class SchemaRep implements PrefixGuesser {
             return new All();
         }
     }
-    static private Map allValidSubElementTypeMap = null;
+    private static Map allValidSubElementTypeMap = null;
     static {
         allValidSubElementTypeMap = new HashMap();
         allValidSubElementTypeMap.put(Annotation.class, null);
@@ -2737,7 +2737,7 @@ public class SchemaRep implements PrefixGuesser {
             return result;
         }
     }
-    static private Map groupValidSubElementTypeMap = null;
+    private static Map groupValidSubElementTypeMap = null;
     static {
         groupValidSubElementTypeMap = new HashMap();
         groupValidSubElementTypeMap.put(All.class, null);
@@ -2787,7 +2787,7 @@ public class SchemaRep implements PrefixGuesser {
             return annotationValidSubElementTypeMap;
         }
     }
-    static private Map annotationValidSubElementTypeMap = null;
+    private static Map annotationValidSubElementTypeMap = null;
     static {
         annotationValidSubElementTypeMap = new HashMap();
         annotationValidSubElementTypeMap.put(AppInfo.class, null);
@@ -2839,7 +2839,7 @@ public class SchemaRep implements PrefixGuesser {
             return appInfoValidSubElementTypeMap;
         }
     }
-    static private Map appInfoValidSubElementTypeMap = null;
+    private static Map appInfoValidSubElementTypeMap = null;
     static {
         appInfoValidSubElementTypeMap = new HashMap();
         appInfoValidSubElementTypeMap.put(AnyNode.class, null);
@@ -2884,7 +2884,7 @@ public class SchemaRep implements PrefixGuesser {
             return documentationValidSubElementTypeMap;
         }
     }
-    static private Map documentationValidSubElementTypeMap = null;
+    private static Map documentationValidSubElementTypeMap = null;
     static {
         documentationValidSubElementTypeMap = new HashMap();
         documentationValidSubElementTypeMap.put(AnyNode.class, null);
@@ -2987,7 +2987,7 @@ public class SchemaRep implements PrefixGuesser {
             return result;
         }
     }
-    static private Map anyNodeValidSubElementTypeMap = null;
+    private static Map anyNodeValidSubElementTypeMap = null;
     static {
         anyNodeValidSubElementTypeMap = new HashMap();
         anyNodeValidSubElementTypeMap.put(AnyNode.class, null);
@@ -3074,7 +3074,7 @@ public class SchemaRep implements PrefixGuesser {
             return result;
         }
     }
-    static private Map textNodeValidSubElementTypeMap = null;
+    private static Map textNodeValidSubElementTypeMap = null;
     static {
         textNodeValidSubElementTypeMap = new HashMap();
         textNodeValidSubElementTypeMap.put(AnyNode.class, null);
@@ -3228,8 +3228,7 @@ public class SchemaRep implements PrefixGuesser {
                 t = null;
             String oldType = type;
             type = t;
-            if (schemaTypeDefs.containsKey(oldType))  // FIXME
-                schemaTypeDefs.remove(oldType);
+            schemaTypeDefs.remove(oldType); // FIXME
             if (t == null)
                 return;
             putSchemaTypeDef(type, this);
@@ -3519,7 +3518,7 @@ public class SchemaRep implements PrefixGuesser {
             return result;
         }
     }
-    static private Map elementValidSubElementTypeMap = null;
+    private static Map elementValidSubElementTypeMap = null;
     static {
         elementValidSubElementTypeMap = new HashMap();
         elementValidSubElementTypeMap.put(Annotation.class, null);
@@ -3653,7 +3652,7 @@ public class SchemaRep implements PrefixGuesser {
             return result;
         }
     }
-    static private Map anyValidSubElementTypeMap = null;
+    private static Map anyValidSubElementTypeMap = null;
     static {
         anyValidSubElementTypeMap = new HashMap();
         anyValidSubElementTypeMap.put(Annotation.class, null);
@@ -3738,7 +3737,7 @@ public class SchemaRep implements PrefixGuesser {
             return result;
         }
     }
-    static private Map anyAttributeValidSubElementTypeMap = null;
+    private static Map anyAttributeValidSubElementTypeMap = null;
     static {
         anyAttributeValidSubElementTypeMap = new HashMap();
         anyAttributeValidSubElementTypeMap.put(Annotation.class, null);
@@ -4005,7 +4004,7 @@ public class SchemaRep implements PrefixGuesser {
             return result;
         }
     }
-    static private Map attributeValidSubElementTypeMap = null;
+    private static Map attributeValidSubElementTypeMap = null;
     static {
         attributeValidSubElementTypeMap = new HashMap();
         attributeValidSubElementTypeMap.put(Annotation.class, null);
@@ -4118,7 +4117,7 @@ public class SchemaRep implements PrefixGuesser {
             return result;
         }
     }
-    static private Map attributeGroupValidSubElementTypeMap = null;
+    private static Map attributeGroupValidSubElementTypeMap = null;
     static {
         attributeGroupValidSubElementTypeMap = new HashMap();
         attributeGroupValidSubElementTypeMap.put(Annotation.class, null);
@@ -4859,11 +4858,11 @@ public class SchemaRep implements PrefixGuesser {
         }
     }
 
-    static public String getXPathExpr(Node node) {
+    public static String getXPathExpr(Node node) {
         return getXPathExpr(node, true);
     }
 
-    static public String getXPathExpr(Node node, boolean addDescription) {
+    public static String getXPathExpr(Node node, boolean addDescription) {
         if (node instanceof Document)
             return "/";
         Node parentNode = node.getParentNode();

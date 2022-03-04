@@ -154,7 +154,7 @@ public final class CreatedModifiedFiles {
          */
     }
 
-    public static abstract class AbstractOperation implements Operation {
+    public abstract static class AbstractOperation implements Operation {
 
         private Project project;
         private SortedSet<String> createdPaths;
@@ -776,7 +776,7 @@ public final class CreatedModifiedFiles {
         return addModuleToTargetPlatform(codeNameBase, null, null, true, clusterName);
     }
     
-    private static abstract class AddOperation extends AbstractOperation {
+    private abstract static class AddOperation extends AbstractOperation {
 
         protected List<NbModuleProvider.ModuleDependency> dependencies;
         private Map<String, ModuleDependency> codenamebaseMap;

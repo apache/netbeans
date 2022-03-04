@@ -60,7 +60,7 @@ public class RepositoryRegistry {
      * A repository was created or removed, where old value is a Collection of all repositories 
      * before the change and new value a Collection of all repositories after the change.
      */
-    public final static String EVENT_REPOSITORIES_CHANGED = RepositoryManager.EVENT_REPOSITORIES_CHANGED; // NOI18N
+    public static final String EVENT_REPOSITORIES_CHANGED = RepositoryManager.EVENT_REPOSITORIES_CHANGED; // NOI18N
     
     private final PropertyChangeSupport changeSupport = new PropertyChangeSupport(this);
     

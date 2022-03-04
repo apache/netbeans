@@ -216,7 +216,7 @@ public abstract class BeansCompletionItem implements CompletionItem {
         return substituteText(component, substOffset, component.getCaret().getDot() - substOffset, false);
     }
 
-    abstract private static class BeansXmlCompletionItem extends BeansCompletionItem {
+    private abstract static class BeansXmlCompletionItem extends BeansCompletionItem {
         /////////
 
         protected int substitutionOffset;

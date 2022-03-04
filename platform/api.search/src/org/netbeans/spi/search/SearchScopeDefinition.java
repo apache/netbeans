@@ -39,7 +39,7 @@ import org.netbeans.api.search.provider.SearchInfo;
 public abstract class SearchScopeDefinition {
 
     private List<ChangeListener> changeListeners =
-            new ArrayList<ChangeListener>(1);
+            new ArrayList<>(1);
 
     /**
      * Identifies type of search scope.
@@ -83,7 +83,7 @@ public abstract class SearchScopeDefinition {
      * @param l listener to be registered
      * @see #isApplicable
      */
-    public synchronized final void addChangeListener(
+    public final synchronized void addChangeListener(
             @NonNull ChangeListener l) {
         if (!changeListeners.contains(l)) {
             changeListeners.add(l);
@@ -99,7 +99,7 @@ public abstract class SearchScopeDefinition {
      * @see #addChangeListener
      * @see #isApplicable
      */
-    public synchronized final void removeChangeListener(
+    public final synchronized void removeChangeListener(
             @NonNull ChangeListener l) {
         changeListeners.remove(l);
     }
@@ -111,7 +111,7 @@ public abstract class SearchScopeDefinition {
     protected final void notifyListeners() {
         ArrayList<ChangeListener> listenersCopy;
         synchronized (this) {
-            listenersCopy = new ArrayList<ChangeListener>(changeListeners);
+            listenersCopy = new ArrayList<>(changeListeners);
         }
         ChangeEvent ev = new ChangeEvent(this);
         for (ChangeListener cl : listenersCopy) {

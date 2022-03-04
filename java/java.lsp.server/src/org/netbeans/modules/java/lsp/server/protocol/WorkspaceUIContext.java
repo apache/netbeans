@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.java.lsp.server.protocol;
 
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import org.eclipse.lsp4j.MessageActionItem;
 import org.eclipse.lsp4j.MessageParams;
@@ -56,6 +57,10 @@ class WorkspaceUIContext extends UIContext {
         return client.showInputBox(params);
     }
 
+    @Override
+    public CompletableFuture<List<QuickPickItem>> showQuickPick(ShowQuickPickParams params) {
+        return client.showQuickPick(params);
+    }
 
     @Override
     protected void logMessage(MessageParams msg) {

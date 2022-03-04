@@ -635,8 +635,9 @@ import org.openide.util.BaseUtilities;
             if (ri.allResCount > -1) {
                 this.allResCount = ri.allResCount;
             }
-            for (String id : ri.rootIndexerTime.keySet()) {
-                Long spent = ri.rootIndexerTime.get(id);
+            for (Map.Entry<String, Long> entry : ri.rootIndexerTime.entrySet()) {
+                String id = entry.getKey();
+                Long spent = entry.getValue();
                 Long my = rootIndexerTime.get(id);
                 if (my == null) {
                     my = spent;

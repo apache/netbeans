@@ -444,7 +444,7 @@ public abstract class FileObject extends Object implements Serializable, Lookup.
     * @param attrName name of the attribute
     * @return appropriate (serializable) value or <CODE>null</CODE> if the attribute is unset (or could not be properly restored for some reason)
     */
-    abstract public Object getAttribute(String attrName);
+    public abstract Object getAttribute(String attrName);
 
     /** Set the file attribute with the specified name. The actual meaning of 
      * this method is implementation dependent. It is generally expected that
@@ -467,13 +467,13 @@ public abstract class FileObject extends Object implements Serializable, Lookup.
     * @param value new value or <code>null</code> to clear the attribute. Must be serializable, although particular filesystems may or may not use serialization to store attribute values.
     * @exception IOException if the attribute cannot be set. If serialization is used to store it, this may in fact be a subclass such as {@link java.io.NotSerializableException}.
     */
-    abstract public void setAttribute(String attrName, Object value)
+    public abstract void setAttribute(String attrName, Object value)
     throws IOException;
 
     /** Get all file attribute names for this file.
     * @return enumeration of keys (as strings)
     */
-    abstract public Enumeration<String> getAttributes();
+    public abstract Enumeration<String> getAttributes();
 
     /** Test whether this file has the specified extension.
     * @param ext the extension the file should have
@@ -1368,8 +1368,8 @@ public abstract class FileObject extends Object implements Serializable, Lookup.
     private static class ED extends FileSystem.EventDispatcher {
         private FCLSupport.Op op;
         private Enumeration<FileChangeListener> en;
-        final private List<FileChangeListener> fsList;
-        final private List<FileChangeListener> repList;
+        private final List<FileChangeListener> fsList;
+        private final List<FileChangeListener> repList;
         
         
         private FileEvent fe;

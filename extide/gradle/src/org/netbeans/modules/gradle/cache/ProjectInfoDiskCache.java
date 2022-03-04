@@ -39,7 +39,7 @@ import org.netbeans.modules.gradle.spi.GradleFiles;
 public final class ProjectInfoDiskCache extends AbstractDiskCache<GradleFiles, QualifiedProjectInfo> {
 
     // Increase this number if new info is gathered from the projects.
-    private static final int COMPATIBLE_CACHE_VERSION = 19;
+    private static final int COMPATIBLE_CACHE_VERSION = 20;
     private static final String INFO_CACHE_FILE_NAME = "project-info.ser"; //NOI18N
     private static final Map<GradleFiles, ProjectInfoDiskCache> DISK_CACHES = Collections.synchronizedMap(new WeakHashMap<>());
 
@@ -94,7 +94,7 @@ public final class ProjectInfoDiskCache extends AbstractDiskCache<GradleFiles, Q
 
         private final Quality quality;
         private final Map<String, Object> info;
-        private transient final Map<String, Object> ext;
+        private final transient Map<String, Object> ext;
         private final Set<String> problems;
         private final String gradleException;
 

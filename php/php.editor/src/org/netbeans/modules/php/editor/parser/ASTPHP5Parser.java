@@ -2294,14 +2294,14 @@ new EncodedActionTable17().getTableData()
     enum Access {
         NON_STATIC, STATIC, NULLSAFE
     }
-    protected final static Integer IMPLICIT_PUBLIC = Integer.valueOf(BodyDeclaration.Modifier.IMPLICIT_PUBLIC);
-    protected final static Integer PUBLIC = Integer.valueOf(BodyDeclaration.Modifier.PUBLIC);
-    protected final static Integer PRIVATE = Integer.valueOf(BodyDeclaration.Modifier.PRIVATE);
-    protected final static Integer PROTECTED = Integer.valueOf(BodyDeclaration.Modifier.PROTECTED);
-    protected final static Integer ABSTRACT = Integer.valueOf(BodyDeclaration.Modifier.ABSTRACT);
-    protected final static Integer FINAL = Integer.valueOf(BodyDeclaration.Modifier.FINAL);
-    protected final static Integer STATIC = Integer.valueOf(BodyDeclaration.Modifier.STATIC);
-    protected final static Integer READONLY = Integer.valueOf(BodyDeclaration.Modifier.READONLY);
+    protected static final Integer IMPLICIT_PUBLIC = Integer.valueOf(BodyDeclaration.Modifier.IMPLICIT_PUBLIC);
+    protected static final Integer PUBLIC = Integer.valueOf(BodyDeclaration.Modifier.PUBLIC);
+    protected static final Integer PRIVATE = Integer.valueOf(BodyDeclaration.Modifier.PRIVATE);
+    protected static final Integer PROTECTED = Integer.valueOf(BodyDeclaration.Modifier.PROTECTED);
+    protected static final Integer ABSTRACT = Integer.valueOf(BodyDeclaration.Modifier.ABSTRACT);
+    protected static final Integer FINAL = Integer.valueOf(BodyDeclaration.Modifier.FINAL);
+    protected static final Integer STATIC = Integer.valueOf(BodyDeclaration.Modifier.STATIC);
+    protected static final Integer READONLY = Integer.valueOf(BodyDeclaration.Modifier.READONLY);
 
     private ErrorStrategy defaultStrategy = new DefaultErrorStrategy();;
     private ErrorStrategy errorStrategy = defaultStrategy;

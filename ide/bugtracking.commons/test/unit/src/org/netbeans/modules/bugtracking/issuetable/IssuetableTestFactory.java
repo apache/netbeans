@@ -47,7 +47,7 @@ public abstract class IssuetableTestFactory extends NbTestSetup {
     public abstract int getColumnsCountBeforeSave();
     public abstract int getColumnsCountAfterSave();
 
-    public final static  IssuetableTestFactory getInstance (Test test) {
+    public static final  IssuetableTestFactory getInstance (Test test) {
         IssuetableTestFactory factory = getFromMap (test);
         return factory;
     }

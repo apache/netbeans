@@ -988,7 +988,7 @@ public class TargetServer {
         }
     }
 
-    public static abstract class DeploymentContextAccessor {
+    public abstract static class DeploymentContextAccessor {
 
         private static volatile DeploymentContextAccessor accessor;
 

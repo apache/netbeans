@@ -307,7 +307,7 @@ public class EjbJarMultiViewDataObject extends DDMultiViewDataObject
                 public void run() {
                     if (deletedEjbNames != null) {
                         for (int i = 0; i < deletedEjbNames.size(); i++) {
-                            String deletedServletName = (String) deletedEjbNames.get(i);
+                            String deletedServletName = deletedEjbNames.get(i);
                             String deletedName = deletedServletName;
                             int index = deletedServletName.lastIndexOf("."); //NOI18N
                             if (index > 0) {
@@ -315,7 +315,7 @@ public class EjbJarMultiViewDataObject extends DDMultiViewDataObject
                             }
                             boolean found = false;
                             for (int j = 0; j < newFileNames.size(); j++) {
-                                String newFileName = (String) newFileNames.get(j);
+                                String newFileName = newFileNames.get(j);
                                 String newName = newFileName;
                                 int ind = newFileName.lastIndexOf("."); //NOI18N
                                 if (ind > 0) {

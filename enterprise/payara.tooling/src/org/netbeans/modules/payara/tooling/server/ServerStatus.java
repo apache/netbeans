@@ -461,7 +461,7 @@ public class ServerStatus implements Closeable {
     /**
      * Common individual server status check task.
      */
-    private static abstract class Task implements TaskStateListener {
+    private abstract static class Task implements TaskStateListener {
 
         ////////////////////////////////////////////////////////////////////////
         // Static methods                                                     //

@@ -954,12 +954,12 @@ public class PropertiesOpen extends CloneableOpenSupport
          * Changes display name of components accordingly. */
         private transient PropertyChangeListener nameUpdaterListener;
 
-        private transient static HashMap<PropertiesDataObject,PropertyChangeListener> weakNameUpdateListeners;
+        private static transient HashMap<PropertiesDataObject,PropertyChangeListener> weakNameUpdateListeners;
 
         /** Generated serial version UID. */
         static final long serialVersionUID =2836248291419024296L;
         
-        private final static transient Object UPDATE_LOCK = new Object();
+        private static final transient Object UPDATE_LOCK = new Object();
         /** Default constructor for deserialization. */
         public PropertiesCloneableTopComponent() {
         }

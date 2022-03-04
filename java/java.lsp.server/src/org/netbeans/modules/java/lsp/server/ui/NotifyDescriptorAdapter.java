@@ -29,7 +29,9 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionException;
 import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -42,7 +44,9 @@ import javax.swing.JButton;
 import org.eclipse.lsp4j.MessageActionItem;
 import org.eclipse.lsp4j.MessageType;
 import org.eclipse.lsp4j.ShowMessageRequestParams;
+import org.netbeans.modules.java.lsp.server.protocol.QuickPickItem;
 import org.netbeans.modules.java.lsp.server.protocol.ShowInputBoxParams;
+import org.netbeans.modules.java.lsp.server.protocol.ShowQuickPickParams;
 import org.openide.NotifyDescriptor;
 import org.openide.awt.Actions;
 import org.openide.util.NbBundle;
@@ -275,6 +279,44 @@ class NotifyDescriptorAdapter {
     }
     
     public CompletableFuture<Object> clientNotifyLater() {
+        return clientNotifyCompletion().thenApply(d -> d.getValue()).exceptionally(t -> {
+            if (t instanceof CompletionException) {
+                t = t.getCause();
+            }
+            if (!(t instanceof CancellationException)) {
+                LOG.log(Level.WARNING, "Exception occurred for {0}", descriptor);
+                LOG.log(Level.WARNING, "Exception stacktrace", t);
+            }
+            return null;
+        });
+    }
+    
+    class Ctrl<T> extends CompletableFuture<T> {
+        private final CompletableFuture clientFuture;
+
+        public Ctrl(CompletableFuture clientFuture) {
+            this.clientFuture = clientFuture;
+        }
+
+        @Override
+        public boolean cancel(boolean mayInterruptIfRunning) {
+            // this is not exactly well synchronized, but with no synchronization in 
+            // NotifyDescriptor the value cannot be set really atomically, but the dependents
+            // will be released during super.cancel() call.
+            boolean b = !isDone();
+            if (b) {
+                Object v = descriptor.getValue();
+                if (!(v == NotifyDescriptor.CANCEL_OPTION || v == NotifyDescriptor.CLOSED_OPTION)) {
+                    descriptor.setValue(NotifyDescriptor.CANCEL_OPTION);
+                }
+                b &= clientFuture.cancel(mayInterruptIfRunning);
+            }
+            return super.cancel(mayInterruptIfRunning) || b;
+        }
+    }
+    
+    public <T extends NotifyDescriptor> CompletableFuture<T> clientNotifyCompletion() {
+        // wrapper that allows to externally control the client's Future
         if (descriptor instanceof NotifyDescriptor.InputLine) {
             NotifyDescriptor.InputLine inp = (NotifyDescriptor.InputLine) descriptor;
             ShowInputBoxParams params = new ShowInputBoxParams();
@@ -282,22 +324,78 @@ class NotifyDescriptorAdapter {
             params.setValue(inp.getInputText());
             params.setPassword(descriptor instanceof NotifyDescriptor.PasswordLine);
             CompletableFuture<String> newText = client.showInputBox(params);
-            return newText.thenApply((item) -> {
+            Ctrl<T> ctrl = new Ctrl<>(newText);
+            newText.thenAccept((item) -> {
                 if (item == null) {
-                    return NotifyDescriptor.CLOSED_OPTION;
+                    descriptor.setValue(NotifyDescriptor.CLOSED_OPTION);
+                    ctrl.completeExceptionally(new CancellationException());
+                } else {
+                    inp.setInputText(item);
+                    descriptor.setValue(NotifyDescriptor.OK_OPTION);
+                    ctrl.complete((T)descriptor);
                 }
-                inp.setInputText(item);
-                return NotifyDescriptor.OK_OPTION;
+            }).exceptionally(t -> {
+                if (t instanceof CompletionException) {
+                    t = t.getCause();
+                }
+                ctrl.completeExceptionally(t);
+                return null;
             });
+            return ctrl;
+        } else if (descriptor instanceof NotifyDescriptor.QuickPick) {
+            NotifyDescriptor.QuickPick qp = (NotifyDescriptor.QuickPick) descriptor;
+            Map<QuickPickItem, NotifyDescriptor.QuickPick.Item> items = new HashMap<>();
+            for (NotifyDescriptor.QuickPick.Item item : qp.getItems()) {
+                items.put(new QuickPickItem(item.getLabel(), item.getDescription(), null, item.isSelected(), null), item);
+            }
+            ShowQuickPickParams params = new ShowQuickPickParams(qp.getTitle(), qp.isMultipleSelection(), new ArrayList<>(items.keySet()));
+            CompletableFuture<List<QuickPickItem>> qpF = client.showQuickPick(params);
+            Ctrl<T> ctrl = new Ctrl<>(qpF);
+            qpF.thenAccept(selected -> {
+                if (selected == null) {
+                    descriptor.setValue(NotifyDescriptor.CLOSED_OPTION);
+                    ctrl.completeExceptionally(new CancellationException());
+                } else {
+                    for (Map.Entry<QuickPickItem, NotifyDescriptor.QuickPick.Item> entry : items.entrySet()) {
+                        entry.getValue().setSelected(selected.contains(entry.getKey()));
+                    }
+                    descriptor.setValue(NotifyDescriptor.OK_OPTION);
+                    ctrl.complete((T)descriptor);
+                }
+            }).exceptionally(t -> {
+                if (t instanceof CompletionException) {
+                    t = t.getCause();
+                }
+                ctrl.completeExceptionally(t);
+                return null;
+            });
+            return ctrl;
         } else {
             ShowMessageRequestParams params = createShowMessageRequest();
             if (params == null) {
-                CompletableFuture<Object> x = new CompletableFuture<>();
-                x.complete(NotifyDescriptor.CLOSED_OPTION);
+                descriptor.setValue(NotifyDescriptor.CLOSED_OPTION);
+                CompletableFuture<T> x = new CompletableFuture<>();
+                x.complete((T)descriptor);
                 return x;
             }
             CompletableFuture<MessageActionItem> resultItem =  client.showMessageRequest(request);
-            return resultItem /*.exceptionally(this::handleClientException) */.thenApply(this::processActivatedOption);
+            Ctrl<T> ctrl = new Ctrl<>(resultItem);
+            resultItem /*.exceptionally(this::handleClientException) */.thenApply(this::processActivatedOption).thenAccept(o -> {
+                descriptor.setValue(o);
+                if (o == NotifyDescriptor.CLOSED_OPTION || o == NotifyDescriptor.CANCEL_OPTION) {
+                    ctrl.completeExceptionally(new CancellationException());
+                } else {
+                    ctrl.complete((T)descriptor);
+                }
+            }).exceptionally(t -> {
+                // JDK-8233050: this exceptionally is chained after .thenApply, it will receive earlier exceptions wrapped:
+                if (t instanceof CompletionException) {
+                    t = ((CompletionException)t).getCause();
+                }
+                ctrl.completeExceptionally(t);
+                return null;
+            });
+            return ctrl;
         }
     }
     

@@ -176,7 +176,7 @@ public class ExtFormatter extends Formatter implements FormatLayer {
     public synchronized boolean replaceFormatLayer(String layerName, FormatLayer layer) {
         int cnt = formatLayerList.size();
         for (int i = 0; i < cnt; i++) {
-            if (layerName.equals(((FormatLayer)formatLayerList.get(i)).getName())) {
+            if (layerName.equals(formatLayerList.get(i).getName())) {
                 formatLayerList.set(i, layer);
                 return true;
             }

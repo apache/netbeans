@@ -234,7 +234,7 @@ public class JsStructureScanner implements StructureScanner {
         Token<? extends JsTokenId> token = LexUtilities.findPrevious(ts, Arrays.asList(JsTokenId.WHITESPACE));
         if ((token.id() == JsTokenId.OPERATOR_ASSIGNMENT || token.id() == JsTokenId.OPERATOR_COLON) && ts.movePrevious()) {
             token = LexUtilities.findPrevious(ts, Arrays.asList(JsTokenId.WHITESPACE));
-            if (token.id() == JsTokenId.IDENTIFIER) {
+            if (token.id() == JsTokenId.IDENTIFIER || token.id() == JsTokenId.PRIVATE_IDENTIFIER) {
                 // it's:
                 // name : function() ...
                 // name = function() ...
@@ -245,7 +245,7 @@ public class JsStructureScanner implements StructureScanner {
             ts.move(functionKeywordPosition);
             ts.moveNext(); ts.moveNext();
             token = LexUtilities.findNext(ts, Arrays.asList(JsTokenId.WHITESPACE));
-            if (token.id() == JsTokenId.IDENTIFIER) {
+            if (token.id() == JsTokenId.IDENTIFIER || token.id() == JsTokenId.PRIVATE_IDENTIFIER) {
                 value = true;
             }
         }
@@ -403,10 +403,10 @@ public class JsStructureScanner implements StructureScanner {
 
         private JsObject modelElement;
         
-        final private List<? extends StructureItem> children;
-        final private String sortPrefix;
-        final protected ParserResult parserResult;
-        final private String fqn;
+        private final List<? extends StructureItem> children;
+        private final String sortPrefix;
+        protected final ParserResult parserResult;
+        private final String fqn;
         
         public JsStructureItem(JsObject elementHandle, List<? extends StructureItem> children, String sortPrefix, ParserResult parserResult) {
             this.modelElement = elementHandle;

@@ -207,7 +207,7 @@ public class CPActionsImplementationProvider extends ActionsImplementationProvid
         return false;
     }
 
-    private static abstract class TextComponentTask extends UserTask implements Runnable {
+    private abstract static class TextComponentTask extends UserTask implements Runnable {
 
         private final Document document;
         private final int caretOffset;

@@ -347,7 +347,7 @@ public class TestBase extends NbTestCase {
         }
     }
 
-    protected static abstract class TestModule {
+    protected abstract static class TestModule {
 
         protected final FileObject projectDir;
         protected final FileObject[] sources;

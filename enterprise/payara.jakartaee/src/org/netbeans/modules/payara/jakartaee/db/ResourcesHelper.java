@@ -90,7 +90,7 @@ public class ResourcesHelper {
         });
     }
 
-    static private J2eeModuleProvider getProvider(Project project) {
+    private static J2eeModuleProvider getProvider(Project project) {
         J2eeModuleProvider provider = null;
         if (project != null) {
             org.openide.util.Lookup lookup = project.getLookup();
@@ -99,7 +99,7 @@ public class ResourcesHelper {
         return provider;
     }
 
-    static private void registerSampleResource(PayaraModule commonSupport) {
+    private static void registerSampleResource(PayaraModule commonSupport) {
         String sample_poolname = "H2Pool"; //NOI18N
         String sample_jdbc = "jdbc/__default"; //NOI18N
         String sample_classname = "org.h2.jdbcx.JdbcDataSource"; //NOI18N

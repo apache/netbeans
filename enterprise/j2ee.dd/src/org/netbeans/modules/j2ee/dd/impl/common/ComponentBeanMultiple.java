@@ -97,7 +97,7 @@ public abstract class ComponentBeanMultiple extends DescriptionBeanMultiple impl
             Iterator<Map.Entry> entries = displayNames.entrySet().iterator();
             int i=0;
             while (entries.hasNext()) {
-                Map.Entry entry = (Map.Entry) entries.next();
+                Map.Entry entry = entries.next();
                 String key = (String) entry.getKey();
                 addDisplayName((String) entry.getValue());
                 setDisplayNameXmlLang(i++, key);

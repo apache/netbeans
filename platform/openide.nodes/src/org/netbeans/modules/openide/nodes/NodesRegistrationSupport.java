@@ -237,7 +237,7 @@ public final class NodesRegistrationSupport {
         }
     }
     
-    private static abstract class AbstractRegistrator implements LookupListener {
+    private abstract static class AbstractRegistrator implements LookupListener {
         Result lookupResult;
         private final Class cls;
         

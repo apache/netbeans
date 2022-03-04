@@ -109,7 +109,7 @@ public final class PreferencesStorage implements StorageDescription<String, Type
             
     private static final String MIME_TYPE = "text/x-nbeditor-preferences"; //NOI18N
     
-    private static abstract class PreferencesReader extends StorageReader<String, TypedValue> {
+    private abstract static class PreferencesReader extends StorageReader<String, TypedValue> {
         protected PreferencesReader(FileObject f, String mimePath) {
             super(f, mimePath);
         }

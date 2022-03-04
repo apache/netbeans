@@ -32,7 +32,7 @@ public interface AxisMarksPainter {
     public Component getPainter(AxisMark mark);
 
 
-    public static abstract class Abstract extends JLabel implements AxisMarksPainter {
+    public abstract static class Abstract extends JLabel implements AxisMarksPainter {
 
         public Abstract() { setBorder(BorderFactory.createEmptyBorder(2, 4, 2, 4)); }
 

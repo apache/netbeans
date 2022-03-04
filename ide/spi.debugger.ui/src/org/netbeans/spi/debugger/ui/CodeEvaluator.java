@@ -95,7 +95,7 @@ public final class CodeEvaluator {
      * Service handling evaluations in the code evaluator.
      * Register an implementation of this class via {@link Registration} annotation.
      */
-    public static abstract class EvaluatorService {
+    public abstract static class EvaluatorService {
         
         /**
          * Property name fired in order to refresh the evaluate button state.

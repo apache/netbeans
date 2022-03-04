@@ -48,8 +48,8 @@ import org.openide.util.NbBundle;
  * @author Jaroslav Tulach <jtulach@netbeans.org>
  */
 class ModuleData {
-    private final static PackageExport[] ZERO_PACKAGE_ARRAY = new PackageExport[0];
-    private final static String[] ZERO_STRING_ARRAY = new String[0];
+    private static final PackageExport[] ZERO_PACKAGE_ARRAY = new PackageExport[0];
+    private static final String[] ZERO_STRING_ARRAY = new String[0];
 
     private final String codeName;
     private final String codeNameBase;

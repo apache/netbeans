@@ -47,7 +47,7 @@ public class SessionOut extends BaseBean {
 
     static Vector<BeanComparator> comparators = new Vector<>();
 
-    static public final String PARAM = "Param"; //NOI18N
+    public static final String PARAM = "Param"; //NOI18N
 
     public SessionOut() {
 	this(Common.USE_DEFAULT_VALUES);
@@ -117,12 +117,12 @@ public class SessionOut extends BaseBean {
     }
 
     //
-    static public void addComparator(BeanComparator c) {
+    public static void addComparator(BeanComparator c) {
 	SessionOut.comparators.add(c);
     }
 
     //
-    static public void removeComparator(BeanComparator c) {
+    public static void removeComparator(BeanComparator c) {
 	SessionOut.comparators.remove(c);
     }
     //

@@ -59,8 +59,6 @@ public class TreeItem {
     // NBLS-specific items, to be processed by the client:
     // Metadata for the icon.
     public IconDescriptor iconDescriptor;
-    // The icon's index
-    public int iconIndex;
     
     /**
      * Metadata that describe an icon origin or contents.

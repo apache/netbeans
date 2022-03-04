@@ -108,7 +108,7 @@ public abstract class BlockFileHandler implements FileHandler {
     /**
      * {@inheritDoc}
      */
-    final public void load(final File file) throws IOException {
+    public final void load(final File file) throws IOException {
         if (file == null) {
             throw new IllegalArgumentException(
                     "The 'file' parameter cannot be null."); // NOI18N
@@ -120,7 +120,7 @@ public abstract class BlockFileHandler implements FileHandler {
     /**
      * {@inheritDoc}
      */
-    final public void save(final File file) throws IOException {
+    public final void save(final File file) throws IOException {
         if (file == null) {
             throw new IllegalArgumentException(
                     "The 'file' parameter cannot be null."); // NOI18N
@@ -136,7 +136,7 @@ public abstract class BlockFileHandler implements FileHandler {
     /**
      * {@inheritDoc}
      */
-    final public String getCurrentComment() {
+    public final String getCurrentComment() {
         if (contents == null) {
             throw new IllegalStateException(
                     "The contents cache has not been intialized."); // NOI18N
@@ -154,7 +154,7 @@ public abstract class BlockFileHandler implements FileHandler {
     /**
      * {@inheritDoc}
      */
-    final public String getCorrectComment(final String text, final int lineLength) {
+    public final String getCorrectComment(final String text, final int lineLength) {
         return commentStart +
                 Utils.reformat(text, commentPrefix, lineLength) +
                 commentEnd + Utils.NL;
@@ -163,7 +163,7 @@ public abstract class BlockFileHandler implements FileHandler {
     /**
      * {@inheritDoc}
      */
-    final public void insertComment(final String text, final int lineLength) {
+    public final void insertComment(final String text, final int lineLength) {
         if (text == null) {
             throw new IllegalArgumentException(
                     "The 'text' parameter cannot be null."); // NOI18N
@@ -189,7 +189,7 @@ public abstract class BlockFileHandler implements FileHandler {
     /**
      * {@inheritDoc}
      */
-    final public void updateComment(final String text, final int lineLength) {
+    public final void updateComment(final String text, final int lineLength) {
         if (text == null) {
             throw new IllegalArgumentException(
                     "The 'text' parameter cannot be null."); // NOI18N

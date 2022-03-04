@@ -107,7 +107,7 @@ public abstract class LookupBasedJavaSourceTaskFactory extends JavaSourceTaskFac
      *
      * @param lookup new {@link Lookup}
      */
-    protected synchronized final void setLookup(Lookup lookup) {
+    protected final synchronized void setLookup(Lookup lookup) {
         if (fileObjectResult != null) {
             fileObjectResult.removeLookupListener(listener);
         }

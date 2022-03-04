@@ -155,7 +155,7 @@ public class ScrollPaneSupport extends AbstractLayoutSupport {
         return false; // cannot remove component from JSplitPane
     }
 
-    static private void ensureFakePeerAttached(Component comp) {
+    private static void ensureFakePeerAttached(Component comp) {
         FakePeerSupport.attachFakePeer(comp);
         if (comp instanceof Container)
             FakePeerSupport.attachFakePeerRecursively((Container)comp);

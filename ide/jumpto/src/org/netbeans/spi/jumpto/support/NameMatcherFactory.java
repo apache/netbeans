@@ -57,7 +57,7 @@ public final class NameMatcherFactory {
     private NameMatcherFactory() {
     }
 
-    private static abstract class BaseNameMatcher implements NameMatcher {
+    private abstract static class BaseNameMatcher implements NameMatcher {
 
         protected final String patternText;
 

@@ -67,9 +67,9 @@ import org.openide.util.Utilities;
  */
 public class ProjectXMLManagerTest extends TestBase {
     
-    private final static String ANT_PROJECT_SUPPORT = "org.netbeans.modules.project.ant";
-    private final static String DIALOGS = "org.openide.dialogs";
-    private final static Set<String> ASSUMED_CNBS;
+    private static final String ANT_PROJECT_SUPPORT = "org.netbeans.modules.project.ant";
+    private static final String DIALOGS = "org.openide.dialogs";
+    private static final Set<String> ASSUMED_CNBS;
     
     static {
         Set<String> assumedCNBs = new HashSet<>(2, 1.0f);

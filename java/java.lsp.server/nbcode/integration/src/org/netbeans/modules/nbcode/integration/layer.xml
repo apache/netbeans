@@ -98,5 +98,6 @@
         <folder name="XML">
             <file name="XMLCatalog.xml_hidden"/>
         </folder>
+        <folder name="Persistence_hidden"/>
     </folder>
 </filesystem>

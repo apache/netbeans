@@ -159,7 +159,7 @@ public class FeatureNotUpToDateTest extends NbTestCase
         assertFalse (feature + " has some available updates.", feature.getAvailableUpdates ().isEmpty ());
     }
     
-    final static class HackedModuleInfo extends ModuleInfo {
+    static final class HackedModuleInfo extends ModuleInfo {
         private ModuleInfo info;
         private SpecificationVersion hackedVersion;
         

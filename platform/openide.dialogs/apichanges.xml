@@ -27,6 +27,34 @@
 </apidefs>
 <changes>
     <change>
+         <summary>Support for CompletableFutures in Dialog API</summary>
+         <version major="7" minor="61"/>
+         <date day="14" month="2" year="2022"/>
+         <author login="sdedic"/>
+         <compatibility addition="yes" binary="compatible" source="compatible" semantic="compatible" deprecation="no" deletion="no" modification="no"/>
+         <description>
+             <p>
+                 <a href="@TOP@/org/openide/DialogDisplayer.html#notifyFuture-T-">DialogDisplayer.notifyFuture</a> now allows to chain processing after user closes the 
+                 dialog without blocking a thread as with <a href="@TOP@/org/openide/DialogDisplayer.html#notify-org.openide.NotifyDescriptor-">DialogDisplayer.notify</a>.
+             </p>
+         </description>
+         <class package="org.openide" name="DialogDisplayer"/>
+    </change>
+    <change>
+         <api name="dialogs"/>
+         <summary>NotifyDescriptor.QuickPick added</summary>
+         <version major="7" minor="60"/>
+         <date day="15" month="2" year="2022"/>
+         <author login="dbalek"/>
+         <compatibility addition="yes" binary="compatible" source="compatible" semantic="compatible" deprecation="no" deletion="no" modification="no"/>
+         <description>
+             <p>
+                 Added <code>QuickPick</code> providing a selection list allowing multiple selections.
+             </p>
+         </description>
+         <class package="org.openide" name="NotifyDescriptor"/>
+    </change>
+    <change>
          <api name="dialogs"/>
          <summary>Allow vetoable Next/Finish validation in wizard</summary>
          <version major="7" minor="59"/>

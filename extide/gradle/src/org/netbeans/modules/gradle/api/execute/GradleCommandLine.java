@@ -37,6 +37,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.ArrayList;
 import java.util.EnumMap;
+import java.util.HashSet;
 import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -83,41 +84,58 @@ public final class GradleCommandLine implements Serializable {
     public static final String CHECK_TASK = "check"; //NOI18N
 
     /**
+     * 
+     * @since 2.23
+     */
+    public interface GradleOptionItem {
+        boolean isSupported();
+        List<String> getFlags();
+        String getDescription();
+    }
+    /**
      * Gradle command line flags
      */
-    public enum Flag {
-        NO_REBUILD(PARAM, "-a", "--no-rebuild"),
+    public enum Flag implements GradleOptionItem {
         BUILD_CACHE(PARAM, "--build-cache"),
+        CONFIGURATION_CACHE(PARAM, "--configuration-cache"),
         CONFIGURE_ON_DEMAND(PARAM, "--configure-on-demand"),
         CONTINUE(PARAM, "--continue"),
-        DRY_RUN(PARAM, "-m", "--dry-run"),
-        OFFLINE(PARAM, "--offline"),
-        PARALLEL(PARAM, "--parallel"),
-        REFRESH_DEPENDENCIES(PARAM, "--refresh-dependencies"),
-        RERUN_TASKS(PARAM, "--rerun-tasks"),
-        LOG_DEBUG(PARAM, "-d", "--debug"),
-        LOG_INFO(PARAM, "-i", "--info"),
-        LOG_WARN(PARAM, "-w", "--warn"),
-        LOG_QUIET(PARAM, "-q", "--quiet"),
-        STACKTRACE(PARAM, "-s", "--stacktrace"),
-        STACKTRACE_FULL(PARAM, "-S", "--full-stacktrace"),
-        PROFILE(PARAM, "--profile"),
-        NO_BUILD_CACHE(PARAM, "--no-build-cache"),
-        NO_CONFIGURE_ON_DEMAND(PARAM, "--no-configure-on-demand"),
-        NO_PARALLEL(PARAM, "--no-parallel"),
         CONTINUOUS(PARAM, "--continuous", "-t"),
-        SCAN(PARAM, "--scan"),
-        NO_SCAN(PARAM, "--no-scan"),
-        DAEMON(UNSUPPORTED, "--no-daemon"),
-        NO_DAEMON(UNSUPPORTED, "--daemon"),
-        HELP(UNSUPPORTED, "--help", "-h", "-?"),
+        DAEMON(UNSUPPORTED, "--daemon"),
+        DRY_RUN(PARAM, "-m", "--dry-run"),
+        EXPORT_KEYS(PARAM, "--export-keys"),
         FOREGROUND(UNSUPPORTED, "--foreground"),
         GUI(UNSUPPORTED, "--gui"),
+        HELP(UNSUPPORTED, "--help", "-h", "-?"),
+        LOG_DEBUG(PARAM, "-d", "--debug"),
+        LOG_INFO(PARAM, "-i", "--info"),
+        LOG_QUIET(PARAM, "-q", "--quiet"),
+        LOG_WARN(PARAM, "-w", "--warn"),
+        NO_BUILD_CACHE(PARAM, "--no-build-cache"),
+        NO_CONFIGURATION_CACHE(PARAM, "--no-configuration-cache"),
+        NO_CONFIGURE_ON_DEMAND(PARAM, "--no-configure-on-demand"),
+        NO_DAEMON(UNSUPPORTED, "--no-daemon"),
+        NO_PARALLEL(PARAM, "--no-parallel"),
+        NO_REBUILD(PARAM, "-a", "--no-rebuild"),
+        NO_SCAN(PARAM, "--no-scan"),
+        NO_SEARCH_UPWARD(UNSUPPORTED, "--no-search-upward", "-u"),
+        NO_WATCH_FS(PARAM, "--no-watch-fs"),
+        OFFLINE(PARAM, "--offline"),
+        PARALLEL(PARAM, "--parallel"),
+        PROFILE(PARAM, "--profile"),
+        RECOMPILE_SCRIPTS(UNSUPPORTED, "--recompile-scripts"),
+        REFRESH_DEPENDENCIES(PARAM, "--refresh-dependencies"),
+        REFRESH_KEYS(PARAM, "--refresh-keys"),
+        RERUN_TASKS(PARAM, "--rerun-tasks"),
+        SCAN(PARAM, "--scan"),
+        STACKTRACE(PARAM, "-s", "--stacktrace"),
+        STACKTRACE_FULL(PARAM, "-S", "--full-stacktrace"),
         STATUS(UNSUPPORTED, "--status"),
         STOP(UNSUPPORTED, "--stop"),
-        NO_SEARCH_UPWARD(UNSUPPORTED, "--no-search-upward", "-u"),
-        RECOMPILE_SCRIPTS(UNSUPPORTED, "--recompile-scripts"),
-        VERSION(UNSUPPORTED, "--version", "-v");
+        UPDATE_LOCKS(PARAM, "--update-locks"),
+        VERSION(UNSUPPORTED, "--version", "-v"),
+        WATCH_FS(PARAM, "--watch-fs"),
+        WRITE_LOCKS(PARAM,"--write-locks");
 
         private Set<Flag> incompatible = Collections.emptySet();
         private final Argument.Kind kind;
@@ -138,6 +156,9 @@ public final class GradleCommandLine implements Serializable {
             SCAN.incompatibleWith(NO_SCAN);
             NO_SCAN.incompatibleWith(SCAN);
 
+            CONFIGURATION_CACHE.incompatibleWith(NO_CONFIGURATION_CACHE);
+            NO_CONFIGURATION_CACHE.incompatibleWith(CONFIGURATION_CACHE);
+            
             CONFIGURE_ON_DEMAND.incompatibleWith(NO_CONFIGURE_ON_DEMAND);
             NO_CONFIGURE_ON_DEMAND.incompatibleWith(CONFIGURE_ON_DEMAND);
 
@@ -146,6 +167,9 @@ public final class GradleCommandLine implements Serializable {
 
             PARALLEL.incompatibleWith(NO_PARALLEL);
             NO_PARALLEL.incompatibleWith(PARALLEL);
+            
+            WATCH_FS.incompatibleWith(NO_WATCH_FS);
+            NO_WATCH_FS.incompatibleWith(WATCH_FS);
         }
 
         private Flag(Argument.Kind kind, String... flags) {
@@ -157,20 +181,23 @@ public final class GradleCommandLine implements Serializable {
             incompatible = Collections.unmodifiableSet(EnumSet.of(first, rest));
         }
 
+        @Override
         public boolean isSupported() {
             return kind != UNSUPPORTED;
         }
 
+        @Override
         public List<String> getFlags() {
             return flags;
         }
 
+        @Override
         public final String getDescription() {
             return NbBundle.getMessage(GradleCommandLine.class, this.name() + "_DSC");
         }
     }
 
-    public enum Property {
+    public enum Property implements GradleOptionItem {
         PROJECT(PARAM, "-P", "--project-prop"),
         SYSTEM(Argument.Kind.SYSTEM, "-D", "--system-prop");
 
@@ -184,27 +211,75 @@ public final class GradleCommandLine implements Serializable {
             this.flag = flag;
         }
 
+        @Override
+        public boolean isSupported() {
+            return true;
+        }
+
+        @Override
+        public List<String> getFlags() {
+            return Collections.singletonList(flag);
+        }
+
+        @Override
+        public String getDescription() {
+            return NbBundle.getMessage(GradleCommandLine.class, this.name() + "_DSC");
+        }
+
     }
 
-    public enum Parameter {
+    public enum Parameter implements GradleOptionItem {
 
-        SETTINGS_FILE(UNSUPPORTED, "-c", "--settings-file"),
-        CONSOLE(UNSUPPORTED, "--console"),
+        BUILD_FILE(UNSUPPORTED, "-b", "--build-file"),
+        CONFIGURATION_CACHE_PROBLEMS(PARAM, argValues("fail", "warn"), "--configuration-cache-problems"),
+        CONSOLE(UNSUPPORTED, argValues("plain", "auto", "rich", "verbose"), "--console"),
+        DEPENDENCY_VERIFICATION(PARAM, argValues("strict", "lenient", "off"), "-F", "--dependency-verification"),
+        EXCLUDE_TASK(PARAM, "-x", "--exclude-task"),
         GRADLE_USER_HOME(UNSUPPORTED, "-g", "--gradle-user-home"),
         INIT_SCRIPT(PARAM, "-I", "--init-script"),
-        MAX_WORKER(PARAM, "--max-worker"),
-        PROJECT_DIR(PARAM, "-p", "--project-dir"),
-        PROJECT_CACHE_DIR(UNSUPPORTED, "--project-cache-dir"),
-        EXCLUDE_TASK(PARAM, "-x", "--exclude-task"),
+        @Deprecated
         IMPORT_BUILD(UNSUPPORTED),
-        INCLUDE_BUILD(PARAM, "--include-build");
+        INCLUDE_BUILD(PARAM, "--include-build"),
+        MAX_WORKER(PARAM, "--max-worker"),
+        PRIORITY(PARAM, argValues("normal", "low"), "--priority"),
+        PROJECT_CACHE_DIR(UNSUPPORTED, "--project-cache-dir"),
+        PROJECT_DIR(PARAM, "-p", "--project-dir"),
+        @Deprecated
+        SETTINGS_FILE(UNSUPPORTED, "-c", "--settings-file"),
+        WARNING_MODE(PARAM, argValues("all", "fail", "summary", "none"),"--warning-mode"),
+        WRITE_VERIFICATION_METADATA(PARAM, "-M", "write-verification-metadata");
 
         final Argument.Kind kind;
         final List<String> flags;
+        final Argument.Values values;
 
         Parameter(Argument.Kind kind, String... flags) {
+            this(kind, Argument.Values.ANY, flags);
+        }
+        
+        Parameter(Argument.Kind kind, Argument.Values values, String... flags) {
             this.kind = kind;
+            this.values = values;
             this.flags = Arrays.asList(flags);
+        }
+        
+        private static Argument.Values argValues(String... values) {
+            return new Argument.Values(values);
+        }
+
+        @Override
+        public boolean isSupported() {
+            return kind != UNSUPPORTED;
+        }
+
+        @Override
+        public List<String> getFlags() {
+            return flags;
+        }
+
+        @Override
+        public String getDescription() {
+            return NbBundle.getMessage(GradleCommandLine.class, this.name() + "_DSC");
         }
     }
 
@@ -215,6 +290,15 @@ public final class GradleCommandLine implements Serializable {
             PARAM, SYSTEM, UNSUPPORTED
         }
 
+        static final class Values {
+            public static final Values ANY = new Values();
+            final String[] values;
+            
+            private Values(String... values) {
+                this.values = values;
+            }
+        }
+        
         Kind getKind();
 
         List<String> getArgs();
@@ -536,8 +620,12 @@ public final class GradleCommandLine implements Serializable {
         arguments.add(FlagArgument.of(flag));
     }
 
-    public boolean canAdd(Flag f) {
-        EnumSet<Flag> reserved = EnumSet.noneOf(Flag.class);
+    public boolean canAdd(Flag flag) {
+        return canAdd((GradleOptionItem) flag);
+    }
+    
+    public boolean canAdd(GradleOptionItem item) {
+        Set<GradleOptionItem> reserved = new HashSet<>();
         Iterator<Argument> it = arguments.iterator();
         while (it.hasNext()) {
             Argument arg = it.next();
@@ -547,7 +635,7 @@ public final class GradleCommandLine implements Serializable {
                 reserved.addAll(farg.flag.incompatible);
             }
         }
-        return !reserved.contains(f);
+        return !reserved.contains(item);
     }
 
     public void removeFlag(Flag flag) {
@@ -796,7 +884,7 @@ public final class GradleCommandLine implements Serializable {
         }
     }
 
-    final static void addGradleSettingJvmargs(File rootDir, List<String> jvmargs) {
+    static final void addGradleSettingJvmargs(File rootDir, List<String> jvmargs) {
         List<File> propFiles = new ArrayList<>();
         propFiles.add(new File(GradleSettings.getDefault().getGradleUserHome(), GradleFiles.GRADLE_PROPERTIES_NAME));
 
@@ -911,6 +999,7 @@ public final class GradleCommandLine implements Serializable {
         ret.setFlag(Flag.OFFLINE, settings.isOffline());
         ret.setFlag(Flag.CONFIGURE_ON_DEMAND, settings.isConfigureOnDemand());
         ret.setFlag(Flag.NO_REBUILD, settings.getNoRebuild());
+        ret.setFlag(Flag.CONFIGURATION_CACHE, settings.getUseConfigCache());
 
         ret.setLogLevel(settings.getDefaultLogLevel());
         ret.setStackTrace(settings.getDefaultStackTrace());

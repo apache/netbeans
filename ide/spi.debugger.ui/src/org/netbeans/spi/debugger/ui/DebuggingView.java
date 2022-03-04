@@ -57,7 +57,7 @@ import org.openide.windows.TopComponent;
  */
 public final class DebuggingView {
     
-    private final static DebuggingView INSTANCE = new DebuggingView();
+    private static final DebuggingView INSTANCE = new DebuggingView();
     
     private Reference<DebuggingViewComponent> dvcRef = new WeakReference<DebuggingViewComponent>(null);
     
@@ -100,7 +100,7 @@ public final class DebuggingView {
      * Debugging view is created for the given debugger session only when an
      * implementation of this class is found in the current session engine lookup.
      */
-    public static abstract class DVSupport {
+    public abstract static class DVSupport {
         
         /** Property name constant. */
         public static final String          PROP_THREAD_STARTED = "threadStarted";      // NOI18N

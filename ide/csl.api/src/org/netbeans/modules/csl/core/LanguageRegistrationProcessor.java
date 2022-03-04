@@ -48,6 +48,7 @@ import org.netbeans.modules.csl.editor.semantic.OccurrencesMarkProviderCreator;
 import org.netbeans.modules.csl.hints.GsfErrorProvider;
 import org.netbeans.modules.csl.hints.GsfUpToDateStateProviderFactory;
 import org.netbeans.modules.csl.navigation.ClassMemberPanel;
+import org.netbeans.modules.csl.navigation.GsfStructureProvider;
 import org.netbeans.modules.csl.spi.LanguageRegistration;
 import org.netbeans.modules.editor.errorstripe.privatespi.MarkProviderCreator;
 import org.netbeans.modules.editor.indent.spi.IndentTask;
@@ -327,6 +328,7 @@ public class LanguageRegistrationProcessor extends LayerGeneratingProcessor {
                .intvalue("position", 5238)
                .boolvalue("scrollable", false)
                .write();
+        instanceFile(b, "Editors/" + mimeType, null, GsfStructureProvider.class, null).write(); // NOI18N
 //
 //        Element navigatorFolder = mkdirs(doc, "Navigator/Panels/" + mimeType); // NOI18N
 //        createFile(doc, navigatorFolder, "org-netbeans-modules-csl-navigation-ClassMemberPanel.instance"); // NOI18N

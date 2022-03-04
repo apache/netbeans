@@ -1005,6 +1005,12 @@ public final class Server {
             logWarning(params);
             return CompletableFuture.completedFuture(null);
         }
+
+        @Override
+        public CompletableFuture<Void> configurationUpdate(UpdateConfigParams params) {
+            logWarning(params);
+            return CompletableFuture.completedFuture(null);
+        }
     };
 
 

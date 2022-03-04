@@ -47,6 +47,19 @@ export interface ShowStatusMessageParams extends ShowMessageParams {
     timeout?: number;
 }
 
+export interface UpdateConfigParams {
+    /**
+    * Information specifying configuration update.
+    */
+    section: string;
+    key: string;
+    value: string;
+}
+
+export namespace UpdateConfigurationRequest {
+    export const type = new ProtocolRequestType<UpdateConfigParams, void, never, void, void>('config/update');
+}
+
 export namespace StatusMessageRequest {
     export const type = new ProtocolNotificationType<ShowStatusMessageParams, void>('window/showStatusBarMessage');
 };

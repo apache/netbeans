@@ -3228,8 +3228,7 @@ public class SchemaRep implements PrefixGuesser {
                 t = null;
             String oldType = type;
             type = t;
-            if (schemaTypeDefs.containsKey(oldType))  // FIXME
-                schemaTypeDefs.remove(oldType);
+            schemaTypeDefs.remove(oldType); // FIXME
             if (t == null)
                 return;
             putSchemaTypeDef(type, this);

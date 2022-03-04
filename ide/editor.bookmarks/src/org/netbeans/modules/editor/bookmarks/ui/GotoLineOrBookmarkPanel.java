@@ -343,9 +343,7 @@ public class GotoLineOrBookmarkPanel extends JPanel implements ActionListener, F
 
     private void updateHistory() {
         String value = getValue();
-        if (history.contains(value)) {
-            history.remove(value); // move item to top
-        }
+        history.remove(value); // move item to top
         history.add(0, value);
         // assure it won't hold more than MAX_ITEMS
         if (history.size() > MAX_HISTORY_ITEMS) {

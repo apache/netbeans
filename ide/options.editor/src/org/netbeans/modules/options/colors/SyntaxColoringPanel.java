@@ -503,8 +503,9 @@ public class SyntaxColoringPanel extends JPanel implements ActionListener,
     @Override
     public void applyChanges() {
         if (colorModel == null) return;
-        for(String profile : toBeSaved.keySet()) {
-            Set<String> toBeSavedLanguages = toBeSaved.get(profile);
+        for(Map.Entry<String, Set<String>> entry : toBeSaved.entrySet()) {
+            String profile = entry.getKey();
+            Set<String> toBeSavedLanguages = entry.getValue();
             Map<String, List<AttributeSet>> schemeMap = profiles.get(profile);
             for(String languageName : toBeSavedLanguages) {
                 colorModel.setCategories(
@@ -832,8 +833,9 @@ public class SyntaxColoringPanel extends JPanel implements ActionListener,
     
     private void fireChanged() {
         boolean isChanged = false;
-        for(String profile : toBeSaved.keySet()) {
-            Set<String> toBeSavedLanguages = toBeSaved.get(profile);
+        for(Map.Entry<String, Set<String>> entry : toBeSaved.entrySet()) {
+            String profile = entry.getKey();
+            Set<String> toBeSavedLanguages = entry.getValue();
             Map<String, List<AttributeSet>> schemeMap = profiles.get(profile);
             for(String languageName : toBeSavedLanguages) {
                 String[] mimePath = getMimePath(languageName);

@@ -190,8 +190,9 @@ public final class EditorBridge extends KeymapManager {
         // convert actionToShortcuts: Map (ShortcutAction > Set (String (shortcut AS-M)))
         // to mimeTypeToKeyBinding: Map (String (mimetype) > List (MultiKeyBinding)).
         Map<String, List<MultiKeyBinding>> mimeTypeToKeyBinding = new HashMap<String, List<MultiKeyBinding>>(); // editor shortcuts
-        for(ShortcutAction action : actionToShortcuts.keySet()) {
-            Set<String> shortcuts = actionToShortcuts.get(action);
+        for(Map.Entry<ShortcutAction, Set<String>> entry : actionToShortcuts.entrySet()) {
+            ShortcutAction action = entry.getKey();
+            Set<String> shortcuts = entry.getValue();
 
             action = action.getKeymapManagerInstance(EDITOR_BRIDGE);
             if (!(action instanceof EditorAction)) {
@@ -270,8 +271,9 @@ public final class EditorBridge extends KeymapManager {
         }
 
         // 2) save all shortcuts
-        for (String mimeType : keyBindingSettings.keySet()) {
-            KeyBindingSettingsFactory kbs = keyBindingSettings.get(mimeType);
+        for (Map.Entry<String, KeyBindingSettingsFactory> entry : keyBindingSettings.entrySet()) {
+            String mimeType = entry.getKey();
+            KeyBindingSettingsFactory kbs = entry.getValue();
             kbs.setKeyBindings(profile, mimeTypeToKeyBinding.get(mimeType));
         }
     }
@@ -457,8 +459,9 @@ public final class EditorBridge extends KeymapManager {
         Map<String, Set<String>> actionNameToShortcuts = convertKeymap(keyBindings);
 
         // 3) create Map (EditorAction > Set (String (shortcut)))
-        for (String actionName : actionNameToShortcuts.keySet()) {
-            Set<String> keyStrokes = actionNameToShortcuts.get(actionName);
+        for (Map.Entry<String, Set<String>> entry : actionNameToShortcuts.entrySet()) {
+            String actionName = entry.getKey();
+            Set<String> keyStrokes = entry.getValue();
             ShortcutAction action = (ShortcutAction) getEditorActionsMap ().get (actionName);
             if (action == null) {
                 if (LOG.isLoggable(Level.FINE)) {

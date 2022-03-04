@@ -660,8 +660,9 @@ public class BasicPanelVisual extends JPanel implements DocumentListener, Window
             File fil = art.getFile();
             if (fil.exists()) {
                 Map<String, String> props = arch.loadRequiredProperties();
-                for (String key : props.keySet()) {
-                    String defVal = props.get(key);
+                for (Map.Entry<String, String> entry : props.entrySet()) {
+                    String key = entry.getKey();
+                    String defVal = entry.getValue();
                     if ("groupId".equals(key) || "artifactId".equals(key) || "version".equals(key)) {
                         continue; //don't show the basic props as additionals..
                     }

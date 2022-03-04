@@ -688,8 +688,9 @@ public class KeymapModel {
         Map<ShortcutAction,Set<String>> adding,
         Map<ShortcutAction, CompoundAction> sharedActions) {
 
-        for (ShortcutAction action : adding.keySet()) {
-            Set<String> shortcuts = adding.get(action);
+        for (Map.Entry<ShortcutAction, Set<String>> entry : adding.entrySet()) {
+            ShortcutAction action = entry.getKey();
+            Set<String> shortcuts = entry.getValue();
             if (shortcuts.isEmpty()) {
                 continue;
             }

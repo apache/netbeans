@@ -1214,9 +1214,7 @@ public final class OpenProjectList {
         
         String templateName = template.getPath();
         
-        if ( getRecentTemplates().contains( templateName ) ) {
-            getRecentTemplates().remove( templateName );
-        }
+        getRecentTemplates().remove(templateName);
         getRecentTemplates().add( 0, templateName );
         
         if ( getRecentTemplates().size() > 100 ) {

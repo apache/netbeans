@@ -23,16 +23,14 @@ set -x -e
 echo Given parameters: $1 $2 $3 $4 $5 $6
 
 if [ -z "$1" ] || [ -z "$2" ]|| [ -z "$3" ] || [ -z "$4" ] || [ -z "$5" ] || [ -z "$6" ] || [ -z "$7" ]; then
-    echo "usage: $0 zipdir prefix buildnumber build_jdk7 build_jdk8 build_jdk11 binaryname mac_sign_idname version_number [nb_locales]"
+    echo "usage: $0 zipdir prefix buildnumber binaryname installer_sign_idname application_sign_idname version_number [nb_locales]"
     echo ""
     echo "zipdir is the dir which contains the zip/modulclusters"
     echo "prefix is the distro filename prefix, e.g. netbeans-hudson-trunk in netbeans-hudson-trunk-2464"
     echo "buildnumber is the distro buildnumber, e.g. 2464 in netbeans-hudson-trunk-2464"
-    echo "build_jdk7 is 1 if bundle jdk7 are required and 0 if not"
-    echo "build_jdk8 is 1 if bundle jdk8 are required and 0 if not"
-    echo "build_jdk11 is 1 if bundle jdk11 are required and 0 if not"
     echo "binaryname is the basename of the zip file"
-    echo "mac_sign_idname are required if the packages are to be signed, 0 if not"
+    echo "installer_sign_idname are required if the packages are to be signed, 0 if not"
+    echo "application_sign_idname are required if the packages are to be signed, 0 if not"
     echo "version_number the netbeans version number"
     echo "[nb_locales] is the string with the list of locales"
     exit 1
@@ -41,14 +39,15 @@ fi
 work_dir=$1
 prefix=$2
 buildnumber=$3
-build_jdk7=$4
-build_jdk8=$5
-build_jdk11=$6
-binaryname=$7
-mac_sign_idname=$8
-version_number=$9
-if [ -n "${10}" ] ; then
-  nb_locales=",${10}"
+build_jdk7=0
+build_jdk8=0
+build_jdk11=0
+binaryname=$5
+installer_sign_idname=$6
+application_sign_idname=$7
+version_number=$8
+if [ -n "${9}" ] ; then
+  nb_locales=",${9}"
 fi
 
 basename=`dirname "$0"`
@@ -76,5 +75,5 @@ fi
 
 rm -rf "$basename"/dist_en
 
-ant -f $basename/build.xml $target -Dlocales=$nb_locales -Dcommon.name=$commonname -Dnb.binary.name=$binaryname -Dmac.sign.idname="$mac_sign_idname" -Dprefix=$prefix -Dbuildnumber=$buildnumber -Dversionnumber=$version_number -Dbuild.jdk7=$build_jdk7 -Dbuild.jdk8=$build_jdk8 -Dbuild.jdk11=$build_jdk11 -Dgf_builds_host=$GLASSFISH_BUILDS_HOST -Djre_builds_host=$JRE_BUILDS_HOST -Djdk_builds_host=$JDK_BUILDS_HOST -Djre_builds_path=$JRE_BUILDS_PATH -Djdk7_builds_path=$JDK7_BUILDS_PATH -Djdk8_builds_path=$JDK8_BUILDS_PATH -Djdk11_builds_path=$JDK11_BUILDS_PATH -Dbinary_cache_host=$BINARY_CACHE_HOST
+ant -f $basename/build.xml $target -Dlocales=$nb_locales -Dcommon.name=$commonname -Dnb.binary.name=$binaryname -Dinstaller.sign.idname="$installer_sign_idname" -Dapplication.sign.idname="$application_sign_idname" -Dprefix=$prefix -Dbuildnumber=$buildnumber -Dversionnumber=$version_number -Dbuild.jdk7=$build_jdk7 -Dbuild.jdk8=$build_jdk8 -Dbuild.jdk11=$build_jdk11 -Dgf_builds_host=$GLASSFISH_BUILDS_HOST -Djre_builds_host=$JRE_BUILDS_HOST -Djdk_builds_host=$JDK_BUILDS_HOST -Djre_builds_path=$JRE_BUILDS_PATH -Djdk7_builds_path=$JDK7_BUILDS_PATH -Djdk8_builds_path=$JDK8_BUILDS_PATH -Djdk11_builds_path=$JDK11_BUILDS_PATH -Dbinary_cache_host=$BINARY_CACHE_HOST
 mv -f "$basename"/dist "$basename"/dist_en

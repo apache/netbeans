@@ -25,7 +25,7 @@
     
     <import file="${basedir}/build.pro"/>
     <property file="${basedir}/Bundle.properties"/>
-    <loadfile property="sign_iden_name" srcFile="${mac.sign.idname}" quiet="true">
+    <loadfile property="sign_iden_name" srcFile="${installer.sign.idname}" quiet="true">
         <filterchain>
             <striplinebreaks/>
         </filterchain>
@@ -108,7 +108,7 @@
             <equals arg1="${build.jdk11}" arg2="1"/>
         </condition>
         <condition property="sign_iden_name_arg" value="" else="--sign '${sign_iden_name}'">
-            <equals arg1="${mac.sign.idname}" arg2="0"/>
+            <equals arg1="${installer.sign.idname}" arg2="0"/>
         </condition>
     </target>        
 

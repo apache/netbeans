@@ -69,11 +69,12 @@ if [ ! -z $NATIVE_MAC_MACHINE ] && [ ! -z $MAC_PATH ]; then
        exit $ERROR_CODE;
    fi
 
+
    # Run new builds
    sh $NB_ALL/nbbuild/installer/mac/newbuild/init.sh | ssh $NATIVE_MAC_MACHINE "cat > $MAC_PATH/nbbuild/installer/mac/newbuild/build-private.sh"
    ssh $NATIVE_MAC_MACHINE chmod a+x $MAC_PATH/nbbuild/installer/mac/newbuild/build.sh
 
-   BASE_COMMAND="$MAC_PATH/nbbuild/installer/mac/newbuild/build.sh $DIST $BASENAME_PREFIX $BUILDNUMBER $BUILD_NBJDK7 $BUILD_NBJDK8 $BUILD_NBJDK11 $BINARY_NAME $MAC_SIGN_IDENTITY_NAME $NB_VER_NUMBER $LOCALES"
+   BASE_COMMAND="$MAC_PATH/nbbuild/installer/mac/newbuild/build.sh $DIST $BASENAME_PREFIX $BUILDNUMBER $BINARY_NAME $INSTALLER_SIGN_IDENTITY_NAME $APPLICATION_SIGN_IDENTITY_NAME $NB_VER_NUMBER $LOCALES"
    
    ssh $NATIVE_MAC_MACHINE "$UNLOCK_COMMAND $BASE_COMMAND" > $MAC_LOG_NEW 2>&1 &
    REMOTE_MAC_PID=$!
@@ -84,8 +85,7 @@ if [ ! -z $BUILD_MAC ]; then
    sh $NB_ALL/nbbuild/installer/mac/newbuild/init.sh | cat > $NB_ALL/nbbuild/installer/mac/newbuild/build-private.sh
    chmod a+x $NB_ALL/nbbuild/installer/mac/newbuild/build.sh
 
-   BASE_COMMAND="$NB_ALL/nbbuild/installer/mac/newbuild/build.sh $DIST $BASENAME_PREFIX $BUILDNUMBER $BUILD_NBJDK7 $BUILD_NBJDK8 $BUILD_NBJDK11 $BINARY_NAME $MAC_SIGN_IDENTITY_NAME $NB_VER_NUMBER $LOCALES"
-
+   BASE_COMMAND="$NB_ALL/nbbuild/installer/mac/newbuild/build.sh $DIST $BASENAME_PREFIX $BUILDNUMBER $BINARY_NAME $INSTALLER_SIGN_IDENTITY_NAME $APPLICATION_SIGN_IDENTITY_NAME $NB_VER_NUMBER $LOCALES" 
    $BASE_COMMAND
 fi
 cd $NB_ALL/nbbuild/installer/infra/build

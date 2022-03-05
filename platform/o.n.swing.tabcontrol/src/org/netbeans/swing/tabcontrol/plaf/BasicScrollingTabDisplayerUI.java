@@ -468,20 +468,7 @@ public abstract class BasicScrollingTabDisplayerUI extends BasicTabDisplayerUI {
     
     @Override
     public Dimension getMinimumSize(JComponent c) {
-        int index = displayer.getSelectionModel().getSelectedIndex();
-        TabDataModel model = displayer.getModel();
-        if (model.size() == 0) {
-            return new Dimension(0, 0);
-        }
-        if( index < 0 || index >= model.size() )
-            index = 0;
-        Component comp = model.getTab(index).getComponent();
-        if( null == comp )
-            comp = displayer.getComponentConverter().getComponent( model.getTab( index ) );
-        Dimension minSize = null == comp ? new Dimension( 100, 10 ) : comp.getMinimumSize();
-        minSize.width = Math.max(minSize.width, 100);
-        minSize.height = Math.max(minSize.height, 10);
-        return minSize;
+        return new Dimension( 100,  displayer.getSize().height);
     }
     
     /**

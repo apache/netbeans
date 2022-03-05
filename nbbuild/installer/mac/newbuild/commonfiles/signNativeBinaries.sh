@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 #
 # Licensed to the Apache Software Foundation (ASF) under one
@@ -34,7 +34,8 @@ profilerBinaries=("/netbeans/profiler/lib/deployed/jdk16/mac/libprofilerinterfac
 jansiJar="/netbeans/java/maven/lib/jansi-2.4.0.jar"
 
 function signBinariesFromArray() {
-  for file in $1; do
+  arr=("$@")
+  for file in "${arr[@]}"; do
     echo $appDir$file
     codesign --force --timestamp --options=runtime -s "$appSigningIdentity" -v $appDir$file
   done
@@ -44,21 +45,22 @@ function signBinaryFromJar() {
   jar tf $appDir$1 | grep '\.so\|\.dylib\|\.jnilib'  > filelist.txt
   while read f
   do
-    if [["$f" == *native/Mac*]]; then
+    if [[ "$f" == *native/Mac* ]]; then
       jar xf $appDir$1 $f
       codesign --force --timestamp --options=runtime -s "$appSigningIdentity" -v $f
       jar uf $appDir$1 $f
       rm -rf $f
     fi
   done < filelist.txt
+  rm -rf filelist.txt
 }
 
 if [[ "$appDir" == *nbide* ]]; then
-  signBinariesFromArray ${nativeExecutionBinaries[@]}
-  signBinariesFromArray ${jniBinaries[@]}
+  signBinariesFromArray "${nativeExecutionBinaries[@]}"
+  signBinariesFromArray "${jniBinaries[@]}"
 fi
 
 if [[ "$appDir" == *javase* ]]; then
-  signBinariesFromArray ${profilerBinaries[@]}
+  signBinariesFromArray "${profilerBinaries[@]}"
   signBinaryFromJar $jansiJar
 fi

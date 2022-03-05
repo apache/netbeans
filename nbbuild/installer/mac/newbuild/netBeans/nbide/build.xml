@@ -88,7 +88,7 @@
         </condition>
         <exec executable="sh" failonerror="yes">
             <arg value="-c"/>
-            <arg value="codesign -vvv --force --deep --options=runtime ${codesign.identity.arg} '${appdir}'"/>
+            <arg value="codesign -vvv --force --deep --timestamp --options=runtime ${codesign.identity.arg} '${appdir}'"/>
         </exec>
     </target>
     
@@ -138,7 +138,7 @@ NB_ID="${nb.id}"
         </condition>        
         <exec executable="sh" failonerror="yes">
             <arg value="-c"/>
-            <arg value="pkgbuild --root ${builddir}/app --scripts ${scriptsdir} --identifier org.netbeans.ide.nbide.${nb.id} --install-location ${install.dir} ${pkgbuild.identity.arg} ${basedir}/../../build/nbide-${nb.id}.pkg"/>
+            <arg value="pkgbuild --root ${builddir}/app --timestamp --scripts ${scriptsdir} --identifier org.netbeans.ide.nbide.${nb.id} --install-location ${install.dir} ${pkgbuild.identity.arg} ${basedir}/../../build/nbide-${nb.id}.pkg"/>
         </exec>
     </target>
     

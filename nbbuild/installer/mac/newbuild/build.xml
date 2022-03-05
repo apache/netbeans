@@ -139,7 +139,20 @@
         <exec executable="sh" failonerror="yes">
             <arg value="-c"/>
             <arg value="unzip -o -d ${basedir}/netBeans/${module.name}/build/netbeans ${common.name}${nb.binary.name}-${cluster.name}.zip"/>
-        </exec>    
+        </exec>
+        <loadfile property="app_iden_name" srcFile="${application.sign.idname}" quiet="true">
+            <filterchain>
+               <striplinebreaks/>
+            </filterchain>
+        </loadfile>
+        <condition property="codesign.identity.arg" value="" else="'${app_iden_name}'">
+            <equals arg1="${application.sign.idname}" arg2="0"/>
+        </condition>
+        <property name="appDir" value="${basedir}/netBeans/${module.name}/build/netbeans"/>
+        <exec executable="sh" failonerror="yes">
+            <arg value="-c"/>
+            <arg value="sh ${basedir}/commonfiles/signNativeBinaries.sh ${codesign.identity.arg} ${appDir}"/>
+        </exec>   
     </target>
     
     <target name="size-pack-module" description="Count up size of the module, pack200">           
@@ -208,7 +221,7 @@
     <target name="build-module">
 
         <property name="module.builddir" value="${basedir}/netBeans/${module.name}/build"/>       
-        
+
         <ant target="size-pack-module"/>        
 
         <property name="scriptsdir" value="${module.builddir}/scripts"/>

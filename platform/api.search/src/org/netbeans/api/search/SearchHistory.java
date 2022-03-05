@@ -58,9 +58,9 @@ public final class SearchHistory {
 
     /** Shareable SearchPattern history. It is a List of SearchPatterns */
     private List<SearchPattern> searchPatternsList
-            = new ArrayList<SearchPattern>(MAX_SEARCH_PATTERNS_ITEMS);
+            = new ArrayList<>(MAX_SEARCH_PATTERNS_ITEMS);
     
-    private List<ReplacePattern> replacePatternsList = new ArrayList<ReplacePattern>(MAX_SEARCH_PATTERNS_ITEMS);
+    private List<ReplacePattern> replacePatternsList = new ArrayList<>(MAX_SEARCH_PATTERNS_ITEMS);
 
     /** Singleton instance */
     private static SearchHistory INSTANCE = null;

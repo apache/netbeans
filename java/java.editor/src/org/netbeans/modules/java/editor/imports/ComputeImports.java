@@ -323,8 +323,9 @@ public final class ComputeImports {
         
         // post processing: if some method hint was involved for a SN, we must retain ONLY
         // such Elements, which correspond to at least 1 method reference in the text. 
-        for (String sn : possibleMethodFQNs.keySet()) {
-            Set<String> fqns = possibleMethodFQNs.get(sn);
+        for (Map.Entry<String, Set<String>> entry : possibleMethodFQNs.entrySet()) {
+            String sn = entry.getKey();
+            Set<String> fqns = entry.getValue();
             
             List<Element> cands = candidates.get(sn);
             List<Element> rawCands = notFilteredCandidates.get(sn);
@@ -426,8 +427,9 @@ public final class ComputeImports {
         
         Set<TypeElement> validRights = new HashSet<TypeElement>();
         
-        for (TypeElement l : validPairs.keySet()) {
-            List<TypeElement> valid = validPairs.get(l);
+        for (Map.Entry<TypeElement, List<TypeElement>> entry : validPairs.entrySet()) {
+            TypeElement l = entry.getKey();
+            List<TypeElement> valid = entry.getValue();
             
             if (valid.isEmpty() && !leftReadOnly) {
                 //invalid left:

@@ -243,7 +243,7 @@ class GraphicalSearchListener extends SearchListener {
 
     private class EventChildren extends Children.Keys<EventNode> {
 
-        private List<EventNode> events = new ArrayList<EventNode>();
+        private List<EventNode> events = new ArrayList<>();
         EventType worstType = EventType.INFO;
 
         public synchronized void addEvent(EventNode event) {

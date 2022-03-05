@@ -192,7 +192,7 @@ class DTDGrammar implements ExtendedGrammarQuery {
                 contentModels.put(el.getTagName(), model);
             }
             if (model instanceof ContentModel) {
-                Enumeration en = ((ContentModel)model).whatCanFollow(new PreviousEnumeration(el, ctx));
+                Enumeration<String> en = ((ContentModel)model).whatCanFollow(new PreviousEnumeration(el, ctx));
                 if (en == null) return org.openide.util.Enumerations.empty();
                 String prefix = ctx.getCurrentPrefix();
                 elements = new TreeSet<>();

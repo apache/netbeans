@@ -2217,7 +2217,7 @@ public class JPDADebuggerImpl extends JPDADebugger {
             "org.openide.awt.SwingBrowserImpl.do-not-block-awt",
             String.valueOf (state != STATE_DISCONNECTED)
         );
-        return new PropertyChangeEvent(this, PROP_STATE, new Integer (o), new Integer (state));
+        return new PropertyChangeEvent(this, PROP_STATE, o, state);
     }
 
     private void setState (int state) {

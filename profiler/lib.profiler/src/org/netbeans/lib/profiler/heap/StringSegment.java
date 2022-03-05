@@ -55,7 +55,7 @@ class StringSegment extends TagBounds {
     //~ Methods ------------------------------------------------------------------------------------------------------------------
 
     String getStringByID(long stringID) {
-        Long stringIDObj = new Long(stringID);
+        Long stringIDObj = stringID;
         String string = (String) stringCache.get(stringIDObj);
         if (string == null) {
             string = createStringByID(stringID);

@@ -338,14 +338,17 @@ public class ProfilerRuntimeCPU extends ProfilerRuntime {
         byte methodId = -1;
         int sessionHash = -1;
 
-        if ("GET".equals(method)) { // NOI18N
-            methodId = 1;
-        } else if ("POST".equals(method)) { // NOI18N
-            methodId = 2;
-        } else if ("PUT".equals(method)) { // NOI18N
-            methodId = 3;
-        } else if ("DELETE".equals(method)) { // NOI18N
-            methodId = 4;
+        if (null != method) switch (method) {
+            case "GET": methodId = 1; break;    // NOI18N
+                
+            case "POST": methodId = 2; break;   // NOI18N
+                
+            case "PUT": methodId = 3; break;    // NOI18N
+                
+            case "DELETE": methodId = 4; break; // NOI18N
+                
+            default:
+                break;
         }
 
         if (sessionId != null) {
@@ -532,11 +535,11 @@ public class ProfilerRuntimeCPU extends ProfilerRuntime {
             return;
         }
         ti.inProfilingRuntimeMethod++;
-        ti.addParameter(Boolean.valueOf(b));
+        ti.addParameter(b);
         ti.inProfilingRuntimeMethod--; 
     }
 
-    public static void addParameter(char b) {
+    public static void addParameter(char c) {
         if (recursiveInstrumentationDisabled) {
             return;
         }
@@ -548,7 +551,7 @@ public class ProfilerRuntimeCPU extends ProfilerRuntime {
         }
 
         ti.inProfilingRuntimeMethod++;
-        ti.addParameter(new Character(b));
+        ti.addParameter(c);
         ti.inProfilingRuntimeMethod--; 
     }
 
@@ -564,11 +567,11 @@ public class ProfilerRuntimeCPU extends ProfilerRuntime {
         }
 
         ti.inProfilingRuntimeMethod++;
-        ti.addParameter(new Byte(b));
+        ti.addParameter(b);
         ti.inProfilingRuntimeMethod--; 
     }
 
-    public static void addParameter(short b) {
+    public static void addParameter(short s) {
         if (recursiveInstrumentationDisabled) {
             return;
         }
@@ -580,11 +583,11 @@ public class ProfilerRuntimeCPU extends ProfilerRuntime {
         }
 
         ti.inProfilingRuntimeMethod++;
-        ti.addParameter(new Short(b));
+        ti.addParameter(s);
         ti.inProfilingRuntimeMethod--; 
     }
 
-    public static void addParameter(int b) {
+    public static void addParameter(int i) {
         if (recursiveInstrumentationDisabled) {
             return;
         }
@@ -596,11 +599,11 @@ public class ProfilerRuntimeCPU extends ProfilerRuntime {
         }
 
         ti.inProfilingRuntimeMethod++;
-        ti.addParameter(new Integer(b));
+        ti.addParameter(i);
         ti.inProfilingRuntimeMethod--; 
     }
 
-    public static void addParameter(long b) {
+    public static void addParameter(long l) {
         if (recursiveInstrumentationDisabled) {
             return;
         }
@@ -612,11 +615,11 @@ public class ProfilerRuntimeCPU extends ProfilerRuntime {
         }
 
         ti.inProfilingRuntimeMethod++;
-        ti.addParameter(new Long(b));
+        ti.addParameter(l);
         ti.inProfilingRuntimeMethod--; 
     }
 
-    public static void addParameter(float b) {
+    public static void addParameter(float f) {
         if (recursiveInstrumentationDisabled) {
             return;
         }
@@ -628,11 +631,11 @@ public class ProfilerRuntimeCPU extends ProfilerRuntime {
         }
 
         ti.inProfilingRuntimeMethod++;
-        ti.addParameter(new Float(b));
+        ti.addParameter(f);
         ti.inProfilingRuntimeMethod--; 
     }
 
-    public static void addParameter(double b) {
+    public static void addParameter(double d) {
         if (recursiveInstrumentationDisabled) {
             return;
         }
@@ -644,7 +647,7 @@ public class ProfilerRuntimeCPU extends ProfilerRuntime {
         }
 
         ti.inProfilingRuntimeMethod++;
-        ti.addParameter(new Double(b));
+        ti.addParameter(d);
         ti.inProfilingRuntimeMethod--; 
     }
 
@@ -690,32 +693,32 @@ public class ProfilerRuntimeCPU extends ProfilerRuntime {
     private static int writeParameter(byte[] evBuf, int curPos, Object p) {
         Class type = p.getClass();
         if (type == Integer.class) {
-            int vp = ((Integer)p).intValue();
+            int vp = ((Integer)p);
             evBuf[curPos++] = ProfilerInterface.INT;
             evBuf[curPos++] = (byte) ((vp >> 24) & 0xFF);
             evBuf[curPos++] = (byte) ((vp >> 16) & 0xFF);
             evBuf[curPos++] = (byte) ((vp >> 8) & 0xFF);
             evBuf[curPos++] = (byte) ((vp) & 0xFF);
         } else if (type == Boolean.class) {
-            boolean vp = ((Boolean)p).booleanValue();
+            boolean vp = ((Boolean)p);
             evBuf[curPos++] = ProfilerInterface.BOOLEAN;
             evBuf[curPos++] = (byte) (vp ? 1 : 0);
         } else if (type == Byte.class) {
-            byte vp = ((Byte)p).byteValue();
+            byte vp = ((Byte)p);
             evBuf[curPos++] = ProfilerInterface.BYTE;
             evBuf[curPos++] = vp;
         } else if (type == Character.class) {
-            char vp = ((Character)p).charValue();
+            char vp = ((Character)p);
             evBuf[curPos++] = ProfilerInterface.CHAR;
             evBuf[curPos++] = (byte) ((vp >> 8) & 0xFF);
             evBuf[curPos++] = (byte) ((vp) & 0xFF);
         } else if (type == Short.class) {
-            short vp = ((Short) p).shortValue();
+            short vp = ((Short) p);
             evBuf[curPos++] = ProfilerInterface.SHORT;
             evBuf[curPos++] = (byte) ((vp >> 8) & 0xFF);
             evBuf[curPos++] = (byte) ((vp) & 0xFF);
         } else if (type == Long.class) {
-            long vp = ((Long)p).longValue();
+            long vp = ((Long)p);
             evBuf[curPos++] = ProfilerInterface.LONG;
             evBuf[curPos++] = (byte) ((vp >> 56) & 0xFF);
             evBuf[curPos++] = (byte) ((vp >> 48) & 0xFF);
@@ -726,14 +729,14 @@ public class ProfilerRuntimeCPU extends ProfilerRuntime {
             evBuf[curPos++] = (byte) ((vp >> 8) & 0xFF);
             evBuf[curPos++] = (byte) ((vp) & 0xFF); 
         } else if (type == Float.class) {
-            int vp = Float.floatToIntBits(((Float)p).floatValue());
+            int vp = Float.floatToIntBits((Float)p);
             evBuf[curPos++] = ProfilerInterface.FLOAT;
             evBuf[curPos++] = (byte) ((vp >> 24) & 0xFF);
             evBuf[curPos++] = (byte) ((vp >> 16) & 0xFF);
             evBuf[curPos++] = (byte) ((vp >> 8) & 0xFF);
             evBuf[curPos++] = (byte) ((vp) & 0xFF);
         } else if (type == Double.class) {
-            long vp = Double.doubleToLongBits(((Double)p).doubleValue());
+            long vp = Double.doubleToLongBits(((Double)p));
             evBuf[curPos++] = ProfilerInterface.DOUBLE;
             evBuf[curPos++] = (byte) ((vp >> 56) & 0xFF);
             evBuf[curPos++] = (byte) ((vp >> 48) & 0xFF);

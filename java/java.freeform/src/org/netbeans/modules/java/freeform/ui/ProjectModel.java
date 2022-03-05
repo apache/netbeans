@@ -639,9 +639,7 @@ public class ProjectModel  {
         Iterator<JavaProjectGenerator.JavaCompilationUnit> it = javaCompilationUnitsList.iterator();
         while (it.hasNext()) {
             JavaProjectGenerator.JavaCompilationUnit cu = it.next();
-            if (cu.packageRoots.contains(location)) {
-                cu.packageRoots.remove(location);
-            }
+            cu.packageRoots.remove(location);
             if (cu.packageRoots.size() == 0) {
                 it.remove();
             }

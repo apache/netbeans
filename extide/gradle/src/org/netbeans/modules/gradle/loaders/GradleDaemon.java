@@ -23,6 +23,13 @@ import org.netbeans.modules.gradle.api.NbGradleProject;
 import org.netbeans.modules.gradle.api.execute.GradleCommandLine;
 import org.netbeans.modules.gradle.spi.GradleSettings;
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import org.gradle.tooling.BuildAction;
 import org.gradle.tooling.BuildActionExecuter;
 import org.gradle.tooling.BuildController;
@@ -32,6 +39,7 @@ import org.gradle.tooling.ProjectConnection;
 import org.netbeans.modules.gradle.api.execute.GradleDistributionManager;
 import org.openide.modules.InstalledFileLocator;
 import org.openide.modules.OnStart;
+import org.openide.modules.Places;
 import org.openide.util.RequestProcessor;
 
 /**
@@ -39,19 +47,21 @@ import org.openide.util.RequestProcessor;
  * @author Laszlo Kishalmi
  */
 public final class GradleDaemon {
+    static final AtomicBoolean initScriptReady = new AtomicBoolean(false);
 
     static final RequestProcessor GRADLE_LOADER_RP = new RequestProcessor("gradle-project-loader", 1); //NOI18N
     static final String INIT_SCRIPT_NAME = "modules/gradle/nb-tooling.gradle"; //NOI18N
     static final String TOOLING_JAR_NAME = "modules/gradle/netbeans-gradle-tooling.jar"; //NOI18N
 
     public static final String PROP_TOOLING_JAR = "NETBEANS_TOOLING_JAR";
-    public static final String INIT_SCRIPT = InstalledFileLocator.getDefault().locate(INIT_SCRIPT_NAME, NbGradleProject.CODENAME_BASE, false).getAbsolutePath();
     public static final String TOOLING_JAR = InstalledFileLocator.getDefault().locate(TOOLING_JAR_NAME, NbGradleProject.CODENAME_BASE, false).getAbsolutePath();
 
     private static final String DAEMON_LOADED = "Daemon Loaded."; //NOI18N
     private static final String LOADER_PROJECT_NAME = "modules/gradle/daemon-loader"; //NOI18N
     private static final File LOADER_PROJECT_DIR = InstalledFileLocator.getDefault().locate(LOADER_PROJECT_NAME, NbGradleProject.CODENAME_BASE, false);
     private static final DummyBuildAction DUMMY_ACTION = new DummyBuildAction();
+    
+    private static final Logger LOG = Logger.getLogger(GradleDaemon.class.getName());
 
     private GradleDaemon() {}
 
@@ -68,14 +78,32 @@ public final class GradleDaemon {
         }
     }
 
+    public static String initScript() {
+        File initScript = Places.getCacheSubfile("gradle/nb-tooling.gradle"); //NOI18N
+        synchronized (initScriptReady) {
+            if (!initScriptReady.get()) {
+                File initTemplate = InstalledFileLocator.getDefault().locate(INIT_SCRIPT_NAME, NbGradleProject.CODENAME_BASE, false);
+                try {
+                    List<String> script = Files.lines(initTemplate.toPath()).map(line -> line.replace(PROP_TOOLING_JAR, TOOLING_JAR)).collect(Collectors.toList());
+                    Files.write(initScript.toPath(), script);
+                    initScriptReady.set(true);
+                } catch(IOException ex) {
+                    // This one is unlikely
+                    LOG.log(Level.WARNING, "Can't create NetBeans Gradle init script", ex); //NOI18N
+                    // Let it pass trough. Gradle call will display some errors as well
+                }
+            }
+        }
+        return initScript.getAbsolutePath();
+    }
+    
     private static void doLoadDaemon() {
         GradleConnector gconn = GradleConnector.newConnector();
         ProjectConnection pconn = gconn.forProjectDirectory(LOADER_PROJECT_DIR).connect();
         BuildActionExecuter<String> action = pconn.action(DUMMY_ACTION);
         GradleCommandLine cmd = new GradleCommandLine();
-        cmd.addSystemProperty(PROP_TOOLING_JAR, TOOLING_JAR);
         cmd.setFlag(GradleCommandLine.Flag.OFFLINE, true);
-        cmd.addParameter(GradleCommandLine.Parameter.INIT_SCRIPT, INIT_SCRIPT);
+        cmd.addParameter(GradleCommandLine.Parameter.INIT_SCRIPT, initScript());
         cmd.configure(action);
         try {
             action.run();

@@ -43,24 +43,23 @@ public class Version {
     private long update;
     private long build;
     
-    private Version(
-            final String string) {
+    private Version(final String string) {
         String[] split = string.split("[\\._\\-]+"); //NOI18N
 
         if (split.length > 0) {
-            major = new Long(split[0]);
+            major = Long.parseLong(split[0]);
         }
         if (split.length > 1) {
-            minor = new Long(split[1]);
+            minor = Long.parseLong(split[1]);
         }
         if (split.length > 2) {
-            micro = new Long(split[2]);
+            micro = Long.parseLong(split[2]);
         }
         if (split.length > 3) {
-            update = new Long(split[3]);
+            update = Long.parseLong(split[3]);
         }
         if (split.length > 4) {
-            build = new Long(split[4]);
+            build = Long.parseLong(split[4]);
         }
     }
     

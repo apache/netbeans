@@ -74,17 +74,24 @@ enterprise/web.core.syntax/external/struts-taglib-1.3.10.jar enterprise/web.stru
 enterprise/web.core.syntax/external/struts-tiles-1.3.10.jar enterprise/web.struts/external/struts-tiles-1.3.10.jar
 
 # gradle is used at build-time, so we can ignore the duplicates
-extide/gradle/external/gradle-7.3-bin.zip enterprise/libs.amazon/external/ion-java-1.0.2.jar
-extide/gradle/external/gradle-7.3-bin.zip ide/c.jcraft.jsch/external/jsch-0.1.55.jar
-extide/gradle/external/gradle-7.3-bin.zip ide/c.jcraft.jzlib/external/jzlib-1.1.3.jar
-extide/gradle/external/gradle-7.3-bin.zip ide/libs.antlr4.runtime/external/antlr4-runtime-4.7.2.jar
-extide/gradle/external/gradle-7.3-bin.zip ide/o.apache.commons.lang/external/commons-lang-2.6.jar
-extide/gradle/external/gradle-7.3-bin.zip ide/o.eclipse.jgit/external/org.eclipse.jgit-5.7.0.202003110725-r.jar
-extide/gradle/external/gradle-7.3-bin.zip java/maven.embedder/external/apache-maven-3.8.4-bin.zip
-extide/gradle/external/gradle-7.3-bin.zip platform/libs.junit4/external/hamcrest-core-1.3.jar
-extide/gradle/external/gradle-7.3-bin.zip platform/libs.junit4/external/junit-4.13.2.jar
-extide/gradle/external/gradle-7.3-bin.zip platform/libs.testng/external/jcommander-1.78.jar
-extide/gradle/external/gradle-7.3-bin.zip platform/o.apache.commons.io/external/commons-io-2.6.jar
+extide/gradle/external/gradle-7.4-bin.zip enterprise/libs.amazon/external/ion-java-1.0.2.jar
+extide/gradle/external/gradle-7.4-bin.zip ide/c.jcraft.jsch/external/jsch-0.1.55.jar
+extide/gradle/external/gradle-7.4-bin.zip ide/c.jcraft.jzlib/external/jzlib-1.1.3.jar
+extide/gradle/external/gradle-7.4-bin.zip ide/libs.antlr4.runtime/external/antlr4-runtime-4.7.2.jar
+extide/gradle/external/gradle-7.4-bin.zip ide/o.apache.commons.lang/external/commons-lang-2.6.jar
+extide/gradle/external/gradle-7.4-bin.zip ide/o.eclipse.jgit/external/org.eclipse.jgit-5.7.0.202003110725-r.jar
+extide/gradle/external/gradle-7.4-bin.zip java/maven.embedder/external/apache-maven-3.8.4-bin.zip
+extide/gradle/external/gradle-7.4-bin.zip platform/libs.junit4/external/hamcrest-core-1.3.jar
+extide/gradle/external/gradle-7.4-bin.zip platform/libs.junit4/external/junit-4.13.2.jar
+extide/gradle/external/gradle-7.4-bin.zip platform/libs.testng/external/jcommander-1.78.jar
+extide/gradle/external/gradle-7.4-bin.zip platform/o.apache.commons.io/external/commons-io-2.6.jar
+extide/gradle/external/gradle-7.4-bin.zip enterprise/cloud.oracle/external/jsr305-3.0.2.jar
+extide/gradle/external/gradle-7.4-bin.zip ide/bcpkix/external/bcpkix-jdk15on-1.68.jar
+extide/gradle/external/gradle-7.4-bin.zip ide/bcprov/external/bcprov-jdk15on-1.68.jar
+extide/gradle/external/gradle-7.4-bin.zip platform/o.apache.commons.codec/external/commons-codec-1.15.jar
+extide/gradle/external/gradle-7.4-bin.zip platform/libs.asm/external/asm-9.2.jar
+extide/gradle/external/gradle-7.4-bin.zip platform/libs.asm/external/asm-commons-9.2.jar
+extide/gradle/external/gradle-7.4-bin.zip platform/libs.asm/external/asm-tree-9.2.jar
 
 # cnd/libs.clank uses a zip file that is expanded at compile time into different jar files.
 cnd/libs.clank/external/clank_0.3.9.zip cnd/libs.clank/external/clank_0.3.9.zip
@@ -110,11 +117,6 @@ ide/derby/external/derby-10.14.2.0.jar ide/db.metadata.model/external/derby-10.1
 # Antlr4 is used internally in two unrelated modules:
 ide/libs.antlr4.runtime/external/antlr4-runtime-4.7.2.jar java/debugger.jpda.truffle/external/antlr4-runtime-4.7.2.jar
 
-# Amazon Beanstalk SDK has frequently changing dependencies, so they are better kept separate
-enterprise/libs.amazon/external/httpclient-4.5.5.jar extide/gradle/external/gradle-4.10.2-bin.zip
-enterprise/libs.amazon/external/ion-java-1.0.2.jar extide/gradle/external/gradle-4.10.2-bin.zip
-enterprise/libs.amazon/external/httpcore-4.4.9.jar extide/gradle/external/gradle-4.10.2-bin.zip
-
 # Only used as testdata (not redistributed) and modules should be testable independed of each other
 webcommon/javascript2.doc/external/testfiles-jsdoc-1.zip webcommon/javascript2.editor/external/testfiles-jsdoc-1.zip are identical
 webcommon/javascript2.editor/external/testfiles-jsdoc-1.zip webcommon/javascript2.extdoc/external/testfiles-jsdoc-1.zip are identical
@@ -129,8 +131,4 @@ java/libs.javacapi/external/nb-javac-jdk-17.0.1-ga-api.jar java/libs.nbjavacapi/
 java/libs.javacapi/external/nb-javac-jdk-17.0.1-ga.jar java/libs.nbjavacapi/external/nb-javac-jdk-17.0.1-ga.jar
 
 # Maven and Gradle are self-contained distributions - ignoring overlaps
-enterprise/cloud.oracle/external/jsr305-3.0.2.jar extide/gradle/external/gradle-7.3-bin.zip
-ide/bcpkix/external/bcpkix-jdk15on-1.68.jar extide/gradle/external/gradle-7.3-bin.zip
-ide/bcprov/external/bcprov-jdk15on-1.68.jar extide/gradle/external/gradle-7.3-bin.zip
-platform/o.apache.commons.codec/external/commons-codec-1.15.jar extide/gradle/external/gradle-7.3-bin.zip
 platform/o.apache.commons.lang3/external/commons-lang3-3.8.1.jar java/maven.embedder/external/apache-maven-3.8.4-bin.zip

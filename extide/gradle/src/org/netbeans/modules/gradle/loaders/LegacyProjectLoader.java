@@ -46,8 +46,6 @@ import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.modules.gradle.GradleProject;
 import org.netbeans.modules.gradle.GradleProjectErrorNotifications;
 import static org.netbeans.modules.gradle.loaders.GradleDaemon.GRADLE_LOADER_RP;
-import static org.netbeans.modules.gradle.loaders.GradleDaemon.INIT_SCRIPT;
-import static org.netbeans.modules.gradle.loaders.GradleDaemon.TOOLING_JAR;
 import org.netbeans.modules.gradle.api.GradleBaseProject;
 import org.netbeans.modules.gradle.api.NbGradleProject;
 import org.netbeans.modules.gradle.api.NbGradleProject.Quality;
@@ -120,9 +118,8 @@ public class LegacyProjectLoader extends AbstractProjectLoader {
 
         GradleCommandLine cmd = new GradleCommandLine(ctx.cmd);
         cmd.setFlag(GradleCommandLine.Flag.CONFIGURE_ON_DEMAND, GradleSettings.getDefault().isConfigureOnDemand());
-        cmd.addParameter(GradleCommandLine.Parameter.INIT_SCRIPT, INIT_SCRIPT);
+        cmd.addParameter(GradleCommandLine.Parameter.INIT_SCRIPT, GradleDaemon.initScript());
         cmd.setStackTrace(GradleCommandLine.StackTrace.SHORT);
-        cmd.addSystemProperty(GradleDaemon.PROP_TOOLING_JAR, TOOLING_JAR);
         cmd.addProjectProperty("nbSerializeCheck", "true");
 
         GoOnline goOnline;

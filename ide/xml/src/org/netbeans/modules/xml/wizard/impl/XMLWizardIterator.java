@@ -533,8 +533,9 @@ public class XMLWizardIterator implements TemplateWizard.Iterator {
             return;
         }
         StringBuffer sb = new StringBuffer();
-        for (String ns : nsAttrs.keySet()) {
-            String nsPrefix = nsAttrs.get(ns);
+        for (Map.Entry<String, String> entry : nsAttrs.entrySet()) {
+            String ns = entry.getKey();
+            String nsPrefix = entry.getValue();
             if ((nsPrefix != null) && (nsPrefix.trim().length() > 0)) {
                 String xmlnsString = "xmlns:" + nsPrefix + "='" + ns + "'";
                 if (xmlBuffer.indexOf(xmlnsString) == -1) {

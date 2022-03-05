@@ -81,7 +81,7 @@ public abstract class PatternSandbox extends JPanel
      */
     protected void initComponents() {
 
-        cboxPattern = new JComboBox<String>();
+        cboxPattern = new JComboBox<>();
         cboxPattern.setEditor(new BasicSearchForm.MultiLineComboBoxEditor(cboxPattern));
         cboxPattern.setEditable(true);
         cboxPattern.setRenderer(new ShorteningCellRenderer());
@@ -117,20 +117,12 @@ public abstract class PatternSandbox extends JPanel
      * Add listeners to buttons.
      */
     private void initButtonsInteraction() {
-        btnCancel.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                closeDialog();
-            }
+        btnCancel.addActionListener((ActionEvent e) -> {
+            closeDialog();
         });
-        btnApply.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                apply();
-                closeDialog();
-            }
+        btnApply.addActionListener((ActionEvent e) -> {
+            apply();
+            closeDialog();
         });
     }
 
@@ -148,13 +140,7 @@ public abstract class PatternSandbox extends JPanel
                         }
                     }
                 });
-        cboxPattern.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                highlightMatchesLater();
-            }
-        });
+        cboxPattern.addActionListener((ActionEvent e) -> highlightMatchesLater());
 
         textPane.getDocument().addDocumentListener(new DocumentListener() {
 
@@ -299,13 +285,7 @@ public abstract class PatternSandbox extends JPanel
      * Schedule highlighting of matches.
      */
     protected void highlightMatchesLater() {
-        EventQueue.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                highlightMatches();
-            }
-        });
+        EventQueue.invokeLater(this::highlightMatches);
     }
 
     /**
@@ -357,7 +337,7 @@ public abstract class PatternSandbox extends JPanel
      * Reverse items in a list. Create a new list, original list is untouched.
      */
     private static <T> List<T> reverse(List<T> list) {
-        LinkedList<T> ll = new LinkedList<T>();
+        LinkedList<T> ll = new LinkedList<>();
         for (T t : list) {
             ll.add(0, t);
         }
@@ -607,7 +587,7 @@ public abstract class PatternSandbox extends JPanel
             JPanel panel = new JPanel();
             JLabel label = new JLabel();
             Mnemonics.setLocalizedText(label, Bundle.LBL_LineEnding());
-            final JComboBox<LineEnding> cbox = new JComboBox<LineEnding>(new LineEnding[]{});
+            final JComboBox<LineEnding> cbox = new JComboBox<>(new LineEnding[]{});
             cbox.getAccessibleContext().setAccessibleName(Bundle.LBL_LineEnding_accName());
             cbox.setToolTipText(Bundle.LBL_LineEnding_tooltip());
             label.setLabelFor(cbox);
@@ -636,31 +616,21 @@ public abstract class PatternSandbox extends JPanel
          * item.
          */
         private void loadLineEnding(final JComboBox<LineEnding> comboBox) {
-            RP.post(new Runnable() {
-
-                @Override
-                public void run() {
-                    String typeStr = NbPreferences.forModule(
-                            PatternSandbox.class).get(LINE_SEP, null);
-                    if (typeStr != null) {
-                        try {
-                            lineEnding = LineEnding.valueOf(typeStr);
-                        } catch (IllegalArgumentException e) {
-                            LOG.log(Level.FINE, "Unknown LEType {0}", typeStr); //NOI18N
-                        }
+            RP.post(() -> {
+                String typeStr = NbPreferences.forModule(
+                        PatternSandbox.class).get(LINE_SEP, null);
+                if (typeStr != null) {
+                    try {
+                        lineEnding = LineEnding.valueOf(typeStr);
+                    } catch (IllegalArgumentException e) {
+                        LOG.log(Level.FINE, "Unknown LEType {0}", typeStr); //NOI18N
                     }
-                    if (lineEnding == null) {
-                        lineEnding = Utilities.isWindows()
-                                ? LineEnding.CRLF : LineEnding.LF;
-                    }
-                    EventQueue.invokeLater(new Runnable() {
-
-                        @Override
-                        public void run() {
-                            fillLineEndingComboBox(comboBox);
-                        }
-                    });
                 }
+                if (lineEnding == null) {
+                    lineEnding = Utilities.isWindows()
+                            ? LineEnding.CRLF : LineEnding.LF;
+                }
+                EventQueue.invokeLater(() -> fillLineEndingComboBox(comboBox));
             });
         }
 
@@ -674,14 +644,10 @@ public abstract class PatternSandbox extends JPanel
             comboBox.addItem(LineEnding.LF);
             comboBox.addItem(LineEnding.CR);
             comboBox.setSelectedItem(lineEnding);
-            comboBox.addActionListener(new ActionListener() {
-
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    lineEnding = ((LineEnding) comboBox.getSelectedItem());
-                    updateLineEnding();
-                    saveLineEnding();
-                }
+            comboBox.addActionListener((ActionEvent e) -> {
+                lineEnding = (LineEnding) comboBox.getSelectedItem();
+                updateLineEnding();
+                saveLineEnding();
             });
             updateLineEnding();
         }
@@ -690,13 +656,10 @@ public abstract class PatternSandbox extends JPanel
          * Persist selected line ending.
          */
         private void saveLineEnding() {
-            RP.post(new Runnable() {
-                @Override
-                public void run() {
-                    if (lineEnding != null) {
-                        NbPreferences.forModule(PatternSandbox.class).put(
-                                LINE_SEP, lineEnding.name());
-                    }
+            RP.post(() -> {
+                if (lineEnding != null) {
+                    NbPreferences.forModule(PatternSandbox.class).put(
+                            LINE_SEP, lineEnding.name());
                 }
             });
         }
@@ -859,21 +822,17 @@ public abstract class PatternSandbox extends JPanel
             jp.add(b);
             Mnemonics.setLocalizedText(b,
                     getText("PathPatternSandbox.browseButton.text"));   //NOI18N
-            b.addActionListener(new ActionListener() {
-
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    JFileChooser jFileChooser = new JFileChooser();
-                    jFileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-                    jFileChooser.setMultiSelectionEnabled(true);
-                    jFileChooser.showOpenDialog(b);
-                    if (jFileChooser.getSelectedFiles() == null) {
-                        return;
-                    }
-                    for (File f : jFileChooser.getSelectedFiles()) {
-                        textPane.setText(textPane.getText() + "\n" //NOI18N
-                                + f.getAbsolutePath());
-                    }
+            b.addActionListener((ActionEvent e) -> {
+                JFileChooser jFileChooser = new JFileChooser();
+                jFileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+                jFileChooser.setMultiSelectionEnabled(true);
+                jFileChooser.showOpenDialog(b);
+                if (jFileChooser.getSelectedFiles() == null) {
+                    return;
+                }
+                for (File f : jFileChooser.getSelectedFiles()) {
+                    textPane.setText(textPane.getText() + "\n" //NOI18N
+                            + f.getAbsolutePath());
                 }
             });
             return jp;

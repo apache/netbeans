@@ -1593,4 +1593,31 @@ public class Css3ParserTest extends CssTestBase {
             + "margin: var(--demoVar, 3ex 2em);"
             + "}");
     }
+
+    public void testParseSelectorListCSS4() {
+        assertParses("h1:not(.dummy) {}");
+        assertParses("h1:not( .h2:visible ) {}");
+        assertParses("h1:not( .h2, .h3:visible ) {}");
+        assertParses("h1:not(.h2,:visible,h2) {}");
+        assertParses("h1:not(.h2,:visible, h1 > h2) {}");
+        assertParses("html|*:not(:link):not(:visited) {}");
+        assertParses("html|*:not(:link, :visited) {}");
+        assertParses("*|*:is(:hover, :focus) {}");
+        assertParses("*|*:is(*:hover, *:focus) {}");
+        assertParses("a:where(:valid, :unsupported) {}");
+        assertParses("a:where(:not(:hover)) {text-decoration: none;}");
+    }
+
+    public void testParsePage() {
+        assertParses("@page {  @top-left { content: attr(test) }; color: red; @bottom-center { content: attr(test2) } }");
+        assertParses("@page {  @top-left { content: attr(test) } }");
+        assertParses("@page {  @top-left { content: attr(test); }; }");
+        assertParses("@page {  ; @top-left { content: attr(test) } }");
+        assertParses("@page {  @top-left { content: attr(test) } ; text-align: right }");
+        assertParses("@page {  @top-left { content: attr(test) } text-align: right }");
+        assertParses("@page {  @top-left { content: attr(test) } text-align: right; background-color: green }");
+        assertParses("@page {  @top-center { content: attr(test) } @bottom-center { content: attr(test2) } background-color: red; }");
+        assertParses("@page {  background-color: red; @top-center { content: attr(test) } @bottom-center { content: attr(test2) } }");
+        assertParses("@page{@top-left{content: attr(test)}}");
+    }
 }

@@ -182,8 +182,9 @@ public class CompletionUtil {
             CompletionContextImpl context, String namespace) {
         List<String> list = new ArrayList<String>();
         
-        for(String key : context.getDeclaredNamespaces().keySet()) {
-            String ns = context.getDeclaredNamespaces().get(key);
+        for(Map.Entry<String, String> entry : context.getDeclaredNamespaces().entrySet()) {
+            String key = entry.getKey();
+            String ns = entry.getValue();
             if(ns.equals(namespace))
                 list.add(getPrefixFromXMLNS(key));
         }

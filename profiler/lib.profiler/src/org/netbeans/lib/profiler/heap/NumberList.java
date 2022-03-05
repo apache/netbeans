@@ -174,7 +174,7 @@ class NumberList {
                 if (el == 0L) {     // end of the block, move to next one
                     break;
                 }
-                numbers.add(new Long(el));
+                numbers.add(el);
             }
             long nextBlock = getOffsetToNextBlock(block);
             if (nextBlock == 0L) {
@@ -254,7 +254,7 @@ class NumberList {
                 buf.put(el);
             }            
         } else {
-            Long offsetObj = new Long(blockOffset);
+            Long offsetObj = blockOffset;
             int offset = slot*numberSize;
             for (int i=numberSize-1;i>=0;i--) {
                 byte el = (byte)(element >> (i*8));
@@ -275,7 +275,7 @@ class NumberList {
             buf.get(block);
             return block;
         } else {
-            Long offsetObj = new Long(offset);
+            Long offsetObj = offset;
 
             block = (byte[]) blockCache.get(offsetObj);
             if (block == null) {
@@ -290,7 +290,7 @@ class NumberList {
 
     private long addBlock() throws IOException {
         long offset=blocks*blockSize;
-        blockCache.put(new Long(offset),new byte[blockSize]);
+        blockCache.put(offset, new byte[blockSize]);
         blocks++;
         return offset;
     }

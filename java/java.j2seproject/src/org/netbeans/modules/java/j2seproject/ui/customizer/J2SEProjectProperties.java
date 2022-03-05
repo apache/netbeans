@@ -103,9 +103,9 @@ public class J2SEProjectProperties {
     
     //Hotfix of the issue #70058
     //Should be removed when the StoreGroup SPI will be extended to allow false default value in ToggleButtonModel
-    private static final Integer BOOLEAN_KIND_TF = new Integer( 0 );
-    private static final Integer BOOLEAN_KIND_YN = new Integer( 1 );
-    private static final Integer BOOLEAN_KIND_ED = new Integer( 2 );
+    private static final Integer BOOLEAN_KIND_TF = 0;
+    private static final Integer BOOLEAN_KIND_YN = 1;
+    private static final Integer BOOLEAN_KIND_ED = 2;
     private static final String COS_MARK = ".netbeans_automatic_build";     //NOI18N
     private static final Logger LOG = Logger.getLogger(J2SEProjectProperties.class.getName());
     private Integer javacDebugBooleanKind;

@@ -977,8 +977,9 @@ public class Actions {
                 map.put(treeListNode.getClass().getName(), list);
             }
 
-            for (String key : map.keySet()) {
-                List<TreeListNode> value = map.get(key);
+            for (Map.Entry<String, List<TreeListNode>> entry : map.entrySet()) {
+                String key = entry.getKey();
+                List<TreeListNode> value = entry.getValue();
                 Action action = null;
                 if (key.equals(RepositoryNode.class.getName()) || key.equals(ClosedRepositoryNode.class.getName())) {
                     action = new Actions.RemoveRepositoryAction(value.toArray(new RepositoryNode[value.size()]));

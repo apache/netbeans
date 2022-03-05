@@ -545,6 +545,7 @@ public class Utilities {
         return t.getKind() == Kind.ERRONEOUS || (t.getKind() == Kind.IDENTIFIER && ((IdentifierTree) t).getName().contentEquals("<error>")); //TODO: <error>...
     }
     
+    @SuppressWarnings({"BoxedValueEquality"})
     private static boolean containsError(Tree t) {
         return new ErrorAwareTreeScanner<Boolean, Void>() {
             @Override
@@ -552,7 +553,7 @@ public class Utilities {
                 if (node != null && isErrorTree(node)) {
                     return true;
                 }
-                return super.scan(node, p) ==Boolean.TRUE;
+                return super.scan(node, p) == Boolean.TRUE;
             }
             @Override
             public Boolean reduce(Boolean r1, Boolean r2) {
@@ -1649,7 +1650,7 @@ public class Utilities {
 
     private static class ParserSourcePositions implements SourcePositions {
 
-        private JavacParser parser;
+        private final JavacParser parser;
 
         private ParserSourcePositions(JavacParser parser) {
             this.parser = parser;

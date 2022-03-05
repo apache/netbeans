@@ -312,7 +312,7 @@ public final class BIEditorSupport extends DataEditorSupport
             return false;
         
         boolean oneOrLess = true;
-        Enumeration en = ((CloneableTopComponent)tc).getReference().getComponents();
+        Enumeration<CloneableTopComponent> en = ((CloneableTopComponent)tc).getReference().getComponents();
         if (en.hasMoreElements()) {
             en.nextElement();
             if (en.hasMoreElements())
@@ -666,7 +666,7 @@ public final class BIEditorSupport extends DataEditorSupport
                 for (TopComponent o : closed) {
                     if (o instanceof CloneableTopComponent) {
                         final CloneableTopComponent topComponent = (CloneableTopComponent) o;
-                        Enumeration en = topComponent.getReference().getComponents();
+                        Enumeration<CloneableTopComponent> en = topComponent.getReference().getComponents();
                         if (multiviewTC == topComponent) {
                             if (en.hasMoreElements()) {
                                 // Remember next cloned top component

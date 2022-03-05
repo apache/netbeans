@@ -83,7 +83,7 @@ public class DeclarativeHintsParserTest extends NbTestCase {
     }
 
     public void testMethodInvocationCondition1() throws Exception {
-        Map<String, ParameterKind> m = new LinkedHashMap<String, ParameterKind>();
+        Map<String, ParameterKind> m = new LinkedHashMap<>();
 
         m.put("a", ParameterKind.STRING_LITERAL);
         m.put("$2", ParameterKind.VARIABLE);
@@ -97,7 +97,7 @@ public class DeclarativeHintsParserTest extends NbTestCase {
     }
 
     public void testMethodInvocationCondition2() throws Exception {
-        Map<String, ParameterKind> m = new LinkedHashMap<String, ParameterKind>();
+        Map<String, ParameterKind> m = new LinkedHashMap<>();
 
         m.put("$1", ParameterKind.VARIABLE);
         m.put("javax.lang.model.element.Modifier.VOLATILE", ParameterKind.ENUM_CONSTANT);
@@ -124,7 +124,7 @@ public class DeclarativeHintsParserTest extends NbTestCase {
     }
 
     public void testNegation() throws Exception {
-        Map<String, ParameterKind> m = new LinkedHashMap<String, ParameterKind>();
+        Map<String, ParameterKind> m = new LinkedHashMap<>();
 
         m.put("$1", ParameterKind.VARIABLE);
         m.put("javax.lang.model.element.Modifier.VOLATILE", ParameterKind.ENUM_CONSTANT);
@@ -166,7 +166,7 @@ public class DeclarativeHintsParserTest extends NbTestCase {
     }
 
     public void testConditionOnFix() throws Exception {
-        Map<String, ParameterKind> m = new LinkedHashMap<String, ParameterKind>();
+        Map<String, ParameterKind> m = new LinkedHashMap<>();
 
         m.put("a", ParameterKind.STRING_LITERAL);
         m.put("$2", ParameterKind.VARIABLE);
@@ -180,11 +180,11 @@ public class DeclarativeHintsParserTest extends NbTestCase {
     }
 
     public void testParseOptions() {
-        Map<String, String> result = new HashMap<String, String>();
+        Map<String, String> result = new HashMap<>();
 
         DeclarativeHintsParser.parseOptions("key1=value1,key2=value2,key3=value3", result);
 
-        Map<String, String> golden = new HashMap<String, String>();
+        Map<String, String> golden = new HashMap<>();
 
         golden.put("key1", "value1");
         golden.put("key2", "value2");
@@ -192,11 +192,11 @@ public class DeclarativeHintsParserTest extends NbTestCase {
 
         assertEquals(golden, result);
 
-        result = new HashMap<String, String>();
+        result = new HashMap<>();
 
         DeclarativeHintsParser.parseOptions("key1=\"value1a,value1b\",key2=\"value2a,value2b\",key3=\"value3a,value3b\"", result);
 
-        golden = new HashMap<String, String>();
+        golden = new HashMap<>();
 
         golden.put("key1", "value1a,value1b");
         golden.put("key2", "value2a,value2b");
@@ -206,7 +206,7 @@ public class DeclarativeHintsParserTest extends NbTestCase {
     }
 
     public void testParseOptionsInContext() throws Exception {
-        Map<String, ParameterKind> m = new LinkedHashMap<String, ParameterKind>();
+        Map<String, ParameterKind> m = new LinkedHashMap<>();
 
         m.put("a", ParameterKind.STRING_LITERAL);
         m.put("$2", ParameterKind.VARIABLE);
@@ -259,6 +259,7 @@ public class DeclarativeHintsParserTest extends NbTestCase {
         performErrorGatheringTest("$a + $b :: test($a, \"a\", \"b\");;");
     }
 
+    @Override
     protected void setUp() throws Exception {
         SourceUtilsTestUtil.prepareTest(new String[0], new Object[0]);
         
@@ -282,7 +283,7 @@ public class DeclarativeHintsParserTest extends NbTestCase {
         FileObject file = FileUtil.createData(new File(getWorkDir(), "Test.java"));
         TestUtilities.copyStringToFile(file, code);
         Result parsed = new DeclarativeHintsParser().parse(file, code, h.tokenSequence(DeclarativeHintTokenId.language()));
-        List<StringHintDescription> real = new LinkedList<StringHintDescription>();
+        List<StringHintDescription> real = new LinkedList<>();
 
         for (HintTextDescription hint : parsed.hints) {
             real.add(StringHintDescription.create(code, hint));
@@ -301,7 +302,7 @@ public class DeclarativeHintsParserTest extends NbTestCase {
         if (goldenBlocks != null) {
             assertNotNull(parsed.blocks);
 
-            List<String> realBlocks = new LinkedList<String>();
+            List<String> realBlocks = new LinkedList<>();
             
             for (int[] span : parsed.blocks) {
                 realBlocks.add(code.substring(span[0], span[1]));
@@ -316,7 +317,7 @@ public class DeclarativeHintsParserTest extends NbTestCase {
         FileObject file = FileUtil.createData(new File(getWorkDir(), "Test.java"));
         TestUtilities.copyStringToFile(file, code);
         Result parsed = new DeclarativeHintsParser().parse(file, code, h.tokenSequence(DeclarativeHintTokenId.language()));
-        List<String> actualError = new LinkedList<String>();
+        List<String> actualError = new LinkedList<>();
 
         for (ErrorDescription ed : parsed.errors) {
             actualError.add(ed.toString());
@@ -354,9 +355,9 @@ public class DeclarativeHintsParserTest extends NbTestCase {
 
         private StringHintDescription(String text) {
             this.text = text;
-            this.conditions = new LinkedList<String>();
-            this.to = new LinkedList<StringFixDescription>();
-            this.options = new HashMap<String, String>();
+            this.conditions = new LinkedList<>();
+            this.to = new LinkedList<>();
+            this.options = new HashMap<>();
         }
 
         public static StringHintDescription create(String text) {
@@ -462,8 +463,8 @@ public class DeclarativeHintsParserTest extends NbTestCase {
 
     private static final class StringFixDescription {
         private final String to;
-        private final List<String> conditions = new LinkedList<String>();
-        private final Map<String, String> options = new HashMap<String, String>();
+        private final List<String> conditions = new LinkedList<>();
+        private final Map<String, String> options = new HashMap<>();
 
         public StringFixDescription(String to) {
             this.to = to;

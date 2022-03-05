@@ -728,8 +728,7 @@ public class WindowManagerParser {
             modeConfigMap.put(wmc.modes[i].name, wmc.modes[i]);
         }
         List<String> toDelete = new ArrayList<String>(10);
-        for (String s: modeParserMap.keySet()) {
-            ModeParser modeParser = modeParserMap.get(s);
+        for (ModeParser modeParser: modeParserMap.values()) {
             if (!modeConfigMap.containsKey(modeParser.getName())) {
                 toDelete.add(modeParser.getName());
             }
@@ -762,8 +761,7 @@ public class WindowManagerParser {
             groupConfigMap.put(wmc.groups[i].name, wmc.groups[i]);
         }
         List<String> toDelete = new ArrayList<String>(10);
-        for (String s: groupParserMap.keySet()) {
-            GroupParser groupParser = groupParserMap.get(s);
+        for (GroupParser groupParser: groupParserMap.values()) {
             if (!groupConfigMap.containsKey(groupParser.getName())) {
                 toDelete.add(groupParser.getName());
             }

@@ -92,8 +92,9 @@ final class CodeTemplatesModel {
             
             // Load the table
             List<Vector<String>> table = new ArrayList<Vector<String>>();
-            for(String abbreviation : abbreviationsMap.keySet()) {
-                CodeTemplateDescription ctd = abbreviationsMap.get(abbreviation);
+            for(Map.Entry<String, CodeTemplateDescription> entry : abbreviationsMap.entrySet()) {
+                String abbreviation = entry.getKey();
+                CodeTemplateDescription ctd = entry.getValue();
                 Vector<String> line =  new Vector<String>(3);
                 line.add(abbreviation);
                 if (LOG.isLoggable(Level.FINER)) {
@@ -133,8 +134,9 @@ final class CodeTemplatesModel {
     }
     
     String findLanguage(String mimeType) {
-        for(String lang : languageToMimeType.keySet()) {
-            String mt = languageToMimeType.get(lang);
+        for(Map.Entry<String, String> entry : languageToMimeType.entrySet()) {
+            String lang = entry.getKey();
+            String mt = entry.getValue();
             if (mt.equals(mimeType)) {
                 return lang;
             }
@@ -152,8 +154,9 @@ final class CodeTemplatesModel {
     
     void saveChanges () {
         // Save modified code templates
-        for(String language : languageToModel.keySet()) {
-            TM tableModel = languageToModel.get(language);
+        for(Map.Entry<String, TM> entry : languageToModel.entrySet()) {
+            String language = entry.getKey();
+            TM tableModel = entry.getValue();
             
             if (!tableModel.isModified()) {
                 continue;
@@ -201,8 +204,7 @@ final class CodeTemplatesModel {
             return true;
         }
 
-        for(String l : languageToModel.keySet()) {
-            TM tableModel = languageToModel.get(l);
+        for(TM tableModel : languageToModel.values()) {
             if (tableModel.isModified()) {
                 return true;
             }

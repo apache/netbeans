@@ -166,8 +166,9 @@ public class SceneSerializer {
             sceneScopeElement = document.createElement(SCENE_SCOPE_ELEMENT);
             setAttribute(document, sceneScopeElement, SCENE_SCOPE_ATTR, scopeXml.toString());
 
-            for( String key : facesConfigScopeMap.keySet()){
-                PageFlowSceneData.PageData data = facesConfigScopeMap.get(key);
+            for( Map.Entry<String, PageFlowSceneData.PageData> entry : facesConfigScopeMap.entrySet()){
+                String key = entry.getKey();
+                PageFlowSceneData.PageData data = entry.getValue();
                 if ( data != null ) {
                     Element nodeElement = document.createElement(NODE_ELEMENT);
                     setAttribute(document, nodeElement, NODE_ID_ATTR, key);

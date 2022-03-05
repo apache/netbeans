@@ -266,7 +266,7 @@ public class LockGraphBuilder extends BaseCallGraphBuilder implements LockProfil
     }
 
     private MonitorInfo getMonitorInfo(int monitorId) {
-        Integer mid = new Integer(monitorId);
+        Integer mid = monitorId;
         MonitorInfo mi = monitorInfos.get(mid);
         if (mi == null) {
             mi = new MonitorInfo(monitorId);
@@ -276,7 +276,7 @@ public class LockGraphBuilder extends BaseCallGraphBuilder implements LockProfil
     }
 
     private void registerNewMonitor(int monitorId, String className) {
-        Integer mid = new Integer(monitorId);
+        Integer mid = monitorId;
         MonitorInfo mi = monitorInfos.get(mid);
         if (mi == null) {
             mi = new MonitorInfo(monitorId,className);

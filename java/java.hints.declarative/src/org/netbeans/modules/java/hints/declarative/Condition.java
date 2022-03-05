@@ -85,7 +85,7 @@ public abstract class Condition {
         private final String methodName;
         private final Map<? extends String, ? extends ParameterKind> params;
         private final MethodInvocationContext mic;
-        private final AtomicReference<Method> toCall = new AtomicReference<Method>();
+        private final AtomicReference<Method> toCall = new AtomicReference<>();
 
         public MethodInvocation(boolean not, String methodName, Map<? extends String, ? extends ParameterKind> params, MethodInvocationContext mic) {
             super(not);

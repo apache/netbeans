@@ -365,8 +365,7 @@ public class RunTimeDDCatalog extends GrammarQueryManager implements CatalogRead
     public void removeCatalogListener(CatalogListener l) {
         if (null == l)
             return;
-        if (catalogListeners.contains(l))
-            catalogListeners.remove(l);
+        catalogListeners.remove(l);
     }
     
     public  void fireCatalogListeners() {
@@ -611,7 +610,7 @@ public class RunTimeDDCatalog extends GrammarQueryManager implements CatalogRead
     @Override
     public Enumeration enabled(GrammarEnvironment ctx) {
         if (ctx.getFileObject() == null) return null;
-        Enumeration en = ctx.getDocumentChildren();
+        Enumeration<Node> en = ctx.getDocumentChildren();
         while (en.hasMoreElements()) {
             Node next = (Node) en.nextElement();
             if (next.getNodeType() == Node.DOCUMENT_TYPE_NODE) {

@@ -959,6 +959,21 @@ public class JavacParser extends Parser {
                 sourceLevel,
                 cpInfo,
                 flags.contains(ConfigFlags.MODULE_INFO));
+        String useRelease;
+        if (sourceLevel != null && !sourceLevel.equals(validatedSourceLevel.requiredTarget().name)) {
+            String modernSourceLevel = sourceLevel.startsWith("1.") ? sourceLevel.substring(2) : sourceLevel; // NOI18N
+            try {
+                int optimalJdkApi = Integer.parseInt(modernSourceLevel);
+                if (optimalJdkApi < 6) {
+                    optimalJdkApi = 6;
+                }
+                useRelease = "" + optimalJdkApi;
+            } catch (NumberFormatException numberFormatException) {
+                useRelease = null;
+            }
+        } else {
+            useRelease = null;
+        }
         if (lintOptions.length() > 0) {
             options.addAll(Arrays.asList(lintOptions.split(" ")));
         }
@@ -971,8 +986,10 @@ public class JavacParser extends Parser {
             options.add("-XDbackgroundCompilation");    //NOI18N
             options.add("-XDcompilePolicy=byfile");     //NOI18N
             options.add("-XD-Xprefer=source");     //NOI18N
-            options.add("-target");                     //NOI18N
-            options.add(validatedSourceLevel.requiredTarget().name);
+            if (useRelease == null) {
+                options.add("-target");                     //NOI18N
+                options.add(validatedSourceLevel.requiredTarget().name);
+            }
         }
         options.add("-XDide");   // NOI18N, javac runs inside the IDE
         if (!DISABLE_PARAMETER_NAMES_READING) {
@@ -984,8 +1001,13 @@ public class JavacParser extends Parser {
         options.add("-g:source"); // NOI18N, Make the compiler to maintian source file info
         options.add("-g:lines"); // NOI18N, Make the compiler to maintain line table
         options.add("-g:vars");  // NOI18N, Make the compiler to maintain local variables table
-        options.add("-source");  // NOI18N
-        options.add(validatedSourceLevel.name);
+        if (useRelease != null) {
+            options.add("--release");  // NOI18N
+            options.add(useRelease);
+        } else {
+            options.add("-source");  // NOI18N
+            options.add(validatedSourceLevel.name);
+        }
         if (sourceProfile != null &&
             sourceProfile != SourceLevelQuery.Profile.DEFAULT) {
             options.add("-profile");    //NOI18N, Limit JRE to required compact profile

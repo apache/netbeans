@@ -42,6 +42,7 @@ public class ModuleLifecycleManager extends LifecycleManager {
         Runtime.getRuntime().addShutdownHook(new Thread("close modules") { // NOI18N
             public @Override void run() {
                 if (TrackingHooks.isInstalled()) {
+                    System.setProperty("netbeans.close.no.exit", "true");
                     LifecycleManager.getDefault().exit();
                 }
             }

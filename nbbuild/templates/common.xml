@@ -532,7 +532,7 @@
                 <isset property="test-have-jdk-1.9"/>
             </or>
         </condition>
-        <property name="test.tracking.agent.args" value="-javaagent:${netbeans.dest.dir}/${nb.cluster.platform.dir}/lib/org-netbeans-agent.jar"/>
+        <property name="test.tracking.agent.args" value="-javaagent:${netbeans.dest.dir}/${nb.cluster.platform.dir}/agent/org-netbeans-agent.jar"/>
         <macrodef name="test-init">
             <attribute name="test.type"/>
             <sequential>

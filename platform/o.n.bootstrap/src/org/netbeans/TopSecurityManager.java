@@ -203,7 +203,7 @@ public class TopSecurityManager extends TrackingHooks {
             Class<?> caller = null;
             Class<?>[] arr = getStack();
             for (int i = 0; i < arr.length; i++) {
-                if (arr[i] == TopSecurityManager.class || arr[i] == StackSecurityManager.class || arr[i].getName().equals("org.netbeans.agent.hooks.TrackingHooksCallback") || arr[i] == TrackingHooks.class) {
+                if (arr[i] == TopSecurityManager.class || arr[i] == StackSecurityManager.class || arr[i].getName().equals("org.netbeans.agent.hooks.TrackingHooksCallback") || arr[i].getName().startsWith(TrackingHooks.class.getName())) {
                     continue;
                 }
                 if (arr[i] != Class.class && arr[i] != AccessibleObject.class) {

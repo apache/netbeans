@@ -25,11 +25,14 @@ import java.io.OutputStream;
 import java.net.Inet4Address;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.netbeans.api.sendopts.CommandException;
 import org.openide.util.Exceptions;
@@ -44,6 +47,7 @@ import org.openide.util.Pair;
     "MSG_PortParseError=Cannot parse '{1}' as port in '{0}'"
 })
 final class ConnectionSpec implements Closeable {
+    private static final Logger LOG = Logger.getLogger(ConnectionSpec.class.getName());
     private final Boolean listen;
     private final int port;
     private final List<Closeable> close = new ArrayList<>();
@@ -114,6 +118,11 @@ final class ConnectionSpec implements Closeable {
                             Socket socket = server.accept();
                             close.add(socket);
                             connectToSocket(socket, prefix, session, serverSetter, launcher);
+                        } catch (SocketException se) {
+                            if (server.isClosed()) {
+                                LOG.log(Level.SEVERE, "Server failed to start on port {0}", port);
+                                break;
+                            }
                         } catch (IOException ex) {
                             Exceptions.printStackTrace(ex);
                         }

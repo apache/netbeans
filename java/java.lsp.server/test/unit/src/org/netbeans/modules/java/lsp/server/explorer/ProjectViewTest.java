@@ -61,6 +61,7 @@ import org.netbeans.api.project.ui.OpenProjects;
 import org.netbeans.api.sendopts.CommandLine;
 import org.netbeans.api.templates.FileBuilder;
 import org.netbeans.junit.NbTestCase;
+import org.netbeans.junit.RandomlyFails;
 import org.netbeans.modules.java.lsp.server.explorer.api.CreateExplorerParams;
 import org.netbeans.modules.java.lsp.server.explorer.api.NodeChangedParams;
 import org.netbeans.modules.java.lsp.server.explorer.api.NodeOperationParams;
@@ -90,6 +91,7 @@ import org.openide.util.test.MockLookup;
  *
  * @author sdedic
  */
+@RandomlyFails
 public class ProjectViewTest extends NbTestCase {
     private final Gson gson = new Gson();
     private Socket clientSocket;

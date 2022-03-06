@@ -29,14 +29,18 @@ import java.util.concurrent.CompletableFuture;
 import org.junit.After;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.netbeans.junit.NbTestCase;
+import org.netbeans.junit.RandomlyFails;
 
 import org.openide.util.Pair;
 
-public class ConnectionSpecTest {
+@RandomlyFails
+public class ConnectionSpecTest extends NbTestCase {
 
     private static ThreadLocal<List<Boolean>> copySessionServer = new ThreadLocal<>();
 
     public ConnectionSpecTest() {
+        super(ConnectionSpecTest.class.getName());
     }
 
     @After

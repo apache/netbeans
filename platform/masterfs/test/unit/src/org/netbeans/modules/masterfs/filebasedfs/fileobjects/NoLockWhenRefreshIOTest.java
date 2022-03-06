@@ -25,7 +25,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.netbeans.agent.hooks.TrackingHooks;
+import org.netbeans.agent.hooks.api.TrackingHooks;
+import org.netbeans.agent.hooks.api.TrackingHooks.Hooks;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.masterfs.filebasedfs.children.ChildrenSupport;
 import org.openide.filesystems.FileObject;
@@ -68,7 +69,7 @@ public class NoLockWhenRefreshIOTest extends NbTestCase {
 
     private void registerHooks() {
         hooks = new AssertNoLockManager(getWorkDirPath());
-        TrackingHooks.register(hooks, 0, TrackingHooks.HOOK_IO);
+        TrackingHooks.register(hooks, 0, Hooks.IO);
     }
 
     @Override

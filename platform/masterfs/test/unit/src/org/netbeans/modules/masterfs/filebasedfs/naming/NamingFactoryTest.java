@@ -20,9 +20,9 @@ package org.netbeans.modules.masterfs.filebasedfs.naming;
 
 import java.io.File;
 import java.io.IOException;
-import java.security.Permission;
 import junit.framework.Test;
-import org.netbeans.agent.hooks.TrackingHooks;
+import org.netbeans.agent.hooks.api.TrackingHooks;
+import org.netbeans.agent.hooks.api.TrackingHooks.Hooks;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.junit.NbTestSuite;
 import org.netbeans.modules.masterfs.providers.ProvidedExtensions;
@@ -57,7 +57,7 @@ public class NamingFactoryTest extends NbTestCase {
     }
     
     public void registerSecurityManager() {
-        TrackingHooks.register(new AssertNoLockManager(NamingFactory.class), 0, TrackingHooks.HOOK_IO);
+        TrackingHooks.register(new AssertNoLockManager(NamingFactory.class), 0, Hooks.IO);
     }
 
     public void testDontForciblyUnregisterFileName() throws Exception {

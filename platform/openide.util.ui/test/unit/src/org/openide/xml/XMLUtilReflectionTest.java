@@ -29,7 +29,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 import junit.framework.Assert;
-import org.netbeans.agent.hooks.TrackingHooks;
+import org.netbeans.agent.hooks.api.TrackingHooks;
+import org.netbeans.agent.hooks.api.TrackingHooks.Hooks;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXParseException;
 
@@ -101,7 +102,7 @@ public class XMLUtilReflectionTest extends org.netbeans.junit.NbTestCase {
         private static boolean initialized;
         public static synchronized void initialize() {
             if (!initialized) {
-                TrackingHooks.register(new CountingSecurityManager(), 0, HOOK_ACCESSIBLE);
+                TrackingHooks.register(new CountingSecurityManager(), 0, Hooks.ACCESSIBLE);
                 initialized = true;
             }
             members.clear();

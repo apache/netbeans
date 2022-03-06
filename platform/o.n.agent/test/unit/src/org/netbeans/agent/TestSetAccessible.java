@@ -19,7 +19,8 @@
 package org.netbeans.agent;
 
 import java.lang.reflect.AccessibleObject;
-import org.netbeans.agent.hooks.TrackingHooks;
+import org.netbeans.agent.hooks.api.TrackingHooks;
+import org.netbeans.agent.hooks.api.TrackingHooks.Hooks;
 
 /**
  *
@@ -33,7 +34,7 @@ public class TestSetAccessible {
                 System.err.print("checkSetAccessible: ");
                 System.err.println(what.getClass().getName());
             }
-        }, 0, TrackingHooks.HOOK_ACCESSIBLE);
+        }, 0, Hooks.ACCESSIBLE);
         Class<AccessibleTest> clazz = AccessibleTest.class;
         System.err.println("going to make a field accessible:");
         clazz.getDeclaredField("accessibleTest").setAccessible(true);

@@ -29,7 +29,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.beans.Introspector;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
@@ -50,8 +49,8 @@ import javax.swing.UIManager;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
 import javax.swing.text.DefaultEditorKit;
-import org.netbeans.TopSecurityManager;
-import org.netbeans.agent.hooks.TrackingHooks;
+import org.netbeans.agent.hooks.api.TrackingHooks;
+import org.netbeans.agent.hooks.api.TrackingHooks.Hooks;
 import org.netbeans.core.ModuleActions;
 import org.netbeans.modules.progress.spi.Controller;
 import org.netbeans.modules.progress.spi.InternalHandle;
@@ -89,7 +88,7 @@ public class Install implements Runnable {
     private static final Logger LOG = Logger.getLogger(Install.class.getName());
     
     public @Override void run() {
-        TrackingHooks.register(SecMan.DEFAULT, 100, TrackingHooks.HOOK_EXIT, TrackingHooks.HOOK_NEW_AWT_WINDOW);
+        TrackingHooks.register(SecMan.DEFAULT, 100, TrackingHooks.Hooks.EXIT, Hooks.NEW_AWT_WINDOW);
     }
     
     @OnStop
@@ -98,7 +97,7 @@ public class Install implements Runnable {
         public @Override void run() {
             showPendingTasks();
 
-            TrackingHooks.clear();
+            TrackingHooks.unregister(SecMan.DEFAULT);
         }
     }
 

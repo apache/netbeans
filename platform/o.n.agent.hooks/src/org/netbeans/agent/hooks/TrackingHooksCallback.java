@@ -20,11 +20,8 @@ package org.netbeans.agent.hooks;
 
 import java.awt.Window;
 import java.io.File;
-import java.io.RandomAccessFile;
 import java.lang.reflect.AccessibleObject;
-import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
-import java.nio.file.Files;
 import java.nio.file.OpenOption;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
@@ -38,21 +35,16 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.netbeans.agent.hooks.api.TrackingHooks;
+import org.netbeans.agent.hooks.api.TrackingHooks.Hooks;
 
-public abstract class TrackingHooks {
+public abstract class TrackingHooksCallback {
 
-    private static final Logger LOG = Logger.getLogger(TrackingHooks.class.getName());
-    public static final String HOOK_EXIT = "exit";
-    public static final String HOOK_IO = "io";
-    public static final String HOOK_PROPERTY = "property";
-    public static final String HOOK_ACCESSIBLE = "accessible";
-    public static final String HOOK_NEW_AWT_WINDOW = "newAWTWindow";
-    public static final String HOOK_SECURITY_MANAGER = "securityManager";
-    public static final String HOOK_EXEC = "exec";
+    private static final Logger LOG = Logger.getLogger(TrackingHooksCallback.class.getName());
 
-    private static final Map<String, Set<HookDescription>> hook2Delegates = new HashMap<>();
+    private static final Map<Hooks, Set<HookDescription>> hook2Delegates = new HashMap<>();
 
-    public static synchronized void register(TrackingHooks delegate, int priority, String... hooks) {
+    public static synchronized void register(TrackingHooks delegate, int priority, Hooks... hooks) {
         if (hook2Delegates.isEmpty() && hooks.length != 0) {
             try {
                 Class<?> agent = Class.forName("org.netbeans.agent.TrackingAgent", false, ClassLoader.getSystemClassLoader());
@@ -62,13 +54,13 @@ public abstract class TrackingHooks {
                 LOG.log(Level.INFO, "Cannot associate tracking hooks, the application will be unstable", ex); // NOI18N
             }
         }
-        for (String hook : hooks) {
+        for (Hooks hook : hooks) {
             Set<HookDescription> existing = hook2Delegates.computeIfAbsent(hook, x -> new TreeSet<>((d1, d2) -> d1.priority - d2.priority));
             existing.add(new HookDescription(delegate, priority));
         }
     }
 
-    private static synchronized Iterable<TrackingHooks> getDelegates(String hook) {
+    private static synchronized Iterable<TrackingHooks> getDelegates(Hooks hook) {
         //bootstrap issues, cannot use lambdas here:
         List<TrackingHooks> result = new ArrayList<>();
 
@@ -98,17 +90,11 @@ public abstract class TrackingHooks {
         return !hook2Delegates.isEmpty();
     }
 
-    protected void checkExit(int i) {}
-
     public static void exitCallback(int i) {
-        for (TrackingHooks h : getDelegates(HOOK_EXIT)) {
-            h.checkExit(i);
+        for (TrackingHooks h : getDelegates(Hooks.EXIT)) {
+            getAccessor().checkExit(h, i);
         }
     }
-
-    protected void checkFileWrite(String path) {}
-    protected void checkFileRead(String path) {}
-    protected void checkDelete(String path) {}
 
     public static void write(File file) {
         write(file.getAbsolutePath());
@@ -121,8 +107,8 @@ public abstract class TrackingHooks {
     }
 
     public static void write(String name) {
-        for (TrackingHooks h : getDelegates(HOOK_IO)) {
-            h.checkFileWrite(name);
+        for (TrackingHooks h : getDelegates(Hooks.IO)) {
+            getAccessor().checkFileWrite(h, name);
         }
     }
 
@@ -137,8 +123,8 @@ public abstract class TrackingHooks {
     }
 
     public static void read(String name) {
-        for (TrackingHooks h : getDelegates(HOOK_IO)) {
-            h.checkFileRead(name);
+        for (TrackingHooks h : getDelegates(Hooks.IO)) {
+            getAccessor().checkFileRead(h, name);
         }
     }
 
@@ -178,52 +164,42 @@ public abstract class TrackingHooks {
     }
 
     private static void deleteFile(String name) {
-        for (TrackingHooks h : getDelegates(HOOK_IO)) {
-            h.checkDelete(name);
+        for (TrackingHooks h : getDelegates(Hooks.IO)) {
+            getAccessor().checkDelete(h, name);
         }
     }
-
-    protected void checkSystemProperty(String property) {}
 
     public static void systemProperty(String property) {
-        for (TrackingHooks h : getDelegates(HOOK_PROPERTY)) {
-            h.checkSystemProperty(property);
+        for (TrackingHooks h : getDelegates(Hooks.PROPERTY)) {
+            getAccessor().checkSystemProperty(h, property);
         }
     }
-
-    protected void checkSetAccessible(AccessibleObject what) {}
 
     public static void setAccessible(AccessibleObject what) {
-        for (TrackingHooks h : getDelegates(HOOK_ACCESSIBLE)) {
-            h.checkSetAccessible(what);
+        for (TrackingHooks h : getDelegates(Hooks.ACCESSIBLE)) {
+            getAccessor().checkSetAccessible(h, what);
         }
     }
-
-    protected void checkSetSecurityManager(Object what) {}
 
     public static void setSecurityManager(Object what) {
-        for (TrackingHooks h : getDelegates(HOOK_SECURITY_MANAGER)) {
-            h.checkSetSecurityManager(what);
+        for (TrackingHooks h : getDelegates(Hooks.SECURITY_MANAGER)) {
+            getAccessor().checkSetSecurityManager(h, what);
         }
     }
-
-    protected void checkNewAWTWindow(Window w) {}
 
     public static void newAWTWindowCallback(Window w) {
-        for (TrackingHooks h : getDelegates(HOOK_NEW_AWT_WINDOW)) {
-            h.checkNewAWTWindow(w);
+        for (TrackingHooks h : getDelegates(Hooks.NEW_AWT_WINDOW)) {
+            getAccessor().checkNewAWTWindow(h, w);
         }
     }
-
-    protected void checkExec(List<String> command) {}
 
     public static void processBuilderStart(ProcessBuilder builder) {
         List<String> command = null;
-        for (TrackingHooks h : getDelegates(HOOK_EXEC)) {
+        for (TrackingHooks h : getDelegates(Hooks.EXEC)) {
             if (command == null) {
                 command = Collections.unmodifiableList(new ArrayList<>(builder.command()));
             }
-            h.checkExec(command);
+            getAccessor().checkExec(h, command);
         }
     }
 
@@ -236,5 +212,38 @@ public abstract class TrackingHooks {
             this.priority = priority;
         }
 
+    }
+
+    private static Accessor ACCESSOR;
+
+    public static synchronized Accessor getAccessor() {
+        try {
+            Class.forName(TrackingHooks.class.getName(), true, TrackingHooks.class.getClassLoader());
+        } catch (ClassNotFoundException ex) {
+            throw new InternalError(ex);
+        }
+        return ACCESSOR;
+    }
+
+    public static synchronized void setAccessor(Accessor accessor) {
+        ACCESSOR = accessor;
+    }
+
+    public interface Accessor {
+        public void checkExit(TrackingHooks hooks, int i);
+
+        public void checkFileWrite(TrackingHooks hooks, String path);
+        public void checkFileRead(TrackingHooks hooks, String path);
+        public void checkDelete(TrackingHooks hooks, String path);
+
+        public void checkSystemProperty(TrackingHooks hooks, String property);
+
+        public void checkSetAccessible(TrackingHooks hooks, AccessibleObject what);
+
+        public void checkSetSecurityManager(TrackingHooks hooks, Object what);
+
+        public void checkNewAWTWindow(TrackingHooks hooks, Window w);
+
+        public void checkExec(TrackingHooks hooks, List<String> command);
     }
 }

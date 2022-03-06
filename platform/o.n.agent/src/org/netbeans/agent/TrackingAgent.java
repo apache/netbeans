@@ -19,10 +19,13 @@
 package org.netbeans.agent;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.IllegalClassFormatException;
 import java.lang.instrument.Instrumentation;
 import java.lang.instrument.UnmodifiableClassException;
+import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.security.ProtectionDomain;
 import java.util.ArrayList;
@@ -31,12 +34,14 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.BiFunction;
+import java.util.jar.JarFile;
 import java.util.stream.Collectors;
 
 public class TrackingAgent {
 
-    private static final String TRACKING_HOOKS = "org/netbeans/agent/hooks/TrackingHooks";
+    private static final String TRACKING_HOOKS = "org/netbeans/agent/hooks/TrackingHooksCallback";
 
+    //<editor-fold defaultstate="collapsed" desc="Transformations">
     private static final List<TrackingTransformer.MethodEnhancement> toInject = Arrays.asList(
             new TrackingTransformer.MethodEnhancement("java/lang/System",
                                                       "exit",
@@ -819,11 +824,15 @@ public class TrackingAgent {
                                                       ),
                                                       "2AB8,%5s") //aload0, invokespecial #5
     );
+    //</editor-fold>
 
     private static Instrumentation instrumentation;
 
-    public static void premain(String arg, Instrumentation i) {
+    public static void premain(String arg, Instrumentation i) throws IOException, URISyntaxException {
         instrumentation = i;
+        File thisFile = new File(TrackingAgent.class.getProtectionDomain().getCodeSource().getLocation().toURI());
+        File hooksFile = new File(thisFile.getParentFile(), "org-netbeans-agent-hooks.jar");
+        i.appendToBootstrapClassLoaderSearch(new JarFile(hooksFile));
     }
 
     public static void install() {
@@ -859,6 +868,9 @@ public class TrackingAgent {
 
         @Override
         public byte[] transform(ClassLoader loader, String className, Class<?> classBeingRedefined, ProtectionDomain protectionDomain, byte[] classfileBuffer) throws IllegalClassFormatException {
+            if (className == null) {
+                return classfileBuffer;
+            }
             try {
                 List<MethodEnhancement> thisClassEnhancements = toInject.stream().filter(me -> {/*System.err.println("className=" + className); */return className.equals(me.className);}).collect(Collectors.toList());
             if (thisClassEnhancements.isEmpty()) {

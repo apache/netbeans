@@ -25,7 +25,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.netbeans.agent.hooks.TrackingHooks;
+import org.netbeans.agent.hooks.api.TrackingHooks;
+import org.netbeans.agent.hooks.api.TrackingHooks.Hooks;
 import org.netbeans.modules.masterfs.filebasedfs.children.ChildrenSupport;
 import org.netbeans.modules.masterfs.filebasedfs.naming.NamingFactory;
 import org.openide.util.Lookup;
@@ -36,7 +37,7 @@ import org.openide.util.Lookup;
  */
 public class FileChangedManager extends TrackingHooks {
     public static void install() {
-        TrackingHooks.register(getInstance(), 0, TrackingHooks.HOOK_IO);
+        TrackingHooks.register(getInstance(), 0, Hooks.IO);
     }
 
     private static final Logger LOG = Logger.getLogger(FileChangedManager.class.getName());

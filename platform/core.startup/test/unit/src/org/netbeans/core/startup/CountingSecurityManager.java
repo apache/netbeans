@@ -19,27 +19,26 @@
 
 package org.netbeans.core.startup;
 
-import java.io.FileDescriptor;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.security.Permission;
 import junit.framework.Assert;
+import org.netbeans.agent.hooks.api.TrackingHooks;
+import org.netbeans.agent.hooks.api.TrackingHooks.Hooks;
 
 /**
  *
  * @author Jaroslav Tulach <jaroslav.tulach@netbeans.org>
  */
-final class CountingSecurityManager extends SecurityManager {
+final class CountingSecurityManager extends TrackingHooks {
     private static int cnt;
     private static StringWriter msgs;
     private static PrintWriter pw;
     private static String prefix;
+    private static CountingSecurityManager instance;
     
     public static void initialize(String prefix) {
-        if (System.getSecurityManager() instanceof CountingSecurityManager) {
-            // ok
-        } else {
-            System.setSecurityManager(new CountingSecurityManager());
+        if (instance == null) {
+            TrackingHooks.register(instance = new CountingSecurityManager(), 0, Hooks.IO);
         }
         cnt = 0;
         msgs = new StringWriter();
@@ -55,7 +54,7 @@ final class CountingSecurityManager extends SecurityManager {
     }
 
     @Override
-    public void checkRead(String file) {
+    public void checkFileRead(String file) {
         if (file.startsWith(prefix)) {
             cnt++;
             pw.println("checkRead: " + file);
@@ -64,32 +63,11 @@ final class CountingSecurityManager extends SecurityManager {
     }
 
     @Override
-    public void checkRead(String file, Object context) {
-        if (file.startsWith(prefix)) {
-            cnt++;
-            pw.println("checkRead2: " + file);
-        }
-    }
-
-    @Override
-    public void checkWrite(FileDescriptor fd) {
-        cnt++;
-        pw.println("Fd: " + fd);
-    }
-
-    @Override
-    public void checkWrite(String file) {
+    public void checkFileWrite(String file) {
         if (file.startsWith(prefix)) {
             cnt++;
             pw.println("checkWrite: " + file);
         }
     }
 
-    @Override
-    public void checkPermission(Permission perm) {
-    }
-
-    @Override
-    public void checkPermission(Permission perm, Object context) {
-    }
 }

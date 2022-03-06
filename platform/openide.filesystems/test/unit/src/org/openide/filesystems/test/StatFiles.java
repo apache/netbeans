@@ -25,7 +25,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import junit.framework.Assert;
-import org.netbeans.agent.hooks.TrackingHooks;
+import org.netbeans.agent.hooks.api.TrackingHooks;
 
 /**
  *
@@ -45,7 +45,7 @@ public class StatFiles extends TrackingHooks {
     }
 
     public void register() {
-        TrackingHooks.register(this, 0, TrackingHooks.HOOK_IO);
+        TrackingHooks.register(this, 0, Hooks.IO);
     }
     
     public void unregister() {

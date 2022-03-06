@@ -24,16 +24,15 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.file.Files;
-import java.nio.file.OpenOption;
 import java.nio.file.StandardOpenOption;
 import java.nio.file.attribute.BasicFileAttributeView;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileTime;
 import java.nio.file.attribute.UserPrincipal;
 import java.util.Arrays;
-import java.util.EnumSet;
 import java.util.HashSet;
-import org.netbeans.agent.hooks.TrackingHooks;
+import org.netbeans.agent.hooks.api.TrackingHooks;
+import org.netbeans.agent.hooks.api.TrackingHooks.Hooks;
 
 /**
  *
@@ -56,7 +55,7 @@ public class TestIO {
             protected void checkDelete(String path) {
                 System.err.println("checkDelete: " + (path.equals(tempPath) ? "TEMP-FILE" : path));
             }
-        }, 0, TrackingHooks.HOOK_IO);
+        }, 0, Hooks.IO);
         System.err.print("going to write using File: "); new FileOutputStream(temp).close();
         System.err.print("File.canExecute: "); temp.canExecute();
         System.err.print("File.canRead: "); temp.canRead();

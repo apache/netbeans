@@ -18,7 +18,8 @@
  */
 package org.openide;
 
-import org.netbeans.agent.hooks.TrackingHooks;
+import org.netbeans.agent.hooks.api.TrackingHooks;
+import org.netbeans.agent.hooks.api.TrackingHooks.Hooks;
 import org.netbeans.junit.NbTestCase;
 
 /**
@@ -27,7 +28,7 @@ import org.netbeans.junit.NbTestCase;
  */
 public class LifecycleManagerTest extends NbTestCase {
     static {
-        TrackingHooks.register(new ChokeOnExit(), 0, TrackingHooks.HOOK_EXIT);
+        TrackingHooks.register(new ChokeOnExit(), 0, Hooks.EXIT);
         System.setProperty("netbeans.full.hack", "true");
     }
     

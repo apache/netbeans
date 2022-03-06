@@ -21,7 +21,8 @@ package org.netbeans.agent;
 import java.awt.Frame;
 import java.awt.Window;
 import java.io.IOException;
-import org.netbeans.agent.hooks.TrackingHooks;
+import org.netbeans.agent.hooks.api.TrackingHooks;
+import org.netbeans.agent.hooks.api.TrackingHooks.Hooks;
 
 /**
  *
@@ -34,7 +35,7 @@ public class TestWindow {
             protected void checkNewAWTWindow(Window w) {
                 System.err.println("checkNewAWTWindow");
             }
-        }, 0, TrackingHooks.HOOK_NEW_AWT_WINDOW);
+        }, 0, Hooks.NEW_AWT_WINDOW);
         System.err.println("going to create new Window(Frame):");
         new Window((Frame) null);
         System.err.println("going to create new Window(Window):");

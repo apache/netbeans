@@ -5,9 +5,14 @@
         <data xmlns="http://www.netbeans.org/ns/nb-module-project/3">
             <code-name-base>org.netbeans.agent.hooks</code-name-base>
             <module-dependencies/>
-            <public-packages>
-                <package>org.netbeans.agent.hooks</package>
-            </public-packages>
+            <friend-packages>
+                <friend>org.netbeans.bootstrap</friend>
+                <friend>org.netbeans.core</friend>
+                <friend>org.netbeans.core.execution</friend>
+                <friend>org.netbeans.core.startup</friend>
+                <friend>org.netbeans.modules.masterfs</friend>
+                <package>org.netbeans.agent.hooks.api</package>
+            </friend-packages>
         </data>
     </configuration>
 </project>

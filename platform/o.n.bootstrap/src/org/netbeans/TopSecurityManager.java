@@ -32,7 +32,7 @@ import java.util.Set;
 import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.netbeans.agent.hooks.TrackingHooks;
+import org.netbeans.agent.hooks.api.TrackingHooks;
 import org.openide.util.WeakSet;
 
 /** NetBeans security manager implementation.
@@ -43,7 +43,7 @@ public class TopSecurityManager extends TrackingHooks {
     private static final Logger LOG = Logger.getLogger(TopSecurityManager.class.getName());
 
     public static void install() {
-        TrackingHooks.register(new TopSecurityManager(), 1000, TrackingHooks.HOOK_EXIT, TrackingHooks.HOOK_PROPERTY, TrackingHooks.HOOK_SECURITY_MANAGER, TrackingHooks.HOOK_ACCESSIBLE);
+        TrackingHooks.register(new TopSecurityManager(), 1000, Hooks.EXIT, Hooks.PROPERTY, Hooks.SECURITY_MANAGER, Hooks.ACCESSIBLE);
     }
 
     static boolean officialExit = false;
@@ -203,7 +203,7 @@ public class TopSecurityManager extends TrackingHooks {
             Class<?> caller = null;
             Class<?>[] arr = getStack();
             for (int i = 0; i < arr.length; i++) {
-                if (arr[i] == TopSecurityManager.class || arr[i] == StackSecurityManager.class || arr[i] == TrackingHooks.class) {
+                if (arr[i] == TopSecurityManager.class || arr[i] == StackSecurityManager.class || arr[i].getName().equals("org.netbeans.agent.hooks.TrackingHooksCallback") || arr[i] == TrackingHooks.class) {
                     continue;
                 }
                 if (arr[i] != Class.class && arr[i] != AccessibleObject.class) {

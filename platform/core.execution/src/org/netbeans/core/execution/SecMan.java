@@ -21,7 +21,7 @@ package org.netbeans.core.execution;
 
 import java.awt.Window;
 import org.netbeans.TopSecurityManager;
-import org.netbeans.agent.hooks.TrackingHooks;
+import org.netbeans.agent.hooks.api.TrackingHooks;
 
 import org.openide.execution.NbClassLoader;
 

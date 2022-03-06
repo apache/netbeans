@@ -22,7 +22,8 @@ import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.stream.Collectors;
-import org.netbeans.agent.hooks.TrackingHooks;
+import org.netbeans.agent.hooks.api.TrackingHooks;
+import org.netbeans.agent.hooks.api.TrackingHooks.Hooks;
 
 /**
  *
@@ -42,7 +43,7 @@ public class TestExec {
                                                            .map(c -> java.equals(c) ? "JAVA" : c)
                                                            .collect(Collectors.joining(", ", "[", "]")));
             }
-        }, 0, TrackingHooks.HOOK_EXEC);
+        }, 0, Hooks.EXEC);
         System.err.println("Runtime.exec(String):");
         Runtime.getRuntime().exec(java);
         System.err.println("Runtime.exec(String, String[]):");

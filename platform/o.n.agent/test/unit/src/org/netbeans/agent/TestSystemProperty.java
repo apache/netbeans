@@ -19,7 +19,8 @@
 package org.netbeans.agent;
 
 import java.io.IOException;
-import org.netbeans.agent.hooks.TrackingHooks;
+import org.netbeans.agent.hooks.api.TrackingHooks;
+import org.netbeans.agent.hooks.api.TrackingHooks.Hooks;
 
 /**
  *
@@ -32,7 +33,7 @@ public class TestSystemProperty {
             protected void checkSystemProperty(String property) {
                 System.err.println("checkSystemProperty: " + property);
             }
-        }, 0, TrackingHooks.HOOK_PROPERTY);
+        }, 0, Hooks.PROPERTY);
         System.err.println("going to read property without default:");
         System.getProperty("property");
         System.err.println("going to read property with default:");

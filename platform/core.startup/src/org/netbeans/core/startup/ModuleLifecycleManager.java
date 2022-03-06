@@ -24,7 +24,7 @@ import java.io.IOException;
 import java.util.concurrent.atomic.AtomicBoolean;
 import org.netbeans.CLIHandler;
 import org.netbeans.TopSecurityManager;
-import org.netbeans.agent.hooks.TrackingHooks;
+import org.netbeans.agent.hooks.api.TrackingHooks;
 import org.netbeans.core.startup.layers.SessionManager;
 import org.openide.LifecycleManager;
 import org.openide.modules.Places;

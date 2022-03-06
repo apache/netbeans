@@ -19,7 +19,8 @@
 package org.netbeans.agent;
 
 import java.io.IOException;
-import org.netbeans.agent.hooks.TrackingHooks;
+import org.netbeans.agent.hooks.api.TrackingHooks;
+import org.netbeans.agent.hooks.api.TrackingHooks.Hooks;
 
 /**
  *
@@ -33,7 +34,7 @@ public class TestSetSecurityManager {
                 System.err.println("setSecurityManager: " + what);
                 throw new SecurityException();
             }
-        }, 0, TrackingHooks.HOOK_SECURITY_MANAGER);
+        }, 0, Hooks.SECURITY_MANAGER);
         System.err.println("going to set SecurityManager:");
         try {
             System.setSecurityManager(new SecurityManager() {

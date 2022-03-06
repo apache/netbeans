@@ -38,7 +38,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import junit.framework.Assert;
 import org.netbeans.TopSecurityManager;
-import org.netbeans.agent.hooks.TrackingHooks;
+import org.netbeans.agent.hooks.api.TrackingHooks;
 import org.netbeans.core.startup.InstalledFileLocatorImpl;
 import org.openide.modules.Places;
 import org.openide.util.Exceptions;
@@ -68,7 +68,7 @@ final class CountingSecurityManager extends TrackingHooks implements Callable<In
         inSubtree("", "");
 
         if (instance == null) {
-            TrackingHooks.register(instance = new CountingSecurityManager(), 0, TrackingHooks.HOOK_IO);
+            TrackingHooks.register(instance = new CountingSecurityManager(), 0, Hooks.IO);
         }
 
         setCnt(0);

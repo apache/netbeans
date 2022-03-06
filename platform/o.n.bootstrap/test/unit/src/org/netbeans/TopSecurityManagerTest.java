@@ -20,7 +20,7 @@
 package org.netbeans;
 
 import junit.framework.TestCase;
-import org.netbeans.agent.hooks.TrackingHooks;
+import org.netbeans.agent.hooks.TrackingHooksCallback;
 
 /**
  *
@@ -33,13 +33,6 @@ public class TopSecurityManagerTest extends TestCase {
         System.err.println("TopSecurityManagerTest: " + testName);
     }
 
-    @Override
-    protected void tearDown() throws Exception {
-        super.tearDown();
-        TrackingHooks.clear();
-    }
-    
-    
     public void testCanInstallTwice() {
         TopSecurityManager.install();
         TopSecurityManager.install();

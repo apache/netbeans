@@ -18,7 +18,9 @@
  */
 package org.netbeans.agent;
 
-import org.netbeans.agent.hooks.TrackingHooks;
+import org.netbeans.agent.hooks.api.TrackingHooks;
+import org.netbeans.agent.hooks.api.TrackingHooks.Hooks;
+
 
 /**
  *
@@ -32,7 +34,7 @@ public class TestSecurityManager {
                 System.out.println("check exit called with: " + i);
                 throw new SecurityException();
             }
-        }, 0, TrackingHooks.HOOK_EXIT);
+        }, 0, Hooks.EXIT);
         try {
             System.exit(-2);
             throw new AssertionError("Didn't throw a SecurityException!");

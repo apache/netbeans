@@ -1,12 +1,11 @@
-Name: JSch-agent-proxy
-Description: A proxy to ssh-agent and Pageant in Java
-Version: 0.0.7
+Name: JSch
+Version: 0.1.72
+License: BSD-jsch
 Origin: JCraft Inc.
-License: BSD-jsch-agentproxy
-Files: jsch.agentproxy.core-0.0.7.jar jsch.agentproxy.pageant-0.0.7.jar jsch.agentproxy.sshagent-0.0.7.jar jsch.agentproxy.usocket-jna-0.0.7.jar
-URL: http://www.jcraft.com/jsch-agent-proxy/LICENSE.txt
+URL: https://github.com/mwiede/jsch/tree/jsch-0.1.72
+Description: Java implementation of SSH2
 
-Copyright (c) 2011-2012 Atsuhiko Yamanaka, JCraft,Inc.
+Copyright (c) 2002-2015 Atsuhiko Yamanaka, JCraft,Inc.
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without

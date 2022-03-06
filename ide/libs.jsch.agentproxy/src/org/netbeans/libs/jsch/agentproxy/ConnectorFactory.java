@@ -18,11 +18,9 @@
  */
 package org.netbeans.libs.jsch.agentproxy;
 
-import com.jcraft.jsch.agentproxy.Connector;
-import com.jcraft.jsch.agentproxy.USocketFactory;
-import com.jcraft.jsch.agentproxy.connector.PageantConnector;
-import com.jcraft.jsch.agentproxy.connector.SSHAgentConnector;
-import com.jcraft.jsch.agentproxy.usocket.JNAUSocketFactory;
+import com.jcraft.jsch.AgentConnector;
+import com.jcraft.jsch.PageantConnector;
+import com.jcraft.jsch.SSHAgentConnector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -52,26 +50,32 @@ public class ConnectorFactory {
         return instance;
     }
     
-    public Connector createConnector (ConnectorKind preferredKind) {
-        Connector con = null;
+    public AgentConnector createConnector(ConnectorKind preferredKind) {
+        AgentConnector agentConnector = null;
         try {
-            if ((preferredKind == ConnectorKind.ANY || preferredKind == ConnectorKind.SSH_AGENT)
-                    && SSHAgentConnector.isConnectorAvailable()) {
-                USocketFactory usf = new JNAUSocketFactory();
-                con = new SSHAgentConnector(usf);
+            if (preferredKind == ConnectorKind.ANY || preferredKind == ConnectorKind.SSH_AGENT) {
+                agentConnector = new SSHAgentConnector();
+                if (!agentConnector.isAvailable()) {
+                    agentConnector = null;
+                }
             }
         } catch (Throwable ex) {
             LOG.log(Level.FINE, null, ex);
         }
+        if(agentConnector != null) {
+            return agentConnector;
+        }
         try {
-            if ((preferredKind == ConnectorKind.ANY || preferredKind == ConnectorKind.PAGEANT)
-                    && PageantConnector.isConnectorAvailable()) {
-                con = new PageantConnector();
+            if (preferredKind == ConnectorKind.ANY || preferredKind == ConnectorKind.PAGEANT)  {
+                agentConnector = new PageantConnector();
+                if (!agentConnector.isAvailable()) {
+                    agentConnector = null;
+                }
             }
         } catch (Throwable ex) {
             LOG.log(Level.FINE, null, ex);
         }
-        return con;
+        return agentConnector;
     }
-    
+
 }

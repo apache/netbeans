@@ -22,6 +22,9 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.parsers.DocumentBuilder;
@@ -32,7 +35,6 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 import org.netbeans.modules.db.sql.execute.ui.SQLHistoryPanel;
 import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileSystem;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.NbPreferences;
 import org.openide.util.RequestProcessor;
@@ -52,7 +54,9 @@ public class SQLHistoryManager  {
     public static final String PROP_SAVED = "saved"; //NOI18N
     
     private static final String SQL_HISTORY_DIRECTORY = "Databases/SQLHISTORY"; // NOI18N
-    private static final String SQL_HISTORY_FILE = "sql_history.xml"; // NOI18N
+    private static final String SQL_HISTORY_BASE = "sql_history"; // NOI18N
+    private static final String SQL_HISTORY_EXT = "xml"; // NOI18N
+    private static final String SQL_HISTORY_FILE = SQL_HISTORY_BASE + "." + SQL_HISTORY_EXT; // NOI18N
     private static final String TAG_HISTORY = "history"; // NOI18N
     private static final String TAG_SQL = "sql"; // NOI18N
     private static final String ATTR_DATE = "date"; // NOI18N
@@ -97,7 +101,7 @@ public class SQLHistoryManager  {
         return NbPreferences.forModule(SQLHistoryPanel.class).getInt("OPT_SQL_STATEMENTS_SAVED_FOR_HISTORY", DEFAULT_SQL_STATEMENTS_SAVED_FOR_HISTORY);
     }
 
-    protected FileObject getHistoryRoot(boolean create) throws IOException {
+    private FileObject getHistoryRoot(boolean create) throws IOException {
         FileObject result = null;
         FileObject historyRootDir = getConfigRoot().getFileObject(getRelativeHistoryPath());
         if (historyRootDir != null || create) {
@@ -116,17 +120,17 @@ public class SQLHistoryManager  {
         return result;
     }
     
-    protected FileObject getConfigRoot() {
+    private FileObject getConfigRoot() {
         return FileUtil.getConfigRoot();
     }
     
-    protected String getRelativeHistoryPath() {
+    private String getRelativeHistoryPath() {
         return SQL_HISTORY_DIRECTORY;
     }
 
     protected String getHistoryFilename() {
         return SQL_HISTORY_FILE;
-                }
+    }
 
     public void setListSize(int listSize) {
         NbPreferences.forModule(SQLHistoryPanel.class).putInt("OPT_SQL_STATEMENTS_SAVED_FOR_HISTORY", listSize);
@@ -205,40 +209,34 @@ public class SQLHistoryManager  {
         @Override
         public void run() {
             try {
-                final FileObject targetFile = getHistoryRoot(true);
-                targetFile.getFileSystem().
-                        runAtomicAction(new FileSystem.AtomicAction() {
-                    @Override
-                    public void run() throws IOException {
-                        ;
-                        try (OutputStream os = targetFile.getOutputStream()) {
-                            XMLStreamWriter xsw = XMLOutputFactory
-                                    .newInstance()
-                                    .createXMLStreamWriter(os);
-                            
-                            xsw.writeStartDocument();
-                            xsw.writeCharacters(CONTENT_NEWLINE);
-                            xsw.writeStartElement(TAG_HISTORY);
-                            xsw.writeCharacters(CONTENT_NEWLINE);
-                            for(SQLHistoryEntry sqe: sqlHistory) {
-                                xsw.writeStartElement(TAG_SQL);
-                                xsw.writeAttribute(ATTR_DATE, sqe.getDateXMLVariant());
-                                xsw.writeAttribute(ATTR_URL, sqe.getUrl());
-                                xsw.writeCharacters(sqe.getSql());
-                                xsw.writeEndElement();
-                                xsw.writeCharacters(CONTENT_NEWLINE);
-                            }
-                            xsw.writeEndElement();
-                            xsw.flush();
-                            xsw.close();
-                        } catch (IOException | XMLStreamException ex) {
-                            LOGGER.log(Level.INFO, ex.getMessage(), ex);
-                        } finally {
-                            PROPERTY_CHANGE_SUPPORT.firePropertyChange(
-                                    PROP_SAVED, null, null);
-                        }
+                final FileObject targetFileObject = getHistoryRoot(true);
+                final Path targetFile = FileUtil.toFile(targetFileObject).toPath();
+                final Path tempfile = Files.createTempFile(targetFile.getParent(), SQL_HISTORY_BASE, SQL_HISTORY_EXT);
+                try ( OutputStream os = Files.newOutputStream(tempfile)) {
+                    XMLStreamWriter xsw = XMLOutputFactory
+                            .newInstance()
+                            .createXMLStreamWriter(os);
+
+                    xsw.writeStartDocument();
+                    xsw.writeCharacters(CONTENT_NEWLINE);
+                    xsw.writeStartElement(TAG_HISTORY);
+                    xsw.writeCharacters(CONTENT_NEWLINE);
+                    for (SQLHistoryEntry sqe : sqlHistory) {
+                        xsw.writeStartElement(TAG_SQL);
+                        xsw.writeAttribute(ATTR_DATE, sqe.getDateXMLVariant());
+                        xsw.writeAttribute(ATTR_URL, sqe.getUrl());
+                        xsw.writeCharacters(sqe.getSql());
+                        xsw.writeEndElement();
+                        xsw.writeCharacters(CONTENT_NEWLINE);
                     }
-                });
+                    xsw.writeEndElement();
+                    xsw.flush();
+                    xsw.close();
+                } catch (IOException | XMLStreamException ex) {
+                    LOGGER.log(Level.INFO, ex.getMessage(), ex);
+                }
+                Files.move(tempfile, targetFile, StandardCopyOption.REPLACE_EXISTING);
+                PROPERTY_CHANGE_SUPPORT.firePropertyChange(PROP_SAVED, null, null);
             } catch (IOException ex) {
                 LOGGER.log(Level.INFO, ex.getMessage());
             }

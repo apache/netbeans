@@ -39,8 +39,8 @@ public class ConnectionSpecTest extends NbTestCase {
 
     private static ThreadLocal<List<Boolean>> copySessionServer = new ThreadLocal<>();
 
-    public ConnectionSpecTest() {
-        super(ConnectionSpecTest.class.getName());
+    public ConnectionSpecTest(String testName) {
+        super(testName);
     }
 
     @After

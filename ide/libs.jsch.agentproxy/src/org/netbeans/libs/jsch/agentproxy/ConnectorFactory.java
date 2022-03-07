@@ -52,28 +52,35 @@ public class ConnectorFactory {
     
     public AgentConnector createConnector(ConnectorKind preferredKind) {
         AgentConnector agentConnector = null;
-        try {
-            if (preferredKind == ConnectorKind.ANY || preferredKind == ConnectorKind.SSH_AGENT) {
-                agentConnector = new SSHAgentConnector();
-                if (!agentConnector.isAvailable()) {
-                    agentConnector = null;
+        if (agentConnector == null) {
+            try {
+                if (preferredKind == ConnectorKind.ANY || preferredKind == ConnectorKind.SSH_AGENT) {
+                    agentConnector = new SSHAgentConnector();
+                    if (!agentConnector.isAvailable()) {
+                        agentConnector = null;
+                    }
                 }
+            } catch (Throwable ex) {
+                LOG.log(Level.FINE, null, ex);
             }
-        } catch (Throwable ex) {
-            LOG.log(Level.FINE, null, ex);
         }
-        if(agentConnector != null) {
-            return agentConnector;
-        }
-        try {
-            if (preferredKind == ConnectorKind.ANY || preferredKind == ConnectorKind.PAGEANT)  {
-                agentConnector = new PageantConnector();
-                if (!agentConnector.isAvailable()) {
-                    agentConnector = null;
+        if (agentConnector == null) {
+            try {
+                if (preferredKind == ConnectorKind.ANY || preferredKind == ConnectorKind.PAGEANT) {
+                    agentConnector = new PageantConnector();
+                    if (!agentConnector.isAvailable()) {
+                        agentConnector = null;
+                    }
                 }
+            } catch (Throwable ex) {
+                LOG.log(Level.FINE, null, ex);
+
             }
-        } catch (Throwable ex) {
-            LOG.log(Level.FINE, null, ex);
+        }
+        if (agentConnector != null) {
+            LOG.log(Level.FINE, "AgentConnector: {0} / {1}", new Object[]{agentConnector.getName(), agentConnector.getClass().getName()});
+        } else {
+            LOG.log(Level.FINE, "AgentConnector: none found");
         }
         return agentConnector;
     }

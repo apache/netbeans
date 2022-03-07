@@ -148,10 +148,9 @@ public class TaskCache {
 
                         String description = convertor.getMessage(err);
                         if (description != null && description.length() > 0) {
-                            description = description.replaceAll("\\\\", "\\\\\\\\"); //NOI18N
-                            description = description.replaceAll("\n", "\\\\n"); //NOI18N
-                            description = description.replaceAll(":", "\\\\d"); //NOI18N
-
+                            description = description.replace("\\", "\\\\") //NOI18N
+                                                     .replace("\n", "\\n") //NOI18N
+                                                     .replace(":", "\\d"); //NOI18N
                             pw.println(description);
                         }
                     }

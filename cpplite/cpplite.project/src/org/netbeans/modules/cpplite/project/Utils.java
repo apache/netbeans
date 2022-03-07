@@ -49,6 +49,6 @@ public class Utils {
     }
     
     private static String unquote(String s) {
-        return s.replaceAll("_s_", " ").replaceAll("_u_", "_");
+        return s.replace("_s_", " ").replace("_u_", "_");
     }
 }

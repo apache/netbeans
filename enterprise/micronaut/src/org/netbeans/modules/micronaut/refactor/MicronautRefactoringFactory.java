@@ -139,7 +139,7 @@ public class MicronautRefactoringFactory implements RefactoringPluginFactory {
                                             ConfigurationMetadataSource source = group.getSources().get(info.className);
                                             if (source != null) {
                                                 for (ConfigurationMetadataProperty property : source.getProperties().values()) {
-                                                    String name = "set" + property.getName().replaceAll("-", "");
+                                                    String name = "set" + property.getName().replace("-", "");
                                                     if (name.equalsIgnoreCase(info.methodName)) {
                                                         for (FileObject configFile : configFiles) {
                                                             MicronautConfigUtilities.collectUsages(configFile, property.getId(), usage -> {

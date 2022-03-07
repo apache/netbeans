@@ -205,7 +205,7 @@ public abstract class RefactoringTestCase extends JellyTestCase {
             Object invoke = method.invoke(parent);
             Label2Text parser = new Label2Text();
             String invoke_str = (String) invoke;
-            String ret = invoke_str.replaceAll("&nbsp;", " ");
+            String ret = invoke_str.replace("&nbsp;", " ");
             parser.parse(new StringReader(ret));
             ret = parser.result.toString();
             return ret;

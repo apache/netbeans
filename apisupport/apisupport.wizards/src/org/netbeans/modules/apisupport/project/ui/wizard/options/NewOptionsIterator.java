@@ -553,7 +553,7 @@ public final class NewOptionsIterator extends BasicWizardIterator {
         String getClassNamePrefix() {
             if (classNamePrefix == null) {
                 classNamePrefix = isAdvanced() ? getSecondaryPanelTitle() : getCategoryName();
-                classNamePrefix = classNamePrefix.trim().replaceAll(" ", "");
+                classNamePrefix = classNamePrefix.trim().replace(" ", "");
                 if (!Utilities.isJavaIdentifier(classNamePrefix)) {
                     classNamePrefix = "";
                 }

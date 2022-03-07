@@ -23,7 +23,6 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -614,9 +613,9 @@ public final class ModuleList {
                 } else {
                     // Wildcard. Convert to regexp and do a brute-force search.
                     // Not the most efficient option but should probably suffice.
-                    String regex = "\\Q" + pattern.replaceAll("\\*\\*", "__DBLASTERISK__"). // NOI18N
-                                                   replaceAll("\\*", "\\\\E[^/]*\\\\Q"). // NOI18N
-                                                   replaceAll("__DBLASTERISK__", "\\\\E.*\\\\Q") + "\\E"; // NOI18N
+                    String regex = "\\Q" + pattern.replace("**", "__DBLASTERISK__") // NOI18N
+                                                  .replace("*", "\\E[^/]*\\Q") // NOI18N
+                                                  .replace("__DBLASTERISK__", "\\E.*\\Q") + "\\E"; // NOI18N
                     Pattern regexp = Pattern.compile(regex);
                     for (String clusterFile : scanDirForFiles(cluster)) {
                         if (regexp.matcher(clusterFile).matches()) {

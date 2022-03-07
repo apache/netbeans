@@ -132,7 +132,7 @@ public class RewriteInCommentTest extends GeneratorTestBase {
             }
         });
 
-        assertEquals(code.replaceAll("test", "foo"), mr.getResultingSource(fo));
+        assertEquals(code.replace("test", "foo"), mr.getResultingSource(fo));
     }
     
     String getGoldenPckg() {

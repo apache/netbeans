@@ -584,7 +584,7 @@ public final class EditorBridge extends KeymapManager {
                     LOG.warning("The action " + action + " doesn't provide short description, using its name."); //NOI18N
                     name = getId();
                 }
-                name = name.replaceAll("&", "").trim(); //NOI18N
+                name = name.replace("&", "").trim(); //NOI18N
             }
             return name;
         }
@@ -601,7 +601,7 @@ public final class EditorBridge extends KeymapManager {
             if (delegaitngActionId == null) {
                 delegaitngActionId = (String) action.getValue(NbEditorKit.SYSTEM_ACTION_CLASS_NAME_PROPERTY);
                 if (delegaitngActionId != null) {
-                    delegaitngActionId = delegaitngActionId.replaceAll("\\.", "-");
+                    delegaitngActionId = delegaitngActionId.replace(".", "-");
                 }
             }
             return delegaitngActionId;

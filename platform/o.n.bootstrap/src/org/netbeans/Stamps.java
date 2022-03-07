@@ -914,7 +914,7 @@ public final class Stamps {
     }
 
     static String clusterLocalStamp(File cluster) {
-        return cluster.getName().replaceAll("\\.\\.", "__");
+        return cluster.getName().replace("..", "__");
     }
     
     static String readRelativePath(DataInput dis) throws IOException {

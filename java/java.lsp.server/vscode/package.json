@@ -505,14 +505,18 @@
 				"title": "Run All Tests",
 				"category": "Test"
 			},
-                        {
+      {
 				"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.DownloadWalletAction",
 				"title": "Add DB Connection"
 			},
-                        {
+      {
 				"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.CreateAutonomousDBAction",
 				"title": "Create Autonomous Database"
-                        },
+			},
+      {
+				"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.OpenServiceConsoleAction",
+				"title": "Open Service Console"
+      },
 			{
 				"command": "java.db.set.env",
 				"title": "Set Database Environment Variables",
@@ -602,6 +606,10 @@
 					"when": "false"
 				},
 				{
+					"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.OpenServiceConsoleAction",
+					"when": "false"
+				},
+				{
 					"command": "java.workspace.configureRunSettings",
 					"when": "false"
 				}
@@ -683,6 +691,10 @@
 				},
 				{
 					"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.DownloadWalletAction",
+					"when": "viewItem =~ /class:oracle.items.DatabaseItem/"
+				},
+				{
+					"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.OpenServiceConsoleAction",
 					"when": "viewItem =~ /class:oracle.items.DatabaseItem/"
 				},
 				{

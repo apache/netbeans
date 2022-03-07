@@ -512,6 +512,11 @@
                         {
 				"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.CreateAutonomousDBAction",
 				"title": "Create Autonomous Database"
+                        },
+			{
+				"command": "java.db.set.env",
+				"title": "Set Database Environment Variables",
+                                "category": "Database"
 			}
 		],
 		"keybindings": [

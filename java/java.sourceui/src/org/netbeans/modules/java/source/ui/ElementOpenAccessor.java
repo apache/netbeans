@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.java.source.ui;
 
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javax.lang.model.element.Element;
 import org.netbeans.api.java.source.ClasspathInfo;
@@ -41,6 +42,8 @@ public abstract class ElementOpenAccessor {
     }
     
     public abstract Object[] getOpenInfo(final ClasspathInfo cpInfo, final ElementHandle<? extends Element> el, AtomicBoolean cancel);
+    
+    public abstract CompletableFuture<Object[]> getOpenInfoFuture(final ClasspathInfo cpInfo, final ElementHandle<? extends Element> el, String nameOpt, AtomicBoolean cancel, boolean acquire);
 
     static {
         try {

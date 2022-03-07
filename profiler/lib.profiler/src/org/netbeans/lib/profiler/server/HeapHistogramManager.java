@@ -199,7 +199,7 @@ class HeapHistogramManager {
             String name = ci.getName();
             Integer cindex = (Integer) classesIdMap.get(name);
             if (cindex == null) {
-                cindex = new Integer(classesIdMap.size());
+                cindex = classesIdMap.size();
                 classesIdMap.put(name, cindex);
                 newClassNames.put(name, cindex);
             }

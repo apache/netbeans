@@ -234,7 +234,7 @@ public class JsStructureScanner implements StructureScanner {
         Token<? extends JsTokenId> token = LexUtilities.findPrevious(ts, Arrays.asList(JsTokenId.WHITESPACE));
         if ((token.id() == JsTokenId.OPERATOR_ASSIGNMENT || token.id() == JsTokenId.OPERATOR_COLON) && ts.movePrevious()) {
             token = LexUtilities.findPrevious(ts, Arrays.asList(JsTokenId.WHITESPACE));
-            if (token.id() == JsTokenId.IDENTIFIER) {
+            if (token.id() == JsTokenId.IDENTIFIER || token.id() == JsTokenId.PRIVATE_IDENTIFIER) {
                 // it's:
                 // name : function() ...
                 // name = function() ...
@@ -245,7 +245,7 @@ public class JsStructureScanner implements StructureScanner {
             ts.move(functionKeywordPosition);
             ts.moveNext(); ts.moveNext();
             token = LexUtilities.findNext(ts, Arrays.asList(JsTokenId.WHITESPACE));
-            if (token.id() == JsTokenId.IDENTIFIER) {
+            if (token.id() == JsTokenId.IDENTIFIER || token.id() == JsTokenId.PRIVATE_IDENTIFIER) {
                 value = true;
             }
         }

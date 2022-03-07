@@ -42,7 +42,7 @@ public class SearchScopeList {
 
     private final List<SearchScopeDefinition> scopes;
     private final List<ChangeListener> changeListeners =
-            new ArrayList<ChangeListener>(1);
+            new ArrayList<>(1);
     private ProxyChangeListener proxyChangeListener = new ProxyChangeListener();
 
     /**
@@ -92,7 +92,7 @@ public class SearchScopeList {
             SearchScopeDefinition... extraSearchScopes) {
 
         List<SearchScopeDefinition> scopeList =
-                new ArrayList<SearchScopeDefinition>(6);
+                new ArrayList<>(6);
         Collection<? extends SearchScopeDefinitionProvider> providers;
         providers = Lookup.getDefault().lookupAll(
                 SearchScopeDefinitionProvider.class);
@@ -112,7 +112,7 @@ public class SearchScopeList {
      */
     public List<SearchScopeDefinition> getSeachScopeDefinitions() {
         synchronized (scopes) {
-            return new ArrayList<SearchScopeDefinition>(scopes); //#220505
+            return new ArrayList<>(scopes); //#220505
         }
     }
 
@@ -135,12 +135,7 @@ public class SearchScopeList {
 
         @Override
         public void stateChanged(final ChangeEvent e) {
-            Mutex.EVENT.writeAccess(new Runnable() {
-                @Override
-                public void run() {
-                    notifyDelegates(e);
-                }
-            });
+            Mutex.EVENT.writeAccess(() -> notifyDelegates(e));
         }
 
         private void notifyDelegates(ChangeEvent e) {

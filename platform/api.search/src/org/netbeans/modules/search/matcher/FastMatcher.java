@@ -155,7 +155,7 @@ public class FastMatcher extends AbstractMatcher {
 
         while (textMatcher.find()) {
             if (textDetails == null) {
-                textDetails = new LinkedList<TextDetail>();
+                textDetails = new LinkedList<>();
                 dataObject = DataObject.find(fo);
                 fileMatches++;
             }
@@ -192,7 +192,7 @@ public class FastMatcher extends AbstractMatcher {
             Matcher m = pattern.matcher(line.getString());
             while (m.find() && canRun) {
                 if (dets == null) {
-                    dets = new ArrayList<TextDetail>();
+                    dets = new ArrayList<>();
                     dataObject = DataObject.find(fo);
 
                 }

@@ -558,12 +558,18 @@ public final class LexUtilities {
             case OPERATOR_RIGHT_SHIFT_ARITHMETIC_ASSIGNMENT:
             case OPERATOR_RIGHT_SHIFT_ASSIGNMENT:
             case OPERATOR_DOT:
+            case OPERATOR_OPTIONAL_ACCESS:
                 return true;
             case OPERATOR_PLUS:
             case OPERATOR_MINUS:
-                if (previous != null && (previous == JsTokenId.IDENTIFIER || previous == JsTokenId.NUMBER
-                        || previous == JsTokenId.REGEXP_END || previous == JsTokenId.STRING_END
-                        || previous == JsTokenId.BRACKET_RIGHT_BRACKET || previous == JsTokenId.BRACKET_RIGHT_CURLY
+                if (previous != null && (
+                        previous == JsTokenId.IDENTIFIER
+                        || previous == JsTokenId.PRIVATE_IDENTIFIER
+                        || previous == JsTokenId.NUMBER
+                        || previous == JsTokenId.REGEXP_END
+                        || previous == JsTokenId.STRING_END
+                        || previous == JsTokenId.BRACKET_RIGHT_BRACKET
+                        || previous == JsTokenId.BRACKET_RIGHT_CURLY
                         || previous == JsTokenId.BRACKET_RIGHT_PAREN)) {
                     return true;
                 }

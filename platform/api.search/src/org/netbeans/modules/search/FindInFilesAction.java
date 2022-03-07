@@ -151,7 +151,7 @@ public class FindInFilesAction extends CallableSystemAction {
         
         Component presenter = super.getToolbarPresenter();
         putProperty(VAR_TOOLBAR_COMP_REF,
-                    new WeakReference<Component>(presenter));
+                    new WeakReference<>(presenter));
         return presenter;
     }
     

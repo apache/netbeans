@@ -91,7 +91,7 @@ public final class ListComboBoxModel<E> implements ComboBoxModel<E> {
     @Override
     public void addListDataListener(ListDataListener l) {
         if (listeners == null) {
-            listeners = new ArrayList<ListDataListener>(3);
+            listeners = new ArrayList<>(3);
             event = new ListDataEvent(this, CONTENTS_CHANGED, -1, -1);
         }
         listeners.add(l);

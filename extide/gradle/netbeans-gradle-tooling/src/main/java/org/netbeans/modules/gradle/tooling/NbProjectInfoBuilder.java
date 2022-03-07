@@ -34,6 +34,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.codehaus.groovy.runtime.InvokerHelper;
+import org.gradle.api.Plugin;
 import org.gradle.api.Project;
 import org.gradle.api.Task;
 import org.gradle.api.artifacts.Configuration;
@@ -53,6 +54,8 @@ import org.gradle.api.artifacts.result.UnresolvedDependencyResult;
 import org.gradle.api.distribution.DistributionContainer;
 import org.gradle.api.file.ConfigurableFileCollection;
 import org.gradle.api.initialization.IncludedBuild;
+import org.gradle.api.plugins.JavaPlatformPlugin;
+import org.gradle.api.plugins.UnknownPluginException;
 import org.gradle.api.specs.Specs;
 import org.gradle.api.tasks.SourceSet;
 import org.gradle.api.tasks.SourceSetContainer;
@@ -554,7 +557,13 @@ class NbProjectInfoBuilder {
         model.getExt().put("resolved_sources_artifacts", resolvedSourcesArtifacts);
         model.getExt().put("resolved_javadoc_artifacts", resolvedJavadocArtifacts);
         model.getInfo().put("project_dependencies", projects);
-        model.getInfo().put("unresolved_problems", unresolvedProblems);
+        // NETBEANS-5846: if this project uses javaPlatform plugin with dependencies enabled, 
+        // do not report unresolved problems
+        if (!(project.getPlugins().hasPlugin(JavaPlatformPlugin.class) && 
+            Boolean.TRUE.equals(getProperty(project, "javaPlatform", "allowDependencies")))) {
+            
+            model.getInfo().put("unresolved_problems", unresolvedProblems);
+        }
         model.registerPerf("dependencies", System.currentTimeMillis() - time);
     }
 

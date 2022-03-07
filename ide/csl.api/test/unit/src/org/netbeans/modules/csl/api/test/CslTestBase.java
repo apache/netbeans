@@ -261,8 +261,9 @@ public abstract class CslTestBase extends NbTestCase {
             logger.addHandler(w);
 
             // initialize classpaths indexing
-            for(String cpId : classPathsForTest.keySet()) {
-                ClassPath cp = classPathsForTest.get(cpId);
+            for(Map.Entry<String, ClassPath> entry : classPathsForTest.entrySet()) {
+                String cpId = entry.getKey();
+                ClassPath cp = entry.getValue();
                 GlobalPathRegistry.getDefault().register(cpId, new ClassPath [] { cp });
             }
 
@@ -288,8 +289,9 @@ public abstract class CslTestBase extends NbTestCase {
             Waiter w = new Waiter(classPathContainsBinaries());
             logger.addHandler(w);
 
-            for(String cpId : classPathsForTest.keySet()) {
-                ClassPath cp = classPathsForTest.get(cpId);
+            for(Map.Entry<String, ClassPath> entry : classPathsForTest.entrySet()) {
+                String cpId = entry.getKey();
+                ClassPath cp = entry.getValue();
                 GlobalPathRegistry.getDefault().unregister(cpId, new ClassPath [] { cp });
             }
 

@@ -330,7 +330,7 @@ public final class FavoritesNode extends FilterNode implements Index {
     }
 
     private List<File> textURIListToFileList( String data ) {
-        List<File> list = new ArrayList<File>(1);
+        List<File> list = new ArrayList<>(1);
         // XXX consider using BufferedReader(StringReader) instead
         for( StringTokenizer st = new StringTokenizer(data, "\r\n");
             st.hasMoreTokens();) {
@@ -343,9 +343,9 @@ public final class FavoritesNode extends FilterNode implements Index {
                 URI uri = new URI(s);
                 File file = Utilities.toFile(uri);
                 list.add( file );
-            } catch( java.net.URISyntaxException e ) {
+            } catch(java.net.URISyntaxException |
+                    IllegalArgumentException e ) {
                 // malformed URI
-            } catch( IllegalArgumentException e ) {
                 // the URI is not a valid 'file:' URI
             }
         }
@@ -574,7 +574,7 @@ public final class FavoritesNode extends FilterNode implements Index {
         private Action [] createActionsForRoot (Action [] arr, boolean removeAvailable) {
             // Only Remove from favorites is added
             if (removeAvailable) {
-                List<Action> newArr = new ArrayList<Action>(arr.length + 2);
+                List<Action> newArr = new ArrayList<>(arr.length + 2);
                 newArr.addAll(Arrays.asList(arr));
                 if (!newArr.isEmpty()) {
                     newArr.add(null);
@@ -589,17 +589,17 @@ public final class FavoritesNode extends FilterNode implements Index {
         /** Add action 'Remove from Favorites'. */
         private Action [] createActionsForFavoriteFolder (Action [] arr) {
             boolean added = false;
-            List<Action> newArr = new ArrayList<Action>();
-            for (int i = 0; i < arr.length; i++) {
+            List<Action> newArr = new ArrayList<>();
+            for (Action arr1 : arr) {
                 //Add before CopyAction or CutAction
-                if (!added && ((arr[i] instanceof CopyAction) || (arr[i] instanceof CutAction))) {
+                if (!added && ((arr1 instanceof CopyAction) || (arr1 instanceof CutAction))) {
                     added = true;
                     newArr.add(Actions.remove());
                     newArr.add(null);
                 }
                 //Do not add Delete action
-                if (!(arr[i] instanceof DeleteAction)) {
-                    newArr.add(arr[i]);
+                if (!(arr1 instanceof DeleteAction)) {
+                    newArr.add(arr1);
                 }
             }
             if (!added) {
@@ -614,17 +614,17 @@ public final class FavoritesNode extends FilterNode implements Index {
         /** Add action 'Remove from Favorites'. */
         private Action [] createActionsForFavoriteFile (Action [] arr) {
             boolean added = false;
-            List<Action> newArr = new ArrayList<Action>();
-            for (int i = 0; i < arr.length; i++) {
+            List<Action> newArr = new ArrayList<>();
+            for (Action arr1 : arr) {
                 //Add before CopyAction or CutAction
-                if (!added && ((arr[i] instanceof CopyAction) || (arr[i] instanceof CutAction))) {
+                if (!added && ((arr1 instanceof CopyAction) || (arr1 instanceof CutAction))) {
                     added = true;
                     newArr.add(Actions.remove());
                     newArr.add(null);
                 }
                 //Do not add Delete action
-                if (!(arr[i] instanceof DeleteAction)) {
-                    newArr.add(arr[i]);
+                if (!(arr1 instanceof DeleteAction)) {
+                    newArr.add(arr1);
                 }
             }
             if (!added) {
@@ -638,15 +638,15 @@ public final class FavoritesNode extends FilterNode implements Index {
         /** Add action 'Add to Favorites'. */
         private Action [] createActionsForFolder (Action [] arr) {
             boolean added = false;
-            List<Action> newArr = new ArrayList<Action>();
-            for (int i = 0; i < arr.length; i++) {
+            List<Action> newArr = new ArrayList<>();
+            for (Action arr1 : arr) {
                 //Add before CopyAction or CutAction
-                if (!added && ((arr[i] instanceof CopyAction) || (arr[i] instanceof CutAction))) {
+                if (!added && ((arr1 instanceof CopyAction) || (arr1 instanceof CutAction))) {
                     added = true;
                     newArr.add(Actions.add());
                     newArr.add(null);
                 }
-                newArr.add(arr[i]);
+                newArr.add(arr1);
             }
             if (!added) {
                 added = true;
@@ -659,15 +659,15 @@ public final class FavoritesNode extends FilterNode implements Index {
         /** Add action 'Add to Favorites'. */
         private Action [] createActionsForFile (Action [] arr) {
             boolean added = false;
-            List<Action> newArr = new ArrayList<Action>();
-            for (int i = 0; i < arr.length; i++) {
+            List<Action> newArr = new ArrayList<>();
+            for (Action arr1 : arr) {
                 //Add before CopyAction or CutAction
-                if (!added && ((arr[i] instanceof CopyAction) || (arr[i] instanceof CutAction))) {
+                if (!added && ((arr1 instanceof CopyAction) || (arr1 instanceof CutAction))) {
                     added = true;
                     newArr.add(Actions.add());
                     newArr.add(null);
                 }
-                newArr.add(arr[i]);
+                newArr.add(arr1);
             }
             if (!added) {
                 added = true;
@@ -711,12 +711,7 @@ public final class FavoritesNode extends FilterNode implements Index {
 
         @Override
         public Transferable paste() throws IOException {
-            Tab.RP.post(new Runnable () {
-                @Override
-                public void run() {
-                    Actions.Add.addToFavorites(Arrays.asList(dos));
-                }
-            });
+            Tab.RP.post(() -> Actions.Add.addToFavorites(Arrays.asList(dos)));
             return null;
         }
 
@@ -731,22 +726,19 @@ public final class FavoritesNode extends FilterNode implements Index {
 
         @Override
         public Transferable paste() throws IOException {
-            Tab.RP.post(new Runnable () {
-                @Override
-                public void run() {
-                    Set<FileObject> fos = new HashSet<FileObject>(files.size());
-                    for (File f : files) {
-                        FileObject fo = FileUtil.toFileObject(FileUtil.normalizeFile(f));
-                        if (fo != null) {
-                            fos.add(fo);
-                        }
+            Tab.RP.post(() -> {
+                Set<FileObject> fos = new HashSet<>(files.size());
+                for (File f : files) {
+                    FileObject fo = FileUtil.toFileObject(FileUtil.normalizeFile(f));
+                    if (fo != null) {
+                        fos.add(fo);
                     }
-                    if (!fos.isEmpty()) {
-                        try {
-                            Favorites.getDefault().add(fos.toArray(new FileObject[fos.size()]));
-                        } catch (DataObjectNotFoundException ex) {
-                            Logger.getLogger(FavoritesNode.class.getName()).log(Level.INFO, null, ex);
-                        }
+                }
+                if (!fos.isEmpty()) {
+                    try {
+                        Favorites.getDefault().add(fos.toArray(new FileObject[fos.size()]));
+                    } catch (DataObjectNotFoundException ex) {
+                        Logger.getLogger(FavoritesNode.class.getName()).log(Level.INFO, null, ex);
                     }
                 }
             });

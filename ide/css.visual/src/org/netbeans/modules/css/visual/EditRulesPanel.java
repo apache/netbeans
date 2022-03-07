@@ -373,16 +373,18 @@ public class EditRulesPanel extends javax.swing.JPanel {
 
             CssIndex index = CssIndex.create(project);
             findAllClassDeclarations = index.findAllClassDeclarations();
-            for (FileObject file : findAllClassDeclarations.keySet()) {
-                Collection<String> classes = findAllClassDeclarations.get(file);
+            for (Map.Entry<FileObject, Collection<String>> entry : findAllClassDeclarations.entrySet()) {
+                FileObject file = entry.getKey();
+                Collection<String> classes = entry.getValue();
                 for (String clz : classes) {
                     SELECTORS_MODEL.addElement(SelectorItem.createClass(clz, file));
                 }
             }
 
             findAllIdDeclarations = index.findAllIdDeclarations();
-            for (FileObject file : findAllIdDeclarations.keySet()) {
-                Collection<String> ids = findAllIdDeclarations.get(file);
+            for (Map.Entry<FileObject, Collection<String>> entry : findAllIdDeclarations.entrySet()) {
+                FileObject file = entry.getKey();
+                Collection<String> ids = entry.getValue();
                 for (String id : ids) {
                     SELECTORS_MODEL.addElement(SelectorItem.createId(id, file));
                 }

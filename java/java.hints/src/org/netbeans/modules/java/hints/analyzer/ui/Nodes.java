@@ -120,8 +120,9 @@ public class Nodes {
         
         Map<Node, List<ErrorDescription>> fileNodes = new HashMap<Node, List<ErrorDescription>>();
         
-        for (FileObject file : errors.keySet()) {
-            List<ErrorDescription> eds = errors.get(file);
+        for (Map.Entry<FileObject, List<ErrorDescription>> entry : errors.entrySet()) {
+            FileObject file = entry.getKey();
+            List<ErrorDescription> eds = entry.getValue();
             Node foundChild = locateChild(view, lvp, file);
 
             if (foundChild == null) {

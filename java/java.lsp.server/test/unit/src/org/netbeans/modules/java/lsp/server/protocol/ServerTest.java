@@ -824,13 +824,18 @@ public class ServerTest extends NbTestCase {
     }
 
     private String toString(DocumentSymbol sym) {
-        return sym.getKind().toString() + ":" +
+        String result = sym.getKind().toString() + ":" +
                sym.getName() + ":" +
-               sym.getRange() + ":" +
-               sym.getChildren()
-                  .stream()
-                  .map(this::toString)
-                  .collect(Collectors.joining(", ", "(", ")"));
+               sym.getRange() + ":";
+        if (sym.getChildren() != null) {
+               result = result + sym.getChildren()
+                    .stream()
+                    .map(this::toString)
+                    .collect(Collectors.joining(", ", "(", ")"));
+        } else {
+            result = result + "()";
+        }
+        return result;
     }
 
     public void testGoToDefinition() throws Exception {

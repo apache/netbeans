@@ -21,6 +21,7 @@ package org.netbeans.modules.xml.multiview.ui;
 
 import javax.swing.JPanel;
 import java.awt.*;
+import java.util.Enumeration;
 import java.util.Hashtable;
 
 import org.openide.nodes.Node;
@@ -279,7 +280,7 @@ public class SectionView extends PanelView implements SectionFocusCookie, Contai
      * if no matching panel was found.
      */
     public SectionPanel findSectionPanel(Object key) {
-        java.util.Enumeration en = map.keys();
+        Enumeration<Node> en = map.keys();
         while (en.hasMoreElements()) {
             NodeSectionPanel pan = map.get(en.nextElement());
             if (pan instanceof SectionPanel) {

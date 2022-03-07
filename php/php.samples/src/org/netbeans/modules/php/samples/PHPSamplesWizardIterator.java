@@ -91,7 +91,7 @@ public class PHPSamplesWizardIterator implements WizardDescriptor./*Progress*/In
         // Always open top dir as a project:
         resultSet.add(dir);
         // Look for nested projects to open as well:
-        Enumeration e = dir.getFolders(true);
+        Enumeration<? extends FileObject> e = dir.getFolders(true);
         while (e.hasMoreElements()) {
             FileObject subfolder = (FileObject) e.nextElement();
             if (ProjectManager.getDefault().isProject(subfolder)) {

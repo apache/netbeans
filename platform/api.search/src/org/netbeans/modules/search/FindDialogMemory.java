@@ -212,8 +212,8 @@ public final class FindDialogMemory {
         resultsViewMode = prefs.get(PROP_RESULTS_VIEW_MODE, null);
         provider = prefs.get(PROP_PROVIDER, null);
         openInNewTab = prefs.getBoolean(PROP_OPEN_IN_NEW_TAB, true);
-        fileNamePatterns = new ArrayList<String>(maxFileNamePatternCount);
-        ignoreList = new ArrayList<String>();
+        fileNamePatterns = new ArrayList<>(maxFileNamePatternCount);
+        ignoreList = new ArrayList<>();
         for(int i=0; i < maxFileNamePatternCount; i++){
             String fileNamePattern = prefs.get(PROP_FILENAME_PATTERN_PREFIX + i, null);
             if (fileNamePattern != null) {

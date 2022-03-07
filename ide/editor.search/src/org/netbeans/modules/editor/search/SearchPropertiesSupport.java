@@ -89,8 +89,9 @@ public final class SearchPropertiesSupport {
         }
         
         public synchronized void saveToPrefs() {
-            for (String editorFindSupportProperty : props.keySet()) {
-                Object value = props.get(editorFindSupportProperty);
+            for (Map.Entry<String, Object> entry : props.entrySet()) {
+                String editorFindSupportProperty = entry.getKey();
+                Object value = entry.getValue();
                 if (value != null) {
                     getInstance().getPrefs().put(id + editorFindSupportProperty, value.toString());
                 } else {

@@ -156,8 +156,9 @@ public final class CustomizableSideBar {
             if (panelsMap != null) {
                 Map<SideBarPosition, JComponent> map = new HashMap<SideBarPosition, JComponent>();
                 
-                for(SideBarPosition pos : panelsMap.keySet()) {
-                    Reference<JPanel> ref = panelsMap.get(pos);
+                for(Map.Entry<SideBarPosition, Reference<JPanel>> entry : panelsMap.entrySet()) {
+                    SideBarPosition pos = entry.getKey();
+                    Reference<JPanel> ref = entry.getValue();
                     if (ref != null) {
                         JPanel panel = ref.get();
                         if (panel != null) {
@@ -182,8 +183,9 @@ public final class CustomizableSideBar {
             Map<SideBarPosition, Reference<JPanel>> panelsMap = new HashMap<SideBarPosition, Reference<JPanel>>();
             Map<SideBarPosition, JComponent> map = new HashMap<SideBarPosition, JComponent>();
             
-            for(SideBarPosition pos : sideBarsMap.keySet()) {
-                List<JComponent> sideBars = sideBarsMap.get(pos);
+            for(Map.Entry<SideBarPosition, List<JComponent>> entry : sideBarsMap.entrySet()) {
+                SideBarPosition pos = entry.getKey();
+                List<JComponent> sideBars = entry.getValue();
                 
                 JPanel panel = pos.getPosition() == SideBarPosition.WEST ?
                         new WestSidebarHolder(target) :

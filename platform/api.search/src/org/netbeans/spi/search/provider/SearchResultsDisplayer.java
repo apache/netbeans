@@ -78,7 +78,7 @@ public abstract class SearchResultsDisplayer<T> {
             @NullAllowed SearchProvider.Presenter presenter,
             @NonNull String title) {
 
-        return new DefaultSearchResultsDisplayer<U>(helper, searchComposition,
+        return new DefaultSearchResultsDisplayer<>(helper, searchComposition,
                 presenter, title);
     }
 

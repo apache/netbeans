@@ -34,8 +34,6 @@ import com.sun.source.util.TreePathScanner;
 import com.sun.source.util.Trees;
 import com.vladsch.flexmark.html2md.converter.FlexmarkHtmlConverter;
 import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.time.Instant;
@@ -143,6 +141,7 @@ import org.eclipse.lsp4j.SignatureHelp;
 import org.eclipse.lsp4j.SignatureHelpParams;
 import org.eclipse.lsp4j.SymbolInformation;
 import org.eclipse.lsp4j.SymbolKind;
+import org.eclipse.lsp4j.SymbolTag;
 import org.eclipse.lsp4j.TextDocumentContentChangeEvent;
 import org.eclipse.lsp4j.TextDocumentEdit;
 import org.eclipse.lsp4j.TextEdit;
@@ -224,9 +223,11 @@ import org.netbeans.modules.refactoring.plugins.FileRenamePlugin;
 import org.netbeans.modules.refactoring.spi.RefactoringCommit;
 import org.netbeans.modules.refactoring.spi.RefactoringElementImplementation;
 import org.netbeans.modules.refactoring.spi.Transaction;
+import org.netbeans.api.lsp.StructureElement;
 import org.netbeans.spi.editor.hints.ErrorDescription;
 import org.netbeans.spi.editor.hints.Fix;
 import org.netbeans.spi.lsp.ErrorProvider;
+import org.netbeans.spi.lsp.StructureProvider;
 import org.netbeans.spi.project.ActionProvider;
 import org.netbeans.spi.project.ProjectConfiguration;
 import org.netbeans.spi.project.ProjectConfigurationProvider;
@@ -812,98 +813,63 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
 
     @Override
     public CompletableFuture<List<Either<SymbolInformation, DocumentSymbol>>> documentSymbol(DocumentSymbolParams params) {
-        return server.openedProjects().thenCompose(projects -> {
-            JavaSource js = getJavaSource(params.getTextDocument().getUri());
-            if (js == null) {
-                return CompletableFuture.completedFuture(Collections.emptyList());
-            }
+        final CompletableFuture<List<Either<SymbolInformation, DocumentSymbol>>> resultFuture = new CompletableFuture<>();
+        
+        BACKGROUND_TASKS.post(() -> {
             List<Either<SymbolInformation, DocumentSymbol>> result = new ArrayList<>();
-            try {
-                js.runUserActionTask(cc -> {
-                    cc.toPhase(JavaSource.Phase.RESOLVED);
-                    Trees trees = cc.getTrees();
-                    CompilationUnitTree cu = cc.getCompilationUnit();
-                    if (cu.getPackage() != null) {
-                        TreePath tp = trees.getPath(cu, cu.getPackage());
-                        Element el = trees.getElement(tp);
-                        if (el != null && el.getKind() == ElementKind.PACKAGE) {
-                            String name = Utils.label(cc, el, true);
-                            SymbolKind kind = Utils.elementKind2SymbolKind(el.getKind());
-                            Range range = Utils.treeRange(cc, tp.getLeaf());
-                            result.add(Either.forRight(new DocumentSymbol(name, kind, range, range)));
-                        }
-                    }
-                    for (Element tel : cc.getTopLevelElements()) {
-                        DocumentSymbol ds = element2DocumentSymbol(cc, tel);
-                        if (ds != null)
-                            result.add(Either.forRight(ds));
-                    }
-                }, true);
-            } catch (IOException ex) {
-                client.logMessage(new MessageParams(MessageType.Error, ex.getMessage()));
-            }
-            return CompletableFuture.completedFuture(result);
-        });
-    }
-
-    private static DocumentSymbol element2DocumentSymbol(CompilationInfo info, Element el) {
-        TreePath path = info.getTrees().getPath(el);
-        if (path == null)
-            return null;
-        TreeUtilities tu = info.getTreeUtilities();
-        if (tu.isSynthetic(path))
-            return null;
-        Range range = Utils.treeRange(info, path.getLeaf());
-        if (range == null)
-            return null;
-        Range selection = Utils.selectionRange(info, path.getLeaf());
-        List<DocumentSymbol> children = new ArrayList<>();
-        for (Element c : el.getEnclosedElements()) {
-            DocumentSymbol ds = element2DocumentSymbol(info, c);
-            if (ds != null) {
-                children.add(ds);
-            }
-        }
-        if (path.getLeaf().getKind() == Kind.METHOD || path.getLeaf().getKind() == Kind.VARIABLE) {
-            children.addAll(getAnonymousInnerClasses(info, path));
-        }
-        String name = Utils.label(info, el, false);
-        String detail = Utils.detail(info, el, false);
-        return new DocumentSymbol(name, Utils.elementKind2SymbolKind(el.getKind()), range, selection != null ? selection : range, detail, children);
-    }
-
-    private static List<DocumentSymbol> getAnonymousInnerClasses(CompilationInfo info, TreePath path) {
-        List<DocumentSymbol> inner = new ArrayList<>();
-        new TreePathScanner<Void, Void>() {
-            @Override
-            public Void visitNewClass(NewClassTree node, Void p) {
-                if (node.getClassBody() != null) {
-                    Range range = Utils.treeRange(info, node);
-                    if (range != null) {
-                        Range selectionRange = Utils.treeRange(info, node.getIdentifier());
-                        Element e = info.getTrees().getElement(new TreePath(getCurrentPath(), node.getClassBody()));
-                        if (e != null) {
-                            Element te = info.getTrees().getElement(new TreePath(getCurrentPath(), node.getIdentifier()));
-                            if (te != null) {
-                                String name = "new " + te.getSimpleName() + "() {...}";
-                                List<DocumentSymbol> children = new ArrayList<>();
-                                for (Element c : e.getEnclosedElements()) {
-                                    DocumentSymbol ds = element2DocumentSymbol(info, c);
-                                    if (ds != null) {
-                                        children.add(ds);
-                                    }
-                                }
-                                inner.add(new DocumentSymbol(name, Utils.elementKind2SymbolKind(e.getKind()), range, selectionRange, null, children));
+            String uri = params.getTextDocument().getUri();
+            FileObject file = fromURI(uri);
+            Document doc = server.getOpenedDocuments().getDocument(uri);
+            if (file != null && (doc instanceof LineDocument)) {
+                StructureProvider structureProvider = MimeLookup.getLookup(DocumentUtilities.getMimeType(doc)).lookup(StructureProvider.class);
+                if (structureProvider != null) {
+                    List<StructureElement> structureElements = structureProvider.getStructure(doc);
+                    if (!structureElements.isEmpty()) {
+                        LineDocument lDoc = (LineDocument) doc;
+                        for (StructureElement structureElement : structureElements) {
+                            DocumentSymbol ds = structureElement2DocumentSymbol(lDoc, structureElement);
+                            if (ds != null) {
+                                result.add(Either.forRight(ds));
                             }
                         }
-                    }
+                    };
                 }
-                return null;
             }
-        }.scan(path, null);
-        return inner;
+            resultFuture.complete(result);
+        });
+        return resultFuture;
     }
 
+    private static DocumentSymbol structureElement2DocumentSymbol (LineDocument doc, StructureElement el) {
+        try {
+            Position selectionStartPos = new Position(LineDocumentUtils.getLineIndex(doc, el.getSelectionStartOffset()), el.getSelectionStartOffset() - LineDocumentUtils.getLineStart(doc, el.getSelectionStartOffset()));
+            Position selectionEndPos = new Position(LineDocumentUtils.getLineIndex(doc, el.getSelectionEndOffset()), el.getSelectionEndOffset() - LineDocumentUtils.getLineStart(doc, el.getSelectionEndOffset()));
+            Range selectionRange = new Range(selectionStartPos, selectionEndPos);
+            Position enclosedStartPos = new Position(LineDocumentUtils.getLineIndex(doc, el.getExpandedStartOffset()), el.getExpandedStartOffset() - LineDocumentUtils.getLineStart(doc, el.getExpandedStartOffset()));
+            Position enclosedEndPos = new Position(LineDocumentUtils.getLineIndex(doc, el.getExpandedEndOffset()), el.getExpandedEndOffset() - LineDocumentUtils.getLineStart(doc, el.getExpandedEndOffset()));
+            Range expandedRange = new Range(enclosedStartPos, enclosedEndPos);
+            DocumentSymbol ds;
+            if (el.getChildren() != null && !el.getChildren().isEmpty()) {
+                List<DocumentSymbol> children = new ArrayList<>();
+                for (StructureElement child: el.getChildren()) {
+                    ds = structureElement2DocumentSymbol(doc, child);
+                    if (ds != null) {
+                        children.add(ds);
+                    }
+                }
+                ds = new DocumentSymbol(el.getName(), Utils.structureElementKind2SymbolKind(el.getKind()), expandedRange, selectionRange, el.getDetail(), children);
+                ds.setTags(Utils.elementTags2SymbolTags(el.getTags()));
+                return ds;
+            }
+            ds = new DocumentSymbol(el.getName(), Utils.structureElementKind2SymbolKind(el.getKind()), expandedRange, selectionRange, el.getDetail());
+            ds.setTags(Utils.elementTags2SymbolTags(el.getTags()));
+            return ds;
+        } catch (BadLocationException ex) {
+
+        }
+        return null;
+    }
+    
     @Override
     public CompletableFuture<List<Either<Command, CodeAction>>> codeAction(CodeActionParams params) {
         // shortcut: if the projects are not yet initialized, return empty:
@@ -1863,6 +1829,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
 
     @CheckForNull
     public JavaSource getJavaSource(String fileUri) {
+        
         Document doc = server.getOpenedDocuments().getDocument(fileUri);
         if (doc == null) {
             FileObject file = fromURI(fileUri);

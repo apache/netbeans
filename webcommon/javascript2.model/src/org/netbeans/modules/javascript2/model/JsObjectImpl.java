@@ -786,8 +786,7 @@ public class JsObjectImpl extends JsElementImpl implements JsObject {
     }
     
     protected void correctTypes(String fromType, String toType) {
-        for (Integer offset: assignments.keySet()) {
-            Collection<TypeUsage> types = assignments.get(offset);
+        for (Collection<TypeUsage> types: assignments.values()) {
             List<TypeUsage> copy = new ArrayList<>(types);
             String typeR = null;
             for (TypeUsage type : copy) {

@@ -554,7 +554,7 @@ abstract class ContentModel {
         private final List<String> list = new LinkedList<>();
         
         // source of lazy stack initilization
-        private final Enumeration en;
+        private final Enumeration<String> en;
         
         // current stack position
         private int current;

@@ -871,7 +871,7 @@ class Controller  {
                 int oldValue = -1;
                 int i = 0;
                 
-                for(Enumeration e = directory.getData(false); e.hasMoreElements(); ++i) {
+                for(Enumeration<? extends FileObject> e = directory.getData(false); e.hasMoreElements(); ++i) {
                     FileObject fo = (FileObject) e.nextElement();
                     FileLock lock = null;
                     try {
@@ -926,7 +926,7 @@ class Controller  {
 	    return;
 	}
 
-	Enumeration e = null;
+	Enumeration<? extends FileObject> e = null;
 	Vector<TransactionNode> nodes = new Vector<>(); 
 	int numtns = 0;
 	TransactionNode[] tns = null;

@@ -758,8 +758,9 @@ public class HintsPanelLogic implements MouseListener, KeyListener, TreeSelectio
         
         public boolean isModified() {
             boolean isChanged = false;
-            for (HintMetadata hint : changes.keySet()) {
-                ModifiedHint e = changes.get(hint);
+            for (Entry<HintMetadata, ModifiedHint> entry : changes.entrySet()) {
+                HintMetadata hint = entry.getKey();
+                ModifiedHint e = entry.getValue();
                 if (e.enabledOverride != null) {
                     Boolean currentEnabled = e.enabledOverride;
                     Boolean savedEnabled = delegate.isEnabled(hint);

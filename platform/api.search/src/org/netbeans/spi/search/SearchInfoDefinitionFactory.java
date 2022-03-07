@@ -227,7 +227,7 @@ public final class SearchInfoDefinitionFactory {
      */
     private static List<SearchFilterDefinition> createDefaultFilterDefList() {
         List<SearchFilterDefinition> list;
-        list = new ArrayList<SearchFilterDefinition>(2);
+        list = new ArrayList<>(2);
         list.add(SHARABILITY_FILTER);
         list.add(VISIBILITY_FILTER);
         return Collections.unmodifiableList(list);

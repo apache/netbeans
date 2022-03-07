@@ -602,8 +602,9 @@ implements WritableLibraryProvider<LibraryImplementation>, ChangeListener {
         }
 
         synchronized String findPath(final LibraryImplementation library) {
-            for (String key : librariesByPath.keySet()) {
-                LibraryImplementation lib = librariesByPath.get(key);
+            for (Map.Entry<String, LibraryImplementation> entry : librariesByPath.entrySet()) {
+                String key = entry.getKey();
+                LibraryImplementation lib = entry.getValue();
                 if (library.equals (lib)) {
                     return key;
                 }

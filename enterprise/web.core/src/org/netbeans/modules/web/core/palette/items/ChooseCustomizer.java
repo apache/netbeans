@@ -112,7 +112,7 @@ public class ChooseCustomizer extends javax.swing.JPanel {
 
         jSpinner1.setModel(new SpinnerNumberModel(Choose.DEFAULT_WHENS, 1, Integer.MAX_VALUE, 1));
         jSpinner1.setEditor(new JSpinner.NumberEditor(jSpinner1, "#"));
-        jSpinner1.setValue(new Integer(Choose.DEFAULT_WHENS));
+        jSpinner1.setValue(Choose.DEFAULT_WHENS);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;

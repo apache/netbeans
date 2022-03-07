@@ -48,7 +48,6 @@ import org.netbeans.modules.editor.macros.storage.MacroDescription;
 import org.netbeans.modules.editor.macros.storage.MacrosStorage;
 import org.netbeans.modules.editor.settings.storage.api.EditorSettings;
 import org.netbeans.modules.editor.settings.storage.api.EditorSettingsStorage;
-import org.netbeans.modules.editor.settings.storage.spi.support.StorageSupport;
 import org.netbeans.spi.options.OptionsPanelController;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
@@ -101,8 +100,9 @@ public final class MacrosModel {
                 mimeType2Macros.put(mimeType, map);
             }
             
-            for(String macroName : macros.keySet()) {
-                MacroDescription md = macros.get(macroName);
+            for(Map.Entry<String, MacroDescription> entry : macros.entrySet()) {
+                String macroName = entry.getKey();
+                MacroDescription md = entry.getValue();
                 Macro macro = new Macro(this, mimeType, md);
                 
                 map.put(macroName, macro);
@@ -120,12 +120,14 @@ public final class MacrosModel {
     public void save() {
         EditorSettingsStorage<String, MacroDescription> ess = EditorSettingsStorage.<String, MacroDescription>get(MacrosStorage.ID);
         
-        for(MimePath mimeType : mimeType2Macros.keySet()) {
-            Map<String, Macro> map = mimeType2Macros.get(mimeType);
+        for(Map.Entry<MimePath, Map<String, Macro>> mimeType2MacrosEntry : mimeType2Macros.entrySet()) {
+            MimePath mimeType = mimeType2MacrosEntry.getKey();
+            Map<String, Macro> map = mimeType2MacrosEntry.getValue();
 
             Map<String, MacroDescription> macros = new HashMap<String, MacroDescription>(map.size());
-            for(String macroName : map.keySet()) {
-                Macro macro = map.get(macroName);
+            for(Map.Entry<String, Macro> macroEntry : map.entrySet()) {
+                String macroName = macroEntry.getKey();
+                Macro macro = macroEntry.getValue();
                 macros.put(macroName, macro.getMacroDescription());
             }
             
@@ -428,8 +430,9 @@ public final class MacrosModel {
     private void fireChanged() {
         EditorSettingsStorage<String, MacroDescription> ess = EditorSettingsStorage.<String, MacroDescription>get(MacrosStorage.ID);
 
-        for (MimePath mimeType : mimeType2Macros.keySet()) {
-            Map<String, Macro> map = mimeType2Macros.get(mimeType);
+        for (Map.Entry<MimePath, Map<String, Macro>> entry : mimeType2Macros.entrySet()) {
+            MimePath mimeType = entry.getKey();
+            Map<String, Macro> map = entry.getValue();
             Map<String, MacroDescription> current = new HashMap<>(map.size());
             for (String macroName : map.keySet()) {
                 current.put(macroName, map.get(macroName).getMacroDescription());

@@ -1650,8 +1650,9 @@ public final class JFXProjectUtils {
     public static Map<String,String> copyMap(Map<String,String> map2Copy) {
         Map<String,String> newMap = new HashMap<String,String>();
         if(map2Copy != null) {
-            for(String key : map2Copy.keySet()) {
-                String value = map2Copy.get(key);
+            for(Map.Entry<String, String> entry : map2Copy.entrySet()) {
+                String key = entry.getKey();
+                String value = entry.getValue();
                 newMap.put(key, value);
             }
         }

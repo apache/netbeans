@@ -444,8 +444,9 @@ public class Utilities {
         }
         
         boolean isEmpty = true;
-        for (UpdateElementImpl elementImpl : updates.keySet ()) {
-            File c = updates.get(elementImpl);
+        for (Map.Entry<UpdateElementImpl, File> entry : updates.entrySet ()) {
+            UpdateElementImpl elementImpl = entry.getKey();
+            File c = entry.getValue();
             // pass this module to given cluster ?
             if (cluster.equals (c)) {
                 Element module = document.createElement(UpdateTracking.ELEMENT_MODULE);
@@ -1284,8 +1285,9 @@ public class Utilities {
         Element root = document.getDocumentElement ();
         boolean isEmpty = true;
         
-        for (UpdateElementImpl impl : updates.keySet ()) {
-            File c = updates.get (impl);
+        for (Map.Entry<UpdateElementImpl, File> entry : updates.entrySet ()) {
+            UpdateElementImpl impl = entry.getKey ();
+            File c = entry.getValue();
             // pass this module to given cluster ?
             if (cluster.equals (c)) {
                 Element module = document.createElement (UpdateTracking.ELEMENT_ADDITIONAL_MODULE);

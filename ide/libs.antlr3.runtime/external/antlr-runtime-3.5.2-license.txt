@@ -1,11 +1,10 @@
 Name: Antlr
 Description: ANother Tool for Language Recognition, is a language tool that provides a framework for constructing recognizers, interpreters, compilers, and translators from grammatical descriptions.
-Version: 3.4
+Version: 3.5.2
 License: BSD-antlr-runtime3
 Origin: Antlr
-URL: http://www.antlr.org
-
-Use of Antlr version 3.4 is governed by the terms of the license below:
+URL: http://www.antlr3.org
+Files: antlr-runtime-3.5.2.jar, antlr-complete-3.5.2.jar
 
  [The "BSD license"]
  Copyright (c) 2010 Terence Parr
@@ -34,7 +33,3 @@ Use of Antlr version 3.4 is governed by the terms of the license below:
  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
-
-
-

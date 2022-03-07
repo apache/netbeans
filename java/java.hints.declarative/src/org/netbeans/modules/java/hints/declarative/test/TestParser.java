@@ -95,7 +95,7 @@ public class TestParser extends Parser {
 
     public static TestCase[] parse(String tests) {
         //TODO: efficiency?
-        List<TestCase> result = new LinkedList<TestCase>();
+        List<TestCase> result = new LinkedList<>();
         int codeIndex = -1;
         int testCaseIndex = -1;
         String lastName = null;
@@ -131,9 +131,9 @@ public class TestParser extends Parser {
     private static @CheckForNull TestCase handleTestCase(int testCaseIndex, String testName, String options, int codeIndex, String testCase) {
         Matcher m = LEADS_TO_HEADER.matcher(testCase);
         String code = null;
-        List<String> results = new LinkedList<String>();
-        List<Integer> startIndices = new LinkedList<Integer>();
-        List<Integer> endIndices = new LinkedList<Integer>();
+        List<String> results = new LinkedList<>();
+        List<Integer> startIndices = new LinkedList<>();
+        List<Integer> endIndices = new LinkedList<>();
         int lastStartIndex = -1;
         int lastIndex = -1;
 

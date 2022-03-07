@@ -95,8 +95,7 @@ public class SingleLineStreamMatcher extends AbstractMatcher {
         FinishingTextDetailList finishList = new FinishingTextDetailList(3);
 
         boolean canRun = true;
-        final InputStream stream = fo.getInputStream();
-        try {
+        try (final InputStream stream = fo.getInputStream()) {
             LineReader nelr = new LineReader(decoder, stream);
             try {
                 LineReader.LineInfo line;
@@ -105,7 +104,7 @@ public class SingleLineStreamMatcher extends AbstractMatcher {
                     Matcher m = pattern.matcher(line.getString());
                     while (m.find() && canRun) {
                         if (dets == null) {
-                            dets = new LinkedList<TextDetail>();
+                            dets = new LinkedList<>();
                             dataObject = DataObject.find(fo);
                         }
                         TextDetail det = MatcherUtils.createTextDetail(false, m,
@@ -131,8 +130,6 @@ public class SingleLineStreamMatcher extends AbstractMatcher {
             } finally {
                 nelr.close();
             }
-        } finally {
-            stream.close();
         }
         return dets;
     }

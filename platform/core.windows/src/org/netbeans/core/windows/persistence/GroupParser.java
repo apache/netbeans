@@ -255,8 +255,7 @@ class GroupParser {
             tcGroupConfigMap.put(sc.tcGroupConfigs[i].tc_id, sc.tcGroupConfigs[i]);
         }
         List<String> toDelete = new ArrayList<String>(10);
-        for (String s: tcGroupParserMap.keySet()) {
-            TCGroupParser tcGroupParser = tcGroupParserMap.get(s);
+        for (TCGroupParser tcGroupParser: tcGroupParserMap.values()) {
             if (!tcGroupConfigMap.containsKey(tcGroupParser.getName())) {
                 toDelete.add(tcGroupParser.getName());
             }

@@ -446,9 +446,10 @@ public class CommitAction extends ContextAction {
 
         boolean enabled = commit.isEnabled();
 
-        for (HgFileNode fileNode : files.keySet()) {
+        for (Entry<HgFileNode, CommitOptions> entry : files.entrySet()) {
 
-            CommitOptions options = files.get(fileNode);
+            HgFileNode fileNode = entry.getKey();
+            CommitOptions options = entry.getValue();
             if (options == CommitOptions.EXCLUDE) {
                 continue;
             }

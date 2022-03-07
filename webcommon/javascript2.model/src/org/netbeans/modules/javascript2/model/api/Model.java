@@ -389,10 +389,10 @@ public final class Model {
         if (isThis) {
             for (int i = expression.size() - 4; i >  - 1; i--) {
                 String name = expression.get(i--);
-                while ((token.id() != JsTokenId.IDENTIFIER || !(token.id() == JsTokenId.IDENTIFIER && token.text().toString().equals(name))) && ts.offset() < expRange.getEnd() && ts.moveNext()) {
+                while ((!isIdentifier(token) || !(isIdentifier(token) && token.text().toString().equals(name))) && ts.offset() < expRange.getEnd() && ts.moveNext()) {
                     token = ts.token();
                 }
-                if (parent != null && token.id() == JsTokenId.IDENTIFIER && token.text().toString().equals(name)) {
+                if (parent != null && isIdentifier(token) && token.text().toString().equals(name)) {
                     JsObject property = parent.getProperty(name);
                     if (property != null) {
                         property.addOccurrence(new OffsetRange(ts.offset(), ts.offset() + name.length()));
@@ -403,10 +403,10 @@ public final class Model {
         } else {
             for (int i = 0; i < expression.size() - 1; i++) {
                 String name = expression.get(i++);
-                while ((token.id() != JsTokenId.IDENTIFIER || !(token.id() == JsTokenId.IDENTIFIER && token.text().toString().equals(name))) && ts.offset() > expRange.getStart() && ts.movePrevious()) {
+                while ((!isIdentifier(token) || !(isIdentifier(token) && token.text().toString().equals(name))) && ts.offset() > expRange.getStart() && ts.movePrevious()) {
                     token = ts.token();
                 }
-                if (parent != null && token.id() == JsTokenId.IDENTIFIER && token.text().toString().equals(name)) {
+                if (parent != null && isIdentifier(token) && token.text().toString().equals(name)) {
                     JsObject property = parent.getProperty(name);
                     if (property != null) {
                         property.addOccurrence(new OffsetRange(ts.offset(), ts.offset() + name.length()));
@@ -897,5 +897,9 @@ public final class Model {
     public static interface Printer {
 
         void println(String str);
+    }
+
+    private static boolean isIdentifier(Token token) {
+        return token.id() == JsTokenId.IDENTIFIER || token.id() == JsTokenId.PRIVATE_IDENTIFIER;
     }
 }

@@ -391,8 +391,9 @@ public class Nodes {
     private static Map<Node, Map<AnalyzerFactory, List<ErrorDescription>>> resolveFileNodes(LogicalViewProvider lvp, LogicalViewCache lvc, final Node view, Map<FileObject, Map<AnalyzerFactory, List<ErrorDescription>>> errors) {
         Map<Node, Map<AnalyzerFactory, List<ErrorDescription>>> fileNodes = new HashMap<Node, Map<AnalyzerFactory, List<ErrorDescription>>>();
 
-        for (FileObject file : errors.keySet()) {
-            Map<AnalyzerFactory, List<ErrorDescription>> eds = errors.get(file);
+        for (Entry<FileObject, Map<AnalyzerFactory, List<ErrorDescription>>> entry : errors.entrySet()) {
+            FileObject file = entry.getKey();
+            Map<AnalyzerFactory, List<ErrorDescription>> eds = entry.getValue();
             Node foundChild = lvc.file2FileNode.get(file);
             
             if (foundChild == null) {

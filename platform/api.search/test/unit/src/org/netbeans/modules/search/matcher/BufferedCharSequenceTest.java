@@ -171,12 +171,10 @@ public class BufferedCharSequenceTest {
                 char result = instance.charAt(index);
                 assertEquals(expResult, result);
 
-            } catch (IndexOutOfBoundsException ioobe) {
+            } catch (IndexOutOfBoundsException |
+                    BufferedCharSequence.SourceIOException ioobe) {
                 ioobe.printStackTrace();
                 fail(ioobe.toString());
-            } catch (BufferedCharSequence.SourceIOException bcse) {
-                bcse.printStackTrace();
-                fail(bcse.toString());
             }
         }
     }   

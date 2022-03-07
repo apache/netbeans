@@ -47,14 +47,17 @@ import {NbTestAdapter} from './testAdapter';
 import { asRanges, StatusMessageRequest, ShowStatusMessageParams, QuickPickRequest, InputBoxRequest, TestProgressNotification, DebugConnector,
          TextEditorDecorationCreateRequest, TextEditorDecorationSetNotification, TextEditorDecorationDisposeNotification, HtmlPageRequest, HtmlPageParams,
          SetTextEditorDecorationParams,
-         ProjectActionParams
+         ProjectActionParams,
+         UpdateConfigurationRequest,
+         UpdateConfigParams
 } from './protocol';
 import * as launchConfigurations from './launchConfigurations';
 import { createTreeViewService, TreeViewService, TreeItemDecorator, Visualizer, CustomizableTreeDataProvider } from './explorer';
-import { initializeRunConfiguration, runConfigurationProvider, runConfigurationNodeProvider, configureRunSettings } from './runConfiguration';
+import { initializeRunConfiguration, runConfigurationProvider, runConfigurationNodeProvider, configureRunSettings, runConfigurationUpdateAll } from './runConfiguration';
 import { TLSSocket } from 'tls';
 
 const API_VERSION : string = "1.0";
+const DATABASE: string = 'Database';
 let client: Promise<NbLanguageClient>;
 let testAdapter: NbTestAdapter | undefined;
 let nbProcess : ChildProcess | null = null;
@@ -773,6 +776,10 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
             c.onRequest(QuickPickRequest.type, async param => {
                 const selected = await window.showQuickPick(param.items, { placeHolder: param.placeHolder, canPickMany: param.canPickMany });
                 return selected ? Array.isArray(selected) ? selected : [selected] : undefined;
+            });
+            c.onRequest(UpdateConfigurationRequest.type, async (param) => {
+                await vscode.workspace.getConfiguration(param.section).update(param.key, param.value);
+                runConfigurationUpdateAll();
             });
             c.onRequest(InputBoxRequest.type, async param => {
                 return await window.showInputBox({ prompt: param.prompt, value: param.value, password: param.password });

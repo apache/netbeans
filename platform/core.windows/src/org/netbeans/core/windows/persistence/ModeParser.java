@@ -302,14 +302,12 @@ class ModeParser {
                 }
             }
             //Append remaining instances if any
-            for (String s: localMap.keySet()) {
-                TCRefParser tcRefParser = localMap.get(s);
+            for (TCRefParser tcRefParser: localMap.values()) {
                 localList.add(tcRefParser);
             }
         } else {
             //if (DEBUG) Debug.log(ModeParser.class, "-- -- NO ORDER, USING PARTIAL ORDERING");
-            for (String s: localMap.keySet()) {
-                TCRefParser tcRefParser = localMap.get(s);
+            for (TCRefParser tcRefParser: localMap.values()) {
                 localList.add(tcRefParser);
             }
             

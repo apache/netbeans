@@ -54,8 +54,7 @@ public class FileReferenceModification {
         if(absolutePathLink) {
             b.append('/'); //initial slash
         }
-        for(FileObject file : items.keySet()) {
-            String item = items.get(file);
+        for(String item : items.values()) {
             b.append(item);
             b.append('/'); //NOI18N
         }

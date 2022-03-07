@@ -110,8 +110,9 @@ public final class MacroShortcutsInjector extends StorageFilter<Collection<KeySt
     public void beforeSave(Map<Collection<KeyStroke>, MultiKeyBinding> map, MimePath mimePath, String profile, boolean defaults) {
         Set<Collection<KeyStroke>> keysToFilterOut = new HashSet<Collection<KeyStroke>>();
         
-        for(Collection<KeyStroke> keys : map.keySet()) {
-            MultiKeyBinding shortcut = map.get(keys);
+        for(Map.Entry<Collection<KeyStroke>,MultiKeyBinding> entry : map.entrySet()) {
+            Collection<KeyStroke> keys = entry.getKey();
+            MultiKeyBinding shortcut = entry.getValue();
             if (shortcut.getActionName().equals(MacroDialogSupport.RunMacroAction.runMacroAction)) {
                 keysToFilterOut.add(keys);
                 if (LOG.isLoggable(Level.FINE)) {

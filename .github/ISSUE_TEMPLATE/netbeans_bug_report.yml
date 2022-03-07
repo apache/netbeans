@@ -27,8 +27,8 @@ body:
         Latest releases are always available from https://netbeans.apache.org/download/
       multiple: false
       options:
-        - "Apache NetBeans 12.6"
-        - "Apache NetBeans 13 release candidate"
+        - "Apache NetBeans 13"
+#        - "Apache NetBeans 14 release candidate"
         - "Apache NetBeans latest daily build"
     validations:
       required: true
@@ -64,6 +64,7 @@ body:
       multiple: false
       options:
         - "No"
+        - "Apache NetBeans 13"
         - "Apache NetBeans 12.6"
         - "Apache NetBeans 12.5"
         - "Apache NetBeans 12.4"
@@ -123,6 +124,8 @@ body:
       options:
         - "Yes"
         - "No"
+    validations:
+        required: true
   - type: dropdown
     attributes:
       label: Code of Conduct

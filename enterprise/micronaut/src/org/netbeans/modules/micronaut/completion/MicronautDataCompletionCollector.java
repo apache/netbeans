@@ -22,6 +22,7 @@ import java.util.function.Consumer;
 import javax.swing.text.Document;
 import org.netbeans.api.editor.mimelookup.MimeRegistration;
 import org.netbeans.api.lsp.Completion;
+import org.netbeans.spi.editor.completion.CompletionItem;
 import org.netbeans.spi.lsp.CompletionCollector;
 
 /**
@@ -46,6 +47,13 @@ public class MicronautDataCompletionCollector implements CompletionCollector {
             @Override
             public Completion createFinderMethodNameItem(String prefix, String name, int offset) {
                 return CompletionCollector.newBuilder(prefix + name).kind(Completion.Kind.Method).sortText(String.format("%04d%s", 10, name)).build();
+            }
+            @Override
+            public Completion createSQLItem(CompletionItem item) {
+                return CompletionCollector.newBuilder(item.getInsertPrefix().toString())
+                        .insertText(item.getInsertPrefix().toString().replace("\"", "\\\""))
+                        .kind(Completion.Kind.Property)
+                        .build();
             }
         }).stream().forEach(consumer);
         return true;

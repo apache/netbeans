@@ -333,6 +333,7 @@
             </test-dependencies>
             <friend-packages>
                 <friend>com.sun.tools.odb</friend>
+                <friend>org.netbeans.modules.micronaut</friend>
                 <friend>org.netbeans.modules.php.editor</friend>
                 <package>org.netbeans.modules.db.sql.editor.api.completion</package>
             </friend-packages>

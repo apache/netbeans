@@ -22,10 +22,8 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.sun.source.tree.ClassTree;
-import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.LineMap;
 import com.sun.source.tree.MethodTree;
-import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.VariableTree;
@@ -47,7 +45,6 @@ import java.util.EnumMap;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
@@ -56,7 +53,6 @@ import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Set;
 import java.util.TreeMap;
-import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -80,6 +76,12 @@ import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.StyledDocument;
+import org.eclipse.lsp4j.CallHierarchyIncomingCall;
+import org.eclipse.lsp4j.CallHierarchyIncomingCallsParams;
+import org.eclipse.lsp4j.CallHierarchyItem;
+import org.eclipse.lsp4j.CallHierarchyOutgoingCall;
+import org.eclipse.lsp4j.CallHierarchyOutgoingCallsParams;
+import org.eclipse.lsp4j.CallHierarchyPrepareParams;
 import org.eclipse.lsp4j.ClientCapabilities;
 import org.eclipse.lsp4j.CodeAction;
 import org.eclipse.lsp4j.CodeActionKind;
@@ -140,8 +142,6 @@ import org.eclipse.lsp4j.ServerCapabilities;
 import org.eclipse.lsp4j.SignatureHelp;
 import org.eclipse.lsp4j.SignatureHelpParams;
 import org.eclipse.lsp4j.SymbolInformation;
-import org.eclipse.lsp4j.SymbolKind;
-import org.eclipse.lsp4j.SymbolTag;
 import org.eclipse.lsp4j.TextDocumentContentChangeEvent;
 import org.eclipse.lsp4j.TextDocumentEdit;
 import org.eclipse.lsp4j.TextEdit;
@@ -174,6 +174,7 @@ import org.netbeans.api.java.source.WorkingCopy;
 import org.netbeans.api.java.source.ui.ElementOpen;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenSequence;
+import org.netbeans.api.lsp.CallHierarchyEntry;
 import org.netbeans.api.lsp.Completion;
 import org.netbeans.api.lsp.HyperlinkLocation;
 import org.netbeans.api.project.FileOwnerQuery;
@@ -226,6 +227,7 @@ import org.netbeans.modules.refactoring.spi.Transaction;
 import org.netbeans.api.lsp.StructureElement;
 import org.netbeans.spi.editor.hints.ErrorDescription;
 import org.netbeans.spi.editor.hints.Fix;
+import org.netbeans.spi.lsp.CallHierarchyProvider;
 import org.netbeans.spi.lsp.ErrorProvider;
 import org.netbeans.spi.lsp.StructureProvider;
 import org.netbeans.spi.project.ActionProvider;
@@ -2004,4 +2006,247 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         return CompletableFuture.completedFuture(tokens);
     }
 
+    @Override
+    public CompletableFuture<List<CallHierarchyItem>> prepareCallHierarchy(CallHierarchyPrepareParams params) {
+        FileObject file = fromURI(params.getTextDocument().getUri());
+        if (file == null) {
+            return CompletableFuture.completedFuture(null);
+        }
+        // FIXME: probably the MIME type ought be derived from the exact source position, not from the whole file.
+        CallHierarchyProvider chp = MimeLookup.getLookup(file.getMIMEType()).lookup(CallHierarchyProvider.class);
+        if (chp == null) {
+            return CompletableFuture.completedFuture(null);
+        }
+        EditorCookie ec = file.getLookup().lookup(EditorCookie.class);
+        // PENDING: possibly handle cancellation with this Future ?
+        LineDocument lDoc;
+        try {
+            Document doc = ec.openDocument();
+            if (!(doc instanceof LineDocument)) {
+                return CompletableFuture.completedFuture(null);
+            }
+            lDoc = (LineDocument)doc;
+        } catch (IOException ex) {
+            CompletableFuture f = new CompletableFuture();
+            f.completeExceptionally(ex);
+            return f;
+        }
+        return chp.findCallOrigin(lDoc, Utils.getOffset(lDoc, params.getPosition())).thenApply(l -> {
+            if (l == null) {
+                return null;
+            }
+            List<CallHierarchyItem> res = new ArrayList<>();
+            for (CallHierarchyEntry c : l) {
+                CallHierarchyItem n = callEntryToItem(file, c, lDoc);
+                if (n != null) {
+                    res.add(n);
+                }
+            }
+            return res;
+        });
+    }
+    
+    private static CallHierarchyItem callEntryToItem(FileObject documentFile, CallHierarchyEntry c, LineDocument lDoc) {
+        CallHierarchyItem chi = new CallHierarchyItem();
+        FileObject owner = c.getElement().getFile();
+        
+        if (documentFile != null && owner != null && owner != documentFile) {
+            // must open the document
+            EditorCookie ck = owner.getLookup().lookup(EditorCookie.class);
+            if (ck == null) {
+                return null;
+            }
+            try {
+                Document doc = ck.openDocument();
+                if (!(doc instanceof LineDocument)) {
+                    return null;
+                }
+                lDoc = (LineDocument)doc;
+            } catch (IOException ex) {
+                // TODO: report to the client ?
+                return null;
+            }
+        }
+        if (owner == null) {
+            owner = documentFile;
+        }
+        DocumentSymbol ds = structureElement2DocumentSymbol(lDoc, c.getElement());
+        if (ds == null) {
+            return null;
+        }
+        chi.setKind(ds.getKind());
+        chi.setName(ds.getName());
+        chi.setTags(ds.getTags());
+        chi.setRange(ds.getRange());
+        chi.setSelectionRange(ds.getSelectionRange());
+        chi.setUri(Utils.toUri(owner));
+        chi.setData(c.getCustomData());
+        return chi;
+    }
+    
+    interface CallHierarchyInvoker<T> {
+        public CompletableFuture<List<T>> computeCalls(FileObject f, LineDocument lDoc, CallHierarchyEntry entry, CallHierarchyProvider provider);
+    }
+    
+    abstract class HierarchyTask<T> {
+        final CallHierarchyItem request;
+        final FileObject file;
+        final CallHierarchyProvider provider;
+        final AtomicBoolean cancelled = new AtomicBoolean();
+        protected LineDocument lineDoc;
+
+        public HierarchyTask(CallHierarchyItem request) {
+            this.request = request;
+            this.file = fromURI(request.getUri());
+            this.provider = file == null ? null :
+                    MimeLookup.getLookup(file.getMIMEType()).lookup(CallHierarchyProvider.class);
+        }
+        
+        public CompletableFuture<List<T>> processRequest() {
+            if (file == null || provider == null) {
+                return null;
+            }
+            try {
+                EditorCookie ec = file.getLookup().lookup(EditorCookie.class);
+                Document doc = ec.openDocument();
+                if (!(doc instanceof LineDocument)) {
+                    return null;
+                }
+                lineDoc = (LineDocument)doc;
+            } catch (IOException | RuntimeException ex) {
+                CompletableFuture<List<T>> res = new CompletableFuture<>();
+                res.completeExceptionally(ex);
+                return res;
+            }
+
+            StructureProvider.Builder b = StructureProvider.newBuilder(
+                    request.getName(), StructureElement.Kind.valueOf(request.getKind().toString()));
+
+            b.file(file);
+            b.expandedStartOffset(Utils.getOffset(lineDoc, request.getRange().getStart()));
+            b.expandedEndOffset(Utils.getOffset(lineDoc, request.getRange().getEnd()));
+            b.selectionStartOffset(Utils.getOffset(lineDoc, request.getSelectionRange().getStart()));
+            b.selectionEndOffset(Utils.getOffset(lineDoc, request.getSelectionRange().getEnd()));
+
+            String d;
+            if (request.getData() instanceof JsonPrimitive) {
+                d = ((JsonPrimitive)request.getData()).getAsString();
+            } else if (request.getData() != null) {
+                d = request.getData().toString();
+            } else {
+                d = null;
+            }
+            
+            return callProvider(provider, new CallHierarchyEntry(b.build(), d)).thenApply(this::convert);
+        }
+        
+        List<T> convert(List<CallHierarchyEntry.Call> l) {
+            if (l == null) {
+                return null;
+            }
+            List<T> res = (List<T>)new ArrayList();
+            for (CallHierarchyEntry.Call call : l) {
+                CallHierarchyEntry che = call.getItem();
+                List<Range> ranges = new ArrayList<>();
+                for (org.netbeans.api.lsp.Range r : call.getRanges()) {
+                    ranges.add(callRange2Range(r, lineDoc));
+                }
+
+                T lspCall = createResultItem(
+                        callEntryToItem(file, che, lineDoc), ranges);
+                res.add(lspCall);
+            }
+            return res;
+        }
+                
+        protected abstract CompletableFuture<List<CallHierarchyEntry.Call>> callProvider(CallHierarchyProvider p, CallHierarchyEntry e);
+        
+        protected abstract T createResultItem(CallHierarchyItem item, List<Range> ranges);
+        
+        //protected abstract CompletableFuture<List<T>> computeCalls(CallHierarchyEntry entry);
+    }
+    
+    @Override
+    public CompletableFuture<List<CallHierarchyIncomingCall>> callHierarchyIncomingCalls(CallHierarchyIncomingCallsParams params) {
+        HierarchyTask<CallHierarchyIncomingCall> t =  new HierarchyTask<CallHierarchyIncomingCall>(params.getItem()) {
+            @Override
+            protected CompletableFuture<List<CallHierarchyEntry.Call>> callProvider(CallHierarchyProvider p, CallHierarchyEntry e) {
+                return p.findIncomingCalls(e);
+            }
+
+            @Override
+            protected CallHierarchyIncomingCall createResultItem(CallHierarchyItem item, List<Range> ranges) {
+                return new CallHierarchyIncomingCall(item, ranges);
+            }
+            
+            protected CompletableFuture computeCalls(CallHierarchyEntry fromEntry) {
+                return provider.findIncomingCalls(fromEntry).thenApply(l -> {
+                    if (l == null) {
+                        return null;
+                    }
+                    List<CallHierarchyIncomingCall> res = new ArrayList<>();
+                    for (CallHierarchyEntry.Call call : l) {
+                        CallHierarchyEntry che = call.getItem();
+                        List<Range> ranges = new ArrayList<>();
+                        for (org.netbeans.api.lsp.Range r : call.getRanges()) {
+                            ranges.add(callRange2Range(r, lineDoc));
+                        }
+
+                        CallHierarchyIncomingCall lspCall = new CallHierarchyIncomingCall(
+                                callEntryToItem(file, che, lineDoc), ranges);
+                        res.add(lspCall);
+                    }
+                    return res;
+                });
+            }
+        };
+        return t.processRequest();
+    }
+    
+    private static Position offset2Position(Document doc, int offset) {
+        int line = NbDocument.findLineNumber((StyledDocument)doc, offset);
+        int column = NbDocument.findLineColumn((StyledDocument)doc, offset);
+        return new Position(line, column);
+    }
+    
+    private static Range callRange2Range(org.netbeans.api.lsp.Range r, Document doc) {
+        return new Range(offset2Position(doc, r.getStartOffset()), offset2Position(doc, r.getEndOffset()));
+    }
+
+    @Override
+    public CompletableFuture<List<CallHierarchyOutgoingCall>> callHierarchyOutgoingCalls(CallHierarchyOutgoingCallsParams params) {
+        HierarchyTask<CallHierarchyOutgoingCall> t =  new HierarchyTask<CallHierarchyOutgoingCall>(params.getItem()) {
+            @Override
+            protected CompletableFuture<List<CallHierarchyEntry.Call>> callProvider(CallHierarchyProvider p, CallHierarchyEntry e) {
+                return p.findIncomingCalls(e);
+            }
+
+            @Override
+            protected CallHierarchyOutgoingCall createResultItem(CallHierarchyItem item, List<Range> ranges) {
+                return new CallHierarchyOutgoingCall(item, ranges);
+            }
+            
+            protected CompletableFuture computeCalls(CallHierarchyEntry fromEntry) {
+                return provider.findIncomingCalls(fromEntry).thenApply(l -> {
+                    if (l == null) {
+                        return null;
+                    }
+                    List<CallHierarchyIncomingCall> res = new ArrayList<>();
+                    for (CallHierarchyEntry.Call call : l) {
+                        CallHierarchyEntry che = call.getItem();
+                        List<Range> ranges = new ArrayList<>();
+                        for (org.netbeans.api.lsp.Range r : call.getRanges()) {
+                            ranges.add(callRange2Range(r, lineDoc));
+                        }
+
+                        CallHierarchyIncomingCall lspCall = new CallHierarchyIncomingCall(
+                                callEntryToItem(file, che, lineDoc), ranges);
+                        res.add(lspCall);
+                    }
+                    return res;
+                });
+            }
+        };
+        return t.processRequest();
+    }
 }

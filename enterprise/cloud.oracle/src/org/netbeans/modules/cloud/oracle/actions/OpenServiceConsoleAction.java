@@ -16,19 +16,18 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.cloud.oracle;
+package org.netbeans.modules.cloud.oracle.actions;
 
 import org.netbeans.modules.cloud.oracle.items.DatabaseItem;
-import java.awt.Desktop;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
 import org.openide.awt.ActionRegistration;
+import org.openide.awt.HtmlBrowser.URLDisplayer;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle.Messages;
 
@@ -42,7 +41,8 @@ import org.openide.util.NbBundle.Messages;
 @ActionReferences(value = {
     @ActionReference(path = "Cloud/Oracle/Databases/Actions", position = 260)
 })
-@Messages("CTL_OpenServiceConsoleAction=Open Service Console")
+@Messages({"CTL_OpenServiceConsoleAction=Open Service Console",
+        "MSG_ServiceConsole=Service Console URL: {0}"})
 public final class OpenServiceConsoleAction implements ActionListener {
 
     private final DatabaseItem context;
@@ -54,9 +54,9 @@ public final class OpenServiceConsoleAction implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent ev) {
         try {
-            Desktop desk = Desktop.getDesktop();
-            desk.browse(new URI(context.getServiceUrl()));
-        } catch (URISyntaxException | IOException ex) {
+            URLDisplayer.getDefault().showURLExternal(
+                    new URL(context.getServiceUrl()));
+        } catch (MalformedURLException ex) {
             Exceptions.printStackTrace(ex);
         }
     }

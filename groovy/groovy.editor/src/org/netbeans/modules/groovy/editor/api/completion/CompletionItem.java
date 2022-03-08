@@ -143,7 +143,7 @@ public abstract class CompletionItem extends DefaultCompletionProposal {
         });
     }
 
-    private CompletionItem(GroovyElement element, int anchorOffset) {
+    protected CompletionItem(GroovyElement element, int anchorOffset) {
         this.element = element;
         this.anchorOffset = anchorOffset;
 

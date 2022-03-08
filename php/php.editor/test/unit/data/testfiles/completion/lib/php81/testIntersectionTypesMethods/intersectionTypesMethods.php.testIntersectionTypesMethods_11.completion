@@ -1,0 +1,5 @@
+Code completion result for source line:
+TestClass&\Test1\Intersec|tion1 $param, // static
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CLASS      Intersection1                   [PUBLIC]   Test1
+CLASS      Intersection2                   [PUBLIC]   Test1

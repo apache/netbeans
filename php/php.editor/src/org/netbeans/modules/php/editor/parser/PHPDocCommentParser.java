@@ -294,8 +294,8 @@ public class PHPDocCommentParser {
         }
         ArrayList<String> types = new ArrayList<>();
         if (tokens.length > 0 && (isReturnTag || !tokens[0].startsWith("$"))) { //NOI18N
-            if (tokens[0].indexOf('|') > -1) {
-                String[] ttokens = tokens[0].split("[|]"); //NOI18N
+            if (tokens[0].indexOf('|') > -1 || tokens[0].indexOf('&') > -1) {
+                String[] ttokens = tokens[0].split("[|&]"); //NOI18N
                 for (String ttoken : ttokens) {
                     types.add(ttoken.trim());
                 }

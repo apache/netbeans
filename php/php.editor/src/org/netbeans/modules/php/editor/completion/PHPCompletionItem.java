@@ -1073,7 +1073,9 @@ public abstract class PHPCompletionItem implements CompletionProposal {
                     Collection<TypeResolver> returnTypes = getBaseFunctionElement().getReturnTypes();
                     // we can also write a union type in phpdoc e.g. @return int|float
                     // check whether the union type is actual declared return type to avoid adding the union type for phpdoc
-                    if (returnTypes.size() == 1 || getBaseFunctionElement().isReturnUnionType()) {
+                    if (returnTypes.size() == 1
+                            || getBaseFunctionElement().isReturnUnionType()
+                            || getBaseFunctionElement().isReturnIntersectionType()) {
                         String returnType = getBaseFunctionElement().asString(PrintAs.ReturnTypes, typeNameResolver, phpVersion);
                         if (StringUtils.hasText(returnType)) {
                             boolean nullableType = CodeUtils.isNullableType(returnType);

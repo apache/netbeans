@@ -139,17 +139,13 @@ public class BaseFunctionElementSupport  {
                     if (typeResolver.isResolved()) {
                         QualifiedName typeName = typeResolver.getTypeName(false);
                         if (typeName != null) {
-                            if (template.length() > 0) {
-                                template.append(Type.SEPARATOR);
-                            }
+                            appendSeparator(template);
                             template.append(typeNameResolver.resolve(typeName).toString());
                         }
                     } else {
                         String typeName = typeResolver.getRawTypeName();
                         if (typeName != null) {
-                            if (template.length() > 0) {
-                                template.append(Type.SEPARATOR);
-                            }
+                            appendSeparator(template);
                             template.append(typeName);
                         }
                     }
@@ -161,9 +157,7 @@ public class BaseFunctionElementSupport  {
                     if (typeResolver.isResolved()) {
                         QualifiedName typeName = typeResolver.getTypeName(false);
                         if (typeName != null) {
-                            if (template.length() > 0) {
-                                template.append(Type.SEPARATOR);
-                            }
+                            appendSeparator(template);
                             if (typeResolver.isNullableType()) {
                                 template.append(CodeUtils.NULLABLE_TYPE_PREFIX);
                             }
@@ -204,6 +198,17 @@ public class BaseFunctionElementSupport  {
                 assert false : as;
         }
         return template.toString();
+    }
+
+    private void appendSeparator(StringBuilder template) {
+        if (template.length() == 0) {
+            return;
+        }
+        if (isReturnIntersectionType()) {
+            template.append(Type.SEPARATOR_INTERSECTION);
+        } else {
+            template.append(Type.SEPARATOR);
+        }
     }
 
     private static String parameters2String(final BaseFunctionElement element, final List<ParameterElement> parameterList, OutputType stringOutputType, TypeNameResolver typeNameResolver) {

@@ -265,6 +265,11 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
             PHPTokenId.PHPDOC_COMMENT_START, PHPTokenId.PHPDOC_COMMENT, PHPTokenId.PHPDOC_COMMENT_END,
             PHPTokenId.PHP_COMMENT_START, PHPTokenId.PHP_COMMENT, PHPTokenId.PHP_COMMENT_END
     );
+    private static final List<PHPTokenId> VALID_INTERSECTION_TYPE_TOKENS = Arrays.asList(
+            PHPTokenId.WHITESPACE, PHPTokenId.PHP_STRING, PHPTokenId.PHP_NS_SEPARATOR,
+            PHPTokenId.PHPDOC_COMMENT_START, PHPTokenId.PHPDOC_COMMENT, PHPTokenId.PHPDOC_COMMENT_END,
+            PHPTokenId.PHP_COMMENT_START, PHPTokenId.PHP_COMMENT, PHPTokenId.PHP_COMMENT_END
+    );
     private boolean caseSensitive;
     private QuerySupport.Kind nameKind;
 
@@ -509,41 +514,45 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
             case TYPE_NAME:
                 autoCompleteNamespaces(completionResult, request);
                 autoCompleteTypeNames(completionResult, request);
-                final ArrayList<String> typesForTypeName = new ArrayList<>(Type.getTypesForEditor());
-                if (isInType(request)) {
-                    // add self and parent
-                    typesForTypeName.addAll(Type.getSpecialTypesForType());
+                if (!isIntersectionType(info, caretOffset)) {
+                    final ArrayList<String> typesForTypeName = new ArrayList<>(Type.getTypesForEditor());
+                    if (isInType(request)) {
+                        // add self and parent
+                        typesForTypeName.addAll(Type.getSpecialTypesForType());
+                    }
+                    if (isNullableType(info, caretOffset)) {
+                        typesForTypeName.remove(Type.FALSE);
+                        typesForTypeName.remove(Type.NULL);
+                    }
+                    if (isUnionType(info, caretOffset)) {
+                        typesForTypeName.remove(Type.MIXED);
+                    }
+                    autoCompleteKeywords(completionResult, request, typesForTypeName);
                 }
-                if (isNullableType(info, caretOffset)) {
-                    typesForTypeName.remove(Type.FALSE);
-                    typesForTypeName.remove(Type.NULL);
-                }
-                if (isUnionType(info, caretOffset)) {
-                    typesForTypeName.remove(Type.MIXED);
-                }
-                autoCompleteKeywords(completionResult, request, typesForTypeName);
                 break;
-            case RETURN_UNION_TYPE_NAME: // no break
+            case RETURN_UNION_OR_INTERSECTION_TYPE_NAME: // no break
             case RETURN_TYPE_NAME:
                 autoCompleteNamespaces(completionResult, request);
                 autoCompleteTypeNames(completionResult, request);
-                final ArrayList<String> typesForReturnTypeName = new ArrayList<>(Type.getTypesForReturnType());
-                if (isInType(request)) {
-                    // add self and parent
-                    typesForReturnTypeName.addAll(Type.getSpecialTypesForType());
-                    typesForReturnTypeName.add(Type.STATIC);
+                if (!isIntersectionType(info, caretOffset)) {
+                    final ArrayList<String> typesForReturnTypeName = new ArrayList<>(Type.getTypesForReturnType());
+                    if (isInType(request)) {
+                        // add self and parent
+                        typesForReturnTypeName.addAll(Type.getSpecialTypesForType());
+                        typesForReturnTypeName.add(Type.STATIC);
+                    }
+                    if (isNullableType(info, caretOffset)) {
+                        typesForReturnTypeName.remove(Type.FALSE);
+                        typesForReturnTypeName.remove(Type.NULL);
+                        typesForReturnTypeName.remove(Type.VOID);
+                        typesForReturnTypeName.remove(Type.NEVER);
+                    } else if (context == CompletionContext.RETURN_UNION_OR_INTERSECTION_TYPE_NAME) {
+                        typesForReturnTypeName.remove(Type.VOID);
+                        typesForReturnTypeName.remove(Type.NEVER);
+                        typesForReturnTypeName.remove(Type.MIXED);
+                    }
+                    autoCompleteKeywords(completionResult, request, typesForReturnTypeName);
                 }
-                if (isNullableType(info, caretOffset)) {
-                    typesForReturnTypeName.remove(Type.FALSE);
-                    typesForReturnTypeName.remove(Type.NULL);
-                    typesForReturnTypeName.remove(Type.VOID);
-                    typesForReturnTypeName.remove(Type.NEVER);
-                } else if (context == CompletionContext.RETURN_UNION_TYPE_NAME) {
-                    typesForReturnTypeName.remove(Type.VOID);
-                    typesForReturnTypeName.remove(Type.NEVER);
-                    typesForReturnTypeName.remove(Type.MIXED);
-                }
-                autoCompleteKeywords(completionResult, request, typesForReturnTypeName);
                 break;
             case FIELD_TYPE_NAME:
                 autoCompleteFieldType(info, caretOffset, completionResult, request, false);
@@ -1197,6 +1206,10 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
         // https://wiki.php.net/rfc/typed_properties_v2
         autoCompleteNamespaces(completionResult, request);
         autoCompleteTypeNames(completionResult, request);
+        if (isIntersectionType(info, caretOffset)) {
+            // Fatal Error: Foo&array, Foo&bool, Foo&callable, etc.
+            return;
+        }
         List<String> keywords = new ArrayList<>(Type.getTypesForFieldType());
         boolean isNullableType = isNullableType(info, caretOffset);
         if (!isInClassContext && !isNullableType) {
@@ -1714,9 +1727,7 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
     }
 
     private static boolean isNullableType(ParserResult info, int caretOffset) {
-            TokenHierarchy<?> th = info.getSnapshot().getTokenHierarchy();
-            TokenSequence<PHPTokenId> tokenSequence = th.tokenSequence(PHPTokenId.language());
-        assert tokenSequence != null;
+        TokenSequence<PHPTokenId> tokenSequence = getTokenSequence(info, caretOffset);
         tokenSequence.move(caretOffset);
         if (tokenSequence.movePrevious()) {
             Token<? extends PHPTokenId> previousToken = LexUtilities.findPrevious(tokenSequence, Arrays.asList(PHPTokenId.WHITESPACE, PHPTokenId.PHP_STRING));
@@ -1728,10 +1739,7 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
     }
 
     private static boolean isUnionType(ParserResult info, int caretOffset) {
-            TokenHierarchy<?> th = info.getSnapshot().getTokenHierarchy();
-            TokenSequence<PHPTokenId> tokenSequence = th.tokenSequence(PHPTokenId.language());
-        assert tokenSequence != null;
-        tokenSequence.move(caretOffset);
+        TokenSequence<PHPTokenId> tokenSequence = getTokenSequence(info, caretOffset);
         if (tokenSequence.movePrevious()) {
             Token<? extends PHPTokenId> previousToken = LexUtilities.findPrevious(tokenSequence, VALID_UNION_TYPE_TOKENS);
             if (previousToken.id() == PHPTokenId.PHP_OPERATOR && TokenUtilities.textEquals(previousToken.text(), Type.SEPARATOR)) {
@@ -1739,6 +1747,31 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
             }
         }
         return false;
+    }
+
+    private static boolean isIntersectionType(ParserResult info, int caretOffset) {
+        TokenSequence<PHPTokenId> tokenSequence = getTokenSequence(info, caretOffset);
+        if (tokenSequence.movePrevious() && tokenSequence.moveNext()) {
+            if ((tokenSequence.token().id() == PHPTokenId.PHP_OPERATOR && TokenUtilities.textEquals(tokenSequence.token().text(), "&&"))) { // NOI18N
+                return true;
+            }
+        }
+        tokenSequence.move(caretOffset);
+        if (tokenSequence.movePrevious()) {
+            Token<? extends PHPTokenId> previousToken = LexUtilities.findPrevious(tokenSequence, VALID_INTERSECTION_TYPE_TOKENS);
+            if (previousToken.id() == PHPTokenId.PHP_OPERATOR && TokenUtilities.textEquals(previousToken.text(), Type.SEPARATOR_INTERSECTION)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static TokenSequence<PHPTokenId> getTokenSequence(ParserResult info, int caretOffset) {
+        TokenHierarchy<?> th = info.getSnapshot().getTokenHierarchy();
+        TokenSequence<PHPTokenId> tokenSequence = th.tokenSequence(PHPTokenId.language());
+        assert tokenSequence != null;
+        tokenSequence.move(caretOffset);
+        return tokenSequence;
     }
 
     private static boolean isInType(CompletionRequest request) {

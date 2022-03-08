@@ -1,0 +1,6 @@
+Code completion result for source line:
+function intersection_types(IntersectionTypes1&|)
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+PACKAGE    Test                            [PUBLIC]   null
+CLASS      IntersectionTypes1              [PUBLIC]   Test
+CLASS      IntersectionTypes2              [PUBLIC]   Test

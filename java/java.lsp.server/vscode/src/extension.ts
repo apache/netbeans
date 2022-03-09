@@ -148,7 +148,8 @@ export function awaitClient() : Promise<NbLanguageClient> {
 }
 
 function findJDK(onChange: (path : string | null) => void): void {
-    function find(): string | null {
+    let nowDark : boolean = isDarkColorTheme();
+function find(): string | null {
         let nbJdk = workspace.getConfiguration('netbeans').get('jdkhome');
         if (nbJdk) {
             return nbJdk as string;
@@ -172,13 +173,27 @@ function findJDK(onChange: (path : string | null) => void): void {
     let currentJdk = find();
     let timeout: NodeJS.Timeout | undefined = undefined;
     workspace.onDidChangeConfiguration(params => {
-        if (timeout || (!params.affectsConfiguration('java') && !params.affectsConfiguration('netbeans'))) {
+        if (timeout) {
+            return;
+        }
+        let interested : boolean = false;
+        if (params.affectsConfiguration('netbeans') || params.affectsConfiguration('java')) {
+            interested = true;
+        } else if (params.affectsConfiguration('workbench.colorTheme')) {
+            let d = isDarkColorTheme();
+            if (d != nowDark) {
+                interested = true;
+            }
+        }
+        if (!interested) {
             return;
         }
         timeout = setTimeout(() => {
             timeout = undefined;
             let newJdk = find();
-            if (newJdk !== currentJdk) {
+            let newD = isDarkColorTheme();
+            if (newJdk !== currentJdk || newD != nowDark) {
+                nowDark = newD;
                 currentJdk = newJdk;
                 onChange(currentJdk);
             }
@@ -578,6 +593,36 @@ function killNbProcess(notifyKill : boolean, log : vscode.OutputChannel, specPro
     }
 }
 
+/**
+ * Attempts to determine if the Workbench is using dark-style color theme, so that NBLS
+ * starts with some dark L&F for icon resource selection.
+ */
+function isDarkColorTheme() : boolean {
+    const themeName = workspace.getConfiguration('workbench')?.get('colorTheme');
+    if (!themeName) {
+        return false;
+    }
+    for (const ext of vscode.extensions.all) {
+        const themeList : object[] =  ext.packageJSON?.contributes && ext.packageJSON?.contributes['themes'];
+        if (!themeList) {
+            continue;
+        }
+        let t : any;
+        for (t of themeList) {
+            if (t.id !== themeName) {
+                continue;
+            }
+            const uiTheme = t.uiTheme;
+            if (typeof(uiTheme) == 'string') {
+                if (uiTheme.includes('-dark') || uiTheme.includes('-black')) {
+                    return true;
+                }
+            }
+        }
+    }
+    return false;
+}
+
 function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContext, log : vscode.OutputChannel, notifyKill: boolean,
     setClient : [(c : NbLanguageClient) => void, (err : any) => void]
 ): void {
@@ -635,7 +680,11 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
                 stdOut = null;
             }
         }
-        let p = launcher.launch(info, "--modules", "--list", "-J-XX:PerfMaxStringConstLength=10240");
+        let extras : string[] = ["--modules", "--list", "-J-XX:PerfMaxStringConstLength=10240"];
+        if (isDarkColorTheme()) {
+            extras.push('--laf', 'com.formdev.flatlaf.FlatDarkLaf');
+        }
+        let p = launcher.launch(info, ...extras);
         handleLog(log, "LSP server launching: " + p.pid);
         p.stdout.on('data', function(d: any) {
             logAndWaitForEnabled(d.toString(), true);

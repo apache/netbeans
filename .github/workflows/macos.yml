@@ -35,7 +35,7 @@ jobs:
           path: |
             ~/.hgexternalcache
             ~/Library/Caches/Homebrew
-          key: ${{ runner.os }}-${{ hashFiles('**/external/binaries-list') }}
+          key: ${{ runner.os }}-${{ hashFiles('*/external/binaries-list', '*/*/external/binaries-list') }}
           restore-keys: ${{ runner.os }}-
 
       - run: brew install ant

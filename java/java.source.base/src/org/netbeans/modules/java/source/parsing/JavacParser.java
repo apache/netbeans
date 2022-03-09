@@ -800,7 +800,9 @@ public class JavacParser extends Parser {
                     invalidate(false);
                 } else {
                     parserError = currentPhase;
-                    dumpSource(currentInfo, ex);
+                    if (LOGGER.isLoggable(Level.FINE)) {
+                        dumpSource(currentInfo, ex);
+                    }
                     throw ex;
                 }
             }
@@ -1348,7 +1350,7 @@ public class JavacParser extends Parser {
                 Exceptions.printStackTrace(exc);
             }
         } else {
-            LOGGER.log(Level.WARNING,
+            LOGGER.log(Level.FINE,
                     "Dump could not be written. Either dump file could not " + // NOI18N
                     "be created or all dump files were already used. Please " + // NOI18N
                     "check that you have write permission to '" + (f != null ? f.getParent() : "var/log") + "' and " + // NOI18N

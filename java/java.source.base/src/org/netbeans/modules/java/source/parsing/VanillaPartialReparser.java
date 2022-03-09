@@ -330,7 +330,7 @@ public class VanillaPartialReparser implements PartialReparser {
             }
             boolean a = false;
             assert a = true;
-            if (a) {
+            if (a && LOGGER.isLoggable(Level.FINE)) {
                 JavacParser.dumpSource(ci, t);
             }
             t.printStackTrace();

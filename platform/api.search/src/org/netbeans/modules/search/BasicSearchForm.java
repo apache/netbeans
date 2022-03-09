@@ -366,7 +366,6 @@ final class BasicSearchForm extends JPanel implements ChangeListener,
     private void initValuesFromCriteria(BasicSearchCriteria initialCriteria,
             boolean searchAndReplace) {
         cboxTextToFind.setSearchPattern(initialCriteria.getSearchPattern());
-        cboxTextToFind.getComponent().setSelectedIndex(0);
         if (cboxReplacement != null) {
             cboxReplacement.setSelectedItem(new ReplaceModelItem(
                     ReplacePattern.create(initialCriteria.getReplaceExpr(),

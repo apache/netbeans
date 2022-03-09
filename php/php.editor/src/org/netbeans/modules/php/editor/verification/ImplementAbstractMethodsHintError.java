@@ -23,6 +23,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
@@ -148,7 +149,15 @@ public class ImplementAbstractMethodsHintError extends HintErrorRule {
                 allValidMethods.addAll(toNames(getValidInheritedMethods(getInheritedMethods(classScope, index))));
                 allValidMethods.addAll(toNames(index.getDeclaredMethods(classScope)));
                 ElementFilter declaredMethods = ElementFilter.forExcludedNames(allValidMethods, PhpElementKind.METHOD);
-                Set<MethodElement> accessibleMethods = declaredMethods.filter(index.getAccessibleMethods(classScope, classScope));
+                List<MethodElement> accessibleMethods = new ArrayList<>(declaredMethods.filter(index.getAccessibleMethods(classScope, classScope)));
+                // sort to get the same result
+                accessibleMethods.sort((MethodElement m1, MethodElement m2) -> {
+                    int result = m1.getFilenameUrl().compareTo(m2.getFilenameUrl());
+                    if (result == 0) {
+                        return Integer.compare(m1.getOffset(), m2.getOffset());
+                    }
+                    return result;
+                });
                 Set<String> methodSkeletons = new LinkedHashSet<>();
                 MethodElement lastMethodElement = null;
                 FileObject lastFileObject = null;

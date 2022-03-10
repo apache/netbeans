@@ -96,6 +96,7 @@ final class CommandObjectBuilder {
      * @throws IllegalStateException if a mandatory entri in the command object
      * is not present.
      */
+    @SuppressWarnings("unchecked")
     JSONObject build() throws IllegalStateException {
         if (file == null) {
             throw new IllegalStateException("Missing file");

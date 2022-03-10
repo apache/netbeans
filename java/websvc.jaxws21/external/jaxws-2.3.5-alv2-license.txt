@@ -1,10 +1,10 @@
 Name: JAX-WS
-Description: JAX-WS Reference Implementation
-Version: 2.2.6
-Origin: Oracle
-URL: http://jax-ws.java.net/
+Description: Eclipse Implementation of Jakarta XML Web Services
+Version: 2.3.5
+Origin: Eclipse EE4J
+URL: https://github.com/eclipse-ee4j/metro-jax-ws
 License: Apache-2.0
-Files: FastInfoset-1.2.12.jar, woodstox-core-asl-4.1.2.jar
+Files: FastInfoset-2.0.0.jar, woodstox-core-6.2.8.jar
 
                                  Apache License
                            Version 2.0, January 2004

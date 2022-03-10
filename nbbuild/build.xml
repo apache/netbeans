@@ -38,6 +38,9 @@
 
   <target name="bootstrap" description="Bootstrap NetBeans-specific Ant extensions."
           depends="-jdk-init,-load-build-properties">
+    <echo message="ant version: ${ant.version}"/>
+    <echo message="Java version: ${java.version}"/>
+    <echo message="JAVA_HOME: ${java.home}"/>
     <fail message="You need to run on JDK 8+ to build NetBeans; java.home=${java.home}">
         <condition>
             <matches pattern="^1\.[01234567].*" string="${java.version}"/>

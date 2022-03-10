@@ -764,7 +764,7 @@ public abstract class PatternSandbox extends JPanel
         @Override
         protected void highlightIndividualMatches(Pattern p) {
 
-            String text = textPane.getText().replaceAll("\r\n", "\n");  //NOI18N
+            String text = textPane.getText().replace("\r\n", "\n");  //NOI18N
 
             Pattern sep = Pattern.compile("\n");                        //NOI18N
             Matcher m = sep.matcher(new TimeLimitedCharSequence(text));

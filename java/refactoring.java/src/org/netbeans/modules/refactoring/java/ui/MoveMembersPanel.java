@@ -271,7 +271,7 @@ public class MoveMembersPanel extends javax.swing.JPanel implements CustomRefact
                 SourceGroup g = (SourceGroup) rootComboBox.getSelectedItem();
                 String packageName = packageComboBox.getSelectedItem().toString();
                 if (g != null && packageName != null) {
-                    String pathname = packageName.replaceAll("\\.", "/"); // NOI18N
+                    String pathname = packageName.replace(".", "/"); // NOI18N
                     FileObject fo = g.getRootFolder().getFileObject(pathname);
                     ClassPath bootCp = ClassPath.getClassPath(fo, ClassPath.BOOT);
                     ClassPath compileCp = ClassPath.getClassPath(fo, ClassPath.COMPILE);

@@ -111,7 +111,7 @@ public class EjbGenerationUtil {
             packageName = FileUtil.getRelativePath(groups [i].getRootFolder(), targetFolder);
         }
         if (packageName != null) {
-            packageName = packageName.replaceAll("/", ".");
+            packageName = packageName.replace("/", ".");
         }
         return packageName+"";
     }

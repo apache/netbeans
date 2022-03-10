@@ -1228,7 +1228,7 @@ public class GoToSupport {
     
     private static String translate(String input) {
         for (int cntr = 0; cntr < c.length; cntr++) {
-            input = input.replaceAll(c[cntr], tags[cntr]);
+            input = input.replace(c[cntr], tags[cntr]);
         }
         
         return input;

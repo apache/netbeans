@@ -1597,7 +1597,7 @@ public class MergePanel extends javax.swing.JPanel implements java.awt.event.Act
     }
     
     private void writeText(Writer w, String text) throws IOException {
-        text = text.replaceAll("\n", System.getProperty("line.separator"));
+        text = text.replace("\n", System.getProperty("line.separator"));
         w.write(text);
     }
 

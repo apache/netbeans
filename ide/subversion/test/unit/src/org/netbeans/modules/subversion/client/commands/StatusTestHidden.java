@@ -352,7 +352,7 @@ public class StatusTestHidden extends AbstractCommandTestCase {
                 throw e;
             }
         }
-        setProperty(externals, "svn:externals", "e1/e2\t" + repo2Url.appendPath("e1").appendPath("e2").toString().replaceAll(" ", "%20"));
+        setProperty(externals, "svn:externals", "e1/e2\t" + repo2Url.appendPath("e1").appendPath("e2").toString().replace(" ", "%20"));
         
         commit(externals);
         update(externals);        

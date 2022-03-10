@@ -58,9 +58,9 @@ public final class TestUtils {
      */
     public static String replaceLinesAndTabs(String input) {
         String escapedString = input;
-        escapedString = escapedString.replaceAll("\n","\\\\n"); //NOI18N
-        escapedString = escapedString.replaceAll("\r","\\\\r"); //NOI18N
-        escapedString = escapedString.replaceAll("\t","\\\\t"); //NOI18N
+        escapedString = escapedString.replace("\n","\\n"); //NOI18N
+        escapedString = escapedString.replace("\r","\\r"); //NOI18N
+        escapedString = escapedString.replace("\t","\\t"); //NOI18N
         return escapedString;
     }
 

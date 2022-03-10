@@ -324,7 +324,7 @@ public final class UpdateUnitProviderImpl {
         String codeName, String displayName, URL url, ProviderCategory c
     ) {
         if (codeName.contains ("/")) {
-            codeName = codeName.replaceAll ("/", "_");
+            codeName = codeName.replace ("/", "_");
         }
         Preferences providerPreferences = getPreferences ().node (codeName);
         assert providerPreferences != null : "Preferences node " + codeName + " found.";

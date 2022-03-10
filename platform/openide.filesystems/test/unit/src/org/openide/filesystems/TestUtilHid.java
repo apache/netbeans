@@ -335,7 +335,7 @@ public class TestUtilHid {
                 String urlVal = null;
 
                 if (fileContents != null) {
-                    urlVal = (path + getName()).replaceAll("/", "-");
+                    urlVal = (path + getName()).replace("/", "-");
                     File f = new File(baseFolder, urlVal);
                     FileWriter wr = new FileWriter(f);
                     wr.append(fileContents);

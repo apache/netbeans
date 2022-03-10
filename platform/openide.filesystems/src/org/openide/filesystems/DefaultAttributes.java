@@ -42,6 +42,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeSet;
 import java.util.logging.Level;
 import javax.xml.parsers.FactoryConfigurationError;
@@ -882,12 +883,12 @@ public class DefaultAttributes extends Object implements AbstractFileSystem.Attr
         /** Enum of attributes for one file.
         */
         public Enumeration<String> attrs(String fileName) {
-            Map m = (Map) get(fileName);
+            Map<String, Map> m = (Map) get(fileName);
 
             if (m == null) {
                 return Enumerations.empty();
             } else {
-                HashSet<String> s = new HashSet<>(m.keySet());
+                Set<String> s = new HashSet<>(m.keySet());
 
                 return Collections.enumeration(s);
             }

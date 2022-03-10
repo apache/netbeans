@@ -1,10 +1,10 @@
 Name: Javac Compiler Implementation
 Description: Javac Compiler Implementation
-Version: jdk-17.0.1-ga
-Files: nb-javac-jdk-17.0.1-ga-api.jar nb-javac-jdk-17.0.1-ga.jar
+Version: jdk-18+36
+Files: nb-javac-jdk-18+36-api.jar nb-javac-jdk-18+36-impl.jar
 License: GPL-2-CP
-Origin: OpenJDK (https://github.com/openjdk/jdk17)
-Source: https://github.com/openjdk/jdk17
+Origin: OpenJDK (https://github.com/openjdk/jdk18)
+Source: https://github.com/openjdk/jdk18
 Type: optional,reviewed
 Comment: The binary has been reviewed to be under the Classpath Exception as a whole. Optional at runtime, but used by default.
 

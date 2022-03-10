@@ -38,7 +38,7 @@ cache:
 
 git:
   quiet: true
-  depth: 3
+  depth: 50
 
 matrix:
     include:

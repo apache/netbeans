@@ -186,6 +186,7 @@ public class LspCallHierarchyProvider implements CallHierarchyProvider {
         public void run(CompilationController parameter) throws Exception {
             List<CallHierarchyEntry.Call> calls = new ArrayList<>();
             int s = callTarget.getElement().getSelectionStartOffset();
+            parameter.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
             TreePath p = parameter.getTreeUtilities().pathFor(s);
             Element e = null;
 
@@ -223,11 +224,10 @@ public class LspCallHierarchyProvider implements CallHierarchyProvider {
             List<CompletableFuture<StructureElement>> delayed = new ArrayList<>();
             List<String> signatures = new ArrayList<>();
             List<Call> delayedRefs = new ArrayList<>();
-
+            
             for (Call c : refs) {
                 TreePathHandle targetH = c.selection;
-                TreePath h = targetH.resolve(info);
-                Element target = info.getTrees().getElement(h);
+                Element target = targetH.getElementHandle().resolve(info);
 
                 CompletableFuture<StructureElement> elementFuture = ElementHeaders.resolveStructureElement(info, target, true);
                 if (elementFuture.isDone()) {
@@ -315,35 +315,15 @@ public class LspCallHierarchyProvider implements CallHierarchyProvider {
 
             @Override
             protected CallHierarchyEntry.Call createCall(StructureElement se, Call c, String signature) {
-                throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-            }
-            
-            
+                CallHierarchyEntry i = new CallHierarchyEntry(se, signature);
 
-            @Override
-            protected void processComputedCall(CompilationInfo info, Call rootCall) {
-                List<CallHierarchyEntry.Call> calls = new ArrayList<>();
-                List<Call> refs = rootCall.getReferences();
-                for (Call c : refs) {
-                    TreePathHandle targetH = c.selection;
-                    TreePath h = targetH.resolve(info);
-                    Element target = info.getTrees().getElement(h);
-                    StructureElement se = ElementHeaders.toStructureElement(info, target, null);
-                    CallHierarchyEntry i = new CallHierarchyEntry(se, signature(target));
-
-                    List<Range> ranges = new ArrayList<>();
-                    for (CallOccurrence oc : c.getOccurrences()) {
-                        PositionBounds pb = oc.getSelectionBounds();
-                        ranges.add(new Range(pb.getBegin().getOffset(), pb.getEnd().getOffset()));
-                    }
-                    CallHierarchyEntry.Call call = new CallHierarchyEntry.Call(i, ranges);
-
-                    calls.add(call);
+                List<Range> ranges = new ArrayList<>();
+                for (CallOccurrence oc : c.getOccurrences()) {
+                    PositionBounds pb = oc.getSelectionBounds();
+                    ranges.add(new Range(pb.getBegin().getOffset(), pb.getEnd().getOffset()));
                 }
-
-                res.complete(calls);
+                return new CallHierarchyEntry.Call(i, ranges);
             }
-            
         }
         return new T(callTarget).process();
     }
@@ -367,6 +347,7 @@ public class LspCallHierarchyProvider implements CallHierarchyProvider {
                 return new CallHierarchyEntry.Call(i, ranges);
             }
             
+            /*
             @Override
             protected void processComputedCall(CompilationInfo info, Call rootCall) {
                 List<CallHierarchyEntry.Call> calls = new ArrayList<>();
@@ -385,7 +366,7 @@ public class LspCallHierarchyProvider implements CallHierarchyProvider {
                     return null;
                 });
             }
-            
+            */
         }
         return new T(callSource).process();
     } 

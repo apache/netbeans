@@ -2037,7 +2037,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
             }
             List<CallHierarchyItem> res = new ArrayList<>();
             for (CallHierarchyEntry c : l) {
-                CallHierarchyItem n = callEntryToItem(file, c, lDoc);
+                CallHierarchyItem n = callEntryToItem(file, c, callEntryDocument(c, lDoc));
                 if (n != null) {
                     res.add(n);
                 }
@@ -2047,29 +2047,14 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
     }
     
     private static CallHierarchyItem callEntryToItem(FileObject documentFile, CallHierarchyEntry c, LineDocument lDoc) {
-        CallHierarchyItem chi = new CallHierarchyItem();
         FileObject owner = c.getElement().getFile();
-        
-        if (documentFile != null && owner != null && owner != documentFile) {
-            // must open the document
-            EditorCookie ck = owner.getLookup().lookup(EditorCookie.class);
-            if (ck == null) {
-                return null;
-            }
-            try {
-                Document doc = ck.openDocument();
-                if (!(doc instanceof LineDocument)) {
-                    return null;
-                }
-                lDoc = (LineDocument)doc;
-            } catch (IOException ex) {
-                // TODO: report to the client ?
-                return null;
-            }
-        }
         if (owner == null) {
             owner = documentFile;
         }
+        if (owner == null || lDoc == null) {
+            return null;
+        }
+        CallHierarchyItem chi = new CallHierarchyItem();
         DocumentSymbol ds = structureElement2DocumentSymbol(lDoc, c.getElement());
         if (ds == null) {
             return null;
@@ -2084,10 +2069,29 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         return chi;
     }
     
-    interface CallHierarchyInvoker<T> {
-        public CompletableFuture<List<T>> computeCalls(FileObject f, LineDocument lDoc, CallHierarchyEntry entry, CallHierarchyProvider provider);
+    LineDocument callEntryDocument(CallHierarchyEntry e, LineDocument documentFile) {
+        FileObject owner = e.getElement().getFile();
+        if (owner != null && owner != documentFile) {
+            // must open the document
+            EditorCookie ck = owner.getLookup().lookup(EditorCookie.class);
+            if (ck == null) {
+                return null;
+            }
+            try {
+                Document doc = ck.openDocument();
+                if (!(doc instanceof LineDocument)) {
+                    return null;
+                }
+                return (LineDocument)doc;
+            } catch (IOException ex) {
+                // TODO: report to the client ?
+                return null;
+            }
+        } else {
+            return documentFile;
+        }
     }
-    
+
     abstract class HierarchyTask<T> {
         final CallHierarchyItem request;
         final FileObject file;
@@ -2147,13 +2151,17 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
             List<T> res = (List<T>)new ArrayList();
             for (CallHierarchyEntry.Call call : l) {
                 CallHierarchyEntry che = call.getItem();
+                LineDocument lDoc = callEntryDocument(che, lineDoc);
+                CallHierarchyItem callItem = callEntryToItem(file, che, lDoc);
+                if (callItem == null) {
+                    continue;
+                }
                 List<Range> ranges = new ArrayList<>();
                 for (org.netbeans.api.lsp.Range r : call.getRanges()) {
-                    ranges.add(callRange2Range(r, lineDoc));
+                    // lDoc cannot be null if callItem != null.
+                    ranges.add(callRange2Range(r, lDoc));
                 }
-
-                T lspCall = createResultItem(
-                        callEntryToItem(file, che, lineDoc), ranges);
+                T lspCall = createResultItem(callItem, ranges);
                 res.add(lspCall);
             }
             return res;
@@ -2162,8 +2170,6 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         protected abstract CompletableFuture<List<CallHierarchyEntry.Call>> callProvider(CallHierarchyProvider p, CallHierarchyEntry e);
         
         protected abstract T createResultItem(CallHierarchyItem item, List<Range> ranges);
-        
-        //protected abstract CompletableFuture<List<T>> computeCalls(CallHierarchyEntry entry);
     }
     
     @Override
@@ -2177,27 +2183,6 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
             @Override
             protected CallHierarchyIncomingCall createResultItem(CallHierarchyItem item, List<Range> ranges) {
                 return new CallHierarchyIncomingCall(item, ranges);
-            }
-            
-            protected CompletableFuture computeCalls(CallHierarchyEntry fromEntry) {
-                return provider.findIncomingCalls(fromEntry).thenApply(l -> {
-                    if (l == null) {
-                        return null;
-                    }
-                    List<CallHierarchyIncomingCall> res = new ArrayList<>();
-                    for (CallHierarchyEntry.Call call : l) {
-                        CallHierarchyEntry che = call.getItem();
-                        List<Range> ranges = new ArrayList<>();
-                        for (org.netbeans.api.lsp.Range r : call.getRanges()) {
-                            ranges.add(callRange2Range(r, lineDoc));
-                        }
-
-                        CallHierarchyIncomingCall lspCall = new CallHierarchyIncomingCall(
-                                callEntryToItem(file, che, lineDoc), ranges);
-                        res.add(lspCall);
-                    }
-                    return res;
-                });
             }
         };
         return t.processRequest();
@@ -2224,27 +2209,6 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
             @Override
             protected CallHierarchyOutgoingCall createResultItem(CallHierarchyItem item, List<Range> ranges) {
                 return new CallHierarchyOutgoingCall(item, ranges);
-            }
-            
-            protected CompletableFuture computeCalls(CallHierarchyEntry fromEntry) {
-                return provider.findIncomingCalls(fromEntry).thenApply(l -> {
-                    if (l == null) {
-                        return null;
-                    }
-                    List<CallHierarchyIncomingCall> res = new ArrayList<>();
-                    for (CallHierarchyEntry.Call call : l) {
-                        CallHierarchyEntry che = call.getItem();
-                        List<Range> ranges = new ArrayList<>();
-                        for (org.netbeans.api.lsp.Range r : call.getRanges()) {
-                            ranges.add(callRange2Range(r, lineDoc));
-                        }
-
-                        CallHierarchyIncomingCall lspCall = new CallHierarchyIncomingCall(
-                                callEntryToItem(file, che, lineDoc), ranges);
-                        res.add(lspCall);
-                    }
-                    return res;
-                });
             }
         };
         return t.processRequest();

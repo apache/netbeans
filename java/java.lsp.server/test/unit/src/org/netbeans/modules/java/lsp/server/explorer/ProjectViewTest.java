@@ -45,6 +45,7 @@ import org.eclipse.lsp4j.InitializeParams;
 import org.eclipse.lsp4j.InitializeResult;
 import org.eclipse.lsp4j.MessageActionItem;
 import org.eclipse.lsp4j.MessageParams;
+import org.eclipse.lsp4j.MessageType;
 import org.eclipse.lsp4j.ProgressParams;
 import org.eclipse.lsp4j.PublishDiagnosticsParams;
 import org.eclipse.lsp4j.SemanticTokensCapabilities;
@@ -275,6 +276,19 @@ public class ProjectViewTest extends NbTestCase {
                         return new SemanticTokensParams(new TextDocumentIdentifier(""));
                     }
                 });
+                gb.registerTypeAdapter(NodeChangedParams.class, new InstanceCreator<NodeChangedParams>() {
+                    @Override
+                    public NodeChangedParams createInstance(Type type) {
+                        return new NodeChangedParams(0);
+                    }
+                });
+                gb.registerTypeAdapter(ShowStatusMessageParams.class, new InstanceCreator<ShowStatusMessageParams>() {
+                    @Override
+                    public ShowStatusMessageParams createInstance(Type type) {
+                        return new ShowStatusMessageParams(MessageType.Error, "ShowStatusMessageParams default error message"); // NOI18N
+                    }
+                });
+
             })
             .create();
     }

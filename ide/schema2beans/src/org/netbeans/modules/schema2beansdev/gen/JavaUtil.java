@@ -835,6 +835,7 @@ public class JavaUtil {
         return cls.getName();
     }
 
+    @Deprecated
     public static int getOptimialHashMapSize(Object[] keys) {
         return getOptimialHashMapSize(keys, keys.length * 8);
     }
@@ -847,12 +848,13 @@ public class JavaUtil {
      *
      * @param maxSize the point at which to give up (the maximum size to try)
      */
+    @Deprecated
     public static int getOptimialHashMapSize(Object[] keys, int maxSize) {
         int keyLength = keys.length;
-        int defaultAnswer = keyLength + 1;
+        int defaultAnswer = keyLength * 3 / 2;
         try {
             java.lang.reflect.Field tableField = HashMap.class.getDeclaredField("table");
-            tableField.setAccessible(true);
+            tableField.setAccessible(true); // requires --add-opens for util package
             for (int tableSize = keyLength + 1; tableSize <= maxSize;
                  tableSize <<= 1) {
                 //System.out.println("tableSize="+tableSize);
@@ -874,10 +876,16 @@ public class JavaUtil {
                 }
                 return table.length;
             }
-        } catch (java.lang.IllegalAccessException e) {
+        } catch (IllegalAccessException | NoSuchFieldException e) {
             return defaultAnswer;
-        } catch (java.lang.NoSuchFieldException e) {
-            return defaultAnswer;
+        } catch (RuntimeException ex) {
+            // todo: remove this workaround post JDK 9+ migration (or entire method)
+            // modules on modern JDKs should prefere immutable collections anyway, e.g Map.of();
+            if (ex.getClass().getName().equals("java.lang.reflect.InaccessibleObjectException")) {
+                return defaultAnswer;
+            } else {
+                throw ex;
+            }
         }
         return defaultAnswer;
     }

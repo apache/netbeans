@@ -114,7 +114,6 @@ public class BuildZipDistributionTest extends TestBase {
             "org.openide.compat," +
             "org.netbeans.api.progress," +
             "org.netbeans.core.multiview," +
-            "org.openide.util.enumerations" +
             "");
         suite.getHelper().putProperties(AntProjectHelper.PROJECT_PROPERTIES_PATH, ep);
         ProjectManager.getDefault().saveProject(suite);

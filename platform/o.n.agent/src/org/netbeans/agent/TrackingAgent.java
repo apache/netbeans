@@ -404,11 +404,23 @@ public class TrackingAgent {
                                                       ),
                                                       "2AB8,%5s"), //aload0, invokespecial #5
             new TrackingTransformer.MethodEnhancement("java/io/File",
-                                                      "lastModified",
+                                                      "setLastModified",
                                                       "(J)Z",
                                                       Arrays.asList(
                                                         "s" + TRACKING_HOOKS,
                                                         "s" + "write",
+                                                        "s" + "(Ljava/io/File;)V",
+                                                        "0C,%1s,%2s",
+                                                        "07,%0s",
+                                                        "0A,%4s,%3s"
+                                                      ),
+                                                      "2AB8,%5s"), //aload0, invokespecial #5
+            new TrackingTransformer.MethodEnhancement("java/io/File",
+                                                      "lastModified",
+                                                      "()J",
+                                                      Arrays.asList(
+                                                        "s" + TRACKING_HOOKS,
+                                                        "s" + "read",
                                                         "s" + "(Ljava/io/File;)V",
                                                         "0C,%1s,%2s",
                                                         "07,%0s",

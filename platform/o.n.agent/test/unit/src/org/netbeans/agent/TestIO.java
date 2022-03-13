@@ -31,6 +31,7 @@ import java.nio.file.attribute.FileTime;
 import java.nio.file.attribute.UserPrincipal;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Objects;
 import org.netbeans.agent.hooks.api.TrackingHooks;
 import org.netbeans.agent.hooks.api.TrackingHooks.Hooks;
 
@@ -39,93 +40,138 @@ import org.netbeans.agent.hooks.api.TrackingHooks.Hooks;
  * @author lahvac
  */
 public class TestIO {
+    private static Output out;
+
     public static void main(String... args) throws IOException {
         File temp = File.createTempFile("test", "test");
         String tempPath = temp.getPath();
         TrackingHooks.register(new TrackingHooks() {
             @Override
             protected void checkFileWrite(String path) {
-                System.err.println("checkFileWrite: " + (path.equals(tempPath) ? "TEMP-FILE" : path));
+                if (path.equals(tempPath)) {
+                    out.print("checkFileWrite: TEMP-FILE");
+                }
             }
             @Override
             protected void checkFileRead(String path) {
-                System.err.println("checkFileRead: " + (path.equals(tempPath) ? "TEMP-FILE" : path));
+                if (path.equals(tempPath)) {
+                    out.print("checkFileRead: TEMP-FILE");
+                }
             }
             @Override
             protected void checkDelete(String path) {
-                System.err.println("checkDelete: " + (path.equals(tempPath) ? "TEMP-FILE" : path));
+                if (path.equals(tempPath)) {
+                    out.print("checkDelete: TEMP-FILE");
+                }
             }
         }, 0, Hooks.IO);
-        System.err.print("going to write using File: "); new FileOutputStream(temp).close();
-        System.err.print("File.canExecute: "); temp.canExecute();
-        System.err.print("File.canRead: "); temp.canRead();
-        System.err.print("File.canWrite: "); temp.canWrite();
-        System.err.print("File.createNewFile: "); temp.createNewFile();
-        System.err.print("File.isDirectory: "); temp.isDirectory();
-        System.err.print("File.isFile: "); temp.isFile();
-        System.err.print("File.isHidden: "); temp.isHidden();
-        System.err.print("File.length: "); temp.exists();
-        System.err.print("File.exists: "); temp.length();
-        System.err.print("File.setExecutable(boolean): "); temp.setExecutable(true);
-        System.err.print("File.setExecutable(boolean, boolean): "); temp.setExecutable(true, true);
-        System.err.print("File.setReadable(boolean): "); temp.setReadable(true);
-        System.err.print("File.setReadable(boolean, boolean): "); temp.setReadable(true, true);
-        System.err.print("File.setWritable(boolean): "); temp.setWritable(true);
-        System.err.print("File.setWritable(boolean, boolean): "); temp.setWritable(true, true);
-        System.err.print("File.setReadOnly(): "); temp.setReadOnly();
-        System.err.print("File.setLastModified(): "); temp.setLastModified(0);
-        System.err.print("going to delete using File: "); temp.delete();
-        System.err.print("going to mkdir using File: "); temp.mkdir();
-        System.err.print("going to mkdirs using File: "); temp.mkdirs();
+        runTest("going to write using File: ", () -> new FileOutputStream(temp).close());
+        runTest("File.canExecute: ", () -> temp.canExecute());
+        runTest("File.canRead: ", () -> temp.canRead());
+        runTest("File.canWrite: ", () -> temp.canWrite());
+        runTest("File.createNewFile: ", () -> temp.createNewFile());
+        runTest("File.isDirectory: ", () -> temp.isDirectory());
+        runTest("File.isFile: ", () -> temp.isFile());
+        runTest("File.isHidden: ", () -> temp.isHidden());
+        runTest("File.length: ", () -> temp.exists());
+        runTest("File.exists: ", () -> temp.length());
+        runTest("File.lastModified: ", () -> temp.lastModified());
+        runTest("File.setExecutable(boolean): ", () -> temp.setExecutable(true));
+        runTest("File.setExecutable(boolean, boolean): ", () -> temp.setExecutable(true, true));
+        runTest("File.setReadable(boolean): ", () -> temp.setReadable(true));
+        runTest("File.setReadable(boolean, boolean): ", () -> temp.setReadable(true, true));
+        runTest("File.setWritable(boolean): ", () -> temp.setWritable(true));
+        runTest("File.setWritable(boolean, boolean): ", () -> temp.setWritable(true, true));
+        runTest("File.setReadOnly(): ", () -> temp.setReadOnly());
+        runTest("File.setLastModified(): ", () -> temp.setLastModified(0));
+        runTest("going to delete using File: ", () -> temp.delete());
+        runTest("going to mkdir using File: ", () -> temp.mkdir());
+        runTest("going to mkdirs using File: ", () -> temp.mkdirs());
         System.err.println("going to list using File: ");
-        System.err.print("1: "); temp.list();
-        System.err.print("2: "); temp.list((dir, name) -> true);
-        System.err.print("3: "); temp.listFiles();
-        System.err.print("4: "); temp.listFiles((dir, name) -> true);
-        System.err.print("5: "); temp.listFiles(file -> true);
-        System.err.print("going to delete using File: "); temp.delete();
-        System.err.print("going to mkdirs using File: "); temp.mkdir();
-        System.err.print("going to delete using File: "); temp.delete();
-        System.err.print("going to write using Path: "); Files.newOutputStream(temp.toPath()).close();
-        System.err.print("delete using Path: "); Files.delete(temp.toPath());
-        System.err.print("going to mkdir using Path: "); Files.createDirectory(temp.toPath());
-        System.err.print("going to mkdirs using Path: "); Files.createDirectories(temp.toPath());
+        runTest("1: ", () -> temp.list());
+        runTest("2: ", () -> temp.list((dir, name) -> true));
+        runTest("3: ", () -> temp.listFiles());
+        runTest("4: ", () -> temp.listFiles((dir, name) -> true));
+        runTest("5: ", () -> temp.listFiles(file -> true));
+        runTest("going to delete using File: ", () -> temp.delete());
+        runTest("going to mkdirs using File: ", () -> temp.mkdir());
+        runTest("going to delete using File: ", () -> temp.delete());
+        runTest("going to write using Path: ", () -> Files.newOutputStream(temp.toPath()).close());
+        runTest("delete using Path: ", () -> Files.delete(temp.toPath()));
+        runTest("going to mkdir using Path: ", () -> Files.createDirectory(temp.toPath()));
+        runTest("going to mkdirs using Path: ", () -> Files.createDirectories(temp.toPath()));
         System.err.println("going to list using Path: ");
-        System.err.print("1: "); Files.newDirectoryStream(temp.toPath());
-        System.err.print("2: "); Files.newDirectoryStream(temp.toPath(), "*");
-        System.err.print("3: "); Files.newDirectoryStream(temp.toPath(), f -> true);
-        System.err.print("delete using Path: "); Files.delete(temp.toPath());
-        System.err.print("going to write using String: "); new FileOutputStream(temp.getAbsolutePath()).close();
-        System.err.print("going to read using File: "); new FileInputStream(temp).close();
-        System.err.print("going to read using Path: "); Files.newInputStream(temp.toPath()).close();
-        System.err.print("going to read using String: "); new FileInputStream(temp.getAbsolutePath()).close();
-        System.err.print("going to open using RandomAccessFile using String: "); new RandomAccessFile(temp.getPath(), "r").close();
-        System.err.print("going to open using RandomAccessFile using File: "); new RandomAccessFile(temp, "r").close();
+        runTest("1: ", () -> Files.newDirectoryStream(temp.toPath()));
+        runTest("2: ", () -> Files.newDirectoryStream(temp.toPath(), "*"));
+        runTest("3: ", () -> Files.newDirectoryStream(temp.toPath(), f -> true));
+        runTest("delete using Path: ", () -> Files.delete(temp.toPath()));
+        runTest("going to write using String: ", () -> new FileOutputStream(temp.getAbsolutePath()).close());
+        runTest("going to read using File: ", () -> new FileInputStream(temp).close());
+        runTest("going to read using Path: ", () -> Files.newInputStream(temp.toPath()).close());
+        runTest("going to read using String: ", () -> new FileInputStream(temp.getAbsolutePath()).close());
+        runTest("going to open using RandomAccessFile using String: ", () -> new RandomAccessFile(temp.getPath(), "r").close());
+        runTest("going to open using RandomAccessFile using File: ", () -> new RandomAccessFile(temp, "r").close());
         System.err.println("going to open using newByteChannel: ");
-        System.err.print("1a: "); Files.newByteChannel(temp.toPath()).close();
-        System.err.print("1b: "); Files.newByteChannel(temp.toPath(), StandardOpenOption.READ).close();
-        System.err.print("1c: "); Files.newByteChannel(temp.toPath(), StandardOpenOption.WRITE).close();
-        System.err.print("1d: "); Files.newByteChannel(temp.toPath(), StandardOpenOption.READ, StandardOpenOption.WRITE).close();
-        System.err.print("2a: "); Files.newByteChannel(temp.toPath(), new HashSet<>()).close();
-        System.err.print("2b: "); Files.newByteChannel(temp.toPath(), new HashSet<>(Arrays.asList(StandardOpenOption.READ))).close();
-        System.err.print("2c: "); Files.newByteChannel(temp.toPath(), new HashSet<>(Arrays.asList(StandardOpenOption.WRITE))).close();
-        System.err.print("2d: "); Files.newByteChannel(temp.toPath(), new HashSet<>(Arrays.asList(StandardOpenOption.READ, StandardOpenOption.WRITE))).close();
-        System.err.print("Files.readAttributes(Path, Class): "); Files.readAttributes(temp.toPath(), BasicFileAttributes.class);
-        System.err.print("Files.readAttributes(Path, String): "); Files.readAttributes(temp.toPath(), "*");
-        System.err.print("Files.getAttribute: "); Files.getAttribute(temp.toPath(), "lastModifiedTime");
-        System.err.print("Files.getFileAttributeView: "); Files.getFileAttributeView(temp.toPath(), BasicFileAttributeView.class);
-        System.err.print("Files.isDirectory: "); Files.isDirectory(temp.toPath());
-        System.err.print("Files.isExecutable: "); Files.isExecutable(temp.toPath());
-        System.err.print("Files.isHidden: "); Files.isHidden(temp.toPath());
-        System.err.print("Files.isReadable: "); Files.isReadable(temp.toPath());
-        System.err.print("Files.isRegularFile: "); Files.isRegularFile(temp.toPath());
-        System.err.print("Files.isSameFile: "); Files.isSameFile(temp.toPath(), temp.toPath()); //XXX
-        System.err.print("Files.isWritable: "); Files.isWritable(temp.toPath());
-        System.err.print("Files.getLastModifiedTime: "); FileTime lastModified = Files.getLastModifiedTime(temp.toPath());
-        System.err.print("Files.getOwner: "); UserPrincipal owner = Files.getOwner(temp.toPath());
-        System.err.print("Files.size: "); Files.size(temp.toPath());
-        System.err.print("Files.setAttribute: "); Files.setAttribute(temp.toPath(), "lastModifiedTime", lastModified);
-        System.err.print("Files.setLastModifiedTime: "); Files.setLastModifiedTime(temp.toPath(), lastModified);
-        System.err.print("Files.setOwner: "); Files.setOwner(temp.toPath(), owner);
+        runTest("1a: ", () -> Files.newByteChannel(temp.toPath()).close());
+        runTest("1b: ", () -> Files.newByteChannel(temp.toPath(), StandardOpenOption.READ).close());
+        runTest("1c: ", () -> Files.newByteChannel(temp.toPath(), StandardOpenOption.WRITE).close());
+        runTest("1d: ", () -> Files.newByteChannel(temp.toPath(), StandardOpenOption.READ, StandardOpenOption.WRITE).close());
+        runTest("2a: ", () -> Files.newByteChannel(temp.toPath(), new HashSet<>()).close());
+        runTest("2b: ", () -> Files.newByteChannel(temp.toPath(), new HashSet<>(Arrays.asList(StandardOpenOption.READ))).close());
+        runTest("2c: ", () -> Files.newByteChannel(temp.toPath(), new HashSet<>(Arrays.asList(StandardOpenOption.WRITE))).close());
+        runTest("2d: ", () -> Files.newByteChannel(temp.toPath(), new HashSet<>(Arrays.asList(StandardOpenOption.READ, StandardOpenOption.WRITE))).close());
+        runTest("Files.readAttributes(Path, Class): ", () -> Files.readAttributes(temp.toPath(), BasicFileAttributes.class));
+        runTest("Files.readAttributes(Path, String): ", () -> Files.readAttributes(temp.toPath(), "*"));
+        runTest("Files.getAttribute: ", () -> Files.getAttribute(temp.toPath(), "lastModifiedTime"));
+        runTest("Files.getFileAttributeView: ", () -> Files.getFileAttributeView(temp.toPath(), BasicFileAttributeView.class));
+        runTest("Files.isDirectory: ", () -> Files.isDirectory(temp.toPath()));
+        runTest("Files.isExecutable: ", () -> Files.isExecutable(temp.toPath()));
+        runTest("Files.isHidden: ", () -> Files.isHidden(temp.toPath()));
+        runTest("Files.isReadable: ", () -> Files.isReadable(temp.toPath()));
+        runTest("Files.isRegularFile: ", () -> Files.isRegularFile(temp.toPath()));
+        runTest("Files.isSameFile: ", () -> Files.isSameFile(temp.toPath(), temp.toPath())); //XXX
+        runTest("Files.isWritable: ", () -> Files.isWritable(temp.toPath()));
+        FileTime[] lastModified = new FileTime[1];
+        runTest("Files.getLastModifiedTime: ", () -> lastModified[0] = Files.getLastModifiedTime(temp.toPath()));
+        UserPrincipal[] owner = new UserPrincipal[1];
+        runTest("Files.getOwner: ", () -> owner[0] = Files.getOwner(temp.toPath()));
+        runTest("Files.size: ", () -> Files.size(temp.toPath()));
+        runTest("Files.setAttribute: ", () -> Files.setAttribute(temp.toPath(), "lastModifiedTime", lastModified[0]));
+        runTest("Files.setLastModifiedTime: ", () -> Files.setLastModifiedTime(temp.toPath(), lastModified[0]));
+        runTest("Files.setOwner: ", () -> Files.setOwner(temp.toPath(), owner[0]));
     }
+
+    private static void runTest(String desc, Test test) throws IOException {
+        System.err.print(desc);
+
+        try {
+            out = new Output() {
+                String last;
+                @Override
+                public void print(String text) {
+                    if (!Objects.equals(last, text)) {
+                        last = text;
+                        System.err.print(text);
+                    }
+                }
+            };
+            test.run();
+        } finally {
+            out = null;
+        }
+        System.err.println();
+    }
+
+    private static class Dedupe {
+
+    }
+
+    interface Output {
+        public void print(String text);
+    }
+
+    interface Test {
+        public void run() throws IOException;
+    }
+
 }

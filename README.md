@@ -27,10 +27,18 @@ Apache NetBeans is an open source development environment, tooling platform, and
 
 ### Build status
    * GitHub actions
-     * [![Apache Netbeans Continuous Integration](https://github.com/apache/netbeans/workflows/Apache%20Netbeans%20Continuous%20Integration/badge.svg)](https://github.com/apache/netbeans/actions)
+     * [![Linux](https://github.com/apache/netbeans/actions/workflows/linux.yml/badge.svg)](https://github.com/apache/netbeans/actions/workflows/linux.yml)
+     * [![Windows](https://github.com/apache/netbeans/actions/workflows/windows.yml/badge.svg)](https://github.com/apache/netbeans/actions/workflows/windows.yml)
+     * [![macOS](https://github.com/apache/netbeans/actions/workflows/macos.yml/badge.svg)](https://github.com/apache/netbeans/actions/workflows/macos.yml)
+     * [![Commit Validation](https://github.com/apache/netbeans/actions/workflows/cv.yml/badge.svg)](https://github.com/apache/netbeans/actions/workflows/cv.yml)
+     * [![Upstream JDK](https://github.com/apache/netbeans/actions/workflows/linux-upstream-jdk.yml/badge.svg)](https://github.com/apache/netbeans/actions/workflows/linux-upstream-jdk.yml)
+     * [![Ensure JDK-8](https://github.com/apache/netbeans/actions/workflows/ensure-jdk8.yml/badge.svg)](https://github.com/apache/netbeans/actions/workflows/ensure-jdk8.yml)
+     * [![PHP](https://github.com/apache/netbeans/actions/workflows/php.yml/badge.svg)](https://github.com/apache/netbeans/actions/workflows/php.yml)
+     * [![Javadoc](https://github.com/apache/netbeans/actions/workflows/javadoc.yml/badge.svg)](https://github.com/apache/netbeans/actions/workflows/javadoc.yml)
+     * [![Profiler Lib Native Binaries](https://github.com/apache/netbeans/actions/workflows/native-binary-build-lib.profiler.yml/badge.svg)](https://github.com/apache/netbeans/actions/workflows/native-binary-build-lib.profiler.yml)
    * TravisCI:
      * [![Build Status](https://app.travis-ci.com/apache/netbeans.svg?branch=master)](https://app.travis-ci.com/apache/netbeans)
-   * Apache Jenkins: 
+   * Apache Jenkins:
      * Linux: [![Build Status](https://ci-builds.apache.org/job/Netbeans/job/netbeans-linux/badge/icon)](https://ci-builds.apache.org/job/Netbeans/job/netbeans-linux/)
      * Windows: [![Build Status](https://ci-builds.apache.org/job/Netbeans/job/netbeans-windows/badge/icon)](https://ci-builds.apache.org/job/Netbeans/job/netbeans-windows)
 
@@ -85,7 +93,7 @@ $ ant -Ddo.build.windows.launchers=true
 sudo apt install make mingw-w64
 ```
 
-#### Generating Javadoc 
+#### Generating Javadoc
 
 Build javadoc:
 ```

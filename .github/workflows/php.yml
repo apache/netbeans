@@ -15,7 +15,7 @@
 # specific language governing permissions and limitations
 # under the License.
 
-name: Apache Netbeans
+name: PHP
 
 on:
   push:
@@ -53,10 +53,10 @@ jobs:
 
       - name: Clean
         run: ant $OPTS clean
-        
+
       - name: Build
         run: ant $OPTS build
-        
+
       - name: Test Hudson
         run: ant $OPTS -f php/hudson.php test
 
@@ -82,62 +82,61 @@ jobs:
         run: ant $OPTS -f php/php.api.testing test
 
       - name: Test ApiGen
-        run: ant -f php/php.apigen test
+        run: ant $OPTS -f php/php.apigen test
 
       - name: Test Atoum
-        run: ant -f php/php.atoum test
+        run: ant $OPTS -f php/php.atoum test
 
       - name: Test Code Analysis
-        run: ant -f php/php.code.analysis test
+        run: ant $OPTS -f php/php.code.analysis test
 
       - name: Test Codeception
-        run: ant -f php/php.codeception test
+        run: ant $OPTS -f php/php.codeception test
 
       - name: Test Composer
-        run: ant -f php/php.composer test
+        run: ant $OPTS -f php/php.composer test
 
       - name: Test PHP Debugger
-        run: ant -f php/php.dbgp test
+        run: ant $OPTS -f php/php.dbgp test
 
       - name: Test Doctrine2
-        run: ant -f php/php.doctrine2 test
+        run: ant $OPTS -f php/php.doctrine2 test
 
       - name: Test PHP Editor
-        run: ant -f php/php.editor test
+        run: ant $OPTS -f php/php.editor test
 
       - name: Test Latte
-        run: ant -f php/php.latte test
+        run: ant $OPTS -f php/php.latte test
 
       - name: Test Nette Tester
-        run: ant -f php/php.nette.tester test
+        run: ant $OPTS -f php/php.nette.tester test
 
       - name: Test PHPUnit
-        run: ant -f php/php.phpunit test
+        run: ant $OPTS -f php/php.phpunit test
 
       - name: Test PHP Project
-        run: ant -f php/php.project test
+        run: ant $OPTS -f php/php.project test
 
       - name: Test Refactoring
-        run: ant -f php/php.refactoring test
+        run: ant $OPTS -f php/php.refactoring test
 
       - name: Test Smarty
-        run: ant -f php/php.smarty test
+        run: ant $OPTS -f php/php.smarty test
 
       - name: Test Symfony
-        run: ant -f php/php.symfony test
+        run: ant $OPTS -f php/php.symfony test
 
       - name: Test Symfony 2
-        run: ant -f php/php.symfony2 test
+        run: ant $OPTS -f php/php.symfony2 test
 
       - name: Test Twig
-        run: ant -f php/php.twig test
+        run: ant $OPTS -f php/php.twig test
 
       - name: Test Zend
-        run: ant -f php/php.zend test
+        run: ant $OPTS -f php/php.zend test
 
       - name: Test Zend 2
-        run: ant -f php/php.zend2 test
+        run: ant $OPTS -f php/php.zend2 test
 
       - name: Test Spellchecker Bindings
-        run: ant -f php/spellchecker.bindings.php test
-        
+        run: ant $OPTS -f php/spellchecker.bindings.php test

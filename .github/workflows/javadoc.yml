@@ -15,7 +15,7 @@
 # specific language governing permissions and limitations
 # under the License.
 
-name: Apache Netbeans
+name: Javadoc
 
 on:
   push:
@@ -46,6 +46,6 @@ jobs:
 
       - name: Build source zips
         run: ant build-source-zips
-        
+
       - name: Build javadoc
         run: ant build-javadoc

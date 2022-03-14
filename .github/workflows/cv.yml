@@ -15,7 +15,7 @@
 # specific language governing permissions and limitations
 # under the License.
 
-name: Apache Netbeans
+name: Commit-validation
 
 on:
   push:
@@ -46,4 +46,3 @@ jobs:
 
       - name: Validate consistency and basic tests
         run: ant -Dcluster.config=release commit-validation
-

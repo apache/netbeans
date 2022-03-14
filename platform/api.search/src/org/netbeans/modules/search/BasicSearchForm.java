@@ -1112,7 +1112,10 @@ final class BasicSearchForm extends JPanel implements ChangeListener,
 
         @Override
         public void setItem(Object item) {
-            area.setText(Objects.toString(item, ""));
+            String text = Objects.toString(item, "");
+            if (!text.equals(area.getText())) { // see BasicComboBoxEditor.setItem(item) or JDK-4530952
+                area.setText(text);
+            }
         }
 
         @Override

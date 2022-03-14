@@ -23,9 +23,17 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import java.util.concurrent.ForkJoinTask;
+import java.util.concurrent.RecursiveTask;
 
 /**
  * key - ID (long/int) of heap object
@@ -176,7 +184,7 @@ class LongMap extends AbstractLongMap {
             if (FOFFSET_SIZE == 4) {
                 return dumpBuffer.getInt(offset + KEY_SIZE + FOFFSET_SIZE + 4 + 1 + ID_SIZE);
             }
-            return dumpBuffer.getLong(offset + KEY_SIZE + FOFFSET_SIZE + 4 + 1 + ID_SIZE);            
+            return dumpBuffer.getLong(offset + KEY_SIZE + FOFFSET_SIZE + 4 + 1 + ID_SIZE);
         }
 
         private void setReferencesPointer(long instanceId) {
@@ -234,6 +242,11 @@ class LongMap extends AbstractLongMap {
             hash = 31 * hash + (int) (this.instanceId ^ (this.instanceId >>> 32));
             return hash;
         }
+
+        @Override
+        public String toString() {
+            return instanceId + ":" + retainedSize;
+        }
     }
     
     //~ Constructors -------------------------------------------------------------------------------------------------------------
@@ -266,29 +279,74 @@ class LongMap extends AbstractLongMap {
     }
 
     long[] getBiggestObjectsByRetainedSize(int number) {
-        SortedSet bigObjects = new TreeSet();
-        long[] bigIds = new long[number];
-        long min = 0;
-        for (long index=0;index<fileSize;index+=ENTRY_SIZE) {
-            long id = getID(index);
-            if (id != 0) {
-                long retainedSize = createEntry(index).getRetainedSize();
-                if (bigObjects.size()<number) {
-                    bigObjects.add(new RetainedSizeEntry(id,retainedSize));
-                    min = ((RetainedSizeEntry)bigObjects.last()).retainedSize;
-                } else if (retainedSize>min) {
-                    bigObjects.remove(bigObjects.last());
-                    bigObjects.add(new RetainedSizeEntry(id,retainedSize));
-                    min = ((RetainedSizeEntry)bigObjects.last()).retainedSize;
-                }
+        long entryCount = fileSize / ENTRY_SIZE;
+        ParallelRetainedSize prs = new ParallelRetainedSize(0, entryCount, number);
+        List<RetainedSizeEntry> results = prs.invoke();
+        long[] result = new long[Math.min(number, results.size())];
+        for (int i = 0; i < result.length; i++) {
+            result[i] = results.get(i).instanceId;
+        }
+        return result;
+    }
+
+    class ParallelRetainedSize extends RecursiveTask<List<RetainedSizeEntry>> {
+
+        private final long start;
+        private final long end;
+        private final long targetCount;
+
+        public ParallelRetainedSize(long start, long end, long targetLength) {
+            this.start = start;
+            this.end = end;
+            this.targetCount = targetLength;
+        }
+
+        private List<ParallelRetainedSize> childTasks() {
+            long len = (end - start) / 2;
+            long mid = start + len;
+            return Arrays.asList(
+                    new ParallelRetainedSize(start, mid, targetCount),
+                    new ParallelRetainedSize(mid, end, targetCount));
+        }
+
+        @Override
+        protected List<RetainedSizeEntry> compute() {
+            if ((end - start) > targetCount) {
+                return ForkJoinTask.invokeAll(childTasks())
+                        .parallelStream()
+                        .map(task -> {
+                            return task.join();
+                        })
+                        .reduce((List<RetainedSizeEntry> a, List<RetainedSizeEntry> b) -> {
+                            a.addAll(b);
+                            List<RetainedSizeEntry> all = a;
+                            Collections.sort(all);
+                            if (all.size() > targetCount) {
+                                all = all.subList(0, (int) targetCount);
+                            }
+                            return all;
+                        }).get();
+            } else {
+                return computeRetainedSizes();
             }
         }
-        int i = 0;
-        Iterator it = bigObjects.iterator();
-        while(it.hasNext()) {
-            bigIds[i++]=((RetainedSizeEntry)it.next()).instanceId;
+
+        private List<RetainedSizeEntry> computeRetainedSizes() {
+            assert end > start : "End < start: " + start + " to " + end;
+            List<RetainedSizeEntry> result = new ArrayList<>((int) (end - start) * 2);
+            long head = start * ENTRY_SIZE;
+            long tail = end * ENTRY_SIZE;
+            for (long index=head; index < tail; index += ENTRY_SIZE) {
+                long id = getID(index);
+                if (id != 0) {
+                    long retainedSize = createEntry(index).getRetainedSize();
+                    if (retainedSize > 0) {
+                        result.add(new RetainedSizeEntry(id, retainedSize));
+                    }
+                }
+            }
+            return result;
         }
-        return bigIds;
     }
 
     //---- Serialization support    

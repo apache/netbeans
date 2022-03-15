@@ -964,8 +964,8 @@ public class JavacParser extends Parser {
             String modernSourceLevel = sourceLevel.startsWith("1.") ? sourceLevel.substring(2) : sourceLevel; // NOI18N
             try {
                 int optimalJdkApi = Integer.parseInt(modernSourceLevel);
-                if (optimalJdkApi < 6) {
-                    optimalJdkApi = 6;
+                if (optimalJdkApi < 7) {
+                    optimalJdkApi = 7;
                 }
                 useRelease = "" + optimalJdkApi;
             } catch (NumberFormatException numberFormatException) {

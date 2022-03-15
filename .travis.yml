@@ -357,7 +357,6 @@ matrix:
             - hide-logs.sh ant $OPTS -f java/debugger.jpda.js test
             - hide-logs.sh ant $OPTS -f java/debugger.jpda.projects test
             - hide-logs.sh ant $OPTS -f java/debugger.jpda.projectsui test
-            - hide-logs.sh ant $OPTS -f java/gradle.java test
             #- ant $OPTS -f java/debugger.jpda.truffle test
             #- ant $OPTS -f java/debugger.jpda.ui test
             - travis_wait hide-logs.sh ant $OPTS -f java/editor.htmlui test
@@ -369,7 +368,6 @@ matrix:
             #- ant $OPTS -f java/java.kit test
             #- ant $OPTS -f java/java.lexer test
             #- ant $OPTS -f java/java.lexer test
-            - ant $OPTS -f java/java.lsp.server test
             #- ant $OPTS -f java/java.metrics test
             - ant $OPTS -f java/java.module.graph test
             - ant $OPTS -f java/java.navigation test
@@ -722,6 +720,18 @@ matrix:
           script:
             - export JAVA_HOME=$TEST_JDK
             - hide-logs.sh ant $OPTS commit-validation
+
+#   exile: for tests which don't behave. Job should be kept short to be easily restartable
+        - name: Test unreliable tests on Java 8
+          jdk: openjdk8
+          env:
+            - OPTS="-Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json -quiet -Dcluster.config=java -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true"
+          before_script:
+            - nbbuild/travis/ant.sh $OPTS clean
+            - nbbuild/travis/ant.sh $OPTS build
+          script:
+            - travis_retry ant $OPTS -f java/java.lsp.server test
+            - travis_retry hide-logs.sh ant $OPTS -f java/gradle.java test
 
 after_failure:
   - nbbuild/travis/print-junit-report.sh

@@ -26,6 +26,7 @@ import com.sun.source.util.DocTreePathScanner;
 import com.sun.source.util.DocTreeScanner;
 import com.sun.source.util.TreePath;
 import com.sun.tools.javac.tree.DCTree;
+import com.sun.tools.javac.util.JCDiagnostic;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -164,8 +165,8 @@ public final class DocTreePathHandle {
         if(treePathHandle.getFileObject() == null) {
             return null;
         }
-        int position = (int) ((DCTree) docTreePath.getLeaf()).getSourcePosition((DCTree.DCDocComment)docTreePath.getDocComment());
-        if (position == (-1)) {
+        JCDiagnostic.DiagnosticPosition position = ((DCTree) docTreePath.getLeaf()).pos((DCTree.DCDocComment)docTreePath.getDocComment());
+        if (position == null) {
             DocTree docTree = docTreePath.getLeaf();
             if(docTree == docTreePath.getDocComment()) {
                 return new DocTreePathHandle(new DocCommentDelegate(treePathHandle));
@@ -174,7 +175,7 @@ public final class DocTreePathHandle {
             assert index != (-1);
             return new DocTreePathHandle(new CountingDelegate(treePathHandle, index, docTreePath.getLeaf().getKind()));
         }
-        Position pos = createPositionRef(treePathHandle.getFileObject(), position, Bias.Forward);
+        Position pos = createPositionRef(treePathHandle.getFileObject(), position.getPreferredPosition(), Bias.Forward);
         return new DocTreePathHandle(new DocTreeDelegate(pos, new DocTreeDelegate.KindPath(docTreePath), treePathHandle));
     }
 

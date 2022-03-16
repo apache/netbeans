@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 9.23.0
+#Version 9.24.0
 
 CLSS public abstract interface java.io.Serializable
 
@@ -179,6 +179,24 @@ fld public final static org.netbeans.modules.parsing.spi.indexing.ErrorsCache$Er
 meth public static org.netbeans.modules.parsing.spi.indexing.ErrorsCache$ErrorKind valueOf(java.lang.String)
 meth public static org.netbeans.modules.parsing.spi.indexing.ErrorsCache$ErrorKind[] values()
 supr java.lang.Enum<org.netbeans.modules.parsing.spi.indexing.ErrorsCache$ErrorKind>
+
+CLSS public abstract interface org.netbeans.modules.parsing.spi.indexing.IndexabilityQueryImplementation
+innr public final static IndexabilityQueryContext
+meth public abstract int getVersion()
+meth public abstract java.lang.String getName()
+meth public abstract java.lang.String getStateIdentifier()
+meth public abstract void addChangeListener(javax.swing.event.ChangeListener)
+meth public abstract void removeChangeListener(javax.swing.event.ChangeListener)
+meth public boolean preventIndexing(org.netbeans.modules.parsing.spi.indexing.IndexabilityQueryImplementation$IndexabilityQueryContext)
+
+CLSS public final static org.netbeans.modules.parsing.spi.indexing.IndexabilityQueryImplementation$IndexabilityQueryContext
+ outer org.netbeans.modules.parsing.spi.indexing.IndexabilityQueryImplementation
+meth public java.lang.String getIndexerName()
+meth public java.net.URL getIndexable()
+meth public java.net.URL getRoot()
+supr java.lang.Object
+hfds indexable,indexerName,root
+hcls Accessor
 
 CLSS public final org.netbeans.modules.parsing.spi.indexing.Indexable
 meth public boolean equals(java.lang.Object)

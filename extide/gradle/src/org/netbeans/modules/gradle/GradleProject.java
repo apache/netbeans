@@ -24,6 +24,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.modules.gradle.api.GradleBaseProject;
 import org.netbeans.modules.gradle.api.NbGradleProject.Quality;
@@ -37,7 +38,9 @@ import org.openide.util.lookup.InstanceContent;
  */
 public final class GradleProject implements Lookup.Provider {
 
-    final int sequence;
+    private static final AtomicInteger SEQ = new AtomicInteger();
+
+    final int sequence = SEQ.getAndIncrement();
     final Set<String> problems;
     final Quality quality;
     final long evaluationTime = System.currentTimeMillis();
@@ -45,8 +48,7 @@ public final class GradleProject implements Lookup.Provider {
     final GradleBaseProject baseProject;
 
     @SuppressWarnings("rawtypes")
-    public GradleProject(int sequence, Quality quality, Set<String> problems, Collection infos) {
-        this.sequence = sequence;
+    public GradleProject(Quality quality, Set<String> problems, Collection infos) {
         this.quality = quality;
         Set<String> probs = new LinkedHashSet<>();
         for (String prob : problems) {
@@ -63,7 +65,6 @@ public final class GradleProject implements Lookup.Provider {
     }
 
     private GradleProject(Quality quality, Set<String> problems, GradleProject origin) {
-        this.sequence = origin.sequence;
         this.quality = quality;
         Set<String> probs = new LinkedHashSet<>();
         for (String prob : problems) {
@@ -99,7 +100,7 @@ public final class GradleProject implements Lookup.Provider {
     public boolean isOlderThan(GradleProject gp) {
         return gp != null ? sequence < gp.sequence : false;
     }
-    
+
     @NonNull
     public GradleBaseProject getBaseProject() {
         return baseProject;
@@ -107,7 +108,7 @@ public final class GradleProject implements Lookup.Provider {
 
     @Override
     public String toString() {
-        return "GradleProject{" + "quality=" + quality + ", baseProject=" + baseProject + '}';
+        return "GradleProject{" + "sequence=" + sequence + ", quality=" + quality + ", baseProject=" + baseProject + '}';
     }
 
     public final GradleProject invalidate(String... reasons) {

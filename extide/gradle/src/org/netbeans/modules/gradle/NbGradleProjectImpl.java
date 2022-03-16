@@ -81,7 +81,7 @@ public final class NbGradleProjectImpl implements Project {
     private final RequestProcessor.Task reloadTask = RELOAD_RP.create(new Runnable() {
         @Override
         public void run() {
-            loadOwnProject(GradleLoadOptions.loadForQuality(aimedQuality));
+            loadOwnProject(GradleLoadOptions.loadForQuality(aimedQuality).force());
         }
     });
 
@@ -271,7 +271,7 @@ public final class NbGradleProjectImpl implements Project {
             }
         }
         try {
-            return loadOwnProject0(opts.sync()).get();
+            return loadOwnProject(opts.sync()).get();
         } catch (InterruptedException | ExecutionException ex) {
             // should not happen, the event dispatch + potential issues happen
             // synchronously
@@ -311,7 +311,7 @@ public final class NbGradleProjectImpl implements Project {
         }
         CompletableFuture<GradleProject> toRet = new CompletableFuture<>();
         RELOAD_RP.post(() ->
-            loadOwnProject0(opts)
+            loadOwnProject(opts)
                 .handle((p, e) -> {
                    if (e == null) {
                        toRet.complete(p);
@@ -351,14 +351,10 @@ public final class NbGradleProjectImpl implements Project {
                 return;
             }
         }
-        loadOwnProject0(GradleLoadOptions.loadForQuality(aim).sync());
+        loadOwnProject(GradleLoadOptions.loadForQuality(aim).sync());
     }
 
-    CompletableFuture<GradleProject> loadOwnProject(GradleLoadOptions opts) {
-        return loadOwnProject0(opts.force());
-    }
-
-    /**
+     /**
      * Loads a project. After load, dispatches reload events. If "sync" is false (= asynchronous), dispatches events
      * and does possible fixups in {@link #RELOAD_RP}. The returned future completes only after all the event
      * listeners in RELOAD_RP complete.
@@ -374,7 +370,7 @@ public final class NbGradleProjectImpl implements Project {
      * @param args optional arguments for the reload
      * @return Future for the new GradleProject state. See notes about sync/async differences.
      */
-    CompletableFuture<GradleProject> loadOwnProject0(GradleLoadOptions opts) {
+    CompletableFuture<GradleProject> loadOwnProject(GradleLoadOptions opts) {
         GradleProjectLoader loader = getLookup().lookup(GradleProjectLoader.class);
         if (loader == null) {
             throw new IllegalStateException("No loader implementation is present!");
@@ -450,7 +446,7 @@ public final class NbGradleProjectImpl implements Project {
      * @return Task representing the reloading process
      */
     RequestProcessor.Task reloadProject(GradleLoadOptions opts) {
-        return RELOAD_RP.post(() -> loadOwnProject(opts));
+        return RELOAD_RP.post(() -> loadOwnProject(opts.force()));
     }
 
     @Override
@@ -532,7 +528,7 @@ public final class NbGradleProjectImpl implements Project {
                 }
                 // get at least something to extract project name from:
                 GradleProject fallback = projectWithQuality(GradleLoadOptions.AIM_FALLBACK);
-                loadOwnProject0(GradleLoadOptions.AIM_FULL_ONLINE.withMessage(Bundle.ACT_PrimingProject(fallback.getBaseProject().getName())).ignoreCache().interactive().force()).
+                loadOwnProject(GradleLoadOptions.AIM_FULL_ONLINE.withMessage(Bundle.ACT_PrimingProject(fallback.getBaseProject().getName())).ignoreCache().interactive().force()).
                         // wait until after reload event is fired.
                         thenApply(p -> ret.complete(p)).
                         exceptionally((e) -> ret.completeExceptionally(e));

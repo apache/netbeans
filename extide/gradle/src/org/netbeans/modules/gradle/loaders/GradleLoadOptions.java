@@ -83,4 +83,24 @@ public final class GradleLoadOptions {
     public static GradleLoadOptions loadForQuality(Quality aim) {
         return new GradleLoadOptions("", false, false, false, false, aim, new String[0]);
     }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder("GradleLoadOptions: {");
+        sb.append("aim: ").append(aim).append(", ");
+        if (ignoreCache) {
+            sb.append("no-cache, ");
+        }
+        if (interactive) {
+            sb.append(" interactive, ");
+        }
+        if (sync) {
+            sb.append("sync, ");
+        }
+        if (force) {
+            sb.append("forced, ");
+        }
+        sb.append("args: ").append(args).append("}");
+        return sb.toString();
+    }
 }

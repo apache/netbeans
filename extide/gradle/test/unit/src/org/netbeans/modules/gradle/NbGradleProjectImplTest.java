@@ -215,7 +215,7 @@ public class NbGradleProjectImplTest extends AbstractGradleProjectTestCase {
                 .ignoreCache()
                 .interactive()
                 .sync();
-        CompletableFuture<GradleProject> f = prjImpl.loadOwnProject0(opts);
+        CompletableFuture<GradleProject> f = prjImpl.loadOwnProject(opts);
         assertFalse(f.isDone());
         projL.processing.acquire();
         // still not done, since blocked inside the listener

@@ -109,7 +109,7 @@ public abstract class AbstractProjectLoader {
             }
 
         }
-        return new GradleProject(0, info.getQuality(), problems, results.values());
+        return new GradleProject(info.getQuality(), problems, results.values());
 
     }
 

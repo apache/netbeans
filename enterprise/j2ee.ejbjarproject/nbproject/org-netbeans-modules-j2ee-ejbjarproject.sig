@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.67
+#Version 1.68
 
 CLSS public java.lang.Object
 cons public init()
@@ -44,6 +44,7 @@ hfds cdiEnabled,configFilesBase,javaEEProfile,libFolder,librariesDefinition,name
 CLSS public org.netbeans.modules.j2ee.ejbjarproject.api.EjbJarProjectGenerator
 fld public final static java.lang.String MINIMUM_ANT_VERSION = "1.6.5"
 meth public static org.netbeans.spi.project.support.ant.AntProjectHelper createProject(java.io.File,java.lang.String,java.lang.String,java.lang.String) throws java.io.IOException
+ anno 0 java.lang.Deprecated()
 meth public static org.netbeans.spi.project.support.ant.AntProjectHelper createProject(java.io.File,java.lang.String,java.lang.String,java.lang.String,java.lang.String) throws java.io.IOException
  anno 0 java.lang.Deprecated()
 meth public static org.netbeans.spi.project.support.ant.AntProjectHelper createProject(org.netbeans.modules.j2ee.ejbjarproject.api.EjbJarProjectCreateData) throws java.io.IOException

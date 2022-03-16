@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.81
+#Version 1.82
 
 CLSS public abstract interface java.io.Serializable
 
@@ -709,6 +709,7 @@ fld public final static org.netbeans.modules.groovy.editor.api.completion.CaretL
 fld public final static org.netbeans.modules.groovy.editor.api.completion.CaretLocation INSIDE_COMMENT
 fld public final static org.netbeans.modules.groovy.editor.api.completion.CaretLocation INSIDE_CONSTRUCTOR_CALL
 fld public final static org.netbeans.modules.groovy.editor.api.completion.CaretLocation INSIDE_METHOD
+fld public final static org.netbeans.modules.groovy.editor.api.completion.CaretLocation INSIDE_PACKAGE
 fld public final static org.netbeans.modules.groovy.editor.api.completion.CaretLocation INSIDE_PARAMETERS
 fld public final static org.netbeans.modules.groovy.editor.api.completion.CaretLocation INSIDE_STRING
 fld public final static org.netbeans.modules.groovy.editor.api.completion.CaretLocation OUTSIDE_CLASSES
@@ -1745,6 +1746,7 @@ CLSS public abstract static org.netbeans.modules.parsing.spi.Parser$Result
  outer org.netbeans.modules.parsing.spi.Parser
 cons protected init(org.netbeans.modules.parsing.api.Snapshot)
 meth protected abstract void invalidate()
+meth protected boolean processingFinished()
 meth public org.netbeans.modules.parsing.api.Snapshot getSnapshot()
 supr java.lang.Object
 hfds snapshot

@@ -96,7 +96,7 @@ public class IndexElementImpl extends DBMemberElementImpl implements IndexElemen
     }
   
     protected void initColumns(LinkedList idxs) {
-        LinkedList columnsList = new LinkedList();
+        List<String> columnsList = new LinkedList<>();
         String name, info;
         int start, end;
         

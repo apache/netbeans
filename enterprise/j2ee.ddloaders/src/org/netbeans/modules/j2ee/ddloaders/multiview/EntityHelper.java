@@ -120,7 +120,7 @@ public class EntityHelper extends EntityAndSessionHelper {
     
     public class CmpFields implements PropertyChangeSource {
         
-        private List listeners = new LinkedList();
+        private List<PropertyChangeListener> listeners = new LinkedList<>();
         private Map<CmpField, CmpFieldHelper> cmpFieldHelperMap = new HashMap<>();
         private CmpFieldsTableModel cmpFieldsTableModel = new CmpFieldsTableModel(this);
         
@@ -221,7 +221,7 @@ public class EntityHelper extends EntityAndSessionHelper {
     }
     
     public class Queries implements PropertyChangeSource {
-        private List listeners = new LinkedList();
+        private List<PropertyChangeListener> listeners = new LinkedList<>();
         private Map<Query, QueryMethodHelper> queryMethodHelperMap = new HashMap<>();
         private Query[] selectMethods;
         private Query[] finderMethods;
@@ -252,7 +252,7 @@ public class EntityHelper extends EntityAndSessionHelper {
         }
         
         private Query[] getQueries(String s) {
-            List list = new LinkedList();
+            List<Query> list = new LinkedList<>();
             Query[] queries = entity.getQuery();
             for (int i = 0; i < queries.length; i++) {
                 Query query = queries[i];

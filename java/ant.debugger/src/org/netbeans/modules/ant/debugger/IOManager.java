@@ -22,6 +22,7 @@ package org.netbeans.modules.ant.debugger;
 import java.io.IOException;
 import java.util.Hashtable;
 import java.util.LinkedList;
+import java.util.List;
 import javax.swing.SwingUtilities;
 import org.openide.awt.StatusDisplayer;
 import org.openide.util.Exceptions;
@@ -63,7 +64,7 @@ public class IOManager {
     
     // public interface ........................................................
 
-    private final LinkedList buffer = new LinkedList ();
+    private final LinkedList<Text> buffer = new LinkedList<>();
     private RequestProcessor.Task task;
     
     /**

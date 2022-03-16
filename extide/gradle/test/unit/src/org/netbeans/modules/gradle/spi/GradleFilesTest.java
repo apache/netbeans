@@ -433,6 +433,17 @@ public class GradleFilesTest {
         assertEquals(null, gf.getFile(GradleFiles.Kind.BUILD_SRC));
     }
 
+    @Test
+    public void testGetBuildSrcProperties() throws IOException {
+        root.newFile("settings.gradle");
+
+        File buildSrc = root.newFolder("buildSrc");
+        GradleFiles gf = new GradleFiles(buildSrc);
+        assertTrue(gf.isBuildSrcProject());
+        int expectedSize = gf.getFile(GradleFiles.Kind.USER_PROPERTIES).exists() ? 1 : 0;
+        assertEquals(expectedSize, gf.getPropertyFiles().size());
+    }
+
     /**
      * Test of getProjectFiles method, of class GradleFiles.
      */

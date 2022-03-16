@@ -23,12 +23,12 @@
     <type>org.netbeans.modules.apisupport.project</type>
     <configuration>
         <data xmlns="http://www.netbeans.org/ns/nb-module-project/2">
-            <code-name-base>bcprov</code-name-base>
+            <code-name-base>bcutil</code-name-base>
             <module-dependencies/>
             <public-packages/>
             <class-path-extension>
-                <runtime-relative-path>bcprov.jar</runtime-relative-path>
-                <binary-origin>external/bcprov-jdk15on-1.70.jar</binary-origin>
+                <runtime-relative-path>bcutil.jar</runtime-relative-path>
+                <binary-origin>external/bcutil-jdk15on-1.70.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

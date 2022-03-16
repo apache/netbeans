@@ -211,7 +211,10 @@ public final class NbGradleProjectImpl implements Project {
                         GradleFiles gf = getGradleFiles();
                         Set<File> ret = new LinkedHashSet<>();
                         for (GradleFiles.Kind kind : GradleFiles.Kind.PROJECT_FILES) {
-                            ret.add(gf.getFile(kind));
+                            File f = gf.getFile(kind);
+                            if (f != null) {
+                                ret.add(f);
+                            }
                         }
                         return ret;
                     }

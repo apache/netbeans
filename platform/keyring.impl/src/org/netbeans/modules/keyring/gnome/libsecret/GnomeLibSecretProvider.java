@@ -143,7 +143,7 @@ public class GnomeLibSecretProvider implements KeyringProvider {
         try {
             GError gerror = Structure.newInstance(GError.class, gerrorBuffer.getValue());
             gerror.read();
-            LOG.warning(String.format("%d/%d: %s", gerror.domain, gerror.code, gerror.message));
+            throw new RuntimeException(String.format("%d/%d: %s", gerror.domain, gerror.code, gerror.message));
         } finally {
             Glib.INSTANCE.g_error_free(gerrorBuffer.getValue());
         }

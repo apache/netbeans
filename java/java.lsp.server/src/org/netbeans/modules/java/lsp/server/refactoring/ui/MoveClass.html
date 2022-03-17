@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Security-Policy" content="default-src http: 'unsafe-inline' 'unsafe-eval'">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="refactoring.css">
+    <link rel="stylesheet" href="codicon.css">
+    <title>Refactor: Move Class...</title>
+</head>
+
+<body>
+    <div class="section">
+        <label>Move class <span class="vscode-editor-font" data-bind="text: from"></span> to:</label>
+    </div>
+    <div class="section3">
+        <div class="flex vdivider2">
+            <div class="flex-equal">
+                <label>Project:</label>
+                <select data-bind="options: availableProjects, optionsText: 'name', value: selectedProject"></select>
+            </div>
+            <div class="flex-equal hdivider">
+                <label>Location:</label>
+                <select data-bind="options: availableRoots, optionsText: 'name', value: selectedRoot">
+                </select>
+            </div>
+        </div>
+        <div class="flex vdivider">
+            <div class="flex-equal">
+                <label>Package:</label>
+                <select data-bind="options: availablePackages, value: selectedPackage">
+                </select>
+            </div>
+            <div class="flex-equal hdivider">
+                <label>Class:</label>
+                <select data-bind="options: availableClasses, optionsText: 'label', value: selectedClass">
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="flex section">
+        <button id="accept" hidden class="regular-button vscode-font align-right">Refactor</button>
+        <button id="reject" hidden class="regular-button vscode-font">Cancel</button>
+    </div>
+</body>
+</html>

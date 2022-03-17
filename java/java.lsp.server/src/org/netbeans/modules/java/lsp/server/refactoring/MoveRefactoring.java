@@ -74,7 +74,6 @@ import org.netbeans.modules.java.lsp.server.Utils;
 import org.netbeans.modules.java.lsp.server.protocol.CodeActionsProvider;
 import org.netbeans.modules.java.lsp.server.protocol.NbCodeLanguageClient;
 import org.netbeans.modules.java.source.ElementHandleAccessor;
-import org.netbeans.modules.java.source.parsing.FileObjects;
 import org.netbeans.modules.parsing.api.ResultIterator;
 import org.netbeans.modules.refactoring.java.api.JavaMoveMembersProperties;
 import org.netbeans.modules.refactoring.java.api.JavaRefactoringUtils;
@@ -286,8 +285,9 @@ public final class MoveRefactoring extends CodeRefactoring {
         static List<String> availablePackages(boolean moveClass, NamedPath selectedRoot) {
             FileObject rootFolder = getSelectedRoot(selectedRoot);
             if (rootFolder != null) {
+                List<String> packages;
                 if (moveClass) {
-                    List<String> packages = new ArrayList<>();
+                    packages = new ArrayList<>();
                     packages.add(Bundle.DN_DefaultPackage());
                     Enumeration<? extends FileObject> children = rootFolder.getChildren(true);
                     while (children.hasMoreElements()) {
@@ -296,9 +296,11 @@ public final class MoveRefactoring extends CodeRefactoring {
                             packages.add(FileUtil.getRelativePath(rootFolder, child).replace('/', '.'));
                         }
                     }
-                    return packages;
+                } else {
+                    packages = ClasspathInfo.create(rootFolder).getClassIndex().getPackageNames("", false, EnumSet.of(ClassIndex.SearchScope.SOURCE)).stream().collect(Collectors.toList());
                 }
-                return ClasspathInfo.create(rootFolder).getClassIndex().getPackageNames("", false, EnumSet.of(ClassIndex.SearchScope.SOURCE)).stream().collect(Collectors.toList());
+                packages.sort((s1, s2) -> s1.compareTo(s2));
+                return packages;
             }
             return Collections.emptyList();
         }
@@ -340,6 +342,7 @@ public final class MoveRefactoring extends CodeRefactoring {
                         ret.add(new ElementUI(false, shortName, data.getKind(), data.getSignature()));
                     }
                 }
+                ret.sort((e1, e2) -> e1.getLabel().compareTo(e2.getLabel()));
                 return ret;
             }
             return Collections.emptyList();
@@ -445,7 +448,7 @@ public final class MoveRefactoring extends CodeRefactoring {
     static final class NamedPathControl {
     }
 
-    static enum Visibility {
+    public static enum Visibility {
 
         ESCALATE("Escalate"),
         ASIS("As is"),
@@ -466,7 +469,7 @@ public final class MoveRefactoring extends CodeRefactoring {
         }
     }
 
-    static enum JavaDoc {
+    public static enum JavaDoc {
 
         ASIS("As is"),
         UPDATE("Update");

@@ -156,6 +156,7 @@ import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.java.hints.infrastructure.JavaErrorProvider;
 import org.netbeans.modules.java.lsp.server.TestCodeLanguageClient;
 import org.netbeans.modules.java.lsp.server.refactoring.ChangeMethodParameterUI;
+import org.netbeans.modules.java.lsp.server.refactoring.MoveElementUI;
 import org.netbeans.modules.java.lsp.server.refactoring.ParameterUI;
 import org.netbeans.modules.java.lsp.server.ui.MockHtmlViewer;
 import org.netbeans.modules.java.source.BootClassPathUtil;
@@ -3648,9 +3649,14 @@ public class ServerTest extends NbTestCase {
             }
 
             @Override
-            public CompletableFuture<List<QuickPickItem>> showQuickPick(ShowQuickPickParams params) {
-                List<QuickPickItem> items = params.getItems();
-                return CompletableFuture.completedFuture("Select target package".equals(params.getPlaceHolder()) ? items.subList(2, 3) : items.subList(0, 1));
+            public CompletableFuture<String> showHtmlPage(HtmlPageParams params) {
+                MoveElementUI ui = MockHtmlViewer.assertDialogShown(params.getUri(), MoveElementUI.class);
+                ui.setSelectedProject(ui.getAvailableProjects().get(0));
+                ui.setSelectedRoot(ui.getAvailableRoots().get(0));
+                ui.setSelectedPackage(ui.getAvailablePackages().get(2));
+                ui.setSelectedClass(ui.getAvailableClasses().get(0));
+                ui.doRefactoring();
+                return CompletableFuture.completedFuture(null);
             }
         }, client.getInputStream(), client.getOutputStream());
         serverLauncher.startListening();
@@ -3758,9 +3764,16 @@ public class ServerTest extends NbTestCase {
             }
 
             @Override
-            public CompletableFuture<List<QuickPickItem>> showQuickPick(ShowQuickPickParams params) {
-                List<QuickPickItem> items = params.getItems();
-                return CompletableFuture.completedFuture("Select target package".equals(params.getPlaceHolder()) ? items.subList(1, 2) : items.subList(0, 1));
+            public CompletableFuture<String> showHtmlPage(HtmlPageParams params) {
+                MoveElementUI ui = MockHtmlViewer.assertDialogShown(params.getUri(), MoveElementUI.class);
+                ui.setSelectedProject(ui.getAvailableProjects().get(0));
+                ui.setSelectedRoot(ui.getAvailableRoots().get(0));
+                ui.setSelectedPackage(ui.getAvailablePackages().get(1));
+                ui.setSelectedClass(ui.getAvailableClasses().get(0));
+                ui.setSelectedVisibility(ui.getAvailableVisibilities().get(0));
+                ui.setSelectedJavaDoc(ui.getAvailableJavaDoc().get(0));
+                ui.doRefactoring();
+                return CompletableFuture.completedFuture(null);
             }
         }, client.getInputStream(), client.getOutputStream());
         serverLauncher.startListening();
@@ -4322,11 +4335,6 @@ public class ServerTest extends NbTestCase {
             public CompletableFuture<ApplyWorkspaceEditResponse> applyEdit(ApplyWorkspaceEditParams params) {
                 edit[0] = params.getEdit();
                 return CompletableFuture.completedFuture(new ApplyWorkspaceEditResponse(false));
-            }
-
-            @Override
-            public CompletableFuture<String> showInputBox(ShowInputBoxParams params) {
-                return CompletableFuture.completedFuture("(java.lang.String s, int cnt, boolean b):java.lang.String");
             }
 
             @Override

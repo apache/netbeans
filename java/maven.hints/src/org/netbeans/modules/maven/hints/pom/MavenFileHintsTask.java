@@ -18,17 +18,13 @@
  */
 package org.netbeans.modules.maven.hints.pom;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
-import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.editor.mimelookup.MimeRegistration;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.maven.hints.pom.spi.POMErrorFixProvider;
-import org.netbeans.modules.maven.model.pom.POMModel;
 import org.netbeans.modules.parsing.api.Snapshot;
 import org.netbeans.modules.parsing.spi.ParserResultTask;
 import org.netbeans.modules.parsing.spi.Scheduler;
@@ -59,7 +55,7 @@ public class MavenFileHintsTask extends ParserResultTask<MavenResult> {
         List<ErrorDescription> errors = PomModelUtils.findHints(result.getProjectModel(), p);
         HintsController.setErrors(fo, PomModelUtils.LAYER_POM, errors);
     }
-
+    
     @Override
     public int getPriority() {
         return 100;

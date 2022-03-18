@@ -57,12 +57,25 @@ public class MavenSelectionHintsTask extends ParserResultTask<MavenResult> {
             return;
         }
         CursorMovedSchedulerEvent cursorEvent = (CursorMovedSchedulerEvent)event;
+        int ss = cursorEvent.getCaretOffset();
+        int se = cursorEvent.getMarkOffset();
+        if (ss > se) {
+            // swap min/max
+            int x = se;
+            se = ss;
+            ss = x;
+        }
+        List<ErrorDescription> errors = computeErrors(result, ss, se, cursorEvent.getCaretOffset());
+        HintsController.setErrors(result.getPomFile(), PomModelUtils.LAYER_POM_SELECTION, errors);
+    }
+    
+    static List<ErrorDescription> computeErrors(MavenResult result, int ss, int se, int co) {
         FileObject fo = result.getPomFile();
         Project project = FileOwnerQuery.getOwner(fo);
         Document document = result.getSnapshot().getSource().getDocument(false);
         if (fo == null || project == null || project.getProjectDirectory() != fo.getParent()) {
             // ?? pom file ought to form a project!
-            return;
+            return null;
         }
         final POMModel model = result.getProjectModel();
         final List<ErrorDescription> errors = new ArrayList<ErrorDescription>();
@@ -76,18 +89,9 @@ public class MavenSelectionHintsTask extends ParserResultTask<MavenResult> {
             old = (Annotation[]) styled.getProperty("maven_annot");
         }
         if (PomModelUtils.checkModelValid(model)) {
-            int ss = cursorEvent.getCaretOffset();
-            int se = cursorEvent.getMarkOffset();
-            if (ss > se) {
-                // swap min/max
-                int x = se;
-                se = ss;
-                ss = x;
-            }
-
             for (SelectionPOMFixProvider prov : PomModelUtils.hintProviders(project, SelectionPOMFixProvider.class)) {
                 List<ErrorDescription> lst = prov.getErrorsForDocument(model, project, 
-                        ss, se, cursorEvent.getCaretOffset());
+                        ss, se, co);
                 if (lst != null) {
                     errors.addAll(lst);
                 }
@@ -123,7 +127,7 @@ public class MavenSelectionHintsTask extends ParserResultTask<MavenResult> {
                 }
             }
         }
-        HintsController.setErrors(fo, PomModelUtils.LAYER_POM_SELECTION, errors);
+        return errors;
     }
 
     @Override

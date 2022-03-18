@@ -27,6 +27,7 @@ import java.util.logging.Logger;
 import javax.swing.event.SwingPropertyChangeSupport;
 import org.netbeans.modules.lsp.client.spi.LanguageServerProvider.LanguageServerDescription;
 import org.netbeans.modules.lsp.client.spi.ServerRestarter;
+import org.openide.util.Exceptions;
 
 /**
  * The unique instance of the clangd LSP server, serving many projects at once.
@@ -118,6 +119,8 @@ public final class ClangdProcess {
             fireStateChange(LSPServerState.MISCONFIGURED);
             File clangd = options.getLogFile();
             throw new IOException(String.format("Cannot execute clangd at path: %s", clangd == null ? "[NOT SET]" : clangd.getAbsolutePath()));
+        } else {
+            fireStateChange(LSPServerState.STOPPED);
         }
         String[] commands = getCommands();
         try {
@@ -177,8 +180,10 @@ public final class ClangdProcess {
     }
 
     public void restart() {
-        if (this.serverRestarter != null) {
-            this.serverRestarter.restart();
+        try {
+            start(this.serverRestarter);
+        } catch (IOException ex) {
+            Exceptions.printStackTrace(ex);
         }
     }
 

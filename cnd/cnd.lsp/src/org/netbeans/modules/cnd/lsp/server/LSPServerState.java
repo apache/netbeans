@@ -28,11 +28,11 @@ import org.openide.util.NbBundle;
  */
 public enum LSPServerState {
 
-    /** clang is configured and ready to be started. */
+    /** clangd is configured and ready to be started. */
     STOPPED,
-    /** clang is not configured yet */
+    /** clangd is not configured yet */
     MISCONFIGURED,
-    /** clang is running */
+    /** clangd is running */
     RUNNING,
     /** clang generated an error */
     ERROR

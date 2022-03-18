@@ -960,7 +960,7 @@ public class JavacParser extends Parser {
                 cpInfo,
                 flags.contains(ConfigFlags.MODULE_INFO));
         String useRelease;
-        if (sourceLevel != null && !sourceLevel.equals(validatedSourceLevel.requiredTarget().name)) {
+        if (sourceLevel != null && !com.sun.tools.javac.code.Source.lookup(sourceLevel).equals(validatedSourceLevel)) {
             String modernSourceLevel = sourceLevel.startsWith("1.") ? sourceLevel.substring(2) : sourceLevel; // NOI18N
             try {
                 int optimalJdkApi = Integer.parseInt(modernSourceLevel);

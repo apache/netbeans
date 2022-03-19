@@ -42,12 +42,12 @@ buildnumber=$3
 build_jdk7=0
 build_jdk8=0
 build_jdk11=0
-binaryname=$5
-installer_sign_idname=$6
-application_sign_idname=$7
-version_number=$8
-if [ -n "${9}" ] ; then
-  nb_locales=",${9}"
+binaryname=$4
+installer_sign_idname=$5
+application_sign_idname=$6
+version_number=$7
+if [ -n "${8}" ] ; then
+  nb_locales=",${8}"
 fi
 
 basename=`dirname "$0"`

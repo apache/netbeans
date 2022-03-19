@@ -597,7 +597,7 @@ public class TableElementImpl extends DBElementImpl implements TableElement.Impl
                         i++;
                     }
 
-                    LinkedList idxs = new LinkedList<>();
+                    LinkedList<String> idxs = new LinkedList<>();
                     for (Iterator it = cols.values().iterator(); it.hasNext();) {
                         // non-unique = false, thus the index is unique -- see initIndexes()
                         idxs.add(indexName + "." + it.next() + ".false"); // NOI18N

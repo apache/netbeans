@@ -479,7 +479,7 @@ public class InspectAndRefactorPanel extends javax.swing.JPanel implements Popup
             
         } else {
             Configuration config = (Configuration) configurationCombo.getSelectedItem();
-            List<HintDescription> hintsToApply = new LinkedList();
+            List<HintDescription> hintsToApply = new LinkedList<>();
             HintsSettings settings = config.getSettings();
             for (Entry<? extends HintMetadata, ? extends Iterable<? extends HintDescription>> e : allHints.entrySet()) {
                 if (!settings.isEnabled(e.getKey())) continue;
@@ -520,7 +520,7 @@ public class InspectAndRefactorPanel extends javax.swing.JPanel implements Popup
         if (customScope==null) {
             return Scopes.specifiedFoldersScope(new Folder[0]);
         }
-        LinkedList list = new LinkedList();
+        List list = new LinkedList<>();
         list.addAll(customScope.getFiles());
         list.addAll(customScope.getFolders());
         list.addAll(customScope.getSourceRoots());

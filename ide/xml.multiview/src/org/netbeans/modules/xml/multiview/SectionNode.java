@@ -115,7 +115,7 @@ public class SectionNode extends AbstractNode {
      * @param boxPanel the panel to be populated
      */
     public void populateBoxPanel(BoxPanel boxPanel) {
-        List nodeList = new LinkedList();
+        List nodeList = new LinkedList<>();
         SectionInnerPanel nodeInnerPanel = createNodeInnerPanel();
         if (nodeInnerPanel != null) {
             nodeList.add(nodeInnerPanel);

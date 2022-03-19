@@ -80,7 +80,7 @@ public class AntDebugger extends ActionsProviderSupport {
     private boolean                     actionRunning = false;
     private IOManager                   ioManager;
     private Object                      currentLine;
-    private LinkedList                  callStackList = new LinkedList();
+    private LinkedList                  callStackList = new LinkedList<>();
     private File                        currentFile;
     private String                      currentTargetName;
     private String                      currentTaskName;

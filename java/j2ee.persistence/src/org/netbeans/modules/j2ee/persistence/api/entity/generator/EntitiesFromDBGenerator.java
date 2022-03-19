@@ -256,7 +256,7 @@ public final class EntitiesFromDBGenerator {
         SchemaElementImpl impl = new SchemaElementImpl(connectionProvider);
         schemaElement = new SchemaElement(impl);
         schemaElement.setName(DBIdentifier.create("schema")); // NOI18N
-        impl.initTables(connectionProvider, new LinkedList(tableNames), new LinkedList(), true);
+        impl.initTables(connectionProvider, new LinkedList<>(tableNames), new LinkedList<>(), true);
         
         return schemaElement;
     }

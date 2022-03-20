@@ -55,6 +55,8 @@ import org.eclipse.lsp4j.DocumentSymbolCapabilities;
 import org.eclipse.lsp4j.InitializeParams;
 import org.eclipse.lsp4j.InitializeResult;
 import org.eclipse.lsp4j.ResourceOperationKind;
+import org.eclipse.lsp4j.SemanticTokenModifiers;
+import org.eclipse.lsp4j.SemanticTokenTypes;
 import org.eclipse.lsp4j.SemanticTokens;
 import org.eclipse.lsp4j.SemanticTokensCapabilities;
 import org.eclipse.lsp4j.SemanticTokensClientCapabilitiesRequests;
@@ -411,14 +413,46 @@ public class LSPBindings {
            }
        }
     }
-    private static final List<String> KNOWN_TOKEN_TYPES = Collections.unmodifiableList(Arrays.asList(
-            "namespace", "package", "function", "method", "macro", "parameter",
-            "variable", "struct", "enum", "class", "typeAlias", "typeParameter",
-            "field", "enumMember", "keyword"
+
+    private static final List<String> KNOWN_TOKEN_TYPES = Collections.unmodifiableList(
+            Arrays.asList(
+                    SemanticTokenTypes.Class,
+                    SemanticTokenTypes.Comment,
+                    SemanticTokenTypes.Enum,
+                    SemanticTokenTypes.EnumMember,
+                    SemanticTokenTypes.Event,
+                    SemanticTokenTypes.Function,
+                    SemanticTokenTypes.Interface,
+                    SemanticTokenTypes.Keyword,
+                    SemanticTokenTypes.Macro,
+                    SemanticTokenTypes.Method,
+                    SemanticTokenTypes.Modifier,
+                    SemanticTokenTypes.Modifier,
+                    SemanticTokenTypes.Namespace,
+                    SemanticTokenTypes.Number,
+                    SemanticTokenTypes.Operator,
+                    SemanticTokenTypes.Parameter,
+                    SemanticTokenTypes.Property,
+                    SemanticTokenTypes.Regexp,
+                    SemanticTokenTypes.String,
+                    SemanticTokenTypes.Struct,
+                    SemanticTokenTypes.Type,
+                    SemanticTokenTypes.TypeParameter,
+                    SemanticTokenTypes.Variable
     ));
 
-    private static final List<String> KNOWN_TOKEN_MODIFIERS = Collections.unmodifiableList(Arrays.asList(
-            "static", "definition", "declaration"
+    private static final List<String> KNOWN_TOKEN_MODIFIERS = Collections.unmodifiableList(
+            Arrays.asList(
+                    SemanticTokenModifiers.Abstract,
+                    SemanticTokenModifiers.Async,
+                    SemanticTokenModifiers.Declaration,
+                    SemanticTokenModifiers.DefaultLibrary,
+                    SemanticTokenModifiers.Definition,
+                    SemanticTokenModifiers.Deprecated,
+                    SemanticTokenModifiers.Documentation,
+                    SemanticTokenModifiers.Modification,
+                    SemanticTokenModifiers.Readonly,
+                    SemanticTokenModifiers.Static
     ));
 
     public static synchronized Set<LSPBindings> getAllBindings() {

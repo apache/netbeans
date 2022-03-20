@@ -918,9 +918,9 @@ final class XMLMapAttr implements Map {
                 try {
                     switch (index) {
                     case 0:
-                        return new Byte(value);
+                        return Byte.valueOf(value);
                     case 1:
-                        return new Short(value);
+                        return Short.valueOf(value);
                     case 2:
                         return new Integer(value); //(objI);
                     case 3:

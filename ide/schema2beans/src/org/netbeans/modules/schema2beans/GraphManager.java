@@ -888,11 +888,11 @@ public class GraphManager extends Object {
 	    case Common.TYPE_BOOLEAN:
 		return Boolean.FALSE;
 	    case Common.TYPE_BYTE:
-		return new Byte((byte)0);
+		return (byte)0;
 	    case Common.TYPE_CHAR:
 		return new Character('\0');
 	    case Common.TYPE_SHORT:
-		return new Short((short)0);
+		return (short)0;
 	    case Common.TYPE_INT:
 		return Integer.valueOf(0);
 	    case Common.TYPE_LONG:
@@ -902,7 +902,7 @@ public class GraphManager extends Object {
 	    case Common.TYPE_DOUBLE:
 		return new Double(0.0);
 	    default:
-            throw new IllegalArgumentException(Common.getMessage("UnknownType", type));
+                throw new IllegalArgumentException(Common.getMessage("UnknownType", type));
 	}
     }
 }

@@ -321,10 +321,7 @@ public class TypesCompletion extends BaseCompletion {
             return;
         }
 
-        String ownerFQN = GroovyUtils.stripClassName(fqnTypeName);
-        if (!ownerFQN.isEmpty() && ownerFQN.endsWith("."))  {
-            ownerFQN = ownerFQN.substring(0, ownerFQN.length() - 1);
-        }
+        String ownerFQN = GroovyUtils.getPackageName(fqnTypeName);
         
         // We are dealing with prefix for some class type
         JavaElementHandle jh = null;

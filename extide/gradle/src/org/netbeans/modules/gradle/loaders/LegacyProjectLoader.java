@@ -63,6 +63,7 @@ import static org.netbeans.modules.gradle.api.NbGradleProject.Quality.SIMPLE;
 import org.netbeans.modules.gradle.api.NbProjectInfo;
 import org.netbeans.modules.gradle.api.NbProjectInfo.Report;
 import org.netbeans.modules.gradle.api.execute.GradleCommandLine;
+import org.netbeans.modules.gradle.api.execute.RunUtils;
 import org.netbeans.modules.gradle.cache.ProjectInfoDiskCache;
 import org.netbeans.modules.gradle.spi.GradleSettings;
 import org.openide.util.Cancellable;
@@ -126,8 +127,9 @@ public class LegacyProjectLoader extends AbstractProjectLoader {
         GradleProjectErrorNotifications errors = ctx.project.getLookup().lookup(GradleProjectErrorNotifications.class);
 
 
-        GradleCommandLine cmd = new GradleCommandLine(ctx.cmd);
+        GradleCommandLine cmd = new GradleCommandLine(RunUtils.getCompatibleGradleDistribution(ctx.project), ctx.cmd);
         cmd.setFlag(GradleCommandLine.Flag.CONFIGURE_ON_DEMAND, GradleSettings.getDefault().isConfigureOnDemand());
+        cmd.setFlag(GradleCommandLine.Flag.CONFIGURATION_CACHE, GradleSettings.getDefault().getUseConfigCache());
         cmd.addParameter(GradleCommandLine.Parameter.INIT_SCRIPT, GradleDaemon.initScript());
         cmd.setStackTrace(GradleCommandLine.StackTrace.SHORT);
         cmd.addProjectProperty("nbSerializeCheck", "true");

@@ -292,7 +292,7 @@ class NbProjectInfoBuilder {
                                 try {
                                     compilerArgs = (List<String>) getProperty(compileTask, "options", "compilerArgs");
                                 } catch (Throwable ex2) {
-                                    compilerArgs = (List<String>) getProperty(compileTask, "kotlinOptions", "getFreeCompilerArgs");
+                                    compilerArgs = (List<String>) getProperty(compileTask, "kotlinOptions", "freeCompilerArgs");
                                 }
                             }
                             model.getInfo().put(propBase + lang + "_compiler_args", new ArrayList<>(compilerArgs));
@@ -400,6 +400,12 @@ class NbProjectInfoBuilder {
         Map<String, String> unresolvedProblems = new HashMap();
         Map<String, Set<File>> resolvedJvmArtifacts = new HashMap();
         Set<Configuration> visibleConfigurations = configurationsToSave();
+
+        // NETBEANS-5846: if this project uses javaPlatform plugin with dependencies enabled, 
+        // do not report unresolved problems
+        boolean ignoreUnresolvable = (project.getPlugins().hasPlugin(JavaPlatformPlugin.class) && 
+            Boolean.TRUE.equals(getProperty(project, "javaPlatform", "allowDependencies")));
+
         visibleConfigurations.forEach(it -> {
             String propBase = "configuration_" + it.getName() + "_";
             model.getInfo().put(propBase + "non_resolving", !resolvable(it));
@@ -438,10 +444,11 @@ class NbProjectInfoBuilder {
                             if(componentIds.contains(id)) {
                                 unresolvedIds.add(id);
                             }
-                            if(! project.getPlugins().hasPlugin("java-platform")) {
+                            if(!ignoreUnresolvable && (it.isVisible() || it.isCanBeConsumed())) {
+                                // hidden configurations like 'testCodeCoverageReportExecutionData' might contain unresolvable artifacts.
+                                // do not report problems here
                                 unresolvedProblems.put(id, ((UnresolvedDependencyResult) it2).getFailure().getMessage());
                             }
-                            unresolvedProblems.put(id, udr.getFailure().getMessage());
                         }
                     });
                 } catch (ResolveException ex) {
@@ -557,13 +564,7 @@ class NbProjectInfoBuilder {
         model.getExt().put("resolved_sources_artifacts", resolvedSourcesArtifacts);
         model.getExt().put("resolved_javadoc_artifacts", resolvedJavadocArtifacts);
         model.getInfo().put("project_dependencies", projects);
-        // NETBEANS-5846: if this project uses javaPlatform plugin with dependencies enabled, 
-        // do not report unresolved problems
-        if (!(project.getPlugins().hasPlugin(JavaPlatformPlugin.class) && 
-            Boolean.TRUE.equals(getProperty(project, "javaPlatform", "allowDependencies")))) {
-            
-            model.getInfo().put("unresolved_problems", unresolvedProblems);
-        }
+        model.getInfo().put("unresolved_problems", unresolvedProblems);
         model.registerPerf("dependencies", System.currentTimeMillis() - time);
     }
 

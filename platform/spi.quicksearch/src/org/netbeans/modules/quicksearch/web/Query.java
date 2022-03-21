@@ -99,8 +99,8 @@ final class Query {
 
             public void run() {
                 String query = searchString;
-                query = query.replaceAll( " ", "+" ); //NOI18N //NOI18N
-                query = query.replaceAll( "#", "%23" ); //NOI18N //NOI18N
+                query = query.replace( " ", "+" ); //NOI18N //NOI18N
+                query = query.replace( "#", "%23" ); //NOI18N //NOI18N
                 query += "&num=" + MAX_NUM_OF_RESULTS; //NOI18N
                 query += "&hl=" + Locale.getDefault().getLanguage(); //NOI18N
                 if( null != SITE_SEARCH )

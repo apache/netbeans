@@ -83,6 +83,15 @@
                     </run-dependency>
                 </dependency>
                 <dependency>
+                    <code-name-base>org.netbeans.libs.commons_compress</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <release-version>0-1</release-version>
+                        <specification-version>0.22.0</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
                     <code-name-base>org.netbeans.modules.java.j2seplatform</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
@@ -200,10 +209,6 @@
                 </dependency>
             </module-dependencies>
             <public-packages/>
-            <class-path-extension>
-                <runtime-relative-path>ext/commons-compress-1.20.jar</runtime-relative-path>
-                <binary-origin>external/commons-compress-1.20.jar</binary-origin>
-            </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>ext/httpcore5-5.0.2.jar</runtime-relative-path>
                 <binary-origin>external/httpcore5-5.0.2.jar</binary-origin>

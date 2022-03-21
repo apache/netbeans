@@ -194,7 +194,7 @@ public class ProjectWhiteListQueryImplementation implements WhiteListQueryImplem
 
                 publicPackagesStr = attrs.getValue("OpenIDE-Module-Public-Packages");
                 if(publicPackagesStr != null && !"".equals(publicPackagesStr)) {
-                    publicPackagesStr = publicPackagesStr.replaceAll(" ", "");
+                    publicPackagesStr = publicPackagesStr.replace(" ", "");
                 }
 
                 if (publicPackagesStr != null && !"-".equals(publicPackagesStr)) {

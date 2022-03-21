@@ -211,7 +211,7 @@ public class MavenNbModuleImpl implements NbModuleProvider {
             MavenProject prj = project.getLookup().lookup(NbMavenProject.class).getMavenProject();
             //same fallback is in nbm-maven-plugin, keep it synchronized with codeNameBase parameter
             codename = prj.getGroupId() + "." + prj.getArtifactId(); //NOI18N
-            codename = codename.replaceAll( "-", "." ); //NOI18N
+            codename = codename.replace( "-", "." ); //NOI18N
         }
         return codename;
     }
@@ -295,7 +295,7 @@ public class MavenNbModuleImpl implements NbModuleProvider {
         for (NbModuleProvider.ModuleDependency mdep : dependencies) {
         String codeNameBase = mdep.getCodeNameBase();
         SpecificationVersion version = mdep.getVersion();
-        String artifactId = codeNameBase.replaceAll("\\.", "-"); //NOI18N
+        String artifactId = codeNameBase.replace(".", "-"); //NOI18N
         NbMavenProject watch = project.getLookup().lookup(NbMavenProject.class);
         if (hasDependency(codeNameBase)) {
             //TODO
@@ -379,7 +379,7 @@ public class MavenNbModuleImpl implements NbModuleProvider {
     }
 
     public @Override boolean hasDependency(String codeNameBase) throws IOException {
-        String artifactId = codeNameBase.replaceAll("\\.", "-"); //NOI18N
+        String artifactId = codeNameBase.replace(".", "-"); //NOI18N
         NbMavenProject watch = project.getLookup().lookup(NbMavenProject.class);
         Set<Artifact> set = watch.getMavenProject().getDependencyArtifacts();
         if (set != null) {
@@ -485,7 +485,7 @@ public class MavenNbModuleImpl implements NbModuleProvider {
      */ 
     @Override
     public SpecificationVersion getDependencyVersion(String codenamebase) throws IOException {
-        String artifactId = codenamebase.replaceAll("\\.", "-"); //NOI18N
+        String artifactId = codenamebase.replace(".", "-"); //NOI18N
         NbMavenProject watch = project.getLookup().lookup(NbMavenProject.class);
         for (Artifact art : watch.getMavenProject().getArtifacts()) {
             if (art.getGroupId().startsWith("org.netbeans") && art.getArtifactId().equals(artifactId)) { //NOI18N

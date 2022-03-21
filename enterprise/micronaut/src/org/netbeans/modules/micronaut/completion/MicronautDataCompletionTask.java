@@ -38,6 +38,7 @@ import java.util.prefs.PreferenceChangeListener;
 import java.util.prefs.Preferences;
 import java.util.regex.Pattern;
 import javax.lang.model.element.AnnotationMirror;
+import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
@@ -46,7 +47,10 @@ import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.ElementFilter;
 import javax.lang.model.util.Types;
+import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
+import javax.swing.text.StyledDocument;
+import org.netbeans.api.db.explorer.ConnectionManager;
 import org.netbeans.api.editor.mimelookup.MimeLookup;
 import org.netbeans.api.java.lexer.JavaTokenId;
 import org.netbeans.api.java.source.CompilationController;
@@ -55,11 +59,16 @@ import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.TreeUtilities;
 import org.netbeans.api.java.source.TypeUtilities;
 import org.netbeans.api.lexer.TokenSequence;
+import org.netbeans.modules.db.sql.editor.api.completion.SQLCompletion;
+import org.netbeans.modules.db.sql.editor.api.completion.SQLCompletionContext;
+import org.netbeans.modules.db.sql.editor.api.completion.SQLCompletionResultSet;
 import org.netbeans.modules.parsing.api.ParserManager;
 import org.netbeans.modules.parsing.api.ResultIterator;
 import org.netbeans.modules.parsing.api.Source;
 import org.netbeans.modules.parsing.api.UserTask;
 import org.netbeans.modules.parsing.spi.ParseException;
+import org.netbeans.spi.editor.completion.CompletionItem;
+import org.openide.text.NbDocument;
 import org.openide.util.Exceptions;
 import org.openide.util.WeakListeners;
 
@@ -69,8 +78,10 @@ import org.openide.util.WeakListeners;
  */
 public class MicronautDataCompletionTask {
 
-    private static final String REPOSITORY_ANNOTATION_NAME = "io.micronaut.data.annotation.Repository";
+    private static final String JPA_REPOSITORY_ANNOTATION_NAME = "io.micronaut.data.annotation.Repository";
+    private static final String JDBC_REPOSITORY_ANNOTATION_NAME = "io.micronaut.data.jdbc.annotation.JdbcRepository";
     private static final String REPOSITORY_TYPE_NAME = "io.micronaut.data.repository.GenericRepository";
+    private static final String QUERY_ANNOTATION_TYPE_NAME = "io.micronaut.data.annotation.Query";
     private static final String GET = "get";
     private static final List<String> QUERY_PATTERNS = new ArrayList<>(Arrays.asList("find", "get", "query", "read", "retrieve", "search"));
     private static final List<String> SPECIAL_QUERY_PATTERNS = new ArrayList<>(Arrays.asList("count", "countDistinct", "delete", "exists", "update"));
@@ -114,6 +125,7 @@ public class MicronautDataCompletionTask {
     public static interface ItemFactory<T> {
         T createFinderMethodItem(String name, String returnType, int offset);
         T createFinderMethodNameItem(String prefix, String name, int offset);
+        T createSQLItem(CompletionItem item);
     }
 
     public <T> List<T> query(Document doc, int caretOffset, ItemFactory<T> factory) {
@@ -133,9 +145,15 @@ public class MicronautDataCompletionTask {
                     int len = anchorOffset - ts.offset();
                     if (len > 0 && ts.token().length() >= len) {
                         if (ts.token().id() == JavaTokenId.IDENTIFIER || ts.token().id().primaryCategory().startsWith("keyword") ||
-                                ts.token().id().primaryCategory().startsWith("string") || ts.token().id().primaryCategory().equals("literal")) {
+                                 ts.token().id().primaryCategory().equals("literal")) {
                             prefix = ts.token().text().toString().substring(0, len);
                             anchorOffset = ts.offset();
+                        } else if (ts.token().id() == JavaTokenId.STRING_LITERAL) {
+                            prefix = ts.token().text().toString().substring(1, ts.token().length() - 1);
+                            anchorOffset = ts.offset() + 1;
+                        } else if (ts.token().id() == JavaTokenId.MULTILINE_STRING_LITERAL) {
+                            prefix = ts.token().text().toString().substring(3, len);
+                            anchorOffset = ts.offset() + 3;
                         }
                     }
                     Consumer consumer = (namePrefix, name, type) -> {
@@ -147,12 +165,12 @@ public class MicronautDataCompletionTask {
                     switch (path.getLeaf().getKind()) {
                         case CLASS:
                         case INTERFACE:
-                            resolve(cc, path, prefix, true, consumer);
+                            resolveFinderMethods(cc, path, prefix, true, consumer);
                             break;
                         case METHOD:
                             Tree returnType = ((MethodTree) path.getLeaf()).getReturnType();
                             if (returnType != null && findLastNonWhitespaceToken(ts, (int) sp.getEndPosition(path.getCompilationUnit(), returnType), anchorOffset) == null) {
-                                resolve(cc, path.getParentPath(), prefix, false, consumer);
+                                resolveFinderMethods(cc, path.getParentPath(), prefix, false, consumer);
                             }
                             break;
                         case VARIABLE:
@@ -160,11 +178,17 @@ public class MicronautDataCompletionTask {
                             if (type != null && findLastNonWhitespaceToken(ts, (int) sp.getEndPosition(path.getCompilationUnit(), type), anchorOffset) == null) {
                                 TreePath parentPath = path.getParentPath();
                                 if (parentPath.getLeaf().getKind() == Tree.Kind.CLASS || parentPath.getLeaf().getKind() == Tree.Kind.INTERFACE) {
-                                    resolve(cc, parentPath, prefix, false, consumer);
+                                    resolveFinderMethods(cc, parentPath, prefix, false, consumer);
                                 }
                             }
                             break;
-
+                        case STRING_LITERAL:
+                            if (path.getParentPath().getLeaf().getKind() == Tree.Kind.ASSIGNMENT && path.getParentPath().getParentPath().getLeaf().getKind() == Tree.Kind.ANNOTATION) {
+                                resolveQueryAnnotation(cc, path.getParentPath().getParentPath(), prefix, caretOffset - anchorOffset, item -> {
+                                    items.add(factory.createSQLItem(item));
+                                });
+                            }
+                            break;
                     }
                 }
             });
@@ -178,7 +202,43 @@ public class MicronautDataCompletionTask {
         return anchorOffset;
     }
 
-    private <T> void resolve(CompilationController cc, TreePath path, String prefix, boolean full, Consumer consumer) throws IOException {
+    private <T> void resolveQueryAnnotation(CompilationController cc, TreePath path, String prefix, int off, java.util.function.Consumer<CompletionItem> consumer) throws IOException {
+        cc.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
+        Element el = cc.getTrees().getElement(path);
+        if (el instanceof TypeElement) {
+            if (QUERY_ANNOTATION_TYPE_NAME.contentEquals(((TypeElement) el).getQualifiedName())) {
+                TreePath clsPath = cc.getTreeUtilities().getPathElementOfKind(TreeUtilities.CLASS_TREE_KINDS, path);
+                if (clsPath != null && checkForRepositoryAnnotation(cc.getTrees().getElement(clsPath).getAnnotationMirrors(), false, new HashSet<>())) {
+                    SQLCompletionContext ctx = SQLCompletionContext.empty()
+                            .setStatement(prefix)
+                            .setOffset(off)
+                            .setDatabaseConnection(ConnectionManager.getDefault().getPreferredConnection(true));
+                    SQLCompletion completion = SQLCompletion.create(ctx);
+                    SQLCompletionResultSet resultSet = SQLCompletionResultSet.create();
+                    completion.query(resultSet, (component, offset, text) -> {
+                        final int caretOffset = component.getCaretPosition();
+                        final StyledDocument document = (StyledDocument) component.getDocument();
+                        try {
+                            NbDocument.runAtomicAsUser(document, () -> {
+                                try {
+                                    int documentOffset = anchorOffset + offset;
+                                    document.remove(documentOffset, caretOffset - documentOffset);
+                                    document.insertString(documentOffset, text.replace("\"", "\\\""), null);
+                                } catch (BadLocationException ex) {
+                                }
+                            });
+                        } catch (BadLocationException ex) {
+                        }
+                    });
+                    for (CompletionItem item : resultSet.getItems()) {
+                        consumer.accept(item);
+                    }
+                }
+            }
+        }
+    }
+
+    private <T> void resolveFinderMethods(CompilationController cc, TreePath path, String prefix, boolean full, Consumer consumer) throws IOException {
         cc.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
         TypeUtilities tu = cc.getTypeUtilities();
         TypeElement entity = getEntityFor(cc, path);
@@ -257,7 +317,7 @@ public class MicronautDataCompletionTask {
     private static TypeElement getEntityFor(CompilationInfo info, TreePath path) {
         TypeElement te = (TypeElement) info.getTrees().getElement(path);
         if (te.getModifiers().contains(Modifier.ABSTRACT)) {
-            if (checkForRepositoryAnnotation(te.getAnnotationMirrors(), new HashSet<>())) {
+            if (checkForRepositoryAnnotation(te.getAnnotationMirrors(), true, new HashSet<>())) {
                 Types types = info.getTypes();
                 TypeMirror repositoryType = types.erasure(info.getElements().getTypeElement(REPOSITORY_TYPE_NAME).asType());
                 for (TypeMirror iface : te.getInterfaces()) {
@@ -276,10 +336,11 @@ public class MicronautDataCompletionTask {
         return null;
     }
 
-    private static boolean checkForRepositoryAnnotation(List<? extends AnnotationMirror> annotations, HashSet<TypeElement> checked) {
+    private static boolean checkForRepositoryAnnotation(List<? extends AnnotationMirror> annotations, boolean jpa, HashSet<TypeElement> checked) {
         for (AnnotationMirror annotation : annotations) {
             TypeElement annotationElement = (TypeElement) annotation.getAnnotationType().asElement();
-            if (REPOSITORY_ANNOTATION_NAME.contentEquals(annotationElement.getQualifiedName()) || checked.add(annotationElement) && checkForRepositoryAnnotation(annotationElement.getAnnotationMirrors(), checked)) {
+            String repositoryAnnotationName = jpa ? JPA_REPOSITORY_ANNOTATION_NAME : JDBC_REPOSITORY_ANNOTATION_NAME;
+            if (repositoryAnnotationName.contentEquals(annotationElement.getQualifiedName()) || checked.add(annotationElement) && checkForRepositoryAnnotation(annotationElement.getAnnotationMirrors(), jpa, checked)) {
                 return true;
             }
         }

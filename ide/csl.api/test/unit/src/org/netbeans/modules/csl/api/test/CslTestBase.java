@@ -715,8 +715,8 @@ public abstract class CslTestBase extends NbTestCase {
         } else {
             // We want to ignore different line separators (like \r\n against \n) because they
             // might be causing failing tests on a different operation systems like Windows :]
-            String expectedUnified = expectedTrimmed.replaceAll("\r", "");
-            String actualUnified = actualTrimmed.replaceAll("\r", "");
+            String expectedUnified = expectedTrimmed.replace("\r", "");
+            String actualUnified = actualTrimmed.replace("\r", "");
             
             // if there is '**' in the actualUnified, it may stand for whatever word of the expected
             // content in that position.
@@ -926,8 +926,8 @@ public abstract class CslTestBase extends NbTestCase {
         } else {
             // We want to ignore different line separators (like \r\n against \n) because they
             // might be causing failing tests on a different operation systems like Windows :]
-            final String expectedUnified = expectedTrimmed.replaceAll("\r", "");
-            final String actualUnified = actualTrimmed.replaceAll("\r", "");
+            final String expectedUnified = expectedTrimmed.replace("\r", "");
+            final String actualUnified = actualTrimmed.replace("\r", "");
 
             if (expectedUnified.equals(actualUnified)) {
                 return; // Only difference is in line separation --> Test passed
@@ -988,8 +988,8 @@ public abstract class CslTestBase extends NbTestCase {
         } else {
             // We want to ignore different line separators (like \r\n against \n) because they
             // might be causing failing tests on a different operation systems like Windows :]
-            final String expectedUnified = expectedTrimmed.replaceAll("\r", "");
-            final String actualUnified = actualTrimmed.replaceAll("\r", "");
+            final String expectedUnified = expectedTrimmed.replace("\r", "");
+            final String actualUnified = actualTrimmed.replace("\r", "");
 
             if (expectedUnified.equals(actualUnified)) {
                 return; // Only difference is in line separation --> Test passed

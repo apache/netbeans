@@ -350,7 +350,7 @@ public class GeneralGroovy extends JellyTestCase {
         opNewProjectWizard.next();
 
         JDialogOperator jdNew = new JDialogOperator("New");
-        JTextComponentOperator jtName = new JTextComponentOperator(jdNew, sampleName.replaceAll(" ", "").replaceAll("-", ""));
+        JTextComponentOperator jtName = new JTextComponentOperator(jdNew, sampleName.replace(" ", "").replace("-", ""));
         jtName.setText(projectName);
         opNewProjectWizard.finish();
         waitScanFinished();

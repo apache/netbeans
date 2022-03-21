@@ -100,7 +100,7 @@ public class MetaInfServicesLookupTest extends NbTestCase {
         
         LOG.info("generating " + jar);
         
-        URL data = MetaInfServicesLookupTest.class.getResource(n.replaceAll("\\.jar", "\\.txt"));
+        URL data = MetaInfServicesLookupTest.class.getResource(n.replace(".jar", ".txt"));
         assertNotNull("Data found", data);
         StringBuffer sb = new StringBuffer();
         InputStreamReader r = new InputStreamReader(data.openStream());

@@ -38,7 +38,7 @@ cache:
 
 git:
   quiet: true
-  depth: 3
+  depth: 50
 
 matrix:
     include:
@@ -60,11 +60,11 @@ matrix:
           env:
             - OPTS="-Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json -quiet -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false"
           before_script:
-            - ant $OPTS clean
-            - ant $OPTS build
+            - nbbuild/travis/ant.sh $OPTS clean
+            - nbbuild/travis/ant.sh $OPTS build
           script:
-            - ant $OPTS check-sigtests-release -Dfail.on.error=true
-            - ant $OPTS gen-sigtests-release
+            - nbbuild/travis/ant.sh $OPTS check-sigtests-release -Dfail.on.error=true
+            - nbbuild/travis/ant.sh $OPTS gen-sigtests-release
 
         - name: Run gen-sigtests-release for platform cluster
           jdk: openjdk8
@@ -76,29 +76,30 @@ matrix:
           env:
             - ANT_OPTS="-Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false"
           script: 
-            - ant -quiet build-source-config -Dcluster.config=platform
+            - nbbuild/travis/ant.sh -quiet build-source-config -Dcluster.config=platform
             - mkdir tmpplatform
             - cd tmpplatform
             - unzip -qq ../nbbuild/build/platform-src*
-            - ant build -Dcluster.config=platform
+            - chmod a+x nbbuild/travis/ant.sh
+            - nbbuild/travis/ant.sh build -Dcluster.config=platform
         
-        - name: Compile all modules with OpenJDK8
+        - name: Compile all modules & tests
           jdk: openjdk8
           env:
             - OPTS="-Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json -quiet -Dcluster.config=full -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false"
           before_script:
-            - ant $OPTS clean
+            - nbbuild/travis/ant.sh $OPTS clean
           script:
-            - ant $OPTS build
-            - ant $OPTS test -Dtest.includes=NoTestsJustBuild
+            - nbbuild/travis/ant.sh $OPTS build
+            - nbbuild/travis/ant.sh $OPTS test -Dtest.includes=NoTestsJustBuild
 
         - name: Test harness modules
           jdk: openjdk8
           env:
             - OPTS="-Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json -quiet -Dcluster.config=platform -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true -Dvanilla.javac.exists=true"
           before_script:
-            - ant $OPTS clean
-            - ant $OPTS build
+            - nbbuild/travis/ant.sh $OPTS clean
+            - nbbuild/travis/ant.sh $OPTS build
           script:
             - ant $OPTS -f harness/o.n.insane test
             - ant $OPTS -f harness/apisupport.harness test
@@ -110,8 +111,8 @@ matrix:
           env:
             - OPTS="-Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json -silent -Dcluster.config=platform -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true -Dvanilla.javac.exists=true"
           before_script:
-            - ant $OPTS clean
-            - ant $OPTS build
+            - nbbuild/travis/ant.sh $OPTS clean
+            - nbbuild/travis/ant.sh $OPTS build
           script:
             - travis_retry hide-logs.sh ant $OPTS -f platform/api.htmlui test
             - travis_retry hide-logs.sh ant $OPTS -f platform/htmlui test
@@ -161,8 +162,8 @@ matrix:
           env:
             - OPTS="-Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json -silent -Dcluster.config=platform -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true -Dvanilla.javac.exists=true"
           before_script:
-            - ant $OPTS clean
-            - ant $OPTS build
+            - nbbuild/travis/ant.sh $OPTS clean
+            - nbbuild/travis/ant.sh $OPTS build
           script:
             - hide-logs.sh ant $OPTS -f platform/openide.actions test
             - hide-logs.sh ant $OPTS -f platform/openide.awt test
@@ -181,7 +182,6 @@ matrix:
             - hide-logs.sh ant $OPTS -f platform/openide.options test
             - travis_retry hide-logs.sh ant $OPTS -f platform/openide.text test
             - hide-logs.sh ant $OPTS -f platform/openide.util test
-            - hide-logs.sh ant $OPTS -f platform/openide.util.enumerations test
             - hide-logs.sh ant $OPTS -f platform/openide.util.lookup test
             - hide-logs.sh ant $OPTS -f platform/openide.util.ui test
             - hide-logs.sh ant $OPTS -f platform/openide.windows test
@@ -204,8 +204,8 @@ matrix:
           env:
             - OPTS="-Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json -quiet -Dcluster.config=minimal -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true"
           before_script:
-            - ant $OPTS clean
-            - ant $OPTS build
+            - nbbuild/travis/ant.sh $OPTS clean
+            - nbbuild/travis/ant.sh $OPTS build
           script:
             - ant $OPTS -f ide/api.xml test
             - ant $OPTS -f ide/api.xml.ui test
@@ -316,8 +316,8 @@ matrix:
           env:
             - OPTS="-Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json -quiet -Dcluster.config=minimal -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true"
           before_script:
-            - ant $OPTS clean
-            - ant $OPTS build
+            - nbbuild/travis/ant.sh $OPTS clean
+            - nbbuild/travis/ant.sh $OPTS build
           script:
             - ant $OPTS -f nb/deadlock.detector test
             - ant $OPTS -f nb/ide.branding test
@@ -330,8 +330,8 @@ matrix:
           env:
             - OPTS="-Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json -quiet -Dcluster.config=java -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true"
           before_script:
-            - ant $OPTS clean
-            - ant $OPTS build
+            - nbbuild/travis/ant.sh $OPTS clean
+            - nbbuild/travis/ant.sh $OPTS build
           script:
             - ant $OPTS -f extide/o.apache.tools.ant.module test
             - ant $OPTS -f extide/gradle test
@@ -341,8 +341,8 @@ matrix:
           env:
             - OPTS="-Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json -quiet -Dcluster.config=java -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true"
           before_script:
-            - ant $OPTS clean
-            - ant $OPTS build
+            - nbbuild/travis/ant.sh $OPTS clean
+            - nbbuild/travis/ant.sh $OPTS build
           script:
             #- ant $OPTS -f java/ant.debugger test
             - hide-logs.sh ant $OPTS -f java/ant.freeform test
@@ -422,8 +422,8 @@ matrix:
           env:
             - OPTS="-Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json -quiet -Dcluster.config=java -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true"
           before_script:
-            - ant $OPTS clean
-            - ant $OPTS build
+            - nbbuild/travis/ant.sh $OPTS clean
+            - nbbuild/travis/ant.sh $OPTS build
           script:
             - ant $OPTS -Dtest.config=batch1 -f java/java.hints test
 
@@ -432,8 +432,8 @@ matrix:
           env:
             - OPTS="-Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json -quiet -Dcluster.config=java -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true"
           before_script:
-            - ant $OPTS clean
-            - ant $OPTS build
+            - nbbuild/travis/ant.sh $OPTS clean
+            - nbbuild/travis/ant.sh $OPTS build
           script:
             - ant $OPTS -Dtest.config=batch2 -f java/java.hints test
 
@@ -445,8 +445,8 @@ matrix:
             - wget https://raw.githubusercontent.com/sormuras/bach/master/install-jdk.sh
             - export TEST_JDK=`bash install-jdk.sh --feature 11 --license GPL --emit-java-home --silent | tail -1`
             - export OPTS="-Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json $OPTS  -Dtest.nbjdk.home=$TEST_JDK -Dtest.run.args=--limit-modules=java.base,java.logging,java.xml,java.prefs,java.desktop,java.management,java.instrument,jdk.zipfs,java.scripting,java.naming -Dtest.bootclasspath.prepend.args=-Dno.netbeans.bootclasspath.prepend.needed=true"
-            - ant $OPTS clean
-            - ant $OPTS build
+            - nbbuild/travis/ant.sh $OPTS clean
+            - nbbuild/travis/ant.sh $OPTS build
           script:
             - ant $OPTS -f java/java.completion test
             - travis_retry ant $OPTS -f java/java.source.base test
@@ -456,8 +456,8 @@ matrix:
           env: 
             - OPTS="-Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json -quiet -Dcluster.config=release -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true"
           before_script:
-            - ant $OPTS clean
-            - ant $OPTS build
+            - nbbuild/travis/ant.sh $OPTS clean
+            - nbbuild/travis/ant.sh $OPTS build
           script:
             - ant $OPTS -f apisupport/apisupport.ant test
             - ant $OPTS -f apisupport/apisupport.project test
@@ -471,8 +471,8 @@ matrix:
           env:
             - OPTS="-Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json -quiet -Dcluster.config=java -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true"
           before_script:
-            - ant $OPTS clean
-            - ant $OPTS build
+            - nbbuild/travis/ant.sh $OPTS clean
+            - nbbuild/travis/ant.sh $OPTS build
           script:
             - ant $OPTS -f javafx/javafx2.editor test -Dtest.config=stable
             #- ant $OPTS -f javafx/javafx2.project test
@@ -482,8 +482,8 @@ matrix:
           env: 
             - OPTS="-Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json -quiet -Dcluster.config=release -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false"
           before_script:
-            - ant $OPTS clean
-            - ant $OPTS build
+            - nbbuild/travis/ant.sh $OPTS clean
+            - nbbuild/travis/ant.sh $OPTS build
           script:
             - ant $OPTS -f ergonomics/ide.ergonomics test -Dtest.config=commit
 
@@ -492,8 +492,8 @@ matrix:
           env:
             - OPTS="-Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json -quiet -Dcluster.config=java -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true"
           before_script:
-            - ant $OPTS clean
-            - ant $OPTS build
+            - nbbuild/travis/ant.sh $OPTS clean
+            - nbbuild/travis/ant.sh $OPTS build
           script:
             - ant $OPTS -f profiler/profiler.oql test
 
@@ -502,8 +502,8 @@ matrix:
           env:
             - OPTS="-Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json -quiet -Dcluster.config=php -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true"
           before_script:
-            - ant $OPTS clean
-            - ant $OPTS build
+            - nbbuild/travis/ant.sh $OPTS clean
+            - nbbuild/travis/ant.sh $OPTS build
           script:
             - hide-logs.sh ant $OPTS -f webcommon/api.knockout test
             #- hide-logs.sh ant $OPTS -f webcommon/cordova test
@@ -547,8 +547,8 @@ matrix:
               - GIT_TEST_REPO="$HOME/git_test_repo"
           script:
               # Build sources
-              - ant $OPTS clean
-              - ant $OPTS build
+              - nbbuild/travis/ant.sh $OPTS clean
+              - nbbuild/travis/ant.sh $OPTS build
               # Run unit tests
               - ant $OPTS $OPTS_TEST -f ide/versioning.core test-unit
               - ant $OPTS $OPTS_TEST -f ide/versioning test-unit
@@ -576,8 +576,8 @@ matrix:
             - OPTS_TEST="-Dtest-unit-sys-prop.ignore.random.failures=true -Dvanilla.javac.exists=true -Dtest-unit-sys-prop.mysql.user=root -Dtest-unit-sys-prop.mysql.password=password"
           before_script:
             - echo "ALTER USER root@'localhost' IDENTIFIED BY 'password';\nFLUSH PRIVILEGES;\n" | mysql -u root
-            - ant $OPTS clean
-            - ant $OPTS build
+            - nbbuild/travis/ant.sh $OPTS clean
+            - nbbuild/travis/ant.sh $OPTS build
           script:
             - travis_retry ant $OPTS $OPTS_TEST -f ide/db.metadata.model test
             - travis_retry ant $OPTS $OPTS_TEST -f ide/db.mysql test
@@ -587,8 +587,8 @@ matrix:
           env:
             - OPTS="-Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json -quiet -Dcluster.config=enterprise -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true"
           before_script:
-            - ant $OPTS clean
-            - ant $OPTS build
+            - nbbuild/travis/ant.sh $OPTS clean
+            - nbbuild/travis/ant.sh $OPTS build
           script:
             - ant $OPTS -f enterprise/spring.webmvc test
             - ant $OPTS -f enterprise/websvc.editor.hints test
@@ -656,8 +656,8 @@ matrix:
           env:
             - OPTS="-Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json -quiet -Dcluster.config=java -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true"
           before_script:
-            - ant $OPTS clean
-            - ant $OPTS build
+            - nbbuild/travis/ant.sh $OPTS clean
+            - nbbuild/travis/ant.sh $OPTS build
           script:
             - (cd java/java.lsp.server; ant build-vscode-ext -D3rdparty.modules=.*nbjavac.*)
             - (cd java/java.lsp.server; ant test-vscode-ext)
@@ -668,8 +668,8 @@ matrix:
             - GRAAL_VERSION="21.1.0"
             - OPTS="-Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json -quiet -Dcluster.config=release -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false"
           before_script:
-            - ant $OPTS clean
-            - ant $OPTS build
+            - nbbuild/travis/ant.sh $OPTS clean
+            - nbbuild/travis/ant.sh $OPTS build
           script:
             - nbbuild/travis/scripting.sh
 
@@ -679,8 +679,8 @@ matrix:
             - GRAAL_VERSION="20.3.0"
             - OPTS="-Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json -quiet -Dcluster.config=release -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false"
           before_script:
-            - ant $OPTS clean
-            - ant $OPTS build
+            - nbbuild/travis/ant.sh $OPTS clean
+            - nbbuild/travis/ant.sh $OPTS build
           script:
             - nbbuild/travis/scripting.sh
 
@@ -689,8 +689,8 @@ matrix:
           env:
             - OPTS="-quiet -Dcluster.config=release -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true"
           before_script:
-            - ant $OPTS clean
-            - ant $OPTS build
+            - nbbuild/travis/ant.sh $OPTS clean
+            - nbbuild/travis/ant.sh $OPTS build
           script:
             - hide-logs.sh ant $OPTS commit-validation
 
@@ -703,8 +703,8 @@ matrix:
             - export TEST_JDK=`bash install-jdk.sh --feature 11 --license GPL --emit-java-home --silent | tail -1`
             - export JAVA_HOME=$TEST_JDK
             - export OPTS="-Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json $OPTS -Dnbjdk.home=$TEST_JDK"
-            - ant $OPTS clean
-            - ant $OPTS build
+            - nbbuild/travis/ant.sh $OPTS clean
+            - nbbuild/travis/ant.sh $OPTS build
             - ant $OPTS test -Dtest.includes=NoTestsJustBuild
           script:
             - hide-logs.sh ant $OPTS commit-validation
@@ -717,8 +717,8 @@ matrix:
             - wget https://raw.githubusercontent.com/sormuras/bach/master/install-jdk.sh
             - export TEST_JDK=`bash install-jdk.sh --feature 15 --license GPL --emit-java-home --silent | tail -1`
             - export OPTS="-Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json $OPTS -Dtest.nbjdk.home=$TEST_JDK"
-            - ant $OPTS clean
-            - ant $OPTS build
+            - nbbuild/travis/ant.sh $OPTS clean
+            - nbbuild/travis/ant.sh $OPTS build
           script:
             - export JAVA_HOME=$TEST_JDK
             - hide-logs.sh ant $OPTS commit-validation

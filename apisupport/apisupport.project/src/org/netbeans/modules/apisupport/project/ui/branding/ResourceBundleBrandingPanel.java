@@ -572,7 +572,7 @@ public class ResourceBundleBrandingPanel extends AbstractBrandingPanel
         }
 
         private String escapeTagDefinitions (String text) {
-            return text.replaceAll("<", "&lt;").replaceAll(">", "&gt;"); // NOI18N
+            return text.replace("<", "&lt;").replace(">", "&gt;"); // NOI18N
         }
 
         public void refresh() {

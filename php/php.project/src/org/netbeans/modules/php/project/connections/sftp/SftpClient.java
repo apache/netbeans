@@ -19,23 +19,23 @@
 
 package org.netbeans.modules.php.project.connections.sftp;
 
+import com.jcraft.jsch.AgentConnector;
+import com.jcraft.jsch.AgentIdentityRepository;
 import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.IdentityRepository;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
+import com.jcraft.jsch.PageantConnector;
 import com.jcraft.jsch.Proxy;
 import com.jcraft.jsch.ProxyHTTP;
 import com.jcraft.jsch.ProxySOCKS5;
+import com.jcraft.jsch.SSHAgentConnector;
 import com.jcraft.jsch.Session;
 import com.jcraft.jsch.SftpATTRS;
 import com.jcraft.jsch.SftpException;
 import com.jcraft.jsch.UIKeyboardInteractive;
 import com.jcraft.jsch.UserInfo;
-import com.jcraft.jsch.agentproxy.AgentProxy;
-import com.jcraft.jsch.agentproxy.Buffer;
-import com.jcraft.jsch.agentproxy.Connector;
-import com.jcraft.jsch.agentproxy.Identity;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
@@ -46,7 +46,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.netbeans.libs.jsch.agentproxy.ConnectorFactory;
@@ -90,13 +89,7 @@ public class SftpClient implements RemoteClient {
         assert configuration != null;
         this.configuration = configuration;
 
-        if (io != null) {
-            sftpLogger = new SftpLogger(io);
-            LOGGER.log(Level.FINE, "Protocol command listener added");
-        } else {
-            sftpLogger = DEV_NULL_LOGGER;
-            LOGGER.log(Level.FINE, "No protocol command listener will be used");
-        }
+        sftpLogger = new SftpLogger(io);
     }
 
     @NbBundle.Messages("SftpConfiguration.bug.knownHosts=<html><b>Error in SFTP library detected:</b><br><br>Your Known Hosts file is too big and will not be used.")
@@ -197,9 +190,9 @@ public class SftpClient implements RemoteClient {
     private boolean setAgent(JSch jsch, String identityFile, boolean preferAgent) throws JSchException {
         boolean agentUsed = false;
         if (preferAgent) {
-            Connector con = ConnectorFactory.getInstance().createConnector(ConnectorFactory.ConnectorKind.ANY);
-            if (con != null) {
-                IdentityRepository irepo = new IdentityRepositoryImpl(con);
+            AgentConnector agentConnector = ConnectorFactory.getInstance().createConnector(ConnectorFactory.ConnectorKind.ANY);
+            if (agentConnector != null) {
+                IdentityRepository irepo = new AgentIdentityRepository(agentConnector);
                 if (irepo.getStatus() == IdentityRepository.RUNNING) {
                     jsch.setIdentityRepository(irepo);
                     agentUsed = true;
@@ -688,20 +681,21 @@ public class SftpClient implements RemoteClient {
 
         @Override
         public boolean isEnabled(int level) {
-            return level >= com.jcraft.jsch.Logger.INFO;
+            return true;
         }
 
         @Override
         public void log(int level, String message) {
-            assert io != null;
-            OutputWriter writer = null;
-            if (level <= com.jcraft.jsch.Logger.INFO) {
-                writer = io.getOut();
-            } else {
-                writer = io.getErr();
+            if (io != null && level >= com.jcraft.jsch.Logger.INFO) {
+                OutputWriter writer;
+                if (level <= com.jcraft.jsch.Logger.INFO) {
+                    writer = io.getOut();
+                } else {
+                    writer = io.getErr();
+                }
+                writer.println(message.trim());
+                writer.flush();
             }
-            writer.println(message.trim());
-            writer.flush();
             if (LOGGER.isLoggable(Level.FINE)) {
                 LOGGER.log(Level.FINE, "Command listener: {0}", message.trim());
             }
@@ -818,104 +812,6 @@ public class SftpClient implements RemoteClient {
             }
             return null;
         }
-    }
-
-    private static final class IdentityRepositoryImpl implements IdentityRepository {
-
-        private final Connector connector;
-        private final AgentProxy proxy;
-
-
-        public IdentityRepositoryImpl(Connector connector) {
-            this.connector = connector;
-            this.proxy = new AgentProxy(connector);
-        }
-
-        @Override
-        public String getName() {
-            return connector.getName();
-        }
-
-        @Override
-        public int getStatus() {
-            return connector.isAvailable()
-                    && proxy.isRunning() ? IdentityRepository.RUNNING : IdentityRepository.UNAVAILABLE;
-        }
-
-        @Override
-        public Vector getIdentities() {
-            Identity[] identities = proxy.getIdentities();
-            Vector<com.jcraft.jsch.Identity> result = new Vector<>(identities.length);
-            for (final Identity identity : identities) {
-                result.add(new com.jcraft.jsch.Identity() {
-                    private byte[] publicKey;
-
-                    @Override
-                    public boolean setPassphrase(byte[] passphrase) throws JSchException {
-                        return true;
-                    }
-
-                    @Override
-                    public byte[] getPublicKeyBlob() {
-                        if (publicKey == null) {
-                            publicKey = identity.getBlob();
-                        }
-                        return identity.getBlob();
-                    }
-
-                    @Override
-                    public byte[] getSignature(byte[] data) {
-                        return proxy.sign(getPublicKeyBlob(), data);
-                    }
-
-                    @Override
-                    public boolean decrypt() {
-                        return true;
-                    }
-
-                    @org.netbeans.api.annotations.common.SuppressWarnings(value = "DM_DEFAULT_ENCODING", justification = "Not known which encoding should be used.")
-                    @Override
-                    public String getAlgName() {
-                        return new String((new Buffer(getPublicKeyBlob())).getString());
-                    }
-
-                    @org.netbeans.api.annotations.common.SuppressWarnings(value = "DM_DEFAULT_ENCODING", justification = "Not known which encoding should be used.")
-                    @Override
-                    public String getName() {
-                        return new String(identity.getComment());
-                    }
-
-                    @Override
-                    public boolean isEncrypted() {
-                        return false;
-                    }
-
-                    @Override
-                    public void clear() {
-
-                    }
-                });
-            }
-            return result;
-        }
-
-        @Override
-        public boolean add(byte[] bytes) {
-            // not supported now
-            return false;
-        }
-
-        @Override
-        public boolean remove(byte[] bytes) {
-            // not supported now
-            return false;
-        }
-
-        @Override
-        public void removeAll() {
-            // not supported now
-        }
-
     }
 
 }

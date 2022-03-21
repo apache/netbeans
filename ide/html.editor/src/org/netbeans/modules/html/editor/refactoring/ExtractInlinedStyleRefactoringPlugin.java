@@ -438,7 +438,7 @@ public class ExtractInlinedStyleRefactoringPlugin implements RefactoringPlugin {
                     //adds the new free element name into all of them
 
                     //replace the namespace postfix by something allowed in css selector name
-                    String tagName = si.getTag().replaceAll(":", "_"); //NOI18N
+                    String tagName = si.getTag().replace(":", "_"); //NOI18N
 
                     String generatedSelectorName = getFirstFreeSelectorName(
                             selectorType, tagName, editedFileElements, targetFileElements);

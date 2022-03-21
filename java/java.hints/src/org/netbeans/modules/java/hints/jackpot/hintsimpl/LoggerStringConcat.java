@@ -178,10 +178,9 @@ public class LoggerStringConcat {
     }
     
     private static String literalToMessageFormat(String v) {
-        String fmtValue = v.replaceAll("'", "''");
-        fmtValue = fmtValue.replaceAll(Pattern.quote("{"), Matcher.quoteReplacement("'{'"));
-        fmtValue = fmtValue.replaceAll(Pattern.quote("}"), Matcher.quoteReplacement("'}'"));
-        return fmtValue;
+        return v.replace("'", "''")
+                .replace("{", "'{'")
+                .replace("}", "'}'");
     }
 
     private static void rewrite(WorkingCopy wc, ExpressionTree level, MethodInvocationTree invocation, TreePath message) {

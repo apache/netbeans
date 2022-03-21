@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.117
+#Version 1.118
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -745,6 +745,7 @@ hfds BROKEN_ALERT_TIMEOUT,LOGGER,brokenAlertLastTime,brokenAlertShown
 CLSS public org.netbeans.modules.j2ee.common.ui.BrokenServerSupport
 meth public static boolean isBroken(java.lang.String)
 meth public static java.lang.String selectServer(java.lang.String,java.lang.Object)
+ anno 0 java.lang.Deprecated()
 meth public static java.lang.String selectServer(org.netbeans.api.j2ee.core.Profile,org.netbeans.modules.j2ee.deployment.devmodules.api.J2eeModule$Type)
 meth public static void showAlert()
 supr java.lang.Object

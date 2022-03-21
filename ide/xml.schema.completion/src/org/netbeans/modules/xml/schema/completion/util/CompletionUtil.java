@@ -199,7 +199,7 @@ public class CompletionUtil {
      */
     public static void loadSchemaURIs(String schemaLocation, List<URI> uris, Map<String, String> schemaLocationMap) {
         StringTokenizer st = new StringTokenizer(
-                schemaLocation.replaceAll("\n", " "), " "); //NOI18N
+                schemaLocation.replace("\n", " "), " "); //NOI18N
         while(st.hasMoreTokens()) {
             URI uri = null;
             try {

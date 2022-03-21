@@ -479,8 +479,8 @@ public class DomainEditor {
         return dSources;
     }
 
-    private HashMap<String,String> getPoolValues(HashMap cpMap, String poolName) {
-        HashMap<String,String> pValues = new HashMap<String,String>();
+    private Map<String,String> getPoolValues(Map<String, Node> cpMap, String poolName) {
+        Map<String,String> pValues = new HashMap<>();
         Node cpNode = (Node) cpMap.get(poolName);
         NamedNodeMap cpAttrMap = cpNode.getAttributes();
         Node dsClassName = cpAttrMap.getNamedItem(CONST_DS_CLASS);

@@ -445,7 +445,7 @@ public abstract class IOSDebugTransport extends MobileDebugTransport implements 
             if (normUrl.endsWith("/")) { // NOI18N
                 normUrl = normUrl.substring(0, normUrl.length() - 1);
             }
-            return getConnectionURL().toString().equals(normUrl.replaceAll("file:///", "file:/"));
+            return getConnectionURL().toString().equals(normUrl.replace("file:///", "file:/"));
         }
 
         private String getTabForUrl() {

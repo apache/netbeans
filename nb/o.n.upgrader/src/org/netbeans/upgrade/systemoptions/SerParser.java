@@ -493,9 +493,9 @@ public final class SerParser implements ObjectStreamConstants {
         aw.values = new ArrayList<Object>(size);
         for (int i = 0; i < size; i++) {
             if (aw.classdesc.name.equals("[B")) { // NOI18N
-                aw.values.add(new Byte(readByte()));
+                aw.values.add(readByte());
             } else if (aw.classdesc.name.equals("[S")) { // NOI18N
-                aw.values.add(new Short(readShort()));
+                aw.values.add(readShort());
             } else if (aw.classdesc.name.equals("[I")) { // NOI18N
                 aw.values.add(new Integer(readInt()));
             } else if (aw.classdesc.name.equals("[J")) { // NOI18N
@@ -553,13 +553,13 @@ public final class SerParser implements ObjectStreamConstants {
     
     private List<NameValue> readNoWrClass(ClassDesc cd) throws IOException {
         List<FieldDesc> fields = cd.fields;
-        List<NameValue> values = new ArrayList<NameValue>(fields.size());
+        List<NameValue> values = new ArrayList<>(fields.size());
         for (int i = 0; i < fields.size(); i++) {
             FieldDesc fd = (FieldDesc)fields.get(i);
             if (fd.type.equals("B")) { // NOI18N
-                values.add(new NameValue(fd, new Byte(readByte())));
+                values.add(new NameValue(fd, readByte()));
             } else if (fd.type.equals("S")) { // NOI18N
-                values.add(new NameValue(fd, new Short(readShort())));
+                values.add(new NameValue(fd, readShort()));
             } else if (fd.type.equals("I")) { // NOI18N
                 values.add(new NameValue(fd, new Integer(readInt())));
             } else if (fd.type.equals("J")) { // NOI18N
@@ -579,5 +579,4 @@ public final class SerParser implements ObjectStreamConstants {
         if (DEBUG) System.err.println("readNoWrClass: " + values); // NOI18N
         return values;
     }
-
 }

@@ -56,11 +56,9 @@ public final class NeonLexerUtils {
     }
 
     public static String replaceLinesAndTabs(String input) {
-        String escapedString = input;
-        escapedString = escapedString.replaceAll("\n", "\\\\n"); //NOI18N
-        escapedString = escapedString.replaceAll("\r", "\\\\r"); //NOI18N
-        escapedString = escapedString.replaceAll("\t", "\\\\t"); //NOI18N
-        return escapedString;
+        return input.replace("\n", "\\n") //NOI18N
+                    .replace("\r", "\\r") //NOI18N
+                    .replace("\t", "\\t"); //NOI18N
     }
 
 }

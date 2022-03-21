@@ -367,33 +367,33 @@ public class Common {
     }
     
     public static Object defaultScalarValue(int type) {
-        switch(type & Common.MASK_TYPE) {
-	    case Common.TYPE_STRING:
-            return "";	// NOI18N
-        case Common.TYPE_COMMENT:
-            return "";	// NOI18N
-	    case Common.TYPE_BOOLEAN:
-            return Boolean.FALSE;
-	    case Common.TYPE_BYTE:
-            return new Byte((byte)0);
-	    case Common.TYPE_CHAR:
-            return new Character('\0');
-	    case Common.TYPE_SHORT:
-            return new Short((short)0);
-	    case Common.TYPE_INT:
-            return Integer.valueOf(0);
-	    case Common.TYPE_LONG:
-            return new Long(0);
-	    case Common.TYPE_FLOAT:
-            return new Float(0.0);
-	    case Common.TYPE_DOUBLE:
-            return new Double(0.0);
-	    default:
-            throw new IllegalArgumentException(Common.getMessage(
-                                                                 "UnknownType_msg", Integer.valueOf(type)));
+        switch (type & Common.MASK_TYPE) {
+            case Common.TYPE_STRING:
+                return "";	// NOI18N
+            case Common.TYPE_COMMENT:
+                return "";	// NOI18N
+            case Common.TYPE_BOOLEAN:
+                return Boolean.FALSE;
+            case Common.TYPE_BYTE:
+                return (byte)0;
+            case Common.TYPE_CHAR:
+                return new Character('\0');
+            case Common.TYPE_SHORT:
+                return (short)0;
+            case Common.TYPE_INT:
+                return Integer.valueOf(0);
+            case Common.TYPE_LONG:
+                return new Long(0);
+            case Common.TYPE_FLOAT:
+                return new Float(0.0);
+            case Common.TYPE_DOUBLE:
+                return new Double(0.0);
+            default:
+                throw new IllegalArgumentException(Common.getMessage(
+                        "UnknownType_msg", Integer.valueOf(type)));
         }
     }
-    
+
     
     /*
      *	Bundle utility methods. The following methods return a formated message

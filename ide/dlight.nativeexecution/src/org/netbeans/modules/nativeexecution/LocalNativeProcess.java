@@ -254,7 +254,7 @@ public final class LocalNativeProcess extends AbstractNativeProcess {
 
                         String errorMsg = loc("LocalNativeProcess.windowsProcessStartFailed.1073741515.text", cmd.toString()); // NOI18N
                         if (info.isPtyMode()) {
-                            errorMsg = errorMsg.replaceAll("\n", "\n\r"); // NOI18N
+                            errorMsg = errorMsg.replace("\n", "\n\r"); // NOI18N
                         }
 
                         try {

@@ -177,7 +177,7 @@ final class CallHierarchyTasks {
         });
     }
     
-    private static final class RootResolver implements Task<CompilationController> {
+    static final class RootResolver implements Task<CompilationController> {
         
         private int offset = -1;
         private TreePathHandle tHandle;

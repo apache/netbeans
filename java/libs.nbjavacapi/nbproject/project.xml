@@ -41,7 +41,7 @@
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>ext/nb-javac-jdk-18.jar</runtime-relative-path>
-                <binary-origin>external/nb-javac-jdk-18+36-impl.jar</binary-origin>
+                <binary-origin>external/nb-javac-jdk-18+36.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

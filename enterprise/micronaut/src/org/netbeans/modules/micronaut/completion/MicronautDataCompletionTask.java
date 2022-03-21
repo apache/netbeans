@@ -135,60 +135,62 @@ public class MicronautDataCompletionTask {
                 @Override
                 public void run(ResultIterator resultIterator) throws Exception {
                     CompilationController cc = CompilationController.get(resultIterator.getParserResult(caretOffset));
-                    cc.toPhase(JavaSource.Phase.PARSED);
-                    anchorOffset = caretOffset;
-                    String prefix = EMPTY;
-                    TokenSequence<JavaTokenId> ts = cc.getTokenHierarchy().tokenSequence(JavaTokenId.language());
-                    if (ts.move(anchorOffset) == 0 || !ts.moveNext()) {
-                        ts.movePrevious();
-                    }
-                    int len = anchorOffset - ts.offset();
-                    if (len > 0 && ts.token().length() >= len) {
-                        if (ts.token().id() == JavaTokenId.IDENTIFIER || ts.token().id().primaryCategory().startsWith("keyword") ||
-                                 ts.token().id().primaryCategory().equals("literal")) {
-                            prefix = ts.token().text().toString().substring(0, len);
-                            anchorOffset = ts.offset();
-                        } else if (ts.token().id() == JavaTokenId.STRING_LITERAL) {
-                            prefix = ts.token().text().toString().substring(1, ts.token().length() - 1);
-                            anchorOffset = ts.offset() + 1;
-                        } else if (ts.token().id() == JavaTokenId.MULTILINE_STRING_LITERAL) {
-                            prefix = ts.token().text().toString().substring(3, len);
-                            anchorOffset = ts.offset() + 3;
+                    if (cc != null) {
+                        cc.toPhase(JavaSource.Phase.PARSED);
+                        anchorOffset = caretOffset;
+                        String prefix = EMPTY;
+                        TokenSequence<JavaTokenId> ts = cc.getTokenHierarchy().tokenSequence(JavaTokenId.language());
+                        if (ts.move(anchorOffset) == 0 || !ts.moveNext()) {
+                            ts.movePrevious();
                         }
-                    }
-                    Consumer consumer = (namePrefix, name, type) -> {
-                        items.add(type != null ? factory.createFinderMethodItem(name, type, anchorOffset) : factory.createFinderMethodNameItem(namePrefix, name, anchorOffset));
-                    };
-                    TreeUtilities treeUtilities = cc.getTreeUtilities();
-                    SourcePositions sp = cc.getTrees().getSourcePositions();
-                    TreePath path = treeUtilities.pathFor(anchorOffset);
-                    switch (path.getLeaf().getKind()) {
-                        case CLASS:
-                        case INTERFACE:
-                            resolveFinderMethods(cc, path, prefix, true, consumer);
-                            break;
-                        case METHOD:
-                            Tree returnType = ((MethodTree) path.getLeaf()).getReturnType();
-                            if (returnType != null && findLastNonWhitespaceToken(ts, (int) sp.getEndPosition(path.getCompilationUnit(), returnType), anchorOffset) == null) {
-                                resolveFinderMethods(cc, path.getParentPath(), prefix, false, consumer);
+                        int len = anchorOffset - ts.offset();
+                        if (len > 0 && ts.token().length() >= len) {
+                            if (ts.token().id() == JavaTokenId.IDENTIFIER || ts.token().id().primaryCategory().startsWith("keyword") ||
+                                     ts.token().id().primaryCategory().equals("literal")) {
+                                prefix = ts.token().text().toString().substring(0, len);
+                                anchorOffset = ts.offset();
+                            } else if (ts.token().id() == JavaTokenId.STRING_LITERAL) {
+                                prefix = ts.token().text().toString().substring(1, ts.token().length() - 1);
+                                anchorOffset = ts.offset() + 1;
+                            } else if (ts.token().id() == JavaTokenId.MULTILINE_STRING_LITERAL) {
+                                prefix = ts.token().text().toString().substring(3, len);
+                                anchorOffset = ts.offset() + 3;
                             }
-                            break;
-                        case VARIABLE:
-                            Tree type = ((VariableTree) path.getLeaf()).getType();
-                            if (type != null && findLastNonWhitespaceToken(ts, (int) sp.getEndPosition(path.getCompilationUnit(), type), anchorOffset) == null) {
-                                TreePath parentPath = path.getParentPath();
-                                if (parentPath.getLeaf().getKind() == Tree.Kind.CLASS || parentPath.getLeaf().getKind() == Tree.Kind.INTERFACE) {
-                                    resolveFinderMethods(cc, parentPath, prefix, false, consumer);
+                        }
+                        Consumer consumer = (namePrefix, name, type) -> {
+                            items.add(type != null ? factory.createFinderMethodItem(name, type, anchorOffset) : factory.createFinderMethodNameItem(namePrefix, name, anchorOffset));
+                        };
+                        TreeUtilities treeUtilities = cc.getTreeUtilities();
+                        SourcePositions sp = cc.getTrees().getSourcePositions();
+                        TreePath path = treeUtilities.pathFor(anchorOffset);
+                        switch (path.getLeaf().getKind()) {
+                            case CLASS:
+                            case INTERFACE:
+                                resolveFinderMethods(cc, path, prefix, true, consumer);
+                                break;
+                            case METHOD:
+                                Tree returnType = ((MethodTree) path.getLeaf()).getReturnType();
+                                if (returnType != null && findLastNonWhitespaceToken(ts, (int) sp.getEndPosition(path.getCompilationUnit(), returnType), anchorOffset) == null) {
+                                    resolveFinderMethods(cc, path.getParentPath(), prefix, false, consumer);
                                 }
-                            }
-                            break;
-                        case STRING_LITERAL:
-                            if (path.getParentPath().getLeaf().getKind() == Tree.Kind.ASSIGNMENT && path.getParentPath().getParentPath().getLeaf().getKind() == Tree.Kind.ANNOTATION) {
-                                resolveQueryAnnotation(cc, path.getParentPath().getParentPath(), prefix, caretOffset - anchorOffset, item -> {
-                                    items.add(factory.createSQLItem(item));
-                                });
-                            }
-                            break;
+                                break;
+                            case VARIABLE:
+                                Tree type = ((VariableTree) path.getLeaf()).getType();
+                                if (type != null && findLastNonWhitespaceToken(ts, (int) sp.getEndPosition(path.getCompilationUnit(), type), anchorOffset) == null) {
+                                    TreePath parentPath = path.getParentPath();
+                                    if (parentPath.getLeaf().getKind() == Tree.Kind.CLASS || parentPath.getLeaf().getKind() == Tree.Kind.INTERFACE) {
+                                        resolveFinderMethods(cc, parentPath, prefix, false, consumer);
+                                    }
+                                }
+                                break;
+                            case STRING_LITERAL:
+                                if (path.getParentPath().getLeaf().getKind() == Tree.Kind.ASSIGNMENT && path.getParentPath().getParentPath().getLeaf().getKind() == Tree.Kind.ANNOTATION) {
+                                    resolveQueryAnnotation(cc, path.getParentPath().getParentPath(), prefix, caretOffset - anchorOffset, item -> {
+                                        items.add(factory.createSQLItem(item));
+                                    });
+                                }
+                                break;
+                        }
                     }
                 }
             });

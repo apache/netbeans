@@ -189,7 +189,7 @@ public class GradleProcessorFactory implements OutputProcessorFactory {
 
     static class WarningModeAllProcessor implements OutputProcessor {
 
-        private static Pattern WARNING_MODE_ALL = Pattern.compile("(You can use ')(\\-\\-warning\\-mode all)('.+)");
+        private static Pattern WARNING_MODE_ALL = Pattern.compile("(.+ ')(\\-\\-warning\\-mode all)('.+)");
         final RunConfig cfg;
 
         public WarningModeAllProcessor(RunConfig cfg) {

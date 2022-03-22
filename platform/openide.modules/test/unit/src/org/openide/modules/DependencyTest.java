@@ -102,6 +102,14 @@ public class DependencyTest extends NbTestCase {
         Dependency.create(Dependency.TYPE_MODULE, "org.foo.thing");
     }
     
+    public void testParseCodenameHyphen() throws Exception {
+        Dependency.create(Dependency.TYPE_MODULE, "org.foo.bar.thing-io");
+    }
+    
+    public void testParseCodenameUnderscore() throws Exception {
+        Dependency.create(Dependency.TYPE_MODULE, "org.foo.bar.thing_io");
+    }
+    
     public void testParseRangedRelVers() throws Exception {
         Dependency d1 = Dependency.create(Dependency.TYPE_MODULE, "org.foo/1-2 > 1.1").iterator().next();
         Dependency d2 = Dependency.create(Dependency.TYPE_MODULE, "org.foo/2-4").iterator().next();

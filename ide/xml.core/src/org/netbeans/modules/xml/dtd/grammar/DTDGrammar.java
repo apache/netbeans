@@ -143,7 +143,7 @@ class DTDGrammar implements ExtendedGrammarQuery {
         
         String prefix = ctx.getCurrentPrefix();
         
-        LinkedList list = new LinkedList ();
+        List<MyAttr> list = new LinkedList<>();
         Iterator<String> it = possibleAttributes.iterator();
         while ( it.hasNext()) {
             String next = it.next();
@@ -216,7 +216,7 @@ class DTDGrammar implements ExtendedGrammarQuery {
         if (elements == null) return org.openide.util.Enumerations.empty();;
         String prefix = ctx.getCurrentPrefix();
         
-        LinkedList list = new LinkedList ();
+        List<MyElement> list = new LinkedList<>();
         Iterator<String> it = elements.iterator();
         while ( it.hasNext()) {
             String next = it.next();
@@ -236,7 +236,7 @@ class DTDGrammar implements ExtendedGrammarQuery {
     public Enumeration queryNotations(String prefix) {
         if (notations == null) return org.openide.util.Enumerations.empty();;
         
-        LinkedList list = new LinkedList ();
+        List<MyNotation> list = new LinkedList<>();
         Iterator<String> it = notations.iterator();
         while ( it.hasNext()) {
             String next = it.next();
@@ -271,7 +271,7 @@ class DTDGrammar implements ExtendedGrammarQuery {
             if (values == null) return org.openide.util.Enumerations.empty();
             
             String prefix = ctx.getCurrentPrefix();
-            LinkedList en = new LinkedList ();
+            List<MyText> en = new LinkedList<>();
             Iterator<String> it = values.iterator();
             while (it.hasNext()) {
                 String next = it.next();

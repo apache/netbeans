@@ -18,9 +18,11 @@
  */
 package org.netbeans.modules.groovy.editor.completion;
 
+import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 import org.codehaus.groovy.ast.ASTNode;
+import org.codehaus.groovy.ast.AnnotationNode;
 import org.codehaus.groovy.ast.ClassHelper;
 import org.codehaus.groovy.ast.ClassNode;
 import org.codehaus.groovy.ast.MethodNode;
@@ -28,15 +30,19 @@ import org.codehaus.groovy.ast.Variable;
 import org.codehaus.groovy.ast.Parameter;
 import org.codehaus.groovy.ast.expr.Expression;
 import org.netbeans.modules.csl.api.CompletionProposal;
+import org.netbeans.modules.csl.spi.ParserResult;
 import org.netbeans.modules.groovy.editor.api.completion.CaretLocation;
 import org.netbeans.modules.groovy.editor.api.completion.CompletionItem;
 import org.netbeans.modules.groovy.editor.api.completion.util.CompletionContext;
+import org.netbeans.modules.groovy.editor.api.parser.GroovyParserResult;
 
 /**
  *
  * @author Petr Pisl
  */
 public class SpockMethodParamCompletion  extends BaseCompletion {
+    
+    private static final String UNROLL_CLASS = "spock.lang.Unroll";  //NOI18N
     
     private static class SpockParameter implements Variable {
 
@@ -114,10 +120,38 @@ public class SpockMethodParamCompletion  extends BaseCompletion {
                     methodNode = (MethodNode) next;
                     break;
                 }    
-            }
+            }  
+            
             String name = null;
+            
             if (methodNode != null) {
-                name = methodNode.getName();
+                
+                AnnotationNode unroll = null;
+                
+                ParserResult pr = request.getParserResult();
+                if(pr != null && pr instanceof GroovyParserResult) {
+                    GroovyParserResult gpr = (GroovyParserResult)request.getParserResult();
+                    List<AnnotationNode> annotations = methodNode.getAnnotations();
+                    if (annotations != null && !annotations.isEmpty()) {
+                        for (AnnotationNode annotation : annotations) {
+                            if (annotation.getClassNode().isDerivedFrom(gpr.resolveClassName(UNROLL_CLASS))) {
+                                unroll = annotation;
+                                break;
+                            }
+                        }
+                    }
+                }
+                
+                if(unroll != null) {
+                    Expression valueMember = unroll.getMember("value");  //NOI18N
+                    if (valueMember != null) {
+                        name = valueMember.getText();
+                    }
+                }
+                
+                if (name == null || !name.contains("#")) {
+                    name = methodNode.getName();
+                }
             }
             
             if (name != null && name.contains("#")) {   //NOI18N

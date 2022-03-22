@@ -800,6 +800,12 @@ public abstract class CompletionItem extends DefaultCompletionProposal {
         @Override
         public ElementKind getKind() {
             // TODO: kind could be class or interface, depending on ek - NETBEANS-5788
+            if (this.ek == javax.lang.model.element.ElementKind.FIELD) {
+                return ElementKind.FIELD;
+            }
+            if (this.ek == javax.lang.model.element.ElementKind.METHOD) {
+                return ElementKind.METHOD;
+            }
             return ElementKind.CLASS;
         }
 
@@ -810,7 +816,10 @@ public abstract class CompletionItem extends DefaultCompletionProposal {
 
         @Override
         public Set<Modifier> getModifiers() {
-            return Collections.emptySet();
+            if (this.ek.isClass() || this.ek.isInterface()) {
+                return Collections.emptySet();
+            }
+            return Collections.singleton(Modifier.STATIC);
         }
         
         void assignHandle(ElementHandle h) {

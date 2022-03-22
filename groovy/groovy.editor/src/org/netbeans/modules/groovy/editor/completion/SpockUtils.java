@@ -24,9 +24,11 @@ import java.util.Set;
 import org.codehaus.groovy.ast.ClassNode;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenSequence;
+import org.netbeans.modules.csl.spi.ParserResult;
 import org.netbeans.modules.groovy.editor.api.completion.util.CompletionContext;
 import org.netbeans.modules.groovy.editor.api.lexer.GroovyTokenId;
 import org.netbeans.modules.groovy.editor.api.lexer.LexUtilities;
+import org.netbeans.modules.groovy.editor.api.parser.GroovyParserResult;
 
 /**
  *
@@ -39,12 +41,16 @@ public class SpockUtils {
         Set<String> visited = new HashSet<>();
         String name;
         ClassNode classNode = context.declaringClass;
-        while (classNode != null && !visited.contains(name = classNode.getName())) {
-            if ("spock.lang.Specification".equals(name)) {
-                return true;
+        ParserResult pr = context.getParserResult();
+        if (pr != null && pr instanceof GroovyParserResult) {
+            GroovyParserResult gpr = (GroovyParserResult)pr;
+            while (classNode != null && !visited.contains(name = classNode.getName())) {
+                if (classNode.isDerivedFrom(gpr.resolveClassName("spock.lang.Specification"))) {   //NOI18N
+                    return true;
+                }
+                visited.add(name);
+                classNode = classNode.getSuperClass();
             }
-            visited.add(name);
-            classNode = classNode.getSuperClass();
         }
         return false;
     }

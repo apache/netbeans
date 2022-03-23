@@ -131,12 +131,15 @@ public class SpockMethodParamCompletion  extends BaseCompletion {
                 ParserResult pr = request.getParserResult();
                 if(pr != null && pr instanceof GroovyParserResult) {
                     GroovyParserResult gpr = (GroovyParserResult)request.getParserResult();
-                    List<AnnotationNode> annotations = methodNode.getAnnotations();
-                    if (annotations != null && !annotations.isEmpty()) {
-                        for (AnnotationNode annotation : annotations) {
-                            if (annotation.getClassNode().isDerivedFrom(gpr.resolveClassName(UNROLL_CLASS))) {
-                                unroll = annotation;
-                                break;
+                    ClassNode unrollCN = gpr.resolveClassName(UNROLL_CLASS);
+                    if (unrollCN != null) {
+                        List<AnnotationNode> annotations = methodNode.getAnnotations();
+                        if (annotations != null && !annotations.isEmpty()) {
+                            for (AnnotationNode annotation : annotations) {
+                                if (annotation.getClassNode().isDerivedFrom(gpr.resolveClassName(UNROLL_CLASS))) {
+                                    unroll = annotation;
+                                    break;
+                                }
                             }
                         }
                     }

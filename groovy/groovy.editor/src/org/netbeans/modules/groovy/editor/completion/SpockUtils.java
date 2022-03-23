@@ -18,7 +18,6 @@
  */
 package org.netbeans.modules.groovy.editor.completion;
 
-
 import java.util.HashSet;
 import java.util.Set;
 import org.codehaus.groovy.ast.ClassNode;
@@ -35,26 +34,34 @@ import org.netbeans.modules.groovy.editor.api.parser.GroovyParserResult;
  * @author Petr Pisl
  */
 public class SpockUtils {
-    
+
     public static boolean isInSpecificationClass(CompletionContext context) {
         
-        Set<String> visited = new HashSet<>();
-        String name;
         ClassNode classNode = context.declaringClass;
         ParserResult pr = context.getParserResult();
         if (pr != null && pr instanceof GroovyParserResult) {
-            GroovyParserResult gpr = (GroovyParserResult)pr;
-            while (classNode != null && !visited.contains(name = classNode.getName())) {
-                if (classNode.isDerivedFrom(gpr.resolveClassName("spock.lang.Specification"))) {   //NOI18N
+            GroovyParserResult gpr = (GroovyParserResult) pr;
+            ClassNode specCN = gpr.resolveClassName("spock.lang.Specification");   //NOI18N
+            if (specCN != null) {
+                if (classNode.isDerivedFrom(specCN)) {   
                     return true;
                 }
-                visited.add(name);
-                classNode = classNode.getSuperClass();
+            } else {
+                // this branch is mainly for tests, which doesn't have Spock on classpath
+                String name;
+                Set<String> visited = new HashSet<>();
+                while (classNode != null && !visited.contains(name = classNode.getName())) {
+                    if ("spock.lang.Specification".equals(name)) {  //NOI18N
+                        return true;
+                    }
+                    visited.add(name);
+                    classNode = classNode.getSuperClass();
+                }
             }
         }
         return false;
     }
-    
+
     static boolean isFirstStatement(final CompletionContext request) {
         TokenSequence<GroovyTokenId> ts = LexUtilities.getGroovyTokenSequence(request.doc, 1);
 
@@ -63,7 +70,7 @@ public class SpockUtils {
             if (ts.movePrevious()) {
                 while (ts.isValid() && ts.movePrevious() && ts.offset() >= 0) {
                     Token<GroovyTokenId> t = ts.token();
-                    if (!(t.id() == GroovyTokenId.NLS || t.id() == GroovyTokenId.WHITESPACE 
+                    if (!(t.id() == GroovyTokenId.NLS || t.id() == GroovyTokenId.WHITESPACE
                             || t.id() == GroovyTokenId.SH_COMMENT || t.id() == GroovyTokenId.SL_COMMENT
                             || t.id() == GroovyTokenId.BLOCK_COMMENT || t.id() == GroovyTokenId.LINE_COMMENT)) {
                         return false;
@@ -75,5 +82,5 @@ public class SpockUtils {
 
         return false;
     }
-    
+
 }

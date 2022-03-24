@@ -42,7 +42,7 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.InetSocketAddress;
 import java.net.ProxySelector;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.netbeans.modules.websvc.manager.util.ManagerUtil;
@@ -310,8 +310,7 @@ public class Wsdl2Java {
             final String wsdlConfigEntry = "\t<wsdl location=\"" + wsdlFileName +
                     "\" packageName=\"" + packageName + "\"/>"; // NOI81N
             
-            PrintWriter configWriter = new PrintWriter( new OutputStreamWriter(
-                    out, Charset.forName("UTF-8")));            // NOI18N
+            PrintWriter configWriter = new PrintWriter(new OutputStreamWriter(out, StandardCharsets.UTF_8));
             
             try {
                 configWriter.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"); // NOI18N

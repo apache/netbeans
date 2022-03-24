@@ -24,6 +24,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -253,7 +254,7 @@ public final class ShortcutWizard extends WizardDescriptor {
                 FileObject shortcut = actionsBuild.createData(fname); // NOI18N
                 OutputStream os = shortcut.getOutputStream();
                 try {
-                    os.write(getContents().getBytes("UTF-8")); // NOI18N
+                    os.write(getContents().getBytes(StandardCharsets.UTF_8));
                 } finally {
                     os.close();
                 }

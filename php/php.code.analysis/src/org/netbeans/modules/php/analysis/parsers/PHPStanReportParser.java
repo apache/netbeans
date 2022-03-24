@@ -78,7 +78,7 @@ public class PHPStanReportParser extends DefaultHandler {
     public static List<Result> parse(File file, FileObject root, @NullAllowed FileObject workDir) {
         try {
             sanitizeFile(file);
-            try (Reader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8"))) { // NOI18N
+            try (Reader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8))) {
                 return create(reader, root, workDir).getResults();
             }
         } catch (IOException | SAXException ex) {

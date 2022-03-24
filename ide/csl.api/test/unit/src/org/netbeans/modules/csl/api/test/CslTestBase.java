@@ -115,7 +115,6 @@ import javax.swing.event.DocumentListener;
 import javax.swing.text.DefaultEditorKit;
 import javax.swing.text.Document;
 import javax.swing.text.Element;
-import junit.framework.Assert;
 import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.api.editor.mimelookup.MimeLookup;
 import org.netbeans.api.editor.mimelookup.MimePath;
@@ -227,7 +226,7 @@ public abstract class CslTestBase extends NbTestCase {
                 layers.add(en.nextElement());
             }
 
-            Assert.assertTrue(additionalLayers[cntr], found);
+            assertTrue(additionalLayers[cntr], found);
         }
 
         XMLFileSystem xmlFS = new XMLFileSystem();
@@ -342,7 +341,7 @@ public abstract class CslTestBase extends NbTestCase {
     public static final FileObject copyStringToFileObject(FileObject fo, String content) throws IOException {
         OutputStream os = fo.getOutputStream();
         try {
-            InputStream is = new ByteArrayInputStream(content.getBytes("UTF-8"));
+            InputStream is = new ByteArrayInputStream(content.getBytes(StandardCharsets.UTF_8));
             try {
                 FileUtil.copy(is, os);
                 return fo;

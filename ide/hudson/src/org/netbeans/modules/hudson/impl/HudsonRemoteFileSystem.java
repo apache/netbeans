@@ -30,6 +30,7 @@ import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Enumeration;
@@ -150,7 +151,7 @@ final class HudsonRemoteFileSystem extends RemoteFileSystem implements
             java.util.List<String> kids = new ArrayList<String>();
             InputStream is = conn.getInputStream();
             try {
-                BufferedReader r = new BufferedReader(new InputStreamReader(is, "UTF-8")); // NOI18N
+                BufferedReader r = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
                 String line;
                 while ((line = r.readLine()) != null) {
                     if (line.endsWith("/")) { // NOI18N

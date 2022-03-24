@@ -19,8 +19,8 @@
 package org.netbeans.modules.java.source.parsing;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.net.URI;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.FileVisitResult;
 import java.nio.file.FileVisitor;
 import java.nio.file.Files;
@@ -142,11 +142,7 @@ public class CachingPathArchive extends AbstractPathArchive {
     }
 
     private String getName(final int start, final int len) {
-        try {
-            return new String(packedNames, start, len, "UTF-8");    //NOI18N
-        } catch (UnsupportedEncodingException ue) {
-            throw new IllegalStateException(ue);
-        }
+        return new String(packedNames, start, len, StandardCharsets.UTF_8);
     }
 
     @NonNull
@@ -175,7 +171,7 @@ public class CachingPathArchive extends AbstractPathArchive {
                     if (cf.length < co+2) {
                         cf = state.currentFolder = Arrays.copyOfRange(cf, 0, 2 + cf.length<<1);
                     }
-                    final byte[] name = file.getFileName().toString().getBytes("UTF-8");
+                    final byte[] name = file.getFileName().toString().getBytes(StandardCharsets.UTF_8);
                     cf[co] = putName(name);
                     cf[co+1] = name.length;
                     state.currentOffset+=2;

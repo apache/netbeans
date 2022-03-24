@@ -26,6 +26,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -110,7 +111,7 @@ public class XMLStorage {
                     FileLock lock = fo.lock ();
                     try {
                         OutputStream os = fo.getOutputStream (lock);
-                        Writer writer = new OutputStreamWriter (os, "UTF-8"); // NOI18N
+                        Writer writer = new OutputStreamWriter (os, StandardCharsets.UTF_8);
                         try {
                             writer.write (content);
                         } finally {

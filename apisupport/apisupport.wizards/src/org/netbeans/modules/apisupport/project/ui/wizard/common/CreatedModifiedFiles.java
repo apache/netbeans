@@ -34,6 +34,7 @@ import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.Writer;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -638,7 +639,7 @@ public final class CreatedModifiedFiles {
             List<String> lines = new ArrayList<String>();
             InputStream serviceIS = service.getInputStream();
             try {
-                BufferedReader br = new BufferedReader(new InputStreamReader(serviceIS, "UTF-8")); // NOI18N
+                BufferedReader br = new BufferedReader(new InputStreamReader(serviceIS, StandardCharsets.UTF_8));
                 String line;
                 while ((line = br.readLine()) != null) {
                     lines.add(line);
@@ -649,7 +650,7 @@ public final class CreatedModifiedFiles {
 
             OutputStream os = service.getOutputStream();
             try {
-                PrintWriter pw = new PrintWriter(new OutputStreamWriter(os, "UTF-8")); // NOI18N
+                PrintWriter pw = new PrintWriter(new OutputStreamWriter(os, StandardCharsets.UTF_8));
                 Iterator<String> it = lines.iterator();
                 while (it.hasNext()) {
                     String line = it.next();

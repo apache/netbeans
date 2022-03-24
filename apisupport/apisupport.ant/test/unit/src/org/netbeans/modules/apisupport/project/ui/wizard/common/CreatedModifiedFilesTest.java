@@ -32,6 +32,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -222,7 +223,7 @@ public class CreatedModifiedFilesTest extends LayerTestBase {
         assertNotNull(registry);
         InputStream is = registry.getInputStream();
         try {
-            BufferedReader r = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+            BufferedReader r = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
             assertEquals("org.example.module1.ProvideMeImpl1", r.readLine());
             assertEquals("org.example.module1.ProvideMeImpl2", r.readLine());
             assertEquals(null, r.readLine());
@@ -233,7 +234,7 @@ public class CreatedModifiedFilesTest extends LayerTestBase {
         assertNotNull(registry);
         is = registry.getInputStream();
         try {
-            BufferedReader r = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+            BufferedReader r = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
             assertEquals("org.example.module1.ProvideMeImpl1", r.readLine());
             assertEquals(null, r.readLine());
         } finally {

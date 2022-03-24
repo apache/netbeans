@@ -27,6 +27,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -235,7 +236,7 @@ public class StreamsHangup {
     private static File writeFile(File f, String body) throws IOException {
         f.getParentFile().mkdirs();
         OutputStream os = new FileOutputStream(f);
-        PrintWriter pw = new PrintWriter(new OutputStreamWriter(os, "UTF-8"));
+        PrintWriter pw = new PrintWriter(new OutputStreamWriter(os, StandardCharsets.UTF_8));
         pw.print(body);
         pw.flush();
         os.close();

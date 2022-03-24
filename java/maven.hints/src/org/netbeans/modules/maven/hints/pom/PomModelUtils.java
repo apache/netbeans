@@ -24,6 +24,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -203,7 +204,7 @@ public final class PomModelUtils {
                 if (err.get() != null) {
                     throw new IOException(err.get());
                 } else {
-                    return new ByteArrayInputStream(content.get().getBytes("UTF-8"));
+                    return new ByteArrayInputStream(content.get().getBytes(StandardCharsets.UTF_8));
                 }
             }
             return new FileInputStream(pomFile);

@@ -312,7 +312,7 @@ public class ServerTest extends NbTestCase {
     public void testMain() throws Exception {
         File src = new File(getWorkDir(), "Test.java");
         src.getParentFile().mkdirs();
-        String code = "public class Test { int i = \"\".hashCode(); public void run() { this.test(); } /**Test.*/public void test() {} }";
+        String code = "public class Test { public int i = \"\".hashCode(); public void run() { this.test(); } /**Test.*/public void test() {} }";
         try (Writer w = new FileWriter(src)) {
             w.write(code);
         }
@@ -331,8 +331,8 @@ public class ServerTest extends NbTestCase {
         VersionedTextDocumentIdentifier id = new VersionedTextDocumentIdentifier(1);
         id.setUri(toURI(src));
         server.getTextDocumentService().didChange(new DidChangeTextDocumentParams(id, Arrays.asList(new TextDocumentContentChangeEvent(new Range(new Position(0, hashCodeStart), new Position(0, hashCodeStart + "hashCode".length())), "hashCode".length(), "equ"))));
-        assertDiags(diags, "Error:0:31-0:34");//errors
-        assertDiags(diags, "Error:0:31-0:34");//hints
+        assertDiags(diags, "Error:0:38-0:41");//errors
+        assertDiags(diags, "Error:0:38-0:41");//hints
         completion = server.getTextDocumentService().completion(new CompletionParams(new TextDocumentIdentifier(toURI(src)), new Position(0, hashCodeStart + 2))).get();
         actualItems = completion.getRight().getItems().stream().map(ci -> ci.getKind() + ":" + ci.getLabel()).collect(Collectors.toList());
         if (jdk9Plus()) {
@@ -378,7 +378,7 @@ public class ServerTest extends NbTestCase {
         assertEquals("(String) ", edit.getNewText());
         server.getTextDocumentService().didChange(new DidChangeTextDocumentParams(id, Arrays.asList(new TextDocumentContentChangeEvent(new Range(new Position(0, closingBrace), new Position(0, closingBrace)), 0, "public  void assignToSelf(Object o) { o = o; }"))));
         assertDiags(diags, "Error:1:0-1:9");//errors
-        assertDiags(diags, "Error:1:0-1:9", "Warning:0:148-0:153", "Warning:0:152-0:153");//hints
+        assertDiags(diags, "Error:1:0-1:9", "Warning:0:155-0:160", "Warning:0:159-0:160");//hints
     }
     
     /**

@@ -237,20 +237,22 @@ public class LspElementUtils {
         }
         TreePathHandle pathHandle = (TreePathHandle)info[6];
         FileObject f = (FileObject)info[0];
-        boolean[] synthetic = new boolean[1];
+        boolean[] synthetic = new boolean[] { false };
         if (f != null) {
             builder.file(f);
-            try {
-                JavaSource js = JavaSource.forFileObject(f);
-                if (js == null) {
-                    return null;
+            if (pathHandle != null) {
+                try {
+                    JavaSource js = JavaSource.forFileObject(f);
+                    if (js == null) {
+                        return null;
+                    }
+                    js.runUserActionTask((cc) -> {
+                        TreePath path = pathHandle.resolve(cc);
+                        synthetic[0] = cc.getTreeUtilities().isSynthetic(path);
+                    }, true);
+                } catch (IOException ex) {
+                    // ignore
                 }
-                js.runUserActionTask((cc) -> {
-                    TreePath path = pathHandle.resolve(cc);
-                    synthetic[0] = cc.getTreeUtilities().isSynthetic(path);
-                }, true);
-            } catch (IOException ex) {
-                // ignore
             }
         }
         if (synthetic[0]) {
@@ -258,7 +260,7 @@ public class LspElementUtils {
         }
         builder.expandedStartOffset((int)info[1]).expandedEndOffset((int)info[2]);
         builder.selectionStartOffset(selStart).selectionEndOffset(selEnd);
-       return builder; 
+       return builder;
     }
     
     private static CompletableFuture<StructureProvider.Builder> setFutureOffsets(CompilationInfo ci, Element original, 

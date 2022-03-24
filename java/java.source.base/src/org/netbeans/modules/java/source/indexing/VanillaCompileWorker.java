@@ -474,9 +474,10 @@ final class VanillaCompileWorker extends CompileWorker {
 
             for (FileObject f : listed) {
                 String name = f.getNameExt();
-                if (name.endsWith(".class"))
+                if (name.endsWith(".class")) {
                     name = name.substring(0, name.length() - FileObjects.CLASS.length()) + FileObjects.SIG;
-                copyRecursively(f, targetRoot, new File(target, name), filter, fmtx, copied);
+                    copyRecursively(f, targetRoot, new File(target, name), filter, fmtx, copied);
+                }
             }
         } else {
             if (target.isDirectory()) {

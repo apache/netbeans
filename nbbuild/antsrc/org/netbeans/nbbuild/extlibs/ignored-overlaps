@@ -88,6 +88,7 @@ extide/gradle/external/gradle-7.4-bin.zip platform/o.apache.commons.codec/extern
 extide/gradle/external/gradle-7.4-bin.zip platform/libs.asm/external/asm-9.2.jar
 extide/gradle/external/gradle-7.4-bin.zip platform/libs.asm/external/asm-commons-9.2.jar
 extide/gradle/external/gradle-7.4-bin.zip platform/libs.asm/external/asm-tree-9.2.jar
+extide/gradle/external/gradle-7.4-bin.zip platform/libs.batik.read/external/xml-apis-1.4.01.jar
 
 # These are the endorsed version of the javaee apis and create libraries, so they are better kept separate
 enterprise/javaee.api/external/javax.annotation-api-1.2.jar enterprise/javaee7.api/external/javax.annotation-api-1.2.jar

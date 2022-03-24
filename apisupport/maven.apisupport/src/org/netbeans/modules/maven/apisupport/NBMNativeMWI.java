@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import javax.xml.namespace.QName;
 import org.apache.maven.artifact.repository.ArtifactRepository;
@@ -57,12 +58,12 @@ import org.openide.util.Exceptions;
  */
 final class NBMNativeMWI {
 
-    static void instantiate(ProjectInfo vi, File projFile, String version, boolean useOsgi, MavenProject mp) {
+    static void instantiate(ProjectInfo vi, File projFile, String version, boolean useOsgi, Map<String,String> propertiesMap, MavenProject mp) {
         CreateProjectBuilder builder = new CreateProjectBuilder(projFile, vi.groupId, vi.artifactId, vi.version)
                 .setPackageName(vi.packageName)
                 .setPackaging("nbm")
                 .setAdditionalNonPomWork(new AdditionalFiles())
-                .setAdditionalOperations(new AdditionalOperations(version, useOsgi));
+                .setAdditionalOperations(new AdditionalOperations(version, useOsgi, propertiesMap));
         if (mp != null) {
             builder = builder.setParentProject(mp);
         }
@@ -142,10 +143,12 @@ final class NBMNativeMWI {
         private CreateProjectBuilder.Context context;
         private final String netbeansDependencyVersion;
         private final boolean useOsgi;
+        private final Map<String,String> propertiesMap;
 
-        private AdditionalOperations(String netbeansDependencyVersion, boolean useOsgi) {
+        private AdditionalOperations(String netbeansDependencyVersion, boolean useOsgi, Map<String,String> propertiesMap) {
             this.netbeansDependencyVersion = netbeansDependencyVersion;
             this.useOsgi = useOsgi;
+            this.propertiesMap = propertiesMap;
         }
 
         @Override
@@ -390,6 +393,12 @@ final class NBMNativeMWI {
                     getOrCreateBuild(model).addPlugin(p);
                 }
                 
+                if (propertiesMap != null) {
+                    for (Map.Entry<String, String> entry : propertiesMap.entrySet()) {
+                        root.getProperties().setProperty(entry.getKey(), entry.getValue());
+                    }
+
+                }
 
             }
         }

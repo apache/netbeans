@@ -515,13 +515,13 @@ public final class ElementOpen {
                         return;
                     }
 
-                    FindDeclarationVisitor v = new FindDeclarationVisitor(el, info);
+                    result[6] = TreePathHandle.create(el, info);
 
+                    FindDeclarationVisitor v = new FindDeclarationVisitor(el, info);
                     CompilationUnitTree cu = info.getCompilationUnit();
 
                     v.scan(cu, null);
                     Tree elTree = v.declTree;
-                    result[6] = TreePathHandle.create(el, info);
                     if (elTree != null) {
                         result[1] = (int)info.getTrees().getSourcePositions().getStartPosition(cu, elTree);
                         result[2] = (int)info.getTrees().getSourcePositions().getEndPosition(cu, elTree);

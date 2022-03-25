@@ -289,7 +289,7 @@ class NbProjectInfoBuilder {
                                 try {
                                     compilerArgs = (List<String>) getProperty(compileTask, "options", "compilerArgs");
                                 } catch (Throwable ex2) {
-                                    compilerArgs = (List<String>) getProperty(compileTask, "kotlinOptions", "getFreeCompilerArgs");
+                                    compilerArgs = (List<String>) getProperty(compileTask, "kotlinOptions", "freeCompilerArgs");
                                 }
                             }
                             model.getInfo().put(propBase + lang + "_compiler_args", new ArrayList<>(compilerArgs));

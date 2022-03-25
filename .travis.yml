@@ -380,7 +380,7 @@ matrix:
             - ant $OPTS -f java/java.preprocessorbridge test
             - hide-logs.sh ant $OPTS -f java/java.project test
             #- ant $OPTS -f java/java.project.ui test
-            #- ant $OPTS -f java/java.source test
+            - ant $OPTS -f java/java.source test-unit -Dtest-unit-sys-prop.ignore.random.failures=true
             #- ant $OPTS -f java/java.source.ant test
             - ant $OPTS -f java/java.source.base test
             - ant $OPTS -f java/java.source.compat8 test
@@ -449,6 +449,7 @@ matrix:
             - ant $OPTS build
           script:
             - ant $OPTS -f java/java.completion test
+            - travis_retry ant $OPTS -f java/java.source test-unit -Dtest-unit-sys-prop.ignore.random.failures=true
             - travis_retry ant $OPTS -f java/java.source.base test
 
         - name: Test apisupport modules

@@ -14,3 +14,4 @@
 --add-exports=java.desktop/sun.swing=ALL-UNNAMED
 --add-exports=java.desktop/sun.awt.im=ALL-UNNAMED
 --add-exports=java.desktop/com.sun.java.swing.plaf.motif=ALL-UNNAMED
+--add-exports=java.desktop/com.apple.eio=ALL-UNNAMED

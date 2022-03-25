@@ -22,6 +22,7 @@ package org.netbeans.modules.keyring.mac;
 import com.sun.jna.Pointer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.netbeans.modules.keyring.impl.KeyringSupport;
 import org.netbeans.spi.keyring.KeyringProvider;
 import org.openide.util.Utilities;
 import org.openide.util.lookup.ServiceProvider;
@@ -33,6 +34,13 @@ public class MacProvider implements KeyringProvider {
 
     private static final Logger LOG = Logger.getLogger(MacProvider.class.getName());
 
+    private final byte[] appName;
+
+    public MacProvider() {
+        appName = KeyringSupport.getAppNameMac().getBytes(UTF_8);
+    }
+
+    @Override
     public boolean enabled() {
         if (Boolean.getBoolean("netbeans.keyring.no.native")) {
             LOG.fine("native keyring integration disabled");
@@ -41,9 +49,10 @@ public class MacProvider implements KeyringProvider {
         return Utilities.isMac();
     }
 
+    @Override
     public char[] read(String key) {
         byte[] serviceName = key.getBytes(UTF_8);
-        byte[] accountName = "NetBeans".getBytes(UTF_8);
+        byte[] accountName = appName;
         int[] dataLength = new int[1];
         Pointer[] data = new Pointer[1];
         error("find", SecurityLibrary.LIBRARY.SecKeychainFindGenericPassword(null, serviceName.length, serviceName,
@@ -55,9 +64,10 @@ public class MacProvider implements KeyringProvider {
         return new String(value, UTF_8).toCharArray();
     }
 
+    @Override
     public void save(String key, char[] password, String description) {
         byte[] serviceName = key.getBytes(UTF_8);
-        byte[] accountName = "NetBeans".getBytes(UTF_8);
+        byte[] accountName = appName;
         // Keychain Access seems to expect UTF-8, so do not use Utils.chars2Bytes:
         byte[] data = new String(password).getBytes(UTF_8);
         Pointer[] itemRef = new Pointer[1];
@@ -73,9 +83,10 @@ public class MacProvider implements KeyringProvider {
         // XXX use description somehow... better to use SecItemAdd with kSecAttrDescription
     }
 
+    @Override
     public void delete(String key) {
         byte[] serviceName = key.getBytes(UTF_8);
-        byte[] accountName = "NetBeans".getBytes(UTF_8);
+        byte[] accountName = appName;
         Pointer[] itemRef = new Pointer[1];
         error("find (for delete)", SecurityLibrary.LIBRARY.SecKeychainFindGenericPassword(null, serviceName.length, serviceName,
                 accountName.length, accountName, null, null, itemRef));

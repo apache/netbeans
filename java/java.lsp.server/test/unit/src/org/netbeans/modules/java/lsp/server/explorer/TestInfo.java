@@ -16,34 +16,33 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.cloud.oracle.items;
+package org.netbeans.modules.java.lsp.server.explorer;
 
 /**
  *
- * @author Jan Horvath
  */
-public class DatabaseItem extends OCIItem {
-    private final String serviceUrl;
-    private final String connectionName;
+public class TestInfo {
+    String name;
+        String id;
 
-    public DatabaseItem(String id, String name, String serviceUrl, String connectionName) {
-        super(id, name);
-        this.serviceUrl = serviceUrl;
-        this.connectionName = connectionName;
-    }
+        public TestInfo() {
+            name = "1";
+            id = "2";
+        }
+        
+        public String getName() {
+            return name;
+        }
 
-    public DatabaseItem() {
-        super();
-        serviceUrl = null;
-        connectionName = null;
-    }
-    
-    public String getServiceUrl() {
-        return serviceUrl;
-    }
+        public void setName(String name) {
+            this.name = name;
+        }
 
-    public String getConnectionName() {
-        return connectionName;
-    }
-    
+        public String getId() {
+            return id;
+        }
+
+        public void setId(String id) {
+            this.id = id;
+        }
 }

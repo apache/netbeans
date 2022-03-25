@@ -38,9 +38,12 @@ import org.netbeans.modules.java.lsp.server.protocol.NbCodeLanguageClient;
 import org.netbeans.modules.parsing.api.ResultIterator;
 import org.openide.awt.Actions;
 import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileUtil;
 import org.openide.nodes.Node;
 import org.openide.util.ContextAwareAction;
+import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
+import org.openide.util.lookup.Lookups;
 import org.openide.util.lookup.ProxyLookup;
 
 /**
@@ -61,7 +64,7 @@ public class NodeActionsProvider extends CodeActionsProvider {
     private final Set<String>  commands;
     private final Gson gson = new Gson();
 
-    private NodeActionsProvider(Set<String> commands) {
+    NodeActionsProvider(Set<String> commands) {
         this.commands = commands;
     }
 
@@ -108,8 +111,22 @@ public class NodeActionsProvider extends CodeActionsProvider {
                 
             }
         }
+        
+        String categoryAndId = command.substring(NBLS_ACTION_PREFIX.length());
+        String category;
+        String aid;
+        
+        int col = categoryAndId.indexOf(CATEGORY_SEPARATOR);
+        if (col != -1) {
+            aid = categoryAndId.substring(col + 1);
+            category = categoryAndId.substring(0, col);
+        } else {
+            category = null;
+            aid = categoryAndId;
+        }
+        
         if (id == -1) {
-            return CompletableFuture.completedFuture(false);
+            return invokeAction(client, category, aid, arguments);
         }
 
         //gson.fromJson(arguments.get(0), JSONObject.class);
@@ -129,18 +146,6 @@ public class NodeActionsProvider extends CodeActionsProvider {
             return f;
         }
         
-        String categoryAndId = command.substring(NBLS_ACTION_PREFIX.length());
-        String category;
-        String aid;
-        
-        int col = categoryAndId.indexOf(CATEGORY_SEPARATOR);
-        if (col != -1) {
-            aid = categoryAndId.substring(col + 1);
-            category = categoryAndId.substring(0, col);
-        } else {
-            category = null;
-            aid = categoryAndId;
-        }
         
         final Lookup targetLookup = new ProxyLookup(target.getLookup(), provider.getLookup());
         
@@ -161,4 +166,40 @@ public class NodeActionsProvider extends CodeActionsProvider {
         return CompletableFuture.completedFuture(true);
     }
     
+    CompletableFuture<Object> invokeAction(NbCodeLanguageClient client, String category, String aid, List<Object> arguments) {
+        String path = "Actions/" + category + "/" + aid.replace('.', '-') + ".instance"; //NOI18N
+        FileObject config = FileUtil.getConfigFile(path);
+        String contextType = (String) config.getAttribute("type"); //NOI18N
+        try {
+            Class<?> clazz = Thread.currentThread().getContextClassLoader().loadClass(contextType);
+            Object context = gson.fromJson(gson.toJson(arguments.get(0)), clazz);
+            if (context != null) {
+                Lookup targetLookup = Lookups.singleton(context);
+                AbstractGlobalActionContext.withActionContext(targetLookup, () -> {
+                    Action a = Actions.forID(category, aid);
+                    if (a == null) {
+                        return CompletableFuture.completedFuture(false);
+                    }
+                    if (a instanceof ContextAwareAction) {
+                        a = ((ContextAwareAction)a).createContextAwareInstance(targetLookup);
+                    }
+                    final Action a2 = a;
+
+                    a2.actionPerformed(new ActionEvent(client, 0, aid));
+                    return null;
+                });
+            } else {
+                return CompletableFuture.completedFuture(false);
+            }
+        } catch (ClassNotFoundException ex) {
+            return completeExceptionally(ex);
+        }
+        return CompletableFuture.completedFuture(true);
+    }
+    
+    private CompletableFuture completeExceptionally(Throwable t) {
+        CompletableFuture f = new CompletableFuture();
+        f.completeExceptionally(t);
+        return f;
+    }
 }

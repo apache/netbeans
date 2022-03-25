@@ -250,7 +250,7 @@ public final class PomModelUtils {
             }
         }
         long d = System.currentTimeMillis() - t;
-        LOG.info("Maven validation of " + pom.getPath() + " run for: " + d);
+        LOG.fine("Maven validation of " + pom.getPath() + " run for: " + d);
         return toRet;
     }
     

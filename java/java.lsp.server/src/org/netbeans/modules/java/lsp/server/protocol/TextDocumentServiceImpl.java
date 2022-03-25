@@ -1079,6 +1079,11 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                     Parser.Result parserResult = resultIterator.getParserResult();
                     //look for main methods:
                     List<CodeLens> lens = new ArrayList<>();
+                    if (parserResult == null) {
+                        // no parser for the sourec type
+                        result.complete(lens);
+                        return;
+                    }
                     CompilationController cc = CompilationController.get(parserResult);
                     if (cc != null) {
                         cc.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);

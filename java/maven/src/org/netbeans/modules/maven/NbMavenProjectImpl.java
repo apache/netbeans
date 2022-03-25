@@ -99,6 +99,7 @@ import org.openide.filesystems.FileEvent;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileRenameEvent;
 import org.openide.filesystems.FileUtil;
+import org.openide.filesystems.MIMEResolver;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.NbCollections;
@@ -111,6 +112,11 @@ import org.openide.util.lookup.ProxyLookup;
 /**
  * A Maven-based project.
  */
+@MIMEResolver.Registration(
+    displayName="#POMResolver",
+    position=309,
+    resource="POMResolver.xml"
+)
 public final class NbMavenProjectImpl implements Project {
 
 

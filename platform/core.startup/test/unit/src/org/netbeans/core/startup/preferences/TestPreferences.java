@@ -21,6 +21,7 @@ package org.netbeans.core.startup.preferences;
 
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.prefs.BackingStoreException;
@@ -533,7 +534,7 @@ public class TestPreferences extends NbPreferencesTest.TestBasicSetup {
         assertNotNull(storage.toPropertiesFile());
         
         OutputStream storageOutputStream = storage.toPropertiesFile().getOutputStream();
-        storageOutputStream.write("key1=value1".getBytes("ISO-8859-1"));
+        storageOutputStream.write("key1=value1".getBytes(StandardCharsets.ISO_8859_1));
         storageOutputStream.close();
     }
 

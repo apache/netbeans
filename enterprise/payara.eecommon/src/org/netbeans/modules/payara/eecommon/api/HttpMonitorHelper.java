@@ -32,6 +32,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -150,8 +151,8 @@ public class HttpMonitorHelper {
         BufferedWriter fw= null;
         boolean deleteNew = true;
         try {
-            fr = new BufferedReader(new InputStreamReader(new FileInputStream(webXML),"ISO-8859-1"));
-            fw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(newWebXML),"ISO-8859-1"));
+            fr = new BufferedReader(new InputStreamReader(new FileInputStream(webXML), StandardCharsets.ISO_8859_1));
+            fw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(newWebXML), StandardCharsets.ISO_8859_1));
             while (true) {
                 String line = fr.readLine();
                 if (line == null)

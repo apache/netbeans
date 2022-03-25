@@ -22,6 +22,8 @@ import java.io.FilterOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
+import static java.nio.charset.StandardCharsets.ISO_8859_1;
+
 /**
  *
  * @author Petr Hejl
@@ -34,19 +36,19 @@ public class ChunkedOutputStream extends FilterOutputStream {
 
     @Override
     public void write(byte[] b, int off, int len) throws IOException {
-        out.write((Integer.toHexString(len) + "\r\n").getBytes("ISO-8859-1")); // NOI18N
+        out.write((Integer.toHexString(len) + "\r\n").getBytes(ISO_8859_1));
         out.write(b, off, len);
-        out.write("\r\n".getBytes("ISO-8859-1")); // NOI18N
+        out.write("\r\n".getBytes(ISO_8859_1));
     }
 
     @Override
     public void write(int b) throws IOException {
-        out.write("1\r\n".getBytes("ISO-8859-1")); // NOI18N
+        out.write("1\r\n".getBytes(ISO_8859_1));
         out.write(b);
-        out.write("\r\n".getBytes("ISO-8859-1")); // NOI18N
+        out.write("\r\n".getBytes(ISO_8859_1));
     }
 
     public void finish() throws IOException {
-        out.write("0\r\n\r\n".getBytes("ISO-8859-1")); // NOI18N
+        out.write("0\r\n\r\n".getBytes(ISO_8859_1));
     }
 }

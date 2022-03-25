@@ -25,9 +25,9 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -162,14 +162,14 @@ public class MavenNbModuleImpl implements NbModuleProvider {
         return FileUtil.normalizeFile(rel);
     }
     
-    private Xpp3Dom getModuleDom() throws UnsupportedEncodingException, IOException, XmlPullParserException {
+    private Xpp3Dom getModuleDom() throws IOException, XmlPullParserException {
         //TODO convert to FileOBject and have the IO stream from there..
         File file = getModuleXmlLocation();
         if (!file.exists()) {
             return null;
         }
         FileInputStream is = new FileInputStream(file);
-        Reader reader = new InputStreamReader(is, "UTF-8"); //NOI18N
+        Reader reader = new InputStreamReader(is, StandardCharsets.UTF_8);
         try {
             return Xpp3DomBuilder.build(reader);
         } finally {

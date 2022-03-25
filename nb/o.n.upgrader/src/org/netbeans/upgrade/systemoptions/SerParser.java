@@ -20,6 +20,7 @@
 package org.netbeans.upgrade.systemoptions;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import org.openide.util.NotImplementedException;
 
@@ -225,7 +226,7 @@ public final class SerParser implements ObjectStreamConstants {
         for (int i = 0; i < len; i++) {
             buf[i] = readByte();
         }
-        String s = new String(buf, "UTF-8"); // NOI18N
+        String s = new String(buf, StandardCharsets.UTF_8);
         if (DEBUG) System.err.println("readUTF: " + s); // NOI18N
         return s;
     }

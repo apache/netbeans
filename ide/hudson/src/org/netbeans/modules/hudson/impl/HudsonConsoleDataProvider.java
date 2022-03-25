@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URLConnection;
+import java.nio.charset.StandardCharsets;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.GZIPInputStream;
@@ -103,7 +104,7 @@ public class HudsonConsoleDataProvider extends BuilderConnector.ConsoleDataProvi
                         isToUse = new GZIPInputStream(is);
                     }
                     // XXX safer to check content type on connection, but in fact Stapler sets it to UTF-8
-                    BufferedReader r = new BufferedReader(new InputStreamReader(isToUse, "UTF-8")); //NOI18N
+                    BufferedReader r = new BufferedReader(new InputStreamReader(isToUse, StandardCharsets.UTF_8));
                     String line;
                     while ((line = r.readLine()) != null) {
                         boolean success = displayer.writeLine(line);

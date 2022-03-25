@@ -28,6 +28,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.channels.FileChannel;
+import java.nio.charset.StandardCharsets;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Locale;
@@ -317,7 +318,7 @@ public class InitialServerFileDistributor extends ServerProgress {
             try {
                 jos.putNextEntry(new ZipEntry("META-INF/MANIFEST.MF")); // NOI18N
                 // UTF-8 guaranteed on any platform
-                jos.write("Manifest-Version: 1.0\n".getBytes("UTF-8")); // NOI18N
+                jos.write("Manifest-Version: 1.0\n".getBytes(StandardCharsets.UTF_8)); // NOI18N
             } finally {
                 jos.close();
             }

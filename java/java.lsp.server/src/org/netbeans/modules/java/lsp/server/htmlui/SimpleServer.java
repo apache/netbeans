@@ -525,7 +525,7 @@ final class SimpleServer extends HttpServer<SimpleServer.ReqRes, SimpleServer.Re
         private final StringBuilder buffer = new StringBuilder();
 
         final ReqRes process(SelectionKey key, ByteBuffer chunk) throws UnsupportedEncodingException {
-            String text = new String(chunk.array(), 0, chunk.limit(), "US-ASCII");
+            String text = new String(chunk.array(), 0, chunk.limit(), StandardCharsets.US_ASCII);
             buffer.append(text);
             int fullHeader = buffer.indexOf("\r\n\r\n");
             if (fullHeader == -1) {
@@ -707,6 +707,6 @@ final class SimpleServer extends HttpServer<SimpleServer.ReqRes, SimpleServer.Re
     }
 
     private static void putString(ByteBuffer bb, String text) throws UnsupportedEncodingException {
-        bb.put(text.getBytes("US-ASCII"));
+        bb.put(text.getBytes(StandardCharsets.US_ASCII));
     }
 }

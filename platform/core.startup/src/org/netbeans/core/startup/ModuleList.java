@@ -35,6 +35,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PushbackInputStream;
 import java.io.Writer;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -680,7 +681,7 @@ final class ModuleList implements Stamps.Updater {
         if (codeName == null)
             throw new IllegalArgumentException("no code name present"); // NOI18N
 
-        Writer w = new OutputStreamWriter(os, "UTF-8"); // NOI18N
+        Writer w = new OutputStreamWriter(os, StandardCharsets.UTF_8);
         w.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"); // NOI18N
         w.write("<!DOCTYPE module PUBLIC \""); // NOI18N
         w.write(PUBLIC_ID);

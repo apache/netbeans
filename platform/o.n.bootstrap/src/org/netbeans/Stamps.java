@@ -36,6 +36,7 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -427,7 +428,7 @@ public final class Stamps {
     
     private static boolean compareAndUpdateFile(File file, String content, AtomicLong result) {
         try {
-            byte[] expected = content.getBytes("UTF-8"); // NOI18N
+            byte[] expected = content.getBytes(StandardCharsets.UTF_8);
             byte[] read = new byte[expected.length];
             FileInputStream is = null;
             boolean areCachesOK;

@@ -24,6 +24,7 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.EnumSet;
@@ -181,7 +182,7 @@ public class ReferencesCountTest extends NbTestCase {
         final FileObject file = FileUtil.createData(root, fqn.replace('.', '/')+"."+JavaDataLoader.JAVA_EXTENSION);   //NOI18N
         final FileLock lck = file.lock();
         try {
-            final PrintWriter out = new PrintWriter(new OutputStreamWriter(file.getOutputStream(lck),"UTF-8"));    //NOI18N
+            final PrintWriter out = new PrintWriter(new OutputStreamWriter(file.getOutputStream(lck), StandardCharsets.UTF_8));
             try {
                 out.print(content);
             } finally {
@@ -201,7 +202,7 @@ public class ReferencesCountTest extends NbTestCase {
         @Override
         public Charset getEncoding(FileObject file) {
             if (file == interestedIn || FileUtil.isParentOf(interestedIn, file)) {
-                return Charset.forName("UTF-8"); //NOI18N
+                return StandardCharsets.UTF_8;
             }
             return null;
         }

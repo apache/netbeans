@@ -198,6 +198,19 @@ matrix:
             - hide-logs.sh ant $OPTS -f platform/templates test
             - hide-logs.sh ant $OPTS -f platform/templatesui test
             - hide-logs.sh ant $OPTS -f platform/uihandler test
+          
+        - name: Test platform modules on JDK 11, Batch 1
+          jdk: openjdk8
+          env:
+            - OPTS="-Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json -silent -Dcluster.config=platform -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true -Dvanilla.javac.exists=true"
+          before_script:
+            - nbbuild/travis/ant.sh $OPTS clean
+            - nbbuild/travis/ant.sh $OPTS build
+            - wget https://raw.githubusercontent.com/sormuras/bach/master/install-jdk.sh
+            - export TEST_JDK=`bash install-jdk.sh --feature 11 --license GPL --emit-java-home --silent | tail -1`
+            - export OPTS="$OPTS  -Dtest.nbjdk.home=$TEST_JDK"
+          script:
+            - hide-logs.sh ant $OPTS -f platform/o.n.bootstrap test
 
         - name: Test ide modules
           jdk: openjdk8

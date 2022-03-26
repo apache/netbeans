@@ -101,7 +101,7 @@ public class SQLHistoryManager  {
         return NbPreferences.forModule(SQLHistoryPanel.class).getInt("OPT_SQL_STATEMENTS_SAVED_FOR_HISTORY", DEFAULT_SQL_STATEMENTS_SAVED_FOR_HISTORY);
     }
 
-    private FileObject getHistoryRoot(boolean create) throws IOException {
+    protected FileObject getHistoryRoot(boolean create) throws IOException {
         FileObject result = null;
         FileObject historyRootDir = getConfigRoot().getFileObject(getRelativeHistoryPath());
         if (historyRootDir != null || create) {
@@ -120,11 +120,11 @@ public class SQLHistoryManager  {
         return result;
     }
 
-    private FileObject getConfigRoot() {
+    protected FileObject getConfigRoot() {
         return FileUtil.getConfigRoot();
     }
 
-    private String getRelativeHistoryPath() {
+    protected String getRelativeHistoryPath() {
         return SQL_HISTORY_DIRECTORY;
     }
 

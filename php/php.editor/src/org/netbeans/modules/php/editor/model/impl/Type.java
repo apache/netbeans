@@ -29,6 +29,37 @@ import org.netbeans.modules.php.api.util.StringUtils;
  */
 public final class Type {
 
+    public enum Kind {
+        NORMAL(""), // NOI18N
+        NULLABLE("?"), // NOI18N
+        UNION(SEPARATOR),
+        INTERSECTION(SEPARATOR_INTERSECTION),
+        ;
+
+        private final String sign;
+
+        private Kind(String sing) {
+            this.sign = sing;
+        }
+
+        public String getSign() {
+            return sign;
+        }
+
+        public static Kind fromTypes(String types) {
+            Kind kind = NORMAL;
+            if (types.contains(SEPARATOR)) {
+                kind = UNION;
+            } else if (types.contains(SEPARATOR_INTERSECTION)) {
+                kind = INTERSECTION;
+            } else if (types.contains(NULLABLE.getSign())) {
+                kind = NULLABLE;
+            }
+            return kind;
+        }
+
+    }
+
     private Type() {
     }
 

@@ -52,7 +52,7 @@ public class SQLHistoryManager  {
     public static final int DEFAULT_SQL_STATEMENTS_SAVED_FOR_HISTORY = 100;
     public static final int MAX_SQL_STATEMENTS_SAVED_FOR_HISTORY = 10000;
     public static final String PROP_SAVED = "saved"; //NOI18N
-    
+
     private static final String SQL_HISTORY_DIRECTORY = "Databases/SQLHISTORY"; // NOI18N
     private static final String SQL_HISTORY_BASE = "sql_history"; // NOI18N
     private static final String SQL_HISTORY_EXT = "xml"; // NOI18N
@@ -66,14 +66,14 @@ public class SQLHistoryManager  {
     private static final RequestProcessor RP = new RequestProcessor(
             SQLHistoryManager.class.getName(), 1, false, false);
     // Time between call to save and real save - usefull to accumulate before save
-    private static final int SAVE_DELAY = 5 * 1000;    
-    
-    private static SQLHistoryManager _instance = null;    
-    
+    private static final int SAVE_DELAY = 5 * 1000;
+
+    private static SQLHistoryManager _instance = null;
+
     private final RequestProcessor.Task SAVER = RP.create(new Saver());
     private final PropertyChangeSupport PROPERTY_CHANGE_SUPPORT =
             new PropertyChangeSupport(this);
-    
+
     private SQLHistory sqlHistory;
 
     protected SQLHistoryManager() {
@@ -89,11 +89,11 @@ public class SQLHistoryManager  {
             }
         });
     }
-    
+
     public static synchronized SQLHistoryManager getInstance() {
         if (_instance == null) {
-            _instance = new SQLHistoryManager();                    
-        } 
+            _instance = new SQLHistoryManager();
+        }
         return _instance;
     }
 
@@ -119,11 +119,11 @@ public class SQLHistoryManager  {
         }
         return result;
     }
-    
+
     private FileObject getConfigRoot() {
         return FileUtil.getConfigRoot();
     }
-    
+
     private String getRelativeHistoryPath() {
         return SQL_HISTORY_DIRECTORY;
     }
@@ -161,15 +161,15 @@ public class SQLHistoryManager  {
                     }
                 }
             } else {
-                
+
             }
         } catch (IOException | ParserConfigurationException | SAXException ex) {
             sqlHistory = new SQLHistory();
-            LOGGER.log(Level.INFO, ex.getMessage());
+            LOGGER.log(Level.WARNING, ex.getMessage());
         }
         sqlHistory.setHistoryLimit(getListSize());
     }
-    
+
     public void save() {
         // On call to save schedule real saving, as save is a often calleed
         // method, this can bundle multiple saves into one write.
@@ -208,10 +208,11 @@ public class SQLHistoryManager  {
 
         @Override
         public void run() {
+            Path tempfile = null;
             try {
                 final FileObject targetFileObject = getHistoryRoot(true);
                 final Path targetFile = FileUtil.toFile(targetFileObject).toPath();
-                final Path tempfile = Files.createTempFile(targetFile.getParent(), SQL_HISTORY_BASE, SQL_HISTORY_EXT);
+                tempfile = Files.createTempFile(targetFile.getParent(), SQL_HISTORY_BASE, SQL_HISTORY_EXT);
                 try ( OutputStream os = Files.newOutputStream(tempfile)) {
                     XMLStreamWriter xsw = XMLOutputFactory
                             .newInstance()
@@ -232,13 +233,18 @@ public class SQLHistoryManager  {
                     xsw.writeEndElement();
                     xsw.flush();
                     xsw.close();
-                } catch (IOException | XMLStreamException ex) {
-                    LOGGER.log(Level.INFO, ex.getMessage(), ex);
                 }
                 Files.move(tempfile, targetFile, StandardCopyOption.REPLACE_EXISTING);
                 PROPERTY_CHANGE_SUPPORT.firePropertyChange(PROP_SAVED, null, null);
-            } catch (IOException ex) {
-                LOGGER.log(Level.INFO, ex.getMessage());
+            } catch (IOException | XMLStreamException ex) {
+                LOGGER.log(Level.WARNING, null, ex);
+                if(tempfile != null && Files.exists(tempfile)) {
+                    try {
+                        Files.delete(tempfile);
+                    } catch (IOException ex1) {
+                        LOGGER.log(Level.INFO, "Failed to cleanup temp file", ex1);
+                    }
+                }
             }
         }
     }

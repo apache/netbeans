@@ -26,8 +26,10 @@ import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -50,10 +52,13 @@ import static org.netbeans.modules.gradle.nodes.Bundle.*;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.prefs.PreferenceChangeListener;
 import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.modules.gradle.api.GradleBaseProject;
+import org.netbeans.modules.gradle.spi.GradleSettings;
 import org.netbeans.modules.gradle.spi.Utils;
 import org.openide.nodes.Children;
+import org.openide.util.WeakListeners;
 
 /**
  *
@@ -108,18 +113,25 @@ public class SubProjectsNode extends AbstractNode {
     private static class SubProjectsChildFactory extends ChildFactory<Project> {
 
         private final Project project;
-        private final PropertyChangeListener listener;
+        private final PropertyChangeListener propListener;
+        private final PreferenceChangeListener prefListener;
 
         SubProjectsChildFactory(Project proj) {
             project = proj;
-            listener = (PropertyChangeEvent evt) -> {
+            propListener = (PropertyChangeEvent evt) -> {
                 if (NbGradleProject.PROP_PROJECT_INFO.equals(evt.getPropertyName())) {
                     ProjectManager.getDefault().clearNonProjectCache();
                     refresh(false);
                 }
             };
-            NbGradleProject.addPropertyChangeListener(project, listener);
+            NbGradleProject.addPropertyChangeListener(project, WeakListeners.propertyChange(propListener, proj));
 
+            prefListener = (evt) -> {
+                if (GradleSettings.PROP_DISPLAY_DESCRIPTION.equals(evt.getKey())) {
+                    refresh(false);
+                }
+            };
+            GradleSettings.getDefault().getPreferences().addPreferenceChangeListener(WeakListeners.create(PreferenceChangeListener.class, prefListener, null));
         }
 
         @Override
@@ -127,7 +139,13 @@ public class SubProjectsNode extends AbstractNode {
 
             Set<Project> containedProjects = ProjectUtils.getContainedProjects(project, false);
             if (containedProjects != null) {
-                projects.addAll(containedProjects);
+                ArrayList<Project> ret = new ArrayList<>(containedProjects);
+                if (GradleSettings.getDefault().isDisplayDesctiption()) {
+                    ret.sort(Comparator.comparing((Project p) -> ProjectUtils.getInformation(p).getDisplayName()));
+                } else {
+                    ret.sort(Comparator.comparing((Project p) -> ProjectUtils.getInformation(p).getName()));
+                }
+                projects.addAll(ret);
             } else {
                 LOG.log(Level.FINE, "No ProjectContainerProvider in the lookup of: {0}", project);
             }

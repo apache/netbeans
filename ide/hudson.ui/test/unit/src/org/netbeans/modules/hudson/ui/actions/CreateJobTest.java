@@ -22,7 +22,6 @@ import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import org.apache.commons.net.util.Base64;
 import org.netbeans.modules.hudson.api.HudsonInstance;
 import org.netbeans.modules.hudson.api.HudsonManager;
 
@@ -53,15 +52,6 @@ public class CreateJobTest {
         CreateJob withCustomAction = new CreateJob(hi);
         assertTrue(withCustomAction.runCustomActionIfAvailable(null));
         HudsonManager.removeInstance(hi);
-    }
-    
-    @Test
-    public void testEncodeTokenBase64() {
-        String username = "Apache NetBeans";
-        String token = "password123";
-        String expected = new Base64(0).encodeToString((username + ':' + token).getBytes()).trim();
-        String actual = java.util.Base64.getEncoder().encodeToString((username + ':' + token).getBytes()).trim();
-        assertTrue(actual.equals(expected));
     }
     
 }

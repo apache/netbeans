@@ -22,6 +22,7 @@ import java.io.File;
 import java.util.Collections;
 import java.util.Map;
 import org.netbeans.api.java.classpath.ClassPath;
+import org.netbeans.modules.php.api.PhpVersion;
 import org.netbeans.modules.php.project.api.PhpSourcePath;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.openide.filesystems.FileObject;
@@ -412,4 +413,358 @@ public class PHP81CodeCompletionTest extends PHPCodeCompletionTestBase {
         checkCompletion("newInInitializersAttributeTyping03", "#[AnAttribute(new Fo^)]");
     }
 
+    public void testIntersectionTypes_01() throws Exception {
+        checkCompletion("intersectionTypes", "        $this->^publicFieldInterfaceImpl->publicMethodClass1();");
+    }
+
+    public void testIntersectionTypes_02() throws Exception {
+        checkCompletion("intersectionTypes", "        $this->publicFieldInterfaceImpl->^publicMethodClass1();");
+    }
+
+    public void testIntersectionTypes_03() throws Exception {
+        checkCompletion("intersectionTypes", "        $this->publicFieldTrait1->^publicMethodClass1();");
+    }
+
+    public void testIntersectionTypes_04() throws Exception {
+        checkCompletion("intersectionTypes", "        self::^$publicStaticFieldInterfaceImpl->publicMethodClass1();");
+    }
+
+    public void testIntersectionTypes_05() throws Exception {
+        checkCompletion("intersectionTypes", "        self::$publicStaticFieldInterfaceImpl->^publicMethodClass1();");
+    }
+
+    public void testIntersectionTypes_06() throws Exception {
+        checkCompletion("intersectionTypes", "        self::$publicStaticFieldInterfaceImpl::^CONST_CLASS1;");
+    }
+
+    public void testIntersectionTypes_07() throws Exception {
+        checkCompletion("intersectionTypes", "        $object->^publicMethodClass1()->publicMethodClass2();");
+    }
+
+    public void testIntersectionTypes_08() throws Exception {
+        checkCompletion("intersectionTypes", "        $object->publicMethodClass1()->^publicMethodClass2();");
+    }
+
+    public void testIntersectionTypes_09() throws Exception {
+        checkCompletion("intersectionTypes", "        $object->publicMethodClass1()::^CONST_CLASS2;");
+    }
+
+    public void testIntersectionTypes_10() throws Exception {
+        checkCompletion("intersectionTypes", "        $object::^$publicFieldClass1->publicMethodClass1();");
+    }
+
+    public void testIntersectionTypes_11() throws Exception {
+        checkCompletion("intersectionTypes", "        $object::$publicFieldClass1->^publicMethodClass1();");
+    }
+
+    public void testIntersectionTypes_12() throws Exception {
+        checkCompletion("intersectionTypes", "        $object::$publicFieldClass1::^publicStaticMethodClass1();");
+    }
+
+    public void testIntersectionTypes_13() throws Exception {
+        checkCompletion("intersectionTypes", "        $object->^publicMethodClass2(); // phpdoc");
+    }
+
+    public void testIntersectionTypes_14() throws Exception {
+        checkCompletion("intersectionTypes", "        $object::^publicStaticMethodClass2(); // phpdoc");
+    }
+
+    public void testIntersectionTypes_15() throws Exception {
+        checkCompletion("intersectionTypes", "        $this::^$publicStaticFieldTrait1->publicMethodClass1();");
+    }
+
+    public void testIntersectionTypes_16() throws Exception {
+        checkCompletion("intersectionTypes", "        $this::$publicStaticFieldTrait1->^publicMethodClass1();");
+    }
+
+    public void testIntersectionTypes_17() throws Exception {
+        checkCompletion("intersectionTypes", "        $this::publicStaticMethodTrait1()::^publicStaticMethodClass1();");
+    }
+
+    public void testIntersectionTypes_18() throws Exception {
+        checkCompletion("intersectionTypes", "        $object->^publicMethodClass1(); // with whitespaces");
+    }
+
+    public void testIntersectionTypes_19() throws Exception {
+        checkCompletion("intersectionTypes", "        $object::^publicStaticMethodClass1(); // with whitespaces");
+    }
+
+    public void testIntersectionTypesFields01() throws Exception {
+        checkCompletion("intersectionTypesFields01", "    private IntersectionTypes1&^");
+    }
+
+    public void testIntersectionTypesFields02() throws Exception {
+        checkCompletion("intersectionTypesFields02", "    private IntersectionTypes1&\\Test1\\^");
+    }
+
+    public void testIntersectionTypesFields03() throws Exception {
+        checkCompletion("intersectionTypesFields03", "    private Test&\\Test1\\IntersectionTypes2&^");
+    }
+
+    public void testIntersectionTypesFields04() throws Exception {
+        checkCompletion("intersectionTypesFields04", "    private Test&\\Test1\\IntersectionTypes2&\\Test1\\IntersectionT^ypes2 $test;");
+    }
+
+    public void testIntersectionTypesFields05() throws Exception {
+        checkCompletion("intersectionTypesFields05", "    private Test&\\Test1\\IntersectionTypes2&^&\\Test1\\IntersectionTypes1 $test;");
+    }
+
+    public void testIntersectionTypesFields06() throws Exception {
+        checkCompletion("intersectionTypesFields06", "    private static Test&\\Test1\\IntersectionTypes2&^\\Test1\\IntersectionTypes1 $test;");
+    }
+
+    public void testIntersectionTypesFunctionParameterType01() throws Exception {
+        checkCompletion("intersectionTypesFunctionParameterType01", "function intersection_types(IntersectionTypes1&^)");
+    }
+
+    public void testIntersectionTypesFunctionParameterType02() throws Exception {
+        checkCompletion("intersectionTypesFunctionParameterType02", "function intersection_types(IntersectionTypes1&\\Test\\I^)");
+    }
+
+    public void testIntersectionTypesFunctionParameterType03() throws Exception {
+        checkCompletion("intersectionTypesFunctionParameterType03", "function intersection_types(IntersectionTypes1&\\Test\\IntersectionTypes2&^)");
+    }
+
+    public void testIntersectionTypesFunctionParameterType04() throws Exception {
+        checkCompletion("intersectionTypesFunctionParameterType04", "function intersection_types(IntersectionTypes1&^&\\Test\\IntersectionTypes2)");
+    }
+
+    public void testIntersectionTypesFunctionParameterType05() throws Exception {
+        checkCompletion("intersectionTypesFunctionParameterType05", "function intersection_types(IntersectionTypes1&^) {");
+    }
+
+    public void testIntersectionTypesFunctionParameterType06() throws Exception {
+        checkCompletion("intersectionTypesFunctionParameterType06", "function intersection_types(IntersectionTypes1&Inte^) {");
+    }
+
+    public void testIntersectionTypesFunctionParameterType07() throws Exception {
+        checkCompletion("intersectionTypesFunctionParameterType07", "function intersection_types(IntersectionTypes1&IntersectionTypes2 $param, IntersectionTypes1&IntersectionTypes2&^) {");
+    }
+
+    public void testIntersectionTypesFunctionParameterType08() throws Exception {
+        checkCompletion("intersectionTypesFunctionParameterType08", "function intersection_types(IntersectionTypes1&IntersectionTypes2 $param, IntersectionTypes1&IntersectionTypes2&\\Test\\^) {");
+    }
+
+    public void testIntersectionTypesFunctionParameterType09() throws Exception {
+        checkCompletion("intersectionTypesFunctionParameterType09", "function intersection_types(IntersectionTypes1&IntersectionTypes2 $param, IntersectionTypes1&IntersectionTypes2&\\Test\\Inter^) {");
+    }
+
+    public void testIntersectionTypesFunctionReturnType01() throws Exception {
+        checkCompletion("intersectionTypesFunctionReturnType01", "function intersection_types(IntersectionTypes1&\\Test\\IntersectionTypes2 $param): IntersectionTypes1&^");
+    }
+
+    public void testIntersectionTypesFunctionReturnType02() throws Exception {
+        checkCompletion("intersectionTypesFunctionReturnType02", "function intersection_types(IntersectionTypes1&\\Test\\IntersectionTypes2 $param): IntersectionTypes1&\\Test\\^");
+    }
+
+    public void testIntersectionTypesFunctionReturnType03() throws Exception {
+        checkCompletion("intersectionTypesFunctionReturnType03", "function intersection_types(IntersectionTypes1&\\Test\\IntersectionTypes2 $param): IntersectionTypes1&\\Test\\IntersectionTypes2&In^");
+    }
+
+    public void testIntersectionTypesFunctionReturnType04() throws Exception {
+        checkCompletion("intersectionTypesFunctionReturnType04", "function intersection_types(IntersectionTypes1&\\Test\\IntersectionTypes2 $param): IntersectionTypes1&^&\\Test\\IntersectionTypes2");
+    }
+
+    public void testIntersectionTypesFunctions_01() throws Exception {
+        checkCompletion("intersectionTypesFunctions", "function intersection_types(Intersect^ion1&Intersection2&\\Test\\Intersection3 $param1, Intersection1&Intersection2 $param): Intersection1& Intersection3 {");
+    }
+
+    public void testIntersectionTypesFunctions_02() throws Exception {
+        checkCompletion("intersectionTypesFunctions", "function intersection_types(Intersection1&Intersection2&\\Test\\Intersection3 $param1, Intersection1&^Intersection2 $param): Intersection1& Intersection3 {");
+    }
+
+    public void testIntersectionTypesFunctions_03() throws Exception {
+        checkCompletion("intersectionTypesFunctions", "function intersection_types(Intersection1&Intersection2&\\Test\\Intersection3 $param1, Intersection1&Intersect^ion2 $param): Intersection1& Intersection3 {");
+    }
+
+    public void testIntersectionTypesFunctions_04() throws Exception {
+        checkCompletion("intersectionTypesFunctions", "function intersection_types(Intersection1&Intersection2&\\Test\\Intersection3 $param1, Intersection1&Intersection2 $param): ^Intersection1& Intersection3 {");
+    }
+
+    public void testIntersectionTypesFunctions_05() throws Exception {
+        checkCompletion("intersectionTypesFunctions", "function intersection_types(Intersection1&Intersection2&\\Test\\Intersection3 $param1, Intersection1&Intersection2 $param): Intersection1& ^Intersection3 {");
+    }
+
+    public void testIntersectionTypesFunctions_06() throws Exception {
+        checkCompletion("intersectionTypesFunctions", "function intersection_types(Intersection1&Intersection2&\\Test\\Intersection3 $param1, Intersection1&Intersection2 $param): Intersection1& Intersec^tion3 {");
+    }
+
+    public void testIntersectionTypesFunctions_07() throws Exception {
+        checkCompletion("intersectionTypesFunctions", "$closure = function(Intersection1&Intersection2&\\Test\\Intersection3 $param1, Intersecti^on1& Intersection2 $param): Intersection1&Intersection2 {");
+    }
+
+    public void testIntersectionTypesFunctions_08() throws Exception {
+        checkCompletion("intersectionTypesFunctions", "$closure = function(Intersection1&Intersection2&\\Test\\Intersection3 $param1, Intersection1& ^Intersection2 $param): Intersection1&Intersection2 {");
+    }
+
+    public void testIntersectionTypesFunctions_09() throws Exception {
+        checkCompletion("intersectionTypesFunctions", "$closure = function(Intersection1&Intersection2&\\Test\\Intersection3 $param1, Intersection1& Intersection2 $param): ^Intersection1&Intersection2 {");
+    }
+
+    public void testIntersectionTypesFunctions_10() throws Exception {
+        checkCompletion("intersectionTypesFunctions", "$closure = function(Intersection1&Intersection2&\\Test\\Intersection3 $param1, Intersection1& Intersection2 $param): Intersection1&^Intersection2 {");
+    }
+
+    public void testIntersectionTypesFunctions_11() throws Exception {
+        checkCompletion("intersectionTypesFunctions", "$closure = function(Intersection1&Intersection2&\\Test\\Intersection3 $param1, Intersection1& Intersection2 $param): Intersection1&Intersec^tion2 {");
+    }
+
+    public void testIntersectionTypesFunctions_12() throws Exception {
+        checkCompletion("intersectionTypesFunctions", "$arrow = fn(Intersection1&Intersection2&^\\Test\\Intersection3 $param1, Intersection1&Intersection2 $param): \\Test\\Intersection1&\\Test\\Intersection2&Intersection3 {");
+    }
+
+    public void testIntersectionTypesFunctions_13() throws Exception {
+        checkCompletion("intersectionTypesFunctions", "$arrow = fn(Intersection1&Intersection2&\\Test\\Intersection3 $param1, Intersection1&^Intersection2 $param): \\Test\\Intersection1&\\Test\\Intersection2&Intersection3 {");
+    }
+
+    public void testIntersectionTypesFunctions_14() throws Exception {
+        checkCompletion("intersectionTypesFunctions", "$arrow = fn(Intersection1&Intersection2&\\Test\\Intersection3 $param1, Intersection1&Intersection2^ $param): \\Test\\Intersection1&\\Test\\Intersection2&Intersection3 {");
+    }
+
+    public void testIntersectionTypesFunctions_15() throws Exception {
+        checkCompletion("intersectionTypesFunctions", "$arrow = fn(Intersection1&Intersection2&\\Test\\Intersection3 $param1, Intersection1&Intersection2 $param): ^\\Test\\Intersection1&\\Test\\Intersection2&Intersection3 {");
+    }
+
+    public void testIntersectionTypesFunctions_16() throws Exception {
+        checkCompletion("intersectionTypesFunctions", "$arrow = fn(Intersection1&Intersection2&\\Test\\Intersection3 $param1, Intersection1&Intersection2 $param): \\Test\\Inte^rsection1&\\Test\\Intersection2&Intersection3 {");
+    }
+
+    public void testIntersectionTypesFunctions_17() throws Exception {
+        checkCompletion("intersectionTypesFunctions", "$arrow = fn(Intersection1&Intersection2&\\Test\\Intersection3 $param1, Intersection1&Intersection2 $param): \\Test\\Intersection1&^\\Test\\Intersection2&Intersection3 {");
+    }
+
+    public void testIntersectionTypesFunctions_18() throws Exception {
+        checkCompletion("intersectionTypesFunctions", "$arrow = fn(Intersection1&Intersection2&\\Test\\Intersection3 $param1, Intersection1&Intersection2 $param): \\Test\\Intersection1&\\Test\\^Intersection2&Intersection3 {");
+    }
+
+    public void testIntersectionTypesFunctions_19() throws Exception {
+        checkCompletion("intersectionTypesFunctions", "$arrow = fn(Intersection1&Intersection2&\\Test\\Intersection3 $param1, Intersection1&Intersection2 $param): \\Test\\Intersection1&\\Test\\Intersection2&^Intersection3 {");
+    }
+
+    public void testIntersectionTypesFunctions_20() throws Exception {
+        checkCompletion("intersectionTypesFunctions", "$arrow = fn(Intersection1&Intersection2&\\Test\\Intersection3 $param1, Intersection1&Intersection2 $param): \\Test\\Intersection1&\\Test\\Intersection2&Intersection3^ {");
+    }
+
+    public void testIntersectionTypesImplementMethod01() throws Exception {
+        checkCompletionCustomTemplateResult(getTestPath("testIntersectionTypesImplementMethod01"), "    test^",
+                new DefaultFilter(PhpVersion.PHP_81, "test"), true);
+    }
+
+    public void testIntersectionTypesImplementMethod02() throws Exception {
+        checkCompletionCustomTemplateResult(getTestPath("testIntersectionTypesImplementMethod02"), "    test^",
+                new DefaultFilter(PhpVersion.PHP_81, "test"), true);
+    }
+
+    public void testIntersectionTypesImplementMethod03() throws Exception {
+        checkCompletionCustomTemplateResult(getTestPath("testIntersectionTypesImplementMethod03"), "    test^",
+                new DefaultFilter(PhpVersion.PHP_81, "test"), true);
+    }
+
+    public void testIntersectionTypesImplementMethod04() throws Exception {
+        checkCompletionCustomTemplateResult(getTestPath("testIntersectionTypesImplementMethod04"), "    test^",
+                new DefaultFilter(PhpVersion.PHP_81, "test"), true);
+    }
+
+    public void testIntersectionTypesMethods_01() throws Exception {
+        checkCompletion("intersectionTypesMethods", "           ^\\Test1\\Intersection1&TestClass $object,");
+    }
+
+    public void testIntersectionTypesMethods_02() throws Exception {
+        checkCompletion("intersectionTypesMethods", "            \\Test1\\^Intersection1&TestClass $object,");
+    }
+
+    public void testIntersectionTypesMethods_03() throws Exception {
+        checkCompletion("intersectionTypesMethods", "            \\Test1\\Intersection1&^TestClass $object,");
+    }
+
+    public void testIntersectionTypesMethods_04() throws Exception {
+        checkCompletion("intersectionTypesMethods", "            \\Test1\\Intersection1&Test^Class $object,");
+    }
+
+    public void testIntersectionTypesMethods_05() throws Exception {
+        checkCompletion("intersectionTypesMethods", "            ^TestClass&\\Test1\\Intersection1 $param,");
+    }
+
+    public void testIntersectionTypesMethods_06() throws Exception {
+        checkCompletion("intersectionTypesMethods", "            TestClass&\\Test1\\Inters^ection1 $param,");
+    }
+
+    public void testIntersectionTypesMethods_07() throws Exception {
+        checkCompletion("intersectionTypesMethods", "    ): ^\\Test1\\Intersection2&\\Test1\\Intersection1 {");
+    }
+
+    public void testIntersectionTypesMethods_08() throws Exception {
+        checkCompletion("intersectionTypesMethods", "    ): \\Test1\\Intersection2&^\\Test1\\Intersection1 {");
+    }
+
+    public void testIntersectionTypesMethods_09() throws Exception {
+        checkCompletion("intersectionTypesMethods", "    ): \\Test1\\Intersection2&\\Test1\\Intersect^ion1 {");
+    }
+
+    public void testIntersectionTypesMethods_10() throws Exception {
+        checkCompletion("intersectionTypesMethods", "            \\Test1\\Intersection1&TestC^lass $object, // static");
+    }
+
+    public void testIntersectionTypesMethods_11() throws Exception {
+        checkCompletion("intersectionTypesMethods", "TestClass&\\Test1\\Intersec^tion1 $param, // static");
+    }
+
+    public void testIntersectionTypesMethods_12() throws Exception {
+        checkCompletion("intersectionTypesMethods", "    ): \\Test1\\Intersection2&^TestClass {");
+    }
+
+    public void testIntersectionTypesMethods_13() throws Exception {
+        checkCompletion("intersectionTypesMethods", "    ): \\Test1\\Intersection2&TestC^lass {");
+    }
+
+    public void testIntersectionTypesMethods_14() throws Exception {
+        checkCompletion("intersectionTypesMethods", "    public function childClassMethod(TestClass&\\Test1\\Intersection1 $object, TestClass&^\\Test1\\Intersection1 $object2): TestClass&\\Test1\\Intersection1 {");
+    }
+
+    public void testIntersectionTypesMethods_15() throws Exception {
+        checkCompletion("intersectionTypesMethods", "    public function childClassMethod(TestClass&\\Test1\\Intersection1 $object, TestClass&\\Test1\\In^tersection1 $object2): TestClass&\\Test1\\Intersection1 {");
+    }
+
+    public void testIntersectionTypesMethods_16() throws Exception {
+        checkCompletion("intersectionTypesMethods", "    public function childClassMethod(TestClass&\\Test1\\Intersection1 $object, TestClass&\\Test1\\Intersection1 $object2): TestClass&\\Test1\\Intersec^tion1 {");
+    }
+
+    public void testIntersectionTypesMethods_17() throws Exception {
+        checkCompletion("intersectionTypesMethods", "    public function interfaceMethod(\\Test1\\Intersection1&TestClass $object, TestClass&\\Test1\\Intersectio^n1 $param, ): TestClass&\\Test1\\Intersection1;");
+    }
+
+    public void testIntersectionTypesMethods_18() throws Exception {
+        checkCompletion("intersectionTypesMethods", "    public function interfaceMethod(\\Test1\\Intersection1&TestClass $object, TestClass&\\Test1\\Intersection1 $param, ): TestClass&\\Test1\\Intersec^tion1;");
+    }
+
+    public void testIntersectionTypesMethods_19() throws Exception {
+        checkCompletion("intersectionTypesMethods", "    abstract protected function abstractClassMethod(TestClass&\\Test1\\Intersection1 $param, TestInerface&TestC^lass $object,): TestClass&\\Test1\\Intersection1;");
+    }
+
+    public void testIntersectionTypesMethods_20() throws Exception {
+        checkCompletion("intersectionTypesMethods", "    abstract protected function abstractClassMethod(TestClass&\\Test1\\Intersection1 $param, TestInerface&TestClass $object,): TestClass&\\Test1\\Intersect^ion1;");
+    }
+
+    public void testIntersectionTypesMethods_21() throws Exception {
+        checkCompletion("intersectionTypesMethods", "    private function traitMethod(TestInterface&\\Test1\\Intersection2 $object, TestClass&\\Test1\\Intersec^tion1 $param): TestInterface&TestClass {");
+    }
+
+    public void testIntersectionTypesMethods_22() throws Exception {
+        checkCompletion("intersectionTypesMethods", "    private function traitMethod(TestInterface&\\Test1\\Intersection2 $object, TestClass&\\Test1\\Intersection1 $param): TestInterface&TestC^lass {");
+    }
+
+    public void testIntersectionTypesOverrideMethod01() throws Exception {
+        checkCompletionCustomTemplateResult(getTestPath("testIntersectionTypesOverrideMethod01"), "    test^",
+                new DefaultFilter(PhpVersion.PHP_81, "test"), true);
+    }
+
+    public void testIntersectionTypesOverrideMethod02() throws Exception {
+        checkCompletionCustomTemplateResult(getTestPath("testIntersectionTypesOverrideMethod02"), "    test^",
+                new DefaultFilter(PhpVersion.PHP_81, "test"), true);
+    }
+
+    public void testIntersectionTypesOverrideMethod03() throws Exception {
+        checkCompletionCustomTemplateResult(getTestPath("testIntersectionTypesOverrideMethod03"), "    test^",
+                new DefaultFilter(PhpVersion.PHP_81, "test"), true);
+    }
 }

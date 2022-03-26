@@ -48,6 +48,10 @@ public class UnusableTypesHintErrorTest extends PHPHintsTestBase {
         checkHints(new UnusableTypesHintError(), "testNeverTypes_01.php");
     }
 
+    public void testIntersectionTypes_01() throws Exception {
+        checkHints(new UnusableTypesHintError(), "testIntersectionTypes_01.php");
+    }
+
     @Override
     protected String getTestDirectory() {
         return TEST_DIRECTORY + "UnusableTypesHintError/";

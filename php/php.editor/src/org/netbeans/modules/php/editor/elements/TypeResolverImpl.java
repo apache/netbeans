@@ -47,7 +47,7 @@ public final class TypeResolverImpl implements TypeResolver {
         // avoid being changed type order(e.g. int|float|Foo|Bar) when an override method is generated
         Set<TypeResolver> retval = new LinkedHashSet<>();
         if (typeSignature != null && typeSignature.length() > 0) {
-            final String regexp = String.format("\\%s", Separator.PIPE.toString()); //NOI18N
+            final String regexp = "[|&]"; // NOI18N
             for (String type : typeSignature.split(regexp)) {
                 String typeName = type;
                 boolean isNullableType = CodeUtils.isNullableType(typeName);

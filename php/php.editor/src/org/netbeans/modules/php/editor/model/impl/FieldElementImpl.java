@@ -161,7 +161,7 @@ class FieldElementImpl extends ScopeImpl implements FieldElement {
     public Collection<? extends TypeScope> getDefaultTypes() {
         Collection<TypeScope> typeScopes = new HashSet<>();
         if (defaultFQType != null && defaultFQType.length() > 0) {
-            String[] allTypeNames = defaultFQType.split("\\|");
+            String[] allTypeNames = defaultFQType.split("\\&|\\|"); // NOI18N
             for (String typeName : allTypeNames) {
                 String modifiedTypeName = typeName;
                 if (typeName.indexOf("[") != -1) {

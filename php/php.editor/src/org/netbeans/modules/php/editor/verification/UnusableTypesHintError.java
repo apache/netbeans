@@ -45,6 +45,7 @@ import org.netbeans.modules.php.editor.parser.astnodes.FieldsDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.FormalParameter;
 import org.netbeans.modules.php.editor.parser.astnodes.FunctionDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.Identifier;
+import org.netbeans.modules.php.editor.parser.astnodes.IntersectionType;
 import org.netbeans.modules.php.editor.parser.astnodes.LambdaFunctionDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.MethodDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.NamespaceName;
@@ -66,6 +67,11 @@ public class UnusableTypesHintError extends HintErrorRule {
     private static final List<String> VALID_TYPES_WITH_OBJECT_TYPE = Arrays.asList(
             Type.ARRAY, Type.BOOL, Type.CALLABLE, Type.FALSE, Type.FLOAT,
             Type.INT, Type.ITERABLE, Type.NULL, Type.STRING, Type.VOID
+    );
+    private static final List<String> INVALID_TYPES_WITH_INTERSECTION_TYPES = Arrays.asList(
+            Type.ARRAY, Type.BOOL, Type.CALLABLE, Type.FALSE, Type.FLOAT,
+            Type.INT, Type.ITERABLE, Type.MIXED, Type.NEVER, Type.NULL,
+            Type.OBJECT, Type.PARENT, Type.SELF, Type.STATIC, Type.STRING, Type.VOID
     );
 
     @Override
@@ -207,6 +213,15 @@ public class UnusableTypesHintError extends HintErrorRule {
         }
 
         @Override
+        public void visit(IntersectionType node) {
+            if (CancelSupport.getDefault().isCancelled()) {
+                return;
+            }
+            checkIntersectionType(node);
+            super.visit(node);
+        }
+
+        @Override
         public void visit(NullableType nullableType) {
             if (CancelSupport.getDefault().isCancelled()) {
                 return;
@@ -321,13 +336,16 @@ public class UnusableTypesHintError extends HintErrorRule {
         }
 
         private void checkUnionType(UnionType unionType) {
-            checkDuplicateType(unionType);
+            checkDuplicateType(unionType.getTypes());
             checkRedundantTypeCombination(unionType);
         }
 
-        private void checkDuplicateType(UnionType unionType) {
-            HashSet<String> types = new HashSet<>();
-            for (Expression type : unionType.getTypes()) {
+        private void checkDuplicateType(List<Expression> types) {
+            HashSet<String> checkedTypes = new HashSet<>();
+            for (Expression type : types) {
+                if (CancelSupport.getDefault().isCancelled()) {
+                    return;
+                }
                 QualifiedName qualifiedName = QualifiedName.create(type);
                 assert qualifiedName != null;
                 String name = qualifiedName.toString().toLowerCase(Locale.ENGLISH);
@@ -335,11 +353,11 @@ public class UnusableTypesHintError extends HintErrorRule {
                     // check bool|false
                     name = Type.BOOL;
                 }
-                if (types.contains(name)) {
+                if (checkedTypes.contains(name)) {
                     createDuplicateTypeError(type, qualifiedName.toString());
                     return;
                 }
-                types.add(name);
+                checkedTypes.add(name);
             }
         }
 
@@ -352,6 +370,9 @@ public class UnusableTypesHintError extends HintErrorRule {
         private void checkRedundantTypeCombinationWithObject(UnionType unionType) {
             boolean hasObjectType = false;
             for (Expression type : unionType.getTypes()) {
+                if (CancelSupport.getDefault().isCancelled()) {
+                    return;
+                }
                 if (type instanceof NamespaceName && isObjectType((NamespaceName) type)) {
                     hasObjectType = true;
                 }
@@ -359,6 +380,9 @@ public class UnusableTypesHintError extends HintErrorRule {
             // e.g. object|self, object|parent, object|static object|\Foo\Bar
             if (hasObjectType) {
                 for (Expression type : unionType.getTypes()) {
+                    if (CancelSupport.getDefault().isCancelled()) {
+                        return;
+                    }
                     if (type instanceof NamespaceName && !isObjectType((NamespaceName) type)) {
                         String typeName = CodeUtils.extractUnqualifiedName((NamespaceName) type);
                         if (!VALID_TYPES_WITH_OBJECT_TYPE.contains(typeName)) {
@@ -377,9 +401,31 @@ public class UnusableTypesHintError extends HintErrorRule {
             // mixed can only be used as a standalone type
             // e.g. mixed|null, mixed|object, mixed|void, and so on are errors
             for (Expression type : unionType.getTypes()) {
+                if (CancelSupport.getDefault().isCancelled()) {
+                    return;
+                }
                 if (type instanceof NamespaceName && isMixedType((NamespaceName) type)) {
                     createError(type, Type.MIXED, UnusableType.Context.Union);
                     break;
+                }
+            }
+        }
+
+        private void checkIntersectionType(IntersectionType intersectionType) {
+            checkDuplicateType(intersectionType.getTypes());
+            checkInvalidIntersectionType(intersectionType);
+        }
+
+        private void checkInvalidIntersectionType(IntersectionType intersectionType) {
+            for (Expression type : intersectionType.getTypes()) {
+                if (CancelSupport.getDefault().isCancelled()) {
+                    return;
+                }
+                QualifiedName qualifiedName = QualifiedName.create(type);
+                assert qualifiedName != null;
+                String name = qualifiedName.toString().toLowerCase(Locale.ENGLISH);
+                if (INVALID_TYPES_WITH_INTERSECTION_TYPES.contains(name)) {
+                    createError(type, qualifiedName.toString(), UnusableType.Context.Intersection);
                 }
             }
         }
@@ -495,6 +541,7 @@ public class UnusableTypesHintError extends HintErrorRule {
         "UnusableType.Context.property=a property",
         "UnusableType.Context.standalone=a standalone",
         "UnusableType.Context.union=a union",
+        "UnusableType.Context.intersection=an intersection",
         "UnusableType.Context.nullable=a nullable",
         "# {0} - type",
         "# {1} - context",
@@ -509,6 +556,7 @@ public class UnusableTypesHintError extends HintErrorRule {
             Property(Bundle.UnusableType_Context_property()),
             Standalone(Bundle.UnusableType_Context_standalone()),
             Union(Bundle.UnusableType_Context_union()),
+            Intersection(Bundle.UnusableType_Context_intersection()),
             Nullable(Bundle.UnusableType_Context_nullable()),
             ;
             private final String context;
@@ -520,10 +568,14 @@ public class UnusableTypesHintError extends HintErrorRule {
             public String getContext() {
                 return context;
             }
+
+            public String getDescription(String type) {
+                return Bundle.UnusableType_description(type, getContext());
+            }
         }
 
         private UnusableType(Rule rule, FileObject fileObject, int startOffset, int endOffset, String type, Context context) {
-            super(rule, Bundle.UnusableType_description(type, context.getContext()), fileObject, new OffsetRange(startOffset, endOffset), Collections.emptyList(), 500);
+            super(rule, context.getDescription(type), fileObject, new OffsetRange(startOffset, endOffset), Collections.emptyList(), 500);
         }
     }
 

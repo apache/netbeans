@@ -1992,7 +1992,7 @@ public class ServerTest extends NbTestCase {
                      fileChanges.get(0).getRange());
         assertEquals("\n" +
                      "    private String convertToString(int value) {\n" +
-                     "        throw new UnsupportedOperationException(\"Not supported yet.\"); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody\n" +
+                     "        throw new UnsupportedOperationException(\"Not supported yet.\");\n" +
                      "    }\n",
                      fileChanges.get(0).getNewText());
     }
@@ -2167,7 +2167,7 @@ public class ServerTest extends NbTestCase {
         assertEquals("\n" +
                      "    @Override\n" +
                      "    public void run() {\n" +
-                     "        throw new UnsupportedOperationException(\"Not supported yet.\"); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody\n" +
+                     "        throw new UnsupportedOperationException(\"Not supported yet.\");\n" +
                      "    }\n",
                      fileChanges.get(0).getNewText());
     }
@@ -2257,7 +2257,7 @@ public class ServerTest extends NbTestCase {
                      fileChanges.get(0).getRange());
         assertEquals("            @Override\n" +
                      "            public void run() {\n" +
-                     "                throw new UnsupportedOperationException(\"Not supported yet.\"); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody\n" +
+                     "                throw new UnsupportedOperationException(\"Not supported yet.\");\n" +
                      "            }\n",
                      fileChanges.get(0).getNewText());
     }
@@ -2345,7 +2345,7 @@ public class ServerTest extends NbTestCase {
                      fileChanges.get(0).getRange());
         assertEquals("        @Override\n" +
                      "        public void run() {\n" +
-                     "            throw new UnsupportedOperationException(\"Not supported yet.\"); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody\n" +
+                     "            throw new UnsupportedOperationException(\"Not supported yet.\");\n" +
                      "        }\n",
                      fileChanges.get(0).getNewText());
     }
@@ -3320,12 +3320,12 @@ public class ServerTest extends NbTestCase {
         assertEquals("\n" +
                      "    @Override\n" +
                      "    protected void finalize() throws Throwable {\n" +
-                     "        super.finalize(); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody\n" +
+                     "        super.finalize();\n" +
                      "    }\n" +
                      "\n" +
                      "    @Override\n" +
                      "    public String toString() {\n" +
-                     "        return super.toString(); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody\n" +
+                     "        return super.toString();\n" +
                      "    }\n",
                      fileChanges.get(0).getNewText());
     }

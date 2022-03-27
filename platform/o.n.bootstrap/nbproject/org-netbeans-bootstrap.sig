@@ -507,7 +507,7 @@ meth public static <%0 extends java.lang.Throwable> java.lang.RuntimeException t
 meth public static java.lang.Class<?>[] getStack()
 meth public static void exit(int)
 meth public static void install()
-supr org.netbeans.agent.hooks.TrackingHooks
+supr org.netbeans.agent.hooks.api.TrackingHooks
 hfds LOG,callerWhiteList,check,officialExit,warnedClassesNDE,warnedClassesNH,warnedSunMisc
 hcls StackSecurityManager
 
@@ -529,15 +529,11 @@ CLSS public abstract interface static org.netbeans.Util$ModuleProvider
  outer org.netbeans.Util
 meth public abstract org.netbeans.Module getModule()
 
-CLSS public abstract org.netbeans.agent.hooks.TrackingHooks
+CLSS public abstract org.netbeans.agent.hooks.api.TrackingHooks
 cons public init()
-fld public final static java.lang.String HOOK_ACCESSIBLE = "accessible"
-fld public final static java.lang.String HOOK_EXIT = "exit"
-fld public final static java.lang.String HOOK_IO = "io"
-fld public final static java.lang.String HOOK_NEW_AWT_WINDOW = "newAWTWindow"
-fld public final static java.lang.String HOOK_PROPERTY = "property"
-fld public final static java.lang.String HOOK_SECURITY_MANAGER = "securityManager"
+innr public final static !enum Hooks
 meth protected void checkDelete(java.lang.String)
+meth protected void checkExec(java.util.List<java.lang.String>)
 meth protected void checkExit(int)
 meth protected void checkFileRead(java.lang.String)
 meth protected void checkFileWrite(java.lang.String)
@@ -545,27 +541,10 @@ meth protected void checkNewAWTWindow(java.awt.Window)
 meth protected void checkSetAccessible(java.lang.reflect.AccessibleObject)
 meth protected void checkSetSecurityManager(java.lang.Object)
 meth protected void checkSystemProperty(java.lang.String)
-meth public !varargs static void register(org.netbeans.agent.hooks.TrackingHooks,int,java.lang.String[])
+meth public !varargs static void register(org.netbeans.agent.hooks.api.TrackingHooks,int,org.netbeans.agent.hooks.api.TrackingHooks$Hooks[])
 meth public static boolean isInstalled()
-meth public static void clear()
-meth public static void deleteFile(java.io.File)
-meth public static void deleteFile(java.nio.file.Path)
-meth public static void exitCallback(int)
-meth public static void newAWTWindowCallback(java.awt.Window)
-meth public static void read(java.io.File)
-meth public static void read(java.lang.String)
-meth public static void read(java.nio.file.Path)
-meth public static void readWrite(java.io.File,java.lang.String)
-meth public static void readWrite(java.nio.file.Path,java.util.Set<java.nio.file.OpenOption>)
-meth public static void setAccessible(java.lang.reflect.AccessibleObject)
-meth public static void setSecurityManager(java.lang.Object)
-meth public static void systemProperty(java.lang.String)
-meth public static void write(java.io.File)
-meth public static void write(java.lang.String)
-meth public static void write(java.nio.file.Path)
+meth public static void unregister(org.netbeans.agent.hooks.api.TrackingHooks)
 supr java.lang.Object
-hfds LOG,hook2Delegates
-hcls HookDescription
 
 CLSS public abstract org.openide.modules.ModuleInfo
 cons protected init()

@@ -149,10 +149,10 @@ public class MarkupTagProcessor {
         }
     }
     
-    private class Region{
+    public class Region{
         private final String markupTagName;
         private final String value;
-        private final Map<String, String> attributes;
+        private Map<String, String> attributes;
 
         Region(String value, Map<String, String> attributes, String markupTagName){
             this.value = value == null || value.isEmpty() ? "anonymous" : value;

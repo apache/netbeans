@@ -1335,38 +1335,49 @@ public class ElementJavadoc {
                 + "</div>\n"); //NOI18N
         sb.append("<pre>"); //NOI18N
         sb.append("<code>"); //NOI18N
+  
 
-        ClassPath classPath = this.cpInfo.getClassPath(ClasspathInfo.PathKind.SOURCE);
-        String pckgName = docPath.getCompilationUnit().getPackageName().toString();
-        
         List<DocTree> attributes = (List<DocTree>) TreeShims.getSnippetDocTreeAttributes(tag);
         
         String fileName = null;
         String regionName = null;
         String lang = null;
-  
+        Set<String> errorList = new HashSet<>();
+        String error = "";
+
         boolean isExternalSnippet = false;
+        String text = null;
         
         for(DocTree att : attributes){
             switch (((AttributeTree)att).getName().toString()) {
                 case "file":
-                    fileName = ((AttributeTree)att).getValue().get(0).toString();
+                    if(isAttrPresent(att) && text==null) {
+                        fileName = ((AttributeTree)att).getValue().get(0).toString();
+                        text = extractContent(docPath, att, errorList, fileName);
+                    } else error = "error: snippet markup: File invalid";
                     isExternalSnippet = true;
                     break;
                 case "class":
-                    fileName = ((AttributeTree)att).getValue().get(0).toString() + ".java";
+                    if(isAttrPresent(att) && text==null) {
+                        fileName = ((AttributeTree)att).getValue().get(0).toString() + ".java";
+                        text = extractContent(docPath, att, errorList, fileName);
+                        lang="java";
+                    } else error = "error: snippet markup: File invalid";
                     isExternalSnippet = true;
-                    lang="java";
                     break;
                 case "region":
-                    regionName = ((AttributeTree)att).getValue().get(0).toString();
+                    if(isAttrPresent(att)) {
+                        regionName = ((AttributeTree)att).getValue().get(0).toString();
+                    } else {
+                        error = "error: snippet markup: region not specified";
+                    }
                     break;
                 case "lang":
                     lang = ((AttributeTree)att).getValue().get(0).toString();
                     break;
             }
+            if(!error.isEmpty())errorList.add(error);
         }
-        
         
         if(lang == null && fileName!=null){
             if(fileName.endsWith(".java")){
@@ -1376,17 +1387,15 @@ public class ElementJavadoc {
             }
         }
         
-        String text = null;
-        if (isExternalSnippet) {
-            pckgName = pckgName.replaceAll("\\.", "\\\\");
-            FileObject snippetFile = classPath.findResource(pckgName + "\\snippet-files\\" + fileName);
-            try {
-                text = snippetFile.asText();
-            } catch (IOException ex) {
-                Exceptions.printStackTrace(ex);
+        if (!isExternalSnippet) {
+            if(TreeShims.getSnippetDocTreeText(tag)!=null) {
+                text = TreeShims.getSnippetDocTreeText(tag).toString();
             }
-        } else {
-            text = TreeShims.getSnippetDocTreeText(tag).toString();
+        }
+
+        if(!errorList.isEmpty() && text==null) {
+            reportError(new ArrayList(errorList), sb);
+            return;
         }
         
         String langCommentPattern;
@@ -1408,14 +1417,41 @@ public class ElementJavadoc {
         sb.append("</div>"); //NOI18N
     }
     
+    private boolean isAttrPresent(DocTree att) {
+        return !((AttributeTree)att).getValue().isEmpty() && (!((AttributeTree)att).getValue().get(0).toString().isEmpty());
+    }
+
+    private String extractContent(TreePath docPath, DocTree attr, Set<String> errorList, String fileName) {
+        String pckgName = docPath.getCompilationUnit().getPackageName().toString();
+
+        ClassPath classPath = this.cpInfo.getClassPath(ClasspathInfo.PathKind.SOURCE);
+        String error = null;
+        String text = null;
+
+        pckgName = pckgName.replaceAll("\\.", "\\\\");
+        FileObject snippetFile = classPath.findResource(pckgName + "\\snippet-files\\" + fileName);
+        if (snippetFile == null || fileName.isEmpty()) {
+            error = "error: snippet markup: File invalid";
+            errorList.add(error);
+        } else {
+            try {
+                text = snippetFile.asText();
+            } catch (IOException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+        }
+        return text;
+    }
+
     private void applyTags(List<SourceLineMeta> parseResult, MarkupTagProcessor.ProcessedTags tags, StringBuilder sb, String regionName) {
 
-        if(!tags.getErrorList().isEmpty()){
+        if(tags.getErrorList().size() > 0){
             reportError(tags.getErrorList(), sb);
             return;
         }
 
         int lineCounter = 0;
+        List<List<MarkupTagProcessor.Region>> regionList = new ArrayList<>();
         for (SourceLineMeta fullLineInfo : parseResult) {
             lineCounter++;
 
@@ -1428,10 +1464,12 @@ public class ElementJavadoc {
             }
 
             List<MarkupTagProcessor.ApplicableMarkupTag> attributes = tags.getMarkUpTagLineMapper().get(lineCounter);
+            List<MarkupTagProcessor.Region> regions = tags.getRegionTagLineMapper().get(lineCounter);
 
             boolean toAddCurrent = true;
             if (regionName != null && regions != null) {
                 toAddCurrent = regions.stream().anyMatch(p -> p.getValue().equals(regionName));
+                regionList.add(regions);
             } else if (regionName != null) {
                 toAddCurrent = false;
             }
@@ -1458,6 +1496,16 @@ public class ElementJavadoc {
                 }
                 sb.append("\n");
 	    }
+        }
+        if(regionName!=null && !regionList.isEmpty()) {
+            boolean noneMatch = regionList.stream().flatMap(List::stream)
+                    .noneMatch(p -> p.getValue().equals(regionName));
+            if(noneMatch) {
+            List<String> errorList = new ArrayList<>();
+            String error = "error: snippet markup: Region not found";
+            errorList.add(error);
+            reportError(errorList, sb);
+            }
         }
     }
 

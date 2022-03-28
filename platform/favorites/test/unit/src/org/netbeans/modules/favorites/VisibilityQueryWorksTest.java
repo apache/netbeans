@@ -112,9 +112,9 @@ public class VisibilityQueryWorksTest extends NbTestCase {
         err.info("Favorites created");
 
         FileObject[] arr = this.favoritesFO.getChildren();
-        for (int i = 0; i < arr.length; i++) {
-            err.info("Delete: " + arr[i]);
-            arr[i].delete();
+        for (FileObject arr1 : arr) {
+            err.info("Delete: " + arr1);
+            arr1.delete();
             err.info("Done");
         }
 
@@ -158,7 +158,7 @@ public class VisibilityQueryWorksTest extends NbTestCase {
         assertNodeForDataObject("hidden object is not there", hiddenDO, false, arr);
         assertEquals("No children at all", 0, arr.length);
 
-        VQI vqi = (VQI) Lookup.getDefault().lookup(VQI.class);
+        VQI vqi = Lookup.getDefault().lookup(VQI.class);
         vqi.showAll = true;
         vqi.fire();
 
@@ -207,8 +207,7 @@ public class VisibilityQueryWorksTest extends NbTestCase {
     /** @return node that contains the data object or null */
     private Node assertNodeForDataObject(String msg, DataObject obj, boolean shouldBeThere, Node[] arr) {
         for (int i = 0; i < arr.length; i++) {
-            boolean ok;
-            DataObject in = (DataObject)arr[i].getCookie(DataObject.class);
+            DataObject in = arr[i].getCookie(DataObject.class);
             
             if (obj == in || ((in instanceof DataShadow) && ((DataShadow)in).getOriginal() == obj)) {
                 if (shouldBeThere) {
@@ -234,6 +233,7 @@ public class VisibilityQueryWorksTest extends NbTestCase {
 
         boolean showAll;
         
+        @Override
         public boolean isVisible(FileObject file) {
             if (showAll) {
                 return true;
@@ -243,10 +243,12 @@ public class VisibilityQueryWorksTest extends NbTestCase {
 
         
         private final ChangeSupport cs = new ChangeSupport(this);
+        @Override
         public void addChangeListener(ChangeListener l) {
             cs.addChangeListener(l);
         }
 
+        @Override
         public void removeChangeListener(ChangeListener l) {
             cs.removeChangeListener(l);
         }

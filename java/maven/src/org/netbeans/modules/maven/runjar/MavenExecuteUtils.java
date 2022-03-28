@@ -97,7 +97,7 @@ public final class MavenExecuteUtils {
      * made on the helper instance. Use {@link #createExecutionEnvHelper}
      * to make an instance.
      */
-    public final static class ExecutionEnvHelper {
+    public static final class ExecutionEnvHelper {
         private final ActionToGoalMapping goalMappings;
         private final NbMavenProjectImpl project;
         

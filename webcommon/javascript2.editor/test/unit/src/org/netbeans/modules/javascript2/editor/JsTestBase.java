@@ -25,9 +25,11 @@ import java.util.Set;
 import org.netbeans.lib.lexer.test.TestLanguageProvider;
 import org.netbeans.modules.csl.api.test.CslTestBase;
 import org.netbeans.modules.csl.spi.DefaultLanguageConfig;
+import org.netbeans.modules.javascript2.editor.index.JsIndexer;
 import org.netbeans.modules.javascript2.lexer.api.JsTokenId;
 import org.netbeans.modules.parsing.impl.indexing.IndexingUtils;
 import org.netbeans.modules.parsing.impl.indexing.RepositoryUpdater;
+import org.netbeans.modules.parsing.spi.indexing.EmbeddingIndexerFactory;
 
 /**
  * @author Tor Norbye
@@ -50,12 +52,17 @@ public abstract class JsTestBase extends CslTestBase {
     protected DefaultLanguageConfig getPreferredLanguage() {
         return new TestJsLanguage();
     }
-    
+
     @Override
     protected String getPreferredMimeType() {
         return JsTokenId.JAVASCRIPT_MIME_TYPE;
     }
-    
+
+    @Override
+    public EmbeddingIndexerFactory getIndexerFactory() {
+        return new JsIndexer.Factory();
+    }
+
     public static class TestJsLanguage extends JsLanguage {
 
         public TestJsLanguage() {

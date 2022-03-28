@@ -41,7 +41,7 @@ public class BrowserURLMapperImpl implements BrowserURLMapperImplementation {
             if (uri.getAuthority() != null && uri.getAuthority().contains("localhost")) { // NOI18N
                 String baseUrl = uri.getScheme() + "://" + uri.getAuthority();
                 return new BrowserURLMapperImplementation.BrowserURLMapper(baseUrl,
-                        baseUrl.replaceAll("localhost", WebUtils.getLocalhostInetAddress().getHostAddress())); // NOI18N
+                        baseUrl.replace("localhost", WebUtils.getLocalhostInetAddress().getHostAddress())); // NOI18N
             }
         } catch (URISyntaxException ex) {
             Exceptions.printStackTrace(ex);

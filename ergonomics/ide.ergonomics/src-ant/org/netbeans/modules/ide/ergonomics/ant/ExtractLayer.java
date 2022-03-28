@@ -21,6 +21,7 @@ package org.netbeans.modules.ide.ergonomics.ant;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -170,8 +171,8 @@ implements FileNameMapper, URIResolver, EntityResolver {
         String sep = "\n    ";
         ByteArrayOutputStream uberLayer = new ByteArrayOutputStream();
         try {
-            uberLayer.write("<?xml version='1.0' encoding='UTF-8'?>\n".getBytes("UTF-8"));
-            uberLayer.write("<filesystem>\n".getBytes("UTF-8"));
+            uberLayer.write("<?xml version='1.0' encoding='UTF-8'?>\n".getBytes(StandardCharsets.UTF_8));
+            uberLayer.write("<filesystem>\n".getBytes(StandardCharsets.UTF_8));
         } catch (IOException iOException) {
             throw new BuildException(iOException);
         }
@@ -237,7 +238,7 @@ implements FileNameMapper, URIResolver, EntityResolver {
         byte[] uberArr = null;
         DuplKeys duplKeys = null;
         try {
-            uberLayer.write("</filesystem>\n".getBytes("UTF-8"));
+            uberLayer.write("</filesystem>\n".getBytes(StandardCharsets.UTF_8));
             uberText = uberLayer.toString("UTF-8");
             uberArr = uberLayer.toByteArray();
             log("uberLayer for " + clusterName + "\n" + uberText, Project.MSG_VERBOSE);
@@ -337,12 +338,8 @@ implements FileNameMapper, URIResolver, EntityResolver {
             te.setProject(getProject());
             te.addText("\n\n\ncnbs=\\" + modules + "\n\n");
             te.setFiltering(false);
-            try {
-                final String antProjects = new String(bundleHeader.toByteArray(), "UTF-8");
-                te.addText(antProjects + "\n\n");
-            } catch (UnsupportedEncodingException ex) {
-                throw new BuildException(ex);
-            }
+            String antProjects = new String(bundleHeader.toByteArray(), StandardCharsets.UTF_8);
+            te.addText(antProjects + "\n\n");
             concat.addFooter(te);
             concat.execute();
         }

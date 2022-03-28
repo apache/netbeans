@@ -46,8 +46,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
-import java.io.UnsupportedEncodingException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -99,7 +99,7 @@ public final class ProjectUtilities {
                                 "org-netbeans-modules-j2ee-earproject",
                                 "org-netbeans-modules-j2ee-ejbjarproject",
                                 "org-netbeans-modules-web-project"})
-    final public static class IntegrationUpdater extends ProjectOpenedHook {
+    public static final class IntegrationUpdater extends ProjectOpenedHook {
         private Project prj;
 
         public IntegrationUpdater(Project prj) {
@@ -202,7 +202,7 @@ public final class ProjectUtilities {
         return buildDir;
     }
 
-    final private static Pattern PROFILER_INIT = Pattern.compile("<\\s*target\\s+.*?name\\s*=\\s*\"profile-init\"", Pattern.DOTALL | Pattern.MULTILINE);
+    private static final Pattern PROFILER_INIT = Pattern.compile("<\\s*target\\s+.*?name\\s*=\\s*\"profile-init\"", Pattern.DOTALL | Pattern.MULTILINE);
     public static boolean isProfilerIntegrated(Project project) {
         String buildXml = ProjectUtilities.getProjectBuildScript(project, "nbproject/build-impl.xml"); // NOI18N
         Matcher m = PROFILER_INIT.matcher(buildXml);
@@ -244,14 +244,7 @@ public final class ProjectUtilities {
             }
         }
 
-        try {
-            return new String(data, "UTF-8" //NOI18N
-            ); // According to Issue 65557, build.xml uses UTF-8, not default encoding!
-        } catch (UnsupportedEncodingException ex) {
-            ErrorManager.getDefault().notify(ErrorManager.ERROR, ex);
-
-            return null;
-        }
+        return new String(data, StandardCharsets.UTF_8); // According to Issue 65557, build.xml uses UTF-8, not default encoding!
     }
 
 //    Now available using AntProjectSupport

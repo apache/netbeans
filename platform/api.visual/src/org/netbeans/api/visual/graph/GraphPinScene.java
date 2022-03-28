@@ -484,7 +484,7 @@ public abstract class GraphPinScene<N, E, P> extends ObjectScene {
     /**
      * This class is a particular GraphPinScene where nodes, edges and pins are represented with String class.
      */
-    public static abstract class StringGraph extends GraphPinScene<String, String, String> {
+    public abstract static class StringGraph extends GraphPinScene<String, String, String> {
 
     }
 

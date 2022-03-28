@@ -23,6 +23,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.concurrent.CompletionStage;
+import org.netbeans.modules.java.lsp.server.explorer.api.ResourceData;
 import org.openide.nodes.Node;
 
 /**
@@ -38,6 +39,7 @@ public interface TreeNodeRegistry {
     Node findNode(int id);
     TreeViewProvider providerOf(int id);
     ImageDataOrIndex imageOrIndex(Image im);
+    ResourceData imageContents(URI imageUri);
     
     CompletionStage<TreeViewProvider> createProvider(String id);
     
@@ -52,27 +54,13 @@ public interface TreeNodeRegistry {
          */
         public String[]     composition;
         
-        /**
-         * Image URI, data: protocol.
-         */
-        public final URI    imageURI;
-        public final int    imageIndex;
+        public String       contentType;
+        public byte[]       imageData;
 
         public ImageDataOrIndex(URI imageURI) {
-            this.imageURI = imageURI;
-            this.imageIndex = -1;
+            this.baseURI = imageURI;
         }
 
-        public ImageDataOrIndex(URI imageUri, int imageIndex) {
-            this.imageIndex = imageIndex;
-            this.imageURI = imageUri;
-        }
-
-        public ImageDataOrIndex(int imageIndex) {
-            this.imageIndex = imageIndex;
-            this.imageURI = null;
-        }
-        
         public ImageDataOrIndex baseURL(URL u) {
             try {
                 baseURI = u == null ? null : u.toURI();
@@ -89,6 +77,12 @@ public interface TreeNodeRegistry {
         
         public ImageDataOrIndex composition(String[] composition) {
             this.composition = composition;
+            return this;
+        }
+        
+        public ImageDataOrIndex imageData(String contentType, byte[] imageData) {
+            this.contentType = contentType;
+            this.imageData = imageData;
             return this;
         }
     }

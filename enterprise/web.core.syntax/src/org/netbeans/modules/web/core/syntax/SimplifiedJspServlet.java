@@ -508,7 +508,7 @@ public class SimplifiedJspServlet extends JSPProcessor {
     }
 
     @Deprecated
-    public static abstract class VirtualJavaClass {
+    public abstract static class VirtualJavaClass {
 
         public final void create(Document doc, String virtualClassBody) {
             FileObject fileDummyJava = null;

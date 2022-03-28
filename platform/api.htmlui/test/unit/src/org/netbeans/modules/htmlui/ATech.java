@@ -30,7 +30,7 @@ public interface ATech {
     }
 
     @ServiceProvider(service = Contexts.Provider.class)
-    public final static class Register implements Contexts.Provider {
+    public static final class Register implements Contexts.Provider {
         @Override
         public void fillContext(Contexts.Builder bldr, Class<?> type) {
             bldr.register(ATech.class, new First(), 30);

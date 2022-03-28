@@ -527,7 +527,7 @@ class HprofHeap implements Heap {
 
             if (classIdOffset != 0) {
                 long classId = dumpBuffer.getID(start + 1 + classIdOffset);
-                classDump = (ClassDump) classIdToClassMap.get(new Long(classId));
+                classDump = (ClassDump) classIdToClassMap.get(classId);
             }
 
             if (classDump != null) {
@@ -624,7 +624,7 @@ class HprofHeap implements Heap {
 
             if (tag == INSTANCE_DUMP) {
                 long classId = dumpBuffer.getID(start+1+idSize+4);
-                ClassDump classDump = (ClassDump) classIdToClassMap.get(new Long(classId));
+                ClassDump classDump = (ClassDump) classIdToClassMap.get(classId);
                 long instanceId = dumpBuffer.getID(start+1);
                 long inOff = start+1+idSize+4+idSize+4;
                 List fields = classDump.getAllInstanceFields();
@@ -726,7 +726,7 @@ class HprofHeap implements Heap {
             boolean isTreeObj = instanceEntry.isTreeObj();
             long instSize = 0;
             
-            if (!isTreeObj && (instanceEntry.getNearestGCRootPointer() != 0 || gcRoots.getGCRoot(new Long(instanceId)) != null)) {
+            if (!isTreeObj && (instanceEntry.getNearestGCRootPointer() != 0 || gcRoots.getGCRoot(instanceId) != null)) {
                 long origSize = instanceEntry.getRetainedSize();
                 if (origSize < 0) origSize = 0;
                 Instance instance = getInstanceByID(instanceId);

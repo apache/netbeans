@@ -183,7 +183,7 @@ public class QueryNode implements Query {
                 String tableName=tbl.getTableName();
                 String schemaName=tbl.getSchemaName();
                 for (int j=0; j<columnNames.size(); j++) {
-                    String columnName = (String) columnNames.get(j);
+                    String columnName = columnNames.get(j);
                     columns.add(new ColumnNode(tableName, columnName, corrName, schemaName));
                 }
             }

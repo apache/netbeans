@@ -146,20 +146,20 @@ public class XMLUtil {
     private static String convertChars(String msg, boolean attribute) {
         String result=msg;
         if (msg.indexOf("&")>=0) //NOI18N
-            result = result.replaceAll("&","&amp;"); //NOI18N
+            result = result.replace("&","&amp;"); //NOI18N
         if (msg.indexOf("<")>=0) //NOI18N
-            result = result.replaceAll("<","&lt;"); //NOI18N
+            result = result.replace("<","&lt;"); //NOI18N
         if (msg.indexOf(">")>=0) //NOI18N   
-            result = result.replaceAll(">","&gt;"); //NOI18N
+            result = result.replace(">","&gt;"); //NOI18N
         if (attribute) { //NOI18N
             if (msg.indexOf("\"")>=0) //NOI18N
-                result = result.replaceAll("\"","&quot;"); //NOI18N
+                result = result.replace("\"","&quot;"); //NOI18N
             if (msg.indexOf("'")>=0) //NOI18N
-                result = result.replaceAll("'","&apos;"); //NOI18N
+                result = result.replace("'","&apos;"); //NOI18N
             if (msg.indexOf("\n")>=0) //NOI18N
-                result = result.replaceAll("\n","&#xA"); //NOI18N
+                result = result.replace("\n","&#xA"); //NOI18N
             if (msg.indexOf("\t")>=0) //NOI18N
-                result = result.replaceAll("\t","&#x9"); //NOI18N
+                result = result.replace("\t","&#x9"); //NOI18N
         }
         return result;
     }
@@ -465,7 +465,7 @@ public class XMLUtil {
     }
 
     // Given @param doc what should it's DOCTYPE name be.
-    static protected String getDocTypeName(Document doc) {
+    protected static String getDocTypeName(Document doc) {
         // First look for a DOCTYPE
         NodeList children = doc.getChildNodes();
         int length = children.getLength();

@@ -34,8 +34,8 @@ import static org.netbeans.CLIHandlerTest.*;
 @RandomlyFails
 public class CLIHandlerServerWaitsTest extends NbTestCase {
 
-    final static ByteArrayInputStream nullInput = new ByteArrayInputStream(new byte[0]);
-    final static ByteArrayOutputStream nullOutput = new ByteArrayOutputStream();
+    static final ByteArrayInputStream nullInput = new ByteArrayInputStream(new byte[0]);
+    static final ByteArrayOutputStream nullOutput = new ByteArrayOutputStream();
     
     private Logger LOG;
 

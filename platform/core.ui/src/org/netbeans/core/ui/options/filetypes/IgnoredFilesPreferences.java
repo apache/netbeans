@@ -43,7 +43,7 @@ final class IgnoredFilesPreferences {
             = "IgnoreHiddenFilesInUserHome";                           // NOI18N
     /** Default ignored files pattern. Pattern \.(cvsignore|svn|DS_Store) is covered by ^\..*$ **/
     static final String DEFAULT_IGNORED_FILES = "^(CVS|SCCS|vssver.?\\.scc|#.*#|%.*%|_svn)$|~$|^\\.(git|hg|svn|cache|DS_Store)$|^Thumbs.db$"; //NOI18N
-    static private String syntaxError;
+    private static String syntaxError;
 
     private IgnoredFilesPreferences() {
     }

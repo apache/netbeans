@@ -147,7 +147,7 @@ final class DragDropUtilities extends Object {
 
     /* Invokes the stored runnable if it is there and than set to null.
      */
-    static private void invokePostDropRun() {
+    private static void invokePostDropRun() {
         if (postDropRun != null) {
             SwingUtilities.invokeLater(postDropRun);
             postDropRun = null;

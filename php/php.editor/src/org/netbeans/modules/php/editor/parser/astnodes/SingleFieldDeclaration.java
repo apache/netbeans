@@ -24,7 +24,7 @@ package org.netbeans.modules.php.editor.parser.astnodes;
  * e.g.
  * var $a, $b;
  * public $a = 3;
- * final private static $var;
+ * private static final $var;
  * private int $int = 20; // PHP 7.4
  * </pre>
  */

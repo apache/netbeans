@@ -193,8 +193,9 @@ public class IndexerTransactionTest extends NbTestCase {
         logHandler.beforeFinishCallback = null;
         parserBlocker.release(1000);
 
-        for(String id : registeredClasspaths.keySet()) {
-            Set<ClassPath> classpaths = registeredClasspaths.get(id);
+        for(Map.Entry<String, Set<ClassPath>> entry : registeredClasspaths.entrySet()) {
+            String id = entry.getKey();
+            Set<ClassPath> classpaths = entry.getValue();
             GlobalPathRegistry.getDefault().unregister(id, classpaths.toArray(new ClassPath[classpaths.size()]));
         }
         registeredClasspaths.clear();
@@ -640,8 +641,8 @@ public class IndexerTransactionTest extends NbTestCase {
 
     public static class SFBQImpl implements SourceForBinaryQueryImplementation {
 
-        final static Map<URL,FileObject> map = new HashMap<URL,FileObject> ();
-        final static Map<URL,Result> results = new HashMap<URL,Result> ();
+        static final Map<URL,FileObject> map = new HashMap<URL,FileObject> ();
+        static final Map<URL,Result> results = new HashMap<URL,Result> ();
 
         public SFBQImpl () {
 

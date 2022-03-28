@@ -79,7 +79,7 @@ public class WebAppProxy implements WebApp {
                 new java.beans.PropertyChangeEvent(this, PROPERTY_VERSION, version, value);
             version=value;
             for (int i=0;i<listeners.size();i++) {
-                ((java.beans.PropertyChangeListener)listeners.get(i)).propertyChange(evt);
+                listeners.get(i).propertyChange(evt);
             }
         }
     }
@@ -105,7 +105,7 @@ public class WebAppProxy implements WebApp {
                 new java.beans.PropertyChangeEvent(this, PROPERTY_STATUS, ddStatus, value);
             ddStatus=value;
             for (int i=0;i<listeners.size();i++) {
-                ((java.beans.PropertyChangeListener)listeners.get(i)).propertyChange(evt);
+                listeners.get(i).propertyChange(evt);
             }
         }
     }

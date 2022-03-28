@@ -953,7 +953,7 @@ abstract class AbstractFolder extends FileObject {
     * @param lock the lock obtained by a call to {@link #lock}
     * @exception IOException if the file could not be deleted
     */
-    final public void delete(FileLock lock) throws IOException {
+    public final void delete(FileLock lock) throws IOException {
         if (isFolder()) {
             FileObject[] fos = this.getChildren();
 

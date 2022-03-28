@@ -44,7 +44,7 @@ public class SourceLevelProvider implements SourceLevelQueryImplementation2 {
         return new R(jshe);
     }
     
-    final static class R implements Result {
+    static final class R implements Result {
         private final JShellEnvironment jshe;
 
         public R(JShellEnvironment jshe) {

@@ -49,12 +49,12 @@ public final class XMLPropertiesConvertor extends Convertor implements PropertyC
      * <code>&lt;attr name="xmlproperties.preventStoring" boolvalue="[true|false]"/>
      * </code>
      */
-    public final static String EA_PREVENT_STORING = "xmlproperties.preventStoring"; //NOI18N
+    public static final String EA_PREVENT_STORING = "xmlproperties.preventStoring"; //NOI18N
     /** file attribute containnig list of property names their changes will be ignored. Usage
      * <code>&lt;attr name="xmlproperties.ignoreChanges" stringvalue="name[, ...]"/>
      * </code>
      */
-    public final static String EA_IGNORE_CHANGES = "xmlproperties.ignoreChanges"; //NOI18N
+    public static final String EA_IGNORE_CHANGES = "xmlproperties.ignoreChanges"; //NOI18N
     private FileObject providerFO;
     /** cached property names to be filtered */
     private java.util.Set ignoreProperites;
@@ -190,7 +190,7 @@ public final class XMLPropertiesConvertor extends Convertor implements PropertyC
         return true;
     }
     
-    private final static String INDENT = "    "; // NOI18N
+    private static final String INDENT = "    "; // NOI18N
     private String instanceClass = null;
     
 

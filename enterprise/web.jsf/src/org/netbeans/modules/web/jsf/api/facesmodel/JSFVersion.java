@@ -107,7 +107,7 @@ public enum JSFVersion {
      * @return JSF version if any found on the WebModule compile classpath, {@code null} otherwise
      */
     @CheckForNull
-    public synchronized static JSFVersion forWebModule(@NonNull final WebModule webModule) {
+    public static synchronized JSFVersion forWebModule(@NonNull final WebModule webModule) {
         Parameters.notNull("webModule", webModule); //NOI18N
         JSFVersion version = projectVersionCache.get(webModule);
         if (version == null) {
@@ -139,7 +139,7 @@ public enum JSFVersion {
      * @since 1.65
      */
     @CheckForNull
-    public synchronized static JSFVersion forProject(@NonNull final Project project) {
+    public static synchronized JSFVersion forProject(@NonNull final Project project) {
         Parameters.notNull("project", project); //NOI18N
         WebModule webModule = WebModule.getWebModule(project.getProjectDirectory());
         if (webModule != null) {

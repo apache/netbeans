@@ -184,7 +184,7 @@ public final class OperationContainerImpl<Support> {
         return Collections.unmodifiableList(operations);
     }
     
-    synchronized public List<OperationInfo<Support>> listAllWithPossibleEager () {
+    public synchronized List<OperationInfo<Support>> listAllWithPossibleEager () {
         if (upToDate) {
             return listAll();
         }

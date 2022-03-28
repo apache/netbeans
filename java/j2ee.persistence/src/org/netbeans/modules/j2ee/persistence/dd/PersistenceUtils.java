@@ -129,7 +129,7 @@ public class PersistenceUtils {
             }
         }
         
-        return (PersistenceUnit[])result.toArray(new PersistenceUnit[result.size()]);
+        return result.toArray(new PersistenceUnit[result.size()]);
     }
     
     /**

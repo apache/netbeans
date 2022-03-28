@@ -66,17 +66,17 @@ import org.netbeans.modules.j2ee.persistence.spi.jpql.ManagedTypeProvider;
  */
 public class JPQLExecutor {
 
-    static private final String ECLIPSELINK_QUERY = "org.eclipse.persistence.jpa.JpaQuery";//NOI18N
-    static private final String ECLIPSELINK_QUERY_SQL0 = "getDatabaseQuery";//NOI18N
-    static private final String ECLIPSELINK_QUERY_SQL1 = "getSQLString";//NOI18N
-    static private final String HIBERNATE_QUERY = "org.hibernate.ejb.HibernateQuery";//NOI18N
-    static private final String HIBERNATE_QUERY_SQL0 = "getSessionFactory";//NOI18N
-    static private final String HIBERNATE_QUERY_SQL1 = "getQueryPlanCache";//NOI18N
-    static private final String HIBERNATE_QUERY_SQL2 = "getHQLQueryPlan";//NOI18N
-    static private final String HIBERNATE_QUERY_SQL3 = "getTranslators";//NOI18N
-    static private final String HIBERNATE_QUERY_SQL4 = "getSQLString";//NOI18N
-    static private final String OPENJPA_QUERY = "org.apache.openjpa.persistence.QueryImpl";//NOI18N
-    static private final String OPENJPA_QUERY_SQL = "getQueryString";//NOI18N
+    private static final String ECLIPSELINK_QUERY = "org.eclipse.persistence.jpa.JpaQuery";//NOI18N
+    private static final String ECLIPSELINK_QUERY_SQL0 = "getDatabaseQuery";//NOI18N
+    private static final String ECLIPSELINK_QUERY_SQL1 = "getSQLString";//NOI18N
+    private static final String HIBERNATE_QUERY = "org.hibernate.ejb.HibernateQuery";//NOI18N
+    private static final String HIBERNATE_QUERY_SQL0 = "getSessionFactory";//NOI18N
+    private static final String HIBERNATE_QUERY_SQL1 = "getQueryPlanCache";//NOI18N
+    private static final String HIBERNATE_QUERY_SQL2 = "getHQLQueryPlan";//NOI18N
+    private static final String HIBERNATE_QUERY_SQL3 = "getTranslators";//NOI18N
+    private static final String HIBERNATE_QUERY_SQL4 = "getSQLString";//NOI18N
+    private static final String OPENJPA_QUERY = "org.apache.openjpa.persistence.QueryImpl";//NOI18N
+    private static final String OPENJPA_QUERY_SQL = "getQueryString";//NOI18N
 
     /**
      * Executes given JPQL query and returns the result.

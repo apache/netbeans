@@ -21,10 +21,9 @@ package org.netbeans.modules.websvc.api.client;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Iterator;
 import java.util.List;
 
@@ -273,9 +272,8 @@ public final class WebServicesClientSupport {
         if (projectXml != null) {
             BufferedReader br = null;
             try {
-                br = new BufferedReader( new InputStreamReader( 
-                        new FileInputStream( FileUtil.toFile(projectXml)), 
-                            Charset.forName("UTF-8")));                 // NOI18N
+                br = new BufferedReader(new InputStreamReader( 
+                        new FileInputStream( FileUtil.toFile(projectXml)), StandardCharsets.UTF_8));
                 String line = null;
                 while ((line = br.readLine()) != null) {
                     if (line.contains("<web-service-client>")) {        //NOI18N

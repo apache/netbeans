@@ -241,7 +241,7 @@ class NIOStreams {
      * Simple implementation of Output, which will block until the SocketChannel
      * does not accept all the data to be sent.
      */
-    private final static class Output extends OutputStream {
+    private static final class Output extends OutputStream {
         private final SocketChannel channel;
         private final Selector  selector;
         private final int timeout;

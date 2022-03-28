@@ -127,7 +127,7 @@ abstract class AbstractGradleClassPathImpl implements FlaggedClassPathImplementa
         }
     }
 
-    synchronized final void clearResourceCache() {
+    final synchronized void clearResourceCache() {
         resources = null;
         support.firePropertyChange(ClassPathImplementation.PROP_RESOURCES, null, null);
     }

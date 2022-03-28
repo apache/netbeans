@@ -86,7 +86,7 @@ public class WhereNode implements Where {
             List<Column> column = new ArrayList<>();
             _cond.getReferencedColumns(column);
             for (int i = 0; i < column.size(); i++) {
-                Column col = (Column)column.get(i);
+                Column col = column.get(i);
                 if (col.matches(tableSpec)) {
                     _cond = null;
                 }

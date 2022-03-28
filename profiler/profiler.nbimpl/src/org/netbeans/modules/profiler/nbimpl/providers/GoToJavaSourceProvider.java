@@ -67,8 +67,8 @@ public final class GoToJavaSourceProvider extends GoToSourceProvider {
         private String methodName;
         private String signature;
         private int line;
-        final private AtomicBoolean cancelled;
-        final private AtomicBoolean result = new AtomicBoolean(true);
+        private final AtomicBoolean cancelled;
+        private final AtomicBoolean result = new AtomicBoolean(true);
         
         public GotoSourceRunnable(Lookup.Provider project, String className, String methodName, String signature, int line, AtomicBoolean cancelled) {
             this.project = project;

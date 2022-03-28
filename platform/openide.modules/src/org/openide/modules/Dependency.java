@@ -39,32 +39,32 @@ public final class Dependency implements Serializable {
     static final long serialVersionUID = 9548259318L;
 
     /** Dependency on another module. */
-    public final static int TYPE_MODULE = 1;
+    public static final int TYPE_MODULE = 1;
 
     /** Dependency on a package. */
-    public final static int TYPE_PACKAGE = 2;
+    public static final int TYPE_PACKAGE = 2;
 
     /** Dependency on Java. */
-    public final static int TYPE_JAVA = 3;
+    public static final int TYPE_JAVA = 3;
 
     /**
      * Dependency on the IDE.
      * @deprecated This type of dependency should no longer be used.
      */
     @Deprecated
-    public final static int TYPE_IDE = 4;
+    public static final int TYPE_IDE = 4;
 
     /** Dependency on a token.
      * @see ModuleInfo#getProvides
      * @since 2.3
      */
-    public final static int TYPE_REQUIRES = 5;
+    public static final int TYPE_REQUIRES = 5;
 
     /** Dependency on a token, but without need to have token provider be initialised sooner.
      * @see ModuleInfo#getProvides
      * @since 7.1
      */
-    public final static int TYPE_NEEDS = 6;
+    public static final int TYPE_NEEDS = 6;
 
     /** An advisory dependency on a token. If at least one provider of such token is 
      * available, it is enabled. If there is no such provider, then nothing is done
@@ -73,16 +73,16 @@ public final class Dependency implements Serializable {
      * @see ModuleInfo#getProvides
      * @since 7.1
      */
-    public final static int TYPE_RECOMMENDS = 7;
+    public static final int TYPE_RECOMMENDS = 7;
 
     /** Comparison by specification version. */
-    public final static int COMPARE_SPEC = 1;
+    public static final int COMPARE_SPEC = 1;
 
     /** Comparison by implementation version. */
-    public final static int COMPARE_IMPL = 2;
+    public static final int COMPARE_IMPL = 2;
 
     /** No comparison, just require the dependency to be present. */
-    public final static int COMPARE_ANY = 3;
+    public static final int COMPARE_ANY = 3;
 
     /** @deprecated request dependencies on direct modules */
     @Deprecated

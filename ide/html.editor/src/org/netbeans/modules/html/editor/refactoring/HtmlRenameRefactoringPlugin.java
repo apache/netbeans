@@ -140,9 +140,10 @@ public class HtmlRenameRefactoringPlugin implements RefactoringPlugin {
             Map<FileObject, HtmlFileModel> modelsCache = new WeakHashMap<>();
             Set<Entry> refactoredReferenceEntries = new HashSet<>();
             //now I need to find out what links go through the given folder
-            for (FileObject source : source2dest.keySet()) {
+            for (Map.Entry<FileObject, Collection<FileReference>> source2destEntry : source2dest.entrySet()) {
                 List<Difference> diffs = new ArrayList<>();
-                Collection<FileReference> destinations = source2dest.get(source);
+                FileObject source = source2destEntry.getKey();
+                Collection<FileReference> destinations = source2destEntry.getValue();
                 for (FileReference dest : destinations) {
                     FileReferenceModification modification = dest.createModification();
                     if (modification.rename(renamedFolder, newName)) {

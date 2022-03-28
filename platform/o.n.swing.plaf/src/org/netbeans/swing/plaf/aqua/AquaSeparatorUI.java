@@ -41,8 +41,8 @@ import javax.swing.plaf.SeparatorUI;
  * @author  Christopher Atlan
  */
 public class AquaSeparatorUI extends SeparatorUI {
-    private final static Color lineColorHorizontal = new Color(215, 215, 215);
-    private final static Color lineColorVertical = new Color(128, 128, 128);
+    private static final Color lineColorHorizontal = new Color(215, 215, 215);
+    private static final Color lineColorVertical = new Color(128, 128, 128);
     
     private static ComponentUI separatorui = new AquaSeparatorUI();
     

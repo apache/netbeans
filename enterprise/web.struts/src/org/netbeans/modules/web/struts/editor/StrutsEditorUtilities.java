@@ -48,7 +48,7 @@ public class StrutsEditorUtilities {
     protected static int XML_ELEMENT = 4;
     protected static int XML_ATTRIBUTE_VALUE = 7;
     
-    static public String END_LINE = System.getProperty("line.separator");  //NOI18N
+    public static String END_LINE = System.getProperty("line.separator");  //NOI18N
     
     
     /** Returns the value of the path attribute, when there is an action
@@ -344,9 +344,7 @@ public class StrutsEditorUtilities {
     private static String addNewLines(final BaseBean bean) throws IOException {
         StringWriter sWriter = new StringWriter();
         bean.writeNode(sWriter);
-        String sBean = sWriter.toString();
-        sBean = sBean.replaceAll("><", ">"+END_LINE+"<");               //NOI18N
-        return sBean;
+        return sWriter.toString().replace("><", ">"+END_LINE+"<");        //NOI18N
     }
     
     private static int writeString(BaseDocument doc, String text, int offset) throws BadLocationException {

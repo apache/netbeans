@@ -33,6 +33,11 @@
                 "Cloud/Oracle/Databases/Actions" folder contains actions working with <code>OCIItem</code>
             </p>
         </api>
+        <api group="layer" name="CloudOracleCompartmentActions" type="export" category="private" >
+            <p>
+                "Cloud/Oracle/Compartment/Actions" folder contains actions working with <code>CompartmentItem</code>
+            </p>
+        </api>
     </answer>
- 
+    
 </api-answers>

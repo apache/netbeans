@@ -34,6 +34,7 @@ import org.xml.sax.helpers.DefaultHandler;
 
 import java.awt.*;
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.List;
 import java.util.logging.Logger;
@@ -728,8 +729,7 @@ public class WindowManagerParser {
             modeConfigMap.put(wmc.modes[i].name, wmc.modes[i]);
         }
         List<String> toDelete = new ArrayList<String>(10);
-        for (String s: modeParserMap.keySet()) {
-            ModeParser modeParser = modeParserMap.get(s);
+        for (ModeParser modeParser: modeParserMap.values()) {
             if (!modeConfigMap.containsKey(modeParser.getName())) {
                 toDelete.add(modeParser.getName());
             }
@@ -762,8 +762,7 @@ public class WindowManagerParser {
             groupConfigMap.put(wmc.groups[i].name, wmc.groups[i]);
         }
         List<String> toDelete = new ArrayList<String>(10);
-        for (String s: groupParserMap.keySet()) {
-            GroupParser groupParser = groupParserMap.get(s);
+        for (GroupParser groupParser: groupParserMap.values()) {
             if (!groupConfigMap.containsKey(groupParser.getName())) {
                 toDelete.add(groupParser.getName());
             }
@@ -1823,7 +1822,7 @@ public class WindowManagerParser {
                 try {
                     lock = cfgFOOutput.lock();
                     os = cfgFOOutput.getOutputStream(lock);
-                    osw = new OutputStreamWriter(os, "UTF-8"); // NOI18N
+                    osw = new OutputStreamWriter(os, StandardCharsets.UTF_8);
                     osw.write(buff.toString());
                     //if (DEBUG) Debug.log(WindowManagerParser.class, "-- DUMP WindowManager:");
                     //if (DEBUG) Debug.log(WindowManagerParser.class, buff.toString());

@@ -397,7 +397,7 @@ final class EventSupport extends SourceEnvironment {
      * changes, the scheduler fires a its tasks with the Source object created
      * for the new file.
      */
-    private final static Map<Scheduler, SchedL> scheduledSources = new HashMap<>(7);
+    private static final Map<Scheduler, SchedL> scheduledSources = new HashMap<>(7);
     
     private static class SchedL implements PropertyChangeListener {
         /**

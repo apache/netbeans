@@ -33,16 +33,16 @@ import java.util.*;
  */
 public class AttrProp implements BaseAttribute {
 
-    static public final int MASK_KIND 		= 0x00FF;
-    static public final int CDATA 		= 0x0001;
-    static public final int ENUM 		= 0x0002;
-    static public final int NMTOKEN 		= 0x0003;
-    static public final int ID 			= 0x0004;
-    static public final int IDREF 		= 0x0005;
-    static public final int IDREFS 		= 0x0006;
-    static public final int ENTITY 		= 0x0007;
-    static public final int ENTITIES 		= 0x0008;
-    static public final int NOTATION 		= 0x0009;
+    public static final int MASK_KIND 		= 0x00FF;
+    public static final int CDATA 		= 0x0001;
+    public static final int ENUM 		= 0x0002;
+    public static final int NMTOKEN 		= 0x0003;
+    public static final int ID 			= 0x0004;
+    public static final int IDREF 		= 0x0005;
+    public static final int IDREFS 		= 0x0006;
+    public static final int ENTITY 		= 0x0007;
+    public static final int ENTITIES 		= 0x0008;
+    public static final int NOTATION 		= 0x0009;
     
     static final String[] kinds =
 	new String[] {"CDATA", "ENUM", "NMTOKEN", "ID", "IDREF",	// NOI18N
@@ -52,12 +52,12 @@ public class AttrProp implements BaseAttribute {
 	new int[] {CDATA, ENUM, NMTOKEN, ID, IDREF,
 		   IDREFS, ENTITY, ENTITIES, NOTATION};
     
-    static public final int MASK_OPTION 	= 0x0F00;
-    static public final int REQUIRED 		= 0x0100;
-    static public final int IMPLIED 		= 0x0200;
-    static public final int FIXED 		= 0x0300;
+    public static final int MASK_OPTION 	= 0x0F00;
+    public static final int REQUIRED 		= 0x0100;
+    public static final int IMPLIED 		= 0x0200;
+    public static final int FIXED 		= 0x0300;
     
-    static public final int TRANSIENT		= 0x1000;
+    public static final int TRANSIENT		= 0x1000;
     
     static final String[] options =
         new String[] {"#REQUIRED", "#IMPLIED", "#FIXED"};	// NOI18N

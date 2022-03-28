@@ -53,7 +53,7 @@ public class JavaUtil {
             }
         }
     }
-    static public String toObject(String expr, String classType, boolean j2me, boolean java5) {
+    public static String toObject(String expr, String classType, boolean j2me, boolean java5) {
         if (j2me) {
             if ("boolean".equals(classType))
                 return "new java.lang.Boolean("+expr+")";
@@ -61,7 +61,7 @@ public class JavaUtil {
         return toObject(expr, classType, java5);
     }
     
-    static private Map toObjectType;
+    private static Map toObjectType;
     static {
         toObjectType = new HashMap();
         toObjectType.put("int", "java.lang.Integer");
@@ -78,14 +78,14 @@ public class JavaUtil {
      * Take a Java primitive and return it's object type.
      * Return the same type if there isn't an object version.
      */
-    static public String toObjectType(String classType) {
+    public static String toObjectType(String classType) {
         String objClass = (String) toObjectType.get(classType);
         if (objClass == null)
             return classType;
         return objClass;
     }
 
-    static private Map fromObjectType;
+    private static Map fromObjectType;
     static {
         fromObjectType = new HashMap();
         fromObjectType.put("java.lang.Integer", "int");
@@ -110,7 +110,7 @@ public class JavaUtil {
      * Take a Java boxed object (like Integer) and return it's primitive type.
      * Return the same type if there isn't a primitive version.
      */
-    static public String fromObjectType(String classType) {
+    public static String fromObjectType(String classType) {
         String objClass = (String) fromObjectType.get(classType);
         if (objClass == null)
             return classType;
@@ -125,7 +125,7 @@ public class JavaUtil {
      *   ('int', '42') -> '""+42'
      *   ('Integer', 'age') -> 'age.toString()'
      */
-    static public String typeToString(String type, String expr) {
+    public static String typeToString(String type, String expr) {
         type = (type == null) ? null : type.intern();
         if ("String" == type || "java.lang.String" == type)
             return expr;
@@ -144,7 +144,7 @@ public class JavaUtil {
      *   eg: ('java.lang.Double', expr) -> '(java.lang.Double) expr'
      *   eg: ('int', 'obj') -> '((java.lang.Integer)obj).intValue()'
      */
-    static public String fromObject(String type, String expr) {
+    public static String fromObject(String type, String expr) {
         type = type.intern();
         if (type == "int")
             return "((java.lang.Integer)"+expr+").intValue()";
@@ -169,11 +169,11 @@ public class JavaUtil {
      * Is @param className immutable?  An immutable object can hold state,
      * but after it's been constructed that state cannot change.
      */
-    static public boolean isImmutable(String className) {
+    public static boolean isImmutable(String className) {
         className = className.intern();
         return immutableTable.containsKey(className);
     }
-    static private Map immutableTable;
+    private static Map immutableTable;
     static {
         immutableTable = new HashMap();
         immutableTable.put("String", null);
@@ -406,7 +406,7 @@ public class JavaUtil {
      *   eg: ('java.lang.Integer', 'node.getNodeValue()')
      *        ->  'new java.lang.Integer(node.getNodeValue())'
      */
-    static public String genParseTextME(String type, String name) {
+    public static String genParseTextME(String type, String name) {
         String parm = name;
         type = type.intern();
         if (type == "String" || type == "java.lang.String")
@@ -601,7 +601,7 @@ public class JavaUtil {
      * Given a scalar type, figure out how to make it into an int
      * (ie, hash code).
      */
-    static public String exprToInt(String type, String expr) {
+    public static String exprToInt(String type, String expr) {
         type = type.intern();
         if (type == "boolean")
             return expr+" ? 0 : 1";
@@ -626,14 +626,14 @@ public class JavaUtil {
      *    ('String', 'word', '"hello"') -> 'word == null ? "hello" == null : word.equals("hello")'
      *    ('float', 'var1', 'var2') -> 'Float.floatToIntBits(var1) == Float.floatToIntBits(var2)'
      */
-    static public String genEquals(String type, String attr1, String attr2) {
+    public static String genEquals(String type, String attr1, String attr2) {
         return genEquals(type, attr1, attr2, true);
     }
 
     /**
      * @param attr1CanBeNull  whether or not attr1 could be null.
      */
-    static public String genEquals(String type, String attr1, String attr2,
+    public static String genEquals(String type, String attr1, String attr2,
                                    boolean attr1CanBeNull) {
         type = type.intern();
         if (type == "float") {
@@ -803,7 +803,7 @@ public class JavaUtil {
         return true;
     }
 
-    static public String baseClassOfArray(String className) {
+    public static String baseClassOfArray(String className) {
         // Does this handle more than 1 dimensional arrays correctly
         if (className.startsWith("[L") && className.endsWith(";")) {  // NOI18N
             return className.substring(2, className.length()-1);
@@ -817,7 +817,7 @@ public class JavaUtil {
      *   eg: "java.lang.String[]" -> "String[]"
      *       "java.util.ArrayList" -> "ArrayList"
      */
-    static public String baseName(String fullClassName) {
+    public static String baseName(String fullClassName) {
         int pos = fullClassName.lastIndexOf('.');
         if (pos == -1)
             return fullClassName;
@@ -827,7 +827,7 @@ public class JavaUtil {
     private static final Class charArrayClass = 
         java.lang.reflect.Array.newInstance(java.lang.Character.TYPE, 0).getClass();
 
-    static public String getCanonicalClassName(Class cls) {
+    public static String getCanonicalClassName(Class cls) {
         if (charArrayClass.isAssignableFrom(cls))
             return "char[]";  // NOI18N
         if (cls.isArray())
@@ -835,7 +835,8 @@ public class JavaUtil {
         return cls.getName();
     }
 
-    static public int getOptimialHashMapSize(Object[] keys) {
+    @Deprecated
+    public static int getOptimialHashMapSize(Object[] keys) {
         return getOptimialHashMapSize(keys, keys.length * 8);
     }
 
@@ -847,12 +848,13 @@ public class JavaUtil {
      *
      * @param maxSize the point at which to give up (the maximum size to try)
      */
-    static public int getOptimialHashMapSize(Object[] keys, int maxSize) {
+    @Deprecated
+    public static int getOptimialHashMapSize(Object[] keys, int maxSize) {
         int keyLength = keys.length;
-        int defaultAnswer = keyLength + 1;
+        int defaultAnswer = keyLength * 3 / 2;
         try {
             java.lang.reflect.Field tableField = HashMap.class.getDeclaredField("table");
-            tableField.setAccessible(true);
+            tableField.setAccessible(true); // requires --add-opens for util package
             for (int tableSize = keyLength + 1; tableSize <= maxSize;
                  tableSize <<= 1) {
                 //System.out.println("tableSize="+tableSize);
@@ -874,22 +876,28 @@ public class JavaUtil {
                 }
                 return table.length;
             }
-        } catch (java.lang.IllegalAccessException e) {
+        } catch (IllegalAccessException | NoSuchFieldException e) {
             return defaultAnswer;
-        } catch (java.lang.NoSuchFieldException e) {
-            return defaultAnswer;
+        } catch (RuntimeException ex) {
+            // todo: remove this workaround post JDK 9+ migration (or entire method)
+            // modules on modern JDKs should prefere immutable collections anyway, e.g Map.of();
+            if (ex.getClass().getName().equals("java.lang.reflect.InaccessibleObjectException")) {
+                return defaultAnswer;
+            } else {
+                throw ex;
+            }
         }
         return defaultAnswer;
     }
 
     // Convert the @param in stream using native2ascii, assuming it's already
     // UTF-8 encoded.
-    static public void native2ascii(Writer out, Reader in) throws java.io.IOException {
+    public static void native2ascii(Writer out, Reader in) throws java.io.IOException {
         FilterWriter n2afilter = new N2AFilter(out);
         copyStream(n2afilter, in);
     }
 
-    static public class N2AFilter extends FilterWriter {
+    public static class N2AFilter extends FilterWriter {
         public N2AFilter(Writer writer) {
             super(writer);
         }
@@ -979,7 +987,7 @@ public class JavaUtil {
         return totalLength;
     }
 
-    static public class InputMonitor implements Runnable {
+    public static class InputMonitor implements Runnable {
         private InputStream is;
         private OutputStream out;
         

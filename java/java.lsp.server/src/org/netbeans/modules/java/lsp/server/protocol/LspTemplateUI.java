@@ -37,6 +37,7 @@ import java.util.concurrent.CompletionStage;
 import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import org.eclipse.lsp4j.ExecuteCommandParams;
 import org.eclipse.lsp4j.MessageParams;
 import org.eclipse.lsp4j.MessageType;
@@ -46,6 +47,8 @@ import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.project.SourceGroup;
 import org.netbeans.api.project.SourceGroupModifier;
+import org.netbeans.api.templates.CreateDescriptor;
+import org.netbeans.api.templates.FileBuilder;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.URLMapper;
@@ -73,57 +76,42 @@ import org.openide.util.Utilities;
     "# {0} - path",
     "ERR_ExistingPath={0} already exists",
 })
-abstract class LspTemplateUI {
+final class LspTemplateUI {
     /**
      * Creation thread. All requests are serialized; make sure that no creation process can block e.g. waiting
      * for the client's response.
      */
     private static final RequestProcessor    CREATION_RP = new RequestProcessor(LspTemplateUI.class);
-    
     private static final Logger LOG = Logger.getLogger(LspTemplateUI.class.getName()); 
     
     private LspTemplateUI() {
     }
 
-    abstract CompletionStage<Pair<DataFolder,String>> findTargetAndName(CompletionStage<DataObject> findTemplate, NbCodeLanguageClient client, ExecuteCommandParams params);
-
     static CompletableFuture<Object> createFromTemplate(String templates, NbCodeLanguageClient client, ExecuteCommandParams params) {
         final FileObject fo = FileUtil.getConfigFile(templates);
         final DataFolder folder = DataFolder.findFolder(fo);
-        LspTemplateUI ui = new LspTemplateUI() {
-            @Override
-            CompletionStage<Pair<DataFolder, String>> findTargetAndName(CompletionStage<DataObject> findTemplate, NbCodeLanguageClient client, ExecuteCommandParams params) {
-                return findTargetAndNameForTemplate(findTemplate, client, params);
-            }
-        };
-        return ui.templateUI(folder, client, params);
+        return new LspTemplateUI().templateUI(folder, client, params);
     }
 
     static CompletableFuture<Object> createProject(String templates, NbCodeLanguageClient client, ExecuteCommandParams params) {
         final FileObject fo = FileUtil.getConfigFile(templates);
         final DataFolder folder = DataFolder.findFolder(fo);
-        LspTemplateUI ui = new LspTemplateUI() {
-            @Override
-            CompletionStage<Pair<DataFolder, String>> findTargetAndName(CompletionStage<DataObject> findTemplate, NbCodeLanguageClient client, ExecuteCommandParams params) {
-                return findTargetAndNameForProject(findTemplate, client, params);
-            }
-        };
-        return ui.projectUI(folder, client, params);
+        return new LspTemplateUI().projectUI(folder, client, params);
     }
 
     private CompletableFuture<Object> templateUI(DataFolder templates, NbCodeLanguageClient client, ExecuteCommandParams params) {
         CompletionStage<DataObject> findTemplate = findTemplate(templates, client);
-        CompletionStage<Pair<DataFolder, String>> findTargetFolderAndName = findTargetAndName(findTemplate, client, params);
-        return findTargetFolderAndName.thenCombineAsync(findTemplate, (targetAndName, source) -> {
-            final String name = targetAndName.second();
-            if (name == null || name.isEmpty()) {
-                throw raise(RuntimeException.class, new UserCancelException());
-            }
+        CompletionStage<DataFolder> findTargetFolder = findTargetForTemplate(findTemplate, client, params);
+        return findTargetFolder.thenCombine(findTemplate, (target, source) -> {
+            final FileObject templateFileObject = source.getPrimaryFile();
+            return new FileBuilder(templateFileObject, target.getPrimaryFile()).name(templateFileObject.getName());
+        }).thenCompose(builder -> configure(builder, client)).thenApplyAsync(builder -> {
             try {
-                DataFolder target = targetAndName.first();
-                Map<String,String> prjParams = new HashMap<>();
-                DataObject newObject = source.createFromTemplate(target, name, prjParams);
-                return (Object) newObject.getPrimaryFile().toURI().toString();
+                if (builder != null) {
+                    List<FileObject> created = builder.build();
+                    return created != null ? (Object) created.stream().map(fo -> fo.toURI().toString()).collect(Collectors.toList()) : null;
+                }
+                return null;
             } catch (IOException ex) {
                 throw raise(RuntimeException.class, ex);
             }
@@ -138,7 +126,7 @@ abstract class LspTemplateUI {
 
     private CompletableFuture<Object> projectUI(DataFolder templates, NbCodeLanguageClient client, ExecuteCommandParams params) {
         CompletionStage<DataObject> findTemplate = findTemplate(templates, client);
-        CompletionStage<Pair<DataFolder, String>> findTargetFolderAndName = findTargetAndName(findTemplate, client, params);
+        CompletionStage<Pair<DataFolder, String>> findTargetFolderAndName = findTargetAndNameForProject(findTemplate, client, params);
         CompletionStage<Pair<DataObject, String>> findTemplateAndPackage = findTemplate.thenCombine(findPackage(findTargetFolderAndName, client), Pair::of);
         return findTargetFolderAndName.thenCombineAsync(findTemplateAndPackage, (targetAndName, templateAndPackage) -> {
             try {
@@ -169,10 +157,10 @@ abstract class LspTemplateUI {
         );
     }
 
-    private static CompletionStage<Pair<DataFolder, String>> findTargetAndNameForTemplate(CompletionStage<DataObject> findTemplate, NbCodeLanguageClient client, ExecuteCommandParams params) {
+    private static CompletionStage<DataFolder> findTargetForTemplate(CompletionStage<DataObject> findTemplate, NbCodeLanguageClient client, ExecuteCommandParams params) {
         final DataObject[] templateObject = new DataObject[1];
-        final CompletionStage<DataFolder> findTarget = findTemplate.thenCompose(any -> { 
-                templateObject[0] = any; 
+        return findTemplate.thenCompose(any -> {
+                templateObject[0] = any;
                 return client.workspaceFolders();
             }).thenCompose(folders -> {
                 boolean[] suggestionIsExact = { true };
@@ -196,15 +184,6 @@ abstract class LspTemplateUI {
                     }
                 }
                 return client.showInputBox(new ShowInputBoxParams(Bundle.CTL_TemplateUI_SelectTarget(), suggestion.getPrimaryFile().getPath())).thenCompose(new VerifyPath());
-        });
-        CompletionStage<String> findTargetName = findTarget.thenCombine(findTemplate, (target, source) -> source).thenCompose((source) -> {
-            return client.showInputBox(new ShowInputBoxParams(Bundle.CTL_TemplateUI_SelectName(), source.getName()));
-        }).thenCombine(findTemplate, (nameWithExtension, source) -> {
-            String templateExtension = source.getPrimaryFile().getExt();
-            return removeExtensionFromFileName(nameWithExtension, templateExtension);
-        });
-        return findTarget.thenCombine(findTargetName, (t, u) -> {
-            return Pair.of(t, u);
         });
     }
 
@@ -230,6 +209,18 @@ abstract class LspTemplateUI {
             }
             return client.showInputBox(new ShowInputBoxParams(Bundle.CTL_TemplateUI_SelectProjectTarget(), suggestWorkspaceRoot(folders))).thenCompose(new VerifyNonExistingFolder());
         });
+    }
+
+    private static CompletionStage<FileBuilder> configure(FileBuilder builder, NbCodeLanguageClient client) {
+        CreateDescriptor desc = builder.createDescriptor(false);
+        FileObject template = desc.getTemplate();
+        Object handler = template.getAttribute(FileBuilder.ATTR_TEMPLATE_HANDLER);
+        if (handler == null) {
+            return client.showInputBox(new ShowInputBoxParams(Bundle.CTL_TemplateUI_SelectName(), desc.getProposedName())).thenApply(name -> {
+                return name != null ? builder.name(name) : null;
+            });
+        }
+        return CompletableFuture.completedFuture(builder);
     }
 
     private static String suggestWorkspaceRoot(List<WorkspaceFolder> folders) throws IllegalArgumentException {
@@ -401,14 +392,6 @@ abstract class LspTemplateUI {
         return findWorkspaceRoot(folders);
     }
 
-    private static String removeExtensionFromFileName(String nameWithExtension, String templateExtension) {
-        if (nameWithExtension != null && nameWithExtension.endsWith('.' + templateExtension)) {
-            return nameWithExtension.substring(0, nameWithExtension.length() - templateExtension.length() - 1);
-        } else {
-            return nameWithExtension;
-        }
-    }
-
     private static List<QuickPickItem> quickPickTemplates(final DataFolder folder) {
         Node[] arr = folder.getNodeDelegate().getChildren().getNodes(true);
         List<QuickPickItem> categories = new ArrayList<>();
@@ -485,13 +468,5 @@ abstract class LspTemplateUI {
 
     private static <T extends Exception> T raise(Class<T> clazz, Exception ex) throws T {
         throw (T)ex;
-    }
-
-    private static String findGroupId(String pkg, String name) {
-        if (pkg.endsWith("." + name)) {
-            return pkg.substring(0, pkg.length() - 1 - name.length());
-        } else {
-            return pkg;
-        }
     }
 }

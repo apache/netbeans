@@ -98,13 +98,11 @@ public class OpenCookieFactory {
                             
                             @Override
                             public void run() {
-                                OpenCookie oc = (OpenCookie) dataObj.getCookie(
-                                        OpenCookie.class);
+                                OpenCookie oc = dataObj.getCookie(OpenCookie.class);
                                 if (oc != null) {
                                     oc.open();
                                 }
-                                LineCookie lc = (LineCookie) dataObj.getCookie(
-                                        LineCookie.class);
+                                LineCookie lc = dataObj.getCookie(LineCookie.class);
                                 if (lc != null) {
                                     Line line = lc.getLineSet().getOriginal(
                                             (int) position[0]);

@@ -55,7 +55,7 @@ public final class ModeUtilities {
      * @param mode the {@link Mode} whose XML configuration is required.
      * @return the XML of the Mode's configuration or {@code null} if not supported.
      */
-    public final static String toXml(Mode mode) {
+    public static final String toXml(Mode mode) {
         return mode instanceof Mode.Xml
                 ? ((Mode.Xml) mode).toXml()
                 : null;

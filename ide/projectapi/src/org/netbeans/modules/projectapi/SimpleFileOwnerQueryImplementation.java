@@ -314,8 +314,9 @@ public class SimpleFileOwnerQueryImplementation implements FileOwnerQueryImpleme
     static void serialize() {
         try {
             Preferences p = NbPreferences.forModule(SimpleFileOwnerQueryImplementation.class).node("externalOwners");
-            for (URI uri : externalOwners.keySet()) {
-                URI ownerURI = externalOwners.get(uri);
+            for (Map.Entry<URI, URI> entry : externalOwners.entrySet()) {
+                URI uri = entry.getKey();
+                URI ownerURI = entry.getValue();
                 if (ownerURI != UNOWNED_URI) {
                 p.put(uri.toString(), ownerURI.toString());
             }

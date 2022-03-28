@@ -338,7 +338,7 @@ public final class FileBuilder {
         
         switch (defaultMode) {
             case FORMAT:
-                MapFormat mf = new MapFormat(new HashMap());
+                MapFormat mf = new MapFormat(new HashMap<>());
                 mf.setExactMatch(false);
                 mf.setLeftBrace("__");
                 mf.setRightBrace("__");

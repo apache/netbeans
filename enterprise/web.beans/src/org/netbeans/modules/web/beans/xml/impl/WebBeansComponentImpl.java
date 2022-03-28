@@ -73,8 +73,7 @@ abstract class WebBeansComponentImpl extends
             for (int i = 0; i < nl.getLength(); i++) {
                 Node n = nl.item(i);
                 if (n instanceof Element) {
-                    WebBeansComponent comp = (WebBeansComponent) getModel().getFactory()
-                            .createComponent((Element) n, this);
+                    WebBeansComponent comp = getModel().getFactory().createComponent((Element) n, this);
                     if (comp != null) {
                         children.add(comp);
                     }

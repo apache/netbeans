@@ -77,7 +77,7 @@ public class DDDataObject extends  DDMultiViewDataObject
     implements DDChangeListener, ChangeListener, PropertyChangeListener {
     private transient WebApp webApp;
     private transient FileObject srcRoots[];
-    protected transient final static RequestProcessor RP = new RequestProcessor("XML Parsing");   // NOI18N
+    protected static final transient RequestProcessor RP = new RequestProcessor("XML Parsing");   // NOI18N
     protected boolean changedFromUI;
 
     private static final long serialVersionUID = 8857563089355069362L;

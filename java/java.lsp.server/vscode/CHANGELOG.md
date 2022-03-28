@@ -20,6 +20,12 @@
     under the License.
 
 -->
+## Version 13.0.601
+* Added base code completion for Spock test framework
+  * Spock Block Names are offered inside methods if the class extends Spock Specification
+  * Parameter names are offered, if the parameters are defined in a method name that is annotated with @Unroll
+* Added Outline view for Groovy files
+
 ## Version 12.6.301
 * Project Explorer to display logical project structure, dependencies and project files introduced
 * Dedicated form for Change method parameters refactoring 

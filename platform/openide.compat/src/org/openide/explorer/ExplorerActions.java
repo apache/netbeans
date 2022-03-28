@@ -251,7 +251,7 @@ public class ExplorerActions {
                 // copy (#13418), cut (#13426). If one node is a parent of another,
                 // assume that the situation is sketchy and prevent it.
                 // For k==1 it is impossible so do not waste time on it.
-                Map allNodes = new HashMap(101);
+                Map<Node, Node> allNodes = new HashMap<>(101);
 
                 for (i = 0; i < k; i++) {
                     if (!checkParents(path[i], allNodes)) {

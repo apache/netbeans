@@ -791,7 +791,7 @@ class AntGrammar implements GrammarQuery {
 
     // Result classes ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    private static abstract class AbstractResultNode extends AbstractNode implements GrammarResult {
+    private abstract static class AbstractResultNode extends AbstractNode implements GrammarResult {
 
         public @Override Icon getIcon(int kind) {
             return null;

@@ -89,15 +89,15 @@ public class BasicAttachStepsProvider extends AttachStepsProvider {
     
     private final Set<ChangeListener> listeners = new HashSet<>();
     
-    public synchronized final void addChangeListener(ChangeListener listener) {
+    public final synchronized void addChangeListener(ChangeListener listener) {
         listeners.add(listener);
     }
     
-    public synchronized final void removeChangeListener(ChangeListener listener) {
+    public final synchronized void removeChangeListener(ChangeListener listener) {
         listeners.remove(listener);
     }
     
-    protected synchronized final void fireChange(ChangeEvent e) {
+    protected final synchronized void fireChange(ChangeEvent e) {
         if (e == null) e = new ChangeEvent(this);
         for (ChangeListener listener : listeners) listener.stateChanged(e);
     }

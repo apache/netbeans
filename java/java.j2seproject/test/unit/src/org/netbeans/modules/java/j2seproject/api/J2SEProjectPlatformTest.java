@@ -125,7 +125,7 @@ public class J2SEProjectPlatformTest extends NbTestCase {
 
 
 
-    private final static class MockJavaPlatformProvider implements JavaPlatformProvider {
+    private static final class MockJavaPlatformProvider implements JavaPlatformProvider {
 
         private static final MockJavaPlatformProvider INSTANCE = new MockJavaPlatformProvider();
 

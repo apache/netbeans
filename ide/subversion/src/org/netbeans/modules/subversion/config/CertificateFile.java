@@ -33,9 +33,9 @@ import org.openide.filesystems.FileUtil;
  */
 public class CertificateFile extends SVNCredentialFile {
 
-    private final static Key CERT = new Key(0, "ascii_cert"); // NOI18N
-    private final static Key FAILURES = new Key(1, "failures"); // NOI18N
-    private final static Key REALMSTRING = new Key(2, "svn:realmstring"); // NOI18N
+    private static final Key CERT = new Key(0, "ascii_cert"); // NOI18N
+    private static final Key FAILURES = new Key(1, "failures"); // NOI18N
+    private static final Key REALMSTRING = new Key(2, "svn:realmstring"); // NOI18N
 
     private static final String NEWLINE = System.getProperty("line.separator"); // NOI18N
     

@@ -49,6 +49,7 @@ import org.netbeans.modules.java.lsp.server.protocol.ShowQuickPickParams;
 import org.netbeans.modules.java.lsp.server.protocol.ShowStatusMessageParams;
 import org.netbeans.modules.java.lsp.server.protocol.TestProgressParams;
 import org.netbeans.modules.java.lsp.server.protocol.TestSuiteInfo;
+import org.netbeans.modules.java.lsp.server.protocol.UpdateConfigParams;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Exceptions;
@@ -219,6 +220,11 @@ public class TestProgressHandlerTest extends NbTestCase {
         @Override
         public void notifyNodeChange(NodeChangedParams params) {
             fail();
+        }
+
+        @Override
+        public CompletableFuture<Void> configurationUpdate(UpdateConfigParams params) {
+            return CompletableFuture.completedFuture(null);
         }
 
     }

@@ -99,7 +99,7 @@ public class AppClientCompositePanelProvider implements ProjectCustomizer.Compos
                     null,
                     (ProjectCustomizer.Category[]) null );
         } else if (WEBSERVICESCATEGORY.equals(name)) {
-            AppClientProject project = (AppClientProject) context.lookup(AppClientProject.class);
+            AppClientProject project = context.lookup(AppClientProject.class);
             List serviceClientsSettings = null;
             WebServicesClientSupport clientSupport = WebServicesClientSupport.getWebServicesClientSupport(project.getProjectDirectory());
             if (clientSupport != null) {

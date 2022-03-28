@@ -45,6 +45,7 @@ import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Method;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -1336,7 +1337,7 @@ public class JavacParser extends Parser {
         if (f != null) {
             try {
                 OutputStream os = new FileOutputStream(f);
-                try (PrintWriter writer = new PrintWriter(new OutputStreamWriter(os, "UTF-8"))) {   //NOI18N
+                try (PrintWriter writer = new PrintWriter(new OutputStreamWriter(os, StandardCharsets.UTF_8))) {
                     writer.println(src);
                     writer.println("----- Classpath: ---------------------------------------------"); // NOI18N
 

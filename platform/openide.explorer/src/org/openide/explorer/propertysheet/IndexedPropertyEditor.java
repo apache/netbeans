@@ -352,7 +352,7 @@ class IndexedPropertyEditor extends Object implements ExPropertyEditor {
             }
 
             if (getConvertedType().equals(Byte.class)) {
-                value = new Byte((byte) 0);
+                value = (byte)0;
             }
 
             if (getConvertedType().equals(Character.class)) {
@@ -372,7 +372,7 @@ class IndexedPropertyEditor extends Object implements ExPropertyEditor {
             }
 
             if (getConvertedType().equals(Short.class)) {
-                value = new Short((short) 0);
+                value = (short)0;
             }
         } else {
             try {

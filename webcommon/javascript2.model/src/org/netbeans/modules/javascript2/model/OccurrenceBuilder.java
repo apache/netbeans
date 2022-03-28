@@ -79,8 +79,9 @@ public class OccurrenceBuilder {
     }
     
     public void processOccurrences(JsObject global) {
-        for (String name : holder.keySet()) {
-            Map<OffsetRange, Item> items = holder.get(name);
+        for (Map.Entry<String, Map<OffsetRange, Item>> entry : holder.entrySet()) {
+            String name = entry.getKey();
+            Map<OffsetRange, Item> items = entry.getValue();
             for (Item item : items.values()) {
                 processOccurrence(global, name, item);
             }

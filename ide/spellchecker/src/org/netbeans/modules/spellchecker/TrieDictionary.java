@@ -29,6 +29,7 @@ import java.net.URL;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileChannel.MapMode;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -311,7 +312,7 @@ public class TrieDictionary implements Dictionary {
         for (URL u : sources) {
             FileObject f = URLMapper.findFileObject(u);
             u = f != null ? URLMapper.findURL(f, URLMapper.EXTERNAL) : u;
-            BufferedReader in = new BufferedReader(new InputStreamReader(u.openStream(), "UTF-8"));
+            BufferedReader in = new BufferedReader(new InputStreamReader(u.openStream(), StandardCharsets.UTF_8));
             
             try {
                 String line;

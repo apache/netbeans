@@ -527,7 +527,7 @@ public class DetectorTest extends TestBase {
                     "[PUBLIC, RECORD, DECLARATION], 0:14-0:18",
                     "[PUBLIC, CLASS], 0:19-0:25",
                     "[PUBLIC, RECORD_COMPONENT, DECLARATION], 0:26-0:27",
-                    "[PACKAGE_PRIVATE, CLASS, DECLARATION], 1:6-1:7",
+                    "[PACKAGE_PRIVATE, CLASS, UNUSED, DECLARATION], 1:6-1:7",
                     "[PUBLIC, CLASS], 2:11-2:17",
                     "[PUBLIC, METHOD, DECLARATION], 2:18-2:19",
                     "[PUBLIC, RECORD], 2:20-2:24",
@@ -591,7 +591,7 @@ public class DetectorTest extends TestBase {
                 "[PACKAGE_PRIVATE, CLASS, DECLARATION], 0:13-0:17",
                 "[KEYWORD], 1:0-1:3",
                 "[KEYWORD], 1:4-1:10",
-                "[PACKAGE_PRIVATE, CLASS, DECLARATION], 1:17-1:22",
+                "[PACKAGE_PRIVATE, CLASS, UNUSED, DECLARATION], 1:17-1:22",
                 "[PACKAGE_PRIVATE, CLASS], 1:31-1:35");
     }
 
@@ -638,7 +638,7 @@ public class DetectorTest extends TestBase {
                 "[PUBLIC, CLASS, DECLARATION], 0:13-0:30\n"
                 + "[PUBLIC, CLASS], 1:4-1:10\n"
                 + "[PACKAGE_PRIVATE, FIELD, DECLARATION], 1:11-1:19\n"
-                + "[PACKAGE_PRIVATE, METHOD, DECLARATION], 2:9-2:11\n"
+                + "[PACKAGE_PRIVATE, METHOD, UNUSED, DECLARATION], 2:9-2:11\n"
                 + "[PUBLIC, CLASS], 3:8-3:14\n"
                 + "[LOCAL_VARIABLE, DECLARATION], 3:15-3:18\n"
                 + "[LOCAL_VARIABLE], 4:16-4:19\n"
@@ -691,11 +691,11 @@ public class DetectorTest extends TestBase {
                     "}\n",
                     "[PUBLIC, CLASS, DECLARATION], 0:13-0:29",
                     "[PUBLIC, CLASS], 1:4-1:10",
-                    "[PACKAGE_PRIVATE, FIELD, DECLARATION], 1:11-1:13",
+                    "[PACKAGE_PRIVATE, FIELD, UNUSED, DECLARATION], 1:11-1:13",
                     "[UNINDENTED_TEXT_BLOCK], 2:13-2:27",
                     "[UNINDENTED_TEXT_BLOCK], 3:13-3:29",
                     "[PUBLIC, CLASS], 5:4-5:10",
-                    "[PACKAGE_PRIVATE, FIELD, DECLARATION], 5:11-5:13",
+                    "[PACKAGE_PRIVATE, FIELD, UNUSED, DECLARATION], 5:11-5:13",
                     "[UNINDENTED_TEXT_BLOCK], 6:16-6:27",
                     "[UNINDENTED_TEXT_BLOCK], 7:16-7:29");
     }
@@ -739,7 +739,7 @@ public class DetectorTest extends TestBase {
                     "[PUBLIC, CLASS], 1:36-1:42",
                     "[PARAMETER, UNUSED, DECLARATION], 1:43-1:47",
                     "[PUBLIC, CLASS], 1:54-1:60",
-                    "[PACKAGE_PRIVATE, FIELD, DECLARATION], 1:61-1:65",
+                    "[PACKAGE_PRIVATE, FIELD, UNUSED, DECLARATION], 1:61-1:65",
                     "[PACKAGE_PRIVATE, CONSTRUCTOR], 2:19-2:25");
     }
 
@@ -814,7 +814,7 @@ public class DetectorTest extends TestBase {
                     "}\n",
                     "[PUBLIC, CLASS, DECLARATION], 0:13-0:29",
                     "[PUBLIC, CLASS], 1:4-1:10",
-                    "[PACKAGE_PRIVATE, FIELD, DECLARATION], 1:11-1:13",
+                    "[PACKAGE_PRIVATE, FIELD, UNUSED, DECLARATION], 1:11-1:13",
                     "[UNINDENTED_TEXT_BLOCK], 2:13-2:27",
                     "[UNINDENTED_TEXT_BLOCK], 6:13-6:29");
     }

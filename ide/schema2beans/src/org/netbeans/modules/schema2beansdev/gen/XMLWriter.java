@@ -30,7 +30,7 @@ public class XMLWriter extends IndentingWriter {
 
     public int HEADER_SECTION = 0;
     public int BODY_SECTION = 1;
-    static final protected int defaultSectionCount = 2;
+    protected static final int defaultSectionCount = 2;
 
     public XMLWriter() {
         super(defaultSectionCount);

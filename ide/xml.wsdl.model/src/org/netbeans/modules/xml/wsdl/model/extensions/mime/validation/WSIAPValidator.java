@@ -71,8 +71,8 @@ import org.openide.util.NbBundle;
 public class WSIAPValidator implements MIMEContent.Visitor {
 
     public static final String CONTENT_TYPE_TEXT_XML = "text/xml";
-    public final static String NS_URI_SWA_REF = "http://ws-i.org/profiles/basic/1.1/xsd";
-    public final static String SCHEMA_TYPE_SWA_REF = "swaRef";
+    public static final String NS_URI_SWA_REF = "http://ws-i.org/profiles/basic/1.1/xsd";
+    public static final String SCHEMA_TYPE_SWA_REF = "swaRef";
 
     private final List<ResultItem> mResults;
     private final MIMEComponentValidator mValidator;

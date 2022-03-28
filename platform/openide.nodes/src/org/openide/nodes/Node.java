@@ -1412,7 +1412,7 @@ public abstract class Node extends FeatureDescriptor implements Lookup.Provider,
     * and value of type <code>String</code> giving a help ID.
     * Normally this is unnecessary as help for the whole {@link Node} will be used by default.
     */
-    public static abstract class PropertySet extends FeatureDescriptor {
+    public abstract static class PropertySet extends FeatureDescriptor {
         /** Default constructor. */
         public PropertySet() {
         }
@@ -1491,7 +1491,7 @@ public abstract class Node extends FeatureDescriptor implements Lookup.Provider,
      * {@link Node#firePropertyChange firing property changes}.
      * @param T the type of bean
     */
-    public static abstract class Property<T> extends FeatureDescriptor {
+    public abstract static class Property<T> extends FeatureDescriptor {
         /**
          * Contains classNames of incorrectly implemented properties which have
          * been already logged by an ErrorManager.<br>
@@ -1690,7 +1690,7 @@ public abstract class Node extends FeatureDescriptor implements Lookup.Provider,
      * @param T type of the whole property
      * @param E type of one element
     */
-    public static abstract class IndexedProperty<T,E> extends Node.Property<T> {
+    public abstract static class IndexedProperty<T,E> extends Node.Property<T> {
         /** type of element that this property works with */
         private Class<E> elementType;
 

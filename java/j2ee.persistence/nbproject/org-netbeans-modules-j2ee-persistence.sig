@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.68.0
+#Version 1.69.0
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -1315,6 +1315,7 @@ meth public int hashCode()
 meth public java.lang.String getMemberName()
 meth public java.lang.String getMemberType()
 meth public static java.lang.String fixRelationshipFieldName(java.lang.String,org.netbeans.modules.j2ee.persistence.entitygenerator.EntityRelation$CollectionType)
+ anno 0 java.lang.Deprecated()
 meth public static java.lang.String makeClassName(java.lang.String)
 meth public static java.lang.String makeFieldName(java.lang.String)
 meth public static java.lang.String makeRelationshipFieldName(java.lang.String,boolean)

@@ -53,7 +53,7 @@ public class JPDAClassTypeTestApp implements EventListener, SwingConstants {
 
     static class MultiImpl extends SuperImpl implements Runnable, Intrfc1, Intrfc2 {
 
-        private final static Class multiIntrfc = getPreparedInterface();
+        private static final Class multiIntrfc = getPreparedInterface();
 
         public static Class getPreparedInterface() {
             new Intrfc6() {
@@ -71,7 +71,7 @@ public class JPDAClassTypeTestApp implements EventListener, SwingConstants {
         }
     }
 
-    private static abstract class SuperImpl implements Intrfc2, Intrfc3, Intrfc4 {
+    private abstract static class SuperImpl implements Intrfc2, Intrfc3, Intrfc4 {
 
         public SuperImpl() {
         }

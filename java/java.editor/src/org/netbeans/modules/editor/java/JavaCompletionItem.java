@@ -604,7 +604,7 @@ public abstract class JavaCompletionItem implements CompletionItem {
         return null;
     }
 
-    static abstract class WhiteListJavaCompletionItem<T extends Element> extends JavaCompletionItem {
+    abstract static class WhiteListJavaCompletionItem<T extends Element> extends JavaCompletionItem {
 
         private static final String WARNING = "org/netbeans/modules/java/editor/resources/warning_badge.gif";   //NOI18N
         private static ImageIcon warningIcon;
@@ -1517,19 +1517,19 @@ public abstract class JavaCompletionItem implements CompletionItem {
             this.assignToVarText = assignToVarOffset < 0 ? null : createAssignToVarText(info, type, this.simpleName);
             if (castType != null) {
                 try {
+                    TreePath tp = info.getTreeUtilities().pathFor(substitutionOffset);
                     if (this.startOffset < 0) {
-                        TreePath tp = info.getTreeUtilities().pathFor(substitutionOffset);
                         if (tp != null && tp.getLeaf().getKind() == Tree.Kind.MEMBER_SELECT) {
                             this.startOffset = (int)info.getTrees().getSourcePositions().getStartPosition(tp.getCompilationUnit(), tp.getLeaf());
                         }
                     }
-                    this.castText = "(" + Utilities.getTypeName(info, castType, false) + (CodeStyle.getDefault(info.getDocument()).spaceAfterTypeCast() ? ") " : ")"); //NOI18N
+                    this.castText = "(" + AutoImport.resolveImport(info, tp, castType) + (CodeStyle.getDefault(info.getDocument()).spaceAfterTypeCast() ? ") " : ")"); //NOI18N
                     this.castEndOffset = findCastEndPosition(info.getTokenHierarchy().tokenSequence(JavaTokenId.language()), startOffset, substitutionOffset);
                 } catch (IOException ex) {
                 }
             } else {
                 this.castEndOffset = -1;
-            }           
+            }
         }
 
         @Override
@@ -1817,19 +1817,19 @@ public abstract class JavaCompletionItem implements CompletionItem {
             this.assignToVarText = this.startOffset < 0 ? null : createAssignToVarText(info, type.getReturnType(), this.simpleName);
             if (castType != null) {
                 try {
+                    TreePath tp = info.getTreeUtilities().pathFor(substitutionOffset);
                     if (this.startOffset < 0) {
-                        TreePath tp = info.getTreeUtilities().pathFor(substitutionOffset);
                         if (tp != null && tp.getLeaf().getKind() == Tree.Kind.MEMBER_SELECT) {
                             this.startOffset = (int)info.getTrees().getSourcePositions().getStartPosition(tp.getCompilationUnit(), tp.getLeaf());
                         }
                     }
-                    this.castText = "(" + Utilities.getTypeName(info, castType, false) + (CodeStyle.getDefault(info.getDocument()).spaceAfterTypeCast() ? ") " : ")"); //NOI18N
+                    this.castText = "(" + AutoImport.resolveImport(info, tp, castType) + (CodeStyle.getDefault(info.getDocument()).spaceAfterTypeCast() ? ") " : ")"); //NOI18N
                     this.castEndOffset = findCastEndPosition(info.getTokenHierarchy().tokenSequence(JavaTokenId.language()), startOffset, substitutionOffset);
                 } catch (IOException ex) {
                 }
             } else {
                 this.castEndOffset = -1;
-            }           
+            }
         }
 
         @Override

@@ -57,7 +57,7 @@ import org.openide.awt.Mnemonics;
 
 class EditPanelQuery extends DataDisplay {
 
-    private final static boolean debug = false;
+    private static final boolean debug = false;
 
     private DisplayTable paramTable = null; 
     private MonitorData monitorData = null;

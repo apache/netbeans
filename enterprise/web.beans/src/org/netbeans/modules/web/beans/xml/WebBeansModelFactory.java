@@ -46,7 +46,7 @@ public class WebBeansModelFactory extends AbstractModelFactory<WebBeansModel> {
     
     @Override
     public WebBeansModel getModel(ModelSource source) {
-        return (WebBeansModel) super.getModel(source);
+        return super.getModel(source);
     }
     
     private static final WebBeansModelFactory INSTANCE = new WebBeansModelFactory();

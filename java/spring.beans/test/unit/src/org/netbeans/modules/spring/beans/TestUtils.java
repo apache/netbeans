@@ -26,6 +26,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import org.netbeans.api.lexer.Language;
 import org.netbeans.api.xml.lexer.XMLTokenId;
 import org.netbeans.editor.BaseDocument;
@@ -75,7 +76,7 @@ public class TestUtils {
     }
 
     public static void copyStringToFile(String string, File path) throws IOException {
-        InputStream inputStream = new ByteArrayInputStream(string.getBytes("UTF-8"));
+        InputStream inputStream = new ByteArrayInputStream(string.getBytes(StandardCharsets.UTF_8));
         try {
             copyStreamToFile(inputStream, path);
         } finally {
@@ -91,7 +92,7 @@ public class TestUtils {
         } finally {
             inputStream.close();
         }
-        return new String(outputStream.toByteArray(), "UTF-8");
+        return new String(outputStream.toByteArray(), StandardCharsets.UTF_8);
     }
 
     private static void copyStreamToFile(InputStream inputStream, File path) throws IOException {

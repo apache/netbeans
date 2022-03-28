@@ -46,6 +46,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import com.google.gson.InstanceCreator;
 import com.google.gson.JsonObject;
+import org.eclipse.lsp4j.CallHierarchyRegistrationOptions;
 import org.eclipse.lsp4j.CodeActionKind;
 import org.eclipse.lsp4j.CodeActionOptions;
 import org.eclipse.lsp4j.CodeLensOptions;
@@ -301,7 +302,7 @@ public final class Server {
         };
     }
 
-    public static class LanguageServerImpl implements LanguageServer, LanguageClientAware, LspServerState {
+    public static class LanguageServerImpl implements LanguageServer, LanguageClientAware, LspServerState, NbLanguageServer {
 
         private static final String NETBEANS_JAVA_IMPORTS = "netbeans.java.imports";
 
@@ -709,6 +710,10 @@ public final class Server {
                 capabilities.setImplementationProvider(true);
                 capabilities.setDocumentHighlightProvider(true);
                 capabilities.setReferencesProvider(true);
+                
+                CallHierarchyRegistrationOptions chOpts = new CallHierarchyRegistrationOptions();
+                chOpts.setWorkDoneProgress(true);
+                capabilities.setCallHierarchyProvider(chOpts);
                 List<String> commands = new ArrayList<>(Arrays.asList(GRAALVM_PAUSE_SCRIPT,
                         JAVA_BUILD_WORKSPACE,
                         JAVA_CLEAN_WORKSPACE,
@@ -1002,6 +1007,12 @@ public final class Server {
 
         @Override
         public CompletableFuture<String> showHtmlPage(HtmlPageParams params) {
+            logWarning(params);
+            return CompletableFuture.completedFuture(null);
+        }
+
+        @Override
+        public CompletableFuture<Void> configurationUpdate(UpdateConfigParams params) {
             logWarning(params);
             return CompletableFuture.completedFuture(null);
         }

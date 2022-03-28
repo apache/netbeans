@@ -34,13 +34,13 @@ import org.netbeans.modules.search.TextDetail;
 class FinishingTextDetailList {
 
     private final int linesAfterMatch;
-    List<TextDetail> waitList = new LinkedList<TextDetail>();
+    List<TextDetail> waitList = new LinkedList<>();
 
     FinishingTextDetailList(int linesAfterMatch) {
         this.linesAfterMatch = linesAfterMatch;
     }
     Map<Integer, List<TextDetail>> detailMap =
-            new HashMap<Integer, List<TextDetail>>();
+            new HashMap<>();
 
     /**
      * Add a text detail that may need to add surrounding lines.

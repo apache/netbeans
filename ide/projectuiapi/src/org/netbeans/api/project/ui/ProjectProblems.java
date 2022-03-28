@@ -18,9 +18,11 @@
  */
 package org.netbeans.api.project.ui;
 
+import java.util.concurrent.CompletionException;
+import java.util.concurrent.ExecutionException;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.project.Project;
-import org.netbeans.modules.project.uiapi.BrokenReferencesImplementation;
+import org.netbeans.spi.project.ui.ProjectProblemsImplementation;
 import org.netbeans.spi.project.ui.ProjectProblemsProvider;
 import org.openide.util.Lookup;
 import org.openide.util.Parameters;
@@ -68,21 +70,34 @@ public class ProjectProblems {
      */
     public static void showAlert(@NonNull final Project project) {
         Parameters.notNull("project", project); //NOI18N
-        final BrokenReferencesImplementation impl = Lookup.getDefault().lookup(BrokenReferencesImplementation.class);
+        final ProjectProblemsImplementation impl = Lookup.getDefault().lookup(ProjectProblemsImplementation.class);
         if (impl != null) {
             impl.showAlert(project);
         }
     }
-
+    
     /**
      * Shows an UI customizer which gives users chance to fix encountered problems.
      * @param project the project for which the customizer should be shown.
      */
     public static void showCustomizer(@NonNull final Project project) {
         Parameters.notNull("project", project); //NOI18N
-        final BrokenReferencesImplementation impl = Lookup.getDefault().lookup(BrokenReferencesImplementation.class);
+        final ProjectProblemsImplementation impl = Lookup.getDefault().lookup(ProjectProblemsImplementation.class);
         if (impl != null) {
-            impl.showCustomizer(project);
+            try {
+                // compatibility: wait for the process to complete.
+                impl.showCustomizer(project).get();
+            } catch (InterruptedException ex) {
+                throw new CompletionException(ex);
+            } catch (ExecutionException ex) {
+                if (ex.getCause() instanceof Error) {
+                    throw (Error)ex.getCause();
+                }
+                if (ex.getCause() instanceof RuntimeException) {
+                    throw (RuntimeException)ex.getCause();
+                }
+                throw new CompletionException(ex.getCause());
+            }
         }
     }
 

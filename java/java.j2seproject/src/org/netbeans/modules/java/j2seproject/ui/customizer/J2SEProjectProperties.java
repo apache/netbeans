@@ -103,9 +103,9 @@ public class J2SEProjectProperties {
     
     //Hotfix of the issue #70058
     //Should be removed when the StoreGroup SPI will be extended to allow false default value in ToggleButtonModel
-    private static final Integer BOOLEAN_KIND_TF = new Integer( 0 );
-    private static final Integer BOOLEAN_KIND_YN = new Integer( 1 );
-    private static final Integer BOOLEAN_KIND_ED = new Integer( 2 );
+    private static final Integer BOOLEAN_KIND_TF = 0;
+    private static final Integer BOOLEAN_KIND_YN = 1;
+    private static final Integer BOOLEAN_KIND_ED = 2;
     private static final String COS_MARK = ".netbeans_automatic_build";     //NOI18N
     private static final Logger LOG = Logger.getLogger(J2SEProjectProperties.class.getName());
     private Integer javacDebugBooleanKind;
@@ -780,13 +780,13 @@ public class J2SEProjectProperties {
         final LinkedList<String> oldRootProps = new LinkedList<String>(Arrays.asList (roots.getRootProperties()));
         boolean rootsAreSame = true;
         for (int i=0; i<data.size();i++) {
-            File f = (File) ((Vector)data.elementAt(i)).elementAt(0);
+            File f = (File)data.elementAt(i).elementAt(0);
             rootURLs[i] = Utilities.toURI(f).toURL();
             if (!rootURLs[i].toExternalForm().endsWith("/")) {  //NOI18N
                 rootURLs[i] = new URL(rootURLs[i]+"/");
             }
             validateURL(rootURLs[i],f);
-            rootLabels[i] = (String) ((Vector)data.elementAt(i)).elementAt(1);
+            rootLabels[i] = (String)data.elementAt(i).elementAt(1);
             rootsAreSame &= !oldRootURLs.isEmpty() &&
                             oldRootURLs.removeFirst().equals(rootURLs[i]) &&
                             roots.getRootDisplayName(oldRootLabels.removeFirst(), oldRootProps.removeFirst()).equals(rootLabels[i]);

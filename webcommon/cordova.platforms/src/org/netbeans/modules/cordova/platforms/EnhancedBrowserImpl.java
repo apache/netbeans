@@ -35,7 +35,7 @@ import org.netbeans.spi.project.ActionProvider;
  */
 public final class EnhancedBrowserImpl implements ClientProjectEnhancedBrowserImplementation {
 
-    final private Project project;
+    private final Project project;
     private final WebBrowser browser;
     protected BrowserSupport browserSupport;
     private static final Logger LOGGER = Logger.getLogger(EnhancedBrowserImpl.class.getName());

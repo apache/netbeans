@@ -34,6 +34,7 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -875,7 +876,7 @@ public class JavaCustomIndexer extends CustomIndexer {
 
     private static Iterable<String> readRSFile (final File file) throws IOException {
         final LinkedHashSet<String> binaryNames = new LinkedHashSet<String>();
-        BufferedReader in = new BufferedReader (new InputStreamReader ( new FileInputStream (file), "UTF-8")); //NOI18N
+        BufferedReader in = new BufferedReader (new InputStreamReader ( new FileInputStream (file), StandardCharsets.UTF_8));
         try {
             String binaryName;
             while ((binaryName=in.readLine())!=null) {
@@ -1438,7 +1439,7 @@ public class JavaCustomIndexer extends CustomIndexer {
         }
     }
     
-    private static abstract class Check implements Callable<Boolean> {
+    private abstract static class Check implements Callable<Boolean> {
         
         protected final Context ctx;
         

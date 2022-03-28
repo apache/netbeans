@@ -67,6 +67,7 @@ import org.netbeans.modules.php.editor.parser.astnodes.FormalParameter;
 import org.netbeans.modules.php.editor.parser.astnodes.FunctionDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.GlobalStatement;
 import org.netbeans.modules.php.editor.parser.astnodes.Identifier;
+import org.netbeans.modules.php.editor.parser.astnodes.IntersectionType;
 import org.netbeans.modules.php.editor.parser.astnodes.LambdaFunctionDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.MethodDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.NamespaceName;
@@ -91,7 +92,7 @@ import org.openide.util.RequestProcessor;
 public final class PhpCommentGenerator {
 
     static final RequestProcessor RP = new RequestProcessor("Generating Bracket Completer", 1); //NOI18N
-    static final String TYPE_PLACEHOLDER = "type";
+    static final String TYPE_PLACEHOLDER = "type"; // NOI18N
 
     private PhpCommentGenerator() {
     }
@@ -198,6 +199,8 @@ public final class PhpCommentGenerator {
         String typeName;
         if (declaredType instanceof UnionType) {
             typeName = VariousUtils.getUnionType((UnionType) declaredType);
+        } else if (declaredType instanceof IntersectionType) {
+            typeName = VariousUtils.getIntersectionType((IntersectionType) declaredType);
         } else {
             QualifiedName name = QualifiedName.create(declaredType);
             assert name != null : declaredType;

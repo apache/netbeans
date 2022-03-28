@@ -57,7 +57,7 @@ public class HudsonManager {
      * @param sync interval (in minutes) between refreshes, or 0 to disable
      * @param persistence persistence settings for the new instance
      */
-    public synchronized static HudsonInstance addInstance(String name, String url, int sync,
+    public static synchronized HudsonInstance addInstance(String name, String url, int sync,
             final Persistence persistence) {
         for (HudsonInstance existing : HudsonManagerImpl.getDefault().getInstances()) {
             if (existing.getUrl().equals(url)) {

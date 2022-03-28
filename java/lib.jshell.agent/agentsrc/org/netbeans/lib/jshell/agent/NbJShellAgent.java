@@ -69,7 +69,7 @@ public class NbJShellAgent implements Runnable, ClassFileTransformer {
      * This field will be initialized at startup. The IDE will grab the value
      * using JDI to associate a debugger Session with the appropriate incoming socket.
      */
-    public volatile static String debuggerKey = ""; // NOI18N
+    public static volatile String debuggerKey = ""; // NOI18N
     
     private static final Logger LOG = Logger.getLogger(NbJShellAgent.class.getName());
     

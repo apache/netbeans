@@ -48,7 +48,7 @@ import org.netbeans.modules.web.monitor.data.*;
 
 class EditPanelServer extends DataDisplay {
 
-    private final static boolean debug = false;
+    private static final boolean debug = false;
     
     private boolean holdTableChanges = false;
     private DisplayTable serverTable = null; 

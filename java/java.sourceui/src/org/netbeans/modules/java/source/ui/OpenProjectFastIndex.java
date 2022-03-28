@@ -559,7 +559,7 @@ class OpenProjectFastIndex implements ClassIndexManagerListener {
             this.dirStartPositions = new int[size * 2];
             this.dirNames = new String[size];
             for (int i = size - 1; i >= 0; i--) {
-                Object[] data = (Object[])indices.get(i);
+                Object[] data = indices.get(i);
                 dirStartPositions[i] = (Integer)data[1];
                 dirStartPositions[i + size] = (Integer)data[2];
                 dirNames[i] = (String)data[0];

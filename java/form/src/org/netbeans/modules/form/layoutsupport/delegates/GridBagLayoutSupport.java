@@ -544,8 +544,8 @@ public class GridBagLayoutSupport extends AbstractLayoutSupport {
      * Comparator of <code>LayoutInfo</code> objects.
      */
     private static class LayoutInfoComparator implements java.util.Comparator<LayoutInfo>{
-        final static int XAXIS = 0;
-        final static int YAXIS = 1;
+        static final int XAXIS = 0;
+        static final int YAXIS = 1;
         int cord;
         
         public LayoutInfoComparator(int cord){

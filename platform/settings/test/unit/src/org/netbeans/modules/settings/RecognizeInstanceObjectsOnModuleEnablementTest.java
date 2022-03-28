@@ -21,6 +21,7 @@ package org.netbeans.modules.settings;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.jar.Attributes;
@@ -76,7 +77,7 @@ public class RecognizeInstanceObjectsOnModuleEnablementTest extends NbTestCase {
         attr.putValue("Manifest-Version", "1.0");
         JarOutputStream os = new JarOutputStream(new FileOutputStream(f), man);
         os.putNextEntry(new JarEntry("META-INF/namedservices/ui/javax.swing.JComponent"));
-        os.write("javax.swing.JButton\n".getBytes("UTF-8"));
+        os.write("javax.swing.JButton\n".getBytes(StandardCharsets.UTF_8));
         os.closeEntry();
         os.close();
         

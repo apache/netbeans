@@ -92,7 +92,7 @@ class ObjectProviders {
         return result;
     }
 
-    private final static class ListenerForHandler implements ArrayValueHandler {
+    private static final class ListenerForHandler implements ArrayValueHandler {
         
         ListenerForHandler(AnnotationModelHelper helper, 
                 TypeElement type, List<SystemEventListener> listeners )
@@ -361,7 +361,7 @@ class ObjectProviders {
 
     }
     
-    private static abstract class AbstractProvider<T extends Refreshable> 
+    private abstract static class AbstractProvider<T extends Refreshable> 
         implements ObjectProvider<T>
     {
         AbstractProvider(AnnotationModelHelper helper, String annotationName) {

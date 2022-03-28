@@ -28,7 +28,7 @@ import javax.swing.JComponent;
  * @author  Jiri Rechtacek
  * @since 4.28
  */
-final public class WizardValidationException extends Exception {
+public final class WizardValidationException extends Exception {
     private String localizedMessage;
     private JComponent source;
 

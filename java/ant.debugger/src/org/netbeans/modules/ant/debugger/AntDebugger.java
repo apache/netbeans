@@ -80,7 +80,7 @@ public class AntDebugger extends ActionsProviderSupport {
     private boolean                     actionRunning = false;
     private IOManager                   ioManager;
     private Object                      currentLine;
-    private LinkedList                  callStackList = new LinkedList();
+    private LinkedList                  callStackList = new LinkedList<>();
     private File                        currentFile;
     private String                      currentTargetName;
     private String                      currentTaskName;
@@ -106,7 +106,7 @@ public class AntDebugger extends ActionsProviderSupport {
             (null, DebuggerEngineProvider.class);
                 
         // init actions
-        for (Iterator it = actions.iterator(); it.hasNext(); ) {
+        for (Iterator<Object> it = actions.iterator(); it.hasNext(); ) {
             setEnabled (it.next(), true);
         }
                 
@@ -852,7 +852,7 @@ public class AntDebugger extends ActionsProviderSupport {
             if (ll == null) {
                 continue;
             }
-            TargetOriginating to = (TargetOriginating) ll.getLast();
+            TargetOriginating to = ll.getLast();
             if (to.getOriginatingTarget() == null) {
                 to.setOriginatingTarget(t);
             } else {
@@ -907,12 +907,12 @@ public class AntDebugger extends ActionsProviderSupport {
             }
             nameToTargetByFiles.put(file, nameToTarget);
         }
-        TargetLister.Target target = (TargetLister.Target) nameToTarget.get(name);
+        TargetLister.Target target = nameToTarget.get(name);
         if (target == null) {
-            String projName = (String) projectNamesByFiles.get(file);
+            String projName = projectNamesByFiles.get(file);
             if (name.startsWith(projName+".")) {
                 name = name.substring(projName.length() + 1);
-                target = (TargetLister.Target) nameToTarget.get(name);
+                target = nameToTarget.get(name);
             }
         }
         return target;

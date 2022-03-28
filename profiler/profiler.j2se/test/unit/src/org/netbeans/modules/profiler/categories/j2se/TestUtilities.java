@@ -24,6 +24,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 
 import junit.framework.Assert;
 
@@ -76,7 +77,7 @@ public class TestUtilities extends ProxyLookup {
      {
         OutputStream os = fo.getOutputStream();
         try {
-            InputStream is = new ByteArrayInputStream(content.getBytes("UTF-8"));
+            InputStream is = new ByteArrayInputStream(content.getBytes(StandardCharsets.UTF_8));
             FileUtil.copy(is, os);
             return fo;
         } finally {

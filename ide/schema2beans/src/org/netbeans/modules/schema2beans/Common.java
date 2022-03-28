@@ -31,52 +31,52 @@ import java.util.MissingResourceException;
 public class Common {
 
     //	Constants
-    static public final int NONE    		= 0x00000;
+    public static final int NONE    		= 0x00000;
 
-    static public final int MASK_USER		= 0xFFFF;
-    static public final int USE_DEFAULT_VALUES	= 0x0001;
-    static public final int NO_DEFAULT_VALUES		= 0x0002;
+    public static final int MASK_USER		= 0xFFFF;
+    public static final int USE_DEFAULT_VALUES	= 0x0001;
+    public static final int NO_DEFAULT_VALUES		= 0x0002;
 
-    static public final int MASK_SEQUENCE	= 0x0000F;
-    static public final int SEQUENCE_AND	= 0x00001;
-    static public final int SEQUENCE_OR		= 0x00002;
+    public static final int MASK_SEQUENCE	= 0x0000F;
+    public static final int SEQUENCE_AND	= 0x00001;
+    public static final int SEQUENCE_OR		= 0x00002;
     
-    static public final int MASK_INSTANCE	= 0x000F0;
-    static public final int TYPE_0_1 		= 0x00010;
-    static public final int TYPE_1			= 0x00020;
-    static public final int TYPE_0_N		= 0x00030;
-    static public final int TYPE_1_N		= 0x00040;
+    public static final int MASK_INSTANCE	= 0x000F0;
+    public static final int TYPE_0_1 		= 0x00010;
+    public static final int TYPE_1			= 0x00020;
+    public static final int TYPE_0_N		= 0x00030;
+    public static final int TYPE_1_N		= 0x00040;
     
-    static public final int MASK_TYPE		= 0x0FF00;
-    static public final int TYPE_STRING		= 0x00100;
-    static public final int TYPE_BEAN		= 0x00200;
-    static public final int TYPE_BOOLEAN	= 0x00300;
-    static public final int TYPE_BYTE		= 0x00400;
-    static public final int TYPE_CHAR		= 0x00500;
-    static public final int TYPE_SHORT		= 0x00600;
-    static public final int TYPE_INT		= 0x00700;
-    static public final int TYPE_LONG		= 0x00800;
-    static public final int TYPE_FLOAT		= 0x00900;
-    static public final int TYPE_DOUBLE		= 0x00a00;
-    static public final int TYPE_COMMENT	= 0x00f00;
+    public static final int MASK_TYPE		= 0x0FF00;
+    public static final int TYPE_STRING		= 0x00100;
+    public static final int TYPE_BEAN		= 0x00200;
+    public static final int TYPE_BOOLEAN	= 0x00300;
+    public static final int TYPE_BYTE		= 0x00400;
+    public static final int TYPE_CHAR		= 0x00500;
+    public static final int TYPE_SHORT		= 0x00600;
+    public static final int TYPE_INT		= 0x00700;
+    public static final int TYPE_LONG		= 0x00800;
+    public static final int TYPE_FLOAT		= 0x00900;
+    public static final int TYPE_DOUBLE		= 0x00a00;
+    public static final int TYPE_COMMENT	= 0x00f00;
 
-    static public final int MASK_PROP		= 0xF0000;
-    static public final int TYPE_KEY		= 0x10000;
-    static public final int TYPE_SHOULD_NOT_BE_EMPTY		= 0x20000;
+    public static final int MASK_PROP		= 0xF0000;
+    public static final int TYPE_KEY		= 0x10000;
+    public static final int TYPE_SHOULD_NOT_BE_EMPTY		= 0x20000;
     
-    static public final int TYPE_VETOABLE	= 0x100000;
+    public static final int TYPE_VETOABLE	= 0x100000;
     
-    static public final int COMMENT		= 0x01;
-    static public final int ELEMENT		= 0x02;
-    static public final int ATTLIST		= 0x03;
+    public static final int COMMENT		= 0x01;
+    public static final int ELEMENT		= 0x02;
+    public static final int ATTLIST		= 0x03;
     
-    static public final String DTD_STRING	= "#PCDATA";	// NOI18N
-    static public final String DTD_EMPTY	= "EMPTY";	// NOI18N
+    public static final String DTD_STRING	= "#PCDATA";	// NOI18N
+    public static final String DTD_EMPTY	= "EMPTY";	// NOI18N
     
-    static public final String CLASS_STRING		= "String";	// NOI18N
-    static public final String CLASS_BOOLEAN		= "Boolean";	// NOI18N
+    public static final String CLASS_STRING		= "String";	// NOI18N
+    public static final String CLASS_BOOLEAN		= "Boolean";	// NOI18N
 
-    static public final String GENERATED_TAG = "Generated";
+    public static final String GENERATED_TAG = "Generated";
     
     
     public static boolean isSequenceOr(int type) {
@@ -367,33 +367,33 @@ public class Common {
     }
     
     public static Object defaultScalarValue(int type) {
-        switch(type & Common.MASK_TYPE) {
-	    case Common.TYPE_STRING:
-            return "";	// NOI18N
-        case Common.TYPE_COMMENT:
-            return "";	// NOI18N
-	    case Common.TYPE_BOOLEAN:
-            return Boolean.FALSE;
-	    case Common.TYPE_BYTE:
-            return new Byte((byte)0);
-	    case Common.TYPE_CHAR:
-            return new Character('\0');
-	    case Common.TYPE_SHORT:
-            return new Short((short)0);
-	    case Common.TYPE_INT:
-            return Integer.valueOf(0);
-	    case Common.TYPE_LONG:
-            return new Long(0);
-	    case Common.TYPE_FLOAT:
-            return new Float(0.0);
-	    case Common.TYPE_DOUBLE:
-            return new Double(0.0);
-	    default:
-            throw new IllegalArgumentException(Common.getMessage(
-                                                                 "UnknownType_msg", Integer.valueOf(type)));
+        switch (type & Common.MASK_TYPE) {
+            case Common.TYPE_STRING:
+                return "";	// NOI18N
+            case Common.TYPE_COMMENT:
+                return "";	// NOI18N
+            case Common.TYPE_BOOLEAN:
+                return Boolean.FALSE;
+            case Common.TYPE_BYTE:
+                return (byte)0;
+            case Common.TYPE_CHAR:
+                return new Character('\0');
+            case Common.TYPE_SHORT:
+                return (short)0;
+            case Common.TYPE_INT:
+                return Integer.valueOf(0);
+            case Common.TYPE_LONG:
+                return new Long(0);
+            case Common.TYPE_FLOAT:
+                return new Float(0.0);
+            case Common.TYPE_DOUBLE:
+                return new Double(0.0);
+            default:
+                throw new IllegalArgumentException(Common.getMessage(
+                        "UnknownType_msg", Integer.valueOf(type)));
         }
     }
-    
+
     
     /*
      *	Bundle utility methods. The following methods return a formated message
@@ -404,7 +404,7 @@ public class Common {
      */
     
     //static private ResourceBundle rb = null;
-    static private String rbName = "org.netbeans.modules.schema2beans.Bundle"; // NOI18N
+    private static String rbName = "org.netbeans.modules.schema2beans.Bundle"; // NOI18N
     
     public static String getMessage(String key) {
         return Common.getMessage(key, null);
@@ -465,7 +465,7 @@ public class Common {
         }
     }
     
-    static public String instanceToString(int instance) {
+    public static String instanceToString(int instance) {
         switch (instance) {
 	    case Common.TYPE_0_1:
             return "optional";
@@ -478,7 +478,7 @@ public class Common {
         }
     }
 
-    static public String instanceToCommonString(int instance) {
+    public static String instanceToCommonString(int instance) {
         switch (instance) {
 	    case Common.TYPE_0_1:
             return "TYPE_0_1";
@@ -495,7 +495,7 @@ public class Common {
      * Return the widest instance set.  Widest as in has the most elements.
      * For instance, TYPE_0_N is widder than TYPE_1.
      */
-    static public int widestInstance(int instance1, int instance2) {
+    public static int widestInstance(int instance1, int instance2) {
         if (instance1 == TYPE_0_N || instance2 == TYPE_0_N)
             return TYPE_0_N;
         if (instance1 == TYPE_1_N || instance2 == TYPE_1_N)

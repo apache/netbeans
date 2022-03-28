@@ -955,7 +955,7 @@ final class InstanceNode extends DataNode implements Runnable {
     } // end of I
     
     /** Derived from BeanChildren and allow replace beancontext. */
-    private final static class InstanceChildren extends Children.Keys implements PropertyChangeListener {
+    private static final class InstanceChildren extends Children.Keys implements PropertyChangeListener {
         java.lang.ref.WeakReference<PropertyChangeListener> dobjListener;
         InstanceDataObject dobj;
         Object bean;

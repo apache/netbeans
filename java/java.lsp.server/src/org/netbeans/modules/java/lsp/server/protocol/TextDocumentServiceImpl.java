@@ -22,10 +22,8 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.sun.source.tree.ClassTree;
-import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.LineMap;
 import com.sun.source.tree.MethodTree;
-import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.VariableTree;
@@ -34,8 +32,6 @@ import com.sun.source.util.TreePathScanner;
 import com.sun.source.util.Trees;
 import com.vladsch.flexmark.html2md.converter.FlexmarkHtmlConverter;
 import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.time.Instant;
@@ -49,7 +45,6 @@ import java.util.EnumMap;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
@@ -58,7 +53,6 @@ import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Set;
 import java.util.TreeMap;
-import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -82,6 +76,12 @@ import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.StyledDocument;
+import org.eclipse.lsp4j.CallHierarchyIncomingCall;
+import org.eclipse.lsp4j.CallHierarchyIncomingCallsParams;
+import org.eclipse.lsp4j.CallHierarchyItem;
+import org.eclipse.lsp4j.CallHierarchyOutgoingCall;
+import org.eclipse.lsp4j.CallHierarchyOutgoingCallsParams;
+import org.eclipse.lsp4j.CallHierarchyPrepareParams;
 import org.eclipse.lsp4j.ClientCapabilities;
 import org.eclipse.lsp4j.CodeAction;
 import org.eclipse.lsp4j.CodeActionKind;
@@ -142,7 +142,6 @@ import org.eclipse.lsp4j.ServerCapabilities;
 import org.eclipse.lsp4j.SignatureHelp;
 import org.eclipse.lsp4j.SignatureHelpParams;
 import org.eclipse.lsp4j.SymbolInformation;
-import org.eclipse.lsp4j.SymbolKind;
 import org.eclipse.lsp4j.TextDocumentContentChangeEvent;
 import org.eclipse.lsp4j.TextDocumentEdit;
 import org.eclipse.lsp4j.TextEdit;
@@ -175,6 +174,7 @@ import org.netbeans.api.java.source.WorkingCopy;
 import org.netbeans.api.java.source.ui.ElementOpen;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenSequence;
+import org.netbeans.api.lsp.CallHierarchyEntry;
 import org.netbeans.api.lsp.Completion;
 import org.netbeans.api.lsp.HyperlinkLocation;
 import org.netbeans.api.project.FileOwnerQuery;
@@ -224,9 +224,12 @@ import org.netbeans.modules.refactoring.plugins.FileRenamePlugin;
 import org.netbeans.modules.refactoring.spi.RefactoringCommit;
 import org.netbeans.modules.refactoring.spi.RefactoringElementImplementation;
 import org.netbeans.modules.refactoring.spi.Transaction;
+import org.netbeans.api.lsp.StructureElement;
 import org.netbeans.spi.editor.hints.ErrorDescription;
 import org.netbeans.spi.editor.hints.Fix;
+import org.netbeans.spi.lsp.CallHierarchyProvider;
 import org.netbeans.spi.lsp.ErrorProvider;
+import org.netbeans.spi.lsp.StructureProvider;
 import org.netbeans.spi.project.ActionProvider;
 import org.netbeans.spi.project.ProjectConfiguration;
 import org.netbeans.spi.project.ProjectConfigurationProvider;
@@ -812,98 +815,63 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
 
     @Override
     public CompletableFuture<List<Either<SymbolInformation, DocumentSymbol>>> documentSymbol(DocumentSymbolParams params) {
-        return server.openedProjects().thenCompose(projects -> {
-            JavaSource js = getJavaSource(params.getTextDocument().getUri());
-            if (js == null) {
-                return CompletableFuture.completedFuture(Collections.emptyList());
-            }
+        final CompletableFuture<List<Either<SymbolInformation, DocumentSymbol>>> resultFuture = new CompletableFuture<>();
+        
+        BACKGROUND_TASKS.post(() -> {
             List<Either<SymbolInformation, DocumentSymbol>> result = new ArrayList<>();
-            try {
-                js.runUserActionTask(cc -> {
-                    cc.toPhase(JavaSource.Phase.RESOLVED);
-                    Trees trees = cc.getTrees();
-                    CompilationUnitTree cu = cc.getCompilationUnit();
-                    if (cu.getPackage() != null) {
-                        TreePath tp = trees.getPath(cu, cu.getPackage());
-                        Element el = trees.getElement(tp);
-                        if (el != null && el.getKind() == ElementKind.PACKAGE) {
-                            String name = Utils.label(cc, el, true);
-                            SymbolKind kind = Utils.elementKind2SymbolKind(el.getKind());
-                            Range range = Utils.treeRange(cc, tp.getLeaf());
-                            result.add(Either.forRight(new DocumentSymbol(name, kind, range, range)));
-                        }
-                    }
-                    for (Element tel : cc.getTopLevelElements()) {
-                        DocumentSymbol ds = element2DocumentSymbol(cc, tel);
-                        if (ds != null)
-                            result.add(Either.forRight(ds));
-                    }
-                }, true);
-            } catch (IOException ex) {
-                client.logMessage(new MessageParams(MessageType.Error, ex.getMessage()));
-            }
-            return CompletableFuture.completedFuture(result);
-        });
-    }
-
-    private static DocumentSymbol element2DocumentSymbol(CompilationInfo info, Element el) {
-        TreePath path = info.getTrees().getPath(el);
-        if (path == null)
-            return null;
-        TreeUtilities tu = info.getTreeUtilities();
-        if (tu.isSynthetic(path))
-            return null;
-        Range range = Utils.treeRange(info, path.getLeaf());
-        if (range == null)
-            return null;
-        Range selection = Utils.selectionRange(info, path.getLeaf());
-        List<DocumentSymbol> children = new ArrayList<>();
-        for (Element c : el.getEnclosedElements()) {
-            DocumentSymbol ds = element2DocumentSymbol(info, c);
-            if (ds != null) {
-                children.add(ds);
-            }
-        }
-        if (path.getLeaf().getKind() == Kind.METHOD || path.getLeaf().getKind() == Kind.VARIABLE) {
-            children.addAll(getAnonymousInnerClasses(info, path));
-        }
-        String name = Utils.label(info, el, false);
-        String detail = Utils.detail(info, el, false);
-        return new DocumentSymbol(name, Utils.elementKind2SymbolKind(el.getKind()), range, selection != null ? selection : range, detail, children);
-    }
-
-    private static List<DocumentSymbol> getAnonymousInnerClasses(CompilationInfo info, TreePath path) {
-        List<DocumentSymbol> inner = new ArrayList<>();
-        new TreePathScanner<Void, Void>() {
-            @Override
-            public Void visitNewClass(NewClassTree node, Void p) {
-                if (node.getClassBody() != null) {
-                    Range range = Utils.treeRange(info, node);
-                    if (range != null) {
-                        Range selectionRange = Utils.treeRange(info, node.getIdentifier());
-                        Element e = info.getTrees().getElement(new TreePath(getCurrentPath(), node.getClassBody()));
-                        if (e != null) {
-                            Element te = info.getTrees().getElement(new TreePath(getCurrentPath(), node.getIdentifier()));
-                            if (te != null) {
-                                String name = "new " + te.getSimpleName() + "() {...}";
-                                List<DocumentSymbol> children = new ArrayList<>();
-                                for (Element c : e.getEnclosedElements()) {
-                                    DocumentSymbol ds = element2DocumentSymbol(info, c);
-                                    if (ds != null) {
-                                        children.add(ds);
-                                    }
-                                }
-                                inner.add(new DocumentSymbol(name, Utils.elementKind2SymbolKind(e.getKind()), range, selectionRange, null, children));
+            String uri = params.getTextDocument().getUri();
+            FileObject file = fromURI(uri);
+            Document doc = server.getOpenedDocuments().getDocument(uri);
+            if (file != null && (doc instanceof LineDocument)) {
+                StructureProvider structureProvider = MimeLookup.getLookup(DocumentUtilities.getMimeType(doc)).lookup(StructureProvider.class);
+                if (structureProvider != null) {
+                    List<StructureElement> structureElements = structureProvider.getStructure(doc);
+                    if (!structureElements.isEmpty()) {
+                        LineDocument lDoc = (LineDocument) doc;
+                        for (StructureElement structureElement : structureElements) {
+                            DocumentSymbol ds = structureElement2DocumentSymbol(lDoc, structureElement);
+                            if (ds != null) {
+                                result.add(Either.forRight(ds));
                             }
                         }
-                    }
+                    };
                 }
-                return null;
             }
-        }.scan(path, null);
-        return inner;
+            resultFuture.complete(result);
+        });
+        return resultFuture;
     }
 
+    private static DocumentSymbol structureElement2DocumentSymbol (LineDocument doc, StructureElement el) {
+        try {
+            Position selectionStartPos = new Position(LineDocumentUtils.getLineIndex(doc, el.getSelectionStartOffset()), el.getSelectionStartOffset() - LineDocumentUtils.getLineStart(doc, el.getSelectionStartOffset()));
+            Position selectionEndPos = new Position(LineDocumentUtils.getLineIndex(doc, el.getSelectionEndOffset()), el.getSelectionEndOffset() - LineDocumentUtils.getLineStart(doc, el.getSelectionEndOffset()));
+            Range selectionRange = new Range(selectionStartPos, selectionEndPos);
+            Position enclosedStartPos = new Position(LineDocumentUtils.getLineIndex(doc, el.getExpandedStartOffset()), el.getExpandedStartOffset() - LineDocumentUtils.getLineStart(doc, el.getExpandedStartOffset()));
+            Position enclosedEndPos = new Position(LineDocumentUtils.getLineIndex(doc, el.getExpandedEndOffset()), el.getExpandedEndOffset() - LineDocumentUtils.getLineStart(doc, el.getExpandedEndOffset()));
+            Range expandedRange = new Range(enclosedStartPos, enclosedEndPos);
+            DocumentSymbol ds;
+            if (el.getChildren() != null && !el.getChildren().isEmpty()) {
+                List<DocumentSymbol> children = new ArrayList<>();
+                for (StructureElement child: el.getChildren()) {
+                    ds = structureElement2DocumentSymbol(doc, child);
+                    if (ds != null) {
+                        children.add(ds);
+                    }
+                }
+                ds = new DocumentSymbol(el.getName(), Utils.structureElementKind2SymbolKind(el.getKind()), expandedRange, selectionRange, el.getDetail(), children);
+                ds.setTags(Utils.elementTags2SymbolTags(el.getTags()));
+                return ds;
+            }
+            ds = new DocumentSymbol(el.getName(), Utils.structureElementKind2SymbolKind(el.getKind()), expandedRange, selectionRange, el.getDetail());
+            ds.setTags(Utils.elementTags2SymbolTags(el.getTags()));
+            return ds;
+        } catch (BadLocationException ex) {
+
+        }
+        return null;
+    }
+    
     @Override
     public CompletableFuture<List<Either<Command, CodeAction>>> codeAction(CodeActionParams params) {
         // shortcut: if the projects are not yet initialized, return empty:
@@ -1111,6 +1079,11 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                     Parser.Result parserResult = resultIterator.getParserResult();
                     //look for main methods:
                     List<CodeLens> lens = new ArrayList<>();
+                    if (parserResult == null) {
+                        // no parser for the sourec type
+                        result.complete(lens);
+                        return;
+                    }
                     CompilationController cc = CompilationController.get(parserResult);
                     if (cc != null) {
                         cc.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
@@ -1863,6 +1836,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
 
     @CheckForNull
     public JavaSource getJavaSource(String fileUri) {
+        
         Document doc = server.getOpenedDocuments().getDocument(fileUri);
         if (doc == null) {
             FileObject file = fromURI(fileUri);
@@ -2037,4 +2011,211 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         return CompletableFuture.completedFuture(tokens);
     }
 
+    @Override
+    public CompletableFuture<List<CallHierarchyItem>> prepareCallHierarchy(CallHierarchyPrepareParams params) {
+        FileObject file = fromURI(params.getTextDocument().getUri());
+        if (file == null) {
+            return CompletableFuture.completedFuture(null);
+        }
+        // FIXME: probably the MIME type ought be derived from the exact source position, not from the whole file.
+        CallHierarchyProvider chp = MimeLookup.getLookup(file.getMIMEType()).lookup(CallHierarchyProvider.class);
+        if (chp == null) {
+            return CompletableFuture.completedFuture(null);
+        }
+        EditorCookie ec = file.getLookup().lookup(EditorCookie.class);
+        // PENDING: possibly handle cancellation with this Future ?
+        LineDocument lDoc;
+        try {
+            Document doc = ec.openDocument();
+            if (!(doc instanceof LineDocument)) {
+                return CompletableFuture.completedFuture(null);
+            }
+            lDoc = (LineDocument)doc;
+        } catch (IOException ex) {
+            CompletableFuture f = new CompletableFuture();
+            f.completeExceptionally(ex);
+            return f;
+        }
+        return chp.findCallOrigin(lDoc, Utils.getOffset(lDoc, params.getPosition())).thenApply(l -> {
+            if (l == null) {
+                return null;
+            }
+            List<CallHierarchyItem> res = new ArrayList<>();
+            for (CallHierarchyEntry c : l) {
+                CallHierarchyItem n = callEntryToItem(file, c, callEntryDocument(c, lDoc));
+                if (n != null) {
+                    res.add(n);
+                }
+            }
+            return res;
+        });
+    }
+    
+    private static CallHierarchyItem callEntryToItem(FileObject documentFile, CallHierarchyEntry c, LineDocument lDoc) {
+        FileObject owner = c.getElement().getFile();
+        if (owner == null) {
+            owner = documentFile;
+        }
+        if (owner == null || lDoc == null) {
+            return null;
+        }
+        CallHierarchyItem chi = new CallHierarchyItem();
+        DocumentSymbol ds = structureElement2DocumentSymbol(lDoc, c.getElement());
+        if (ds == null) {
+            return null;
+        }
+        chi.setKind(ds.getKind());
+        chi.setName(ds.getName());
+        chi.setTags(ds.getTags());
+        chi.setRange(ds.getRange());
+        chi.setSelectionRange(ds.getSelectionRange());
+        chi.setUri(Utils.toUri(owner));
+        chi.setData(c.getCustomData());
+        return chi;
+    }
+    
+    LineDocument callEntryDocument(CallHierarchyEntry e, LineDocument documentFile) {
+        FileObject owner = e.getElement().getFile();
+        if (owner != null && owner != documentFile) {
+            // must open the document
+            EditorCookie ck = owner.getLookup().lookup(EditorCookie.class);
+            if (ck == null) {
+                return null;
+            }
+            try {
+                Document doc = ck.openDocument();
+                if (!(doc instanceof LineDocument)) {
+                    return null;
+                }
+                return (LineDocument)doc;
+            } catch (IOException ex) {
+                // TODO: report to the client ?
+                return null;
+            }
+        } else {
+            return documentFile;
+        }
+    }
+
+    abstract class HierarchyTask<T> {
+        final CallHierarchyItem request;
+        final FileObject file;
+        final CallHierarchyProvider provider;
+        final AtomicBoolean cancelled = new AtomicBoolean();
+        protected LineDocument lineDoc;
+
+        public HierarchyTask(CallHierarchyItem request) {
+            this.request = request;
+            this.file = fromURI(request.getUri());
+            this.provider = file == null ? null :
+                    MimeLookup.getLookup(file.getMIMEType()).lookup(CallHierarchyProvider.class);
+        }
+        
+        public CompletableFuture<List<T>> processRequest() {
+            if (file == null || provider == null) {
+                return null;
+            }
+            try {
+                EditorCookie ec = file.getLookup().lookup(EditorCookie.class);
+                Document doc = ec.openDocument();
+                if (!(doc instanceof LineDocument)) {
+                    return null;
+                }
+                lineDoc = (LineDocument)doc;
+            } catch (IOException | RuntimeException ex) {
+                CompletableFuture<List<T>> res = new CompletableFuture<>();
+                res.completeExceptionally(ex);
+                return res;
+            }
+
+            StructureProvider.Builder b = StructureProvider.newBuilder(
+                    request.getName(), StructureElement.Kind.valueOf(request.getKind().toString()));
+
+            b.file(file);
+            b.expandedStartOffset(Utils.getOffset(lineDoc, request.getRange().getStart()));
+            b.expandedEndOffset(Utils.getOffset(lineDoc, request.getRange().getEnd()));
+            b.selectionStartOffset(Utils.getOffset(lineDoc, request.getSelectionRange().getStart()));
+            b.selectionEndOffset(Utils.getOffset(lineDoc, request.getSelectionRange().getEnd()));
+
+            String d;
+            if (request.getData() instanceof JsonPrimitive) {
+                d = ((JsonPrimitive)request.getData()).getAsString();
+            } else if (request.getData() != null) {
+                d = request.getData().toString();
+            } else {
+                d = null;
+            }
+            
+            return callProvider(provider, new CallHierarchyEntry(b.build(), d)).thenApply(this::convert);
+        }
+        
+        List<T> convert(List<CallHierarchyEntry.Call> l) {
+            if (l == null) {
+                return null;
+            }
+            List<T> res = (List<T>)new ArrayList();
+            for (CallHierarchyEntry.Call call : l) {
+                CallHierarchyEntry che = call.getItem();
+                LineDocument lDoc = callEntryDocument(che, lineDoc);
+                CallHierarchyItem callItem = callEntryToItem(file, che, lDoc);
+                if (callItem == null) {
+                    continue;
+                }
+                List<Range> ranges = new ArrayList<>();
+                for (org.netbeans.api.lsp.Range r : call.getRanges()) {
+                    // lDoc cannot be null if callItem != null.
+                    ranges.add(callRange2Range(r, lDoc));
+                }
+                T lspCall = createResultItem(callItem, ranges);
+                res.add(lspCall);
+            }
+            return res;
+        }
+                
+        protected abstract CompletableFuture<List<CallHierarchyEntry.Call>> callProvider(CallHierarchyProvider p, CallHierarchyEntry e);
+        
+        protected abstract T createResultItem(CallHierarchyItem item, List<Range> ranges);
+    }
+    
+    @Override
+    public CompletableFuture<List<CallHierarchyIncomingCall>> callHierarchyIncomingCalls(CallHierarchyIncomingCallsParams params) {
+        HierarchyTask<CallHierarchyIncomingCall> t =  new HierarchyTask<CallHierarchyIncomingCall>(params.getItem()) {
+            @Override
+            protected CompletableFuture<List<CallHierarchyEntry.Call>> callProvider(CallHierarchyProvider p, CallHierarchyEntry e) {
+                return p.findIncomingCalls(e);
+            }
+
+            @Override
+            protected CallHierarchyIncomingCall createResultItem(CallHierarchyItem item, List<Range> ranges) {
+                return new CallHierarchyIncomingCall(item, ranges);
+            }
+        };
+        return t.processRequest();
+    }
+    
+    private static Position offset2Position(Document doc, int offset) {
+        int line = NbDocument.findLineNumber((StyledDocument)doc, offset);
+        int column = NbDocument.findLineColumn((StyledDocument)doc, offset);
+        return new Position(line, column);
+    }
+    
+    private static Range callRange2Range(org.netbeans.api.lsp.Range r, Document doc) {
+        return new Range(offset2Position(doc, r.getStartOffset()), offset2Position(doc, r.getEndOffset()));
+    }
+
+    @Override
+    public CompletableFuture<List<CallHierarchyOutgoingCall>> callHierarchyOutgoingCalls(CallHierarchyOutgoingCallsParams params) {
+        HierarchyTask<CallHierarchyOutgoingCall> t =  new HierarchyTask<CallHierarchyOutgoingCall>(params.getItem()) {
+            @Override
+            protected CompletableFuture<List<CallHierarchyEntry.Call>> callProvider(CallHierarchyProvider p, CallHierarchyEntry e) {
+                return p.findIncomingCalls(e);
+            }
+
+            @Override
+            protected CallHierarchyOutgoingCall createResultItem(CallHierarchyItem item, List<Range> ranges) {
+                return new CallHierarchyOutgoingCall(item, ranges);
+            }
+        };
+        return t.processRequest();
+    }
 }

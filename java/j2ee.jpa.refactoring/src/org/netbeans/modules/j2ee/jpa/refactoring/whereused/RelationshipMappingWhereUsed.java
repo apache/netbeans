@@ -73,7 +73,7 @@ import org.openide.util.lookup.Lookups;
 public final class RelationshipMappingWhereUsed extends JavaRefactoringPlugin {
     
     private final WhereUsedQuery whereUsedQuery;
-    private final static Logger LOG = Logger.getLogger(RelationshipMappingWhereUsed.class.getName());
+    private static final Logger LOG = Logger.getLogger(RelationshipMappingWhereUsed.class.getName());
     
     public RelationshipMappingWhereUsed(WhereUsedQuery refactoring) {
         this.whereUsedQuery = refactoring;
@@ -261,7 +261,7 @@ public final class RelationshipMappingWhereUsed extends JavaRefactoringPlugin {
             try {
                 DataObject dobj = DataObject.find(getParentFile());
                 if (dobj != null) {
-                    EditorCookie.Observable obs = (EditorCookie.Observable)dobj.getLookup().lookup(EditorCookie.Observable.class);
+                    EditorCookie.Observable obs = dobj.getLookup().lookup(EditorCookie.Observable.class);
                     if (obs != null && obs instanceof CloneableEditorSupport) {
                         CloneableEditorSupport supp = (CloneableEditorSupport)obs;
 

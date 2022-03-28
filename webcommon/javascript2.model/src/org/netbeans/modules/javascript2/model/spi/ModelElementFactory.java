@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -89,7 +90,7 @@ public final class ModelElementFactory {
 
     public JsObject loadGlobalObject(InputStream is, String sourceLabel, URL defaultDocURL) throws IOException {
         JsFunction global = newGlobalObject(null, Integer.MAX_VALUE);
-        BufferedReader reader = new BufferedReader(new InputStreamReader(is, "UTF-8")); // NOI18N
+        BufferedReader reader = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
         try {
             for (JsObject object : Model.readModel(reader, global, sourceLabel, defaultDocURL)) {
                 putGlobalProperty(global, object);

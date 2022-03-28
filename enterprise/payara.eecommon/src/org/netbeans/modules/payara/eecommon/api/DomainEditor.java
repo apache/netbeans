@@ -77,20 +77,20 @@ public class DomainEditor {
     private static String CONST_SID = "SID"; // NOI18N
     private static String CONST_SERVER_NAME = "serverName"; // NOI18N
     private static String CONST_DRIVER_CLASS = "driverClass"; // NOI18N
-    static private String CONST_NAME = "name"; // NOI18N
-    static private String CONST_VALUE = "value"; // NOI18N
-    static private String CONST_DS_CLASS = "datasource-classname"; // NOI18N
-    static private String CONST_RES_TYPE = "res-type"; // NOI18N
-    static private String CONST_JVM_OPTIONS = "jvm-options"; // NOI18N
-    static private String CONST_JNDINAME = "jndi-name"; // NOI18N
-    static private String CONST_PROP = "property"; // NOI18N
-    static private String CONST_POOLNAME = "pool-name"; // NOI18N
-    static private String CONST_ENABLED = "enabled"; // NOI18N
-    static private String CONST_OBJTYPE = "object-type"; // NOI18N
-    static private String CONST_JDBC = "jdbc-resource"; // NOI18N
-    static private String CONST_CP = "jdbc-connection-pool"; // NOI18N
-    static private String CONST_AO = "admin-object-resource"; // NOI18N
-    static private String XML_ENTITY = "<?xml version=\"1.0\" encoding=\"{0}\"?>";
+    private static String CONST_NAME = "name"; // NOI18N
+    private static String CONST_VALUE = "value"; // NOI18N
+    private static String CONST_DS_CLASS = "datasource-classname"; // NOI18N
+    private static String CONST_RES_TYPE = "res-type"; // NOI18N
+    private static String CONST_JVM_OPTIONS = "jvm-options"; // NOI18N
+    private static String CONST_JNDINAME = "jndi-name"; // NOI18N
+    private static String CONST_PROP = "property"; // NOI18N
+    private static String CONST_POOLNAME = "pool-name"; // NOI18N
+    private static String CONST_ENABLED = "enabled"; // NOI18N
+    private static String CONST_OBJTYPE = "object-type"; // NOI18N
+    private static String CONST_JDBC = "jdbc-resource"; // NOI18N
+    private static String CONST_CP = "jdbc-connection-pool"; // NOI18N
+    private static String CONST_AO = "admin-object-resource"; // NOI18N
+    private static String XML_ENTITY = "<?xml version=\"1.0\" encoding=\"{0}\"?>";
     
     private String dmLoc;
     private String dmName;
@@ -479,8 +479,8 @@ public class DomainEditor {
         return dSources;
     }
 
-    private HashMap<String,String> getPoolValues(HashMap cpMap, String poolName) {
-        HashMap<String,String> pValues = new HashMap<String,String>();
+    private Map<String,String> getPoolValues(Map<String, Node> cpMap, String poolName) {
+        Map<String,String> pValues = new HashMap<>();
         Node cpNode = (Node) cpMap.get(poolName);
         NamedNodeMap cpAttrMap = cpNode.getAttributes();
         Node dsClassName = cpAttrMap.getNamedItem(CONST_DS_CLASS);
@@ -510,12 +510,12 @@ public class DomainEditor {
             }
         } // connection-pool properties
 
-        pValues.put(CONST_LOWER_DATABASE_NAME, (String) map.get(CONST_LOWER_DATABASE_NAME));
-        pValues.put(CONST_PORT_NUMBER, (String) map.get(CONST_PORT_NUMBER));
-        pValues.put(CONST_LOWER_PORT_NUMBER, (String) map.get(CONST_LOWER_PORT_NUMBER));
-        pValues.put(CONST_DATABASE_NAME, (String) map.get(CONST_DATABASE_NAME));
-        pValues.put(CONST_SID, (String) map.get(CONST_SID));
-        pValues.put(CONST_DRIVER_CLASS, (String) map.get(CONST_DRIVER_CLASS));
+        pValues.put(CONST_LOWER_DATABASE_NAME, map.get(CONST_LOWER_DATABASE_NAME));
+        pValues.put(CONST_PORT_NUMBER, map.get(CONST_PORT_NUMBER));
+        pValues.put(CONST_LOWER_PORT_NUMBER, map.get(CONST_LOWER_PORT_NUMBER));
+        pValues.put(CONST_DATABASE_NAME, map.get(CONST_DATABASE_NAME));
+        pValues.put(CONST_SID, map.get(CONST_SID));
+        pValues.put(CONST_DRIVER_CLASS, map.get(CONST_DRIVER_CLASS));
         if (dsClassName != null) {
             pValues.put("dsClassName", dsClassName.getNodeValue());
         }

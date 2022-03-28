@@ -247,12 +247,28 @@ public final class ImportHelper {
      * @return missing class name
      */
     public static String getMissingClassName(String errorMessage) {
-        String errorPrefix = "unable to resolve class "; // NOI18N
-        if (!errorMessage.startsWith(errorPrefix)) {
+        String errorText = "unable to resolve class "; // NOI18N
+        String missingClass = null;
+        if (errorMessage.startsWith(errorText)) {
+            missingClass = errorMessage.substring(errorText.length());
+        } else {
+            // I really don't like how the missing class is founded, but so far .....
+            errorText = "doesn't refer to a local variable, static field or class"; //NOI18N
+            if (errorMessage.contains(errorText)) {
+                int startIndex = errorMessage.indexOf('\'');
+                if (startIndex > -1) {
+                    startIndex++;
+                    int endIndex = errorMessage.indexOf('\'', startIndex);
+                    if (endIndex > -1) {
+                        missingClass = errorMessage.substring(startIndex, endIndex);
+                    }
+                }
+            }
+        }
+            
+        if (missingClass == null) {
             return null;
         }
-
-        String missingClass = errorMessage.substring(errorPrefix.length());
         int idx = missingClass.indexOf(" ");
         if (idx != -1) {
             missingClass = missingClass.substring(0, idx);

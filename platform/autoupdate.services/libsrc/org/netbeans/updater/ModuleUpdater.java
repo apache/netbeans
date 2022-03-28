@@ -20,6 +20,7 @@
 package org.netbeans.updater;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
@@ -613,7 +614,7 @@ public final class ModuleUpdater extends Thread {
         if (executableFilesEntry != null) {
             BufferedReader reader = null;
             try {
-                reader = new BufferedReader(new InputStreamReader(jarFile.getInputStream(executableFilesEntry), "UTF-8"));
+                reader = new BufferedReader(new InputStreamReader(jarFile.getInputStream(executableFilesEntry), StandardCharsets.UTF_8));
                 String s;
                 while ((s = reader.readLine()) != null) {
                     list.add(s);

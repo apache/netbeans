@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -102,7 +103,7 @@ public final class TestMethodFinderImpl extends EmbeddingIndexer {
                 class2methods.computeIfAbsent(className, name -> new ArrayList<>()).add(method);
             }
             output.getParentFile().mkdirs();
-            try (PrintWriter pw = new PrintWriter(new OutputStreamWriter(new FileOutputStream(output), "UTF-8"))) {
+            try (PrintWriter pw = new PrintWriter(new OutputStreamWriter(new FileOutputStream(output), StandardCharsets.UTF_8))) {
                 pw.print("url: "); //NOI18N
                 pw.println(url.toString());
                 for (Map.Entry<String, List<TestMethodController.TestMethod>> entry : class2methods.entrySet()) {

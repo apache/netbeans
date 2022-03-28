@@ -57,7 +57,7 @@ import org.netbeans.modules.terminal.api.ui.TerminalContainer;
      * using the get() method which uses futures until the value is available.
      * @param <V>
      */
-    public static abstract class ValueTask<V> extends Task implements Callable<V> {
+    public abstract static class ValueTask<V> extends Task implements Callable<V> {
 	private final FutureTask<V> future;
 
 	protected  ValueTask(Terminal terminal) {

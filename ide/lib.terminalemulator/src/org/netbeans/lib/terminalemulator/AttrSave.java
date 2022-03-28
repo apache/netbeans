@@ -25,50 +25,50 @@
 package org.netbeans.lib.terminalemulator;
 
 class AttrSave {
-    private final static int BGCOLOR_OFF = 0;
-    private final static int BGCOLOR_WIDTH = 5;
-    private final static int BGCOLOR_MASK = 0xf;
+    private static final int BGCOLOR_OFF = 0;
+    private static final int BGCOLOR_WIDTH = 5;
+    private static final int BGCOLOR_MASK = 0xf;
     @SuppressWarnings("PointlessBitwiseExpression")
-    public final static int BGCOLOR = BGCOLOR_MASK << BGCOLOR_OFF;
+    public static final int BGCOLOR = BGCOLOR_MASK << BGCOLOR_OFF;
 
-    private final static int FGCOLOR_OFF = BGCOLOR_OFF + BGCOLOR_WIDTH;
-    private final static int FGCOLOR_WIDTH = 5;
-    private final static int FGCOLOR_MASK = 0xf;
-    public final static int FGCOLOR = FGCOLOR_MASK << FGCOLOR_OFF;
+    private static final int FGCOLOR_OFF = BGCOLOR_OFF + BGCOLOR_WIDTH;
+    private static final int FGCOLOR_WIDTH = 5;
+    private static final int FGCOLOR_MASK = 0xf;
+    public static final int FGCOLOR = FGCOLOR_MASK << FGCOLOR_OFF;
 
-    private final static int HIDDEN_OFF = FGCOLOR_OFF + FGCOLOR_WIDTH;
-    private final static int HIDDEN_WIDTH = 1;
-    public final static int HIDDEN = 0x1 << HIDDEN_OFF;
+    private static final int HIDDEN_OFF = FGCOLOR_OFF + FGCOLOR_WIDTH;
+    private static final int HIDDEN_WIDTH = 1;
+    public static final int HIDDEN = 0x1 << HIDDEN_OFF;
 
-    private final static int REVERSE_OFF = HIDDEN_OFF + HIDDEN_WIDTH;
-    private final static int REVERSE_WIDTH = 1;
-    public final static int REVERSE = 0x1 << REVERSE_OFF;
+    private static final int REVERSE_OFF = HIDDEN_OFF + HIDDEN_WIDTH;
+    private static final int REVERSE_WIDTH = 1;
+    public static final int REVERSE = 0x1 << REVERSE_OFF;
 
-    private final static int BLINK_OFF = REVERSE_OFF + REVERSE_WIDTH;
-    private final static int BLINK_WIDTH = 1;
-    public final static int BLINK = 0x1 << BLINK_OFF;
+    private static final int BLINK_OFF = REVERSE_OFF + REVERSE_WIDTH;
+    private static final int BLINK_WIDTH = 1;
+    public static final int BLINK = 0x1 << BLINK_OFF;
 
-    private final static int UNDERSCORE_OFF = BLINK_OFF + BLINK_WIDTH;
-    private final static int UNDERSCORE_WIDTH = 1;
-    public final static int UNDERSCORE = 0x1 << UNDERSCORE_OFF;
+    private static final int UNDERSCORE_OFF = BLINK_OFF + BLINK_WIDTH;
+    private static final int UNDERSCORE_WIDTH = 1;
+    public static final int UNDERSCORE = 0x1 << UNDERSCORE_OFF;
 
-    private final static int BRIGHT_OFF = UNDERSCORE_OFF + UNDERSCORE_WIDTH;
-    private final static int BRIGHT_WIDTH = 1;
-    public final static int BRIGHT = 0x1 << BRIGHT_OFF;
+    private static final int BRIGHT_OFF = UNDERSCORE_OFF + UNDERSCORE_WIDTH;
+    private static final int BRIGHT_WIDTH = 1;
+    public static final int BRIGHT = 0x1 << BRIGHT_OFF;
 
-    private final static int DIM_OFF = BRIGHT_OFF + BRIGHT_WIDTH;
-    private final static int DIM_WIDTH = 1;
-    public final static int DIM = 0x1 << DIM_OFF;
+    private static final int DIM_OFF = BRIGHT_OFF + BRIGHT_WIDTH;
+    private static final int DIM_WIDTH = 1;
+    public static final int DIM = 0x1 << DIM_OFF;
 
-    private final static int ACTIVE_OFF = DIM_OFF + DIM_WIDTH;
-    private final static int ACTIVE_WIDTH = 1;
-    public final static int ACTIVE = 0x1 << ACTIVE_OFF;
+    private static final int ACTIVE_OFF = DIM_OFF + DIM_WIDTH;
+    private static final int ACTIVE_WIDTH = 1;
+    public static final int ACTIVE = 0x1 << ACTIVE_OFF;
 
     // Since an attr value of 0 means render using default attributes
     // We need a value that signifies that no attribute has been set.
     // Can't use the highest (sign) bit since Java has no unsigned and
     // we get complaints from the compiler.
-    public final static int UNSET = 0x40000000;
+    public static final int UNSET = 0x40000000;
 
 
 

@@ -59,7 +59,7 @@ import org.openide.util.NbBundle.Messages;
 @Messages("TXT_CUSTOM=Custom...")
 public class BuildActionsCustomizer extends javax.swing.JPanel {
 
-    private final static String CUSTOM_ACTION = Bundle.TXT_CUSTOM();
+    private static final String CUSTOM_ACTION = Bundle.TXT_CUSTOM();
     private static final String CARD_NOSELECT = "empty"; //NOI18N
     private static final String CARD_DETAILS = "details"; //NOI18N
     private static final String CARD_DISABLED = "disabled"; //NOI18N
@@ -531,7 +531,7 @@ public class BuildActionsCustomizer extends javax.swing.JPanel {
             // try to insert at the same position:
             List<String> items = new ArrayList<>();
             for (int i = 1; i < availableActionsModel.getSize(); i++) {
-                items.add((String)availableActionsModel.getElementAt(i));
+                items.add(availableActionsModel.getElementAt(i));
             }
             items.add(action);
             Collections.sort(items);

@@ -66,6 +66,7 @@ java/java.editor/src/org/netbeans/modules/java/editor/resources/JavaExample
 platform/lib.uihandler/src/org/netbeans/lib/uihandler/pubKey
 maven.indexer/external/NOTICE-patched-indexer-core-6.0.0
 nbbuild/hudson/.hgmail-profiler
+nbbuild/jms-config/*
 nbbuild/l10n.patterns
 platform/o.n.core/test/unit/src/org/netbeans/core/modules/jars/localized-manifest/locmani/something.txt
 platform/openide.util.lookup/test/unit/src/org/openide/util/lookup/MetaInfServicesLookupTestRunnable.txt

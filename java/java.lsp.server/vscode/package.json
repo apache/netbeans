@@ -73,6 +73,11 @@
 					"when": "nbJavaLSReady"
 				},
 				{
+					"id": "cloud.resources",
+					"name": "Cloud",
+					"when": "nbJavaLSReady"
+				},
+				{
 					"id": "run-config",
 					"name": "Run Configuration",
 					"contextualTitle": "Run Configuration",
@@ -499,6 +504,23 @@
 				"command": "testing.runAll",
 				"title": "Run All Tests",
 				"category": "Test"
+			},
+      {
+				"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.DownloadWalletAction",
+				"title": "Add DB Connection"
+			},
+      {
+				"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.CreateAutonomousDBAction",
+				"title": "Create Autonomous Database"
+			},
+      {
+				"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.OpenServiceConsoleAction",
+				"title": "Open Service Console"
+      },
+			{
+				"command": "java.db.set.env",
+				"title": "Set Database Environment Variables",
+                                "category": "Database"
 			}
 		],
 		"keybindings": [
@@ -573,6 +595,18 @@
 				},
 				{
 					"command": "java.local.db.set.preferred.connection",
+					"when": "false"
+				},
+				{
+					"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.DownloadWalletAction",
+					"when": "false"
+				},
+				{
+					"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.CreateAutonomousDBAction",
+					"when": "false"
+				},
+				{
+					"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.OpenServiceConsoleAction",
 					"when": "false"
 				},
 				{
@@ -656,14 +690,25 @@
 					"when": "viewItem =~ /class:ddl.DBConnection/"
 				},
 				{
+					"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.DownloadWalletAction",
+					"when": "viewItem =~ /class:oracle.items.DatabaseItem/"
+				},
+				{
+					"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.OpenServiceConsoleAction",
+					"when": "viewItem =~ /class:oracle.items.DatabaseItem/"
+				},
+				{
+					"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.CreateAutonomousDBAction",
+					"when": "viewItem =~ /class:oracle.items.CompartmentItem/"
+				},
+				{
 					"command": "java.workspace.configureRunSettings",
 					"when": "view == run-config && viewItem == configureRunSettings",
 					"group": "inline@1"
 				}
 			]
 		},
-		
-		"netbeans.iconMapping" : [
+		"netbeans.iconMapping": [
 			{
 				"uriExpression": "nbres:/org/netbeans/modules/gradle/resources/gradle.png",
 				"codeicon": "project"
@@ -676,7 +721,6 @@
 				"uriExpression": "nbres:/org/netbeans/modules/maven/resources/jaricon.png",
 				"codeicon": "project"
 			},
-
 			{
 				"uriExpression": "nbres:/org/netbeans/modules/gradle/resources/libraries.png",
 				"codeicon": "settings-gear"
@@ -707,12 +751,16 @@
 			},
 			{
 				"uriExpression": "nbres:/org/netbeans/modules/nbcode/integration/resources/uidefaults/Tree.(open|closed)Icon",
-				"valueMatch": [ " [0-9]+([A-Z][A-z]+)?SourceRoot | Dependencies[A-Z]+ | OtherRoots | projectfiles | BootCPNode " ],
+				"valueMatch": [
+					" [0-9]+([A-Z][A-z]+)?SourceRoot | Dependencies[A-Z]+ | OtherRoots | projectfiles | BootCPNode "
+				],
 				"codeicon": "file-submodule"
 			},
 			{
 				"uriExpression": "nbres:/org/netbeans/modules/nbcode/integration/resources/uidefaults/Tree.(open|closed)Icon",
-				"valueMatch": [ " [0-9]+([A-z]+).(java|groovy|generated|resources) " ],
+				"valueMatch": [
+					" [0-9]+([A-z]+).(java|groovy|generated|resources) "
+				],
 				"codeicon": "file-submodule"
 			},
 			{
@@ -724,7 +772,6 @@
 				"codeicon": "vm"
 			}
 		],
-	
 		"jsonValidation": [
 			{
 				"fileMatch": "package.json",
@@ -732,8 +779,6 @@
 			}
 		]
 	},
-
-
 	"scripts": {
 		"vscode:prepublish": "npm run compile",
 		"compile": "tsc -p ./",

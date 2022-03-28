@@ -23,10 +23,10 @@ import java.io.OutputStream;
 import java.io.Writer;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
-import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
 import java.nio.charset.CoderResult;
 import java.nio.charset.CodingErrorAction;
+import java.nio.charset.StandardCharsets;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -45,7 +45,7 @@ class WriterOutputStream extends OutputStream {
 
     public WriterOutputStream(Writer out) {
         this.writer = out;
-        this.decoder = Charset.forName("UTF-8"). //NOI18N
+        this.decoder = StandardCharsets.UTF_8.
                 newDecoder().
                 onMalformedInput(CodingErrorAction.REPLACE).
                 onUnmappableCharacter(CodingErrorAction.REPLACE).

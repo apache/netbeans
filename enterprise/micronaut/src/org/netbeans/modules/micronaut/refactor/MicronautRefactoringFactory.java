@@ -139,7 +139,7 @@ public class MicronautRefactoringFactory implements RefactoringPluginFactory {
                                             ConfigurationMetadataSource source = group.getSources().get(info.className);
                                             if (source != null) {
                                                 for (ConfigurationMetadataProperty property : source.getProperties().values()) {
-                                                    String name = "set" + property.getName().replaceAll("-", "");
+                                                    String name = "set" + property.getName().replace("-", "");
                                                     if (name.equalsIgnoreCase(info.methodName)) {
                                                         for (FileObject configFile : configFiles) {
                                                             MicronautConfigUtilities.collectUsages(configFile, property.getId(), usage -> {
@@ -237,7 +237,7 @@ public class MicronautRefactoringFactory implements RefactoringPluginFactory {
             try {
                 DataObject dobj = DataObject.find(getParentFile());
                 if (dobj != null) {
-                    EditorCookie.Observable obs = (EditorCookie.Observable)dobj.getCookie(EditorCookie.Observable.class);
+                    EditorCookie.Observable obs = dobj.getCookie(EditorCookie.Observable.class);
                     if (obs != null && obs instanceof CloneableEditorSupport) {
                         CloneableEditorSupport supp = (CloneableEditorSupport)obs;
                         return new PositionBounds(supp.createPositionRef(startOffset, Position.Bias.Forward), supp.createPositionRef(Math.max(startOffset, endOffset), Position.Bias.Forward));

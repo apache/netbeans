@@ -45,7 +45,7 @@ import org.openide.util.Lookup;
 )
 public class DBschemaDataObject extends MultiDataObject {
   
-    transient protected SchemaElement schemaElement;
+    protected transient SchemaElement schemaElement;
     transient SchemaElementImpl schemaElementImpl;
 
     public DBschemaDataObject (FileObject pf, DBschemaDataLoader loader) throws DataObjectExistsException {

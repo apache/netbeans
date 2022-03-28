@@ -305,14 +305,14 @@ public class JavaCompletionCollector implements CompletionCollector {
             if (castType != null) {
                 try {
                     int castStartOffset = assignToVarOffset;
+                    TreePath tp = info.getTreeUtilities().pathFor(substitutionOffset);
                     if (castStartOffset < 0) {
-                        TreePath tp = info.getTreeUtilities().pathFor(substitutionOffset);
                         if (tp != null && tp.getLeaf().getKind() == Tree.Kind.MEMBER_SELECT) {
                             castStartOffset = (int)info.getTrees().getSourcePositions().getStartPosition(tp.getCompilationUnit(), tp.getLeaf());
                         }
                     }
                     StringBuilder castText = new StringBuilder();
-                    castText.append("((").append(Utilities.getTypeName(info, castType, false)).append(CodeStyle.getDefault(info.getDocument()).spaceAfterTypeCast() ? ") " : ")");
+                    castText.append("((").append(AutoImport.resolveImport(info, tp, castType)).append(CodeStyle.getDefault(info.getDocument()).spaceAfterTypeCast() ? ") " : ")");
                     int castEndOffset = findCastEndPosition(info.getTokenHierarchy().tokenSequence(JavaTokenId.language()), castStartOffset, substitutionOffset);
                     if (castEndOffset >= 0) {
                         castText.append(info.getText().subSequence(castStartOffset, castEndOffset)).append(")");
@@ -973,15 +973,15 @@ public class JavaCompletionCollector implements CompletionCollector {
             String filter = null;
             if (castType != null) {
                 try {
+                    TreePath tp = info.getTreeUtilities().pathFor(substitutionOffset);
                     int castStartOffset = assignToVarOffset;
                     if (castStartOffset < 0) {
-                        TreePath tp = info.getTreeUtilities().pathFor(substitutionOffset);
                         if (tp != null && tp.getLeaf().getKind() == Tree.Kind.MEMBER_SELECT) {
                             castStartOffset = (int)info.getTrees().getSourcePositions().getStartPosition(tp.getCompilationUnit(), tp.getLeaf());
                         }
                     }
                     StringBuilder castText = new StringBuilder();
-                    castText.append("((").append(Utilities.getTypeName(info, castType, false)).append(CodeStyle.getDefault(info.getDocument()).spaceAfterTypeCast() ? ") " : ")");
+                    castText.append("((").append(AutoImport.resolveImport(info, tp, castType)).append(CodeStyle.getDefault(info.getDocument()).spaceAfterTypeCast() ? ") " : ")");
                     int castEndOffset = findCastEndPosition(info.getTokenHierarchy().tokenSequence(JavaTokenId.language()), castStartOffset, substitutionOffset);
                     if (castEndOffset >= 0) {
                         castText.append(info.getText().subSequence(castStartOffset, castEndOffset)).append(")");

@@ -95,7 +95,7 @@ public final class LogManager {
     private static void initializeConsoleLogging () {
         // check whether we should log to console as well
         if (System.getProperty(LOG_TO_CONSOLE_PROPERTY) != null) {
-            logToConsole = new Boolean(System.getProperty(LOG_TO_CONSOLE_PROPERTY));
+            logToConsole = Boolean.parseBoolean(System.getProperty(LOG_TO_CONSOLE_PROPERTY));
         } else {
             logToConsole = DEFAULT_LOG_TO_CONSOLE;
         }

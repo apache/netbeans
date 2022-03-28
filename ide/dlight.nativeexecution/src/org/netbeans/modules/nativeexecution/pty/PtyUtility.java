@@ -26,7 +26,7 @@ import org.netbeans.modules.nativeexecution.api.util.HelperUtility;
  */
 public final class PtyUtility extends HelperUtility {
 
-    private final static PtyUtility instance = new PtyUtility();
+    private static final PtyUtility instance = new PtyUtility();
 
     private PtyUtility() {
         super("bin/nativeexecution/$osname-${platform}$_isa/pty"); // NOI18N

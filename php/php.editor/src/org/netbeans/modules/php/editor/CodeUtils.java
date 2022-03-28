@@ -51,6 +51,7 @@ import org.netbeans.modules.php.editor.parser.astnodes.FunctionName;
 import org.netbeans.modules.php.editor.parser.astnodes.GroupUseStatementPart;
 import org.netbeans.modules.php.editor.parser.astnodes.Identifier;
 import org.netbeans.modules.php.editor.parser.astnodes.InfixExpression;
+import org.netbeans.modules.php.editor.parser.astnodes.IntersectionType;
 import org.netbeans.modules.php.editor.parser.astnodes.MethodDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.MethodInvocation;
 import org.netbeans.modules.php.editor.parser.astnodes.NamespaceName;
@@ -272,7 +273,8 @@ public final class CodeUtils {
      *
      * @param typeName The type name
      * @return The type name. If it is a nullable type, the name is returned
-     * with "?". If it's union type, type names separated by "|" are returned
+     * with "?". If it's a union type, type names separated by "|" are returned.
+     * If it's an intersection type, type names separated by "&" are returned.
      */
     @CheckForNull
     public static String extractQualifiedName(Expression typeName) {
@@ -290,6 +292,16 @@ public final class CodeUtils {
             for (Expression type : unionType.getTypes()) {
                 if (sb.length() > 0) {
                     sb.append(Type.SEPARATOR);
+                }
+                sb.append(extractQualifiedName(type));
+            }
+            return sb.toString();
+        } else if (typeName instanceof IntersectionType) {
+            IntersectionType intersectionType = (IntersectionType) typeName;
+            StringBuilder sb = new StringBuilder();
+            for (Expression type : intersectionType.getTypes()) {
+                if (sb.length() > 0) {
+                    sb.append(Type.SEPARATOR_INTERSECTION);
                 }
                 sb.append(extractQualifiedName(type));
             }

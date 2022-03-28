@@ -214,7 +214,7 @@ public abstract class PUCompletor {
                 public void run(CompilationController cc) throws Exception {
                     cc.toPhase(Phase.ELEMENTS_RESOLVED);
                     Project project = FileOwnerQuery.getOwner(fo);
-                    EntityClassScopeProvider provider = (EntityClassScopeProvider) project.getLookup().lookup(EntityClassScopeProvider.class);
+                    EntityClassScopeProvider provider = project.getLookup().lookup(EntityClassScopeProvider.class);
                     EntityClassScope ecs = null;
                     Entity[] entities = null;
                     if (provider != null) {

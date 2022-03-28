@@ -38,7 +38,7 @@ import javax.swing.border.Border;
  *
  * @author S. Aubrecht
  */
-final public  class ListRendererPanel extends JPanel {
+public final  class ListRendererPanel extends JPanel {
 
     private final ListNode node;
 

@@ -80,7 +80,7 @@ public final class RequestPrivilegesTask implements Computable<RequestPrivileges
 
         final Collection<String> requestedPrivileges;
         final boolean askForPassword;
-        final private String privilegesString;
+        private final String privilegesString;
         final SPSCommonImpl support;
 
         public RequestPrivilegesTaskParams(

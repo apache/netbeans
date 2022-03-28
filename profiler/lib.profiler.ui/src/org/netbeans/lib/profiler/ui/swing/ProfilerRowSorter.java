@@ -188,7 +188,7 @@ class ProfilerRowSorter extends TableRowSorter {
     
     void addRowFilter(RowFilter filter) {
         if (filters == null) filters = new HashSet();
-        if (filters.contains(filter)) filters.remove(filter);
+        filters.remove(filter);
         filters.add(filter);
         refreshRowFilter();
     }

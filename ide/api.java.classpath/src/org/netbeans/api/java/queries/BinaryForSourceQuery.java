@@ -133,7 +133,7 @@ public final class BinaryForSourceQuery {
      * of this class.
      * @since 1.58
      */
-    public static abstract class Result2 implements Result {
+    public abstract static class Result2 implements Result {
         Result2() {
         }
 

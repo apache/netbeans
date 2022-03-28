@@ -92,8 +92,9 @@ public abstract class PHPFormatterTestBase extends PHPTestBase {
         }
         options.put(FmtOptions.CONTINUATION_INDENT_SIZE, 4);
         Preferences prefs = CodeStylePreferences.get(doc).getPreferences();
-        for (String option : options.keySet()) {
-            Object value = options.get(option);
+        for (Map.Entry<String, Object> entry : options.entrySet()) {
+            String option = entry.getKey();
+            Object value = entry.getValue();
             if (value instanceof Integer) {
                 prefs.putInt(option, ((Integer) value).intValue());
             } else if (value instanceof String) {
@@ -175,8 +176,9 @@ public abstract class PHPFormatterTestBase extends PHPTestBase {
         setupDocumentIndentation(doc, indentPrefs);
 
         Preferences prefs = CodeStylePreferences.get(doc).getPreferences();
-        for (String option : options.keySet()) {
-            Object value = options.get(option);
+        for (Map.Entry<String, Object> entry : options.entrySet()) {
+            String option = entry.getKey();
+            Object value = entry.getValue();
             if (value instanceof Integer) {
                 prefs.putInt(option, ((Integer) value).intValue());
             } else if (value instanceof String) {

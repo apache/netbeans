@@ -304,6 +304,7 @@ meth public abstract boolean getMiscOnly()
 meth public abstract java.util.Map<java.lang.String,java.lang.Object> getExt()
 meth public abstract java.util.Map<java.lang.String,java.lang.Object> getInfo()
 meth public abstract java.util.Set<java.lang.String> getProblems()
+meth public abstract java.util.Set<org.netbeans.modules.gradle.api.NbProjectInfo.Report> getReports()
 
 CLSS public abstract interface org.netbeans.modules.gradle.api.execute.ActionMapping
 fld public final static java.lang.String CUSTOM_PREFIX = "custom-"

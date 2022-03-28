@@ -18,7 +18,9 @@
  */
 package org.netbeans.modules.gradle.loaders;
 
+import java.io.File;
 import java.io.Serializable;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -27,10 +29,13 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.logging.Level;
 import static java.util.logging.Level.FINE;
 import static java.util.logging.Level.INFO;
 import static java.util.logging.Level.WARNING;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.swing.SwingUtilities;
 import org.gradle.tooling.BuildAction;
 import org.gradle.tooling.BuildActionExecuter;
@@ -45,6 +50,7 @@ import org.gradle.tooling.ProjectConnection;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.modules.gradle.GradleProject;
 import org.netbeans.modules.gradle.GradleProjectErrorNotifications;
+import org.netbeans.modules.gradle.GradleReport;
 import static org.netbeans.modules.gradle.loaders.GradleDaemon.GRADLE_LOADER_RP;
 import org.netbeans.modules.gradle.api.GradleBaseProject;
 import org.netbeans.modules.gradle.api.NbGradleProject;
@@ -53,6 +59,7 @@ import static org.netbeans.modules.gradle.api.NbGradleProject.Quality.EVALUATED;
 import static org.netbeans.modules.gradle.api.NbGradleProject.Quality.FULL_ONLINE;
 import static org.netbeans.modules.gradle.api.NbGradleProject.Quality.SIMPLE;
 import org.netbeans.modules.gradle.api.NbProjectInfo;
+import org.netbeans.modules.gradle.api.NbProjectInfo.Report;
 import org.netbeans.modules.gradle.api.execute.GradleCommandLine;
 import org.netbeans.modules.gradle.cache.ProjectInfoDiskCache;
 import org.netbeans.modules.gradle.spi.GradleSettings;
@@ -152,7 +159,7 @@ public class LegacyProjectLoader extends AbstractProjectLoader {
                         GradleProjectErrorNotifications.bulletedList(info.getProblems()));                
             }
             if (!info.hasException()) {
-                if (!info.getProblems().isEmpty()) {
+                if (!info.getProblems().isEmpty() || !info.getReports().isEmpty()) {
                     // If we do not have exception, but seen some problems the we mark the quality as SIMPLE
                     quality = SIMPLE;
                 } else {
@@ -160,21 +167,29 @@ public class LegacyProjectLoader extends AbstractProjectLoader {
                     quality = onlineResult.get() ? Quality.FULL_ONLINE : Quality.FULL;
                 }
             } else {
-                if (info.getProblems().isEmpty()) {
+                if (info.getProblems().isEmpty() && info.getReports().isEmpty()) {
                     String problem = info.getGradleException();
                     String[] lines = problem.split("\n");
                     LOG.log(INFO, "Failed to retrieve project information for: {0}\nReason: {1}", new Object[] {base.getProjectDir(), problem}); //NOI18N
                     errors.openNotification(TIT_LOAD_FAILED(base.getProjectDir().getName()), lines[0], problem);
                     return ctx.previous.invalidate(problem);
                 } else {
-                    return ctx.previous.invalidate(info.getProblems().toArray(new String[0]));
+                    List<GradleReport> reps = new ArrayList<>();
+                    for (Report r : info.getReports()) {
+                        reps.add(copyReport(r));
+                    }
+                    File f = ctx.project.getGradleFiles().getBuildScript();
+                    for (String s : info.getProblems()) {
+                        reps.add(GradleReport.simple(f == null ? null : f.toPath(), s));
+                    }
+                    return ctx.previous.invalidate(info.getProblems().toArray(new GradleReport[0]));
                 }
             }
         } catch (GradleConnectionException | IllegalStateException ex) {
             LOG.log(FINE, "Failed to retrieve project information for: " + base.getProjectDir(), ex);
-            List<String> problems = exceptionsToProblems(ex);
+            List<GradleReport> problems = exceptionsToProblems(ctx.project.getGradleFiles().getBuildScript(), ex);
             errors.openNotification(TIT_LOAD_FAILED(base.getProjectDir()), ex.getMessage(), GradleProjectErrorNotifications.bulletedList(problems));
-            return ctx.previous.invalidate(problems.toArray(new String[0]));
+            return ctx.previous.invalidate(problems.toArray(new GradleReport[0]));
         } finally {
             loadedProjects.incrementAndGet();
         }
@@ -185,7 +200,7 @@ public class LegacyProjectLoader extends AbstractProjectLoader {
             LOG.log(FINE, "Load happened on AWT event dispatcher", new RuntimeException());
         }
         ProjectInfoDiskCache.QualifiedProjectInfo qinfo = new ProjectInfoDiskCache.QualifiedProjectInfo(quality, info);
-        GradleProject ret = createGradleProject(qinfo);
+        GradleProject ret = createGradleProject(ctx.project.getGradleFiles(), qinfo);
         GradleArtifactStore.getDefault().processProject(ret);
         if (info.getMiscOnly()) {
             ret = ctx.previous;
@@ -195,11 +210,27 @@ public class LegacyProjectLoader extends AbstractProjectLoader {
         return ret;
     }
     
-    private static List<String> causesToProblems(Throwable ex) {
-        List<String> problems = new ArrayList<>();
+    static GradleReport copyReport(Report orig) {
+        String rawLoc = orig.getScriptLocation();
+        String loc = null;
+        
+        if (rawLoc != null) {
+        // strip potential script displayname garbage.
+            Matcher m = FILE_PATH_FROM_LOCATION.matcher(rawLoc);
+            if (m.matches()) {
+                loc = m.group(1);
+            }
+        }
+        
+        return new GradleReport(orig.getErrorClass(), loc, orig.getLineNumber(), orig.getMessage(), 
+                orig.getCause() == null ? null : copyReport(orig.getCause()));
+    }
+    
+    private static List<GradleReport> causesToProblems(Throwable ex) {
+        List<GradleReport> problems = new ArrayList<>();
         Throwable th = ex;
         while (th != null) {
-            problems.add(th.getMessage());
+            problems.add(GradleReport.simple(null, th.getMessage()));
         }
         return problems;
     }
@@ -223,52 +254,83 @@ public class LegacyProjectLoader extends AbstractProjectLoader {
      * 
      * The rest of messages is coalesced into one text. Location, if present, is appended at the end.
      */
-    private static List<String> exceptionsToProblems(Throwable t) {
+    private static List<GradleReport> exceptionsToProblems(File script, Throwable t) {
         if (!(t instanceof GradleConnectionException)) {
             return causesToProblems(t);
         }
-        // skip Connection exception no useful info there.
-        Throwable cause = t.getCause();
-        if (cause == null || cause == t) {
-            // no cause - use exception message.
-            return Collections.singletonList(t.getMessage());
-        }
-        String msg = "";
-        String appendLocation = null;
-        // LocationAwareException is not part of APIs:
-        if (cause.getClass().getName().endsWith("LocationAwareException")) { // NOI18N
-            Throwable next = cause.getCause();
-            appendLocation = cause.getMessage();
-            if (next != null) {
-                String m = next.getMessage();
-                int i = appendLocation.indexOf(m);
-                if (i >= 0) {
-                    // the LocationAwareException may include the immediately nested exception's message.
-                    appendLocation = appendLocation.substring(0, i).trim();
-                }
+        return Collections.singletonList(createReport(t.getCause()));
+    }
+    
+    /**
+     * Accessor for the 'location' property on LocationAwareException
+     */
+    private static Method locationAccessor;
+
+    /**
+     * Accessor for the 'lineNumber' property on LocationAwareException
+     */
+    private static Method lineNumberAccessor;
+    
+    private static String getLocation(Throwable locationAwareEx) {
+        try {
+            if (locationAccessor == null) {
+                locationAccessor = locationAwareEx.getClass().getMethod("getLocation"); // NOI18N
             }
-            cause = next;
+            return (String)locationAccessor.invoke(locationAwareEx);
+        } catch (ReflectiveOperationException ex) {
+            LOG.log(Level.FINE,"Error getting location", ex);
+            return null;
         }
-        while (cause != null) {
-            if (!msg.isEmpty()) {
-                msg = Bundle.FMT_AppendMessage(msg, cause.getMessage());
-            } else {
-                msg = cause.getMessage();
+    }
+
+    private static int getLineNumber(Throwable locationAwareEx) {
+        try {
+            if (lineNumberAccessor == null) {
+                lineNumberAccessor = locationAwareEx.getClass().getMethod("getLineNumber"); // NOI18N
             }
-            Throwable next = cause.getCause();
-            if (next == cause) {
-                break;
-            }
-            cause = next;
+            Integer i = (Integer)lineNumberAccessor.invoke(locationAwareEx);
+            return i != null ? i : -1;
+        } catch (ReflectiveOperationException ex) {
+            LOG.log(Level.FINE,"Error getting line number", ex);
+            return -1;
         }
-        if (appendLocation != null) {
-            // if the message itself is multi-line, add the location info on a separate line:
-            if (msg.contains("\n")) { // NOI18N
-                msg = msg + "\n"; // NOI18N
-            }
-            msg = Bundle.FMT_MessageWithLocation(msg, appendLocation);
+    }
+
+    /**
+     * LocationAwareException uses ScriptSource.getDisplayName() in its location; so the filename is prepended by 'build file', usually
+     * capitalized. Who knows what other labels the resources gradle uses can have ? Add newly discovered ones to the regexp.
+     */
+    private static final Pattern FILE_PATH_FROM_LOCATION = Pattern.compile("build file '(.*)'(?: line:.*)$", Pattern.CASE_INSENSITIVE);
+
+    /**
+     * Converts exception hierarchy into chain of {@link GradleReports}. Each LocationAwareException's data
+     * are used to annotated its nested cause's message.
+     * @param e the throwable
+     * @return head of {@link GradleRepor} chain.
+     */
+    private static GradleReport createReport(Throwable e) {
+        if (e == null) {
+            return null;
         }
-        return Collections.singletonList(msg);
+
+        Throwable reported = e;
+        String loc = null;
+        int line = -1;
+        GradleReport nested = null;
+        
+        if (e.getClass().getName().endsWith("LocationAwareException")) { // NOI18N
+            String rawLoc = getLocation(e);
+            Matcher m = FILE_PATH_FROM_LOCATION.matcher(rawLoc);
+            loc = m.matches() ? m.group(1) : rawLoc;
+            line = getLineNumber(e);
+            reported = e.getCause();
+        } else {
+            reported = e;
+        }
+        if (reported.getCause() != null && reported.getCause() != reported) {
+            nested = createReport(reported.getCause());
+        }
+        return new GradleReport(reported.getClass().getName(), loc, line, reported.getMessage(), nested);
     }
 
     private static BuildActionExecuter<NbProjectInfo> createInfoAction(ProjectConnection pconn, GradleCommandLine cmd, CancellationToken token, ProgressListener pl) {

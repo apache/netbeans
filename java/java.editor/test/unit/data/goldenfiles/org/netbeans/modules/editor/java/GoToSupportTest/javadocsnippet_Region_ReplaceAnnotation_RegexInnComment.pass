@@ -1,0 +1,8 @@
+<html><body><font size='+0'><b><a href='*0'>test.&#x200B;Test</a></b></font><pre>public void <b>testRegion_ReplaceAnnotation_RegexInnComment</b>()</pre><p><pre><code> class HelloWorld {
+     public static void main(String... args) {
+         System.out.println("...replace..." + "Good morning");  //"...replace..."
+         System.out.println("Hello World!" + "...replace..."); 
+ }
+ }
+ 
+</code></pre><p>

@@ -1,0 +1,11 @@
+<html><body><font size='+0'><b><a href='*0'>test.&#x200B;Test</a></b></font><pre>public void <b>errorsInUnpairedRegion</b>()</pre><p><pre><code><span style="color:red;">error: snippet markup: unpaired region <b><i>highlight anonymous</b></i></span>
+</code></pre>
+ 
+ <pre><code><span style="color:red;">error: snippet markup: unpaired region <b><i>highlight rg1</b></i></span>
+</code></pre>
+ 
+ <pre><code><span style="color:red;">error: snippet markup: unpaired region <b><i>highlight rg2</b></i></span>
+</code></pre>
+ 
+ <pre><code><span style="color:red;">error: snippet markup: unpaired region <b><i>highlight rg1</b></i></span>
+</code></pre><p>

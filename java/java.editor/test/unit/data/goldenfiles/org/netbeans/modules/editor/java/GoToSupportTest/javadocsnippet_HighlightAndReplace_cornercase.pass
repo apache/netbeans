@@ -1,0 +1,5 @@
+<html><body><font size='+0'><b><a href='*0'>test.&#x200B;Test</a></b></font><pre>public void <b>testHighlightAndReplace_cornercase</b>()</pre><p><pre><code>  public static void \bmain\b(String... args) {	
+		 S<b>y</b><b>s</b>replace<b>.</b><b>o</b><b>u</b><b>t</b>.println("tests"); 	
+ }
+ 
+</code></pre><p>

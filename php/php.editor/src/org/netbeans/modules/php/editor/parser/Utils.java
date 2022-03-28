@@ -201,6 +201,9 @@ public final class Utils {
             case ASTPHP5Symbols.T_END_NOWDOC:
                 name = "T_END_NOWDOC"; //NOI18N
                 break;
+            case ASTPHP5Symbols.T_ENUM:
+                name = "T_ENUM"; //NOI18N
+                break;
             case ASTPHP5Symbols.T_EQUAL:
                 name = "T_EQUAL"; //NOI18N
                 break;

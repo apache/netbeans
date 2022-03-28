@@ -1359,6 +1359,15 @@ public class ASTPHP5ParserTest extends ParserTestBase {
         performTest("parser/php81/pureIntersectionTypesWithUnionTypeError_03");
     }
 
+    public void testEnumerations_01() throws Exception {
+        performTest("parser/php81/enumerations_01");
+    }
+
+    public void testEnumAsTypeName() throws Exception {
+        // We can use "enum" as a type name
+        performTest("parser/php81/enumAsTypeName");
+    }
+
     @Override
     protected String getTestResult(String filename) throws Exception {
         // the same <Comment /> is shown twice becase the scanner is used twice

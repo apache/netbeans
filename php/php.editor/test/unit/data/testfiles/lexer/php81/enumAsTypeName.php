@@ -1,3 +1,4 @@
+<?php
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -16,28 +17,20 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.php.editor.lexer;
 
-public class PHP81FeaturesTest extends PHPLexerTestBase {
+class Enum {
 
-    public PHP81FeaturesTest(String testName) {
-        super(testName);
+    private int $enum;
+    private static string $enum;
+    public const ENUM = "enum";
+
+    public function enum() {
     }
 
-    public void testNeverType_01() throws Exception {
-        performTest("lexer/php81/neverType_01");
+    public static function enum() {
     }
-
-    public void testReadonlyProperties_01() throws Exception {
-        performTest("lexer/php81/readonlyProperties_01");
-    }
-
-    public void testEnumerations_01() throws Exception {
-        performTest("lexer/php81/enumerations_01");
-    }
-
-    public void testEnumAsTypeName() throws Exception {
-        performTest("lexer/php81/enumAsTypeName");
-    }
-
 }
+
+trait Enum {}
+
+interface Enum {}

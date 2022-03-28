@@ -209,6 +209,10 @@ parser code {:
             attributedStatement = ConstantDeclaration.create((ConstantDeclaration) statement, attributes);
         } else if (statement instanceof MethodDeclaration) {
             attributedStatement = MethodDeclaration.create((MethodDeclaration) statement, attributes);
+        } else if (statement instanceof EnumDeclaration) {
+            attributedStatement = EnumDeclaration.create((EnumDeclaration) statement, attributes);
+        } else if (statement instanceof CaseDeclaration) {
+            attributedStatement = CaseDeclaration.create((CaseDeclaration) statement, attributes);
         } else {
             assert false;
         }
@@ -283,7 +287,7 @@ parser code {:
  * terminals
  *
  * To keep existing values(see: ASTPHP5Symbols), add new one to end.
- * If the values changes, it's incompatible.
+ * If the values are changed, it's incompatible.
  */
 
 terminal String T_EXIT;
@@ -413,6 +417,7 @@ terminal T_COALESCE_EQUAL;
 terminal T_ATTRIBUTE;
 terminal String T_READONLY;
 terminal T_AMPERSAND_NOT_FOLLOWED_BY_VAR_OR_VARARG; /* & */
+terminal T_ENUM; /* PHP 8.1 */
 
 /* Non terminals */
 
@@ -616,6 +621,10 @@ non terminal Expression static_constant_array_access;
 non terminal Expression static_class_constant_array_access;
 non terminal Expression static_array_creation;
 non terminal VariableBase base_variable_with_function_calls;
+
+non terminal Expression enum_backing_type;
+non terminal Statement enum_case;
+non terminal Expression enum_case_expr;
 
 non terminal List class_name_list;
 /*
@@ -1892,6 +1901,16 @@ T_CURLY_OPEN:blockStart trait_statement_list:statementList T_CURLY_CLOSE:blockEn
     TraitDeclaration traitDeclaration = new TraitDeclaration(startleft, blockEndright, traitId, block);
     RESULT = traitDeclaration;
 :}
+
+|
+T_ENUM:start T_STRING:enumName enum_backing_type:type implements_list:interfaces
+T_CURLY_OPEN:blockStart class_statement_list:statementList T_CURLY_CLOSE:blockEnd
+{:
+    Identifier name = new Identifier(enumNameleft, enumNameright, enumName);
+    Block block = new Block(blockStartleft, blockEndright, statementList);
+    EnumDeclaration enumDeclaration = new EnumDeclaration(startleft, blockEndright, name, type, interfaces, block);
+    RESULT = enumDeclaration;
+:}
 ;
 
 interface_statement_list ::=
@@ -2830,6 +2849,42 @@ method_body:body
     FunctionDeclaration functionDeclaration = new FunctionDeclaration(startleft, bodyright, functionId, paramList, returnType, body, isReference.booleanValue());
     MethodDeclaration methodDeclaration = new MethodDeclaration(methodStart, bodyright, modifier.intValue(), functionDeclaration, true);
     RESULT = methodDeclaration;
+:}
+
+| enum_case:e
+{:
+    RESULT = e;
+:}
+;
+
+enum_backing_type ::=
+/* empty */
+{:
+    RESULT = null;
+:}
+
+| T_NEKUDOTAIM:e type_expr:type
+{:
+    RESULT = type;
+:}
+;
+
+enum_case ::=
+T_CASE:s identifier:name enum_case_expr:expr T_SEMICOLON:end
+{:
+    RESULT = new CaseDeclaration(sleft, endright, name, expr);
+:}
+;
+
+enum_case_expr ::=
+/* empty */
+{:
+    RESULT = null;
+:}
+
+| T_EQUAL:e expr:expr
+{:
+    RESULT = expr;
 :}
 ;
 

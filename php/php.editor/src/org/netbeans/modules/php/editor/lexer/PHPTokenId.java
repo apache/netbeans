@@ -40,7 +40,7 @@ import org.netbeans.spi.lexer.LexerRestartInfo;
  */
 public enum PHPTokenId implements TokenId {
 
-    T_INLINE_HTML(null, "php"),
+    T_INLINE_HTML(null, "php"), // NOI18N
     PHP_OPENTAG(null, "phpopenclose"), //NOI18N
     T_OPEN_TAG_WITH_ECHO(null, "phpopenclose"),
     PHP_CLOSETAG(null, "phpopenclose"), //NOI18N
@@ -70,6 +70,7 @@ public enum PHPTokenId implements TokenId {
     PHP_EMPTY(null, "keyword"), //NOI18N
     PHP_CLASS("class", "keyword"), //NOI18N
     PHP_TRAIT("trait", "keyword"), //NOI18N
+    PHP_ENUM("enum", "keyword"), //NOI18N PHP 8.1
     PHP_FOR("for", "keyword"), //NOI18N
     PHP_STRING(null, "identifier"), //NOI18N
     PHP_AS(null, "keyword"), //NOI18N

@@ -959,21 +959,7 @@ public class JavacParser extends Parser {
                 sourceLevel,
                 cpInfo,
                 flags.contains(ConfigFlags.MODULE_INFO));
-        String useRelease;
-        if (sourceLevel != null && !com.sun.tools.javac.code.Source.lookup(sourceLevel).equals(validatedSourceLevel)) {
-            String modernSourceLevel = sourceLevel.startsWith("1.") ? sourceLevel.substring(2) : sourceLevel; // NOI18N
-            try {
-                int optimalJdkApi = Integer.parseInt(modernSourceLevel);
-                if (optimalJdkApi < 7) {
-                    optimalJdkApi = 7;
-                }
-                useRelease = "" + optimalJdkApi;
-            } catch (NumberFormatException numberFormatException) {
-                useRelease = null;
-            }
-        } else {
-            useRelease = null;
-        }
+        String useRelease = useRelease(sourceLevel, validatedSourceLevel);
         if (lintOptions.length() > 0) {
             options.addAll(Arrays.asList(lintOptions.split(" ")));
         }
@@ -1097,6 +1083,23 @@ public class JavacParser extends Parser {
         NBMemberEnter.preRegister(context, backgroundCompilation);
         TIME_LOGGER.log(Level.FINE, "JavaC", context);
         return task;
+    }
+
+    private static String useRelease(final String requestedSource, com.sun.tools.javac.code.Source validatedSourceLevel) {
+        if (requestedSource == null || validatedSourceLevel == null) {
+            return null;
+        }
+        com.sun.tools.javac.code.Source sourceLevel = com.sun.tools.javac.code.Source.lookup(requestedSource);
+        if (sourceLevel == null) {
+            return null;
+        }
+        if (validatedSourceLevel.equals(sourceLevel)) {
+            return null;
+        }
+        if (sourceLevel.compareTo(com.sun.tools.javac.code.Source.JDK7) <= 0) {
+            sourceLevel = com.sun.tools.javac.code.Source.JDK7;
+        }
+        return sourceLevel.isSupported() ? sourceLevel.requiredTarget().multiReleaseValue() : null;
     }
 
     /*test*/

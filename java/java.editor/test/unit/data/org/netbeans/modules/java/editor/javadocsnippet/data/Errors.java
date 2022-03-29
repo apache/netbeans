@@ -231,4 +231,48 @@ public class Test {
      */
     public void errorsInNoRegionToEnd(){}
     
+    /**
+    *
+    * {@snippet file=""}
+    * {@snippet class=""}
+    * {@snippet file="" class=""}
+    * {@snippet file="" file=""}
+    */
+    public void errorFileEmpty() {}
+
+    /**
+    *
+    * {@snippet file="HiWorld.java"}
+    * {@snippet class="HiWorld"}
+    * {@snippet file="HiWorld.java" class="HiWorld"}
+    * {@snippet file="HiWorld.java" file="HiWorld.java"}
+    */
+    public void errorFileInvalid() {}
+
+    /**
+    *
+    * {@snippet file="HelloWorld.java"}
+    * {@snippet class="HelloWorld"}
+    * {@snippet file="HiWorld.java" class="HelloWorld"}
+    * {@snippet file="HelloWorld.java" file="HiWorld.java"}
+    * {@snippet file="" file="HelloWorld.java"}
+    */
+    public void externalSnippetFile() {}
+
+    /**
+    *
+    * {@snippet file="HelloWorld.java" region="test"}
+    * {@snippet class="HelloWorld" region="test"}
+    */
+    public void errorRegionInvalid() {}
+
+    /**
+    *
+    * {@snippet file="HelloWorld.java" region="example"}
+    * {@snippet class="HelloWorld" region=""}
+    * {@snippet class="HelloWorld" region="example"}
+    * {@snippet class="HelloWorld" region="region1"}
+    * 
+    */
+    public void testRegionValid() {}
 }

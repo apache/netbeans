@@ -1354,7 +1354,9 @@ public class ElementJavadoc {
                     if(isAttrPresent(att) && text==null) {
                         fileName = ((AttributeTree)att).getValue().get(0).toString();
                         text = extractContent(docPath, att, errorList, fileName);
-                    } else error = "error: snippet markup: File invalid";
+                    } else {
+                        error = "error: snippet markup: File invalid";
+                    }
                     isExternalSnippet = true;
                     break;
                 case "class":
@@ -1362,7 +1364,9 @@ public class ElementJavadoc {
                         fileName = ((AttributeTree)att).getValue().get(0).toString() + ".java";
                         text = extractContent(docPath, att, errorList, fileName);
                         lang="java";
-                    } else error = "error: snippet markup: File invalid";
+                    } else {
+                        error = "error: snippet markup: File invalid";
+                    }
                     isExternalSnippet = true;
                     break;
                 case "region":

@@ -62,10 +62,10 @@ public class DBSetEnvCommand extends CodeActionsProvider {
         }
         DatabaseConnection conn = ConnectionManager.getDefault().getPreferredConnection(true);
         Map<String, String> props = new HashMap<>();
-        props.put("DATASOURCE_DEFAULT_URL", conn.getDatabaseURL()); //NOI18N
-        props.put("DATASOURCE_DEFAULT_USERNAME", conn.getUser()); //NOI18N
-        props.put("DATASOURCE_DEFAULT_PASSWORD", conn.getPassword()); //NOI18N
-        props.put("DATASOURCE_DEFAULT_DRIVER_CLASS_NAME", conn.getDriverClass()); //NOI18N
+        props.put("DATASOURCES_DEFAULT_URL", conn.getDatabaseURL()); //NOI18N
+        props.put("DATASOURCES_DEFAULT_USERNAME", conn.getUser()); //NOI18N
+        props.put("DATASOURCES_DEFAULT_PASSWORD", conn.getPassword()); //NOI18N
+        props.put("DATASOURCES_DEFAULT_DRIVER_CLASS_NAME", conn.getDriverClass()); //NOI18N
         String values = props.entrySet().stream()
                 .map(e -> e.getKey() + "=" + e.getValue()) //NOI18N
                 .collect(Collectors.joining(",")); //NOI18N

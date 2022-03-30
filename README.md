@@ -27,14 +27,7 @@ Apache NetBeans is an open source development environment, tooling platform, and
 
 ### Build status
    * GitHub actions
-     * [![Linux](https://github.com/apache/netbeans/actions/workflows/linux.yml/badge.svg)](https://github.com/apache/netbeans/actions/workflows/linux.yml)
-     * [![Windows](https://github.com/apache/netbeans/actions/workflows/windows.yml/badge.svg)](https://github.com/apache/netbeans/actions/workflows/windows.yml)
-     * [![macOS](https://github.com/apache/netbeans/actions/workflows/macos.yml/badge.svg)](https://github.com/apache/netbeans/actions/workflows/macos.yml)
-     * [![Commit Validation](https://github.com/apache/netbeans/actions/workflows/cv.yml/badge.svg)](https://github.com/apache/netbeans/actions/workflows/cv.yml)
-     * [![Upstream JDK](https://github.com/apache/netbeans/actions/workflows/linux-upstream-jdk.yml/badge.svg)](https://github.com/apache/netbeans/actions/workflows/linux-upstream-jdk.yml)
-     * [![Ensure JDK-8](https://github.com/apache/netbeans/actions/workflows/ensure-jdk8.yml/badge.svg)](https://github.com/apache/netbeans/actions/workflows/ensure-jdk8.yml)
-     * [![PHP](https://github.com/apache/netbeans/actions/workflows/php.yml/badge.svg)](https://github.com/apache/netbeans/actions/workflows/php.yml)
-     * [![Javadoc](https://github.com/apache/netbeans/actions/workflows/javadoc.yml/badge.svg)](https://github.com/apache/netbeans/actions/workflows/javadoc.yml)
+     * [![Build Status](https://github.com/apache/netbeans/actions/workflows/main.yml/badge.svg)](https://github.com/apache/netbeans/actions/workflows/main.yml)
      * [![Profiler Lib Native Binaries](https://github.com/apache/netbeans/actions/workflows/native-binary-build-lib.profiler.yml/badge.svg)](https://github.com/apache/netbeans/actions/workflows/native-binary-build-lib.profiler.yml)
    * TravisCI:
      * [![Build Status](https://app.travis-ci.com/apache/netbeans.svg?branch=master)](https://app.travis-ci.com/apache/netbeans)

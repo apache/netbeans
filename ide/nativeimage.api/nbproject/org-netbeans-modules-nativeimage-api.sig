@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 0.1
+#Version 0.6
 
 CLSS public abstract interface java.io.Serializable
 
@@ -47,6 +47,63 @@ meth public void printStackTrace(java.io.PrintWriter)
 meth public void setStackTrace(java.lang.StackTraceElement[])
 supr java.lang.Object
 
+CLSS public final org.netbeans.modules.nativeimage.api.Location
+innr public final static Builder
+meth public int getColumn()
+meth public int getLine()
+meth public java.lang.String toString()
+meth public long getPC()
+meth public static org.netbeans.modules.nativeimage.api.Location$Builder newBuilder()
+supr java.lang.Object
+hfds column,line,pc
+
+CLSS public final static org.netbeans.modules.nativeimage.api.Location$Builder
+ outer org.netbeans.modules.nativeimage.api.Location
+meth public org.netbeans.modules.nativeimage.api.Location build()
+meth public void column(int)
+meth public void line(int)
+meth public void pc(long)
+supr java.lang.Object
+hfds column,line,pc
+
+CLSS public final org.netbeans.modules.nativeimage.api.SourceInfo
+innr public final static Builder
+meth public boolean equals(java.lang.Object)
+meth public int hashCode()
+meth public java.lang.String getFileName()
+meth public java.lang.String getFullName()
+meth public java.lang.String toString()
+meth public static org.netbeans.modules.nativeimage.api.SourceInfo$Builder newBuilder()
+supr java.lang.Object
+hfds fileName,fullName
+
+CLSS public final static org.netbeans.modules.nativeimage.api.SourceInfo$Builder
+ outer org.netbeans.modules.nativeimage.api.SourceInfo
+meth public org.netbeans.modules.nativeimage.api.SourceInfo build()
+meth public void fileName(java.lang.String)
+meth public void fullName(java.lang.String)
+supr java.lang.Object
+hfds fileName,fullName
+
+CLSS public final org.netbeans.modules.nativeimage.api.Symbol
+innr public final static Builder
+meth public java.lang.String getDescription()
+meth public java.lang.String getName()
+meth public java.lang.String getType()
+meth public java.lang.String toString()
+meth public static org.netbeans.modules.nativeimage.api.Symbol$Builder newBuilder()
+supr java.lang.Object
+hfds description,name,type
+
+CLSS public final static org.netbeans.modules.nativeimage.api.Symbol$Builder
+ outer org.netbeans.modules.nativeimage.api.Symbol
+meth public org.netbeans.modules.nativeimage.api.Symbol build()
+meth public void description(java.lang.String)
+meth public void name(java.lang.String)
+meth public void type(java.lang.String)
+supr java.lang.Object
+hfds description,name,type
+
 CLSS public org.netbeans.modules.nativeimage.api.debug.EvaluateException
 cons public init(java.lang.String)
 cons public init(java.lang.Throwable)
@@ -56,7 +113,16 @@ CLSS public final org.netbeans.modules.nativeimage.api.debug.NIDebugger
 innr public final static Builder
 meth public java.lang.String getVersion()
 meth public java.lang.String readMemory(java.lang.String,long,int)
+meth public java.util.List<org.netbeans.modules.nativeimage.api.Location> listLocations(java.lang.String)
+ anno 0 org.netbeans.api.annotations.common.CheckForNull()
+meth public java.util.Map<org.netbeans.modules.nativeimage.api.SourceInfo,java.util.List<org.netbeans.modules.nativeimage.api.Symbol>> listFunctions(java.lang.String,boolean,int)
+ anno 0 org.netbeans.api.annotations.common.CheckForNull()
+meth public java.util.Map<org.netbeans.modules.nativeimage.api.SourceInfo,java.util.List<org.netbeans.modules.nativeimage.api.Symbol>> listVariables(java.lang.String,boolean,int)
+ anno 0 org.netbeans.api.annotations.common.CheckForNull()
+meth public java.util.concurrent.CompletableFuture<java.lang.Void> attach(java.lang.String,long,java.lang.String,java.util.function.Consumer<org.netbeans.api.debugger.DebuggerEngine>)
 meth public java.util.concurrent.CompletableFuture<java.lang.Void> start(java.util.List<java.lang.String>,java.io.File,java.lang.String,java.lang.String,org.netbeans.api.extexecution.ExecutionDescriptor,java.util.function.Consumer<org.netbeans.api.debugger.DebuggerEngine>)
+ anno 0 java.lang.Deprecated()
+meth public java.util.concurrent.CompletableFuture<java.lang.Void> start(org.netbeans.modules.nativeimage.api.debug.StartDebugParameters,java.util.function.Consumer<org.netbeans.api.debugger.DebuggerEngine>)
 meth public java.util.concurrent.CompletableFuture<org.netbeans.modules.nativeimage.api.debug.NIVariable> evaluateAsync(java.lang.String,java.lang.String,org.netbeans.modules.nativeimage.api.debug.NIFrame)
 meth public org.netbeans.api.debugger.Breakpoint addLineBreakpoint(java.lang.Object,org.netbeans.modules.nativeimage.api.debug.NILineBreakpointDescriptor)
 meth public org.netbeans.modules.nativeimage.api.debug.NIVariable evaluate(java.lang.String,java.lang.String,org.netbeans.modules.nativeimage.api.debug.NIFrame) throws org.netbeans.modules.nativeimage.api.debug.EvaluateException
@@ -116,15 +182,44 @@ meth public abstract org.netbeans.modules.nativeimage.api.debug.NIVariable getPa
 meth public abstract org.netbeans.modules.nativeimage.api.debug.NIVariable[] getChildren(int,int)
 meth public org.netbeans.modules.nativeimage.api.debug.NIVariable[] getChildren()
 
+CLSS public final org.netbeans.modules.nativeimage.api.debug.StartDebugParameters
+innr public final static Builder
+meth public java.io.File getWorkingDirectory()
+meth public java.lang.String getDebugger()
+meth public java.lang.String getDisplayName()
+meth public java.util.List<java.lang.String> getCommand()
+meth public org.netbeans.api.extexecution.ExecutionDescriptor getExecutionDescriptor()
+meth public org.openide.util.Lookup getContextLookup()
+meth public static org.netbeans.modules.nativeimage.api.debug.StartDebugParameters$Builder newBuilder(java.util.List<java.lang.String>)
+supr java.lang.Object
+hfds command,contextLookup,debugger,displayName,executionDescriptor,workingDirectory
+
+CLSS public final static org.netbeans.modules.nativeimage.api.debug.StartDebugParameters$Builder
+ outer org.netbeans.modules.nativeimage.api.debug.StartDebugParameters
+meth public org.netbeans.modules.nativeimage.api.debug.StartDebugParameters build()
+meth public org.netbeans.modules.nativeimage.api.debug.StartDebugParameters$Builder debugger(java.lang.String)
+meth public org.netbeans.modules.nativeimage.api.debug.StartDebugParameters$Builder displayName(java.lang.String)
+meth public org.netbeans.modules.nativeimage.api.debug.StartDebugParameters$Builder executionDescriptor(org.netbeans.api.extexecution.ExecutionDescriptor)
+meth public org.netbeans.modules.nativeimage.api.debug.StartDebugParameters$Builder lookup(org.openide.util.Lookup)
+meth public org.netbeans.modules.nativeimage.api.debug.StartDebugParameters$Builder workingDirectory(java.io.File)
+supr java.lang.Object
+hfds command,contextLookup,debugger,displayName,executionDescriptor,workingDirectory
+
 CLSS public abstract interface org.netbeans.modules.nativeimage.spi.debug.NIDebuggerProvider
 meth public abstract java.lang.String getVersion()
 meth public abstract java.lang.String readMemory(java.lang.String,long,int)
-meth public abstract java.util.concurrent.CompletableFuture<java.lang.Void> start(java.util.List<java.lang.String>,java.io.File,java.lang.String,java.lang.String,org.netbeans.api.extexecution.ExecutionDescriptor,java.util.function.Consumer<org.netbeans.api.debugger.DebuggerEngine>)
 meth public abstract java.util.concurrent.CompletableFuture<org.netbeans.modules.nativeimage.api.debug.NIVariable> evaluateAsync(java.lang.String,java.lang.String,org.netbeans.modules.nativeimage.api.debug.NIFrame)
 meth public abstract org.netbeans.api.debugger.Breakpoint addLineBreakpoint(java.lang.Object,org.netbeans.modules.nativeimage.api.debug.NILineBreakpointDescriptor)
 meth public abstract void removeBreakpoint(java.lang.Object)
 meth public abstract void setFrameDisplayer(org.netbeans.modules.nativeimage.spi.debug.filters.FrameDisplayer)
 meth public abstract void setVariablesDisplayer(org.netbeans.modules.nativeimage.spi.debug.filters.VariableDisplayer)
+meth public java.util.List<org.netbeans.modules.nativeimage.api.Location> listLocations(java.lang.String)
+meth public java.util.Map<org.netbeans.modules.nativeimage.api.SourceInfo,java.util.List<org.netbeans.modules.nativeimage.api.Symbol>> listFunctions(java.lang.String,boolean,int)
+meth public java.util.Map<org.netbeans.modules.nativeimage.api.SourceInfo,java.util.List<org.netbeans.modules.nativeimage.api.Symbol>> listVariables(java.lang.String,boolean,int)
+meth public java.util.concurrent.CompletableFuture<java.lang.Void> attach(java.lang.String,long,java.lang.String,java.util.function.Consumer<org.netbeans.api.debugger.DebuggerEngine>)
+meth public java.util.concurrent.CompletableFuture<java.lang.Void> start(java.util.List<java.lang.String>,java.io.File,java.lang.String,java.lang.String,org.netbeans.api.extexecution.ExecutionDescriptor,java.util.function.Consumer<org.netbeans.api.debugger.DebuggerEngine>)
+ anno 0 java.lang.Deprecated()
+meth public java.util.concurrent.CompletableFuture<java.lang.Void> start(org.netbeans.modules.nativeimage.api.debug.StartDebugParameters,java.util.function.Consumer<org.netbeans.api.debugger.DebuggerEngine>)
 
 CLSS public abstract interface org.netbeans.modules.nativeimage.spi.debug.NIDebuggerServiceProvider
 meth public abstract org.netbeans.modules.nativeimage.spi.debug.NIDebuggerProvider create()

@@ -102,7 +102,7 @@ public class MethodCompletion extends BaseCompletion {
         }
 
         // 2.2  static/instance method on class or object
-        if (!context.isBehindDot() && context.context.before1 != null) {
+        if (!context.isBehindDot() && context.context.before1 != null && context.location != CaretLocation.INSIDE_METHOD) {
             return false;
         }
 
@@ -159,8 +159,8 @@ public class MethodCompletion extends BaseCompletion {
             try {
                 javaSource.runUserActionTask(new Task<CompilationController>() {
                     @Override
-                    public void run(CompilationController info) {
-
+                    public void run(CompilationController info) throws IOException {
+                        info.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
                         List<Element> typelist = new ArrayList<>();
                         for (String importName : getAllImports()) {
                             typelist.addAll(getElementListFor(info.getElements(), importName));

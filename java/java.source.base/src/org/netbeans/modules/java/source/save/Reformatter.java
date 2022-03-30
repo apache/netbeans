@@ -20,6 +20,7 @@ package org.netbeans.modules.java.source.save;
 
 import com.sun.source.tree.*;
 import com.sun.source.tree.LambdaExpressionTree.BodyKind;
+import com.sun.source.tree.Tree.Kind;
 import com.sun.source.util.*;
 import com.sun.tools.javac.api.JavacTaskImpl;
 import com.sun.tools.javac.api.JavacTrees;
@@ -54,7 +55,6 @@ import org.netbeans.modules.editor.indent.spi.ExtraLock;
 import org.netbeans.modules.editor.indent.spi.ReformatTask;
 import org.netbeans.modules.java.source.JavaSourceAccessor;
 import org.netbeans.modules.java.source.NoJavacHelper;
-import org.netbeans.modules.java.source.TreeShims;
 import org.netbeans.modules.java.source.parsing.FileObjects;
 import org.netbeans.modules.java.source.parsing.JavacParser;
 import org.netbeans.modules.parsing.api.Embedding;
@@ -584,29 +584,8 @@ public class Reformatter implements ReformatTask {
 
                 Boolean ret;
 
-                switch (tree.getKind().toString()) {
-                    case TreeShims.SWITCH_EXPRESSION:
-                        ret = scanSwitchExpression(tree, p);
-                        break;
-                    case TreeShims.YIELD:
-                        ret = scanYield(tree, p);
-                        break;
-                    case TreeShims.BINDING_PATTERN:
-                        ret = scanBindingPattern(tree, p);
-                        break;
-                    case TreeShims.GUARDED_PATTERN:
-                        ret = scanGuardedPattern(tree, p);
-                        break;
-                    case TreeShims.PARENTHESIZED_PATTERN:
-                        ret = scanParenthesizedPattern(tree, p);
-                        break;
-                    case TreeShims.RECORD:
-                        ret = scanRecord((ClassTree) tree, p);
-                        break;
-                    default:
-                        ret = super.scan(tree, p);
-                        break;
-                }
+                ret = super.scan(tree, p);
+
                 return ret != null ? ret : true;
             }
             finally {
@@ -898,6 +877,9 @@ public class Reformatter implements ReformatTask {
 
         @Override
         public Boolean visitClass(ClassTree node, Void p) {
+            if (node.getKind() == Kind.RECORD) {
+                return scanRecord(node, p);
+            }
             Tree parent = getCurrentPath().getParentPath().getLeaf();
             if (parent.getKind() != Tree.Kind.NEW_CLASS && (parent.getKind() != Tree.Kind.VARIABLE || !isEnumerator((VariableTree)parent))) {
                 boolean old = continuationIndent;
@@ -961,7 +943,7 @@ public class Reformatter implements ReformatTask {
                         wrapToken(cs.wrapExtendsImplementsKeyword(), 1, id == INTERFACE ? EXTENDS : IMPLEMENTS);
                         wrapList(cs.wrapExtendsImplementsList(), cs.alignMultilineImplements(), true, COMMA, impls);
                     }
-                    List<? extends Tree> perms = TreeShims.getPermits(node);
+                    List<? extends Tree> perms = node.getPermitsClause();
                     if (perms != null && !perms.isEmpty()) {
                         wrapToken(cs.wrapExtendsImplementsKeyword(), 1, EXTENDS); 
                         wrapList(cs.wrapExtendsImplementsList(), cs.alignMultilineImplements(), true, COMMA, perms);
@@ -1095,14 +1077,12 @@ public class Reformatter implements ReformatTask {
                                 }
                                 blankLines(cs.getBlankLinesAfterClass());
                                 break;
-                            default:
-                                if (member.getKind().toString().equals(TreeShims.RECORD)) {
+                            case RECORD:
                                 if (!first)
-                                   blankLines(cs.getBlankLinesBeforeMethods());
-                                    scanRecord((ClassTree)member, p);
+                                    blankLines(cs.getBlankLinesBeforeMethods());
+                                scanRecord((ClassTree)member, p);
                                 blankLines(cs.getBlankLinesAfterMethods());
                                 break;
-                                }    
                         }
                         first = false;
                     }
@@ -1177,7 +1157,7 @@ public class Reformatter implements ReformatTask {
                         WrapStyle newWrapStyle = cs.wrapAnnotations();
                         if (parent instanceof ClassTree) {
                             for (Tree member : ((ClassTree) parent).getMembers()) {
-                                if (member.getKind().toString().equals(TreeShims.RECORD)) {
+                                if (member.getKind() == Kind.RECORD) {
                                     ClassTree cls = (ClassTree) member;
                                     for (Tree recMember : cls.getMembers()) {
                                         if (recMember.equals(getCurrentPath().getLeaf())) {
@@ -2796,68 +2776,14 @@ public class Reformatter implements ReformatTask {
             return handleSwitch(node, p);
         }
 
-        private Boolean scanSwitchExpression(Tree node, Void p) {
-         return handleSwitch(node,p);
+        @Override
+        public Boolean visitSwitchExpression(SwitchExpressionTree node, Void p) {
+            return handleSwitch(node,p);
         }
 
-        private Boolean scanYield(Tree node, Void p) {
-            return handleYield(node, p);
-        }
-
-        private Boolean scanBindingPattern(Tree node, Void p) {
-            Name name = TreeShims.getBinding(node);
-            Tree type = TreeShims.getBindingPatternType(node);
-            scan(type, p);
-            if (name != null) {
-                space();
-                accept(IDENTIFIER);
-            }
-            return true;
-        }
-
-        private Boolean scanGuardedPattern(Tree node, Void p) {
-            try {
-                Tree gpt = TreeShims.getGuardedPattern(node);
-                if (gpt != null) {
-                    if (scanParenthesizedPattern(gpt, p) == false) {
-                        Name name = TreeShims.getBinding(gpt);
-                        Tree type = TreeShims.getBindingPatternType(gpt);
-                        scan(type, p);
-                        if (name != null) {
-                            removeWhiteSpace(IDENTIFIER);
-                        }
-                    }
-                }
-            } catch (RuntimeException ex) {
-                return false;
-            }
-
-            ExpressionTree exprTree = TreeShims.getGuardedExpression(node);
-            if (exprTree != null) {
-                accept(IDENTIFIER);
-                removeWhiteSpace(IDENTIFIER);
-                scan(exprTree, p);
-            }
-            return true;
-        }
-
-        private Boolean scanParenthesizedPattern(Tree node, Void p) {
-            try {
-                Tree ppt = TreeShims.getParenthesizedPattern(node);
-                if (ppt != null) {
-                    if (scanGuardedPattern(ppt, p) == false) {
-                        scanBindingPattern(ppt, p);
-                    }
-                    removeWhiteSpace(IDENTIFIER);
-                }
-            } catch (RuntimeException ex) {
-                return false;
-            }
-            return true;
-        }
-
-        private Boolean handleYield(Tree node, Void p) {
-            ExpressionTree exprTree = TreeShims.getYieldValue(node);
+        @Override
+        public Boolean visitYield(YieldTree node, Void p) {
+            ExpressionTree exprTree = node.getValue();
             if (exprTree != null) {
                 accept(IDENTIFIER);
                 space();
@@ -2867,17 +2793,47 @@ public class Reformatter implements ReformatTask {
             return true;
         }
 
+        @Override
+        public Boolean visitBindingPattern(BindingPatternTree node, Void p) {
+            scan(node.getVariable(), p);
+            return true;
+        }
+
+        @Override
+        public Boolean visitGuardedPattern(GuardedPatternTree node, Void p) {
+            scan(node.getPattern(), p);
+            space();
+            accept(AMPAMP);
+            space();
+            scan(node.getExpression(), p);
+
+            return true;
+        }
+
+        @Override
+        public Boolean visitParenthesizedPattern(ParenthesizedPatternTree node, Void p) {
+            accept(LPAREN);
+            scan(node.getPattern(), p);
+            accept(RPAREN);
+            return true;
+        }
+
         private boolean handleSwitch(Tree node, Void p) {
+            ExpressionTree selExpr;
+            List<? extends CaseTree> cases;
+            if (node.getKind() == Kind.SWITCH) {
+                selExpr = ((SwitchTree) node).getExpression();
+                cases = ((SwitchTree) node).getCases();
+            } else {
+                selExpr = ((SwitchExpressionTree) node).getExpression();
+                cases = ((SwitchExpressionTree) node).getCases();
+            }
             accept(SWITCH);
             boolean oldContinuationIndent = continuationIndent;
             try {
                 continuationIndent = true;
                 spaces(cs.spaceBeforeSwitchParen() ? 1 : 0);
-                List<? extends ExpressionTree> exprTrees = TreeShims.getExpressions(node);
-                if (!exprTrees.isEmpty()) {
-                    ExpressionTree expressionTree = exprTrees.get(0);
-                    scan(expressionTree, p);
-                }
+                scan(selExpr, p);
             } finally {
                 continuationIndent = oldContinuationIndent;
             }
@@ -2886,7 +2842,7 @@ public class Reformatter implements ReformatTask {
             boolean indentCases = cs.indentCasesFromSwitch() ;
             int old = lastIndent;
             int halfIndent = lastIndent;
-            if (node.getKind().toString().equals(TreeShims.SWITCH_EXPRESSION)) {
+            if (node.getKind() == Kind.SWITCH_EXPRESSION) {
                 continuationIndent = false;
             }
             switch (bracePlacement) {
@@ -2926,12 +2882,11 @@ public class Reformatter implements ReformatTask {
                     }
                     break;
             }
-            if (node.getKind().toString().equals(TreeShims.SWITCH_EXPRESSION)) {
+            if (node.getKind() == Kind.SWITCH_EXPRESSION) {
                 indent = lastIndent + indentSize;
             }
-            List<? extends CaseTree> caseTrees = TreeShims.getCases(node);
             try {
-                for (CaseTree caseTree : caseTrees) {
+                for (CaseTree caseTree : cases) {
                     newline();
                     scan(caseTree, p);
                 }
@@ -2977,32 +2932,37 @@ public class Reformatter implements ReformatTask {
 
         @Override
         public Boolean visitCase(CaseTree node, Void p) {
-            List<? extends Tree> labels = TreeShims.getLabels(node);
+            List<? extends Tree> labels = node.getLabels();
             if (labels != null && labels.size() > 0) {
-                if (tokens.token().id() == JavaTokenId.DEFAULT && labels.get(0).getKind().toString().equals(TreeShims.DEFAULT_CASE_LABEL)) {
+                if (tokens.token().id() == JavaTokenId.DEFAULT && labels.get(0).getKind() == Kind.DEFAULT_CASE_LABEL) {
                     accept(DEFAULT);
                 } else {
                     accept(CASE);
                     space();
                     for (Tree label : labels) {
-                        if (label.getKind().toString().equals(TreeShims.DEFAULT_CASE_LABEL)) {
-                            removeWhiteSpace(JavaTokenId.DEFAULT);
-                            accept(DEFAULT);
-                        } else if (label.getKind().toString().equals(TreeShims.BINDING_PATTERN)
-                                || label.getKind().toString().equals(TreeShims.PARENTHESIZED_PATTERN)
-                                || label.getKind().toString().equals(TreeShims.GUARDED_PATTERN)) {
-                            removeWhiteSpace(JavaTokenId.IDENTIFIER);
-                            scan(label, p);
-                        } else if (label.getKind().toString().equals(TreeShims.NULL_LITERAL)) {
-                            removeWhiteSpace(JavaTokenId.NULL);
-                            scan(label, p);
-                        } else {
-                            scan(label, p);
+                        switch (label.getKind()) {
+                            case DEFAULT_CASE_LABEL:
+                                removeWhiteSpace(JavaTokenId.DEFAULT);
+                                accept(DEFAULT);
+                                break;
+                            case BINDING_PATTERN:
+                            case PARENTHESIZED_PATTERN:
+                            case GUARDED_PATTERN:
+                                removeWhiteSpace(JavaTokenId.IDENTIFIER);
+                                scan(label, p);
+                                break;
+                            case NULL_LITERAL:
+                                removeWhiteSpace(JavaTokenId.NULL);
+                                scan(label, p);
+                                break;
+                            default:
+                                scan(label, p);
+                                break;
                         }
                     }
                 }
-            } else if (TreeShims.getExpressions(node).size() > 0) {
-                List<? extends ExpressionTree> exprs = TreeShims.getExpressions(node);
+            } else if (node.getExpressions().size() > 0) {
+                List<? extends ExpressionTree> exprs = node.getExpressions();
                 accept(CASE);
                 space();
                 exprs.forEach(exp -> {
@@ -3018,7 +2978,7 @@ public class Reformatter implements ReformatTask {
             else {
                 space();
                 accept(ARROW);
-                caseBody = TreeShims.getBody(node);
+                caseBody = node.getBody();
                 if (caseBody instanceof StatementTree)
                     statements = Collections.singletonList((StatementTree) caseBody);
             }
@@ -3071,16 +3031,10 @@ public class Reformatter implements ReformatTask {
         @Override
         public Boolean visitBreak(BreakTree node, Void p) {
             JavaTokenId token = accept(BREAK);
-            ExpressionTree exprTree = TreeShims.getValue(node);
-            if (exprTree != null) {
+            Name label = node.getLabel();
+            if (label != null) {
                 space();
-                scan(exprTree, p);
-            } else {
-                Name label = node.getLabel();
-                if (label != null) {
-                    space();
-                    accept(IDENTIFIER, UNDERSCORE);
-                }
+                accept(IDENTIFIER, UNDERSCORE);
             }
             accept(SEMICOLON);
             return true;
@@ -3454,7 +3408,7 @@ public class Reformatter implements ReformatTask {
             space();
             accept(INSTANCEOF);
             space();
-            Tree pattern = TreeShims.getPattern(node);
+            Tree pattern = node.getPattern();
             if (pattern == null)
                 pattern = node.getType();
             scan(pattern, p);
@@ -3526,6 +3480,7 @@ public class Reformatter implements ReformatTask {
                         spaceWithinParens = cs.spaceWithinWhileParens();
                         break;
                     case SWITCH:
+                    case SWITCH_EXPRESSION:
                         spaceWithinParens = cs.spaceWithinSwitchParens();
                         break;
                     case SYNCHRONIZED:

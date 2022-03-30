@@ -103,11 +103,11 @@ public final class XSLGrammarQuery implements GrammarQuery{
     private String lastDoctypePublic;
 
     // we cannot parse SGML DTD for HTML, let emulate it by XHTML DTD
-    private final static String XHTML_PUBLIC_ID =
+    private static final String XHTML_PUBLIC_ID =
             System.getProperty("netbeans.xsl.html.public", "-//W3C//DTD XHTML 1.0 Transitional//EN");  // NOI18N
 
     // we cannot parse SGML DTD for HTML, let emulate it by XHTML DTD
-    private final static String XHTML_SYSTEM_ID =
+    private static final String XHTML_SYSTEM_ID =
             System.getProperty("netbeans.xsl.html.system", "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"); // NOI18N
 
     // namespace that this grammar supports
@@ -978,7 +978,7 @@ public final class XSLGrammarQuery implements GrammarQuery{
     // Result classes ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
-    private static abstract class AbstractResultNode extends AbstractNode implements GrammarResult {
+    private abstract static class AbstractResultNode extends AbstractNode implements GrammarResult {
 
         public Icon getIcon(int kind) {
             return null;

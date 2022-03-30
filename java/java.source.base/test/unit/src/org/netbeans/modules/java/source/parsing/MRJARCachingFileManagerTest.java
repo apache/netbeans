@@ -18,13 +18,12 @@
  */
 package org.netbeans.modules.java.source.parsing;
 
-import com.sun.tools.javac.code.Source;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -167,7 +166,7 @@ public class MRJARCachingFileManagerTest extends NbTestCase {
         final StandardJavaFileManager fm = jc.getStandardFileManager(
                 null,
                 Locale.ENGLISH,
-                Charset.forName("UTF-8"));  //NOI18N
+                StandardCharsets.UTF_8);
         fm.setLocation(
                 StandardLocation.CLASS_PATH,
                 Collections.singleton(FileUtil.archiveOrDirForURL(mvCp.entries().get(0).getURL())));
@@ -358,7 +357,7 @@ public class MRJARCachingFileManagerTest extends NbTestCase {
                     try {
                         final BufferedReader in = new BufferedReader(new InputStreamReader(
                                 jfo.openInputStream(),
-                                Charset.forName("UTF-8"))); //NOI18N
+                                StandardCharsets.UTF_8));
                         return in.readLine();
                     } catch (IOException ioe) {
                         throw new RuntimeException(ioe);
@@ -408,7 +407,7 @@ public class MRJARCachingFileManagerTest extends NbTestCase {
                             path :
                             String.format("%s/%s", prefix[0], path);            //NOI18N
                     jar.putNextEntry(new ZipEntry(pathWithScope));
-                    jar.write(String.format("%s %s", name, prefix[1]).getBytes(Charset.forName("UTF-8")));  //NOI18N
+                    jar.write(String.format("%s %s", name, prefix[1]).getBytes(StandardCharsets.UTF_8));
                     jar.closeEntry();
                 }
             }

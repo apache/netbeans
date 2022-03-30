@@ -47,9 +47,15 @@ Apache NetBeans Language Server brings full featured Java development (edit-comp
 * Debugger __Java 8+...__ - start main class or test on JDK8+. More in [Debugger section](#debugger-and-launch-configurations)
 * Progress shown for long running operations with cancel support for selected types
 * __Native Image Debugger__ is a new Run configuration added which allows Java style debugging of Ahead of Time compiled native-images, produced by GraalVM. It is experimental feature which works with GDB on Linux. GDB 7.11 or GDB 10.1+ is required due to known issue [#26139](https://sourceware.org/bugzilla/show_bug.cgi?id=26139) in GDB 8 and 9.
+  * It is also possible to attach to running native image process using __Attach to Native Image__ launch configuation.
 * __Micronaut and Spring__ support especially for YAML configuration files with code completion and source code navigation to Java.
 * __Test Explorer__ for Java tests results visualization and execution including editor code Lenses.
 * Maven and Gradle support including multi-project projects, subprojects opening and Gradle priming builds.
+
+## Project Explorer
+Project Explorer provides an overview of logical project structure, groups sources together and greatly simplifies Java package structure exploration. Project Explorer is an addition to the classical workspace explorer. Use it to build, test, execute and operate your Maven and Gradle Java projects.
+
+![Project Explorer](images/project-explorer.png)
 
 ## Debugger and Launch Configurations
 Language Server __Java 8+ ...__ launch configuration supports debugging and running Java applications using JDK8 or newer. 
@@ -65,23 +71,67 @@ Language Server __Java 8+ ...__ launch configuration supports debugging and runn
     * __Attach to Shared Memory__ is available on Windows in addtion to above mentioned _Attach..._
 
 Default launch configurations provided by Language Server can modified in `launch.json` file using intellisense for available options.
+
+### Run Configurations panel
+Program arguments, VM options, evironment variables,... can be set in Run Configuration panel a part of Explorer. The panel is sufficient for all typical use-cases Java programmer faces. Only advanced, expert scenarios may require touching of `launch.json` (which still takes precedence).
+
+![Run Configuration](images/run_config.png) 
+
 ## Supported Refactorings
 
 Class level refactorings as well as variable refactorings are supported in VSCode via Apache NetBeans extension. See following screenshots:
 
-![Class Source Actions](images/Source_actions.png) ![Introduce ... refactoring](images/Introduce_refactoring.png)
+### Source Action ... context menu
+![Class Source Actions](images/Source_actions.png) 
+
+### Introduce refactorings available via Show Code actions light bulb
+![Introduce ... refactoring](images/Introduce_refactoring.png)
+
+### More Refactorings available also using Refactor... context menu
+![More Refactorings](images/Refactor_menu.png)
+
+### Surroung with refactorings
+![Surrond with Refactorings](images/Surrond_With_refactorings.png)
 
 Some refactorings are two steps with like Override method ... where method to be overriden is selected in 2nd step:
 
 ![Override refactoring](images/Override_refactoring.png)
 
+### Change Method Parameters refactoring
+Change method parameters refactoring is provided using dedidacated form allowing to change, add, move, remove method parameters.
+![Change method parameters refactoring](images/change_method_params.png)
+
+### Some of supported refactorings:
+* Convert to static import 
+* Rename 	
+* Pull member up & down 
+* Move class 
+* Extract interface/method 
+* Extract local variable
+* Assign to variable
+* Generate hashCode/equals
+* Generate toString()
+* Surround With refactoring
+* For cycle refactoring
+* try-catch refactoring
+* switch() statement
+* while() cycle
+
+## Organize Imports
+Out of the box support for organizing imports in Java sources is available. It removes unused imports, groups imports by packages and updates your imports whenever a file is saved. In addition to the defaults, there is a rich set of configuration options. 
+
+Go to VSCode `Preferences | Settings`  and search for _NetBeans_ to set `Netbeans > Java > Imports:` options:
+* `Count For Using Star Import` - Class count to use a star-import, 999 means any number 
+* `Count For Using Static Star Import` - Members count to use a static star-import, 999 means any number
+* `Groups` - Groups of import statements (specified by their package prefixes) and their sorting order. Import statements within a group are ordered alphabetically
+
+And `Netbeans > Java > On Save: Organize Imports` - Enable organize imports action on a document save
 ## Test Explorer
 NetBeans Language Server provides Test Explorer view which allows to run all tests in a project, examine the results, go to source code and  run particular test.
 ![Test Explorer](images/Test_explorer.png)
 
 
 ## Native Image Debugger
-Experimental Support
 
 NetBeans Language Server allows Java like debugging of native images produced by GraalVM EE native-image tool. It is provided using GDB and via new Run configuration named __Launch Native Image__. This experimental feature works __now__ only on Linux with certain version of GDB, see above. GraalVM Enterprise Edition is needed as it produces full debug information for native images, at this time.
 
@@ -121,6 +171,10 @@ following locations:
 - current system path
 
 As soon as one of the settings is changed, the Language Server is restarted.
+
+## Running Language Server per VSCode workspace or for user
+It is possible to run Apache NetBeans Language Server per workspace (VSCode window). This allows separation of Language Server for given project as Language Server JVM is not shared for more VSCode open workspaces (projects).
+It is possible to change this in `Preferences | Settings | Netbeans: Userdir`. Set to `local` to use dedicated Language Server per workspace or set to `global` (this is default) to have one Language Server for all VSCode workspaces.
 
 ## Conflicts with other Java Extensions
 

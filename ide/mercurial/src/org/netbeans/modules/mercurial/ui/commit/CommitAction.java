@@ -446,9 +446,10 @@ public class CommitAction extends ContextAction {
 
         boolean enabled = commit.isEnabled();
 
-        for (HgFileNode fileNode : files.keySet()) {
+        for (Entry<HgFileNode, CommitOptions> entry : files.entrySet()) {
 
-            CommitOptions options = files.get(fileNode);
+            HgFileNode fileNode = entry.getKey();
+            CommitOptions options = entry.getValue();
             if (options == CommitOptions.EXCLUDE) {
                 continue;
             }
@@ -730,7 +731,7 @@ public class CommitAction extends ContextAction {
         }
     }
 
-    private static abstract class Cmd {
+    private abstract static class Cmd {
         protected final Map<File, List<File>> m;
         protected final OutputLogger logger;
         protected final String logMsgFormat;

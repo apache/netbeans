@@ -108,7 +108,7 @@ public class TestSingleMethodSupport {
 		if (pane != null) {
 		    String text = pane.getText();
                     if (text != null) {  //NOI18N
-                        text = text.replaceAll("\n", "").replaceAll(" ", "");
+                        text = text.replace("\n", "").replace(" ", "");
 			if ((text.contains("@RunWith") || text.contains("@org.junit.runner.RunWith")) //NOI18N
 			    && text.contains("Parameterized.class)")) {  //NOI18N
 			    return false;

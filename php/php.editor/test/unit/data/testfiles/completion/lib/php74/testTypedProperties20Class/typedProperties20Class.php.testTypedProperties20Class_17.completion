@@ -23,6 +23,7 @@ KEYWORD    parent                                     null
 KEYWORD    private                                    null
 KEYWORD    protected                                  null
 KEYWORD    public                                     null
+KEYWORD    readonly                                   null
 KEYWORD    self                                       null
 KEYWORD    static                                     null
 KEYWORD    string                                     null

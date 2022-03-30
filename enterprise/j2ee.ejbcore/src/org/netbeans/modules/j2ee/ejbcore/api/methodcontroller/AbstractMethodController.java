@@ -59,10 +59,10 @@ import org.openide.util.Exceptions;
  */
 public abstract class AbstractMethodController extends EjbMethodController {
     
-    private final static int LOCAL = 0;
-    private final static int REMOTE = 1;
-    private final static int LOCAL_HOME = 2;
-    private final static int REMOTE_HOME = 3;
+    private static final int LOCAL = 0;
+    private static final int REMOTE = 1;
+    private static final int LOCAL_HOME = 2;
+    private static final int REMOTE_HOME = 3;
     
     private final String ejbClass;
     private final MetadataModel<EjbJarMetadata> model;

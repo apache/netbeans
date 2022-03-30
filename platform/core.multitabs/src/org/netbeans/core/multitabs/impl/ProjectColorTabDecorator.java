@@ -49,20 +49,14 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service=TabDecorator.class)
 public class ProjectColorTabDecorator extends TabDecorator {
 
-    private static final Map<Object, Color> project2color = new WeakHashMap<Object, Color>(10);
-    private static final Map<TabData, Color> tab2color = new WeakHashMap<TabData, Color>(10);
+    private static final Map<Object, Color> project2color = new WeakHashMap<>(10);
+    private static final Map<TabData, Color> tab2color = new WeakHashMap<>(10);
     private static final List<Color> backGroundColors;
     private static Color foregroundColor;
-    private final static ChangeListener projectsListener = new ChangeListener() {
-
-        @Override
-        public void stateChanged(ChangeEvent e) {
-            updateColorMapping();
-        }
-    };
+    private static final ChangeListener projectsListener = (ChangeEvent e) -> updateColorMapping();
 
     static {
-        backGroundColors = new ArrayList<Color>( 10 );
+        backGroundColors = new ArrayList<>( 10 );
 
         // load background colors from UI defaults if available
         if (UIManager.getColor("nb.multitabs.project.1.background") != null) {
@@ -125,7 +119,7 @@ public class ProjectColorTabDecorator extends TabDecorator {
     public Color getBackground( TabData tab, boolean selected ) {
         if( selected || !Settings.getDefault().isSameProjectSameColor() )
             return null;
-        Color res = null;
+        Color res;
         synchronized( tab2color ) {
             res = tab2color.get( tab );
             if( null == res ) {
@@ -149,7 +143,7 @@ public class ProjectColorTabDecorator extends TabDecorator {
     public void paintAfter( TabData tab, Graphics g, Rectangle tabRect, boolean isSelected ) {
         if( !isSelected || !Settings.getDefault().isSameProjectSameColor() )
             return;
-        Color c = null;
+        Color c;
         synchronized( tab2color ) {
             c = tab2color.get( tab );
             if( null == c ) {
@@ -177,9 +171,9 @@ public class ProjectColorTabDecorator extends TabDecorator {
     private static void updateColorMapping() {
         ProjectProxy[] projects = ProjectSupport.getDefault().getOpenProjects();
         synchronized( project2color ) {
-            Map<Object, Color> oldColors = new HashMap<Object, Color>( project2color );
+            Map<Object, Color> oldColors = new HashMap<>( project2color );
             project2color.clear();
-            List<Color> availableColors = new ArrayList<Color>( backGroundColors );
+            List<Color> availableColors = new ArrayList<>( backGroundColors );
 
             for( ProjectProxy p : projects ) {
                 Color c = oldColors.get( p.getToken() );
@@ -205,7 +199,7 @@ public class ProjectColorTabDecorator extends TabDecorator {
     }
 
     private static Color getColorForTab( TabData tab ) {
-        ProjectProxy p = ProjectSupport.getDefault().getProjectForTab( tab );
+        ProjectProxy p = ProjectSupport.getDefault().tryGetProjectForTab(tab);
         if( null != p ) {
             synchronized( project2color ) {
                 return project2color.get( p.getToken() );

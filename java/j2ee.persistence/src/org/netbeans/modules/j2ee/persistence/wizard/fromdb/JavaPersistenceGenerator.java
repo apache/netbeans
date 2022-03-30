@@ -672,7 +672,7 @@ public class JavaPersistenceGenerator implements PersistenceGenerator {
                             " in " + FileUtil.getFileDisplayName(copy.getFileObject())); // NOI18N
                 }
                 moduleElement = copy.getElements().getModuleOf(typeElement);
-                originalClassTree = (ClassTree) copy.getTrees().getTree(typeElement);
+                originalClassTree = copy.getTrees().getTree(typeElement);
                 assert originalClassTree != null;
                 newClassTree = originalClassTree;
                 genUtils = GenerationUtils.newInstance(copy);
@@ -715,7 +715,7 @@ public class JavaPersistenceGenerator implements PersistenceGenerator {
 
                 // Add @Basic(optional=false) for not nullable columns
                 if (!m.isNullable()) {
-                    List<ExpressionTree> basicAnnArguments = new ArrayList();
+                    List<ExpressionTree> basicAnnArguments = new ArrayList<>();
                     basicAnnArguments.add(genUtils.createAnnotationArgument("optional", false)); //NOI18N
                     annotations.add(genUtils.createAnnotation("javax.persistence.Basic", basicAnnArguments)); //NOI18N
                     //Add @NotNull constraint
@@ -729,11 +729,11 @@ public class JavaPersistenceGenerator implements PersistenceGenerator {
                     annotations.add(genUtils.createAnnotation("javax.persistence.Lob")); // NOI18N
                 }
 
-                List<ExpressionTree> columnAnnArguments = new ArrayList();
+                List<ExpressionTree> columnAnnArguments = new ArrayList<>();
                 String memberName = m.getMemberName();
                 String memberType = getMemberType(m);
 
-                String columnName = (String) dbMappings.getCMPFieldMapping().get(memberName);
+                String columnName = dbMappings.getCMPFieldMapping().get(memberName);
                 if(!useDefaults || !memberName.equalsIgnoreCase(columnName)){
                     columnAnnArguments.add(genUtils.createAnnotationArgument("name", columnName)); //NOI18N
                 }
@@ -1335,7 +1335,7 @@ public class JavaPersistenceGenerator implements PersistenceGenerator {
                     } else {
                         pkProperty = property = createProperty(m);
                     }
-                    String pkColumnName = (String) dbMappings.getCMPFieldMapping().get(memberName);
+                    String pkColumnName = dbMappings.getCMPFieldMapping().get(memberName);
                     pkColumnNames.add(pkColumnName);
                 } else {
                     //check type
@@ -1492,7 +1492,7 @@ public class JavaPersistenceGenerator implements PersistenceGenerator {
                 } else {  // Role A
                     if (role.isMany() && role.isToMany()) { // ManyToMany
                         List<ExpressionTree> joinTableAnnArguments = new ArrayList<ExpressionTree>();
-                        String jTN =  (String) dbMappings.getJoinTableMapping().get(role.getFieldName());
+                        String jTN =  dbMappings.getJoinTableMapping().get(role.getFieldName());
 
                         if(existingJoinTables.get(jTN) != null){
                             //update isn't supported yet, just return if same join table already exists
@@ -1533,9 +1533,9 @@ public class JavaPersistenceGenerator implements PersistenceGenerator {
 
                         annotations.add(genUtils.createAnnotation("javax.persistence.JoinTable", joinTableAnnArguments)); // NOI18N
                     } else { // ManyToOne, OneToMany, OneToOne
-                        ColumnData[] columns = (ColumnData[]) dbMappings.getCmrFieldMapping().get(role.getFieldName());
+                        ColumnData[] columns = dbMappings.getCmrFieldMapping().get(role.getFieldName());
                         CMPMappingModel relatedMappings = beanMap.get(role.getParent().getRoleB().getEntityName()).getCMPMapping();
-                        ColumnData[] invColumns = (ColumnData[]) relatedMappings.getCmrFieldMapping().get(role.getParent().getRoleB().getFieldName());
+                        ColumnData[] invColumns = relatedMappings.getCmrFieldMapping().get(role.getParent().getRoleB().getFieldName());
                         if (columns.length == 1) {
                             if (existingJoinColumns.get(columns[0].getColumnName()) != null) {
                                 return;

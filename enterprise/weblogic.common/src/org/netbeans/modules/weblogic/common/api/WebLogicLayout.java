@@ -42,7 +42,6 @@ import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.regex.Matcher;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
@@ -196,8 +195,8 @@ public final class WebLogicLayout {
             // XXX cache values
             File mwHome = getMiddlewareHome(config.getServerHome());
             if (mwHome != null) {
-                File serverModuleFile = FileUtil.normalizeFile(new File(mwHome,
-                        serverModulesJar.replaceAll("/", Matcher.quoteReplacement(File.separator)))); // NOI18N
+                File serverModuleFile = FileUtil.normalizeFile(
+                        new File(mwHome, serverModulesJar.replace("/", File.separator))); // NOI18N
                 return new File[] {weblogicJar, serverModuleFile};
             }
         }

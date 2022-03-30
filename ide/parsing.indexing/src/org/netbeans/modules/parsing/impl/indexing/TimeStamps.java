@@ -29,6 +29,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.text.MessageFormat;
 import java.util.Collection;
 import java.util.Collections;
@@ -55,17 +56,17 @@ public final class TimeStamps {
     // -J-Dorg.netbeans.modules.parsing.impl.indexing.TimeStamps.level=FINE
     private static final Logger LOG = Logger.getLogger(TimeStamps.class.getName());
     private static final String TIME_STAMPS_FILE = "timestamps.properties"; //NOI18N
-    private static final String VERSION = "#v2"; //NOI18N
+    private static final String VERSION_2 = "#v2"; //NOI18N
+    private static final String VERSION_3 = "#v3"; //NOI18N
 
-    
     private final Implementation impl;
-    
+
 
     private TimeStamps(@NonNull final Implementation impl) throws IOException {
         assert impl != null;
         this.impl = impl;
     }
-    
+
     public boolean checkAndStoreTimestamp(FileObject f, String relativePath) {
         return impl.checkAndStoreTimestamp(f, relativePath);
     }
@@ -73,11 +74,11 @@ public final class TimeStamps {
     public Set<String> getUnseenFiles() {
         return impl.getUnseenFiles();
     }
-    
+
     public void store () throws IOException {
         impl.store();
     }
-    
+
     void resetToNow() {
         final long now = System.currentTimeMillis();
         impl.reset(now);
@@ -103,7 +104,7 @@ public final class TimeStamps {
             final boolean detectDeletedFiles) throws IOException {
         return new TimeStamps(new RegularImpl(root, detectDeletedFiles));
     }
-    
+
     public static TimeStamps changedTransient() throws IOException {
         return new TimeStamps(new AllChangedTransientImpl());
     }
@@ -118,10 +119,10 @@ public final class TimeStamps {
         if (cacheDir != null) {
             return new File (FileUtil.toFile(cacheDir),TIME_STAMPS_FILE).exists();
         }
-        
+
         return false;
     }
-    
+
     private static interface Implementation {
         boolean checkAndStoreTimestamp(FileObject root, String relativePath);
         Set<String> getUnseenFiles();
@@ -131,20 +132,20 @@ public final class TimeStamps {
         Collection<? extends String> getEnclosedFiles(@NonNull String relativePath);
         void store() throws IOException;
     }
-    
+
     private static final class RegularImpl implements Implementation {
-        
+
         private final URL root;
-        private final LongHashMap<String> timestamps = new LongHashMap<String>();
+        private final LongHashMap<String> timestamps = new LongHashMap<>();
         private final Set<String> unseen;
         private FileObject rootFoCache;
-        
+
         private RegularImpl(
                 @NonNull final URL root,
                 final boolean detectDeletedFiles) throws IOException {
             assert root != null;
             this.root = root;
-            this.unseen = detectDeletedFiles ? new HashSet<String>() : null;
+            this.unseen = detectDeletedFiles ? new HashSet<>() : null;
             load();
         }
 
@@ -183,12 +184,12 @@ public final class TimeStamps {
 
             return isUpToDate;
         }
-        
+
         @Override
         public Set<String> getUnseenFiles() {
             return unseen;
         }
-        
+
         @Override
         public void reset(final long value) {
             for (LongHashMap.Entry<String> entry : timestamps.entrySet()) {
@@ -206,7 +207,7 @@ public final class TimeStamps {
         @NonNull
         @Override
         public Collection<? extends String> getEnclosedFiles(@NonNull final String relativePath) {
-            final Set<String> res = new HashSet<String>();
+            final Set<String> res = new HashSet<>();
             for (String filePath : timestamps.keySet()) {
                 if (filePath.startsWith(relativePath)) {
                     res.add(filePath);
@@ -224,14 +225,15 @@ public final class TimeStamps {
             final File f = new File(cacheDir, TIME_STAMPS_FILE);
             assert f != null;
             try {
-                final BufferedWriter out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(f), "UTF-8")); //NOI18N
-                try {
+                try (BufferedWriter out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(f), StandardCharsets.UTF_8))) {
                     if (unseen != null) {
                         timestamps.keySet().removeAll(unseen);
                     }
 
                     // write version
-                    out.write(VERSION); //NOI18N
+                    out.write(VERSION_3); //NOI18N
+                    out.write(" ");
+                    out.write(IndexabilityQuery.getInstance().getState());
                     out.newLine();
 
                     // write data
@@ -243,15 +245,13 @@ public final class TimeStamps {
                     }
 
                     out.flush();
-                } finally {
-                    out.close();
                 }
             } catch (IOException e) {
                 //In case of IOException props are not stored, everything is scanned next time
                 LOG.log(Level.FINE, null, e);
             }
         }
-        
+
         private void load () throws IOException {
             final FileObject cacheFolder = CacheFolder.getDataFolder(
                 root,
@@ -264,32 +264,63 @@ public final class TimeStamps {
                     try {
                         boolean readOldPropertiesFormat = false;
                         {
-                            final BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(f), "UTF-8")); //NOI18N
-                            try {
+                            try (BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(f), StandardCharsets.UTF_8))) {
                                 String line = in.readLine();
-                                if (line != null && line.startsWith(VERSION)) {
+                                if (line != null && line.startsWith(VERSION_2)) {
                                     // it's the new format
-                                    LOG.log(Level.FINE, "{0}: reading {1} timestamps", new Object [] { f.getPath(), VERSION }); //NOI18N
+                                    LOG.log(Level.FINE, "{0}: reading {1} timestamps", new Object [] { f.getPath(), VERSION_2 }); //NOI18N
 
-                                    while (null != (line = in.readLine())) {
-                                        int idx = line.indexOf('='); //NOI18N
-                                        if (idx != -1) {
-                                            try {
-                                                final String path = line.substring(0, idx);
-                                                if (!path.isEmpty() && path.charAt(0) != '/') {
-                                                    final long ts = Long.parseLong(line.substring(idx + 1));
-                                                    timestamps.put(path, ts);
-                                                } else {
-                                                    LOG.log(
-                                                        Level.WARNING,
-                                                        "Invalid timestamp entry {0} in {1}",   //NOI18N
-                                                        new Object[]{
-                                                            path,
-                                                            f.getAbsolutePath()
-                                                        });
+                                    if (IndexabilityQuery.getInstance().isSameState("")) {
+                                        while (null != (line = in.readLine())) {
+                                            int idx = line.indexOf('='); //NOI18N
+                                            if (idx != -1) {
+                                                try {
+                                                    final String path = line.substring(0, idx);
+                                                    if (!path.isEmpty() && path.charAt(0) != '/') {
+                                                        final long ts = Long.parseLong(line.substring(idx + 1));
+                                                        timestamps.put(path, ts);
+                                                    } else {
+                                                        LOG.log(
+                                                                Level.WARNING,
+                                                                "Invalid timestamp entry {0} in {1}", //NOI18N
+                                                                new Object[]{
+                                                                    path,
+                                                                    f.getAbsolutePath()
+                                                                });
+                                                    }
+                                                } catch (NumberFormatException nfe) {
+                                                    LOG.log(Level.FINE, "Invalid timestamp: line={0}, timestamps={1}, exception={2}", new Object[]{line, f.getPath(), nfe}); //NOI18N
                                                 }
-                                            } catch (NumberFormatException nfe) {
-                                                LOG.log(Level.FINE, "Invalid timestamp: line={0}, timestamps={1}, exception={2}", new Object[] { line, f.getPath(), nfe }); //NOI18N
+                                            }
+                                        }
+                                    }
+                                } else if (line != null && line.startsWith(VERSION_3)) {
+                                    // it's the new format
+                                    LOG.log(Level.FINE, "{0}: reading {1} timestamps", new Object[]{f.getPath(), VERSION_3}); //NOI18N
+
+                                    String state = line.substring(VERSION_3.length());
+
+                                    if (IndexabilityQuery.getInstance().isSameState(state)) {
+                                        while (null != (line = in.readLine())) {
+                                            int idx = line.indexOf('='); //NOI18N
+                                            if (idx != -1) {
+                                                try {
+                                                    final String path = line.substring(0, idx);
+                                                    if (!path.isEmpty() && path.charAt(0) != '/') {
+                                                        final long ts = Long.parseLong(line.substring(idx + 1));
+                                                        timestamps.put(path, ts);
+                                                    } else {
+                                                        LOG.log(
+                                                                Level.WARNING,
+                                                                "Invalid timestamp entry {0} in {1}", //NOI18N
+                                                                new Object[]{
+                                                                    path,
+                                                                    f.getAbsolutePath()
+                                                                });
+                                                    }
+                                                } catch (NumberFormatException nfe) {
+                                                    LOG.log(Level.FINE, "Invalid timestamp: line={0}, timestamps={1}, exception={2}", new Object[]{line, f.getPath(), nfe}); //NOI18N
+                                                }
                                             }
                                         }
                                     }
@@ -297,19 +328,14 @@ public final class TimeStamps {
                                     // it's the old format from Properties.store()
                                     readOldPropertiesFormat = true;
                                 }
-                            } finally {
-                                in.close();
                             }
                         }
 
                         if (readOldPropertiesFormat) {
                             LOG.log(Level.FINE, "{0}: reading old Properties timestamps", f.getPath()); //NOI18N
                             final Properties p = new Properties();
-                            final InputStream in = new FileInputStream(f);
-                            try {
+                            try (InputStream in = new FileInputStream(f)) {
                                 p.load(in);
-                            } finally {
-                                in.close();
                             }
 
                             for(Map.Entry<Object, Object> entry : p.entrySet()) {
@@ -338,7 +364,7 @@ public final class TimeStamps {
                             }
                             LOG.log(Level.FINEST, "---------------------------"); //NOI18N
                         }
-                    } catch (Exception e) {
+                    } catch (IOException | RuntimeException e) {
                         // #176001: catching all exceptions, because j.u.Properties can throw IllegalArgumentException
                         // from its load() method
                         // In case of any exception props are empty, everything is scanned
@@ -380,5 +406,5 @@ public final class TimeStamps {
         public void store() throws IOException {
         }
     }
-    
+
 }

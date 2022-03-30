@@ -1893,20 +1893,16 @@ public class JPDADebuggerImpl extends JPDADebugger {
     public void notifyToBeResumedAllNoFire(Set<ThreadReference> ignoredThreads) {
         List<? extends JPDAThreadImpl> threads = threadsTranslation.getTranslated((o) ->
                 (o instanceof JPDAThreadImpl && (ignoredThreads == null || !ignoredThreads.contains(o))) ? (JPDAThreadImpl) o : null);
-        int n = threads.size();
-        if (n > 0) {
-            processInParallel(n, (i) -> {
-                JPDAThreadImpl thread = threads.get(i);
-                int status = thread.getState();
-                boolean invalid = (status == JPDAThread.STATE_NOT_STARTED ||
-                                   status == JPDAThread.STATE_UNKNOWN ||
-                                   status == JPDAThread.STATE_ZOMBIE);
-                if (!invalid) {
-                    thread.notifyToBeResumedNoFire();
-                } else if (status == JPDAThread.STATE_UNKNOWN || status == JPDAThread.STATE_ZOMBIE) {
-                    threadsTranslation.remove(thread.getThreadReference());
-                }
-            });
+        for (JPDAThreadImpl thread : threads) {
+            int status = thread.getState();
+            boolean invalid = (status == JPDAThread.STATE_NOT_STARTED ||
+                               status == JPDAThread.STATE_UNKNOWN ||
+                               status == JPDAThread.STATE_ZOMBIE);
+            if (!invalid) {
+                thread.notifyToBeResumedNoFire();
+            } else if (status == JPDAThread.STATE_UNKNOWN || status == JPDAThread.STATE_ZOMBIE) {
+                threadsTranslation.remove(thread.getThreadReference());
+            }
         }
     }
     
@@ -1989,28 +1985,26 @@ public class JPDADebuggerImpl extends JPDADebugger {
 
         // Create threads in parallel.
         // Constructor of JPDAThreadImpl calls getName() and getStatus(), which take time on slow connection during remote debugging.
-        List<JPDAThread> threads = new ArrayList<>(n);
+        JPDAThread[] threads = new JPDAThread[n];
         if (n > 0) {
-            AtomicBoolean filteredThreads = new AtomicBoolean(false);
             processInParallel(n, (i) -> {
                 JPDAThreadImpl thread = getThread(tl.get(i));
                 if (!thread.getName().contains(ThreadsCache.THREAD_NAME_FILTER_PATTERN)) {
-                    threads.set(i, thread);
+                    threads[i] = thread;
                 } else {
-                    threads.set(i, null);
-                    filteredThreads.set(true);
+                    threads[i] = null;
                 }
             });
-            if (filteredThreads.get()) {
-                Iterator<JPDAThread> it = threads.iterator();
-                while (it.hasNext()) {
-                    if (it.next() == null) {
-                        it.remove();
-                    }
+            List<JPDAThread> threadsFiltered = new ArrayList<>(n);
+            for (JPDAThread t : threads) {
+                if (t != null) {
+                    threadsFiltered.add(t);
                 }
             }
+            return Collections.unmodifiableList(threadsFiltered);
+        } else {
+            return Collections.emptyList();
         }
-        return Collections.unmodifiableList(threads);
     }
 
     private void processInParallel(int n, Consumer<Integer> task) {
@@ -2223,7 +2217,7 @@ public class JPDADebuggerImpl extends JPDADebugger {
             "org.openide.awt.SwingBrowserImpl.do-not-block-awt",
             String.valueOf (state != STATE_DISCONNECTED)
         );
-        return new PropertyChangeEvent(this, PROP_STATE, new Integer (o), new Integer (state));
+        return new PropertyChangeEvent(this, PROP_STATE, o, state);
     }
 
     private void setState (int state) {

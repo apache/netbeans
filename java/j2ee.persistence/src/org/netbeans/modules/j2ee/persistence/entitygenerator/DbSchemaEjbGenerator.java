@@ -49,13 +49,13 @@ import org.netbeans.modules.j2ee.persistence.entitygenerator.EntityRelation.Coll
 public class DbSchemaEjbGenerator {
     
     private GeneratedTables genTables;
-    private Map beans = new HashMap();
-    private List relations = new ArrayList();
+    private Map<String, EntityClass> beans = new HashMap<>();
+    private List<EntityRelation> relations = new ArrayList<>();
     private SchemaElement schemaElement;
     private Set<String> tablesReferecedByOtherTables;
     private Set<String> primaryKeyIsForeignKeyTables;
     private final CollectionType colectionType;
-    private final static Logger LOGGER = Logger.getLogger(DbSchemaEjbGenerator.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(DbSchemaEjbGenerator.class.getName());
     private boolean useColumNamesInRelations = false;
     //private ArrayList<String> warningMessages;
     private final boolean generateUnresolvedRelationships;
@@ -195,16 +195,16 @@ public class DbSchemaEjbGenerator {
     }
     
     public EntityClass[] getBeans() {
-        return (EntityClass[])beans.values().toArray(new EntityClass[beans.size()]);
+        return beans.values().toArray(new EntityClass[beans.size()]);
     }
     
     public EntityRelation[] getRelations() {
-        return (EntityRelation[])relations.toArray(new EntityRelation[relations.size()]);
+        return relations.toArray(new EntityRelation[relations.size()]);
     }
     
     
     private EntityClass getBean(String tableName) {
-        return (EntityClass)beans.get(tableName);
+        return beans.get(tableName);
     }
     
     private EntityClass addBean(String tableName) {
@@ -551,8 +551,8 @@ public class DbSchemaEjbGenerator {
     private void buildCMPSet() {
         reset();
         addAllTables();
-        for (Iterator it = beans.keySet().iterator(); it.hasNext();) {
-            String tableName = it.next().toString();
+        for (Iterator<String> it = beans.keySet().iterator(); it.hasNext();) {
+            String tableName = it.next();
             TableElement table = schemaElement.getTable(DBIdentifier.create(tableName));
             ColumnElement[] cols = table.getColumns();
             UniqueKeyElement pk = getPrimaryOrCandidateKey(table);
@@ -583,13 +583,13 @@ public class DbSchemaEjbGenerator {
     }
     
     private List getFieldNames(EntityClass bean) {
-        List result = new ArrayList();
-        for (Iterator i = bean.getFields().iterator(); i.hasNext();) {
-            EntityMember member = (EntityMember)i.next();
+        List<String> result = new ArrayList<>();
+        for (Iterator<EntityMember> i = bean.getFields().iterator(); i.hasNext();) {
+            EntityMember member = i.next();
             result.add(member.getMemberName());
         }
-        for (Iterator i = bean.getRoles().iterator(); i.hasNext();) {
-            RelationshipRole role = (RelationshipRole)i.next();
+        for (Iterator<RelationshipRole> i = bean.getRoles().iterator(); i.hasNext();) {
+            RelationshipRole role = i.next();
             result.add(role.getFieldName());
         }
         return result;
@@ -600,7 +600,7 @@ public class DbSchemaEjbGenerator {
      */
     private EntityRelation[] makeRelationsUnique() {
         EntityRelation[] r = getRelations();
-        List relationNames = new ArrayList(r.length);
+        List<String> relationNames = new ArrayList<>(r.length);
         for (int i = 0; i < r.length; i++) {
             r[i].makeRoleNamesUnique();
             String baseName = r[i].getRelationName();
@@ -612,7 +612,7 @@ public class DbSchemaEjbGenerator {
     /**
      * return name generated or base name if this was ok
      */
-    private static String uniqueAlgorithm(List names, String baseName, String sep) {
+    private static String uniqueAlgorithm(List<String> names, String baseName, String sep) {
         String newName = baseName;
         int unique = 0;
         while (names.contains(newName)) {
@@ -640,7 +640,7 @@ public class DbSchemaEjbGenerator {
                 ret.put(fkc, key);
             }
         }
-        return (ForeignKeyElement[]) ret.values().toArray(new ForeignKeyElement[]{});
+        return ret.values().toArray(new ForeignKeyElement[]{});
     }
 
     /**

@@ -20,6 +20,7 @@ package org.netbeans.modules.php.nette.tester.run;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.List;
@@ -222,7 +223,7 @@ public class TapParserTest extends NbTestCase {
 
     private void putFileContent(String filePath, String content) throws IOException {
         File file = new File(getWorkDir(), filePath);
-        Files.write(file.toPath(), content.getBytes("UTF-8"));
+        Files.write(file.toPath(), content.getBytes(StandardCharsets.UTF_8));
     }
 
 }

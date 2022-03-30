@@ -101,11 +101,15 @@ public final class GradleProject implements Serializable, Lookup.Provider {
     }
 
     public final GradleProject invalidate(String... reasons) {
+        Set<String> problems = reasons.length > 0 ? new LinkedHashSet<>(Arrays.asList(reasons)) : Collections.emptySet();
         if (getQuality().worseThan(Quality.EVALUATED)) {
-            return this;
+            if (!problems.isEmpty()) {
+                return new GradleProject(getQuality(), problems, this);
+            } else {
+                return this;
+            }
         } else {
-            Set<String> p = new LinkedHashSet<>(Arrays.asList(reasons));
-            return new GradleProject(Quality.EVALUATED, p, this);
+            return new GradleProject(Quality.EVALUATED, problems, this);
         }
     }
 

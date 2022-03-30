@@ -49,7 +49,7 @@ class ObjectProviders {
         }
     }
 
-    private static abstract class AbstractProvider<T extends Refreshable> implements ObjectProvider<T> {
+    private abstract static class AbstractProvider<T extends Refreshable> implements ObjectProvider<T> {
 
         private Set<String> annotationTypeNames;
         private AnnotationModelHelper helper;

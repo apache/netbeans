@@ -19,8 +19,8 @@
 package org.netbeans.modules.nativeexecution.api.util;
 
 import java.io.File;
-import java.io.IOException;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Level;
@@ -371,7 +371,7 @@ public final class WindowsSupport {
             }
 
             if (cygwinVersion.startsWith("1.7")) { // NOI18N
-                charset = Charset.forName("UTF-8"); // NOI18N
+                charset = StandardCharsets.UTF_8;
             }
         } catch (Exception ex) {
         }

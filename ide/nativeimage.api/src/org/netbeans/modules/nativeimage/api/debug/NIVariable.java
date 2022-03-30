@@ -20,28 +20,28 @@ package org.netbeans.modules.nativeimage.api.debug;
 
 /**
  * Representation of a native variable.
- * @since 1.0
+ * @since 0.1
  */
 public interface NIVariable {
 
     /**
      * Name of the variable.
      *
-     * @since 1.0
+     * @since 0.1
      */
     String getName();
 
     /**
      * Type of the variable value.
      *
-     * @since 1.0
+     * @since 0.1
      */
     String getType();
 
     /**
      * String representation of the variable value.
      *
-     * @since 1.0
+     * @since 0.1
      */
     String getValue();
 
@@ -50,14 +50,14 @@ public interface NIVariable {
      * variable.
      *
      * @return the parent variable, or <code>null</code>.
-     * @since 1.0
+     * @since 0.1
      */
     NIVariable getParent();
 
     /**
      * Number of child variables (properties, or array elements) of this variable.
      *
-     * @since 1.0
+     * @since 0.1
      */
     int getNumChildren();
 
@@ -66,14 +66,14 @@ public interface NIVariable {
      * <code>from</code> index and up to and excluding <code>to</code> index will
      * be returned. If <code>from</code> is less than zero, all children are returned.
      *
-     * @since 1.0
+     * @since 0.1
      */
     NIVariable[] getChildren(int from, int to);
 
     /**
      * Get all variable's children.
      *
-     * @since 1.0
+     * @since 0.1
      */
     default NIVariable[] getChildren() {
         return getChildren(0, Integer.MAX_VALUE);
@@ -82,7 +82,7 @@ public interface NIVariable {
     /**
      * Get the full expression that this variable object represents.
      *
-     * @since 1.0
+     * @since 0.1
      */
     String getExpressionPath();
 
@@ -90,7 +90,7 @@ public interface NIVariable {
      * Get the frame this variable is associated with.
      *
      * @return the frame, or <code>null</code>.
-     * @since 1.0
+     * @since 0.1
      */
     NIFrame getFrame();
 }

@@ -36,14 +36,14 @@ import org.openide.modules.ModuleInfo;
  * @author Radek Matous, Jiri Rechtacek
  */
 abstract class OperationValidator {
-    private final static OperationValidator FOR_INSTALL = new InstallValidator();
-    private final static OperationValidator FOR_INTERNAL_UPDATE = new InternalUpdateValidator();
-    private final static OperationValidator FOR_UNINSTALL = new UninstallValidator();
-    private final static OperationValidator FOR_UPDATE = new UpdateValidator();
-    private final static OperationValidator FOR_ENABLE = new EnableValidator();
-    private final static OperationValidator FOR_DISABLE = new DisableValidator();
-    private final static OperationValidator FOR_CUSTOM_INSTALL = new CustomInstallValidator();
-    private final static OperationValidator FOR_CUSTOM_UNINSTALL = new CustomUninstallValidator();
+    private static final OperationValidator FOR_INSTALL = new InstallValidator();
+    private static final OperationValidator FOR_INTERNAL_UPDATE = new InternalUpdateValidator();
+    private static final OperationValidator FOR_UNINSTALL = new UninstallValidator();
+    private static final OperationValidator FOR_UPDATE = new UpdateValidator();
+    private static final OperationValidator FOR_ENABLE = new EnableValidator();
+    private static final OperationValidator FOR_DISABLE = new DisableValidator();
+    private static final OperationValidator FOR_CUSTOM_INSTALL = new CustomInstallValidator();
+    private static final OperationValidator FOR_CUSTOM_UNINSTALL = new CustomUninstallValidator();
     private static final Logger LOGGER = Logger.getLogger (OperationValidator.class.getName ());
     
     /** Creates a new instance of OperationValidator */

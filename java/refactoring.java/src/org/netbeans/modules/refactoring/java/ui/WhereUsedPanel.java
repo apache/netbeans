@@ -171,7 +171,7 @@ public class WhereUsedPanel extends JPanel implements CustomRefactoringPanel {
             initialized = true;
     }
 
-    static abstract class WhereUsedInnerPanel extends JPanel {
+    abstract static class WhereUsedInnerPanel extends JPanel {
         abstract boolean isSearchInComments();
         abstract void initialize(Element element, CompilationController info);
     }

@@ -130,10 +130,10 @@ class AutoUpdateCatalogParser extends DefaultHandler {
 
     private static Map<String, ModuleItem> cache;
     private static URI cacheURI;
-    synchronized static Map<String, ModuleItem> getUpdateItems (URL url, URL provider, Task task) throws IOException {
+    static synchronized Map<String, ModuleItem> getUpdateItems (URL url, URL provider, Task task) throws IOException {
         return getUpdateItems(url, null, provider, task);
     }
-    synchronized static Map<String, ModuleItem> getUpdateItems (URL url, InputStream data, URL provider, Task task) throws IOException {
+    static synchronized Map<String, ModuleItem> getUpdateItems (URL url, InputStream data, URL provider, Task task) throws IOException {
 
         Map<String, ModuleItem> items = new HashMap<> ();
         URI base;

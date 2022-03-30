@@ -24,7 +24,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
-import org.netbeans.modules.payara.tooling.data.JDKVersion;
 import org.openide.util.Exceptions;
 
 /**
@@ -188,7 +187,8 @@ public class StartupArgsEntity implements StartupArgs {
                     if (javaVersionLine != null) {
                         javaVersion = JDKVersion.toValue(
                                 javaVersionLine.substring(javaVersionLine.indexOf("\"") + 1, javaVersionLine.lastIndexOf("\"")), // NOI18N
-                                implementorLine != null ? implementorLine.substring(implementorLine.indexOf("\"") + 1, implementorLine.lastIndexOf("\"")) : null // NOI18N
+                                implementorLine != null ? implementorLine.substring(implementorLine.indexOf("\"") + 1, implementorLine.lastIndexOf("\"")) : null, // NOI18N
+                                null
                         );
                     }
                 } catch (IOException ex) {

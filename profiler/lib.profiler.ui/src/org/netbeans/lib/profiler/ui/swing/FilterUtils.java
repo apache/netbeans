@@ -382,7 +382,7 @@ public final class FilterUtils {
         else button.setEnabled(!currentFilter.equals(activeFilter));
     }
     
-    private static abstract class Filter extends RowFilter {
+    private abstract static class Filter extends RowFilter {
 
         public boolean equals(Object o) {
             return o instanceof Filter;

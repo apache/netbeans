@@ -28,7 +28,6 @@ import org.codehaus.groovy.ast.FieldNode;
 import org.codehaus.groovy.ast.MethodNode;
 import org.codehaus.groovy.ast.ModuleNode;
 import org.codehaus.groovy.ast.Parameter;
-import org.codehaus.groovy.ast.expr.ClassExpression;
 import org.codehaus.groovy.ast.expr.ClosureExpression;
 import org.codehaus.groovy.ast.expr.ConstantExpression;
 import org.codehaus.groovy.ast.expr.ConstructorCallExpression;
@@ -37,6 +36,7 @@ import org.codehaus.groovy.ast.expr.ListExpression;
 import org.codehaus.groovy.ast.expr.NamedArgumentListExpression;
 import org.codehaus.groovy.ast.expr.RangeExpression;
 import org.codehaus.groovy.ast.expr.VariableExpression;
+import org.codehaus.groovy.ast.stmt.BlockStatement;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.editor.BaseDocument;
@@ -285,6 +285,9 @@ public final class CompletionContext {
 
             if (t.id() == GroovyTokenId.LITERAL_package) {
                 return CaretLocation.ABOVE_PACKAGE;
+            } else if (t.id() == GroovyTokenId.LITERAL_class || t.id() == GroovyTokenId.LITERAL_def
+                    || t.id() == GroovyTokenId.LPAREN || t.id() == GroovyTokenId.LBRACE) {
+                break;
             }
         }
 
@@ -293,19 +296,60 @@ public final class CompletionContext {
 
         boolean classDefBeforePosition = false;
         boolean openBraceBeforePosition = false;
-
+        // is there package statement?
+        boolean afterPackagePosition = false;
+        boolean canBeImport = true;
+        
         ts.move(position);
 
         while (ts.isValid() && ts.movePrevious() && ts.offset() >= 0) {
             Token<GroovyTokenId> t = ts.token();
             if (t.id() == GroovyTokenId.LBRACE) {
                 openBraceBeforePosition = true;
+                canBeImport = false;
             } else if (t.id() == GroovyTokenId.LITERAL_class || t.id() == GroovyTokenId.LITERAL_interface || t.id() == GroovyTokenId.LITERAL_trait) {
                 classDefBeforePosition = true;
                 break;
+            } else if (t.id() == GroovyTokenId.LITERAL_package) {
+                afterPackagePosition = true;
+                break;
+            } else if (canBeImport && t.id() == GroovyTokenId.LITERAL_import) {
+                return CaretLocation.INSIDE_IMPORT;
+            }
+            
+            if (canBeImport && !(t.id() == GroovyTokenId.DOT || t.id() == GroovyTokenId.IDENTIFIER
+                    || t.id() == GroovyTokenId.WHITESPACE || t.id() == GroovyTokenId.LITERAL_static)) {
+                canBeImport = false;
             }
         }
 
+        if (afterPackagePosition) {
+            // are we in the package statement?
+            ts.move(position);  // back on the caret position
+            boolean isPackageStatement = true;
+            boolean blockComment = false;
+            int countOfWhitespaces = 0;
+            while (ts.isValid() && ts.movePrevious() && ts.offset() >= 0 && isPackageStatement) {
+                Token<GroovyTokenId> t = ts.token();
+                if (t.id() == GroovyTokenId.LITERAL_package) {
+                    break;
+                } else if (t.id() == GroovyTokenId.WHITESPACE) {
+                    countOfWhitespaces++;
+                } else if (t.id() == GroovyTokenId.BLOCK_COMMENT) {
+                    // cases: 
+                    //      package /* comment */ org.apache.something
+                    //      package /* comment */org.apache.something
+                    //      package/* comment */org.apache.something
+                    blockComment = true;
+                } else {
+                    isPackageStatement = (t.id() == GroovyTokenId.DOT || t.id() == GroovyTokenId.IDENTIFIER);
+                }
+            }
+            if (isPackageStatement && (countOfWhitespaces == 1 || (blockComment && countOfWhitespaces < 3))) {
+                // we are just behind the package keyword
+                return CaretLocation.INSIDE_PACKAGE;
+            }
+        } 
 
         boolean classDefAfterPosition = false;
 
@@ -319,7 +363,7 @@ public final class CompletionContext {
             }
         }
 
-        if (path != null) {
+         if (path != null) {
             ASTNode node = path.root();
             if (node instanceof ModuleNode) {
                 ModuleNode module = (ModuleNode) node;
@@ -398,6 +442,8 @@ public final class CompletionContext {
 
          */
 
+        boolean insideBlock = false;  // we need to distinquish, whether are we inside 
+                                      // a method or in method declaration part
         for (Iterator<ASTNode> it = path.iterator(); it.hasNext();) {
             ASTNode current = it.next();
             if (current instanceof ClosureExpression) {
@@ -408,7 +454,11 @@ public final class CompletionContext {
                     return CaretLocation.INSIDE_CLOSURE;
                 }
             } else if (current instanceof MethodNode) {
-                return CaretLocation.INSIDE_METHOD;
+                if (insideBlock) {
+                    return CaretLocation.INSIDE_METHOD;
+                }
+            } else if (current instanceof BlockStatement) {
+                insideBlock = true;
             } else if (current instanceof ClassNode) {
                 return CaretLocation.INSIDE_CLASS;
             } else if (current instanceof ModuleNode) {
@@ -741,7 +791,7 @@ public final class CompletionContext {
         DotCompletionContext dotCompletionContext = getDotCompletionContext();
 
         // FIXME static/script context...
-        if (!isBehindDot() && context.before1 == null
+        if (!isBehindDot() && (context.before1 == null || location == CaretLocation.INSIDE_METHOD)
                 && (location == CaretLocation.INSIDE_CLOSURE || location == CaretLocation.INSIDE_METHOD)) {
             ASTNode an = ContextHelper.getSurroundingClassMember(this);
             boolean st = 

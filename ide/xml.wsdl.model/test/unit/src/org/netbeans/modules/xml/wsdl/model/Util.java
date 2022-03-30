@@ -31,6 +31,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.URI;
+import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import javax.swing.text.Document;
 import org.netbeans.modules.xml.schema.model.GlobalSimpleType;
@@ -81,7 +82,7 @@ public class Util {
     
     public static String getResourceAsString(String path) throws Exception {
         InputStream in = Util.class.getResourceAsStream(path);
-        BufferedReader br = new BufferedReader(new InputStreamReader(in,"UTF-8"));
+        BufferedReader br = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
         StringBuffer sbuf = new StringBuffer();
         try {
             String line = null;

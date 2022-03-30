@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.100.0
+#Version 1.103.0
 
 CLSS public abstract interface java.io.Serializable
 
@@ -81,6 +81,8 @@ meth public org.netbeans.api.project.Project getMainProject()
 meth public org.netbeans.api.project.Project[] getOpenProjects()
 meth public org.netbeans.api.project.ui.ProjectGroup getActiveProjectGroup()
  anno 0 org.netbeans.api.annotations.common.CheckForNull()
+meth public org.openide.explorer.ExplorerManager createLogicalView()
+meth public org.openide.explorer.ExplorerManager createPhysicalView()
 meth public static org.netbeans.api.project.ui.OpenProjects getDefault()
 meth public void addProjectGroupChangeListener(org.netbeans.api.project.ui.ProjectGroupChangeListener)
  anno 1 org.netbeans.api.annotations.common.NonNull()

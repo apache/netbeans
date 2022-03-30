@@ -88,7 +88,7 @@ public class UpdateProjectImpl implements UpdateImplementation {
                 synchronized (this) {
                     if (isCurrent == null) {
                         if ((cfg.getConfigurationFragment("data","http://www.netbeans.org/ns/j2ee-ejbjarproject/1",true) != null) ||
-                        (cfg.getConfigurationFragment("data","http://www.netbeans.org/ns/j2ee-ejbjarproject/2",true) != null)) {
+                                (cfg.getConfigurationFragment("data","http://www.netbeans.org/ns/j2ee-ejbjarproject/2",true) != null)) {
                             isCurrent = Boolean.FALSE;
                         } else {
                             isCurrent = Boolean.TRUE;
@@ -97,7 +97,7 @@ public class UpdateProjectImpl implements UpdateImplementation {
                     return isCurrent;
                 }
             }
-        }).booleanValue();
+        });
     }
 
     public boolean canUpdate() {
@@ -196,7 +196,7 @@ public class UpdateProjectImpl implements UpdateImplementation {
                                 ArrayList<FileObject> files = new ArrayList<FileObject>();
                                 ArrayList<FileObject> dirs = new ArrayList<FileObject>();
                                 for (Iterator<URL> it = roots.iterator(); it.hasNext();) {
-                                    URL rootUrl = (URL) it.next();
+                                    URL rootUrl = it.next();
                                     FileObject root = org.openide.filesystems.URLMapper.findFileObject (rootUrl);
                                     if ("jar".equals(rootUrl.getProtocol())) {  //NOI18N
                                         root = FileUtil.getArchiveFile (root);

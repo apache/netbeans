@@ -1,0 +1,6 @@
+Code completion result for source line:
+String a = this.meth|od1()
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+METHOD     method1()                       [PRIVATE]  String
+METHOD     method2()                       [PUBLIC]   void

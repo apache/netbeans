@@ -59,8 +59,7 @@ public class StringPrefixTree<Type> {
          *         with case sensitive settings rules applied.
          */
         Character toCharacter(final char c) {
-            return Character.valueOf(
-                    caseSensitive ? c : Character.toUpperCase(c));
+            return caseSensitive ? c : Character.toUpperCase(c);
         }
 
         /**
@@ -188,7 +187,7 @@ public class StringPrefixTree<Type> {
             sb.append("Value=");
             sb.append(value != null ? value.toString() : "null");
             sb.append(" Transitions=[");
-            for (Iterator i = next.keySet().iterator(); i.hasNext(); ) {
+            for (Iterator<Character> i = next.keySet().iterator(); i.hasNext(); ) {
                 sb.append(i.next());
                 if (i.hasNext()) {
                     sb.append(',');

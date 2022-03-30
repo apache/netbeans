@@ -28,6 +28,7 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.net.URI;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -36,7 +37,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.netbeans.api.diff.StreamSource;
 import org.netbeans.modules.hudson.ui.api.HudsonSCMHelper;
-import static org.netbeans.modules.hudson.mercurial.Bundle.*;
 import org.netbeans.modules.hudson.spi.HudsonJobChangeItem.HudsonJobChangeFile;
 import org.netbeans.modules.hudson.spi.HudsonJobChangeItem.HudsonJobChangeFile.EditType;
 import org.openide.filesystems.FileUtil;
@@ -44,6 +44,8 @@ import org.openide.util.NbBundle.Messages;
 import org.openide.util.RequestProcessor;
 import org.openide.windows.OutputEvent;
 import org.openide.windows.OutputListener;
+
+import static org.netbeans.modules.hudson.mercurial.Bundle.*;
 
 /**
  * Creates a hyperlink to a Mercurial change.
@@ -119,7 +121,7 @@ class MercurialHyperlink implements OutputListener {
             try {
                 InputStream is = rawrev.openStream();
                 try {
-                    BufferedReader r = new BufferedReader(new InputStreamReader(is, "ISO-8859-1")); // NOI18N
+                    BufferedReader r = new BufferedReader(new InputStreamReader(is, StandardCharsets.ISO_8859_1));
                     String line;
                     while ((line = r.readLine()) != null) {
                         Matcher m = PARENT_COMMENT.matcher(line);

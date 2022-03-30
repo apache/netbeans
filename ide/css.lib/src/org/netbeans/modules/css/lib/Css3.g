@@ -32,7 +32,7 @@
 // Rebuild the lexer and parser:
 // 1. Update Css3.g
 // 2. Update the lexer/parser sources by running
-//    ant -Dantlr.jar=<PATH_TO_ANTLR3_JAR> generate-antlr-parser
+//    ant generate-antlr-parser
 //    from the module directory (ide/css.lib)
 // 3. Rerun unittests
 // 4. Commit Css3.g together with generated Css3Lexer.java and Css3Parser.java
@@ -44,7 +44,7 @@ grammar Css3;
 //}
 
 @header {
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -101,6 +101,10 @@ package org.netbeans.modules.css.lib;
     private boolean tokenNameEquals(String tokenImage) {
         return tokenImage.equalsIgnoreCase(input.LT(1).getText());
     }
+    
+    private boolean tokenNameEquals2(String tokenImage) {
+        return tokenImage.equalsIgnoreCase(input.LT(2).getText());
+    }
 
     private boolean tokenNameIs(String[] tokens) {
         for(String tokenImage : tokens) {
@@ -116,7 +120,7 @@ package org.netbeans.modules.css.lib;
             && input.LT(1).getText().startsWith(prefix);
     }
 
-/**
+    /**
      * Use the current stacked followset to work out the valid tokens that
      * can follow on from the current point in the parse, then recover by
      * eating tokens that are not a member of the follow set we compute.
@@ -193,7 +197,7 @@ package org.netbeans.modules.css.lib;
         }
     }
 
-    /**
+        /**
          * synces to next RBRACE "}" taking nesting into account
          */
         protected void syncToRBRACE(int nest)
@@ -246,7 +250,7 @@ package org.netbeans.modules.css.lib;
 }
 
 @lexer::header {
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -311,7 +315,13 @@ charSetValue
 
 imports
 	:
-	( importItem ws? SEMI ws? )+
+	(
+            ( importItem ws? SEMI ws? )
+            |
+            ( sass_use ws? SEMI ws? )
+            |
+            ( sass_forward ws? SEMI ws? )
+        )+
 	;
 
 importItem
@@ -323,6 +333,58 @@ importItem
         |
         {isLessSource()}? IMPORT_SYM ws? (LPAREN less_import_types RPAREN ws?)? resourceIdentifier ((ws? mediaQueryList)=>ws? mediaQueryList)?
     ;
+
+sass_use
+    :
+        {isScssSource()}? SASS_USE ws resourceIdentifier (ws sass_use_as)? (ws sass_use_with)?
+    ;
+
+sass_use_as
+    :
+    {tokenNameEquals("as")}? IDENT ws IDENT
+    ;
+
+sass_use_with
+    :
+    {tokenNameEquals("with")}? IDENT ws? LPAREN ws? sass_use_with_declaration  (ws? COMMA ws? sass_use_with_declaration)*  ws? RPAREN
+    ;
+
+sass_use_with_declaration
+    :
+    cp_variable ws? COLON ws? cp_expression
+    ;
+
+
+sass_forward
+    :
+        {isScssSource()}? SASS_FORWARD ws resourceIdentifier ( ws ( sass_forward_hide |  sass_forward_show))? ({tokenNameEquals2("as")}? ws sass_forward_as)? ({tokenNameEquals2("with")}? ws sass_forward_with)?
+    ;
+
+sass_forward_as
+    :
+    {tokenNameEquals("as")}? IDENT ws IDENT
+    ;
+
+sass_forward_with
+    :
+    {tokenNameEquals("with")}? IDENT ws? LPAREN ws? sass_forward_with_declaration  (ws? COMMA ws? sass_forward_with_declaration)*  ws? RPAREN
+    ;
+
+sass_forward_with_declaration
+    :
+    cp_variable ws? COLON ws? cp_expression
+    ;
+
+sass_forward_hide
+    :
+    {tokenNameEquals("hide")}? IDENT ws IDENT (ws? COMMA ws? IDENT)*
+    ;
+
+sass_forward_show
+    :
+    {tokenNameEquals("show")}? IDENT ws IDENT (ws? COMMA ws? IDENT)*
+    ;
+
 media
     : MEDIA_SYM ws?
     (
@@ -534,11 +596,16 @@ webkitKeyframeSelectors
 	;
 
 page
+@init {
+    boolean semiRequired = false;
+}
     : PAGE_SYM ws? ( IDENT ws? )? (pseudoPage ws?)?
-        LBRACE ws?
+        LBRACE
             //the grammar in the http://www.w3.org/TR/css3-page/ says the declaration/margins should be delimited by the semicolon,
             //but there's no such char in the examples => making it arbitrary
-            ((propertyDeclaration|margin) ws?)? (SEMI ws? ((propertyDeclaration|margin) ws?)?)*
+            ( ws? ({semiRequired}? (SEMI ws?) | (SEMI ws?)?) (propertyDeclaration{semiRequired=true;}|margin{semiRequired=false;}))*
+            SEMI?
+            ws?
         RBRACE
     ;
 
@@ -733,7 +800,7 @@ elementSubsequent
     :
     (
         {isScssSource()}? sass_extend_only_selector
-        | {isCssPreprocessorSource()}? LESS_AND (IDENT | NUMBER)*
+        | {isCssPreprocessorSource()}? LESS_AND (IDENT | NUMBER | {isScssSource()}? sass_interpolation_expression_var)*
         | {isLessSource()}? LESS_AND less_selector_interpolation_exp
     	| cssId
     	| cssClass
@@ -827,10 +894,9 @@ pseudo
                     )?
                 )
                 | {isScssSource()}? sass_interpolation_expression_var
-                |
-                ( NOT ws? LPAREN ws? (simpleSelectorSequence ws?)? RPAREN )
-                | 
-                ({isLessSource()}? {tokenNameEquals("extend")}? IDENT ws? LPAREN ws? selectorsGroup? RPAREN)
+                | ( NOT ws? LPAREN ws? ( selectorsGroup ws?)? RPAREN )
+                | {tokenNameEquals("is") || tokenNameEquals("where")}? ( IDENT ws? LPAREN ws? ( selectorsGroup ws?)? RPAREN )
+                | ({isLessSource()}? {tokenNameEquals("extend")}? IDENT ws? LPAREN ws? selectorsGroup? RPAREN)
              ) 
     ;
 
@@ -913,7 +979,7 @@ term
     (
         (functionName ws? LPAREN)=>function //"myfunction(" as predicate
         | VARIABLE
-        | IDENT
+        | {! (isScssSource() && tokenNameEquals2("."))}? IDENT
         | (LBRACKET WS? IDENT (WS IDENT)* WS? RBRACKET)
         | NUMBER
         | URANGE
@@ -1018,7 +1084,7 @@ cp_variable
         //every token which might possibly begin with the at sign
         {isLessSource()}? ( AT_IDENT | IMPORT_SYM | PAGE_SYM | MEDIA_SYM | NAMESPACE_SYM | CHARSET_SYM | COUNTER_STYLE_SYM | FONT_FACE_SYM | TOPLEFTCORNER_SYM | TOPLEFT_SYM | TOPCENTER_SYM | TOPRIGHT_SYM | TOPRIGHTCORNER_SYM | BOTTOMLEFTCORNER_SYM | BOTTOMLEFT_SYM | BOTTOMCENTER_SYM | BOTTOMRIGHT_SYM | BOTTOMRIGHTCORNER_SYM | LEFTTOP_SYM | LEFTMIDDLE_SYM | LEFTBOTTOM_SYM | RIGHTTOP_SYM | RIGHTMIDDLE_SYM | RIGHTBOTTOM_SYM | MOZ_DOCUMENT_SYM | WEBKIT_KEYFRAMES_SYM | SASS_CONTENT | SASS_MIXIN | SASS_INCLUDE | SASS_EXTEND | SASS_DEBUG | SASS_WARN | SASS_IF | SASS_ELSE | SASS_FOR | SASS_FUNCTION | SASS_RETURN | SASS_EACH | SASS_WHILE | SASS_AT_ROOT )
         |
-        {isScssSource()}? ( SASS_VAR )
+        {isScssSource()}? ( SASS_VAR | IDENT DOT SASS_VAR )
     ;
 
 //comma separated list of cp_expression-s
@@ -1252,7 +1318,7 @@ sass_nested_properties
 
 sass_extend
     :
-    SASS_EXTEND ws simpleSelectorSequence (ws SASS_OPTIONAL)?
+    SASS_EXTEND ws simpleSelectorSequence (ws? COMMA ws? simpleSelectorSequence)* (ws SASS_OPTIONAL)?
     ;
 
 sass_extend_only_selector
@@ -1791,6 +1857,8 @@ SASS_ELSEIF         : '@ELSEIF'; //@elseif
 SASS_FOR            : '@FOR';
 SASS_FUNCTION       : '@FUNCTION';
 SASS_RETURN         : '@RETURN';
+SASS_USE            : '@USE';
+SASS_FORWARD        : '@FORWARD';
 
 SASS_EACH           : '@EACH';
 SASS_WHILE          : '@WHILE';

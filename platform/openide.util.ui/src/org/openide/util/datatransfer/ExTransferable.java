@@ -152,7 +152,7 @@ public class ExTransferable extends Object implements Transferable {
     *
     * @param l the listener
     */
-    public synchronized final void addTransferListener(TransferListener l) {
+    public final synchronized void addTransferListener(TransferListener l) {
         if (listeners == null) {
             listeners = new EventListenerList();
         }
@@ -162,7 +162,7 @@ public class ExTransferable extends Object implements Transferable {
 
     /** Removes a listener.
     */
-    public synchronized final void removeTransferListener(TransferListener l) {
+    public final synchronized void removeTransferListener(TransferListener l) {
         if (listeners != null) {
             listeners.remove(TransferListener.class, l);
         }
@@ -217,7 +217,7 @@ public class ExTransferable extends Object implements Transferable {
     /** Support for transferable owner with only one data flavor.
     * Subclasses need only implement {@link #getData}.
     */
-    public static abstract class Single extends Object implements Transferable {
+    public abstract static class Single extends Object implements Transferable {
         /** the supported data flavor */
         private DataFlavor flavor;
 

@@ -31,7 +31,7 @@ public final class UiOptions {
     /** Creates a new instance of UiOptions */
     private UiOptions() {}
     
-    final static class GoToTypeDialog {
+    static final class GoToTypeDialog {
     
         private static final String GO_TO_TYPE_DIALOG = "GoToTypeDialog"; // NOI18N    
         
@@ -74,7 +74,7 @@ public final class UiOptions {
         }
     }
     
-    public final static class GoToSymbolDialog {
+    public static final class GoToSymbolDialog {
     
         private static final String GO_TO_SYMBOL_DIALOG = "GoToSymbolDialog"; // NOI18N    
         

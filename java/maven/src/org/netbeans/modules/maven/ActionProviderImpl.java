@@ -521,7 +521,7 @@ public class ActionProviderImpl implements ActionProvider {
         return new CustomAction(name, mapping, showUI, context, project);
     }
 
-    private final static class CustomAction extends AbstractAction {
+    private static final class CustomAction extends AbstractAction {
 
         private final NetbeansActionMapping mapping;
         private final boolean showUI;
@@ -625,7 +625,7 @@ public class ActionProviderImpl implements ActionProvider {
     }
 
     // XXX should this be an API somewhere?
-    private static abstract class ConditionallyShownAction extends AbstractAction implements ContextAwareAction {
+    private abstract static class ConditionallyShownAction extends AbstractAction implements ContextAwareAction {
         protected boolean triggeredOnFile = false;
         protected boolean triggeredOnPom = false;
         

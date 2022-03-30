@@ -20,7 +20,10 @@ package org.netbeans.modules.lsp.client.bindings;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -110,22 +113,11 @@ public class FoldManagerImpl implements FoldManager, BackgroundTask {
         EditorCookie ec = file.getLookup().lookup(EditorCookie.class);
         Document doc = ec != null ? ec.getDocument() : null;
         if (doc == null) {
-            return ;
+            return;
         }
+
         List<FoldingRange> ranges = computeRanges(bindings, file);
-        List<FoldInfo> infos = new ArrayList<>();
-        if (ranges != null) {
-            for (FoldingRange r : ranges) {
-                int start = Utils.getOffset(doc, new Position(r.getStartLine(), r.getStartCharacter() != null ? r.getStartCharacter() : 0));
-                int end;
-                if (r.getEndCharacter() == null) {
-                    end = Utils.getOffset(doc, new Position(r.getEndLine() + 1, 0)) - 1;
-                } else {
-                    end = Utils.getOffset(doc, new Position(r.getEndLine(), r.getEndCharacter()));
-                }
-                infos.add(FoldInfo.range(start, end, FoldType.CODE_BLOCK));
-            }
-        }
+        List<FoldInfo> infos = computeInfos(doc, ranges);
         SwingUtilities.invokeLater(() -> {
             doc.render(() -> {
                 operation.getHierarchy().render(() -> {
@@ -138,7 +130,45 @@ public class FoldManagerImpl implements FoldManager, BackgroundTask {
             });
         });
     }
-
+    
+    static List<FoldInfo> computeInfos(Document doc, List<FoldingRange> ranges) {
+        Set<FoldingRangeInfo2> foldingRangesSeen = new HashSet<>();
+        List<FoldInfo> infos = new ArrayList<>();
+        if (ranges != null) {
+            for (FoldingRange r : ranges) {
+                int start;
+                if(r.getStartCharacter() == null) {
+                    int endCharacter = Utils.getEndCharacter(doc, r.getStartLine());
+                    start = Utils.getOffset(doc, new Position(r.getStartLine(), endCharacter));
+                } else {
+                    start = Utils.getOffset(doc, new Position(r.getStartLine(), r.getStartCharacter()));
+                }
+                int end;
+                if (r.getEndCharacter() == null) {
+                    int endCharacter = Utils.getEndCharacter(doc, r.getEndLine());
+                    end = Utils.getOffset(doc, new Position(r.getEndLine(), endCharacter));
+                } else {
+                    end = Utils.getOffset(doc, new Position(r.getEndLine(), r.getEndCharacter()));
+                }
+                // Map the fold range type to netbeans as far as possible
+                FoldType foldType;
+                if ("comment".equals(r.getKind())) {
+                    foldType = FoldType.COMMENT;
+                } else if ("imports".equals(r.getKind())) {
+                    foldType = FoldType.IMPORT;
+                } else {
+                    foldType = FoldType.CODE_BLOCK;
+                }
+                FoldingRangeInfo2 fri2 = new FoldingRangeInfo2(start, end, foldType);
+                if (!foldingRangesSeen.contains(fri2)) {
+                    infos.add(FoldInfo.range(start, end, foldType));
+                    foldingRangesSeen.add(fri2);
+                }
+            }
+        }
+        return infos;
+    }
+   
     static List<FoldingRange> computeRanges(LSPBindings bindings, FileObject file) {
         if (bindings.getInitResult() != null &&
             bindings.getInitResult().getCapabilities() != null &&
@@ -162,5 +192,62 @@ public class FoldManagerImpl implements FoldManager, BackgroundTask {
             return new FoldManagerImpl();
         }
 
+    }
+
+    static class FoldingRangeInfo2 {
+        private int start;
+        private int end;
+        private FoldType type;
+
+        public FoldingRangeInfo2(int start, int end, FoldType type) {
+            this.start = start;
+            this.end = end;
+            this.type = type;
+        }
+
+        public int getStart() {
+            return start;
+        }
+
+        public int getEnd() {
+            return end;
+        }
+
+        public FoldType getType() {
+            return type;
+        }
+
+        @Override
+        public int hashCode() {
+            int hash = 3;
+            hash = 23 * hash + this.start;
+            hash = 23 * hash + this.end;
+            hash = 23 * hash + Objects.hashCode(this.type);
+            return hash;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (this == obj) {
+                return true;
+            }
+            if (obj == null) {
+                return false;
+            }
+            if (getClass() != obj.getClass()) {
+                return false;
+            }
+            final FoldingRangeInfo2 other = (FoldingRangeInfo2) obj;
+            if (this.start != other.start) {
+                return false;
+            }
+            if (this.end != other.end) {
+                return false;
+            }
+            if (!Objects.equals(this.type, other.type)) {
+                return false;
+            }
+            return true;
+        }
     }
 }

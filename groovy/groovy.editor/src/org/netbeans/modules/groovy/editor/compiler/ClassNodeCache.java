@@ -19,6 +19,7 @@
 package org.netbeans.modules.groovy.editor.compiler;
 
 import groovy.lang.GroovyClassLoader;
+import groovy.lang.GroovyCodeSource;
 import groovy.lang.GroovyResourceLoader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -28,12 +29,15 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
-import java.util.Collections;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.codehaus.groovy.ast.ClassNode;
@@ -45,11 +49,10 @@ import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.source.ClasspathInfo;
 import org.netbeans.api.java.source.JavaSource;
-import org.netbeans.modules.groovy.editor.api.parser.GroovyParser;
 import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.URLMapper;
 import org.openide.util.Enumerations;
-import org.openide.util.Pair;
 
 /**
  *
@@ -72,7 +75,6 @@ public final class ClassNodeCache {
     private final Map<CharSequence,ClassNode> cache;
     private final Map<CharSequence,Void> nonExistent;
     private Reference<JavaSource> resolver;
-    private Reference<GroovyClassLoader> transformationLoaderRef;
     private Reference<GroovyClassLoader> resolveLoaderRef;
     private long invocationCount;
     private long hitCount;
@@ -206,20 +208,69 @@ public final class ClassNodeCache {
         return src;
     }
     
+    static class PathSnapshot {
+        final List<FileObject> roots;
+        final List<Long> modifiedStamps;
+        final int hash;
+
+        public PathSnapshot(ClassPath path) {
+            roots = Arrays.asList(path.getRoots());
+            List<Long> stamps = new ArrayList<>(roots.size());
+            for (FileObject f : roots) {
+                long ts;
+                
+                if (f.isValid()) {
+                    FileObject ar = FileUtil.getArchiveFile(f);
+                    ts = ar == null ? f.lastModified().getTime() : ar.lastModified().getTime();
+                } else {
+                    ts = -1;
+                }
+                stamps.add(ts);
+            }
+            modifiedStamps = stamps;
+            
+            int hash = 3;
+            hash = 59 * hash + Objects.hashCode(this.roots);
+            // hash = 59 * hash + Objects.hashCode(this.modifiedStamps);
+            this.hash = hash;
+        }
+        
+        @Override
+        public int hashCode() {
+            return hash;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (this == obj) {
+                return true;
+            }
+            if (obj == null) {
+                return false;
+            }
+            if (getClass() != obj.getClass()) {
+                return false;
+            }
+            final PathSnapshot other = (PathSnapshot) obj;
+            if (!Objects.equals(this.roots, other.roots)) {
+                return false;
+            }
+            /*
+            if (!Objects.equals(this.modifiedStamps, other.modifiedStamps)) {
+                return false;
+            }
+            */
+            return true;
+        }
+    }
+    
     public GroovyClassLoader createTransformationLoader(
             @NonNull final ClassPath allResources,
-            @NonNull final CompilerConfiguration configuration) {        
-        GroovyClassLoader transformationLoader = transformationLoaderRef == null ? null : transformationLoaderRef.get();
-        if (transformationLoader == null) {
-            LOG.log(Level.FINE,"Transformation ClassLoader created.");  //NOI18N
-            transformationLoader = 
-                new TransformationClassLoader(
-                    CompilationUnit.class.getClassLoader(),
-                    allResources,
-                    configuration);
-            transformationLoaderRef = new SoftReference<>(transformationLoader);
-        }
-        return transformationLoader;
+            @NonNull final CompilerConfiguration configuration, FileObject src, ClassPath... paths) {        
+        return new TransformationClassLoader(
+                    ClassLoaderFactory.forFile(src).createClassLoader(configuration, paths), 
+                    allResources, configuration, this
+        );
     }
     
     public ParsingClassLoader createResolveLoader(
@@ -302,41 +353,73 @@ public final class ClassNodeCache {
         return true;
     }
     
-    private static class TransformationClassLoader extends GroovyClassLoader {
-
-        public TransformationClassLoader(ClassLoader parent, ClassPath cp, CompilerConfiguration config) {
+    public static class TransformationClassLoader extends GroovyClassLoader {
+        private PerfData perfData;
+        
+        private CompilationUnit unit;
+        
+        public TransformationClassLoader(ClassLoader parent, ClassPath cp, CompilerConfiguration config, 
+                ClassNodeCache cache) {
             super(parent, config);
             for (ClassPath.Entry entry : cp.entries()) {
                 this.addURL(entry.getURL());
             }
+            this.perfData = cache.perfData;
         }
 
+        public void setUnit(CompilationUnit unit) {
+            this.unit = unit;
+        }
+
+        @Override
+        public Class loadClass(String name, boolean lookupScriptFiles, boolean preferClassOverScript, boolean resolve) throws ClassNotFoundException, CompilationFailedException {
+            long t = System.currentTimeMillis();
+            try {
+                return super.loadClass(name, lookupScriptFiles, preferClassOverScript, resolve);
+            } finally {
+                long t2 = System.currentTimeMillis();
+                perfData.addVisitorTime(unit.getPhase(), "TransformationClassLoader", t2 - t);
+            }
+        }
+        
+        @Override 
+        protected Class<?> findClass(final String name) throws ClassNotFoundException {
+            Class<?> ret = super.findClass(name);
+            PerfData.LOG.log(Level.FINER, "** Found class: {0} ", name);
+            return ret;
+        }
+                
+
+        @Override
+        public Class defineClass(String name, byte[] b) {
+            PerfData.LOG.log(Level.FINER, "Defining class {0} from {1}", name);
+            return super.defineClass(name, b);
+        }
+
+        @Override
+        public Class parseClass(GroovyCodeSource codeSource, boolean shouldCacheSource) throws CompilationFailedException {
+            PerfData.LOG.log(Level.FINER, "Parsing Groovy class: {0} from {1}", new Object[] {
+                codeSource.getName(),
+                codeSource.getFile()
+            });
+            return super.parseClass(codeSource, shouldCacheSource); 
+        }
+
+        @Override
+        public Class defineClass(ClassNode classNode, String file, String newCodeBase) {
+            PerfData.LOG.log(Level.FINER, "Defining class {0} from {1}", new Object[] {
+                classNode.getName(),
+                file
+            });
+            return super.defineClass(classNode, file, newCodeBase);
+        }
     }
 
     public static class ParsingClassLoader extends GroovyClassLoader {
 
         private static final ClassNotFoundException CNF = new ClassNotFoundException();
         
-        /**
-         * Indicates the resource is just one, there are not multiple resources. Will be
-         * replaced by URL in the cache on first reference, so next accesses do not need to
-         * use URLMappers. Note: this tag value is compared by identity
-         */
-        private static final URL PLACEHOLDER; 
-        
-        /**
-         * Multiple resources of the same name; use slow method. Note: this tag value is compared by identity
-         */
-        private static final URL MULTIPLE; 
-        
-        static {
-            try {
-                PLACEHOLDER = new URL("file:///");
-                MULTIPLE = new URL("file:///");
-            } catch (IOException ex) {
-                throw new IllegalStateException();
-            }
-        }
+        private final ResourceCache resourceCache;
         
         private final CompilerConfiguration config;
 
@@ -352,11 +435,6 @@ public final class ClassNodeCache {
         
         private CompilationUnit unit;
         
-        /**
-         * Map of folder contents. Indexed by folder path, values are file => URL/placeholder
-         */
-        private final Map<String, Map<String, URL>> folderContents = new HashMap<>();
-        
         public ParsingClassLoader(
                 @NonNull ClassPath path,
                 @NonNull CompilerConfiguration config,
@@ -365,6 +443,14 @@ public final class ClassNodeCache {
             this.config = config;
             this.path = path;
             this.cache = cache;
+            this.resourceCache = new ResourceCache(path) {
+                @Override
+                protected void addNonExistentResource(String name) {
+                    super.addNonExistentResource(name);
+                    // in addition, mark the non-existent for others.
+                    cache.addNonExistentResource(name);
+                }
+            };
         }
 
         public void setPerfData(PerfData perfData) {
@@ -413,6 +499,7 @@ public final class ClassNodeCache {
                 // This ClassLoader is a throwaway one, so if the source changes, the classes can be loaded again in a different
                 // ParsingCL instance next parsing round.
                 String cr = name.replace(".", "/") + ".class"; // NOI18N
+                // getResource now serves .sig files as well.
                 URL u = getResource(cr);
                 if (u != null) {
                     try {
@@ -437,95 +524,18 @@ public final class ClassNodeCache {
             }
         }
         
-        /**
-         * Will load folder from {@link #path} and return its contents. The 1st pair element
-         * is the filename, the second is a Map of folder's contents.
-         * @param resourceName full resource name to search for
-         * @return filename and folder contents.
-         */
-        private Pair<String, Map<String, URL>> loadFolder(String resourceName) {
-            int lastSlash = resourceName.lastIndexOf('/');
-            String folderName = lastSlash == -1 ? "" : resourceName.substring(0, lastSlash);
-            Map<String, URL> contents = folderContents.get(folderName);
-            String rest = resourceName.substring(lastSlash + 1);
-            if (cache.isNonExistentResource(folderName)) {
-                return Pair.of(rest, Collections.emptyMap());
-            }
-            if (contents != null) {
-                return Pair.of(rest, contents);
-            }
-            Map<String, URL> lhm = new LinkedHashMap<>();
-            boolean empty = true;
-            for (FileObject parent: path.findAllResources(folderName)) {
-                for (FileObject f : parent.getChildren()) {
-                    if (lhm.putIfAbsent(f.getNameExt(), PLACEHOLDER) != null) {
-                        lhm.put(f.getNameExt(), MULTIPLE);
-                    }
-                    empty = false;
-                }
-            }
-            folderContents.put(folderName, lhm);
-            if (empty) {
-                cache.addNonExistentResource(folderName);
-            }
-            return Pair.of(rest, lhm);
-        }
-
-        // allow to conditionally disable this optimization, for debugging.
-        private static final boolean RESOURCES_FROM_FILESYSTEMS = Boolean.valueOf(System.getProperty(GroovyParser.class.getName() + ".useFilesystems", "true"));
-        
         @Override
         public Enumeration<URL> getResources(String name) throws IOException {
             if (cache.isNonExistentResource(name)) {
                 return Enumerations.empty();
             }
-            if (!RESOURCES_FROM_FILESYSTEMS) {
-                 Enumeration<URL> en = super.getResources(name);
-                if (!en.hasMoreElements()) {
-                    cache.addNonExistentResource(name);
-                }
-                return en;
-            }
-            Pair<String, Map<String, URL>> fl = loadFolder(name);
-            URL res = fl.second().get(fl.first());
-            if (res == null) {
+            Enumeration<URL> urls = resourceCache.getResources(name);
+            if (!urls.hasMoreElements()) {
                 cache.addNonExistentResource(name);
-                return Collections.emptyEnumeration();
-            } else if (res == MULTIPLE) {
-                return super.getResources(name);
-            } else if (res == PLACEHOLDER) {
-                Enumeration<URL> r = super.getResources(name);
-                if (r.hasMoreElements()) {
-                    res = r.nextElement();
-                    fl.second().put(fl.first(), res);
-                } else {
-                    cache.addNonExistentResource(name);
-                    return null;
-                }
             }
-            return Enumerations.singleton(res);
+            return urls;
         }
         
-        private URL doGetResource(String name) {
-            Pair<String, Map<String, URL>> fl = loadFolder(name);
-            URL res = fl.second().get(fl.first());
-            if (res == null) {
-                return null;
-            }
-            
-            if (res == MULTIPLE) {
-                FileObject f = path.findResource(name);
-                return URLMapper.findURL(f, URLMapper.INTERNAL);
-            } else if (res == PLACEHOLDER) {
-                FileObject f = path.findResource(name);
-                res = URLMapper.findURL(f, URLMapper.INTERNAL);
-                fl.second().put(fl.first(), res);
-                return res;
-            } else {
-                return res;
-            }
-        }
-
         @Override
         public URL getResource(String name) {
             long t = System.currentTimeMillis();
@@ -533,18 +543,10 @@ public final class ClassNodeCache {
                 if (cache.isNonExistentResource(name)) {
                     return null;
                 }
-                if (!RESOURCES_FROM_FILESYSTEMS) {
-                    URL u = super.getResource(name);
-                    if (u == null) {
-                        LOG.log(Level.FINE, " -> caching nonexistent: " + name);
-                        cache.addNonExistentResource(name);
-                    }
-                    return u;
-                }
-                URL u = doGetResource(name);
+                URL u = resourceCache.getResource(name);
                 if (u == null && name.endsWith(".class")) {
                     String sigName = name.substring(0, name.length() - 5) + "sig";
-                    u = doGetResource(sigName);
+                    u = resourceCache.getResource(sigName);
                 }
                 if (u == null) {
                     LOG.log(Level.FINE, " -> caching nonexistent: " + name);

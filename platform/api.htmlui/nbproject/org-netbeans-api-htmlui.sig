@@ -1,5 +1,11 @@
 #Signature file v4.1
-#Version 1.19
+#Version 1.23
+
+CLSS public abstract interface !annotation java.lang.FunctionalInterface
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE])
+intf java.lang.annotation.Annotation
 
 CLSS public java.lang.Object
 cons public init()
@@ -53,6 +59,7 @@ meth public abstract java.lang.String url()
 CLSS public abstract interface !annotation org.netbeans.api.htmlui.HTMLDialog
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=SOURCE)
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD])
+innr public abstract interface static OnSubmit
 innr public final static Builder
 intf java.lang.annotation.Annotation
 meth public abstract !hasdefault java.lang.String className()
@@ -66,8 +73,14 @@ meth public <%0 extends java.lang.Object> {%%0} component(java.lang.Class<{%%0}>
 meth public java.lang.String showAndWait()
 meth public org.netbeans.api.htmlui.HTMLDialog$Builder loadFinished(java.lang.Runnable)
 meth public static org.netbeans.api.htmlui.HTMLDialog$Builder newDialog(java.lang.String)
+meth public void show(org.netbeans.api.htmlui.HTMLDialog$OnSubmit)
 supr java.lang.Object
-hfds impl
+hfds onPageLoad,techIds,url
+
+CLSS public abstract interface static org.netbeans.api.htmlui.HTMLDialog$OnSubmit
+ outer org.netbeans.api.htmlui.HTMLDialog
+ anno 0 java.lang.FunctionalInterface()
+meth public abstract boolean onSubmit(java.lang.String)
 
 CLSS public abstract interface !annotation org.netbeans.api.htmlui.OpenHTMLRegistration
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=SOURCE)
@@ -77,4 +90,27 @@ meth public abstract !hasdefault java.lang.String iconBase()
 meth public abstract !hasdefault java.lang.String[] techIds()
 meth public abstract java.lang.String displayName()
 meth public abstract java.lang.String url()
+
+CLSS public abstract interface org.netbeans.spi.htmlui.HTMLViewerSpi<%0 extends java.lang.Object, %1 extends java.lang.Object>
+innr public final static Context
+meth public abstract <%0 extends java.lang.Object> {%%0} component({org.netbeans.spi.htmlui.HTMLViewerSpi%0},java.lang.Class<{%%0}>)
+meth public abstract java.lang.String getId({org.netbeans.spi.htmlui.HTMLViewerSpi%0},{org.netbeans.spi.htmlui.HTMLViewerSpi%1})
+meth public abstract void runLater({org.netbeans.spi.htmlui.HTMLViewerSpi%0},java.lang.Runnable)
+meth public abstract void setEnabled({org.netbeans.spi.htmlui.HTMLViewerSpi%0},{org.netbeans.spi.htmlui.HTMLViewerSpi%1},boolean)
+meth public abstract void setText({org.netbeans.spi.htmlui.HTMLViewerSpi%0},{org.netbeans.spi.htmlui.HTMLViewerSpi%1},java.lang.String)
+meth public abstract {org.netbeans.spi.htmlui.HTMLViewerSpi%0} newView(org.netbeans.spi.htmlui.HTMLViewerSpi$Context)
+meth public abstract {org.netbeans.spi.htmlui.HTMLViewerSpi%1} createButton({org.netbeans.spi.htmlui.HTMLViewerSpi%0},java.lang.String)
+
+CLSS public final static org.netbeans.spi.htmlui.HTMLViewerSpi$Context
+ outer org.netbeans.spi.htmlui.HTMLViewerSpi
+meth public boolean isBlocking()
+meth public boolean isDialog()
+meth public boolean isWindow()
+meth public boolean onSubmit(java.lang.String)
+meth public java.lang.ClassLoader getClassLoader()
+meth public java.lang.String[] getTechIds()
+meth public java.net.URL getPage()
+meth public org.openide.util.Lookup onPageLoad()
+supr java.lang.Object
+hfds component,lifeCycleCallback,loader,onPageLoad,onSubmit,techIds,url
 

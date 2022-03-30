@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 7.81
+#Version 7.85
 
 CLSS public java.awt.Canvas
 cons public init()
@@ -1730,7 +1730,10 @@ cons public init()
 meth protected abstract boolean accept(org.netbeans.api.templates.CreateDescriptor)
 meth protected abstract java.util.List<org.openide.filesystems.FileObject> createFromTemplate(org.netbeans.api.templates.CreateDescriptor) throws java.io.IOException
  anno 0 org.netbeans.api.annotations.common.NonNull()
+meth protected static java.util.List<org.openide.filesystems.FileObject> defaultCopyContents(org.netbeans.api.templates.CreateDescriptor,org.openide.filesystems.FileObject,org.openide.filesystems.FileObject) throws java.io.IOException
+meth public static void copyAttributesFromTemplate(org.netbeans.api.templates.CreateFromTemplateHandler,org.openide.filesystems.FileObject,org.openide.filesystems.FileObject) throws java.io.IOException
 supr java.lang.Object
+hfds ATTR_TEMPLATE_PREFIX,PROP_TEMPLATE
 
 CLSS public org.openide.DialogDescriptor
 cons public init(java.lang.Object,java.lang.String)
@@ -2572,6 +2575,11 @@ meth public void layoutContainer(java.awt.Container)
 supr java.awt.FlowLayout
 hfds serialVersionUID
 
+CLSS public final org.openide.awt.GraphicsUtils
+meth public static void configureDefaultRenderingHints(java.awt.Graphics)
+supr java.lang.Object
+hfds antialias,gtkAA,hintsMap
+
 CLSS public org.openide.awt.HtmlBrowser
 cons public init()
 cons public init(boolean,boolean)
@@ -3082,7 +3090,7 @@ meth public void setDnDListener(org.openide.awt.Toolbar$DnDListener)
 meth public void setUI(javax.swing.plaf.ToolBarUI)
 meth public void setVisible(boolean)
 supr org.openide.awt.ToolbarWithOverflow
-hfds LOG,backingFolder,displayName,emptyAction,emptyInsets,isFlatLaF,isMetalLaF,label,processor,serialVersionUID
+hfds LOG,backingFolder,displayName,emptyAction,emptyInsets,isFlatLaF,isMetalLaF,isWindowsLaF,label,processor,serialVersionUID
 hcls DefaultIconButton,DefaultIconToggleButton,Folder
 
 CLSS public static org.openide.awt.Toolbar$DnDEvent
@@ -3318,6 +3326,7 @@ hfds EA_LISTENERS,entry,listeners,types,typesSet
 hcls Pair
 
 CLSS public abstract interface org.openide.loaders.CreateFromTemplateAttributesProvider
+ anno 0 java.lang.Deprecated()
 meth public abstract java.util.Map<java.lang.String,?> attributesFor(org.openide.loaders.DataObject,org.openide.loaders.DataFolder,java.lang.String)
 
 CLSS public abstract org.openide.loaders.CreateFromTemplateHandler

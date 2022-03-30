@@ -205,10 +205,10 @@ class QueryModel {
     
 
     Column findSelectColumn(String tableSpec, String columnName) {
-        ArrayList columns = new ArrayList();
+        List<Column> columns = new ArrayList<>();
         _query.getSelect().getReferencedColumns(columns);
         for (int i=0; i<columns.size(); i++) {
-            Column col = (Column)columns.get(i);
+            Column col = columns.get(i);
             if (col.matches(tableSpec, columnName))
                 return col;
         }

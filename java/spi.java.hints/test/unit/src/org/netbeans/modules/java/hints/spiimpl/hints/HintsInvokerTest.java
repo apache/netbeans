@@ -31,7 +31,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javax.swing.text.Document;
-import static org.junit.Assert.*;
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.modules.java.hints.spiimpl.TestBase;
 import org.netbeans.spi.java.hints.HintContext;
@@ -749,6 +748,7 @@ public class HintsInvokerTest extends TestBase {
             this.fix = fix;
         }
 
+        @Override
         public Collection<? extends ErrorDescription> createErrors(HintContext ctx) {
             if (ctx.getInfo().getTreeUtilities().isSynthetic(ctx.getPath())) {
                 return null;

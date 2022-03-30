@@ -413,7 +413,7 @@ public final class ProjectEar extends J2eeApplicationProvider
             }
             
             ArrayList<FileObject> filteredContent = new ArrayList<FileObject>(5);
-            Enumeration ch = f.getChildren(true);
+            Enumeration<? extends FileObject> ch = f.getChildren(true);
             while (ch.hasMoreElements()) {
                 FileObject fo = (FileObject) ch.nextElement();
                 String fileName = fo.getNameExt();

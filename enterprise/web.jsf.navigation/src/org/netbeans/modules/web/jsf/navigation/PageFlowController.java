@@ -24,7 +24,6 @@ import java.awt.EventQueue;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
-import java.lang.String;
 import java.lang.ref.WeakReference;
 import javax.swing.SwingUtilities;
 import org.netbeans.modules.web.jsf.api.ConfigurationUtils;
@@ -580,7 +579,7 @@ public class PageFlowController {
             List<NavigationCase> navCases = rule.getNavigationCases();
 
             /* this is for ALL_FACES_CONFIG scope*/
-            boolean isModifableEdge = editableRules.contains(rule) ? true : false;
+            boolean isModifableEdge = editableRules.contains(rule);
 
             for (NavigationCase navCase : navCases) {
 

@@ -33,8 +33,6 @@ import static org.netbeans.modules.gradle.api.NbGradleProject.Quality.FALLBACK;
 import org.netbeans.modules.gradle.api.execute.GradleCommandLine;
 import org.netbeans.modules.gradle.cache.ProjectInfoDiskCache;
 import org.netbeans.modules.gradle.cache.SubProjectDiskCache;
-import static org.netbeans.modules.gradle.loaders.GradleDaemon.INIT_SCRIPT;
-import static org.netbeans.modules.gradle.loaders.GradleDaemon.TOOLING_JAR;
 import org.netbeans.modules.gradle.options.GradleExperimentalSettings;
 import org.netbeans.modules.gradle.spi.GradleFiles;
 import org.netbeans.modules.gradle.spi.GradleSettings;
@@ -71,7 +69,7 @@ public abstract class AbstractProjectLoader {
 
         public ReloadContext(NbGradleProjectImpl project, NbGradleProject.Quality aim, GradleCommandLine cmd, String description) {
             this.project = project;
-            this.previous = project.isGradleProjectLoaded() ? project.getGradleProject() : FallbackProjectLoader.createFallbackProject(project.getGradleFiles());
+            this.previous = project.isGradleProjectLoaded() ? project.projectWithQuality(null, FALLBACK, false, false) : FallbackProjectLoader.createFallbackProject(project.getGradleFiles());
             this.aim = aim;
             this.cmd = cmd;
             this.description = description;
@@ -89,9 +87,8 @@ public abstract class AbstractProjectLoader {
     static GradleCommandLine injectNetBeansTooling(GradleCommandLine cmd) {
         GradleCommandLine ret = new GradleCommandLine(cmd);
         ret.setFlag(GradleCommandLine.Flag.CONFIGURE_ON_DEMAND, GradleSettings.getDefault().isConfigureOnDemand());
-        ret.addParameter(GradleCommandLine.Parameter.INIT_SCRIPT, INIT_SCRIPT);
+        ret.addParameter(GradleCommandLine.Parameter.INIT_SCRIPT, GradleDaemon.initScript());
         ret.setStackTrace(GradleCommandLine.StackTrace.SHORT);
-        ret.addSystemProperty(GradleDaemon.PROP_TOOLING_JAR, TOOLING_JAR);
         ret.addProjectProperty("nbSerializeCheck", "true");
         return ret;
     }

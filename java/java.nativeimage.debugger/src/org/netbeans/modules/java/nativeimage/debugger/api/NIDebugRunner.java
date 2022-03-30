@@ -32,6 +32,7 @@ import org.netbeans.modules.nativeimage.api.debug.NIDebugger;
 import org.netbeans.modules.java.nativeimage.debugger.breakpoints.JPDABreakpointsHandler;
 import org.netbeans.modules.java.nativeimage.debugger.displayer.JavaFrameDisplayer;
 import org.netbeans.modules.java.nativeimage.debugger.displayer.JavaVariablesDisplayer;
+import org.netbeans.modules.nativeimage.api.debug.StartDebugParameters;
 import static org.netbeans.spi.project.ActionProvider.COMMAND_DEBUG;
 
 import org.openide.DialogDisplayer;
@@ -61,7 +62,9 @@ public final class NIDebugRunner {
      * @param startedEngine consumer of the started {@link DebuggerEngine}.
      * @return an instance of {@link NIDebugger}.
      * @throws IllegalStateException when the native debugger is not available.
+     * @deprecated Use {@link #start(File, StartDebugParameters, Project, Consumer)} instead.
      */
+    @Deprecated
     public static NIDebugger start(File niFile, List<String> arguments, String debuggerCommand, Project project, String displayName, ExecutionDescriptor executionDescriptor, Consumer<DebuggerEngine> startedEngine) throws IllegalStateException {
         JavaVariablesDisplayer variablesDisplayer = new JavaVariablesDisplayer();
         JavaFrameDisplayer frameDisplayer = new JavaFrameDisplayer(project);
@@ -91,6 +94,28 @@ public final class NIDebugRunner {
         return debugger;
     }
 
+    public static NIDebugger start(File niFile, StartDebugParameters debugParameters, Project project, Consumer<DebuggerEngine> startedEngine) throws IllegalStateException {
+        JavaVariablesDisplayer variablesDisplayer = new JavaVariablesDisplayer();
+        JavaFrameDisplayer frameDisplayer = new JavaFrameDisplayer(project);
+        NIDebugger debugger = NIDebugger.newBuilder()
+                .frameDisplayer(frameDisplayer)
+                .variablesDisplayer(variablesDisplayer)
+                .build();
+        variablesDisplayer.setDebugger(debugger);
+        JPDABreakpointsHandler breakpointsHandler = new JPDABreakpointsHandler(niFile, debugger);
+        DialogDisplayer displayer = DialogDisplayer.getDefault(); // The launcher might provide a special displayer in the lookup. This is why we grab it eagerly.
+        debugger.start(debugParameters,
+                (engine) -> {
+                    if (startedEngine != null) {
+                        startedEngine.accept(engine);
+                    }
+                }).thenRun(() -> {
+                    breakpointsHandler.dispose();
+                });
+        checkVersion(debugger.getVersion(), displayer);
+        return debugger;
+    }
+
     /**
      * Attach debugger to a Native Image.
      *
@@ -102,7 +127,9 @@ public final class NIDebugRunner {
      * @return an instance of {@link NIDebugger}.
      * @throws IllegalStateException when the native debugger is not available.
      * @since 0.3
+     * @deprecated Use {@link #start(File, StartDebugParameters, Project, Consumer) and set {@link StartDebugParameters.Builder#processID(long)}.
      */
+    @Deprecated
     public static NIDebugger attach(File niFile, long processId, String debuggerCommand, Project project, Consumer<DebuggerEngine> startedEngine) throws IllegalStateException {
         JavaVariablesDisplayer variablesDisplayer = new JavaVariablesDisplayer();
         JavaFrameDisplayer frameDisplayer = new JavaFrameDisplayer(project);

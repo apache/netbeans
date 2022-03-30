@@ -27,6 +27,7 @@ import static org.netbeans.modules.fish.payara.micro.plugin.Constants.PROFILE_SI
 import static org.netbeans.modules.fish.payara.micro.plugin.Constants.RUN_SINGLE_ACTION;
 import java.io.File;
 import static java.util.Arrays.asList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import org.netbeans.api.project.Project;
@@ -118,7 +119,7 @@ public class MicroExecutionChecker extends ExecutionChecker {
         String buildPath = application.getMavenProject().getBuild().getDirectory()
                 + File.separator
                 + application.getMavenProject().getBuild().getFinalName();
-        ReloadAction.reloadApplication(buildPath);
+        ReloadAction.reloadApplication(buildPath, null);
     }
     
 

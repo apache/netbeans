@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.30
+#Version 1.33
 
 CLSS public abstract interface java.io.Serializable
 
@@ -1139,6 +1139,236 @@ cons public init(org.junit.internal.AssumptionViolatedException)
 supr java.lang.RuntimeException
 hfds serialVersionUID
 
+CLSS public org.junit.experimental.ParallelComputer
+cons public init(boolean,boolean)
+meth protected org.junit.runner.Runner getRunner(org.junit.runners.model.RunnerBuilder,java.lang.Class<?>) throws java.lang.Throwable
+meth public org.junit.runner.Runner getSuite(org.junit.runners.model.RunnerBuilder,java.lang.Class<?>[]) throws org.junit.runners.model.InitializationError
+meth public static org.junit.runner.Computer classes()
+meth public static org.junit.runner.Computer methods()
+supr org.junit.runner.Computer
+hfds classes,methods
+
+CLSS public org.junit.experimental.categories.Categories
+cons public init(java.lang.Class<?>,org.junit.runners.model.RunnerBuilder) throws org.junit.runners.model.InitializationError
+innr public abstract interface static !annotation ExcludeCategory
+innr public abstract interface static !annotation IncludeCategory
+innr public static CategoryFilter
+supr org.junit.runners.Suite
+
+CLSS public static org.junit.experimental.categories.Categories$CategoryFilter
+ outer org.junit.experimental.categories.Categories
+cons protected init(boolean,java.util.Set<java.lang.Class<?>>,boolean,java.util.Set<java.lang.Class<?>>)
+cons public init(java.lang.Class<?>,java.lang.Class<?>)
+ anno 0 java.lang.Deprecated()
+meth public !varargs static org.junit.experimental.categories.Categories$CategoryFilter exclude(boolean,java.lang.Class<?>[])
+meth public !varargs static org.junit.experimental.categories.Categories$CategoryFilter exclude(java.lang.Class<?>[])
+meth public !varargs static org.junit.experimental.categories.Categories$CategoryFilter include(boolean,java.lang.Class<?>[])
+meth public !varargs static org.junit.experimental.categories.Categories$CategoryFilter include(java.lang.Class<?>[])
+meth public boolean shouldRun(org.junit.runner.Description)
+meth public java.lang.String describe()
+meth public java.lang.String toString()
+meth public static org.junit.experimental.categories.Categories$CategoryFilter categoryFilter(boolean,java.util.Set<java.lang.Class<?>>,boolean,java.util.Set<java.lang.Class<?>>)
+meth public static org.junit.experimental.categories.Categories$CategoryFilter exclude(java.lang.Class<?>)
+meth public static org.junit.experimental.categories.Categories$CategoryFilter include(java.lang.Class<?>)
+supr org.junit.runner.manipulation.Filter
+hfds excluded,excludedAny,included,includedAny
+
+CLSS public abstract interface static !annotation org.junit.experimental.categories.Categories$ExcludeCategory
+ outer org.junit.experimental.categories.Categories
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+intf java.lang.annotation.Annotation
+meth public abstract !hasdefault boolean matchAny()
+meth public abstract !hasdefault java.lang.Class<?>[] value()
+
+CLSS public abstract interface static !annotation org.junit.experimental.categories.Categories$IncludeCategory
+ outer org.junit.experimental.categories.Categories
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+intf java.lang.annotation.Annotation
+meth public abstract !hasdefault boolean matchAny()
+meth public abstract !hasdefault java.lang.Class<?>[] value()
+
+CLSS public abstract interface !annotation org.junit.experimental.categories.Category
+ anno 0 java.lang.annotation.Inherited()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+intf java.lang.annotation.Annotation
+meth public abstract java.lang.Class<?>[] value()
+
+CLSS public final org.junit.experimental.categories.CategoryValidator
+cons public init()
+meth public java.util.List<java.lang.Exception> validateAnnotatedMethod(org.junit.runners.model.FrameworkMethod)
+supr org.junit.validator.AnnotationValidator
+hfds INCOMPATIBLE_ANNOTATIONS
+
+CLSS public final org.junit.experimental.categories.ExcludeCategories
+cons public init()
+intf org.junit.runner.FilterFactory
+meth protected org.junit.runner.manipulation.Filter createFilter(java.util.List<java.lang.Class<?>>)
+meth public org.junit.runner.manipulation.Filter createFilter(org.junit.runner.FilterFactoryParams) throws org.junit.runner.FilterFactory$FilterNotCreatedException
+supr java.lang.Object
+hcls ExcludesAny
+
+CLSS public final org.junit.experimental.categories.IncludeCategories
+cons public init()
+intf org.junit.runner.FilterFactory
+meth protected org.junit.runner.manipulation.Filter createFilter(java.util.List<java.lang.Class<?>>)
+meth public org.junit.runner.manipulation.Filter createFilter(org.junit.runner.FilterFactoryParams) throws org.junit.runner.FilterFactory$FilterNotCreatedException
+supr java.lang.Object
+hcls IncludesAny
+
+CLSS public org.junit.experimental.max.CouldNotReadCoreException
+cons public init(java.lang.Throwable)
+supr java.lang.Exception
+hfds serialVersionUID
+
+CLSS public org.junit.experimental.max.MaxCore
+meth public java.util.List<org.junit.runner.Description> sortedLeavesForTest(org.junit.runner.Request)
+meth public org.junit.runner.Request sortRequest(org.junit.runner.Request)
+meth public org.junit.runner.Result run(java.lang.Class<?>)
+meth public org.junit.runner.Result run(org.junit.runner.Request)
+meth public org.junit.runner.Result run(org.junit.runner.Request,org.junit.runner.JUnitCore)
+meth public static org.junit.experimental.max.MaxCore forFolder(java.lang.String)
+ anno 0 java.lang.Deprecated()
+meth public static org.junit.experimental.max.MaxCore storedLocally(java.io.File)
+supr java.lang.Object
+hfds MALFORMED_JUNIT_3_TEST_CLASS_PREFIX,history
+
+CLSS public org.junit.experimental.max.MaxHistory
+intf java.io.Serializable
+meth public java.util.Comparator<org.junit.runner.Description> testComparator()
+meth public org.junit.runner.notification.RunListener listener()
+meth public static org.junit.experimental.max.MaxHistory forFolder(java.io.File)
+supr java.lang.Object
+hfds fDurations,fFailureTimestamps,fHistoryStore,serialVersionUID
+hcls RememberingListener,TestComparator
+
+CLSS public org.junit.experimental.results.PrintableResult
+cons public init(java.util.List<org.junit.runner.notification.Failure>)
+meth public int failureCount()
+meth public java.lang.String toString()
+meth public java.util.List<org.junit.runner.notification.Failure> failures()
+meth public static org.junit.experimental.results.PrintableResult testResult(java.lang.Class<?>)
+meth public static org.junit.experimental.results.PrintableResult testResult(org.junit.runner.Request)
+supr java.lang.Object
+hfds result
+
+CLSS public org.junit.experimental.results.ResultMatchers
+cons public init()
+ anno 0 java.lang.Deprecated()
+meth public static org.hamcrest.Matcher<java.lang.Object> hasSingleFailureContaining(java.lang.String)
+meth public static org.hamcrest.Matcher<org.junit.experimental.results.PrintableResult> failureCountIs(int)
+meth public static org.hamcrest.Matcher<org.junit.experimental.results.PrintableResult> hasFailureContaining(java.lang.String)
+meth public static org.hamcrest.Matcher<org.junit.experimental.results.PrintableResult> hasSingleFailureMatching(org.hamcrest.Matcher<java.lang.Throwable>)
+meth public static org.hamcrest.Matcher<org.junit.experimental.results.PrintableResult> isSuccessful()
+supr java.lang.Object
+
+CLSS public org.junit.experimental.runners.Enclosed
+cons public init(java.lang.Class<?>,org.junit.runners.model.RunnerBuilder) throws java.lang.Throwable
+supr org.junit.runners.Suite
+
+CLSS public abstract interface !annotation org.junit.experimental.theories.DataPoint
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[FIELD, METHOD])
+intf java.lang.annotation.Annotation
+meth public abstract !hasdefault java.lang.Class<? extends java.lang.Throwable>[] ignoredExceptions()
+meth public abstract !hasdefault java.lang.String[] value()
+
+CLSS public abstract interface !annotation org.junit.experimental.theories.DataPoints
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[FIELD, METHOD])
+intf java.lang.annotation.Annotation
+meth public abstract !hasdefault java.lang.Class<? extends java.lang.Throwable>[] ignoredExceptions()
+meth public abstract !hasdefault java.lang.String[] value()
+
+CLSS public abstract interface !annotation org.junit.experimental.theories.FromDataPoints
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[PARAMETER])
+intf java.lang.annotation.Annotation
+meth public abstract java.lang.String value()
+
+CLSS public org.junit.experimental.theories.ParameterSignature
+meth public <%0 extends java.lang.annotation.Annotation> {%%0} findDeepAnnotation(java.lang.Class<{%%0}>)
+meth public <%0 extends java.lang.annotation.Annotation> {%%0} getAnnotation(java.lang.Class<{%%0}>)
+meth public boolean canAcceptType(java.lang.Class<?>)
+meth public boolean canAcceptValue(java.lang.Object)
+meth public boolean canPotentiallyAcceptType(java.lang.Class<?>)
+meth public boolean hasAnnotation(java.lang.Class<? extends java.lang.annotation.Annotation>)
+meth public java.lang.Class<?> getType()
+meth public java.util.List<java.lang.annotation.Annotation> getAnnotations()
+meth public static java.util.ArrayList<org.junit.experimental.theories.ParameterSignature> signatures(java.lang.reflect.Method)
+meth public static java.util.List<org.junit.experimental.theories.ParameterSignature> signatures(java.lang.reflect.Constructor<?>)
+supr java.lang.Object
+hfds CONVERTABLE_TYPES_MAP,annotations,type
+
+CLSS public abstract org.junit.experimental.theories.ParameterSupplier
+cons public init()
+meth public abstract java.util.List<org.junit.experimental.theories.PotentialAssignment> getValueSources(org.junit.experimental.theories.ParameterSignature) throws java.lang.Throwable
+supr java.lang.Object
+
+CLSS public abstract interface !annotation org.junit.experimental.theories.ParametersSuppliedBy
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE, PARAMETER])
+intf java.lang.annotation.Annotation
+meth public abstract java.lang.Class<? extends org.junit.experimental.theories.ParameterSupplier> value()
+
+CLSS public abstract org.junit.experimental.theories.PotentialAssignment
+cons public init()
+innr public static CouldNotGenerateValueException
+meth public abstract java.lang.Object getValue() throws org.junit.experimental.theories.PotentialAssignment$CouldNotGenerateValueException
+meth public abstract java.lang.String getDescription() throws org.junit.experimental.theories.PotentialAssignment$CouldNotGenerateValueException
+meth public static org.junit.experimental.theories.PotentialAssignment forValue(java.lang.String,java.lang.Object)
+supr java.lang.Object
+
+CLSS public static org.junit.experimental.theories.PotentialAssignment$CouldNotGenerateValueException
+ outer org.junit.experimental.theories.PotentialAssignment
+cons public init()
+cons public init(java.lang.Throwable)
+supr java.lang.Exception
+hfds serialVersionUID
+
+CLSS public org.junit.experimental.theories.Theories
+cons protected init(org.junit.runners.model.TestClass) throws org.junit.runners.model.InitializationError
+cons public init(java.lang.Class<?>) throws org.junit.runners.model.InitializationError
+innr public static TheoryAnchor
+meth protected java.util.List<org.junit.runners.model.FrameworkMethod> computeTestMethods()
+meth protected void collectInitializationErrors(java.util.List<java.lang.Throwable>)
+meth protected void validateConstructor(java.util.List<java.lang.Throwable>)
+meth protected void validateTestMethods(java.util.List<java.lang.Throwable>)
+meth public org.junit.runners.model.Statement methodBlock(org.junit.runners.model.FrameworkMethod)
+supr org.junit.runners.BlockJUnit4ClassRunner
+
+CLSS public static org.junit.experimental.theories.Theories$TheoryAnchor
+ outer org.junit.experimental.theories.Theories
+cons public init(org.junit.runners.model.FrameworkMethod,org.junit.runners.model.TestClass)
+meth protected !varargs void reportParameterizedError(java.lang.Throwable,java.lang.Object[]) throws java.lang.Throwable
+meth protected void handleAssumptionViolation(org.junit.internal.AssumptionViolatedException)
+meth protected void handleDataPointSuccess()
+meth protected void runWithAssignment(org.junit.experimental.theories.internal.Assignments) throws java.lang.Throwable
+meth protected void runWithCompleteAssignment(org.junit.experimental.theories.internal.Assignments) throws java.lang.Throwable
+meth protected void runWithIncompleteAssignment(org.junit.experimental.theories.internal.Assignments) throws java.lang.Throwable
+meth public void evaluate() throws java.lang.Throwable
+supr org.junit.runners.model.Statement
+hfds fInvalidParameters,successes,testClass,testMethod
+
+CLSS public abstract interface !annotation org.junit.experimental.theories.Theory
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD])
+intf java.lang.annotation.Annotation
+meth public abstract !hasdefault boolean nullsAccepted()
+
+CLSS public abstract interface !annotation org.junit.experimental.theories.suppliers.TestedOn
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[PARAMETER])
+intf java.lang.annotation.Annotation
+meth public abstract int[] ints()
+
+CLSS public org.junit.experimental.theories.suppliers.TestedOnSupplier
+cons public init()
+meth public java.util.List<org.junit.experimental.theories.PotentialAssignment> getValueSources(org.junit.experimental.theories.ParameterSignature)
+supr org.junit.experimental.theories.ParameterSupplier
+
+CLSS public abstract interface org.junit.function.ThrowingRunnable
+meth public abstract void run() throws java.lang.Throwable
+
 CLSS public org.junit.internal.AssumptionViolatedException
 cons public init(java.lang.Object,org.hamcrest.Matcher<?>)
  anno 0 java.lang.Deprecated()
@@ -1922,6 +2152,39 @@ meth public long getTimeout()
 supr java.lang.Exception
 hfds serialVersionUID,timeUnit,timeout
 
+CLSS public org.junit.runners.parameterized.BlockJUnit4ClassRunnerWithParameters
+cons public init(org.junit.runners.parameterized.TestWithParameters) throws org.junit.runners.model.InitializationError
+meth protected java.lang.String getName()
+meth protected java.lang.String testName(org.junit.runners.model.FrameworkMethod)
+meth protected java.lang.annotation.Annotation[] getRunnerAnnotations()
+meth protected org.junit.runners.model.Statement classBlock(org.junit.runner.notification.RunNotifier)
+meth protected void validateConstructor(java.util.List<java.lang.Throwable>)
+meth protected void validateFields(java.util.List<java.lang.Throwable>)
+meth public java.lang.Object createTest() throws java.lang.Exception
+supr org.junit.runners.BlockJUnit4ClassRunner
+hfds name,parameters
+hcls InjectionType,RunAfterParams,RunBeforeParams
+
+CLSS public org.junit.runners.parameterized.BlockJUnit4ClassRunnerWithParametersFactory
+cons public init()
+intf org.junit.runners.parameterized.ParametersRunnerFactory
+meth public org.junit.runner.Runner createRunnerForTestWithParameters(org.junit.runners.parameterized.TestWithParameters) throws org.junit.runners.model.InitializationError
+supr java.lang.Object
+
+CLSS public abstract interface org.junit.runners.parameterized.ParametersRunnerFactory
+meth public abstract org.junit.runner.Runner createRunnerForTestWithParameters(org.junit.runners.parameterized.TestWithParameters) throws org.junit.runners.model.InitializationError
+
+CLSS public org.junit.runners.parameterized.TestWithParameters
+cons public init(java.lang.String,org.junit.runners.model.TestClass,java.util.List<java.lang.Object>)
+meth public boolean equals(java.lang.Object)
+meth public int hashCode()
+meth public java.lang.String getName()
+meth public java.lang.String toString()
+meth public java.util.List<java.lang.Object> getParameters()
+meth public org.junit.runners.model.TestClass getTestClass()
+supr java.lang.Object
+hfds name,parameters,testClass
+
 CLSS public abstract org.junit.validator.AnnotationValidator
 cons public init()
 meth public java.util.List<java.lang.Exception> validateAnnotatedClass(org.junit.runners.model.TestClass)
@@ -1929,6 +2192,30 @@ meth public java.util.List<java.lang.Exception> validateAnnotatedField(org.junit
 meth public java.util.List<java.lang.Exception> validateAnnotatedMethod(org.junit.runners.model.FrameworkMethod)
 supr java.lang.Object
 hfds NO_VALIDATION_ERRORS
+
+CLSS public org.junit.validator.AnnotationValidatorFactory
+cons public init()
+meth public org.junit.validator.AnnotationValidator createAnnotationValidator(org.junit.validator.ValidateWith)
+supr java.lang.Object
+hfds VALIDATORS_FOR_ANNOTATION_TYPES
+
+CLSS public final org.junit.validator.AnnotationsValidator
+cons public init()
+intf org.junit.validator.TestClassValidator
+meth public java.util.List<java.lang.Exception> validateTestClass(org.junit.runners.model.TestClass)
+supr java.lang.Object
+hfds VALIDATORS
+hcls AnnotatableValidator,ClassValidator,FieldValidator,MethodValidator
+
+CLSS public org.junit.validator.PublicClassValidator
+cons public init()
+intf org.junit.validator.TestClassValidator
+meth public java.util.List<java.lang.Exception> validateTestClass(org.junit.runners.model.TestClass)
+supr java.lang.Object
+hfds NO_VALIDATION_ERRORS
+
+CLSS public abstract interface org.junit.validator.TestClassValidator
+meth public abstract java.util.List<java.lang.Exception> validateTestClass(org.junit.runners.model.TestClass)
 
 CLSS public abstract interface !annotation org.junit.validator.ValidateWith
  anno 0 java.lang.annotation.Inherited()

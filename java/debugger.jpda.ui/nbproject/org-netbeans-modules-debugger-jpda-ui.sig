@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.66
+#Version 1.69
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -1320,6 +1320,7 @@ meth public java.net.URI getSourceURI()
 meth public org.netbeans.api.debugger.jpda.CallStackFrame getCallStackFrame()
 meth public org.netbeans.spi.debugger.ui.DebuggingView$DVThread getThread()
 meth public void makeCurrent()
+meth public void popOff() throws org.netbeans.spi.debugger.ui.DebuggingView$PopException
 supr java.lang.Object
 hfds stackFrame,thread
 
@@ -1503,6 +1504,7 @@ innr public abstract interface static DVThreadGroup
 innr public abstract static DVSupport
 innr public final static DVFilter
 innr public final static Deadlock
+innr public final static PopException
 meth public org.openide.windows.TopComponent getViewTC()
 meth public static org.netbeans.spi.debugger.ui.DebuggingView getDefault()
 supr java.lang.Object
@@ -1517,6 +1519,7 @@ meth public abstract java.net.URI getSourceURI()
 meth public abstract org.netbeans.spi.debugger.ui.DebuggingView$DVThread getThread()
 meth public abstract void makeCurrent()
 meth public java.lang.String getSourceMimeType()
+meth public void popOff() throws org.netbeans.spi.debugger.ui.DebuggingView$PopException
 
 CLSS public abstract static org.netbeans.spi.debugger.ui.DebuggingView$DVSupport
  outer org.netbeans.spi.debugger.ui.DebuggingView

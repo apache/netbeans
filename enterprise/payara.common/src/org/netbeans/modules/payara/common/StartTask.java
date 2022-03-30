@@ -545,7 +545,7 @@ public class StartTask extends BasicTask<TaskState> {
         // create a logger to the server's output stream so that a user
         // can observe the progress
         LogViewMgr logger = LogViewMgr.getInstance(instance.getProperty(PayaraModule.URL_ATTR));
-        logger.readInputStreams(recognizers, false, null,
+        logger.readInputStreams(recognizers, true, null,
                 new FetchLogSimple(instance.getProcess().getInputStream()),
                 new FetchLogSimple(instance.getProcess().getErrorStream()));
 
@@ -572,9 +572,10 @@ public class StartTask extends BasicTask<TaskState> {
             return change.fireOperationStateChanged();
         }
         if (!PayaraState.isOnline(instance)) {
-              return fireOperationStateChanged(
-                      TaskState.FAILED, TaskEvent.CMD_FAILED,
-                      "StartTask.startDAS.startFailed", instanceName);
+            PayaraStatus.suspend(instance);
+            return fireOperationStateChanged(
+                    TaskState.FAILED, TaskEvent.CMD_FAILED,
+                    "StartTask.startDAS.startFailed", instanceName);
         } else {
             return startClusterOrInstance(adminHost, adminPort);
         }

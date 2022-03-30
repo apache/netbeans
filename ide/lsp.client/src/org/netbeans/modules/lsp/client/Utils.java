@@ -79,6 +79,16 @@ public class Utils {
     public static int getOffset(Document doc, Position pos) {
         return LineDocumentUtils.getLineStartFromIndex((LineDocument) doc, pos.getLine()) + pos.getCharacter();
     }
+    
+    public static int getEndCharacter(Document doc, int line) {
+        int start = LineDocumentUtils.getLineStartFromIndex((LineDocument) doc, line);
+        try {
+            return LineDocumentUtils.getLineEnd((LineDocument) doc, start) - start;
+        } catch (BadLocationException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+        return 0;
+    }
 
     public static void applyWorkspaceEdit(WorkspaceEdit edit) {
         if (edit.getDocumentChanges() != null) {
@@ -290,5 +300,9 @@ public class Utils {
 
     public static boolean isTrue(Boolean b) {
         return b != null && b;
+    }
+    public static boolean isEnabled(Either<Boolean, ?> settings) {
+        return settings != null && (settings.isLeft() ? isTrue(settings.getLeft())
+                                                       : settings.getRight() != null);
     }
 }

@@ -46,7 +46,7 @@ public final class CompilerOptionsProvider implements CompilerOptionsQueryImplem
         return new R(jshe);
     }
     
-    final static class R extends Result {
+    static final class R extends Result {
         private final JShellEnvironment env;
 
         public R(JShellEnvironment env) {

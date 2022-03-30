@@ -167,7 +167,9 @@ public final class ProgressHandleFactory {
     /**
      * Create a cancelable handle for a task that is not triggered by explicit user action.
      * Such tasks have lower priority in the UI.
-     * Since {@code 1.59}, the functionality moves to basic {@link ProgressHandle Progress API}; this method is retained for smooth transition of older API clients.
+     * Since {@code 1.59}, the functionality moves to basic {@link ProgressHandle Progress API}; this method is retained
+     * for smooth transition of older API clients.
+     *
      * @param displayName to be shown in the progress UI
      * @param allowToCancel either null, if the task cannot be cancelled or 
      *          an instance of {@link org.openide.util.Cancellable} that will be called when user 
@@ -175,6 +177,7 @@ public final class ProgressHandleFactory {
      * @return an instance of {@link org.netbeans.api.progress.ProgressHandle}, initialized but not started.
      * @deprecated Use {@link ProgressHandle#createSystemHandle(java.lang.String, org.openide.util.Cancellable)}.
      */
+    @Deprecated
     public static ProgressHandle createSystemHandle(String displayName, Cancellable allowToCancel) {
         return createSystemHandle(displayName, allowToCancel, null);
     }
@@ -191,8 +194,8 @@ public final class ProgressHandleFactory {
      * @param displayName to be shown in the progress UI
      * @return an instance of {@link org.netbeans.api.progress.ProgressHandle}, initialized but not started.
      * @deprecated Please use {@link ProgressHandle#createSystemHandle(java.lang.String, org.openide.util.Cancellable, javax.swing.Action)}
-     * @Deprecated
      */
+    @Deprecated
     public static ProgressHandle createSystemHandle(String displayName, Cancellable allowToCancel, Action linkOutput) {
         return ProgressHandle.createSystemHandle(displayName, allowToCancel, linkOutput);
     }    

@@ -33,7 +33,7 @@ import javax.swing.table.TableCellRenderer;
 
 class PropertiesTable extends JTable {
 
-    private final static int margin = 6; 
+    private static final int margin = 6; 
 
     private boolean fontChanged = true;
     private int newHeight = 23; 

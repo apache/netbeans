@@ -52,12 +52,12 @@ import org.netbeans.modules.javascript2.types.api.TypeUsage;
 public class JsObjectImpl extends JsElementImpl implements JsObject {
 
 //    final protected HashMap<String, JsObject> properties = new HashMap<String, JsObject>();
-    final protected LinkedHashMap<String, JsObject> properties = new LinkedHashMap<String, JsObject>();
+    protected final LinkedHashMap<String, JsObject> properties = new LinkedHashMap<String, JsObject>();
     private Identifier declarationName;
     private JsObject parent;
-    final private List<Occurrence> occurrences = new ArrayList<Occurrence>();
-    final private NavigableMap<Integer, Collection<TypeUsage>> assignments = new TreeMap<>();
-    final private Map<String, Integer>assignmentsReverse = new HashMap<>();
+    private final List<Occurrence> occurrences = new ArrayList<Occurrence>();
+    private final NavigableMap<Integer, Collection<TypeUsage>> assignments = new TreeMap<>();
+    private final Map<String, Integer>assignmentsReverse = new HashMap<>();
     private int countOfAssignments = 0;
     private boolean hasName;
     private Documentation documentation;
@@ -786,8 +786,7 @@ public class JsObjectImpl extends JsElementImpl implements JsObject {
     }
     
     protected void correctTypes(String fromType, String toType) {
-        for (Integer offset: assignments.keySet()) {
-            Collection<TypeUsage> types = assignments.get(offset);
+        for (Collection<TypeUsage> types: assignments.values()) {
             List<TypeUsage> copy = new ArrayList<>(types);
             String typeR = null;
             for (TypeUsage type : copy) {

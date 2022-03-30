@@ -40,6 +40,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
+import org.openide.awt.GraphicsUtils;
 import org.openide.util.NbBundle;
 
 /**
@@ -56,8 +57,8 @@ public abstract class LinkButton extends JButton
 
     private final Color defaultForeground;
 
-    private final static Border regularBorder = ButtonBorder.createRegular();
-    private final static Border mouseoverBorder = ButtonBorder.createMouseOver();
+    private static final Border regularBorder = ButtonBorder.createRegular();
+    private static final Border mouseoverBorder = ButtonBorder.createMouseOver();
 
     private String usageTrackingId;
 
@@ -142,10 +143,11 @@ public abstract class LinkButton extends JButton
 
     @Override
     protected void paintComponent(Graphics g) {
-        Graphics2D g2 = Utils.prepareGraphics( g );
+        GraphicsUtils.configureDefaultRenderingHints(g);
+        Graphics2D g2 = (Graphics2D) g;
         if( showBorder && !Utils.isDefaultButtons() ) {
             Border b = underline ? mouseoverBorder : regularBorder;
-            b.paintBorder(this, g, 0, 0, getWidth(), getHeight());
+            b.paintBorder(this, g2, 0, 0, getWidth(), getHeight());
         }
         super.paintComponent(g2);
 

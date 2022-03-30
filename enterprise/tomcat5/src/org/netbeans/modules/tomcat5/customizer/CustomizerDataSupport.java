@@ -531,22 +531,22 @@ public class CustomizerDataSupport {
         }
         
         if (serverPortModelFlag) {
-            tm.setServerPort(((Integer)serverPortModel.getValue()).intValue());
+            tm.setServerPort(((Integer)serverPortModel.getValue()));
             serverPortModelFlag = false;
         }
         
         if (shutdownPortModelFlag) {
-            tm.setShutdownPort(((Integer)shutdownPortModel.getValue()).intValue());
+            tm.setShutdownPort(((Integer)shutdownPortModel.getValue()));
             shutdownPortModelFlag = false;
         }
         
         if (debugPortModelFlag) {
-            tp.setDebugPort(((Integer)debugPortModel.getValue()).intValue());
+            tp.setDebugPort(((Integer)debugPortModel.getValue()));
             debugPortModelFlag = false;
         }
         
         if (deploymentTimeoutModelFlag) {
-            tp.setDeploymentTimeout(((Integer)deploymentTimeoutModel.getValue()).intValue());
+            tp.setDeploymentTimeout(((Integer)deploymentTimeoutModel.getValue()));
             deploymentTimeoutModelFlag = false;
         }
         

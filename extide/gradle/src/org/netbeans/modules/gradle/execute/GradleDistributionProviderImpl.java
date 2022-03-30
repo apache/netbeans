@@ -55,7 +55,7 @@ import org.openide.util.WeakListeners;
 @ProjectServiceProvider(service = {GradleDistributionProvider.class, WatchedResourceProvider.class}, projectType = NbGradleProject.GRADLE_PROJECT_TYPE)
 public class GradleDistributionProviderImpl implements GradleDistributionProvider, WatchedResourceProvider {
 
-    private final static Logger LOGGER = Logger.getLogger(GradleDistributionProviderImpl.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(GradleDistributionProviderImpl.class.getName());
 
     private static final List<String> AFFECTING_PROPS = Arrays.asList(
             PROP_GRADLE_USER_HOME,
@@ -105,7 +105,7 @@ public class GradleDistributionProviderImpl implements GradleDistributionProvide
                 try {
                     dist = mgr.distributionFromWrapper(project.getGradleFiles().getRootDir());
                 } catch (Exception ex) {
-                    LOGGER.log(Level.FINE, "Cannot evaulate Gradle Wrapper", ex); //NOI18N
+                    LOGGER.log(Level.INFO, "Cannot evaulate Gradle Wrapper", ex); //NOI18N
                 }
             }
 
@@ -113,7 +113,7 @@ public class GradleDistributionProviderImpl implements GradleDistributionProvide
                 try {
                     dist = mgr.distributionFromDir(new File(settings.getDistributionHome()));
                 } catch (IOException ex) {
-                    LOGGER.log(Level.FINE, "Cannot evaulate Gradle Distribution", ex); //NOI18N
+                    LOGGER.log(Level.INFO, "Cannot evaulate Gradle Distribution", ex); //NOI18N
                 }
             }
             if (dist == null) {

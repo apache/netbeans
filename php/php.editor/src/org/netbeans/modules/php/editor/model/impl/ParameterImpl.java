@@ -41,6 +41,8 @@ public class ParameterImpl implements Parameter {
     private final boolean isReference;
     private final boolean isVariadic;
     private final boolean isUnionType;
+    private final boolean isIntersectionType;
+    private final int modifier;
 
     public ParameterImpl(
             String name,
@@ -50,7 +52,10 @@ public class ParameterImpl implements Parameter {
             OffsetRange range,
             boolean isReference,
             boolean isVariadic,
-            boolean isUnionType) {
+            boolean isUnionType,
+            int modifier,
+            boolean isIntersectionType
+    ) {
         this.name = name;
         this.defaultValue = defaultValue;
         if (types == null) {
@@ -63,6 +68,8 @@ public class ParameterImpl implements Parameter {
         this.isReference = isReference;
         this.isVariadic = isVariadic;
         this.isUnionType = isUnionType;
+        this.modifier = modifier;
+        this.isIntersectionType = isIntersectionType;
     }
 
     @NonNull
@@ -98,6 +105,16 @@ public class ParameterImpl implements Parameter {
     }
 
     @Override
+    public boolean isIntersectionType() {
+        return isIntersectionType;
+    }
+
+    @Override
+    public int getModifier() {
+        return modifier;
+    }
+
+    @Override
     public List<QualifiedName> getTypes() {
         return new ArrayList<>(types);
     }
@@ -114,7 +131,7 @@ public class ParameterImpl implements Parameter {
         List<QualifiedName> qNames = getTypes();
         for (int idx = 0; idx < qNames.size(); idx++) {
             if (idx > 0) {
-                sb.append('|'); //NOI18N
+                sb.append(Type.getTypeSeparator(isIntersectionType));
             }
             QualifiedName qualifiedName = qNames.get(idx);
             sb.append(qualifiedName.toString());
@@ -130,6 +147,10 @@ public class ParameterImpl implements Parameter {
         sb.append(isVariadic ? 1 : 0);
         sb.append(":"); //NOI18N
         sb.append(isUnionType ? 1 : 0);
+        sb.append(":"); //NOI18N
+        sb.append(modifier);
+        sb.append(":"); //NOI18N
+        sb.append(isIntersectionType ? 1 : 0);
         return sb.toString();
     }
 
@@ -154,6 +175,8 @@ public class ParameterImpl implements Parameter {
                     boolean isReference = Integer.parseInt(parts[4]) > 0;
                     boolean isVariadic = Integer.parseInt(parts[5]) > 0;
                     boolean isUnionType = Integer.parseInt(parts[6]) > 0;
+                    int modifier = Integer.parseInt(parts[7]);
+                    boolean isIntersectionType = Integer.parseInt(parts[8]) > 0;
                     parameters.add(new ParameterImpl(
                             paramName,
                             (defValue.length() != 0) ? decode(defValue) : null,
@@ -162,7 +185,10 @@ public class ParameterImpl implements Parameter {
                             OffsetRange.NONE,
                             isReference,
                             isVariadic,
-                            isUnionType));
+                            isUnionType,
+                            modifier,
+                            isIntersectionType
+                    ));
                 }
             }
         }

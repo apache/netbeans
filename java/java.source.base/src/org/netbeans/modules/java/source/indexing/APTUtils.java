@@ -33,6 +33,7 @@ import java.lang.ref.SoftReference;
 import java.lang.ref.WeakReference;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -405,7 +406,7 @@ public class APTUtils implements ChangeListener, PropertyChangeListener {
                         try {
                             final URLConnection uc = resources.nextElement().openConnection();
                             uc.setUseCaches(false);
-                            ins = new BufferedReader(new InputStreamReader(uc.getInputStream(), "UTF-8")); //NOI18N
+                            ins = new BufferedReader(new InputStreamReader(uc.getInputStream(), StandardCharsets.UTF_8));
                             String line;
                             while ((line = ins.readLine()) != null) {
                                 int hash = line.indexOf('#');

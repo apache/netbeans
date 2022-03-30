@@ -39,7 +39,7 @@ public abstract class PathResourceBase implements PathResourceImplementation {
      * The listener is notified when the roots of the PathResource are changed.
      * @param listener
      */
-    public synchronized final void addPropertyChangeListener(PropertyChangeListener listener) {
+    public final synchronized void addPropertyChangeListener(PropertyChangeListener listener) {
         if (this.pListeners == null)
             this.pListeners = new ArrayList<PropertyChangeListener> ();
         this.pListeners.add (listener);
@@ -49,7 +49,7 @@ public abstract class PathResourceBase implements PathResourceImplementation {
      * Removes PropertyChangeListener
      * @param listener
      */
-    public synchronized final void removePropertyChangeListener(PropertyChangeListener listener) {
+    public final synchronized void removePropertyChangeListener(PropertyChangeListener listener) {
         if (this.pListeners == null)
             return;
         this.pListeners.remove (listener);

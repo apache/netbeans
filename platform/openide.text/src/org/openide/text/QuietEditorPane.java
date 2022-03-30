@@ -80,9 +80,9 @@ final class QuietEditorPane extends JEditorPane {
         }
     }
     
-    final static int FIRE = 0x1;
-    final static int PAINT = 0x2;
-    final static int ALL = FIRE | PAINT;
+    static final int FIRE = 0x1;
+    static final int PAINT = 0x2;
+    static final int ALL = FIRE | PAINT;
 
     // #21120. Caret was null while serializing CloneableEditor.
 

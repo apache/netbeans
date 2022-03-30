@@ -24,6 +24,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -129,7 +130,7 @@ public class WLJ2eePlatformFactoryTest extends NbTestCase {
             stringBuilder.append(line).append("\n");
         }
         
-        InputStream is = new ByteArrayInputStream(stringBuilder.toString().getBytes("UTF-8"));
+        InputStream is = new ByteArrayInputStream(stringBuilder.toString().getBytes(StandardCharsets.UTF_8));
         try {
             new JarOutputStream(new FileOutputStream(file), new Manifest(is)).close();
         } finally {

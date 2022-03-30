@@ -126,6 +126,7 @@ public abstract class PHPCompletionItem implements CompletionProposal {
     @StaticResource
     private static final String PHP_KEYWORD_ICON = "org/netbeans/modules/php/editor/resources/php16Key.png"; //NOI18N
     protected static final ImageIcon KEYWORD_ICON = new ImageIcon(ImageUtilities.loadImage(PHP_KEYWORD_ICON));
+    private static final int TYPE_NAME_MAX_LENGTH = Integer.getInteger("nb.php.editor.ccTypeNameMaxLength", 30); // NOI18N
     final CompletionRequest request;
     private final ElementHandle element;
     private QualifiedNameKind generateAs;
@@ -597,7 +598,8 @@ public abstract class PHPCompletionItem implements CompletionProposal {
                             param.isReference(),
                             param.isVariadic(),
                             param.isUnionType(),
-                            param.getModifier()
+                            param.getModifier(),
+                            param.isIntersectionType()
                     );
                 }
             }
@@ -884,17 +886,35 @@ public abstract class PHPCompletionItem implements CompletionProposal {
         @Override
         protected String getTypeName() {
             Set<TypeResolver> types = getField().getInstanceTypes();
-            String typeName = types.isEmpty() ? "?" : types.size() > 1 ? Type.MIXED : "?"; //NOI18N
-            if (types.size() == 1) {
-                TypeResolver typeResolver = types.iterator().next();
-                if (typeResolver.isResolved()) {
-                    QualifiedName qualifiedName = typeResolver.getTypeName(false);
+            List<String> typeNames = new ArrayList<>();
+            for (TypeResolver type : types) {
+                String typeName = "?"; //NOI18N
+                if (type.isResolved()) {
+                    QualifiedName qualifiedName = type.getTypeName(false);
                     if (qualifiedName != null) {
                         typeName = qualifiedName.toString();
+                        if (type.isNullableType()) {
+                            typeName = CodeUtils.NULLABLE_TYPE_PREFIX + typeName;
+                        }
                     }
                 }
+                typeNames.add(typeName);
             }
-            return typeName;
+            String typeName;
+            if (typeNames.isEmpty()) {
+                typeName = "?"; // NOI18N
+            } else if (typeNames.size() == 1) {
+                typeName = typeNames.get(0);
+            } else {
+                if (getField().isUnionType()) {
+                    typeName = StringUtils.implode(typeNames, Type.SEPARATOR);
+                } else if (getField().isIntersectionType()) {
+                    typeName = StringUtils.implode(typeNames, Type.SEPARATOR_INTERSECTION);
+                } else {
+                    typeName = StringUtils.implode(typeNames, Type.SEPARATOR);
+                }
+            }
+            return StringUtils.truncate(typeName, 0, TYPE_NAME_MAX_LENGTH, "..."); // NOI18N
         }
 
         @Override
@@ -1072,7 +1092,9 @@ public abstract class PHPCompletionItem implements CompletionProposal {
                     Collection<TypeResolver> returnTypes = getBaseFunctionElement().getReturnTypes();
                     // we can also write a union type in phpdoc e.g. @return int|float
                     // check whether the union type is actual declared return type to avoid adding the union type for phpdoc
-                    if (returnTypes.size() == 1 || getBaseFunctionElement().isReturnUnionType()) {
+                    if (returnTypes.size() == 1
+                            || getBaseFunctionElement().isReturnUnionType()
+                            || getBaseFunctionElement().isReturnIntersectionType()) {
                         String returnType = getBaseFunctionElement().asString(PrintAs.ReturnTypes, typeNameResolver, phpVersion);
                         if (StringUtils.hasText(returnType)) {
                             boolean nullableType = CodeUtils.isNullableType(returnType);

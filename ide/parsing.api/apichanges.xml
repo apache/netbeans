@@ -87,6 +87,21 @@ is the proper place.
 <!-- ACTUAL CHANGES BEGIN HERE: -->
 
   <changes>
+      <change id="Parser.Result.processingFinished">
+          <api name="ParsingAPI"/>
+          <summary>Adding Parser.Result.processingFinished</summary>
+          <version major="9" minor="20"/>
+          <date day="12" month="9" year="2021"/>
+          <author login="jlahoda"/>
+          <compatibility source="compatible" binary="compatible" addition="yes"/>
+          <description>
+              <p>
+                  Adding a new method, Parser.Result.processingFinished, used to
+                  mark a result as completely finished, or not completely finished.
+              </p>
+          </description>
+          <class package="org.netbeans.modules.parsing.spi" name="Parser"/>
+      </change>
       <change id="Source.Context.Lookup">
           <api name="ParsingAPI"/>
           <summary>Source provides access to Lookup</summary>

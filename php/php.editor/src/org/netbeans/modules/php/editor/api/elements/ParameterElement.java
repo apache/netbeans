@@ -33,6 +33,7 @@ public interface ParameterElement {
     boolean isReference();
     boolean isVariadic();
     boolean isUnionType();
+    boolean isIntersectionType();
     int getModifier();
     Set<TypeResolver> getTypes();
     @CheckForNull

@@ -27,6 +27,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.Locale;
 import java.util.Set;
@@ -296,7 +297,7 @@ public class DictionaryInstallerPanel extends javax.swing.JPanel {
 
             //TODO: if the dictionary already exists, provide user with a warning.
             input = new InputStreamReader (new FileInputStream (description.dictionaryFile), description.fileEncoding);
-            output = new OutputStreamWriter (new FileOutputStream (file), "UTF-8"); // NOI18N
+            output = new OutputStreamWriter (new FileOutputStream (file), StandardCharsets.UTF_8);
             char[] buffer = new char[BUFFER_LENGTH];
             int len = BUFFER_LENGTH;
             do {

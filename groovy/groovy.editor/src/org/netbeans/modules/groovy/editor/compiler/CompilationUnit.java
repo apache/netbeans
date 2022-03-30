@@ -127,7 +127,7 @@ public class CompilationUnit extends org.codehaus.groovy.control.CompilationUnit
             if (parser.isCancelled()) {
                 throw new CancellationException();
             }
-
+            
             ClassNode classNode = cache.get(name);
             if (classNode != null) {
                 return classNode;
@@ -143,18 +143,14 @@ public class CompilationUnit extends org.codehaus.groovy.control.CompilationUnit
                 return classNode;
             }
 
-            if (cache.isNonExistent(name)) {
-                return null;
-            }
-            
             classNode = classResolver.apply(name);
             if (classNode != null) {
                 cache.put(name, classNode);
                 return classNode;
             }
-            classNode = super.getClass(name);
-            if (classNode != null) {
-                return classNode;
+            
+            if (cache.isNonExistent(name)) {
+                return null;
             }
             
             // The following code is legacy and ClassNodes it creates are not fully populated with properties, fields and methods.

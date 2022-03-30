@@ -47,7 +47,7 @@ import org.openide.util.RequestProcessor;
  */
 public class AddMethodActions implements CodeGenerator {
 
-    public static abstract class AbstractFactory implements CodeGenerator.Factory {
+    public abstract static class AbstractFactory implements CodeGenerator.Factory {
 
         private AbstractAddMethodStrategy strategy;
 

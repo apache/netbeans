@@ -53,4 +53,42 @@
     <fontcolor name="support.constant" default="keyword" />
     <fontcolor name="variable.language" default="keyword" />
 
+    <fontcolor name="mod-namespace" default="identifier" />
+    <fontcolor name="mod-package" default="identifier" />
+    <fontcolor name="mod-function" default="method" />
+    <fontcolor name="mod-method" default="method" />
+    <fontcolor name="mod-macro" default="mod-function" />
+    <fontcolor name="mod-parameter" default="parameter"/>
+    <fontcolor name="mod-variable" default="identifier"/>
+    <fontcolor name="mod-struct" default="identifier"/>
+    <fontcolor name="mod-enum" default="identifier"/>
+    <fontcolor name="mod-class" default="identifier"/>
+    <fontcolor name="mod-typeAlias" default="identifier"/>
+    <fontcolor name="mod-typeParameter" default="identifier"/>
+    <fontcolor name="mod-field" default="field"/>
+    <fontcolor name="mod-enumMember" default="field"/>
+    <fontcolor name="mod-keyword" default="keyword"/>
+
+    <fontcolor name="mod-namespace-declaration" default="identifier"/>
+    <fontcolor name="mod-package-declaration" default="identifier"/>
+    <fontcolor name="mod-function-declaration" default="method"/>
+    <fontcolor name="mod-method-declaration" default="method"/>
+    <fontcolor name="mod-macro-declaration" default="mod-function"/>
+    <fontcolor name="mod-parameter-declaration" default="parameter"/>
+    <fontcolor name="mod-variable-declaration" default="identifier"/>
+    <fontcolor name="mod-struct-declaration" default="identifier"/>
+    <fontcolor name="mod-enum-declaration" default="identifier"/>
+    <fontcolor name="mod-class-declaration" default="identifier"/>
+    <fontcolor name="mod-typeAlias-declaration" default="identifier"/>
+    <fontcolor name="mod-typeParameter-declaration" default="identifier"/>
+    <fontcolor name="mod-field-declaration" default="field"/>
+    <fontcolor name="mod-enumMember-declaration" default="field"/>
+    <fontcolor name="mod-keyword-declaration" default="keyword"/>
+
+    <fontcolor name="mod-static" >
+        <font style="italic" />
+    </fontcolor>
+
+    <fontcolor name="mod-deprecated" strikeThrough="black"/>
+
 </fontscolors>

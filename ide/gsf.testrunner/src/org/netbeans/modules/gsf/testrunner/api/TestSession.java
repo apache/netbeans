@@ -22,6 +22,7 @@ import java.lang.ref.WeakReference;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 import org.netbeans.api.extexecution.print.LineConvertors.FileLocator;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
@@ -61,6 +62,10 @@ public class TestSession {
      * The suites that were executed.
      */
     private final List<TestSuite> testSuites = new ArrayList<TestSuite>();
+    /**
+     * Current suite indexes.
+     */
+    private final Stack<Integer> suiteIdxs = new Stack<Integer>();
     /**
      * Holds output for testcases. Since a testcase is created only after 
      * a test finishes, the output of that testcase needs to be associated 
@@ -176,7 +181,22 @@ public class TestSession {
                 output.clear();
             }
         }
-        testSuites.add(suite);
+        synchronized (this) {
+            suiteIdxs.push(testSuites.size());
+            testSuites.add(suite);
+        }
+    }
+
+    /**
+     * Marks the currently running test suite as finished.
+     *
+     * @param suite the suite to mark as finished
+     * @since 2.26
+     */
+    public synchronized void finishSuite(TestSuite suite) {
+        if (!suiteIdxs.isEmpty() && suite == getCurrentSuite()) {
+            suiteIdxs.pop();
+        }
     }
 
     /**
@@ -204,8 +224,8 @@ public class TestSession {
      * @return the suite that is currently running or <code>null</code> if 
      * no suite is running.
      */
-    public TestSuite getCurrentSuite() {
-        return testSuites.isEmpty() ? null : testSuites.get(testSuites.size() -1);
+    public synchronized TestSuite getCurrentSuite() {
+        return testSuites.isEmpty() ? null : testSuites.get(suiteIdxs.isEmpty() ? testSuites.size() -1 : suiteIdxs.peek());
     }
 
     /**

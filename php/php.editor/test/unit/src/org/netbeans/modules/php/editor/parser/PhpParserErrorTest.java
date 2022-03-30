@@ -1192,6 +1192,11 @@ public class PhpParserErrorTest extends PHPTestBase {
         checkErrors("testfiles/parser/php80/attributeSyntax_02.php");
     }
 
+    // [NETBEANS-6193] attributes of interface constants and methods
+    public void testAttributeSyntax_03() throws Exception {
+        checkErrors("testfiles/parser/php80/attributeSyntax_03.php");
+    }
+
     public void testAttributeSyntaxError_01() throws Exception {
         checkErrors("testfiles/parser/php80/attributeSyntaxError_01.php");
     }
@@ -1223,4 +1228,62 @@ public class PhpParserErrorTest extends PHPTestBase {
     public void testNamedArgumentsWithAttribute_01() throws Exception {
         checkErrors("testfiles/parser/php80/namedArgumentsWithAttribute_01.php");
     }
+
+    // [NETBEANS-5599] PHP 8.1
+    public void testFinalClassConstants_01() throws Exception {
+        checkErrors("testfiles/parser/php81/finalClassConstants_01.php");
+    }
+
+    public void testFinalClassConstantsWithAttributes_01() throws Exception {
+        checkErrors("testfiles/parser/php81/finalClassConstantsWithAttributes_01.php");
+    }
+
+    public void testFinalClassMethods_01() throws Exception {
+        checkErrors("testfiles/parser/finalClassMethods_01.php");
+    }
+
+    public void testFinalTraitMethods_01() throws Exception {
+        checkErrors("testfiles/parser/finalTraitMethods_01.php");
+    }
+
+    public void testReadonlyProperties_01() throws Exception {
+        checkErrors("testfiles/parser/php81/readonlyProperties_01.php");
+    }
+
+    public void testReadonlyPropertiesWithConstError() throws Exception {
+        checkErrors("testfiles/parser/php81/readonlyPropertiesWithConstError.php");
+    }
+
+    public void testReadonlyPropertiesWithStaticError() throws Exception {
+        checkErrors("testfiles/parser/php81/readonlyPropertiesWithStaticError.php");
+    }
+
+    public void testNewInInitializers_01() throws Exception {
+        checkErrors("testfiles/parser/php81/newInInitializers_01.php");
+    }
+
+    public void testNewInInitializersWithClassConstantError() throws Exception {
+        checkErrors("testfiles/parser/php81/newInInitializersWithClassConstantError.php");
+    }
+
+    public void testNewInInitializersWithPropertyError() throws Exception {
+        checkErrors("testfiles/parser/php81/newInInitializersWithPropertyError.php");
+    }
+
+    public void testPureIntersectionTypes_01() throws Exception {
+        checkErrors("testfiles/parser/php81/pureIntersectionTypes_01.php");
+    }
+
+    public void testPureIntersectionTypesWithUnionTypeError_01() throws Exception {
+        checkErrors("testfiles/parser/php81/pureIntersectionTypesWithUnionTypeError_01.php");
+    }
+
+    public void testPureIntersectionTypesWithUnionTypeError_02() throws Exception {
+        checkErrors("testfiles/parser/php81/pureIntersectionTypesWithUnionTypeError_02.php");
+    }
+
+    public void testPureIntersectionTypesWithUnionTypeError_03() throws Exception {
+        checkErrors("testfiles/parser/php81/pureIntersectionTypesWithUnionTypeError_03.php");
+    }
+
 }

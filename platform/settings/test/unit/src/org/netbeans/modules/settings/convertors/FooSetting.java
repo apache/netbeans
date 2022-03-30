@@ -26,8 +26,8 @@ import java.util.Properties;
  * @author  Jan Pokorsky
  */
 public class FooSetting {
-    private final static String PROP_PROPERTY1 = "property1";
-    private final static String PROP_NAME = "name";
+    private static final String PROP_PROPERTY1 = "property1";
+    private static final String PROP_NAME = "name";
 
     /** Holds value of property property1. */
     private String property1;

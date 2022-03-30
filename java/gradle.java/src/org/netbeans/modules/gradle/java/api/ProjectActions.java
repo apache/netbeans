@@ -41,15 +41,34 @@ public final class ProjectActions {
      * {@codesnippet JavaExecTokenProviderTest#testExamplePassJvmAndArguments}
      * </div>
      */
-    public static String TOKEN_JAVAEXEC_JVMARGS = "javaExec.jvmArgs";
+    public static String TOKEN_JAVAEXEC_JVMARGS = "javaExec.jvmArgs"; // NOI18N
 
     /**
      * Replaceable token for program parameters as a commandline option. Generates --args <i>&lt;parameter-list></i>, if the extra parameters are present, otherwise
      * generates an empty String. See {@link #TOKEN_JAVAEXEC_JVMARGS} for code examples.
      * @since 1.9
      */
-    public static String TOKEN_JAVAEXEC_ARGS = "javaExec.args";
+    public static String TOKEN_JAVAEXEC_ARGS = "javaExec.args"; // NOI18N
 
+    /**
+     * Replaceable token for program working directory. Generates project property for NB Tooling Gradle plugin, which is used in <code>action-mapping.xml</code>
+     * and can be customized by the user. This feature cooperates with NetBeans Tooling Gradle plugin provided by org.netbeans.gradle module.
+     * The Gradle Java project support consumes {@link ExplicitProcessParameters} from the action's context Lookup, and populates the replaceable token mapping
+     * from {@link ExplicitProcessParameters#getWorkingDirectory()}.
+     *
+     * @since 1.15
+     */
+    public static String TOKEN_JAVAEXEC_CWD = "javaExec.workingDir"; // NOI18N
+
+    /**
+     * Replaceable token for program environment variables. Generates project property for NB Tooling Gradle plugin, which is used in <code>action-mapping.xml</code>
+     * and can be customized by the user. This feature cooperates with NetBeans Tooling Gradle plugin provided by org.netbeans.gradle module.
+     * The Gradle Java project support consumes {@link ExplicitProcessParameters} from the action's context Lookup, and populates the replaceable token mapping
+     * from {@link ExplicitProcessParameters#getEnvironmentVariables()}.
+     *
+     * @since 1.15
+     */
+    public static String TOKEN_JAVAEXEC_ENV = "javaExec.environment"; // NOI18N
 
     private ProjectActions() {}
 }

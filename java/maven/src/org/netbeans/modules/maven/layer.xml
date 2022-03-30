@@ -33,6 +33,22 @@
             <folder name="Maven2">
                 <attr name="displayName" bundlevalue="org.netbeans.modules.maven.newproject.Bundle#Templates/Project/Maven2"/>
                 <attr name="position" intvalue="100"/>
+
+                <!-- Simple Java project structure -->
+                <folder name="JavaApp">
+                    <folder name="src">
+                        <folder name="main">
+                            <folder name="java">
+                                <folder name="${packagePath}">
+                                    <file name="${mainClassName}.java" url="nbresloc:/org/netbeans/modules/maven/resources/App.java.template">
+                                        <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
+                                        <attr name="template.openFile" boolvalue="true"/>
+                                    </file>
+                                </folder>
+                            </folder>
+                        </folder>
+                    </folder>
+                </folder>
             </folder>
         </folder>
     </folder>
@@ -96,6 +112,10 @@
                 <file name="sep-4.instance">
                     <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
                     <attr name="position" intvalue="1600"/>
+                </file>
+                <file name="org-netbeans-modules-project-ui-problems-BrokenProjectActionFactory.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Project/org-netbeans-modules-project-ui-problems-BrokenProjectActionFactory.instance"/>
+                    <attr name="position" intvalue="1770"/>
                 </file>
                 <file name="org-netbeans-modules-project-ui-SetMainProject.shadow">
                     <attr name="originalFile" stringvalue="Actions/Project/org-netbeans-modules-project-ui-SetMainProject.instance"/>

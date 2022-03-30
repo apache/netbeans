@@ -23,7 +23,10 @@ import java.util.Collections;
 import javax.swing.SwingUtilities;
 import javax.swing.text.Document;
 import javax.swing.text.StyledDocument;
+import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.modules.editor.NbEditorDocument;
+import org.netbeans.modules.javascript2.editor.JsPreferences;
+import org.netbeans.modules.javascript2.editor.JsVersion;
 import org.netbeans.modules.parsing.api.indexing.IndexingManager;
 import org.netbeans.spi.lexer.MutableTextInput;
 import org.openide.cookies.EditorCookie;
@@ -43,6 +46,10 @@ public abstract class EcmaLevelRule extends JsAstRule {
     public static void refresh(final FileObject fo) throws IOException {
         reindexFile(fo);
         refreshDocument(fo);
+    }
+
+    static boolean ecmaEditionProjectBelow(JsHintsProvider.JsRuleContext context, JsVersion targetVersion) {
+        return JsPreferences.isPreECMAVersion(FileOwnerQuery.getOwner(context.getJsParserResult().getSnapshot().getSource().getFileObject()), targetVersion);
     }
 
     private static void reindexFile(final FileObject fo) {

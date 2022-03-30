@@ -29,6 +29,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.jar.JarOutputStream;
 import java.util.jar.Manifest;
 import org.netbeans.junit.NbTestCase;
@@ -100,7 +101,7 @@ public class WebLogicLayoutTest extends NbTestCase {
             stringBuilder.append(line).append("\n");
         }
 
-        InputStream is = new ByteArrayInputStream(stringBuilder.toString().getBytes("UTF-8"));
+        InputStream is = new ByteArrayInputStream(stringBuilder.toString().getBytes(StandardCharsets.UTF_8));
         try {
             new JarOutputStream(new FileOutputStream(file), new Manifest(is)).close();
         } finally {

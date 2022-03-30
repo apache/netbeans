@@ -267,7 +267,7 @@ public final class NodeHelper {
                 Object value = null;
 
                 if (currentType.equals(int.class.getName()) || currentType.equals(Integer.class.getName())) {
-                    value = Integer.valueOf(0);
+                    value = 0;
                 } else if (currentType.equals(byte.class.getName()) || currentType.equals(Byte.class.getName())) {
                     value = Byte.valueOf("0");
                 } else if (currentType.equals(boolean.class.getName()) || currentType.equals(Boolean.class.getName())) {

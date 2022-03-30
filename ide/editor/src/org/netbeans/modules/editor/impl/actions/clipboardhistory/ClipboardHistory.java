@@ -56,7 +56,7 @@ public final class ClipboardHistory implements ClipboardListener {
         }
     }
 
-    public synchronized static ClipboardHistory getInstance() {
+    public static synchronized ClipboardHistory getInstance() {
         if (instance == null) {
             instance = new ClipboardHistory();
         }

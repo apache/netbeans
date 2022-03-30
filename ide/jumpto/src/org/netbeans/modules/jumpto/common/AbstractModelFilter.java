@@ -93,7 +93,7 @@ public abstract class AbstractModelFilter<T> implements Models.Filter<T> {
     }
 
     @CheckForNull
-    protected synchronized final String getSearchText() {
+    protected final synchronized String getSearchText() {
         return searchText;
     }
 

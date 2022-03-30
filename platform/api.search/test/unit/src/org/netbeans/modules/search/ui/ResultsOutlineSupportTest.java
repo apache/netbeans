@@ -70,12 +70,9 @@ public class ResultsOutlineSupportTest {
 
         //add listener, create value holder
         final AtomicBoolean deleted = new AtomicBoolean(false);
-        mo.addPropertyChangeListener(new PropertyChangeListener() {
-            @Override
-            public void propertyChange(PropertyChangeEvent evt) {
-                if (MatchingObject.PROP_REMOVED.equals(evt.getPropertyName())) {
-                    deleted.set(true);
-                }
+        mo.addPropertyChangeListener((PropertyChangeEvent evt) -> {
+            if (MatchingObject.PROP_REMOVED.equals(evt.getPropertyName())) {
+                deleted.set(true);
             }
         });
         parent1Item.remove();
@@ -112,13 +109,10 @@ public class ResultsOutlineSupportTest {
 
         //add listener, create value holder
         final AtomicBoolean notified = new AtomicBoolean(false);
-        parent1Item.addPropertyChangeListener(new PropertyChangeListener() {
-            @Override
-            public void propertyChange(PropertyChangeEvent evt) {
-                if (FolderTreeItem.PROP_CHILDREN.equals(
-                        evt.getPropertyName())) {
-                    notified.set(true);
-                }
+        parent1Item.addPropertyChangeListener((PropertyChangeEvent evt) -> {
+            if (FolderTreeItem.PROP_CHILDREN.equals(
+                    evt.getPropertyName())) {
+                notified.set(true);
             }
         });
         mo.remove();
@@ -190,17 +184,9 @@ public class ResultsOutlineSupportTest {
         final ResultModel rm = SearchTestUtils.createResultModelWithSampleData(false);
         final ResultsOutlineSupport ros[] = new ResultsOutlineSupport[1];
         try {
-            EventQueue.invokeAndWait(new Runnable() {
-
-                @Override
-                public void run() {
-                    ros[0] = new ResultsOutlineSupport(false, false, rm,
-                            null, Node.EMPTY);
-                }
-            });
-        } catch (InterruptedException ex) {
-            Exceptions.printStackTrace(ex);
-        } catch (InvocationTargetException ex) {
+            EventQueue.invokeAndWait(() -> ros[0] = new ResultsOutlineSupport(false, false, rm, null, Node.EMPTY));
+        } catch (InterruptedException |
+                InvocationTargetException ex) {
             Exceptions.printStackTrace(ex);
         }
 
@@ -230,27 +216,21 @@ public class ResultsOutlineSupportTest {
             }
 
             // Add a new file ...
-            Thread t1 = new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    ros[0].update();
-                    ros[0].getResultsNode().getChildren().getNodes();
-                    finishFlag.thread1Finished = true;
-                }
+            Thread t1 = new Thread(() -> {
+                ros[0].update();
+                ros[0].getResultsNode().getChildren().getNodes();
+                finishFlag.thread1Finished = true;
             });
 
             // ... and close the model at the same time.
-            Thread t2 = new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    // simulate ResultsOutlineSupport.clean() - synchronize and
-                    // call ResultModel.close()
-                    synchronized (ros[0]) {
-                        rm.close();
-                        ros[0].getResultsNode().getChildren().getNodes();
-                    }
-                    finishFlag.thread2Finished = true;
+            Thread t2 = new Thread(() -> {
+                // simulate ResultsOutlineSupport.clean() - synchronize and
+                // call ResultModel.close()
+                synchronized (ros[0]) {
+                    rm.close();
+                    ros[0].getResultsNode().getChildren().getNodes();
                 }
+                finishFlag.thread2Finished = true;
             });
             t1.start();
             t2.start();

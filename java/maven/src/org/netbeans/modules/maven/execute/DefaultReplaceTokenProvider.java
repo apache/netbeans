@@ -29,6 +29,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import javax.swing.ActionMap;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.java.project.JavaProjectConstants;
 import org.netbeans.api.java.queries.UnitTestForSourceQuery;
@@ -38,10 +39,12 @@ import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.project.SourceGroup;
 import org.netbeans.api.project.Sources;
+import org.netbeans.modules.maven.ActionProviderImpl;
 import org.netbeans.modules.maven.NbMavenProjectImpl;
 import org.netbeans.modules.maven.api.NbMavenProject;
 import org.netbeans.modules.maven.classpath.MavenSourcesImpl;
 import org.netbeans.modules.maven.configurations.M2ConfigProvider;
+import org.netbeans.modules.maven.runjar.MavenExecuteUtils;
 import org.netbeans.modules.maven.spi.actions.ActionConvertor;
 import org.netbeans.modules.maven.spi.actions.ReplaceTokenProvider;
 import org.netbeans.spi.project.ActionProvider;
@@ -206,6 +209,7 @@ public class DefaultReplaceTokenProvider implements ReplaceTokenProvider, Action
             // not all of the selected files are under one source root, so maybe they were
             // selected from both source and test packages and "Test Files" action was invoked on them?
             if (ActionProvider.COMMAND_TEST_SINGLE.equals(actionName) ||
+                ActionProviderImpl.COMMAND_INTEGRATION_TEST_SINGLE.equals(actionName) ||
                 ActionProvider.COMMAND_DEBUG_TEST_SINGLE.equals(actionName)) 
             {
                 HashSet<String> test = new HashSet<String>();
@@ -336,13 +340,41 @@ public class DefaultReplaceTokenProvider implements ReplaceTokenProvider, Action
 //        return files.toArray(
 //                new FileObject[files.size()]);
 //    }
+    
+    private boolean isIntegrationTestFile(FileObject file) {
+        return file.getName().endsWith("IT") || file.getName().endsWith("ITCase"); //NOI18N
+    }
 
+    private boolean isIntegrationTestTarget(Lookup lookup) {
+        final SingleMethod targetMethod = lookup.lookup(SingleMethod.class); //JavaDataObject
+        if (targetMethod != null) {
+            return isIntegrationTestFile(targetMethod.getFile());
+        } 
+        final Collection<? extends FileObject> targetFiles = lookup.lookupAll(FileObject.class);
+        if (targetFiles != null) {
+            return targetFiles.stream().allMatch(file -> isIntegrationTestFile(file));
+        }
+        return false;
+    }
+    
     @Override public String convert(String action, Lookup lookup) {
         if (SingleMethod.COMMAND_DEBUG_SINGLE_METHOD.equals(action)) {
+            if (isIntegrationTestTarget(lookup)) {
+                return ActionProviderImpl.COMMAND_DEBUG_INTEGRATION_TEST_SINGLE;
+            }
             return ActionProvider.COMMAND_DEBUG_TEST_SINGLE;
         }
         if (SingleMethod.COMMAND_RUN_SINGLE_METHOD.equals(action)) {
+            if (isIntegrationTestTarget(lookup)) {
+                return ActionProviderImpl.COMMAND_INTEGRATION_TEST_SINGLE;
+            }
             return ActionProvider.COMMAND_TEST_SINGLE;
+        }
+        if (ActionProvider.COMMAND_TEST_SINGLE.equals(action) && isIntegrationTestTarget(lookup)) {
+            return ActionProviderImpl.COMMAND_INTEGRATION_TEST_SINGLE;
+        }
+        if (ActionProvider.COMMAND_DEBUG_TEST_SINGLE.equals(action) && isIntegrationTestTarget(lookup)) {
+            return ActionProviderImpl.COMMAND_DEBUG_INTEGRATION_TEST_SINGLE;
         }
         if (ActionProvider.COMMAND_RUN_SINGLE.equals(action) ||
             ActionProvider.COMMAND_DEBUG_SINGLE.equals(action) ||

@@ -30,7 +30,7 @@ import org.netbeans.lib.profiler.utils.StringUtils;
  */
 class MonitorInfo {
 
-    final private int monitorId;
+    private final int monitorId;
     private String className;
     private Map<ThreadInfo, OpenThread> openThreads;
     private Map<ThreadInfo, ThreadDetail> waitThreads;

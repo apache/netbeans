@@ -105,9 +105,9 @@ public class Utils {
 
     public static boolean areInSameJ2EEApp(Project p1, Project p2) {
         Set globalPath = GlobalPathRegistry.getDefault().getSourceRoots();
-        Iterator iter = globalPath.iterator();
+        Iterator<FileObject> iter = globalPath.iterator();
         while (iter.hasNext()) {
-            FileObject sourceRoot = (FileObject)iter.next();
+            FileObject sourceRoot = iter.next();
             Project project = FileOwnerQuery.getOwner(sourceRoot);
             if (project != null) {
                 Object j2eeAppProvider = project.getLookup().lookup(J2eeApplicationProvider.class);

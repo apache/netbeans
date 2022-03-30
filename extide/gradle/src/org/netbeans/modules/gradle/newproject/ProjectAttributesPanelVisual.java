@@ -325,7 +325,7 @@ public final class ProjectAttributesPanelVisual extends JPanel implements Docume
             String part1 = tfGroup.getText().trim();
             part1 = !part1.isEmpty() ? part1 + "." : part1;
 
-            String part2 = tfProjectName.getText().trim().replaceAll(" ", "").replace('-', '.');
+            String part2 = tfProjectName.getText().trim().replace(" ", "").replace('-', '.');
             tfPackageBase.getDocument().removeDocumentListener(this);
             tfPackageBase.setText(part1 + part2);
             tfPackageBase.getDocument().addDocumentListener(this);

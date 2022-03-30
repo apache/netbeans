@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 9.19.0
+#Version 9.22.0
 
 CLSS public abstract interface java.io.Serializable
 
@@ -253,6 +253,7 @@ CLSS public abstract static org.netbeans.modules.parsing.spi.Parser$Result
  outer org.netbeans.modules.parsing.spi.Parser
 cons protected init(org.netbeans.modules.parsing.api.Snapshot)
 meth protected abstract void invalidate()
+meth protected boolean processingFinished()
 meth public org.netbeans.modules.parsing.api.Snapshot getSnapshot()
 supr java.lang.Object
 hfds snapshot

@@ -95,7 +95,7 @@ public class GeneralSanityTest extends NbTestCase {
                 countDown--;
             }
 
-            synchronized final void waitForAWT() throws InterruptedException {
+            final synchronized void waitForAWT() throws InterruptedException {
                 while (countDown > 0) {
                     WindowManager.getDefault().invokeWhenUIReady(this);
                     wait();

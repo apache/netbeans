@@ -26,43 +26,19 @@
             <code-name-base>org.netbeans.libs.jsch.agentproxy</code-name-base>
             <module-dependencies>
                 <dependency>
-                    <code-name-base>org.netbeans.libs.jna</code-name-base>
+                    <code-name-base>com.jcraft.jsch</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
                     <run-dependency>
-                        <release-version>2</release-version>
-                        <specification-version>2.1</specification-version>
-                    </run-dependency>
-                </dependency>
-                <dependency>
-                    <code-name-base>org.netbeans.libs.jna.platform</code-name-base>
-                    <run-dependency>
-                        <release-version>2</release-version>
-                        <specification-version>2.1</specification-version>
+                        <specification-version>0.1.49</specification-version>
                     </run-dependency>
                 </dependency>
             </module-dependencies>
             <friend-packages>
                 <friend>org.netbeans.libs.git</friend>
                 <friend>org.netbeans.modules.php.project</friend>
-                <package>com.jcraft.jsch.agentproxy</package>
-                <package>com.jcraft.jsch.agentproxy.connector</package>
                 <package>org.netbeans.libs.jsch.agentproxy</package>
             </friend-packages>
-            <class-path-extension>
-                <runtime-relative-path>ext/jsch-agentproxy-core.jar</runtime-relative-path>
-                <binary-origin>external/jsch.agentproxy.core-0.0.7.jar</binary-origin>
-            </class-path-extension>
-            <class-path-extension>
-                <runtime-relative-path>ext/jsch-agentproxy-pageant.jar</runtime-relative-path>
-                <binary-origin>external/jsch.agentproxy.pageant-0.0.7.jar</binary-origin>
-            </class-path-extension>
-            <class-path-extension>
-                <runtime-relative-path>ext/jsch-agentproxy-sshagent.jar</runtime-relative-path>
-                <binary-origin>external/jsch.agentproxy.sshagent-0.0.7.jar</binary-origin>
-            </class-path-extension>
-            <class-path-extension>
-                <runtime-relative-path>ext/jsch-agentproxy-usocket-jna.jar</runtime-relative-path>
-                <binary-origin>external/jsch.agentproxy.usocket-jna-0.0.7.jar</binary-origin>
-            </class-path-extension>
         </data>
     </configuration>
 </project>

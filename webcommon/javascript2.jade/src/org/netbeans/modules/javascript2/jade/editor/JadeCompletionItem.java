@@ -133,9 +133,9 @@ public class JadeCompletionItem implements CompletionProposal {
     }
     
     protected static class CompletionRequest {
-        final public int anchor;
-        final public String prefix;
-        final public ParserResult parserResult;
+        public final int anchor;
+        public final String prefix;
+        public final ParserResult parserResult;
 
         public CompletionRequest(ParserResult parserResult, int anchor, String prefix) {
             this.anchor = anchor;

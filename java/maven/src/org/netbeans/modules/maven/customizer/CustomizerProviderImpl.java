@@ -281,7 +281,7 @@ public class CustomizerProviderImpl implements CustomizerProvider2 {
     }    
     
     
-    public static abstract class ModelAccessor {
+    public abstract static class ModelAccessor {
         public abstract void setConfigurationId(ModelHandle.Configuration cfg, String id);
         
         public abstract ModelHandle createHandle(POMModel model, MavenProject proj, Map<String, ActionToGoalMapping> mapp,
@@ -289,7 +289,7 @@ public class CustomizerProviderImpl implements CustomizerProvider2 {
         
     }
         
-    public static abstract class ModelAccessor2 {
+    public abstract static class ModelAccessor2 {
         
         public abstract ModelHandle2 createHandle(POMModel model, MavenProject proj, Map<String, ActionToGoalMapping> mapp,
                 List<ModelHandle2.Configuration> configs, ModelHandle2.Configuration active, MavenProjectPropsImpl auxProps);

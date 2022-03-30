@@ -172,7 +172,7 @@ class ServerLog {
                         if (nextColonIdx > -1) {
                             String lineNum = logLine.substring(colonIdx + 1, nextColonIdx);
                             try {
-                                line = Integer.valueOf(lineNum).intValue();
+                                line = Integer.valueOf(lineNum);
                             } catch(NumberFormatException nfe) { 
                                 // ignore it
                                 Logger.getLogger(ServerLog.class.getName()).log(Level.INFO, null, nfe);
@@ -197,7 +197,7 @@ class ServerLog {
                         if (thirdColonIdx > -1) {
                             String lineNum = logLine.substring(secondColonIdx + 1, thirdColonIdx);
                             try {
-                                line = Integer.valueOf(lineNum).intValue();
+                                line = Integer.valueOf(lineNum);
                             } catch(NumberFormatException nfe) { 
                                 // ignore it
                                 Logger.getLogger(ServerLog.class.getName()).log(Level.INFO, null, nfe);
@@ -228,7 +228,7 @@ class ServerLog {
                             if (lastColonIdx > -1) {
                                 String lineNum = content.substring(lastColonIdx + 1);
                                 try {
-                                    line = Integer.valueOf(lineNum).intValue();
+                                    line = Integer.valueOf(lineNum);
                                 } catch(NumberFormatException nfe) {
                                     // ignore it
                                     Logger.getLogger(ServerLog.class.getName()).log(Level.INFO, null, nfe);
@@ -269,7 +269,7 @@ class ServerLog {
             } else {
                 writer.println(line);
                 if (line.startsWith("SEVERE: WSSERVLET11: failed to parse runtime descriptor: java.lang.LinkageError:")) { // NOI18N
-                    File jaxwsApi = InstalledFileLocator.getDefault().locate("modules/ext/jaxws21/api/jaxws-api.jar", null, false); // NOI18N
+                    File jaxwsApi = InstalledFileLocator.getDefault().locate("modules/ext/jaxws22/api/jakarta.xml.ws-api.jar", null, false); // NOI18N
                     File jaxbApi  = InstalledFileLocator.getDefault().locate("modules/ext/jaxb/api/jaxb-api.jar", null, false); // NOI18N
                     File endoresedDir = tomcatManager.getTomcatProperties().getJavaEndorsedDir();
                     if (jaxwsApi != null && jaxbApi != null) {

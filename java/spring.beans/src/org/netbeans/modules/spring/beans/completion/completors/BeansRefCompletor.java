@@ -45,7 +45,7 @@ import org.openide.filesystems.FileObject;
  */
 public class BeansRefCompletor extends Completor {
 
-    final private boolean includeGlobal;
+    private final boolean includeGlobal;
 
     public BeansRefCompletor(boolean includeGlobal, int invocationOffset) {
         super(invocationOffset);

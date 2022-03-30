@@ -24,6 +24,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
 import org.netbeans.junit.MockServices;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.palette.Category;
@@ -172,7 +173,7 @@ public class PaletteItemTest extends NbTestCase {
         FileObject fo = itemsFolder.createData(ITEM_FILE);
         FileLock lock = fo.lock();
         try {
-            OutputStreamWriter writer = new OutputStreamWriter(fo.getOutputStream(lock), "UTF-8");
+            OutputStreamWriter writer = new OutputStreamWriter(fo.getOutputStream(lock), StandardCharsets.UTF_8);
             try {
                 writer.write("<?xml version='1.0' encoding='UTF-8'?>");
                 writer.write("<!DOCTYPE editor_palette_item PUBLIC '-//NetBeans//Editor Palette Item 1.0//EN' 'http://www.netbeans.org/dtds/editor-palette-item-1_0.dtd'>");
@@ -195,7 +196,7 @@ public class PaletteItemTest extends NbTestCase {
         FileObject fo = itemsFolder.createData(ITEM_FILE);
         FileLock lock = fo.lock();
         try {
-            OutputStreamWriter writer = new OutputStreamWriter(fo.getOutputStream(lock), "UTF-8");
+            OutputStreamWriter writer = new OutputStreamWriter(fo.getOutputStream(lock), StandardCharsets.UTF_8);
             try {
                 writer.write("<?xml version='1.0' encoding='UTF-8'?>");
                 writer.write("<!DOCTYPE editor_palette_item PUBLIC '-//NetBeans//Editor Palette Item 1.0//EN' 'http://www.netbeans.org/dtds/editor-palette-item-1_0.dtd'>");
@@ -218,7 +219,7 @@ public class PaletteItemTest extends NbTestCase {
         FileObject fo = itemsFolder.createData(ITEM_FILE);
         FileLock lock = fo.lock();
         try {
-            OutputStreamWriter writer = new OutputStreamWriter(fo.getOutputStream(lock), "UTF-8");
+            OutputStreamWriter writer = new OutputStreamWriter(fo.getOutputStream(lock), StandardCharsets.UTF_8);
             try {
                 writer.write("<?xml version='1.0' encoding='UTF-8'?>");
                 writer.write("<!DOCTYPE editor_palette_item PUBLIC '-//NetBeans//Editor Palette Item 1.1//EN' 'http://www.netbeans.org/dtds/editor-palette-item-1_1.dtd'>");

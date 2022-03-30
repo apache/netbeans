@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 9.23
+#Version 9.27
 
 CLSS public java.io.IOException
 cons public init()
@@ -474,6 +474,7 @@ meth public static boolean isArchiveFile(java.net.URL)
 meth public static boolean isArchiveFile(org.openide.filesystems.FileObject)
 meth public static boolean isParentOf(org.openide.filesystems.FileObject,org.openide.filesystems.FileObject)
 meth public static boolean isRecursiveSymbolicLink(org.openide.filesystems.FileObject) throws java.io.IOException
+meth public static boolean isValidFileName(java.lang.String)
 meth public static java.io.File archiveOrDirForURL(java.net.URL)
 meth public static java.io.File normalizeFile(java.io.File)
 meth public static java.io.File toFile(org.openide.filesystems.FileObject)
@@ -493,6 +494,7 @@ meth public static java.net.URLStreamHandler nbfsURLStreamHandler()
  anno 0 java.lang.Deprecated()
 meth public static java.util.List<java.lang.String> getMIMETypeExtensions(java.lang.String)
 meth public static java.util.List<org.openide.filesystems.FileObject> getOrder(java.util.Collection<org.openide.filesystems.FileObject>,boolean)
+meth public static java.util.function.BiFunction<java.lang.String,java.lang.Object,java.lang.Object> defaultAttributesTransformer()
 meth public static org.openide.filesystems.FileChangeListener weakFileChangeListener(org.openide.filesystems.FileChangeListener,java.lang.Object)
 meth public static org.openide.filesystems.FileObject copyFile(org.openide.filesystems.FileObject,org.openide.filesystems.FileObject,java.lang.String) throws java.io.IOException
 meth public static org.openide.filesystems.FileObject copyFile(org.openide.filesystems.FileObject,org.openide.filesystems.FileObject,java.lang.String,java.lang.String) throws java.io.IOException
@@ -520,6 +522,7 @@ meth public static void addRecursiveListener(org.openide.filesystems.FileChangeL
 meth public static void addRecursiveListener(org.openide.filesystems.FileChangeListener,java.io.File,java.util.concurrent.Callable<java.lang.Boolean>)
 meth public static void copy(java.io.InputStream,java.io.OutputStream) throws java.io.IOException
 meth public static void copyAttributes(org.openide.filesystems.FileObject,org.openide.filesystems.FileObject) throws java.io.IOException
+meth public static void copyAttributes(org.openide.filesystems.FileObject,org.openide.filesystems.FileObject,java.util.function.BiFunction<java.lang.String,java.lang.Object,java.lang.Object>) throws java.io.IOException
 meth public static void extractJar(org.openide.filesystems.FileObject,java.io.InputStream) throws java.io.IOException
  anno 0 java.lang.Deprecated()
 meth public static void preventFileChooserSymlinkTraversal(javax.swing.JFileChooser,java.io.File)
@@ -531,7 +534,7 @@ meth public static void removeRecursiveListener(org.openide.filesystems.FileChan
 meth public static void setMIMEType(java.lang.String,java.lang.String)
 meth public static void setOrder(java.util.List<org.openide.filesystems.FileObject>) throws java.io.IOException
 supr java.lang.Object
-hfds LOG,REFRESH_RP,archiveRootProviderCache,archiveRootProviders,diskFileSystem,normalizedRef,refreshTask,transientAttributes
+hfds DEFAULT_ATTR_TRANSFORMER,ILLEGAL_FILENAME_CHARACTERS,LOG,REFRESH_RP,archiveRootProviderCache,archiveRootProviders,diskFileSystem,normalizedRef,refreshTask,transientAttributes
 hcls NonCanonicalizingFile
 
 CLSS public org.openide.filesystems.JarFileSystem

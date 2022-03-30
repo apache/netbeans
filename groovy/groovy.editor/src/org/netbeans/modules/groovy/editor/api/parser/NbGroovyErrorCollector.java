@@ -22,8 +22,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -75,6 +77,8 @@ class NbGroovyErrorCollector extends ErrorCollector {
      */
     private boolean showStaticCompileErrors;
     private boolean showFilteredErrors;
+    
+    private boolean disableErrors;
     
     /**
      * Cached combined errors.s
@@ -170,14 +174,28 @@ class NbGroovyErrorCollector extends ErrorCollector {
         super.failIfErrors();
     }
 
+    public boolean isDisableErrors() {
+        return disableErrors;
+    }
+
+    public void setDisableErrors(boolean disableErrors) {
+        this.disableErrors = disableErrors;
+    }
+
     @Override
     public boolean hasErrors() {
+        if (disableErrors) {
+            return false;
+        }
         List<? extends Message> errs = getErrors();
         return errs != null && !errs.isEmpty();
     }
 
     @Override
     public List<? extends Message> getErrors() {
+        if (disableErrors) {
+            return Collections.emptyList();
+        }
         return showStaticCompileErrors ? getAllErrors() : super.getErrors();
     }
 
@@ -189,6 +207,9 @@ class NbGroovyErrorCollector extends ErrorCollector {
 
     @Override
     public int getErrorCount() {
+        if (disableErrors) {
+            return 0;
+        }
         List<? extends Message> errs = getErrors();
         return errs.size();
     }
@@ -217,6 +238,9 @@ class NbGroovyErrorCollector extends ErrorCollector {
     }
     
     public List<Message> getAllErrors() {
+        if (disableErrors) {
+            return Collections.emptyList();
+        }
         if (combinedErrors == null) {
             List<? extends Message> base = super.getErrors();
             combinedErrors = new ArrayList<>();
@@ -287,7 +311,7 @@ class NbGroovyErrorCollector extends ErrorCollector {
         }
         StringBuilder sb = new StringBuilder();
         try (InputStream is = NbGroovyErrorCollector.class.getResourceAsStream(RESOURCE_FILTERED_ERRORS);
-             BufferedReader r = new BufferedReader(new InputStreamReader(is, "UTF-8"))) {
+             BufferedReader r = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8))) {
             String line;
             
             while ((line = r.readLine()) != null) {

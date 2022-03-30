@@ -25,6 +25,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -103,7 +104,7 @@ public class JREProbe {
         if (bomFile.canRead()) {
             try {
                 final BufferedReader in = new BufferedReader(new InputStreamReader(
-                    new FileInputStream(bomFile),"UTF-8")); //NOI18N
+                    new FileInputStream(bomFile), StandardCharsets.UTF_8));
                 try {
                     String line;
                     while ((line = in.readLine()) != null) {

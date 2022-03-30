@@ -129,7 +129,7 @@ public class MicronautConfigHyperlinkProvider implements HyperlinkProviderExt {
                         }
                         TypeElement te = (TypeElement) handle[0].resolve(controller);
                         if (te != null) {
-                            String name = "set" + propertyName.replaceAll("-", "");
+                            String name = "set" + propertyName.replace("-", "");
                             for (ExecutableElement executableElement : ElementFilter.methodsIn(te.getEnclosedElements())) {
                                 if (name.equalsIgnoreCase(executableElement.getSimpleName().toString())) {
                                     handle[0] = ElementHandle.create(executableElement);

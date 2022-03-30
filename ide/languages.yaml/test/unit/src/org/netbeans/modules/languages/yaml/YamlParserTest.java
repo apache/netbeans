@@ -50,6 +50,10 @@ public class YamlParserTest extends YamlTestBase {
         checkErrors("testfiles/error3.yaml");
     }
 
+    public void testErrors4() throws Exception {
+        checkErrors("testfiles/error4.yaml");
+    }
+
     public void testIssue232192_01() throws Exception {
         checkErrors("testfiles/issue232192_01.yaml");
     }
@@ -87,7 +91,7 @@ public class YamlParserTest extends YamlTestBase {
                 String annotatedSource = annotateErrors(diagnostics);
                 assertDescriptionMatches("testfiles/" + relFilePath, annotatedSource, false, ".errors", false);
                 // Make sure we actually skipped parsing this large document!
-                assertTrue(result.getRootNodes().size() == 0);
+                assertTrue(result.getItems().isEmpty());
             }
         });
     }
@@ -110,21 +114,27 @@ public class YamlParserTest extends YamlTestBase {
         assertNotNull("Parser result must be nonnull", parser.getResult(null));
     }
 
+    private String replacePhpFragments(String source) {
+        StringBuilder sb = new StringBuilder(source);
+        YamlParser.replacePhpFragments(sb);
+        return sb.toString();
+    }
+    
     public void testReplacePhpFragments() {
-        assertEquals("", YamlParser.replacePhpFragments(""));
-        assertEquals("foo bar", YamlParser.replacePhpFragments("foo bar"));
-        assertEquals("?>", YamlParser.replacePhpFragments("?>"));
-        assertEquals("<?", YamlParser.replacePhpFragments("<?"));
-        assertEquals("foo ?>", YamlParser.replacePhpFragments("foo ?>"));
-        assertEquals("<? bar", YamlParser.replacePhpFragments("<? bar"));
+        assertEquals("", replacePhpFragments(""));
+        assertEquals("foo bar", replacePhpFragments("foo bar"));
+        assertEquals("?>", replacePhpFragments("?>"));
+        assertEquals("<?", replacePhpFragments("<?"));
+        assertEquals("foo ?>", replacePhpFragments("foo ?>"));
+        assertEquals("<? bar", replacePhpFragments("<? bar"));
 
-        assertEquals("    ", YamlParser.replacePhpFragments("<??>"));
-        assertEquals("foo:    ", YamlParser.replacePhpFragments("foo:<??>"));
-        assertEquals("foo:                   ", YamlParser.replacePhpFragments("foo:<? here goes php ?>"));
-        assertEquals("foo           baz", YamlParser.replacePhpFragments("foo <? bar ?> baz"));
+        assertEquals("    ", replacePhpFragments("<??>"));
+        assertEquals("foo:    ", replacePhpFragments("foo:<??>"));
+        assertEquals("foo:                   ", replacePhpFragments("foo:<? here goes php ?>"));
+        assertEquals("foo           baz", replacePhpFragments("foo <? bar ?> baz"));
 
-        assertEquals("        ", YamlParser.replacePhpFragments("<??><??>"));
-        assertEquals("foo:    bar:       qux", YamlParser.replacePhpFragments("foo:<??>bar:<?baz?>qux"));
+        assertEquals("        ", replacePhpFragments("<??><??>"));
+        assertEquals("foo:    bar:       qux", replacePhpFragments("foo:<??>bar:<?baz?>qux"));
     }
 
     public void testReplacePhpFragmentsPerformance() {
@@ -136,11 +146,11 @@ public class YamlParserTest extends YamlTestBase {
                 source.append("<? php here ?>");
             }
         }
-        long start = System.currentTimeMillis();
-        YamlParser.replacePhpFragments(source.toString());
-        long time = System.currentTimeMillis() - start;
+        long start = System.nanoTime();
+        YamlParser.replacePhpFragments(source);
+        long time = System.nanoTime() - start;
         // takes about 30 ms on my laptop, so I suppose 300 ms should
         // be enough pretty much on any machine
-        assertTrue("Slow replacing of php fragments: " + time + " ms", time < 300);
+        assertTrue("Slow replacing of php fragments: " + time + " ms", time < 300_000_000L);
     }
 }

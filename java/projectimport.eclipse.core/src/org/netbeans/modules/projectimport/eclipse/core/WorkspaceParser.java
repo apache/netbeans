@@ -25,6 +25,7 @@ import java.io.FileInputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -283,7 +284,7 @@ final class WorkspaceParser {
         byte[] path = new byte[pathLength];
         int read = is.read(path);
         assert read == pathLength;
-        String pathS = new String(path, "ISO-8859-1"); // NOI18N
+        String pathS = new String(path, StandardCharsets.ISO_8859_1);
         if (pathS.startsWith("URI//")) { // #89577 // NOI18N
             pathS = pathS.substring(pathS.indexOf(':') + 1);
         }

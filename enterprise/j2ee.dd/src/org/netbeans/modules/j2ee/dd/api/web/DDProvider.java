@@ -112,7 +112,7 @@ public final class DDProvider {
                     }
                 } else {
                     version = original.getVersion();
-                    error = (SAXParseException) errorMap.get(fo.toURL());
+                    error = errorMap.get(fo.toURL());
                 }
             }
             if (version != null) {
@@ -233,6 +233,7 @@ public final class DDProvider {
      * or the implementation in j2eeserver gets changed.
      * @deprecated do not use - temporary workaround that exposes the schema2beans implementation
      */
+    @Deprecated
     public org.netbeans.modules.schema2beans.BaseBean getBaseBean(org.netbeans.modules.j2ee.dd.api.common.CommonDDBean bean) {
         if (bean instanceof org.netbeans.modules.schema2beans.BaseBean) {
             return (org.netbeans.modules.schema2beans.BaseBean) bean;

@@ -51,8 +51,8 @@ import javax.swing.tree.TreePath;
 * @author Dafe Simonek, Jiri Rechtacek, David Strupl
 */
 final class OutlineViewDropSupport implements DropTargetListener, Runnable {
-    final static protected int FUSSY_POINTING = 3;
-    final static private int DELAY_TIME_FOR_EXPAND = 1000;
+    protected static final int FUSSY_POINTING = 3;
+    private static final int DELAY_TIME_FOR_EXPAND = 1000;
 
     /** true if support is active, false otherwise */
     boolean active = false;
@@ -270,7 +270,7 @@ final class OutlineViewDropSupport implements DropTargetListener, Runnable {
             timer = new Timer(
                     DELAY_TIME_FOR_EXPAND,
                     new ActionListener() {
-                        final public void actionPerformed(ActionEvent e) {
+                        public final void actionPerformed(ActionEvent e) {
                             if (LOGABLE) {
                                 log("should expand " + path); // NOI18N
                             }

@@ -36,7 +36,7 @@ import org.netbeans.modules.form.layoutsupport.LayoutSupportManager;
  *
  * @author   Petr Hrebejk
  */
-final public class GridBagCustomizer extends JPanel implements Customizer
+public final class GridBagCustomizer extends JPanel implements Customizer
 {
     /** bundle to obtain text information from */
 //    private static java.util.ResourceBundle bundle = org.openide.util.NbBundle.getBundle(GridBagCustomizer.class);
@@ -1260,7 +1260,7 @@ final public class GridBagCustomizer extends JPanel implements Customizer
 
 
     public static class Window extends JDialog implements Customizer, ActionListener {
-        final private GridBagCustomizer customizerPanel;
+        private final GridBagCustomizer customizerPanel;
         private boolean packCalled;
         public Window() {
             super(org.openide.windows.WindowManager.getDefault().getMainWindow());

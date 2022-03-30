@@ -109,14 +109,17 @@ public abstract class GroovyCCTestBase extends GroovyTestBase {
     }
     
     @Override
-    protected void assertDescriptionMatches(String relFilePath, 
-            String description, boolean includeTestName, String ext, boolean checkFileExistence) throws Exception {
-        super.assertDescriptionMatches(relFilePath, removeSpuriousCompletionItemsFromDescription(description), includeTestName, ext, checkFileExistence);            
+    protected void assertDescriptionMatches(String relFilePath,
+            String description, boolean includeTestName, boolean includeJavaVersion, String ext, boolean checkFileExistence, boolean skipMarkers) throws Exception {
+        super.assertDescriptionMatches(relFilePath, removeSpuriousCompletionItemsFromDescription(description), includeTestName,
+                includeJavaVersion, ext, checkFileExistence, skipMarkers);
     }    
     
     private String removeSpuriousCompletionItemsFromDescription(String description) {
         return description.replaceAll("PACKAGE\\s+apple\\s+null\n", "")
-                .replaceAll("PACKAGE\\s+oracle\\s+null\n", "");
+                .replaceAll("PACKAGE\\s+oracle\\s+null\n", "")
+                .replaceAll("PACKAGE\\s+netscape\\s+null\n", "")
+                .replaceAll("PACKAGE\\s+nbjavac\\s+null\n", "");
     }
     
     protected boolean checkLspCompletion = true;

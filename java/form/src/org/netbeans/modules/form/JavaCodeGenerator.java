@@ -4078,7 +4078,7 @@ class JavaCodeGenerator extends CodeGenerator {
     // {{{ CodeGenerateEditor
     //
 
-    final public static class CodeGenerateEditor extends PropertyEditorSupport
+    public static final class CodeGenerateEditor extends PropertyEditorSupport
     {
         private RADComponent component;
 
@@ -4582,7 +4582,7 @@ class JavaCodeGenerator extends CodeGenerator {
         
     }
     
-    public final static class LayoutCodeTargetEditor
+    public static final class LayoutCodeTargetEditor
                       extends org.netbeans.modules.form.editors.EnumEditor
     {
         public LayoutCodeTargetEditor() {
@@ -4613,7 +4613,7 @@ class JavaCodeGenerator extends CodeGenerator {
         }
     }
     
-    public final static class ListenerGenerationStyleEditor
+    public static final class ListenerGenerationStyleEditor
                       extends org.netbeans.modules.form.editors.EnumEditor
     {
         public ListenerGenerationStyleEditor() {

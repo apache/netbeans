@@ -55,7 +55,6 @@ import org.openide.cookies.EditorCookie;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.loaders.DataObject;
-import static org.junit.Assert.*;
 import org.netbeans.api.java.source.SourceUtilsTestUtil2;
 import org.netbeans.junit.RandomlyFails;
 

@@ -302,7 +302,7 @@ public abstract class CookieAction extends NodeAction {
      * extract the nodes it operates on from it. Otherwise it delegates to the
      * regular NodeAction.
      */
-    final static class CookieDelegateAction extends org.openide.util.actions.NodeAction.DelegateAction
+    static final class CookieDelegateAction extends org.openide.util.actions.NodeAction.DelegateAction
     implements org.openide.nodes.NodeListener, Runnable {
         /** our weak listener */
         private org.openide.nodes.NodeListener listener;

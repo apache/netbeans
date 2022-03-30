@@ -77,7 +77,7 @@ public final class ActionToGoalUtils {
     }
 
 
-    public static abstract class ContextAccessor {
+    public abstract static class ContextAccessor {
 
         public abstract ExecutionContext createContext(InputOutput inputoutput, ProgressHandle handle);
     }
@@ -198,7 +198,7 @@ public final class ActionToGoalUtils {
      * @since 2.149
      */
     public static boolean isDisabledMapping(NetbeansActionMapping am) {
-        return am.getGoals().isEmpty();
+        return am == null || am.getGoals().isEmpty();
     }
 
     public static boolean isActionEnable(String action, NbMavenProjectImpl project, ProjectConfiguration c, Lookup lookup) {

@@ -257,6 +257,7 @@
                 <friend>org.netbeans.modules.javaee.beanvalidation</friend>
                 <friend>org.netbeans.modules.maven.j2ee</friend>
                 <friend>org.netbeans.modules.maven.jaxws</friend>
+                <friend>org.netbeans.modules.micronaut</friend>
                 <friend>org.netbeans.modules.spring.beans</friend>
                 <friend>org.netbeans.modules.spring.webmvc</friend>
                 <friend>org.netbeans.modules.web.core</friend>

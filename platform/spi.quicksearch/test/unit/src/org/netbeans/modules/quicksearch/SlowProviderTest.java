@@ -104,8 +104,8 @@ public class SlowProviderTest extends NbTestCase {
     }
 
     private static final Semaphore sync = new Semaphore(0);
-    private volatile static boolean obsoleteAtStart;
-    private volatile static boolean obsoleteAtEnd;
+    private static volatile boolean obsoleteAtStart;
+    private static volatile boolean obsoleteAtEnd;
     
     public static class SlowProvider implements SearchProvider {
         

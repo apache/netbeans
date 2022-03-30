@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 9.21.0
+#Version 9.24.0
 
 CLSS public abstract interface java.io.Serializable
 
@@ -180,6 +180,24 @@ meth public static org.netbeans.modules.parsing.spi.indexing.ErrorsCache$ErrorKi
 meth public static org.netbeans.modules.parsing.spi.indexing.ErrorsCache$ErrorKind[] values()
 supr java.lang.Enum<org.netbeans.modules.parsing.spi.indexing.ErrorsCache$ErrorKind>
 
+CLSS public abstract interface org.netbeans.modules.parsing.spi.indexing.IndexabilityQueryImplementation
+innr public final static IndexabilityQueryContext
+meth public abstract int getVersion()
+meth public abstract java.lang.String getName()
+meth public abstract java.lang.String getStateIdentifier()
+meth public abstract void addChangeListener(javax.swing.event.ChangeListener)
+meth public abstract void removeChangeListener(javax.swing.event.ChangeListener)
+meth public boolean preventIndexing(org.netbeans.modules.parsing.spi.indexing.IndexabilityQueryImplementation$IndexabilityQueryContext)
+
+CLSS public final static org.netbeans.modules.parsing.spi.indexing.IndexabilityQueryImplementation$IndexabilityQueryContext
+ outer org.netbeans.modules.parsing.spi.indexing.IndexabilityQueryImplementation
+meth public java.lang.String getIndexerName()
+meth public java.net.URL getIndexable()
+meth public java.net.URL getRoot()
+supr java.lang.Object
+hfds indexable,indexerName,root
+hcls Accessor
+
 CLSS public final org.netbeans.modules.parsing.spi.indexing.Indexable
 meth public boolean equals(java.lang.Object)
 meth public int hashCode()
@@ -252,6 +270,7 @@ meth public org.netbeans.modules.parsing.spi.indexing.support.IndexDocument crea
 meth public org.netbeans.modules.parsing.spi.indexing.support.IndexDocument createDocument(org.openide.filesystems.FileObject)
  anno 0 org.netbeans.api.annotations.common.NonNull()
  anno 1 org.netbeans.api.annotations.common.NonNull()
+meth public static boolean isIndexingTask(org.netbeans.modules.parsing.api.Task)
 meth public static org.netbeans.modules.parsing.spi.indexing.support.IndexingSupport getInstance(org.netbeans.modules.parsing.spi.indexing.Context) throws java.io.IOException
  anno 0 org.netbeans.api.annotations.common.NonNull()
  anno 1 org.netbeans.api.annotations.common.NonNull()

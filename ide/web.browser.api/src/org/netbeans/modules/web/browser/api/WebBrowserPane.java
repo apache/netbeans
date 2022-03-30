@@ -303,7 +303,7 @@ public final class WebBrowserPane {
     /**
      * Marker interface for all browser events.
      */
-    public static abstract class WebBrowserPaneEvent {
+    public abstract static class WebBrowserPaneEvent {
 
         private WebBrowserPane pane;
 

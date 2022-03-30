@@ -27,7 +27,7 @@
 
     <property name="nbextra.dir" location="../../../nbextra"/>
     <property name="test.timeout" value="3600000"/>
-    <property name="test.run.args" value="-Dnetbeans.keyring.no.master=true -client -Xss4m -Xms64m -Xmx1024m -XX:PermSize=64m -XX:MaxPermSize=300m -Xverify:none -Dcom.sun.aas.installRoot=&quot;${j2ee.appserver.path}&quot; -Dtomcat.installRoot=&quot;${tomcat.webserver.path}&quot;  -Dorg.netbeans.performance.repeat=&quot;${repeat}&quot;"/>
+    <property name="test.run.args" value="-Dnetbeans.keyring.no.master=true -client -Xss4m -Xms64m -Xmx1024m -Xverify:none -Dcom.sun.aas.installRoot=&quot;${j2ee.appserver.path}&quot; -Dtomcat.installRoot=&quot;${tomcat.webserver.path}&quot;  -Dorg.netbeans.performance.repeat=&quot;${repeat}&quot;"/>
     <property environment="env"/>
     <property name="hudson.buildnumber" value="${env.BUILD_NUMBER}"/>
     <property name="hudson.jobname" value="${env.JOB_NAME}"/>

@@ -25,7 +25,7 @@ import java.beans.PropertyEditorSupport;
 import org.openide.util.NbBundle;
 import org.openide.explorer.propertysheet.editors.EnhancedPropertyEditor;
 
-abstract public class ChoiceEditor extends PropertyEditorSupport implements EnhancedPropertyEditor {
+public abstract class ChoiceEditor extends PropertyEditorSupport implements EnhancedPropertyEditor {
 
     public String curr_Sel;
 
@@ -73,7 +73,7 @@ abstract public class ChoiceEditor extends PropertyEditorSupport implements Enha
     }
     
     @Override
-    abstract public String[] getTags();
+    public abstract String[] getTags();
     
     public Component getInPlaceCustomEditor() {
         return null;

@@ -177,7 +177,7 @@ final class CallHierarchyTasks {
         });
     }
     
-    private static final class RootResolver implements Task<CompilationController> {
+    static final class RootResolver implements Task<CompilationController> {
         
         private int offset = -1;
         private TreePathHandle tHandle;
@@ -238,7 +238,7 @@ final class CallHierarchyTasks {
         
     }
     
-    private static abstract class CallTaskBase implements Runnable, CancellableTask<CompilationController> {
+    private abstract static class CallTaskBase implements Runnable, CancellableTask<CompilationController> {
         
         protected final Call elmDesc;
         private final Runnable resultHandler;

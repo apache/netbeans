@@ -513,7 +513,7 @@ public final class AppClientProject implements Project, FileChangeListener {
                 GeneratedFilesHelper.BUILD_IMPL_XML_PATH,
                 AppClientProject.class.getResource("resources/build-impl.xsl"));
             final Boolean projectPropertiesSave = AppClientProject.this.projectPropertiesSave.get();
-            if ((projectPropertiesSave.booleanValue() && (state & GeneratedFilesHelper.FLAG_MODIFIED) == GeneratedFilesHelper.FLAG_MODIFIED) ||
+            if ((projectPropertiesSave && (state & GeneratedFilesHelper.FLAG_MODIFIED) == GeneratedFilesHelper.FLAG_MODIFIED) ||
                 state == (GeneratedFilesHelper.FLAG_UNKNOWN | GeneratedFilesHelper.FLAG_MODIFIED | 
                     GeneratedFilesHelper.FLAG_OLD_PROJECT_XML | GeneratedFilesHelper.FLAG_OLD_STYLESHEET)) {  //missing genfiles.properties
                 try {
@@ -817,8 +817,8 @@ public final class AppClientProject implements Project, FileChangeListener {
             this.helper = helper;
         }
         
-        transient private final UpdateHelper helper;
-        transient private boolean isArchive = false;
+        private final transient UpdateHelper helper;
+        private transient boolean isArchive = false;
         
         // List of primarily supported templates
         
@@ -884,7 +884,7 @@ public final class AppClientProject implements Project, FileChangeListener {
             return retVal;
         }
 
-        transient private boolean checked = false;
+        private transient boolean checked = false;
         
         private void checkEnvironment() {
             if (!checked) {

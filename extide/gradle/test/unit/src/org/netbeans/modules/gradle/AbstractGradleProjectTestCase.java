@@ -87,6 +87,11 @@ public class AbstractGradleProjectTestCase extends NbTestCase {
         }).get();
     }
     
+    protected void dumpProject(Project project){
+        NbGradleProjectImpl impl = (NbGradleProjectImpl) project;
+        impl.dumpProject();
+    }
+    
     protected FileObject createGradleProject(String path, String buildScript, String settingsScript) throws IOException {
         FileObject ret = FileUtil.toFileObject(getWorkDir());
         if (path != null) {

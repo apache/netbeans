@@ -220,7 +220,7 @@ public class HelpStringCustomEditor extends JPanel {
         }
     } // End of nested class ReplaceCodeEditor.
 
-    private static abstract class StringEditor extends PropertyEditorSupport implements ExPropertyEditor {
+    private abstract static class StringEditor extends PropertyEditorSupport implements ExPropertyEditor {
         private static boolean useRaw = Boolean.getBoolean("netbeans.stringEditor.useRawCharacters");
 
        // bugfix# 9219 added editable field and isEditable() "getter" to be used in StringCustomEditor    

@@ -315,7 +315,7 @@ public abstract class ProjectJAXWSClientSupport implements JAXWSClientSupportImp
                             ActionUtils.runTarget(buildImplFo,new String[]{"wsimport-client-"+finalName},props); //NOI18N
                     return Boolean.TRUE;
                 }
-            }).booleanValue();
+            });
         } catch (MutexException e) {
             ErrorManager.getDefault().notify(e);
         }

@@ -30,6 +30,7 @@ import java.lang.reflect.Modifier;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLStreamHandler;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -37,8 +38,6 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import junit.framework.Assert;
-import junit.framework.AssertionFailedError;
 
 /**
  * Lets you register mock implementations of global services.
@@ -161,7 +160,10 @@ public class MockServices {
             for (Class<?> c : services) {
                 try {
                     if (test) {
-                        Assert.assertEquals(c, getParent().loadClass(c.getName()));
+                        final Class<?> real = getParent().loadClass(c.getName());
+                        if (!c.equals(real)) {
+                            throw new AssertionError("Service " + c + " isn't " + real);
+                        }
                     }
                     int mods = c.getModifiers();
                     if (!Modifier.isPublic(mods) || Modifier.isAbstract(mods)) {
@@ -173,7 +175,7 @@ public class MockServices {
                 } catch (NoSuchMethodException x) {
                     throw (IllegalArgumentException) new IllegalArgumentException("Class " + c.getName() + " has no public no-arg constructor").initCause(x);
                 } catch (Exception x) {
-                    throw (AssertionFailedError) new AssertionFailedError(x.toString()).initCause(x);
+                    throw new AssertionError(x.toString(), x);
                 }
             }
             this.services = services;
@@ -208,7 +210,7 @@ public class MockServices {
                     }
                     if (!impls.isEmpty()) {
                         final ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                        PrintWriter pw = new PrintWriter(new OutputStreamWriter(baos, "UTF-8"));
+                        PrintWriter pw = new PrintWriter(new OutputStreamWriter(baos, StandardCharsets.UTF_8));
                         for (String impl : impls) {
                             pw.println(impl);
                             pw.println("#position=100");

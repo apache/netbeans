@@ -476,7 +476,7 @@ implements WizardDescriptor.InstantiatingIterator<WizardDescriptor> {
     }
 
     @JavaScriptBody(args = "code", body = "return 0 || eval(code);")
-    native static Object eval(String code);
+    static native Object eval(String code);
     
     @JavaScriptBody(args = { "arr" }, body = 
         "for (var i = 0; i < arr.length; i++) {\n" +

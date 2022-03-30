@@ -36,6 +36,7 @@ import org.eclipse.lsp4j.debug.SetExceptionBreakpointsArguments;
 import org.eclipse.lsp4j.debug.Source;
 import org.eclipse.lsp4j.debug.SourceBreakpoint;
 import org.eclipse.lsp4j.jsonrpc.messages.ResponseErrorCode;
+import org.netbeans.modules.java.lsp.server.URITranslator;
 import org.netbeans.modules.java.lsp.server.debugging.DebugAdapterContext;
 import org.netbeans.modules.java.lsp.server.debugging.utils.ErrorUtilities;
 
@@ -75,6 +76,7 @@ public final class NbBreakpointsRequestHandler {
                 ResponseErrorCode.InvalidParams);
             return resultFuture;
         }
+        sourcePath = URITranslator.getDefault().uriFromLSP(sourcePath);
         List<Breakpoint> res = new ArrayList<>();
         NbBreakpoint[] toAdds = this.convertClientBreakpointsToDebugger(source, sourcePath, arguments.getBreakpoints(), context);
         // Decode the URI if it comes encoded:

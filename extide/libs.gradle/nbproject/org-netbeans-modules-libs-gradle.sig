@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 7.0
+#Version 7.4
 
 CLSS public abstract interface java.io.Serializable
 
@@ -50,6 +50,7 @@ meth public boolean isWriteDependencyLocks()
 meth public int getMaxWorkerCount()
 meth public int hashCode()
 meth public java.io.File getBuildFile()
+ anno 0 java.lang.Deprecated()
  anno 0 org.gradle.internal.impldep.javax.annotation.Nullable()
 meth public java.io.File getCurrentDir()
 meth public java.io.File getGradleUserHomeDir()
@@ -58,6 +59,7 @@ meth public java.io.File getProjectCacheDir()
 meth public java.io.File getProjectDir()
  anno 0 org.gradle.internal.impldep.javax.annotation.Nullable()
 meth public java.io.File getSettingsFile()
+ anno 0 java.lang.Deprecated()
  anno 0 org.gradle.internal.impldep.javax.annotation.Nullable()
 meth public java.lang.String toString()
 meth public java.util.List<java.io.File> getAllInitScripts()
@@ -83,6 +85,7 @@ meth public void includeBuild(java.io.File)
 meth public void setBuildCacheDebugLogging(boolean)
 meth public void setBuildCacheEnabled(boolean)
 meth public void setBuildFile(java.io.File)
+ anno 0 java.lang.Deprecated()
  anno 1 org.gradle.internal.impldep.javax.annotation.Nullable()
 meth public void setBuildScan(boolean)
 meth public void setConfigureOnDemand(boolean)
@@ -116,6 +119,7 @@ meth public void setRefreshDependencies(boolean)
 meth public void setRefreshKeys(boolean)
 meth public void setRerunTasks(boolean)
 meth public void setSettingsFile(java.io.File)
+ anno 0 java.lang.Deprecated()
  anno 1 org.gradle.internal.impldep.javax.annotation.Nullable()
 meth public void setShowStacktrace(org.gradle.api.logging.configuration.ShowStacktrace)
 meth public void setSystemPropertiesArgs(java.util.Map<java.lang.String,java.lang.String>)

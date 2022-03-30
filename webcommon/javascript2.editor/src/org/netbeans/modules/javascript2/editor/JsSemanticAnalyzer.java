@@ -169,7 +169,7 @@ public class JsSemanticAnalyzer extends SemanticAnalyzer<JsParserResult> {
                             ts.move(offset);
                             if (ts.moveNext() && ts.movePrevious()) {
                                 Token token = LexUtilities.findPrevious(ts, Arrays.asList(JsTokenId.WHITESPACE, JsTokenId.BLOCK_COMMENT, JsTokenId.DOC_COMMENT));
-                                if (token.id() == JsTokenId.IDENTIFIER && token.length() == 3) {
+                                if ((token.id() == JsTokenId.IDENTIFIER || token.id() == JsTokenId.PRIVATE_IDENTIFIER) && token.length() == 3) {
                                     highlights.put(new OffsetRange(ts.offset(), ts.offset() + token.length()), ColoringAttributes.METHOD_SET);
                                 }
                             }
@@ -307,7 +307,7 @@ public class JsSemanticAnalyzer extends SemanticAnalyzer<JsParserResult> {
                     TokenSequence<? extends JsTokenId> ts = LexUtilities.getJsPositionedSequence(result.getSnapshot(), pos);
                     if (ts != null) {
                         Token<? extends JsTokenId> token = LexUtilities.findPreviousNonWsNonComment(ts);
-                        if (token != null && token.id() == JsTokenId.IDENTIFIER && "async".equals(token.text().toString())) {
+                        if (token != null && (token.id() == JsTokenId.IDENTIFIER || token.id() == JsTokenId.PRIVATE_IDENTIFIER) && "async".equals(token.text().toString())) {
                             highlights.put(LexUtilities.getLexerOffsets(result,
                                     new OffsetRange(ts.offset(), ts.offset() + token.length())), SEMANTIC_KEYWORD);
                         }
@@ -323,7 +323,7 @@ public class JsSemanticAnalyzer extends SemanticAnalyzer<JsParserResult> {
                     TokenSequence<? extends JsTokenId> ts = LexUtilities.getJsPositionedSequence(result.getSnapshot(), start);
                     if (ts != null) {
                         Token<? extends JsTokenId> token = LexUtilities.findNextNonWsNonComment(ts);
-                        if (token != null && token.id() == JsTokenId.IDENTIFIER && ts.offset() < importSpecifierNode.getBindingIdentifier().getStart()) {
+                        if (token != null && (token.id() == JsTokenId.IDENTIFIER || token.id() == JsTokenId.PRIVATE_IDENTIFIER) && ts.offset() < importSpecifierNode.getBindingIdentifier().getStart()) {
                             // it has to be "as"
                             highlights.put(LexUtilities.getLexerOffsets(result,
                                     new OffsetRange(ts.offset(), ts.offset() + token.length())), SEMANTIC_KEYWORD);
@@ -340,7 +340,7 @@ public class JsSemanticAnalyzer extends SemanticAnalyzer<JsParserResult> {
                     TokenSequence<? extends JsTokenId> ts = LexUtilities.getJsPositionedSequence(result.getSnapshot(), start);
                     if (ts != null) {
                         Token<? extends JsTokenId> token = LexUtilities.findNextNonWsNonComment(ts);
-                        if (token != null && token.id() == JsTokenId.IDENTIFIER && ts.offset() < exportSpecifierNode.getExportIdentifier().getStart()) {
+                        if (token != null && (token.id() == JsTokenId.IDENTIFIER || token.id() == JsTokenId.PRIVATE_IDENTIFIER) && ts.offset() < exportSpecifierNode.getExportIdentifier().getStart()) {
                             // it has to be "as"
                             highlights.put(LexUtilities.getLexerOffsets(result,
                                     new OffsetRange(ts.offset(), ts.offset() + token.length())), SEMANTIC_KEYWORD);
@@ -428,7 +428,7 @@ public class JsSemanticAnalyzer extends SemanticAnalyzer<JsParserResult> {
                     TokenSequence<? extends JsTokenId> ts = LexUtilities.getJsPositionedSequence(result.getSnapshot(), p.getStart() - 1);
                     if (ts != null) {
                         Token<? extends JsTokenId> token = LexUtilities.findPreviousNonWsNonComment(ts);
-                        if (token != null && token.id() == JsTokenId.IDENTIFIER && "async".equals(token.text().toString())) {
+                        if (token != null && (token.id() == JsTokenId.IDENTIFIER || token.id() == JsTokenId.PRIVATE_IDENTIFIER) && "async".equals(token.text().toString())) {
                             offset = ts.offset();
                             highlights.put(LexUtilities.getLexerOffsets(result,
                                     new OffsetRange(ts.offset(), ts.offset() + token.length())), SEMANTIC_KEYWORD);

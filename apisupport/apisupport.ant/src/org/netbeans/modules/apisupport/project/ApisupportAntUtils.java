@@ -474,7 +474,7 @@ public class ApisupportAntUtils {
      * Property provider which computes one or more properties based on some properties coming
      * from an intermediate evaluator, and is capable of firing changes correctly.
      */
-    public static abstract class ComputedPropertyProvider implements PropertyProvider, PropertyChangeListener {
+    public abstract static class ComputedPropertyProvider implements PropertyProvider, PropertyChangeListener {
         private final PropertyEvaluator eval;
         private final ChangeSupport cs = new ChangeSupport(this);
         protected ComputedPropertyProvider(PropertyEvaluator eval) {
@@ -676,13 +676,13 @@ public class ApisupportAntUtils {
         if (dir == null) {
             return;
         }
-        for (Enumeration en1 = dir.getFolders(false); en1.hasMoreElements(); ) {
+        for (Enumeration<? extends FileObject> en1 = dir.getFolders(false); en1.hasMoreElements(); ) {
             FileObject subDir = (FileObject) en1.nextElement();
             if (VisibilityQuery.getDefault().isVisible(subDir)) {
                 scanForPackages(validPkgs, subDir, ext);
             }
         }
-        for (Enumeration en2 = dir.getData(false); en2.hasMoreElements(); ) {
+        for (Enumeration<? extends FileObject> en2 = dir.getData(false); en2.hasMoreElements(); ) {
             FileObject kid = (FileObject) en2.nextElement();
             if (kid.hasExt(ext) && Utilities.isJavaIdentifier(kid.getName())) {
                 // at least one class inside directory -> valid package

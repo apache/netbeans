@@ -120,7 +120,10 @@ public final class GradleConfiguration implements Serializable, ModuleSearchSupp
     }
 
     public boolean isEmpty() {
-        return !canBeResolved || ((files == null || files.files.isEmpty()) && modules.isEmpty() && unresolved.isEmpty() && projects.isEmpty());
+        return ((files == null || files.files.isEmpty()) 
+                && modules.isEmpty() 
+                && unresolved.isEmpty() 
+                && projects.isEmpty());
     }
 
     @Override

@@ -214,8 +214,9 @@ public class RuleEditorNode extends AbstractNode {
                                 break update; //canot merge - the collections differ
                             }
 
-                            for (String declarationName : oName2DeclarationMap.keySet()) {
-                                PropertyDeclaration oldD = oName2DeclarationMap.get(declarationName);
+                            for (Entry<String, PropertyDeclaration> entry : oName2DeclarationMap.entrySet()) {
+                                String declarationName = entry.getKey();
+                                PropertyDeclaration oldD = entry.getValue();
                                 PropertyDeclaration newD = nName2DeclarationMap.get(declarationName);
 
                                 //update the existing DeclarationProperty with the fresh

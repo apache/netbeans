@@ -251,7 +251,7 @@ public class JQueryCodeCompletion implements CompletionProvider {
         }
     }
 
-    private synchronized static Map<String, Collection<PropertyNameDataItem>> getPropertyNameData() {
+    private static synchronized Map<String, Collection<PropertyNameDataItem>> getPropertyNameData() {
         return PropertyNameDataLoader.getData(getPropertyNameDataFile());
     }
     

@@ -217,7 +217,7 @@ public class LogViewer extends Thread {
             }
         } else {
             if (line.contains("java.lang.LinkageError: JAXB 2.0 API")) { // NOI18N
-                File jaxwsApi = InstalledFileLocator.getDefault().locate("modules/ext/jaxws21/api/jaxws-api.jar", null, false); // NOI18N
+                File jaxwsApi = InstalledFileLocator.getDefault().locate("modules/ext/jaxws22/api/jakarta.xml.ws-api.jar", null, false); // NOI18N
                 File jaxbApi = InstalledFileLocator.getDefault().locate("modules/ext/jaxb/api/jaxb-api.jar", null, false); // NOI18N
                 File endoresedDir = tomcatManager.getTomcatProperties().getJavaEndorsedDir();
                 if (jaxwsApi != null && jaxbApi != null) {
@@ -403,7 +403,7 @@ public class LogViewer extends Thread {
                         if (nextColonIdx > -1) {
                             String lineNum = logLine.substring(colonIdx + 1, nextColonIdx);
                             try {
-                                line = Integer.valueOf(lineNum).intValue();
+                                line = Integer.valueOf(lineNum);
                             } catch(NumberFormatException nfe) { 
                                 // ignore it
                                 Logger.getLogger(LogViewer.class.getName()).log(Level.INFO, null, nfe);
@@ -428,7 +428,7 @@ public class LogViewer extends Thread {
                         if (thirdColonIdx > -1) {
                             String lineNum = logLine.substring(secondColonIdx + 1, thirdColonIdx);
                             try {
-                                line = Integer.valueOf(lineNum).intValue();
+                                line = Integer.valueOf(lineNum);
                             } catch(NumberFormatException nfe) { // ignore it
                                 Logger.getLogger(LogViewer.class.getName()).log(Level.INFO, null, nfe);
                             }
@@ -453,7 +453,7 @@ public class LogViewer extends Thread {
                         if (lastParenthIdx > -1 && lastColonIdx > -1) {
                             String lineNum = logLine.substring(lastColonIdx + 1, lastParenthIdx);
                             try {
-                                line = Integer.valueOf(lineNum).intValue();
+                                line = Integer.valueOf(lineNum);
                             } catch(NumberFormatException nfe) { // ignore it
                                 Logger.getLogger(LogViewer.class.getName()).log(Level.INFO, null, nfe);
                             }

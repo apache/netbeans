@@ -397,7 +397,7 @@ private void bProxyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
                 Utilities.setGlobalInstallation(false);
                 break;
             default:
-                assert false : "Unknow index";
+                assert false : "Unknown index";
         }
     }//GEN-LAST:event_cbLocationActionPerformed
 
@@ -420,7 +420,7 @@ private void bProxyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
         private boolean sbEnabled;
         private String detailsTitle;
 
-        synchronized private void prepareContent() {
+        private synchronized void prepareContent() {
             assert ! SwingUtilities.isEventDispatchThread() : "Invoke SettingsTab.prepareContent out of AWT only";
             int rowIndex = table.getSelectedRow();
             if (rowIndex != -1 && table.getRowCount() > 0 && getSettingsTableModel().getUpdateUnitProvider(rowIndex) != null) {

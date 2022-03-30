@@ -49,6 +49,7 @@ import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle;
 import org.openide.util.NbBundle.Messages;
 
+
 /**
  *
  * @author Laszlo Kishalmi
@@ -59,7 +60,7 @@ public class SettingsPanel extends javax.swing.JPanel {
     @StaticResource
     private static final String RESTART_ICON = "org/netbeans/modules/gradle/resources/restart.png"; //NOI18
 
-    private final static String[] CARDS = {"Execution", "Appearance", "Dependencies", "Experimental"}; //NOI18N
+    private static final String[] CARDS = {"Execution", "Appearance", "Dependencies", "Experimental"}; //NOI18N
 
     private GradleDistributionManager gdm = GradleDistributionManager.get(GradleSettings.getDefault().getGradleUserHome());
 
@@ -112,8 +113,9 @@ public class SettingsPanel extends javax.swing.JPanel {
         cbOffline = new javax.swing.JCheckBox();
         cbSkipTest = new javax.swing.JCheckBox();
         cbSkipCheck = new javax.swing.JCheckBox();
-        cbNoRebuild = new javax.swing.JCheckBox();
+        cbUseConfigCache = new javax.swing.JCheckBox();
         cbConfigureOnDemand = new javax.swing.JCheckBox();
+        cbNoRebuild = new javax.swing.JCheckBox();
         lbAllowExecution = new javax.swing.JLabel();
         cbAllowExecution = new javax.swing.JComboBox<>();
         cbPreferMaven = new javax.swing.JCheckBox();
@@ -276,10 +278,10 @@ public class SettingsPanel extends javax.swing.JPanel {
                                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                             .addGroup(jPanel1Layout.createSequentialGroup()
                                                 .addGap(231, 231, 231)
-                                                .addComponent(lbVersionInfo, javax.swing.GroupLayout.DEFAULT_SIZE, 59, Short.MAX_VALUE))
+                                                .addComponent(lbVersionInfo, javax.swing.GroupLayout.DEFAULT_SIZE, 109, Short.MAX_VALUE))
                                             .addComponent(rbUseStandardGradle, javax.swing.GroupLayout.PREFERRED_SIZE, 235, javax.swing.GroupLayout.PREFERRED_SIZE))
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(cbGradleVersion, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                        .addComponent(cbGradleVersion, 0, 122, Short.MAX_VALUE))
                                     .addGroup(jPanel1Layout.createSequentialGroup()
                                         .addComponent(rbUseCustomGradle)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -344,9 +346,13 @@ public class SettingsPanel extends javax.swing.JPanel {
 
         org.openide.awt.Mnemonics.setLocalizedText(cbSkipCheck, org.openide.util.NbBundle.getMessage(SettingsPanel.class, "SettingsPanel.cbSkipCheck.text")); // NOI18N
 
-        org.openide.awt.Mnemonics.setLocalizedText(cbNoRebuild, org.openide.util.NbBundle.getMessage(SettingsPanel.class, "SettingsPanel.cbNoRebuild.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(cbUseConfigCache, org.openide.util.NbBundle.getMessage(SettingsPanel.class, "SettingsPanel.cbUseConfigCache.text")); // NOI18N
+        cbUseConfigCache.setToolTipText(org.openide.util.NbBundle.getMessage(SettingsPanel.class, "SettingsPanel.cbUseConfigCache.toolTipText")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(cbConfigureOnDemand, org.openide.util.NbBundle.getMessage(SettingsPanel.class, "SettingsPanel.cbConfigureOnDemand.text")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(cbNoRebuild, org.openide.util.NbBundle.getMessage(SettingsPanel.class, "SettingsPanel.cbNoRebuild.text")); // NOI18N
+        cbNoRebuild.setToolTipText(org.openide.util.NbBundle.getMessage(SettingsPanel.class, "SettingsPanel.cbNoRebuild.toolTipText")); // NOI18N
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -355,17 +361,15 @@ public class SettingsPanel extends javax.swing.JPanel {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(cbConfigureOnDemand)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(cbOffline)
-                            .addComponent(cbNoRebuild))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 82, Short.MAX_VALUE)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(cbSkipCheck, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(cbSkipTest, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                    .addComponent(cbOffline)
+                    .addComponent(cbConfigureOnDemand)
+                    .addComponent(cbNoRebuild))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(cbUseConfigCache)
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(cbSkipCheck, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(cbSkipTest, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -380,7 +384,9 @@ public class SettingsPanel extends javax.swing.JPanel {
                     .addComponent(cbSkipTest)
                     .addComponent(cbNoRebuild))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(cbConfigureOnDemand)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(cbConfigureOnDemand)
+                    .addComponent(cbUseConfigCache))
                 .addGap(72, 72, 72))
         );
 
@@ -716,8 +722,9 @@ public class SettingsPanel extends javax.swing.JPanel {
         cbSilentInstall.setSelected(settings.isSilentInstall());
 
         cbOffline.setSelected(settings.isOffline());
-        cbConfigureOnDemand.setSelected(settings.isConfigureOnDemand());
         cbNoRebuild.setSelected(settings.getNoRebuild());
+        cbConfigureOnDemand.setSelected(settings.isConfigureOnDemand());
+        cbUseConfigCache.setSelected(settings.getUseConfigCache());
 
         cbSkipCheck.setSelected(settings.skipCheck());
         cbSkipTest.setSelected(settings.skipTest());
@@ -793,8 +800,9 @@ public class SettingsPanel extends javax.swing.JPanel {
         settings.setSilentInstall(cbSilentInstall.isSelected());
 
         settings.setOffline(cbOffline.isSelected());
-        settings.setConfigureOnDemand(cbConfigureOnDemand.isSelected());
         settings.setNoRebuild(cbNoRebuild.isSelected());
+        settings.setConfigureOnDemand(cbConfigureOnDemand.isSelected());
+        settings.setUseConfigCache(cbUseConfigCache.isSelected());
         settings.setSkipCheck(cbSkipCheck.isSelected());
         settings.setSkipTest(cbSkipTest.isSelected());
         settings.setHideEmptyConfigurations(cbHideEmptyConfig.isSelected());
@@ -839,7 +847,7 @@ public class SettingsPanel extends javax.swing.JPanel {
 
         isChanged |= settings.isOffline() != cbOffline.isSelected();
         isChanged |= settings.isConfigureOnDemand() != cbConfigureOnDemand.isSelected();
-        isChanged |= settings.getNoRebuild() != cbNoRebuild.isSelected();
+        isChanged |= settings.getUseConfigCache() != cbUseConfigCache.isSelected();
         isChanged |= settings.skipCheck() != cbSkipCheck.isSelected();
         isChanged |= settings.skipTest() != cbSkipTest.isSelected();
 
@@ -936,6 +944,7 @@ public class SettingsPanel extends javax.swing.JPanel {
     private javax.swing.JCheckBox cbSkipCheck;
     private javax.swing.JCheckBox cbSkipTest;
     private javax.swing.JCheckBox cbStartDaemonOnStart;
+    private javax.swing.JCheckBox cbUseConfigCache;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;

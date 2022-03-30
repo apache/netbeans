@@ -72,7 +72,7 @@ public class AskEditorQuestionsTest {
         }
     }
 
-    public final static class MockDialogDisplayer extends DialogDisplayer {
+    public static final class MockDialogDisplayer extends DialogDisplayer {
         public MockDialogDisplayer() {
         }
 

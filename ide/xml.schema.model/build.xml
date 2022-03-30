@@ -21,4 +21,34 @@
 -->
 <project name="ide/xml.schema.model" default="build" basedir=".">
     <import file="../../nbbuild/templates/projectized.xml"/>
+    <target name="do-unit-test-build" depends="projectized.do-unit-test-build">
+        <macrodef name="package-zip-from-resources">
+            <attribute name="zipbasename"/>
+            <attribute name="prefix" default=""/>
+            <sequential>
+                <zip destfile="${build.test.unit.classes.dir}/org/netbeans/modules/xml/schema/model/resources/@{zipbasename}.zip">
+                    <zipfileset dir="${build.test.unit.dir}/data/org/netbeans/modules/xml/schema/model/resources/@{zipbasename}" prefix="@{prefix}" includes="**"/>
+                </zip>
+            </sequential>
+        </macrodef>
+        
+        <package-zip-from-resources zipbasename="resolve1" prefix="resolve1/" />
+        <package-zip-from-resources zipbasename="resolve2" prefix="resolve2/" />
+        <package-zip-from-resources zipbasename="resolve3" prefix="resolve3/" />
+        <package-zip-from-resources zipbasename="resolve4" prefix="resolve4/" />
+        <package-zip-from-resources zipbasename="resolve5" prefix="resolve5/" />
+        <package-zip-from-resources zipbasename="resolve6" prefix="resolve6/" />
+        <package-zip-from-resources zipbasename="resolve7" prefix="resolve7/" />
+        <package-zip-from-resources zipbasename="resolve8" prefix="resolve8/" />
+        <package-zip-from-resources zipbasename="resolve9" prefix="resolve9/" />
+        <package-zip-from-resources zipbasename="resolve10" prefix="resolve10/"/>
+        <package-zip-from-resources zipbasename="resolve11" prefix="resolve11/" />
+        <package-zip-from-resources zipbasename="resolve12" prefix="resolve12/" />
+        <package-zip-from-resources zipbasename="resolve13" prefix="resolve13/" />
+        <package-zip-from-resources zipbasename="resolve14" prefix="resolve14/" />
+        <package-zip-from-resources zipbasename="resolve15" prefix="resolve15/" />
+        <package-zip-from-resources zipbasename="cyclic_dependencies" prefix="cyclic_dependencies/" />
+        <package-zip-from-resources zipbasename="performance1" prefix="" />
+        <package-zip-from-resources zipbasename="performance2" prefix="" />
+    </target>
 </project>

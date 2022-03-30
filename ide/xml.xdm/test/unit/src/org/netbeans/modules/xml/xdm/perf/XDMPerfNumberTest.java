@@ -25,6 +25,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import org.netbeans.editor.BaseDocument;
@@ -111,7 +112,7 @@ public class XDMPerfNumberTest extends TestCase {
         java.net.URL url = getClass().getResource(SCHEMA_FILE);            
         // prepare document
         BaseDocument basedoc = new BaseDocument(true, "text/xml"); //NOI18N
-        insertStringInDocument(new InputStreamReader(url.openStream(),"UTF-8"), basedoc);
+        insertStringInDocument(new InputStreamReader(url.openStream(), StandardCharsets.UTF_8), basedoc);
         long start = System.currentTimeMillis();
         SyntaxSupport sup = basedoc.getSyntaxSupport();
         TokenItem ti = sup.getTokenChain(0);
@@ -128,7 +129,7 @@ public class XDMPerfNumberTest extends TestCase {
         javax.swing.text.Document sd = new BaseDocument(true, "text/xml"); //NOI18N
         XDMModel model = null;
 
-        InputStreamReader reader = new InputStreamReader(getClass().getResourceAsStream(SCHEMA_FILE),"UTF-8");
+        InputStreamReader reader = new InputStreamReader(getClass().getResourceAsStream(SCHEMA_FILE), StandardCharsets.UTF_8);
         insertStringInDocument(reader, sd);
 
         start = System.currentTimeMillis();

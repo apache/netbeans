@@ -50,6 +50,7 @@ import org.netbeans.api.debugger.DebuggerEngine;
 import org.netbeans.api.debugger.DebuggerInfo;
 import org.netbeans.api.debugger.DebuggerManager;
 import org.netbeans.api.debugger.DebuggerManagerAdapter;
+import org.netbeans.api.extexecution.base.ExplicitProcessParameters;
 import org.netbeans.modules.cnd.debugger.gdb2.mi.MICommand;
 import org.netbeans.modules.cnd.debugger.gdb2.mi.MICommandInjector;
 import org.netbeans.modules.cnd.debugger.gdb2.mi.MIConst;
@@ -75,6 +76,7 @@ import org.openide.filesystems.FileUtil;
 import org.openide.text.Annotatable;
 import org.openide.text.Line;
 import org.openide.util.Exceptions;
+import org.openide.util.Lookup;
 import org.openide.util.Pair;
 import org.openide.util.RequestProcessor;
 
@@ -109,7 +111,7 @@ public final class CPPLiteDebugger {
         engineProvider = (CPPLiteDebuggerEngineProvider) contextProvider.lookupFirst(null, DebuggerEngineProvider.class);
     }
 
-    void setDebuggee(Process debuggee) {
+    void setDebuggee(Process debuggee, boolean printObjects) {
         this.debuggee = debuggee;
 
         CPPLiteInjector injector = new CPPLiteInjector(debuggee.getOutputStream());
@@ -137,7 +139,9 @@ public final class CPPLiteDebugger {
         proxy.send(new Command("-gdb-set target-async"));
         //proxy.send(new Command("-gdb-set scheduler-locking on"));
         proxy.send(new Command("-gdb-set non-stop on"));
-        proxy.send(new Command("-gdb-set print object on"));
+        if (printObjects) {
+            proxy.send(new Command("-gdb-set print object on"));
+        }
     }
 
     public void execRun() {
@@ -811,15 +815,20 @@ public final class CPPLiteDebugger {
         CPPLiteDebugger debugger = es[0].lookupFirst(null, CPPLiteDebugger.class);
         List<String> executable = new ArrayList<>();
         executable.add(configuration.getDebugger());
-        executable.add("--interpreter=mi");
-        executable.add("--tty=" + pty.getSlaveName());
+        executable.add("--interpreter=mi");             // NOI18N
+        executable.add("--tty=" + pty.getSlaveName());  // NOI18N
         if (configuration.isAttach()) {
-            executable.add("-p");
+            executable.add("-p");                       // NOI18N
             executable.add(Long.toString(configuration.getAttachProcessId()));
         }
+        if (configuration.getExecutable().size() > 1) {
+            executable.add("--args");                   // NOI18N
+        }
         executable.addAll(configuration.getExecutable());
-        Process debuggee = new ProcessBuilder(executable).directory(configuration.getDirectory()).start();
-        new RequestProcessor(configuration.getDisplayName() + " (pty deallocator)").post(() -> {
+        ProcessBuilder processBuilder = new ProcessBuilder(executable);
+        setParameters(processBuilder, configuration);
+        Process debuggee = processBuilder.start();
+        new RequestProcessor(configuration.getDisplayName() + " (pty deallocator)").post(() -> {    // NOI18N
             try {
                 while (debuggee.isAlive()) {
                     try {
@@ -836,7 +845,7 @@ public final class CPPLiteDebugger {
                 }
             }
         });
-        debugger.setDebuggee(debuggee);
+        debugger.setDebuggee(debuggee, configuration.isPrintObjects());
         AtomicInteger exitCode = debugger.exitCode;
 
         return new Process() {
@@ -876,6 +885,25 @@ public final class CPPLiteDebugger {
                 debuggee.destroy();
             }
         };
+    }
+
+    private static void setParameters(ProcessBuilder processBuilder, CPPLiteDebuggerConfig configuration) {
+        ExplicitProcessParameters processParameters = configuration.getProcessParameters();
+        if (processParameters.getWorkingDirectory() != null) {
+            processBuilder.directory(processParameters.getWorkingDirectory());
+        }
+        if (!processParameters.getEnvironmentVariables().isEmpty()) {
+            Map<String, String> environment = processBuilder.environment();
+            for (Map.Entry<String, String> entry : processParameters.getEnvironmentVariables().entrySet()) {
+                String env = entry.getKey();
+                String val = entry.getValue();
+                if (val != null) {
+                    environment.put(env, val);
+                } else {
+                    environment.remove(env);
+                }
+            }
+        }
     }
 
     private class BreakpointsHandler extends DebuggerManagerAdapter implements PropertyChangeListener {
@@ -942,7 +970,7 @@ public final class CPPLiteDebugger {
         private void addBreakpoint(CPPLiteBreakpoint breakpoint) {
             String path = breakpoint.getFilePath();
             int lineNumber = breakpoint.getLineNumber();
-            String disabled = breakpoint.isEnabled() ? "" : "-d ";
+            String disabled = breakpoint.isEnabled() ? "-f " : "-d ";
             Command command = new Command("-break-insert " + disabled + path + ":" + lineNumber) {
                 @Override
                 protected void onDone(MIRecord record) {

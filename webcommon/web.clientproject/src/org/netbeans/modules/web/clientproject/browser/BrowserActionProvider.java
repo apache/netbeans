@@ -42,7 +42,7 @@ import org.openide.util.Pair;
 
 public class BrowserActionProvider implements ActionProvider {
 
-    final private ClientSideProject project;
+    private final ClientSideProject project;
     private final BrowserSupport support;
     private ClientProjectEnhancedBrowserImpl cfg;
 

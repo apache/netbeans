@@ -489,7 +489,7 @@ public class XDMUtil {
     static org.netbeans.modules.xml.xdm.nodes.Document fDoc;
     static org.netbeans.modules.xml.xdm.nodes.Document sDoc;
     
-    public final static String NS_PREFIX = "xmlns";
-    public final static String SCHEMA_LOCATION = "schemaLocation";    
-    public final static String XML_PROLOG = "<?xml version=\"1.0\"?>\n";
+    public static final String NS_PREFIX = "xmlns";
+    public static final String SCHEMA_LOCATION = "schemaLocation";    
+    public static final String XML_PROLOG = "<?xml version=\"1.0\"?>\n";
 }

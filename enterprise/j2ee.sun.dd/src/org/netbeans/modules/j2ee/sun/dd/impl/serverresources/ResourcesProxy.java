@@ -610,7 +610,7 @@ public class ResourcesProxy implements Resources, RootInterfaceImpl {
     public void setStatus(int value) {
         if (ddStatus!=value) {
             java.beans.PropertyChangeEvent evt =
-                new java.beans.PropertyChangeEvent(this, PROPERTY_STATUS, Integer.valueOf(ddStatus), Integer.valueOf(value));
+                new java.beans.PropertyChangeEvent(this, PROPERTY_STATUS, ddStatus, value);
             ddStatus=value;
             for (int i=0;i<listeners.size();i++) {
                 listeners.get(i).propertyChange(evt);

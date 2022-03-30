@@ -940,6 +940,10 @@ public final class IndexQueryImpl implements ElementQuery.Index {
                     final Set<TypeElement> inheritedTypes = elementQueryIndex.getInheritedTypes(enclosingType);
                     for (final TypeElement nextType : inheritedTypes) {
                         filters.add(ElementFilter.forMembersOfType(nextType));
+                        // GH #3486
+                        for (TypeElement trait : getAllUsedTraits(nextType)) {
+                            filters.add(ElementFilter.forMembersOfType(trait));
+                        }
                     }
                 }
                 return filters.toArray(new ElementFilter[filters.size()]);
@@ -1374,7 +1378,7 @@ public final class IndexQueryImpl implements ElementQuery.Index {
     }
 
     private Set<TypeConstantElement> getNotPrivateTypeConstants(TypeElement oneType) {
-        return ElementFilter.forPublicModifiers(true).filter(getDeclaredTypeConstants(oneType));
+        return ElementFilter.forPrivateModifiers(false).filter(getDeclaredTypeConstants(oneType));
     }
 
     private Set<FieldElement> getNotPrivateFields(ClassElement oneClass) {
@@ -1391,15 +1395,10 @@ public final class IndexQueryImpl implements ElementQuery.Index {
         final long start = (LOG.isLoggable(Level.FINE)) ? System.currentTimeMillis() : 0;
         final Set<FieldElement> retval = new HashSet<>();
         final Set<ClassElement> inheritedClasses = getInheritedClasses(classElement);
-        final Set<String> declaredFieldNames = toNames(getDeclaredFields(classElement));
         for (ClassElement oneClass : inheritedClasses) {
             final Set<FieldElement> fields = getNotPrivateFields(oneClass);
             for (final FieldElement fieldElement : fields) {
-                final String fieldName = fieldElement.getName();
-                if (!declaredFieldNames.contains(fieldName)) {
-                    retval.add(fieldElement);
-                    declaredFieldNames.add(fieldName);
-                }
+                retval.add(fieldElement);
             }
         }
         if (LOG.isLoggable(Level.FINE)) {
@@ -1414,15 +1413,10 @@ public final class IndexQueryImpl implements ElementQuery.Index {
         final long start = (LOG.isLoggable(Level.FINE)) ? System.currentTimeMillis() : 0;
         final Set<TypeConstantElement> retval = new HashSet<>();
         final Set<? extends TypeElement> inheritedTypes = getInheritedTypes(typeElement);
-        final Set<String> declaredConstantNames = toNames(getDeclaredTypeConstants(typeElement));
         for (TypeElement oneType : inheritedTypes) {
             final Set<TypeConstantElement> constants = getNotPrivateTypeConstants(oneType);
             for (final TypeConstantElement constantElement : constants) {
-                final String constantName = constantElement.getName();
-                if (!declaredConstantNames.contains(constantName)) {
-                    retval.add(constantElement);
-                    declaredConstantNames.add(constantName);
-                }
+                retval.add(constantElement);
             }
         }
         if (LOG.isLoggable(Level.FINE)) {

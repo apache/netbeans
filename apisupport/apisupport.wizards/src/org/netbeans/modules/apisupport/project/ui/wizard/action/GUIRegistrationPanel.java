@@ -297,7 +297,7 @@ final class GUIRegistrationPanel extends BasicWizardIterator.Panel {
                         } else {
                             // create model
                             DefaultComboBoxModel model = new DefaultComboBoxModel();
-                            for (Iterator it = sorted.iterator(); it.hasNext(); ) {
+                            for (Iterator<LayerItemPresenter> it = sorted.iterator(); it.hasNext(); ) {
                                 model.addElement(it.next());
                             }
                             combo.setModel(model);

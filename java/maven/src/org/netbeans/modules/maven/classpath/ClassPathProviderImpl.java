@@ -55,6 +55,7 @@ import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Mutex;
 import org.openide.util.Utilities;
+import org.openide.util.WeakListeners;
 
 /**
  * Defines class path for maven2 projects..
@@ -75,25 +76,27 @@ public final class ClassPathProviderImpl implements ClassPathProvider, ActiveJ2S
     
     private final @NonNull Project proj;
     
-    private final static int SOURCE_PATH = 0;                   // TEST_SOURCE_PATH = 1 
-    private final static int COMPILE_TIME_PATH = 2;             // TEST_COMPILE_TIME_PATH = 3
-    private final static int RUNTIME_PATH = 4;                  // TEST_RUNTIME_PATH = 5
-    private final static int BOOT_PATH = 6;                     // TEST_BOOT_PATH = 7
-    private final static int ENDORSED_PATH = 8;
-    private final static int MODULE_BOOT_PATH = 9;
-    private final static int MODULE_COMPILE_PATH = 10;          // TEST_MODULE_COMPILE_PATH = 11
-    private final static int MODULE_LEGACY_PATH = 12;           // TEST_MODULE_LEGACY_PATH = 13
+    private static final int SOURCE_PATH = 0;                   // TEST_SOURCE_PATH = 1 
+    private static final int COMPILE_TIME_PATH = 2;             // TEST_COMPILE_TIME_PATH = 3
+    private static final int RUNTIME_PATH = 4;                  // TEST_RUNTIME_PATH = 5
+    private static final int BOOT_PATH = 6;                     // TEST_BOOT_PATH = 7
+    private static final int ENDORSED_PATH = 8;
+    private static final int MODULE_BOOT_PATH = 9;
+    private static final int MODULE_COMPILE_PATH = 10;          // TEST_MODULE_COMPILE_PATH = 11
+    private static final int MODULE_LEGACY_PATH = 12;           // TEST_MODULE_LEGACY_PATH = 13
     
-    private final static int MODULE_EXECUTE_PATH = 14;          // TEST_MODULE_EXECUTE_PATH = 15
-    private final static int MODULE_EXECUTE_CLASS_PATH = 16;    // TEST_MODULE_EXECUTE_CLASS_PATH = 17
+    private static final int MODULE_EXECUTE_PATH = 14;          // TEST_MODULE_EXECUTE_PATH = 15
+    private static final int MODULE_EXECUTE_CLASS_PATH = 16;    // TEST_MODULE_EXECUTE_CLASS_PATH = 17
     
-    private final static int JAVA8_COMPILE_PATH = 18;
-    private final static int JAVA8_TEST_COMPILE_PATH = 19;
-    private final static int JAVA8_TEST_SCOPED_COMPILE_PATH = 20;
-    private final static int JAVA8_RUNTIME_PATH = 21;           // JAVA8_TEST_RUNTIME_PATH = 22
-    private final static int JAVA8_TEST_SCOPED_RUNTIME_PATH = 23;
+    private static final int JAVA8_COMPILE_PATH = 18;
+    private static final int JAVA8_TEST_COMPILE_PATH = 19;
+    private static final int JAVA8_TEST_SCOPED_COMPILE_PATH = 20;
+    private static final int JAVA8_RUNTIME_PATH = 21;           // JAVA8_TEST_RUNTIME_PATH = 22
+    private static final int JAVA8_TEST_SCOPED_RUNTIME_PATH = 23;
     
-    private final ClassPath[] cache = new ClassPath[24];
+    private static final int ANNOTATION_PROC_PATH = 24;         // TEST_ANNOTATION_PROC_PATH = 25
+    
+    private final ClassPath[] cache = new ClassPath[26];
     
     private BootClassPathImpl bcpImpl;
     private EndorsedClassPathImpl ecpImpl;
@@ -214,8 +217,7 @@ public final class ClassPathProviderImpl implements ClassPathProvider, ActiveJ2S
         } else if (type.equals(ClassPathSupport.ENDORSED)) {
             return getEndorsedClassPath();
         } else if (type.equals(JavaClassPathConstants.PROCESSOR_PATH)) {
-            // XXX read <processorpath> from maven-compiler-plugin config
-            return getCompileTimeClasspath(fileType);
+            return getAnnotationProcClassPath(fileType);
         } else if (type.equals(JavaClassPathConstants.MODULE_BOOT_PATH)) {            
             return getModuleBootPath();
         } else if (type.equals(JavaClassPathConstants.MODULE_COMPILE_PATH)) {            
@@ -295,6 +297,34 @@ public final class ClassPathProviderImpl implements ClassPathProvider, ActiveJ2S
         return computeIfAbsent(
                 SOURCE_PATH + ftype, 
                 () -> ClassPathFactory.createClassPath(ftype == TYPE_SRC ? new SourceClassPathImpl(getNBMavenProject()) : new TestSourceClassPathImpl(getNBMavenProject())));
+    }
+    
+    private ClassPath getAnnotationProcClassPath(int type) {
+        final int ftype;
+        switch (type) {
+            case TYPE_WEB: 
+            default:
+                ftype = TYPE_SRC;
+                break;
+            case TYPE_SRC:
+            case TYPE_TESTSRC:
+                ftype = type;
+                break;
+        }
+        int index = ANNOTATION_PROC_PATH + ftype;
+        return computeIfAbsent(
+                index,
+                () -> {
+                    ClassPath anno = ClassPathFactory.createClassPath(new AnnotationProcClassPathImpl(getNBMavenProject(), ftype == TYPE_SRC));
+                    return createMultiplexClassPath(
+                            new AnnotationPathSelector(
+                                    getNBMavenProject(), anno, 
+                                    () -> getCompileTimeClasspath(type)
+                            )
+                    );
+                }
+                        
+        );
     }
     
     private ClassPath getCompileTimeClasspath(int type) {
@@ -678,8 +708,54 @@ public final class ClassPathProviderImpl implements ClassPathProvider, ActiveJ2S
         }
     }
     
-    private static abstract class ClassPathSelector implements org.netbeans.spi.java.classpath.support.ClassPathSupport.Selector {
-        private final PropertyChangeSupport support = new PropertyChangeSupport(this);
+    /**
+     * This selector chooses the annotation classpath, if it is not empty (has items, or is broken), or the regular
+     * compile classpath if annotation path is empty. The selector reacts 
+     */
+    private static class AnnotationPathSelector extends ClassPathSelector {
+        private final ClassPath annotationCP;
+        private final Supplier<ClassPath> compileClassPath;
+        
+        public AnnotationPathSelector(NbMavenProjectImpl proj, ClassPath anno, Supplier<ClassPath> compile) {
+            super(proj);
+            this.annotationCP = anno;
+            this.compileClassPath = compile;
+            
+            anno.addPropertyChangeListener(WeakListeners.propertyChange(
+                    e -> {
+                        active = null;
+                        support.firePropertyChange(PROP_ACTIVE_CLASS_PATH, null, null);
+                    }, ClassPath.PROP_ROOTS, anno
+            ));
+//            proj.getProjectWatcher().addPropertyChangeListener((e) -> {
+//                if (NbMavenProject.PROP_PROJECT.equals(e.getPropertyName())) {
+//                    active = null;
+//                    support.firePropertyChange(PROP_ACTIVE_CLASS_PATH, null, null);
+//                }
+//            });
+        }
+
+        @Override
+        protected boolean isReset(PropertyChangeEvent evt) {
+            return NbMavenProject.PROP_PROJECT.equals(evt.getPropertyName());
+        }
+
+        @Override
+        public ClassPath getActiveClassPath() {
+            if (active != null) {
+                return active;
+            }
+            if (annotationCP.getFlags().contains(ClassPath.Flag.INCOMPLETE) ||
+                !annotationCP.entries().isEmpty()) {
+                return active = annotationCP;
+            } else {
+                return active = compileClassPath.get();
+            }
+        }
+    }
+    
+    private abstract static class ClassPathSelector implements org.netbeans.spi.java.classpath.support.ClassPathSupport.Selector {
+        protected final PropertyChangeSupport support = new PropertyChangeSupport(this);
         
         protected final NbMavenProjectImpl proj;
         protected ClassPath active = null;

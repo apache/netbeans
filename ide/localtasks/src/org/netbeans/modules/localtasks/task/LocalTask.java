@@ -632,7 +632,7 @@ public final class LocalTask extends AbstractLocalTask {
         }
     }
     
-    final static class TaskReference {
+    static final class TaskReference {
 
         private final String repositoryId;
         private final String taskId;

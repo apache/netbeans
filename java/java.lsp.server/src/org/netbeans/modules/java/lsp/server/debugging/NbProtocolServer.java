@@ -23,6 +23,8 @@ import java.io.IOException;
 import java.io.Writer;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.file.FileSystemNotFoundException;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -80,6 +82,7 @@ import org.netbeans.api.debugger.jpda.ObjectVariable;
 import org.netbeans.api.debugger.jpda.Variable;
 import org.netbeans.modules.debugger.jpda.truffle.vars.TruffleVariable;
 import org.netbeans.modules.java.lsp.server.LspSession;
+import org.netbeans.modules.java.lsp.server.URITranslator;
 import org.netbeans.modules.java.lsp.server.debugging.breakpoints.NbBreakpointsRequestHandler;
 import org.netbeans.modules.java.lsp.server.debugging.attach.NbAttachRequestHandler;
 import org.netbeans.modules.java.lsp.server.debugging.launch.NbDebugSession;
@@ -321,17 +324,32 @@ public final class NbProtocolServer implements IDebugProtocolServer, LspSession.
                         stackFrame.setName(frame.getName());
                         URI sourceURI = frame.getSourceURI();
                         if (sourceURI != null) {
+                            sourceURI = URI.create(URITranslator.getDefault().uriToLSP(sourceURI.toString()));
                             Source source = new Source();
                             String scheme = sourceURI.getScheme();
-                            if (null == scheme || scheme.isEmpty() || "file".equalsIgnoreCase(scheme)) {
-                                source.setName(Paths.get(sourceURI).getFileName().toString());
-                                source.setPath(sourceURI.getPath());
+                            Path sourcePath = null;
+                            if (null == scheme) {
+                                sourcePath = Paths.get(sourceURI.getPath());
+                            } else if ("file".equalsIgnoreCase(scheme)) {   // NOI18N
+                                try {
+                                    sourcePath = Paths.get(sourceURI);
+                                } catch (FileSystemNotFoundException | SecurityException | IllegalArgumentException ex) {
+                                    sourcePath = null;
+                                }
+                            }
+                            if (sourcePath != null) {
+                                source.setName(sourcePath.getFileName().toString());
+                                source.setPath(sourcePath.toString());
                                 source.setSourceReference(0);
                             } else {
                                 int ref = context.createSourceReference(sourceURI, frame.getSourceMimeType());
                                 String path = sourceURI.getPath();
-                                if (path == null) {
+                                if (path == null || path.isEmpty()) {
                                     path = sourceURI.getSchemeSpecificPart();
+                                    while (path.startsWith("//")) {
+                                        // Remove multiple initial slashes
+                                        path = path.substring(1);
+                                    }
                                 }
                                 if (path != null) {
                                     int sepIndex = Math.max(path.lastIndexOf('/'), path.lastIndexOf(File.separatorChar));
@@ -505,6 +523,11 @@ public final class NbProtocolServer implements IDebugProtocolServer, LspSession.
                 evaluateJPDA(debugger, expression, threadId, response);
             } else {
                 NIDebugger niDebugger = context.getDebugSession().getNIDebugger();
+                if (niDebugger == null) {
+                    throw ErrorUtilities.createResponseErrorException(
+                        "No active debugger is found.",
+                        ResponseErrorCode.RequestCancelled);
+                }
                 evaluateNative(niDebugger, expression, threadId, response);
             }
             return response;

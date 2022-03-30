@@ -304,10 +304,12 @@ public class MavenProjectGrammar extends AbstractSchemaBasedGrammar {
                 return false;
             }
         });
+
         List<GrammarResult> toReturn = new ArrayList<GrammarResult>();
         Collection<String> params = new HashSet<String>();
+
         while (it.hasNext()) {
-            Element el = (Element)it.next();
+            Element el = it.next();
             String editable = el.getChildText("editable"); //NOI18N
             if ("true".equalsIgnoreCase(editable)) { //NOI18N
                 String name = el.getChildText("name"); //NOI18N
@@ -569,7 +571,7 @@ public class MavenProjectGrammar extends AbstractSchemaBasedGrammar {
         
         if (path.endsWith("dependencies/dependency/scope")) { //NOI18N
             if (path.contains("dependencyManagement")) {
-                ArrayList<String> lst = new ArrayList(Arrays.asList(SCOPES));
+                List<String> lst = new ArrayList<>(Arrays.asList(SCOPES));
                 lst.add("import");
                 Collections.sort(lst);
                 return super.createTextValueList(lst.toArray(new String[0]), virtualTextCtx);

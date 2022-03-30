@@ -13,7 +13,7 @@ IDENTIFIER      "window", la=1, st=LexerState{canFollowLiteral=false, canFollowK
 OPERATOR_DOT    ".", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=false, braceBalances=[JSX], jsxBalances=[1]}
 IDENTIFIER      "isLoggedIn", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[JSX], jsxBalances=[1]}
 WHITESPACE      " ", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[JSX], jsxBalances=[1]}
-OPERATOR_TERNARY  "?", st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[JSX], jsxBalances=[1]}
+OPERATOR_TERNARY  "?", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[JSX], jsxBalances=[1]}
 WHITESPACE      " ", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[JSX], jsxBalances=[1]}
 IDENTIFIER      "window", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[JSX], jsxBalances=[1]}
 OPERATOR_DOT    ".", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=false, braceBalances=[JSX], jsxBalances=[1]}
@@ -53,7 +53,7 @@ IDENTIFIER      "window", la=1, st=LexerState{canFollowLiteral=false, canFollowK
 OPERATOR_DOT    ".", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=false, braceBalances=[], jsxBalances=[]}
 IDENTIFIER      "isLoggedIn", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
 WHITESPACE      " ", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
-OPERATOR_TERNARY  "?", st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_TERNARY  "?", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
 WHITESPACE      " ", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
 IDENTIFIER      "window", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
 OPERATOR_DOT    ".", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=false, braceBalances=[], jsxBalances=[]}

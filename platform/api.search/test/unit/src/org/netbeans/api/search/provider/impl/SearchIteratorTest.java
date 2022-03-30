@@ -161,7 +161,7 @@ public final class SearchIteratorTest extends NbTestCase {
 
         assertTrue("project root not searchable", searchInfo.canSearch());
         
-        List<String> foundFilesPaths = new ArrayList<String>(16);
+        List<String> foundFilesPaths = new ArrayList<>(16);
         SearchScopeOptions sso = SearchScopeOptions.create("*", false);
         SearchListener lstnr = new SearchListener() {};
         AtomicBoolean terminated = new AtomicBoolean(false);

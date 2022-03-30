@@ -123,7 +123,7 @@ final class JavaFileFilterListener implements ChangeListener {
         }
         return result;
     }
-    synchronized static JavaFileFilterListener getDefault() {
+    static synchronized JavaFileFilterListener getDefault() {
         if (instance == null) {
             instance = new JavaFileFilterListener();
         }

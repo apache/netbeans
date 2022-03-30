@@ -30,7 +30,7 @@ public class Dispatches extends BaseBean {
 
     static Vector<BeanComparator> comparators = new Vector<>();
 
-    static public final String DISPATCHDATA = "DispatchData"; // NOI18N
+    public static final String DISPATCHDATA = "DispatchData"; // NOI18N
 
     public Dispatches() {
 	this(Common.USE_DEFAULT_VALUES);
@@ -94,12 +94,12 @@ public class Dispatches extends BaseBean {
     }
 
     //
-    static public void addComparator(BeanComparator c) {
+    public static void addComparator(BeanComparator c) {
 	comparators.add(c);
     }
 
     //
-    static public void removeComparator(BeanComparator c) {
+    public static void removeComparator(BeanComparator c) {
 	comparators.remove(c);
     }
     // Dump the content of this bean returning it as a String

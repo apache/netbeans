@@ -38,7 +38,7 @@ public class ExtFinderFactory {
     * the <tt>lineFound()</tt> method that can do a local find.
     * !!! Udelat to poradne i s vice bufferama
     */
-    public static abstract class LineFwdFinder extends FinderFactory.AbstractFinder {
+    public abstract static class LineFwdFinder extends FinderFactory.AbstractFinder {
 
         private int origStartPos;
 
@@ -111,7 +111,7 @@ public class ExtFinderFactory {
     * the <tt>lineFound()</tt> method that can do a local find.
     * !!! Udelat to poradne i s vice bufferama
     */
-    public static abstract class LineBwdFinder extends FinderFactory.AbstractFinder {
+    public abstract static class LineBwdFinder extends FinderFactory.AbstractFinder {
 
         private int origStartPos;
 
@@ -191,7 +191,7 @@ public class ExtFinderFactory {
     * the <tt>lineFound()</tt> method that can do a local find.
     * !!! Udelat to poradne i s vice bufferama
     */
-    public static abstract class LineBlocksFinder extends FinderFactory.AbstractBlocksFinder {
+    public abstract static class LineBlocksFinder extends FinderFactory.AbstractBlocksFinder {
 
         private int origStartPos;
 

@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.12
+#Version 1.15
 
 CLSS public java.lang.Object
 cons public init()
@@ -91,6 +91,7 @@ CLSS public abstract static org.netbeans.modules.parsing.spi.Parser$Result
  outer org.netbeans.modules.parsing.spi.Parser
 cons protected init(org.netbeans.modules.parsing.api.Snapshot)
 meth protected abstract void invalidate()
+meth protected boolean processingFinished()
 meth public org.netbeans.modules.parsing.api.Snapshot getSnapshot()
 supr java.lang.Object
 hfds snapshot

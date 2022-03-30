@@ -24,17 +24,12 @@ import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionTree;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.TypeElement;
-import javax.swing.ListModel;
 import javax.swing.table.TableModel;
 import org.netbeans.api.java.source.CancellableTask;
 import org.netbeans.api.java.source.JavaSource;
@@ -257,51 +252,4 @@ public class HandlerButtonListener implements ActionListener{
         }
     }
     
-    private boolean isInModel(String className, ListModel model) {
-        for(int i = 0; i < model.getSize(); i++){
-            String cls = (String)model.getElementAt(i);
-            if(className.equals(cls)){
-                return true;
-            }
-        }
-        return false;
-    }
-    
-    private boolean isNewHandler(String className, HandlerChain handlerChain){
-        if(handlerChain != null){
-            Handler[] handlers = handlerChain.getHandlers();
-            for(int i = 0; i < handlers.length; i++){
-                if(handlers[i].getHandlerClass().equals(className)){
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-    
-    private static String readResource(InputStream is) throws IOException {
-        // read the config from resource first
-        StringBuffer sb = new StringBuffer();
-        String lineSep = System.getProperty("line.separator");//NOI18N
-        BufferedReader br = null;
-        try {
-            new BufferedReader(new InputStreamReader(is,
-                Charset.forName("UTF-8")));
-        String line = br.readLine();
-            while (line != null) {
-                sb.append(line);
-                sb.append(lineSep);
-                line = br.readLine();
-            }
-        }
-        finally {
-            if ( br!= null ){
-                br.close();
-            }
-            else {
-                is.close();
-            }
-        }
-        return sb.toString();
-    }
 }

@@ -1553,7 +1553,7 @@ public class NexusRepositoryIndexerImpl implements RepositoryIndexerImplementati
                                 }
                             }
                         } else if (ArtifactInfo.ARTIFACT_ID.equals(fieldName)) {
-                            String aid = one.replaceAll("-", "?").replaceAll("\\.", "?");
+                            String aid = one.replace("-", "?").replace(".", "?");
                             try {
                                 q = constructQuery(MAVEN.ARTIFACT_ID, aid);
                             } catch (IllegalArgumentException iae) {
@@ -1566,7 +1566,7 @@ public class NexusRepositoryIndexerImpl implements RepositoryIndexerImplementati
                                 }
                             }
                         } else if (ArtifactInfo.GROUP_ID.equals(fieldName)) {
-                            String gid = one.replaceAll("-", "?").replaceAll("\\.", "?");
+                            String gid = one.replace("-", "?").replace(".", "?");
                             try {
                                 q = constructQuery(MAVEN.GROUP_ID, gid);
                             } catch (IllegalArgumentException iae) {

@@ -51,6 +51,35 @@
 <!-- ACTUAL CHANGES BEGIN HERE: -->
 
 <changes>
+    <change id="CallHierarchyProvider">
+        <api name="LSP_API"/>
+        <summary>Added CallHierarchyProvider and relevant elements</summary>
+        <version major="1" minor="9"/>
+        <date day="9" month="3" year="2022"/>
+        <author login="sdedic"/>
+        <compatibility binary="compatible" source="compatible" addition="yes" deletion="no"/>
+        <description>
+            <a href="@TOP@/org/netbeans/spi/lsp/CallHiearchyProvider.html">CallHierarchyProvider</a> SPI allows to trace incoming and
+            outgoing calls. <a href="@TOP@/org/netbeans/api/lsp/CallHierarchyEntry.html">CallHierarchyEntry</a> describes a specific call site 
+            or target.
+        </description>
+        <class package="org.netbeans.api.lsp" name="CallHierarchyEntry"/>
+        <class package="org.netbeans.spi.lsp" name="CallHierarchyProvider"/>
+    </change>
+    <change id="StructureProvider">
+        <api name="LSP_API"/>
+        <summary>Adding StructeProvider and StructureElement</summary>
+        <version major="1" minor="8"/>
+        <date day="24" month="1" year="2022"/>
+        <author login="ppisl"/>
+        <compatibility binary="compatible" source="compatible" addition="yes" deletion="no"/>
+        <description>
+            A <code>StructureProvider</code> interface allows to compute structure (tree of <code>SourceElement</code>s)
+            of the given file. 
+        </description>
+        <class package="org.netbeans.api.lsp" name="StructureElement"/>
+        <class package="org.netbeans.spi.lsp" name="StructureProvider"/>
+    </change>
     <change id="ErrorProvider.Context.getOffset">
         <api name="LSP_API"/>
         <summary>Adding ErrorProvider.Context.getOffset() method</summary>

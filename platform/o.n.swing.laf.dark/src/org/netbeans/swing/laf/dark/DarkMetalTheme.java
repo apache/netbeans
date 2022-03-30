@@ -242,5 +242,5 @@ public class DarkMetalTheme extends MetalTheme {
         return DEFAULT_FONT;
     }
 
-    private final static FontUIResource DEFAULT_FONT = new FontUIResource("Dialog", Font.PLAIN, 11); //NOI18N
+    private static final FontUIResource DEFAULT_FONT = new FontUIResource("Dialog", Font.PLAIN, 11); //NOI18N
 }

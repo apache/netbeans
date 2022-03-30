@@ -141,12 +141,7 @@ public class BasicSearchProvider extends SearchProvider {
                 String scopeToUse = chooseSearchScope(scopeId);
                 form = new BasicSearchForm(scopeToUse, isReplacing(),
                         explicitCriteria, extraSearchScopes);
-                form.setUsabilityChangeListener(new ChangeListener() {
-                    @Override
-                    public void stateChanged(ChangeEvent e) {
-                        fireChange();
-                    }
-                });
+                form.setUsabilityChangeListener((ChangeEvent e) -> fireChange());
             }
             return form;
         }
@@ -226,7 +221,8 @@ public class BasicSearchProvider extends SearchProvider {
                     notifySupport.setInformationMessage(UiUtils.getText(
                             "BasicSearchForm.txtInfoNoWildcards"));     //NOI18N
                 } else {
-                    notifySupport.clearMessages();
+                    notifySupport.setInformationMessage(UiUtils.getText(
+                            "BasicSearchForm.txtInfoMultiline"));     //NOI18N
                 }
             }
             return usable;

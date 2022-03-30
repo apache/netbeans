@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.9
+#Version 1.12
 
 CLSS public java.lang.Object
 cons public init()
@@ -76,7 +76,12 @@ hfds breakpointsToDisable,breakpointsToEnable,groupName,hitCountFilter,hitCountF
 CLSS public org.netbeans.modules.debugger.jpda.truffle.breakpoints.TruffleLineBreakpoint
 cons public init(java.net.URL,int)
 cons public init(org.netbeans.modules.javascript2.debug.EditorLineHandler)
+meth public final boolean isSuspend()
+meth public final java.lang.String getPrintText()
+meth public final void setPrintText(java.lang.String)
+meth public final void setSuspend(boolean)
 supr org.netbeans.modules.javascript2.debug.breakpoints.JSLineBreakpoint
+hfds printText,suspend
 hcls FixedLineHandler
 
 CLSS public final org.netbeans.modules.debugger.jpda.truffle.frames.TruffleStackFrame
@@ -177,6 +182,7 @@ meth public abstract org.netbeans.api.debugger.jpda.ObjectVariable setValue(org.
 meth public abstract org.netbeans.modules.debugger.jpda.truffle.LanguageName getLanguage()
 meth public abstract org.netbeans.modules.debugger.jpda.truffle.source.SourcePosition getTypeSource()
 meth public abstract org.netbeans.modules.debugger.jpda.truffle.source.SourcePosition getValueSource()
+meth public boolean isReceiver()
 meth public static org.netbeans.modules.debugger.jpda.truffle.vars.TruffleVariable get(org.netbeans.api.debugger.jpda.Variable)
 
 CLSS public org.netbeans.modules.javascript2.debug.breakpoints.JSLineBreakpoint

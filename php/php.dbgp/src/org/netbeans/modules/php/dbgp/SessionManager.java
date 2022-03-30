@@ -101,11 +101,6 @@ public class SessionManager {
 
     public synchronized void stopSession(Session session) {
         SessionId id = session.lookupFirst(null, SessionId.class);
-        // NETBEANS-5080 detach the request of the debug session to finish the task
-        DebugSession debugSession = session.lookupFirst(null, DebugSession.class);
-        if (debugSession != null) {
-            debugSession.cancel();
-        }
         DebugSession debSess = getSession(id);
         if (debSess != null) {
             debSess.stopSession();
@@ -122,6 +117,11 @@ public class SessionManager {
         }
         SessionManager.closeServerThread(session);
         resetBreakpoints();
+        // NETBEANS-5080 request cancellation to finish the task
+        DebugSession debugSession = session.lookupFirst(null, DebugSession.class);
+        if (debugSession != null) {
+            debugSession.cancel();
+        }
     }
 
     public static SessionId getSessionId(Project project) {

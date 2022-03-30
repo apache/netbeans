@@ -43,7 +43,7 @@ public class TestParserTest {
         
         List<String> golden = Arrays.asList("name:code\n:[fixed1\n, fixed2\n]:0:16:[26, 38]",
                                             "name:code\n:[fixed1\n, fixed2\n]:45:61:[71, 83]");
-        List<String> testCases = new LinkedList<String>();
+        List<String> testCases = new LinkedList<>();
 
         for (TestCase ts : TestParser.parse(code)) {
             testCases.add(ts.toString());
@@ -60,7 +60,7 @@ public class TestParserTest {
 
         List<String> golden = Arrays.asList("name:code\n:[]:0:16:[]",
                                             "name:code\n:[]:21:37:[]");
-        List<String> testCases = new LinkedList<String>();
+        List<String> testCases = new LinkedList<>();
 
         for (TestCase ts : TestParser.parse(code)) {
             testCases.add(ts.toString());

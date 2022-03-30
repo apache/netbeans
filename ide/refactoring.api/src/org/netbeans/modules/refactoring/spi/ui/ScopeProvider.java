@@ -118,7 +118,7 @@ public abstract class ScopeProvider {
      *
      * @since 1.30
      */
-    public static abstract class CustomScopeProvider extends ScopeProvider {
+    public abstract static class CustomScopeProvider extends ScopeProvider {
 
         /**
          * Set the scope to be customized. This method will be called right

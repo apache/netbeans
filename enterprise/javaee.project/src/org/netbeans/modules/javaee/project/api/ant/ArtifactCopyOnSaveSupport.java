@@ -27,6 +27,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URI;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -411,7 +412,7 @@ public abstract class ArtifactCopyOnSaveSupport implements FileChangeListener,
             try {
                 jos.putNextEntry(new ZipEntry("META-INF/MANIFEST.MF")); // NOI18N
                 // UTF-8 guaranteed on any platform
-                jos.write("Manifest-Version: 1.0\n".getBytes("UTF-8")); // NOI18N
+                jos.write("Manifest-Version: 1.0\n".getBytes(StandardCharsets.UTF_8));
             } finally {
                 jos.close();
             }

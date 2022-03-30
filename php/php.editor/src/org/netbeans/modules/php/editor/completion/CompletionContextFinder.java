@@ -60,7 +60,7 @@ final class CompletionContextFinder {
     private static final String MULTI_CATCH_EXCEPTION_TOKENS = "MULTI_CATCH_EXCEPTION_TOKENS"; //NOI18N
     private static final String COMBINED_USE_STATEMENT_TOKENS = "COMBINED_USE_STATEMENT_TOKENS"; //NOI18N
     private static final String CONST_STATEMENT_TOKENS = "CONST_STATEMENT_TOKENS"; //NOI18N
-    private static final String FIELD_UNION_TYPE_TOKENS = "FIELD_UNION_TYPE_TOKENS"; //NOI18N
+    private static final String FIELD_UNION_OR_INTERSECTION_TYPE_TOKENS = "FIELD_UNION_TYPE_TOKENS"; //NOI18N
     private static final String FIELD_MODIFIERS_TOKENS = "FIELD_MODIFIERS_TOKENS"; //NOI18N
     private static final String OBJECT_OPERATOR_TOKEN = "OBJECT_OPERATOR_TOKEN"; //NOI18N
     private static final String TYPE_KEYWORD = "TYPE_KEYWORD"; //NOI18N
@@ -162,7 +162,7 @@ final class CompletionContextFinder {
             new Object[]{FIELD_MODIFIERS_TOKENS, PHPTokenId.WHITESPACE, NAMESPACE_FALSE_TOKEN},
             new Object[]{FIELD_MODIFIERS_TOKENS, PHPTokenId.WHITESPACE, PHPTokenId.PHP_TOKEN},
             new Object[]{FIELD_MODIFIERS_TOKENS, PHPTokenId.WHITESPACE, PHPTokenId.PHP_TOKEN, NAMESPACE_FALSE_TOKEN},
-            new Object[]{FIELD_MODIFIERS_TOKENS, FIELD_UNION_TYPE_TOKENS}
+            new Object[]{FIELD_MODIFIERS_TOKENS, FIELD_UNION_OR_INTERSECTION_TYPE_TOKENS}
     );
     private static final List<Object[]> CLASS_CONTEXT_KEYWORDS_TOKENCHAINS = Arrays.asList(
             new Object[]{PHPTokenId.PHP_PRIVATE},
@@ -183,6 +183,9 @@ final class CompletionContextFinder {
             new Object[]{PHPTokenId.PHP_FINAL},
             new Object[]{PHPTokenId.PHP_FINAL, PHPTokenId.WHITESPACE},
             new Object[]{PHPTokenId.PHP_FINAL, PHPTokenId.WHITESPACE, PHPTokenId.PHP_STRING},
+            new Object[]{PHPTokenId.PHP_READONLY},
+            new Object[]{PHPTokenId.PHP_READONLY, PHPTokenId.WHITESPACE},
+            new Object[]{PHPTokenId.PHP_READONLY, PHPTokenId.WHITESPACE, PHPTokenId.PHP_STRING},
             new Object[]{PHPTokenId.PHP_CURLY_OPEN},
             new Object[]{PHPTokenId.WHITESPACE},
             new Object[]{PHPTokenId.WHITESPACE, PHPTokenId.PHP_STRING},
@@ -209,7 +212,7 @@ final class CompletionContextFinder {
 
         EXPRESSION, GLOBAL_CONST_EXPRESSION, CLASS_CONST_EXPRESSION, MATCH_EXPRESSION,
         HTML, CLASS_NAME, INTERFACE_NAME,
-        TYPE_NAME, RETURN_TYPE_NAME, RETURN_UNION_TYPE_NAME, FIELD_TYPE_NAME, VISIBILITY_MODIFIER_OR_TYPE_NAME, STRING,
+        TYPE_NAME, RETURN_TYPE_NAME, RETURN_UNION_OR_INTERSECTION_TYPE_NAME, FIELD_TYPE_NAME, VISIBILITY_MODIFIER_OR_TYPE_NAME, STRING,
         CLASS_MEMBER, STATIC_CLASS_MEMBER, PHPDOC, INHERITANCE, EXTENDS, IMPLEMENTS, METHOD_NAME,
         CLASS_MEMBER_PARAMETER_NAME, STATIC_CLASS_MEMBER_PARAMETER_NAME, FUNCTION_PARAMETER_NAME,
         CLASS_CONTEXT_KEYWORDS, SERVER_ENTRY_CONSTANTS, NONE, NEW_CLASS, GLOBAL, NAMESPACE_KEYWORD,
@@ -516,8 +519,8 @@ final class CompletionContextFinder {
                     accept = false;
                     break;
                 }
-            } else if (tokenID == FIELD_UNION_TYPE_TOKENS) {
-                if (!consumeFieldUnionType(tokenSequence)) {
+            } else if (tokenID == FIELD_UNION_OR_INTERSECTION_TYPE_TOKENS) {
+                if (!consumeFieldUnionOrIntersectionType(tokenSequence)) {
                     accept = false;
                     break;
                 }
@@ -600,6 +603,10 @@ final class CompletionContextFinder {
 
         boolean hasCurlyOpen = false;
         do {
+            // NETBEANS-5849
+            if (tokenSequence.token().id() == PHPTokenId.PHP_USE) {
+                return false;
+            }
             if (tokenSequence.token().id() == PHPTokenId.PHP_CURLY_OPEN) {
                 hasCurlyOpen = true;
             }
@@ -623,7 +630,7 @@ final class CompletionContextFinder {
         return hasCurlyOpen;
     }
 
-    private static boolean consumeFieldUnionType(TokenSequence tokenSequence) {
+    private static boolean consumeFieldUnionOrIntersectionType(TokenSequence tokenSequence) {
         if (tokenSequence.token().id() == PHPTokenId.WHITESPACE) {
             // e.g. private int ^, private int|string ^, private const ^
             if (!tokenSequence.movePrevious()) {
@@ -641,10 +648,11 @@ final class CompletionContextFinder {
         while (tokenSequence.movePrevious()) {
             // "|", " ", "Foo", "int", "\Foo\Bar", etc.
             if (!isVerticalBar(tokenSequence.token())
-                && tokenSequence.token().id() != PHPTokenId.WHITESPACE
-                && tokenSequence.token().id() != PHPTokenId.PHP_STRING
-                && !isType(tokenSequence.token())
-                && !consumeNameSpace(tokenSequence)) {
+                    && !isReference(tokenSequence.token())
+                    && tokenSequence.token().id() != PHPTokenId.WHITESPACE
+                    && tokenSequence.token().id() != PHPTokenId.PHP_STRING
+                    && !isType(tokenSequence.token())
+                    && !consumeNameSpace(tokenSequence)) {
                 if (first) {
                     isFieldType = false;
                 }
@@ -928,7 +936,7 @@ final class CompletionContextFinder {
         boolean isNamespaceSeparator = false;
         boolean testCompletionSeparator = true;
         boolean checkReturnTypeSeparator = false;
-        boolean isUnionType = false;
+        boolean isUnionOrIntersectionType = false;
         boolean isInConstructor = false;
         int orgOffset = tokenSequence.offset();
         tokenSequence.moveNext();
@@ -955,10 +963,13 @@ final class CompletionContextFinder {
                 // check reference character (&) [unfortunately, cannot distinguish & as a operator and as a reference mark]
                 // check "..." (is it really operator?)
                 if (!isReference(cToken)
+                        && !isNew(cToken)
                         && !isVariadic(cToken)
                         && !isInitilizerToken(cToken) // ($param = '')
                         && !isVerticalBar(cToken) // int|false
-                        && !isOrOperator(cToken)) { // || (int|^|float)
+                        && !isOrOperator(cToken) // || (int|^|float)
+                        && !isAndOperator(cToken) // && (Foo&^&Bar)
+                        ) {
                     break;
                 }
             }
@@ -975,13 +986,36 @@ final class CompletionContextFinder {
                             || isIterable(token)
                             || isNullableTypesPrefix(cToken)
                             || isVerticalBar(cToken)
+                            || isReference(cToken)
                             || isOrOperator(cToken)
-                            || isVisibilityModifier(cToken)) {
-                        isCompletionSeparator = true;
-                        if (isVerticalBar(cToken) || isOrOperator(cToken)) {
-                            isUnionType = true;
+                            || isAndOperator(cToken)
+                            || isVisibilityModifier(cToken)
+                            || isReadonlyModifier(cToken)) {
+                        if (isReference(cToken)) {
+                            int origOffset = tokenSequence.offset();
+                            try {
+                                // e.g. function &my_sort5(&^$data) {, function &my_sort5(^&$data) {
+                                Token<? extends PHPTokenId> previous = LexUtilities.findPrevious(tokenSequence, Arrays.asList(PHPTokenId.WHITESPACE, PHPTokenId.PHP_OPERATOR));
+                                if (isComma(previous) || isLeftBracket(previous)) {
+                                    int offset = cToken.offset(null) + cToken.text().length();
+                                    if (carretOffset >= offset) {
+                                        testCompletionSeparator = false;
+                                    }
+                                    continue;
+                                }
+                            } finally {
+                                tokenSequence.move(origOffset);
+                                tokenSequence.moveNext();
+                            }
                         }
-                        if (isVisibilityModifier(token) || isVisibilityModifier(cToken)) {
+                        isCompletionSeparator = true;
+                        if (isVerticalBar(cToken) || isOrOperator(cToken) || isReference(cToken) || isAndOperator(cToken)) {
+                            isUnionOrIntersectionType = true;
+                        }
+                        if (isVisibilityModifier(token)
+                                || isVisibilityModifier(cToken)
+                                || isReadonlyModifier(token)
+                                || isReadonlyModifier(cToken)) {
                             contextForSeparator = CompletionContext.VISIBILITY_MODIFIER_OR_TYPE_NAME;
                         } else {
                             contextForSeparator = CompletionContext.TYPE_NAME;
@@ -1007,18 +1041,18 @@ final class CompletionContextFinder {
                         }
                         isNamespaceSeparator = false;
                         continue;
-                    } else if (!isCommentToken(tokenSequence)) {
+                    } else if (!isCommentToken(tokenSequence) && !isNew(cToken)) {
                         testCompletionSeparator = false;
                     }
                 } else if (checkReturnTypeSeparator) {
                     if (!isReturnTypeToken(cToken)) {
                         checkReturnTypeSeparator = false;
-                    } else if (isVerticalBar(cToken)) {
-                        isUnionType = true;
+                    } else if (isVerticalBar(cToken) || isReference(cToken)) {
+                        isUnionOrIntersectionType = true;
                     }
                     if (isReturnTypeSeparator(cToken)) {
-                        contextForSeparator = isUnionType
-                                ? CompletionContext.RETURN_UNION_TYPE_NAME
+                        contextForSeparator = isUnionOrIntersectionType
+                                ? CompletionContext.RETURN_UNION_OR_INTERSECTION_TYPE_NAME
                                 : CompletionContext.RETURN_TYPE_NAME;
                     }
                 } else if (isFunctionDeclaration(cToken)) {
@@ -1047,12 +1081,16 @@ final class CompletionContextFinder {
     }
 
     private static boolean isVariable(Token<PHPTokenId> token) {
-        return token.id().equals(PHPTokenId.PHP_VARIABLE); //NOI18N
+        return token.id().equals(PHPTokenId.PHP_VARIABLE);
+    }
+
+    private static boolean isNew(Token<PHPTokenId> token) {
+        return token.id().equals(PHPTokenId.PHP_NEW);
     }
 
     private static boolean isReference(Token<PHPTokenId> token) {
         return token.id().equals(PHPTokenId.PHP_OPERATOR)
-                && TokenUtilities.textEquals(token.text(), "&"); // NOI18N
+                && TokenUtilities.textEquals(token.text(), Type.SEPARATOR_INTERSECTION);
     }
 
     private static boolean isVariadic(Token<PHPTokenId> token) {
@@ -1094,6 +1132,11 @@ final class CompletionContextFinder {
                 && TokenUtilities.textEquals(token.text(), "||"); // NOI18N
     }
 
+    private static boolean isAndOperator(Token<PHPTokenId> token) {
+        return token.id() == PHPTokenId.PHP_OPERATOR
+                && TokenUtilities.textEquals(token.text(), "&&"); // NOI18N
+    }
+
     private static boolean isNullableTypesPrefix(Token<PHPTokenId> token) {
         return token.id().equals(PHPTokenId.PHP_TOKEN)
                 && TokenUtilities.textEquals(token.text(), "?"); // NOI18N
@@ -1132,6 +1175,7 @@ final class CompletionContextFinder {
                 || token.id() == PHPTokenId.PHP_PROTECTED
                 || token.id() == PHPTokenId.PHP_PUBLIC
                 || token.id() == PHPTokenId.PHP_STATIC
+                || token.id() == PHPTokenId.PHP_READONLY
                 || token.id() == PHPTokenId.PHP_VAR;
     }
 
@@ -1139,6 +1183,10 @@ final class CompletionContextFinder {
         return token.id() == PHPTokenId.PHP_PRIVATE
                 || token.id() == PHPTokenId.PHP_PROTECTED
                 || token.id() == PHPTokenId.PHP_PUBLIC;
+    }
+
+    private static boolean isReadonlyModifier(Token<PHPTokenId> token) {
+        return token.id() == PHPTokenId.PHP_READONLY;
     }
 
     private static boolean isConstructor(Token<PHPTokenId> token) {
@@ -1153,6 +1201,7 @@ final class CompletionContextFinder {
                 || id == PHPTokenId.PHP_TYPE_INT
                 || id == PHPTokenId.PHP_TYPE_STRING
                 || id == PHPTokenId.PHP_TYPE_VOID
+                || id == PHPTokenId.PHP_TYPE_NEVER
                 || id == PHPTokenId.PHP_TYPE_OBJECT
                 || id == PHPTokenId.PHP_TYPE_MIXED
                 || id == PHPTokenId.PHP_SELF

@@ -377,7 +377,7 @@ public class ProfileSupport {
 
     }
 
-    private static abstract class Validator implements Runnable {
+    private abstract static class Validator implements Runnable {
 
         protected final Context context;
         protected final URL root;
@@ -475,7 +475,7 @@ public class ProfileSupport {
             return new BinaryValidator(root, context);
         }
 
-        private final static class BinaryValidator extends Validator {
+        private static final class BinaryValidator extends Validator {
 
             private BinaryValidator(
                 @NonNull final URL root,
@@ -552,7 +552,7 @@ public class ProfileSupport {
 
         }
 
-        private final static class SourceValidator extends Validator {
+        private static final class SourceValidator extends Validator {
 
             private final File cacheRoot;
             private final ClasspathInfo resolveCps;

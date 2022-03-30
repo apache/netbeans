@@ -42,6 +42,7 @@ import org.eclipse.lsp4j.CompletionList;
 import org.eclipse.lsp4j.CompletionOptions;
 import org.eclipse.lsp4j.CompletionParams;
 import org.eclipse.lsp4j.InitializeResult;
+import org.eclipse.lsp4j.InsertReplaceEdit;
 import org.eclipse.lsp4j.MarkupContent;
 import org.eclipse.lsp4j.ParameterInformation;
 import org.eclipse.lsp4j.ServerCapabilities;
@@ -189,7 +190,14 @@ public class CompletionProviderImpl implements CompletionProvider {
                                 commit("");
                             }
                             private void commit(String appendText) {
-                                TextEdit te = i.getTextEdit();
+                                Either<TextEdit, InsertReplaceEdit> edit = i.getTextEdit();
+                                if (edit != null && edit.isRight()) {
+                                    //TODO: the NetBeans client does not current support InsertReplaceEdits, should not happen
+                                    Completion.get().hideDocumentation();
+                                    Completion.get().hideCompletion();
+                                    return ;
+                                }
+                                TextEdit te = edit != null ? edit.getLeft() : null;
                                 NbDocument.runAtomic((StyledDocument) doc, () -> {
                                     try {
                                         int endPos;

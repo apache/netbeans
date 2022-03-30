@@ -25,14 +25,8 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.GraphicsEnvironment;
 import java.awt.Insets;
-import java.awt.RenderingHints;
-import java.awt.Toolkit;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.swing.Icon;
 import javax.swing.JComponent;
@@ -46,14 +40,6 @@ import org.openide.util.Exceptions;
  * instance should ever exist.
  */
 class HtmlLabelUI extends LabelUI {
-
-    /** System property to automatically turn on antialiasing for html strings */
-    
-    static final boolean antialias = Boolean.getBoolean("nb.cellrenderer.antialiasing") // NOI18N
-         ||Boolean.getBoolean("swing.aatext") // NOI18N
-         ||(isGTK() && gtkShouldAntialias()) // NOI18N
-         || isAqua();
-    
     private static HtmlLabelUI uiInstance;
     
     private static int FIXED_HEIGHT;
@@ -71,10 +57,8 @@ class HtmlLabelUI extends LabelUI {
         }
     }
 
-    private static Map<Object,Object> hintsMap;
     private static Color unfocusedSelBg;
     private static Color unfocusedSelFg;
-    private static Boolean gtkAA;
 
     public static ComponentUI createUI(JComponent c) {
         assert c instanceof HtmlRendererImpl;
@@ -171,7 +155,7 @@ class HtmlLabelUI extends LabelUI {
         //Antialiasing affects the text metrics, so use it if needed when
         //calculating preferred size or the result here will be narrower
         //than the space actually needed
-        ((Graphics2D) g).addRenderingHints(getHints());
+        GraphicsUtils.configureDefaultRenderingHints(g);
 
         int textwidth = textWidth(text, g, font, r.isHtml()) + 4;
 
@@ -186,24 +170,6 @@ class HtmlLabelUI extends LabelUI {
         }
 
         return prefSize;
-    }
-
-    @SuppressWarnings("unchecked")
-    static final Map<?,?> getHints() {
-        //XXX We REALLY need to put this in a graphics utils lib
-        if (hintsMap == null) {
-            //Thanks to Phil Race for making this possible
-            hintsMap = (Map)(Toolkit.getDefaultToolkit().getDesktopProperty("awt.font.desktophints")); //NOI18N
-            if (hintsMap == null) {
-                hintsMap = new HashMap<Object,Object>();
-                if (antialias) {
-                    hintsMap.put(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-                }
-            }
-        }
-        Map<?,?> ret = hintsMap;
-        assert ret != null; // does this method need to be synchronized?
-        return ret;
     }
 
     public @Override void update(Graphics g, JComponent c) {
@@ -245,8 +211,7 @@ class HtmlLabelUI extends LabelUI {
     }
 
     public @Override void paint(Graphics g, JComponent c) {
-
-        ((Graphics2D) g).addRenderingHints(getHints());
+        GraphicsUtils.configureDefaultRenderingHints(g);
 
         HtmlRendererImpl r = (HtmlRendererImpl) c;
 
@@ -580,14 +545,5 @@ class HtmlLabelUI extends LabelUI {
         }
 
         return unfocusedSelFg;
-    }
-
-    public static final boolean gtkShouldAntialias() {
-        if (gtkAA == null) {
-            Object o = Toolkit.getDefaultToolkit().getDesktopProperty("gnome.Xft/Antialias"); //NOI18N
-            gtkAA = Integer.valueOf(1).equals(o);
-        }
-
-        return gtkAA.booleanValue();
     }
 }

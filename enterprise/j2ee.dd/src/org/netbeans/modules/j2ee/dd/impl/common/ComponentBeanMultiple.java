@@ -24,14 +24,18 @@
  */
 package org.netbeans.modules.j2ee.dd.impl.common;
 
+import java.util.ArrayList;
 import java.util.logging.Level;
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 import org.netbeans.modules.schema2beans.Version;
 import org.netbeans.modules.j2ee.dd.api.common.IconInterface;
 import org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException;
 import org.netbeans.modules.j2ee.dd.api.common.DisplayNameInterface;
+import org.netbeans.modules.j2ee.dd.api.common.Icon;
 
 public abstract class ComponentBeanMultiple extends DescriptionBeanMultiple implements DisplayNameInterface, IconInterface {
     
@@ -90,10 +94,10 @@ public abstract class ComponentBeanMultiple extends DescriptionBeanMultiple impl
     public void setAllDisplayNames(Map displayNames) throws VersionNotSupportedException {
         removeAllDisplayNames();
         if (displayNames!=null) {
-            java.util.Iterator entries = displayNames.entrySet().iterator();
+            Iterator<Map.Entry> entries = displayNames.entrySet().iterator();
             int i=0;
             while (entries.hasNext()) {
-                Map.Entry entry = (Map.Entry) entries.next();
+                Map.Entry entry = entries.next();
                 String key = (String) entry.getKey();
                 addDisplayName((String) entry.getValue());
                 setDisplayNameXmlLang(i++, key);
@@ -126,7 +130,7 @@ public abstract class ComponentBeanMultiple extends DescriptionBeanMultiple impl
     }
     
     public void removeDisplayNameForLocale(String locale) throws VersionNotSupportedException {
-        Map map = new java.util.HashMap();
+        Map<String, String> map = new HashMap<>();
         for (int i=0;i<sizeDisplayName();i++) {
             String desc=getDisplayName(i);
             String loc=getDisplayNameXmlLang(i);
@@ -239,7 +243,7 @@ public abstract class ComponentBeanMultiple extends DescriptionBeanMultiple impl
         return null;
     }
     public Map getAllIcons() {
-        Map map =new java.util.HashMap();
+        Map<String, String[]> map =new HashMap<>();
         org.netbeans.modules.j2ee.dd.api.common.Icon[] icons = getIcon();
         for (int i=0;i<icons.length;i++) {
             String[] iconPair = new String[] {icons[i].getSmallIcon(),icons[i].getLargeIcon()};
@@ -340,8 +344,8 @@ public abstract class ComponentBeanMultiple extends DescriptionBeanMultiple impl
     }
     
     public void removeIcon(String locale, boolean isSmall) throws VersionNotSupportedException  {
-        org.netbeans.modules.j2ee.dd.api.common.Icon[] icons = getIcon();
-        java.util.List iconList = new java.util.ArrayList();
+        Icon[] icons = getIcon();
+        List<Icon> iconList = new ArrayList<>();
         for (int i=0;i<icons.length;i++) {
             String loc=icons[i].getXmlLang();
             if ((locale==null && loc==null) || (locale!=null && locale.equalsIgnoreCase(loc))) {

@@ -248,7 +248,7 @@ public class WebFreeFormActionProvider implements ActionProvider {
         if (properties != null) {
             Iterator<Element> propertiesIt = XMLUtil.findSubElements(properties).iterator();
             while (propertiesIt.hasNext()) {
-                Element el = (Element) propertiesIt.next();
+                Element el = propertiesIt.next();
                 Element nue = script.getOwnerDocument().createElement("property"); // NOI18N
                 if (el.getLocalName().equals("property")) { // NOI18N
                     String name = el.getAttribute("name"); // NOI18N
@@ -594,7 +594,7 @@ public class WebFreeFormActionProvider implements ActionProvider {
         } catch (DataObjectNotFoundException e) {
             throw new AssertionError(e);
         }
-        LineCookie lines = (LineCookie) fileDO.getCookie(LineCookie.class);
+        LineCookie lines = fileDO.getCookie(LineCookie.class);
         if (lines != null) {
             try {
                 lines.getLineSet().getCurrent(line).show(ShowOpenType.OPEN, ShowVisibilityType.FOCUS);
@@ -620,7 +620,7 @@ public class WebFreeFormActionProvider implements ActionProvider {
             throw new AssertionError(e);
         }
         
-        EditCookie edit = (EditCookie)fileDO.getCookie(EditCookie.class);
+        EditCookie edit = fileDO.getCookie(EditCookie.class);
         if (edit != null) {
             edit.edit();
         }
@@ -665,7 +665,7 @@ public class WebFreeFormActionProvider implements ActionProvider {
         Element foldersEl = XMLUtil.findElement(data, "folders", Util.NAMESPACE); // NOI18N
         if (foldersEl != null) {
             for (Iterator<Element> i = XMLUtil.findSubElements(foldersEl).iterator(); i.hasNext();) {
-                Element sourceFolderEl = (Element)i.next();
+                Element sourceFolderEl = i.next();
                 Element typeEl = XMLUtil.findElement(sourceFolderEl , "type", Util.NAMESPACE); // NOI18N
                 if (typeEl == null || !XMLUtil.findText(typeEl).equals(type))
                     continue;

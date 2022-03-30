@@ -418,7 +418,7 @@ private void sharableProjectActionPerformed(java.awt.event.ActionEvent evt) {//G
     // Private methods ---------------------------------------------------------
     
     private String validFreeProjectName (final File parentFolder, final String formater, final int index) {
-        String name = MessageFormat.format (formater, new Object[]{Integer.valueOf(index)});                
+        String name = MessageFormat.format (formater, new Object[]{index});                
         File file = new File (parentFolder, name);
         return file.exists() ? null : name;
     }
@@ -512,7 +512,7 @@ private void sharableProjectActionPerformed(java.awt.event.ActionEvent evt) {//G
 
     public static String decorateMessage(String message) {
         if (message != null) {
-            return "<html>" + message.replaceAll("<",  "&lt;").replaceAll(">",  "&gt;") + "</html>"; // NIO18N
+            return "<html>" + message.replace("<",  "&lt;").replace(">",  "&gt;") + "</html>"; // NIO18N
         }
         return null;
     }

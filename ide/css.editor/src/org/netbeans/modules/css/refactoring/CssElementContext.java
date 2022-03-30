@@ -43,7 +43,7 @@ public abstract class CssElementContext {
 
     public abstract FileObject getFileObject();
 
-    public static abstract class AbstractFileContext extends CssElementContext {
+    public abstract static class AbstractFileContext extends CssElementContext {
 
         private FileObject fo;
 

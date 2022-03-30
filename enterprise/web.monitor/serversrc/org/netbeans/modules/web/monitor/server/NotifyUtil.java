@@ -51,10 +51,10 @@ class NotifyUtil  {
     private String ideServer = null; 
     private Vector otherIDEs = null;
     boolean errorPrinted = false;
-    private final static String putServlet =
+    private static final String putServlet =
 	    "/servlet/org.netbeans.modules.web.monitor.client.PutTransaction?"; //NOI18N  
 
-    private final static String replayServlet = 
+    private static final String replayServlet = 
 	"/servlet/org.netbeans.modules.web.monitor.client.ReplaySendXMLServlet";  //NOI18N
 
 

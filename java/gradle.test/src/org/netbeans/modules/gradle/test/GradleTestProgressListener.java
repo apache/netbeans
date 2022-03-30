@@ -65,7 +65,7 @@ import org.openide.util.Lookup;
 @ProjectServiceProvider(service = GradleProgressListenerProvider.class, projectType = NbGradleProject.GRADLE_PLUGIN_TYPE + "/java")
 public final class GradleTestProgressListener implements ProgressListener, GradleProgressListenerProvider {
 
-    final private Project project;
+    private final Project project;
     TestSession session;
 
     Map<String, Testcase> runningTests = new ConcurrentHashMap<>();
@@ -177,6 +177,7 @@ public final class GradleTestProgressListener implements ProgressListener, Gradl
         String suiteName = GradleTestSuite.suiteName(op);
         if (suiteName.equals(currentSuite.getName())) {
             Report report = session.getReport(result.getEndTime() - result.getStartTime());
+            session.finishSuite(currentSuite);
             CoreManager manager = getManager();
             if (manager != null) {
                 manager.displayReport(session, report, true);

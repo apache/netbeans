@@ -1,8 +1,9 @@
 #Signature file v4.1
-#Version 1.6
+#Version 1.9
 
 CLSS public abstract interface com.formdev.flatlaf.FlatClientProperties
 fld public final static java.lang.String BUTTON_TYPE = "JButton.buttonType"
+fld public final static java.lang.String BUTTON_TYPE_BORDERLESS = "borderless"
 fld public final static java.lang.String BUTTON_TYPE_HELP = "help"
 fld public final static java.lang.String BUTTON_TYPE_ROUND_RECT = "roundRect"
 fld public final static java.lang.String BUTTON_TYPE_SQUARE = "square"
@@ -30,6 +31,8 @@ fld public final static java.lang.String SELECT_ALL_ON_FOCUS_POLICY_ALWAYS = "al
 fld public final static java.lang.String SELECT_ALL_ON_FOCUS_POLICY_NEVER = "never"
 fld public final static java.lang.String SELECT_ALL_ON_FOCUS_POLICY_ONCE = "once"
 fld public final static java.lang.String SQUARE_SIZE = "JButton.squareSize"
+fld public final static java.lang.String STYLE = "FlatLaf.style"
+fld public final static java.lang.String STYLE_CLASS = "FlatLaf.styleClass"
 fld public final static java.lang.String TABBED_PANE_ALIGN_CENTER = "center"
 fld public final static java.lang.String TABBED_PANE_ALIGN_FILL = "fill"
 fld public final static java.lang.String TABBED_PANE_ALIGN_LEADING = "leading"
@@ -58,6 +61,9 @@ fld public final static java.lang.String TABBED_PANE_TAB_CLOSE_TOOLTIPTEXT = "JT
 fld public final static java.lang.String TABBED_PANE_TAB_HEIGHT = "JTabbedPane.tabHeight"
 fld public final static java.lang.String TABBED_PANE_TAB_ICON_PLACEMENT = "JTabbedPane.tabIconPlacement"
 fld public final static java.lang.String TABBED_PANE_TAB_INSETS = "JTabbedPane.tabInsets"
+fld public final static java.lang.String TABBED_PANE_TAB_TYPE = "JTabbedPane.tabType"
+fld public final static java.lang.String TABBED_PANE_TAB_TYPE_CARD = "card"
+fld public final static java.lang.String TABBED_PANE_TAB_TYPE_UNDERLINED = "underlined"
 fld public final static java.lang.String TABBED_PANE_TAB_WIDTH_MODE = "JTabbedPane.tabWidthMode"
 fld public final static java.lang.String TABBED_PANE_TAB_WIDTH_MODE_COMPACT = "compact"
 fld public final static java.lang.String TABBED_PANE_TAB_WIDTH_MODE_EQUAL = "equal"
@@ -66,11 +72,20 @@ fld public final static java.lang.String TABBED_PANE_TRAILING_COMPONENT = "JTabb
 fld public final static java.lang.String TAB_BUTTON_SELECTED_BACKGROUND = "JToggleButton.tab.selectedBackground"
 fld public final static java.lang.String TAB_BUTTON_UNDERLINE_COLOR = "JToggleButton.tab.underlineColor"
 fld public final static java.lang.String TAB_BUTTON_UNDERLINE_HEIGHT = "JToggleButton.tab.underlineHeight"
+fld public final static java.lang.String TEXT_FIELD_CLEAR_CALLBACK = "JTextField.clearCallback"
+fld public final static java.lang.String TEXT_FIELD_LEADING_COMPONENT = "JTextField.leadingComponent"
+fld public final static java.lang.String TEXT_FIELD_LEADING_ICON = "JTextField.leadingIcon"
+fld public final static java.lang.String TEXT_FIELD_PADDING = "JTextField.padding"
+fld public final static java.lang.String TEXT_FIELD_SHOW_CLEAR_BUTTON = "JTextField.showClearButton"
+fld public final static java.lang.String TEXT_FIELD_TRAILING_COMPONENT = "JTextField.trailingComponent"
+fld public final static java.lang.String TEXT_FIELD_TRAILING_ICON = "JTextField.trailingIcon"
 fld public final static java.lang.String TITLE_BAR_BACKGROUND = "JRootPane.titleBarBackground"
 fld public final static java.lang.String TITLE_BAR_FOREGROUND = "JRootPane.titleBarForeground"
+fld public final static java.lang.String TITLE_BAR_SHOW_ICON = "JRootPane.titleBarShowIcon"
 fld public final static java.lang.String TREE_PAINT_SELECTION = "JTree.paintSelection"
 fld public final static java.lang.String TREE_WIDE_SELECTION = "JTree.wideSelection"
 fld public final static java.lang.String USE_WINDOW_DECORATIONS = "JRootPane.useWindowDecorations"
+meth public static <%0 extends java.lang.Object> {%%0} clientProperty(javax.swing.JComponent,java.lang.String,{%%0},java.lang.Class<{%%0}>)
 meth public static boolean clientPropertyBoolean(javax.swing.JComponent,java.lang.String,boolean)
 meth public static boolean clientPropertyEquals(javax.swing.JComponent,java.lang.String,java.lang.Object)
 meth public static int clientPropertyInt(javax.swing.JComponent,java.lang.String,int)
@@ -83,6 +98,8 @@ fld public final static java.lang.String NAME = "FlatLaf Darcula"
 meth public java.lang.String getDescription()
 meth public java.lang.String getName()
 meth public static boolean install()
+ anno 0 java.lang.Deprecated()
+meth public static boolean setup()
 meth public static void installLafInfo()
 supr com.formdev.flatlaf.FlatDarkLaf
 
@@ -93,6 +110,8 @@ meth public boolean isDark()
 meth public java.lang.String getDescription()
 meth public java.lang.String getName()
 meth public static boolean install()
+ anno 0 java.lang.Deprecated()
+meth public static boolean setup()
 meth public static void installLafInfo()
 supr com.formdev.flatlaf.FlatLaf
 
@@ -141,11 +160,14 @@ fld public final static java.lang.String NAME = "FlatLaf IntelliJ"
 meth public java.lang.String getDescription()
 meth public java.lang.String getName()
 meth public static boolean install()
+ anno 0 java.lang.Deprecated()
+meth public static boolean setup()
 meth public static void installLafInfo()
 supr com.formdev.flatlaf.FlatLightLaf
 
 CLSS public abstract com.formdev.flatlaf.FlatLaf
 cons public init()
+fld public final static java.lang.Object NULL_VALUE
 innr public abstract interface static DisabledIconProvider
 meth protected java.util.List<java.lang.Class<?>> getLafClassesForDefaultsLoading()
 meth protected java.util.Properties getAdditionalDefaults()
@@ -156,13 +178,18 @@ meth public boolean isSupportedLookAndFeel()
 meth public final boolean equals(java.lang.Object)
 meth public final int hashCode()
 meth public java.lang.String getID()
+meth public java.util.Map<java.lang.String,java.lang.String> getExtraDefaults()
 meth public javax.swing.Icon getDisabledIcon(javax.swing.JComponent,javax.swing.Icon)
 meth public javax.swing.UIDefaults getDefaults()
 meth public static boolean install(javax.swing.LookAndFeel)
+ anno 0 java.lang.Deprecated()
 meth public static boolean isLafDark()
 meth public static boolean isShowMnemonics()
 meth public static boolean isUseNativeWindowDecorations()
+meth public static boolean setup(javax.swing.LookAndFeel)
 meth public static boolean supportsNativeWindowDecorations()
+meth public static java.lang.Object parseDefaultsValue(java.lang.String,java.lang.String,java.lang.Class<?>)
+meth public static java.util.Map<java.lang.String,java.lang.String> getGlobalExtraDefaults()
 meth public static javax.swing.UIDefaults$ActiveValue createActiveFontValue(float)
 meth public static void hideMnemonics()
 meth public static void initIconColors(javax.swing.UIDefaults,boolean)
@@ -170,20 +197,27 @@ meth public static void installLafInfo(java.lang.String,java.lang.Class<? extend
 meth public static void registerCustomDefaultsSource(java.io.File)
 meth public static void registerCustomDefaultsSource(java.lang.String)
 meth public static void registerCustomDefaultsSource(java.lang.String,java.lang.ClassLoader)
+meth public static void registerCustomDefaultsSource(java.net.URL)
 meth public static void repaintAllFramesAndDialogs()
 meth public static void revalidateAndRepaintAllFramesAndDialogs()
+meth public static void runWithUIDefaultsGetter(java.util.function.Function<java.lang.Object,java.lang.Object>,java.lang.Runnable)
+meth public static void setGlobalExtraDefaults(java.util.Map<java.lang.String,java.lang.String>)
 meth public static void setUseNativeWindowDecorations(boolean)
 meth public static void showMnemonics(java.awt.Component)
 meth public static void unregisterCustomDefaultsSource(java.io.File)
 meth public static void unregisterCustomDefaultsSource(java.lang.String)
 meth public static void unregisterCustomDefaultsSource(java.lang.String,java.lang.ClassLoader)
+meth public static void unregisterCustomDefaultsSource(java.net.URL)
 meth public static void updateUI()
 meth public static void updateUILater()
 meth public void initialize()
+meth public void registerUIDefaultsGetter(java.util.function.Function<java.lang.Object,java.lang.Object>)
+meth public void setExtraDefaults(java.util.Map<java.lang.String,java.lang.String>)
 meth public void uninitialize()
+meth public void unregisterUIDefaultsGetter(java.util.function.Function<java.lang.Object,java.lang.Object>)
 supr javax.swing.plaf.basic.BasicLookAndFeel
-hfds DESKTOPFONTHINTS,aquaLoaded,customDefaultsSources,desktopPropertyListener,desktopPropertyName,desktopPropertyName2,mnemonicHandler,oldPopupFactory,postInitialization,updateUIPending
-hcls ActiveFont,ImageIconUIResource
+hfds DESKTOPFONTHINTS,aquaLoaded,customDefaultsSources,desktopPropertyListener,desktopPropertyName,desktopPropertyName2,extraDefaults,globalExtraDefaults,mnemonicHandler,oldPopupFactory,postInitialization,uiDefaultsGetters,updateUIPending
+hcls ActiveFont,FlatUIDefaults,ImageIconUIResource
 
 CLSS public abstract interface static com.formdev.flatlaf.FlatLaf$DisabledIconProvider
  outer com.formdev.flatlaf.FlatLaf
@@ -196,6 +230,8 @@ meth public boolean isDark()
 meth public java.lang.String getDescription()
 meth public java.lang.String getName()
 meth public static boolean install()
+ anno 0 java.lang.Deprecated()
+meth public static boolean setup()
 meth public static void installLafInfo()
 supr com.formdev.flatlaf.FlatLaf
 
@@ -215,6 +251,7 @@ hfds baseTheme,dark,name,properties
 CLSS public abstract interface com.formdev.flatlaf.FlatSystemProperties
 fld public final static java.lang.String ANIMATION = "flatlaf.animation"
 fld public final static java.lang.String MENUBAR_EMBEDDED = "flatlaf.menuBarEmbedded"
+fld public final static java.lang.String NATIVE_LIBRARY_PATH = "flatlaf.nativeLibraryPath"
 fld public final static java.lang.String UI_SCALE = "flatlaf.uiScale"
 fld public final static java.lang.String UI_SCALE_ALLOW_SCALE_DOWN = "flatlaf.uiScale.allowScaleDown"
 fld public final static java.lang.String UI_SCALE_ENABLED = "flatlaf.uiScale.enabled"
@@ -232,6 +269,8 @@ fld public final java.lang.String author
 fld public final java.lang.String name
 innr public static ThemeLaf
 meth public static boolean install(java.io.InputStream)
+ anno 0 java.lang.Deprecated()
+meth public static boolean setup(java.io.InputStream)
 meth public static com.formdev.flatlaf.FlatLaf createLaf(com.formdev.flatlaf.IntelliJTheme)
 meth public static com.formdev.flatlaf.FlatLaf createLaf(java.io.InputStream) throws java.io.IOException
 supr java.lang.Object
@@ -307,10 +346,20 @@ CLSS public com.formdev.flatlaf.util.ColorFunctions
 cons public init()
 innr public abstract interface static ColorFunction
 innr public static Fade
+innr public static HSLChange
 innr public static HSLIncreaseDecrease
+innr public static Mix
 meth public !varargs static java.awt.Color applyFunctions(java.awt.Color,com.formdev.flatlaf.util.ColorFunctions$ColorFunction[])
 meth public static float clamp(float)
+meth public static float luma(java.awt.Color)
+meth public static java.awt.Color darken(java.awt.Color,float)
+meth public static java.awt.Color desaturate(java.awt.Color,float)
+meth public static java.awt.Color lighten(java.awt.Color,float)
 meth public static java.awt.Color mix(java.awt.Color,java.awt.Color,float)
+meth public static java.awt.Color saturate(java.awt.Color,float)
+meth public static java.awt.Color shade(java.awt.Color,float)
+meth public static java.awt.Color spin(java.awt.Color,float)
+meth public static java.awt.Color tint(java.awt.Color,float)
 supr java.lang.Object
 
 CLSS public abstract interface static com.formdev.flatlaf.util.ColorFunctions$ColorFunction
@@ -326,6 +375,16 @@ meth public java.lang.String toString()
 meth public void apply(float[])
 supr java.lang.Object
 
+CLSS public static com.formdev.flatlaf.util.ColorFunctions$HSLChange
+ outer com.formdev.flatlaf.util.ColorFunctions
+cons public init(int,float)
+fld public final float value
+fld public final int hslIndex
+intf com.formdev.flatlaf.util.ColorFunctions$ColorFunction
+meth public java.lang.String toString()
+meth public void apply(float[])
+supr java.lang.Object
+
 CLSS public static com.formdev.flatlaf.util.ColorFunctions$HSLIncreaseDecrease
  outer com.formdev.flatlaf.util.ColorFunctions
 cons public init(int,boolean,float,boolean,boolean)
@@ -336,6 +395,16 @@ fld public final float amount
 fld public final int hslIndex
 intf com.formdev.flatlaf.util.ColorFunctions$ColorFunction
 meth protected boolean shouldInverse(float[])
+meth public java.lang.String toString()
+meth public void apply(float[])
+supr java.lang.Object
+
+CLSS public static com.formdev.flatlaf.util.ColorFunctions$Mix
+ outer com.formdev.flatlaf.util.ColorFunctions
+cons public init(java.awt.Color,float)
+fld public final float weight
+fld public final java.awt.Color color2
+intf com.formdev.flatlaf.util.ColorFunctions$ColorFunction
 meth public java.lang.String toString()
 meth public void apply(float[])
 supr java.lang.Object
@@ -425,7 +494,6 @@ meth public void fillPolygon(int[],int[],int)
 meth public void fillPolygon(java.awt.Polygon)
 meth public void fillRect(int,int,int,int)
 meth public void fillRoundRect(int,int,int,int,int,int)
-meth public void finalize()
 meth public void rotate(double)
 meth public void rotate(double,double,double)
 meth public void scale(double,double)
@@ -527,6 +595,7 @@ meth public static java.util.List<java.awt.Image> getResolutionVariants(java.awt
 supr java.lang.Object
 
 CLSS public com.formdev.flatlaf.util.NativeLibrary
+cons public init(java.io.File,boolean)
 cons public init(java.lang.String,java.lang.ClassLoader,boolean)
 meth public boolean isLoaded()
 supr java.lang.Object
@@ -550,18 +619,52 @@ meth public void paintIcon(java.awt.Component,java.awt.Graphics,int,int)
 supr java.lang.Object
 hfds iconHeight,iconWidth,imageIcon,lastImage,lastSystemScaleFactor,lastUserScaleFactor
 
+CLSS public com.formdev.flatlaf.util.SoftCache<%0 extends java.lang.Object, %1 extends java.lang.Object>
+cons public init()
+cons public init(int)
+intf java.util.Map<{com.formdev.flatlaf.util.SoftCache%0},{com.formdev.flatlaf.util.SoftCache%1}>
+meth public boolean containsKey(java.lang.Object)
+meth public boolean containsValue(java.lang.Object)
+meth public boolean isEmpty()
+meth public int size()
+meth public java.util.Collection<{com.formdev.flatlaf.util.SoftCache%1}> values()
+meth public java.util.Set<java.util.Map$Entry<{com.formdev.flatlaf.util.SoftCache%0},{com.formdev.flatlaf.util.SoftCache%1}>> entrySet()
+meth public java.util.Set<{com.formdev.flatlaf.util.SoftCache%0}> keySet()
+meth public void clear()
+meth public void forEach(java.util.function.BiConsumer<? super {com.formdev.flatlaf.util.SoftCache%0},? super {com.formdev.flatlaf.util.SoftCache%1}>)
+meth public void putAll(java.util.Map<? extends {com.formdev.flatlaf.util.SoftCache%0},? extends {com.formdev.flatlaf.util.SoftCache%1}>)
+meth public void replaceAll(java.util.function.BiFunction<? super {com.formdev.flatlaf.util.SoftCache%0},? super {com.formdev.flatlaf.util.SoftCache%1},? extends {com.formdev.flatlaf.util.SoftCache%1}>)
+meth public {com.formdev.flatlaf.util.SoftCache%1} get(java.lang.Object)
+meth public {com.formdev.flatlaf.util.SoftCache%1} put({com.formdev.flatlaf.util.SoftCache%0},{com.formdev.flatlaf.util.SoftCache%1})
+meth public {com.formdev.flatlaf.util.SoftCache%1} remove(java.lang.Object)
+supr java.lang.Object
+hfds map,queue
+hcls CacheReference
+
 CLSS public com.formdev.flatlaf.util.StringUtils
 cons public init()
 meth public static boolean isEmpty(java.lang.String)
+meth public static boolean isTrimmedEmpty(java.lang.String)
 meth public static java.lang.String removeLeading(java.lang.String,java.lang.String)
 meth public static java.lang.String removeTrailing(java.lang.String,java.lang.String)
+meth public static java.lang.String substringTrimmed(java.lang.String,int)
+meth public static java.lang.String substringTrimmed(java.lang.String,int,int)
 meth public static java.util.List<java.lang.String> split(java.lang.String,char)
+meth public static java.util.List<java.lang.String> split(java.lang.String,char,boolean,boolean)
+supr java.lang.Object
+
+CLSS public com.formdev.flatlaf.util.SwingUtils
+cons public init()
+meth public static <%0 extends java.awt.Component> {%%0} getComponentByName(java.awt.Container,java.lang.String)
 supr java.lang.Object
 
 CLSS public com.formdev.flatlaf.util.SystemInfo
 cons public init()
+fld public final static boolean isAARCH64
 fld public final static boolean isJava_11_orLater
 fld public final static boolean isJava_15_orLater
+fld public final static boolean isJava_17_orLater
+fld public final static boolean isJava_18_orLater
 fld public final static boolean isJava_9_orLater
 fld public final static boolean isJetBrainsJVM
 fld public final static boolean isJetBrainsJVM_11_orLater
@@ -576,6 +679,8 @@ fld public final static boolean isWebswing
 fld public final static boolean isWinPE
 fld public final static boolean isWindows
 fld public final static boolean isWindows_10_orLater
+fld public final static boolean isWindows_11_orLater
+fld public final static boolean isX86
 fld public final static boolean isX86_64
 fld public final static long javaVersion
 fld public final static long osVersion
@@ -588,6 +693,7 @@ cons public init()
 meth public static boolean isSystemScalingEnabled()
 meth public static double getSystemScaleFactor(java.awt.Graphics2D)
 meth public static double getSystemScaleFactor(java.awt.GraphicsConfiguration)
+meth public static float computeFontScaleFactor(java.awt.Font)
 meth public static float getUserScaleFactor()
 meth public static float scale(float)
 meth public static float unscale(float)
@@ -893,6 +999,34 @@ CLSS public abstract interface !annotation java.lang.annotation.Target
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE])
 intf java.lang.annotation.Annotation
 meth public abstract java.lang.annotation.ElementType[] value()
+
+CLSS public abstract interface java.util.Map<%0 extends java.lang.Object, %1 extends java.lang.Object>
+innr public abstract interface static Entry
+meth public abstract boolean containsKey(java.lang.Object)
+meth public abstract boolean containsValue(java.lang.Object)
+meth public abstract boolean equals(java.lang.Object)
+meth public abstract boolean isEmpty()
+meth public abstract int hashCode()
+meth public abstract int size()
+meth public abstract java.util.Collection<{java.util.Map%1}> values()
+meth public abstract java.util.Set<java.util.Map$Entry<{java.util.Map%0},{java.util.Map%1}>> entrySet()
+meth public abstract java.util.Set<{java.util.Map%0}> keySet()
+meth public abstract void clear()
+meth public abstract void putAll(java.util.Map<? extends {java.util.Map%0},? extends {java.util.Map%1}>)
+meth public abstract {java.util.Map%1} get(java.lang.Object)
+meth public abstract {java.util.Map%1} put({java.util.Map%0},{java.util.Map%1})
+meth public abstract {java.util.Map%1} remove(java.lang.Object)
+meth public boolean remove(java.lang.Object,java.lang.Object)
+meth public boolean replace({java.util.Map%0},{java.util.Map%1},{java.util.Map%1})
+meth public void forEach(java.util.function.BiConsumer<? super {java.util.Map%0},? super {java.util.Map%1}>)
+meth public void replaceAll(java.util.function.BiFunction<? super {java.util.Map%0},? super {java.util.Map%1},? extends {java.util.Map%1}>)
+meth public {java.util.Map%1} compute({java.util.Map%0},java.util.function.BiFunction<? super {java.util.Map%0},? super {java.util.Map%1},? extends {java.util.Map%1}>)
+meth public {java.util.Map%1} computeIfAbsent({java.util.Map%0},java.util.function.Function<? super {java.util.Map%0},? extends {java.util.Map%1}>)
+meth public {java.util.Map%1} computeIfPresent({java.util.Map%0},java.util.function.BiFunction<? super {java.util.Map%0},? super {java.util.Map%1},? extends {java.util.Map%1}>)
+meth public {java.util.Map%1} getOrDefault(java.lang.Object,{java.util.Map%1})
+meth public {java.util.Map%1} merge({java.util.Map%0},{java.util.Map%1},java.util.function.BiFunction<? super {java.util.Map%1},? super {java.util.Map%1},? extends {java.util.Map%1}>)
+meth public {java.util.Map%1} putIfAbsent({java.util.Map%0},{java.util.Map%1})
+meth public {java.util.Map%1} replace({java.util.Map%0},{java.util.Map%1})
 
 CLSS public abstract interface javax.swing.Icon
 meth public abstract int getIconHeight()

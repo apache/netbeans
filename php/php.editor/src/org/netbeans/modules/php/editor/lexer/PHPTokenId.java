@@ -60,6 +60,7 @@ public enum PHPTokenId implements TokenId {
     PHP_TYPE_VOID("void", "keyword"), //NOI18N
     PHP_TYPE_OBJECT("object", "keyword"), //NOI18N
     PHP_TYPE_MIXED("mixed", "keyword"), //NOI18N
+    PHP_TYPE_NEVER("never", "keyword"), //NOI18N NETBEANS-5599 PHP 8.1
     PHP_FINAL(null, "keyword"), //NOI18N
     PHP_PAAMAYIM_NEKUDOTAYIM(null, "operator"), //NOI18N
     PHP_EXTENDS(null, "keyword"), //NOI18N
@@ -168,7 +169,9 @@ public enum PHPTokenId implements TokenId {
     PHP__METHOD__(null, "constant"), //NOI18N
     PHP_TRUE(null, "keyword"), //NOI18N
     PHP_FALSE(null, "keyword"), //NOI18N
-    PHP_NULL(null, "keyword"); //NOI18N
+    PHP_NULL(null, "keyword"), // NOI18N
+    PHP_READONLY(null, "keyword"), // NOI18N NETBEANS-5599 PHP 8.1
+    ;
 
     private final String fixedText;
     private final String primaryCategory;

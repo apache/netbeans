@@ -168,7 +168,7 @@ public class QueryNode implements Query {
         if (_select.hasAsteriskQualifier()) {  // NOI18N
 
             // Hack - if there's a star, just replace the whole list
-            ArrayList columns = new ArrayList();
+            List<ColumnNode> columns = new ArrayList<>();
 
             // Get the list of table objects from FROM
             List<Table> tables = _from.getTables();
@@ -177,13 +177,13 @@ public class QueryNode implements Query {
             for (int i=0; i<tables.size(); i++) {
                 TableNode tbl = (TableNode) tables.get(i);
                 String fullTableName = tbl.getFullTableName();
-		List columnNames = new ArrayList();
+		List<String> columnNames = new ArrayList<>();
 		tableReader.getColumnNames(fullTableName, columnNames);
                 String corrName=tbl.getCorrName();
                 String tableName=tbl.getTableName();
                 String schemaName=tbl.getSchemaName();
                 for (int j=0; j<columnNames.size(); j++) {
-                    String columnName = (String) columnNames.get(j);
+                    String columnName = columnNames.get(j);
                     columns.add(new ColumnNode(tableName, columnName, corrName, schemaName));
                 }
             }

@@ -64,7 +64,10 @@ import javax.lang.model.type.TypeVariable;
 import javax.lang.model.type.WildcardType;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
+import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
+import org.netbeans.api.editor.document.LineDocument;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.editor.mimelookup.MimeRegistration;
 import org.netbeans.api.java.lexer.JavaTokenId;
 import org.netbeans.api.java.source.CodeStyle;
@@ -158,6 +161,7 @@ public class JavaCompletionCollector implements CompletionCollector {
             JavaCompletionTask.LambdaItemFactory<Completion>, JavaCompletionTask.ModuleItemFactory<Completion> {
 
         private static final Set<String> SUPPORTED_ELEMENT_KINDS = new HashSet<>(Arrays.asList("PACKAGE", "CLASS", "INTERFACE", "ENUM", "ANNOTATION_TYPE", "METHOD", "CONSTRUCTOR", "INSTANCE_INIT", "STATIC_INIT", "FIELD", "ENUM_CONSTANT", "TYPE_PARAMETER", "MODULE"));
+        private static final String EMPTY = "";
         private static final String ERROR = "<error>";
         private static final int DEPRECATED = 10;
         private final Document doc;
@@ -180,7 +184,7 @@ public class JavaCompletionCollector implements CompletionCollector {
             return CompletionCollector.newBuilder(kwd)
                     .kind(Completion.Kind.Keyword)
                     .sortText(String.format("%04d%s", smartType ? 670 : 1670, kwd))
-                    .insertText(kwd + postfix)
+                    .insertText(postfix != null ? kwd + postfix : kwd)
                     .insertTextFormat(Completion.TextFormat.PlainText)
                     .build();
         }
@@ -200,7 +204,7 @@ public class JavaCompletionCollector implements CompletionCollector {
             return CompletionCollector.newBuilder(simpleName)
                     .kind(Completion.Kind.Folder)
                     .sortText(String.format("%04d%s#%s", 1900, simpleName, pkgFQN))
-                    .insertText(simpleName + (inPackageStatement ? "" : "."))
+                    .insertText(simpleName + (inPackageStatement ? EMPTY : "."))
                     .insertTextFormat(Completion.TextFormat.PlainText)
                     .build();
         }
@@ -251,7 +255,7 @@ public class JavaCompletionCollector implements CompletionCollector {
                 TypeElement elem = (TypeElement)dt.asElement();
                 String name = elem.getQualifiedName().toString();
                 int idx = name.lastIndexOf('.');
-                String pkgName = idx < 0 ? "" : name.substring(0, idx);
+                String pkgName = idx < 0 ? EMPTY : name.substring(0, idx);
                 CompletionCollector.Builder builder = CompletionCollector.newBuilder(new StringBuilder(label).insert(0, elem.getSimpleName()).toString())
                         .kind(elementKind2CompletionItemKind(elem.getKind()))
                         .sortText(String.format("%04d%s#%02d#%s", 800, elem.getSimpleName().toString(), Utilities.getImportanceLevel(name), pkgName))
@@ -301,14 +305,14 @@ public class JavaCompletionCollector implements CompletionCollector {
             if (castType != null) {
                 try {
                     int castStartOffset = assignToVarOffset;
+                    TreePath tp = info.getTreeUtilities().pathFor(substitutionOffset);
                     if (castStartOffset < 0) {
-                        TreePath tp = info.getTreeUtilities().pathFor(substitutionOffset);
                         if (tp != null && tp.getLeaf().getKind() == Tree.Kind.MEMBER_SELECT) {
                             castStartOffset = (int)info.getTrees().getSourcePositions().getStartPosition(tp.getCompilationUnit(), tp.getLeaf());
                         }
                     }
                     StringBuilder castText = new StringBuilder();
-                    castText.append("((").append(Utilities.getTypeName(info, castType, false)).append(CodeStyle.getDefault(info.getDocument()).spaceAfterTypeCast() ? ") " : ")");
+                    castText.append("((").append(AutoImport.resolveImport(info, tp, castType)).append(CodeStyle.getDefault(info.getDocument()).spaceAfterTypeCast() ? ") " : ")");
                     int castEndOffset = findCastEndPosition(info.getTokenHierarchy().tokenSequence(JavaTokenId.language()), castStartOffset, substitutionOffset);
                     if (castEndOffset >= 0) {
                         castText.append(info.getText().subSequence(castStartOffset, castEndOffset)).append(")");
@@ -382,8 +386,16 @@ public class JavaCompletionCollector implements CompletionCollector {
                         GeneratorUtils.generateMethodOverride(wc, tp, elem, substitutionOffset);
                     }
                 });
-                if (textEdit != null) {
-                    builder.textEdit(textEdit);
+                if (textEdit != null && doc instanceof LineDocument) {
+                    try {
+                        int idx = LineDocumentUtils.getLineIndex((LineDocument) doc, substitutionOffset);
+                        if (idx == LineDocumentUtils.getLineIndex((LineDocument) doc, textEdit.getStartOffset()) && idx == LineDocumentUtils.getLineIndex((LineDocument) doc, textEdit.getEndOffset())) {
+                            builder.textEdit(textEdit);
+                        } else {
+                            builder.textEdit(new TextEdit(substitutionOffset, substitutionOffset, EMPTY))
+                                    .additionalTextEdits(Collections.singletonList(textEdit));
+                        }
+                    } catch (BadLocationException badLocationException) {}
                 }
             } catch (IOException ex) {
             }
@@ -443,8 +455,16 @@ public class JavaCompletionCollector implements CompletionCollector {
                         }
                     }
                 });
-                if (textEdit != null) {
-                    builder.textEdit(textEdit);
+                if (textEdit != null && doc instanceof LineDocument) {
+                    try {
+                        int idx = LineDocumentUtils.getLineIndex((LineDocument) doc, substitutionOffset);
+                        if (idx == LineDocumentUtils.getLineIndex((LineDocument) doc, textEdit.getStartOffset()) && idx == LineDocumentUtils.getLineIndex((LineDocument) doc, textEdit.getEndOffset())) {
+                            builder.textEdit(textEdit);
+                        } else {
+                            builder.textEdit(new TextEdit(substitutionOffset, substitutionOffset, EMPTY))
+                                    .additionalTextEdits(Collections.singletonList(textEdit));
+                        }
+                    } catch (BadLocationException badLocationException) {}
                 }
             } catch (IOException ex) {
             }
@@ -699,8 +719,16 @@ public class JavaCompletionCollector implements CompletionCollector {
                         }
                     }
                 });
-                if (textEdit != null) {
-                    builder.textEdit(textEdit);
+                if (textEdit != null && doc instanceof LineDocument) {
+                    try {
+                        int idx = LineDocumentUtils.getLineIndex((LineDocument) doc, substitutionOffset);
+                        if (idx == LineDocumentUtils.getLineIndex((LineDocument) doc, textEdit.getStartOffset()) && idx == LineDocumentUtils.getLineIndex((LineDocument) doc, textEdit.getEndOffset())) {
+                            builder.textEdit(textEdit);
+                        } else {
+                            builder.textEdit(new TextEdit(substitutionOffset, substitutionOffset, EMPTY))
+                                    .additionalTextEdits(Collections.singletonList(textEdit));
+                        }
+                    } catch (BadLocationException badLocationException) {}
                 }
             } catch (IOException ex) {
             }
@@ -767,7 +795,7 @@ public class JavaCompletionCollector implements CompletionCollector {
         private Completion createTypeItem(CompilationInfo info, String prefix, ElementHandle<TypeElement> handle, TypeElement elem, DeclaredType type, int substitutionOffset, ReferencesCount referencesCount, boolean isDeprecated, boolean insideNew, boolean addTypeVars, boolean addSimpleName, boolean smartType) {
             String name = elem.getQualifiedName().toString();
             int idx = name.lastIndexOf('.');
-            String pkgName = idx < 0 ? "" : name.substring(0, idx);
+            String pkgName = idx < 0 ? EMPTY : name.substring(0, idx);
             StringBuilder label = new StringBuilder();
             StringBuilder insertText = new StringBuilder();
             if (prefix != null) {
@@ -876,9 +904,7 @@ public class JavaCompletionCollector implements CompletionCollector {
             StringBuilder insertText = new StringBuilder();
             StringBuilder sortParams = new StringBuilder();
             label.append(simpleName).append("(");
-            if (elem.getKind() == ElementKind.METHOD || offset - substitutionOffset == simpleName.length()) {
-                insertText.append(simpleName);
-            }
+            insertText.append(simpleName);
             if (!inImport && !memberRef) {
                 insertText.append(CodeStyle.getDefault(doc).spaceBeforeMethodCallParen() ? " (" : "(");
             }
@@ -947,15 +973,15 @@ public class JavaCompletionCollector implements CompletionCollector {
             String filter = null;
             if (castType != null) {
                 try {
+                    TreePath tp = info.getTreeUtilities().pathFor(substitutionOffset);
                     int castStartOffset = assignToVarOffset;
                     if (castStartOffset < 0) {
-                        TreePath tp = info.getTreeUtilities().pathFor(substitutionOffset);
                         if (tp != null && tp.getLeaf().getKind() == Tree.Kind.MEMBER_SELECT) {
                             castStartOffset = (int)info.getTrees().getSourcePositions().getStartPosition(tp.getCompilationUnit(), tp.getLeaf());
                         }
                     }
                     StringBuilder castText = new StringBuilder();
-                    castText.append("((").append(Utilities.getTypeName(info, castType, false)).append(CodeStyle.getDefault(info.getDocument()).spaceAfterTypeCast() ? ") " : ")");
+                    castText.append("((").append(AutoImport.resolveImport(info, tp, castType)).append(CodeStyle.getDefault(info.getDocument()).spaceAfterTypeCast() ? ") " : ")");
                     int castEndOffset = findCastEndPosition(info.getTokenHierarchy().tokenSequence(JavaTokenId.language()), castStartOffset, substitutionOffset);
                     if (castEndOffset >= 0) {
                         castText.append(info.getText().subSequence(castStartOffset, castEndOffset)).append(")");
@@ -1095,7 +1121,7 @@ public class JavaCompletionCollector implements CompletionCollector {
             if (t1.getKind().isPrimitive() && types.isSameType(types.boxedClass((PrimitiveType)t1).asType(), t2)) {
                 return true;
             }
-            return t2.getKind().isPrimitive() && types.isSameType(t1, types.boxedClass((PrimitiveType)t1).asType());
+            return t2.getKind().isPrimitive() && types.isSameType(t1, types.boxedClass((PrimitiveType)t2).asType());
         }
 
         private static boolean isOfKind(Element e, EnumSet<ElementKind> kinds) {

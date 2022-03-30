@@ -20,6 +20,29 @@
     under the License.
 
 -->
+## Version 13.0.601
+* Added base code completion for Spock test framework
+  * Spock Block Names are offered inside methods if the class extends Spock Specification
+  * Parameter names are offered, if the parameters are defined in a method name that is annotated with @Unroll
+* Added Outline view for Groovy files
+
+## Version 12.6.301
+* Project Explorer to display logical project structure, dependencies and project files introduced
+* Dedicated form for Change method parameters refactoring 
+* Organize Imports added, see `Netbeans > Java > Imports:` _settings_ for customizations
+* Setting `NetBeans: Userdir = global | local` added to run Language Server per workspace or globally for user
+* Run Configurations panel added to allow intuitive configuration of Run & Debug
+* Java Outline view provides all details for selected file
+* Numerous bug fixes and stability improvements in all areas
+
+## Version 12.5.301
+* Number of refactorings added
+* Attach to Native Image launch config added for Native Image Debugger
+* Native Image debugger visually distinguishes when Java code was not included in binary by native-image tool.
+* Groovy Support for Spock tests enabled by default
+* Java 8+ launch config accepts arguments for ENV and CWD
+* JDK17 support
+* Supporting VS Code 1.59 official API and UI for running tests
 
 ## Version 12.4.301
 

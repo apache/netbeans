@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.javascript2.editor.navigation;
 
+import java.util.IdentityHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.netbeans.modules.javascript2.model.api.JsElement;
@@ -35,27 +36,34 @@ import org.netbeans.modules.javascript2.model.api.Occurrence;
 public class OccurrencesSupport {
 
     private static final Logger LOGGER = Logger.getLogger(OccurrencesSupport.class.getName());
-    
+
     private final Model model;
 
     public OccurrencesSupport(Model model) {
         this.model = model;
     }
-    
+
     public Occurrence getOccurrence(int offset) {
         Occurrence result;
         long start = System.currentTimeMillis();
         JsObject object = model.getGlobalObject();
-        result = findOccurrence(object, offset);
+        IdentityHashMap<JsObject,Void> scannedElements = new IdentityHashMap<>();
+        result = findOccurrence(object, offset, scannedElements);
+        scannedElements.clear();
         if (result == null) {
-            result = findDeclaration(object, offset);
+            result = findDeclaration(object, offset, scannedElements);
         }
         long end = System.currentTimeMillis();
         LOGGER.log(Level.FINE, "Computing getOccurences({0}) took {1}ms. Returns {2}", new Object[]{offset, end - start, result});
         return result;
     }
-    
-    private Occurrence findOccurrence(JsObject object, int offset) {
+
+    private Occurrence findOccurrence(JsObject object, int offset, IdentityHashMap<JsObject,Void> scannedElements) {
+        if(scannedElements.containsKey(object)) {
+            return null;
+        } else {
+            scannedElements.put(object, null);
+        }
         Occurrence result = null;
         JsElement.Kind kind = object.getJSKind();
         for(Occurrence occurrence: object.getOccurrences()) {
@@ -65,10 +73,10 @@ public class OccurrencesSupport {
             }
             if (kind.isFunction() || kind == JsElement.Kind.CATCH_BLOCK) {
                 for(JsObject param : ((JsFunction)object).getParameters()) {
-                 result = findOccurrence(param, offset);
+                 result = findOccurrence(param, offset, scannedElements);
                     if (result != null) {
                         break;
-                    }   
+                    }
                 }
                 if (result != null) {
                     return result;
@@ -77,7 +85,7 @@ public class OccurrencesSupport {
             if (!(object instanceof JsReference && ModelUtils.isDescendant(object, ((JsReference)object).getOriginal()))) {
                 for(JsObject property: object.getProperties().values()) {
                     if (!(property instanceof JsReference && !((JsReference)property).getOriginal().isAnonymous())) {
-                        result = findOccurrence(property, offset);
+                        result = findOccurrence(property, offset, scannedElements);
                         if (result != null) {
                             break;
                         }
@@ -92,8 +100,13 @@ public class OccurrencesSupport {
             }
         return result;
     }
-    
-    private Occurrence findDeclaration (JsObject object, int offset) {
+
+    private Occurrence findDeclaration (JsObject object, int offset, IdentityHashMap<JsObject,Void> scannedElements) {
+        if(scannedElements.containsKey(object)) {
+            return null;
+        } else {
+            scannedElements.put(object, null);
+        }
         Occurrence result = null;
         JsElement.Kind kind = object.getJSKind();
         if (kind != JsElement.Kind.ANONYMOUS_OBJECT && kind != JsElement.Kind.WITH_OBJECT
@@ -105,9 +118,9 @@ public class OccurrencesSupport {
                 propertyName = propertyName.substring(propertyName.lastIndexOf(' ') + 1);
                 JsObject property = object.getParent().getProperty(propertyName);
                 if (property != null) {
-                    return new Occurrence(property.getDeclarationName().getOffsetRange(), property); 
+                    return new Occurrence(property.getDeclarationName().getOffsetRange(), property);
                 }
-            } 
+            }
 
             result = new Occurrence(object.getDeclarationName().getOffsetRange(), object);
         }
@@ -122,7 +135,7 @@ public class OccurrencesSupport {
         if (result == null) {
             for(JsObject property: object.getProperties().values()) {
                 if (!(property instanceof JsReference)) {
-                    result = findDeclaration(property, offset);
+                    result = findDeclaration(property, offset, scannedElements);
                     if (result != null) {
                         break;
                     }

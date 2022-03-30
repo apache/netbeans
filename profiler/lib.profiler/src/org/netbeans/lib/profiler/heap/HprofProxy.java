@@ -94,7 +94,7 @@ class HprofProxy {
                     offset = Integer.valueOf(0);
                 }
                 if (len == null) {
-                    len = new Integer(chars.getLength());
+                    len = chars.getLength();
                 }
                 char[] charArr = getChars(chars, coder, offset.intValue(), len.intValue());
 

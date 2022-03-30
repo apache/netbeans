@@ -24,6 +24,7 @@ import java.io.FileWriter;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.Writer;
+import java.nio.charset.StandardCharsets;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.textmate.lexer.api.GrammarInjectionRegistration;
 import org.netbeans.modules.textmate.lexer.api.GrammarRegistration;
@@ -65,7 +66,7 @@ public class CreateRegistrationProcessorTest extends NbTestCase {
             AnnotationProcessorTestUtils.runJavac(getWorkDir(), null, outDir, null, System.err)
             );
         
-        try (Reader r = new InputStreamReader(new FileInputStream(new File(new File(outDir, "META-INF"), "generated-layer.xml")), "UTF-8")) {
+        try (Reader r = new InputStreamReader(new FileInputStream(new File(new File(outDir, "META-INF"), "generated-layer.xml")), StandardCharsets.UTF_8)) {
             StringBuilder content = new StringBuilder();
             int read;
             
@@ -113,7 +114,7 @@ public class CreateRegistrationProcessorTest extends NbTestCase {
             AnnotationProcessorTestUtils.runJavac(getWorkDir(), null, outDir, null, System.err)
             );
 
-        try (Reader r = new InputStreamReader(new FileInputStream(new File(new File(outDir, "META-INF"), "generated-layer.xml")), "UTF-8")) {
+        try (Reader r = new InputStreamReader(new FileInputStream(new File(new File(outDir, "META-INF"), "generated-layer.xml")), StandardCharsets.UTF_8)) {
             StringBuilder content = new StringBuilder();
             int read;
 

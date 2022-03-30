@@ -60,7 +60,7 @@ public abstract class ActionManager<A extends SystemAction, S extends CallbackSy
      * holds set of windows for which their ActionMap was modified
      */
     private final Set<TopComponent> activatedOnWindows =
-            new WeakSet<TopComponent>(8);
+            new WeakSet<>(8);
     /**
      *
      */
@@ -136,7 +136,7 @@ public abstract class ActionManager<A extends SystemAction, S extends CallbackSy
             Action ls = getAction();
             actionMap.put(key, ls);
             win.putClientProperty(getMappedActionKey(),
-                    new WeakReference<Action>(ls));
+                    new WeakReference<>(ls));
         }
     }
 

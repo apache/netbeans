@@ -95,7 +95,7 @@ public abstract class ActionInvoker extends Object {
     /** Special class that can be passed to invokeAction and delegates
      * to correct values
      */
-    private static abstract class ActionRunnable implements Action {
+    private abstract static class ActionRunnable implements Action {
         final ActionEvent ev;
         final Action action;
         final boolean async;

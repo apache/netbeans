@@ -338,7 +338,7 @@ public final class Version {
             return Integer.valueOf(0).compareTo(o2);
         }
         if (o2 == null) {
-            return o1.compareTo(Integer.valueOf(0));
+            return o1.compareTo(0);
         }
         return o1.compareTo(o2);
     }

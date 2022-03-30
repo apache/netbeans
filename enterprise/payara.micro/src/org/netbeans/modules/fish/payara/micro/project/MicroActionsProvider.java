@@ -23,32 +23,17 @@ import static org.netbeans.modules.fish.payara.micro.plugin.Constants.MAVEN_WAR_
 import static org.netbeans.modules.fish.payara.micro.plugin.Constants.PROFILE_SINGLE_ACTION;
 import static org.netbeans.modules.fish.payara.micro.plugin.Constants.RUN_SINGLE_ACTION;
 import static org.netbeans.modules.fish.payara.micro.plugin.Constants.WAR_PACKAGING;
-import org.netbeans.modules.fish.payara.micro.project.MicroApplication;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
 import java.util.prefs.Preferences;
 import org.netbeans.api.annotations.common.StaticResource;
 import org.netbeans.api.project.Project;
 import static org.netbeans.api.project.ProjectUtils.getPreferences;
-import static org.netbeans.modules.fish.payara.micro.plugin.Constants.COMPILE_EXPLODE_ACTION;
-import static org.netbeans.modules.fish.payara.micro.plugin.Constants.COMPILE_GOAL;
-import static org.netbeans.modules.fish.payara.micro.plugin.Constants.DEBUG_ACTION;
-import static org.netbeans.modules.fish.payara.micro.plugin.Constants.EXPLODED_GOAL;
-import static org.netbeans.modules.fish.payara.micro.plugin.Constants.EXPLODE_ACTION;
-import static org.netbeans.modules.fish.payara.micro.plugin.Constants.PROFILE_ACTION;
-import static org.netbeans.modules.fish.payara.micro.plugin.Constants.RESOURCES_GOAL;
-import static org.netbeans.modules.fish.payara.micro.plugin.Constants.RUN_ACTION;
-import static org.netbeans.modules.fish.payara.micro.plugin.Constants.START_GOAL;
-import static org.netbeans.modules.fish.payara.micro.plugin.Constants.STOP_ACTION;
-import static org.netbeans.modules.fish.payara.micro.plugin.Constants.STOP_GOAL;
+import static org.netbeans.modules.fish.payara.micro.plugin.Constants.HOT_DEPLOY;
 import static org.netbeans.modules.fish.payara.micro.plugin.Constants.VERSION;
-import static org.netbeans.modules.fish.payara.micro.plugin.Constants.WAR_GOAL;
 import org.netbeans.modules.maven.api.NbMavenProject;
 import org.netbeans.modules.maven.api.execute.RunConfig;
 import org.netbeans.modules.maven.execute.model.NetbeansActionMapping;
-import org.netbeans.modules.maven.j2ee.J2eeActionsProvider;
 import org.netbeans.modules.maven.spi.actions.AbstractMavenActionsProvider;
 import org.netbeans.modules.maven.spi.actions.MavenActionsProvider;
 import static org.netbeans.spi.project.ActionProvider.COMMAND_DEBUG;
@@ -107,9 +92,13 @@ public class MicroActionsProvider implements MavenActionsProvider {
         if (microApplication != null) {
             Preferences pref = getPreferences(project, MicroApplication.class, true);
             String microVersionText = pref.get(VERSION, "");
+            Boolean hotDeploy = pref.getBoolean(HOT_DEPLOY, false);
             RunConfig config = actionsProvider.createConfigForDefaultAction(actionName, project, lookup);
             if (!microVersionText.isEmpty()) {
                 config.setProperty("version.payara", microVersionText);
+            }
+            if(hotDeploy) {
+                config.setProperty("hotDeploy", Boolean.TRUE.toString());
             }
             return config;
         }

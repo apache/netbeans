@@ -697,7 +697,7 @@ public class ReflectionHelper {
                  */
                 Class classToAdd = null;
                 if (null != parameterList && ii < parameterList.size()) {
-                    JavaParameter actualParameter = (JavaParameter) parameterList.get(ii);
+                    JavaParameter actualParameter = parameterList.get(ii);
                     String formalName = actualParameter.getType().getFormalName();
                     if (isPrimitiveClass(formalName)) {
                         classToAdd = referenceClass2PrimitiveClass(paramValues[ii].getClass());

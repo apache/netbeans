@@ -35,7 +35,7 @@ public class PacUtilsDateTime {
      * Content: {@code  SUN  MON  TUE  WED  THU  FRI  SAT}
      *
      */
-    public final static List<String> WEEKDAY_NAMES = Collections.unmodifiableList(
+    public static final List<String> WEEKDAY_NAMES = Collections.unmodifiableList(
             Arrays.asList("SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"));
 
     /**
@@ -44,7 +44,7 @@ public class PacUtilsDateTime {
      * Content: {@code JAN  FEB  MAR  APR  MAY  JUN  JUL  AUG  SEP  OCT  NOV  DEC}
      *
      */
-    public final static List<String> MONTH_NAMES = Collections.unmodifiableList(
+    public static final List<String> MONTH_NAMES = Collections.unmodifiableList(
             Arrays.asList("JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"));
 
     private static final TimeZone UTC_TIME = TimeZone.getTimeZone("UTC");

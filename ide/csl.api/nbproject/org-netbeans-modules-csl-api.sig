@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.67.0
+#Version 2.72.0
 
 CLSS public abstract interface java.awt.event.ActionListener
 intf java.util.EventListener
@@ -805,6 +805,7 @@ hcls Edit
 CLSS public org.netbeans.modules.csl.api.EditList
 cons public init(javax.swing.text.Document)
 cons public init(org.netbeans.editor.BaseDocument)
+innr public final static Edit
 meth public int firstEditLine(javax.swing.text.Document)
 meth public int firstLine(org.netbeans.editor.BaseDocument)
 meth public java.lang.String toString()
@@ -818,7 +819,18 @@ meth public void applyToDocument(org.netbeans.editor.BaseDocument)
 meth public void setFormatAll(boolean)
 supr java.lang.Object
 hfds LOG,doc,edits,formatAll,positions
-hcls DelegatedPosition,Edit
+hcls DelegatedPosition
+
+CLSS public final static org.netbeans.modules.csl.api.EditList$Edit
+ outer org.netbeans.modules.csl.api.EditList
+intf java.lang.Comparable<org.netbeans.modules.csl.api.EditList$Edit>
+meth public int compareTo(org.netbeans.modules.csl.api.EditList$Edit)
+meth public int getOffset()
+meth public int getRemoveLen()
+meth public java.lang.String getInsertText()
+meth public java.lang.String toString()
+supr java.lang.Object
+hfds format,insertText,offset,offsetOrdinal,removeLen
 
 CLSS public abstract org.netbeans.modules.csl.api.EditRegions
 cons public init()
@@ -1318,6 +1330,7 @@ supr java.lang.Enum<org.netbeans.modules.csl.api.Severity>
 
 CLSS public abstract interface org.netbeans.modules.csl.api.StructureItem
 innr public abstract interface static CollapsedDefault
+innr public abstract interface static InheritedItem
 meth public abstract boolean equals(java.lang.Object)
 meth public abstract boolean isLeaf()
 meth public abstract int hashCode()
@@ -1340,11 +1353,19 @@ meth public abstract org.netbeans.modules.csl.api.ElementHandle getElementHandle
  anno 0 org.netbeans.api.annotations.common.NonNull()
 meth public abstract org.netbeans.modules.csl.api.ElementKind getKind()
  anno 0 org.netbeans.api.annotations.common.NonNull()
+meth public static boolean isInherited(org.netbeans.modules.csl.api.StructureItem)
 
 CLSS public abstract interface static org.netbeans.modules.csl.api.StructureItem$CollapsedDefault
  outer org.netbeans.modules.csl.api.StructureItem
 intf org.netbeans.modules.csl.api.StructureItem
 meth public abstract boolean isCollapsedByDefault()
+
+CLSS public abstract interface static org.netbeans.modules.csl.api.StructureItem$InheritedItem
+ outer org.netbeans.modules.csl.api.StructureItem
+intf org.netbeans.modules.csl.api.StructureItem
+meth public abstract boolean isInherited()
+meth public abstract org.netbeans.modules.csl.api.ElementHandle getDeclaringElement()
+ anno 0 org.netbeans.api.annotations.common.NonNull()
 
 CLSS public abstract interface org.netbeans.modules.csl.api.StructureScanner
 innr public final static Configuration
@@ -1681,6 +1702,7 @@ CLSS public abstract static org.netbeans.modules.parsing.spi.Parser$Result
  outer org.netbeans.modules.parsing.spi.Parser
 cons protected init(org.netbeans.modules.parsing.api.Snapshot)
 meth protected abstract void invalidate()
+meth protected boolean processingFinished()
 meth public org.netbeans.modules.parsing.api.Snapshot getSnapshot()
 supr java.lang.Object
 hfds snapshot

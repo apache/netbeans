@@ -108,7 +108,6 @@ public class NewWebFreeformProjectWizardIterator implements WizardDescriptor.Ins
                     if (webModules != null) {
                         // Save the web classpath for the web module
                         String webClasspath = (String)wiz.getProperty(NewWebFreeformProjectWizardIterator.PROP_WEB_CLASSPATH);
-                        Iterator iter = webModules.iterator();
                         for (WebProjectGenerator.WebModule wm : webModules) {
                             wm.classpath = webClasspath;
                         }
@@ -164,7 +163,7 @@ public class NewWebFreeformProjectWizardIterator implements WizardDescriptor.Ins
             assert c instanceof JComponent;
             JComponent jc = (JComponent)c;
             // Step #.
-            jc.putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, new Integer(i)); // NOI18N
+            jc.putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, i); // NOI18N
             // Step name (actually the whole list for reference).
             jc.putClientProperty(WizardDescriptor.PROP_CONTENT_DATA, steps); // NOI18N
             // set title
@@ -186,7 +185,7 @@ public class NewWebFreeformProjectWizardIterator implements WizardDescriptor.Ins
     
     public String name() {
         return MessageFormat.format (NbBundle.getMessage(NewWebFreeformProjectWizardIterator.class, "TXT_NewWebFreeformProjectWizardIterator_TitleFormat"), // NOI18N
-            new Object[] {new Integer (index + 1), new Integer (panels.length) });
+            new Object[] {index + 1, panels.length});
     }
     
     public boolean hasNext() {

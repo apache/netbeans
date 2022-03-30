@@ -46,10 +46,10 @@ public class PacHelperMethodsImplTest {
     private InetAddress ipv4Addr;
     private InetAddress ipv6Addr;
     private final NbPacHelperMethods helpers = new NbPacHelperMethods();
-    private final static List<String> WEEKDAY_NAMES = Collections.unmodifiableList(
+    private static final List<String> WEEKDAY_NAMES = Collections.unmodifiableList(
             Arrays.asList("SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"));
 
-    private final static List<String> MONTH_NAMES = Collections.unmodifiableList(
+    private static final List<String> MONTH_NAMES = Collections.unmodifiableList(
             Arrays.asList("JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"));
 
     public PacHelperMethodsImplTest() {

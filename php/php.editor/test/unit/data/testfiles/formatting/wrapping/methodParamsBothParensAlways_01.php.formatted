@@ -1,0 +1,142 @@
+<?php
+
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
+// no newlines
+function testEmptyParams(): void {
+    
+}
+
+function test1(
+        $param1,
+        $param2,
+        $param3
+): void {
+    
+}
+
+function test2(
+        int $param1,
+        string $param2,
+        object $param3
+): void {
+    
+}
+
+function test3(
+        int $param1,
+        string $param2,
+        object $param3,
+): void {
+    
+}
+
+class Test {
+
+    public function testEmptyParams() {
+        
+    }
+
+    public function testParams1($param): int {
+        
+    }
+
+    private function testParams2(
+            $param1,
+            int $param2,
+            string $param3
+    ): int {
+        
+    }
+
+    private function testParams3(
+            $param1,
+            int $param2,
+            string $param3,
+    ): int {
+        
+    }
+
+}
+
+$labmda = function () {
+    
+};
+
+$labmda = function () use ($test): int {
+    
+};
+
+$labmda = function ($param1) use ($test): int {
+    
+};
+
+$labmda = function (
+        $param1,
+        int $param2
+): int {
+    
+};
+
+$labmda = function (
+        string $param1,
+        int $param2
+) use ($test): int {
+    
+};
+
+$labmda = function (
+        string $param1,
+        int $param2,
+) use (
+        $test1,
+        $test2
+): int {
+    
+};
+
+$labmda = function (
+        string $param1,
+        int $param2,
+) use (
+        $test1,
+        $test2,
+): int {
+    
+};
+
+interface TestInterface {
+
+    public function testEmptyParams();
+
+    public function testParams1($param): int;
+
+    public function testParams2(
+            $param1,
+            int $param2,
+            string $param3
+    );
+
+    public function testParams3(
+            $param1,
+            int $param2,
+            string $param3,
+    );
+}

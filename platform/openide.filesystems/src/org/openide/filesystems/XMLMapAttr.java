@@ -926,7 +926,7 @@ final class XMLMapAttr implements Map {
                     case 3:
                         return new Long(value);
                     case 4:
-                        return new Float(value);
+                        return Float.valueOf(value);
                     case 5:
                         return new Double(value);
                     case 6:

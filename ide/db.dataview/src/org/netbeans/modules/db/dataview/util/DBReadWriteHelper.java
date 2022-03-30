@@ -445,7 +445,7 @@ public class DBReadWriteHelper {
 
                 case Types.FLOAT:
                 case Types.REAL:
-                    return valueObj instanceof Float ? valueObj : new Float(valueObj.toString());
+                    return valueObj instanceof Float ? valueObj : Float.valueOf(valueObj.toString());
 
                 case Types.DECIMAL:
                 case Types.NUMERIC:

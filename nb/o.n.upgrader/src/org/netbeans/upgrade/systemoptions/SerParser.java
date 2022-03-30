@@ -501,7 +501,7 @@ public final class SerParser implements ObjectStreamConstants {
             } else if (aw.classdesc.name.equals("[J")) { // NOI18N
                 aw.values.add(new Long(readLong()));
             } else if (aw.classdesc.name.equals("[F")) { // NOI18N
-                aw.values.add(new Float(Float.intBitsToFloat(readInt())));
+                aw.values.add(Float.intBitsToFloat(readInt()));
             } else if (aw.classdesc.name.equals("[D")) { // NOI18N
                 aw.values.add(new Double(Double.longBitsToDouble(readLong())));
             } else if (aw.classdesc.name.equals("[C")) { // NOI18N
@@ -565,7 +565,7 @@ public final class SerParser implements ObjectStreamConstants {
             } else if (fd.type.equals("J")) { // NOI18N
                 values.add(new NameValue(fd, new Long(readLong())));
             } else if (fd.type.equals("F")) { // NOI18N
-                values.add(new NameValue(fd, new Float(Float.intBitsToFloat(readInt()))));
+                values.add(new NameValue(fd, Float.intBitsToFloat(readInt())));
             } else if (fd.type.equals("D")) { // NOI18N
                 values.add(new NameValue(fd, new Double(Double.longBitsToDouble(readLong()))));
             } else if (fd.type.equals("C")) { // NOI18N

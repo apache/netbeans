@@ -104,16 +104,8 @@ public class DBAddConnection extends CodeActionsProvider {
                     if (username == null) {
                         return;
                     }
-                    char[] password = null;
-                    if (m.get(PASSWORD) != null) {
-                        List<Double> p = (List<Double>) m.get(PASSWORD);
-                        password = new char[p.size()];
-                        for (int i = 0; i < password.length; i++) {
-                            password[i] = (char) p.get(i).byteValue();
-                        }
-                    }
-                    
-                    CompletableFuture<String> passwordFuture = password != null ? CompletableFuture.completedFuture(new String(password)) : client.showInputBox(new ShowInputBoxParams(
+                    String password = (String) m.get(PASSWORD);
+                    CompletableFuture<String> passwordFuture = password != null ? CompletableFuture.completedFuture(password) : client.showInputBox(new ShowInputBoxParams(
                             Bundle.MSG_EnterPassword(), "", true));
                     passwordFuture.thenAccept((p) -> { //NOI18N
                         if (p == null) {

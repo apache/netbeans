@@ -30,6 +30,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -85,6 +86,24 @@ public class GradleArtifactStore {
     public Set<File> getBinaries(String id) {
         Set<File> ret = binaries.get(id);
         return ret;
+    }
+    
+    public Set<File> getSources(Set<File> binaries) {
+        if (binaries.size() != 1) {
+            return null;
+        } else {
+            File f = sources.get(binaries.iterator().next());
+            return f == null ? null : Collections.singleton(f);
+        }
+    }
+    
+    public Set<File> getJavadocs(Set<File> binaries) {
+        if (binaries.size() != 1) {
+            return null;
+        } else {
+            File f = javadocs.get(binaries.iterator().next());
+            return f == null ? null : Collections.singleton(f);
+        }
     }
     
     public File getSources(File binary) {
@@ -186,13 +205,22 @@ public class GradleArtifactStore {
         for (GradleConfiguration conf : gp.getBaseProject().getConfigurations().values()) {
             for (GradleDependency.ModuleDependency module : conf.getModules()) {
                 Set<File> oldBins = binaries.get(module.getId());
-                if (oldBins == null || oldBins.isEmpty()) {
+                boolean empty = module.getArtifacts() == null || module.getArtifacts().isEmpty();
+                boolean binsEmpty = oldBins == null || oldBins.isEmpty();
+                boolean cacheEmpty;
+                GradleModuleFileCache21.CachedArtifactVersion cav = modCache.resolveModule(module.getId());
+                if (cav != null && cav.getBinary() != null) {
+                    // possibly trigger project reload if the artifact store does not match the GradleModuleFileCache21.
+                    cacheEmpty = !Files.exists(cav.getBinary().getPath());
+                } else {
+                    cacheEmpty = true;
+                }
+                if (empty != (cacheEmpty && binsEmpty)) {
                     LOG.log(Level.FINE, "Checking {0}: Module dependency {1} not found in cache.", new Object[] { gp.getBaseProject().getProjectDir(), module.getId() });
                     return false;
                 }
-                if (oldBins.size() == 1) {
+                if (!binsEmpty && oldBins.size() == 1) {
                     File binary = oldBins.iterator().next();
-                    GradleModuleFileCache21.CachedArtifactVersion cav = modCache.resolveModule(module.getId());
                     if (cav == null) {
                         LOG.log(Level.FINE, "Checking {0}: Cached artifact not found for {1}", new Object[] { gp.getBaseProject().getProjectDir(), module.getId() });
                         return false;
@@ -201,14 +229,14 @@ public class GradleArtifactStore {
                     GradleModuleFileCache21.CachedArtifactVersion.Entry sourceEntry = cav.getSources();
                     if (sourceEntry != null && Files.exists(sourceEntry.getPath())) {
                         File check = sources.get(binary);
-                        if (check == null || !check.toPath().equals(sourceEntry.getPath())) {
+                        if (check != null && !check.toPath().equals(sourceEntry.getPath())) {
                             LOG.log(Level.FINE, "Checking {0}: cache does not list CachedArtifact for source {2}", new Object[] { gp.getBaseProject().getProjectDir(), module.getId(), sourceEntry.getPath() });
                             return false;
                         }
                     }
                     if (javadocEntry != null && Files.exists(javadocEntry.getPath())) {
                         File check = javadocs.get(binary);
-                        if (check == null || !check.toPath().equals(javadocEntry.getPath())) {
+                        if (check != null && !check.toPath().equals(javadocEntry.getPath())) {
                             LOG.log(Level.FINE, "Checking {0}: cache does not list CachedArtifact for javadoc {2}", new Object[] { gp.getBaseProject().getProjectDir(), module.getId(), javadocEntry.getPath() });
                             return false;
                         }

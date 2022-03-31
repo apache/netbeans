@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package org.netbeans.modules.gradle.api;
+package org.netbeans.modules.gradle.tooling.internal;
 
 import org.netbeans.modules.gradle.tooling.Model;
 import java.util.Map;

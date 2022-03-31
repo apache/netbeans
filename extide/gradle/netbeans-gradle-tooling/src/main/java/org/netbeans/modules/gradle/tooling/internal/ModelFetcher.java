@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.gradle.api;
+package org.netbeans.modules.gradle.tooling.internal;
 
 import java.io.Serializable;
 import java.util.HashMap;

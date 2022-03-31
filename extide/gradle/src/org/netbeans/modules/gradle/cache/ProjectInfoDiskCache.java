@@ -34,8 +34,8 @@ import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.modules.gradle.NbGradleProjectImpl;
 import org.netbeans.modules.gradle.cache.ProjectInfoDiskCache.QualifiedProjectInfo;
 import org.netbeans.modules.gradle.api.NbGradleProject.Quality;
-import org.netbeans.modules.gradle.api.NbProjectInfo;
-import org.netbeans.modules.gradle.api.NbProjectInfo.Report;
+import org.netbeans.modules.gradle.tooling.internal.NbProjectInfo;
+import org.netbeans.modules.gradle.tooling.internal.NbProjectInfo.Report;
 import org.netbeans.modules.gradle.spi.GradleFiles;
 
 /**

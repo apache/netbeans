@@ -72,6 +72,7 @@ import org.eclipse.lsp4j.TextDocumentSyncOptions;
 import org.eclipse.lsp4j.WorkDoneProgressCancelParams;
 import org.eclipse.lsp4j.WorkDoneProgressParams;
 import org.eclipse.lsp4j.WorkspaceFolder;
+import org.eclipse.lsp4j.jsonrpc.Endpoint;
 import org.eclipse.lsp4j.jsonrpc.JsonRpcException;
 import org.eclipse.lsp4j.jsonrpc.Launcher;
 import org.eclipse.lsp4j.jsonrpc.MessageConsumer;
@@ -195,6 +196,9 @@ public final class Server {
         public MessageConsumer attachLookup(MessageConsumer delegate) {
             // PENDING: allow for message consumer wrappers to be registered to add pre/post processing for
             // the request plus build the request's default Lookup contents.
+            if (!(delegate instanceof Endpoint)) {
+                return delegate; 
+            }
             return new MessageConsumer() {
                 @Override
                 public void consume(Message msg) throws MessageIssueException, JsonRpcException {

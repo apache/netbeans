@@ -224,7 +224,7 @@ final class LspTemplateUI {
     }
 
     private static String suggestWorkspaceRoot(List<WorkspaceFolder> folders) throws IllegalArgumentException {
-        String suggestion = System.getProperty("user.dir");
+        String suggestion = System.getProperty("user.home");
         if (folders != null && !folders.isEmpty()) try {
             suggestion = Utilities.toFile(new URI(folders.get(0).getUri())).getParent();
         } catch (URISyntaxException ex) {

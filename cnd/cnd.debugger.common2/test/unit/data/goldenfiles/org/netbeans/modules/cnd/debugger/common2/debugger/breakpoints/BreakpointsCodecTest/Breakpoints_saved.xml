@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<breakpoints version="1">
+  <breakpoint type="Line" timestamp="1306139196674">
+    <attributes id=""
+                count="0"
+                temp="false"
+                adjusted="false"
+                action="ActionStop"
+                java="false"
+                enabled="true"
+                lineNumber="46"
+                fileName="quote.cc"/>
+  </breakpoint>
+  <breakpoint type="Function" timestamp="1306139196675">
+    <attributes id=""
+                count="0"
+                temp="false"
+                adjusted="false"
+                action="ActionStop"
+                java="false"
+                enabled="true"
+                function="main"
+                qfunction="main"
+                subEvent="FunctionSubEvent_IN"/>
+  </breakpoint>
+  <breakpoint type="Instruction" timestamp="1306139196675">
+    <attributes id=""
+                count="0"
+                temp="false"
+                adjusted="false"
+                action="ActionStop"
+                java="false"
+                enabled="true"
+                instruction="0x1234567"/>
+  </breakpoint>
+</breakpoints>

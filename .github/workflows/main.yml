@@ -60,7 +60,7 @@ jobs:
         run: tar -I 'zstd -9 -T0' -cf /tmp/build.tar.zst --exclude ".git" .
 
       - name: Upload Build
-        if: ${{ matrix.java == '11' }}
+        if: ${{ (matrix.java == '11') && success() }}
         uses: actions/upload-artifact@v3
         with:
           name: build
@@ -356,7 +356,9 @@ jobs:
   cleanup:
     name: Cleanup Workflow Artifacts
     needs: [base-build, linux-commit-validation, linux-build-system-test, linux-javadoc, macos, php]
-    if: ${{ always() }}
+    # don't cleanup on failure() or always(), because someone might want to restart an unreliable secondary job
+    # if primary jobs fail there won't be anything to cleanup anyway.
+    if: success() || cancelled()
     runs-on: ubuntu-latest
     steps:
 
@@ -370,3 +372,4 @@ jobs:
         name: Delete build Artifact
         with:
           name: build
+          failOnError: true

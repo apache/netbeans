@@ -767,7 +767,8 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
                 { language: 'yaml', pattern: '**/{application,bootstrap}*.yml' },
                 { language: 'properties', pattern: '**/{application,bootstrap}*.properties' },
                 { language: 'jackpot-hint' },
-                { language: 'xml', pattern: '**/pom.xml' }
+                { language: 'xml', pattern: '**/pom.xml' },
+                { pattern: '**/build.gradle'}
         ];
         const enableGroovy : boolean = conf.get("netbeans.groovySupport.enabled") || true;
         if (enableGroovy) {

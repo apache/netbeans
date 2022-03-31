@@ -41,5 +41,22 @@ public interface NbProjectInfo extends Model, org.gradle.tooling.model.Model {
      */    
     Map<String, Object> getExt();
     Set<String> getProblems();
+
+    /**
+     * @since 2.23
+     */
+    Set<Report> getReports();
+    
     boolean getMiscOnly();
+    
+    /**
+     * @since 2.23
+     */
+    interface Report {
+        public String getErrorClass();
+        public String getScriptLocation();
+        public int getLineNumber();
+        public String getMessage();
+        public Report getCause();
+    }
 }

@@ -523,7 +523,6 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
 
     // register completions:
     launchConfigurations.registerCompletion(context);
-
     return Object.freeze({
         version : API_VERSION
     });
@@ -552,6 +551,7 @@ function activateWithJDK(specifiedJDK: string | null, context: ExtensionContext,
     });
     const a : Promise<void> | null = maintenance;
     commands.executeCommand('setContext', 'nbJavaLSReady', false);
+    commands.executeCommand('setContext', 'dbAddConnectionPresent', true);
     activationPending = true;
     // chain the restart after termination of the former process.
     if (a != null) {

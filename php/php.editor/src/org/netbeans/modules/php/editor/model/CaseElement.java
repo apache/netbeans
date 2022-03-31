@@ -16,33 +16,13 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+package org.netbeans.modules.php.editor.model;
 
-package org.netbeans.modules.php.editor.api.elements;
+import org.netbeans.api.annotations.common.CheckForNull;
 
-import java.util.Collection;
-import java.util.Set;
-import org.netbeans.modules.php.editor.api.QualifiedName;
+public interface CaseElement extends ClassMemberElement, ModelElement {
 
-/**
- *
- * @author Radek Matous
- */
-public interface TypeElement extends FullyQualifiedElement {
+    @CheckForNull
+    String getValue();
 
-    enum PrintAs {
-        SuperTypes,
-        NameAndSuperTypes
-    }
-    String asString(PrintAs as);
-
-    /**
-     * @return all implemented ifaces
-     */
-    Set<QualifiedName> getSuperInterfaces();
-    Collection<QualifiedName> getFQSuperInterfaceNames();
-    boolean isClass();
-    boolean isInterface();
-    boolean isTrait();
-    boolean isTraited();
-    boolean isEnum();
 }

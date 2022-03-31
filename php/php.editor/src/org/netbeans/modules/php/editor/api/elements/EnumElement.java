@@ -16,33 +16,16 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.netbeans.modules.php.editor.api.elements;
 
-import java.util.Collection;
-import java.util.Set;
+import org.netbeans.api.annotations.common.CheckForNull;
+import org.netbeans.modules.php.editor.api.PhpElementKind;
 import org.netbeans.modules.php.editor.api.QualifiedName;
 
-/**
- *
- * @author Radek Matous
- */
-public interface TypeElement extends FullyQualifiedElement {
+public interface EnumElement extends TraitedElement {
 
-    enum PrintAs {
-        SuperTypes,
-        NameAndSuperTypes
-    }
-    String asString(PrintAs as);
+    PhpElementKind KIND = PhpElementKind.ENUM;
 
-    /**
-     * @return all implemented ifaces
-     */
-    Set<QualifiedName> getSuperInterfaces();
-    Collection<QualifiedName> getFQSuperInterfaceNames();
-    boolean isClass();
-    boolean isInterface();
-    boolean isTrait();
-    boolean isTraited();
-    boolean isEnum();
+    @CheckForNull
+    QualifiedName getBackingType();
 }

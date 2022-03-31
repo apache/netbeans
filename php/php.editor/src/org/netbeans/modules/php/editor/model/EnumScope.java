@@ -16,33 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
-package org.netbeans.modules.php.editor.api.elements;
+package org.netbeans.modules.php.editor.model;
 
 import java.util.Collection;
-import java.util.Set;
-import org.netbeans.modules.php.editor.api.QualifiedName;
+import org.netbeans.modules.php.editor.api.elements.EnumElement;
 
-/**
- *
- * @author Radek Matous
- */
-public interface TypeElement extends FullyQualifiedElement {
+public interface EnumScope extends TypeScope, VariableScope, EnumElement, TraitedScope {
 
-    enum PrintAs {
-        SuperTypes,
-        NameAndSuperTypes
-    }
-    String asString(PrintAs as);
-
-    /**
-     * @return all implemented ifaces
-     */
-    Set<QualifiedName> getSuperInterfaces();
-    Collection<QualifiedName> getFQSuperInterfaceNames();
-    boolean isClass();
-    boolean isInterface();
-    boolean isTrait();
-    boolean isTraited();
-    boolean isEnum();
+    Collection<? extends CaseElement> getDeclaredEnumCases();
 }

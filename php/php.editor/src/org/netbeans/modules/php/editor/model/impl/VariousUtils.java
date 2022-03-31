@@ -46,6 +46,7 @@ import org.netbeans.modules.php.editor.elements.TypeNameResolverImpl;
 import org.netbeans.modules.php.editor.lexer.PHPTokenId;
 import org.netbeans.modules.php.editor.model.ArrowFunctionScope;
 import org.netbeans.modules.php.editor.model.ClassScope;
+import org.netbeans.modules.php.editor.model.EnumScope;
 import org.netbeans.modules.php.editor.model.FieldElement;
 import org.netbeans.modules.php.editor.model.FileScope;
 import org.netbeans.modules.php.editor.model.FunctionScope;
@@ -1578,6 +1579,8 @@ public final class VariousUtils {
                 csi = (ClassScope) methodInScope;
             } else if (methodInScope instanceof TraitScope) {
                 csi = (TraitScope) methodInScope;
+            } else if (methodInScope instanceof EnumScope) {
+                csi = (EnumScope) methodInScope;
             }
         }
         if (inScope instanceof ClassScope || inScope instanceof InterfaceScope) {

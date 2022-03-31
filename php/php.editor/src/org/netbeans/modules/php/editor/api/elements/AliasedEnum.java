@@ -16,33 +16,30 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.netbeans.modules.php.editor.api.elements;
 
 import java.util.Collection;
-import java.util.Set;
+import org.netbeans.modules.php.editor.api.AliasedName;
 import org.netbeans.modules.php.editor.api.QualifiedName;
 
-/**
- *
- * @author Radek Matous
- */
-public interface TypeElement extends FullyQualifiedElement {
+public class AliasedEnum extends AliasedType implements EnumElement {
 
-    enum PrintAs {
-        SuperTypes,
-        NameAndSuperTypes
+    public AliasedEnum(AliasedName aliasedName, EnumElement enumElement) {
+        super(aliasedName, enumElement);
     }
-    String asString(PrintAs as);
 
-    /**
-     * @return all implemented ifaces
-     */
-    Set<QualifiedName> getSuperInterfaces();
-    Collection<QualifiedName> getFQSuperInterfaceNames();
-    boolean isClass();
-    boolean isInterface();
-    boolean isTrait();
-    boolean isTraited();
-    boolean isEnum();
+    private EnumElement getEnumElement() {
+        return (EnumElement) element;
+    }
+
+    @Override
+    public Collection<QualifiedName> getUsedTraits() {
+        return getEnumElement().getUsedTraits();
+    }
+
+    @Override
+    public QualifiedName getBackingType() {
+        return getEnumElement().getBackingType();
+    }
+
 }

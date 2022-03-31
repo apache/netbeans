@@ -22,37 +22,32 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.modules.csl.api.OffsetRange;
-import org.netbeans.modules.php.editor.api.PhpModifiers;
 import org.netbeans.modules.php.editor.api.QualifiedName;
-import org.netbeans.modules.php.editor.model.nodes.ASTNodeInfo.Kind;
-import org.netbeans.modules.php.editor.parser.astnodes.ClassDeclaration;
-import org.netbeans.modules.php.editor.parser.astnodes.ClassDeclaration.Modifier;
+import org.netbeans.modules.php.editor.parser.astnodes.EnumDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.Expression;
 import org.netbeans.modules.php.editor.parser.astnodes.Identifier;
 
-/**
- * @author Radek Matous
- */
-public class ClassDeclarationInfo extends ASTNodeInfo<ClassDeclaration> {
+public class EnumDeclarationInfo extends ASTNodeInfo<EnumDeclaration> {
 
-    ClassDeclarationInfo(ClassDeclaration node) {
+    EnumDeclarationInfo(EnumDeclaration node) {
         super(node);
     }
 
-    public static ClassDeclarationInfo create(ClassDeclaration classDeclaration) {
-        return new ClassDeclarationInfo(classDeclaration);
+    public static EnumDeclarationInfo create(EnumDeclaration enumDeclaration) {
+        return new EnumDeclarationInfo(enumDeclaration);
     }
 
     @Override
     public Kind getKind() {
-        return Kind.CLASS;
+        return Kind.ENUM;
     }
 
     @Override
     public String getName() {
-        ClassDeclaration classDeclaration = getOriginalNode();
-        return classDeclaration.getName().getName();
+        EnumDeclaration enumDeclaration = getOriginalNode();
+        return enumDeclaration.getName().getName();
     }
 
     @Override
@@ -60,20 +55,9 @@ public class ClassDeclarationInfo extends ASTNodeInfo<ClassDeclaration> {
         return QualifiedName.create(getOriginalNode().getName());
     }
 
-    @Override
-    public OffsetRange getRange() {
-        ClassDeclaration classDeclaration = getOriginalNode();
-        Identifier name = classDeclaration.getName();
-        return new OffsetRange(name.getStartOffset(), name.getEndOffset());
-    }
-
-    public Expression getSuperClass() {
-        return (getOriginalNode().getSuperClass() != null) ? getOriginalNode().getSuperClass() : null;
-    }
-
-    public QualifiedName getSuperClassName() {
-        final Expression superClass = getSuperClass();
-        return (superClass != null) ? QualifiedName.create(superClass) : null;
+    @CheckForNull
+    public QualifiedName getBackingType() {
+        return QualifiedName.create(getOriginalNode().getBackingType());
     }
 
     public List<? extends Expression> getInterfaces() {
@@ -92,15 +76,11 @@ public class ClassDeclarationInfo extends ASTNodeInfo<ClassDeclaration> {
         return retval;
     }
 
-    public PhpModifiers getAccessModifiers() {
-        Modifier modifier = getOriginalNode().getModifier();
-
-        if (modifier.equals(Modifier.ABSTRACT)) {
-            return PhpModifiers.fromBitMask(PhpModifiers.PUBLIC, PhpModifiers.ABSTRACT);
-        } else if (modifier.equals(Modifier.FINAL)) {
-            return PhpModifiers.fromBitMask(PhpModifiers.PUBLIC, PhpModifiers.FINAL);
-        }
-        return PhpModifiers.fromBitMask(PhpModifiers.PUBLIC);
+    @Override
+    public OffsetRange getRange() {
+        EnumDeclaration enumDeclaration = getOriginalNode();
+        Identifier name = enumDeclaration.getName();
+        return new OffsetRange(name.getStartOffset(), name.getEndOffset());
     }
 
     public Collection<QualifiedName> getUsedTraits() {

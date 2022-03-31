@@ -1,3 +1,4 @@
+<?php
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -17,32 +18,4 @@
  * under the License.
  */
 
-package org.netbeans.modules.php.editor.api.elements;
-
-import java.util.Collection;
-import java.util.Set;
-import org.netbeans.modules.php.editor.api.QualifiedName;
-
-/**
- *
- * @author Radek Matous
- */
-public interface TypeElement extends FullyQualifiedElement {
-
-    enum PrintAs {
-        SuperTypes,
-        NameAndSuperTypes
-    }
-    String asString(PrintAs as);
-
-    /**
-     * @return all implemented ifaces
-     */
-    Set<QualifiedName> getSuperInterfaces();
-    Collection<QualifiedName> getFQSuperInterfaceNames();
-    boolean isClass();
-    boolean isInterface();
-    boolean isTrait();
-    boolean isTraited();
-    boolean isEnum();
-}
+enum Simple1 {}

@@ -20,17 +20,14 @@ package org.netbeans.modules.cloud.oracle.actions;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.text.MessageFormat;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import org.netbeans.api.db.explorer.ConnectionManager;
 import org.netbeans.api.db.explorer.DatabaseConnection;
 import org.netbeans.api.db.explorer.DatabaseException;
@@ -100,7 +97,7 @@ public class DownloadWalletAction implements ActionListener {
                                 return;
                             }
                         }
-                        String dbUrl = MessageFormat.format(URL_TEMPLATE, context.getConnectionName(), walletPath);
+                        String dbUrl = MessageFormat.format(URL_TEMPLATE, connectionName, walletPath);
                         DatabaseConnection dbConn = DatabaseConnection.create(
                                 drivers[0], 
                                 dbUrl, 

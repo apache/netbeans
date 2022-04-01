@@ -20,10 +20,17 @@ package org.netbeans.modules.cloud.oracle.actions;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.MessageFormat;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.netbeans.api.db.explorer.ConnectionManager;
 import org.netbeans.api.db.explorer.DatabaseConnection;
 import org.netbeans.api.db.explorer.DatabaseException;
@@ -61,8 +68,8 @@ import org.openide.util.NbBundle;
     "LBL_SaveWallet=Save DB Wallet",
     "CTL_DownloadWalletAction=Download Wallet",
     "MSG_WalletDownloaded=Database Wallet was downloaded to {0}",
-    "MSG_WalletDownloadedPassword=Database Wallet was downloaded. \nGenerated wallet password is: {0}"
-    
+    "MSG_WalletDownloadedPassword=Database Wallet was downloaded. \nGenerated wallet password is: {0}",
+    "MSG_WalletNoConnection=Wallet doesn't contain any connection"
 })
 public class DownloadWalletAction implements ActionListener {
     
@@ -83,6 +90,16 @@ public class DownloadWalletAction implements ActionListener {
                     
                     JDBCDriver[] drivers = JDBCDriverManager.getDefault().getDrivers("oracle.jdbc.OracleDriver"); //NOI18N
                     if (drivers.length > 0) {
+                        String connectionName = context.getConnectionName();
+                        if (connectionName == null) {
+                            Optional<String> n = parseConnectionNames(walletPath).stream().findFirst();
+                            if (n.isPresent()) {
+                                connectionName = n.get();
+                            } else {
+                                StatusDisplayer.getDefault().setStatusText(Bundle.MSG_WalletNoConnection());
+                                return;
+                            }
+                        }
                         String dbUrl = MessageFormat.format(URL_TEMPLATE, context.getConnectionName(), walletPath);
                         DatabaseConnection dbConn = DatabaseConnection.create(
                                 drivers[0], 
@@ -107,4 +124,16 @@ public class DownloadWalletAction implements ActionListener {
         });
     }
     
+    protected List<String> parseConnectionNames(Path wallet) {
+        Path tns = wallet.resolve("tnsnames.ora"); //NOI18N
+        try {
+            return Files.newBufferedReader(tns).lines()
+                    .filter(l -> l.contains("=")) //NOI18N
+                    .map(l -> l.substring(0, l.indexOf("=")).trim()) //NOI18N
+                    .collect(Collectors.toList());
+        } catch (IOException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+        return Collections.emptyList();
+    }
 }

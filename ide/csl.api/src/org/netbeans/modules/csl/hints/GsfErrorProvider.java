@@ -112,20 +112,20 @@ public class GsfErrorProvider implements ErrorProvider {
 
     private Diagnostic error2Diagnostic(Error error, LineDocument lineDocument, int idx) {
         Diagnostic.Builder diagBuilder = Diagnostic.Builder.create(() -> {
-            if (lineDocument != null) {
+            if (lineDocument != null && error.getStartPosition() >= error.getEndPosition()) {
                 try {
                     return LineDocumentUtils.getLineFirstNonWhitespace(lineDocument, error.getStartPosition());
                 } catch (BadLocationException ex) {}
             }
             return error.getStartPosition();
         }, () -> {
-            if (lineDocument != null) {
+            if (lineDocument != null && error.getStartPosition() >= error.getEndPosition()) {
                 try {
                     return LineDocumentUtils.getLineLastNonWhitespace(lineDocument, error.getEndPosition());
                 } catch (BadLocationException ex) {}
             }
             return error.getEndPosition();
-        }, error.getDescription());
+        }, error.getDescription() != null ? error.getDescription() : error.getDisplayName());
         switch (error.getSeverity()) {
             case FATAL:
             case ERROR:

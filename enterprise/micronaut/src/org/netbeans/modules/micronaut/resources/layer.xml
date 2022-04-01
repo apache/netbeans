@@ -28,6 +28,20 @@
                     <file name="org-netbeans-modules-micronaut-completion-MicronautJavaConfigPropertiesCompletion.instance"/>
                 </folder>
             </folder>
+            <folder name="x-yaml">
+                <file name="org-netbeans-modules-csl-hints-GsfErrorProvider.instance">
+                    <attr name="instanceClass" stringvalue="org.netbeans.modules.csl.hints.GsfErrorProvider"/>
+                </file>
+            </folder>
+        </folder>
+    </folder>
+    <folder name="CslPlugins">
+        <folder name="text">
+            <folder name="x-yaml">
+                <file name="hints.instance">
+                    <attr name="instanceClass" stringvalue="org.netbeans.modules.micronaut.MicronautConfigValidator"/>
+                </file>
+            </folder>
         </folder>
     </folder>
     <folder name="Projects">

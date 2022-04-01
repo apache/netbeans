@@ -81,10 +81,7 @@ import org.netbeans.spi.editor.hints.Severity;
 import org.openide.cookies.EditorCookie;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.URLMapper;
-import org.openide.text.NbDocument;
 import org.openide.util.Exceptions;
-import org.openide.util.NbBundle.Messages;
-import org.openide.util.RequestProcessor;
 
 /**
  *
@@ -93,8 +90,6 @@ import org.openide.util.RequestProcessor;
 public class LanguageClientImpl implements LanguageClient {
 
     private static final Logger LOG = Logger.getLogger(LanguageClientImpl.class.getName());
-    private static final RequestProcessor WORKER = new RequestProcessor(LanguageClientImpl.class.getName(), 1, false, false);
-
     private LSPBindings bindings;
     private boolean allowCodeActions;
 
@@ -209,7 +204,7 @@ public class LanguageClientImpl implements LanguageClient {
     @Override
     public CompletableFuture<List<Object>> configuration(ConfigurationParams configurationParams) {
         CompletableFuture<List<Object>> result = new CompletableFuture<>();
-        WORKER.post(() -> {
+        bindings.worker.post(() -> {
             List<Object> outcome = new ArrayList<>();
             for (ConfigurationItem ci : configurationParams.getItems()) {
                 outcome.add(null);

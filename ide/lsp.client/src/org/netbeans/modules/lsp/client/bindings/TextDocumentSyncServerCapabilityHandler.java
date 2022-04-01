@@ -65,7 +65,6 @@ import org.openide.util.RequestProcessor;
  */
 public class TextDocumentSyncServerCapabilityHandler {
 
-    private final RequestProcessor WORKER = new RequestProcessor(TextDocumentSyncServerCapabilityHandler.class.getName(), 1, false, false);
     private final Set<JTextComponent> lastOpened = Collections.newSetFromMap(new IdentityHashMap<>());
 
     private void handleChange() {
@@ -159,9 +158,8 @@ public class TextDocumentSyncServerCapabilityHandler {
 
                         boolean typingModification = DocumentUtilities.isTypingModification(doc);
                         long documentVersion = DocumentUtilities.getDocumentVersion(doc);
-
-                        WORKER.post(() -> {
-                            LSPBindings server = LSPBindings.getBindings(file);
+                        LSPBindings server = LSPBindings.getBindings(file);
+                        server.worker.post(() -> {
 
                             if (server == null)
                                 return ; //ignore
@@ -248,18 +246,18 @@ public class TextDocumentSyncServerCapabilityHandler {
             openDocument2PanesCount.put(doc, --count);
         }
         if (count == 0) {
+            FileObject file = NbEditorUtilities.getFileObject(doc);
+
+            if (file == null)
+                return; //ignore
+
+            LSPBindings server = LSPBindings.getBindings(file);
+
+            if (server == null)
+                return ; //ignore
+
             //TODO modified!
-            WORKER.post(() -> {
-                FileObject file = NbEditorUtilities.getFileObject(doc);
-
-                if (file == null)
-                    return; //ignore
-
-                LSPBindings server = LSPBindings.getBindings(file);
-
-                if (server == null)
-                    return ; //ignore
-
+            server.worker.post(() -> {
                 TextDocumentIdentifier di = new TextDocumentIdentifier();
                 di.setUri(Utils.toURI(file));
                 DidCloseTextDocumentParams params = new DidCloseTextDocumentParams(di);
@@ -272,22 +270,22 @@ public class TextDocumentSyncServerCapabilityHandler {
     }
 
     private void ensureDidOpenSent(Document doc) {
-        WORKER.post(() -> {
-            FileObject file = NbEditorUtilities.getFileObject(doc);
+        FileObject file = NbEditorUtilities.getFileObject(doc);
 
-            if (file == null)
-                return; //ignore
+        if (file == null)
+            return; //ignore
 
-            LSPBindings server = LSPBindings.getBindings(file);
+        LSPBindings server = LSPBindings.getBindings(file);
 
-            if (server == null)
-                return ; //ignore
+        if (server == null)
+            return ; //ignore
 
-            if (!server.getOpenedFiles().add(file)) {
-                //already opened:
-                return ;
-            }
+        if (!server.getOpenedFiles().add(file)) {
+            //already opened:
+            return ;
+        }
 
+        server.worker.post(() -> {
             doc.putProperty(HyperlinkProviderImpl.class, true);
 
             String uri = Utils.toURI(file);
@@ -314,17 +312,17 @@ public class TextDocumentSyncServerCapabilityHandler {
 
     private void registerBackgroundTasks(JTextComponent c) {
         Document doc = c.getDocument();
-        WORKER.post(() -> {
-            FileObject file = NbEditorUtilities.getFileObject(doc);
+        FileObject file = NbEditorUtilities.getFileObject(doc);
 
-            if (file == null)
-                return; //ignore
+        if (file == null)
+            return; //ignore
 
-            LSPBindings server = LSPBindings.getBindings(file);
+        LSPBindings server = LSPBindings.getBindings(file);
 
-            if (server == null)
-                return ; //ignore
+        if (server == null)
+            return ; //ignore
 
+        server.worker.post(() -> {
             SwingUtilities.invokeLater(() -> {
                 if (c.getClientProperty(MarkOccurrences.class) == null) {
                     MarkOccurrences mo = new MarkOccurrences(c);

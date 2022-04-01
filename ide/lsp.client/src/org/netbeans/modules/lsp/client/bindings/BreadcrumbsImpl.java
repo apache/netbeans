@@ -57,7 +57,6 @@ import org.openide.loaders.DataObjectNotFoundException;
 import org.openide.util.Exceptions;
 import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
-import org.openide.util.RequestProcessor;
 import org.openide.util.lookup.Lookups;
 import org.openide.xml.XMLUtil;
 
@@ -67,7 +66,6 @@ import org.openide.xml.XMLUtil;
  */
 public class BreadcrumbsImpl implements BackgroundTask {
 
-    private static final RequestProcessor WORKER = new RequestProcessor(BreadcrumbsImpl.class.getName(), 1, false, false);
     private final JTextComponent comp;
     private final Document doc;
     private volatile RootBreadcrumbsElementImpl rootElement;
@@ -332,9 +330,12 @@ public class BreadcrumbsImpl implements BackgroundTask {
         }
 
         private void update() {
-            WORKER.post(() -> {
-                FileObject file = NbEditorUtilities.getFileObject(component.getDocument());
-                LSPBindings bindings = file != null ? LSPBindings.getBindings(file) : null;
+            FileObject file = NbEditorUtilities.getFileObject(component.getDocument());
+            final LSPBindings bindings = file != null ? LSPBindings.getBindings(file) : null;
+            if (bindings == null) {
+                return;
+            }
+            bindings.worker.post(() -> {
                 Runnable r;
 
                 if (bindings != null && Utils.isEnabled(bindings.getInitResult().getCapabilities().getDocumentSymbolProvider())) {

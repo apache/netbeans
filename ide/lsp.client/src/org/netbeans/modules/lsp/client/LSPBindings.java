@@ -55,6 +55,8 @@ import org.eclipse.lsp4j.DocumentSymbolCapabilities;
 import org.eclipse.lsp4j.InitializeParams;
 import org.eclipse.lsp4j.InitializeResult;
 import org.eclipse.lsp4j.ResourceOperationKind;
+import org.eclipse.lsp4j.SemanticTokenModifiers;
+import org.eclipse.lsp4j.SemanticTokenTypes;
 import org.eclipse.lsp4j.SemanticTokens;
 import org.eclipse.lsp4j.SemanticTokensCapabilities;
 import org.eclipse.lsp4j.SemanticTokensClientCapabilitiesRequests;
@@ -108,7 +110,7 @@ public class LSPBindings {
     private static final int LSP_KEEP_ALIVE_MINUTES = 10;
     private static final int INVALID_START_TIME = 1 * 60 * 1000;
     private static final int INVALID_START_MAX_COUNT = 5;
-    private static final RequestProcessor WORKER = new RequestProcessor(LanguageClientImpl.class.getName(), 1, false, false);
+    private static final RequestProcessor IDLE_BINDINGS_WORKER = new RequestProcessor(LanguageClientImpl.class.getName() + "IDLE", 1, false, false); // NOI18N
     private static final ChangeSupport cs = new ChangeSupport(LSPBindings.class);
     private static final Map<LSPBindings,Long> lspKeepAlive = new IdentityHashMap<>();
     private static final Map<URI, Map<String, ServerDescription>> project2MimeType2Server = new HashMap<>();
@@ -120,7 +122,7 @@ public class LSPBindings {
 
         // Remove LSP Servers from strong reference tracking, that have not
         // been accessed more than LSP_KEEP_ALIVE_MINUTES minutes
-        WORKER.scheduleAtFixedRate(
+        IDLE_BINDINGS_WORKER.scheduleAtFixedRate(
             () -> {
                 synchronized (LSPBindings.class) {
                     long tooOld = System.currentTimeMillis() - (LSP_KEEP_ALIVE_MINUTES * 60L * 1000L);
@@ -216,7 +218,7 @@ public class LSPBindings {
                 for(String mt: description.mimeTypes) {
                     mimeType2Server.put(mt, description);
                 }
-                WORKER.post(() -> cs.fireChange());
+                bindings.worker.post(() -> cs.fireChange());
             }
         }
 
@@ -265,8 +267,8 @@ public class LSPBindings {
 
                 if (b != null) {
                     lspKeepAlive.remove(b);
-
                     try {
+                        List<Runnable> pendingTasks = b.worker.shutdownNow();
                         b.server.shutdown().get();
                     } catch (InterruptedException | ExecutionException ex) {
                         LOG.log(Level.FINE, null, ex);
@@ -369,7 +371,7 @@ public class LSPBindings {
                         Arrays.stream(extensions)
                         .collect(Collectors.toMap(k -> k, v -> bindings)));
                 }
-                WORKER.post(() -> cs.fireChange());
+                bindings.worker.post(() -> cs.fireChange());
             } catch (InterruptedException | ExecutionException | IOException ex) {
                 Exceptions.printStackTrace(ex);
             }
@@ -412,13 +414,41 @@ public class LSPBindings {
        }
     }
     private static final List<String> KNOWN_TOKEN_TYPES = Collections.unmodifiableList(Arrays.asList(
-            "namespace", "package", "function", "method", "macro", "parameter",
-            "variable", "struct", "enum", "class", "typeAlias", "typeParameter",
-            "field", "enumMember", "keyword"
+            SemanticTokenTypes.Class,
+            SemanticTokenTypes.Comment,
+            SemanticTokenTypes.Enum,
+            SemanticTokenTypes.EnumMember,
+            SemanticTokenTypes.Event,
+            SemanticTokenTypes.Function,
+            SemanticTokenTypes.Interface,
+            SemanticTokenTypes.Keyword,
+            SemanticTokenTypes.Macro,
+            SemanticTokenTypes.Method,
+            SemanticTokenTypes.Modifier,
+            SemanticTokenTypes.Namespace,
+            SemanticTokenTypes.Number,
+            SemanticTokenTypes.Operator,
+            SemanticTokenTypes.Parameter,
+            SemanticTokenTypes.Property,
+            SemanticTokenTypes.Regexp,
+            SemanticTokenTypes.String,
+            SemanticTokenTypes.Struct,
+            SemanticTokenTypes.Type,
+            SemanticTokenTypes.TypeParameter,
+            SemanticTokenTypes.Variable
     ));
 
     private static final List<String> KNOWN_TOKEN_MODIFIERS = Collections.unmodifiableList(Arrays.asList(
-            "static", "definition", "declaration"
+            SemanticTokenModifiers.Abstract,
+            SemanticTokenModifiers.Async,
+            SemanticTokenModifiers.Declaration,
+            SemanticTokenModifiers.DefaultLibrary,
+            SemanticTokenModifiers.Definition,
+            SemanticTokenModifiers.Deprecated,
+            SemanticTokenModifiers.Documentation,
+            SemanticTokenModifiers.Modification,
+            SemanticTokenModifiers.Readonly,
+            SemanticTokenModifiers.Static
     ));
 
     public static synchronized Set<LSPBindings> getAllBindings() {
@@ -441,11 +471,14 @@ public class LSPBindings {
     private final LanguageServer server;
     private final InitializeResult initResult;
     private final Process process;
+    // LSP Server specific request processor
+    public final RequestProcessor worker;
 
     private LSPBindings(LanguageServer server, InitializeResult initResult, Process process) {
         this.server = server;
         this.initResult = initResult;
         this.process = process;
+        this.worker = new RequestProcessor(server.getClass().getName() + "WORKER", 1, false, false); // NOI18N
     }
 
     public TextDocumentService getTextDocumentService() {
@@ -463,12 +496,10 @@ public class LSPBindings {
 
     @SuppressWarnings("AccessingNonPublicFieldOfAnotherObject")
     public static synchronized void addBackgroundTask(FileObject file, BackgroundTask task) {
-        RequestProcessor.Task req = WORKER.create(() -> {
-            LSPBindings bindings = getBindings(file);
-
-            if (bindings == null)
-                return ;
-
+        LSPBindings bindings = getBindings(file);
+        if (bindings == null)
+            return ;
+        RequestProcessor.Task req = bindings.worker.create(() -> {
             task.run(bindings, file);
         });
 
@@ -489,7 +520,7 @@ public class LSPBindings {
     }
 
     public void runOnBackground(Runnable r) {
-        WORKER.post(r);
+        worker.post(r);
     }
 
     private static void scheduleBackgroundTask(RequestProcessor.Task req) {
@@ -567,6 +598,10 @@ public class LSPBindings {
         public void run() {
             if(! process.isAlive()) {
                 return;
+            }
+            LSPBindings bindings = get();
+            if (bindings != null) {
+                bindings.worker.shutdownNow();
             }
             CompletableFuture<Object> shutdownResult = server.shutdown();
             for (int i = 0; i < 300; i--) {

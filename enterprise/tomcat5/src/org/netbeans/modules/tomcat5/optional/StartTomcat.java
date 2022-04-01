@@ -110,7 +110,7 @@ public final class StartTomcat extends StartServer implements ProgressObject {
     private static final int MODE_PROFILE = 2;
     
     /** For how long should we keep trying to get response from the server. */
-    private static final long TIMEOUT_DELAY = 180000;
+    private static final long DEFAULT_TIMEOUT_DELAY = 180000;
 
     private static final Pattern WINDOWS_ESCAPED_JAVA_OPTS = Pattern.compile("^set\\s\"JAVA_OPTS.*$");
     
@@ -583,8 +583,19 @@ public final class StartTomcat extends StartServer implements ProgressObject {
          * @return <code>true</code> if START/STOP command completion was verified,
          *         <code>false</code> if time-out ran out.
          */
-        private boolean hasCommandSucceeded() {
-            long timeout = System.currentTimeMillis() + TIMEOUT_DELAY;
+        private boolean hasCommandSucceeded() {          
+            long timeout = System.currentTimeMillis();
+            
+            if (command == CommandType.START) {
+                timeout += tm.getTomcatProperties().getStartupTimeout() * 1000l;
+            }
+            else if (command == CommandType.STOP) {
+                timeout += tm.getTomcatProperties().getShutdownTimeout() * 1000l;
+            }
+            else {
+                timeout += DEFAULT_TIMEOUT_DELAY;
+            }
+            
             while (true) {
                 boolean isRunning = isRunning();
                 if (command == CommandType.START) {

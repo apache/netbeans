@@ -124,6 +124,8 @@ public class TomcatProperties {
             NbBundle.getMessage(TomcatProperties.class, "LBL_DefaultDisplayName");
     private static final boolean DEF_VALUE_DRIVER_DEPLOYMENT = true;
     private static final int     DEF_VALUE_DEPLOYMENT_TIMEOUT = 120;
+    private static final int     DEF_VALUE_STARTUP_TIMEOUT = 120;
+    private static final int     DEF_VALUE_SHUTDOWN_TIMEOUT = 120;
     
     private TomcatManager tm;
     private InstanceProperties ip;
@@ -592,6 +594,44 @@ public class TomcatProperties {
     
     public void setDeploymentTimeout(int timeout) {
         ip.setProperty(InstanceProperties.DEPLOYMENT_TIMEOUT, Integer.toString(timeout));
+    }
+    
+    public int getStartupTimeout() {
+        String val = ip.getProperty(InstanceProperties.STARTUP_TIMEOUT);
+        if (val != null) {
+            try {
+                int timeout = Integer.parseInt(val);
+                if (timeout >= 1) {
+                    return timeout;
+                }
+            } catch (NumberFormatException nfe) {
+                Logger.getLogger(TomcatProperties.class.getName()).log(Level.INFO, null, nfe);
+            }
+        }
+        return DEF_VALUE_STARTUP_TIMEOUT;
+    }
+    
+    public void setStartupTimeout(int timeout) {
+        ip.setProperty(InstanceProperties.STARTUP_TIMEOUT, Integer.toString(timeout));
+    }
+    
+    public int getShutdownTimeout() {
+        String val = ip.getProperty(InstanceProperties.SHUTDOWN_TIMEOUT);
+        if (val != null) {
+            try {
+                int timeout = Integer.parseInt(val);
+                if (timeout >= 1) {
+                    return timeout;
+                }
+            } catch (NumberFormatException nfe) {
+                Logger.getLogger(TomcatProperties.class.getName()).log(Level.INFO, null, nfe);
+            }
+        }
+        return DEF_VALUE_SHUTDOWN_TIMEOUT;
+    }
+    
+    public void setShutdownTimeout(int timeout) {
+        ip.setProperty(InstanceProperties.SHUTDOWN_TIMEOUT, Integer.toString(timeout));
     }
     
     public boolean getDriverDeployment() {

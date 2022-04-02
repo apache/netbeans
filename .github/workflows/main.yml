@@ -55,16 +55,16 @@ jobs:
       - name: Build NetBeans
         run: ant -Dcluster.config=release build-nozip
 
-      - name: Archive Build
+      - name: Prepare Artifact
         if: ${{ matrix.java == '11' }}
-        run: tar -czf /tmp/build.tar.gz --exclude ".git" .
+        run: tar -I 'zstd -9 -T0' -cf /tmp/build.tar.zst --exclude ".git" .
 
       - name: Upload Build
-        if: ${{ matrix.java == '11' }}
+        if: ${{ (matrix.java == '11') && success() }}
         uses: actions/upload-artifact@v3
         with:
           name: build
-          path: /tmp/build.tar.gz
+          path: /tmp/build.tar.zst
           retention-days: 1
           if-no-files-found: error
 
@@ -94,7 +94,7 @@ jobs:
           name: build
 
       - name: Extract
-        run: tar -xzf build.tar.gz --exclude nbbuild/build/test
+        run: tar --zstd -xf build.tar.zst
         
       - name: SM config
         if: ${{ matrix.java == '19-ea' }}
@@ -130,7 +130,7 @@ jobs:
           name: build
 
       - name: Extract
-        run: tar -xzf build.tar.gz --exclude nbbuild/build/test
+        run: tar --zstd -xf build.tar.zst
 
       - name: Test Netbeans Build System
         run: ant -Dcluster.config=release localtest
@@ -158,7 +158,7 @@ jobs:
           name: build
 
       - name: Extract
-        run: tar -xzf build.tar.gz --exclude nbbuild/build/test
+        run: tar --zstd -xf build.tar.zst
 
       - name: Get maven coordinates
         run: ant getallmavencoordinates
@@ -200,8 +200,9 @@ jobs:
         with:
           name: build
 
+      # tar on MacOS is not aware of zstd "tar --zstd -xf build.tar.zst" isn't working
       - name: Extract
-        run: tar -xzf build.tar.gz --exclude nbbuild/build/test
+        run: unzstd -c build.tar.zst | tar -x
 
       - run: brew install ant
 
@@ -211,7 +212,7 @@ jobs:
       - name: Test platform/core.network
         run: ant -f platform/core.network test
 
-      - name: Validate consistency and basic tests
+      - name: Commit Validation tests
         run: ant -Dcluster.config=release commit-validation
 
   php:
@@ -259,7 +260,7 @@ jobs:
           name: build
 
       - name: Extract
-        run: tar -xzf build.tar.gz --exclude nbbuild/build/test
+        run: tar --zstd -xf build.tar.zst
 
       - name: Test Platform Core Network
         run: ant $OPTS -f platform/core.network test
@@ -355,7 +356,9 @@ jobs:
   cleanup:
     name: Cleanup Workflow Artifacts
     needs: [base-build, linux-commit-validation, linux-build-system-test, linux-javadoc, macos, php]
-    if: ${{ always() }}
+    # don't cleanup on failure() or always(), because someone might want to restart an unreliable secondary job
+    # if primary jobs fail there won't be anything to cleanup anyway.
+    if: success() || cancelled()
     runs-on: ubuntu-latest
     steps:
 
@@ -369,3 +372,4 @@ jobs:
         name: Delete build Artifact
         with:
           name: build
+          failOnError: true

@@ -95,15 +95,7 @@ jobs:
 
       - name: Extract
         run: tar --zstd -xf build.tar.zst
-        
-      - name: SM config
-        if: ${{ matrix.java == '19-ea' }}
-        run: echo "SECURITY_MANAGER_OPTIONS=-Djava.security.manager=allow" >> $GITHUB_ENV
 
-      - name: JMS config
-        if: ${{ matrix.java != '8' }}
-        run: echo "JAVA_TOOL_OPTIONS=$SECURITY_MANAGER_OPTIONS --add-opens=java.base/java.net=ALL-UNNAMED --add-opens=java.desktop/javax.swing=ALL-UNNAMED" >> $GITHUB_ENV
-        
       - name: Commit Validation tests
         run: ant -Dcluster.config=release commit-validation
 

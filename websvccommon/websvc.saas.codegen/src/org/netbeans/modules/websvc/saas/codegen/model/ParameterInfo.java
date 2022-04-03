@@ -183,7 +183,7 @@ public class ParameterInfo {
         } else if (type == Long.class || type == Long.TYPE) {
             return new Long(0);
         } else if (type == Float.class || type == Float.TYPE) {
-            return new Float(0);
+            return 0F;
         } else if (type == Double.class || type == Double.TYPE) {
             return new Double(0);
         } else if (type == Boolean.class || type == Boolean.TYPE) {

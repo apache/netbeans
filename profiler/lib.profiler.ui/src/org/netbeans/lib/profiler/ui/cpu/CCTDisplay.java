@@ -409,31 +409,6 @@ public class CCTDisplay extends SnapshotCPUResultsPanel implements ScreenshotPro
                     return columnToolTips[col];
                 }
 
-//                private Float getNodeTimeRel(PrestimeCPUCCTNode pNode) {
-//                    return new Float(pNode.getTotalTime0InPerCent());
-//                }
-//
-//                private String getNodeTime(PrestimeCPUCCTNode pNode) {
-//                    return StringUtils.mcsTimeToString(pNode.getTotalTime0()) + " ms (" // NOI18N
-//                           + percentFormat.format(pNode.getTotalTime0InPerCent() / 100) + ")"; // NOI18N
-//                }
-//
-//                private String getNodeWaitTime(PrestimeCPUCCTNode pNode) {
-//                    return StringUtils.mcsTimeToString(pNode.getWaitTime0()) + " ms"; // NOI18N
-//                }
-//
-//                private String getNodeSleepTime(PrestimeCPUCCTNode pNode) {
-//                    return StringUtils.mcsTimeToString(pNode.getSleepTime0()) + " ms"; // NOI18N
-//                }
-//
-//                private String getNodeSecondaryTime(PrestimeCPUCCTNode pNode) {
-//                    return StringUtils.mcsTimeToString(pNode.getTotalTime1()) + " ms"; // NOI18N
-//                }
-//
-//                private Integer getNodeInvocations(PrestimeCPUCCTNode pNode) {
-//                    return Integer.valueOf(pNode.getNCalls());
-//                }
-
                 private Integer getNodeMethodId(PrestimeCPUCCTNode pNode) {
                     return Integer.valueOf(pNode.getMethodId());
                 }
@@ -630,7 +605,7 @@ public class CCTDisplay extends SnapshotCPUResultsPanel implements ScreenshotPro
     }
     
     protected Float getNodeTimeRel(long time, float percent) {
-        return new Float(percent);
+        return percent;
     }
 
     protected String getNodeTime(long time, float percent) {

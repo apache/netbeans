@@ -21,16 +21,5 @@
 -->
 <project name="platform/o.apache.commons.lang3" default="build" basedir=".">
     <import file="../../nbbuild/templates/projectized.xml"/>
-    <target name="jar" depends="-define-FileCRC32Calculator">
-        <FileCRC32Calculator file="external/commons-lang3-3.12.0.jar" property="o.apache.commons.lang3.crc32" />
-        <jar jarfile="${cluster}/${module.jar}">
-            <zipfileset src="external/commons-lang3-3.12.0.jar"/>
-            <manifest>
-                <attribute name="Bundle-SymbolicName" value="org.apache.commons.lang3"/>
-                <attribute name="Bundle-Version" value="3.12.0"/>
-                <attribute name="Export-Package" value="Export-Package: org.apache.commons.lang3;version=&quot;3.12.0&quot;,org.apache.commons.lang3.arch;version=&quot;3.12.0&quot;,org.apache.commons.lang3.builder;v ersion=&quot;3.12.0&quot;,org.apache.commons.lang3.compare;version=&quot;3.12.0&quot;,org.apache.commons.lang3.concurrent;version=&quot;3.12.0&quot;,org.apache.commons. lang3.concurrent.locks;version=&quot;3.12.0&quot;,org.apache.commons.lang3.event;version=&quot;3.12.0&quot;,org.apache.commons.lang3.exception;version=&quot;3.12.0 &quot;,org.apache.commons.lang3.function;version=&quot;3.12.0&quot;,org.apache.commons.lang3.math;version=&quot;3.12.0&quot;,org.apache.commons.lang3.mutable;version=&quot;3.12.0&quot;,org.apache.commons.lang3.reflect;version=&quot;3.12.0&quot;,org.apa che.commons.lang3.stream;version=&quot;3.12.0&quot;,org.apache.commons.lang3.text;version=&quot;3.12.0&quot;,org.apache.commons.lang3.text.translate;version=&quot;3.12.0&quot;,org.apache.commons.lang3.time;version=&quot;3.12.0&quot;,org.apache.commons.lang3.tuple;version=&quot;3.12.0&quot;"/>
-                <attribute name="NB-Original-CRC" value="${o.apache.commons.lang3.crc32}"/>
-            </manifest>
-        </jar>
-    </target>
+    <target name="jar"/>
 </project>

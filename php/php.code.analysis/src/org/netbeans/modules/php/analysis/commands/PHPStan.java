@@ -99,8 +99,8 @@ public final class PHPStan {
     }
 
     @NbBundle.Messages("PHPStan.script.label=PHPStan")
-    public static String validate(String codeSnifferPath) {
-        return PhpExecutableValidator.validateCommand(codeSnifferPath, Bundle.PHPStan_script_label());
+    public static String validate(String phpStanPath) {
+        return PhpExecutableValidator.validateCommand(phpStanPath, Bundle.PHPStan_script_label());
     }
 
     public void startAnalyzeGroup() {

@@ -23,12 +23,16 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicBoolean;
+import javax.lang.model.element.AnnotationMirror;
+import javax.lang.model.element.AnnotationValue;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.element.VariableElement;
 import javax.lang.model.util.ElementFilter;
 import javax.swing.text.Document;
 import org.netbeans.api.editor.mimelookup.MimeRegistration;
@@ -129,12 +133,31 @@ public class MicronautConfigHyperlinkProvider implements HyperlinkProviderExt {
                         }
                         TypeElement te = (TypeElement) handle[0].resolve(controller);
                         if (te != null) {
+                            ElementHandle found = null;
                             String name = "set" + propertyName.replace("-", "");
                             for (ExecutableElement executableElement : ElementFilter.methodsIn(te.getEnclosedElements())) {
                                 if (name.equalsIgnoreCase(executableElement.getSimpleName().toString())) {
-                                    handle[0] = ElementHandle.create(executableElement);
+                                    found = ElementHandle.create(executableElement);
                                     break;
                                 }
+                            }
+                            if (found == null) {
+                                TypeElement typeElement = controller.getElements().getTypeElement("io.micronaut.context.annotation.Property");
+                                for (VariableElement variableElement : ElementFilter.fieldsIn(te.getEnclosedElements())) {
+                                    for (AnnotationMirror annotationMirror : variableElement.getAnnotationMirrors()) {
+                                        if (typeElement == annotationMirror.getAnnotationType().asElement()) {
+                                            for (Map.Entry<? extends ExecutableElement, ? extends AnnotationValue> entry : annotationMirror.getElementValues().entrySet()) {
+                                                if ("name".contentEquals(entry.getKey().getSimpleName()) && propertyName.equals(entry.getValue().getValue())) {
+                                                    found = ElementHandle.create(variableElement);
+                                                    break;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            if (found != null) {
+                                handle[0] = found;
                             }
                         }
                     }, true);

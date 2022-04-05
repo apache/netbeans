@@ -87,7 +87,7 @@ public class DBAddConnection extends CodeActionsProvider {
         String userId = null;
         String dbUrl = null;
         String driverClass = null;
-        final Map m = gson.fromJson((JsonObject) arguments.get(0), Map.class);
+        final Map m = arguments.isEmpty() ? null : gson.fromJson((JsonObject) arguments.get(0), Map.class);
         if (m != null) {
             userId = (String) m.get(USER_ID);
             dbUrl = (String) m.get(DB_URL);

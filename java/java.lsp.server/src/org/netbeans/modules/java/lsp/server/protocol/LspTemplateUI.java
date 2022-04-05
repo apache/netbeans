@@ -49,6 +49,7 @@ import org.netbeans.api.project.SourceGroup;
 import org.netbeans.api.project.SourceGroupModifier;
 import org.netbeans.api.templates.CreateDescriptor;
 import org.netbeans.api.templates.FileBuilder;
+import org.netbeans.modules.parsing.api.indexing.IndexingManager;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.URLMapper;
@@ -109,7 +110,11 @@ final class LspTemplateUI {
             try {
                 if (builder != null) {
                     List<FileObject> created = builder.build();
-                    return created != null ? (Object) created.stream().map(fo -> fo.toURI().toString()).collect(Collectors.toList()) : null;
+                    if (created == null || created.isEmpty()) {
+                        return null;
+                    }
+                    IndexingManager.getDefault().refreshAllIndices(false, true, created.toArray(new FileObject[0]));
+                    return (Object) created.stream().map(fo -> fo.toURI().toString()).collect(Collectors.toList());
                 }
                 return null;
             } catch (IOException ex) {

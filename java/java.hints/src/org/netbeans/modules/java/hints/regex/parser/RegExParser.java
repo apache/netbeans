@@ -20,7 +20,7 @@ package org.netbeans.modules.java.hints.regex.parser;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import org.netbeans.modules.java.hints.regex.parser.AnyChar.Blank;
+import org.netbeans.modules.java.hints.regex.parser.RegexConstructs.*;
 
 /**
  *
@@ -31,8 +31,8 @@ public class RegExParser {
     private final String input;
     private int pos;
     private int groupNo;
-    public HashMap<Integer, RegEx> groupMap;
-    public HashMap<String, RegEx> namedGroupMap;
+    private HashMap<Integer, RegEx> groupMap;
+    private HashMap<String, RegEx> namedGroupMap;
 
     private static final char OR = '|';
     private static final char AND = '&';
@@ -199,8 +199,8 @@ public class RegExParser {
                 return handleParenthesis();
             case '\\':
                 return handleEscape();
-            case '.':
-                eat('.');
+            case DOT:
+                eat(DOT);
                 return new AnyChar();
             case '^':
                 eat('^');
@@ -257,7 +257,7 @@ public class RegExParser {
                 
             }
         } else {
-            r = new CapturingGropup(groupNo, regex(), this);
+            r = new CapturingGroup(groupNo, regex(), this);
         }
         eat(PAR_CL);
         return r;
@@ -271,7 +271,7 @@ public class RegExParser {
         }
         if (nextIn(DIGIT)) {
             String number = "";
-            int n = groupMap.size();
+            int n = getGroupMap().size();
             while (more() && nextIn(DIGIT)) {
                 int parseInt = Integer.parseInt(String.valueOf(number + peek()));
                 if (parseInt <= n) {
@@ -282,7 +282,7 @@ public class RegExParser {
             }
             int num = Integer.parseInt(String.valueOf(number));
 
-            return groupMap.get(num);
+            return getGroupMap().get(num);
         }
         char esc = next();
         if (esc == QUOT_OP) {
@@ -304,7 +304,7 @@ public class RegExParser {
                 s.append(next());
             }
             next();
-            return namedGroupMap.get(s.toString());
+            return getNamedGroupMap().get(s.toString());
         }
         if (SpecialChar.sChars.containsKey(esc)) {
             return SpecialChar.sChars.get(esc);
@@ -482,6 +482,22 @@ public class RegExParser {
         }
 
         return posixClass;
+    }
+
+    public HashMap<String, RegEx> getNamedGroupMap() {
+        return namedGroupMap;
+    }
+
+    public void setNamedGroupMap(HashMap<String, RegEx> namedGroupMap) {
+        this.namedGroupMap = namedGroupMap;
+    }
+
+    public HashMap<Integer, RegEx> getGroupMap() {
+        return groupMap;
+    }
+
+    public void setGroupMap(HashMap<Integer, RegEx> groupMap) {
+        this.groupMap = groupMap;
     }
 
 }

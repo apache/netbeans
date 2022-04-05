@@ -23,8 +23,8 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import javax.swing.JPanel;
 import org.netbeans.modules.java.hints.regex.parser.ExampleGenerator;
-import org.netbeans.modules.java.hints.regex.parser.RegEx;
 import org.netbeans.modules.java.hints.regex.parser.RegExParser;
+import org.netbeans.modules.java.hints.regex.parser.RegexConstructs.RegEx;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 

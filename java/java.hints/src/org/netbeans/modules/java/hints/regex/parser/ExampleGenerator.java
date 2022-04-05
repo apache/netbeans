@@ -21,7 +21,7 @@ package org.netbeans.modules.java.hints.regex.parser;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import org.netbeans.modules.java.hints.regex.parser.AnyChar.Blank;
+import org.netbeans.modules.java.hints.regex.parser.RegexConstructs.*;
 
 /**
  *
@@ -181,7 +181,6 @@ public class ExampleGenerator {
                 buildExample(nodes, sb);
             });
 
-            return;
         }
     }
 }

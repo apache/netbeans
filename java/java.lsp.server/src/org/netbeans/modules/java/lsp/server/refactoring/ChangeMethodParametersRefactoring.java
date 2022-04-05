@@ -266,6 +266,8 @@ public final class ChangeMethodParametersRefactoring extends CodeRefactoring {
                 }
                 String returnType = ui.getReturnType();
                 refactoring.setReturnType(returnType.length() > 0 ? returnType : null);
+                String name = ui.getName();
+                refactoring.setMethodName(name.length() > 0 ? name : null);
                 List<ParameterUI> parameters = ui.getParameters();
                 ChangeParametersRefactoring.ParameterInfo[] params = new ChangeParametersRefactoring.ParameterInfo[parameters.size()];
                 for (int i = 0; i < parameters.size(); i++) {

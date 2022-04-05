@@ -445,6 +445,16 @@ class NbProjectInfoBuilder {
                             if(!ignoreUnresolvable && (it.isVisible() || it.isCanBeConsumed())) {
                                 // hidden configurations like 'testCodeCoverageReportExecutionData' might contain unresolvable artifacts.
                                 // do not report problems here
+                                Throwable failure = ((UnresolvedDependencyResult) it2).getFailure();
+                                if (project.getGradle().getStartParameter().isOffline()) {
+                                    // if the unresolvable is bcs. offline mode, throw an exception to get retry in online mode.
+                                    Throwable prev = null;
+                                    for (Throwable t = failure; t != prev && t != null; prev = t, t = t.getCause()) {
+                                        if (t.getMessage().contains("available for offline")) {
+                                            throw new NeedOnlineModeException("Need online mode", failure);
+                                        }
+                                    }
+                                }
                                 unresolvedProblems.put(id, ((UnresolvedDependencyResult) it2).getFailure().getMessage());
                             }
                         }

@@ -47,17 +47,17 @@ import org.openide.util.RequestProcessor;
 )
 @ActionID(category = "Database", id = "netbeans.db.explorer.action.Refresh")
 @ActionReferences(value = {
-    @ActionReference(path = "Databases/Explorer/Connection/Actions", position = 100),
-    @ActionReference(path = "Databases/Explorer/Catalog/Actions", position = 100),
-    @ActionReference(path = "Databases/Explorer/Schema/Actions", position = 100),
-    @ActionReference(path = "Databases/Explorer/TableList/Actions", position = 100),
-    @ActionReference(path = "Databases/Explorer/SystemTableList/Actions", position = 100),
-    @ActionReference(path = "Databases/Explorer/Table/Actions", position = 100),
-    @ActionReference(path = "Databases/Explorer/ViewList/Actions", position = 100),
-    @ActionReference(path = "Databases/Explorer/ProcedureList/Actions", position = 100),
-    @ActionReference(path = "Databases/Explorer/Index/Actions", position = 100),
-    @ActionReference(path = "Databases/Explorer/ForeignKeyList/Actions", position = 100),
-    @ActionReference(path = "Databases/Explorer/ForeignKey/Actions", position = 100),
+    @ActionReference(path = "Databases/Explorer/Connection/Actions", position = 350),
+    @ActionReference(path = "Databases/Explorer/Catalog/Actions", position = 350),
+    @ActionReference(path = "Databases/Explorer/Schema/Actions", position = 350),
+    @ActionReference(path = "Databases/Explorer/TableList/Actions", position = 350),
+    @ActionReference(path = "Databases/Explorer/SystemTableList/Actions", position = 350),
+    @ActionReference(path = "Databases/Explorer/Table/Actions", position = 250),
+    @ActionReference(path = "Databases/Explorer/ViewList/Actions", position = 350),
+    @ActionReference(path = "Databases/Explorer/ProcedureList/Actions", position = 350),
+    @ActionReference(path = "Databases/Explorer/Index/Actions", position = 350),
+    @ActionReference(path = "Databases/Explorer/ForeignKeyList/Actions", position = 300),
+    @ActionReference(path = "Databases/Explorer/ForeignKey/Actions", position = 350),
 })
 public class RefreshAction extends BaseAction {
     private static final RequestProcessor RP = new RequestProcessor(RefreshAction.class);

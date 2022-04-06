@@ -607,7 +607,7 @@ non terminal Integer af_modifiers;
 
 non terminal ClassName class_name_reference;
 non terminal StaticConstantAccess class_constant;
-non terminal Expression reference_constant;
+non terminal StaticConstantAccess enum_constant;
 non terminal ClassName dynamic_class_name_reference;
 non terminal VariableBase dereferencable_variable;
 non terminal VariableBase base_variable;
@@ -4082,11 +4082,67 @@ namespace_name:list T_OPEN_PARENTHESE function_call_parameter_list:parameters T_
             new FunctionName(oleft, cright, reflectionVariable), parameters));
 :}
 
+| class_name:className T_PAAMAYIM_NEKUDOTAYIM identifier:constant T_OBJECT_OPERATOR identifier:fn T_OPEN_PARENTHESE function_call_parameter_list:parameters T_CLOSE_PARENTHESE:e
+{:
+    // Name::CASE1->method();
+    RESULT = new MethodInvocation(classNameleft, eright, new StaticConstantAccess(classNameleft, constantright, className, constant),
+        new FunctionInvocation(fnleft, eright,
+            new FunctionName(fnleft, fnright, fn), parameters), false);
+:}
+
+| class_name:className T_PAAMAYIM_NEKUDOTAYIM identifier:constant T_NULLSAFE_OBJECT_OPERATOR identifier:fn T_OPEN_PARENTHESE function_call_parameter_list:parameters T_CLOSE_PARENTHESE:e
+{:
+    // Name::CASE1?->method();
+    RESULT = new MethodInvocation(classNameleft, eright, new StaticConstantAccess(classNameleft, constantright, className, constant),
+        new FunctionInvocation(fnleft, eright,
+            new FunctionName(fnleft, fnright, fn), parameters), true);
+:}
+
+| enum_constant:enumConst T_PAAMAYIM_NEKUDOTAYIM identifier:fn T_OPEN_PARENTHESE function_call_parameter_list:parameters T_CLOSE_PARENTHESE:e
+{:
+    // Name::CASE1::CASE2::staticMethod();
+    RESULT = new StaticMethodInvocation(enumConstleft, eright, enumConst,
+        new FunctionInvocation(fnleft, eright,
+            new FunctionName(fnleft, fnright, fn), parameters));
+:}
+
+| enum_constant:enumConst T_PAAMAYIM_NEKUDOTAYIM identifier:constant T_OBJECT_OPERATOR identifier:fn T_OPEN_PARENTHESE function_call_parameter_list:parameters T_CLOSE_PARENTHESE:e
+{:
+    // Name::CASE1::CASE2->method();
+    RESULT = new MethodInvocation(enumConstleft, eright, new StaticConstantAccess(enumConstleft, constantright, enumConst, constant),
+        new FunctionInvocation(fnleft, eright,
+            new FunctionName(fnleft, fnright, fn), parameters), false);
+:}
+
+| enum_constant:enumConst T_PAAMAYIM_NEKUDOTAYIM identifier:constant T_NULLSAFE_OBJECT_OPERATOR identifier:fn T_OPEN_PARENTHESE function_call_parameter_list:parameters T_CLOSE_PARENTHESE:e
+{:
+    // Name::CASE1::CASE2?->method();
+    RESULT = new MethodInvocation(enumConstleft, eright, new StaticConstantAccess(enumConstleft, constantright, enumConst, constant),
+        new FunctionInvocation(fnleft, eright,
+            new FunctionName(fnleft, fnright, fn), parameters), true);
+:}
+
 | variable_class_name:className T_PAAMAYIM_NEKUDOTAYIM identifier:fn T_OPEN_PARENTHESE function_call_parameter_list:parameters T_CLOSE_PARENTHESE:e
 {:
     RESULT = new StaticMethodInvocation(classNameleft, eright, className,
         new FunctionInvocation(fnleft, eright,
             new FunctionName(fnleft, fnright, fn), parameters));
+:}
+
+| variable_class_name:className T_PAAMAYIM_NEKUDOTAYIM identifier:constant T_OBJECT_OPERATOR identifier:fn T_OPEN_PARENTHESE function_call_parameter_list:parameters T_CLOSE_PARENTHESE:e
+{:
+    // $i::CONSTANT->method();
+    RESULT = new MethodInvocation(classNameleft, eright, new StaticConstantAccess(classNameleft, constantright, className, constant),
+        new FunctionInvocation(fnleft, eright,
+            new FunctionName(fnleft, fnright, fn), parameters), false);
+:}
+
+| variable_class_name:className T_PAAMAYIM_NEKUDOTAYIM identifier:constant T_NULLSAFE_OBJECT_OPERATOR identifier:fn T_OPEN_PARENTHESE function_call_parameter_list:parameters T_CLOSE_PARENTHESE:e
+{:
+    // $i::CONSTANT?->method();
+    RESULT = new MethodInvocation(classNameleft, eright, new StaticConstantAccess(classNameleft, constantright, className, constant),
+        new FunctionInvocation(fnleft, eright,
+            new FunctionName(fnleft, fnright, fn), parameters), true);
 :}
 
 | variable_class_name:className T_PAAMAYIM_NEKUDOTAYIM variable_without_objects:reflectionName T_OPEN_PARENTHESE function_call_parameter_list:parameters T_CLOSE_PARENTHESE:e
@@ -5691,26 +5747,35 @@ variable:var
 ;
 
 class_constant ::=
-class_name:className T_PAAMAYIM_NEKUDOTAYIM reference_constant:constant
+enum_constant:constant
 {:
-    RESULT = new StaticConstantAccess(classNameleft, constantright, className, constant);
+    RESULT = constant;
 :}
 
-| variable_class_name:className T_PAAMAYIM_NEKUDOTAYIM reference_constant:constant
+| class_constant:constant array_dimension:ad
 {:
-    RESULT = new StaticConstantAccess(classNameleft, constantright, className, constant);
+    // Name::CONSTANT[1][2];
+    // Name::ENUM_CASE::CONSTANT[1];
+    RESULT = new StaticConstantAccess(constantleft, adright, constant.getDispatcher(),
+            new ExpressionArrayAccess(constant.getConstant().getStartOffset(), adright, constant.getConstant(), ad));
 :}
 ;
 
-reference_constant ::=
-reference_constant:constant array_dimension:ad
+enum_constant ::=
+class_name:className T_PAAMAYIM_NEKUDOTAYIM identifier:constant
 {:
-    RESULT = new ExpressionArrayAccess(constantleft, adright, constant, ad);
+    RESULT = new StaticConstantAccess(classNameleft, constantright, className, constant);
 :}
 
-| identifier:constantName
+| variable_class_name:className T_PAAMAYIM_NEKUDOTAYIM identifier:constant
 {:
-    RESULT = constantName;
+    RESULT = new StaticConstantAccess(classNameleft, constantright, className, constant);
+:}
+
+| enum_constant:enumConst T_PAAMAYIM_NEKUDOTAYIM identifier:constant
+{:
+    // Name::ENUM_CASE::CONSTANT;
+    RESULT = new StaticConstantAccess(enumConstleft, constantright, enumConst, constant);
 :}
 ;
 

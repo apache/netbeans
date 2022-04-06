@@ -36,6 +36,10 @@ public class PHP81FeaturesTest extends PHPLexerTestBase {
         performTest("lexer/php81/enumerations_01");
     }
 
+    public void testEnumerations_02() throws Exception {
+        performTest("lexer/php81/enumerations_02");
+    }
+
     public void testEnumAsTypeName() throws Exception {
         performTest("lexer/php81/enumAsTypeName");
     }

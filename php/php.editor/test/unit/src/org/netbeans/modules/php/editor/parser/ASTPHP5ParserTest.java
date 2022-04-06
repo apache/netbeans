@@ -1363,6 +1363,10 @@ public class ASTPHP5ParserTest extends ParserTestBase {
         performTest("parser/php81/enumerations_01");
     }
 
+    public void testEnumerations_02() throws Exception {
+        performTest("parser/php81/enumerations_02");
+    }
+
     public void testEnumAsTypeName() throws Exception {
         // We can use "enum" as a type name
         performTest("parser/php81/enumAsTypeName");

@@ -29,6 +29,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -110,9 +111,12 @@ final class LspTemplateUI {
             try {
                 if (builder != null) {
                     List<FileObject> created = builder.build();
-                    if (created == null || created.isEmpty()) {
+                    if (created == null) {
                         return null;
+                    } else if (created.isEmpty()) {
+                        return Collections.emptyList();
                     }
+                    // Make sure the newly created files are indexed before returned to client
                     IndexingManager.getDefault().refreshAllIndices(false, true, created.toArray(new FileObject[0]));
                     return (Object) created.stream().map(fo -> fo.toURI().toString()).collect(Collectors.toList());
                 }

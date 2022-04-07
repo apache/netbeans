@@ -62,7 +62,16 @@
             <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.micronaut.db.Bundle"/>
             <attr name="templateWizardURL" urlvalue="nbresloc:/org/netbeans/modules/micronaut/resources/Micronaut.html"/>
             <attr name="position" intvalue="1280"/>
-
+            <file name="Controller">
+                <attr name="position" intvalue="120"/>
+                <attr name="template" boolvalue="true"/>
+                <attr name="instantiatingIterator" methodvalue="org.netbeans.modules.micronaut.db.MicronautController.create"/>
+                <attr name="template.createTemplateHandler" methodvalue="org.netbeans.modules.micronaut.db.MicronautController.handler"/>
+                <attr name="templateCategory" stringvalue="persistence"/>
+                <attr name="templateWizardURL" urlvalue="nbresloc:/org/netbeans/modules/micronaut/resources/Controller.html"/>
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.micronaut.db.Bundle"/>
+                <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/java/resources/class.png"/>
+            </file>
             <file name="Entity">
                 <attr name="position" intvalue="220"/>
                 <attr name="template" boolvalue="true"/>

@@ -20,11 +20,19 @@
     under the License.
 
 -->
-## Version 13.0.601
+## Version 13.0.301
 * Added base code completion for Spock test framework
   * Spock Block Names are offered inside methods if the class extends Spock Specification
   * Parameter names are offered, if the parameters are defined in a method name that is annotated with @Unroll
 * Added Outline view for Groovy files
+* Significant improvements & bug fixes working with Gradle projects 
+* Info on project problems shown in VSCode 
+* Move refactoring updated to use rich form style
+* Oracle Cloud Explorer added
+* Database Explorer added for JDBC databases including wallet authentication style
+* Micronaut and JPA Entity classes supported together with Repository classes
+* GraalVM native image debugging fixes and improvements
+* Java Call Hierarchy added
 
 ## Version 12.6.301
 * Project Explorer to display logical project structure, dependencies and project files introduced

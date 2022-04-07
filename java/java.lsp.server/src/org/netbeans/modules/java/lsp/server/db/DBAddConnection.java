@@ -87,41 +87,43 @@ public class DBAddConnection extends CodeActionsProvider {
         String userId = null;
         String dbUrl = null;
         String driverClass = null;
-        final Map m = arguments.isEmpty() ? null : gson.fromJson((JsonObject) arguments.get(0), Map.class);
-        if (m != null) {
-            userId = (String) m.get(USER_ID);
-            dbUrl = (String) m.get(DB_URL);
-            driverClass = (String) m.get(DRIVER);
-        }
-        if (dbUrl != null && driverClass != null) {
-            
-            JDBCDriver[] driver = JDBCDriverManager.getDefault().getDrivers(driverClass); //NOI18N
-            if (driver != null && driver.length > 0) {
-                CompletableFuture<String> usernameFuture = userId != null ? CompletableFuture.completedFuture(userId) : client.showInputBox(new ShowInputBoxParams(
-                        Bundle.MSG_EnterUsername(), userId));
-                
-                usernameFuture.thenAccept((username) -> { //NOI18N
-                    if (username == null) {
-                        return;
-                    }
-                    String password = (String) m.get(PASSWORD);
-                    CompletableFuture<String> passwordFuture = password != null ? CompletableFuture.completedFuture(password) : client.showInputBox(new ShowInputBoxParams(
-                            Bundle.MSG_EnterPassword(), "", true));
-                    passwordFuture.thenAccept((p) -> { //NOI18N
-                        if (p == null) {
+        if (arguments != null && arguments.size() > 0) {
+            final Map m = gson.fromJson((JsonObject) arguments.get(0), Map.class);
+            if (m != null) {
+                userId = (String) m.get(USER_ID);
+                dbUrl = (String) m.get(DB_URL);
+                driverClass = (String) m.get(DRIVER);
+            }
+            if (dbUrl != null && driverClass != null) {
+
+                JDBCDriver[] driver = JDBCDriverManager.getDefault().getDrivers(driverClass); //NOI18N
+                if (driver != null && driver.length > 0) {
+                    CompletableFuture<String> usernameFuture = userId != null ? CompletableFuture.completedFuture(userId) : client.showInputBox(new ShowInputBoxParams(
+                            Bundle.MSG_EnterUsername(), userId));
+
+                    usernameFuture.thenAccept((username) -> { //NOI18N
+                        if (username == null) {
                             return;
                         }
-                        DatabaseConnection dbconn = DatabaseConnection.create(driver[0], (String) m.get(DB_URL), username, (String) m.get(SCHEMA), p, true, (String) m.get(DISPLAY_NAME));
-                        try {
-                            ConnectionManager.getDefault().addConnection(dbconn);
-                        } catch (DatabaseException ex) {
-                            client.showMessage(new MessageParams(MessageType.Error, ex.getMessage()));
-                        }
+                        String password = (String) m.get(PASSWORD);
+                        CompletableFuture<String> passwordFuture = password != null ? CompletableFuture.completedFuture(password) : client.showInputBox(new ShowInputBoxParams(
+                                Bundle.MSG_EnterPassword(), "", true));
+                        passwordFuture.thenAccept((p) -> { //NOI18N
+                            if (p == null) {
+                                return;
+                            }
+                            DatabaseConnection dbconn = DatabaseConnection.create(driver[0], (String) m.get(DB_URL), username, (String) m.get(SCHEMA), p, true, (String) m.get(DISPLAY_NAME));
+                            try {
+                                ConnectionManager.getDefault().addConnection(dbconn);
+                            } catch (DatabaseException ex) {
+                                client.showMessage(new MessageParams(MessageType.Error, ex.getMessage()));
+                            }
+                        });
                     });
-                });
-                client.showMessage(new MessageParams(MessageType.Info, Bundle.MSG_ConnectionAdded()));
+                    client.showMessage(new MessageParams(MessageType.Info, Bundle.MSG_ConnectionAdded()));
+                }
+                return CompletableFuture.completedFuture(null);
             }
-            return CompletableFuture.completedFuture(null);
         }
         
         JDBCDriver[] drivers = JDBCDriverManager.getDefault().getDrivers();

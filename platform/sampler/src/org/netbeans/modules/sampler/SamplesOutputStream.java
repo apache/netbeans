@@ -195,7 +195,7 @@ class SamplesOutputStream {
                 stack[i] = oldStackRef.get();
                 assert stack[i] != null;
             } else {
-                steCache.put(ste, new WeakReference(ste));
+                steCache.put(ste, new WeakReference<>(ste));
             }
         }
     }

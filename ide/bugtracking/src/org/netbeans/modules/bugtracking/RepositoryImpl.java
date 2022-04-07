@@ -521,7 +521,7 @@ public final class RepositoryImpl<R, Q, I> {
             return w;
         }
         
-        public WeakReference get(DATA key, WRAPPER w) {
+        public WeakReference<WRAPPER> get(DATA key, WRAPPER w) {
             return super.put(key, new MapReference(key, w)); 
         }
         

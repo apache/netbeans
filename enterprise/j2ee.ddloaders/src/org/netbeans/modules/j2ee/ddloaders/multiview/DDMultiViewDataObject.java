@@ -48,7 +48,6 @@ public abstract class DDMultiViewDataObject extends XmlMultiViewDataObject
         implements DDProviderDataObject {
 
 
-    private WeakReference transactionReference = null;
     private static final int HANDLE_UNPARSABLE_TIMEOUT = 2000;
     private DDMultiViewDataObject.ModelSynchronizer modelSynchronizer;
 
@@ -91,9 +90,6 @@ public abstract class DDMultiViewDataObject extends XmlMultiViewDataObject
     }
 
     public void writeModel(RootInterface model) throws IOException {
-        if (transactionReference != null && transactionReference.get() != null) {
-            return;
-        }
         FileLock dataLock = waitForLock();
         if (dataLock == null) {
             return;
@@ -168,27 +164,6 @@ public abstract class DDMultiViewDataObject extends XmlMultiViewDataObject
      * Method is called before switching to the design view from XML view when the document isn't parseable.
      */
     protected abstract boolean isDocumentParseable();
-
-//    public Transaction openTransaction() {
-//        final XmlMultiViewDataSynchronizer.Transaction synchronizerTransaction = getModelSynchronizer().openTransaction();
-//        if (synchronizerTransaction == null) {
-//            return null;
-//        } else {
-//            Transaction transaction = new Transaction() {
-//                public void rollback() {
-//                    synchronizerTransaction.rollback();
-//                    transactionReference = null;
-//                }
-//
-//                public void commit() throws IOException {
-//                    synchronizerTransaction.commit();
-//                    transactionReference = null;
-//                }
-//            };
-//            transactionReference = new WeakReference(transaction);
-//            return transaction;
-//        }
-//    }
 
     private class ModelSynchronizer extends XmlMultiViewDataSynchronizer {
         private long handleUnparseableTimeout = 0;

@@ -36,6 +36,7 @@ import static java.util.logging.Level.WARNING;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import javax.swing.SwingUtilities;
 import org.gradle.tooling.BuildAction;
 import org.gradle.tooling.BuildActionExecuter;
@@ -51,6 +52,7 @@ import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.modules.gradle.GradleProject;
 import org.netbeans.modules.gradle.GradleProjectErrorNotifications;
 import org.netbeans.modules.gradle.GradleReport;
+import org.netbeans.modules.gradle.NbGradleProjectImpl;
 import static org.netbeans.modules.gradle.loaders.GradleDaemon.GRADLE_LOADER_RP;
 import org.netbeans.modules.gradle.api.GradleBaseProject;
 import org.netbeans.modules.gradle.api.NbGradleProject;
@@ -67,6 +69,7 @@ import org.openide.util.Cancellable;
 import org.openide.util.NbBundle;
 
 import static org.netbeans.modules.gradle.loaders.Bundle.*;
+import org.openide.filesystems.FileUtil;
 
 /**
  *
@@ -150,7 +153,7 @@ public class LegacyProjectLoader extends AbstractProjectLoader {
 
             errors.clear();
             AtomicBoolean onlineResult = new AtomicBoolean();
-            info = retrieveProjectInfo(goOnline, pconn, cmd, token, pl, onlineResult);
+            info = retrieveProjectInfo(ctx.project, goOnline, pconn, cmd, token, pl, onlineResult);
 
             if (!info.getProblems().isEmpty()) {
                 errors.openNotification(
@@ -160,7 +163,25 @@ public class LegacyProjectLoader extends AbstractProjectLoader {
             }
             if (!info.hasException()) {
                 if (!info.getProblems().isEmpty() || !info.getReports().isEmpty()) {
-                    // If we do not have exception, but seen some problems the we mark the quality as SIMPLE
+                    if (LOG.isLoggable(Level.FINE)) {
+                        // If we do not have exception, but seen some problems the we mark the quality as SIMPLE
+                        Object o = new ArrayList<String>(info.getReports().stream().
+                                map(LegacyProjectLoader::copyReport).
+                                map((r) -> r.formatReportForHintOrProblem(
+                                        true, 
+                                        FileUtil.toFileObject(
+                                                ctx.project.getGradleFiles().getBuildScript()
+                                        )
+                                )).
+                                collect(Collectors.toList())
+                        );
+                        LOG.log(Level.FINE, "Project {0} loaded without exception, but with problems: {1}", 
+                                new Object[] {
+                                    ctx.project, 
+                                    o
+                                }
+                        );
+                    }                    
                     quality = SIMPLE;
                 } else {
                     // the project has been either fully loaded, or online checked
@@ -178,6 +199,22 @@ public class LegacyProjectLoader extends AbstractProjectLoader {
                     for (Report r : info.getReports()) {
                         reps.add(copyReport(r));
                     }
+                    Object o = new ArrayList<String>(reps.stream().
+                            map((r) -> r.formatReportForHintOrProblem(
+                                true, 
+                                FileUtil.toFileObject(
+                                    ctx.project.getGradleFiles().getBuildScript()
+                                )
+                            )).
+                            collect(Collectors.toList())
+                    );
+                    LOG.log(Level.FINE, "Project {0} loaded with exception, and with problems: {1}", 
+                            new Object[] {
+                                ctx.project, 
+                                o
+                            }
+                    );
+                    LOG.log(FINE, "Thrown exception:", info.getGradleException()); //NOI18N
                     File f = ctx.project.getGradleFiles().getBuildScript();
                     for (String s : info.getProblems()) {
                         reps.add(GradleReport.simple(f == null ? null : f.toPath(), s));
@@ -350,7 +387,7 @@ public class LegacyProjectLoader extends AbstractProjectLoader {
         return ret;
     }
 
-    private static NbProjectInfo retrieveProjectInfo(GoOnline goOnline, ProjectConnection pconn, GradleCommandLine cmd, CancellationToken token, ProgressListener pl, AtomicBoolean wasOnline) throws GradleConnectionException, IllegalStateException {
+    private static NbProjectInfo retrieveProjectInfo(NbGradleProjectImpl projectImpl, GoOnline goOnline, ProjectConnection pconn, GradleCommandLine cmd, CancellationToken token, ProgressListener pl, AtomicBoolean wasOnline) throws GradleConnectionException, IllegalStateException {
         NbProjectInfo ret;
 
         GradleSettings settings = GradleSettings.getDefault();
@@ -377,6 +414,9 @@ public class LegacyProjectLoader extends AbstractProjectLoader {
                     return ret;
                 }
             } catch (GradleConnectionException | IllegalStateException ex) {
+                LOG.log(Level.FINE, "Project {0} loaded with exception for mode {1}", 
+                        new Object[] { projectImpl, goOnline });
+                LOG.log(Level.FINE, "Thrown exception is: ", ex);
                 if (goOnline == GoOnline.NEVER) {
                     throw ex;
                 }

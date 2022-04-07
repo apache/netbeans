@@ -530,7 +530,7 @@ public class TreeEditorCookieImpl implements TreeEditorCookie, UpdateDocumentCoo
     /*
      * Reference which remembers which editor created stored TreeDocumentRoot.
      */
-    private class TreeReference extends WeakReference implements Runnable {
+    private class TreeReference extends WeakReference<TreeDocumentRoot> implements Runnable {
         
         TreeReference (TreeDocumentRoot root) {
             super(root, Utilities.activeReferenceQueue());
@@ -564,7 +564,7 @@ public class TreeEditorCookieImpl implements TreeEditorCookie, UpdateDocumentCoo
 
     public static class CookieFactoryImpl extends CookieFactory {
     
-        private WeakReference editor;
+        private WeakReference<TreeEditorCookieImpl> editor;
 
         private final XMLDataObjectLook dobj;   // used while creating the editor
         
@@ -604,7 +604,7 @@ public class TreeEditorCookieImpl implements TreeEditorCookie, UpdateDocumentCoo
             if ( Util.THIS.isLoggable() ) /* then */ Util.THIS.debug ("Initializing TreeEditorCookieImpl ..."); // NOI18N
 
             TreeEditorCookieImpl cake = new TreeEditorCookieImpl (dobj);
-            editor = new WeakReference (cake);
+            editor = new WeakReference<>(cake);
             return cake;
         }
 

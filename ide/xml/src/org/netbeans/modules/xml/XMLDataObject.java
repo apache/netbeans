@@ -80,7 +80,7 @@ public final class XMLDataObject extends org.openide.loaders.XMLDataObject
     private static final long serialVersionUID = 9153823984913876866L;
     
     /** Synchronization implementation delegate. */
-    private Reference<XMLSyncSupport> refSync;
+    private Reference<Synchronizator> refSync;
     
     /** Cookie Manager */
     private final DataObjectCookieManager cookieManager;
@@ -256,7 +256,7 @@ public final class XMLDataObject extends org.openide.loaders.XMLDataObject
             return sync;
         }
         sync = new XMLSyncSupport(this);
-        refSync = new WeakReference(sync);
+        refSync = new WeakReference<>(sync);
         return sync;
     }
 

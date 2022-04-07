@@ -399,7 +399,7 @@ public class DeclarativeHintsParser {
     /**
      * Marker that javac api is not available.
      */
-    private static final Reference<ClassPath> NONE = new WeakReference(null);
+    private static final Reference<ClassPath> NONE = new WeakReference<>(null);
     
     private static ClassPath getJavacApiJarClasspath() {
         Reference<ClassPath> r = javacApiClasspath;

@@ -388,7 +388,7 @@ public final class GradleCommandLine implements Serializable {
 
         @Override
         public List<String> getArgs() {
-            return Collections.singletonList(flag.flags.get(0));
+            return Collections.singletonList(toString());
         }
 
         @Override
@@ -425,6 +425,11 @@ public final class GradleCommandLine implements Serializable {
         public boolean supportsGradle(GradleDistribution dist) {
             return flag.supportsGradle(dist);
         }
+
+        @Override
+        public String toString() {
+            return flag.flags.get(0);
+        }
     }
 
     static class PropertyArgument implements Argument {
@@ -441,7 +446,7 @@ public final class GradleCommandLine implements Serializable {
 
         @Override
         public List<String> getArgs() {
-            return Collections.singletonList(prop.prefix + key + "=" + value);
+            return Collections.singletonList(toString());
         }
 
         @Override
@@ -478,6 +483,11 @@ public final class GradleCommandLine implements Serializable {
         @Override
         public boolean supportsGradle(GradleDistribution dist) {
             return prop.supportsGradle(dist);
+        }
+
+        @Override
+        public String toString(){
+            return prop.prefix + key + "=" + value;
         }
     }
 
@@ -565,6 +575,13 @@ public final class GradleCommandLine implements Serializable {
         public boolean supportsGradle(GradleDistribution dist) {
             return param.supportsGradle(dist);
         }
+
+        @Override
+        public String toString() {
+            return param.flags.get(0) + " " + value;
+        }
+
+
     }
 
     static class ParameterParser implements ArgumentParser<ParametricArgument> {
@@ -672,6 +689,9 @@ public final class GradleCommandLine implements Serializable {
             if (kinds.contains(arg.getKind())) {
                 if ((dist == null) || arg.supportsGradle(dist)) {
                     ret.addAll(arg.getArgs());
+                }
+                if ((dist != null) && !arg.supportsGradle(dist)) {
+                    LOGGER.log(Level.INFO, "'{0}' is not supported by Gradle {1}, so it will be omitted.", new Object[]{arg.toString(), dist.getVersion()});
                 }
             }
         }

@@ -132,10 +132,11 @@ public final class GradleDistributionManager {
      * @return
      */
     public static GradleDistributionManager get(File gradleUserHome) {
-        GradleDistributionManager ret = CACHE.get(gradleUserHome);
+        File home = gradleUserHome != null ? gradleUserHome : GradleSettings.getDefault().getGradleUserHome();
+        GradleDistributionManager ret = CACHE.get(home);
         if (ret == null) {
-            ret = new GradleDistributionManager(gradleUserHome);
-            CACHE.put(gradleUserHome, ret);
+            ret = new GradleDistributionManager(home);
+            CACHE.put(home, ret);
         }
         return ret;
     }
@@ -147,8 +148,8 @@ public final class GradleDistributionManager {
      * @return the GradleDistributionManager for the default Gradle user home.
      * @since 2.23
      */
-    public static GradleDistributionManager getDefault() {
-        return get(GradleSettings.getDefault().getGradleUserHome());
+    public static GradleDistributionManager get() {
+        return GradleDistributionManager.get(null);
     }
 
     /**

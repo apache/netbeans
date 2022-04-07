@@ -477,9 +477,10 @@ public final class NbGradleProjectImpl implements Project {
                     this.loading = null;
                 }
             }
+            f.complete(prj);
             LOG.log(Level.FINER, "Firing changes/reload synchronously");
             ACCESSOR.doFireReload(watcher);
-            return CompletableFuture.completedFuture(prj);
+            return f;
         } else {
             LOG.log(Level.FINER, "Firing changes/reload in RP");
             RELOAD_RP.post(() -> callAccessorReload(f, prj));
@@ -494,8 +495,8 @@ public final class NbGradleProjectImpl implements Project {
                     this.loading = null;
                 }
             }
-            ACCESSOR.doFireReload(watcher);
             f.complete(prj);
+            ACCESSOR.doFireReload(watcher);
         } catch (ThreadDeath t) {
             throw t;
         } catch (RuntimeException | Error ex) {

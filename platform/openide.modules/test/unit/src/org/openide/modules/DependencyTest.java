@@ -139,7 +139,7 @@ public class DependencyTest extends NbTestCase {
     
     public void testMisparseBadCodename() throws Exception {
         misparse(Dependency.TYPE_MODULE, "org.foo/-1");
-        misparse(Dependency.TYPE_MODULE, "org-foo/1");
+        Dependency.create(Dependency.TYPE_MODULE, "org-foo/1");
         misparse(Dependency.TYPE_MODULE, "org.foo./1");
     }
     
@@ -188,7 +188,7 @@ public class DependencyTest extends NbTestCase {
     }
     
     public void testMisparseRequiresBadCodeName() throws Exception {
-        misparse(Dependency.TYPE_REQUIRES, "some-thing");
+        Dependency.create(Dependency.TYPE_REQUIRES, "some-thing");
     }
     
     public void testMisparseDuplicates() throws Exception {

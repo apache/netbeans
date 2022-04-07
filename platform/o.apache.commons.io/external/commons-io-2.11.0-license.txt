@@ -1,10 +1,9 @@
-Name: Apache Commons
+Name: Apache Commons IO
 Description: Assist with developing IO functionality
 Origin: Apache Software Foundation
+Version: 2.11.0
 License: Apache-2.0
-Version: 2.5.3.6
-URL: https://commons.apache.org/
-Files: commons-io-2.5.jar
+URL: https://commons.apache.org/proper/commons-io/
 
 
 

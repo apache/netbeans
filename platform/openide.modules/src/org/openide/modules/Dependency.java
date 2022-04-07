@@ -177,7 +177,7 @@ public final class Dependency implements Serializable {
         }
     }
     private static final Pattern FQN = Pattern.compile(
-        "(?:\\p{javaJavaIdentifierStart}\\p{javaJavaIdentifierPart}*)(?:[.]\\p{javaJavaIdentifierPart}+)*" // NOI18N
+        "(?:\\p{javaJavaIdentifierStart}\\p{javaJavaIdentifierPart}*)(?:[.-]\\p{javaJavaIdentifierPart}+)*" // NOI18N
     ); 
     
     /** Parse dependencies from tags. Since version 7.32 it can parse

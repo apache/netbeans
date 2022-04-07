@@ -647,6 +647,12 @@
                         <specification-version>1.10</specification-version>
                     </run-dependency>
                 </dependency>
+                <dependency>
+                    <code-name-base>org.apache.commons.io</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency/>
+                </dependency>
             </module-dependencies>
             <test-dependencies>
                 <test-type>
@@ -809,10 +815,6 @@
             <class-path-extension>
                 <runtime-relative-path>ext/org.eclipse.lsp4j-0.12.0.jar</runtime-relative-path>
                 <binary-origin>external/org.eclipse.lsp4j-0.12.0.jar</binary-origin>
-            </class-path-extension>
-            <class-path-extension>
-                <runtime-relative-path>ext/commons-io-2.5.jar</runtime-relative-path>
-                <binary-origin>external/commons-io-2.5.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

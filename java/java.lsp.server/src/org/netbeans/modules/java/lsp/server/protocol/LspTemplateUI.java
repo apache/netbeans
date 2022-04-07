@@ -29,6 +29,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -49,6 +50,7 @@ import org.netbeans.api.project.SourceGroup;
 import org.netbeans.api.project.SourceGroupModifier;
 import org.netbeans.api.templates.CreateDescriptor;
 import org.netbeans.api.templates.FileBuilder;
+import org.netbeans.modules.parsing.api.indexing.IndexingManager;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.URLMapper;
@@ -109,7 +111,14 @@ final class LspTemplateUI {
             try {
                 if (builder != null) {
                     List<FileObject> created = builder.build();
-                    return created != null ? (Object) created.stream().map(fo -> fo.toURI().toString()).collect(Collectors.toList()) : null;
+                    if (created == null) {
+                        return null;
+                    } else if (created.isEmpty()) {
+                        return Collections.emptyList();
+                    }
+                    // Make sure the newly created files are indexed before returned to client
+                    IndexingManager.getDefault().refreshAllIndices(false, true, created.toArray(new FileObject[0]));
+                    return (Object) created.stream().map(fo -> fo.toURI().toString()).collect(Collectors.toList());
                 }
                 return null;
             } catch (IOException ex) {

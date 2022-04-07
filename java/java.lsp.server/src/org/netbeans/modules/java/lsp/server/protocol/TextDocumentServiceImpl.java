@@ -218,6 +218,7 @@ import org.netbeans.modules.refactoring.api.RenameRefactoring;
 import org.netbeans.modules.refactoring.api.WhereUsedQuery;
 import org.netbeans.modules.refactoring.api.impl.APIAccessor;
 import org.netbeans.modules.refactoring.api.impl.SPIAccessor;
+import org.netbeans.modules.refactoring.java.api.JavaRefactoringUtils;
 import org.netbeans.modules.refactoring.java.api.WhereUsedQueryConstants;
 import org.netbeans.modules.refactoring.java.spi.hooks.JavaModificationResult;
 import org.netbeans.modules.refactoring.plugins.FileRenamePlugin;
@@ -1208,8 +1209,14 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                     result.complete(null);
                 }
                 int pos = Utils.getOffset((LineDocument) doc, params.getPosition());
+                TokenSequence<JavaTokenId> ts = cc.getTokenHierarchy().tokenSequence(JavaTokenId.language());
+                ts.move(pos);
+                if (ts.moveNext() && ts.token().id() != JavaTokenId.WHITESPACE && ts.offset() == pos) {
+                    pos += 1;
+                }
                 TreePath path = cc.getTreeUtilities().pathFor(pos);
                 RenameRefactoring ref = new RenameRefactoring(Lookups.singleton(TreePathHandle.create(path, cc)));
+                ref.getContext().add(JavaRefactoringUtils.getClasspathInfoFor(cc.getFileObject()));
                 ref.setNewName("any");
                 Problem p = ref.fastCheckParameters();
                 boolean hasFatalProblem = false;
@@ -1221,7 +1228,6 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                     result.complete(null);
                 } else {
                     //XXX: better range computation
-                    TokenSequence<JavaTokenId> ts = cc.getTokenHierarchy().tokenSequence(JavaTokenId.language());
                     int d = ts.move(pos);
                     if (ts.moveNext()) {
                         if (d == 0 && ts.token().id() != JavaTokenId.IDENTIFIER) {
@@ -1272,7 +1278,13 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                     if (cancel.get()) return ;
                     Document doc = cc.getSnapshot().getSource().getDocument(true);
                     if (doc instanceof LineDocument) {
-                        TreePath path = cc.getTreeUtilities().pathFor(Utils.getOffset((LineDocument) doc, params.getPosition()));
+                        int pos = Utils.getOffset((LineDocument) doc, params.getPosition());
+                        TokenSequence<JavaTokenId> ts = cc.getTokenHierarchy().tokenSequence(JavaTokenId.language());
+                        ts.move(pos);
+                        if (ts.moveNext() && ts.token().id() != JavaTokenId.WHITESPACE && ts.offset() == pos) {
+                            pos += 1;
+                        }
+                        TreePath path = cc.getTreeUtilities().pathFor(pos);
                         List<Object> lookupContent = new ArrayList<>();
 
                         lookupContent.add(TreePathHandle.create(path, cc));
@@ -1288,6 +1300,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                         }
 
                         refactoring[0] = new RenameRefactoring(Lookups.fixed(lookupContent.toArray(new Object[0])));
+                        refactoring[0].getContext().add(JavaRefactoringUtils.getClasspathInfoFor(cc.getFileObject()));
                         refactoring[0].setNewName(params.getNewName());
                         refactoring[0].setSearchInComments(true); //TODO?
                     }
@@ -1339,7 +1352,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                 List<RefactoringElementImplementation> fileChanges = APIAccessor.DEFAULT.getFileChanges(session);
                 for (RefactoringElementImplementation rei : fileChanges) {
                     if (rei instanceof FileRenamePlugin.RenameFile) {
-                        String oldURI = params.getTextDocument().getUri();
+                        String oldURI = Utils.toUri(rei.getParentFile());
                         int dot = oldURI.lastIndexOf('.');
                         int slash = oldURI.lastIndexOf('/');
                         String newURI = oldURI.substring(0, slash + 1) + params.getNewName() + oldURI.substring(dot);

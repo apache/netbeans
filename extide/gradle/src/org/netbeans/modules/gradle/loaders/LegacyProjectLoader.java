@@ -18,7 +18,14 @@
  */
 package org.netbeans.modules.gradle.loaders;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.PipedInputStream;
+import java.io.PipedOutputStream;
 import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -70,6 +77,8 @@ import org.openide.util.NbBundle;
 
 import static org.netbeans.modules.gradle.loaders.Bundle.*;
 import org.openide.filesystems.FileUtil;
+import org.openide.util.Exceptions;
+import org.openide.util.RequestProcessor;
 
 /**
  *
@@ -77,7 +86,12 @@ import org.openide.filesystems.FileUtil;
  */
 //@ProjectServiceProvider(service = GradleProjectLoader.class, projectTypes = @ProjectType(id = NbGradleProject.GRADLE_PROJECT_TYPE, position=500))
 public class LegacyProjectLoader extends AbstractProjectLoader {
-
+    /**
+     * Thread which will log output from the build process, eventually. Note that the project loader runs single-threaded, 
+     * so one task RP should be sufficient.
+     */
+    private static final RequestProcessor   DAEMON_LOG_RP = new RequestProcessor(LegacyProjectLoader.class);
+    
     private enum GoOnline { NEVER, ON_DEMAND, ALWAYS }
 
     private static final Logger LOG = Logger.getLogger(LegacyProjectLoader.class.getName());
@@ -409,7 +423,7 @@ public class LegacyProjectLoader extends AbstractProjectLoader {
             BuildActionExecuter<NbProjectInfo> action = createInfoAction(pconn, offline, token, pl);
             wasOnline.set(!offline.hasFlag(GradleCommandLine.Flag.OFFLINE));
             try {
-                ret = action.run();
+                ret = runInfoAction(action);
                 if (goOnline == GoOnline.NEVER || !ret.hasException()) {
                     return ret;
                 }
@@ -425,10 +439,95 @@ public class LegacyProjectLoader extends AbstractProjectLoader {
         
         BuildActionExecuter<NbProjectInfo> action = createInfoAction(pconn, online, token, pl);
         wasOnline.set(true);
-        ret = action.run();
-        return ret;
+        return runInfoAction(action);
+    }
+    
+
+    /**
+     * Makes a workaround for standard {@link PipedOutputStream} wait.
+     * <p>The {@link PipedInputStream#read()}, in case the receive buffer is
+     * empty at the time of the call, waits for up to 1000ms.
+     * {@link PipedOutputStream#write(int)} does call <code>sink.receive</code>,
+     * but does not <code>notify()</code> the sink object so that read's
+     * wait() terminates.
+     * <p>
+     * As a result, the read side of the pipe waits full 1000ms even though data
+     * become available during the wait.
+     * <p>
+     * The workaround is to simply {@link PipedOutputStream#flush} after write,
+     * which returns from wait()s immediately.
+     *
+     * @author Svata Dedic Copyright (C) 2020
+     */
+    static class ImmediatePipedOutputStream extends PipedOutputStream {
+        @Override
+        public void write(byte[] b, int off, int len) throws IOException {
+            super.write(b, off, len);
+            flush();
+        }
+
+        @Override
+        public void write(int b) throws IOException {
+            super.write(b);
+            flush();
+        }
     }
 
+    private static NbProjectInfo runInfoAction(BuildActionExecuter<NbProjectInfo> action) {
+        class LogDelegate implements Runnable {
+            final BufferedReader rdr;
+            
+            LogDelegate(InputStream is) throws IOException {
+                rdr = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+            }
+            
+            public void run() {
+                boolean first = true;
+                try {
+                    String line;
+                    while ((line = rdr.readLine()) != null) {
+                        if (first) {
+                            LOG.log(Level.FINER, "[gradle] ---- daemon log starting");
+                            first = false;
+                        }
+                        LOG.log(Level.FINER, "[gradle] {0}", line);
+                    }
+                } catch (IOException ex) {
+                } finally {
+                    LOG.log(Level.FINER, "[gradle] ---- log terminated");
+                }
+            }
+        }
+        
+        OutputStream logStream = null;
+        try {
+            if (LOG.isLoggable(Level.FINER)) {
+                if (LOG.isLoggable(Level.FINEST)) {
+                    action.addArguments("--debug"); // NOI18N
+                }
+                PipedOutputStream pos = new ImmediatePipedOutputStream();
+                try {
+                    logStream = pos;
+                    DAEMON_LOG_RP.post(new LogDelegate(new PipedInputStream(pos)));
+                } catch (IOException ex) {
+                    throw new IllegalStateException(ex);
+                }
+                action.setStandardOutput(pos);
+                action.setStandardError(pos);
+            }
+        
+            return action.run(); 
+        } finally {
+            if (logStream != null) {
+                try {
+                    logStream.close();
+                } catch (IOException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
+            }
+        }
+    }
+    
     private static class NbProjectInfoAction implements Serializable, BuildAction<NbProjectInfo> {
 
         @Override

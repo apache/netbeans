@@ -35,6 +35,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
@@ -147,8 +148,9 @@ public class GradleArtifactStore {
                 Set<File> oldBins = binaries.get(module.getId());
                 Set<File> newBins = module.getArtifacts();
                 gavs.add(module.getId());
-                if (oldBins != newBins) {
+                if (!Objects.equals(oldBins, newBins)) {
                     binaries.put(module.getId(), newBins);
+                    LOG.log(Level.FINER, "Updating JAR {0} to {1}", new Object[] { module.getId(), newBins });
                     changed = true;
                 }
                 if (module.getArtifacts().size() == 1) {
@@ -157,14 +159,21 @@ public class GradleArtifactStore {
                         File source = module.getSources().iterator().next();
                         if (binary.isFile() && source.isFile()) {
                             File old = sources.put(binary, source);
-                            changed |= (old == null) || !old.equals(source);
+                            boolean c = (old == null) || !old.equals(source);
+                            if (c && LOG.isLoggable(Level.FINER)) {
+                                LOG.log(Level.FINER, "Updating source {0} to {1}", new Object[] { module.getId(), source });
+                            }
+                            changed |= c;
                         }
                     }
                     if (module.getJavadoc().size() == 1) {
                         File javadoc = module.getJavadoc().iterator().next();
                         if (binary.isFile() && javadoc.isFile()) {
                             File old = javadocs.put(binary, javadoc);
-                            changed |= (old == null) || !old.equals(javadoc);
+                            boolean c = (old == null) || !old.equals(javadoc);
+                            if (c && LOG.isLoggable(Level.FINER)) {
+                                LOG.log(Level.FINER, "Updating javadoc {0} to {1}", new Object[] { module.getId(), javadoc });
+                            }
                         }
                     }
                 }

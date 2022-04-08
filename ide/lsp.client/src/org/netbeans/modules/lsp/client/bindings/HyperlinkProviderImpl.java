@@ -69,9 +69,11 @@ public class HyperlinkProviderImpl implements HyperlinkProviderExt {
             return null;
         }
 
+        BaseDocument document = (BaseDocument) doc;
+        document.readLock();
         try {
             //XXX: not really using the server, are we?
-            int[] ident = Utilities.getIdentifierBlock((BaseDocument) doc, offset);
+            int[] ident = Utilities.getIdentifierBlock(document, offset);
             if (ident == null) {
                 return null;
             }
@@ -86,6 +88,8 @@ public class HyperlinkProviderImpl implements HyperlinkProviderExt {
             return ident;
         } catch (BadLocationException ex) {
             return null;
+        } finally {
+            document.readUnlock();
         }
     }
 

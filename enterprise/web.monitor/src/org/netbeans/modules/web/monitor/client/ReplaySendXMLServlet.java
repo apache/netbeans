@@ -41,7 +41,7 @@ public class ReplaySendXMLServlet extends HttpServlet {
     private static FileObject currDir = null;
     private static FileObject saveDir = null;
     private static FileObject replayDir = null;
-    private final static boolean debug = false;
+    private static final boolean debug = false;
      
 
     //

@@ -85,7 +85,7 @@ public class SAXBindingsParser extends org.xml.sax.helpers.DefaultHandler {
     private void dispatch(final boolean fireOnlyIfMixed) throws SAXException {
         if (fireOnlyIfMixed && buffer.length() == 0) return; //skip it
         
-        Object[] ctx = (Object[]) context.peek();
+        Object[] ctx = context.peek();
         String here = (String) ctx[0];
         Attributes attrs = (Attributes) ctx[1];
         buffer.delete(0, buffer.length());

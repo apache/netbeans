@@ -36,6 +36,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.SocketTimeoutException;
+import java.nio.charset.StandardCharsets;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.HashMap;
@@ -443,7 +444,7 @@ class MultiPartHandler {
     do {
       result = in.readLine(buf, 0, buf.length);  // does +=
       if (result != -1) {
-        sbuf.append(new String(buf, 0, result, "ISO-8859-1"));
+        sbuf.append(new String(buf, 0, result, StandardCharsets.ISO_8859_1));
       }
     } while (result == buf.length);  // loop only if the buffer was filled
 

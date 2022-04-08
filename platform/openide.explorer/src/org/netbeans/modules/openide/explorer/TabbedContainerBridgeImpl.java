@@ -52,7 +52,7 @@ class TabbedContainerBridgeImpl extends TabbedContainerBridge {
         List<TabData> l = cont.getModel().getTabs();
         Object[] items = new Object[l.size()];
         for (int i=0; i < items.length; i++) {
-            items[i] = ((TabData) l.get(i)).getUserObject();
+            items[i] = l.get(i).getUserObject();
         }
         return items;
     }

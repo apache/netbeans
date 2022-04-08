@@ -34,8 +34,8 @@ import org.openide.util.Lookup;
  * @author lkishalmi
  */
 public class DebianJavaPlatformDetector implements Runnable {
-    final static File DEBIAN_JAVA_DIR = new File("/usr/lib/jvm"); //NOI18N
-    final static String JAVA_DIR_MATCHER = "java-(\\d+)-openjdk-(amd64|arm64|i386)"; //NOI18N
+    static final File DEBIAN_JAVA_DIR = new File("/usr/lib/jvm"); //NOI18N
+    static final String JAVA_DIR_MATCHER = "java-(\\d+)-openjdk-(amd64|arm64|i386)"; //NOI18N
 
     @Override
     public void run() {

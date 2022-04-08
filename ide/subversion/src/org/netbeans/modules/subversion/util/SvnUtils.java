@@ -900,7 +900,7 @@ public class SvnUtils {
      * @return
      */
     public static String fixLineEndings(String text) {
-        return text.replaceAll("\r\n", "\n").replace('\r', '\n');
+        return text.replace("\r\n", "\n").replace('\r', '\n');
     }
 
     public static boolean hasMetadata (File file) {

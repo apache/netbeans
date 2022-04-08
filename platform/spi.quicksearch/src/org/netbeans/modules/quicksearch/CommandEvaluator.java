@@ -42,7 +42,7 @@ import org.openide.util.RequestProcessor.Task;
  */
 public class CommandEvaluator {
     
-    final static String RECENT = "Recent";                              //NOI18N
+    static final String RECENT = "Recent";                              //NOI18N
     private static final String PROP_ENABLED_CATEGORIES
             = "enabledCategories";                                      //NOI18N
     

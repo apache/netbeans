@@ -69,6 +69,7 @@ import javax.lang.model.element.Modifier;
 import javax.lang.model.element.ModuleElement;
 import javax.lang.model.element.Name;
 import javax.lang.model.element.PackageElement;
+import javax.lang.model.element.RecordComponentElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.TypeParameterElement;
 import javax.lang.model.element.VariableElement;
@@ -85,7 +86,6 @@ import javax.lang.model.util.Types;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
-import org.netbeans.modules.java.source.TreeShims;
 import org.netbeans.modules.java.source.builder.ElementsService;
 import org.netbeans.modules.java.source.base.SourceLevelUtils;
 import org.openide.util.Parameters;
@@ -595,17 +595,10 @@ public final class ElementUtilities {
         }
 
         @Override
-        public StringBuilder visitUnknown(Element e, Boolean p) {
-            if (TreeShims.isRecord(e)) {
-                //TODO: test!
-                return visitType((TypeElement) e, p);
-            }
-            if (TreeShims.isRecordComponent(e)) {
-                //TODO: test!
-                return visitVariable((VariableElement) e, p);
-            }
-            return super.visitUnknown(e, p);
+        public StringBuilder visitRecordComponent(RecordComponentElement e, Boolean p) {
+            return visitVariable((VariableElement) e, p);
         }
+
     }
 
     /**

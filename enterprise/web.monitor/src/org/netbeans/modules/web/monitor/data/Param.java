@@ -76,12 +76,12 @@ public class Param extends BaseBean {
     }
 
     //
-    static public void addComparator(BeanComparator c) {
+    public static void addComparator(BeanComparator c) {
 	Param.comparators.add(c);
     }
 
     //
-    static public void removeComparator(BeanComparator c) {
+    public static void removeComparator(BeanComparator c) {
 	Param.comparators.remove(c);
     }
     //

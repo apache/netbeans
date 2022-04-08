@@ -11,6 +11,7 @@ KEYWORD    float                                      null
 KEYWORD    int                                        null
 KEYWORD    iterable                                   null
 KEYWORD    mixed                                      null
+KEYWORD    never                                      null
 KEYWORD    null                                       null
 KEYWORD    object                                     null
 KEYWORD    parent                                     null

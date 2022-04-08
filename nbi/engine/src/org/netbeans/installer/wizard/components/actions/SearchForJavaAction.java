@@ -50,8 +50,8 @@ import org.netbeans.installer.wizard.components.panels.JdkLocationPanel;
 public class SearchForJavaAction extends WizardAction {
     /////////////////////////////////////////////////////////////////////////////////
     // Instance
-    private static List<File> javaLocations = new LinkedList<File>();
-    private static List<String> javaLabels = new LinkedList<String>();
+    private static List<File> javaLocations = new LinkedList<>();
+    private static List<String> javaLabels  = new LinkedList<>();
     
     public SearchForJavaAction() {
         setProperty(TITLE_PROPERTY, DEFAULT_TITLE);
@@ -66,7 +66,7 @@ public class SearchForJavaAction extends WizardAction {
     public void execute(Progress progress) {
         LogManager.logEntry("search for all java locations");
         getWizardUi().setProgress(progress);
-        final List<File> locations = new LinkedList<File>();
+        final List<File> locations = new LinkedList<>();
         progress.setTitle(SEARCH_INSTALLED_JAVAS);
         progress.setDetail(StringUtils.EMPTY_STRING);
         progress.setPercentage(Progress.START);
@@ -366,12 +366,12 @@ public class SearchForJavaAction extends WizardAction {
                 nativeUtils.getWindowsRegistry();
         
         final int currentMode = registry.getMode();
-        List <Boolean> modes = new ArrayList <Boolean> ();
+        List <Boolean> modes = new ArrayList <> ();
         modes.add(null); //default mode
         
         if(registry.isAlternativeModeSupported()) {
             LogManager.log("... alternative registry view is also supported");
-            modes.add(new Boolean(true));//alternative mode
+            modes.add(true);//alternative mode
         }        
         try {
           for (Boolean mode : modes) {

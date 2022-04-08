@@ -31,6 +31,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.Collections;
@@ -353,7 +354,7 @@ public final class LibraryProvider {
             URLConnection urlConnection = urlObject.openConnection();
             StringBuilder content = new StringBuilder();
             try (BufferedReader reader = new BufferedReader(new InputStreamReader(
-                urlConnection.getInputStream(), "UTF-8"))) { // NOI18N
+                urlConnection.getInputStream(), StandardCharsets.UTF_8))) {
                 String line;
                 while ((line = reader.readLine()) != null) {
                     content.append(line).append('\n');

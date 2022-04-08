@@ -158,7 +158,7 @@ public abstract class BuilderConnector {
      * A provider of console output of builds. They can
      * be shown in output window, external browser, etc.
      */
-    public static abstract class ConsoleDataProvider {
+    public abstract static class ConsoleDataProvider {
 
         /**
          * Show build console of a hudson job build using a displayer.
@@ -182,7 +182,7 @@ public abstract class BuilderConnector {
      * A provider of info about test failures. They can be displayer
      * in test results window, output window, external browser, etc.
      */
-    public static abstract class FailureDataProvider {
+    public abstract static class FailureDataProvider {
 
         /**
          * Show failures of a hudson job build.

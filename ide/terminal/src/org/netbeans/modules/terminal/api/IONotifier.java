@@ -73,11 +73,11 @@ public abstract class IONotifier {
         return find(io) != null;
     }
 
-    abstract protected void addPropertyChangeListener(PropertyChangeListener listener);
+    protected abstract void addPropertyChangeListener(PropertyChangeListener listener);
 
-    abstract protected void removePropertyChangeListener(PropertyChangeListener listener);
+    protected abstract void removePropertyChangeListener(PropertyChangeListener listener);
 
-    abstract protected void addVetoableChangeListener(VetoableChangeListener listener );
+    protected abstract void addVetoableChangeListener(VetoableChangeListener listener );
 
-    abstract protected void removeVetoableChangeListener(VetoableChangeListener listener );
+    protected abstract void removeVetoableChangeListener(VetoableChangeListener listener );
 }

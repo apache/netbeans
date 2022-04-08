@@ -5,5 +5,5 @@ METHOD     publicMethodClass1()            [PUBLIC]   \UnionTypes1\Class1
 METHOD     publicMethodClass2()            [PUBLIC]   \UnionTypes1\Class2
 METHOD     publicStaticMethodClass1()      [STATIC]   \UnionTypes1\Class1
 METHOD     publicStaticMethodClass2()      [STATIC]   \UnionTypes1\Class2
-VARIABLE   mixed publicFieldClass1         [PUBLIC]   \UnionTypes1\Class1
-VARIABLE   mixed publicFieldClass2         [PUBLIC]   \UnionTypes1\Class2
+VARIABLE   Class1|Class2 publicFieldClass  [PUBLIC]   \UnionTypes1\Class1
+VARIABLE   Class1|Class2 publicFieldClass  [PUBLIC]   \UnionTypes1\Class2

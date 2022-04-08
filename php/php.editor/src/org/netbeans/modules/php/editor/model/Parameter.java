@@ -39,6 +39,8 @@ public interface Parameter {
     boolean isReference();
     boolean isVariadic();
     boolean isUnionType();
+    boolean isIntersectionType();
+    int getModifier();
     /*mixed types can be documented in php doc*/
     List<QualifiedName> getTypes();
     OffsetRange getOffsetRange();

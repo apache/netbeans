@@ -50,7 +50,7 @@ import org.openide.windows.TopComponent;
  * Corresponds to core.io.ui...IOWindow.
  * @author ivan
  */
-final public class TerminalContainerTabbed extends TerminalContainerCommon {
+public final class TerminalContainerTabbed extends TerminalContainerCommon {
 
     private JTabbedPane tabbedPane;
     private JComponent soleComponent;
@@ -127,7 +127,7 @@ final public class TerminalContainerTabbed extends TerminalContainerCommon {
     }
 
     @Override
-    final protected void addTabWork(JComponent comp) {
+    protected final void addTabWork(JComponent comp) {
 	if (soleComponent != null) {
 	    // only single tab, remove it from TopComp. and add it to tabbed pane
 	    assert tabbedPane.getParent() == null;
@@ -169,7 +169,7 @@ final public class TerminalContainerTabbed extends TerminalContainerCommon {
     }
 
     @Override
-    final protected void removeTabWork(final JComponent comp) {
+    protected final void removeTabWork(final JComponent comp) {
 	if (soleComponent != null) {
 	    // removing the last one
 	    assert soleComponent == comp;

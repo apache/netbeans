@@ -56,8 +56,9 @@ public class NbUtils {
     public static Map<String, AttributeSet> immutize(Map<String, ? extends AttributeSet> map, Object... filterOutKeys) {
         Map<String, AttributeSet> immutizedMap = new HashMap<>();
         
-        for(String name : map.keySet()) {
-            AttributeSet attribs = map.get(name);
+        for(Map.Entry<String, ? extends AttributeSet> entry : map.entrySet()) {
+            String name = entry.getKey();
+            AttributeSet attribs = entry.getValue();
             
             if (filterOutKeys.length == 0) {
                 immutizedMap.put(name, AttributesUtilities.createImmutable(attribs));

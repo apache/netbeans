@@ -121,8 +121,9 @@ public class StructureAnalyzer implements StructureScanner {
         // Process fields
         Map<String, FieldNode> names = new HashMap<>();
 
-        for (ASTClass clz : fields.keySet()) {
-            Set<FieldNode> assignments = fields.get(clz);
+        for (Map.Entry<ASTClass, Set<FieldNode>> entry : fields.entrySet()) {
+            ASTClass clz = entry.getKey();
+            Set<FieldNode> assignments = entry.getValue();
 
             // Find unique variables
             if (assignments != null) {

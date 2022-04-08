@@ -165,12 +165,16 @@ public class RelatedCMPWizard implements TemplateWizard.Iterator {
 //                        new PersistenceUnitWizardDescriptor(project),
 //                };
 //            } else {
-            return new WizardDescriptor.Panel[]{
-                        new DatabaseTablesPanel.WizardPanel(wizardTitle),
-                        new EntityClassesPanel.WizardPanel(),
-                        new MappingOptionsPanel.WizardPanel(),};
-//            }
+            return TYPE_JPA.equals(type) ? new WizardDescriptor.Panel[] {
+                new DatabaseTablesPanel.WizardPanel(wizardTitle),
+                new EntityClassesPanel.WizardPanel(),
+                new MappingOptionsPanel.WizardPanel()
+            } : new WizardDescriptor.Panel[]{
+                new DatabaseTablesPanel.WizardPanel(null),
+                new EntityClassesPanel.WizardPanel(false, false, true, false)
+            } ;
         }
+//            }
     }
 
     private String[] createSteps() {
@@ -189,10 +193,14 @@ public class RelatedCMPWizard implements TemplateWizard.Iterator {
 //                        NbBundle.getMessage(PersistenceUnitWizardDescriptor.class,"LBL_Step1")
 //                };
 //            } else {
-            return new String[]{
-                        NbBundle.getMessage(RelatedCMPWizard.class, "LBL_DatabaseTables"),
-                        NbBundle.getMessage(RelatedCMPWizard.class, "LBL_EntityClasses"),
-                        NbBundle.getMessage(RelatedCMPWizard.class, "LBL_MappingOptions"),};
+            return TYPE_JPA.equals(type) ? new String[] {
+                NbBundle.getMessage(RelatedCMPWizard.class, "LBL_DatabaseTables"),
+                NbBundle.getMessage(RelatedCMPWizard.class, "LBL_EntityClasses"),
+                NbBundle.getMessage(RelatedCMPWizard.class, "LBL_MappingOptions")
+            } : new String[] {
+                NbBundle.getMessage(RelatedCMPWizard.class, "LBL_DatabaseTables"),
+                NbBundle.getMessage(RelatedCMPWizard.class, "LBL_EntityClasses")
+            };
 //            }
         }
     }

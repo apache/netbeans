@@ -141,7 +141,7 @@ public final class DDProvider {
     }
 
     private WebServicesProxy getFromCache (FileObject fo) {
-         return (WebServicesProxy) ddMap.get(fo);
+         return ddMap.get(fo);
     }
     
     /**
@@ -162,6 +162,7 @@ public final class DDProvider {
     /**  Convenient method for getting the BaseBean object from CommonDDBean object
      * @deprecated DO NOT USE - TEMPORARY WORKAROUND !!!!
      */
+    @Deprecated
     public org.netbeans.modules.schema2beans.BaseBean getBaseBean(org.netbeans.modules.j2ee.dd.api.common.CommonDDBean bean) {
         if (bean instanceof org.netbeans.modules.schema2beans.BaseBean) return (org.netbeans.modules.schema2beans.BaseBean)bean;
         else if (bean instanceof WebServicesProxy) return (org.netbeans.modules.schema2beans.BaseBean) ((WebServicesProxy)bean).getOriginal();

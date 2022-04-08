@@ -83,6 +83,20 @@ is the proper place.
     <!-- ACTUAL CHANGES BEGIN HERE: -->
 
     <changes>
+        <change id="nested-class-locations">
+            <api name="gradle.java.api"/>
+            <summary>Location can represent nested classes</summary>
+            <version major="1" minor="17"/>
+            <date day="18" month="2" year="2022"/>
+            <author login="ratcashdev"/>
+            <compatibility semantic="compatible" deprecation="yes"/>
+            <description>
+                <code><a href="@TOP@/org/netbeans/modules/gradle/java/api/output/Location.html">Location</a></code>
+                is now capabe to represent java code location inside nested classes as well.
+            </description>
+            <class package="org.netbeans.modules.gradle.java.api.output" name="Location"/>
+            <issue number="NETBEANS-6041"/>
+        </change>
         <change id="gradle-7.0-deprecation">
             <api name="gradle.java.api"/>
             <summary>Deprecating Gradle 7.0 removed API-s</summary>

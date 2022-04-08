@@ -59,7 +59,7 @@ public final class PersistenceScopes {
      */
     public static PersistenceScopes getPersistenceScopes(Project project) {
         Parameters.notNull("project", project); // NOI18N
-        PersistenceScopesProvider provider = (PersistenceScopesProvider)project.getLookup().lookup(PersistenceScopesProvider.class);
+        PersistenceScopesProvider provider = project.getLookup().lookup(PersistenceScopesProvider.class);
         if (provider != null) {
             return provider.getPersistenceScopes();
         }
@@ -77,7 +77,7 @@ public final class PersistenceScopes {
      */
     public static PersistenceScopes getPersistenceScopes(Project project, FileObject fo) {
         Parameters.notNull("project", project); // NOI18N
-        PersistenceScopesProvider provider = (PersistenceScopesProvider)project.getLookup().lookup(PersistenceScopesProvider.class);
+        PersistenceScopesProvider provider = project.getLookup().lookup(PersistenceScopesProvider.class);
         if (provider != null) {
             return provider.getPersistenceScopes(fo);
         }

@@ -89,6 +89,7 @@ import javax.tools.JavaFileObject;
 import javax.tools.JavaFileObject.Kind;
 
 import com.sun.tools.classfile.ConstantPool.CPInfo;
+import java.nio.charset.StandardCharsets;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.source.ClasspathInfo;
 import org.netbeans.api.java.source.ClasspathInfo.PathKind;
@@ -138,7 +139,7 @@ public class CodeGenerator {
             OutputStream out = file.getOutputStream();
 
             try {
-                FileUtil.copy(new ByteArrayInputStream("".getBytes("UTF-8")), out); //NOI18N
+                FileUtil.copy(new ByteArrayInputStream("".getBytes(StandardCharsets.UTF_8)), out); //NOI18N
             } finally {
                 out.close();
             }
@@ -251,7 +252,7 @@ public class CodeGenerator {
                 }
                 out = result[0].getOutputStream();
                 try {
-                    FileUtil.copy(new ByteArrayInputStream(r.getResultingSource(file).getBytes("UTF-8")), out);
+                    FileUtil.copy(new ByteArrayInputStream(r.getResultingSource(file).getBytes(StandardCharsets.UTF_8)), out);
                 } finally {
                     out.close();
                 }

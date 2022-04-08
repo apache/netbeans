@@ -247,14 +247,14 @@ public class SearchScopeBrowse {
         "TTL_FileDoesNotExist=File Error"
     })
     private List<File> selectExistingFiles(File[] files) {
-        List<File> existingFiles = new ArrayList<File>(files.length);
+        List<File> existingFiles = new ArrayList<>(files.length);
         boolean errorShown = false;
-        for (int i = 0; i < files.length; i++) {
-            if (files[i].exists()) {
-                existingFiles.add(files[i]);
+        for (File file : files) {
+            if (file.exists()) {
+                existingFiles.add(file);
             } else if (!errorShown) {
                 DialogDisplayer.getDefault().notifyLater(new NotifyDescriptor(
-                        Bundle.MSG_FileDoesNotExist(files[i]),
+                        Bundle.MSG_FileDoesNotExist(file),
                         Bundle.TTL_FileDoesNotExist(),
                         NotifyDescriptor.DEFAULT_OPTION,
                         NotifyDescriptor.ERROR_MESSAGE, null,

@@ -45,18 +45,18 @@ import org.openide.util.Utilities;
  */
 public final class RepositoryImpl<R, Q, I> {
 
-    private final static Logger LOG = Logger.getLogger("org.netbeans.modules.bugtracking.Repository"); // NOI18N
+    private static final Logger LOG = Logger.getLogger("org.netbeans.modules.bugtracking.Repository"); // NOI18N
     
-    public final static String EVENT_QUERY_LIST_CHANGED = RepositoryProvider.EVENT_QUERY_LIST_CHANGED;
+    public static final String EVENT_QUERY_LIST_CHANGED = RepositoryProvider.EVENT_QUERY_LIST_CHANGED;
     
-    public final static String EVENT_UNSUBMITTED_ISSUES_CHANGED = RepositoryProvider.EVENT_UNSUBMITTED_ISSUES_CHANGED;
+    public static final String EVENT_UNSUBMITTED_ISSUES_CHANGED = RepositoryProvider.EVENT_UNSUBMITTED_ISSUES_CHANGED;
         
     /**
      * RepositoryProvider's attributes have changed, e.g. name, url, etc.
      * Old and new value are maps of changed doubles: attribute-name / attribute-value.
      * Old value can be null in case the repository is created.
      */
-    public final static String EVENT_ATTRIBUTES_CHANGED = "bugtracking.repository.attributes.changed"; //NOI18N
+    public static final String EVENT_ATTRIBUTES_CHANGED = "bugtracking.repository.attributes.changed"; //NOI18N
 
     public static final String ATTRIBUTE_URL = "repository.attribute.url"; //NOI18N
     public static final String ATTRIBUTE_DISPLAY_NAME = "repository.attribute.displayName"; //NOI18N
@@ -521,7 +521,7 @@ public final class RepositoryImpl<R, Q, I> {
             return w;
         }
         
-        public WeakReference get(DATA key, WRAPPER w) {
+        public WeakReference<WRAPPER> get(DATA key, WRAPPER w) {
             return super.put(key, new MapReference(key, w)); 
         }
         

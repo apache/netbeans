@@ -40,14 +40,17 @@ class HprofInstanceValue extends HprofObject implements FieldValue {
 
     //~ Methods ------------------------------------------------------------------------------------------------------------------
 
+    @Override
     public Instance getDefiningInstance() {
         return field.classDump.getHprof().getInstanceByOffset(new long[] {instanceOffset});
     }
 
+    @Override
     public Field getField() {
         return field;
     }
 
+    @Override
     public String getValue() {
         return getTypeValue().toString();
     }
@@ -62,50 +65,41 @@ class HprofInstanceValue extends HprofObject implements FieldValue {
     static Object getTypeValue(final HprofByteBuffer dumpBuffer, final long position, final byte type) {
         switch (type) {
             case HprofHeap.OBJECT:
-
                 long obj = dumpBuffer.getID(position);
-
-                return new Long(obj);
+                return obj;
+                
             case HprofHeap.BOOLEAN:
-
                 byte b = dumpBuffer.get(position);
-
-                return Boolean.valueOf(b != 0);
+                return b != 0;
+                
             case HprofHeap.CHAR:
-
                 char ch = dumpBuffer.getChar(position);
-
-                return Character.valueOf(ch);
+                return ch;
+                
             case HprofHeap.FLOAT:
-
                 float f = dumpBuffer.getFloat(position);
-
-                return new Float(f);
+                return f;
+                
             case HprofHeap.DOUBLE:
-
                 double d = dumpBuffer.getDouble(position);
-
-                return new Double(d);
+                return d;
+                
             case HprofHeap.BYTE:
-
                 byte bt = dumpBuffer.get(position);
-
-                return new Byte(bt);
+                return bt;
+                
             case HprofHeap.SHORT:
-
                 short sh = dumpBuffer.getShort(position);
-
-                return new Short(sh);
+                return sh;
+                
             case HprofHeap.INT:
-
                 int i = dumpBuffer.getInt(position);
-
-                return Integer.valueOf(i);
+                return i;
+                
             case HprofHeap.LONG:
-
                 long lg = dumpBuffer.getLong(position);
-
-                return new Long(lg);
+                return lg;
+                
             default:
                 return "Invalid type " + type; // NOI18N
         }

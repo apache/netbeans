@@ -460,9 +460,6 @@ public class MoveMembersTransformer extends RefactoringVisitor {
                     return (r1 == Boolean.TRUE || r2 == Boolean.TRUE);
                 }
             };
-            if (workingCopy.getTrees().getTree(el) == null) {
-                System.err.println("!!!");
-            }
             Boolean needsArgument = needsArgumentScanner.scan(workingCopy.getTrees().getTree(el).getBody(), sourceType);
             if (needsArgument == Boolean.TRUE) {
                 ExpressionTree newArgument;

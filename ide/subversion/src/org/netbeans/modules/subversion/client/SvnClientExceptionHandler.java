@@ -118,28 +118,28 @@ public class SvnClientExceptionHandler {
         new CertificateFailure (8, "issuer is not trusted" ,                        NbBundle.getMessage(SvnClientExceptionHandler.class, "MSG_CertFailureNotTrusted"))         // NOI18N
     };
     
-    public final static int EX_UNKNOWN = 0;
-    public final static int EX_ACTION_CANCELED_BY_USER = 2;
-    public final static int EX_AUTHENTICATION = 4;
-    public final static int EX_NO_CERTIFICATE = 8;
-    public final static int EX_WRONG_URL = 16;
-    public final static int EX_NO_HOST_CONNECTION = 32;
-    public final static int EX_UNVERSIONED_RESOURCE = 64;
-    public final static int EX_WRONG_URL_IN_REVISION = 128;
-    public final static int EX_URL_NON_EXISTENT = 256;
-    public final static int EX_HTTP_405 = 512;
-    public final static int EX_IS_ALREADY_WC = 1024;
-    public final static int EX_CLOSED_CONNECTION = 2048;
-    public final static int EX_COMMIT_FAILED = 4096;
-    public final static int EX_FILE_ALREADY_EXISTS = 8192;
-    public final static int EX_IS_OUT_OF_DATE = 16384;            
-    public final static int EX_NO_SVN_CLIENT = 32768;            
-    public final static int EX_HTTP_FORBIDDEN = 65536;      
-    public final static int EX_SSL_NEGOTIATION_FAILED = 131072;
+    public static final int EX_UNKNOWN = 0;
+    public static final int EX_ACTION_CANCELED_BY_USER = 2;
+    public static final int EX_AUTHENTICATION = 4;
+    public static final int EX_NO_CERTIFICATE = 8;
+    public static final int EX_WRONG_URL = 16;
+    public static final int EX_NO_HOST_CONNECTION = 32;
+    public static final int EX_UNVERSIONED_RESOURCE = 64;
+    public static final int EX_WRONG_URL_IN_REVISION = 128;
+    public static final int EX_URL_NON_EXISTENT = 256;
+    public static final int EX_HTTP_405 = 512;
+    public static final int EX_IS_ALREADY_WC = 1024;
+    public static final int EX_CLOSED_CONNECTION = 2048;
+    public static final int EX_COMMIT_FAILED = 4096;
+    public static final int EX_FILE_ALREADY_EXISTS = 8192;
+    public static final int EX_IS_OUT_OF_DATE = 16384;            
+    public static final int EX_NO_SVN_CLIENT = 32768;            
+    public static final int EX_HTTP_FORBIDDEN = 65536;      
+    public static final int EX_SSL_NEGOTIATION_FAILED = 131072;
           
   
-    public final static int EX_HANDLED_EXCEPTIONS = EX_AUTHENTICATION | EX_NO_CERTIFICATE | EX_NO_HOST_CONNECTION | EX_SSL_NEGOTIATION_FAILED | EX_HTTP_FORBIDDEN;
-    public final static int EX_DEFAULT_HANDLED_EXCEPTIONS = EX_HANDLED_EXCEPTIONS;
+    public static final int EX_HANDLED_EXCEPTIONS = EX_AUTHENTICATION | EX_NO_CERTIFICATE | EX_NO_HOST_CONNECTION | EX_SSL_NEGOTIATION_FAILED | EX_HTTP_FORBIDDEN;
+    public static final int EX_DEFAULT_HANDLED_EXCEPTIONS = EX_HANDLED_EXCEPTIONS;
     
     private final SVNClientException exception;
     private final int exceptionMask;

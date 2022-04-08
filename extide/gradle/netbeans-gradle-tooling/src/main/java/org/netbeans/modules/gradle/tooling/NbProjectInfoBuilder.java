@@ -53,6 +53,7 @@ import org.gradle.api.artifacts.result.UnresolvedDependencyResult;
 import org.gradle.api.distribution.DistributionContainer;
 import org.gradle.api.file.ConfigurableFileCollection;
 import org.gradle.api.initialization.IncludedBuild;
+import org.gradle.api.plugins.JavaPlatformPlugin;
 import org.gradle.api.specs.Specs;
 import org.gradle.api.tasks.SourceSet;
 import org.gradle.api.tasks.SourceSetContainer;
@@ -289,7 +290,7 @@ class NbProjectInfoBuilder {
                                 try {
                                     compilerArgs = (List<String>) getProperty(compileTask, "options", "compilerArgs");
                                 } catch (Throwable ex2) {
-                                    compilerArgs = (List<String>) getProperty(compileTask, "kotlinOptions", "getFreeCompilerArgs");
+                                    compilerArgs = (List<String>) getProperty(compileTask, "kotlinOptions", "freeCompilerArgs");
                                 }
                             }
                             model.getInfo().put(propBase + lang + "_compiler_args", new ArrayList<>(compilerArgs));
@@ -397,6 +398,12 @@ class NbProjectInfoBuilder {
         Map<String, String> unresolvedProblems = new HashMap();
         Map<String, Set<File>> resolvedJvmArtifacts = new HashMap();
         Set<Configuration> visibleConfigurations = configurationsToSave();
+
+        // NETBEANS-5846: if this project uses javaPlatform plugin with dependencies enabled, 
+        // do not report unresolved problems
+        boolean ignoreUnresolvable = (project.getPlugins().hasPlugin(JavaPlatformPlugin.class) && 
+            Boolean.TRUE.equals(getProperty(project, "javaPlatform", "allowDependencies")));
+
         visibleConfigurations.forEach(it -> {
             String propBase = "configuration_" + it.getName() + "_";
             model.getInfo().put(propBase + "non_resolving", !resolvable(it));
@@ -435,10 +442,21 @@ class NbProjectInfoBuilder {
                             if(componentIds.contains(id)) {
                                 unresolvedIds.add(id);
                             }
-                            if(! project.getPlugins().hasPlugin("java-platform")) {
+                            if(!ignoreUnresolvable && (it.isVisible() || it.isCanBeConsumed())) {
+                                // hidden configurations like 'testCodeCoverageReportExecutionData' might contain unresolvable artifacts.
+                                // do not report problems here
+                                Throwable failure = ((UnresolvedDependencyResult) it2).getFailure();
+                                if (project.getGradle().getStartParameter().isOffline()) {
+                                    // if the unresolvable is bcs. offline mode, throw an exception to get retry in online mode.
+                                    Throwable prev = null;
+                                    for (Throwable t = failure; t != prev && t != null; prev = t, t = t.getCause()) {
+                                        if (t.getMessage().contains("available for offline")) {
+                                            throw new NeedOnlineModeException("Need online mode", failure);
+                                        }
+                                    }
+                                }
                                 unresolvedProblems.put(id, ((UnresolvedDependencyResult) it2).getFailure().getMessage());
                             }
-                            unresolvedProblems.put(id, udr.getFailure().getMessage());
                         }
                     });
                 } catch (ResolveException ex) {

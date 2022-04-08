@@ -155,7 +155,7 @@ public class J2EEProfilerSPI implements org.netbeans.modules.j2ee.deployment.pro
         if ((startingStateTimeout != null) && !"".equals(startingStateTimeout)) { // NOI18N
 
             try {
-                int timeout = new Integer(startingStateTimeout);
+                int timeout = Integer.parseInt(startingStateTimeout);
                 STARTING_STATE_TIMEOUT = timeout;
                 ProfilerLogger.log(">>> Profiler agent startup timeout redefined to " + STARTING_STATE_TIMEOUT + " ms"); // NOI18N
             } catch (Exception ex) {

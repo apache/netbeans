@@ -1,0 +1,6 @@
+Code completion result for source line:
+text = "${kolec|} and ${base.field} and ${self.field} and ${fiel}"
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+FIELD      kolecko                         [PRIVATE]  int
+FIELD      kolecko22                       [PRIVATE]  int

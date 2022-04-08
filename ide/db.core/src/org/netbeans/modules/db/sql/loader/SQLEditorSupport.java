@@ -490,7 +490,7 @@ public class SQLEditorSupport extends DataEditorSupport
         }
     }
 
-    private final static class SQLExecutor implements Runnable, Cancellable {
+    private static final class SQLExecutor implements Runnable, Cancellable {
         private final SQLCloneableEditor editor;
         private final SQLEditorSupport parent;
 

@@ -132,7 +132,7 @@ public class TableSorter extends AbstractTableModel {
 
     private Directive getDirective(int column) {
         for (int i = 0; i < sortingColumns.size(); i++) {
-            Directive directive = (Directive) sortingColumns.get(i);
+            Directive directive = sortingColumns.get(i);
             if (directive.column == column) {
                 return directive;
             }
@@ -197,7 +197,7 @@ public class TableSorter extends AbstractTableModel {
 
     protected Comparator getComparator(int column) {
         Class columnType = tableModel.getColumnClass(column);
-        Comparator comparator = (Comparator) columnComparators.get(columnType);
+        Comparator comparator = columnComparators.get(columnType);
         if (comparator != null) {
             return comparator;
         }

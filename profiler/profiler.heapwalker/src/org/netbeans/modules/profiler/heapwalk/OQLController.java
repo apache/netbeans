@@ -63,9 +63,9 @@ public class OQLController extends AbstractTopLevelController
     private QueryController queryController;
     private SavedController savedController;
 
-    final private ExecutorService progressUpdater = Executors.newSingleThreadExecutor();
+    private final ExecutorService progressUpdater = Executors.newSingleThreadExecutor();
 
-    final private AtomicBoolean analysisRunning = new AtomicBoolean(false);
+    private final AtomicBoolean analysisRunning = new AtomicBoolean(false);
     private OQLEngine engine = null;
 
 

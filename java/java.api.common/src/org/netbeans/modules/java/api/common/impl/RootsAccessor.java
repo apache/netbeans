@@ -32,7 +32,7 @@ public abstract class RootsAccessor {
     private static volatile RootsAccessor instance;
 
 
-    public synchronized static RootsAccessor getInstance() {
+    public static synchronized RootsAccessor getInstance() {
         if (instance == null) {
             try {
                 Class.forName(Roots.class.getName(),true,RootsAccessor.class.getClassLoader());

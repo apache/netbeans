@@ -60,7 +60,7 @@ public class HistoryRegistry {
     
     private HistoryRegistry() {}
     
-    public synchronized static HistoryRegistry getInstance() {
+    public static synchronized HistoryRegistry getInstance() {
         if(instance == null) {
             instance = new HistoryRegistry();
         }

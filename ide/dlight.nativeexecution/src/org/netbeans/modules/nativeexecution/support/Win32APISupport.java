@@ -48,7 +48,7 @@ public interface Win32APISupport extends StdCallLibrary {
             return o;
         }
     }
-    public final static HANDLE INVALID_HANDLE = new HANDLE() {
+    public static final HANDLE INVALID_HANDLE = new HANDLE() {
 
         {
             super.setPointer(Pointer.createConstant(-1));

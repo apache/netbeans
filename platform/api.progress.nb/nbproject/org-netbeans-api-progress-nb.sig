@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.62
+#Version 1.63
 
 CLSS public abstract interface java.lang.AutoCloseable
 meth public abstract void close() throws java.lang.Exception
@@ -111,7 +111,9 @@ meth public static org.netbeans.api.progress.ProgressHandle createHandle(java.la
 meth public static org.netbeans.api.progress.ProgressHandle createSystemHandle(java.lang.String)
  anno 0 java.lang.Deprecated()
 meth public static org.netbeans.api.progress.ProgressHandle createSystemHandle(java.lang.String,org.openide.util.Cancellable)
+ anno 0 java.lang.Deprecated()
 meth public static org.netbeans.api.progress.ProgressHandle createSystemHandle(java.lang.String,org.openide.util.Cancellable,javax.swing.Action)
+ anno 0 java.lang.Deprecated()
 meth public static org.netbeans.api.progress.ProgressHandle createSystemUIHandle(java.lang.String,org.openide.util.Cancellable,javax.swing.Action)
 meth public static org.netbeans.api.progress.ProgressHandle createUIHandle(java.lang.String,org.openide.util.Cancellable,javax.swing.Action)
 supr java.lang.Object

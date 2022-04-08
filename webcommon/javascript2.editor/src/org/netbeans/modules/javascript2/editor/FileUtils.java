@@ -44,7 +44,7 @@ import org.openide.util.BaseUtilities;
  */
 public class FileUtils {
     
-    final static String GO_UP = "../"; //NOI18N
+    static final String GO_UP = "../"; //NOI18N
     private static final String SLASH = "/"; //NOI18N
     private static final String FILE = "file"; // URI scheme
     

@@ -19,12 +19,10 @@
 
 package org.netbeans.modules.quicksearch.web;
 
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -52,11 +50,7 @@ final class Result {
     void parse( String html, int currentSearchOffset ) {
         searchFinished = true;
         items.clear();
-        try {
-            html = new String(html.getBytes(), "UTF-8"); //NOI18N
-        } catch (UnsupportedEncodingException ex) {
-            Logger.getLogger(Result.class.getName()).log(Level.FINE, null, ex);
-        }
+        html = new String(html.getBytes(), StandardCharsets.UTF_8);
         Pattern p = Pattern.compile("<a\\s+href\\s*=\\s*\"(.*?)\"[^>]*>(.*?)</a>", //NOI18N
                 Pattern.CASE_INSENSITIVE|Pattern.MULTILINE);
         Matcher m = p.matcher(html);

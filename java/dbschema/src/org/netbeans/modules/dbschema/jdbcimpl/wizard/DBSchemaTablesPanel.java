@@ -709,7 +709,7 @@ public class DBSchemaTablesPanel extends JPanel implements ListDataListener {
         }
     }
     
-    private static abstract class Handler {
+    private abstract static class Handler {
         
         public abstract void handle(Parameters params);
         

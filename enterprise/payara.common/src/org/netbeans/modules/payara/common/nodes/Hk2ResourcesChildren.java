@@ -52,7 +52,7 @@ public class Hk2ResourcesChildren extends Children.Keys<Object> implements Refre
 
     private Lookup lookup;
     private String type;
-    private final static Node WAIT_NODE = Hk2ItemNode.createWaitNode();
+    private static final Node WAIT_NODE = Hk2ItemNode.createWaitNode();
 
     Hk2ResourcesChildren(Lookup lookup, String type) {
         this.lookup = lookup;

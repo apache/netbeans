@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.22
+#Version 1.23
 
 CLSS public abstract interface java.io.Serializable
 
@@ -81,8 +81,9 @@ meth public org.openide.filesystems.FileObject getTarget()
  anno 0 org.netbeans.api.annotations.common.NonNull()
 meth public org.openide.filesystems.FileObject getTemplate()
  anno 0 org.netbeans.api.annotations.common.NonNull()
+meth public org.openide.util.Lookup getLookup()
 supr java.lang.Object
-hfds freeExtension,locale,name,parameters,preformatted,proposedName,target,template
+hfds contextLookup,freeExtension,locale,name,parameters,preformatted,proposedName,target,template
 
 CLSS public abstract interface org.netbeans.api.templates.CreateFromTemplateAttributes
 meth public abstract java.util.Map<java.lang.String,?> attributesFor(org.netbeans.api.templates.CreateDescriptor)
@@ -101,12 +102,18 @@ cons public init()
 meth protected abstract boolean accept(org.netbeans.api.templates.CreateDescriptor)
 meth protected abstract java.util.List<org.openide.filesystems.FileObject> createFromTemplate(org.netbeans.api.templates.CreateDescriptor) throws java.io.IOException
  anno 0 org.netbeans.api.annotations.common.NonNull()
+meth protected static java.util.List<org.openide.filesystems.FileObject> defaultCopyContents(org.netbeans.api.templates.CreateDescriptor,org.openide.filesystems.FileObject,org.openide.filesystems.FileObject) throws java.io.IOException
+meth public static void copyAttributesFromTemplate(org.netbeans.api.templates.CreateFromTemplateHandler,org.openide.filesystems.FileObject,org.openide.filesystems.FileObject) throws java.io.IOException
 supr java.lang.Object
+hfds ATTR_TEMPLATE_PREFIX,PROP_TEMPLATE
 
 CLSS public final org.netbeans.api.templates.FileBuilder
 cons public init(org.openide.filesystems.FileObject,org.openide.filesystems.FileObject)
  anno 1 org.netbeans.api.annotations.common.NonNull()
  anno 2 org.netbeans.api.annotations.common.NonNull()
+fld public final static java.lang.String ATTR_TEMPLATE_HANDLER = "template.createTemplateHandler"
+fld public final static java.lang.String ATTR_TEMPLATE_MERGE_FOLDERS = "template.mergeFolders"
+fld public final static java.lang.String ATTR_TEMPLATE_OPEN_FILE = "template.openFile"
 innr public final static !enum Mode
 meth public java.util.List<org.openide.filesystems.FileObject> build() throws java.io.IOException
  anno 0 org.netbeans.api.annotations.common.CheckForNull()
@@ -121,6 +128,7 @@ meth public org.netbeans.api.templates.FileBuilder useFormat(java.text.Format)
  anno 1 org.netbeans.api.annotations.common.NonNull()
 meth public org.netbeans.api.templates.FileBuilder useLocale(java.util.Locale)
  anno 1 org.netbeans.api.annotations.common.NonNull()
+meth public org.netbeans.api.templates.FileBuilder useLookup(org.openide.util.Lookup)
 meth public org.netbeans.api.templates.FileBuilder withParameters(java.util.Map<java.lang.String,?>)
  anno 1 org.netbeans.api.annotations.common.NullAllowed()
 meth public static org.netbeans.api.templates.FileBuilder fromDescriptor(org.netbeans.api.templates.CreateDescriptor)
@@ -150,6 +158,7 @@ CLSS public abstract interface !annotation org.netbeans.api.templates.TemplateRe
 intf java.lang.annotation.Annotation
 meth public abstract !hasdefault boolean requireProject()
 meth public abstract !hasdefault int position()
+meth public abstract !hasdefault java.lang.Class<? extends org.netbeans.api.templates.CreateFromTemplateHandler> createHandlerClass()
 meth public abstract !hasdefault java.lang.String description()
 meth public abstract !hasdefault java.lang.String displayName()
 meth public abstract !hasdefault java.lang.String iconBase()

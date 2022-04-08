@@ -25,8 +25,10 @@ import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.StatementTree;
+import com.sun.source.tree.SwitchExpressionTree;
 import com.sun.source.tree.SwitchTree;
 import com.sun.source.tree.Tree;
+import com.sun.source.tree.Tree.Kind;
 import com.sun.tools.javac.tree.JCTree;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -45,7 +47,6 @@ import org.netbeans.api.java.source.TestUtilities;
 import org.netbeans.api.java.source.TreeMaker;
 import org.netbeans.api.java.source.WorkingCopy;
 import org.netbeans.junit.NbTestSuite;
-import org.netbeans.modules.java.source.TreeShims;
 import org.netbeans.modules.java.source.parsing.JavacParser;
 import org.netbeans.spi.java.queries.CompilerOptionsQueryImplementation;
 import org.openide.filesystems.FileObject;
@@ -205,15 +206,15 @@ public void testSwitchRuleFormatting2() throws Exception {
                 List<? extends CaseTree> cases;
                 List<ExpressionTree> patterns = new ArrayList<>();
                 if(switchBlock!=null){
-                boolean switchExpressionFlag = switchBlock.getKind().toString().equals(TreeShims.SWITCH_EXPRESSION);
+                boolean switchExpressionFlag = switchBlock.getKind() == Kind.SWITCH_EXPRESSION;
                 if (switchExpressionFlag) {
-                    cases = TreeShims.getCases(switchBlock);
+                    cases = ((SwitchExpressionTree) switchBlock).getCases();
                 } else {
                     cases = ((SwitchTree) switchBlock).getCases();
                 }
                 for (Iterator<? extends CaseTree> it = cases.iterator(); it.hasNext();) {
                     CaseTree ct = it.next();
-                    patterns.addAll(TreeShims.getExpressions(ct));
+                    patterns.addAll(ct.getExpressions());
                     List<StatementTree> statements;
                     if (ct.getStatements() == null) {
                         statements = new ArrayList<>(((JCTree.JCCase) ct).stats);

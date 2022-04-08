@@ -47,7 +47,7 @@ import org.openide.filesystems.FileObject;
 public class TaskIndexer extends CustomIndexer {
 
     private final TaskList taskList;
-    private final static Logger LOG = Logger.getLogger(TaskIndexer.class.getName());
+    private static final Logger LOG = Logger.getLogger(TaskIndexer.class.getName());
 
     static final String KEY_SCANNER = "scanner"; //NOI18N
     static final String KEY_TASK = "task"; //NOI18N

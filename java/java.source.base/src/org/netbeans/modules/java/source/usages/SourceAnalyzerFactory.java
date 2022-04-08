@@ -34,6 +34,7 @@ import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.text.MessageFormat;
 import java.util.*;
 import java.util.logging.Level;
@@ -57,7 +58,6 @@ import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.java.source.SourceUtils;
 import org.netbeans.modules.java.source.ElementHandleAccessor;
-import org.netbeans.modules.java.source.TreeShims;
 import org.netbeans.modules.java.source.builder.ElementsService;
 import org.netbeans.modules.java.source.indexing.JavaCustomIndexer;
 import org.netbeans.modules.java.source.parsing.FileObjects;
@@ -149,7 +149,7 @@ public final class SourceAnalyzerFactory {
                         javax.tools.FileObject fo = manager.getFileForOutput(StandardLocation.CLASS_OUTPUT, "", FileObjects.stripExtension(relativePath) + '.' + ext, tuple.jfo);
                         assert fo != null;
                         try {
-                            BufferedReader in = new BufferedReader ( new InputStreamReader (fo.openInputStream(), "UTF-8"));
+                            BufferedReader in = new BufferedReader ( new InputStreamReader (fo.openInputStream(), StandardCharsets.UTF_8));
                             try {
                                 String line;
                                 while ((line = in.readLine())!=null) {
@@ -165,7 +165,7 @@ public final class SourceAnalyzerFactory {
                             //workarond: use manager.getFileForOutput() which may return non existing javac FileObject and
                             //cahch FileNotFoundException when it doens't exist, there is nothing to add into rsList
                         }
-                        PrintWriter rsOut = new PrintWriter( new OutputStreamWriter (fo.openOutputStream(), "UTF-8"));
+                        PrintWriter rsOut = new PrintWriter( new OutputStreamWriter (fo.openOutputStream(), StandardCharsets.UTF_8));
                         try {
                             for (String sig : uv.rsList) {
                                 rsOut.println(sig);
@@ -404,7 +404,7 @@ public final class SourceAnalyzerFactory {
                 state=oldState;
             }
             scan(node.getTypeDecls(),p);
-            scan(TreeShims.getModule(cu),p); //note: on older JDKs, this will analyze the ModuleTree twice
+            scan(cu.getModule(),p);
 
             Pair<BinaryName,String> name = null;
             if (!imports.isEmpty() ||

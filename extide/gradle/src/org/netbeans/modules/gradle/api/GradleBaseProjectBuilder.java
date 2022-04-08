@@ -50,8 +50,8 @@ import org.openide.util.lookup.ServiceProvider;
 @SuppressWarnings("unchecked")
 class GradleBaseProjectBuilder implements ProjectInfoExtractor.Result {
 
-    final static Map<String, List<String>> DEPENDENCY_TO_PLUGIN = new LinkedHashMap<>();
-    final static Logger LOG = Logger.getLogger(GradleBaseProjectBuilder.class.getName());
+    static final Map<String, List<String>> DEPENDENCY_TO_PLUGIN = new LinkedHashMap<>();
+    static final Logger LOG = Logger.getLogger(GradleBaseProjectBuilder.class.getName());
 
     static {
         addDependencyPlugin("javax:javaee-api:.*", "ejb", "jpa");
@@ -164,6 +164,11 @@ class GradleBaseProjectBuilder implements ProjectInfoExtractor.Result {
         Map<String, String> unresolvedProblems = (Map<String, String>) info.get("unresolved_problems");
         unresolvedProblems = unresolvedProblems != null ? unresolvedProblems : Collections.<String, String>emptyMap();
         Map<String, ModuleDependency> components = new HashMap<>();
+        
+        // supplement project info with cache data as in online mode javadocs and sources are NOT queried. Especially
+        // when doing a refresh / download, the project info is just partial, although Gradle has relevant artifacts in
+        // its caches.
+        GradleArtifactStore store = GradleArtifactStore.getDefault();
         for (Map.Entry<String, Set<File>> entry : arts.entrySet()) {
             String componentId = entry.getKey();
             // Looking at cache first as we might have the chance to find Sources and Javadocs
@@ -174,9 +179,13 @@ class GradleBaseProjectBuilder implements ProjectInfoExtractor.Result {
             components.put(componentId, dep);
             if (sources.containsKey(componentId)) {
                 dep.sources = sources.get(entry.getKey());
+            } else {
+                dep.sources = store.getSources(entry.getValue());
             }
             if (javadocs.containsKey(componentId)) {
                 dep.javadoc = javadocs.get(entry.getKey());
+            } else {
+                dep.javadoc = store.getJavadocs(entry.getValue());                
             }
         }
         Map<String, ProjectDependency> projects = new HashMap<>();

@@ -80,7 +80,7 @@ public final class UIInternalHandle extends InternalHandle {
             // no UI atm
             return false;
         }
-        viewAction = (Action)al;
+        viewAction = al;
         return true;
     }
 

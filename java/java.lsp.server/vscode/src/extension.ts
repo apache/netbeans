@@ -47,14 +47,17 @@ import {NbTestAdapter} from './testAdapter';
 import { asRanges, StatusMessageRequest, ShowStatusMessageParams, QuickPickRequest, InputBoxRequest, TestProgressNotification, DebugConnector,
          TextEditorDecorationCreateRequest, TextEditorDecorationSetNotification, TextEditorDecorationDisposeNotification, HtmlPageRequest, HtmlPageParams,
          SetTextEditorDecorationParams,
-         ProjectActionParams
+         ProjectActionParams,
+         UpdateConfigurationRequest,
+         UpdateConfigParams
 } from './protocol';
 import * as launchConfigurations from './launchConfigurations';
 import { createTreeViewService, TreeViewService, TreeItemDecorator, Visualizer, CustomizableTreeDataProvider } from './explorer';
-import { initializeRunConfiguration, runConfigurationProvider, runConfigurationNodeProvider, configureRunSettings } from './runConfiguration';
+import { initializeRunConfiguration, runConfigurationProvider, runConfigurationNodeProvider, configureRunSettings, runConfigurationUpdateAll } from './runConfiguration';
 import { TLSSocket } from 'tls';
 
 const API_VERSION : string = "1.0";
+const DATABASE: string = 'Database';
 let client: Promise<NbLanguageClient>;
 let testAdapter: NbTestAdapter | undefined;
 let nbProcess : ChildProcess | null = null;
@@ -148,7 +151,8 @@ export function awaitClient() : Promise<NbLanguageClient> {
 }
 
 function findJDK(onChange: (path : string | null) => void): void {
-    function find(): string | null {
+    let nowDark : boolean = isDarkColorTheme();
+function find(): string | null {
         let nbJdk = workspace.getConfiguration('netbeans').get('jdkhome');
         if (nbJdk) {
             return nbJdk as string;
@@ -172,13 +176,27 @@ function findJDK(onChange: (path : string | null) => void): void {
     let currentJdk = find();
     let timeout: NodeJS.Timeout | undefined = undefined;
     workspace.onDidChangeConfiguration(params => {
-        if (timeout || (!params.affectsConfiguration('java') && !params.affectsConfiguration('netbeans'))) {
+        if (timeout) {
+            return;
+        }
+        let interested : boolean = false;
+        if (params.affectsConfiguration('netbeans') || params.affectsConfiguration('java')) {
+            interested = true;
+        } else if (params.affectsConfiguration('workbench.colorTheme')) {
+            let d = isDarkColorTheme();
+            if (d != nowDark) {
+                interested = true;
+            }
+        }
+        if (!interested) {
             return;
         }
         timeout = setTimeout(() => {
             timeout = undefined;
             let newJdk = find();
-            if (newJdk !== currentJdk) {
+            let newD = isDarkColorTheme();
+            if (newJdk !== currentJdk || newD != nowDark) {
+                nowDark = newD;
                 currentJdk = newJdk;
                 onChange(currentJdk);
             }
@@ -274,17 +292,15 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
 
     let conf = workspace.getConfiguration();
     if (conf.get("netbeans.conflict.check")) {
-        let e = vscode.extensions.getExtension('redhat.java');
+        const id = 'redhat.java';
+        let e = vscode.extensions.getExtension(id);
         function disablingFailed(reason: any) {
             handleLog(log, 'Disabling some services failed ' + reason);
         }
         if (e && workspace.name) {
-            vscode.window.showInformationMessage(`redhat.java found at ${e.extensionPath} - Suppressing some services to not clash with Apache NetBeans Language Server.`);
-            conf.update('java.completion.enabled', false, false).then(() => {
-                vscode.window.showInformationMessage('Usage of only one Java extension is recommended. Certain services of redhat.java have been disabled. ');
-                conf.update('java.debug.settings.enableRunDebugCodeLens', false, false).then(() => {}, disablingFailed);
-                conf.update('java.test.editor.enableShortcuts', false, false).then(() => {}, disablingFailed);
-            }, disablingFailed);
+            vscode.window.showInformationMessage(`Another Java support extension is already installed. It is recommended to use only one Java support per workspace.`, `Manually disable`).then(() => {
+                vscode.commands.executeCommand('workbench.extensions.action.showInstalledExtensions');
+            });
         }
     }
 
@@ -343,7 +359,14 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
 
             if (typeof res === 'string') {
                 let newFile = vscode.Uri.parse(res as string);
-                await vscode.window.showTextDocument(newFile);
+                await vscode.window.showTextDocument(newFile, { preview: false });
+            } else if (Array.isArray(res)) {
+                for(let r of res) {
+                    if (typeof r === 'string') {
+                        let newFile = vscode.Uri.parse(r as string);
+                        await vscode.window.showTextDocument(newFile, { preview: false });
+                    }
+                }
             }
         } else {
             throw `Client ${c} doesn't support new from template`;
@@ -500,7 +523,6 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
 
     // register completions:
     launchConfigurations.registerCompletion(context);
-
     return Object.freeze({
         version : API_VERSION
     });
@@ -529,6 +551,7 @@ function activateWithJDK(specifiedJDK: string | null, context: ExtensionContext,
     });
     const a : Promise<void> | null = maintenance;
     commands.executeCommand('setContext', 'nbJavaLSReady', false);
+    commands.executeCommand('setContext', 'dbAddConnectionPresent', true);
     activationPending = true;
     // chain the restart after termination of the former process.
     if (a != null) {
@@ -571,6 +594,36 @@ function killNbProcess(notifyKill : boolean, log : vscode.OutputChannel, specPro
         handleLog(log, msg + "current process is " + (p ? p.pid : "None"));
         return new Promise((res, rej) => { res(); });
     }
+}
+
+/**
+ * Attempts to determine if the Workbench is using dark-style color theme, so that NBLS
+ * starts with some dark L&F for icon resource selection.
+ */
+function isDarkColorTheme() : boolean {
+    const themeName = workspace.getConfiguration('workbench')?.get('colorTheme');
+    if (!themeName) {
+        return false;
+    }
+    for (const ext of vscode.extensions.all) {
+        const themeList : object[] =  ext.packageJSON?.contributes && ext.packageJSON?.contributes['themes'];
+        if (!themeList) {
+            continue;
+        }
+        let t : any;
+        for (t of themeList) {
+            if (t.id !== themeName) {
+                continue;
+            }
+            const uiTheme = t.uiTheme;
+            if (typeof(uiTheme) == 'string') {
+                if (uiTheme.includes('-dark') || uiTheme.includes('-black')) {
+                    return true;
+                }
+            }
+        }
+    }
+    return false;
 }
 
 function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContext, log : vscode.OutputChannel, notifyKill: boolean,
@@ -630,7 +683,11 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
                 stdOut = null;
             }
         }
-        let p = launcher.launch(info, "--modules", "--list", "-J-XX:PerfMaxStringConstLength=10240");
+        let extras : string[] = ["--modules", "--list", "-J-XX:PerfMaxStringConstLength=10240"];
+        if (isDarkColorTheme()) {
+            extras.push('--laf', 'com.formdev.flatlaf.FlatDarkLaf');
+        }
+        let p = launcher.launch(info, ...extras);
         handleLog(log, "LSP server launching: " + p.pid);
         p.stdout.on('data', function(d: any) {
             logAndWaitForEnabled(d.toString(), true);
@@ -709,7 +766,9 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
                 { language: 'java' },
                 { language: 'yaml', pattern: '**/{application,bootstrap}*.yml' },
                 { language: 'properties', pattern: '**/{application,bootstrap}*.properties' },
-                { language: 'jackpot-hint' }
+                { language: 'jackpot-hint' },
+                { language: 'xml', pattern: '**/pom.xml' },
+                { pattern: '**/build.gradle'}
         ];
         const enableGroovy : boolean = conf.get("netbeans.groovySupport.enabled") || true;
         if (enableGroovy) {
@@ -769,6 +828,10 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
                 const selected = await window.showQuickPick(param.items, { placeHolder: param.placeHolder, canPickMany: param.canPickMany });
                 return selected ? Array.isArray(selected) ? selected : [selected] : undefined;
             });
+            c.onRequest(UpdateConfigurationRequest.type, async (param) => {
+                await vscode.workspace.getConfiguration(param.section).update(param.key, param.value);
+                runConfigurationUpdateAll();
+            });
             c.onRequest(InputBoxRequest.type, async param => {
                 return await window.showInputBox({ prompt: param.prompt, value: param.value, password: param.password });
             });
@@ -827,6 +890,7 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
             // create project explorer:
             c.findTreeViewService().createView('foundProjects', 'Projects', { canSelectMany : false });
             createDatabaseView(c);
+            c.findTreeViewService().createView('cloud.resources', undefined, { canSelectMany : false });
         }).catch(setClient[1]);
     }).catch((reason) => {
         activationPending = false;
@@ -1157,7 +1221,9 @@ class NetBeansConfigurationResolver implements vscode.DebugConfigurationProvider
         if (!config.request) {
             config.request = 'launch';
         }
-        config.file = '${file}';
+        if (vscode.window.activeTextEditor) {
+            config.file = '${file}';
+        }
         if (!config.classPaths) {
             config.classPaths = ['any'];
         }

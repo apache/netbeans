@@ -29,6 +29,7 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -37,7 +38,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.CompletionStage;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
@@ -121,7 +121,7 @@ public final class NbGradleProjectImpl implements Project {
         return project != null;
     }
 
-    public static abstract class WatcherAccessor {
+    public abstract static class WatcherAccessor {
 
         public abstract NbGradleProject createWatcher(NbGradleProjectImpl proj);
 
@@ -211,7 +211,10 @@ public final class NbGradleProjectImpl implements Project {
                         GradleFiles gf = getGradleFiles();
                         Set<File> ret = new LinkedHashSet<>();
                         for (GradleFiles.Kind kind : GradleFiles.Kind.PROJECT_FILES) {
-                            ret.add(gf.getFile(kind));
+                            File f = gf.getFile(kind);
+                            if (f != null) {
+                                ret.add(f);
+                            }
                         }
                         return ret;
                     }
@@ -231,6 +234,7 @@ public final class NbGradleProjectImpl implements Project {
     }
 
     synchronized void dumpProject() {
+        loading = null;
         project = null;
         attemptedQuality = null;
         loadedProjectSerial = 0;
@@ -312,7 +316,7 @@ public final class NbGradleProjectImpl implements Project {
         RELOAD_RP.post(() -> 
             loadOwnProject0(desc, false, interactive, aim, false, force)
                 .handle((p, e) -> {
-                   if (e != null) {
+                   if (e == null) {
                        toRet.complete(p);
                    } else {
                        toRet.completeExceptionally(e);
@@ -367,6 +371,39 @@ public final class NbGradleProjectImpl implements Project {
     CompletableFuture<GradleProject> loadOwnProject(String desc, boolean ignoreCache, boolean interactive, Quality aim, String... args) {
         return loadOwnProject0(desc, ignoreCache, interactive, aim, false, true, args);
     }
+
+    /**
+     * Future that is present during project load. Other load requests can be satisfied by this Future if they do not contain
+     * the 'force' flag.
+     */
+    // @GuardedBy(this)
+    private LoadingCF loading;
+    
+    private static class LoadingCF extends CompletableFuture<GradleProject> {
+        private final Quality aim;
+        private final boolean ignoreCache;
+        private final boolean interactive;
+        private final boolean sync;
+        private final List<String> args;
+
+        public LoadingCF(Quality aim, boolean ignoreCache, boolean interactive, boolean sync, List<String> args) {
+            this.aim = aim;
+            this.ignoreCache = ignoreCache;
+            this.interactive = interactive;
+            this.sync = sync;
+            this.args = args;
+        }
+     
+        public boolean satisifes(LoadingCF other) {
+            if (aim.worseThan(other.aim)) {
+                return false;
+            }
+            if (ignoreCache != other.ignoreCache || interactive != other.interactive || sync != other.sync) {
+                return false;
+            }
+            return args.equals(other.args);
+        }
+    }
     
     /**
      * Loads a project. After load, dispatches reload events. If "sync" is false (= asynchronous), dispatches events
@@ -389,7 +426,17 @@ public final class NbGradleProjectImpl implements Project {
         if (loader == null) {
             throw new IllegalStateException("No loader implementation is present!");
         }
-
+        LoadingCF f = new LoadingCF(aim, ignoreCache, interactive, sync, Arrays.asList(args));
+        synchronized (this) {
+            if (this.loading != null && this.loading.satisifes(f)) {
+                if (!force) {
+                    LOG.log(Level.FINER, "Project {2} is already loading to quality {0}, now attempted {1}, returning existing handle", new 
+                            Object[] { this.loading.aim, aim, this });
+                    return this.loading;
+                }
+            }
+            this.loading = f;
+        }
         int s = currentSerial.incrementAndGet();
         // do not block during project load.
         LOG.log(Level.FINER, "Starting project {2} load, serial {0}, attempted quality {1}", new Object[] { s, aim, this });
@@ -402,7 +449,20 @@ public final class NbGradleProjectImpl implements Project {
             }
             loadedProjectSerial = s;
             this.attemptedQuality = aim;
-            if (project != null && !force && project.getQuality().atLeast(prj.getQuality())) {
+            
+            boolean replace = project == null || force;
+            if (project != null) {
+                if (prj.getQuality().betterThan(project.getQuality())) {
+                    replace = true;
+                } else if (
+                        project.getQuality().equals(prj.getQuality()) && 
+                        !project.getProblems().equals(prj.getProblems()) &&
+                        !prj.getProblems().isEmpty()) {
+                    // exception: if the new project is the same quality fallback, but contains (different) problem info, use it
+                    replace = true;
+                }
+            }
+            if (!replace) {
                 // avoid replacing a project when nothing has changed.
                 LOG.log(Level.FINER, "Current project {1} sufficient for attempted quality {0}", new Object[] { this.project, aim });
                 return CompletableFuture.completedFuture(this.project);
@@ -412,11 +472,15 @@ public final class NbGradleProjectImpl implements Project {
         }
         // notify the project has been changed.
         if (sync || RELOAD_RP.isRequestProcessorThread()) {
+            synchronized (this) {
+                if (this.loading == f) {
+                    this.loading = null;
+                }
+            }
             LOG.log(Level.FINER, "Firing changes/reload synchronously");
             ACCESSOR.doFireReload(watcher);
             return CompletableFuture.completedFuture(prj);
         } else {
-            CompletableFuture<GradleProject> f = new CompletableFuture<>();
             LOG.log(Level.FINER, "Firing changes/reload in RP");
             RELOAD_RP.post(() -> callAccessorReload(f, prj));
             return f;
@@ -425,6 +489,11 @@ public final class NbGradleProjectImpl implements Project {
     
     private CompletableFuture<GradleProject> callAccessorReload(CompletableFuture<GradleProject> f, GradleProject prj) {
         try {
+            synchronized (this) {
+                if (this.loading == f) {
+                    this.loading = null;
+                }
+            }
             ACCESSOR.doFireReload(watcher);
             f.complete(prj);
         } catch (ThreadDeath t) {
@@ -474,12 +543,13 @@ public final class NbGradleProjectImpl implements Project {
 
     @Override
     public String toString() {
-        synchronized (this) {
-            if (isGradleProjectLoaded()) {
-                return "Gradle: " + project.getBaseProject().getName() + "[" + project.getQuality() + "]";
-            } else {
-                return "Unloaded Gradle Project: " + gradleFiles.toString();
-            }
+        // synchronized was here, but is it may be called during Logger.log(), it may completely cause a deadlock
+        // between LogHandler (that calls this toString() and other thread that locked this and tries to use Logger).
+        GradleProject p = project;
+        if (p != null) {
+            return "Gradle: " + p.getBaseProject().getName() + "[" + p.getQuality() + "]";
+        } else {
+            return "Unloaded Gradle Project: " + gradleFiles.toString();
         }
     }
     
@@ -494,7 +564,7 @@ public final class NbGradleProjectImpl implements Project {
 
     GradleProject getPrimedProject() {
         GradleProject gp = projectWithQuality(null, EVALUATED, false, false);
-        return !(gp.getQuality().notBetterThan(EVALUATED) || !gp.getProblems().isEmpty()) ? gp : null;
+        return gp.getQuality().betterThan(EVALUATED) ? gp : null;
     }
     
     /**

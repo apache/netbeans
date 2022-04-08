@@ -96,6 +96,7 @@ public final class Ear {
      * @return J2EE platform version
      * @deprecated use {@link #getJ2eeProfile()}
      */
+    @Deprecated
     public String getJ2eePlatformVersion () {
         if (impl2 != null) {
             // TODO null happens when EAR is deleted and getApplication is called

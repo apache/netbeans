@@ -143,9 +143,9 @@ public final class Stub {
             
             if (retClass.isPrimitive()) {
                 if (retClass == Byte.TYPE) {
-                    return new Byte((byte)0);
+                    return (byte)0;
                 } else if (retClass == Short.TYPE) {
-                    return new Short((short)0);
+                    return (short)0;
                 } else if (retClass == Integer.TYPE) {
                     return new Integer(0);
                 } else if (retClass == Long.TYPE) {

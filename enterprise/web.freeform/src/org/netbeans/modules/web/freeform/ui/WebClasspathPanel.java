@@ -356,7 +356,7 @@ public class WebClasspathPanel extends javax.swing.JPanel implements HelpCtx.Pro
     public String getClasspath(){
         StringBuffer sf = new StringBuffer();
         for (int i = 1; i < listModel.getSize(); i++){
-            String path = (String)listModel.get(i);
+            String path = listModel.get(i);
             sf.append(path);
             if (i < listModel.getSize()-1)
                 sf.append(File.pathSeparatorChar);
@@ -385,7 +385,7 @@ public class WebClasspathPanel extends javax.swing.JPanel implements HelpCtx.Pro
                 AuxiliaryConfiguration aux = Util.getAuxiliaryConfiguration(projectHelper);
                 List<WebProjectGenerator.WebModule> l = WebProjectGenerator.getWebmodules(projectHelper, aux);
                 if (l != null){
-                    WebProjectGenerator.WebModule wm = (WebProjectGenerator.WebModule)l.get(0);
+                    WebProjectGenerator.WebModule wm = l.get(0);
                     wm.classpath = getClasspath();
                     WebProjectGenerator.putWebModules(projectHelper, aux, l);
                 }

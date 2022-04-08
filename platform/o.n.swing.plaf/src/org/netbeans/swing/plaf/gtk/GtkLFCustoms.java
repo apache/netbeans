@@ -220,7 +220,7 @@ public class GtkLFCustoms extends LFCustoms {
     }
     
     /** Temporary workaround for GTK L&F */
-    private static abstract class GTKIcon implements Icon {
+    private abstract static class GTKIcon implements Icon {
         private static final int SIZE = 11;
         @Override
         public int getIconWidth() {

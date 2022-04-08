@@ -38,7 +38,7 @@ import java.util.logging.Logger;
  *
  * @author Ian Formanek, Tomas Pavek
  */
-final public class FormPropertyEditorManager {
+public final class FormPropertyEditorManager {
 
     /**
      * Maps property type to property editor class. There are 2 maps - one for

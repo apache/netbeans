@@ -306,8 +306,9 @@ public final class GradleJavaSourceSet implements Serializable {
      * @return the matching {@link SourceType} or {@code null}.
      */
     public SourceType getSourceType(File f) {
-        for (SourceType type : sources.keySet()) {
-            Set<File> dirs = sources.get(type);
+        for (Map.Entry<SourceType, Set<File>> entry : sources.entrySet()) {
+            SourceType type = entry.getKey();
+            Set<File> dirs = entry.getValue();
             for (File dir : dirs) {
                 if (parentOrSame(f, dir)) {
                     return type;
@@ -329,8 +330,9 @@ public final class GradleJavaSourceSet implements Serializable {
 
     public Set<SourceType> getSourceTypes(File f) {
         Set<SourceType> ret = EnumSet.noneOf(SourceType.class);
-        for (SourceType type : sources.keySet()) {
-            Set<File> dirs = sources.get(type);
+        for (Map.Entry<SourceType, Set<File>> entry : sources.entrySet()) {
+            SourceType type = entry.getKey();
+            Set<File> dirs = entry.getValue();
             for (File dir : dirs) {
                 if (parentOrSame(f, dir)) {
                     ret.add(type);

@@ -315,7 +315,7 @@ public class JSTestDriverSupport {
             String s = JSTestDriverCustomizerPanel.getServerURL();
             // #230400 - use IP address instead of localhost so that mobile browsers testing works:
             if (bd.getBrowserFamily().isMobile() && s.startsWith("http://localhost:")) {
-                s = s.replaceAll("localhost", WebUtils.getLocalhostInetAddress().getHostAddress());
+                s = s.replace("localhost", WebUtils.getLocalhostInetAddress().getHostAddress());
             }
             s = s+"/capture"; //NOI18N
             if (bd.hasNetBeansIntegration()) {

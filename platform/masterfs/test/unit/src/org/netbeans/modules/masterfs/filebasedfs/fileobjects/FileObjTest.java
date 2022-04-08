@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.attribute.UserDefinedFileAttributeView;
 import java.util.Arrays;
@@ -138,7 +139,7 @@ public class FileObjTest extends NbTestCase {
         fo.addFileChangeListener(listener);
         
         OutputStream os = fo.getOutputStream();
-        os.write("Ahoj everyone!\n".getBytes("UTF-8"));
+        os.write("Ahoj everyone!\n".getBytes(StandardCharsets.UTF_8));
         os.close();
 
         assertEquals("Only one change event should be fired.", 1, listener.check(EventType.CHANGED));

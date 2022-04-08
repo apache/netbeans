@@ -70,8 +70,11 @@ class RunConfigurationProvider implements vscode.DebugConfigurationProvider {
 					config.env = {};
 				}
 				for (let val of envs) {
-					const vals = val.trim().split('=');
-					config.env[vals[0]] = vals[1];
+					val = val.trim();
+					const div = val.indexOf('=');
+					if (div > 0) { // div === 0 means bad format (no ENV name)
+						config.env[val.substring(0, div)] = val.substring(div + 1, val.length);
+					}
 				}
 			}
 
@@ -156,12 +159,15 @@ class RunConfigurationNode extends vscode.TreeItem {
 		this.value = value;
 		this.getConfig().update(this.settingsKey, this.value, false);
 		this.updateNode();
-        runConfigurationNodeProvider.refresh();
 	}
 
-	updateNode() {
-		this.description = this.value ? this.value : '<default>';
-        this.tooltip = `${this.label} ${this.description}`;
+	updateNode(reload?: boolean) {
+            if (reload) {
+                this.value  = this.getConfig().get(this.settingsKey) as string;
+            }
+            this.description = this.value ? this.value : '<default>';
+            this.tooltip = `${this.label} ${this.description}`;
+            runConfigurationNodeProvider.refresh();
 	}
 
 	getConfig(): vscode.WorkspaceConfiguration {
@@ -215,4 +221,10 @@ export function configureRunSettings(context: vscode.ExtensionContext, ...params
     if (params[0][0]) {
         (params[0][0] as RunConfigurationNode).configure(context);
     }
+}
+export function runConfigurationUpdateAll() {
+    argumentsNode.updateNode(true);
+    vmOptionsNode.updateNode(true);
+    environmentVariablesNode.updateNode(true);
+    workingDirectoryNode.updateNode(true);
 }

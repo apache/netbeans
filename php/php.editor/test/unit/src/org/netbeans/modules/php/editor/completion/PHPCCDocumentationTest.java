@@ -167,6 +167,14 @@ public class PHPCCDocumentationTest extends PHPCodeCompletionTestBase {
         checkCompletionDocumentation("testfiles/completion/documentation/fieldWithoutPhpDoc.php", "self::$union^Type", false, "");
     }
 
+    public void testFieldIntersectionTypeWithoutPhpDoc() throws Exception {
+        checkCompletionDocumentation("testfiles/completion/documentation/fieldWithoutPhpDoc.php", "$this->interse^ctionType;", false, "");
+    }
+
+    public void testFieldLongNameTypeWithoutPhpDoc() throws Exception {
+        checkCompletionDocumentation("testfiles/completion/documentation/fieldWithoutPhpDoc.php", "$this->longNameT^ype;", false, "");
+    }
+
     public void testMethodTypedWithoutPhpDoc() throws Exception {
         checkCompletionDocumentation("testfiles/completion/documentation/functionWithoutPhpDoc.php", "$instance->testTy^ped(1, null, null);", false, "");
     }
@@ -179,6 +187,10 @@ public class PHPCCDocumentationTest extends PHPCodeCompletionTestBase {
         checkCompletionDocumentation("testfiles/completion/documentation/functionWithoutPhpDoc.php", "$instance->testUnionTy^pe(1, null, null);", false, "");
     }
 
+    public void testMethodIntersectionTypeWithoutPhpDoc() throws Exception {
+        checkCompletionDocumentation("testfiles/completion/documentation/functionWithoutPhpDoc.php", "$instance->testIntersectio^nType(null, null);", false, "");
+    }
+
     public void testFunctionTypedWithoutPhpDoc() throws Exception {
         checkCompletionDocumentation("testfiles/completion/documentation/functionWithoutPhpDoc.php", "testTyp^ed(2, null, null);", false, "");
     }
@@ -189,6 +201,10 @@ public class PHPCCDocumentationTest extends PHPCodeCompletionTestBase {
 
     public void testFunctionUnionTypeWithoutPhpDoc() throws Exception {
         checkCompletionDocumentation("testfiles/completion/documentation/functionWithoutPhpDoc.php", "testUnionTy^pe(2, null, null);", false, "");
+    }
+
+    public void testFunctionIntersectionTypeWithoutPhpDoc() throws Exception {
+        checkCompletionDocumentation("testfiles/completion/documentation/functionWithoutPhpDoc.php", "testIntersectionTy^pe(null, null); // function", false, "");
     }
 
     @Override

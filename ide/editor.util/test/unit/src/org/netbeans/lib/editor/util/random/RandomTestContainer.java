@@ -303,7 +303,7 @@ public final class RandomTestContainer extends PropertyProvider {
      * Random operation that can be registered for random testing container
      * and that can be triggered with certain probability.
      */
-    public static abstract class Op {
+    public abstract static class Op {
 
         private final String name;
 
@@ -325,7 +325,7 @@ public final class RandomTestContainer extends PropertyProvider {
     /**
      * Check correctness of things after each operation.
      */
-    public static abstract class Check {
+    public abstract static class Check {
 
         protected abstract void check(Context context) throws Exception;
 

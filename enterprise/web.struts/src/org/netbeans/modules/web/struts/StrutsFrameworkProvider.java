@@ -157,7 +157,7 @@ public class StrutsFrameworkProvider extends WebFrameworkProvider {
             if (resource != null){
                 String name = resource.getAttributeValue("parameter");
                 if (name != null) {
-                    name = name.replaceAll("/", ".");
+                    name = name.replace("/", ".");
                     panel.setAppResource(name);
                 }
             }
@@ -366,7 +366,7 @@ public class StrutsFrameworkProvider extends WebFrameworkProvider {
             //copy Welcome.jsp
             if (canCreateNewFile(wm.getDocumentBase(), "welcomeStruts.jsp")) { //NOI18N
                 content = readResource (this.getClass().getClassLoader().getResourceAsStream(RESOURCE_FOLDER + "welcome.jsp"), "UTF-8"); //NOI18N
-                content = content.replaceAll("__ENCODING__", FileEncodingQuery.getDefaultEncoding().name());
+                content = content.replace("__ENCODING__", FileEncodingQuery.getDefaultEncoding().name());
                 target = FileUtil.createData(wm.getDocumentBase(), "welcomeStruts.jsp");//NOI18N
                 createFile(target, content, "UTF-8"); //NOI18N
                 File indexJsp = new File(FileUtil.toFile(wm.getDocumentBase()), "index.jsp");  //NOI18N

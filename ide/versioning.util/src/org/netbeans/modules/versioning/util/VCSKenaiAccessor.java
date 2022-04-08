@@ -47,7 +47,7 @@ public abstract class VCSKenaiAccessor {
     /**
      * Some kenai vcs repository was changed
      */
-    public final static String PROP_KENAI_VCS_NOTIFICATION = "kenai.vcs.notification"; // NOI18N
+    public static final String PROP_KENAI_VCS_NOTIFICATION = "kenai.vcs.notification"; // NOI18N
 
     protected static final Logger LOG = Logger.getLogger("org.netbeans.modules.versioning.util.VCSKenaiSupport");
 
@@ -167,7 +167,7 @@ public abstract class VCSKenaiAccessor {
     /**
      * Repesents a Kenai user
      */
-    public static abstract class KenaiUser {
+    public abstract static class KenaiUser {
 
         /**
          * Determines wheter the {@link KenaiUser} is online or not
@@ -240,7 +240,7 @@ public abstract class VCSKenaiAccessor {
     /**
      * Represents a change in a kenai VCS repository
      */
-    public static abstract class VCSKenaiNotification {
+    public abstract static class VCSKenaiNotification {
 
         /**
          * The repository uri

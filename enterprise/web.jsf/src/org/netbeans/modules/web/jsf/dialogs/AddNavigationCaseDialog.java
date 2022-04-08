@@ -50,7 +50,7 @@ public class AddNavigationCaseDialog extends javax.swing.JPanel implements Valid
         modelT.addElement("");
         Iterator<NavigationRule> iter = facesConfig.getNavigationRules().iterator();
         while (iter.hasNext()) {
-            String fromViewID=((NavigationRule)iter.next()).getFromViewId();
+            String fromViewID=iter.next().getFromViewId();
             if (fromViewID != null && fromViewID.trim().length() > 0){
                 modelF.addElement(fromViewID);
                 modelT.addElement(fromViewID);

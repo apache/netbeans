@@ -40,9 +40,12 @@ import static org.netbeans.modules.java.lsp.server.explorer.NodeLookupContextVal
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.loaders.DataFolder;
+import org.openide.loaders.DataObject;
+import org.openide.loaders.DataObjectNotFoundException;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
 import org.openide.nodes.Node;
+import org.openide.util.Exceptions;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
@@ -56,6 +59,7 @@ public class DefaultDecorationsImpl implements TreeDataProvider.Factory {
     public static final String EXPLORER_ROOT = "Explorers"; // NOI18N
     public static final String COOKIES_EXT = "contextValues"; // NOI18N
     
+    public static final String CTXVALUE_FILE = "is:file"; // NOI18N
     public static final String CTXVALUE_FOLDER = "is:folder"; // NOI18N
     public static final String CTXVALUE_PROJECT = "is:project"; // NOI18N
     public static final String CTXVALUE_PROJECT_ROOT = "is:projectRoot"; // NOI18N
@@ -144,6 +148,15 @@ public class DefaultDecorationsImpl implements TreeDataProvider.Factory {
             if (f != null) {
                 // reverse check, if the file's node is proxied to by the node we got:
                 Node fn = f.getLookup().lookup(Node.class);
+                // DataObjects that have MultiDataObject.associateLookup() == 0 do not report Node in their FileObject, hack it for files only:
+                if (fn == null && !f.isFolder()) {
+                    try {
+                        DataObject obj = DataObject.find(f);
+                        fn = obj.getNodeDelegate();
+                    } catch (DataObjectNotFoundException ex) {
+                        // ignore
+                    }
+                }
                 if (nodeChecked || fn != null) {
                     if (nodeChecked || n.getLookup().lookup(fn.getClass()) == fn) {
                         try {
@@ -166,7 +179,8 @@ public class DefaultDecorationsImpl implements TreeDataProvider.Factory {
                                 }
                                 folder = true;
                                 d.addContextValues(CTXVALUE_FOLDER);
-                            } else {
+                            } else if ((f.isData() || f.isValid()) && !f.isVirtual()) {
+                                d.addContextValues(CTXVALUE_FILE);
                                 // PENDING: this could be moved to the VSNetbeans module ?
                                 d.setCommand("vscode.open"); // NOI18N
                             }

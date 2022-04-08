@@ -620,20 +620,20 @@ public abstract class AbstractCodeGeneratorClass {
     //	parts of the class start at one tabulation
     //
     
-    static protected final int	   	PUBLIC 		= 0;
-    static protected final int		PRIVATE 	= 1;
-    static protected final int		VOID 		= 2;
-    static protected final int		CLASS 		= 3;
-    static protected final int		IMPORT 		= 4;
-    static protected final int		PACKAGE    	= 5;
-    static protected final int		STRING 		= 6;
-    static protected final int		BOOLEAN		= 7;
-    static protected final int		STATIC		= 8;
-    static protected final int		FINAL		= 9;
-    static protected final int		INT			= 10;
-    static protected final int		PROTECTED	= 11;
+    protected static final int	   	PUBLIC 		= 0;
+    protected static final int		PRIVATE 	= 1;
+    protected static final int		VOID 		= 2;
+    protected static final int		CLASS 		= 3;
+    protected static final int		IMPORT 		= 4;
+    protected static final int		PACKAGE    	= 5;
+    protected static final int		STRING 		= 6;
+    protected static final int		BOOLEAN		= 7;
+    protected static final int		STATIC		= 8;
+    protected static final int		FINAL		= 9;
+    protected static final int		INT			= 10;
+    protected static final int		PROTECTED	= 11;
     
-    static protected final String arrKeywords[] = {
+    protected static final String arrKeywords[] = {
         "public",
         "private",
         "void",

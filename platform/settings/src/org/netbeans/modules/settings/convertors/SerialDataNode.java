@@ -845,7 +845,7 @@ public final class SerialDataNode extends DataNode {
     } // end of I
     
     /** Derived from BeanChildren and allow replace beancontext. */
-    private final static class InstanceChildren extends Children.Keys {
+    private static final class InstanceChildren extends Children.Keys {
         SerialDataNode task;
         DataObject dobj;
         Object bean;

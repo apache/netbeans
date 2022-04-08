@@ -53,7 +53,7 @@ public class DBMetaDataProvider {
     // must be a weak reference -- we don't want to prevent the connection from being GCd
     // it is OK to be a weak reference -- the connection is hold strongly by the DB Explorer
     // while connected
-    private final Reference/*<Connection>*/ conn;
+    private final Reference<Connection> conn;
     private final String driverClass;
     
     private Map/*<String, Catalog>*/ catalogs;
@@ -76,7 +76,7 @@ public class DBMetaDataProvider {
     }
     
     public DBMetaDataProvider(Connection conn, String driverClass) {
-        this.conn = new WeakReference(conn);
+        this.conn = new WeakReference<>(conn);
         this.driverClass = driverClass;
     }
     

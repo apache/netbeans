@@ -24,6 +24,7 @@ import com.thaiopensource.validate.*;
 import com.thaiopensource.validate.prop.rng.RngProperty;
 import com.thaiopensource.xml.sax.XMLReaderCreator;
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.logging.Handler;
 import java.util.logging.Level;
@@ -158,7 +159,7 @@ public class NbValidationTransaction extends ValidationTransaction {
         try {
             LOGGER.fine("Starting initialization.");
 
-            BufferedReader r = new BufferedReader(new InputStreamReader(LocalCacheEntityResolver.getPresetsAsStream(), "UTF-8"));
+            BufferedReader r = new BufferedReader(new InputStreamReader(LocalCacheEntityResolver.getPresetsAsStream(), StandardCharsets.UTF_8));
             String line;
             List<String> doctypes = new LinkedList<String>();
             List<String> namespaces = new LinkedList<String>();

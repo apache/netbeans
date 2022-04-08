@@ -30,20 +30,20 @@ public final class TreeName {
      * The treeName prefix. For example, the prefix for the treeName "a:foo"
      * is "a".
      */
-    final private String prefix;
+    private final String prefix;
 
     /**
      * The treeName name. For example, the name for the treeName "a:foo"
      * is "foo".
      */
-    final private String name;
+    private final String name;
 
 
     /**
      * The treeName rawName. For example, the rawName for the treeName "a:foo"
      * is "a:foo".
      */
-    final private String rawName;
+    private final String rawName;
     
     
     //

@@ -374,7 +374,7 @@ public class EvaluationContext {
 
     }
 
-    public static abstract class VariableInfo {
+    public abstract static class VariableInfo {
 
         public abstract void setValue(Value value) throws IllegalStateException;
 

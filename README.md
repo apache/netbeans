@@ -27,10 +27,11 @@ Apache NetBeans is an open source development environment, tooling platform, and
 
 ### Build status
    * GitHub actions
-     * [![Apache Netbeans Continuous Integration](https://github.com/apache/netbeans/workflows/Apache%20Netbeans%20Continuous%20Integration/badge.svg)](https://github.com/apache/netbeans/actions)
+     * [![Build Status](https://github.com/apache/netbeans/actions/workflows/main.yml/badge.svg)](https://github.com/apache/netbeans/actions/workflows/main.yml)
+     * [![Profiler Lib Native Binaries](https://github.com/apache/netbeans/actions/workflows/native-binary-build-lib.profiler.yml/badge.svg)](https://github.com/apache/netbeans/actions/workflows/native-binary-build-lib.profiler.yml)
    * TravisCI:
      * [![Build Status](https://app.travis-ci.com/apache/netbeans.svg?branch=master)](https://app.travis-ci.com/apache/netbeans)
-   * Apache Jenkins: 
+   * Apache Jenkins:
      * Linux: [![Build Status](https://ci-builds.apache.org/job/Netbeans/job/netbeans-linux/badge/icon)](https://ci-builds.apache.org/job/Netbeans/job/netbeans-linux/)
      * Windows: [![Build Status](https://ci-builds.apache.org/job/Netbeans/job/netbeans-windows/badge/icon)](https://ci-builds.apache.org/job/Netbeans/job/netbeans-windows)
 
@@ -38,13 +39,12 @@ Apache NetBeans is an open source development environment, tooling platform, and
 
   * Git
   * Ant 1.9.9 or above
-  * JDK 8 or 11 (to build NetBeans)
-  * JDK 9 or above (to run NetBeans)
+  * JDK 11 (to build NetBeans)
+  * JDK 11 or above (to run NetBeans)
   * MinGW (optional), to build Windows Launchers
 
 #### Notes:
 
-* NetBeans also runs with JDK 8, although then it will not include tools for the JDK 9 Shell.
 * NetBeans license violation checks are managed via the [rat-exclusions.txt](https://github.com/apache/netbeans/blob/master/nbbuild/rat-exclusions.txt) file.
 * Set JAVA_HOME and ANT_HOME appropriately or leave them undefined.
 
@@ -86,7 +86,7 @@ $ ant -Ddo.build.windows.launchers=true
 sudo apt install make mingw-w64
 ```
 
-#### Generating Javadoc 
+#### Generating Javadoc
 
 Build javadoc:
 ```

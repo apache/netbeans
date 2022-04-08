@@ -32,6 +32,7 @@ import java.io.Writer;
 import java.lang.ref.SoftReference;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Method;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.logging.Level;
@@ -807,7 +808,7 @@ implements PropertyChangeListener, FileSystem.AtomicAction {
             if (inst == null) return ;
             
             ByteArrayOutputStream b = new ByteArrayOutputStream(1024);
-            Writer w = new OutputStreamWriter(b, "UTF-8"); // NOI18N
+            Writer w = new OutputStreamWriter(b, StandardCharsets.UTF_8);
             try {
                 isWriting = true;
                 Convertor conv = getConvertor();
@@ -836,7 +837,7 @@ implements PropertyChangeListener, FileSystem.AtomicAction {
     /** A provider for .settings files  containing serial data format
      * (hexa stream)
      */
-    public final static class Provider implements Environment.Provider {
+    public static final class Provider implements Environment.Provider {
         private final FileObject providerFO;
         
         public static Environment.Provider create(FileObject fo) {

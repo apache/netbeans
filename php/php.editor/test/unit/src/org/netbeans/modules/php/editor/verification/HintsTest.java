@@ -43,10 +43,6 @@ public class HintsTest extends PHPHintsTestBase {
         return inputFile;
     }
 
-    public void testModifiersCheckHint() throws Exception {
-        checkHints(new ModifiersCheckHintError(), "testModifiersCheckHint.php");
-    }
-
     public void testAbstractClassInstantiationHint() throws Exception {
         checkHints(new AbstractClassInstantiationHintError(), "testAbstractClassInstantiationHint.php");
     }
@@ -470,26 +466,6 @@ public class HintsTest extends PHPHintsTestBase {
         applyHint(new EmptyStatementHint(), "testIssue259026_03.php", "$test1 = 1;;^", "Empty Statement");
     }
 
-    public void testConstantModifiersCheckHint() throws Exception {
-        checkHints(new ModifiersCheckHintError(), "testConstantModifiersCheckHint.php");
-    }
-
-    public void testConstantModifiersCheckFix_01() throws Exception {
-        applyHint(new ModifiersCheckHintError(), "testConstantModifiersCheckFix.php", "private const PRIVATE_INT^ERFACE_CONST = 2;", "Remove modifier");
-    }
-
-    public void testConstantModifiersCheckFix_02() throws Exception {
-        applyHint(new ModifiersCheckHintError(), "testConstantModifiersCheckFix.php", "protected const P^ROTECTED_INTERFACE_CONST = 3;", "Remove modifier");
-    }
-
-    public void testVoidReturnTypeHint_01() throws Exception {
-        checkHints(new ReturnTypeHintErrorStub(PhpVersion.PHP_70), "testVoidReturnTypeHint.php");
-    }
-
-    public void testVoidReturnTypeHint_02() throws Exception {
-        checkHints(new ReturnTypeHintErrorStub(PhpVersion.PHP_71), "testVoidReturnTypeHint.php");
-    }
-
     public void testDeclareStrictTypes_01a() throws Exception {
         checkHints(new DeclareStrictTypesSuggestionStub(PhpVersion.PHP_70), "testDeclareStrictTypesSuggestion_01.php", "^<?php");
     }
@@ -560,21 +536,6 @@ public class HintsTest extends PHPHintsTestBase {
         @Override
         protected boolean isAtLeastPhp54(FileObject fileObject) {
             return phpVersion.compareTo(PhpVersion.PHP_54) >= 0;
-        }
-
-    }
-
-    private static final class ReturnTypeHintErrorStub extends ReturnTypeHintError {
-
-        private final PhpVersion phpVersion;
-
-        public ReturnTypeHintErrorStub(PhpVersion phpVersion) {
-            this.phpVersion = phpVersion;
-        }
-
-        @Override
-        protected PhpVersion getPhpVersion(FileObject file) {
-            return phpVersion;
         }
 
     }

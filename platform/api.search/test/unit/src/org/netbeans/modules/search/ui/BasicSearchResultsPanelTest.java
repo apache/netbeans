@@ -138,7 +138,7 @@ public class BasicSearchResultsPanelTest {
     private static class TextDetailChilren extends Children.Keys<TextDetail> {
 
         public TextDetailChilren(String prefix, int count) {
-            List<TextDetail> keys = new LinkedList<TextDetail>();
+            List<TextDetail> keys = new LinkedList<>();
             for (int i = 1; i <= count; i++) {
                 TextDetail td = new TextDetail(null, null);
                 td.setLineText(prefix + i);

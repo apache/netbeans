@@ -124,7 +124,7 @@ public abstract class TracerPackage implements Positionable {
      *
      * @param <X> any DataSource type
      */
-    public static abstract class SessionAware extends TracerPackage {
+    public abstract static class SessionAware extends TracerPackage {
 
         private PackageStateHandler stateHandler;
 
@@ -150,7 +150,7 @@ public abstract class TracerPackage implements Positionable {
          *
          * @return predefined PackageStateHandler which obtains status notifications
          */
-        public synchronized final PackageStateHandler getStateHandler() {
+        public final synchronized PackageStateHandler getStateHandler() {
             if (stateHandler == null) stateHandler = new PackageStateHandler() {
                 public void probeAdded(TracerProbe probe, IdeSnapshot snapshot) {
                     SessionAware.this.probeAdded(probe, snapshot);

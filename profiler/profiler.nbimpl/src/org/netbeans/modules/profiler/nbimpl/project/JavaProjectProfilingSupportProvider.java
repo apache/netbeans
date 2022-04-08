@@ -89,7 +89,7 @@ public abstract class JavaProjectProfilingSupportProvider extends ProjectProfili
         "IncorrectJavaSpecVersionDialogCaption=Warning",
         "IncorrectJavaSpecVersionDialogMsg=The specification version of project Java Platform is greater than specification version of the\nplatform that will be used for profiling. You may experience problems unless you set the compiler\nparameter to generate bytecode compatible with the platform that will be used.\n\nDo you want to continue with the current settings?"
     })
-    synchronized public JavaPlatform getProjectJavaPlatform() {
+    public synchronized JavaPlatform getProjectJavaPlatform() {
         JavaPlatform projectJavaPlatform = resolveProjectJavaPlatform();
         
         if (projectJavaPlatform != null && !MiscUtils.isSupportedJVM(projectJavaPlatform.getSystemProperties())) {
@@ -148,7 +148,7 @@ public abstract class JavaProjectProfilingSupportProvider extends ProjectProfili
 //        return platform;
     }
     
-    abstract protected JavaPlatform resolveProjectJavaPlatform();
+    protected abstract JavaPlatform resolveProjectJavaPlatform();
     
     protected final JavaPlatform getPlatformByName(String platformName) {
         if (platformName == null || platformName.equals("default_platform")) { // NOI18N

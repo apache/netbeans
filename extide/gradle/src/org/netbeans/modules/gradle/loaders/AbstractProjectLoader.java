@@ -25,16 +25,16 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 import org.netbeans.modules.gradle.GradleProject;
+import org.netbeans.modules.gradle.GradleReport;
 import org.netbeans.modules.gradle.NbGradleProjectImpl;
 import org.netbeans.modules.gradle.api.GradleBaseProject;
 import org.netbeans.modules.gradle.api.NbGradleProject;
 import static org.netbeans.modules.gradle.api.NbGradleProject.Quality.EVALUATED;
 import static org.netbeans.modules.gradle.api.NbGradleProject.Quality.FALLBACK;
+import org.netbeans.modules.gradle.api.NbProjectInfo.Report;
 import org.netbeans.modules.gradle.api.execute.GradleCommandLine;
 import org.netbeans.modules.gradle.cache.ProjectInfoDiskCache;
 import org.netbeans.modules.gradle.cache.SubProjectDiskCache;
-import static org.netbeans.modules.gradle.loaders.GradleDaemon.INIT_SCRIPT;
-import static org.netbeans.modules.gradle.loaders.GradleDaemon.TOOLING_JAR;
 import org.netbeans.modules.gradle.options.GradleExperimentalSettings;
 import org.netbeans.modules.gradle.spi.GradleFiles;
 import org.netbeans.modules.gradle.spi.GradleSettings;
@@ -71,7 +71,7 @@ public abstract class AbstractProjectLoader {
 
         public ReloadContext(NbGradleProjectImpl project, NbGradleProject.Quality aim, GradleCommandLine cmd, String description) {
             this.project = project;
-            this.previous = project.isGradleProjectLoaded() ? project.getGradleProject() : FallbackProjectLoader.createFallbackProject(project.getGradleFiles());
+            this.previous = project.isGradleProjectLoaded() ? project.projectWithQuality(null, FALLBACK, false, false) : FallbackProjectLoader.createFallbackProject(project.getGradleFiles());
             this.aim = aim;
             this.cmd = cmd;
             this.description = description;
@@ -89,14 +89,13 @@ public abstract class AbstractProjectLoader {
     static GradleCommandLine injectNetBeansTooling(GradleCommandLine cmd) {
         GradleCommandLine ret = new GradleCommandLine(cmd);
         ret.setFlag(GradleCommandLine.Flag.CONFIGURE_ON_DEMAND, GradleSettings.getDefault().isConfigureOnDemand());
-        ret.addParameter(GradleCommandLine.Parameter.INIT_SCRIPT, INIT_SCRIPT);
+        ret.addParameter(GradleCommandLine.Parameter.INIT_SCRIPT, GradleDaemon.initScript());
         ret.setStackTrace(GradleCommandLine.StackTrace.SHORT);
-        ret.addSystemProperty(GradleDaemon.PROP_TOOLING_JAR, TOOLING_JAR);
         ret.addProjectProperty("nbSerializeCheck", "true");
         return ret;
     }
 
-    static GradleProject createGradleProject(ProjectInfoDiskCache.QualifiedProjectInfo info) {
+    static GradleProject createGradleProject(GradleFiles gf, ProjectInfoDiskCache.QualifiedProjectInfo info) {
         Collection<? extends ProjectInfoExtractor> extractors = Lookup.getDefault().lookupAll(ProjectInfoExtractor.class);
         Map<Class, Object> results = new HashMap<>();
         Set<String> problems = new LinkedHashSet<>(info.getProblems());
@@ -112,7 +111,16 @@ public abstract class AbstractProjectLoader {
             }
 
         }
-        return new GradleProject(info.getQuality(), problems, results.values());
+        Set<GradleReport> reps = new LinkedHashSet<>();
+        if (info.getReports() != null) {
+            for (Report r : info.getReports()) {
+                reps.add(LegacyProjectLoader.copyReport(r));
+            }
+        }
+        for (String s : problems) {
+            reps.add(GradleReport.simple(gf.getBuildScript().toPath(), s));
+        }
+        return new GradleProject(info.getQuality(), reps, results.values());
 
     }
 
@@ -132,6 +140,4 @@ public abstract class AbstractProjectLoader {
         GradleFiles gf = new GradleFiles(gp.getBaseProject().getProjectDir(), true);
         ProjectInfoDiskCache.get(gf).storeData(data);
     }
-
-
 }

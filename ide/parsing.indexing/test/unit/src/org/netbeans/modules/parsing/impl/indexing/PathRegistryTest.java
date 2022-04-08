@@ -603,8 +603,8 @@ public class PathRegistryTest extends IndexingTestBase {
 
     public static class SFBQImpl implements SourceForBinaryQueryImplementation {
 
-        final static Map<URL,FileObject> map = new HashMap<URL,FileObject> ();
-        final static Map<URL,Result> results = new HashMap<URL,Result> ();
+        static final Map<URL,FileObject> map = new HashMap<URL,FileObject> ();
+        static final Map<URL,Result> results = new HashMap<URL,Result> ();
 
         public SFBQImpl () {
 
@@ -694,7 +694,7 @@ public class PathRegistryTest extends IndexingTestBase {
 
     public static class DeadLockSFBQImpl implements SourceForBinaryQueryImplementation {
 
-        private final static Object lock = new String ("Lock");
+        private static final Object lock = new String ("Lock");
 
         public DeadLockSFBQImpl () {
         }

@@ -26,7 +26,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Deque;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -201,10 +200,10 @@ public final class FindComponentModules extends Task {
         Preferences pref = FindComponentModules.getPreferences ();
         String value = pref.get (ENABLE_LATER, null);
         if (value != null && value.trim ().length () > 0) {
-            Enumeration en = new StringTokenizer (value, ","); // NOI18N
-            while (en.hasMoreElements ()) {
-                String codeName = ((String) en.nextElement ()).trim ();
-                UpdateElement el = findUpdateElement (codeName, true);
+            StringTokenizer st = new StringTokenizer(value, ","); // NOI18N
+            while (st.hasMoreElements()) {
+                String codeName = st.nextToken().trim();
+                UpdateElement el = findUpdateElement(codeName, true);
                 if (el != null) {
                     res.add (el);
                 }

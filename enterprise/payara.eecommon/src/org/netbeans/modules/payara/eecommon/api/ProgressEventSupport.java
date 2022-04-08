@@ -106,7 +106,7 @@ public class ProgressEventSupport {
 
 	if (targets != null) {
 	    for (int i = 0; i < targets.size(); i++) {
-	        ProgressListener target = (ProgressListener)targets.elementAt(i);
+	        ProgressListener target = targets.elementAt(i);
 	        target.handleProgressEvent (evt);
 	    }
 	}

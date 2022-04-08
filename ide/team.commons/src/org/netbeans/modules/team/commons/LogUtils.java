@@ -33,7 +33,7 @@ public final class LogUtils {
     /**
      * Metrics logger
      */
-    private final static Logger METRICS_LOG = Logger.getLogger("org.netbeans.ui.metrics.bugtracking"); // NOI18N
+    private static final Logger METRICS_LOG = Logger.getLogger("org.netbeans.ui.metrics.bugtracking"); // NOI18N
 
     /**
      * The automatic refresh was set on or off.<br>
@@ -78,7 +78,7 @@ public final class LogUtils {
      */
     private static final String USG_ISSUE_TRACKING_REPOSITORY = "USG_ISSUE_TRACKING_REPOSITORY"; // NOI18N
     
-    private final static Set<String> loggedParams = new HashSet<String>(1); // to avoid logging same params more than once in a session
+    private static final Set<String> loggedParams = new HashSet<String>(1); // to avoid logging same params more than once in a session
 
     public static void logQueryEvent(String connector, String name, int count, boolean isFromTeamServer, boolean isAutoRefresh) {
         name = obfuscateQueryName(name);

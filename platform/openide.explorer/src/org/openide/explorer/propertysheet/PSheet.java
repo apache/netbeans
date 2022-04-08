@@ -81,8 +81,8 @@ import org.netbeans.modules.openide.explorer.TabbedContainerBridge;
  * @author  Tim Boudreau
  */
 class PSheet extends JPanel implements MouseListener {
-    public final static int STATE_HAS_DESCRIPTION = 1;
-    public final static int STATE_HAS_TABS = 2;
+    public static final int STATE_HAS_DESCRIPTION = 1;
+    public static final int STATE_HAS_TABS = 2;
     private int addCount = 0;
     private String description = ""; //NOI18N
     private String title = ""; //NOI18N

@@ -115,7 +115,6 @@ import javax.swing.event.DocumentListener;
 import javax.swing.text.DefaultEditorKit;
 import javax.swing.text.Document;
 import javax.swing.text.Element;
-import junit.framework.Assert;
 import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.api.editor.mimelookup.MimeLookup;
 import org.netbeans.api.editor.mimelookup.MimePath;
@@ -227,7 +226,7 @@ public abstract class CslTestBase extends NbTestCase {
                 layers.add(en.nextElement());
             }
 
-            Assert.assertTrue(additionalLayers[cntr], found);
+            assertTrue(additionalLayers[cntr], found);
         }
 
         XMLFileSystem xmlFS = new XMLFileSystem();
@@ -261,8 +260,9 @@ public abstract class CslTestBase extends NbTestCase {
             logger.addHandler(w);
 
             // initialize classpaths indexing
-            for(String cpId : classPathsForTest.keySet()) {
-                ClassPath cp = classPathsForTest.get(cpId);
+            for(Map.Entry<String, ClassPath> entry : classPathsForTest.entrySet()) {
+                String cpId = entry.getKey();
+                ClassPath cp = entry.getValue();
                 GlobalPathRegistry.getDefault().register(cpId, new ClassPath [] { cp });
             }
 
@@ -288,8 +288,9 @@ public abstract class CslTestBase extends NbTestCase {
             Waiter w = new Waiter(classPathContainsBinaries());
             logger.addHandler(w);
 
-            for(String cpId : classPathsForTest.keySet()) {
-                ClassPath cp = classPathsForTest.get(cpId);
+            for(Map.Entry<String, ClassPath> entry : classPathsForTest.entrySet()) {
+                String cpId = entry.getKey();
+                ClassPath cp = entry.getValue();
                 GlobalPathRegistry.getDefault().unregister(cpId, new ClassPath [] { cp });
             }
 
@@ -340,7 +341,7 @@ public abstract class CslTestBase extends NbTestCase {
     public static final FileObject copyStringToFileObject(FileObject fo, String content) throws IOException {
         OutputStream os = fo.getOutputStream();
         try {
-            InputStream is = new ByteArrayInputStream(content.getBytes("UTF-8"));
+            InputStream is = new ByteArrayInputStream(content.getBytes(StandardCharsets.UTF_8));
             try {
                 FileUtil.copy(is, os);
                 return fo;
@@ -713,8 +714,8 @@ public abstract class CslTestBase extends NbTestCase {
         } else {
             // We want to ignore different line separators (like \r\n against \n) because they
             // might be causing failing tests on a different operation systems like Windows :]
-            String expectedUnified = expectedTrimmed.replaceAll("\r", "");
-            String actualUnified = actualTrimmed.replaceAll("\r", "");
+            String expectedUnified = expectedTrimmed.replace("\r", "");
+            String actualUnified = actualTrimmed.replace("\r", "");
             
             // if there is '**' in the actualUnified, it may stand for whatever word of the expected
             // content in that position.
@@ -924,8 +925,8 @@ public abstract class CslTestBase extends NbTestCase {
         } else {
             // We want to ignore different line separators (like \r\n against \n) because they
             // might be causing failing tests on a different operation systems like Windows :]
-            final String expectedUnified = expectedTrimmed.replaceAll("\r", "");
-            final String actualUnified = actualTrimmed.replaceAll("\r", "");
+            final String expectedUnified = expectedTrimmed.replace("\r", "");
+            final String actualUnified = actualTrimmed.replace("\r", "");
 
             if (expectedUnified.equals(actualUnified)) {
                 return; // Only difference is in line separation --> Test passed
@@ -986,8 +987,8 @@ public abstract class CslTestBase extends NbTestCase {
         } else {
             // We want to ignore different line separators (like \r\n against \n) because they
             // might be causing failing tests on a different operation systems like Windows :]
-            final String expectedUnified = expectedTrimmed.replaceAll("\r", "");
-            final String actualUnified = actualTrimmed.replaceAll("\r", "");
+            final String expectedUnified = expectedTrimmed.replace("\r", "");
+            final String actualUnified = actualTrimmed.replace("\r", "");
 
             if (expectedUnified.equals(actualUnified)) {
                 return; // Only difference is in line separation --> Test passed

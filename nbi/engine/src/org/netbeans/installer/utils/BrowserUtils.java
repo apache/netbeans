@@ -34,9 +34,9 @@ import javax.swing.event.HyperlinkListener;
  */
 public class BrowserUtils {
 
-    private final static boolean isBrowseSupported;
-    private final static Method browseMethod;
-    private final static Object desktop;
+    private static final boolean isBrowseSupported;
+    private static final Method browseMethod;
+    private static final Object desktop;
 
 
     static {

@@ -66,7 +66,8 @@ public final class J2SEPlatformDefaultJavadocImpl implements J2SEPlatformDefault
         OFFICIAL_JAVADOC.put("15", "https://docs.oracle.com/en/java/javase/15/docs/api/"); // NOI18N
         OFFICIAL_JAVADOC.put("16", "https://docs.oracle.com/en/java/javase/16/docs/api/"); // NOI18N
         OFFICIAL_JAVADOC.put("17", "https://docs.oracle.com/en/java/javase/17/docs/api/"); // NOI18N
-        OFFICIAL_JAVADOC.put("18", "https://download.java.net/java/early_access/jdk18/docs/api/"); // NOI18N Early access
+        OFFICIAL_JAVADOC.put("18", "https://docs.oracle.com/en/java/javase/18/docs/api/"); // NOI18N
+        OFFICIAL_JAVADOC.put("19", "https://download.java.net/java/early_access/jdk19/docs/api/"); // NOI18N Early access
     }
 
     @Override

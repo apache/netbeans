@@ -1,0 +1,5 @@
+Code completion result for source line:
+public function returnType(): ne|ver; // interface
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+KEYWORD    never                                      null

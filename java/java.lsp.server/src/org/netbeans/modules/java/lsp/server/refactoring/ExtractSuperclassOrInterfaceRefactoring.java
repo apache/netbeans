@@ -47,12 +47,14 @@ import org.eclipse.lsp4j.CodeActionParams;
 import org.eclipse.lsp4j.MessageParams;
 import org.eclipse.lsp4j.MessageType;
 import org.netbeans.api.java.classpath.ClassPath;
+import org.netbeans.api.java.lexer.JavaTokenId;
 import org.netbeans.api.java.source.ClasspathInfo;
 import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.TreePathHandle;
 import org.netbeans.api.java.source.TreeUtilities;
+import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.modules.java.lsp.server.Utils;
 import org.netbeans.modules.java.lsp.server.protocol.CodeActionsProvider;
 import org.netbeans.modules.java.lsp.server.protocol.NbCodeLanguageClient;
@@ -100,6 +102,11 @@ public final class ExtractSuperclassOrInterfaceRefactoring extends CodeRefactori
         }
         info.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
         int offset = getOffset(info, params.getRange().getStart());
+        TokenSequence<JavaTokenId> ts = info.getTokenHierarchy().tokenSequence(JavaTokenId.language());
+        ts.move(offset);
+        if (ts.moveNext() && ts.token().id() != JavaTokenId.WHITESPACE && ts.offset() == offset) {
+            offset += 1;
+        }
         String uri = Utils.toUri(info.getFileObject());
         Trees trees = info.getTrees();
         TreeUtilities treeUtilities = info.getTreeUtilities();

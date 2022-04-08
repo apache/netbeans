@@ -125,7 +125,7 @@ public final class NbSourceProvider {
                 for (String path : sourcePaths) {
                     Path fullpath = Paths.get(path, relativeSourcePath);
                     if (Files.isRegularFile(fullpath)) {
-                        uri = fullpath.toString();
+                        uri = fullpath.toUri().toString();
                         break;
                     }
                 }

@@ -306,7 +306,7 @@ public class XMLUtilTest extends NbTestCase {
         doc.getDocumentElement().appendChild(doc.createElement("child"));
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         XMLUtil.write(doc, baos, "UTF-8");
-        String data = baos.toString()/*#62680*/.replaceAll("\r\n", "\n");
+        String data = baos.toString()/*#62680*/.replace("\r\n", "\n");
         assertTrue("had reasonable indentation in\n" + data, data.indexOf("<root>\n    <child/>\n</root>\n") != -1);
     }
     
@@ -343,7 +343,7 @@ public class XMLUtilTest extends NbTestCase {
         c.appendChild(doc.importNode(d2, true));
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         XMLUtil.write(doc, baos, "UTF-8");
-        String data2 = baos.toString().replaceAll("\r\n", "\n");
+        String data2 = baos.toString().replace("\r\n", "\n");
         //System.err.println("normalized data:\n" + ignoreSpaceChanges(data, doctype) + "\nnormalized data2:\n" + ignoreSpaceChanges(data2, doctype));
         assertEquals("identity replacement should not mess up indentation in \n" + data2, ignoreSpaceChanges(data, doctype), ignoreSpaceChanges(data2, doctype));
     }
@@ -369,7 +369,7 @@ public class XMLUtilTest extends NbTestCase {
         Document doc = XMLUtil.parse(new InputSource(new StringReader(data)), false, false, null, null);
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         XMLUtil.write(doc, baos, "UTF-8");
-        String data2 = baos.toString().replaceAll("\r\n", "\n");
+        String data2 = baos.toString().replace("\r\n", "\n");
         assertEquals("identity replacement should not mess up significant whitespace", data, data2);
     }
     

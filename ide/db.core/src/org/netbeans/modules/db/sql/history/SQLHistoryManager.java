@@ -22,6 +22,9 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.parsers.DocumentBuilder;
@@ -32,7 +35,6 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 import org.netbeans.modules.db.sql.execute.ui.SQLHistoryPanel;
 import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileSystem;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.NbPreferences;
 import org.openide.util.RequestProcessor;
@@ -50,9 +52,11 @@ public class SQLHistoryManager  {
     public static final int DEFAULT_SQL_STATEMENTS_SAVED_FOR_HISTORY = 100;
     public static final int MAX_SQL_STATEMENTS_SAVED_FOR_HISTORY = 10000;
     public static final String PROP_SAVED = "saved"; //NOI18N
-    
+
     private static final String SQL_HISTORY_DIRECTORY = "Databases/SQLHISTORY"; // NOI18N
-    private static final String SQL_HISTORY_FILE = "sql_history.xml"; // NOI18N
+    private static final String SQL_HISTORY_BASE = "sql_history"; // NOI18N
+    private static final String SQL_HISTORY_EXT = "xml"; // NOI18N
+    private static final String SQL_HISTORY_FILE = SQL_HISTORY_BASE + "." + SQL_HISTORY_EXT; // NOI18N
     private static final String TAG_HISTORY = "history"; // NOI18N
     private static final String TAG_SQL = "sql"; // NOI18N
     private static final String ATTR_DATE = "date"; // NOI18N
@@ -62,14 +66,14 @@ public class SQLHistoryManager  {
     private static final RequestProcessor RP = new RequestProcessor(
             SQLHistoryManager.class.getName(), 1, false, false);
     // Time between call to save and real save - usefull to accumulate before save
-    private static final int SAVE_DELAY = 5 * 1000;    
-    
-    private static SQLHistoryManager _instance = null;    
-    
+    private static final int SAVE_DELAY = 5 * 1000;
+
+    private static SQLHistoryManager _instance = null;
+
     private final RequestProcessor.Task SAVER = RP.create(new Saver());
     private final PropertyChangeSupport PROPERTY_CHANGE_SUPPORT =
             new PropertyChangeSupport(this);
-    
+
     private SQLHistory sqlHistory;
 
     protected SQLHistoryManager() {
@@ -85,11 +89,11 @@ public class SQLHistoryManager  {
             }
         });
     }
-    
+
     public static synchronized SQLHistoryManager getInstance() {
         if (_instance == null) {
-            _instance = new SQLHistoryManager();                    
-        } 
+            _instance = new SQLHistoryManager();
+        }
         return _instance;
     }
 
@@ -115,18 +119,18 @@ public class SQLHistoryManager  {
         }
         return result;
     }
-    
+
     protected FileObject getConfigRoot() {
         return FileUtil.getConfigRoot();
     }
-    
+
     protected String getRelativeHistoryPath() {
         return SQL_HISTORY_DIRECTORY;
     }
 
     protected String getHistoryFilename() {
         return SQL_HISTORY_FILE;
-                }
+    }
 
     public void setListSize(int listSize) {
         NbPreferences.forModule(SQLHistoryPanel.class).putInt("OPT_SQL_STATEMENTS_SAVED_FOR_HISTORY", listSize);
@@ -157,15 +161,15 @@ public class SQLHistoryManager  {
                     }
                 }
             } else {
-                
+
             }
         } catch (IOException | ParserConfigurationException | SAXException ex) {
             sqlHistory = new SQLHistory();
-            LOGGER.log(Level.INFO, ex.getMessage());
+            LOGGER.log(Level.WARNING, ex.getMessage());
         }
         sqlHistory.setHistoryLimit(getListSize());
     }
-    
+
     public void save() {
         // On call to save schedule real saving, as save is a often calleed
         // method, this can bundle multiple saves into one write.
@@ -204,43 +208,43 @@ public class SQLHistoryManager  {
 
         @Override
         public void run() {
+            Path tempfile = null;
             try {
-                final FileObject targetFile = getHistoryRoot(true);
-                targetFile.getFileSystem().
-                        runAtomicAction(new FileSystem.AtomicAction() {
-                    @Override
-                    public void run() throws IOException {
-                        ;
-                        try (OutputStream os = targetFile.getOutputStream()) {
-                            XMLStreamWriter xsw = XMLOutputFactory
-                                    .newInstance()
-                                    .createXMLStreamWriter(os);
-                            
-                            xsw.writeStartDocument();
-                            xsw.writeCharacters(CONTENT_NEWLINE);
-                            xsw.writeStartElement(TAG_HISTORY);
-                            xsw.writeCharacters(CONTENT_NEWLINE);
-                            for(SQLHistoryEntry sqe: sqlHistory) {
-                                xsw.writeStartElement(TAG_SQL);
-                                xsw.writeAttribute(ATTR_DATE, sqe.getDateXMLVariant());
-                                xsw.writeAttribute(ATTR_URL, sqe.getUrl());
-                                xsw.writeCharacters(sqe.getSql());
-                                xsw.writeEndElement();
-                                xsw.writeCharacters(CONTENT_NEWLINE);
-                            }
-                            xsw.writeEndElement();
-                            xsw.flush();
-                            xsw.close();
-                        } catch (IOException | XMLStreamException ex) {
-                            LOGGER.log(Level.INFO, ex.getMessage(), ex);
-                        } finally {
-                            PROPERTY_CHANGE_SUPPORT.firePropertyChange(
-                                    PROP_SAVED, null, null);
-                        }
+                final FileObject targetFileObject = getHistoryRoot(true);
+                final Path targetFile = FileUtil.toFile(targetFileObject).toPath();
+                tempfile = Files.createTempFile(targetFile.getParent(), SQL_HISTORY_BASE, SQL_HISTORY_EXT);
+                try ( OutputStream os = Files.newOutputStream(tempfile)) {
+                    XMLStreamWriter xsw = XMLOutputFactory
+                            .newInstance()
+                            .createXMLStreamWriter(os);
+
+                    xsw.writeStartDocument();
+                    xsw.writeCharacters(CONTENT_NEWLINE);
+                    xsw.writeStartElement(TAG_HISTORY);
+                    xsw.writeCharacters(CONTENT_NEWLINE);
+                    for (SQLHistoryEntry sqe : sqlHistory) {
+                        xsw.writeStartElement(TAG_SQL);
+                        xsw.writeAttribute(ATTR_DATE, sqe.getDateXMLVariant());
+                        xsw.writeAttribute(ATTR_URL, sqe.getUrl());
+                        xsw.writeCharacters(sqe.getSql());
+                        xsw.writeEndElement();
+                        xsw.writeCharacters(CONTENT_NEWLINE);
                     }
-                });
-            } catch (IOException ex) {
-                LOGGER.log(Level.INFO, ex.getMessage());
+                    xsw.writeEndElement();
+                    xsw.flush();
+                    xsw.close();
+                }
+                Files.move(tempfile, targetFile, StandardCopyOption.REPLACE_EXISTING);
+                PROPERTY_CHANGE_SUPPORT.firePropertyChange(PROP_SAVED, null, null);
+            } catch (IOException | XMLStreamException ex) {
+                LOGGER.log(Level.WARNING, null, ex);
+                if(tempfile != null && Files.exists(tempfile)) {
+                    try {
+                        Files.delete(tempfile);
+                    } catch (IOException ex1) {
+                        LOGGER.log(Level.INFO, "Failed to cleanup temp file", ex1);
+                    }
+                }
             }
         }
     }

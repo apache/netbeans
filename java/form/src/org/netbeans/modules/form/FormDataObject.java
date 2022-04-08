@@ -40,8 +40,8 @@ import org.openide.util.Lookup;
  * @author Ian Formanek, Petr Hamernik
  */
 public class FormDataObject extends MultiDataObject {
-    transient private EditorSupport formEditor;
-    transient private OpenEdit openEdit;
+    private transient EditorSupport formEditor;
+    private transient OpenEdit openEdit;
 
     /** The entry for the .form file */
     FileEntry formEntry;

@@ -43,7 +43,6 @@ import org.netbeans.modules.php.editor.model.impl.VariousUtils;
 import org.netbeans.modules.php.editor.model.nodes.MethodDeclarationInfo;
 import org.netbeans.modules.php.editor.parser.astnodes.BodyDeclaration.Modifier;
 import org.netbeans.modules.php.editor.parser.astnodes.MethodDeclaration;
-import org.netbeans.modules.php.editor.parser.astnodes.UnionType;
 import org.openide.util.Parameters;
 
 /**
@@ -118,7 +117,7 @@ public final class MethodElementImpl extends PhpElementImpl implements MethodEle
     private static List<ParameterElement> fromParameterNames(String... names) {
         List<ParameterElement> retval = new ArrayList<>();
         for (String parameterName : names) {
-            retval.add(new ParameterElementImpl(parameterName, null, 0, Collections.<TypeResolver>emptySet(), true, true, false, false, false, 0));
+            retval.add(new ParameterElementImpl(parameterName, null, 0, Collections.<TypeResolver>emptySet(), true, true, false, false, false, 0, false));
         }
         return retval;
     }
@@ -160,7 +159,6 @@ public final class MethodElementImpl extends PhpElementImpl implements MethodEle
         Parameters.notNull("node", node);
         Parameters.notNull("fileQuery", fileQuery);
         MethodDeclarationInfo info = MethodDeclarationInfo.create(fileQuery.getResult().getProgram(), node, type.isInterface());
-        boolean isUnionType = node.getFunction().getReturnType() instanceof UnionType;
         return new MethodElementImpl(
                 type,
                 info.getName(),
@@ -171,7 +169,7 @@ public final class MethodElementImpl extends PhpElementImpl implements MethodEle
                 fileQuery,
                 BaseFunctionElementSupport.ParametersImpl.create(info.getParameters()),
                 BaseFunctionElementSupport.ReturnTypesImpl.create(
-                    TypeResolverImpl.parseTypes(VariousUtils.getReturnType(fileQuery.getResult().getProgram(), node.getFunction())), isUnionType),
+                    TypeResolverImpl.parseTypes(VariousUtils.getReturnType(fileQuery.getResult().getProgram(), node.getFunction())), node.getFunction().getReturnType()),
                 VariousUtils.isDeprecatedFromPHPDoc(fileQuery.getResult().getProgram(), node.getFunction()));
     }
 
@@ -213,6 +211,11 @@ public final class MethodElementImpl extends PhpElementImpl implements MethodEle
     @Override
     public boolean isReturnUnionType() {
         return functionSupport.isReturnUnionType();
+    }
+
+    @Override
+    public boolean isReturnIntersectionType() {
+        return functionSupport.isReturnIntersectionType();
     }
 
     @Override
@@ -293,6 +296,7 @@ public final class MethodElementImpl extends PhpElementImpl implements MethodEle
         sb.append(isDeprecated() ? 1 : 0).append(Separator.SEMICOLON);
         sb.append(getFilenameUrl()).append(Separator.SEMICOLON);
         sb.append(isReturnUnionType()? 1 : 0).append(Separator.SEMICOLON);
+        sb.append(isReturnIntersectionType() ? 1 : 0).append(Separator.SEMICOLON);
         return sb.toString();
     }
 
@@ -370,6 +374,10 @@ public final class MethodElementImpl extends PhpElementImpl implements MethodEle
         boolean isUnionType() {
             return signature.integer(8) == 1;
         }
+
+        boolean isIntersectionType() {
+            return signature.integer(9) == 1;
+        }
     }
 
     private void checkSignature(StringBuilder sb) {
@@ -422,10 +430,12 @@ public final class MethodElementImpl extends PhpElementImpl implements MethodEle
         //@GuardedBy("this")
         private Set<TypeResolver> retrievedReturnTypes = null;
         private final boolean isUnionType;
+        private final boolean isIntersectionType;
 
         public ReturnTypesFromSignature(MethodSignatureParser methodSignatureParser) {
             this.methodSignatureParser = methodSignatureParser;
             this.isUnionType = methodSignatureParser.isUnionType();
+            this.isIntersectionType = methodSignatureParser.isIntersectionType();
         }
 
         @Override
@@ -439,6 +449,11 @@ public final class MethodElementImpl extends PhpElementImpl implements MethodEle
         @Override
         public boolean isUnionType() {
             return isUnionType;
+        }
+
+        @Override
+        public boolean isIntersectionType() {
+            return isIntersectionType;
         }
 
     }

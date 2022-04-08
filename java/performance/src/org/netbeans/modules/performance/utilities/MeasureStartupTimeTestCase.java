@@ -79,7 +79,7 @@ public class MeasureStartupTimeTestCase extends org.netbeans.junit.NbPerformance
     /**
      * Number used for unknown time.
      */
-    protected final static long UNKNOWN_TIME = -1;
+    protected static final long UNKNOWN_TIME = -1;
 
     /**
      * Table of the supported platforms.

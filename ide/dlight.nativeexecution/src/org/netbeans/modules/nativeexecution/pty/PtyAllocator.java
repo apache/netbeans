@@ -143,7 +143,7 @@ public final class PtyAllocator {
         return result;
     }
 
-    private final static class PtyImplementation implements Pty {
+    private static final class PtyImplementation implements Pty {
 
         private final String tty;
         private final int pid;

@@ -44,7 +44,7 @@ import org.openide.windows.InputOutput;
 @SuppressWarnings("initialization")
 public class DownloadPanel extends javax.swing.JPanel {
 
-    public final static String PROP_DOWNLOAD_FINISHED = "downloadFinished";
+    public static final String PROP_DOWNLOAD_FINISHED = "downloadFinished";
 
     private boolean downloadFinished;
     private File download;

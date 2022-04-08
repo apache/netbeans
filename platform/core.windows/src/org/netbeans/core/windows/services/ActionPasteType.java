@@ -109,10 +109,10 @@ final class ActionPasteType {
         return retVal;
     }
 
-    private final static class PasteTypeImpl extends PasteType {
-        final private DataFolder targetFolder;
-        final private Collection<DataObject>  sourceDataObjects;
-        final private int pasteOperation;
+    private static final class PasteTypeImpl extends PasteType {
+        private final DataFolder targetFolder;
+        private final Collection<DataObject>  sourceDataObjects;
+        private final int pasteOperation;
 
     
         private PasteTypeImpl(final Collection<DataObject> sourceDataObjects, final DataFolder targetFolder, final int pasteOperation) {

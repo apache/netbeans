@@ -76,7 +76,7 @@ public class TimestampType {
         }
     }
 
-    public synchronized static Date doParse (String sVal) {
+    public static synchronized Date doParse (String sVal) {
         Date dVal = null;
         for (DateFormat format : TIMESTAMP_PARSING_FORMATS) {
             try {

@@ -46,7 +46,7 @@ import org.netbeans.modules.terminal.ioprovider.Terminal;
 
 abstract class TerminalContainerCommon extends TerminalContainer implements IOContainer.Provider {
 
-    private final static String PROP_ATTRIBUTES =
+    private static final String PROP_ATTRIBUTES =
 	    "TerminalContainerCommonImpl.ATTRIBUTES";	// NOI18N
 
     protected final TopComponent owner;
@@ -80,7 +80,7 @@ abstract class TerminalContainerCommon extends TerminalContainer implements IOCo
         this.originalName = originalName;
     }
 
-    final protected TopComponent topComponent() {
+    protected final TopComponent topComponent() {
         return owner;
     }
 
@@ -117,7 +117,7 @@ abstract class TerminalContainerCommon extends TerminalContainer implements IOCo
      * Handle delegation from containing TopComponent.
      */
     @Override
-    final public void componentActivated() {
+    public final void componentActivated() {
 	// Up to the client of TerminalContainer:
 	// owner.componentActivated();
 	activated = true;
@@ -133,7 +133,7 @@ abstract class TerminalContainerCommon extends TerminalContainer implements IOCo
      * Handle delegation from containing TopComponent.
      */
     @Override
-    final public void componentDeactivated() {
+    public final void componentDeactivated() {
 	// Up to the client of TerminalContainer:
 	// owner.componentDeactivated();
 	activated = false;
@@ -149,40 +149,40 @@ abstract class TerminalContainerCommon extends TerminalContainer implements IOCo
     // Overrides of IOContainer.Provider
     //
     @Override
-    final public void open() {
+    public final void open() {
 	if (owner != null)
 	    owner.open();
     }
 
     @Override
-    final public void requestActive() {
+    public final void requestActive() {
 	if (owner != null)
 	    owner.requestActive();
     }
 
     @Override
-    final public void requestVisible() {
+    public final void requestVisible() {
 	if (owner != null)
 	    owner.requestVisible();
     }
 
     @Override
-    final public boolean isActivated() {
+    public final boolean isActivated() {
 	return activated;
     }
 
     @Override
-    final public void add(JComponent comp, CallBacks cb) {
+    public final void add(JComponent comp, CallBacks cb) {
 	addTab(comp, cb);
     }
 
     @Override
-    final public void remove(JComponent comp) {
+    public final void remove(JComponent comp) {
 	removeTab(comp);
     }
 
     @Override
-    final public void select(JComponent comp) {
+    public final void select(JComponent comp) {
 	selectLite(comp);
     }
 
@@ -253,7 +253,7 @@ abstract class TerminalContainerCommon extends TerminalContainer implements IOCo
     }
 
     @Override
-    final public boolean isCloseable(JComponent comp) {
+    public final boolean isCloseable(JComponent comp) {
 	CallBacks cb = attributesFor(comp).cb;
 	if (cb != null && IOVisibilityControl.isSupported(cb)) {
 	    return IOVisibilityControl.isClosable(cb);
@@ -292,20 +292,20 @@ abstract class TerminalContainerCommon extends TerminalContainer implements IOCo
     //
     // Methods to be implemented in implementation
     //
-    abstract protected void addTabWork(JComponent comp);
+    protected abstract void addTabWork(JComponent comp);
 
-    abstract protected void removeTabWork(JComponent comp);
+    protected abstract void removeTabWork(JComponent comp);
 
-    abstract protected void setTitleWork(JComponent comp, String title);
+    protected abstract void setTitleWork(JComponent comp, String title);
 
-    abstract protected boolean contains(JComponent comp);
+    protected abstract boolean contains(JComponent comp);
 
-    abstract protected void restoreAttrsFor(JComponent comp);
+    protected abstract void restoreAttrsFor(JComponent comp);
 
-    abstract protected void selectLite(JComponent comp);
+    protected abstract void selectLite(JComponent comp);
 
     @Override
-    abstract public JComponent getSelected();
+    public abstract JComponent getSelected();
     
     @Override
     public abstract List<? extends Component> getAllTabs();
@@ -313,14 +313,14 @@ abstract class TerminalContainerCommon extends TerminalContainer implements IOCo
     //
     // Implementation support
     //
-    final protected void addTab(JComponent comp, CallBacks cb) {
+    protected final void addTab(JComponent comp, CallBacks cb) {
 	Attributes attr = attributesFor(comp);
 	attr.cb = cb;
 
 	addTabWork(comp);
     }
 
-    final protected void removeTab(JComponent comp) {
+    protected final void removeTab(JComponent comp) {
 	if (comp == null)
 	    return;
 
@@ -386,7 +386,7 @@ abstract class TerminalContainerCommon extends TerminalContainer implements IOCo
      * Update out containing TC's window name.
      * @param title
      */
-    final protected void updateWindowName(String title) {
+    protected final void updateWindowName(String title) {
 	if (owner == null)
 	    return;
 
@@ -416,7 +416,7 @@ abstract class TerminalContainerCommon extends TerminalContainer implements IOCo
      * Update anything that needs to be updated.
      */
 
-    final protected void checkSelectionChange() {
+    protected final void checkSelectionChange() {
 	// outptu2 calls this checkTabSelChange().
 	JComponent selection = getSelected();
 	if (selection != lastSelection) {

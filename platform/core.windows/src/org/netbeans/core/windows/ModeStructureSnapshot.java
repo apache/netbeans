@@ -115,7 +115,7 @@ public class ModeStructureSnapshot {
     
     /** Superclass for snapshot of model element.
      * There are three types, split, mode, and editor (represents editor area) type. */
-    public static abstract class ElementSnapshot {
+    public abstract static class ElementSnapshot {
         // PENDING revise
         /** Corresponding object in model (SplitNode or ModeNode or ModeImpl for separate mode). */
         private final ModelElement originator;

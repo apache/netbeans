@@ -260,8 +260,9 @@ public final class OnSaveTabPanelController extends OptionsPanelController {
         }
 
         public void applyChanges() {
-            for(String mimeType : mimeTypePreferences.keySet()) {
-                ProxyPreferences pp = mimeTypePreferences.get(mimeType);
+            for(Map.Entry<String, ProxyPreferences> entry : mimeTypePreferences.entrySet()) {
+                String mimeType = entry.getKey();
+                ProxyPreferences pp = entry.getValue();
                 pp.silence();
                 try {
                     LOG.fine("    flushing pp for '" + mimeType + "'"); //NOI18N
@@ -274,8 +275,9 @@ public final class OnSaveTabPanelController extends OptionsPanelController {
 
         public void destroy() {
             // destroy all proxy preferences
-            for(String mimeType : mimeTypePreferences.keySet()) {
-                ProxyPreferences pp = mimeTypePreferences.get(mimeType);
+            for(Map.Entry<String, ProxyPreferences> entry : mimeTypePreferences.entrySet()) {
+                String mimeType = entry.getKey();
+                ProxyPreferences pp = entry.getValue();
                 pp.removeNodeChangeListener(weakNodeL);
                 pp.removePreferenceChangeListener(weakPrefL);
                 pp.destroy();

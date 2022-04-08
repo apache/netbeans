@@ -9,6 +9,8 @@ class Example implements Iface1, Iface2, Iface3 {
 #[A1("param")]
 private ClassA|ClassB|null $unionType;
 
+private ClassA&ClassB $intersectionType;
+
     public function ifExample ($a, $b) {
         if (convert($a) > $b) {
             echo "a is bigger than b";
@@ -99,6 +101,12 @@ public function unionTypesExample(
         Class1|Class2|null $object
         ): int|float|null {
     return null;
+}
+
+public function intersectionTypesExample(
+        ClassA&ClassB $object
+        ): ClassA&ClassB {
+    return $object;
 }
 
 public function nullsafeOperatorExample(object $object){

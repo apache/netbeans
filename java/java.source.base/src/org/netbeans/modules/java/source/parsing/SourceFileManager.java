@@ -339,7 +339,7 @@ public class SourceFileManager implements JavaFileManager {
         }
     }
 
-    public static abstract class ModifiedFilesTransaction extends TransactionContext.Service {
+    public abstract static class ModifiedFilesTransaction extends TransactionContext.Service {
         public  abstract void cacheUpdated(@NonNull final URI file);
         abstract void begin();
     }

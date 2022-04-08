@@ -33,8 +33,8 @@ public class SessionData extends BaseBean {
 
     static Vector<BeanComparator> comparators = new Vector<>();
 
-    static public final String SESSIONIN = "SessionIn"; //NOI18N
-    static public final String SESSIONOUT = "SessionOut"; //NOI18N
+    public static final String SESSIONIN = "SessionIn"; //NOI18N
+    public static final String SESSIONOUT = "SessionOut"; //NOI18N
 
     public SessionData() {
 	this(Common.USE_DEFAULT_VALUES);
@@ -103,12 +103,12 @@ public class SessionData extends BaseBean {
     }
 
     //
-    static public void addComparator(BeanComparator c) {
+    public static void addComparator(BeanComparator c) {
 	SessionData.comparators.add(c);
     }
 
     //
-    static public void removeComparator(BeanComparator c) {
+    public static void removeComparator(BeanComparator c) {
 	SessionData.comparators.remove(c);
     }
     //

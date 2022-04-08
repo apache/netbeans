@@ -94,6 +94,7 @@ public class EjbJarProjectGenerator {
      * @throws IOException in case something went wrong
      * @deprecated 
      */
+    @Deprecated
     public static AntProjectHelper createProject(File dir, final String name, 
             final String j2eeLevel, final String serverInstanceID) throws IOException {
 

@@ -127,7 +127,7 @@ public abstract class SelectionAwareJavaSourceTaskFactory extends JavaSourceTask
      * @return selection span in the current {@link JTextComponent} for a given file.
      *         <code>null</code> if no selection available so far.
      */
-    public synchronized static int[] getLastSelection(FileObject file) {
+    public static synchronized int[] getLastSelection(FileObject file) {
         if (file == null) {
             throw new NullPointerException("Cannot pass null file!");
         }
@@ -143,7 +143,7 @@ public abstract class SelectionAwareJavaSourceTaskFactory extends JavaSourceTask
         return new int[] {startPosition, endPosition};
     }
     
-    private synchronized static void setLastSelection(FileObject file, int startPosition, int endPosition) {
+    private static synchronized void setLastSelection(FileObject file, int startPosition, int endPosition) {
         file2SelectionStartPosition.put(file, startPosition);
         file2SelectionEndPosition.put(file, endPosition);
     }

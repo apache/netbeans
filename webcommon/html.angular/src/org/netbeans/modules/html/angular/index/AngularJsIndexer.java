@@ -323,16 +323,17 @@ public class AngularJsIndexer extends EmbeddingIndexer{
                     return;
                 }
                 if (templates != null && !templates.isEmpty()) {
-                    for (Map.Entry<URI, Map<String, AngularJsController.ModuleConfigRegistration>> entry : templates.entrySet()) {
-                        URI uri = entry.getKey();
-                        Map<String, AngularJsController.ModuleConfigRegistration> map = entry.getValue();
+                    for (Map.Entry<URI, Map<String, AngularJsController.ModuleConfigRegistration>> templateEntry : templates.entrySet()) {
+                        URI uri = templateEntry.getKey();
+                        Map<String, AngularJsController.ModuleConfigRegistration> map = templateEntry.getValue();
                         File file = Utilities.toFile(uri);
                         FileObject fo = FileUtil.toFileObject(file);
 
                         if (fo != null) {
                             IndexDocument elementDocument = support.createDocument(fo);
-                            for (String template : map.keySet()) {
-                                AngularJsController.ModuleConfigRegistration controller = map.get(template);
+                            for (Map.Entry<String, AngularJsController.ModuleConfigRegistration> entry : map.entrySet()) {
+                                String template = entry.getKey();
+                                AngularJsController.ModuleConfigRegistration controller = entry.getValue();
                                 StringBuilder sb = new StringBuilder();
                                 sb.append(template).append(":").append(controller.getControllerName()); //NOI18N
                                 if (controller.getControllerAsName() != null) {

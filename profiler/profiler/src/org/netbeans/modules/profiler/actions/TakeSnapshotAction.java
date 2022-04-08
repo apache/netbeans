@@ -79,7 +79,7 @@ public final class TakeSnapshotAction extends ProfilingAwareAction {
     }
     
     private static final class Singleton {
-        final private static TakeSnapshotAction INSTANCE = new TakeSnapshotAction();
+        private static final TakeSnapshotAction INSTANCE = new TakeSnapshotAction();
     }
     
     @ActionID(id = "org.netbeans.modules.profiler.actions.TakeSnapshotAction", category = "Profile")

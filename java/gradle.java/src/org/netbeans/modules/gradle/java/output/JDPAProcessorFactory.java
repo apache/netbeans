@@ -44,7 +44,7 @@ public class JDPAProcessorFactory implements OutputProcessorFactory {
 
     private static class JDPAOutputProcessor implements OutputProcessor {
 
-        private final static Pattern JDPA_LISTEN = Pattern.compile("Listening for transport dt_socket at address: (\\d+)");
+        private static final Pattern JDPA_LISTEN = Pattern.compile("Listening for transport dt_socket at address: (\\d+)");
         final RunConfig cfg;
         boolean activated;
 

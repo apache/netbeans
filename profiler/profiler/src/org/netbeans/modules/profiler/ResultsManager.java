@@ -114,7 +114,7 @@ import org.openide.windows.WindowManager;
     "ResultsManager_DifferentObjectSize=<html><b>Object sizes are different.</b><br><br>Size of the same objects differ for each snapshot and their comparison is invalid.<br>The snapshots have likely been taken on different architectures (32bit vs. 64bit).</html>"
 })
 public final class ResultsManager {
-    final private static Logger LOGGER = Logger.getLogger(ResultsManager.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(ResultsManager.class.getName());
     
     //~ Inner Classes ------------------------------------------------------------------------------------------------------------
 
@@ -180,7 +180,7 @@ public final class ResultsManager {
     }
 
     private static class Singleton {
-        final private static ResultsManager INSTANCE = new ResultsManager();
+        private static final ResultsManager INSTANCE = new ResultsManager();
     }
     
     //~ Methods ------------------------------------------------------------------------------------------------------------------

@@ -53,11 +53,11 @@ import org.tigris.subversion.svnclientadapter.SVNUrl;
  */
 public abstract class ConnectionType implements ActionListener, DocumentListener, FocusListener {
     
-    private final static String LOCAL_URL_HELP          = "file:///repository_path[@REV]";              // NOI18N
-    private final static String HTTP_URL_HELP           = "http://hostname/repository_path[@REV]";      // NOI18N
-    private final static String HTTPS_URL_HELP          = "https://hostname/repository_path[@REV]";     // NOI18N
-    private final static String SVN_URL_HELP            = "svn://hostname/repository_path[@REV]";       // NOI18N
-    private final static String SVN_SSH_URL_HELP        = "svn+{0}://hostname/repository_path[@REV]";   // NOI18N
+    private static final String LOCAL_URL_HELP          = "file:///repository_path[@REV]";              // NOI18N
+    private static final String HTTP_URL_HELP           = "http://hostname/repository_path[@REV]";      // NOI18N
+    private static final String HTTPS_URL_HELP          = "https://hostname/repository_path[@REV]";     // NOI18N
+    private static final String SVN_URL_HELP            = "svn://hostname/repository_path[@REV]";       // NOI18N
+    private static final String SVN_SSH_URL_HELP        = "svn+{0}://hostname/repository_path[@REV]";   // NOI18N
 
     protected final Repository repository;
     private List<JTextField> selectOnFocusFields = null;

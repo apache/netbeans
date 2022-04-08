@@ -195,7 +195,7 @@ class SamplesOutputStream {
                 stack[i] = oldStackRef.get();
                 assert stack[i] != null;
             } else {
-                steCache.put(ste, new WeakReference(ste));
+                steCache.put(ste, new WeakReference<>(ste));
             }
         }
     }
@@ -220,9 +220,9 @@ class SamplesOutputStream {
 
     private static class Sample {
 
-        final private long time;
-        final private List<Long> sameThread;
-        final private List<ThreadInfo> newThreads;
+        private final long time;
+        private final List<Long> sameThread;
+        private final List<ThreadInfo> newThreads;
 
         Sample(long t, List<Long> sameT, List<ThreadInfo> newT) {
             time = t;

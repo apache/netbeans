@@ -34,7 +34,7 @@ import org.openide.util.ImageUtilities;
  */
 public class AngularJsCompletionItem implements CompletionProposal {
 
-    private final static String ANGULAR_NAME = "Angular Js";
+    private static final String ANGULAR_NAME = "Angular Js";
     private static ImageIcon angularIcon = null;
 
     private final int anchorOffset;

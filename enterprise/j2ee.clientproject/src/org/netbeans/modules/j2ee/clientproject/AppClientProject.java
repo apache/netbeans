@@ -817,8 +817,8 @@ public final class AppClientProject implements Project, FileChangeListener {
             this.helper = helper;
         }
         
-        transient private final UpdateHelper helper;
-        transient private boolean isArchive = false;
+        private final transient UpdateHelper helper;
+        private transient boolean isArchive = false;
         
         // List of primarily supported templates
         
@@ -884,7 +884,7 @@ public final class AppClientProject implements Project, FileChangeListener {
             return retVal;
         }
 
-        transient private boolean checked = false;
+        private transient boolean checked = false;
         
         private void checkEnvironment() {
             if (!checked) {

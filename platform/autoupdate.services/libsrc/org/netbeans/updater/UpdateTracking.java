@@ -20,6 +20,7 @@
 package org.netbeans.updater;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.zip.CRC32;
@@ -925,7 +926,7 @@ public final class UpdateTracking {
             OutputStream os;
             try {
                 os = context.createOS(config);
-                PrintWriter pw = new PrintWriter(new java.io.OutputStreamWriter(os, "UTF-8"));
+                PrintWriter pw = new PrintWriter(new OutputStreamWriter(os, StandardCharsets.UTF_8));
                 // Please make sure formatting matches what the IDE actually spits
                 // out; it could matter.
                 pw.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");

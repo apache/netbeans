@@ -29,9 +29,9 @@ import org.netbeans.modules.groovy.grails.api.GrailsPlatform;
  */
 public class SourceCategoriesGrails301 implements SourceCategoriesInterface {
 
-    static public final GrailsPlatform.Version MIN_VERSION = GrailsPlatform.Version.valueOf("3.0.1");    
+    public static final GrailsPlatform.Version MIN_VERSION = GrailsPlatform.Version.valueOf("3.0.1");    
     
-    static private final Map<SourceCategoryType, SourceCategory> SOURCE_CATEGORIES
+    private static final Map<SourceCategoryType, SourceCategory> SOURCE_CATEGORIES
             = new HashMap<>();
 
     static {

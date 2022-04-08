@@ -26,6 +26,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -132,7 +133,7 @@ public abstract class SetupHid extends NbTestCase {
             while (it.hasNext()) {
                 Map.Entry entry = (Map.Entry) it.next();
                 String path = (String) entry.getKey();
-                byte[] data = ((String) entry.getValue()).getBytes("UTF-8");
+                byte[] data = ((String) entry.getValue()).getBytes(StandardCharsets.UTF_8);
                 JarEntry je = new JarEntry(path);
                 je.setSize(data.length);
                 CRC32 crc = new CRC32();

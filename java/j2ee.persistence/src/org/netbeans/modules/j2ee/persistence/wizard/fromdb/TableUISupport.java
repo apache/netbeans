@@ -122,7 +122,7 @@ public class TableUISupport {
         }
     }
 
-    private static abstract class TableModel extends AbstractListModel {
+    private abstract static class TableModel extends AbstractListModel {
 
         public abstract Table getElementAt(int index);
     }

@@ -45,7 +45,7 @@ public class SearchScopeOptions {
     private boolean regexp = false;
     private boolean searchInArchives = false;
     private boolean searchInGenerated = false;
-    private List<SearchFilterDefinition> filters = new LinkedList<SearchFilterDefinition>();
+    private List<SearchFilterDefinition> filters = new LinkedList<>();
 
     /*
      * Use static methods to create intances. This also makes this class final

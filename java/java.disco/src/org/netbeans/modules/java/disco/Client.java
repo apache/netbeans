@@ -47,7 +47,7 @@ import java.util.stream.Collectors;
 
 public class Client {
 
-    private final static Client INSTANCE = new Client();
+    private static final Client INSTANCE = new Client();
 
     private DiscoClient client = null;
 
@@ -69,7 +69,7 @@ public class Client {
     private Client() {
     }
 
-    public synchronized final List<MajorVersion> getAllLTSVersions() {
+    public final synchronized List<MajorVersion> getAllLTSVersions() {
         Queue<MajorVersion> majorVersions = getDisco().getAllMajorVersions(false);
         return majorVersions.stream()
                 .filter(majorVersion -> majorVersion.isMaintained())

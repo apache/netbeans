@@ -36,6 +36,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -88,7 +89,7 @@ public class JpaControllerUtil {
         if (encoding == null) {
             encoding = FileEncodingQuery.getDefaultEncoding();
             if (encoding == null) {
-                return Charset.forName("UTF-8");
+                return StandardCharsets.UTF_8;
             }
             else {
                 return encoding;

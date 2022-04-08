@@ -29,6 +29,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
@@ -222,8 +223,9 @@ final class GeneralOptionsPanel extends javax.swing.JPanel implements ActionList
     }
     
     void cancel() {
-        for(VersioningSystem vs : savedDisconnectedFolders.keySet()) {
-            List<String> saved = savedDisconnectedFolders.get(vs);
+        for(Map.Entry<VersioningSystem, List<String>> entry : savedDisconnectedFolders.entrySet()) {
+            VersioningSystem vs = entry.getKey();
+            List<String> saved = entry.getValue();
             List<String> current = Arrays.asList(Utils.getDisconnectedRoots(vs));
             for (String folder : saved) {
                 if (!current.contains(folder)) {

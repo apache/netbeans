@@ -118,7 +118,7 @@ public class SimpleObjCache<K,V> {
         map.clear();
     }
     
-    synchronized private void evictIfFull() {
+    private synchronized void evictIfFull() {
         if (map.size() >= maxSize) {
             K toBeEvicted = findEvictionCandidate();
             if (toBeEvicted != null) {

@@ -54,7 +54,7 @@ import org.openide.util.NbBundle;
  */
 public class StrutsConfigHyperlinkProvider implements HyperlinkProvider {
     
-    static private boolean debug = false;
+    private static boolean debug = false;
     private static Hashtable hyperlinkTable;
     
     private final int JAVA_CLASS = 0;

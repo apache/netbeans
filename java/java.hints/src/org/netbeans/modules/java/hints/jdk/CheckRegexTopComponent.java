@@ -69,14 +69,12 @@ public final class CheckRegexTopComponent extends TopComponent {
     private static final String PREFERRED_ID = "CheckRegexTopComponent";
     private static boolean isStrictMatch;
     private static int Flags = 0;
-    private static ArrayList<String> FlagsSet;
     
     public CheckRegexTopComponent() {
         initComponents();
         setName(Bundle.CTL_CheckRegexTopComponent());
         setToolTipText(Bundle.HINT_CheckRegexTopComponent());
         isStrictMatch = false;
-        FlagsSet = new ArrayList<>();
     }
 
     /**
@@ -376,10 +374,8 @@ public final class CheckRegexTopComponent extends TopComponent {
     private void caseInsensitiveMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_caseInsensitiveMenuItemActionPerformed
         if(caseInsensitiveMenuItem.isSelected()){
             Flags |= Pattern.CASE_INSENSITIVE;
-            FlagsSet.add("CASE_INSENSITIVE");
         }else{
             Flags &= ~Pattern.CASE_INSENSITIVE;
-            FlagsSet.remove("CASE_INSENSITIVE");
         }
         flagsPopupMenu.show(flagsButton, 0, 0 - flagsPopupMenu.getHeight());
         matchPattern();
@@ -388,10 +384,8 @@ public final class CheckRegexTopComponent extends TopComponent {
     private void multilineMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_multilineMenuItemActionPerformed
         if(multilineMenuItem.isSelected()){
             Flags |= Pattern.MULTILINE;
-            FlagsSet.add("MULTILINE");
         }else{
             Flags &= ~Pattern.MULTILINE;
-            FlagsSet.remove("MULTILINE");
         }
         flagsPopupMenu.show(flagsButton, 0, 0 - flagsPopupMenu.getHeight());
         matchPattern();
@@ -400,10 +394,8 @@ public final class CheckRegexTopComponent extends TopComponent {
     private void dotAllMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dotAllMenuItemActionPerformed
         if(dotAllMenuItem.isSelected()){
             Flags |= Pattern.DOTALL;
-            FlagsSet.add("DOTALL");
         }else{
             Flags &= ~Pattern.DOTALL;
-            FlagsSet.remove("DOTALL");
         }
         flagsPopupMenu.show(flagsButton, 0, 0 - flagsPopupMenu.getHeight());
         matchPattern();
@@ -412,10 +404,8 @@ public final class CheckRegexTopComponent extends TopComponent {
     private void unicodeCaseMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_unicodeCaseMenuItemActionPerformed
         if(unicodeCaseMenuItem.isSelected()){
             Flags |= Pattern.UNICODE_CASE;
-            FlagsSet.add("UNICODE_CASE");
         }else{
             Flags &= ~Pattern.UNICODE_CASE;
-            FlagsSet.remove("UNICODE_CASE");
         }
         flagsPopupMenu.show(flagsButton, 0, 0 - flagsPopupMenu.getHeight());
         matchPattern();
@@ -424,10 +414,8 @@ public final class CheckRegexTopComponent extends TopComponent {
     private void unicodeCharacterClassMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_unicodeCharacterClassMenuItemActionPerformed
         if(unicodeCharacterClassMenuItem.isSelected()){
             Flags |= Pattern.UNICODE_CHARACTER_CLASS;
-            FlagsSet.add("UNICODE_CHARACTER_CLASS");
         }else{
             Flags &= ~Pattern.UNICODE_CHARACTER_CLASS;
-            FlagsSet.remove("UNICODE_CHARACTER_CLASS");
         }
         flagsPopupMenu.show(flagsButton, 0, 0 - flagsPopupMenu.getHeight());
         matchPattern();
@@ -436,10 +424,8 @@ public final class CheckRegexTopComponent extends TopComponent {
     private void commentsMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_commentsMenuItemActionPerformed
         if(commentsMenuItem.isSelected()){
             Flags |= Pattern.COMMENTS;
-            FlagsSet.add("COMMENTS");
         }else{
             Flags &= ~Pattern.COMMENTS;
-            FlagsSet.remove("COMMENTS");
         }
         flagsPopupMenu.show(flagsButton, 0, 0 - flagsPopupMenu.getHeight());
         matchPattern();
@@ -448,10 +434,8 @@ public final class CheckRegexTopComponent extends TopComponent {
     private void literalMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_literalMenuItemActionPerformed
         if(literalMenuItem.isSelected()){
             Flags |= Pattern.LITERAL;
-            FlagsSet.add("LITERAL");
         }else{
             Flags &= ~Pattern.LITERAL;
-            FlagsSet.remove("LITERAL");
         }
         flagsPopupMenu.show(flagsButton, 0, 0 - flagsPopupMenu.getHeight());
         matchPattern();
@@ -460,10 +444,8 @@ public final class CheckRegexTopComponent extends TopComponent {
     private void unixLinesMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_unixLinesMenuItemActionPerformed
         if(unixLinesMenuItem.isSelected()){
             Flags |= Pattern.UNIX_LINES;
-            FlagsSet.add("UNIX_LINES");
         }else{
             Flags &= ~Pattern.UNIX_LINES;
-            FlagsSet.remove("UNIX_LINES");
         }
         flagsPopupMenu.show(flagsButton, 0, 0 - flagsPopupMenu.getHeight());
         matchPattern();
@@ -472,10 +454,8 @@ public final class CheckRegexTopComponent extends TopComponent {
     private void canonEqMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_canonEqMenuItemActionPerformed
         if(canonEqMenuItem.isSelected()){
             Flags |= Pattern.CANON_EQ;
-            FlagsSet.add("CANON_EQ");
         }else{
             Flags &= ~Pattern.CANON_EQ;
-            FlagsSet.remove("CANON_EQ");
         }
         flagsPopupMenu.show(flagsButton, 0, 0 - flagsPopupMenu.getHeight());
         matchPattern();
@@ -647,15 +627,4 @@ public final class CheckRegexTopComponent extends TopComponent {
         return regexTextArea.getText();
     }
     
-    private String printSetFlags(){
-        StringBuilder sb = new StringBuilder();
-        int n = FlagsSet.size();
-        for(int i=0; i< n; i++){
-            sb.append(FlagsSet.get(i));
-            if(i != n-1){
-                sb.append(", ");
-            }
-        }
-        return sb.toString();
-    }
 }

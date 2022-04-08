@@ -149,7 +149,6 @@ public class ExampleGenerator {
 
             int n = charClassList.size();
             sb.append(charClassList.get(rnd.nextInt(n)));
-            //buildExample(charClassList.get(rnd.nextInt(n)), sb);
 
             return;
         }

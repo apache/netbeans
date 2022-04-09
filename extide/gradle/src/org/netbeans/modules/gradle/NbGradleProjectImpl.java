@@ -39,6 +39,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import org.netbeans.api.project.Project;
@@ -385,6 +387,7 @@ public final class NbGradleProjectImpl implements Project {
         private final boolean interactive;
         private final boolean sync;
         private final List<String> args;
+        private ThreadLocal<GradleProject> ownThreadCompletion = new ThreadLocal<>();
 
         public LoadingCF(Quality aim, boolean ignoreCache, boolean interactive, boolean sync, List<String> args) {
             this.aim = aim;
@@ -402,6 +405,30 @@ public final class NbGradleProjectImpl implements Project {
                 return false;
             }
             return args.equals(other.args);
+        }
+
+        @Override
+        public GradleProject getNow(GradleProject valueIfAbsent) {
+            GradleProject p = ownThreadCompletion.get();
+            return p != null ? p : super.getNow(valueIfAbsent);
+        }
+
+        @Override
+        public GradleProject join() {
+            GradleProject p = ownThreadCompletion.get();
+            return p != null ? p : super.join(); 
+        }
+
+        @Override
+        public GradleProject get(long timeout, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
+            GradleProject p = ownThreadCompletion.get();
+            return p != null ? p : super.get(timeout, unit);
+        }
+
+        @Override
+        public GradleProject get() throws InterruptedException, ExecutionException {
+            GradleProject p = ownThreadCompletion.get();
+            return p != null ? p : super.get();
         }
     }
     
@@ -432,7 +459,7 @@ public final class NbGradleProjectImpl implements Project {
                 if (!force) {
                     LOG.log(Level.FINER, "Project {2} is already loading to quality {0}, now attempted {1}, returning existing handle", new 
                             Object[] { this.loading.aim, aim, this });
-                    return this.loading;
+                    return loading;
                 }
             }
             this.loading = f;
@@ -477,9 +504,14 @@ public final class NbGradleProjectImpl implements Project {
                     this.loading = null;
                 }
             }
-            f.complete(prj);
             LOG.log(Level.FINER, "Firing changes/reload synchronously");
-            ACCESSOR.doFireReload(watcher);
+            try {
+                f.ownThreadCompletion.set(prj);
+                ACCESSOR.doFireReload(watcher);
+            } finally {
+                f.ownThreadCompletion.remove();
+                f.complete(prj);
+            }
             return f;
         } else {
             LOG.log(Level.FINER, "Firing changes/reload in RP");
@@ -488,15 +520,20 @@ public final class NbGradleProjectImpl implements Project {
         }
     }
     
-    private CompletableFuture<GradleProject> callAccessorReload(CompletableFuture<GradleProject> f, GradleProject prj) {
+    private CompletableFuture<GradleProject> callAccessorReload(LoadingCF f, GradleProject prj) {
         try {
             synchronized (this) {
                 if (this.loading == f) {
                     this.loading = null;
                 }
             }
-            f.complete(prj);
-            ACCESSOR.doFireReload(watcher);
+            try {
+                f.ownThreadCompletion.set(prj);
+                ACCESSOR.doFireReload(watcher);
+            } finally {
+                f.ownThreadCompletion.remove();
+                f.complete(prj);
+            }
         } catch (ThreadDeath t) {
             throw t;
         } catch (RuntimeException | Error ex) {

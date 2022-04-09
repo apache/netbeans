@@ -27,7 +27,8 @@ public enum PhpElementKind {
     METHOD, FIELD, TYPE_CONSTANT,
     VARIABLE, CONSTANT, FUNCTION,
     NAMESPACE_DECLARATION, USE_STATEMENT, GROUP_USE_STATEMENT, CONSTRUCTOR,
-    TRAIT, TRAIT_CONFLICT_RESOLUTION, TRAIT_METHOD_ALIAS, EMPTY;
+    TRAIT, TRAIT_CONFLICT_RESOLUTION, TRAIT_METHOD_ALIAS, EMPTY,
+    ENUM, ENUM_CASE;
 
     public final ElementKind getElementKind() {
         ElementKind result;
@@ -58,6 +59,9 @@ public enum PhpElementKind {
                 break;
             case NAMESPACE_DECLARATION:
                 result = ElementKind.PACKAGE;
+                break;
+            case ENUM_CASE:
+                result = ElementKind.CONSTANT;
                 break;
             default:
                 result = ElementKind.OTHER;

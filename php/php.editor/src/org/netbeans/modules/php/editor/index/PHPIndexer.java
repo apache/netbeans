@@ -94,6 +94,8 @@ public final class PHPIndexer extends EmbeddingIndexer {
     public static final String FIELD_USED_TRAIT = "usedtrait"; //NOI18N
     public static final String FIELD_TRAIT_CONFLICT_RESOLUTION = "traitconf"; //NOI18N
     public static final String FIELD_TRAIT_METHOD_ALIAS = "traitmeth"; //NOI18N
+    public static final String FIELD_ENUM = "enum"; //NOI18N
+    public static final String FIELD_ENUM_CASE = "enum.case"; //NOI18N
 
     public static final String FIELD_VAR = "var"; //NOI18N
     /** This field is for fast access top level elemnts. */
@@ -119,7 +121,9 @@ public final class PHPIndexer extends EmbeddingIndexer {
                     FIELD_TRAIT,
                     FIELD_USED_TRAIT,
                     FIELD_TRAIT_CONFLICT_RESOLUTION,
-                    FIELD_TRAIT_METHOD_ALIAS
+                    FIELD_TRAIT_METHOD_ALIAS,
+                    FIELD_ENUM,
+                    FIELD_ENUM_CASE,
                 }
             )
     );
@@ -216,7 +220,7 @@ public final class PHPIndexer extends EmbeddingIndexer {
     public static final class Factory extends EmbeddingIndexerFactory {
 
         public static final String NAME = "php"; // NOI18N
-        public static final int VERSION = 32;
+        public static final int VERSION = 33;
 
         @Override
         public EmbeddingIndexer createIndexer(final Indexable indexable, final Snapshot snapshot) {

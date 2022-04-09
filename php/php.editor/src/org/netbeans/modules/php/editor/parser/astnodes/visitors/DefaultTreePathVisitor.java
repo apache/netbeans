@@ -34,6 +34,7 @@ import org.netbeans.modules.php.editor.parser.astnodes.AttributeDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.BackTickExpression;
 import org.netbeans.modules.php.editor.parser.astnodes.Block;
 import org.netbeans.modules.php.editor.parser.astnodes.BreakStatement;
+import org.netbeans.modules.php.editor.parser.astnodes.CaseDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.CastExpression;
 import org.netbeans.modules.php.editor.parser.astnodes.CatchClause;
 import org.netbeans.modules.php.editor.parser.astnodes.ClassDeclaration;
@@ -48,6 +49,7 @@ import org.netbeans.modules.php.editor.parser.astnodes.DeclareStatement;
 import org.netbeans.modules.php.editor.parser.astnodes.DoStatement;
 import org.netbeans.modules.php.editor.parser.astnodes.EchoStatement;
 import org.netbeans.modules.php.editor.parser.astnodes.EmptyStatement;
+import org.netbeans.modules.php.editor.parser.astnodes.EnumDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.ExpressionStatement;
 import org.netbeans.modules.php.editor.parser.astnodes.FieldAccess;
 import org.netbeans.modules.php.editor.parser.astnodes.FieldsDeclaration;
@@ -257,6 +259,13 @@ public class DefaultTreePathVisitor extends DefaultVisitor {
     }
 
     @Override
+    public void visit(CaseDeclaration node) {
+        addToPath(node);
+        super.visit(node);
+        removeFromPath();
+    }
+
+    @Override
     public void visit(ConstantDeclaration node) {
         addToPath(node);
         super.visit(node);
@@ -335,6 +344,13 @@ public class DefaultTreePathVisitor extends DefaultVisitor {
 
     @Override
     public void visit(EmptyStatement node) {
+        addToPath(node);
+        super.visit(node);
+        removeFromPath();
+    }
+
+    @Override
+    public void visit(EnumDeclaration node) {
         addToPath(node);
         super.visit(node);
         removeFromPath();

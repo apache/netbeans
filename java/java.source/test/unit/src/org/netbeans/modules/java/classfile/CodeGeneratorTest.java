@@ -234,10 +234,13 @@ public class CodeGeneratorTest extends ClassIndexTestCase {
         mr.commit();
 
         final String generatedText = normalizeWhitespaces(TestUtilities.copyFileToString(FileUtil.toFile(testOutFile)));
+        int at = 0;
         for (String expLine : lines) {
-            if (!generatedText.contains(expLine)) {
-                fail("Expecting: " + expLine + ", but found:\n" + generatedText);
+            int found = generatedText.indexOf(expLine, at);
+            if (found == -1) {
+                fail("Expecting: " + expLine + ", but found:\n" + generatedText.substring(at));
             }
+            at = found;
         }
         assertEquals(testFile.getNameExt(), betterName[0]);
     }

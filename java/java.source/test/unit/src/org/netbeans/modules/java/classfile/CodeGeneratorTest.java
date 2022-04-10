@@ -125,34 +125,29 @@ public class CodeGeneratorTest extends ClassIndexTestCase {
                     "}\n");
     }
     
-    //this test depends too much on the details how javap decompiles classes, and
-    //is not well suited to work with javap from the JDK, disabled for now:
-    public void DISABLEtestDecompile1() throws Exception {
+    public void testDecompile1() throws Exception {
         performFromClassTest("package test; class Test {\n" +
                              "    private void test() {\n" +
                              "        System.out.println(100000);\n" +
                              "    }\n" +
                              "}\n",
-                             "package test;\n" +
-                             "class Test {\n" +
-                             "    Test() {\n" +
-                             "        // <editor-fold defaultstate=\"collapsed\" desc=\"Compiled Code\">\n" +
-                             "        /* 0: aload_0\n" +
-                             "         * 1: invokespecial java/lang/Object.\"<init>\":()V\n" +
-                             "         * 4: return\n" +
-                             "         *  */\n" +
-                             "        // </editor-fold>\n" +
-                             "    }\n" +
-                             "    private void test() {\n" +
-                             "        // <editor-fold defaultstate=\"collapsed\" desc=\"Compiled Code\">\n" +
-                             "        /* 0: getstatic     java/lang/System.out:Ljava/io/PrintStream;\n" +
-                             "         * 3: ldc           100000\n" +
-                             "         * 5: invokevirtual java/io/PrintStream.println:(I)V\n" +
-                             "         * 8: return\n" +
-                             "         *  */\n" +
-                             "        // </editor-fold>\n" +
-                             "    }\n" +
-                             "}\n");
+                             "package test;",
+                             "class Test {",
+                             "Test() {",
+                             "// <editor-fold defaultstate=\"collapsed\" desc=\"Compiled Code\">",
+                             "aload_0",
+                             "return",
+                             "// </editor-fold>",
+                             "}",
+                             "private void test() {",
+                             "// <editor-fold defaultstate=\"collapsed\" desc=\"Compiled Code\">",
+                             "getstatic", "java/lang/System.out:Ljava/io/PrintStream;",
+                             "ldc", "100000",
+                             "invokevirtual", "java/io/PrintStream.println:(I)V",
+                             "return",
+                             "</editor-fold>",
+                             "}",
+                             "}");
     }
 
     private void performTest(String test, final String golden) throws Exception {
@@ -172,6 +167,7 @@ public class CodeGeneratorTest extends ClassIndexTestCase {
         TestUtilities.copyStringToFile(testFile, test);
         final ClasspathInfo cpInfo = ClasspathInfoAccessor.getINSTANCE().create(testOutFile, null, true, true, false, true);
         JavaSource testSource = JavaSource.create(cpInfo, testOutFile);
+        final String[] betterName = new String[1];
         Task<WorkingCopy> task = new Task<WorkingCopy>() {
             @Override
             public void run(final WorkingCopy workingCopy) throws IOException {
@@ -182,7 +178,7 @@ public class CodeGeneratorTest extends ClassIndexTestCase {
 
                 assertNotNull(t);
 
-                workingCopy.rewrite(workingCopy.getCompilationUnit(), CodeGenerator.generateCode(workingCopy, t));
+                workingCopy.rewrite(workingCopy.getCompilationUnit(), CodeGenerator.generateCode(workingCopy, t, betterName));
             }
         };
 
@@ -191,7 +187,7 @@ public class CodeGeneratorTest extends ClassIndexTestCase {
         mr.commit();
 
         assertEquals(normalizeWhitespaces(golden), normalizeWhitespaces(TestUtilities.copyFileToString(FileUtil.toFile(testOutFile))));
-
+        assertNull("No better name suggested for source", betterName[0]);
         testSource.runUserActionTask(new Task<CompilationController>() {
             @Override
             public void run(CompilationController cc) throws Exception {
@@ -201,7 +197,7 @@ public class CodeGeneratorTest extends ClassIndexTestCase {
         }, true);
     }
 
-    private void performFromClassTest(String test, final String golden) throws Exception {
+    private void performFromClassTest(String test, final String... lines) throws Exception {
         clearWorkDir();
         beginTx();
         FileObject wd = FileUtil.toFileObject(getWorkDir());
@@ -213,12 +209,13 @@ public class CodeGeneratorTest extends ClassIndexTestCase {
         FileObject cache = FileUtil.createFolder(wd, "cache");
 
         SourceUtilsTestUtil.prepareTest(src, build, cache);
-        FileObject testFile = FileUtil.createData(src, "test/Test.java");
+        FileObject testFile = FileUtil.createData(src, "test/TestSourceToCompile.java");
         TestUtilities.copyStringToFile(testFile, test);
         SourceUtilsTestUtil.compileRecursively(src);
         final FileObject testOutFile = FileUtil.createData(src, "out/Test.java");
         final ClasspathInfo cpInfo = ClasspathInfoAccessor.getINSTANCE().create(testOutFile, null, true, true, false, true);
         JavaSource testSource = JavaSource.create(cpInfo, testOutFile);
+        final String[] betterName = new String[1];
         Task<WorkingCopy> task = new Task<WorkingCopy>() {
             @Override
             public void run(final WorkingCopy workingCopy) throws IOException {
@@ -228,7 +225,7 @@ public class CodeGeneratorTest extends ClassIndexTestCase {
 
                 assertNotNull(t);
 
-                workingCopy.rewrite(workingCopy.getCompilationUnit(), CodeGenerator.generateCode(workingCopy, t));
+                workingCopy.rewrite(workingCopy.getCompilationUnit(), CodeGenerator.generateCode(workingCopy, t, betterName));
             }
         };
 
@@ -236,7 +233,13 @@ public class CodeGeneratorTest extends ClassIndexTestCase {
 
         mr.commit();
 
-        assertEquals(normalizeWhitespaces(golden), normalizeWhitespaces(TestUtilities.copyFileToString(FileUtil.toFile(testOutFile))));
+        final String generatedText = normalizeWhitespaces(TestUtilities.copyFileToString(FileUtil.toFile(testOutFile)));
+        for (String expLine : lines) {
+            if (!generatedText.contains(expLine)) {
+                fail("Expecting: " + expLine + ", but found:\n" + generatedText);
+            }
+        }
+        assertEquals(testFile.getNameExt(), betterName[0]);
     }
 
     private static String normalizeWhitespaces(String text) {

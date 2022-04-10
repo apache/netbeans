@@ -1,0 +1,11 @@
+    case |>MARK_OCCURRENCES:CAS^E1<|;
+            static::|>MARK_OCCURRENCES:CASE1<| => 'Case1',
+        Simple::|>MARK_OCCURRENCES:CASE1<|->publicMethod();
+        Simple::|>MARK_OCCURRENCES:CASE1<|::publicStaticMethod();
+        self::|>MARK_OCCURRENCES:CASE1<|;
+        self::|>MARK_OCCURRENCES:CASE1<|->publicMethod();
+        static::|>MARK_OCCURRENCES:CASE1<|;
+        static::|>MARK_OCCURRENCES:CASE1<|->publicMethod();
+Simple::|>MARK_OCCURRENCES:CASE1<|::CONSTANT1;
+Simple::|>MARK_OCCURRENCES:CASE1<|::CASE2;
+$i::|>MARK_OCCURRENCES:CASE1<|;

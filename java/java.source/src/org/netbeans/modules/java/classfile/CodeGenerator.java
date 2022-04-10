@@ -88,7 +88,7 @@ import javax.lang.model.util.AbstractElementVisitor9;
 import javax.tools.JavaFileObject;
 import javax.tools.JavaFileObject.Kind;
 
-import com.sun.tools.classfile.ConstantPool.CPInfo;
+import com.sun.tools.classfile.SourceFile_attribute;
 import java.nio.charset.StandardCharsets;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.source.ClasspathInfo;
@@ -128,6 +128,7 @@ public class CodeGenerator {
     private static final String DISABLE_ERRORS = "disable-java-errors"; //NOI18N
     static final String CLASSFILE_ROOT = "classfile-root";              //NOI18N
     static final String CLASSFILE_BINNAME = "classfile-binaryName";     //NOI18N
+    static final String CLASSFILE_SOURCEFILE = "classfile-sourcefile";    //NOI18N
 
     public static FileObject generateCode(final ClasspathInfo cpInfo, final ElementHandle<? extends Element> toOpenHandle) {
 	if (UNUSABLE_KINDS.contains(toOpenHandle.getKind())) {
@@ -230,7 +231,8 @@ public class CodeGenerator {
                             return;
                         }
                     }
-                    final CompilationUnitTree cut = generateCode(wc, toOpen);
+                    final String[] betterName = { null };
+                    final CompilationUnitTree cut = generateCode(wc, toOpen, betterName);
                     wc.rewrite(wc.getCompilationUnit(), cut);
                     if (source == null) {
                         result[0] = FileUtil.createData(sourceRootFO, path);
@@ -240,6 +242,9 @@ public class CodeGenerator {
                     }
 
                     result[0].setAttribute(HASH_ATTRIBUTE_NAME, hash);
+                    if (betterName[0] != null) {
+                        result[0].setAttribute(CLASSFILE_SOURCEFILE, betterName[0]);
+                    }
                     
                     sourceGenerated[0] = true;
                 }
@@ -271,15 +276,17 @@ public class CodeGenerator {
         }
     }
 
-    static CompilationUnitTree generateCode(WorkingCopy wc, Element te) {
+    static CompilationUnitTree generateCode(WorkingCopy wc, Element te, String[] name) {
         TreeMaker make = wc.getTreeMaker();
-        Tree clazz = new TreeBuilder(make, wc).visit(te);
+        final TreeBuilder b = new TreeBuilder(make, wc);
+        Tree clazz = b.visit(te);
         CompilationUnitTree cut = make.CompilationUnit(
                 te.getKind() == ElementKind.MODULE ? null : make.Identifier(((PackageElement) te.getEnclosingElement()).getQualifiedName()),
                 Collections.<ImportTree>emptyList(),
                 Collections.singletonList(clazz),
                 wc.getCompilationUnit().getSourceFile());
 
+        name[0] = b.sourceFileName;
         return cut;
     }
 
@@ -289,6 +296,7 @@ public class CodeGenerator {
         private final WorkingCopy wc;
         private ClassFile cf;
         private Map<String, Method> sig2Method;
+        String sourceFileName;
 
         public TreeBuilder(TreeMaker make, WorkingCopy wc) {
             this.make = make;
@@ -349,6 +357,11 @@ public class CodeGenerator {
                         
                         try {
                             cf = ClassFile.read(in);
+                            Attribute sfaRaw = cf.getAttribute(Attribute.SourceFile);
+                            if (sfaRaw instanceof SourceFile_attribute) {
+                                SourceFile_attribute sfa = (SourceFile_attribute) sfaRaw;
+                                sourceFileName = sfa.getSourceFile(cf.constant_pool);
+                            }
                             for (Method m : cf.methods) {
                                 sig2Method.put(cf.constant_pool.getUTF8Value(m.name_index) + ":" + cf.constant_pool.getUTF8Value(m.descriptor.index), m);
                             }

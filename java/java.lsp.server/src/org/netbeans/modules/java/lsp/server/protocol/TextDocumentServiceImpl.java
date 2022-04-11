@@ -2221,7 +2221,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         HierarchyTask<CallHierarchyOutgoingCall> t =  new HierarchyTask<CallHierarchyOutgoingCall>(params.getItem()) {
             @Override
             protected CompletableFuture<List<CallHierarchyEntry.Call>> callProvider(CallHierarchyProvider p, CallHierarchyEntry e) {
-                return p.findIncomingCalls(e);
+                return p.findOutgoingCalls(e);
             }
 
             @Override

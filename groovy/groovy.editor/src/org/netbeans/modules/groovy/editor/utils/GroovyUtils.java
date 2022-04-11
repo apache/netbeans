@@ -257,6 +257,11 @@ public final class GroovyUtils {
      */
     public static ClassNode findInferredType(ASTNode n) {
         Object o = n.getNodeMetaData(StaticTypesMarker.INFERRED_TYPE);
+        
+        if (o == null) {
+            o = n.getNodeMetaData(StaticTypesMarker.INFERRED_RETURN_TYPE);
+        }
+        
         ClassNode cn = null;
         if (n instanceof Expression) {
             cn = ((Expression)n).getType();

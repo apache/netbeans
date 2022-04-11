@@ -179,7 +179,7 @@ public final class ConstructorGenerator extends CodeActionsProvider {
         data.put(OFFSET, startOffset);
         data.put(CONSTRUCTORS, constructors);
         data.put(FIELDS, fields);
-        return Collections.singletonList(createCodeAction(Bundle.DN_GenerateConstructor(), isSource ? CODE_GENERATOR_KIND : CodeActionKind.QuickFix, data, null));
+        return Collections.singletonList(createCodeAction(Bundle.DN_GenerateConstructor(), isSource ? CODE_GENERATOR_KIND : CodeActionKind.QuickFix, data, "workbench.action.focusActiveEditorGroup"));
     }
 
     @Override

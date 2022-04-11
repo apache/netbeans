@@ -4669,7 +4669,8 @@ public final class GdbDebuggerImpl extends NativeDebuggerImpl
 
         // There is no way to determine correct file mapper here, see #191835
         //final String mprogram = toCString(fmap.worldToEngine(program));
-        final String mprogram = toCString(program);
+        final String mprogram = toCString(fmap.worldToEngine(program));
+
 
         // mainly load symbol table
         // -file-core-file is not implemented in gdb 6.1
@@ -5894,6 +5895,7 @@ public final class GdbDebuggerImpl extends NativeDebuggerImpl
     }
 
     public void runDir(String dir) {
+        dir = this.fmap.worldToEngine(dir);
         dir = localToRemote("runDir", dir); // NOI18N
         String cmdString = peculiarity.environmentCdCommand() + " " + dir; // NOI18N
         sendSilent(cmdString);

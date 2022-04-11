@@ -25,19 +25,33 @@
 #include <stddef.h>
 #include <stdlib.h>
 
+/**
+ * Invoked by ExecutorCND.java with the following arguments:
+ * 0 - Path to GdbKillProc.exe
+ * 1 - "-s"
+ * 2 - "INT"
+ * 3 - gdb process PID.
+ */
 int main(int argc, char **argv)
 {
+    if (argc != 4) {
+        /* Not enough arguments */
+        return 1;
+    }
     unsigned pid = (unsigned) strtol(argv[3], NULL, 0);
     if (pid == 0) {
-	return 1;
+	    return 1;
     }
+    /* https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-openprocess */
     HANDLE proc = OpenProcess(PROCESS_ALL_ACCESS, FALSE, (DWORD) pid);
     if (proc == NULL) {
-	return 2;
+	    return 2;
     }
+    /* https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-debugbreakprocess */
     if (!DebugBreakProcess(proc)) {
-	return 3;
+	    return 3;
     }
+    /* https://docs.microsoft.com/en-us/windows/win32/api/handleapi/nf-handleapi-closehandle */
     CloseHandle(proc);
     return 0;
 }

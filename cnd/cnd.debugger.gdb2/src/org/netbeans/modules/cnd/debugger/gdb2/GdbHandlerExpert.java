@@ -198,6 +198,7 @@ public class GdbHandlerExpert implements HandlerExpert {
 	    String file = lb.getFileName();
 	    int line = lb.getLineNumber();
 
+        file = debugger.fmap().worldToEngine(file);
 	    file = debugger.localToRemote("LineBreakpoint", file); // NOI18N
 
             // unify separators

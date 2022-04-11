@@ -28,6 +28,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeListener;
 
@@ -51,6 +53,7 @@ import org.openide.modules.InstalledFileLocator;
 import org.openide.util.Utilities;
 
 /* package */ class ExecutorCND extends Executor {
+    private static final Logger LOG = Logger.getLogger(ExecutorCND.class.getName());
     private NativeProcess engineProc;
     private int pid = -1;
     private final ExecutionEnvironment exEnv;
@@ -101,6 +104,9 @@ import org.openide.util.Utilities;
             //looks loke GdbKillProc file could not be located, will just check for null
             if (f != null && f.exists()) {
                 ProcessUtils.execute(exEnv, f.getAbsolutePath(), "-s", "INT", Long.toString(pid)); //NOI18N
+            } else {
+                LOG.log(Level.SEVERE, "Helper executable {0} not found, cannot reliably interrupt debugger process with PID {1}", 
+                        new Object[] { f.getAbsolutePath(), pid });
             }
         } else {
             try {

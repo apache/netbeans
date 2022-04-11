@@ -722,43 +722,43 @@
 		},
 		"netbeans.iconMapping": [
 			{
-				"uriExpression": "nbres:/org/netbeans/modules/gradle/resources/gradle.png",
+				"uriExpression": "nbres:/org/netbeans/modules/gradle/resources/gradle",
 				"codeicon": "project"
 			},
 			{
-				"uriExpression": "nbres:/org/netbeans/modules/gradle/java/resources/javaseProjectIcon.png",
+				"uriExpression": "nbres:/org/netbeans/modules/gradle/java/resources/javaseProjectIcon",
 				"codeicon": "project"
 			},
 			{
-				"uriExpression": "nbres:/org/netbeans/modules/maven/resources/jaricon.png",
+				"uriExpression": "nbres:/org/netbeans/modules/maven/resources/jaricon",
 				"codeicon": "project"
 			},
 			{
-				"uriExpression": "nbres:/org/netbeans/modules/gradle/resources/libraries.png",
+				"uriExpression": "nbres:/org/netbeans/modules/gradle/resources/libraries",
 				"codeicon": "settings-gear"
 			},
 			{
-				"uriExpression": "nbres:/org/netbeans/modules/gradle/resources/(empty.png|module-artifact.png)",
+				"uriExpression": "nbres:/org/netbeans/modules/gradle/resources/(empty|module-artifact)",
 				"codeicon": "file-zip"
 			},
 			{
-				"uriExpression": "nbres:/org/netbeans/modules/maven/DependencyIcon.png",
+				"uriExpression": "nbres:/org/netbeans/modules/maven/DependencyIcon",
 				"codeicon": "file-zip"
 			},
 			{
-				"uriExpression": "nbres:/org/netbeans/modules/maven/TransitiveDependencyIcon.png",
+				"uriExpression": "nbres:/org/netbeans/modules/maven/TransitiveDependencyIcon",
 				"codeicon": "library"
 			},
 			{
-				"uriExpression": "nbres:/org/netbeans/spi/java/project/support/ui/package(Empty)?.gif",
+				"uriExpression": "nbres:/org/netbeans/spi/java/project/support/ui/package(Empty)?",
 				"codeicon": "file-submodule"
 			},
 			{
-				"uriExpression": "nbres:/org/netbeans/modules/java/resources/(abstract_class_file|class|enum_file).png",
+				"uriExpression": "nbres:/org/netbeans/modules/java/resources/(abstract_class_file|class|enum_file)",
 				"codeicon": "symbol-class"
 			},
 			{
-				"uriExpression": "nbres:/org/netbeans/modules/java/resources/(annotation_file|interface_file).png",
+				"uriExpression": "nbres:/org/netbeans/modules/java/resources/(annotation_file|interface_file)",
 				"codeicon": "symbol-interface"
 			},
 			{
@@ -780,7 +780,7 @@
 				"codeicon": "*folder"
 			},
 			{
-				"uriExpression": "nbres:/org/netbeans/modules/java/api/common/project/ui/resources/platform.gif",
+				"uriExpression": "nbres:/org/netbeans/modules/java/api/common/project/ui/resources/platform",
 				"codeicon": "vm"
 			}
 		],

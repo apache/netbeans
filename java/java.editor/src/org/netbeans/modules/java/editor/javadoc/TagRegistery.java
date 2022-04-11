@@ -100,7 +100,7 @@ final class TagRegistery {
         addTag("@uses", false, EnumSet.of(ElementKind.MODULE));
         
         addTag("@code", true, ALL_KINDS);
-		addTag("@snippet", true, ALL_KINDS);
+	addTag("@snippet", true, ALL_KINDS);
         addTag("@docRoot", true, ALL_KINDS);
         // just in empty tag description
         addTag("@inheritDoc", true, EnumSet.of(ElementKind.METHOD));

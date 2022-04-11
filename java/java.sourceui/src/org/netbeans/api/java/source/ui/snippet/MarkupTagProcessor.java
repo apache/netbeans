@@ -16,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.netbeans.api.java.source.ui.snippet;
 
 import java.util.ArrayList;
@@ -51,7 +52,7 @@ public class MarkupTagProcessor {
                 addMarkupTags(thisLine, transformRegionAttributeToMarkupTag(newRegionList), markUpTagOnLine);
             }
             //checkng no attribute on this line
-            if (fullLineInfo.getThisLineMarkUpTags() != null) {
+            if (!fullLineInfo.getThisLineMarkUpTags().isEmpty()) {
                 for (MarkupTag markUpTag : fullLineInfo.getThisLineMarkUpTags()) {
                     if (SUPPORTED_SNIPPET_MARKUP_TAGS.contains(markUpTag.getTagName())) {
 

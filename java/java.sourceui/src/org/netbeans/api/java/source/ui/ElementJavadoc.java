@@ -1352,7 +1352,7 @@ public class ElementJavadoc {
         for (SourceLineMeta fullLineInfo : parseResult) {
             lineCounter++;
             
-            String codeLine = fullLineInfo.getUncommentSourceLine() != null ? fullLineInfo.getUncommentSourceLine() : fullLineInfo.getActualSourceLine();
+            String codeLine = fullLineInfo.getSourceLineWithoutComment() != null ? fullLineInfo.getSourceLineWithoutComment() : fullLineInfo.getActualSourceLine();
 
             List<SourceLineCharterMapperToHtmlTag> eachCharList = new LinkedList<>();
             for (int pos = 0; pos < codeLine.length(); pos++) {

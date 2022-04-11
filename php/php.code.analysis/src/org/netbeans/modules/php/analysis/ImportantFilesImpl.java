@@ -41,7 +41,8 @@ public final class ImportantFilesImpl implements ImportantFilesImplementation {
             CodingStandardsFixer.CONFIG_FILE_NAME_V3,
             CodingStandardsFixer.DIST_CONFIG_FILE_NAME_V3,
             PHPStan.CONFIG_FILE_NAME,
-            PHPStan.DIST_CONFIG_FILE_NAME};
+            PHPStan.DIST_CONFIG_FILE_NAME,
+            PHPStan.ALTERNATIVE_DIST_CONFIG_FILE_NAME};
 
     private final ImportantFilesSupport support;
 

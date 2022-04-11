@@ -32,6 +32,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import org.codehaus.groovy.runtime.InvokerHelper;
 import org.gradle.api.Project;
@@ -41,9 +42,11 @@ import org.gradle.api.artifacts.FileCollectionDependency;
 import org.gradle.api.artifacts.ModuleDependency;
 import org.gradle.api.artifacts.ProjectDependency;
 import org.gradle.api.artifacts.ResolveException;
+import org.gradle.api.artifacts.ResolvedArtifact;
 import org.gradle.api.artifacts.ResolvedDependency;
 import org.gradle.api.artifacts.component.ComponentIdentifier;
 import org.gradle.api.artifacts.component.ModuleComponentSelector;
+import org.gradle.api.artifacts.component.ProjectComponentIdentifier;
 import org.gradle.api.artifacts.result.ArtifactResolutionResult;
 import org.gradle.api.artifacts.result.ArtifactResult;
 import org.gradle.api.artifacts.result.ComponentArtifactsResult;
@@ -82,7 +85,12 @@ class NbProjectInfoBuilder {
         "jacocoAnt",
         "jdepend",
         "pmd",
+        ".*DependenciesMetadata"
     }));
+    
+    private static final Pattern CONFIG_EXCLUDES_PATTERN = Pattern.compile(
+        CONFIG_EXCLUDES.stream().reduce("", (s1, s2) -> s1 + "|" + s2)
+    );
 
     private static final Set<String> RECOGNISED_PLUGINS = new HashSet<>(asList(new String[]{
         "antlr",
@@ -172,7 +180,8 @@ class NbProjectInfoBuilder {
         model.getInfo().put("project_buildDir", project.getBuildDir());
         model.getInfo().put("project_projectDir", project.getProjectDir());
         model.getInfo().put("project_rootDir", project.getRootDir());
-        model.getInfo().put("gradle_user_home", project.getGradle().getGradleHomeDir());
+        model.getInfo().put("gradle_user_home", project.getGradle().getGradleUserHomeDir());
+        model.getInfo().put("gradle_home", project.getGradle().getGradleHomeDir());
 
         Set<Configuration> visibleConfigurations = configurationsToSave();
         model.getInfo().put("configurations", visibleConfigurations.stream().map(conf->conf.getName()).collect(Collectors.toCollection(HashSet::new )));
@@ -433,7 +442,12 @@ class NbProjectInfoBuilder {
                             ResolvedDependencyResult rdr = (ResolvedDependencyResult) it2;
                             if (rdr.getRequested() instanceof ModuleComponentSelector) {
                                 ids.add(rdr.getSelected().getId());
-                                componentIds.add(rdr.getSelected().getId().toString());
+                                // do not bother with components that only select a variant, which is itself a component
+                                // TODO: represent as a special component type so the IDE shows it, but the IDE knows it is an abstract
+                                // intermediate with no artifact(s).
+                                if (!rdr.getResolvedVariant().getExternalVariant().isPresent()) {
+                                    componentIds.add(rdr.getSelected().getId().toString());
+                                }
                             }
                         }
                         if (it2 instanceof UnresolvedDependencyResult) {
@@ -487,6 +501,15 @@ class NbProjectInfoBuilder {
 
             if (resolvable(it)) {
                 try {
+                    Set<ResolvedArtifact> arts = it.getResolvedConfiguration()
+                            .getLenientConfiguration()
+                            .getArtifacts();
+                    
+                    arts.stream().forEach(a -> {
+                        if (!(a.getId().getComponentIdentifier() instanceof ProjectComponentIdentifier)) {
+                            resolvedJvmArtifacts.putIfAbsent(a.getId().getComponentIdentifier().toString(), Collections.singleton(a.getFile()));
+                        }
+                    });
                     it.getResolvedConfiguration()
                             .getLenientConfiguration()
                             .getFirstLevelModuleDependencies(Specs.SATISFIES_ALL)
@@ -627,7 +650,7 @@ class NbProjectInfoBuilder {
     private Set<Configuration> configurationsToSave() {
         return project
                 .getConfigurations()
-                .matching(c -> !CONFIG_EXCLUDES.contains(c.getName()))
+                .matching(c -> !CONFIG_EXCLUDES_PATTERN.matcher(c.getName()).matches())
                 .stream()
                 .flatMap(c -> c.getHierarchy().stream())
                 .collect(Collectors.toSet());

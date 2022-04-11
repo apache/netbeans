@@ -3198,11 +3198,7 @@ public class Utilities {
         for (Iterator<? extends CaseTree> it = cases.iterator(); it.hasNext();) {
             CaseTree ct = it.next();
             TreePath casePath = new TreePath(tp, ct);
-            if(TreeShims.isPatternMatch(st)){
-                patterns.addAll(ct.getLabels());
-            }else{
-                patterns.addAll(ct.getExpressions());
-            }
+            patterns.addAll(ct.getLabels());            
             List<StatementTree> statements;
             if (ct.getStatements() == null) {
                 statements = new ArrayList<>(((JCTree.JCCase) ct).stats);

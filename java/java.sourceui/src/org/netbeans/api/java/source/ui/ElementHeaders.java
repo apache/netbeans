@@ -27,8 +27,6 @@ import com.sun.source.util.TreePath;
 import java.util.concurrent.CompletableFuture;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
-import javax.lang.model.element.Name;
-import javax.lang.model.type.TypeMirror;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.java.queries.SourceJavadocAttacher;
 import org.netbeans.api.java.source.CompilationInfo;
@@ -225,15 +223,29 @@ public final class ElementHeaders {
      * is returned for Elements outside that have no source associated when {@code resolveSources} is false.
      * <p>
      * Calling {@link CompletableFuture#cancel} on the returned value performs cancel on the possible long-running task(s) in a best-effort way: it is
-     * not guaranteed that the already started processes interrupt.
+     * not guaranteed that the already started processes interrupts.
      * @param info compilation
      * @param el the element to convert
      * @param resolveSources 
      * @return completion handle for the StructureElement
-    * @since 1.63
+     * @since 1.63
      */
     public static CompletableFuture<StructureElement> resolveStructureElement(CompilationInfo info, Element el, boolean resolveSources) {
         return LspElementUtils.createStructureElement(info, el, resolveSources);
+    }
+
+    /**
+     * Describes a javac {@link Element} as LSP {@link StructureElement}. Source file and position information may not be provided, but 
+     * the other fields of the {@link StructureElement} will be filled. If `allowBinaries' is true, the file member of the {@link StructureElement} may
+     * be filled with FileObject of binary that defines the {@link Element}; source FileObject is always preferred, if available.
+     * 
+     * @param info compilation
+     * @param el the element to convert
+     * @return created item
+     * @since 1.64
+     */
+    public static StructureElement convertElement(CompilationInfo info, Element el, ElementUtilities.ElementAcceptor childAcceptor, boolean allowBinary) {
+        return LspElementUtils.describeElement(info, el, childAcceptor, allowBinary);
     }
 
     /**

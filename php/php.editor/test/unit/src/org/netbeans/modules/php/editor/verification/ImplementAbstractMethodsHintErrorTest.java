@@ -261,6 +261,18 @@ public class ImplementAbstractMethodsHintErrorTest extends PHPHintsTestBase {
         applyHint(new ImplementAbstractMethodsHintError(), "testIntersectionTypesImplementMethod04.php", "class Impleme^nt extends ImplementMethodTest {", "Implement");
     }
 
+    public void testEnumerations_01() throws Exception {
+        checkHints(new ImplementAbstractMethodsHintError(), "testEnumerations_01.php");
+    }
+
+    public void testEnumerationssFix_01() throws Exception {
+        applyHint(new ImplementAbstractMethodsHintError(), "testEnumerations_01.php", "enum Test^Enum implements TestEnumInterface {", "Implement");
+    }
+
+    public void testEnumerationssFix_02() throws Exception {
+        applyHint(new ImplementAbstractMethodsHintError(), "testEnumerations_01.php", "enum TestEnumWith^Trait {", "Implement");
+    }
+
     //~ Inner classes
     private static final class ImplementAbstractMethodsHintErrorStub extends ImplementAbstractMethodsHintError {
 

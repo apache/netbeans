@@ -1,0 +1,21 @@
+    public int $property;
+    ---------------------
+HINT:Enums cannot have properties
+    public static string $staticProperty = "error";
+    -----------------------------------------------
+HINT:Enums cannot have properties
+enum IncorrectBackingType: Foo {
+                           ---
+HINT:Backing type must be "string" or "int"
+    public int $property = 1;
+    -------------------------
+HINT:Enums cannot have properties
+    public static string $staticProperty = "error";
+    -----------------------------------------------
+HINT:Enums cannot have properties
+    case C;
+    -------
+HINT:"case" can only be in enums
+    case D = 1;
+    -----------
+HINT:"case" can only be in enums

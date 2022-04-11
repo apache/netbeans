@@ -1,0 +1,12 @@
+enum Redeclared {
+     ----------
+HINT:Type "Redeclared" has been already declared
+class Redeclared {
+      ----------
+HINT:Type "Redeclared" has been already declared
+trait Redeclared {
+      ----------
+HINT:Type "Redeclared" has been already declared
+interface Redeclared {
+          ----------
+HINT:Type "Redeclared" has been already declared

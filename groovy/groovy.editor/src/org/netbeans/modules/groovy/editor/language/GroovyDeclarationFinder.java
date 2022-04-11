@@ -226,9 +226,7 @@ public class GroovyDeclarationFinder implements DeclarationFinder {
                         if (variableE.isDynamicTyped()) {
                             ClassNode cn = GroovyUtils.findInferredType(variableE);
                             if (cn != null) { 
-                                if (cn.isResolved()) {
-                                    typeName = cn.getTypeClass().getTypeName();
-                                } else if (cn.getName() != null) {
+                                if (cn.getName() != null) {
                                     typeName = cn.getName();
                                 }
                                 

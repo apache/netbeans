@@ -66,7 +66,7 @@ public class NbClassPathCompat {
     @Deprecated
     public static NbClassPath createRepositoryPath (FileSystemCapability cap) {
         Thread.dumpStack();
-        final List res = new LinkedList();
+        final List res = new LinkedList<>();
 
 
         final class Env extends FileSystem$Environment {

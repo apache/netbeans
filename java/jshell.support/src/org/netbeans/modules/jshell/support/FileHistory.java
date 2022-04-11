@@ -21,6 +21,7 @@ package org.netbeans.modules.jshell.support;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -221,7 +222,7 @@ public class FileHistory implements ShellHistory {
         }
         
         try (BufferedWriter wr = new BufferedWriter(
-                new OutputStreamWriter(historyFile.getOutputStream(), "UTF-8"))) {
+                new OutputStreamWriter(historyFile.getOutputStream(), StandardCharsets.UTF_8))) {
             for (Item item : itemsToSave) {
                 String s = item2String(item);
                 String[] lines = s.split("\n");

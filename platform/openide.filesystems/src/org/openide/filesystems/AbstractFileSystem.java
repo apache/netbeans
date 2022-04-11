@@ -98,7 +98,7 @@ public abstract class AbstractFileSystem extends FileSystem {
     private static final long serialVersionUID = -3345098214331282438L;
 
     /** cached last value of Enumeration which holds resource name (enumeration like StringTokenizer)*/
-    static transient private PathElements lastEnum;
+    private static transient PathElements lastEnum;
 
     /** root object for the filesystem */
     private transient AbstractFileObject root;
@@ -208,7 +208,7 @@ public abstract class AbstractFileSystem extends FileSystem {
     *
     * @param ms number of milliseconds between two refreshes; if <code><= 0</code> then refreshing is disabled
     */
-    protected synchronized final void setRefreshTime(int ms) {
+    protected final synchronized void setRefreshTime(int ms) {
         if (refresher != null) {
             refresher.stop();
         }

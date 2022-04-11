@@ -31,7 +31,7 @@ public class Utils {
 
 
     private static Map<String, FileObject> filesCache = new HashMap<String, FileObject> ();
-    public final static int ScrollBarUnitIncrement = 16;
+    public static final int ScrollBarUnitIncrement = 16;
     
     public static FileObject getFileObject (String name, String ext, boolean create)
     throws IOException {

@@ -1,0 +1,367 @@
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+
+name: NetBeans
+
+on:
+  push:
+  pull_request:
+
+jobs:
+    
+# primary build job, most other jobs use the artifact produced here
+# artifact is only produced once in the matrix
+  base-build:
+    name: Build Clusters on JDK ${{ matrix.java }} 
+    runs-on: ubuntu-latest
+    env:
+      ANT_OPTS: -Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json
+    strategy:
+      matrix:
+        java: [ '11', '17' ]
+      fail-fast: false
+    steps:
+        
+      - name: Set up JDK ${{ matrix.java }} 
+        uses: actions/setup-java@v2
+        with:
+          java-version: ${{ matrix.java }} 
+          distribution: 'zulu'
+
+      - name: Caching dependencies
+        uses: actions/cache@v2
+        with:
+          path: ~/.hgexternalcache
+          key: ${{ runner.os }}-${{ hashFiles('*/external/binaries-list', '*/*/external/binaries-list') }}
+          restore-keys: ${{ runner.os }}-
+          
+      - name: Checkout ${{ github.ref }} ( ${{ github.sha }} )
+        uses: actions/checkout@v3
+
+      - name: Build NetBeans
+        run: ant -Dcluster.config=release build-nozip
+
+      - name: Prepare Artifact
+        if: ${{ matrix.java == '11' }}
+        run: tar -I 'zstd -9 -T0' -cf /tmp/build.tar.zst --exclude ".git" .
+
+      - name: Upload Build
+        if: ${{ (matrix.java == '11') && success() }}
+        uses: actions/upload-artifact@v3
+        with:
+          name: build
+          path: /tmp/build.tar.zst
+          retention-days: 1
+          if-no-files-found: error
+
+
+# secondary jobs
+  linux-commit-validation:
+    needs: base-build
+    name: Commit Validation on Linux/JDK ${{ matrix.java }} 
+    runs-on: ubuntu-latest
+    env:
+      ANT_OPTS: -Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json
+    strategy:
+      matrix:
+        java: [ '8', '11', '17', '19-ea' ]
+      fail-fast: false
+    steps:
+
+      - name: Set up JDK ${{ matrix.java }} 
+        uses: actions/setup-java@v2
+        with:
+          java-version: ${{ matrix.java }} 
+          distribution: 'zulu'
+
+      - name: Download Build
+        uses: actions/download-artifact@v3
+        with:
+          name: build
+
+      - name: Extract
+        run: tar --zstd -xf build.tar.zst
+
+      - name: Commit Validation tests
+        run: ant -Dcluster.config=release commit-validation
+
+  linux-build-system-test:
+    needs: base-build
+    name: Build-System Test on Linux/JDK ${{ matrix.java }} 
+    runs-on: ubuntu-latest
+    env:
+      ANT_OPTS: -Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json
+    strategy:
+      matrix:
+        java: [ '11' ]
+    steps:
+
+      - name: Set up JDK ${{ matrix.java }} 
+        uses: actions/setup-java@v2
+        with:
+          java-version: ${{ matrix.java }} 
+          distribution: 'zulu'
+
+      - name: Download Build
+        uses: actions/download-artifact@v3
+        with:
+          name: build
+
+      - name: Extract
+        run: tar --zstd -xf build.tar.zst
+
+      - name: Test Netbeans Build System
+        run: ant -Dcluster.config=release localtest
+
+  linux-javadoc:
+    needs: base-build
+    name: Build NBMs, Source zips and Javadoc on JDK ${{ matrix.java }} 
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        java: [ '11' ]
+    env:
+      ANT_OPTS: -Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json
+    steps:
+
+      - name: Set up JDK ${{ matrix.java }} 
+        uses: actions/setup-java@v2
+        with:
+          java-version: ${{ matrix.java }} 
+          distribution: 'zulu'
+
+      - name: Download Build
+        uses: actions/download-artifact@v3
+        with:
+          name: build
+
+      - name: Extract
+        run: tar --zstd -xf build.tar.zst
+
+      - name: Get maven coordinates
+        run: ant getallmavencoordinates
+
+      - name: Build nbms
+        run: ant build-nbms
+
+      - name: Build source zips
+        run: ant build-source-zips
+
+      - name: Build javadoc
+        run: ant build-javadoc
+
+  macos:
+    needs: base-build
+    name: Tests on MacOS/JDK ${{ matrix.java }} 
+    runs-on: macos-11
+    env:
+      ANT_OPTS: -Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json
+    strategy:
+      matrix:
+        java: [ '11' ]
+    steps:
+
+      - name: Set up JDK ${{ matrix.java }} 
+        uses: actions/setup-java@v2
+        with:
+          java-version: ${{ matrix.java }} 
+          distribution: 'zulu'
+
+      - uses: actions/cache@v2
+        with:
+          path: ~/Library/Caches/Homebrew
+          key: ${{ runner.os }}-homebrew
+          restore-keys: ${{ runner.os }}-homebrew
+
+      - name: Download Build
+        uses: actions/download-artifact@v3
+        with:
+          name: build
+
+      # tar on MacOS is not aware of zstd "tar --zstd -xf build.tar.zst" isn't working
+      - name: Extract
+        run: unzstd -c build.tar.zst | tar -x
+
+      - run: brew install ant
+
+      - name: Test platform/masterfs.macosx
+        run: ant -f platform/masterfs.macosx test
+
+      - name: Test platform/core.network
+        run: ant -f platform/core.network test
+
+      - name: Commit Validation tests
+        run: ant -Dcluster.config=release commit-validation
+
+  php:
+    needs: base-build
+    name: PHP on ${{ matrix.os }}/JDK ${{ matrix.java }} 
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: bash
+    env:
+      DISPLAY: ":99.0"
+      ANT_OPTS: -Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json
+      OPTS: -Dtest-unit-sys-prop.ignore.random.failures=true
+    strategy:
+      matrix:
+        java: [ '8' ]
+        os: [ 'windows-2022', 'ubuntu-20.04' ]
+      fail-fast: false
+    steps:
+
+      - name: Set up JDK ${{ matrix.java }} 
+        uses: actions/setup-java@v2
+        with:
+          java-version: ${{ matrix.java }} 
+          distribution: 'zulu'
+
+      # linux specific setup
+      - name: Setup PHP
+        if: contains(matrix.os, 'ubuntu')
+        uses: shivammathur/setup-php@2.8.0
+        with:
+          php-version: '7.4'
+          tools: pecl
+          extensions: xdebug
+          ini-values: xdebug.mode=debug
+
+      - name: Launch Xvfb
+        if: contains(matrix.os, 'ubuntu')
+        run: Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
+      # - - -
+
+      - name: Download Build
+        uses: actions/download-artifact@v3
+        with:
+          name: build
+
+      - name: Extract
+        run: tar --zstd -xf build.tar.zst
+
+      - name: Test Platform Core Network
+        run: ant $OPTS -f platform/core.network test
+
+      - name: Test PHP Hudson
+        run: ant $OPTS -f php/hudson.php test
+
+      - name: Test PHP Neon
+        run: ant $OPTS -f php/languages.neon test
+
+      - name: Test PHP API Annotation
+        run: ant $OPTS -f php/php.api.annotation test
+
+      - name: Test PHP API Documentation
+        run: ant $OPTS -f php/php.api.documentation test
+
+      - name: Test PHP API Executable
+        run: ant $OPTS -f php/php.api.executable test
+
+      - name: Test PHP API Framework
+        run: ant $OPTS -f php/php.api.framework test
+
+      - name: Test PHP API Module
+        run: ant $OPTS -f php/php.api.phpmodule test
+
+      - name: Test PHP API Testing
+        run: ant $OPTS -f php/php.api.testing test
+
+      - name: Test PHP ApiGen
+        run: ant $OPTS -f php/php.apigen test
+
+      - name: Test PHP Atoum
+        run: ant $OPTS -f php/php.atoum test
+
+      - name: Test PHP Code Analysis
+        run: ant $OPTS -f php/php.code.analysis test
+
+      - name: Test PHP Codeception
+        run: ant $OPTS -f php/php.codeception test
+
+      - name: Test PHP Composer
+        run: ant $OPTS -f php/php.composer test
+
+      # needs X fails on fails on Windows
+      - name: Test PHP Debugger
+        if: contains(matrix.os, 'ubuntu')
+        run: ant $OPTS -f php/php.dbgp test
+
+      - name: Test PHP Doctrine2
+        run: ant $OPTS -f php/php.doctrine2 test
+
+      - name: Test PHP Editor
+        run: ant $OPTS -f php/php.editor test
+
+      - name: Test PHP Latte
+        run: ant $OPTS -f php/php.latte test
+
+      - name: Test PHP Nette Tester
+        run: ant $OPTS -f php/php.nette.tester test
+
+      - name: Test PHPUnit
+        run: ant $OPTS -f php/php.phpunit test
+
+      - name: Test PHP Project
+        run: ant $OPTS -f php/php.project test
+
+      - name: Test PHP Refactoring
+        run: ant $OPTS -f php/php.refactoring test
+
+      - name: Test PHP Smarty
+        run: ant $OPTS -f php/php.smarty test
+
+      - name: Test PHP Symfony
+        run: ant $OPTS -f php/php.symfony test
+
+      - name: Test PHP Symfony 2
+        run: ant $OPTS -f php/php.symfony2 test
+
+      - name: Test PHP Twig
+        run: ant $OPTS -f php/php.twig test
+
+      - name: Test PHP Zend
+        run: ant $OPTS -f php/php.zend test
+
+      - name: Test PHP Zend 2
+        run: ant $OPTS -f php/php.zend2 test
+
+      - name: Test PHP Spellchecker Bindings
+        run: ant $OPTS -f php/spellchecker.bindings.php test
+ 
+
+# last job depends on everything so that it is forced to run last even if a long job fails early
+  cleanup:
+    name: Cleanup Workflow Artifacts
+    needs: [base-build, linux-commit-validation, linux-build-system-test, linux-javadoc, macos, php]
+    # don't cleanup on failure() or always(), because someone might want to restart an unreliable secondary job
+    # if primary jobs fail there won't be anything to cleanup anyway.
+    if: success() || cancelled()
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          persist-credentials: false
+          submodules: recursive
+
+      - uses: ./.github/actions/delete-artifact/
+        name: Delete build Artifact
+        with:
+          name: build
+          failOnError: true

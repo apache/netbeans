@@ -18,10 +18,12 @@
  */
 package org.netbeans.modules.java.lsp.server.protocol;
 
+import com.google.gson.InstanceCreator;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Method;
+import java.lang.reflect.Type;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -44,6 +46,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import com.google.gson.InstanceCreator;
 import com.google.gson.JsonObject;
+import org.eclipse.lsp4j.CallHierarchyRegistrationOptions;
 import org.eclipse.lsp4j.CodeActionKind;
 import org.eclipse.lsp4j.CodeActionOptions;
 import org.eclipse.lsp4j.CodeLensOptions;
@@ -60,13 +63,16 @@ import org.eclipse.lsp4j.MessageType;
 import org.eclipse.lsp4j.PublishDiagnosticsParams;
 import org.eclipse.lsp4j.RenameOptions;
 import org.eclipse.lsp4j.SemanticTokensCapabilities;
+import org.eclipse.lsp4j.SemanticTokensParams;
 import org.eclipse.lsp4j.ServerCapabilities;
 import org.eclipse.lsp4j.ShowMessageRequestParams;
+import org.eclipse.lsp4j.TextDocumentIdentifier;
 import org.eclipse.lsp4j.TextDocumentSyncKind;
 import org.eclipse.lsp4j.TextDocumentSyncOptions;
 import org.eclipse.lsp4j.WorkDoneProgressCancelParams;
 import org.eclipse.lsp4j.WorkDoneProgressParams;
 import org.eclipse.lsp4j.WorkspaceFolder;
+import org.eclipse.lsp4j.jsonrpc.Endpoint;
 import org.eclipse.lsp4j.jsonrpc.JsonRpcException;
 import org.eclipse.lsp4j.jsonrpc.Launcher;
 import org.eclipse.lsp4j.jsonrpc.MessageConsumer;
@@ -148,13 +154,23 @@ public final class Server {
     private static Launcher<NbCodeLanguageClient> createLauncher(LanguageServerImpl server, Pair<InputStream, OutputStream> io,
             Function<MessageConsumer, MessageConsumer> processor) {
         return new LSPLauncher.Builder<NbCodeLanguageClient>()
-            .configureGson(gb -> gb.registerTypeAdapter(SemanticTokensCapabilities.class, (InstanceCreator<SemanticTokensCapabilities>) type -> new SemanticTokensCapabilities(false)))
             .setLocalService(server)
             .setRemoteInterface(NbCodeLanguageClient.class)
             .setInput(io.first())
             .setOutput(io.second())
             .wrapMessages(processor)
-//                .traceMessages(new java.io.PrintWriter(System.err))
+            .configureGson(gb -> {
+                gb.registerTypeAdapter(SemanticTokensCapabilities.class, new InstanceCreator<SemanticTokensCapabilities>() {
+                    @Override public SemanticTokensCapabilities createInstance(Type type) {
+                        return new SemanticTokensCapabilities(null);
+                    }
+                });
+                gb.registerTypeAdapter(SemanticTokensParams.class, new InstanceCreator<SemanticTokensParams>() {
+                    @Override public SemanticTokensParams createInstance(Type type) {
+                        return new SemanticTokensParams(new TextDocumentIdentifier(""));
+                    }
+                });
+            })
             .create();
     }
 
@@ -180,6 +196,9 @@ public final class Server {
         public MessageConsumer attachLookup(MessageConsumer delegate) {
             // PENDING: allow for message consumer wrappers to be registered to add pre/post processing for
             // the request plus build the request's default Lookup contents.
+            if (!(delegate instanceof Endpoint)) {
+                return delegate; 
+            }
             return new MessageConsumer() {
                 @Override
                 public void consume(Message msg) throws MessageIssueException, JsonRpcException {
@@ -287,7 +306,7 @@ public final class Server {
         };
     }
 
-    public static class LanguageServerImpl implements LanguageServer, LanguageClientAware, LspServerState {
+    public static class LanguageServerImpl implements LanguageServer, LanguageClientAware, LspServerState, NbLanguageServer {
 
         private static final String NETBEANS_JAVA_IMPORTS = "netbeans.java.imports";
 
@@ -673,7 +692,7 @@ public final class Server {
             }
         }
 
-        private InitializeResult constructInitResponse(JavaSource src) {
+        private InitializeResult constructInitResponse(InitializeParams init, JavaSource src) {
             ServerCapabilities capabilities = new ServerCapabilities();
             if (src != null) {
                 TextDocumentSyncOptions textDocumentSyncOptions = new TextDocumentSyncOptions();
@@ -695,6 +714,10 @@ public final class Server {
                 capabilities.setImplementationProvider(true);
                 capabilities.setDocumentHighlightProvider(true);
                 capabilities.setReferencesProvider(true);
+                
+                CallHierarchyRegistrationOptions chOpts = new CallHierarchyRegistrationOptions();
+                chOpts.setWorkDoneProgress(true);
+                capabilities.setCallHierarchyProvider(chOpts);
                 List<String> commands = new ArrayList<>(Arrays.asList(GRAALVM_PAUSE_SCRIPT,
                         JAVA_BUILD_WORKSPACE,
                         JAVA_CLEAN_WORKSPACE,
@@ -709,6 +732,7 @@ public final class Server {
                         JAVA_NEW_FROM_TEMPLATE,
                         JAVA_NEW_PROJECT,
                         JAVA_PROJECT_CONFIGURATION_COMPLETION,
+                        JAVA_PROJECT_RESOLVE_PROJECT_PROBLEMS,
                         JAVA_SUPER_IMPLEMENTATION,
                         JAVA_SOURCE_FOR,
                         JAVA_CLEAR_PROJECT_CACHES,
@@ -724,6 +748,7 @@ public final class Server {
                 capabilities.setRenameProvider(renOpt);
                 FoldingRangeProviderOptions foldingOptions = new FoldingRangeProviderOptions();
                 capabilities.setFoldingRangeProvider(foldingOptions);
+                textDocumentService.init(init.getCapabilities(), capabilities);
             }
             return new InitializeResult(capabilities);
         }
@@ -768,7 +793,7 @@ public final class Server {
             // but complete the InitializationRequest independently of the project initialization.
             return CompletableFuture.completedFuture(
                     finishInitialization(
-                        constructInitResponse(checkJavaSupport())
+                        constructInitResponse(init, checkJavaSupport())
                     )
             );
         }
@@ -882,6 +907,10 @@ public final class Server {
      * Provides code-completion of configurations.
      */
     public static final String JAVA_PROJECT_CONFIGURATION_COMPLETION = "java.project.configuration.completion";
+    /**
+     * Provides resolution of project problems.
+     */
+    public static final String JAVA_PROJECT_RESOLVE_PROJECT_PROBLEMS = "java.project.resolveProjectProblems";
 
 
     /**
@@ -982,6 +1011,12 @@ public final class Server {
 
         @Override
         public CompletableFuture<String> showHtmlPage(HtmlPageParams params) {
+            logWarning(params);
+            return CompletableFuture.completedFuture(null);
+        }
+
+        @Override
+        public CompletableFuture<Void> configurationUpdate(UpdateConfigParams params) {
             logWarning(params);
             return CompletableFuture.completedFuture(null);
         }

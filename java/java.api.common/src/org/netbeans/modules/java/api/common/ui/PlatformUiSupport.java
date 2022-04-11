@@ -370,7 +370,7 @@ public final class PlatformUiSupport {
             if(!javacProfile.equals(props.getProperty(javacProfileKey))) {
                 props.setProperty(javacProfileKey, javacProfile);
             }
-        } else if (props.containsKey(javacProfileKey)) {
+        } else {
             props.remove(javacProfileKey);
         }
 

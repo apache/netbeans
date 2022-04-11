@@ -20,6 +20,7 @@
 package org.netbeans.modules.url;
 
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import org.netbeans.spi.queries.FileEncodingQueryImplementation;
 import org.openide.filesystems.FileObject;
 
@@ -34,7 +35,7 @@ final class EncodingQueryImpl extends FileEncodingQueryImplementation {
     private final Charset charsetUtf8;
 
     EncodingQueryImpl() {
-        charsetUtf8 = Charset.forName("UTF-8");                         //NOI18N
+        charsetUtf8 = StandardCharsets.UTF_8;
     }
 
     @Override

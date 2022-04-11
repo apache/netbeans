@@ -56,7 +56,7 @@ public interface Analyzer extends Cancellable {
      */
     public Iterable<? extends ErrorDescription> analyze();
 
-    public static abstract class AnalyzerFactory {
+    public abstract static class AnalyzerFactory {
         private final String id;
         private final String displayName;
         private final String iconPath;

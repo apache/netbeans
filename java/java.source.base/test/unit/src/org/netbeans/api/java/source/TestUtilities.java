@@ -30,6 +30,7 @@ import java.io.OutputStream;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.spi.FileSystemProvider;
 import java.util.ArrayList;
@@ -137,7 +138,7 @@ public final class TestUtilities {
      * @param f the file to be read
      * @return the contents of the file(s).
      */
-    public final static String copyFileToString (java.io.File f) throws java.io.IOException {
+    public static final String copyFileToString (java.io.File f) throws java.io.IOException {
         int s = (int)f.length ();
         byte[] data = new byte[s];
         int len = new FileInputStream (f).read (data);
@@ -152,7 +153,7 @@ public final class TestUtilities {
      * @param f the file to be read
      * @return the contents of the file(s).
      */
-    public final static String copyGZipFileToString (java.io.File f) throws java.io.IOException {
+    public static final String copyGZipFileToString (java.io.File f) throws java.io.IOException {
         GZIPInputStream is = new GZIPInputStream(new FileInputStream(f));
         byte[] arr = new byte[256 * 256];
         int first = 0;
@@ -171,9 +172,9 @@ public final class TestUtilities {
      * @param content the contents of the returned file.
      * @return the created file
      */
-    public final static File copyStringToFile (File f, String content) throws Exception {
+    public static final File copyStringToFile (File f, String content) throws Exception {
         FileOutputStream os = new FileOutputStream(f);
-        InputStream is = new ByteArrayInputStream(content.getBytes("UTF-8"));
+        InputStream is = new ByteArrayInputStream(content.getBytes(StandardCharsets.UTF_8));
         FileUtil.copy(is, os);
         os.close ();
         is.close();
@@ -188,9 +189,9 @@ public final class TestUtilities {
      * @param content the contents of the returned file.
      * @return the created file
      */
-    public final static FileObject copyStringToFile (FileObject f, String content) throws Exception {
+    public static final FileObject copyStringToFile (FileObject f, String content) throws Exception {
         OutputStream os = f.getOutputStream();
-        InputStream is = new ByteArrayInputStream(content.getBytes("UTF-8"));
+        InputStream is = new ByteArrayInputStream(content.getBytes(StandardCharsets.UTF_8));
         FileUtil.copy(is, os);
         os.close ();
         is.close();
@@ -205,7 +206,7 @@ public final class TestUtilities {
      * 
      * @param urls to analyze
      */
-    public final static void analyzeBinaries(final Collection<URL> urls) throws IOException {
+    public static final void analyzeBinaries(final Collection<URL> urls) throws IOException {
         final ClasspathInfo cpInfo = ClasspathInfo.create(EMPTY, EMPTY, EMPTY);
         final ClassIndexManager mgr  = ClassIndexManager.getDefault();
         final JavaSource js = JavaSource.create(cpInfo);

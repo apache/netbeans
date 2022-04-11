@@ -149,7 +149,7 @@ FormatToken{kind=TEXT, offset=133, text=export, id=KEYWORD_EXPORT}
 FormatToken{kind=WHITESPACE, offset=139, text= , id=WHITESPACE}
 FormatToken{kind=TEXT, offset=140, text=const, id=KEYWORD_CONST}
 FormatToken{kind=WHITESPACE, offset=145, text= , id=WHITESPACE}
-FormatToken{kind=TEXT, offset=146, text=x, id=IDENTIFIER}
+FormatToken{kind=TEXT, offset=146, text=z, id=IDENTIFIER}
 FormatToken{kind=WHITESPACE, offset=147, text= , id=WHITESPACE}
 FormatToken{kind=BEFORE_ASSIGNMENT_OPERATOR, offset=-1, text=null, id=null}
 FormatToken{kind=TEXT, offset=148, text==, id=OPERATOR_ASSIGNMENT}

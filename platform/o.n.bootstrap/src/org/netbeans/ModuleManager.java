@@ -2460,7 +2460,7 @@ public final class ModuleManager extends Modules {
             willEnable = null;
         }
 
-        synchronized final void registerEnable(Set<Module> modules, List<Module> l) {
+        final synchronized void registerEnable(Set<Module> modules, List<Module> l) {
             toEnable = new HashSet<String>();
             for (Module m : modules) {
                 toEnable.add(m.getCodeNameBase());
@@ -2473,7 +2473,7 @@ public final class ModuleManager extends Modules {
             Stamps.getModulesJARs().scheduleSave(this, CACHE, false);
         }
 
-        synchronized final List<String> simulateEnable(Set<Module> modules) {
+        final synchronized List<String> simulateEnable(Set<Module> modules) {
             if (
                 toEnable != null &&
                 modules.size() == toEnable.size() &&

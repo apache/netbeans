@@ -543,8 +543,7 @@ abstract class FieldInjectionPointLogic {
             WebBeansModelImplementation modelImpl, TypeElement typeElement, AtomicBoolean cancel )
     {
         Set<TypeElement> result = new HashSet<TypeElement>();
-        ElementHandle<TypeElement> handle = ElementHandle
-                .create((TypeElement) typeElement);
+        ElementHandle<TypeElement> handle = ElementHandle.create(typeElement);
         ClassIndex classIndex = modelImpl
                 .getHelper().getClasspathInfo().getClassIndex();
         if(cancel.get()) {

@@ -21,6 +21,7 @@ package org.netbeans.modules.javahelp;
 
 import java.io.*;
 import java.net.*;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 import org.openide.modules.InstalledFileLocator;
@@ -294,9 +295,9 @@ public final class NbDocsStreamHandler extends URLStreamHandler {
                 if (is != null) {
                     byte [] arr;
                     arr = readData(is);
-                    String s1 = new String(arr,"UTF-8"); // NOI18N
+                    String s1 = new String(arr, StandardCharsets.UTF_8);
                     String s2 = s1.replaceAll("\\{0\\}",moduleName); // NOI18N
-                    arr = s2.getBytes("UTF-8");
+                    arr = s2.getBytes(StandardCharsets.UTF_8);
                     stream = new ByteArrayInputStream(arr);
                 } else {
                     throw new IOException("Info file not found."); // NOI18N

@@ -91,7 +91,7 @@ public final class CodeStyle {
      *
      * @since 0.39
      */
-    public synchronized static CodeStyle getDefault(FileObject file) {
+    public static synchronized CodeStyle getDefault(FileObject file) {
         Preferences prefs = CodeStylePreferences.get(file, JavacParser.MIME_TYPE).getPreferences();
         return FmtOptions.codeStyleProducer.create(prefs);
     }
@@ -107,7 +107,7 @@ public final class CodeStyle {
      * 
      * @since 0.39
      */
-    public synchronized static CodeStyle getDefault(Document doc) {
+    public static synchronized CodeStyle getDefault(Document doc) {
         Preferences prefs = CodeStylePreferences.get(doc, JavacParser.MIME_TYPE).getPreferences();
         return FmtOptions.codeStyleProducer.create(prefs);
     }

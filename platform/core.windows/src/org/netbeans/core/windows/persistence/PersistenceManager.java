@@ -1003,8 +1003,9 @@ public final class PersistenceManager implements PropertyChangeListener {
             return;
         }
 
-        for (Exception e : failedCompsMap.keySet()) {
-            String name = failedCompsMap.get(e);
+        for (Map.Entry<Exception, String> entry : failedCompsMap.entrySet()) {
+            Exception e = entry.getKey();
+            String name = entry.getValue();
             // create message
             String message = NbBundle.getMessage(PersistenceManager.class, 
                     (reading ? "FMT_TCReadError" : "FMT_TCWriteError"),
@@ -1360,8 +1361,8 @@ public final class PersistenceManager implements PropertyChangeListener {
      */
     public static String escapeTcId4XmlContent (String tcName) {
         if (tcName.indexOf('&') != -1 || tcName.indexOf('\'') != -1) {
-            tcName = tcName.replaceAll("&", "&amp;");
-            tcName = tcName.replaceAll("'", "&apos;");
+            tcName = tcName.replace("&", "&amp;");
+            tcName = tcName.replace("'", "&apos;");
         }
         return tcName;
     }

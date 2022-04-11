@@ -135,8 +135,7 @@ public class GrabTableHelper {
         Map cprops = connector.getDatabaseSpecification().getCommandProperties(
                 Specification.CREATE_TABLE);
         Map<String, String> bindmap = (Map) cprops.get("Binding");                     // NOI18N
-        String tname = (String) bindmap.get(TableColumn.COLUMN);
-        column.setFormat((String) ((Map) props.get(tname)).get(
-                "Format"));                                             //NOI18N
+        String tname = bindmap.get(TableColumn.COLUMN);
+        column.setFormat((String)props.get(tname).get( "Format"));                     //NOI18N
     }
 }

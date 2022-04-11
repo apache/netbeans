@@ -199,7 +199,7 @@ public class FileEntry extends MultiDataObject.Entry {
     * <P>
     * Useful for representing useless files.
     */
-    public final static class Numb extends MultiDataObject.Entry {
+    public static final class Numb extends MultiDataObject.Entry {
         /** generated Serialized Version UID */
         static final long serialVersionUID = -6572157492885890612L;
 
@@ -290,7 +290,7 @@ public class FileEntry extends MultiDataObject.Entry {
      * using this entry.
      * @since 1.13
      */
-    public final static class Folder extends MultiDataObject.Entry {
+    public static final class Folder extends MultiDataObject.Entry {
 
         /** Creates new FolderEntry */
         public Folder (MultiDataObject obj, FileObject fo) {

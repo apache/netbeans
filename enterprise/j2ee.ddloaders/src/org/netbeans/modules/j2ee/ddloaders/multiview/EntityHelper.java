@@ -30,6 +30,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author pfiala
@@ -119,8 +120,8 @@ public class EntityHelper extends EntityAndSessionHelper {
     
     public class CmpFields implements PropertyChangeSource {
         
-        private List listeners = new LinkedList();
-        private HashMap cmpFieldHelperMap = new HashMap();
+        private List<PropertyChangeListener> listeners = new LinkedList<>();
+        private Map<CmpField, CmpFieldHelper> cmpFieldHelperMap = new HashMap<>();
         private CmpFieldsTableModel cmpFieldsTableModel = new CmpFieldsTableModel(this);
         
         public int getCmpFieldCount() {
@@ -220,8 +221,8 @@ public class EntityHelper extends EntityAndSessionHelper {
     }
     
     public class Queries implements PropertyChangeSource {
-        private List listeners = new LinkedList();
-        private HashMap queryMethodHelperMap = new HashMap();
+        private List<PropertyChangeListener> listeners = new LinkedList<>();
+        private Map<Query, QueryMethodHelper> queryMethodHelperMap = new HashMap<>();
         private Query[] selectMethods;
         private Query[] finderMethods;
         public static final String SELECT_PREFIX = "ejbSelect"; //NOI18N
@@ -251,7 +252,7 @@ public class EntityHelper extends EntityAndSessionHelper {
         }
         
         private Query[] getQueries(String s) {
-            List list = new LinkedList();
+            List<Query> list = new LinkedList<>();
             Query[] queries = entity.getQuery();
             for (int i = 0; i < queries.length; i++) {
                 Query query = queries[i];

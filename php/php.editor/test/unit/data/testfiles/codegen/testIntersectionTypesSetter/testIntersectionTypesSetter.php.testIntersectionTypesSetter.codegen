@@ -1,0 +1,16 @@
+public  function setFooBar(Foo&Bar $$fooBar): void {
+$$this->fooBar = $fooBar;
+}
+
+public  function setFooBarBaz(Foo&Bar&Baz $$fooBarBaz): void {
+$$this->fooBarBaz = $fooBarBaz;
+}
+
+public  function setFoo(Foo $$foo): void {
+$$this->foo = $foo;
+}
+
+public static function setStaticFooBar(Foo&Bar $$staticFooBar): void {
+self::$$staticFooBar = $staticFooBar;
+}
+

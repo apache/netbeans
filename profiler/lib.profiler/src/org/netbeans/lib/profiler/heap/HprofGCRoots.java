@@ -36,9 +36,9 @@ class HprofGCRoots {
 
     final HprofHeap heap;
     private Map<Integer, ThreadObjectHprofGCRoot> threadObjGC;
-    final private Object lastThreadObjGCLock = new Object();
+    private final Object lastThreadObjGCLock = new Object();
     private Map<Long,GCRoot> gcRoots;
-    final private Object gcRootLock = new Object();
+    private final Object gcRootLock = new Object();
     private List gcRootsList;
 
     HprofGCRoots(HprofHeap h) {

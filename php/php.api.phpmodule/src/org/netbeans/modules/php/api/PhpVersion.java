@@ -37,6 +37,7 @@ import org.openide.util.NbBundle;
     "PhpVersion.PHP_73=PHP 7.3",
     "PhpVersion.PHP_74=PHP 7.4",
     "PhpVersion.PHP_80=PHP 8.0",
+    "PhpVersion.PHP_81=PHP 8.1",
 })
 public enum PhpVersion {
 
@@ -90,7 +91,12 @@ public enum PhpVersion {
      * PHP 8.0.
      * @since 2.74
      */
-    PHP_80(Bundle.PhpVersion_PHP_80());
+    PHP_80(Bundle.PhpVersion_PHP_80()),
+    /**
+     * PHP 8.1.
+     * @since 2.80
+     */
+    PHP_81(Bundle.PhpVersion_PHP_81());
 
     private final String displayName;
     private final boolean namespaces;
@@ -204,6 +210,17 @@ public enum PhpVersion {
     }
 
     /**
+     * Check whether this version supports the never type.
+     *
+     * @return {@code true} if this version supports never type, {@code false}
+     * otherwise
+     * @since 2.81
+     */
+    public boolean hasNeverType() {
+        return this.compareTo(PhpVersion.PHP_81) >= 0;
+    }
+
+    /**
      * Check whether this is supported version yet by PHP official.
      *
      * @return {@code true} if this is supported version, {@code false}
@@ -236,6 +253,7 @@ public enum PhpVersion {
         PHP_73(LocalDate.of(2018, 12, 6), LocalDate.of(2020, 12, 6), LocalDate.of(2021, 12, 6)),
         PHP_74(LocalDate.of(2019, 11, 28), LocalDate.of(2021, 11, 28), LocalDate.of(2022, 11, 28)),
         PHP_80(LocalDate.of(2020, 11, 26), LocalDate.of(2022, 11, 26), LocalDate.of(2023, 11, 26)),
+        PHP_81(LocalDate.of(2021, 11, 25), LocalDate.of(2023, 11, 25), LocalDate.of(2024, 11, 25)),
         ;
 
         private final LocalDate initialRelease;

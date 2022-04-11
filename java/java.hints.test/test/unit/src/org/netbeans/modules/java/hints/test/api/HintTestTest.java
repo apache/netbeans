@@ -26,6 +26,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
+import java.nio.charset.StandardCharsets;
 import javax.swing.text.Document;
 import org.junit.Assert;
 import org.junit.Test;
@@ -121,9 +122,9 @@ public class HintTestTest {
             try {
                 FileObject resource = ctx.getWorkingCopy().getFileObject().getParent().getFileObject("test.txt");
                 Assert.assertNotNull(resource);
-                Reader r = new InputStreamReader(ctx.getResourceContent(resource), "UTF-8");
+                Reader r = new InputStreamReader(ctx.getResourceContent(resource), StandardCharsets.UTF_8);
                 ByteArrayOutputStream outData = new ByteArrayOutputStream();
-                Writer w = new OutputStreamWriter(outData, "UTF-8");
+                Writer w = new OutputStreamWriter(outData, StandardCharsets.UTF_8);
                 int read;
 
                 while ((read = r.read()) != -1) {

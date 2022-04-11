@@ -106,4 +106,14 @@ public class FoldingTest extends PHPTestBase {
         checkFolds("testfiles/parser/foldingMatch_03.php");
     }
 
+    // NETBEANS-6438
+    public void testAttributes_01() throws Exception {
+        checkFolds("testfiles/parser/php80/attributeSyntax_01.php");
+    }
+
+    // NETBEANS-5599 PHP 8.1
+    public void testEnumerations_01() throws Exception {
+        checkFolds("testfiles/parser/php81/enumerations_01.php");
+    }
+
 }

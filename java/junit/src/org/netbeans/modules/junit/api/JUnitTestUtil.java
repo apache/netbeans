@@ -63,30 +63,30 @@ import org.openide.util.Utilities;
  * @version 1.1
  */
 public class JUnitTestUtil extends CommonTestUtil {
-    static private final String JAVA_SOURCES_SUFFIX               = "java";
+    private static final String JAVA_SOURCES_SUFFIX               = "java";
     private static final String JAVA_MIME_TYPE = "text/x-java";         //NOI18N
 
-    static private String getTestClassSuffix() {
+    private static String getTestClassSuffix() {
         return JUnitSettings.TEST_CLASSNAME_SUFFIX;
     }
     
-    static private String getIntegrationTestSuffix() {
+    private static String getIntegrationTestSuffix() {
         return JUnitSettings.INTEGRATION_TEST_CLASSNAME_SUFFIX;
     }
     
-    static private String getTestClassPrefix() {
+    private static String getTestClassPrefix() {
         return JUnitSettings.TEST_CLASSNAME_PREFIX;
     }
     
-    static private String getTestSuiteSuffix() {
+    private static String getTestSuiteSuffix() {
         return JUnitSettings.SUITE_CLASSNAME_SUFFIX;
     }
     
-    static private String getTestSuitePrefix() {
+    private static String getTestSuitePrefix() {
         return JUnitSettings.SUITE_CLASSNAME_PREFIX;
     }
     
-    static private String getRootSuiteName() {
+    private static String getRootSuiteName() {
         return JUnitSettings.getDefault().getRootSuiteClassName();
     }
     
@@ -441,7 +441,7 @@ public class JUnitTestUtil extends CommonTestUtil {
 //        return cls.getInnerClass(name, false);
 //    }
 
-    static public String createNewName(int i, Set usedNames) {
+    public static String createNewName(int i, Set usedNames) {
         String ret;
         do {
             ret = "p" + i++;

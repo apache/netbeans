@@ -61,11 +61,11 @@ class StackTraceSegment extends TagBounds {
         long[] offset;
         
         initSerialNumToFrame();
-        initialOffset = (Long) serialNumToStackTrace.get(new Long(stackTraceSerialNumber/SERIALNUM_DIV));
+        initialOffset = (Long) serialNumToStackTrace.get(stackTraceSerialNumber / SERIALNUM_DIV);
         if (initialOffset == null) {
             initialOffset = new Long(startOffset);
         }
-        offset = new long[] { initialOffset.longValue() };
+        offset = new long[] {initialOffset};
         while (offset[0] < endOffset) {
             long start = offset[0];
             long serialNumber = readStackTraceTag(offset);
@@ -96,15 +96,15 @@ class StackTraceSegment extends TagBounds {
         if (serialNumToStackTrace == null) {
             long[] offset = new long[] { startOffset };
 
-            serialNumToStackTrace = new HashMap();
+            serialNumToStackTrace = new HashMap<>();
             while (offset[0] < endOffset) {
                 long start = offset[0];
                 long serialNumber = readStackTraceTag(offset);
-                Long serialNumberMask = new Long(serialNumber/SERIALNUM_DIV);
+                Long serialNumberMask = serialNumber/SERIALNUM_DIV;
                 Long minOffset = (Long) serialNumToStackTrace.get(serialNumberMask);
                 
                 if (minOffset == null || minOffset > start) {
-                    serialNumToStackTrace.put(serialNumberMask, new Long(start));
+                    serialNumToStackTrace.put(serialNumberMask, start);
                 }
             }
 //            Systems.debug("serialNumToStackTrace size:"+serialNumToStackTrace.size());

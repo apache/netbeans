@@ -26,6 +26,7 @@ import org.netbeans.modules.php.editor.api.NameKind.Exact;
 import org.netbeans.modules.php.editor.api.elements.ClassElement;
 import org.netbeans.modules.php.editor.api.elements.ConstantElement;
 import org.netbeans.modules.php.editor.api.elements.ElementFilter;
+import org.netbeans.modules.php.editor.api.elements.EnumCaseElement;
 import org.netbeans.modules.php.editor.api.elements.FieldElement;
 import org.netbeans.modules.php.editor.api.elements.FunctionElement;
 import org.netbeans.modules.php.editor.api.elements.InterfaceElement;
@@ -129,6 +130,16 @@ public class AbstractElementQuery implements ElementQuery {
     @Override
     public final Set<TypeConstantElement> getTypeConstants(NameKind constantQuery) {
         return getElements(TypeConstantElement.class, constantQuery);
+    }
+
+    @Override
+    public Set<EnumCaseElement> getEnumCases(Exact typeQuery, NameKind enumCaseQuery) {
+        return getElements(EnumCaseElement.class, typeQuery, enumCaseQuery);
+    }
+
+    @Override
+    public Set<EnumCaseElement> getEnumCases(NameKind enumCaseQuery) {
+        return getElements(EnumCaseElement.class, enumCaseQuery);
     }
 
     @Override

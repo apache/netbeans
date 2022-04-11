@@ -27,6 +27,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.MissingResourceException;
 import java.util.Set;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -303,5 +304,23 @@ public class GradleCommandLineTest {
         List<String> jvmargs = new ArrayList<>();
         GradleCommandLine.addGradleSettingJvmargs(root.getRoot(), jvmargs);
         assertEquals(Arrays.asList("-Dfile.encoding=UTF-8", "-Dsomething=space value"), jvmargs);
+    }
+    
+    @Test
+    public void testDescriptions() {
+        Set<GradleCommandLine.GradleOptionItem> all = new HashSet<>();
+        all.addAll(Arrays.asList(GradleCommandLine.Flag.values()));
+        all.addAll(Arrays.asList(GradleCommandLine.Parameter.values()));
+        all.addAll(Arrays.asList(GradleCommandLine.Property.values()));
+        all.remove(GradleCommandLine.Parameter.IMPORT_BUILD);
+        List<GradleCommandLine.GradleOptionItem> missing = new ArrayList<>();
+        for (GradleCommandLine.GradleOptionItem item : all) {
+            try {
+                assertNotNull(item.getDescription());
+            } catch (MissingResourceException ex){
+                missing.add(item);
+            }
+        }
+        assertTrue(missing.toString(), missing.isEmpty());
     }
 }

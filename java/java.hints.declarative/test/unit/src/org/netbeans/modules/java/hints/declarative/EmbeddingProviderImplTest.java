@@ -128,7 +128,7 @@ public class EmbeddingProviderImplTest extends NbTestCase {
         prepareTest(code, -1);
 
         Source s = Source.create(doc);
-        final List<String> output = new LinkedList<String>();
+        final List<String> output = new LinkedList<>();
 
         ParserManager.parse(Collections.singletonList(s), new UserTask() {
             @Override

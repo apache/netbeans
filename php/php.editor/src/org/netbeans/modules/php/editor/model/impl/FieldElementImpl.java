@@ -23,6 +23,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.parsing.spi.indexing.support.IndexDocument;
 import org.netbeans.modules.php.editor.CodeUtils;
@@ -34,7 +35,6 @@ import org.netbeans.modules.php.editor.index.PHPIndexer;
 import org.netbeans.modules.php.editor.index.Signature;
 import org.netbeans.modules.php.editor.model.ClassScope;
 import org.netbeans.modules.php.editor.model.FieldElement;
-import org.netbeans.modules.php.editor.model.FunctionScope;
 import org.netbeans.modules.php.editor.model.ModelElement;
 import org.netbeans.modules.php.editor.model.Scope;
 import org.netbeans.modules.php.editor.model.TypeScope;
@@ -161,7 +161,7 @@ class FieldElementImpl extends ScopeImpl implements FieldElement {
     public Collection<? extends TypeScope> getDefaultTypes() {
         Collection<TypeScope> typeScopes = new HashSet<>();
         if (defaultFQType != null && defaultFQType.length() > 0) {
-            String[] allTypeNames = defaultFQType.split("\\|");
+            String[] allTypeNames = defaultFQType.split("\\&|\\|"); // NOI18N
             for (String typeName : allTypeNames) {
                 String modifiedTypeName = typeName;
                 if (typeName.indexOf("[") != -1) {
@@ -255,13 +255,19 @@ class FieldElementImpl extends ScopeImpl implements FieldElement {
         Collection<String> retval = Collections.<String>emptyList();
         if (defaultType != null && defaultType.length() > 0) {
             retval = new ArrayList<>();
-            for (String typeName : defaultType.split("\\|")) { //NOI18N
+            for (String typeName : defaultType.split("\\&|\\|")) { //NOI18N
                 if (!VariousUtils.isSemiType(typeName)) {
                     retval.add(typeName);
                 }
             }
         }
         return retval;
+    }
+
+    @CheckForNull
+    @Override
+    public String getDefaultType() {
+        return defaultType;
     }
 
     @Override

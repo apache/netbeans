@@ -19,67 +19,70 @@
 
 package org.netbeans.api.debugger.jpda;
 
+import com.sun.jdi.Bootstrap;
+import com.sun.jdi.VirtualMachineManager;
+import com.sun.jdi.connect.AttachingConnector;
+import com.sun.jdi.connect.Transport;
+
+import java.beans.PropertyChangeEvent;
+import java.io.EOFException;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
-import java.util.HashMap;
-import java.util.Map;
-import org.netbeans.api.debugger.*;
-
-import java.io.*;
-import java.util.*;
-import java.net.URLClassLoader;
 import java.net.URL;
-import java.beans.PropertyChangeEvent;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-
-import com.sun.jdi.connect.*;
-import com.sun.jdi.VirtualMachineManager;
-import com.sun.jdi.Bootstrap;
-//import org.netbeans.api.java.classpath.ClassPath;
+import java.net.URLClassLoader;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import junit.framework.Test;
 import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+
+import org.netbeans.api.debugger.ActionsManager;
+import org.netbeans.api.debugger.ActionsManagerListener;
+import org.netbeans.api.debugger.Breakpoint;
+import org.netbeans.api.debugger.DebuggerEngine;
+import org.netbeans.api.debugger.DebuggerManager;
+import org.netbeans.api.debugger.DebuggerManagerListener;
+import org.netbeans.api.debugger.Session;
+import org.netbeans.api.debugger.Watch;
 import org.netbeans.api.java.classpath.ClassPath;
-//import org.netbeans.spi.java.classpath.support.ClassPathSupport;
-import org.netbeans.api.java.queries.SourceForBinaryQuery;
 import org.netbeans.junit.NbModuleSuite;
 import org.netbeans.junit.NbModuleSuite.Configuration;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
-import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileUtil;
-import org.openide.util.Exceptions;
 
 /**
  * Contains support functionality for unit tests.
  *
  * @author Maros Sandor
  */
-public class JPDASupport implements DebuggerManagerListener {
+public final class JPDASupport implements DebuggerManagerListener {
 
     private static final boolean    verbose = false;
-    private static final DateFormat df = new SimpleDateFormat("kk:mm:ss.SSS");
     private static DebuggerManager  dm = DebuggerManager.getDebuggerManager ();
 
     private JPDADebugger            jpdaDebugger;
     private DebuggerEngine          debuggerEngine;
+    private final ProcessIO         processIO;
     
-
-    private Object [] debuggerStartLock = new Object[1];
-    private Object [] stepLock = new Object[1];
-
-    private Object              STATE_LOCK = new Object ();
+    private Object                  STATE_LOCK = new Object ();
     
-    
-    private JPDASupport (JPDADebugger jpdaDebugger) {
+    private JPDASupport (JPDADebugger jpdaDebugger, ProcessIO pio) {
         this.jpdaDebugger = jpdaDebugger;
         jpdaDebugger.addPropertyChangeListener (this);
         DebuggerEngine[] de = dm.getDebuggerEngines ();
         int i, k = de.length;
-        for (i = 0; i < k; i++)
+        for (i = 0; i < k; i++) {
             if (de [i].lookupFirst (null, JPDADebugger.class) == jpdaDebugger) {
                 debuggerEngine = de [i];
                 break;
             }
+        }
+        this.processIO = pio;
     }
     
     public static Test createTestSuite(Class<? extends TestCase> clazz) {
@@ -182,26 +185,62 @@ public class JPDASupport implements DebuggerManagerListener {
                 break;
             }
         }
-        if (connector == null) 
-            throw new RuntimeException
-                ("No attaching socket connector available");
-
+        if (connector == null) {
+            throw new RuntimeException("No attaching socket connector available");
+        }
         JPDADebugger jpdaDebugger = JPDADebugger.attach (
             "localhost", 
             port, 
             createServices ()
         );
-        return new JPDASupport (jpdaDebugger);
+        return new JPDASupport (jpdaDebugger, pio);
     }
 
-    
+    public static JPDASupport attachScript(String launcher, String path) throws IOException, DebuggerStartException {
+        String [] cmdArray = new String [] {
+            System.getProperty ("java.home") + File.separatorChar +
+                "bin" + File.separatorChar + launcher,
+            "--jvm",
+            "--vm.agentlib:jdwp=transport=dt_socket,suspend=y,server=y",
+            path
+        };
+        Process process = Runtime.getRuntime ().exec (cmdArray);
+        String line = readLine (process.getInputStream ());
+        int port = Integer.parseInt (line.substring (line.lastIndexOf (':') + 1).trim ());
+        ProcessIO pio = new ProcessIO (process);
+        pio.go();
+
+        VirtualMachineManager vmm = Bootstrap.virtualMachineManager();
+        List aconnectors = vmm.attachingConnectors();
+        AttachingConnector connector = null;
+        for (Iterator i = aconnectors.iterator(); i.hasNext();) {
+            AttachingConnector ac = (AttachingConnector) i.next();
+            Transport t = ac.transport ();
+            if (t != null && t.name().equals("dt_socket")) {
+                connector = ac;
+                break;
+            }
+        }
+        if (connector == null) {
+            throw new RuntimeException("No attaching socket connector available");
+        }
+
+        JPDADebugger jpdaDebugger = JPDADebugger.attach (
+            "localhost",
+            port,
+            new Object[]{}
+        );
+        return new JPDASupport(jpdaDebugger, pio);
+    }
+
+
     // public interface ........................................................
     
     public void doContinue () {
-        if (jpdaDebugger.getState () != JPDADebugger.STATE_STOPPED) 
+        if (jpdaDebugger.getState () != JPDADebugger.STATE_STOPPED) {
             throw new IllegalStateException ();
-        debuggerEngine.getActionsManager ().doAction 
-            (ActionsManager.ACTION_CONTINUE);
+        }
+        debuggerEngine.getActionsManager().doAction(ActionsManager.ACTION_CONTINUE);
     }
 
     public void stepOver () {
@@ -217,9 +256,10 @@ public class JPDASupport implements DebuggerManagerListener {
     }
 
     public void step (Object action) {
-        if (jpdaDebugger.getState () != JPDADebugger.STATE_STOPPED)
+        if (jpdaDebugger.getState () != JPDADebugger.STATE_STOPPED) {
             throw new IllegalStateException ();
-        debuggerEngine.getActionsManager ().doAction (action);
+        }
+        DebuggerManager.getDebuggerManager().getCurrentEngine().getActionsManager().doAction(action);
         waitState (JPDADebugger.STATE_STOPPED);
     }
 
@@ -245,6 +285,11 @@ public class JPDASupport implements DebuggerManagerListener {
         debuggerEngine.getActionsManager ().
             doAction (ActionsManager.ACTION_KILL);
         waitState (JPDADebugger.STATE_DISCONNECTED);
+        try {
+            processIO.join();
+        } catch (InterruptedException ex) {
+            // Interrupted
+        }
     }
 
     public void waitState (int state) {
@@ -322,7 +367,7 @@ public class JPDASupport implements DebuggerManagerListener {
     }
 
     private static String readLine (InputStream in) throws IOException {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         for (;;) {
             int c = in.read();
             if (c == -1) throw new EOFException();
@@ -363,7 +408,12 @@ public class JPDASupport implements DebuggerManagerListener {
             cmdArray = arr;
         }
 
-        return Runtime.getRuntime ().exec (cmdArray);
+        ProcessBuilder pb = new ProcessBuilder().command(cmdArray);
+        String classesDir = System.getProperty("test.dir.classes");
+        if (classesDir != null) {
+            pb.directory(new File(classesDir));
+        }
+        return pb.start();
     }
     
     private static String getClassPath(File[] extraCP) {
@@ -477,7 +527,9 @@ public class JPDASupport implements DebuggerManagerListener {
     
     private static class ProcessIO {
 
-        private Process p;
+        private final Process p;
+        private Thread threadOut;
+        private Thread threadErr;
 
         public ProcessIO(Process p) {
             this.p = p;
@@ -487,8 +539,14 @@ public class JPDASupport implements DebuggerManagerListener {
             InputStream out = p.getInputStream();
             InputStream err = p.getErrorStream();
 
-            new SimplePipe(System.out, out).start();
-            new SimplePipe(System.out, err).start();
+            (threadOut = new SimplePipe(System.out, out)).start();
+            (threadErr = new SimplePipe(System.out, err)).start();
+        }
+
+        private void join() throws InterruptedException {
+            threadOut.join();
+            threadErr.join();
+            assertEquals(0, p.waitFor());
         }
     }
 

@@ -32,7 +32,7 @@ public final class CPFloatInfo extends CPEntry {
 
     CPFloatInfo(ConstantPool pool, float v) {
 	super(pool);
-        value = new Float(v);
+        value = v;
     }
 
     public final int getTag() {

@@ -3071,12 +3071,15 @@ public class CasualDiff {
         // called.
     }
 
-    protected void diffErroneous(JCErroneous oldT, JCErroneous newT, int[] bounds) {
-        JCTree oldTident = oldT.getErrorTrees().get(0);
-        JCTree newTident = newT.getErrorTrees().get(0);
-        if (oldTident.getKind() == Kind.IDENTIFIER && newTident.getKind() == Kind.IDENTIFIER) {
-            diffIdent((JCIdent) oldTident, (JCIdent) newTident, bounds);
-        }
+    protected int diffErroneous(JCErroneous oldT, JCErroneous newT, int[] bounds) {
+        JCTree oldTerr = oldT.getErrorTrees().get(0);
+        JCTree newTerr = newT.getErrorTrees().get(0);
+        int localPointer = bounds[0];
+        int[] errBounds = getBounds(oldTerr);
+        copyTo(localPointer, errBounds[0]);
+        localPointer = diffTree(oldTerr, newTerr, errBounds);
+        copyTo(localPointer, bounds[1]);
+        return bounds[1];
     }
     
     protected int diffLambda(JCLambda oldT, JCLambda newT, int[] bounds) {
@@ -5325,7 +5328,7 @@ public class CasualDiff {
     }
     
     private int getOldPos(DCTree oldT, DCDocComment doc) {
-        return (int) oldT.getSourcePosition(doc);
+        return oldT.pos(doc).getStartPosition();
     }
     
     public int endPos(DCTree oldT, DCDocComment doc) {
@@ -5730,7 +5733,7 @@ public class CasualDiff {
               retVal = diffAssignop((JCAssignOp)oldT, (JCAssignOp)newT, elementBounds);
               break;
           case ERRONEOUS:
-              diffErroneous((JCErroneous)oldT, (JCErroneous)newT, elementBounds);
+              retVal = diffErroneous((JCErroneous)oldT, (JCErroneous)newT, elementBounds);
               break;
           case MODIFIERS:
               retVal = diffModifiers((JCModifiers) oldT, (JCModifiers) newT, parent, elementBounds[0]);

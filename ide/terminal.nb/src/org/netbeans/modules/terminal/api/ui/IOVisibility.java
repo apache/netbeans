@@ -99,8 +99,8 @@ public abstract class IOVisibility {
 	    return iov.isSupported();
     }
 
-    abstract protected void setVisible(boolean visible);
-    abstract protected void setClosable(boolean closable);
-    abstract protected boolean isClosable();
-    abstract protected boolean isSupported();
+    protected abstract void setVisible(boolean visible);
+    protected abstract void setClosable(boolean closable);
+    protected abstract boolean isClosable();
+    protected abstract boolean isSupported();
 }

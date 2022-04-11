@@ -331,7 +331,7 @@ public final class ProgressSupport {
      * Describes an action. See also {@link EventThreadAction} and
      * {@link BackgroundAction}.
      */
-    public static abstract class Action {
+    public abstract static class Action {
 
         /**
          * Constructs a new action, by default {@link #isEnabled enabled}.
@@ -404,7 +404,7 @@ public final class ProgressSupport {
      * Describes an event thread action, that is, one that should be run
      * in the event dispatching thread.
      */
-    public static abstract class EventThreadAction extends Action {
+    public abstract static class EventThreadAction extends Action {
 
         private final boolean cancellable;
 
@@ -430,7 +430,7 @@ public final class ProgressSupport {
      * Describes a background action, that is, one that should be run
      * in a background thread under a progress dialog.
      */
-    public static abstract class BackgroundAction extends Action {
+    public abstract static class BackgroundAction extends Action {
 
         private final boolean cancellable;
 

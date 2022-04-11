@@ -777,7 +777,7 @@ public abstract class PositionEstimator {
 
     }
     
-    private static abstract class BaseEstimator extends PositionEstimator {
+    private abstract static class BaseEstimator extends PositionEstimator {
         
         JavaTokenId precToken;
         private ArrayList<String> separatorList;
@@ -968,7 +968,7 @@ public abstract class PositionEstimator {
                     if (seq.movePrevious() && seq.offset() >= sectionStart && nonRelevant.contains(seq.token().id())) {
                         moveToSrcRelevantBounded(seq, Direction.BACKWARD);
                         seq.moveNext();
-                        treeEnd = seq.offset();
+                        treeEnd = Math.max(seq.offset(), treeStart);
                     }
                 }
 

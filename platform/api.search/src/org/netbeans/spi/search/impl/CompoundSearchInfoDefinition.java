@@ -84,7 +84,7 @@ public class CompoundSearchInfoDefinition extends SearchInfoDefinition {
         }
 
         List<SearchInfoDefinition> searchableElements =
-                new ArrayList<SearchInfoDefinition>(elements.length);
+                new ArrayList<>(elements.length);
         for (SearchInfoDefinition element : elements) {
             if (element.canSearch()) {
                 searchableElements.add(element);
@@ -113,7 +113,7 @@ public class CompoundSearchInfoDefinition extends SearchInfoDefinition {
         }
 
         List<SearchInfoDefinition> searchableElements =
-                new ArrayList<SearchInfoDefinition>(elements.length);
+                new ArrayList<>(elements.length);
         for (SearchInfoDefinition element : elements) {
             if (element.canSearch()) {
                 searchableElements.add(element);
@@ -134,7 +134,7 @@ public class CompoundSearchInfoDefinition extends SearchInfoDefinition {
 
     @Override
     public List<SearchRoot> getSearchRoots() {
-        List<SearchRoot> allRoots = new LinkedList<SearchRoot>();
+        List<SearchRoot> allRoots = new LinkedList<>();
         for (SearchInfoDefinition si : elements) {
             allRoots.addAll(si.getSearchRoots());
         }

@@ -20,7 +20,6 @@
 package org.netbeans.modules.java.source.indexing;
 
 import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -35,6 +34,7 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -59,6 +59,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import javax.lang.model.SourceVersion;
 
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ModuleElement;
@@ -82,7 +83,6 @@ import org.netbeans.api.java.source.ClasspathInfo;
 import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
-import org.netbeans.modules.classfile.ClassFile;
 import org.netbeans.modules.java.source.ElementHandleAccessor;
 import org.netbeans.modules.java.source.JavaSourceTaskFactoryManager;
 import org.netbeans.modules.java.source.ModuleNames;
@@ -115,7 +115,6 @@ import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.URLMapper;
-import org.openide.modules.InstalledFileLocator;
 import org.openide.util.Exceptions;
 //import org.openide.util.NbBundle;
 import org.openide.util.Pair;
@@ -877,7 +876,7 @@ public class JavaCustomIndexer extends CustomIndexer {
 
     private static Iterable<String> readRSFile (final File file) throws IOException {
         final LinkedHashSet<String> binaryNames = new LinkedHashSet<String>();
-        BufferedReader in = new BufferedReader (new InputStreamReader ( new FileInputStream (file), "UTF-8")); //NOI18N
+        BufferedReader in = new BufferedReader (new InputStreamReader ( new FileInputStream (file), StandardCharsets.UTF_8));
         try {
             String binaryName;
             while ((binaryName=in.readLine())!=null) {
@@ -1395,15 +1394,7 @@ public class JavaCustomIndexer extends CustomIndexer {
     private static Pair<Object,Method> heapDumper;
 
     private static String computeJavacVersion() {
-        if (NoJavacHelper.hasNbJavac()) {
-            File nbJavac = InstalledFileLocator.getDefault().locate("modules/ext/nb-javac-impl.jar", "org.netbeans.modules.nbjavac.impl", false);
-            if (nbJavac != null) {
-                return String.valueOf(nbJavac.lastModified());
-            }
-            return "-1";
-        } else {
-            return System.getProperty("java.vm.version", "unknown");
-        }
+        return SourceVersion.latest().toString();
     }
 
     private static class FilterOutJDK7AndLaterWarnings implements Comparable<Diagnostic<? extends JavaFileObject>> {
@@ -1448,7 +1439,7 @@ public class JavaCustomIndexer extends CustomIndexer {
         }
     }
     
-    private static abstract class Check implements Callable<Boolean> {
+    private abstract static class Check implements Callable<Boolean> {
         
         protected final Context ctx;
         

@@ -783,11 +783,9 @@ public class InlineMethodTransformer extends RefactoringVisitor {
             switch (grandparent.getKind()) {
                 case FOR_LOOP: {
                     ForLoopTree forLoopTree = (ForLoopTree) grandparent;
-                    if(translateMap.containsKey(grandparent)) {
-                        Tree newTree = translateMap.get(grandparent);
-                        if(newTree.getKind() == FOR_LOOP) {
-                            forLoopTree = (ForLoopTree) newTree;
-                        }
+                    Tree newTree = translateMap.get(grandparent);
+                    if (newTree != null && newTree.getKind() == FOR_LOOP) {
+                        forLoopTree = (ForLoopTree) newTree;
                     }
                     
                     StatementTree statement = forLoopTree.getStatement();

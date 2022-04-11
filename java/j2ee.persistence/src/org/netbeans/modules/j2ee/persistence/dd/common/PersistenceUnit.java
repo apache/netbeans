@@ -37,8 +37,8 @@ public interface PersistenceUnit {
 	static public final String PROPERTIES = "Properties";	// NOI18N
 
         //
-        static public final String JTA_TRANSACTIONTYPE="JTA";//NOI18N
-        static public final String RESOURCE_LOCAL_TRANSACTIONTYPE="RESOURCE_LOCAL";//NOI18N
+        public static final String JTA_TRANSACTIONTYPE="JTA";//NOI18N
+        public static final String RESOURCE_LOCAL_TRANSACTIONTYPE="RESOURCE_LOCAL";//NOI18N
 
         public void setName(java.lang.String value);
         public java.lang.String getName();

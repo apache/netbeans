@@ -40,8 +40,8 @@ public class JsKeywords {
         ENDS_WITH_DOT
     };
 
-    protected final static Map<String, CompletionDescription> KEYWORDS = new HashMap<>();
-    protected final static Map<String, CompletionDescription> SPECIAL_KEYWORDS_IMPORTEXPORT = new HashMap<>();
+    protected static final Map<String, CompletionDescription> KEYWORDS = new HashMap<>();
+    protected static final Map<String, CompletionDescription> SPECIAL_KEYWORDS_IMPORTEXPORT = new HashMap<>();
     
     static {
         KEYWORDS.put(JsTokenId.KEYWORD_BREAK.fixedText(), new CompletionDescription(CompletionType.ENDS_WITH_SEMICOLON));

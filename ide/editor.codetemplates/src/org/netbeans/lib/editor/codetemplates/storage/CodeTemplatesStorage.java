@@ -115,7 +115,7 @@ public final class CodeTemplatesStorage implements StorageDescription<String, Co
             
     private static final String MIME_TYPE = "text/x-nbeditor-codetemplatesettings"; //NOI18N
     
-    private static abstract class TemplatesReader extends StorageReader<String, CodeTemplateDescription> {
+    private abstract static class TemplatesReader extends StorageReader<String, CodeTemplateDescription> {
         protected TemplatesReader(FileObject f, String mimePath) {
             super(f, mimePath);
         }

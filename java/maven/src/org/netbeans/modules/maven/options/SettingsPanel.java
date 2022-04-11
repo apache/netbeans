@@ -25,6 +25,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.StringReader;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -91,7 +93,7 @@ public class SettingsPanel extends javax.swing.JPanel {
     private final DefaultComboBoxModel jdkHomeDataModel = new DefaultComboBoxModel();
     private String             mavenRuntimeHome = null;
     private int                lastSelected = -1;
-    private final static RequestProcessor RP = new RequestProcessor(SettingsPanel.class);
+    private static final RequestProcessor RP = new RequestProcessor(SettingsPanel.class);
 
     private static class ComboBoxRenderer extends DefaultListCellRenderer {
 
@@ -304,9 +306,8 @@ public class SettingsPanel extends javax.swing.JPanel {
 
         if (path != null) {
             path = path.trim();
-            File fil = new File(path);
             String ver = null;
-            if (fil.exists() && new File(fil, "bin" + File.separator + "mvn").exists()) { //NOI18N
+            if (Files.exists(Paths.get(path, "bin"))) { //NOI18N
                 ver = MavenSettings.getCommandLineMavenVersion(new File(path));
             }
 

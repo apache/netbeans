@@ -88,7 +88,7 @@ public class NewQuickSearchIterator extends BasicWizardIterator {
         cmf.add(cmf.createFileWithSubstitutions(actionPath, template, replaceTokens));
 
         // add layer entry about the provider
-        String category = "QuickSearch/" + model.getCategoryName().replaceAll(" ", ""); // NOI18N
+        String category = "QuickSearch/" + model.getCategoryName().replace(" ", ""); // NOI18N
         String dashedPkgName = model.getPackageName().replace('.', '-');
         String dashedFqClassName = dashedPkgName + '-' + fileName;
         String instanceFullPath = category + "/" // NOI18N

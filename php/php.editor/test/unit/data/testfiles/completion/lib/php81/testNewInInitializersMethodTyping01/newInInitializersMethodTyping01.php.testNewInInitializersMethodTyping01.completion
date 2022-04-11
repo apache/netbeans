@@ -1,0 +1,11 @@
+Code completion result for source line:
+public $prop = |,
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CLASS      Foo                             [PUBLIC]   newInInitializersMethodTyping01.php
+CLASS      Test                            [PUBLIC]   newInInitializersMethodTyping01.php
+KEYWORD    parent::                                   null
+KEYWORD    self::                                     null
+KEYWORD    static::                                   null
+------------------------------------
+KEYWORD    array                                      null
+KEYWORD    new                                        null

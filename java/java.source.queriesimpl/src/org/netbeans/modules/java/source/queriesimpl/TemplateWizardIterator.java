@@ -266,7 +266,7 @@ class TemplateWizardIterator implements WizardDescriptor.AsynchronousInstantiati
         SuperclassPanel() {
             ResourceBundle bundle = NbBundle.getBundle(TemplateWizardIterator.class);
             setName(bundle.getString("CTL_SuperclassTitle")); // NOI18N
-            putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, new Integer(1)); //NOI18N
+            putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, 1); //NOI18N
             getAccessibleContext()
                 .setAccessibleDescription(bundle.getString("ACSD_SuperclassPanel")); // NOI18N
 

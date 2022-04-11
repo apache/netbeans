@@ -333,8 +333,9 @@ public class HtmlDeclarationFinder implements DeclarationFinder {
             }
 
             DeclarationLocation dl = null;
-            for (FileObject f : occurances.keySet()) {
-                Collection<EntryHandle> entries = occurances.get(f);
+            for (Map.Entry<FileObject, Collection<EntryHandle>> entry : occurances.entrySet()) {
+                FileObject f = entry.getKey();
+                Collection<EntryHandle> entries = entry.getValue();
                 for (EntryHandle entryHandle : entries) {
                     //grrr, the main declarationlocation must be also added to the alternatives
                     //if there are more than one

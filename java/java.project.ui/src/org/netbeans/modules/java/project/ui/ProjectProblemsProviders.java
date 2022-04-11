@@ -603,7 +603,7 @@ public class ProjectProblemsProviders {
 
 
     //<editor-fold defaultstate="collapsed" desc="Resolver implementations">
-    private static abstract class BaseResolver implements ProjectProblemResolver {
+    private abstract static class BaseResolver implements ProjectProblemResolver {
 
         protected final RefType type;
         protected final String id;
@@ -815,7 +815,7 @@ public class ProjectProblemsProviders {
         }
     }
 
-    private static abstract class ReferenceResolver extends BaseResolver {
+    private abstract static class ReferenceResolver extends BaseResolver {
 
         static File lastSelectedFile;
 

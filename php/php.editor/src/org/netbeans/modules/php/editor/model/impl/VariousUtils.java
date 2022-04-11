@@ -46,6 +46,7 @@ import org.netbeans.modules.php.editor.elements.TypeNameResolverImpl;
 import org.netbeans.modules.php.editor.lexer.PHPTokenId;
 import org.netbeans.modules.php.editor.model.ArrowFunctionScope;
 import org.netbeans.modules.php.editor.model.ClassScope;
+import org.netbeans.modules.php.editor.model.EnumScope;
 import org.netbeans.modules.php.editor.model.FieldElement;
 import org.netbeans.modules.php.editor.model.FileScope;
 import org.netbeans.modules.php.editor.model.FunctionScope;
@@ -79,6 +80,7 @@ import org.netbeans.modules.php.editor.parser.astnodes.Identifier;
 import org.netbeans.modules.php.editor.parser.astnodes.Include;
 import org.netbeans.modules.php.editor.parser.astnodes.InfixExpression;
 import org.netbeans.modules.php.editor.parser.astnodes.InfixExpression.OperatorType;
+import org.netbeans.modules.php.editor.parser.astnodes.IntersectionType;
 import org.netbeans.modules.php.editor.parser.astnodes.MethodInvocation;
 import org.netbeans.modules.php.editor.parser.astnodes.NamespaceName;
 import org.netbeans.modules.php.editor.parser.astnodes.NullableType;
@@ -130,6 +132,7 @@ public final class VariousUtils {
     private static final Pattern SEMICOLON_PATTERN = Pattern.compile("\\;"); // NOI18N
     private static final Pattern DOT_PATTERN = Pattern.compile("\\."); // NOI18N
     private static final Pattern TYPE_SEPARATOR_PATTERN = Pattern.compile("\\|"); // NOI18N
+    private static final Pattern TYPE_SEPARATOR_INTERSECTION_PATTERN = Pattern.compile("\\&"); // NOI18N
 
 
     static {
@@ -228,6 +231,8 @@ public final class VariousUtils {
             String typeName;
             if (returnType instanceof UnionType) {
                 typeName = getUnionType((UnionType) returnType);
+            } else if (returnType instanceof IntersectionType){
+                typeName = getIntersectionType((IntersectionType) returnType);
             } else {
                 QualifiedName name = QualifiedName.create(returnType);
                 assert name != null : returnType;
@@ -268,9 +273,39 @@ public final class VariousUtils {
         return sb.toString();
     }
 
+    /**
+     * Get the types separated by "&".
+     *
+     * @param intesectionType
+     * @return types separated by "&"
+     */
+    public static String getIntersectionType(IntersectionType intesectionType) {
+        StringBuilder sb = new StringBuilder();
+        for (Expression type : intesectionType.getTypes()) {
+            QualifiedName name = QualifiedName.create(type);
+            if (sb.length() > 0) {
+                sb.append(Type.SEPARATOR_INTERSECTION);
+            }
+            assert name != null : type;
+            sb.append(name.toString());
+        }
+        return sb.toString();
+    }
+
     public static List<Pair<QualifiedName, Boolean/* isNullableType */>> getParamTypesFromUnionTypes(UnionType unionType) {
         List<Pair<QualifiedName, Boolean>> types = new ArrayList<>();
         for (Expression type : unionType.getTypes()) {
+            QualifiedName name = QualifiedName.create(type);
+            if (name != null) {
+                types.add(Pair.of(name, false));
+            }
+        }
+        return types;
+    }
+
+    public static List<Pair<QualifiedName, Boolean/* isNullableType */>> getParamTypesFromIntersectionTypes(IntersectionType intersectionType) {
+        List<Pair<QualifiedName, Boolean>> types = new ArrayList<>();
+        for (Expression type : intersectionType.getTypes()) {
             QualifiedName name = QualifiedName.create(type);
             if (name != null) {
                 types.add(Pair.of(name, false));
@@ -1544,6 +1579,8 @@ public final class VariousUtils {
                 csi = (ClassScope) methodInScope;
             } else if (methodInScope instanceof TraitScope) {
                 csi = (TraitScope) methodInScope;
+            } else if (methodInScope instanceof EnumScope) {
+                csi = (EnumScope) methodInScope;
             }
         }
         if (inScope instanceof ClassScope || inScope instanceof InterfaceScope) {
@@ -1814,8 +1851,12 @@ public final class VariousUtils {
     public static String qualifyTypeNames(String typeNames, int offset, Scope inScope) {
         StringBuilder retval = new StringBuilder();
         if (typeNames != null) {
-            if (!typeNames.matches(SPACES_AND_TYPE_DELIMITERS)) { //NOI18N
-                for (String typeName : TYPE_SEPARATOR_PATTERN.split(typeNames)) {
+            if (!typeNames.matches(SPACES_AND_TYPE_DELIMITERS)) {
+                boolean isIntersection = typeNames.contains(Type.SEPARATOR_INTERSECTION);
+                String[] types = isIntersection
+                        ? TYPE_SEPARATOR_INTERSECTION_PATTERN.split(typeNames)
+                        : TYPE_SEPARATOR_PATTERN.split(typeNames);
+                for (String typeName : types) {
                     String typeRawPart = typeName;
                     if (CodeUtils.isNullableType(typeRawPart)) {
                         retval.append(CodeUtils.NULLABLE_TYPE_PREFIX);
@@ -1829,19 +1870,19 @@ public final class VariousUtils {
                     }
                     if ("$this".equals(typeName)) { //NOI18N
                         // #239987
-                        retval.append("\\this").append(Type.SEPARATOR); //NOI18N
+                        retval.append("\\this").append(Type.getTypeSeparator(isIntersection)); //NOI18N
                     } else if (!typeRawPart.startsWith(NamespaceDeclarationInfo.NAMESPACE_SEPARATOR) && !Type.isPrimitive(typeRawPart)) {
                         QualifiedName fullyQualifiedName = VariousUtils.getFullyQualifiedName(QualifiedName.create(typeRawPart), offset, inScope);
                         retval.append(fullyQualifiedName.toString().startsWith(NamespaceDeclarationInfo.NAMESPACE_SEPARATOR)
                                 ? "" //NOI18N
                                 : NamespaceDeclarationInfo.NAMESPACE_SEPARATOR);
-                        retval.append(fullyQualifiedName.toString()).append(typeArrayPart).append(Type.SEPARATOR);
+                        retval.append(fullyQualifiedName.toString()).append(typeArrayPart).append(Type.getTypeSeparator(isIntersection));
                     } else {
-                        retval.append(typeRawPart).append(typeArrayPart).append(Type.SEPARATOR);
+                        retval.append(typeRawPart).append(typeArrayPart).append(Type.getTypeSeparator(isIntersection));
                     }
                 }
-                assert retval.length() - Type.SEPARATOR.length() >= 0 : "retval:" + retval + "# typeNames:" + typeNames; //NOI18N
-                retval = new StringBuilder(retval.toString().substring(0, retval.length() - Type.SEPARATOR.length()));
+                assert retval.length() - Type.getTypeSeparator(isIntersection).length() >= 0 : "retval:" + retval + "# typeNames:" + typeNames; //NOI18N
+                retval = new StringBuilder(retval.toString().substring(0, retval.length() - Type.getTypeSeparator(isIntersection).length()));
             }
         }
         return retval.toString();

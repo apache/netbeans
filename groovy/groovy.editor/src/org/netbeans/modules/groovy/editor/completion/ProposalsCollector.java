@@ -67,6 +67,7 @@ public class ProposalsCollector {
 
     public void completeKeywords(CompletionContext completionRequest) {
         keywordCompletion.complete(proposals, completionRequest, context.getAnchor());
+        (new SpockBlockNamesCompletion()).complete(proposals, completionRequest, context.getAnchor());
     }
 
     public void completeMethods(CompletionContext completionRequest) {
@@ -91,6 +92,7 @@ public class ProposalsCollector {
 
     public void completeLocalVars(CompletionContext request) {
         localVarCompletion.complete(proposals, request, context.getAnchor());
+        (new SpockMethodParamCompletion()).complete(proposals, request, context.getAnchor());
     }
 
     public void completeNewVars(CompletionContext request) {

@@ -20,6 +20,7 @@
 package org.netbeans.modules.maven.event;
 
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.concurrent.atomic.AtomicBoolean;
 import org.apache.maven.eventspy.AbstractEventSpy;
 import org.apache.maven.execution.ExecutionEvent;
@@ -197,8 +198,8 @@ public class NbEventSpy extends AbstractEventSpy {
                         JSONObject excep = new JSONObject();
                         //all mojo failed events in current codebase are lifecycle execs.
                         String message = exc.getCause().getMessage();
-                        byte[] enc = Base64.encodeBase64(message.getBytes("UTF-8")); //NOW are these conversions correct?
-                        String encString = new String(enc, "UTF-8");
+                        byte[] enc = Base64.encodeBase64(message.getBytes(StandardCharsets.UTF_8)); //NOW are these conversions correct?
+                        String encString = new String(enc, StandardCharsets.UTF_8);
                         excep.put("msg", encString);
                         root.put("exc", excep);
                     }

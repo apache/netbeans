@@ -165,7 +165,6 @@ public class TreeTableOperator extends JTableOperator {
          * @param mouseButton mouse button identification
          * @param modifiers modifiers pressed during mouse click
          */
-        @org.netbeans.api.annotations.common.SuppressWarnings("BC_UNCONFIRMED_CAST") //suppres FindBugs warning
         public void pressMouse(ComponentOperator oper, int x, int y, int mouseButton, int modifiers) {
             checkSupported(oper);
             ComponentOperator realOper = ((RenderedTreeOperator)oper).getRealOperator();
@@ -179,7 +178,6 @@ public class TreeTableOperator extends JTableOperator {
          * @param mouseButton mouse button identification
          * @param modifiers modifiers pressed during mouse click
          */
-        @org.netbeans.api.annotations.common.SuppressWarnings("BC_UNCONFIRMED_CAST") //suppres FindBugs warning
         public void releaseMouse(ComponentOperator oper, int x, int y, int mouseButton, int modifiers) {
             checkSupported(oper);
             ComponentOperator realOper = ((RenderedTreeOperator)oper).getRealOperator();
@@ -195,7 +193,6 @@ public class TreeTableOperator extends JTableOperator {
          * @param modifiers modifiers pressed during mouse click
          * @param mouseClick timeout of mouse click
          */
-        @org.netbeans.api.annotations.common.SuppressWarnings("BC_UNCONFIRMED_CAST") //suppres FindBugs warning
         public void clickMouse(ComponentOperator oper, int x, int y, int clickCount, int mouseButton, 
                 		   int modifiers, Timeout mouseClick) {
             checkSupported(oper);
@@ -208,7 +205,6 @@ public class TreeTableOperator extends JTableOperator {
          * @param x x position of mouse operation
          * @param y y position of mouse operation
          */
-        @org.netbeans.api.annotations.common.SuppressWarnings("BC_UNCONFIRMED_CAST") //suppres FindBugs warning
         public void moveMouse(ComponentOperator oper, int x, int y) {
             checkSupported(oper);
             ComponentOperator realOper = ((RenderedTreeOperator)oper).getRealOperator();
@@ -222,7 +218,6 @@ public class TreeTableOperator extends JTableOperator {
          * @param mouseButton mouse button identification
          * @param modifiers modifiers pressed during mouse click
          */
-        @org.netbeans.api.annotations.common.SuppressWarnings("BC_UNCONFIRMED_CAST") //suppres FindBugs warning
         public void dragMouse(ComponentOperator oper, int x, int y, int mouseButton, int modifiers) {
             checkSupported(oper);
             ComponentOperator realOper = ((RenderedTreeOperator)oper).getRealOperator();
@@ -241,7 +236,6 @@ public class TreeTableOperator extends JTableOperator {
          * @param before timeout before drag
          * @param after timeout after drop
          */
-        @org.netbeans.api.annotations.common.SuppressWarnings("BC_UNCONFIRMED_CAST") //suppres FindBugs warning
         public void dragNDrop(ComponentOperator oper, int start_x, int start_y, int end_x, int end_y, 
                 		  int mouseButton, int modifiers, Timeout before, Timeout after) {
             checkSupported(oper);
@@ -253,7 +247,6 @@ public class TreeTableOperator extends JTableOperator {
         /** Enters mouse on operator given by {@link TreeTableOperator.RenderedTreeOperator#getRealOperator getRealOperator()} method.
          * @param oper operator which delegates events on an real operator
          */
-        @org.netbeans.api.annotations.common.SuppressWarnings("BC_UNCONFIRMED_CAST") //suppres FindBugs warning
         public void enterMouse(ComponentOperator oper){
             checkSupported(oper);
             ComponentOperator realOper = ((RenderedTreeOperator)oper).getRealOperator();
@@ -263,7 +256,6 @@ public class TreeTableOperator extends JTableOperator {
         /** Exits mouse on operator given by {@link TreeTableOperator.RenderedTreeOperator#getRealOperator getRealOperator()} method.
          * @param oper operator which delegates events on an real operator
          */
-        @org.netbeans.api.annotations.common.SuppressWarnings("BC_UNCONFIRMED_CAST") //suppres FindBugs warning
         public void exitMouse(ComponentOperator oper) {
             checkSupported(oper);
             ComponentOperator realOper = ((RenderedTreeOperator)oper).getRealOperator();

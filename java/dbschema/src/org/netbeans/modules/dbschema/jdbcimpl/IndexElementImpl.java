@@ -84,7 +84,7 @@ public class IndexElementImpl extends DBMemberElementImpl implements IndexElemen
      */
     public ColumnElement[] getColumns() {
         DBElement[] dbe = columns.getElements();
-        return (ColumnElement[]) Arrays.asList(dbe).toArray(new ColumnElement[dbe.length]);
+        return Arrays.asList(dbe).toArray(new ColumnElement[dbe.length]);
     }
   
     /** Find a column by name.
@@ -96,7 +96,7 @@ public class IndexElementImpl extends DBMemberElementImpl implements IndexElemen
     }
   
     protected void initColumns(LinkedList idxs) {
-        LinkedList columnsList = new LinkedList();
+        List<String> columnsList = new LinkedList<>();
         String name, info;
         int start, end;
         

@@ -332,7 +332,7 @@ class Table extends JTable {
         if( null == htmlText )
             return null;
         String res = htmlText.replaceAll( "<[^>]*>", "" ); // NOI18N // NOI18N
-        res = res.replaceAll( "&nbsp;", " " ); // NOI18N // NOI18N
+        res = res.replace( "&nbsp;", " " ); // NOI18N // NOI18N
         res = res.trim();
         return res;
     }

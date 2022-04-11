@@ -116,15 +116,15 @@ public class NbDdeBrowserImpl extends ExtBrowserImpl {
         logFine("NbDdeBrowserImpl created with factory:", extBrowserFactory); // NOI18N
     }
     
-    native private byte [] reqDdeMessage (String srv, String topic, String item, int timeout) throws NbBrowserException;
+    private native byte [] reqDdeMessage (String srv, String topic, String item, int timeout) throws NbBrowserException;
     
     /** finds registry entry for browser opening */
-    public native static String getBrowserPath (String browser) throws NbBrowserException;
+    public static native String getBrowserPath (String browser) throws NbBrowserException;
     
     /** returns the command that executes default application for opening of 
      *  .html files
      */
-    public native static String getDefaultOpenCommand() throws NbBrowserException;
+    public static native String getDefaultOpenCommand() throws NbBrowserException;
     
     /** Sets current URL.
      *

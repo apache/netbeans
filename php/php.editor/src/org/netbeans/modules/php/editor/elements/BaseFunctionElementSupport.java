@@ -38,6 +38,9 @@ import org.netbeans.modules.php.editor.api.elements.TypeMemberElement;
 import org.netbeans.modules.php.editor.api.elements.TypeNameResolver;
 import org.netbeans.modules.php.editor.api.elements.TypeResolver;
 import org.netbeans.modules.php.editor.model.impl.Type;
+import org.netbeans.modules.php.editor.parser.astnodes.ASTNode;
+import org.netbeans.modules.php.editor.parser.astnodes.IntersectionType;
+import org.netbeans.modules.php.editor.parser.astnodes.UnionType;
 
 /**
  * @author Radek Matous
@@ -63,6 +66,10 @@ public class BaseFunctionElementSupport  {
 
     public final boolean isReturnUnionType() {
         return returnTypes.isUnionType();
+    }
+
+    public final boolean isReturnIntersectionType() {
+        return returnTypes.isIntersectionType();
     }
 
     public final String asString(PrintAs as, BaseFunctionElement element, TypeNameResolver typeNameResolver) {
@@ -94,7 +101,7 @@ public class BaseFunctionElementSupport  {
                     Collection<TypeResolver> returns1 = getReturnTypes();
                     // we can also write the union type in phpdoc e.g. @return int|float
                     // check whether the union type is the actual declared return type to avoid adding the union type for phpdoc
-                    if (returns1.size() == 1 || isReturnUnionType()) {
+                    if (returns1.size() == 1 || isReturnUnionType() || isReturnIntersectionType()) {
                         String returnType = asString(PrintAs.ReturnTypes, element, typeNameResolver, phpVersion);
                         if (StringUtils.hasText(returnType)) {
                             boolean isNullableType = CodeUtils.isNullableType(returnType);
@@ -132,17 +139,13 @@ public class BaseFunctionElementSupport  {
                     if (typeResolver.isResolved()) {
                         QualifiedName typeName = typeResolver.getTypeName(false);
                         if (typeName != null) {
-                            if (template.length() > 0) {
-                                template.append(Type.SEPARATOR);
-                            }
+                            appendSeparator(template);
                             template.append(typeNameResolver.resolve(typeName).toString());
                         }
                     } else {
                         String typeName = typeResolver.getRawTypeName();
                         if (typeName != null) {
-                            if (template.length() > 0) {
-                                template.append(Type.SEPARATOR);
-                            }
+                            appendSeparator(template);
                             template.append(typeName);
                         }
                     }
@@ -154,9 +157,7 @@ public class BaseFunctionElementSupport  {
                     if (typeResolver.isResolved()) {
                         QualifiedName typeName = typeResolver.getTypeName(false);
                         if (typeName != null) {
-                            if (template.length() > 0) {
-                                template.append(Type.SEPARATOR);
-                            }
+                            appendSeparator(template);
                             if (typeResolver.isNullableType()) {
                                 template.append(CodeUtils.NULLABLE_TYPE_PREFIX);
                             }
@@ -197,6 +198,17 @@ public class BaseFunctionElementSupport  {
                 assert false : as;
         }
         return template.toString();
+    }
+
+    private void appendSeparator(StringBuilder template) {
+        if (template.length() == 0) {
+            return;
+        }
+        if (isReturnIntersectionType()) {
+            template.append(Type.SEPARATOR_INTERSECTION);
+        } else {
+            template.append(Type.SEPARATOR);
+        }
     }
 
     private static String parameters2String(final BaseFunctionElement element, final List<ParameterElement> parameterList, OutputType stringOutputType, TypeNameResolver typeNameResolver) {
@@ -320,24 +332,32 @@ public class BaseFunctionElementSupport  {
             public boolean isUnionType() {
                 return false;
             }
+
+            @Override
+            public boolean isIntersectionType() {
+                return false;
+            }
         };
 
         Set<TypeResolver> getReturnTypes();
         boolean isUnionType();
+        boolean isIntersectionType();
     }
 
     public static final class ReturnTypesImpl implements ReturnTypes {
 
         private final Set<TypeResolver> returnTypes;
         private final boolean isUnionType;
+        private final boolean isIntersectionType;
 
-        public static ReturnTypes create(Set<TypeResolver> returnTypes, boolean isUnionType) {
-            return new ReturnTypesImpl(returnTypes, isUnionType);
+        public static ReturnTypes create(Set<TypeResolver> returnTypes, ASTNode node) {
+            return new ReturnTypesImpl(returnTypes, node);
         }
 
-        private ReturnTypesImpl(Set<TypeResolver> returnTypes, boolean isUnionType) {
+        private ReturnTypesImpl(Set<TypeResolver> returnTypes, ASTNode node) {
             this.returnTypes = returnTypes;
-            this.isUnionType = isUnionType;
+            this.isUnionType = node instanceof UnionType;
+            this.isIntersectionType = node instanceof IntersectionType;
         }
 
         @Override
@@ -348,6 +368,11 @@ public class BaseFunctionElementSupport  {
         @Override
         public boolean isUnionType() {
             return isUnionType;
+        }
+
+        @Override
+        public boolean isIntersectionType() {
+            return isIntersectionType;
         }
 
     }

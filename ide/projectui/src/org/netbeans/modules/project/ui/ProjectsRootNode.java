@@ -370,7 +370,7 @@ public class ProjectsRootNode extends AbstractNode {
             if (!data.hasFirst()) {
                 LOG.log(
                         Level.WARNING,
-                        "Warning - project of {0} in {1} failed to supply a LogicalViewProvider in its lookup",  // NOI18N
+                        "Warning - project of {0} in {1} doesn't supply a LogicalViewProvider in its lookup",  // NOI18N
                         new Object[]{
                             project.getClass(),
                             FileUtil.getFileDisplayName(project.getProjectDirectory())

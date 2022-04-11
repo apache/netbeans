@@ -159,7 +159,7 @@ public final class EditorFindSupport {
     }
 
     /** Get shared instance of find support */
-    public synchronized static EditorFindSupport getInstance() {
+    public static synchronized EditorFindSupport getInstance() {
         if (findSupport == null) {
             findSupport = new EditorFindSupport();
         }
@@ -1097,7 +1097,7 @@ public final class EditorFindSupport {
         return newCacheKey.toString();
     }
     
-    public final static class SPW{
+    public static final class SPW{
         private final String searchExpression;
         private final boolean wholeWords;
         private final boolean matchCase;
@@ -1166,7 +1166,7 @@ public final class EditorFindSupport {
         }
     } // End of SPW class
 
-    public final static class RP {
+    public static final class RP {
 
         private final String replaceExpression;
         private final boolean preserveCase;

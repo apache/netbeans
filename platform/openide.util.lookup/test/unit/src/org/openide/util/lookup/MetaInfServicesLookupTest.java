@@ -30,6 +30,7 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.net.URLConnection;
 import java.net.URLStreamHandler;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -100,7 +101,7 @@ public class MetaInfServicesLookupTest extends NbTestCase {
         
         LOG.info("generating " + jar);
         
-        URL data = MetaInfServicesLookupTest.class.getResource(n.replaceAll("\\.jar", "\\.txt"));
+        URL data = MetaInfServicesLookupTest.class.getResource(n.replace(".jar", ".txt"));
         assertNotNull("Data found", data);
         StringBuffer sb = new StringBuffer();
         InputStreamReader r = new InputStreamReader(data.openStream());
@@ -529,7 +530,7 @@ public class MetaInfServicesLookupTest extends NbTestCase {
 
                                 @Override
                                 public InputStream getInputStream() throws IOException {
-                                    return new ByteArrayInputStream("java.lang.Object\n".getBytes("UTF-8"));
+                                    return new ByteArrayInputStream("java.lang.Object\n".getBytes(StandardCharsets.UTF_8));
                                 }
                             };
                         }
@@ -648,7 +649,7 @@ public class MetaInfServicesLookupTest extends NbTestCase {
                             return new URLConnection(u) {
                                 public void connect() throws IOException {}
                                 public @Override InputStream getInputStream() throws IOException {
-                                    return new ByteArrayInputStream(n.getBytes("UTF-8"));
+                                    return new ByteArrayInputStream(n.getBytes(StandardCharsets.UTF_8));
                                 }
                             };
                         }

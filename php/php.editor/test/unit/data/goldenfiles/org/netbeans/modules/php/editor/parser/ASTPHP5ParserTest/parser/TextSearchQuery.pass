@@ -11553,7 +11553,7 @@
         <token id='T_VARIABLE' start='33772' end='33778'>
             <text>$regex</text>
         </token>
-        <token id='T_REFERENCE' start='33779' end='33780'>
+        <token id='T_AMPERSAND_NOT_FOLLOWED_BY_VAR_OR_VARARG' start='33779' end='33780'>
             <text>&amp;</text>
         </token>
         <token id='T_OPEN_PARENTHESE' start='33781' end='33782'>
@@ -11646,7 +11646,7 @@
         <token id='T_VARIABLE' start='34013' end='34019'>
             <text>$regex</text>
         </token>
-        <token id='T_REFERENCE' start='34020' end='34021'>
+        <token id='T_AMPERSAND_NOT_FOLLOWED_BY_VAR_OR_VARARG' start='34020' end='34021'>
             <text>&amp;</text>
         </token>
         <token id='T_OPEN_PARENTHESE' start='34022' end='34023'>
@@ -11727,7 +11727,7 @@
         <token id='T_VARIABLE' start='34225' end='34231'>
             <text>$regex</text>
         </token>
-        <token id='T_REFERENCE' start='34232' end='34233'>
+        <token id='T_AMPERSAND_NOT_FOLLOWED_BY_VAR_OR_VARARG' start='34232' end='34233'>
             <text>&amp;</text>
         </token>
         <token id='T_OPEN_PARENTHESE' start='34234' end='34235'>
@@ -11808,7 +11808,7 @@
         <token id='T_VARIABLE' start='34442' end='34448'>
             <text>$regex</text>
         </token>
-        <token id='T_REFERENCE' start='34449' end='34450'>
+        <token id='T_AMPERSAND_NOT_FOLLOWED_BY_VAR_OR_VARARG' start='34449' end='34450'>
             <text>&amp;</text>
         </token>
         <token id='T_OPEN_PARENTHESE' start='34451' end='34452'>
@@ -11910,7 +11910,7 @@
         <token id='T_VARIABLE' start='34705' end='34711'>
             <text>$regex</text>
         </token>
-        <token id='T_REFERENCE' start='34712' end='34713'>
+        <token id='T_AMPERSAND_NOT_FOLLOWED_BY_VAR_OR_VARARG' start='34712' end='34713'>
             <text>&amp;</text>
         </token>
         <token id='T_OPEN_PARENTHESE' start='34714' end='34715'>
@@ -12012,7 +12012,7 @@
         <token id='T_VARIABLE' start='34968' end='34974'>
             <text>$regex</text>
         </token>
-        <token id='T_REFERENCE' start='34975' end='34976'>
+        <token id='T_AMPERSAND_NOT_FOLLOWED_BY_VAR_OR_VARARG' start='34975' end='34976'>
             <text>&amp;</text>
         </token>
         <token id='T_OPEN_PARENTHESE' start='34977' end='34978'>
@@ -12114,7 +12114,7 @@
         <token id='T_VARIABLE' start='35229' end='35235'>
             <text>$regex</text>
         </token>
-        <token id='T_REFERENCE' start='35236' end='35237'>
+        <token id='T_AMPERSAND_NOT_FOLLOWED_BY_VAR_OR_VARARG' start='35236' end='35237'>
             <text>&amp;</text>
         </token>
         <token id='T_OPEN_PARENTHESE' start='35238' end='35239'>
@@ -12216,7 +12216,7 @@
         <token id='T_VARIABLE' start='35491' end='35497'>
             <text>$regex</text>
         </token>
-        <token id='T_REFERENCE' start='35498' end='35499'>
+        <token id='T_AMPERSAND_NOT_FOLLOWED_BY_VAR_OR_VARARG' start='35498' end='35499'>
             <text>&amp;</text>
         </token>
         <token id='T_OPEN_PARENTHESE' start='35500' end='35501'>

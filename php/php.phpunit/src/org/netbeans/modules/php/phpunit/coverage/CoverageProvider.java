@@ -23,6 +23,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.netbeans.api.annotations.common.CheckForNull;
@@ -42,7 +43,7 @@ public class CoverageProvider {
     public Coverage getCoverage() {
         CoverageImpl coverage = new CoverageImpl();
         try {
-            PhpUnitCoverageLogParser.parse(new BufferedReader(new InputStreamReader(new FileInputStream(PhpUnit.COVERAGE_LOG), "UTF-8")), coverage); // NOI18N
+            PhpUnitCoverageLogParser.parse(new BufferedReader(new InputStreamReader(new FileInputStream(PhpUnit.COVERAGE_LOG), StandardCharsets.UTF_8)), coverage);
         } catch (FileNotFoundException ex) {
             assert false;
             LOGGER.info(String.format("File %s not found. If there are no errors in PHPUnit output (verify in Output window), "

@@ -76,8 +76,8 @@ public class CustomizerSources extends javax.swing.JPanel implements HelpCtx.Pro
         jTextFieldConfigFilesFolder.setDocument(uiProperties.META_INF_MODEL);
         
         SourceRootsUi.EditMediator emSR = SourceRootsUi.registerEditMediator(
-                (EjbJarProject)uiProperties.getProject(),
-                ((EjbJarProject)uiProperties.getProject()).getSourceRoots(),
+                uiProperties.getProject(),
+                uiProperties.getProject().getSourceRoots(),
                 sourceRoots,
                 addSourceRoot,
                 removeSourceRoot,
@@ -85,8 +85,8 @@ public class CustomizerSources extends javax.swing.JPanel implements HelpCtx.Pro
                 downSourceRoot,null,false);
         
         SourceRootsUi.EditMediator emTSR = SourceRootsUi.registerEditMediator(
-                (EjbJarProject)uiProperties.getProject(),
-                ((EjbJarProject)uiProperties.getProject()).getTestSourceRoots(),
+                uiProperties.getProject(),
+                uiProperties.getProject().getTestSourceRoots(),
                 testRoots,
                 addTestRoot,
                 removeTestRoot,
@@ -111,7 +111,7 @@ public class CustomizerSources extends javax.swing.JPanel implements HelpCtx.Pro
             }
         });
         enableSourceLevel();
-        this.originalEncoding = ((EjbJarProject)uiProperties.getProject()).evaluator().getProperty(EjbJarProjectProperties.SOURCE_ENCODING);
+        this.originalEncoding = uiProperties.getProject().evaluator().getProperty(EjbJarProjectProperties.SOURCE_ENCODING);
         if (this.originalEncoding == null) {
             this.originalEncoding = Charset.defaultCharset().name();
         }

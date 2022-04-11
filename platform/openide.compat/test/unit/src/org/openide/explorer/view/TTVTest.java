@@ -193,7 +193,7 @@ public class TTVTest extends NbTestCase {
     /** Specialized property that will hold reference to any node method
      * holdNode was called on.
      */
-    private static abstract class NodeHolderProperty extends PropertySupport.ReadOnly<Object> {
+    private abstract static class NodeHolderProperty extends PropertySupport.ReadOnly<Object> {
         private Node heldNode;
         
         NodeHolderProperty (String propName, Class propClass, String name, String hint) {

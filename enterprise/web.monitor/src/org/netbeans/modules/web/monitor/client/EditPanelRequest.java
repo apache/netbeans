@@ -44,7 +44,7 @@ import org.netbeans.modules.web.monitor.data.*;
 
 class EditPanelRequest extends DataDisplay {
 
-    private final static boolean debug = false;
+    private static final boolean debug = false;
 
     private static final String [] methodChoices = {
 	EditPanel.GET, 

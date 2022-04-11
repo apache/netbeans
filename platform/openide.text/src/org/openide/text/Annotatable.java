@@ -93,25 +93,25 @@ public abstract class Annotatable extends Object {
 
     /** Add listeners on changes of annotatable properties
      * @param l change listener*/
-    final public void addPropertyChangeListener(java.beans.PropertyChangeListener l) {
+    public final void addPropertyChangeListener(java.beans.PropertyChangeListener l) {
         propertyChangeSupport.addPropertyChangeListener(l);
     }
 
     /** Remove listeners on changes of annotatable properties
      * @param l change listener*/
-    final public void removePropertyChangeListener(java.beans.PropertyChangeListener l) {
+    public final void removePropertyChangeListener(java.beans.PropertyChangeListener l) {
         propertyChangeSupport.removePropertyChangeListener(l);
     }
 
     /** Fire property change to registered listeners. */
-    final protected void firePropertyChange(String propertyName, Object oldValue, Object newValue) {
+    protected final void firePropertyChange(String propertyName, Object oldValue, Object newValue) {
         propertyChangeSupport.firePropertyChange(propertyName, oldValue, newValue);
     }
 
     /** Whether this Annotatable object was removed or not.
      * @return whether the Annotatable object was removed or not
      */
-    final public boolean isDeleted() {
+    public final boolean isDeleted() {
         return deleted;
     }
 
@@ -122,7 +122,7 @@ public abstract class Annotatable extends Object {
      * what means that document is closed.
      * @since 1.35
      */
-    abstract public String getText();
+    public abstract String getText();
 
     /** Setter for property deleted.
      * @param deleted New value of property deleted.
@@ -139,7 +139,7 @@ public abstract class Annotatable extends Object {
      * already attached some annotations or not.
      * @return count of attached annotations
      */
-    final public int getAnnotationCount() {
+    public final int getAnnotationCount() {
         return attachedAnnotations.size();
     }
 }

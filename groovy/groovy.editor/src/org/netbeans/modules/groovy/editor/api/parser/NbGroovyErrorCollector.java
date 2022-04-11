@@ -22,6 +22,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -310,7 +311,7 @@ class NbGroovyErrorCollector extends ErrorCollector {
         }
         StringBuilder sb = new StringBuilder();
         try (InputStream is = NbGroovyErrorCollector.class.getResourceAsStream(RESOURCE_FILTERED_ERRORS);
-             BufferedReader r = new BufferedReader(new InputStreamReader(is, "UTF-8"))) {
+             BufferedReader r = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8))) {
             String line;
             
             while ((line = r.readLine()) != null) {

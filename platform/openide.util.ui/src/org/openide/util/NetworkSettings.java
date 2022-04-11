@@ -160,7 +160,7 @@ public final class NetworkSettings {
      * @author Jiri Rechtacek, Ondrej Vrabec
      * @since 8.17
      */
-    public static abstract class ProxyCredentialsProvider {
+    public abstract static class ProxyCredentialsProvider {
 
         /** Returns the <code>username</code> for Proxy Authentication.
          * Returns <code>null</code> if no authentication required.

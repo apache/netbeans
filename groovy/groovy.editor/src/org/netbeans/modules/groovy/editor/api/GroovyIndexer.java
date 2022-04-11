@@ -45,6 +45,7 @@ import org.netbeans.modules.csl.api.Modifier;
 import org.netbeans.modules.groovy.editor.api.lexer.LexUtilities;
 import org.netbeans.modules.groovy.editor.api.elements.ast.ASTField;
 import org.netbeans.modules.groovy.editor.api.elements.ast.ASTMethod;
+import org.netbeans.modules.groovy.editor.api.elements.common.MethodElement;
 import org.netbeans.modules.groovy.editor.compiler.ClassNodeCache;
 import org.netbeans.modules.groovy.editor.compiler.PerfData;
 import org.netbeans.modules.groovy.editor.utils.GroovyUtils;
@@ -352,10 +353,10 @@ public class GroovyIndexer extends EmbeddingIndexer {
             sb.append(constructor.getName());
             sb.append(';');
 
-            List<String> params = constructor.getParameterTypes();
-            if (!params.isEmpty()) {
-                for (String paramName : params) {
-                    sb.append(paramName);
+            List<MethodElement.MethodParameter> params = constructor.getParameters();
+            if (params != null && !params.isEmpty()) {
+                for (MethodElement.MethodParameter param : params) {
+                    sb.append(param.getFqnType());
                     sb.append(",");
                 }
 

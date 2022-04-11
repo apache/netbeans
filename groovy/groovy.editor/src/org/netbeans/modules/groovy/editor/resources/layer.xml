@@ -126,13 +126,11 @@
                     </folder>
                 </folder>
 
-                <!-- Commented out because Groovy completiont tests are failing with JavaIndexer properly in place.
-                     Groovy maintainers must address this issue appropriately, see NETBEANS-4826
                 <file name="JavaIndexer.shadow">
-                    <!- - Ugly hack to make commit-validation work. Must change when NETBEANS-4795 is implemented - ->
+                    <!-- Ugly hack to make commit-validation work. Must change when NETBEANS-4795 is implemented -->
                     <attr name="originalFile" stringvalue="Editors/text/x-java/org-netbeans-modules-java-source-indexing-JavaCustomIndexer$Factory-register.instance"/>
                 </file>
-                          -->
+
 
             </folder>
             <folder name="x-gradle+x-groovy">

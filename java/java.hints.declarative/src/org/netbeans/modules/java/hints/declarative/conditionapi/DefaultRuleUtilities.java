@@ -46,8 +46,30 @@ public final class DefaultRuleUtilities {
         return matcher.referencedIn(variable, in);
     }
 
+    /**
+     * @deprecated Use {@link #sourceVersionGE(int)} instead.
+     */
+    @Deprecated
     public boolean sourceVersionGE(SourceVersion source) {
         return context.sourceVersion().compareTo(source) >= 0;
+    }
+
+    /**
+     * Returns true if the provided feature version is less or equals the
+     * source version of the inspected file.
+     * @see Runtime.Version#feature()
+     */
+    public boolean sourceVersionLE(int feature) {
+        return context.sourceVersion().ordinal() <= feature;
+    }
+
+    /**
+     * Returns true if the provided feature version is greater or equals the
+     * source version of the inspected file.
+     * @see Runtime.Version#feature()
+     */
+    public boolean sourceVersionGE(int feature) {
+        return context.sourceVersion().ordinal() >= feature;
     }
 
     public boolean hasModifier(Variable variable, Modifier modifier) {

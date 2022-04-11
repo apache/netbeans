@@ -82,7 +82,10 @@ public class GroovyParserResult extends ParserResult {
             return null;
         }
         LookupResult lr = unit.getClassNodeResolver().resolveName(className, unit);
-        return lr.getClassNode();
+        if (lr != null) {
+            return lr.getClassNode();
+        }
+        return null;
     }
 
     // FIXME remove this

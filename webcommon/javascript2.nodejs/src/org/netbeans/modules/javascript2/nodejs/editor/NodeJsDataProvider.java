@@ -32,6 +32,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -452,7 +453,9 @@ public class NodeJsDataProvider {
                                 }
                             }
                             JsObject object = factory.newFunction(scope, toObject, methodName, paramNames, NodeJsUtils.NODEJS_NAME);
-                            object.setDocumentation(Documentation.create(doc, getDocumentationURL(methodName, paramNames)));
+                            if(doc != null) {
+                                object.setDocumentation(Documentation.create(doc, getDocumentationURL(methodName, paramNames)));
+                            }
                             toObject.addProperty(object.getName(), object);
                             addProperties(factory, object, (DeclarationScope) object, method);
                             addMethods(factory, object, (DeclarationScope) object, method);
@@ -469,7 +472,9 @@ public class NodeJsDataProvider {
             JsObject object = factory.newObject(parent, propertyName, OffsetRange.NONE, true, NodeJsUtils.NODEJS_NAME);
             parent.addProperty(object.getName(), object);
             String doc = getJSONStringProperty(jsonObject, DESCRIPTION);
-            object.setDocumentation(Documentation.create(doc, getDocumentationURL(propertyName)));
+            if(doc != null) {
+                object.setDocumentation(Documentation.create(doc, getDocumentationURL(propertyName)));
+            }
             return object;
         }
         return null;
@@ -574,7 +579,7 @@ public class NodeJsDataProvider {
     }
 
     private String getFileContent(File file) throws IOException {
-        Reader r = new InputStreamReader(new FileInputStream(file), "UTF-8"); // NOI18N
+        Reader r = new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8);
         StringBuilder sb = new StringBuilder();
         try {
             char[] buf = new char[2048];
@@ -652,8 +657,8 @@ public class NodeJsDataProvider {
         synchronized (cacheFile) {
             String tmpFileName = cacheFile.getAbsolutePath() + ".tmp";  //NOI18N
             File tmpFile = new File(tmpFileName);
-            try (Writer writer = new OutputStreamWriter(new FileOutputStream(tmpFile), "UTF-8")) { // NOI18N
-                loadURL(url, writer, Charset.forName("UTF-8")); //NOI18N
+            try (Writer writer = new OutputStreamWriter(new FileOutputStream(tmpFile), StandardCharsets.UTF_8)) {
+                loadURL(url, writer, StandardCharsets.UTF_8);
                 writer.close();
                 tmpFile.renameTo(cacheFile);
             } finally {

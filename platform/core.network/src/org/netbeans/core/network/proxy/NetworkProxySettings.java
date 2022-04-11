@@ -37,10 +37,10 @@ public final class NetworkProxySettings {
         MANUAL
     }        
     
-    private final static Logger LOGGER = Logger.getLogger(NetworkProxySettings.class.getName());
-    private final static String COLON = ":"; //NOI18N
-    private final static String SLASH = "/"; //NOI18N
-    private final static String EMPTY_STRING = ""; //NOI18N
+    private static final Logger LOGGER = Logger.getLogger(NetworkProxySettings.class.getName());
+    private static final String COLON = ":"; //NOI18N
+    private static final String SLASH = "/"; //NOI18N
+    private static final String EMPTY_STRING = ""; //NOI18N
     private final boolean resolved;
     private final ProxyMode proxyMode;
     private final String httpProxyHost;

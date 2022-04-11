@@ -54,7 +54,7 @@ public final class MavenQueryProvider extends GrammarQueryManager {
     public Enumeration enabled(GrammarEnvironment ctx) {
         // check if is supported environment..
         if (getGrammar(ctx) != null) {
-            Enumeration en = ctx.getDocumentChildren();
+            Enumeration<Node> en = ctx.getDocumentChildren();
             while (en.hasMoreElements()) {
                 Node next = (Node)en.nextElement();
                 if (next.getNodeType() == Node.ELEMENT_NODE) {

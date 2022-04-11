@@ -918,14 +918,14 @@ public abstract class WeakListener implements java.util.EventListener {
 
     /** Reference that also holds ref to WeakListener.
     */
-    private static final class ListenerReference extends WeakReference implements Runnable {
+    private static final class ListenerReference<T> extends WeakReference<T> implements Runnable {
         private static Class lastClass;
         private static String lastMethodName;
         private static Method lastRemove;
         private static Object LOCK = new Object();
         final WeakListener weakListener;
 
-        public ListenerReference(Object ref, WeakListener weakListener) {
+        public ListenerReference(T ref, WeakListener weakListener) {
             super(ref, Utilities.activeReferenceQueue());
             this.weakListener = weakListener;
         }

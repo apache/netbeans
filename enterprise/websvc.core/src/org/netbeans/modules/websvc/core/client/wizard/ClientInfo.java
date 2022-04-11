@@ -38,6 +38,7 @@ import java.net.ProxySelector;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JList;
@@ -1240,8 +1241,7 @@ private void saasBrowse(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saasB
             LineNumberReader lnReader = null;
             boolean foundWsdlNamespace = false;
             try {
-                fr = new InputStreamReader( new FileInputStream(f), 
-                        Charset.forName( "UTF-8"));                         // NOI18N
+                fr = new InputStreamReader( new FileInputStream(f), StandardCharsets.UTF_8);
                 lnReader = new LineNumberReader(fr);
                 if (lnReader != null) {
                     String line = null;

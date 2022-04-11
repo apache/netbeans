@@ -27,6 +27,7 @@ import java.io.OutputStreamWriter;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.CharBuffer;
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -74,7 +75,7 @@ public class CompletionContextTest extends FXMLCompletionTestBase {
         File f = new File(dataDir, CompletionContextTest.class.getPackage().getName().replaceAll("\\.", "/") + 
                 "/" + fname);
         InputStream stream = new FileInputStream(f);
-        InputStreamReader rd = new InputStreamReader(stream, "UTF-8");
+        InputStreamReader rd = new InputStreamReader(stream, StandardCharsets.UTF_8);
         
         StringBuffer sb = new StringBuffer();
         CharBuffer cb = CharBuffer.allocate(10000);

@@ -50,7 +50,7 @@ public class TableWidget extends Widget{
     private static final Color BORDER_COLOR =  new Color(169, 197, 235);
     private static final Color SELECTED_BORDER_COLOR = new Color(255,153,0);
     private TableModel model;
-    private final static int COLUMN_WIDTH = 100;
+    private static final int COLUMN_WIDTH = 100;
     
     /**
      * Creates a table widget for a tablemodel.

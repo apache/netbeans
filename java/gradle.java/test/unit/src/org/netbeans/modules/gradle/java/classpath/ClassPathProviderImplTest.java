@@ -27,16 +27,22 @@ import java.lang.ref.WeakReference;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
-import junit.framework.AssertionFailedError;
+import java.util.concurrent.TimeUnit;
+import java.util.logging.Handler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.junit.Test;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ui.OpenProjects;
 import org.netbeans.modules.gradle.AbstractGradleProjectTestCase;
+import org.netbeans.modules.gradle.NbGradleProjectImpl;
 import org.netbeans.modules.gradle.ProjectTrust;
 import org.netbeans.modules.gradle.api.NbGradleProject;
+import org.netbeans.modules.gradle.cache.ProjectInfoDiskCache;
 import org.netbeans.modules.gradle.java.api.GradleJavaProject;
+import org.netbeans.modules.gradle.spi.GradleFiles;
 import org.netbeans.spi.java.classpath.ClassPathProvider;
 import org.netbeans.spi.project.ActionProgress;
 import org.netbeans.spi.project.ActionProvider;
@@ -94,9 +100,20 @@ public class ClassPathProviderImplTest extends AbstractGradleProjectTestCase {
     private void createSimpleApp() throws IOException {
         FileObject d = FileUtil.toFileObject(getDataDir());
         FileObject main = d.getFileObject("javasimple/src/main/java/test/App.java");
-        project = createGradleProject(path, "apply plugin: 'java'", null);
+        project = createGradleProject(path, String.join("\n", 
+                "apply plugin: 'java'",
+                "sourceSets {",
+                "    main {",
+                "        java {",
+                "            srcDirs = ['src/main/java', 'src/main/java2']",
+                "        }",
+                "    }",
+                " }"
+            ), null);
         FileObject src = FileUtil.createFolder(project, "src/main/java/test");
         java = FileUtil.copyFile(main, src, main.getName());
+        // create an additional source folder - this will be only recognized after true project load.
+        FileObject java2 = FileUtil.createFolder(project, "src/main/java2/test");
     }
     
     public void testUntrustedSourcePath() throws Exception {
@@ -208,7 +225,7 @@ public class ClassPathProviderImplTest extends AbstractGradleProjectTestCase {
         
         // open the project - and then close it, so the project is ditched by Gradle module.
         openAndCloseProject(prj);
-
+        
         ProjectTrust.getDefault().distrustProject(prj);
         
         NbGradleProject ngp = NbGradleProject.get(prj);
@@ -218,25 +235,142 @@ public class ClassPathProviderImplTest extends AbstractGradleProjectTestCase {
         assertFalse("Cached project must know its COMPILE path", cp.getRoots().length == 0);
     }
 
+    @Override
+    protected void tearDown() throws Exception {
+        // TEMPORARY: enable logging for CI failure diagnostics:
+        Logger.getLogger("org.netbeans.modules.gradle").setLevel(Level.WARNING);
+        setLevel(Level.INFO);
+        super.tearDown();
+    }
+
+
+    public static void setLevel(Level targetLevel) {
+        Logger root = Logger.getLogger("");
+        for (Handler handler : root.getHandlers()) {
+            handler.setLevel(targetLevel);
+        }
+    }
+
     /**
      * Checks that a trusted, once compiled project will provide nonempty compile classpath
      * just after open.
      */
     public void testCompilePreTrusted() throws Exception {
+        Project prj2 = testReopenedProjectHasClasspath(false);
+
+        FileObject j2 = prj2.getProjectDirectory().getFileObject("src/main/java/test/App.java");
+        
+        NbGradleProject ngp = NbGradleProject.get(prj2);
+        assertTrue("Closed project should be at least EVALUATED", ngp.getQuality().atLeast(NbGradleProject.Quality.EVALUATED));
+
+        ClassPathProviderImpl gradleCPImpl = (ClassPathProviderImpl)prj2.getLookup().lookup(ClassPathProvider.class);
+        // Hack: relies on that ClassPathProviderImpl.updateGroups locks on the provider's instance; allows
+        // to check CP properties before the asynchronous task updates the project.
+        synchronized (gradleCPImpl) {
+            ClassPath cp = ClassPath.getClassPath(j2, ClassPath.COMPILE);
+            assertFalse("Cached project must know its COMPILE path", cp.getRoots().length == 0);
+            assertContainsJava2(ClassPath.getClassPath(j2, ClassPath.SOURCE));
+        }
+    }
+    
+    /**
+     * Checks that a trusted, but NOT compiled (without caches) project will provide nonempty compile classpath
+     * just after open.
+     */
+    public void testCompiledTrustedWithoutCaches() throws Exception {
+        Project prj2 = testReopenedProjectHasClasspath(true);
+        NbGradleProject ngp = NbGradleProject.get(prj2);
+        assertTrue("Closed project should not be FULL or FULL_ONLINE", ngp.getQuality().worseThan(NbGradleProject.Quality.FULL));
+        
+        // without caches the project may only load to a FALLBACK state, one need to explicitly ask for FULL or FULL_ONLINE (i.e. project open).
+        // there's a test in Gradle core which checks the buildscript is not implicitly executed.
+
+        FileObject j2 = prj2.getProjectDirectory().getFileObject("src/main/java/test/App.java");
+
+        CountDownLatch cdl = new CountDownLatch(1);
+        CountDownLatch cdl2 = new CountDownLatch(1);
+        ClassPath cp;
+        ClassPath scp;
+        ClassPathProviderImpl gradleCPImpl = (ClassPathProviderImpl)prj2.getLookup().lookup(ClassPathProvider.class);
+        
+        // Hack: relies on that ClassPathProviderImpl.updateGroups locks on the provider's instance; allows
+        // to check CP properties before the asynchronous task updates the project.
+        synchronized (gradleCPImpl) {
+            assertTrue("Closed project with no caches should not reach EVALUATED", ngp.getQuality().worseThan(NbGradleProject.Quality.EVALUATED));
+            cp = ClassPath.getClassPath(j2, ClassPath.COMPILE);
+            scp = ClassPath.getClassPath(j2, ClassPath.SOURCE);
+            
+            assertEquals("The project in fallback state should have no compile path", 0, cp.getRoots().length);
+            
+            for (FileObject fo : scp.getRoots()) {
+                if (fo.getName().endsWith("java2")) {
+                    fail("java2 must not be listed in fallback mode");
+                }
+            }
+
+            cp.addPropertyChangeListener((e) -> {
+                if (!ClassPath.PROP_ROOTS.equals(e.getPropertyName())) {
+                    return;
+                }
+                cdl.countDown();
+            });
+            
+            scp.addPropertyChangeListener((e) -> {
+                if (!ClassPath.PROP_ROOTS.equals(e.getPropertyName())) {
+                    return;
+                }
+                cdl2.countDown();
+            });
+            
+        }
+        // but, there should be a reload scheduled, if one asks for a classpath - so wait for the event for some time
+        
+        assertTrue("Compile path roots must change", cdl.await(100, TimeUnit.SECONDS));
+        assertFalse("The project should auto-initialize and report changes", cp.getRoots().length == 0);
+        assertTrue("Source path roots must change", cdl2.await(100, TimeUnit.SECONDS));
+        assertContainsJava2(scp);
+    }
+    
+    private void assertContainsJava2(ClassPath scp) {
+        boolean found = false;
+        for (FileObject fo : scp.getRoots()) {
+            if (fo.getName().endsWith("java2")) {
+                found = true;
+            }
+        }
+        assertTrue("java2 must be among sources after full load", found);
+    }
+    
+    private Project testReopenedProjectHasClasspath(boolean destroyCaches) throws Exception {
+        // TEMPORARY: enable logging for CI failure diagnostics. The test was failing on CI, let it produce more logs
+        // remove the logging again when the test proves stable.
+        Logger.getLogger("org.netbeans.modules.gradle").setLevel(Level.FINER);
+        setLevel(Level.FINER);
+        
         path = "first";
         createSimpleApp();
         Project prj = FileOwnerQuery.getOwner(java);
         compileProject(prj);
+        GradleFiles files = prj.getLookup().lookup(NbGradleProjectImpl.class).getGradleFiles();
         
         // open the project - and then close it, so the project is ditched by Gradle module.
         openAndCloseProject(prj);
 
+        // we need to flush Gradle disk cache, as it retains loaded data identified by j.io.File
+        // In addition, we need to delete the serialized state so that only trust remains.
+
+        if (destroyCaches) {
+            ProjectInfoDiskCache.testDestroyCache(files);
+        }
+        ProjectInfoDiskCache.testFlushCaches();
+        
         FileObject wd = FileUtil.toFileObject(getWorkDir());
         FileObject s = wd.createFolder("second");
         
         copy(project, s);
         
-        // rename the files; the cache encodes full path to the project.
+        // rename the files; the cache encodes full path to the project. The renamed project will
+        // be in the same directory, but its FileObject is different - project cache will not list it.
         try (FileLock fl = project.lock()) {
             project.rename(fl, "old", null);
         }
@@ -244,15 +378,11 @@ public class ClassPathProviderImplTest extends AbstractGradleProjectTestCase {
             s.rename(fl, "first", null);
         }
         
+        
         Project prj2 = FileOwnerQuery.getOwner(s);
         assertNotSame(prj, prj2);
-        FileObject j2 = s.getFileObject("src/main/java/test/App.java");
         
-        NbGradleProject ngp = NbGradleProject.get(prj2);
-        assertTrue("Closed project should be at least EVALUATED", ngp.getQuality().atLeast(NbGradleProject.Quality.EVALUATED));
-        
-        ClassPath cp = ClassPath.getClassPath(j2, ClassPath.COMPILE);
-        assertFalse("Cached project must know its COMPILE path", cp.getRoots().length == 0);
+        return prj2;
     }
     
     private void copy(FileObject orig, FileObject to) throws IOException {
@@ -275,7 +405,7 @@ public class ClassPathProviderImplTest extends AbstractGradleProjectTestCase {
     public void testClasspathWillRefreshLate() throws Exception {
         FileObject d = FileUtil.toFileObject(getDataDir());
         FileObject main = d.getFileObject("javasimple/src/main/java/test/App.java");
-        project = createGradleProject(path, "apply plugin: 'java'\n"
+        project = createGradleProject(getName(), "apply plugin: 'java'\n"
                 + "\n"
                 + "sourceSets {\n"
                 + "    main {\n"

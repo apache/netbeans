@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.java.source.ui;
 
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javax.lang.model.element.Element;
 import org.netbeans.api.java.source.ClasspathInfo;
@@ -32,15 +33,17 @@ public abstract class ElementOpenAccessor {
     
     private static ElementOpenAccessor instance;
 
-    public synchronized static ElementOpenAccessor getInstance() {
+    public static synchronized ElementOpenAccessor getInstance() {
         return instance;
     }
 
-    public synchronized static void setInstance(ElementOpenAccessor instance) {
+    public static synchronized void setInstance(ElementOpenAccessor instance) {
         ElementOpenAccessor.instance = instance;
     }
     
     public abstract Object[] getOpenInfo(final ClasspathInfo cpInfo, final ElementHandle<? extends Element> el, AtomicBoolean cancel);
+    
+    public abstract CompletableFuture<Object[]> getOpenInfoFuture(final ClasspathInfo cpInfo, final ElementHandle<? extends Element> el, String nameOpt, AtomicBoolean cancel, boolean acquire);
 
     static {
         try {

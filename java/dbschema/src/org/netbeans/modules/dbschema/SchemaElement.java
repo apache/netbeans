@@ -172,7 +172,7 @@ public class SchemaElement extends DBElement implements Node.Cookie {
             return se;
         else
             synchronized (schemaCache) {
-                se = (SchemaElement) schemaCache.get(name);
+                se = schemaCache.get(name);
                 if (se != null)
                     return se;
                 

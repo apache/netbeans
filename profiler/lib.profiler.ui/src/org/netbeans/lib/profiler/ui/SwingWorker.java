@@ -43,9 +43,9 @@ public abstract class SwingWorker {
 
     private final Object warmupLock = new Object();
     private boolean useEQ;
-    final private Semaphore throughputSemaphore;
-    final private AtomicBoolean cancelFlag = new AtomicBoolean(false);
-    final private AtomicBoolean primed= new AtomicBoolean(true);
+    private final Semaphore throughputSemaphore;
+    private final AtomicBoolean cancelFlag = new AtomicBoolean(false);
+    private final AtomicBoolean primed= new AtomicBoolean(true);
     
     //@GuardedBy warmupLock
     private boolean workerRunning;
@@ -171,7 +171,7 @@ public abstract class SwingWorker {
      * 
      * @since 1.18
      */
-    final public void cancel() {
+    public final void cancel() {
          if (cancelFlag.compareAndSet(false, true)) {
              cancelled();
              if (throughputSemaphore != null) {
@@ -186,7 +186,7 @@ public abstract class SwingWorker {
      * 
      * @since 1.18
      */
-    final protected boolean isCancelled() {
+    protected final boolean isCancelled() {
         return cancelFlag.get();
     }
     

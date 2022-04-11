@@ -51,7 +51,7 @@ public class OpenFilesSearchScopeProvider extends SearchScopeDefinitionProvider 
     @Override
     public List<SearchScopeDefinition> createSearchScopeDefinitions() {
         List<SearchScopeDefinition> list =
-                new ArrayList<SearchScopeDefinition>(1);
+                new ArrayList<>(1);
         list.add(new OpenFilesScope());
         return list;
     }
@@ -115,7 +115,7 @@ public class OpenFilesSearchScopeProvider extends SearchScopeDefinitionProvider 
          * @return all the currenlty opened FileObjects
          */
         private Collection<FileObject> getCurrentlyOpenedFiles() {
-            LinkedHashSet<FileObject> result = new LinkedHashSet<FileObject>();
+            LinkedHashSet<FileObject> result = new LinkedHashSet<>();
             for (TopComponent tc : TopComponent.getRegistry().getOpened()) {
                 DataObject dob = tc.getLookup().lookup(DataObject.class);
                 if (tc.isOpened() && dob != null && isFromEditorWindow(dob, tc)) {
@@ -133,13 +133,9 @@ public class OpenFilesSearchScopeProvider extends SearchScopeDefinitionProvider 
             final EditorCookie editor = dobj.getLookup().lookup(
                     EditorCookie.class);
             if (editor != null) {
-                return Mutex.EVENT.readAccess(new Action<Boolean>() {
-                    @Override
-                    public Boolean run() {
-                        return (tc instanceof CloneableTopComponent) // #246597
-                                || NbDocument.findRecentEditorPane(editor) != null;
-                    }
-                });
+                return Mutex.EVENT.readAccess((Action<Boolean>) () ->
+                        (tc instanceof CloneableTopComponent) // #246597
+                        || NbDocument.findRecentEditorPane(editor) != null);
             }
             return false;
         }

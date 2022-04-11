@@ -79,7 +79,7 @@ public class SourceGroupSupport {
                 result.add(sourceGroups[i]);
             }
         }
-        return (SourceGroup[]) result.toArray(new SourceGroup[result.size()]);
+        return result.toArray(new SourceGroup[result.size()]);
     }
 
     public static boolean isValidPackageName(String packageName) {
@@ -197,7 +197,7 @@ public class SourceGroupSupport {
         List<SourceGroup> result = new ArrayList<>();
         List<FileObject> sourceRoots = getFileObjects(rootURLs, true);
         for (int i = 0; i < sourceRoots.size(); i++) {
-            FileObject sourceRoot = (FileObject) sourceRoots.get(i);
+            FileObject sourceRoot = sourceRoots.get(i);
             SourceGroup srcGroup = (SourceGroup) foldersToSourceGroupsMap.get(sourceRoot);
             if (srcGroup != null) {
                 result.add(srcGroup);

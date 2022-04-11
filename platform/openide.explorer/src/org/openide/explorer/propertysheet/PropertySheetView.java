@@ -70,13 +70,13 @@ public class PropertySheetView extends PropertySheet {
     static final long serialVersionUID = -7568245745904766160L;
 
     /** helper flag for avoiding multiple initialization of the GUI */
-    transient private boolean guiInitialized = false;
+    private transient boolean guiInitialized = false;
 
     /** The Listener that tracks changes in explorerManager */
-    transient private PropertyIL managerListener;
+    private transient PropertyIL managerListener;
 
     /** manager to use */
-    transient private ExplorerManager explorerManager;
+    private transient ExplorerManager explorerManager;
 
     public PropertySheetView() {
         setPreferredSize(new Dimension (200, 300));

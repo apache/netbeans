@@ -30,9 +30,11 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.WeakHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.prefs.Preferences;
@@ -70,6 +72,7 @@ public class Janitor {
     public static final String PROP_UNUSED_DAYS = "UnusedDays"; //NOI18N
 
     private static final String LOGFILE_NAME = "var/log/messages.log"; //NOI18N
+    private static final String ALL_CHECKSUM_NAME = "lastModified/all-checksum.txt"; //NOI18N
     @StaticResource
     private static final String CLEAN_ICON = "org/netbeans/modules/janitor/resources/clean.gif"; //NOI18N
 
@@ -177,7 +180,7 @@ public class Janitor {
     }
 
     static void deleteDir(File dir) {
-        if (dir == null) return;
+        if ((dir == null) || !dir.exists()) return;
         Path path = dir.toPath();
         try {
             Files.walkFileTree(path, new SimpleFileVisitor<Path>() {
@@ -233,10 +236,12 @@ public class Janitor {
     static List<Pair<String, Integer>> getOtherVersions() {
         File userDir = Places.getUserDirectory();
         List<Pair<String, Integer>> ret = new LinkedList<>();
+        Set<String> availableUserDirs = new HashSet<>();
         Instant now = Instant.now();
         if (userDir != null) {
             File userParent = userDir.getParentFile();
             for (File f : userParent.listFiles()) {
+                availableUserDirs.add(f.getName());
                 Path logFile = new File(f, LOGFILE_NAME).toPath();
                 if (!f.equals(userDir) && Files.isRegularFile(logFile)) {
                     try {
@@ -247,6 +252,25 @@ public class Janitor {
                         }
                     } catch (IOException ex) {
                         //Just ignore what we can't process
+                    }
+                }
+            }
+        }
+
+        //Search for abandoned cache dirs (cache dirs with no user dir)
+        File cacheDir = Places.getCacheDirectory();
+        if (cacheDir != null) {
+            File cacheParent = cacheDir.getParentFile();
+            for (File f : cacheParent.listFiles()) {
+                if (f.isDirectory() && !availableUserDirs.contains(f.getName())) {
+                    if (new File(f, ALL_CHECKSUM_NAME).exists() && !cacheDir.equals(f)) {
+                        try {
+                            Instant lastModified = Files.getLastModifiedTime(f.toPath()).toInstant();
+                            Integer age = (int) Duration.between(lastModified, now).toDays();
+                            ret.add(Pair.of(f.getName(), age));
+                        } catch (IOException ex) {
+                            //Just ignore what we can't process
+                        }
                     }
                 }
             }

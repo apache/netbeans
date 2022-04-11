@@ -36,7 +36,7 @@ public abstract class StatisticalModule extends JPanel {
     
     //~ Methods ------------------------------------------------------------------------------------------------------------------
 
-    final public void setSelectedMethodId(int methodId) {
+    public final void setSelectedMethodId(int methodId) {
         int oldId = this.mId;
         this.mId = methodId;
         if (oldId != this.mId) {
@@ -44,11 +44,11 @@ public abstract class StatisticalModule extends JPanel {
         }
     }
         
-    final protected int getSelectedMethodId() {
+    protected final int getSelectedMethodId() {
         return mId;
     }
     
-    final public void setSelectedMark(Mark mark) {
+    public final void setSelectedMark(Mark mark) {
         Mark oldMark = this.mark;
         this.mark = mark;
         
@@ -57,7 +57,7 @@ public abstract class StatisticalModule extends JPanel {
         }
     }
     
-    final protected Mark getSelectedMark() {
+    protected final Mark getSelectedMark() {
         return this.mark;
     }
     

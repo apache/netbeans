@@ -58,6 +58,7 @@ import javax.imageio.ImageReader;
 import javax.imageio.stream.ImageInputStream;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
+import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
@@ -78,6 +79,12 @@ import org.openide.util.spi.SVGLoader;
  */
 public final class ImageUtilities {
 
+    /**
+     * Property that holds URL of the image bits.
+     * @since 9.24
+     */
+    public static final String PROPERTY_URL = "url"; // NOI18N
+    
     private static final Logger LOGGER = Logger.getLogger(ImageUtilities.class.getName());
 
     /** separator for individual parts of tool tip text */
@@ -117,18 +124,27 @@ public final class ImageUtilities {
      * {@link Icon#paintIcon(Component, Graphics, int, int)} when converting an {@code Icon} to an
      * {@code Image}. See comment in {@link #icon2ToolTipImage(Icon, URL)}.
      */
-    private static volatile Component dummyIconComponent;
+    private static volatile Component dummyIconComponentLabel;
+
+    /**
+     * Second dummy component. Some {@link Icon#paintIcon(java.awt.Component, java.awt.Graphics, int, int)} are very picky and downcast the
+     * Component to a specific subclass. JCheckBox will satisfy checkboxes, abstract buttons etc. Will not eliminate all cases, but helps.
+     * 
+     */
+    private static volatile Component dummyIconComponentButton;
 
     static {
         /* Could have used Mutex.EVENT.writeAccess here, but it doesn't seem to be available during
         testing. */
         if (EventQueue.isDispatchThread()) {
-            dummyIconComponent = new JLabel();
+            dummyIconComponentLabel = new JLabel();
+            dummyIconComponentButton = new JCheckBox();
         } else {
             SwingUtilities.invokeLater(new Runnable() {
                 @Override
                 public void run() {
-                    dummyIconComponent = new JLabel();
+                    dummyIconComponentLabel = new JLabel();
+                    dummyIconComponentButton = new JCheckBox();
                 }
             });
         }
@@ -175,8 +191,9 @@ public final class ImageUtilities {
      * 
      * <p>Caching of loaded images can be used internally to improve performance.
      * <p> Since version 8.12 the returned image object responds to call
-     * <code>image.getProperty("url", null)</code> by returning the internal
-     * {@link URL} of the found and loaded <code>resource</code>.
+     * <code>image.getProperty({@link #PROPERTY_URL}, null)</code> by returning the internal
+     * {@link URL} of the found and loaded <code>resource</code>. Convenience method {@link #findImageBaseURL}
+     * should be used in preference to direct property access.
      * 
      * <p>If the current look and feel is 'dark' (<code>UIManager.getBoolean("nb.dark.theme")</code>)
      * then the method first attempts to load image <i>&lt;original file name&gt;<b>_dark</b>.&lt;original extension&gt;</i>.
@@ -352,7 +369,14 @@ public final class ImageUtilities {
         should really only be called on the Event Dispatch Thread. Constructing the component once
         on the EDT fixed the problem. Read-only operations from non-EDT threads shouldn't really be
         a problem; most Icon implementations won't ever access the component parameter anyway. */
-        icon.paintIcon(dummyIconComponent, g, 0, 0);
+        try {
+            icon.paintIcon(dummyIconComponentLabel, g, 0, 0);
+        } catch (ClassCastException ex) {
+            // java.desktop/javax.swing.plaf.metal.OceanTheme$IFIcon.paintIcon assumes a different component,
+            // so let's try second most used one type, it satisfies AbstractButton, JCheckbox. Not all cases are
+            // covered, however.
+            icon.paintIcon(dummyIconComponentButton, g, 0, 0);
+        }
         g.dispose();
         return image;
     }
@@ -447,7 +471,22 @@ public final class ImageUtilities {
         // Go through FilteredIcon to preserve scalable icons.
         return icon2Image(createDisabledIcon(image2Icon(image)));
     }
-
+    
+    /**
+     * Attempts to find image's URL, if it is defined. Image Observer features
+     * are not used during this call, the property is assumed to be populated. Note that
+     * the URL may be specific for a localization or branding, and may be the same for
+     * bare and badged icons.
+     * 
+     * @param image image to inspect
+     * @return image's URL or {@code null} if not defined.
+     * @since 9.24
+     */
+    public static URL findImageBaseURL(Image image) {
+      Object o = image.getProperty(PROPERTY_URL, null);
+      return o instanceof URL ? (URL)o : null;
+    }
+    
     /**
      * Get an SVG icon loader, if the appropriate service provider module is installed. To ensure
      * lazy loading of the SVG loader module, this method should only be called when there actually
@@ -824,7 +863,7 @@ public final class ImageUtilities {
             }
             str.append(toolTip);
         }
-        Object firstUrl = image1.getProperty("url", null);
+        Object firstUrl = image1.getProperty(PROPERTY_URL, null);
         
         ColorModel model = colorModel(bitmask? Transparency.BITMASK: Transparency.TRANSLUCENT);
         // Provide a delegate Icon for scalable rendering.
@@ -892,7 +931,7 @@ public final class ImageUtilities {
         return buffImage;
     }
     
-    static private ColorModel colorModel(int transparency) {
+    private static ColorModel colorModel(int transparency) {
         ColorModel model;
         try {
             model = java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment()
@@ -1067,11 +1106,11 @@ public final class ImageUtilities {
             int w = Math.max(1, image.getWidth(null));
             int h = Math.max(1, image.getHeight(null));
             if (url == null) {
-                Object value = image.getProperty("url", null);
+                Object value = image.getProperty(PROPERTY_URL, null);
                 url = (value instanceof URL) ? (URL) value : null;
-            }            
+            }
             Icon icon = (image instanceof ToolTipImage)
-                    ? ((ToolTipImage) image).getDelegateIcon() : null;
+                   ? ((ToolTipImage) image).getDelegateIcon() : null;
             ToolTipImage newImage = new ToolTipImage(
                 toolTipText,
                 icon,
@@ -1178,7 +1217,7 @@ public final class ImageUtilities {
 
         @Override
         public Object getProperty(String name, ImageObserver observer) {
-            if ("url".equals(name)) { // NOI18N
+            if (PROPERTY_URL.equals(name)) { // NOI18N
                 /* In some cases it might strictly be more appropriate to return
                 Image.UndefinedProperty rather than null (see Javadoc spec for this method), but
                 retain the existing behavior and use null instead here. That way there won't be a
@@ -1192,7 +1231,7 @@ public final class ImageUtilities {
                     if (image == this || image == null) {
                         return null;
                     }
-                    return image.getProperty("url", observer);
+                    return image.getProperty(name, observer);
                 }
             }
             return super.getProperty(name, observer);

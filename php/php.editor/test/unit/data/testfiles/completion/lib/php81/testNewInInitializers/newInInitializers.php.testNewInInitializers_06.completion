@@ -1,0 +1,5 @@
+Code completion result for source line:
+function func1($param = ne|w Func) {}
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+KEYWORD    new                                        null

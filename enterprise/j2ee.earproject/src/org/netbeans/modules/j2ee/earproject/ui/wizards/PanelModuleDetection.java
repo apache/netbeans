@@ -32,7 +32,7 @@ import org.openide.util.HelpCtx;
  *
  * @author Martin Krauskopf
  */
-final public class PanelModuleDetection implements WizardDescriptor.Panel, WizardDescriptor.FinishablePanel, ChangeListener {
+public final class PanelModuleDetection implements WizardDescriptor.Panel, WizardDescriptor.FinishablePanel, ChangeListener {
     
     private WizardDescriptor wizardDescriptor;
     private PanelModuleDetectionVisual component;

@@ -69,7 +69,7 @@ implements CloneableEditorSupport.Env {
     /** if not null contains message why this document cannot be modified */
     private transient String cannotBeModified;
     private transient Date date = new Date ();
-    private transient final PropertyChangeSupport pcl;
+    private final transient PropertyChangeSupport pcl;
     private transient VetoableChangeListener vetoL;
     
     private transient volatile boolean inReloadBeforeSupportLock;

@@ -355,7 +355,6 @@
                 <friend>org.netbeans.modules.csl.api</friend>
                 <friend>org.netbeans.modules.diff</friend>
                 <friend>org.netbeans.modules.editor.indent.project</friend>
-                <friend>org.netbeans.modules.findbugs</friend>
                 <friend>org.netbeans.modules.groovy.grailsproject</friend>
                 <friend>org.netbeans.modules.html.editor</friend>
                 <friend>org.netbeans.modules.j2ee.clientproject</friend>

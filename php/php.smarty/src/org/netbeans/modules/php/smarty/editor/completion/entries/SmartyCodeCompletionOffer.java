@@ -34,9 +34,9 @@ import org.openide.util.Exceptions;
  */
 public class SmartyCodeCompletionOffer {
 
-    private final static ArrayList<TplCompletionItem> completionItemsFunctions = new ArrayList<TplCompletionItem>();
-    private final static ArrayList<TplCompletionItem> completionItemsModifiers = new ArrayList<TplCompletionItem>();
-    private final static HashMap<String, ArrayList<TplCompletionItem>> completionItemsFunctionParams = new HashMap<String, ArrayList<TplCompletionItem>>();
+    private static final ArrayList<TplCompletionItem> completionItemsFunctions = new ArrayList<TplCompletionItem>();
+    private static final ArrayList<TplCompletionItem> completionItemsModifiers = new ArrayList<TplCompletionItem>();
+    private static final HashMap<String, ArrayList<TplCompletionItem>> completionItemsFunctionParams = new HashMap<String, ArrayList<TplCompletionItem>>();
 
     static {
         //loadFunctions(new String[]{"built-in-functions", "custom-functions"});

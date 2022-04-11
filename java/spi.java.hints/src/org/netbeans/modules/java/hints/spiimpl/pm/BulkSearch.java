@@ -95,7 +95,7 @@ public abstract class BulkSearch {
     @CheckForNull
     public abstract BulkPattern create(Collection<? extends String> code, Collection<? extends Tree> patterns, Collection<? extends AdditionalQueryConstraints> additionalConstraints, AtomicBoolean cancel);
 
-    public static abstract class BulkPattern {
+    public abstract static class BulkPattern {
 
         private final List<? extends String> patterns;
         private final List<? extends Set<? extends String>> identifiers;

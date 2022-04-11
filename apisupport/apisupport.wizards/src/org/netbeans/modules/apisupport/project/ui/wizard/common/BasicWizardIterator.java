@@ -396,7 +396,7 @@ public abstract class BasicWizardIterator implements WizardDescriptor.Asynchrono
             panel.addPropertyChangeListener(this);
             panel.setName(panel.getPanelName()); // NOI18N
             this.panel = panel;
-            panel.putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, new Integer(stepIndex)); // NOI18N
+            panel.putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, stepIndex); // NOI18N
             // names of currently used steps
             panel.putClientProperty(WizardDescriptor.PROP_CONTENT_DATA, allSteps); // NOI18N
         }

@@ -30,7 +30,7 @@ import org.openide.filesystems.FileUtil;
  *
  * @author Jaroslv Bachorik
  */
-final public class ExternalPackages {
+public final class ExternalPackages {
     private static final Comparator<FileObject> pathComparator = new Comparator<FileObject>() {
         @Override
         public int compare(FileObject o1, FileObject o2) {

@@ -40,7 +40,7 @@ import org.netbeans.modules.web.monitor.data.*;
 
 public class Util  {
 
-    private final static boolean debug = false;
+    private static final boolean debug = false;
 
     public Util() {}
 
@@ -109,7 +109,7 @@ public class Util  {
 	}
 	if(ht == null || ht.isEmpty()) return false;
 	
-	Enumeration e = ht.keys();
+	Enumeration<String> e = ht.keys();
 
 	while(e.hasMoreElements()) {
 	    String name = (String)e.nextElement();
@@ -139,7 +139,7 @@ public class Util  {
 	catch(Exception ex) { }
 			    
 	if(ht != null && ht.size() > 0) {
-	    Enumeration e = ht.keys();
+	    Enumeration<String> e = ht.keys();
 	    while(e.hasMoreElements()) {
 		String name = (String)e.nextElement();
 		String[] value = (String[])(ht.get(name));

@@ -52,7 +52,7 @@ import org.openide.util.NbBundle;
  * Param editorn vara non-modal? */
 public class NameValueCellEditor extends DefaultCellEditor  {
 
-    private final static boolean debug = false;
+    private static final boolean debug = false;
     private static String editNameAndValueTitle;
     private static String editValueOnlyTitle;
 

@@ -28,6 +28,7 @@ import java.util.EnumSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.modules.java.hints.declarative.Condition.Otherwise;
@@ -41,6 +42,8 @@ import org.netbeans.spi.java.hints.HintContext;
 import org.netbeans.spi.java.hints.HintContext.MessageKind;
 import org.netbeans.spi.java.hints.JavaFixUtilities;
 import org.openide.util.NbBundle.Messages;
+
+import static java.util.logging.Level.WARNING;
 
 /**
  *
@@ -82,12 +85,17 @@ class DeclarativeHintsWorker implements Worker {
         context.enterScope();
 
         for (Condition c : conditions) {
-            if (!c.holds(context, true)) {
+            try {
+                if (!c.holds(context, true)) {
+                    return null;
+                }
+            } catch (IllegalStateException ex) {
+                logConditionFailed("rule", c, ex);
                 return null;
             }
         }
         
-        List<Fix> editorFixes = new LinkedList<Fix>();
+        List<Fix> editorFixes = new LinkedList<>();
 
         OUTER: for (DeclarativeFix fix : fixes) {
             context.enterScope();
@@ -101,7 +109,12 @@ class DeclarativeHintsWorker implements Worker {
                             continue OUTER;
                         }
                     }
-                    if (!c.holds(context, false)) {
+                    try {
+                        if (!c.holds(context, false)) {
+                            continue OUTER;
+                        }
+                    } catch (IllegalStateException ex) {
+                        logConditionFailed("fix", c, ex);
                         continue OUTER;
                     }
                 }
@@ -185,6 +198,11 @@ class DeclarativeHintsWorker implements Worker {
         }
 
         return Collections.singletonList(ed);
+    }
+
+    private void logConditionFailed(String type, Condition c, IllegalStateException ex) {
+        Logger.getLogger(DeclarativeHintsWorker.class.getName())
+                .log(WARNING, type+" condition failed, DN: '"+displayName+"' cond: "+c.toString(), ex);
     }
 
     private static void reportErrorWarning(HintContext ctx, Map<String, String> options) {

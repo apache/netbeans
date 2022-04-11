@@ -45,7 +45,7 @@ public abstract class HeapHistogram {
 
     public abstract long getTotalPermGenHeapBytes();
 
-    public static abstract class ClassInfo {
+    public abstract static class ClassInfo {
 
         public abstract String getName();
 

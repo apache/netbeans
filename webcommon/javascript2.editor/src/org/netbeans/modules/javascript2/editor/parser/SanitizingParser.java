@@ -546,7 +546,7 @@ public abstract class SanitizingParser<R extends BaseParserResult> extends Parse
     /**
      * Parsing context
      */
-    protected final static class Context {
+    protected static final class Context {
 
         private static final List<JsTokenId> IMPORT_EXPORT = new ArrayList<JsTokenId>(2);
 
@@ -776,7 +776,7 @@ public abstract class SanitizingParser<R extends BaseParserResult> extends Parse
         public abstract Sanitize next();
     }
 
-    private static abstract class TokenCondition {
+    private abstract static class TokenCondition {
 
         public abstract boolean found(JsTokenId id);
 

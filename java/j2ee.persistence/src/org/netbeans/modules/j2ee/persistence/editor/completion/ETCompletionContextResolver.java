@@ -21,9 +21,13 @@ package org.netbeans.modules.j2ee.persistence.editor.completion;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.lang.model.element.AnnotationMirror;
+import javax.lang.model.element.Element;
+import javax.lang.model.element.TypeElement;
 import javax.swing.text.BadLocationException;
 import org.eclipse.persistence.jpa.jpql.parser.DefaultJPQLGrammar;
 import org.eclipse.persistence.jpa.jpql.tools.ContentAssistProposals;
@@ -81,7 +85,10 @@ public class ETCompletionContextResolver implements CompletionContextResolver {
         } else if("NamedQuery".equals(annotationName)){//NOI18N
             completeJPQLContext(ctx, parsedNN, nnattr, result);
         } else if("Query".equals(annotationName) && parsedNN.getAttributesList().size() == 1){//NOI18N
-            completeJPQLContext(ctx, parsedNN, nnattr, result);
+            Element cls = ctx.getJavaClass();
+            if (cls == null || !checkForRepositoryAnnotation(cls.getAnnotationMirrors(), new HashSet<>())) {
+                completeJPQLContext(ctx, parsedNN, nnattr, result);
+            }
         }
         
         
@@ -90,7 +97,7 @@ public class ETCompletionContextResolver implements CompletionContextResolver {
 
     private List<JPACompletionItem> completecreateNamedQueryparameters(JPACodeCompletionProvider.Context ctx, List<JPACompletionItem> results) {
         Project prj = FileOwnerQuery.getOwner(ctx.getFileObject());
-        EntityClassScopeProvider provider = (EntityClassScopeProvider) prj.getLookup().lookup(EntityClassScopeProvider.class);
+        EntityClassScopeProvider provider = prj.getLookup().lookup(EntityClassScopeProvider.class);
         EntityClassScope ecs = null;
         Entity[] entities = null;
         if (provider != null) {
@@ -219,7 +226,18 @@ public class ETCompletionContextResolver implements CompletionContextResolver {
             return false;
         }
     }
-    
+
+    private static boolean checkForRepositoryAnnotation(List<? extends AnnotationMirror> annotations, HashSet<TypeElement> checked) {
+        for (AnnotationMirror annotation : annotations) {
+            TypeElement annotationElement = (TypeElement) annotation.getAnnotationType().asElement();
+            if (REPOSITORY_ANNOTATION_NAME.contentEquals(annotationElement.getQualifiedName()) || checked.add(annotationElement) && checkForRepositoryAnnotation(annotationElement.getAnnotationMirrors(), checked)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static final String REPOSITORY_ANNOTATION_NAME = "io.micronaut.data.jdbc.annotation.JdbcRepository";
 
     private static final boolean DEBUG = Boolean.getBoolean("debug." + ETCompletionContextResolver.class.getName());
 }

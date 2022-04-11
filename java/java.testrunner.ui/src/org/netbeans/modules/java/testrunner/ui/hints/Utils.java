@@ -66,7 +66,7 @@ public class Utils {
 	    List<String> framework2Add = new ArrayList<String>();
 	    for (String framework : testingFrameworks) {
 		String preffiledName = Utils.getPreffiledName(info, framework);
-		preffiledName = preffiledName.replaceAll("\\.", "/").concat(".java"); //NOI18N
+		preffiledName = preffiledName.replace(".", "/").concat(".java"); //NOI18N
 		String path = targetFolderPath.concat("/").concat(preffiledName);
 		File f = new File(path);
 		FileObject fo = FileUtil.toFileObject(f);
@@ -77,7 +77,7 @@ public class Utils {
 		} else {
 		    try {
 			String testMethodName = getTestMethodName(methodName);
-			if (fo != null && !fo.asText().replaceAll("\n", "").trim().contains(testMethodName.concat("("))) { //NOI18N
+			if (fo != null && !fo.asText().replace("\n", "").trim().contains(testMethodName.concat("("))) { //NOI18N
 			    framework2Add.add(framework);
 			}
 		    } catch (IOException ex) {

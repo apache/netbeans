@@ -19,6 +19,7 @@
 package org.netbeans.modules.ide.ergonomics;
 
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.logging.Level;
@@ -55,7 +56,7 @@ public class LayersCheck extends NbTestCase {
             if (r == arr.length) {
                 fail("Too big layer " + u);
             }
-            String s = new String(arr, 0, r, "UTF-8");
+            String s = new String(arr, 0, r, StandardCharsets.UTF_8);
             if (s.contains("path=\"")) {
                 fail("There shall be no path attribute in " + u + ":\n" + s);
             }

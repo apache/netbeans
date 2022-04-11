@@ -66,8 +66,9 @@ public abstract  class PhpTypinghooksTestBase extends PHPTestBase {
 
     protected void setOptionsForDocument(Document doc, Map<String, Object> options) throws Exception {
         Preferences prefs = CodeStylePreferences.get(doc).getPreferences();
-        for (String option : options.keySet()) {
-            Object value = options.get(option);
+        for (Map.Entry<String, Object> entry : options.entrySet()) {
+            String option = entry.getKey();
+            Object value = entry.getValue();
             if (value instanceof Integer) {
                 prefs.putInt(option, ((Integer)value).intValue());
             }

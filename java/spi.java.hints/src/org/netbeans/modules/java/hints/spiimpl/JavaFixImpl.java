@@ -114,7 +114,7 @@ public class JavaFixImpl implements Fix {
         
     }
     
-    public static abstract class Accessor {
+    public abstract static class Accessor {
 
         static {
             try {

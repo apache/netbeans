@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Enumeration;
@@ -75,7 +76,7 @@ public final class TestMethodFinder {
     }
 
     private static void loadTestMethods(FileObject input, Map<FileObject, Collection<TestMethodController.TestMethod>> file2TestMethods) {
-        try (BufferedReader br = new BufferedReader(new InputStreamReader(input.getInputStream(), "UTF-8"))) {
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(input.getInputStream(), StandardCharsets.UTF_8))) {
             FileObject fo = null;
             String className = null;
             Position classPosition = null;

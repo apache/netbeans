@@ -255,21 +255,17 @@ public class SearchPerformanceComparator extends javax.swing.JFrame {
             final CustomSearchListener listener =
                     new CustomSearchListener(matcher);
             final AtomicBoolean terminated = new AtomicBoolean(false);
-            new Thread(new Runnable() {
-
-                @Override
-                public void run() {
-                    listener.searchStarted();
-                    for (FileObject fo : si.getFilesToSearch(
-                            so, listener, terminated)) {
-
-                        Def result = fm.check(fo, listener);
-                        if (result != null) {
-                            listener.objectFound(result);
-                        }
+            new Thread(() -> {
+                listener.searchStarted();
+                for (FileObject fo : si.getFilesToSearch(
+                        so, listener, terminated)) {
+                    
+                    Def result = fm.check(fo, listener);
+                    if (result != null) {
+                        listener.objectFound(result);
                     }
-                    listener.searchFinished();
                 }
+                listener.searchFinished();
             }).start();
         }
     }//GEN-LAST:event_runButtonActionPerformed
@@ -294,13 +290,10 @@ public class SearchPerformanceComparator extends javax.swing.JFrame {
                     break;
                 }
             }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(SearchPerformanceComparator.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(SearchPerformanceComparator.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(SearchPerformanceComparator.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+        } catch (ClassNotFoundException |
+                InstantiationException |
+                IllegalAccessException |
+                javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(SearchPerformanceComparator.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
@@ -308,15 +301,11 @@ public class SearchPerformanceComparator extends javax.swing.JFrame {
         /*
          * Create and display the form
          */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                SearchPerformanceComparator spc =
-                        new SearchPerformanceComparator();
-                spc.setVisible(true);
-                spc.setDefaultCloseOperation(EXIT_ON_CLOSE);
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            SearchPerformanceComparator spc =
+                    new SearchPerformanceComparator();
+            spc.setVisible(true);
+            spc.setDefaultCloseOperation(EXIT_ON_CLOSE);
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -28,6 +28,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashSet;
@@ -249,7 +250,7 @@ public final class NamedServiceProcessor extends AbstractServiceProviderProcesso
             while (en.hasMoreElements()) {
                 URL url = en.nextElement();
                 InputStream is = url.openStream();
-                BufferedReader reader = new BufferedReader(new InputStreamReader(is, "UTF-8")); // NOI18N
+                BufferedReader reader = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
 
                 // XXX consider using ServiceLoaderLine instead
                 while (true) {

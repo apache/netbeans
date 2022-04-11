@@ -20,6 +20,7 @@
 package org.netbeans.modules.php.project;
 
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import org.netbeans.modules.php.project.util.PhpProjectUtils;
 import org.netbeans.spi.queries.FileEncodingQueryImplementation;
 import org.openide.filesystems.FileObject;
@@ -31,7 +32,7 @@ public final class InternalFilesFileEncodingQuery extends FileEncodingQueryImple
     @Override
     public Charset getEncoding(FileObject file) {
         if (PhpProjectUtils.isInternalFile(file)) {
-            return Charset.forName("UTF-8"); // NOI18N
+            return StandardCharsets.UTF_8;
         }
         return null;
     }

@@ -57,7 +57,7 @@ import org.openide.util.HelpCtx;
 public class HibernateWebModuleExtender extends WebModuleExtender {
 
     private HibernateConfigurationPanel configPanel = null;
-    private final static String DEFAULT_CONFIG_FILENAME = "hibernate.cfg";
+    private static final String DEFAULT_CONFIG_FILENAME = "hibernate.cfg";
     private final String dialect = "hibernate.dialect";
     private final String driver = "hibernate.connection.driver_class";
     private final String url = "hibernate.connection.url";

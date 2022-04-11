@@ -35,22 +35,22 @@ public interface BaseAttribute {
     /**
      *	Values returned by getType()
      **/
-    static public final int TYPE_CDATA 		= AttrProp.CDATA;
-    static public final int TYPE_ENUM 		= AttrProp.ENUM;
-    static public final int TYPE_NMTOKEN 	= AttrProp.NMTOKEN;
-    static public final int TYPE_ID 		= AttrProp.ID;
-    static public final int TYPE_IDREF 		= AttrProp.IDREF;
-    static public final int TYPE_IDREFS 	= AttrProp.IDREFS;
-    static public final int TYPE_ENTITY 	= AttrProp.ENTITY;
-    static public final int TYPE_ENTITIES 	= AttrProp.ENTITIES;
-    static public final int TYPE_NOTATION 	= AttrProp.NOTATION;
+    public static final int TYPE_CDATA 		= AttrProp.CDATA;
+    public static final int TYPE_ENUM 		= AttrProp.ENUM;
+    public static final int TYPE_NMTOKEN 	= AttrProp.NMTOKEN;
+    public static final int TYPE_ID 		= AttrProp.ID;
+    public static final int TYPE_IDREF 		= AttrProp.IDREF;
+    public static final int TYPE_IDREFS 	= AttrProp.IDREFS;
+    public static final int TYPE_ENTITY 	= AttrProp.ENTITY;
+    public static final int TYPE_ENTITIES 	= AttrProp.ENTITIES;
+    public static final int TYPE_NOTATION 	= AttrProp.NOTATION;
     
     /**
      *	Values returned by getOption()
      */
-    static public final int OPTION_REQUIRED 	= AttrProp.REQUIRED;
-    static public final int OPTION_IMPLIED 	= AttrProp.IMPLIED;
-    static public final int OPTION_FIXED 	= AttrProp.FIXED;
+    public static final int OPTION_REQUIRED 	= AttrProp.REQUIRED;
+    public static final int OPTION_IMPLIED 	= AttrProp.IMPLIED;
+    public static final int OPTION_FIXED 	= AttrProp.FIXED;
     
     
     /**

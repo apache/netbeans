@@ -53,11 +53,11 @@ import javax.swing.tree.TreePath;
 * @author Dafe Simonek, Jiri Rechtacek
 */
 final class TreeViewDropSupport implements DropTargetListener, Runnable {
-    final static protected int FUSSY_POINTING = 3;
-    final static private int DELAY_TIME_FOR_EXPAND = 1000;
-    final static private int SHIFT_DOWN = -1;
-    final static private int SHIFT_RIGHT = 10;
-    final static private int SHIFT_LEFT = 15;
+    protected static final int FUSSY_POINTING = 3;
+    private static final int DELAY_TIME_FOR_EXPAND = 1000;
+    private static final int SHIFT_DOWN = -1;
+    private static final int SHIFT_RIGHT = 10;
+    private static final int SHIFT_LEFT = 15;
 
     // Attributes
 
@@ -267,7 +267,7 @@ final class TreeViewDropSupport implements DropTargetListener, Runnable {
             timer = new Timer(
                     DELAY_TIME_FOR_EXPAND,
                     new ActionListener() {
-                        final public void actionPerformed(ActionEvent e) {
+                        public final void actionPerformed(ActionEvent e) {
                             view.expandNode(cn);
                         }
                     }

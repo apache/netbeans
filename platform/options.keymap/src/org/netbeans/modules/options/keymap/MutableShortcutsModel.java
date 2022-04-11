@@ -547,8 +547,9 @@ class MutableShortcutsModel extends ShortcutsFinderImpl implements ShortcutsFind
                         Exceptions.printStackTrace(ex);
                     }
                 }
-                for (String profile: modifiedProfiles.keySet()) {
-                    Map<ShortcutAction, Set<String>> actionToShortcuts = modifiedProfiles.get (profile);
+                for (Map.Entry<String, Map<ShortcutAction, Set<String>>> entry: modifiedProfiles.entrySet()) {
+                    String profile = entry.getKey ();
+                    Map<ShortcutAction, Set<String>> actionToShortcuts = entry.getValue();
                     actionToShortcuts = convertToEmacs (actionToShortcuts);
                     model.changeKeymap (
                         profile, 

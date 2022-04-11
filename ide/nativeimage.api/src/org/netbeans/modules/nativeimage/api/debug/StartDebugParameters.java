@@ -20,6 +20,8 @@ package org.netbeans.modules.nativeimage.api.debug;
 
 import java.io.File;
 import java.util.List;
+import org.netbeans.api.annotations.common.CheckForNull;
+import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.api.extexecution.ExecutionDescriptor;
 import org.openide.util.Lookup;
 
@@ -34,14 +36,20 @@ public final class StartDebugParameters {
     private final File workingDirectory;
     private final String debugger;
     private final String displayName;
+    private final boolean displayObjects;
+    private final Long processId;
     private final ExecutionDescriptor executionDescriptor;
     private final Lookup contextLookup;
 
-    private StartDebugParameters(List<String> command, File workingDirectory, String debugger, String displayName, ExecutionDescriptor executionDescriptor, Lookup contextLookup) {
+    private StartDebugParameters(List<String> command, File workingDirectory, String debugger,
+                                 String displayName, boolean displayObjects, Long processId,
+                                 ExecutionDescriptor executionDescriptor, Lookup contextLookup) {
         this.command = command;
         this.workingDirectory = workingDirectory;
         this.debugger = debugger;
         this.displayName = displayName;
+        this.displayObjects = displayObjects;
+        this.processId = processId;
         this.executionDescriptor = executionDescriptor;
         this.contextLookup = contextLookup;
     }
@@ -83,6 +91,30 @@ public final class StartDebugParameters {
     }
 
     /**
+     * Check whether debugger may display objects using it's own rules.
+     *
+     * @return <code>true</code> if debugger may display objects using it's own rules,
+     *         <code>false</code> otherwise.
+     * @since 0.8
+     */
+    public boolean isDebuggerDisplayObjects() {
+        return displayObjects;
+    }
+
+    /**
+     * Get a process ID to attach to.
+     * When <code>null</code>, the command is to be launched. Otherwise,
+     * the debugger is attached to process with that ID.
+     *
+     * @return the process ID to attach to, or <code>null</code> to launch the command.
+     * @since 0.8
+     */
+    @CheckForNull
+    public Long getProcessId() {
+        return processId;
+    }
+
+    /**
      * Execution descriptor that describes the runtime attributes.
      *
      * @return the execution descriptor
@@ -121,6 +153,8 @@ public final class StartDebugParameters {
         private File workingDirectory;
         private String debugger;
         private String displayName;
+        private boolean displayObjects = true;
+        private Long processId = null;
         private ExecutionDescriptor executionDescriptor;
         private Lookup contextLookup;
 
@@ -157,6 +191,29 @@ public final class StartDebugParameters {
         }
 
         /**
+         * Set whether debugger may display objects using it's own rules.
+         * It's <code>true</code> by default.
+         *
+         * @since 0.8
+         */
+        public Builder debuggerDisplayObjects(boolean displayObjects) {
+            this.displayObjects = displayObjects;
+            return this;
+        }
+
+        /**
+         * Set a process ID to attach to instead of launching the command. The command
+         * should correspond to the process.
+         * Use <code>null</code> to launch the command. It's <code>null</code> by default.
+         *
+         * @since 0.8
+         */
+        public Builder processID(@NullAllowed Long processId) { 
+            this.processId = processId;
+            return this;
+        }
+
+        /**
          * Set execution descriptor that describes the runtime attributes.
          *
          * @return the builder
@@ -182,7 +239,7 @@ public final class StartDebugParameters {
          * @return a new instance of {@link StartDebugParameters}.
          */
         public StartDebugParameters build() {
-            return new StartDebugParameters(command, workingDirectory, debugger, displayName, executionDescriptor, contextLookup);
+            return new StartDebugParameters(command, workingDirectory, debugger, displayName, displayObjects, processId, executionDescriptor, contextLookup);
         }
     }
 }

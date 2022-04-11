@@ -205,7 +205,7 @@ public class JPACodeCompletionProvider implements CompletionProvider {
         private void run(CompilationController controller) {
             if (!hasTask || !isTaskCancelled()){
                 int startOffset = caretOffset;
-                Iterator resolversItr = resolvers.iterator();
+                Iterator<CompletionContextResolver> resolversItr = resolvers.iterator();
                 TreePath env = null;
                 try {
                     env = getCompletionTreePath(controller, caretOffset, CompletionProvider.COMPLETION_QUERY_TYPE);
@@ -217,7 +217,7 @@ public class JPACodeCompletionProvider implements CompletionProvider {
                 }
                 results = new ArrayList<JPACompletionItem>();
                 while (resolversItr.hasNext()) {
-                    CompletionContextResolver resolver = (CompletionContextResolver) resolversItr.next();
+                    CompletionContextResolver resolver = resolversItr.next();
                     TaskUserAction task = new TaskUserAction(controller, resolver, startOffset);
                     try {
                         EntityClassScope scope = EntityClassScope.getEntityClassScope(URLMapper.findFileObject(controller.getCompilationUnit().getSourceFile().toUri().toURL()));

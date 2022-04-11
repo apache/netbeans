@@ -45,6 +45,7 @@ import org.gradle.tooling.ConfigurableLauncher;
 import org.openide.util.NbBundle;
 import static org.netbeans.modules.gradle.api.execute.GradleCommandLine.Argument.Kind.*;
 import org.netbeans.modules.gradle.api.execute.GradleDistributionManager.GradleDistribution;
+import org.netbeans.modules.gradle.api.execute.GradleDistributionManager.GradleVersionRange;
 import org.netbeans.modules.gradle.spi.GradleSettings;
 import org.netbeans.modules.gradle.spi.GradleFiles;
 import org.openide.util.Utilities;
@@ -109,58 +110,50 @@ public final class GradleCommandLine implements Serializable {
     }
 
 
-    private static final GradleDistributionManager.GradleVersionRange supportedSince(String ver) {
-        return GradleDistributionManager.GradleVersionRange.from(ver);
-    }
-
-    private static final GradleDistributionManager.GradleVersionRange removedIn(String ver) {
-        return GradleDistributionManager.GradleVersionRange.until(ver);
-    }
-
     /**
      * Gradle command line flags
      */
     public enum Flag implements GradleOptionItem {
         BUILD_CACHE(PARAM, "--build-cache"),
-        CONFIGURATION_CACHE(PARAM, supportedSince("6.5"), "--configuration-cache"),
+        CONFIGURATION_CACHE(PARAM, GradleVersionRange.from("6.5"), "--configuration-cache"),
         CONFIGURE_ON_DEMAND(PARAM, "--configure-on-demand"),
         CONTINUE(PARAM, "--continue"),
         CONTINUOUS(PARAM, "--continuous", "-t"),
         DAEMON(UNSUPPORTED, "--daemon"),
         DRY_RUN(PARAM, "-m", "--dry-run"),
-        EXPORT_KEYS(PARAM, supportedSince("6.2"), "--export-keys"),
+        EXPORT_KEYS(PARAM, GradleVersionRange.from("6.2"), "--export-keys"),
         FOREGROUND(UNSUPPORTED, "--foreground"),
-        GUI(UNSUPPORTED, removedIn("4.0"), "--gui"),
+        GUI(UNSUPPORTED, GradleVersionRange.until("4.0"), "--gui"),
         HELP(UNSUPPORTED, "--help", "-h", "-?"),
         LOG_DEBUG(PARAM, "-d", "--debug"),
         LOG_INFO(PARAM, "-i", "--info"),
         LOG_QUIET(PARAM, "-q", "--quiet"),
         LOG_WARN(PARAM, "-w", "--warn"),
         NO_BUILD_CACHE(PARAM, "--no-build-cache"),
-        NO_CONFIGURATION_CACHE(PARAM, supportedSince("6.5"), "--no-configuration-cache"),
+        NO_CONFIGURATION_CACHE(PARAM, GradleVersionRange.from("6.5"), "--no-configuration-cache"),
         NO_CONFIGURE_ON_DEMAND(PARAM, "--no-configure-on-demand"),
         NO_DAEMON(UNSUPPORTED, "--no-daemon"),
         NO_PARALLEL(PARAM, "--no-parallel"),
         NO_REBUILD(PARAM, "-a", "--no-rebuild"),
-        NO_SCAN(PARAM, supportedSince("4.3"), "--no-scan"),
-        NO_SEARCH_UPWARD(UNSUPPORTED, removedIn("5.0"), "--no-search-upward", "-u"),
-        NO_WATCH_FS(PARAM, supportedSince("6.7"), "--no-watch-fs"),
+        NO_SCAN(PARAM, GradleVersionRange.from("4.3"), "--no-scan"),
+        NO_SEARCH_UPWARD(UNSUPPORTED, GradleVersionRange.until("5.0"), "--no-search-upward", "-u"),
+        NO_WATCH_FS(PARAM, GradleVersionRange.from("6.7"), "--no-watch-fs"),
         OFFLINE(PARAM, "--offline"),
         PARALLEL(PARAM, "--parallel"),
         PROFILE(PARAM, "--profile"),
-        RECOMPILE_SCRIPTS(UNSUPPORTED, removedIn("5.0"), "--recompile-scripts"),
+        RECOMPILE_SCRIPTS(UNSUPPORTED, GradleVersionRange.until("5.0"), "--recompile-scripts"),
         REFRESH_DEPENDENCIES(PARAM, "--refresh-dependencies"),
-        REFRESH_KEYS(PARAM, supportedSince("6.2"), "--refresh-keys"),
+        REFRESH_KEYS(PARAM, GradleVersionRange.from("6.2"), "--refresh-keys"),
         RERUN_TASKS(PARAM, "--rerun-tasks"),
-        SCAN(PARAM, supportedSince("4.3"), "--scan"),
+        SCAN(PARAM, GradleVersionRange.from("4.3"), "--scan"),
         STACKTRACE(PARAM, "-s", "--stacktrace"),
         STACKTRACE_FULL(PARAM, "-S", "--full-stacktrace"),
         STATUS(UNSUPPORTED, "--status"),
         STOP(UNSUPPORTED, "--stop"),
-        UPDATE_LOCKS(PARAM, supportedSince("4.8"), "--update-locks"),
+        UPDATE_LOCKS(PARAM, GradleVersionRange.from("4.8"), "--update-locks"),
         VERSION(UNSUPPORTED, "--version", "-v"),
-        WATCH_FS(PARAM, supportedSince("6.7"), "--watch-fs"),
-        WRITE_LOCKS(PARAM, supportedSince("4.8"),"--write-locks");
+        WATCH_FS(PARAM, GradleVersionRange.from("6.7"), "--watch-fs"),
+        WRITE_LOCKS(PARAM, GradleVersionRange.from("4.8"),"--write-locks");
 
         private Set<Flag> incompatible = Collections.emptySet();
         private final Argument.Kind kind;
@@ -272,7 +265,7 @@ public final class GradleCommandLine implements Serializable {
     public enum Parameter implements GradleOptionItem {
 
         BUILD_FILE(UNSUPPORTED, "-b", "--build-file"),
-        CONFIGURATION_CACHE_PROBLEMS(PARAM, supportedSince("6.5"), argValues("fail", "warn"), "--configuration-cache-problems"),
+        CONFIGURATION_CACHE_PROBLEMS(PARAM, GradleVersionRange.from("6.5"), argValues("fail", "warn"), "--configuration-cache-problems"),
         CONSOLE(UNSUPPORTED, argValues("plain", "auto", "rich", "verbose"), "--console"),
         DEPENDENCY_VERIFICATION(PARAM, argValues("strict", "lenient", "off"), "-F", "--dependency-verification"),
         EXCLUDE_TASK(PARAM, "-x", "--exclude-task"),
@@ -280,7 +273,7 @@ public final class GradleCommandLine implements Serializable {
         INIT_SCRIPT(PARAM, "-I", "--init-script"),
         @Deprecated
         IMPORT_BUILD(UNSUPPORTED),
-        INCLUDE_BUILD(PARAM, supportedSince("3.1"), "--include-build"),
+        INCLUDE_BUILD(PARAM, GradleVersionRange.from("3.1"), "--include-build"),
         MAX_WORKER(PARAM, "--max-worker"),
         PRIORITY(PARAM, argValues("normal", "low"), "--priority"),
         PROJECT_CACHE_DIR(UNSUPPORTED, "--project-cache-dir"),
@@ -288,7 +281,7 @@ public final class GradleCommandLine implements Serializable {
         @Deprecated
         SETTINGS_FILE(UNSUPPORTED, "-c", "--settings-file"),
         WARNING_MODE(PARAM, argValues("all", "fail", "summary", "none"),"--warning-mode"),
-        WRITE_VERIFICATION_METADATA(PARAM, supportedSince("6.2"), "-M", "write-verification-metadata");
+        WRITE_VERIFICATION_METADATA(PARAM, GradleVersionRange.from("6.2"), "-M", "write-verification-metadata");
 
         final Argument.Kind kind;
         final GradleDistributionManager.GradleVersionRange supportedRange;

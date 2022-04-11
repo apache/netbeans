@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<licenseinfo>
+    <fileset>
+        <!-- Tests expect this file without an ASF License header -->
+        <file>test/unit/data/goldenfiles/org/netbeans/modules/cnd/debugger/common2/debugger/breakpoints/BreakpointsCodecTest/Breakpoints_new.xml</file>
+        <file>test/unit/data/goldenfiles/org/netbeans/modules/cnd/debugger/common2/debugger/breakpoints/BreakpointsCodecTest/Breakpoints_old.xml</file>
+        <file>test/unit/data/goldenfiles/org/netbeans/modules/cnd/debugger/common2/debugger/breakpoints/BreakpointsCodecTest/Breakpoints_saved.xml</file>
+        <license ref="Apache-2.0-ASF" />
+        <comment type="TEST_DATA" />
+    </fileset>
+    <fileset>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/autos.png</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/Bpt.png</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/Bpt_broken.png</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/Bpt_broken_dis.png</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/Bpt_cmpx.png</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/Bpt_cmpx_broken.png</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/Bpt_cmpx_broken_dis.png</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/Bpt_cmpx_dis.png</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/Bpt_cmpx_hit.png</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/Bpt_cmpx_hit_broken.png</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/Bpt_cmpx_hit_broken_dis.png</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/Bpt_cmpx_hit_dis.png</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/Bpt_dis.png</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/Bpt_hit.png</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/Bpt_hit_broken.png</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/Bpt_hit_broken_dis.png</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/Bpt_hit_dis.png</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/Bpt_mult.png</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/Bpt_mult_broken.png</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/Bpt_mult_broken_dis.png</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/Bpt_mult_dis.png</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/Bpt_mult_hit.png</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/Bpt_mult_hit_broken.png</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/Bpt_mult_hit_broken_dis.png</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/Bpt_mult_hit_dis.png</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/Bpt_nonline.png</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/Bpt_nonline_dis.png</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/configure.png</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/configure24.png</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/continue-at-line.png</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/continue-at-line24.png</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/debug_core_file.png</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/debug_core_file_1.png</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/debug_core_file24.png</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/debug_executable.png</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/debug_executable24.png</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/debug_most_recent.png</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/debug_most_recent24.png</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/debugger_console.png</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/debugger_log.png</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/detach_from_process.png</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/detach_from_process24.png</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/disassambler.png</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/evaluate_expression.png</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/evaluate_expression24.png</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/list-toggle16.png</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/list-toggle24.png</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/memory_browser.png</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/Pointing_arrow.png</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/process_io.png</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/refresh.png</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/refresh_1.png</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/refresh24.png</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/registers.png</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/restart.png</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/restart24.png</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/run.png</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/run_to_cursor_instruction.png</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/run_to_cursor_instruction24.png</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/run_to_last_function.png</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/run_to_last_function24.png</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/run24.png</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/runtime_checking.png</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/Save.png</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/step_into_instruction.png</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/step_into_instruction24.png</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/step_out_instruction.png</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/step_out_instruction24.png</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/step_over_instruction.png</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/step_over_instruction24.png</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/step_to_function.png</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/step_to_function24.png</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/terminate_process.png</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/terminate_process24.png</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/thread.png</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/thread_current.png</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/thread_current_hit.png</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/thread_hit.png</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/tree-toggle16.png</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/tree-toggle24.png</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/treeview.png</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/Bpt.gif</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/Bpt_broken.gif</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/Bpt_broken_dis.gif</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/Bpt_cmpx.gif</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/Bpt_cmpx_broken.gif</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/Bpt_cmpx_broken_dis.gif</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/Bpt_cmpx_dis.gif</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/Bpt_cmpx_hit.gif</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/Bpt_cmpx_hit_broken.gif</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/Bpt_cmpx_hit_broken_dis.gif</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/Bpt_cmpx_hit_dis.gif</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/Bpt_dis.gif</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/Bpt_hit.gif</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/Bpt_hit_broken.gif</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/Bpt_hit_broken_dis.gif</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/Bpt_hit_dis.gif</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/Bpt_mult.gif</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/Bpt_mult_broken.gif</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/Bpt_mult_broken_dis.gif</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/Bpt_mult_dis.gif</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/Bpt_mult_hit.gif</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/Bpt_mult_hit_broken.gif</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/Bpt_mult_hit_broken_dis.gif</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/Bpt_mult_hit_dis.gif</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/Bpt_nonline.gif</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/Bpt_nonline_dis.gif</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/BrokenBreakpoint.gif</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/empty.gif</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/extras.gif</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/field.gif</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/field_pointer.gif</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/field_static.gif</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/field_static_pointer.gif</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/local.gif</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/local_pointer.gif</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/local_static.gif</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/local_static_pointer.gif</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/Pointing_arrow.gif</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/pop_last_debugger_call.gif</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/pop_last_debugger_call24.gif</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/pop2cur.gif</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/popcall.gif</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/signal_handler_frame.gif</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/user_call_frame.gif</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/waitNode.gif</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/watch_type1.gif</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/watch_type1_pointer.gif</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/watch_type2.gif</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/icons/watch_type2_pointer.gif</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/resources/blank.gif</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/resources/general.gif</file>
+        <file>src/org/netbeans/modules/cnd/debugger/common2/utils/comment.gif</file>
+        <license ref="Apache-2.0-ASF" />
+        <comment type="COMMENT_UNSUPPORTED" />
+    </fileset>
+</licenseinfo>

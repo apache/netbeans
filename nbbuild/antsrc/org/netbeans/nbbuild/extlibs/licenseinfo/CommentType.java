@@ -22,7 +22,8 @@ public enum CommentType {
     TEMPLATE_MINIMAL_IP("The file is used as a template and contains minimal IP."),
     CATEGORY_B("The contained code is used at runtime and must be included in source form."),
     COMMENT_UNSUPPORTED("Filetype does not support comments."),
-    GUI_USABILITY("Code is visible at runtime and added license would negatively affect usability.");
+    GUI_USABILITY("Code is visible at runtime and added license would negatively affect usability."),
+    TEST_DATA("The file is used in tests and license header can't be added.");
     
     private String outputComment;
     

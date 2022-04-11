@@ -66,7 +66,13 @@ public final class SimpleConverter implements PathConverter {
         String prefix = trgType == PathType.CYGWIN ? cygwinPrefix : "/"; // NOI18N
 
         if (path.length() > 2 && path.charAt(1) == ':') {
-            result = prefix + result.replaceFirst(":", ""); // NOI18N
+            if (trgType == PathType.CYGWIN) {
+                // Some Cygwin tools (e.g. gdb) want unit letters in lowercase, 
+                // i.e., '/cygdrive/c/...', not '/cygdrive/C/...'
+                result = prefix + Character.toLowerCase(path.charAt(0)) + path.substring(2);
+            } else {
+                result = prefix + result.replaceFirst(":", ""); // NOI18N
+            }
         }
 
         return result.replace('\\', '/'); // NOI18N

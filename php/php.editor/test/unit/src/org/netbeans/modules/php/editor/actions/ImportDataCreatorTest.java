@@ -106,6 +106,14 @@ public class ImportDataCreatorTest extends PHPTestBase {
         performTest("class My^Class {");
     }
 
+    public void testImportDataEnums_01() throws Exception {
+        performTest("class TestClass^2 {");
+    }
+
+    public void testImportDataEnums_02() throws Exception {
+        performTest("class Test^Class3 {");
+    }
+
     private void performTest(String caretLine) throws Exception {
         performTest(caretLine, null);
     }

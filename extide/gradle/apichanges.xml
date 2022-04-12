@@ -102,8 +102,21 @@ is the proper place.
             <author login="lkishalmi"/>
             <compatibility semantic="compatible" addition="yes"/>
             <description>
-                Added GradleOptionItem interface to <code><a href="@TOP@/org/netbeans/modules/gradle/api/execute/GradleCommandLine.html">GradleCommandLine</a></code> 
-                in order to support a common interface for Flaf, Parameter, and Property enums.
+                <p>
+                    Added GradleOptionItem interface to <code><a href="@TOP@/org/netbeans/modules/gradle/api/execute/GradleCommandLine.html">GradleCommandLine</a></code>
+                    in order to support a common interface for Flaf, Parameter, and Property enums.
+                </p>
+                <p>
+                    <code>
+                        <a href="@TOP@/org/netbeans/modules/gradle/api/execute/GradleCommandLine.html">GradleCommandLine</a>
+                    </code> also can be aware of the GradleDistribution it is plan to be used with, so it got a few
+                    new constructors supporting that.
+                </p>
+                <p>
+                    <code>
+                        <a href="@TOP@/org/netbeans/modules/gradle/api/execute/RunUtils.html#getCompatibleGradleDistribution-org.netbeans.api.project.Project-">RunUtils.getCompatibleGradleDistribution</a>
+                    </code>is added to help retrieve the closest Gradle distribution a project could use to invoke Gradle build actions.
+                </p>
             </description>
         </change>
         <change id="tooling-runWorkingDir-runEnvironment">

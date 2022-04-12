@@ -99,7 +99,7 @@ public class GradleDistributionProviderImpl implements GradleDistributionProvide
         if (dist == null) {
             GradleSettings settings = GradleSettings.getDefault();
 
-            GradleDistributionManager mgr = GradleDistributionManager.get(settings.getGradleUserHome());
+            GradleDistributionManager mgr = GradleDistributionManager.get();
 
             if (settings.isWrapperPreferred()) {
                 try {

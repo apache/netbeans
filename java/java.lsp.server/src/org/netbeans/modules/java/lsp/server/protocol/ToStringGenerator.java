@@ -112,7 +112,7 @@ public final class ToStringGenerator extends CodeActionsProvider {
         data.put(URI, uri);
         data.put(OFFSET, offset);
         data.put(FIELDS, fields);
-        return Collections.singletonList(createCodeAction(Bundle.DN_GenerateToString(), CODE_GENERATOR_KIND, data, null));
+        return Collections.singletonList(createCodeAction(Bundle.DN_GenerateToString(), CODE_GENERATOR_KIND, data, fields.isEmpty() ? null : "workbench.action.focusActiveEditorGroup"));
     }
 
     @Override

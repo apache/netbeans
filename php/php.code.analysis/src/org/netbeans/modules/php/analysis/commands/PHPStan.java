@@ -78,6 +78,7 @@ public final class PHPStan {
      // configuration files
     public static final String CONFIG_FILE_NAME = "phpstan.neon";  // NOI18N
     public static final String DIST_CONFIG_FILE_NAME = "phpstan.neon.dist";  // NOI18N
+    public static final String ALTERNATIVE_DIST_CONFIG_FILE_NAME = "phpstan.dist.neon";  // NOI18N
 
     private final String phpStanPath;
     private int analyzeGroupCounter = 1;

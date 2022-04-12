@@ -159,6 +159,9 @@ public class DBAddConnection extends CodeActionsProvider {
                         int i = ((Double) selectedItems.get(0).getUserData()).intValue();
                         JDBCDriver driver = drivers[i];
                         String urlTemplate = urlTemplates.get(driver.getClassName());
+                        if (urlTemplate == null) {
+                            urlTemplate = "";
+                        }
                         client.showInputBox(new ShowInputBoxParams(
                                 Bundle.MSG_EnterDbUrl(), urlTemplate)).thenAccept((u) -> {
                             if (u == null) {

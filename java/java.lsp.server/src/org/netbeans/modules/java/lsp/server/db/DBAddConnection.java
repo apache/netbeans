@@ -158,7 +158,7 @@ public class DBAddConnection extends CodeActionsProvider {
                     if (!selectedItems.isEmpty()) {
                         int i = ((Double) selectedItems.get(0).getUserData()).intValue();
                         JDBCDriver driver = drivers[i];
-                        String urlTemplate = urlTemplates.get(driver.getClassName());
+                        String urlTemplate = driver.getClassName() != null ? urlTemplates.get(driver.getClassName()) : "";
                         if (urlTemplate == null) {
                             urlTemplate = "";
                         }

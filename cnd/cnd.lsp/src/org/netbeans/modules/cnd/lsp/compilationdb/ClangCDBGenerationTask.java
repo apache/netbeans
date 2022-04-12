@@ -43,6 +43,7 @@ import org.netbeans.modules.cnd.api.toolchain.AbstractCompiler;
 import org.netbeans.modules.cnd.api.toolchain.CompilerSet;
 import org.netbeans.modules.cnd.api.toolchain.PredefinedToolKind;
 import org.netbeans.modules.cnd.api.toolchain.Tool;
+import org.netbeans.modules.cnd.lsp.pkgconfig.PkgConfig;
 import org.netbeans.modules.cnd.makeproject.api.MakeProject;
 import org.netbeans.modules.cnd.makeproject.api.configurations.BasicCompilerConfiguration;
 import org.netbeans.modules.cnd.makeproject.api.configurations.CCCompilerConfiguration;
@@ -172,11 +173,14 @@ final class ClangCDBGenerationTask implements Callable<Void>, Cancellable {
         // Use a temporary file to create the compilation database.
         File tempFile = Files.createTempFile("CDB", ".json").toFile(); // NOI18N
 
+        // Use a "PkgConfig" to expand `pkg-config` stuff...
+        PkgConfig pkgConfig = new PkgConfig(makeProject.getDevelopmentHost());
+
         try ( FileOutputStream outputStream = new FileOutputStream(tempFile); //
                   PrintWriter writer = new PrintWriter(new OutputStreamWriter(outputStream, StandardCharsets.UTF_8))) {
             FileChannel channel = outputStream.getChannel();
             FileLock lock = channel.lock();
-            writeCompilationDatabase(writer, lock, items);
+            writeCompilationDatabase(writer, lock, pkgConfig, items);
         }
 
         // Only update the compilation database if we're done with all items.
@@ -198,7 +202,8 @@ final class ClangCDBGenerationTask implements Callable<Void>, Cancellable {
         });
     }
 
-    private void writeCompilationDatabase(PrintWriter writer, FileLock lock, Item[] items)
+    private void writeCompilationDatabase(PrintWriter writer, FileLock lock, 
+            PkgConfig pkgConfig, Item[] items)
             throws Exception {
 
         // We don't want to hold all command objects in memory, but write
@@ -222,7 +227,7 @@ final class ClangCDBGenerationTask implements Callable<Void>, Cancellable {
                 case OTHER: // Assembler?
                     // C and C++ files (and possibly assembler) are included in the compilation database
                     commandObject = getCommandObjectForItem(
-                            language, item, itemConfiguration);
+                            language, pkgConfig, item, itemConfiguration);
                     break;
                 case FORTRAN:
                     // Fortran is not supported in clang-style compilation databases, AFAIK
@@ -243,17 +248,16 @@ final class ClangCDBGenerationTask implements Callable<Void>, Cancellable {
 
     /**
      * Returns a Command Object required to compile an item.
-     *
-     * @param makeProject The project
-     * @param activeMakeConfiguration The active make configuration.
-     * @param compilerSet The compiler set.
+     * @param language The language of this item.
+     * @param pkgConfig The PkgConfig used to expand `pkg-config `calls.
      * @param item The item being compiled.
      * @param itemConfiguration The item configuration of the item.
-     * @return A JSON String with this command object.
+     * @return A JSONObject with for this item.
      * @throws Exception If an I/O error happens.
      */
     private JSONObject getCommandObjectForItem(
-            Language language, Item item, ItemConfiguration itemConfiguration)
+            Language language, PkgConfig pkgConfig, 
+            Item item, ItemConfiguration itemConfiguration)
             throws Exception {
 
         if (itemConfiguration.getExcluded().getValue()) {
@@ -295,6 +299,7 @@ final class ClangCDBGenerationTask implements Callable<Void>, Cancellable {
                 String cFlags = cConfiguration.getCFlags(compiler);
                 builder.addCommandItem(cFlags);
                 String allOptions = cConfiguration.getAllOptions2(compiler);
+                allOptions = pkgConfig.expand(allOptions);
                 builder.addCommandItem(allOptions);
                 LOG.log(Level.FINE, "C: CFLAGS {0} options {1}", new Object[]{cFlags, allOptions});
             }
@@ -307,6 +312,7 @@ final class ClangCDBGenerationTask implements Callable<Void>, Cancellable {
                 String cppFlags = cppConfiguration.getCCFlags(compiler);
                 builder.addCommandItem(cppFlags);
                 String allOptions = cppConfiguration.getAllOptions2(compiler);
+                allOptions = pkgConfig.expand(allOptions);
                 builder.addCommandItem(allOptions);
                 LOG.log(Level.FINE, "C++: CFLAGS {0} options {1}", new Object[]{cppFlags, allOptions});
             }

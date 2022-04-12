@@ -371,7 +371,7 @@ public class TreeShims {
             Class gpt = Class.forName("com.sun.source.doctree.SnippetTree"); //NOI18N
             return isJDKVersionRelease18_Or_Above()
                     ? (List<DocTree>) gpt.getDeclaredMethod("getAttributes").invoke(node) //NOI18N
-                    : null;
+                    : Collections.emptyList();
         } catch (NoSuchMethodException | ClassNotFoundException ex) {
             return null;
         } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {

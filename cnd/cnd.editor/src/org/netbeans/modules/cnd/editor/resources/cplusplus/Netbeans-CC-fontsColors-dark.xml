@@ -39,11 +39,11 @@
     <!-- Constants (strings, literals, characters, numbers -->
     <fontcolor name="literal" default="literal" >
     </fontcolor>
-    <fontcolor name="number" default="number" foreColor="ff1e9347">
+    <fontcolor name="number" default="number" foreColor="ffd49e84">
     </fontcolor>
-    <fontcolor name="string" default="string" foreColor="ff1e9347">
+    <fontcolor name="string" default="string" foreColor="ffd49e84">
     </fontcolor>
-    <fontcolor name="character" default="character" foreColor="ff1e9347">
+    <fontcolor name="character" default="character" foreColor="ffd49e84">
     </fontcolor>
     <fontcolor name="string-escape" default="string">
         <font style="bold" />
@@ -53,22 +53,22 @@
     </fontcolor>
 
     <!-- Keywords, operators -->
-    <fontcolor name="keyword" default="keyword" foreColor="ff0000ff">
+    <fontcolor name="keyword" default="keyword">
     </fontcolor>
     <fontcolor name="operator" default="operator">
     </fontcolor>
 
     <!-- Identifiers, variables, members, functions, parameters -->
-    <fontcolor name="identifier" foreColor="ff0070c1" default="identifier">
+    <fontcolor name="identifier" foreColor="ff4696d1" default="identifier">
     </fontcolor>
     <fontcolor name="mod-variable" default="identifier">
     </fontcolor>
     <fontcolor name="mod-parameter" default="identifier">
         <font style="italic" />
     </fontcolor>
-    <fontcolor name="mod-member" foreColor="ff206a80" default="identifier">
+    <fontcolor name="mod-member" foreColor="ff50acf0" default="identifier">
     </fontcolor>
-    <fontcolor name="mod-class" foreColor="ff206a80" default="identifier">
+    <fontcolor name="mod-class" foreColor="ff50acf0" default="identifier">
     </fontcolor>
     <fontcolor name="mod-namespace" default="identifier">
     </fontcolor>

@@ -144,8 +144,6 @@ public class AutoImport extends SimpleTypeVisitor6<Void, Void> {
             bound = type.getUpperBound();
             if (bound != null && bound.getKind() != TypeKind.NULL) {
                 builder.append(" extends "); //NOI18N
-                if (bound.getKind() == TypeKind.TYPEVAR)
-                    bound = ((TypeVariable)bound).getLowerBound();
                 visit(bound);
             }
         }

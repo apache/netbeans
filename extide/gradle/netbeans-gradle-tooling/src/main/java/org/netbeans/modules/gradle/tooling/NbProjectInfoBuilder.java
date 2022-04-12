@@ -445,7 +445,8 @@ class NbProjectInfoBuilder {
                                 // do not bother with components that only select a variant, which is itself a component
                                 // TODO: represent as a special component type so the IDE shows it, but the IDE knows it is an abstract
                                 // intermediate with no artifact(s).
-                                if (!rdr.getResolvedVariant().getExternalVariant().isPresent()) {
+                                if (rdr.getResolvedVariant() == null ||
+                                    !rdr.getResolvedVariant().getExternalVariant().isPresent()) {
                                     componentIds.add(rdr.getSelected().getId().toString());
                                 }
                             }

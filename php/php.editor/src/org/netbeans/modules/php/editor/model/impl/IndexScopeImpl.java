@@ -143,6 +143,11 @@ class IndexScopeImpl extends ScopeImpl implements IndexScope {
         return indexScope.findConstants(constantName);
     }
 
+    static List<? extends CaseElement> getEnumCases(final QualifiedName enumCaseName, TypeScope scope) {
+        final IndexScope indexScope = ModelUtils.getIndexScope(scope);
+        return indexScope.findEnumCases(scope, enumCaseName.toString());
+    }
+
     static Collection<? extends FunctionScope> getFunctions(final QualifiedName fncName, ModelElement elem) {
         final IndexScope indexScope = ModelUtils.getIndexScope(elem);
         return indexScope.findFunctions(fncName);

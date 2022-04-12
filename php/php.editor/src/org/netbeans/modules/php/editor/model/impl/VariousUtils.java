@@ -45,6 +45,7 @@ import org.netbeans.modules.php.editor.api.QualifiedNameKind;
 import org.netbeans.modules.php.editor.elements.TypeNameResolverImpl;
 import org.netbeans.modules.php.editor.lexer.PHPTokenId;
 import org.netbeans.modules.php.editor.model.ArrowFunctionScope;
+import org.netbeans.modules.php.editor.model.CaseElement;
 import org.netbeans.modules.php.editor.model.ClassScope;
 import org.netbeans.modules.php.editor.model.EnumScope;
 import org.netbeans.modules.php.editor.model.FieldElement;
@@ -93,6 +94,7 @@ import org.netbeans.modules.php.editor.parser.astnodes.Program;
 import org.netbeans.modules.php.editor.parser.astnodes.Reference;
 import org.netbeans.modules.php.editor.parser.astnodes.Scalar;
 import org.netbeans.modules.php.editor.parser.astnodes.SingleFieldDeclaration;
+import org.netbeans.modules.php.editor.parser.astnodes.StaticConstantAccess;
 import org.netbeans.modules.php.editor.parser.astnodes.StaticDispatch;
 import org.netbeans.modules.php.editor.parser.astnodes.StaticFieldAccess;
 import org.netbeans.modules.php.editor.parser.astnodes.StaticMethodInvocation;
@@ -120,6 +122,7 @@ public final class VariousUtils {
     public static final String STATIC_METHOD_TYPE_PREFIX = "static.mtd" + POST_OPERATION_TYPE_DELIMITER; //NOI18N
     public static final String FIELD_TYPE_PREFIX = "fld" + POST_OPERATION_TYPE_DELIMITER; //NOI18N
     public static final String STATIC_FIELD_TYPE_PREFIX = "static.fld" + POST_OPERATION_TYPE_DELIMITER; //NOI18N
+    public static final String STATIC_CONSTANT_TYPE_PREFIX = "static.constant" + POST_OPERATION_TYPE_DELIMITER; //NOI18N
     public static final String VAR_TYPE_PREFIX = "var" + POST_OPERATION_TYPE_DELIMITER; //NOI18N
     public static final String ARRAY_TYPE_PREFIX = "array" + POST_OPERATION_TYPE_DELIMITER; //NOI18N
     public static final String TYPE_TYPE_PREFIX = "type" + POST_OPERATION_TYPE_DELIMITER; //NOI18N
@@ -568,6 +571,8 @@ public final class VariousUtils {
                     operation = VariousUtils.STATIC_METHOD_TYPE_PREFIX;
                 } else if (VariousUtils.STATIC_FIELD_TYPE_PREFIX.equalsIgnoreCase(operationPrefix)) {
                     operation = VariousUtils.STATIC_FIELD_TYPE_PREFIX;
+                } else if (VariousUtils.STATIC_CONSTANT_TYPE_PREFIX.equalsIgnoreCase(operationPrefix)) {
+                    operation = VariousUtils.STATIC_CONSTANT_TYPE_PREFIX;
                 } else if (VariousUtils.VAR_TYPE_PREFIX.equalsIgnoreCase(operationPrefix)) {
                     operation = VariousUtils.VAR_TYPE_PREFIX;
                 } else if (VariousUtils.ARRAY_TYPE_PREFIX.equalsIgnoreCase(operationPrefix)) {
@@ -637,6 +642,36 @@ public final class VariousUtils {
                             Collection<? extends FieldElement> fields = IndexScopeImpl.getFields(type, fieldName, varScope, PhpModifiers.ALL_FLAGS);
                             for (FieldElement field : fields) {
                                 newRecentTypes.addAll(field.getTypes(offset));
+                            }
+                        }
+                        recentTypes = newRecentTypes;
+                        operation = null;
+                    } else if (operation.startsWith(STATIC_CONSTANT_TYPE_PREFIX)) {
+                        // const or case: const CONSTANT = 1;, case CASE1;
+                        // Name::CONSTANT; Name::CASE1;
+                        Set<TypeScope> newRecentTypes = new HashSet<>();
+                        final Collection<? extends TypeScope> types;
+                        final String constantName;
+                        String[] frgs = DOT_PATTERN.split(frag);
+                        if (frgs.length == 1) {
+                            // uniform variable syntax
+                            constantName = frag;
+                            types = oldRecentTypes;
+                        } else {
+                            assert frgs.length == 2 : semiTypeName;
+                            constantName = frgs[1];
+                            String clsName = frgs[0];
+                            assert clsName != null : frag;
+                            QualifiedName fullyQualifiedName = getFullyQualifiedName(createQuery(clsName, varScope), offset, varScope);
+                            types = IndexScopeImpl.getTypes(fullyQualifiedName, varScope);
+                        }
+                        for (TypeScope type : types) {
+                            List<? extends CaseElement> enumCases = IndexScopeImpl.getEnumCases(QualifiedName.create(constantName), type);
+                            for (CaseElement enumCase : enumCases) {
+                                Scope inScope = enumCase.getInScope();
+                                if (inScope instanceof TypeScope) {
+                                    newRecentTypes.add((TypeScope) inScope);
+                                }
                             }
                         }
                         recentTypes = newRecentTypes;
@@ -1111,6 +1146,16 @@ public final class VariousUtils {
                     return PRE_OPERATION_TYPE_DELIMITER + STATIC_FIELD_TYPE_PREFIX + clsName + '.' + fldName;
                 }
                 return PRE_OPERATION_TYPE_DELIMITER + STATIC_FIELD_TYPE_PREFIX + fldName;
+            }
+        } else if (varBase instanceof StaticConstantAccess) {
+            StaticConstantAccess constantAccess = (StaticConstantAccess) varBase;
+            String clsName = CodeUtils.extractUnqualifiedName(constantAccess.getDispatcher());
+            String constName = CodeUtils.extractQualifiedName(constantAccess.getConstant());
+            if (constName != null) {
+                if (clsName != null) {
+                    return PRE_OPERATION_TYPE_DELIMITER + STATIC_CONSTANT_TYPE_PREFIX + clsName + '.' + constName;
+                }
+                return PRE_OPERATION_TYPE_DELIMITER + STATIC_CONSTANT_TYPE_PREFIX + constName;
             }
         }
 

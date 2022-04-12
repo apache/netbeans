@@ -281,4 +281,244 @@ public class OccurrencesFinderImplPHP81Test extends OccurrencesFinderImplTestBas
         checkOccurrences(getTestPath(), "$arrow = fn(Foo&Bar $test): Foo&B^ar => $test;", true);
     }
 
+    public void testEnumerations_a01() throws Exception {
+        checkOccurrences(getTestPath(), "enum Simp^le {", true);
+    }
+
+    public void testEnumerations_a02() throws Exception {
+        checkOccurrences(getTestPath(), "        Si^mple::CASE2;", true);
+    }
+
+    public void testEnumerations_a03() throws Exception {
+        checkOccurrences(getTestPath(), "        Simpl^e::CONSTANT1;", true);
+    }
+
+    public void testEnumerations_a04() throws Exception {
+        checkOccurrences(getTestPath(), "        Simp^le::publicStaticMethod();", true);
+    }
+
+    public void testEnumerations_a05() throws Exception {
+        checkOccurrences(getTestPath(), "        Sim^ple::CASE1->publicMethod();", true);
+    }
+
+    public void testEnumerations_a06() throws Exception {
+        checkOccurrences(getTestPath(), "        Si^mple::CASE1::publicStaticMethod();", true);
+    }
+
+    public void testEnumerations_a07() throws Exception {
+        checkOccurrences(getTestPath(), "use Enum1\\Simp^le;", true);
+    }
+
+    public void testEnumerations_a08() throws Exception {
+        checkOccurrences(getTestPath(), "Sim^ple::CASE1::CONSTANT1;", true);
+    }
+
+    public void testEnumerations_a09() throws Exception {
+        checkOccurrences(getTestPath(), "S^imple::CASE1::CASE2;", true);
+    }
+
+    public void testEnumerations_a10() throws Exception {
+        checkOccurrences(getTestPath(), "Simpl^e::CASE2->publicMethod();", true);
+    }
+
+    public void testEnumerations_a11() throws Exception {
+        checkOccurrences(getTestPath(), "S^imple::CASE2::publicStaticMethod();", true);
+    }
+
+    public void testEnumerations_a12() throws Exception {
+        checkOccurrences(getTestPath(), "Simpl^e::publicStaticMethod(); // 2", true);
+    }
+
+    public void testEnumerations_a13() throws Exception {
+        checkOccurrences(getTestPath(), "Sim^ple::staticTest();", true);
+    }
+
+    public void testEnumerations_a14() throws Exception {
+        checkOccurrences(getTestPath(), "$i = Simp^le::CASE2;", true);
+    }
+
+    public void testEnumerations_b01() throws Exception {
+        checkOccurrences(getTestPath(), "    case CAS^E1;", true);
+    }
+
+    public void testEnumerations_b02() throws Exception {
+        checkOccurrences(getTestPath(), "            static::CA^SE1 => 'Case1',", true);
+    }
+
+    public void testEnumerations_b03() throws Exception {
+        checkOccurrences(getTestPath(), "        Simple::CA^SE1->publicMethod();", true);
+    }
+
+    public void testEnumerations_b04() throws Exception {
+        checkOccurrences(getTestPath(), "        Simple::CAS^E1::publicStaticMethod();", true);
+    }
+
+    public void testEnumerations_b05() throws Exception {
+        checkOccurrences(getTestPath(), "        self::CAS^E1;", true);
+    }
+
+    public void testEnumerations_b06() throws Exception {
+        checkOccurrences(getTestPath(), "        self::CASE^1->publicMethod();", true);
+    }
+
+    public void testEnumerations_b07() throws Exception {
+        checkOccurrences(getTestPath(), "        static::C^ASE1;", true);
+    }
+
+    public void testEnumerations_b08() throws Exception {
+        checkOccurrences(getTestPath(), "        static::CA^SE1->publicMethod();", true);
+    }
+
+    public void testEnumerations_b09() throws Exception {
+        checkOccurrences(getTestPath(), "Simple::CAS^E1::CONSTANT1;", true);
+    }
+
+    public void testEnumerations_b10() throws Exception {
+        checkOccurrences(getTestPath(), "Simple::CASE^1::CASE2;", true);
+    }
+
+    public void testEnumerations_b11() throws Exception {
+        checkOccurrences(getTestPath(), "$i::C^ASE1;", true);
+    }
+
+    public void testEnumerations_c01() throws Exception {
+        checkOccurrences(getTestPath(), "    case CA^SE2;", true);
+    }
+
+    public void testEnumerations_c02() throws Exception {
+        checkOccurrences(getTestPath(), "    const CONSTANT2 = self::C^ASE2;", true);
+    }
+
+    public void testEnumerations_c03() throws Exception {
+        checkOccurrences(getTestPath(), "            static::CASE^2 => 'Case2',", true);
+    }
+
+    public void testEnumerations_c04() throws Exception {
+        checkOccurrences(getTestPath(), "        Simple::CAS^E2;", true);
+    }
+
+    public void testEnumerations_c05() throws Exception {
+        checkOccurrences(getTestPath(), "Simple::CASE1::C^ASE2;", true);
+    }
+
+    public void testEnumerations_c06() throws Exception {
+        checkOccurrences(getTestPath(), "Simple::C^ASE2->publicMethod();", true);
+    }
+
+    public void testEnumerations_c07() throws Exception {
+        checkOccurrences(getTestPath(), "Simple::CAS^E2::publicStaticMethod();", true);
+    }
+
+    public void testEnumerations_c08() throws Exception {
+        checkOccurrences(getTestPath(), "$i = Simple::CAS^E2;", true);
+    }
+
+    public void testEnumerations_d01() throws Exception {
+        checkOccurrences(getTestPath(), "    public function publicM^ethod(): void {", true);
+    }
+
+    public void testEnumerations_d02() throws Exception {
+        checkOccurrences(getTestPath(), "        Simple::CASE1->publ^icMethod();", true);
+    }
+
+    public void testEnumerations_d03() throws Exception {
+        checkOccurrences(getTestPath(), "        self::CASE1->pub^licMethod();", true);
+    }
+
+    public void testEnumerations_d04() throws Exception {
+        checkOccurrences(getTestPath(), "        static::CASE1->publicMet^hod();", true);
+    }
+
+    public void testEnumerations_d05() throws Exception {
+        checkOccurrences(getTestPath(), "Simple::CASE2->publicMetho^d();", true);
+    }
+
+    public void testEnumerations_d06() throws Exception {
+        checkOccurrences(getTestPath(), "$i->publi^cMethod();", true);
+    }
+
+    public void testEnumerations_e01() throws Exception {
+        checkOccurrences(getTestPath(), "    public static function publicStati^cMethod(): void {", true);
+    }
+
+    public void testEnumerations_e02() throws Exception {
+        checkOccurrences(getTestPath(), "        Simple::publicStaticMeth^od();", true);
+    }
+
+    public void testEnumerations_e03() throws Exception {
+        checkOccurrences(getTestPath(), "        Simple::CASE1::publicStaticMet^hod();", true);
+    }
+
+    public void testEnumerations_e04() throws Exception {
+        checkOccurrences(getTestPath(), "        self::public^StaticMethod();", true);
+    }
+
+    public void testEnumerations_e05() throws Exception {
+        checkOccurrences(getTestPath(), "        static::publicStatic^Method();", true);
+    }
+
+    public void testEnumerations_e06() throws Exception {
+        checkOccurrences(getTestPath(), "Simple::CASE2::publ^icStaticMethod();", true);
+    }
+
+    public void testEnumerations_e07() throws Exception {
+        checkOccurrences(getTestPath(), "Simple::publicStaticMet^hod(); // 2", true);
+    }
+
+    public void testEnumerations_e08() throws Exception {
+        checkOccurrences(getTestPath(), "$i::publicStaticMeth^od();", true);
+    }
+
+    public void testEnumerations_f01() throws Exception {
+        checkOccurrences(getTestPath(), "    const CONSTA^NT1 = \"CONSTANT1\";", true);
+    }
+
+    public void testEnumerations_f02() throws Exception {
+        checkOccurrences(getTestPath(), "        Simple::CONSTA^NT1;", true);
+    }
+
+    public void testEnumerations_f03() throws Exception {
+        checkOccurrences(getTestPath(), "Simple::CASE1::CONSTA^NT1;", true);
+    }
+
+    public void testEnumerations_g01() throws Exception {
+        checkOccurrences(getTestPath(), "    const CONST^ANT2 = self::CASE2;", true);
+    }
+
+    public void testEnumerations_g02() throws Exception {
+        checkOccurrences(getTestPath(), "        self::CONSTAN^T2;", true);
+    }
+
+    public void testEnumerations_g03() throws Exception {
+        checkOccurrences(getTestPath(), "        static::CONST^ANT2;", true);
+    }
+
+    public void testEnumerationsWithBackingType_a01() throws Exception {
+        checkOccurrences(getTestPath(), "    case C^ASE1 = 1;", true);
+    }
+
+    public void testEnumerationsWithBackingType_a02() throws Exception {
+        checkOccurrences(getTestPath(), "            static::CAS^E1 => 'Case1',", true);
+    }
+
+    public void testEnumerationsWithBackingType_b01() throws Exception {
+        checkOccurrences(getTestPath(), "    case CA^SE2 = 2;", true);
+    }
+
+    public void testEnumerationsWithBackingType_b02() throws Exception {
+        checkOccurrences(getTestPath(), "    const CONSTANT2 = self::CAS^E2;", true);
+    }
+
+    public void testEnumerationsWithBackingType_b03() throws Exception {
+        checkOccurrences(getTestPath(), "            static::CASE^2 => 'Case2',", true);
+    }
+
+    public void testEnumerationsWithBackingType_c01() throws Exception {
+        checkOccurrences(getTestPath(), "    case CAS^E3 = 1 << 3;", true);
+    }
+
+    public void testEnumerationsWithBackingType_c02() throws Exception {
+        checkOccurrences(getTestPath(), "            static::CAS^E3 => 'Case3',", true);
+    }
+
 }

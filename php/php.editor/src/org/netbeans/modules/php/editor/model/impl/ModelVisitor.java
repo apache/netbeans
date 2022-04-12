@@ -1680,7 +1680,7 @@ public final class ModelVisitor extends DefaultTreePathVisitor {
             intersectionType.getTypes().forEach(t -> prepareType(t, scope));
         }
         if (namespaceName instanceof NamespaceName) {
-            Kind[] kinds = {Kind.CLASS, Kind.IFACE};
+            Kind[] kinds = {Kind.CLASS, Kind.IFACE, Kind.ENUM};
             occurencesBuilder.prepare(kinds, (NamespaceName) namespaceName, scope);
         }
     }
@@ -1722,6 +1722,7 @@ public final class ModelVisitor extends DefaultTreePathVisitor {
                 occurencesBuilder.prepare(Kind.CLASS, name, currentScope);
                 occurencesBuilder.prepare(Kind.IFACE, name, currentScope);
                 occurencesBuilder.prepare(Kind.TRAIT, name, currentScope);
+                occurencesBuilder.prepare(Kind.ENUM, name, currentScope);
                 break;
             default:
                 assert false : "Unknown type: " + realType;

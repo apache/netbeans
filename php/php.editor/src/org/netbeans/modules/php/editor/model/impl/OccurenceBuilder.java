@@ -296,7 +296,7 @@ class OccurenceBuilder {
     }
 
     void prepare(final NamespaceName namespaceName, final Scope scope) {
-        Kind[] kinds = {Kind.CLASS};
+        Kind[] kinds = {Kind.CLASS, Kind.ENUM};
         prepare(kinds, namespaceName, scope);
     }
 

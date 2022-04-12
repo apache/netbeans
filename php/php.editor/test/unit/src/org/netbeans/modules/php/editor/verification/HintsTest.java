@@ -51,18 +51,6 @@ public class HintsTest extends PHPHintsTestBase {
         checkHints(new AbstractClassInstantiationHintError(), "testAbstractClassInstantiationHint_02.php");
     }
 
-    public void testMethodRedeclarationHint() throws Exception {
-        checkHints(new MethodRedeclarationHintError(), "testMethodRedeclarationHint.php");
-    }
-
-    public void testTypeRedeclarationHint() throws Exception {
-        checkHints(new TypeRedeclarationHintError(), "testTypeRedeclarationHint.php");
-    }
-
-    public void testConstantRedeclarationHint() throws Exception {
-        checkHints(new ConstantRedeclarationHintError(), "testConstantRedeclarationHint.php");
-    }
-
     public void testUnusedUsesHint() throws Exception {
         checkHints(new UnusedUsesHint(), "testUnusedUsesHint.php");
     }
@@ -332,10 +320,6 @@ public class HintsTest extends PHPHintsTestBase {
 
     public void testErrorControlOperatorHint() throws Exception {
         checkHints(new ErrorControlOperatorHint(), "testErrorControlOperatorHint.php");
-    }
-
-    public void testIssue226494() throws Exception {
-        checkHints(new MethodRedeclarationHintError(), "testIssue226494.php");
     }
 
     public void testClosingDelimUseCase01() throws Exception {

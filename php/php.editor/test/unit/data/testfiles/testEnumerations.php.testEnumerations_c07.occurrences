@@ -1,0 +1,8 @@
+    case |>MARK_OCCURRENCES:CASE2<|;
+    const CONSTANT2 = self::|>MARK_OCCURRENCES:CASE2<|;
+            static::|>MARK_OCCURRENCES:CASE2<| => 'Case2',
+        Simple::|>MARK_OCCURRENCES:CASE2<|;
+Simple::CASE1::|>MARK_OCCURRENCES:CASE2<|;
+Simple::|>MARK_OCCURRENCES:CASE2<|->publicMethod();
+Simple::|>MARK_OCCURRENCES:CAS^E2<|::publicStaticMethod();
+$i = Simple::|>MARK_OCCURRENCES:CASE2<|;

@@ -119,6 +119,11 @@
 					"default": true,
 					"description": "Avoid conflicts with other Java extensions"
 				},
+				"netbeans.revealActiveInProjects": {
+					"type": "boolean",
+					"default": true,
+					"description": "Reveals active text editor in Projects view"
+				},
 				"java.test.editor.enableShortcuts": {
 					"type": "boolean",
 					"default": false,
@@ -525,6 +530,11 @@
 				"command": "java.db.set.env",
 				"title": "Set Database Environment Variables",
 				"category": "Database"
+			},
+			{
+				"command": "java.select.editor.projects",
+				"title": "Reveal active editor in Projects",
+				"category": "Project"
 			}
 		],
 		"keybindings": [

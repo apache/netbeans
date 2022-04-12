@@ -16,30 +16,23 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.cnd.lsp.makeproject;
+package org.netbeans.modules.cnd.lsp.makeproject.ui;
 
-import java.util.ArrayList;
-import org.netbeans.modules.cnd.lsp.compilationdb.ClangCDBSupport;
-import org.netbeans.modules.cnd.lsp.server.LSPServerSupport;
-import org.netbeans.modules.cnd.makeproject.api.MakeProject;
-import org.netbeans.modules.cnd.makeproject.api.MakeProjectLookupProvider;
+import org.netbeans.api.project.Project;
+import org.netbeans.modules.cnd.makeproject.api.ui.LogicalViewNodeProvider;
+import org.openide.nodes.AbstractNode;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
- * Adds stuff to MakeProject Lookup.
- *
+ * Adds a "LSP Servers" node to Make based projects.
  * @author antonio
  */
-@ServiceProvider(service = MakeProjectLookupProvider.class, position = 1000)
-public class LSPMakeProjectLookupProvider implements MakeProjectLookupProvider {
+@ServiceProvider(service = LogicalViewNodeProvider.class, position = 1000)
+public class LSPLogicalViewNodeProvider implements LogicalViewNodeProvider {
 
     @Override
-    public void addLookup(MakeProject owner, ArrayList<Object> ic) {
-        ClangCDBSupport compilationDatabaseSupport = new ClangCDBSupport(owner);
-        ic.add(compilationDatabaseSupport);
-        LSPServerSupport lspServerSupport = new LSPServerSupport(owner);
-        ic.add(lspServerSupport);
-        ic.add(lspServerSupport.getOpenedHook());
+    public AbstractNode getLogicalViewNode(Project project) {
+        return new LSPServersNode(project);
     }
-
+    
 }

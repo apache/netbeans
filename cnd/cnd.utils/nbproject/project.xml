@@ -215,6 +215,7 @@
                 <friend>org.netbeans.modules.cnd.indexing</friend>
                 <friend>org.netbeans.modules.cnd.jconvertwizard</friend>
                 <friend>org.netbeans.modules.cnd.lexer</friend>
+                <friend>org.netbeans.modules.cnd.lsp</friend>
                 <friend>org.netbeans.modules.cnd.makeproject</friend>
                 <friend>org.netbeans.modules.cnd.makeproject.source.bridge</friend>
                 <friend>org.netbeans.modules.cnd.makeproject.ui</friend>

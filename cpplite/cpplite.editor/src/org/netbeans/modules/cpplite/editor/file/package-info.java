@@ -16,38 +16,38 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-@TemplateRegistrations({
-    @TemplateRegistration(folder = "cpplite",
-                          content = "CTemplate.c",
-                          scriptEngine = "freemarker",
-                          category = "cpplite",
-                          displayName = "#CTemplate",
-                          iconBase = CDataObject.ICON),
-    @TemplateRegistration(folder = "cpplite",
-                          content = "CPPTemplate.cpp",
-                          scriptEngine="freemarker",
-                          category = "cpplite",
-                          displayName = "#CPPTemplate",
-                          iconBase = CPPDataObject.ICON),
-    @TemplateRegistration(folder = "cpplite",
-                          content = "HTemplate.h",
-                          scriptEngine="freemarker",
-                          category = "cpplite",
-                          displayName = "#HTemplate",
-                          iconBase = HDataObject.ICON),
-    @TemplateRegistration(folder = "cpplite",
-                          content = "HPPTemplate.hpp",
-                          scriptEngine="freemarker",
-                          category = "cpplite",
-                          displayName = "#HPPTemplate",
-                          iconBase = HPPDataObject.ICON)
-})
-@Messages({
-    "CTemplate=C file",
-    "CPPTemplate=C++ file",
-    "HTemplate=Header file",
-    "HPPTemplate=Header for C++ file",
-})
+//@TemplateRegistrations({
+//    @TemplateRegistration(folder = "cpplite",
+//                          content = "CTemplate.c",
+//                          scriptEngine = "freemarker",
+//                          category = "cpplite",
+//                          displayName = "#CTemplate",
+//                          iconBase = CDataObject.ICON),
+//    @TemplateRegistration(folder = "cpplite",
+//                          content = "CPPTemplate.cpp",
+//                          scriptEngine="freemarker",
+//                          category = "cpplite",
+//                          displayName = "#CPPTemplate",
+//                          iconBase = CPPDataObject.ICON),
+//    @TemplateRegistration(folder = "cpplite",
+//                          content = "HTemplate.h",
+//                          scriptEngine="freemarker",
+//                          category = "cpplite",
+//                          displayName = "#HTemplate",
+//                          iconBase = HDataObject.ICON),
+//    @TemplateRegistration(folder = "cpplite",
+//                          content = "HPPTemplate.hpp",
+//                          scriptEngine="freemarker",
+//                          category = "cpplite",
+//                          displayName = "#HPPTemplate",
+//                          iconBase = HPPDataObject.ICON)
+//})
+//@Messages({
+//    "CTemplate=C file",
+//    "CPPTemplate=C++ file",
+//    "HTemplate=Header file",
+//    "HPPTemplate=Header for C++ file",
+//})
 package org.netbeans.modules.cpplite.editor.file;
 
 import org.netbeans.api.templates.TemplateRegistration;

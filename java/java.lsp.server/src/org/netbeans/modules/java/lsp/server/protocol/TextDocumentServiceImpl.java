@@ -902,8 +902,14 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                 diagnostics.addAll(computeDiags(params.getTextDocument().getUri(), startOffset, ErrorProvider.Kind.HINTS, documentVersion(doc)));
             }
 
-            Map<String, org.netbeans.api.lsp.Diagnostic> id2Errors = (Map<String, org.netbeans.api.lsp.Diagnostic>) doc.getProperty("lsp-errors");
-            if (id2Errors != null) {
+            Map<String, org.netbeans.api.lsp.Diagnostic> id2Errors = new HashMap<>();
+            for (String key : VALID_ERROR_KEYS) {
+                Map<String, org.netbeans.api.lsp.Diagnostic> diags = (Map<String, org.netbeans.api.lsp.Diagnostic>) doc.getProperty("lsp-errors-valid-" + key);
+                if (diags != null) {
+                    id2Errors.putAll(diags);
+                }
+            }
+            if (!id2Errors.isEmpty()) {
                 for (Entry<String, org.netbeans.api.lsp.Diagnostic> entry : id2Errors.entrySet()) {
                     org.netbeans.api.lsp.Diagnostic err = entry.getValue();
                     if (err.getDescription() == null || err.getDescription().isEmpty()) {
@@ -1490,6 +1496,9 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                     }
                 }
             });
+            for (String key : VALID_ERROR_KEYS) {
+                doc.putProperty("lsp-errors-valid-" + key, null);
+            }
         }
         runDiagnosticTasks(params.getTextDocument().getUri());
         reportNotificationDone("didChange", params);
@@ -1661,7 +1670,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                         Document doc = server.getOpenedDocuments().getDocument(uri);
                         if (documentVersion(doc) == originalVersion) {
                             publishDiagnostics(uri, hintDiags);
-                }
+                        }
                     }).schedule(DELAY);
                 }
             });
@@ -1727,6 +1736,9 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
             }
             if (offset < 0) {
                 doc.putProperty("lsp-errors-" + keyPrefix, id2Errors);
+                doc.putProperty("lsp-errors-valid-" + keyPrefix, id2Errors);
+            } else {
+                doc.putProperty("lsp-errors-valid-offsetHints", id2Errors);
             }
             Map<String, org.netbeans.api.lsp.Diagnostic> mergedId2Errors = new HashMap<>();
             for (String k : ERROR_KEYS) {
@@ -1753,7 +1765,6 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
             if (offset >= 0) {
                 mergedId2Errors.putAll(id2Errors);
             }
-            doc.putProperty("lsp-errors", mergedId2Errors);
         } catch (IOException ex) {
             throw new IllegalStateException(ex);
         }
@@ -1842,6 +1853,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
     }
     
     private static final String[] ERROR_KEYS = {"errors", "hints"};
+    private static final String[] VALID_ERROR_KEYS = {"errors", "hints", "offsetHints"};
 
     private interface ProduceErrors {
         public List<ErrorDescription> computeErrors(CompilationInfo info, Document doc) throws IOException;

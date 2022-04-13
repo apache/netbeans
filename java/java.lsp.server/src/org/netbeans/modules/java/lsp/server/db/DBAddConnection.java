@@ -26,6 +26,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -75,7 +76,16 @@ public class DBAddConnection extends CodeActionsProvider {
     public static final String DB_URL =  "url"; // NOI18N
     public static final String SCHEMA =  "schema"; // NOI18N
     public static final String DISPLAY_NAME =  "displayName"; // NOI18N
-    
+
+    private static final Map<String, String> urlTemplates = new HashMap<> ();
+    static {
+        urlTemplates.put("org.postgresql.Driver", "jdbc:postgresql://<HOST>:5432/<DB>");
+        urlTemplates.put("org.gjt.mm.mysql.Driver", "jdbc:mysql://<HOST>:3306/<DB>");
+        urlTemplates.put("com.mysql.cj.jdbc.Driver", "jdbc:mysql://<HOST>:3306/<DB>");
+        urlTemplates.put("org.mariadb.jdbc.Driver", "jdbc:mariadb://<HOST>:3306/<DB>");
+        urlTemplates.put("oracle.jdbc.OracleDriver", "jdbc:oracle:thin:@//<HOST>[:<PORT>][/<SERVICE>]");
+        urlTemplates.put("com.microsoft.sqlserver.jdbc.SQLServerDriver", "jdbc:sqlserver://<HOST>\\<DB>[:<PORT>]");
+    }
     private final Gson gson = new Gson();
 
     @Override
@@ -148,8 +158,12 @@ public class DBAddConnection extends CodeActionsProvider {
                     if (!selectedItems.isEmpty()) {
                         int i = ((Double) selectedItems.get(0).getUserData()).intValue();
                         JDBCDriver driver = drivers[i];
+                        String urlTemplate = driver.getClassName() != null ? urlTemplates.get(driver.getClassName()) : "";
+                        if (urlTemplate == null) {
+                            urlTemplate = "";
+                        }
                         client.showInputBox(new ShowInputBoxParams(
-                                Bundle.MSG_EnterDbUrl(), "")).thenAccept((u) -> {
+                                Bundle.MSG_EnterDbUrl(), urlTemplate)).thenAccept((u) -> {
                             if (u == null) {
                                 return;
                             }

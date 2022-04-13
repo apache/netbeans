@@ -965,14 +965,16 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
 
         ctx.subscriptions.push(window.onDidChangeActiveTextEditor(ed => {
             const netbeansConfig = workspace.getConfiguration('netbeans');
-            if (netbeansConfig.get("revealActiveInProjects", true)) {
+            if (netbeansConfig.get("revealActiveInProjects")) {
                 revealActiveEditor(ed);
             }
         }));
         ctx.subscriptions.push(vscode.commands.registerCommand("java.select.editor.projects", () => revealActiveEditor()));
 
         // attempt to reveal NOW:
-        revealActiveEditor();
+        if (netbeansConfig.get("revealActiveInProjects")) {
+            revealActiveEditor();
+        }
     }
 
     async function showHtmlPage(params : HtmlPageParams): Promise<string> {

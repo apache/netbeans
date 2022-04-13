@@ -164,7 +164,9 @@ public class GroovyParser extends Parser {
 
             @Override
             public void error(Error error) {
-                errors.add(error);
+                if (!errors.contains(error)) {
+                    errors.add(error);
+                }
             }
         };
         long t1 = System.currentTimeMillis();

@@ -888,7 +888,9 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
             commands.executeCommand('setContext', 'nbJavaLSReady', true);
         
             // create project explorer:
-            c.findTreeViewService().createView('foundProjects', 'Projects', { canSelectMany : false });
+            //c.findTreeViewService().createView('foundProjects', 'Projects', { canSelectMany : false });
+            createProjectView(context, c);
+
             createDatabaseView(c);
             c.findTreeViewService().createView('cloud.resources', undefined, { canSelectMany : false });
         }).catch(setClient[1]);
@@ -944,6 +946,35 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
                 customizable.addItemDecorator(new Decorator(customizable, c))
         });
         
+    }
+
+    async function createProjectView(ctx : ExtensionContext, client : NbLanguageClient) {
+        const ts : TreeViewService = client.findTreeViewService();
+        let tv : vscode.TreeView<Visualizer> = await ts.createView('foundProjects', 'Projects', { canSelectMany : false });
+
+        async function revealActiveEditor(ed? : vscode.TextEditor) {
+            if (!window.activeTextEditor?.document?.uri) {
+                return;
+            }
+            let vis : Visualizer | undefined = await ts.findPath(tv, window.activeTextEditor?.document?.uri?.toString());
+            if (!vis) {
+                return;
+            }
+            tv.reveal(vis, { select : true, focus : false, expand : false });
+        }
+
+        ctx.subscriptions.push(window.onDidChangeActiveTextEditor(ed => {
+            const netbeansConfig = workspace.getConfiguration('netbeans');
+            if (netbeansConfig.get("revealActiveInProjects")) {
+                revealActiveEditor(ed);
+            }
+        }));
+        ctx.subscriptions.push(vscode.commands.registerCommand("java.select.editor.projects", () => revealActiveEditor()));
+
+        // attempt to reveal NOW:
+        if (netbeansConfig.get("revealActiveInProjects")) {
+            revealActiveEditor();
+        }
     }
 
     async function showHtmlPage(params : HtmlPageParams): Promise<string> {

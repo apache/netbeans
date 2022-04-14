@@ -123,11 +123,12 @@ public class LspCallHierarchyProvider implements CallHierarchyProvider {
             public void run(ResultIterator resultIterator) throws Exception {
                 Parser.Result r = resultIterator.getParserResult(offset);
                 if ("text/x-java".equals(r.getSnapshot().getMimeType())) {
-                    CompilationInfo ci = CompilationInfo.get(r);
+                    CompilationController ci = CompilationController.get(r);
                     if (ci == null || r.getSnapshot().getSource().getFileObject() == null) {
                         control.complete(null);
                         return;
                     }
+                    ci.toPhase(JavaSource.Phase.PARSED);
                     TreePath tp = ci.getTreeUtilities().pathFor(offset);
                     if (tp == null) {
                         control.complete(null);
@@ -290,7 +291,7 @@ public class LspCallHierarchyProvider implements CallHierarchyProvider {
                 res.complete(null);
                 return;
             }
-            CallHierarchyTasks.RootResolver rr = new CallHierarchyTasks.RootResolver(tph, true, true);
+            CallHierarchyTasks.RootResolver rr = new CallHierarchyTasks.RootResolver(tph, type == CallHierarchyModel.HierarchyType.CALLER, true);
             rr.run(parameter);
 
             CallHierarchyModel m = CallHierarchyModel.create(tph, 
@@ -298,6 +299,10 @@ public class LspCallHierarchyProvider implements CallHierarchyProvider {
             m.replaceRoot(rr.getRoot());
 
             Call rootCall = m.getRoot();
+            if (rootCall == null) {
+                res.complete(null);
+                return;
+            }
             m.computeCalls(m.getRoot(), () -> {
                 JavaSource js = JavaSource.forFileObject(fo);
                 if (js == null) {
@@ -326,7 +331,11 @@ public class LspCallHierarchyProvider implements CallHierarchyProvider {
                 CompletableFuture<StructureElement> elementFuture = ElementHeaders.resolveStructureElement(info, target, true);
                 if (elementFuture.isDone()) {
                     try {
-                        calls.add(createCall(elementFuture.get(), c, signature(target)));
+                        StructureElement sel = elementFuture.get();
+                        if (sel == null) {
+                            continue;
+                        }
+                        calls.add(createCall(sel, c, signature(target)));
                     } catch (ExecutionException ex) {
                         Throwable cause = ex.getCause();
                         if (cause instanceof CancellationException) {
@@ -379,13 +388,14 @@ public class LspCallHierarchyProvider implements CallHierarchyProvider {
             return toCancel != null ? toCancel : res;
         }
 
-        protected void processComputedCall(CompilationInfo info, Call rootCall) {
+        protected void processComputedCall(CompilationController info, Call rootCall) throws IOException {
             List<CallHierarchyEntry.Call> calls = new ArrayList<>();
             List<Call> refs = rootCall.getReferences();
 
             if (cancelled.get()) {
                 return;
             }
+            info.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
             toCancel = processAsync(info, refs, calls);
             toCancel.handle((r, ex) -> {
                 if (ex != null) { 

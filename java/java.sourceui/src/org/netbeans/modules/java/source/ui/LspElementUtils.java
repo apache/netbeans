@@ -77,11 +77,13 @@ public class LspElementUtils {
 
         StructureProvider.Builder builder = StructureProvider.newBuilder(createName(info, el), ElementHeaders.javaKind2Structure(el));
         builder.detail(createDetail(info, el));
-        FileObject f;
-        FileObject owner;
+        FileObject f = null;
+        FileObject owner = null;
         if (!bypassOpen) {
             Object[] oi = setOffsets(info, el, builder);
-            owner = f = oi != null ? (FileObject)oi[0] : null;
+            if (oi != null) {
+                owner = f = (FileObject)oi[0]; 
+            }
         } else {
             f = null;
             owner = parentFile;
@@ -294,32 +296,27 @@ public class LspElementUtils {
     }
     
     private static StructureProvider.Builder processOffsetInfo(Object[] info, StructureProvider.Builder builder) {
-        if (info != null) {
-            int selStart = (int)info[3];
-            if (selStart < 0) {
-                selStart = (int)info[1];
-            }
-            int selEnd = (int)info[4];
-            if (selEnd < 0) {
-                selEnd = (int)info[2];
-            }
-            TreePathHandle pathHandle = (TreePathHandle)info[6];
-            FileObject f = (FileObject)info[0];
-            boolean[] synthetic = new boolean[] { false };
-            if (f != null) {
-                builder.file(f);
-                if (pathHandle != null) {
-                    try {
-                        JavaSource js = JavaSource.forFileObject(f);
-                        if (js == null) {
-                            return null;
-                        }
-                        js.runUserActionTask((cc) -> {
-                            TreePath path = pathHandle.resolve(cc);
-                            synthetic[0] = cc.getTreeUtilities().isSynthetic(path);
-                        }, true);
-                    } catch (IOException ex) {
-                        // ignore
+        if (info == null) {
+            return builder;
+        }
+        int selStart = (int)info[3];
+        if (selStart < 0) {
+            selStart = (int)info[1];
+        }
+        int selEnd = (int)info[4];
+        if (selEnd < 0) {
+            selEnd = (int)info[2];
+        }
+        TreePathHandle pathHandle = (TreePathHandle)info[6];
+        FileObject f = (FileObject)info[0];
+        boolean[] synthetic = new boolean[] { false };
+        if (f != null) {
+            builder.file(f);
+            if (pathHandle != null) {
+                try {
+                    JavaSource js = JavaSource.forFileObject(f);
+                    if (js == null) {
+                        return null;
                     }
                 }
             }

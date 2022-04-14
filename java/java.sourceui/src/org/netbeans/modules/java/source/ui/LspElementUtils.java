@@ -332,7 +332,7 @@ public class LspElementUtils {
         }
         builder.expandedStartOffset((int)info[1]).expandedEndOffset((int)info[2]);
         builder.selectionStartOffset(selStart).selectionEndOffset(selEnd);
-       return builder;
+        return builder;
     }
     
     private static CompletableFuture<StructureProvider.Builder> setFutureOffsets(CompilationInfo ci, Element original, 

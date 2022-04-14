@@ -318,14 +318,20 @@ public class LspElementUtils {
                     if (js == null) {
                         return null;
                     }
+                    js.runUserActionTask((cc) -> {
+                        TreePath path = pathHandle.resolve(cc);
+                        synthetic[0] = cc.getTreeUtilities().isSynthetic(path);
+                    }, true);
+                } catch (IOException ex) {
+                    // ignore
                 }
             }
-            if (synthetic[0]) {
-                return null;
-            }
-            builder.expandedStartOffset((int)info[1]).expandedEndOffset((int)info[2]);
-            builder.selectionStartOffset(selStart).selectionEndOffset(selEnd);
         }
+        if (synthetic[0]) {
+            return null;
+        }
+        builder.expandedStartOffset((int)info[1]).expandedEndOffset((int)info[2]);
+        builder.selectionStartOffset(selStart).selectionEndOffset(selEnd);
         return builder;
     }
     

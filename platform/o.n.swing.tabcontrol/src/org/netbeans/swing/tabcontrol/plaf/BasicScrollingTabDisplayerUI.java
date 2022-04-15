@@ -468,7 +468,7 @@ public abstract class BasicScrollingTabDisplayerUI extends BasicTabDisplayerUI {
     
     @Override
     public Dimension getMinimumSize(JComponent c) {
-        return new Dimension( 100,  displayer.getSize().height);
+        return new Dimension( 100,  displayer.getPreferredSize().height);
     }
     
     /**

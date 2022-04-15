@@ -18,11 +18,11 @@
  */
 package org.netbeans.modules.java.disco;
 
+import eu.hansolo.jdktools.Latest;
+import eu.hansolo.jdktools.PackageType;
+import eu.hansolo.jdktools.TermOfSupport;
 import io.foojay.api.discoclient.pkg.Distribution;
-import io.foojay.api.discoclient.pkg.Latest;
-import io.foojay.api.discoclient.pkg.PackageType;
 import io.foojay.api.discoclient.pkg.Pkg;
-import io.foojay.api.discoclient.pkg.TermOfSupport;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -37,20 +37,24 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 public abstract class AdvancedPanel extends javax.swing.JPanel {
 
     protected BundleTableModel tableModel;
+    private final DefaultComboBoxModel<Distribution> distrosModel;
 
     public AdvancedPanel() {
+        distrosModel = new DefaultComboBoxModel<>();
         initComponents();
 
         distributionComboBox.setRenderer(new DistributionListCellRenderer());
         versionComboBox.setRenderer(new VersionListCellRenderer());
+        packageTypeComboBox.setRenderer(new PackageTypeListCellRenderer());
     }
 
     @UIEffect
     public @Nullable
     Pkg getSelectedPackage() {
         int index = table.getSelectedRow();
-        if (index < 0)
+        if (index < 0) {
             return null;
+        }
         int modelIndex = table.convertRowIndexToModel(index);
         Pkg bundle = tableModel.getBundles().get(modelIndex);
         return bundle;
@@ -66,6 +70,17 @@ public abstract class AdvancedPanel extends javax.swing.JPanel {
 
     @UIEffect
     protected abstract void updateData(Distribution distribution, Integer featureVersion, Latest latest, PackageType bundleType);
+
+    protected void updateDistributions(List<Distribution> distros) {
+        distrosModel.removeAllElements();
+        distros.stream()
+                .sorted((o1, o2) -> o1.getUiString().compareTo(o2.getUiString()))
+                .forEachOrdered(distrosModel::addElement);
+        Client.getInstance().getDistribution(
+                DiscoPlatformInstall.defaultDistribution())
+                .filter(distros::contains)
+                .ifPresent(distrosModel::setSelectedItem);
+    }
     
     protected void setVersions(List<Integer> versions, Map<Integer, TermOfSupport> lts) {
         List<Integer> reversedVersions = new ArrayList<>(versions);
@@ -81,17 +96,7 @@ public abstract class AdvancedPanel extends javax.swing.JPanel {
     }
 
     private ComboBoxModel<Distribution> createDistributionComboboxModel() {
-        List<Distribution> allDistros = Distribution.getDistributions();
-        allDistros.sort((o1, o2) -> {
-            return o1.getUiString().compareTo(o2.getUiString());
-        });
-        List<Distribution> distros = new ArrayList<>(1 + allDistros.size());
-        distros.add(Distribution.NONE);
-        distros.addAll(allDistros);
-
-        Distribution[] distributions = distros.toArray(new Distribution[0]);
-
-        return new DefaultComboBoxModel<>(distributions);
+        return distrosModel;
     }
 
     private ComboBoxModel<PackageType> createPackageTypeComboboxModel() {

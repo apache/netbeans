@@ -18,30 +18,18 @@
  */
 package org.netbeans.modules.java.disco;
 
-import org.netbeans.spi.java.platform.CustomPlatformInstall;
-import org.openide.WizardDescriptor;
-import org.openide.WizardDescriptor.InstantiatingIterator;
-import org.openide.util.NbBundle;
+import eu.hansolo.jdktools.PackageType;
+import java.awt.Component;
+import javax.swing.DefaultListCellRenderer;
+import javax.swing.JList;
 
-@NbBundle.Messages({
-    "DiscoPlatformInstall.displayName=Download OpenJDK (via Foojay.io Disco API)"
-})
-public class FoojayPlatformInstall extends CustomPlatformInstall {
+public class PackageTypeListCellRenderer extends DefaultListCellRenderer {
 
-    private FoojayPlatformInstall() {}
-    
-    @Override
-    public InstantiatingIterator<WizardDescriptor> createIterator() {
-        return new FoojayPlatformIt();
+    public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+        if (value instanceof PackageType) {
+            value = ((PackageType) value).getUiString();
+        }
+        super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+        return this;
     }
-
-    @Override
-    public String getDisplayName() {
-        return Bundle.DiscoPlatformInstall_displayName();
-    }
-    
-    public static FoojayPlatformInstall create() {
-        return new FoojayPlatformInstall();
-    }
-    
 }

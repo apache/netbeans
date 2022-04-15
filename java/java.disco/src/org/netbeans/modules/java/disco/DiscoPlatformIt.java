@@ -35,7 +35,7 @@ import org.netbeans.api.java.platform.JavaPlatform;
 import org.openide.WizardDescriptor;
 
 @SuppressWarnings("initialization")
-public final class FoojayPlatformIt implements WizardDescriptor.InstantiatingIterator<WizardDescriptor> {
+public final class DiscoPlatformIt implements WizardDescriptor.InstantiatingIterator<WizardDescriptor> {
 
     public static final String PROP_DOWNLOAD = "download"; //NOI18N
     public static final String PROP_DOWNLOAD_FOLDER = "downloadFolder"; //NOI18N
@@ -139,7 +139,7 @@ public final class FoojayPlatformIt implements WizardDescriptor.InstantiatingIte
     @Override
     public Set<JavaPlatform> instantiate() throws IOException {
         //TODO: Download (in background?)
-        String downloadedFolder = (String) wizard.getProperty(FoojayPlatformIt.PROP_DOWNLOAD);
+        String downloadedFolder = (String) wizard.getProperty(DiscoPlatformIt.PROP_DOWNLOAD);
         if (downloadedFolder != null) {
             File f = new File(downloadedFolder);
             if (!f.isDirectory()) {

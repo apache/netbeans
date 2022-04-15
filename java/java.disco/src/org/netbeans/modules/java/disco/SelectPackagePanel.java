@@ -94,7 +94,7 @@ public class SelectPackagePanel extends FirstPanel {
     @UIEffect
     public void addNotify() {
         super.addNotify();
-        
+
         class Result {
             final List<Integer> versionNumbers;
             final Map<Integer, TermOfSupport> versionNumberSupport;
@@ -105,7 +105,7 @@ public class SelectPackagePanel extends FirstPanel {
                 this.versionNumberSupport = versionNumberSupport;
                 this.distributions = distributions;
             }
-            
+
         }
 
         if (initialLoad)
@@ -127,7 +127,6 @@ public class SelectPackagePanel extends FirstPanel {
                         versionNumbers.add(i);
                     }
                     Map<Integer, TermOfSupport> versionNumberSupport = new HashMap<>(Maps.filterKeys(majorVersions, v -> versionNumbers.contains(v)));
-//                    return new AbstractMap.SimpleEntry<>(versionNumbers, versionNumberSupport);
                     return new Result(versionNumbers, versionNumberSupport, distros);
         }).then((c) -> {
             //hide 'please wait' message, show tabs
@@ -196,7 +195,7 @@ public class SelectPackagePanel extends FirstPanel {
 
     @Override
     protected void updateDistributions(List<Distribution> distros) {
-        super.updateDistributions(distros); //To change body of generated methods, choose Tools | Templates.
+        super.updateDistributions(distros);
     }
 
     @UIEffect

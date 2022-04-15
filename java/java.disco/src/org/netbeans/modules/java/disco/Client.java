@@ -90,7 +90,6 @@ public class Client {
     public synchronized List<Pkg> getPkgs(final Distribution distribution, final VersionNumber versionNumber, final Latest latest, final OperatingSystem operatingSystem,
             final Architecture architecture, final ArchiveType archiveType, final PackageType packageType,
             final Boolean javafxBundled) {
-//        return getDisco().getPkgs(distribution, versionNumber, latest, operatingSystem, LibCType.NONE, architecture, Bitness.NONE, archiveType, packageType, javafxBundled, /*directlyDownloadable*/ true, ReleaseStatus.NONE, TermOfSupport.NONE, Scope.PUBLIC);
         return getDisco().getPkgs(asList(distribution),
                 versionNumber,
                 latest,
@@ -139,7 +138,7 @@ public class Client {
         //XXX: in theory this could be delayed until disco is instantiated...
         getDisco().setOnEvt(type, observer);
     }
-    
+
     public synchronized void removeAllObservers() {
         getDisco().removeAllObservers();
     }

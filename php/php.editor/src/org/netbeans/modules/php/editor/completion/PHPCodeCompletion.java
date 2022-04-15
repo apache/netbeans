@@ -71,6 +71,8 @@ import org.netbeans.modules.php.editor.api.elements.AliasedElement.Trait;
 import org.netbeans.modules.php.editor.api.elements.ClassElement;
 import org.netbeans.modules.php.editor.api.elements.ConstantElement;
 import org.netbeans.modules.php.editor.api.elements.ElementFilter;
+import org.netbeans.modules.php.editor.api.elements.EnumCaseElement;
+import org.netbeans.modules.php.editor.api.elements.EnumElement;
 import org.netbeans.modules.php.editor.api.elements.FieldElement;
 import org.netbeans.modules.php.editor.api.elements.FunctionElement;
 import org.netbeans.modules.php.editor.api.elements.InterfaceElement;
@@ -87,6 +89,7 @@ import org.netbeans.modules.php.editor.completion.CompletionContextFinder.Comple
 import org.netbeans.modules.php.editor.completion.CompletionContextFinder.KeywordCompletionType;
 import static org.netbeans.modules.php.editor.completion.CompletionContextFinder.lexerToASTOffset;
 import org.netbeans.modules.php.editor.completion.PHPCompletionItem.CompletionRequest;
+import org.netbeans.modules.php.editor.completion.PHPCompletionItem.EnumCaseItem;
 import org.netbeans.modules.php.editor.completion.PHPCompletionItem.FieldItem;
 import org.netbeans.modules.php.editor.completion.PHPCompletionItem.MethodElementItem;
 import org.netbeans.modules.php.editor.completion.PHPCompletionItem.TypeConstantItem;
@@ -461,6 +464,14 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
             case INTERFACE_NAME:
                 autoCompleteNamespaces(completionResult, request);
                 autoCompleteInterfaceNames(completionResult, request);
+                break;
+            case BACKING_TYPE:
+                List<String> backingTypes = Type.getTypesForBackingType();
+                for (String keyword : backingTypes) {
+                    if (startsWith(keyword, request.prefix)) {
+                        completionResult.add(new PHPCompletionItem.KeywordItem(keyword, request));
+                    }
+                }
                 break;
             case GROUP_USE_KEYWORD:
                 autoCompleteGroupUse(UseType.TYPE, completionResult, request);
@@ -866,6 +877,33 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
         }
     }
 
+    private void autoCompleteEnumNames(final PHPCompletionResult completionResult,
+            PHPCompletionItem.CompletionRequest request, boolean endWithDoubleColon) {
+        autoCompleteEnumNames(completionResult, request, endWithDoubleColon, null);
+    }
+
+    private void autoCompleteEnumNames(final PHPCompletionResult completionResult,
+            PHPCompletionItem.CompletionRequest request, boolean endWithDoubleColon, QualifiedNameKind kind) {
+        if (CancelSupport.getDefault().isCancelled()) {
+            return;
+        }
+        final boolean isCamelCase = isCamelCaseForTypeNames(request.prefix);
+        final NameKind nameQuery = NameKind.create(request.prefix,
+                isCamelCase ? Kind.CAMEL_CASE : Kind.CASE_INSENSITIVE_PREFIX);
+        Model model = request.result.getModel();
+        Set<EnumElement> enums = request.index.getEnums(nameQuery, ModelUtils.getAliasedNames(model, request.anchor), Trait.ALIAS);
+
+        if (!enums.isEmpty()) {
+            completionResult.setFilterable(false);
+        }
+        for (EnumElement enumElement : enums) {
+            if (CancelSupport.getDefault().isCancelled()) {
+                return;
+            }
+            completionResult.add(new PHPCompletionItem.EnumItem(enumElement, request, endWithDoubleColon, kind));
+        }
+    }
+
     private void autoCompleteInterfaceNames(final PHPCompletionResult completionResult, PHPCompletionItem.CompletionRequest request) {
         autoCompleteInterfaceNames(completionResult, request, null);
     }
@@ -1020,6 +1058,12 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
                     }
                     completionResult.add(new PHPCompletionItem.TraitItem(trait, request));
                 }
+                for (EnumElement enumElement : request.index.getEnums(nameQuery)) {
+                    if (CancelSupport.getDefault().isCancelled()) {
+                        return;
+                    }
+                    completionResult.add(new PHPCompletionItem.EnumItem(enumElement, request, false, kind));
+                }
                 break;
             case CONST:
                 for (ConstantElement constant : request.index.getConstants(nameQuery)) {
@@ -1055,6 +1099,7 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
         }
         if (request.prefix.trim().length() > 0) {
             autoCompleteClassNames(completionResult, request, endWithDoubleColon, kind);
+            autoCompleteEnumNames(completionResult, request, endWithDoubleColon, kind);
             autoCompleteInterfaceNames(completionResult, request, kind);
         } else {
             Model model = request.result.getModel();
@@ -1071,6 +1116,9 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
                     }
                 } else if (element instanceof InterfaceElement) {
                     completionResult.add(new PHPCompletionItem.InterfaceItem((InterfaceElement) element, request, kind, endWithDoubleColon));
+                } else if (element instanceof EnumElement) {
+                    EnumElement enumElement = (EnumElement) element;
+                    completionResult.add(new PHPCompletionItem.EnumItem(enumElement, request, endWithDoubleColon, kind));
                 }
             }
         }
@@ -1419,6 +1467,10 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
                             ElementFilter.forKind(PhpElementKind.TYPE_CONSTANT),
                             ElementFilter.forName(NameKind.caseInsensitivePrefix(request.prefix)),
                             ElementFilter.forInstanceOf(TypeConstantElement.class));
+                    final ElementFilter enumCasesFilter = ElementFilter.allOf(
+                            ElementFilter.forKind(PhpElementKind.ENUM_CASE),
+                            ElementFilter.forName(NameKind.caseInsensitivePrefix(request.prefix)),
+                            ElementFilter.forInstanceOf(EnumCaseElement.class));
                     HashSet<TypeMemberElement> accessibleTypeMembers = new HashSet<>();
                     accessibleTypeMembers.addAll(request.index.getAccessibleTypeMembers(typeScope, enclosingType));
                     // for @mixin tag #241740
@@ -1451,6 +1503,10 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
                                 TypeConstantElement constant = (TypeConstantElement) phpElement;
                                 TypeConstantItem constantItem = PHPCompletionItem.TypeConstantItem.getItem(constant, request, completeAccessPrefix);
                                 completionResult.add(constantItem);
+                            } else if ((staticContext || completeAccessPrefix) && enumCasesFilter.isAccepted(phpElement)) {
+                                EnumCaseElement enumCase = (EnumCaseElement) phpElement;
+                                EnumCaseItem enumCaseItem = EnumCaseItem.getItem(enumCase, request, completeAccessPrefix);
+                                completionResult.add(enumCaseItem);
                             }
                         }
                     }
@@ -1894,6 +1950,9 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
                 if (!classElement.isAnonymous()) {
                     completionResult.add(new PHPCompletionItem.ClassItem(classElement, request, true, null));
                 }
+            } else if (element instanceof EnumElement) {
+                EnumElement enumElement = (EnumElement) element;
+                completionResult.add(new PHPCompletionItem.EnumItem(enumElement, request, true, null));
             } else if (element instanceof InterfaceElement) {
                 completionResult.add(new PHPCompletionItem.InterfaceItem((InterfaceElement) element, request, true));
             } else if (offerGlobalVariables && element instanceof VariableElement) {

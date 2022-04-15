@@ -223,7 +223,7 @@ public final class IndexQueryImpl implements ElementQuery.Index {
         return Collections.unmodifiableSet(traits);
     }
 
-    private Set<EnumElement> getEnumImpl(final NameKind query) {
+    private Set<EnumElement> getEnumsImpl(final NameKind query) {
         final long start = (LOG.isLoggable(Level.FINE)) ? System.currentTimeMillis() : 0;
         final Set<EnumElement> enums = new HashSet<>();
         final Collection<? extends IndexResult> result = results(EnumElementImpl.IDX_FIELD, query);
@@ -271,7 +271,7 @@ public final class IndexQueryImpl implements ElementQuery.Index {
         types.addAll(getClassesImpl(query));
         types.addAll(getInterfacesImpl(query));
         types.addAll(getTraitsImpl(query));
-        types.addAll(getEnumImpl(query));
+        types.addAll(getEnumsImpl(query));
         return types;
     }
 
@@ -564,7 +564,7 @@ public final class IndexQueryImpl implements ElementQuery.Index {
                 for (final IndexResult indexResult : enumResults) {
                     for (final TypeElement enumElement : EnumElementImpl.fromSignature(typeQuery, this, indexResult)) {
                         members.addAll(MethodElementImpl.fromSignature(enumElement, memberQuery, this, indexResult));
-                        members.addAll(MethodElementImpl.fromSignature(enumElement, memberQuery, this, indexResult));
+                        members.addAll(CaseElementImpl.fromSignature(enumElement, memberQuery, this, indexResult));
                         members.addAll(TypeConstantElementImpl.fromSignature(enumElement, memberQuery, this, indexResult));
                     }
                 }
@@ -1514,7 +1514,7 @@ public final class IndexQueryImpl implements ElementQuery.Index {
         types.addAll(getClassesImpl(typeQuery));
         types.addAll(getInterfacesImpl(typeQuery));
         types.addAll(getTraitsImpl(typeQuery));
-        types.addAll(getEnumImpl(typeQuery));
+        types.addAll(getEnumsImpl(typeQuery));
         for (TypeElement typeElement : types) {
             retval.addAll(ElementFilter.forName(methodQuery).filter(getAllMethods(typeElement)));
         }
@@ -1537,7 +1537,7 @@ public final class IndexQueryImpl implements ElementQuery.Index {
         Set<TypeElement> types = new HashSet<>();
         types.addAll(getClassesImpl(typeQuery));
         types.addAll(getInterfacesImpl(typeQuery));
-        types.addAll(getEnumImpl(typeQuery));
+        types.addAll(getEnumsImpl(typeQuery));
         for (TypeElement typeElement : types) {
             retval.addAll(ElementFilter.forName(constantQuery).filter(getAllTypeConstants(typeElement)));
         }
@@ -1548,7 +1548,7 @@ public final class IndexQueryImpl implements ElementQuery.Index {
     public Set<EnumCaseElement> getAllEnumCases(Exact typeQuery, NameKind enumCaseQuery) {
         Set<EnumCaseElement> retval = new HashSet<>();
         Set<TypeElement> types = new HashSet<>();
-        types.addAll(getEnumImpl(typeQuery));
+        types.addAll(getEnumsImpl(typeQuery));
         for (TypeElement typeElement : types) {
             retval.addAll(ElementFilter.forName(enumCaseQuery).filter(getAllEnumCases(typeElement)));
         }
@@ -2025,6 +2025,24 @@ public final class IndexQueryImpl implements ElementQuery.Index {
     }
 
     @Override
+    public Set<EnumElement> getEnums(final NameKind query, final Set<AliasedName> aliasedNames, final Trait trait) {
+        final Set<EnumElement> retval = new HashSet<>();
+        for (final AliasedName aliasedName : aliasedNames) {
+            for (final NameKind nextQuery : queriesForAlias(query, aliasedName, PhpElementKind.ENUM)) {
+                for (final EnumElement nextClass : getEnumsImpl(nextQuery)) {
+                    final AliasedEnum aliasedClass = new AliasedEnum(aliasedName, nextClass);
+                    if (trait != null) {
+                        aliasedClass.setTrait(trait);
+                    }
+                    retval.add(aliasedClass);
+                }
+            }
+        }
+        retval.addAll(getEnumsImpl(query));
+        return retval;
+    }
+
+    @Override
     public Set<NamespaceElement> getNamespaces(final NameKind query, final Set<AliasedName> aliasedNames, final Trait trait) {
         final Set<NamespaceElement> retval = new HashSet<>();
         for (final AliasedName aliasedName : aliasedNames) {
@@ -2166,7 +2184,7 @@ public final class IndexQueryImpl implements ElementQuery.Index {
     @Override
     public Set<EnumElement> getEnums(NameKind query) {
         final Set<EnumElement> retval = new HashSet<>();
-        retval.addAll(getEnumImpl(query));
+        retval.addAll(getEnumsImpl(query));
         return retval;
     }
 

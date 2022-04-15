@@ -230,6 +230,8 @@ class IndexScopeImpl extends ScopeImpl implements IndexScope {
                         retval.add(new InterfaceScopeImpl(this, (InterfaceElement) typeElement));
                     } else if (typeElement instanceof TraitElement) {
                         retval.add(new TraitScopeImpl(this, (TraitElement) typeElement));
+                    } else if (typeElement instanceof EnumElement) {
+                        retval.add(new EnumScopeImpl(this, (EnumElement) typeElement));
                     } else {
                         assert false : typeElement.getClass();
                     }

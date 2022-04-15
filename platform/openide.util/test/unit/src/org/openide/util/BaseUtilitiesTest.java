@@ -21,17 +21,20 @@ package org.openide.util;
 
 import java.io.File;
 import java.net.URI;
-import java.util.Locale;
+import static java.util.Locale.US;
 import org.netbeans.junit.NbTestCase;
 import static org.openide.util.BaseUtilities.*;
 import static java.lang.Boolean.*;
+import java.text.BreakIterator;
 
 /**
  *
- * @author Jiri Rechtacek et al.
+ * @author Jiri Rechtacek et al. , Lukasz Bownik
  */
 public class BaseUtilitiesTest extends NbTestCase {
+    
     private String originalOsName;
+    private final BreakIterator breakIterator = BreakIterator.getCharacterInstance(US);
 
     public BaseUtilitiesTest(String name) {
         super(name);
@@ -59,7 +62,7 @@ public class BaseUtilitiesTest extends NbTestCase {
     public void testGetOperatingSystemFreebsd () {
         System.setProperty ("os.name", "FreeBSD");
         assertEquals ("System.getProperty (os.name) returns FreeBSD", "FreeBSD", System.getProperty ("os.name"));
-        assertEquals ("System.getProperty (os.name) returns freebsd", "freebsd", System.getProperty ("os.name").toLowerCase (Locale.US));
+        assertEquals ("System.getProperty (os.name) returns freebsd", "freebsd", System.getProperty ("os.name").toLowerCase (US));
         assertEquals ("FreeBSD recognized as OS_FREEBSD", BaseUtilities.OS_FREEBSD, BaseUtilities.getOperatingSystem ());
     }
 
@@ -100,6 +103,7 @@ public class BaseUtilitiesTest extends NbTestCase {
         assertFalse ("freebsd is not isWindows", BaseUtilities.isWindows ());
         assertTrue ("freebsd isUnix", BaseUtilities.isUnix ());
     }
+    
     //--------------------------------------------------------------------------
     public void test_IsJavaIdentifier_returnsTrue_whenGivenJavaIdentifier()
             throws Exception {
@@ -125,12 +129,7 @@ public class BaseUtilitiesTest extends NbTestCase {
     public void test_toFile_throwsNullPonter_whenArgumentIsNull()
             throws Exception {
 
-        try {
-            toFile(null);
-            fail();
-        } catch (final NullPointerException e) {
-            //good
-        }
+        expectNullPointer(() -> toFile(null));
     }
     
     //--------------------------------------------------------------------------
@@ -237,12 +236,7 @@ public class BaseUtilitiesTest extends NbTestCase {
     public void test_toURI_throwsNullPonter_whenArgumentIsNull()
             throws Exception {
 
-        try {
-            toURI(null);
-            fail();
-        } catch (final NullPointerException e) {
-            //good
-        }
+        expectNullPointer(() -> toURI(null));
     }
 
     //--------------------------------------------------------------------------
@@ -309,75 +303,73 @@ public class BaseUtilitiesTest extends NbTestCase {
         URI wrappedResolvedURI = new URI("jar:" + resolvedURI + "!/");
         assertEquals(wrappedURI, wrappedResolvedURI);
     }
+    
+    //--------------------------------------------------------------------------
+    public void test_parseParameters_throwsNullPointer_whenGivenNullArgument() {
 
-    public void testParseParameters1() {
-        String[] args = BaseUtilities.parseParameters("\"c:\\program files\\jdk\\bin\\java\" -Dmessage=\"Hello /\\\\/\\\\ there!\" -Xmx128m");
+        expectNullPointer(() -> parseParameters(null));
+    }
+
+    //--------------------------------------------------------------------------
+    public void test_parseParameters_returnsEmptyArray_whenGivenEmptyString() {
+
+        assertEquals(0, parseParameters("").length);
+        assertEquals(0, parseParameters("   \t\r\n").length);
+    }
+
+    //--------------------------------------------------------------------------
+    public void test_parseParameters_returnsProperArray_forProperInput() {
+
+        String[] args;
+
+        args = parseParameters("\"c:\\program files\\jdk\\bin\\java\" -Dmessage=\"Hello /\\\\/\\\\ there!\" -Xmx128m");
         assertEquals(3, args.length);
         assertEquals("c:\\program files\\jdk\\bin\\java", args[0]);
         assertEquals("-Dmessage=Hello /\\/\\ there!", args[1]);
         assertEquals("-Xmx128m", args[2]);
-    }
 
-    public void testParseParameters2() {
-        String[] args = BaseUtilities.parseParameters("c:\\program files\\jdk\\bin\\java   -Xmx128m");
+        args = parseParameters("c:\\program files\\jdk\\bin\\java   -Xmx128m");
         assertEquals(3, args.length);
         assertEquals("c:\\program", args[0]);
         assertEquals("files\\jdk\\bin\\java", args[1]);
         assertEquals("-Xmx128m", args[2]);
-    }
 
-    public void testParseParameters3() {
-        String[] args = BaseUtilities.parseParameters("\"-Xmx128m");
+        args = parseParameters("\"-Xmx128m");
         assertEquals(1, args.length);
         assertEquals("-Xmx128m", args[0]);
-    }
 
-    public void testParseParameters4() {
-        String[] args = BaseUtilities.parseParameters("'-Xmx128m");
+        args = parseParameters("'-Xmx128m");
         assertEquals(1, args.length);
         assertEquals("-Xmx128m", args[0]);
-    }
 
-    public void testParseParameters5() {
-        String[] args = BaseUtilities.parseParameters("-Dmessage='Hello \"NetBeans\"'");
+        args = parseParameters("-Dmessage='Hello \"NetBeans\"'");
         assertEquals(1, args.length);
         assertEquals("-Dmessage=Hello \"NetBeans\"", args[0]);
-    }
 
-    public void testParseParameters6() {
-        String[] args = BaseUtilities.parseParameters("'c:\\program files\\jdk\\bin\\java'\n-Dmessage='Hello /\\/\\ there!' \t -Xmx128m");
+        args = parseParameters("'c:\\program files\\jdk\\bin\\java'\n-Dmessage='Hello /\\/\\ there!' \t -Xmx128m");
         assertEquals(3, args.length);
         assertEquals("c:\\program files\\jdk\\bin\\java", args[0]);
         assertEquals("-Dmessage=Hello /\\/\\ there!", args[1]);
         assertEquals("-Xmx128m", args[2]);
-    }
 
-    public void testParseParameters7() {
-        String[] args = BaseUtilities.parseParameters("-Dmessage=\"NetBeans\" \"\" 'third\narg'");
+        args = parseParameters("-Dmessage=\"NetBeans\" \"\" 'third\narg'");
         assertEquals(3, args.length);
         assertEquals("-Dmessage=NetBeans", args[0]);
         assertEquals("", args[1]);
         assertEquals("third\narg", args[2]);
-    }
 
-    public void testParseParameters8() {
-        String[] args = BaseUtilities.parseParameters("-Dmessage=\"NetBeans\" \"\" \"third\\narg\"");
+        args = parseParameters("-Dmessage=\"NetBeans\" \"\" \"third\\narg\"");
         assertEquals(3, args.length);
         assertEquals("-Dmessage=NetBeans", args[0]);
         assertEquals("", args[1]);
         assertEquals("third\\narg", args[2]);
     }
+    
     //--------------------------------------------------------------------------
-
     public void test_normalizeURI_ThrowsNullPointer_whenGivenNull()
             throws Exception {
 
-        try {
-            normalizeURI(null);
-            fail();
-        } catch (final NullPointerException e) {
-            //good
-        }
+        expectNullPointer(() -> normalizeURI(null));
     }
     //--------------------------------------------------------------------------
     public void test_normalizeURI_ReturnsTheSameURI_whenNormalizationIsNotNeeded()
@@ -387,7 +379,7 @@ public class BaseUtilitiesTest extends NbTestCase {
                 normalizeURI(new URI("file:////wsl$/Target/")).toString());
     }
     //--------------------------------------------------------------------------
-    public void test_normalizeURI_ReturnsNorMalizadURI()
+    public void test_normalizeURI_ReturnsNormalizadURI()
             throws Exception {
 
         assertEquals("file:////wsl$/Target/",
@@ -556,5 +548,103 @@ public class BaseUtilitiesTest extends NbTestCase {
         assertEquals(2, ((double[])result).length);
         assertEquals(0.0, ((double[])result)[0], 0.00001);
         assertEquals(1.0, ((double[])result)[1], 0.00001);
+    }
+    //--------------------------------------------------------------------------
+    public void test_getClassName_throwsNullPointer_whenGivenNullArgument() {
+        
+        expectNullPointer(() -> getClassName(null));
+    }
+    //--------------------------------------------------------------------------
+    public void test_getClassName_returnsClassName_forProperInvocation() {
+        
+        assertEquals("java.lang.String", getClassName(String.class));
+        assertEquals("java.lang.String[]", getClassName(String[].class));
+    }
+    //--------------------------------------------------------------------------
+    public void test_getShortClassName_throwsNullPointer_whenGivenNullArgument() {
+        
+        expectNullPointer(() -> getShortClassName(null));
+    }
+    //--------------------------------------------------------------------------
+    public void test_getShortClassName_returnsClassName_forProperInvocation() {
+        
+        assertEquals("String", getShortClassName(String.class));
+        assertEquals("String[]", getShortClassName(String[].class));
+        assertEquals("UnicodeBlock", getShortClassName(Character.UnicodeBlock.class));
+    }
+    //--------------------------------------------------------------------------
+    public void test_pureCalssName_thworsNullPointer_whenGivenNullArgument() {
+        
+        expectNullPointer(() -> pureClassName(null));
+    }
+    //--------------------------------------------------------------------------
+    public void test_pureCalssName__returnsEmptyString_whenGivenEmptyString() {
+        
+        assertEquals("", pureClassName(""));
+    }
+    //--------------------------------------------------------------------------
+    public void test_pureCalssName__returnsBlankString_whenGivenBlankString() {
+        
+        assertEquals(" \t", pureClassName(" \t"));
+    }
+    //--------------------------------------------------------------------------
+    public void test_pureCalssName__returnsClassName_whenGivenFullyQualifiedClassName() {
+        
+        assertEquals("java.lang.String", pureClassName("java.lang.String"));
+        assertEquals("UnicodeBlock", pureClassName("java.lang.Character$UnicodeBlock"));
+    }
+    //--------------------------------------------------------------------------
+    public void test_wrapString_throwsNullPointer_whenGivenNullArgument() {
+
+        expectNullPointer(() -> wrapString(null, 11, this.breakIterator, true));
+
+        //NullPointerException happens only when line breaking actually happenes.
+        //Change second argument below from 1 to 10 and and rerun the test to observe this.
+        //Maybe we should tighten this behavior to throw NPE unconditionally.
+        expectNullPointer(() -> wrapString("ab\ncd", 1, null, true));
+    }
+    //--------------------------------------------------------------------------
+    public void test_wrapString_assumesWidthEqalsOne_whenGivenZeroWidth() {
+
+        assertEquals("a\n\n \n\nb\n", wrapString("a\nb", 0, this.breakIterator, true));
+    }
+    //--------------------------------------------------------------------------
+    public void test_wrapString_assumesWidthEqalsOne_whenGivenNegativeWidth() {
+
+        assertEquals("a\n\n \n\nb\n", wrapString("a\nb", -1, this.breakIterator, true));
+    }
+    //--------------------------------------------------------------------------
+    public void test_wrapString_returnsblankString_whenGivenEmptyString() {
+
+        assertEquals("\n", wrapString("", 10, this.breakIterator, true));
+        assertEquals(" \n", wrapString(" ", 10, this.breakIterator, true));
+        assertEquals(" \n", wrapString("\n", 10, this.breakIterator, true));
+    }
+    //--------------------------------------------------------------------------
+    public void test_wrapString_returnsOneLineWithOriginalString_whenGivenShortString() {
+
+        // String shorter than given width (10).
+        assertEquals("abc def\n", wrapString("abc\ndef", 10, this.breakIterator, true));
+    }
+    //--------------------------------------------------------------------------
+    public void test_wrapString_wrapsLinesEvenInShostStrings_whenRemoveNewLinesEqualsFalse() {
+
+        // String shorter than given width (10).
+        assertEquals("abc\ndef\n", wrapString("abc\ndef", 10, this.breakIterator, false));
+    }
+    //--------------------------------------------------------------------------
+    public void test_wrapString_wrapsString_whenGivenLongString() {
+
+        assertEquals("abc \ndef\n", wrapString("abc\ndef", 5, this.breakIterator, true));
+    }
+    //--------------------------------------------------------------------------
+    private void expectNullPointer(final Runnable code) {
+
+        try {
+            code.run();
+            fail("Null pointer not thrown.");
+        } catch (final NullPointerException e) {
+            // good
+        }
     }
 }

@@ -19,6 +19,7 @@
 
 package org.netbeans.spi.project;
 
+import java.util.Objects;
 import org.openide.filesystems.FileObject;
 
 /**
@@ -31,6 +32,7 @@ public final class SingleMethod {
 
     private FileObject file;
     private String methodName;
+    private String enclosingType = null;
 
     /**
      * Creates a new instance holding the specified identification
@@ -54,6 +56,19 @@ public final class SingleMethod {
         this.methodName = methodName;
     }
 
+    public SingleMethod(FileObject file, String methodName, String enclosingType) {
+        super();
+        if (file == null) {
+            throw new IllegalArgumentException("file is <null>");
+        }
+        if (methodName == null) {
+            throw new IllegalArgumentException("methodName is <null>");
+        }
+        this.file = file;
+        this.methodName = methodName;
+        this.enclosingType = enclosingType;
+    }
+
     /**
      * Returns the file identification.
      *
@@ -72,6 +87,10 @@ public final class SingleMethod {
      */
     public String getMethodName() {
         return methodName;
+    }
+
+    public String getEnclosingType() {
+        return enclosingType;
     }
 
     /**
@@ -94,14 +113,16 @@ public final class SingleMethod {
             return false;
         }
         SingleMethod other = (SingleMethod) obj;
-        return other.file.equals(file) && other.methodName.equals(methodName);
+        return other.file.equals(file) && other.methodName.equals(methodName)
+            && Objects.equals(this.enclosingType, other.enclosingType);
     }
 
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 29 * hash + this.file.hashCode();
-        hash = 29 * hash + this.methodName.hashCode();
+        hash = 29 * hash + Objects.hashCode(this.file);
+        hash = 29 * hash + Objects.hashCode(this.methodName);
+        hash = 29 * hash + Objects.hashCode(this.enclosingType);
         return hash;
     }
 }

@@ -25,7 +25,6 @@ import com.sun.source.tree.Tree.Kind;
 import com.sun.source.util.SourcePositions;
 import com.sun.source.util.TreePath;
 import com.sun.source.util.Trees;
-import java.io.IOException;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -57,7 +56,6 @@ import org.netbeans.modules.java.testrunner.ui.spi.ComputeTestMethods;
 import org.netbeans.modules.java.testrunner.ui.spi.ComputeTestMethods.Factory;
 import org.netbeans.modules.parsing.spi.Parser;
 import org.netbeans.spi.project.SingleMethod;
-import org.openide.ErrorManager;
 import org.openide.filesystems.FileObject;
 import org.openide.util.Exceptions;
 import org.openide.util.lookup.ServiceProvider;
@@ -150,12 +148,13 @@ public final class TestClassInfoTask implements Task<CompilationController> {
                     int end = (int) sp.getEndPosition(tp.getCompilationUnit(), tp.getLeaf());
                     Document doc = info.getSnapshot().getSource().getDocument(false);
                     try {
+                        String enclosingType = getEnclosingType(elements.getBinaryName(typeElement).toString(), info.getFileObject().getName());
                         result.add(new TestMethod(elements.getBinaryName(typeElement).toString(),
-                                doc != null ? doc.createPosition(clazzPreferred) : new SimplePosition(clazzPreferred),
-                                new SingleMethod(info.getFileObject(), mn),
-                                doc != null ? doc.createPosition(start) : new SimplePosition(start),
-                                doc != null ? doc.createPosition(preferred) : new SimplePosition(preferred),
-                                doc != null ? doc.createPosition(end) : new SimplePosition(end)));
+                            doc != null ? doc.createPosition(clazzPreferred) : new SimplePosition(clazzPreferred),
+                            new SingleMethod(info.getFileObject(), mn, enclosingType),
+                            doc != null ? doc.createPosition(start) : new SimplePosition(start),
+                            doc != null ? doc.createPosition(preferred) : new SimplePosition(preferred),
+                            doc != null ? doc.createPosition(end) : new SimplePosition(end)));
                     } catch (BadLocationException ex) {
                         //ignore
                     }
@@ -176,6 +175,15 @@ public final class TestClassInfoTask implements Task<CompilationController> {
                 }
             });
         }
+    }
+
+    private static String getEnclosingType(String fqClassName, String fileName) {
+        // drop the package name
+        String classOnly = fqClassName.substring(fqClassName.lastIndexOf('.') + 1);
+        if (classOnly.startsWith(fileName) && classOnly.length() > fileName.length()) {
+            return classOnly.substring(fileName.length());
+        }
+        return null;
     }
 
     private static boolean isTestSource(FileObject fo) {

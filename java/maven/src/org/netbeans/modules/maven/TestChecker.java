@@ -54,9 +54,17 @@ public class TestChecker implements PrerequisitesChecker {
         { //NOI18N - profile-tests is not really nice but well.
                 String test = config.getProperties().get("test");
                 String method = config.getProperties().get(DefaultReplaceTokenProvider.METHOD_NAME);
-                if (test != null && method != null) {
+                String enclosingType = config.getProperties().get(DefaultReplaceTokenProvider.ENCLOSING_TYPE_NAME);
+                if (test != null) {
                     config.setProperty(DefaultReplaceTokenProvider.METHOD_NAME, null);
-                    config.setProperty("test", test + '#' + method);
+                    config.setProperty(DefaultReplaceTokenProvider.ENCLOSING_TYPE_NAME, null);
+                    // ensure that maven executes all the methods in embedded classes too.
+                    String methodConstraint = method == null ? "," + test + "$*" : "#" + method;
+                    if (enclosingType != null) {
+                        config.setProperty("test", test + enclosingType + methodConstraint);
+                    } else {
+                        config.setProperty("test", test + methodConstraint);
+                    }
                 }
         }
         if (ActionProviderImpl.COMMAND_INTEGRATION_TEST_SINGLE.equals(action) ||
@@ -65,9 +73,16 @@ public class TestChecker implements PrerequisitesChecker {
         {
                 String test = config.getProperties().get("it.test"); //NOI18N
                 String method = config.getProperties().get(DefaultReplaceTokenProvider.METHOD_NAME);
-                if (test != null && method != null) {
+                String enclosingType = config.getProperties().get(DefaultReplaceTokenProvider.ENCLOSING_TYPE_NAME);
+                if (test != null) {
                     config.setProperty(DefaultReplaceTokenProvider.METHOD_NAME, null);
-                    config.setProperty("it.test", test + '#' + method); //NOI18N
+                    config.setProperty(DefaultReplaceTokenProvider.ENCLOSING_TYPE_NAME, null);
+                    String methodConstraint = method == null ? "," + test + "$*" : "#" + method;
+                    if (enclosingType != null) {
+                        config.setProperty("it.test", test + enclosingType + methodConstraint);
+                    } else {
+                        config.setProperty("it.test", test + methodConstraint);
+                    }
                 }
         }
         if (MavenSettings.getDefault().isSkipTests()) {

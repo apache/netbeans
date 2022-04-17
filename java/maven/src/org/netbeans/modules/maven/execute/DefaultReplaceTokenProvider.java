@@ -29,7 +29,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import javax.swing.ActionMap;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.java.project.JavaProjectConstants;
 import org.netbeans.api.java.queries.UnitTestForSourceQuery;
@@ -44,7 +43,6 @@ import org.netbeans.modules.maven.NbMavenProjectImpl;
 import org.netbeans.modules.maven.api.NbMavenProject;
 import org.netbeans.modules.maven.classpath.MavenSourcesImpl;
 import org.netbeans.modules.maven.configurations.M2ConfigProvider;
-import org.netbeans.modules.maven.runjar.MavenExecuteUtils;
 import org.netbeans.modules.maven.spi.actions.ActionConvertor;
 import org.netbeans.modules.maven.spi.actions.ReplaceTokenProvider;
 import org.netbeans.spi.project.ActionProvider;
@@ -74,6 +72,7 @@ public class DefaultReplaceTokenProvider implements ReplaceTokenProvider, Action
     static final String PACK_CLASSNAME = "packageClassName";//NOI18N
     static final String ABSOLUTE_PATH = "absolutePathName";
     public static final String METHOD_NAME = "nb.single.run.methodName"; //NOI18N
+    public static final String ENCLOSING_TYPE_NAME = "nb.single.run.enclosingType"; //NOI18N
     private static final String VARIABLE_PREFIX = "var."; //NOI18N
     // as defined in org.netbeans.modules.project.ant.VariablesModel
     public static String[] fileBasedProperties = new String[] {
@@ -234,6 +233,7 @@ public class DefaultReplaceTokenProvider implements ReplaceTokenProvider, Action
             //sort of hack to push the method name through the current apis..
             SingleMethod method = methods.iterator().next();
             replaceMap.put(METHOD_NAME, method.getMethodName());
+            replaceMap.put(ENCLOSING_TYPE_NAME, method.getEnclosingType());
         }
 
         if (group != null &&

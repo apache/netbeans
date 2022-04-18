@@ -268,4 +268,13 @@ public class ModelTest extends ModelTestBase {
     public void testIssue231530() throws Exception {
         checkModel("testfiles/model/issue231530.js");
     }
+
+    public void testComplexPrototype() throws Exception {
+        // The unittest model contains multiple prototype entries, where only
+        // two are defined by plain strings and the others are variables,
+        // properties of objects and function calls. If at some later time these
+        // cases are better supported, the extracted model needs to be rechecked
+        // and regenerated.
+        checkModel("testfiles/model/complexPrototype.js");
+    }
 }

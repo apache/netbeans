@@ -175,7 +175,7 @@ public class LegacyProjectLoader extends AbstractProjectLoader {
                 errors.openNotification(
                         TIT_LOAD_ISSUES(base.getProjectDir().getName()),
                         TIT_LOAD_ISSUES(base.getProjectDir().getName()),
-                        GradleProjectErrorNotifications.bulletedList(info.getProblems()));                
+                        GradleProjectErrorNotifications.bulletedList(info.getProblems()));
             }
             if (!info.hasException()) {
                 if (!info.getProblems().isEmpty() || !info.getReports().isEmpty()) {
@@ -373,9 +373,11 @@ public class LegacyProjectLoader extends AbstractProjectLoader {
         
         if (e.getClass().getName().endsWith("LocationAwareException")) { // NOI18N
             String rawLoc = getLocation(e);
-            Matcher m = FILE_PATH_FROM_LOCATION.matcher(rawLoc);
-            loc = m.matches() ? m.group(1) : rawLoc;
-            line = getLineNumber(e);
+            if (rawLoc != null) {
+                Matcher m = FILE_PATH_FROM_LOCATION.matcher(rawLoc);
+                loc = m.matches() ? m.group(1) : rawLoc;
+                line = getLineNumber(e);
+            }
             reported = e.getCause();
         } else {
             reported = e;

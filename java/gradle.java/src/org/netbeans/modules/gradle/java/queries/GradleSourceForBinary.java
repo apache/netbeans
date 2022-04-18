@@ -132,7 +132,7 @@ public class GradleSourceForBinary implements SourceForBinaryQueryImplementation
                     support.fireChange();
                 }
             };
-            NbGradleProject.get(project).addPropertyChangeListener(WeakListeners.propertyChange(listener, project));
+            NbGradleProject.addPropertyChangeListener(project, WeakListeners.propertyChange(listener, NbGradleProject.get(project)));
         }
 
         @Override

@@ -143,6 +143,8 @@ public interface ElementQuery {
 
         Set<InterfaceElement> getInterfaces(NameKind query, Set<AliasedName> aliases, AliasedElement.Trait trait);
 
+        Set<EnumElement> getEnums(NameKind query, Set<AliasedName> aliases, AliasedElement.Trait trait);
+
         Set<TraitElement> getTraits(final NameKind query);
 
         Set<EnumElement> getEnums(final NameKind query);

@@ -1,0 +1,5 @@
+Code completion result for source line:
+self::CASE1::protectedStatic|EnumMethod();
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     protectedStaticEnumMethod()     [PROTECTE  \Enum1\Simple
+METHOD     protectedStaticTraitMethod()    [PROTECTE  \Enum1\TestTrait

@@ -97,7 +97,7 @@ public final class Type {
     private static final List<String> TYPES_FOR_PHP_DOC = Arrays.asList(STRING, INTEGER, INT, BOOLEAN, BOOL, FLOAT, DOUBLE, OBJECT, MIXED, ARRAY,
             RESOURCE, VOID, NULL, CALLBACK, CALLABLE, ITERABLE, FALSE, TRUE, SELF);
     private static final List<String> MIXED_TYPE = Arrays.asList(ARRAY, BOOL, CALLABLE, INT, FLOAT, NULL, OBJECT, /*RESOURCE, */STRING);
-
+    private static final List<String> TYPES_FOR_BACKING_TYPE = Arrays.asList(INT, STRING);
 
     public static boolean isPrimitive(String typeName) {
         boolean retval = false;
@@ -176,6 +176,15 @@ public final class Type {
 
     public static List<String> getTypesForPhpDoc() {
         return TYPES_FOR_PHP_DOC;
+    }
+
+    /**
+     * Get valid types for the backing type. "int" and "string" are available.
+     *
+     * @return valid types for the backing type
+     */
+    public static List<String> getTypesForBackingType() {
+        return TYPES_FOR_BACKING_TYPE;
     }
 
     /**

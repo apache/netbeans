@@ -43,6 +43,7 @@ import org.netbeans.modules.php.editor.parser.astnodes.ASTError;
 import org.netbeans.modules.php.editor.parser.astnodes.ASTNode;
 import org.netbeans.modules.php.editor.parser.astnodes.Block;
 import org.netbeans.modules.php.editor.parser.astnodes.ClassDeclaration;
+import org.netbeans.modules.php.editor.parser.astnodes.EnumDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.FunctionDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.InterfaceDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.MethodDeclaration;
@@ -211,7 +212,7 @@ final class CompletionContextFinder {
     public static enum CompletionContext {
 
         EXPRESSION, GLOBAL_CONST_EXPRESSION, CLASS_CONST_EXPRESSION, MATCH_EXPRESSION,
-        HTML, CLASS_NAME, INTERFACE_NAME,
+        HTML, CLASS_NAME, INTERFACE_NAME, BACKING_TYPE,
         TYPE_NAME, RETURN_TYPE_NAME, RETURN_UNION_OR_INTERSECTION_TYPE_NAME, FIELD_TYPE_NAME, VISIBILITY_MODIFIER_OR_TYPE_NAME, STRING,
         CLASS_MEMBER, STATIC_CLASS_MEMBER, PHPDOC, INHERITANCE, EXTENDS, IMPLEMENTS, METHOD_NAME,
         CLASS_MEMBER_PARAMETER_NAME, STATIC_CLASS_MEMBER_PARAMETER_NAME, FUNCTION_PARAMETER_NAME,
@@ -313,7 +314,7 @@ final class CompletionContextFinder {
                 return paramContext;
             }
             return CompletionContext.INTERFACE_CONTEXT_KEYWORDS;
-        } else if (isInsideClassOrTraitDeclarationBlock(info, caretOffset, tokenSequence)) {
+        } else if (isInsideClassOrTraitOrEnumDeclarationBlock(info, caretOffset, tokenSequence)) {
             if (acceptTokenChains(tokenSequence, USE_KEYWORD_TOKENS, moveNextSucces)) {
                 return CompletionContext.USE_TRAITS;
             } else if (acceptTokenChains(tokenSequence, METHOD_NAME_TOKENCHAINS, moveNextSucces)) {
@@ -821,19 +822,22 @@ final class CompletionContextFinder {
     private static CompletionContext getClsIfaceDeclContext(Token<PHPTokenId> token, int tokenOffset, TokenSequence<PHPTokenId> tokenSequence) {
         boolean isNew = false;
         boolean isClass = false;
+        boolean isTrait = false;
+        boolean isEnum = false;
         int openParenthesis = 0;
         boolean isIface = false;
         boolean isExtends = false;
         boolean isImplements = false;
         boolean isNsSeparator = false;
         boolean isString = false;
+        boolean isBackingType =false;
         Token<PHPTokenId> stringToken = null;
         boolean nokeywords;
         List<? extends Token<PHPTokenId>> preceedingLineTokens = getPreceedingLineTokens(token, tokenOffset, tokenSequence);
         for (int i = 0; i < preceedingLineTokens.size(); i++) {
             Token<PHPTokenId> cToken = preceedingLineTokens.get(i);
             TokenId id = cToken.id();
-            nokeywords = !isIface && !isClass && !isExtends && !isImplements && !isNsSeparator;
+            nokeywords = !isIface && !isClass && !isTrait && !isEnum && !isExtends && !isImplements && !isNsSeparator && !isBackingType;
             if (id.equals(PHPTokenId.PHP_TOKEN)
                     && TokenUtilities.textEquals(cToken.text(), ")")) { // NOI18N
                 openParenthesis--;
@@ -859,6 +863,12 @@ final class CompletionContextFinder {
                     return null;
                 }
                 break;
+            } else if (id.equals(PHPTokenId.PHP_TRAIT)) {
+                isTrait = true;
+                break;
+            } else if (id.equals(PHPTokenId.PHP_ENUM)) {
+                isEnum = true;
+                break;
             } else if (id.equals(PHPTokenId.PHP_INTERFACE)) {
                 isIface = true;
                 break;
@@ -868,6 +878,8 @@ final class CompletionContextFinder {
                 isImplements = true;
             } else if (id.equals(PHPTokenId.PHP_NS_SEPARATOR)) {
                 isNsSeparator = true;
+            } else if (isReturnTypeSeparator(cToken)) {
+                isBackingType = true;
             } else if (nokeywords && id.equals(PHPTokenId.PHP_STRING)) {
                 isString = true;
                 stringToken = cToken;
@@ -877,9 +889,14 @@ final class CompletionContextFinder {
                 }
             }
         }
-        if (isClass || isIface) {
+        if (isClass || isIface || isTrait || isEnum) {
             if (isImplements) {
                 return CompletionContext.INTERFACE_NAME;
+            } else if (isBackingType) {
+                if (isString) {
+                   return CompletionContext.IMPLEMENTS;
+                }
+                return CompletionContext.BACKING_TYPE;
             } else if (isExtends) {
                 if (isString && isClass && stringToken != null && tokenOffset == 0
                         && preceedingLineTokens.size() > 0 && preceedingLineTokens.get(0).text().equals(stringToken.text())) {
@@ -896,6 +913,8 @@ final class CompletionContextFinder {
                         : isClass ? CompletionContext.IMPLEMENTS : CompletionContext.INTERFACE_NAME;
             } else if (isIface) {
                 return !isString ? CompletionContext.NONE : CompletionContext.EXTENDS;
+            } else if (isEnum) {
+                return !isString ? CompletionContext.NONE : CompletionContext.IMPLEMENTS;
             } else if (isClass) {
                 if (isString
                         || isNew) {
@@ -1333,7 +1352,7 @@ final class CompletionContextFinder {
         return retval;
     }
 
-    private static synchronized boolean isInsideClassOrTraitDeclarationBlock(ParserResult info,
+    private static synchronized boolean isInsideClassOrTraitOrEnumDeclarationBlock(ParserResult info,
             int caretOffset, TokenSequence tokenSequence) {
         List<ASTNode> nodePath = NavUtils.underCaret(info, lexerToASTOffset(info, caretOffset));
         boolean methDecl = false;
@@ -1350,7 +1369,8 @@ final class CompletionContextFinder {
             } else if (aSTNode instanceof MethodDeclaration) {
                 methDecl = true;
             } else if (aSTNode instanceof ClassDeclaration
-                    || aSTNode instanceof TraitDeclaration) {
+                    || aSTNode instanceof TraitDeclaration
+                    || aSTNode instanceof EnumDeclaration) {
                 if (aSTNode.getEndOffset() != caretOffset) {
                     typeDecl = true;
                     if (funcDecl) {
@@ -1398,7 +1418,9 @@ final class CompletionContextFinder {
                         || id.equals(PHPTokenId.PHP_CATCH))
                         && (curlyOpen > curlyClose)) {
                     return false;
-                } else if (id.equals(PHPTokenId.PHP_CLASS) || id.equals(PHPTokenId.PHP_TRAIT)) {
+                } else if (id.equals(PHPTokenId.PHP_CLASS)
+                        || id.equals(PHPTokenId.PHP_TRAIT)
+                        || id.equals(PHPTokenId.PHP_ENUM)) {
                     boolean isTypeScope = curlyOpen > 0 && (curlyOpen > curlyClose);
                     return isTypeScope;
                 }

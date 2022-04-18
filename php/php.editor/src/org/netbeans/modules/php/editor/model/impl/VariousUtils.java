@@ -1233,6 +1233,8 @@ public final class VariousUtils {
         int leftBraces = 0;
         int rightBraces = State.PARAMS.equals(state) ? 1 : 0;
         int arrayBrackets = 0;
+        String className = null;
+        String fieldName = null;
         CloneExpressionInfo cloneInfo = new CloneExpressionInfo();
         StringBuilder metaAll = new StringBuilder();
         while (!state.equals(State.INVALID) && !state.equals(State.STOP) && tokenSequence.movePrevious() && skipWhitespaces(tokenSequence)) {
@@ -1279,7 +1281,7 @@ public final class VariousUtils {
                             arrayBrackets++;
                             state = State.IDX;
                         } else if (isString(token)) {
-                            metaAll.insert(0, token.text().toString());
+                            fieldName = token.text().toString();
                             state = isArray ? State.ARRAY_FIELD : State.FIELD;
                         } else if (isVariable(token)) {
                             metaAll.insert(0, token.text().toString());
@@ -1289,10 +1291,10 @@ public final class VariousUtils {
                     case STATIC_REFERENCE:
                         state = State.INVALID;
                         if (isString(token)) {
-                            metaAll.insert(0, token.text().toString());
+                            className = token.text().toString();
                             state = State.CLASSNAME;
                         } else if (isSelf(token) || isParent(token) || isStatic(token)) {
-                            metaAll.insert(0, translateSpecialClassName(varScope, token.text().toString()));
+                            className = translateSpecialClassName(varScope, token.text().toString());
                             state = State.CLASSNAME;
                         } else if (isRightBracket(token)) {
                             rightBraces++;
@@ -1345,10 +1347,19 @@ public final class VariousUtils {
                             state = State.METHOD;
                         }
                         break;
-                    case ARRAY_FIELD:
-                    case FIELD:
+                    case ARRAY_FIELD: // no break
+                    case FIELD: // field or enum case
                         state = State.INVALID;
+                        if (isStaticReference(token)) {
+                            // ::ENUM_CASE
+                            state = State.STATIC_REFERENCE;
+                            break;
+                        }
+                        assert fieldName != null;
+                        metaAll.insert(0, fieldName);
+                        fieldName = null;
                         if (isReference(token)) {
+                            // ->fieldName
                             metaAll.insert(0, PRE_OPERATION_TYPE_DELIMITER + VariousUtils.FIELD_TYPE_PREFIX);
                             state = State.REFERENCE;
                         }
@@ -1360,17 +1371,26 @@ public final class VariousUtils {
                             break;
                         } else {
                             state = State.VARIABLE;
-                        }
-                    case ARRAY_VARIABLE:
+                        } // no break
+                    case ARRAY_VARIABLE: // no break
                     case VARIABLE:
                         if (state.equals(State.ARRAY_VARIABLE)) {
                             metaAll.insert(0, PRE_OPERATION_TYPE_DELIMITER + VariousUtils.ARRAY_TYPE_PREFIX);
                         } else {
                             metaAll.insert(0, PRE_OPERATION_TYPE_DELIMITER + VariousUtils.VAR_TYPE_PREFIX);
-                        }
+                        } // no break
                     case CLASSNAME:
                         //TODO: self, parent not handled yet
                         //TODO: maybe rather introduce its own State for self, parent
+                        if (isStaticReference(token)) {
+                            // CLASS_NAME::ENUM_CASE
+                            state = State.STATIC_REFERENCE;
+                            break;
+                        }
+                        if (className != null) {
+                            metaAll.insert(0, className);
+                            className = null;
+                        }
                         if (isNamespaceSeparator(token)) {
                             if (tokenSequence.movePrevious()) {
                                 metaAll.insert(0, token.text().toString());
@@ -1396,6 +1416,10 @@ public final class VariousUtils {
                     state = State.STOP;
                     break;
                 } else if (state.equals(State.CLASSNAME)) {
+                    if (className != null) {
+                        metaAll.insert(0, className);
+                        className = null;
+                    }
                     if (!metaAll.toString().startsWith("\\")) { //NOI18N
                         if (tokenSequence.moveNext()) { // return to last valid token
                             metaAll = transformToFullyQualifiedType(metaAll, tokenSequence, varScope);
@@ -1507,12 +1531,12 @@ public final class VariousUtils {
 
     private static String translateSpecialClassName(Scope scp, String clsName) {
         TypeScope typeScope = null;
-        if (scp instanceof ClassScope || scp instanceof TraitScope) {
+        if (scp instanceof ClassScope || scp instanceof TraitScope || scp instanceof EnumScope) {
             typeScope = (TypeScope) scp;
         } else if (scp instanceof MethodScope) {
             MethodScope msi = (MethodScope) scp;
             Scope inScope = msi.getInScope();
-            if (inScope instanceof ClassScope || inScope instanceof TraitScope) {
+            if (inScope instanceof ClassScope || inScope instanceof TraitScope || inScope instanceof EnumScope) {
                 typeScope = (TypeScope) inScope;
             }
         }

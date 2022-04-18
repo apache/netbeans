@@ -103,6 +103,8 @@ import org.netbeans.modules.php.editor.model.impl.Type;
 import org.netbeans.modules.php.editor.model.impl.VariousUtils;
 import org.netbeans.modules.php.editor.model.nodes.NamespaceDeclarationInfo;
 import org.netbeans.modules.php.editor.NavUtils;
+import org.netbeans.modules.php.editor.api.elements.EnumCaseElement;
+import org.netbeans.modules.php.editor.api.elements.EnumElement;
 import org.netbeans.modules.php.editor.options.CodeCompletionPanel.CodeCompletionType;
 import org.netbeans.modules.php.editor.options.OptionsUtils;
 import org.netbeans.modules.php.editor.parser.PHPParseResult;
@@ -1004,6 +1006,72 @@ public abstract class PHPCompletionItem implements CompletionProposal {
         }
     }
 
+    static class EnumCaseItem extends PHPCompletionItem {
+
+        private final boolean completeAccessPrefix;
+
+        public static EnumCaseItem getItem(EnumCaseElement constant, CompletionRequest request) {
+            return getItem(constant, request, false);
+        }
+
+        public static EnumCaseItem getItem(EnumCaseElement constant, CompletionRequest request, boolean completeAccessPrefix) {
+            return new EnumCaseItem(constant, request, completeAccessPrefix);
+        }
+
+        private EnumCaseItem(EnumCaseElement constant, CompletionRequest request, boolean completeAccessPrefix) {
+            super(constant, request);
+            this.completeAccessPrefix = completeAccessPrefix;
+        }
+
+        EnumCaseElement getEnumCase() {
+            return (EnumCaseElement) getElement();
+        }
+
+        @Override
+        public ElementKind getKind() {
+            return ElementKind.CONSTANT;
+        }
+
+        @Override
+        public String getLhsHtml(HtmlFormatter formatter) {
+            formatter.name(getKind(), true);
+            if (isDeprecated()) {
+                formatter.deprecated(true);
+                formatter.appendText(getName());
+                formatter.deprecated(false);
+            } else {
+                formatter.appendText(getName());
+            }
+            formatter.name(getKind(), false);
+            formatter.appendText(" "); //NOI18N
+            String value = getEnumCase().getValue();
+            formatter.type(true);
+            formatter.appendText(value != null ? value : "?"); // NOI18N
+            formatter.type(false);
+
+            return formatter.getText();
+        }
+
+        @Override
+        public String getName() {
+            return getEnumCase().getName();
+        }
+
+        @Override
+        public String getInsertPrefix() {
+            Completion.get().showToolTip();
+            return getName();
+        }
+
+        @Override
+        public String getCustomInsertTemplate() {
+            if (completeAccessPrefix) {
+                return "self::" + getName(); // NOI18N
+            }
+            return super.getCustomInsertTemplate();
+        }
+    }
+
     public static class MethodDeclarationItem extends MethodElementItem {
 
         public static MethodDeclarationItem getDeclarationItem(final MethodElement methodElement, CompletionRequest request) {
@@ -1663,6 +1731,61 @@ public abstract class PHPCompletionItem implements CompletionProposal {
                 return builder.toString();
             } else if (CompletionContext.NEW_CLASS.equals(request.context)) {
                 scheduleShowingCompletion();
+            }
+            return superTemplate;
+        }
+    }
+
+    static class EnumItem extends PHPCompletionItem {
+
+        private static final ImageIcon ICON = IconsUtils.getElementIcon(PhpElementKind.ENUM);
+        private boolean endWithDoubleColon;
+
+        EnumItem(EnumElement enumElement, CompletionRequest request, boolean endWithDoubleColon, QualifiedNameKind generateAs) {
+            super(enumElement, request, generateAs);
+            this.endWithDoubleColon = endWithDoubleColon;
+        }
+
+        @Override
+        public ImageIcon getIcon() {
+            return ICON;
+        }
+
+        @Override
+        public ElementKind getKind() {
+            return ElementKind.CLASS;
+        }
+
+        @Override
+        public String getInsertPrefix() {
+            return getName();
+        }
+
+        @Override
+        public String getCustomInsertTemplate() {
+            final String superTemplate = super.getInsertPrefix();
+            if (endWithDoubleColon) {
+                StringBuilder builder = new StringBuilder();
+                builder.append(superTemplate);
+                boolean includeDoubleColumn = true;
+                if (EditorRegistry.lastFocusedComponent() != null) {
+                    Document doc = EditorRegistry.lastFocusedComponent().getDocument();
+                    int caret = EditorRegistry.lastFocusedComponent().getCaretPosition();
+                    try {
+                        if (caret + 2 < doc.getLength() && "::".equals(doc.getText(caret, 2))) { //NOI18N
+                            includeDoubleColumn = false;
+                        }
+                    } catch (BadLocationException ex) {
+                        // do nothing
+                    }
+                }
+
+                if (includeDoubleColumn) {
+                    builder.append("::"); // NOI18N
+                }
+                builder.append("${cursor}"); //NOI18N
+                scheduleShowingCompletion();
+                return builder.toString();
             }
             return superTemplate;
         }

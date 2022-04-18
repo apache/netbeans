@@ -24,10 +24,20 @@ enum IncorrectProperties {
     case CASE_NAME;
 }
 
+enum IncorrectPropertiesWithTrait {
+    use TestTrait1;
+    case CASE_NAME;
+}
+
 enum IncorrectBackingType: Foo {
     public int $property = 1;
     public static string $staticProperty = "error";
     case CASE_NAME;
+}
+
+enum IncorrectConstructor {
+    public function __construct() {
+    }
 }
 
 enum CorrectBackingTypeString: string {
@@ -45,9 +55,15 @@ class IncorrectEnumCase {
     public static string $property = "correct";
 }
 
-trait TestTrait {
+trait TestTrait1 {
+    use TestTrait2;
     public int $property = 1;
     public static string $property = "correct";
+}
+
+trait TestTrait2 {
+    public int $property2 = 1;
+    public static string $property2 = "correct";
 }
 
 interface TestInterface {

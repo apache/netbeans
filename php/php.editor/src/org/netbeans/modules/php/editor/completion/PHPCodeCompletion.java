@@ -146,6 +146,8 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
         PHP_KEYWORDS.put("use", KeywordCompletionType.SIMPLE); //NOI18N
         PHP_KEYWORDS.put("namespace", KeywordCompletionType.SIMPLE); //NOI18N
         PHP_KEYWORDS.put("class", KeywordCompletionType.ENDS_WITH_SPACE); //NOI18N
+        PHP_KEYWORDS.put("trait", KeywordCompletionType.ENDS_WITH_SPACE); //NOI18N
+        PHP_KEYWORDS.put("enum", KeywordCompletionType.ENDS_WITH_SPACE); //NOI18N
         PHP_KEYWORDS.put("const", KeywordCompletionType.ENDS_WITH_SPACE); //NOI18N
         PHP_KEYWORDS.put("continue", KeywordCompletionType.ENDS_WITH_SEMICOLON); //NOI18N
         PHP_KEYWORDS.put("function", KeywordCompletionType.ENDS_WITH_SPACE); //NOI18N

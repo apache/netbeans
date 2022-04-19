@@ -68,8 +68,9 @@ public class NbmWizardPanelVisual extends javax.swing.JPanel {
     private static final Set<String> IGNORE_RELEASES = new HashSet<>(Arrays.asList("RELEASE120"));
 
     private final NbmWizardPanel panel;
-    private ValidationGroup vg = ValidationGroup.create();
-    private ValidationGroup vgEnabled = ValidationGroup.create();
+    private final ValidationGroup vg = ValidationGroup.create();
+    private final ValidationGroup vgEnabled = ValidationGroup.create();
+
     boolean isApp = false;
     private boolean isLoaded = false;
     private AggregateProgressHandle handle;
@@ -87,62 +88,49 @@ public class NbmWizardPanelVisual extends javax.swing.JPanel {
             cbAddModule.setVisible(false);
             txtAddModule.setVisible(false);            
         }        
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                initValidators();
-            }
-        });
+        SwingUtilities.invokeLater(this::initValidators);
         
-        RP.post(new Runnable() {
-            public @Override void run() {
-                EventQueue.invokeLater(new Runnable()  {
-                        public @Override void run() {
-                            versionCombo.setModel(new DefaultComboBoxModel(new Object[] {SEARCHING}));
-                        }
-                    });
-                List<RepositoryInfo> info = MavenNbModuleImpl.netbeansRepo();               
-                final Object key = this;               
-                if (info == null || info.contains(null)) {
-                    try {
-                        //transient remove central, make central transient too
-                        RepositoryPreferences.getInstance().addTransientRepository(key, "central", "central", "https://repo1.maven.org/maven2", RepositoryInfo.MirrorStrategy.NON_WILDCARD);
-                        info = MavenNbModuleImpl.netbeansRepo();
-                    } catch (URISyntaxException x) {
-                        assert false : x;
-                    }
-                }
-                if (info != null) {
-                    final Result<NBVersionInfo> result = RepositoryQueries.getVersionsResult("org.netbeans.cluster", "platform", Collections.unmodifiableList(info));
-                    List<String> versions = filterVersions(result);
+        RP.post(() -> {
 
-                    if (result.isPartial()) {
-                        versions.add(SEARCHING);
-                        //we return the values we have and schedule retrieval of the rest.
-                        RP.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                result.waitForSkipped();
-                                List<String> allVersions = filterVersions(result);
-                                EventQueue.invokeLater(new Runnable()  {
-                                            public @Override void run() {
-                                                versionCombo.setModel(new DefaultComboBoxModel(allVersions.toArray()));
-                                                versionComboActionPerformed(null);
-                                            }
-                                        });
-                            }
-                        });
-                    } else {
+            EventQueue.invokeLater(() -> versionCombo.setModel(new DefaultComboBoxModel(new Object[] {SEARCHING})));
+
+            List<RepositoryInfo> info = MavenNbModuleImpl.netbeansRepo();               
+            final Object key = this;               
+            if (info == null || info.contains(null)) {
+                try {
+                    //transient remove central, make central transient too
+                    RepositoryPreferences.getInstance().addTransientRepository(key, "central", "central", "https://repo1.maven.org/maven2", RepositoryInfo.MirrorStrategy.NON_WILDCARD);
+                    info = MavenNbModuleImpl.netbeansRepo();
+                } catch (URISyntaxException x) {
+                    assert false : x;
+                }
+            }
+
+            if (info != null) {
+                final Result<NBVersionInfo> result = RepositoryQueries.getVersionsResult("org.netbeans.cluster", "platform", Collections.unmodifiableList(info));
+                List<String> versions = filterVersions(result);
+
+                if (result.isPartial()) {
+                    versions.add(SEARCHING);
+                    //we return the values we have and schedule retrieval of the rest.
+                    RP.post(() -> {
+                        result.waitForSkipped();
                         RepositoryPreferences.getInstance().removeTransientRepositories(key);
-                    }
-                    isLoaded = true;
-                    EventQueue.invokeLater(new Runnable()  {
-                                            public @Override void run() {
-                                                versionCombo.setModel(new DefaultComboBoxModel(versions.toArray()));
-                                                versionComboActionPerformed(null);
-                                            }
-                                        });
-                    }
+                        List<String> allVersions = filterVersions(result);
+                        EventQueue.invokeLater(() -> {
+                            versionCombo.setModel(new DefaultComboBoxModel(allVersions.toArray()));
+                            versionComboActionPerformed(null);
+                        });
+                    });
+                } else {
+                    RepositoryPreferences.getInstance().removeTransientRepositories(key);
+                }
+
+                isLoaded = true;
+                EventQueue.invokeLater(() -> {
+                    versionCombo.setModel(new DefaultComboBoxModel(versions.toArray()));
+                    versionComboActionPerformed(null);
+                });
             }
         });
         
@@ -313,7 +301,7 @@ public class NbmWizardPanelVisual extends javax.swing.JPanel {
             }
         }        
          
-        d.putProperty(NbmWizardIterator.OSGIDEPENDENCIES, Boolean.valueOf(cbOsgiDeps.isSelected()));
+        d.putProperty(NbmWizardIterator.OSGIDEPENDENCIES, cbOsgiDeps.isSelected());
          if (isApp) {
              if (cbAddModule.isSelected()) {
                  d.putProperty(NbmWizardIterator.NBM_ARTIFACTID, txtAddModule.getText().trim());
@@ -325,12 +313,9 @@ public class NbmWizardPanelVisual extends javax.swing.JPanel {
          if (version != null && !version.equals(SEARCHING)) {
              d.putProperty(NbmWizardIterator.NB_VERSION, version);
          }
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                panel.getValidationGroup().remove(vg);
-                panel.getEnabledStateValidationGroup().remove(vgEnabled);
-            }
+        SwingUtilities.invokeLater(() -> {
+            panel.getValidationGroup().remove(vg);
+            panel.getEnabledStateValidationGroup().remove(vgEnabled);
         });
     }
 
@@ -344,7 +329,7 @@ public class NbmWizardPanelVisual extends javax.swing.JPanel {
         
         Boolean b = (Boolean) d.getProperty(NbmWizardIterator.OSGIDEPENDENCIES);
         if (b != null) {
-            cbOsgiDeps.setSelected(b.booleanValue());
+            cbOsgiDeps.setSelected(b);
         }
         if (isApp) {
             String artifId = (String) d.getProperty("artifactId");
@@ -360,13 +345,10 @@ public class NbmWizardPanelVisual extends javax.swing.JPanel {
         if (version != null) {
             versionCombo.setSelectedItem(version);
         }
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                panel.getValidationGroup().addItem(vg, true);
-                panel.getEnabledStateValidationGroup().addItem(vgEnabled, true);
-                vgEnabled.performValidation();
-            }
+        SwingUtilities.invokeLater(() -> {
+            panel.getValidationGroup().addItem(vg, true);
+            panel.getEnabledStateValidationGroup().addItem(vgEnabled, true);
+            vgEnabled.performValidation();
         });
     }
 }

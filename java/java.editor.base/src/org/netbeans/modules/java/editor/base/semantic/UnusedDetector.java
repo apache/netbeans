@@ -319,39 +319,42 @@ public class UnusedDetector {
         }
         ElementHandle eh = ElementHandle.create(el);
         Set<FileObject> res = info.getClasspathInfo().getClassIndex().getResources(ElementHandle.create(typeElement), searchKinds, scope);
-        for (FileObject fo : res) {
-            if (fo != info.getFileObject()) {
-                JavaSource js = JavaSource.forFileObject(fo);
-                if (js == null) {
-                    return false;
-                }
-                AtomicBoolean found = new AtomicBoolean();
-                try {
-                    js.runUserActionTask(cc -> {
-                        cc.toPhase(JavaSource.Phase.RESOLVED);
-                        new TreePathScanner<Void, Element>() {
-                            @Override
-                            public Void scan(Tree tree, Element p) {
-                                if (!found.get() && tree != null) {
-                                    Element element = cc.getTrees().getElement(new TreePath(getCurrentPath(), tree));
-                                    if (element != null && eh.signatureEquals(element)) {
-                                        found.set(true);
+        if (res != null) {
+            for (FileObject fo : res) {
+                if (fo != info.getFileObject()) {
+                    JavaSource js = JavaSource.forFileObject(fo);
+                    if (js == null) {
+                        return false;
+                    }
+                    AtomicBoolean found = new AtomicBoolean();
+                    try {
+                        js.runUserActionTask(cc -> {
+                            cc.toPhase(JavaSource.Phase.RESOLVED);
+                            new TreePathScanner<Void, Element>() {
+                                @Override
+                                public Void scan(Tree tree, Element p) {
+                                    if (!found.get() && tree != null) {
+                                        Element element = cc.getTrees().getElement(new TreePath(getCurrentPath(), tree));
+                                        if (element != null && eh.signatureEquals(element)) {
+                                            found.set(true);
+                                        }
+                                        super.scan(tree, p);
                                     }
-                                    super.scan(tree, p);
+                                    return null;
                                 }
-                                return null;
-                            }
-                        }.scan(new TreePath(cc.getCompilationUnit()), el);
-                    }, true);
-                } catch (IOException ex) {
-                    Exceptions.printStackTrace(ex);
-                }
-                if (found.get()) {
-                    return false;
+                            }.scan(new TreePath(cc.getCompilationUnit()), el);
+                        }, true);
+                    } catch (IOException ex) {
+                        Exceptions.printStackTrace(ex);
+                    }
+                    if (found.get()) {
+                        return false;
+                    }
                 }
             }
+            return true;
         }
-        return true;
+        return false;
     }
 
     private enum UseTypes {

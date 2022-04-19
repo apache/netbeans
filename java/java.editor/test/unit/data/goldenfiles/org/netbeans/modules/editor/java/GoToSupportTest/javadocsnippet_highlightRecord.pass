@@ -1,0 +1,10 @@
+<html><body><font size='+0'><b><a href='*0'>test.&#x200B;Test</a></b></font><pre>private static void <b>method</b>(<a href='*1'>R</a> r)</pre><p>A simple program.
+
+ <code><a href='*2'>System.out</a></code>
+ <pre><code> class HelloWorld {
+     public static void main(String... args) {
+         System.out.<b>p</b><b>r</b><b>i</b><b>n</b><b>t</b><b>l</b><b>n</b>("Hello World!");      
+ }
+ }
+ 
+</code></pre><p>

@@ -1,0 +1,7 @@
+<html><body><font size='+0'><b><a href='*0'>test.&#x200B;Test</a></b></font><pre>public void <b>testSingleLine_Replace_RegexDot</b>()</pre><p><pre><code> class HelloWorld {
+     public static void main(String... args) {
+..........................................................................................................................................
+ }
+ }
+ 
+</code></pre><p>

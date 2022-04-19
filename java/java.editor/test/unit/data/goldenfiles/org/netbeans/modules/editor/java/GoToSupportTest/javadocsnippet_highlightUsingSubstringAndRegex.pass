@@ -1,0 +1,9 @@
+<html><body><font size='+0'><b><a href='*0'>test.&#x200B;Test</a></b></font><pre>public void <b>highlightUsingSubstringAndRegex</b>()</pre><p><pre><code>   public static void main(String... args1) {
+       for (<b>v</b><b>a</b><b>r</b> arg : args<b>1</b>) {                 
+           if (!<b>a</b><b>r</b><b>g</b>.isBlankarg<b>(</b><b>)</b>) {           
+               <b>S</b><b>y</b><b>s</b><b>t</b><b>e</b><b>m</b>.<b>o</b><b>u</b><b>t</b>.println("outs");       
+ }
+ }
+ }
+ 
+</code></pre><p>

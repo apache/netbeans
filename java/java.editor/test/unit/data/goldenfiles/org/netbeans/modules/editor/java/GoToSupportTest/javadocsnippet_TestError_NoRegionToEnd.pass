@@ -1,0 +1,2 @@
+<html><body><font size='+0'><b><a href='*0'>test.&#x200B;Test</a></b></font><pre>public void <b>errorsInNoRegionToEnd</b>()</pre><p><pre><code><span style="color:red;">error: snippet markup: no region to end @end <sub>^</sub><b><i>anonymous</b></i></span>
+</code></pre><p>

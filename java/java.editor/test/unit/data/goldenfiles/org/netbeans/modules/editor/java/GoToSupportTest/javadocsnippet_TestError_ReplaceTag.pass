@@ -1,0 +1,36 @@
+<html><body><font size='+0'><b><a href='*0'>test.&#x200B;Test</a></b></font><pre>public void <b>errorsInReplaceTag</b>()</pre><p><pre><code><span style="color:red;">error: snippet markup: Invalid value <sub>^</sub><b><i>Blank</b></i> for <sub>^</sub><b><i>replace</b></i> tag mark up attribute <sub>^</sub><b><i>substring</b></i></span>
+</code></pre>
+ 
+ <pre><code><span style="color:red;">error: snippet markup: Invalid value <sub>^</sub><b><i>Blank</b></i> for <sub>^</sub><b><i>replace</b></i> tag mark up attribute <sub>^</sub><b><i>substring</b></i></span>
+</code></pre>
+ 
+ <pre><code><span style="color:red;">error: snippet markup: Invalid value <sub>^</sub><b><i>Blank</b></i> for <sub>^</sub><b><i>replace</b></i> tag mark up attribute <sub>^</sub><b><i>substring</b></i></span>
+</code></pre>
+ 
+ <pre><code><span style="color:red;">error: snippet markup: Invalid value <sub>^</sub><b><i>Blank</b></i> for <sub>^</sub><b><i>replace</b></i> tag mark up attribute <sub>^</sub><b><i>regex</b></i></span>
+</code></pre>
+ 
+ <pre><code><span style="color:red;">error: snippet markup: Invalid value <sub>^</sub><b><i>Blank</b></i> for <sub>^</sub><b><i>replace</b></i> tag mark up attribute <sub>^</sub><b><i>regex</b></i></span>
+</code></pre>
+ 
+ <pre><code><span style="color:red;">error: snippet markup: Invalid value <sub>^</sub><b><i>Blank</b></i> for <sub>^</sub><b><i>replace</b></i> tag mark up attribute <sub>^</sub><b><i>regex</b></i></span>
+</code></pre>
+ 
+ <pre><code><span style="color:red;">error: snippet markup: Missing <sub>^</sub><b><i>replace</b></i> tag attribute : <sub>^</sub><b><i>replacement</b></i></span>
+</code></pre>
+ 
+ <pre><code><span style="color:red;">error: snippet markup: Missing <sub>^</sub><b><i>replace</b></i> tag attribute : <sub>^</sub><b><i>replacement</b></i></span>
+</code></pre>
+ 
+ <pre><code><span style="color:red;">error: snippet markup: Invalid value <sub>^</sub><b><i>Blank</b></i> for <sub>^</sub><b><i>replace</b></i> tag mark up attribute <sub>^</sub><b><i>substring</b></i></span>
+</code></pre>
+ 
+ <pre><code> interface Helloclass {
+ }
+ 
+</code></pre>
+ 
+ <pre><code> class Hello {
+ }
+ 
+</code></pre><p>

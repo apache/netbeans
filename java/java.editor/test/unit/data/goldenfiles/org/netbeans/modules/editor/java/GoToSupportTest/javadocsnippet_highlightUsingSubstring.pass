@@ -1,0 +1,9 @@
+<html><body><font size='+0'><b><a href='*0'>test.&#x200B;Test</a></b></font><pre>public void <b>highlightUsingSubstring</b>()</pre><p><pre><code>   public static void main(String... args) {
+       for (var arg : <b>a</b><b>r</b><b>g</b><b>s</b>) {                 
+           if (!<b>a</b><b>r</b><b>g</b>.isBlank<b>a</b><b>r</b><b>g</b>()) {           
+               System.out.<b>p</b><b>r</b><b>i</b><b>n</b><b>t</b><b>l</b><b>n</b>(<b>a</b><b>r</b><b>g</b>);       
+ }
+ }
+ }
+ 
+</code></pre><p>

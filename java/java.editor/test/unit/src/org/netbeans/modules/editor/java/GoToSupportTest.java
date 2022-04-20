@@ -1581,7 +1581,10 @@ public class GoToSupportTest extends NbTestCase {
     }
 
     public void testJavadocSnippetHighlightRecord() throws Exception {
-        if (!TreeShims.isJDKVersionRelease18_Or_Above()) {
+        try {
+            SourceVersion.valueOf("RELEASE_18"); //NOI18N
+        } catch (IllegalArgumentException ex) {
+            //OK, no RELEASE_18, skip tests
             return;
         }
 
@@ -1596,7 +1599,10 @@ public class GoToSupportTest extends NbTestCase {
     }
     
     public void testHighlightUsingSubstring() throws Exception {
-        if (!TreeShims.isJDKVersionRelease18_Or_Above()) {
+        try {
+            SourceVersion.valueOf("RELEASE_18"); //NOI18N
+        } catch (IllegalArgumentException ex) {
+            //OK, no RELEASE_18, skip tests
             return;
         }
 
@@ -1608,7 +1614,10 @@ public class GoToSupportTest extends NbTestCase {
     }
     
     public void testHesthighlightUsingRegex() throws Exception {
-        if (!TreeShims.isJDKVersionRelease18_Or_Above()) {
+        try {
+            SourceVersion.valueOf("RELEASE_18"); //NOI18N
+        } catch (IllegalArgumentException ex) {
+            //OK, no RELEASE_18, skip tests
             return;
         }
 
@@ -1620,7 +1629,10 @@ public class GoToSupportTest extends NbTestCase {
     }
  
     public void testHighlightUsingSubstringAndRegex() throws Exception {
-        if (!TreeShims.isJDKVersionRelease18_Or_Above()) {
+        try {
+            SourceVersion.valueOf("RELEASE_18"); //NOI18N
+        } catch (IllegalArgumentException ex) {
+            //OK, no RELEASE_18, skip tests
             return;
         }
 
@@ -1632,7 +1644,10 @@ public class GoToSupportTest extends NbTestCase {
     }
     
     public void testHighlightUsingSubstringRegexAndType() throws Exception {
-        if (!TreeShims.isJDKVersionRelease18_Or_Above()) {
+        try {
+            SourceVersion.valueOf("RELEASE_18"); //NOI18N
+        } catch (IllegalArgumentException ex) {
+            //OK, no RELEASE_18, skip tests
             return;
         }
 
@@ -1644,7 +1659,10 @@ public class GoToSupportTest extends NbTestCase {
     }
         
     public void testHighlightUsingMultipleSnippetTagInOneJavaDocWithRegion() throws Exception {
-        if (!TreeShims.isJDKVersionRelease18_Or_Above()) {
+        try {
+            SourceVersion.valueOf("RELEASE_18"); //NOI18N
+        } catch (IllegalArgumentException ex) {
+            //OK, no RELEASE_18, skip tests
             return;
         }
 
@@ -1656,7 +1674,10 @@ public class GoToSupportTest extends NbTestCase {
     }
         
     public void testHighlightUsingNestedRegions() throws Exception {
-        if (!TreeShims.isJDKVersionRelease18_Or_Above()) {
+        try {
+            SourceVersion.valueOf("RELEASE_18"); //NOI18N
+        } catch (IllegalArgumentException ex) {
+            //OK, no RELEASE_18, skip tests
             return;
         }
 
@@ -1668,7 +1689,10 @@ public class GoToSupportTest extends NbTestCase {
     }
     
     public void testHighlightUsingRegionsEndedWithDoubleColon() throws Exception {
-        if (!TreeShims.isJDKVersionRelease18_Or_Above()) {
+        try {
+            SourceVersion.valueOf("RELEASE_18"); //NOI18N
+        } catch (IllegalArgumentException ex) {
+            //OK, no RELEASE_18, skip tests
             return;
         }
 
@@ -1680,7 +1704,10 @@ public class GoToSupportTest extends NbTestCase {
     }
     
     public void testNoMarkupTagPresent() throws Exception {
-        if (!TreeShims.isJDKVersionRelease18_Or_Above()) {
+        try {
+            SourceVersion.valueOf("RELEASE_18"); //NOI18N
+        } catch (IllegalArgumentException ex) {
+            //OK, no RELEASE_18, skip tests
             return;
         }
 
@@ -1692,7 +1719,10 @@ public class GoToSupportTest extends NbTestCase {
     }
  
     public void testHighlightTagSubstringApplyToNextLine() throws Exception {
-        if (!TreeShims.isJDKVersionRelease18_Or_Above()) {
+        try {
+            SourceVersion.valueOf("RELEASE_18"); //NOI18N
+        } catch (IllegalArgumentException ex) {
+            //OK, no RELEASE_18, skip tests
             return;
         }
 
@@ -1704,7 +1734,10 @@ public class GoToSupportTest extends NbTestCase {
     }
  
     public void testHighlightTagRegexWithAllCharacterChange() throws Exception {
-        if (!TreeShims.isJDKVersionRelease18_Or_Above()) {
+        try {
+            SourceVersion.valueOf("RELEASE_18"); //NOI18N
+        } catch (IllegalArgumentException ex) {
+            //OK, no RELEASE_18, skip tests
             return;
         }
 
@@ -1716,7 +1749,10 @@ public class GoToSupportTest extends NbTestCase {
     }
        
     public void testHighlightTagRegexWithAllCharacterChangeUsingDot() throws Exception {
-        if (!TreeShims.isJDKVersionRelease18_Or_Above()) {
+        try {
+            SourceVersion.valueOf("RELEASE_18"); //NOI18N
+        } catch (IllegalArgumentException ex) {
+            //OK, no RELEASE_18, skip tests
             return;
         }
 
@@ -1728,7 +1764,10 @@ public class GoToSupportTest extends NbTestCase {
     }
     
     public void testSingleLine_Replace_Regex() throws Exception {
-        if (!TreeShims.isJDKVersionRelease18_Or_Above()) {
+        try {
+            SourceVersion.valueOf("RELEASE_18"); //NOI18N
+        } catch (IllegalArgumentException ex) {
+            //OK, no RELEASE_18, skip tests
             return;
         }
         this.sourceLevel = getLatestSourceVersion();
@@ -1738,7 +1777,10 @@ public class GoToSupportTest extends NbTestCase {
     }
 
     public void testSingleLine_Replace_RegexDotStar() throws Exception {
-        if (!TreeShims.isJDKVersionRelease18_Or_Above()) {
+        try {
+            SourceVersion.valueOf("RELEASE_18"); //NOI18N
+        } catch (IllegalArgumentException ex) {
+            //OK, no RELEASE_18, skip tests
             return;
         }
         this.sourceLevel = getLatestSourceVersion();
@@ -1748,7 +1790,10 @@ public class GoToSupportTest extends NbTestCase {
     }
 
     public void testSingleLine_Replace_RegexDot() throws Exception {
-        if (!TreeShims.isJDKVersionRelease18_Or_Above()) {
+        try {
+            SourceVersion.valueOf("RELEASE_18"); //NOI18N
+        } catch (IllegalArgumentException ex) {
+            //OK, no RELEASE_18, skip tests
             return;
         }
         this.sourceLevel = getLatestSourceVersion();
@@ -1758,7 +1803,10 @@ public class GoToSupportTest extends NbTestCase {
     }
 
     public void testSingleLine_Replace_Substring() throws Exception {
-        if (!TreeShims.isJDKVersionRelease18_Or_Above()) {
+        try {
+            SourceVersion.valueOf("RELEASE_18"); //NOI18N
+        } catch (IllegalArgumentException ex) {
+            //OK, no RELEASE_18, skip tests
             return;
         }
         this.sourceLevel = getLatestSourceVersion();
@@ -1768,7 +1816,10 @@ public class GoToSupportTest extends NbTestCase {
     }
 
     public void testSingleLine_MultipleReplaceAnnotation_Regex() throws Exception {
-        if (!TreeShims.isJDKVersionRelease18_Or_Above()) {
+        try {
+            SourceVersion.valueOf("RELEASE_18"); //NOI18N
+        } catch (IllegalArgumentException ex) {
+            //OK, no RELEASE_18, skip tests
             return;
         }
         this.sourceLevel = getLatestSourceVersion();
@@ -1778,7 +1829,10 @@ public class GoToSupportTest extends NbTestCase {
     }
 
     public void testSingleLine_MultipleReplaceAnnotation_Substring() throws Exception {
-        if (!TreeShims.isJDKVersionRelease18_Or_Above()) {
+        try {
+            SourceVersion.valueOf("RELEASE_18"); //NOI18N
+        } catch (IllegalArgumentException ex) {
+            //OK, no RELEASE_18, skip tests
             return;
         }
         this.sourceLevel = getLatestSourceVersion();
@@ -1788,7 +1842,10 @@ public class GoToSupportTest extends NbTestCase {
     }
 
     public void testSingleLine_ReplaceAnnotation_Regex_DoubleQuote() throws Exception {
-        if (!TreeShims.isJDKVersionRelease18_Or_Above()) {
+        try {
+            SourceVersion.valueOf("RELEASE_18"); //NOI18N
+        } catch (IllegalArgumentException ex) {
+            //OK, no RELEASE_18, skip tests
             return;
         }
         this.sourceLevel = getLatestSourceVersion();
@@ -1798,7 +1855,10 @@ public class GoToSupportTest extends NbTestCase {
     }
 
     public void testRegion_ReplaceAnnotation_Regex() throws Exception {
-        if (!TreeShims.isJDKVersionRelease18_Or_Above()) {
+        try {
+            SourceVersion.valueOf("RELEASE_18"); //NOI18N
+        } catch (IllegalArgumentException ex) {
+            //OK, no RELEASE_18, skip tests
             return;
         }
         this.sourceLevel = getLatestSourceVersion();
@@ -1808,7 +1868,10 @@ public class GoToSupportTest extends NbTestCase {
     }
 
     public void testRegion_ReplaceAnnotation_RegexInnComment() throws Exception {
-        if (!TreeShims.isJDKVersionRelease18_Or_Above()) {
+        try {
+            SourceVersion.valueOf("RELEASE_18"); //NOI18N
+        } catch (IllegalArgumentException ex) {
+            //OK, no RELEASE_18, skip tests
             return;
         }
         this.sourceLevel = getLatestSourceVersion();
@@ -1818,7 +1881,10 @@ public class GoToSupportTest extends NbTestCase {
     }
 
     public void testNestedRegion_ReplaceAnnotation_Substring() throws Exception {
-        if (!TreeShims.isJDKVersionRelease18_Or_Above()) {
+        try {
+            SourceVersion.valueOf("RELEASE_18"); //NOI18N
+        } catch (IllegalArgumentException ex) {
+            //OK, no RELEASE_18, skip tests
             return;
         }
         this.sourceLevel = getLatestSourceVersion();
@@ -1828,7 +1894,10 @@ public class GoToSupportTest extends NbTestCase {
     }
 
     public void testNestedRegion_ReplaceAnnotation_Regex() throws Exception {
-        if (!TreeShims.isJDKVersionRelease18_Or_Above()) {
+        try {
+            SourceVersion.valueOf("RELEASE_18"); //NOI18N
+        } catch (IllegalArgumentException ex) {
+            //OK, no RELEASE_18, skip tests
             return;
         }
         this.sourceLevel = getLatestSourceVersion();
@@ -1838,7 +1907,10 @@ public class GoToSupportTest extends NbTestCase {
     }
 
     public void testNestedRegion_Highlight_And_replace() throws Exception {
-        if (!TreeShims.isJDKVersionRelease18_Or_Above()) {
+        try {
+            SourceVersion.valueOf("RELEASE_18"); //NOI18N
+        } catch (IllegalArgumentException ex) {
+            //OK, no RELEASE_18, skip tests
             return;
         }
         this.sourceLevel = getLatestSourceVersion();
@@ -1848,7 +1920,10 @@ public class GoToSupportTest extends NbTestCase {
     }
 
     public void testHighlightAndReplace_cornercase() throws Exception {
-        if (!TreeShims.isJDKVersionRelease18_Or_Above()) {
+        try {
+            SourceVersion.valueOf("RELEASE_18"); //NOI18N
+        } catch (IllegalArgumentException ex) {
+            //OK, no RELEASE_18, skip tests
             return;
         }
         this.sourceLevel = getLatestSourceVersion();
@@ -1858,7 +1933,10 @@ public class GoToSupportTest extends NbTestCase {
     }
 
     public void testLinkTag() throws Exception {
-        if (!TreeShims.isJDKVersionRelease18_Or_Above()) {
+        try {
+            SourceVersion.valueOf("RELEASE_18"); //NOI18N
+        } catch (IllegalArgumentException ex) {
+            //OK, no RELEASE_18, skip tests
             return;
         }
         this.sourceLevel = getLatestSourceVersion();
@@ -1869,7 +1947,10 @@ public class GoToSupportTest extends NbTestCase {
     }
 
     public void testLinkTag_With_RegexAndRegion() throws Exception {
-        if (!TreeShims.isJDKVersionRelease18_Or_Above()) {
+        try {
+            SourceVersion.valueOf("RELEASE_18"); //NOI18N
+        } catch (IllegalArgumentException ex) {
+            //OK, no RELEASE_18, skip tests
             return;
         }
         this.sourceLevel = getLatestSourceVersion();
@@ -1880,7 +1961,10 @@ public class GoToSupportTest extends NbTestCase {
     }
 
     public void testLinkTag_AppliesToNextLine() throws Exception {
-        if (!TreeShims.isJDKVersionRelease18_Or_Above()) {
+        try {
+            SourceVersion.valueOf("RELEASE_18"); //NOI18N
+        } catch (IllegalArgumentException ex) {
+            //OK, no RELEASE_18, skip tests
             return;
         }
         this.sourceLevel = getLatestSourceVersion();
@@ -1891,7 +1975,10 @@ public class GoToSupportTest extends NbTestCase {
     }
 
     public void testLink_MultipleTag_OnSameLine() throws Exception {
-        if (!TreeShims.isJDKVersionRelease18_Or_Above()) {
+        try {
+            SourceVersion.valueOf("RELEASE_18"); //NOI18N
+        } catch (IllegalArgumentException ex) {
+            //OK, no RELEASE_18, skip tests
             return;
         }
         this.sourceLevel = getLatestSourceVersion();
@@ -1901,7 +1988,10 @@ public class GoToSupportTest extends NbTestCase {
     }
 
     public void testLinkTag_With_RegionAttribute() throws Exception {
-        if (!TreeShims.isJDKVersionRelease18_Or_Above()) {
+        try {
+            SourceVersion.valueOf("RELEASE_18"); //NOI18N
+        } catch (IllegalArgumentException ex) {
+            //OK, no RELEASE_18, skip tests
             return;
         }
         this.sourceLevel = getLatestSourceVersion();
@@ -1911,7 +2001,10 @@ public class GoToSupportTest extends NbTestCase {
     }
 
     public void testLinkTag_Ref_ToThisClass_UsingHash() throws Exception {
-        if (!TreeShims.isJDKVersionRelease18_Or_Above()) {
+        try {
+            SourceVersion.valueOf("RELEASE_18"); //NOI18N
+        } catch (IllegalArgumentException ex) {
+            //OK, no RELEASE_18, skip tests
             return;
         }
         this.sourceLevel = getLatestSourceVersion();
@@ -1921,7 +2014,10 @@ public class GoToSupportTest extends NbTestCase {
     }
 
     public void testLinkTag_FieldRef_ToThisClass_UsingHash() throws Exception {
-        if (!TreeShims.isJDKVersionRelease18_Or_Above()) {
+        try {
+            SourceVersion.valueOf("RELEASE_18"); //NOI18N
+        } catch (IllegalArgumentException ex) {
+            //OK, no RELEASE_18, skip tests
             return;
         }
         this.sourceLevel = getLatestSourceVersion();
@@ -1931,7 +2027,10 @@ public class GoToSupportTest extends NbTestCase {
     }
 
     public void testLinkTag_AlongWith_HighlightTag() throws Exception {
-        if (!TreeShims.isJDKVersionRelease18_Or_Above()) {
+        try {
+            SourceVersion.valueOf("RELEASE_18"); //NOI18N
+        } catch (IllegalArgumentException ex) {
+            //OK, no RELEASE_18, skip tests
             return;
         }
         this.sourceLevel = getLatestSourceVersion();
@@ -1941,7 +2040,10 @@ public class GoToSupportTest extends NbTestCase {
     }
 
     public void testLinkTag_AlongWith_ReplaceTag() throws Exception {
-        if (!TreeShims.isJDKVersionRelease18_Or_Above()) {
+        try {
+            SourceVersion.valueOf("RELEASE_18"); //NOI18N
+        } catch (IllegalArgumentException ex) {
+            //OK, no RELEASE_18, skip tests
             return;
         }
         this.sourceLevel = getLatestSourceVersion();
@@ -1951,7 +2053,10 @@ public class GoToSupportTest extends NbTestCase {
     }
 
     public void testLinkTag_AlongWith_SubStringAndReplaceTag() throws Exception {
-        if (!TreeShims.isJDKVersionRelease18_Or_Above()) {
+        try {
+            SourceVersion.valueOf("RELEASE_18"); //NOI18N
+        } catch (IllegalArgumentException ex) {
+            //OK, no RELEASE_18, skip tests
             return;
         }
         this.sourceLevel = getLatestSourceVersion();
@@ -1961,7 +2066,10 @@ public class GoToSupportTest extends NbTestCase {
     }
 
     public void testLinkTag_EmptyReplacementValue() throws Exception {
-        if (!TreeShims.isJDKVersionRelease18_Or_Above()) {
+        try {
+            SourceVersion.valueOf("RELEASE_18"); //NOI18N
+        } catch (IllegalArgumentException ex) {
+            //OK, no RELEASE_18, skip tests
             return;
         }
         this.sourceLevel = getLatestSourceVersion();
@@ -1970,7 +2078,10 @@ public class GoToSupportTest extends NbTestCase {
         performTest("LinkTag", 4758, null, "javadocsnippet_LinkTag_EmptyReplacementValue.pass", this.sourceLevel);
     }
     public void testError_HighlightTag() throws Exception {
-        if (!TreeShims.isJDKVersionRelease18_Or_Above()) {
+        try {
+            SourceVersion.valueOf("RELEASE_18"); //NOI18N
+        } catch (IllegalArgumentException ex) {
+            //OK, no RELEASE_18, skip tests
             return;
         }
         this.sourceLevel = getLatestSourceVersion();
@@ -1980,7 +2091,10 @@ public class GoToSupportTest extends NbTestCase {
     }
     
     public void testError_ReplaceTag() throws Exception {
-        if (!TreeShims.isJDKVersionRelease18_Or_Above()) {
+        try {
+            SourceVersion.valueOf("RELEASE_18"); //NOI18N
+        } catch (IllegalArgumentException ex) {
+            //OK, no RELEASE_18, skip tests
             return;
         }
         this.sourceLevel = getLatestSourceVersion();
@@ -1990,7 +2104,10 @@ public class GoToSupportTest extends NbTestCase {
     }
     
     public void testError_LinkTag() throws Exception {
-        if (!TreeShims.isJDKVersionRelease18_Or_Above()) {
+        try {
+            SourceVersion.valueOf("RELEASE_18"); //NOI18N
+        } catch (IllegalArgumentException ex) {
+            //OK, no RELEASE_18, skip tests
             return;
         }
         this.sourceLevel = getLatestSourceVersion();
@@ -2000,7 +2117,10 @@ public class GoToSupportTest extends NbTestCase {
     }
     
     public void testError_UnpairedRegion() throws Exception {
-        if (!TreeShims.isJDKVersionRelease18_Or_Above()) {
+        try {
+            SourceVersion.valueOf("RELEASE_18"); //NOI18N
+        } catch (IllegalArgumentException ex) {
+            //OK, no RELEASE_18, skip tests
             return;
         }
         this.sourceLevel = getLatestSourceVersion();
@@ -2010,7 +2130,10 @@ public class GoToSupportTest extends NbTestCase {
     }
     
     public void testError_NoRegionToEnd() throws Exception {
-        if (!TreeShims.isJDKVersionRelease18_Or_Above()) {
+        try {
+            SourceVersion.valueOf("RELEASE_18"); //NOI18N
+        } catch (IllegalArgumentException ex) {
+            //OK, no RELEASE_18, skip tests
             return;
         }
         this.sourceLevel = getLatestSourceVersion();

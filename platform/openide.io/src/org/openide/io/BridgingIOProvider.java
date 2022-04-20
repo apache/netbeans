@@ -158,8 +158,7 @@ public class BridgingIOProvider<IO, S extends PrintWriter, P, F>
         @Override
         public OutputWriter getErr() {
             return new BridgingOutputWriter(ioDelegate,
-                    providerDelegate.getOut(ioDelegate)
-        );
+                    providerDelegate.getErr(ioDelegate));
         }
 
         @Override

@@ -181,6 +181,8 @@ public interface Visitor {
     //public void endVisit(InstanceOfExpression instanceOfExpression);
     public void visit(InterfaceDeclaration interfaceDeclaration);
 
+    public void visit(IntersectionType intersectionType);
+
     //public void endVisit(InterfaceDeclaration interfaceDeclaration);
     public void visit(ListVariable listVariable);
 

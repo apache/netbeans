@@ -940,6 +940,10 @@ public final class IndexQueryImpl implements ElementQuery.Index {
                     final Set<TypeElement> inheritedTypes = elementQueryIndex.getInheritedTypes(enclosingType);
                     for (final TypeElement nextType : inheritedTypes) {
                         filters.add(ElementFilter.forMembersOfType(nextType));
+                        // GH #3486
+                        for (TypeElement trait : getAllUsedTraits(nextType)) {
+                            filters.add(ElementFilter.forMembersOfType(trait));
+                        }
                     }
                 }
                 return filters.toArray(new ElementFilter[filters.size()]);

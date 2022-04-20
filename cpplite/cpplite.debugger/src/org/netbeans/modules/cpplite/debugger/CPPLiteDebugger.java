@@ -968,7 +968,7 @@ public final class CPPLiteDebugger {
         private void addBreakpoint(CPPLiteBreakpoint breakpoint) {
             String path = breakpoint.getFilePath();
             int lineNumber = breakpoint.getLineNumber();
-            String disabled = breakpoint.isEnabled() ? "" : "-d ";
+            String disabled = breakpoint.isEnabled() ? "-f " : "-d ";
             Command command = new Command("-break-insert " + disabled + path + ":" + lineNumber) {
                 @Override
                 protected void onDone(MIRecord record) {

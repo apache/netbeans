@@ -28,5 +28,6 @@ KEYWORD    function                                   null
 KEYWORD    private                                    null
 KEYWORD    protected                                  null
 KEYWORD    public                                     null
+KEYWORD    readonly                                   null
 KEYWORD    static                                     null
 KEYWORD    var                                        null

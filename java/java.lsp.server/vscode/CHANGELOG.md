@@ -20,8 +20,14 @@
     under the License.
 
 -->
-## Version 13.0.0
-* Project Explorer to display project organization, dependencies and contents introduced.
+## Version 12.6.301
+* Project Explorer to display logical project structure, dependencies and project files introduced
+* Dedicated form for Change method parameters refactoring 
+* Organize Imports added, see `Netbeans > Java > Imports:` _settings_ for customizations
+* Setting `NetBeans: Userdir = global | local` added to run Language Server per workspace or globally for user
+* Run Configurations panel added to allow intuitive configuration of Run & Debug
+* Java Outline view provides all details for selected file
+* Numerous bug fixes and stability improvements in all areas
 
 ## Version 12.5.301
 * Number of refactorings added

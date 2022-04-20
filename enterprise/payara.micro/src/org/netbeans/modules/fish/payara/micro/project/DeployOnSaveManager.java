@@ -97,10 +97,9 @@ public final class DeployOnSaveManager {
         return t;
     });
 
-    //private final ExecutorService EXECUTOR = Executors.newFixedThreadPool(1);
     /** <i>GuardedBy("this")</i>
      */
-    private Map<J2eeModuleProvider, Set<Artifact>> toDeploy = new HashMap<>();
+    private Map<J2eeModuleProvider, DeployArtifact> toDeploy = new HashMap<>();
 
     /** <i>GuardedBy("this")</i>
      */
@@ -230,18 +229,15 @@ public final class DeployOnSaveManager {
         }
     }
 
-    public void submitChangedArtifacts(J2eeModuleProvider provider, Iterable<Artifact> artifacts) {
+    public void submitChangedArtifacts(Project project, J2eeModuleProvider provider, Iterable<Artifact> artifacts) {
         assert provider != null;
         assert artifacts != null;
 
         synchronized (this) {
-            Set<Artifact> preparedArtifacts = toDeploy.get(provider);
+            DeployArtifact preparedArtifacts = toDeploy.get(provider);
             if (preparedArtifacts == null) {
-                preparedArtifacts = new HashSet<>();
+                preparedArtifacts = new DeployArtifact(project, artifacts);
                 toDeploy.put(provider, preparedArtifacts);
-            }
-            for (Artifact artifact : artifacts) {
-                preparedArtifacts.add(artifact);
             }
 
             boolean delayed = true;
@@ -308,7 +304,7 @@ public final class DeployOnSaveManager {
                     LOGGER.log(Level.FINE, "Delivered compile artifact: {0}", artifact);
                 }
             }
-            DeployOnSaveManager.getDefault().submitChangedArtifacts(realProvider, realArtifacts);
+            DeployOnSaveManager.getDefault().submitChangedArtifacts(realProject, realProvider, realArtifacts);
 
             try {
                 current.get();
@@ -354,7 +350,7 @@ public final class DeployOnSaveManager {
                     LOGGER.log(Level.FINE, "Delivered copy artifact: {0}", artifact);
                 }
             }
-            DeployOnSaveManager.getDefault().submitChangedArtifacts(realProvider, artifacts);
+            DeployOnSaveManager.getDefault().submitChangedArtifacts(realProject, realProvider, artifacts);
 
             try {
                 current.get();
@@ -365,6 +361,26 @@ public final class DeployOnSaveManager {
                 Exceptions.printStackTrace(ex);
             }
         }
+    }
+
+    class DeployArtifact {
+
+        private final Project project;
+        private final Iterable<Artifact> artifacts;
+
+        public DeployArtifact(Project project, Iterable<Artifact> artifacts) {
+            this.project = project;
+            this.artifacts = artifacts;
+        }
+
+        public Project getProject() {
+            return project;
+        }
+
+        public Iterable<Artifact> getArtifacts() {
+            return artifacts;
+        }
+
     }
 
     private class DeployTask implements Runnable {
@@ -388,7 +404,7 @@ public final class DeployOnSaveManager {
 
             LOGGER.log(Level.FINE, "Performing pending deployments");
 
-            Map<J2eeModuleProvider, Set<Artifact>> deployNow;
+            Map<J2eeModuleProvider, DeployArtifact> deployNow;
             Map<J2eeModuleProvider, List<DeployOnSaveListener>> listeners = new HashMap<>();
             synchronized (DeployOnSaveManager.this) {
                 if (toDeploy.isEmpty()) {
@@ -407,8 +423,8 @@ public final class DeployOnSaveManager {
                 }
             }
 
-            for (Map.Entry<J2eeModuleProvider, Set<Artifact>> entry : deployNow.entrySet()) {
-                if (entry.getValue().isEmpty()) {
+            for (Map.Entry<J2eeModuleProvider, DeployArtifact> entry : deployNow.entrySet()) {
+                if (!entry.getValue().getArtifacts().iterator().hasNext()) {
                     continue;
                 }
                 try {
@@ -419,7 +435,7 @@ public final class DeployOnSaveManager {
 
                         List<DeployOnSaveListener> toFire = listeners.get(entry.getKey());
                         if (toFire != null) {
-                            toFire.forEach(listener -> listener.deployed(entry.getValue()));
+                            toFire.forEach(listener -> listener.deployed(entry.getValue().getArtifacts()));
                         }
                     }
                 } catch (Throwable t) {
@@ -429,10 +445,10 @@ public final class DeployOnSaveManager {
             }
         }
 
-        private boolean notifyServer(J2eeModuleProvider provider, Iterable<Artifact> artifacts) {
+        private boolean notifyServer(J2eeModuleProvider provider, DeployArtifact deployArtifact) {
             if (LOGGER.isLoggable(Level.FINEST)) {
                 StringBuilder builder = new StringBuilder("Artifacts updated: [");
-                for (Artifact artifact : artifacts) {
+                for (Artifact artifact : deployArtifact.getArtifacts()) {
                     builder.append(artifact.getFile().getAbsolutePath()).append(",");
                 }
                 builder.setLength(builder.length() - 1);
@@ -442,8 +458,8 @@ public final class DeployOnSaveManager {
 
             DeploymentState state;
             try {
-                distributeOnSave(FileUtil.toFile(provider.getJ2eeModule().getContentDirectory()), artifacts);
-                ReloadAction.reloadApplication(provider.getJ2eeModule().getContentDirectory().getPath());
+                distributeOnSave(FileUtil.toFile(provider.getJ2eeModule().getContentDirectory()), deployArtifact.getArtifacts());
+                ReloadAction.reloadApplication(provider.getJ2eeModule().getContentDirectory().getPath(), deployArtifact);
                 state = DeploymentState.MODULE_UPDATED;
             } catch (IOException ex) {
                 LOGGER.log(Level.INFO, null, ex);

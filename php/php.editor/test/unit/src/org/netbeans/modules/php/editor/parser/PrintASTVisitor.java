@@ -702,6 +702,13 @@ public class PrintASTVisitor implements Visitor {
     }
 
     @Override
+    public void visit(IntersectionType node) {
+        XMLPrintNode printNode = new XMLPrintNode(node, "IntersectionType");
+        printNode.addChildren(node.getTypes());
+        printNode.print(this);
+    }
+
+    @Override
     public void visit(ListVariable node) {
         XMLPrintNode printNode = new XMLPrintNode(node, "ListVariable", new String[]{"type", node.getSyntaxType().name()});
         printNode.addChildren(node.getElements());

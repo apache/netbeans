@@ -2124,7 +2124,7 @@ outer:  do {
             if (SLOW) {
                 Item item = todo.item;
                 if (item != null && item.message == null) {
-                    item.message = "task failed due to: " + ex;
+                    item.message = ex.toString();
                     item.initCause(ex);
                     ex = item;
                 }

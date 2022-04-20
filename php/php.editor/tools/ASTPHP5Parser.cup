@@ -36,6 +36,7 @@ parser code {:
     protected final static Integer ABSTRACT = Integer.valueOf(BodyDeclaration.Modifier.ABSTRACT);
     protected final static Integer FINAL = Integer.valueOf(BodyDeclaration.Modifier.FINAL);
     protected final static Integer STATIC = Integer.valueOf(BodyDeclaration.Modifier.STATIC);
+    protected final static Integer READONLY = Integer.valueOf(BodyDeclaration.Modifier.READONLY);
 
     private ErrorStrategy defaultStrategy = new DefaultErrorStrategy();;
     private ErrorStrategy errorStrategy = defaultStrategy;
@@ -410,6 +411,8 @@ terminal T_ELLIPSIS;
 terminal T_COALESCE;
 terminal T_COALESCE_EQUAL;
 terminal T_ATTRIBUTE;
+terminal String T_READONLY;
+terminal T_AMPERSAND_NOT_FOLLOWED_BY_VAR_OR_VARARG; /* & */
 
 /* Non terminals */
 
@@ -471,7 +474,9 @@ non terminal Expression exit_expr;
 non terminal List ctor_arguments;
 non terminal Expression common_scalar;
 non terminal Expression static_scalar;
+non terminal Expression static_scalar_with_class_instance;
 non terminal Expression static_scalar_value;
+non terminal Expression static_scalar_value_with_class_instance;
 non terminal Expression static_operation;
 non terminal Expression scalar;
 non terminal List static_array_pair_list;
@@ -544,7 +549,7 @@ non terminal Identifier identifier_without_class;
 non terminal Identifier identifier;
 non terminal List class_constant_declaration;
 non terminal List constant_declaration;
-non terminal Integer optional_visibility_modifier;
+non terminal Integer optional_property_modifiers;
 non terminal Integer constant_modifiers;
 non terminal Integer method_modifiers;
 non terminal Block method_body;
@@ -574,6 +579,9 @@ non terminal Expression class_type;
 non terminal Expression class_type_without_static;
 non terminal List<Expression> union_type;
 non terminal List<Expression> union_type_without_static;
+non terminal List<Expression> intersection_type;
+non terminal List<Expression> intersection_type_without_static;
+non terminal ampersand;
 non terminal Expression optional_return_type;
 non terminal VariableBase r_variable;
 non terminal Integer variable_modifiers;
@@ -585,6 +593,9 @@ non terminal List isset_variables;
 non terminal Expression isset_variable;
 non terminal Variable tracked_variable;
 non terminal Variable optional_tracked_variable;
+non terminal Integer abstract_modifier;
+non terminal Integer final_modifier;
+non terminal Integer readonly_modifier;
 non terminal Integer static_modifier;
 non terminal Integer ppp_modifiers;
 non terminal Integer af_modifiers;
@@ -641,6 +652,7 @@ precedence left T_BOOLEAN_AND;
 precedence left T_OR;
 precedence left T_KOVA;
 precedence left T_REFERENCE;
+precedence left T_AMPERSAND_NOT_FOLLOWED_BY_VAR_OR_VARARG;
 precedence left T_ELLIPSIS;
 precedence left T_COALESCE;
 
@@ -658,7 +670,7 @@ precedence nonassoc T_NEW, T_CLONE;
 precedence left T_ELSEIF;
 precedence left T_ELSE;
 precedence left T_ENDIF;
-precedence right T_STATIC, T_ABSTRACT, T_FINAL, T_PRIVATE, T_PROTECTED, T_PUBLIC;
+precedence right T_STATIC, T_ABSTRACT, T_FINAL, T_PRIVATE, T_PROTECTED, T_PUBLIC, T_READONLY;
 
 thestart ::=
 top_statement_list:statementList
@@ -1094,6 +1106,11 @@ reserved_non_modifiers_without_class:reserved
 :}
 
 | T_PUBLIC:modifier
+{:
+    RESULT = new Identifier(modifierleft, modifierright, modifier, true);
+:}
+
+| T_READONLY:modifier
 {:
     RESULT = new Identifier(modifierleft, modifierright, modifier, true);
 :}
@@ -1813,7 +1830,7 @@ is_reference ::=
     RESULT = Boolean.FALSE;
 :}
 
-| T_REFERENCE
+| ampersand
 {:
     RESULT = Boolean.TRUE;
 :}
@@ -2080,7 +2097,7 @@ variable:var
     RESULT = var;
 :}
 
-| T_REFERENCE:start variable:var
+| ampersand:start variable:var
 {:
     Reference reference = new Reference (startleft, varright, var);
     RESULT = reference;
@@ -2344,15 +2361,52 @@ attributes:attributes parameter:param
 :}
 ;
 
-optional_visibility_modifier ::=
-constant_modifiers:modifier
+optional_property_modifiers ::=
+/* empty */
 {:
-    RESULT = modifier;
+    RESULT = null;
+:}
+
+| ppp_modifiers:pModifier
+{:
+    RESULT = pModifier;
+:}
+
+| readonly_modifier:modifier
+{:
+    /* e.g. readonly int $property = 1, */
+    int result = 0;
+    result |= ASTPHP5Parser.IMPLICIT_PUBLIC.intValue();
+    result |= modifier.intValue();
+    RESULT = Integer.valueOf(result);
+:}
+
+| ppp_modifiers:pModifier readonly_modifier:rModifier
+{:
+    int result = 0;
+    result |= pModifier.intValue();
+    result |= rModifier.intValue();
+    RESULT = Integer.valueOf(result);
+:}
+
+| readonly_modifier:rModifier ppp_modifiers:pModifier
+{:
+    int result = 0;
+    result |= rModifier.intValue();
+    result |= pModifier.intValue();
+    RESULT = Integer.valueOf(result);
+:}
+;
+
+readonly_modifier ::=
+T_READONLY
+{:
+    RESULT = ASTPHP5Parser.READONLY;
 :}
 ;
 
 parameter ::=
-optional_visibility_modifier:modifier optional_class_type_without_static:classType is_reference:isReference is_variadic:isVariadic T_VARIABLE:var
+optional_property_modifiers:modifier optional_class_type_without_static:classType is_reference:isReference is_variadic:isVariadic T_VARIABLE:var
 {:
     int start = varleft;
     if (isVariadic) {
@@ -2383,7 +2437,7 @@ optional_visibility_modifier:modifier optional_class_type_without_static:classTy
     RESULT = parameter;
 :}
 
-| optional_visibility_modifier:modifier optional_class_type_without_static:classType is_reference:isReference is_variadic:isVariadic T_VARIABLE:var T_EQUAL static_scalar:scalar
+| optional_property_modifiers:modifier optional_class_type_without_static:classType is_reference:isReference is_variadic:isVariadic T_VARIABLE:var T_EQUAL static_scalar_with_class_instance:expr
 {:
     int start = varleft;
     if (isVariadic) {
@@ -2410,7 +2464,7 @@ optional_visibility_modifier:modifier optional_class_type_without_static:classTy
             argument = new Reference(isReferenceleft, varright, v);
         }
     }
-    FormalParameter parameter = new FormalParameter(start, scalarright, modifier, classType, argument, scalar);
+    FormalParameter parameter = new FormalParameter(start, exprright, modifier, classType, argument, expr);
     RESULT = parameter;
 :}
 ;
@@ -2453,6 +2507,11 @@ class_type:type
 | union_type:list
 {:
     RESULT = new UnionType(listleft, listright, list);
+:}
+
+| intersection_type:list
+{:
+    RESULT = new IntersectionType(listleft, listright, list);
 :}
 ;
 
@@ -2504,6 +2563,22 @@ class_type:type1 T_OR class_type:type2
 :}
 ;
 
+intersection_type ::=
+class_type:type1 T_AMPERSAND_NOT_FOLLOWED_BY_VAR_OR_VARARG class_type:type2
+{:
+    List list = new ArrayList<>();
+    list.add(type1);
+    list.add(type2);
+    RESULT = list;
+:}
+
+| intersection_type:list T_AMPERSAND_NOT_FOLLOWED_BY_VAR_OR_VARARG class_type:type
+{:
+    list.add(type);
+    RESULT = list;
+:}
+;
+
 type_expr_without_static ::=
 class_type_without_static:type
 {:
@@ -2519,6 +2594,11 @@ class_type_without_static:type
 {:
     RESULT = new UnionType(listleft, listright, list);
 :}
+
+| intersection_type_without_static:list
+{:
+    RESULT = new IntersectionType(listleft, listright, list);
+:}
 ;
 
 union_type_without_static ::=
@@ -2531,6 +2611,22 @@ class_type_without_static:type1 T_OR class_type_without_static:type2
 :}
 
 | union_type_without_static:list T_OR class_type_without_static:type
+{:
+    list.add(type);
+    RESULT = list;
+:}
+;
+
+intersection_type_without_static ::=
+class_type_without_static:type1 T_AMPERSAND_NOT_FOLLOWED_BY_VAR_OR_VARARG class_type_without_static:type2
+{:
+    List list = new ArrayList<>();
+    list.add(type1);
+    list.add(type2);
+    RESULT = list;
+:}
+
+| intersection_type_without_static:list T_AMPERSAND_NOT_FOLLOWED_BY_VAR_OR_VARARG class_type_without_static:type
 {:
     list.add(type);
     RESULT = list;
@@ -2685,7 +2781,7 @@ static_var_list:list T_COMMA T_VARIABLE:var
     RESULT = list;
 :}
 
-| T_VARIABLE:var T_EQUAL static_scalar:expr
+| T_VARIABLE:var T_EQUAL static_scalar_with_class_instance:expr
 {:
     Variable v = new Variable(varleft, varright, var);
     Assignment assignment = new Assignment(varleft, exprright, v, Assignment.Type.EQUAL, expr);
@@ -2926,12 +3022,42 @@ constant_modifiers ::=
 {:
     RESULT = modifier;
 :}
+
+| final_modifier:modifier
+{:
+    RESULT = modifier;
+:}
+
+| final_modifier:fModifier ppp_modifiers:pModifier
+{:
+    int result = 0;
+    result |= fModifier.intValue();
+    result |= pModifier.intValue();
+    RESULT = Integer.valueOf(result);
+:}
+
+| ppp_modifiers:pModifier final_modifier:fModifier
+{:
+    int result = 0;
+    result |= pModifier.intValue();
+    result |= fModifier.intValue();
+    RESULT = Integer.valueOf(result);
+:}
 ;
 
 variable_modifiers ::=
 ppp_modifiers:modifier
 {:
     RESULT = modifier;
+:}
+
+| readonly_modifier:modifier
+{:
+    /* e.g. readonly int $property; */
+    int result = 0;
+    result |= ASTPHP5Parser.IMPLICIT_PUBLIC.intValue();
+    result |= modifier.intValue();
+    RESULT = Integer.valueOf(result);
 :}
 
 | static_modifier:modifier
@@ -2952,6 +3078,22 @@ ppp_modifiers:modifier
     int result = 0;
     result |= fModifier.intValue();
     result |= sModifier.intValue();
+    RESULT = Integer.valueOf(result);
+:}
+
+| readonly_modifier:rModifier ppp_modifiers:fModifier
+{:
+    int result = 0;
+    result |= rModifier.intValue();
+    result |= fModifier.intValue();
+    RESULT = Integer.valueOf(result);
+:}
+
+| ppp_modifiers:fModifier readonly_modifier:rModifier
+{:
+    int result = 0;
+    result |= fModifier.intValue();
+    result |= rModifier.intValue();
     RESULT = Integer.valueOf(result);
 :}
 
@@ -3022,7 +3164,15 @@ method_modifiers ::=
     RESULT = Integer.valueOf(result);
 :}
 
-| af_modifiers:fModifier ppp_modifiers:sModifier
+| abstract_modifier:aModifier ppp_modifiers:sModifier
+{:
+    int result = 0;
+    result |= aModifier.intValue();
+    result |= sModifier.intValue();
+    RESULT = Integer.valueOf(result);
+:}
+
+| final_modifier:fModifier ppp_modifiers:sModifier
 {:
     int result = 0;
     result |= fModifier.intValue();
@@ -3075,13 +3225,36 @@ method_modifiers ::=
     RESULT = Integer.valueOf(result);
 :}
 
-| af_modifiers:fModifier ppp_modifiers:sModifier static_modifier:tModifier
+| abstract_modifier:aModifier ppp_modifiers:sModifier static_modifier:tModifier
+{:
+    int result = 0;
+    result |= aModifier.intValue();
+    result |= sModifier.intValue();
+    result |= tModifier.intValue();
+    RESULT = Integer.valueOf(result);
+:}
+
+| final_modifier:fModifier ppp_modifiers:sModifier static_modifier:tModifier
 {:
     int result = 0;
     result |= fModifier.intValue();
     result |= sModifier.intValue();
     result |= tModifier.intValue();
     RESULT = Integer.valueOf(result);
+:}
+;
+
+abstract_modifier ::=
+T_ABSTRACT
+{:
+    RESULT = ASTPHP5Parser.ABSTRACT;
+:}
+;
+
+final_modifier ::=
+T_FINAL
+{:
+    RESULT = ASTPHP5Parser.FINAL;
 :}
 ;
 
@@ -3110,14 +3283,14 @@ T_PUBLIC
 ;
 
 af_modifiers ::=
-T_ABSTRACT
+abstract_modifier:modifier
 {:
-    RESULT = ASTPHP5Parser.ABSTRACT;
+    RESULT = modifier;
 :}
 
-| T_FINAL
+| final_modifier:modifier
 {:
-    RESULT = ASTPHP5Parser.FINAL;
+    RESULT = modifier;
 :}
 ;
 
@@ -3161,7 +3334,7 @@ constant_declaration:list T_COMMA string_st:constName T_EQUAL static_scalar_valu
     RESULT = list;
 :}
 
-| T_CONST string_st:constName T_EQUAL static_scalar_value:expr
+| T_CONST string_st:constName T_EQUAL static_scalar_value_with_class_instance:expr
 {:
     List list = new LinkedList();
     Identifier constId = new Identifier(constNameleft, constNameright, constName);
@@ -3270,12 +3443,12 @@ T_LIST:start T_OPEN_PARENTHESE array_pair_list:varList T_CLOSE_PARENTHESE:close 
     RESULT = new Assignment(varleft, exprright, var, Assignment.Type.EQUAL, expr);
 :}
 
-| variable:var T_EQUAL T_REFERENCE:reftoken variable:refvar
+| variable:var T_EQUAL ampersand:reftoken variable:refvar
 {:
     RESULT = new Assignment(varleft, refvarright, var, Assignment.Type.EQUAL, new Reference(reftokenleft, refvarright, refvar));
 :}
 
-| variable:var T_EQUAL T_REFERENCE:reftoken T_NEW:start class_name_reference:className ctor_arguments:ctor
+| variable:var T_EQUAL ampersand:reftoken T_NEW:start class_name_reference:className ctor_arguments:ctor
 {:
     ClassInstanceCreation classInstanceCreation = new ClassInstanceCreation(startleft, ctorright, className, ctor);
     Reference reference = new Reference(reftokenleft, ctorright, classInstanceCreation);
@@ -3401,6 +3574,11 @@ T_LIST:start T_OPEN_PARENTHESE array_pair_list:varList T_CLOSE_PARENTHESE:close 
 :}
 
 | expr:expr1 T_REFERENCE expr:expr2
+{:
+    RESULT = new InfixExpression(expr1left, expr2right, expr1 , InfixExpression.OperatorType.AND, expr2);
+:}
+
+| expr:expr1 T_AMPERSAND_NOT_FOLLOWED_BY_VAR_OR_VARARG expr:expr2
 {:
     RESULT = new InfixExpression(expr1left, expr2right, expr1 , InfixExpression.OperatorType.AND, expr2);
 :}
@@ -3784,7 +3962,7 @@ lexical_var_list:list T_COMMA T_VARIABLE:var
     RESULT = list;
 :}
 
-| lexical_var_list:list T_COMMA T_REFERENCE:ref T_VARIABLE:var
+| lexical_var_list:list T_COMMA ampersand:ref T_VARIABLE:var
 {:
     list.add(new Reference (refleft, varright, new Variable(varleft, varright, var)));
     RESULT = list;
@@ -3797,7 +3975,7 @@ lexical_var_list:list T_COMMA T_VARIABLE:var
     RESULT = list;
 :}
 
-| T_REFERENCE:ref T_VARIABLE:var
+| ampersand:ref T_VARIABLE:var
 {:
     List list = new LinkedList();
     list.add(new Reference (refleft, varright, new Variable(varleft, varright, var)));
@@ -4186,6 +4364,19 @@ common_scalar:scalar
 :}
 ;
 
+/* PHP 8.1: New in initializer */
+static_scalar_value_with_class_instance ::=
+static_scalar_value:scalar
+{:
+    RESULT = scalar;
+:}
+
+| T_NEW:n class_name_reference:className ctor_arguments:ctor
+{:
+    RESULT = new ClassInstanceCreation(nleft, ctorright, className, ctor);
+:}
+;
+
 static_operation ::=
 /*static_scalar_value T_OPEN_RECT static_scalar_value T_CLOSE_RECT
 {:
@@ -4265,6 +4456,11 @@ static_array_creation:arrayCreation
 :}
 
 | static_scalar_value:expr1 T_REFERENCE static_scalar_value:expr2
+{:
+    RESULT = new InfixExpression(expr1left, expr2right, expr1 , InfixExpression.OperatorType.AND, expr2);
+:}
+
+| static_scalar_value:expr1 T_AMPERSAND_NOT_FOLLOWED_BY_VAR_OR_VARARG static_scalar_value:expr2
 {:
     RESULT = new InfixExpression(expr1left, expr2right, expr1 , InfixExpression.OperatorType.AND, expr2);
 :}
@@ -4394,6 +4590,14 @@ static_array_creation:arrayCreation
 
 static_scalar ::=  /* compile-time evaluated scalars */
 static_scalar_value:scalar
+{:
+    RESULT = scalar;
+:}
+;
+
+/* PHP 8.1: New in initializer */
+static_scalar_with_class_instance ::=
+static_scalar_value_with_class_instance:scalar
 {:
     RESULT = scalar;
 :}
@@ -4551,6 +4755,11 @@ static_array_pair_list ::=
 possible_comma ::=
 /* empty */
 | T_COMMA
+;
+
+ampersand ::=
+T_REFERENCE
+| T_AMPERSAND_NOT_FOLLOWED_BY_VAR_OR_VARARG
 ;
 
 non_empty_static_array_pair_list ::=
@@ -5210,7 +5419,7 @@ expr:key T_DOUBLE_ARROW expr:value
     RESULT = unpack;
 :}
 
-| expr:expr T_DOUBLE_ARROW T_REFERENCE:start w_variable:var
+| expr:expr T_DOUBLE_ARROW ampersand:start w_variable:var
 {:
     Reference value = new Reference(startleft, varright, var);
     ArrayElement element = new ArrayElement(exprleft, varright, expr, value);
@@ -5218,7 +5427,7 @@ expr:key T_DOUBLE_ARROW expr:value
 :}
 
 
-| T_REFERENCE:start w_variable:var
+| ampersand:start w_variable:var
 {:
     Reference ref = new Reference(startleft, varright, var);
     ArrayElement element = new ArrayElement(startleft, varright, ref);

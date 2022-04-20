@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.lsp.client;
 
+import com.google.gson.InstanceCreator;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -25,6 +26,7 @@ import java.io.OutputStream;
 import java.lang.ref.Reference;
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.WeakReference;
+import java.lang.reflect.Type;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.URI;
@@ -35,6 +37,7 @@ import java.util.HashSet;
 import java.util.IdentityHashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -48,10 +51,15 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javax.swing.event.ChangeListener;
 import org.eclipse.lsp4j.ClientCapabilities;
+import org.eclipse.lsp4j.CompletionCapabilities;
 import org.eclipse.lsp4j.DocumentSymbolCapabilities;
 import org.eclipse.lsp4j.InitializeParams;
 import org.eclipse.lsp4j.InitializeResult;
 import org.eclipse.lsp4j.ResourceOperationKind;
+import org.eclipse.lsp4j.SemanticTokens;
+import org.eclipse.lsp4j.SemanticTokensCapabilities;
+import org.eclipse.lsp4j.SemanticTokensClientCapabilitiesRequests;
+import org.eclipse.lsp4j.SemanticTokensLegend;
 import org.eclipse.lsp4j.ServerCapabilities;
 import org.eclipse.lsp4j.SymbolCapabilities;
 import org.eclipse.lsp4j.SymbolKind;
@@ -166,6 +174,13 @@ public class LSPBindings {
 
         if (prj == null) {
             dir = file.getParent();
+            File dirFile = FileUtil.toFile(dir);
+            if (dirFile != null &&
+                dirFile.getName().startsWith("vcs-") &&
+                dirFile.getAbsolutePath().startsWith(System.getProperty("java.io.tmpdir"))) {
+                //diff dir, don't start servers:
+                return null;
+            }
         } else {
             dir = prj.getProjectDirectory();
         }
@@ -268,7 +283,23 @@ public class LSPBindings {
                     InputStream in = LanguageServerProviderAccessor.getINSTANCE().getInputStream(desc);
                     OutputStream out = LanguageServerProviderAccessor.getINSTANCE().getOutputStream(desc);
                     Process p = LanguageServerProviderAccessor.getINSTANCE().getProcess(desc);
-                    Launcher<LanguageServer> launcher = LSPLauncher.createClientLauncher(lci, in, out);
+                    Launcher<LanguageServer> launcher = new LSPLauncher.Builder<LanguageServer>()
+                                                                       .setLocalService(lci)
+                                                                       .setRemoteInterface(LanguageServer.class)
+                                                                       .setInput(in)
+                                                                       .setOutput(out)
+                                                                       .configureGson(gson -> {
+                       gson.registerTypeAdapter(SemanticTokensLegend.class, new InstanceCreator<SemanticTokensLegend>() {
+                           @Override public SemanticTokensLegend createInstance(Type type) {
+                               return new SemanticTokensLegend(Collections.emptyList(), Collections.emptyList());
+                           }
+                       });
+                       gson.registerTypeAdapter(SemanticTokens.class, new InstanceCreator<SemanticTokens>() {
+                           @Override public SemanticTokens createInstance(Type type) {
+                               return new SemanticTokens(Collections.emptyList());
+                           }
+                       });
+                    }).create();
                     launcher.startListening();
                     LanguageServer server = launcher.getRemoteProxy();
                     InitializeResult result = initServer(p, server, dir); //XXX: what if a different root is expected????
@@ -339,6 +370,7 @@ public class LSPBindings {
        dsc.setHierarchicalDocumentSymbolSupport(true);
        dsc.setSymbolKind(new SymbolKindCapabilities(Arrays.asList(SymbolKind.values())));
        tdcc.setDocumentSymbol(dsc);
+       tdcc.setSemanticTokens(new SemanticTokensCapabilities(new SemanticTokensClientCapabilitiesRequests(true), KNOWN_TOKEN_TYPES, KNOWN_TOKEN_MODIFIERS, Arrays.asList()));
        WorkspaceClientCapabilities wcc = new WorkspaceClientCapabilities();
        wcc.setWorkspaceEdit(new WorkspaceEditCapabilities());
        wcc.getWorkspaceEdit().setDocumentChanges(true);
@@ -359,6 +391,15 @@ public class LSPBindings {
            }
        }
     }
+    private static final List<String> KNOWN_TOKEN_TYPES = Collections.unmodifiableList(Arrays.asList(
+            "namespace", "package", "function", "method", "macro", "parameter",
+            "variable", "struct", "enum", "class", "typeAlias", "typeParameter",
+            "field", "enumMember", "keyword"
+    ));
+
+    private static final List<String> KNOWN_TOKEN_MODIFIERS = Collections.unmodifiableList(Arrays.asList(
+            "static", "definition", "declaration"
+    ));
 
     public static synchronized Set<LSPBindings> getAllBindings() {
         Set<LSPBindings> allBindings = Collections.newSetFromMap(new IdentityHashMap<>());

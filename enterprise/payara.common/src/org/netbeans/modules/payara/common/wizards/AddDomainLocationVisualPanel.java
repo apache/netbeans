@@ -91,6 +91,7 @@ public class AddDomainLocationVisualPanel extends javax.swing.JPanel {
             hostRemoteLabel.setVisible(false);
             hostRemoteField.setVisible(false);
             remoteLink.setVisible(false);
+            dockerVolumeCheckBox.setVisible(false);
         } else {
             domainLocalLabel.setVisible(false);
             domainLocalField.setVisible(false);
@@ -102,7 +103,13 @@ public class AddDomainLocationVisualPanel extends javax.swing.JPanel {
             hostRemoteLabel.setVisible(true);
             hostRemoteField.setVisible(true);
             remoteLink.setVisible(true);
+            dockerVolumeCheckBox.setVisible(true);
         }
+        hostPathLabel.setVisible(dockerVolumeCheckBox.isSelected());
+        hostPathField.setVisible(dockerVolumeCheckBox.isSelected());
+        containerPathLabel.setVisible(dockerVolumeCheckBox.isSelected());
+        containerPathField.setVisible(dockerVolumeCheckBox.isSelected());
+
         KeyListener kl = new MyKeyListener();
         if (isLocal) {
             // Put the choices into the combo box...
@@ -133,32 +140,23 @@ public class AddDomainLocationVisualPanel extends javax.swing.JPanel {
             domainLocalField.setModel(model);
             domainLocalField.getEditor()
                     .getEditorComponent().addKeyListener(kl);
-            domainLocalField.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent arg0) {
-                    domainLocalField.getEditor().setItem(
-                            domainLocalField.getSelectedItem());
-                    fireChangeEvent();
-                }
+            domainLocalField.addActionListener(arg0 -> {
+                domainLocalField.getEditor().setItem(
+                        domainLocalField.getSelectedItem());
+                fireChangeEvent();
             });
-            localIpCB.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    updateLocalIpsCombobox();
-                    fireChangeEvent();
-                }
+            localIpCB.addActionListener((e) -> {
+                updateLocalIpsCombobox();
+                fireChangeEvent();
             });
             updateLocalIpsCombobox();
         } else {
             domainRemoteField.addKeyListener(kl);
             hostRemoteField.addKeyListener(kl);
         }
-        useDefaultPortsCB.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                updatePortsFields();
-                fireChangeEvent();
-            }
+        useDefaultPortsCB.addActionListener(e -> {
+            updatePortsFields();
+            fireChangeEvent();
         });
         dasPortField.addKeyListener(kl);
         httpPortField.addKeyListener(kl);
@@ -175,6 +173,8 @@ public class AddDomainLocationVisualPanel extends javax.swing.JPanel {
         targetValueField.addKeyListener(kl);
         userNameField.addKeyListener(kl);
         passwordField.addKeyListener(kl);
+        hostPathField.addKeyListener(kl);
+        containerPathField.addKeyListener(kl);
     }
     
     /**
@@ -224,6 +224,18 @@ public class AddDomainLocationVisualPanel extends javax.swing.JPanel {
      */
     String getUserNameValue() {
         return userNameField.getText().trim();
+    }
+
+    boolean getDockerValue() {
+        return dockerVolumeCheckBox.isSelected();
+    }
+    
+    String getHostPathValue() {
+        return hostPathField.getText().trim();
+    }
+
+    String getContainerPathValue() {
+        return containerPathField.getText().trim();
     }
 
     /**
@@ -452,6 +464,11 @@ public class AddDomainLocationVisualPanel extends javax.swing.JPanel {
         domainRemoteLabel = new javax.swing.JLabel();
         domainRemoteField = new javax.swing.JTextField();
         remoteLink = new javax.swing.JLabel();
+        hostPathLabel = new javax.swing.JLabel();
+        containerPathLabel = new javax.swing.JLabel();
+        dockerVolumeCheckBox = new javax.swing.JCheckBox();
+        hostPathField = new javax.swing.JTextField();
+        containerPathField = new javax.swing.JTextField();
 
         setPreferredSize(new java.awt.Dimension(438, 353));
 
@@ -491,7 +508,7 @@ public class AddDomainLocationVisualPanel extends javax.swing.JPanel {
         );
         remotePanelLayout.setVerticalGroup(
             remotePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 37, Short.MAX_VALUE)
+            .addGap(0, 0, Short.MAX_VALUE)
         );
 
         domainLocalLabel.setLabelFor(domainLocalField);
@@ -532,6 +549,25 @@ public class AddDomainLocationVisualPanel extends javax.swing.JPanel {
             }
         });
 
+        hostPathLabel.setText(org.openide.util.NbBundle.getMessage(AddDomainLocationVisualPanel.class, "AddDomainLocationVisualPanel.hostPathLabel.text")); // NOI18N
+        hostPathLabel.setMinimumSize(new java.awt.Dimension(75, 14));
+
+        containerPathLabel.setText(org.openide.util.NbBundle.getMessage(AddDomainLocationVisualPanel.class, "AddDomainLocationVisualPanel.containerPathLabel.text")); // NOI18N
+        containerPathLabel.setMinimumSize(new java.awt.Dimension(100, 14));
+
+        dockerVolumeCheckBox.setText(org.openide.util.NbBundle.getMessage(AddDomainLocationVisualPanel.class, "AddDomainLocationVisualPanel.dockerVolumeCheckBox.text")); // NOI18N
+        dockerVolumeCheckBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                dockerVolumeCheckBoxActionPerformed(evt);
+            }
+        });
+
+        hostPathField.setColumns(5);
+        hostPathField.setText(org.openide.util.NbBundle.getMessage(AddDomainLocationVisualPanel.class, "AddDomainLocationVisualPanel.hostPathField.text")); // NOI18N
+
+        containerPathField.setColumns(5);
+        containerPathField.setText(org.openide.util.NbBundle.getMessage(AddDomainLocationVisualPanel.class, "AddDomainLocationVisualPanel.containerPathField.text")); // NOI18N
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -539,16 +575,17 @@ public class AddDomainLocationVisualPanel extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(remoteLink, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(domainLocalLabel)
-                            .addComponent(domainRemoteLabel)
-                            .addComponent(hostLocalLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(hostRemoteLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(dasPortFieldLabel)
-                            .addComponent(targetValueLabel)
-                            .addComponent(userNameLabel)
-                            .addComponent(passwordLabel))
+                            .addComponent(domainLocalLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(domainRemoteLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(hostLocalLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(hostRemoteLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(dasPortFieldLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(targetValueLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(userNameLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(passwordLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
@@ -564,19 +601,27 @@ public class AddDomainLocationVisualPanel extends javax.swing.JPanel {
                                     .addComponent(userNameField, javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(targetValueField, javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(layout.createSequentialGroup()
-                                        .addComponent(dasPortField, javax.swing.GroupLayout.DEFAULT_SIZE, 73, Short.MAX_VALUE)
+                                        .addComponent(dasPortField, javax.swing.GroupLayout.DEFAULT_SIZE, 7, Short.MAX_VALUE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(httpPortFieldLabel)))
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(layout.createSequentialGroup()
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(httpPortField, javax.swing.GroupLayout.DEFAULT_SIZE, 74, Short.MAX_VALUE)
+                                        .addComponent(httpPortField, javax.swing.GroupLayout.DEFAULT_SIZE, 7, Short.MAX_VALUE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(useDefaultPortsCB))
                                     .addGroup(layout.createSequentialGroup()
                                         .addGap(112, 112, 112)
                                         .addComponent(remotePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))))
-                    .addComponent(remoteLink)))
+                    .addComponent(dockerVolumeCheckBox)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(hostPathLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(hostPathField)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(containerPathLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(containerPathField))))
         );
 
         layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {dasPortFieldLabel, domainLocalLabel, domainRemoteLabel, hostLocalLabel, hostRemoteLabel, httpPortFieldLabel, passwordLabel, targetValueLabel, userNameLabel});
@@ -620,9 +665,17 @@ public class AddDomainLocationVisualPanel extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(passwordLabel)
                     .addComponent(passwordField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(remoteLink, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 73, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(dockerVolumeCheckBox)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(hostPathLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(containerPathLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(hostPathField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(containerPathField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(remoteLink)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(remotePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
@@ -641,16 +694,27 @@ public class AddDomainLocationVisualPanel extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_remoteLinkMouseClicked
 
+    private void dockerVolumeCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dockerVolumeCheckBoxActionPerformed
+        hostPathLabel.setVisible(dockerVolumeCheckBox.isSelected());
+        hostPathField.setVisible(dockerVolumeCheckBox.isSelected());
+        containerPathLabel.setVisible(dockerVolumeCheckBox.isSelected());
+        containerPathField.setVisible(dockerVolumeCheckBox.isSelected());
+    }//GEN-LAST:event_dockerVolumeCheckBoxActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTextField containerPathField;
+    private javax.swing.JLabel containerPathLabel;
     private javax.swing.JTextField dasPortField;
     private javax.swing.JLabel dasPortFieldLabel;
+    private javax.swing.JCheckBox dockerVolumeCheckBox;
     private javax.swing.JComboBox domainLocalField;
     private javax.swing.JLabel domainLocalLabel;
     private javax.swing.JTextField domainRemoteField;
     private javax.swing.JLabel domainRemoteLabel;
     private javax.swing.JComboBox hostLocalField;
     private javax.swing.JLabel hostLocalLabel;
+    private javax.swing.JTextField hostPathField;
+    private javax.swing.JLabel hostPathLabel;
     private javax.swing.JTextField hostRemoteField;
     private javax.swing.JLabel hostRemoteLabel;
     private javax.swing.JTextField httpPortField;

@@ -9,7 +9,7 @@
         <token id='T_FUNCTION' start='16' end='24'>
             <text>function</text>
         </token>
-        <token id='T_REFERENCE' start='25' end='26'>
+        <token id='T_AMPERSAND_NOT_FOLLOWED_BY_VAR_OR_VARARG' start='25' end='26'>
             <text>&amp;</text>
         </token>
         <token id='T_OPEN_PARENTHESE' start='27' end='28'>

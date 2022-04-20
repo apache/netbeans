@@ -1,0 +1,7 @@
+Code completion result for source line:
+function func1($param = |) {}
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CLASS      Func                            [PUBLIC]   newInInitializersFuncTyping01.php
+------------------------------------
+KEYWORD    array                                      null
+KEYWORD    new                                        null

@@ -24,6 +24,7 @@ addons:
       - xvfb
       - openjfx
       - libgfortran3
+      - libxml2-utils
 
 install:
   - export PATH="$PATH:$TRAVIS_BUILD_DIR/nbbuild/travis"
@@ -34,6 +35,10 @@ install:
 cache:
   directories:
   - $HOME/.hgexternalcache
+
+git:
+  quiet: true
+  depth: 3
 
 matrix:
     include:
@@ -647,7 +652,7 @@ matrix:
         - name: Build the Visual Studio Code extension for Java
           jdk: openjdk8
           before_install:
-            - nvm install 12.14.1
+            - nvm install 16.13.2
           env:
             - OPTS="-Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json -quiet -Dcluster.config=java -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true"
           before_script:
@@ -717,3 +722,7 @@ matrix:
           script:
             - export JAVA_HOME=$TEST_JDK
             - hide-logs.sh ant $OPTS commit-validation
+
+after_failure:
+  - nbbuild/travis/print-junit-report.sh
+  - sleep 3

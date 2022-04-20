@@ -39,6 +39,7 @@ import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.*;
+import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -216,7 +217,7 @@ final class BasicSearchForm extends JPanel implements ChangeListener,
 
         lblTextToFind = new JLabel();
         JComboBox<String> box = new JComboBox<>();
-        box.setEditor(new MultiLineComboBoxEditor());
+        box.setEditor(new MultiLineComboBoxEditor(box));
         cboxTextToFind = ComponentUtils.adjustComboForSearchPattern(box);
         lblTextToFind.setLabelFor(cboxTextToFind.getComponent());
         btnTestTextToFind = new JButton();
@@ -227,7 +228,7 @@ final class BasicSearchForm extends JPanel implements ChangeListener,
         if (searchAndReplace) {
             lblReplacement = new JLabel();
             cboxReplacement = new JComboBox<>();
-            cboxReplacement.setEditor(new MultiLineComboBoxEditor());
+            cboxReplacement.setEditor(new MultiLineComboBoxEditor(cboxReplacement));
             cboxReplacement.setEditable(true);
             cboxReplacement.setRenderer(new ShorteningCellRenderer());
             lblReplacement.setLabelFor(cboxReplacement);
@@ -1116,11 +1117,23 @@ final class BasicSearchForm extends JPanel implements ChangeListener,
 
         private final JTextArea area = new JTextArea();
 
-        public MultiLineComboBoxEditor() {
+        public MultiLineComboBoxEditor(JComboBox reference) {
             area.setWrapStyleWord(false);
             area.setLineWrap(false);
+
+            Border border = ((JComponent)reference.getEditor().getEditorComponent()).getBorder();
+            if (border == null) {
+                border = reference.getBorder();
+            }
+            area.setBorder(border);
+
+            // retain standard focus traversal behavior
             area.setFocusTraversalKeys(KeyboardFocusManager.FORWARD_TRAVERS‌​AL_KEYS, null);
             area.setFocusTraversalKeys(KeyboardFocusManager.BACKWARD_TRAVERS‌​AL_KEYS, null);
+
+            // dispatch enter to parent; set line breaks on shift+enter
+            area.getInputMap().put(KeyStroke.getKeyStroke("shift ENTER"), "insert-break");
+            area.getInputMap().put(KeyStroke.getKeyStroke("ENTER"), "text-submit");
         }
 
         @Override

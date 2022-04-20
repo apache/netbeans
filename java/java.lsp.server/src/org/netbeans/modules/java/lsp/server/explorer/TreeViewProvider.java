@@ -24,6 +24,10 @@ import org.netbeans.modules.java.lsp.server.explorer.api.TreeItemData;
 import org.netbeans.modules.java.lsp.server.explorer.api.TreeDataEvent;
 import org.netbeans.modules.java.lsp.server.explorer.api.TreeDataProvider;
 import java.beans.PropertyChangeEvent;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -40,6 +44,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.netbeans.modules.java.lsp.server.explorer.TreeItem.IconDescriptor;
 import org.openide.explorer.ExplorerManager;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
@@ -336,6 +341,9 @@ public abstract class TreeViewProvider {
         if (n == null) {
             return -1;
         }
+        if (nodeRegistry == null) {
+            return -1;
+        }
         synchronized (this) {
             Integer lspId = idMap.get(n);
             if (lspId != null) {
@@ -385,6 +393,16 @@ public abstract class TreeViewProvider {
             if (idoi != null) {
                 ti.iconIndex = idoi.imageIndex;
                 ti.iconUri = idoi.imageURI;
+                ti.iconDescriptor = new IconDescriptor();
+                try {
+                    URI baseURI = builtinURI2URI(idoi.baseURI);
+                    if (baseURI != null) {
+                        ti.iconDescriptor.baseUri = baseURI;
+                        ti.iconDescriptor.composition = idoi.composition;
+                    }
+                } catch (URISyntaxException ex) {
+                    LOG.log(Level.WARNING, "Cannot convert URL: {0}", idoi.baseURI);
+                }
             }
         } else if (data.getIconURI() != null) {
             ti.iconUri = data.getIconURI();
@@ -590,20 +608,21 @@ public abstract class TreeViewProvider {
     
     static final Node DUMMY_NODE = new AbstractNode(Children.LEAF);
 
+    private static ExplorerManager dummyManager() {
+        ExplorerManager m = new ExplorerManager();
+        m.setRootContext(DUMMY_NODE);
+        return m;
+    }
+
     /**
      * Dummy provider that serves root, no children and sinks all events.
      */
-    static final TreeViewProvider NONE = new TreeViewProvider("", new ExplorerManager(), null, Lookup.EMPTY) {
-        final Node root = DUMMY_NODE;
+    static final TreeViewProvider NONE = new TreeViewProvider("", dummyManager(), null, Lookup.EMPTY) {
+        final Node root = super.manager.getRootContext();
         
         @Override
         public CompletionStage<TreeItem> getRootInfo() {
             return super.getRootInfo();
-        }
-
-        @Override
-        public TreeItem findTreeItem(Node n) {
-            return super.findTreeItem(n);
         }
 
         @Override
@@ -613,11 +632,35 @@ public abstract class TreeViewProvider {
 
         @Override
         protected int findId(Node n) {
-            return super.findId(root);
+            // there are no nodes at all
+            return -1; 
         }
         
         @Override
         protected void onDidChangeTreeData(Node n, int id) {
         }
     };
+    
+    static URI builtinURI2URI(URI u) throws URISyntaxException {
+        if (u == null) {
+            return null;
+        }
+        // I could work through URLMapper + FileUtil, but that would open the JAR
+        // as filesystem, which gives some perf overhead:
+        try {
+            if ("jar".equals(u.getScheme())) { // NOI18N
+                URL u2 = u.toURL();
+                String s = u2.getPath();
+                int i = s.indexOf('!');
+                // I don't want to send file: / jar: URLs over LSP wire,
+                // let's have just resource path
+                if (i != -1) {
+                    return new URI("nbres", s.substring(i + 1), null); // NOI18N
+                }
+            }
+        } catch (MalformedURLException ex) {
+            throw new URISyntaxException(u.toString(), ex.getMessage());
+        }
+        return u;
+    }
 }

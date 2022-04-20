@@ -32,15 +32,12 @@ import com.sun.source.tree.Scope;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.util.SourcePositions;
 import com.sun.source.util.TreePath;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.IdentityHashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -58,7 +55,6 @@ import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.source.ClasspathInfo;
 import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.JavaSource;
-import org.netbeans.api.java.source.Task;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.modules.java.hints.declarative.Condition.False;
@@ -74,6 +70,7 @@ import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Exceptions;
+
 import static org.netbeans.modules.java.hints.declarative.DeclarativeHintTokenId.*;
 
 /**
@@ -91,15 +88,14 @@ public class DeclarativeHintsParser {
     private final FileObject file;
     private final CharSequence text;
     private final TokenSequence<DeclarativeHintTokenId> input;
-    private final Map<String, String> options = new HashMap<String, String>();
+    private final Map<String, String> options = new HashMap<>();
     private       String importsBlockCode;
     private       int[] importsBlockSpan;
-    private final List<HintTextDescription> hints = new LinkedList<HintTextDescription>();
-    private final List<String> blocksCode = new LinkedList<String>();
-    private final List<int[]> blocksSpan = new LinkedList<int[]>();
-    private final List<ErrorDescription> errors = new LinkedList<ErrorDescription>();
+    private final List<HintTextDescription> hints = new LinkedList<>();
+    private final List<String> blocksCode = new LinkedList<>();
+    private final List<int[]> blocksSpan = new LinkedList<>();
+    private final List<ErrorDescription> errors = new LinkedList<>();
     private final MethodInvocationContext mic;
-    private final Map<MethodInvocation, int[]> allMIConditions = new IdentityHashMap<MethodInvocation, int[]>();
 
     private Impl(FileObject file, CharSequence text, TokenSequence<DeclarativeHintTokenId> input) {
         this.file = file;
@@ -153,17 +149,17 @@ public class DeclarativeHintsParser {
                     errors.add(ErrorDescriptionFactory.createErrorDescription(Severity.ERROR, "Custom code not allowed", file, pos, pos + 2));
                     break;
                 }
-                String text = token().text().toString();
-                int soffs = text.startsWith("<?") ? 2 : 0; // NOI18N
+                String block = token().text().toString();
+                int soffs = block.startsWith("<?") ? 2 : 0; // NOI18N
                 // handle a case <?> -- see #244576
-                int eoffs = text.endsWith("?>") ? Math.max(soffs, text.length() - 2) : text.length(); // NOI18N
-                text = text.substring(soffs, eoffs);
+                int eoffs = block.endsWith("?>") ? Math.max(soffs, block.length() - 2) : block.length(); // NOI18N
+                block = block.substring(soffs, eoffs);
                 int[] span = new int[] {token().offset(null) + soffs, token().offset(null) + eoffs};
                 if (importsBlockCode == null && !wasFirstRule) {
-                    importsBlockCode = text;
+                    importsBlockCode = block;
                     importsBlockSpan = span;
                 } else {
-                    blocksCode.add(text);
+                    blocksCode.add(block);
                     blocksSpan.add(span);
                 }
             }
@@ -204,18 +200,18 @@ public class DeclarativeHintsParser {
 
         int patternEnd = input.offset();
 
-        Map<String, String> ruleOptions = new HashMap<String, String>();
+        Map<String, String> ruleOptions = new HashMap<>();
 
         maybeParseOptions(ruleOptions);
 
-        List<Condition> conditions = new LinkedList<Condition>();
-        List<int[]> conditionsSpans = new LinkedList<int[]>();
+        List<Condition> conditions = new LinkedList<>();
+        List<int[]> conditionsSpans = new LinkedList<>();
 
         if (id() == DOUBLE_COLON) {
             parseConditions(conditions, conditionsSpans);
         }
 
-        List<FixTextDescription> targets = new LinkedList<FixTextDescription>();
+        List<FixTextDescription> targets = new LinkedList<>();
 
         while (id() == LEADS_TO && !eof) {
             nextToken();
@@ -234,13 +230,13 @@ public class DeclarativeHintsParser {
 
             int targetEnd = input.offset();
             
-            Map<String, String> fixOptions = new HashMap<String, String>();
+            Map<String, String> fixOptions = new HashMap<>();
 
             maybeParseOptions(fixOptions);
 
             int[] span = new int[] {targetStart, targetEnd};
-            List<Condition> fixConditions = new LinkedList<Condition>();
-            List<int[]> fixConditionSpans = new LinkedList<int[]>();
+            List<Condition> fixConditions = new LinkedList<>();
+            List<int[]> fixConditionSpans = new LinkedList<>();
 
             if (id() == DOUBLE_COLON) {
                 parseConditions(fixConditions, fixConditionSpans);
@@ -403,7 +399,7 @@ public class DeclarativeHintsParser {
     /**
      * Marker that javac api is not available.
      */
-    private static final Reference<ClassPath> NONE = new WeakReference(null);
+    private static final Reference<ClassPath> NONE = new WeakReference<>(null);
     
     private static ClassPath getJavacApiJarClasspath() {
         Reference<ClassPath> r = javacApiClasspath;
@@ -454,81 +450,81 @@ public class DeclarativeHintsParser {
 
     private static @NonNull Condition resolve(MethodInvocationContext mic, final String invocation, final boolean not, final int offset, final FileObject file, final List<ErrorDescription> errors) throws IOException {
         final String[] methodName = new String[1];
-        final Map<String, ParameterKind> params = new LinkedHashMap<String, ParameterKind>();
+        final Map<String, ParameterKind> params = new LinkedHashMap<>();
         ClasspathInfo cpInfo = Hacks.createUniversalCPInfo();
         
         ClassPath javacPath = getJavacApiJarClasspath();
-         if (javacPath != null) {
-             ClasspathInfo result = null;
-             Reference<Holder> h = cache;
-             Holder holder;
-             if (h != null && (holder = h.get()) != null) {
-                 if (holder.universalPath == cpInfo) {
-                     result = holder.cachedInfo.get();
-                 }
-             }
-             if (result == null) {
-                 result = ClasspathInfo.create(ClassPathSupport.createProxyClassPath(
-                         javacPath, cpInfo.getClassPath(ClasspathInfo.PathKind.BOOT)), ClassPath.EMPTY, ClassPath.EMPTY);
-                 cache = new WeakReference<>(new Holder(result, cpInfo));
-             }
-             cpInfo = result;
-         }
-        JavaSource.create(cpInfo).runUserActionTask(new Task<CompilationController>() {
-            @SuppressWarnings("fallthrough")
-            public void run(CompilationController parameter) throws Exception {
-                parameter.toPhase(JavaSource.Phase.RESOLVED);
-                if (invocation == null || invocation.length() == 0) {
-                    //XXX: report an error
-                    return ;
+        if (javacPath != null) {
+            ClasspathInfo result = null;
+            Reference<Holder> h = cache;
+            Holder holder;
+            if (h != null && (holder = h.get()) != null) {
+                if (holder.universalPath == cpInfo) {
+                    result = holder.cachedInfo.get();
                 }
-                SourcePositions[] positions = new SourcePositions[1];
-                ExpressionTree et = parameter.getTreeUtilities().parseExpression(invocation, positions);
+            }
+            if (result == null) {
+                result = ClasspathInfo.create(ClassPathSupport.createProxyClassPath(
+                        javacPath, cpInfo.getClassPath(ClasspathInfo.PathKind.BOOT)), ClassPath.EMPTY, ClassPath.EMPTY);
+                cache = new WeakReference<>(new Holder(result, cpInfo));
+            }
+            cpInfo = result;
+        }
+        JavaSource.create(cpInfo).runUserActionTask((CompilationController parameter) -> {
+            parameter.toPhase(JavaSource.Phase.RESOLVED);
+            if (invocation == null || invocation.isEmpty()) {
+                //XXX: report an error
+                return ;
+            }
+            SourcePositions[] positions = new SourcePositions[1];
+            ExpressionTree et = parameter.getTreeUtilities().parseExpression(invocation, positions);
 
-                if (et.getKind() != Kind.METHOD_INVOCATION) {
-                    //XXX: report an error
-                    return ;
-                }
+            if (et.getKind() != Kind.METHOD_INVOCATION) {
+                //XXX: report an error
+                return ;
+            }
 
-                MethodInvocationTree mit = (MethodInvocationTree) et;
-                
-                if (mit.getMethodSelect().getKind() != Kind.IDENTIFIER) {
-                    //XXX: report an error
-                    return ;
-                }
+            MethodInvocationTree mit = (MethodInvocationTree) et;
 
-                Scope s = Hacks.constructScope(parameter, "javax.lang.model.SourceVersion", "javax.lang.model.element.Modifier", "javax.lang.model.element.ElementKind");
+            if (mit.getMethodSelect().getKind() != Kind.IDENTIFIER) {
+                //XXX: report an error
+                return ;
+            }
 
-                parameter.getTreeUtilities().attributeTree(et, s);
+            Scope s = Hacks.constructScope(parameter, "javax.lang.model.SourceVersion", "javax.lang.model.element.Modifier", "javax.lang.model.element.ElementKind");
 
-                methodName[0] = ((IdentifierTree) mit.getMethodSelect()).getName().toString();
+            parameter.getTreeUtilities().attributeTree(et, s);
 
-                for (ExpressionTree t : mit.getArguments()) {
-                    switch (t.getKind()) {
-                        case STRING_LITERAL:
-                            params.put(((LiteralTree) t).getValue().toString(), ParameterKind.STRING_LITERAL);
+            methodName[0] = ((IdentifierTree) mit.getMethodSelect()).getName().toString();
+
+            for (ExpressionTree t : mit.getArguments()) {
+                switch (t.getKind()) {
+                    case STRING_LITERAL:
+                        params.put(((LiteralTree) t).getValue().toString(), ParameterKind.STRING_LITERAL);
+                        break;
+                    case INT_LITERAL:
+                        params.put(((LiteralTree) t).getValue().toString(), ParameterKind.INT_LITERAL);
+                        break;
+                    case IDENTIFIER:
+                        String name = ((IdentifierTree) t).getName().toString();
+
+                        if (name.startsWith("$")) {
+                            params.put(name, ParameterKind.VARIABLE);
                             break;
-                        case IDENTIFIER:
-                            String name = ((IdentifierTree) t).getName().toString();
+                        }
+                    case MEMBER_SELECT:
+                        TreePath tp = parameter.getTrees().getPath(s.getEnclosingClass());
+                        Element e = parameter.getTrees().getElement(new TreePath(tp, t));
 
-                            if (name.startsWith("$")) {
-                                params.put(name, ParameterKind.VARIABLE);
-                                break;
-                            }
-                        case MEMBER_SELECT:
-                            TreePath tp = parameter.getTrees().getPath(s.getEnclosingClass());
-                            Element e = parameter.getTrees().getElement(new TreePath(tp, t));
-
-                            if (e.getKind() != ElementKind.ENUM_CONSTANT) {
-                                int start = (int) positions[0].getStartPosition(null, t) + offset;
-                                int end = (int) positions[0].getEndPosition(null, t) + offset;
-                                errors.add(ErrorDescriptionFactory.createErrorDescription(Severity.ERROR, "Cannot resolve enum constant", file, start, end));
-                                break;
-                            }
-
-                            params.put(((TypeElement) e.getEnclosingElement()).getQualifiedName().toString() + "." + e.getSimpleName().toString(), ParameterKind.ENUM_CONSTANT);
+                        if (e.getKind() != ElementKind.ENUM_CONSTANT) {
+                            int start = (int) positions[0].getStartPosition(null, t) + offset;
+                            int end = (int) positions[0].getEndPosition(null, t) + offset;
+                            errors.add(ErrorDescriptionFactory.createErrorDescription(Severity.ERROR, "Cannot resolve enum constant", file, start, end));
                             break;
-                    }
+                        }
+                        name = ((TypeElement) e.getEnclosingElement()).getQualifiedName() + "." + e.getSimpleName();
+                        params.put(name, ParameterKind.ENUM_CONSTANT);
+                        break;
                 }
             }
         }, true);

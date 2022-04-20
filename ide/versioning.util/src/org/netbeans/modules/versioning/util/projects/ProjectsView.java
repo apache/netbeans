@@ -249,7 +249,7 @@ class ProjectsView extends JPanel implements ExplorerManager.Provider, VetoableC
      */
     private final class ProjectNode extends AbstractNode {
         static final String PROPERTY_NAME_PATH = "path";    // NOI18N
-        final private ProjectInformation info;
+        private final ProjectInformation info;
 
         public ProjectNode(Project p, Children children) {
             super(children, Lookups.singleton(p));

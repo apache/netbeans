@@ -344,6 +344,17 @@ public abstract class InstancePanel extends javax.swing.JPanel {
         userNameField.setText(instance.getUserName());
         passwordField.setText(instance.getPassword());
     }
+    
+    /**
+     * Docker fields initialization.
+     * <p/>
+     * Initialize host path and container path with values stored in Payara
+     * instance object.
+     */
+    protected void initDockerVolume() {
+        hostPathField.setText(instance.getHostPath());
+        containerPathField.setText(instance.getContainerPath());
+    }
 
     /**
      * Initialize internal properties storage from Payara instance object
@@ -488,6 +499,23 @@ public abstract class InstancePanel extends javax.swing.JPanel {
     }
 
     /**
+     * Docker volume path storage.
+     * <p/>
+     * Store docker volume path when form fields values differs from Payara
+     * instance properties.
+     */
+    protected void storeDockerVolume() {
+        final String hostPath = hostPathField.getText().trim();
+        if (!hostPath.equals(instance.getHostPath())) {
+            instance.setHostPath(hostPath);
+        }
+        final String containerPath = containerPathField.getText().trim();
+        if (!containerPath.equals(instance.getContainerPath())) {
+            instance.setContainerPath(containerPath);
+        }
+    }
+
+    /**
      * Enable form fields that can be modified by user.
      * <p/>
      * Set those form fields that can be modified by user as enabled. This
@@ -502,6 +530,8 @@ public abstract class InstancePanel extends javax.swing.JPanel {
         targetField.setEnabled(true);
         userNameField.setEnabled(true);
         passwordField.setEnabled(true);
+        hostPathField.setEnabled(true);
+        containerPathField.setEnabled(true);
         commetSupport.setEnabled(true);
         httpMonitor.setEnabled(true);
         jdbcDriverDeployment.setEnabled(true);
@@ -528,6 +558,8 @@ public abstract class InstancePanel extends javax.swing.JPanel {
         targetField.setEnabled(false);
         userNameField.setEnabled(false);
         passwordField.setEnabled(false);
+        hostPathField.setEnabled(false);
+        containerPathField.setEnabled(false);
         commetSupport.setEnabled(false);
         httpMonitor.setEnabled(false);
         jdbcDriverDeployment.setEnabled(false);
@@ -547,6 +579,7 @@ public abstract class InstancePanel extends javax.swing.JPanel {
         initHost();
         initDomainAndTarget();
         initCredentials();
+        initDockerVolume();
         initCheckBoxes();
         updatePasswordVisibility();
         // do the magic according to loopback checkbox
@@ -563,6 +596,7 @@ public abstract class InstancePanel extends javax.swing.JPanel {
         storePorts();
         storeTarget();
         storeCredentials();
+        storeDockerVolume();
         storeCheckBoxes();
     }
 
@@ -639,6 +673,10 @@ public abstract class InstancePanel extends javax.swing.JPanel {
         hostRemoteField = new javax.swing.JTextField();
         hotDeploy = new javax.swing.JCheckBox();
         showPassword = new javax.swing.JToggleButton();
+        hostPathLabel = new javax.swing.JLabel();
+        hostPathField = new javax.swing.JTextField();
+        containerPathLabel = new javax.swing.JLabel();
+        containerPathField = new javax.swing.JTextField();
 
         setName(org.openide.util.NbBundle.getMessage(InstancePanel.class, "InstanceLocalPanel.displayName")); // NOI18N
         setPreferredSize(new java.awt.Dimension(602, 304));
@@ -744,6 +782,16 @@ public abstract class InstancePanel extends javax.swing.JPanel {
             }
         });
 
+        hostPathLabel.setLabelFor(domainField);
+        org.openide.awt.Mnemonics.setLocalizedText(hostPathLabel, org.openide.util.NbBundle.getMessage(InstancePanel.class, "InstancePanel.hostPathLabel.text")); // NOI18N
+
+        hostPathField.setText(org.openide.util.NbBundle.getMessage(InstancePanel.class, "InstancePanel.hostPathField.text")); // NOI18N
+
+        containerPathLabel.setLabelFor(domainField);
+        org.openide.awt.Mnemonics.setLocalizedText(containerPathLabel, org.openide.util.NbBundle.getMessage(InstancePanel.class, "InstancePanel.containerPathLabel.text")); // NOI18N
+
+        containerPathField.setText(org.openide.util.NbBundle.getMessage(InstancePanel.class, "InstancePanel.containerPathField.text")); // NOI18N
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -762,27 +810,40 @@ public abstract class InstancePanel extends javax.swing.JPanel {
                             .addComponent(installationLocationField, javax.swing.GroupLayout.PREFERRED_SIZE, 1, Short.MAX_VALUE)
                             .addComponent(hostRemoteField)))
                     .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jdbcDriverDeployment, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                            .addComponent(httpMonitor, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(commetSupport, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(hostLocalLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(domainLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(dasPortLabel)
-                            .addComponent(userNameLabel))
+                            .addComponent(preserveSessions, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(hotDeploy, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(hostPathLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(hostLocalLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(domainLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(dasPortLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(userNameLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(hostLocalField, 0, 207, Short.MAX_VALUE)
+                                .addComponent(hostLocalField, 0, 201, Short.MAX_VALUE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(localIpCB))
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                     .addComponent(domainField, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 1, Short.MAX_VALUE)
                                     .addComponent(dasPortField, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 1, Short.MAX_VALUE)
-                                    .addComponent(userNameField, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 1, Short.MAX_VALUE))
+                                    .addComponent(userNameField, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 1, Short.MAX_VALUE)
+                                    .addComponent(hostPathField, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 1, Short.MAX_VALUE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(httpPortLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(targetLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(passwordLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                    .addComponent(passwordLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(containerPathLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 1, Short.MAX_VALUE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(httpPortField, javax.swing.GroupLayout.PREFERRED_SIZE, 1, Short.MAX_VALUE)
@@ -791,16 +852,8 @@ public abstract class InstancePanel extends javax.swing.JPanel {
                                         .addComponent(passwordField, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(showPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(2, 2, 2))))))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jdbcDriverDeployment, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                            .addComponent(httpMonitor, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(commetSupport, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(preserveSessions, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(hotDeploy, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                                        .addGap(2, 2, 2))
+                                    .addComponent(containerPathField, javax.swing.GroupLayout.PREFERRED_SIZE, 1, Short.MAX_VALUE))))))
                 .addContainerGap())
         );
 
@@ -850,15 +903,21 @@ public abstract class InstancePanel extends javax.swing.JPanel {
                         .addComponent(userNameLabel)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(hostPathLabel)
+                    .addComponent(hostPathField)
+                    .addComponent(containerPathLabel)
+                    .addComponent(containerPathField))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(commetSupport)
                     .addComponent(hotDeploy))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(httpMonitor)
                     .addComponent(preserveSessions))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jdbcDriverDeployment)
-                .addGap(120, 120, 120))
+                .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -904,6 +963,8 @@ public abstract class InstancePanel extends javax.swing.JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     protected javax.swing.JCheckBox commetSupport;
+    protected javax.swing.JTextField containerPathField;
+    protected javax.swing.JLabel containerPathLabel;
     protected javax.swing.JTextField dasPortField;
     protected javax.swing.JLabel dasPortLabel;
     protected javax.swing.JTextField domainField;
@@ -912,6 +973,8 @@ public abstract class InstancePanel extends javax.swing.JPanel {
     protected javax.swing.JLabel domainsFolderLabel;
     protected javax.swing.JComboBox hostLocalField;
     protected javax.swing.JLabel hostLocalLabel;
+    protected javax.swing.JTextField hostPathField;
+    protected javax.swing.JLabel hostPathLabel;
     protected javax.swing.JTextField hostRemoteField;
     protected javax.swing.JLabel hostRemoteLabel;
     protected javax.swing.JCheckBox hotDeploy;

@@ -112,4 +112,12 @@ public class NavigatorTest extends PhpNavigatorTestBase {
         performTest("structure/php80ConstructorPropertyPromotion");
     }
 
+    public void testPureIntersectionTypes() throws Exception {
+        performTest("structure/pureIntersectionTypes");
+    }
+
+    public void testEnumerations() throws Exception {
+        performTest("structure/enumerations");
+    }
+
 }

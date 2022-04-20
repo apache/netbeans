@@ -24,6 +24,7 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 import org.netbeans.modules.gradle.GradleProject;
+import org.netbeans.modules.gradle.GradleReport;
 import org.netbeans.modules.gradle.api.NbGradleProject;
 import org.netbeans.modules.gradle.spi.GradleFiles;
 import org.netbeans.modules.gradle.spi.ProjectInfoExtractor;
@@ -52,11 +53,13 @@ public class FallbackProjectLoader extends AbstractProjectLoader {
     public static GradleProject createFallbackProject(GradleFiles files) {
         Collection<? extends ProjectInfoExtractor> extractors = Lookup.getDefault().lookupAll(ProjectInfoExtractor.class);
         Map<Class, Object> infos = new HashMap<>();
-        Set<String> problems = new LinkedHashSet<>();
+        Set<GradleReport> problems = new LinkedHashSet<>();
 
         for (ProjectInfoExtractor extractor : extractors) {
             ProjectInfoExtractor.Result result = extractor.fallback(files);
-            problems.addAll(result.getProblems());
+            for (String s : result.getProblems()) {
+                problems.add(GradleReport.simple(files.getBuildScript().toPath(), s));
+            }
             for (Object extract : result.getExtract()) {
                 infos.put(extract.getClass(), extract);
             }

@@ -50,7 +50,7 @@ import org.xml.sax.ext.LexicalHandler;
  */
 public class UserXMLCatalog implements CatalogReader, CatalogWriter, CatalogDescriptor2, EntityResolver {
     private static final String PROPERTY_LEX_HANDLER = "http://xml.org/sax/properties/lexical-handler";
-    private Map publicIds;
+    private Map<String, String> publicIds;
     private List<CatalogListener> catalogListeners;
     private static final String catalogResource = "xml/catalogs/UserXMLCatalog.xml"; // NOI18N
     private static final String URI_PREFIX = "URI:"; // NOI18N
@@ -181,10 +181,10 @@ public class UserXMLCatalog implements CatalogReader, CatalogWriter, CatalogDesc
                 FileObject userCatalog = FileUtil.getConfigFile(catalogResource);
                 publicIds = parse(userCatalog);
             } catch (java.io.IOException ex) {
-                publicIds = new HashMap();
+                publicIds = new HashMap<>();
                 org.openide.ErrorManager.getDefault().notify(ex);
             } catch (SAXException ex) {
-                publicIds = new HashMap();
+                publicIds = new HashMap<>();
                 org.openide.ErrorManager.getDefault().notify(ex);
             }
         } 

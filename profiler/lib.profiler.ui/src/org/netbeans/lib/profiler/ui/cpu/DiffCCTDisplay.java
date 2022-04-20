@@ -45,7 +45,7 @@ public class DiffCCTDisplay extends CCTDisplay {
     
     
     protected Float getNodeTimeRel(long time, float percent) {
-        return new Float(time);
+        return (float)time;
     }
 
     protected String getNodeTime(long time, float percent) {

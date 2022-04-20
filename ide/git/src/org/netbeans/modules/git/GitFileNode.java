@@ -37,7 +37,7 @@ import org.openide.util.NbBundle;
  */
 public abstract class GitFileNode<T extends FileNodeInformation> extends VCSFileNode {
     
-    public static abstract class FileNodeInformation extends VCSFileInformation {
+    public abstract static class FileNodeInformation extends VCSFileInformation {
 
         public abstract boolean isCopied ();
 

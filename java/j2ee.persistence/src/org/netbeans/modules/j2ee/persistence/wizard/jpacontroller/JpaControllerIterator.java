@@ -197,7 +197,7 @@ public class JpaControllerIterator implements TemplateWizard.Iterator {
                         JpaControllerUtil.class.getClassLoader().
                         getResourceAsStream(RESOURCE_FOLDER + 
                                 EXCEPTION_CLASS_NAMES[i] + ".java.txt"), "UTF-8"); //NOI18N
-                content = content.replaceAll("__PACKAGE__", exceptionPackage);
+                content = content.replace("__PACKAGE__", exceptionPackage);
                 FileObject target = FileUtil.createData(exceptionFolder, 
                         EXCEPTION_CLASS_NAMES[i] + ".java");//NOI18N
                 String projectEncoding = JpaControllerUtil.

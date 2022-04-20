@@ -64,8 +64,9 @@ public class SideBarFactoriesProviderTest extends NbTestCase {
         Map<SideBarPosition, List> c = p.getFactories();
         
         assertEquals(3, c.size());
-        for (SideBarPosition pos : c.keySet()) {
-            List ll = c.get(pos);
+        for (Map.Entry<SideBarPosition, List> entry : c.entrySet()) {
+            SideBarPosition pos = entry.getKey();
+            List ll = entry.getValue();
             if (SideBarPosition.WEST_NAME.equals(pos.getPositionName())) {
                 Object o = ll.get(0);
                 assertTrue(o instanceof SBF2);

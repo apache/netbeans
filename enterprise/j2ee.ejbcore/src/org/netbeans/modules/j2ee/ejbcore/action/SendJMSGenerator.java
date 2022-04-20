@@ -327,7 +327,7 @@ public final class SendJMSGenerator {
                 workingCopy.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
                 TypeElement typeElement = workingCopy.getElements().getTypeElement(className);
                 MethodTree methodTree = MethodModelSupport.createMethodTree(workingCopy, methodModel);
-                methodTree = (MethodTree) GeneratorUtilities.get(workingCopy).importFQNs(methodTree);
+                methodTree = GeneratorUtilities.get(workingCopy).importFQNs(methodTree);
                 ClassTree classTree = workingCopy.getTrees().getTree(typeElement);
                 ClassTree newClassTree = workingCopy.getTreeMaker().addClassMember(classTree, methodTree);
                 workingCopy.rewrite(classTree, newClassTree);
@@ -395,7 +395,7 @@ public final class SendJMSGenerator {
                 workingCopy.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
                 TypeElement typeElement = workingCopy.getElements().getTypeElement(className);
                 MethodTree methodTree = MethodModelSupport.createMethodTree(workingCopy, methodModel);
-                methodTree = (MethodTree) GeneratorUtilities.get(workingCopy).importFQNs(methodTree);
+                methodTree = GeneratorUtilities.get(workingCopy).importFQNs(methodTree);
                 ClassTree classTree = workingCopy.getTrees().getTree(typeElement);
                 ClassTree newClassTree = workingCopy.getTreeMaker().addClassMember(classTree, methodTree);
                 workingCopy.rewrite(classTree, newClassTree);

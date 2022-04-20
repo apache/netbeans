@@ -40,6 +40,7 @@ import javax.lang.model.element.TypeElement;
 import org.eclipse.lsp4j.CodeAction;
 import org.eclipse.lsp4j.CodeActionKind;
 import org.eclipse.lsp4j.CodeActionParams;
+import org.eclipse.lsp4j.Command;
 import org.eclipse.lsp4j.TextEdit;
 import org.eclipse.lsp4j.WorkspaceEdit;
 import org.netbeans.api.java.source.CompilationController;
@@ -105,7 +106,7 @@ public final class ImplementOverrideMethodGenerator extends CodeActionsProvider 
                 implementMethods.add(new QuickPickItem(createLabel(info, method), enclosingTypeName, null, mustImplement, new ElementData(method)));
             }
             if (!implementMethods.isEmpty()) {
-                result.add(createCodeAction(Bundle.DN_GenerateImplementMethod(), CODE_GENERATOR_KIND, data(uri, offset, true, implementMethods), null));
+                result.add(createCodeAction(Bundle.DN_GenerateImplementMethod(), CODE_GENERATOR_KIND, data(uri, offset, true, implementMethods), "workbench.action.focusActiveEditorGroup"));
             }
         }
         if (typeElement.getKind().isClass() || typeElement.getKind().isInterface()) {
@@ -121,7 +122,7 @@ public final class ImplementOverrideMethodGenerator extends CodeActionsProvider 
                 overrideMethods.add(item);
             }
             if (!overrideMethods.isEmpty()) {
-                result.add(createCodeAction(Bundle.DN_GenerateOverrideMethod(), CODE_GENERATOR_KIND, data (uri, offset, false, overrideMethods), null));
+                result.add(createCodeAction(Bundle.DN_GenerateOverrideMethod(), CODE_GENERATOR_KIND, data (uri, offset, false, overrideMethods), "workbench.action.focusActiveEditorGroup"));
             }
         }
         return result;

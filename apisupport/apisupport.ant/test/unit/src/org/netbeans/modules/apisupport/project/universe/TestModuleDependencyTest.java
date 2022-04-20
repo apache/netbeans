@@ -31,8 +31,8 @@ import org.openide.filesystems.FileObject;
  */
 public class TestModuleDependencyTest extends TestBase {
     
-    private final static String ANT_PROJECT_SUPPORT = "org.netbeans.modules.project.ant";
-    private final static String DIALOGS = "org.openide.dialogs";
+    private static final String ANT_PROJECT_SUPPORT = "org.netbeans.modules.project.ant";
+    private static final String DIALOGS = "org.openide.dialogs";
     private  TestModuleDependency tdJP_001;
     private TestModuleDependency tdJP_101;
     private TestModuleDependency tdJP_101otherInstance;

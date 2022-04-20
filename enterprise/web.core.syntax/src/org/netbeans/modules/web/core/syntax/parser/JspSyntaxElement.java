@@ -142,7 +142,7 @@ public abstract class JspSyntaxElement {
         }
     }
 
-    public static abstract class Named extends JspSyntaxElement {
+    public abstract static class Named extends JspSyntaxElement {
 
         protected String name;
 
@@ -168,7 +168,7 @@ public abstract class JspSyntaxElement {
         }
     }
 
-    public static abstract class AttributedTagLikeElement extends Named {
+    public abstract static class AttributedTagLikeElement extends Named {
 
         private List<Attribute> attribs;
 

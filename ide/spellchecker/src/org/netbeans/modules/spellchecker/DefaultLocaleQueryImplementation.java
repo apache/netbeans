@@ -24,6 +24,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Locale;
 import java.util.StringTokenizer;
 import org.netbeans.modules.spellchecker.spi.LocaleQueryImplementation;
@@ -59,7 +60,7 @@ public class DefaultLocaleQueryImplementation implements LocaleQueryImplementati
         if (file == null)
             return Locale.getDefault ();
         
-        Charset UTF8 = Charset.forName("UTF-8");
+        Charset UTF8 = StandardCharsets.UTF_8;
         
         BufferedReader r = null;
         
@@ -103,7 +104,7 @@ public class DefaultLocaleQueryImplementation implements LocaleQueryImplementati
     
     public static void setDefaultLocale(Locale locale) {
         FileObject file = getDefaultLocaleFile();
-        Charset UTF8 = Charset.forName("UTF-8");
+        Charset UTF8 = StandardCharsets.UTF_8;
         FileLock lock = null;
         PrintWriter pw = null;
         

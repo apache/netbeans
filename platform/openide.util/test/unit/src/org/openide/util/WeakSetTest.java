@@ -145,7 +145,7 @@ public class WeakSetTest extends NbTestCase {
         }
     }
     
-    private final static class TestObj {
+    private static final class TestObj {
         static final Set<TestObj> testObjs = new WeakSet<TestObj>();
         private final String name;
         TestObj(String name) {
@@ -162,7 +162,7 @@ public class WeakSetTest extends NbTestCase {
         
     }
     
-    private final static class GC implements Runnable {
+    private static final class GC implements Runnable {
 
         public void run() {
             try {

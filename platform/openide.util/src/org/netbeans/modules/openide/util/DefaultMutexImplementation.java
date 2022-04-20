@@ -612,7 +612,7 @@ public class DefaultMutexImplementation implements MutexImplementation {
 
                 for (int i = 0; i < size; i++) {
                     try {
-                        Runnable r = (Runnable) runnables.get(i);
+                        Runnable r = runnables.get(i);
 
                         r.run();
                     }

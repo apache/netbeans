@@ -107,7 +107,7 @@ public final class ClassSource {
     /**
      * One logical component of the classpath.
      */
-    public static abstract class Entry {
+    public abstract static class Entry {
         /** List of folder URLs (dirs or roots of JARs) making up the classpath. */
         public abstract List<URL> getClasspath();
         /** Tries to add the classpath entries to a project, as with {@link ProjectClassPathModifier}. 

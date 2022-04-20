@@ -42,6 +42,7 @@ import org.netbeans.modules.java.lsp.server.protocol.ShowInputBoxParams;
 import org.netbeans.modules.java.lsp.server.protocol.ShowQuickPickParams;
 import org.netbeans.modules.java.lsp.server.protocol.ShowStatusMessageParams;
 import org.netbeans.modules.java.lsp.server.protocol.TestProgressParams;
+import org.netbeans.modules.java.lsp.server.protocol.UpdateConfigParams;
 
 public abstract class TestCodeLanguageClient implements NbCodeLanguageClient {
 
@@ -136,4 +137,10 @@ public abstract class TestCodeLanguageClient implements NbCodeLanguageClient {
     public void notifyNodeChange(NodeChangedParams params) {
         throw new UnsupportedOperationException();
     }
+
+    @Override
+    public CompletableFuture<Void> configurationUpdate(UpdateConfigParams params) {
+        throw new UnsupportedOperationException();
+    }
+    
 }

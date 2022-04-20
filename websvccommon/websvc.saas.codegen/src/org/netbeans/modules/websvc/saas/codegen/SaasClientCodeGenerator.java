@@ -57,7 +57,7 @@ import org.openide.util.Exceptions;
  *
  * @author nam
  */
-abstract public class SaasClientCodeGenerator implements SaasClientCodeGenerationProvider {
+public abstract class SaasClientCodeGenerator implements SaasClientCodeGenerationProvider {
     
     public static final String REST_CONNECTION = "RestConnection"; //NOI18N
     public static final String REST_RESPONSE = "RestResponse"; //NOI18N
@@ -238,7 +238,7 @@ abstract public class SaasClientCodeGenerator implements SaasClientCodeGeneratio
         }
     }
 
-    abstract protected String getCustomMethodBody() throws IOException;
+    protected abstract String getCustomMethodBody() throws IOException;
     
     public SaasBean getBean() {
         return bean;

@@ -97,7 +97,7 @@ abstract class ExecJSAction extends AbstractAction implements ContextAwareAction
         return Utilities.actionsGlobalContext().lookup(FileObject.class);
     }
     
-    abstract protected void exec(JavaPlatform javaPlatform, FileObject fo) throws IOException, UnsupportedOperationException;
+    protected abstract void exec(JavaPlatform javaPlatform, FileObject fo) throws IOException, UnsupportedOperationException;
 
     @Override
     public void stateChanged(ChangeEvent e) {

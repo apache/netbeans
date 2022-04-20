@@ -231,7 +231,7 @@ implements CloneableEditorSupport.Env {
         }
     }
     
-    private final static class NbLikeEditorKitWithCustomEditor extends NbLikeEditorKit {
+    private static final class NbLikeEditorKitWithCustomEditor extends NbLikeEditorKit {
         
         public Document createDefaultDocument() {
             return new CustomDoc();

@@ -583,7 +583,7 @@ public final class ConnectionManager {
     private static class ConnectToAction
             extends AbstractAction implements AsynchronousAction {
 
-        private final static ConnectionManager cm = ConnectionManager.getInstance();
+        private static final ConnectionManager cm = ConnectionManager.getInstance();
         private final ExecutionEnvironment env;
         private final Runnable onConnect;
 

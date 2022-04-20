@@ -499,7 +499,7 @@ public class QuickSearch {
         return str1.substring(0, i);
     }
     
-    private final static class AnimationTimer {
+    private static final class AnimationTimer {
         
         private final JLabel jLabel;
         private final Icon findIcon;

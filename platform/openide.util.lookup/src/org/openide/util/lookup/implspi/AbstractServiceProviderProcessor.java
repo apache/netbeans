@@ -27,6 +27,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.lang.annotation.Annotation;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.NoSuchFileException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -214,7 +215,7 @@ public abstract class AbstractServiceProviderProcessor extends AbstractProcessor
                     FileObject in = filer.getResource(StandardLocation.CLASS_OUTPUT, "", rsrc);
                     InputStream is = in.openInputStream();
                     try {
-                        ServiceLoaderLine.parse(new InputStreamReader(is, "UTF-8"), lines); // NOI18N
+                        ServiceLoaderLine.parse(new InputStreamReader(is, StandardCharsets.UTF_8), lines);
                     } finally {
                         is.close();
                     }
@@ -300,7 +301,7 @@ public abstract class AbstractServiceProviderProcessor extends AbstractProcessor
                             originatingElementsByProcessor.get(filer).get(entry.getKey()).toArray(new Element[0]));
                     OutputStream os = out.openOutputStream();
                     try {
-                        PrintWriter w = new PrintWriter(new OutputStreamWriter(os, "UTF-8"));
+                        PrintWriter w = new PrintWriter(new OutputStreamWriter(os, StandardCharsets.UTF_8));
                         for (ServiceLoaderLine line : entry.getValue()) {
                             line.write(w);
                         }

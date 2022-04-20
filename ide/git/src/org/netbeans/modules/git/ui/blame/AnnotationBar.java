@@ -1166,7 +1166,7 @@ final class AnnotationBar extends JComponent implements Accessible, PropertyChan
                         LOG.log(Level.INFO, "HG.AB: can not HTML escape: ", message);  // NOI18N
                     }
                     if (escaped != null) {
-                        String lined = escaped.replaceAll("\n", "<br>");  // NOI18N
+                        String lined = escaped.replace("\n", "<br>");  // NOI18N
                         annotation.append("<p>").append(lined); // NOI18N
                     }
                 }

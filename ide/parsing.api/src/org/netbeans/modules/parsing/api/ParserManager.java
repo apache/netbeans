@@ -168,7 +168,8 @@ public final class ParserManager {
                 try {
                     TaskProcessor.callUserTask(userTask, resultIterator);
                 } finally {
-                    if (ParserAccessor.getINSTANCE().processingFinished(resultIterator.getParserResult())) {
+                    if (resultIterator.getParserResult() == null
+                            || ParserAccessor.getINSTANCE().processingFinished(resultIterator.getParserResult())) {
                         i++;
                     }
                     ResultIteratorAccessor.getINSTANCE().invalidate(resultIterator);

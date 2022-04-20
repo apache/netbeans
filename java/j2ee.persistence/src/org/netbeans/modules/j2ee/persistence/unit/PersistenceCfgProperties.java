@@ -36,22 +36,22 @@ import org.netbeans.modules.j2ee.persistence.provider.ProviderUtil;
 public class PersistenceCfgProperties {
 
     // String[] for selecting one of the values
-    private final static String[] TRUE_FALSE = new String[]{"true", "false"}; // NOI18N
-    private final static String[] SCHEMA_GEN_OPTIONS = new String[]{"none", "create", "drop-and-create", "drop"};
-    private final static String[] SCHEMA_GEN_SOURCE_TYPES = new String[]{"metadata", "script", "metadata-then-script", "script-then-metadata"};
+    private static final String[] TRUE_FALSE = new String[]{"true", "false"}; // NOI18N
+    private static final String[] SCHEMA_GEN_OPTIONS = new String[]{"none", "create", "drop-and-create", "drop"};
+    private static final String[] SCHEMA_GEN_SOURCE_TYPES = new String[]{"metadata", "script", "metadata-then-script", "script-then-metadata"};
     //eclipselink
-    private final static String[] EL_CACHE_TYPES = new String[]{"Full", "Weak", "Soft", "SoftWeak", "HardWeak", "NONE"};//NOI18N
-    private final static String[] EL_FLUSH_CLEAR_CACHE = new String[]{"Drop", "DropInvalidate", "Merge"};//NOI18N
-    private final static String[] EL_WEAWING = new String[] {"true", "false", "static"};//NOI18N
-    private final static String[] EL_PROFILER = new String[]{"PerformanceProfiler", "QueryMonitor", "NoProfiler"};//NOI18N
-    private final static String[] EL_CONTEXT_REFMODE = new String[]{"HARD", "WEAK", "FORCE_WEAK"};//NOI18N
-    private final static String[] EL_BATCHWRITER = new String[]{"JDBC", "Buffered", "Oracle-JDBC", "None"};//NOI18N
-    private final static String[] EL_EXCLUSIVE_CON_MODE = new String[]{"Transactional", "Isolated", "Always"};//NOI18N
-    private final static String[] EL_LOGGER = new String[]{"DefaultLogger", "JavaLogger", "ServerLogger"};//NOI18N
-    private final static String[] EL_LOGGER_LEVEL = new String[]{"OFF", "SEVERE", "WARNING", "INFO", "CONFIG", "FINE", "FINER", "FINEST", "ALL"};//NOI18N
-    private final static String[] EL_TARGET_DATABASE = new String[]{"Access", "Attunity", "Auto", "Cloudscape", "Database", "DB2Mainframe", "DB2", "DB2Z", "DBase", "Derby", "Firebird", "H2", "HANA", "HSQL", "Informix11", "Informix", "JavaDB", "MaxDB", "MySQL", "Oracle10", "Oracle11", "Oracle12", "Oracle18", "Oracle19", "Oracle8", "Oracle9", "Oracle", "Pervasive", "PointBase", "PostgreSQL", "SQLAnywhere", "SQLServer", "Sybase", "Symfoware", "TimesTen7", "TimesTen"};//NOI18N
-    private final static String[] EL_TARGET_SERVER = new String[]{"None", "Glassfish", "JBoss", "Oc4j", "SAPNetWeaver_7_1", "SunAS9Server", "WebLogic_10", "WebLogic_12", "WebLogic_9", "WebLogic", "WebSphere_6_1", "WebSphere_7", "WebSphere_EJBEmbeddable", "WebSphere_Liberty", "WebSphere"};//NOI18N
-    private final static String[] EL_DDL_GEN_MODE = new String[]{"both", "database", "sql-script"};//NOI18N
+    private static final String[] EL_CACHE_TYPES = new String[]{"Full", "Weak", "Soft", "SoftWeak", "HardWeak", "NONE"};//NOI18N
+    private static final String[] EL_FLUSH_CLEAR_CACHE = new String[]{"Drop", "DropInvalidate", "Merge"};//NOI18N
+    private static final String[] EL_WEAWING = new String[] {"true", "false", "static"};//NOI18N
+    private static final String[] EL_PROFILER = new String[]{"PerformanceProfiler", "QueryMonitor", "NoProfiler"};//NOI18N
+    private static final String[] EL_CONTEXT_REFMODE = new String[]{"HARD", "WEAK", "FORCE_WEAK"};//NOI18N
+    private static final String[] EL_BATCHWRITER = new String[]{"JDBC", "Buffered", "Oracle-JDBC", "None"};//NOI18N
+    private static final String[] EL_EXCLUSIVE_CON_MODE = new String[]{"Transactional", "Isolated", "Always"};//NOI18N
+    private static final String[] EL_LOGGER = new String[]{"DefaultLogger", "JavaLogger", "ServerLogger"};//NOI18N
+    private static final String[] EL_LOGGER_LEVEL = new String[]{"OFF", "SEVERE", "WARNING", "INFO", "CONFIG", "FINE", "FINER", "FINEST", "ALL"};//NOI18N
+    private static final String[] EL_TARGET_DATABASE = new String[]{"Access", "Attunity", "Auto", "Cloudscape", "Database", "DB2Mainframe", "DB2", "DB2Z", "DBase", "Derby", "Firebird", "H2", "HANA", "HSQL", "Informix11", "Informix", "JavaDB", "MaxDB", "MySQL", "Oracle10", "Oracle11", "Oracle12", "Oracle18", "Oracle19", "Oracle8", "Oracle9", "Oracle", "Pervasive", "PointBase", "PostgreSQL", "SQLAnywhere", "SQLServer", "Sybase", "Symfoware", "TimesTen7", "TimesTen"};//NOI18N
+    private static final String[] EL_TARGET_SERVER = new String[]{"None", "Glassfish", "JBoss", "Oc4j", "SAPNetWeaver_7_1", "SunAS9Server", "WebLogic_10", "WebLogic_12", "WebLogic_9", "WebLogic", "WebSphere_6_1", "WebSphere_7", "WebSphere_EJBEmbeddable", "WebSphere_Liberty", "WebSphere"};//NOI18N
+    private static final String[] EL_DDL_GEN_MODE = new String[]{"both", "database", "sql-script"};//NOI18N
     
     private static final Map<Provider, Map<String, String[]>> possiblePropertyValues = new HashMap<Provider, Map<String, String[]>>();
 
@@ -248,7 +248,7 @@ public class PersistenceCfgProperties {
         return ret;
     }
     
-    private final static class KeyOrder implements Comparator<String>{
+    private static final class KeyOrder implements Comparator<String>{
 
         @Override
         public int compare(String o1, String o2) {

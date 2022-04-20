@@ -38,4 +38,9 @@ public class Variable {
         this.index = index;
     }
 
+    @Override
+    public String toString() {
+        return "Variable{" + "variableName=" + variableName + '}';
+    }
+
 }

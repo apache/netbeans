@@ -69,9 +69,8 @@ public final class SubnodesSearchInfoDefinition extends SearchInfoDefinition {
         }
 
         List<SearchInfo> searchInfoElements =
-                new ArrayList<SearchInfo>(nodes.length);
-        for (int i = 0; i < nodes.length; i++) {
-            Node child = nodes[i];
+                new ArrayList<>(nodes.length);
+        for (Node child : nodes) {
             SearchInfo subInfo = 
                     SearchInfoUtils.getSearchInfoForNode(child);
             if (subInfo != null && subInfo.canSearch()) {
@@ -108,7 +107,7 @@ public final class SubnodesSearchInfoDefinition extends SearchInfoDefinition {
         if (nodes.length == 0) {
             return Collections.emptyList();
         }
-        List<SearchRoot> allRoots = new LinkedList<SearchRoot>();
+        List<SearchRoot> allRoots = new LinkedList<>();
         for (Node subNode : nodes) {
             SearchInfoDefinition subInfo =
                     SearchInfoDefinitionUtils.getSearchInfoDefinition(subNode);

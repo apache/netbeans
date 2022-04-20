@@ -20,6 +20,7 @@ package tests;
 
 import java.io.*;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import junit.framework.*;
 import org.netbeans.junit.*;
 
@@ -419,7 +420,7 @@ public class MainTest extends NbTestCase {
     private int runCommand(String cmd) throws java.io.IOException, java.lang.InterruptedException {
         System.out.println(cmd);
         Process proc = Runtime.getRuntime().exec(cmd);
-        Writer out = new BufferedWriter(new OutputStreamWriter(getRef(), "UTF-8"));
+        Writer out = new BufferedWriter(new OutputStreamWriter(getRef(), StandardCharsets.UTF_8));
         Thread outThread = new Thread(new InputMonitor("out: ", proc.getInputStream(), out));
         outThread.start();
         Thread errThread = new Thread(new InputMonitor("err: ", proc.getErrorStream(), out));

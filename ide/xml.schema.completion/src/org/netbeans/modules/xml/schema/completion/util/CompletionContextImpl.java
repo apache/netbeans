@@ -983,8 +983,7 @@ public class CompletionContextImpl extends CompletionContext {
             return;
         
 //        specialCompletion = true;
-        for(String prefix : declaredNamespaces.keySet()) {
-            String temp = declaredNamespaces.get(prefix);
+        for(String temp : declaredNamespaces.values()) {
             try {
                 if (nsModelMap.containsKey(temp)) {
                     // ignore, was added from specific location
@@ -1023,15 +1022,17 @@ public class CompletionContextImpl extends CompletionContext {
 
         //if the tns is already present in declared namespaces,
         //return the prefix
-        for(String key : getDeclaredNamespaces().keySet()) {
-            String ns = getDeclaredNamespaces().get(key);
+        for(Map.Entry<String, String> entry : getDeclaredNamespaces().entrySet()) {
+            String key = entry.getKey();
+            String ns = entry.getValue();
             if(ns.equals(tns))
                 return key;
         }
 
         //then try to look that up in the suggested namespace
-        for(String key : suggestedNamespaces.keySet()) {
-            String ns = suggestedNamespaces.get(key);
+        for(Map.Entry<String, String> entry : suggestedNamespaces.entrySet()) {
+            String key = entry.getKey();
+            String ns = entry.getValue();
             if(ns.equals(tns))
                 return key;
         }

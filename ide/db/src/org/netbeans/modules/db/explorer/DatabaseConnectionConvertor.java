@@ -33,6 +33,7 @@ import java.nio.charset.CharacterCodingException;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
 import java.nio.charset.CoderResult;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.LinkedList;
@@ -298,7 +299,7 @@ public class DatabaseConnectionConvertor implements Environment.Provider, Instan
     }
 
     static String decodePassword(byte[] bytes) throws CharacterCodingException {
-        CharsetDecoder decoder = Charset.forName("UTF-8").newDecoder(); // NOI18N
+        CharsetDecoder decoder = StandardCharsets.UTF_8.newDecoder();
         ByteBuffer input = ByteBuffer.wrap(bytes);
         int outputLength = (int)(bytes.length * (double)decoder.maxCharsPerByte());
         if (outputLength == 0) {

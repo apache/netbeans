@@ -57,7 +57,7 @@ public class EmbeddingProviderImpl extends EmbeddingProvider {
 
     private List<Embedding> rules(Snapshot snapshot, Result parsed) {
         int index = 0;
-        List<Embedding> result = new LinkedList<Embedding>();
+        List<Embedding> result = new LinkedList<>();
 
         result.add(snapshot.create("//no-errors\n", "text/x-java"));
         result.add(snapshot.create(GLOBAL_PATTERN_PACKAGE, "text/x-java"));
@@ -117,7 +117,7 @@ public class EmbeddingProviderImpl extends EmbeddingProvider {
     }
     
     private List<Embedding> predicates(Snapshot snapshot, Result parsed) {
-        List<Embedding> result = new LinkedList<Embedding>();
+        List<Embedding> result = new LinkedList<>();
 
         result.add(snapshot.create(GLOBAL_PATTERN_PACKAGE, "text/x-java"));
 

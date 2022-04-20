@@ -1,0 +1,5 @@
+Code completion result for source line:
+readonly protected int|str|ing $readonlyProtected;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+KEYWORD    string                                     null

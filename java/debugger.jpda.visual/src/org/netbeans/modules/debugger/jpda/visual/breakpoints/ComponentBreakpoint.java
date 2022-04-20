@@ -33,7 +33,7 @@ import org.netbeans.modules.debugger.jpda.visual.spi.ComponentInfo;
  * @author Martin Entlicher
  * @author Jaroslav Bachorik
  */
-abstract public class ComponentBreakpoint extends Breakpoint {
+public abstract class ComponentBreakpoint extends Breakpoint {
     public static final int TYPE_ADD = 1;
     public static final int TYPE_REMOVE = 2;
     public static final int TYPE_SHOW = 4;
@@ -82,7 +82,7 @@ abstract public class ComponentBreakpoint extends Breakpoint {
         firePropertyChange(PROP_TYPE, oldType, type);
     }
     
-    abstract public int supportedTypes();
+    public abstract int supportedTypes();
     
     /*private void notifyRemoved() {
         DebuggerManager.getDebuggerManager().removeDebuggerListener(serviceBreakpointListenerWeak);

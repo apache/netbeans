@@ -63,7 +63,7 @@ public class AndroidPlatform implements MobilePlatform {
     
     public static int DEFAULT_TIMEOUT = 30000;
 
-    private transient final java.beans.PropertyChangeSupport propertyChangeSupport = new java.beans.PropertyChangeSupport(this);
+    private final transient java.beans.PropertyChangeSupport propertyChangeSupport = new java.beans.PropertyChangeSupport(this);
     
     public AndroidPlatform() {
     }

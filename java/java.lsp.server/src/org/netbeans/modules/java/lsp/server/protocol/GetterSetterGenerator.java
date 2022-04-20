@@ -104,7 +104,7 @@ public final class GetterSetterGenerator extends CodeActionsProvider {
                 QuickPickItem item = new QuickPickItem(createLabel(info, variableElement));
                 item.setUserData(new ElementData(variableElement));
                 return item;
-            }).collect(Collectors.toList())), null));
+            }).collect(Collectors.toList())), all && pair.first().size() > 1 ? "workbench.action.focusActiveEditorGroup" : null));
         }
         if (missingSetters) {
             String name = pair.second().size() == 1 ? Bundle.DN_GenerateSetterFor(pair.second().iterator().next().getSimpleName().toString()) : Bundle.DN_GenerateSetters();
@@ -112,7 +112,7 @@ public final class GetterSetterGenerator extends CodeActionsProvider {
                 QuickPickItem item = new QuickPickItem(createLabel(info, variableElement));
                 item.setUserData(new ElementData(variableElement));
                 return item;
-            }).collect(Collectors.toList())), null));
+            }).collect(Collectors.toList())), all && pair.first().size() > 1 ? "workbench.action.focusActiveEditorGroup" : null));
         }
         if (missingGetters && missingSetters) {
             pair.first().retainAll(pair.second());
@@ -121,7 +121,7 @@ public final class GetterSetterGenerator extends CodeActionsProvider {
                 QuickPickItem item = new QuickPickItem(createLabel(info, variableElement));
                 item.setUserData(new ElementData(variableElement));
                 return item;
-            }).collect(Collectors.toList())), null));
+            }).collect(Collectors.toList())), all && pair.first().size() > 1 ? "workbench.action.focusActiveEditorGroup" : null));
         }
         return result;
     }

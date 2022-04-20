@@ -233,8 +233,9 @@ public class InjectCompositeComponent {
                 @Override
                 public void run(ResultIterator resultIterator) throws Exception {
                     final Map<Library, String> importsMap = new LinkedHashMap<>();
-                    for (String uri : context.getDeclarations().keySet()) {
-                        String prefix = context.getDeclarations().get(uri);
+                    for (Map.Entry<String, String> entry : context.getDeclarations().entrySet()) {
+                        String uri = entry.getKey();
+                        String prefix = entry.getValue();
                         Library lib = jsfs.getLibrary(uri);
                         if (lib != null) {
                             importsMap.put(lib, prefix);

@@ -792,7 +792,7 @@ public class QueryBuilder extends TopComponent
                 List<Column> fromColumns = new ArrayList<>();
                 ( (JoinTable) fromTables.get(i) ).getReferencedColumns(fromColumns);
                 for ( int j = 0; j < fromColumns.size(); j++ ) {
-                    Column fromColumn = (Column) fromColumns.get(j);
+                    Column fromColumn = fromColumns.get(j);
                     if (! checkTableColumnName( fromColumn)) {
                         showTableColumnNameError(  fromColumn.getColumnName() );
                         return false;
@@ -892,7 +892,7 @@ public class QueryBuilder extends TopComponent
     private boolean checkColumns(List<Column> columns)  throws SQLException {
 	Log.getLogger().entering("QueryBuilder", "checkColumns"); // NOI18N
         for ( int i = 0; i < columns.size(); i++ ) {
-            Column column = (Column) columns.get(i);
+            Column column = columns.get(i);
             String columnTableSpec = column.getTableSpec();
             String columnFullTableName = column.getFullTableName();
 
@@ -1147,7 +1147,7 @@ public class QueryBuilder extends TopComponent
                 String[] values = new String[list.size()];
 
                 for (int i = 0; i < parameters.length; i++) {
-                    parameters[i] = new String((String) list.get(i));
+                    parameters[i] = new String(list.get(i));
                 }
                 ParameterizedQueryDialog pqDlg =
 		    new ParameterizedQueryDialog( parameters, true);

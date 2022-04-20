@@ -858,7 +858,7 @@ public abstract class BaseFileObj extends FileObject {
         return new ReplaceForSerialization(getFileName().getFile());
     }
 
-    abstract protected void setValid(boolean valid);
+    protected abstract void setValid(boolean valid);
     abstract void refreshImpl(final boolean expected, boolean fire);
 
     @Override

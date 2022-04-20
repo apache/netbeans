@@ -35,7 +35,7 @@ import org.openide.util.NbPreferences;
  *
  * @author S. Aubrecht
  */
-final public class Settings {
+public final class Settings {
     
     public static final String PROP_PATTERN_LIST = "patternList"; //NOI18N
     public static final String PROP_SCAN_COMMENTS_ONLY = "scanCommentsOnly"; //NOI18N

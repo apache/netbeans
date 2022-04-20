@@ -432,8 +432,9 @@ public abstract class IndexerCache <T extends SourceIndexerFactory> {
                 Map<String, Set<IndexerInfo<T>>> _infosByName = new HashMap<String, Set<IndexerInfo<T>>>();
                 Map<String, Collection<IndexerInfo<T>>> _infosByMimeType = new HashMap<String, Collection<IndexerInfo<T>>>();
                 List<IndexerInfo<T>> _orderedInfos = new ArrayList<IndexerInfo<T>>();
-                for (T factory : factories.keySet()) {
-                    Set<String> mimeTypes = factories.get(factory);
+                for (Map.Entry<T, Set<String>> entry : factories.entrySet()) {
+                    T factory = entry.getKey();
+                    Set<String> mimeTypes = entry.getValue();
                     String factoryName = getIndexerName(factory);
                     IndexerInfo<T> info = new IndexerInfo<T>(factory, factoryName, getIndexerVersion(factory), mimeTypes);
 
@@ -625,8 +626,9 @@ public abstract class IndexerCache <T extends SourceIndexerFactory> {
 
     private void writeLastKnownIndexers(Map<String, Set<IndexerInfo<T>>> lki) {
         Properties props = new Properties();
-        for(String indexerName : lki.keySet()) {
-            Set<IndexerInfo<T>> iinfos = lki.get(indexerName);
+        for(Map.Entry<String, Set<IndexerInfo<T>>> entry : lki.entrySet()) {
+            String indexerName = entry.getKey();
+            Set<IndexerInfo<T>> iinfos = entry.getValue();
             int indexerVersion = -1;
             Set<String> mimeTypes = new HashSet<String>();
             for(IndexerInfo<T> iinfo : iinfos) {

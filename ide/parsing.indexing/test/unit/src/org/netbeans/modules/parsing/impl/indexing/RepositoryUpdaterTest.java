@@ -2901,8 +2901,8 @@ public class RepositoryUpdaterTest extends IndexingTestBase {
 
     public static class SFBQImpl implements SourceForBinaryQueryImplementation {
 
-        final static Map<URL,FileObject> map = new HashMap<> ();
-        final static Map<URL,Result> results = new HashMap<> ();
+        static final Map<URL,FileObject> map = new HashMap<> ();
+        static final Map<URL,Result> results = new HashMap<> ();
 
         public SFBQImpl () {
 

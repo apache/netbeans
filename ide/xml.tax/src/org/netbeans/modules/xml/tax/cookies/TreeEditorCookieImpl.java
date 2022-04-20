@@ -335,7 +335,7 @@ public class TreeEditorCookieImpl implements TreeEditorCookie, UpdateDocumentCoo
             
             if ( Util.THIS.isLoggable() ) /* then */ Util.THIS.debug("PARSING: " + input.getSystemId()); // NOI18N
 
-            TreeDocumentRoot doc = (TreeDocumentRoot) parser.parse(input);
+            TreeDocumentRoot doc = parser.parse(input);
             
             annotation = Util.THIS.getString ("MSG_Unexpected_exception_in_merge");
             setTreeAndStatus (doc, STATUS_OK);
@@ -418,7 +418,7 @@ public class TreeEditorCookieImpl implements TreeEditorCookie, UpdateDocumentCoo
     // it MUST respect synchronization atomicity
     public void updateDocumentRoot() {
 
-        TreeDocumentCookie cookie = (TreeDocumentCookie) xmlDO.getCookie(TreeDocumentCookie.class);
+        TreeDocumentCookie cookie = xmlDO.getCookie(TreeDocumentCookie.class);
         if (cookie != null && cookie.getDocumentRoot() != null) {
             Task task = new Task( new Runnable() {
                 public void run() {
@@ -530,7 +530,7 @@ public class TreeEditorCookieImpl implements TreeEditorCookie, UpdateDocumentCoo
     /*
      * Reference which remembers which editor created stored TreeDocumentRoot.
      */
-    private class TreeReference extends WeakReference implements Runnable {
+    private class TreeReference extends WeakReference<TreeDocumentRoot> implements Runnable {
         
         TreeReference (TreeDocumentRoot root) {
             super(root, Utilities.activeReferenceQueue());
@@ -564,7 +564,7 @@ public class TreeEditorCookieImpl implements TreeEditorCookie, UpdateDocumentCoo
 
     public static class CookieFactoryImpl extends CookieFactory {
     
-        private WeakReference editor;
+        private WeakReference<TreeEditorCookieImpl> editor;
 
         private final XMLDataObjectLook dobj;   // used while creating the editor
         
@@ -604,7 +604,7 @@ public class TreeEditorCookieImpl implements TreeEditorCookie, UpdateDocumentCoo
             if ( Util.THIS.isLoggable() ) /* then */ Util.THIS.debug ("Initializing TreeEditorCookieImpl ..."); // NOI18N
 
             TreeEditorCookieImpl cake = new TreeEditorCookieImpl (dobj);
-            editor = new WeakReference (cake);
+            editor = new WeakReference<>(cake);
             return cake;
         }
 

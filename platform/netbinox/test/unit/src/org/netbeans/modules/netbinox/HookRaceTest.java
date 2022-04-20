@@ -88,9 +88,9 @@ public class HookRaceTest extends NbTestCase {
     }
 
     public static final class SlowH implements HookConfigurator {
-        private final static Object LOCK = new Object();
+        private static final Object LOCK = new Object();
         private static boolean proceed;
-        volatile static int cnt;
+        static volatile int cnt;
         
         @Override
         public void addHooks(HookRegistry hr) {

@@ -64,7 +64,7 @@ public final class EntityDataObject extends MultiDataObject implements XMLDataOb
     private transient Synchronizator synchronizator;
 
     /** Cookie Manager */
-    private transient final DataObjectCookieManager cookieManager;
+    private final transient DataObjectCookieManager cookieManager;
 
     
     public EntityDataObject (final FileObject obj, final UniFileLoader loader) throws DataObjectExistsException {

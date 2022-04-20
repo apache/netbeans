@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.micronaut.newproject;
 
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
@@ -32,6 +33,7 @@ import javax.swing.event.DocumentListener;
 import org.openide.WizardDescriptor;
 import org.openide.WizardValidationException;
 import org.openide.util.AsyncGUIJob;
+import org.openide.util.ImageUtilities;
 import org.openide.util.RequestProcessor;
 
 /**
@@ -110,6 +112,7 @@ public class BasePropertiesVisual extends JPanel implements DocumentListener, Ac
         junitRadioButton = new javax.swing.JRadioButton();
         spockRadioButton = new javax.swing.JRadioButton();
         kotestRadioButton = new javax.swing.JRadioButton();
+        executeDownloadedCodeWarning = new javax.swing.JLabel();
 
         org.openide.awt.Mnemonics.setLocalizedText(serviceURLLabel, org.openide.util.NbBundle.getMessage(BasePropertiesVisual.class, "LBL_ChooseServiceURL")); // NOI18N
 
@@ -184,6 +187,14 @@ public class BasePropertiesVisual extends JPanel implements DocumentListener, Ac
         org.openide.awt.Mnemonics.setLocalizedText(kotestRadioButton, org.openide.util.NbBundle.getMessage(BasePropertiesVisual.class, "LBL_Kotest")); // NOI18N
         kotestRadioButton.setActionCommand("KOTEST");
 
+        executeDownloadedCodeWarning.setBackground(new java.awt.Color(248, 184, 139));
+        executeDownloadedCodeWarning.setForeground(Color.black);
+        executeDownloadedCodeWarning.setIcon(ImageUtilities.loadImageIcon("org/netbeans/modules/micronaut/resources/warning.png", false));
+        org.openide.awt.Mnemonics.setLocalizedText(executeDownloadedCodeWarning, org.openide.util.NbBundle.getMessage(BasePropertiesVisual.class, "MSG_executeDownloadedCodeWarning")); // NOI18N
+        executeDownloadedCodeWarning.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(248, 184, 139), 5, true));
+        executeDownloadedCodeWarning.setOpaque(true);
+        executeDownloadedCodeWarning.setVerticalTextPosition(javax.swing.SwingConstants.TOP);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -191,45 +202,46 @@ public class BasePropertiesVisual extends JPanel implements DocumentListener, Ac
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(javaVersionLabel)
-                    .addComponent(groupLabel)
-                    .addComponent(languageLabel)
-                    .addComponent(customRadioButton)
-                    .addComponent(artifactLabel)
-                    .addComponent(applicationTypeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(versionLabel)
-                    .addComponent(snapshotRadioButton)
-                    .addComponent(defaultRadioButton)
-                    .addComponent(serviceURLLabel)
-                    .addComponent(testFrameworkLabel))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(executeDownloadedCodeWarning, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(javaVersionLabel)
+                            .addComponent(groupLabel)
+                            .addComponent(languageLabel)
+                            .addComponent(customRadioButton)
+                            .addComponent(artifactLabel)
+                            .addComponent(versionLabel)
+                            .addComponent(snapshotRadioButton)
+                            .addComponent(defaultRadioButton)
+                            .addComponent(serviceURLLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(testFrameworkLabel)
+                            .addComponent(applicationTypeLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(javaVersionComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(javaRadioButton, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(junitRadioButton))
-                                .addGap(18, 18, 18)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(spockRadioButton)
-                                    .addComponent(kotlinRadioButton))
-                                .addGap(18, 18, 18)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(groovyRadioButton)
-                                    .addComponent(kotestRadioButton))))
-                        .addGap(357, 357, 357))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(javaVersionComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(javaRadioButton, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(junitRadioButton))
+                                        .addGap(18, 18, 18)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(spockRadioButton)
+                                            .addComponent(kotlinRadioButton))
+                                        .addGap(18, 18, 18)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(groovyRadioButton)
+                                            .addComponent(kotestRadioButton))))
+                                .addGap(0, 332, Short.MAX_VALUE))
                             .addComponent(defaultURLLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(versionTextField)
                             .addComponent(snapshotURLLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(customTextField)
                             .addComponent(applicationTypeComboBox, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(artifactTextField, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(groupTextField))
-                        .addContainerGap())))
+                            .addComponent(groupTextField))))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -254,7 +266,7 @@ public class BasePropertiesVisual extends JPanel implements DocumentListener, Ac
                     .addComponent(versionLabel))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(groupTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(groupTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(groupLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -280,7 +292,9 @@ public class BasePropertiesVisual extends JPanel implements DocumentListener, Ac
                     .addComponent(junitRadioButton)
                     .addComponent(spockRadioButton)
                     .addComponent(kotestRadioButton))
-                .addContainerGap(28, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(executeDownloadedCodeWarning, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(17, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -293,6 +307,7 @@ public class BasePropertiesVisual extends JPanel implements DocumentListener, Ac
     private javax.swing.JTextField customTextField;
     private javax.swing.JRadioButton defaultRadioButton;
     private javax.swing.JLabel defaultURLLabel;
+    private javax.swing.JLabel executeDownloadedCodeWarning;
     private javax.swing.JRadioButton groovyRadioButton;
     private javax.swing.JLabel groupLabel;
     private javax.swing.JTextField groupTextField;

@@ -25,6 +25,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import junit.framework.TestCase;
 import org.netbeans.editor.BaseDocument;
 import org.netbeans.editor.BaseKit;
@@ -58,7 +59,7 @@ public class XMLGeneratorTest extends TestCase {
     protected static BaseDocument getResourceAsDocument(String path) throws Exception {
         InputStream in = XMLGeneratorTest.class.getResourceAsStream(path);
         BaseDocument sd = new BaseDocument(true, "text/xml"); //NOI18N
-        BufferedReader br = new BufferedReader(new InputStreamReader(in,"UTF-8"));
+        BufferedReader br = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
         StringBuffer sbuf = new StringBuffer();
         try {
             String line = null;

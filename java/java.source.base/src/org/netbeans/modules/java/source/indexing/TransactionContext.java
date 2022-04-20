@@ -229,7 +229,7 @@ public final class TransactionContext {
     /**
      * Transaction service which can be registered into the {@link TransactionContext}.
      */
-    public static abstract class Service {
+    public abstract static class Service {
         /**
          * Called to commit changes done during the transaction.
          * @throws IOException in case of IO error.

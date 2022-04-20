@@ -50,43 +50,28 @@ public class DefaultMatcherTest extends NbTestCase {
 
     private void createAndCheckTextContent(String encoding) {
         FileObject root = FileUtil.createMemoryFileSystem().getRoot();
-        try {
-            OutputStream os = root.createAndOpen("file");
-            try {
-                OutputStreamWriter osw = new OutputStreamWriter(os,
-                        encoding);
-                try {
-                    osw.append("Test Text");
-                    osw.flush();
-                } finally {
-                    osw.close();
-                }
-            } finally {
-                os.close();
-            }
-            assertTrue("File with encoding " + encoding
-                    + " was detected as binary file",
-                    DefaultMatcher.hasTextContent(root.getFileObject("file")));
+        try (OutputStream os = root.createAndOpen("file");
+                OutputStreamWriter osw = new OutputStreamWriter(os, encoding)) {
+            osw.append("Test Text");
+            osw.flush();
         } catch (UnsupportedEncodingException eee) {
             LOG.log(Level.INFO, "Unknown encoding {0}", encoding);
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         }
+        assertTrue("File with encoding " + encoding
+                + " was detected as binary file",
+                DefaultMatcher.hasTextContent(root.getFileObject("file")));
     }
 
     public void testHasTextContentWithBinaryContent() {
         FileObject root = FileUtil.createMemoryFileSystem().getRoot();
-        try {
-            OutputStream os = root.createAndOpen("file");
-            try {
-                os.write(new byte[]{90, 98, 88, 97, 94, 0, 1, 2, 4, 5, 4, 6});
-            } finally {
-                os.close();
-            }
-            assertFalse("Binary file was detected as textual file",
-                    DefaultMatcher.hasTextContent(root.getFileObject("file")));
+        try (OutputStream os = root.createAndOpen("file")) {
+            os.write(new byte[]{90, 98, 88, 97, 94, 0, 1, 2, 4, 5, 4, 6});
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         }
+        assertFalse("Binary file was detected as textual file",
+                DefaultMatcher.hasTextContent(root.getFileObject("file")));
     }
 }

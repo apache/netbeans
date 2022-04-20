@@ -43,7 +43,7 @@ import org.openide.util.Lookup;
  */
 public final class ModelRunConfig extends BeanRunConfig {
     
-    private final static Logger LOG = Logger.getLogger(ModelRunConfig.class.getName());
+    private static final Logger LOG = Logger.getLogger(ModelRunConfig.class.getName());
     
     private final NetbeansActionMapping model;
     private final boolean fallback;

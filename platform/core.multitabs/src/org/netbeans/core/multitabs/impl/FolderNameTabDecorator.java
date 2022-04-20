@@ -40,7 +40,7 @@ import org.openide.windows.TopComponent;
 public class FolderNameTabDecorator extends TabDecorator {
 
     private final SettingsImpl settings = new SettingsImpl();
-    private final static String pathSeparator = System.getProperty( "file.separator", "/" ); //NOI18N
+    private static final String pathSeparator = System.getProperty( "file.separator", "/" ); //NOI18N
 
     @Override
     public String getText( TabData tab ) {

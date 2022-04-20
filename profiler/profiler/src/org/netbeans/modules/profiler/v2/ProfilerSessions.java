@@ -572,7 +572,7 @@ final class ProfilerSessions {
         // --- Singleton -------------------------------------------------------
         
         private static final class Singleton {
-            final private static StopAction INSTANCE = new StopAction();
+            private static final StopAction INSTANCE = new StopAction();
         }
         @ActionID(category="Profile", id="org.netbeans.modules.profiler.v2.ProfilerSessions.StopAction") // NOI18N
         @ActionRegistration(displayName="#LBL_StopAction", lazy=false) // NOI18N

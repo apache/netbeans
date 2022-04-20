@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
+<filesystem>
+    <folder name="Actions">
+        <folder name="Tools">
+            <file name="testAction1.instance">
+                <attr stringvalue="Test Action" name="displayName"/>
+                <attr methodvalue="org.openide.awt.Actions.context" name="instanceCreate"/>
+                <attr name="type" stringvalue="org.netbeans.modules.java.lsp.server.explorer.TestInfo"/>
+                <attr name="injectable" stringvalue="org.netbeans.modules.java.lsp.server.explorer.NodeActionsProviderTest$TestAction"/>
+                <attr name="delegate" methodvalue="org.openide.awt.Actions.inject"/>
+                <attr name="selectionType" stringvalue="EXACTLY_ONE"/>
+                <attr boolvalue="false" name="noIconInMenu"/>
+                <attr boolvalue="false" name="asynchronous"/>
+            </file>
+        </folder>
+    </folder>
+</filesystem>

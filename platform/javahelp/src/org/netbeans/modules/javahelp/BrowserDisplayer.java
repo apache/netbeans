@@ -96,7 +96,7 @@ public class BrowserDisplayer extends JButton
     private HTMLDocument doc;
     private URL base;
 
-    private final static Cursor handCursor =
+    private static final Cursor handCursor =
 	Cursor.getPredefinedCursor(Cursor.HAND_CURSOR);
 
     private Cursor origCursor;

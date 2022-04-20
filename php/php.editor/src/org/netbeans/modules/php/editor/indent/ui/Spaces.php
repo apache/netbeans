@@ -9,6 +9,8 @@ class Example implements Iface1, Iface2, Iface3 {
 #[A1("param")]
 private ClassA|ClassB|null $unionType;
 
+private ClassA&ClassB $intersectionType;
+
     public function ifExample ($a, $b) {
         if (convert($a) > $b) {
             echo "a is bigger than b";
@@ -101,9 +103,28 @@ public function unionTypesExample(
     return null;
 }
 
+public function intersectionTypesExample(
+        ClassA&ClassB $object
+        ): ClassA&ClassB {
+    return $object;
+}
+
 public function nullsafeOperatorExample(object $object){
     $object?->nullsafe();
 }
+}
+
+enum EnumExample: string {
+
+    case FOO = 'F';
+    case BAR = 'B';
+
+    public function example(): string {
+        return match ($this) {
+            static::FOO => 'Foo',
+            static::BAR => 'Bar',
+        };
+    }
 }
 
 $anonymousFunc = function ($arg) use ($param):int {

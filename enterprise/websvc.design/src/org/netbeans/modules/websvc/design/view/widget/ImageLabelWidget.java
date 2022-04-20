@@ -209,7 +209,7 @@ public class ImageLabelWidget extends Widget {
 
     public static final int DEFAULT_GAP = 4;
     
-    public static abstract class PaintableImageWidget extends Widget {
+    public abstract static class PaintableImageWidget extends Widget {
         
         private static final Stroke STROKE = new BasicStroke(1.0F, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_MITER);
 

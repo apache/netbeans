@@ -39,6 +39,20 @@
   <!-- Compile the JFluid engine system library, that depends on JDK version - so there are two libraries -->
   <!-- Compile the engine system library -->
     <target name="compile-system" depends="init">
+        <mkdir dir="${jvmstat.classes.dir}"/>
+        <copy todir="${jvmstat.classes.dir}">
+            <resources>
+                <javaresource name="sun/jvmstat/monitor/HostIdentifier.class"/>
+                <javaresource name="sun/jvmstat/monitor/MonitorException.class"/>
+                <javaresource name="sun/jvmstat/monitor/MonitoredHost.class"/>
+                <javaresource name="sun/jvmstat/monitor/MonitoredVm.class"/>
+                <javaresource name="sun/jvmstat/monitor/MonitoredVmUtil.class"/>
+                <javaresource name="sun/jvmstat/monitor/VmIdentifier.class"/>
+
+                <javaresource name="sun/management/ThreadInfoCompositeData.class"/>
+                <javaresource name="sun/management/LazyCompositeData.class"/>
+            </resources>
+        </copy>
         <mkdir dir="${build15.classes.dir}"/>
         <fail message="javac.source of lib.profiler classes should be as low as possible!">
             <condition>

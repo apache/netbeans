@@ -67,7 +67,7 @@ public class SystemActionTest extends NbTestCase {
         assertTrue(log.toString(), log.toString().contains("No such icon"));
     }
     
-    private static abstract class TestSystemAction extends SystemAction {
+    private abstract static class TestSystemAction extends SystemAction {
         public void actionPerformed(ActionEvent e) {}
         public HelpCtx getHelpCtx() {
             return HelpCtx.DEFAULT_HELP;

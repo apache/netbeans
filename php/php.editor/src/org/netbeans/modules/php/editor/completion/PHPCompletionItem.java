@@ -103,6 +103,8 @@ import org.netbeans.modules.php.editor.model.impl.Type;
 import org.netbeans.modules.php.editor.model.impl.VariousUtils;
 import org.netbeans.modules.php.editor.model.nodes.NamespaceDeclarationInfo;
 import org.netbeans.modules.php.editor.NavUtils;
+import org.netbeans.modules.php.editor.api.elements.EnumCaseElement;
+import org.netbeans.modules.php.editor.api.elements.EnumElement;
 import org.netbeans.modules.php.editor.options.CodeCompletionPanel.CodeCompletionType;
 import org.netbeans.modules.php.editor.options.OptionsUtils;
 import org.netbeans.modules.php.editor.parser.PHPParseResult;
@@ -126,6 +128,7 @@ public abstract class PHPCompletionItem implements CompletionProposal {
     @StaticResource
     private static final String PHP_KEYWORD_ICON = "org/netbeans/modules/php/editor/resources/php16Key.png"; //NOI18N
     protected static final ImageIcon KEYWORD_ICON = new ImageIcon(ImageUtilities.loadImage(PHP_KEYWORD_ICON));
+    private static final int TYPE_NAME_MAX_LENGTH = Integer.getInteger("nb.php.editor.ccTypeNameMaxLength", 30); // NOI18N
     final CompletionRequest request;
     private final ElementHandle element;
     private QualifiedNameKind generateAs;
@@ -597,7 +600,8 @@ public abstract class PHPCompletionItem implements CompletionProposal {
                             param.isReference(),
                             param.isVariadic(),
                             param.isUnionType(),
-                            param.getModifier()
+                            param.getModifier(),
+                            param.isIntersectionType()
                     );
                 }
             }
@@ -884,17 +888,35 @@ public abstract class PHPCompletionItem implements CompletionProposal {
         @Override
         protected String getTypeName() {
             Set<TypeResolver> types = getField().getInstanceTypes();
-            String typeName = types.isEmpty() ? "?" : types.size() > 1 ? Type.MIXED : "?"; //NOI18N
-            if (types.size() == 1) {
-                TypeResolver typeResolver = types.iterator().next();
-                if (typeResolver.isResolved()) {
-                    QualifiedName qualifiedName = typeResolver.getTypeName(false);
+            List<String> typeNames = new ArrayList<>();
+            for (TypeResolver type : types) {
+                String typeName = "?"; //NOI18N
+                if (type.isResolved()) {
+                    QualifiedName qualifiedName = type.getTypeName(false);
                     if (qualifiedName != null) {
                         typeName = qualifiedName.toString();
+                        if (type.isNullableType()) {
+                            typeName = CodeUtils.NULLABLE_TYPE_PREFIX + typeName;
+                        }
                     }
                 }
+                typeNames.add(typeName);
             }
-            return typeName;
+            String typeName;
+            if (typeNames.isEmpty()) {
+                typeName = "?"; // NOI18N
+            } else if (typeNames.size() == 1) {
+                typeName = typeNames.get(0);
+            } else {
+                if (getField().isUnionType()) {
+                    typeName = StringUtils.implode(typeNames, Type.SEPARATOR);
+                } else if (getField().isIntersectionType()) {
+                    typeName = StringUtils.implode(typeNames, Type.SEPARATOR_INTERSECTION);
+                } else {
+                    typeName = StringUtils.implode(typeNames, Type.SEPARATOR);
+                }
+            }
+            return StringUtils.truncate(typeName, 0, TYPE_NAME_MAX_LENGTH, "..."); // NOI18N
         }
 
         @Override
@@ -973,6 +995,72 @@ public abstract class PHPCompletionItem implements CompletionProposal {
                 return formatter.getText();
             }
             return super.getRhsHtml(formatter);
+        }
+
+        @Override
+        public String getCustomInsertTemplate() {
+            if (completeAccessPrefix) {
+                return "self::" + getName(); // NOI18N
+            }
+            return super.getCustomInsertTemplate();
+        }
+    }
+
+    static class EnumCaseItem extends PHPCompletionItem {
+
+        private final boolean completeAccessPrefix;
+
+        public static EnumCaseItem getItem(EnumCaseElement constant, CompletionRequest request) {
+            return getItem(constant, request, false);
+        }
+
+        public static EnumCaseItem getItem(EnumCaseElement constant, CompletionRequest request, boolean completeAccessPrefix) {
+            return new EnumCaseItem(constant, request, completeAccessPrefix);
+        }
+
+        private EnumCaseItem(EnumCaseElement constant, CompletionRequest request, boolean completeAccessPrefix) {
+            super(constant, request);
+            this.completeAccessPrefix = completeAccessPrefix;
+        }
+
+        EnumCaseElement getEnumCase() {
+            return (EnumCaseElement) getElement();
+        }
+
+        @Override
+        public ElementKind getKind() {
+            return ElementKind.CONSTANT;
+        }
+
+        @Override
+        public String getLhsHtml(HtmlFormatter formatter) {
+            formatter.name(getKind(), true);
+            if (isDeprecated()) {
+                formatter.deprecated(true);
+                formatter.appendText(getName());
+                formatter.deprecated(false);
+            } else {
+                formatter.appendText(getName());
+            }
+            formatter.name(getKind(), false);
+            formatter.appendText(" "); //NOI18N
+            String value = getEnumCase().getValue();
+            formatter.type(true);
+            formatter.appendText(value != null ? value : "?"); // NOI18N
+            formatter.type(false);
+
+            return formatter.getText();
+        }
+
+        @Override
+        public String getName() {
+            return getEnumCase().getName();
+        }
+
+        @Override
+        public String getInsertPrefix() {
+            Completion.get().showToolTip();
+            return getName();
         }
 
         @Override
@@ -1072,7 +1160,9 @@ public abstract class PHPCompletionItem implements CompletionProposal {
                     Collection<TypeResolver> returnTypes = getBaseFunctionElement().getReturnTypes();
                     // we can also write a union type in phpdoc e.g. @return int|float
                     // check whether the union type is actual declared return type to avoid adding the union type for phpdoc
-                    if (returnTypes.size() == 1 || getBaseFunctionElement().isReturnUnionType()) {
+                    if (returnTypes.size() == 1
+                            || getBaseFunctionElement().isReturnUnionType()
+                            || getBaseFunctionElement().isReturnIntersectionType()) {
                         String returnType = getBaseFunctionElement().asString(PrintAs.ReturnTypes, typeNameResolver, phpVersion);
                         if (StringUtils.hasText(returnType)) {
                             boolean nullableType = CodeUtils.isNullableType(returnType);
@@ -1641,6 +1731,61 @@ public abstract class PHPCompletionItem implements CompletionProposal {
                 return builder.toString();
             } else if (CompletionContext.NEW_CLASS.equals(request.context)) {
                 scheduleShowingCompletion();
+            }
+            return superTemplate;
+        }
+    }
+
+    static class EnumItem extends PHPCompletionItem {
+
+        private static final ImageIcon ICON = IconsUtils.getElementIcon(PhpElementKind.ENUM);
+        private boolean endWithDoubleColon;
+
+        EnumItem(EnumElement enumElement, CompletionRequest request, boolean endWithDoubleColon, QualifiedNameKind generateAs) {
+            super(enumElement, request, generateAs);
+            this.endWithDoubleColon = endWithDoubleColon;
+        }
+
+        @Override
+        public ImageIcon getIcon() {
+            return ICON;
+        }
+
+        @Override
+        public ElementKind getKind() {
+            return ElementKind.CLASS;
+        }
+
+        @Override
+        public String getInsertPrefix() {
+            return getName();
+        }
+
+        @Override
+        public String getCustomInsertTemplate() {
+            final String superTemplate = super.getInsertPrefix();
+            if (endWithDoubleColon) {
+                StringBuilder builder = new StringBuilder();
+                builder.append(superTemplate);
+                boolean includeDoubleColumn = true;
+                if (EditorRegistry.lastFocusedComponent() != null) {
+                    Document doc = EditorRegistry.lastFocusedComponent().getDocument();
+                    int caret = EditorRegistry.lastFocusedComponent().getCaretPosition();
+                    try {
+                        if (caret + 2 < doc.getLength() && "::".equals(doc.getText(caret, 2))) { //NOI18N
+                            includeDoubleColumn = false;
+                        }
+                    } catch (BadLocationException ex) {
+                        // do nothing
+                    }
+                }
+
+                if (includeDoubleColumn) {
+                    builder.append("::"); // NOI18N
+                }
+                builder.append("${cursor}"); //NOI18N
+                scheduleShowingCompletion();
+                return builder.toString();
             }
             return superTemplate;
         }

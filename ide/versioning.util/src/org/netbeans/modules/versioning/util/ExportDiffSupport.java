@@ -293,9 +293,9 @@ public abstract class ExportDiffSupport {
         return chooser;
     }
 
-    public static abstract class ExportDiffProvider {
+    public abstract static class ExportDiffProvider {
         private PropertyChangeSupport support = new PropertyChangeSupport(this);
-        private final static String EVENT_DATA_CHANGED = "ExportDiff.data.changed";
+        private static final String EVENT_DATA_CHANGED = "ExportDiff.data.changed";
 
         /**
          * Sets the files for which this provider should provide
@@ -341,7 +341,7 @@ public abstract class ExportDiffSupport {
      * Abstract ancestor of an output diff panel.
      * @author Ondra Vrabec
      */
-    public static abstract class AbstractExportDiffPanel extends JPanel {
+    public abstract static class AbstractExportDiffPanel extends JPanel {
 
         /**
          * Implement this method to access diff output file path field's text.

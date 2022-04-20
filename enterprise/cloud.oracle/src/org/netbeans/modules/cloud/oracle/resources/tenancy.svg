@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<svg version="1.1" id="Vector_Icons" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px"
+	 y="0px" width="16px" height="16px" viewBox="0 0 16 16" style="enable-background:new 0 0 16 16;" xml:space="preserve">
+  <path
+   fill="#c74634"
+   d="m 5.265068,13.029437 c -2.6367373,0 -4.74612757,-2.208919 -4.74612757,-4.9700663 0,-2.7611477 2.10939027,-4.9700658 4.74612757,-4.9700658 h 5.56112 c 2.636738,0 4.746128,2.2089181 4.746128,4.9700658 0,2.7611473 -2.10939,4.9700663 -4.746128,4.9700663 h -5.56112 m 5.417297,-1.757095 c 1.725865,0 3.068205,-1.455878 3.068205,-3.2129713 0,-1.8072967 -1.390281,-3.2129718 -3.068205,-3.2129718 H 5.408891 c -1.7258653,0 -3.0682044,1.4558778 -3.0682044,3.2129718 0,1.7570933 1.3902802,3.2129713 3.0682044,3.2129713 h 5.273474"
+   id="path25"
+   style="stroke-width:0.490587" />
+</svg>

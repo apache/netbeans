@@ -282,7 +282,7 @@ public final class ImplementAllAbstractMethods implements ErrorRule<Object>, Ove
         return basic;
     }
     
-    static abstract class ImplementFixBase extends CreateFixBase implements Task<WorkingCopy>, DebugFix {
+    abstract static class ImplementFixBase extends CreateFixBase implements Task<WorkingCopy>, DebugFix {
         protected final JavaSource      source;
         protected final TreePathHandle  handle;
         protected final ElementHandle<TypeElement>  implementType;

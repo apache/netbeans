@@ -339,6 +339,11 @@ final class CloseButtonTabbedPane extends JTabbedPane implements PropertyChangeL
             || (osName.equals( "Windows NT (unknown)" ) && "10.0".equals( System.getProperty("os.version") ));
     }
 
+    private static boolean isWindows11() {
+        String osName = System.getProperty ("os.name");
+        return osName.indexOf("Windows 11") >= 0;
+    }
+
     private boolean isWindowsVistaLaF() {
         String osName = System.getProperty ("os.name");
         return osName.indexOf("Vista") >= 0 
@@ -551,7 +556,7 @@ final class CloseButtonTabbedPane extends JTabbedPane implements PropertyChangeL
                 @Override
                 public void setText(String text) {
                     super.setText(text);
-                    if (isWindowsLaF() && isWindows10()) {
+                    if (isWindowsLaF() && (isWindows10() || isWindows11())) {
                         int r = text.endsWith(" ") || text.endsWith("&nbsp;</html>") ? 0 : 3; // NOI18N
                         setBorder(BorderFactory.createEmptyBorder(0, 0, 0, r));
                     }

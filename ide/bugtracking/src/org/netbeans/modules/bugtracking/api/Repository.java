@@ -42,15 +42,15 @@ public final class Repository {
      * A query from this repository was saved or removed.
      * @since 1.85
      */
-    public final static String EVENT_QUERY_LIST_CHANGED = RepositoryProvider.EVENT_QUERY_LIST_CHANGED;
+    public static final String EVENT_QUERY_LIST_CHANGED = RepositoryProvider.EVENT_QUERY_LIST_CHANGED;
 
     /**
      * RepositoryProvider's attributes have changed, e.g. name, url, etc.
      * @since 1.85
      */
-    public final static String EVENT_ATTRIBUTES_CHANGED = RepositoryImpl.EVENT_ATTRIBUTES_CHANGED;
+    public static final String EVENT_ATTRIBUTES_CHANGED = RepositoryImpl.EVENT_ATTRIBUTES_CHANGED;
 
-    private final static Logger LOG = Logger.getLogger("org.netbeans.modules.bugtracking.Repository"); // NOI18N
+    private static final Logger LOG = Logger.getLogger("org.netbeans.modules.bugtracking.Repository"); // NOI18N
     
     static {
         APIAccessorImpl.createAccesor();

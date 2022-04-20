@@ -221,7 +221,7 @@ public class DeclarationFinderImpl implements DeclarationFinder {
                 }
                 if (ts != null) {
                     ts.move(offset);
-                    if (ts.moveNext() && ts.token().id() == JsTokenId.IDENTIFIER) {
+                    if (ts.moveNext() && (ts.token().id() == JsTokenId.IDENTIFIER || ts.token().id() == JsTokenId.PRIVATE_IDENTIFIER)) {
                         String propertyName = ts.token().text().toString();
                         for (Type type : assignments) {
                             String fqn = ModelUtils.getFQNFromType(type);
@@ -355,7 +355,7 @@ public class DeclarationFinderImpl implements DeclarationFinder {
                 TokenSequence<? extends JsTokenId> ts = LexUtilities.getTokenSequence(doc, caretOffset, language);
                 if (ts != null) {
                     ts.move(caretOffset);
-                    if (ts.moveNext() && ts.token().id() == JsTokenId.IDENTIFIER) {
+                    if (ts.moveNext() && (ts.token().id() == JsTokenId.IDENTIFIER || ts.token().id() == JsTokenId.PRIVATE_IDENTIFIER)) {
                         value[0] = new OffsetRange(ts.offset(), ts.offset() + ts.token().length());
                     } else if (ts.token() != null && ts.token().id() == JsTokenId.DOC_COMMENT) {
                         TokenSequence<? extends JsDocumentationTokenId> tsDoc = LexerUtils.getTokenSequence(doc, caretOffset, JsDocumentationTokenId.language(), true);

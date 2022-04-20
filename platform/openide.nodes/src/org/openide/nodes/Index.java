@@ -104,7 +104,7 @@ public interface Index extends Node.Cookie {
     /** A support class implementing some methods of the <code>Index</code>
     * cookie.
     */
-    public static abstract class Support implements Index {
+    public abstract static class Support implements Index {
         /** Registered listeners */
         private HashSet<ChangeListener> listeners;
 

@@ -463,13 +463,11 @@ public class ConfigurableActionsProviderImpl implements ProjectActionMappingProv
             this.actionIDs = r.actionIDs;
             
             if (oldCache != null) {
-                for (String id : oldCache.keySet()) {
-                    ActionData ad = oldCache.get(id);
+                for (ActionData ad : oldCache.values()) {
                     ad.detach();
                 }
             }
-            for (String id : newCache.keySet()) {
-                ActionData ad = newCache.get(id);
+            for (ActionData ad : newCache.values()) {
                 ad.attach(projectDirectory, null, fcl);
             }
             if (newCache.keySet().equals(oldConfigs)) {

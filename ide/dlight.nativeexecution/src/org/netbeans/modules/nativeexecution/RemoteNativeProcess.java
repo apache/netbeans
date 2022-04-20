@@ -28,7 +28,7 @@ import org.openide.util.Exceptions;
 
 public final class RemoteNativeProcess extends AbstractNativeProcess {
 
-    private final static int startupErrorExitValue = 184;
+    private static final int startupErrorExitValue = 184;
     private ChannelStreams streams = null;
 
     public RemoteNativeProcess(NativeProcessInfo info) {

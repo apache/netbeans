@@ -28,6 +28,7 @@ import java.lang.ref.*;
 import java.io.*;
 import java.util.*;
 import java.net.*;
+import java.nio.charset.StandardCharsets;
 import java.util.logging.Level;
 import org.openide.util.Lookup.Result;
 
@@ -37,12 +38,12 @@ import org.openide.util.Lookup.Result;
  */
 public class FileObjectTestHid extends TestBaseHid {
 
-    private final static String FOLDER_CHILD_NAME= "testFolder";
-    private final static String FOLDER_CHILD= "/"+FOLDER_CHILD_NAME;
+    private static final String FOLDER_CHILD_NAME= "testFolder";
+    private static final String FOLDER_CHILD= "/"+FOLDER_CHILD_NAME;
 
-    private final static String FILE_CHILD_NAME= "test";
-    private final static String FILE_CHILD_EXT= "txt";
-    private final static String FILE_CHILD= "/"+FILE_CHILD_NAME+"." +FILE_CHILD_EXT;
+    private static final String FILE_CHILD_NAME= "test";
+    private static final String FILE_CHILD_EXT= "txt";
+    private static final String FILE_CHILD= "/"+FILE_CHILD_NAME+"." +FILE_CHILD_EXT;
     
     /**Should be deleted and testedFS renamed to fs*/
     private FileSystem fs;
@@ -1221,7 +1222,7 @@ public class FileObjectTestHid extends TestBaseHid {
         assertEquals("Same path", ch.getPath(), newCh.getPath());
 
         try (OutputStream os = newCh.getOutputStream()) {
-            os.write("Ahoj".getBytes("UTF-8"));
+            os.write("Ahoj".getBytes(StandardCharsets.UTF_8));
         }
         assertEquals("Ahoj", newCh.asText("UTF-8"));
         assertEquals("Parents are same", ch.getParent(), newCh.getParent());
@@ -1240,7 +1241,7 @@ public class FileObjectTestHid extends TestBaseHid {
         assertFalse("Not valid", ch.isValid());
 
         try (OutputStream os = ch.getOutputStream()) {
-            os.write("Ahoj".getBytes("UTF-8"));
+            os.write("Ahoj".getBytes(StandardCharsets.UTF_8));
         }
 
         if (!ch.isValid()) {
@@ -2770,12 +2771,12 @@ public class FileObjectTestHid extends TestBaseHid {
         try {
             OutputStream os = fo1.getOutputStream();
             String txt = "Ahoj\nJak\nSe\nMas";
-            os.write(txt.getBytes("UTF-8"));
+            os.write(txt.getBytes(StandardCharsets.UTF_8));
             os.close();
             byte[] arr = fo1.asBytes();
             assertNotNull("Arrays is read", arr);
             assertEquals("Right length bytes", txt.length(), arr.length);
-            assertEquals(txt, new String(arr, "UTF-8"));
+            assertEquals(txt, new String(arr, StandardCharsets.UTF_8));
             assertEquals(txt, fo1.asText("UTF-8"));
 
             ArrayList<String> all = new ArrayList<String>();
@@ -2824,7 +2825,7 @@ public class FileObjectTestHid extends TestBaseHid {
 
             OutputStream os = fo1.getOutputStream();
             for (int i = 0; i < 10; i++) {
-                os.write(sb.toString().getBytes("UTF-8"));
+                os.write(sb.toString().getBytes(StandardCharsets.UTF_8));
             }
             os.close();
             if (64 * 1024 > fo1.getSize()) {
@@ -3612,7 +3613,7 @@ public class FileObjectTestHid extends TestBaseHid {
             
             OutputStream os = fo1.getOutputStream();
             String txt = "Ahoj\nJak\nSe\nMas";
-            os.write(txt.getBytes("UTF-8"));
+            os.write(txt.getBytes(StandardCharsets.UTF_8));
             os.close();
 
             

@@ -45,8 +45,8 @@
           <Group type="102" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="ternaryNullCheck" alignment="0" min="-2" pref="346" max="-2" attributes="0"/>
-                  <Component id="stringLiteralsFirst" alignment="0" min="-2" pref="346" max="-2" attributes="0"/>
+                  <Component id="ternaryNullCheck" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="stringLiteralsFirst" alignment="0" min="-2" pref="315" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="32767" attributes="0"/>
           </Group>
@@ -56,9 +56,9 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="ternaryNullCheck" min="-2" pref="30" max="-2" attributes="0"/>
+              <Component id="ternaryNullCheck" min="-2" pref="24" max="-2" attributes="0"/>
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
-              <Component id="stringLiteralsFirst" min="-2" pref="30" max="-2" attributes="0"/>
+              <Component id="stringLiteralsFirst" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="32767" attributes="0"/>
           </Group>
       </Group>

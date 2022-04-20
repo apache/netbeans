@@ -22,6 +22,7 @@ import org.netbeans.modules.javascript2.model.api.IndexedElement;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Collection;
+import java.util.IdentityHashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.logging.Level;
@@ -96,14 +97,16 @@ public class JsIndexer extends EmbeddingIndexer {
         JsObject globalObject = model.getGlobalObject();
         for (JsObject object : globalObject.getProperties().values()) {
             if (object.getParent() != null) {
-                storeObject(object, object.getName(), support, indexable);
+                IdentityHashMap<JsObject,Integer> visited = new IdentityHashMap<>();
+                storeObject(object, object.getName(), support, indexable, visited);
             }
         }
         
         IndexDocument document = support.createDocument(indexable);
         for (JsObject object : globalObject.getProperties().values()) {
             if (object.getParent() != null) {
-                storeUsages(object, object.getName(), document);
+                IdentityHashMap<JsObject,Integer> visited = new IdentityHashMap<>();
+                storeUsages(object, object.getName(), document, visited);
             }
         }
         support.addDocument(document);
@@ -214,7 +217,15 @@ public class JsIndexer extends EmbeddingIndexer {
         return elementDocument;
     }
 
-    private void storeObject(JsObject object, String fqn, IndexingSupport support, Indexable indexable) {
+    private void storeObject(JsObject object, String fqn, IndexingSupport support, Indexable indexable, IdentityHashMap<JsObject,Integer> visited) {
+        // @todo: This prevents unlimited recursion when self referencing strucures
+        //        are scanned. It is necessary to rework the index users so that
+        //        this is not necessary
+        if(visited.containsKey(object)) {
+            return;
+        }
+        IdentityHashMap<JsObject,Integer> childVisited = new IdentityHashMap<>(visited);
+        childVisited.compute(object, (k, v) -> v == null ? 1 : v+1);
         if (!isInvisibleFunction(object) && object != null && object.getName() != null) {
             if (object.isDeclared() || ModelUtils.PROTOTYPE.equals(object.getName())) {
                 // if it's delcared, then store in the index as new document.
@@ -226,7 +237,7 @@ public class JsIndexer extends EmbeddingIndexer {
                 // there can be declared it's properties or methods
                 for (JsObject property : object.getProperties().values()) {
                     if (!(property instanceof JsReference && !((JsReference)property).getOriginal().isAnonymous())) {
-                        storeObject(property, fqn + '.' + property.getName(), support, indexable);
+                        storeObject(property, fqn + '.' + property.getName(), support, indexable, childVisited);
                     } else {
                         IndexDocument document = createDocumentForReference((JsReference)property, fqn + '.' + property.getName(), support, indexable);
 ////                      IndexDocument document = IndexedElement.createDocument(property, fqn + '.' + property.getName(), support, indexable);
@@ -236,7 +247,7 @@ public class JsIndexer extends EmbeddingIndexer {
                 if (object instanceof JsFunction) {
                     // store parameters
                     for (JsObject parameter : ((JsFunction)object).getParameters()) {
-                        storeObject(parameter, fqn + '.' + parameter.getName(), support, indexable);
+                        storeObject(parameter, fqn + '.' + parameter.getName(), support, indexable, childVisited);
                     }
                 }
             }
@@ -286,7 +297,15 @@ public class JsIndexer extends EmbeddingIndexer {
         return result.toString();
     }
 
-    private void storeUsages(JsObject object, String name, IndexDocument document) {
+    private void storeUsages(JsObject object, String name, IndexDocument document, IdentityHashMap<JsObject,Integer> visited) {
+        // @todo: This prevents unlimited recursion when self referencing strucures
+        //        are scanned. It is necessary to rework the index users so that
+        //        this is not necessary
+        if(visited.containsKey(object)) {
+            return;
+        }
+        IdentityHashMap<JsObject,Integer> childVisited = new IdentityHashMap<>(visited);
+        childVisited.compute(object, (k, v) -> v == null ? 1 : v+1);
         StringBuilder sb = new StringBuilder();
         sb.append(object.getName());
         for (JsObject property : object.getProperties().values()) {
@@ -304,12 +323,12 @@ public class JsIndexer extends EmbeddingIndexer {
         if (object instanceof JsFunction) {
             // store parameters
             for (JsObject parameter : ((JsFunction) object).getParameters()) {
-                storeUsages(parameter, parameter.getName(), document);
+                storeUsages(parameter, parameter.getName(), document, childVisited);
             }
         }
         for (JsObject property : object.getProperties().values()) {
             if (storeUsage(property) && (!(property instanceof JsReference && !((JsReference)property).getOriginal().isAnonymous()))) {
-                storeUsages(property, property.getName(), document);
+                storeUsages(property, property.getName(), document, childVisited);
             }
         }
     }

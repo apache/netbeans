@@ -86,6 +86,18 @@ public class PSR4HintTest extends PHPHintsTestBase {
         checkHints(new PSR4Hint.TypeDeclarationHint(), "Vendor/App/TraitName.php");
     }
 
+    public void testEnumNameOk() throws Exception {
+        checkHints(new PSR4Hint.TypeDeclarationHint(), "Vendor/App/EnumName.php");
+    }
+
+    public void testEnumNameDifferent() throws Exception {
+        checkHints(new PSR4Hint.TypeDeclarationHint(), "Vendor/App/EnumName.php");
+    }
+
+    public void testEnumNameDifferentCase() throws Exception {
+        checkHints(new PSR4Hint.TypeDeclarationHint(), "Vendor/App/EnumName.php");
+    }
+
     @Override
     protected void checkHints(Rule hint, String fileName) throws Exception {
         super.checkHints(hint, getTestDir() + "/" + fileName);

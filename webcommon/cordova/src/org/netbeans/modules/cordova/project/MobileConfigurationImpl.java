@@ -43,7 +43,7 @@ import org.openide.util.Exceptions;
  */
 public class MobileConfigurationImpl implements ProjectConfiguration, PropertyProvider {
 
-    final private Project project;
+    private final Project project;
     //final private ClientProjectPlatformImpl platform;
     private final String name;
     private final String displayName;

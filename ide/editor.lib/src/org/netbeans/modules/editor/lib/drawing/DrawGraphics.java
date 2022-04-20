@@ -175,7 +175,7 @@ public interface DrawGraphics {
     /** Abstract draw-graphics that maintains a fg and bg color, font,
     * current x and y coordinates.
     */
-    public static abstract class AbstractDG implements DrawGraphics {
+    public abstract static class AbstractDG implements DrawGraphics {
 
         /** Current foreground color */
         Color foreColor;

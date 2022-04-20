@@ -136,7 +136,7 @@
         <!-- When requires.nb.javac property is true, prepend javac-api and javac-impl on bootclasspath to allow override the default annotation
              processing API located in rt.jar. -->
     </target>
-    <target name="build-init" depends="basic-init,jdk-8-check,set-buildnumber,-define-custom-javac-task,-init-bootclasspath-prepend">
+    <target name="build-init" depends="basic-init,jdk-8-check,set-buildnumber,-define-custom-javac-task,-init-bootclasspath-prepend,-load-module-flags">
         <property name="public.package.jar.dir" location="${nb.build.dir}/public-package-jars"/>
         <mkdir dir="${public.package.jar.dir}"/>
         <parseprojectxml
@@ -257,7 +257,7 @@
     <target name="-process.release.files"/>
     
     <target name="-download.release.files" depends="-define-downloadbinaries-task">
-        <downloadbinaries cache="${binaries.cache}" server="${binaries.server}">
+        <downloadbinaries cache="${binaries.cache}" server="${binaries.server}" repos="${binaries.repos}">
             <manifest dir=".">
                 <include name="external/binaries-list"/>
             </manifest>
@@ -289,12 +289,7 @@
     </target>
     <target name="test-lib-init" depends="-init-bootclasspath-prepend,init,-build-libs.junit4">
         <path id="test.unit.lib.cp"/>
-        <!-- The IDE is so big that anything enabling all clusters will exceed the JVM's defaults! -->
-        <!-- Any changes please propagate into nbbuild/testdist/release/one-module.xml test.run.args property -->
-        <condition property="test.run.args" value="-ea -Xmx480m">
-            <istrue value="${have-jdk-1.8}"/>
-        </condition>
-        <property name="test.run.args" value="-ea -Xmx480m"/>
+        <property name="test.run.args" value="-ea -Xmx700m ${metabuild.jms-flags.jvm} -XX:+IgnoreUnrecognizedVMOptions"/>
         <property name="extra.test.libs.dir" location="${test.dist.dir}/extralibs"/>
         <macrodef name="test-init-nborg">
             <attribute name="test.type"/>

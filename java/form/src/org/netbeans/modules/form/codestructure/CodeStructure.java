@@ -1046,9 +1046,9 @@ public class CodeStructure {
     // ---------------
 
     /** For debugging purposes only. */
-    static private int traceCount = 0;
+    private static int traceCount = 0;
     /** For debugging purposes only. */
-    static private final boolean TRACE = false;
+    private static final boolean TRACE = false;
     /** For debugging purposes only. */
     static void t(String str) {
         if (TRACE)

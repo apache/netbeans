@@ -197,7 +197,7 @@ final class SuiteLogicalView implements LogicalViewProvider  {
             refresh(false);
         }
 
-        private static abstract class Key {
+        private abstract static class Key {
             public final Group group;
 
             public Key(Group group) {

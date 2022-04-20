@@ -65,7 +65,7 @@ import org.openide.util.Lookup;
 @ProjectServiceProvider(service = GradleProgressListenerProvider.class, projectType = NbGradleProject.GRADLE_PLUGIN_TYPE + "/java")
 public final class GradleTestProgressListener implements ProgressListener, GradleProgressListenerProvider {
 
-    final private Project project;
+    private final Project project;
     TestSession session;
 
     Map<String, Testcase> runningTests = new ConcurrentHashMap<>();

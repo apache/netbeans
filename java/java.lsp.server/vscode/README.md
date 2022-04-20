@@ -52,6 +52,11 @@ Apache NetBeans Language Server brings full featured Java development (edit-comp
 * __Test Explorer__ for Java tests results visualization and execution including editor code Lenses.
 * Maven and Gradle support including multi-project projects, subprojects opening and Gradle priming builds.
 
+## Project Explorer
+Project Explorer provides an overview of logical project structure, groups sources together and greatly simplifies Java package structure exploration. Project Explorer is an addition to the classical workspace explorer. Use it to build, test, execute and operate your Maven and Gradle Java projects.
+
+![Project Explorer](images/project-explorer.png)
+
 ## Debugger and Launch Configurations
 Language Server __Java 8+ ...__ launch configuration supports debugging and running Java applications using JDK8 or newer. 
 1. The launch configuration (debugger) is invoked when `Run main | Debug main` code lense is selected in the code.
@@ -66,6 +71,12 @@ Language Server __Java 8+ ...__ launch configuration supports debugging and runn
     * __Attach to Shared Memory__ is available on Windows in addtion to above mentioned _Attach..._
 
 Default launch configurations provided by Language Server can modified in `launch.json` file using intellisense for available options.
+
+### Run Configurations panel
+Program arguments, VM options, evironment variables,... can be set in Run Configuration panel a part of Explorer. The panel is sufficient for all typical use-cases Java programmer faces. Only advanced, expert scenarios may require touching of `launch.json` (which still takes precedence).
+
+![Run Configuration](images/run_config.png) 
+
 ## Supported Refactorings
 
 Class level refactorings as well as variable refactorings are supported in VSCode via Apache NetBeans extension. See following screenshots:
@@ -85,6 +96,15 @@ Class level refactorings as well as variable refactorings are supported in VSCod
 Some refactorings are two steps with like Override method ... where method to be overriden is selected in 2nd step:
 
 ![Override refactoring](images/Override_refactoring.png)
+
+### Change Method Parameters refactoring
+Change method parameters refactoring is provided using dedidacated form allowing to change, add, move, remove method parameters.
+![Change method parameters refactoring](images/change_method_params.png)
+
+### Move Members Refactoring
+Move members refactoring provides dedicated form as well.
+![Move members refactoring](images/move_refactoring.png)
+
 ### Some of supported refactorings:
 * Convert to static import 
 * Rename 	
@@ -95,13 +115,21 @@ Some refactorings are two steps with like Override method ... where method to be
 * Assign to variable
 * Generate hashCode/equals
 * Generate toString()
-* Change method signature
 * Surround With refactoring
 * For cycle refactoring
 * try-catch refactoring
 * switch() statement
 * while() cycle
 
+## Organize Imports
+Out of the box support for organizing imports in Java sources is available. It removes unused imports, groups imports by packages and updates your imports whenever a file is saved. In addition to the defaults, there is a rich set of configuration options. 
+
+Go to VSCode `Preferences | Settings`  and search for _NetBeans_ to set `Netbeans > Java > Imports:` options:
+* `Count For Using Star Import` - Class count to use a star-import, 999 means any number 
+* `Count For Using Static Star Import` - Members count to use a static star-import, 999 means any number
+* `Groups` - Groups of import statements (specified by their package prefixes) and their sorting order. Import statements within a group are ordered alphabetically
+
+And `Netbeans > Java > On Save: Organize Imports` - Enable organize imports action on a document save
 ## Test Explorer
 NetBeans Language Server provides Test Explorer view which allows to run all tests in a project, examine the results, go to source code and  run particular test.
 ![Test Explorer](images/Test_explorer.png)
@@ -128,6 +156,18 @@ Setting project's Maven pom.xml to skip native-image build everytime when projec
 
 When native image is built, including debug info then add __Launch Native Image__ configuration to launch.json. Select it in Run & Debug activity window and press F5 to debug Java source code on native image.
 
+## Database Support
+Database Explorer allows to connect to databases using appropriate JDBC drivers.
+Make Default Connection sets selected Database connection as default for IDE. This connection is then used by all IDE editors for SQL Code completion, or Micronaut Data queries, e.g. `findByPagesGreaterThan`
+
+![Database Explorer](images/database-explorer.png)
+
+## OCI Explorer
+Oracle Cloud Infrastructure Explorer supports viewing compartments and resources available on user OCI instance. It is defined by OCI config file which has to be downloaded according to [OCI instructions](https://docs.oracle.com/en-us/iaas/Content/API/Concepts/sdkconfig.htm) and saved in `<users_home>/.oci/config`
+
+![Cloud Explorer](images/cloud-explorer.png)
+
+It is possible to add JDBC connection to Oracle Autonomous DB running in OCI using __Add DB Connection__ menu. It downloads DB Wallet automatically.
 ## Supported Options
 
 * __netbeans.jdkhome__ - path to the JDK, see dedicated section below
@@ -148,6 +188,10 @@ following locations:
 
 As soon as one of the settings is changed, the Language Server is restarted.
 
+## Running Language Server per VSCode workspace or for user
+It is possible to run Apache NetBeans Language Server per workspace (VSCode window). This allows separation of Language Server for given project as Language Server JVM is not shared for more VSCode open workspaces (projects).
+It is possible to change this in `Preferences | Settings | Netbeans: Userdir`. Set to `local` to use dedicated Language Server per workspace or set to `global` (this is default) to have one Language Server for all VSCode workspaces.
+
 ## Conflicts with other Java Extensions
 
 Apache NetBeans Language Server extension isn't the only Java supporting
@@ -156,12 +200,6 @@ the extension disables certain functionality known to cause problems, this is do
 
 This behavior can be disabled by setting `netbeans.conflict.check` setting to `false`.
 
-## Project Explorer
-Very simple Project Explorer is introduced, as a counterpart for File Explorer. The Project Explorer 
-follows logical project's structure, groups sources together and in case of Java, simplifies package structure
-view. In the future, Project Explorer will offer build, execute and build system (gradle/maven) oriented 
-actions.
-![Project Explorer](images/project-explorer.png)
 ## Contributing
 
 Read [building instructions](BUILD.md) to help Apache community to

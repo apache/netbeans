@@ -52,10 +52,10 @@ public class JsTypedTextInterceptor implements TypedTextInterceptor {
     private static final TokenId[] REGEXP_TOKENS = { JsTokenId.REGEXP, JsTokenId.REGEXP_END };
 
     /** Tokens which indicate that we're within a literal string */
-    private final static TokenId[] STRING_TOKENS = { JsTokenId.STRING, JsTokenId.STRING_END };
+    private static final TokenId[] STRING_TOKENS = { JsTokenId.STRING, JsTokenId.STRING_END };
 
     /** Tokens which indicate that we're within a template string */
-    private final static TokenId[] TEMPLATE_TOKENS = { JsTokenId.TEMPLATE, JsTokenId.TEMPLATE_END };
+    private static final TokenId[] TEMPLATE_TOKENS = { JsTokenId.TEMPLATE, JsTokenId.TEMPLATE_END };
     
     private final Language<JsTokenId> language;
 
@@ -148,7 +148,7 @@ public class JsTypedTextInterceptor implements TypedTextInterceptor {
                             }
                             TokenId id = token.id();
 
-                            if (((id == JsTokenId.IDENTIFIER) && (token.length() == 1))
+                            if (((token.id() == JsTokenId.IDENTIFIER || token.id() == JsTokenId.PRIVATE_IDENTIFIER) && (token.length() == 1))
                                     || (id == JsTokenId.BRACKET_LEFT_BRACKET) || (id == JsTokenId.BRACKET_RIGHT_BRACKET)
                                     || (id == JsTokenId.BRACKET_LEFT_CURLY) || (id == JsTokenId.BRACKET_RIGHT_CURLY)
                                     || (id == JsTokenId.BRACKET_LEFT_PAREN) || (id == JsTokenId.BRACKET_RIGHT_PAREN)) {

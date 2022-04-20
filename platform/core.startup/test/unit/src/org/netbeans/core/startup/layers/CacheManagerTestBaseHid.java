@@ -26,6 +26,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -192,7 +193,7 @@ public abstract class CacheManagerTestBaseHid extends NbTestCase implements Imag
         byte[] buf = new byte[1024];
         int read;
         while ((read = is.read(buf)) != -1) {
-            text.append(new String(buf, 0, read, "US-ASCII"));
+            text.append(new String(buf, 0, read, StandardCharsets.US_ASCII));
         }
         return text.toString();
     }

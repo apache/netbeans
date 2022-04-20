@@ -172,7 +172,7 @@ public class TemplatesAction extends AbstractAction { // XXX could be ActionList
         }
     }
     
-    static private Set<Node> getNodes2Open (Node [] nodes) {
+    private static Set<Node> getNodes2Open (Node [] nodes) {
         Set<Node> nodes2open = new HashSet<> (nodes.length);
         for (int i = 0; i < nodes.length; i++) {
             if (nodes [i].isLeaf ()) {

@@ -221,7 +221,18 @@ public class GroovyDeclarationFinder implements DeclarationFinder {
                     // TODO this and super magic ?
                     
                     String typeName = objectExpression.getType().getName();
-
+                    if (objectExpression instanceof VariableExpression) {
+                        VariableExpression variableE = (VariableExpression) objectExpression;
+                        if (variableE.isDynamicTyped()) {
+                            ClassNode cn = GroovyUtils.findInferredType(variableE);
+                            if (cn != null) { 
+                                if (cn.getName() != null) {
+                                    typeName = cn.getName();
+                                }
+                                
+                            }
+                        }
+                    }
                     // try to find it in Java
                     FileObject fo = parserResult.getSnapshot().getSource().getFileObject();
                     if (fo != null) {

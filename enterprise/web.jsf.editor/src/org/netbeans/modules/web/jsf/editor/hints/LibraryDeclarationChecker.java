@@ -69,6 +69,7 @@ import org.openide.util.NbBundle;
  * @author marekfukala
  */
 public class LibraryDeclarationChecker extends HintsProvider {
+    private static final String SCHEMA_INSTANCE = "http://www.w3.org/2001/XMLSchema-instance"; //NOI18N
 
     private static final Logger LOG = Logger.getLogger(LibraryDeclarationChecker.class.getName());
 
@@ -204,6 +205,10 @@ public class LibraryDeclarationChecker extends HintsProvider {
         }
 
         for (String namespace : declaredNamespaces) {
+            if(SCHEMA_INSTANCE.equals(namespace)) {
+                continue;
+            }
+
             Library lib = NamespaceUtils.getForNs(libs, namespace);
             if (lib != null) {
                 // http://java.sun.com/jsf/passthrough usage needs to be resolved on base of all declared libraries

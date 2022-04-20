@@ -28,6 +28,7 @@ import org.netbeans.modules.php.editor.index.PHPIndexer;
 import org.netbeans.modules.php.editor.index.Signature;
 import org.netbeans.modules.php.editor.model.ClassScope;
 import org.netbeans.modules.php.editor.model.ConstantElement;
+import org.netbeans.modules.php.editor.model.EnumScope;
 import org.netbeans.modules.php.editor.model.FunctionScope;
 import org.netbeans.modules.php.editor.model.GroupUseScope;
 import org.netbeans.modules.php.editor.model.InterfaceScope;
@@ -149,6 +150,11 @@ final class NamespaceScopeImpl extends ScopeImpl implements NamespaceScope, Vari
     }
 
     @Override
+    public Collection<? extends EnumScope> getDeclaredEnums() {
+        return filter(getElements(), (ModelElement element) -> element.getPhpElementKind() == PhpElementKind.ENUM);
+    }
+
+    @Override
     public Collection<? extends ConstantElement> getDeclaredConstants() {
         return filter(getElements(), new ElementFilter() {
             @Override
@@ -210,7 +216,8 @@ final class NamespaceScopeImpl extends ScopeImpl implements NamespaceScope, Vari
         Collection<? extends ClassScope> classes = getDeclaredClasses();
         Collection<? extends InterfaceScope> interfaces = getDeclaredInterfaces();
         Collection<? extends TraitScope> traits = getDeclaredTraits();
-        return ModelUtils.merge(classes, interfaces, traits);
+        Collection<? extends EnumScope> enums = getDeclaredEnums();
+        return ModelUtils.merge(classes, interfaces, traits, enums);
     }
 
 

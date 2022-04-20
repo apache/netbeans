@@ -242,8 +242,8 @@ public class ModulesNodeFactory implements NodeFactory {
     /** Represent one module (a suite component) node. */
     private static final class SuiteComponentNode extends AbstractNode {
 
-        private final static Action REMOVE_ACTION = new RemoveSuiteComponentAction();
-        private final static Action OPEN_ACTION = new OpenProjectAction();
+        private static final Action REMOVE_ACTION = new RemoveSuiteComponentAction();
+        private static final Action OPEN_ACTION = new OpenProjectAction();
 
         public SuiteComponentNode(final NbModuleProject suiteComponent) {
             super(Children.LEAF, Lookups.fixed(new Object[] {suiteComponent}));

@@ -38,7 +38,7 @@ import org.openide.util.lookup.ServiceProvider;
  * Opens an FXML file in SceneBuilder instance if available.
  */
 public final class SceneBuilderFXMLOpener extends FXMLOpener {
-    final private static Logger LOG = Logger.getLogger(SceneBuilderFXMLOpener.class.getName());
+    private static final Logger LOG = Logger.getLogger(SceneBuilderFXMLOpener.class.getName());
     private Settings settings = Settings.getInstance();
  
     @Override

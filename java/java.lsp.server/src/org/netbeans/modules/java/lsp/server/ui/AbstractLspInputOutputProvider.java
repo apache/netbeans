@@ -58,12 +58,12 @@ public abstract class AbstractLspInputOutputProvider implements InputOutputProvi
 
     @Override
     public final PrintWriter getOut(LspIO io) {
-        return io.out;
+        return new PrintWriter(io.out);
     }
 
     @Override
     public final PrintWriter getErr(LspIO io) {
-        return io.err;
+        return new PrintWriter(io.err);
     }
 
     @Override
@@ -94,7 +94,7 @@ public abstract class AbstractLspInputOutputProvider implements InputOutputProvi
 
     @Override
     public final boolean isIOClosed(LspIO io) {
-        return io.closed;
+        return io.isClosed();
     }
 
     @Override
@@ -133,16 +133,15 @@ public abstract class AbstractLspInputOutputProvider implements InputOutputProvi
         private final IOContext ctx;
         final Lookup lookup;
         final Reader in;
-        final PrintWriter out;
-        final PrintWriter err;
-        volatile boolean closed;
+        final LspWriter out;
+        final LspWriter err;
 
         LspIO(String name, IOContext ioCtx, Lookup lookup) {
             this.name = name;
             this.ctx = ioCtx;
             this.lookup = lookup;
-            this.out = new PrintWriter(new LspWriter(true));
-            this.err = new PrintWriter(new LspWriter(false));
+            this.out = new LspWriter(true);
+            this.err = new LspWriter(false);
             Reader in;
             try {
                 InputStream is = ioCtx.getStdIn();
@@ -155,7 +154,9 @@ public abstract class AbstractLspInputOutputProvider implements InputOutputProvi
                     }
                 };
             } catch (IOException ex) {
-                err.write(ex.getLocalizedMessage());
+                try {
+                    err.write(ex.getLocalizedMessage());
+                } catch (IOException ioex) {}
                 in = new CharArrayReader(new char[0]) {
                     @Override
                     public void close() {
@@ -165,8 +166,13 @@ public abstract class AbstractLspInputOutputProvider implements InputOutputProvi
             this.in = in;
         }
 
+        boolean isClosed() {
+            return out.closed && err.closed;
+        }
+
         private final class LspWriter extends Writer {
             private final boolean stdIO;
+            volatile boolean closed;
 
             LspWriter(boolean stdIO) {
                 this.stdIO = stdIO;

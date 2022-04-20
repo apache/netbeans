@@ -20,6 +20,7 @@ package org.netbeans.modules.ant.freeform;
 
 import java.io.File;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.spi.project.support.ant.AntProjectHelper;
@@ -58,7 +59,7 @@ public class FreeformFileEncodingQueryImplTest extends TestBase {
                 appendChild(doc.createElementNS(Util.NAMESPACE, "source-folder"));
         sf.appendChild(doc.createElementNS(Util.NAMESPACE, "label")).appendChild(doc.createTextNode("Sources"));
         sf.appendChild(doc.createElementNS(Util.NAMESPACE, "location")).appendChild(doc.createTextNode("../ext"));
-        final Charset expectedCharset = Charset.forName("UTF-8");
+        final Charset expectedCharset = StandardCharsets.UTF_8;
         sf.appendChild(doc.createElementNS(Util.NAMESPACE,"encoding")).appendChild(doc.createTextNode(expectedCharset.name()));
         Util.putPrimaryConfigurationData(helper, data);
         ProjectManager.getDefault().saveProject(p);

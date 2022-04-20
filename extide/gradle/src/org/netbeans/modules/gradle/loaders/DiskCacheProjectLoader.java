@@ -39,8 +39,9 @@ public class DiskCacheProjectLoader extends AbstractProjectLoader {
     @Override
     public GradleProject load() {
         ProjectInfoDiskCache cache = ProjectInfoDiskCache.get(ctx.project.getGradleFiles());
+        LOG.log(Level.FINER, "Loaded from cache: {0}, valid: {1}", new Object[] { ctx.previous, cache.isValid() });
         if (cache.isCompatible()) {
-            GradleProject prev = createGradleProject(cache.loadData());
+            GradleProject prev = createGradleProject(ctx.project.getGradleFiles(), cache.loadData());
             LOG.log(Level.FINER, "Loaded from cache: {0}, valid: {1}", new Object[] { prev, cache.isValid() });
             if (cache.isValid() && GradleArtifactStore.getDefault().sanityCheckCachedProject(prev)) {
                 updateSubDirectoryCache(prev);

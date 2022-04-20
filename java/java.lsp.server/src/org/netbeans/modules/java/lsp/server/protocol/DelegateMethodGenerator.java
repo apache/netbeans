@@ -126,7 +126,7 @@ public final class DelegateMethodGenerator extends CodeActionsProvider {
         data.put(OFFSET, offset);
         data.put(TYPE, typeItem);
         data.put(FIELDS, fields);
-        return Collections.singletonList(createCodeAction(Bundle.DN_GenerateDelegateMethod(), CODE_GENERATOR_KIND, data, null));
+        return Collections.singletonList(createCodeAction(Bundle.DN_GenerateDelegateMethod(), CODE_GENERATOR_KIND, data, "workbench.action.focusActiveEditorGroup"));
     }
 
     @Override

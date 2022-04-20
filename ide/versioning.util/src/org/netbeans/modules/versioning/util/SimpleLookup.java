@@ -98,7 +98,7 @@ public class SimpleLookup extends AbstractLookup {
     }
     
     /** Copy from AbstractLookup.SimpleItem */
-    private final static class SimpleItem<T> extends Pair<T> {
+    private static final class SimpleItem<T> extends Pair<T> {
         private T obj;
 
         /** Create an item.

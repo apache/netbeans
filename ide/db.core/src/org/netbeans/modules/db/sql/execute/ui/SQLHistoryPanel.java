@@ -70,8 +70,8 @@ public class SQLHistoryPanel extends javax.swing.JPanel {
     public static final String SAVE_STATEMENTS_CLEARED = ""; // NOI18N  
     public static final Logger LOGGER = Logger.getLogger(SQLHistoryPanel.class.getName());
     private JEditorPane editorPane;
-    final private ListSelectionModel sqlTableSelektion;
-    final private DateFormat dateTimeFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
+    private final ListSelectionModel sqlTableSelektion;
+    private final DateFormat dateTimeFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
 
     /** Creates new form SQLHistoryPanel */
     public SQLHistoryPanel(final JEditorPane editorPane) {

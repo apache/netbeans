@@ -155,6 +155,6 @@ function checkSystemversion() {
     <pkg-ref id="ident.pkg.javaee" version="0.0.0.0.1" installKBytes="@SIZE_JAVAEE@" auth="Root" onConclusion="None">javaee-@NB_ID@.pkg</pkg-ref>
     <pkg-ref id="ident.pkg.webcommon" version="0.0.0.0.1" installKBytes="@SIZE_WEBCOMMON@" auth="Root" onConclusion="None">webcommon-@NB_ID@.pkg</pkg-ref>
     <pkg-ref id="ident.pkg.php" version="0.0.0.0.1" installKBytes="@SIZE_PHP@" auth="Root" onConclusion="None">php-@NB_ID@.pkg</pkg-ref>
-    <pkg-ref id="ident.pkg.cpp" version="0.0.0.0.1" installKBytes="@SIZE_CPP@" auth="Root" onConclusion="None">cpp-@NB_ID@.pkg</pkg-ref>
+    <!-- <pkg-ref id="ident.pkg.cpp" version="0.0.0.0.1" installKBytes="@SIZE_CPP@" auth="Root" onConclusion="None">cpp-@NB_ID@.pkg</pkg-ref> -->
     <pkg-ref id="ident.pkg.postinstallscripts" version="0.0.0.0.1" auth="Root" onConclusion="None">postinstallscripts.pkg</pkg-ref>
 </installer-gui-script>

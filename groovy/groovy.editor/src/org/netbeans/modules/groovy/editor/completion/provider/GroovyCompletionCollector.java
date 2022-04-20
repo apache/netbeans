@@ -382,10 +382,9 @@ public class GroovyCompletionCollector implements CompletionCollector {
         static String stripHtml( String htmlText ) {
             if( null == htmlText )
                 return null;
-            String res = htmlText.replaceAll( "<[^>]*>", "" ); // NOI18N // NOI18N
-            res = res.replaceAll( "&nbsp;", " " ); // NOI18N // NOI18N
-            res = res.trim();
-            return res;
+            return htmlText.replaceAll( "<[^>]*>", "" ) // NOI18N
+                           .replace( "&nbsp;", " " ) // NOI18N
+                           .trim();
         }
         
         @Override

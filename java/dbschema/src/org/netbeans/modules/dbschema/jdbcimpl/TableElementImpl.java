@@ -33,7 +33,7 @@ public class TableElementImpl extends DBElementImpl implements TableElement.Impl
     private DBElementsCollection columns;
     private DBElementsCollection indexes;
     private DBElementsCollection keys;
-    transient private DBElementsCollection columnPairs;
+    private transient DBElementsCollection columnPairs;
 
     private String table;
 
@@ -135,7 +135,7 @@ public class TableElementImpl extends DBElementImpl implements TableElement.Impl
     @Override
     public ColumnElement[] getColumns() {
         DBElement[] dbe = columns.getElements();
-        return (ColumnElement[]) Arrays.asList(dbe).toArray(new ColumnElement[dbe.length]);
+        return Arrays.asList(dbe).toArray(new ColumnElement[dbe.length]);
     }
   
     /** Find a column by name.
@@ -176,23 +176,23 @@ public class TableElementImpl extends DBElementImpl implements TableElement.Impl
                             rset = bridge.getDriverSpecification().getRow();
                             Object type = rset.get(new Integer(5));
                             if (type != null) {
-                                sqlType = (new Integer((String) rset.get(new Integer(5)))).intValue();
+                                sqlType = (new Integer(rset.get(new Integer(5)))).intValue();
                             } else {
                                 sqlType = 0; //java.sql.Types.NULL
                             }
                             // #192609: IllegalArgumentException: aType == null
                             if ("PostgreSQL".equalsIgnoreCase(dmd.getDatabaseProductName())) { // NOI18N
                                 if (Types.DISTINCT == sqlType) {
-                                    sqlType = (new Integer((String) rset.get(new Integer(22)))).intValue();
+                                    sqlType = (new Integer(rset.get(new Integer(22)))).intValue();
                                 }
                             }
-                            sqlTypeName = (String) rset.get(new Integer(6));
-                            colName = (String) rset.get(new Integer(4));
-                            colNull = (String) rset.get(new Integer(11));
-                            colSize = (String) rset.get(new Integer(7));
-                            colDec = (String) rset.get(new Integer(9));
+                            sqlTypeName = rset.get(new Integer(6));
+                            colName = rset.get(new Integer(4));
+                            colNull = rset.get(new Integer(11));
+                            colSize = rset.get(new Integer(7));
+                            colDec = rset.get(new Integer(9));
                             
-                            strAutoIncrement = (String)rset.get(new Integer(23));
+                            strAutoIncrement = rset.get(new Integer(23));
                             rset.clear();
                         } else {
                             sqlType = rs.getInt("DATA_TYPE"); //NOI18N
@@ -268,7 +268,7 @@ public class TableElementImpl extends DBElementImpl implements TableElement.Impl
     @Override
     public IndexElement[] getIndexes() {
         DBElement[] dbe = indexes.getElements();        
-        return (IndexElement[]) Arrays.asList(dbe).toArray(new IndexElement[dbe.length]);
+        return Arrays.asList(dbe).toArray(new IndexElement[dbe.length]);
     }
   
     /** Find an index by name.
@@ -309,9 +309,9 @@ public class TableElementImpl extends DBElementImpl implements TableElement.Impl
                 
                 String name, columnName;
                 boolean unq;
-                LinkedList idxs = new LinkedList();
+                LinkedList<String> idxs = new LinkedList<>();
                 if (rs != null) {
-                    Map rset = new HashMap();
+                    Map<Integer, String> rset = new HashMap<>();
                     String uniqueStr;
                     while (rs.next()) {
                         if (bridge != null) {
@@ -398,7 +398,7 @@ public class TableElementImpl extends DBElementImpl implements TableElement.Impl
     @Override
     public KeyElement[] getKeys() {
         DBElement[] dbe = keys.getElements();
-        return (KeyElement[]) Arrays.asList(dbe).toArray(new KeyElement[dbe.length]);
+        return Arrays.asList(dbe).toArray(new KeyElement[dbe.length]);
     }
   
     /** Find a key by name.
@@ -463,7 +463,7 @@ public class TableElementImpl extends DBElementImpl implements TableElement.Impl
 
         String name, fkColName, pkTableName, pkColName, c1, c2, s1, s2;
         if (rs != null) {
-            Map rset = new HashMap();
+            Map<Integer, String> rset = new HashMap<>();
             while (rs.next()) {
                 if (bridge != null) {
                     rset = bridge.getDriverSpecification().getRow();
@@ -559,11 +559,11 @@ public class TableElementImpl extends DBElementImpl implements TableElement.Impl
             Object keySeq;
             String colName;
             if (rs != null) {
-                Map rset = new HashMap();
+                Map<Integer, String> rset = new HashMap<>();
                 while (rs.next()) {
                     if (bridge != null) {
                         rset = bridge.getDriverSpecification().getRow();
-                        keySeq = (Object) rset.get(new Integer(5));
+                        keySeq = rset.get(new Integer(5));
                         colName = (String) rset.get(new Integer(4));
                         rset.clear();
                     } else {
@@ -597,7 +597,7 @@ public class TableElementImpl extends DBElementImpl implements TableElement.Impl
                         i++;
                     }
 
-                    LinkedList idxs = new LinkedList();
+                    LinkedList<String> idxs = new LinkedList<>();
                     for (Iterator it = cols.values().iterator(); it.hasNext();) {
                         // non-unique = false, thus the index is unique -- see initIndexes()
                         idxs.add(indexName + "." + it.next() + ".false"); // NOI18N
@@ -653,7 +653,7 @@ public class TableElementImpl extends DBElementImpl implements TableElement.Impl
     @Override
     public ColumnPairElement[] getColumnPairs() {
         DBElement[] dbe = columnPairs.getElements();
-        return (ColumnPairElement[]) Arrays.asList(dbe).toArray(new ColumnPairElement[dbe.length]);
+        return Arrays.asList(dbe).toArray(new ColumnPairElement[dbe.length]);
     }
     
     @Override

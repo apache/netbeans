@@ -79,5 +79,5 @@ public abstract class IOPosition {
      * Gets current position in IO
      * @return current position
      */
-    abstract protected Position currentPosition();
+    protected abstract Position currentPosition();
 }

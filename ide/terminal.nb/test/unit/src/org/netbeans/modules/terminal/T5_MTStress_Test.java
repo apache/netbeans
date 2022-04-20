@@ -29,8 +29,8 @@ import org.openide.windows.OutputWriter;
 
 public class T5_MTStress_Test extends TestSupport {
 
-    private final static int NCREATORS = 10;
-    private final static int NWRITERS = 10;
+    private static final int NCREATORS = 10;
+    private static final int NWRITERS = 10;
 
     public T5_MTStress_Test(String testName) {
 	super(testName);

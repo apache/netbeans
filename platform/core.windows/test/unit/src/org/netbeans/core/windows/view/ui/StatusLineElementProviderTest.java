@@ -46,9 +46,9 @@ public class StatusLineElementProviderTest extends NbTestCase {
         System.setProperty ("org.openide.util.Lookup", "org.netbeans.core.windows.view.ui.StatusLineElementProviderTest$Lkp");
     }
     
-    static private InstanceContent ic = null;
-    static private Impl impl1, impl2;
-    static private JPanel statusLine;
+    private static InstanceContent ic = null;
+    private static Impl impl1, impl2;
+    private static JPanel statusLine;
     
     public StatusLineElementProviderTest(String name) {
         super(name);

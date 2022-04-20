@@ -317,7 +317,7 @@ public class UpdateManagerImpl extends Object {
             return units.get(moduleCodeName);
         }
         
-        synchronized private void createMaps () {
+        private synchronized void createMaps () {
             availableEagers = new HashSet<UpdateElement> (getUnits ().size ());
             installedEagers = new HashSet<UpdateElement> (getUnits ().size ());
             token2installedProviders = new HashMap<String, Collection<ModuleInfo>> (11);

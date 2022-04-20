@@ -22,7 +22,6 @@ package org.netbeans.modules.java.hints.declarative;
 import java.io.IOException;
 import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.Collection;
@@ -34,7 +33,6 @@ import java.util.Map.Entry;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.java.classpath.ClassPath;
-import org.netbeans.api.java.platform.JavaPlatform;
 import org.netbeans.modules.java.hints.declarative.Condition.MethodInvocation.ParameterKind;
 import org.netbeans.modules.java.hints.declarative.conditionapi.Context;
 import org.netbeans.modules.java.hints.declarative.conditionapi.DefaultRuleUtilities;
@@ -53,12 +51,12 @@ public class MethodInvocationContext {
     /*not private for tests*/final List<Class<?>> ruleUtilities;
     
     public MethodInvocationContext() {
-        ruleUtilities = new LinkedList<Class<?>>();
+        ruleUtilities = new LinkedList<>();
         ruleUtilities.add(DefaultRuleUtilities.class);
     }
 
     public Method linkMethod(String methodName, Map<? extends String, ? extends ParameterKind> params) {
-        Collection<Class<?>> paramTypes = new LinkedList<Class<?>>();
+        Collection<Class<?>> paramTypes = new LinkedList<>();
 
         for (Entry<? extends String, ? extends ParameterKind> e : params.entrySet()) {
             switch ((ParameterKind) e.getValue()) {
@@ -68,10 +66,11 @@ public class MethodInvocationContext {
                 case STRING_LITERAL:
                     paramTypes.add(String.class);
                     break;
+                case INT_LITERAL:
+                    paramTypes.add(int.class);
+                    break;
                 case ENUM_CONSTANT:
-                    Enum<?> constant = loadEnumConstant(e.getKey());
-
-                    paramTypes.add(constant.getDeclaringClass());
+                    paramTypes.add(loadEnumConstant(e.getKey()).getDeclaringClass());
                     break;
             }
         }
@@ -124,13 +123,13 @@ public class MethodInvocationContext {
     }
 
     public boolean invokeMethod(Context ctx, @NonNull Method method, Map<? extends String, ? extends ParameterKind> params) {
-        Collection<Object> paramValues = new LinkedList<Object>();
+        Collection<Object> paramValues = new LinkedList<>();
         int i = 0;
         Collection<Object> vararg = null;
 
         for (Entry<? extends String, ? extends ParameterKind> e : params.entrySet()) {
             if (++i == method.getParameterTypes().length && method.isVarArgs()) {
-                vararg = new LinkedList<Object>();
+                vararg = new LinkedList<>();
             }
             Object toAdd;
             switch ((ParameterKind) e.getValue()) {
@@ -140,10 +139,11 @@ public class MethodInvocationContext {
                 case STRING_LITERAL:
                     toAdd = e.getKey();
                     break;
+                case INT_LITERAL:
+                    toAdd = Integer.valueOf(e.getKey());
+                    break;
                 case ENUM_CONSTANT:
-                    Enum<?> constant = loadEnumConstant(e.getKey());
-
-                    toAdd = constant;
+                    toAdd = loadEnumConstant(e.getKey());
                     break;
                 default:
                     throw new IllegalStateException();
@@ -171,17 +171,7 @@ public class MethodInvocationContext {
             Object instance = c.newInstance(ctx, matcher);
 
             return (Boolean) method.invoke(instance, paramValues.toArray(new Object[0]));
-        } catch (InstantiationException ex) {
-            throw new IllegalStateException(ex);
-        } catch (InvocationTargetException ex) {
-            throw new IllegalStateException(ex);
-        } catch (IllegalAccessException ex) {
-            throw new IllegalStateException(ex);
-        } catch (IllegalArgumentException ex) {
-            throw new IllegalStateException(ex);
-        } catch (NoSuchMethodException ex) {
-            throw new IllegalStateException(ex);
-        } catch (SecurityException ex) {
+        } catch (ReflectiveOperationException | IllegalArgumentException | SecurityException ex) {
             throw new IllegalStateException(ex);
         }
     }
@@ -243,9 +233,8 @@ public class MethodInvocationContext {
             ClassLoader l = new ClassLoader(MethodInvocationContext.class.getClassLoader()) {
                 @Override
                 protected Class<?> findClass(String name) throws ClassNotFoundException {
-                    if (classes.containsKey(name)) {
-                        byte[] bytes = classes.get(name);
-                        
+                    byte[] bytes = classes.get(name);
+                    if (bytes != null) {
                         return defineClass(name, bytes, 0, bytes.length);
                     }
                     
@@ -256,9 +245,7 @@ public class MethodInvocationContext {
             Class<?> c = l.loadClass("$." + className);
 
             ruleUtilities.add(c);
-        } catch (ClassNotFoundException ex) {
-            Exceptions.printStackTrace(ex);
-        } catch (IOException ex) {
+        } catch (ClassNotFoundException | IOException ex) {
             Exceptions.printStackTrace(ex);
         }
     }

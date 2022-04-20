@@ -598,7 +598,7 @@ public abstract class PayaraConfiguration implements
         return J2EEBaseVersion.getVersion(module.getType(), module.getModuleVersion());
     }
 
-    final public org.netbeans.modules.j2ee.dd.api.common.RootInterface getStandardRootDD() {
+    public final org.netbeans.modules.j2ee.dd.api.common.RootInterface getStandardRootDD() {
         org.netbeans.modules.j2ee.dd.api.common.RootInterface stdRootDD = null;
         J2eeModuleHelper j2eeModuleHelper = J2eeModuleHelper.getSunDDModuleHelper(module.getType());
         if(j2eeModuleHelper != null) {
@@ -607,7 +607,7 @@ public abstract class PayaraConfiguration implements
         return stdRootDD;
     }
 
-    final public Webservices getWebServicesRootDD() {
+    public final Webservices getWebServicesRootDD() {
         Webservices wsRootDD = null;
         J2eeModuleHelper j2eeModuleHelper = J2eeModuleHelper.getSunDDModuleHelper(module.getType());
         if(j2eeModuleHelper != null) {

@@ -141,7 +141,7 @@ public class PersistenceManager implements LazyDebuggerManagerListener {
             if (bs[i] instanceof AntBreakpoint)
                 bb.add (bs [i]);
         bs = new Breakpoint [bb.size ()];
-        return (Breakpoint[]) bb.toArray (bs);
+        return bb.toArray(bs);
     }
 }
 

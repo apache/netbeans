@@ -87,7 +87,7 @@ public class HtmlIndexer extends EmbeddingIndexer {
         });
     }
     
-    static private void fireChangeImpl(FileObject fo) {
+    private static void fireChangeImpl(FileObject fo) {
         Project p = FileOwnerQuery.getOwner(fo);
         if (p == null) {
             // no project to notify

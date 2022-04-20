@@ -128,7 +128,7 @@
                     <compile-dependency/>
                     <run-dependency>
                         <release-version>1</release-version>
-                        <specification-version>1.4</specification-version>
+                        <specification-version>1.9</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -138,6 +138,14 @@
                     <run-dependency>
                         <release-version>1</release-version>
                         <specification-version>1.59</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.netbeans.api.templates</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>1.24</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -407,7 +415,7 @@
                     <compile-dependency/>
                     <run-dependency>
                         <release-version>0</release-version>
-                        <specification-version>0.5</specification-version>
+                        <specification-version>0.8</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -454,6 +462,17 @@
                         <specification-version>1.101</specification-version>
                     </run-dependency>
                 </dependency>
+
+                <dependency>
+                    <code-name-base>org.netbeans.modules.projectuiapi</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <release-version>1</release-version>
+                        <implementation-version/>
+                    </run-dependency>
+                </dependency>
+
                 <dependency>
                     <code-name-base>org.netbeans.modules.queries</code-name-base>
                     <build-prerequisite/>
@@ -537,7 +556,7 @@
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
-                        <specification-version>7.52</specification-version>
+                        <specification-version>7.61</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -730,6 +749,7 @@
                     <test-dependency>
                         <code-name-base>org.netbeans.modules.projectui</code-name-base>
                         <recursive/>
+                        <compile-dependency/>
                     </test-dependency>
                     <test-dependency>
                         <code-name-base>org.netbeans.modules.settings</code-name-base>

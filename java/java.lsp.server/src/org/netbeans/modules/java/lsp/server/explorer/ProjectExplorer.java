@@ -18,21 +18,34 @@
  */
 package org.netbeans.modules.java.lsp.server.explorer;
 
+import java.net.MalformedURLException;
+import java.net.URI;
 import org.netbeans.modules.java.lsp.server.explorer.api.ExplorerManagerFactory;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
+import org.netbeans.api.project.FileOwnerQuery;
+import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ui.OpenProjects;
+import org.netbeans.spi.project.ui.LogicalViewProvider;
 import org.openide.explorer.ExplorerManager;
+import org.openide.filesystems.FileObject;
+import org.openide.filesystems.URLMapper;
+import org.openide.nodes.Node;
+import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.RequestProcessor;
 import org.openide.util.lookup.ServiceProvider;
+import org.openide.util.lookup.ServiceProviders;
 
 /**
  *
  * @author sdedic
  */
-@ServiceProvider(path = "Explorers/" + ProjectExplorer.ID_PROJECT_LOGICAL_VIEW, service = ExplorerManagerFactory.class)
-public class ProjectExplorer implements ExplorerManagerFactory {
+@ServiceProviders({
+    @ServiceProvider(path = "Explorers/" + ProjectExplorer.ID_PROJECT_LOGICAL_VIEW, service = ExplorerManagerFactory.class),
+    @ServiceProvider(path = "Explorers/" + ProjectExplorer.ID_PROJECT_LOGICAL_VIEW, service = PathFinder.class)
+})
+public class ProjectExplorer implements ExplorerManagerFactory, PathFinder {
     static final String ID_PROJECT_LOGICAL_VIEW = "foundProjects"; // NOI18N
     
     private static final RequestProcessor PROJECT_INIT_RP = new RequestProcessor(ProjectExplorer.class.getName());
@@ -43,5 +56,60 @@ public class ProjectExplorer implements ExplorerManagerFactory {
             return null;
         }
         return CompletableFuture.supplyAsync(() -> OpenProjects.getDefault().createLogicalView(), PROJECT_INIT_RP);
+    }
+
+    @Override
+    public Node findPath(Node root, Object target) {
+        FileObject file = null;
+        
+        if (target instanceof FileObject) {
+            file = (FileObject)target;
+        } else {
+            URI uri = null;
+            if (target instanceof String) {
+                uri = URI.create(target.toString());
+            } else if (target instanceof URI) {
+                uri = (URI)target;
+            }
+            if (uri == null) {
+                return null;
+            }
+            try {
+                file = URLMapper.findFileObject(uri.toURL());
+            } catch (MalformedURLException ex) {
+                Exceptions.printStackTrace(ex);
+                return null;
+            }
+        }
+        if (file == null) {
+            return null;
+        }
+        Project p = FileOwnerQuery.getOwner(file); 
+        if (p == null) {
+            return null;
+        }
+        Node[] projectChildren = root.getChildren().getNodes(true);
+        if (projectChildren.length == 0) {
+            // this is mega-ugly, but the project's node initializes lazily somehow and
+            // sometimes does not return proper children on first query.
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+            projectChildren = root.getChildren().getNodes(true);
+        }
+        for (Node n : projectChildren) {
+            Project nodeProject = n.getLookup().lookup(Project.class);
+            if (nodeProject != p) {
+                continue;
+            }
+            org.netbeans.spi.project.ui.PathFinder ppf = p.getLookup().lookup(org.netbeans.spi.project.ui.PathFinder.class);
+            if (ppf == null) {
+                continue;
+            }
+            return ppf.findPath(n, file);
+        }
+        return null;
     }
 }

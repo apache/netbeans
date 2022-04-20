@@ -29,9 +29,8 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -77,7 +76,6 @@ import org.openide.modules.InstalledFileLocator;
 import org.openide.util.Mutex;
 import org.openide.util.MutexException;
 import org.openide.util.NbBundle;
-import org.openide.util.Utilities;
 import org.xml.sax.SAXException;
 
 
@@ -157,7 +155,7 @@ public class WSUtils {
                 BufferedWriter bw = null;
                 try {
                     bw = new BufferedWriter(new OutputStreamWriter(
-                            jaxWsFo.getOutputStream(lock), Charset.forName("UTF-8")));  // NOI18N
+                            jaxWsFo.getOutputStream(lock), StandardCharsets.UTF_8));
                     bw.write(jaxWsContent);
                 } finally {
                     lock.releaseLock();
@@ -181,8 +179,7 @@ public class WSUtils {
                 OutputStream os = null;
                 try {
                     os = handlerFo.getOutputStream(lock);
-                    bw = new BufferedWriter(new OutputStreamWriter(os, 
-                            Charset.forName("UTF-8")));             // NOI18N
+                    bw = new BufferedWriter(new OutputStreamWriter(os, StandardCharsets.UTF_8));
                     bw.write(handlerContent);
                     bw.close();
                 } finally {
@@ -224,7 +221,7 @@ public class WSUtils {
                 OutputStreamWriter osw = null;
                 try {
                     os = sunJaxwsFo.getOutputStream(lock);
-                    osw = new OutputStreamWriter(os, Charset.forName("UTF-8"));     // NOI18N
+                    osw = new OutputStreamWriter(os, StandardCharsets.UTF_8);
                     bw = new BufferedWriter(osw);
                     bw.write(sunJaxwsContent);
                 } finally {
@@ -360,7 +357,7 @@ public class WSUtils {
     }
     
     private static String getJaxWsApiDir() {
-        File jaxwsApi = InstalledFileLocator.getDefault().locate("modules/ext/jaxws22/api/jaxws-api.jar", null, false); // NOI18N
+        File jaxwsApi = InstalledFileLocator.getDefault().locate("modules/ext/jaxws22/api/jakarta.xml.ws-api.jar", null, false); // NOI18N
         if (jaxwsApi!=null) {
             File jaxbApi =  InstalledFileLocator.getDefault().locate("modules/ext/jaxb/api/jaxb-api.jar", null, false); // NOI18N
             return jaxwsApi.getParent()+(jaxbApi != null? ":"+jaxbApi.getParent() : ""); //NOI18N
@@ -408,9 +405,9 @@ public class WSUtils {
 
     private static List<URL> getJaxWsApiJars() throws IOException {
         List<URL> urls = new ArrayList<URL>();
-        File apiJar = InstalledFileLocator.getDefault().locate("modules/ext/jaxws22/api/jaxws-api.jar", null, false); // NOI18N
+        File apiJar = InstalledFileLocator.getDefault().locate("modules/ext/jaxws22/api/jakarta.xml.ws-api.jar", null, false); // NOI18N
         if (apiJar != null) {
-            URL url = new URL("jar:nbinst://org.netbeans.modules.websvc.jaxws21api/modules/ext/jaxws22/api/jaxws-api.jar!/");
+            URL url = new URL("jar:nbinst://org.netbeans.modules.websvc.jaxws21api/modules/ext/jaxws22/api/jakarta.xml.ws-api.jar!/");
             /*URL url = apiJar.toURI().toURL();
             if (FileUtil.isArchiveFile(url)) {
                 urls.add(FileUtil.getArchiveRoot(url));
@@ -597,7 +594,7 @@ public class WSUtils {
                 BufferedWriter bw =null;
                 try {
                     bw = new BufferedWriter(new OutputStreamWriter(
-                            jaxWsCatalog.getOutputStream(lock), Charset.forName("UTF-8"))); // NOI18N
+                            jaxWsCatalog.getOutputStream(lock), StandardCharsets.UTF_8));
                     bw.write(jaxWsContent);
                 } finally {
                     lock.releaseLock();
@@ -616,8 +613,7 @@ public class WSUtils {
         boolean found = false;
         try {
             br = new BufferedReader(new InputStreamReader( 
-                    new FileInputStream( FileUtil.toFile(jaxWsFo)), 
-                        Charset.forName("UTF-8")));                 // NOI18N
+                    new FileInputStream(FileUtil.toFile(jaxWsFo)), StandardCharsets.UTF_8));
             String line = null;
             while ((line = br.readLine()) != null) {
                 if (line.contains("<client ")) { //NOI18N
@@ -638,8 +634,7 @@ public class WSUtils {
         boolean found = false;
         try {
             br = new BufferedReader(new InputStreamReader( 
-                    new FileInputStream( FileUtil.toFile(jaxWsFo)), 
-                        Charset.forName("UTF-8")));                 // NOI18N
+                    new FileInputStream(FileUtil.toFile(jaxWsFo)), StandardCharsets.UTF_8));
             String line = null;
             while ((line = br.readLine()) != null) {
                 if (line.contains("<client ") || line.contains("<service ")) { //NOI18N

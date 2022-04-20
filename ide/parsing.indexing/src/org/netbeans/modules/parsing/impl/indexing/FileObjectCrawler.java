@@ -169,8 +169,9 @@ NEXT_FILE:      for(FileObject f : files) {
                     }
                     cluster.add(f);
                 }
-                for(FileObject parent : clusters.keySet()) {
-                    Set<FileObject> cluster = clusters.get(parent);
+                for(Map.Entry<FileObject, Set<FileObject>> clusterEntry : clusters.entrySet()) {
+                    FileObject parent = clusterEntry.getKey();
+                    Set<FileObject> cluster = clusterEntry.getValue();
                     StringBuilder relativePath = relPaths.get(parent);
                     if (relativePath != null) {
                         finished = collect(
@@ -454,8 +455,9 @@ NEXT_FILE:      for(FileObject f : files) {
         }
         public static void logHistogram(Level level, Map<String, Integer> data) {
             Map<Integer, Set<String>> sortedMap = new TreeMap<>(REVERSE);
-            for(String item : data.keySet()) {
-                Integer freq = data.get(item);
+            for(Map.Entry<String, Integer> entry : data.entrySet()) {
+                String item = entry.getKey();
+                Integer freq = entry.getValue();
                 Set<String> items = sortedMap.get(freq);
                 if (items == null) {
                     items = new TreeSet<>();

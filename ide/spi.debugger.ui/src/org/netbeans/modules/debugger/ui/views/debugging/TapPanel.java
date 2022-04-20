@@ -278,7 +278,7 @@ public final class TapPanel extends javax.swing.JPanel {
 
     }
     
-    final static class TrivialLayout implements LayoutManager {
+    static final class TrivialLayout implements LayoutManager {
         
         public void addLayoutComponent (String name, Component comp) {
             //do nothing

@@ -645,6 +645,16 @@ PHP_TYPE_NEVER=[n][e][v][e][r]
     return PHPTokenId.PHP_INTERFACE;
 }
 
+<ST_PHP_IN_SCRIPTING>"enum"{WHITESPACE}("extends"|"implements") {
+    yypushback(yylength() - 4); // 4: enum length
+    return PHPTokenId.PHP_STRING;
+}
+
+<ST_PHP_IN_SCRIPTING>"enum"{WHITESPACE}[a-zA-Z_\x80-\xff] {
+    yypushback(yylength() - 4); // 4: enum length
+    return PHPTokenId.PHP_ENUM;
+}
+
 <ST_PHP_IN_SCRIPTING>"extends" {
     return PHPTokenId.PHP_EXTENDS;
 }

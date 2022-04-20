@@ -30,6 +30,7 @@ import java.lang.reflect.Modifier;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLStreamHandler;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -209,7 +210,7 @@ public class MockServices {
                     }
                     if (!impls.isEmpty()) {
                         final ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                        PrintWriter pw = new PrintWriter(new OutputStreamWriter(baos, "UTF-8"));
+                        PrintWriter pw = new PrintWriter(new OutputStreamWriter(baos, StandardCharsets.UTF_8));
                         for (String impl : impls) {
                             pw.println(impl);
                             pw.println("#position=100");

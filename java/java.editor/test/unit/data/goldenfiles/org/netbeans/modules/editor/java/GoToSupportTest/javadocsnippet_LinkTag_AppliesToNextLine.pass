@@ -1,0 +1,10 @@
+<html><body><font size='+0'><b><a href='*0'>test.&#x200B;Test</a></b></font><pre>public void <b>testLinkTag_AppliesToNextLine</b>()</pre><p>A simple program
+
+ <pre><code> class HelloWorld {
+     public static void main(String... args) {
+         
+         System.out.println("Hello World!");
+ }
+ }
+ 
+</code></pre><p>

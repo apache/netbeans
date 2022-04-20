@@ -135,6 +135,15 @@ public final class ModelUtils {
         return retval;
     }
 
+    public static Collection<? extends EnumScope> getDeclaredEnums(FileScope fileScope) {
+        List<EnumScope> retval = new ArrayList<>();
+        Collection<? extends NamespaceScope> declaredNamespaces = fileScope.getDeclaredNamespaces();
+        for (NamespaceScope namespace : declaredNamespaces) {
+            retval.addAll(namespace.getDeclaredEnums());
+        }
+        return retval;
+    }
+
     public static Collection<? extends ConstantElement> getDeclaredConstants(FileScope fileScope) {
         List<ConstantElement> retval = new ArrayList<>();
         Collection<? extends NamespaceScope> declaredNamespaces = fileScope.getDeclaredNamespaces();

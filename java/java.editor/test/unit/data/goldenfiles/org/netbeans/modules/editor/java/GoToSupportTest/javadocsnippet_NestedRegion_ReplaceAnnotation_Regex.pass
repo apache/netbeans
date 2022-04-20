@@ -1,0 +1,10 @@
+<html><body><font size='+0'><b><a href='*0'>test.&#x200B;Test</a></b></font><pre>public void <b>testNestedRegion_ReplaceAnnotation_Regex</b>()</pre><p><pre><code> class HelloWorld<span style="background-color:yellow;">1</span> {
+     public static void main(String... args) {
+         UPPERystem.out.println(num);  
+         UPPERystem.out.println(num);
+         UPPERystem.out.println("UPPER"); 
+         System.out.print(num);
+ }
+ }
+ 
+</code></pre><p>

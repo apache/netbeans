@@ -85,7 +85,7 @@ public abstract class AbstractTestQueryProvider implements RepositoryIndexQueryP
         return false;
     }
 
-    abstract protected String getID();
+    protected abstract String getID();
 
     @Override
     public ArchetypeQueries getArchetypeQueries() {

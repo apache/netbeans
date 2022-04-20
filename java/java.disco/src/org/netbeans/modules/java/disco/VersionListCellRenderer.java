@@ -18,7 +18,7 @@
  */
 package org.netbeans.modules.java.disco;
 
-import io.foojay.api.discoclient.pkg.TermOfSupport;
+import eu.hansolo.jdktools.TermOfSupport;
 import java.awt.Component;
 import java.util.Collections;
 import java.util.Map;

@@ -304,10 +304,12 @@ public class MavenProjectGrammar extends AbstractSchemaBasedGrammar {
                 return false;
             }
         });
+
         List<GrammarResult> toReturn = new ArrayList<GrammarResult>();
         Collection<String> params = new HashSet<String>();
+
         while (it.hasNext()) {
-            Element el = (Element)it.next();
+            Element el = it.next();
             String editable = el.getChildText("editable"); //NOI18N
             if ("true".equalsIgnoreCase(editable)) { //NOI18N
                 String name = el.getChildText("name"); //NOI18N

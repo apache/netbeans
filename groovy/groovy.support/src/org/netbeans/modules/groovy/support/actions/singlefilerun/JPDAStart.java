@@ -81,10 +81,9 @@ public class JPDAStart implements Runnable {
             try {
 
                 ListeningConnector lc = null;
-                Iterator i = Bootstrap.virtualMachineManager().
-                        listeningConnectors().iterator();
+                Iterator<ListeningConnector> i = Bootstrap.virtualMachineManager().listeningConnectors().iterator();
                 for (; i.hasNext();) {
-                    lc = (ListeningConnector) i.next();
+                    lc = i.next();
                     Transport t = lc.transport();
                     if (t != null && t.name().equals(getTransport())) {
                         break;

@@ -35,7 +35,7 @@ public class ProjectPersistenceScopeProvider implements PersistenceScopeProvider
     public PersistenceScope findPersistenceScope(FileObject fo) {
         Project project = FileOwnerQuery.getOwner(fo);
         if (project != null) {
-            PersistenceScopeProvider provider = (PersistenceScopeProvider)project.getLookup().lookup(PersistenceScopeProvider.class);
+            PersistenceScopeProvider provider = project.getLookup().lookup(PersistenceScopeProvider.class);
             if (provider != null) {
                 return provider.findPersistenceScope(fo);
             }

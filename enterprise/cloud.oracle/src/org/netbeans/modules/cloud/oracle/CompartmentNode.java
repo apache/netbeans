@@ -18,12 +18,18 @@
  */
 package org.netbeans.modules.cloud.oracle;
 
+import org.netbeans.modules.cloud.oracle.items.OCIItem;
 import java.util.List;
+import javax.swing.Action;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import org.netbeans.modules.cloud.oracle.items.CompartmentItem;
+import org.netbeans.modules.cloud.oracle.items.DatabaseItem;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
 import org.openide.nodes.Node;
+import org.openide.util.Utilities;
+import org.openide.util.lookup.Lookups;
 
 /**
  *
@@ -33,35 +39,43 @@ public class CompartmentNode extends AbstractNode {
     
     private static final String COMPARTMENT_ICON = "org/netbeans/modules/cloud/oracle/resources/compartment.svg"; // NOI18N
     
-    public CompartmentNode(OCIItem compartment) {
-        super(Children.create(new CompartmentNode.CompartmentChildFactory(compartment), true));
+    public CompartmentNode(CompartmentItem compartment) {
+        super(Children.create(
+                new CompartmentNode.CompartmentChildFactory(compartment), true), 
+                Lookups.fixed(compartment));
         setName(compartment.getName()); 
         setDisplayName(compartment.getName());
         setIconBaseWithExtension(COMPARTMENT_ICON);
     }
     
-    public static class CompartmentChildFactory extends org.openide.nodes.ChildFactory<OCIItem>
+    @Override
+    public Action[] getActions(boolean context) {
+        return Utilities.actionsForPath("Cloud/Oracle/Compartment/Actions").toArray(new Action[0]); // NOI18N
+    }
+    
+    public static class CompartmentChildFactory extends org.openide.nodes.ChildFactory<DatabaseItem>
             implements ChangeListener {
 
         private final String compartmentId;
 
-        public CompartmentChildFactory(OCIItem compartment) {
+        public CompartmentChildFactory(CompartmentItem compartment) {
             this.compartmentId = compartment.getId();
+            compartment.addChangeListener(this);
         }
 
         @Override
-        protected boolean createKeys(List<OCIItem> toPopulate) {
+        protected boolean createKeys(List<DatabaseItem> toPopulate) {
             toPopulate.addAll(OCIManager.getDefault().getDatabases(compartmentId));
             return true;
         }
 
         @Override
         public void stateChanged(ChangeEvent e) {
-            
+            refresh(false);
         }
 
         @Override
-        protected Node createNodeForKey(OCIItem key) {
+        protected Node createNodeForKey(DatabaseItem key) {
             AbstractNode node = new DatabaseNode(key);
             return node;
         }

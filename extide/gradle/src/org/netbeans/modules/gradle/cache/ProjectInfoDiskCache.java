@@ -19,17 +19,23 @@
 package org.netbeans.modules.gradle.cache;
 
 import java.io.File;
+import java.io.Serializable;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.WeakHashMap;
+import org.netbeans.api.annotations.common.CheckForNull;
+import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.modules.gradle.NbGradleProjectImpl;
 import org.netbeans.modules.gradle.cache.ProjectInfoDiskCache.QualifiedProjectInfo;
 import org.netbeans.modules.gradle.api.NbGradleProject.Quality;
 import org.netbeans.modules.gradle.api.NbProjectInfo;
+import org.netbeans.modules.gradle.api.NbProjectInfo.Report;
 import org.netbeans.modules.gradle.spi.GradleFiles;
 
 /**
@@ -39,7 +45,7 @@ import org.netbeans.modules.gradle.spi.GradleFiles;
 public final class ProjectInfoDiskCache extends AbstractDiskCache<GradleFiles, QualifiedProjectInfo> {
 
     // Increase this number if new info is gathered from the projects.
-    private static final int COMPATIBLE_CACHE_VERSION = 19;
+    private static final int COMPATIBLE_CACHE_VERSION = 21;
     private static final String INFO_CACHE_FILE_NAME = "project-info.ser"; //NOI18N
     private static final Map<GradleFiles, ProjectInfoDiskCache> DISK_CACHES = Collections.synchronizedMap(new WeakHashMap<>());
 
@@ -89,13 +95,101 @@ public final class ProjectInfoDiskCache extends AbstractDiskCache<GradleFiles, Q
         if (key.hasWrapper()) ret.add(key.getWrapperProperties());
         return ret;
     }
+    
+    private static CacheReport makeReport(Report r) {
+        CacheReport nested;
+        
+        if (r.getCause() != null) {
+            nested = makeReport(r.getCause());
+        } else {
+            nested = null;
+        }
+        return new CacheReport(r.getErrorClass(), r.getScriptLocation(), r.getLineNumber(), r.getMessage(), nested);
+    }
+    
+    private static Set<Report> makeReports(Collection<Report> reps) {
+        Set<Report> res = new LinkedHashSet<>();
+        for (Report r : reps) {
+            res.add(makeReport(r));
+        }
+        return res;
+    }
+
+    final static class CacheReport implements Report, Serializable {
+        private final String errorClass;
+        private final String location;
+        private final int line;
+        private final String message;
+        private final Report causedBy;
+
+        public CacheReport(String errorClass, String location, int line, String message, Report causedBy) {
+            this.errorClass = errorClass;
+            this.location = location;
+            this.line = line;
+            this.message = message;
+            this.causedBy = causedBy;
+        }
+
+        public String getErrorClass() {
+            return errorClass;
+        }
+
+        @Override
+        public String getScriptLocation() {
+            return location;
+        }
+
+        public int getLineNumber() {
+            return line;
+        }
+        
+        public @NonNull String getMessage() {
+            return message;
+        }
+
+        public @CheckForNull Report getCause() {
+            return causedBy;
+        }
+
+        @Override
+        public int hashCode() {
+            int hash = 3;
+            return hash;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (this == obj) {
+                return true;
+            }
+            if (obj == null) {
+                return false;
+            }
+            if (getClass() != obj.getClass()) {
+                return false;
+            }
+            final CacheReport other = (CacheReport) obj;
+            if (this.line != other.line) {
+                return false;
+            }
+            if (!Objects.equals(this.errorClass, other.errorClass)) {
+                return false;
+            }
+            if (!Objects.equals(this.location, other.location)) {
+                return false;
+            }
+            return Objects.equals(this.message, other.message);
+        }
+
+    }
 
     public static final class QualifiedProjectInfo implements NbProjectInfo {
 
         private final Quality quality;
         private final Map<String, Object> info;
-        private transient final Map<String, Object> ext;
+        private final transient Map<String, Object> ext;
         private final Set<String> problems;
+        private final Set<Report> reports;
         private final String gradleException;
 
         public QualifiedProjectInfo(Quality quality, NbProjectInfo pinfo) {
@@ -104,6 +198,7 @@ public final class ProjectInfoDiskCache extends AbstractDiskCache<GradleFiles, Q
             ext = new TreeMap<>(pinfo.getExt());
             problems = new LinkedHashSet<>(pinfo.getProblems());
             gradleException = pinfo.getGradleException();
+            reports = makeReports(pinfo.getReports());
         }
 
         @Override
@@ -119,6 +214,11 @@ public final class ProjectInfoDiskCache extends AbstractDiskCache<GradleFiles, Q
         @Override
         public Set<String> getProblems() {
             return problems;
+        }
+
+        @Override
+        public Set<Report> getReports() {
+            return reports;
         }
 
         @Override

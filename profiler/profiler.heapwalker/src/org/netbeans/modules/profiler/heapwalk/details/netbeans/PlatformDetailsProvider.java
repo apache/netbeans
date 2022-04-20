@@ -1303,7 +1303,7 @@ public class PlatformDetailsProvider extends DetailsProvider.Basic {
      * it is still more effective than String, because string stores length in field
      * and it costs 20 bytes aligned into 24
      */
-    private final static class CharBasedSequence implements CompactCharSequence, Comparable<CharSequence> {
+    private static final class CharBasedSequence implements CompactCharSequence, Comparable<CharSequence> {
 
         private final char[] value;
         private int hash;
@@ -1372,7 +1372,7 @@ public class PlatformDetailsProvider extends DetailsProvider.Basic {
      * compact char sequence implementation based on byte[]
      * size: 8 + 4 + 4 (= 16 bytes) + sizeof ('value')
      */
-    private final static class ByteBasedSequence implements CompactCharSequence, Comparable<CharSequence> {
+    private static final class ByteBasedSequence implements CompactCharSequence, Comparable<CharSequence> {
 
         private final byte[] value;
         private int hash;
@@ -1597,16 +1597,16 @@ public class PlatformDetailsProvider extends DetailsProvider.Basic {
     
     private static class DependencyResolver {
         
-        private final static int TYPE_MODULE = 1;
-        private final static int TYPE_PACKAGE = 2;
-        private final static int TYPE_JAVA = 3;
-        private final static int TYPE_IDE = 4;
-        private final static int TYPE_REQUIRES = 5;
-        private final static int TYPE_NEEDS = 6;
-        private final static int TYPE_RECOMMENDS = 7;
-        private final static int COMPARE_SPEC = 1;
-        private final static int COMPARE_IMPL = 2;
-        private final static int COMPARE_ANY = 3;
+        private static final int TYPE_MODULE = 1;
+        private static final int TYPE_PACKAGE = 2;
+        private static final int TYPE_JAVA = 3;
+        private static final int TYPE_IDE = 4;
+        private static final int TYPE_REQUIRES = 5;
+        private static final int TYPE_NEEDS = 6;
+        private static final int TYPE_RECOMMENDS = 7;
+        private static final int COMPARE_SPEC = 1;
+        private static final int COMPARE_IMPL = 2;
+        private static final int COMPARE_ANY = 3;
         
         static String toString(String name, String version, int type, int comparison) {
             StringBuilder buf = new StringBuilder(100);

@@ -567,7 +567,7 @@ final class TokensBrowserTopComponent extends TopComponent {
         }
     }
     
-    final static class ResolvableHelper implements Serializable {
+    static final class ResolvableHelper implements Serializable {
         private static final long serialVersionUID = 1L;
         public Object readResolve () {
             return TokensBrowserTopComponent.getDefault ();

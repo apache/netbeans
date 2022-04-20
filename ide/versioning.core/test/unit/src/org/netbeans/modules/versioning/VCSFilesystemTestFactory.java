@@ -134,7 +134,7 @@ public abstract class VCSFilesystemTestFactory extends NbTestSetup {
         map.put(test ,s );
     }
 
-    private synchronized static VCSFilesystemTestFactory getFromMap (Test test) {
+    private static synchronized VCSFilesystemTestFactory getFromMap (Test test) {
         LinkedList s = (LinkedList) map.get (test);
         VCSFilesystemTestFactory  retVal;
         try {

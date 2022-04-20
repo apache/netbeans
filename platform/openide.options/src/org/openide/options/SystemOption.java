@@ -344,7 +344,7 @@ WHILE:
 
                     if (useMethod) {
                         // set the value
-                        Method write = (Method) map.get(name);
+                        Method write = map.get(name);
 
                         if (write != null) {
                             // if you have where to set the value

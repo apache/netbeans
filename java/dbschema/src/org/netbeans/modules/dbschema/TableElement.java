@@ -398,7 +398,7 @@ public final class TableElement extends DBElement implements ColumnElementHolder
 
 		int count = keys.size();
 
-		return ((ForeignKeyElement[]) keys.toArray(new ForeignKeyElement[count]));
+		return (keys.toArray(new ForeignKeyElement[count]));
 	}
 
 	/** Finds a foreign key by name.
@@ -428,7 +428,7 @@ public final class TableElement extends DBElement implements ColumnElementHolder
 		if (keys == null)
             return null;
 
-		return ((UniqueKeyElement[]) keys.toArray(new UniqueKeyElement[keys.size()]));
+		return (keys.toArray(new UniqueKeyElement[keys.size()]));
 	}
 
 	/** Finds a unique key by name.

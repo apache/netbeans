@@ -777,7 +777,7 @@ public abstract class PositionEstimator {
 
     }
     
-    private static abstract class BaseEstimator extends PositionEstimator {
+    private abstract static class BaseEstimator extends PositionEstimator {
         
         JavaTokenId precToken;
         private ArrayList<String> separatorList;

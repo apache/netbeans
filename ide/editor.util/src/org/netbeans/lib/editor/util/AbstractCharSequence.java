@@ -90,7 +90,7 @@ public abstract class AbstractCharSequence implements CharSequence {
      * i.e. charsequence.equals(string) works
      * but string.equals(charsequence) does not.
      */
-    public static abstract class StringLike extends AbstractCharSequence {
+    public abstract static class StringLike extends AbstractCharSequence {
 
         public int hashCode() {
             return CharSequenceUtilities.stringLikeHashCode(this);

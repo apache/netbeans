@@ -235,7 +235,7 @@ public class ResourceStringFoldProvider extends ParsingFoldSupport{
                 message =  message.substring(0, newline);
                 
             }
-            message = message.replaceAll("\\.\\.\\.", "\u2026");
+            message = message.replace("...", "\u2026");
             
             FoldInfo info = FoldInfo.range(start, end, JavaFoldTypeProvider.BUNDLE_STRING).
                     withDescription(message).
@@ -365,7 +365,7 @@ public class ResourceStringFoldProvider extends ParsingFoldSupport{
                 if (pack.isUnnamed()) {
                     return null;
                 }
-                return pack.getQualifiedName().toString().replaceAll("\\.", "/") + "/" + bfn;
+                return pack.getQualifiedName().toString().replace(".", "/") + "/" + bfn;
             }
             return null;
         }

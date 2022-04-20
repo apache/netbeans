@@ -120,4 +120,13 @@ public interface NbCodeLanguageClient extends LanguageClient {
     public default boolean isRequestDispatcherThread() {
         return Boolean.TRUE.equals(Server.DISPATCHERS.get());
     }
+    
+    /**
+     * Update a configuration value. The updated configuration values are persisted.
+     * 
+     * @param params configuration update information.
+     */
+    @JsonRequest("config/update")
+    public CompletableFuture<Void> configurationUpdate(@NonNull UpdateConfigParams params);
+    
 }

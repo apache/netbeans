@@ -79,10 +79,10 @@ public final class JsfForm extends EntityClass implements ActiveEditorDrop, Pale
             stringBuffer.append("<").append(jsfLibrariesSupport.getLibraryPrefix(DefaultLibraryInfo.JSF_CORE)).append(":view>\n"); //NOI18N
         }
         stringBuffer.append(MessageFormat.format(
-                BEGIN[formType].replaceAll("__HTML__", jsfLibrariesSupport.getLibraryPrefix(DefaultLibraryInfo.HTML)), //NOI18N
+                BEGIN[formType].replace("__HTML__", jsfLibrariesSupport.getLibraryPrefix(DefaultLibraryInfo.HTML)), //NOI18N
                 new Object[] {variable}));
 
-        stringBuffer.append(END[formType].replaceAll("__HTML__", jsfLibrariesSupport.getLibraryPrefix(DefaultLibraryInfo.HTML))); //NOI18N
+        stringBuffer.append(END[formType].replace("__HTML__", jsfLibrariesSupport.getLibraryPrefix(DefaultLibraryInfo.HTML))); //NOI18N
         if (surroundWithFView) {
             stringBuffer.append("</").append(jsfLibrariesSupport.getLibraryPrefix(DefaultLibraryInfo.JSF_CORE)).append(":view>\n"); //NOI18N
         }

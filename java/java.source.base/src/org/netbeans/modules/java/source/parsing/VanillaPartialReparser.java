@@ -163,6 +163,7 @@ public class VanillaPartialReparser implements PartialReparser {
     }
 
     @Override
+    @SuppressWarnings({"AssertWithSideEffects", "NestedAssignment"})
     public boolean reparseMethod (final CompilationInfoImpl ci,
             final Snapshot snapshot,
             final MethodTree orig,
@@ -328,9 +329,9 @@ public class VanillaPartialReparser implements PartialReparser {
             if (t instanceof ThreadDeath) {
                 throw (ThreadDeath) t;
             }
-            boolean a = false;
-            assert a = true;
-            if (a) {
+            boolean enableDumpSource = false;
+            assert enableDumpSource = true; // Only dump sources with assertions enabled
+            if (enableDumpSource) {
                 JavacParser.dumpSource(ci, t);
             }
             t.printStackTrace();
@@ -607,8 +608,15 @@ public class VanillaPartialReparser implements PartialReparser {
         public static final class FactoryImpl extends TaskFactory {
 
             @Override
+            @SuppressWarnings({"AssertWithSideEffects", "NestedAssignment"})
             public Collection<? extends SchedulerTask> create(Snapshot snapshot) {
-                return Collections.singletonList(new VerifyPartialReparse());
+                boolean enableVerifier = false;
+                assert enableVerifier = true;  // Only enable verifier if assertions are enabled
+                if (enableVerifier) {
+                    return Collections.singletonList(new VerifyPartialReparse());
+                } else {
+                    return Collections.emptyList();
+                }
             }
 
         }

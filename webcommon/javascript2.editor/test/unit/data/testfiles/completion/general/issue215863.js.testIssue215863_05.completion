@@ -7,4 +7,4 @@ FIELD      localStorage: Storage           [PUBLIC]   JS Platform
 FIELD      location: Location              [PUBLIC]   JS Platform
 FIELD      locationbar: Object             [PUBLIC]   JS Platform
 VARIABLE   longString: String              [PUBLIC]   stringLiterals01.js
-KEYWORD    let                                        ECMAScript 6
+KEYWORD    let                                        ECMAScript 6 - 2015

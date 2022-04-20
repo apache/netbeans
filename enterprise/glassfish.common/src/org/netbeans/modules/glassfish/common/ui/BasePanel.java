@@ -258,9 +258,9 @@ public abstract class BasePanel extends JPanel {
         }
     }
 
-    static abstract class DataTableModel extends AbstractTableModel {
+    abstract static class DataTableModel extends AbstractTableModel {
 
-        abstract public Map<String, String> getData();
+        public abstract Map<String, String> getData();
 
         private String[][] rowData;
         private String pushPrefix;

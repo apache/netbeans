@@ -358,8 +358,7 @@ public class Parser {
             case '.':
                 result = new TreeNode(TreeNode.METACHAR,
                                       start,
-                                      start + 1,
-                                      new Character(ch));
+                                      start + 1, ch);
                 break;
 
             case '[':
@@ -384,8 +383,7 @@ public class Parser {
                     case 'B':
                         result = new TreeNode(TreeNode.METACHAR,
                                               start,
-                                              start + 2,
-                                              new Character(ch2));
+                                              start + 2, ch2);
                         break;
 
                     case 'u':
@@ -426,8 +424,7 @@ public class Parser {
                         }
                         result = new TreeNode(TreeNode.CHAR,
                                               start,
-                                              start + 2,
-                                              new Character(parsedChar));
+                                              start + 2, parsedChar);
                         break;
                 }
                 break;
@@ -449,8 +446,7 @@ public class Parser {
                 }
                 result = new TreeNode(TreeNode.CHAR,
                                       start,
-                                      start + 1,
-                                      new Character(ch));
+                                      start + 1, ch);
                 break;
         }
         return result;
@@ -472,8 +468,7 @@ public class Parser {
             case '?':
                 result = new TreeNode(TreeNode.QUANTIFIER,
                                       start,
-                                      start + 1,
-                                      new Character(ch));
+                                      start + 1, ch);
                 return result;
             case '{':
                 break;
@@ -604,7 +599,7 @@ public class Parser {
         TreeNode result = new TreeNode(TreeNode.NUMBER,
                                        start,
                                        start + endIndex,
-                                       new Integer(number));
+                                       number);
         return result;
     }
 
@@ -900,14 +895,12 @@ public class Parser {
                 }
                 result = new TreeNode(TreeNode.CHAR,
                                       start,
-                                      start + 2,
-                                      new Character(parsedChar));
+                                      start + 2, parsedChar);
                 break;
             default:
                 result = new TreeNode(TreeNode.CHAR,
                                       start,
-                                      start + 1,
-                                      new Character(ch));
+                                      start + 1, ch);
                 break;
         }
         return result;

@@ -19,6 +19,7 @@
 package org.netbeans.modules.php.nette.tester.run;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -272,7 +273,7 @@ public final class TapParser {
 
         @Override
         public String call() throws IOException {
-            return new String(Files.readAllBytes(Paths.get(filePath)), "UTF-8"); // NOI18N
+            return new String(Files.readAllBytes(Paths.get(filePath)), StandardCharsets.UTF_8);
         }
 
     }

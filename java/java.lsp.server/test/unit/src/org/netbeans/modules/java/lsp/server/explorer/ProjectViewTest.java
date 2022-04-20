@@ -29,13 +29,17 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
+import org.eclipse.lsp4j.CodeAction;
+import org.eclipse.lsp4j.CodeActionParams;
 import org.eclipse.lsp4j.ConfigurationParams;
 import org.eclipse.lsp4j.InitializeParams;
 import org.eclipse.lsp4j.InitializeResult;
@@ -55,12 +59,12 @@ import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ui.OpenProjects;
 import org.netbeans.api.sendopts.CommandLine;
-import org.netbeans.api.templates.CreateDescriptor;
 import org.netbeans.api.templates.FileBuilder;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.java.lsp.server.explorer.api.CreateExplorerParams;
 import org.netbeans.modules.java.lsp.server.explorer.api.NodeChangedParams;
 import org.netbeans.modules.java.lsp.server.explorer.api.NodeOperationParams;
+import org.netbeans.modules.java.lsp.server.protocol.CodeActionsProvider;
 import org.netbeans.modules.java.lsp.server.protocol.DecorationRenderOptions;
 import org.netbeans.modules.java.lsp.server.protocol.HtmlPageParams;
 import org.netbeans.modules.java.lsp.server.protocol.NbCodeClientCapabilities;
@@ -72,10 +76,14 @@ import org.netbeans.modules.java.lsp.server.protocol.ShowInputBoxParams;
 import org.netbeans.modules.java.lsp.server.protocol.ShowQuickPickParams;
 import org.netbeans.modules.java.lsp.server.protocol.ShowStatusMessageParams;
 import org.netbeans.modules.java.lsp.server.protocol.TestProgressParams;
+import org.netbeans.modules.java.lsp.server.protocol.UpdateConfigParams;
+import org.netbeans.modules.parsing.api.ResultIterator;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.URLMapper;
 import org.openide.modules.DummyInstalledFileLocator;
+import org.openide.nodes.Node;
+import org.openide.util.Lookup;
 import org.openide.util.Utilities;
 import org.openide.util.test.MockLookup;
 
@@ -94,7 +102,7 @@ public class ProjectViewTest extends NbTestCase {
 
     @Override
     protected void setUp() throws Exception {
-        MockLookup.setLayersAndInstances();
+        MockLookup.setLayersAndInstances(new ServerLookupExtractionCommand());
         System.setProperty("java.awt.headless", Boolean.TRUE.toString());
         super.setUp();
         clearWorkDir();
@@ -245,6 +253,11 @@ public class ProjectViewTest extends NbTestCase {
                 client.nodeChanges.drainPermits();
             }
         }
+
+        @Override
+        public CompletableFuture<Void> configurationUpdate(UpdateConfigParams params) {
+            return CompletableFuture.completedFuture(null);
+        }
     }
 
     private static Launcher<NbLanguageServer> createLauncher(NbCodeLanguageClient client, InputStream in, OutputStream out,
@@ -328,6 +341,23 @@ public class ProjectViewTest extends NbTestCase {
         return findFirstProjectNode();
     }
     
+    volatile Lookup serverLookup;
+
+    public class ServerLookupExtractionCommand extends CodeActionsProvider {
+
+        @Override
+        public List<CodeAction> getCodeActions(ResultIterator resultIterator, CodeActionParams params) throws Exception {
+            return Collections.emptyList();
+        }
+
+        @Override
+        public Set<String> getCommands() {
+            // this is called during server's initialization.
+            serverLookup = Lookup.getDefault();
+            return Collections.emptySet();
+        }
+    }
+    
     private TreeItem findFirstProjectNode() throws Exception {
         if (client == null) {
             client = new LspClient();
@@ -354,9 +384,30 @@ public class ProjectViewTest extends NbTestCase {
     }
     
     private TreeItem findChild(TreeItem parent, String... labelPath) throws Exception {
+        TreeNodeRegistry reg = serverLookup.lookup(TreeNodeRegistry.class);
         TreeItem item = parent;
         for (String l : labelPath) {
             TreeItem next = findChild(item, l);
+            if (next == null) {
+                Node n = reg.findNode(item.id);
+                Node[] ns = n.getChildren().getNodes(true);
+                StringBuilder sb = new StringBuilder();
+                for (Node a : ns) {
+                    if (sb.length() > 0) {
+                        sb.append(", ");
+                    }
+                    sb.append(a.getDisplayName());
+                }
+                System.out.println("*** Error - node " + l + " does not exist in " + item.label + ", node list: " + sb.toString());
+                sb = new StringBuilder();
+                for (TreeItem candidate : getChildren(parent)) {
+                    if (sb.length() > 0) {
+                        sb.append(", ");
+                    }
+                    sb.append(candidate.label);
+                }
+                System.out.println("TreeItem children: " + sb.toString());
+            }
             assertNotNull("There's no " + l + " in " + item.label, next);
             item = next;
         }

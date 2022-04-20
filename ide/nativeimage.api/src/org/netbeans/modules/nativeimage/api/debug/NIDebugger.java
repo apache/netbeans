@@ -152,7 +152,9 @@ public final class NIDebugger {
      * @param startedEngine the corresponding DebuggerEngine is passed to this consumer
      * @return future that completes on the execution finish
      * @since 0.4
+     * @deprecated Use {@link #start(StartDebugParameters, Consumer) and set {@link StartDebugParameters.Builder#processID(long)}.
      */
+    @Deprecated
     public CompletableFuture<Void> attach(String executablePath, long processId, String debugger, Consumer<DebuggerEngine> startedEngine) {
         return provider.attach(executablePath,  processId, debugger, startedEngine);
     }

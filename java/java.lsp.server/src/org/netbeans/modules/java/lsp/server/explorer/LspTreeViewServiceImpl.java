@@ -20,16 +20,25 @@ package org.netbeans.modules.java.lsp.server.explorer;
 
 import org.netbeans.modules.java.lsp.server.explorer.api.TreeViewService;
 import java.io.IOException;
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
+import java.util.concurrent.CompletionStage;
 import org.eclipse.lsp4j.jsonrpc.services.JsonSegment;
 import org.eclipse.lsp4j.services.LanguageClient;
 import org.eclipse.lsp4j.services.LanguageClientAware;
 import org.netbeans.modules.java.lsp.server.explorer.api.ConfigureExplorerParams;
 import org.netbeans.modules.java.lsp.server.explorer.api.CreateExplorerParams;
+import org.netbeans.modules.java.lsp.server.explorer.api.FindPathParams;
+import org.netbeans.modules.java.lsp.server.explorer.api.GetResourceParams;
 import org.netbeans.modules.java.lsp.server.protocol.NbCodeLanguageClient;
 import org.netbeans.modules.java.lsp.server.explorer.api.NodeChangedParams;
 import org.netbeans.modules.java.lsp.server.explorer.api.NodeOperationParams;
+import org.netbeans.modules.java.lsp.server.explorer.api.ResourceData;
 import org.openide.nodes.Node;
 import org.openide.util.Lookup;
 
@@ -162,4 +171,64 @@ public class LspTreeViewServiceImpl implements TreeViewService, LanguageClientAw
         }
         return CompletableFuture.completedFuture(false);
     }
+    
+    @Override
+    public CompletableFuture<ResourceData> getResource(GetResourceParams params) {
+        URI uri = params.getUri();
+        if (params.getAcceptEncodings() != null) {
+            if (!Arrays.asList(params.getAcceptEncodings()).contains("base64")) { // NOI18N
+                throw new IllegalArgumentException("Base64 encoding must be accepted.");
+            }
+        }
+        return CompletableFuture.completedFuture(treeService.imageContents(uri));
+    }
+
+    @Override
+    public CompletableFuture<int[]> findPath(FindPathParams params) {
+        Object toSelect = params.getSelectData();
+        TreeViewProvider tvp = treeService.providerOf(params.getRootNodeId());
+        if (tvp == null) {
+            return null;
+        }
+        Node rootNode = tvp.getExplorerManager().getRootContext();
+        for (PathFinder finder : tvp.getLookup().lookupAll(PathFinder.class)) {
+            Node target = finder.findPath(rootNode, toSelect);
+            if (target != null) {
+                return constructPath(tvp, rootNode, target);
+            }
+        }
+        return CompletableFuture.completedFuture(null);
+    }
+    
+    private static int[] toIntArray(List<Integer> wrappers) {
+        int[] ret = new int[wrappers.size()];
+        int idx = 0;
+        for (Integer i : wrappers) {
+            ret[idx++] = i;
+        }
+        return ret;
+    }
+    
+    CompletableFuture<int[]> constructLevel(TreeViewProvider tvp, Node from, Node node, List<Integer> collectedIds) {
+        if (node == null) {
+            return CompletableFuture.completedFuture(null);
+        }
+        CompletionStage<Void> idStage = tvp.getNodeId(node).thenAccept(id -> collectedIds.add(id));
+        CompletionStage<int[]> levelStage = idStage.thenCompose(v -> {
+            if (node == from) {
+                Collections.reverse(collectedIds);
+                return CompletableFuture.completedFuture(toIntArray(collectedIds));
+            } else {
+                return tvp.getParent(node).thenCompose(n -> constructLevel(tvp, from, n, collectedIds));
+            }
+        });
+        
+        return levelStage.toCompletableFuture();
+    }
+    
+    CompletableFuture<int[]> constructPath(TreeViewProvider tvp, Node from, Node to) {
+        List<Integer> collectedIds = new ArrayList<>();
+        return constructLevel(tvp, from, to, collectedIds);
+    }
+    
 }

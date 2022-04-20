@@ -171,6 +171,13 @@ public class ElementJavadoc {
         HTML_TAGS.put("highlighted", new HtmlStartEndTag("<span style=\"background-color:yellow;\">", "</span>"));
     }
     
+    private static final Map<String, String> MARKUPTAG_MANDATORY_ATTRIBUTE = new HashMap<>();
+    
+    static{
+        MARKUPTAG_MANDATORY_ATTRIBUTE.put("link", "target");
+        MARKUPTAG_MANDATORY_ATTRIBUTE.put("replace", "replacement");
+    }
+    
     /** Creates an object describing the Javadoc of given element. The object
      * is capable of getting the text formated into HTML, resolve the links,
      * jump to external javadoc.

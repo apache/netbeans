@@ -103,20 +103,16 @@ public class RootsTest extends NbTestCase {
         
         File home = new File (System.getProperty("user.home")).getCanonicalFile();
 
-        HashSet<DataFolder> folders = new HashSet<DataFolder>();
-        for (int i = 0; i < arr.length; i++) {
-            DataFolder f = arr[i].getCookie(DataFolder.class);
+        HashSet<DataFolder> folders = new HashSet<>();
+        for (Node arr1 : arr) {
+            DataFolder f = arr1.getCookie(DataFolder.class);
             if (f == null) continue;
-            
             folders.add (f);
-            
             File file = FileUtil.toFile (
-                f.getPrimaryFile()
+                    f.getPrimaryFile()
             );
             assertNotNull ("All folders have files", file);
-            
             file = file.getCanonicalFile();
-            
             if (file.equals (home)) {
                 return;
             }
@@ -127,7 +123,7 @@ public class RootsTest extends NbTestCase {
 
     
     public void testNodesUnderRootRepresentTheirFiles () throws Exception {
-        HashSet<File> roots = new HashSet<File>(Arrays.asList (File.listRoots()));
+        HashSet<File> roots = new HashSet<>(Arrays.asList (File.listRoots()));
         
         Node[] arr = FavoritesNode.getNode ().getChildren ().getNodes (true);
         
@@ -135,7 +131,7 @@ public class RootsTest extends NbTestCase {
             File f = FavoritesNode.fileForNode (arr[i]);
             if (roots.remove (f)) {
                 Node[] nexts = arr[i].getChildren().getNodes (true);
-                for (int j = 0; j < nexts.length; j++) {
+                for (Node next : nexts) {
                     File file = FavoritesNode.fileForNode (nexts[i]);
                     assertNotNull ("For node: " + nexts[i] + " there has to be file", file);
                     assertEquals ("Correct parent for " + nexts[i], f, file.getParentFile());

@@ -31,7 +31,7 @@ import org.openide.filesystems.FileUtil;
  */
 final class ConvertorResolver {
     private static final String LOOKUP_PREFIX = "/xml/lookups"; // NOI18N
-    private final static ConvertorResolver DEFAULT = new ConvertorResolver();
+    private static final ConvertorResolver DEFAULT = new ConvertorResolver();
 
     /** Creates a new instance of ConvertorResolver */
     private ConvertorResolver() {

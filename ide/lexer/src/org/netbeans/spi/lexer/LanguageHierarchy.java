@@ -298,7 +298,7 @@ public abstract class LanguageHierarchy<T extends TokenId> {
      *
      * @return non-null language.
      */
-    public synchronized final Language<T> language() {
+    public final synchronized Language<T> language() {
         if (language == null) {
             // Both tokenIds() and tokenCategories() should impose no locks
             // so call in synchronized block

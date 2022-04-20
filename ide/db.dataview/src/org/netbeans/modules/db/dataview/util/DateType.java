@@ -81,7 +81,7 @@ public class DateType {
         return new java.sql.Date(cal.getTimeInMillis());
     }
 
-    private synchronized static java.util.Date doParse (String sVal) {
+    private static synchronized java.util.Date doParse (String sVal) {
         java.util.Date dVal = null;
         for (DateFormat format : DATE_PARSING_FORMATS) {
             try {

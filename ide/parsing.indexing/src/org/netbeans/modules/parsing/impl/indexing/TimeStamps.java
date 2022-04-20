@@ -29,6 +29,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.text.MessageFormat;
 import java.util.Collection;
 import java.util.Collections;
@@ -224,8 +225,7 @@ public final class TimeStamps {
             final File f = new File(cacheDir, TIME_STAMPS_FILE);
             assert f != null;
             try {
-                try (BufferedWriter out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(f), "UTF-8")) //NOI18N
-                ) {
+                try (BufferedWriter out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(f), StandardCharsets.UTF_8))) {
                     if (unseen != null) {
                         timestamps.keySet().removeAll(unseen);
                     }
@@ -264,8 +264,7 @@ public final class TimeStamps {
                     try {
                         boolean readOldPropertiesFormat = false;
                         {
-                            try (BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(f), "UTF-8")) //NOI18N
-                            ) {
+                            try (BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(f), StandardCharsets.UTF_8))) {
                                 String line = in.readLine();
                                 if (line != null && line.startsWith(VERSION_2)) {
                                     // it's the new format

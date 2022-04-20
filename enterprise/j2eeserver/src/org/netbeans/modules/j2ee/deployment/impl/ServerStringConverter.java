@@ -23,6 +23,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.NodeList;
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -51,7 +52,7 @@ public class ServerStringConverter extends org.netbeans.spi.settings.DOMConverto
             FileObject dir = FileUtil.getConfigFile(destDir);
             FileObject fo = FileUtil.createData(dir, destFile);
             lock = fo.lock();
-            writer = new OutputStreamWriter(fo.getOutputStream(lock), "UTF-8"); // NOI18N
+            writer = new OutputStreamWriter(fo.getOutputStream(lock), StandardCharsets.UTF_8);
             create().write(writer, instance);
             return true;
             
@@ -80,7 +81,7 @@ public class ServerStringConverter extends org.netbeans.spi.settings.DOMConverto
             if (fo == null)
                 return null;
             
-            reader = new InputStreamReader(fo.getInputStream(), "UTF-8"); // NOI18N
+            reader = new InputStreamReader(fo.getInputStream(), StandardCharsets.UTF_8);
             return (ServerString) create().read(reader);
         } catch(Exception ioe) {
             Logger.getLogger("global").log(Level.WARNING, null, ioe);

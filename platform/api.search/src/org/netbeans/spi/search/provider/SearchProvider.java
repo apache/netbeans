@@ -139,7 +139,7 @@ public abstract class SearchProvider {
      * }}</pre>
      * </div>
      */
-    public static abstract class Presenter {
+    public abstract static class Presenter {
 
         private SearchProvider searchProvider;
         private boolean replacing;

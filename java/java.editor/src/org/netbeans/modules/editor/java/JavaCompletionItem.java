@@ -604,7 +604,7 @@ public abstract class JavaCompletionItem implements CompletionItem {
         return null;
     }
 
-    static abstract class WhiteListJavaCompletionItem<T extends Element> extends JavaCompletionItem {
+    abstract static class WhiteListJavaCompletionItem<T extends Element> extends JavaCompletionItem {
 
         private static final String WARNING = "org/netbeans/modules/java/editor/resources/warning_badge.gif";   //NOI18N
         private static ImageIcon warningIcon;

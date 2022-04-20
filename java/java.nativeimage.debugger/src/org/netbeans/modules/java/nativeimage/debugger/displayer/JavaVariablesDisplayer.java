@@ -28,6 +28,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.WeakHashMap;
 
 import org.netbeans.modules.nativeimage.api.debug.EvaluateException;
 import org.netbeans.modules.nativeimage.api.debug.NIDebugger;
@@ -49,11 +50,16 @@ public final class JavaVariablesDisplayer implements VariableDisplayer {
     private static final String STRING_VALUE = "value";
     private static final String STRING_CODER = "coder";
     private static final String HASH = "hash";
+    private static final String NAME = "name";
     private static final String UNSET = "<optimized out>";
 
     private static final String[] STRING_TYPES = new String[] { String.class.getName(), StringBuilder.class.getName(), StringBuffer.class.getName() };
 
+    // Variable names with this prefix contain space-separated variable name and expression path
+    private static final String PREFIX_VAR_PATH = "{ ";
+
     private NIDebugger debugger;
+    private final Map<NIVariable, String> variablePaths = Collections.synchronizedMap(new WeakHashMap<>());
 
     public JavaVariablesDisplayer() {
     }
@@ -66,28 +72,40 @@ public final class JavaVariablesDisplayer implements VariableDisplayer {
     public NIVariable[] displayed(NIVariable[] variables) {
         List<NIVariable> displayedVars = new ArrayList<>(variables.length);
         for (NIVariable var : variables) {
-           String value = var.getValue();
+            String value = var.getValue();
             if (UNSET.equals(value)) {
                 continue;
+            }
+            if (var instanceof AbstractVar) {
+                // Translated already
+                displayedVars.add(var);
+                continue;
+            }
+            String name = var.getName();
+            String path = null;
+            if (name.startsWith(PREFIX_VAR_PATH)) {
+                int i = name.indexOf(' ', PREFIX_VAR_PATH.length());
+                if (i > 0) {
+                    path = name.substring(i + 1);
+                    name = name.substring(PREFIX_VAR_PATH.length(), i);
+                }
+            }
+            if (path != null) {
+                variablePaths.put(var, path);
             }
             int nch = var.getNumChildren();
             NIVariable displayedVar;
             if (nch == 0) {
-                String name = var.getName();
-                if (!name.equals(getNameOrIndex(name))) {
-                    displayedVar = new Var(var);
-                } else {
-                    displayedVar = var;
-                }
+                displayedVar = new Var(var, name, path);
             } else {
                 NIVariable[] children = var.getChildren();
-                NIVariable[] subChildren = children[0].getChildren();
+                NIVariable[] subChildren = children.length > 0 ? children[0].getChildren() : new NIVariable[]{};
                 // Check for Array
                 if (subChildren.length == 3 &&
                         //HUB.equals(subChildren[0].getName()) &&
                         ARRAY_LENGTH.equals(subChildren[1].getName()) &&
                         ARRAY.equals(subChildren[2].getName())) {
-                    displayedVar = new ArrayVar(var, subChildren[1], subChildren[2]);
+                    displayedVar = new ArrayVar(var, name, path, subChildren[1], subChildren[2]);
                 } else {
                     // Check for String
                     String type = getSimpleType(var.getType());
@@ -102,20 +120,20 @@ public final class JavaVariablesDisplayer implements VariableDisplayer {
                         }
                     }
                     if (likeString) {
-                        displayedVar = new StringVar(var, type, isString ? null : subChildren);
+                        displayedVar = new StringVar(var, name, path, type, isString ? null : subChildren);
                     } else {
                         if (children.length == 1 && PUBLIC.equals(children[0].getName())) {
                             // Object children
-                            displayedVar = new ObjectVar(var, subChildren);
+                            displayedVar = new ObjectVar(var, name, path, subChildren);
                         } else {
-                            String name = var.getName();
-                            if (!name.equals(getNameOrIndex(name))) {
-                                displayedVar = new Var(var);
-                            } else {
-                                displayedVar = var;
-                            }
+                            displayedVar = new Var(var, name, path);
                         }
                     }
+                }
+            }
+            if (displayedVar != var) {
+                synchronized (variablePaths) {
+                    variablePaths.put(displayedVar, variablePaths.get(var));
                 }
             }
             displayedVars.add(displayedVar);
@@ -233,7 +251,7 @@ public final class JavaVariablesDisplayer implements VariableDisplayer {
 
     private String readArray(NIVariable lengthVariable, int itemSize) {
         int length = Integer.parseInt(lengthVariable.getValue());
-        String expressionPath = lengthVariable.getExpressionPath();
+        String expressionPath = getExpressionPath(lengthVariable);
         if (expressionPath != null && !expressionPath.isEmpty()) {
             String addressExpr = "&" + expressionPath;
             return debugger.readMemory(addressExpr, 4, length * itemSize); // length has 4 bytes
@@ -243,7 +261,7 @@ public final class JavaVariablesDisplayer implements VariableDisplayer {
 
     private String readArray(NIVariable lengthVariable, int offset, int itemSize) {
         int length = Integer.parseInt(lengthVariable.getValue());
-        String expressionPath = lengthVariable.getExpressionPath();
+        String expressionPath = getExpressionPath(lengthVariable);
         if (expressionPath != null && !expressionPath.isEmpty()) {
             String addressExpr = "&" + expressionPath;
             return debugger.readMemory(addressExpr, 4 + offset, length * itemSize); // length has 4 bytes
@@ -271,14 +289,72 @@ public final class JavaVariablesDisplayer implements VariableDisplayer {
         return restrictChildren(children, from, to);
     }
 
-    private class StringVar implements NIVariable {
+    private static NIVariable findChild(String name, NIVariable[] children) {
+        for (NIVariable var : children) {
+            if (name.equals(var.getName())) {
+                return var;
+            }
+        }
+        return null;
+    }
 
-        private final NIVariable var;
+    private static boolean isPrimitiveArray(String type) {
+        int i = type.indexOf(' ');
+        if (i < 0) {
+            return false;
+        }
+        String name = type.substring(0, i);
+        switch (name) {
+            case "boolean":
+            case "byte":
+            case "char":
+            case "short":
+            case "int":
+            case "long":
+            case "float":
+            case "double":
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    private String getExpressionPath(NIVariable var) {
+        String path = var.getExpressionPath();
+        if (!path.isEmpty()) {
+            return path;
+        } else {
+            return createExpressionPath(var);
+        }
+    }
+
+    /** Used as a fallback when {@link NIVariable#getExpressionPath()} does not provide anything. */
+    private String createExpressionPath(NIVariable var) {
+        String path = variablePaths.get(var);
+        if (path != null) {
+            return path;
+        }
+        path = var.getName();
+        NIVariable parent = var.getParent();
+        if (parent == null) {
+            return path;
+        } else {
+            String parentPath = createExpressionPath(parent);
+            if (PUBLIC.equals(path)) {
+                return parentPath;
+            } else {
+                return parentPath + '.' + path;
+            }
+        }
+    }
+
+    private class StringVar extends AbstractVar {
+
         private final String type;
         private final NIVariable[] children;
 
-        StringVar(NIVariable var, String type, NIVariable[] children) {
-            this.var = var;
+        StringVar(NIVariable var, String name, String path, String type, NIVariable[] children) {
+            super(var, name, path);
             this.type = type;
             this.children = children;
         }
@@ -286,11 +362,6 @@ public final class JavaVariablesDisplayer implements VariableDisplayer {
         @Override
         public NIFrame getFrame() {
             return var.getFrame();
-        }
-
-        @Override
-        public String getName() {
-            return getNameOrIndex(var.getName());
         }
 
         @Override
@@ -306,7 +377,14 @@ public final class JavaVariablesDisplayer implements VariableDisplayer {
             arrayInfo = getVarsByName(arrayInfo.get(PUBLIC).getChildren());
             NIVariable arrayVariable = arrayInfo.get(ARRAY);
             NIVariable lengthVariable = arrayInfo.get(ARRAY_LENGTH);
-            int length = Integer.parseInt(lengthVariable.getValue());
+            String lengthStr = lengthVariable.getValue();
+            if (lengthStr.isEmpty()) {
+                return "";
+            }
+            int length = Integer.parseInt(lengthStr);
+            if (length <= 0) {
+                return "";
+            }
             NIVariable coderVar = varChildren.get(STRING_CODER);
             int coder = -1;
             if (coderVar != null) {
@@ -320,7 +398,7 @@ public final class JavaVariablesDisplayer implements VariableDisplayer {
                 } catch (NumberFormatException ex) {
                 }
             }
-            String hexArray = readArray(lengthVariable, coder == -1 ? 4 : 0, 2);
+            String hexArray = readArray(lengthVariable, 0, 2);
             if (hexArray != null) {
                 switch (coder) {
                     case 0: // Compressed String on JDK 9+
@@ -330,18 +408,105 @@ public final class JavaVariablesDisplayer implements VariableDisplayer {
                     default: // UTF-16 String on JDK 8
                         return parseUTF16(hexArray, length);
                 }
-            } else { // legacy code
-                String arrayExpression = getArrayExpression(arrayVariable);
-                char[] characters = new char[length];
+            } else { // legacy code for older gdb version (less than 10.x)
+                String arrayExpression = JavaVariablesDisplayer.this.getExpressionPath(arrayVariable); //getArrayExpression(arrayVariable);
+                NIFrame frame = var.getFrame();
                 try {
-                    for (int i = 0; i < length; i++) {
-                        NIVariable charVar = debugger.evaluate(arrayExpression + "[" + i + "]", null, var.getFrame());
-                        characters[i] = charVar.getValue().charAt(1);
+                    NIVariable charVar = debugger.evaluate(arrayExpression + "[0]", null, frame);
+                    if ("byte".equals(charVar.getType())) {
+                        // bytes to be parsed to String
+                        switch (coder) {
+                            case 0: // Compressed String on JDK 9+
+                                return parseLatin1(arrayExpression, frame, length);
+                            case 1: // UTF-16 String on JDK 9+
+                                return parseUTF16(arrayExpression, frame, length/2);
+                            default: // UTF-16 String on JDK 8
+                                return parseUTF16(arrayExpression, frame, length);
+                        }
+                    } else {
+                        char[] characters = new char[length];
+                        for(int i = 0; ; ) {
+                            String charStr = charVar.getValue();
+                            characters[i] = parseCharacter(charStr);
+                            if (++i >= length) {
+                                break;
+                            }
+                            charVar = debugger.evaluate(arrayExpression + "[" + i + "]", null, frame);
+                        }
+                        return new String(characters);
                     }
                 } catch (EvaluateException ex) {
                     return ex.getLocalizedMessage();
                 }
-                return new String(characters);
+            }
+        }
+
+        private char parseCharacter(String charValue) {
+            if (charValue.startsWith("'") && charValue.endsWith("'")) {
+                charValue = charValue.substring(1, charValue.length() - 1);
+            }
+            byte b0, b1;
+            if (charValue.startsWith("\\\\x")) {
+                // hexadecimal
+                b1 = parseByte(charValue, 3);
+                b0 = parseByte(charValue, 5);
+            } else {
+                int[] pos = new int[] {0};
+                try {
+                    b1 = getByteFromChar(charValue, pos);
+                    charValue = charValue.substring(pos[0]);
+                    b0 = getByteFromChar(charValue, pos);
+                } catch (NumberFormatException nfex) {
+                    // octal does not fit into byte
+                    try {
+                        return (char) Short.parseShort(charValue.substring(2), 8);
+                    } catch (NumberFormatException ex) {
+                        return charValue.charAt(0);
+                    }
+                }
+            }
+            CharsetDecoder cd = Charset.forName("utf-16").newDecoder(); // NOI18N
+            byte[] bytes = new byte[] {b1, b0};
+            ByteBuffer buffer = ByteBuffer.allocate(2);
+            buffer.rewind();
+            buffer.put(b0);
+            buffer.put(b1);
+            buffer.rewind();
+            try {
+                char c = cd.decode(buffer).get();
+                return c;
+            } catch (CharacterCodingException ex) {
+                return charValue.charAt(0);
+            }
+        }
+
+        private byte getByteFromChar(String charValue, int[] pos) {
+            if (charValue.startsWith("\\\\")) {
+                pos[0] += 2;
+                char c = charValue.charAt(2);
+                if (Character.isDigit(c)) {
+                    // octal
+                    pos[0] += 3;
+                    return Byte.parseByte(charValue.substring(2, 5), 8);
+                }
+                pos[0]++;
+                switch (c) {
+                    case 'a': return 7; // BEL
+                    case 'b': return 8; // Backspace
+                    case 't': return 9; // TAB
+                    case 'n': return 10; // LF
+                    case 'v': return 11; // VT
+                    case 'f': return 12; // FF
+                    case 'r': return 13; // CR
+                    case '\\':
+                        pos[0]++; // Two back slashes
+                        return (byte) c;
+                    default:
+                        return (byte) c;
+                }
+            } else {
+                pos[0] += 1;
+                return (byte) charValue.charAt(0);
             }
         }
 
@@ -393,6 +558,47 @@ public final class JavaVariablesDisplayer implements VariableDisplayer {
             return (byte) (Integer.parseInt(hex, 16) & 0xFF);
         }
 
+        private String parseUTF16(String arrayExpression, NIFrame frame, int length) throws EvaluateException {
+            CharsetDecoder cd = Charset.forName("utf-16").newDecoder(); // NOI18N
+            ByteBuffer buffer = ByteBuffer.allocate(2);
+            char[] characters = new char[length];
+            for (int i = 0; i < length; i++) {
+                NIVariable byteVar = debugger.evaluate(arrayExpression + "[" + (2*i) + "]", null, frame);
+                byte b1 = Byte.parseByte(byteVar.getValue());
+                byteVar = debugger.evaluate(arrayExpression + "[" + (2*i+1) + "]", null, frame);
+                byte b0 = Byte.parseByte(byteVar.getValue());
+                buffer.rewind();
+                buffer.put(b0);
+                buffer.put(b1);
+                buffer.rewind();
+                try {
+                    char c = cd.decode(buffer).get();
+                    characters[i] = c;
+                } catch (CharacterCodingException ex) {
+                }
+            }
+            return new String(characters);
+        }
+
+        private String parseLatin1(String arrayExpression, NIFrame frame, int length) throws EvaluateException {
+            CharsetDecoder cd = Charset.forName("latin1").newDecoder(); // NOI18N
+            ByteBuffer buffer = ByteBuffer.allocate(1);
+            char[] characters = new char[length];
+            for (int i = 0; i < length; i++) {
+                NIVariable byteVar = debugger.evaluate(arrayExpression + "[" + i + "]", null, frame);
+                byte b = Byte.parseByte(byteVar.getValue());
+                buffer.rewind();
+                buffer.put(b);
+                buffer.rewind();
+                try {
+                    char c = cd.decode(buffer).get();
+                    characters[i] = c;
+                } catch (CharacterCodingException ex) {
+                }
+            }
+            return new String(characters);
+        }
+
         @Override
         public int getNumChildren() {
             return children != null ? children.length : 0;
@@ -408,21 +614,16 @@ public final class JavaVariablesDisplayer implements VariableDisplayer {
             return var.getParent();
         }
 
-        @Override
-        public String getExpressionPath() {
-            return var.getExpressionPath();
-        }
     }
 
-    private class ArrayVar implements NIVariable {
+    private class ArrayVar extends AbstractVar {
 
-        private final NIVariable var;
         private final NIVariable lengthVariable;
         private final int length;
         private final NIVariable array;
 
-        ArrayVar(NIVariable var, NIVariable lengthVariable, NIVariable array) {
-            this.var = var;
+        ArrayVar(NIVariable var, String name, String path, NIVariable lengthVariable, NIVariable array) {
+            super(var, name, path);
             this.lengthVariable = lengthVariable;
             int arrayLength;
             try {
@@ -442,11 +643,6 @@ public final class JavaVariablesDisplayer implements VariableDisplayer {
         @Override
         public NIVariable getParent() {
             return var.getParent();
-        }
-
-        @Override
-        public String getName() {
-            return getNameOrIndex(var.getName());
         }
 
         @Override
@@ -481,38 +677,45 @@ public final class JavaVariablesDisplayer implements VariableDisplayer {
             }
 
             String arrayAddress = null;
-            String expressionPath = lengthVariable.getExpressionPath();
-            if (expressionPath != null && !expressionPath.isEmpty()) {
-                String addressExpr = "&" + expressionPath;
-                NIVariable addressVariable;
-                try {
-                    addressVariable = debugger.evaluate(addressExpr, null, lengthVariable.getFrame());
-                } catch (EvaluateException ex) {
-                    addressVariable = null;
-                }
-                if (addressVariable != null) {
-                    String address = addressVariable.getValue();
-                    address = address.toLowerCase();
-                    if (address.startsWith("0x")) {
-                        arrayAddress = address;
+            if (isPrimitiveArray(array.getType())) {
+                String expressionPath = JavaVariablesDisplayer.this.getExpressionPath(lengthVariable);
+                if (expressionPath != null && !expressionPath.isEmpty()) {
+                    String addressExpr = "&" + expressionPath;
+                    NIVariable addressVariable;
+                    try {
+                        addressVariable = debugger.evaluate(addressExpr, null, lengthVariable.getFrame());
+                    } catch (EvaluateException ex) {
+                        addressVariable = null;
+                    }
+                    if (addressVariable != null) {
+                        String address = addressVariable.getValue();
+                        address = address.toLowerCase();
+                        if (address.startsWith("0x")) {
+                            arrayAddress = address;
+                        }
                     }
                 }
             }
             NIVariable[] elements = new NIVariable[to - from];
             try {
                 if (arrayAddress != null) {
-                    String itemExpression = "*(" + getSimpleType(getType()) + "*)(" + arrayAddress + "+";
+                    int offset = (getTypeSize(getType()) == 8) ? 8 : 4;
+                    String itemExpression = "*(((" + getSimpleType(getType()) + "*)(" + arrayAddress + "+"+offset+"))+";
                     int size = getTypeSize(getType());
-                    int offset = 4 + from*size;
                     for (int i = from; i < to; i++) {
-                        NIVariable element = debugger.evaluate(itemExpression + offset + ")", Integer.toString(i), var.getFrame());
-                        offset += size;
+                        String expr = itemExpression + i + ")";
+                        NIVariable element = debugger.evaluate(expr, Integer.toString(i), var.getFrame());
+                        // When gdb could retrieve variable address, it did resolve the expression path.
+                        // Thus there is no need to remember it in variablePaths.
                         elements[i - from] = element;
                     }
                 } else {
-                    String arrayExpression = getArrayExpression(array);
+                    String arrayExpression = JavaVariablesDisplayer.this.getExpressionPath(array);
                     for (int i = from; i < to; i++) {
-                        NIVariable element = debugger.evaluate(arrayExpression + "[" + i + "]", Integer.toString(i), var.getFrame());
+                        String expr = arrayExpression + "[" + i + "]";
+                        String namePath = PREFIX_VAR_PATH + Integer.toString(i) + ' ' + expr;
+                        NIVariable element = debugger.evaluate(expr, namePath, var.getFrame());
+                        variablePaths.put(element, expr);
                         elements[i - from] = element;
                     }
                 }
@@ -522,19 +725,14 @@ public final class JavaVariablesDisplayer implements VariableDisplayer {
             return elements;
         }
 
-        @Override
-        public String getExpressionPath() {
-            return var.getExpressionPath();
-        }
     }
 
-    private class ObjectVar implements NIVariable {
+    private class ObjectVar extends AbstractVar {
 
-        private final NIVariable var;
         private final NIVariable[] children;
 
-        ObjectVar(NIVariable var, NIVariable[] children) {
-            this.var = var;
+        ObjectVar(NIVariable var, String name, String path, NIVariable[] children) {
+            super(var, name, path);
             this.children = children;
         }
 
@@ -549,13 +747,8 @@ public final class JavaVariablesDisplayer implements VariableDisplayer {
         }
 
         @Override
-        public String getName() {
-            return getNameOrIndex(var.getName());
-        }
-
-        @Override
         public String getType() {
-            return displayType(var.getType());
+            return displayType(findRuntimeType());
         }
 
         @Override
@@ -585,18 +778,26 @@ public final class JavaVariablesDisplayer implements VariableDisplayer {
             return getObjectChildren(children, from, to);
         }
 
-        @Override
-        public String getExpressionPath() {
-            return var.getExpressionPath();
+        private String findRuntimeType() {
+            NIVariable hub = findChild(HUB, children);
+            if (hub != null) {
+                NIVariable pub = findChild(PUBLIC, hub.getChildren());
+                NIVariable nameVar = findChild(NAME, pub.getChildren());
+                if (nameVar != null) {
+                    String name = new StringVar(nameVar, varName, varPath, null, null).getValue();
+                    if (!name.isEmpty()) {
+                        return name;
+                    }
+                }
+            }
+            return var.getType();
         }
     }
 
-    private class Var implements NIVariable {
+    private class Var extends AbstractVar {
 
-        private final NIVariable var;
-
-        Var(NIVariable var) {
-            this.var = var;
+        Var(NIVariable var, String name, String path) {
+            super(var, name, path);
         }
 
         @Override
@@ -607,11 +808,6 @@ public final class JavaVariablesDisplayer implements VariableDisplayer {
         @Override
         public NIVariable getParent() {
             return var.getParent();
-        }
-
-        @Override
-        public String getName() {
-            return getNameOrIndex(var.getName());
         }
 
         @Override
@@ -639,9 +835,41 @@ public final class JavaVariablesDisplayer implements VariableDisplayer {
             return var.getChildren();
         }
 
+    }
+
+    private abstract class AbstractVar implements NIVariable {
+
+        protected final NIVariable var;
+        protected final String varName;
+        protected final String varPath;
+
+        AbstractVar(NIVariable var, String varName, String varPath) {
+            this.var = var;
+            this.varName = varName;
+            this.varPath = varPath;
+        }
+
         @Override
-        public String getExpressionPath() {
-            return var.getExpressionPath();
+        public final String getName() {
+            if (varName != null) {
+                return varName;
+            }
+            return getNameOrIndex(var.getName());
+        }
+
+        @Override
+        public final String getExpressionPath() {
+            if (varPath != null) {
+                return varPath;
+            } else {
+                String path = var.getExpressionPath();
+                if (!path.isEmpty()) {
+                    return path;
+                } else {
+                    path = variablePaths.get(var);
+                    return path != null ? path : getName();
+                }
+            }
         }
     }
 }

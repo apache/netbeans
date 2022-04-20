@@ -95,8 +95,7 @@ public class ServiceLocatorStrategy {
     private ClassPath buildClassPathFromImportedProject(FileObject fileObject) {
         Project project = FileOwnerQuery.getOwner(fileObject);
         assert project != null : "cannot find project for file";
-        ClassPathProvider cpp = (ClassPathProvider)
-            project.getLookup().lookup(ClassPathProvider.class);
+        ClassPathProvider cpp = project.getLookup().lookup(ClassPathProvider.class);
         assert cpp != null: "project doesn't have class path provider";
         Sources sources = ProjectUtils.getSources(project);
         SourceGroup[] groups = sources.getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA);

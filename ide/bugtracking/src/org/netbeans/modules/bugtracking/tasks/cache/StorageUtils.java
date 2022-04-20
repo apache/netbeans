@@ -42,7 +42,7 @@ public class StorageUtils {
 
         private static FileLocks instance;
 
-        private synchronized static FileLocks getInstance() {
+        private static synchronized FileLocks getInstance() {
             if (instance == null) {
                 instance = new FileLocks();
             }

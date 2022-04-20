@@ -387,7 +387,7 @@ public final class NamingFactory {
     }
 
     
-    synchronized static String dump(Integer id, File file) {
+    static synchronized String dump(Integer id, File file) {
         StringBuilder sb = new StringBuilder();
         final String hex = Integer.toHexString(id);
 

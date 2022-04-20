@@ -44,4 +44,5 @@ public interface TypeElement extends FullyQualifiedElement {
     boolean isInterface();
     boolean isTrait();
     boolean isTraited();
+    boolean isEnum();
 }

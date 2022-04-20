@@ -1,0 +1,11 @@
+<html><body><font size='+0'><b><a href='*0'>test.&#x200B;Test</a></b></font><pre>public void <b>testLinkTag_With_RegexAndRegion</b>()</pre><p>A simple program
+
+ <pre><code>   public static void main(String... args) {
+       for (var arg : args) {                 
+           if (!arg.isBlank()) {
+               System.out.println(arg);
+           }
+       }                                      
+ }
+ 
+</code></pre><p>

@@ -108,7 +108,7 @@ public abstract class SectionNodeView extends SectionView {
     }
 
     public SectionNode retrieveSectionNode(SectionNode node) {
-        SectionNode sectionNode = (SectionNode) nodes.get(node);
+        SectionNode sectionNode = nodes.get(node);
         return sectionNode == null ? rootNode : sectionNode;
     }
 

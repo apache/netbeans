@@ -93,64 +93,64 @@ public class NbTestDecorator extends TestDecorator implements NbTest {
         
 /** for description, see this method in NbTestCase class
  */
-        static public void assertFile(String message, String test, String pass, String diff, Diff externalDiff) {
+        public static void assertFile(String message, String test, String pass, String diff, Diff externalDiff) {
             NbTestCase.assertFile(message,test,pass,diff,externalDiff);
         }
         
 /** for description, see this method in NbTestCase class
  */
-        static public void assertFile(String test, String pass, String diff, Diff externalDiff) {
+        public static void assertFile(String test, String pass, String diff, Diff externalDiff) {
             NbTestCase.assertFile(test, pass, diff, externalDiff);
         }
         
 /** for description, see this method in NbTestCase class
  */
-        static public void assertFile(String message, String test, String pass, String diff) {
+        public static void assertFile(String message, String test, String pass, String diff) {
             NbTestCase.assertFile(message, test, pass, diff);
         }
         
 /** for description, see this method in NbTestCase class
  */
-        static public void assertFile(String test, String pass, String diff) {
+        public static void assertFile(String test, String pass, String diff) {
             NbTestCase.assertFile(test, pass, diff);
         }
         
 /** for description, see this method in NbTestCase class
  */
-        static public void assertFile(String test, String pass) {
+        public static void assertFile(String test, String pass) {
             NbTestCase.assertFile(test, pass);
         }
         
         
 /** for description, see this method in NbTestCase class
  */
-        static public void assertFile(String message, File test, File pass, File diff, Diff externalDiff) {
+        public static void assertFile(String message, File test, File pass, File diff, Diff externalDiff) {
             NbTestCase.assertFile(message,test,pass,diff,externalDiff);
         }
         
         
 /** for description, see this method in NbTestCase class
  */
-        static public void assertFile(File test, File pass, File diff, Diff externalDiff) {
+        public static void assertFile(File test, File pass, File diff, Diff externalDiff) {
             NbTestCase.assertFile(test, pass, diff, externalDiff);
         }
         
         
 /** for description, see this method in NbTestCase class
  */
-        static public void assertFile(String message, File test, File pass, File diff) {
+        public static void assertFile(String message, File test, File pass, File diff) {
             NbTestCase.assertFile(message, test, pass, diff);
         }
         
 /** for description, see this method in NbTestCase class
  */
-        static public void assertFile(File test, File pass, File diff) {
+        public static void assertFile(File test, File pass, File diff) {
             NbTestCase.assertFile(test,pass,diff);
         }
         
 /** for description, see this method in NbTestCase class
  */
-        static public void assertFile(File test, File pass) {
+        public static void assertFile(File test, File pass) {
             NbTestCase.assertFile(test, pass);
         }
         

@@ -343,7 +343,7 @@ public class TreeEntityDecl extends TreeNodeDecl implements DTD.Child, Parameter
         this.systemId     = null;
         this.notationName = null;
         
-        firePropertyChange (PROP_TYPE,          new Short (oldType), new Short (this.type));
+        firePropertyChange (PROP_TYPE, oldType, this.type);
         firePropertyChange (PROP_INTERNAL_TEXT, oldInternalText,     newInternalText);
         firePropertyChange (PROP_PUBLIC_ID,     oldPublicId,         this.publicId);
         firePropertyChange (PROP_SYSTEM_ID,     oldSystemId,         this.systemId);
@@ -485,7 +485,7 @@ public class TreeEntityDecl extends TreeNodeDecl implements DTD.Child, Parameter
         this.systemId     = newSystemId;
         this.notationName = null;
         
-        firePropertyChange (PROP_TYPE,          new Short (oldType), new Short (this.type));
+        firePropertyChange (PROP_TYPE, oldType, this.type);
         firePropertyChange (PROP_INTERNAL_TEXT, oldInternalText,     this.internalText);
         firePropertyChange (PROP_PUBLIC_ID,     oldPublicId,         newPublicId);
         firePropertyChange (PROP_SYSTEM_ID,     oldSystemId,         newSystemId);
@@ -543,7 +543,7 @@ public class TreeEntityDecl extends TreeNodeDecl implements DTD.Child, Parameter
         }
         this.notationName = newNotationName;
         
-        firePropertyChange (PROP_TYPE,          new Short (oldType), new Short (this.type));
+        firePropertyChange (PROP_TYPE, oldType, this.type);
         firePropertyChange (PROP_NOTATION_NAME, oldNotationName,     newNotationName);
     }
     
@@ -594,7 +594,7 @@ public class TreeEntityDecl extends TreeNodeDecl implements DTD.Child, Parameter
         this.systemId     = newSystemId;
         this.notationName = newNotationName;
         
-        firePropertyChange (PROP_TYPE,          new Short (oldType), new Short (this.type));
+        firePropertyChange (PROP_TYPE, oldType, this.type);
         firePropertyChange (PROP_INTERNAL_TEXT, oldInternalText,     this.internalText);
         firePropertyChange (PROP_PUBLIC_ID,     oldPublicId,         newPublicId);
         firePropertyChange (PROP_SYSTEM_ID,     oldSystemId,         newSystemId);

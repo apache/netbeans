@@ -291,9 +291,10 @@ public final class SemanticHighlighter extends IndexingAwareParserResultTask<Par
 
         Map<OffsetRange,Set<ColoringAttributes>> highlights = task.getHighlights();
         if (highlights != null) {
-            for (OffsetRange range : highlights.keySet()) {
+            for (Map.Entry<OffsetRange, Set<ColoringAttributes>> entry : highlights.entrySet()) {
 
-                Set<ColoringAttributes> colors = highlights.get(range);
+                OffsetRange range = entry.getKey();
+                Set<ColoringAttributes> colors = entry.getValue();
                 if (colors == null) {
                     continue;
                 }

@@ -468,7 +468,7 @@ private void bypassRefactoringCheckBoxItemStateChanged(java.awt.event.ItemEvent 
                 SourceGroup g = (SourceGroup) rootComboBox.getSelectedItem();
                 String packageName = packageComboBox.getSelectedItem().toString();
                 if (packageComboBox.getSelectedIndex() > -1 && g != null && packageName != null) {
-                    String pathname = packageName.replaceAll("\\.", "/"); // NOI18N
+                    String pathname = packageName.replace(".", "/"); // NOI18N
                     FileObject fo = g.getRootFolder().getFileObject(pathname);
                     ClassPath bootCp = ClassPath.getClassPath(fo, ClassPath.BOOT);
                     if(bootCp == null) {

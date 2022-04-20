@@ -1807,7 +1807,7 @@ public class DirectoryChooserUI extends BasicFileChooserUI {
     /*************** HELPER CLASSES ***************/
     
     private class IconIndenter implements Icon {
-        final static int space = 10;
+        static final int space = 10;
         Icon icon = null;
         int depth = 0;
         

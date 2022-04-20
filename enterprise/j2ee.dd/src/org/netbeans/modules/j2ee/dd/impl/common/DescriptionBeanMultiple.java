@@ -27,6 +27,7 @@ package org.netbeans.modules.j2ee.dd.impl.common;
 
 import java.util.Map;
 import java.util.HashMap;
+import java.util.Iterator;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -83,10 +84,10 @@ public abstract class DescriptionBeanMultiple extends EnclosingBean implements D
     public void setAllDescriptions(Map descriptions) throws VersionNotSupportedException {
         removeAllDescriptions();
         if (descriptions!=null) {
-            java.util.Iterator keys = descriptions.keySet().iterator();
+            Iterator<String> keys = descriptions.keySet().iterator();
             int i=0;
             while (keys.hasNext()) {
-                String key = (String) keys.next();
+                String key = keys.next();
                 addDescription((String)descriptions.get(key));
                 setDescriptionXmlLang(i++, key);
             }

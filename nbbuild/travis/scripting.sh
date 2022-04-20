@@ -35,6 +35,7 @@ fi
 
 $GRAALVM/bin/gu install python
 $GRAALVM/bin/gu install R
+$GRAALVM/bin/gu install ruby
 
 # Test on GraalVM
 
@@ -45,3 +46,4 @@ JAVA_HOME=$GRAALVM ant -f platform/core.network/build.xml test
 JAVA_HOME=$GRAALVM ant -f webcommon/libs.graaljs/build.xml test
 JAVA_HOME=$GRAALVM ant -f profiler/profiler.oql/build.xml test
 JAVA_HOME=$GRAALVM ant -f java/nashorn.execution/build.xml test
+JAVA_HOME=$GRAALVM ant -f java/debugger.jpda.truffle/build.xml test

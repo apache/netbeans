@@ -189,7 +189,7 @@ public class WatchesActionsProvider implements NodeActionsProvider {
         w.setExpression(wp.getExpression());
     }
 
-    private static abstract class CheckBoxAction extends AbstractAction implements Presenter.Popup {
+    private abstract static class CheckBoxAction extends AbstractAction implements Presenter.Popup {
 
         private JCheckBoxMenuItem popupItem;
 

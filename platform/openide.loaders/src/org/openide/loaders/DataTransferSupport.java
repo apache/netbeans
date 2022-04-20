@@ -87,7 +87,7 @@ abstract class DataTransferSupport {
     
     /** Supports paste of multiple DataObject at once.
      */
-    static abstract class PasteTypeExt extends PasteType {
+    abstract static class PasteTypeExt extends PasteType {
         private static final RequestProcessor RP = new RequestProcessor("Paste Support"); // NOI18N
         
         /** All DataObjects being pasted. */

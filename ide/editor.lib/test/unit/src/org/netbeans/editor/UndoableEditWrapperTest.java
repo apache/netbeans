@@ -93,7 +93,7 @@ public class UndoableEditWrapperTest extends NbTestCase {
         static final String mimeType = "text/plain";
 
         /** the support to work with */
-        transient final CES support;
+        final transient CES support;
         
         private transient String content = ""; // initial document content
         private transient boolean modified = false;

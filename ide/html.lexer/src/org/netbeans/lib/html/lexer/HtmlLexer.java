@@ -606,7 +606,7 @@ public final class HtmlLexer implements Lexer<HTMLTokenId> {
                         if(input.readLength() > closeDelimiter.length()) {
                             input.backup(closeDelimiter.length());
                             //save the provider's index in the token's property so we can set the corresponding embdding in HTMLTokenId.language()
-                            return token(HTMLTokenId.EL_CONTENT, new HtmlTokenPropertyProvider(EL_CONTENT_PROVIDER_INDEX, new Byte((byte)(customELIndex - 1))));
+                            return token(HTMLTokenId.EL_CONTENT, new HtmlTokenPropertyProvider(EL_CONTENT_PROVIDER_INDEX, (byte)(customELIndex - 1)));
                         } else {
                             //return the open symbol token and switch to "in el" state
                             lexerState = INIT;
@@ -1088,7 +1088,7 @@ public final class HtmlLexer implements Lexer<HTMLTokenId> {
                         if(input.readLength() > closeDelimiter.length()) {
                             input.backup(closeDelimiter.length());
                             //save the provider's index in the token's property so we can set the corresponding embdding in HTMLTokenId.language()
-                            return token(HTMLTokenId.EL_CONTENT, new HtmlTokenPropertyProvider(EL_CONTENT_PROVIDER_INDEX, new Byte((byte)(customELIndex - 1))));
+                            return token(HTMLTokenId.EL_CONTENT, new HtmlTokenPropertyProvider(EL_CONTENT_PROVIDER_INDEX, (byte)(customELIndex - 1)));
                         } else {
                             //return the close symbol token and switch to "in value" state
                             lexerState = ISI_VAL_QUOT;
@@ -1416,7 +1416,7 @@ public final class HtmlLexer implements Lexer<HTMLTokenId> {
 
             case ISI_EL:
             case ISI_VAL_QUOT_EL:
-                return token(HTMLTokenId.EL_CONTENT, new HtmlTokenPropertyProvider(EL_CONTENT_PROVIDER_INDEX, new Byte((byte)(customELIndex - 1))));
+                return token(HTMLTokenId.EL_CONTENT, new HtmlTokenPropertyProvider(EL_CONTENT_PROVIDER_INDEX, (byte)(customELIndex - 1)));
 
 
         }

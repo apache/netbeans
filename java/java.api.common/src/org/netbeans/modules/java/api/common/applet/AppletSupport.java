@@ -60,8 +60,8 @@ public class AppletSupport {
     /** constant for class extension */
     private static final String CLASS_EXT = "class"; // NOI18N
 
-    private final static String POLICY_FILE_NAME = "applet";
-    private final static String POLICY_FILE_EXT = "policy";
+    private static final String POLICY_FILE_NAME = "applet";
+    private static final String POLICY_FILE_EXT = "policy";
         
     private AppletSupport() {}
 

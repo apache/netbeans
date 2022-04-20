@@ -273,7 +273,7 @@ public class PreInstallSummaryPanel extends ErrorMessagePanel {
                         downloadSize+=product.getDownloadSize();
                     }
                     // the critical check point - we download all the data
-                    spaceMap.put(downloadDataDirRoot, new Long(downloadSize));                
+                    spaceMap.put(downloadDataDirRoot, downloadSize);                
                     long lastDataSize = 0;
                     
                     for (Product product: toInstall) {

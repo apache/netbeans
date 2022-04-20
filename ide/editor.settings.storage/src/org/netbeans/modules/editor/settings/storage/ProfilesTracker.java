@@ -230,8 +230,9 @@ public final class ProfilesTracker {
 
             HashMap<String, ProfileDescription> newProfiles = new HashMap<>();
             HashMap<String, ProfileDescription> newProfilesByDisplayName = new HashMap<>();
-            for(String id : scan.keySet()) {
-                List<Object []> profileInfos = scan.get(id);
+            for(Map.Entry<String, List<Object []>> entry : scan.entrySet()) {
+                String id = entry.getKey();
+                List<Object []> profileInfos = entry.getValue();
 
                 // Determine profile's display name and if it can roll back user changes
                 String displayName  = null;

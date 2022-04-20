@@ -46,6 +46,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import com.google.gson.InstanceCreator;
 import com.google.gson.JsonObject;
+import org.eclipse.lsp4j.CallHierarchyRegistrationOptions;
 import org.eclipse.lsp4j.CodeActionKind;
 import org.eclipse.lsp4j.CodeActionOptions;
 import org.eclipse.lsp4j.CodeLensOptions;
@@ -71,6 +72,7 @@ import org.eclipse.lsp4j.TextDocumentSyncOptions;
 import org.eclipse.lsp4j.WorkDoneProgressCancelParams;
 import org.eclipse.lsp4j.WorkDoneProgressParams;
 import org.eclipse.lsp4j.WorkspaceFolder;
+import org.eclipse.lsp4j.jsonrpc.Endpoint;
 import org.eclipse.lsp4j.jsonrpc.JsonRpcException;
 import org.eclipse.lsp4j.jsonrpc.Launcher;
 import org.eclipse.lsp4j.jsonrpc.MessageConsumer;
@@ -194,6 +196,9 @@ public final class Server {
         public MessageConsumer attachLookup(MessageConsumer delegate) {
             // PENDING: allow for message consumer wrappers to be registered to add pre/post processing for
             // the request plus build the request's default Lookup contents.
+            if (!(delegate instanceof Endpoint)) {
+                return delegate; 
+            }
             return new MessageConsumer() {
                 @Override
                 public void consume(Message msg) throws MessageIssueException, JsonRpcException {
@@ -709,6 +714,10 @@ public final class Server {
                 capabilities.setImplementationProvider(true);
                 capabilities.setDocumentHighlightProvider(true);
                 capabilities.setReferencesProvider(true);
+                
+                CallHierarchyRegistrationOptions chOpts = new CallHierarchyRegistrationOptions();
+                chOpts.setWorkDoneProgress(true);
+                capabilities.setCallHierarchyProvider(chOpts);
                 List<String> commands = new ArrayList<>(Arrays.asList(GRAALVM_PAUSE_SCRIPT,
                         JAVA_BUILD_WORKSPACE,
                         JAVA_CLEAN_WORKSPACE,
@@ -1002,6 +1011,12 @@ public final class Server {
 
         @Override
         public CompletableFuture<String> showHtmlPage(HtmlPageParams params) {
+            logWarning(params);
+            return CompletableFuture.completedFuture(null);
+        }
+
+        @Override
+        public CompletableFuture<Void> configurationUpdate(UpdateConfigParams params) {
             logWarning(params);
             return CompletableFuture.completedFuture(null);
         }

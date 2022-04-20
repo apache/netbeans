@@ -92,7 +92,7 @@ final class SourcePosition {
     private static synchronized long getId(Source s) {
         Long id = sourceId.get(s);
         if (id == null) {
-            id = new Long(nextId++);
+            id = nextId++;
             sourceId.put(s, id);
         }
         return id;

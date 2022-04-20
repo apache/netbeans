@@ -29,6 +29,7 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -37,8 +38,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.CompletionStage;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import org.netbeans.api.project.Project;
@@ -121,7 +123,7 @@ public final class NbGradleProjectImpl implements Project {
         return project != null;
     }
 
-    public static abstract class WatcherAccessor {
+    public abstract static class WatcherAccessor {
 
         public abstract NbGradleProject createWatcher(NbGradleProjectImpl proj);
 
@@ -211,7 +213,10 @@ public final class NbGradleProjectImpl implements Project {
                         GradleFiles gf = getGradleFiles();
                         Set<File> ret = new LinkedHashSet<>();
                         for (GradleFiles.Kind kind : GradleFiles.Kind.PROJECT_FILES) {
-                            ret.add(gf.getFile(kind));
+                            File f = gf.getFile(kind);
+                            if (f != null) {
+                                ret.add(f);
+                            }
                         }
                         return ret;
                     }
@@ -231,6 +236,7 @@ public final class NbGradleProjectImpl implements Project {
     }
 
     synchronized void dumpProject() {
+        loading = null;
         project = null;
         attemptedQuality = null;
         loadedProjectSerial = 0;
@@ -367,6 +373,64 @@ public final class NbGradleProjectImpl implements Project {
     CompletableFuture<GradleProject> loadOwnProject(String desc, boolean ignoreCache, boolean interactive, Quality aim, String... args) {
         return loadOwnProject0(desc, ignoreCache, interactive, aim, false, true, args);
     }
+
+    /**
+     * Future that is present during project load. Other load requests can be satisfied by this Future if they do not contain
+     * the 'force' flag.
+     */
+    // @GuardedBy(this)
+    private LoadingCF loading;
+    
+    private static class LoadingCF extends CompletableFuture<GradleProject> {
+        private final Quality aim;
+        private final boolean ignoreCache;
+        private final boolean interactive;
+        private final boolean sync;
+        private final List<String> args;
+        private ThreadLocal<GradleProject> ownThreadCompletion = new ThreadLocal<>();
+
+        public LoadingCF(Quality aim, boolean ignoreCache, boolean interactive, boolean sync, List<String> args) {
+            this.aim = aim;
+            this.ignoreCache = ignoreCache;
+            this.interactive = interactive;
+            this.sync = sync;
+            this.args = args;
+        }
+     
+        public boolean satisifes(LoadingCF other) {
+            if (aim.worseThan(other.aim)) {
+                return false;
+            }
+            if (ignoreCache != other.ignoreCache || interactive != other.interactive || sync != other.sync) {
+                return false;
+            }
+            return args.equals(other.args);
+        }
+
+        @Override
+        public GradleProject getNow(GradleProject valueIfAbsent) {
+            GradleProject p = ownThreadCompletion.get();
+            return p != null ? p : super.getNow(valueIfAbsent);
+        }
+
+        @Override
+        public GradleProject join() {
+            GradleProject p = ownThreadCompletion.get();
+            return p != null ? p : super.join(); 
+        }
+
+        @Override
+        public GradleProject get(long timeout, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
+            GradleProject p = ownThreadCompletion.get();
+            return p != null ? p : super.get(timeout, unit);
+        }
+
+        @Override
+        public GradleProject get() throws InterruptedException, ExecutionException {
+            GradleProject p = ownThreadCompletion.get();
+            return p != null ? p : super.get();
+        }
+    }
     
     /**
      * Loads a project. After load, dispatches reload events. If "sync" is false (= asynchronous), dispatches events
@@ -389,7 +453,17 @@ public final class NbGradleProjectImpl implements Project {
         if (loader == null) {
             throw new IllegalStateException("No loader implementation is present!");
         }
-
+        LoadingCF f = new LoadingCF(aim, ignoreCache, interactive, sync, Arrays.asList(args));
+        synchronized (this) {
+            if (this.loading != null && this.loading.satisifes(f)) {
+                if (!force) {
+                    LOG.log(Level.FINER, "Project {2} is already loading to quality {0}, now attempted {1}, returning existing handle", new 
+                            Object[] { this.loading.aim, aim, this });
+                    return loading;
+                }
+            }
+            this.loading = f;
+        }
         int s = currentSerial.incrementAndGet();
         // do not block during project load.
         LOG.log(Level.FINER, "Starting project {2} load, serial {0}, attempted quality {1}", new Object[] { s, aim, this });
@@ -403,7 +477,7 @@ public final class NbGradleProjectImpl implements Project {
             loadedProjectSerial = s;
             this.attemptedQuality = aim;
             
-            boolean replace = project == null;
+            boolean replace = project == null || force;
             if (project != null) {
                 if (prj.getQuality().betterThan(project.getQuality())) {
                     replace = true;
@@ -425,21 +499,41 @@ public final class NbGradleProjectImpl implements Project {
         }
         // notify the project has been changed.
         if (sync || RELOAD_RP.isRequestProcessorThread()) {
+            synchronized (this) {
+                if (this.loading == f) {
+                    this.loading = null;
+                }
+            }
             LOG.log(Level.FINER, "Firing changes/reload synchronously");
-            ACCESSOR.doFireReload(watcher);
-            return CompletableFuture.completedFuture(prj);
+            try {
+                f.ownThreadCompletion.set(prj);
+                ACCESSOR.doFireReload(watcher);
+            } finally {
+                f.ownThreadCompletion.remove();
+                f.complete(prj);
+            }
+            return f;
         } else {
-            CompletableFuture<GradleProject> f = new CompletableFuture<>();
             LOG.log(Level.FINER, "Firing changes/reload in RP");
             RELOAD_RP.post(() -> callAccessorReload(f, prj));
             return f;
         }
     }
     
-    private CompletableFuture<GradleProject> callAccessorReload(CompletableFuture<GradleProject> f, GradleProject prj) {
+    private CompletableFuture<GradleProject> callAccessorReload(LoadingCF f, GradleProject prj) {
         try {
-            ACCESSOR.doFireReload(watcher);
-            f.complete(prj);
+            synchronized (this) {
+                if (this.loading == f) {
+                    this.loading = null;
+                }
+            }
+            try {
+                f.ownThreadCompletion.set(prj);
+                ACCESSOR.doFireReload(watcher);
+            } finally {
+                f.ownThreadCompletion.remove();
+                f.complete(prj);
+            }
         } catch (ThreadDeath t) {
             throw t;
         } catch (RuntimeException | Error ex) {

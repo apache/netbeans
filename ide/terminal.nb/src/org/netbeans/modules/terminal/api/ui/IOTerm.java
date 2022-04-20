@@ -26,7 +26,7 @@ import org.openide.windows.InputOutput;
  *
  * @author masha
  */
-abstract public class IOTerm extends org.netbeans.modules.terminal.api.IOTerm {
+public abstract class IOTerm extends org.netbeans.modules.terminal.api.IOTerm {
     
     private static IOTerm find(InputOutput io) {
         if (io instanceof Lookup.Provider) {
@@ -49,6 +49,6 @@ abstract public class IOTerm extends org.netbeans.modules.terminal.api.IOTerm {
      *
      * @return underlying Term associatd with io.
      */
-    abstract protected Term term();
+    protected abstract Term term();
     
 }

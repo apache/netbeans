@@ -268,7 +268,7 @@ public final class TreeViewTest extends NbTestCase {
             tree.collapseRow(4);
         }
         
-        final static class TreeChildren extends Children.Array {
+        static final class TreeChildren extends Children.Array {
             
             private static final char[] letters
                     = new char[] {'A', 'B', 'C', 'D', 'E'};

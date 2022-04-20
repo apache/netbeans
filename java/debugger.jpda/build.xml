@@ -20,7 +20,112 @@
 
 -->
 <project basedir="." default="build" name="java/debugger.jpda">
-    <import file="../../nbbuild/templates/projectized.xml"/>
+    <import file="../../nbbuild/templates/projectized.xml"/>    
+
+    <target name="build-init" depends="projectized.build-init">
+        <mkdir dir="${jpda.classes.dir}"/>
+        <copy todir="${jpda.classes.dir}">
+            <resources>
+                <javaresource name="com/sun/jdi/AbsentInformationException.class"/>
+                <javaresource name="com/sun/jdi/Bootstrap.class"/>
+                <javaresource name="com/sun/jdi/IncompatibleThreadStateException.class"/>
+                <javaresource name="com/sun/jdi/InvalidTypeException.class"/>
+                <javaresource name="com/sun/jdi/InvalidStackFrameException.class"/>
+                <javaresource name="com/sun/jdi/InvocationException.class"/>
+                <javaresource name="com/sun/jdi/StackFrame.class"/>
+                <javaresource name="com/sun/jdi/ObjectReference.class"/>
+                <javaresource name="com/sun/jdi/ThreadReference.class"/>
+                <javaresource name="com/sun/jdi/ClassObjectReference.class"/>
+                <javaresource name="com/sun/jdi/ClassLoaderReference.class"/>
+                <javaresource name="com/sun/jdi/ReferenceType.class"/>
+                <javaresource name="com/sun/jdi/ClassType.class"/>
+                <javaresource name="com/sun/jdi/ClassNotLoadedException.class"/>
+                <javaresource name="com/sun/jdi/Value.class"/>
+                <javaresource name="com/sun/jdi/VoidValue.class"/>
+                <javaresource name="com/sun/jdi/FloatValue.class"/>
+                <javaresource name="com/sun/jdi/DoubleValue.class"/>
+                <javaresource name="com/sun/jdi/ShortValue.class"/>
+                <javaresource name="com/sun/jdi/IntegerValue.class"/>
+                <javaresource name="com/sun/jdi/LongValue.class"/>
+                <javaresource name="com/sun/jdi/PrimitiveValue.class"/>
+                <javaresource name="com/sun/jdi/Locatable.class"/>
+                <javaresource name="com/sun/jdi/Location.class"/>
+                <javaresource name="com/sun/jdi/MonitorInfo.class"/>
+                <javaresource name="com/sun/jdi/Mirror.class"/>
+                <javaresource name="com/sun/jdi/VirtualMachine.class"/>
+                <javaresource name="com/sun/jdi/VirtualMachineManager.class"/>
+                <javaresource name="com/sun/jdi/InterfaceType.class"/>
+                <javaresource name="com/sun/jdi/PrimitiveType.class"/>
+                <javaresource name="com/sun/jdi/VMDisconnectedException.class"/>
+                <javaresource name="com/sun/jdi/VMOutOfMemoryException.class"/>
+                <javaresource name="com/sun/jdi/connect/AttachingConnector.class"/>
+                <javaresource name="com/sun/jdi/connect/Connector.class"/>
+                <javaresource name="com/sun/jdi/connect/Connector$Argument.class"/>
+                <javaresource name="com/sun/jdi/connect/Connector$IntegerArgument.class"/>
+                <javaresource name="com/sun/jdi/connect/IllegalConnectorArgumentsException.class"/>
+                <javaresource name="com/sun/jdi/connect/LaunchingConnector.class"/>
+                <javaresource name="com/sun/jdi/connect/ListeningConnector.class"/>
+                <javaresource name="com/sun/jdi/connect/Transport.class"/>
+                <javaresource name="com/sun/jdi/connect/VMStartException.class"/>
+                <javaresource name="com/sun/jdi/request/EventRequest.class"/>
+                <javaresource name="com/sun/jdi/request/StepRequest.class"/>
+                <javaresource name="com/sun/jdi/request/MonitorWaitedRequest.class"/>
+                <javaresource name="com/sun/jdi/request/MonitorContendedEnterRequest.class"/>
+                <javaresource name="com/sun/jdi/request/MethodExitRequest.class"/>
+                <javaresource name="com/sun/jdi/request/ModificationWatchpointRequest.class"/>
+                <javaresource name="com/sun/jdi/request/ExceptionRequest.class"/>
+                <javaresource name="com/sun/jdi/request/InvalidRequestStateException.class"/>
+                <javaresource name="com/sun/jdi/request/VMDeathRequest.class"/>
+                <javaresource name="com/sun/jdi/event/Event.class"/>
+                <javaresource name="com/sun/jdi/event/EventIterator.class"/>
+                <javaresource name="com/sun/jdi/event/ClassPrepareEvent.class"/>
+                <javaresource name="com/sun/jdi/event/ClassUnloadEvent.class"/>
+                <javaresource name="com/sun/jdi/event/MethodEntryEvent.class"/>
+                <javaresource name="com/sun/jdi/event/EventSet.class"/>
+                <javaresource name="com/sun/jdi/event/WatchpointEvent.class"/>
+                <javaresource name="com/sun/jdi/event/ModificationWatchpointEvent.class"/>
+                <javaresource name="com/sun/jdi/event/MonitorWaitedEvent.class"/>
+                <javaresource name="com/sun/jdi/event/ThreadStartEvent.class"/>
+                <javaresource name="com/sun/jdi/event/VMStartEvent.class"/>
+                <javaresource name="com/sun/jdi/CharValue.class"/>
+                <javaresource name="com/sun/jdi/TypeComponent.class"/>
+                <javaresource name="com/sun/jdi/ThreadGroupReference.class"/>
+                <javaresource name="com/sun/jdi/event/MethodExitEvent.class"/>
+                <javaresource name="com/sun/jdi/ByteValue.class"/>
+                <javaresource name="com/sun/jdi/event/ExceptionEvent.class"/>
+                <javaresource name="com/sun/jdi/ArrayReference.class"/>
+                <javaresource name="com/sun/jdi/Method.class"/>
+                <javaresource name="com/sun/jdi/event/MonitorContendedEnteredEvent.class"/>
+                <javaresource name="com/sun/jdi/BooleanValue.class"/>
+                <javaresource name="com/sun/jdi/connect/spi/Connection.class"/>
+                <javaresource name="com/sun/jdi/request/MonitorContendedEnteredRequest.class"/>
+                <javaresource name="com/sun/jdi/Type.class"/>
+                <javaresource name="com/sun/jdi/ObjectCollectedException.class"/>
+                <javaresource name="com/sun/jdi/ClassNotPreparedException.class"/>
+                <javaresource name="com/sun/jdi/request/WatchpointRequest.class"/>
+                <javaresource name="com/sun/jdi/event/MonitorWaitEvent.class"/>
+                <javaresource name="com/sun/jdi/request/ClassPrepareRequest.class"/>
+                <javaresource name="com/sun/jdi/ArrayType.class"/>
+                <javaresource name="com/sun/jdi/request/ThreadDeathRequest.class"/>
+                <javaresource name="com/sun/jdi/event/LocatableEvent.class"/>
+                <javaresource name="com/sun/jdi/StringReference.class"/>
+                <javaresource name="com/sun/jdi/request/EventRequestManager.class"/>
+                <javaresource name="com/sun/jdi/request/ThreadStartRequest.class"/>
+                <javaresource name="com/sun/jdi/event/MonitorContendedEnterEvent.class"/>
+                <javaresource name="com/sun/jdi/request/MethodEntryRequest.class"/>
+                <javaresource name="com/sun/jdi/request/MonitorWaitRequest.class"/>
+                <javaresource name="com/sun/jdi/NativeMethodException.class"/>
+                <javaresource name="com/sun/jdi/request/ClassUnloadRequest.class"/>
+                <javaresource name="com/sun/jdi/Field.class"/>
+                <javaresource name="com/sun/jdi/event/ThreadDeathEvent.class"/>
+                <javaresource name="com/sun/jdi/request/AccessWatchpointRequest.class"/>
+                <javaresource name="com/sun/jdi/InternalException.class"/>
+                <javaresource name="com/sun/jdi/LocalVariable.class"/>
+                <javaresource name="com/sun/jdi/event/EventQueue.class"/>
+                <javaresource name="com/sun/jdi/request/BreakpointRequest.class"/>
+            </resources>
+        </copy>
+    </target>
 
     <target name="gen-compile" depends="init">
         <mkdir dir="build/genclasses"/>

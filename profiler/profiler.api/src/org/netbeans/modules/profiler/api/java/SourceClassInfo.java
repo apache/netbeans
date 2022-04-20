@@ -30,15 +30,15 @@ import org.openide.filesystems.FileObject;
  *
  * @author Jaroslav Bachorik
  */
-abstract public class SourceClassInfo {
-    final public static Comparator<SourceClassInfo> COMPARATOR = new Comparator<SourceClassInfo>() {
+public abstract class SourceClassInfo {
+    public static final Comparator<SourceClassInfo> COMPARATOR = new Comparator<SourceClassInfo>() {
         @Override
         public int compare(SourceClassInfo o1, SourceClassInfo o2) {
             return o1.getVMName().compareTo(o2.getVMName());
         }
     };
     
-    final private static Pattern anonymousInnerClassPattern = Pattern.compile(".*?\\$[0-9]*$");
+    private static final Pattern anonymousInnerClassPattern = Pattern.compile(".*?\\$[0-9]*$");
     
     private String simpleName, qualName, vmName;
     
@@ -74,7 +74,7 @@ abstract public class SourceClassInfo {
      *
      * @return Returns the class simple name (the last part of the FQN)
      */
-    final public String getSimpleName() {
+    public final String getSimpleName() {
         return simpleName;
     }
 
@@ -82,7 +82,7 @@ abstract public class SourceClassInfo {
      *
      * @return Returns the class FQN
      */
-    final public String getQualifiedName() {
+    public final String getQualifiedName() {
         return qualName;
     }
 
@@ -90,7 +90,7 @@ abstract public class SourceClassInfo {
      *
      * @return Returns the VM internal class name
      */
-    final public String getVMName() {
+    public final String getVMName() {
         return vmName;
     }
 
@@ -102,15 +102,15 @@ abstract public class SourceClassInfo {
         return isAnonymous(qualName);
     }
     
-    abstract public FileObject getFile();
-    abstract public Set<SourceMethodInfo> getMethods(boolean all);
-    abstract public Set<SourceClassInfo> getSubclasses();
-    abstract public Set<SourceClassInfo> getInnerClases();
-    abstract public Set<SourceMethodInfo> getConstructors();
-    abstract public SourceClassInfo getSuperType();
-    abstract public Set<SourceClassInfo> getInterfaces();
+    public abstract FileObject getFile();
+    public abstract Set<SourceMethodInfo> getMethods(boolean all);
+    public abstract Set<SourceClassInfo> getSubclasses();
+    public abstract Set<SourceClassInfo> getInnerClases();
+    public abstract Set<SourceMethodInfo> getConstructors();
+    public abstract SourceClassInfo getSuperType();
+    public abstract Set<SourceClassInfo> getInterfaces();
     
-    final protected boolean isAnonymous(String className) {
+    protected final boolean isAnonymous(String className) {
         return anonymousInnerClassPattern.matcher(className).matches();
     }
 }

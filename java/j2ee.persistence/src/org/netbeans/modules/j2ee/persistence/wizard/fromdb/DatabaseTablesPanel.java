@@ -1099,7 +1099,9 @@ public class DatabaseTablesPanel extends javax.swing.JPanel implements AncestorL
         @Override
         public void readSettings(WizardDescriptor settings) {
             wizardDescriptor = settings;
-            wizardDescriptor.putProperty("NewFileWizard_Title", title); // NOI18N
+            if (title != null) {
+                wizardDescriptor.putProperty("NewFileWizard_Title", title); // NOI18N
+            }
             
             if (!componentInitialized) {
                 componentInitialized = true;

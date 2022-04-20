@@ -249,7 +249,7 @@ public class HtmlCompletionProvider implements CompletionProvider {
         }
     }
 
-    private static abstract class AbstractQuery extends AsyncCompletionQuery {
+    private abstract static class AbstractQuery extends AsyncCompletionQuery {
 
         protected final boolean triggeredByAutocompletion;
 

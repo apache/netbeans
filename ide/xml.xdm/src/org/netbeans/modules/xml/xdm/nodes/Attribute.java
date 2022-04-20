@@ -21,7 +21,6 @@ package org.netbeans.modules.xml.xdm.nodes;
 
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Pattern;
 import org.netbeans.modules.xml.xdm.visitor.XMLNodeVisitor;
 
 /**
@@ -246,31 +245,24 @@ public class Attribute extends NodeImpl implements Node, org.w3c.dom.Attr {
     
     private String insertEntityReference(String text) {
         // just make sure we replace & with &amp; and not &amp; with &&amp;amp; and so on
-        String result = removeEntityReference(text);
-        result = result.replaceAll("&","&amp;");   //replace &
-        result = result.replaceAll("<","&lt;");    //replace <
-//        result = result.replaceAll(">","&gt;");    //replace >
-        result = result.replaceAll("'","&apos;");  //replace '
-        result = result.replaceAll("\"","&quot;"); //replace "
-        return result;
+        return removeEntityReference(text)
+                    .replace("&", "&amp;")   //replace &
+                    .replace("<", "&lt;")    //replace <
+//                    .replace(">", "&gt;")    //replace >
+                    .replace("'", "&apos;")  //replace '
+                    .replace("\"", "&quot;"); //replace "
     }
 
     private String removeEntityReference(String text) {
-        String result = text;
-        result = AMPERSAND_PATTERN.matcher(result).replaceAll("&");   //replace with &
-        result = LESS_THAN_PATTERN.matcher(result).replaceAll("<");    //replace with <
-//        result = result.replaceAll("&gt;",">");    //replace with >
-        result = APOSTROPHE_PATTERN.matcher(result).replaceAll("'");  //replace with '
-        result = QUOTE_PATTERN.matcher(result).replaceAll("\""); //replace with "
-        return result;
+        return text.replace("&amp;", "&")   //replace with &
+                   .replace("&lt;", "<")    //replace with <
+//                   .replace("&gt;", ">")    //replace with >
+                   .replace("&apos;", "'")  //replace with '
+                   .replace("&quot;", "\""); //replace with "
     }
     
     private String name = null;
     private String value = null;
-    private static final Pattern AMPERSAND_PATTERN = Pattern.compile("&amp;"); //NOI18N
-    private static final Pattern LESS_THAN_PATTERN = Pattern.compile("&lt;"); //NOI18N
-    private static final Pattern APOSTROPHE_PATTERN = Pattern.compile("&apos;"); //NOI18N
-    private static final Pattern QUOTE_PATTERN = Pattern.compile("&quot;");//NOI18N
 }
 
 

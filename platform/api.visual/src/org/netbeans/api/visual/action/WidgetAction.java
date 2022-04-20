@@ -54,7 +54,7 @@ public interface WidgetAction {
     /**
      * Represents a state of event processing.
      */
-    public static abstract class State {
+    public abstract static class State {
 
         /**
          * The state that means: The event is not processed by the action and has to be processed by other actions too.
@@ -468,7 +468,7 @@ public interface WidgetAction {
      * An adapter of the widget action. All methods return locked or rejected event state based on a result of isLocked method.
      * This is often used for long-term actions like MoveAction.
      */
-    public static abstract class LockedAdapter implements WidgetAction {
+    public abstract static class LockedAdapter implements WidgetAction {
 
         /**
          * Called by event handlers to resolve whether they should return locked or rejected event state.

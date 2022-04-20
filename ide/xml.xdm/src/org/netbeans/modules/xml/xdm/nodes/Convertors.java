@@ -153,15 +153,15 @@ public final class Convertors {
     static class EncodingUtil {
 
         /** IANA to Java encoding mappings */
-        protected final static Map<String, String> encodingIANA2JavaMap = new TreeMap<String, String>();
+        protected static final Map<String, String> encodingIANA2JavaMap = new TreeMap<String, String>();
 
         /** */
-        protected final static Map<String, String> encodingIANADescriptionMap = new TreeMap<String, String>();
+        protected static final Map<String, String> encodingIANADescriptionMap = new TreeMap<String, String>();
 
         /** */
-        protected final static Map<String, String> encodingIANAAliasesMap = new TreeMap<String, String>();
+        protected static final Map<String, String> encodingIANAAliasesMap = new TreeMap<String, String>();
         
-        protected final static Map<String, String> encodingJava2IANAMap = new TreeMap<String, String>();
+        protected static final Map<String, String> encodingJava2IANAMap = new TreeMap<String, String>();
 
         //
         // Static initialization

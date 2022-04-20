@@ -291,7 +291,7 @@ public final class ElementOpen {
      * @since 1.58
      */
     public static CompletableFuture<Location> getLocation(final ClasspathInfo cpInfo, final ElementHandle<? extends Element> el, String resourceName) {
-        final CompletableFuture<Object[]> future = getFutureOpenInfo(cpInfo, el, resourceName, new AtomicBoolean());
+        final CompletableFuture<Object[]> future = getFutureOpenInfo(cpInfo, el, resourceName, new AtomicBoolean(), true);
         return future.thenApply(openInfo -> {
             if (openInfo != null && openInfo[0] != null && (int) openInfo[1] != (-1) && (int) openInfo[2] != (-1)) {
                 FileObject file = (FileObject) openInfo[0];
@@ -357,13 +357,13 @@ public final class ElementOpen {
         return FileObjects.CLASS.equals(file.getExt()) || ClassParser.MIME_TYPE.equals(file.getMIMEType(ClassParser.MIME_TYPE));
     }
 
-    private static CompletableFuture<Object[]> getFutureOpenInfo(final ClasspathInfo cpInfo, final ElementHandle<? extends Element> el, String resourceName, AtomicBoolean cancel) {
+    static CompletableFuture<Object[]> getFutureOpenInfo(final ClasspathInfo cpInfo, final ElementHandle<? extends Element> el, String resourceName, AtomicBoolean cancel, boolean acquire) {
         Object[] openInfo = getOpenInfo(cpInfo, el, cancel);
         if (openInfo != null) {
             return CompletableFuture.completedFuture(openInfo);
         }
         // try to attach sources
-        if (resourceName != null) {
+        if (resourceName != null && acquire) {
             final ClassPath cp = ClassPathSupport.createProxyClassPath(
                 cpInfo.getClassPath(ClasspathInfo.PathKind.BOOT),
                 cpInfo.getClassPath(ClasspathInfo.PathKind.COMPILE),
@@ -411,7 +411,7 @@ public final class ElementOpen {
         return CompletableFuture.completedFuture(generated != null ? getOpenInfo(generated, el, cancel) : null);
     }
 
-    private static Object[] getOpenInfo(final ClasspathInfo cpInfo, final ElementHandle<? extends Element> el, AtomicBoolean cancel) {
+    static Object[] getOpenInfo(final ClasspathInfo cpInfo, final ElementHandle<? extends Element> el, AtomicBoolean cancel) {
         FileObject fo = SourceUtils.getFile(el, cpInfo);
         if (fo != null && fo.isFolder()) {
             fo = fo.getFileObject("package-info.java"); // NOI18N
@@ -423,7 +423,7 @@ public final class ElementOpen {
         assert fo != null;
 
         try {
-            Object[] result = new Object[6];
+            Object[] result = new Object[7];
             result[0] = fo;
             getOffset(fo, handle, result, cancel);
             return result;
@@ -515,13 +515,13 @@ public final class ElementOpen {
                         return;
                     }
 
-                    FindDeclarationVisitor v = new FindDeclarationVisitor(el, info);
+                    result[6] = TreePathHandle.create(el, info);
 
+                    FindDeclarationVisitor v = new FindDeclarationVisitor(el, info);
                     CompilationUnitTree cu = info.getCompilationUnit();
 
                     v.scan(cu, null);
                     Tree elTree = v.declTree;
-
                     if (elTree != null) {
                         result[1] = (int)info.getTrees().getSourcePositions().getStartPosition(cu, elTree);
                         result[2] = (int)info.getTrees().getSourcePositions().getEndPosition(cu, elTree);
@@ -608,6 +608,11 @@ public final class ElementOpen {
             @Override
             public Object[] getOpenInfo(ClasspathInfo cpInfo, ElementHandle<? extends Element> el, AtomicBoolean cancel) {
                 return ElementOpen.getOpenInfo(cpInfo, el, cancel);
+            }
+
+            @Override
+            public CompletableFuture<Object[]> getOpenInfoFuture(final ClasspathInfo cpInfo, final ElementHandle<? extends Element> el, String nameOpt, AtomicBoolean cancel, boolean acquire) {
+                return ElementOpen.getFutureOpenInfo(cpInfo, el, nameOpt, cancel, acquire);
             }
         });
     }

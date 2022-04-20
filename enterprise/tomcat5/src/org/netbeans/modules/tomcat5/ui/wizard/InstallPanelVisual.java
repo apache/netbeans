@@ -422,7 +422,7 @@ class InstallPanelVisual extends javax.swing.JPanel {
         // prevent the message from being cut off - wizard descriptor issue work-around
         return errorMessage == null 
                 ? null
-                : "<html>" + errorMessage.replaceAll("<",  "&lt;").replaceAll(">",  "&gt;") + "</html>"; // NIO18N
+                : "<html>" + errorMessage.replace("<",  "&lt;").replace(">",  "&gt;") + "</html>"; // NIO18N
     }
     
     public boolean isInfoMessage() {

@@ -1,3 +1,22 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
 package org.netbeans.api.java.source.ui.snippet;
 
 
@@ -18,11 +37,7 @@ public class SnippetTagCommentParser {
     private static final String JAVA_LANG_SOURCE_LINE_START_PATTERN = "^(.*)(";
     private static final String MARKUPTAG_START_PATTERN = "(\\s*@\\s*\\w+.+?))$";
     private final SnippetMarkupTagExtractor extractor = new SnippetMarkupTagExtractor();
-    private final Pattern markUpPattern;
-
-    public SnippetTagCommentParser(String langCommentPattern) {
-        this.markUpPattern = Pattern.compile(JAVA_LANG_SOURCE_LINE_START_PATTERN + langCommentPattern + MARKUPTAG_START_PATTERN);     
-    }
+    private final Pattern markUpPattern = Pattern.compile(JAVA_LANG_SOURCE_LINE_START_PATTERN + "\\Q//\\E"+ MARKUPTAG_START_PATTERN);
     
     public List<SourceLineMeta> parse(String snippetDocComment) {
         List<SourceLineMeta> fullSourceLineInfo = new ArrayList<>();

@@ -30,10 +30,18 @@ import org.netbeans.modules.php.editor.CodeUtils;
 import org.netbeans.modules.php.editor.lexer.PHPTokenId;
 import org.netbeans.modules.php.editor.parser.PHPParseResult;
 import org.netbeans.modules.php.editor.parser.astnodes.ASTNode;
+import org.netbeans.modules.php.editor.parser.astnodes.Assignment;
+import org.netbeans.modules.php.editor.parser.astnodes.AttributeDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.BodyDeclaration;
+import org.netbeans.modules.php.editor.parser.astnodes.CaseDeclaration;
+import org.netbeans.modules.php.editor.parser.astnodes.ClassInstanceCreation;
 import org.netbeans.modules.php.editor.parser.astnodes.ConstantDeclaration;
+import org.netbeans.modules.php.editor.parser.astnodes.EnumDeclaration;
+import org.netbeans.modules.php.editor.parser.astnodes.Expression;
+import org.netbeans.modules.php.editor.parser.astnodes.FormalParameter;
 import org.netbeans.modules.php.editor.parser.astnodes.Identifier;
 import org.netbeans.modules.php.editor.parser.astnodes.IntersectionType;
+import org.netbeans.modules.php.editor.parser.astnodes.StaticStatement;
 import org.netbeans.modules.php.editor.parser.astnodes.visitors.DefaultVisitor;
 import org.openide.filesystems.FileObject;
 import org.openide.util.NbBundle;
@@ -102,6 +110,76 @@ public final class PHP81UnhandledError extends UnhandledErrorRule {
 
         @Override
         public void visit(IntersectionType node) {
+            if (CancelSupport.getDefault().isCancelled()) {
+                return;
+            }
+            createError(node);
+            super.visit(node);
+        }
+
+        @Override
+        public void visit(StaticStatement node) {
+            // static $a = new A();
+            if (CancelSupport.getDefault().isCancelled()) {
+                return;
+            }
+            for (Expression expression : node.getExpressions()) {
+                if (CancelSupport.getDefault().isCancelled()) {
+                    return;
+                }
+                if (expression instanceof Assignment) {
+                    Assignment assignment = (Assignment) expression;
+                    if (assignment.getOperator() == Assignment.Type.EQUAL) {
+                        checkNewInInitializer(assignment.getRightHandSide());
+                    }
+                }
+            }
+            super.visit(node);
+        }
+
+        @Override
+        public void visit(FormalParameter node) {
+            // function func($param = new A()) {}
+            if (CancelSupport.getDefault().isCancelled()) {
+                return;
+            }
+            checkNewInInitializer(node.getDefaultValue());
+            super.visit(node);
+        }
+
+        @Override
+        public void visit(AttributeDeclaration attributeDeclaration) {
+            // #[AnAttribute(new A())]
+            if (CancelSupport.getDefault().isCancelled()) {
+                return;
+            }
+            List<Expression> parameters = attributeDeclaration.getParameters();
+            // #[MyAttribute] this case is null
+            if (parameters != null) {
+                for (Expression parameter : parameters) {
+                    if (CancelSupport.getDefault().isCancelled()) {
+                        return;
+                    }
+                    checkNewInInitializer(parameter);
+                }
+            }
+            super.visit(attributeDeclaration);
+        }
+
+        @Override
+        public void visit(EnumDeclaration node) {
+            if (CancelSupport.getDefault().isCancelled()) {
+                return;
+            }
+            createError(node);
+            super.visit(node);
+        }
+
+        @Override
+        public void visit(CaseDeclaration node) {
+            if (CancelSupport.getDefault().isCancelled()) {
+                return;
+            }
             createError(node);
             super.visit(node);
         }
@@ -111,6 +189,22 @@ public final class PHP81UnhandledError extends UnhandledErrorRule {
                 for (Identifier name : constantDeclaration.getNames()) {
                     createError(name);
                 }
+            }
+            // New in initializer
+            // const CONSTANT = new Constant();
+            if (constantDeclaration.isGlobal()) {
+                for (Expression initializer : constantDeclaration.getInitializers()) {
+                    if (CancelSupport.getDefault().isCancelled()) {
+                        return;
+                    }
+                    checkNewInInitializer(initializer);
+                }
+            }
+        }
+
+        private void checkNewInInitializer(Expression node) {
+            if (node instanceof ClassInstanceCreation) {
+                createError(node);
             }
         }
 

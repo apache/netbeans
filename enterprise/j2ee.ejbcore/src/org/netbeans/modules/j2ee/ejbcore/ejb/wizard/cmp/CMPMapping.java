@@ -48,11 +48,11 @@ public class CMPMapping implements OriginalCMPMapping {
     }
     
     public String getFieldColumn(String cmpFieldName) {
-        return (String) model.getCMPFieldMapping().get(cmpFieldName);
+        return model.getCMPFieldMapping().get(cmpFieldName);
     }
     
     public String[] getRelationshipColumn(String cmrFieldName) {
-        ColumnData[] columns =  (ColumnData[]) model.getCmrFieldMapping().get(cmrFieldName);
+        ColumnData[] columns =  model.getCmrFieldMapping().get(cmrFieldName);
         String[] names = new String[columns.length];
         for(int i = 0; i < columns.length; i ++) {
             names[i] = columns[i].getColumnName();
@@ -73,7 +73,7 @@ public class CMPMapping implements OriginalCMPMapping {
     }
     
     public String getRelationshipJoinTable(String cmrFieldName) {
-        return (String) model.getJoinTableMapping().get(cmrFieldName);
+        return model.getJoinTableMapping().get(cmrFieldName);
     }
     
     public CMPMappingModel getMappingModel() {

@@ -101,6 +101,10 @@ Some refactorings are two steps with like Override method ... where method to be
 Change method parameters refactoring is provided using dedidacated form allowing to change, add, move, remove method parameters.
 ![Change method parameters refactoring](images/change_method_params.png)
 
+### Move Members Refactoring
+Move members refactoring provides dedicated form as well.
+![Move members refactoring](images/move_refactoring.png)
+
 ### Some of supported refactorings:
 * Convert to static import 
 * Rename 	
@@ -152,6 +156,18 @@ Setting project's Maven pom.xml to skip native-image build everytime when projec
 
 When native image is built, including debug info then add __Launch Native Image__ configuration to launch.json. Select it in Run & Debug activity window and press F5 to debug Java source code on native image.
 
+## Database Support
+Database Explorer allows to connect to databases using appropriate JDBC drivers.
+Make Default Connection sets selected Database connection as default for IDE. This connection is then used by all IDE editors for SQL Code completion, or Micronaut Data queries, e.g. `findByPagesGreaterThan`
+
+![Database Explorer](images/database-explorer.png)
+
+## OCI Explorer
+Oracle Cloud Infrastructure Explorer supports viewing compartments and resources available on user OCI instance. It is defined by OCI config file which has to be downloaded according to [OCI instructions](https://docs.oracle.com/en-us/iaas/Content/API/Concepts/sdkconfig.htm) and saved in `<users_home>/.oci/config`
+
+![Cloud Explorer](images/cloud-explorer.png)
+
+It is possible to add JDBC connection to Oracle Autonomous DB running in OCI using __Add DB Connection__ menu. It downloads DB Wallet automatically.
 ## Supported Options
 
 * __netbeans.jdkhome__ - path to the JDK, see dedicated section below

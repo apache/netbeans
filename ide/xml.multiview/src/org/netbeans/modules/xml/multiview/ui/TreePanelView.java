@@ -57,7 +57,7 @@ public class TreePanelView extends PanelView {
     
     protected void showPanel(TreeNode node) {
         String panelId = node.getPanelId();
-        TreePanel treePanel = (TreePanel)map.get(panelId);
+        TreePanel treePanel = map.get(panelId);
         if (treePanel==null) {
             treePanel = node.getPanel();
             map.put(panelId,treePanel);

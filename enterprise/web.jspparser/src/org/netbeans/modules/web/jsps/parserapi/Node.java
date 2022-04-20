@@ -836,7 +836,7 @@ public abstract class Node {
     /**
      * Represents an expression, declaration, or scriptlet
      */
-    public static abstract class ScriptingElement extends Node {
+    public abstract static class ScriptingElement extends Node {
 
 	public ScriptingElement(String qName, String localName, String text,
 				Mark start, Node parent) {

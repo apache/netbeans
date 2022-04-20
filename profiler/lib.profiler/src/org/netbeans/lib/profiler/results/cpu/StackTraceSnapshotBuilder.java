@@ -290,7 +290,7 @@ public class StackTraceSnapshotBuilder {
         status = null;
     }
     
-    final public void setIgnoredThreads(Set<String> ignoredThreadNames) {
+    public final void setIgnoredThreads(Set<String> ignoredThreadNames) {
         synchronized (lock) {
             this.ignoredThreadNames.clear();
             this.ignoredThreadNames.addAll(ignoredThreadNames);
@@ -314,7 +314,7 @@ public class StackTraceSnapshotBuilder {
         }
     }
     
-    final public void addStacktrace(java.lang.management.ThreadInfo[] threads, long dumpTimeStamp) throws IllegalStateException {
+    public final void addStacktrace(java.lang.management.ThreadInfo[] threads, long dumpTimeStamp) throws IllegalStateException {
         long timediff = processDumpTimeStamp(dumpTimeStamp);
         
         if (timediff < 0) return;

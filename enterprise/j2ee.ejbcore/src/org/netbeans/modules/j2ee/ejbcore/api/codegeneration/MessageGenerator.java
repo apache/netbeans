@@ -112,8 +112,9 @@ public final class MessageGenerator {
         this.jmsSupport = jmsSupport;
         boolean useMappedName = useMappedName();
         if (profile != null && profile.isAtLeast(Profile.JAVA_EE_7_WEB) && jmsSupport.useDestinationLookup()) {
-            String destination = properties.get(ActivationConfigProperties.DESTINATION_LOOKUP) == null || ((String) properties.get(ActivationConfigProperties.DESTINATION_LOOKUP)).isEmpty() ?
-                    messageDestination.getName() : properties.get(ActivationConfigProperties.DESTINATION_LOOKUP);
+            String destination = properties.get(ActivationConfigProperties.DESTINATION_LOOKUP) == null ||
+                    properties.get(ActivationConfigProperties.DESTINATION_LOOKUP).isEmpty() ?
+                                   messageDestination.getName() : properties.get(ActivationConfigProperties.DESTINATION_LOOKUP);
             properties.put(DESTINATION_LOOKUP, destination);
         } else {
             if (!useMappedName) {

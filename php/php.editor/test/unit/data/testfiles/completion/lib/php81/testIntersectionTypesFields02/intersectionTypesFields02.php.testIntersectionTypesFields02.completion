@@ -1,0 +1,5 @@
+Code completion result for source line:
+private IntersectionTypes1&\Test1\|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CLASS      IntersectionTypes1              [PUBLIC]   Test1
+CLASS      IntersectionTypes2              [PUBLIC]   Test1

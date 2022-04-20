@@ -1,0 +1,17 @@
+This folder contains lists of JVM flags, related to JEP 396: Strongly Encapsulate JDK Internals by Default
+
+NetBeans breaks the encapsulation of the java module system in several places,
+for example by reflectively accessing some internals of the javac API.
+To allow that, JMS requires the JVM (JDK 16+) to be configured with flags specifying the exceptions.
+
+example:
+--add-opens=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED
+
+This folder is not intended to specify module dependencies.
+There should be hopefully fewer flags over time, devs are encouraged to shrink
+the list if possible. Once the NetBeans module system has been made JMS aware,
+there might be better places for specifying this exceptions.
+
+format:
+the flags are grouped by category, filename specifies the category, one flag per line, no comments or other strings allowed
+to make usage outside of java programs (e.g CI job configs, copy&paste into maven poms, netbeans.conf) as simple as possible.

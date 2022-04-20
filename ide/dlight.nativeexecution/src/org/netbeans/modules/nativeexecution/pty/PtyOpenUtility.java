@@ -90,7 +90,7 @@ final class PtyOpenUtility extends HelperUtility {
         return new PtyInfo(pid, tty);
     }
 
-    final static class PtyInfo {
+    static final class PtyInfo {
 
         final int pid;
         final String tty;

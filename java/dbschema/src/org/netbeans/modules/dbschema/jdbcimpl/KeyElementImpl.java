@@ -65,7 +65,7 @@ public abstract class KeyElementImpl extends DBMemberElementImpl implements KeyE
      */
     public ColumnElement[] getColumns() {
         DBElement[] dbe = columns.getElements();
-        return (ColumnElement[]) Arrays.asList(dbe).toArray(new ColumnElement[dbe.length]);
+        return Arrays.asList(dbe).toArray(new ColumnElement[dbe.length]);
     }
   
     /** Find a column by name.

@@ -37,7 +37,6 @@
                 <result>
                     <module-dependency codenamebase="org.openide.filesystems" spec="6.0"/>
                     <module-dependency codenamebase="org.openide.util" spec="6.0"/>
-                    <module-dependency codenamebase="org.openide.util.enumerations" spec="6.0"/>
                     <module-dependency codenamebase="org.openide.modules" spec="6.0"/>
                     <module-dependency codenamebase="org.openide.nodes" spec="6.0"/>
                     <module-dependency codenamebase="org.openide.explorer" spec="6.0"/>

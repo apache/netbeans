@@ -1,0 +1,5 @@
+<html><body><font size='+0'><b><a href='*0'>test.&#x200B;Test</a></b></font><pre>public void <b>noMarkupTagPresent</b>()</pre><p><pre><code>   public static void main(String... args) {
+     System.out.println("args"); // highligh substring = "args"
+ }
+ 
+</code></pre><p>

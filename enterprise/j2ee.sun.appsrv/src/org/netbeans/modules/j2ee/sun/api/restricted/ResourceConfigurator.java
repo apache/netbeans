@@ -80,12 +80,12 @@ public class ResourceConfigurator implements ResourceConfiguratorInterface {
 
     public static final String __SunResourceExt = "sun-resource"; // NOI18N
 
-    private final static char BLANK = ' ';
-    private final static char DOT   = '.';
-    private final static char[]	ILLEGAL_FILENAME_CHARS	= {'/', '\\', ':', '*', '?', '"', '<', '>', '|', ',', '=', ';' };
+    private static final char BLANK = ' ';
+    private static final char DOT   = '.';
+    private static final char[]	ILLEGAL_FILENAME_CHARS	= {'/', '\\', ':', '*', '?', '"', '<', '>', '|', ',', '=', ';' };
     // private final static char[]	ILLEGAL_RESOURCE_NAME_CHARS	= {':', '*', '?', '"', '<', '>', '|', ',' };
-    private final static char REPLACEMENT_CHAR = '_';
-    private final static char DASH = '-';
+    private static final char REPLACEMENT_CHAR = '_';
+    private static final char DASH = '-';
 
     private static final String DATAFILE = "org/netbeans/modules/j2ee/sun/sunresources/beans/CPWizard.xml";  // NOI18N
 

@@ -45,7 +45,7 @@ public final class SetupDirNodeFactory implements NodeFactory {
     }
 
     public NodeList createNodes(Project p) {
-        AppClientProject project = (AppClientProject) p.getLookup().lookup(AppClientProject.class);
+        AppClientProject project = p.getLookup().lookup(AppClientProject.class);
         assert project != null;
         return new SetupDirNodeList(project);
     }
@@ -58,7 +58,7 @@ public final class SetupDirNodeFactory implements NodeFactory {
 
         SetupDirNodeList(AppClientProject proj) {
             project = proj;
-            AppClientLogicalViewProvider logView = (AppClientLogicalViewProvider) project.getLookup().lookup(AppClientLogicalViewProvider.class);
+            AppClientLogicalViewProvider logView = project.getLookup().lookup(AppClientLogicalViewProvider.class);
             assert logView != null;
         }
         

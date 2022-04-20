@@ -37,7 +37,7 @@ public class SimpleIssueFinder {
 
     private SimpleIssueFinder() {}
     
-    public synchronized static SimpleIssueFinder getInstance() {
+    public static synchronized SimpleIssueFinder getInstance() {
         if(instance == null) {
             instance = new SimpleIssueFinder();
         }

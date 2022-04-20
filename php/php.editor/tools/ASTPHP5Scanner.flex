@@ -534,6 +534,16 @@ NOWDOC_CHARS=({NEWLINE}*(([^a-zA-Z_\x7f-\xff\n\r][^\n\r]*)|({LABEL}[^a-zA-Z0-9_\
     return createFullSymbol(ASTPHP5Symbols.T_INTERFACE);
 }
 
+<ST_IN_SCRIPTING>"enum"{WHITESPACE}("extends"|"implements") {
+    yypushback(yylength() - 4); // 4: enum length
+    return createFullSymbol(ASTPHP5Symbols.T_STRING);
+}
+
+<ST_IN_SCRIPTING>"enum"{WHITESPACE}[a-zA-Z_\x80-\xff] {
+    yypushback(yylength() - 4); // 4: enum length
+    return createFullSymbol(ASTPHP5Symbols.T_ENUM);
+}
+
 <ST_IN_SCRIPTING>"extends" {
     return createFullSymbol(ASTPHP5Symbols.T_EXTENDS);
 }

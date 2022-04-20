@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.java.lsp.server.explorer;
 
+import java.awt.Image;
 import java.beans.BeanInfo;
 import org.netbeans.modules.java.lsp.server.explorer.api.TreeDataListener;
 import org.netbeans.modules.java.lsp.server.explorer.api.TreeItemData;
@@ -33,6 +34,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -53,6 +55,7 @@ import org.openide.nodes.NodeEvent;
 import org.openide.nodes.NodeListener;
 import org.openide.nodes.NodeMemberEvent;
 import org.openide.nodes.NodeReorderEvent;
+import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
 import org.openide.util.RequestProcessor;
 
@@ -391,12 +394,10 @@ public abstract class TreeViewProvider {
         if (data.getIconImage() != null && data.getIconImage() != DUMMY_NODE.getIcon(BeanInfo.ICON_COLOR_16x16)) {
             TreeNodeRegistry.ImageDataOrIndex idoi = nodeRegistry.imageOrIndex(data.getIconImage());
             if (idoi != null) {
-                ti.iconIndex = idoi.imageIndex;
-                ti.iconUri = idoi.imageURI;
-                ti.iconDescriptor = new IconDescriptor();
                 try {
                     URI baseURI = builtinURI2URI(idoi.baseURI);
                     if (baseURI != null) {
+                        ti.iconDescriptor = new IconDescriptor();
                         ti.iconDescriptor.baseUri = baseURI;
                         ti.iconDescriptor.composition = idoi.composition;
                     }
@@ -404,8 +405,6 @@ public abstract class TreeViewProvider {
                     LOG.log(Level.WARNING, "Cannot convert URL: {0}", idoi.baseURI);
                 }
             }
-        } else if (data.getIconURI() != null) {
-            ti.iconUri = data.getIconURI();
         }
         ti.contextValue = v;
         ti.command = data.getCommand();
@@ -476,6 +475,7 @@ public abstract class TreeViewProvider {
     public CompletionStage<Integer> getNodeId(Node n) {
         Integer i;
         List<Node> toExpand = new ArrayList<>();
+        toExpand.add(n);
         synchronized (this) {
             i = idMap.get(n);
             if (i != null) {
@@ -488,20 +488,26 @@ public abstract class TreeViewProvider {
                 if (i != null) {
                     break;
                 }
+                parent = parent.getParentNode();
             }
             if (parent == null) {
                 return CompletableFuture.completedFuture(null);
             }
         }
-        CompletionStage<Node[]> stage = null;
-        for (Node p : toExpand) {
-            if (stage == null) {
+        CompletionStage<Integer> nextStage = null;
+        // do not iterate index #0
+        for (int idx = toExpand.size() - 1; idx > 0; idx--) {
+            CompletionStage<Node[]> stage = null;
+            Node p = toExpand.get(idx);
+            if (nextStage == null) {
                 stage = getChildren(p);
             } else {
-                stage = stage.thenCompose((nodes) -> getChildren(p));
+                stage = nextStage.thenCompose((x) -> getChildren(p));
             }
+            final int fidx = idx - 1;
+            nextStage = stage.thenApply((ch) -> findId(toExpand.get(fidx)));
         }
-        return stage.thenCompose((any) -> getNodeId(n));
+        return nextStage;
     }
 
     public final CompletionStage<TreeItem> getTreeItem(int id) {
@@ -662,5 +668,29 @@ public abstract class TreeViewProvider {
             throw new URISyntaxException(u.toString(), ex.getMessage());
         }
         return u;
+    }
+
+    public static URI findImageURI(Image i) {
+        URL u = ImageUtilities.findImageBaseURL(i);
+        if (u == null) {
+            return null;
+        }
+        String s = u.toString();
+        try {
+            if (s.contains(":")) {
+                return new URI(s);
+            } else {
+                return new URI("nbres:/" + s);
+            }
+        } catch (URISyntaxException ex) {
+            LOG.log(Level.WARNING, "Unable to interpret image ID: {0}", s);
+            return null;
+        }
+    }
+    
+    /* testing */ SortedMap<Integer, NodeHolder> getHolders() {
+        synchronized (this) {
+            return new TreeMap<>(holdChildren);
+        }
     }
 }

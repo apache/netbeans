@@ -415,7 +415,7 @@ public final class AutomaticDependencies {
         
     }
     
-    private static abstract class Dep {
+    private abstract static class Dep {
         public Dep() {}
         public final String toString() {
             return manifestKey() + ": " + toManifestForm();

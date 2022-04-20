@@ -158,7 +158,7 @@ export class NbTestAdapter {
                                         if (!currentTest) {
                                             const subName = this.subTestName(item, test);
                                             if (subName) {
-                                                currentTest = item.children.get(test.id);
+                                                currentTest = subName === '()' ? item : item.children.get(test.id);
                                             }
                                         }
                                     });
@@ -236,7 +236,7 @@ export class NbTestAdapter {
                     const parents: Map<TestItem, string> = new Map();
                     currentSuite?.children.forEach(item => {
                         const subName = this.subTestName(item, test);
-                        if (subName) {
+                        if (subName && '()' !== subName) {
                             parents.set(item, subName);
                         }
                     });
@@ -278,7 +278,7 @@ export class NbTestAdapter {
             }
             return label;
         } else {
-            const regexp = new RegExp(item.id.replace(/#\S*/g, '\\S*'));
+            const regexp = new RegExp(item.id.replace(/[-[\]{}()*+?.,\\^$|\s]/g, '\\$&').replace(/#\w*/g, '\\S*'));
             if (regexp.test(test.id)) {
                 let idx = test.id.indexOf(':');
                 return idx < 0 ? test.id : test.id.slice(idx + 1);

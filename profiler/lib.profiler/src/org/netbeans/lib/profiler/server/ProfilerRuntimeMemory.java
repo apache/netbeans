@@ -176,7 +176,7 @@ public class ProfilerRuntimeMemory extends ProfilerRuntime {
         if (classIdInt == null) {
             int newClassId = externalActionsHandler.handleFirstTimeVMObjectAlloc(className, definingClassLoaderId);
 
-            classIdInt = new Integer(newClassId);
+            classIdInt = newClassId;
             synchronized (classIdMapLock) {
                 classIdMap.put(classNameId, classIdInt);
             }

@@ -237,7 +237,7 @@ public class JPDAStart implements Runnable {
                     );
             Iterator<JPDADebugger> it = debuggers.iterator();
             while (it.hasNext()) {
-                JPDADebugger d = (JPDADebugger) it.next();
+                JPDADebugger d = it.next();
                 d.removePropertyChangeListener(
                         JPDADebugger.PROP_STATE,
                         this

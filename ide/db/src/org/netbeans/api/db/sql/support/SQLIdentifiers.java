@@ -60,7 +60,7 @@ public final class SQLIdentifiers {
     /**
      * This is a utility class that is used to quote identifiers.
      */
-    public static abstract class Quoter {
+    public abstract static class Quoter {
 
         final String quoteString;
 

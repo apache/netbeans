@@ -22,6 +22,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.LinkOption;
@@ -34,8 +35,9 @@ import java.util.Set;
 import java.util.logging.Level;
 import org.netbeans.modules.payara.tooling.logging.Logger;
 import org.netbeans.modules.payara.tooling.utils.OsUtils;
-import static org.netbeans.modules.payara.tooling.utils.ServerUtils.PF_DOMAIN_CONFIG_DIR_NAME;
 import org.netbeans.modules.payara.tooling.data.PayaraServer;
+
+import static org.netbeans.modules.payara.tooling.utils.ServerUtils.PF_DOMAIN_CONFIG_DIR_NAME;
 
 /**
  * Support for <code>asadmin</code> <code>--passwordfile</code> file format.
@@ -351,7 +353,7 @@ public class PasswordFile {
         Writer out = null;
         createFilePosix();
         try {
-            out = new OutputStreamWriter(new FileOutputStream(file.toFile()), "UTF-8");
+            out = new OutputStreamWriter(new FileOutputStream(file.toFile()), StandardCharsets.UTF_8);
             out.write(dataToWrite());
         } catch (IOException ioe) {
             success = false;

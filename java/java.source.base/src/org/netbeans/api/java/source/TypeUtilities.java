@@ -424,8 +424,6 @@ public final class TypeUtilities {
                     bound = t.getUpperBound();
                     if (bound != null && bound.getKind() != TypeKind.NULL) {
                         DEFAULT_VALUE.append(" extends "); //NOI18N
-                        if (bound.getKind() == TypeKind.TYPEVAR)
-                            bound = ((TypeVariable)bound).getLowerBound();
                         visit(bound, p);
                     }
                 }

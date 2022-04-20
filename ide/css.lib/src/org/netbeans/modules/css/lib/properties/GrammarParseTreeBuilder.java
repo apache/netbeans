@@ -142,8 +142,9 @@ public class GrammarParseTreeBuilder implements GrammarResolverListener {
         peek.choosenBranches.add(element);
         
         //remove all children except the choosen one
-        for (GrammarElement key : peek.childrenMap.keySet()) {
-            Node.AbstractNode node = peek.childrenMap.get(key);
+        for (Map.Entry<GrammarElement, Node.AbstractNode> entry : peek.childrenMap.entrySet()) {
+            GrammarElement key = entry.getKey();
+            Node.AbstractNode node = entry.getValue();
             if(!peek.choosenBranches.contains(key)) {
                 group.removeChild(node);
             }

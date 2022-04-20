@@ -2,5 +2,5 @@ Code completion result for source line:
 import static java.lang.Math.P|I
 (QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
 ------------------------------------
-CLASS      PI                                         null
-CLASS      pow(double,double)                         null
+METHOD     pow                             [STATIC]   null
+FIELD      PI                              [STATIC]   null

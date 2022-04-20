@@ -29,12 +29,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Pattern;
 import org.netbeans.modules.editor.mimelookup.APIAccessor;
 import org.netbeans.modules.editor.mimelookup.MimeLookupCacheSPI;
 import org.netbeans.modules.editor.mimelookup.MimePathLookup;
 import org.openide.util.Lookup;
-import org.openide.util.lookup.Lookups;
 
 /**
  * The mime path is a concatenation of one or more mime types. The purpose of
@@ -112,14 +112,14 @@ public final class MimePath {
     private static final Object LOCK = new Object();
 
     /** The List of Recently Used mime paths. */
-    private static final ArrayList<MimePath> LRU = new ArrayList<MimePath>();
+    private static final ArrayList<MimePath> LRU = new ArrayList<>();
 
     /** The maximum size of the List of Recently Used mime paths.
     /* package */ static final int MAX_LRU_SIZE = 3;
 
     private static final Pattern REG_NAME_PATTERN = Pattern.compile("^[[\\p{Alnum}][!#$&.+\\-^_]]{1,127}$"); //NOI18N
 
-    private static final Set<String> WELL_KNOWN_TYPES = new HashSet<String>(Arrays.asList(
+    private static final Set<String> WELL_KNOWN_TYPES = new HashSet<>(Arrays.asList(
         "application", //NOI18N
         "audio", //NOI18N
         "content", //NOI18N   for content/unknown mime type
@@ -131,7 +131,7 @@ public final class MimePath {
         "video" //NOI18N
     ));
     
-    private static final Map<String,Reference<MimePath>> string2mimePath = new HashMap<String,Reference<MimePath>>();
+    private static final Map<String,Reference<MimePath>> string2mimePath = new ConcurrentHashMap<>();
     
     /**
      * Gets the mime path for the given mime type. The returned <code>MimePath</code>
@@ -199,14 +199,12 @@ public final class MimePath {
      */
     public static MimePath parse(String path) {
         assert path != null : "path cannot be null"; // NOI18N
-        
-        synchronized (string2mimePath) {
-            Reference<MimePath> mpRef = string2mimePath.get(path);
-            MimePath mimePath = mpRef != null ? mpRef.get() : null;
-            
-            if (mimePath != null) {
-                return mimePath;
-            }
+
+        Reference<MimePath> mpRef = string2mimePath.get(path);
+        MimePath mimePath = mpRef != null ? mpRef.get() : null;
+
+        if (mimePath != null) {
+            return mimePath;
         }
 
         // Parse the path
@@ -214,16 +212,14 @@ public final class MimePath {
         if (!(o instanceof MimePath)) {
             throw new IllegalArgumentException((String) o);
         }
-        
-        synchronized (string2mimePath) {
-            MimePath mimePath = (MimePath) o;
-            
-            // Intern the path since the language path's string path is also interned
-            // and thus they can be matched by identity
-            string2mimePath.put(path.intern(), new WeakReference<MimePath>(mimePath));
-            
-            return mimePath;
-        }
+
+        mimePath = (MimePath) o;
+
+        // Intern the path since the language path's string path is also interned
+        // and thus they can be matched by identity
+        string2mimePath.put(path.intern(), new WeakReference<>(mimePath));
+
+        return mimePath;
     }
 
     /**
@@ -278,6 +274,14 @@ public final class MimePath {
      * @since 1.7
      */
     public static boolean validate(CharSequence path) {
+        if(path == null) {
+            return false;
+        }
+
+        if (string2mimePath.containsKey(path.toString())) {
+            return true;
+        }
+
         // parseImpl will return error string if parsing fails
         return !(parseImpl(path, true) instanceof String);
     }

@@ -90,9 +90,9 @@ public class Schema {
         DBIdentifier tableId = DBIdentifier.create(tableName);
         TableElement tableElement = schemaElement.getTable(tableId);
         if (tableElement == null) {
-            LinkedList tableList = new LinkedList();
+            LinkedList tableList = new LinkedList<>();
             tableList.add(tableName);
-            LinkedList viewList = new LinkedList();
+            LinkedList viewList = new LinkedList<>();
             schemaElementImpl.initTables(cp, tableList, viewList, false);
             
             tableElement = schemaElement.getTable(tableId);

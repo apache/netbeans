@@ -18,13 +18,13 @@
  */
 package org.netbeans.modules.java.disco;
 
-import io.foojay.api.discoclient.pkg.ArchiveType;
+import eu.hansolo.jdktools.ArchiveType;
+import eu.hansolo.jdktools.Latest;
+import eu.hansolo.jdktools.LibCType;
+import eu.hansolo.jdktools.PackageType;
+import eu.hansolo.jdktools.versioning.VersionNumber;
 import io.foojay.api.discoclient.pkg.Distribution;
-import io.foojay.api.discoclient.pkg.Latest;
-import io.foojay.api.discoclient.pkg.LibCType;
-import io.foojay.api.discoclient.pkg.PackageType;
 import io.foojay.api.discoclient.pkg.Pkg;
-import io.foojay.api.discoclient.pkg.VersionNumber;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
@@ -79,16 +79,17 @@ class QuickPkgSelection implements PkgSelection {
         if (pkg != null)
             return pkg.getDistribution().getUiString() + " " + pkg.getJavaVersion().toString();
         else
-            return "Zulu " + version.getFeature().getAsInt(); //NOI18N
+            return "OpenJDK " + version.getFeature().getAsInt(); //NOI18N
     }
 
     @Override
     public @Nullable Pkg get(@Nullable Client d) {
         if (pkg != null || d == null)
             return pkg;
-
+        Distribution defDist = d.getDistribution(DiscoPlatformInstall.defaultDistribution())
+                .orElse(null);
         List<Pkg> pkgs;
-            pkgs = d.getPkgs(Distribution.ZULU, version, Latest.OVERALL, OS.getOperatingSystem(),
+            pkgs = d.getPkgs(defDist, version, Latest.OVERALL, OS.getOperatingSystem(),
                     OS.getArchitecture(),
                     ArchiveType.NONE, PackageType.JDK, false);
         Optional<Pkg> found = pkgs.stream().filter(filter).findAny();

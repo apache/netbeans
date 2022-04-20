@@ -727,7 +727,7 @@ public final class DocumentModel {
     // ------ model synchronization -------
     //-------------------------------------
     
-    public synchronized final void readLock() {
+    public final synchronized void readLock() {
         try {
             while (currWriter != null) {
                 if (currWriter == Thread.currentThread()) {
@@ -743,7 +743,7 @@ public final class DocumentModel {
         }
     }
     
-    public synchronized final void readUnlock() {
+    public final synchronized void readUnlock() {
         if (currWriter == Thread.currentThread()) {
             // writer has full read access.
             return;
@@ -754,7 +754,7 @@ public final class DocumentModel {
         notify();
     }
     
-    private synchronized final void writeLock() {
+    private final synchronized void writeLock() {
         try {
             while ((numReaders > 0) || (currWriter != null)) {
                 if (Thread.currentThread() == currWriter) {
@@ -774,7 +774,7 @@ public final class DocumentModel {
         }
     }
     
-    private synchronized final void writeUnlock() {
+    private final synchronized void writeUnlock() {
         if (--numWriters <= 0) {
             numWriters = 0;
             currWriter = null;

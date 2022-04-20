@@ -451,7 +451,7 @@ public class JShellTool implements MessageHandler {
         String indentedNewLine = LINE_SEP + feedback.getPre()
                 + String.format("   %-" + (aLen + 4) + "s", "");
         for (Entry<String, String> e : a2b.entrySet()) {
-            hard(format, e.getKey(), e.getValue().replaceAll("\n", indentedNewLine));
+            hard(format, e.getKey(), e.getValue().replace("\n", indentedNewLine));
         }
     }
 

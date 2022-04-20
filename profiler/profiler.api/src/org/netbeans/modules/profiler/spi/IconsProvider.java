@@ -49,7 +49,7 @@ public abstract class IconsProvider {
     /**
      * Basic implementation of a simple IconsProvider supporting statically defined and dynamically generated images.
      */
-    public static abstract class Basic extends IconsProvider {
+    public abstract static class Basic extends IconsProvider {
         
         private Map<String, String> images;
 

@@ -156,6 +156,7 @@ import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.java.hints.infrastructure.JavaErrorProvider;
 import org.netbeans.modules.java.lsp.server.TestCodeLanguageClient;
 import org.netbeans.modules.java.lsp.server.refactoring.ChangeMethodParameterUI;
+import org.netbeans.modules.java.lsp.server.refactoring.MoveElementUI;
 import org.netbeans.modules.java.lsp.server.refactoring.ParameterUI;
 import org.netbeans.modules.java.lsp.server.ui.MockHtmlViewer;
 import org.netbeans.modules.java.source.BootClassPathUtil;
@@ -311,7 +312,7 @@ public class ServerTest extends NbTestCase {
     public void testMain() throws Exception {
         File src = new File(getWorkDir(), "Test.java");
         src.getParentFile().mkdirs();
-        String code = "public class Test { int i = \"\".hashCode(); public void run() { this.test(); } /**Test.*/public void test() {} }";
+        String code = "public class Test { public int i = \"\".hashCode(); public void run() { this.test(); } /**Test.*/public void test() {} }";
         try (Writer w = new FileWriter(src)) {
             w.write(code);
         }
@@ -330,8 +331,8 @@ public class ServerTest extends NbTestCase {
         VersionedTextDocumentIdentifier id = new VersionedTextDocumentIdentifier(1);
         id.setUri(toURI(src));
         server.getTextDocumentService().didChange(new DidChangeTextDocumentParams(id, Arrays.asList(new TextDocumentContentChangeEvent(new Range(new Position(0, hashCodeStart), new Position(0, hashCodeStart + "hashCode".length())), "hashCode".length(), "equ"))));
-        assertDiags(diags, "Error:0:31-0:34");//errors
-        assertDiags(diags, "Error:0:31-0:34");//hints
+        assertDiags(diags, "Error:0:38-0:41");//errors
+        assertDiags(diags, "Error:0:38-0:41");//hints
         completion = server.getTextDocumentService().completion(new CompletionParams(new TextDocumentIdentifier(toURI(src)), new Position(0, hashCodeStart + 2))).get();
         actualItems = completion.getRight().getItems().stream().map(ci -> ci.getKind() + ":" + ci.getLabel()).collect(Collectors.toList());
         if (jdk9Plus()) {
@@ -377,7 +378,7 @@ public class ServerTest extends NbTestCase {
         assertEquals("(String) ", edit.getNewText());
         server.getTextDocumentService().didChange(new DidChangeTextDocumentParams(id, Arrays.asList(new TextDocumentContentChangeEvent(new Range(new Position(0, closingBrace), new Position(0, closingBrace)), 0, "public  void assignToSelf(Object o) { o = o; }"))));
         assertDiags(diags, "Error:1:0-1:9");//errors
-        assertDiags(diags, "Error:1:0-1:9", "Warning:0:148-0:153", "Warning:0:152-0:153");//hints
+        assertDiags(diags, "Error:1:0-1:9", "Warning:0:155-0:160", "Warning:0:159-0:160");//hints
     }
     
     /**
@@ -824,13 +825,18 @@ public class ServerTest extends NbTestCase {
     }
 
     private String toString(DocumentSymbol sym) {
-        return sym.getKind().toString() + ":" +
+        String result = sym.getKind().toString() + ":" +
                sym.getName() + ":" +
-               sym.getRange() + ":" +
-               sym.getChildren()
-                  .stream()
-                  .map(this::toString)
-                  .collect(Collectors.joining(", ", "(", ")"));
+               sym.getRange() + ":";
+        if (sym.getChildren() != null) {
+               result = result + sym.getChildren()
+                    .stream()
+                    .map(this::toString)
+                    .collect(Collectors.joining(", ", "(", ")"));
+        } else {
+            result = result + "()";
+        }
+        return result;
     }
 
     public void testGoToDefinition() throws Exception {
@@ -3643,9 +3649,14 @@ public class ServerTest extends NbTestCase {
             }
 
             @Override
-            public CompletableFuture<List<QuickPickItem>> showQuickPick(ShowQuickPickParams params) {
-                List<QuickPickItem> items = params.getItems();
-                return CompletableFuture.completedFuture("Select target package".equals(params.getPlaceHolder()) ? items.subList(2, 3) : items.subList(0, 1));
+            public CompletableFuture<String> showHtmlPage(HtmlPageParams params) {
+                MoveElementUI ui = MockHtmlViewer.assertDialogShown(params.getUri(), MoveElementUI.class);
+                ui.setSelectedProject(ui.getAvailableProjects().get(0));
+                ui.setSelectedRoot(ui.getAvailableRoots().get(0));
+                ui.setSelectedPackage(ui.getAvailablePackages().get(2));
+                ui.setSelectedClass(ui.getAvailableClasses().get(0));
+                ui.doRefactoring();
+                return CompletableFuture.completedFuture(null);
             }
         }, client.getInputStream(), client.getOutputStream());
         serverLauncher.startListening();
@@ -3753,9 +3764,16 @@ public class ServerTest extends NbTestCase {
             }
 
             @Override
-            public CompletableFuture<List<QuickPickItem>> showQuickPick(ShowQuickPickParams params) {
-                List<QuickPickItem> items = params.getItems();
-                return CompletableFuture.completedFuture("Select target package".equals(params.getPlaceHolder()) ? items.subList(1, 2) : items.subList(0, 1));
+            public CompletableFuture<String> showHtmlPage(HtmlPageParams params) {
+                MoveElementUI ui = MockHtmlViewer.assertDialogShown(params.getUri(), MoveElementUI.class);
+                ui.setSelectedProject(ui.getAvailableProjects().get(0));
+                ui.setSelectedRoot(ui.getAvailableRoots().get(0));
+                ui.setSelectedPackage(ui.getAvailablePackages().get(1));
+                ui.setSelectedClass(ui.getAvailableClasses().get(0));
+                ui.setSelectedVisibility(ui.getAvailableVisibilities().get(0));
+                ui.setSelectedJavaDoc(ui.getAvailableJavaDoc().get(0));
+                ui.doRefactoring();
+                return CompletableFuture.completedFuture(null);
             }
         }, client.getInputStream(), client.getOutputStream());
         serverLauncher.startListening();
@@ -4317,11 +4335,6 @@ public class ServerTest extends NbTestCase {
             public CompletableFuture<ApplyWorkspaceEditResponse> applyEdit(ApplyWorkspaceEditParams params) {
                 edit[0] = params.getEdit();
                 return CompletableFuture.completedFuture(new ApplyWorkspaceEditResponse(false));
-            }
-
-            @Override
-            public CompletableFuture<String> showInputBox(ShowInputBoxParams params) {
-                return CompletableFuture.completedFuture("(java.lang.String s, int cnt, boolean b):java.lang.String");
             }
 
             @Override

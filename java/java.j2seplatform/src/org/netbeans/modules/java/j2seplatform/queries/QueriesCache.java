@@ -190,7 +190,7 @@ final class QueriesCache<T extends QueriesCache.ResultBase> {
         return sources;
     }
 
-    static abstract class ResultBase {
+    abstract static class ResultBase {
         private final ChangeSupport cs = new ChangeSupport(this);
 
         public void addChangeListener(@NonNull final ChangeListener l) {

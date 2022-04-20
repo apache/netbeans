@@ -84,7 +84,7 @@ public class JsCamelCaseInterceptor implements CamelCaseInterceptor {
             }
         }
 
-        if (token.id() == JsTokenId.IDENTIFIER) {
+        if (token.id() == JsTokenId.IDENTIFIER || token.id() == JsTokenId.PRIVATE_IDENTIFIER) {
             String image = token.text().toString();
             int imageLength = image.length();
             int offsetInImage = offset - ts.offset();

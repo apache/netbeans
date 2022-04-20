@@ -160,7 +160,7 @@ public class ConfigurationUtils {
                     files.add(file);
                 }
             }
-            return (FileObject[])files.toArray(new FileObject[files.size()]);
+            return files.toArray(new FileObject[files.size()]);
         }
         return new FileObject [0];
     }

@@ -58,7 +58,7 @@ public abstract class IgnoreUnignoreCommand extends GitCommand {
     private final ProgressMonitor monitor;
     private final Set<File> ignoreFiles;
     private final FileListener listener;
-    protected final static Logger LOG = Logger.getLogger(IgnoreUnignoreCommand.class.getName());
+    protected static final Logger LOG = Logger.getLogger(IgnoreUnignoreCommand.class.getName());
     
     public IgnoreUnignoreCommand (Repository repository, GitClassFactory gitFactory, File[] files, ProgressMonitor monitor, FileListener listener) {
         super(repository, gitFactory, monitor);

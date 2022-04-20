@@ -71,7 +71,7 @@ final class BorderBuilders {
         return null;
     }
     
-    static abstract class BorderBuilder extends InstanceBuilder<Border> {
+    abstract static class BorderBuilder extends InstanceBuilder<Border> {
         private final boolean isUIResource;
         BorderBuilder(Instance instance, Heap heap) {
             super(instance, heap);

@@ -123,7 +123,7 @@ public class DebuggingActionsProvider implements NodeActionsProvider {
         );
     }
 
-    private static abstract class LazyActionPerformer implements Models.ActionPerformer {
+    private abstract static class LazyActionPerformer implements Models.ActionPerformer {
 
         private RequestProcessor rp;
 

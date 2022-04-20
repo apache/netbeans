@@ -16,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.netbeans.api.java.source.ui.snippet;
 
 import java.util.ArrayList;
@@ -24,7 +25,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-import org.netbeans.api.java.source.ui.ElementJavadoc;
 
 /**
  *
@@ -32,7 +32,7 @@ import org.netbeans.api.java.source.ui.ElementJavadoc;
  */
 public class MarkupTagProcessor {
     
-    private static final List<String> SUPPORTED_SNIPPET_MARKUP_TAGS = Arrays.asList("highlight", "replace", "link", "start");
+    private static final List<String> SUPPORTED_SNIPPET_MARKUP_TAGS = Arrays.asList("highlight", "replace", "link");
 
     public ProcessedTags process(List<SourceLineMeta> parseResult ){
         Map<Integer, List<ApplicableMarkupTag>> markUpTagOnLine = new TreeMap<>();
@@ -45,16 +45,14 @@ public class MarkupTagProcessor {
         
         main:
         for(SourceLineMeta fullLineInfo : parseResult){
-            //List<ApplicableMarkupTag> attribList = new ArrayList<>();
             nextLine++;
             if (!regionList.isEmpty()) {
                 List<Region> newRegionList = new ArrayList<>(regionList);
                 regionTagOnLine.put(thisLine, newRegionList);
-                //markUpTagOnLine.put(thisLine, transformRegionAttributeToMarkupTag(newRegionList));
                 addMarkupTags(thisLine, transformRegionAttributeToMarkupTag(newRegionList), markUpTagOnLine);
             }
             //checkng no attribute on this line
-            if (fullLineInfo.getThisLineMarkUpTags() != null) {
+            if (!fullLineInfo.getThisLineMarkUpTags().isEmpty()) {
                 for (MarkupTag markUpTag : fullLineInfo.getThisLineMarkUpTags()) {
                     if (SUPPORTED_SNIPPET_MARKUP_TAGS.contains(markUpTag.getTagName())) {
 
@@ -80,25 +78,22 @@ public class MarkupTagProcessor {
                             markupAttribute.remove("region");
                             Region region = new Region(regionVal, markupAttribute, markUpTag.getTagName());
                             regionList.add(region);
-                            List<Region> newRegionList = new ArrayList<>(regionList);
+                            List<Region> newRegionList = new ArrayList<>();
+                            newRegionList.add(region);
                             regionTagOnLine.put(markUpTag.isTagApplicableToNextLine() ? nextLine : thisLine, newRegionList);
-                            //markUpTagOnLine.put(markUpTag.isTagApplicableToNextLine() ? nextLine : thisLine, transformRegionAttributeToMarkupTag(newRegionList));
                             if(!markUpTag.isTagApplicableToNextLine()){
                                 addMarkupTags(thisLine, transformRegionAttributeToMarkupTag(newRegionList), markUpTagOnLine);
                             }
                         } else {
                             ApplicableMarkupTag markupTag = new ApplicableMarkupTag(markupAttribute, markUpTag.getTagName());
-                            //attribList.add(markupTag);
                             List<ApplicableMarkupTag> markupTagList = new ArrayList<>();
                             markupTagList.add(markupTag);
-                            //markUpTagOnLine.put(markUpTag.isTagApplicableToNextLine() ? nextLine : thisLine, newAttribList);
                             addMarkupTags(markUpTag.isTagApplicableToNextLine() ? nextLine : thisLine, markupTagList, markUpTagOnLine);
                         }
                     }
                     if (markUpTag.getTagName().equals("end")) {
                         List<Region> newRegionList = new ArrayList<>(regionList);
                         regionTagOnLine.put(thisLine, newRegionList);
-                        //markUpTagOnLine.put(thisLine, transformRegionAttributeToMarkupTag(newRegionList));
                         addMarkupTags(thisLine, transformRegionAttributeToMarkupTag(newRegionList), markUpTagOnLine);
 
                         Map<String, String> eAttrib = new HashMap<>();
@@ -115,11 +110,11 @@ public class MarkupTagProcessor {
                                     break;
                                 }
                             }
-                        } else if (regionList.size() > 0) {
+                        } else if (!regionList.isEmpty()) {
                             regionList.remove(regionList.size() - 1);//if no region defined then end with last region
                         } else {//no region defined only @end is provided, this case considered as invalid
                             //report error with @end tag and region value;
-                            errorList.add("error: snippet markup: no region to end " + "@end" + " " + regionVal);
+                            errorList.add(String.format("error: snippet markup: no region to end @end <sub>^</sub><b><i>%s</b></i>", regionVal));
                             break main;
                         }
                     }
@@ -127,13 +122,13 @@ public class MarkupTagProcessor {
             }
             thisLine++;
         }
-        if(regionList.size() > 0){
+        if(!regionList.isEmpty()){
             for(Region region :regionList){
-                String error = "";
+                String error;
                 if(region.markupTagName.equals("end")){
-                    error = "error: snippet markup: no region to end "+region.markupTagName + " " +region.value;
+                    error = String.format("error: snippet markup: no region to end <b><i>%s %s</b></i>", region.markupTagName, region.value);
                 } else{
-                    error = "error: snippet markup: unpaired region "+region.markupTagName + " "+ region.value;
+                    error = String.format("error: snippet markup: unpaired region <b><i>%s %s</b></i>", region.markupTagName, region.value);
                 }
                 errorList.add(error);
             }
@@ -156,10 +151,10 @@ public class MarkupTagProcessor {
         }
     }
     
-    public class Region{
+    private class Region{
         private final String markupTagName;
         private final String value;
-        private Map<String, String> attributes;
+        private final Map<String, String> attributes;
 
         Region(String value, Map<String, String> attributes, String markupTagName){
             this.value = value == null || value.isEmpty() ? "anonymous" : value;

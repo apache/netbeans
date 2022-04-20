@@ -49,9 +49,7 @@ class UpdatedRowContext {
     }
 
     public void removeUpdateForSelectedRow(int row) {
-        if(changedData.containsKey(Integer.valueOf(row))){
-            changedData.remove(Integer.valueOf(row));
-        }
+        changedData.remove(Integer.valueOf(row));
     }
 
     public Set<Integer> getUpdateKeys() {

@@ -49,8 +49,8 @@ public final class RunGCAction extends ProfilingAwareAction {
 
     private static final int[] ENABLED_STATES = new int[] { Profiler.PROFILING_RUNNING };
     
-    final private static class Singleton {
-        final private static RunGCAction INSTANCE = new RunGCAction();
+    private static final class Singleton {
+        private static final RunGCAction INSTANCE = new RunGCAction();
     }
     
     @ActionID(id = "org.netbeans.modules.profiler.actions.RunGCAction", category = "Profile")

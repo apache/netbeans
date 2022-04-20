@@ -40,6 +40,7 @@ import org.netbeans.api.java.source.Task;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.modules.csl.api.CompletionProposal;
 import org.netbeans.modules.groovy.editor.api.GroovyIndex;
+import org.netbeans.modules.groovy.editor.api.completion.CaretLocation;
 import org.netbeans.modules.groovy.editor.api.completion.CompletionItem;
 import org.netbeans.modules.groovy.editor.completion.util.CamelCaseUtil;
 import org.netbeans.modules.groovy.editor.api.completion.util.ContextHelper;
@@ -303,7 +304,7 @@ public class TypesCompletion extends BaseCompletion {
         if ((onlyInterfaces && (type.getKind() != ElementKind.INTERFACE)) || alreadyPresent.contains(type)) {
             return;
         }
-
+        
         String fqnTypeName = type.getName();
         String typeName = GroovyUtils.stripPackage(fqnTypeName);
 
@@ -313,12 +314,21 @@ public class TypesCompletion extends BaseCompletion {
         if (constructorCompletion && typeName.toUpperCase().equals(request.getPrefix().toUpperCase())) {
             return;
         }
+        
+        if (type.getHandle() != null
+                &&!(type.getHandle().getKind().isClass() || type.getHandle().getKind().isInterface())
+                && request.location != CaretLocation.INSIDE_IMPORT) {
+            return;
+        }
 
+        String ownerFQN = GroovyUtils.getPackageName(fqnTypeName);
+        
         // We are dealing with prefix for some class type
         JavaElementHandle jh = null;
         if (type.getHandle() != null) {
-            jh = new JavaElementHandle(fqnTypeName, typeName, type.getHandle(), Collections.emptyList(), Collections.emptySet());
+            jh = new JavaElementHandle(typeName, ownerFQN, type.getHandle(), Collections.emptyList(), Collections.emptySet());
         }
+        
         if (isPrefixed(request, typeName)) {
             alreadyPresent.add(type);
             proposals.putIfAbsent(fqnTypeName, CompletionAccessor.instance().createType(jh, fqnTypeName, typeName, anchor, type.getKind()));
@@ -327,7 +337,6 @@ public class TypesCompletion extends BaseCompletion {
         // We are dealing with CamelCase completion for some class type
         if (CamelCaseUtil.compareCamelCase(typeName, request.getPrefix())) {
             CompletionItem.TypeItem camelCaseProposal = CompletionAccessor.instance().createType(jh, fqnTypeName, typeName, anchor, ElementKind.CLASS);
-            
             proposals.putIfAbsent(fqnTypeName, camelCaseProposal);
         }
     }
@@ -360,7 +369,7 @@ public class TypesCompletion extends BaseCompletion {
                                 if (modifiers.contains(Modifier.PUBLIC)
                                     || samePackage && (modifiers.contains(Modifier.PROTECTED)
                                     || (!modifiers.contains(Modifier.PUBLIC) && !modifiers.contains(Modifier.PRIVATE)))) {
-
+                                    
                                     result.add(new TypeHolder(element.toString(), org.netbeans.api.java.source.ElementHandle.create(element)));
                                 }
                             }
@@ -377,8 +386,8 @@ public class TypesCompletion extends BaseCompletion {
                                 if (modifiers.contains(Modifier.PUBLIC)
                                     || samePackage && (modifiers.contains(Modifier.PROTECTED)
                                     || (!modifiers.contains(Modifier.PUBLIC) && !modifiers.contains(Modifier.PRIVATE)))) {
-
-                                    result.add(new TypeHolder(element.toString(), org.netbeans.api.java.source.ElementHandle.create(element)));
+                                    
+                                        result.add(new TypeHolder(pkg + "." + element.getSimpleName().toString(), org.netbeans.api.java.source.ElementHandle.create(element)));
                                 }
                             }
                         }

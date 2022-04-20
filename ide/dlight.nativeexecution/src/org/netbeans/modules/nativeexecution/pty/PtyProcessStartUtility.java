@@ -26,7 +26,7 @@ import org.netbeans.modules.nativeexecution.api.util.HelperUtility;
  */
 public final class PtyProcessStartUtility extends HelperUtility {
 
-    private final static PtyProcessStartUtility instance = new PtyProcessStartUtility();
+    private static final PtyProcessStartUtility instance = new PtyProcessStartUtility();
 
     private PtyProcessStartUtility() {
         super("bin/nativeexecution/$osname-${platform}$_isa/process_start"); // NOI18N

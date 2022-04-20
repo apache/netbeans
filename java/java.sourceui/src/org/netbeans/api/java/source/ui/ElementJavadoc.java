@@ -1425,7 +1425,7 @@ public class ElementJavadoc {
             } else {
                 return true;
             }
-        } else if (!tagAttributes.containsKey(MARKUPTAG_MANDATORY_ATTRIBUTE.get(markupTagName))) {
+        } else if (!markupTagName.equals("start") && !tagAttributes.containsKey(MARKUPTAG_MANDATORY_ATTRIBUTE.get(markupTagName))) {
             // mandatory mark up tag not present
             String error = String.format("error: snippet markup: Missing <sub>^</sub><b><i>%s</b></i> tag attribute : <sub>^</sub><b><i>%s</b></i>", markupTagName, MARKUPTAG_MANDATORY_ATTRIBUTE.get(markupTagName));
             errors.add(error);

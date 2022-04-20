@@ -85,6 +85,18 @@ is the proper place.
     <!-- ACTUAL CHANGES BEGIN HERE: -->
 
     <changes>
+        <change id="GeneratedSourceType">
+            <api name="java_project"/>
+            <summary>Added a constant to mark generated sources with.</summary>
+            <version major="1" minor="88"/>
+            <date day="3" month="11" year="2021"/>
+            <author login="mentlicher"/>
+            <compatibility addition="yes"/>
+            <description>
+                Added <code>JavaProjectConstants.SOURCES_TYPE_GENERATED</code> constant witch represents type of source group with generated sources.
+            </description>
+            <class package="org.netbeans.api.java.project" name="JavaProjectConstants"/>
+        </change>
         <change id="ProjectPlatformNoPE">
             <api name="java_project"/>
             <summary>Added support for per-project platform for projects which don't use PropertyEvaluator.</summary>

@@ -35,6 +35,7 @@ import com.sun.source.doctree.ReferenceTree;
 import com.sun.source.doctree.ReturnTree;
 import com.sun.source.doctree.SeeTree;
 import com.sun.source.doctree.SinceTree;
+import com.sun.source.doctree.SnippetTree;
 import com.sun.source.doctree.StartElementTree;
 import com.sun.source.doctree.TextTree;
 import com.sun.source.doctree.ThrowsTree;
@@ -1315,22 +1316,20 @@ public class ElementJavadoc {
                 case TEXT:
                     TextTree ttag = (TextTree)tag;
                     sb.append(ttag.getBody());
-					break;
-		default:
-                    if (tag.getKind().toString().equals("SNIPPET")) {
-                        processDocSnippet(sb, tag);
-                    }	
+                    break;
+                case SNIPPET:
+                    processDocSnippet(sb, (SnippetTree)tag);
+                    break;
             }
         }
         return sb;
     }
 
-    private void processDocSnippet(StringBuilder sb, DocTree tag) {
+    private void processDocSnippet(StringBuilder sb, SnippetTree javadocSnippet) {
         sb.append("<pre>"); //NOI18N
         sb.append("<code>"); //NOI18N
-        
-        List<DocTree> attributes = TreeShims.getSnippetDocTreeAttributes(tag);
-        TextTree text = TreeShims.getSnippetDocTreeText(tag);
+        List<? extends DocTree> attributes = javadocSnippet.getAttributes();
+        TextTree text = javadocSnippet.getBody();
         SnippetTagCommentParser parser = new SnippetTagCommentParser();
         List<SourceLineMeta> parseResult = parser.parse(text.getBody());
         MarkupTagProcessor tagProcessor = new MarkupTagProcessor();

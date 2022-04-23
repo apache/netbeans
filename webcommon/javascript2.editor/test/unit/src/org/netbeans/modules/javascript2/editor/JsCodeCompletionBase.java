@@ -91,7 +91,7 @@ public class JsCodeCompletionBase extends JsTestBase {
 
         final BaseDocument doc = getDocument(content.toString());
         Source source = Source.create(doc);
-        final AtomicReference<CompletionProposal> found = new AtomicReference<CompletionProposal>();
+        final AtomicReference<CompletionProposal> found = new AtomicReference<>();
         ParserManager.parse(Collections.singleton(source), new UserTask() {
             @Override
             public void run(ResultIterator resultIterator) throws Exception {

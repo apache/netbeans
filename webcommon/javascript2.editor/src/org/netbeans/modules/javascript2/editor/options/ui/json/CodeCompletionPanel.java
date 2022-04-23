@@ -46,7 +46,7 @@ public class CodeCompletionPanel extends JPanel {
 
     private final Preferences preferences;
     private final ItemListener defaultCheckBoxListener = new DefaultCheckBoxListener();
-    private final Map<String, Object> id2Saved = new HashMap<String, Object>();
+    private final Map<String, Object> id2Saved = new HashMap<>();
 
     public CodeCompletionPanel(Preferences preferences) {
         assert preferences != null;
@@ -59,13 +59,7 @@ public class CodeCompletionPanel extends JPanel {
     }
 
     public static PreferencesCustomizer.Factory getCustomizerFactory() {
-        return new PreferencesCustomizer.Factory() {
-
-            @Override
-            public PreferencesCustomizer create(Preferences preferences) {
-                return new CodeCompletionPreferencesCustomizer(preferences);
-            }
-        };
+        return CodeCompletionPreferencesCustomizer::new;
     }
 
     private void initAutoCompletion() {

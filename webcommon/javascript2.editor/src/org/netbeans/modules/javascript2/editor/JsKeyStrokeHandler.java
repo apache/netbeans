@@ -30,7 +30,6 @@ import com.oracle.js.parser.ir.visitor.NodeVisitor;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -91,8 +90,6 @@ class JsKeyStrokeHandler implements KeystrokeHandler {
 
                 root.accept(new NodeVisitor(new LexicalContext()) {
 
-                    final HashSet<String> referencedFunction = new HashSet();
-
                     private OffsetRange getOffsetRange(IdentNode node) {
                         // because the truffle parser doesn't set correctly the finish offset, when there are comments after the indent node
                         return new OffsetRange(node.getStart(), node.getStart() + node.getName().length());
@@ -112,7 +109,7 @@ class JsKeyStrokeHandler implements KeystrokeHandler {
                         return new OffsetRange(com.oracle.js.parser.Token.descPosition(node.getFirstToken()),
                                 com.oracle.js.parser.Token.descPosition(node.getLastToken()) + com.oracle.js.parser.Token.descLength(node.getLastToken()));
                     }
-                    
+
                     @Override
                     protected boolean enterDefault(Node node) {
                         OffsetRange range = getOffsetRange(node);
@@ -134,7 +131,7 @@ class JsKeyStrokeHandler implements KeystrokeHandler {
                             processFunction(node);
                             return false;
                         }
-                                                
+
                         if (fnRange.getStart() <= caretOffset && caretOffset <= fnRange.getEnd()) {
                             ranges.add(new OffsetRange(fnRange.getStart(), fnRange.getEnd()));
                             int firstParamOffset = fnRange.getEnd();

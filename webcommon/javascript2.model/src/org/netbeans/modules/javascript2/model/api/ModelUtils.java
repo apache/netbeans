@@ -400,9 +400,6 @@ public class ModelUtils {
         }
         return null;
     }
-    private static final Collection<JsTokenId> CTX_DELIMITERS = Arrays.asList(
-            JsTokenId.BRACKET_LEFT_CURLY, JsTokenId.BRACKET_RIGHT_CURLY,
-            JsTokenId.OPERATOR_SEMICOLON);
 
     private static Collection<TypeUsage> tryResolveWindowProperty(Model model, Index jsIndex, String name) {
         // since issue #215863
@@ -446,7 +443,7 @@ public class ModelUtils {
             result = visitor.getSemiTypes(expression, builder);
         }
         if (builder.getCurrentWith()!= null) {
-            Collection<TypeUsage> withResult = new HashSet<TypeUsage>();
+            Collection<TypeUsage> withResult = new HashSet<>();
             String withSemi = SemiTypeResolverVisitor.ST_WITH + builder.getCurrentWith().getFullyQualifiedName();
 
             for(TypeUsage type : result) {
@@ -1103,7 +1100,7 @@ public class ModelUtils {
                 }
             }
 
-            HashMap<String, TypeUsage> resultTypes  = new HashMap<String, TypeUsage> ();
+            HashMap<String, TypeUsage> resultTypes  = new HashMap<> ();
             for (TypeUsage typeUsage : lastResolvedTypes) {
                 if(!resultTypes.containsKey(typeUsage.getType())) {
                     resultTypes.put(typeUsage.getType(), typeUsage);

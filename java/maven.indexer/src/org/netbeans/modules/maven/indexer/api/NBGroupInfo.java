@@ -31,8 +31,10 @@ import java.util.List;
  * @author Anuradha
  */
 public class NBGroupInfo {
-  private String name;
-  private List<NBArtifactInfo> artifactInfos=new  ArrayList<NBArtifactInfo>();
+
+    private final String name;
+    private final List<NBArtifactInfo> artifactInfos = new ArrayList<>();
+
     public NBGroupInfo(String name) {
         this.name = name;
     }
@@ -50,7 +52,7 @@ public class NBGroupInfo {
     }
 
     public List<NBArtifactInfo> getArtifactInfos() {
-        return new  ArrayList<NBArtifactInfo>(artifactInfos);
+        return new ArrayList<>(artifactInfos);
     }
 
     public String getName() {

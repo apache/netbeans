@@ -26,7 +26,7 @@ import org.netbeans.modules.maven.indexer.api.RepositoryInfo;
  * The basic set of queries. To be implemented by all index managers.
  * 
  * <p><b>Note</b> that all calls might be made from the IDE-s user interface and
- * even if the return time isn't crucial for the UI responsivity, it still should be 
+ * even if the return time isn't crucial for the UI responsiveness, it still should be
  * "reasonably" fast.</p>
  * 
  * @author Milos Kleint

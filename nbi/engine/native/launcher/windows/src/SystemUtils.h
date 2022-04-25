@@ -24,7 +24,6 @@
 extern "C" {
 #endif
 
-DWORD is9x();
 DWORD isNT();
 DWORD isXP();
 DWORD is2k();

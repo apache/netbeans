@@ -309,7 +309,6 @@ public class ServerTest extends NbTestCase {
         }
     }
 
-    @org.junit.Ignore
     public void testMain() throws Exception {
         File src = new File(getWorkDir(), "Test.java");
         src.getParentFile().mkdirs();
@@ -1282,7 +1281,6 @@ public class ServerTest extends NbTestCase {
                          "<none>:1:26-1:29", "<none>:2:12-2:15", "<none>:3:17-3:20");
     }
 
-    @org.junit.Ignore
     public void testHover() throws Exception {
         File src = new File(getWorkDir(), "Test.java");
         src.getParentFile().mkdirs();

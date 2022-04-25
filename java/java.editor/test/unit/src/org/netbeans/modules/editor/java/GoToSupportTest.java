@@ -46,6 +46,7 @@ import org.netbeans.api.java.source.ClasspathInfo;
 import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.java.source.JavaSource;
+import org.netbeans.api.java.source.SourceUtilsTest;
 import org.netbeans.api.java.source.SourceUtilsTestUtil;
 import org.netbeans.api.java.source.SourceUtilsTestUtil2;
 import org.netbeans.api.java.source.Task;
@@ -276,31 +277,6 @@ public class GoToSupportTest extends NbTestCase {
                 fail("Should not be called.");
             }
         }, true);
-    }
-
-    public void testTooltipForInnerClasses() throws Exception {
-        String code = "package test; public class Test {enum EE {A} class CC {} EE a; CC c;}";
-        int[] offset = new int[] {82, 88};
-        String[] golden = new String[] {
-            "<html><body><base href=\"file:" + getWorkDirPath() + "/src/test/Test.java\"></base><font size='+0'><b><a href='*0'>test.&#x200B;Test</a></b></font><pre>static enum <b>EE</b><br>extends <a href='*1'>Enum</a>&lt;<a href='*2'>EE</a>&gt;</pre>",
-            "<html><body><base href=\"file:" + getWorkDirPath() + "/src/test/Test.java\"></base><font size='+0'><b><a href='*0'>test.&#x200B;Test</a></b></font><pre>class <b>CC</b><br>extends <a href='*1'>Object</a></pre>",
-        };
-        assertEquals(offset.length, golden.length);
-        for (int cntr = 0; cntr < offset.length; cntr++) {
-            String tooltip = performTest(code, offset[cntr] - 24, new OrigUiUtilsCaller() {
-                public void open(FileObject fo, int pos) {
-                    fail("Should not be called.");
-                }
-                public void beep() {
-                    fail("Should not be called.");
-                }
-                public void open(ClasspathInfo info, Element el) {
-                    fail("Should not be called.");
-                }
-            }, true);
-
-            assertEquals(golden[cntr], tooltip);
-        }
     }
 
     public void testGoToIntoAnnonymous() throws Exception {
@@ -1304,7 +1280,6 @@ public class GoToSupportTest extends NbTestCase {
         out.write(docText);
         out.close();
         
-
         File goldenFile = getGoldenFile(goldenFileName);
         File diffFile = new File(getWorkDir(), getName() + ".diff");
 
@@ -1858,118 +1833,6 @@ public class GoToSupportTest extends NbTestCase {
         performTest("ReplaceTag", 6926, null, "javadocsnippet_HighlightAndReplace_cornercase.pass", this.sourceLevel);
     }
 
-    public void testLinkTag() throws Exception {
-        if (!TreeShims.isJDKVersionRelease18_Or_Above()) {
-            return;
-        }
-        this.sourceLevel = getLatestSourceVersion();
-        EXTRA_OPTIONS.add("--enable-preview");
-        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
-        performTest("LinkTag", 558, null, "javadocsnippet_LinkTag.pass", this.sourceLevel);
-
-    }
-
-    public void testLinkTag_With_RegexAndRegion() throws Exception {
-        if (!TreeShims.isJDKVersionRelease18_Or_Above()) {
-            return;
-        }
-        this.sourceLevel = getLatestSourceVersion();
-        EXTRA_OPTIONS.add("--enable-preview");
-        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
-        performTest("LinkTag", 999, null, "javadocsnippet_LinkTag_With_RegexAndRegion.pass", this.sourceLevel);
-
-    }
-
-    public void testLinkTag_AppliesToNextLine() throws Exception {
-        if (!TreeShims.isJDKVersionRelease18_Or_Above()) {
-            return;
-        }
-        this.sourceLevel = getLatestSourceVersion();
-        EXTRA_OPTIONS.add("--enable-preview");
-        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
-        performTest("LinkTag", 1350, null, "javadocsnippet_LinkTag_AppliesToNextLine.pass", this.sourceLevel);
-
-    }
-
-    public void testLink_MultipleTag_OnSameLine() throws Exception {
-        if (!TreeShims.isJDKVersionRelease18_Or_Above()) {
-            return;
-        }
-        this.sourceLevel = getLatestSourceVersion();
-        EXTRA_OPTIONS.add("--enable-preview");
-        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
-        performTest("LinkTag", 1737, null, "javadocsnippet_Link_MultipleTag_OnSameLine.pass", this.sourceLevel);
-    }
-
-    public void testLinkTag_With_RegionAttribute() throws Exception {
-        if (!TreeShims.isJDKVersionRelease18_Or_Above()) {
-            return;
-        }
-        this.sourceLevel = getLatestSourceVersion();
-        EXTRA_OPTIONS.add("--enable-preview");
-        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
-        performTest("LinkTag", 2420, null, "javadocsnippet_LinkTag_With_RegionAttribute.pass", this.sourceLevel);
-    }
-
-    public void testLinkTag_Ref_ToThisClass_UsingHash() throws Exception {
-        if (!TreeShims.isJDKVersionRelease18_Or_Above()) {
-            return;
-        }
-        this.sourceLevel = getLatestSourceVersion();
-        EXTRA_OPTIONS.add("--enable-preview");
-        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
-        performTest("LinkTag", 2752, null, "javadocsnippet_LinkTag_Ref_ToThisClass_UsingHash.pass", this.sourceLevel);
-    }
-
-    public void testLinkTag_FieldRef_ToThisClass_UsingHash() throws Exception {
-        if (!TreeShims.isJDKVersionRelease18_Or_Above()) {
-            return;
-        }
-        this.sourceLevel = getLatestSourceVersion();
-        EXTRA_OPTIONS.add("--enable-preview");
-        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
-        performTest("LinkTag", 3074, null, "javadocsnippet_LinkTag_FieldRef_ToThisClass_UsingHash.pass", this.sourceLevel);
-    }
-
-    public void testLinkTag_AlongWith_HighlightTag() throws Exception {
-        if (!TreeShims.isJDKVersionRelease18_Or_Above()) {
-            return;
-        }
-        this.sourceLevel = getLatestSourceVersion();
-        EXTRA_OPTIONS.add("--enable-preview");
-        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
-        performTest("LinkTag", 3492, null, "javadocsnippet_LinkTag_AlongWith_HighlightTag.pass", this.sourceLevel);
-    }
-
-    public void testLinkTag_AlongWith_ReplaceTag() throws Exception {
-        if (!TreeShims.isJDKVersionRelease18_Or_Above()) {
-            return;
-        }
-        this.sourceLevel = getLatestSourceVersion();
-        EXTRA_OPTIONS.add("--enable-preview");
-        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
-        performTest("LinkTag", 3895, null, "javadocsnippet_LinkTag_AlongWith_ReplaceTag.pass", this.sourceLevel);
-    }
-
-    public void testLinkTag_AlongWith_SubStringAndReplaceTag() throws Exception {
-        if (!TreeShims.isJDKVersionRelease18_Or_Above()) {
-            return;
-        }
-        this.sourceLevel = getLatestSourceVersion();
-        EXTRA_OPTIONS.add("--enable-preview");
-        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
-        performTest("LinkTag", 4353, null, "javadocsnippet_LinkTag_AlongWith_SubStringAndReplaceTag.pass", this.sourceLevel);
-    }
-
-    public void testLinkTag_EmptyReplacementValue() throws Exception {
-        if (!TreeShims.isJDKVersionRelease18_Or_Above()) {
-            return;
-        }
-        this.sourceLevel = getLatestSourceVersion();
-        EXTRA_OPTIONS.add("--enable-preview");
-        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
-        performTest("LinkTag", 4758, null, "javadocsnippet_LinkTag_EmptyReplacementValue.pass", this.sourceLevel);
-    }
     public void testError_HighlightTag() throws Exception {
         if (!TreeShims.isJDKVersionRelease18_Or_Above()) {
             return;
@@ -1988,16 +1851,6 @@ public class GoToSupportTest extends NbTestCase {
         EXTRA_OPTIONS.add("--enable-preview");
         JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
         performTest("Errors", 2613, null, "javadocsnippet_TestError_ReplaceTag.pass", this.sourceLevel);
-    }
-    
-    public void testError_LinkTag() throws Exception {
-        if (!TreeShims.isJDKVersionRelease18_Or_Above()) {
-            return;
-        }
-        this.sourceLevel = getLatestSourceVersion();
-        EXTRA_OPTIONS.add("--enable-preview");
-        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
-        performTest("Errors", 4069, null, "javadocsnippet_TestError_LinkTag.pass", this.sourceLevel);
     }
     
     public void testError_UnpairedRegion() throws Exception {

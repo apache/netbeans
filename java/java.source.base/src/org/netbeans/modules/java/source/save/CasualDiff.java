@@ -21,7 +21,6 @@ package org.netbeans.modules.java.source.save;
 import com.sun.source.doctree.DocCommentTree;
 import com.sun.source.doctree.DocTree;
 import static com.sun.source.doctree.DocTree.Kind.RETURN;
-import com.sun.source.doctree.TextTree;
 import com.sun.source.tree.*;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.util.DocSourcePositions;
@@ -426,7 +425,7 @@ public class CasualDiff {
         return td.checkDiffs(DiffUtilities.diff(originalText, resultSrc, start, 
                 td.readSections(originalText.length(), resultSrc.length(), lineStart, start), lineStart));
     }
-  
+    
     private static class SectKey {
         private int off;
         SectKey(int off) { this.off = off; }
@@ -4744,10 +4743,6 @@ public class CasualDiff {
 //                  }
                     break;
                 }
-//                if(oldT.getKind().toString().equals(TreeShims.SNIPPET)){
-//                  localpointer = diffSnippet(doc, oldT, newT, elementBounds);
-//                  break;
-//                }
                 String msg = "Diff not implemented: "
                         + ((com.sun.source.doctree.DocTree) oldT).getKind().toString()
                         + " " + oldT.getClass().getName();
@@ -5009,31 +5004,7 @@ public class CasualDiff {
         }
         return elementBounds[1];
     }
-//    
-//    private int diffSnippet(DCDocComment doc, DCTree oldT, DCTree newT, int[] elementBounds) {
-//        int localpointer = getOldPos(oldT, doc);
-//        copyTo(elementBounds[0], localpointer);
-//        List<DCTree> oldSnippetAttributes = (List<DCTree>) TreeShims.getSnippetDocTreeAttributes(oldT);
-//        List<DCTree> newsnippetAttributes = (List<DCTree>) TreeShims.getSnippetDocTreeAttributes(newT);
-//        int endPos = endPos(oldSnippetAttributes, doc);
-// 
-//        localpointer = diffList(doc, oldSnippetAttributes, newsnippetAttributes, localpointer, Measure.DOCTREE);        
-//        if(localpointer < endPos){
-//            copyTo(localpointer, localpointer = endPos);
-//        }
-//        
-//        DCText oldSnippetText = (DCText) TreeShims.getSnippetDocTreeText(oldT);
-//        DCText newSnippetText = (DCText) TreeShims.getSnippetDocTreeText(newT);
-//        if(oldSnippetText != null && newSnippetText != null){
-//            localpointer = diffText(doc, oldSnippetText, newSnippetText, elementBounds);
-//        }
-//        if(localpointer < elementBounds[1]) {
-//            copyTo(localpointer, elementBounds[1]);
-//        }
-//        
-//        return elementBounds[1];
-//    }
-//  
+    
     private int diffStartElement(DCDocComment doc, DCStartElement oldT, DCStartElement newT, int[] elementBounds) {
         int localpointer = oldT.attrs.isEmpty()? elementBounds[1] - 1 : getOldPos(oldT.attrs.get(0), doc);
         if(oldT.name.equals(newT.name)) {

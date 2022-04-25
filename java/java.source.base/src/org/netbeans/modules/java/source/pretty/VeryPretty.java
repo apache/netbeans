@@ -1342,7 +1342,7 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
                 sep = ", "; //TODO: space or not should be a configuration setting
             }
         }
-        Object caseKind = CasualDiff.getCaseKind(tree);
+        Object caseKind = tree.getCaseKind();
         if (caseKind == null || !String.valueOf(caseKind).equals("RULE")) {
             print(':');
             newline();

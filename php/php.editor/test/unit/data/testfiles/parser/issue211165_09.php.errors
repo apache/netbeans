@@ -10,10 +10,10 @@
 [[52,53]-Syntax error
  unexpected:	{
  after:	extends
- expected:	identifier, namespace, \, define] 52-53:Syntax error
+ expected:	identifier, define] 52-53:Syntax error
  unexpected:	{
  after:	extends
- expected:	identifier, namespace, \, define
+ expected:	identifier, define
 [[59,65]-POSSIBLE Syntax Error (check preceding valid syntax error)
  unexpected:	public] 59-65:POSSIBLE Syntax Error (check preceding valid syntax error)
  unexpected:	public

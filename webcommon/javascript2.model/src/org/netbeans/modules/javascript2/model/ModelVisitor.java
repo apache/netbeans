@@ -418,6 +418,20 @@ public class ModelVisitor extends PathNodeVisitor implements ModelResolver {
                         types.add(new TypeUsage(parameter, rhs.getStart(), false));
                     }
 
+                    if (property.getDocumentation() == null) {
+                        JsDocumentationHolder docHolder = JsDocumentationSupport.getDocumentationHolder(parserResult);
+                        if (docHolder != null) {
+                            property.setDocumentation(docHolder.getDocumentation(lhs));
+                            property.setDeprecated(docHolder.isDeprecated(lhs));
+                            List<Type> returnTypes = docHolder.getReturnType(lhs);
+                            if (!returnTypes.isEmpty()) {
+                                for (Type type : returnTypes) {
+                                    property.addAssignment(new TypeUsage(type.getType(), type.getOffset(), true), lhs.getFinish());
+                                }
+                            }
+                        }
+                    }
+
                     for (TypeUsage type : types) {
                         // plus 5 due to the this.
                         property.addAssignment(type, lhs.getStart() + 5);

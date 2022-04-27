@@ -35,13 +35,28 @@ public final class HTMLDialogBase {
         this.view = view;
     }
 
-    public static HTMLDialogBase create(String url, Runnable onPageLoad, HTMLDialog.OnSubmit onSubmit, String[] techIds, Class<?> component) {
+    public static HTMLDialogBase create(String url, String[] resources, Runnable onPageLoad, HTMLDialog.OnSubmit onSubmit, String[] techIds, Class<?> component) {
         ClassLoader loader = onPageLoad.getClass().getClassLoader();
         final URL u;
         try {
             u = new URL(url);
         } catch (MalformedURLException ex) {
             throw new IllegalArgumentException(url, ex);
+        }
+        final URL[] rs;
+        int idx = url.lastIndexOf("/");
+        String parent = idx < 0 ? null : url.substring(0, idx + 1);
+        if (parent == null) {
+            rs = new URL[0];
+        } else {
+            rs = new URL[resources.length];
+            for (int i = 0; i < resources.length; i++) {
+                try {
+                    rs[i] = new URL(parent + resources[i]);
+                } catch (MalformedURLException ex) {
+                    throw new IllegalArgumentException(url, ex);
+                }
+            }
         }
         class AcceptAndInit implements Consumer<String>, Callable<Lookup> {
             private Buttons<?, ?> buttons;
@@ -88,7 +103,7 @@ public final class HTMLDialogBase {
         }
         AcceptAndInit init = new AcceptAndInit();
         HTMLViewerSpi.Context c = ContextAccessor.getDefault().newContext(
-            loader, u, techIds, onSubmit, init, init, component
+            loader, u, rs, techIds, onSubmit, init, init, component
         );
         HtmlPair<?, ?> view = HtmlPair.newView(c);
         final Buttons<?, ?> buttons = component == null ? new Buttons<>(view, onSubmit) : null;

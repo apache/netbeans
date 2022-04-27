@@ -29,10 +29,9 @@ public final class Buttons {
     }
 
     @JavaScriptBody(args = {}, body = "\n"
-        + "const vscode = acquireVsCodeApi();\n" // this method can be called only once per WebView existance
         + "window.close = function() {\n"
-        + "  vscode.postMessage({\n"
-        + "    command: 'dispose',\n"
+        + "  self.vscode.postMessage({\n"
+        + "    command: 'dispose'\n"
         + "  });\n"
         + "};\n"
     )

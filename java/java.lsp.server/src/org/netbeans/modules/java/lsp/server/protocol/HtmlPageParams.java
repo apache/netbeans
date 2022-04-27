@@ -18,23 +18,47 @@
  */
 package org.netbeans.modules.java.lsp.server.protocol;
 
+import java.util.Map;
 import java.util.Objects;
 import org.eclipse.xtext.xbase.lib.Pure;
 
 public class HtmlPageParams  {
-    private String uri;
+    private String id;
+    private String text;
+    private Map<String, String> resources;
 
-    public HtmlPageParams(String uri) {
-        this.uri = uri;
+    public HtmlPageParams(String id, String text) {
+        this.id = id;
+        this.text = text;
     }
 
     @Pure
-    public String getUri() {
-        return uri;
+    public String getId() {
+        return id;
     }
 
-    public HtmlPageParams setUri(String uri) {
-        this.uri = uri;
+    public HtmlPageParams setId(String id) {
+        this.id = id;
+        return this;
+    }
+
+    @Pure
+    public String getText() {
+        return text;
+    }
+
+    public HtmlPageParams setText(String text) {
+        this.text = text;
+        return this;
+    }
+
+    @Pure
+    public Map<String, String> getResources() {
+        return resources;
+    }
+
+    public HtmlPageParams setResources(Map<String, String> resources) {
+        this.resources = resources;
         return this;
     }
 
@@ -42,7 +66,9 @@ public class HtmlPageParams  {
     @Override
     public int hashCode() {
         int hash = 5;
-        hash = 83 * hash + Objects.hashCode(this.uri);
+        hash = 83 * hash + Objects.hashCode(this.id);
+        hash = 83 * hash + Objects.hashCode(this.text);
+        hash = 83 * hash + Objects.hashCode(this.resources);
         return hash;
     }
 
@@ -59,7 +85,13 @@ public class HtmlPageParams  {
             return false;
         }
         final HtmlPageParams other = (HtmlPageParams) obj;
-        if (!Objects.equals(this.uri, other.uri)) {
+        if (!Objects.equals(this.id, other.id)) {
+            return false;
+        }
+        if (!Objects.equals(this.text, other.text)) {
+            return false;
+        }
+        if (!Objects.equals(this.resources, other.resources)) {
             return false;
         }
         return true;

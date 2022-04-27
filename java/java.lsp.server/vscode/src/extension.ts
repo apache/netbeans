@@ -48,7 +48,7 @@ import * as launcher from './nbcode';
 import {NbTestAdapter} from './testAdapter';
 import { asRanges, StatusMessageRequest, ShowStatusMessageParams, QuickPickRequest, InputBoxRequest, MutliStepInputRequest, TestProgressNotification, DebugConnector,
          TextEditorDecorationCreateRequest, TextEditorDecorationSetNotification, TextEditorDecorationDisposeNotification, HtmlPageRequest, HtmlPageParams,
-         SetTextEditorDecorationParams, ProjectActionParams, UpdateConfigurationRequest, QuickPickStep, InputBoxStep
+         ExecInHtmlPageRequest, SetTextEditorDecorationParams, ProjectActionParams, UpdateConfigurationRequest, QuickPickStep, InputBoxStep
 } from './protocol';
 import * as launchConfigurations from './launchConfigurations';
 import { createTreeViewService, TreeViewService, TreeItemDecorator, Visualizer, CustomizableTreeDataProvider } from './explorer';
@@ -855,6 +855,7 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
             }
             c.onNotification(StatusMessageRequest.type, showStatusBarMessage);
             c.onRequest(HtmlPageRequest.type, showHtmlPage);
+            c.onRequest(ExecInHtmlPageRequest.type, execInHtmlPage);
             c.onNotification(LogMessageNotification.type, (param) => handleLog(log, param.message));
             c.onRequest(QuickPickRequest.type, async param => {
                 const selected = await window.showQuickPick(param.items, { title: param.title, placeHolder: param.placeHolder, canPickMany: param.canPickMany });
@@ -1048,50 +1049,60 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
         }
     }
 
-    async function showHtmlPage(params : HtmlPageParams): Promise<string> {
-        function showUri(url: string, ok: any, err: any) {
-            let uri = vscode.Uri.parse(url);
-            var http = require('http');
+    const webviews = new Map<string, vscode.Webview>();
 
-            let host = uri.authority.split(":")[0];
-            let port = uri.authority.split(":")[1];
-
-            var options = {
-                host: host,
-                port: port,
-                path: uri.path
+    async function showHtmlPage(params : HtmlPageParams): Promise<void> {
+        return new Promise(resolve => {
+            let data = params.text;
+            const match = /<title>(.*)<\/title>/i.exec(data);
+            const name = match && match.length > 1 ? match[1] : '';
+            const resourceDir = vscode.Uri.joinPath(context.globalStorageUri, params.id);
+            workspace.fs.createDirectory(resourceDir);
+            let view = vscode.window.createWebviewPanel('htmlView', name, vscode.ViewColumn.Beside, {
+                enableScripts: true,
+                localResourceRoots: [resourceDir, vscode.Uri.joinPath(context.extensionUri, 'node_modules', '@vscode/codicons', 'dist')]
+            });
+            webviews.set(params.id, view.webview);
+            const resources = params.resources;
+            if (resources) {
+                for (const resourceName in resources) {
+                    const resourceText = resources[resourceName];
+                    const resourceUri = vscode.Uri.joinPath(resourceDir, resourceName);
+                    workspace.fs.writeFile(resourceUri, Buffer.from(resourceText, 'utf8'));
+                    data = data.replace('href="' + resourceName + '"', 'href="' + view.webview.asWebviewUri(resourceUri) + '"');
+                }
             }
-            var request = http.request(options, function(res: any) {
-                var data = '';
-                res.on('data', function(chunk: any) {
-                    data += chunk;
-                });
-                res.on('end', function() {
-                    const match = /<title>(.*)<\/title>/i.exec(data);
-                    const name = match && match.length > 1 ? match[1] : ''
-                    let view = vscode.window.createWebviewPanel('htmlView', name, vscode.ViewColumn.Beside, {
-                        enableScripts: true,
-                    });
-                    view.webview.html = data.replace("<head>", `<head><base href="${url}">`);
-                    view.webview.onDidReceiveMessage(message => {
-                        switch (message.command) {
-                            case 'dispose':
-                                view.dispose();
-                                break;
-                        }
-                    });
-                    view.onDidDispose(() => {
-                        ok(null);
-                    });
-                });
+            const codiconsUri = view.webview.asWebviewUri(vscode.Uri.joinPath(context.extensionUri, 'node_modules', '@vscode/codicons', 'dist', 'codicon.css'));
+            view.webview.html = data.replace('href="codicon.css"', 'href="' + codiconsUri + '"');
+            view.webview.onDidReceiveMessage(message => {
+                switch (message.command) {
+                    case 'dispose':
+                        webviews.delete(params.id);
+                        view.dispose();
+                        break;
+                    case 'command':
+                        vscode.commands.executeCommand('nb.htmlui.process.command', message.data);
+                        break;
+                }
             });
-            request.on('error', function(e: any) {
-                err(e);
+            view.onDidDispose(() => {
+                resolve();
+                workspace.fs.delete(resourceDir, {recursive: true});
             });
-            request.end();
-        }
-        return new Promise((ok, err) => {
-            showUri(params.uri, ok, err);
+        });
+    }
+
+    async function execInHtmlPage(params : HtmlPageParams): Promise<boolean> {
+        return new Promise(resolve => {
+            const webview = webviews.get(params.id);
+            if (webview) {
+                webview.postMessage({
+                    execScript: params.text
+                }).then(ret => {
+                    resolve(ret);
+                });
+            }
+            resolve(false);
         });
     }
 

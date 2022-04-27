@@ -3680,7 +3680,7 @@ public class ServerTest extends NbTestCase {
 
             @Override
             public CompletableFuture<String> showHtmlPage(HtmlPageParams params) {
-                MoveElementUI ui = MockHtmlViewer.assertDialogShown(params.getUri(), MoveElementUI.class);
+                MoveElementUI ui = MockHtmlViewer.assertDialogShown(params.getText(), MoveElementUI.class);
                 ui.setSelectedProject(ui.getAvailableProjects().get(0));
                 ui.setSelectedRoot(ui.getAvailableRoots().get(0));
                 ui.setSelectedPackage(ui.getAvailablePackages().get(2));
@@ -3795,7 +3795,7 @@ public class ServerTest extends NbTestCase {
 
             @Override
             public CompletableFuture<String> showHtmlPage(HtmlPageParams params) {
-                MoveElementUI ui = MockHtmlViewer.assertDialogShown(params.getUri(), MoveElementUI.class);
+                MoveElementUI ui = MockHtmlViewer.assertDialogShown(params.getText(), MoveElementUI.class);
                 ui.setSelectedProject(ui.getAvailableProjects().get(0));
                 ui.setSelectedRoot(ui.getAvailableRoots().get(0));
                 ui.setSelectedPackage(ui.getAvailablePackages().get(1));
@@ -4369,7 +4369,7 @@ public class ServerTest extends NbTestCase {
 
             @Override
             public CompletableFuture<String> showHtmlPage(HtmlPageParams params) {
-                ChangeMethodParameterUI ui = MockHtmlViewer.assertDialogShown(params.getUri(), ChangeMethodParameterUI.class);
+                ChangeMethodParameterUI ui = MockHtmlViewer.assertDialogShown(params.getText(), ChangeMethodParameterUI.class);
                 ui.getParameters().add(1, new ParameterUI("int", "cnt"));
                 ui.doRefactoring();
                 return CompletableFuture.completedFuture(null);

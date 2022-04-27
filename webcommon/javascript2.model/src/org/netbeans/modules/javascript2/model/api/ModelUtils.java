@@ -27,6 +27,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.logging.Level;
@@ -550,7 +551,7 @@ public class ModelUtils {
             if (declarationScope != null) {
                 boolean resolved = false;
                 for (JsObject variable : variables) {
-                    if (variable.getName().equals(name)) {
+                    if (Objects.equals(variable.getName(), name)) {
                         String newVarType;
                         if (!variable.getAssignments().isEmpty()) {
                              newVarType= SemiTypeResolverVisitor.ST_EXP + variable.getFullyQualifiedName().replace(".", SemiTypeResolverVisitor.ST_PRO);

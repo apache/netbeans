@@ -30,7 +30,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.netbeans.api.actions.Openable;
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.filesystems.FileObject;
@@ -173,7 +172,7 @@ final class InternalSampler extends Sampler {
             // log warnining
             return;
         }
-        progress = ProgressHandleFactory.createHandle(Save_Progress());
+        progress = ProgressHandle.createHandle(Save_Progress());
         progress.start(steps);
     }
 

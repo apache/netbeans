@@ -20,7 +20,6 @@ package org.netbeans.modules.lsp.client.bindings;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -30,16 +29,14 @@ import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javax.swing.SwingUtilities;
-import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
-import javax.swing.text.StyledDocument;
 import org.eclipse.lsp4j.ApplyWorkspaceEditParams;
 import org.eclipse.lsp4j.ApplyWorkspaceEditResponse;
 import org.eclipse.lsp4j.CodeAction;
@@ -51,21 +48,20 @@ import org.eclipse.lsp4j.ConfigurationItem;
 import org.eclipse.lsp4j.ConfigurationParams;
 import org.eclipse.lsp4j.Diagnostic;
 import org.eclipse.lsp4j.DiagnosticSeverity;
-import org.eclipse.lsp4j.ExecuteCommandParams;
 import org.eclipse.lsp4j.MessageActionItem;
 import org.eclipse.lsp4j.MessageParams;
+import org.eclipse.lsp4j.MessageType;
 import org.eclipse.lsp4j.ProgressParams;
 import org.eclipse.lsp4j.PublishDiagnosticsParams;
 import org.eclipse.lsp4j.ServerCapabilities;
 import org.eclipse.lsp4j.ShowMessageRequestParams;
 import org.eclipse.lsp4j.TextDocumentIdentifier;
-import org.eclipse.lsp4j.TextEdit;
 import org.eclipse.lsp4j.WorkDoneProgressBegin;
 import org.eclipse.lsp4j.WorkDoneProgressCreateParams;
 import org.eclipse.lsp4j.WorkDoneProgressEnd;
 import org.eclipse.lsp4j.WorkDoneProgressNotification;
 import org.eclipse.lsp4j.WorkDoneProgressReport;
-import org.eclipse.lsp4j.WorkspaceEdit;
+import org.eclipse.lsp4j.jsonrpc.Endpoint;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.eclipse.lsp4j.services.LanguageClient;
 import org.netbeans.api.progress.*;
@@ -78,12 +74,13 @@ import org.netbeans.spi.editor.hints.Fix;
 import org.netbeans.spi.editor.hints.HintsController;
 import org.netbeans.spi.editor.hints.LazyFixList;
 import org.netbeans.spi.editor.hints.Severity;
+import org.openide.DialogDisplayer;
+import org.openide.NotifyDescriptor;
+import org.openide.NotifyDescriptor.QuickPick.Item;
 import org.openide.cookies.EditorCookie;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.URLMapper;
-import org.openide.text.NbDocument;
 import org.openide.util.Exceptions;
-import org.openide.util.NbBundle.Messages;
 import org.openide.util.RequestProcessor;
 
 /**
@@ -192,18 +189,86 @@ public class LanguageClientImpl implements LanguageClient {
 
     @Override
     public void showMessage(MessageParams arg0) {
-        System.err.println("showMessage: " + arg0);
+        int messageType;
+
+        switch (Optional.ofNullable(arg0.getType()).orElse(MessageType.Log)) {
+            default:
+            case Log:
+            case Info:
+                messageType = NotifyDescriptor.INFORMATION_MESSAGE;
+                break;
+            case Warning:
+                messageType = NotifyDescriptor.WARNING_MESSAGE;
+                break;
+            case Error:
+                messageType = NotifyDescriptor.ERROR_MESSAGE;
+                break;
+        }
+
+        NotifyDescriptor nd = new NotifyDescriptor.Message(
+                arg0.getMessage(),
+                messageType
+        );
+
+        DialogDisplayer.getDefault().notifyLater(nd);
     }
 
     @Override
     public CompletableFuture<MessageActionItem> showMessageRequest(ShowMessageRequestParams arg0) {
-        System.err.println("showMessageRequest");
-        return null; //???
+        int messageType;
+
+        switch (Optional.ofNullable(arg0.getType()).orElse(MessageType.Log)) {
+            default:
+            case Log:
+            case Info:
+                messageType = NotifyDescriptor.INFORMATION_MESSAGE;
+                break;
+            case Warning:
+                messageType = NotifyDescriptor.WARNING_MESSAGE;
+                break;
+            case Error:
+                messageType = NotifyDescriptor.ERROR_MESSAGE;
+                break;
+        }
+
+        NotifyDescriptor.QuickPick nd = new NotifyDescriptor.QuickPick(
+                arg0.getMessage(),
+                "Please select",
+                arg0.getActions().stream()
+                        .map(mai -> new Item(mai.getTitle(), mai.getTitle()))
+                        .collect(Collectors.toList())
+                ,
+                false
+        );
+
+        nd.setMessageType(messageType);
+
+        return DialogDisplayer.getDefault()
+                .notifyFuture(nd)
+                .thenApply(nd2 -> {
+                    return new MessageActionItem(
+                            nd2.getItems().stream()
+                                    .filter(i -> i.isSelected())
+                                    .findFirst()
+                                    .map(i -> i.getLabel())
+                                    .orElse(""));
+                });
     }
 
     @Override
     public void logMessage(MessageParams arg0) {
-        System.err.println("logMessage: " + arg0);
+        switch (Optional.ofNullable(arg0.getType()).orElse(MessageType.Log)) {
+            case Log:
+            case Info:
+                LOG.info(arg0.getMessage());
+                break;
+            case Warning:
+                LOG.warning(arg0.getMessage());
+                break;
+            case Error:
+                LOG.severe(arg0.getMessage());
+                break;
+        }
     }
 
     @Override

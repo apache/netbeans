@@ -87,7 +87,7 @@ import org.openide.util.RequestProcessor;
  *
  * @author lahvac
  */
-public class LanguageClientImpl implements LanguageClient {
+public class LanguageClientImpl implements LanguageClient, Endpoint {
 
     private static final Logger LOG = Logger.getLogger(LanguageClientImpl.class.getName());
     private static final RequestProcessor WORKER = new RequestProcessor(LanguageClientImpl.class.getName(), 1, false, false);
@@ -282,6 +282,15 @@ public class LanguageClientImpl implements LanguageClient {
             result.complete(outcome);
         });
         return result;
+    }
+
+    public CompletableFuture<?> request(String method, Object parameter) {
+        LOG.log(Level.WARNING, "Received unhandled request: {0}: {1}", new Object[] {method, parameter});
+        return CompletableFuture.completedFuture(null);
+    }
+
+    public void notify(String method, Object parameter) {
+        LOG.log(Level.WARNING, "Received unhandled notification: {0}: {1}", new Object[] {method, parameter});
     }
 
     private final class DiagnosticFixList implements LazyFixList {

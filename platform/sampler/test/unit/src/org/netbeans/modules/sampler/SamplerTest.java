@@ -18,17 +18,17 @@
  */
 package org.netbeans.modules.sampler;
 
-import java.awt.Dialog;
 import java.io.ByteArrayOutputStream;
+import java.io.Closeable;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.util.logging.Handler;
+import java.util.logging.Level;
+import java.util.logging.LogRecord;
+import java.util.logging.Logger;
 import org.junit.*;
 import static org.junit.Assert.*;
 import org.netbeans.junit.MockServices;
-import org.netbeans.junit.NbTestCase;
-import org.openide.DialogDescriptor;
-import org.openide.DialogDisplayer;
-import org.openide.NotifyDescriptor;
 import org.openide.util.Exceptions;
 
 /**
@@ -138,29 +138,39 @@ public class SamplerTest {
     public void testStop() {
         System.out.println("stop");
         Sampler instance = Sampler.createManualSampler("stop");
-        DD.hasData = false;
-        instance.start();
-        longRunningMethod();
-        instance.stop();
-        assert(DD.hasData);
+        assertNotNull(instance);
+        try (DD d = new DD()) {
+            instance.start();
+            longRunningMethod();
+            instance.stop();
+            assertNotNull(d.logged);
+        }
     }
 
-    /** Our own dialog displayer.
-     */
-    public static final class DD extends DialogDisplayer {
-        static boolean hasData;
+    public static final class DD extends Handler implements Closeable {
+        private final Logger LOG = Logger.getLogger("org.openide.util.Exceptions");
+        LogRecord logged;
         
-        @Override
-        public Dialog createDialog(DialogDescriptor descriptor) {
-            throw new IllegalStateException ("Not implemented");
+        public DD() {
+            LOG.addHandler(this);
+            LOG.setLevel(Level.WARNING);
+            LOG.setUseParentHandlers(false);
+            setLevel(Level.WARNING);
         }
-        
+
         @Override
-        public Object notify(NotifyDescriptor descriptor) {
-           hasData = true;
-           return null;
+        public void publish(LogRecord record) {
+            logged = record;
         }
-        
+
+        @Override
+        public void flush() {
+        }
+
+        @Override
+        public void close() throws SecurityException {
+            LOG.removeHandler(this);
+        }
     } // end of DD    
     
 }

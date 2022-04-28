@@ -137,7 +137,9 @@ public class GroovyError implements Badging {
             return false;
         }
         
-        if (!this.description.equals(test.description)) {
+        if ((this.description == null && test.description != null) || 
+                (this.description != null && test.description == null)
+                || !this.description.equals(test.description)) {
             return false;
         }
         
@@ -145,7 +147,9 @@ public class GroovyError implements Badging {
             return false;
         }
         
-        if (!this.file.equals(test.file)) {
+        if ((this.file == null && test.file != null) || 
+                (this.file != null && test.file == null)
+                || !this.file.equals(test.file)) {
             return false;
         }
         
@@ -170,9 +174,9 @@ public class GroovyError implements Badging {
 
         hash = (11 * hash) + this.start;
         hash = (11 * hash) + this.end;
-        hash = (11 * hash) + this.description.hashCode();
+        hash = (11 * hash) + (this.description != null ? this.description.hashCode() : 0);
         hash = (11 * hash) + this.displayName.hashCode();
-        hash = (11 * hash) + this.file.hashCode();
+        hash = (11 * hash) + (this.file != null ? this.file.hashCode() : 0);
         hash = (11 * hash) + this.id.hashCode();
         hash = (11 * hash) + this.key.hashCode();
         hash = (11 * hash) + this.severity.hashCode();

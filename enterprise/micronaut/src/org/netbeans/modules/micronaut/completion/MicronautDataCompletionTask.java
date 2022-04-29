@@ -41,6 +41,7 @@ import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
+import javax.lang.model.element.RecordComponentElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeKind;
@@ -249,8 +250,15 @@ public class MicronautDataCompletionTask {
             for (ExecutableElement method : ElementFilter.methodsIn(entity.getEnclosedElements())) {
                 String methodName = method.getSimpleName().toString();
                 if (methodName.startsWith(GET) && method.getParameters().isEmpty()) {
-                    prop2Types.put(methodName.substring(GET.length()), tu.getTypeName(method.getReturnType()).toString());
+                    methodName = methodName.substring(GET.length());
+                    methodName = methodName.substring(0, 1).toUpperCase() + methodName.substring(1);
+                    prop2Types.put(methodName, tu.getTypeName(method.getReturnType()).toString());
                 }
+            }
+            for (RecordComponentElement recordComponent : ElementFilter.recordComponentsIn(entity.getEnclosedElements())) {
+                String name = recordComponent.getSimpleName().toString();
+                name = name.substring(0, 1).toUpperCase() + name.substring(1);
+                prop2Types.put(name, tu.getTypeName(recordComponent.asType()).toString());
             }
             addFindByCompletions(entity, prop2Types, prefix, full, consumer);
         }

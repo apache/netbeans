@@ -30,7 +30,7 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.netbeans.api.project.Project;
-import org.netbeans.modules.gradle.NbGradleProjectImpl;
+import org.netbeans.modules.gradle.api.NbGradleProject;
 import org.netbeans.modules.gradle.spi.GradleFiles;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -96,7 +96,7 @@ public class GradlePropertiesEditor {
     }
     
     public PropertiesEditor getEditor(FileObject origin, GradleFiles.Kind kind) {
-        GradleFiles gf = ((NbGradleProjectImpl) project).getGradleFiles();
+        GradleFiles gf = NbGradleProject.get(project).getFiles();
         if (origin != null) {
             File f = FileUtil.toFile(origin);
             if (f != null) {
@@ -138,7 +138,7 @@ public class GradlePropertiesEditor {
     }
     
     CachedProperties loadGradleProperties0() {
-        GradleFiles gf = ((NbGradleProjectImpl) project).getGradleFiles();
+        GradleFiles gf = NbGradleProject.get(project).getFiles();
         List<File> files = gf.getPropertyFiles();
         CachedProperties cached;
         synchronized (this) {
@@ -151,7 +151,7 @@ public class GradlePropertiesEditor {
     }
     
     CachedProperties ensureGetProperties() {
-        GradleFiles gf = ((NbGradleProjectImpl) project).getGradleFiles();
+        GradleFiles gf = NbGradleProject.get(project).getFiles();
         synchronized (this) {
             if (loadedProperties != null) {
                 return loadedProperties;

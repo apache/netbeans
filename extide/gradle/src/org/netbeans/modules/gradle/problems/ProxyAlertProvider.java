@@ -122,7 +122,6 @@ public class ProxyAlertProvider implements ProjectProblemsProvider, PropertyChan
             return;
         }
         synchronized (this) {
-            NbGradleProjectImpl gp = (NbGradleProjectImpl)owner;
             if (reports().equals(this.knownReports)) {
                 return;
             }

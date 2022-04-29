@@ -18,18 +18,14 @@
  */
 package org.netbeans.modules.gradle.problems;
 
-import java.io.File;
 import java.io.IOException;
-import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.netbeans.api.project.Project;
-import org.netbeans.modules.gradle.NbGradleProjectImpl;
 import org.netbeans.modules.gradle.api.NbGradleProject;
-import org.netbeans.modules.gradle.spi.GradleFiles;
 import org.netbeans.spi.project.ui.ProjectProblemResolver;
 import org.netbeans.spi.project.ui.ProjectProblemsProvider;
 import org.netbeans.spi.project.ui.ProjectProblemsProvider.Result;
@@ -53,12 +49,14 @@ public class ChangeOrRemovePropertyResolver implements ProjectProblemResolver {
     private final PropertiesEditor editor;
     private final int proxyPort;
     private final CompletableFuture<ProjectProblemsProvider.Result> future = new CompletableFuture<>();
+    private final NbGradleProject gp;
     
     public ChangeOrRemovePropertyResolver(Project project, PropertiesEditor editor, String proxyHost, int proxyPort) {
         this.project = project;
         this.proxyHost = proxyHost;
         this.proxyPort = proxyPort;
         this.editor = editor;
+        gp = NbGradleProject.get(project);
     }
 
     @Override
@@ -79,14 +77,11 @@ public class ChangeOrRemovePropertyResolver implements ProjectProblemResolver {
     public void run() {
         boolean reload = doRun();
         if (reload) {
-            NbGradleProject gp = NbGradleProject.get(project);
             gp.toQuality(Bundle.ReasonProxyChanged(), NbGradleProject.Quality.FULL, true);
         }
     }
     
     boolean doRun() {
-        GradleFiles gf = ((NbGradleProjectImpl) project).getGradleFiles();
-        
         if (editor == null) {
             // should not happen
             return false;

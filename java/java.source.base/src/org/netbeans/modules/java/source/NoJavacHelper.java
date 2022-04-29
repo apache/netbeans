@@ -34,21 +34,22 @@ import org.openide.modules.OnStart;
  */
 public class NoJavacHelper {
 
-    private static final boolean hasWorkingJavac;
+    public static final int REQUIRED_JAVAC_VERSION = 18; // <- TODO: increment on every release
+    private static final boolean HAS_WORKING_JAVAC;
 
     static {
         boolean res;
         try {
-            SourceVersion.valueOf("RELEASE_17");
+            SourceVersion.valueOf("RELEASE_"+REQUIRED_JAVAC_VERSION);
             res = true;
         } catch (IllegalArgumentException ex) {
             res = false;
         }
-        hasWorkingJavac = res;
+        HAS_WORKING_JAVAC = res;
     }
 
     public static boolean hasWorkingJavac() {
-        return hasWorkingJavac;
+        return HAS_WORKING_JAVAC;
     }
 
     // safety net if someone manages to start NB on JDK 8 with nb-javac uninstalled

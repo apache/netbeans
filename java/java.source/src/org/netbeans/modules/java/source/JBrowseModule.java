@@ -62,7 +62,7 @@ public class JBrowseModule extends ModuleInstall {
                              " Please either:" +
                              "<ul>" +
                                  "<li>install nb-javac library (<b>highly recommended</b>)</li>" +
-                                 "<li>run NetBeans on JDK 17 or later</li>" +
+                                 "<li>run NetBeans on JDK "+NoJavacHelper.REQUIRED_JAVAC_VERSION+" or later</li>" +
                              "</ul>",
         "BN_Install=Install nb-javac",
         "DN_nbjavac=nb-javac library",

@@ -19,13 +19,18 @@
 package org.netbeans.modules.editor.java;
 import java.beans.PropertyVetoException;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.regex.Pattern;
 import javax.lang.model.SourceVersion;
-
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
@@ -35,7 +40,7 @@ import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.swing.event.ChangeListener;
 import javax.swing.text.Document;
-
+import static junit.framework.TestCase.assertNotNull;
 import org.netbeans.api.java.lexer.JavaTokenId;
 import org.netbeans.api.java.source.ClasspathInfo;
 import org.netbeans.api.java.source.CompilationController;
@@ -45,12 +50,14 @@ import org.netbeans.api.java.source.SourceUtilsTestUtil;
 import org.netbeans.api.java.source.SourceUtilsTestUtil2;
 import org.netbeans.api.java.source.Task;
 import org.netbeans.api.java.source.TestUtilities;
+import org.netbeans.api.java.source.gen.WhitespaceIgnoringDiff;
 import org.netbeans.api.lexer.Language;
 import org.netbeans.junit.NbTestCase;
+import static org.netbeans.junit.NbTestCase.assertFile;
 import org.netbeans.modules.editor.java.GoToSupport.UiUtilsCaller;
-//import org.netbeans.modules.java.source.TreeLoader;
 import org.netbeans.modules.java.source.parsing.JavacParser;
 import org.netbeans.spi.java.queries.CompilerOptionsQueryImplementation;
+import org.openide.LifecycleManager;
 import org.openide.cookies.EditorCookie;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -1258,7 +1265,63 @@ public class GoToSupportTest extends NbTestCase {
         
         return null;
     }
+    
+    protected void performTest(String source, int caretPos, String textToInsert, String goldenFileName, String sourceLevel) throws Exception {
+        
+        clearWorkDir();
+        FileUtil.refreshFor(getWorkDir());
 
+        FileObject wd = FileUtil.toFileObject(getWorkDir());
+        FileObject sourceDir = FileUtil.createFolder(wd, "src");
+        FileObject buildDir = FileUtil.createFolder(wd, "build");
+        FileObject cacheDir = FileUtil.createFolder(wd, "cache");
+        
+        File testSource = new File(getWorkDir(), "test/Test.java");
+        testSource.getParentFile().mkdirs();
+        copyToWorkDir(new File(getDataDir(), "org/netbeans/modules/java/editor/javadocsnippet/data/" + source + ".java"), testSource);
+        FileObject testSourceFO = FileUtil.toFileObject(testSource);
+        
+        SourceUtilsTestUtil.setSourceLevel(testSourceFO, sourceLevel);
+        SourceUtilsTestUtil.prepareTest(sourceDir, buildDir, cacheDir, new FileObject[0]);
+        assertNotNull(testSourceFO);
+        DataObject testSourceDO = DataObject.find(testSourceFO);
+        assertNotNull(testSourceDO);
+        EditorCookie ec = testSourceDO.getCookie(EditorCookie.class);
+        assertNotNull(ec);
+        final Document doc = ec.openDocument();
+        assertNotNull(doc);
+        doc.putProperty(Language.class, JavaTokenId.language());
+        doc.putProperty("mimeType", "text/x-java");
+        int textToInsertLength = textToInsert != null ? textToInsert.length() : 0;
+        if (textToInsertLength > 0)
+            doc.insertString(caretPos, textToInsert, null);
+        
+        String docText = GoToSupport.getGoToElementTooltip(doc, caretPos, false, null);
+        assertNotNull(goldenFileName);            
+
+        File output = new File(getWorkDir(), getName() + ".out2");
+        Writer out = new FileWriter(output);            
+        out.write(docText);
+        out.close();
+        
+        File goldenFile = getGoldenFile(goldenFileName);
+        File diffFile = new File(getWorkDir(), getName() + ".diff");
+
+        assertFile(output, goldenFile, diffFile, new WhitespaceIgnoringDiff());
+        
+        LifecycleManager.getDefault().saveAll();
+    }
+
+    protected void copyToWorkDir(File resource, File toFile) throws IOException {
+        InputStream is = new FileInputStream(resource);
+        OutputStream outs = new FileOutputStream(toFile);
+        int read;
+        while ((read = is.read()) != (-1)) {
+            outs.write(read);
+        }
+        outs.close();
+        is.close();
+    }
     /**Copied from org.netbeans.api.project.
      * Create a scratch directory for tests.
      * Will be in /tmp or whatever, and will be empty.
@@ -1517,6 +1580,445 @@ public class GoToSupportTest extends NbTestCase {
         }
     }
 
+    public void testJavadocSnippetHighlightRecord() throws Exception {
+        if (!TreeShims.isJDKVersionRelease18_Or_Above()) {
+            return;
+        }
+
+        if (!hasRecords()) {
+            return;
+        }
+        this.sourceLevel = getLatestSourceVersion();
+        EXTRA_OPTIONS.add("--enable-preview");
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
+        
+        performTest("HighlightTag", 388, null, "javadocsnippet_highlightRecord.pass", this.sourceLevel);
+    }
+    
+    public void testHighlightUsingSubstring() throws Exception {
+        if (!TreeShims.isJDKVersionRelease18_Or_Above()) {
+            return;
+        }
+
+        this.sourceLevel = getLatestSourceVersion();
+        EXTRA_OPTIONS.add("--enable-preview");      
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
+        
+        performTest("HighlightTag", 858, null, "javadocsnippet_highlightUsingSubstring.pass", this.sourceLevel);
+    }
+    
+    public void testHesthighlightUsingRegex() throws Exception {
+        if (!TreeShims.isJDKVersionRelease18_Or_Above()) {
+            return;
+        }
+
+        this.sourceLevel = getLatestSourceVersion();
+        EXTRA_OPTIONS.add("--enable-preview");
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
+        
+        performTest("HighlightTag",1280, null, "javadocsnippet_highlightUsingRegex.pass", this.sourceLevel);
+    }
+ 
+    public void testHighlightUsingSubstringAndRegex() throws Exception {
+        if (!TreeShims.isJDKVersionRelease18_Or_Above()) {
+            return;
+        }
+
+        this.sourceLevel = getLatestSourceVersion();
+        EXTRA_OPTIONS.add("--enable-preview");
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
+
+        performTest("HighlightTag", 1788, null, "javadocsnippet_highlightUsingSubstringAndRegex.pass", this.sourceLevel);
+    }
+    
+    public void testHighlightUsingSubstringRegexAndType() throws Exception {
+        if (!TreeShims.isJDKVersionRelease18_Or_Above()) {
+            return;
+        }
+
+        this.sourceLevel = getLatestSourceVersion();
+        EXTRA_OPTIONS.add("--enable-preview");
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
+
+        performTest("HighlightTag", 3734, null, "javadocsnippet_highlightUsingSubstringRegexAndType.pass", this.sourceLevel);
+    }
+        
+    public void testHighlightUsingMultipleSnippetTagInOneJavaDocWithRegion() throws Exception {
+        if (!TreeShims.isJDKVersionRelease18_Or_Above()) {
+            return;
+        }
+
+        this.sourceLevel = getLatestSourceVersion();
+        EXTRA_OPTIONS.add("--enable-preview");
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
+
+        performTest("HighlightTag", 3734, null, "javadocsnippet_highlightUsingMultipleSnippetTagInOneJavaDocWithRegion.pass", this.sourceLevel);
+    }
+        
+    public void testHighlightUsingNestedRegions() throws Exception {
+        if (!TreeShims.isJDKVersionRelease18_Or_Above()) {
+            return;
+        }
+
+        this.sourceLevel = getLatestSourceVersion();
+        EXTRA_OPTIONS.add("--enable-preview");
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
+
+        performTest("HighlightTag", 5335, null, "javadocsnippet_highlightUsingNestedRegions.pass", this.sourceLevel);
+    }
+    
+    public void testHighlightUsingRegionsEndedWithDoubleColon() throws Exception {
+        if (!TreeShims.isJDKVersionRelease18_Or_Above()) {
+            return;
+        }
+
+        this.sourceLevel = getLatestSourceVersion();
+        EXTRA_OPTIONS.add("--enable-preview");
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
+
+        performTest("HighlightTag", 6028, null, "javadocsnippet_highlightUsingRegionsEndedWithDoubleColon.pass", this.sourceLevel);
+    }
+    
+    public void testNoMarkupTagPresent() throws Exception {
+        if (!TreeShims.isJDKVersionRelease18_Or_Above()) {
+            return;
+        }
+
+        this.sourceLevel = getLatestSourceVersion();
+        EXTRA_OPTIONS.add("--enable-preview");
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
+
+        performTest("HighlightTag", 6271, null, "javadocsnippet_noMarkupTagPresent.pass", this.sourceLevel);
+    }
+ 
+    public void testHighlightTagSubstringApplyToNextLine() throws Exception {
+        if (!TreeShims.isJDKVersionRelease18_Or_Above()) {
+            return;
+        }
+
+        this.sourceLevel = getLatestSourceVersion();
+        EXTRA_OPTIONS.add("--enable-preview");
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
+
+        performTest("HighlightTag", 6521, null, "javadocsnippet_highlightTagSubstringApplyToNextLine.pass", this.sourceLevel);
+    }
+ 
+    public void testHighlightTagRegexWithAllCharacterChange() throws Exception {
+        if (!TreeShims.isJDKVersionRelease18_Or_Above()) {
+            return;
+        }
+
+        this.sourceLevel = getLatestSourceVersion();
+        EXTRA_OPTIONS.add("--enable-preview");
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
+
+        performTest("HighlightTag", 6783, null, "javadocsnippet_highlightTagRegexWithAllCharacterChange.pass", this.sourceLevel);
+    }
+       
+    public void testHighlightTagRegexWithAllCharacterChangeUsingDot() throws Exception {
+        if (!TreeShims.isJDKVersionRelease18_Or_Above()) {
+            return;
+        }
+
+        this.sourceLevel = getLatestSourceVersion();
+        EXTRA_OPTIONS.add("--enable-preview");
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
+
+        performTest("HighlightTag", 7047, null, "javadocsnippet_highlightTagRegexWithAllCharacterChangeUsingDot.pass", this.sourceLevel);
+    }
+    
+    public void testSingleLine_Replace_Regex() throws Exception {
+        if (!TreeShims.isJDKVersionRelease18_Or_Above()) {
+            return;
+        }
+        this.sourceLevel = getLatestSourceVersion();
+        EXTRA_OPTIONS.add("--enable-preview");
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
+        performTest("ReplaceTag", 1127, null, "javadocsnippet_SingleLine_Replace_Regex.pass", this.sourceLevel);
+    }
+
+    public void testSingleLine_Replace_RegexDotStar() throws Exception {
+        if (!TreeShims.isJDKVersionRelease18_Or_Above()) {
+            return;
+        }
+        this.sourceLevel = getLatestSourceVersion();
+        EXTRA_OPTIONS.add("--enable-preview");
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
+        performTest("ReplaceTag", 1417, null, "javadocsnippet_SingleLine_Replace_RegexDotStar.pass", this.sourceLevel);
+    }
+
+    public void testSingleLine_Replace_RegexDot() throws Exception {
+        if (!TreeShims.isJDKVersionRelease18_Or_Above()) {
+            return;
+        }
+        this.sourceLevel = getLatestSourceVersion();
+        EXTRA_OPTIONS.add("--enable-preview");
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
+        performTest("ReplaceTag", 1713, null, "javadocsnippet_SingleLine_Replace_RegexDot.pass", this.sourceLevel);
+    }
+
+    public void testSingleLine_Replace_Substring() throws Exception {
+        if (!TreeShims.isJDKVersionRelease18_Or_Above()) {
+            return;
+        }
+        this.sourceLevel = getLatestSourceVersion();
+        EXTRA_OPTIONS.add("--enable-preview");
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
+        performTest("ReplaceTag", 2021, null, "javadocsnippet_SingleLine_Replace_Substring.pass", this.sourceLevel);
+    }
+
+    public void testSingleLine_MultipleReplaceAnnotation_Regex() throws Exception {
+        if (!TreeShims.isJDKVersionRelease18_Or_Above()) {
+            return;
+        }
+        this.sourceLevel = getLatestSourceVersion();
+        EXTRA_OPTIONS.add("--enable-preview");
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
+        performTest("ReplaceTag", 2383, null, "javadocsnippet_SingleLine_MultipleReplaceAnnotation_Regex.pass", this.sourceLevel);
+    }
+
+    public void testSingleLine_MultipleReplaceAnnotation_Substring() throws Exception {
+        if (!TreeShims.isJDKVersionRelease18_Or_Above()) {
+            return;
+        }
+        this.sourceLevel = getLatestSourceVersion();
+        EXTRA_OPTIONS.add("--enable-preview");
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
+        performTest("ReplaceTag", 2878, null, "javadocsnippet_SingleLine_MultipleReplaceAnnotation_Substring.pass", this.sourceLevel);
+    }
+
+    public void testSingleLine_ReplaceAnnotation_Regex_DoubleQuote() throws Exception {
+        if (!TreeShims.isJDKVersionRelease18_Or_Above()) {
+            return;
+        }
+        this.sourceLevel = getLatestSourceVersion();
+        EXTRA_OPTIONS.add("--enable-preview");
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
+        performTest("ReplaceTag", 3221, null, "javadocsnippet_SingleLine_ReplaceAnnotation_Regex_DoubleQuote.pass", this.sourceLevel);
+    }
+
+    public void testRegion_ReplaceAnnotation_Regex() throws Exception {
+        if (!TreeShims.isJDKVersionRelease18_Or_Above()) {
+            return;
+        }
+        this.sourceLevel = getLatestSourceVersion();
+        EXTRA_OPTIONS.add("--enable-preview");
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
+        performTest("ReplaceTag", 3732, null, "javadocsnippet_Region_ReplaceAnnotation_Regex.pass", this.sourceLevel);
+    }
+
+    public void testRegion_ReplaceAnnotation_RegexInnComment() throws Exception {
+        if (!TreeShims.isJDKVersionRelease18_Or_Above()) {
+            return;
+        }
+        this.sourceLevel = getLatestSourceVersion();
+        EXTRA_OPTIONS.add("--enable-preview");
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
+        performTest("ReplaceTag", 4135, null, "javadocsnippet_Region_ReplaceAnnotation_RegexInnComment.pass", this.sourceLevel);
+    }
+
+    public void testNestedRegion_ReplaceAnnotation_Substring() throws Exception {
+        if (!TreeShims.isJDKVersionRelease18_Or_Above()) {
+            return;
+        }
+        this.sourceLevel = getLatestSourceVersion();
+        EXTRA_OPTIONS.add("--enable-preview");
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
+        performTest("ReplaceTag", 4712, null, "javadocsnippet_NestedRegion_ReplaceAnnotation_Substring.pass", this.sourceLevel);
+    }
+
+    public void testNestedRegion_ReplaceAnnotation_Regex() throws Exception {
+        if (!TreeShims.isJDKVersionRelease18_Or_Above()) {
+            return;
+        }
+        this.sourceLevel = getLatestSourceVersion();
+        EXTRA_OPTIONS.add("--enable-preview");
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
+        performTest("ReplaceTag", 5270, null, "javadocsnippet_NestedRegion_ReplaceAnnotation_Regex.pass", this.sourceLevel);
+    }
+
+    public void testNestedRegion_Highlight_And_replace() throws Exception {
+        if (!TreeShims.isJDKVersionRelease18_Or_Above()) {
+            return;
+        }
+        this.sourceLevel = getLatestSourceVersion();
+        EXTRA_OPTIONS.add("--enable-preview");
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
+        performTest("ReplaceTag", 6597, null, "javadocsnippet_NestedRegion_Highlight_And_replace.pass", this.sourceLevel);
+    }
+
+    public void testHighlightAndReplace_cornercase() throws Exception {
+        if (!TreeShims.isJDKVersionRelease18_Or_Above()) {
+            return;
+        }
+        this.sourceLevel = getLatestSourceVersion();
+        EXTRA_OPTIONS.add("--enable-preview");
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
+        performTest("ReplaceTag", 6926, null, "javadocsnippet_HighlightAndReplace_cornercase.pass", this.sourceLevel);
+    }
+
+    public void testLinkTag() throws Exception {
+        if (!TreeShims.isJDKVersionRelease18_Or_Above()) {
+            return;
+        }
+        this.sourceLevel = getLatestSourceVersion();
+        EXTRA_OPTIONS.add("--enable-preview");
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
+        performTest("LinkTag", 558, null, "javadocsnippet_LinkTag.pass", this.sourceLevel);
+
+    }
+
+    public void testLinkTag_With_RegexAndRegion() throws Exception {
+        if (!TreeShims.isJDKVersionRelease18_Or_Above()) {
+            return;
+        }
+        this.sourceLevel = getLatestSourceVersion();
+        EXTRA_OPTIONS.add("--enable-preview");
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
+        performTest("LinkTag", 999, null, "javadocsnippet_LinkTag_With_RegexAndRegion.pass", this.sourceLevel);
+
+    }
+
+    public void testLinkTag_AppliesToNextLine() throws Exception {
+        if (!TreeShims.isJDKVersionRelease18_Or_Above()) {
+            return;
+        }
+        this.sourceLevel = getLatestSourceVersion();
+        EXTRA_OPTIONS.add("--enable-preview");
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
+        performTest("LinkTag", 1350, null, "javadocsnippet_LinkTag_AppliesToNextLine.pass", this.sourceLevel);
+
+    }
+
+    public void testLink_MultipleTag_OnSameLine() throws Exception {
+        if (!TreeShims.isJDKVersionRelease18_Or_Above()) {
+            return;
+        }
+        this.sourceLevel = getLatestSourceVersion();
+        EXTRA_OPTIONS.add("--enable-preview");
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
+        performTest("LinkTag", 1737, null, "javadocsnippet_Link_MultipleTag_OnSameLine.pass", this.sourceLevel);
+    }
+
+    public void testLinkTag_With_RegionAttribute() throws Exception {
+        if (!TreeShims.isJDKVersionRelease18_Or_Above()) {
+            return;
+        }
+        this.sourceLevel = getLatestSourceVersion();
+        EXTRA_OPTIONS.add("--enable-preview");
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
+        performTest("LinkTag", 2420, null, "javadocsnippet_LinkTag_With_RegionAttribute.pass", this.sourceLevel);
+    }
+
+    public void testLinkTag_Ref_ToThisClass_UsingHash() throws Exception {
+        if (!TreeShims.isJDKVersionRelease18_Or_Above()) {
+            return;
+        }
+        this.sourceLevel = getLatestSourceVersion();
+        EXTRA_OPTIONS.add("--enable-preview");
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
+        performTest("LinkTag", 2752, null, "javadocsnippet_LinkTag_Ref_ToThisClass_UsingHash.pass", this.sourceLevel);
+    }
+
+    public void testLinkTag_FieldRef_ToThisClass_UsingHash() throws Exception {
+        if (!TreeShims.isJDKVersionRelease18_Or_Above()) {
+            return;
+        }
+        this.sourceLevel = getLatestSourceVersion();
+        EXTRA_OPTIONS.add("--enable-preview");
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
+        performTest("LinkTag", 3074, null, "javadocsnippet_LinkTag_FieldRef_ToThisClass_UsingHash.pass", this.sourceLevel);
+    }
+
+    public void testLinkTag_AlongWith_HighlightTag() throws Exception {
+        if (!TreeShims.isJDKVersionRelease18_Or_Above()) {
+            return;
+        }
+        this.sourceLevel = getLatestSourceVersion();
+        EXTRA_OPTIONS.add("--enable-preview");
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
+        performTest("LinkTag", 3492, null, "javadocsnippet_LinkTag_AlongWith_HighlightTag.pass", this.sourceLevel);
+    }
+
+    public void testLinkTag_AlongWith_ReplaceTag() throws Exception {
+        if (!TreeShims.isJDKVersionRelease18_Or_Above()) {
+            return;
+        }
+        this.sourceLevel = getLatestSourceVersion();
+        EXTRA_OPTIONS.add("--enable-preview");
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
+        performTest("LinkTag", 3895, null, "javadocsnippet_LinkTag_AlongWith_ReplaceTag.pass", this.sourceLevel);
+    }
+
+    public void testLinkTag_AlongWith_SubStringAndReplaceTag() throws Exception {
+        if (!TreeShims.isJDKVersionRelease18_Or_Above()) {
+            return;
+        }
+        this.sourceLevel = getLatestSourceVersion();
+        EXTRA_OPTIONS.add("--enable-preview");
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
+        performTest("LinkTag", 4353, null, "javadocsnippet_LinkTag_AlongWith_SubStringAndReplaceTag.pass", this.sourceLevel);
+    }
+
+    public void testLinkTag_EmptyReplacementValue() throws Exception {
+        if (!TreeShims.isJDKVersionRelease18_Or_Above()) {
+            return;
+        }
+        this.sourceLevel = getLatestSourceVersion();
+        EXTRA_OPTIONS.add("--enable-preview");
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
+        performTest("LinkTag", 4758, null, "javadocsnippet_LinkTag_EmptyReplacementValue.pass", this.sourceLevel);
+    }
+    public void testError_HighlightTag() throws Exception {
+        if (!TreeShims.isJDKVersionRelease18_Or_Above()) {
+            return;
+        }
+        this.sourceLevel = getLatestSourceVersion();
+        EXTRA_OPTIONS.add("--enable-preview");
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
+        performTest("Errors", 1331, null, "javadocsnippet_TestError_HighlightTag.pass", this.sourceLevel);
+    }
+    
+    public void testError_ReplaceTag() throws Exception {
+        if (!TreeShims.isJDKVersionRelease18_Or_Above()) {
+            return;
+        }
+        this.sourceLevel = getLatestSourceVersion();
+        EXTRA_OPTIONS.add("--enable-preview");
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
+        performTest("Errors", 2613, null, "javadocsnippet_TestError_ReplaceTag.pass", this.sourceLevel);
+    }
+    
+    public void testError_LinkTag() throws Exception {
+        if (!TreeShims.isJDKVersionRelease18_Or_Above()) {
+            return;
+        }
+        this.sourceLevel = getLatestSourceVersion();
+        EXTRA_OPTIONS.add("--enable-preview");
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
+        performTest("Errors", 4069, null, "javadocsnippet_TestError_LinkTag.pass", this.sourceLevel);
+    }
+    
+    public void testError_UnpairedRegion() throws Exception {
+        if (!TreeShims.isJDKVersionRelease18_Or_Above()) {
+            return;
+        }
+        this.sourceLevel = getLatestSourceVersion();
+        EXTRA_OPTIONS.add("--enable-preview");
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
+        performTest("Errors", 4740, null, "javadocsnippet_TestError_UnpairedRegion.pass", this.sourceLevel);
+    }
+    
+    public void testError_NoRegionToEnd() throws Exception {
+        if (!TreeShims.isJDKVersionRelease18_Or_Above()) {
+            return;
+        }
+        this.sourceLevel = getLatestSourceVersion();
+        EXTRA_OPTIONS.add("--enable-preview");
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
+        performTest("Errors", 4906, null, "javadocsnippet_TestError_NoRegionToEnd.pass", this.sourceLevel);
+    }
+    
     private static final List<String> EXTRA_OPTIONS = new ArrayList<>();
     @ServiceProvider(service = CompilerOptionsQueryImplementation.class, position = 100)
     public static class TestCompilerOptionsQueryImplementation implements CompilerOptionsQueryImplementation {

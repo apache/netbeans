@@ -107,6 +107,11 @@ public final class GradleReport {
         return Objects.equals(this.location, other.location);
     }
 
+    @Override
+    public String toString() {
+        return formatReportForHintOrProblem(true, null);
+    }
+
     @NbBundle.Messages({
         "# {0} - previous part",
         "# {1} - appended part",
@@ -119,6 +124,7 @@ public final class GradleReport {
         "# {1} - the file",
         "FMT_MessageWithLocationNoLine={0} ({1})"
     })
+
     /**
      * Formats the report for simple viewing. The function concatenates report messages, starting from
      * outer Report. If `includeLocation` is true, script name + line is printed at the end. 

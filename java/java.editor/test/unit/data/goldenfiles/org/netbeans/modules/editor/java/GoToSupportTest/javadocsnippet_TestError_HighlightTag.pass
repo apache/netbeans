@@ -1,0 +1,43 @@
+<html><body><font size='+0'><b><a href='*0'>test.&#x200B;Test</a></b></font><pre>public void <b>errorsInHighlightTag</b>()</pre><p><pre><code><span style="color:red;">error: snippet markup: Invalid value <sub>^</sub><b><i>Blank</b></i> for <sub>^</sub><b><i>highlight</b></i> tag mark up attribute <sub>^</sub><b><i>substring</b></i></span>
+</code></pre>
+ 
+ <pre><code><span style="color:red;">error: snippet markup: Invalid value <sub>^</sub><b><i>Blank</b></i> for <sub>^</sub><b><i>highlight</b></i> tag mark up attribute <sub>^</sub><b><i>substring</b></i></span>
+</code></pre>
+ 
+ <pre><code><span style="color:red;">error: snippet markup: Invalid value <sub>^</sub><b><i>Blank</b></i> for <sub>^</sub><b><i>highlight</b></i> tag mark up attribute <sub>^</sub><b><i>substring</b></i></span>
+</code></pre>
+ 
+ <pre><code><span style="color:red;">error: snippet markup: Invalid value <sub>^</sub><b><i>Blank</b></i> for <sub>^</sub><b><i>highlight</b></i> tag mark up attribute <sub>^</sub><b><i>substring</b></i></span>
+</code></pre>
+ 
+ 
+ <pre><code><span style="color:red;">error: snippet markup: Invalid value <sub>^</sub><b><i>Blank</b></i> for <sub>^</sub><b><i>highlight</b></i> tag mark up attribute <sub>^</sub><b><i>regex</b></i></span>
+</code></pre>
+ 
+ <pre><code><span style="color:red;">error: snippet markup: Invalid value <sub>^</sub><b><i>Blank</b></i> for <sub>^</sub><b><i>highlight</b></i> tag mark up attribute <sub>^</sub><b><i>regex</b></i></span>
+</code></pre>
+ 
+ <pre><code><span style="color:red;">error: snippet markup: Invalid value <sub>^</sub><b><i>Blank</b></i> for <sub>^</sub><b><i>highlight</b></i> tag mark up attribute <sub>^</sub><b><i>regex</b></i></span>
+</code></pre>
+ 
+ <pre><code><span style="color:red;">error: snippet markup: Invalid value <sub>^</sub><b><i></b></i> for <sub>^</sub><b><i>highlight</b></i> tag mark up attribute <sub>^</sub><b><i>type</b></i>.<br>Valid values, such as bold, italic, or highlighted</span>
+</code></pre>
+ 
+ <pre><code><span style="color:red;">error: snippet markup: Invalid value <sub>^</sub><b><i></b></i> for <sub>^</sub><b><i>highlight</b></i> tag mark up attribute <sub>^</sub><b><i>type</b></i>.<br>Valid values, such as bold, italic, or highlighted</span>
+</code></pre>
+ 
+ <pre><code><span style="color:red;">error: snippet markup: Invalid value <sub>^</sub><b><i></b></i> for <sub>^</sub><b><i>highlight</b></i> tag mark up attribute <sub>^</sub><b><i>type</b></i>.<br>Valid values, such as bold, italic, or highlighted</span>
+</code></pre>
+ 
+ <pre><code><span style="color:red;">error: snippet markup: Invalid value <sub>^</sub><b><i>xyz</b></i> for <sub>^</sub><b><i>highlight</b></i> tag mark up attribute <sub>^</sub><b><i>type</b></i>.<br>Valid values, such as bold, italic, or highlighted</span>
+</code></pre>
+ 
+ <pre><code><span style="background-color:yellow;"> </span>class<span style="background-color:yellow;"> </span>HelloWorld<span style="background-color:yellow;"> </span>{
+ }
+ 
+</code></pre>
+ 
+ <pre><code> class HelloWorld {
+ }
+ 
+</code></pre><p>

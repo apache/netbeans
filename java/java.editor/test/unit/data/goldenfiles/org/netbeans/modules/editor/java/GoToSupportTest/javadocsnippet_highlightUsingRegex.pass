@@ -1,0 +1,9 @@
+<html><body><font size='+0'><b><a href='*0'>test.&#x200B;Test</a></b></font><pre>public void <b>highlightUsingRegex</b>()</pre><p><pre><code>   public static void main(String... args1) {
+       for (var arg : args<b>1</b>) {                 
+           if (!<b>a</b><b>r</b><b>g</b>.isBlankarg()) {           
+               System.<b>o</b><b>u</b><b>t</b>.println(args1);       
+ }
+ }
+ }
+ 
+</code></pre><p>

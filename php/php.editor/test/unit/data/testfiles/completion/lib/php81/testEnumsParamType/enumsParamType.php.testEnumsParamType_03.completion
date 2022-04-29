@@ -1,0 +1,8 @@
+Code completion result for source line:
+public function publicMethod1(En|um1 $enum1, Enum2 $enum2): void {
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+PACKAGE    EnumTestNamespace1              [PUBLIC]   null
+PACKAGE    EnumTestNamespace2              [PUBLIC]   null
+CLASS      Enum1                           [PUBLIC]   EnumTestNamespace2
+CLASS      Enum2                           [PUBLIC]   EnumTestNamespace2
+CLASS      EnumTest                        [PUBLIC]   EnumTestNamespace1

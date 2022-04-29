@@ -1,0 +1,10 @@
+<html><body><font size='+0'><b><a href='*0'>test.&#x200B;Test</a></b></font><pre>public void <b>testLinkTag_AlongWith_HighlightTag</b>()</pre><p>A simple program
+
+ <pre><code> class HelloWorld {
+     public static void main(String... args) {
+         
+         System.<span style="background-color:yellow;">o</span><span style="background-color:yellow;">u</span><span style="background-color:yellow;">t</span><span style="background-color:yellow;">.</span><span style="background-color:yellow;">p</span><span style="background-color:yellow;">r</span><span style="background-color:yellow;">i</span><span style="background-color:yellow;">n</span><span style="background-color:yellow;">t</span><span style="background-color:yellow;">l</span><span style="background-color:yellow;">n</span>("Hello World!");
+ }
+ }
+ 
+</code></pre><p>

@@ -1,0 +1,4 @@
+Code completion result for source line:
+Simple::CASE1->publicEnum|Method();
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     publicEnumMethod()              [PUBLIC]   \Enum1\Simple

@@ -18,24 +18,32 @@
  */
 package org.netbeans.modules.sampler;
 
-/**
- *
- * @author Tomas Hurka
- */
-public class SamplerTest extends AbstractSamplerBase {
+import java.io.DataOutputStream;
 
-    @Override
-    protected Handle createManualSampler(String name) {
-        return new DirectSamplerHandle(Sampler.createManualSampler(name));
+final class DirectSamplerHandle extends AbstractSamplerBase.Handle {
+    private final Sampler sampler;
+
+    DirectSamplerHandle(Sampler sampler) {
+        this.sampler = sampler;
     }
 
     @Override
-    protected Handle createSampler(String name) {
-        return new DirectSamplerHandle(Sampler.createSampler(name));
+    public final synchronized void start() {
+        sampler.start();
     }
 
     @Override
-    protected boolean logsMessage() {
-        return true;
+    public final void cancel() {
+        sampler.cancel();
+    }
+
+    @Override
+    public final void stopAndWriteTo(DataOutputStream dos) {
+        sampler.stopAndWriteTo(dos);
+    }
+
+    @Override
+    public final void stop() {
+        sampler.stop();
     }
 }

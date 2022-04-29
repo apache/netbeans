@@ -36,8 +36,6 @@ import java.util.zip.GZIPOutputStream;
 
 import javax.management.StandardMBean;
 
-import org.openide.util.Exceptions;
-
 /**
  *
  * @author Tomas Hurka
@@ -267,7 +265,6 @@ class SamplesOutputStream {
                                                              true);
                 return (Object[]) getterBean.getAttribute("Threads");
             } catch (Exception ex) {
-                Exceptions.printStackTrace(ex);
                 return new Object[0];
             }
         }

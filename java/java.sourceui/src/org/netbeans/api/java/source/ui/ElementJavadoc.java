@@ -394,7 +394,8 @@ public class ElementJavadoc {
         this.fileObject = compilationInfo.getFileObject();
         this.handle = element == null ? null : ElementHandle.create(element);
         this.cancel = cancel;
-        this.packageName = compilationInfo.getCompilationUnit().getPackageName().toString();
+        this.packageName = compilationInfo.getCompilationUnit().getPackageName() != null ? compilationInfo.getCompilationUnit().getPackageName().toString()
+                                                                                         : "";
         this.imports = compilationInfo.getCompilationUnit().getImports();
         this.className = compilationInfo.getCompilationUnit().getSourceFile().getName().replaceFirst("[.][^.]+$", "");
 

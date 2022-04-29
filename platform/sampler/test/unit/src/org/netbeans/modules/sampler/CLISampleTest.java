@@ -18,24 +18,27 @@
  */
 package org.netbeans.modules.sampler;
 
-/**
- *
- * @author Tomas Hurka
- */
-public class SamplerTest extends AbstractSamplerBase {
+import java.io.IOException;
+import java.lang.management.ManagementFactory;
 
+public class CLISampleTest extends AbstractSamplerBase {
     @Override
     protected Handle createManualSampler(String name) {
-        return new DirectSamplerHandle(Sampler.createManualSampler(name));
+        CLISampler sampler = new CLISampler(ManagementFactory.getThreadMXBean(), null) {
+            @Override
+            protected void saveSnapshot(byte[] arr) throws IOException {
+            }
+        };
+        return new DirectSamplerHandle(sampler);
     }
 
     @Override
     protected Handle createSampler(String name) {
-        return new DirectSamplerHandle(Sampler.createSampler(name));
+        return createManualSampler(name);
     }
 
     @Override
     protected boolean logsMessage() {
-        return true;
+        return false;
     }
 }

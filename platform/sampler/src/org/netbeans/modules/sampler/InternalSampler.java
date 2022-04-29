@@ -54,7 +54,7 @@ final class InternalSampler extends Sampler {
     private ProgressHandle progress;
 
     static InternalSampler createInternalSampler(String key) {
-        if (SamplesOutputStream.isSupported() && isRunMode()) {
+        if (isRunMode()) {
             return new InternalSampler(key);
         }
         return null;
@@ -107,8 +107,9 @@ final class InternalSampler extends Sampler {
         return runMode;
     }
     
-    InternalSampler(String thread) {
+    InternalSampler(String thread) throws LinkageError {
         super(thread);
+        progress = ProgressHandle.createHandle(Save_Progress());
     }
 
     @Override
@@ -174,7 +175,6 @@ final class InternalSampler extends Sampler {
             // log warnining
             return;
         }
-        progress = ProgressHandle.createHandle(Save_Progress());
         progress.start(steps);
     }
 
@@ -184,7 +184,7 @@ final class InternalSampler extends Sampler {
             return;
         }
         progress.finish();
-        progress = null;
+        progress = ProgressHandle.createHandle(Save_Progress());
     }
 
     @Override

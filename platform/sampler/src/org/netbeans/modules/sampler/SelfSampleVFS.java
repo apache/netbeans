@@ -25,10 +25,10 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Enumeration;
 import org.openide.filesystems.AbstractFileSystem;
-import org.openide.util.Enumerations;
 
 /** Filesystem that allows to virtually move some files next to each other.
  *
@@ -143,7 +143,7 @@ implements AbstractFileSystem.List, AbstractFileSystem.Info, AbstractFileSystem.
 
     @Override
     public Enumeration<String> attributes(String name) {
-        return Enumerations.empty();
+        return Collections.emptyEnumeration();
     }
 
     @Override

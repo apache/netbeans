@@ -18,24 +18,38 @@
  */
 package org.netbeans.modules.sampler;
 
-/**
- *
- * @author Tomas Hurka
- */
-public class SamplerTest extends AbstractSamplerBase {
+import java.io.IOException;
+import java.lang.management.ManagementFactory;
+import java.lang.management.ThreadMXBean;
 
-    @Override
-    protected Handle createManualSampler(String name) {
-        return new DirectSamplerHandle(Sampler.createManualSampler(name));
+final class StandaloneSampler extends Sampler {
+    StandaloneSampler(String n) {
+        super(n);
     }
 
     @Override
-    protected Handle createSampler(String name) {
-        return new DirectSamplerHandle(Sampler.createSampler(name));
+    ThreadMXBean getThreadMXBean() {
+        return ManagementFactory.getThreadMXBean();
     }
 
     @Override
-    protected boolean logsMessage() {
-        return true;
+    void saveSnapshot(byte[] arr) throws IOException {
+    }
+
+    @Override
+    void printStackTrace(Throwable ex) {
+        ex.printStackTrace();
+    }
+
+    @Override
+    void openProgress(int steps) {
+    }
+
+    @Override
+    void closeProgress() {
+    }
+
+    @Override
+    void progress(int i) {
     }
 }

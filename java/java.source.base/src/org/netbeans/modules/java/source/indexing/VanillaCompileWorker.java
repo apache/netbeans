@@ -690,6 +690,11 @@ final class VanillaCompileWorker extends CompileWorker {
                     //likely a duplicate of another class, don't touch:
                     return null;
                 }
+                if (isOtherClass(csym)) {
+                    // Something went somewhere the csym.type is Type.Unknown,
+                    // do not go any further
+                    return null;
+                }
                 currentClass = csym;
                 Type.ClassType ct = (Type.ClassType) csym.type;
                 if (csym == syms.objectType.tsym) {
@@ -1049,8 +1054,13 @@ final class VanillaCompileWorker extends CompileWorker {
         }
         return isErroneousClass(((JCClassDecl) tree).sym);
     }
+
     private boolean isErroneousClass(Element el) {
         return el instanceof ClassSymbol && (((ClassSymbol) el).asType() == null || ((ClassSymbol) el).asType().getKind() == TypeKind.ERROR);
+    }
+
+    private boolean isOtherClass(Element el) {
+        return el instanceof ClassSymbol && (((ClassSymbol) el).asType() == null || ((ClassSymbol) el).asType().getKind() == TypeKind.OTHER);
     }
 
     public static Function<Diagnostic<?>, String> DIAGNOSTIC_TO_TEXT = d -> d.getMessage(null);

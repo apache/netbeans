@@ -82,18 +82,16 @@ public class JsDocElementUtils {
         if (text.isEmpty()) {
             return new ArrayList<>();
         }
-        if (text.charAt(0) == '(') {
-            text = text.substring(1);
-            if (text.charAt(text.length() - 1) == ')') {
-                text = text.substring(0, text.length() - 2);
-            }
+        if (text.charAt(0) == '(' && text.charAt(text.length() - 1) == ')') {
+            text = text.substring(1, text.length() - 1);
             text = text.trim();
         }
         String[] typesArray = text.split("[|]"); //NOI18N
         List<Type> types = new ArrayList<>(typesArray.length);
         for (String string : typesArray) {
-            if (!string.trim().isEmpty()) {
-                types.add(createTypeUsage(string, offset + textToParse.indexOf(string)));
+            String type = string.trim();
+            if (!type.isEmpty()) {
+                types.add(createTypeUsage(type, offset + textToParse.indexOf(type)));
             }
         }
         return types;

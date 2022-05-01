@@ -441,7 +441,7 @@ public class DBReadWriteHelper {
                     }
                         
                 case Types.DOUBLE:
-                    return valueObj instanceof Double ? valueObj : new Double(valueObj.toString());
+                    return valueObj instanceof Double ? valueObj : Double.valueOf(valueObj.toString());
 
                 case Types.FLOAT:
                 case Types.REAL:

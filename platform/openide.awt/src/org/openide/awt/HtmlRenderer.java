@@ -352,7 +352,7 @@ public final class HtmlRenderer {
                 }
 
                 double chWidth = wid / chars.length;
-                int estCharsToPaint = new Double(w / chWidth).intValue();
+                int estCharsToPaint = Double.valueOf(w / chWidth).intValue();
                 if( estCharsToPaint > chars.length )
                     estCharsToPaint = chars.length;
                 //let's correct the estimate now
@@ -1057,7 +1057,7 @@ public final class HtmlRenderer {
                             //Word wrap mode
                             goToNextRow = true;
 
-                            int lastChar = new Double(nextTag - estCharsOver).intValue();
+                            int lastChar = Double.valueOf(nextTag - estCharsOver).intValue();
 
                             //Unlike Swing's word wrap, which does not wrap on tag boundaries correctly, if we're out of space,
                             //we're out of space
@@ -1108,7 +1108,7 @@ public final class HtmlRenderer {
                                 }
                             } else if (brutalWrap) {
                                 //wrap without checking word boundaries
-                                length = (new Double((w - widthPainted) / chWidth)).intValue();
+                                length = Double.valueOf((w - widthPainted) / chWidth).intValue();
 
                                 if ((pos + length) > nextTag) {
                                     length = (nextTag - pos);
@@ -1127,7 +1127,7 @@ public final class HtmlRenderer {
 
                     if (strikethrough || underline || link) {
                         LineMetrics lm = fm.getLineMetrics(chars, pos, length - 1, g);
-                        int lineWidth = new Double(x + r.getWidth()).intValue();
+                        int lineWidth = Double.valueOf(x + r.getWidth()).intValue();
 
                         if (paint) {
                             if (strikethrough) {

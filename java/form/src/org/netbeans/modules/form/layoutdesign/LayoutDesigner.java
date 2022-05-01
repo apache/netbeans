@@ -437,8 +437,8 @@ public final class LayoutDesigner implements LayoutConstants {
             LayoutTestUtils.writeLayoutComponentArray(testCode, "comps", "lc");				    //NOI18N
             LayoutTestUtils.writeRectangleArray(testCode, "bounds", bounds);				    //NOI18N
             LayoutTestUtils.writeString(testCode, "defaultContId", defaultContId);			    //NOI18N         
-            testCode.add("Point hotspot = new Point(" + new Double(hotspot.getX()).intValue() + "," +	    //NOI18N
-			    new Double(hotspot.getY()).intValue() + ");");				    //NOI18N
+            testCode.add("Point hotspot = new Point(" + Double.valueOf(hotspot.getX()).intValue() + "," +	    //NOI18N
+			    Double.valueOf(hotspot.getY()).intValue() + ");");				    //NOI18N
             testCode.add("ld.startAdding(comps, bounds, hotspot, defaultContId);");			    //NOI18N
             testCode.add("}");										    //NOI18N
         }
@@ -465,8 +465,8 @@ public final class LayoutDesigner implements LayoutConstants {
             testCode.add("{"); //NOI18N
             LayoutTestUtils.writeStringArray(testCode, "compIds", compIds); //NOI18N
             LayoutTestUtils.writeRectangleArray(testCode, "bounds", bounds); //NOI18N
-            testCode.add("Point hotspot = new Point(" + new Double(hotspot.getX()).intValue() + "," +  //NOI18N
-		    new Double(hotspot.getY()).intValue() + ");"); //NOI18N
+            testCode.add("Point hotspot = new Point(" + Double.valueOf(hotspot.getX()).intValue() + "," +  //NOI18N
+		    Double.valueOf(hotspot.getY()).intValue() + ");"); //NOI18N
             testCode.add("ld.startMoving(compIds, bounds, hotspot);"); //NOI18N
             testCode.add("}"); //NOI18N
         }
@@ -519,8 +519,8 @@ public final class LayoutDesigner implements LayoutConstants {
             testCode.add("{"); //NOI18N
             LayoutTestUtils.writeStringArray(testCode, "compIds", compIds); //NOI18N
             LayoutTestUtils.writeRectangleArray(testCode, "bounds", bounds); //NOI18N
-            testCode.add("Point hotspot = new Point(" + new Double(hotspot.getX()).intValue() + "," +  //NOI18N
-		    new Double(hotspot.getY()).intValue() + ");"); //NOI18N
+            testCode.add("Point hotspot = new Point(" + Double.valueOf(hotspot.getX()).intValue() + "," +  //NOI18N
+		    Double.valueOf(hotspot.getY()).intValue() + ");"); //NOI18N
             LayoutTestUtils.writeIntArray(testCode, "resizeEdges", resizeEdges); //NOI18N
             testCode.add("boolean inLayout = " + inLayout + ";"); // NOI18N
             testCode.add("ld.startResizing(compIds, bounds, hotspot, resizeEdges, inLayout);"); //NOI18N

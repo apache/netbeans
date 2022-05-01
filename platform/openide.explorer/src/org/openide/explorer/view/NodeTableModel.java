@@ -31,6 +31,7 @@ import java.beans.PropertyChangeListener;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.TreeMap;
 
 import javax.swing.*;
@@ -148,7 +149,7 @@ public class NodeTableModel extends AbstractTableModel {
         int visibleCount = 0;
         existsComparableColumn = false;
 
-        TreeMap<Double, Integer> sort = new TreeMap<Double, Integer>();
+        Map<Double, Integer> sort = new TreeMap<>();
         int i = 0;
         int ia = 0;
 
@@ -163,9 +164,9 @@ public class NodeTableModel extends AbstractTableModel {
                     Object o = props[i].getValue(ATTR_ORDER_NUMBER);
 
                     if (o instanceof Integer) {
-                        sort.put(new Double(((Integer) o).doubleValue()), Integer.valueOf(ia));
+                        sort.put(((Integer)o).doubleValue(), ia);
                     } else {
-                        sort.put(new Double(ia + 0.1), new Integer(ia));
+                        sort.put(Double.valueOf(ia + 0.1), ia);
                     }
                 } else {
                     allPropertyColumns[ia].setVisibleIndex(-1);
@@ -218,9 +219,9 @@ public class NodeTableModel extends AbstractTableModel {
             int vi = allPropertyColumns[i].getVisibleIndex();
 
             if (vi == -1) {
-                sort.put(new Double(i - 0.1), Integer.valueOf(i));
+                sort.put(Double.valueOf(i - 0.1), Integer.valueOf(i));
             } else {
-                sort.put(new Double(vi), Integer.valueOf(i));
+                sort.put(Double.valueOf(vi), Integer.valueOf(i));
             }
         }
 

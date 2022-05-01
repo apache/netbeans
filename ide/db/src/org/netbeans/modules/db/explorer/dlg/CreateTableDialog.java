@@ -471,7 +471,7 @@ public class CreateTableDialog {
                 Map cmap = ColumnItem.getColumnProperty(i);
                 col.setIdentifier(cmap.get("name")); //NOI18N
                 columnName = NbBundle.getMessage (CreateTableDialog.class, "CreateTable_" + i); //NOI18N
-                columnWidth = (new Double(getFontMetrics(getFont()).getStringBounds(columnName, getGraphics()).getWidth())).intValue() + 20;
+                columnWidth = Double.valueOf(getFontMetrics(getFont()).getStringBounds(columnName, getGraphics()).getWidth()).intValue() + 20;
                 if (cmap.containsKey("width")) { // NOI18N
                     if (((Integer)cmap.get("width")).intValue() < columnWidth)
                         col.setPreferredWidth(columnWidth);

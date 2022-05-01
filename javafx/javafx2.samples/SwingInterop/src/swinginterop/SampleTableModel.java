@@ -37,9 +37,9 @@ public class SampleTableModel extends AbstractTableModel {
     private final String[] names = {"2007", "2008", "2009"};
  
     private Object[][] data = {
-            {new Double(567), new Double(956), new Double(1154)},
-            {new Double(1292), new Double(1665), new Double(1927)},
-            {new Double(1292), new Double(2559), new Double(2774)}
+            {Double.valueOf(567D),  Double.valueOf(956D),  Double.valueOf(1154D)},
+            {Double.valueOf(1292D), Double.valueOf(1665D), Double.valueOf(1927D)},
+            {Double.valueOf(1292D), Double.valueOf(2559D), Double.valueOf(2774D)}
         };
 
     public double getTickUnit() {

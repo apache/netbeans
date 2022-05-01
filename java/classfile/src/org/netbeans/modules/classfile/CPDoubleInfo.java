@@ -32,7 +32,7 @@ public final class CPDoubleInfo extends CPEntry {
 
     CPDoubleInfo(ConstantPool pool, double v) {
 	super(pool);
-        value = new Double(v);
+        value = v;
     }
 
     /* The VM doesn't allow the next constant pool slot to be used

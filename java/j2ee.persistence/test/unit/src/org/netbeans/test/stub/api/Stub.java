@@ -151,9 +151,9 @@ public final class Stub {
                 } else if (retClass == Long.TYPE) {
                     return new Long(0L);
                 } else if (retClass == Float.TYPE) {
-                    return new Float(0);
+                    return (float)0F;
                 } else if (retClass == Double.TYPE) {
-                    return new Double(0.0);
+                    return (double)0D;
                 } else if (retClass == Character.TYPE) {
                     return new Character('\0');
                 } else if (retClass == Boolean.TYPE) {

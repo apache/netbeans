@@ -123,7 +123,7 @@ class BaseTabLayoutModel implements TabLayoutModel {
             //No need to calculate for every string
             String testStr = "Zgj"; //NOI18N
             Font f = getFont();
-            textHeight = new Double(f.getStringBounds(testStr, 
+            textHeight = Double.valueOf(f.getStringBounds(testStr, 
             BasicScrollingTabDisplayerUI.getOffscreenGraphics(component).getFontRenderContext()).getWidth()).intValue() + 2;
         }
         return textHeight;

@@ -164,7 +164,7 @@ public class ClassesListController extends AbstractController {
                     else data[i][4] = (retainedSizeByClass > 0 ? "+" : "") + numberFormat.format(retainedSizeByClass); // NOI18N 
                 }
             } else {
-                data[i][1] = new Double((double) instancesCount /
+                data[i][1] = Double.valueOf((double) instancesCount /
                                      (double) totalLiveInstances * 100);
                 data[i][2] = numberFormat.format(instancesCount) + " (" // NOI18N
                                      + percentFormat.format((double) instancesCount /

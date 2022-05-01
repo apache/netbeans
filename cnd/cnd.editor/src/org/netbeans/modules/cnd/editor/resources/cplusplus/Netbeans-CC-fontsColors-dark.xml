@@ -19,12 +19,20 @@
     under the License.
 
 -->
-<!DOCTYPE fontscolors PUBLIC "-//NetBeans//DTD Editor Fonts and Colors settings 1.1//EN" "http://www.netbeans.org/dtds/EditorFontsColors-1_1.dtd">
+<!DOCTYPE fontscolors PUBLIC "-//NetBeans//DTD Editor Fonts and Colors settings 1.1//EN" "http://www.netbeans.org/dtds/EditorFontsColors-1_1.dtd" 
+[
+    <!ENTITY YELLOW "ffffc66d">
+    <!ENTITY ORANGE "ffcc7832">
+    <!ENTITY PALEBLUE "ff7fb7f3">
+    <!ENTITY PALEMAGENTA "ff9876aa">
+    <!ENTITY PALEYELLOW "ffdadeb2">
+    <!ENTITY MAGENTA "ffdb92ed">
+]>
 
 <fontscolors>
 
     <!-- Comments, errors, whitespace -->
-    <fontcolor name="comment" default="comment">
+    <fontcolor name="comment" default="comment" foreColor="ff4dc6ac">
     </fontcolor>
     <fontcolor name="errors" default="error">
     </fontcolor>
@@ -39,11 +47,11 @@
     <!-- Constants (strings, literals, characters, numbers -->
     <fontcolor name="literal" default="literal" >
     </fontcolor>
-    <fontcolor name="number" default="number" foreColor="ffd49e84">
+    <fontcolor name="number" default="number" foreColor="&YELLOW;">
     </fontcolor>
-    <fontcolor name="string" default="string" foreColor="ffd49e84">
+    <fontcolor name="string" default="string" foreColor="&YELLOW;">
     </fontcolor>
-    <fontcolor name="character" default="character" foreColor="ffd49e84">
+    <fontcolor name="character" default="string" foreColor="&YELLOW;">
     </fontcolor>
     <fontcolor name="string-escape" default="string">
         <font style="bold" />
@@ -53,40 +61,56 @@
     </fontcolor>
 
     <!-- Keywords, operators -->
-    <fontcolor name="keyword" default="keyword">
+    <fontcolor name="keyword" default="keyword" foreColor="&ORANGE;">
     </fontcolor>
     <fontcolor name="operator" default="operator">
     </fontcolor>
 
     <!-- Identifiers, variables, members, functions, parameters -->
-    <fontcolor name="identifier" foreColor="ff4696d1" default="identifier">
+    <fontcolor name="identifier" foreColor="&PALEBLUE;" default="identifier">
     </fontcolor>
     <fontcolor name="mod-variable" default="identifier">
     </fontcolor>
-    <fontcolor name="mod-parameter" default="identifier">
+    <!-- parameters are a bit darker -->
+    <fontcolor name="mod-parameter" default="identifier" foreColor="&PALEMAGENTA;">
+    </fontcolor>
+    <fontcolor name="mod-member" default="identifier" foreColor="&PALEYELLOW;">
         <font style="italic" />
     </fontcolor>
-    <fontcolor name="mod-member" foreColor="ff50acf0" default="identifier">
+    <fontcolor name="mod-funcion" default="identifier" foreColor="&PALEYELLOW;">
+        <font style="italic" />
     </fontcolor>
-    <fontcolor name="mod-class" foreColor="ff50acf0" default="identifier">
+    <fontcolor name="mod-class" default="identifier">
+        <font style="bold" />
     </fontcolor>
     <fontcolor name="mod-namespace" default="identifier">
+        <font style="bold" />
     </fontcolor>
     <fontcolor name="mod-typeParameter" default="identifier">
+        <font style="italic" />
     </fontcolor>
-    <fontcolor name="mod-macro" default="identifier">
-    </fontcolor>
-
     <fontcolor name="html-tag" default="comment">
         <font style="bold" />
     </fontcolor> 
     
-    <fontcolor name="preprocessor" foreColor="009B00"/>
+    <fontcolor name="preprocessor" foreColor="&MAGENTA;"/>
     <fontcolor name="preprocessor-keyword-directive" default="preprocessor"/>
-    <fontcolor name="preprocessor-keyword" default="preprocessor-keyword-directive"/>
-    <fontcolor name="preprocessor-system-include-literal" default="string"/>
-    <fontcolor name="preprocessor-user-include-literal" default="string"/>
-    <fontcolor name="preprocessor-identifier" default="identifier"/>
+    <fontcolor name="preprocessor-keyword" default="preprocessor" />
+    <fontcolor name="preprocessor-system-include-literal" default="preprocessor"/>
+    <fontcolor name="preprocessor-user-include-literal" default="preprocessor">
+        <font style="bold" />
+    </fontcolor>
+    <fontcolor name="preprocessor-identifier" default="preprocessor">
+        <font style="bold" />
+    </fontcolor>
+    <fontcolor name="mod-macro" default="preprocessor">
+    </fontcolor>
+    <fontcolor name="mod-enum" default="preprocessor">
+        <font style="bold+italic" />
+    </fontcolor>
+    <fontcolor name="mod-enumMember" default="preprocessor">
+        <font style="bold+italic" />
+    </fontcolor>
 
     <fontcolor name="pragma-omp" foreColor="2E92C7"/>
     <fontcolor name="pragma-omp-keyword-directive" default="pragma-omp"/>

@@ -1455,7 +1455,7 @@ public final class MakeActionProviderImpl implements MakeActionProvider {
         }
         if (itemConfiguration.getTool() == PredefinedToolKind.CustomTool && !itemConfiguration.getCustomToolConfiguration().getModified()) {
             CodeAssistance ca = Lookup.getDefault().lookup(CodeAssistance.class);
-            if (ca.hasCodeAssistance(item)) {
+            if (ca != null && ca.hasCodeAssistance(item)) {
                 // included header
                 List<NativeFileItem> listCU = ca.findHeaderCompilationUnit(item);
                 for(NativeFileItem i : listCU) {

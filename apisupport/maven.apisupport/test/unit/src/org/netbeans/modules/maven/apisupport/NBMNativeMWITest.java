@@ -52,7 +52,7 @@ public class NBMNativeMWITest extends NbTestCase {
         wd = FileUtil.toFileObject(getWorkDir());
         FileObject createData = wd.createFolder("test1");
         ProjectInfo pi = new ProjectInfo("my.groupid", "artefact1", "1.0", "my.packagename");
-        NBMNativeMWI.instantiate(pi, FileUtil.toFile(createData), "RELEASE110", true, null);
+        NBMNativeMWI.instantiate(pi, FileUtil.toFile(createData), "RELEASE110", true, null, null);
 
         FileObject builtpom = createData.getFileObject("pom", "xml");
         MavenXpp3Reader reader = new MavenXpp3Reader();
@@ -71,7 +71,7 @@ public class NBMNativeMWITest extends NbTestCase {
         wd = FileUtil.toFileObject(getWorkDir());
         FileObject createData = wd.createFolder("test1");
         ProjectInfo pi = new ProjectInfo("my.groupid", "artefact1", "1.0", "my.packagename");
-        NBMNativeMWI.instantiate(pi, FileUtil.toFile(createData), "dev-SNAPSHOT", true, null);
+        NBMNativeMWI.instantiate(pi, FileUtil.toFile(createData), "dev-SNAPSHOT", true, null, null);
         FileObject builtpom = createData.getFileObject("pom", "xml");
 
         MavenXpp3Reader reader = new MavenXpp3Reader();
@@ -97,7 +97,7 @@ public class NBMNativeMWITest extends NbTestCase {
         mp.setGroupId("mm");
         mp.setArtifactId("aaa");
         mp.setFile(FileUtil.toFile(parentpomFile));
-        NBMNativeMWI.instantiate(pi, FileUtil.toFile(createData), "RELEASE110", true, mp);
+        NBMNativeMWI.instantiate(pi, FileUtil.toFile(createData), "RELEASE110", true, null, mp);
 
         MavenXpp3Reader reader = new MavenXpp3Reader();
         FileObject builtpom = createData.getFileObject("pom", "xml");
@@ -123,7 +123,7 @@ public class NBMNativeMWITest extends NbTestCase {
         mp.setGroupId("mm");
         mp.setArtifactId("aaa");
         mp.setFile(FileUtil.toFile(parentpomFile));
-        NBMNativeMWI.instantiate(pi, FileUtil.toFile(createData), "dev-SNAPSHOT", true, mp);
+        NBMNativeMWI.instantiate(pi, FileUtil.toFile(createData), "dev-SNAPSHOT", true, null, mp);
 
         MavenXpp3Reader reader = new MavenXpp3Reader();
         FileObject builtpom = createData.getFileObject("pom", "xml");
@@ -151,7 +151,7 @@ public class NBMNativeMWITest extends NbTestCase {
         ProjectInfo pi = new ProjectInfo("my.groupid", "artefact1", "1.0", "my.packagename");
         MavenProject mp = new MavenProject(model);
         mp.setFile(FileUtil.toFile(parentpomFile));
-        NBMNativeMWI.instantiate(pi, FileUtil.toFile(createData), "RELEASE110", true, mp);
+        NBMNativeMWI.instantiate(pi, FileUtil.toFile(createData), "RELEASE110", true, null, mp);
 
         MavenXpp3Reader readeroutput = new MavenXpp3Reader();
         FileObject builtpom = createData.getFileObject("pom", "xml");
@@ -179,7 +179,7 @@ public class NBMNativeMWITest extends NbTestCase {
         ProjectInfo pi = new ProjectInfo("my.groupid", "artefact1", "1.0", "my.packagename");
         MavenProject mp = new MavenProject(model);
         mp.setFile(FileUtil.toFile(parentpomFile));
-        NBMNativeMWI.instantiate(pi, FileUtil.toFile(createData), "RELEASE110", true, mp);
+        NBMNativeMWI.instantiate(pi, FileUtil.toFile(createData), "RELEASE110", true, null, mp);
         MavenXpp3Reader readeroutput = new MavenXpp3Reader();
         FileObject builtpom = createData.getFileObject("pom", "xml");
         Model modeloutput = readeroutput.read(new FileReader(FileUtil.toFile(builtpom)));

@@ -24,6 +24,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -54,6 +55,7 @@ import org.netbeans.modules.maven.embedder.EmbedderFactory;
 import org.netbeans.modules.maven.indexer.api.NBVersionInfo;
 import org.netbeans.modules.maven.indexer.api.RepositoryQueries;
 import org.netbeans.spi.project.ui.support.CommonProjectActions;
+import org.openide.util.NbBundle;
 
 public class NbmWizardIterator implements WizardDescriptor.BackgroundInstantiatingIterator<WizardDescriptor> {
 
@@ -140,14 +142,20 @@ public class NbmWizardIterator implements WizardDescriptor.BackgroundInstantiati
             File projFile = FileUtil.normalizeFile((File) wiz.getProperty(CommonProjectActions.PROJECT_PARENT_FOLDER)); // NOI18N
             String version = (String) wiz.getProperty(NB_VERSION);
             assert version != null;
-            Map<String,String> additional = Collections.singletonMap("netbeansVersion", version); // NOI18N
-            
+            String addopensflaglist = NbBundle.getMessage(NbmWizardIterator.class, "NbmWizardIterator.AddOpenFlag"); // NOI18N
+            String addopensfflaglist = NbBundle.getMessage(NbmWizardIterator.class, "NbmWizardIterator.AddOpenFFlag"); // NOI18N
+            Map<String,String> additional = new HashMap<>();
+            // add the --add-open flag
+            additional.put("addopensflagsList", addopensflaglist); // NOI18N
+            additional.put("addopensfflagsList", addopensfflaglist); // NOI18N
             if (archetype == NB_MODULE_ARCH) {
                 getLatestArchetypeVersion(NB_MODULE_ARCH);
-                NBMNativeMWI.instantiate(vi, projFile, version, Boolean.TRUE.equals(wiz.getProperty(OSGIDEPENDENCIES)), null);
+                NBMNativeMWI.instantiate(vi, projFile, version, Boolean.TRUE.equals(wiz.getProperty(OSGIDEPENDENCIES)), additional, null);
 
             } else {
             getLatestArchetypeVersion(NB_APP_ARCH);
+            // version used only for archertype
+            additional.put("netbeansVersion", version); // NOI18N
             ArchetypeWizards.createFromArchetype(projFile, vi, archetype, additional, true);
             List<ModelOperation<POMModel>> opers = new ArrayList<ModelOperation<POMModel>>();
             if (Boolean.TRUE.equals(wiz.getProperty(OSGIDEPENDENCIES))) {
@@ -183,7 +191,7 @@ public class NbmWizardIterator implements WizardDescriptor.BackgroundInstantiati
                 
                 ProjectInfo nbm = new ProjectInfo(vi.groupId, nbm_artifactId, vi.version, vi.packageName);
                 File nbm_folder = FileUtil.normalizeFile(new File(projFile, nbm_artifactId));
-                NBMNativeMWI.instantiate(nbm, nbm_folder, version, Boolean.TRUE.equals(wiz.getProperty(OSGIDEPENDENCIES)), mp);
+                NBMNativeMWI.instantiate(nbm, nbm_folder, version, Boolean.TRUE.equals(wiz.getProperty(OSGIDEPENDENCIES)), additional, mp);
                 if (archetype == NB_APP_ARCH) {
                     File appDir = new File(projFile, "application"); //NOI18N
                     addModuleToApplication(appDir, new ProjectInfo("${project.groupId}", nbm.artifactId, "${project.version}", nbm.packageName), null); // NOI18N

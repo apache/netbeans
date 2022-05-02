@@ -249,16 +249,22 @@ public class MicronautDataCompletionTask {
             Map<String, String> prop2Types = new HashMap<>();
             for (ExecutableElement method : ElementFilter.methodsIn(entity.getEnclosedElements())) {
                 String methodName = method.getSimpleName().toString();
-                if (methodName.startsWith(GET) && method.getParameters().isEmpty()) {
-                    methodName = methodName.substring(GET.length());
-                    methodName = methodName.substring(0, 1).toUpperCase() + methodName.substring(1);
-                    prop2Types.put(methodName, tu.getTypeName(method.getReturnType()).toString());
+                if (methodName.startsWith(GET) && methodName.length() > 3 && method.getParameters().isEmpty()) {
+                    TypeMirror type = method.getReturnType();
+                    if (type.getKind() != TypeKind.ERROR) {
+                        methodName = methodName.substring(GET.length());
+                        methodName = methodName.substring(0, 1).toUpperCase(Locale.ENGLISH) + methodName.substring(1);
+                        prop2Types.put(methodName, tu.getTypeName(type).toString());
+                    }
                 }
             }
             for (RecordComponentElement recordComponent : ElementFilter.recordComponentsIn(entity.getEnclosedElements())) {
-                String name = recordComponent.getSimpleName().toString();
-                name = name.substring(0, 1).toUpperCase() + name.substring(1);
-                prop2Types.put(name, tu.getTypeName(recordComponent.asType()).toString());
+                TypeMirror type = recordComponent.asType();
+                if (type.getKind() != TypeKind.ERROR) {
+                    String name = recordComponent.getSimpleName().toString();
+                    name = name.substring(0, 1).toUpperCase(Locale.ENGLISH) + name.substring(1);
+                    prop2Types.put(name, tu.getTypeName(type).toString());
+                }
             }
             addFindByCompletions(entity, prop2Types, prefix, full, consumer);
         }

@@ -65,7 +65,6 @@ public class HTMLDocView extends JEditorPane {
         //add listeners for selection support
         addMouseListener(new MouseListener() {
             public void mouseClicked(MouseEvent e) {
-                getHighlighter().removeAllHighlights();
             }
             public void mousePressed(MouseEvent e) {
                 getHighlighter().removeAllHighlights();
@@ -77,7 +76,11 @@ public class HTMLDocView extends JEditorPane {
                 }
             }
 
-            public void mouseReleased(MouseEvent e) {}
+            public void mouseReleased(MouseEvent e) {
+                if(getSelectedText() == null){
+                    getHighlighter().removeAllHighlights();
+                }
+            }
             public void mouseEntered(MouseEvent e) {}
             public void mouseExited(MouseEvent e) {}
         });

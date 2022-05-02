@@ -118,6 +118,7 @@ import javax.tools.ToolProvider;
 import com.sun.source.tree.ImportTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.util.JavacTask;
+import com.sun.tools.javac.code.ClassFinder;
 import org.netbeans.api.java.source.ui.snippet.MarkupTagProcessor;
 
 /** Utility class for viewing Javadoc comments as HTML.
@@ -175,6 +176,7 @@ public class ElementJavadoc {
     static{
         MARKUPTAG_MANDATORY_ATTRIBUTE.put("link", "target");
         MARKUPTAG_MANDATORY_ATTRIBUTE.put("replace", "replacement");
+        MARKUPTAG_MANDATORY_ATTRIBUTE.put("start", "region");
     }
     
     /** Creates an object describing the Javadoc of given element. The object
@@ -1224,6 +1226,7 @@ public class ElementJavadoc {
 
     private StringBuilder inlineTags(List<? extends DocTree> tags, TreePath docPath, DocCommentTree doc, DocTrees trees, CharSequence inherited) {
         StringBuilder sb = new StringBuilder();
+        Integer snippetCount=0;
         for (DocTree tag : tags) {
             switch (tag.getKind()) {
                 case REFERENCE:
@@ -1318,41 +1321,106 @@ public class ElementJavadoc {
                     sb.append(ttag.getBody());
 					break;
 		default:
-                    if (tag.getKind().toString().equals("SNIPPET")) {
-                        processDocSnippet(sb, tag);
+                    if (tag.getKind().toString().equals("SNIPPET")) { 
+                        snippetCount++;
+                        processDocSnippet(sb, tag, snippetCount,docPath, doc, trees);
                     }	
             }
         }
         return sb;
     }
 
-    private void processDocSnippet(StringBuilder sb, DocTree tag) {
+    private void processDocSnippet(StringBuilder sb, DocTree tag, Integer snippetCount, TreePath docPath,DocCommentTree doc, DocTrees trees) {
+        sb.append("<div id=\"snippet").append(snippetCount).append("\" style=\"font-size: 10px; border: 1px solid black; margin-top: 2px; margin-bottom: 2px\">"); //NOI18N
+        sb.append("<div align=right>" //NOI18N
+                + "<a href=\"copy.snippet").append(snippetCount).append("\">Copy</a>" //NOI18N
+                + "</div>\n"); //NOI18N
         sb.append("<pre>"); //NOI18N
         sb.append("<code>"); //NOI18N
+
+        ClassPath classPath = this.cpInfo.getClassPath(ClasspathInfo.PathKind.SOURCE);
+        String pckgName = docPath.getCompilationUnit().getPackageName().toString();
         
-        List<DocTree> attributes = TreeShims.getSnippetDocTreeAttributes(tag);
-        TextTree text = TreeShims.getSnippetDocTreeText(tag);
-        SnippetTagCommentParser parser = new SnippetTagCommentParser();
-        List<SourceLineMeta> parseResult = parser.parse(text.getBody());
+        List<DocTree> attributes = (List<DocTree>) TreeShims.getSnippetDocTreeAttributes(tag);
+        
+        String fileName = null;
+        String regionName = null;
+        String lang = null;
+  
+        boolean isExternalSnippet = false;
+        
+        for(DocTree att : attributes){
+            switch (((AttributeTree)att).getName().toString()) {
+                case "file":
+                    fileName = ((AttributeTree)att).getValue().get(0).toString();
+                    isExternalSnippet = true;
+                    break;
+                case "class":
+                    fileName = ((AttributeTree)att).getValue().get(0).toString() + ".java";
+                    isExternalSnippet = true;
+                    lang="java";
+                    break;
+                case "region":
+                    regionName = ((AttributeTree)att).getValue().get(0).toString();
+                    break;
+                case "lang":
+                    lang = ((AttributeTree)att).getValue().get(0).toString();
+                    break;
+            }
+        }
+        
+        
+        if(lang == null && fileName!=null){
+            if(fileName.endsWith(".java")){
+                lang="java";
+            }else if(fileName.endsWith(".properties")){
+                lang="properties";
+            }
+        }
+        
+        String text = null;
+        if (isExternalSnippet) {
+            pckgName = pckgName.replaceAll("\\.", "\\\\");
+            FileObject snippetFile = classPath.findResource(pckgName + "\\snippet-files\\" + fileName);
+            try {
+                text = snippetFile.asText();
+            } catch (IOException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+        } else {
+            text = TreeShims.getSnippetDocTreeText(tag).toString();
+        }
+        
+        String langCommentPattern;
+        if(lang != null && lang.equals("properties")){
+            langCommentPattern = "#";
+        }else{
+            langCommentPattern = "\\Q//\\E";
+        }
+        
+        SnippetTagCommentParser parser = new SnippetTagCommentParser(langCommentPattern);
+        List<SourceLineMeta> parseResult = parser.parse(text);
+		
         MarkupTagProcessor tagProcessor = new MarkupTagProcessor();
         MarkupTagProcessor.ProcessedTags tags = tagProcessor.process(parseResult);
-        applyTags(parseResult, tags, sb);
+        applyTags(parseResult, tags, sb, regionName);
 
         sb.append("</code>"); //NOI18N
         sb.append("</pre>"); //NOI18N
+        sb.append("</div>"); //NOI18N
     }
     
-    private void applyTags(List<SourceLineMeta> parseResult, MarkupTagProcessor.ProcessedTags tags, StringBuilder sb) {
-        
+    private void applyTags(List<SourceLineMeta> parseResult, MarkupTagProcessor.ProcessedTags tags, StringBuilder sb, String regionName) {
+
         if(!tags.getErrorList().isEmpty()){
             reportError(tags.getErrorList(), sb);
             return;
         }
-        
+
         int lineCounter = 0;
         for (SourceLineMeta fullLineInfo : parseResult) {
             lineCounter++;
-            
+
             String codeLine = fullLineInfo.getSourceLineWithoutComment() != null ? fullLineInfo.getSourceLineWithoutComment() : fullLineInfo.getActualSourceLine();
 
             List<SourceLineCharterMapperToHtmlTag> eachCharList = new LinkedList<>();
@@ -1360,29 +1428,38 @@ public class ElementJavadoc {
                 SourceLineCharterMapperToHtmlTag htmlCharMapper = new SourceLineCharterMapperToHtmlTag(new LinkedList<>(), codeLine.charAt(pos), new ArrayList<>());
                 eachCharList.add(htmlCharMapper);
             }
-            
-            List<MarkupTagProcessor.ApplicableMarkupTag> attributes = tags.getMarkUpTagLineMapper().get(lineCounter);
 
-            if (attributes != null) {
-                for (MarkupTagProcessor.ApplicableMarkupTag attrib : attributes) {
-                    codeLine = applyTagsToHTML(codeLine, attrib.getAttributes(), attrib.getMarkupTagName(), sb, eachCharList);
-                    if(codeLine == null){//its error
-                        return;
+            List<MarkupTagProcessor.ApplicableMarkupTag> attributes = tags.getMarkUpTagLineMapper().get(lineCounter);
+            List<MarkupTagProcessor.Region> regions = tags.getRegionTagLineMapper().get(lineCounter);
+
+            boolean toAddCurrent = true;
+            if (regionName != null && regions != null) {
+                toAddCurrent = regions.stream().anyMatch(p -> p.getValue().equals(regionName));
+            } else if (regionName != null) {
+                toAddCurrent = false;
+            }
+            if (toAddCurrent) {
+                if (attributes != null) {
+                    for (MarkupTagProcessor.ApplicableMarkupTag attrib : attributes) {
+                        codeLine = applyTagsToHTML(codeLine, attrib.getAttributes(), attrib.getMarkupTagName(), sb, eachCharList);
+                        if (codeLine == null) {//its error
+                            return;
+                        }
                     }
                 }
-            }
-            
-            for (SourceLineCharterMapperToHtmlTag charMapper : eachCharList) {
-                for (String startTag : charMapper.getStartTag()) {
-                    sb.append(startTag);
+
+                for (SourceLineCharterMapperToHtmlTag charMapper : eachCharList) {
+                    for (String startTag : charMapper.getStartTag()) {
+                        sb.append(startTag);
+                    }
+                    //replace html tag to equivalent plain text
+                    sb.append(charMapper.getSourceChar() == '<' ? "&lt;" : charMapper.getSourceChar());
+                    for (String endTag : charMapper.getEndTag()) {
+                        sb.append(endTag);
+                    }
                 }
-                //replace html tag to equivalent plain text
-                sb.append(charMapper.getSourceChar()=='<' ? "&lt;" : charMapper.getSourceChar());
-                for (String endTag : charMapper.getEndTag()) {
-                    sb.append(endTag);
-                }
+                sb.append("\n");
             }
-            sb.append("\n");
         }
     }
 
@@ -1400,11 +1477,9 @@ public class ElementJavadoc {
                 applyHighlightTag(codeLine, tagAction, htmlHighlightType, tagAttributes.get(tagAction), eachCharList);
                 break;
             case "replace":
-                //String replacement = tagAttributes.get("replacement") != null && !tagAttributes.get("replacement").trim().isEmpty() ? tagAttributes.get("replacement") : null;
                 codeLine = applyReplaceTag(codeLine, tagAction, tagAttributes.get("replacement"), tagAttributes.get(tagAction), eachCharList);
                 break;
             case "link":
-                //String linkTarget = tagAttributes.get("target") != null && !tagAttributes.get("target").trim().isEmpty() ? tagAttributes.get("target") : null;
                 applyLinkTag(codeLine, tagAction, tagAttributes.get("target"), tagAttributes.get(tagAction), eachCharList);
                 break;
             default:
@@ -1426,6 +1501,8 @@ public class ElementJavadoc {
             } else {
                 return true;
             }
+        } else if(markupTagName.equals("start")){
+            return true;
         } else if (!tagAttributes.containsKey(MARKUPTAG_MANDATORY_ATTRIBUTE.get(markupTagName))) {
             // mandatory mark up tag not present
             String error = String.format("error: snippet markup: Missing <sub>^</sub><b><i>%s</b></i> tag attribute : <sub>^</sub><b><i>%s</b></i>", markupTagName, MARKUPTAG_MANDATORY_ATTRIBUTE.get(markupTagName));
@@ -1511,7 +1588,7 @@ public class ElementJavadoc {
                     }
                     formattedLine.replace(fromIndex, fromIndex + tagActionValue.length(), replacement);
                     
-                    fromIndex += replacement.length();
+                        fromIndex += replacement.length();
                     codeLine = formattedLine.toString();
                 }
             }
@@ -1545,7 +1622,7 @@ public class ElementJavadoc {
     }
     
     private void applyLinkTag(String codeLine, String tagAction, String linkTarget, String tagActionValue, List<SourceLineCharterMapperToHtmlTag> eachCharList) {
-        
+
         String linkHtmlStartTag = "";
         String linkHtmlEndTag = "";
         try {
@@ -1555,12 +1632,12 @@ public class ElementJavadoc {
             JavaDocSnippetLinkTagFileObject docSnippetLinkTagFileObject = new JavaDocSnippetLinkTagFileObject(fullClassCode);
             StringBuilder linkRef = new StringBuilder();
             createSnippetMarkupLinkTag(linkRef, docSnippetLinkTagFileObject);
-            
+
             String link = linkRef.toString();
             //replace <code>, becasue of some issue while resolving hyperlink and code in netbeans ide
             link = link.replace("<code>", "");
             link = link.replace("</code>", "");
-                        
+
             String linkValue = link.replaceAll("\\<.*?>", "");
             linkHtmlStartTag = link.substring(0, link.indexOf(linkValue));
             linkHtmlEndTag = link.substring(link.indexOf(linkValue) + linkValue.length());
@@ -1571,7 +1648,7 @@ public class ElementJavadoc {
         if(linkHtmlStartTag.equals("") || linkHtmlEndTag.equals("")){
             return;
         }
-        
+
          if(tagAction.equals("substring")){
             int fromIndex = 0;
             while (fromIndex != -1) {
@@ -1587,7 +1664,7 @@ public class ElementJavadoc {
                     fromIndex += tagActionValue.length();
                 }
             }
-            
+
         } else if(tagAction.equals("regex")){
             Pattern p = Pattern.compile(tagActionValue);
             Matcher m = p.matcher(codeLine);
@@ -1597,10 +1674,10 @@ public class ElementJavadoc {
                     startTag.add(0, linkHtmlStartTag);
                     List<String> endTag = eachCharList.get(t).getEndTag();
                     endTag.add(linkHtmlEndTag);
-                }
             }
         }
-
+    }
+    
         
     }
     
@@ -1648,7 +1725,7 @@ public class ElementJavadoc {
         StringBuilder prjClsPath = new StringBuilder();
         String prjSrcPath = cpInfo.getClassPath(ClasspathInfo.PathKind.SOURCE).toString();
         prjClsPath.append(prjSrcPath);
-
+        
         for(ClassPath.Entry cpe : cpInfo.getClassPath(ClasspathInfo.PathKind.COMPILE).entries()){
             prjClsPath.append(";");
             prjClsPath.append(cpe.getRoot().getFileSystem().getDisplayName());
@@ -1657,7 +1734,7 @@ public class ElementJavadoc {
         JavacTask task = (JavacTask) compiler.getTask(null, null, null, opt, null, Arrays.asList(fileObject));
 
         DocTrees docTrees = DocTrees.instance(task);//trees
-
+        
         Iterable<? extends Element> docClass = task.analyze();
 
         main:

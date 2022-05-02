@@ -1,4 +1,5 @@
-<html><body><font size='+0'><b><a href='*0'>test.&#x200B;Test</a></b></font><pre>public void <b>testNestedRegion_ReplaceAnnotation_Regex</b>()</pre><p><pre><code> class HelloWorld<span style="background-color:yellow;">1</span> {
+<html><body><font size='+0'><b><a href='*0'>test.&#x200B;Test</a></b></font><pre>public void <b>testNestedRegion_ReplaceAnnotation_Regex</b>()</pre><p><div id="snippet1" style="font-size: 10px; border: 1px solid black; margin-top: 2px; margin-bottom: 2px"><div align=right><a href="copy.snippet1">Copy</a></div>
+<pre><code> class HelloWorld<span style="background-color:yellow;">1</span> {
      public static void main(String... args) {
          UPPERystem.out.println(num);  
          UPPERystem.out.println(num);
@@ -7,4 +8,4 @@
  }
  }
  
-</code></pre><p>
+</code></pre></div><p>

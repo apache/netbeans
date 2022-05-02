@@ -316,7 +316,7 @@ public final class NbGradleProject {
      * @return files accessor.
      * @since 2.24
      */
-    public GradleFiles getFiles() {
+    public GradleFiles getGradleFiles() {
         return project.getGradleFiles();
     }
     

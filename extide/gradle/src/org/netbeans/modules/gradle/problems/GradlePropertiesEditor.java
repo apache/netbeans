@@ -96,7 +96,7 @@ public class GradlePropertiesEditor {
     }
     
     public PropertiesEditor getEditor(FileObject origin, GradleFiles.Kind kind) {
-        GradleFiles gf = NbGradleProject.get(project).getFiles();
+        GradleFiles gf = NbGradleProject.get(project).getGradleFiles();
         if (origin != null) {
             File f = FileUtil.toFile(origin);
             if (f != null) {
@@ -138,7 +138,7 @@ public class GradlePropertiesEditor {
     }
     
     CachedProperties loadGradleProperties0() {
-        GradleFiles gf = NbGradleProject.get(project).getFiles();
+        GradleFiles gf = NbGradleProject.get(project).getGradleFiles();
         List<File> files = gf.getPropertyFiles();
         CachedProperties cached;
         synchronized (this) {
@@ -151,7 +151,6 @@ public class GradlePropertiesEditor {
     }
     
     CachedProperties ensureGetProperties() {
-        GradleFiles gf = NbGradleProject.get(project).getFiles();
         synchronized (this) {
             if (loadedProperties != null) {
                 return loadedProperties;

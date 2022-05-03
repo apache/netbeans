@@ -18,8 +18,6 @@
  */
 package org.netbeans.modules.java.mx.project;
 
-import org.netbeans.junit.RandomlyFails;
-
 public class TrufleSuiteTest extends SuiteCheck {
     public TrufleSuiteTest(String n) {
         super(n);
@@ -29,7 +27,6 @@ public class TrufleSuiteTest extends SuiteCheck {
         return SuiteCheck.suite(TrufleSuiteTest.class);
     }
 
-    @RandomlyFails
     public void testParseTruffleSourcesWithoutError() throws Exception {
         verifyNoErrorsInSuite("truffle");
     }

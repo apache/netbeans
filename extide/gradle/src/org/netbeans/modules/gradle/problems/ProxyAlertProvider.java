@@ -107,10 +107,13 @@ public class ProxyAlertProvider implements ProjectProblemsProvider, PropertyChan
         List<ProjectProblem> old;
         
         synchronized (this) {
-            if (this.problems.equals(newProblems)) {
+            if (this.problems != null && this.problems.equals(newProblems)) {
                 return;
             }
             old = this.problems;
+            if (old == null) {
+                old = Collections.emptyList();
+            }
             this.problems = newProblems;
         }
         propSupport.firePropertyChange(PROP_PROBLEMS, old, newProblems);

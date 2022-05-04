@@ -337,25 +337,43 @@ public final class JavadocCompletionUtils {
     }
     
     private static final Set<DocTree.Kind> BLOCK_TAGS =
-            EnumSet.of(DocTree.Kind.AUTHOR, DocTree.Kind.DEPRECATED, DocTree.Kind.PARAM,
+            EnumSet.of(DocTree.Kind.AUTHOR, DocTree.Kind.DEPRECATED, DocTree.Kind.EXCEPTION,
+                       DocTree.Kind.HIDDEN,DocTree.Kind.PARAM, DocTree.Kind.PROVIDES,
                        DocTree.Kind.RETURN, DocTree.Kind.SEE, DocTree.Kind.SERIAL,
-                       DocTree.Kind.SERIAL_DATA, DocTree.Kind.SERIAL_FIELD, DocTree.Kind.SINCE,
-                       DocTree.Kind.THROWS, DocTree.Kind.UNKNOWN_BLOCK_TAG, DocTree.Kind.VERSION);
+                       DocTree.Kind.SERIAL_DATA, DocTree.Kind.SERIAL_FIELD, DocTree.Kind.SERIAL_FIELD,
+                       DocTree.Kind.SINCE, DocTree.Kind.THROWS, DocTree.Kind.USES, DocTree.Kind.VERSION,
+                       DocTree.Kind.UNKNOWN_BLOCK_TAG);
     public static boolean isBlockTag(DocTreePath tag) {
         return BLOCK_TAGS.contains(normalizedKind(tag.getLeaf()));
+    }
+
+    private static final Set<DocTree.Kind> INLINE_TAGS =
+            EnumSet.of(DocTree.Kind.CODE, DocTree.Kind.DOC_ROOT, DocTree.Kind.INDEX,
+                       DocTree.Kind.INHERIT_DOC, DocTree.Kind.LINK, DocTree.Kind.LINK_PLAIN,
+                       DocTree.Kind.LITERAL, DocTree.Kind.SNIPPET, DocTree.Kind.SUMMARY,
+                       DocTree.Kind.SYSTEM_PROPERTY, DocTree.Kind.VALUE, DocTree.Kind.UNKNOWN_INLINE_TAG);
+    public static boolean isInlineTag(DocTreePath tag) {
+        return INLINE_TAGS.contains(normalizedKind(tag.getLeaf()));
     }
 
     public static DocTree.Kind normalizedKind(DocTree tag) {
         DocTree.Kind normalizedKind = tag.getKind();
         if (normalizedKind == com.sun.source.doctree.DocTree.Kind.ERRONEOUS) {
-            String errorBody = ((ErroneousTree) tag).getBody();
-            switch (errorBody.split("\\s")[0]) {
+            String txt = ((ErroneousTree) tag).getBody().split("\\s")[0];
+            switch (txt) {
                 case "@throws": normalizedKind = DocTree.Kind.THROWS; break;
                 case "@see": normalizedKind = DocTree.Kind.SEE; break;
                 case "@param": normalizedKind = DocTree.Kind.PARAM; break;
                 case "{@value": normalizedKind = DocTree.Kind.VALUE; break;
                 case "{@link": normalizedKind = DocTree.Kind.LINK; break;
                 case "{@linkplain": normalizedKind = DocTree.Kind.LINK; break;
+                default:
+                    if (txt.startsWith("@")) {
+                        normalizedKind = DocTree.Kind.UNKNOWN_BLOCK_TAG;
+                    } else if (txt.startsWith("{@")) {
+                        normalizedKind = DocTree.Kind.UNKNOWN_INLINE_TAG;
+                    }
+                    break;
             }
         }
         return normalizedKind;

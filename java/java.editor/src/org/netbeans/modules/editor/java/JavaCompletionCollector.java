@@ -110,7 +110,8 @@ public class JavaCompletionCollector implements CompletionCollector {
     @Override
     public boolean collectCompletions(Document doc, int offset, Completion.Context context, Consumer<Completion> consumer) {
         AtomicBoolean ret = new AtomicBoolean(true);
-        if (Utilities.isJavaContext(doc, offset, true)) {
+        if ((context.getTriggerKind() != Completion.TriggerKind.TriggerCharacter || context.getTriggerCharacter() == '.')
+                && Utilities.isJavaContext(doc, offset, true)) {
             try {
                 ParserManager.parse(Collections.singletonList(Source.create(doc)), new UserTask() {
                     @Override

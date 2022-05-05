@@ -64,7 +64,7 @@ public class JavadocCompletionCollector implements CompletionCollector {
     @Override
     public boolean collectCompletions(Document doc, int offset, Completion.Context context, Consumer<Completion> consumer) {
         AtomicBoolean ret = new AtomicBoolean(true);
-        if ((context.getTriggerKind() != Completion.TriggerKind.TriggerCharacter || context.getTriggerCharacter() == '#' || context.getTriggerCharacter() == '@')
+        if ((context == null || context.getTriggerKind() != Completion.TriggerKind.TriggerCharacter || context.getTriggerCharacter() == '#' || context.getTriggerCharacter() == '@')
                 && JavadocCompletionUtils.isJavadocContext(doc, offset)) {
             try {
                 ParserManager.parse(Collections.singletonList(Source.create(doc)), new UserTask() {
@@ -73,7 +73,7 @@ public class JavadocCompletionCollector implements CompletionCollector {
                         CompilationController controller = CompilationController.get(resultIterator.getParserResult(offset));
                         controller.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
                         JavadocCompletionTask<Completion> task = JavadocCompletionTask.create(offset, new ItemFactoryImpl(controller, offset),
-                                context.getTriggerKind() == Completion.TriggerKind.TriggerForIncompleteCompletions, () -> false);
+                                context != null && context.getTriggerKind() == Completion.TriggerKind.TriggerForIncompleteCompletions, () -> false);
                         task.run(resultIterator);
                         List<Completion> results = task.getResults();
                         if (results != null) {

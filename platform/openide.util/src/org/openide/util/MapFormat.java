@@ -26,16 +26,15 @@ import java.text.NumberFormat;
 import java.text.ParsePosition;
 
 import java.util.Date;
-import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
+import static org.openide.util.NbBundle.getBundle;
 
-
-/** A text format similar to <code>MessageFormat</code>
- * but using string rather than numeric keys.
- * You might use use this formatter like this:
- * <pre>MapFormat.format("Hello {name}", map);</pre>
- * Or to have more control over it:
+/**
+ * A text format similar to <code>MessageFormat</code> but using string rather
+ * than numeric keys. You might use use this formatter like this:
+ * <pre>MapFormat.format("Hello {name}", map);</pre> Or to have more control
+ * over it:
  * <pre>
  * Map m = new HashMap ();
  * m.put ("KEY", "value");
@@ -45,472 +44,329 @@ import java.util.Map;
  * String result = f.format ("the __KEY__ here");
  * </pre>
  *
- * @author Slavek Psenicka
+ * @author Slavek Psenicka, Lukasz Bownik
  * @see MessageFormat
  */
 public class MapFormat extends Format {
-    private static final int BUFSIZE = 255;
 
-    /** Array with to-be-skipped blocks */
+    static final long serialVersionUID = -7695811542873819436L;
 
-    //private RangeList skipped;
-    static final long serialVersionUID = -7695811542873819435L;
-
-    /** Locale region settings used for number and date formatting */
-    private Locale locale = Locale.getDefault();
-
-    /** Left delimiter */
-    private String ldel = "{"; // NOI18N
-
-    /** Right delimiter */
-    private String rdel = "}"; // NOI18N
-
-    /** Used formatting map */
-    private Map<String, Object> argmap;
-
-    /** Offsets to {} expressions */
-    private int[] offsets;
-
-    /** Keys enclosed by {} brackets */
-    private String[] arguments;
-
-    /** Max used offset */
-    private int maxOffset;
-
-    /** Should be thrown an exception if key was not found? */
-    private boolean throwex = false;
-
-    /** Exactly match brackets? */
-    private boolean exactmatch = true;
+    private String leftDelimiter = "{";
+    private String rightDelimiter = "}";
+    private Map<String, Object> argumentsMap;
+    private boolean throwExceptionWhenKeyValueNotFound = false;
+    private boolean delimitersMustMatchExactly = true;
 
     /**
-    * Constructor.
-    * For common work use  <code>format(pattern, arguments) </code>.
-    * @param arguments keys and values to use in the format
-    */
-    public MapFormat(Map arguments) {
-        super();
-        setMap(arguments);
+     * Constructor. For common work use  <code>format(pattern, arguments)
+     * </code>.
+     *
+     * @param arguments keys and values to use in the format
+     */
+    public MapFormat(final Map<String, Object> arguments) {
+
+        this.argumentsMap = arguments;
     }
 
     /**
-    * Designated method. It gets the string, initializes HashFormat object
-    * and returns converted string. It scans  <code>pattern</code>
-    * for {} brackets, then parses enclosed string and replaces it
-    * with argument's  <code>get()</code> value.
-    * @param pattern String to be parsed.
-    * @param arguments Map with key-value pairs to replace.
-    * @return Formatted string
-    */
-    public static String format(String pattern, Map arguments) {
-        MapFormat temp = new MapFormat(arguments);
+     * Designated method. It gets the string, initializes HashFormat object and
+     * returns converted string. It scans  <code>pattern</code> for {} brackets,
+     * then parses enclosed string and replaces it with argument's
+     * <code>get()</code> value.
+     *
+     * @param pattern String to be parsed.
+     * @param arguments Map with key-value pairs to replace.
+     * @return Formatted string
+     */
+    public static String format(final String pattern, final Map<String, Object> arguments) {
 
-        return temp.format(pattern);
-    }
-
-    // unused so removed --jglick
-
-    /**
-    * Search for comments and quotation marks.
-    * Prepares internal structures.
-    * @param pattern String to be parsed.
-    * @param lmark Left mark of to-be-skipped block.
-    * @param rmark Right mark of to-be-skipped block or null if does not exist (// comment).
-    private void process(String pattern, String lmark, String rmark)
-    {
-        int idx = 0;
-        while (true) {
-            int ridx = -1, lidx = pattern.indexOf(lmark,idx);
-            if (lidx >= 0) {
-                if (rmark != null) {
-                    ridx = pattern.indexOf(rmark,lidx + lmark.length());
-                } else ridx = pattern.length();
-            } else break;
-            if (ridx >= 0) {
-                skipped.put(new Range(lidx, ridx-lidx));
-                if (rmark != null) idx = ridx+rmark.length();
-                else break;
-            } else break;
-        }
-    }
-    */
-    /** Returns the value for given key. Subclass may define its own beahvior of
-    * this method. For example, if key is not defined, subclass can return <not defined>
-    * string.
-    *
-    * @param key Key.
-    * @return Value for this key.
-    */
-    protected Object processKey(String key) {
-        return argmap.get(key);
+        return new MapFormat(arguments).format(pattern);
     }
 
     /**
-    * Scans the pattern and prepares internal variables.
-    * @param newPattern String to be parsed.
-    * @exception IllegalArgumentException if number of arguments exceeds BUFSIZE or
-    * parser found unmatched brackets (this exception should be switched off
-    * using setExactMatch(false)).
-    */
-    public String processPattern(String newPattern) throws IllegalArgumentException {
-        int idx = 0;
-        int offnum = -1;
-        StringBuffer outpat = new StringBuffer();
-        offsets = new int[BUFSIZE];
-        arguments = new String[BUFSIZE];
-        maxOffset = -1;
+     * Returns the value for given key. Subclass may define its own beahvior of
+     * this method. For example, if key is not defined, subclass can return
+     * <not defined>
+     * string.
+     *
+     * @param key Key.
+     * @return Value for this key.
+     */
+    protected Object processKey(final String key) {
 
-        //skipped = new RangeList();
-        // What was this for??
-        //process(newPattern, "\"", "\""); // NOI18N
-        while (true) {
-            int ridx = -1;
-            int lidx = newPattern.indexOf(ldel, idx);
-
-            /*
-            Range ran = skipped.getRangeContainingOffset(lidx);
-            if (ran != null) {
-                outpat.append(newPattern.substring(idx, ran.getEnd()));
-                idx = ran.getEnd(); continue;
-            }
-             */
-            if (lidx >= 0) {
-                ridx = newPattern.indexOf(rdel, lidx + ldel.length());
-            } else {
-                break;
-            }
-
-            if (++offnum >= BUFSIZE) {
-                throw new IllegalArgumentException(
-                    NbBundle.getBundle(MapFormat.class).getString("MSG_TooManyArguments")
-                );
-            }
-
-            if (ridx < 0) {
-                if (exactmatch) {
-                    throw new IllegalArgumentException(
-                        NbBundle.getBundle(MapFormat.class).getString("MSG_UnmatchedBraces") + " " + lidx
-                    );
-                } else {
-                    break;
-                }
-            }
-
-            outpat.append(newPattern.substring(idx, lidx));
-            offsets[offnum] = outpat.length();
-            arguments[offnum] = newPattern.substring(lidx + ldel.length(), ridx);
-            idx = ridx + rdel.length();
-            maxOffset++;
-        }
-
-        outpat.append(newPattern.substring(idx));
-
-        return outpat.toString();
+        return this.argumentsMap.get(key);
     }
 
     /**
-    * Formats object.
-    * @param obj Object to be formatted into string
-    * @return Formatted object
-    */
-    private String formatObject(Object obj) {
-        if (obj == null) {
-            return null;
-        }
-
-        if (obj instanceof Number) {
-            return NumberFormat.getInstance(locale).format(obj); // fix
-        } else if (obj instanceof Date) {
-            return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT, locale).format(obj); //fix
-        } else if (obj instanceof String) {
-            return (String) obj;
-        }
-
-        return obj.toString();
-    }
-
-    /**
-    * Formats the parsed string by inserting table's values.
-    * @param pat a string pattern
-    * @param result Buffer to be used for result.
+     * Formats the parsed string by inserting table's values.
+     *
+     * @param pat a string pattern
+     * @param result Buffer to be used for result.
      * @param fpos position
-    * @return Formatted string
-    */
-    public StringBuffer format(Object pat, StringBuffer result, FieldPosition fpos) {
-        String pattern = processPattern((String) pat);
-        int lastOffset = 0;
+     * @return Formatted string
+     */
+    @Override
+    public StringBuffer format(final Object pat, final StringBuffer result,
+            final FieldPosition fpos) {
 
-        for (int i = 0; i <= maxOffset; ++i) {
-            int offidx = offsets[i];
-            result.append(pattern.substring(lastOffset, offsets[i]));
-            lastOffset = offidx;
+        final String pattern = pat.toString();
+        int index = 0;
 
-            String key = arguments[i];
-            String obj;
-            if (key.length() > 0) {
-                obj = formatObject(processKey(key));
-            } else {
-                // else just copy the left and right braces
-                result.append(this.ldel);
-                result.append(this.rdel);
-                continue;
-            }
+        while (true) {
+            final int leftDelimiterIndex = pattern.indexOf(this.leftDelimiter, index);
+            if (found(leftDelimiterIndex)) {
+                final int indexAfterLeftDelimiter = leftDelimiterIndex
+                        + this.leftDelimiter.length();
 
-            if (obj == null) {
-                // try less-greedy match; useful for e.g. PROP___PROPNAME__ where
-                // 'PROPNAME' is a key and delims are both '__'
-                // this does not solve all possible cases, surely, but it should catch
-                // the most common ones
-                String lessgreedy = ldel + key;
-                int fromright = lessgreedy.lastIndexOf(ldel);
+                final int rightDelimiterIndex = pattern.indexOf(this.rightDelimiter,
+                        indexAfterLeftDelimiter);
+                if (found(rightDelimiterIndex)) {
+                    result.append(pattern, index, leftDelimiterIndex);
 
-                if (fromright > 0) {
-                    String newkey = lessgreedy.substring(fromright + ldel.length());
-                    String newsubst = formatObject(processKey(newkey));
+                    final String key = pattern.substring(indexAfterLeftDelimiter, rightDelimiterIndex);
 
-                    if (newsubst != null) {
-                        obj = lessgreedy.substring(0, fromright) + newsubst;
+                    if (key.isEmpty()) {
+                        result.append(this.leftDelimiter).append(this.rightDelimiter);
+                    } else {
+                        final CharSequence value = formatObject(processKey(key));
+                        if (value != null) {
+                            result.append(value);
+                        } else {
+                            final String potentiallyRepeated = this.leftDelimiter + key;
+                            int leftDelimiterIndexFromRight
+                                    = potentiallyRepeated.lastIndexOf(this.leftDelimiter);
+
+                            final String newKey
+                                    = potentiallyRepeated.substring(leftDelimiterIndexFromRight
+                                            + this.leftDelimiter.length());
+                            final String newValue = formatObject(processKey(newKey));
+
+                            if (newValue != null) {
+                                result.append(potentiallyRepeated, 0,
+                                        leftDelimiterIndexFromRight).append(newValue);
+                            } else {
+                                if (this.throwExceptionWhenKeyValueNotFound) {
+                                    throwArgumentNotFound(key);
+                                } else {
+                                    result.append(this.leftDelimiter).append(key).
+                                            append(this.rightDelimiter);
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    if (this.delimitersMustMatchExactly) {
+                        throwUnmatchedBraces(index);
+                    } else {
+                        return result.append(pattern, index, pattern.length());
                     }
                 }
+                index = rightDelimiterIndex + this.rightDelimiter.length();
+            } else {
+                return result.append(pattern, index, pattern.length());
             }
-
-            if (obj == null) {
-                if (throwex) {
-                    throw new IllegalArgumentException(
-                        MessageFormat.format(
-                            NbBundle.getBundle(MapFormat.class).getString("MSG_FMT_ObjectForKey"),
-                            new Object[] { new Integer(key) }
-                        )
-                    );
-                } else {
-                    obj = ldel + key + rdel;
-                }
-            }
-
-            result.append(obj);
         }
-
-        result.append(pattern.substring(lastOffset, pattern.length()));
-
-        return result;
     }
 
     /**
-    * Parses the string. Does not yet handle recursion (where
-    * the substituted strings contain %n references.)
-    */
-    public Object parseObject(String text, ParsePosition status) {
+     *
+     */
+    private static void throwArgumentNotFound(final String key) {
+
+        throw new IllegalArgumentException(
+                MessageFormat.format(getFromBundle("MSG_FMT_ObjectForKey"),
+                        new Object[]{key}));
+    }
+
+    /**
+     *
+     */
+    private static void throwUnmatchedBraces(final int index) {
+
+        throw new IllegalArgumentException(
+                getFromBundle("MSG_UnmatchedBraces") + " " + index);
+    }
+
+    /**
+     *
+     */
+    private static boolean found(final int index) {
+
+        return index > -1;
+    }
+
+    /**
+     * Formats object.
+     *
+     * @param obj Object to be formatted into string
+     * @return Formatted object
+     */
+    private String formatObject(final Object obj) {
+
+        if (obj == null) {
+            return null;
+        } else if (obj instanceof Number) {
+            return NumberFormat.getInstance(Locale.getDefault()).format(obj);
+        } else if (obj instanceof Date) {
+            return DateFormat.getDateTimeInstance(DateFormat.SHORT, 
+                    DateFormat.SHORT, Locale.getDefault()).format(obj);
+        } else {
+            return obj.toString();
+        }
+    }
+
+    /**
+     * Parses the string.Does not yet handle recursion (where the substituted
+     * strings contain %n references.)
+     *
+     * @param text
+     * @param status
+     */
+    @Override
+    public Object parseObject(final String text, final ParsePosition status) {
+
         return parse(text);
     }
 
     /**
-    * Parses the string. Does not yet handle recursion (where
-    * the substituted strings contain {n} references.)
-    * @return New format.
-    */
-    public String parse(String source) {
-        StringBuffer sbuf = new StringBuffer(source);
-        Iterator<String> key_it = argmap.keySet().iterator();
+     * Parses the string.Does not yet handle recursion (where the substituted
+     * strings contain {n} references.)
+     *
+     * @param source
+     * @return New format.
+     */
+    public String parse(final String source) {
 
-        //skipped = new RangeList();
-        // What was this for??
-        //process(source, "\"", "\""); // NOI18N
-        while (key_it.hasNext()) {
-            String it_key = key_it.next();
-            String it_obj = formatObject(argmap.get(it_key));
-            int it_idx = -1;
+        final StringBuilder buffer = new StringBuilder(source);
+
+        this.argumentsMap.forEach((key, value) -> {
+            final String obj = formatObject(value);
+            int index = -1;
 
             do {
-                it_idx = sbuf.toString().indexOf(it_obj, ++it_idx);
+                index = buffer.indexOf(obj, ++index);
 
-                if (it_idx >= 0 /* && !skipped.containsOffset(it_idx) */    ) {
-                    sbuf.replace(it_idx, it_idx + it_obj.length(), ldel + it_key + rdel);
-
-                    //skipped = new RangeList();
-                    // What was this for??
-                    //process(sbuf.toString(), "\"", "\""); // NOI18N
+                if (index > -1) {
+                    buffer.replace(index, index + obj.length(),
+                            leftDelimiter + key + rightDelimiter);
                 }
-            } while (it_idx != -1);
-        }
+            } while (index != -1);
+        });
 
-        return sbuf.toString();
-    }
-
-    /** Test whether formatter will throw exception if object for key was not found.
-    * If given map does not contain object for key specified, it could
-    * throw an exception. Returns true if throws. If not, key is left unchanged.
-    */
-    public boolean willThrowExceptionIfKeyWasNotFound() {
-        return throwex;
-    }
-
-    /** Specify whether formatter will throw exception if object for key was not found.
-    * If given map does not contain object for key specified, it could
-    * throw an exception. If does not throw, key is left unchanged.
-    * @param flag If true, formatter throws IllegalArgumentException.
-    */
-    public void setThrowExceptionIfKeyWasNotFound(boolean flag) {
-        throwex = flag;
-    }
-
-    /** Test whether both brackets are required in the expression.
-    * If not, use setExactMatch(false) and formatter will ignore missing right
-    * bracket. Advanced feature.
-    */
-    public boolean isExactMatch() {
-        return exactmatch;
-    }
-
-    /** Specify whether both brackets are required in the expression.
-    * If not, use setExactMatch(false) and formatter will ignore missing right
-    * bracket. Advanced feature.
-    * @param flag If true, formatter will ignore missing right bracket (default = false)
-    */
-    public void setExactMatch(boolean flag) {
-        exactmatch = flag;
-    }
-
-    /** Returns string used as left brace */
-    public String getLeftBrace() {
-        return ldel;
-    }
-
-    /** Sets string used as left brace
-    * @param delimiter Left brace.
-    */
-    public void setLeftBrace(String delimiter) {
-        ldel = delimiter;
-    }
-
-    /** Returns string used as right brace */
-    public String getRightBrace() {
-        return rdel;
-    }
-
-    /** Sets string used as right brace
-    * @param delimiter Right brace.
-    */
-    public void setRightBrace(String delimiter) {
-        rdel = delimiter;
-    }
-
-    /** Returns argument map */
-    public Map getMap() {
-        return argmap;
-    }
-
-    /** Sets argument map
-    * This map should contain key-value pairs with key values used in
-    * formatted string expression. If value for key was not found, formatter leave
-    * key unchanged (except if you've set setThrowExceptionIfKeyWasNotFound(true),
-    * then it fires IllegalArgumentException.
-    *
-    * @param map the argument map
-    */
-    public void setMap(Map map) {
-        argmap = map;
-    }
-
-    // commented out because unused --jglick
-
-    /**
-    * Range of expression in string.
-    * Used internally to store information about quotation marks and comments
-    * in formatted string.
-    *
-    * @author   Slavek Psenicka
-    * @version  1.0, March 11. 1999
-    *
-    class Range extends Object
-    {
-        /** Offset of expression *
-        private int offset;
-
-        /** Length of expression *
-        private int length;
-
-        /** Constructor *
-        public Range(int off, int len)
-        {
-            offset = off;
-            length = len;
-        }
-
-        /** Returns offset *
-        public int getOffset()
-        {
-            return offset;
-        }
-
-        /** Returns length of expression *
-        public int getLength()
-        {
-            return length;
-        }
-
-        /** Returns final position of expression *
-        public int getEnd()
-        {
-            return offset+length;
-        }
-
-        public String toString()
-        {
-            return "("+offset+", "+length+")"; // NOI18N
-        }
+        return buffer.toString();
     }
 
     /**
-    * List of ranges.
-    * Used internally to store information about quotation marks and comments
-    * in formatted string.
-    *
-    * @author   Slavek Psenicka
-    * @version  1.0, March 11. 1999
-    *
-    class RangeList
-    {
-        /** Map with Ranges *
-        private HashMap hmap;
-
-        /** Constructor *
-        public RangeList()
-        {
-            hmap = new HashMap();
-        }
-
-        /** Returns true if offset is enclosed by any Range object in list *
-        public boolean containsOffset(int offset)
-        {
-            return (getRangeContainingOffset(offset) != null);
-        }
-
-        /** Returns enclosing Range object in list for given offset *
-        public Range getRangeContainingOffset(int offset)
-        {
-            if (hmap.size() == 0) return null;
-            int offit = offset;
-            while (offit-- >= 0) {
-                Integer off = new Integer(offit);
-                if (hmap.containsKey(off)) {
-                    Range ran = (Range)hmap.get(off);
-                    if (ran.getEnd() - offset > 0) return ran;
-                }
-            }
-
-            return null;
-        }
-
-        /** Puts new range into list *
-        public void put(Range range)
-        {
-            hmap.put(new Integer(range.getOffset()), range);
-        }
-
-        public String toString()
-        {
-            return hmap.toString();
-        }
-    }
+     * Test whether formatter will throw exception if object for key was not
+     * found. If given map does not contain object for key specified, it could
+     * throw an exception. Returns true if throws. If not, key is left
+     * unchanged.
      */
+    public boolean willThrowExceptionIfKeyWasNotFound() {
+
+        return this.throwExceptionWhenKeyValueNotFound;
+    }
+
+    /**
+     * Specify whether formatter will throw exception if object for key was not
+     * found. If given map does not contain object for key specified, it could
+     * throw an exception. If does not throw, key is left unchanged.
+     *
+     * @param value If true, formatter throws IllegalArgumentException.
+     */
+    public void setThrowExceptionIfKeyWasNotFound(final boolean value) {
+
+        this.throwExceptionWhenKeyValueNotFound = value;
+    }
+
+    /**
+     * Test whether both brackets are required in the expression. If not, use
+     * setExactMatch(false) and formatter will ignore missing right bracket.
+     * Advanced feature.
+     */
+    public boolean isExactMatch() {
+
+        return this.delimitersMustMatchExactly;
+    }
+
+    /**
+     * Specify whether both brackets are required in the expression. If not, use
+     * setExactMatch(false) and formatter will ignore missing right bracket.
+     * Advanced feature.
+     *
+     * @param value If false, formatter will ignore missing right bracket
+     * (default = true)
+     */
+    public void setExactMatch(final boolean value) {
+
+        this.delimitersMustMatchExactly = value;
+    }
+
+    /**
+     * Returns string used as left brace
+     */
+    public String getLeftBrace() {
+
+        return this.leftDelimiter;
+    }
+
+    /**
+     * Sets string used as left brace
+     *
+     * @param delimiter Left brace.
+     */
+    public void setLeftBrace(final String delimiter) {
+
+        this.leftDelimiter = delimiter;
+    }
+
+    /**
+     * Returns string used as right brace
+     */
+    public String getRightBrace() {
+
+        return this.rightDelimiter;
+    }
+
+    /**
+     * Sets string used as right brace
+     *
+     * @param delimiter Right brace.
+     */
+    public void setRightBrace(final String delimiter) {
+
+        this.rightDelimiter = delimiter;
+    }
+
+    /**
+     * Returns argument map
+     *
+     * @return
+     */
+    public Map<String, Object> getMap() {
+
+        return this.argumentsMap;
+    }
+
+    /**
+     * Sets argument map This map should contain key-value pairs with key values
+     * used in formatted string expression. If value for key was not found,
+     * formatter leave key unchanged (except if you've set
+     * setThrowExceptionIfKeyWasNotFound(true), then it fires
+     * IllegalArgumentException.
+     *
+     * @param map the argument map
+     */
+    public void setMap(final Map<String, Object> map) {
+
+        this.argumentsMap = map;
+    }
+
+    /**
+     * 
+     */
+    private static String getFromBundle(final String key) {
+
+        return getBundle(MapFormat.class).getString(key);
+    }
 }

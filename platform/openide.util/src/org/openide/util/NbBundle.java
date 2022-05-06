@@ -22,12 +22,12 @@ package org.openide.util;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.Reader;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.ref.Reference;
-import java.lang.ref.WeakReference;
 import java.net.URL;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
@@ -35,8 +35,8 @@ import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
 import java.nio.charset.CharsetEncoder;
 import java.nio.charset.CoderResult;
-import java.nio.charset.CodingErrorAction;
-import java.nio.charset.StandardCharsets;
+import static java.nio.charset.CodingErrorAction.*;
+import static java.nio.charset.StandardCharsets.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -53,6 +53,7 @@ import java.util.ResourceBundle;
 import java.util.WeakHashMap;
 import java.util.jar.Attributes;
 import java.util.logging.Level;
+import static java.util.logging.Level.*;
 import java.util.logging.Logger;
 
 /** Convenience class permitting easy loading of localized resources of various sorts.
@@ -86,12 +87,12 @@ public class NbBundle extends Object {
      * Keeps only weak references to the class loaders.
      * @see "#9275"
      */
-    static final Map<ClassLoader,Map<String,URL>> localizedFileCache = new WeakHashMap<ClassLoader,Map<String,URL>>();
+    static final Map<ClassLoader,Map<String,URL>> localizedFileCache = new WeakHashMap<>();
 
     /**
      * Cache of resource bundles.
      */
-    static final Map<ClassLoader,Map<String,Reference<ResourceBundle>>> bundleCache = new WeakHashMap<ClassLoader,Map<String,Reference<ResourceBundle>>>();
+    static final Map<ClassLoader,Map<String,Reference<ResourceBundle>>> bundleCache = new WeakHashMap<>();
 
     /**
      * Do not call.
@@ -183,12 +184,12 @@ public class NbBundle extends Object {
         // USE_DEBUG_LOADER and ext is "html" or "txt" etc...
         URL lookup = null;
         Iterator<String> it = new LocaleIterator(locale);
-        List<String> cacheCandidates = new ArrayList<String>(10);
+        List<String> cacheCandidates = new ArrayList<>(10);
         String baseNameSlashes = baseName.replace('.', '/');
         Map<String,URL> perLoaderCache = localizedFileCache.get(loader);
 
         if (perLoaderCache == null) {
-            localizedFileCache.put(loader, perLoaderCache = new HashMap<String,URL>());
+            localizedFileCache.put(loader, perLoaderCache = new HashMap<>());
         }
 
         // #31008: better use of domain cache priming.
@@ -387,14 +388,13 @@ public class NbBundle extends Object {
     }
 
     /** Finds package name for given class */
-    private static String findName(Class<?> clazz) {
-        String pref = clazz.getName();
-        int last = pref.lastIndexOf('.');
+    private static String findName(final Class<?> clazz) {
+        
+        final String clsName = clazz.getName();
+        final int indexOfLastDot = clsName.lastIndexOf('.');
 
-        if (last >= 0) {
-            pref = pref.substring(0, last + 1);
-
-            return pref + "Bundle"; // NOI18N
+        if (indexOfLastDot >= 0) {
+            return clsName.substring(0, indexOfLastDot + 1).concat("Bundle"); // NOI18N)
         } else {
             // base package, search for bundle
             return "Bundle"; // NOI18N
@@ -422,6 +422,7 @@ public class NbBundle extends Object {
     */
     public static ResourceBundle getBundle(String baseName, Locale locale, ClassLoader loader)
     throws MissingResourceException {
+        
         if (USE_DEBUG_LOADER) {
             loader = DebugLoader.get(loader);
         }
@@ -430,16 +431,16 @@ public class NbBundle extends Object {
         // with MergedBundle to handle branding) instead of manually finding bundles.
         // However this code is faster and has some other desirable properties.
         // Cf. #13847.
-        ResourceBundle b = getBundleFast(baseName, locale, loader);
+        final ResourceBundle b = getBundleFast(baseName, locale, loader);
 
         if (b != null) {
             return b;
         } else {
-            MissingResourceException e = new MissingResourceException("No such bundle " + baseName, baseName, null); // NOI18N
+            final MissingResourceException e = new MissingResourceException("No such bundle ".concat(baseName), 
+                    baseName, null); // NOI18N
 
             if (Lookup.getDefault().lookup(ClassLoader.class) == null) {
-                Exceptions.attachMessage(e,
-                                         "Class loader not yet initialized in lookup"); // NOI18N
+                Exceptions.attachMessage(e, "Class loader not yet initialized in lookup"); // NOI18N
             } else {
                 Exceptions.attachMessage(e, "Offending classloader: " + loader); // NOI18N
             }
@@ -458,64 +459,50 @@ public class NbBundle extends Object {
      * @param loader a class loader to search in
      * @return a resource bundle (locale- and branding-merged), or null if not found
      */
-    private static ResourceBundle getBundleFast(String name, Locale locale, ClassLoader loader) {
-        Map<String,Reference<ResourceBundle>> m;
+    private static ResourceBundle getBundleFast(final String name, 
+            final Locale locale, final ClassLoader loader) {
+        
+        final Map<String,Reference<ResourceBundle>> map = fromBundleCache(loader);      
+        final String key = buildKey(name, locale);
 
-        synchronized (bundleCache) {
-            m = bundleCache.get(loader); 
+        synchronized (map) {
+            final Reference<ResourceBundle> ref = map.get(key);
+            ResourceBundle bundle = ref != null ? ref.get() : null;
 
-            if (m == null) {
-                bundleCache.put(loader, m = new HashMap<String,Reference<ResourceBundle>>());
-            }
-        }
-
-        //A minor optimization to cut down on StringBuffer allocations - OptimizeIt
-        //showed the commented out code below was a major source of them.  This
-        //just does the same thing with a char array - Tim
-        String localeStr = locale.toString();
-        char[] k = new char[name.length() + ((brandingToken != null) ? brandingToken.length() : 1) + 2 +
-            localeStr.length()];
-        name.getChars(0, name.length(), k, 0);
-        k[name.length()] = '/'; //NOI18N
-
-        int pos = name.length() + 1;
-
-        if (brandingToken == null) {
-            k[pos] = '-'; //NOI18N
-            pos++;
-        } else {
-            brandingToken.getChars(0, brandingToken.length(), k, pos);
-            pos += brandingToken.length();
-        }
-
-        k[pos] = '/'; //NOI18N
-        pos++;
-        localeStr.getChars(0, localeStr.length(), k, pos);
-
-        String key = new String(k);
-
-        /*
-        String key = name + '/' + (brandingToken != null ? brandingToken : "-") + '/' + locale; // NOI18N
-         */
-        synchronized (m) {
-            Reference<ResourceBundle> o = m.get(key);
-            ResourceBundle b = o != null ? o.get() : null;
-
-            if (b != null) {
-                return b;
-            } else {
-                b = loadBundle(name, locale, loader);
-
-                if (b != null) {
-                    m.put(key, new TimedSoftReference<ResourceBundle>(b, m, key));
+            if (bundle == null) {
+                bundle = loadBundle(name, locale, loader);
+                if (bundle != null) {
+                    map.put(key, new TimedSoftReference<>(bundle, map, key));
                 } else {
                     // Used to cache misses as well, to make the negative test faster.
                     // However this caused problems: see #31578.
                 }
-
-                return b;
             }
+            return bundle;
         }
+    }
+    //--------------------------------------------------------------------------
+    private static Map<String, Reference<ResourceBundle>> fromBundleCache(
+            final ClassLoader loader) {
+
+        synchronized (bundleCache) {
+            return bundleCache.computeIfAbsent(loader, l -> new HashMap<>());
+        }
+    }
+    //--------------------------------------------------------------------------
+    private static String buildKey(final String name, final Locale locale) {
+
+        final String localeStr = locale.toString();
+        final int len = name.length() + 
+                (brandingToken != null ? brandingToken.length() : 1) 
+                + 2 + localeStr.length();
+
+        return new StringBuilder(len).append(name).
+                append('/').
+                append(brandingToken != null ? brandingToken : '-').
+                append('/').
+                append(localeStr).
+                toString();
     }
 
     /**
@@ -525,46 +512,34 @@ public class NbBundle extends Object {
      * @param loader a class loader to search in
      * @return a resource bundle (locale- and branding-merged), or null if not found
      */
-    private static ResourceBundle loadBundle(String name, Locale locale, ClassLoader loader) {
-        String sname = name.replace('.', '/');
-        Iterator<String> it = new LocaleIterator(locale);
-        LinkedList<String> l = new LinkedList<String>();
+    private static ResourceBundle loadBundle(final String name, 
+            final Locale locale, final ClassLoader loader) {
+        
+        final String sname = name.replace('.', '/');
+        final List<String> reversedSuffixes = getReversedLocalizingSuffixes(locale);
+        final Properties properties = new Properties();
 
-        while (it.hasNext()) {
-            l.addFirst(it.next());
-        }
+        for (final String suffix : reversedSuffixes) {
+            final String resource = sname + suffix + ".properties";
 
-        Properties p = new Properties();
-
-        for (String suffix : l) {
-            String res = sname + suffix + ".properties";
-
+            
             // #49961: don't use getResourceAsStream; catch all errors opening it
-            URL u = loader != null ? loader.getResource(res) : ClassLoader.getSystemResource(res);
+            final URL url = loader != null ? loader.getResource(resource) : 
+                    ClassLoader.getSystemResource(resource);
 
-            if (u != null) {
-                //System.err.println("Loading " + res);
+            if (url != null) {
                 try {
                     // #51667: but in case we are in USE_DEBUG_LOADER mode, use gRAS (since getResource is not overridden)
-                    InputStream is = USE_DEBUG_LOADER ?
-                        (loader != null ? loader.getResourceAsStream(res) : ClassLoader.getSystemResourceAsStream(res)) :
-                            u.openStream();
+                    final InputStream is = USE_DEBUG_LOADER ?
+                        (loader != null ? loader.getResourceAsStream(resource) : ClassLoader.getSystemResourceAsStream(resource)) :
+                            url.openStream();
 
                     // #NETBEANS-5181
-                    String encoding = System.getProperty("java.util.PropertyResourceBundle.encoding");
-                    UtfThenIsoCharset charset = "UTF-8".equals(encoding) ? utfThenIsoCharsetOnlyUTF8 : utfThenIsoCharset;
-                    InputStreamReader reader = new InputStreamReader(is,
-                            "ISO-8859-1".equals(encoding)
-                            ? StandardCharsets.ISO_8859_1.newDecoder()
-                            : charset.newDecoder());
-
-                    try {
-                        p.load(reader);
-                    } finally {
-                        is.close();
-                    }
-                } catch (IOException e) {
-                    Exceptions.attachMessage(e, "While loading: " + res); // NOI18N
+                    try (final Reader reader = new InputStreamReader(is, newDecoder())) {
+                        properties.load(reader);
+                    } 
+                } catch (final IOException e) {
+                    Exceptions.attachMessage(e, "While loading: ".concat(resource)); // NOI18N
                     LOG.log(Level.WARNING, null, e);
 
                     return null;
@@ -572,11 +547,30 @@ public class NbBundle extends Object {
             } else if (suffix.length() == 0) {
                 // No base *.properties. Try *.class.
                 // Note that you may not mix *.properties w/ *.class this way.
-                return loadBundleClass(name, sname, locale, l, loader);
+                return loadBundleClass(name, sname, locale, reversedSuffixes, loader);
             }
         }
 
-        return new PBundle(NbCollections.checkedMapByFilter(p, String.class, String.class, true), locale);
+        return new PBundle(NbCollections.checkedMapByFilter(properties, 
+                String.class, String.class, true), locale);
+    }
+    //--------------------------------------------------------------------------
+    private static List<String> getReversedLocalizingSuffixes(final Locale locale) {
+        
+        final LinkedList<String> result = new LinkedList<>();
+        
+        new LocaleIterator(locale).forEachRemaining(s -> result.addFirst(s));
+        return result;
+    }
+    //--------------------------------------------------------------------------
+    private static CharsetDecoder newDecoder() {
+
+        final String encoding = System.getProperty("java.util.PropertyResourceBundle.encoding");
+        final UtfThenIsoCharset charset = "UTF-8".equals(encoding) ? 
+                utfThenIsoCharsetOnlyUTF8 : utfThenIsoCharset;
+        
+        return "ISO-8859-1".equals(encoding)
+                ? ISO_8859_1.newDecoder() : charset.newDecoder();
     }
 
     /**
@@ -589,36 +583,37 @@ public class NbBundle extends Object {
      * @return a resource bundle (merged according to the suffixes), or null if not found
      */
     private static ResourceBundle loadBundleClass(
-        String name, String sname, Locale locale, List<String> suffixes, ClassLoader l
-    ) {
-        if (l != null && l.getResource(sname + ".class") == null) { // NOI18N
+            final String name, final String sname, final Locale locale,
+            final List<String> suffixes, final ClassLoader loader) {
 
+        if (loader != null && loader.getResource(sname.concat(".class")) == null) { // NOI18N
             // No chance - no base bundle. Don't waste time catching CNFE.
             return null;
-        }
+        } else {
+            ResourceBundle master = null;
 
-        ResourceBundle master = null;
+            for (final String suffix : suffixes) {
+                try {
+                    final Class<? extends ResourceBundle> cls
+                            = Class.forName(name.concat(suffix), true, loader).
+                                    asSubclass(ResourceBundle.class);
+                    ResourceBundle bundle = cls.newInstance();
 
-        for (String suffix : suffixes) {
-            try {
-                Class<? extends ResourceBundle> c = Class.forName(name + suffix, true, l).asSubclass(ResourceBundle.class);
-                ResourceBundle b = c.newInstance();
-
-                if (master == null) {
-                    master = b;
-                } else {
-                    master = new MergedBundle(locale, b, master);
+                    if (master == null) {
+                        master = bundle;
+                    } else {
+                        master = new MergedBundle(locale, bundle, master);
+                    }
+                } catch (final ClassNotFoundException cnfe) {
+                    // fine - ignore
+                } catch (final Exception e) {
+                    LOG.log(WARNING, null, e);
+                } catch (final LinkageError e) {
+                    LOG.log(WARNING, null, e);
                 }
-            } catch (ClassNotFoundException cnfe) {
-                // fine - ignore
-            } catch (Exception e) {
-                LOG.log(Level.WARNING, null, e);
-            } catch (LinkageError e) {
-                LOG.log(Level.WARNING, null, e);
             }
+            return master;
         }
-
-        return master;
     }
 
     //
@@ -848,30 +843,29 @@ public class NbBundle extends Object {
     }
 
     private static class AttributesMap extends HashMap<String,String> {
-        private Attributes attrs;
+        
+        private final Attributes attrs;
 
-        public AttributesMap(Attributes attrs) {
+        private AttributesMap(final Attributes attrs) {
+            
             super(7);
             this.attrs = attrs;
         }
 
-        public @Override String get(Object _k) {
-            if (!(_k instanceof String)) {
+        @Override
+        public String get(final Object key) {
+
+            if (key instanceof String) {
+                try {
+                    return this.attrs.getValue(new Attributes.Name((String)key));
+                } catch (final IllegalArgumentException e) {
+                    // Robustness, and workaround for reported MRJ locale bug:
+                    LOG.log(FINE, null, e);
+                    return null;
+                }
+            } else {
                 return null;
             }
-            String k = (String) _k;
-
-            Attributes.Name an;
-
-            try {
-                an = new Attributes.Name(k);
-            } catch (IllegalArgumentException iae) {
-                // Robustness, and workaround for reported MRJ locale bug:
-                LOG.log(Level.FINE, null, iae);
-                return null;
-            }
-
-            return attrs.getValue(an);
         }
     }
 
@@ -909,9 +903,9 @@ public class NbBundle extends Object {
      * Ideally could just set the parent on the first, but this is protected, so...
      */
     private static class MergedBundle extends ResourceBundle {
-        private Locale loc;
-        private ResourceBundle sub1;
-        private ResourceBundle sub2;
+        private final Locale loc;
+        private final ResourceBundle sub1;
+        private final ResourceBundle sub2;
 
         /**
          * Create a new bundle delegating to two others.
@@ -963,9 +957,9 @@ public class NbBundle extends Object {
     * Branding tokens with underscores are broken apart naturally: so e.g.
     * branding "f4j_ce" looks first for "f4j_ce" branding, then "f4j" branding, then none.
     */
-    private static class LocaleIterator extends Object implements Iterator<String> {
+    private static class LocaleIterator implements Iterator<String> {
         /** this flag means, if default locale is in progress */
-        private boolean defaultInProgress = false;
+        private boolean defaultInProgress;
 
         /** this flag means, if empty suffix was exported yet */
         private boolean empty = false;
@@ -974,7 +968,7 @@ public class NbBundle extends Object {
         private Locale locale;
 
         /** current locale, and initial locale */
-        private Locale initLocale;
+        private final Locale initLocale;
 
         /** current suffix which will be returned in next calling nextElement */
         private String current;
@@ -982,502 +976,75 @@ public class NbBundle extends Object {
         /** the branding string in use */
         private String branding;
 
-        /** Creates new LocaleIterator for given locale.
-        * @param locale given Locale
-        */
-        public LocaleIterator(Locale locale) {
-            this.locale = this.initLocale = locale;
+        //----------------------------------------------------------------------
+        public LocaleIterator(final Locale locale) {
 
-            if (locale.equals(Locale.getDefault())) {
-                defaultInProgress = true;
-            }
-
-            current = '_' + locale.toString();
-
-            if (brandingToken == null) {
-                branding = null;
-            } else {
-                branding = "_" + brandingToken; // NOI18N
-            }
-
-            //System.err.println("Constructed: " + this);
+            this.locale = locale;
+            this.initLocale = locale;
+            this.defaultInProgress = locale.equals(Locale.getDefault());
+            this.current = "_".concat(locale.toString());
+            this.branding = brandingToken != null ? "_".concat(brandingToken) : ""; // NOI18N
         }
+        //----------------------------------------------------------------------
+        @Override
+        public String next() throws NoSuchElementException {
 
-        /** @return next suffix.
-        * @exception NoSuchElementException if there is no more locale suffix.
-        */
-        public @Override String next() throws NoSuchElementException {
-            if (current == null) {
+            if (this.current == null) {
                 throw new NoSuchElementException();
             }
+            final String result = this.branding.concat(this.current);
+            updateCurrent();
+            return result;
+        }
+        //----------------------------------------------------------------------
+        private void updateCurrent() {
 
-            final String ret;
-
-            if (branding == null) {
-                ret = current;
-            } else {
-                ret = branding + current;
-            }
-
-            int lastUnderbar = current.lastIndexOf('_');
-
+            final int lastUnderbar = this.current.lastIndexOf('_');
             if (lastUnderbar == 0) {
-                if (empty) {
-                    reset();
+                if (this.empty) {
+                    resetIteration();
                 } else {
-                    current = ""; // NOI18N
-                    empty = true;
+                    this.current = ""; // NOI18N
+                    this.empty = true;
                 }
             } else {
                 if (lastUnderbar == -1) {
-                    if (defaultInProgress) {
-                        reset();
+                    if (this.defaultInProgress) {
+                        resetIteration();
                     } else {
                         // [PENDING] stuff with trying the default locale
                         // after the real one does not actually seem to work...
-                        locale = Locale.getDefault();
-                        current = '_' + locale.toString();
-                        defaultInProgress = true;
+                        this.locale = Locale.getDefault();
+                        this.current = "_".concat(this.locale.toString()); // NOI18N
+                        this.defaultInProgress = true;
                     }
                 } else {
-                    current = current.substring(0, lastUnderbar);
+                    this.current = this.current.substring(0, lastUnderbar);
                 }
             }
-
-            //System.err.println("Returning: `" + ret + "' from: " + this);
-            return ret;
         }
+        //----------------------------------------------------------------------
+        private void resetIteration() {
 
-        /** Finish a series.
-         * If there was a branding prefix, restart without that prefix
-         * (or with a shorter prefix); else finish.
-         */
-        private void reset() {
-            if (branding != null) {
-                current = '_' + initLocale.toString();
-
-                int idx = branding.lastIndexOf('_');
-
-                if (idx == 0) {
-                    branding = null;
-                } else {
-                    branding = branding.substring(0, idx);
-                }
-
-                empty = false;
+            if (this.branding.isEmpty()) {
+                this.current = null; // finish iteration
             } else {
-                current = null;
+                this.current = "_".concat(this.initLocale.toString());
+
+                final int index = this.branding.lastIndexOf('_');
+                this.branding = index > 0 ? this.branding.substring(0, index) : ""; // NOI18N
+                this.empty = false;
             }
         }
+        //----------------------------------------------------------------------
+        @Override
+        public boolean hasNext() {
 
-        /** Tests if there is any sufix.*/
-        public @Override boolean hasNext() {
-            return (current != null);
+            return this.current != null;
         }
-
-        public @Override void remove() throws UnsupportedOperationException {
-            throw new UnsupportedOperationException();
-        }
+        //----------------------------------------------------------------------
     }
      // end of LocaleIterator
-
-    /** Classloader whose special trick is inserting debug information
-     * into any *.properties files it loads.
-     */
-    static final class DebugLoader extends ClassLoader {
-        /** global bundle index, each loaded bundle gets its own */
-        private static int count = 0;
-
-        /** indices of known bundles; needed since DebugLoader's can be collected
-         * when softly reachable, but this should be transparent to the user
-         */
-        private static final Map<String,Integer> knownIDs = new HashMap<String,Integer>();
-
-        /** cache of existing debug loaders for regular loaders */
-        private static final Map<ClassLoader,Reference<ClassLoader>> existing = new WeakHashMap<ClassLoader,Reference<ClassLoader>>();
-
-        private DebugLoader(ClassLoader cl) {
-            super(cl);
-
-            //System.err.println ("new DebugLoader: cl=" + cl);
-        }
-
-        private static int getID(String name) {
-            synchronized (knownIDs) {
-                Integer i = knownIDs.get(name);
-
-                if (i == null) {
-                    i = ++count;
-                    knownIDs.put(name, i);
-                    System.err.println("NbBundle trace: #" + i + " = " + name); // NOI18N
-                }
-
-                return i;
-            }
-        }
-
-        public static ClassLoader get(ClassLoader normal) {
-            //System.err.println("Lookup: normal=" + normal);
-            synchronized (existing) {
-                Reference<ClassLoader> r = existing.get(normal);
-
-                if (r != null) {
-                    ClassLoader dl = r.get();
-
-                    if (dl != null) {
-                        //System.err.println("\tcache hit");
-                        return dl;
-                    } else {
-                        //System.err.println("\tcollected ref");
-                    }
-                } else {
-                    //System.err.println("\tnot in cache");
-                }
-
-                ClassLoader dl = new DebugLoader(normal);
-                existing.put(normal, new WeakReference<ClassLoader>(dl));
-
-                return dl;
-            }
-        }
-
-        public @Override InputStream getResourceAsStream(String name) {
-            InputStream base = super.getResourceAsStream(name);
-
-            if (base == null) {
-                return null;
-            }
-
-            if (name.endsWith(".properties")) { // NOI18N
-
-                int id = getID(name);
-
-                //System.err.println ("\tthis=" + this + " parent=" + getParent ());
-                boolean loc = name.indexOf("Bundle") != -1; // NOI18N
-
-                return new DebugInputStream(base, id, loc);
-            } else {
-                return base;
-            }
-        }
-
-        // [PENDING] getResource not overridden; but ResourceBundle uses getResourceAsStream anyhow
-
-        /** Wrapper input stream which parses the text as it goes and adds annotations.
-         * Resource-bundle values are annotated with their current line number and also
-         * the supplied it, so e.g. if in the original input stream on line 50 we have:
-         *   somekey=somevalue
-         * so in the wrapper stream (id 123) this line will read:
-         *   somekey=somevalue (123:50)
-         * Since you see on stderr what #123 is, you can then pinpoint where any bundle key
-         * originally came from, assuming NbBundle loaded it from a *.properties file.
-         * @see {@link Properties#load} for details on the syntax of *.properties files.
-         */
-        static final class DebugInputStream extends InputStream {
-            /** state transition diagram constants */
-            private static final int WAITING_FOR_KEY = 0;
-
-            /** state transition diagram constants */
-            private static final int IN_COMMENT = 1;
-
-            /** state transition diagram constants */
-            private static final int IN_KEY = 2;
-
-            /** state transition diagram constants */
-            private static final int IN_KEY_BACKSLASH = 3;
-
-            /** state transition diagram constants */
-            private static final int AFTER_KEY = 4;
-
-            /** state transition diagram constants */
-            private static final int WAITING_FOR_VALUE = 5;
-
-            /** state transition diagram constants */
-            private static final int IN_VALUE = 6;
-
-            /** state transition diagram constants */
-            private static final int IN_VALUE_BACKSLASH = 7;
-            private final InputStream base;
-            private final int id;
-            private final boolean localizable;
-
-            /** current line number */
-            private int line = 0;
-            
-            /** line number in effect for last-encountered key */
-            private int keyLine = 0;
-
-            /** current state in state machine */
-            private int state = WAITING_FOR_KEY;
-
-            /** if true, the last char was a CR, waiting to see if we get a NL too */
-            private boolean twixtCrAndNl = false;
-
-            /** if non-null, a string to serve up before continuing (length must be > 0) */
-            private String toInsert = null;
-
-            /** if true, the next value encountered should be localizable if normally it would not be, or vice-versa */
-            private boolean reverseLocalizable = false;
-
-            /** text of currently read comment, including leading comment character */
-            private StringBuffer lastComment = null;
-
-            /** text of currently read value, ignoring escapes for now */
-            private final StringBuilder currentValue = new StringBuilder();
-
-            /** Create a new InputStream which will annotate resource bundles.
-             * Bundles named Bundle*.properties will be treated as localizable by default,
-             * and so annotated; other bundles will be treated as nonlocalizable and not annotated.
-             * Messages can be individually marked as localizable or not to override this default,
-             * in accordance with some I18N conventions for NetBeans.
-             * @param base the unannotated stream
-             * @param id an identifying number to use in annotations
-             * @param localizable if true, this bundle is expected to be localizable
-             * @see http://www.netbeans.org/i18n/
-             */
-            public DebugInputStream(InputStream base, int id, boolean localizable) {
-                this.base = base;
-                this.id = id;
-                this.localizable = localizable;
-            }
-
-            public @Override int read() throws IOException {
-                if (toInsert != null) {
-                    char result = toInsert.charAt(0);
-
-                    if (toInsert.length() > 1) {
-                        toInsert = toInsert.substring(1);
-                    } else {
-                        toInsert = null;
-                    }
-
-                    return result;
-                }
-
-                int next = base.read();
-
-                if (next == '\n') {
-                    twixtCrAndNl = false;
-                    line++;
-                } else if (next == '\r') {
-                    if (twixtCrAndNl) {
-                        line++;
-                    } else {
-                        twixtCrAndNl = true;
-                    }
-                } else {
-                    twixtCrAndNl = false;
-                }
-
-                switch (state) {
-                case WAITING_FOR_KEY:
-
-                    switch (next) {
-                    case '#':
-                    case '!':
-                        state = IN_COMMENT;
-                        lastComment = new StringBuffer();
-                        lastComment.append((char) next);
-
-                        return next;
-
-                    case ' ':
-                    case '\t':
-                    case '\n':
-                    case '\r':
-                    case -1:
-                        return next;
-
-                    case '\\':
-                        state = IN_KEY_BACKSLASH;
-
-                        return next;
-
-                    default:
-                        state = IN_KEY;
-                        keyLine = line + 1;
-
-                        return next;
-                    }
-
-                case IN_COMMENT:
-
-                    switch (next) {
-                    case '\n':
-                    case '\r':
-
-                        String comment = lastComment.toString();
-                        lastComment = null;
-
-                        if (localizable && comment.equals("#NOI18N")) { // NOI18N
-                            reverseLocalizable = true;
-                        } else if (localizable && comment.equals("#PARTNOI18N")) { // NOI18N
-                            System.err.println(
-                                "NbBundle WARNING (" + id + ":" + line +
-                                "): #PARTNOI18N encountered, will not annotate I18N parts"
-                            ); // NOI18N
-                            reverseLocalizable = true;
-                        } else if (!localizable && comment.equals("#I18N")) { // NOI18N
-                            reverseLocalizable = true;
-                        } else if (!localizable && comment.equals("#PARTI18N")) { // NOI18N
-                            System.err.println(
-                                "NbBundle WARNING (" + id + ":" + line +
-                                "): #PARTI18N encountered, will not annotate I18N parts"
-                            ); // NOI18N
-                            reverseLocalizable = false;
-                        } else if (
-                            (localizable && (comment.equals("#I18N") || comment.equals("#PARTI18N"))) || // NOI18N
-                                (!localizable && (comment.equals("#NOI18N") || comment.equals("#PARTNOI18N")))
-                        ) { // NOI18N
-                            System.err.println(
-                                "NbBundle WARNING (" + id + ":" + line + "): incongruous comment " + comment +
-                                " found for bundle"
-                            ); // NOI18N
-                            reverseLocalizable = false;
-                        }
-
-                        state = WAITING_FOR_KEY;
-
-                        return next;
-
-                    default:
-                        lastComment.append((char) next);
-
-                        return next;
-                    }
-
-                case IN_KEY:
-
-                    switch (next) {
-                    case '\\':
-                        state = IN_KEY_BACKSLASH;
-
-                        return next;
-
-                    case ' ':
-                    case '\t':
-                        state = AFTER_KEY;
-
-                        return next;
-
-                    case '=':
-                    case ':':
-                        state = WAITING_FOR_VALUE;
-
-                        return next;
-
-                    case '\r':
-                    case '\n':
-                        state = WAITING_FOR_KEY;
-
-                        return next;
-
-                    default:
-                        return next;
-                    }
-
-                case IN_KEY_BACKSLASH:
-                    state = IN_KEY;
-
-                    return next;
-
-                case AFTER_KEY:
-
-                    switch (next) {
-                    case '=':
-                    case ':':
-                        state = WAITING_FOR_VALUE;
-
-                        return next;
-
-                    case '\r':
-                    case '\n':
-                        state = WAITING_FOR_KEY;
-
-                        return next;
-
-                    default:
-                        return next;
-                    }
-
-                case WAITING_FOR_VALUE:
-
-                    switch (next) {
-                    case '\r':
-                    case '\n':
-                        state = WAITING_FOR_KEY;
-
-                        return next;
-
-                    case ' ':
-                    case '\t':
-                        return next;
-
-                    case '\\':
-                        state = IN_VALUE_BACKSLASH;
-
-                        return next;
-
-                    default:
-                        state = IN_VALUE;
-                        currentValue.setLength(0);
-                        return next;
-                    }
-
-                case IN_VALUE:
-
-                    switch (next) {
-                    case '\\':
-
-                        // Gloss over distinction between simple escapes and \u1234, which is not important for us.
-                        // Also no need to deal specially with continuation lines; for us, there is an escaped
-                        // newline, after which will be more value, and that is all that is important.
-                        state = IN_VALUE_BACKSLASH;
-
-                        return next;
-
-                    case '\n':
-                    case '\r':
-                    case -1:
-
-                        // End of value. This is the tricky part.
-                        boolean revLoc = reverseLocalizable;
-                        reverseLocalizable = false;
-                        state = WAITING_FOR_KEY;
-
-                        if (localizable ^ revLoc) {
-                            // This value is intended to be localizable. Annotate it.
-                            assert keyLine > 0;
-                            toInsert = "(" + id + ":" + keyLine + ")"; // NOI18N
-                            if (next != -1) {
-                                toInsert += Character.valueOf((char) next);
-                            }
-                            keyLine = 0;
-
-                            // Now return the space before the rest of the string explicitly.
-                            return ' ';
-                        } else {
-                            // This is not supposed to be a localizable value, leave it alone.
-                            return next;
-                        }
-
-                    default:
-                        currentValue.append((char) next);
-                        return next;
-                    }
-
-                case IN_VALUE_BACKSLASH:
-                    state = IN_VALUE;
-
-                    return next;
-
-                default:
-                    throw new IOException("should never happen"); // NOI18N
-                }
-            }
-
-        }
-    }
     
     
     /**
@@ -1514,15 +1081,15 @@ public class NbBundle extends Object {
 
          private final class UtfThenIsoDecoder extends CharsetDecoder {
 
-            private CharsetDecoder decoderUTF;
+            private final CharsetDecoder decoderUTF;
             private CharsetDecoder decoderISO;  // Not null means we switched to ISO
 
             protected UtfThenIsoDecoder(Charset cs, float averageCharsPerByte, float maxCharsPerByte) {
                 super(cs, averageCharsPerByte, maxCharsPerByte);
 
-                decoderUTF = StandardCharsets.UTF_8.newDecoder()
-                        .onMalformedInput(CodingErrorAction.REPORT) // We want to be informed of this error
-                        .onUnmappableCharacter(CodingErrorAction.REPORT);  // We want to be informed of this error                
+                decoderUTF = UTF_8.newDecoder()
+                        .onMalformedInput(REPORT) // We want to be informed of this error
+                        .onUnmappableCharacter(REPORT);  // We want to be informed of this error                
             }
 
             @Override
@@ -1539,7 +1106,7 @@ public class NbBundle extends Object {
 
                 
                 // UTF decoding
-                CoderResult cr = decoderUTF.decode(in, out, false);
+                final CoderResult cr = decoderUTF.decode(in, out, false);
                 if (cr.isUnderflow() || cr.isOverflow()) {
                     // Normal results
                     return cr;
@@ -1554,7 +1121,7 @@ public class NbBundle extends Object {
                 // Switch to ISO
                 in.reset();
                 out.reset();
-                decoderISO = StandardCharsets.ISO_8859_1.newDecoder();
+                decoderISO = ISO_8859_1.newDecoder();
                 return decoderISO.decode(in, out, false);
             }
         }

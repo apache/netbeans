@@ -18,10 +18,15 @@
  */
 package org.openide.util;
 
+import java.util.Collection;
+import static java.util.Collections.emptyList;
 import java.util.HashSet;
-import java.util.Iterator;
-import java.util.logging.Level;
+import static java.util.Objects.requireNonNull;
 import java.util.logging.Logger;
+import static java.util.logging.Level.*;
+import static java.lang.System.currentTimeMillis;
+import java.lang.reflect.Method;
+import java.util.WeakHashMap;
 
 
 /** A task that may be executed in a separate thread and permits examination of its status.
@@ -43,18 +48,14 @@ import java.util.logging.Logger;
 *
 * @author Jaroslav Tulach
 */
-public class Task extends Object implements Runnable {
+public class Task implements Runnable {
     /** Dummy task which is already finished. */
-    public static final Task EMPTY = new Task();
+    public static final Task EMPTY = new Task(null);
     private static final Logger LOG = Logger.getLogger(Task.class.getName());
-
-    static {
-        EMPTY.finished = true;
-    }
 
     /** map of subclasses to booleans whether they override waitFinished() or not
      */
-    private static java.util.WeakHashMap<Class, Boolean> overrides;
+    private static WeakHashMap<Class, Boolean> overrides;
 
     /** request processor for workarounding compatibility problem with
      * classes that do not override waitFinished (long)
@@ -75,12 +76,10 @@ public class Task extends Object implements Runnable {
     * by default thrown exceptions are simply logged and not rethrown.
     * @param run runnable to run that computes the task
     */
-    public Task(Runnable run) {
+    public Task(final Runnable run) {
+        
         this.run = run;
-
-        if (run == null) {
-            finished = true;
-        }
+        this.finished = run == null;
     }
 
     /** Constructor for subclasses that wants to control whole execution
@@ -88,6 +87,7 @@ public class Task extends Object implements Runnable {
     * @since 1.5
     */
     protected Task() {
+        
         this.run = null;
     }
 
@@ -95,8 +95,9 @@ public class Task extends Object implements Runnable {
     * @return <code>true</code> if so
     */
     public final boolean isFinished() {
+        
         synchronized (this) {
-            return finished;
+            return this.finished;
         }
     }
 
@@ -104,8 +105,9 @@ public class Task extends Object implements Runnable {
     * Changed not to be <code>final</code> in version 1.5
     */
     public void waitFinished() {
+        
         synchronized (this) {
-            while (!finished) {
+            while (!this.finished) {
                 try {
                     wait();
                 } catch (InterruptedException ex) {
@@ -123,59 +125,45 @@ public class Task extends Object implements Runnable {
     *  @since 5.0
     */
     public boolean waitFinished(long milliseconds) throws InterruptedException {
+        
         synchronized (this) {
             if (overridesTimeoutedWaitFinished()) {
                 // the the task overrides waitFinished (timeout) or is 
                 // one of the basic tasks, then we can just simply do our bese
                 // code. Otherwise we have to execute threading workaround
-                if (finished) {
+                if (this.finished) {
                     return true;
                 }
-
-                long expectedEnd = System.currentTimeMillis() + milliseconds;
-
+                final long expectedEnd = currentTimeMillis() + milliseconds;
                 for (;;) {
-                    LOG.log(Level.FINE, "About to wait {0} ms", milliseconds);
+                    LOG.log(FINE, "About to wait {0} ms", milliseconds);
                     wait(milliseconds);
 
-                    if (finished) {
-                        LOG.log(Level.FINER, "finished, return"); // NOI18N
+                    if (this.finished) {
+                        LOG.log(FINER, "finished, return"); // NOI18N
                         return true;
                     }
-                    
                     if (milliseconds == 0) {
-                        LOG.log(Level.FINER, "infinite wait, again"); // NOI18N
+                        LOG.log(FINER, "infinite wait, again"); // NOI18N
                         continue;
                     }
-                    
-                    long now = System.currentTimeMillis();
-                    long remains = expectedEnd - now;
-                    LOG.log(Level.FINER, "remains {0} ms", remains);
+                    final long remains = expectedEnd - currentTimeMillis();
+                    LOG.log(FINER, "remains {0} ms", remains);
                     if (remains <= 0) {
-                        LOG.log(Level.FINER, "exit, timetout");
+                        LOG.log(FINER, "exit, timetout");
                         return false;
                     }
-
                     milliseconds = remains;
                 }
             }
         }
-
         // as we know that RequestProcessor implements the waitFinished(long)
         // correctly we just post a task for waitFinished() into some
         // of its threads and wait just the given milliseconds time
         // for the result, by that we can guarantee the semantics
         // of the call
-        class Run implements Runnable {
-            @Override
-            public void run() {
-                Task.this.waitFinished();
-            }
-        }
-
         LOG.fine("Using compatibility waiting");
-        RequestProcessor.Task task = RP.post(new Run());
-
+        final RequestProcessor.Task task = RP.post(this::waitFinished);
         return task.waitFinished(milliseconds);
     }
 
@@ -184,8 +172,9 @@ public class Task extends Object implements Runnable {
     * @since 1.5
     */
     protected final void notifyRunning() {
+        
         synchronized (this) {
-            RequestProcessor.logger().log(Level.FINE, "notifyRunning: {0}", this); // NOI18N
+            RequestProcessor.logger().log(FINE, "notifyRunning: {0}", this); // NOI18N
             this.finished = false;
             notifyAll();
         }
@@ -195,25 +184,18 @@ public class Task extends Object implements Runnable {
     * @see #run
     */
     protected final void notifyFinished() {
-        Iterator<TaskListener> it;
+        
+        Collection<TaskListener> listeners = emptyList();
 
         synchronized (this) {
-            finished = true;
-            RequestProcessor.logger().log(Level.FINE, "notifyFinished: {0}", this); // NOI18N
+            this.finished = true;
+            RequestProcessor.logger().log(FINE, "notifyFinished: {0}", this); // NOI18N
             notifyAll();
-
-            // fire the listeners
-            if (list == null) {
-                return;
+            if (this.list != null) {
+                listeners = (Collection<TaskListener>) this.list.clone();
             }
-
-            it = ((HashSet<TaskListener>) list.clone()).iterator();
         }
-
-        while (it.hasNext()) {
-            TaskListener l = it.next();
-            l.taskFinished(this);
-        }
+        listeners.forEach((l) -> l.taskFinished(this));
     }
 
     /** Start the task.
@@ -224,12 +206,13 @@ public class Task extends Object implements Runnable {
     * <p>Note that this call runs synchronously, but typically the creator
     * of the task will call this method in a separate thread.
     */
+    @Override
     public void run() {
         try {
             notifyRunning();
 
-            if (run != null) {
-                run.run();
+            if (this.run != null) {
+                this.run.run();
             }
         } finally {
             notifyFinished();
@@ -240,78 +223,70 @@ public class Task extends Object implements Runnable {
      * task {@link #isFinished()}. In case the task is already finished, the
      * listener is called immediately.
      * 
-     * @param l the listener to add
+     * @param listener the listener to add
      */
-    public void addTaskListener(TaskListener l) {
-        boolean callNow;
+    public void addTaskListener(final TaskListener listener){
+        
+        // adding this check will prevetn Task.run() from throwing NPE
+        // is this addition is accepted, unignore TaskTest.addTaskListener_throwsNullPointer_whenGivenNullArgument
+        //requireNonNull(listener); 
+        
+        boolean callNow = false;
         synchronized (this) {
-            if (list == null) {
-                list = new HashSet<TaskListener>();
+            if (this.list == null) {
+                this.list = new HashSet<>();
             }
-            list.add(l);
-            
-            callNow = finished;
+            this.list.add(listener);
+            callNow = this.finished;
         }
-
         if (callNow) {
-            l.taskFinished(this);
+            listener.taskFinished(this);
         }
     }
 
     /** Remove a listener from the task.
     * @param l the listener to remove
     */
-    public synchronized void removeTaskListener(TaskListener l) {
-        if (list == null) {
-            return;
-        }
+    public synchronized void removeTaskListener(final TaskListener l) {
 
-        list.remove(l);
+        this.list.remove(l);
     }
 
+    @Override
     public String toString() {
-        return "task " + run; // NOI18N
+        
+        return "task " + this.run; // NOI18N
     }
 
     /** Checks whether the class overrides wait finished.
      */
     private boolean overridesTimeoutedWaitFinished() {
+        
         // yes we implement it corretly
         if (getClass() == Task.class) {
             return true;
         }
-
         // RequestProcessor.Task overrides correctly
         if (getClass() == RequestProcessor.Task.class) {
             return true;
         }
-
-        java.util.WeakHashMap<Class,Boolean> m;
-        Boolean does;
-
         synchronized (Task.class) {
             if (overrides == null) {
-                overrides = new java.util.WeakHashMap<Class, Boolean>();
+                overrides = new WeakHashMap<>();
                 RP = new RequestProcessor("Timeout waitFinished compatibility processor", 255); // NOI18N
             }
-
-            m = overrides;
-
-            does = m.get(getClass());
-
-            if (does != null) {
-                return does.booleanValue();
+            Boolean doesOverride = overrides.get(getClass());
+            if (doesOverride != null) {
+                return doesOverride;
             }
-
             try {
-                java.lang.reflect.Method method = getClass().getMethod("waitFinished", new Class[] { Long.TYPE }); // NOI18N
-                does = Boolean.valueOf(method.getDeclaringClass() != Task.class);
-                m.put(getClass(), does);
-
-                return does.booleanValue();
-            } catch (Exception ex) {
+                final Method method = getClass().
+                        getMethod("waitFinished", new Class[] { Long.TYPE }); // NOI18N
+                doesOverride = method.getDeclaringClass() != Task.class;
+                overrides.put(getClass(), doesOverride);
+                return doesOverride;
+            } catch (final NoSuchMethodException | SecurityException ex) {
                 Exceptions.printStackTrace(ex);
-
                 return true;
             }
         }
@@ -321,6 +296,7 @@ public class Task extends Object implements Runnable {
      * Used for debugging from RequestProcessor.
      */
     String debug() {
-        return (run == null) ? "null" : run.getClass().getName();
+        
+        return (this.run == null) ? "null" : this.run.getClass().getName();
     }
 }

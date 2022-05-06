@@ -19,6 +19,7 @@
 package org.netbeans.modules.gradle;
 
 import java.io.File;
+import java.nio.file.FileSystemNotFoundException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Objects;
@@ -150,8 +151,13 @@ public final class GradleReport {
         if (relativeTo != null) {
             // try convert the location to a FileObject:
             File dir = FileUtil.toFile(relativeTo);
-            Path scriptPath = Paths.get(getLocation());
-            locString = dir.toPath().relativize(scriptPath).toString();
+            try {
+                Path scriptPath = Paths.get(getLocation());
+                locString = dir.toPath().relativize(scriptPath).toString();
+            } catch (FileSystemNotFoundException | IllegalArgumentException ex) {
+                // perhaps the location is not a filename
+                locString = getLocation();
+            }
         } else {
             locString = getLocation();
         }

@@ -25,7 +25,6 @@ import java.util.Set;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.netbeans.junit.NbTestCase;
-import org.openide.util.ChangeSupport;
 import org.openide.util.test.MockChangeListener;
 
 /**
@@ -39,7 +38,7 @@ public class ChangeSupportTest extends NbTestCase {
     }
 
     public void testChangeSupport() {
-        final int[] changeCount = { 0 };
+
         ChangeSupport support = new ChangeSupport(this);
         MockChangeListener listener1 = new MockChangeListener(), listener2 = new MockChangeListener();
 
@@ -52,7 +51,7 @@ public class ChangeSupportTest extends NbTestCase {
         support.addChangeListener(listener1);
         support.addChangeListener(listener2);
         assertTrue(support.hasListeners());
-        Set<ChangeListener> listeners = new HashSet<ChangeListener>(support.listeners);
+        Set<ChangeListener> listeners = new HashSet<>(support.listeners);
         assertEquals(2, listeners.size());
         assertTrue(listeners.contains(listener1));
         assertTrue(listeners.contains(listener2));
@@ -63,9 +62,7 @@ public class ChangeSupportTest extends NbTestCase {
         listener2.assertEventCount(1);
         assertSame(this, events.iterator().next().getSource());
 
-        support.removeChangeListener(new ChangeListener() {
-            public void stateChanged(ChangeEvent e) {
-            }
+        support.removeChangeListener((ChangeEvent e) -> {
         });
         support.fireChange();
         listener1.assertEventCount(1);

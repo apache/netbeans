@@ -21,7 +21,7 @@ package org.openide.util;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.logging.Level;
+import static java.util.logging.Level.*;
 import java.util.logging.Logger;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -38,7 +38,7 @@ public final class ChangeSupport {
     private static final Logger LOG = Logger.getLogger(ChangeSupport.class.getName());
 
     // not private because used in unit tests
-    final List<ChangeListener> listeners = new CopyOnWriteArrayList<ChangeListener>();
+    final List<ChangeListener> listeners = new CopyOnWriteArrayList<>();
     private final Object source;
 
     /**
@@ -46,7 +46,8 @@ public final class ChangeSupport {
      *
      * @param  source the instance to be given as the source for events.
      */
-    public ChangeSupport(Object source) {
+    public ChangeSupport(final Object source) {
+        
         this.source = source;
     }
 
@@ -58,14 +59,15 @@ public final class ChangeSupport {
      *
      * @param  listener the <code>ChangeListener</code> to be added.
      */
-    public void addChangeListener(ChangeListener listener) {
-        if (listener == null) {
-            return;
+    public void addChangeListener(final ChangeListener listener) {
+
+        if (listener != null) {
+            if (LOG.isLoggable(FINE) && this.listeners.contains(listener)) {
+                LOG.log(FINE, "diagnostics for #167491", 
+                        new IllegalStateException("Added " + listener + " multiply"));
+            }
+            this.listeners.add(listener);
         }
-        if (LOG.isLoggable(Level.FINE) && listeners.contains(listener)) {
-            LOG.log(Level.FINE, "diagnostics for #167491", new IllegalStateException("Added " + listener + " multiply"));
-        }
-        listeners.add(listener);
     }
 
     /**
@@ -77,37 +79,24 @@ public final class ChangeSupport {
      *
      * @param  listener the <code>ChangeListener</code> to be removed.
      */
-    public void removeChangeListener(ChangeListener listener) {
-        if (listener == null) {
-            return;
-        }
-        listeners.remove(listener);
+    public void removeChangeListener(final ChangeListener listener) {
+
+        this.listeners.remove(listener);
     }
 
     /**
      * Fires a change event to all registered listeners.
      */
     public void fireChange() {
-        if (listeners.isEmpty()) {
-            return;
-        }
-        fireChange(new ChangeEvent(source));
-    }
 
-    /**
-     * Fires the specified <code>ChangeEvent</code> to all registered
-     * listeners. If <code>event</code> is null, no exception is thrown
-     * and no action is taken.
-     *
-     * @param  event the <code>ChangeEvent</code> to be fired.
-     */
-    private void fireChange(ChangeEvent event) {
-        assert event != null;
-        for (ChangeListener listener : listeners) {
-            try {
-                listener.stateChanged(event);
-            } catch (RuntimeException x) {
-                Exceptions.printStackTrace(x);
+        if (!listeners.isEmpty()) {
+            final ChangeEvent event = new ChangeEvent(this.source);
+            for (final ChangeListener listener : this.listeners) {
+                try {
+                    listener.stateChanged(event);
+                } catch (final RuntimeException x) {
+                    Exceptions.printStackTrace(x);
+                }
             }
         }
     }
@@ -119,6 +108,7 @@ public final class ChangeSupport {
      *         false otherwise.
      */
     public boolean hasListeners() {
-        return !listeners.isEmpty();
+        
+        return !this.listeners.isEmpty();
     }
 }

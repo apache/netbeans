@@ -26,7 +26,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -40,7 +39,9 @@ import java.util.Scanner;
 import java.util.Set;
 import java.util.logging.Level;
 import org.netbeans.junit.NbTestCase;
-import org.openide.util.NbCollections;
+import static org.openide.util.NbCollections.*;
+import static java.util.Collections.*;
+import static java.util.Arrays.asList;
 
 /**
  * @author Jesse Glick
@@ -53,6 +54,7 @@ public class NbCollectionsTest extends NbTestCase {
     }
     
     protected Level logLevel() {
+        
         return Level.SEVERE;
     }
 
@@ -60,17 +62,17 @@ public class NbCollectionsTest extends NbTestCase {
         Set s = new HashSet();
         s.add(1);
         s.add(2);
-        Set<Integer> checked = NbCollections.checkedSetByCopy(s, Integer.class, true);
+        Set<Integer> checked = checkedSetByCopy(s, Integer.class, true);
         assertEquals(s, checked);
         s.add("three");
         try {
-            NbCollections.checkedSetByCopy(s, Integer.class, true);
+            checkedSetByCopy(s, Integer.class, true);
             fail();
         } catch (ClassCastException e) {/*OK*/}
-        assertEquals(checked, NbCollections.checkedSetByCopy(s, Integer.class, false));
+        assertEquals(checked, checkedSetByCopy(s, Integer.class, false));
         s.remove("three");
         s.add(null);
-        checked = NbCollections.checkedSetByCopy(s, Integer.class, true);
+        checked = checkedSetByCopy(s, Integer.class, true);
         assertEquals("nulls preserved", s, checked);
         s.clear();
         s.add(5);
@@ -85,17 +87,17 @@ public class NbCollectionsTest extends NbTestCase {
     private void doTestCheckedListByCopy(List l) {
         l.add(1);
         l.add(2);
-        List<Integer> checked = NbCollections.checkedListByCopy(l, Integer.class, true);
+        List<Integer> checked = checkedListByCopy(l, Integer.class, true);
         assertEquals(l, checked);
         l.add("three");
         try {
-            NbCollections.checkedListByCopy(l, Integer.class, true);
+            checkedListByCopy(l, Integer.class, true);
             fail();
         } catch (ClassCastException e) {/*OK*/}
-        assertEquals(checked, NbCollections.checkedListByCopy(l, Integer.class, false));
+        assertEquals(checked, checkedListByCopy(l, Integer.class, false));
         l.remove("three");
         l.add(null);
-        checked = NbCollections.checkedListByCopy(l, Integer.class, true);
+        checked = checkedListByCopy(l, Integer.class, true);
         assertEquals("nulls preserved", l, checked);
         l.clear();
         l.add(5);
@@ -106,25 +108,25 @@ public class NbCollectionsTest extends NbTestCase {
         Map m = new HashMap();
         m.put(1, "hello");
         m.put(2, "goodbye");
-        Map<Integer,String> checked = NbCollections.checkedMapByCopy(m, Integer.class, String.class, true);
+        Map<Integer,String> checked = checkedMapByCopy(m, Integer.class, String.class, true);
         assertEquals(m, checked);
         m.put(2, new Object());
         try {
-            NbCollections.checkedMapByCopy(m, Integer.class, String.class, true);
+            checkedMapByCopy(m, Integer.class, String.class, true);
             fail();
         } catch (ClassCastException e) {/*OK*/}
-        assertEquals(Collections.singletonMap(1, "hello"), NbCollections.checkedMapByCopy(m, Integer.class, String.class, false));
+        assertEquals(singletonMap(1, "hello"), checkedMapByCopy(m, Integer.class, String.class, false));
         m.remove(2);
         Long three = 3L;
         m.put(three, "oops!");
         try {
-            NbCollections.checkedMapByCopy(m, Integer.class, String.class, true);
+            checkedMapByCopy(m, Integer.class, String.class, true);
             fail();
         } catch (ClassCastException e) {/*OK*/}
-        assertEquals(Collections.singletonMap(1, "hello"), NbCollections.checkedMapByCopy(m, Integer.class, String.class, false));
+        assertEquals(singletonMap(1, "hello"), checkedMapByCopy(m, Integer.class, String.class, false));
         m.remove(three);
         m.put(null, null);
-        checked = NbCollections.checkedMapByCopy(m, Integer.class, String.class, true);
+        checked = checkedMapByCopy(m, Integer.class, String.class, true);
         assertEquals("nulls preserved", m, checked);
         m.clear();
         m.put(5, "new");
@@ -132,31 +134,31 @@ public class NbCollectionsTest extends NbTestCase {
     }
 
     public void testCheckedIteratorByFilter() throws Exception {
-        Iterator raw = Arrays.asList("one", 2, "three").iterator();
-        Iterator<String> strings = NbCollections.checkedIteratorByFilter(raw, String.class, false);
+        Iterator raw = asList("one", 2, "three").iterator();
+        Iterator<String> strings = checkedIteratorByFilter(raw, String.class, false);
         assertTrue(strings.hasNext());
         assertEquals("one", strings.next());
         assertTrue(strings.hasNext());
         assertEquals("three", strings.next());
         assertFalse(strings.hasNext());
-        raw = Arrays.asList("one", 2, "three").iterator();
-        strings = NbCollections.checkedIteratorByFilter(raw, String.class, true);
+        raw = asList("one", 2, "three").iterator();
+        strings = checkedIteratorByFilter(raw, String.class, true);
         try {
             while (strings.hasNext()) {
                 strings.next();
             }
             fail();
         } catch (ClassCastException e) {/*OK*/}
-        raw = Arrays.asList("one", "three").iterator();
-        strings = NbCollections.checkedIteratorByFilter(raw, String.class, true);
+        raw = asList("one", "three").iterator();
+        strings = checkedIteratorByFilter(raw, String.class, true);
         assertTrue(strings.hasNext());
         assertEquals("one", strings.next());
         assertTrue(strings.hasNext());
         assertEquals("three", strings.next());
         assertFalse(strings.hasNext());
-        List l = new ArrayList(Arrays.asList(new Object[] {"one", 2, "three"}));
+        List l = new ArrayList(asList("one", 2, "three"));
         raw = l.iterator();
-        strings = NbCollections.checkedIteratorByFilter(raw, String.class, false);
+        strings = checkedIteratorByFilter(raw, String.class, false);
         assertTrue(strings.hasNext());
         assertEquals("one", strings.next());
         strings.remove();
@@ -173,9 +175,9 @@ public class NbCollectionsTest extends NbTestCase {
         s.add(1);
         s.add("goodbye");
         s.add(2);
-        Set<String> s2 = NbCollections.checkedSetByFilter(s, String.class, false);
+        Set<String> s2 = checkedSetByFilter(s, String.class, false);
         assertEquals(3, s2.size());
-        assertEquals(new HashSet(Arrays.asList(new String[] {"hello", "there", "goodbye"})), s2);
+        assertEquals(new HashSet(asList("hello", "there", "goodbye")), s2);
         assertTrue(s2.contains("hello"));
         assertFalse(s2.contains("nowhere"));
         try {
@@ -189,7 +191,7 @@ public class NbCollectionsTest extends NbTestCase {
             }
         }
         assertEquals(2, s2.size());
-        assertEquals(new HashSet(Arrays.asList(new String[] {"there", "goodbye"})), s2);
+        assertEquals(new HashSet(asList("there", "goodbye")), s2);
         assertEquals(4, s.size());
         it = s2.iterator();
         while (it.hasNext()) {
@@ -197,23 +199,23 @@ public class NbCollectionsTest extends NbTestCase {
             it.remove();
         }
         assertEquals(0, s2.size());
-        assertEquals(Collections.emptySet(), s2);
-        assertEquals(new HashSet(Arrays.asList(new Integer[] {1, 2})), s);
+        assertEquals(emptySet(), s2);
+        assertEquals(new HashSet(asList(1, 2)), s);
         s.clear();
         s.add("new");
-        assertEquals("modifications to original found", Collections.singleton("new"), s2);
+        assertEquals("modifications to original found", singleton("new"), s2);
         assertTrue(s2.add("additional"));
-        assertEquals("original set modified too", new HashSet(Arrays.asList(new String[] {"new", "additional"})), s);
+        assertEquals("original set modified too", new HashSet(asList("new", "additional")), s);
         try {
             ((Set) s2).add(13);
             fail();
         } catch (ClassCastException e) {/*OK*/}
         // Other:
         assertEquals("preserved by serialization", s2, cloneBySerialization(s2));
-        assertEquals("empty set filtered as empty", Collections.emptySet(), NbCollections.checkedSetByFilter(Collections.emptySet(), String.class, false));
-        assertEquals("empty set from wholly wrong set", Collections.emptySet(), NbCollections.checkedSetByFilter(Collections.singleton(5), String.class, false));
+        assertEquals("empty set filtered as empty", emptySet(), checkedSetByFilter(emptySet(), String.class, false));
+        assertEquals("empty set from wholly wrong set", emptySet(), checkedSetByFilter(singleton(5), String.class, false));
         // Make sure iterator behaves fully acc. to contract:
-        Set<Integer> s3 = NbCollections.checkedSetByFilter(new HashSet(Collections.singleton(1)), Integer.class, false);
+        Set<Integer> s3 = checkedSetByFilter(new HashSet(singleton(1)), Integer.class, false);
         Iterator<Integer> it3 = s3.iterator();
         assertTrue(it3.hasNext());
         assertTrue(it3.hasNext());
@@ -245,13 +247,13 @@ public class NbCollectionsTest extends NbTestCase {
         s.add(1);
         s.add("goodbye");
         s.add(2);
-        Set<String> s2 = NbCollections.checkedSetByFilter(s, String.class, true);
+        Set<String> s2 = checkedSetByFilter(s, String.class, true);
         try {
             s2.size();
             fail();
         } catch (ClassCastException x) {/*OK*/}
         try {
-            new HashSet<String>(s2);
+            new HashSet<>(s2);
             fail();
         } catch (ClassCastException x) {/*OK*/}
         s.remove(1);
@@ -270,7 +272,7 @@ public class NbCollectionsTest extends NbTestCase {
         m.put(2, "two");
         m.put("three", "three");
         m.put(4, 4);
-        Map<Integer,String> m2 = NbCollections.checkedMapByFilter(m, Integer.class, String.class, false);
+        Map<Integer,String> m2 = checkedMapByFilter(m, Integer.class, String.class, false);
         assertEquals(2, m2.size());
         assertEquals("one", m2.get(1));
         try {
@@ -322,7 +324,7 @@ public class NbCollectionsTest extends NbTestCase {
             fail();
         } catch (ClassCastException e) {/*OK*/}
         m2.remove(1);
-        assertEquals(Collections.singletonMap(2, "two"), m2);
+        assertEquals(singletonMap(2, "two"), m2);
         assertEquals(3, m.size());
         m2.entrySet().clear();
         assertTrue(m2.isEmpty());
@@ -344,9 +346,9 @@ public class NbCollectionsTest extends NbTestCase {
         assertEquals(3, m.size());
         // Other:
         assertEquals(m2, cloneBySerialization(m2));
-        assertEquals(Collections.emptyMap(), NbCollections.checkedMapByFilter(Collections.emptyMap(), String.class, String.class, false));
-        assertEquals(Collections.emptyMap(), NbCollections.checkedMapByFilter(Collections.singletonMap(1, "two"), String.class, String.class, false));
-        assertEquals(Collections.emptyMap(), NbCollections.checkedMapByFilter(Collections.singletonMap("one", 2), String.class, String.class, false));
+        assertEquals(emptyMap(), checkedMapByFilter(emptyMap(), String.class, String.class, false));
+        assertEquals(emptyMap(), checkedMapByFilter(singletonMap(1, "two"), String.class, String.class, false));
+        assertEquals(emptyMap(), checkedMapByFilter(singletonMap("one", 2), String.class, String.class, false));
         // Misc. return values have to reflect nature of view:
         m.clear();
         m.put(1, 1);
@@ -364,13 +366,13 @@ public class NbCollectionsTest extends NbTestCase {
         m.put(2, "two");
         m.put("three", "three");
         m.put(4, 4);
-        Map<Integer,String> m2 = NbCollections.checkedMapByFilter(m, Integer.class, String.class, true);
+        Map<Integer,String> m2 = checkedMapByFilter(m, Integer.class, String.class, true);
         try {
             m2.size();
             fail();
         } catch (ClassCastException e) {/*OK*/}
         try {
-            new HashMap<Integer,String>(m2);
+            new HashMap<>(m2);
             fail();
         } catch (ClassCastException e) {/*OK*/}
         try {
@@ -394,8 +396,8 @@ public class NbCollectionsTest extends NbTestCase {
     }
 
     public void testCheckedEnumerationByFilter() throws Exception {
-        Enumeration<?> raw = Collections.enumeration(Arrays.asList("one", 2, "three"));
-        Enumeration<String> strings = NbCollections.checkedEnumerationByFilter(raw, String.class, false);
+        Enumeration<?> raw = enumeration(asList("one", 2, "three"));
+        Enumeration<String> strings = checkedEnumerationByFilter(raw, String.class, false);
         assertTrue(strings.hasMoreElements());
         assertEquals("one", strings.nextElement());
         assertTrue(strings.hasMoreElements());
@@ -404,14 +406,14 @@ public class NbCollectionsTest extends NbTestCase {
     }
 
     public void testCheckedEnumerationByFilterStrict() throws Exception {
-        Enumeration<?> raw = Collections.enumeration(Arrays.asList("one", 2, "three"));
-        Enumeration<String> strings = NbCollections.checkedEnumerationByFilter(raw, String.class, true);
+        Enumeration<?> raw = enumeration(asList("one", 2, "three"));
+        Enumeration<String> strings = checkedEnumerationByFilter(raw, String.class, true);
         try {
             Collections.list(strings);
             fail();
         } catch (ClassCastException e) {/*OK*/}
-        raw = Collections.enumeration(Arrays.asList("one", "three"));
-        strings = NbCollections.checkedEnumerationByFilter(raw, String.class, true);
+        raw = enumeration(asList("one", "three"));
+        strings = checkedEnumerationByFilter(raw, String.class, true);
         assertTrue(strings.hasMoreElements());
         assertEquals("one", strings.nextElement());
         assertTrue(strings.hasMoreElements());
@@ -430,29 +432,29 @@ public class NbCollectionsTest extends NbTestCase {
 
     public void testIterable() throws Exception {
         String text = "hello kitty!";
-        List<String> l1 = new ArrayList<String>();
-        for (String token : NbCollections.iterable(new Scanner(text))) {
+        List<String> l1 = new ArrayList<>();
+        for (String token : iterable(new Scanner(text))) {
             l1.add(token);
         }
-        assertEquals(Arrays.asList("hello", "kitty!"), l1);
-        for (String token : NbCollections.iterable(new Scanner(""))) {
+        assertEquals(asList("hello", "kitty!"), l1);
+        for (String token : iterable(new Scanner(""))) {
             fail();
         }
         try {
-            NbCollections.iterable((Iterator<?>) null);
+            iterable((Iterator<?>) null);
             fail();
         } catch (NullPointerException x) {/* OK */}
-        List<URL> l2 = new ArrayList<URL>();
-        for (URL u : NbCollections.iterable(NbCollections.class.getClassLoader().getResources(NbCollections.class.getName().replace('.', '/') + ".class"))) {
+        List<URL> l2 = new ArrayList<>();
+        for (URL u : iterable(NbCollections.class.getClassLoader().getResources(NbCollections.class.getName().replace('.', '/') + ".class"))) {
             assertNotNull(u);
             l2.add(u);
         }
         assertFalse(l2.isEmpty()); // permissible to have >1 element in case JAR doubly added to CP
-        for (URL u : NbCollections.iterable(NbCollections.class.getClassLoader().getResources("nonexistent"))) {
+        for (URL u : iterable(NbCollections.class.getClassLoader().getResources("nonexistent"))) {
             fail();
         }
         try {
-            NbCollections.iterable((Enumeration<?>) null);
+            iterable((Enumeration<?>) null);
             fail();
         } catch (NullPointerException x) {/* OK */}
     }

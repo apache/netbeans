@@ -23,7 +23,6 @@ import java.io.Serializable;
 import java.util.AbstractMap;
 import java.util.AbstractSet;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -34,9 +33,9 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.RandomAccess;
 import java.util.Set;
-import java.util.logging.Level;
+import static java.util.logging.Level.WARNING;
 import java.util.logging.Logger;
-import org.openide.util.Enumerations;
+import static java.util.Objects.requireNonNull;
 
 /**
  * Utilities for working with generics.
@@ -63,22 +62,25 @@ public class NbCollections {
      *         to the named type (or they may be null)
      * @throws ClassCastException if some entry in the raw set was not well-typed, and only if <code>strict</code> was true
      */
-    public static <E> Set<E> checkedSetByCopy(Set rawSet, Class<E> type, boolean strict) throws ClassCastException {
-        Set<E> s = new HashSet<E>(rawSet.size() * 4 / 3 + 1);
-        Iterator<?> it = rawSet.iterator();
-        while (it.hasNext()) {
-            Object e = it.next();
+    public static <E> Set<E> checkedSetByCopy(final Set rawSet, Class<E> type, 
+            final boolean strict)
+            throws ClassCastException {
+
+        final Set<E> result = new HashSet<>(rawSet.size() * 4 / 3 + 1);
+
+        rawSet.forEach((e) -> {
             try {
-                s.add(type.cast(e));
-            } catch (ClassCastException x) {
+                result.add(type.cast(e));
+            } catch (final ClassCastException x) {
                 if (strict) {
                     throw x;
                 } else {
-                    LOG.log(Level.WARNING, "Element {0} not assignable to {1}", new Object[] {e, type});
+                    LOG.log(WARNING, "Element {0} not assignable to {1}", 
+                            new Object[]{e, type});
                 }
             }
-        }
-        return s;
+        });
+        return result;
     }
 
     /**
@@ -91,22 +93,26 @@ public class NbCollections {
      *         to the named type (or they may be null)
      * @throws ClassCastException if some entry in the raw list was not well-typed, and only if <code>strict</code> was true
      */
-    public static <E> List<E> checkedListByCopy(List rawList, Class<E> type, boolean strict) throws ClassCastException {
-        List<E> l = (rawList instanceof RandomAccess) ? new ArrayList<E>(rawList.size()) : new LinkedList<E>();
-        Iterator<?> it = rawList.iterator();
-        while (it.hasNext()) {
-            Object e = it.next();
+    public static <E> List<E> checkedListByCopy(final List rawList,
+            final Class<E> type, final boolean strict)
+            throws ClassCastException {
+
+        final List<E> result = (rawList instanceof RandomAccess)
+                ? new ArrayList<>(rawList.size()) : new LinkedList<>();
+
+        rawList.forEach(e -> {
             try {
-                l.add(type.cast(e));
-            } catch (ClassCastException x) {
+                result.add(type.cast(e));
+            } catch (final ClassCastException x) {
                 if (strict) {
                     throw x;
                 } else {
-                    LOG.log(Level.WARNING, "Element {0} not assignable to {1}", new Object[] {e, type});
+                    LOG.log(WARNING, "Element {0} not assignable to {1}",
+                            new Object[]{e, type});
                 }
             }
-        }
-        return l;
+        });
+        return result;
     }
 
     /**
@@ -120,22 +126,25 @@ public class NbCollections {
      *         to the named types (or they may be null)
      * @throws ClassCastException if some key or value in the raw map was not well-typed, and only if <code>strict</code> was true
      */
-    public static <K,V> Map<K,V> checkedMapByCopy(Map rawMap, Class<K> keyType, Class<V> valueType, boolean strict) throws ClassCastException {
-        Map<K,V> m2 = new HashMap<K,V>(rawMap.size() * 4 / 3 + 1);
-        Iterator<Map.Entry> it = rawMap.entrySet().iterator();
-        while (it.hasNext()) {
-            Map.Entry e = it.next();
+    public static <K, V> Map<K, V> checkedMapByCopy(final Map rawMap,
+            final Class<K> keyType, final Class<V> valueType, final boolean strict)
+            throws ClassCastException {
+
+        final Map<K, V> result = new HashMap<>(rawMap.size() * 4 / 3 + 1);
+
+        rawMap.forEach((key, value) -> {
             try {
-                m2.put(keyType.cast(e.getKey()), valueType.cast(e.getValue()));
-            } catch (ClassCastException x) {
+                result.put(keyType.cast(key), valueType.cast(value));
+            } catch (final ClassCastException x) {
                 if (strict) {
                     throw x;
                 } else {
-                    LOG.log(Level.WARNING, "Entry {0} not assignable to <{1},{2}>", new Object[] {e, keyType, valueType});
+                    LOG.log(WARNING, "Entry {0}={1} not assignable to <{2},{3}>",
+                            new Object[]{key, value, keyType, valueType});
                 }
             }
-        }
-        return m2;
+        });
+        return result;
     }
 
     private abstract static class CheckedIterator<E> implements Iterator<E> {
@@ -145,12 +154,13 @@ public class NbCollections {
         private final Iterator<?> it;
         private Object next = WAITING;
 
-        public CheckedIterator(Iterator it) {
+        public CheckedIterator(final Iterator it) {
             this.it = it;
         }
 
         protected abstract boolean accept(Object o);
 
+        @Override
         public boolean hasNext() {
             if (next != WAITING) {
                 return true;
@@ -165,6 +175,7 @@ public class NbCollections {
             return false;
         }
 
+        @Override
         public E next() {
             if (next == WAITING && !hasNext()) {
                 throw new NoSuchElementException();
@@ -176,6 +187,7 @@ public class NbCollections {
             return x;
         }
 
+        @Override
         public void remove() {
             it.remove();
         }
@@ -191,8 +203,11 @@ public class NbCollections {
      *               if true, {@link ClassCastException} may be thrown from an iterator operation
      * @return an iterator guaranteed to contain only objects of the requested type (or null)
      */
-    public static <E> Iterator<E> checkedIteratorByFilter(Iterator rawIterator, final Class<E> type, final boolean strict) {
+    public static <E> Iterator<E> checkedIteratorByFilter(final Iterator rawIterator, 
+            final Class<E> type, final boolean strict) {
+        
         return new CheckedIterator<E>(rawIterator) {
+            @Override
             protected boolean accept(Object o) {
                 if (o == null) {
                     return true;
@@ -222,8 +237,10 @@ public class NbCollections {
      *               if true, a {@link ClassCastException} may arise during some set operation
      * @return a view over the raw set guaranteed to match the specified type
      */
-    public static <E> Set<E> checkedSetByFilter(Set rawSet, Class<E> type, boolean strict) {
-        return new CheckedSet<E>(rawSet, type, strict);
+    public static <E> Set<E> checkedSetByFilter(final Set rawSet, 
+            final Class<E> type, final boolean strict) {
+        
+        return new CheckedSet<>(rawSet, type, strict);
     }
     private static final class CheckedSet<E> extends AbstractSet<E> implements Serializable {
 
@@ -304,7 +321,7 @@ public class NbCollections {
      * @return a view over the raw map guaranteed to match the specified type
      */
     public static <K,V> Map<K,V> checkedMapByFilter(Map rawMap, Class<K> keyType, Class<V> valueType, boolean strict) {
-        return new CheckedMap<K,V>(rawMap, keyType, valueType, strict);
+        return new CheckedMap<>(rawMap, keyType, valueType, strict);
     }
     private static final class CheckedMap<K,V> extends AbstractMap<K,V> implements Serializable {
 
@@ -451,22 +468,20 @@ public class NbCollections {
      *               if true, {@link ClassCastException} may be thrown from an enumeration operation
      * @return an enumeration guaranteed to contain only objects of the requested type (or null)
      */
-    public static <E> Enumeration<E> checkedEnumerationByFilter(Enumeration<?> rawEnum, final Class<E> type, final boolean strict) {
-        @SuppressWarnings("unchecked")
-        Enumeration<?> _rawEnum = rawEnum;
-        return Enumerations.<Object,E>filter(_rawEnum, new Enumerations.Processor<Object,E>() {
-            public E process(Object o, Collection<Object> ignore) {
-                if (o == null) {
-                    return null;
-                } else {
-                    try {
-                        return type.cast(o);
-                    } catch (ClassCastException x) {
-                        if (strict) {
-                            throw x;
-                        } else {
-                            return null;
-                        }
+    public static <E> Enumeration<E> checkedEnumerationByFilter(final Enumeration<?> rawEnum, 
+            final Class<E> type, final boolean strict) {
+        
+        return Enumerations.filter(rawEnum, (o, ignore) -> {
+            if (o == null) {
+                return null;
+            } else {
+                try {
+                    return type.cast(o);
+                } catch (final ClassCastException x) {
+                    if (strict) {
+                        throw x;
+                    } else {
+                        return null;
                     }
                 }
             }
@@ -495,14 +510,10 @@ public class NbCollections {
      * @since org.openide.util 7.5
      */
     public static <E> Iterable<E> iterable(final Iterator<E> iterator) {
-        if (iterator == null) {
-            throw new NullPointerException();
-        }
-        return new Iterable<E>() {
-            public Iterator<E> iterator() {
-                return iterator;
-            }
-        };
+        
+        requireNonNull(iterator);
+                
+        return () -> iterator;
     }
 
     /**
@@ -527,22 +538,21 @@ public class NbCollections {
      * @since org.openide.util 7.5
      */
     public static <E> Iterable<E> iterable(final Enumeration<E> enumeration) {
-        if (enumeration == null) {
-            throw new NullPointerException();
-        }
-        return new Iterable<E>() {
-            public Iterator<E> iterator() {
-                return new Iterator<E>() {
-                    public boolean hasNext() {
-                        return enumeration.hasMoreElements();
-                    }
-                    public E next() {
-                        return enumeration.nextElement();
-                    }
-                    public void remove() {
-                        throw new UnsupportedOperationException();
-                    }
-                };
+        
+        requireNonNull(enumeration);
+
+        return () -> new Iterator<E>() {
+            @Override
+            public boolean hasNext() {
+                return enumeration.hasMoreElements();
+            }
+            @Override
+            public E next() {
+                return enumeration.nextElement();
+            }
+            @Override
+            public void remove() {
+                throw new UnsupportedOperationException();
             }
         };
     }

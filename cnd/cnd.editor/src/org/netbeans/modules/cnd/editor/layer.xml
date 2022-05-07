@@ -231,6 +231,13 @@
                             </file>
                         </folder>
                     </folder>
+                    <folder name="FlatLafDark">
+                        <folder name="Defaults">
+                            <file name="dark-coloring.xml" url="resources/cplusplus/Netbeans-CC-fontsColors-dark.xml">
+                               <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.cnd.editor.resources.cplusplus.Bundle"/>
+                            </file>
+                        </folder>
+                    </folder>                
                 </folder>
                 <folder name="Keybindings">
                     <folder name="NetBeans">
@@ -360,6 +367,13 @@
                             </file>
                         </folder>
                     </folder>
+                    <folder name="FlatLafDark">
+                        <folder name="Defaults">
+                            <file name="dark-coloring.xml" url="resources/cplusplus/Netbeans-CC-fontsColors-dark.xml">
+                               <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.cnd.editor.resources.cplusplus.Bundle"/>
+                            </file>
+                        </folder>
+                    </folder>                
                 </folder>
                 <folder name="Keybindings">
                     <folder name="NetBeans">
@@ -490,6 +504,13 @@
                             </file>
                         </folder>
                     </folder>
+                    <folder name="FlatLafDark">
+                        <folder name="Defaults">
+                            <file name="dark-coloring.xml" url="resources/cplusplus/Netbeans-CC-fontsColors-dark.xml">
+                               <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.cnd.editor.resources.cplusplus.Bundle"/>
+                            </file>
+                        </folder>
+                    </folder>                
                 </folder>
                 <folder name="Keybindings">
                     <folder name="NetBeans">

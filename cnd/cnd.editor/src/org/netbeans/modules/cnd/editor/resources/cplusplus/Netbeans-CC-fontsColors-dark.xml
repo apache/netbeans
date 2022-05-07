@@ -21,18 +21,18 @@
 -->
 <!DOCTYPE fontscolors PUBLIC "-//NetBeans//DTD Editor Fonts and Colors settings 1.1//EN" "http://www.netbeans.org/dtds/EditorFontsColors-1_1.dtd" 
 [
-    <!ENTITY ORANGE "ffcf7d03">
-    <!ENTITY PALEBLUE "ff336bdd">
-    <!ENTITY MARINEBLUE "ff298aa6">
-    <!ENTITY DARKBLUE "ff295abd">
-    <!ENTITY MAGENTA "ffba2ca3">
-    <!ENTITY BROWN "ff78492a">
+    <!ENTITY YELLOW "ffffc66d">
+    <!ENTITY ORANGE "ffcc7832">
+    <!ENTITY PALEBLUE "ff7fb7f3">
+    <!ENTITY PALEMAGENTA "ff9876aa">
+    <!ENTITY PALEYELLOW "ffdadeb2">
+    <!ENTITY MAGENTA "ffdb92ed">
 ]>
 
 <fontscolors>
 
     <!-- Comments, errors, whitespace -->
-    <fontcolor name="comment" default="comment" foreColor="ff008400">
+    <fontcolor name="comment" default="comment" foreColor="ff4dc6ac">
     </fontcolor>
     <fontcolor name="errors" default="error">
     </fontcolor>
@@ -47,11 +47,11 @@
     <!-- Constants (strings, literals, characters, numbers -->
     <fontcolor name="literal" default="literal" >
     </fontcolor>
-    <fontcolor name="number" default="number" foreColor="&ORANGE;">
+    <fontcolor name="number" default="number" foreColor="&YELLOW;">
     </fontcolor>
-    <fontcolor name="string" default="string" foreColor="&ORANGE;">
+    <fontcolor name="string" default="string" foreColor="&YELLOW;">
     </fontcolor>
-    <fontcolor name="character" default="string" foreColor="&ORANGE;">
+    <fontcolor name="character" default="string" foreColor="&YELLOW;">
     </fontcolor>
     <fontcolor name="string-escape" default="string">
         <font style="bold" />
@@ -61,7 +61,7 @@
     </fontcolor>
 
     <!-- Keywords, operators -->
-    <fontcolor name="keyword" default="keyword" foreColor="&MAGENTA;">
+    <fontcolor name="keyword" default="keyword" foreColor="&ORANGE;">
     </fontcolor>
     <fontcolor name="operator" default="operator">
     </fontcolor>
@@ -72,12 +72,12 @@
     <fontcolor name="mod-variable" default="identifier">
     </fontcolor>
     <!-- parameters are a bit darker -->
-    <fontcolor name="mod-parameter" default="identifier" foreColor="&DARKBLUE;">
+    <fontcolor name="mod-parameter" default="identifier" foreColor="&PALEMAGENTA;">
     </fontcolor>
-    <fontcolor name="mod-member" default="identifier" foreColor="&MARINEBLUE;">
+    <fontcolor name="mod-member" default="identifier" foreColor="&PALEYELLOW;">
         <font style="italic" />
     </fontcolor>
-    <fontcolor name="mod-funcion" default="identifier" foreColor="&MARINEBLUE;">
+    <fontcolor name="mod-funcion" default="identifier" foreColor="&PALEYELLOW;">
         <font style="italic" />
     </fontcolor>
     <fontcolor name="mod-class" default="identifier">
@@ -93,7 +93,7 @@
         <font style="bold" />
     </fontcolor> 
     
-    <fontcolor name="preprocessor" foreColor="&BROWN;"/>
+    <fontcolor name="preprocessor" foreColor="&MAGENTA;"/>
     <fontcolor name="preprocessor-keyword-directive" default="preprocessor"/>
     <fontcolor name="preprocessor-keyword" default="preprocessor" />
     <fontcolor name="preprocessor-system-include-literal" default="preprocessor"/>

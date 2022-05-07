@@ -16,30 +16,28 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.cnd.lsp.makeproject;
+package org.netbeans.modules.cnd.lsp.pkgconfig.manager;
 
-import java.util.ArrayList;
-import org.netbeans.modules.cnd.lsp.compilationdb.ClangCDBSupport;
-import org.netbeans.modules.cnd.lsp.server.LSPServerSupport;
-import org.netbeans.modules.cnd.makeproject.api.MakeProject;
-import org.netbeans.modules.cnd.makeproject.api.MakeProjectLookupProvider;
+import org.netbeans.modules.cnd.makeproject.api.configurations.MakeConfiguration;
+import org.netbeans.modules.cnd.makeproject.spi.configurations.PkgConfigManager;
+import org.netbeans.modules.nativeexecution.api.ExecutionEnvironment;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
- * Adds stuff to MakeProject Lookup.
- *
+ * LSPPkgConfigManager is a simple PkgConfigManager (currently only local
+ * environments are supported).
  * @author antonio
  */
-@ServiceProvider(service = MakeProjectLookupProvider.class, position = 1000)
-public class LSPMakeProjectLookupProvider implements MakeProjectLookupProvider {
+@ServiceProvider(service = PkgConfigManager.class)
+public class PkgConfigManagerImpl extends PkgConfigManager {
 
     @Override
-    public void addLookup(MakeProject owner, ArrayList<Object> ic) {
-        ClangCDBSupport compilationDatabaseSupport = new ClangCDBSupport(owner);
-        ic.add(compilationDatabaseSupport);
-        LSPServerSupport lspServerSupport = new LSPServerSupport(owner);
-        ic.add(lspServerSupport);
-        ic.add(lspServerSupport.getOpenedHook());
+    public PkgConfig getPkgConfig(ExecutionEnvironment env, MakeConfiguration conf) {
+        if (! env.isLocal()) {
+            // TODO: Implement a remote PkgConfigManager?
+            return null;
+        }
+        return new PkgConfigImpl(env, conf);
     }
-
+    
 }

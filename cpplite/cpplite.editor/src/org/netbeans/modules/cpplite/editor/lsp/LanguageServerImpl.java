@@ -53,16 +53,16 @@ import org.openide.util.Pair;
  *
  * @author lahvac
  */
-@MimeRegistrations({
-    @MimeRegistration(service=LanguageServerProvider.class,
-                      mimeType=MIMETypes.C),
-    @MimeRegistration(service=LanguageServerProvider.class,
-                      mimeType=MIMETypes.CPP),
-    @MimeRegistration(service=LanguageServerProvider.class,
-                      mimeType=MIMETypes.H),
-    @MimeRegistration(service=LanguageServerProvider.class,
-                      mimeType=MIMETypes.HPP)
-})
+//@MimeRegistrations({
+//    @MimeRegistration(service=LanguageServerProvider.class,
+//                      mimeType=MIMETypes.C),
+//    @MimeRegistration(service=LanguageServerProvider.class,
+//                      mimeType=MIMETypes.CPP),
+//    @MimeRegistration(service=LanguageServerProvider.class,
+//                      mimeType=MIMETypes.H),
+//    @MimeRegistration(service=LanguageServerProvider.class,
+//                      mimeType=MIMETypes.HPP)
+//})
 public class LanguageServerImpl implements LanguageServerProvider {
 
     private static final Logger LOG = Logger.getLogger(LanguageServerImpl.class.getName());

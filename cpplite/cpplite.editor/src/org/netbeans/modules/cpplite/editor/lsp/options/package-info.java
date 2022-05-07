@@ -16,15 +16,15 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-@OptionsPanelController.ContainerRegistration(
-    id = "CPlusPlus",
-    iconBase = "org/netbeans/modules/cpplite/editor/lsp/options/cnd_32.png",
-    categoryName = "#OptionsCategory_Name_CPlusPlus",
-    keywords = "#OptionsCategory_Keywords_CPlusPlus",
-    keywordsCategory = "CPPLite",
-    position = 715
-)
-@org.openide.util.NbBundle.Messages({"OptionsCategory_Name_CPlusPlus=C/C++", "OptionsCategory_Keywords_CPlusPlus=C C++"})
+//@OptionsPanelController.ContainerRegistration(
+//    id = "CPlusPlus",
+//    iconBase = "org/netbeans/modules/cpplite/editor/lsp/options/cnd_32.png",
+//    categoryName = "#OptionsCategory_Name_CPlusPlus",
+//    keywords = "#OptionsCategory_Keywords_CPlusPlus",
+//    keywordsCategory = "CPPLite",
+//    position = 715
+//)
+//@org.openide.util.NbBundle.Messages({"OptionsCategory_Name_CPlusPlus=C/C++", "OptionsCategory_Keywords_CPlusPlus=C C++"})
 package org.netbeans.modules.cpplite.editor.lsp.options;
 
 import org.netbeans.spi.options.OptionsPanelController;

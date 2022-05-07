@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.cpplite.editor.lsp.options;
+package org.netbeans.modules.cnd.lsp.server.options;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
@@ -26,67 +26,77 @@ import org.netbeans.spi.options.OptionsPanelController;
 import org.openide.util.HelpCtx;
 import org.openide.util.Lookup;
 
-//@OptionsPanelController.SubRegistration(
-//        id = "cpplite",
-//        displayName = "#OptionsCategory_DisplayName",
-//        keywords = "#OptionsCategory_Keywords_CPPLite",
-//        keywordsCategory = "CPPLite",
-//        location = "CPlusPlus",
-//        position = 2000
-//)
-//@org.openide.util.NbBundle.Messages({"OptionsCategory_DisplayName=ccls configuration", "OptionsCategory_Keywords_CPPLite=C C++ ccls"})
-public final class CPPLiteOptionsPanelController extends OptionsPanelController {
+/**
+ * The controller for the "C/C++ / LSP ServeR" option panel tab.
+ * @author antonio
+ */
+@OptionsPanelController.SubRegistration(
+        location = "CPlusPlus",
+        id = "clangd",
+        displayName = "#AdvancedOption_DisplayName_LSPServer",
+        keywords = "#AdvancedOption_Keywords_LSPServer",
+        keywordsCategory = "CPlusPlus/LSPServer",
+        position = 1500
+)
+@org.openide.util.NbBundle.Messages({"AdvancedOption_DisplayName_LSPServer=LSP Server", "AdvancedOption_Keywords_LSPServer=LSP server clangd"})
+public final class LSPServerOptionsPanelController extends OptionsPanelController {
 
-    private CPPLitePanel panel;
+    private LSPServerPanel panel;
     private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
     private boolean changed;
 
+    @Override
     public void update() {
         getPanel().load();
         changed = false;
     }
 
+    @Override
     public void applyChanges() {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                getPanel().store();
-                changed = false;
-            }
+        SwingUtilities.invokeLater(() -> {
+            getPanel().store();
+            changed = false;
         });
     }
 
+    @Override
     public void cancel() {
         // need not do anything special, if no changes have been persisted yet
     }
 
+    @Override
     public boolean isValid() {
         return getPanel().valid();
     }
 
+    @Override
     public boolean isChanged() {
         return changed;
     }
 
+    @Override
     public HelpCtx getHelpCtx() {
         return null; // new HelpCtx("...ID") if you have a help set
     }
 
+    @Override
     public JComponent getComponent(Lookup masterLookup) {
         return getPanel();
     }
 
+    @Override
     public void addPropertyChangeListener(PropertyChangeListener l) {
         pcs.addPropertyChangeListener(l);
     }
 
+    @Override
     public void removePropertyChangeListener(PropertyChangeListener l) {
         pcs.removePropertyChangeListener(l);
     }
 
-    private CPPLitePanel getPanel() {
+    private LSPServerPanel getPanel() {
         if (panel == null) {
-            panel = new CPPLitePanel(this);
+            panel = new LSPServerPanel(this);
         }
         return panel;
     }

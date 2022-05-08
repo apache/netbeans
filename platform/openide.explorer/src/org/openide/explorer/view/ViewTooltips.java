@@ -93,7 +93,7 @@ final class ViewTooltips extends MouseAdapter implements MouseMotionListener {
      * for now) which should show helper tooltips.  Should be called
      * from the component's addNotify() method.
      */
-    synchronized static void register (JComponent comp) {
+    static synchronized void register (JComponent comp) {
         ViewTooltips vtt = (ViewTooltips) comp.getClientProperty(KEY);
         assert vtt == null : "There already is " + vtt + " for " + comp;
         comp.putClientProperty(KEY, vtt = new ViewTooltips());
@@ -105,7 +105,7 @@ final class ViewTooltips extends MouseAdapter implements MouseMotionListener {
      * for now) which should show helper tooltips. Should be called
      * from the component's removeNotify() method.
      */
-    synchronized static void unregister (JComponent comp) {
+    static synchronized void unregister (JComponent comp) {
         ViewTooltips inst = (ViewTooltips) comp.getClientProperty(KEY);
         if (inst == null) {
             return;

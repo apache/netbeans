@@ -49,9 +49,8 @@ public final class GradleCompilerOptionsQuery implements CompilerOptionsQueryImp
 
     public GradleCompilerOptionsQuery(Project project) {
         this.project = project;
-        final NbGradleProject watcher = NbGradleProject.get(project);
         listener = (evt) -> {
-            if (watcher.isUnloadable()) return;
+            if (NbGradleProject.get(project).isUnloadable()) return;
             if (NbGradleProject.PROP_PROJECT_INFO.equals(evt.getPropertyName())) {
                 //TODO: How shall we handle source set removal?
                 synchronized(GradleCompilerOptionsQuery.this) {
@@ -61,7 +60,7 @@ public final class GradleCompilerOptionsQuery implements CompilerOptionsQueryImp
                 }
             }
         };
-        watcher.addPropertyChangeListener(WeakListeners.propertyChange(listener, project));
+        NbGradleProject.addPropertyChangeListener(project, WeakListeners.propertyChange(listener, NbGradleProject.get(project)));
     }
 
     @Override

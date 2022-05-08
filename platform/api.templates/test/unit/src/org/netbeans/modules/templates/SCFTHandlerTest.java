@@ -26,6 +26,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -301,7 +302,7 @@ public class SCFTHandlerTest extends NbTestCase {
         Map<String,String> parameters = Collections.singletonMap("type", "empty");
         
         FEQI.fs = root2.getFileSystem();
-        FEQI.result = Charset.forName("UTF-8");
+        FEQI.result = StandardCharsets.UTF_8;
         
         DataObject n = obj.createFromTemplate(folder, "complex", parameters);
         Integer cnt = TwoPartLoader.queried.get(n.getPrimaryFile());
@@ -318,7 +319,7 @@ public class SCFTHandlerTest extends NbTestCase {
             fail("Too small file: " + length + " for " + snd);
         }
         
-        String normRead = readChars(snd, Charset.forName("UTF-8"));
+        String normRead = readChars(snd, StandardCharsets.UTF_8);
 
         txt = txt.replaceAll("print\\('", "").replaceAll("'\\)", "") + "\n";
         

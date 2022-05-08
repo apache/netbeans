@@ -95,6 +95,11 @@ public final class MicronautDataCompletionProvider implements CompletionProvider
                             .sortText(name)
                             .build();
                 }
+
+                @Override
+                public CompletionItem createSQLItem(CompletionItem item) {
+                    return item;
+                }
             }));
             resultSet.setAnchorOffset(task.getAnchorOffset());
             resultSet.finish();

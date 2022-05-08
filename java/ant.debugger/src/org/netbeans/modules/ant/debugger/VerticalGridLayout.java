@@ -49,7 +49,7 @@ public class VerticalGridLayout implements LayoutManager2 {
 
     private final int screenHeight;
 
-    final private Set<Component> components = new LinkedHashSet<Component>();
+    private final Set<Component> components = new LinkedHashSet<Component>();
     
     @Override
     public void addLayoutComponent(Component comp, Object constraints) {

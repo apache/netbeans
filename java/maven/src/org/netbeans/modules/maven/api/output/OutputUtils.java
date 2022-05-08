@@ -146,7 +146,7 @@ public final class OutputUtils {
         }
     }
     
-    private static abstract class StacktraceOutputListener implements OutputListener {
+    private abstract static class StacktraceOutputListener implements OutputListener {
         
         protected abstract ClassPath getClassPath();
         

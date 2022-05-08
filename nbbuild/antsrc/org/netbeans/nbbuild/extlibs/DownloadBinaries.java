@@ -312,7 +312,8 @@ public class DownloadBinaries extends Task {
                 log("Trying: " + url, Project.MSG_VERBOSE);
                 return downloadFromServer(this, url);
             } catch (IOException ex) {
-                //Try the next URL
+                // Saves the exception and tries the next URL, if present
+                firstProblem = ex;
             }
         }
         throw new BuildException("Could not download " + cacheName + " from " + server + ": " + firstProblem, firstProblem, getLocation());

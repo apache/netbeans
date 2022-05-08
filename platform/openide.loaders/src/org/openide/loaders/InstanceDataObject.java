@@ -24,6 +24,7 @@ import java.beans.PropertyVetoException;
 import java.io.*;
 import java.lang.ref.*;
 import java.lang.reflect.*;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.logging.*;
 import org.openide.ServiceType;
@@ -945,7 +946,7 @@ public class InstanceDataObject extends MultiDataObject implements InstanceCooki
 
     // XXX #27494 Please changes to this field apply also into
     // core/naming/src/org/netbeans/core/naming/Utils class.
-    private final static int MAX_FILENAME_LENGTH = 50;
+    private static final int MAX_FILENAME_LENGTH = 50;
 
     // XXX #27494 Please changes to this method apply also into
     // core/naming/src/org/netbeans/core/naming/Utils class.
@@ -1543,7 +1544,7 @@ public class InstanceDataObject extends MultiDataObject implements InstanceCooki
         private InstanceDataObject result = null;
         private boolean create;
 
-        private final static Creator me = new Creator ();
+        private static final Creator me = new Creator ();
 
 
         private Creator() {
@@ -1609,7 +1610,7 @@ public class InstanceDataObject extends MultiDataObject implements InstanceCooki
             throw new IOException("missing attribute settings.convertor"); // NOI18N
         }
         ByteArrayOutputStream b = new ByteArrayOutputStream(1024);
-        Writer w = new OutputStreamWriter(b, "UTF-8"); // NOI18N
+        Writer w = new OutputStreamWriter(b, StandardCharsets.UTF_8);
         convertorWriteMethod(convertor, new WriterProvider(w, ctx), inst);
         w.close();
         return b;
@@ -1638,7 +1639,7 @@ public class InstanceDataObject extends MultiDataObject implements InstanceCooki
     }
 
     /** path where to find convertor/provider definition */
-    private final static String EA_PROVIDER_PATH = "settings.providerPath"; // NOI18N
+    private static final String EA_PROVIDER_PATH = "settings.providerPath"; // NOI18N
     private static final String EA_SUBCLASSES = "settings.subclasses"; // NOI18N
 
     /** look up appropriate convertor according to obj */

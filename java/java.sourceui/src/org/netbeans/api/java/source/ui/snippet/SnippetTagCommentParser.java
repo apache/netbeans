@@ -38,10 +38,14 @@ public class SnippetTagCommentParser {
     private final SnippetMarkupTagExtractor extractor = new SnippetMarkupTagExtractor();
     private final Pattern markUpPattern;
 
+    public SnippetTagCommentParser() {
+        this.markUpPattern = Pattern.compile(JAVA_LANG_SOURCE_LINE_START_PATTERN + "\\Q//\\E" + MARKUPTAG_START_PATTERN);     
+    }
+    
     public SnippetTagCommentParser(String langCommentPattern) {
         this.markUpPattern = Pattern.compile(JAVA_LANG_SOURCE_LINE_START_PATTERN + langCommentPattern + MARKUPTAG_START_PATTERN);     
     }
-    
+  
     public List<SourceLineMeta> parse(String snippetDocComment) {
         List<SourceLineMeta> fullSourceLineInfo = new ArrayList<>();
         Matcher matcher = markUpPattern.matcher("");

@@ -404,12 +404,12 @@ public abstract class Properties {
     }
 
 
-    private final static class PrimitiveRegister {
+    private static final class PrimitiveRegister {
 
-        private HashMap properties = new HashMap ();
+        private Map<String, String> properties = new HashMap<>();
         private boolean isInitialized = false;
-        private HashMap<String, ReentrantReadWriteLock> propertyRWLocks = new HashMap<String, ReentrantReadWriteLock>();
-        private HashMap<String, Integer> propertyRWLockCounts = new HashMap<String, Integer>();
+        private Map<String, ReentrantReadWriteLock> propertyRWLocks = new HashMap<>();
+        private Map<String, Integer> propertyRWLockCounts = new HashMap<>();
 
 
         public String getProperty (String propertyName, String defaultValue) {
@@ -689,7 +689,7 @@ public abstract class Properties {
         ServicesHolder<Reader>      readers      = new ReaderHolder();
         ServicesHolder<Initializer> initializers = new InitializerHolder();
 
-        private static abstract class ServicesHolder<T> {
+        private abstract static class ServicesHolder<T> {
 
             private Class<T> clazz;
             // Holds the list to prevent from garbage-collect. Do not remove!
@@ -1468,17 +1468,17 @@ public abstract class Properties {
                 if (classNames[0].equals(className)) {
                     return Boolean.valueOf(properties.getBoolean(propertyName, false));
                 } else if (classNames[1].equals(className)) {
-                    return new Byte(properties.getByte(propertyName, (byte) 0));
+                    return properties.getByte(propertyName, (byte)0);
                 } else if (classNames[2].equals(className)) {
                     return new Character(properties.getChar(propertyName, (char) 0));
                 } else if (classNames[3].equals(className)) {
-                    return new Short(properties.getShort(propertyName, (short) 0));
+                    return properties.getShort(propertyName, (short)0);
                 } else if (classNames[4].equals(className)) {
                     return Integer.valueOf(properties.getInt(propertyName, 0));
                 } else if (classNames[5].equals(className)) {
                     return new Long(properties.getLong(propertyName, 0l));
                 } else if (classNames[6].equals(className)) {
-                    return new Float(properties.getFloat(propertyName, 0f));
+                    return properties.getFloat(propertyName, 0f);
                 } else if (classNames[7].equals(className)) {
                     return new Double(properties.getDouble(propertyName, 0d));
                 }

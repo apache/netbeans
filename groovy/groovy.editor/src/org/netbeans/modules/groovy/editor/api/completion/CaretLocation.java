@@ -36,6 +36,7 @@ public enum CaretLocation {
     INSIDE_PARAMETERS("INSIDE_PARAMETERS"), // inside a parameter-list definition (signature) of a method.
     INSIDE_COMMENT("INSIDE_COMMENT"),       // inside a line or block comment
     INSIDE_STRING("INSIDE_STRING"),         // inside string literal
+    INSIDE_IMPORT("INSIDE_IMPORT"),         // inside import statement
     UNDEFINED("UNDEFINED");
     
     private String id;

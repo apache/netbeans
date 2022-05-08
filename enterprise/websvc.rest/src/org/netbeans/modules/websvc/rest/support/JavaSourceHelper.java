@@ -637,7 +637,7 @@ public class JavaSourceHelper {
         List<ExpressionTree> typeArgTrees = new ArrayList<ExpressionTree>();
 
         for (String arg : typeArgs) {
-            typeArgTrees.add((ExpressionTree) createTypeTree(copy, arg));
+            typeArgTrees.add(createTypeTree(copy, arg));
         }
 
         return maker.ParameterizedType(typeTree, typeArgTrees);

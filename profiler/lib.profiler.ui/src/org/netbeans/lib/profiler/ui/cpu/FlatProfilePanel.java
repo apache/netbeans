@@ -908,7 +908,7 @@ public abstract class FlatProfilePanel extends CPUResultsPanel {
             case 0:
                 return flatProfileContainer.getMethodNameAtRow(row);
             case 1:
-                return new Float(flatProfileContainer.getPercentAtRow(row));
+                return flatProfileContainer.getPercentAtRow(row);
             case 2:
                 return StringUtils.mcsTimeToString(flatProfileContainer.getTimeInMcs0AtRow(row)) + " ms (" // NOI18N
                         + percentFormat.format(flatProfileContainer.getPercentAtRow(row) / 100) + ")"; // NOI18N

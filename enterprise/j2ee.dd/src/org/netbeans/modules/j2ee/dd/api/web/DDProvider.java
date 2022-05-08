@@ -107,12 +107,12 @@ public final class DDProvider {
                         // preparsing
                         error = parse(fo);
                         original = DDUtils.createWebApp(fo, version);
-                        baseBeanMap.put(fo.toURL(), new WeakReference(original));
+                        baseBeanMap.put(fo.toURL(), new WeakReference<>(original));
                         errorMap.put(fo.toURL(), error);
                     }
                 } else {
                     version = original.getVersion();
-                    error = (SAXParseException) errorMap.get(fo.toURL());
+                    error = errorMap.get(fo.toURL());
                 }
             }
             if (version != null) {
@@ -155,7 +155,7 @@ public final class DDProvider {
             if (cached != null) {
                 return cached;
             }
-            ddMap.put(fo.toURL(), new WeakReference(webApp));
+            ddMap.put(fo.toURL(), new WeakReference<>(webApp));
         }
         return webApp;
     }
@@ -189,7 +189,7 @@ public final class DDProvider {
     }
     
     private WebAppProxy getFromCache(FileObject fo) throws IOException {
-        WeakReference wr = (WeakReference) ddMap.get(fo.toURL());
+        WeakReference<WebAppProxy> wr = ddMap.get(fo.toURL());
         if (wr == null) {
             return null;
         }
@@ -201,7 +201,7 @@ public final class DDProvider {
     }
     
     private WebApp getOriginalFromCache(FileObject fo) throws IOException {
-        WeakReference wr = (WeakReference) baseBeanMap.get(fo.toURL());
+        WeakReference<WebApp> wr = baseBeanMap.get(fo.toURL());
         if (wr == null) {
             return null;
         }        
@@ -290,7 +290,7 @@ public final class DDProvider {
                                     webApp.setStatus(WebApp.STATE_INVALID_OLD_VERSION);
                                     webApp.setError(null);
                                 }
-                                baseBeanMap.put(fo.toURL(), new WeakReference(original));
+                                baseBeanMap.put(fo.toURL(), new WeakReference<>(original));
                                 errorMap.put(fo.toURL(), webApp.getError());
                                 webApp.merge(original, WebApp.MERGE_UPDATE);
                             } catch (SAXException ex) {
@@ -314,7 +314,7 @@ public final class DDProvider {
                                     if (original.getClass().equals(orig.getClass())) {
                                         orig.merge(original,WebApp.MERGE_UPDATE);
                                     } else {
-                                        baseBeanMap.put(fo.toURL(), new WeakReference(original));
+                                        baseBeanMap.put(fo.toURL(), new WeakReference<>(original));
                                     }
                                 }
                             } catch (SAXException ex) {

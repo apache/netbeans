@@ -33,7 +33,7 @@ enum Progress {
     }
 
     private static List<Listener> listeners = Collections.emptyList();
-    synchronized static void register(Listener onChange) {
+    static synchronized void register(Listener onChange) {
         if (listeners.isEmpty()) {
             listeners = Collections.singletonList(onChange);
         } else {
@@ -43,7 +43,7 @@ enum Progress {
         }
     }
 
-    private synchronized static void notifyUpdates(Handle h, Type type) {
+    private static synchronized void notifyUpdates(Handle h, Type type) {
         for (Listener onChange : listeners) {
             switch (type) {
                 case STARTED: onChange.started(h); break;

@@ -7,6 +7,6 @@ METHOD     privateMethod()                 [PRIVATE]  User
 METHOD     protectedMethod()               [PROTECTE  User
 METHOD     test()                          [STATIC]   User
 VARIABLE   ? protectedField                [PROTECTE  User
-VARIABLE   Address address                 [PRIVATE]  User
+VARIABLE   ?Address address                [PRIVATE]  User
 VARIABLE   int id                          [PUBLIC]   User
 VARIABLE   string name                     [PRIVATE]  User

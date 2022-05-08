@@ -41,12 +41,12 @@ import org.openide.filesystems.FileSystem;
  */
 final class DataModel extends BasicWizardIterator.BasicDataModel {
     
-    static private String AUTOUPDATE_TYPES = "Services/AutoupdateType"; //NOI18N
+    private static String AUTOUPDATE_TYPES = "Services/AutoupdateType"; //NOI18N
     private String AUTOUPDATE_SERVICE_TYPE = "_update_center"; //NOI18N
-    static private String AUTOUPDATE_SETTINGS_TYPE_EXT = "settings"; //NOI18N
-    static private String AUTOUPDATE_INSTANCE_TYPE_EXT = "instance"; //NOI18N
-    static private String AUTOUPDATE_MODULE = "org.netbeans.modules.autoupdate"; // NOI18N
-    static private String AUTOUPDATE_MODULE_NEW = "org.netbeans.modules.autoupdate.services"; // NOI18N
+    private static String AUTOUPDATE_SETTINGS_TYPE_EXT = "settings"; //NOI18N
+    private static String AUTOUPDATE_INSTANCE_TYPE_EXT = "instance"; //NOI18N
+    private static String AUTOUPDATE_MODULE = "org.netbeans.modules.autoupdate"; // NOI18N
+    private static String AUTOUPDATE_MODULE_NEW = "org.netbeans.modules.autoupdate.services"; // NOI18N
 
     private CreatedModifiedFiles cmf;
     

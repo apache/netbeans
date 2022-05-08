@@ -163,7 +163,7 @@ public class ConnectionManagerTest extends NativeExecutionBaseTestCase {
         counters.assertEquals("Number of exceptions", "exceptions", 0);
     }
 
-    private final static class GetConnectToActionTaskFactory implements ConcurrentTasksSupport.TaskFactory {
+    private static final class GetConnectToActionTaskFactory implements ConcurrentTasksSupport.TaskFactory {
 
         private final ExecutionEnvironment env;
         private final Counters counters;

@@ -212,7 +212,7 @@ public class ReorderTest extends TestCase {
 			if(child instanceof Element)
 				System.out.print(((Element)child).getAttribute("name")+", ");
 			else if(child instanceof Text)
-				System.out.print("["+((Text)child).getTokens().get(0).getValue().replaceAll("\n", "~")+"]");
+				System.out.print("["+((Text)child).getTokens().get(0).getValue().replace("\n", "~")+"]");
 		}
 		System.out.println();
         }

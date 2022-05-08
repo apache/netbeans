@@ -173,7 +173,7 @@ public class JavaElementFoldManager implements FoldManager {
     static final class JavaElementFoldTask extends ScanningCancellableTask<CompilationInfo> {
         
         //XXX: this will hold JavaElementFoldTask as long as the FileObject exists:
-        private final static Map<DataObject, JavaElementFoldTask> file2Task = new WeakHashMap<DataObject, JavaElementFoldTask>();
+        private static final Map<DataObject, JavaElementFoldTask> file2Task = new WeakHashMap<DataObject, JavaElementFoldTask>();
         
         private AtomicLong version = new AtomicLong(0);
         

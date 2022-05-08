@@ -26,6 +26,8 @@
 package org.netbeans.modules.j2ee.dd.impl.commonws;
 
 import java.util.Iterator;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.netbeans.modules.schema2beans.Version;
 import org.netbeans.modules.j2ee.dd.api.common.*;
@@ -81,7 +83,7 @@ public abstract class DescriptionBeanMultiple extends EnclosingBean implements D
             Iterator<String> keys = descriptions.keySet().iterator();
             int i=0;
             while (keys.hasNext()) {
-                String key = (String) keys.next();
+                String key = keys.next();
                 addDescription((String)descriptions.get(key));
                 setDescriptionXmlLang(i++, key);
             }
@@ -102,8 +104,9 @@ public abstract class DescriptionBeanMultiple extends EnclosingBean implements D
             return getDescription(null);
         } catch (VersionNotSupportedException ex){return null;}
     }
-    public java.util.Map getAllDescriptions() {
-        java.util.Map map =new java.util.HashMap();
+
+    public Map getAllDescriptions() {
+        Map<String, String> map =new HashMap<>();
         for (int i=0;i<sizeDescription();i++) {
             String desc=getDescription(i);
             String loc=getDescriptionXmlLang(i);
@@ -113,7 +116,7 @@ public abstract class DescriptionBeanMultiple extends EnclosingBean implements D
     }
     
     public void removeDescriptionForLocale(String locale) throws VersionNotSupportedException {
-        java.util.Map map = new java.util.HashMap();
+        Map<String, String> map = new HashMap<>();
         for (int i=0;i<sizeDescription();i++) {
             String desc=getDescription(i);
             String loc=getDescriptionXmlLang(i);

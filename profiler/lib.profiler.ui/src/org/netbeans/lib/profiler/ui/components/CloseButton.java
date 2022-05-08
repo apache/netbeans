@@ -36,7 +36,7 @@ public class CloseButton {
     protected CloseButton() {}
     
     
-    public static abstract class Provider {
+    public abstract static class Provider {
         
         public abstract JButton create(Runnable onClose);
         

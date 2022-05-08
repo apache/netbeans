@@ -406,7 +406,7 @@ public abstract class AbstractGroovyActionProvider implements ActionProvider {
             ErrorManager.getDefault().notify(ErrorManager.INFORMATIONAL, ex);
             return targets;
         }
-        Enumeration propNames = props.propertyNames();
+        Enumeration<?> propNames = props.propertyNames();
         while (propNames.hasMoreElements()) {
             String propName = (String) propNames.nextElement();
             if (propName.startsWith("$target.")) {

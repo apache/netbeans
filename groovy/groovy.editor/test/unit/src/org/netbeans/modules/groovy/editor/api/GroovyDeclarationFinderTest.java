@@ -60,6 +60,15 @@ public class GroovyDeclarationFinderTest extends GroovyTestBase {
     public void testMethod2() throws Exception {
         checkDeclaration(TEST_BASE + "Methods2.groovy", "println get^Name()", "^def getName() {");
     }
+    
+    public void testJavaMethod1() throws Exception {
+        checkDeclaration(TEST_BASE + "a/Declaration4.groovy", "        def builder = new TestBuil^der()", "TestBuilder.java", 25);
+    }
+    
+    public void testJavaMethod2() throws Exception {
+        checkDeclaration(TEST_BASE + "a/Declaration4.groovy", "        def clon = builder.clo^ne(builder)", "TestBuilder.java", 63);
+    }
+
 
     public void testGroovyClass1() throws Exception {
         checkDeclaration(TEST_BASE + "a/Declaration2.groovy", "    private Decla^ration1 x", "Declaration1.groovy", 17);

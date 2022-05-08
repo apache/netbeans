@@ -111,7 +111,7 @@ public final class CPPLiteDebugger {
         engineProvider = (CPPLiteDebuggerEngineProvider) contextProvider.lookupFirst(null, DebuggerEngineProvider.class);
     }
 
-    void setDebuggee(Process debuggee) {
+    void setDebuggee(Process debuggee, boolean printObjects) {
         this.debuggee = debuggee;
 
         CPPLiteInjector injector = new CPPLiteInjector(debuggee.getOutputStream());
@@ -139,7 +139,9 @@ public final class CPPLiteDebugger {
         proxy.send(new Command("-gdb-set target-async"));
         //proxy.send(new Command("-gdb-set scheduler-locking on"));
         proxy.send(new Command("-gdb-set non-stop on"));
-        proxy.send(new Command("-gdb-set print object on"));
+        if (printObjects) {
+            proxy.send(new Command("-gdb-set print object on"));
+        }
     }
 
     public void execRun() {
@@ -843,7 +845,7 @@ public final class CPPLiteDebugger {
                 }
             }
         });
-        debugger.setDebuggee(debuggee);
+        debugger.setDebuggee(debuggee, configuration.isPrintObjects());
         AtomicInteger exitCode = debugger.exitCode;
 
         return new Process() {
@@ -968,7 +970,7 @@ public final class CPPLiteDebugger {
         private void addBreakpoint(CPPLiteBreakpoint breakpoint) {
             String path = breakpoint.getFilePath();
             int lineNumber = breakpoint.getLineNumber();
-            String disabled = breakpoint.isEnabled() ? "" : "-d ";
+            String disabled = breakpoint.isEnabled() ? "-f " : "-d ";
             Command command = new Command("-break-insert " + disabled + path + ":" + lineNumber) {
                 @Override
                 protected void onDone(MIRecord record) {

@@ -78,9 +78,9 @@ import org.openide.xml.XMLUtil;
  */
 public class DashboardUtils {
 
-    private final static int VISIBLE_START_CHARS = 5;
-    private final static String BOLD_START_SUBSTITUTE = "$$$BOLD_START$$$"; //NOI18
-    private final static String BOLD_END_SUBSTITUTE = "$$$BOLD_END$$$"; //NOI18
+    private static final int VISIBLE_START_CHARS = 5;
+    private static final String BOLD_START_SUBSTITUTE = "$$$BOLD_START$$$"; //NOI18
+    private static final String BOLD_END_SUBSTITUTE = "$$$BOLD_END$$$"; //NOI18
     private static final String NEW_COLOR = UIUtils.getColorString(UIUtils.getTaskNewColor());
     private static final String MODIFIED_COLOR = UIUtils.getColorString(UIUtils.getTaskModifiedColor());
     private static final String CONFLICT_COLOR = UIUtils.getColorString(UIUtils.getTaskConflictColor());

@@ -54,7 +54,7 @@ public class CoverageManagerImpl implements CoverageManager {
     public static final String COVERAGE_INSTANCE_FILE = "coverage.instance"; // NOI18N
     private static final String MIME_TYPE = "mimeType"; // NOI18N
     private static final String COVERAGE_DOC_PROPERTY = "coverage"; // NOI18N
-    private final static String PREF_EDITOR_BAR = "editorBar"; // NOI18N
+    private static final String PREF_EDITOR_BAR = "editorBar"; // NOI18N
     private final Set<String> enabledMimeTypes = new HashSet<>();
     private final Map<Project, CoverageReportTopComponent> showingReports = new HashMap<>();
     private Boolean showEditorBar;

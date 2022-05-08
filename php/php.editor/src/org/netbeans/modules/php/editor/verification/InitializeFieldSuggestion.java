@@ -161,7 +161,7 @@ public class InitializeFieldSuggestion extends SuggestionRule {
                 return;
             }
             String fieldName = CodeUtils.extractVariableName(node.getName());
-            if (fieldName != null) {
+            if (fieldName != null && declaredFields != null) {
                 declaredFields.add(fieldName);
             }
         }

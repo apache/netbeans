@@ -53,7 +53,7 @@ class SplitLayerUI extends LayerUI<JPanel> {
     private boolean isDragging = false;
     private final AWTEventListener awtListener;
 
-    private final static Color FILL_COLOR = new Color( 0, 0, 0, 128);
+    private static final Color FILL_COLOR = new Color( 0, 0, 0, 128);
 
     public SplitLayerUI( final JComponent content ) {
         this.content = content;

@@ -126,7 +126,7 @@ public final class SessionManager {
         java.beans.PropertyChangeEvent event = new java.beans.PropertyChangeEvent(this, name, null, null);
         for (int i = 0; i < list.size(); i++) {
             try {
-                ((PropertyChangeListener) list.get(i)).propertyChange(event);
+                list.get(i).propertyChange(event);
             }
             catch (RuntimeException e) {
                 Exceptions.printStackTrace(e);

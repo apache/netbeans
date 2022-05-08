@@ -537,7 +537,6 @@ public class FixDependenciesTest extends TestBase {
             "  <replace codenamebase='org.openide'>\n" +  
             "   <module codenamebase='org.openide.filesystems' spec='6.2'/>\n" +
             "   <module codenamebase='org.openide.util' spec='6.2'/>\n" +
-            "   <module codenamebase='org.openide.util.enumerations' spec='6.2'/>\n" +
             "   <module codenamebase='org.openide.modules' spec='6.2'/>\n" +
             "   <module codenamebase='org.openide.nodes' spec='6.2'/>\n" +
             "   <module codenamebase='org.openide.explorer' spec='6.2'/>\n" +

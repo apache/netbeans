@@ -25,6 +25,7 @@ import com.sun.source.util.Trees;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
@@ -46,12 +47,14 @@ import org.eclipse.lsp4j.CodeActionParams;
 import org.eclipse.lsp4j.MessageParams;
 import org.eclipse.lsp4j.MessageType;
 import org.netbeans.api.htmlui.HTMLDialog;
+import org.netbeans.api.java.lexer.JavaTokenId;
 import org.netbeans.api.java.source.ClasspathInfo;
 import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.SourceUtils;
 import org.netbeans.api.java.source.TreePathHandle;
+import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.modules.editor.java.Utilities;
 import org.netbeans.modules.java.lsp.server.Utils;
 import org.netbeans.modules.java.lsp.server.protocol.CodeActionsProvider;
@@ -94,6 +97,11 @@ public final class ChangeMethodParametersRefactoring extends CodeRefactoring {
         }
         info.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
         int offset = getOffset(info, params.getRange().getStart());
+        TokenSequence<JavaTokenId> ts = info.getTokenHierarchy().tokenSequence(JavaTokenId.language());
+        ts.move(offset);
+        if (ts.moveNext() && ts.token().id() != JavaTokenId.WHITESPACE && ts.offset() == offset) {
+            offset += 1;
+        }
         Trees trees = info.getTrees();
         TreePath path = info.getTreeUtilities().pathFor(offset);
         Tree.Kind kind = null;
@@ -107,7 +115,11 @@ public final class ChangeMethodParametersRefactoring extends CodeRefactoring {
             if (element == null || element.asType().getKind() == TypeKind.ERROR) {
                 return Collections.emptyList();
             }
-            elementSource = SourceUtils.getFile(ElementHandle.create(element), info.getClasspathInfo());
+            ElementHandle<Element> handle = ElementHandle.create(element);
+            if (JavaRefactoringUtils.isFromLibrary(handle, info.getClasspathInfo())) {
+                return Collections.emptyList();
+            }
+            elementSource = SourceUtils.getFile(handle, info.getClasspathInfo());
         }
         if (elementSource == null) {
             return Collections.emptyList();
@@ -204,6 +216,7 @@ public final class ChangeMethodParametersRefactoring extends CodeRefactoring {
         model.withName(method.getSimpleName().toString())
                 .withReturnType(Utilities.getTypeName(ci, method.getReturnType(), true).toString())
                 .withSelectedModifier(mod)
+                .withIsStatic(method.getModifiers().contains(javax.lang.model.element.Modifier.STATIC))
                 .withParameters(params)
                 .assignData(client, file, TreePathHandle.from(handle, ClasspathInfo.create(file)));
         model.applyBindings();
@@ -217,6 +230,7 @@ public final class ChangeMethodParametersRefactoring extends CodeRefactoring {
 
     @Model(className = "ChangeMethodParameterUI", targetId = "", instance = true, builder = "with", properties = {
         @Property(name = "selectedModifier", type = Modifier.class),
+        @Property(name = "isStatic", type = boolean.class),
         @Property(name = "name", type = String.class),
         @Property(name = "returnType", type = String.class),
         @Property(name = "parameters", type = ParameterUI.class, array = true)
@@ -239,8 +253,21 @@ public final class ChangeMethodParametersRefactoring extends CodeRefactoring {
         void doRefactoring(ChangeMethodParameterUI ui) {
             try {
                 ChangeParametersRefactoring refactoring = new ChangeParametersRefactoring(handle);
+                Modifier selectedModifier = ui.getSelectedModifier();
+                if (selectedModifier != null) {
+                    Set<javax.lang.model.element.Modifier> modifiers = new HashSet<>(1);
+                    switch (selectedModifier) {
+                        case PRIVATE: modifiers.add(javax.lang.model.element.Modifier.PRIVATE);break;
+                        case PACKAGE_PRIVATE: break; /* no modifier */
+                        case PROTECTED: modifiers.add(javax.lang.model.element.Modifier.PROTECTED); break;
+                        case PUBLIC: modifiers.add(javax.lang.model.element.Modifier.PUBLIC); break;
+                    }
+                    refactoring.setModifiers(modifiers);
+                }
                 String returnType = ui.getReturnType();
                 refactoring.setReturnType(returnType.length() > 0 ? returnType : null);
+                String name = ui.getName();
+                refactoring.setMethodName(name.length() > 0 ? name : null);
                 List<ParameterUI> parameters = ui.getParameters();
                 ChangeParametersRefactoring.ParameterInfo[] params = new ChangeParametersRefactoring.ParameterInfo[parameters.size()];
                 for (int i = 0; i < parameters.size(); i++) {
@@ -306,15 +333,19 @@ public final class ChangeMethodParametersRefactoring extends CodeRefactoring {
 
         @ComputedProperty
         static String preview(
-            Modifier selectedModifier, String returnType, String name, List<ParameterUI> parameters
+            Modifier selectedModifier, boolean isStatic, String returnType, String name, List<ParameterUI> parameters
         ) {
             StringBuilder sb = new StringBuilder();
-            sb.append(selectedModifier != null ? selectedModifier.javaName : "").append(" ").append(returnType);
+            sb.append(selectedModifier != null ? selectedModifier.javaName : "").append(" ");
+            if (isStatic) {
+                sb.append("static ");
+            }
+            sb.append(returnType);
             sb.append(" ").append(name).append("(");
             String sep = "";
             for (ParameterUI p : parameters) {
                 sb.append(sep);
-                sb.append(p.getType()).append(" ").append(p.getName());
+                sb.append(p.getType() != null ? p.getType() : "").append(" ").append(p.getName() != null ? p.getName() : "");
                 sep = ", ";
             }
             sb.append(")");

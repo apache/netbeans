@@ -303,7 +303,7 @@ public class ShelveChangesAction extends SingleRepositoryAction {
 
         private static UnshelveMenu instance;
         
-        synchronized static UnshelveMenu getInstance () {
+        static synchronized UnshelveMenu getInstance () {
             if (instance == null) {
                 instance = new UnshelveMenu();
             }

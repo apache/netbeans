@@ -370,7 +370,7 @@ private void fixOnNextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
     protected String preferredID() {
         return PREFERRED_ID;
     }
-    final static class ResolvableHelper implements Serializable {
+    static final class ResolvableHelper implements Serializable {
         private static final long serialVersionUID = 1L;
 
         public Object readResolve() {

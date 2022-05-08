@@ -28,7 +28,7 @@ import org.netbeans.lib.profiler.heap.JavaClass;
  *
  * @author      Bill Foote
  */
-final public class ReferenceChain {
+public final class ReferenceChain {
     private WeakReference<Object> obj;	// Object referred to
     ReferenceChain next;	// Next in chain
     private Heap heap;

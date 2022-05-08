@@ -18,7 +18,6 @@
  */
 package org.netbeans.modules.maven.indexer;
 
-import java.util.function.Predicate;
 import org.junit.Test;
 import static org.junit.Assert.*;
 

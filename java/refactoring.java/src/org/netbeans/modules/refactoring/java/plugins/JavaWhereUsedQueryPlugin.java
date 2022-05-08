@@ -370,8 +370,9 @@ public class JavaWhereUsedQueryPlugin extends JavaRefactoringPlugin implements F
                 }
                 packages.add(nonRecursiveFolder);
             }
-            for (FileObject sourceRoot1 : folders.keySet()) {
-                Set<NonRecursiveFolder> packages1 = folders.get(sourceRoot1);
+            for (Map.Entry<FileObject, Set<NonRecursiveFolder>> entry : folders.entrySet()) {
+                FileObject sourceRoot1 = entry.getKey();
+                Set<NonRecursiveFolder> packages1 = entry.getValue();
                 if (packages1 != null && !packages1.isEmpty()) {
                     ClasspathInfo cpath;
                     if (isSearchFromBaseClass() && fo != null) {

@@ -166,6 +166,7 @@ public class UnusedImports {
 	    scan(tree.getImports(), d);
 	    scan(tree.getPackageAnnotations(), d);
 	    scan(tree.getTypeDecls(), d);
+	    scan(tree.getModule(), d);
 	    return null;
         }
 

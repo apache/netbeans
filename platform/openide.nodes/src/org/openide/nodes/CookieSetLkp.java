@@ -124,7 +124,7 @@ final class CookieSetLkp extends AbstractLookup {
 
     /** Instance of one item representing an object.
      */
-    final static class SimpleItem<T> extends Pair<T> {
+    static final class SimpleItem<T> extends Pair<T> {
         private T obj;
 
         /** Create an item.
@@ -203,7 +203,7 @@ final class CookieSetLkp extends AbstractLookup {
 
     /** Instance of one item registered in the map.
      */
-    final static class ConvertingItem<T,R> extends Pair<R> {
+    static final class ConvertingItem<T,R> extends Pair<R> {
         /** registered object */
         private T obj;
 

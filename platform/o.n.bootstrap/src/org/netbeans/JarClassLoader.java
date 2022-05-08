@@ -331,7 +331,7 @@ public class JarClassLoader extends ProxyClassLoader {
         }
     }
 
-    static abstract class Source {
+    abstract static class Source {
         private URL url;
         private ProtectionDomain pd;
         protected JarClassLoader jcl;

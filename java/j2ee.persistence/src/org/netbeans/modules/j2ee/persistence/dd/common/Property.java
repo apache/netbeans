@@ -24,8 +24,8 @@ package org.netbeans.modules.j2ee.persistence.dd.common;
  * @author sp153251
  */
 public interface Property {
-    static public final String NAME = "Name";	// NOI18N
-    static public final String VALUE = "Value";	// NOI18N
+    public static final String NAME = "Name";	// NOI18N
+    public static final String VALUE = "Value";	// NOI18N
 
     public void setName(java.lang.String value);
     public java.lang.String getName();

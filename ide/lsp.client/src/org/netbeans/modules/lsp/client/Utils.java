@@ -195,7 +195,9 @@ public class Utils {
             if (cmd.isLeft()) {
                 command = cmd.getLeft();
             } else {
-                Utils.applyWorkspaceEdit(cmd.getRight().getEdit());
+                if(cmd.getRight().getEdit() != null) {
+                    Utils.applyWorkspaceEdit(cmd.getRight().getEdit());
+                }
                 command = cmd.getRight().getCommand();
             }
             if (command != null) {
@@ -300,5 +302,9 @@ public class Utils {
 
     public static boolean isTrue(Boolean b) {
         return b != null && b;
+    }
+    public static boolean isEnabled(Either<Boolean, ?> settings) {
+        return settings != null && (settings.isLeft() ? isTrue(settings.getLeft())
+                                                       : settings.getRight() != null);
     }
 }

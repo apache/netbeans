@@ -571,10 +571,10 @@ public final class AddDriverDialog extends javax.swing.JPanel {
 
                 for (int i = 0; i < dlm.size(); i++) {
                     try {
-                        String file  = (String)dlm.get(i);
+                        String file  = dlm.get(i);
                         JarFile jf = new JarFile(file);
                         try {
-                            Enumeration entries = jf.entries();
+                            Enumeration<JarEntry> entries = jf.entries();
                             while (entries.hasMoreElements()) {
                                 JarEntry entry = (JarEntry)entries.nextElement();
                                 String className = entry.getName();

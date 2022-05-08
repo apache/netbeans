@@ -44,8 +44,8 @@ import org.openide.util.Exceptions;
 public class ToggleBlockCommentAction extends BaseAction {
 
     static final long serialVersionUID = -1L;
-    static final private String FORCE_COMMENT = "force-comment"; //NOI18N
-    static final private String FORCE_UNCOMMENT = "force-uncomment"; //NOI18N
+    private static final String FORCE_COMMENT = "force-comment"; //NOI18N
+    private static final String FORCE_UNCOMMENT = "force-uncomment"; //NOI18N
 
     public ToggleBlockCommentAction() {
         super(ExtKit.toggleCommentAction);

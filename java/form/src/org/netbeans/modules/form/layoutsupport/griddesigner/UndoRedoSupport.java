@@ -111,7 +111,7 @@ public class UndoRedoSupport {
         return redoAction;
     }
     
-    static abstract class DelegateAction extends AbstractAction {
+    abstract static class DelegateAction extends AbstractAction {
         protected Action delegate;
         
         protected DelegateAction(Action delegate) {

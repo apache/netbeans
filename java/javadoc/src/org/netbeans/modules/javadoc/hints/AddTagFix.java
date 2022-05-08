@@ -146,9 +146,9 @@ abstract class AddTagFix extends JavaFix {
      */
     private static class TagComparator implements Comparator<DocTree> {
         
-        private final static int HIGHER = -1;
-        private final static int EQUAL = 0;
-        private final static int LOWER = 1;
+        private static final int HIGHER = -1;
+        private static final int EQUAL = 0;
+        private static final int LOWER = 1;
 
         @Override
         public int compare(DocTree t, DocTree t1) {

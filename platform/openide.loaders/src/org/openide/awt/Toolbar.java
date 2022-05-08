@@ -253,7 +253,7 @@ public class Toolbar extends ToolbarWithOverflow /*implemented by patchsuperclas
      * @deprecated Always returns 1
      */
     @Deprecated
-    static public int rowCount (int height) {
+    public static int rowCount (int height) {
         return 1;
     }
 

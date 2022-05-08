@@ -419,9 +419,7 @@ public class TagLibParseSupport implements org.openide.nodes.Node.Cookie, TagLib
         }
         
         private String translate (String text){
-            String value = text.replaceAll("&lt;", "<");
-            value = value.replaceAll("&gt;", ">");
-            return value;
+            return text.replace("&lt;", "<").replace("&gt;", ">");
         }
 
     }

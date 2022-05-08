@@ -130,7 +130,7 @@ public class J2SESampleProjectGenerator {
             projectFolder = projectFolder.getParentFile();            
         }
         while (!nameStack.empty()) {
-            projLoc = projLoc.createFolder ((String)nameStack.pop());
+            projLoc = projLoc.createFolder(nameStack.pop());
             assert projLoc != null;
         }
         return projLoc;

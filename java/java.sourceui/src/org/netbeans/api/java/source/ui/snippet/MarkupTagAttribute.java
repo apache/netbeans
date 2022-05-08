@@ -69,10 +69,7 @@ public class MarkupTagAttribute {
             return false;
         }
         final MarkupTagAttribute other = (MarkupTagAttribute) obj;
-        if (!Objects.equals(this.name, other.name)) {
-            return false;
-        }
-        return true;
+        return Objects.equals(this.name, other.name);
     }
     
 }

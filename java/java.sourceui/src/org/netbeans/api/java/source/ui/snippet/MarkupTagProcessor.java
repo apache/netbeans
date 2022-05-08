@@ -51,7 +51,7 @@ public class MarkupTagProcessor {
                 addMarkupTags(thisLine, transformRegionAttributeToMarkupTag(newRegionList), markUpTagOnLine);
             }
             //checkng no attribute on this line
-            if (fullLineInfo.getThisLineMarkUpTags() != null) {
+            if (!fullLineInfo.getThisLineMarkUpTags().isEmpty()) {
                 for (MarkupTag markUpTag : fullLineInfo.getThisLineMarkUpTags()) {
                     if (SUPPORTED_SNIPPET_MARKUP_TAGS.contains(markUpTag.getTagName())) {
 
@@ -152,7 +152,7 @@ public class MarkupTagProcessor {
     public class Region{
         private final String markupTagName;
         private final String value;
-        private Map<String, String> attributes;
+        private final Map<String, String> attributes;
 
         Region(String value, Map<String, String> attributes, String markupTagName){
             this.value = value == null || value.isEmpty() ? "anonymous" : value;

@@ -113,7 +113,7 @@ public final class PMFWizard implements WizardDescriptor.InstantiatingIterator, 
         return tempPanels;
     }
     
-    static private String CONST_ADD_PROPERTY = "LBL_AddProperty"; // NOI18N
+    private static String CONST_ADD_PROPERTY = "LBL_AddProperty"; // NOI18N
     
     private String[] createSteps() {
         String[] tempSteps = null;

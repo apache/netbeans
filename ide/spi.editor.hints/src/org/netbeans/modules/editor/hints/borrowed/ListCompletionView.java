@@ -70,8 +70,8 @@ public class ListCompletionView extends JList {
     private static final Logger LOG = Logger.getLogger(ListCompletionView.class.getName());
     public static final int COMPLETION_ITEM_HEIGHT = 16;
     private static final int DARKER_COLOR_COMPONENT = 5;
-    private final static Icon icon = ImageUtilities.loadImageIcon("org/netbeans/modules/editor/hints/resources/suggestion.gif", false); // NOI18N
-    private final static Icon subMenuIcon;
+    private static final Icon icon = ImageUtilities.loadImageIcon("org/netbeans/modules/editor/hints/resources/suggestion.gif", false); // NOI18N
+    private static final Icon subMenuIcon;
     private final int fixedItemHeight;
     private final HtmlRenderer.Renderer defaultRenderer = HtmlRenderer.createRenderer();
     private Font font;

@@ -127,7 +127,9 @@ public final class NIDebugRunner {
      * @return an instance of {@link NIDebugger}.
      * @throws IllegalStateException when the native debugger is not available.
      * @since 0.3
+     * @deprecated Use {@link #start(File, StartDebugParameters, Project, Consumer) and set {@link StartDebugParameters.Builder#processID(long)}.
      */
+    @Deprecated
     public static NIDebugger attach(File niFile, long processId, String debuggerCommand, Project project, Consumer<DebuggerEngine> startedEngine) throws IllegalStateException {
         JavaVariablesDisplayer variablesDisplayer = new JavaVariablesDisplayer();
         JavaFrameDisplayer frameDisplayer = new JavaFrameDisplayer(project);

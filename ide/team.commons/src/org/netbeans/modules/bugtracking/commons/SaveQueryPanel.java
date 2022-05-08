@@ -171,7 +171,7 @@ public class SaveQueryPanel extends javax.swing.JPanel implements DocumentListen
         }
     }
 
-    public static abstract class QueryNameValidator {
+    public abstract static class QueryNameValidator {
         public abstract String isValid(String name);
     }
 }

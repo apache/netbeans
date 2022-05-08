@@ -22,6 +22,7 @@ package org.netbeans.modules.form.palette;
 import java.util.*;
 import java.io.*;
 import java.beans.*;
+import java.nio.charset.StandardCharsets;
 
 import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
@@ -225,7 +226,7 @@ public class PaletteItemDataObject extends MultiDataObject implements CookieSet.
         FileLock lock = itemFile.lock();
         OutputStream os = itemFile.getOutputStream(lock);
         try {
-            os.write(buff.toString().getBytes("UTF-8")); // NOI18N
+            os.write(buff.toString().getBytes(StandardCharsets.UTF_8));
         }
         finally {
             os.close();

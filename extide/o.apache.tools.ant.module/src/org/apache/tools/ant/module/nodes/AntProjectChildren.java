@@ -40,7 +40,7 @@ import org.openide.util.RequestProcessor;
 
 final class AntProjectChildren extends Children.Keys<TargetLister.Target> implements ChangeListener, Comparator<TargetLister.Target> {
     
-    private final static RequestProcessor RP = new RequestProcessor(AntProjectChildren.class);
+    private static final RequestProcessor RP = new RequestProcessor(AntProjectChildren.class);
     private static Collator SORTER = Collator.getInstance();
     
     private final AntProjectCookie cookie;

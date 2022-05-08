@@ -49,7 +49,7 @@ public class DataViewTableDataExportFileChooser {
 
     private static File previouslySelectedDirectory;
 
-    public synchronized static void extractAsFile(final DataViewTableUIModel model) {
+    public static synchronized void extractAsFile(final DataViewTableUIModel model) {
         final JFileChooser fc = initializeFileChooser();
         int returnVal = fc.showDialog(null, Bundle.LBL_FILE_CHOOSER());
         switch (returnVal) {

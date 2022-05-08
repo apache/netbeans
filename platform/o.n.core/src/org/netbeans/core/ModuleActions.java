@@ -145,7 +145,7 @@ public class ModuleActions extends ActionManager
 
     /** Adds new action to the list.
     */
-    public synchronized static void add (ManifestSection.ActionSection a) {
+    public static synchronized void add (ManifestSection.ActionSection a) {
         List<ManifestSection.ActionSection> list = map.get (module);
         if (list == null) {
             list = new ArrayList<ManifestSection.ActionSection> ();
@@ -160,7 +160,7 @@ public class ModuleActions extends ActionManager
 
     /** Removes new action from the list.
     */
-    public synchronized static void remove (ManifestSection.ActionSection a) {
+    public static synchronized void remove (ManifestSection.ActionSection a) {
         List<ManifestSection.ActionSection> list = map.get (module);
         if (list == null) {
             return;
@@ -178,7 +178,7 @@ public class ModuleActions extends ActionManager
 
     /** Creates the actions.
     */
-    private synchronized static SystemAction[] createActions () {
+    private static synchronized SystemAction[] createActions () {
         Iterator<List<ManifestSection.ActionSection>> it = map.values ().iterator ();
 
         ArrayList<Object> arr = new ArrayList<Object> (map.size () * 5);

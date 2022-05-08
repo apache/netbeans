@@ -18,13 +18,17 @@
  */
 package org.netbeans.modules.java.lsp.server.db;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import java.net.URL;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
@@ -66,12 +70,72 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service = CodeActionsProvider.class)
 public class DBAddConnection extends CodeActionsProvider {
     public static final String DB_ADD_CONNECTION =  "db.add.connection"; // NOI18N
+    public static final String USER_ID =  "userId"; // NOI18N
+    public static final String PASSWORD =  "password"; // NOI18N
+    public static final String DRIVER =  "driver"; // NOI18N
+    public static final String DB_URL =  "url"; // NOI18N
+    public static final String SCHEMA =  "schema"; // NOI18N
+    public static final String DISPLAY_NAME =  "displayName"; // NOI18N
+
+    private static final Map<String, String> urlTemplates = new HashMap<> ();
+    static {
+        urlTemplates.put("org.postgresql.Driver", "jdbc:postgresql://<HOST>:5432/<DB>");
+        urlTemplates.put("org.gjt.mm.mysql.Driver", "jdbc:mysql://<HOST>:3306/<DB>");
+        urlTemplates.put("com.mysql.cj.jdbc.Driver", "jdbc:mysql://<HOST>:3306/<DB>");
+        urlTemplates.put("org.mariadb.jdbc.Driver", "jdbc:mariadb://<HOST>:3306/<DB>");
+        urlTemplates.put("oracle.jdbc.OracleDriver", "jdbc:oracle:thin:@//<HOST>[:<PORT>][/<SERVICE>]");
+        urlTemplates.put("com.microsoft.sqlserver.jdbc.SQLServerDriver", "jdbc:sqlserver://<HOST>\\<DB>[:<PORT>]");
+    }
+    private final Gson gson = new Gson();
 
     @Override
     public CompletableFuture<Object> processCommand(NbCodeLanguageClient client, String command, List<Object> arguments) {
         if (!DB_ADD_CONNECTION.equals(command)) {
             return null;
         }
+        
+        String userId = null;
+        String dbUrl = null;
+        String driverClass = null;
+        if (arguments != null && arguments.size() > 0) {
+            final Map m = gson.fromJson((JsonObject) arguments.get(0), Map.class);
+            if (m != null) {
+                userId = (String) m.get(USER_ID);
+                dbUrl = (String) m.get(DB_URL);
+                driverClass = (String) m.get(DRIVER);
+            }
+            if (dbUrl != null && driverClass != null) {
+
+                JDBCDriver[] driver = JDBCDriverManager.getDefault().getDrivers(driverClass); //NOI18N
+                if (driver != null && driver.length > 0) {
+                    CompletableFuture<String> usernameFuture = userId != null ? CompletableFuture.completedFuture(userId) : client.showInputBox(new ShowInputBoxParams(
+                            Bundle.MSG_EnterUsername(), userId));
+
+                    usernameFuture.thenAccept((username) -> { //NOI18N
+                        if (username == null) {
+                            return;
+                        }
+                        String password = (String) m.get(PASSWORD);
+                        CompletableFuture<String> passwordFuture = password != null ? CompletableFuture.completedFuture(password) : client.showInputBox(new ShowInputBoxParams(
+                                Bundle.MSG_EnterPassword(), "", true));
+                        passwordFuture.thenAccept((p) -> { //NOI18N
+                            if (p == null) {
+                                return;
+                            }
+                            DatabaseConnection dbconn = DatabaseConnection.create(driver[0], (String) m.get(DB_URL), username, (String) m.get(SCHEMA), p, true, (String) m.get(DISPLAY_NAME));
+                            try {
+                                ConnectionManager.getDefault().addConnection(dbconn);
+                            } catch (DatabaseException ex) {
+                                client.showMessage(new MessageParams(MessageType.Error, ex.getMessage()));
+                            }
+                        });
+                    });
+                    client.showMessage(new MessageParams(MessageType.Info, Bundle.MSG_ConnectionAdded()));
+                }
+                return CompletableFuture.completedFuture(null);
+            }
+        }
+        
         JDBCDriver[] drivers = JDBCDriverManager.getDefault().getDrivers();
         List<QuickPickItem> items = new ArrayList<>();
         for (int i = 0; i < drivers.length; i++) {
@@ -94,8 +158,12 @@ public class DBAddConnection extends CodeActionsProvider {
                     if (!selectedItems.isEmpty()) {
                         int i = ((Double) selectedItems.get(0).getUserData()).intValue();
                         JDBCDriver driver = drivers[i];
+                        String urlTemplate = driver.getClassName() != null ? urlTemplates.get(driver.getClassName()) : "";
+                        if (urlTemplate == null) {
+                            urlTemplate = "";
+                        }
                         client.showInputBox(new ShowInputBoxParams(
-                                Bundle.MSG_EnterDbUrl(), "")).thenAccept((u) -> {
+                                Bundle.MSG_EnterDbUrl(), urlTemplate)).thenAccept((u) -> {
                             if (u == null) {
                                 return;
                             }

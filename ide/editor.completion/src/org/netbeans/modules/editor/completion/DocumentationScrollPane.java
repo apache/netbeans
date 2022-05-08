@@ -460,24 +460,24 @@ public class DocumentationScrollPane extends JScrollPane {
         
         @Override
         public void hyperlinkUpdate(HyperlinkEvent e) {
-            if(e!=null && e.getEventType() == HyperlinkEvent.EventType.ACTIVATED && e.getDescription().startsWith("copy.snippet")){
-                    Clipboard systemClipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-                    String snippetCount = e.getDescription().replaceAll("[^0-9]", "");
-                    HTMLDocument HtmlDoc = (HTMLDocument)e.getSourceElement().getDocument();
-                    HTMLDocView source = (HTMLDocView)e.getSource();
-                    source.getText();
-                    Element snippetElement = HtmlDoc.getElement("snippet" + snippetCount);
-                    StringBuilder text = new StringBuilder();
-                    getTextToCopy(HtmlDoc, text, snippetElement);   
-                    handleTextToCopy(HtmlDoc, snippetElement, text);                        
-                    systemClipboard.setContents(new StringSelection(text.toString()), null);
-                    view.getHighlighter().removeAllHighlights(); 
-                    try {
-                        view.getHighlighter().addHighlight(e.getSourceElement().getStartOffset(), e.getSourceElement().getEndOffset(), new DefaultHighlightPainter(Color.GRAY));
-                    } catch (BadLocationException ex) {
-                        Exceptions.printStackTrace(ex);
-                    }
-                }else if (e != null && HyperlinkEvent.EventType.ACTIVATED.equals(e.getEventType())) {
+            if (e != null && e.getEventType() == HyperlinkEvent.EventType.ACTIVATED && e.getDescription().startsWith("copy.snippet")) {
+                Clipboard systemClipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+                String snippetCount = e.getDescription().replaceAll("[^0-9]", "");
+                HTMLDocument HtmlDoc = (HTMLDocument) e.getSourceElement().getDocument();
+                HTMLDocView source = (HTMLDocView) e.getSource();
+                source.getText();
+                Element snippetElement = HtmlDoc.getElement("snippet" + snippetCount);
+                StringBuilder text = new StringBuilder();
+                getTextToCopy(HtmlDoc, text, snippetElement);
+                handleTextToCopy(HtmlDoc, snippetElement, text);
+                systemClipboard.setContents(new StringSelection(text.toString()), null);
+                view.getHighlighter().removeAllHighlights();
+                try {
+                    view.getHighlighter().addHighlight(e.getSourceElement().getStartOffset(), e.getSourceElement().getEndOffset(), new DefaultHighlightPainter(Color.GRAY));
+                } catch (BadLocationException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
+            } else if (e != null && HyperlinkEvent.EventType.ACTIVATED.equals(e.getEventType())) {
                 final String desc = e.getDescription();
                 if (desc != null) {
                     RP.post(new Runnable() {
@@ -495,7 +495,7 @@ public class DocumentationScrollPane extends JScrollPane {
                             }
                         }
                     });
-                }                    
+                }
             }
         }
 
@@ -504,13 +504,13 @@ public class DocumentationScrollPane extends JScrollPane {
             int startOffset = snippetElement.getStartOffset();
             int endOffset = snippetElement.getEndOffset();
             int count = 0;
-            while(it.isValid()){
+            while (it.isValid()) {
                 int startOffset1 = it.getStartOffset();
                 int endOffset1 = it.getEndOffset();
                 try {
                     String aTagText = HtmlDoc.getText(startOffset1, endOffset1 - startOffset1);
-                    if(startOffset1 > startOffset && endOffset1 < endOffset && 
-                            aTagText.length() == 1 && Character.isWhitespace(aTagText.charAt(0))){
+                    if (startOffset1 > startOffset && endOffset1 < endOffset
+                            && aTagText.length() == 1 && Character.isWhitespace(aTagText.charAt(0))) {
                         text.deleteCharAt(startOffset1 - startOffset - count);
                         count++;
                     }
@@ -518,13 +518,13 @@ public class DocumentationScrollPane extends JScrollPane {
                     Exceptions.printStackTrace(ex);
                 }
                 it.next();
-            }           
+            }
             text.delete(0, text.indexOf("\n") + 1); //removing first line of div i.e. "Copy"  
         }
 
         private void getTextToCopy(HTMLDocument HtmlDoc, StringBuilder sb, Element snippetElement) {
             int elementCount = snippetElement.getElementCount();
-            if(elementCount == 0){
+            if (elementCount == 0) {
                 int startOffset = snippetElement.getStartOffset();
                 int endOffset = snippetElement.getEndOffset();
                 try {
@@ -534,7 +534,7 @@ public class DocumentationScrollPane extends JScrollPane {
                 }
                 return;
             }
-            for(int i=0;i<elementCount; i++){
+            for (int i = 0; i < elementCount; i++) {
                 Element element = snippetElement.getElement(i);
                 getTextToCopy(HtmlDoc, sb, element);
             }

@@ -22,8 +22,8 @@ package org.netbeans.modules.profiler.utilities;
  * A utility class for simple delegation
  * @author Jaroslav Bachorik
  */
-abstract public class Delegate<T> {
-    volatile private T delegate;
+public abstract class Delegate<T> {
+    private volatile T delegate;
 
     public void setDelegate(T delegate) {
         this.delegate = delegate;

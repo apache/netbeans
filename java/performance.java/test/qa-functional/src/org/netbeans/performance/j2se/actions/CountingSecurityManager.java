@@ -239,13 +239,13 @@ public final class CountingSecurityManager extends SecurityManager {
             }
             int absoluteStacks = 0;
             synchronized (stacks) {
-                for (String s : stacks.keySet()) {
-                    int value = stacks.get(s);
+                for (int value : stacks.values()) {
                     absoluteStacks += value;
                 }
                 int min = absoluteStacks / 50;
-                for (String s : stacks.keySet()) {
-                    int value = stacks.get(s);
+                for (Map.Entry<String, Integer> entry : stacks.entrySet()) {
+                    String s = entry.getKey();
+                    int value = entry.getValue();
                     if (value > min) {
                         out.printf("count %5d; Stack:\n", value);
                         for (String line : s.split("\n")) {

@@ -105,7 +105,7 @@ public final class LoggerGenerator extends CodeActionsProvider {
         Map<String, Object> data = new HashMap<>();
         data.put(URI, uri);
         data.put(OFFSET, offset);
-        return Collections.singletonList(createCodeAction(Bundle.DN_GenerateLogger(), CODE_GENERATOR_KIND, data, null));
+        return Collections.singletonList(createCodeAction(Bundle.DN_GenerateLogger(), CODE_GENERATOR_KIND, data, "workbench.action.focusActiveEditorGroup"));
     }
 
     @Override

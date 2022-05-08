@@ -51,56 +51,56 @@ public class SectionVisualTheme {
      public SectionVisualTheme() {
     }
     
-    static public Color getDocumentBackgroundColor(){
+    public static Color getDocumentBackgroundColor(){
         return documentBackgroundColor;
     }
-    static public Color getMarginColor(){
+    public static Color getMarginColor(){
         return documentMarginColor;
     }
-    static public Color getSectionHeaderColor(){
+    public static Color getSectionHeaderColor(){
         return sectionHeaderColor;
     }
-    static public Color getContainerHeaderColor(){
+    public static Color getContainerHeaderColor(){
         return containerHeaderColor;
     }
-    static public Color getSectionHeaderActiveColor(){
+    public static Color getSectionHeaderActiveColor(){
         return sectionHeaderActiveColor;
     }
-    static public Color getSectionActiveBackgroundColor(){
+    public static Color getSectionActiveBackgroundColor(){
         return sectionActiveBackgroundColor;
     }
-    static public Color getTableHeaderColor(){
+    public static Color getTableHeaderColor(){
         return tableHeaderColor;
     }
-    static public Color getTableGridColor(){
+    public static Color getTableGridColor(){
         return tableGridColor;
     }
     
-    static public Color getSectionHeaderLineColor(){
+    public static Color getSectionHeaderLineColor(){
         return sectionHeaderLineColor;
     }
     
-    static public Color getHyperlinkColor(){
+    public static Color getHyperlinkColor(){
         return hyperlinkColor;
     }
     
-    static public Color getHyperlinkColorFocused(){
+    public static Color getHyperlinkColorFocused(){
         return hyperlinkColorFocused;
     }
     
-    static public Color getTextColor(){
+    public static Color getTextColor(){
         return textColor;
     }
     
-    static public Color getFillerColor(){
+    public static Color getFillerColor(){
         return fillerColor;
     }
     
-    static public Color getErrorLabelColor(){
+    public static Color getErrorLabelColor(){
         return errorLabelColor;
     }
     
-    static public Color getFoldLineColor(){
+    public static Color getFoldLineColor(){
         return foldLineColor;
     }
     

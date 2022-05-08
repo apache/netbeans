@@ -211,7 +211,7 @@ public class ToggleProfilingPointAction extends AbstractAction implements AWTEve
 
     private ProfilingPointsSwitcher ppSwitcher;
     private ProfilingPointFactory[] ppFactories;
-    volatile private boolean warningDialogOpened = false;
+    private volatile boolean warningDialogOpened = false;
     private int currentFactory;
 
     private KeyStroke acceleratorKeyStroke;

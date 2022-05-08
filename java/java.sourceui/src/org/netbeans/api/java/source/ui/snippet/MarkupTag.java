@@ -19,6 +19,7 @@
 package org.netbeans.api.java.source.ui.snippet;
 
 import java.util.List;
+import java.util.Objects;
 
 public class MarkupTag {
 
@@ -42,5 +43,35 @@ public class MarkupTag {
     }
     public boolean isTagApplicableToNextLine() {
         return isTagApplicableToNextLine;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        hash = 79 * hash + Objects.hashCode(this.tagName);
+        hash = 79 * hash + Objects.hashCode(this.markUpTagAttributes);
+        hash = 79 * hash + (this.isTagApplicableToNextLine ? 1 : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final MarkupTag other = (MarkupTag) obj;
+        if (this.isTagApplicableToNextLine != other.isTagApplicableToNextLine) {
+            return false;
+        }
+        if (!Objects.equals(this.tagName, other.tagName)) {
+            return false;
+        }
+        return Objects.equals(this.markUpTagAttributes, other.markUpTagAttributes);
     }
 }

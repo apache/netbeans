@@ -28,6 +28,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -54,7 +55,7 @@ public class TestFileUtils {
     public static File writeFile(File f, String body) throws IOException {
         f.getParentFile().mkdirs();
         OutputStream os = new FileOutputStream(f);
-        PrintWriter pw = new PrintWriter(new OutputStreamWriter(os, "UTF-8"));
+        PrintWriter pw = new PrintWriter(new OutputStreamWriter(os, StandardCharsets.UTF_8));
         pw.print(body);
         pw.flush();
         os.close();
@@ -119,7 +120,7 @@ public class TestFileUtils {
         for (String entry : entries) {
             int colon = entry.indexOf(':');
             assert colon != -1 : entry;
-            binary.put(entry.substring(0, colon), entry.substring(colon + 1).getBytes("UTF-8"));
+            binary.put(entry.substring(0, colon), entry.substring(colon + 1).getBytes(StandardCharsets.UTF_8));
         }
         writeZipFile(os, binary);
     }

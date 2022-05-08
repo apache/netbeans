@@ -344,7 +344,7 @@ public final class EditorRegistry {
         fireEvents(events);
     }
 
-    private synchronized static void _focusGained(JTextComponent c, Component origFocused, List<PropertyChangeEvent> events) {
+    private static synchronized void _focusGained(JTextComponent c, Component origFocused, List<PropertyChangeEvent> events) {
         Item item = item(c);
         assert (item != null) : "Not registered!"; // NOI18N
 

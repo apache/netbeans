@@ -650,7 +650,7 @@ public class SourceUtils {
         return null;
     }
 
-    private static abstract class Match {
+    private abstract static class Match {
 
         private final String name;
 

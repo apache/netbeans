@@ -56,22 +56,22 @@ import org.netbeans.modules.web.monitor.data.*;
 public class MonitorFilter extends Logger implements Filter {
 
     // REPLAY strings - must be coordinated with client.Controller
-    public final static String REPLAY = "netbeans.replay"; //NOI18N
-    public final static String PORT = "netbeans.replay.port"; //NOI18N
-    public final static String REPLAYSTATUS = "netbeans.replay.status"; //NOI18N
-    public final static String REPLAYSESSION = "netbeans.replay.session"; //NOI18N
+    public static final String REPLAY = "netbeans.replay"; //NOI18N
+    public static final String PORT = "netbeans.replay.port"; //NOI18N
+    public static final String REPLAYSTATUS = "netbeans.replay.status"; //NOI18N
+    public static final String REPLAYSESSION = "netbeans.replay.session"; //NOI18N
 
     // The request attribute name under which we store a reference to
     // ourself. 
     private String attribute = null;
-    public final static String PREFIX = "netbeans.monitor"; //NOI18N
-    private final static String attNameRequest =
+    public static final String PREFIX = "netbeans.monitor"; //NOI18N
+    private static final String attNameRequest =
 	"netbeans.monitor.request"; //NOI18N
-    private final static String attNameResponse =
+    private static final String attNameResponse =
 	"netbeans.monitor.response"; //NOI18N
-    private final static String attNameFilter =
+    private static final String attNameFilter =
 	"netbeans.monitor.filter"; //NOI18N
-    private final static String attNameMonData =
+    private static final String attNameMonData =
 	"netbeans.monitor.monData"; //NOI18N
     //private final static String attNameExecTime =
     //"netbeans.monitor.execTime"; //NOI18N
@@ -86,7 +86,7 @@ public class MonitorFilter extends Logger implements Filter {
     // configured. 
     private FilterConfig filterConfig = null;
 
-    private final static String className = 
+    private static final String className = 
 	"org.netbeans.modules.web.monitor.server.Monitor"; //NOI18N
     
     private static ResourceBundle statusmsgs = 
@@ -113,7 +113,7 @@ public class MonitorFilter extends Logger implements Filter {
                 "/netbeans-tomcat-status-test"; //NOI18N
 
     // debugging 
-    private final static boolean debug = false;
+    private static final boolean debug = false;
 
     public MonitorFilter() { 
     } 

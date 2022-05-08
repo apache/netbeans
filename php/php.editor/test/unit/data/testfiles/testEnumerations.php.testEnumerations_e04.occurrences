@@ -1,0 +1,8 @@
+    public static function |>MARK_OCCURRENCES:publicStaticMethod<|(): void {
+        Simple::|>MARK_OCCURRENCES:publicStaticMethod<|();
+        Simple::CASE1::|>MARK_OCCURRENCES:publicStaticMethod<|();
+        self::|>MARK_OCCURRENCES:public^StaticMethod<|();
+        static::|>MARK_OCCURRENCES:publicStaticMethod<|();
+Simple::CASE2::|>MARK_OCCURRENCES:publicStaticMethod<|();
+Simple::|>MARK_OCCURRENCES:publicStaticMethod<|(); // 2
+$i::|>MARK_OCCURRENCES:publicStaticMethod<|();

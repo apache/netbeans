@@ -39,10 +39,10 @@ import org.netbeans.modules.welcome.content.Constants;
  */
 public class StartPageContent extends JPanel implements Constants {
 
-    private final static Color COLOR_TOP_START = new Color(46, 110, 172);
-    private final static Color COLOR_TOP_END = new Color(255, 255, 255);
-    private final static Color COLOR_BOTTOM_START = new Color(255, 255, 255);
-    private final static Color COLOR_BOTTOM_END = new Color(241, 246, 252);
+    private static final Color COLOR_TOP_START = new Color(46, 110, 172);
+    private static final Color COLOR_TOP_END = new Color(255, 255, 255);
+    private static final Color COLOR_BOTTOM_START = new Color(255, 255, 255);
+    private static final Color COLOR_BOTTOM_END = new Color(241, 246, 252);
 
     public StartPageContent() {
         super( new GridBagLayout() );

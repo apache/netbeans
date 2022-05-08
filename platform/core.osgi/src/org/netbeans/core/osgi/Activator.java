@@ -28,6 +28,7 @@ import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLStreamHandler;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.atomic.AtomicReference;
@@ -304,7 +305,7 @@ public class Activator implements BundleActivator, SynchronousBundleListener {
                     try {
                         InputStream is = entry.openStream();
                         try {
-                            BufferedReader r = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+                            BufferedReader r = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
                             String line;
                             while ((line = r.readLine()) != null) {
                                 if (!line.isEmpty() && !line.startsWith("#")) {

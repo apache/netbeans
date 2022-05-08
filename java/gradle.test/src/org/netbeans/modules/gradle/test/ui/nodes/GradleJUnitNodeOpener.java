@@ -45,7 +45,7 @@ public final class GradleJUnitNodeOpener extends NodeOpener {
             Node first = children.getNodeAt(0);
             if ((first != null) && (first instanceof GradleTestMethodNode)) {
                 GradleTestMethodNode node = (GradleTestMethodNode) first;
-                Location loc = new Location(node.getTestLocation().getFileName());
+                Location loc = node.getTestLocation().withNoTarget();
                 new LocationOpener(loc, node).open();
             }
         }

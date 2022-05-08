@@ -51,6 +51,7 @@ import org.netbeans.api.java.source.ClasspathInfo;
 import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.java.source.JavaSource;
+import org.netbeans.api.java.source.SourceUtilsTest;
 import org.netbeans.api.java.source.SourceUtilsTestUtil;
 import org.netbeans.api.java.source.SourceUtilsTestUtil2;
 import org.netbeans.api.java.source.Task;
@@ -282,31 +283,6 @@ public class GoToSupportTest extends NbTestCase {
                 fail("Should not be called.");
             }
         }, true);
-    }
-
-    public void testTooltipForInnerClasses() throws Exception {
-        String code = "package test; public class Test {enum EE {A} class CC {} EE a; CC c;}";
-        int[] offset = new int[] {82, 88};
-        String[] golden = new String[] {
-            "<html><body><base href=\"file:" + getWorkDirPath() + "/src/test/Test.java\"></base><font size='+0'><b><a href='*0'>test.&#x200B;Test</a></b></font><pre>static enum <b>EE</b><br>extends <a href='*1'>Enum</a>&lt;<a href='*2'>EE</a>&gt;</pre>",
-            "<html><body><base href=\"file:" + getWorkDirPath() + "/src/test/Test.java\"></base><font size='+0'><b><a href='*0'>test.&#x200B;Test</a></b></font><pre>class <b>CC</b><br>extends <a href='*1'>Object</a></pre>",
-        };
-        assertEquals(offset.length, golden.length);
-        for (int cntr = 0; cntr < offset.length; cntr++) {
-            String tooltip = performTest(code, offset[cntr] - 24, new OrigUiUtilsCaller() {
-                public void open(FileObject fo, int pos) {
-                    fail("Should not be called.");
-                }
-                public void beep() {
-                    fail("Should not be called.");
-                }
-                public void open(ClasspathInfo info, Element el) {
-                    fail("Should not be called.");
-                }
-            }, true);
-
-            assertEquals(golden[cntr], tooltip);
-        }
     }
 
     public void testGoToIntoAnnonymous() throws Exception {
@@ -1273,7 +1249,6 @@ public class GoToSupportTest extends NbTestCase {
     }
     
     protected void performTest(String source, int caretPos, String textToInsert, String goldenFileName, String sourceLevel, boolean external) throws Exception {
-        
         clearWorkDir();
         FileUtil.refreshFor(getWorkDir());
 
@@ -1316,6 +1291,7 @@ public class GoToSupportTest extends NbTestCase {
         out.write(docText);
         out.close();
 
+        
         File goldenFile = getGoldenFile(goldenFileName);
         File diffFile = new File(getWorkDir(), getName() + ".diff");
 
@@ -1995,6 +1971,7 @@ public class GoToSupportTest extends NbTestCase {
         JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
         performTest("LinkTag", 4758, null, "javadocsnippet_LinkTag_EmptyReplacementValue.pass", this.sourceLevel, false);
     }
+
     public void testError_HighlightTag() throws Exception {
         if (!TreeShims.isJDKVersionRelease18_Or_Above()) {
             return;

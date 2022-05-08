@@ -70,7 +70,7 @@ public final class
     private static final IOTable taskIOs = new IOTable(base, systemIO);
 
     /* table of window:threadgrp */
-    static private WindowTable wtable = new WindowTable();
+    private static WindowTable wtable = new WindowTable();
 
     /** list of ExecutionListeners */
     private HashSet<ExecutionListener> executionListeners = new HashSet<ExecutionListener>();

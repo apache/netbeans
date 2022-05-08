@@ -616,7 +616,7 @@ public class ChangeParametersPanel extends JPanel implements CustomRefactoringPa
     private void addButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addButtonActionPerformed
         acceptEditedValue(); 
         int rowCount = model.getRowCount();
-        model.addRow(new Object[] { "Object", paramname + rowCount, "null", new Integer(-1), Boolean.TRUE }); // NOI18N
+        model.addRow(new Object[] { "Object", paramname + rowCount, "null", -1, Boolean.TRUE }); // NOI18N
         paramTable.scrollRectToVisible(paramTable.getCellRect(rowCount, 0, false));
         paramTable.changeSelection(rowCount, 0, false, false);
         autoEdit(paramTable);
@@ -776,7 +776,7 @@ public class ChangeParametersPanel extends JPanel implements CustomRefactoringPa
             Boolean removable = !scan.hasRefernces();
             // Used to check if var was user in overridden/overriding methods
 //            if (model.getRowCount()<=originalIndex) {
-            newModel.add(new Object[]{typeRepresentation, par.toString(), "", new Integer(originalIndex), removable});
+            newModel.add(new Object[]{typeRepresentation, par.toString(), "", originalIndex, removable});
 //            } else {
 //                removable = Boolean.valueOf(model.isRemovable(originalIndex) && removable.booleanValue());
 //                ((Vector) model.getDataVector().get(originalIndex)).set(4, removable);

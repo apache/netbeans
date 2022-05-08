@@ -66,7 +66,7 @@ public final class RepositoryQueries {
      * @param <T>
      * @since 2.9
      */
-    public final static class Result<T> {
+    public static final class Result<T> {
         private final ResultImplementation<T> impl;
         
         /**
@@ -120,7 +120,7 @@ public final class RepositoryQueries {
         }
     }
         
-    private final static class CompositeResult<T> implements ResultImplementation {
+    private static final class CompositeResult<T> implements ResultImplementation<T> {
         
         private final List<ResultImplementation<T>> results;
         
@@ -179,7 +179,7 @@ public final class RepositoryQueries {
    /**
      * One usage result.
      */
-    public final static class ClassUsage {
+    public static final class ClassUsage {
         private final NBVersionInfo artifact;
         private final Set<String> classes;
         public ClassUsage(NBVersionInfo artifact, Set<String> classes) {

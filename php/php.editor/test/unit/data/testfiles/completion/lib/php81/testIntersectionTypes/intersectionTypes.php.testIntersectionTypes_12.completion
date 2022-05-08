@@ -1,0 +1,11 @@
+Code completion result for source line:
+$object::$publicFieldClass1::|publicStaticMethodClass1();
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     publicStaticMethodClass1()      [STATIC]   \IntersectionTypes1\Class1
+METHOD     publicStaticMethodClass2()      [STATIC]   \IntersectionTypes1\Class2
+VARIABLE   Class1&Class2 $publicStaticFie  [STATIC]   \IntersectionTypes1\Class1
+VARIABLE   Class1&Class2 $publicStaticFie  [STATIC]   \IntersectionTypes1\Class2
+CONSTANT   CONST_CLASS1 "constant"         [PUBLIC]   \IntersectionTypes1\Class1
+CONSTANT   CONST_CLASS2 "constant"         [PUBLIC]   \IntersectionTypes1\Class2
+CONSTANT   class \IntersectionTypes1\Clas  [PUBLIC]   Magic Constant
+CONSTANT   class \IntersectionTypes1\Clas  [PUBLIC]   Magic Constant

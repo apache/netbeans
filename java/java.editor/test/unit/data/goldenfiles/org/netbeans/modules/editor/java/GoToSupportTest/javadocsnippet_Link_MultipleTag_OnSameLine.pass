@@ -24,5 +24,4 @@
          System.out.println(ArrayList.class); 
  }
  }
- 
 </code></pre></div><p>

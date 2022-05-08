@@ -1,0 +1,8 @@
+Code completion result for source line:
+enum EnumTest:int implements | {
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+PACKAGE    EnumTestNamespace               [PUBLIC]   null
+PACKAGE    EnumTestNamespace2              [PUBLIC]   null
+------------------------------------
+CLASS      EnumInterface1                  [PUBLIC]   EnumTestNamespace
+CLASS      EnumInterface2                  [PUBLIC]   EnumTestNamespace

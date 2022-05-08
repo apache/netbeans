@@ -19,6 +19,7 @@
 package org.netbeans.api.java.source.ui.snippet;
 
 
+import java.util.Collections;
 import java.util.List;
 
 public class SourceLineMeta {
@@ -36,14 +37,14 @@ public class SourceLineMeta {
     }
 
     public List<MarkupTag> getThisLineMarkUpTags() {
-        return thisLineMarkUpTags;
+        return thisLineMarkUpTags == null ? Collections.emptyList() : thisLineMarkUpTags;
     }
 
     public void setThisLineMarkUpTags(List<MarkupTag> thisLineMarkUpTags) {
         this.thisLineMarkUpTags = thisLineMarkUpTags;
     }
 
-    public String getUncommentSourceLine() {
+    public String getSourceLineWithoutComment() {
         return sourceLineWithoutComment;
     }
 

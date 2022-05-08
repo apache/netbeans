@@ -69,7 +69,7 @@ public final class ReplaceTask implements Runnable {
         this.matchingObjects = matchingObjects;
         this.panel = panel;
         
-        problems = new ArrayList<String>(4);
+        problems = new ArrayList<>(4);
         progressHandle = ProgressHandle.createHandle(
                 NbBundle.getMessage(getClass(), "LBL_Replacing"), //NOI18N
                 null, null);
@@ -77,6 +77,7 @@ public final class ReplaceTask implements Runnable {
     
     /**
      */
+    @Override
     public void run() {
         assert !EventQueue.isDispatchThread();
         
@@ -96,11 +97,7 @@ public final class ReplaceTask implements Runnable {
         
         checkForErrors();
         if (resultStatus == null) {       //the check passed
-            FileUtil.runAtomicAction(new Runnable() {
-                public void run() {
-                    doReplace();
-                }
-            });
+            FileUtil.runAtomicAction((Runnable) this::doReplace);
         }
     }
     
@@ -158,9 +155,8 @@ public final class ReplaceTask implements Runnable {
                 } else {
                     errMessage = status.getDescription(obj.getFileObject().getPath());
                 }
-            } catch (FileAlreadyLockedException ex) {
-                errMessage = createMsgFileLocked(obj);
-            } catch (UserQuestionException ex) {
+            } catch (FileAlreadyLockedException |
+                    UserQuestionException ex) {
                 errMessage = createMsgFileLocked(obj);
             } catch (IOException ex) {
                 ex.printStackTrace();      //PENDING - ex.printStackTrace()?

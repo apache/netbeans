@@ -539,7 +539,7 @@ public class RADVisualFormContainer extends RADVisualContainer implements FormCo
     // ------------------------------------------------------------------------------------------
     // Innerclasses
 
-    final public static class SizePolicyEditor extends java.beans.PropertyEditorSupport {
+    public static final class SizePolicyEditor extends java.beans.PropertyEditorSupport {
         /** Display Names for alignment. */
         private static final String[] names = {
             FormUtils.getBundleString("VALUE_sizepolicy_full"), // NOI18N

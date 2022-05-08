@@ -1083,7 +1083,7 @@ outer:  do {
         }
     }
 
-    private static abstract class TaskFutureWrapper implements ScheduledFuture<Void>, Runnable, RunnableWrapper {
+    private abstract static class TaskFutureWrapper implements ScheduledFuture<Void>, Runnable, RunnableWrapper {
         volatile Task t;
         protected final Runnable toRun;
         protected final long initialDelay;
@@ -2124,7 +2124,7 @@ outer:  do {
             if (SLOW) {
                 Item item = todo.item;
                 if (item != null && item.message == null) {
-                    item.message = "task failed due to: " + ex;
+                    item.message = ex.toString();
                     item.initCause(ex);
                     ex = item;
                 }
@@ -2196,7 +2196,7 @@ outer:  do {
             return 0;
         }
 
-        synchronized static final void schedule(Item localItem, long delay) {
+        static final synchronized void schedule(Item localItem, long delay) {
             if (TICK == null) {
                 TICK = new TickTac();
                 TICK.scheduleImpl(localItem, delay);
@@ -2214,7 +2214,7 @@ outer:  do {
             queue.add(localItem);
         }
         
-        synchronized static final void cancel(Item localItem) {
+        static final synchronized void cancel(Item localItem) {
             if (TICK != null) {
                 TICK.cancelImpl(localItem);
                 TickTac.class.notifyAll();

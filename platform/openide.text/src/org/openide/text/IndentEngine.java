@@ -100,7 +100,7 @@ public abstract class IndentEngine extends org.openide.ServiceType {
      * @deprecated IndentEngine now is a ServiceType
      */
     @Deprecated
-    public synchronized static void register(String mime, IndentEngine eng) {
+    public static synchronized void register(String mime, IndentEngine eng) {
         map.put(mime, eng);
     }
 
@@ -114,7 +114,7 @@ public abstract class IndentEngine extends org.openide.ServiceType {
     /** Finds engine associated with given mime type.
     * If no engine is associated returns default one.
     */
-    public synchronized static IndentEngine find(String mime) {
+    public static synchronized IndentEngine find(String mime) {
         Enumeration<? extends IndentEngine> en = indentEngines();
 
         while (en.hasMoreElements()) {

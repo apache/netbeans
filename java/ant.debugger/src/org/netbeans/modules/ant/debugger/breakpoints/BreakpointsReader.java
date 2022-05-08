@@ -77,7 +77,7 @@ public class BreakpointsReader implements Properties.Reader {
     @Override
     public void write (Object object, Properties properties) {
         AntBreakpoint b = (AntBreakpoint) object;
-        FileObject fo = (FileObject) b.getLine ().getLookup ().
+        FileObject fo = b.getLine().getLookup().
             lookup (FileObject.class);
             properties.setString("url", fo.toURL().toString());
             properties.setInt (

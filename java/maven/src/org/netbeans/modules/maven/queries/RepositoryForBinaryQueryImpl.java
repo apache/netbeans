@@ -296,7 +296,7 @@ public class RepositoryForBinaryQueryImpl extends AbstractMavenForBinaryQueryImp
         private final PropertyChangeListener projectListener;
         private final FileChangeListener sourceJarChangeListener;
         private final RequestProcessor.Task checkChangesTask;
-        private final static int CHECK_CHANGES_DELAY = 50;
+        private static final int CHECK_CHANGES_DELAY = 50;
         private final String groupId;
         private final String artifactId;
         private final String version;

@@ -38,7 +38,7 @@ public final class QueryRequest extends Observable {
     private String className;
     private List<RepositoryInfo> repositories;
     private boolean queryFinished;
-    private final List<NBVersionInfo> results = new ArrayList<NBVersionInfo>();
+    private final List<NBVersionInfo> results = new ArrayList<>();
 
     /**
      * Constructor of a new query request. The request is created by a requester

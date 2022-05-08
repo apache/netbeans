@@ -344,7 +344,7 @@ public class PluginPropertyUtils {
             @Override
             public String[] build(Xpp3Dom conf, ExpressionEvaluator eval) {
                 if (conf != null) {
-                    Xpp3Dom dom = (Xpp3Dom) conf; // MNG-4862
+                    Xpp3Dom dom = conf; // MNG-4862
                     Xpp3Dom source = dom.getChild(multiProperty);
                     if (source != null) {
                         List<String> toRet = new ArrayList<String>();

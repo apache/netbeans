@@ -43,18 +43,19 @@
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" attributes="0">
-              <EmptySpace max="-2" attributes="0"/>
+              <EmptySpace min="-2" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" attributes="0">
+                  <Component id="remoteLink" max="32767" attributes="0"/>
+                  <Group type="102" alignment="0" attributes="0">
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="domainLocalLabel" linkSize="3" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="domainRemoteLabel" linkSize="3" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="hostLocalLabel" linkSize="3" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="hostRemoteLabel" linkSize="3" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="dasPortFieldLabel" linkSize="3" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="targetValueLabel" linkSize="3" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="userNameLabel" linkSize="3" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="passwordLabel" linkSize="3" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="domainLocalLabel" linkSize="3" alignment="0" max="32767" attributes="0"/>
+                          <Component id="domainRemoteLabel" linkSize="3" alignment="0" max="32767" attributes="0"/>
+                          <Component id="hostLocalLabel" linkSize="3" alignment="0" max="32767" attributes="0"/>
+                          <Component id="hostRemoteLabel" linkSize="3" alignment="0" max="32767" attributes="0"/>
+                          <Component id="dasPortFieldLabel" linkSize="3" alignment="0" max="32767" attributes="0"/>
+                          <Component id="targetValueLabel" linkSize="3" alignment="0" max="32767" attributes="0"/>
+                          <Component id="userNameLabel" linkSize="3" alignment="0" max="32767" attributes="0"/>
+                          <Component id="passwordLabel" linkSize="3" alignment="0" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
@@ -72,7 +73,7 @@
                                   <Component id="userNameField" alignment="0" max="32767" attributes="0"/>
                                   <Component id="targetValueField" alignment="0" max="32767" attributes="1"/>
                                   <Group type="102" attributes="0">
-                                      <Component id="dasPortField" pref="73" max="32767" attributes="1"/>
+                                      <Component id="dasPortField" pref="7" max="32767" attributes="1"/>
                                       <EmptySpace min="-2" max="-2" attributes="0"/>
                                       <Component id="httpPortFieldLabel" linkSize="3" min="-2" max="-2" attributes="0"/>
                                   </Group>
@@ -80,7 +81,7 @@
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Group type="102" attributes="0">
                                       <EmptySpace min="-2" max="-2" attributes="0"/>
-                                      <Component id="httpPortField" pref="74" max="32767" attributes="0"/>
+                                      <Component id="httpPortField" pref="7" max="32767" attributes="0"/>
                                       <EmptySpace min="-2" max="-2" attributes="0"/>
                                       <Component id="useDefaultPortsCB" min="-2" max="-2" attributes="0"/>
                                   </Group>
@@ -92,7 +93,16 @@
                           </Group>
                       </Group>
                   </Group>
-                  <Component id="remoteLink" max="32767" attributes="0"/>
+                  <Component id="dockerVolumeCheckBox" min="-2" max="-2" attributes="0"/>
+                  <Group type="102" attributes="0">
+                      <Component id="hostPathLabel" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="hostPathField" max="32767" attributes="1"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="containerPathLabel" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="containerPathField" max="32767" attributes="1"/>
+                  </Group>
               </Group>
           </Group>
       </Group>
@@ -144,9 +154,18 @@
                   <Component id="passwordLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="passwordField" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="dockerVolumeCheckBox" min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="hostPathLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="containerPathLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="hostPathField" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="containerPathField" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace max="-2" attributes="0"/>
               <Component id="remoteLink" max="-2" attributes="0"/>
-              <EmptySpace pref="73" max="32767" attributes="0"/>
+              <EmptySpace max="32767" attributes="0"/>
               <Component id="remotePanel" min="-2" max="-2" attributes="0"/>
           </Group>
       </Group>
@@ -279,7 +298,7 @@
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
-              <EmptySpace min="0" pref="37" max="32767" attributes="0"/>
+              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
       </Layout>
@@ -411,6 +430,52 @@
       <Events>
         <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="remoteLinkMouseClicked"/>
       </Events>
+    </Component>
+    <Component class="javax.swing.JLabel" name="hostPathLabel">
+      <Properties>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="org/netbeans/modules/payara/common/wizards/Bundle.properties" key="AddDomainLocationVisualPanel.hostPathLabel.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+        <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+          <Dimension value="[75, 14]"/>
+        </Property>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="containerPathLabel">
+      <Properties>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="org/netbeans/modules/payara/common/wizards/Bundle.properties" key="AddDomainLocationVisualPanel.containerPathLabel.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+        <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+          <Dimension value="[100, 14]"/>
+        </Property>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JCheckBox" name="dockerVolumeCheckBox">
+      <Properties>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="org/netbeans/modules/payara/common/wizards/Bundle.properties" key="AddDomainLocationVisualPanel.dockerVolumeCheckBox.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="dockerVolumeCheckBoxActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JTextField" name="hostPathField">
+      <Properties>
+        <Property name="columns" type="int" value="5"/>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="org/netbeans/modules/payara/common/wizards/Bundle.properties" key="AddDomainLocationVisualPanel.hostPathField.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="containerPathField">
+      <Properties>
+        <Property name="columns" type="int" value="5"/>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="org/netbeans/modules/payara/common/wizards/Bundle.properties" key="AddDomainLocationVisualPanel.containerPathField.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+      </Properties>
     </Component>
   </SubComponents>
 </Form>

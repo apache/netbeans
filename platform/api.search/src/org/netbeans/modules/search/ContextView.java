@@ -120,7 +120,7 @@ public final class ContextView extends JPanel {
 
     /** Map of approved/rejected files. */
     private final Map<FileObject, Boolean> APPROVED_FILES =
-            new WeakHashMap<FileObject, Boolean>();
+            new WeakHashMap<>();
 
     /**
      * 
@@ -164,12 +164,9 @@ public final class ContextView extends JPanel {
         setResultModel(resultModel);
 
         this.explorerManager = explorerManager;
-        explorerManager.addPropertyChangeListener(new PropertyChangeListener() {
-            @Override
-            public void propertyChange(PropertyChangeEvent evt) {
-                if (evt.getPropertyName().equals("selectedNodes")) {
-                    updateForSelection();
-                }
+        explorerManager.addPropertyChangeListener((PropertyChangeEvent evt) -> {
+            if (evt.getPropertyName().equals("selectedNodes")) {
+                updateForSelection();
             }
         });
     }
@@ -479,6 +476,7 @@ public final class ContextView extends JPanel {
          * @author  Tim Boudreau
          * @author  Marian Petras
          */
+        @Override
         public void run() {
             assert EventQueue.isDispatchThread();
             

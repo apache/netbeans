@@ -78,7 +78,7 @@ public class ExplorerPanel extends TopComponent implements ExplorerManager.Provi
     private ExplorerManager manager;
 
     /** listens on the selected nodes in the ExporerManager */
-    transient private final PropertyChangeListener managerListener = new PropL();
+    private final transient PropertyChangeListener managerListener = new PropL();
 
     /** action handler for cut/copy/paste/delete for this panel */
     private ExplorerActions actions;

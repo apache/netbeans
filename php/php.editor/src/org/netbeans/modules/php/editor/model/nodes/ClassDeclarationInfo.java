@@ -16,12 +16,10 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.netbeans.modules.php.editor.model.nodes;
 
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import org.netbeans.modules.csl.api.OffsetRange;
@@ -32,13 +30,12 @@ import org.netbeans.modules.php.editor.parser.astnodes.ClassDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.ClassDeclaration.Modifier;
 import org.netbeans.modules.php.editor.parser.astnodes.Expression;
 import org.netbeans.modules.php.editor.parser.astnodes.Identifier;
-import org.netbeans.modules.php.editor.parser.astnodes.UseTraitStatementPart;
-import org.netbeans.modules.php.editor.parser.astnodes.visitors.DefaultVisitor;
 
 /**
  * @author Radek Matous
  */
 public class ClassDeclarationInfo extends ASTNodeInfo<ClassDeclaration> {
+
     ClassDeclarationInfo(ClassDeclaration node) {
         super(node);
     }
@@ -62,7 +59,6 @@ public class ClassDeclarationInfo extends ASTNodeInfo<ClassDeclaration> {
     public QualifiedName getQualifiedName() {
         return QualifiedName.create(getOriginalNode().getName());
     }
-
 
     @Override
     public OffsetRange getRange() {
@@ -111,24 +107,6 @@ public class ClassDeclarationInfo extends ASTNodeInfo<ClassDeclaration> {
         final UsedTraitsVisitor visitor = new UsedTraitsVisitor();
         getOriginalNode().getBody().accept(visitor);
         return visitor.getUsedTraits();
-    }
-
-    private static class UsedTraitsVisitor extends DefaultVisitor {
-        private final List<UseTraitStatementPart> useParts = new LinkedList<>();
-
-        @Override
-        public void visit(UseTraitStatementPart node) {
-            useParts.add(node);
-        }
-
-        public Collection<QualifiedName> getUsedTraits() {
-            Collection<QualifiedName> retval = new HashSet<>();
-            for (UseTraitStatementPart useTraitStatementPart : useParts) {
-                retval.add(QualifiedName.create(useTraitStatementPart.getName()));
-            }
-            return retval;
-        }
-
     }
 
 }

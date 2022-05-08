@@ -123,13 +123,13 @@ public class CookieOut extends BaseBean
     }
 
     //
-    static public void addComparator(BeanComparator c)
+    public static void addComparator(BeanComparator c)
     {
 	CookieOut.comparators.add(c);
     }
 
     //
-    static public void removeComparator(BeanComparator c)
+    public static void removeComparator(BeanComparator c)
     {
 	CookieOut.comparators.remove(c);
     }

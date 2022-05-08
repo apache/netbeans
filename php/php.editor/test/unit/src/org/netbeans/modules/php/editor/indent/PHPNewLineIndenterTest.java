@@ -1210,6 +1210,30 @@ public class PHPNewLineIndenterTest extends PHPTestBase {
         testIndentInFile("testfiles/indent/php80/constructorPropertyPromotion_08.php");
     }
 
+    public void testEnumerations_01() throws Exception {
+        testIndentInFile("testfiles/indent/php81/enumerations_01.php");
+    }
+
+    public void testEnumerations_02() throws Exception {
+        testIndentInFile("testfiles/indent/php81/enumerations_02.php");
+    }
+
+    public void testEnumerations_03() throws Exception {
+        testIndentInFile("testfiles/indent/php81/enumerations_03.php");
+    }
+
+    public void testEnumerationsWithBackingType_01() throws Exception {
+        testIndentInFile("testfiles/indent/php81/enumerationsWithBackingType_01.php");
+    }
+
+    public void testEnumerationsWithBackingType_02() throws Exception {
+        testIndentInFile("testfiles/indent/php81/enumerationsWithBackingType_02.php");
+    }
+
+    public void testEnumerationsWithBackingType_03() throws Exception {
+        testIndentInFile("testfiles/indent/php81/enumerationsWithBackingType_03.php");
+    }
+
     @Override
     protected boolean runInEQ() {
         return true;
@@ -1246,8 +1270,9 @@ public class PHPNewLineIndenterTest extends PHPTestBase {
             options.put(FmtOptions.INDENT_SIZE, indentPrefs.getIndentation());
         }
         Preferences prefs = CodeStylePreferences.get(doc).getPreferences();
-        for (String option : options.keySet()) {
-            Object value = options.get(option);
+        for (Map.Entry<String, Object> entry : options.entrySet()) {
+            String option = entry.getKey();
+            Object value = entry.getValue();
             if (value instanceof Integer) {
                 prefs.putInt(option, ((Integer) value).intValue());
             } else if (value instanceof String) {

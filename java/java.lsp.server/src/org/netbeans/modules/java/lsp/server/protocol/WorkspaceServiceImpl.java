@@ -101,7 +101,6 @@ import org.netbeans.modules.gsf.testrunner.ui.api.TestMethodController;
 import org.netbeans.modules.gsf.testrunner.ui.api.TestMethodFinder;
 import org.netbeans.modules.java.lsp.server.LspServerState;
 import org.netbeans.modules.java.lsp.server.Utils;
-import org.netbeans.modules.java.lsp.server.db.DBAddConnection;
 import org.netbeans.modules.java.lsp.server.debugging.attach.AttachConfigurations;
 import org.netbeans.modules.java.lsp.server.debugging.attach.AttachNativeConfigurations;
 import org.netbeans.modules.java.source.ElementHandleAccessor;
@@ -950,7 +949,7 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
             checkStatus();
         }
 
-        synchronized final void checkStatus() {
+        final synchronized void checkStatus() {
             if (running == 0) {
                 try {
                     wait(100);

@@ -76,25 +76,25 @@ public final class ClassPathProviderImpl implements ClassPathProvider, ActiveJ2S
     
     private final @NonNull Project proj;
     
-    private final static int SOURCE_PATH = 0;                   // TEST_SOURCE_PATH = 1 
-    private final static int COMPILE_TIME_PATH = 2;             // TEST_COMPILE_TIME_PATH = 3
-    private final static int RUNTIME_PATH = 4;                  // TEST_RUNTIME_PATH = 5
-    private final static int BOOT_PATH = 6;                     // TEST_BOOT_PATH = 7
-    private final static int ENDORSED_PATH = 8;
-    private final static int MODULE_BOOT_PATH = 9;
-    private final static int MODULE_COMPILE_PATH = 10;          // TEST_MODULE_COMPILE_PATH = 11
-    private final static int MODULE_LEGACY_PATH = 12;           // TEST_MODULE_LEGACY_PATH = 13
+    private static final int SOURCE_PATH = 0;                   // TEST_SOURCE_PATH = 1 
+    private static final int COMPILE_TIME_PATH = 2;             // TEST_COMPILE_TIME_PATH = 3
+    private static final int RUNTIME_PATH = 4;                  // TEST_RUNTIME_PATH = 5
+    private static final int BOOT_PATH = 6;                     // TEST_BOOT_PATH = 7
+    private static final int ENDORSED_PATH = 8;
+    private static final int MODULE_BOOT_PATH = 9;
+    private static final int MODULE_COMPILE_PATH = 10;          // TEST_MODULE_COMPILE_PATH = 11
+    private static final int MODULE_LEGACY_PATH = 12;           // TEST_MODULE_LEGACY_PATH = 13
     
-    private final static int MODULE_EXECUTE_PATH = 14;          // TEST_MODULE_EXECUTE_PATH = 15
-    private final static int MODULE_EXECUTE_CLASS_PATH = 16;    // TEST_MODULE_EXECUTE_CLASS_PATH = 17
+    private static final int MODULE_EXECUTE_PATH = 14;          // TEST_MODULE_EXECUTE_PATH = 15
+    private static final int MODULE_EXECUTE_CLASS_PATH = 16;    // TEST_MODULE_EXECUTE_CLASS_PATH = 17
     
-    private final static int JAVA8_COMPILE_PATH = 18;
-    private final static int JAVA8_TEST_COMPILE_PATH = 19;
-    private final static int JAVA8_TEST_SCOPED_COMPILE_PATH = 20;
-    private final static int JAVA8_RUNTIME_PATH = 21;           // JAVA8_TEST_RUNTIME_PATH = 22
-    private final static int JAVA8_TEST_SCOPED_RUNTIME_PATH = 23;
+    private static final int JAVA8_COMPILE_PATH = 18;
+    private static final int JAVA8_TEST_COMPILE_PATH = 19;
+    private static final int JAVA8_TEST_SCOPED_COMPILE_PATH = 20;
+    private static final int JAVA8_RUNTIME_PATH = 21;           // JAVA8_TEST_RUNTIME_PATH = 22
+    private static final int JAVA8_TEST_SCOPED_RUNTIME_PATH = 23;
     
-    private final static int ANNOTATION_PROC_PATH = 24;         // TEST_ANNOTATION_PROC_PATH = 25
+    private static final int ANNOTATION_PROC_PATH = 24;         // TEST_ANNOTATION_PROC_PATH = 25
     
     private final ClassPath[] cache = new ClassPath[26];
     
@@ -754,7 +754,7 @@ public final class ClassPathProviderImpl implements ClassPathProvider, ActiveJ2S
         }
     }
     
-    private static abstract class ClassPathSelector implements org.netbeans.spi.java.classpath.support.ClassPathSupport.Selector {
+    private abstract static class ClassPathSelector implements org.netbeans.spi.java.classpath.support.ClassPathSupport.Selector {
         protected final PropertyChangeSupport support = new PropertyChangeSupport(this);
         
         protected final NbMavenProjectImpl proj;

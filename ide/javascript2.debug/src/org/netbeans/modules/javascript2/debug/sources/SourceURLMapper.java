@@ -183,7 +183,7 @@ public final class SourceURLMapper extends URLMapper {
             List<Byte> bytes = new ArrayList<>();
             while (text.length() > (i + 2) && text.charAt(i) == '%') {
                 int v = Integer.parseInt(text.substring(i+1, i+3), 16);
-                bytes.add(new Byte((byte) (v & 0xFF)));
+                bytes.add((byte)(v & 0xFF));
                 i += 3;
             }
             byte[] byteArray = new byte[bytes.size()];

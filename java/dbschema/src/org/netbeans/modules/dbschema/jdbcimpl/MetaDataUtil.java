@@ -19,18 +19,17 @@
 
 package org.netbeans.modules.dbschema.jdbcimpl;
 
-import java.sql.*;
 import java.util.LinkedList;
+import java.util.List;
 
 public class MetaDataUtil {
 
     public static boolean areViewsSupported(String productName) {
-        LinkedList list = new LinkedList();
+        List<String> list = new LinkedList<>();
 
         list.add("PointBase"); // NOI18N
         list.add("MySQL"); // NOI18N
         list.add("HypersonicSQL"); // NOI18N
-//        list.add("InstantDB"); // NOI18N - isn't necessary in the list - getTables() returns empty result set for views
 
         if (list.contains(productName.trim()))
             return false;

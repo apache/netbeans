@@ -1262,6 +1262,10 @@ public final class AnnotationHolder implements ChangeListener, DocumentListener 
 
         return false;
     }
+    
+    public Document getDocument() {
+        return doc;
+    }
 
     public synchronized List<ErrorDescription> getErrors() {
         return new ArrayList<ErrorDescription>(errors2Lines.keySet());

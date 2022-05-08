@@ -222,7 +222,7 @@ public class ErrorMessagePanel extends WizardPanel {
             return null;
         }
         
-        protected synchronized final void updateErrorMessage() {
+        protected final synchronized void updateErrorMessage() {
             String message;
             
             try {

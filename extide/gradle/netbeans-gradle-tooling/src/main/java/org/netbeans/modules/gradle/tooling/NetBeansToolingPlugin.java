@@ -92,6 +92,8 @@ public class NetBeansToolingPlugin implements Plugin<Project> {
                     }
                 }
                 return model;
+            } catch (NeedOnlineModeException ex) {
+                throw ex;
             } catch (RuntimeException ex) {
                 StringWriter sw = new StringWriter();
                 PrintWriter pw = new PrintWriter(sw);

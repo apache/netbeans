@@ -84,6 +84,32 @@ is the proper place.
     <!-- ACTUAL CHANGES BEGIN HERE: -->
 
     <changes>
+        <change id="StructureElement_convert">
+            <api name="general"/>
+            <summary>A variant conversion that works for both source and binary elements.</summary>
+            <version major="1" minor="64"/>
+            <date day="11" month="4" year="2022"/>
+            <author login="sdedic"/>
+            <compatibility addition="yes"/>
+            <description>
+                Binary-only javac Elements can be converted to StructureElement, avoids fetching the source.
+            </description>
+            <class package="org.netbeans.api.java.source.ui" name="ElementHeaders"/>
+        </change>
+        <change id="StructureElement">
+            <api name="general"/>
+            <summary>Added conversion from javac Elements to LSP structures.</summary>
+            <version major="1" minor="63"/>
+            <date day="9" month="3" year="2022"/>
+            <author login="sdedic"/>
+            <compatibility addition="yes"/>
+            <description>
+                Utility methods for conversion of javac-specific <code>Elements</code> to abstracted 
+                <a href="@org-netbeans-api-lsp@/org/netbeans/api/lsp/StructureElement.html">StructureElements</a> defined by
+                the LSP protocol.
+            </description>
+            <class package="org.netbeans.api.java.source.ui" name="ElementHeaders"/>
+        </change>
         <change id="ElementOpenGetLocation">
             <api name="general"/>
             <summary>Adding ElementOpen.getLocation(ClasspathInfo, ElementHandle, String)</summary>

@@ -122,6 +122,24 @@ public class ConvertToVarHintTest {
     }
     
     @Test
+    public void testMethodRefToVar() throws Exception {
+
+        HintTest.create()
+                .setCaretMarker('^')
+                .input("package test;\n"
+                        + "import java.util.function.Consumer;\n"
+                        + "public class Test {\n"
+                        + "    void m2() {\n"
+                        + "       final Consumer<String> println = System.out::println^;\n"
+                        + "    }\n"
+                        + "}\n")
+                .sourceLevel("1.10")
+                .run(ConvertToVarHint.class)
+                .assertNotContainsWarnings(VAR_CONV_DESC);
+
+    }
+    
+    @Test
     public void testArrayInitializerVar() throws Exception {
 
         HintTest.create()

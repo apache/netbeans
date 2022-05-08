@@ -18,38 +18,41 @@
  */
 package org.netbeans.modules.java.disco;
 
+import eu.hansolo.jdktools.Architecture;
+import eu.hansolo.jdktools.ArchiveType;
+import eu.hansolo.jdktools.Bitness;
+import eu.hansolo.jdktools.Latest;
+import eu.hansolo.jdktools.LibCType;
+import eu.hansolo.jdktools.OperatingSystem;
+import eu.hansolo.jdktools.PackageType;
+import eu.hansolo.jdktools.ReleaseStatus;
+import eu.hansolo.jdktools.TermOfSupport;
+import eu.hansolo.jdktools.versioning.Semver;
+import eu.hansolo.jdktools.versioning.VersionNumber;
 import io.foojay.api.discoclient.DiscoClient;
 import io.foojay.api.discoclient.event.Evt;
 import io.foojay.api.discoclient.event.EvtObserver;
 import io.foojay.api.discoclient.event.EvtType;
-import io.foojay.api.discoclient.pkg.Architecture;
-import io.foojay.api.discoclient.pkg.ArchiveType;
-import io.foojay.api.discoclient.pkg.Bitness;
 import io.foojay.api.discoclient.pkg.Distribution;
-import io.foojay.api.discoclient.pkg.Latest;
-import io.foojay.api.discoclient.pkg.LibCType;
 import io.foojay.api.discoclient.pkg.MajorVersion;
-import io.foojay.api.discoclient.pkg.OperatingSystem;
-import io.foojay.api.discoclient.pkg.PackageType;
 import io.foojay.api.discoclient.pkg.Pkg;
-import io.foojay.api.discoclient.pkg.ReleaseStatus;
 import io.foojay.api.discoclient.pkg.Scope;
-import io.foojay.api.discoclient.pkg.SemVer;
-import io.foojay.api.discoclient.pkg.TermOfSupport;
-import io.foojay.api.discoclient.pkg.VersionNumber;
-import io.foojay.api.discoclient.util.Constants;
 import io.foojay.api.discoclient.util.PkgInfo;
 import java.util.Collections;
 import java.util.List;
-import java.util.Queue;
+import java.util.Optional;
 import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
+import static java.util.Arrays.asList;
+
 public class Client {
 
-    private final static Client INSTANCE = new Client();
+    private static final Client INSTANCE = new Client();
 
     private DiscoClient client = null;
+    private List<MajorVersion> majorVersions;
+    private List<Distribution> distributions;
 
     public static Client getInstance() {
         return INSTANCE;
@@ -57,11 +60,7 @@ public class Client {
 
     private synchronized DiscoClient getDisco() {
         if (client == null) {
-            client = new DiscoClient();
-            // @TODO : this is just a workaround for NPE in Disco Client library
-            for (Distribution dist : Distribution.values()) {
-                Constants.SCOPE_LOOKUP.putIfAbsent(dist, Collections.EMPTY_LIST);
-            }
+            client = new DiscoClient(DiscoPlatformInstall.clientName());
         }
         return client;
     }
@@ -69,11 +68,15 @@ public class Client {
     private Client() {
     }
 
-    public synchronized final List<MajorVersion> getAllLTSVersions() {
-        Queue<MajorVersion> majorVersions = getDisco().getAllMajorVersions(false);
-        return majorVersions.stream()
-                .filter(majorVersion -> majorVersion.isMaintained())
-                .collect(Collectors.toList());
+    public synchronized final List<MajorVersion> getAllMajorVersions() {
+        if (majorVersions == null) {
+            majorVersions = Collections.unmodifiableList(
+                    getDisco().getAllMajorVersions(false).stream()
+                            .filter(majorVersion -> majorVersion.isMaintained())
+                            .filter(majorVersion -> majorVersion.isEarlyAccessOnly() != Boolean.TRUE)
+                            .collect(Collectors.toList()));
+        }
+        return majorVersions;
     }
 
     public synchronized MajorVersion getLatestLts(boolean b) {
@@ -87,20 +90,57 @@ public class Client {
     public synchronized List<Pkg> getPkgs(final Distribution distribution, final VersionNumber versionNumber, final Latest latest, final OperatingSystem operatingSystem,
             final Architecture architecture, final ArchiveType archiveType, final PackageType packageType,
             final Boolean javafxBundled) {
-        return getDisco().getPkgs(distribution, versionNumber, latest, operatingSystem, LibCType.NONE, architecture, Bitness.NONE, archiveType, packageType, javafxBundled, /*directlyDownloadable*/ true, ReleaseStatus.NONE, TermOfSupport.NONE, Scope.PUBLIC);
+        return getDisco().getPkgs(asList(distribution),
+                versionNumber,
+                latest,
+                operatingSystem,
+                LibCType.NONE,
+                architecture,
+                Bitness.NONE,
+                archiveType,
+                packageType,
+                javafxBundled,
+                /*directlyDownloadable*/ true,
+                asList(ReleaseStatus.NONE),
+                TermOfSupport.NONE,
+                asList(Scope.PUBLIC),
+                null
+        );
     }
 
-    public synchronized PkgInfo getPkgInfo(String ephemeralId, SemVer javaVersion) {
-        return getDisco().getPkgInfo(ephemeralId, javaVersion);
+    public synchronized List<Distribution> getDistributions() {
+        if (distributions == null) {
+            distributions = Collections.unmodifiableList(getDisco().getDistributions()
+                    .stream()
+                    .filter(distribution -> distribution.getScopes().contains(Scope.BUILD_OF_OPEN_JDK))
+                    .filter(distribution -> distribution.getScopes().contains(Scope.PUBLIC))
+                    .collect(Collectors.toList())
+            );
+        }
+        return distributions;
     }
 
-    public synchronized Future<?> downloadPkg(PkgInfo pkgInfo, String absolutePath) {
+    public synchronized Optional<Distribution> getDistribution(String text) {
+        return getDistributions().stream()
+                .filter(d -> d.getSynonyms().contains(text))
+                .findFirst();
+    }
+
+    public synchronized PkgInfo getPkgInfo(String ephemeralId, Semver javaVersion) {
+        return getDisco().getPkgInfoByEphemeralId(ephemeralId, javaVersion);
+    }
+
+    public synchronized Future<?> downloadPkg(PkgInfo pkgInfo, String absolutePath) throws InterruptedException {
         return getDisco().downloadPkg(pkgInfo, absolutePath);
     }
 
     public synchronized void setOnEvt(final EvtType<? extends Evt> type, final EvtObserver observer) {
         //XXX: in theory this could be delayed until disco is instantiated...
         getDisco().setOnEvt(type, observer);
+    }
+
+    public synchronized void removeAllObservers() {
+        getDisco().removeAllObservers();
     }
 
 }

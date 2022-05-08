@@ -33,6 +33,7 @@ import org.netbeans.modules.php.editor.parser.astnodes.AttributeDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.BackTickExpression;
 import org.netbeans.modules.php.editor.parser.astnodes.Block;
 import org.netbeans.modules.php.editor.parser.astnodes.BreakStatement;
+import org.netbeans.modules.php.editor.parser.astnodes.CaseDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.CastExpression;
 import org.netbeans.modules.php.editor.parser.astnodes.CatchClause;
 import org.netbeans.modules.php.editor.parser.astnodes.ClassDeclaration;
@@ -49,6 +50,7 @@ import org.netbeans.modules.php.editor.parser.astnodes.DereferencedArrayAccess;
 import org.netbeans.modules.php.editor.parser.astnodes.DoStatement;
 import org.netbeans.modules.php.editor.parser.astnodes.EchoStatement;
 import org.netbeans.modules.php.editor.parser.astnodes.EmptyStatement;
+import org.netbeans.modules.php.editor.parser.astnodes.EnumDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.ExpressionArrayAccess;
 import org.netbeans.modules.php.editor.parser.astnodes.ExpressionStatement;
 import org.netbeans.modules.php.editor.parser.astnodes.FieldAccess;
@@ -73,6 +75,7 @@ import org.netbeans.modules.php.editor.parser.astnodes.Include;
 import org.netbeans.modules.php.editor.parser.astnodes.InfixExpression;
 import org.netbeans.modules.php.editor.parser.astnodes.InstanceOfExpression;
 import org.netbeans.modules.php.editor.parser.astnodes.InterfaceDeclaration;
+import org.netbeans.modules.php.editor.parser.astnodes.IntersectionType;
 import org.netbeans.modules.php.editor.parser.astnodes.LambdaFunctionDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.ListVariable;
 import org.netbeans.modules.php.editor.parser.astnodes.MatchArm;
@@ -213,6 +216,13 @@ public class DefaultVisitor implements Visitor {
     }
 
     @Override
+    public void visit(CaseDeclaration node) {
+        scan(node.getAttributes());
+        scan(node.getName());
+        scan(node.getInitializer());
+    }
+
+    @Override
     public void visit(CastExpression node) {
         scan(node.getExpression());
     }
@@ -301,6 +311,15 @@ public class DefaultVisitor implements Visitor {
 
     @Override
     public void visit(EmptyStatement emptyStatement) {
+    }
+
+    @Override
+    public void visit(EnumDeclaration node) {
+        scan(node.getAttributes());
+        scan(node.getName());
+        scan(node.getBackingType());
+        scan(node.getInterfaes());
+        scan(node.getBody());
     }
 
     @Override
@@ -424,6 +443,11 @@ public class DefaultVisitor implements Visitor {
         scan(node.getName());
         scan(node.getInterfaes());
         scan(node.getBody());
+    }
+
+    @Override
+    public void visit(IntersectionType node) {
+        scan(node.getTypes());
     }
 
     @Override

@@ -26,6 +26,7 @@ import java.lang.ref.Reference;
 import java.lang.ref.SoftReference;
 import java.lang.ref.WeakReference;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -64,6 +65,8 @@ import org.apache.maven.project.ProjectBuildingException;
 import org.apache.maven.project.ProjectBuildingRequest;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
+import org.netbeans.api.annotations.common.NullAllowed;
+import org.netbeans.api.annotations.common.NullUnknown;
 import org.netbeans.api.java.project.classpath.ProjectClassPathModifier;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.queries.VisibilityQuery;
@@ -96,6 +99,7 @@ import org.openide.filesystems.FileEvent;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileRenameEvent;
 import org.openide.filesystems.FileUtil;
+import org.openide.filesystems.MIMEResolver;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.NbCollections;
@@ -108,6 +112,11 @@ import org.openide.util.lookup.ProxyLookup;
 /**
  * A Maven-based project.
  */
+@MIMEResolver.Registration(
+    displayName="#POMResolver",
+    position=309,
+    resource="POMResolver.xml"
+)
 public final class NbMavenProjectImpl implements Project {
 
 
@@ -201,7 +210,7 @@ public final class NbMavenProjectImpl implements Project {
     }
 
 
-    public static abstract class WatcherAccessor {
+    public abstract static class WatcherAccessor {
 
         public abstract NbMavenProject createWatcher(NbMavenProjectImpl proj);
 
@@ -550,10 +559,39 @@ public final class NbMavenProjectImpl implements Project {
         return auxprops;
     }
 
+    /**
+     * The method will migrate to regular FileUtilities after NB13 release. The issue is that the result of 
+     * {@link FileUtilities#convertStringToUri(java.lang.String)} result depends on whether the directory 
+     * identified by the string exists or not. If it exists, the URI ends with a "/". For non-existent directories
+     * the URI lacks the trailing "/". This can break URI keys in a Map (if the directory gets created) and prevents
+     * from creating a ClassPath from such URLs (/ is checked). But FileUtilities is API and this behaviour is there for
+     * ages, so the correction should be added with a parameter.
+     */
+    public static @NullUnknown URI convertStringToUri(@NullAllowed String str, boolean slashIfNotExist) {
+        if (str != null) {
+            File fil = new File(str);
+            fil = FileUtil.normalizeFile(fil);
+            // this conversion returns URIs that end with "/" if fil is an existing directory, but returns
+            // without the slash if the directory just does not exist yet.
+            URI uri = Utilities.toURI(fil);
+            String s = uri.toString();
+            if (slashIfNotExist && !s.endsWith("/") && (fil.isDirectory() || !fil.exists())) { // NOI18N
+                try {
+                    return new URI(s + "/"); // NOI18N
+                } catch (URISyntaxException ex) {
+                    throw new IllegalArgumentException(str);
+                }
+            } else {
+                return uri;
+            }
+        }
+        return null;
+    }
+
     public URI[] getSourceRoots(boolean test) {
         List<URI> uris = new ArrayList<URI>();
         for (String root : test ? getOriginalMavenProject().getTestCompileSourceRoots() : getOriginalMavenProject().getCompileSourceRoots()) {
-            uris.add(FileUtilities.convertStringToUri(root));
+            uris.add(convertStringToUri(root, true));
         }
         for (JavaLikeRootProvider rp : getLookup().lookupAll(JavaLikeRootProvider.class)) {
             // XXX for a few purposes (listening) it is desirable to list these even before they exist, but usually it is just noise (cf. #196414 comment #2)

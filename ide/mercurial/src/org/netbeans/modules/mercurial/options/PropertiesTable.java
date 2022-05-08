@@ -44,7 +44,7 @@ import org.openide.util.NbBundle;
  */
 public class PropertiesTable implements AncestorListener, TableModelListener {
     
-    static public final String[] PROPERTIES_COLUMNS = new String[] {PropertiesTableModel.COLUMN_NAME_NAME, PropertiesTableModel.COLUMN_NAME_VALUE};
+    public static final String[] PROPERTIES_COLUMNS = new String[] {PropertiesTableModel.COLUMN_NAME_NAME, PropertiesTableModel.COLUMN_NAME_VALUE};
             
     private PropertiesTableModel tableModel;
     private JTable table;

@@ -276,7 +276,7 @@ public final class ExplicitProcessParameters {
      * </ul>
      * and the mode can be overridden for each group.
      */
-    public final static class Builder {
+    public static final class Builder {
         private int position = 0;
         private List<String> launcherArguments = null;
         private List<String> arguments = null;

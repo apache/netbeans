@@ -49,6 +49,27 @@
 }]]>
         </code>
     </codetemplate>
+    <codetemplate uuid="org.netbeans.modules.php.editor.codetemplate.en" abbreviation="en" contexts="php-code">
+        <code>
+<![CDATA[enum ${EnumName} {
+    case ${CaseName};${cursor}
+}]]>
+        </code>
+    </codetemplate>
+    <codetemplate uuid="org.netbeans.modules.php.editor.codetemplate.eni" abbreviation="eni" contexts="php-code">
+        <code>
+<![CDATA[enum ${EnumName}: int {
+    case ${CaseName} = ${value};${cursor}
+}]]>
+        </code>
+    </codetemplate>
+    <codetemplate uuid="org.netbeans.modules.php.editor.codetemplate.ens" abbreviation="ens" contexts="php-code">
+        <code>
+<![CDATA[enum ${EnumName}: string {
+    case ${CaseName} = ${value};${cursor}
+}]]>
+        </code>
+    </codetemplate>
     <codetemplate uuid="org.netbeans.modules.php.editor.codetemplate.cln" abbreviation="cln" contexts="php-code">
         <code>
 <![CDATA[$$${NEW_VAR newVarName default="newObj"} = clone ${VARIABLE variableFromPreviousAssignment default="$variable"};

@@ -63,10 +63,10 @@ public class ModePropertyEditor extends PropertyEditorSupport {
     public void setAsText (String text) {
         for (int i = 0; i < getTags().length ; i++)
             if (getTags()[i] == text) {
-                setValue(new Integer(values[i]));
+                setValue(values[i]);
                 return;
             }
 
-        setValue( new Integer(0) );
+        setValue(0);
     }
 }

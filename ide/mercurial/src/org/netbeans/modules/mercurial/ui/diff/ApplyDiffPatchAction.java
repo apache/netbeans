@@ -36,6 +36,7 @@ import java.awt.Dialog;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
@@ -132,7 +133,7 @@ public class ApplyDiffPatchAction extends ContextAction {
     }
 
     private static boolean isNetBeansPatch (File patchFile) {
-        try (BufferedReader reader = Files.newBufferedReader(patchFile.toPath(), Charset.forName("UTF-8"))) {
+        try (BufferedReader reader = Files.newBufferedReader(patchFile.toPath(), StandardCharsets.UTF_8)) {
             boolean netbeansPatch = false;
             boolean cont = true;
             for (String line = reader.readLine(); line != null && cont; line = reader.readLine()) {

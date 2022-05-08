@@ -185,11 +185,12 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
         Map<Element, List<UnusedDescription>> element2Unused = UnusedDetector.findUnused(info) //XXX: unnecessarily ugly
                                                                              .stream()
                                                                              .collect(Collectors.groupingBy(ud -> ud.unusedElement));
-        for (Element decl : v.type2Uses.keySet()) {
+        for (Map.Entry<Element, List<Use>> entry : v.type2Uses.entrySet()) {
             if (cancel.get())
                 return true;
             
-            List<Use> uses = v.type2Uses.get(decl);
+            Element decl = entry.getKey();
+            List<Use> uses = entry.getValue();
             
             for (Use u : uses) {
                 if (u.spec == null)

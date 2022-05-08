@@ -111,11 +111,11 @@ public final class EqualsHashCodeGenerator extends CodeActionsProvider {
         String uri = Utils.toUri(info.getFileObject());
         if (equalsHashCode[0] == null) {
             if (equalsHashCode[1] == null) {
-                return Collections.singletonList(createCodeAction(Bundle.DN_GenerateEqualsHashCode(), CODE_GENERATOR_KIND, data(0, uri, offset, fields), null));
+                return Collections.singletonList(createCodeAction(Bundle.DN_GenerateEqualsHashCode(), CODE_GENERATOR_KIND, data(0, uri, offset, fields), "workbench.action.focusActiveEditorGroup"));
             }
-            return Collections.singletonList(createCodeAction(Bundle.DN_GenerateEquals(), CODE_GENERATOR_KIND, data(EQUALS_ONLY, uri, offset, fields), null));
+            return Collections.singletonList(createCodeAction(Bundle.DN_GenerateEquals(), CODE_GENERATOR_KIND, data(EQUALS_ONLY, uri, offset, fields), "workbench.action.focusActiveEditorGroup"));
         }
-        return Collections.singletonList(createCodeAction(Bundle.DN_GenerateHashCode(), CODE_GENERATOR_KIND, data(HASH_CODE_ONLY, uri, offset, fields), null));
+        return Collections.singletonList(createCodeAction(Bundle.DN_GenerateHashCode(), CODE_GENERATOR_KIND, data(HASH_CODE_ONLY, uri, offset, fields), "workbench.action.focusActiveEditorGroup"));
     }
 
     @Override

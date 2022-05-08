@@ -209,4 +209,8 @@ public class SemanticAnalyzerTest extends SemanticAnalysisTestBase {
     public void testNETBEANS5719_02() throws Exception {
         checkSemantic("testfiles/semantic/netbeans5719_02.php");
     }
+
+    public void testEnumerations() throws Exception {
+        checkSemantic("testfiles/semantic/enumerations.php");
+    }
 }

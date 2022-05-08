@@ -706,8 +706,7 @@ class SummaryCellRenderer implements ListCellRenderer {
         }
 
         private String prepareText (String text) {
-            text = text.replaceAll("\n", "<br>"); //NOI18N
-            return "<html><body>" + text + "</body></html>"; //NOI18N
+            return "<html><body>" + text.replace("\n", "<br>") + "</body></html>"; //NOI18N
         }
         
     }

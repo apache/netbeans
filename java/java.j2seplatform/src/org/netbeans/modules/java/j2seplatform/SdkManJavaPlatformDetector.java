@@ -33,7 +33,7 @@ import org.openide.util.Lookup;
  */
 public class SdkManJavaPlatformDetector implements Runnable {
 
-    final static File SDKMAN_JAVA_DIR = new File(System.getProperty("user.home"), ".sdkman/candidates/java"); //NOI18N
+    static final File SDKMAN_JAVA_DIR = new File(System.getProperty("user.home"), ".sdkman/candidates/java"); //NOI18N
 
     @Override
     public void run() {

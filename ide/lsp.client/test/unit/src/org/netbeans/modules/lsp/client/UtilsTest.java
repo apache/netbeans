@@ -19,6 +19,7 @@
 package org.netbeans.modules.lsp.client;
 
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -62,7 +63,7 @@ public class UtilsTest extends NbTestCase {
                        "0123456789\n" +
                        "0123456789\n" +
                        "0123456789\n" +
-                       "0123456789\n").getBytes("UTF-8"));
+                       "0123456789\n").getBytes(StandardCharsets.UTF_8));
         }
         FileObject sourceFile2 = wd.createData("Test2.txt");
         try (OutputStream out = sourceFile2.getOutputStream()) {
@@ -70,7 +71,7 @@ public class UtilsTest extends NbTestCase {
                        "0123456789\n" +
                        "0123456789\n" +
                        "0123456789\n" +
-                       "0123456789\n").getBytes("UTF-8"));
+                       "0123456789\n").getBytes(StandardCharsets.UTF_8));
         }
         Map<String, List<TextEdit>> changes = new HashMap<>();
         changes.put(Utils.toURI(sourceFile1), Arrays.asList(new TextEdit(new Range(new Position(2, 3), new Position(2, 6)), "a"),
@@ -103,7 +104,7 @@ public class UtilsTest extends NbTestCase {
                        "0123456789\n" +
                        "0123456789\n" +
                        "0123456789\n" +
-                       "0123456789\n").getBytes("UTF-8"));
+                       "0123456789\n").getBytes(StandardCharsets.UTF_8));
         }
         FileObject sourceFile2 = wd.createData("Test2.txt");
         try (OutputStream out = sourceFile2.getOutputStream()) {
@@ -111,7 +112,7 @@ public class UtilsTest extends NbTestCase {
                        "0123456789\n" +
                        "0123456789\n" +
                        "0123456789\n" +
-                       "0123456789\n").getBytes("UTF-8"));
+                       "0123456789\n").getBytes(StandardCharsets.UTF_8));
         }
         FileObject sourceFile3 = wd.createData("Test3.txt");
         WorkspaceEdit edit = new WorkspaceEdit(Arrays.asList(Either.forLeft(new TextDocumentEdit(new VersionedTextDocumentIdentifier(Utils.toURI(sourceFile1), -1), Arrays.asList(new TextEdit(new Range(new Position(2, 3), new Position(2, 6)), "a"),

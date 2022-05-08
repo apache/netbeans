@@ -271,7 +271,7 @@ public class MoveMembersPanel extends javax.swing.JPanel implements CustomRefact
                 SourceGroup g = (SourceGroup) rootComboBox.getSelectedItem();
                 String packageName = packageComboBox.getSelectedItem().toString();
                 if (g != null && packageName != null) {
-                    String pathname = packageName.replaceAll("\\.", "/"); // NOI18N
+                    String pathname = packageName.replace(".", "/"); // NOI18N
                     FileObject fo = g.getRootFolder().getFileObject(pathname);
                     ClassPath bootCp = ClassPath.getClassPath(fo, ClassPath.BOOT);
                     ClassPath compileCp = ClassPath.getClassPath(fo, ClassPath.COMPILE);
@@ -454,7 +454,7 @@ public class MoveMembersPanel extends javax.swing.JPanel implements CustomRefact
                     @Override
                     public void componentHidden(ComponentEvent e) {}
                 });
-                layeredPaneAbove.add(label, new Integer(JLayeredPane.POPUP_LAYER - 1));
+                layeredPaneAbove.add(label, (JLayeredPane.POPUP_LAYER - 1));
             }
         } else {
             JLayeredPane layeredPaneAbove = JLayeredPane.getLayeredPaneAbove(outlineView1);

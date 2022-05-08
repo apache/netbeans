@@ -11,6 +11,6 @@ export var y = function () {
     "test" + 45;
 }
 
-export const x = function () {
+export const z = function () {
     "test" + 45;
 }

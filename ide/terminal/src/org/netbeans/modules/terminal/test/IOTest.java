@@ -77,6 +77,6 @@ public abstract class IOTest {
         return find(io) != null;
     }
 
-    abstract protected boolean isQuiescent();
-    abstract protected void performCloseAction();
+    protected abstract boolean isQuiescent();
+    protected abstract void performCloseAction();
 }

@@ -98,7 +98,7 @@ class SlownessReporter {
                     latestActionClassName = getParam(rec, 4);
                 }
                 if (latestActionClassName != null) {
-                    latestActionClassName = latestActionClassName.replaceAll("&", ""); // NOI18N
+                    latestActionClassName = latestActionClassName.replace("&", ""); // NOI18N
                     Pattern p = Pattern.compile(DELEGATE_PATTERN);
                     Matcher m = p.matcher(latestActionClassName);
                     if (m.find()) {

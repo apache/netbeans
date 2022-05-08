@@ -87,7 +87,7 @@ public class LSPBindingsTest {
         }
     }
 
-    public final static class MockMimeResolver extends MIMEResolver {
+    public static final class MockMimeResolver extends MIMEResolver {
 
         public MockMimeResolver() {
         }

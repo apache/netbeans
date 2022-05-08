@@ -1012,7 +1012,7 @@ public class CallStackFrameImpl implements CallStackFrame {
         return Collections.unmodifiableList(frameMonitors);
     }
     
-    private final static class EqualsInfo {
+    private static final class EqualsInfo {
         
         private JPDAThread thread;
         private int depth;

@@ -150,7 +150,7 @@ public class ConnectionDialog {
      * the <code>JPanel</code>, which is displayed using <code>DialogDescriptor</code>
      * does not know when this happens.
      */
-    public static abstract class FocusablePanel extends JPanel {
+    public abstract static class FocusablePanel extends JPanel {
         
         public abstract void initializeFocus();
     }

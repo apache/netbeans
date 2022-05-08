@@ -211,7 +211,7 @@ public class XMLSettingsTest extends Benchmark {
         }
     }
     
-    public static abstract class SuperClazz implements Serializable {
+    public abstract static class SuperClazz implements Serializable {
         public abstract int x();
     }
     public static final class Clazz extends SuperClazz {

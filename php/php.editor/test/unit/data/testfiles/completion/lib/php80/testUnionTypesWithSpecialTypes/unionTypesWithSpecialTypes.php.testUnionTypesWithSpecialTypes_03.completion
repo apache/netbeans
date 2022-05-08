@@ -6,5 +6,5 @@ METHOD     childMethodParent(parent|null   [PUBLIC]   \UnionTypes1\UnionChild
 METHOD     parentMethod()                  [PUBLIC]   \UnionTypes1\UnionParent
 METHOD     testMethod()                    [PUBLIC]   \UnionTypes1\UnionChild
 METHOD     traitMethod(self|parent $param  [PUBLIC]   \UnionTypes1\UnionTrait
-VARIABLE   mixed union                     [PRIVATE]  \UnionTypes1\UnionChild
 VARIABLE   object parentField              [PROTECTE  \UnionTypes1\UnionParent
+VARIABLE   self|parent union               [PRIVATE]  \UnionTypes1\UnionChild

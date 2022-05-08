@@ -372,7 +372,7 @@ public final class SvnOptionsController extends OptionsPanelController implement
     }
     
     private void onManageLabelsClick() {     
-        String labelFormat = panel.annotationTextField.getText().replaceAll(" ", "");        
+        String labelFormat = panel.annotationTextField.getText().replace(" ", "");        
         annotationSettings.show(labelFormat != null && labelFormat.indexOf("{folder}") > -1);                
     }
     

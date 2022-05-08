@@ -108,24 +108,24 @@ public abstract class IOTab {
      * Gets current tab icon
      * @return current tab icon
      */
-    abstract protected Icon getIcon();
+    protected abstract Icon getIcon();
 
 
     /**
      * Sets icon to tab
      * @param icon tab icon
      */
-    abstract protected void setIcon(Icon icon);
+    protected abstract void setIcon(Icon icon);
 
     /**
      * Gets current tool tip text
      * @return current tool tip text
      */
-    abstract protected String getToolTipText();
+    protected abstract String getToolTipText();
 
     /**
      * Sets tool tip text to tab
      * @param text new tool tip text
      */
-    abstract protected void setToolTipText(String text);
+    protected abstract void setToolTipText(String text);
 }

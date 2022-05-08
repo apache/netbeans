@@ -315,7 +315,7 @@ public final class PHPBracesMatcher implements BracesMatcher, BracesMatcher.Cont
                     PHPTokenId.PHP_DO, PHPTokenId.PHP_WHILE,
                     PHPTokenId.PHP_TRY, PHPTokenId.PHP_CATCH, PHPTokenId.PHP_FINALLY,
                     PHPTokenId.PHP_IF, PHPTokenId.PHP_ELSE, PHPTokenId.PHP_ELSEIF,
-                    PHPTokenId.PHP_SWITCH, PHPTokenId.PHP_USE, PHPTokenId.PHP_MATCH
+                    PHPTokenId.PHP_SWITCH, PHPTokenId.PHP_USE, PHPTokenId.PHP_MATCH, PHPTokenId.PHP_ENUM
             );
             Token<? extends PHPTokenId> previousToken = LexUtilities.findPreviousToken(ts, lookfor);
             if (previousToken == null || previousToken.id() == PHPTokenId.PHP_CURLY_CLOSE) {

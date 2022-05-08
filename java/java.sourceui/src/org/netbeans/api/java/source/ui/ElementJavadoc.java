@@ -176,6 +176,7 @@ public class ElementJavadoc {
     static{
         MARKUPTAG_MANDATORY_ATTRIBUTE.put("link", "target");
         MARKUPTAG_MANDATORY_ATTRIBUTE.put("replace", "replacement");
+        MARKUPTAG_MANDATORY_ATTRIBUTE.put("start", "region");
     }
     
     /** Creates an object describing the Javadoc of given element. The object
@@ -395,7 +396,8 @@ public class ElementJavadoc {
         this.fileObject = compilationInfo.getFileObject();
         this.handle = element == null ? null : ElementHandle.create(element);
         this.cancel = cancel;
-        this.packageName = compilationInfo.getCompilationUnit().getPackageName().toString();
+        this.packageName = compilationInfo.getCompilationUnit().getPackageName() != null ? compilationInfo.getCompilationUnit().getPackageName().toString()
+                                                                                         : "";
         this.imports = compilationInfo.getCompilationUnit().getImports();
         this.className = compilationInfo.getCompilationUnit().getSourceFile().getName().replaceFirst("[.][^.]+$", "");
 
@@ -1370,12 +1372,12 @@ public class ElementJavadoc {
                     isExternalSnippet = true;
                     break;
                 case "region":
-                    if(isAttrPresent(att)) {
-                        regionName = ((AttributeTree)att).getValue().get(0).toString();
-                    } else {
-                        error = "error: snippet markup: region not specified";
-                    }
-                    break;
+		    if(isAttrPresent(att)) {
+		    	regionName = ((AttributeTree)att).getValue().get(0).toString();
+		    } else {
+		    	error = "error: snippet markup:region not specified";
+		    }
+		    break;
                 case "lang":
                     lang = ((AttributeTree)att).getValue().get(0).toString();
                     break;
@@ -1400,8 +1402,7 @@ public class ElementJavadoc {
         if(!errorList.isEmpty() && text==null) {
             reportError(new ArrayList(errorList), sb);
             return;
-        }
-        
+        } 
         String langCommentPattern;
         if(lang != null && lang.equals("properties")){
             langCommentPattern = "#";
@@ -1448,8 +1449,7 @@ public class ElementJavadoc {
     }
 
     private void applyTags(List<SourceLineMeta> parseResult, MarkupTagProcessor.ProcessedTags tags, StringBuilder sb, String regionName) {
-
-        if(tags.getErrorList().size() > 0){
+        if(!tags.getErrorList().isEmpty()){
             reportError(tags.getErrorList(), sb);
             return;
         }
@@ -1459,7 +1459,7 @@ public class ElementJavadoc {
         for (SourceLineMeta fullLineInfo : parseResult) {
             lineCounter++;
 
-            String codeLine = fullLineInfo.getUncommentSourceLine() != null ? fullLineInfo.getUncommentSourceLine() : fullLineInfo.getActualSourceLine();
+            String codeLine = fullLineInfo.getSourceLineWithoutComment() != null ? fullLineInfo.getSourceLineWithoutComment() : fullLineInfo.getActualSourceLine();
 
             List<SourceLineCharterMapperToHtmlTag> eachCharList = new LinkedList<>();
             for (int pos = 0; pos < codeLine.length(); pos++) {
@@ -1491,9 +1491,8 @@ public class ElementJavadoc {
                     for (String startTag : charMapper.getStartTag()) {
                         sb.append(startTag);
                     }
-            
-                //replace html tag to equivalent plain text
-                sb.append(charMapper.getSourceChar()=='<' ? "&lt;" : charMapper.getSourceChar());
+                    //replace html tag to equivalent plain text
+                    sb.append(charMapper.getSourceChar() == '<' ? "&lt;" : charMapper.getSourceChar());
                     for (String endTag : charMapper.getEndTag()) {
                         sb.append(endTag);
                     }
@@ -1531,7 +1530,6 @@ public class ElementJavadoc {
                 codeLine = applyReplaceTag(codeLine, tagAction, tagAttributes.get("replacement"), tagAttributes.get(tagAction), eachCharList);
                 break;
             case "link":
-                //String linkTarget = tagAttributes.get("target") != null && !tagAttributes.get("target").trim().isEmpty() ? tagAttributes.get("target") : null;
                 applyLinkTag(codeLine, tagAction, tagAttributes.get("target"), tagAttributes.get(tagAction), eachCharList);
                 break;
             default:
@@ -1553,8 +1551,8 @@ public class ElementJavadoc {
             } else {
                 return true;
             }
-	} else if (markupTagName.equals("start")) {
-		return true;
+        } else if(markupTagName.equals("start")){
+            return true;
         } else if (!tagAttributes.containsKey(MARKUPTAG_MANDATORY_ATTRIBUTE.get(markupTagName))) {
             // mandatory mark up tag not present
             String error = String.format("error: snippet markup: Missing <sub>^</sub><b><i>%s</b></i> tag attribute : <sub>^</sub><b><i>%s</b></i>", markupTagName, MARKUPTAG_MANDATORY_ATTRIBUTE.get(markupTagName));
@@ -1573,6 +1571,7 @@ public class ElementJavadoc {
         }
         return true;
     }
+
     private void reportError(List<String> errorList, StringBuilder sb){
         errorList.iterator().forEachRemaining(error -> sb.append("<span style=\"color:red;\">"+error +"</span>").append("\n"));
     }
@@ -1777,7 +1776,7 @@ public class ElementJavadoc {
         StringBuilder prjClsPath = new StringBuilder();
         String prjSrcPath = cpInfo.getClassPath(ClasspathInfo.PathKind.SOURCE).toString();
         prjClsPath.append(prjSrcPath);
-
+        
         for(ClassPath.Entry cpe : cpInfo.getClassPath(ClasspathInfo.PathKind.COMPILE).entries()){
             prjClsPath.append(";");
             prjClsPath.append(cpe.getRoot().getFileSystem().getDisplayName());

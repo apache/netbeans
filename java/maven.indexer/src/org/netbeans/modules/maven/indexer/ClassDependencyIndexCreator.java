@@ -35,11 +35,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.function.Predicate;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Stream;
 import java.util.zip.CRC32;
 import org.apache.commons.codec.binary.Base32;
 import org.apache.lucene.document.Document;
@@ -214,7 +214,7 @@ class ClassDependencyIndexCreator extends AbstractIndexCreator {
         return referrers;
     }
 
-    static final Predicate<String> JDK_CLASS_TEST = new MatchWords(new String[]{
+    private static final String[] JDK_CLASS_TEST = new String[] {
         "apple/applescript", "apple/laf", "apple/launcher", "apple/security",
         "com/apple/concurrent", "com/apple/eawt", "com/apple/eio", "com/apple/laf", "com/oracle/net",
         "com/oracle/nio", "com/oracle/util", "com/oracle/webservices", "com/oracle/xmlns",
@@ -256,34 +256,36 @@ class ClassDependencyIndexCreator extends AbstractIndexCreator {
         "org/omg/CosNaming", "org/omg/Dynamic", "org/omg/DynamicAny", "org/omg/IOP", "org/omg/Messaging",
         "org/omg/PortableInterceptor", "org/omg/PortableServer", "org/omg/SendingContext", "org/omg/stub",
         "org/w3c/dom", "org/xml/sax"
-    });
+    };
 
     /**
      * @param referrer a referring class, as {@code pkg/Outer$Inner}
-     * @param data its bytecode
+     * @param classData its bytecode
      * @param depsMap map from referring outer classes (as {@code pkg/Outer}) to referred-to classes (as {@code pkg/Outer$Inner})
      * @param siblings other referring classes in the same artifact (including this one), as {@code pkg/Outer$Inner}
      */
-    private static void addDependenciesToMap(String referrer, InputStream data, Map<String, Set<String>> depsMap, Set<String> siblings) throws IOException {
+    private static void addDependenciesToMap(String referrer, InputStream classData, Map<String, Set<String>> depsMap, Set<String> siblings) throws IOException {
+
         int shell = referrer.indexOf('$', referrer.lastIndexOf('/') + 1);
         String referrerTopLevel = shell == -1 ? referrer : referrer.substring(0, shell);
-        for (String referee : dependencies(data)) {
-            if (referrer.equals(referee)) {
-                continue;
-            }
-            if (siblings.contains(referee)) {
-                continue; // in same JAR, not interesting
-            }
-            if (JDK_CLASS_TEST.test(referee)) {
-                continue;
-            }
-            Set<String> referees = depsMap.get(referrerTopLevel);
-            if (referees == null) {
-                referees = new HashSet<>();
-                depsMap.put(referrerTopLevel, referees);
-            }
-            referees.add(referee);
+
+        Set<String> tmp = depsMap.get(referrerTopLevel);
+        if (tmp == null) {
+            tmp = new HashSet<>();
+            depsMap.put(referrerTopLevel, tmp);
         }
+        Set<String> referees = tmp;
+
+        dependenciesOf(classData)
+            .filter((referee) -> !referrer.equals(referee))
+            .filter((referee) -> !siblings.contains(referee)) // in same JAR, not interesting
+            .filter((referee) -> {
+                for (int i = 0; i < JDK_CLASS_TEST.length; i++)
+                    if (referee.startsWith(JDK_CLASS_TEST[i]))
+                        return false;
+                return true;
+            })
+            .forEach((referee) -> referees.add(referee));
     }
 
     @FunctionalInterface
@@ -312,7 +314,7 @@ class ClassDependencyIndexCreator extends AbstractIndexCreator {
     }
 
     void read(File jar, JarClassEntryConsumer consumer) throws IOException {
-        Set<String> classNames = new HashSet<>();
+        Set<String> classNames = new HashSet<>(512);
         try (JarFile jf = new JarFile(jar, false)) {
             // XXX the original code ignores siblings by first having a list
             // of the class names.  Getting this before processing JAR entries
@@ -359,14 +361,9 @@ class ClassDependencyIndexCreator extends AbstractIndexCreator {
         }
     }
 
-    // adapted from org.netbeans.nbbuild.VerifyClassLinkage
-    private static Collection<String> dependencies(InputStream data) throws IOException {
-        Set<ClassName> cl = new ClassFile(data).getAllClassNames();
-        Set<String> result = new HashSet<>(cl.size());
-        for (ClassName className : cl) {
-            result.add(className.getInternalName());
-        }
-        return result;
+    private static Stream<String> dependenciesOf(InputStream classData) throws IOException {
+        return new ClassFile(classData).getAllClassNames()
+                .stream().unordered().map(ClassName::getInternalName).distinct();
     }
 
     static final List<IndexerField> INDEXER_FIELDS = Collections.singletonList(FLD_NB_DEPENDENCY_CLASS);

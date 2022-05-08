@@ -620,9 +620,7 @@ public class NexusRepositoryIndexerImpl implements RepositoryIndexerImplementati
         } catch (ComponentLookupException x) {
             throw new IOException("could not find protocol handler for " + repo.getRepositoryUrl(), x);
         } finally {
-            if(isDiag()) {
-                LOGGER.log(Level.INFO, "Indexing of {0} took {1} millis.", new Object[]{repo.getId(), System.currentTimeMillis() - t});
-            }
+            LOGGER.log(Level.INFO, "Indexing of {0} took {1} s.", new Object[]{repo.getId(), String.format("%.2f", (System.currentTimeMillis() - t)/1000.0f)});
             synchronized (indexingMutexes) {
                 indexingMutexes.remove(mutex);
             }

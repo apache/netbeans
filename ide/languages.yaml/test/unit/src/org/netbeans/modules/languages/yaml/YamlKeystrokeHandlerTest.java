@@ -137,7 +137,72 @@ public class YamlKeystrokeHandlerTest extends YamlTestBase {
         insertChar("c^ass", 'l', "cl^ass");
     }
 
+    public void testInsertCurly() throws Exception {
+        insertChar("{^", '{', "{{^}}");
+    }
+
+    public void testDeleteCurly() throws Exception {
+        deleteChar("{{^}}", "^");
+    }
+
+    public void testInsertSpaceCurly() throws Exception {
+        insertChar("{{^}}", ' ', "{{ ^ }}");
+    }
+
+    public void testDeleteSpaceCurly() throws Exception {
+        deleteChar("{{ ^ }}", "{{^}}");
+    }
+
+    public void testInsertSingleQuote1() throws Exception {
+        insertChar("foo: ^", '\'', "foo: '^'");
+    }
+
+    public void testInsertSingleQuote2() throws Exception {
+        insertChar("foo: 'a^", '\'', "foo: 'a'^");
+    }
+
+    public void testInsertSingleQuote3() throws Exception {
+        insertChar("foo: bar^", '\'', "foo: 'bar'^", "bar");
+    }
+
+    public void testInsertSingleQuote4() throws Exception {
+        insertChar("foo: ^bar", '\'', "foo: 'bar'^", "bar");
+    }
+
+    public void testDeleteSingle1() throws Exception {
+        deleteChar("foo: '^'", "foo: ^");
+    }
+
+    public void testDeleteSingle2() throws Exception {
+        deleteChar("foo: ''^", "foo: '^");
+    }
+
+    public void testInsertDoubleQuote1() throws Exception {
+        insertChar("foo: { ^", '"', "foo: { \"^\"");
+    }
+
+    public void testInsertDoubleQuote2() throws Exception {
+        insertChar("foo: { \"bar\": \"baz^ }", '"', "foo: { \"bar\": \"baz\"^ }");
+    }
+
+    public void testInsertDoubleQuote3() throws Exception {
+        insertChar("foo: bar^", '"', "foo: \"bar\"^", "bar");
+    }
+
+    public void testInsertDoubleQuote4() throws Exception {
+        insertChar("foo: ^bar", '"', "foo: \"bar\"^", "bar");
+    }
+
+    public void testDeleteDouble1() throws Exception {
+        deleteChar("foo: \"^\"", "foo: ^");
+    }
+
+    public void testDeleteDouble2() throws Exception {
+        deleteChar("foo: \"\"^", "foo: \"^");
+    }
+
     public void testDeleteX() throws Exception {
+
         deleteChar("cl^ass", "c^ass");
     }
 

@@ -48,6 +48,7 @@ public abstract class GroovyElement implements ElementHandle {
     /** Signature of the element*/
     protected String signature;
 
+    protected OffsetRange offsetRange;
 
     public GroovyElement() {
     }
@@ -124,6 +125,11 @@ public abstract class GroovyElement implements ElementHandle {
 
     @Override
     public OffsetRange getOffsetRange(ParserResult result) {
-        return OffsetRange.NONE;
+        return this.offsetRange == null ? OffsetRange.NONE : offsetRange;
     }
+
+    public void setOffsetRange(OffsetRange offsetRange) {
+        this.offsetRange = offsetRange;
+    }
+   
 }

@@ -31,6 +31,7 @@ import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 import org.netbeans.modules.csl.api.Modifier;
+import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.groovy.editor.api.elements.common.MethodElement.MethodParameter;
 import org.netbeans.modules.groovy.editor.api.elements.index.IndexedClass;
 import org.netbeans.modules.groovy.editor.api.elements.index.IndexedElement;
@@ -252,10 +253,18 @@ public final class GroovyIndex {
                     }
                 }
                 int flags = 0;
-                if (parts.length > 2) {
+                if (parts.length > 3) {
                     flags = IndexedElement.stringToFlag(parts[2], 0);
                 }
-                result.add(new IndexedMethod(map, className, className, "void", methodParams, "", flags));
+                
+                IndexedMethod c = new IndexedMethod(map, className, className, "void", methodParams, "", flags);
+                
+                OffsetRange range = createOffsetRange(parts[parts.length - 1]);
+                if (range != null) {
+                    c.setOffsetRange(range);
+                }
+                
+                result.add(c);
             }
         }
 
@@ -310,6 +319,8 @@ public final class GroovyIndex {
                         continue;
                     } else if (kind == QuerySupport.Kind.CASE_INSENSITIVE_PREFIX && !signature.regionMatches(true, 0, name, 0, name.length())) {
                         continue;
+                    } else if (kind == QuerySupport.Kind.CASE_INSENSITIVE_CAMEL_CASE && !matchInsensitiveCamelCase(name, signature)) {    
+                        continue;
                     } else if (kind == QuerySupport.Kind.CASE_INSENSITIVE_REGEXP) {
                         int len = signature.length();
                         int end = signature.indexOf('(');
@@ -348,6 +359,25 @@ public final class GroovyIndex {
         return methods;
     }
 
+    private boolean matchInsensitiveCamelCase(String text, String where) {
+        if (text.length() > where.length()) {
+            return false;
+        }
+        String textP = text.toLowerCase();
+        String whereP = where.toLowerCase();
+        int index = -1;
+        for (int i = 0; i < textP.length(); i++) {
+            index = whereP.indexOf(textP.charAt(i), index + 1);
+            if (index == -1) {
+                return false;
+            }
+            if (whereP.length() <= (index + 1)) {
+                return false;
+            }
+        }
+        return true;
+    }
+    
     /**
      * Gets all fields for the given fully qualified name.
      *
@@ -452,7 +482,7 @@ public final class GroovyIndex {
 
         return fields;
     }
-
+    
     /**
      * Get the set of inherited (through super classes and mixins) for the given fully qualified class name.
      * @param classFqn FQN: module1.module2.moduleN.class
@@ -563,6 +593,13 @@ public final class GroovyIndex {
 
         IndexedClass c = IndexedClass.create(simpleName, fqn, map, attrs, flags);
 
+        String offset = map.getValue(GroovyIndexer.CLASS_OFFSET);
+        if (offset != null) {
+            OffsetRange range = createOffsetRange(offset);
+            if (range != null) {
+                c.setOffsetRange(range);
+            }
+        }
         return c;
     }
 
@@ -593,18 +630,28 @@ public final class GroovyIndex {
 
         // Extract attributes
         int attributeIndex = signature.indexOf(';', typeIndex + 1);
+        int offsetRangeIndex = signature.indexOf(";[", attributeIndex == -1 ? typeIndex + 1 : attributeIndex + 1);
         String attributes = null;
         int flags = 0;
 
-        if (attributeIndex != -1) {
+        if (attributeIndex != -1 && offsetRangeIndex != attributeIndex) {
             flags = IndexedElement.stringToFlag(signature, attributeIndex+1);
 
             if (signature.length() > attributeIndex+1) {
-                attributes = signature.substring(attributeIndex+1, signature.length());
+                attributes = signature.substring(attributeIndex+1, offsetRangeIndex != -1 ? offsetRangeIndex : signature.length());
             }
         }
 
-        return new IndexedMethod(map, clz, getMethodName(methodSignature), type, getMethodParameter(methodSignature), attributes, flags);
+        IndexedMethod m = new IndexedMethod(map, clz, getMethodName(methodSignature), type, getMethodParameter(methodSignature), attributes, flags);
+        
+        if (offsetRangeIndex != -1) {
+            OffsetRange range = createOffsetRange(signature.substring(offsetRangeIndex + 1));
+            if (range != null) {
+                m.setOffsetRange(range);
+            }   
+        }
+        
+        return m;
     }
 
     private String getMethodName(String methodSignature) {
@@ -635,7 +682,7 @@ public final class GroovyIndex {
         }
         return parameters;
     }
-
+    
     private IndexedField createField(String signature, IndexResult map, boolean inherited) {
         String clz = map.getValue(GroovyIndexer.CLASS_NAME);
         String module = map.getValue(GroovyIndexer.IN);
@@ -662,14 +709,15 @@ public final class GroovyIndex {
         }
 
         int attributeIndex = signature.indexOf(';', typeIndex + 1);
+        int offsetRangeIndex = signature.indexOf(";[", attributeIndex == -1 ? typeIndex + 1 : attributeIndex + 1);
         String attributes = null;
         int flags = 0;
 
-        if (attributeIndex != -1) {
+        if (attributeIndex != -1 && attributeIndex != offsetRangeIndex) {
             flags = IndexedElement.stringToFlag(signature, attributeIndex + 1);
 
             if (signature.length() > attributeIndex + 1) {
-                attributes = signature.substring(attributeIndex + 1, signature.length());
+                attributes = signature.substring(attributeIndex + 1, offsetRangeIndex != -1 ? offsetRangeIndex : signature.length());
             }
 
             //signature = signature.substring(0, attributeIndex);
@@ -678,9 +726,28 @@ public final class GroovyIndex {
         IndexedField m = IndexedField.create(type, name, clz, map, attributes, flags);
         m.setInherited(inherited);
 
+        if (offsetRangeIndex != -1) {
+            OffsetRange range = createOffsetRange(signature.substring(offsetRangeIndex + 1));
+            if (range != null) {
+                m.setOffsetRange(range);
+            }   
+        }
         return m;
     }
 
+    private static OffsetRange createOffsetRange(String text) {
+        OffsetRange result = null;
+        int offsetStartIndex = text.indexOf('[');
+        int commaIndex = text.indexOf(',', offsetStartIndex + 1);
+        int offsetLastIndex = text.indexOf(']', commaIndex != -1 ? commaIndex : offsetStartIndex);
+        if (offsetStartIndex != -1 && commaIndex != -1 && offsetLastIndex != -1) {
+            int startOffset = Integer.parseInt(text.substring(offsetStartIndex + 1, commaIndex));
+            int endOffset = Integer.parseInt(text.substring(commaIndex + 1, offsetLastIndex));
+            result = new OffsetRange(startOffset, endOffset);
+        }
+        return result;
+    }
+    
     private boolean search(String key, String name, QuerySupport.Kind kind, Set<IndexResult> result) {
         try {
             result.addAll(querySupport.query(key, name, kind));

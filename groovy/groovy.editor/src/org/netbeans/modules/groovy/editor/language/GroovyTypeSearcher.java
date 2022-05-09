@@ -36,10 +36,13 @@ import org.netbeans.modules.csl.api.ElementHandle;
 import org.netbeans.modules.csl.api.IndexSearcher;
 import org.netbeans.modules.csl.api.IndexSearcher.Descriptor;
 import org.netbeans.modules.csl.api.IndexSearcher.Helper;
+import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.csl.spi.GsfUtilities;
 import org.netbeans.modules.groovy.editor.api.GroovyIndex;
 import org.netbeans.modules.groovy.editor.api.elements.index.IndexedClass;
 import org.netbeans.modules.groovy.editor.api.elements.index.IndexedElement;
+import org.netbeans.modules.groovy.editor.api.elements.index.IndexedField;
+import org.netbeans.modules.groovy.editor.api.elements.index.IndexedMethod;
 import org.netbeans.modules.groovy.support.api.GroovySources;
 import org.netbeans.modules.parsing.spi.indexing.support.QuerySupport;
 import org.netbeans.modules.parsing.spi.indexing.support.QuerySupport.Kind;
@@ -59,10 +62,36 @@ public class GroovyTypeSearcher implements IndexSearcher {
 
     @Override
     public Set<? extends Descriptor> getSymbols(Project project, String textForQuery, Kind kind, Helper helper) {
-        // TODO - search for methods too!!
+        GroovyIndex index = GroovyIndex.get(QuerySupport.findRoots(project, Collections.singleton(ClassPath.SOURCE), Collections.<String>emptySet(), Collections.<String>emptySet()));
 
-        // For now, just at a minimum do the types
-        return getTypes(project, textForQuery, kind, helper);
+        kind = adjustKind(kind, textForQuery);
+        
+        if (kind == QuerySupport.Kind.CASE_INSENSITIVE_PREFIX /*|| kind == QuerySupport.Kind.CASE_INSENSITIVE_REGEXP*/) {
+            textForQuery = textForQuery.toLowerCase(Locale.ENGLISH);
+        }
+        
+        Set<GroovyTypeDescriptor> result = new HashSet<GroovyTypeDescriptor>();
+        
+        
+        if (textForQuery.length() > 0) {
+            Set<IndexedClass> classes = null;
+            classes = index.getClasses(textForQuery, kind);
+            for (IndexedClass cls : classes) {
+                result.add(new GroovyTypeDescriptor(cls, helper));
+            }
+            
+            Set<IndexedField> fields = index.getFields(textForQuery, null, kind);
+            for (IndexedField field : fields) {
+                result.add(new GroovyTypeDescriptor(field, helper));
+            }
+            
+            Set<IndexedMethod> methods = index.getMethods(textForQuery, null, kind);
+            for (IndexedMethod method : methods) {
+                result.add(new GroovyTypeDescriptor(method, helper));
+            }
+        }
+        
+        return result;
     }
 
     @Override
@@ -208,11 +237,8 @@ public class GroovyTypeSearcher implements IndexSearcher {
                 // out by getFileObject (to avoid checking file existence multiple times; use a boolean
                 // flag for that instead)
             } else {
-
-                // TODO: Would be good to change offset to the start of the class decalaration instead 
-                // of zero. Unfortunatelly we don't have such an information in the index so far and
                 // parsing whole AST for that is too expensive (see issue 183727 for background)
-                GsfUtilities.open(fileObject, 0, element.getName());
+                GsfUtilities.open(fileObject, getOffset(), element.getName());
             }
         }
 
@@ -251,7 +277,8 @@ public class GroovyTypeSearcher implements IndexSearcher {
 
         @Override
         public int getOffset() {
-            throw new UnsupportedOperationException("Not supported yet.");
+            OffsetRange range = element.getOffsetRange(null);
+            return range != null ? range.getStart() : -1;
         }
 
         @Override
@@ -264,6 +291,41 @@ public class GroovyTypeSearcher implements IndexSearcher {
             return null;
         }
 
+        @Override
+        public boolean equals(Object obj) {
+            if (obj == null) {
+                return false;
+            }
+            if (getClass() != obj.getClass()) {
+                return false;
+            }
+            GroovyTypeDescriptor other = (GroovyTypeDescriptor) obj;
+            if (this.element != null) {
+                if (!this.element.equals(other.element)) {
+                    return false;
+                }
+            } else if (other.element != null) {
+                return false;
+            }
+            if (this.helper != null) {
+                if (!this.helper.equals(other.helper)) {
+                    return false;
+                }
+            } else if (other.helper != null) {
+                return false;
+            }
+            return true;
+        }
+
+        @Override
+        public int hashCode() {
+            int hash = 11;
+            hash = 23 * hash + (this.element != null ? this.element.hashCode() : 0);
+            hash = 23 * hash + (this.helper != null ? this.helper.hashCode() : 0);
+            return hash;
+        }
+        
+        
     }
 
 }

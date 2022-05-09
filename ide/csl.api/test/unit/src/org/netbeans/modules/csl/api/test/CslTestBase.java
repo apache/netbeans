@@ -1249,21 +1249,21 @@ public abstract class CslTestBase extends NbTestCase {
         Formatter formatter = getFormatter(null);
 
         int sourcePos = source.indexOf('^');
-        assertNotNull(sourcePos);
+        assertTrue("Source text must have a caret ^ marker", sourcePos != -1);
         source = source.substring(0, sourcePos) + source.substring(sourcePos+1);
 
         int reformattedPos = reformatted.indexOf('^');
-        assertNotNull(reformattedPos);
+        assertTrue("Reformatted text must have a caret ^ marker", reformattedPos != -1);
         reformatted = reformatted.substring(0, reformattedPos) + reformatted.substring(reformattedPos+1);
 
         JEditorPane ta = getPane(source);
         Caret caret = ta.getCaret();
         caret.setDot(sourcePos);
         if (selection != null) {
-            int start = original.indexOf(selection);
+            int start = source.indexOf(selection);
             assertTrue(start != -1);
             assertTrue("Ambiguous selection - multiple occurrences of selection string",
-                    original.indexOf(selection, start+1) == -1);
+                    source.indexOf(selection, start+1) == -1);
             ta.setSelectionStart(start);
             ta.setSelectionEnd(start+selection.length());
             assertEquals(selection, ta.getSelectedText());
@@ -1299,11 +1299,11 @@ public abstract class CslTestBase extends NbTestCase {
         Formatter formatter = getFormatter(null);
 
         int sourcePos = source.indexOf('^');
-        assertNotNull(sourcePos);
+        assertTrue("Source text must have a caret ^ marker", sourcePos != -1);
         source = source.substring(0, sourcePos) + source.substring(sourcePos+1);
 
         int reformattedPos = reformatted.indexOf('^');
-        assertNotNull(reformattedPos);
+        assertTrue("Reformatted text must have a caret ^ marker", reformattedPos != -1);
         reformatted = reformatted.substring(0, reformattedPos) + reformatted.substring(reformattedPos+1);
 
         JEditorPane ta = getPane(source);
@@ -1332,11 +1332,12 @@ public abstract class CslTestBase extends NbTestCase {
         Formatter formatter = getFormatter(null);
 
         int sourcePos = source.indexOf('^');
-        assertNotNull(sourcePos);
+        assertTrue("Source text must have a caret ^ marker", sourcePos != -1);
+
         source = source.substring(0, sourcePos) + source.substring(sourcePos+1);
 
         int reformattedPos = reformatted.indexOf('^');
-        assertNotNull(reformattedPos);
+        assertTrue("Reformatted text must have a caret ^ marker", reformattedPos != -1);
         reformatted = reformatted.substring(0, reformattedPos) + reformatted.substring(reformattedPos+1);
 
         JEditorPane ta = getPane(source);
@@ -2529,12 +2530,12 @@ public abstract class CslTestBase extends NbTestCase {
 
     public void insertNewline(String source, String reformatted, IndentPrefs preferences) throws Exception {
         int sourcePos = source.indexOf('^');
-        assertNotNull(sourcePos);
+        assertTrue("Source text must have a caret ^ marker", sourcePos != -1);
         source = source.substring(0, sourcePos) + source.substring(sourcePos+1);
         Formatter formatter = getFormatter(null);
 
         int reformattedPos = reformatted.indexOf('^');
-        assertNotNull(reformattedPos);
+        assertTrue("Reformatted text must have a caret ^ marker", reformattedPos != -1);
         reformatted = reformatted.substring(0, reformattedPos) + reformatted.substring(reformattedPos+1);
 
         JEditorPane ta = getPane(source);

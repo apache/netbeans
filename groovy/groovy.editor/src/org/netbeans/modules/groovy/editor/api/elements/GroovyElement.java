@@ -48,6 +48,7 @@ public abstract class GroovyElement implements ElementHandle {
     /** Signature of the element*/
     protected String signature;
 
+    /** Offset range of the element */
     protected OffsetRange offsetRange;
 
     public GroovyElement() {

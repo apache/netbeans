@@ -46,8 +46,7 @@ public final class ChangeSupport {
      *
      * @param  source the instance to be given as the source for events.
      */
-    public ChangeSupport(final Object source) {
-        
+    public ChangeSupport(Object source) {
         this.source = source;
     }
 
@@ -59,14 +58,14 @@ public final class ChangeSupport {
      *
      * @param  listener the <code>ChangeListener</code> to be added.
      */
-    public void addChangeListener(final ChangeListener listener) {
+    public void addChangeListener(ChangeListener listener) {
 
         if (listener != null) {
-            if (LOG.isLoggable(FINE) && this.listeners.contains(listener)) {
+            if (LOG.isLoggable(FINE) && listeners.contains(listener)) {
                 LOG.log(FINE, "diagnostics for #167491", 
                         new IllegalStateException("Added " + listener + " multiply"));
             }
-            this.listeners.add(listener);
+            listeners.add(listener);
         }
     }
 
@@ -79,9 +78,9 @@ public final class ChangeSupport {
      *
      * @param  listener the <code>ChangeListener</code> to be removed.
      */
-    public void removeChangeListener(final ChangeListener listener) {
+    public void removeChangeListener(ChangeListener listener) {
 
-        this.listeners.remove(listener);
+        listeners.remove(listener);
     }
 
     /**
@@ -90,11 +89,11 @@ public final class ChangeSupport {
     public void fireChange() {
 
         if (!listeners.isEmpty()) {
-            final ChangeEvent event = new ChangeEvent(this.source);
-            for (final ChangeListener listener : this.listeners) {
+            ChangeEvent event = new ChangeEvent(source);
+            for (ChangeListener listener : listeners) {
                 try {
                     listener.stateChanged(event);
-                } catch (final RuntimeException x) {
+                } catch (RuntimeException x) {
                     Exceptions.printStackTrace(x);
                 }
             }
@@ -108,7 +107,6 @@ public final class ChangeSupport {
      *         false otherwise.
      */
     public boolean hasListeners() {
-        
-        return !this.listeners.isEmpty();
+        return !listeners.isEmpty();
     }
 }

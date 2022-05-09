@@ -62,16 +62,15 @@ public class NbCollections {
      *         to the named type (or they may be null)
      * @throws ClassCastException if some entry in the raw set was not well-typed, and only if <code>strict</code> was true
      */
-    public static <E> Set<E> checkedSetByCopy(final Set rawSet, Class<E> type, 
-            final boolean strict)
+    public static <E> Set<E> checkedSetByCopy(Set rawSet, Class<E> type, boolean strict)
             throws ClassCastException {
 
-        final Set<E> result = new HashSet<>(rawSet.size() * 4 / 3 + 1);
+        Set<E> result = new HashSet<>(rawSet.size() * 4 / 3 + 1);
 
         rawSet.forEach((e) -> {
             try {
                 result.add(type.cast(e));
-            } catch (final ClassCastException x) {
+            } catch (ClassCastException x) {
                 if (strict) {
                     throw x;
                 } else {
@@ -93,17 +92,16 @@ public class NbCollections {
      *         to the named type (or they may be null)
      * @throws ClassCastException if some entry in the raw list was not well-typed, and only if <code>strict</code> was true
      */
-    public static <E> List<E> checkedListByCopy(final List rawList,
-            final Class<E> type, final boolean strict)
+    public static <E> List<E> checkedListByCopy(List rawList, Class<E> type, boolean strict)
             throws ClassCastException {
 
-        final List<E> result = (rawList instanceof RandomAccess)
+        List<E> result = (rawList instanceof RandomAccess)
                 ? new ArrayList<>(rawList.size()) : new LinkedList<>();
 
         rawList.forEach(e -> {
             try {
                 result.add(type.cast(e));
-            } catch (final ClassCastException x) {
+            } catch (ClassCastException x) {
                 if (strict) {
                     throw x;
                 } else {
@@ -126,16 +124,16 @@ public class NbCollections {
      *         to the named types (or they may be null)
      * @throws ClassCastException if some key or value in the raw map was not well-typed, and only if <code>strict</code> was true
      */
-    public static <K, V> Map<K, V> checkedMapByCopy(final Map rawMap,
-            final Class<K> keyType, final Class<V> valueType, final boolean strict)
+    public static <K, V> Map<K, V> checkedMapByCopy(Map rawMap, Class<K> keyType, 
+            Class<V> valueType, boolean strict)
             throws ClassCastException {
 
-        final Map<K, V> result = new HashMap<>(rawMap.size() * 4 / 3 + 1);
+        Map<K, V> result = new HashMap<>(rawMap.size() * 4 / 3 + 1);
 
         rawMap.forEach((key, value) -> {
             try {
                 result.put(keyType.cast(key), valueType.cast(value));
-            } catch (final ClassCastException x) {
+            } catch (ClassCastException x) {
                 if (strict) {
                     throw x;
                 } else {
@@ -154,7 +152,7 @@ public class NbCollections {
         private final Iterator<?> it;
         private Object next = WAITING;
 
-        public CheckedIterator(final Iterator it) {
+        public CheckedIterator(Iterator it) {
             this.it = it;
         }
 
@@ -203,8 +201,8 @@ public class NbCollections {
      *               if true, {@link ClassCastException} may be thrown from an iterator operation
      * @return an iterator guaranteed to contain only objects of the requested type (or null)
      */
-    public static <E> Iterator<E> checkedIteratorByFilter(final Iterator rawIterator, 
-            final Class<E> type, final boolean strict) {
+    public static <E> Iterator<E> checkedIteratorByFilter(Iterator rawIterator, 
+            Class<E> type, boolean strict) {
         
         return new CheckedIterator<E>(rawIterator) {
             @Override
@@ -237,8 +235,7 @@ public class NbCollections {
      *               if true, a {@link ClassCastException} may arise during some set operation
      * @return a view over the raw set guaranteed to match the specified type
      */
-    public static <E> Set<E> checkedSetByFilter(final Set rawSet, 
-            final Class<E> type, final boolean strict) {
+    public static <E> Set<E> checkedSetByFilter(Set rawSet, Class<E> type, boolean strict) {
         
         return new CheckedSet<>(rawSet, type, strict);
     }
@@ -468,8 +465,8 @@ public class NbCollections {
      *               if true, {@link ClassCastException} may be thrown from an enumeration operation
      * @return an enumeration guaranteed to contain only objects of the requested type (or null)
      */
-    public static <E> Enumeration<E> checkedEnumerationByFilter(final Enumeration<?> rawEnum, 
-            final Class<E> type, final boolean strict) {
+    public static <E> Enumeration<E> checkedEnumerationByFilter(Enumeration<?> rawEnum, 
+            Class<E> type, boolean strict) {
         
         return Enumerations.filter(rawEnum, (o, ignore) -> {
             if (o == null) {
@@ -477,7 +474,7 @@ public class NbCollections {
             } else {
                 try {
                     return type.cast(o);
-                } catch (final ClassCastException x) {
+                } catch (ClassCastException x) {
                     if (strict) {
                         throw x;
                     } else {
@@ -509,7 +506,7 @@ public class NbCollections {
      * @see <a href="http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4988624">Java bug #4988624</a>
      * @since org.openide.util 7.5
      */
-    public static <E> Iterable<E> iterable(final Iterator<E> iterator) {
+    public static <E> Iterable<E> iterable(Iterator<E> iterator) {
         
         requireNonNull(iterator);
                 
@@ -537,7 +534,7 @@ public class NbCollections {
      * @see <a href="http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6349852">Java bug #6349852</a>
      * @since org.openide.util 7.5
      */
-    public static <E> Iterable<E> iterable(final Enumeration<E> enumeration) {
+    public static <E> Iterable<E> iterable(Enumeration<E> enumeration) {
         
         requireNonNull(enumeration);
 

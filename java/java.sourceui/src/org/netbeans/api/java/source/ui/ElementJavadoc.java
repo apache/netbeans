@@ -1498,7 +1498,7 @@ public class ElementJavadoc {
                     }
                 }
                 sb.append("\n");
-	    }
+            }
         }
         if(regionName!=null && !regionList.isEmpty()) {
             boolean noneMatch = regionList.stream().flatMap(List::stream)

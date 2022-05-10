@@ -1372,12 +1372,12 @@ public class ElementJavadoc {
                     isExternalSnippet = true;
                     break;
                 case "region":
-		    if(isAttrPresent(att)) {
-		    	regionName = ((AttributeTree)att).getValue().get(0).toString();
-		    } else {
-		    	error = "error: snippet markup:region not specified";
-		    }
-		    break;
+                    if(isAttrPresent(att)) {
+                        regionName = ((AttributeTree)att).getValue().get(0).toString();
+                    } else {
+                        error = "error: snippet markup:region not specified";
+                    }
+                    break;
                 case "lang":
                     lang = ((AttributeTree)att).getValue().get(0).toString();
                     break;
@@ -1402,7 +1402,7 @@ public class ElementJavadoc {
         if(!errorList.isEmpty() && text==null) {
             reportError(new ArrayList(errorList), sb);
             return;
-        } 
+        }
         String langCommentPattern;
         if(lang != null && lang.equals("properties")){
             langCommentPattern = "#";
@@ -1480,10 +1480,10 @@ public class ElementJavadoc {
             if (toAddCurrent) {
                 if (attributes != null) {
                     for (MarkupTagProcessor.ApplicableMarkupTag attrib : attributes) {
-                    codeLine = applyTagsToHTML(codeLine, attrib.getAttributes(), attrib.getMarkupTagName(), sb, eachCharList);
-		    if(codeLine == null){//its error
-			    return;
-		    }
+                        codeLine = applyTagsToHTML(codeLine, attrib.getAttributes(), attrib.getMarkupTagName(), sb, eachCharList);
+                        if(codeLine == null){//its error
+                            return;
+                        }
                     }
                 }
 
@@ -1504,10 +1504,10 @@ public class ElementJavadoc {
             boolean noneMatch = regionList.stream().flatMap(List::stream)
                     .noneMatch(p -> p.getValue().equals(regionName));
             if(noneMatch) {
-            List<String> errorList = new ArrayList<>();
-            String error = "error: snippet markup: Region not found";
-            errorList.add(error);
-            reportError(errorList, sb);
+                List<String> errorList = new ArrayList<>();
+                String error = "error: snippet markup: Region not found";
+                errorList.add(error);
+                reportError(errorList, sb);
             }
         }
     }
@@ -1526,7 +1526,6 @@ public class ElementJavadoc {
                 applyHighlightTag(codeLine, tagAction, htmlHighlightType, tagAttributes.get(tagAction), eachCharList);
                 break;
             case "replace":
-                //String replacement = tagAttributes.get("replacement") != null && !tagAttributes.get("replacement").trim().isEmpty() ? tagAttributes.get("replacement") : null;
                 codeLine = applyReplaceTag(codeLine, tagAction, tagAttributes.get("replacement"), tagAttributes.get(tagAction), eachCharList);
                 break;
             case "link":

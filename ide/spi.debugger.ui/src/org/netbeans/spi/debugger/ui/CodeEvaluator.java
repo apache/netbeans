@@ -477,16 +477,12 @@ public final class CodeEvaluator {
                 this.type = type;
                 this.value = value;
                 this.toStringValue = toStringValue;
-                StringBuffer buf = new StringBuffer();
-                buf.append("<html>");
-                String text = expression.replaceAll ("&", "&amp;");
-                text = text.replaceAll ("<", "&lt;");
-                text = text.replaceAll (">", "&gt;");
-                text = text.replaceAll ("\n", "<br/>");
-                text = text.replaceAll ("\r", "");
-                buf.append(text);
-                buf.append("</html>");
-                this.tooltip = buf.toString();
+                String text = expression.replace("&", "&amp;")
+                                        .replace("<", "&lt;")
+                                        .replace(">", "&gt;")
+                                        .replace("\n", "<br/>")
+                                        .replace("\r", "");
+                this.tooltip = "<html>"+text+"</html>";
             }
 
             /**

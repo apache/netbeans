@@ -23,6 +23,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -738,7 +739,7 @@ public class FormRefactoringUpdate extends SimpleRefactoringElementImplementatio
             if (outString != null) {
                 saveForUndo(formFile);
                 os = formFile.getOutputStream(lock);
-                os.write(outString.getBytes("UTF-8")); // NOI18N
+                os.write(outString.getBytes(StandardCharsets.UTF_8));
             }
         } catch (IOException ex) {
             Exceptions.printStackTrace(ex);

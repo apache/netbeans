@@ -26,6 +26,7 @@ import com.sun.source.tree.Tree;
 import com.sun.source.util.TreePath;
 import org.netbeans.api.java.source.support.ErrorAwareTreeScanner;
 import com.sun.source.util.Trees;
+import com.sun.tools.javac.api.ClientCodeWrapper;
 import com.sun.tools.javac.code.ClassFinder;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symtab;
@@ -487,6 +488,7 @@ public final class JavaSourceUtilImpl extends org.netbeans.modules.java.preproce
             throw new IllegalStateException(String.valueOf(l));
         }
         
+        @ClientCodeWrapper.Trusted
         private static final class MemOutFileObject extends FileObjects.Base {            
             private final ByteArrayOutputStream out;
             private long modified;

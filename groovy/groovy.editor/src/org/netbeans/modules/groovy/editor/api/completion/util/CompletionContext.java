@@ -298,19 +298,28 @@ public final class CompletionContext {
         boolean openBraceBeforePosition = false;
         // is there package statement?
         boolean afterPackagePosition = false;
-
+        boolean canBeImport = true;
+        
         ts.move(position);
 
         while (ts.isValid() && ts.movePrevious() && ts.offset() >= 0) {
             Token<GroovyTokenId> t = ts.token();
             if (t.id() == GroovyTokenId.LBRACE) {
                 openBraceBeforePosition = true;
+                canBeImport = false;
             } else if (t.id() == GroovyTokenId.LITERAL_class || t.id() == GroovyTokenId.LITERAL_interface || t.id() == GroovyTokenId.LITERAL_trait) {
                 classDefBeforePosition = true;
                 break;
             } else if (t.id() == GroovyTokenId.LITERAL_package) {
                 afterPackagePosition = true;
                 break;
+            } else if (canBeImport && t.id() == GroovyTokenId.LITERAL_import) {
+                return CaretLocation.INSIDE_IMPORT;
+            }
+            
+            if (canBeImport && !(t.id() == GroovyTokenId.DOT || t.id() == GroovyTokenId.IDENTIFIER
+                    || t.id() == GroovyTokenId.WHITESPACE || t.id() == GroovyTokenId.LITERAL_static)) {
+                canBeImport = false;
             }
         }
 

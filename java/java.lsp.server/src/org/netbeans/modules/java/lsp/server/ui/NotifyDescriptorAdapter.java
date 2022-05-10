@@ -119,12 +119,10 @@ class NotifyDescriptorAdapter {
         if (!original.startsWith("<html>")) { // NOI18N
             return original;
         }
-        String res = 
-                original.replaceAll("<p/>|</p>|<br>", "\n"). // NOI18N
-                    replaceAll( "<[^>]*>", "" ). // NOI18N 
-                    replaceAll( "&nbsp;", " " ); // NOI18N 
-        res = res.trim();
-        return res;
+        return original.replaceAll("<p/>|</p>|<br>", "\n") // NOI18N
+                       .replaceAll("<[^>]*>", "")
+                       .replace("&nbsp;", " ") // NOI18N
+                       .trim();
     }
     
     public String getAccessibleDescription(Object o) {

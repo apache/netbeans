@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -265,7 +266,7 @@ public class ProjectRunnerImplTest extends NbTestCase {
     @ServiceProvider(service=FileEncodingQueryImplementation.class)
     public static final class FEQImpl extends FileEncodingQueryImplementation {
         @Override public Charset getEncoding(FileObject file) {
-            return Charset.forName("UTF-8");
+            return StandardCharsets.UTF_8;
         }
     }
 }

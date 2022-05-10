@@ -21,6 +21,7 @@ package org.netbeans.modules.maven.apisupport;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.logging.Level;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
@@ -142,7 +143,7 @@ public class NBMNativeMWITest extends NbTestCase {
         FileObject createDatap = wd.createFolder("testp");
         FileObject parentpomFile = createDatap.createData("pom", "xml");
         try (OutputStream os = parentpomFile.getOutputStream()) {
-            os.write(POMCOMPILER.getBytes("UTF-8"));
+            os.write(POMCOMPILER.getBytes(StandardCharsets.UTF_8));
         }
         MavenXpp3Reader reader = new MavenXpp3Reader();
         Model model = reader.read(new FileReader(FileUtil.toFile(parentpomFile)));
@@ -170,7 +171,7 @@ public class NBMNativeMWITest extends NbTestCase {
         FileObject createDatap = wd.createFolder("testp");
         FileObject parentpomFile = createDatap.createData("pom", "xml");
         try (OutputStream os = parentpomFile.getOutputStream()) {
-            os.write(POMJAR.getBytes("UTF-8"));
+            os.write(POMJAR.getBytes(StandardCharsets.UTF_8));
         }
         MavenXpp3Reader reader = new MavenXpp3Reader();
         Model model = reader.read(new FileReader(FileUtil.toFile(parentpomFile)));

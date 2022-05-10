@@ -21,6 +21,7 @@ package org.netbeans.api.extexecution.base.input;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import org.netbeans.junit.NbTestCase;
 
@@ -34,7 +35,7 @@ public class InputReadersStreamTest extends NbTestCase {
 
     private static final int MAX_RETRIES = TEST_CHARS.length * 2;
 
-    private static final Charset TEST_CHARSET = Charset.forName("UTF-8");
+    private static final Charset TEST_CHARSET = StandardCharsets.UTF_8;
 
     public InputReadersStreamTest(String name) {
         super(name);

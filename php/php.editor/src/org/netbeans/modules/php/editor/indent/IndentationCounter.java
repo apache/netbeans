@@ -378,9 +378,24 @@ public class IndentationCounter {
 
         if (token.id() == PHPTokenId.PHP_SEMICOLON && ts.movePrevious()) {
             retunValue.expressionStartOffset = LexUtilities.findStartTokenOfExpression(ts);
+            boolean hasColon = false;
             ts.move(retunValue.expressionStartOffset);
             ts.moveNext();
-            retunValue.indentDelta = ts.token().id() == PHPTokenId.PHP_CASE || ts.token().id() == PHPTokenId.PHP_DEFAULT
+            // case ENUM_CASE;
+            // case Expression:
+            if (ts.token().id() == PHPTokenId.PHP_CASE) {
+                while (ts.moveNext() && ts.offset() < origOffset) {
+                    TokenId id = ts.token().id();
+                    if (ts.token().id().equals(PHPTokenId.PHP_TOKEN)
+                            && TokenUtilities.textEquals(ts.token().text(), ":")) { // NOI18N
+                        hasColon = true;
+                        break;
+                    }
+                }
+                ts.move(retunValue.expressionStartOffset);
+                ts.moveNext();
+            }
+            retunValue.indentDelta = (ts.token().id() == PHPTokenId.PHP_CASE && hasColon) || ts.token().id() == PHPTokenId.PHP_DEFAULT
                     ? indentSize : 0;
             retunValue.processedByControlStmt = false;
             ts.move(origOffset);

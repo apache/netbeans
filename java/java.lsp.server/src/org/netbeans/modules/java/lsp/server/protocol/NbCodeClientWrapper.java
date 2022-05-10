@@ -192,4 +192,10 @@ class NbCodeClientWrapper implements NbCodeLanguageClient {
     public void notifyNodeChange(NodeChangedParams params) {
         remote.notifyNodeChange(params);
     }
+    
+    @Override
+    public CompletableFuture<Void> configurationUpdate(UpdateConfigParams params) {
+        return remote.configurationUpdate(params);
+    }
+    
 }

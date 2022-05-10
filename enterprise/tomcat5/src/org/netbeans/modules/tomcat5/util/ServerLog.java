@@ -269,7 +269,7 @@ class ServerLog {
             } else {
                 writer.println(line);
                 if (line.startsWith("SEVERE: WSSERVLET11: failed to parse runtime descriptor: java.lang.LinkageError:")) { // NOI18N
-                    File jaxwsApi = InstalledFileLocator.getDefault().locate("modules/ext/jaxws21/api/jaxws-api.jar", null, false); // NOI18N
+                    File jaxwsApi = InstalledFileLocator.getDefault().locate("modules/ext/jaxws22/api/jakarta.xml.ws-api.jar", null, false); // NOI18N
                     File jaxbApi  = InstalledFileLocator.getDefault().locate("modules/ext/jaxb/api/jaxb-api.jar", null, false); // NOI18N
                     File endoresedDir = tomcatManager.getTomcatProperties().getJavaEndorsedDir();
                     if (jaxwsApi != null && jaxbApi != null) {

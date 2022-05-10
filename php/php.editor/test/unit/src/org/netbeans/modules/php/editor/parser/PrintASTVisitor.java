@@ -295,6 +295,17 @@ public class PrintASTVisitor implements Visitor {
     }
 
     @Override
+    public void visit(CaseDeclaration node) {
+        XMLPrintNode printNode = new XMLPrintNode(node, "CaseDeclaration");
+        if (node.isAttributed()) {
+            printNode.addChildrenGroup("Attributes", node.getAttributes());
+        }
+        printNode.addChild("CaseName", node.getName());
+        printNode.addChild(node.getInitializer());
+        printNode.print(this);
+    }
+
+    @Override
     public void visit(ConstantDeclaration node) {
         XMLPrintNode printNode;
         if (node.isGlobal()) {
@@ -412,6 +423,19 @@ public class PrintASTVisitor implements Visitor {
     @Override
     public void visit(EmptyStatement emptyStatement) {
         (new XMLPrintNode(emptyStatement, "EmptyStatement")).print(this);
+    }
+
+    @Override
+    public void visit(EnumDeclaration enumDeclaration) {
+        XMLPrintNode printNode = new XMLPrintNode(enumDeclaration, "EnumDeclaration");
+        if (enumDeclaration.isAttributed()) {
+            printNode.addChildrenGroup("Attributes", enumDeclaration.getAttributes());
+        }
+        printNode.addChildrenGroup("EnumName", new ASTNode[]{enumDeclaration.getName()});
+        printNode.addChildrenGroup("BackingType", new ASTNode[]{enumDeclaration.getBackingType()});
+        printNode.addChildrenGroup("Interfaces", enumDeclaration.getInterfaes());
+        printNode.addChild(enumDeclaration.getBody());
+        printNode.print(this);
     }
 
     @Override

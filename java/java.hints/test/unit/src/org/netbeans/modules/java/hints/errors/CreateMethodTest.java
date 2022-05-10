@@ -86,14 +86,14 @@ public class CreateMethodTest extends ErrorHintsTestBase {
         performFixTest("test/Test.java",
                        "package test; public class Test {public void test() {test2(null);}}", 82 - 25,
                        "CreateMethodFix:test2(java.lang.Object object)void:test.Test",
-                       "package test; public class Test {public void test() {test2(null);} private void test2(Object object) { throw new UnsupportedOperationException(\"Not supported yet.\"); //To change body of generated methods, choose Tools | Templates. } }");
+                       "package test; public class Test {public void test() {test2(null);} private void test2(Object object) { throw new UnsupportedOperationException(\"Not supported yet.\"); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody } }");
     }
     @RandomlyFails
     public void testCreateMethod77038() throws Exception {
         performFixTest("test/Test.java",
                        "package test; public class Test {public void test() {b(test2() ? true : false);} void t(boolean b){}}", 82 - 25,
                        "CreateMethodFix:test2()boolean:test.Test",
-                       "package test; public class Test {public void test() {b(test2() ? true : false);} void t(boolean b){} private boolean test2() { throw new UnsupportedOperationException(\"Not supported yet.\"); //To change body of generated methods, choose Tools | Templates. } }");
+                       "package test; public class Test {public void test() {b(test2() ? true : false);} void t(boolean b){} private boolean test2() { throw new UnsupportedOperationException(\"Not supported yet.\"); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody } }");
     }
     @RandomlyFails
     public void testCreateMethod82923() throws Exception {
@@ -105,7 +105,7 @@ public class CreateMethodTest extends ErrorHintsTestBase {
                        "package test; import java.util.Collection; public class Test {public static void test() {fff(getStrings());} private static Collection<String> getStrings() {return null;}}",
                        116 - 25,
                        "CreateMethodFix:fff(java.util.Collection<java.lang.String> strings)void:test.Test",
-                       "package test; import java.util.Collection; public class Test {public static void test() {fff(getStrings());} private static Collection<String> getStrings() {return null;} private static void fff(Collection<String> strings) { throw new UnsupportedOperationException(\"Not supported yet.\"); //To change body of generated methods, choose Tools | Templates. } }");
+                       "package test; import java.util.Collection; public class Test {public static void test() {fff(getStrings());} private static Collection<String> getStrings() {return null;} private static void fff(Collection<String> strings) { throw new UnsupportedOperationException(\"Not supported yet.\"); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody } }");
     }
     @RandomlyFails
     public void testCreateMethod74129() throws Exception {
@@ -113,7 +113,7 @@ public class CreateMethodTest extends ErrorHintsTestBase {
         performFixTest("test/Test.java",
                        "package test; public class Test {public void test() {TopLevel.f|ff();}} class TopLevel {}",
                        "CreateMethodFix:fff()void:test.TopLevel",
-                       "package test; public class Test {public void test() {TopLevel.fff();}} class TopLevel { static void fff() { throw new UnsupportedOperationException(\"Not supported yet.\"); //To change body of generated methods, choose Tools | Templates. } }");
+                       "package test; public class Test {public void test() {TopLevel.fff();}} class TopLevel { static void fff() { throw new UnsupportedOperationException(\"Not supported yet.\"); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody } }");
     }
     @RandomlyFails
     public void testCreateMethod76498() throws Exception {
@@ -121,7 +121,7 @@ public class CreateMethodTest extends ErrorHintsTestBase {
                        "package test; public class Test {public static class T extends Test {public void test() {super.fff();}}}",
                        122 - 25,
                        "CreateMethodFix:fff()void:test.Test",
-                       "package test; public class Test { private void fff() { throw new UnsupportedOperationException(\"Not supported yet.\"); //To change body of generated methods, choose Tools | Templates. } public static class T extends Test {public void test() {super.fff();}}}");
+                       "package test; public class Test { private void fff() { throw new UnsupportedOperationException(\"Not supported yet.\"); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody } public static class T extends Test {public void test() {super.fff();}}}");
     }
     @RandomlyFails
     public void testCreateMethod75069() throws Exception {
@@ -129,35 +129,35 @@ public class CreateMethodTest extends ErrorHintsTestBase {
                        "package test; public class Test<T> {public void test() {this.fff();}}",
                        88 - 25,
                        "CreateMethodFix:fff()void:test.Test",
-                       "package test; public class Test<T> {public void test() {this.fff();} private void fff() { throw new UnsupportedOperationException(\"Not supported yet.\"); //To change body of generated methods, choose Tools | Templates. } }");
+                       "package test; public class Test<T> {public void test() {this.fff();} private void fff() { throw new UnsupportedOperationException(\"Not supported yet.\"); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody } }");
     }
     @RandomlyFails
     public void testCreateMethod119037() throws Exception {
         performFixTest("test/Test.java",
                        "package test; public class Test {static {f|ff();}}",
                        "CreateMethodFix:fff()void:test.Test",
-                       "package test; public class Test {static {fff();} private static void fff() { throw new UnsupportedOperationException(\"Not supported yet.\"); //To change body of generated methods, choose Tools | Templates. } }");
+                       "package test; public class Test {static {fff();} private static void fff() { throw new UnsupportedOperationException(\"Not supported yet.\"); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody } }");
     }
     @RandomlyFails
     public void testCreateMethodWithAnonymousParameter104820() throws Exception {
         performFixTest("test/Test.java",
                        "package test;public class Test {public static void method() {final Test ac = new Test();new Runnable() {public void run() {ac.a|ction(this);}};}}",
                        "CreateMethodFix:action(java.lang.Runnable aThis)void:test.Test",
-                       "package test;public class Test {public static void method() {final Test ac = new Test();new Runnable() {public void run() {ac.action(this);}};} private void action(Runnable aThis) { throw new UnsupportedOperationException(\"Not supported yet.\"); //To change body of generated methods, choose Tools | Templates. } }");
+                       "package test;public class Test {public static void method() {final Test ac = new Test();new Runnable() {public void run() {ac.action(this);}};} private void action(Runnable aThis) { throw new UnsupportedOperationException(\"Not supported yet.\"); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody } }");
     }
     @RandomlyFails
     public void testCreateMethodWithEnumParam() throws Exception {
         performFixTest("test/Test.java",
                        "package test; public class Test { enum Paddle{UP, DOWN} public void foo() {f|ff(Paddle.UP);}}",
                        "CreateMethodFix:fff(test.Test.Paddle paddle)void:test.Test",
-                       "package test; public class Test { private void fff(Paddle paddle) { throw new UnsupportedOperationException(\"Not supported yet.\"); //To change body of generated methods, choose Tools | Templates. } enum Paddle{UP, DOWN} public void foo() {fff(Paddle.UP);}}");
+                       "package test; public class Test { private void fff(Paddle paddle) { throw new UnsupportedOperationException(\"Not supported yet.\"); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody } enum Paddle{UP, DOWN} public void foo() {fff(Paddle.UP);}}");
     }
     @RandomlyFails
     public void testCreateMethodWithParamOfEnumType199793() throws Exception {
         performFixTest("test/Test.java",
                        "package test; public class Test { enum Paddle{UP, DOWN} public void foo(Paddle test) {f|ff(test);}}",
                        "CreateMethodFix:fff(test.Test.Paddle test)void:test.Test",
-                       "package test; public class Test { private void fff(Paddle test) { throw new UnsupportedOperationException(\"Not supported yet.\"); //To change body of generated methods, choose Tools | Templates. } enum Paddle{UP, DOWN} public void foo(Paddle test) {fff(test);}}");
+                       "package test; public class Test { private void fff(Paddle test) { throw new UnsupportedOperationException(\"Not supported yet.\"); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody } enum Paddle{UP, DOWN} public void foo(Paddle test) {fff(test);}}");
     }
     @RandomlyFails
     public void test220582() throws Exception {
@@ -179,7 +179,7 @@ public class CreateMethodTest extends ErrorHintsTestBase {
                         "        }\n" +
                         "    }\n" +
                         "    private boolean isNew(String name) {\n" +
-                        "        throw new UnsupportedOperationException(\"Not supported yet.\"); //To change body of generated methods, choose Tools | Templates.\n" +
+                        "        throw new UnsupportedOperationException(\"Not supported yet.\"); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody\n" +
                         "    }\n" +
                         "}\n").replaceAll("[ \n\t\r]+", " "));
     }
@@ -201,7 +201,7 @@ public class CreateMethodTest extends ErrorHintsTestBase {
                         "        Field f = method(c);\n" +
                         "    }\n" +
                         "    private Field method(Class<?> c) {\n" +
-                        "        throw new UnsupportedOperationException(\"Not supported yet.\"); //To change body of generated methods, choose Tools | Templates.\n" +
+                        "        throw new UnsupportedOperationException(\"Not supported yet.\"); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody\n" +
                         "    }\n" +
                         "}\n").replaceAll("[ \n\t\r]+", " "));
     }
@@ -223,7 +223,7 @@ public class CreateMethodTest extends ErrorHintsTestBase {
                         "        Field f = method(c1, c2);\n" +
                         "    }\n" +
                         "    private <T extends Number & CharSequence, E extends Integer> Field method(Class<E> c1, Class<T> c2) {\n" +
-                        "        throw new UnsupportedOperationException(\"Not supported yet.\"); //To change body of generated methods, choose Tools | Templates.\n" +
+                        "        throw new UnsupportedOperationException(\"Not supported yet.\"); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody\n" +
                         "    }\n" +
                         "}\n").replaceAll("[ \n\t\r]+", " "));
     }
@@ -245,7 +245,7 @@ public class CreateMethodTest extends ErrorHintsTestBase {
                         "        Class<E> cr = method(c);\n" +
                         "    }\n" +
                         "    private <T extends Number & CharSequence, E> Class<E> method(Class<T> c) {\n" +
-                        "        throw new UnsupportedOperationException(\"Not supported yet.\"); //To change body of generated methods, choose Tools | Templates.\n" +
+                        "        throw new UnsupportedOperationException(\"Not supported yet.\"); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody\n" +
                         "    }\n" +
                         "}\n").replaceAll("[ \n\t\r]+", " "));
     }
@@ -271,7 +271,7 @@ public class CreateMethodTest extends ErrorHintsTestBase {
                         "        getName(undefined());\n" +
                         "    }\n" +
                         "    private String undefined() {\n" +
-                        "         throw new UnsupportedOperationException(\"Not supported yet.\"); //To change body of generated methods, choose Tools | Templates. \n" +
+                        "         throw new UnsupportedOperationException(\"Not supported yet.\"); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody \n" +
                         "    }\n" +
                         "}\n" +
                         "class Aux {\n" +
@@ -297,7 +297,7 @@ public class CreateMethodTest extends ErrorHintsTestBase {
                         "    }\n" +
                         "    public static void m(String str) {}\n" +
                         "    private static void m(Number str) {\n" +
-                        "         throw new UnsupportedOperationException(\"Not supported yet.\"); //To change body of generated methods, choose Tools | Templates. \n" +
+                        "         throw new UnsupportedOperationException(\"Not supported yet.\"); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody \n" +
                         "    }\n" +
                         "}\n").replaceAll("[ \n\t\r]+", " "));
     }
@@ -319,7 +319,7 @@ public class CreateMethodTest extends ErrorHintsTestBase {
                         "        test(this::undef);\n" +
                         "    }\n" +
                         "    private void undef() {\n" +
-                        "         throw new UnsupportedOperationException(\"Not supported yet.\"); //To change body of generated methods, choose Tools | Templates. \n" +
+                        "         throw new UnsupportedOperationException(\"Not supported yet.\"); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody \n" +
                         "    }\n" +
                         "}\n").replaceAll("[ \n\t\r]+", " "));
     }
@@ -338,7 +338,7 @@ public class CreateMethodTest extends ErrorHintsTestBase {
                        ("package test;\n" +
                         "public class Test {\n" +
                         "    private static void undef() {\n" +
-                        "         throw new UnsupportedOperationException(\"Not supported yet.\"); //To change body of generated methods, choose Tools | Templates. \n" +
+                        "         throw new UnsupportedOperationException(\"Not supported yet.\"); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody \n" +
                         "    }\n" +
                         "    public void test(Runnable r) {\n" +
                         "        test(Test::undef);\n" +
@@ -367,7 +367,7 @@ public class CreateMethodTest extends ErrorHintsTestBase {
                         "        test(Test::undef);\n" +
                         "    }\n" +
                         "    private void undef() {\n" +
-                        "         throw new UnsupportedOperationException(\"Not supported yet.\"); //To change body of generated methods, choose Tools | Templates. \n" +
+                        "         throw new UnsupportedOperationException(\"Not supported yet.\"); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody \n" +
                         "    }\n" +
                         "    public interface I<T> {\n" +
                         "        public void run(T t);\n" +
@@ -394,7 +394,7 @@ public class CreateMethodTest extends ErrorHintsTestBase {
                        ("package test;\n" +
                         "public class Test {\n" +
                         "    private static void undef(Test t) {\n" +
-                        "         throw new UnsupportedOperationException(\"Not supported yet.\"); //To change body of generated methods, choose Tools | Templates. \n" +
+                        "         throw new UnsupportedOperationException(\"Not supported yet.\"); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody \n" +
                         "    }\n" +
                         "    public void test(I<Test> r) {\n" +
                         "        test(Test::undef);\n" +
@@ -427,7 +427,7 @@ public class CreateMethodTest extends ErrorHintsTestBase {
                         "        test(this::undef);\n" +
                         "    }\n" +
                         "    private void undef(Test t) {\n" +
-                        "         throw new UnsupportedOperationException(\"Not supported yet.\"); //To change body of generated methods, choose Tools | Templates. \n" +
+                        "         throw new UnsupportedOperationException(\"Not supported yet.\"); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody \n" +
                         "    }\n" +
                         "    public interface I<T> {\n" +
                         "        public void run(T t);\n" +

@@ -34,6 +34,7 @@ import org.xml.sax.helpers.DefaultHandler;
 
 import java.awt.*;
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.List;
 import java.util.logging.Logger;
@@ -1503,7 +1504,7 @@ class ModeParser {
                 try {
                     lock = cfgFOOutput.lock();
                     os = cfgFOOutput.getOutputStream(lock);
-                    osw = new OutputStreamWriter(os, "UTF-8"); // NOI18N
+                    osw = new OutputStreamWriter(os, StandardCharsets.UTF_8);
                     osw.write(buff.toString());
                     /*log("-- DUMP Mode:");
                     log(buff.toString());*/

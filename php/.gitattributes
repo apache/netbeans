@@ -1,0 +1,11 @@
+# PHP tests assume test data files use unix line endings
+
+php.editor/test/unit/data/testfiles/elements/typenameresolver/*.php                                      text eol=lf
+
+php.editor/test/unit/data/goldenfiles/org/netbeans/modules/php/editor/lexer/PHPLexerTest/lexer/*.pass    text eol=lf
+
+php.editor/test/unit/data/testfiles/parser/**/*.php                                                      text eol=lf
+php.editor/test/unit/data/testfiles/parser/**/*.errors                                                   text eol=lf
+php.editor/test/unit/data/goldenfiles/org/netbeans/modules/php/editor/parser/ASTPHP5ParserTest/**/*.pass text eol=lf
+
+php.twig/test/unit/data/goldenfiles/org/netbeans/modules/php/twig/editor/lexer/TwigLexerTest/*.pass      text eol=lf

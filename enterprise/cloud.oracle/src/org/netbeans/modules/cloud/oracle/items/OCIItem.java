@@ -44,6 +44,10 @@ public class OCIItem {
         changeSupport = new ChangeSupport(this);
     }
 
+    public OCIItem() {
+        this(null, null);
+    }
+    
     /**
      * OCID of the item.
      * 

@@ -54,7 +54,7 @@ public class CCPaintComponent extends JPanel {
     
     private int ascent;
     
-    private Map widths;
+    private Map<String, Integer> widths;
     
     private FontMetrics fontMetrics;
     
@@ -252,7 +252,7 @@ public class CCPaintComponent extends JPanel {
         if (widths != null) {
             widths.clear();
         } else {
-            widths = new HashMap();
+            widths = new HashMap<>();
         }
         for (int i = 0; i < frequentWords.length; i++) {
             storeWidth(frequentWords[i]);

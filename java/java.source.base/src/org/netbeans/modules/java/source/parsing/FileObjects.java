@@ -48,6 +48,7 @@ import java.nio.Buffer;
 import java.nio.CharBuffer;
 import java.nio.channels.CompletionHandler;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
@@ -133,7 +134,7 @@ public class FileObjects {
     public static final String MODULE_INFO = "module-info";   //NOI18N
 
     private static final Charset SYSTEM_ENCODING = Charset.defaultCharset();
-    private static final Charset UTF8_ENCODING = Charset.forName("UTF-8");  //NOI18N
+    private static final Charset UTF8_ENCODING = StandardCharsets.UTF_8;
     private static final Pattern MATCHER_PATCH =
                 Pattern.compile("(.+)=(.+)");  //NOI18N
     //todo: If more clients than btrace will need this, create a SPI.

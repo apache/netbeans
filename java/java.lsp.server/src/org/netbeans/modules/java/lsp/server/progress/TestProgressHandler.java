@@ -86,10 +86,6 @@ public final class TestProgressHandler implements TestResultDisplayHandler.Spi<T
         String className = report.getSuiteClassName();
         for (Testcase test : report.getTests()) {
             String name = test.getDisplayName();
-            int idx = name.indexOf('(');
-            if (idx > 0) {
-                name = name.substring(0, idx);
-            }
             String id = className + ':' + name;
             String state = statusToState(test.getStatus());
             List<String> stackTrace = test.getTrouble() != null ? Arrays.asList(test.getTrouble().getStackTrace()) : null;

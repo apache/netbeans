@@ -18,13 +18,12 @@
  */
 package org.netbeans.modules.profiler.heapwalk.details.netbeans;
 
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import org.netbeans.lib.profiler.heap.Heap;
 import org.netbeans.lib.profiler.heap.Instance;
 import org.netbeans.lib.profiler.heap.PrimitiveArrayInstance;
 import org.netbeans.modules.profiler.heapwalk.details.spi.DetailsProvider;
-import org.openide.util.Exceptions;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
@@ -65,11 +64,7 @@ public class JavacDetailsProvider extends DetailsProvider.Basic {
                 String el = (String) elements.get(index+i);
                 data[i] = Byte.valueOf(el).byteValue();
             }
-            try {
-                return new String(data, "UTF-8"); // NOI18N
-            } catch (UnsupportedEncodingException ex) {
-                Exceptions.printStackTrace(ex);
-            }
+            return new String(data, StandardCharsets.UTF_8);
         }
         return null;
     }

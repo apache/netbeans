@@ -24,6 +24,7 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -127,7 +128,7 @@ public class PersistenceLibrarySupport {
         PrintWriter out = null;
         try {
             lock = definitionFile.lock();
-            out = new PrintWriter(new OutputStreamWriter(definitionFile.getOutputStream(lock), "UTF-8"));
+            out = new PrintWriter(new OutputStreamWriter(definitionFile.getOutputStream(lock), StandardCharsets.UTF_8));
             out.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");      //NOI18N
             out.println("<!DOCTYPE library PUBLIC \"-//NetBeans//DTD Library Declaration 1.0//EN\" \"http://www.netbeans.org/dtds/library-declaration-1_0.dtd\">"); //NOI18N
             out.println("<library version=\"1.0\">");       			//NOI18N

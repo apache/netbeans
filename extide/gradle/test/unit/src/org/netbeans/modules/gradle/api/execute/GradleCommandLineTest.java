@@ -323,4 +323,19 @@ public class GradleCommandLineTest {
         }
         assertTrue(missing.toString(), missing.isEmpty());
     }
+
+    @Test
+    public void testUnsupportedArg1() {
+        GradleCommandLine cmd = new GradleCommandLine("--gui");
+        cmd = new GradleCommandLine(GradleDistributionManager.get().defaultDistribution(), cmd);
+        assertTrue(cmd.getFullCommandLine().isEmpty());
+    }
+
+    @Test
+    public void testUnsupportedArg2() {
+        GradleCommandLine cmd = new GradleCommandLine("--include-build", "../something");
+        cmd = new GradleCommandLine(GradleDistributionManager.get().distributionFromVersion("2.2"), cmd);
+        assertTrue(cmd.getFullCommandLine().isEmpty());
+    }
+
 }

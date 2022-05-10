@@ -52,11 +52,7 @@ class OutWriter extends PrintWriter {
 
     private boolean disposeOnClose = false;
 
-    //IZ 44375 - Memory mapping fails with bad file handle on win 98
-    private static final boolean USE_HEAP_STORAGE =
-        Boolean.getBoolean("nb.output.heap") || Utilities.getOperatingSystem() == //NOI18N
-        Utilities.OS_WIN98 || 
-        Utilities.getOperatingSystem() == Utilities.OS_WIN95;
+    private static final boolean USE_HEAP_STORAGE = Boolean.getBoolean("nb.output.heap");
 
     /**
      * Byte array used to write the line separator after line writes.

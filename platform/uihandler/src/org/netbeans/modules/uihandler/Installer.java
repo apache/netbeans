@@ -34,6 +34,7 @@ import java.lang.management.RuntimeMXBean;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.*;
+import java.nio.charset.StandardCharsets;
 import java.security.GeneralSecurityException;
 import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
@@ -736,7 +737,7 @@ public class Installer extends ModuleInstall implements Runnable {
     private static String reportFileContent(File f) {
         BufferedReader br = null;
         try {
-            br = new BufferedReader(new InputStreamReader(new FileInputStream(f), "UTF-8"));
+            br = new BufferedReader(new InputStreamReader(new FileInputStream(f), StandardCharsets.UTF_8));
             StringWriter sw = new StringWriter();
             String line;
             while ((line = br.readLine()) != null) {
@@ -2439,7 +2440,7 @@ public class Installer extends ModuleInstall implements Runnable {
                 int offset = builder.length();
                 n.setValue("offset", offset); // NOI18N
                 LogRecords.write(os, r);
-                builder.append(os.toString("UTF-8"));
+                builder.append(os.toString("UTF-8")); // NOI18N
             } catch (IOException ex) {
                 Installer.LOG.log(Level.WARNING, null, ex);
             }

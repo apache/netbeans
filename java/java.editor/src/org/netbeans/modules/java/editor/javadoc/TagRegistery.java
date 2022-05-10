@@ -100,7 +100,16 @@ final class TagRegistery {
         addTag("@uses", false, EnumSet.of(ElementKind.MODULE));
         
         addTag("@code", true, ALL_KINDS);
+        addTag("@snippet", true, ALL_KINDS);
+        addTag("@summary", true, ALL_KINDS);
+        addTag("@systemProperty", true, EnumSet.<ElementKind>of(
+            ElementKind.ANNOTATION_TYPE, ElementKind.CLASS,
+            ElementKind.CONSTRUCTOR, ElementKind.ENUM,
+            ElementKind.ENUM_CONSTANT, ElementKind.FIELD,
+            ElementKind.INTERFACE, ElementKind.METHOD,
+            ElementKind.MODULE, ElementKind.PACKAGE));
         addTag("@docRoot", true, ALL_KINDS);
+        addTag("@index", true, ALL_KINDS);
         // just in empty tag description
         addTag("@inheritDoc", true, EnumSet.of(ElementKind.METHOD));
         addTag("@link", true, ALL_KINDS);

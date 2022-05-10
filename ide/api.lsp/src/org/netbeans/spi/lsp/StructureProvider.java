@@ -27,6 +27,7 @@ import java.util.concurrent.CompletableFuture;
 import javax.swing.text.Document;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.modules.lsp.StructureElementAccessor;
+import org.openide.filesystems.FileObject;
 
 /**
  * Interface for building structure of symbols at a given document.
@@ -99,6 +100,7 @@ public interface StructureProvider {
         private StructureElement.Kind kind;
         private Set<StructureElement.Tag> tags;
         private List<StructureElement> children;
+        private FileObject file;
 
         private Builder(@NonNull String name, @NonNull StructureElement.Kind kind) {
             this.name = name;
@@ -247,6 +249,18 @@ public interface StructureProvider {
         }
         
         /**
+         * Sets file which contains the structure element. {@code null} stands
+         * for either implicit or inaccessible.
+         * @param f file object
+         * @return this instance
+         * @since 1.9
+         */
+        public Builder file(FileObject f) {
+            this.file = f;
+            return this;
+        }
+        
+        /**
          * Builds structure element.
          *
          * @since 1.8
@@ -254,7 +268,7 @@ public interface StructureProvider {
         @NonNull
         public StructureElement build() {
             return StructureElementAccessor.getDefault()
-                    .createStructureElement(name, detail, selectionStartOffset, 
+                    .createStructureElement(file, name, detail, selectionStartOffset, 
                             selectionEndOffset, expandedStartOffset, expandedEndOffset, 
                             kind, tags, children);
         }

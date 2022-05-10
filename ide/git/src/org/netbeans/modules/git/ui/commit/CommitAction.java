@@ -25,6 +25,7 @@ import org.netbeans.modules.versioning.util.common.VCSCommitOptions;
 import org.netbeans.modules.versioning.util.common.VCSCommitTable;
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -169,7 +170,7 @@ public class CommitAction extends SingleRepositoryAction {
                 GitRepositoryState.CHERRY_PICKING, GitRepositoryState.CHERRY_PICKING_RESOLVED).contains(state)) {
             File f = new File(GitUtils.getGitFolderForRoot(repository), "MERGE_MSG"); //NOI18N
             try {
-                message = new String(FileUtils.getFileContentsAsByteArray(f), "UTF-8"); //NOI18N
+                message = new String(FileUtils.getFileContentsAsByteArray(f), StandardCharsets.UTF_8);
             } catch (IOException ex) {
                 LOG.log(Level.FINE, null, ex);
             }

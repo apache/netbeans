@@ -129,7 +129,7 @@ class OpenProjectFastIndex implements ClassIndexManagerListener {
      * will be released. The collection is shared between all scheduled Watchers.
      */
     // @GuardedBy(self)
-    private Reference<Set<FileObject>> removedRoots;
+    private Reference<Collection<FileObject>> removedRoots;
     
     /**
      * Cached project information. Added at the first request for project icon or name,
@@ -287,9 +287,11 @@ class OpenProjectFastIndex implements ClassIndexManagerListener {
         if (watcher != null) {
             return watcher;
         }
-        Collection removed = removedRoots == null ? null : removedRoots.get();
+
+        Collection<FileObject> removed = removedRoots == null ? null : removedRoots.get();
+
         if (removed == null) {
-            removedRoots = new WeakReference(removed = new HashSet<FileObject>());
+            removedRoots = new WeakReference<Collection<FileObject>>(removed = new HashSet<>());
         }
         watcher = new ProjectOpenWatcher(f, removed);
         watchCount++;
@@ -552,7 +554,7 @@ class OpenProjectFastIndex implements ClassIndexManagerListener {
         
         NameIndex(Project p, FileObject root, String files, List<Object[]> indices) {
             this.project = p;
-            this.root = new WeakReference(root);
+            this.root = new WeakReference<>(root);
             this.size = indices.size();
             this.fileNames = files;
             

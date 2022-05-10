@@ -38,6 +38,9 @@
 
   <target name="bootstrap" description="Bootstrap NetBeans-specific Ant extensions."
           depends="-jdk-init,-load-build-properties">
+    <echo message="ant version: ${ant.version}"/>
+    <echo message="Java version: ${java.version}"/>
+    <echo message="JAVA_HOME: ${java.home}"/>
     <fail message="You need to run on JDK 8+ to build NetBeans; java.home=${java.home}">
         <condition>
             <matches pattern="^1\.[01234567].*" string="${java.version}"/>
@@ -464,42 +467,6 @@ metabuild.hash=${metabuild.hash}</echo>
             <include name="netbeans*.exe"/>
         </patternset>
     </unzip>
-  </target>
-
-  <target name="-load-module-flags">
-      <loadfile property="jms-base.flags" srcFile="jms-config/base.flags">
-          <filterchain>
-              <tokenfilter>
-                  <replaceregex pattern="--" replace=" -J--" />
-              </tokenfilter>
-              <striplinebreaks/>
-          </filterchain>
-      </loadfile>
-      <loadfile property="jms-desktop.flags" srcFile="jms-config/desktop.flags">
-          <filterchain>
-              <tokenfilter>
-                  <replaceregex pattern="--" replace=" -J--" />
-              </tokenfilter>
-              <striplinebreaks/>
-          </filterchain>
-      </loadfile>
-      <loadfile property="jms-compiler.flags" srcFile="jms-config/compiler.flags">
-          <filterchain>
-              <tokenfilter>
-                  <replaceregex pattern="--" replace=" -J--" />
-              </tokenfilter>
-              <striplinebreaks/>
-          </filterchain>
-      </loadfile>
-      <loadfile property="jms-tools.flags" srcFile="jms-config/tools.flags">
-          <filterchain>
-              <tokenfilter>
-                  <replaceregex pattern="--" replace=" -J--" />
-              </tokenfilter>
-              <striplinebreaks/>
-          </filterchain>
-      </loadfile>
-      <property name="metabuild.jms-flags" value="${jms-base.flags}${jms-desktop.flags}${jms-compiler.flags}${jms-tools.flags}"/>
   </target>
 
   <target name="finish-build-nb" depends="init,-check-nb-cluster,-download-nb-windows-launchers,-load-module-flags" if="has.nb.cluster">

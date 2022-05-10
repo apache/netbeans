@@ -32,6 +32,12 @@ public class DatabaseItem extends OCIItem {
         this.connectionName = connectionName;
     }
 
+    public DatabaseItem() {
+        super();
+        serviceUrl = null;
+        connectionName = null;
+    }
+    
     public String getServiceUrl() {
         return serviceUrl;
     }

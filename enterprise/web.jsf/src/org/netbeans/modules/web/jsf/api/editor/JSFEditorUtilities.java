@@ -309,9 +309,7 @@ public class JSFEditorUtilities {
     private static String addNewLines(final BaseBean bean) throws IOException {
         StringWriter sWriter = new StringWriter();
         bean.writeNode(sWriter);
-        String sBean = sWriter.toString();
-        sBean = sBean.replaceAll("><", ">"+END_LINE+"<");               //NOI18N
-        return sBean;
+        return sWriter.toString().replace("><", ">"+END_LINE+"<");     //NOI18N
     }
     
     private static int writeString(BaseDocument doc, String text, int offset){

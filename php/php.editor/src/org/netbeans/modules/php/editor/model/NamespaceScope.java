@@ -52,6 +52,7 @@ public interface NamespaceScope extends VariableScope, FullyQualifiedElement {
     Collection<? extends ClassScope> getDeclaredClasses();
     Collection<? extends InterfaceScope> getDeclaredInterfaces();
     Collection<? extends TraitScope> getDeclaredTraits();
+    Collection<? extends EnumScope> getDeclaredEnums();
     Collection<? extends ConstantElement> getDeclaredConstants();
     Collection<? extends FunctionScope> getDeclaredFunctions();
     boolean isDefaultNamespace();

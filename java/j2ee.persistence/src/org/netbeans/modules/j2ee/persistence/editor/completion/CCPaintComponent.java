@@ -262,7 +262,7 @@ public class CCPaintComponent extends JPanel {
         if (widths != null) {
             widths.clear();
         } else {
-            widths = new HashMap();
+            widths = new HashMap<>();
         }
         for (int i = 0; i < frequentWords.length; i++) {
             storeWidth(frequentWords[i]);

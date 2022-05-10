@@ -33,6 +33,8 @@ import org.netbeans.modules.php.editor.api.QualifiedName;
 import org.netbeans.modules.php.editor.api.QuerySupportFactory;
 import org.netbeans.modules.php.editor.api.elements.ClassElement;
 import static org.netbeans.modules.php.editor.api.elements.ElementFilter.forFiles;
+import org.netbeans.modules.php.editor.api.elements.EnumCaseElement;
+import org.netbeans.modules.php.editor.api.elements.EnumElement;
 import org.netbeans.modules.php.editor.api.elements.FunctionElement;
 import org.netbeans.modules.php.editor.api.elements.InterfaceElement;
 import org.netbeans.modules.php.editor.api.elements.MethodElement;
@@ -41,9 +43,11 @@ import org.netbeans.modules.php.editor.api.elements.TypeConstantElement;
 import org.netbeans.modules.php.editor.api.elements.TypeElement;
 import org.netbeans.modules.php.editor.api.elements.VariableElement;
 import org.netbeans.modules.php.editor.elements.IndexQueryImpl;
+import org.netbeans.modules.php.editor.model.CaseElement;
 import org.netbeans.modules.php.editor.model.ClassConstantElement;
 import org.netbeans.modules.php.editor.model.ClassScope;
 import org.netbeans.modules.php.editor.model.ConstantElement;
+import org.netbeans.modules.php.editor.model.EnumScope;
 import org.netbeans.modules.php.editor.model.FieldElement;
 import org.netbeans.modules.php.editor.model.FunctionScope;
 import org.netbeans.modules.php.editor.model.IndexScope;
@@ -139,6 +143,11 @@ class IndexScopeImpl extends ScopeImpl implements IndexScope {
         return indexScope.findConstants(constantName);
     }
 
+    static List<? extends CaseElement> getEnumCases(final QualifiedName enumCaseName, TypeScope scope) {
+        final IndexScope indexScope = ModelUtils.getIndexScope(scope);
+        return indexScope.findEnumCases(scope, enumCaseName.toString());
+    }
+
     static Collection<? extends FunctionScope> getFunctions(final QualifiedName fncName, ModelElement elem) {
         final IndexScope indexScope = ModelUtils.getIndexScope(elem);
         return indexScope.findFunctions(fncName);
@@ -195,6 +204,19 @@ class IndexScopeImpl extends ScopeImpl implements IndexScope {
     }
 
     @Override
+    public List<? extends EnumScope> findEnums(QualifiedName enumName) {
+        List<EnumScope> retval = new ArrayList<>();
+        retval.addAll(ModelUtils.filter(ModelUtils.getDeclaredEnums(model.getFileScope()), enumName));
+        if (retval.isEmpty()) {
+            Set<EnumElement> enums = getIndex().getEnums(NameKind.exact(enumName));
+            for (EnumElement indexedEnum : forFiles(getFileObject()).prefer(enums)) {
+                retval.add(new EnumScopeImpl(this, indexedEnum));
+            }
+        }
+        return retval;
+    }
+
+    @Override
     public List<? extends TypeScope> findTypes(final QualifiedName queryName) {
         List<TypeScope> retval = new ArrayList<>();
         retval.addAll(ModelUtils.filter(ModelUtils.getDeclaredTypes(model.getFileScope()), queryName));
@@ -208,6 +230,8 @@ class IndexScopeImpl extends ScopeImpl implements IndexScope {
                         retval.add(new InterfaceScopeImpl(this, (InterfaceElement) typeElement));
                     } else if (typeElement instanceof TraitElement) {
                         retval.add(new TraitScopeImpl(this, (TraitElement) typeElement));
+                    } else if (typeElement instanceof EnumElement) {
+                        retval.add(new EnumScopeImpl(this, (EnumElement) typeElement));
                     } else {
                         assert false : typeElement.getClass();
                     }
@@ -278,6 +302,16 @@ class IndexScopeImpl extends ScopeImpl implements IndexScope {
     }
 
     @Override
+    public List<? extends CaseElement> findEnumCases(TypeScope type) {
+        List<CaseElement> retval = new ArrayList<>();
+        Set<EnumCaseElement> enumCases = getIndex().getDeclaredEnumCases(type);
+        for (EnumCaseElement enumCase : forFiles(getFileObject()).prefer(enumCases)) {
+            retval.add(new CaseElementImpl(type, enumCase));
+        }
+        return retval;
+    }
+
+    @Override
     public List<? extends MethodScope> findMethods(TypeScope type, String queryName, int... modifiers) {
         List<MethodScope> retval = new ArrayList<>();
         //PhpModifiers attribs = new PhpModifiers(modifiers);
@@ -307,6 +341,17 @@ class IndexScopeImpl extends ScopeImpl implements IndexScope {
                     forName(NameKind.exact(queryName)).filter(getIndex().getDeclaredTypeConstants(type));
         for (TypeConstantElement con : forFiles(getFileObject()).prefer(constants)) {
             retval.add(new ClassConstantElementImpl(type, con));
+        }
+        return retval;
+    }
+
+    @Override
+    public List<? extends CaseElement> findEnumCases(TypeScope type, String queryName) {
+        List<CaseElement> retval = new ArrayList<>();
+        Set<EnumCaseElement> enumCases = org.netbeans.modules.php.editor.api.elements.ElementFilter.
+                    forName(NameKind.exact(queryName)).filter(getIndex().getDeclaredEnumCases(type));
+        for (EnumCaseElement caseElement : forFiles(getFileObject()).prefer(enumCases)) {
+            retval.add(new CaseElementImpl(type, caseElement));
         }
         return retval;
     }

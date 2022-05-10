@@ -1286,4 +1286,17 @@ public class PhpParserErrorTest extends PHPTestBase {
         checkErrors("testfiles/parser/php81/pureIntersectionTypesWithUnionTypeError_03.php");
     }
 
+    public void testEnumerations_01() throws Exception {
+        checkErrors("testfiles/parser/php81/enumerations_01.php");
+    }
+
+    public void testEnumerations_02() throws Exception {
+        checkErrors("testfiles/parser/php81/enumerations_02.php");
+    }
+
+    public void testEnumAsTypeName() throws Exception {
+        // We can use "enum" as a type name
+        checkErrors("testfiles/parser/php81/enumAsTypeName.php");
+    }
+
 }

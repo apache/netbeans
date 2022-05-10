@@ -1,0 +1,6 @@
+Code completion result for source line:
+whe|re:
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+KEYWORD    when                                       null
+KEYWORD    where                                      null

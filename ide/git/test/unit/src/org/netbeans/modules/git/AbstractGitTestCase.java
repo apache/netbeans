@@ -26,6 +26,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.channels.Channels;
+import java.nio.charset.StandardCharsets;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -110,7 +111,7 @@ public abstract class AbstractGitTestCase extends NbTestCase {
         BufferedReader r = null;
         try {
             StringBuilder sb = new StringBuilder();
-            r = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8"));
+            r = new BufferedReader(new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8));
             for (String line = r.readLine(); line != null; line = r.readLine()) {
                 if (sb.length() > 0) {
                     sb.append('\n');

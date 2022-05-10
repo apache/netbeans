@@ -198,7 +198,7 @@ public final class NewTestSuiteWizardIterator implements WizardDescriptor.Instan
             packageName = FileUtil.getRelativePath(groups[i].getRootFolder(), targetFolder);
         }
         if (packageName != null) {
-            packageName = packageName.replaceAll("/", "."); // NOI18N
+            packageName = packageName.replace("/", "."); // NOI18N
         }
         return packageName;
     }

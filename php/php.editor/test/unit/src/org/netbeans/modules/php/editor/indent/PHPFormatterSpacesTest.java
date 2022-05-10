@@ -1657,4 +1657,16 @@ public class PHPFormatterSpacesTest extends PHPFormatterTestBase {
         reformatFileContents("testfiles/formatting/spaces/php81/spaceAroundPureIntersectionTypeSeparator_02b.php", options);
     }
 
+    public void testSpacesBeforeEnumDecLeftBrace_01a() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_BEFORE_CLASS_DECL_LEFT_BRACE, true);
+        reformatFileContents("testfiles/formatting/spaces/php81/spaceBeforeEnumDecLeftBrace_01a.php", options);
+    }
+
+    public void testSpacesBeforeEnumDecLeftBrace_01b() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_BEFORE_CLASS_DECL_LEFT_BRACE, false);
+        reformatFileContents("testfiles/formatting/spaces/php81/spaceBeforeEnumDecLeftBrace_01b.php", options);
+    }
+
 }

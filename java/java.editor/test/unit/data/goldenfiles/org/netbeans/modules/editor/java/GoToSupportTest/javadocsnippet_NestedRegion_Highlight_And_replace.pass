@@ -1,0 +1,17 @@
+<html><body><font size='+0'><b><a href='*0'>test.&#x200B;Test</a></b></font><pre>public void <b>testNestedRegion_Highlight_And_replace</b>()</pre><p><div id="snippet1" style="font-size: 10px; border: 1px solid black; margin-top: 2px; margin-bottom: 2px"><div align=right><a href="copy.snippet1">Copy</a></div>
+<pre><code>   public static void \bmain\b(String... args) {	
+       for (var <i><b>a</b></i><i><b>r</b></i><i><b>g</b></i> : <i><b>a</b></i><i><b>r</b></i><i><b>g</b></i>s) {                         
+           if (!<b>a</b><b>r</b><b>g</b>.isBl<b>a</b><b>r</b><b>g</b>k()) {
+               System.<b><b>a</b></b><b><b>r</b></b><b><b>g</b></b>.println("<b><b>a</b></b><b><b>r</b></b><b><b>g</b></b>");		
+		 System.arg.println("arg");
+		 System.arg.println("tests");           
+		 System.arg.println("replace-new");           
+		 System.out.println("<b>\</b><b>b</b><b>a</b><b>r</b><b>g</b><b>\</b><b>b</b>");         
+		 System.arg.println("<b>r</b><b>e</b><b>p</b><b>l</b><b>a</b><b>c</b><b>e</b>"); 			
+		 System.out.println("\barg\b");         // to-do
+		 System.out.println("<b>a</b><b>r</b><b>g</b><b>b</b>"); 
+ }
+ }
+ }
+ 
+</code></pre></div><p>

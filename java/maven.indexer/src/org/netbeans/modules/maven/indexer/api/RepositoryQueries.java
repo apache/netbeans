@@ -120,7 +120,7 @@ public final class RepositoryQueries {
         }
     }
         
-    private static final class CompositeResult<T> implements ResultImplementation {
+    private static final class CompositeResult<T> implements ResultImplementation<T> {
         
         private final List<ResultImplementation<T>> results;
         

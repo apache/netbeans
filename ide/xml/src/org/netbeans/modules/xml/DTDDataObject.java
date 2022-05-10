@@ -59,7 +59,7 @@ public final class DTDDataObject extends MultiDataObject implements XMLDataObjec
     private static final long serialVersionUID = 2890472952957502631L;
 
     /** Synchronization implementation delegate. */
-    private Reference<XMLSyncSupport> refSync;
+    private Reference<Synchronizator> refSync;
     
     /** Cookie Manager */
     private final DataObjectCookieManager cookieManager;
@@ -143,7 +143,7 @@ public final class DTDDataObject extends MultiDataObject implements XMLDataObjec
             return sync;
         }
         sync = new DTDSyncSupport(this);       
-        refSync = new WeakReference(sync);
+        refSync = new WeakReference<>(sync);
         return sync;
     }
 

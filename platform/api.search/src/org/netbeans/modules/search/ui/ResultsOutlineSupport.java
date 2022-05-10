@@ -23,7 +23,6 @@ import java.awt.FontMetrics;
 import java.awt.Image;
 import java.awt.datatransfer.Transferable;
 import java.awt.event.HierarchyEvent;
-import java.awt.event.HierarchyListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -403,8 +402,7 @@ public class ResultsOutlineSupport {
                     : "<html>" + htmlName + "</html>";       // #214330 //NOI18N
             String stripped = (htmlName == null)
                     ? null
-                    : htmlName.replaceAll("<b>", "").replaceAll( //NOI18N
-                    "</b>", "");                                        //NOI18N
+                    : htmlName.replace("<b>", "").replace("</b>", "");  //NOI18N
             this.setDisplayName(stripped);
         }
 

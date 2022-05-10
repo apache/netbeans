@@ -25,6 +25,7 @@ import java.beans.PropertyChangeSupport;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.File;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -204,7 +205,7 @@ implements ProjectFactory, PropertyChangeListener, Runnable {
                 is = prj.getInputStream();
                 len = is.read(arr);
                 if (len >= 0) {
-                    content = new String(arr, 0, len, "UTF-8");
+                    content = new String(arr, 0, len, StandardCharsets.UTF_8);
                 }
             } catch (IOException ex) {
                 LOG.log(Level.FINEST, "exception while reading " + prj, ex); // NOI18N

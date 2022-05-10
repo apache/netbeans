@@ -95,6 +95,7 @@ body:
       options:
         - "Apache NetBeans provided installer"
         - "Apache NetBeans binary zip"
+        - "Apache NetBeans Snap Package"
         - "Third-party package"
         - "Own source build"
         - "Apache VSNetBeans for VSCode"

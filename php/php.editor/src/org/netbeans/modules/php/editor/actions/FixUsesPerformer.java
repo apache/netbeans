@@ -719,9 +719,10 @@ public class FixUsesPerformer {
             static Type create(ItemVariant.Type type) {
                 Type result;
                 switch (type) {
-                    case CLASS:
-                    case INTERFACE:
-                    case TRAIT:
+                    case CLASS: // no break
+                    case INTERFACE: // no break
+                    case TRAIT: // no break
+                    case ENUM:
                         result = TYPE;
                         break;
                     case CONST:

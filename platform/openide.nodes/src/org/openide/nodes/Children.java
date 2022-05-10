@@ -1679,7 +1679,8 @@ public abstract class Children extends Object {
     * added to the collection and if the same object is added
     * more than once it is indexed by a number.
     */
-    private abstract static class Dupl<T> implements Cloneable, Entry {
+    // package-private for tests only!
+    abstract static class Dupl<T> implements Cloneable, Entry {
         /** the key either real value or Dupl (Dupl (Dupl (... value ...)))*/
         protected Object key;
 

@@ -87,7 +87,9 @@ public class GroovyTypeSearcher implements IndexSearcher {
             
             Set<IndexedMethod> methods = index.getMethods(textForQuery, null, kind);
             for (IndexedMethod method : methods) {
-                result.add(new GroovyTypeDescriptor(method, helper));
+                if (method.getOffsetRange(null)  != OffsetRange.NONE) {
+                    result.add(new GroovyTypeDescriptor(method, helper));
+                }
             }
         }
         

@@ -413,8 +413,7 @@ public class GroovyIndexer extends EmbeddingIndexer {
         
         private static void appendOffsetRange(StringBuilder sb, ASTNode node, BaseDocument document) {
             OffsetRange range = ASTUtils.getRange(node, document);
-            sb.append("[");
-            sb.append(range.getStart()).append(",").append(range.getEnd()).append(']');
+            sb.append('[').append(range.getStart()).append(',').append(range.getEnd()).append(']');
         }
 
     }

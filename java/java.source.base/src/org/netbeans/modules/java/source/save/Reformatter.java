@@ -418,6 +418,7 @@ public class Reformatter implements ReformatTask {
         private static final String JDOC_RETURN_TAG = "@return"; //NOI18N
         private static final String JDOC_THROWS_TAG = "@throws"; //NOI18N
         private static final String JDOC_VALUE_TAG = "@value"; //NOI18N
+        private static final String JDOC_SNIPPET_TAG = "@snippet"; //NOI18N
         private static final String ERROR = "<error>"; //NOI18N
 
         private final String fText;
@@ -4815,6 +4816,7 @@ public class Reformatter implements ReformatTask {
                             } else if (JDOC_LINK_TAG.equalsIgnoreCase(tokenText)
                                     || JDOC_LINKPLAIN_TAG.equalsIgnoreCase(tokenText)
                                     || JDOC_CODE_TAG.equalsIgnoreCase(tokenText)
+                                    || JDOC_SNIPPET_TAG.equalsIgnoreCase(tokenText)
                                     || JDOC_DOCROOT_TAG.equalsIgnoreCase(tokenText)
                                     || JDOC_INHERITDOC_TAG.equalsIgnoreCase(tokenText)
                                     || JDOC_VALUE_TAG.equalsIgnoreCase(tokenText)

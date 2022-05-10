@@ -40,6 +40,6 @@ public class BrowseWizardPanel extends AbstractWizardPanel<BrowsePanel> {
 
     @Override
     public void storeSettings(WizardDescriptor wiz) {
-        wiz.putProperty(FoojayPlatformIt.PROP_DOWNLOAD_FOLDER, getComponent().getUserDownloadFolder());
+        wiz.putProperty(DiscoPlatformIt.PROP_DOWNLOAD_FOLDER, getComponent().getUserDownloadFolder());
     }
 }

@@ -41,7 +41,7 @@ public class CMPMappingModel {
         cmpFieldMapping = new HashMap<String, String>();
         cmrFieldMapping = new HashMap<String, ColumnData[]>();
         cmrJoinMapping = new HashMap<String, String>();
-        joinTableColumnMappings = new HashMap();
+        joinTableColumnMappings = new HashMap<>();
     }
     
     public void setTableName(String tableName) {

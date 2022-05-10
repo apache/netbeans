@@ -20,11 +20,11 @@ package org.netbeans.modules.java.navigation;
 
 import java.io.File;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
-import static org.junit.Assert.*;
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.SourceUtilsTestUtil;
@@ -34,7 +34,6 @@ import org.netbeans.modules.editor.breadcrumbs.spi.BreadcrumbsElement;
 import org.netbeans.spi.queries.FileEncodingQueryImplementation;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
-import org.openide.nodes.Node;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
@@ -171,7 +170,7 @@ public class BreadCrumbsNodeImplTest extends NbTestCase {
     @ServiceProvider(service=FileEncodingQueryImplementation.class)
     public static final class FEQImpl extends FileEncodingQueryImplementation {
         @Override public Charset getEncoding(FileObject file) {
-            return Charset.forName("UTF-8");
+            return StandardCharsets.UTF_8;
         }
     }
 }

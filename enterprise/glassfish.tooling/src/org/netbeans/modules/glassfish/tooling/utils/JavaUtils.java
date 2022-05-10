@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -66,7 +67,7 @@ public class JavaUtils {
     public static final String JAVA_HOME_ENV = "JAVA_HOME";
 
     /** UTF-8 {@link Charset}. */
-    public static final Charset UTF_8 = Charset.forName("UTF-8");
+    public static final Charset UTF_8 = StandardCharsets.UTF_8;
     /**
      * Java VM version output regular expression pattern.
      * <p/>

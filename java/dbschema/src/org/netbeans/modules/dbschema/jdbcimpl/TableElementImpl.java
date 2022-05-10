@@ -309,9 +309,9 @@ public class TableElementImpl extends DBElementImpl implements TableElement.Impl
                 
                 String name, columnName;
                 boolean unq;
-                LinkedList idxs = new LinkedList();
+                LinkedList<String> idxs = new LinkedList<>();
                 if (rs != null) {
-                    Map rset = new HashMap();
+                    Map<Integer, String> rset = new HashMap<>();
                     String uniqueStr;
                     while (rs.next()) {
                         if (bridge != null) {
@@ -463,7 +463,7 @@ public class TableElementImpl extends DBElementImpl implements TableElement.Impl
 
         String name, fkColName, pkTableName, pkColName, c1, c2, s1, s2;
         if (rs != null) {
-            Map rset = new HashMap();
+            Map<Integer, String> rset = new HashMap<>();
             while (rs.next()) {
                 if (bridge != null) {
                     rset = bridge.getDriverSpecification().getRow();
@@ -559,7 +559,7 @@ public class TableElementImpl extends DBElementImpl implements TableElement.Impl
             Object keySeq;
             String colName;
             if (rs != null) {
-                Map rset = new HashMap();
+                Map<Integer, String> rset = new HashMap<>();
                 while (rs.next()) {
                     if (bridge != null) {
                         rset = bridge.getDriverSpecification().getRow();
@@ -597,7 +597,7 @@ public class TableElementImpl extends DBElementImpl implements TableElement.Impl
                         i++;
                     }
 
-                    LinkedList idxs = new LinkedList();
+                    LinkedList<String> idxs = new LinkedList<>();
                     for (Iterator it = cols.values().iterator(); it.hasNext();) {
                         // non-unique = false, thus the index is unique -- see initIndexes()
                         idxs.add(indexName + "." + it.next() + ".false"); // NOI18N

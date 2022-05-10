@@ -83,7 +83,7 @@ public class KOJsEmbeddingProviderPlugin extends JsEmbeddingProviderPlugin {
 
     public KOJsEmbeddingProviderPlugin() {
         JS_LANGUAGE = Language.find(KOUtils.JAVASCRIPT_MIMETYPE); //NOI18N
-        this.stack = new LinkedList();
+        this.stack = new LinkedList<>();
     }
 
     @Override

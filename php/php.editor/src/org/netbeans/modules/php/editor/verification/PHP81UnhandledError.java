@@ -33,8 +33,10 @@ import org.netbeans.modules.php.editor.parser.astnodes.ASTNode;
 import org.netbeans.modules.php.editor.parser.astnodes.Assignment;
 import org.netbeans.modules.php.editor.parser.astnodes.AttributeDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.BodyDeclaration;
+import org.netbeans.modules.php.editor.parser.astnodes.CaseDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.ClassInstanceCreation;
 import org.netbeans.modules.php.editor.parser.astnodes.ConstantDeclaration;
+import org.netbeans.modules.php.editor.parser.astnodes.EnumDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.Expression;
 import org.netbeans.modules.php.editor.parser.astnodes.FormalParameter;
 import org.netbeans.modules.php.editor.parser.astnodes.Identifier;
@@ -162,6 +164,24 @@ public final class PHP81UnhandledError extends UnhandledErrorRule {
                 }
             }
             super.visit(attributeDeclaration);
+        }
+
+        @Override
+        public void visit(EnumDeclaration node) {
+            if (CancelSupport.getDefault().isCancelled()) {
+                return;
+            }
+            createError(node);
+            super.visit(node);
+        }
+
+        @Override
+        public void visit(CaseDeclaration node) {
+            if (CancelSupport.getDefault().isCancelled()) {
+                return;
+            }
+            createError(node);
+            super.visit(node);
         }
 
         private void checkConstantDeclaration(ConstantDeclaration constantDeclaration) {

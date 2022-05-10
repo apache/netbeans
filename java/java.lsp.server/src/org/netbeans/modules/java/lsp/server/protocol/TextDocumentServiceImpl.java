@@ -22,10 +22,8 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.sun.source.tree.ClassTree;
-import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.LineMap;
 import com.sun.source.tree.MethodTree;
-import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.VariableTree;
@@ -47,7 +45,6 @@ import java.util.EnumMap;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
@@ -56,7 +53,6 @@ import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Set;
 import java.util.TreeMap;
-import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -80,6 +76,12 @@ import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.StyledDocument;
+import org.eclipse.lsp4j.CallHierarchyIncomingCall;
+import org.eclipse.lsp4j.CallHierarchyIncomingCallsParams;
+import org.eclipse.lsp4j.CallHierarchyItem;
+import org.eclipse.lsp4j.CallHierarchyOutgoingCall;
+import org.eclipse.lsp4j.CallHierarchyOutgoingCallsParams;
+import org.eclipse.lsp4j.CallHierarchyPrepareParams;
 import org.eclipse.lsp4j.ClientCapabilities;
 import org.eclipse.lsp4j.CodeAction;
 import org.eclipse.lsp4j.CodeActionKind;
@@ -140,8 +142,6 @@ import org.eclipse.lsp4j.ServerCapabilities;
 import org.eclipse.lsp4j.SignatureHelp;
 import org.eclipse.lsp4j.SignatureHelpParams;
 import org.eclipse.lsp4j.SymbolInformation;
-import org.eclipse.lsp4j.SymbolKind;
-import org.eclipse.lsp4j.SymbolTag;
 import org.eclipse.lsp4j.TextDocumentContentChangeEvent;
 import org.eclipse.lsp4j.TextDocumentEdit;
 import org.eclipse.lsp4j.TextEdit;
@@ -174,6 +174,7 @@ import org.netbeans.api.java.source.WorkingCopy;
 import org.netbeans.api.java.source.ui.ElementOpen;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenSequence;
+import org.netbeans.api.lsp.CallHierarchyEntry;
 import org.netbeans.api.lsp.Completion;
 import org.netbeans.api.lsp.HyperlinkLocation;
 import org.netbeans.api.project.FileOwnerQuery;
@@ -217,6 +218,7 @@ import org.netbeans.modules.refactoring.api.RenameRefactoring;
 import org.netbeans.modules.refactoring.api.WhereUsedQuery;
 import org.netbeans.modules.refactoring.api.impl.APIAccessor;
 import org.netbeans.modules.refactoring.api.impl.SPIAccessor;
+import org.netbeans.modules.refactoring.java.api.JavaRefactoringUtils;
 import org.netbeans.modules.refactoring.java.api.WhereUsedQueryConstants;
 import org.netbeans.modules.refactoring.java.spi.hooks.JavaModificationResult;
 import org.netbeans.modules.refactoring.plugins.FileRenamePlugin;
@@ -226,6 +228,7 @@ import org.netbeans.modules.refactoring.spi.Transaction;
 import org.netbeans.api.lsp.StructureElement;
 import org.netbeans.spi.editor.hints.ErrorDescription;
 import org.netbeans.spi.editor.hints.Fix;
+import org.netbeans.spi.lsp.CallHierarchyProvider;
 import org.netbeans.spi.lsp.ErrorProvider;
 import org.netbeans.spi.lsp.StructureProvider;
 import org.netbeans.spi.project.ActionProvider;
@@ -899,8 +902,14 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                 diagnostics.addAll(computeDiags(params.getTextDocument().getUri(), startOffset, ErrorProvider.Kind.HINTS, documentVersion(doc)));
             }
 
-            Map<String, org.netbeans.api.lsp.Diagnostic> id2Errors = (Map<String, org.netbeans.api.lsp.Diagnostic>) doc.getProperty("lsp-errors");
-            if (id2Errors != null) {
+            Map<String, org.netbeans.api.lsp.Diagnostic> id2Errors = new HashMap<>();
+            for (String key : VALID_ERROR_KEYS) {
+                Map<String, org.netbeans.api.lsp.Diagnostic> diags = (Map<String, org.netbeans.api.lsp.Diagnostic>) doc.getProperty("lsp-errors-valid-" + key);
+                if (diags != null) {
+                    id2Errors.putAll(diags);
+                }
+            }
+            if (!id2Errors.isEmpty()) {
                 for (Entry<String, org.netbeans.api.lsp.Diagnostic> entry : id2Errors.entrySet()) {
                     org.netbeans.api.lsp.Diagnostic err = entry.getValue();
                     if (err.getDescription() == null || err.getDescription().isEmpty()) {
@@ -1077,6 +1086,11 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                     Parser.Result parserResult = resultIterator.getParserResult();
                     //look for main methods:
                     List<CodeLens> lens = new ArrayList<>();
+                    if (parserResult == null) {
+                        // no parser for the sourec type
+                        result.complete(lens);
+                        return;
+                    }
                     CompilationController cc = CompilationController.get(parserResult);
                     if (cc != null) {
                         cc.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
@@ -1201,8 +1215,14 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                     result.complete(null);
                 }
                 int pos = Utils.getOffset((LineDocument) doc, params.getPosition());
+                TokenSequence<JavaTokenId> ts = cc.getTokenHierarchy().tokenSequence(JavaTokenId.language());
+                ts.move(pos);
+                if (ts.moveNext() && ts.token().id() != JavaTokenId.WHITESPACE && ts.offset() == pos) {
+                    pos += 1;
+                }
                 TreePath path = cc.getTreeUtilities().pathFor(pos);
                 RenameRefactoring ref = new RenameRefactoring(Lookups.singleton(TreePathHandle.create(path, cc)));
+                ref.getContext().add(JavaRefactoringUtils.getClasspathInfoFor(cc.getFileObject()));
                 ref.setNewName("any");
                 Problem p = ref.fastCheckParameters();
                 boolean hasFatalProblem = false;
@@ -1214,7 +1234,6 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                     result.complete(null);
                 } else {
                     //XXX: better range computation
-                    TokenSequence<JavaTokenId> ts = cc.getTokenHierarchy().tokenSequence(JavaTokenId.language());
                     int d = ts.move(pos);
                     if (ts.moveNext()) {
                         if (d == 0 && ts.token().id() != JavaTokenId.IDENTIFIER) {
@@ -1265,7 +1284,13 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                     if (cancel.get()) return ;
                     Document doc = cc.getSnapshot().getSource().getDocument(true);
                     if (doc instanceof LineDocument) {
-                        TreePath path = cc.getTreeUtilities().pathFor(Utils.getOffset((LineDocument) doc, params.getPosition()));
+                        int pos = Utils.getOffset((LineDocument) doc, params.getPosition());
+                        TokenSequence<JavaTokenId> ts = cc.getTokenHierarchy().tokenSequence(JavaTokenId.language());
+                        ts.move(pos);
+                        if (ts.moveNext() && ts.token().id() != JavaTokenId.WHITESPACE && ts.offset() == pos) {
+                            pos += 1;
+                        }
+                        TreePath path = cc.getTreeUtilities().pathFor(pos);
                         List<Object> lookupContent = new ArrayList<>();
 
                         lookupContent.add(TreePathHandle.create(path, cc));
@@ -1281,6 +1306,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                         }
 
                         refactoring[0] = new RenameRefactoring(Lookups.fixed(lookupContent.toArray(new Object[0])));
+                        refactoring[0].getContext().add(JavaRefactoringUtils.getClasspathInfoFor(cc.getFileObject()));
                         refactoring[0].setNewName(params.getNewName());
                         refactoring[0].setSearchInComments(true); //TODO?
                     }
@@ -1332,7 +1358,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                 List<RefactoringElementImplementation> fileChanges = APIAccessor.DEFAULT.getFileChanges(session);
                 for (RefactoringElementImplementation rei : fileChanges) {
                     if (rei instanceof FileRenamePlugin.RenameFile) {
-                        String oldURI = params.getTextDocument().getUri();
+                        String oldURI = Utils.toUri(rei.getParentFile());
                         int dot = oldURI.lastIndexOf('.');
                         int slash = oldURI.lastIndexOf('/');
                         String newURI = oldURI.substring(0, slash + 1) + params.getNewName() + oldURI.substring(dot);
@@ -1470,6 +1496,9 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                     }
                 }
             });
+            for (String key : VALID_ERROR_KEYS) {
+                doc.putProperty("lsp-errors-valid-" + key, null);
+            }
         }
         runDiagnosticTasks(params.getTextDocument().getUri());
         reportNotificationDone("didChange", params);
@@ -1641,7 +1670,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                         Document doc = server.getOpenedDocuments().getDocument(uri);
                         if (documentVersion(doc) == originalVersion) {
                             publishDiagnostics(uri, hintDiags);
-                }
+                        }
                     }).schedule(DELAY);
                 }
             });
@@ -1707,6 +1736,9 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
             }
             if (offset < 0) {
                 doc.putProperty("lsp-errors-" + keyPrefix, id2Errors);
+                doc.putProperty("lsp-errors-valid-" + keyPrefix, id2Errors);
+            } else {
+                doc.putProperty("lsp-errors-valid-offsetHints", id2Errors);
             }
             Map<String, org.netbeans.api.lsp.Diagnostic> mergedId2Errors = new HashMap<>();
             for (String k : ERROR_KEYS) {
@@ -1733,7 +1765,6 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
             if (offset >= 0) {
                 mergedId2Errors.putAll(id2Errors);
             }
-            doc.putProperty("lsp-errors", mergedId2Errors);
         } catch (IOException ex) {
             throw new IllegalStateException(ex);
         }
@@ -1822,6 +1853,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
     }
     
     private static final String[] ERROR_KEYS = {"errors", "hints"};
+    private static final String[] VALID_ERROR_KEYS = {"errors", "hints", "offsetHints"};
 
     private interface ProduceErrors {
         public List<ErrorDescription> computeErrors(CompilationInfo info, Document doc) throws IOException;
@@ -2004,4 +2036,211 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         return CompletableFuture.completedFuture(tokens);
     }
 
+    @Override
+    public CompletableFuture<List<CallHierarchyItem>> prepareCallHierarchy(CallHierarchyPrepareParams params) {
+        FileObject file = fromURI(params.getTextDocument().getUri());
+        if (file == null) {
+            return CompletableFuture.completedFuture(null);
+        }
+        // FIXME: probably the MIME type ought be derived from the exact source position, not from the whole file.
+        CallHierarchyProvider chp = MimeLookup.getLookup(file.getMIMEType()).lookup(CallHierarchyProvider.class);
+        if (chp == null) {
+            return CompletableFuture.completedFuture(null);
+        }
+        EditorCookie ec = file.getLookup().lookup(EditorCookie.class);
+        // PENDING: possibly handle cancellation with this Future ?
+        LineDocument lDoc;
+        try {
+            Document doc = ec.openDocument();
+            if (!(doc instanceof LineDocument)) {
+                return CompletableFuture.completedFuture(null);
+            }
+            lDoc = (LineDocument)doc;
+        } catch (IOException ex) {
+            CompletableFuture f = new CompletableFuture();
+            f.completeExceptionally(ex);
+            return f;
+        }
+        return chp.findCallOrigin(lDoc, Utils.getOffset(lDoc, params.getPosition())).thenApply(l -> {
+            if (l == null) {
+                return null;
+            }
+            List<CallHierarchyItem> res = new ArrayList<>();
+            for (CallHierarchyEntry c : l) {
+                CallHierarchyItem n = callEntryToItem(file, c, callEntryDocument(c, lDoc));
+                if (n != null) {
+                    res.add(n);
+                }
+            }
+            return res;
+        });
+    }
+    
+    private static CallHierarchyItem callEntryToItem(FileObject documentFile, CallHierarchyEntry c, LineDocument lDoc) {
+        FileObject owner = c.getElement().getFile();
+        if (owner == null) {
+            owner = documentFile;
+        }
+        if (owner == null || lDoc == null) {
+            return null;
+        }
+        CallHierarchyItem chi = new CallHierarchyItem();
+        DocumentSymbol ds = structureElement2DocumentSymbol(lDoc, c.getElement());
+        if (ds == null) {
+            return null;
+        }
+        chi.setKind(ds.getKind());
+        chi.setName(ds.getName());
+        chi.setTags(ds.getTags());
+        chi.setRange(ds.getRange());
+        chi.setSelectionRange(ds.getSelectionRange());
+        chi.setUri(Utils.toUri(owner));
+        chi.setData(c.getCustomData());
+        return chi;
+    }
+    
+    LineDocument callEntryDocument(CallHierarchyEntry e, LineDocument documentFile) {
+        FileObject owner = e.getElement().getFile();
+        if (owner != null && owner != documentFile) {
+            // must open the document
+            EditorCookie ck = owner.getLookup().lookup(EditorCookie.class);
+            if (ck == null) {
+                return null;
+            }
+            try {
+                Document doc = ck.openDocument();
+                if (!(doc instanceof LineDocument)) {
+                    return null;
+                }
+                return (LineDocument)doc;
+            } catch (IOException ex) {
+                // TODO: report to the client ?
+                return null;
+            }
+        } else {
+            return documentFile;
+        }
+    }
+
+    abstract class HierarchyTask<T> {
+        final CallHierarchyItem request;
+        final FileObject file;
+        final CallHierarchyProvider provider;
+        final AtomicBoolean cancelled = new AtomicBoolean();
+        protected LineDocument lineDoc;
+
+        public HierarchyTask(CallHierarchyItem request) {
+            this.request = request;
+            this.file = fromURI(request.getUri());
+            this.provider = file == null ? null :
+                    MimeLookup.getLookup(file.getMIMEType()).lookup(CallHierarchyProvider.class);
+        }
+        
+        public CompletableFuture<List<T>> processRequest() {
+            if (file == null || provider == null) {
+                return null;
+            }
+            try {
+                EditorCookie ec = file.getLookup().lookup(EditorCookie.class);
+                Document doc = ec.openDocument();
+                if (!(doc instanceof LineDocument)) {
+                    return null;
+                }
+                lineDoc = (LineDocument)doc;
+            } catch (IOException | RuntimeException ex) {
+                CompletableFuture<List<T>> res = new CompletableFuture<>();
+                res.completeExceptionally(ex);
+                return res;
+            }
+
+            StructureProvider.Builder b = StructureProvider.newBuilder(
+                    request.getName(), StructureElement.Kind.valueOf(request.getKind().toString()));
+
+            b.file(file);
+            b.expandedStartOffset(Utils.getOffset(lineDoc, request.getRange().getStart()));
+            b.expandedEndOffset(Utils.getOffset(lineDoc, request.getRange().getEnd()));
+            b.selectionStartOffset(Utils.getOffset(lineDoc, request.getSelectionRange().getStart()));
+            b.selectionEndOffset(Utils.getOffset(lineDoc, request.getSelectionRange().getEnd()));
+
+            String d;
+            if (request.getData() instanceof JsonPrimitive) {
+                d = ((JsonPrimitive)request.getData()).getAsString();
+            } else if (request.getData() != null) {
+                d = request.getData().toString();
+            } else {
+                d = null;
+            }
+            
+            return callProvider(provider, new CallHierarchyEntry(b.build(), d)).thenApply(this::convert);
+        }
+        
+        List<T> convert(List<CallHierarchyEntry.Call> l) {
+            if (l == null) {
+                return null;
+            }
+            List<T> res = (List<T>)new ArrayList();
+            for (CallHierarchyEntry.Call call : l) {
+                CallHierarchyEntry che = call.getItem();
+                LineDocument lDoc = callEntryDocument(che, lineDoc);
+                CallHierarchyItem callItem = callEntryToItem(file, che, lDoc);
+                if (callItem == null) {
+                    continue;
+                }
+                List<Range> ranges = new ArrayList<>();
+                for (org.netbeans.api.lsp.Range r : call.getRanges()) {
+                    // lDoc cannot be null if callItem != null.
+                    ranges.add(callRange2Range(r, lDoc));
+                }
+                T lspCall = createResultItem(callItem, ranges);
+                res.add(lspCall);
+            }
+            return res;
+        }
+                
+        protected abstract CompletableFuture<List<CallHierarchyEntry.Call>> callProvider(CallHierarchyProvider p, CallHierarchyEntry e);
+        
+        protected abstract T createResultItem(CallHierarchyItem item, List<Range> ranges);
+    }
+    
+    @Override
+    public CompletableFuture<List<CallHierarchyIncomingCall>> callHierarchyIncomingCalls(CallHierarchyIncomingCallsParams params) {
+        HierarchyTask<CallHierarchyIncomingCall> t =  new HierarchyTask<CallHierarchyIncomingCall>(params.getItem()) {
+            @Override
+            protected CompletableFuture<List<CallHierarchyEntry.Call>> callProvider(CallHierarchyProvider p, CallHierarchyEntry e) {
+                return p.findIncomingCalls(e);
+            }
+
+            @Override
+            protected CallHierarchyIncomingCall createResultItem(CallHierarchyItem item, List<Range> ranges) {
+                return new CallHierarchyIncomingCall(item, ranges);
+            }
+        };
+        return t.processRequest();
+    }
+    
+    private static Position offset2Position(Document doc, int offset) {
+        int line = NbDocument.findLineNumber((StyledDocument)doc, offset);
+        int column = NbDocument.findLineColumn((StyledDocument)doc, offset);
+        return new Position(line, column);
+    }
+    
+    private static Range callRange2Range(org.netbeans.api.lsp.Range r, Document doc) {
+        return new Range(offset2Position(doc, r.getStartOffset()), offset2Position(doc, r.getEndOffset()));
+    }
+
+    @Override
+    public CompletableFuture<List<CallHierarchyOutgoingCall>> callHierarchyOutgoingCalls(CallHierarchyOutgoingCallsParams params) {
+        HierarchyTask<CallHierarchyOutgoingCall> t =  new HierarchyTask<CallHierarchyOutgoingCall>(params.getItem()) {
+            @Override
+            protected CompletableFuture<List<CallHierarchyEntry.Call>> callProvider(CallHierarchyProvider p, CallHierarchyEntry e) {
+                return p.findOutgoingCalls(e);
+            }
+
+            @Override
+            protected CallHierarchyOutgoingCall createResultItem(CallHierarchyItem item, List<Range> ranges) {
+                return new CallHierarchyOutgoingCall(item, ranges);
+            }
+        };
+        return t.processRequest();
+    }
 }

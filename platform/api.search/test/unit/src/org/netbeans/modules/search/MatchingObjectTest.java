@@ -26,6 +26,7 @@ import java.io.OutputStreamWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -283,7 +284,7 @@ public class MatchingObjectTest extends NbTestCase {
     public void testCheckFileLines() throws IOException {
 
         FileSystem fs = FileUtil.createMemoryFileSystem();
-        Charset chs = Charset.forName("UTF-8");
+        Charset chs = StandardCharsets.UTF_8;
         OutputStream os = fs.getRoot().createAndOpen("find.txt");
         try {
             OutputStreamWriter osw = new OutputStreamWriter(os,
@@ -372,7 +373,7 @@ public class MatchingObjectTest extends NbTestCase {
         @Override
         public Charset getEncoding(FileObject file) {
             if (file.getName().equals("utf8file")) {
-                return Charset.forName("UTF-8");
+                return StandardCharsets.UTF_8;
             } else {
                 return null;
             }

@@ -32,9 +32,9 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import org.codehaus.groovy.runtime.InvokerHelper;
-import org.gradle.api.Plugin;
 import org.gradle.api.Project;
 import org.gradle.api.Task;
 import org.gradle.api.artifacts.Configuration;
@@ -42,9 +42,11 @@ import org.gradle.api.artifacts.FileCollectionDependency;
 import org.gradle.api.artifacts.ModuleDependency;
 import org.gradle.api.artifacts.ProjectDependency;
 import org.gradle.api.artifacts.ResolveException;
+import org.gradle.api.artifacts.ResolvedArtifact;
 import org.gradle.api.artifacts.ResolvedDependency;
 import org.gradle.api.artifacts.component.ComponentIdentifier;
 import org.gradle.api.artifacts.component.ModuleComponentSelector;
+import org.gradle.api.artifacts.component.ProjectComponentIdentifier;
 import org.gradle.api.artifacts.result.ArtifactResolutionResult;
 import org.gradle.api.artifacts.result.ArtifactResult;
 import org.gradle.api.artifacts.result.ComponentArtifactsResult;
@@ -55,7 +57,6 @@ import org.gradle.api.distribution.DistributionContainer;
 import org.gradle.api.file.ConfigurableFileCollection;
 import org.gradle.api.initialization.IncludedBuild;
 import org.gradle.api.plugins.JavaPlatformPlugin;
-import org.gradle.api.plugins.UnknownPluginException;
 import org.gradle.api.specs.Specs;
 import org.gradle.api.tasks.SourceSet;
 import org.gradle.api.tasks.SourceSetContainer;
@@ -84,7 +85,12 @@ class NbProjectInfoBuilder {
         "jacocoAnt",
         "jdepend",
         "pmd",
+        ".*DependenciesMetadata"
     }));
+    
+    private static final Pattern CONFIG_EXCLUDES_PATTERN = Pattern.compile(
+        CONFIG_EXCLUDES.stream().reduce("", (s1, s2) -> s1 + "|" + s2)
+    );
 
     private static final Set<String> RECOGNISED_PLUGINS = new HashSet<>(asList(new String[]{
         "antlr",
@@ -174,7 +180,8 @@ class NbProjectInfoBuilder {
         model.getInfo().put("project_buildDir", project.getBuildDir());
         model.getInfo().put("project_projectDir", project.getProjectDir());
         model.getInfo().put("project_rootDir", project.getRootDir());
-        model.getInfo().put("gradle_user_home", project.getGradle().getGradleHomeDir());
+        model.getInfo().put("gradle_user_home", project.getGradle().getGradleUserHomeDir());
+        model.getInfo().put("gradle_home", project.getGradle().getGradleHomeDir());
 
         Set<Configuration> visibleConfigurations = configurationsToSave();
         model.getInfo().put("configurations", visibleConfigurations.stream().map(conf->conf.getName()).collect(Collectors.toCollection(HashSet::new )));
@@ -292,7 +299,7 @@ class NbProjectInfoBuilder {
                                 try {
                                     compilerArgs = (List<String>) getProperty(compileTask, "options", "compilerArgs");
                                 } catch (Throwable ex2) {
-                                    compilerArgs = (List<String>) getProperty(compileTask, "kotlinOptions", "getFreeCompilerArgs");
+                                    compilerArgs = (List<String>) getProperty(compileTask, "kotlinOptions", "freeCompilerArgs");
                                 }
                             }
                             model.getInfo().put(propBase + lang + "_compiler_args", new ArrayList<>(compilerArgs));
@@ -400,6 +407,12 @@ class NbProjectInfoBuilder {
         Map<String, String> unresolvedProblems = new HashMap();
         Map<String, Set<File>> resolvedJvmArtifacts = new HashMap();
         Set<Configuration> visibleConfigurations = configurationsToSave();
+
+        // NETBEANS-5846: if this project uses javaPlatform plugin with dependencies enabled, 
+        // do not report unresolved problems
+        boolean ignoreUnresolvable = (project.getPlugins().hasPlugin(JavaPlatformPlugin.class) && 
+            Boolean.TRUE.equals(getProperty(project, "javaPlatform", "allowDependencies")));
+
         visibleConfigurations.forEach(it -> {
             String propBase = "configuration_" + it.getName() + "_";
             model.getInfo().put(propBase + "non_resolving", !resolvable(it));
@@ -429,7 +442,18 @@ class NbProjectInfoBuilder {
                             ResolvedDependencyResult rdr = (ResolvedDependencyResult) it2;
                             if (rdr.getRequested() instanceof ModuleComponentSelector) {
                                 ids.add(rdr.getSelected().getId());
-                                componentIds.add(rdr.getSelected().getId().toString());
+                                // do not bother with components that only select a variant, which is itself a component
+                                // TODO: represent as a special component type so the IDE shows it, but the IDE knows it is an abstract
+                                // intermediate with no artifact(s).
+                                if (rdr.getResolvedVariant() == null) {
+                                    componentIds.add(rdr.getSelected().getId().toString());
+                                } else {
+                                    sinceGradle("6.8", () -> {
+                                        if (!rdr.getResolvedVariant().getExternalVariant().isPresent()) {
+                                            componentIds.add(rdr.getSelected().getId().toString());
+                                        }
+                                    });
+                                }
                             }
                         }
                         if (it2 instanceof UnresolvedDependencyResult) {
@@ -438,10 +462,21 @@ class NbProjectInfoBuilder {
                             if(componentIds.contains(id)) {
                                 unresolvedIds.add(id);
                             }
-                            if(! project.getPlugins().hasPlugin("java-platform")) {
+                            if(!ignoreUnresolvable && (it.isVisible() || it.isCanBeConsumed())) {
+                                // hidden configurations like 'testCodeCoverageReportExecutionData' might contain unresolvable artifacts.
+                                // do not report problems here
+                                Throwable failure = ((UnresolvedDependencyResult) it2).getFailure();
+                                if (project.getGradle().getStartParameter().isOffline()) {
+                                    // if the unresolvable is bcs. offline mode, throw an exception to get retry in online mode.
+                                    Throwable prev = null;
+                                    for (Throwable t = failure; t != prev && t != null; prev = t, t = t.getCause()) {
+                                        if (t.getMessage().contains("available for offline")) {
+                                            throw new NeedOnlineModeException("Need online mode", failure);
+                                        }
+                                    }
+                                }
                                 unresolvedProblems.put(id, ((UnresolvedDependencyResult) it2).getFailure().getMessage());
                             }
-                            unresolvedProblems.put(id, udr.getFailure().getMessage());
                         }
                     });
                 } catch (ResolveException ex) {
@@ -472,6 +507,15 @@ class NbProjectInfoBuilder {
 
             if (resolvable(it)) {
                 try {
+                    Set<ResolvedArtifact> arts = it.getResolvedConfiguration()
+                            .getLenientConfiguration()
+                            .getArtifacts();
+                    
+                    arts.stream().forEach(a -> {
+                        if (!(a.getId().getComponentIdentifier() instanceof ProjectComponentIdentifier)) {
+                            resolvedJvmArtifacts.putIfAbsent(a.getId().getComponentIdentifier().toString(), Collections.singleton(a.getFile()));
+                        }
+                    });
                     it.getResolvedConfiguration()
                             .getLenientConfiguration()
                             .getFirstLevelModuleDependencies(Specs.SATISFIES_ALL)
@@ -557,13 +601,7 @@ class NbProjectInfoBuilder {
         model.getExt().put("resolved_sources_artifacts", resolvedSourcesArtifacts);
         model.getExt().put("resolved_javadoc_artifacts", resolvedJavadocArtifacts);
         model.getInfo().put("project_dependencies", projects);
-        // NETBEANS-5846: if this project uses javaPlatform plugin with dependencies enabled, 
-        // do not report unresolved problems
-        if (!(project.getPlugins().hasPlugin(JavaPlatformPlugin.class) && 
-            Boolean.TRUE.equals(getProperty(project, "javaPlatform", "allowDependencies")))) {
-            
-            model.getInfo().put("unresolved_problems", unresolvedProblems);
-        }
+        model.getInfo().put("unresolved_problems", unresolvedProblems);
         model.registerPerf("dependencies", System.currentTimeMillis() - time);
     }
 
@@ -618,7 +656,7 @@ class NbProjectInfoBuilder {
     private Set<Configuration> configurationsToSave() {
         return project
                 .getConfigurations()
-                .matching(c -> !CONFIG_EXCLUDES.contains(c.getName()))
+                .matching(c -> !CONFIG_EXCLUDES_PATTERN.matcher(c.getName()).matches())
                 .stream()
                 .flatMap(c -> c.getHierarchy().stream())
                 .collect(Collectors.toSet());

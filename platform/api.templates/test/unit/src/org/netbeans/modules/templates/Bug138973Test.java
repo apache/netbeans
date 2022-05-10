@@ -31,12 +31,10 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
-import java.nio.ByteBuffer;
-import java.nio.CharBuffer;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
 import java.nio.charset.CharsetEncoder;
-import java.nio.charset.CoderResult;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import org.netbeans.api.editor.mimelookup.MimePath;
 import org.netbeans.api.editor.mimelookup.test.MockMimeLookup;
@@ -44,7 +42,6 @@ import org.netbeans.api.queries.FileEncodingQuery;
 import org.netbeans.junit.MockServices;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.openide.loaders.DataObjectEncodingQueryImplementation;
-import org.netbeans.modules.templates.ScriptingCreateFromTemplateHandler;
 import org.netbeans.spi.queries.FileEncodingQueryImplementation;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -83,7 +80,7 @@ public class Bug138973Test extends NbTestCase {
                                                       TEMPLATE_NAME_EXT);
         templateFile.setAttribute ("template", Boolean.TRUE);
         templateFile.setAttribute(ScriptingCreateFromTemplateHandler.SCRIPT_ENGINE_ATTR, "js");
-        byte[] templateBytes = TESTING_TEXT.getBytes("ISO-8859-1");
+        byte[] templateBytes = TESTING_TEXT.getBytes(StandardCharsets.ISO_8859_1);
         InputStream source = new ByteArrayInputStream(templateBytes);
         OutputStream target = templateFile.getOutputStream();
         FileUtil.copy(source, target);
@@ -225,12 +222,12 @@ public class Bug138973Test extends NbTestCase {
         @Override
         public CharsetDecoder newDecoder() {
             newDecoder++;
-            return Charset.forName("UTF-8").newDecoder();
+            return StandardCharsets.UTF_8.newDecoder();
         }
         @Override
         public CharsetEncoder newEncoder() {
             newEncoder++;
-            return Charset.forName("UTF-8").newEncoder();
+            return StandardCharsets.UTF_8.newEncoder();
         }
     }
 

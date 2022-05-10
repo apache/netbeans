@@ -209,7 +209,7 @@ public final class JDBCStubUtil {
     
     private static void addAllAsReferenceType(List list, short[] values) {
         for (int i = 0; i < values.length; i++) {
-            list.add(new Short(values[i]));
+            list.add(values[i]);
         }
     }
     

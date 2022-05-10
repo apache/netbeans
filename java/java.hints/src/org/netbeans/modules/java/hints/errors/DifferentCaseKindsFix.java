@@ -70,7 +70,7 @@ public class DifferentCaseKindsFix implements ErrorRule<Void> {
             caseTrees = ((SwitchExpressionTree) parentPath.getLeaf()).getCases();
         } else {
             flag = true;
-            caseTrees = ((SwitchTree) treePath.getParentPath().getLeaf()).getCases();
+            caseTrees = ((SwitchTree) parentPath.getLeaf()).getCases();
         }
             boolean completesNormally = false;
             boolean wasDefault = false;

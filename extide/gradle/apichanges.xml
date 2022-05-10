@@ -83,6 +83,17 @@ is the proper place.
     <!-- ACTUAL CHANGES BEGIN HERE: -->
 
     <changes>
+        <change id="gradle-reports">
+            <api name="general"/>
+            <summary>Rich exception reports are exported from Gradle process.</summary>
+            <version major="2" minor="23"/>
+            <date day="28" month="2" year="2022"/>
+            <author login="sdedic"/>
+            <compatibility semantic="compatible" addition="yes"/>
+            <description>
+                Errors are transferred including their causes and script location(s), so the IDE may provide better messages or hints.
+            </description>
+        </change>
         <change id="gradle-cli-update">
             <api name="general"/>
             <summary>GradleCommandLine Flag, Parameter, and Property implements GradleOptionItem interface</summary>
@@ -91,8 +102,21 @@ is the proper place.
             <author login="lkishalmi"/>
             <compatibility semantic="compatible" addition="yes"/>
             <description>
-                Added GradleOptionItem interface to <code><a href="@TOP@/org/netbeans/modules/gradle/api/execute/GradleCommandLine.html">GradleCommandLine</a></code> 
-                in order to support a common interface for Flaf, Parameter, and Property enums.
+                <p>
+                    Added GradleOptionItem interface to <code><a href="@TOP@/org/netbeans/modules/gradle/api/execute/GradleCommandLine.html">GradleCommandLine</a></code>
+                    in order to support a common interface for Flaf, Parameter, and Property enums.
+                </p>
+                <p>
+                    <code>
+                        <a href="@TOP@/org/netbeans/modules/gradle/api/execute/GradleCommandLine.html">GradleCommandLine</a>
+                    </code> also can be aware of the GradleDistribution it is plan to be used with, so it got a few
+                    new constructors supporting that.
+                </p>
+                <p>
+                    <code>
+                        <a href="@TOP@/org/netbeans/modules/gradle/api/execute/RunUtils.html#getCompatibleGradleDistribution-org.netbeans.api.project.Project-">RunUtils.getCompatibleGradleDistribution</a>
+                    </code>is added to help retrieve the closest Gradle distribution a project could use to invoke Gradle build actions.
+                </p>
             </description>
         </change>
         <change id="tooling-runWorkingDir-runEnvironment">

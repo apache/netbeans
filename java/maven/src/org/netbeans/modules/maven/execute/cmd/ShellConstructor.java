@@ -44,7 +44,9 @@ public class ShellConstructor implements Constructor {
     public List<String> construct() {
 
         // use mvnd if its the home of a daemon
-        String ex = Files.exists(Paths.get(mavenHome.getPath(), "bin", "mvnd")) ? "mvnd" : "mvn"; //NOI18N
+        String mavenDaemonSuffixDetection = Utilities.isWindows() ? ".exe" : "";
+        String ex = Files.exists(Paths.get(mavenHome.getPath(), "bin", "mvnd" + mavenDaemonSuffixDetection)) ? "mvnd" : "mvn"; //NOI18N
+
         List<String> command = new ArrayList<>();
 
         if (Utilities.isWindows()) {

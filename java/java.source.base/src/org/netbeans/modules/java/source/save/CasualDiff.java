@@ -5312,7 +5312,7 @@ public class CasualDiff {
     }
     
     private int getOldPos(DCTree oldT, DCDocComment doc) {
-        return (int) oldT.getSourcePosition(doc);
+        return oldT.pos(doc).getStartPosition();
     }
     
     public int endPos(DCTree oldT, DCDocComment doc) {

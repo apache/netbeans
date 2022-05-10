@@ -26,6 +26,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.Enumeration;
 import javax.swing.Action;
 import junit.framework.Assert;
@@ -107,7 +108,7 @@ public class EarDataNodeTest extends NbTestCase {
         f.getParentFile().mkdirs();
         OutputStream os = new FileOutputStream(f);
         try {
-            Writer w = new OutputStreamWriter(os, "UTF-8");
+            Writer w = new OutputStreamWriter(os, StandardCharsets.UTF_8);
             w.write(contents);
             w.flush();
         } finally {

@@ -46,8 +46,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
-import java.io.UnsupportedEncodingException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -244,14 +244,7 @@ public final class ProjectUtilities {
             }
         }
 
-        try {
-            return new String(data, "UTF-8" //NOI18N
-            ); // According to Issue 65557, build.xml uses UTF-8, not default encoding!
-        } catch (UnsupportedEncodingException ex) {
-            ErrorManager.getDefault().notify(ErrorManager.ERROR, ex);
-
-            return null;
-        }
+        return new String(data, StandardCharsets.UTF_8); // According to Issue 65557, build.xml uses UTF-8, not default encoding!
     }
 
 //    Now available using AntProjectSupport

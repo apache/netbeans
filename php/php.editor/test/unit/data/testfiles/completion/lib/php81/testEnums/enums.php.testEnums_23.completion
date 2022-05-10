@@ -1,0 +1,5 @@
+Code completion result for source line:
+Simple::CASE1::CON|STANT1;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CONSTANT   CONSTANT1 "CONSTANT1"           [PUBLIC]   \Enum1\Simple
+CONSTANT   CONSTANT2 ?                     [PUBLIC]   \Enum1\Simple

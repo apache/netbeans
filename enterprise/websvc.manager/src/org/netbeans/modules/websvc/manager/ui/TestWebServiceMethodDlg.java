@@ -402,7 +402,7 @@ public class TestWebServiceMethodDlg extends JPanel implements ActionListener, M
         }
     }
 
-    private void doMethodFinished(Object inReturnedObject,LinkedList inParamList) {
+    private void doMethodFinished(Object inReturnedObject, List inParamList) {
         dialog.setCursor(normalCursor);
 
         showResults(inReturnedObject);

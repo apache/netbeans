@@ -93,9 +93,9 @@ public class Hk2TargetModuleID implements TargetModuleID {
         // !PW FIXME path ought to be URL encoded by the time we get here.
         if (null != contextPath) {
             if(!contextPath.startsWith("/")) {
-                return target.getServerUri() + "/" + contextPath.replaceAll(" ", "%20");
+                return target.getServerUri() + "/" + contextPath.replace(" ", "%20");
             } else {
-                return target.getServerUri() + contextPath.replaceAll(" ", "%20");
+                return target.getServerUri() + contextPath.replace(" ", "%20");
             }
         }
         return null;

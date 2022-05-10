@@ -23,6 +23,7 @@ import java.awt.Dialog;
 import java.awt.GraphicsEnvironment;
 import java.io.File;
 import java.io.IOException;
+import java.util.Locale;
 import java.util.Optional;
 import javax.swing.JFileChooser;
 import javax.swing.event.DocumentListener;
@@ -100,7 +101,7 @@ final class DownloadWalletDialog extends AbstractPasswordPanel {
                 if (DialogDescriptor.OK_OPTION != selected) {
                     return Optional.empty();
                 }
-                String username = inp.getInputText();
+                String username = inp.getInputText().toUpperCase(Locale.US);
                 
                 inp = new NotifyDescriptor.PasswordLine(Bundle.JDBCPassword(), Bundle.JDBCPassword());
                 selected = DialogDisplayer.getDefault().notify(inp);

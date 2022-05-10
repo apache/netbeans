@@ -22,6 +22,7 @@ package org.netbeans.core.startup;
 import org.netbeans.SetupHid;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 
@@ -40,7 +41,7 @@ abstract class NbInstallerTestBase extends SetupHid {
         byte[] buf = new byte[1024];
         int read;
         while ((read = is.read(buf)) != -1) {
-            text.append(new String(buf, 0, read, "US-ASCII"));
+            text.append(new String(buf, 0, read, StandardCharsets.US_ASCII));
         }
         return text.toString();
     }

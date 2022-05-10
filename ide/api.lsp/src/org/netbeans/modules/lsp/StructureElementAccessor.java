@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Set;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.lsp.StructureElement;
+import org.openide.filesystems.FileObject;
 import org.openide.util.Exceptions;
 import org.openide.util.Parameters;
 
@@ -53,6 +54,6 @@ public abstract class StructureElementAccessor {
         DEFAULT = accessor;
     }
     
-    public abstract StructureElement createStructureElement(@NonNull String name, String detail, int selectionStartOffset, int selectionEndOffset, int expandedStartOffset, int expandedEndOffset, @NonNull StructureElement.Kind kind, Set<StructureElement.Tag> tags, List<StructureElement> children);
+    public abstract StructureElement createStructureElement(FileObject file, @NonNull String name, String detail, int selectionStartOffset, int selectionEndOffset, int expandedStartOffset, int expandedEndOffset, @NonNull StructureElement.Kind kind, Set<StructureElement.Tag> tags, List<StructureElement> children);
     
 }

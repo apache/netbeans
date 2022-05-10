@@ -23,19 +23,21 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.nio.charset.StandardCharsets;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 import org.netbeans.modules.java.lsp.server.ui.AbstractLspInputOutputProvider;
 import org.netbeans.modules.java.lsp.server.ui.LspIOAccessor;
 import org.openide.util.Lookup;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  *
@@ -51,7 +53,7 @@ public class NbProcessConsoleTest {
     @Test
     public void testConsoleClose() throws Exception {
         InputStream sin = console.getStdIn();
-        BufferedReader rdr = new BufferedReader(new InputStreamReader(sin, "UTF-8"));
+        BufferedReader rdr = new BufferedReader(new InputStreamReader(sin, StandardCharsets.UTF_8));
         assertReaderClosed(rdr);
     }
     

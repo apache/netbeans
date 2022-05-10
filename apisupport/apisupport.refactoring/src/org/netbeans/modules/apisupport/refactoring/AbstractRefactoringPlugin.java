@@ -23,6 +23,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
@@ -99,7 +100,7 @@ public abstract class AbstractRefactoringPlugin implements RefactoringPlugin {
     protected final int checkContentOfFile(FileObject fo, String classToLookFor) {
         BufferedReader reader = null;
         try {
-            reader = new BufferedReader(new InputStreamReader(fo.getInputStream(), "UTF-8")); // NOI18N
+            reader = new BufferedReader(new InputStreamReader(fo.getInputStream(), StandardCharsets.UTF_8));
             String line = reader.readLine();
             int counter = 0;
             while (line != null) {

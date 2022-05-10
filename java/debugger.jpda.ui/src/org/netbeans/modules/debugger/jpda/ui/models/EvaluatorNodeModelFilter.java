@@ -166,16 +166,12 @@ public class EvaluatorNodeModelFilter implements ExtendedNodeModelFilter {
         if (node == result.getResult()) {
             String str = result.getExpression();
             if (str != null) {
-                StringBuffer buf = new StringBuffer();
-                buf.append("<html>");
-                str = str.replaceAll ("&", "&amp;");
-                str = str.replaceAll ("<", "&lt;");
-                str = str.replaceAll (">", "&gt;");
-                str = str.replaceAll ("\n", "<br/>");
-                str = str.replaceAll ("\r", "");
-                buf.append(str);
-                buf.append("</html>");
-                return buf.toString();
+                str = str.replace ("&", "&amp;")
+                         .replace ("<", "&lt;")
+                         .replace (">", "&gt;")
+                         .replace ("\n", "<br/>")
+                         .replace ("\r", "");
+                return "<html>"+str+"</html>";
             }
         }
         if (node instanceof DefaultHistoryItem) {

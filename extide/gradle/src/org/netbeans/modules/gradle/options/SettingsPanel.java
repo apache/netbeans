@@ -62,7 +62,7 @@ public class SettingsPanel extends javax.swing.JPanel {
 
     private static final String[] CARDS = {"Execution", "Appearance", "Dependencies", "Experimental"}; //NOI18N
 
-    private GradleDistributionManager gdm = GradleDistributionManager.get(GradleSettings.getDefault().getGradleUserHome());
+    private GradleDistributionManager gdm = GradleDistributionManager.get();
 
     /**
      * Creates new form SettingsPanel

@@ -107,8 +107,8 @@ public class EjbJarMultiViewDataObject extends DDMultiViewDataObject
     private boolean initialized = false;
 
     private PropertyChangeListener ejbJarChangeListener;
-    private Map entityHelperMap = new HashMap();
-    private Map sessionHelperMap = new HashMap();
+    private Map<Entity, EntityHelper> entityHelperMap    = new HashMap<>();
+    private Map<Session, SessionHelper> sessionHelperMap = new HashMap<>();
     
     private static final long serialVersionUID = 8857563089355069362L;
     

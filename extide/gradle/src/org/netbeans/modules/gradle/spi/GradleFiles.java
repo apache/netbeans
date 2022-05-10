@@ -105,7 +105,7 @@ public final class GradleFiles implements Serializable {
         List<File> ret = new ArrayList<>(3);
         for (Kind kind:Kind.PROPERTIES){
             File f = getFile(kind);
-            if (f.exists()){
+            if ((f != null) && f.exists()){
                 ret.add(f);
             }
         }
@@ -175,6 +175,12 @@ public final class GradleFiles implements Serializable {
         return settingsScript;
     }
 
+    /**
+     * The list of the existing property files in the current project in
+     * the order of: user, root, and project properties.
+     *
+     * @return the list of existing project property files.
+     */
     public List<File> getPropertyFiles() {
         return searchPropertyFiles();
     }
@@ -261,10 +267,11 @@ public final class GradleFiles implements Serializable {
     }
 
     /**
-     * Returns the possible file names for a Gradle project file,
+     * Returns the possible file names for a Gradle project file, or
+     * {@code null} if that kind is not accepted in the project context.
      *
      * @param kind The role of the project file.
-     * @return
+     * @return a possible project file or {@code null}
      */
     public File getFile(Kind kind) {
         if (isBuildSrcProject()) {

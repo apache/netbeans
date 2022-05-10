@@ -146,10 +146,8 @@ public class ExecutableFilesIndex {
         Set<String> result = new HashSet<String>();
 
         for (String file : executableFiles) {
-            file = file.replaceAll("\\\\d", ":"); //NOI18N
-            file = file.replaceAll("\\\\\\\\", "\\\\"); //NOI18N
-
-            result.add(file);
+            result.add(file.replace("\\d", ":") //NOI18N
+                           .replace("\\\\", "\\")); //NOI18N
         }
         
         return result;
@@ -159,15 +157,12 @@ public class ExecutableFilesIndex {
         StringBuilder attribute = new StringBuilder();
         boolean first = true;
 
-        for (String s : values) {
+        for (String value : values) {
             if (!first) {
                 attribute.append("::"); //NOI18N
             }
-            s = s.replaceAll("\\\\", "\\\\\\\\"); //NOI18N
-            s = s.replaceAll(":", "\\\\d"); //NOI18N
-
-            attribute.append(s);
-
+            attribute.append(value.replace("\\", "\\\\") //NOI18N
+                                  .replace(":", "\\d")); //NOI18N
             first = false;
         }
         

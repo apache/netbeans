@@ -159,12 +159,15 @@ class RunConfigurationNode extends vscode.TreeItem {
 		this.value = value;
 		this.getConfig().update(this.settingsKey, this.value, false);
 		this.updateNode();
-        runConfigurationNodeProvider.refresh();
 	}
 
-	updateNode() {
-		this.description = this.value ? this.value : '<default>';
-        this.tooltip = `${this.label} ${this.description}`;
+	updateNode(reload?: boolean) {
+            if (reload) {
+                this.value  = this.getConfig().get(this.settingsKey) as string;
+            }
+            this.description = this.value ? this.value : '<default>';
+            this.tooltip = `${this.label} ${this.description}`;
+            runConfigurationNodeProvider.refresh();
 	}
 
 	getConfig(): vscode.WorkspaceConfiguration {
@@ -218,4 +221,10 @@ export function configureRunSettings(context: vscode.ExtensionContext, ...params
     if (params[0][0]) {
         (params[0][0] as RunConfigurationNode).configure(context);
     }
+}
+export function runConfigurationUpdateAll() {
+    argumentsNode.updateNode(true);
+    vmOptionsNode.updateNode(true);
+    environmentVariablesNode.updateNode(true);
+    workingDirectoryNode.updateNode(true);
 }

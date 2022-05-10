@@ -67,7 +67,7 @@ public abstract class AbstractDiskCache<K, T extends Serializable> {
     public final synchronized void storeData(T data) {
         CacheEntry<T> entry = new CacheEntry<>(this, data);
         if (doStoreEntry(entry)) {
-            entryRef = new WeakReference(entry);        
+            entryRef = new WeakReference<>(entry);        
         }
     }
 

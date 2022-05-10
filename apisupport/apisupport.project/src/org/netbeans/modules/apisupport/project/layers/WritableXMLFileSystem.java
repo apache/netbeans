@@ -29,13 +29,13 @@ import java.io.InputStream;
 import java.io.NotSerializableException;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -72,7 +72,6 @@ import org.openide.filesystems.FileRenameEvent;
 import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.URLMapper;
 import org.openide.util.Enumerations;
-import org.openide.util.Exceptions;
 import org.openide.util.RequestProcessor;
 import org.openide.util.WeakListeners;
 
@@ -305,12 +304,8 @@ public final class WritableXMLFileSystem extends AbstractFileSystem
                     buf.append(((TreeText) o).getData().trim());
                 }
             }
-            try {
-                // This encoding is intentional...
-                return buf.toString().getBytes("UTF-8"); // NOI18N
-            } catch (UnsupportedEncodingException uee) {
-                throw new FileNotFoundException(uee.getMessage());
-            }
+            // This encoding is intentional...
+            return buf.toString().getBytes(StandardCharsets.UTF_8);
         }
     }
     

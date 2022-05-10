@@ -26,6 +26,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -353,7 +354,7 @@ class HeapHistogramManager {
         StringBuffer token;
 
         Scanner(InputStream is) throws UnsupportedEncodingException {
-            reader = new BufferedReader(new InputStreamReader(new FullInputStream(is), "UTF-8"));   // NOI18N
+            reader = new BufferedReader(new InputStreamReader(new FullInputStream(is), StandardCharsets.UTF_8));
             token = new StringBuffer(128);
         }
 

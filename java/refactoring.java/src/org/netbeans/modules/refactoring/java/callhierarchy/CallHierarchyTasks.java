@@ -177,7 +177,7 @@ final class CallHierarchyTasks {
         });
     }
     
-    private static final class RootResolver implements Task<CompilationController> {
+    static final class RootResolver implements Task<CompilationController> {
         
         private int offset = -1;
         private TreePathHandle tHandle;
@@ -486,7 +486,11 @@ final class CallHierarchyTasks {
         
         @Override
         protected void runTask() throws Exception {
-            JavaSource js = JavaSource.forFileObject(elmDesc.getSourceToQuery().getFileObject());
+            TreePathHandle tph = elmDesc.getSourceToQuery();
+            if (tph == null || tph.getFileObject() == null) {
+                return;
+            }
+            JavaSource js = JavaSource.forFileObject(tph.getFileObject());
             if (js != null) {
                 Future<Void> control = ScanUtils.postUserActionTask(js, this);
                 control.get();

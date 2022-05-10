@@ -368,7 +368,7 @@ public class OpenTempl_defaultPackTest extends ExtJellyTestCase {
     public void testJavaFile(String javafile) throws IOException {
 
         
-        assertFile(new File(getWorkDir() + File.separator + this.getName() + ".ref"), getGoldenFile(File.separatorChar+System.getProperty("os.name")+File.separatorChar+javafile + "JavaFile" + jdkVersion.replaceAll("jdk", "") + ".pass"), new File(getWorkDir(), javafile + "java.diff"));
+        assertFile(new File(getWorkDir() + File.separator + this.getName() + ".ref"), getGoldenFile(File.separatorChar+System.getProperty("os.name")+File.separatorChar+javafile + "JavaFile" + jdkVersion.replace("jdk", "") + ".pass"), new File(getWorkDir(), javafile + "java.diff"));
 
 
     }

@@ -26,7 +26,6 @@ import javax.swing.JTable;
 import javax.swing.SwingUtilities;
 import javax.swing.table.TableCellRenderer;
 import org.netbeans.modules.ide.ergonomics.fod.FeatureManager;
-import org.openide.util.RequestProcessor;
 
 public final class ContentPanel extends JPanel {
     static String FINDING_MODULES = "finding-modules";
@@ -101,9 +100,7 @@ public final class ContentPanel extends JPanel {
     }
     
     private static String prepareToolTip (String original) {
-        String res = "";
-        res = "<html>" + original.replaceAll (",", "<br>")+ "</html>"; // NOI18N
-        return res;
+        return "<html>" + original.replace (",", "<br>")+ "</html>"; // NOI18N
     }
     
     /** This method is called from within the constructor to

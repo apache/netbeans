@@ -607,7 +607,7 @@ public class InternationalizationResourceBundleBrandingPanel extends AbstractBra
         }
 
         private String escapeTagDefinitions (String text) {
-            return text.replaceAll("<", "&lt;").replaceAll(">", "&gt;"); // NOI18N
+            return text.replace("<", "&lt;").replace(">", "&gt;"); // NOI18N
         }
 
         public void refresh() {

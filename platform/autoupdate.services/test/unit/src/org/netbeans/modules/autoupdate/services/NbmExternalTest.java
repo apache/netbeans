@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -52,6 +53,7 @@ import org.netbeans.updater.UpdateTracking;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Lookup;
 import org.openide.util.Utilities;
+
 import static org.netbeans.modules.autoupdate.services.Utilities.hexEncode;
 
 public class NbmExternalTest extends NbTestCase {
@@ -126,7 +128,7 @@ public class NbmExternalTest extends NbTestCase {
             catalogFile = File.createTempFile("catalog-", ".xml", tmpDirectory);
             catalogURL = Utilities.toURI(catalogFile).toURL();
         }
-        PrintWriter pw = new PrintWriter(new OutputStreamWriter(new FileOutputStream(catalogFile), "UTF-8"));
+        PrintWriter pw = new PrintWriter(new OutputStreamWriter(new FileOutputStream(catalogFile), StandardCharsets.UTF_8));
         pw.write(res);
         pw.close();
     }
@@ -182,10 +184,10 @@ public class NbmExternalTest extends NbTestCase {
         }
 
         jos.putNextEntry(new ZipEntry(moduleDir + "Bundle.properties"));
-        jos.write(new String(MODULE_NAME_PROP + "=" + moduleName).getBytes("UTF-8"));
+        jos.write(new String(MODULE_NAME_PROP + "=" + moduleName).getBytes(StandardCharsets.UTF_8));
         jos.putNextEntry(new ZipEntry("META-INF/"));
         jos.putNextEntry(new ZipEntry("META-INF/manifest.mf"));
-        jos.write(getManifest(codeName, releaseVersion, implVersion, moduleDir, specVersion, visible, dependency).getBytes("UTF-8"));
+        jos.write(getManifest(codeName, releaseVersion, implVersion, moduleDir, specVersion, visible, dependency).getBytes(StandardCharsets.UTF_8));
         jos.close();
         File ext = new File(jar.getParentFile(), jar.getName() + ".external");
         FileOutputStream os = new FileOutputStream(ext);
@@ -209,7 +211,7 @@ public class NbmExternalTest extends NbTestCase {
         jos = new JarOutputStream(new FileOutputStream(nbm), mf);
         jos.putNextEntry(new ZipEntry("Info/"));
         jos.putNextEntry(new ZipEntry("Info/info.xml"));
-        jos.write(createInfoXML(visible, codeName, releaseVersion, implVersion, moduleName, Utilities.toURI(nbm).toURL().toString(), specVersion, dependency).getBytes("UTF-8"));
+        jos.write(createInfoXML(visible, codeName, releaseVersion, implVersion, moduleName, Utilities.toURI(nbm).toURL().toString(), specVersion, dependency).getBytes(StandardCharsets.UTF_8));
 
         jos.putNextEntry(new ZipEntry("netbeans/"));
         jos.putNextEntry(new ZipEntry("netbeans/modules/"));
@@ -217,7 +219,7 @@ public class NbmExternalTest extends NbTestCase {
         jos.putNextEntry(new ZipEntry("netbeans/config/Modules/"));
         jos.putNextEntry(new ZipEntry("netbeans/config/Modules/" + moduleFile + ".xml"));
 
-        jos.write(getConfigXML(codeName, moduleFile, specVersion).getBytes("UTF-8"));
+        jos.write(getConfigXML(codeName, moduleFile, specVersion).getBytes(StandardCharsets.UTF_8));
 
 
         jos.putNextEntry(new ZipEntry("netbeans/modules/" + moduleFile + ".jar.external"));

@@ -1,0 +1,28 @@
+    public int $property;
+    ---------------------
+HINT:Enum cannot have properties
+    public static string $staticProperty = "error";
+    -----------------------------------------------
+HINT:Enum cannot have properties
+    use TestTrait1;
+    ---------------
+HINT:Enum cannot have properties, but "TestTrait1" has properties
+HINT:Enum cannot have properties, but "TestTrait2" has properties
+enum IncorrectBackingType: Foo {
+                           ---
+HINT:Backing type must be "string" or "int"
+    public int $property = 1;
+    -------------------------
+HINT:Enum cannot have properties
+    public static string $staticProperty = "error";
+    -----------------------------------------------
+HINT:Enum cannot have properties
+    public function __construct() {
+                    -----------
+HINT:Enum cannot have a constructor
+    case C;
+    -------
+HINT:"case" can only be in enums
+    case D = 1;
+    -----------
+HINT:"case" can only be in enums

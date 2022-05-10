@@ -37,7 +37,7 @@ public abstract class EntityAndSessionHelper implements PropertyChangeListener, 
     protected final EntityAndSession ejb;
     protected final EjbJarMultiViewDataObject ejbJarMultiViewDataObject;
     protected final FileObject ejbJarFile;
-    private List listeners = new LinkedList();
+    private List<PropertyChangeListener> listeners = new LinkedList<>();
     public AbstractMethodController abstractMethodController;
     
     public EntityAndSessionHelper(EjbJarMultiViewDataObject ejbJarMultiViewDataObject, EntityAndSession ejb) {

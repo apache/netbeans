@@ -85,6 +85,7 @@ abstract class ScopeImpl extends ModelElementImpl implements Scope {
             case USE_STATEMENT:
             case GROUP_USE_STATEMENT:
             case TRAIT:
+            case ENUM:
                 result = true;
                 break;
             default:

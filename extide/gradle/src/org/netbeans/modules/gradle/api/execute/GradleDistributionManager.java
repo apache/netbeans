@@ -66,6 +66,7 @@ import org.json.simple.parser.ParseException;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.modules.gradle.api.NbGradleProject;
 import org.netbeans.modules.gradle.spi.GradleFiles;
+import org.netbeans.modules.gradle.spi.GradleSettings;
 import org.openide.awt.Notification;
 import org.openide.awt.NotificationDisplayer;
 import org.openide.util.Exceptions;
@@ -131,12 +132,24 @@ public final class GradleDistributionManager {
      * @return
      */
     public static GradleDistributionManager get(File gradleUserHome) {
-        GradleDistributionManager ret = CACHE.get(gradleUserHome);
+        File home = gradleUserHome != null ? gradleUserHome : GradleSettings.getDefault().getGradleUserHome();
+        GradleDistributionManager ret = CACHE.get(home);
         if (ret == null) {
-            ret = new GradleDistributionManager(gradleUserHome);
-            CACHE.put(gradleUserHome, ret);
+            ret = new GradleDistributionManager(home);
+            CACHE.put(home, ret);
         }
         return ret;
+    }
+
+    /**
+     * Return a {@link GradleDistributionManager} for the Gradle user
+     * home, set in the IDE.
+     * 
+     * @return the GradleDistributionManager for the default Gradle user home.
+     * @since 2.23
+     */
+    public static GradleDistributionManager get() {
+        return GradleDistributionManager.get(null);
     }
 
     /**
@@ -363,6 +376,62 @@ public final class GradleDistributionManager {
         PathAssembler pa = new PathAssembler(gradleUserHome, null);
         PathAssembler.LocalDistribution dist = pa.getDistribution(conf);
         return new File(dist.getDistributionDir(), "gradle-" + version);
+    }
+
+    
+    static final class GradleVersionRange {
+
+        public final GradleVersion lowerBound;
+        public final GradleVersion upperBound;
+        public static final GradleVersionRange UNBOUNDED = new GradleVersionRange(null, null);
+
+        GradleVersionRange(GradleVersion lowerBound, GradleVersion upperBound) {
+            if ((lowerBound != null) && (upperBound != null) && (lowerBound.compareTo(upperBound) >= 0)) {
+                throw new IllegalArgumentException("Invalid version range: [" + lowerBound + ", " + upperBound + ")");
+            }
+            this.lowerBound = lowerBound;
+            this.upperBound = upperBound;
+        }
+
+        public boolean contains(GradleVersion ver) {
+            return ((lowerBound == null) || (lowerBound.compareTo(ver) <= 0)) && ((upperBound == null) || (upperBound.compareTo(ver) > 0));
+        }
+
+        public boolean contains(String ver) {
+            return contains(GradleVersion.version(ver));
+        }
+
+        public static GradleVersionRange from(GradleVersion lowerBound) {
+            return new GradleVersionRange(lowerBound, null);
+        }
+
+        public static GradleVersionRange from(String lowerBound) {
+            return from(GradleVersion.version(lowerBound));
+        }
+
+        public static GradleVersionRange until(GradleVersion upperBound) {
+            return new GradleVersionRange(null, upperBound);
+        }
+
+        public static GradleVersionRange until(String upperBound) {
+            return until(GradleVersion.version(upperBound));
+        }
+
+        public static GradleVersionRange range(GradleVersion lowerRange, GradleVersion upperRange) {
+            return new GradleVersionRange(lowerRange, upperRange);
+        }
+
+        public static GradleVersionRange range(GradleVersion lowerRange, String upperRange) {
+            return range(lowerRange, GradleVersion.version(upperRange));
+        }
+
+        public static GradleVersionRange range(String lowerRange, GradleVersion upperRange) {
+            return new GradleVersionRange(GradleVersion.version(lowerRange), upperRange);
+        }
+
+        public static GradleVersionRange range(String lowerRange, String upperRange) {
+            return new GradleVersionRange(GradleVersion.version(lowerRange), GradleVersion.version(upperRange));
+        }
     }
 
     /**

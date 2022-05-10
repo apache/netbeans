@@ -119,6 +119,11 @@
 					"default": true,
 					"description": "Avoid conflicts with other Java extensions"
 				},
+				"netbeans.revealActiveInProjects": {
+					"type": "boolean",
+					"default": false,
+					"description": "Reveals active text editor in Projects view"
+				},
 				"java.test.editor.enableShortcuts": {
 					"type": "boolean",
 					"default": false,
@@ -450,6 +455,10 @@
 				"title": "Disconnect"
 			},
 			{
+				"command": "nbls:Database:netbeans.db.explorer.action.Refresh",
+				"title": "Refresh"
+			},
+			{
 				"command": "nbls:Edit:org.openide.actions.DeleteAction",
 				"title": "Delete"
 			},
@@ -505,13 +514,27 @@
 				"title": "Run All Tests",
 				"category": "Test"
 			},
-                        {
+			{
 				"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.DownloadWalletAction",
 				"title": "Add DB Connection"
 			},
-                        {
+			{
 				"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.CreateAutonomousDBAction",
 				"title": "Create Autonomous Database"
+			},
+			{
+				"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.OpenServiceConsoleAction",
+				"title": "Open Service Console"
+			},
+			{
+				"command": "java.db.set.env",
+				"title": "Set Database Environment Variables",
+				"category": "Database"
+			},
+			{
+				"command": "java.select.editor.projects",
+				"title": "Reveal active editor in Projects",
+				"category": "Project"
 			}
 		],
 		"keybindings": [
@@ -581,6 +604,10 @@
 					"when": "false"
 				},
 				{
+					"command": "nbls:Database:netbeans.db.explorer.action.Refresh",
+					"when": "false"
+				},
+				{
 					"command": "nbls:Edit:org.openide.actions.DeleteAction",
 					"when": "false"
 				},
@@ -594,6 +621,10 @@
 				},
 				{
 					"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.CreateAutonomousDBAction",
+					"when": "false"
+				},
+				{
+					"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.OpenServiceConsoleAction",
 					"when": "false"
 				},
 				{
@@ -635,10 +666,14 @@
 				},
 				{
 					"command": "nbls:Database:netbeans.db.explorer.action.Connect",
-					"when": "viewItem =~ /class:ddl.DBConnection/"
+					"when": "viewItem =~ /class:org.netbeans.api.db.explorer.DatabaseConnection/"
 				},
 				{
 					"command": "nbls:Database:netbeans.db.explorer.action.Disconnect",
+					"when": "viewItem =~ /class:org.netbeans.api.db.explorer.DatabaseConnection/"
+				},
+				{
+					"command": "nbls:Database:netbeans.db.explorer.action.Refresh",
 					"when": "viewItem =~ /class:ddl.DBConnection/"
 				},
 				{
@@ -674,10 +709,14 @@
 				},
 				{
 					"command": "java.local.db.set.preferred.connection",
-					"when": "viewItem =~ /class:ddl.DBConnection/"
+					"when": "viewItem =~ /class:org.netbeans.api.db.explorer.DatabaseConnection/"
 				},
 				{
 					"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.DownloadWalletAction",
+					"when": "viewItem =~ /class:oracle.items.DatabaseItem/"
+				},
+				{
+					"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.OpenServiceConsoleAction",
 					"when": "viewItem =~ /class:oracle.items.DatabaseItem/"
 				},
 				{
@@ -693,43 +732,43 @@
 		},
 		"netbeans.iconMapping": [
 			{
-				"uriExpression": "nbres:/org/netbeans/modules/gradle/resources/gradle.png",
+				"uriExpression": "nbres:/org/netbeans/modules/gradle/resources/gradle",
 				"codeicon": "project"
 			},
 			{
-				"uriExpression": "nbres:/org/netbeans/modules/gradle/java/resources/javaseProjectIcon.png",
+				"uriExpression": "nbres:/org/netbeans/modules/gradle/java/resources/javaseProjectIcon",
 				"codeicon": "project"
 			},
 			{
-				"uriExpression": "nbres:/org/netbeans/modules/maven/resources/jaricon.png",
+				"uriExpression": "nbres:/org/netbeans/modules/maven/resources/jaricon",
 				"codeicon": "project"
 			},
 			{
-				"uriExpression": "nbres:/org/netbeans/modules/gradle/resources/libraries.png",
+				"uriExpression": "nbres:/org/netbeans/modules/gradle/resources/libraries",
 				"codeicon": "settings-gear"
 			},
 			{
-				"uriExpression": "nbres:/org/netbeans/modules/gradle/resources/(empty.png|module-artifact.png)",
+				"uriExpression": "nbres:/org/netbeans/modules/gradle/resources/(empty|module-artifact)",
 				"codeicon": "file-zip"
 			},
 			{
-				"uriExpression": "nbres:/org/netbeans/modules/maven/DependencyIcon.png",
+				"uriExpression": "nbres:/org/netbeans/modules/maven/DependencyIcon",
 				"codeicon": "file-zip"
 			},
 			{
-				"uriExpression": "nbres:/org/netbeans/modules/maven/TransitiveDependencyIcon.png",
+				"uriExpression": "nbres:/org/netbeans/modules/maven/TransitiveDependencyIcon",
 				"codeicon": "library"
 			},
 			{
-				"uriExpression": "nbres:/org/netbeans/spi/java/project/support/ui/package(Empty)?.gif",
+				"uriExpression": "nbres:/org/netbeans/spi/java/project/support/ui/package(Empty)?",
 				"codeicon": "file-submodule"
 			},
 			{
-				"uriExpression": "nbres:/org/netbeans/modules/java/resources/(abstract_class_file|class|enum_file).png",
+				"uriExpression": "nbres:/org/netbeans/modules/java/resources/(abstract_class_file|class|enum_file)",
 				"codeicon": "symbol-class"
 			},
 			{
-				"uriExpression": "nbres:/org/netbeans/modules/java/resources/(annotation_file|interface_file).png",
+				"uriExpression": "nbres:/org/netbeans/modules/java/resources/(annotation_file|interface_file)",
 				"codeicon": "symbol-interface"
 			},
 			{
@@ -751,7 +790,7 @@
 				"codeicon": "*folder"
 			},
 			{
-				"uriExpression": "nbres:/org/netbeans/modules/java/api/common/project/ui/resources/platform.gif",
+				"uriExpression": "nbres:/org/netbeans/modules/java/api/common/project/ui/resources/platform",
 				"codeicon": "vm"
 			}
 		],

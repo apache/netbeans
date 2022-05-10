@@ -53,8 +53,8 @@ public final class GradleDaemon {
     static final String INIT_SCRIPT_NAME = "modules/gradle/nb-tooling.gradle"; //NOI18N
     static final String TOOLING_JAR_NAME = "modules/gradle/netbeans-gradle-tooling.jar"; //NOI18N
 
-    public static final String PROP_TOOLING_JAR = "NETBEANS_TOOLING_JAR";
-    public static final String TOOLING_JAR = InstalledFileLocator.getDefault().locate(TOOLING_JAR_NAME, NbGradleProject.CODENAME_BASE, false).getAbsolutePath();
+    private static final String PROP_TOOLING_JAR = "NETBEANS_TOOLING_JAR";
+    private static final String TOOLING_JAR = InstalledFileLocator.getDefault().locate(TOOLING_JAR_NAME, NbGradleProject.CODENAME_BASE, false).getAbsolutePath().replace("\\", "\\\\");
 
     private static final String DAEMON_LOADED = "Daemon Loaded."; //NOI18N
     private static final String LOADER_PROJECT_NAME = "modules/gradle/daemon-loader"; //NOI18N

@@ -20,8 +20,10 @@ package org.netbeans.api.lsp;
 
 import java.util.List;
 import java.util.Set;
+import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.modules.lsp.StructureElementAccessor;
+import org.openide.filesystems.FileObject;
 
 /**
  * StructureElement is a tree item that shows the structure of the source code.
@@ -34,18 +36,17 @@ public final class StructureElement {
     static {
         StructureElementAccessor.setDefault(new StructureElementAccessor() {
             @Override
-            public StructureElement createStructureElement(String name, String detail, int selectionStartOffset, int selectionEndOffset, int expandedStartOffset, int expandedEndOffset, Kind kind, Set<Tag> tags, List<StructureElement> children) {
-                return new StructureElement(name, detail, selectionStartOffset, selectionEndOffset, expandedStartOffset, expandedEndOffset, kind, tags, children);
+            public StructureElement createStructureElement(FileObject file, String name, String detail, int selectionStartOffset, int selectionEndOffset, int expandedStartOffset, int expandedEndOffset, Kind kind, Set<Tag> tags, List<StructureElement> children) {
+                return new StructureElement(file, name, detail, selectionStartOffset, selectionEndOffset, expandedStartOffset, expandedEndOffset, kind, tags, children);
             }
         });
     }
 
+    private final FileObject file;
     private final String name;
     private final String detail;
-    private final int selectionStartOffset;
-    private final int selectionEndOffset;
-    private final int expandedStartOffset;
-    private final int expandedEndOffset;
+    private final Range selectionRange;
+    private final Range expandedRange;
     private final Kind kind;
     private final Set<Tag> tags;
     private final List<StructureElement> children;
@@ -89,13 +90,12 @@ public final class StructureElement {
         Deprecated;
     }
 
-    private StructureElement(@NonNull String name, String detail, int selectionStartOffset, int selectionEndOffset, int expandedStartOffset, int expandedEndOffset, @NonNull Kind kind, Set<Tag> tags, List<StructureElement> children) {
+    private StructureElement(FileObject file, @NonNull String name, String detail, int selectionStartOffset, int selectionEndOffset, int expandedStartOffset, int expandedEndOffset, @NonNull Kind kind, Set<Tag> tags, List<StructureElement> children) {
+        this.file = file;
         this.name = name;
         this.detail = detail;
-        this.selectionStartOffset = selectionStartOffset;
-        this.selectionEndOffset = selectionEndOffset;
-        this.expandedStartOffset = expandedStartOffset;
-        this.expandedEndOffset = expandedEndOffset;
+        this.selectionRange = new Range(selectionStartOffset, selectionEndOffset);
+        this.expandedRange = new Range(expandedStartOffset, expandedEndOffset);
         this.kind = kind;
         this.tags = tags;
         this.children = children;
@@ -118,7 +118,7 @@ public final class StructureElement {
      * @return start offset of the selection
      */
     public int getSelectionStartOffset() {
-        return selectionStartOffset;
+        return selectionRange.getStartOffset();
     }
 
     /**
@@ -128,7 +128,7 @@ public final class StructureElement {
      * @return end offset of the selection
      */
     public int getSelectionEndOffset() {
-        return selectionEndOffset;
+        return selectionRange.getEndOffset();
     }
 
     /**
@@ -138,7 +138,7 @@ public final class StructureElement {
      * @return start of the enclosed range
      */
     public int getExpandedStartOffset() {
-        return expandedStartOffset;
+        return expandedRange.getStartOffset();
     }
 
     /**
@@ -148,7 +148,29 @@ public final class StructureElement {
      * @return end of the enclosed range
      */
     public int getExpandedEndOffset() {
-        return expandedEndOffset;
+        return expandedRange.getEndOffset();
+    }
+    
+    /**
+     * The selection range marks part of document that should be revealed
+     * and selected for an element.
+     *
+     * @return start offset of the selection
+     * @since 1.9
+     */
+    public Range getSelectionRange() {
+        return selectionRange;
+    }
+    
+    /**
+     * The expanded range is offset range that is typically used to determine if
+     * the cursors inside the element to reveal in the element in the UI.
+     *
+     * @return expanded range.
+     * @since 1.9
+     */
+    public Range getExpandedRange() {
+        return expandedRange;
     }
 
     /**
@@ -187,5 +209,15 @@ public final class StructureElement {
     public List<StructureElement> getChildren() {
         return children;
     }
-  
+
+    /**
+     * File which contains this element. If {@code null}, the file may
+     * be inaccessible; in that case, offsets will be also set to -1.
+     * @return owning file, or {@code null}
+     * @since 1.9
+     */
+    @CheckForNull
+    public FileObject getFile() {
+        return file;
+    }
 }

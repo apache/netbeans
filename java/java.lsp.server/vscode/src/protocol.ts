@@ -47,6 +47,19 @@ export interface ShowStatusMessageParams extends ShowMessageParams {
     timeout?: number;
 }
 
+export interface UpdateConfigParams {
+    /**
+    * Information specifying configuration update.
+    */
+    section: string;
+    key: string;
+    value: string;
+}
+
+export namespace UpdateConfigurationRequest {
+    export const type = new ProtocolRequestType<UpdateConfigParams, void, never, void, void>('config/update');
+}
+
 export namespace StatusMessageRequest {
     export const type = new ProtocolNotificationType<ShowStatusMessageParams, void>('window/showStatusBarMessage');
 };
@@ -174,6 +187,12 @@ export interface ResourceData {
     contentSize : number;
 }
 
+export interface FindPathParams {
+    rootNodeId : number;
+    uri? : vscode.Uri;
+    selectData? : any;
+}
+
 export namespace NodeInfoNotification {
     export const type = new ProtocolNotificationType<NodeChangedParams, void>('nodes/nodeChanged');
 }
@@ -185,6 +204,7 @@ export namespace NodeInfoRequest {
     export const destroy = new ProtocolRequestType<NodeOperationParams, boolean, never, void, void>('nodes/delete');
     export const collapsed = new ProtocolNotificationType<NodeOperationParams, void>('nodes/collapsed');
     export const getresource = new ProtocolRequestType<GetResourceParams, ResourceData, never, void, void>('nodes/getresource');
+    export const findparams = new ProtocolRequestType<FindPathParams, number[], never, void, void>('nodes/findpath');
     
     export interface IconDescriptor {
         baseUri : vscode.Uri;

@@ -49,6 +49,9 @@ public class CLIOptions extends CLIHandler {
     
     /* The class of the UIManager to be used for netbeans - can be set by command-line argument -ui <class name> */
     protected static Class uiClass;
+    
+    static String uiClassName;
+    
     /* The size of the fonts in the UI - 0 pt, the default value is set in NbTheme (for Metal L&F), for other L&Fs is set
        in the class Main. The value can be changed in Themes.xml in system directory or by command-line argument -fontsize <size> */
     private static int uiFontSize = 0;
@@ -152,12 +155,13 @@ public class CLIOptions extends CLIHandler {
                     } else if ("Aqua".equals(ui)) {
                         ui = "com.apple.laf.AquaLookAndFeel";
                     }
+                    uiClassName = ui;
                     uiClass = Class.forName(ui);
                 } catch(ArrayIndexOutOfBoundsException e) {
                     System.err.println(getString("ERR_UIExpected"));
                     return 2;
                 } catch (ClassNotFoundException e2) {
-                    System.err.println(getString("ERR_UINotFound"));
+                    // ignore, will be reported later. Maybe.
                 }
             } else if (isOption (args[i], "fontsize")) { // NOI18N
                 args[i] = null;

@@ -24,6 +24,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.Reader;
 import org.netbeans.junit.NbTestCase;
+import org.openide.filesystems.FileUtil;
 
 /**
  * @author Tomas Mysik
@@ -45,7 +46,7 @@ public class PhpUnitCoverageLogParserTest extends NbTestCase {
         assertEquals(2, coverage.getFiles().size());
 
         CoverageImpl.FileImpl file = (CoverageImpl.FileImpl) coverage.getFiles().get(0);
-        assertEquals("/home/gapon/NetBeansProjects/PhpProject01/src/hola/Calculator2.php5", file.getPath());
+        assertEquals(FileUtil.normalizePath("/home/gapon/NetBeansProjects/PhpProject01/src/hola/Calculator2.php5"), file.getPath());
         assertEquals(2, file.getClasses().size());
 
         CoverageImpl.ClassImpl clazz = file.getClasses().get(0);
@@ -80,7 +81,7 @@ public class PhpUnitCoverageLogParserTest extends NbTestCase {
         assertEquals(25, fileMetrics.getCoveredElements());
 
         file = (CoverageImpl.FileImpl) coverage.getFiles().get(1);
-        assertEquals("/home/gapon/NetBeansProjects/PhpProject01/src/Calculator.php", file.getPath());
+        assertEquals(FileUtil.normalizePath("/home/gapon/NetBeansProjects/PhpProject01/src/Calculator.php"), file.getPath());
         assertEquals(1, file.getClasses().size());
         assertEquals(6, file.getLines().size());
 
@@ -118,7 +119,7 @@ public class PhpUnitCoverageLogParserTest extends NbTestCase {
         assertEquals(20, coverage.getFiles().size());
 
         CoverageImpl.FileImpl file = (CoverageImpl.FileImpl) coverage.getFiles().get(0);
-        assertEquals("/usr/local/zend/apache2/htdocs/mysgc/plugins/mcJobqueuePlugin/lib/jobhandler/McJobqueueTestjobHandler.php", file.getPath());
+        assertEquals(FileUtil.normalizePath("/usr/local/zend/apache2/htdocs/mysgc/plugins/mcJobqueuePlugin/lib/jobhandler/McJobqueueTestjobHandler.php"), file.getPath());
         assertEquals(1, file.getClasses().size());
 
         CoverageImpl.ClassImpl clazz = file.getClasses().get(0);

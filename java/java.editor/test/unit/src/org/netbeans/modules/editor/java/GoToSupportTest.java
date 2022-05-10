@@ -1606,7 +1606,7 @@ public class GoToSupportTest extends NbTestCase {
         EXTRA_OPTIONS.add("--enable-preview");      
         JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
         
-        performTest("HighlightTag", 858, null, "javadocsnippet_highlightUsingSubstring.pass", this.sourceLevel, false);
+        performTest("HighlightTag", 1667, null, "javadocsnippet_highlightUsingSubstring.pass", this.sourceLevel, false);
     }
     
     public void testHesthighlightUsingRegex() throws Exception {
@@ -1618,7 +1618,7 @@ public class GoToSupportTest extends NbTestCase {
         EXTRA_OPTIONS.add("--enable-preview");
         JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
         
-        performTest("HighlightTag",1280, null, "javadocsnippet_highlightUsingRegex.pass", this.sourceLevel, false);
+        performTest("HighlightTag",2092, null, "javadocsnippet_highlightUsingRegex.pass", this.sourceLevel, false);
     }
  
     public void testHighlightUsingSubstringAndRegex() throws Exception {
@@ -1630,7 +1630,7 @@ public class GoToSupportTest extends NbTestCase {
         EXTRA_OPTIONS.add("--enable-preview");
         JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
 
-        performTest("HighlightTag", 1788, null, "javadocsnippet_highlightUsingSubstringAndRegex.pass", this.sourceLevel, false);
+        performTest("HighlightTag", 2604, null, "javadocsnippet_highlightUsingSubstringAndRegex.pass", this.sourceLevel, false);
     }
     
     public void testHighlightUsingSubstringRegexAndType() throws Exception {
@@ -1642,7 +1642,7 @@ public class GoToSupportTest extends NbTestCase {
         EXTRA_OPTIONS.add("--enable-preview");
         JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
 
-        performTest("HighlightTag", 3734, null, "javadocsnippet_highlightUsingSubstringRegexAndType.pass", this.sourceLevel, false);
+        performTest("HighlightTag", 4551, null, "javadocsnippet_highlightUsingSubstringRegexAndType.pass", this.sourceLevel, false);
     }
         
     public void testHighlightUsingMultipleSnippetTagInOneJavaDocWithRegion() throws Exception {
@@ -1654,7 +1654,7 @@ public class GoToSupportTest extends NbTestCase {
         EXTRA_OPTIONS.add("--enable-preview");
         JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
 
-        performTest("HighlightTag", 3734, null, "javadocsnippet_highlightUsingMultipleSnippetTagInOneJavaDocWithRegion.pass", this.sourceLevel, false);
+        performTest("HighlightTag", 5333, null, "javadocsnippet_highlightUsingMultipleSnippetTagInOneJavaDocWithRegion.pass", this.sourceLevel, false);
     }
         
     public void testHighlightUsingNestedRegions() throws Exception {
@@ -1666,7 +1666,7 @@ public class GoToSupportTest extends NbTestCase {
         EXTRA_OPTIONS.add("--enable-preview");
         JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
 
-        performTest("HighlightTag", 5335, null, "javadocsnippet_highlightUsingNestedRegions.pass", this.sourceLevel, false);
+        performTest("HighlightTag", 6148, null, "javadocsnippet_highlightUsingNestedRegions.pass", this.sourceLevel, false);
     }
     
     public void testHighlightUsingRegionsEndedWithDoubleColon() throws Exception {
@@ -1678,7 +1678,7 @@ public class GoToSupportTest extends NbTestCase {
         EXTRA_OPTIONS.add("--enable-preview");
         JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
 
-        performTest("HighlightTag", 6028, null, "javadocsnippet_highlightUsingRegionsEndedWithDoubleColon.pass", this.sourceLevel, false);
+        performTest("HighlightTag", 6840, null, "javadocsnippet_highlightUsingRegionsEndedWithDoubleColon.pass", this.sourceLevel, false);
     }
     
     public void testNoMarkupTagPresent() throws Exception {
@@ -1690,7 +1690,7 @@ public class GoToSupportTest extends NbTestCase {
         EXTRA_OPTIONS.add("--enable-preview");
         JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
 
-        performTest("HighlightTag", 6271, null, "javadocsnippet_noMarkupTagPresent.pass", this.sourceLevel, false);
+        performTest("HighlightTag", 7083, null, "javadocsnippet_noMarkupTagPresent.pass", this.sourceLevel, false);
     }
  
     public void testHighlightTagSubstringApplyToNextLine() throws Exception {
@@ -1702,7 +1702,7 @@ public class GoToSupportTest extends NbTestCase {
         EXTRA_OPTIONS.add("--enable-preview");
         JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
 
-        performTest("HighlightTag", 6521, null, "javadocsnippet_highlightTagSubstringApplyToNextLine.pass", this.sourceLevel, false);
+        performTest("HighlightTag", 7333, null, "javadocsnippet_highlightTagSubstringApplyToNextLine.pass", this.sourceLevel, false);
     }
  
     public void testHighlightTagRegexWithAllCharacterChange() throws Exception {
@@ -1714,7 +1714,7 @@ public class GoToSupportTest extends NbTestCase {
         EXTRA_OPTIONS.add("--enable-preview");
         JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
 
-        performTest("HighlightTag", 6783, null, "javadocsnippet_highlightTagRegexWithAllCharacterChange.pass", this.sourceLevel, false);
+        performTest("HighlightTag", 7598, null, "javadocsnippet_highlightTagRegexWithAllCharacterChange.pass", this.sourceLevel, false);
     }
        
     public void testHighlightTagRegexWithAllCharacterChangeUsingDot() throws Exception {
@@ -1726,7 +1726,7 @@ public class GoToSupportTest extends NbTestCase {
         EXTRA_OPTIONS.add("--enable-preview");
         JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
 
-        performTest("HighlightTag", 7047, null, "javadocsnippet_highlightTagRegexWithAllCharacterChangeUsingDot.pass", this.sourceLevel, false);
+        performTest("HighlightTag", 7860, null, "javadocsnippet_highlightTagRegexWithAllCharacterChangeUsingDot.pass", this.sourceLevel, false);
     }
     
     public void testSingleLine_Replace_Regex() throws Exception {
@@ -1866,7 +1866,7 @@ public class GoToSupportTest extends NbTestCase {
         this.sourceLevel = getLatestSourceVersion();
         EXTRA_OPTIONS.add("--enable-preview");
         JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
-        performTest("LinkTag", 558, null, "javadocsnippet_LinkTag.pass", this.sourceLevel, false);
+        performTest("LinkTag", 1368, null, "javadocsnippet_LinkTag.pass", this.sourceLevel, false);
 
     }
 
@@ -1877,7 +1877,7 @@ public class GoToSupportTest extends NbTestCase {
         this.sourceLevel = getLatestSourceVersion();
         EXTRA_OPTIONS.add("--enable-preview");
         JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
-        performTest("LinkTag", 999, null, "javadocsnippet_LinkTag_With_RegexAndRegion.pass", this.sourceLevel, false);
+        performTest("LinkTag", 1809, null, "javadocsnippet_LinkTag_With_RegexAndRegion.pass", this.sourceLevel, false);
 
     }
 
@@ -1888,7 +1888,7 @@ public class GoToSupportTest extends NbTestCase {
         this.sourceLevel = getLatestSourceVersion();
         EXTRA_OPTIONS.add("--enable-preview");
         JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
-        performTest("LinkTag", 1350, null, "javadocsnippet_LinkTag_AppliesToNextLine.pass", this.sourceLevel, false);
+        performTest("LinkTag", 2160, null, "javadocsnippet_LinkTag_AppliesToNextLine.pass", this.sourceLevel, false);
 
     }
 
@@ -1899,7 +1899,7 @@ public class GoToSupportTest extends NbTestCase {
         this.sourceLevel = getLatestSourceVersion();
         EXTRA_OPTIONS.add("--enable-preview");
         JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
-        performTest("LinkTag", 1737, null, "javadocsnippet_Link_MultipleTag_OnSameLine.pass", this.sourceLevel, false);
+        performTest("LinkTag", 2547, null, "javadocsnippet_Link_MultipleTag_OnSameLine.pass", this.sourceLevel, false);
     }
 
     public void testLinkTag_With_RegionAttribute() throws Exception {
@@ -1909,7 +1909,7 @@ public class GoToSupportTest extends NbTestCase {
         this.sourceLevel = getLatestSourceVersion();
         EXTRA_OPTIONS.add("--enable-preview");
         JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
-        performTest("LinkTag", 2420, null, "javadocsnippet_LinkTag_With_RegionAttribute.pass", this.sourceLevel, false);
+        performTest("LinkTag", 3230, null, "javadocsnippet_LinkTag_With_RegionAttribute.pass", this.sourceLevel, false);
     }
 
     public void testLinkTag_Ref_ToThisClass_UsingHash() throws Exception {
@@ -1919,7 +1919,7 @@ public class GoToSupportTest extends NbTestCase {
         this.sourceLevel = getLatestSourceVersion();
         EXTRA_OPTIONS.add("--enable-preview");
         JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
-        performTest("LinkTag", 2752, null, "javadocsnippet_LinkTag_Ref_ToThisClass_UsingHash.pass", this.sourceLevel, false);
+        performTest("LinkTag", 3562, null, "javadocsnippet_LinkTag_Ref_ToThisClass_UsingHash.pass", this.sourceLevel, false);
     }
 
     public void testLinkTag_FieldRef_ToThisClass_UsingHash() throws Exception {
@@ -1929,7 +1929,7 @@ public class GoToSupportTest extends NbTestCase {
         this.sourceLevel = getLatestSourceVersion();
         EXTRA_OPTIONS.add("--enable-preview");
         JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
-        performTest("LinkTag", 3074, null, "javadocsnippet_LinkTag_FieldRef_ToThisClass_UsingHash.pass", this.sourceLevel, false);
+        performTest("LinkTag", 3884, null, "javadocsnippet_LinkTag_FieldRef_ToThisClass_UsingHash.pass", this.sourceLevel, false);
     }
 
     public void testLinkTag_AlongWith_HighlightTag() throws Exception {
@@ -1939,7 +1939,7 @@ public class GoToSupportTest extends NbTestCase {
         this.sourceLevel = getLatestSourceVersion();
         EXTRA_OPTIONS.add("--enable-preview");
         JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
-        performTest("LinkTag", 3492, null, "javadocsnippet_LinkTag_AlongWith_HighlightTag.pass", this.sourceLevel, false);
+        performTest("LinkTag", 4302, null, "javadocsnippet_LinkTag_AlongWith_HighlightTag.pass", this.sourceLevel, false);
     }
 
     public void testLinkTag_AlongWith_ReplaceTag() throws Exception {
@@ -1949,7 +1949,7 @@ public class GoToSupportTest extends NbTestCase {
         this.sourceLevel = getLatestSourceVersion();
         EXTRA_OPTIONS.add("--enable-preview");
         JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
-        performTest("LinkTag", 3895, null, "javadocsnippet_LinkTag_AlongWith_ReplaceTag.pass", this.sourceLevel, false);
+        performTest("LinkTag", 4705, null, "javadocsnippet_LinkTag_AlongWith_ReplaceTag.pass", this.sourceLevel, false);
     }
 
     public void testLinkTag_AlongWith_SubStringAndReplaceTag() throws Exception {
@@ -1959,7 +1959,7 @@ public class GoToSupportTest extends NbTestCase {
         this.sourceLevel = getLatestSourceVersion();
         EXTRA_OPTIONS.add("--enable-preview");
         JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
-        performTest("LinkTag", 4353, null, "javadocsnippet_LinkTag_AlongWith_SubStringAndReplaceTag.pass", this.sourceLevel, false);
+        performTest("LinkTag", 5163, null, "javadocsnippet_LinkTag_AlongWith_SubStringAndReplaceTag.pass", this.sourceLevel, false);
     }
 
     public void testLinkTag_EmptyReplacementValue() throws Exception {
@@ -1969,7 +1969,7 @@ public class GoToSupportTest extends NbTestCase {
         this.sourceLevel = getLatestSourceVersion();
         EXTRA_OPTIONS.add("--enable-preview");
         JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
-        performTest("LinkTag", 4758, null, "javadocsnippet_LinkTag_EmptyReplacementValue.pass", this.sourceLevel, false);
+        performTest("LinkTag", 5568, null, "javadocsnippet_LinkTag_EmptyReplacementValue.pass", this.sourceLevel, false);
     }
 
     public void testError_HighlightTag() throws Exception {
@@ -1979,7 +1979,7 @@ public class GoToSupportTest extends NbTestCase {
         this.sourceLevel = getLatestSourceVersion();
         EXTRA_OPTIONS.add("--enable-preview");
         JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
-        performTest("Errors", 1331, null, "javadocsnippet_TestError_HighlightTag.pass", this.sourceLevel, false);
+        performTest("Errors", 2140, null, "javadocsnippet_TestError_HighlightTag.pass", this.sourceLevel, false);
     }
     
     public void testError_ReplaceTag() throws Exception {
@@ -1989,7 +1989,7 @@ public class GoToSupportTest extends NbTestCase {
         this.sourceLevel = getLatestSourceVersion();
         EXTRA_OPTIONS.add("--enable-preview");
         JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
-        performTest("Errors", 2613, null, "javadocsnippet_TestError_ReplaceTag.pass", this.sourceLevel, false);
+        performTest("Errors", 3422, null, "javadocsnippet_TestError_ReplaceTag.pass", this.sourceLevel, false);
     }
     
     public void testError_LinkTag() throws Exception {
@@ -1999,7 +1999,7 @@ public class GoToSupportTest extends NbTestCase {
         this.sourceLevel = getLatestSourceVersion();
         EXTRA_OPTIONS.add("--enable-preview");
         JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
-        performTest("Errors", 4069, null, "javadocsnippet_TestError_LinkTag.pass", this.sourceLevel, false);
+        performTest("Errors", 4877, null, "javadocsnippet_TestError_LinkTag.pass", this.sourceLevel, false);
     }
     
     public void testError_UnpairedRegion() throws Exception {
@@ -2009,7 +2009,7 @@ public class GoToSupportTest extends NbTestCase {
         this.sourceLevel = getLatestSourceVersion();
         EXTRA_OPTIONS.add("--enable-preview");
         JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
-        performTest("Errors", 4740, null, "javadocsnippet_TestError_UnpairedRegion.pass", this.sourceLevel, false);
+        performTest("Errors", 5548, null, "javadocsnippet_TestError_UnpairedRegion.pass", this.sourceLevel, false);
     }
     
     public void testError_NoRegionToEnd() throws Exception {
@@ -2019,7 +2019,7 @@ public class GoToSupportTest extends NbTestCase {
         this.sourceLevel = getLatestSourceVersion();
         EXTRA_OPTIONS.add("--enable-preview");
         JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
-        performTest("Errors", 4906, null, "javadocsnippet_TestError_NoRegionToEnd.pass", this.sourceLevel, false);
+        performTest("Errors", 5715, null, "javadocsnippet_TestError_NoRegionToEnd.pass", this.sourceLevel, false);
     }
 
     public void testErrorFileEmpty() throws Exception {
@@ -2034,7 +2034,7 @@ public class GoToSupportTest extends NbTestCase {
         EXTRA_OPTIONS.add("--enable-preview");
         JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
 
-        performTest("Errors", 5096, null, "javadocsnippet_file_empty.pass", this.sourceLevel, true);
+        performTest("Errors", 5901, null, "javadocsnippet_file_empty.pass", this.sourceLevel, true);
     }
 
     public void testErrorFileInvalid() throws Exception {
@@ -2049,7 +2049,7 @@ public class GoToSupportTest extends NbTestCase {
         EXTRA_OPTIONS.add("--enable-preview");
         JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
 
-        performTest("Errors", 5335, null, "javadocsnippet_file_invalid.pass", this.sourceLevel, true);
+        performTest("Errors", 6140, null, "javadocsnippet_file_invalid.pass", this.sourceLevel, true);
     }
 
     public void testExternalSnippetFile() throws Exception {
@@ -2064,7 +2064,7 @@ public class GoToSupportTest extends NbTestCase {
         EXTRA_OPTIONS.add("--enable-preview");
         JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
 
-        performTest("Errors", 5637, null, "javadocsnippet_external_file.pass", this.sourceLevel, true);
+        performTest("Errors", 6440, null, "javadocsnippet_external_file.pass", this.sourceLevel, true);
     }
 
     public void testErrorRegionInvalid() throws Exception {
@@ -2079,7 +2079,7 @@ public class GoToSupportTest extends NbTestCase {
         EXTRA_OPTIONS.add("--enable-preview");
         JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
 
-        performTest("Errors", 5805, null, "javadocsnippet_region_invalid.pass", this.sourceLevel, true);
+        performTest("Errors", 6608, null, "javadocsnippet_region_invalid.pass", this.sourceLevel, true);
     }
 
     public void testExternalRegionValid() throws Exception {
@@ -2094,7 +2094,7 @@ public class GoToSupportTest extends NbTestCase {
         EXTRA_OPTIONS.add("--enable-preview");
         JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
 
-        performTest("Errors", 6087, null, "javadocsnippet_region_valid.pass", this.sourceLevel, true);
+        performTest("Errors", 6888, null, "javadocsnippet_region_valid.pass", this.sourceLevel, true);
     }
 
     private static final List<String> EXTRA_OPTIONS = new ArrayList<>();

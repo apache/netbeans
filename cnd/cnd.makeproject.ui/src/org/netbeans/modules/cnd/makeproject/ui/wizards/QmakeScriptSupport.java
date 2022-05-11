@@ -123,7 +123,7 @@ public class QmakeScriptSupport implements PreBuildArtifactProvider {
             String cCompilerFlags = ConfigureScriptSupport.getCompilerFlags(def);
             String cppCompilerFlags = ConfigureScriptSupport.getCompilerFlags(def);
             int platform = CompilerSetManager.get(ee).getPlatform();
-            if (def.getCompilerFlavor().isSunStudioCompiler() && (platform == PlatformTypes.PLATFORM_SOLARIS_INTEL || platform == PlatformTypes.PLATFORM_SOLARIS_SPARC)) {
+            if (def.getCompilerFlavor().isSunStudioCompiler() && (platform == PlatformTypes.PLATFORM_SOLARIS_INTEL)) {
                 ConfigureScriptSupport.appendIfNeed("-spec ", flags, buf, "solaris-cc"); // NOI18N
             }
             if (platform == PlatformTypes.PLATFORM_MACOSX) {

@@ -70,7 +70,6 @@ public class CppUtils {
                     os = "macx"; // NOI18N
                     break;
                 case PlatformTypes.PLATFORM_SOLARIS_INTEL:
-                case PlatformTypes.PLATFORM_SOLARIS_SPARC:
                     os = "solaris"; // NOI18N
                     break;
                 case PlatformTypes.PLATFORM_WINDOWS:

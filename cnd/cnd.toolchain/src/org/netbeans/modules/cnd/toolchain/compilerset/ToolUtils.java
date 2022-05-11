@@ -155,8 +155,6 @@ public final class ToolUtils {
         switch (platform) {
             case PlatformTypes.PLATFORM_LINUX:
                 return "linux"; // NOI18N
-            case PlatformTypes.PLATFORM_SOLARIS_SPARC:
-                return "sun_sparc"; // NOI18N
             case PlatformTypes.PLATFORM_SOLARIS_INTEL:
                 return "sun_intel"; // NOI18N
             case PlatformTypes.PLATFORM_WINDOWS:
@@ -169,13 +167,6 @@ public final class ToolUtils {
     }
     public static boolean isPlatforSupported(int platform, ToolchainDescriptor d) {
         switch (platform) {
-            case PlatformTypes.PLATFORM_SOLARIS_SPARC:
-                for (String p : d.getPlatforms()) {
-                    if ("sun_sparc".equals(p)) { // NOI18N
-                        return true;
-                    }
-                }
-                break;
             case PlatformTypes.PLATFORM_SOLARIS_INTEL:
                 for (String p : d.getPlatforms()) {
                     if ("sun_intel".equals(p)) { // NOI18N
@@ -226,12 +217,8 @@ public final class ToolUtils {
         String os = System.getProperty("os.name").toLowerCase(); // NOI18N
 
         if (os.contains("sunos")) { // NOI18N
-            String os_arch = System.getProperty("os.arch", "");	// NOI18N
-            int platform_arch = PlatformTypes.PLATFORM_SOLARIS_INTEL;
-            if (os_arch.toLowerCase().contains("sparc")) {// NOI18N
-                platform_arch = PlatformTypes.PLATFORM_SOLARIS_SPARC;		// NOI18N
-            }
-            return platform_arch;
+            // This is all we currently support on SunOS
+            return PlatformTypes.PLATFORM_SOLARIS_INTEL;
         } else if (os.contains("windows")) { // NOI18N
             return PlatformTypes.PLATFORM_WINDOWS;
         } else if (os.contains("linux")) { // NOI18N

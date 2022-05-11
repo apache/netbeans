@@ -63,8 +63,6 @@ public class SVR4Packager implements PackagerDescriptor {
         String defArch;
         if (makeConfiguration.getDevelopmentHost().getBuildPlatform() == PlatformTypes.PLATFORM_SOLARIS_INTEL) {
             defArch = "i386"; // NOI18N
-        } else if (makeConfiguration.getDevelopmentHost().getBuildPlatform() == PlatformTypes.PLATFORM_SOLARIS_SPARC) {
-            defArch = "sparc"; // NOI18N
         } else {
             // Anything else ?
             defArch = "i386"; // NOI18N

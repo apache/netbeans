@@ -80,11 +80,9 @@ public class RemoteCompilerSetProvider implements CompilerSetProvider {
         } else if (platform.startsWith("Linux") || platform.startsWith("PLATFORM_LINUX")) { // NOI18N
             return PlatformTypes.PLATFORM_LINUX;
         } else if (platform.startsWith("SunOS")) { // NOI18N
-            return platform.contains("86") ? PlatformTypes.PLATFORM_SOLARIS_INTEL : PlatformTypes.PLATFORM_SOLARIS_SPARC; // NOI18N
+            return PlatformTypes.PLATFORM_SOLARIS_INTEL ; // NOI18N
         } else if (platform.startsWith("PLATFORM_SOLARIS_INTEL")) { // NOI18N
             return PlatformTypes.PLATFORM_SOLARIS_INTEL;
-        } else if (platform.startsWith("PLATFORM_SOLARIS_SPARC")) { // NOI18N
-            return PlatformTypes.PLATFORM_SOLARIS_SPARC;
         } else if (platform.toLowerCase(Locale.getDefault()).startsWith("mac") || platform.startsWith("PLATFORM_MACOSX")) { // NOI18N
             return PlatformTypes.PLATFORM_MACOSX;
         } else {

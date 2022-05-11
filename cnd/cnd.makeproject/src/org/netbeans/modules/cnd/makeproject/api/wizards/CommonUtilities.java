@@ -133,7 +133,6 @@ public final class CommonUtilities {
                 paths += "/usr/lib:/usr/local/lib:/Library/Frameworks:/System/Library/Frameworks";  //NOI18N
                 break;
             case PlatformTypes.PLATFORM_SOLARIS_INTEL:
-            case PlatformTypes.PLATFORM_SOLARIS_SPARC:
             case PlatformTypes.PLATFORM_LINUX:
             default:
                 if (!paths.isEmpty()) {
@@ -151,7 +150,6 @@ public final class CommonUtilities {
             case PlatformTypes.PLATFORM_MACOSX:
                 break;
             case PlatformTypes.PLATFORM_SOLARIS_INTEL:
-            case PlatformTypes.PLATFORM_SOLARIS_SPARC:
                 break;
             case PlatformTypes.PLATFORM_LINUX:
                 paths = appendConfigLD(eenv, paths, "/etc/ld.so.conf", 0); //NOI18N
@@ -235,7 +233,6 @@ public final class CommonUtilities {
             case PlatformTypes.PLATFORM_MACOSX:
                 return "DYLD_LIBRARY_PATH"; // NOI18N
             case PlatformTypes.PLATFORM_SOLARIS_INTEL:
-            case PlatformTypes.PLATFORM_SOLARIS_SPARC:
             case PlatformTypes.PLATFORM_LINUX:
             default:
                 return "LD_LIBRARY_PATH"; // NOI18N
@@ -250,7 +247,6 @@ public final class CommonUtilities {
             case PlatformTypes.PLATFORM_MACOSX:
                 return "DYLD_LIBRARY_PATH"; // NOI18N
             case PlatformTypes.PLATFORM_SOLARIS_INTEL:
-            case PlatformTypes.PLATFORM_SOLARIS_SPARC:
             case PlatformTypes.PLATFORM_LINUX:
             default:
                 return "LD_LIBRARY_PATH"; // NOI18N

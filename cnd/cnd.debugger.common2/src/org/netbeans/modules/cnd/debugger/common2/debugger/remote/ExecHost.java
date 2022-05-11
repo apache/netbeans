@@ -114,9 +114,6 @@ class ExecHost extends Host {
 	    case PlatformTypes.PLATFORM_SOLARIS_INTEL:
 		return Platform.Solaris_x86;
 
-	    case PlatformTypes.PLATFORM_SOLARIS_SPARC:
-		return Platform.Solaris_Sparc;
-
 	    case PlatformTypes.PLATFORM_MACOSX:
 		return Platform.MacOSX_x86;
 

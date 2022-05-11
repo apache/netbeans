@@ -31,7 +31,6 @@ import org.openide.util.Utilities;
 public final class PlatformTypes {
 
     // Platform id's
-    public static final int PLATFORM_SOLARIS_SPARC = 0;
     public static final int PLATFORM_SOLARIS_INTEL = 1;
     public static final int PLATFORM_LINUX = 2;
     public static final int PLATFORM_WINDOWS = 3;
@@ -49,8 +48,6 @@ public final class PlatformTypes {
             case SUNOS:
                 HostInfo.CpuFamily cpuFamily = hostInfo.getCpuFamily();
                 switch (cpuFamily) {
-                    case SPARC:
-                        return PLATFORM_SOLARIS_SPARC;
                     case X86:
                         return PLATFORM_SOLARIS_INTEL;
                     case ARM:
@@ -87,7 +84,8 @@ public final class PlatformTypes {
                 if (arch.indexOf("86") >= 0) { // NOI18N
                     defaultPlatform = PlatformTypes.PLATFORM_SOLARIS_INTEL;
                 } else {
-                    defaultPlatform = PlatformTypes.PLATFORM_SOLARIS_SPARC;
+                    // Possible we might be Solaris on a different CPU
+                    defaultPlatform = PlatformTypes.PLATFORM_GENERIC;
                 }
             } else if (Utilities.getOperatingSystem() == Utilities.OS_LINUX) {
                 defaultPlatform = PlatformTypes.PLATFORM_LINUX;
@@ -101,9 +99,6 @@ public final class PlatformTypes {
     public static String toString(int platform) {
         String out;
         switch (platform) {
-            case PLATFORM_SOLARIS_SPARC:
-                out = "PLATFORM_SOLARIS_SPARC"; // NOI18N
-                break;
             case PLATFORM_SOLARIS_INTEL:
                 out = "PLATFORM_SOLARIS_INTEL"; // NOI18N
                 break;

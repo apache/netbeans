@@ -196,6 +196,7 @@
                             <attr name="instantiatingIterator" newvalue="org.netbeans.modules.cnd.makeproject.ui.wizards.MakeSampleProjectIterator"/>
                         </file>
 
+                        <!--
                         <file name="Hello" url="nbresloc:/org/netbeans/modules/cnd/makeproject/resources/samples/hello.zip">
                             <attr name="position" intvalue="820"/>
                             <attr name="template" boolvalue="true"/>
@@ -204,6 +205,7 @@
                             <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/cnd/makeproject/resources/projects-managed.png"/>
                             <attr name="instantiatingIterator" newvalue="org.netbeans.modules.cnd.makeproject.ui.wizards.MakeSampleProjectIterator"/>
                         </file>
+                        -->
 
                         <file name="Pi" url="nbresloc:/org/netbeans/modules/cnd/makeproject/resources/samples/pi.zip">
                             <attr name="position" intvalue="830"/>

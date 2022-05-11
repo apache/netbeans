@@ -42,6 +42,7 @@ import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
@@ -1212,6 +1213,7 @@ public class JavadocCompletionTask<T> extends UserTask {
         CharSequence text = token.text();
         int pos = caretOffset - jdts.offset();
         DocTreePath tag = getTag(jdctx, caretOffset);
+        insideInlineSnippet(jdctx, tag);
         if (pos > 0 && pos <= text.length() && text.charAt(pos - 1) == '{') {
             if (tag != null && !JavadocCompletionUtils.isBlockTag(tag)) {
                 int start = (int) jdctx.positions.getStartPosition(jdctx.javac.getCompilationUnit(), jdctx.comment, tag.getLeaf());
@@ -1229,6 +1231,43 @@ public class JavadocCompletionTask<T> extends UserTask {
             }
         } else if (JavadocCompletionUtils.isLineBreak(token, pos)) {
             resolveBlockTag(null, jdctx);
+        }
+    }
+
+    private void insideInlineSnippet(JavadocContext jdctx, DocTreePath tag) {
+        int start = (int) jdctx.positions.getStartPosition(jdctx.javac.getCompilationUnit(), jdctx.comment, tag.getLeaf());
+        String subStr = JavadocCompletionUtils.getCharSequence(jdctx.doc, start, caretOffset).toString();
+        subStr = subStr.replaceAll("\\s","");
+        boolean match = Pattern.compile("(?<=//)@$").matcher(subStr).find();
+        if(match) {
+            List<String> inlineAttr =new ArrayList() {{
+                add("highlight");
+                add("replace");
+                add("link");
+            }};
+            for(String str: inlineAttr) {
+                items.add(factory.createNameItem(str, this.caretOffset));
+            }
+        } else {
+            String str = subStr.substring(subStr.lastIndexOf("@"));
+            if(str!=null) {
+                completeInlineMarkupTag(str, new ArrayList(){{add("substring");add("regex");add("region");}});
+            }
+        }
+    }
+
+    private void completeInlineMarkupTag(String str, List<String> attr) {
+        String value = " = \"<value>\"";
+        switch(str) {
+            case "@highlight": attr.add("type"); break;
+            case "@replace":attr.add("replacement");break;
+            case "@link":attr.add("target"); attr.add("type"); break;
+            default: break;
+        }
+        if(attr.size()>3) {
+            for(String entry:attr) {
+                items.add(factory.createNameItem(entry+value, this.caretOffset));
+            }
         }
     }
 

@@ -174,8 +174,8 @@ public abstract class PositionEstimator {
     }
     
     static class CasePatternEstimator extends BaseEstimator {
-        CasePatternEstimator(List<? extends ExpressionTree> oldL, 
-                             List<? extends ExpressionTree> newL,
+        CasePatternEstimator(List<? extends Tree> oldL, 
+                             List<? extends Tree> newL,
                              DiffContext diffContext)
         {
             super(CASE, oldL, newL, diffContext);

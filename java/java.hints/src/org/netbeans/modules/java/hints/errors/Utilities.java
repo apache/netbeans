@@ -39,7 +39,6 @@ import com.sun.source.tree.ArrayTypeTree;
 import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.BlockTree;
-import com.sun.source.tree.CaseLabelTree;
 import com.sun.source.tree.CaseTree;
 import com.sun.source.tree.CatchTree;
 import com.sun.source.tree.ClassTree;
@@ -3182,7 +3181,8 @@ public class Utilities {
         ExpressionTree switchExpr;
         List<? extends CaseTree> cases;
         Set<VariableElement> variablesDeclaredInOtherCases = new HashSet<>();
-        List<CaseLabelTree> patterns = new ArrayList<>();
+
+        List<Tree> patterns = new ArrayList<>();
         Tree leftVariable = null;
         boolean ruleSwitchFlag = st.getKind() == Kind.SWITCH_EXPRESSION;
         if (ruleSwitchFlag) {

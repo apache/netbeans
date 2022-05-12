@@ -174,6 +174,7 @@ public class MapFormatTest {
     }
 
     //--------------------------------------------------------------------------
+    // test the fix for https://bz.apache.org/netbeans/show_bug.cgi?id=67238
     @Test
     public void format_ignoresEmptySequanceOfMultipleBraces() {
 
@@ -189,6 +190,26 @@ public class MapFormatTest {
                 mf.format("/*_____________________*/\n/*__first__*/"));
 
     }
+    
+    //--------------------------------------------------------------------------
+    // test the fix for https://bz.apache.org/netbeans/show_bug.cgi?id=67238
+    @Test
+    public void format_ignoresEmptySequanceOfMultipleBraces_andNeverCalls_processKey() {
+
+        MapFormat mf = new MapFormat(this.johnDoe) {
+            @Override
+            protected Object processKey(String key) {
+                fail("'processKey()' should not be called with key: " + key);
+                return "not defined";
+            }
+        };
+        mf.setExactMatch(false);
+        mf.setLeftBrace("__");
+        mf.setRightBrace("__");
+
+        String s = "/*___________________________________________________________________________*/";
+        assertEquals(s, mf.format(s));
+    }
 
     //--------------------------------------------------------------------------
     @Test
@@ -196,6 +217,7 @@ public class MapFormatTest {
 
         MapFormat mf = new MapFormat(this.johnDoe);
         mf.setExactMatch(false);
+        
         assertEquals("Hello {prefix Doe.", mf.format("Hello {prefix {last}."));
         assertEquals("Hello Mr {last.", mf.format("Hello {prefix} {last."));
     }

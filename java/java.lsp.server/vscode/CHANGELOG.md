@@ -20,6 +20,9 @@
     under the License.
 
 -->
+
+## Version 14.0
+* netbeans.jdkhome setting is Remote SSH aware
 ## Version 13.0.301
 * Added base code completion for Spock test framework
   * Spock Block Names are offered inside methods if the class extends Spock Specification

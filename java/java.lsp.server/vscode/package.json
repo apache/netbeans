@@ -94,7 +94,8 @@
 						"null"
 					],
 					"default": null,
-					"description": "Specifies JDK for the Apache NetBeans Language Server"
+					"description": "Specifies JDK for the Apache NetBeans Language Server",
+					"scope": "machine"
 				},
 				"netbeans.verbose": {
 					"type": "boolean",

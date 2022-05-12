@@ -220,7 +220,7 @@ jobs:
     env:
       DISPLAY: ":99.0"
       TEST_OPTS: "-Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json -Dcluster.config=release -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true"
-      OPTS: "-Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json -Dtest.run.args=--limit-modules=java.base,java.logging,java.xml,java.prefs,java.desktop,java.management,java.instrument,jdk.zipfs,java.scripting,java.naming -Dtest.bootclasspath.prepend.args=-Dno.netbeans.bootclasspath.prepend.needed=true"
+      MOD_OPTS: "-Dtest.run.args=--limit-modules=java.base,java.logging,java.xml,java.prefs,java.desktop,java.management,java.instrument,jdk.zipfs,java.scripting,java.naming -Dtest.bootclasspath.prepend.args=-Dno.netbeans.bootclasspath.prepend.needed=true"
     strategy:
       matrix:
         java: [ '8', '11', '17' ]
@@ -241,30 +241,37 @@ jobs:
       - name: Extract
         run: tar --zstd -xf build.tar.zst
         
-      - name: Setup Env
+      - name: Setup Env 8
+        if: ${{ matrix.java == '8' }}
+        run: echo "OPTS=$TEST_OPTS" >> $GITHUB_ENV
+        
+      - name: Setup Env 8+
         if: ${{ matrix.java != '8' }}
-        run: echo "OPTS=${OPTS}" >> $GITHUB_ENV
+        run: echo "OPTS=$TEST_OPTS $MOD_OPTS" >> $GITHUB_ENV
+        
+      - name: Print Env
+        run: cat $GITHUB_ENV
 
       - name: Setup Xvfb
         run: Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
 
       - name: Groovy Editor
-        run: ant $TEST_OPTS -f groovy/groovy.editor test
+        run: ant $OPTS -f groovy/groovy.editor test
 
       - name: Groovy GSP
-        run: ant $TEST_OPTS -f groovy/groovy.gsp test
+        run: ant $OPTS -f groovy/groovy.gsp test
 
       - name: Groovy Support
-        run: ant $TEST_OPTS -f groovy/groovy.support test
+        run: ant $OPTS -f groovy/groovy.support test
 
 #      - name: Groovy Misc
-#        run: ant $TEST_OPTS -f groovy/groovy test
+#        run: ant $OPTS -f groovy/groovy test
 
 #      - name: Groovy Java
-#        run: ant $TEST_OPTS -f groovy/groovy.java test
+#        run: ant $OPTS -f groovy/groovy.java test
 
 #      - name: Groovy Kit
-#        run: ant $TEST_OPTS -f groovy/groovy.kit test
+#        run: ant $OPTS -f groovy/groovy.kit test
 
   php:
     needs: base-build

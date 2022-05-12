@@ -213,6 +213,59 @@ jobs:
       - name: Commit Validation tests
         run: ant -Dcluster.config=release commit-validation
 
+  groovy:
+    needs: base-build
+    name: Groovy Tests on Linux/JDK ${{ matrix.java }} 
+    runs-on: ubuntu-latest
+    env:
+      DISPLAY: ":99.0"
+      TEST_OPTS: "-Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json -Dcluster.config=release -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true"
+      OPTS: "-Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json -Dtest.run.args=--limit-modules=java.base,java.logging,java.xml,java.prefs,java.desktop,java.management,java.instrument,jdk.zipfs,java.scripting,java.naming -Dtest.bootclasspath.prepend.args=-Dno.netbeans.bootclasspath.prepend.needed=true"
+    strategy:
+      matrix:
+        java: [ '8', '11', '17' ]
+      fail-fast: false
+    steps:
+
+      - name: Set up JDK ${{ matrix.java }} 
+        uses: actions/setup-java@v2
+        with:
+          java-version: ${{ matrix.java }} 
+          distribution: 'zulu'
+
+      - name: Download Build
+        uses: actions/download-artifact@v3
+        with:
+          name: build
+
+      - name: Extract
+        run: tar --zstd -xf build.tar.zst
+        
+      - name: Setup Env
+        if: ${{ matrix.java != '8' }}
+        run: echo "OPTS=${OPTS}" >> $GITHUB_ENV
+
+      - name: Setup Xvfb
+        run: Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
+
+      - name: Groovy Editor
+        run: ant $TEST_OPTS -f groovy/groovy.editor test
+
+      - name: Groovy GSP
+        run: ant $TEST_OPTS -f groovy/groovy.gsp test
+
+      - name: Groovy Support
+        run: ant $TEST_OPTS -f groovy/groovy.support test
+
+#      - name: Groovy Misc
+#        run: ant $TEST_OPTS -f groovy/groovy test
+
+#      - name: Groovy Java
+#        run: ant $TEST_OPTS -f groovy/groovy.java test
+
+#      - name: Groovy Kit
+#        run: ant $TEST_OPTS -f groovy/groovy.kit test
+
   php:
     needs: base-build
     name: PHP on ${{ matrix.os }}/JDK ${{ matrix.java }} 
@@ -247,7 +300,7 @@ jobs:
           extensions: xdebug
           ini-values: xdebug.mode=debug
 
-      - name: Launch Xvfb
+      - name: Setup Xvfb
         if: contains(matrix.os, 'ubuntu')
         run: Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
       # - - -
@@ -353,7 +406,7 @@ jobs:
 # last job depends on everything so that it is forced to run last even if a long job fails early
   cleanup:
     name: Cleanup Workflow Artifacts
-    needs: [base-build, linux-commit-validation, linux-build-system-test, linux-javadoc, macos, php]
+    needs: [base-build, linux-commit-validation, linux-build-system-test, linux-javadoc, macos, groovy, php]
     # don't cleanup on failure() or always(), because someone might want to restart an unreliable secondary job
     # if primary jobs fail there won't be anything to cleanup anyway.
     if: success() || cancelled()

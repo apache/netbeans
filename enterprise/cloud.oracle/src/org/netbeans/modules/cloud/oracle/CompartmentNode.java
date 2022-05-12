@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.cloud.oracle;
 
+import org.netbeans.modules.cloud.oracle.devops.DevopsProjectNode;
 import org.netbeans.modules.cloud.oracle.items.OCIItem;
 import java.util.List;
 import javax.swing.Action;
@@ -53,7 +54,7 @@ public class CompartmentNode extends AbstractNode {
         return Utilities.actionsForPath("Cloud/Oracle/Compartment/Actions").toArray(new Action[0]); // NOI18N
     }
     
-    public static class CompartmentChildFactory extends org.openide.nodes.ChildFactory<DatabaseItem>
+    public static class CompartmentChildFactory extends org.openide.nodes.ChildFactory<OCIItem>
             implements ChangeListener {
 
         private final String compartmentId;
@@ -64,8 +65,9 @@ public class CompartmentNode extends AbstractNode {
         }
 
         @Override
-        protected boolean createKeys(List<DatabaseItem> toPopulate) {
+        protected boolean createKeys(List<OCIItem> toPopulate) {
             toPopulate.addAll(OCIManager.getDefault().getDatabases(compartmentId));
+            toPopulate.addAll(OCIManager.getDefault().listDevopsProjects(compartmentId));
             return true;
         }
 
@@ -75,9 +77,11 @@ public class CompartmentNode extends AbstractNode {
         }
 
         @Override
-        protected Node createNodeForKey(DatabaseItem key) {
-            AbstractNode node = new DatabaseNode(key);
-            return node;
+        protected Node createNodeForKey(OCIItem key) {
+            if (key instanceof DatabaseItem) {
+                return new DatabaseNode((DatabaseItem) key);
+            } 
+            return new DevopsProjectNode(key);
         }
     }
 }

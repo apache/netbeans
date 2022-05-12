@@ -126,7 +126,7 @@ public class HTMLDocView extends JEditorPane {
                     Document doc = getDocument();
                     doc.remove(0, doc.getLength());
                     getEditorKit().read(in, getDocument(), 0);  //!!! still too expensive to be called from AWT
-                    setCaretPosition(0);
+                    setCaretPosition(0); 
                     if (reference != null) {
                         SwingUtilities.invokeLater(new Runnable(){
                             public void run(){

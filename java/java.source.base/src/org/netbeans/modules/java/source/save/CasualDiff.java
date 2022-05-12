@@ -425,7 +425,7 @@ public class CasualDiff {
         return td.checkDiffs(DiffUtilities.diff(originalText, resultSrc, start, 
                 td.readSections(originalText.length(), resultSrc.length(), lineStart, start), lineStart));
     }
-    
+
     private static class SectKey {
         private int off;
         SectKey(int off) { this.off = off; }
@@ -5004,7 +5004,7 @@ public class CasualDiff {
         }
         return elementBounds[1];
     }
-    
+
     private int diffStartElement(DCDocComment doc, DCStartElement oldT, DCStartElement newT, int[] elementBounds) {
         int localpointer = oldT.attrs.isEmpty()? elementBounds[1] - 1 : getOldPos(oldT.attrs.get(0), doc);
         if(oldT.name.equals(newT.name)) {

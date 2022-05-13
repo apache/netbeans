@@ -27,6 +27,9 @@ concurrency:
   group: ${{ github.head_ref || github.run_id }}
   cancel-in-progress: true
 
+env:
+  METABUILD_OPTS: -Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json
+
 jobs:
     
 # primary build job, most other jobs use the artifact produced here
@@ -35,7 +38,7 @@ jobs:
     name: Build Clusters on JDK ${{ matrix.java }} 
     runs-on: ubuntu-latest
     env:
-      ANT_OPTS: -Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json
+      ANT_OPTS: $METABUILD_OPTS
     strategy:
       matrix:
         java: [ '11', '17' ]
@@ -81,7 +84,7 @@ jobs:
     name: Commit Validation on Linux/JDK ${{ matrix.java }} 
     runs-on: ubuntu-latest
     env:
-      ANT_OPTS: -Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json
+      ANT_OPTS: $METABUILD_OPTS
     strategy:
       matrix:
         java: [ '8', '11', '17', '19-ea' ]
@@ -110,7 +113,7 @@ jobs:
     name: Build-System Test on Linux/JDK ${{ matrix.java }} 
     runs-on: ubuntu-latest
     env:
-      ANT_OPTS: -Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json
+      ANT_OPTS: $METABUILD_OPTS
     strategy:
       matrix:
         java: [ '11' ]
@@ -141,7 +144,7 @@ jobs:
       matrix:
         java: [ '11' ]
     env:
-      ANT_OPTS: -Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json
+      ANT_OPTS: $METABUILD_OPTS
     steps:
 
       - name: Set up JDK ${{ matrix.java }} 
@@ -175,7 +178,7 @@ jobs:
     name: Tests on MacOS/JDK ${{ matrix.java }} 
     runs-on: macos-11
     env:
-      ANT_OPTS: -Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json
+      ANT_OPTS: $METABUILD_OPTS
     strategy:
       matrix:
         java: [ '11' ]
@@ -219,7 +222,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       DISPLAY: ":99.0"
-      TEST_OPTS: "-Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json -Dcluster.config=release -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true"
+      TEST_OPTS: "$METABUILD_OPTS -Dcluster.config=release -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true"
       MOD_OPTS: "-Dtest.run.args=--limit-modules=java.base,java.logging,java.xml,java.prefs,java.desktop,java.management,java.instrument,jdk.zipfs,java.scripting,java.naming -Dtest.bootclasspath.prepend.args=-Dno.netbeans.bootclasspath.prepend.needed=true"
     strategy:
       matrix:
@@ -248,9 +251,6 @@ jobs:
       - name: Setup Env 8+
         if: ${{ matrix.java != '8' }}
         run: echo "OPTS=$TEST_OPTS $MOD_OPTS" >> $GITHUB_ENV
-        
-      - name: Print Env
-        run: cat $GITHUB_ENV
 
       - name: Setup Xvfb
         run: Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
@@ -282,7 +282,7 @@ jobs:
         shell: bash
     env:
       DISPLAY: ":99.0"
-      ANT_OPTS: -Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json
+      ANT_OPTS: $METABUILD_OPTS
       OPTS: -Dtest-unit-sys-prop.ignore.random.failures=true
     strategy:
       matrix:

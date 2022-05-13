@@ -36,85 +36,85 @@ import org.openide.util.Lookup;
 import org.openide.util.NbBundle.Messages;
 import org.openide.windows.TopComponent;
 
-//@Messages({
-//    "LBL_C_LOADER=Files of C"
-//})
-//@MIMEResolver.ExtensionRegistration(
-//        displayName = "#LBL_C_LOADER",
-//        mimeType = MIMETypes.C,
-//        extension = {"c"},
-//        position = 1000000
-//)
-//@DataObject.Registration(
-//        mimeType = MIMETypes.C,
-//        iconBase = CDataObject.ICON,
-//        displayName = "#LBL_C_LOADER",
-//        position = 300
-//)
-//@ActionReferences({
-//    @ActionReference(
-//            path = "Loaders/" + MIMETypes.C + "/Actions",
-//            id = @ActionID(category = "System", id = "org.openide.actions.OpenAction"),
-//            position = 100,
-//            separatorAfter = 200
-//    ),
-//    @ActionReference(
-//            path = "Loaders/" + MIMETypes.C + "/Actions",
-//            id = @ActionID(category = "Edit", id = "org.openide.actions.CutAction"),
-//            position = 300
-//    ),
-//    @ActionReference(
-//            path = "Loaders/" + MIMETypes.C + "/Actions",
-//            id = @ActionID(category = "Edit", id = "org.openide.actions.CopyAction"),
-//            position = 400,
-//            separatorAfter = 500
-//    ),
-//    @ActionReference(
-//            path = "Loaders/" + MIMETypes.C + "/Actions",
-//            id = @ActionID(category = "Edit", id = "org.openide.actions.DeleteAction"),
-//            position = 600
-//    ),
-//    @ActionReference(
-//            path = "Loaders/" + MIMETypes.C + "/Actions",
-//            id = @ActionID(category = "System", id = "org.openide.actions.RenameAction"),
-//            position = 700,
-//            separatorAfter = 800
-//    ),
-//    @ActionReference(
-//            path = "Loaders/" + MIMETypes.C + "/Actions",
-//            id = @ActionID(category = "System", id = "org.openide.actions.SaveAsTemplateAction"),
-//            position = 900,
-//            separatorAfter = 1000
-//    ),
-//    @ActionReference(
-//            path = "Loaders/" + MIMETypes.C + "/Actions",
-//            id = @ActionID(category = "System", id = "org.openide.actions.FileSystemAction"),
-//            position = 1100,
-//            separatorAfter = 1200
-//    ),
-//    @ActionReference(
-//            path = "Loaders/" + MIMETypes.C + "/Actions",
-//            id = @ActionID(category = "System", id = "org.openide.actions.ToolsAction"),
-//            position = 1300
-//    ),
-//    @ActionReference(
-//            path = "Loaders/" + MIMETypes.C + "/Actions",
-//            id = @ActionID(category = "System", id = "org.openide.actions.PropertiesAction"),
-//            position = 1400
-//    ),
-//    @ActionReference(
-//            path = "Editors/" + MIMETypes.CPP + "/Popup",
-//            id = @ActionID(category = "Refactoring", id = "org.netbeans.modules.refactoring.api.ui.WhereUsedAction"),
-//            position = 1400
-//    ),
-//    @ActionReference(
-//            path = "Editors/" + MIMETypes.CPP + "/Popup",
-//            id = @ActionID(category = "Refactoring", id = "org.netbeans.modules.refactoring.api.ui.RenameAction"),
-//            position = 1500,
-//            separatorAfter = 1550
-//    )
-//})
-//@GrammarRegistration(grammar="resources/c.tmLanguage.json", mimeType=MIMETypes.C)
+@Messages({
+    "LBL_C_LOADER=Files of C"
+})
+@MIMEResolver.ExtensionRegistration(
+        displayName = "#LBL_C_LOADER",
+        mimeType = MIMETypes.C,
+        extension = {"c"},
+        position = 1000000
+)
+@DataObject.Registration(
+        mimeType = MIMETypes.C,
+        iconBase = CDataObject.ICON,
+        displayName = "#LBL_C_LOADER",
+        position = 300
+)
+@ActionReferences({
+    @ActionReference(
+            path = "Loaders/" + MIMETypes.C + "/Actions",
+            id = @ActionID(category = "System", id = "org.openide.actions.OpenAction"),
+            position = 100,
+            separatorAfter = 200
+    ),
+    @ActionReference(
+            path = "Loaders/" + MIMETypes.C + "/Actions",
+            id = @ActionID(category = "Edit", id = "org.openide.actions.CutAction"),
+            position = 300
+    ),
+    @ActionReference(
+            path = "Loaders/" + MIMETypes.C + "/Actions",
+            id = @ActionID(category = "Edit", id = "org.openide.actions.CopyAction"),
+            position = 400,
+            separatorAfter = 500
+    ),
+    @ActionReference(
+            path = "Loaders/" + MIMETypes.C + "/Actions",
+            id = @ActionID(category = "Edit", id = "org.openide.actions.DeleteAction"),
+            position = 600
+    ),
+    @ActionReference(
+            path = "Loaders/" + MIMETypes.C + "/Actions",
+            id = @ActionID(category = "System", id = "org.openide.actions.RenameAction"),
+            position = 700,
+            separatorAfter = 800
+    ),
+    @ActionReference(
+            path = "Loaders/" + MIMETypes.C + "/Actions",
+            id = @ActionID(category = "System", id = "org.openide.actions.SaveAsTemplateAction"),
+            position = 900,
+            separatorAfter = 1000
+    ),
+    @ActionReference(
+            path = "Loaders/" + MIMETypes.C + "/Actions",
+            id = @ActionID(category = "System", id = "org.openide.actions.FileSystemAction"),
+            position = 1100,
+            separatorAfter = 1200
+    ),
+    @ActionReference(
+            path = "Loaders/" + MIMETypes.C + "/Actions",
+            id = @ActionID(category = "System", id = "org.openide.actions.ToolsAction"),
+            position = 1300
+    ),
+    @ActionReference(
+            path = "Loaders/" + MIMETypes.C + "/Actions",
+            id = @ActionID(category = "System", id = "org.openide.actions.PropertiesAction"),
+            position = 1400
+    ),
+    @ActionReference(
+            path = "Editors/" + MIMETypes.CPP + "/Popup",
+            id = @ActionID(category = "Refactoring", id = "org.netbeans.modules.refactoring.api.ui.WhereUsedAction"),
+            position = 1400
+    ),
+    @ActionReference(
+            path = "Editors/" + MIMETypes.CPP + "/Popup",
+            id = @ActionID(category = "Refactoring", id = "org.netbeans.modules.refactoring.api.ui.RenameAction"),
+            position = 1500,
+            separatorAfter = 1550
+    )
+})
+@GrammarRegistration(grammar="resources/c.tmLanguage.json", mimeType=MIMETypes.C)
 public class CDataObject extends MultiDataObject {
 
     @StaticResource
@@ -130,14 +130,14 @@ public class CDataObject extends MultiDataObject {
         return 1;
     }
 
-//    @MultiViewElement.Registration(
-//        displayName = "#Source",
-//        iconBase = CDataObject.ICON,
-//        persistenceType = TopComponent.PERSISTENCE_ONLY_OPENED,
-//        mimeType = MIMETypes.C,
-//        preferredID = "c.source",
-//        position = 100
-//    )
+    @MultiViewElement.Registration(
+        displayName = "#Source",
+        iconBase = CDataObject.ICON,
+        persistenceType = TopComponent.PERSISTENCE_ONLY_OPENED,
+        mimeType = MIMETypes.C,
+        preferredID = "c.source",
+        position = 100
+    )
     public static MultiViewEditorElement createEditor(Lookup lkp) {
         return new MultiViewEditorElement(lkp);
     }

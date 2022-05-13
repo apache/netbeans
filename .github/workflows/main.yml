@@ -85,6 +85,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       ANT_OPTS: $METABUILD_OPTS
+      DISPLAY: ":99.0"
     strategy:
       matrix:
         java: [ '8', '11', '17', '19-ea' ]
@@ -104,6 +105,9 @@ jobs:
 
       - name: Extract
         run: tar --zstd -xf build.tar.zst
+
+      - name: Setup Xvfb
+        run: Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
 
       - name: Commit Validation tests
         run: ant -Dcluster.config=release commit-validation
@@ -362,7 +366,7 @@ jobs:
       - name: Test PHP Composer
         run: ant $OPTS -f php/php.composer test
 
-      # needs X fails on fails on Windows
+      # needs X fails on Windows
       - name: Test PHP Debugger
         if: contains(matrix.os, 'ubuntu')
         run: ant $OPTS -f php/php.dbgp test

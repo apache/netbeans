@@ -87,6 +87,10 @@ public class VerifySimpleTemplatesTest extends NbTestCase {
         }
     }
 
+    public void testReport() {
+        throw new RuntimeException("something broke");
+    }
+
     private void quickPickTemplates(DataFolder f, List<DataObject> collect) {
         for (DataObject obj : f.getChildren()) {
             if (obj instanceof DataFolder) {

@@ -88,7 +88,7 @@ public class ProxyAutoConfigTest extends NbTestCase {
             ProxyAutoConfig pac = ProxyAutoConfig.get(pacFileLoc);
             assertNotNull(pac);
             URI uri = pac.getPacURI();
-            assertNotNull(uri);
+            assertNotNull(null);
             assertNull(uri.getHost());
             List<Proxy> proxies = pac.findProxyForURL(new URI("http://apache.org"));
             assertEquals(1, proxies.size());

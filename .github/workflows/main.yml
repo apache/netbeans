@@ -57,6 +57,8 @@ jobs:
           
       - name: Checkout ${{ github.ref }} ( ${{ github.sha }} )
         uses: actions/checkout@v3
+        with:
+          submodules: true
 
       - name: Build NetBeans
         run: ant -Dcluster.config=release build-nozip
@@ -78,7 +80,7 @@ jobs:
 # secondary jobs
   linux-commit-validation:
     needs: base-build
-    name: Commit Validation on Linux/JDK ${{ matrix.java }} 
+    name: Commit Validation on Linux/JDK ${{ matrix.java }}
     runs-on: ubuntu-latest
     env:
       ANT_OPTS: -Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json
@@ -104,6 +106,13 @@ jobs:
 
       - name: Commit Validation tests
         run: ant -Dcluster.config=release commit-validation
+
+      - name: Publish JUnit Report
+        uses: ./.github/actions/junit-report/
+        if: failure()
+        with:
+          check_name: JUnit Report (Commit Validation on Linux/JDK ${{ matrix.java }})
+          report_paths: './nbbuild/build/test/commit-validation/results/TEST-*.xml'
 
   linux-build-system-test:
     needs: base-build
@@ -212,6 +221,13 @@ jobs:
 
       - name: Commit Validation tests
         run: ant -Dcluster.config=release commit-validation
+        
+      - name: Publish JUnit Report
+        uses: ./.github/actions/junit-report/
+        if: failure()
+        with:
+          check_name: JUnit Report (Tests on MacOS/JDK ${{ matrix.java }})
+          report_paths: './*/*/build/test/*/results/TEST-*.xml'
 
   php:
     needs: base-build
@@ -349,6 +365,12 @@ jobs:
       - name: Test PHP Spellchecker Bindings
         run: ant $OPTS -f php/spellchecker.bindings.php test
  
+      - name: Publish JUnit Report
+        uses: ./.github/actions/junit-report/
+        if: failure()
+        with:
+          check_name: JUnit Report (PHP on ${{ matrix.os }}/JDK ${{ matrix.java }})
+          report_paths: './*/*/build/test/*/results/TEST-*.xml'
 
 # last job depends on everything so that it is forced to run last even if a long job fails early
   cleanup:
@@ -364,10 +386,10 @@ jobs:
         uses: actions/checkout@v3
         with:
           persist-credentials: false
-          submodules: recursive
+          submodules: true
 
-      - uses: ./.github/actions/delete-artifact/
-        name: Delete build Artifact
+      - name: Delete build Artifact
+        uses: ./.github/actions/delete-artifact/
         with:
           name: build
           failOnError: true

@@ -1,10 +1,9 @@
 Name: OCI Java SDK
 Description: Oracle Cloud Infrastructure SDK for Java
-License: UPL-Apache-2.0
 Origin: https://github.com/oracle/oci-java-sdk
 Version: 2.27.0
-Files: oci-java-sdk-circuitbreaker-2.27.0.jar, oci-java-sdk-common-2.27.0.jar, oci-java-sdk-database-2.27.0.jar, oci-java-sdk-identity-2.27.0.jar, oci-java-sdk-workrequests-2.27.0.jar oci-java-sdk-adm-2.27.0.jar oci-java-sdk-devops-2.27.0.jar
-
+License: UPL-Apache-2.0
+Files: oci-java-sdk-circuitbreaker-2.27.0.jar, oci-java-sdk-common-2.27.0.jar, oci-java-sdk-database-2.27.0.jar, oci-java-sdk-identity-2.27.0.jar, oci-java-sdk-workrequests-2.27.0.jar, oci-java-sdk-adm-2.27.0.jar, oci-java-sdk-devops-2.27.0.jar
 
 Copyright (c) 2016, 2020, Oracle and/or its affiliates.  All rights reserved.
 

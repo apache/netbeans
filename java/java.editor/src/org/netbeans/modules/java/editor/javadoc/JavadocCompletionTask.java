@@ -1244,6 +1244,8 @@ public class JavadocCompletionTask<T> extends UserTask {
                 add("highlight");
                 add("replace");
                 add("link");
+                add("start");
+                add("end");
             }};
             for(String str: inlineAttr) {
                 items.add(factory.createNameItem(str, this.caretOffset));
@@ -1259,10 +1261,23 @@ public class JavadocCompletionTask<T> extends UserTask {
     private void completeInlineMarkupTag(String str, List<String> attr) {
         String value = " = \"<value>\"";
         switch(str) {
-            case "@highlight": attr.add("type"); break;
-            case "@replace":attr.add("replacement");break;
-            case "@link":attr.add("target"); attr.add("type"); break;
-            default: break;
+            case "@highlight":
+                attr.add("type");
+                break;
+            case "@replace":
+                attr.add("replacement");
+                break;
+            case "@link":
+                attr.add("target");
+                attr.add("type");
+                break;
+            case "@start":
+            case "@end":
+                attr.clear();
+                attr.add("region");
+                break;
+            default:
+                break;
         }
         if(attr.size()>3) {
             for(String entry:attr) {

@@ -398,12 +398,12 @@ public final class CPPLiteDebugger {
         MIRecord memory;
         String offsetArg;
         if (offset != 0) {
-            offsetArg = "-o " + offset + " ";
+            offsetArg = "-o " + offset + " \"";
         } else {
-            offsetArg = "";
+            offsetArg = "\"";
         }
         try {
-            memory = sendAndGet("-data-read-memory-bytes " + offsetArg + address + " " + length);
+            memory = sendAndGet("-data-read-memory-bytes " + offsetArg + address + "\" " + length);
         } catch (InterruptedException ex) {
             return null;
         }
@@ -434,7 +434,7 @@ public final class CPPLiteDebugger {
     public List<Location> listLocations(String filePath) {
         MIRecord lines;
         try {
-            lines = sendAndGet("-symbol-list-lines " + filePath);
+            lines = sendAndGet("-symbol-list-lines \"" + filePath + "\"");
         } catch (InterruptedException ex) {
             return null;
         }

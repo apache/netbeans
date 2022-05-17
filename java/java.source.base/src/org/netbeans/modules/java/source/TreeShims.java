@@ -371,7 +371,7 @@ public class TreeShims {
             Class gpt = Class.forName("com.sun.source.doctree.SnippetTree"); //NOI18N
             return isJDKVersionRelease18_Or_Above()
                     ? (List<DocTree>) gpt.getDeclaredMethod("getAttributes").invoke(node) //NOI18N
-                    : null;
+                    : Collections.emptyList();
         } catch (NoSuchMethodException | ClassNotFoundException ex) {
             return null;
         } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
@@ -412,7 +412,9 @@ public class TreeShims {
         if (isJDKVersionRelease17_Or_Above()) {
             try {
                 return node.getClass().getField("patternSwitch").getBoolean(node);
-            } catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException | SecurityException ex) {
+            } catch(NoSuchFieldException e){
+                return false;
+            }catch (IllegalArgumentException | IllegalAccessException | SecurityException ex) {
                 throw TreeShims.<RuntimeException>throwAny(ex);
             }
         }

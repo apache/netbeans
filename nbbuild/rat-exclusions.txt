@@ -221,3 +221,7 @@ ide/xml.text/src/org/netbeans/modules/xml/text/resources/DTDExample
 ide/xml.text/src/org/netbeans/modules/xml/text/resources/XMLExample
 ide/xml.text/src/org/netbeans/modules/xml/text/resources/XMLExampleIndent
 ide/properties.syntax/src/org/netbeans/modules/properties/syntax/PropertiesExample
+
+
+###### GitHub Issue tooling
+.github/**

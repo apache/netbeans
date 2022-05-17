@@ -25,6 +25,7 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.Caret;
 import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenSequence;
@@ -59,7 +60,7 @@ public class YamlKeystrokeHandler implements KeystrokeHandler {
                 if ("%=".equals(s) && dotPos >= 3) { // NOI18N
                     s = doc.getText(dotPos - 3, 3);
                 }
-                if ("<%".equals(s) || "<%=".equals(s)) { // NOI18N
+                if ("<%".equals(s) || "<%=".equals(s) || "{{".equals(s)) { // NOI18N
                     doc.insertString(dotPos, "  ", null);
                     caret.setDot(dotPos + 1);
                     return true;
@@ -71,6 +72,50 @@ public class YamlKeystrokeHandler implements KeystrokeHandler {
             return false;
         }
 
+        if ((c == '{') && (dotPos > 0)) {
+            try {
+                String s = dotPos > 1 ? doc.getText(dotPos - 2, 2) : doc.getText(dotPos - 1, 1);
+                if ("{".equals(s) || (s.endsWith("{") && (s.length() > 1) && (s.charAt(0) != '{'))) {
+                    doc.insertString(dotPos, "{}}", null);
+                    caret.setDot(dotPos + 1);
+                    return true;
+                }
+            } catch (BadLocationException ble) {
+                Exceptions.printStackTrace(ble);
+            }
+
+            return false;
+        }
+
+        if ((c == '\'') || (c == '"')) {
+            int sstart = target.getSelectionStart();
+            int send = target.getSelectionEnd();
+            if ((sstart != send) && ((dotPos == sstart) || (dotPos == send))) {
+                doc.insertString(sstart, String.valueOf(c), null);
+                doc.insertString(send + 1, String.valueOf(c), null);
+                caret.setDot(send + 2);
+                return true;
+            }
+            int lineStart = LineDocumentUtils.getLineStart(doc, dotPos);
+            int lineEnd = LineDocumentUtils.getLineEnd(doc, dotPos);
+            char[] line = doc.getChars(lineStart, lineEnd - lineStart);
+
+            int quotes = 0;
+            for (char d : line) {
+                if (c == d) quotes++;
+            }
+            // Try to keep the number of quotes even
+            if ( quotes % 2 == 1 ) {
+                // Inserting one if the number of quotes are odd
+                return false;
+            } else {
+                // Inserting double if the number of quotes are even
+                doc.insertString(sstart, String.valueOf(c) + String.valueOf(c), null);
+                caret.setDot(dotPos + 1);
+                return true;
+            }
+        }
+
         if ((dotPos > 0) && (c == '%' || c == '>')) {
             TokenHierarchy<Document> th = TokenHierarchy.get((Document) doc);
             TokenSequence<?> ts = th.tokenSequence();
@@ -80,7 +125,7 @@ public class YamlKeystrokeHandler implements KeystrokeHandler {
                     Token<?> token = ts.token();
                     if (token.id() == YamlTokenId.TEXT && doc.getText(dotPos - 1, 1).charAt(0) == '<') {
                         // See if there's anything ahead
-                        int first = Utilities.getFirstNonWhiteFwd(doc, dotPos, Utilities.getRowEnd(doc, dotPos));
+                        int first = LineDocumentUtils.getNextNonWhitespace(doc, dotPos, LineDocumentUtils.getLineEnd(doc, dotPos));
                         if (first == -1) {
                             doc.insertString(dotPos, "%%>", null); // NOI18N
                             caret.setDot(dotPos + 1);
@@ -98,7 +143,7 @@ public class YamlKeystrokeHandler implements KeystrokeHandler {
                             }
                         } else if (tokenText.endsWith("<")) {
                             // See if there's anything ahead
-                            int first = Utilities.getFirstNonWhiteFwd(doc, dotPos, Utilities.getRowEnd(doc, dotPos));
+                            int first = LineDocumentUtils.getNextNonWhitespace(doc, dotPos, LineDocumentUtils.getLineEnd(doc, dotPos));
                             if (first == -1) {
                                 doc.insertString(dotPos, "%%>", null); // NOI18N
                                 caret.setDot(dotPos + 1);
@@ -137,6 +182,7 @@ public class YamlKeystrokeHandler implements KeystrokeHandler {
 
     @Override
     public boolean charBackspaced(Document doc, int dotPos, JTextComponent target, char ch) throws BadLocationException {
+        Caret caret = target.getCaret();
         if (ch == '%' && dotPos > 0 && dotPos <= doc.getLength() - 2) {
             String s = doc.getText(dotPos - 1, 3);
             if ("<%>".equals(s)) { // NOI18N
@@ -145,6 +191,30 @@ public class YamlKeystrokeHandler implements KeystrokeHandler {
             }
         }
 
+        if ((ch == ' ') && (dotPos > 1) && (dotPos <= doc.getLength() - 3)) {
+            String s = doc.getText(dotPos - 2, 5);
+            if ("{{ }}".equals(s)) {
+                doc.remove(dotPos, 1);
+                return true;
+            }
+        }
+
+        if ((ch == '{') && (dotPos > 0) && (dotPos <= doc.getLength() - 2)) {
+            String s = doc.getText(dotPos - 1, 3);
+            if ("{}}".equals(s)) {
+                doc.remove(dotPos - 1, 3);
+                caret.setDot(dotPos - 1);
+                return true;
+            }
+        }
+
+        if (((ch == '\'') || (ch == '"')) && (dotPos <= doc.getLength() - 1)) {
+            String s = doc.getText(dotPos, 1);
+            if (String.valueOf(ch).equals(s)) {
+                doc.remove(dotPos, 1);
+                return true;
+            }
+        }
         return false;
     }
 
@@ -158,8 +228,8 @@ public class YamlKeystrokeHandler implements KeystrokeHandler {
         // Basically, use the same indent as the current line, unless the caret is immediately preceeded by a ":" (possibly with whitespace
         // in between)
 
-        int lineBegin = Utilities.getRowStart(doc, offset);
-        int lineEnd = Utilities.getRowEnd(doc, offset);
+        int lineBegin = LineDocumentUtils.getLineStart(doc, offset);
+        int lineEnd = LineDocumentUtils.getLineEnd(doc, offset);
 
         if (lineBegin == offset && lineEnd == offset) {
             // Pressed return on a blank newline - do nothing
@@ -214,7 +284,7 @@ public class YamlKeystrokeHandler implements KeystrokeHandler {
             return Collections.emptyList();
         }
 
-        List<OffsetRange> ranges = new ArrayList<OffsetRange>();
+        List<OffsetRange> ranges = new ArrayList<>();
         for (StructureItem item : items) {
             addRanges(ranges, caretOffset, item);
         }
@@ -247,13 +317,13 @@ public class YamlKeystrokeHandler implements KeystrokeHandler {
 
     public static int getLineIndent(BaseDocument doc, int offset) {
         try {
-            int start = Utilities.getRowStart(doc, offset);
+            int start = LineDocumentUtils.getLineStart(doc, offset);
             int end;
 
-            if (Utilities.isRowWhite(doc, start)) {
-                end = Utilities.getRowEnd(doc, offset);
+            if (LineDocumentUtils.isLineWhitespace(doc, start)) {
+                end = LineDocumentUtils.getLineEnd(doc, offset);
             } else {
-                end = Utilities.getRowFirstNonWhite(doc, start);
+                end = LineDocumentUtils.getLineFirstNonWhitespace(doc, start);
             }
 
             int indent = Utilities.getVisualColumn(doc, end);

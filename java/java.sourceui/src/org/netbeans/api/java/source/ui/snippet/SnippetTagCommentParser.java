@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.netbeans.api.java.source.ui.snippet;
 
 
@@ -37,8 +36,16 @@ public class SnippetTagCommentParser {
     private static final String JAVA_LANG_SOURCE_LINE_START_PATTERN = "^(.*)(";
     private static final String MARKUPTAG_START_PATTERN = "(\\s*@\\s*\\w+.+?))$";
     private final SnippetMarkupTagExtractor extractor = new SnippetMarkupTagExtractor();
-    private final Pattern markUpPattern = Pattern.compile(JAVA_LANG_SOURCE_LINE_START_PATTERN + "\\Q//\\E"+ MARKUPTAG_START_PATTERN);
+    private final Pattern markUpPattern;
+
+    public SnippetTagCommentParser() {
+        this.markUpPattern = Pattern.compile(JAVA_LANG_SOURCE_LINE_START_PATTERN + "\\Q//\\E" + MARKUPTAG_START_PATTERN);     
+    }
     
+    public SnippetTagCommentParser(String langCommentPattern) {
+        this.markUpPattern = Pattern.compile(JAVA_LANG_SOURCE_LINE_START_PATTERN + langCommentPattern + MARKUPTAG_START_PATTERN);     
+    }
+  
     public List<SourceLineMeta> parse(String snippetDocComment) {
         List<SourceLineMeta> fullSourceLineInfo = new ArrayList<>();
         Matcher matcher = markUpPattern.matcher("");

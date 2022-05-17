@@ -173,6 +173,7 @@ import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import org.openide.util.NbCollections;
 import javax.lang.model.type.TypeKind;
+import org.netbeans.modules.java.source.TreeShims;
 import org.netbeans.modules.java.source.transform.TreeHelpers;
 
 public class CasualDiff {
@@ -425,7 +426,7 @@ public class CasualDiff {
         return td.checkDiffs(DiffUtilities.diff(originalText, resultSrc, start, 
                 td.readSections(originalText.length(), resultSrc.length(), lineStart, start), lineStart));
     }
-    
+
     private static class SectKey {
         private int off;
         SectKey(int off) { this.off = off; }
@@ -1926,7 +1927,7 @@ public class CasualDiff {
         
         List<JCCase> cases = newT.cases;
         if (cases.size() != 0) {
-            String caseKind = String.valueOf(CasualDiff.getCaseKind(cases.get(0)));
+            String caseKind = String.valueOf(cases.get(0).getCaseKind());
             if (caseKind.equals("RULE")) { // NOI18N
                 printer.newline();
             }
@@ -1966,8 +1967,21 @@ public class CasualDiff {
 
     protected int diffCase(JCCase oldT, JCCase newT, int[] bounds) {
         int localPointer = bounds[0];
-        List<JCExpression> oldPatterns = getCasePatterns(oldT);
-        List<JCExpression> newPatterns = getCasePatterns(newT);
+        List<? extends JCTree> oldPatterns;
+        List<? extends JCTree> newPatterns;
+        
+        if(!(oldT.getLabels().size()==1 && oldT.getLabels().get(0).getKind().toString().equals("DEFAULT_CASE_LABEL"))){
+            oldPatterns = oldT.getLabels();            
+        }else{
+            oldPatterns = oldT.getExpressions();           
+        }
+        
+        if(!(newT.getLabels().size() == 1 && newT.getLabels().get(0).getKind().toString().equals("DEFAULT_CASE_LABEL"))){
+            newPatterns = newT.getLabels();            
+        }else{
+            newPatterns = newT.getExpressions();           
+        }
+        
         PositionEstimator patternEst = EstimatorFactory.casePatterns(
                 oldPatterns,
                 newPatterns,
@@ -2001,7 +2015,7 @@ public class CasualDiff {
         tokenSequence.move(endpos);
         do { } while (tokenSequence.moveNext() && JavaTokenId.COLON != tokenSequence.token().id() && JavaTokenId.ARROW != tokenSequence.token().id());
         boolean reindentStatements = false;
-        if (Objects.equals(getCaseKind(oldT), getCaseKind(newT))) {
+        if (Objects.equals(oldT.getCaseKind(), newT.getCaseKind())) {
             tokenSequence.moveNext();
             copyTo(localPointer, localPointer = tokenSequence.offset());
         } else {
@@ -2055,31 +2069,6 @@ public class CasualDiff {
         }
         printer.undent(old);
         return localPointer;
-    }
-
-    public static List<JCExpression> getCasePatterns(JCCase cs) {
-        try {
-            return (List<JCExpression>) CaseTree.class.getDeclaredMethod("getExpressions").invoke(cs);
-        } catch (Throwable t) {
-            JCExpression pat = cs.getExpression();
-            return pat != null ? Collections.singletonList(pat) : Collections.emptyList();
-        }
-    }
-
-    public static List<JCTree> getCaseLabelPatterns(JCCase cs) {
-        try {
-            return (List<JCTree>) CaseTree.class.getDeclaredMethod("getLabels").invoke(cs);
-        } catch (Throwable t) {
-            return Collections.emptyList();
-        }
-    }
-     
-    public static Object getCaseKind(JCCase cs) {
-        try {
-            return CaseTree.class.getDeclaredMethod("getCaseKind").invoke(cs);
-        } catch (Throwable t) {
-            return null;
-        }
     }
 
     protected int diffSynchronized(JCSynchronized oldT, JCSynchronized newT, int[] bounds) {
@@ -5004,7 +4993,7 @@ public class CasualDiff {
         }
         return elementBounds[1];
     }
-    
+
     private int diffStartElement(DCDocComment doc, DCStartElement oldT, DCStartElement newT, int[] elementBounds) {
         int localpointer = oldT.attrs.isEmpty()? elementBounds[1] - 1 : getOldPos(oldT.attrs.get(0), doc);
         if(oldT.name.equals(newT.name)) {

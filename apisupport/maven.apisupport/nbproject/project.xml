@@ -25,6 +25,16 @@
         <data xmlns="http://www.netbeans.org/ns/nb-module-project/3">
             <code-name-base>org.netbeans.modules.maven.apisupport</code-name-base>
             <module-dependencies>
+                <!-- keep in front of any module which uses lucene, maven indexer uses it's own verison  -->
+                <dependency>
+                    <code-name-base>org.netbeans.modules.maven.indexer</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <release-version>2</release-version>
+                        <specification-version>2.11</specification-version>
+                    </run-dependency>
+                </dependency>
                 <dependency>
                     <code-name-base>org.netbeans.api.annotations.common</code-name-base>
                     <build-prerequisite/>
@@ -163,15 +173,6 @@
                     <run-dependency>
                         <release-version>2</release-version>
                         <specification-version>2.54</specification-version>
-                    </run-dependency>
-                </dependency>
-                <dependency>
-                    <code-name-base>org.netbeans.modules.maven.indexer</code-name-base>
-                    <build-prerequisite/>
-                    <compile-dependency/>
-                    <run-dependency>
-                        <release-version>2</release-version>
-                        <specification-version>2.11</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>

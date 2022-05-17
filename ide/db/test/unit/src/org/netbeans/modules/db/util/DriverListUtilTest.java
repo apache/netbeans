@@ -226,6 +226,86 @@ public class DriverListUtilTest extends TestCase {
         propValues.remove(JdbcUrl.TOKEN_HOST);
         testUrlString(url, propValues, "jdbc:mariadb:///" + DB);
     }
+
+    public void testAmazonAthenaStandard() throws Exception {
+        ArrayList<String> supportedProps = new ArrayList<>();
+        supportedProps.add(JdbcUrl.TOKEN_ADDITIONAL);
+        ArrayList<String> requiredProps = new ArrayList<String>();
+
+        JdbcUrl url = checkUrl(getDriverName("DRIVERNAME_Athena"), getType("TYPE_Standard"), "com.simba.athena.jdbc.Driver",
+                "jdbc:awsathena://[<ADDITIONAL>]",
+                supportedProps, requiredProps);
+
+        HashMap<String, String> propValues = buildPropValues(supportedProps);
+
+        testUrlString(url, propValues, "jdbc:awsathena://" + ADDITIONAL);
+
+        propValues.remove(JdbcUrl.TOKEN_ADDITIONAL);
+        testUrlString(url, propValues, "jdbc:awsathena://");
+    }
+
+    public void testAmazonAthenaEndpoint() throws Exception {
+        ArrayList<String> supportedProps = new ArrayList<>();
+        supportedProps.add(JdbcUrl.TOKEN_HOST);
+        supportedProps.add(JdbcUrl.TOKEN_PORT);
+        supportedProps.add(JdbcUrl.TOKEN_ADDITIONAL);
+        ArrayList<String> requiredProps = new ArrayList<String>();
+        requiredProps.add(JdbcUrl.TOKEN_HOST);
+
+        JdbcUrl url = checkUrl(getDriverName("DRIVERNAME_Athena"), getType("TYPE_Endpoint"), "com.simba.athena.jdbc.Driver",
+                "jdbc:awsathena://<HOST>[:<PORT>][;<ADDITIONAL>]",
+                supportedProps, requiredProps);
+
+        HashMap<String, String> propValues = buildPropValues(supportedProps);
+
+        testUrlString(url, propValues, "jdbc:awsathena://" + HOST + ":" + PORT + ";" + ADDITIONAL);
+
+        propValues.remove(JdbcUrl.TOKEN_ADDITIONAL);
+        testUrlString(url, propValues, "jdbc:awsathena://" + HOST + ":" + PORT);
+
+        propValues.remove(JdbcUrl.TOKEN_PORT);
+        testUrlString(url, propValues, "jdbc:awsathena://" + HOST);
+    }
+
+    public void testAmazonRedshiftUserName() throws Exception {
+        ArrayList<String> requiredProps = new ArrayList<String>();
+        JdbcUrl url = checkUrl(getDriverName("DRIVERNAME_Redshift"), getType("TYPE_UserName"), "com.amazon.redshift.jdbc.Driver",
+                "jdbc:redshift://[<HOST>[:<PORT>]][/<DB>][;<ADDITIONAL>]",
+                STD_SUPPORTED_PROPS, requiredProps);
+
+        HashMap<String, String> propValues = buildPropValues(STD_SUPPORTED_PROPS);
+
+        testUrlString(url, propValues, "jdbc:redshift://" + HOST + ":" + PORT + "/" + DB + ";" + ADDITIONAL);
+
+        propValues.remove(JdbcUrl.TOKEN_ADDITIONAL);
+        testUrlString(url, propValues, "jdbc:redshift://" + HOST + ":" + PORT + "/" + DB);
+
+        propValues.remove(JdbcUrl.TOKEN_PORT);
+        testUrlString(url, propValues, "jdbc:redshift://" + HOST + "/" + DB);
+
+        propValues.remove(JdbcUrl.TOKEN_HOST);
+        testUrlString(url, propValues, "jdbc:redshift:///" + DB);
+    }
+
+    public void testAmazonRedshiftIAM() throws Exception {
+        ArrayList<String> requiredProps = new ArrayList<String>();
+        JdbcUrl url = checkUrl(getDriverName("DRIVERNAME_Redshift"), getType("TYPE_IAM"), "com.amazon.redshift.jdbc.Driver",
+                "jdbc:redshift:iam://[<HOST>[:<PORT>]][/<DB>][;<ADDITIONAL>]",
+                STD_SUPPORTED_PROPS, requiredProps);
+
+        HashMap<String, String> propValues = buildPropValues(STD_SUPPORTED_PROPS);
+
+        testUrlString(url, propValues, "jdbc:redshift:iam://" + HOST + ":" + PORT + "/" + DB + ";" + ADDITIONAL);
+
+        propValues.remove(JdbcUrl.TOKEN_ADDITIONAL);
+        testUrlString(url, propValues, "jdbc:redshift:iam://" + HOST + ":" + PORT + "/" + DB);
+
+        propValues.remove(JdbcUrl.TOKEN_PORT);
+        testUrlString(url, propValues, "jdbc:redshift:iam://" + HOST + "/" + DB);
+
+        propValues.remove(JdbcUrl.TOKEN_HOST);
+        testUrlString(url, propValues, "jdbc:redshift:iam:///" + DB);
+    }
     
     enum DB2Types { DB2, IDS, CLOUDSCAPE };
     

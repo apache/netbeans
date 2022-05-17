@@ -61,6 +61,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import org.netbeans.api.java.source.WorkingCopy;
+import org.netbeans.modules.java.source.TreeShims;
 
 /**
  *
@@ -77,7 +78,9 @@ public class ImmutableDocTreeTranslator extends ImmutableTreeTranslator implemen
     public DocTree translate(DocTree tree) {
         if (tree == null) {
             return null;
-        } else {
+        } else if (tree.getKind().name().equals("SNIPPET")){
+            return rewriteSnippetChildren(tree);
+        }else {
             DocTree t = tree.accept(this, null);
             if (tree2Tag != null && tree != t) {
                 tree2Tag.put(t, tree2Tag.get(tree));
@@ -370,7 +373,18 @@ public class ImmutableDocTreeTranslator extends ImmutableTreeTranslator implemen
             value = make.Version(body);
         }
         return value;
+    }  
+
+    protected final DocTree rewriteSnippetChildren(DocTree tree) {
+        DocTree value = tree;
+        List<? extends DocTree> snippetTreeAttributes = translateDoc(TreeShims.getSnippetDocTreeAttributes(tree));
+        TextTree snippetTreeText = (TextTree) translate(TreeShims.getSnippetDocTreeText(tree));
+        if((snippetTreeAttributes != TreeShims.getSnippetDocTreeAttributes(tree)) || (snippetTreeText != TreeShims.getSnippetDocTreeText(tree))){
+            value=make.Snippet(snippetTreeAttributes, snippetTreeText);
+        }    
+        return value;
     }
+    
     //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="VisitMethods">

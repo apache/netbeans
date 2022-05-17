@@ -31,6 +31,7 @@ import com.sun.source.util.TreePath;
 import com.sun.source.util.Trees;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.HashMap;
@@ -1213,7 +1214,9 @@ public class JavadocCompletionTask<T> extends UserTask {
         CharSequence text = token.text();
         int pos = caretOffset - jdts.offset();
         DocTreePath tag = getTag(jdctx, caretOffset);
-        insideInlineSnippet(jdctx, tag);
+        int startPos = (int) jdctx.positions.getStartPosition(jdctx.javac.getCompilationUnit(), jdctx.comment, tag.getLeaf());
+        String subStr = JavadocCompletionUtils.getCharSequence(jdctx.doc, startPos, caretOffset).toString();
+        insideInlineSnippet(subStr);
         if (pos > 0 && pos <= text.length() && text.charAt(pos - 1) == '{') {
             if (tag != null && !JavadocCompletionUtils.isBlockTag(tag)) {
                 int start = (int) jdctx.positions.getStartPosition(jdctx.javac.getCompilationUnit(), jdctx.comment, tag.getLeaf());
@@ -1234,9 +1237,7 @@ public class JavadocCompletionTask<T> extends UserTask {
         }
     }
 
-    private void insideInlineSnippet(JavadocContext jdctx, DocTreePath tag) {
-        int start = (int) jdctx.positions.getStartPosition(jdctx.javac.getCompilationUnit(), jdctx.comment, tag.getLeaf());
-        String subStr = JavadocCompletionUtils.getCharSequence(jdctx.doc, start, caretOffset).toString();
+    void insideInlineSnippet(String subStr) {
         subStr = subStr.replaceAll("\\s","");
         boolean match = Pattern.compile("(?<=//)@$").matcher(subStr).find();
         if(match) {
@@ -1251,8 +1252,9 @@ public class JavadocCompletionTask<T> extends UserTask {
                 items.add(factory.createNameItem(str, this.caretOffset));
             }
         } else {
+            String[] tags = {"@highlight","@replace","@link","@start","@end"};
             String str = subStr.substring(subStr.lastIndexOf("@"));
-            if(str!=null) {
+            if(Arrays.asList(tags).contains(str)) {
                 completeInlineMarkupTag(str, new ArrayList(){{add("substring");add("regex");add("region");}});
             }
         }
@@ -1279,7 +1281,7 @@ public class JavadocCompletionTask<T> extends UserTask {
             default:
                 break;
         }
-        if(attr.size()>3) {
+        if(!attr.isEmpty()) {
             for(String entry:attr) {
                 items.add(factory.createNameItem(entry+value, this.caretOffset));
             }

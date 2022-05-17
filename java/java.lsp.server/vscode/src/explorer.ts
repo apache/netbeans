@@ -198,11 +198,11 @@ export class TreeViewService extends vscode.Disposable {
   public findProductIcon(res : vscode.Uri, ...values: string[]) : string | ThemeIcon | undefined {
     const s : string = res.toString();
     outer: for (let e of this.entries) {
-      if (e.uriRegexp.exec(s)) {
+      if (e.uriRegexp.test(s)) {
         if (e.valueRegexps) {
           let s : string = " " + values.join(" ") + " ";
           for (let vr of e.valueRegexps) {
-            if (!vr.exec(s)) {
+            if (!vr.test(s)) {
               continue outer;
             }
           }
@@ -402,9 +402,10 @@ class VisualizerProvider extends vscode.Disposable implements CustomizableTreeDa
     return this.wrap(async (arr) => {
       const pn : number = Number(element.parent?.id) || -1;
       let fetched = await this.queryVisualizer(element, arr, () => this.fetchItem(pn, n));
+      let origin : vscode.TreeItem;
       if (fetched) {
         element.update(fetched);
-        return self.getTreeItem2(fetched);
+        origin = await self.getTreeItem2(fetched);
       } else {
         // fire a change, this was unexpected
         const pn : number = Number(element.parent?.id) || -1;
@@ -412,8 +413,27 @@ class VisualizerProvider extends vscode.Disposable implements CustomizableTreeDa
         if (pv) {
           this.fireItemChange(pv);
         }
-        return element;
+        origin = element;
       }
+      let ti : vscode.TreeItem = new vscode.TreeItem(origin.label || "", origin.collapsibleState);
+
+      // See #4113 -- vscode broke icons display, if resourceUri is defined in TreeItem. We're OK with files,
+      // but folders can have a semantic icon, so let hide resourceUri from vscode for folders.
+      ti.command = origin.command;
+      ti.contextValue = origin.contextValue;
+      ti.description = origin.description;
+      ti.iconPath = origin.iconPath;
+      ti.id = origin.id;
+      ti.label = origin.label;
+      ti.tooltip = origin.tooltip;
+      ti.accessibilityInformation = origin.accessibilityInformation;
+
+      if (origin.resourceUri) {
+        if (!origin.resourceUri.toString().endsWith("/")) {
+          ti.resourceUri = origin.resourceUri;
+        }
+      }
+      return ti;
     });
   }
 

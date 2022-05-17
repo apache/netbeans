@@ -20,9 +20,11 @@
     under the License.
 
 -->
-
 ## Version 14.0
-* netbeans.jdkhome setting is Remote SSH aware
+* Workaround for VSCode 1.67 error which breaks Projects explorer icon
+* Remove HTML tags from project problem messages
+* Fixes for Gradle projects and LSP
+
 ## Version 13.0.301
 * Added base code completion for Spock test framework
   * Spock Block Names are offered inside methods if the class extends Spock Specification

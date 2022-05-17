@@ -39,10 +39,6 @@ nbbuild/external/langtools-9.zip nbbuild/external/langtools-9.zip
 # Used to parse data during build, but need to as a lib for ide cluster
 nbbuild/external/json-simple-1.1.1.jar ide/libs.json_simple/external/json-simple-1.1.1.jar
 
-# Compile only nb-javac
-java/libs.nbjavacapi/external/nb-javac-jdk-18+36-api.jar nbbuild/external/nb-javac-jdk-17+36-api.jar
-java/libs.nbjavacapi/external/nb-javac-jdk-18+36.jar nbbuild/external/nb-javac-jdk-17+36.jar
-
 # JFlex is used by multiple modules.
 webcommon/javascript2.jade/external/jflex-1.4.3.jar webcommon/javascript2.lexer/external/jflex-1.4.3.jar
 
@@ -121,8 +117,8 @@ webcommon/javascript2.jsdoc/external/testfiles-jsdoc-1.zip webcommon/javascript2
 harness/apisupport.harness/external/launcher-12.5-distribution.zip platform/o.n.bootstrap/external/launcher-12.5-distribution.zip
 
 # only one is part of the product:
-java/libs.javacapi/external/nb-javac-jdk-18+36-api.jar java/libs.nbjavacapi/external/nb-javac-jdk-18+36-api.jar
-java/libs.javacapi/external/nb-javac-jdk-18+36.jar java/libs.nbjavacapi/external/nb-javac-jdk-18+36.jar
+java/libs.javacapi/external/nb-javac-jdk-18.0.1+10-api.jar java/libs.nbjavacapi/external/nb-javac-jdk-18.0.1+10-api.jar
+java/libs.javacapi/external/nb-javac-jdk-18.0.1+10.jar java/libs.nbjavacapi/external/nb-javac-jdk-18.0.1+10.jar
 
 # Maven and Gradle are self-contained distributions - ignoring overlaps
 platform/o.apache.commons.lang3/external/commons-lang3-3.8.1.jar java/maven.embedder/external/apache-maven-3.8.5-bin.zip

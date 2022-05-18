@@ -81,14 +81,17 @@ import org.eclipse.lsp4j.Diagnostic;
 import org.eclipse.lsp4j.DidChangeTextDocumentParams;
 import org.eclipse.lsp4j.DidCloseTextDocumentParams;
 import org.eclipse.lsp4j.DidOpenTextDocumentParams;
+import org.eclipse.lsp4j.DocumentFormattingParams;
 import org.eclipse.lsp4j.DocumentHighlight;
 import org.eclipse.lsp4j.DocumentHighlightKind;
 import org.eclipse.lsp4j.DocumentHighlightParams;
+import org.eclipse.lsp4j.DocumentRangeFormattingParams;
 import org.eclipse.lsp4j.DocumentSymbol;
 import org.eclipse.lsp4j.DocumentSymbolParams;
 import org.eclipse.lsp4j.ExecuteCommandParams;
 import org.eclipse.lsp4j.FoldingRange;
 import org.eclipse.lsp4j.FoldingRangeRequestParams;
+import org.eclipse.lsp4j.FormattingOptions;
 import org.eclipse.lsp4j.Hover;
 import org.eclipse.lsp4j.HoverParams;
 import org.eclipse.lsp4j.ImplementationParams;
@@ -4474,6 +4477,166 @@ public class ServerTest extends NbTestCase {
         assertEquals("do { \n" +
                      "    ${0:$TM_SELECTED_TEXT}\n" +
                      "} while (${1:true});", obj.getAsJsonPrimitive("snippet").getAsString());
+    }
+
+    public void testFormatDocument() throws Exception {
+        File src = new File(getWorkDir(), "Test.java");
+        src.getParentFile().mkdirs();
+        String code = "public class Test\n" +
+                      "{\n" +
+                      "    public static void main(String[] args)\n" +
+                      "    {\n" +
+                      "        System.out.println(\"Hello World\");\n" +
+                      "    }\n" +
+                      "}\n";
+        try (Writer w = new FileWriter(src)) {
+            w.write(code);
+        }
+
+        List<Diagnostic>[] diags = new List[1];
+        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new LspClient() {
+            @Override
+            public void telemetryEvent(Object arg0) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void publishDiagnostics(PublishDiagnosticsParams params) {
+                synchronized (diags) {
+                    diags[0] = params.getDiagnostics();
+                    diags.notifyAll();
+                }
+            }
+
+            @Override
+            public void showMessage(MessageParams arg0) {
+            }
+
+            @Override
+            public CompletableFuture<MessageActionItem> showMessageRequest(ShowMessageRequestParams arg0) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void logMessage(MessageParams arg0) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public CompletableFuture<ApplyWorkspaceEditResponse> applyEdit(ApplyWorkspaceEditParams params) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+        }, client.getInputStream(), client.getOutputStream());
+        serverLauncher.startListening();
+        LanguageServer server = serverLauncher.getRemoteProxy();
+        server.initialize(new InitializeParams()).get();
+        String uri = src.toURI().toString();
+        server.getTextDocumentService().didOpen(new DidOpenTextDocumentParams(new TextDocumentItem(uri, "java", 0, code)));
+        synchronized (diags) {
+            while (diags[0] == null) {
+                try {
+                    diags.wait();
+                } catch (InterruptedException ex) {
+                }
+            }
+        }
+        VersionedTextDocumentIdentifier id = new VersionedTextDocumentIdentifier(src.toURI().toString(), 1);
+        List<? extends TextEdit> edits = server.getTextDocumentService().formatting(new DocumentFormattingParams(id, new FormattingOptions(4, true))).get();
+        assertNotNull(edits);
+        assertEquals(4, edits.size());
+        assertEquals(new Range(new Position(2, 42),
+                               new Position(3, 4)),
+                     edits.get(0).getRange());
+        assertEquals(edits.get(0).getNewText(), " ");
+        assertEquals(new Range(new Position(2, 0),
+                               new Position(2, 4)),
+                     edits.get(1).getRange());
+        assertEquals(edits.get(1).getNewText(), "\n    ");
+        assertEquals(new Range(new Position(0, 17),
+                               new Position(1, 0)),
+                     edits.get(2).getRange());
+        assertEquals(edits.get(2).getNewText(), " ");
+        assertEquals(new Range(new Position(0, 0),
+                               new Position(0, 0)),
+                     edits.get(3).getRange());
+        assertEquals(edits.get(3).getNewText(), "\n");
+    }
+
+    public void testFormatSelection() throws Exception {
+        File src = new File(getWorkDir(), "Test.java");
+        src.getParentFile().mkdirs();
+        String code = "public class Test\n" +
+                      "{\n" +
+                      "    public static void main(String[] args)\n" +
+                      "    {\n" +
+                      "        System.out.println(\"Hello World\");\n" +
+                      "    }\n" +
+                      "}\n";
+        try (Writer w = new FileWriter(src)) {
+            w.write(code);
+        }
+
+        List<Diagnostic>[] diags = new List[1];
+        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new LspClient() {
+            @Override
+            public void telemetryEvent(Object arg0) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void publishDiagnostics(PublishDiagnosticsParams params) {
+                synchronized (diags) {
+                    diags[0] = params.getDiagnostics();
+                    diags.notifyAll();
+                }
+            }
+
+            @Override
+            public void showMessage(MessageParams arg0) {
+            }
+
+            @Override
+            public CompletableFuture<MessageActionItem> showMessageRequest(ShowMessageRequestParams arg0) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void logMessage(MessageParams arg0) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public CompletableFuture<ApplyWorkspaceEditResponse> applyEdit(ApplyWorkspaceEditParams params) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+        }, client.getInputStream(), client.getOutputStream());
+        serverLauncher.startListening();
+        LanguageServer server = serverLauncher.getRemoteProxy();
+        server.initialize(new InitializeParams()).get();
+        String uri = src.toURI().toString();
+        server.getTextDocumentService().didOpen(new DidOpenTextDocumentParams(new TextDocumentItem(uri, "java", 0, code)));
+        synchronized (diags) {
+            while (diags[0] == null) {
+                try {
+                    diags.wait();
+                } catch (InterruptedException ex) {
+                }
+            }
+        }
+        VersionedTextDocumentIdentifier id = new VersionedTextDocumentIdentifier(src.toURI().toString(), 1);
+        List<? extends TextEdit> edits = server.getTextDocumentService().rangeFormatting(new DocumentRangeFormattingParams(id, new FormattingOptions(4, true), new Range(new Position(2, 0), new Position(6, 0)))).get();
+        assertNotNull(edits);
+        assertEquals(2, edits.size());
+        assertEquals(new Range(new Position(2, 42),
+                               new Position(3, 4)),
+                     edits.get(0).getRange());
+        assertEquals(edits.get(0).getNewText(), " ");
+        assertEquals(new Range(new Position(2, 0),
+                               new Position(2, 4)),
+                     edits.get(1).getRange());
+        assertEquals(edits.get(1).getNewText(), "    ");
     }
 
     public void testNoErrorAndHintsFor() throws Exception {

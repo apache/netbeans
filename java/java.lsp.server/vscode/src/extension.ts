@@ -779,7 +779,10 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
             // Register the server for java documents
             documentSelector: documentSelectors,
             synchronize: {
-                configurationSection: 'netbeans.java.imports',
+                configurationSection: [
+                    'netbeans.format',
+                    'netbeans.java.imports'
+                ],
                 fileEvents: [
                     workspace.createFileSystemWatcher('**/*.java')
                 ]

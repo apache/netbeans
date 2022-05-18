@@ -44,6 +44,7 @@ import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.ArrayType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
+import javax.swing.text.BadLocationException;
 import javax.swing.text.StyledDocument;
 import org.eclipse.lsp4j.Position;
 import org.eclipse.lsp4j.Range;
@@ -269,6 +270,17 @@ public class Utils {
 
             return new Position(line, column);
         } catch (IOException ex) {
+            throw new IllegalStateException(ex);
+        }
+    }
+
+    public static Position createPosition(LineDocument doc, int offset) {
+        try {
+            int line = LineDocumentUtils.getLineIndex(doc, offset);
+            int column = offset - LineDocumentUtils.getLineStart(doc, offset);
+
+            return new Position(line, column);
+        } catch (BadLocationException ex) {
             throw new IllegalStateException(ex);
         }
     }

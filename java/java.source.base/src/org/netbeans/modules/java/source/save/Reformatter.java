@@ -5460,6 +5460,9 @@ public class Reformatter implements ReformatTask {
                 int offset = (int)sp.getStartPosition(path.getCompilationUnit(), path.getLeaf());
                 if (offset < 0)
                     return indent;
+                if (offset == 0) {
+                    return 0;
+                }
                 tokens.move(offset);
                 String text = null;
                 while (tokens.movePrevious()) {

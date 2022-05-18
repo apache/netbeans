@@ -4193,10 +4193,9 @@ public final class JavaCompletionTask<T> extends BaseTask {
                 while ((idx = qName.lastIndexOf('.')) > 0) {
                     if (sName == null) {
                         sName = qName.substring(idx + 1);
-                        if (sName.length() <= 0 || !startsWith(env, sName, prefix)) {
-                            break;
+                        if (sName.length() > 0 && startsWith(env, sName, prefix)) {
+                            results.add(itemFactory.createTypeItem(name, kinds, anchorOffset, env.getReferencesCount(), controller.getSnapshot().getSource(), env.isInsideNew(), env.isInsideNew() || env.isInsideClass(), env.isAfterExtends()));
                         }
-                        results.add(itemFactory.createTypeItem(name, kinds, anchorOffset, env.getReferencesCount(), controller.getSnapshot().getSource(), env.isInsideNew(), env.isInsideNew() || env.isInsideClass(), env.isAfterExtends()));
                     }
                     qName = qName.substring(0, idx);
                     doNotRemove.add(qName);
@@ -4218,7 +4217,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
             Set<ElementHandle<TypeElement>> declaredTypes = controller.getClasspathInfo().getClassIndex().getDeclaredTypes(subwordsPattern != null ? subwordsPattern : prefix != null ? prefix : EMPTY, kind, EnumSet.allOf(ClassIndex.SearchScope.class));
             results.ensureCapacity(results.size() + declaredTypes.size());
             for (ElementHandle<TypeElement> name : declaredTypes) {
-                if (excludeHandles != null && excludeHandles.contains(name) || isAnnonInner(name)) {
+                if (!kinds.contains(name.getKind()) || excludeHandles != null && excludeHandles.contains(name) || isAnnonInner(name)) {
                     continue;
                 }
                 results.add(itemFactory.createTypeItem(name, kinds, anchorOffset, env.getReferencesCount(), controller.getSnapshot().getSource(), env.isInsideNew(), env.isInsideNew() || env.isInsideClass(), env.isAfterExtends()));

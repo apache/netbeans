@@ -37,7 +37,7 @@ public final class Buttons {
     )
     public static native void registerCloseWindow();
 
-    @JavaScriptBody(args = { "id", "callback" }, javacall = true, body = "\n"
+    @JavaScriptBody(args = { "id", "callback" }, javacall = true, wait4java=false, body = "\n"
             + "var first = false;\n"
             + "var footer = document.getElementById('dialog-buttons');\n"
             + "if (!footer) {\n"

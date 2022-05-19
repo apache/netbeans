@@ -14,6 +14,4 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-release.external/net.java.html-1.8.jar=modules/net-java-html.jar
-is.autoload=true
-nbm.module.author=Jaroslav Tulach
+7FCB0AB15323824A56EBE3A7A4D2E471BD2AA59E org.netbeans.html:xhr4j:1.8

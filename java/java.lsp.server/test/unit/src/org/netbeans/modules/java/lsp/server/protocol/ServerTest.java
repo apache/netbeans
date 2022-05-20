@@ -132,6 +132,7 @@ import org.eclipse.lsp4j.WorkspaceClientCapabilities;
 import org.eclipse.lsp4j.WorkspaceEdit;
 import org.eclipse.lsp4j.WorkspaceEditCapabilities;
 import org.eclipse.lsp4j.WorkspaceFolder;
+import org.eclipse.lsp4j.WorkspaceSymbol;
 import org.eclipse.lsp4j.WorkspaceSymbolParams;
 import org.eclipse.lsp4j.jsonrpc.Launcher;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
@@ -1770,8 +1771,8 @@ public class ServerTest extends NbTestCase {
         initParams.setRootUri(toURI(getWorkDir()));
         InitializeResult result = server.initialize(initParams).get();
         indexingComplete.await();
-        List<? extends SymbolInformation> symbols = server.getWorkspaceService().symbol(new WorkspaceSymbolParams("Tes")).get();
-        List<String> actual = symbols.stream().map(si -> si.getKind() + ":" + si.getName() + ":" + si.getContainerName() + ":" + toString(si.getLocation())).collect(Collectors.toList());
+        Either<List<? extends SymbolInformation>, List<? extends WorkspaceSymbol>> symbols = server.getWorkspaceService().symbol(new WorkspaceSymbolParams("Tes")).get();
+        List<String> actual = symbols.getRight().stream().map(ws -> ws.getKind() + ":" + ws.getName() + ":" + ws.getContainerName() + ":" + toString(ws.getLocation().getLeft())).collect(Collectors.toList());
         assertEquals(Arrays.asList("Class:Test:null:Test:0:0-0:0",
                                    "Constructor:Test():Test:Test.java:0:7-0:7",
                                    "Method:testMethod():Test:Test.java:2:4-2:38",

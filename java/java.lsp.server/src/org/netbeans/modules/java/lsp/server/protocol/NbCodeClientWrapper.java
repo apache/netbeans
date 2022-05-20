@@ -30,7 +30,6 @@ import org.eclipse.lsp4j.MessageParams;
 import org.eclipse.lsp4j.ProgressParams;
 import org.eclipse.lsp4j.PublishDiagnosticsParams;
 import org.eclipse.lsp4j.RegistrationParams;
-import org.eclipse.lsp4j.SetTraceParams;
 import org.eclipse.lsp4j.ShowDocumentParams;
 import org.eclipse.lsp4j.ShowDocumentResult;
 import org.eclipse.lsp4j.ShowMessageRequestParams;
@@ -172,11 +171,6 @@ class NbCodeClientWrapper implements NbCodeLanguageClient {
     @Override
     public void logTrace(LogTraceParams params) {
         remote.logTrace(params);
-    }
-
-    @Override
-    public void setTrace(SetTraceParams params) {
-        remote.setTrace(params);
     }
 
     @Override

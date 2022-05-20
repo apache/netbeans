@@ -20,6 +20,9 @@
     under the License.
 
 -->
+## Version 14.0.301
+* Format Document and Format Selection added.
+
 ## Version 14.0
 * Workaround for VSCode 1.67 error which breaks Projects explorer icon
 * Remove HTML tags from project problem messages

@@ -18,7 +18,6 @@
  */
 package org.netbeans.modules.java.lsp.server.protocol;
 
-import com.google.gson.InstanceCreator;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -308,6 +307,7 @@ public final class Server {
 
     public static class LanguageServerImpl implements LanguageServer, LanguageClientAware, LspServerState, NbLanguageServer {
 
+        private static final String NETBEANS_FORMAT = "netbeans.format";
         private static final String NETBEANS_JAVA_IMPORTS = "netbeans.java.imports";
 
         // change to a greater throughput if the initialization waits on more processes than just (serialized) project open.
@@ -713,6 +713,8 @@ public final class Server {
                 capabilities.setTypeDefinitionProvider(true);
                 capabilities.setImplementationProvider(true);
                 capabilities.setDocumentHighlightProvider(true);
+                capabilities.setDocumentFormattingProvider(true);
+                capabilities.setDocumentRangeFormattingProvider(true);
                 capabilities.setReferencesProvider(true);
                 
                 CallHierarchyRegistrationOptions chOpts = new CallHierarchyRegistrationOptions();
@@ -804,6 +806,12 @@ public final class Server {
                     ConfigurationItem item = new ConfigurationItem();
                     FileObject fo = projects[0].getProjectDirectory();
                     item.setScopeUri(Utils.toUri(fo));
+                    item.setSection(NETBEANS_FORMAT);
+                    client.configuration(new ConfigurationParams(Collections.singletonList(item))).thenAccept(c -> {
+                        if (c != null && !c.isEmpty() && c.get(0) instanceof JsonObject) {
+                            workspaceService.updateJavaFormatPreferences(fo, (JsonObject) c.get(0));
+                        }
+                    });
                     item.setSection(NETBEANS_JAVA_IMPORTS);
                     client.configuration(new ConfigurationParams(Collections.singletonList(item))).thenAccept(c -> {
                         if (c != null && !c.isEmpty() && c.get(0) instanceof JsonObject) {

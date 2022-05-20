@@ -24,6 +24,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.sun.source.util.TreePath;
 import java.beans.PropertyChangeListener;
+import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
@@ -32,6 +33,8 @@ import java.net.URL;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -42,6 +45,7 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
@@ -118,8 +122,10 @@ import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.URLMapper;
+import org.openide.modules.Places;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
+import org.openide.util.NbPreferences;
 import org.openide.util.Pair;
 import org.openide.util.RequestProcessor;
 import org.openide.util.WeakListeners;
@@ -900,14 +906,47 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
     public void didChangeConfiguration(DidChangeConfigurationParams params) {
         server.openedProjects().thenAccept(projects -> {
             if (projects != null && projects.length > 0) {
+                updateJavaFormatPreferences(projects[0].getProjectDirectory(), ((JsonObject) params.getSettings()).getAsJsonObject("netbeans").getAsJsonObject("format"));
                 updateJavaImportPreferences(projects[0].getProjectDirectory(), ((JsonObject) params.getSettings()).getAsJsonObject("netbeans").getAsJsonObject("java").getAsJsonObject("imports"));
             }
         });
     }
 
+    void updateJavaFormatPreferences(FileObject fo, JsonObject configuration) {
+        if (configuration != null) {
+            NbPreferences.Provider provider = Lookup.getDefault().lookup(NbPreferences.Provider.class);
+            Preferences prefs = provider != null ? provider.preferencesRoot().node("de/funfried/netbeans/plugins/externalcodeformatter") : null;
+            JsonPrimitive formatterPrimitive = configuration.getAsJsonPrimitive("codeFormatter");
+            String formatter = formatterPrimitive != null ? formatterPrimitive.getAsString() : null;
+            JsonPrimitive pathPrimitive = configuration.getAsJsonPrimitive("settingsPath");
+            String path = pathPrimitive != null ? pathPrimitive.getAsString() : null;
+            if (formatter == null || "NetBeans".equals(formatter)) {
+                if (prefs != null) {
+                    prefs.put("enabledFormatter.JAVA", "netbeans-formatter");
+                }
+                Path p = path != null ? Paths.get(path) : null;
+                File file = p != null ? p.toFile() : null;
+                try {
+                    if (file != null && file.exists() && file.canRead() && file.getName().endsWith(".zip")) {
+                        OptionsExportModel.get().doImport(file);
+                    } else {
+                        OptionsExportModel.get().clean();
+                    }
+                } catch (IOException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
+            } else if (prefs != null) {
+                prefs.put("enabledFormatter.JAVA", formatter.toLowerCase(Locale.ENGLISH).concat("-java-formatter"));
+                if (path != null) {
+                    prefs.put(formatter.toLowerCase(Locale.ENGLISH).concat("FormatterLocation"), path);
+                }
+            }
+        }
+    }
+
     void updateJavaImportPreferences(FileObject fo, JsonObject configuration) {
         Preferences prefs = CodeStylePreferences.get(fo, "text/x-java").getPreferences();
-        if (prefs != null) {
+        if (prefs != null && configuration != null) {
             prefs.put("importGroupsOrder", String.join(";", gson.fromJson(configuration.get("groups"), String[].class)));
             prefs.putBoolean("allowConvertToStarImport", true);
             prefs.putInt("countForUsingStarImport", configuration.getAsJsonPrimitive("countForUsingStarImport").getAsInt());

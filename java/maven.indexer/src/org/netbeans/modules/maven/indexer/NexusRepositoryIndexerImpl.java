@@ -32,6 +32,7 @@ import java.net.URI;
 import java.nio.file.FileStore;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
@@ -130,6 +131,11 @@ public class NexusRepositoryIndexerImpl implements RepositoryIndexerImplementati
     }
 
     private static final Logger LOGGER = Logger.getLogger(NexusRepositoryIndexerImpl.class.getName());
+
+    private static final String GROUP_CACHE_ALL_PREFIX = "nb-groupcache-all-v1"; // NOI18N
+    private static final String GROUP_CACHE_ALL_SUFFIX = "txt"; // NOI18N
+    private static final String GROUP_CACHE_ROOT_PREFIX = "nb-groupcache-root-v1"; // NOI18N
+    private static final String GROUP_CACHE_ROOT_SUFFIX = "txt"; // NOI18N
 
     private PlexusContainer embedder;
     private Indexer indexer;
@@ -257,14 +263,50 @@ public class NexusRepositoryIndexerImpl implements RepositoryIndexerImplementati
     }
     
     //TODO try to experiment with the non-forced version of the context addition
-    public IndexingContext addIndexingContextForced(String id, String repositoryId, File repository, 
-            File indexDirectory, String repositoryUrl, String indexUpdateUrl, List<? extends IndexCreator> indexers) throws IOException {
+    private IndexingContext addIndexingContextForced(
+            RepositoryInfo repo,
+            List<? extends IndexCreator> indexers
+    ) throws IOException {
 
-        IndexingContext context = indexer.createIndexingContext(id, repositoryId, repository, indexDirectory, repositoryUrl, indexUpdateUrl, true, true, indexers);
+        IndexingContext context = indexer.createIndexingContext(
+                /* id */ repo.getId(),
+                /* repositoryId */ repo.getId(),
+                /* repository */ repo.isLocal() ? new File(repo.getRepositoryPath()) : null,
+                /* indexDirectory */ getIndexDirectory(repo),
+                /* repositoryUrl */ repo.isRemoteDownloadable() ? repo.getRepositoryUrl() : null,
+                /* indexUpdateUrl */ repo.isRemoteDownloadable() ? repo.getIndexUpdateUrl() : null,
+                /* searchable */ true,
+                /* reclaim */ true,
+                /* indexers */ indexers);
+
+        // The allGroups and rootGroups properties of the IndexingContext are
+        // not persistent anymore, so need to be save outside the context
+        boolean needGroupCacheRebuild = false;
+        try {
+            context.setAllGroups(Files.readAllLines(getAllGroupCacheFile(repo)));
+        } catch (IOException ex) {
+            needGroupCacheRebuild = true;
+        }
+        try {
+            context.setRootGroups(Files.readAllLines(getRootGroupCacheFile(repo)));
+        } catch (IOException ex) {
+            needGroupCacheRebuild = true;
+        }
+        // At least one of the group caches could not be loaded, so rebuild it
+        if(needGroupCacheRebuild) {
+            RP.submit(() -> {
+                try {
+                    context.rebuildGroups();
+                    storeGroupCache(repo, context);
+                } catch (IOException ex) {
+                    LOGGER.log(Level.WARNING, "Failed to store group caches for repo: " + repo.getId(), ex);
+                }
+            });
+        }
         indexingContexts.put(context.getId(), context);
         return context;
     } 
-    
+
     public void removeIndexingContext(IndexingContext context, boolean deleteFiles) throws IOException {
         if (indexingContexts.remove(context.getId()) != null ) {
             indexer.closeIndexingContext( context, deleteFiles );
@@ -296,7 +338,6 @@ public class NexusRepositoryIndexerImpl implements RepositoryIndexerImplementati
                 }
             }
             LOGGER.log(Level.FINE, "Loading Context: {0}", info.getId());
-            File loc = new File(getDefaultIndexLocation(), info.getId()); // index folder
 
             List<IndexCreator> creators = new ArrayList<>();
             try {
@@ -318,17 +359,10 @@ public class NexusRepositoryIndexerImpl implements RepositoryIndexerImplementati
                 creators.add(new NotifyingIndexCreator());
             }
             try {
-                addIndexingContextForced(
-                        info.getId(), // context id
-                        info.getId(), // repository id
-                        info.isLocal() ? new File(info.getRepositoryPath()) : null, // repository folder
-                        loc,
-                        info.isRemoteDownloadable() ? info.getRepositoryUrl() : null, // repositoryUrl
-                        info.isRemoteDownloadable() ? indexUpdateUrl : null,
-                        creators);
+                addIndexingContextForced(info, creators);
                 LOGGER.log(Level.FINE, "using index creators: {0}", creators);
             } catch (IOException ex) {
-                LOGGER.log(Level.INFO, "Found a broken index at " + loc + " with loaded contexts " + getIndexingContexts().keySet(), ex);
+                LOGGER.log(Level.INFO, "Found a broken index at " + getIndexDirectory(info) + " with loaded contexts " + getIndexingContexts().keySet(), ex);
                 break LOAD;
             }
         }
@@ -353,7 +387,7 @@ public class NexusRepositoryIndexerImpl implements RepositoryIndexerImplementati
             }
         }
         
-        File loc = new File(getDefaultIndexLocation(), info.getId()); // index folder
+        File loc = getIndexDirectory(info); // index folder
         if (!indexExists(loc.toPath())) {
             index = true;
             LOGGER.log(Level.FINER, "Index Not Available: {0} at: {1}", new Object[]{info.getId(), loc.getAbsolutePath()});
@@ -496,7 +530,10 @@ public class NexusRepositoryIndexerImpl implements RepositoryIndexerImplementati
                         nic.start(listener);
                     }
                     try {
+                        Files.deleteIfExists(getAllGroupCacheFile(repo));
+                        Files.deleteIfExists(getRootGroupCacheFile(repo));
                         remoteIndexUpdater.fetchAndUpdateIndex(iur);
+                        storeGroupCache(repo, indexingContext);
                     } catch (IllegalArgumentException ex) {
                         // This exception is raised from the maven-indexer.
                         // maven-indexer supported two formats:
@@ -529,7 +566,11 @@ public class NexusRepositoryIndexerImpl implements RepositoryIndexerImplementati
                 } else {
                     RepositoryIndexerListener repoListener = new RepositoryIndexerListener(indexingContext);
                     try {
+                        // Ensure no stale cache files are left
+                        Files.deleteIfExists(getAllGroupCacheFile(repo));
+                        Files.deleteIfExists(getRootGroupCacheFile(repo));
                         scan(indexingContext, null, repoListener, updateLocal);
+                        storeGroupCache(repo, indexingContext);
                     } finally {
                         repoListener.close();
                     }
@@ -770,6 +811,7 @@ public class NexusRepositoryIndexerImpl implements RepositoryIndexerImplementati
                 }
                 try {
                     indexer.addArtifactsToIndex(artifactContexts, indexingContext);
+                    storeGroupCache(repo, indexingContext);
                 } catch (ZipError err) {
                     LOGGER.log(Level.INFO, "#230581 concurrent access to local repository file. Skipping..", err);
                 }
@@ -824,6 +866,7 @@ public class NexusRepositoryIndexerImpl implements RepositoryIndexerImplementati
                 if (pom.exists()) {
                     //TODO batch removal??
                     indexer.deleteArtifactsFromIndex(Collections.singleton(contextProducer.getArtifactContext(indexingContext, pom)), indexingContext);
+                    storeGroupCache(repo, indexingContext);
                 }
                 return null;
             });
@@ -1487,7 +1530,7 @@ public class NexusRepositoryIndexerImpl implements RepositoryIndexerImplementati
     public List<RepositoryInfo> getLoaded(final List<RepositoryInfo> repos) {
         final List<RepositoryInfo> toRet = new ArrayList<>(repos.size());
         for (final RepositoryInfo repo : repos) {
-            File loc = new File(getDefaultIndexLocation(), repo.getId()); // index folder
+            File loc = getIndexDirectory(repo); // index folder
             if (indexExists(loc.toPath())) {
                 toRet.add(repo);
             }
@@ -1633,5 +1676,49 @@ public class NexusRepositoryIndexerImpl implements RepositoryIndexerImplementati
             return new WagonHelper.WagonFetcher(wagon, listener, authenticationInfo, proxyInfo);
         }
     }
-    
+
+    private File getIndexDirectory(final RepositoryInfo info) {
+        return new File(getDefaultIndexLocation(), info.getId());
+    }
+
+    private Path getAllGroupCacheFile(final RepositoryInfo info) {
+        return new File(getIndexDirectory(info), GROUP_CACHE_ALL_PREFIX + "." + GROUP_CACHE_ALL_SUFFIX).toPath();
+    }
+
+    private Path getRootGroupCacheFile(final RepositoryInfo info) {
+        return new File(getIndexDirectory(info), GROUP_CACHE_ROOT_PREFIX + "." + GROUP_CACHE_ROOT_SUFFIX).toPath();
+    }
+
+    private void storeGroupCache(RepositoryInfo repoInfo, IndexingContext ic) throws IOException {
+        // MINDEXER-157: After import all groups and root groups are inverted in the IndexingContext
+        Set<String> allGroups = ic.getAllGroups();
+        Set<String> rootGroups = ic.getRootGroups();
+        if(rootGroups.size() > allGroups.size()) {
+            // Inversion - allGroups should always have the same size as rootGroups or be larger
+            ic.setAllGroups(rootGroups);
+            ic.setRootGroups(allGroups);
+        } else if (rootGroups.size() == allGroups.size()) {
+            // Inversion if any groupId in rootGroups contains a dot (so is not a root id)
+            boolean inversion = rootGroups.stream().anyMatch(s -> s.contains("."));
+            if (inversion) {
+                ic.setAllGroups(rootGroups);
+                ic.setRootGroups(allGroups);
+            }
+        }
+
+        Path indexDir = getIndexDirectory(repoInfo).toPath();
+        Path tempAllCache = Files.createTempFile(indexDir, GROUP_CACHE_ALL_PREFIX, GROUP_CACHE_ALL_SUFFIX);
+        Path tempRootCache = Files.createTempFile(indexDir, GROUP_CACHE_ROOT_PREFIX, GROUP_CACHE_ROOT_SUFFIX);
+        try {
+            Files.write(tempAllCache, ic.getAllGroups());
+            Files.move(tempAllCache, getAllGroupCacheFile(repoInfo), StandardCopyOption.REPLACE_EXISTING);
+
+            Files.write(tempRootCache, ic.getRootGroups());
+            Files.move(tempRootCache, getRootGroupCacheFile(repoInfo), StandardCopyOption.REPLACE_EXISTING);
+        } finally {
+            Files.deleteIfExists(tempAllCache);
+            Files.deleteIfExists(tempRootCache);
+        }
+    }
+
 }

@@ -27,7 +27,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.SwingUtilities;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
 
@@ -227,7 +226,7 @@ public abstract class Sampler {
             if (cancel || samples < 1) {
                 return;
             }
-            if (SwingUtilities.isEventDispatchThread()) throw new IllegalStateException("sampling cannot be stopped from EDT");  //NOI18N
+            if (isDispatchThread()) throw new IllegalStateException("sampling cannot be stopped from EDT");  //NOI18N
             double average = sum / samples;
             double std_deviation = Math.sqrt(devSquaresSum / samples);
             boolean writeCommand = dos != null;
@@ -255,4 +254,8 @@ public abstract class Sampler {
             samplesStream = null;
         }
     }    
+
+    boolean isDispatchThread() {
+        return false;
+    }
 }

@@ -22,7 +22,7 @@
 		"multi-root ready"
 	],
 	"engines": {
-		"vscode": "^1.60.0"
+		"vscode": "^1.67.0"
 	},
 	"activationEvents": [
 		"onLanguage:java",

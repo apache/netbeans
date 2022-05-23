@@ -34,7 +34,9 @@ import {
     MessageType,
     LogMessageNotification,
     RevealOutputChannelOn,
-    DocumentSelector
+    DocumentSelector,
+    ErrorHandlerResult,
+    CloseHandlerResult
 } from 'vscode-languageclient';
 
 import * as net from 'net';
@@ -799,15 +801,15 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
                 }
             },
             errorHandler: {
-                error : function(_error: Error, _message: Message, count: number): ErrorAction {
-                    return ErrorAction.Continue;
+                error : function(error: Error, _message: Message, count: number): ErrorHandlerResult {
+                    return { action: ErrorAction.Continue, message: error.message };
                 },
-                closed : function(): CloseAction {
+                closed : function(): CloseHandlerResult {
                     handleLog(log, "Connection to Apache NetBeans Language Server closed.");
                     if (!activationPending) {
                         restartWithJDKLater(10000, false);
                     }
-                    return CloseAction.DoNotRestart;
+                    return { action: CloseAction.DoNotRestart };
                 }
             }
         }
@@ -821,8 +823,7 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
                 clientOptions
         );
         handleLog(log, 'Language Client: Starting');
-        c.start();
-        c.onReady().then(() => {
+        c.start().then(() => {
             testAdapter = new NbTestAdapter();
             c.onNotification(StatusMessageRequest.type, showStatusBarMessage);
             c.onRequest(HtmlPageRequest.type, showHtmlPage);

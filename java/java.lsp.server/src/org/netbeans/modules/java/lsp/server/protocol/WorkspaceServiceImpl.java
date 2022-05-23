@@ -74,7 +74,9 @@ import org.eclipse.lsp4j.Position;
 import org.eclipse.lsp4j.Range;
 import org.eclipse.lsp4j.ShowDocumentParams;
 import org.eclipse.lsp4j.SymbolInformation;
+import org.eclipse.lsp4j.WorkspaceSymbol;
 import org.eclipse.lsp4j.WorkspaceSymbolParams;
+import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.eclipse.lsp4j.services.LanguageClient;
 import org.eclipse.lsp4j.services.LanguageClientAware;
 import org.eclipse.lsp4j.services.WorkspaceService;
@@ -678,15 +680,15 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
     private static final String SOURCE_FOR = "sourceFor:";
 
     @Override
-    public CompletableFuture<List<? extends SymbolInformation>> symbol(WorkspaceSymbolParams params) {
+    public CompletableFuture<Either<List<? extends SymbolInformation>, List<? extends WorkspaceSymbol>>> symbol(WorkspaceSymbolParams params) {
         // shortcut: if the projects are not yet initialized, return empty:
         if (server.openedProjects().getNow(null) == null) {
-            return CompletableFuture.completedFuture(Collections.emptyList());
+            return CompletableFuture.completedFuture(Either.forLeft(Collections.emptyList()));
         }
         String query = params.getQuery();
         if (query.isEmpty()) {
             //cannot query "all":
-            return CompletableFuture.completedFuture(Collections.emptyList());
+            return CompletableFuture.completedFuture(Either.forLeft(Collections.emptyList()));
         }
         System.err.println("query=" + query);
         boolean exact = false;
@@ -697,7 +699,7 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
         String queryFin = query;
         boolean exactFin = exact;
         AtomicBoolean cancel = new AtomicBoolean();
-        CompletableFuture<List<? extends SymbolInformation>> result = new CompletableFuture<List<? extends SymbolInformation>>() {
+        CompletableFuture<Either<List<? extends SymbolInformation>, List<? extends WorkspaceSymbol>>> result = new CompletableFuture<Either<List<? extends SymbolInformation>, List<? extends WorkspaceSymbol>>>() {
             @Override
             public boolean cancel(boolean mayInterruptIfRunning) {
                 cancel.set(mayInterruptIfRunning);
@@ -833,7 +835,7 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                     symbols.add(symbol);
                 }
                 Collections.sort(symbols, (i1, i2) -> i1.getName().compareToIgnoreCase(i2.getName()));
-                result.complete(symbols);
+                result.complete(Either.forLeft(symbols));
             } catch (Throwable t) {
                 result.completeExceptionally(t);
             }

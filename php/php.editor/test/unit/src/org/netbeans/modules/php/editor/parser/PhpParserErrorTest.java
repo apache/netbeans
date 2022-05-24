@@ -1299,4 +1299,52 @@ public class PhpParserErrorTest extends PHPTestBase {
         checkErrors("testfiles/parser/php81/enumAsTypeName.php");
     }
 
+    public void testTreatNamespacedNamesAsSingleToken_01a() throws Exception {
+        checkErrors("testfiles/parser/php80/treatNamespacedNamesAsSingleToken_01a.php");
+    }
+
+    public void testTreatNamespacedNamesAsSingleToken_01b() throws Exception {
+        checkErrors("testfiles/parser/php80/treatNamespacedNamesAsSingleToken_01b.php");
+    }
+
+    public void testTreatNamespacedNamesAsSingleToken_02a() throws Exception {
+        checkErrors("testfiles/parser/php80/treatNamespacedNamesAsSingleToken_02a.php");
+    }
+
+    public void testTreatNamespacedNamesAsSingleToken_02b() throws Exception {
+        checkErrors("testfiles/parser/php80/treatNamespacedNamesAsSingleToken_02b.php");
+    }
+
+    public void testTreatNamespacedNamesAsSingleToken_03() throws Exception {
+        checkErrors("testfiles/parser/php80/treatNamespacedNamesAsSingleToken_03.php");
+    }
+
+    public void testTreatNamespacedNamesAsSingleToken_04() throws Exception {
+        checkErrors("testfiles/parser/php80/treatNamespacedNamesAsSingleToken_04.php");
+    }
+
+    public void testTreatNamespacedNamesAsSingleTokenError_01a() throws Exception {
+        checkErrors("testfiles/parser/php80/treatNamespacedNamesAsSingleTokenError_01a.php");
+    }
+
+    public void testTreatNamespacedNamesAsSingleTokenError_01b() throws Exception {
+        checkErrors("testfiles/parser/php80/treatNamespacedNamesAsSingleTokenError_01b.php");
+    }
+
+    public void testTreatNamespacedNamesAsSingleTokenError_02a() throws Exception {
+        checkErrors("testfiles/parser/php80/treatNamespacedNamesAsSingleTokenError_02a.php");
+    }
+
+    public void testTreatNamespacedNamesAsSingleTokenError_02b() throws Exception {
+        checkErrors("testfiles/parser/php80/treatNamespacedNamesAsSingleTokenError_02b.php");
+    }
+
+    public void testTreatNamespacedNamesAsSingleTokenError_03a() throws Exception {
+        checkErrors("testfiles/parser/php80/treatNamespacedNamesAsSingleTokenError_03a.php");
+    }
+
+    public void testTreatNamespacedNamesAsSingleTokenError_03b() throws Exception {
+        checkErrors("testfiles/parser/php80/treatNamespacedNamesAsSingleTokenError_03b.php");
+    }
+
 }

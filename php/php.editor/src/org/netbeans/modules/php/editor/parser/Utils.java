@@ -336,6 +336,15 @@ public final class Utils {
             case ASTPHP5Symbols.T_MUL_EQUAL:
                 name = "T_MUL_EQUAL"; //NOI18N
                 break;
+            case ASTPHP5Symbols.T_NAME_FULLY_QUALIFIED:
+                name = "T_NAME_FULLY_QUALIFIED"; //NOI18N
+                break;
+            case ASTPHP5Symbols.T_NAME_QUALIFIED:
+                name = "T_NAME_QUALIFIED"; //NOI18N
+                break;
+            case ASTPHP5Symbols.T_NAME_RELATIVE:
+                name = "T_NAME_RELATIVE"; //NOI18N
+                break;
             case ASTPHP5Symbols.T_NEKUDA:
                 name = "T_NEKUDA"; //NOI18N
                 break;

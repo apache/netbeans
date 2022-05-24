@@ -592,6 +592,18 @@ NOWDOC_CHARS=({NEWLINE}*(([^a-zA-Z_\x7f-\xff\n\r][^\n\r]*)|({LABEL}[^a-zA-Z0-9_\
     return createSymbol(ASTPHP5Symbols.T_PAAMAYIM_NEKUDOTAYIM);
 }
 
+<ST_IN_SCRIPTING>"namespace"("\\"{LABEL})+ {
+    return createFullSymbol(ASTPHP5Symbols.T_NAME_RELATIVE);
+}
+
+<ST_IN_SCRIPTING>{LABEL}("\\"{LABEL})+ {
+    return createFullSymbol(ASTPHP5Symbols.T_NAME_QUALIFIED);
+}
+
+<ST_IN_SCRIPTING>"\\"{LABEL}("\\"{LABEL})* {
+    return createFullSymbol(ASTPHP5Symbols.T_NAME_FULLY_QUALIFIED);
+}
+
 <ST_IN_SCRIPTING>"\\" {
     return createSymbol(ASTPHP5Symbols.T_NS_SEPARATOR);
 }

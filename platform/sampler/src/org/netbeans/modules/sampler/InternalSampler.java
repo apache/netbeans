@@ -171,7 +171,7 @@ final class InternalSampler extends Sampler {
     @Override
     @Messages("Save_Progress=Saving snapshot")
     void openProgress(final int steps) {
-        if (EventQueue.isDispatchThread()) {
+        if (isDispatchThread()) {
             // log warnining
             return;
         }
@@ -180,7 +180,7 @@ final class InternalSampler extends Sampler {
 
     @Override
     void closeProgress() {
-        if (EventQueue.isDispatchThread()) {
+        if (isDispatchThread()) {
             return;
         }
         progress.finish();
@@ -189,12 +189,16 @@ final class InternalSampler extends Sampler {
 
     @Override
     void progress(int i) {
-        if (EventQueue.isDispatchThread()) {
+        if (isDispatchThread()) {
             return;
         }
         if (progress != null) {
             progress.progress(i);
         }
     }
-    
+
+    @Override
+    boolean isDispatchThread() {
+        return EventQueue.isDispatchThread();
+    }
 }

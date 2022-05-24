@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.14
+#Version 1.16
 
 CLSS public abstract interface java.io.Serializable
 
@@ -73,6 +73,7 @@ meth public final java.util.Collection<java.io.File> getAvailableDirs()
 meth public final java.util.Collection<java.io.File> getAvailableDirs(boolean)
 meth public final java.util.Set<java.io.File> getGroovyDirs()
 meth public final java.util.Set<java.io.File> getJavaDirs()
+meth public final java.util.Set<java.io.File> getKotlinDirs()
 meth public final java.util.Set<java.io.File> getResourcesDirs()
 meth public final java.util.Set<java.io.File> getScalaDirs()
 meth public int hashCode()
@@ -123,6 +124,7 @@ CLSS public final static !enum org.netbeans.modules.gradle.java.api.GradleJavaSo
 fld public final static org.netbeans.modules.gradle.java.api.GradleJavaSourceSet$SourceType GENERATED
 fld public final static org.netbeans.modules.gradle.java.api.GradleJavaSourceSet$SourceType GROOVY
 fld public final static org.netbeans.modules.gradle.java.api.GradleJavaSourceSet$SourceType JAVA
+fld public final static org.netbeans.modules.gradle.java.api.GradleJavaSourceSet$SourceType KOTLIN
 fld public final static org.netbeans.modules.gradle.java.api.GradleJavaSourceSet$SourceType RESOURCES
 fld public final static org.netbeans.modules.gradle.java.api.GradleJavaSourceSet$SourceType SCALA
 meth public java.lang.String toString()
@@ -132,6 +134,8 @@ supr java.lang.Enum<org.netbeans.modules.gradle.java.api.GradleJavaSourceSet$Sou
 
 CLSS public final org.netbeans.modules.gradle.java.api.ProjectActions
 fld public static java.lang.String TOKEN_JAVAEXEC_ARGS
+fld public static java.lang.String TOKEN_JAVAEXEC_CWD
+fld public static java.lang.String TOKEN_JAVAEXEC_ENV
 fld public static java.lang.String TOKEN_JAVAEXEC_JVMARGS
 supr java.lang.Object
 

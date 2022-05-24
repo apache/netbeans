@@ -1,0 +1,5 @@
+class |>MARK_OCCURRENCES:Foo<| {}
+#[AnAttribute(new |>MARK_OCCURRENCES:F^oo<|)]
+#[AnAttribute(new |>MARK_OCCURRENCES:Foo<|())]
+#[AnAttribute(new |>MARK_OCCURRENCES:Foo<|(1))]
+#[AnAttribute(new |>MARK_OCCURRENCES:Foo<|(x: 1))]

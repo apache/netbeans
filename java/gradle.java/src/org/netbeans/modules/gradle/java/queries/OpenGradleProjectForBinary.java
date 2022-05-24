@@ -52,8 +52,8 @@ public class OpenGradleProjectForBinary implements SourceForBinaryQueryImplement
                 if ("file".equals(uri.getScheme())) {
                     File jar = new File(uri);
                     Map<String, Project> projectArchives = projectArchives();
-                    if (projectArchives.containsKey(jar.getName())) {
-                        Project p = projectArchives.get(jar.getName());
+                    Project p = projectArchives.get(jar.getName());
+                    if (p != null) {
                         GradleJavaProject gjp = GradleJavaProject.get(p);
                         File archive = gjp.getArchive(GradleJavaProject.CLASSIFIER_NONE);
                         URL root = FileUtil.urlForArchiveOrDir(archive);

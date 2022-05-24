@@ -36,6 +36,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.netbeans.modules.gradle.GradleModuleFileCache21;
 import org.netbeans.modules.gradle.spi.GradleSettings;
 import org.openide.util.lookup.ServiceProvider;
@@ -48,7 +50,8 @@ import org.openide.util.lookup.ServiceProvider;
 @SuppressWarnings("unchecked")
 class GradleBaseProjectBuilder implements ProjectInfoExtractor.Result {
 
-    final static Map<String, List<String>> DEPENDENCY_TO_PLUGIN = new LinkedHashMap<>();
+    static final Map<String, List<String>> DEPENDENCY_TO_PLUGIN = new LinkedHashMap<>();
+    static final Logger LOG = Logger.getLogger(GradleBaseProjectBuilder.class.getName());
 
     static {
         addDependencyPlugin("javax:javaee-api:.*", "ejb", "jpa");
@@ -73,6 +76,11 @@ class GradleBaseProjectBuilder implements ProjectInfoExtractor.Result {
     }
 
     void build() {
+        if (LOG.isLoggable(Level.FINE)) {
+            for (Map.Entry<String, Object> entry : info.entrySet()) {
+                LOG.log(Level.FINE, entry.getKey() + " = " + String.valueOf(entry.getValue()));
+            }
+        }
         processBasicInfo();
         processTasks();
         processDependencies();
@@ -148,39 +156,80 @@ class GradleBaseProjectBuilder implements ProjectInfoExtractor.Result {
 
         Map<String, Set<File>> arts = (Map<String, Set<File>>) info.get("resolved_jvm_artifacts");
         arts = arts != null ? arts : Collections.<String, Set<File>>emptyMap();
+        if (LOG.isLoggable(Level.FINER)) {
+            LOG.log(Level.FINER, "Resolved JVM artifacts: {0}", arts.toString().replace(",", "\n\t"));
+        }
         Map<String, Set<File>> sources = (Map<String, Set<File>>) info.get("resolved_sources_artifacts");
         sources = sources != null ? sources : Collections.<String, Set<File>>emptyMap();
+        if (LOG.isLoggable(Level.FINER)) {
+            LOG.log(Level.FINER, "Resolved source artifacts: {0}", sources.toString().replace(",", "\n\t"));
+        }
         Map<String, Set<File>> javadocs = (Map<String, Set<File>>) info.get("resolved_javadoc_artifacts");
         javadocs = javadocs != null ? javadocs : Collections.<String, Set<File>>emptyMap();
+        if (LOG.isLoggable(Level.FINER)) {
+            LOG.log(Level.FINER, "Resolved javadoc artifacts: {0}", javadocs.toString().replace(",", "\n\t"));
+        }
 
         Map<String, String> unresolvedProblems = (Map<String, String>) info.get("unresolved_problems");
         unresolvedProblems = unresolvedProblems != null ? unresolvedProblems : Collections.<String, String>emptyMap();
         Map<String, ModuleDependency> components = new HashMap<>();
+        
+        // supplement project info with cache data as in online mode javadocs and sources are NOT queried. Especially
+        // when doing a refresh / download, the project info is just partial, although Gradle has relevant artifacts in
+        // its caches.
+        GradleArtifactStore store = GradleArtifactStore.getDefault();
         for (Map.Entry<String, Set<File>> entry : arts.entrySet()) {
             String componentId = entry.getKey();
+            LOG.log(Level.FINER, "Resolving JVM artifact {0}", componentId);
             // Looking at cache first as we might have the chance to find Sources and Javadocs
             ModuleDependency dep = resolveModuleDependency(gradleUserHome, componentId);
             if (!dep.getArtifacts().equals(entry.getValue())) {
+                if (LOG.isLoggable(Level.FINER)) {
+                    LOG.log(Level.FINER, "Created component {0} from JVM artifacts: {1}", new Object[] { componentId, entry.getValue() });
+                }
                 dep = new ModuleDependency(componentId, entry.getValue());
             }
             components.put(componentId, dep);
+            if (LOG.isLoggable(Level.FINER) && dep.sources != null && !dep.sources.isEmpty()) {
+                LOG.log(Level.FINER, "Replacing sources for {0} sources from {1}, used to be {2}", new Object[] {
+                    componentId, sources.containsKey(componentId) ? "resolvedSources" : "artifactStore", dep.sources
+                });
+            }
             if (sources.containsKey(componentId)) {
                 dep.sources = sources.get(entry.getKey());
+            } else {
+                dep.sources = store.getSources(entry.getValue());
+            }
+            if (LOG.isLoggable(Level.FINER) && dep.javadoc != null && !dep.javadoc.isEmpty()) {
+                LOG.log(Level.FINER, "Replacing javadocs for {0} from {1}, used to be {2}", new Object[] {
+                    componentId, javadocs.containsKey(componentId) ? "resolvedJavadocs" : "artifactStore", dep.javadoc
+                });
             }
             if (javadocs.containsKey(componentId)) {
                 dep.javadoc = javadocs.get(entry.getKey());
+            } else {
+                dep.javadoc = store.getJavadocs(entry.getValue());                
+            }
+            if (LOG.isLoggable(Level.FINER)) {
+                LOG.log(Level.FINER, "Done component: {0} -> {1}", new Object[] { componentId, dep });
             }
         }
         Map<String, ProjectDependency> projects = new HashMap<>();
         for (Map.Entry<String, File> entry : prjs.entrySet()) {
             ProjectDependency dep = new ProjectDependency(entry.getKey(), entry.getValue());
             projects.put(entry.getKey(), dep);
+            if (LOG.isLoggable(Level.FINER)) {
+                LOG.log(Level.FINER, "Added project dependency: {0} -> {1} ", new Object[] { entry.getKey(), dep });
+            }
         }
         Map<String, UnresolvedDependency> unresolved = new HashMap<>();
         for (Map.Entry<String, String> entry : unresolvedProblems.entrySet()) {
             UnresolvedDependency dep = new UnresolvedDependency(entry.getKey());
             dep.problem = entry.getValue();
             unresolved.put(entry.getKey(), dep);
+            if (LOG.isLoggable(Level.FINER)) {
+                LOG.log(Level.FINER, "Adding UNRESOLVED dependency: {0} -> {1}", new Object[] { entry.getKey(), dep });
+            }
         }
         if (configurationNames != null) {
             for (String name : configurationNames) {
@@ -193,9 +242,11 @@ class GradleBaseProjectBuilder implements ProjectInfoExtractor.Result {
                     for (String c : requiredComponents) {
                         ModuleDependency dep = components.get(c);
                         if (dep != null) {
+                            LOG.log(Level.FINER, "Configuration {0}, known component {1}", new Object[] { conf.getName(), dep });
                             conf.modules.add(dep);
                         } else {
                             dep = resolveModuleDependency(gradleUserHome, c);
+                            LOG.log(Level.FINER, "Configuration {0}, resolved to {1}", new Object[] { conf.getName(), dep });
                             if (dep != null) {
                                 components.put(c, dep);
                                 conf.modules.add(dep);
@@ -217,7 +268,11 @@ class GradleBaseProjectBuilder implements ProjectInfoExtractor.Result {
                 Set<String> unresolvedComp = (Set<String>) info.get("configuration_" + name + "_unresolved");
                 if (unresolvedComp != null) {
                     for (String u : unresolvedComp) {
-                        conf.unresolved.add(unresolved.get(u));
+                        UnresolvedDependency dep = unresolved.get(u);
+                        if (dep == null) {
+                            dep = new UnresolvedDependency(u);
+                        }
+                        conf.unresolved.add(dep);
                     }
                 }
                 Set<File> files = (Set<File>) info.get("configuration_" + name + "_files");
@@ -268,13 +323,24 @@ class GradleBaseProjectBuilder implements ProjectInfoExtractor.Result {
             GradleModuleFileCache21.CachedArtifactVersion artVersion = moduleCache.resolveModule(c);
             Set<File> binaries = artifactSore.getBinaries(c);
             if (((binaries == null) || binaries.isEmpty()) && (artVersion.getBinary() != null)) {
+                LOG.log(Level.FINER, "Resolving component {0} from module21: {0}", artVersion.getBinary());
                 binaries = Collections.singleton(artVersion.getBinary().getPath().toFile());
+            } else {
+                if (LOG.isLoggable(Level.FINER)) {
+                    LOG.log(Level.FINER, "Resolving component {0} from artifactstore: {0}", new Object[] { c, binaries });
+                }
             }
             ModuleDependency ret = new ModuleDependency(c, binaries);
             if (artVersion.getSources() != null) {
+                if (LOG.isLoggable(Level.FINER)) {
+                    LOG.log(Level.FINER, "Resolving sources {0} from module21: {0}", new Object[] { c, artVersion.getSources().getPath() });
+                }
                 ret.sources = Collections.singleton(artVersion.getSources().getPath().toFile());
             }
             if (artVersion.getJavaDoc() != null) {
+                if (LOG.isLoggable(Level.FINER)) {
+                    LOG.log(Level.FINER, "Resolving javadoc {0} from module21: {0}", new Object[] { c, artVersion.getJavaDoc().getPath() });
+                }
                 ret.javadoc = Collections.singleton(artVersion.getJavaDoc().getPath().toFile());
             }
             return ret;

@@ -67,6 +67,7 @@ public final class OutputUtils {
      * @deprecated use {@link #matchStackTraceLine(java.lang.String, org.openide.filesystems.FileObject)}  
      *              or {@link #matchStackTraceLine(java.lang.String, org.netbeans.api.project.Project)} instead.
      */
+    @Deprecated
     public static OutputListener matchStackTraceLine(String line, ClassPath classPath) {
         StacktraceAttributes sa = matchStackTraceLine(line);
         return sa != null ? new ClassPathStacktraceOutputListener(classPath, sa) : null;
@@ -145,7 +146,7 @@ public final class OutputUtils {
         }
     }
     
-    private static abstract class StacktraceOutputListener implements OutputListener {
+    private abstract static class StacktraceOutputListener implements OutputListener {
         
         protected abstract ClassPath getClassPath();
         

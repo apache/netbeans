@@ -31,7 +31,7 @@ import org.netbeans.modules.schema2beansdev.gen.XMLWriter;
 import org.netbeans.modules.schema2beansdev.metadd.*;
 
 public class XMLSchemaParser extends GeneralParser implements SchemaParser {
-    public final static String JAVA_TYPE_NS = "http://schema2beans.netbeans.org/javaTypes";
+    public static final String JAVA_TYPE_NS = "http://schema2beans.netbeans.org/javaTypes";
 
     //	Handler to callback with the tokens found in the Schema.
     private DocDefHandler	handler;
@@ -1031,7 +1031,7 @@ public class XMLSchemaParser extends GeneralParser implements SchemaParser {
         }
     }
 
-    static protected int getInstanceValue(String minOccurs, String maxOccurs) {
+    protected static int getInstanceValue(String minOccurs, String maxOccurs) {
         if (minOccurs == null)
             minOccurs = "1";
         if (maxOccurs == null)

@@ -41,8 +41,8 @@ public final class WildflyTabVisualPanel extends JPanel {
      * use this handle to do so.
      */
 
-    transient private final WildFlyProperties targetData;
-    transient private final WildflyDeploymentManager dm;
+    private final transient WildFlyProperties targetData;
+    private final transient WildflyDeploymentManager dm;
 
 
     /**

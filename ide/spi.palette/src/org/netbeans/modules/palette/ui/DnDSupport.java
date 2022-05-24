@@ -59,7 +59,7 @@ import org.netbeans.modules.palette.Item;
  */
 public class DnDSupport  implements DragGestureListener, DropTargetListener {
     
-    final static private int DELAY_TIME_FOR_EXPAND = 1000;
+    private static final int DELAY_TIME_FOR_EXPAND = 1000;
 
     private Set<DragGestureRecognizer> recognizers = new HashSet<DragGestureRecognizer>( 5 );
     private Set<DropTarget> dropTargets = new HashSet<DropTarget>( 5 );
@@ -230,7 +230,7 @@ public class DnDSupport  implements DragGestureListener, DropTargetListener {
                 timer = new Timer(
                     DELAY_TIME_FOR_EXPAND,
                     new ActionListener() {
-                        final public void actionPerformed(ActionEvent e) {
+                        public final void actionPerformed(ActionEvent e) {
                             button.setExpanded( true );
                         }
                     }

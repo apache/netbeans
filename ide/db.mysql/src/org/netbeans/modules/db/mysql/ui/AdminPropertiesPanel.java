@@ -45,7 +45,7 @@ public class AdminPropertiesPanel extends javax.swing.JPanel {
     private Color nbErrorForeground;
 
     // the most recent directory where a new path was chosen
-    static private String recentDirectory = null;    
+    private static String recentDirectory = null;    
 
     private void validatePanel() {
         descriptor.setValid(false);

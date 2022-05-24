@@ -18,7 +18,7 @@
  */
 package org.netbeans.modules.gsf.testrunner.ui;
 
-import java.awt.AlphaComposite;
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
@@ -28,18 +28,16 @@ import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Insets;
-import java.awt.Rectangle;
-import java.awt.RenderingHints;
-import java.awt.Toolkit;
+import java.awt.Shape;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
-import java.awt.image.ConvolveOp;
-import java.awt.image.Kernel;
-import java.util.Map;
+import java.awt.font.GlyphVector;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Rectangle2D;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.Timer;
+import org.openide.awt.GraphicsUtils;
 
 /**
  * <strong>This is a copy of <code>CoverageBar</code> from the gsf.codecoverage</code>
@@ -162,32 +160,13 @@ public final class ResultBar extends JComponent implements ActionListener{
         repaint();
     }
 
-    public
-    @Override
-    void paint(Graphics g) {
-        // Antialiasing if necessary
-        Object value = (Map) (Toolkit.getDefaultToolkit().getDesktopProperty("awt.font.desktophints")); //NOI18N
-        Map renderingHints = (value instanceof Map) ? (java.util.Map) value : null;
-        if (renderingHints != null && g instanceof Graphics2D) {
-            Graphics2D g2d = (Graphics2D) g;
-            RenderingHints oldHints = g2d.getRenderingHints();
-            g2d.setRenderingHints(renderingHints);
-            try {
-                super.paint(g2d);
-            } finally {
-                g2d.setRenderingHints(oldHints);
-            }
-        } else {
-            super.paint(g);
-        }
-    }
-
     @Override
     protected void paintComponent(Graphics g) {
-
         if (!(g instanceof Graphics2D)) {
             return;
         }
+        // Antialiasing if necessary
+        GraphicsUtils.configureDefaultRenderingHints(g);
 
         int width = getWidth();
         int barRectWidth = width;
@@ -199,12 +178,12 @@ public final class ResultBar extends JComponent implements ActionListener{
         }
 
         int amountFull = (int) (barRectWidth * passedPercentage / 100.0f);
-	int amountSkip = (int) (barRectWidth * skippedPercentage / 100.0f);
-	int amountAbort = (int) (barRectWidth * abortedPercentage / 100.0f);
-	int amountFail = Math.abs(barRectWidth - amountFull - amountSkip - amountAbort);
-	if(amountFail <= 1) {
-	    amountFail = 0;
-	}
+        int amountSkip = (int) (barRectWidth * skippedPercentage / 100.0f);
+        int amountAbort = (int) (barRectWidth * abortedPercentage / 100.0f);
+        int amountFail = Math.abs(barRectWidth - amountFull - amountSkip - amountAbort);
+        if(amountFail <= 1) {
+            amountFail = 0;
+        }
 
         Color notCoveredLight = NOT_COVERED_LIGHT;
         Color notCoveredDark = NOT_COVERED_DARK;
@@ -255,10 +234,9 @@ public final class ResultBar extends JComponent implements ActionListener{
             }
         }
         g2.setPaint(new GradientPaint(0, phase, light, 0, phase + height / 2, dark, true));
-        g2.fillRect(1, 1, barRectWidth, height);
+        g2.fillRect(0, 0, barRectWidth, height);
 
-        g2.setFont(getFont());
-        paintDropShadowText(g2, barRectWidth, barRectHeight);
+        paintText(g2, barRectWidth, barRectHeight);
     }
 
     @Override
@@ -281,10 +259,6 @@ public final class ResultBar extends JComponent implements ActionListener{
         }
         size.width += border.left + border.right;
         size.height += border.top + border.bottom;
-        
-        // The component was replaced with a new one or the JSplitPane's divider was used to adjust the size. 
-        // This is needed so that text is painted using the correct buffered image size, see paintDropShadowText().
-        textImage = null;
         
         return size;
     }
@@ -309,103 +283,26 @@ public final class ResultBar extends JComponent implements ActionListener{
         return h - fm.getDescent() - ((h - fm.getHeight()) / 2);
     }
 
-    ///////////////////////////////////////////////////////////////////////////////
-    // The following code is related to painting drop-shadow text. It is
-    // directly based on code in openide.actions/**/HeapView.java by Scott Violet.
-    ///////////////////////////////////////////////////////////////////////////////
     /**
-     * Image containing text.
+     * Renders the text with a slightly contrasted outline.
      */
-    private BufferedImage textImage;
-    /**
-     * Image containing the drop shadow.
-     */
-    private BufferedImage dropShadowImage;
-    /**
-     * Color for the text before blurred.
-     */
-    private static final Color TEXT_BLUR_COLOR = Color.WHITE;
-    /**
-     * Color for text drawn on top of blurred text.
-     */
-    private static final Color TEXT_COLOR = Color.WHITE;
-    /**
-     * Size used for Kernel used to generate drop shadow.
-     */
-    private static final int KERNEL_SIZE = 3;
-    /**
-     * Factor used for Kernel used to generate drop shadow.
-     */
-    private static final float BLUR_FACTOR = 0.1f;
-    /**
-     * How far to shift the drop shadow along the horizontal axis.
-     */
-    private static final int SHIFT_X = 0;
-    /**
-     * How far to shift the drop shadow along the vertical axis.
-     */
-    private static final int SHIFT_Y = 1;
-    /**
-     * Used to generate drop shadown.
-     */
-    private ConvolveOp blur;
-
-    /**
-     * Renders the text using a drop shadow.
-     */
-    private void paintDropShadowText(Graphics g, int w, int h) {
-        if (textImage == null) {
-            textImage = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
-            dropShadowImage = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
-        }
-        // Step 1: render the text.
-        Graphics2D textImageG = textImage.createGraphics();
-        textImageG.setComposite(AlphaComposite.Clear);
-        textImageG.fillRect(0, 0, w, h);
-        textImageG.setComposite(AlphaComposite.SrcOver);
-        textImageG.setColor(TEXT_BLUR_COLOR);
-        paintText(textImageG, w, h);
-        textImageG.dispose();
-
-        // Step 2: copy the image containing the text to dropShadowImage using
-        // the blur effect, which generates a nice drop shadow.
-        Graphics2D blurryImageG = dropShadowImage.createGraphics();
-        blurryImageG.setComposite(AlphaComposite.Clear);
-        blurryImageG.fillRect(0, 0, w, h);
-        blurryImageG.setComposite(AlphaComposite.SrcOver);
-        if (blur == null) {
-            // Configure structures needed for rendering drop shadow.
-            int kw = KERNEL_SIZE, kh = KERNEL_SIZE;
-            float blurFactor = BLUR_FACTOR;
-            float[] kernelData = new float[kw * kh];
-            for (int i = 0; i < kernelData.length; i++) {
-                kernelData[i] = blurFactor;
-            }
-            blur = new ConvolveOp(new Kernel(kw, kh, kernelData));
-        }
-        blurryImageG.drawImage(textImage, blur, SHIFT_X, SHIFT_Y);
-        if (emphasize) {
-            blurryImageG.setColor(Color.YELLOW);
-        } else {
-            blurryImageG.setColor(TEXT_COLOR);
-        }
-        blurryImageG.setFont(getFont());
-
-        // Step 3: render the text again on top.
-        paintText(blurryImageG, w, h);
-        blurryImageG.dispose();
-
-        // And finally copy it.
-        g.drawImage(dropShadowImage, 0, 0, null);
-    }
-
-    private void paintText(Graphics g, int w, int h) {
-        g.setFont(getFont());
+    private void paintText(Graphics2D g, int w, int h) {
+        // Similar to org.openide.actions.HeapView.paintText.
+        Font font = getFont();
         String text = getString();
-        FontMetrics fm = g.getFontMetrics();
-        int textWidth = fm.stringWidth(text);
-        g.drawString(text, (w - textWidth) / 2,
-                h - fm.getDescent() - ((h - fm.getHeight()) / 2));
+        GlyphVector gv = font.createGlyphVector(g.getFontRenderContext(), text);
+        FontMetrics fm = g.getFontMetrics(font);
+        Shape outline = gv.getOutline();
+        Rectangle2D bounds = outline.getBounds2D();
+        double x = Math.max(0, (w - bounds.getWidth()) / 2.0);
+        double y = h / 2.0 + fm.getAscent() / 2.0 - 1;
+        AffineTransform oldTransform = g.getTransform();
+        g.translate(x, y);
+        g.setColor(new Color(0, 0, 0, 100));
+        g.setStroke(new BasicStroke(2.0f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+        g.draw(outline);
+        g.setColor(Color.WHITE);
+        g.fill(outline);
+        g.setTransform(oldTransform);
     }
-
 }

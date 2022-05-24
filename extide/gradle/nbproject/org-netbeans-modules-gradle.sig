@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.15
+#Version 2.22
 
 CLSS public abstract interface java.io.Serializable
 
@@ -304,6 +304,7 @@ meth public abstract boolean getMiscOnly()
 meth public abstract java.util.Map<java.lang.String,java.lang.Object> getExt()
 meth public abstract java.util.Map<java.lang.String,java.lang.Object> getInfo()
 meth public abstract java.util.Set<java.lang.String> getProblems()
+meth public abstract java.util.Set<org.netbeans.modules.gradle.api.NbProjectInfo.Report> getReports()
 
 CLSS public abstract interface org.netbeans.modules.gradle.api.execute.ActionMapping
 fld public final static java.lang.String CUSTOM_PREFIX = "custom-"
@@ -492,6 +493,7 @@ meth public boolean isCompatibleWithJava(int)
 meth public boolean isCompatibleWithSystemJava()
 meth public int compareTo(org.netbeans.modules.gradle.api.execute.GradleDistributionManager$GradleDistribution)
 meth public int hashCode()
+meth public int lastSupportedJava()
 meth public java.io.File getDistributionDir()
 meth public java.io.File getGradleUserHome()
 meth public java.lang.String getVersion()
@@ -919,9 +921,11 @@ hfds TEMPLATE_BUILD,TEMPLATE_PROPS,TEMPLATE_SETTINGS,buildTemplate,templateParam
 CLSS public final org.netbeans.modules.gradle.spi.newproject.TemplateOperation
 cons public init()
 cons public init(org.netbeans.api.progress.ProgressHandle)
+innr public abstract InitOperation
 innr public abstract interface static ProjectConfigurator
 intf java.lang.Runnable
 meth public java.util.Set<org.openide.filesystems.FileObject> getImportantFiles()
+meth public org.netbeans.modules.gradle.spi.newproject.TemplateOperation$InitOperation createGradleInit(java.io.File,java.lang.String)
 meth public void addConfigureProject(java.io.File,org.netbeans.modules.gradle.spi.newproject.TemplateOperation$ProjectConfigurator)
 meth public void addProjectPreload(java.io.File)
 meth public void addWrapperInit(java.io.File)
@@ -933,8 +937,17 @@ meth public void openFromFile(java.lang.String,java.io.File,java.util.Map<java.l
 meth public void openFromTemplate(java.lang.String,java.io.File,java.util.Map<java.lang.String,?>)
 meth public void run()
 supr java.lang.Object
-hfds handle,importantFiles,steps
-hcls ConfigureProjectStep,CopyFromFileTemplate,CopyFromTemplate,CreateDirStep,InitGradleWrapper,OperationStep,PreloadProject
+hfds LOG,handle,importantFiles,steps
+hcls BaseOperationStep,ConfigureProjectStep,CopyFromFileTemplate,CopyFromTemplate,CreateDirStep,InitGradleWrapper,InitStep,OperationStep,PreloadProject
+
+CLSS public abstract org.netbeans.modules.gradle.spi.newproject.TemplateOperation$InitOperation
+ outer org.netbeans.modules.gradle.spi.newproject.TemplateOperation
+meth public abstract org.netbeans.modules.gradle.spi.newproject.TemplateOperation$InitOperation basePackage(java.lang.String)
+meth public abstract org.netbeans.modules.gradle.spi.newproject.TemplateOperation$InitOperation dsl(java.lang.String)
+meth public abstract org.netbeans.modules.gradle.spi.newproject.TemplateOperation$InitOperation projectName(java.lang.String)
+meth public abstract org.netbeans.modules.gradle.spi.newproject.TemplateOperation$InitOperation testFramework(java.lang.String)
+meth public final void add()
+supr java.lang.Object
 
 CLSS public abstract interface static org.netbeans.modules.gradle.spi.newproject.TemplateOperation$ProjectConfigurator
  outer org.netbeans.modules.gradle.spi.newproject.TemplateOperation

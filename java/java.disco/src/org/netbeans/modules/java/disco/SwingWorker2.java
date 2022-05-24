@@ -26,6 +26,7 @@ import org.checkerframework.checker.guieffect.qual.UIEffect;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.openide.util.Exceptions;
 
 public class SwingWorker2 {
 
@@ -64,10 +65,16 @@ public class SwingWorker2 {
                 @Override
                 protected void done() {
                     try {
-                        consumer.accept(get());
+                        T result = get();
+                        if (consumer != null) {
+                            consumer.accept(result);
+                        }
                     } catch (InterruptedException | ExecutionException ex) {
-                        if (errors != null)
+                        if (errors != null) {
                             errors.accept(ex);
+                        } else {
+                            Exceptions.printStackTrace(ex);
+                        }
                     }
                 }
             }.execute();

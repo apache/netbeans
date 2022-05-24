@@ -54,7 +54,6 @@ import org.netbeans.api.java.source.matching.Occurrence;
 import org.netbeans.api.java.source.matching.Pattern;
 import org.netbeans.api.lexer.Language;
 import org.netbeans.junit.NbTestCase;
-import org.netbeans.modules.java.hints.introduce.IntroduceHint;
 import org.netbeans.modules.java.hints.introduce.IntroduceMethodFix;
 import org.netbeans.modules.java.hints.spiimpl.pm.BulkSearch;
 import org.netbeans.modules.java.hints.spiimpl.pm.BulkSearch.BulkPattern;
@@ -73,6 +72,7 @@ import org.openide.loaders.DataObject;
  *
  * @author Jan Lahoda
  */
+@SuppressWarnings({"unchecked", "rawtypes"})
 public class CopyFinderTest extends NbTestCase {
 
     public CopyFinderTest(String testName) {
@@ -1504,8 +1504,9 @@ public class CopyFinderTest extends NbTestCase {
             }
             if (!actual.isEmpty()) {
                 Map<String, String> print = new HashMap<String, String>(actual.size());
-                for (String s : actual.keySet()) {
-                    int[] arr = actual.get(s);
+                for (Entry<String, int[]> entry : actual.entrySet()) {
+                    String s = entry.getKey();
+                    int[] arr = entry.getValue();
                     print.put(s, Arrays.toString(arr));
                 }
                 assertTrue("Extra duplicates found: " + print, actual.isEmpty());
@@ -1537,8 +1538,9 @@ public class CopyFinderTest extends NbTestCase {
             }
             if (!actualMulti.isEmpty()) {
                 Map<String, String> print = new HashMap<String, String>(actualMulti.size());
-                for (String s : actualMulti.keySet()) {
-                    int[] arr = actualMulti.get(s);
+                for (Entry<String, int[]> entry : actualMulti.entrySet()) {
+                    String s = entry.getKey();
+                    int[] arr = entry.getValue();
                     print.put(s, Arrays.toString(arr));
                 }
                 assertTrue("Extra multi duplicates found: " + print, actualMulti.isEmpty());

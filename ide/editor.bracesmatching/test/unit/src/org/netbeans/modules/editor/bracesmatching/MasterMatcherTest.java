@@ -237,12 +237,12 @@ public class MasterMatcherTest extends NbTestCase {
     private static final class BlockingMatcher implements BracesMatcher, BracesMatcherFactory {
         private static volatile int counter;
         
-        public volatile static BlockingMatcher lastMatcher = null; 
+        public static volatile BlockingMatcher lastMatcher = null; 
         
-        public volatile static boolean blockInFindOrigin = false;
+        public static volatile boolean blockInFindOrigin = false;
         
-        public volatile static int [] origin = null;
-        public volatile static int [] matches = null;
+        public static volatile int [] origin = null;
+        public static volatile int [] matches = null;
         
         public final MatcherContext context;
         

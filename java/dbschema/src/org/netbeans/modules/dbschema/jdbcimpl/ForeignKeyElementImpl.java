@@ -44,7 +44,7 @@ public class ForeignKeyElementImpl  extends KeyElementImpl implements ForeignKey
   
     public ColumnPairElement[] getColumnPairs() {
         DBElement[] dbe = getColumnCollection().getElements();
-        return (ColumnPairElement[]) Arrays.asList(dbe).toArray(new ColumnPairElement[dbe.length]);
+        return Arrays.asList(dbe).toArray(new ColumnPairElement[dbe.length]);
     }
     
     public ColumnPairElement getColumnPair(DBIdentifier name) {

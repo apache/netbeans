@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.8
+#Version 2.10
 
 CLSS public abstract interface java.io.Closeable
 intf java.lang.AutoCloseable
@@ -1091,12 +1091,16 @@ CLSS public org.netbeans.modules.payara.tooling.admin.ServerAdmin
 cons public init()
 meth public !varargs static <%0 extends org.netbeans.modules.payara.tooling.admin.Result> java.util.concurrent.Future<{%%0}> exec(java.util.concurrent.ExecutorService,org.netbeans.modules.payara.tooling.data.PayaraServer,org.netbeans.modules.payara.tooling.admin.Command,org.netbeans.modules.payara.tooling.TaskStateListener[])
 meth public !varargs static <%0 extends org.netbeans.modules.payara.tooling.admin.Result> java.util.concurrent.Future<{%%0}> exec(java.util.concurrent.ExecutorService,org.netbeans.modules.payara.tooling.data.PayaraServer,org.netbeans.modules.payara.tooling.admin.Command,org.netbeans.modules.payara.tooling.data.IdeContext,org.netbeans.modules.payara.tooling.TaskStateListener[])
+ anno 0 java.lang.Deprecated()
 meth public !varargs static <%0 extends org.netbeans.modules.payara.tooling.admin.Result> java.util.concurrent.Future<{%%0}> exec(org.netbeans.modules.payara.tooling.data.PayaraServer,org.netbeans.modules.payara.tooling.admin.Command,org.netbeans.modules.payara.tooling.TaskStateListener[])
 meth public !varargs static <%0 extends org.netbeans.modules.payara.tooling.admin.Result> java.util.concurrent.Future<{%%0}> exec(org.netbeans.modules.payara.tooling.data.PayaraServer,org.netbeans.modules.payara.tooling.admin.Command,org.netbeans.modules.payara.tooling.data.IdeContext,org.netbeans.modules.payara.tooling.TaskStateListener[])
+ anno 0 java.lang.Deprecated()
 meth public static <%0 extends org.netbeans.modules.payara.tooling.admin.Result> java.util.concurrent.Future<{%%0}> exec(java.util.concurrent.ExecutorService,org.netbeans.modules.payara.tooling.data.PayaraServer,org.netbeans.modules.payara.tooling.admin.Command)
 meth public static <%0 extends org.netbeans.modules.payara.tooling.admin.Result> java.util.concurrent.Future<{%%0}> exec(java.util.concurrent.ExecutorService,org.netbeans.modules.payara.tooling.data.PayaraServer,org.netbeans.modules.payara.tooling.admin.Command,org.netbeans.modules.payara.tooling.data.IdeContext)
+ anno 0 java.lang.Deprecated()
 meth public static <%0 extends org.netbeans.modules.payara.tooling.admin.Result> java.util.concurrent.Future<{%%0}> exec(org.netbeans.modules.payara.tooling.data.PayaraServer,org.netbeans.modules.payara.tooling.admin.Command)
 meth public static <%0 extends org.netbeans.modules.payara.tooling.admin.Result> java.util.concurrent.Future<{%%0}> exec(org.netbeans.modules.payara.tooling.data.PayaraServer,org.netbeans.modules.payara.tooling.admin.Command,org.netbeans.modules.payara.tooling.data.IdeContext)
+ anno 0 java.lang.Deprecated()
 meth public static java.util.concurrent.ExecutorService executor(int)
 meth public static void init(java.net.Authenticator)
 supr java.lang.Object
@@ -1240,6 +1244,7 @@ meth public java.lang.String toString()
 meth public java.util.Optional<java.lang.Short> getMinor()
 meth public java.util.Optional<java.lang.Short> getSubMinor()
 meth public java.util.Optional<java.lang.Short> getUpdate()
+meth public java.util.Optional<java.lang.String> getVM()
 meth public java.util.Optional<java.lang.String> getVendor()
 meth public short getMajor()
 meth public static boolean isCorrectJDK(java.util.Optional<org.netbeans.modules.payara.tooling.data.JDKVersion>,java.util.Optional<org.netbeans.modules.payara.tooling.data.JDKVersion>)
@@ -1247,8 +1252,9 @@ meth public static boolean isCorrectJDK(org.netbeans.modules.payara.tooling.data
 meth public static org.netbeans.modules.payara.tooling.data.JDKVersion getDefaultPlatformVersion()
 meth public static org.netbeans.modules.payara.tooling.data.JDKVersion toValue(java.lang.String)
 meth public static org.netbeans.modules.payara.tooling.data.JDKVersion toValue(java.lang.String,java.lang.String)
+meth public static org.netbeans.modules.payara.tooling.data.JDKVersion toValue(java.lang.String,java.lang.String,java.lang.String)
 supr java.lang.Object
-hfds DEFAULT_VALUE,IDE_JDK_VERSION,MAJOR_INDEX,MINOR_INDEX,SUBMINOR_INDEX,UPDATE_INDEX,VERSION_MATCHER,major,minor,subminor,update,vendor
+hfds DEFAULT_VALUE,IDE_JDK_VERSION,MAJOR_INDEX,MINOR_INDEX,SUBMINOR_INDEX,UPDATE_INDEX,VERSION_MATCHER,major,minor,subminor,update,vendor,vm
 
 CLSS public final !enum org.netbeans.modules.payara.tooling.data.PayaraAdminInterface
 fld public final static org.netbeans.modules.payara.tooling.data.PayaraAdminInterface HTTP
@@ -1376,6 +1382,9 @@ meth public abstract int getAdminPort()
 meth public abstract int getPort()
 meth public abstract java.lang.String getAdminPassword()
 meth public abstract java.lang.String getAdminUser()
+meth public abstract boolean isDocker()
+meth public abstract java.lang.String getHostPath()
+meth public abstract java.lang.String getContainerPath()
 meth public abstract java.lang.String getDomainName()
 meth public abstract java.lang.String getDomainsFolder()
 meth public abstract java.lang.String getHost()
@@ -1397,6 +1406,9 @@ meth public int getAdminPort()
 meth public int getPort()
 meth public java.lang.String getAdminPassword()
 meth public java.lang.String getAdminUser()
+meth public abstract boolean isDocker()
+meth public abstract java.lang.String getHostPath()
+meth public abstract java.lang.String getContainerPath()
 meth public java.lang.String getDomainName()
 meth public java.lang.String getDomainsFolder()
 meth public java.lang.String getHost()
@@ -2166,6 +2178,8 @@ cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.String,java.lang.String)
 fld public final java.lang.String option
 fld public final java.util.Optional<java.lang.String> vendor
+ anno 0 java.lang.Deprecated()
+fld public final java.util.Optional<java.lang.String> vendorOrVM
 fld public final java.util.Optional<org.netbeans.modules.payara.tooling.data.JDKVersion> maxVersion
 fld public final java.util.Optional<org.netbeans.modules.payara.tooling.data.JDKVersion> minVersion
 meth public boolean equals(java.lang.Object)

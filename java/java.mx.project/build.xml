@@ -24,7 +24,7 @@
     <property name="mx.dir" value="${graal.dir}/../mx"/>
     <available property="graal.dir.available" file="${graal.dir}/LICENSE"/>
 
-    <target name="test-preinit" unless="graal.dir.available">
+    <target name="-checkout-graalvm" unless="graal.dir.available">
         <delete dir="${graal.dir}"/>
         <mkdir dir="${graal.dir}/.."/>
         <exec dir="${graal.dir}/.." executable="git" failonerror="true">
@@ -45,6 +45,9 @@
             <arg value="--single-branch"/>
             <arg value="https://github.com/graalvm/mx"/>
         </exec>
+    </target>
+
+    <target name="test-preinit" depends="-checkout-graalvm">
         <exec dir="${graal.dir}/truffle" executable="${mx.dir}/mx" failonerror="true">
             <arg value="build"/>
         </exec>

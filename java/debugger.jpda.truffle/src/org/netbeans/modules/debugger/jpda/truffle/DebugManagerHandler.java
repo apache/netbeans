@@ -118,9 +118,7 @@ final class DebugManagerHandler {
     
     void newPolyglotEngineInstance(ObjectReference engine, JPDAThreadImpl thread) {
         LOG.log(Level.FINE, "Engine created breakpoint hit: engine = {0} in thread = {1}", new Object[] { engine, thread.getThreadReference()});
-        if (inited.compareAndSet(false, true)) {
-            initDebuggerRemoteService(thread);
-        }
+        assert inited.get(): "The remote services should have been initialized already from a Truffle class.";
         if (accessorClass == null) {
             // No accessor
             return ;
@@ -163,7 +161,13 @@ final class DebugManagerHandler {
         }
     }
 
-    private void initDebuggerRemoteService(JPDAThread thread) {
+    void initDebuggerRemoteService(JPDAThread thread) {
+        if (inited.compareAndSet(false, true)) {
+            doInitDebuggerRemoteService(thread);
+        }
+    }
+
+    private void doInitDebuggerRemoteService(JPDAThread thread) {
         if (LOG.isLoggable(Level.FINE)) {
             LOG.log(Level.FINE, "initDebuggerRemoteService({0})", thread);
         }

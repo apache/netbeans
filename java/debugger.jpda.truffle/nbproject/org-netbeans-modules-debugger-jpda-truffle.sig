@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.10
+#Version 1.12
 
 CLSS public java.lang.Object
 cons public init()
@@ -76,7 +76,12 @@ hfds breakpointsToDisable,breakpointsToEnable,groupName,hitCountFilter,hitCountF
 CLSS public org.netbeans.modules.debugger.jpda.truffle.breakpoints.TruffleLineBreakpoint
 cons public init(java.net.URL,int)
 cons public init(org.netbeans.modules.javascript2.debug.EditorLineHandler)
+meth public final boolean isSuspend()
+meth public final java.lang.String getPrintText()
+meth public final void setPrintText(java.lang.String)
+meth public final void setSuspend(boolean)
 supr org.netbeans.modules.javascript2.debug.breakpoints.JSLineBreakpoint
+hfds printText,suspend
 hcls FixedLineHandler
 
 CLSS public final org.netbeans.modules.debugger.jpda.truffle.frames.TruffleStackFrame

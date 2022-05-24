@@ -25,6 +25,7 @@ import org.openide.filesystems.FileObject;
 import java.nio.charset.Charset;
 import java.io.InputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.logging.Logger;
 import java.util.logging.Level;
 
@@ -38,7 +39,7 @@ public class DiffFileEncodingQueryImplementation extends FileEncodingQueryImplem
 
     public Charset getEncoding(FileObject file) {
         if (!"text/x-diff".equals(file.getMIMEType())) return null;
-        return generatedByIDE(file) ? Charset.forName("UTF-8") : null;
+        return generatedByIDE(file) ? StandardCharsets.UTF_8 : null;
     }
 
     private boolean generatedByIDE(FileObject file) {
@@ -48,7 +49,7 @@ public class DiffFileEncodingQueryImplementation extends FileEncodingQueryImplem
         try {
             is = file.getInputStream();
             int n = is.read(buffer);
-            return n > 0 && ContextualPatch.MAGIC.startsWith(new String(buffer, 0, n, "US-ASCII"));
+            return n > 0 && ContextualPatch.MAGIC.startsWith(new String(buffer, 0, n, StandardCharsets.US_ASCII));
         } catch (IOException e) {
             Logger.getLogger(DiffFileEncodingQueryImplementation.class.getName()).log(Level.INFO, "FEQ failed", e);
         } finally {

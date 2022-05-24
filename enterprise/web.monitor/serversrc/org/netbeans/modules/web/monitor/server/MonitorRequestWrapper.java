@@ -61,8 +61,8 @@ public class MonitorRequestWrapper extends HttpServletRequestWrapper {
 
     // These fields are used to manage session replacement during
     // replay, if the server supports it
-    public final static String JSESSIONID = "JSESSIONID"; // NOI18N
-    public final static String REPLACED =
+    public static final String JSESSIONID = "JSESSIONID"; // NOI18N
+    public static final String REPLACED =
 	"netbeans.replay.session-replaced"; //NOI18N    
 
     private static final boolean debug = false;

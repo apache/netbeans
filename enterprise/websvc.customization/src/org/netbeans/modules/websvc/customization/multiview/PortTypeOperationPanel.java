@@ -164,7 +164,7 @@ public class PortTypeOperationPanel extends SaveableSectionInnerPanel{
         }
     }
     
-    final public void syncButtons(){
+    public final void syncButtons(){
         List<PortTypeOperationCustomization> ee =
                 operation.getExtensibilityElements(PortTypeOperationCustomization.class);
         if(ee.size() == 1){

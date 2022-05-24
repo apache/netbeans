@@ -60,7 +60,7 @@ public final class GlassfishInstanceProvider implements ServerInstanceProvider, 
 
     private static final String AUTOINSTANCECOPIED = "autoinstance-copied"; // NOI18N
 
-    private volatile static GlassfishInstanceProvider glassFishProvider;
+    private static volatile GlassfishInstanceProvider glassFishProvider;
 
     public static final String EE6_DEPLOYER_FRAGMENT = "deployer:gfv3ee6"; // NOI18N
     public static final String EE8_DEPLOYER_FRAGMENT = "deployer:gfv5ee8"; // NOI18N
@@ -69,16 +69,16 @@ public final class GlassfishInstanceProvider implements ServerInstanceProvider, 
     public static final String JAKARTAEE91_DEPLOYER_FRAGMENT = "deployer:gfv610ee9";
     public static final String EE6WC_DEPLOYER_FRAGMENT = "deployer:gfv3ee6wc"; // NOI18N
     public static final String PRELUDE_DEPLOYER_FRAGMENT = "deployer:gfv3"; // NOI18N
-    static private String EE6_INSTANCES_PATH = "/GlassFishEE6/Instances"; // NOI18N
-    static private String EE8_INSTANCES_PATH = "/GlassFishEE8/Instances"; // NOI18N
-    static private String EE9_INSTANCES_PATH = "/GlassFishEE9/Instances"; // NOI18N
-    static private String JAKARTAEE8_INSTANCES_PATH = "/GlassFishJakartaEE8/Instances"; // NOI18N
-    static private String JAKARTAEE9_INSTANCES_PATH = "/GlassFishJakartaEE9/Instances"; // NOI18N
+    private static String EE6_INSTANCES_PATH = "/GlassFishEE6/Instances"; // NOI18N
+    private static String EE8_INSTANCES_PATH = "/GlassFishEE8/Instances"; // NOI18N
+    private static String EE9_INSTANCES_PATH = "/GlassFishEE9/Instances"; // NOI18N
+    private static String JAKARTAEE8_INSTANCES_PATH = "/GlassFishJakartaEE8/Instances"; // NOI18N
+    private static String JAKARTAEE9_INSTANCES_PATH = "/GlassFishJakartaEE9/Instances"; // NOI18N
   //  static private String JAKARTAEE91_INSTANCES_PATH = "/GlassFishJakartaEE91/Instances"; // NOI18N
-    static private String EE6WC_INSTANCES_PATH = "/GlassFishEE6WC/Instances"; // NOI18N
+    private static String EE6WC_INSTANCES_PATH = "/GlassFishEE6WC/Instances"; // NOI18N
 
-    static public String PRELUDE_DEFAULT_NAME = "GlassFish_v3_Prelude"; //NOI18N
-    static public String EE6WC_DEFAULT_NAME = "GlassFish_Server_3.1"; // NOI18N
+    public static String PRELUDE_DEFAULT_NAME = "GlassFish_v3_Prelude"; //NOI18N
+    public static String EE6WC_DEFAULT_NAME = "GlassFish_Server_3.1"; // NOI18N
 
     // GlassFish Tooling SDK configuration should be done before any server
     // instance is created and used.
@@ -127,13 +127,13 @@ public final class GlassfishInstanceProvider implements ServerInstanceProvider, 
     private static final Set<String> activeDisplayNames = Collections.synchronizedSet(new HashSet<String>());
     private final ChangeSupport support = new ChangeSupport(this);
 
-    final private String[] instancesDirNames;
-    final private String displayName;
-    final private String[] uriFragments;
-    final private boolean needsJdk6;
-    final private List<String> noPasswordOptions;
-    final private CommandFactory cf;
-    final private Lookup.Result<RegisteredDDCatalog> lookupResult = Lookups.forPath(Util.GF_LOOKUP_PATH).lookupResult(RegisteredDDCatalog.class);
+    private final String[] instancesDirNames;
+    private final String displayName;
+    private final String[] uriFragments;
+    private final boolean needsJdk6;
+    private final List<String> noPasswordOptions;
+    private final CommandFactory cf;
+    private final Lookup.Result<RegisteredDDCatalog> lookupResult = Lookups.forPath(Util.GF_LOOKUP_PATH).lookupResult(RegisteredDDCatalog.class);
 
     @SuppressWarnings("LeakingThisInConstructor")
     private GlassfishInstanceProvider(

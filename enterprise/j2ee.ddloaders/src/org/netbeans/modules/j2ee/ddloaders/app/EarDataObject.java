@@ -81,7 +81,7 @@ public class EarDataObject extends DD2beansDataObject
     implements DDChangeListener, ApplicationProxy.OutputProvider, FileChangeListener, ChangeListener {
     private Application ejbJar;
     private FileObject srcRoots[];
-    private final static RequestProcessor RP2 = new RequestProcessor();   // NOI18N
+    private static final RequestProcessor RP2 = new RequestProcessor();   // NOI18N
 
     private static final long serialVersionUID = 8857563089355069362L;
     
@@ -168,7 +168,7 @@ public class EarDataObject extends DD2beansDataObject
                 }
             }
         }
-        srcRoots = (FileObject []) srcRootList.toArray (new FileObject [srcRootList.size ()]);
+        srcRoots = srcRootList.toArray(new FileObject[srcRootList.size ()]);
     }
     
     private String getPackageName (FileObject clazz) {
@@ -235,7 +235,7 @@ public class EarDataObject extends DD2beansDataObject
      * @return String for node delegate
     */
     public String getStringForInvalidDocument(SAXParseError error) {
-        return NbBundle.getMessage (EarDataObject.class, "TXT_errorOnLine", new Integer(error.getErrorLine()));
+        return NbBundle.getMessage (EarDataObject.class, "TXT_errorOnLine", error.getErrorLine());
     }
                     
     /** Create document from the Node. This method is called after Node (Node properties)is changed.
@@ -454,7 +454,7 @@ public class EarDataObject extends DD2beansDataObject
                         }
                     }
                     else if (options[1].equals (e.getSource ())) {
-                        Enumeration en = connectionPanel.listModel.elements ();
+                        Enumeration<DDChangeEvent> en = connectionPanel.listModel.elements ();
                         while (en.hasMoreElements ()) {
                             processDDChangeEvent ((DDChangeEvent)en.nextElement ());
                         }
@@ -487,7 +487,7 @@ public class EarDataObject extends DD2beansDataObject
             return;
        
         if (evt.getType () != DDChangeEvent.EJB_ADDED) {
-            updateDD(evt.getOldValue(), (String)evt.getNewValue (), evt.getType());
+            updateDD(evt.getOldValue(), evt.getNewValue (), evt.getType());
         }
     }
 
@@ -519,7 +519,7 @@ public class EarDataObject extends DD2beansDataObject
                             if (index>0) deletedName = deletedServletName.substring(index+1);
                             boolean found = false;
                             for (int j=0;j<newFileNames.size();j++) {
-                                String newFileName = (String)newFileNames.get(j);
+                                String newFileName = newFileNames.get(j);
                                 String newName = newFileName;
                                 int ind = newFileName.lastIndexOf("."); //NOI18N
                                 if (ind>0) newName = newFileName.substring(ind+1);

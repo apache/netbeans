@@ -70,8 +70,8 @@ class TransactionView extends TopComponent implements ExplorerManager.Provider,
 				     PropertyChangeListener, ChangeListener {
 
     // Handles all the files etc. 
-    private transient static TransactionView instance = null; 
-    private transient static Controller controller = null;
+    private static transient TransactionView instance = null; 
+    private static transient Controller controller = null;
 
     // Misc
     private transient JToggleButton timeAButton, 	timeDButton,
@@ -85,7 +85,7 @@ class TransactionView extends TopComponent implements ExplorerManager.Provider,
     private transient  Dimension tabD = new Dimension(500,472);
     
     // Display stuff 
-    private transient static ExplorerManager mgr = null;
+    private static transient ExplorerManager mgr = null;
     private transient JPanel logPanel = null; 
     private transient JPanel dataPanel = null; 
     private transient JSplitPane splitPanel = null; 
@@ -286,7 +286,7 @@ class TransactionView extends TopComponent implements ExplorerManager.Provider,
 	buttonPanel.setFloatable (false);
 
 	JButton updateButton = new JButton(new ImageIcon(TransactionView.class.getResource
-        ("/org/netbeans/modules/web/monitor/client/icons/update.gif")));; // NOI18N
+        ("/org/netbeans/modules/web/monitor/client/icons/update.gif"))); // NOI18N
 	updateButton.setToolTipText(NbBundle.getBundle(TransactionView.class).getString("MON_Reload_all_17"));
 	updateButton.addActionListener(new ActionListener() {
 		public void actionPerformed(ActionEvent e) {
@@ -587,7 +587,7 @@ class TransactionView extends TopComponent implements ExplorerManager.Provider,
 	splitPanel.setDividerLocation((int)(logD.getWidth()));
 
 	try { 
-	    Container o = (Container)this.getParent(); 
+	    Container o = this.getParent(); 
 	    while(true) { 
 		if(o instanceof JFrame) { 
 		    JFrame parent = (JFrame)o; 

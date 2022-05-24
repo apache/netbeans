@@ -649,7 +649,7 @@ public class CallEjbPanel extends javax.swing.JPanel {
                 Exceptions.printStackTrace(ex);
             }
 
-            return result.booleanValue();
+            return result;
         }
 
         private boolean hasJarArtifact() {

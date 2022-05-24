@@ -148,11 +148,11 @@ public abstract class IOTerm {
      *         {@link java.nio.charset.Charset </code>charset<code>}, null for system default
      * @param postConnectTask the task to be executed *after* the connection is established
      */    
-    abstract protected void connect(OutputStream pin, InputStream pout, InputStream perr, String charset, Runnable postConnectTask);
+    protected abstract void connect(OutputStream pin, InputStream pout, InputStream perr, String charset, Runnable postConnectTask);
 
-    abstract protected void disconnect(Runnable continuation);
+    protected abstract void disconnect(Runnable continuation);
     
-    abstract protected void setReadOnly(boolean isReadOnly);
+    protected abstract void setReadOnly(boolean isReadOnly);
     
-    abstract protected void requestFocus();
+    protected abstract void requestFocus();
 }

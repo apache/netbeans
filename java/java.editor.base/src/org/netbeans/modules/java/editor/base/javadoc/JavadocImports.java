@@ -853,7 +853,7 @@ public final class JavadocImports {
                     // if position in token == 0 resolve CC according to previous token
                     jdctx.jdts.movePrevious();
                 }
-                jdctx.positions = (DocSourcePositions) trees.getSourcePositions();
+                jdctx.positions = trees.getSourcePositions();
                 if (jdctx.positions != null) {
                     //insideTag(result[0], jdctx, caretOffset, prevTagError ? Kind.SEE : JavadocCompletionUtils.normalizedKind(result[0].getLeaf()));
                     insideTag(result[0], jdctx, caretOffset);

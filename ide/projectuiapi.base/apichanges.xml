@@ -83,6 +83,20 @@ is the proper place.
     <!-- ACTUAL CHANGES BEGIN HERE: -->
 
     <changes>
+        <change id="LogicalAndPhysicalView">
+            <api name="BaseProjectUIAPI"/>
+            <summary>API to obtain basic project views added</summary>
+            <version major="1" minor="101"/>
+            <date day="24" month="11" year="2021"/>
+            <author login="sdedic"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                    An API for viewers to get project logical and physical project views has been introduced.
+                </p>
+            </description>
+            <class package="org.netbeans.api.project.ui" name="OpenProjects"/>
+        </change>
         <change id="ProjectConvertors-delegatingLookup">
             <api name="BaseProjectUIAPI"/>
             <summary>Added a support method into <code>ProjectConvertors</code> creating a <code>Lookup</code> delegating to the owner project.</summary>

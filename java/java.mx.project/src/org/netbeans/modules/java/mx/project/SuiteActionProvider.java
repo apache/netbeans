@@ -48,6 +48,7 @@ import org.openide.windows.OutputEvent;
 import org.openide.windows.OutputListener;
 
 final class SuiteActionProvider implements ActionProvider {
+    private static final String TEST_MX_PATH = System.getProperty("org.netbeans.modules.java.mx.project.test.mxpath"); // NOI18N
     private static final RequestProcessor ASYNC = new RequestProcessor("Mx Async", 10);
     private static final List<String> SUPPORTED_ACTIONS = Arrays.asList(
         ActionProvider.COMMAND_CLEAN,
@@ -240,7 +241,9 @@ final class SuiteActionProvider implements ActionProvider {
                 });
         ProcessBuilder processBuilder = ProcessBuilder.getLocal();
         processBuilder.setWorkingDirectory(suiteDir.getPath());
-        processBuilder.setExecutable("mx"); // NOI18N
+        
+        String executable = TEST_MX_PATH != null ? TEST_MX_PATH : "mx"; // NOI18N
+        processBuilder.setExecutable(executable); // NOI18N
         processBuilder.setArguments(Arrays.asList(args));
         ExecutionService service = ExecutionService.newService(processBuilder, descriptor, taskName);
         Future<Integer> task = service.run();

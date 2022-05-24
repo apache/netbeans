@@ -122,9 +122,11 @@ public class Utilities {
             List<KeyStore> kss = new ArrayList<>();
 
             for (KeyStoreProvider provider : c) {
-                KeyStore ks = provider.getKeyStore();
-                if (ks != null) {
-                    kss.add(ks);
+                if (provider.getTrustLevel() == trustLevel) {
+                    KeyStore ks = provider.getKeyStore();
+                    if (ks != null) {
+                        kss.add(ks);
+                    }
                 }
             }
 
@@ -378,7 +380,7 @@ public class Utilities {
         }
     }
     
-    static private class KeyStoreProviderListener implements LookupListener {
+    private static class KeyStoreProviderListener implements LookupListener {
         private KeyStoreProviderListener () {
         }
         
@@ -442,8 +444,9 @@ public class Utilities {
         }
         
         boolean isEmpty = true;
-        for (UpdateElementImpl elementImpl : updates.keySet ()) {
-            File c = updates.get(elementImpl);
+        for (Map.Entry<UpdateElementImpl, File> entry : updates.entrySet ()) {
+            UpdateElementImpl elementImpl = entry.getKey();
+            File c = entry.getValue();
             // pass this module to given cluster ?
             if (cluster.equals (c)) {
                 Element module = document.createElement(UpdateTracking.ELEMENT_MODULE);
@@ -1282,8 +1285,9 @@ public class Utilities {
         Element root = document.getDocumentElement ();
         boolean isEmpty = true;
         
-        for (UpdateElementImpl impl : updates.keySet ()) {
-            File c = updates.get (impl);
+        for (Map.Entry<UpdateElementImpl, File> entry : updates.entrySet ()) {
+            UpdateElementImpl impl = entry.getKey ();
+            File c = entry.getValue();
             // pass this module to given cluster ?
             if (cluster.equals (c)) {
                 Element module = document.createElement (UpdateTracking.ELEMENT_ADDITIONAL_MODULE);

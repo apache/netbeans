@@ -49,6 +49,7 @@ import org.netbeans.modules.editor.indent.api.IndentUtils;
 import org.netbeans.modules.parsing.api.Snapshot;
 import org.netbeans.modules.parsing.api.Source;
 import org.netbeans.modules.parsing.spi.CursorMovedSchedulerEvent;
+import org.netbeans.modules.parsing.spi.SourceModificationEvent;
 import org.openide.ErrorManager;
 import org.openide.cookies.EditorCookie;
 import org.openide.cookies.LineCookie;
@@ -694,6 +695,10 @@ public final class GsfUtilities {
             return enforcedCaretOffset;
         }
 
+        if (event instanceof SourceModificationEvent) {
+            return ((SourceModificationEvent)event).getAffectedEndOffset();
+        }
+        
         return -1;
     }
 

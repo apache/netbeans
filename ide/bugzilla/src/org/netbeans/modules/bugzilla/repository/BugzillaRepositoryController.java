@@ -379,7 +379,7 @@ public class BugzillaRepositoryController implements RepositoryController, Docum
         }
 
         @Override
-        final public void run() {
+        public final void run() {
             UIUtils.runInAWT(new Runnable() {
                 @Override
                 public void run() {

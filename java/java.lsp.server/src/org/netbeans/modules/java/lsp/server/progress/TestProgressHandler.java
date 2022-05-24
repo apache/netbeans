@@ -28,6 +28,7 @@ import org.eclipse.lsp4j.debug.OutputEventArguments;
 import org.eclipse.lsp4j.debug.services.IDebugProtocolClient;
 import org.netbeans.api.extexecution.print.LineConvertors;
 import org.netbeans.modules.gsf.testrunner.api.Report;
+import org.netbeans.modules.gsf.testrunner.api.Status;
 import org.netbeans.modules.gsf.testrunner.api.TestSession;
 import org.netbeans.modules.gsf.testrunner.api.TestSuite;
 import org.netbeans.modules.gsf.testrunner.api.Testcase;
@@ -63,19 +64,19 @@ public final class TestProgressHandler implements TestResultDisplayHandler.Spi<T
     public void displayOutput(TestProgressHandler token, String text, boolean error) {
         if (text != null) {
             OutputEventArguments output = new OutputEventArguments();
-            output.setOutput(text.endsWith("\n") ? text : text + "\n");
+            output.setOutput(text.trim() + "\n");
             debugClient.output(output);
         }
     }
 
     @Override
     public void displaySuiteRunning(TestProgressHandler token, String suiteName) {
-        lspClient.notifyTestProgress(new TestProgressParams(uri, new TestSuiteInfo(suiteName, TestSuiteInfo.State.Running)));
+        lspClient.notifyTestProgress(new TestProgressParams(uri, new TestSuiteInfo(suiteName, TestSuiteInfo.State.Started)));
     }
 
     @Override
     public void displaySuiteRunning(TestProgressHandler token, TestSuite suite) {
-        lspClient.notifyTestProgress(new TestProgressParams(uri, new TestSuiteInfo(suite.getName(), TestSuiteInfo.State.Running)));
+        lspClient.notifyTestProgress(new TestProgressParams(uri, new TestSuiteInfo(suite.getName(), TestSuiteInfo.State.Started)));
     }
 
     @Override
@@ -85,28 +86,8 @@ public final class TestProgressHandler implements TestResultDisplayHandler.Spi<T
         String className = report.getSuiteClassName();
         for (Testcase test : report.getTests()) {
             String name = test.getDisplayName();
-            int idx = name.indexOf('(');
-            if (idx > 0) {
-                name = name.substring(0, idx);
-            }
             String id = className + ':' + name;
-            String status;
-            switch (test.getStatus()) {
-                case PASSED:
-                    status = TestSuiteInfo.State.Passed;
-                    break;
-                case ERROR:
-                    status = TestSuiteInfo.State.Errored;
-                    break;
-                case FAILED:
-                    status = TestSuiteInfo.State.Failed;
-                    break;
-                case SKIPPED:
-                    status = TestSuiteInfo.State.Skipped;
-                    break;
-                default:
-                    throw new IllegalStateException("Unexpected testcase status: " + test.getStatus());
-            }
+            String state = statusToState(test.getStatus());
             List<String> stackTrace = test.getTrouble() != null ? Arrays.asList(test.getTrouble().getStackTrace()) : null;
             String location = test.getLocation();
             FileObject fo = location != null ? fileLocations.computeIfAbsent(location, loc -> {
@@ -117,29 +98,18 @@ public final class TestProgressHandler implements TestResultDisplayHandler.Spi<T
                 }
                 return fileLocator != null ? fileLocator.find(loc) : null;
             }) : null;
-            TestSuiteInfo.TestCaseInfo info = testCases.get(id);
-            if (info != null) {
-                updateState(info, status);
-            } else {
-                info = new TestSuiteInfo.TestCaseInfo(id, name, className + '.' + name, fo != null ? Utils.toUri(fo) : null, null, status, stackTrace);
-                testCases.put(id, info);
+            int cnt = 1;
+            String base = id;
+            while (testCases.containsKey(id)) {
+                id = base + '-' + cnt++;
             }
+            TestSuiteInfo.TestCaseInfo info = new TestSuiteInfo.TestCaseInfo(id, name, fo != null ? Utils.toUri(fo) : null, null, state, stackTrace);
+            testCases.put(id, info);
         }
-        String status;
-        switch (report.getStatus()) {
-            case PASSED:
-            case FAILED:
-                status = TestSuiteInfo.State.Completed;
-                break;
-            case ERROR:
-                status = TestSuiteInfo.State.Errored;
-                break;
-            default:
-                throw new IllegalStateException("Unexpected testsuite status: " + report.getStatus());
-        }
+        String state = statusToState(report.getStatus());
         FileObject fo = fileLocations.size() == 1 ? fileLocations.values().iterator().next() : null;
         lspClient.notifyTestProgress(new TestProgressParams(uri, new TestSuiteInfo(report.getSuiteClassName(),
-                fo != null ? Utils.toUri(fo) : null, null, status, new ArrayList<>(testCases.values()))));
+                fo != null ? Utils.toUri(fo) : null, null, state, new ArrayList<>(testCases.values()))));
     }
 
     @Override
@@ -155,21 +125,23 @@ public final class TestProgressHandler implements TestResultDisplayHandler.Spi<T
         return 0;
     }
 
-    private void updateState(TestSuiteInfo.TestCaseInfo info, String state) {
-        switch (state) {
-            case TestSuiteInfo.State.Errored:
-                info.setState(state);
-                break;
-            case TestSuiteInfo.State.Failed:
-                if (!TestSuiteInfo.State.Errored.equals(info.getState())) {
-                    info.setState(state);
-                }
-                break;
-            case TestSuiteInfo.State.Passed:
-                if (TestSuiteInfo.State.Skipped.equals(info.getState())) {
-                    info.setState(state);
-                }
-                break;
+    private String statusToState(Status status) {
+        switch (status) {
+            case PASSED:
+            case PASSEDWITHERRORS:
+                return TestSuiteInfo.State.Passed;
+            case ERROR:
+                return TestSuiteInfo.State.Errored;
+            case FAILED:
+                return TestSuiteInfo.State.Failed;
+            case SKIPPED:
+            case ABORTED:
+            case IGNORED:
+                return TestSuiteInfo.State.Skipped;
+            case PENDING:
+                return TestSuiteInfo.State.Started;
+            default:
+                throw new IllegalStateException("Unexpected testsuite status: " + status);
         }
     }
 }

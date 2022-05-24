@@ -740,7 +740,7 @@ public class HtmlBrowser extends JPanel {
     * This interface represents an implementation of html browser used in HtmlBrowser. Each BrowserImpl
     * implementation corresponds with some BrowserFactory implementation.
     */
-    public static abstract class Impl {
+    public abstract static class Impl {
         /** generated Serialized Version UID */
         static final long serialVersionUID = 2912844785502962114L;
 
@@ -919,7 +919,7 @@ public class HtmlBrowser extends JPanel {
      * browsers, etc.
      * @since 3.14
      */
-    public static abstract class URLDisplayer {
+    public abstract static class URLDisplayer {
         /** Subclass constructor. */
         protected URLDisplayer() {
         }

@@ -105,13 +105,13 @@ public class Utils {
             
             // Force a save to make sure to make sure the line position in
             // the editor is in sync with the java source.
-            SaveCookie sc = (SaveCookie) dataObj.getCookie(SaveCookie.class);
+            SaveCookie sc = dataObj.getCookie(SaveCookie.class);
      
             if (sc != null) {
                 sc.save();
             }
             
-            LineCookie lc = (LineCookie) dataObj.getCookie(LineCookie.class);
+            LineCookie lc = dataObj.getCookie(LineCookie.class);
             
             if (lc != null) {
                 final long[] position = JavaSourceHelper.getPosition(javaSource, methodName);

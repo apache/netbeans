@@ -26,6 +26,7 @@ import java.awt.geom.Area;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
 import java.util.Map;
+import org.openide.awt.GraphicsUtils;
 
 /**
  * Utilities for manipulating colors, caching gradient paint objects, creating a
@@ -38,8 +39,6 @@ final class ColorUtil {
     private static Map<RenderingHints.Key, Object> hintsMap = null;
     private static final boolean noGpCache = Boolean.getBoolean(
             "netbeans.winsys.nogpcache");  //NOI18N
-    private static final boolean noAntialias = 
-        Boolean.getBoolean("nb.no.antialias"); //NOI18N
     
     //Values for checking if we should flush the cache bitmap
     private static int focusedHeight = -1;
@@ -169,30 +168,8 @@ final class ColorUtil {
         return result;
     }
 
-    private static Map getHints() {
-        if (hintsMap == null) {
-            //Thanks to Phil Race for making this possible
-            hintsMap = (Map<RenderingHints.Key, Object>)(Toolkit.getDefaultToolkit().getDesktopProperty("awt.font.desktophints")); //NOI18N
-            if (hintsMap == null) {
-                hintsMap = new HashMap<RenderingHints.Key, Object>();
-                if (shouldAntialias()) {
-                    hintsMap.put(RenderingHints.KEY_TEXT_ANTIALIASING,
-                            RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-                }
-            }
-            if (shouldAntialias() && (hintsMap == null || !hintsMap.containsKey(RenderingHints.KEY_TEXT_ANTIALIASING))) {
-                hintsMap.put(RenderingHints.KEY_ANTIALIASING,
-                         RenderingHints.VALUE_ANTIALIAS_ON);
-            }
-        }
-        return hintsMap;
-        
-    }
-
     public static final void setupAntialiasing(Graphics g) {
-        if (noAntialias) return;
-        
-        ((Graphics2D) g).addRenderingHints(getHints());
+        GraphicsUtils.configureDefaultRenderingHints(g);
     }
     
     private static final boolean antialias = Boolean.getBoolean(
@@ -201,7 +178,10 @@ final class ColorUtil {
         gtkShouldAntialias()) || 
         Boolean.getBoolean ("swing.aatext") || //NOI18N
         "Aqua".equals(UIManager.getLookAndFeel().getID()); 
-    
+
+    /**
+     * @deprecated Use {@link GraphicsUtils#configureDefaultRenderingHints(java.awt.Graphics)} instead.
+     */
     public static final boolean shouldAntialias() {
         return antialias;
     }

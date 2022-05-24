@@ -156,4 +156,10 @@ public @interface TemplateRegistration {
      * @since 1.4
      */
     String[] techIds() default {};
+
+    /**
+     * Specifies the default handler to instantiate the template. 
+     * @since 1.23
+     */
+    Class<? extends CreateFromTemplateHandler> createHandlerClass() default CreateFromTemplateHandler.class;
 }

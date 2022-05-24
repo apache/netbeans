@@ -86,18 +86,18 @@ public class JspDataObject extends MultiDataObject implements QueryStringCookie 
 
     private static final Logger LOGGER = Logger.getLogger(JspDataObject.class.getName());
 
-    transient private EditorCookie servletEdit;
-    transient protected JspServletDataObject servletDataObject;
+    private transient EditorCookie servletEdit;
+    protected transient JspServletDataObject servletDataObject;
     // it is guaranteed that if servletDataObject != null, then this is its
     // last modified date at the time of last refresh
-    transient private Date servletDataObjectDate;
-    transient private CompileData compileData;
-    transient private boolean firstStart;
-    transient private Listener listener;
-    transient private BaseJspEditorSupport editorSupport;
-    transient final private static boolean debug = false;
+    private transient Date servletDataObjectDate;
+    private transient CompileData compileData;
+    private transient boolean firstStart;
+    private transient Listener listener;
+    private transient BaseJspEditorSupport editorSupport;
+    private static final transient boolean debug = false;
     
-    transient private AtomicReference<String> encoding = new AtomicReference<String>();
+    private transient AtomicReference<String> encoding = new AtomicReference<String>();
 
      @MultiViewElement.Registration(
             displayName="#LBL_JSPEditorTab",
@@ -175,7 +175,7 @@ public class JspDataObject extends MultiDataObject implements QueryStringCookie 
                     //the jsp templates contains the ${encoding} property 
                     //so the ICHNE is always thrown for them, just ignore
                     Boolean template = (Boolean)file.getAttribute("template");//NOI18N
-                    if(template == null || !template.booleanValue()) {
+                    if(template == null || !template) {
                         Logger.getLogger("global").log(Level.INFO, "Detected illegal charset name in file " + file.getNameExt() + " (" + ichse.getMessage() + ")");  //NOI18N
                     }
                 } catch (UnsupportedCharsetException uchse) {

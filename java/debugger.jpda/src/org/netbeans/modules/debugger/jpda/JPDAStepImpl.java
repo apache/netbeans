@@ -55,13 +55,13 @@ import org.netbeans.api.debugger.jpda.JPDADebugger;
 import org.netbeans.api.debugger.jpda.JPDAStep;
 import org.netbeans.api.debugger.jpda.JPDAThread;
 import org.netbeans.api.debugger.jpda.MethodBreakpoint;
-import org.netbeans.api.debugger.jpda.SmartSteppingFilter;
 import org.netbeans.api.debugger.jpda.Variable;
 import org.netbeans.api.debugger.jpda.event.JPDABreakpointEvent;
 import org.netbeans.api.debugger.jpda.event.JPDABreakpointListener;
-import org.netbeans.modules.debugger.jpda.actions.CompoundSmartSteppingListener;
-import org.netbeans.modules.debugger.jpda.actions.SmartSteppingFilterImpl;
+import org.netbeans.modules.debugger.jpda.actions.SmartSteppingFilterWrapper;
+import org.netbeans.modules.debugger.jpda.actions.StepActionProvider;
 import org.netbeans.modules.debugger.jpda.actions.StepIntoActionProvider;
+import org.netbeans.modules.debugger.jpda.impl.StepUtils;
 import org.netbeans.modules.debugger.jpda.jdi.ClassNotPreparedExceptionWrapper;
 import org.netbeans.modules.debugger.jpda.jdi.ClassTypeWrapper;
 import org.netbeans.modules.debugger.jpda.jdi.IllegalThreadStateExceptionWrapper;
@@ -118,12 +118,14 @@ public class JPDAStepImpl extends JPDAStep implements Executor {
     private boolean wasInBoxingUnboxingLocation;
     private StopHereCheck stopHereCheck;
     private final Properties p;
+    private final SmartSteppingFilterWrapper smartSteppingFilter;
     
     private final Session session;
     
     public JPDAStepImpl(JPDADebugger debugger, Session session, int size, int depth) {
         super(debugger, size, depth);
         this.session = session;
+        this.smartSteppingFilter = new SmartSteppingFilterWrapper(debugger.getSmartSteppingFilter());
         p = Properties.getDefault().getProperties("debugger.options.JPDA"); // NOI18N
     }
     
@@ -133,7 +135,7 @@ public class JPDAStepImpl extends JPDAStep implements Executor {
         if (ignoreStepFilters || steppingFromFilteredLocation) {
             exclusionPatterns = stepFilters;
         } else {
-            exclusionPatterns = debugger.getSmartSteppingFilter().getExclusionPatterns();
+            exclusionPatterns = smartSteppingFilter.getExclusionPatterns();
             if (stepFilters != null) {
                 int epl = exclusionPatterns.length;
                 exclusionPatterns = Arrays.copyOf(exclusionPatterns, epl + stepFilters.length);
@@ -152,7 +154,7 @@ public class JPDAStepImpl extends JPDAStep implements Executor {
     }
     
     private String[] getCurrentExclusionPatterns() {
-        String[] exclusionPatterns = debugger.getSmartSteppingFilter().getExclusionPatterns();
+        String[] exclusionPatterns = smartSteppingFilter.getExclusionPatterns();
         String[] stepFilters = getSteppingFilters();
         if (stepFilters != null) {
             int epl = exclusionPatterns.length;
@@ -199,8 +201,8 @@ public class JPDAStepImpl extends JPDAStep implements Executor {
                 //SingleThreadedStepWatch.stepRequestDeleted(stepRequest);
                 debuggerImpl.getOperator().unregister(stepRequest);
             }
-            steppingFromFilteredLocation = !((SmartSteppingFilterImpl) debuggerImpl.getSmartSteppingFilter()).stopHere(tr.getClassName());
-            steppingFromCompoundFilteredLocation = !debuggerImpl.stopHere(tr).isStop();
+            steppingFromFilteredLocation = !StepActionProvider.stopInClass(tr.getClassName(), smartSteppingFilter);
+            steppingFromCompoundFilteredLocation = !debuggerImpl.stopHere(tr, smartSteppingFilter).isStop();
             int size = getSize();
             boolean stepAdded = false;
             if (logger.isLoggable(Level.FINE)) {
@@ -225,6 +227,7 @@ public class JPDAStepImpl extends JPDAStep implements Executor {
                     size,
                     getDepth()
                 );
+                StepUtils.markOriginalStepDepth(stepRequest, trImpl.getThreadReference());
                 //stepRequest.addCountFilter(1); - works bad with exclusion filters!
                 String[] exclusionPatterns = applyExclusionPatterns(stepRequest);
                 debuggerImpl.getOperator().register(stepRequest, this);
@@ -468,6 +471,7 @@ public class JPDAStepImpl extends JPDAStep implements Executor {
             StepRequest.STEP_LINE,
             StepRequest.STEP_OVER
         );
+        StepUtils.markOriginalStepDepth(boundaryStepRequest, trRef);
         if (isNextOperationFromDifferentExpression) {
             EventRequestWrapper.addCountFilter(boundaryStepRequest, 2);
         } else {
@@ -632,6 +636,7 @@ public class JPDAStepImpl extends JPDAStep implements Executor {
                                 StepRequest.STEP_LINE,
                                 StepRequest.STEP_OUT
                             );
+                            StepUtils.markOriginalStepDepth(stepRequest, tr.getThreadReference());
                             EventRequestWrapper.addCountFilter(stepRequest, 1);
                             String[] exclusionPatterns = getCurrentExclusionPatterns();
                             // JDI is inconsistent!!! Step into steps *through* filters, but step out does *NOT*
@@ -899,7 +904,7 @@ public class JPDAStepImpl extends JPDAStep implements Executor {
                         if (steppingFromCompoundFilteredLocation) {
                             stop = StopOrStep.stop();
                         } else {
-                            stop = debuggerImpl.stopHere(t);
+                            stop = debuggerImpl.stopHere(t, smartSteppingFilter);
                         }
                         if (stop.isStop() && !steppingFromFilteredLocation) {
                             String[] exclusionPatterns = getCurrentExclusionPatterns();
@@ -946,6 +951,7 @@ public class JPDAStepImpl extends JPDAStep implements Executor {
                             doStepSize,
                             doStepDepth
                         );
+                        StepUtils.markOriginalStepDepth(stepRequest, tr);
                         //EventRequestWrapper.addCountFilter(stepRequest, 1);
                         String[] exclusionPatterns = applyExclusionPatterns(stepRequest);
                         debuggerImpl.getOperator ().register (stepRequest, this);
@@ -971,7 +977,7 @@ public class JPDAStepImpl extends JPDAStep implements Executor {
                 }
 
                 // Not synthetic
-                StopOrStep stop = debuggerImpl.stopHere(t);
+                StopOrStep stop = debuggerImpl.stopHere(t, smartSteppingFilter);
                 if (stop.isStop()) {
                     //S ystem.out.println("/nStepAction.exec end - do not resume");
                     return false; // do not resume
@@ -1002,6 +1008,7 @@ public class JPDAStepImpl extends JPDAStep implements Executor {
                     doStepSize,
                     depth
                 );
+                StepUtils.markOriginalStepDepth(stepRequest, tr);
                 if (logger.isLoggable(Level.FINE)) {
                     try {
                         logger.fine("Can not stop at " + ThreadReferenceWrapper.frame(tr, 0) + ", smart-stepping. Submitting step = " + stepRequest + "; depth = " + depth);
@@ -1118,23 +1125,6 @@ public class JPDAStepImpl extends JPDAStep implements Executor {
         return topFrame;
     }
     
-    private SmartSteppingFilterImpl smartSteppingFilter;
-
-    private SmartSteppingFilterImpl getSmartSteppingFilterImpl () {
-        if (smartSteppingFilter == null) {
-            smartSteppingFilter = (SmartSteppingFilterImpl) session.lookupFirst(null, SmartSteppingFilter.class);
-        }
-        return smartSteppingFilter;
-    }
-
-    private CompoundSmartSteppingListener compoundSmartSteppingListener;
-
-    private CompoundSmartSteppingListener getCompoundSmartSteppingListener () {
-        if (compoundSmartSteppingListener == null)
-            compoundSmartSteppingListener = session.lookupFirst(null, CompoundSmartSteppingListener.class);
-        return compoundSmartSteppingListener;
-    }
-
     public void setIgnoreStepFilters(boolean ignoreStepFilters) {
         this.ignoreStepFilters = ignoreStepFilters;
     }

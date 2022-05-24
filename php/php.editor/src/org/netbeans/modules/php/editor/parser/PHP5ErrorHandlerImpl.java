@@ -396,6 +396,7 @@ public class PHP5ErrorHandlerImpl implements PHP5ErrorHandler {
                 case ASTPHP5Symbols.T_GOTO : text = "goto"; break; //NOI18N
                 case ASTPHP5Symbols.T_YIELD : text = "yield"; break; //NOI18N
                 case ASTPHP5Symbols.T_YIELD_FROM : text = "yield from"; break; //NOI18N
+                case ASTPHP5Symbols.T_READONLY : text = "readonly"; break; //NOI18N PHP 8.1
                 default:
                     //no-op
             }

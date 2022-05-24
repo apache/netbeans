@@ -111,7 +111,7 @@ public class EntriesCache {
         DATE_ATTRIBUTES.add("text-time");
     }
 
-    private final static int MAX_SIZE;
+    private static final int MAX_SIZE;
 
     static {
         int ms;

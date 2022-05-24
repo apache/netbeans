@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 7.81
+#Version 7.83
 
 CLSS public java.awt.Canvas
 cons public init()
@@ -1734,6 +1734,11 @@ meth public java.awt.Dimension preferredLayoutSize(java.awt.Container)
 meth public void layoutContainer(java.awt.Container)
 supr java.awt.FlowLayout
 hfds serialVersionUID
+
+CLSS public final org.openide.awt.GraphicsUtils
+meth public static void configureDefaultRenderingHints(java.awt.Graphics)
+supr java.lang.Object
+hfds antialias,gtkAA,hintsMap
 
 CLSS public org.openide.awt.HtmlBrowser
 cons public init()

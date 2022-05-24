@@ -34,7 +34,7 @@ import org.openide.filesystems.FileUtil;
  */
 class PropertiesStorage  {
     private static final String USERROOT_PREFIX = "/Preferences";//NOI18N
-    private final static FileObject SFS_ROOT = FileUtil.getConfigRoot();
+    private static final FileObject SFS_ROOT = FileUtil.getConfigRoot();
     
     private final String folderPath;
     private String filePath;

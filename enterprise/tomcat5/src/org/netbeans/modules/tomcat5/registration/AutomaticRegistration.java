@@ -278,7 +278,7 @@ public class AutomaticRegistration {
             }
             displayName = NbBundle.getMessage(AutomaticRegistration.class, "LBL_ApacheTomcatAlt", version, i++);
             unique = true;
-        };
+        }
         return displayName;
     }
 

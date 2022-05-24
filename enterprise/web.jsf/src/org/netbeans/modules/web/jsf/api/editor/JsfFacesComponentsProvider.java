@@ -85,7 +85,7 @@ public class JsfFacesComponentsProvider {
                             // @FacesComponent to be used as a tag in the facelet can be defined by annotation only for now.
                             if (component instanceof ComponentImpl) {
                                 ComponentImpl facesComponent = (ComponentImpl) component;
-                                includeComponentIntoLibraries(libraries, (ComponentImpl) facesComponent);
+                                includeComponentIntoLibraries(libraries, facesComponent);
                             }
                         }
                         return libraries.values();

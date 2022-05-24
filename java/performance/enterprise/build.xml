@@ -53,7 +53,7 @@
         <os family="unix"/>
     </condition>
 
-    <property name="test.run.args" value="-Dnetbeans.keyring.no.master=true -client -Xss4m -Xms64m -Xmx1024m -XX:PermSize=64m -XX:MaxPermSize=300m -Xverify:none -Dcom.sun.aas.installRoot=&quot;${j2ee.appserver.path}&quot; -Dtomcat.installRoot=&quot;${tomcat.webserver.path}&quot;  -Dorg.netbeans.performance.repeat=&quot;${repeat}&quot;"/>
+    <property name="test.run.args" value="-Dnetbeans.keyring.no.master=true -client -Xss4m -Xms64m -Xmx1024m -Xverify:none -Dcom.sun.aas.installRoot=&quot;${j2ee.appserver.path}&quot; -Dtomcat.installRoot=&quot;${tomcat.webserver.path}&quot;  -Dorg.netbeans.performance.repeat=&quot;${repeat}&quot;"/>
     <target name="test" description="Uses test-single to run each suite in different VM">
         <antcall target="test-single">         
             <param name="test.includes" value="**\MeasureEnterpriseSetupTest*"/>

@@ -50,7 +50,7 @@ public class ArchetypeTemplateHandlerTest {
     @Test
     public void testMatchDataModelJava() {
         Set<FileObject> fos = new HashSet<>();
-        ArchetypeTemplateHandler.collectFiles(root, fos, "wizard/src/main/java/.*/MyClass.java");
+        TemplateUtils.collectFiles(root, fos, "wizard/src/main/java/.*/MyClass.java");
         assertEquals("One item: " + fos, 1, fos.size());
         FileObject fo = fos.iterator().next();
         assertEquals("root/wizard/src/main/java/com/yourorg/somepkg/MyClass.java", fo.getPath());
@@ -59,7 +59,7 @@ public class ArchetypeTemplateHandlerTest {
     @Test
     public void testMatchIndexHTML() {
         Set<FileObject> fos = new HashSet<>();
-        ArchetypeTemplateHandler.collectFiles(root, fos, "wizard/src/main/webapp/index.html");
+        TemplateUtils.collectFiles(root, fos, "wizard/src/main/webapp/index.html");
         assertEquals("One item: " + fos, fos.size(), 1);
         FileObject fo = fos.iterator().next();
         assertEquals("root/wizard/src/main/webapp/index.html", fo.getPath());

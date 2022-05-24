@@ -32,6 +32,7 @@ import org.netbeans.modules.php.editor.CodeUtils;
 import org.netbeans.modules.php.editor.parser.PHPParseResult;
 import org.netbeans.modules.php.editor.parser.astnodes.ASTNode;
 import org.netbeans.modules.php.editor.parser.astnodes.ClassDeclaration;
+import org.netbeans.modules.php.editor.parser.astnodes.EnumDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.Identifier;
 import org.netbeans.modules.php.editor.parser.astnodes.InterfaceDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.NamespaceDeclaration;
@@ -174,6 +175,15 @@ public abstract class PSR4Hint extends HintRule {
 
             @Override
             public void visit(TraitDeclaration node) {
+                if (CancelSupport.getDefault().isCancelled()) {
+                    return;
+                }
+                processTypeDeclaration(node);
+                super.visit(node);
+            }
+
+            @Override
+            public void visit(EnumDeclaration node) {
                 if (CancelSupport.getDefault().isCancelled()) {
                     return;
                 }

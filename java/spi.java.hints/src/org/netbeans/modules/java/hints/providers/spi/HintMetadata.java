@@ -90,7 +90,7 @@ public class HintMetadata {
         private boolean enabled;
         private Hint.Kind kind;
         private Severity severity;
-        private final Collection<String> suppressWarnings = new ArrayList<String>();
+        private final Collection<String> suppressWarnings = new ArrayList<>();
         private CustomizerProvider customizer;
         private final Set<Options> options = EnumSet.noneOf(Options.class);
         private SourceVersion sourceVersion;
@@ -210,7 +210,7 @@ public class HintMetadata {
         HEAVY;
 
         public static Set<Options> fromHintOptions(Hint.Options... options) {
-            Set<Options> result = new HashSet<Options>();
+            Set<Options> result = new HashSet<>();
 
             for (Hint.Options opt : options) {
                 result.add(valueOf(opt.name()));

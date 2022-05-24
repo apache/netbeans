@@ -352,7 +352,7 @@ NodeModel, TableModel, NodeActionsProvider {
         }
     }
 
-    private static abstract class SpecialNode {
+    private abstract static class SpecialNode {
         protected ObjectVariable object;
 
         protected SpecialNode(ObjectVariable parent) {

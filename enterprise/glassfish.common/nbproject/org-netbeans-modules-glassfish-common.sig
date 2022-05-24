@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.87
+#Version 1.89
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -1500,6 +1500,7 @@ fld public final static org.netbeans.modules.glassfish.common.ServerDetails GLAS
 fld public final static org.netbeans.modules.glassfish.common.ServerDetails GLASSFISH_SERVER_5_1_0
 fld public final static org.netbeans.modules.glassfish.common.ServerDetails GLASSFISH_SERVER_6
 fld public final static org.netbeans.modules.glassfish.common.ServerDetails GLASSFISH_SERVER_6_1_0
+fld public final static org.netbeans.modules.glassfish.common.ServerDetails GLASSFISH_SERVER_6_2_1
 meth public boolean isInstalledInDirectory(java.io.File)
 meth public int getVersion()
 meth public java.lang.String getDirectUrl()

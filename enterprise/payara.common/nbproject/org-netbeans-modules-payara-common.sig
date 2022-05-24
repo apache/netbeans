@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.8
+#Version 2.10
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -1870,8 +1870,11 @@ hfds mailHostField,mailHostLabel,resourceEnabledCB,returnField,returnLabel,userF
 CLSS public org.netbeans.modules.payara.common.ui.JavaPlatformsComboBox
 cons public init()
 cons public init(java.lang.Object[])
+ anno 0 java.lang.Deprecated()
 cons public init(java.util.Vector<?>)
+ anno 0 java.lang.Deprecated()
 cons public init(javax.swing.ComboBoxModel)
+ anno 0 java.lang.Deprecated()
 cons public init(org.netbeans.api.java.platform.JavaPlatform[])
 fld public final static java.lang.String EMPTY_DISPLAY_NAME
 innr public static Platform

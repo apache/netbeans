@@ -29,7 +29,7 @@ import org.openide.util.Lookup;
  * 
  * @author Jaroslav Bachorik
  */
-final public class ProfilerTypeUtils {
+public final class ProfilerTypeUtils {
     private static ProfilerTypeUtilsProvider getProvider(Lookup.Provider project) {
         return project != null ? project.getLookup().lookup(ProfilerTypeUtilsProvider.class) : Lookup.getDefault().lookup(ProfilerTypeUtilsProvider.class);
     }

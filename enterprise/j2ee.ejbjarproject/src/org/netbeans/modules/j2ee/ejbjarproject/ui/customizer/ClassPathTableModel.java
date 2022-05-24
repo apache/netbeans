@@ -118,7 +118,7 @@ public final class ClassPathTableModel extends AbstractTableModel implements Lis
     }
 
     private Boolean getShowItemAsIncludedInDeployment(ClassPathSupport.Item item) {
-        Boolean result = Boolean.valueOf("true".equals(item.getAdditionalProperty(ClassPathSupportCallbackImpl.INCLUDE_IN_DEPLOYMENT)));
+        Boolean result = "true".equals(item.getAdditionalProperty(ClassPathSupportCallbackImpl.INCLUDE_IN_DEPLOYMENT));
         return result;
     }
 }

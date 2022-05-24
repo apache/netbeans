@@ -46,7 +46,7 @@ import org.openide.util.WeakListeners;
  * @author lkishalmi
  */
 @ProjectServiceProvider(service = ProjectConnection.class, projectType = NbGradleProject.GRADLE_PROJECT_TYPE)
-public class GradleProjectConnection implements ProjectConnection {
+public final class GradleProjectConnection implements ProjectConnection {
 
     final Project project;
     ProjectConnection conn;
@@ -111,13 +111,17 @@ public class GradleProjectConnection implements ProjectConnection {
         compatConn = null;
     }
 
+    synchronized boolean hasConnection() {
+        return conn != null || compatConn != null;
+    }
+    
     private synchronized ProjectConnection getConnection(boolean compatible) {
         if (conn == null) {
             File projectDir = FileUtil.toFile(project.getProjectDirectory());
             GradleConnector gconn = GradleConnector.newConnector();
             GradleDistributionProvider pvd = project.getLookup().lookup(GradleDistributionProvider.class);
             if (pvd != null) {
-                pvd.addChangeListener(WeakListeners.change(listener, null));
+                pvd.addChangeListener(WeakListeners.change(listener, pvd));
                 GradleDistribution dist = pvd.getGradleDistribution();
                 if (dist != null) {
                     conn = createConnection(dist, projectDir);

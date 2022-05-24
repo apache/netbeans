@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.logging.Level;
@@ -101,7 +102,7 @@ public class BundleResourceTest extends NetigsoHid {
         byte[] arr = new byte[400];
         int len = is.read(arr);
         assertTrue(len > 0);
-        assertEquals(hello, new String(arr, 0, len, "UTF-8"));
+        assertEquals(hello, new String(arr, 0, len, StandardCharsets.UTF_8));
     }
 
 }

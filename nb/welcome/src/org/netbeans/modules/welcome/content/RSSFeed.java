@@ -494,9 +494,9 @@ public class RSSFeed extends JPanel implements Constants, PropertyChangeListener
     }
     
     private String stripHtml( String htmlSnippet ) {
-        String res = htmlSnippet.replaceAll( "<[^>]*>", "" ); // NOI18N // NOI18N
-        res = res.replaceAll( "&nbsp;", " " ); // NOI18N // NOI18N
-        return res.trim();
+        return htmlSnippet.replaceAll( "<[^>]*>", "" ) // NOI18N
+                          .replace( "&nbsp;", " " ) // NOI18N
+                          .trim();
     }
     
     protected int getMaxDecsriptionLength() {

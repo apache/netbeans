@@ -30,13 +30,13 @@ import org.openide.util.NbBundle;
  */
 public class ExceptionHandler {    
      
-    public final static int EX_UNKNOWN = 0;
-    public final static int EX_ACTION_CANCELED_BY_USER = 2;
-    public final static int EX_NO_REPOSITORY = 4;
-    public final static int EX_ALREADY_TRACKED = 8;
-    public final static int EX_NOT_TRACKED = 16;
-    public final static int EX_CANNOT_READ_COMMIT_MSG = 32;
-    public final static int EX_UNABLE_EXECUTE_CMD = 64;
+    public static final int EX_UNKNOWN = 0;
+    public static final int EX_ACTION_CANCELED_BY_USER = 2;
+    public static final int EX_NO_REPOSITORY = 4;
+    public static final int EX_ALREADY_TRACKED = 8;
+    public static final int EX_NOT_TRACKED = 16;
+    public static final int EX_CANNOT_READ_COMMIT_MSG = 32;
+    public static final int EX_UNABLE_EXECUTE_CMD = 64;
                  
     static final String ACTION_CANCELED_BY_USER = org.openide.util.NbBundle.getMessage(ExceptionHandler.class, "MSG_ActionCanceledByUser"); // NOI18N
     private final HgException exception;

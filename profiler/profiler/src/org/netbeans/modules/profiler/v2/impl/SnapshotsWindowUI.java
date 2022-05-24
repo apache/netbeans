@@ -662,7 +662,7 @@ public final class SnapshotsWindowUI extends ProfilerTopComponent {
     
     // --- Snapshot wrapper  ---------------------------------------------------
     
-    private static abstract class Snapshot implements Comparable {
+    private abstract static class Snapshot implements Comparable {
         
         private final FileObject fo;
         private String displayName;

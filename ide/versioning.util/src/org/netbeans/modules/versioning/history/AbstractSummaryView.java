@@ -354,7 +354,7 @@ public abstract class AbstractSummaryView implements MouseListener, MouseMotionL
         public void getMoreResults(PropertyChangeListener callback, int count);
         public boolean hasMoreResults ();
         
-        public final static class SearchHighlight {
+        public static final class SearchHighlight {
             public static enum Kind {
                 MESSAGE,
                 AUTHOR,
@@ -403,7 +403,7 @@ public abstract class AbstractSummaryView implements MouseListener, MouseMotionL
 
     private final SummaryViewMaster master;
 
-    public static abstract class LogEntry {
+    public abstract static class LogEntry {
         public static final String PROP_EVENTS_CHANGED = "propEventsChanged"; //NOI18N
         private final PropertyChangeSupport support;
 
@@ -449,7 +449,7 @@ public abstract class AbstractSummaryView implements MouseListener, MouseMotionL
          */
         protected abstract Collection<RevisionHighlight> getRevisionHighlights ();
 
-        public static abstract class Event {
+        public abstract static class Event {
             public abstract String getPath();
             public abstract String getOriginalPath ();
             public abstract String getAction();

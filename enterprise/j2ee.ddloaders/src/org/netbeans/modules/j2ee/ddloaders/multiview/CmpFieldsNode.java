@@ -70,8 +70,8 @@ public class CmpFieldsNode extends EjbSectionNode {
                     final ListSelectionModel selectionModel = innerTablePanel.getTable().getSelectionModel();
                     final int selectedRow = selectionModel.getLeadSelectionIndex();
                     model.refreshView();
-                    final int oldRow = ((Integer)evt.getOldValue()).intValue();
-                    final int newRow = ((Integer)evt.getNewValue()).intValue();
+                    final int oldRow = ((Integer)evt.getOldValue());
+                    final int newRow = ((Integer)evt.getNewValue());
                     if (selectedRow == oldRow) {
                         selectionModel.setSelectionInterval(newRow, newRow);
                     }
@@ -89,7 +89,7 @@ public class CmpFieldsNode extends EjbSectionNode {
             }
         } else if (element instanceof CmpField[]) {
             final List list1 = Arrays.asList(cmpFields.getCmpFields());
-            final List list2 = new LinkedList(Arrays.asList((CmpField[]) element));
+            final List list2 = new LinkedList<>(Arrays.asList((CmpField[]) element));
             if (list1.size() == list2.size()) {
                 list2.removeAll(list1);
                 if (list2.size() == 0) {

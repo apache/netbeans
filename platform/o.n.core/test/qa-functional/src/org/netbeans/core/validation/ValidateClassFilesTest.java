@@ -27,11 +27,16 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import junit.framework.Test;
+import org.netbeans.core.startup.Main;
+import org.netbeans.Module;
 import org.netbeans.junit.NbModuleSuite;
 import org.netbeans.junit.NbTestCase;
+import org.openide.modules.Dependency;
 
 public class ValidateClassFilesTest extends NbTestCase {
     public ValidateClassFilesTest(String name) {
@@ -46,16 +51,18 @@ public class ValidateClassFilesTest extends NbTestCase {
     public void testCheckClassFiles() throws IOException {
         String platformDir = System.getProperty("netbeans.home");
         final StringBuilder err = new StringBuilder();
-        checkClassFiles(platformDir, err);
+        Map<String, Integer> fileNameToVersion = calculateFileNameToVersion();
+        checkClassFiles(platformDir, err, fileNameToVersion);
         for (String cluster : System.getProperty("netbeans.dirs").split(File.pathSeparator)) {
-            checkClassFiles(cluster, err);
+            checkClassFiles(cluster, err, fileNameToVersion);
         }
         if (err.length() != 0) {
             fail(err.toString());
         }
     }
 
-    private void checkClassFiles(String c, final StringBuilder err) throws IOException {
+    private void checkClassFiles(String c, final StringBuilder err,
+            Map<String, Integer> classFileVersions) throws IOException {
         if (c == null) {
             return;
         }
@@ -70,14 +77,8 @@ public class ValidateClassFilesTest extends NbTestCase {
             public FileVisitResult visitFile(Path path, BasicFileAttributes attrs) throws IOException {
                 final File file = path.toFile();
                 if (file.getName().endsWith(".jar")) {
-                    if (file.getName().startsWith("javafx-")) {
-                        if (file.getParentFile().getName().equals("ext")) {
-                            File c = file.getParentFile().getParentFile().getParentFile();
-                            if (c.getName().equals("extra")) {
-                                return FileVisitResult.CONTINUE;
-                            }
-                        }
-                    }
+
+                    int classFileVersion = classFileVersions.getOrDefault(file.getName(), 52);
 
                     JarFile jf = new JarFile(file);
                     Enumeration<JarEntry> en = jf.entries();
@@ -89,6 +90,9 @@ public class ValidateClassFilesTest extends NbTestCase {
                         if (entry.getName().startsWith("META-INF/versions/")) {
                             continue;
                         }
+                        if (entry.getName().startsWith("META-INF/ct.sym/")) {
+                            continue;
+                        }
 
                         if (entry.getName().endsWith(".class")) {
                             try (DataInputStream dis = new DataInputStream(jf.getInputStream(entry))) {
@@ -96,7 +100,7 @@ public class ValidateClassFilesTest extends NbTestCase {
                                 short minor = dis.readShort();
                                 short major = dis.readShort();
 
-                                if (magic != 0xcafebabe || major > 52) {
+                                if (magic != 0xcafebabe || major > classFileVersion) {
                                     err.append("\n found version " + major + "." + minor + " in " + entry.getName() + " in " + file);
                                 }
                             }
@@ -117,4 +121,24 @@ public class ValidateClassFilesTest extends NbTestCase {
             }
         });
     }
+
+    private Map<String, Integer> calculateFileNameToVersion() {
+        Map<String, Integer> result = new HashMap<>();
+        for (Module module : Main.getModuleSystem().getManager().getModules()) {
+            for (Dependency dep : module.getDependencies()) {
+                if (dep.getType() == Dependency.TYPE_JAVA) {
+                    String javaVersion = dep.getVersion();
+                    if (javaVersion.startsWith("1.")) {
+                        break;
+                    }
+                    int classFileVersion = Integer.parseInt(javaVersion) + 44;
+                    for (File jar : module.getAllJars()) {
+                        result.put(jar.getName(), classFileVersion);
+                    }
+                }
+            }
+        }
+        return result;
+    }
+
 }

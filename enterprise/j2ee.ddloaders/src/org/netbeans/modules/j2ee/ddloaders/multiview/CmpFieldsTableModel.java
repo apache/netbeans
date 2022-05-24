@@ -109,16 +109,16 @@ public class CmpFieldsTableModel extends InnerTableModel {
 //                helper.setType((String) value);
 //                break;
             case 2:
-                helper.setLocalGetter(((Boolean) value).booleanValue());
+                helper.setLocalGetter(((Boolean) value));
                 break;
             case 3:
-                helper.setLocalSetter(((Boolean) value).booleanValue());
+                helper.setLocalSetter(((Boolean) value));
                 break;
             case 4:
-                helper.setRemoteGetter(((Boolean) value).booleanValue());
+                helper.setRemoteGetter(((Boolean) value));
                 break;
             case 5:
-                helper.setRemoteSetter(((Boolean) value).booleanValue());
+                helper.setRemoteSetter(((Boolean) value));
                 break;
             case 6:
                 helper.setDescription((String) value);

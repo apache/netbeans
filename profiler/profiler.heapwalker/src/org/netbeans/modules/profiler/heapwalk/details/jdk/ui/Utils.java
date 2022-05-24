@@ -184,7 +184,7 @@ final class Utils {
         
     }
     
-    static abstract class InstanceBuilder<T> {
+    abstract static class InstanceBuilder<T> {
 
         InstanceBuilder(Instance instance, Heap heap) {}
 
@@ -200,7 +200,7 @@ final class Utils {
 
     }
     
-    static abstract class View<T extends InstanceBuilder> extends DetailsProvider.View implements Scrollable {
+    abstract static class View<T extends InstanceBuilder> extends DetailsProvider.View implements Scrollable {
         
         private static final int DASH_SIZE = 20;
         

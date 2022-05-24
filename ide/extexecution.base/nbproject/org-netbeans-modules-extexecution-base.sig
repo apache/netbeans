@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.19
+#Version 1.21
 
 CLSS public abstract interface java.io.Closeable
 intf java.lang.AutoCloseable
@@ -142,17 +142,21 @@ meth public !varargs java.util.List<java.lang.String> getAllArguments(java.lang.
 meth public boolean isArgReplacement()
 meth public boolean isEmpty()
 meth public boolean isLauncherArgReplacement()
+meth public java.io.File getWorkingDirectory()
+ anno 0 org.netbeans.api.annotations.common.CheckForNull()
 meth public java.util.List<java.lang.String> getAllArguments(java.util.List<java.lang.String>)
  anno 0 org.netbeans.api.annotations.common.NonNull()
 meth public java.util.List<java.lang.String> getArguments()
 meth public java.util.List<java.lang.String> getLauncherArguments()
+meth public java.util.Map<java.lang.String,java.lang.String> getEnvironmentVariables()
+ anno 0 org.netbeans.api.annotations.common.NonNull()
 meth public static org.netbeans.api.extexecution.base.ExplicitProcessParameters buildExplicitParameters(java.util.Collection<? extends org.netbeans.api.extexecution.base.ExplicitProcessParameters>)
 meth public static org.netbeans.api.extexecution.base.ExplicitProcessParameters buildExplicitParameters(org.openide.util.Lookup)
  anno 0 org.netbeans.api.annotations.common.NonNull()
 meth public static org.netbeans.api.extexecution.base.ExplicitProcessParameters empty()
 meth public static org.netbeans.api.extexecution.base.ExplicitProcessParameters$Builder builder()
 supr java.lang.Object
-hfds EMPTY,arguments,launcherArguments,position,replaceArgs,replaceLauncherArgs
+hfds EMPTY,arguments,environmentVars,launcherArguments,position,replaceArgs,replaceLauncherArgs,workingDirectory
 
 CLSS public final static org.netbeans.api.extexecution.base.ExplicitProcessParameters$Builder
  outer org.netbeans.api.extexecution.base.ExplicitProcessParameters
@@ -168,6 +172,8 @@ meth public org.netbeans.api.extexecution.base.ExplicitProcessParameters$Builder
  anno 1 org.netbeans.api.annotations.common.NullAllowed()
 meth public org.netbeans.api.extexecution.base.ExplicitProcessParameters$Builder combine(org.netbeans.api.extexecution.base.ExplicitProcessParameters)
  anno 1 org.netbeans.api.annotations.common.NullAllowed()
+meth public org.netbeans.api.extexecution.base.ExplicitProcessParameters$Builder environmentVariable(java.lang.String,java.lang.String)
+meth public org.netbeans.api.extexecution.base.ExplicitProcessParameters$Builder environmentVariables(java.util.Map<java.lang.String,java.lang.String>)
 meth public org.netbeans.api.extexecution.base.ExplicitProcessParameters$Builder launcherArg(java.lang.String)
  anno 1 org.netbeans.api.annotations.common.NullAllowed()
 meth public org.netbeans.api.extexecution.base.ExplicitProcessParameters$Builder launcherArgs(java.util.List<java.lang.String>)
@@ -175,8 +181,9 @@ meth public org.netbeans.api.extexecution.base.ExplicitProcessParameters$Builder
 meth public org.netbeans.api.extexecution.base.ExplicitProcessParameters$Builder position(int)
 meth public org.netbeans.api.extexecution.base.ExplicitProcessParameters$Builder replaceArgs(boolean)
 meth public org.netbeans.api.extexecution.base.ExplicitProcessParameters$Builder replaceLauncherArgs(boolean)
+meth public org.netbeans.api.extexecution.base.ExplicitProcessParameters$Builder workingDirectory(java.io.File)
 supr java.lang.Object
-hfds arguments,launcherArguments,position,replaceArgs,replaceLauncherArgs
+hfds arguments,environmentVars,launcherArguments,position,replaceArgs,replaceLauncherArgs,workingDirectory
 
 CLSS public abstract interface org.netbeans.api.extexecution.base.ParametrizedRunnable<%0 extends java.lang.Object>
 meth public abstract void run({org.netbeans.api.extexecution.base.ParametrizedRunnable%0})

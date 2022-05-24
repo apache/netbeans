@@ -135,6 +135,7 @@ public final class FmtOptions {
     public static final String SPACE_AROUND_NULLSAFE_OBJECT_OPS = "spaceAroundNullsafeObjectOps"; //NOI18N
     public static final String SPACE_AROUND_DECLARE_EQUAL = "spaceAroundDeclareEqual"; //NOI18N
     public static final String SPACE_AROUND_UNION_TYPE_SEPARATOR = "spaceAroundUnionTypeSeparator"; //NOI18N
+    public static final String SPACE_AROUND_INTERSECTION_TYPE_SEPARATOR = "spaceAroundIntersectionTypeSeparator"; //NOI18N
     public static final String SPACE_BEFORE_CLASS_DECL_LEFT_BRACE = "spaceBeforeClassDeclLeftBrace"; //NOI18N
     public static final String SPACE_BEFORE_ANONYMOUS_CLASS_LEFT_BRACE = "spaceBeforeAnonymousClassLeftBrace"; //NOI18N
     public static final String SPACE_BEFORE_METHOD_DECL_LEFT_BRACE = "spaceBeforeMethodDeclLeftBrace"; //NOI18N
@@ -192,10 +193,17 @@ public final class FmtOptions {
     public static final String WRAP_EXTENDS_IMPLEMENTS_KEYWORD = "wrapExtendsImplementsKeyword"; //NOI18N
     public static final String WRAP_EXTENDS_IMPLEMENTS_LIST = "wrapExtendsImplementsList"; //NOI18N
     public static final String WRAP_METHOD_PARAMS = "wrapMethodParams"; //NOI18N
+    public static final String WRAP_METHOD_PARAMS_AFTER_LEFT_PAREN = "wrapMethodParamsAfterLeftParen"; // NOI18N
+    public static final String WRAP_METHOD_PARAMS_RIGHT_PAREN = "wrapMethodParamsRightParen"; // NOI18N
+    public static final String WRAP_METHOD_PARAMS_KEEP_PAREN_AND_BRACE_ON_THE_SAME_LINE = "wrapKeepParenAndBraceOnTheSameLine"; // NOI18N
     public static final String WRAP_METHOD_CALL_ARGS = "wrapMethodCallArgs"; //NOI18N
+    public static final String WRAP_METHOD_CALL_ARGS_AFTER_LEFT_PAREN = "wrapMethodCallArgsAfterLeftParen"; // NOI18N
+    public static final String WRAP_METHOD_CALL_ARGS_RIGHT_PAREN = "wrapMethodCallArgsRightParen"; // NOI18N
     public static final String WRAP_CHAINED_METHOD_CALLS = "wrapChainedMethodCalls"; //NOI18N
     public static final String WRAP_ARRAY_INIT = "wrapArrayInit"; //NOI18N
     public static final String WRAP_FOR = "wrapFor"; //NOI18N
+    public static final String WRAP_FOR_AFTER_LEFT_PAREN = "wrapForAfterLeftParen"; // NOI18N
+    public static final String WRAP_FOR_RIGHT_PAREN = "wrapForRightParen"; // NOI18N
     public static final String WRAP_FOR_STATEMENT = "wrapForStatement"; //NOI18N
     public static final String WRAP_IF_STATEMENT = "wrapIfStatement"; //NOI18N
     public static final String WRAP_WHILE_STATEMENT = "wrapWhileStatement"; //NOI18N
@@ -317,6 +325,7 @@ public final class FmtOptions {
             {SPACE_AROUND_NULLSAFE_OBJECT_OPS, FALSE},
             {SPACE_AROUND_DECLARE_EQUAL, FALSE},
             {SPACE_AROUND_UNION_TYPE_SEPARATOR, FALSE},
+            {SPACE_AROUND_INTERSECTION_TYPE_SEPARATOR, FALSE},
             {SPACE_BEFORE_CLASS_DECL_LEFT_BRACE, TRUE},
             {SPACE_BEFORE_METHOD_DECL_LEFT_BRACE, TRUE},
             {SPACE_BEFORE_IF_LEFT_BRACE, TRUE},
@@ -374,10 +383,17 @@ public final class FmtOptions {
             {WRAP_EXTENDS_IMPLEMENTS_KEYWORD, WRAP_NEVER}, //NOI18N
             {WRAP_EXTENDS_IMPLEMENTS_LIST, WRAP_NEVER}, //NOI18N
             {WRAP_METHOD_PARAMS, WRAP_NEVER}, //NOI18N
+            {WRAP_METHOD_PARAMS_AFTER_LEFT_PAREN, FALSE}, //NOI18N
+            {WRAP_METHOD_PARAMS_RIGHT_PAREN, FALSE}, //NOI18N
+            {WRAP_METHOD_PARAMS_KEEP_PAREN_AND_BRACE_ON_THE_SAME_LINE, FALSE},
             {WRAP_METHOD_CALL_ARGS, WRAP_NEVER}, //NOI18N
+            {WRAP_METHOD_CALL_ARGS_AFTER_LEFT_PAREN, FALSE}, //NOI18N
+            {WRAP_METHOD_CALL_ARGS_RIGHT_PAREN, FALSE}, //NOI18N
             {WRAP_CHAINED_METHOD_CALLS, WRAP_NEVER}, //NOI18N
             {WRAP_ARRAY_INIT, WRAP_NEVER}, //NOI18N
             {WRAP_FOR, WRAP_NEVER}, //NOI18N
+            {WRAP_FOR_AFTER_LEFT_PAREN, FALSE}, //NOI18N
+            {WRAP_FOR_RIGHT_PAREN, FALSE}, //NOI18N
             {WRAP_FOR_STATEMENT, WRAP_ALWAYS}, //NOI18N
             {WRAP_IF_STATEMENT, WRAP_ALWAYS}, //NOI18N
             {WRAP_WHILE_STATEMENT, WRAP_ALWAYS}, //NOI18N

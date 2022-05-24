@@ -42,6 +42,7 @@ public final class GradleJavaSourceSet implements Serializable {
         "LBL_JAVA=Java",
         "LBL_GROOVY=Groovy",
         "LBL_SCALA=Scala",
+        "LBL_KOTLIN=Kotlin",
         "LBL_RESOURCES=Resources",
         "LBL_GENERATED=Generated"
     })
@@ -49,7 +50,9 @@ public final class GradleJavaSourceSet implements Serializable {
 
         JAVA, GROOVY, SCALA, RESOURCES,
         /** @since 1.8 */
-        GENERATED;
+        GENERATED,
+        /** @since 1.15 */
+        KOTLIN;
 
         @Override
         public String toString() {
@@ -57,6 +60,7 @@ public final class GradleJavaSourceSet implements Serializable {
                 case JAVA: return Bundle.LBL_JAVA();
                 case GROOVY: return Bundle.LBL_GROOVY();
                 case SCALA: return Bundle.LBL_SCALA();
+                case KOTLIN: return Bundle.LBL_KOTLIN();
                 case RESOURCES: return Bundle.LBL_RESOURCES();
                 case GENERATED: return Bundle.LBL_GENERATED();
             }
@@ -210,6 +214,11 @@ public final class GradleJavaSourceSet implements Serializable {
         return getSourceDirs(SourceType.SCALA);
     }
 
+    /** @since 1.15 */
+    public final Set<File> getKotlinDirs() {
+        return getSourceDirs(SourceType.KOTLIN);
+    }
+
     public final Set<File> getResourcesDirs() {
         return getSourceDirs(SourceType.RESOURCES);
     }
@@ -297,8 +306,9 @@ public final class GradleJavaSourceSet implements Serializable {
      * @return the matching {@link SourceType} or {@code null}.
      */
     public SourceType getSourceType(File f) {
-        for (SourceType type : sources.keySet()) {
-            Set<File> dirs = sources.get(type);
+        for (Map.Entry<SourceType, Set<File>> entry : sources.entrySet()) {
+            SourceType type = entry.getKey();
+            Set<File> dirs = entry.getValue();
             for (File dir : dirs) {
                 if (parentOrSame(f, dir)) {
                     return type;
@@ -320,8 +330,9 @@ public final class GradleJavaSourceSet implements Serializable {
 
     public Set<SourceType> getSourceTypes(File f) {
         Set<SourceType> ret = EnumSet.noneOf(SourceType.class);
-        for (SourceType type : sources.keySet()) {
-            Set<File> dirs = sources.get(type);
+        for (Map.Entry<SourceType, Set<File>> entry : sources.entrySet()) {
+            SourceType type = entry.getKey();
+            Set<File> dirs = entry.getValue();
             for (File dir : dirs) {
                 if (parentOrSame(f, dir)) {
                     ret.add(type);
@@ -529,6 +540,8 @@ public final class GradleJavaSourceSet implements Serializable {
                 return getCompileTaskName("Groovy"); //NOI18N
             case SCALA:
                 return getCompileTaskName("Scala"); //NOI18N
+            case KOTLIN:
+                return getCompileTaskName("Kotlin"); //NOI18N
         }
         return null;
     }

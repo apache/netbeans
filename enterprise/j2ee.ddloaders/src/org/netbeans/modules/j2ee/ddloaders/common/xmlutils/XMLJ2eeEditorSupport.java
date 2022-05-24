@@ -365,7 +365,7 @@ public class XMLJ2eeEditorSupport extends DataEditorSupport
          * @return the editor support
          */
         public CloneableOpenSupport findCloneableOpenSupport () {
-            return (XMLJ2eeEditorSupport) getDataObject ().getCookie (XMLJ2eeEditorSupport.class);
+            return getDataObject().getCookie(XMLJ2eeEditorSupport.class);
         }
     }
 }

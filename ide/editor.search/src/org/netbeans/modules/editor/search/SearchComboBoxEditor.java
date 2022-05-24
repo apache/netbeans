@@ -176,14 +176,14 @@ public class SearchComboBoxEditor implements ComboBoxEditor {
                     @Override
                     public void insertString(DocumentFilter.FilterBypass fb, int offset, String string, AttributeSet attr) throws BadLocationException {
                         if (string != null) {
-                            fb.insertString(offset, string.replaceAll("\\t", "").replaceAll("\\n", ""), attr); //NOI18N
+                            fb.insertString(offset, string.replace("\t", "").replace("\n", ""), attr); //NOI18N
                         }
                     }
 
                     @Override
                     public void replace(DocumentFilter.FilterBypass fb, int offset, int length, String string, AttributeSet attr) throws BadLocationException {
                         if (string != null) {
-                            fb.replace(offset, length, string.replaceAll("\\t", "").replaceAll("\\n", ""), attr); //NOI18N
+                            fb.replace(offset, length, string.replace("\t", "").replace("\n", ""), attr); //NOI18N
                         }
                     }
                 });

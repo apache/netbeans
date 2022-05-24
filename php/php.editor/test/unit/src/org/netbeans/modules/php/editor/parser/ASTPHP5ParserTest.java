@@ -1265,6 +1265,11 @@ public class ASTPHP5ParserTest extends ParserTestBase {
         performTest("parser/php80/attributeSyntax_02");
     }
 
+    // [NETBEANS-6193] attributes of interface constants and methods
+    public void testAttributeSyntax_03() throws Exception {
+        performTest("parser/php80/attributeSyntax_03");
+    }
+
     public void testAttributeSyntaxError_01() throws Exception {
         performTest("parser/php80/attributeSyntaxError_01");
     }
@@ -1295,6 +1300,76 @@ public class ASTPHP5ParserTest extends ParserTestBase {
 
     public void testNamedArgumentsWithAttribute_01() throws Exception {
         performTest("parser/php80/namedArgumentsWithAttribute_01");
+    }
+
+    // [NETBEANS-5599] PHP 8.1
+    public void testFinalClassConstants_01() throws Exception {
+        performTest("parser/php81/finalClassConstants_01");
+    }
+
+    public void testFinalClassConstantsWithAttributes_01() throws Exception {
+        performTest("parser/php81/finalClassConstantsWithAttributes_01");
+    }
+
+    public void testFinalClassMethods_01() throws Exception {
+        performTest("parser/finalClassMethods_01");
+    }
+
+    public void testFinalTraitMethods_01() throws Exception {
+        performTest("parser/finalTraitMethods_01");
+    }
+
+    public void testReadonlyProperties_01() throws Exception {
+        performTest("parser/php81/readonlyProperties_01");
+    }
+
+    public void testReadonlyPropertiesWithConstError() throws Exception {
+        performTest("parser/php81/readonlyPropertiesWithConstError");
+    }
+
+    public void testReadonlyPropertiesWithStaticError() throws Exception {
+        performTest("parser/php81/readonlyPropertiesWithStaticError");
+    }
+
+    public void testNewInInitializers_01() throws Exception {
+        performTest("parser/php81/newInInitializers_01");
+    }
+
+    public void testNewInInitializersWithClassConstantError() throws Exception {
+        performTest("parser/php81/newInInitializersWithClassConstantError");
+    }
+
+    public void testNewInInitializersWithPropertyError() throws Exception {
+        performTest("parser/php81/newInInitializersWithPropertyError");
+    }
+
+    public void testPureIntersectionTypes_01() throws Exception {
+        performTest("parser/php81/pureIntersectionTypes_01");
+    }
+
+    public void testPureIntersectionTypesWithUnionTypeError_01() throws Exception {
+        performTest("parser/php81/pureIntersectionTypesWithUnionTypeError_01");
+    }
+
+    public void testPureIntersectionTypesWithUnionTypeError_02() throws Exception {
+        performTest("parser/php81/pureIntersectionTypesWithUnionTypeError_02");
+    }
+
+    public void testPureIntersectionTypesWithUnionTypeError_03() throws Exception {
+        performTest("parser/php81/pureIntersectionTypesWithUnionTypeError_03");
+    }
+
+    public void testEnumerations_01() throws Exception {
+        performTest("parser/php81/enumerations_01");
+    }
+
+    public void testEnumerations_02() throws Exception {
+        performTest("parser/php81/enumerations_02");
+    }
+
+    public void testEnumAsTypeName() throws Exception {
+        // We can use "enum" as a type name
+        performTest("parser/php81/enumAsTypeName");
     }
 
     @Override

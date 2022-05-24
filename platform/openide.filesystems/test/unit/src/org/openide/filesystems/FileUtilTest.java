@@ -703,4 +703,39 @@ public class FileUtilTest extends NbTestCase {
         assertNotNull(result);
         assertTrue(result.toExternalForm().endsWith("/"));  //NOI18N
     }
+
+    public void testCopyAttributes() throws Exception {
+        FileObject testRoot = FileUtil.createMemoryFileSystem().getRoot();
+        FileObject aFile = testRoot.createData("a", "file");
+        FileObject aTemplate = testRoot.createData("b", "template");
+        
+        aFile.setAttribute("attr", 1);
+        aFile.setAttribute("SystemFileSystem.icon", "fakeValue");
+        aFile.setAttribute("templateCategory", "fakeValue2");
+        
+        aTemplate.setAttribute("template", Boolean.TRUE);
+        aTemplate.setAttribute("filtered.one", Boolean.TRUE);
+        aTemplate.setAttribute("filtered.two", Boolean.TRUE);
+        
+        FileObject bFile = testRoot.createData("b", "file");
+        FileUtil.copyAttributes(aFile, bFile);
+        assertNull(bFile.getAttribute("SystemFileSystem.icon"));
+        assertNull(bFile.getAttribute("templateCategory"));
+        assertEquals(1, bFile.getAttribute("attr"));
+        
+        FileObject cFile = testRoot.createData("c", "file");
+        FileUtil.copyAttributes(aTemplate, cFile, (n, v) -> {
+            if ("filtered.one".equals(n)) {
+                return null;
+            } else if ("filtered.two".equals(n)) {
+                return 42;
+            } else {
+                return FileUtil.defaultAttributesTransformer().apply(n, v);
+            }
+        });
+        assertEquals(Boolean.TRUE, cFile.getAttribute("template"));
+        assertNull(cFile.getAttribute("filtered.one"));
+        assertEquals(42, cFile.getAttribute("filtered.two"));
+    }
+
 }

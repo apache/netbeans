@@ -30,12 +30,12 @@ import java.util.Map.Entry;
  */
 public class VendorNameMgr {
 
-    private final static char BLANK = ' ';
-    private final static char DOT   = '.';
-    private final static char []	ILLEGAL_FILENAME_CHARS	= {'/', '\\', ':', '*', '?', '"', '<', '>', '|', ',', '=', ';' };
+    private static final char BLANK = ' ';
+    private static final char DOT   = '.';
+    private static final char []	ILLEGAL_FILENAME_CHARS	= {'/', '\\', ':', '*', '?', '"', '<', '>', '|', ',', '=', ';' };
 
-    private final static String ILLEGAL_CHARS_PATTERN = "[/\\:*\"<>|,=; \\.]"; // NOI18N
-    private final static String REPLACEMENT_PATTERN = "_"; // NOI18N
+    private static final String ILLEGAL_CHARS_PATTERN = "[/\\:*\"<>|,=; \\.]"; // NOI18N
+    private static final String REPLACEMENT_PATTERN = "_"; // NOI18N
     
 
     /**

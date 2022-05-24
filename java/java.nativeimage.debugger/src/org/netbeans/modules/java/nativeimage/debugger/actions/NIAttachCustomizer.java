@@ -39,6 +39,7 @@ import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.java.nativeimage.debugger.actions.Processes.ProcessInfo;
 import org.netbeans.modules.java.nativeimage.debugger.api.NIDebugRunner;
+import org.netbeans.modules.nativeimage.api.debug.StartDebugParameters;
 import org.netbeans.spi.debugger.ui.Controller;
 import static org.netbeans.spi.debugger.ui.Controller.PROP_VALID;
 import org.netbeans.spi.debugger.ui.PersistentController;
@@ -421,11 +422,14 @@ public class NIAttachCustomizer extends javax.swing.JPanel {
                 }
                 File file = new File(filePath);
                 String displayName = COMMAND_DEBUG + " " + file.getName();
-                if (attach2Process != null) {
-                    NIDebugRunner.attach(file, attach2Process.getPid(), debuggerCommand, null, null);
-                } else {
-                    NIDebugRunner.start(file, Collections.emptyList(), debuggerCommand, null, displayName, null, null);
-                }
+                StartDebugParameters startParams = StartDebugParameters.newBuilder(Collections.singletonList(file.getAbsolutePath()))
+                        .debugger(debuggerCommand)
+                        .debuggerDisplayObjects(false)
+                        .displayName(displayName)
+                        .processID(attach2Process != null ? attach2Process.getPid() : null)
+                        .workingDirectory(new File(System.getProperty("user.dir", ""))) // NOI18N
+                        .build();
+                NIDebugRunner.start(file, startParams, null, null);
             });
             return true;
         }

@@ -99,10 +99,14 @@ public class PrepareBundles {
         Map<String, LicenseDescription> project2License = new HashMap<>();
         Map<String, String> project2Notice = new HashMap<>();
         try (DirectoryStream<Path> ds = Files.newDirectoryStream(packagesDir.resolve("node_modules"));
-             Writer binariesList = new OutputStreamWriter(Files.newOutputStream(bundlesDir.resolve("binaries-list")), "UTF-8")) {
+            Writer binariesList = new OutputStreamWriter(Files.newOutputStream(bundlesDir.resolve("binaries-list")), "UTF-8")) {
             for (Path module : ds) {
                 if (".bin".equals(module.getFileName().toString())) continue;
+                if (".package-lock.json".equals(module.getFileName().toString())) continue;
                 if ("@types".equals(module.getFileName().toString())) continue;
+                if ("@ungap".equals(module.getFileName().toString())) {
+                    module = module.resolve("promise-all-settled");
+                }
                 Path packageJson = module.resolve("package.json");
 
                 if (!Files.isReadable(packageJson)) {
@@ -171,11 +175,12 @@ public class PrepareBundles {
 
                 Path bundle = bundlesDir.resolve(module.getFileName() + "-" + version + ".zip");
                 try (JarOutputStream out = new JarOutputStream(Files.newOutputStream(bundle));
-                     Stream<Path> files = Files.walk(module, FileVisitOption.FOLLOW_LINKS)) {
+                    Stream<Path> files = Files.walk(module, FileVisitOption.FOLLOW_LINKS)) {
+                    Path moduleFinal = module;
                     files.forEach(p -> {
-                        if (p == module) return ;
+                        if (p == moduleFinal) return ;
                         try {
-                            String relative = module.getParent().relativize(p).toString();
+                            String relative = moduleFinal.getParent().relativize(p).toString();
                             boolean isDir = Files.isDirectory(p);
                             ZipEntry ze = new ZipEntry(relative + (isDir ? "/" : ""));
                             out.putNextEntry(ze);

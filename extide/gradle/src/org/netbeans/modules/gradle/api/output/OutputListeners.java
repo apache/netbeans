@@ -38,51 +38,33 @@ public final class OutputListeners {
     }
 
     public static Runnable openFileAt(final FileObject file, final int line, final int col) {
-        return new Runnable() {
-
-            @Override
-            public void run() {
-                if (file != null) {
-                    try {
-                        DataObject data = DataObject.find(file);
-                        if (data != null) {
-                            EditorCookie cookie = data.getLookup().lookup(EditorCookie.class);
-                            if (cookie != null) {
-                                try {
-                                    cookie.getLineSet().getOriginal(line - 1).show(Line.ShowOpenType.REUSE, Line.ShowVisibilityType.FOCUS, col - 1);
-                                } catch (IndexOutOfBoundsException ex) {
-                                    cookie.open();
-                                }
-
+        return () -> {
+            if (file != null) {
+                try {
+                    DataObject data = DataObject.find(file);
+                    if (data != null) {
+                        EditorCookie cookie = data.getLookup().lookup(EditorCookie.class);
+                        if (cookie != null) {
+                            try {
+                                cookie.getLineSet().getOriginal(line - 1).show(Line.ShowOpenType.REUSE, Line.ShowVisibilityType.FOCUS, col - 1);
+                            } catch (IndexOutOfBoundsException ex) {
+                                cookie.open();
                             }
 
                         }
-                    } catch (DataObjectNotFoundException ex) {
+
                     }
+                } catch (DataObjectNotFoundException ex) {
                 }
             }
-
         };
     }
 
     public static Runnable openURL(final URL url) {
-        return new Runnable() {
-
-            @Override
-            public void run() {
-                HtmlBrowser.URLDisplayer.getDefault().showURL(url);
-            }
-
-        };
+        return () -> HtmlBrowser.URLDisplayer.getDefault().showURL(url);
     }
 
     public static Runnable displayStatusText(final String text) {
-        return new Runnable() {
-
-            @Override
-            public void run() {
-                StatusDisplayer.getDefault().setStatusText(text);
-            }
-        };
+        return () -> StatusDisplayer.getDefault().setStatusText(text);
     }
 }

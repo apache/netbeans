@@ -221,7 +221,18 @@ public class GroovyDeclarationFinder implements DeclarationFinder {
                     // TODO this and super magic ?
                     
                     String typeName = objectExpression.getType().getName();
-
+                    if (objectExpression instanceof VariableExpression) {
+                        VariableExpression variableE = (VariableExpression) objectExpression;
+                        if (variableE.isDynamicTyped()) {
+                            ClassNode cn = GroovyUtils.findInferredType(variableE);
+                            if (cn != null) { 
+                                if (cn.getName() != null) {
+                                    typeName = cn.getName();
+                                }
+                                
+                            }
+                        }
+                    }
                     // try to find it in Java
                     FileObject fo = parserResult.getSnapshot().getSource().getFileObject();
                     if (fo != null) {
@@ -298,6 +309,17 @@ public class GroovyDeclarationFinder implements DeclarationFinder {
                         }
 
                         // TODO try to find it in Groovy
+                        
+                        // This resolves the problem only partially.
+                        // I reuse the VariableScopeVisitor and if it finds the FiledNode, it return its position. 
+                        VariableScopeVisitor vsv = new VariableScopeVisitor(((ModuleNode)root).getContext(), path, doc, astOffset);
+                        vsv.collect();
+                        for (ASTNode astNode : vsv.getOccurrences()) {
+                            if (astNode instanceof FieldNode) {
+                                int offset = ASTUtils.getOffset(doc, astNode.getLineNumber(), astNode.getColumnNumber());
+                                return new DeclarationLocation(fo, offset);
+                            }
+                        }
                     }
                 }
             } else if (closest instanceof DeclarationExpression
@@ -513,6 +535,7 @@ public class GroovyDeclarationFinder implements DeclarationFinder {
             Elements elements = info.getElements();
 
             if (elements != null) {
+                info.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
                 final javax.lang.model.element.TypeElement typeElement = ElementSearch.getClass(elements, fqName);
 
                 if (typeElement != null) {
@@ -867,5 +890,7 @@ public class GroovyDeclarationFinder implements DeclarationFinder {
         }
         return DeclarationLocation.NONE;
     }
+    
+    
 
 }

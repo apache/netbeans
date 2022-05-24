@@ -1,0 +1,5 @@
+Code completion result for source line:
+public $prop = ne|,
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+KEYWORD    new                                        null

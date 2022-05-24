@@ -27,6 +27,7 @@ import javax.swing.text.DefaultEditorKit;
 import javax.swing.text.Document;
 import junit.framework.Test;
 import junit.framework.TestSuite;
+import org.netbeans.api.actions.Closable;
 import org.netbeans.api.editor.mimelookup.MimePath;
 import org.netbeans.api.editor.mimelookup.test.MockMimeLookup;
 import org.netbeans.api.html.lexer.HTMLTokenId;
@@ -42,6 +43,7 @@ import org.openide.cookies.EditorCookie;
 import org.openide.filesystems.FileObject;
 import org.openide.loaders.DataObject;
 import org.openide.util.Exceptions;
+import org.openide.util.Lookup;
 
 public class CssIndenterTest extends TestBase {
 
@@ -179,6 +181,32 @@ public class CssIndenterTest extends TestBase {
 
     public void testFormattingNetBeansCSS() throws Exception {
         reformatFileContents("testfiles/netbeans.css", new IndentPrefs(4, 4));
+    }
+
+    public void testPartitialFormatting() throws Exception {
+        IndentPrefs preferences = new IndentPrefs(4, 4);
+        String file = "testfiles/partialformatting.css";
+
+        FileObject fo = getTestFile(file);
+        assertNotNull(fo);
+        BaseDocument doc = getDocument(fo);
+        assertNotNull(doc);
+
+        Formatter formatter = getFormatter(preferences);
+
+        setupDocumentIndentation(doc, preferences);
+        format(doc, formatter, 1056, 1173, false);
+
+        String after = doc.getText(0, doc.getLength());
+        assertDescriptionMatches(file, after, false, ".formatted");
+
+        DataObject.find(fo).getLookup().lookup(Closable.class).close();
+
+        doc = getDocument(fo);
+        setupDocumentIndentation(doc, preferences);
+        format(doc, formatter, 857, 904, false);
+        after = doc.getText(0, doc.getLength());
+        assertDescriptionMatches(file, after, false, ".formatted2");
     }
 
     public void testIndentation() throws Exception {

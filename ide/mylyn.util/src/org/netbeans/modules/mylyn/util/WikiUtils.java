@@ -32,7 +32,7 @@ import org.openide.util.Lookup;
  */
 public class WikiUtils {
 
-    private final static Logger LOG = Logger.getLogger("org.netbeans.mylym.utils.WikiUtils"); //NOI18N
+    private static final Logger LOG = Logger.getLogger("org.netbeans.mylym.utils.WikiUtils"); //NOI18N
 
     private WikiUtils () {
     }

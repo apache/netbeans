@@ -786,7 +786,7 @@ class SplitSubModel {
     /// Nodes of this tree model
     ////////////////////////////////////////
     /** Class representing one node in SplitSubModel.  */
-    protected static abstract class Node implements ModelElement {
+    protected abstract static class Node implements ModelElement {
         /** Reference to parent node. */
         private SplitNode parent;
 

@@ -31,6 +31,7 @@ import org.netbeans.api.debugger.Breakpoint;
 import org.netbeans.api.debugger.DebuggerEngine;
 import org.netbeans.api.extexecution.ExecutionDescriptor;
 import org.netbeans.api.extexecution.ExecutionService;
+import org.netbeans.api.extexecution.base.ExplicitProcessParameters;
 import org.netbeans.modules.cpplite.debugger.CPPFrame;
 import org.netbeans.modules.cpplite.debugger.CPPLiteDebugger;
 import org.netbeans.modules.cpplite.debugger.CPPLiteDebuggerConfig;
@@ -42,12 +43,14 @@ import org.netbeans.modules.nativeimage.api.debug.EvaluateException;
 import org.netbeans.modules.nativeimage.api.debug.NIFrame;
 import org.netbeans.modules.nativeimage.api.debug.NILineBreakpointDescriptor;
 import org.netbeans.modules.nativeimage.api.debug.NIVariable;
+import org.netbeans.modules.nativeimage.api.debug.StartDebugParameters;
 import org.netbeans.modules.nativeimage.spi.debug.NIDebuggerProvider;
 import org.netbeans.modules.nativeimage.spi.debug.filters.FrameDisplayer;
 
 import org.openide.LifecycleManager;
 import org.openide.util.RequestProcessor;
 import org.netbeans.modules.nativeimage.spi.debug.filters.VariableDisplayer;
+import org.openide.util.Lookup;
 
 /**
  *
@@ -85,10 +88,22 @@ public class NIDebuggerProviderImpl implements NIDebuggerProvider {
     }
 
     @Override
-    public CompletableFuture<Void> start(List<String> command, File workingDirectory, String miDebugger, String displayName, ExecutionDescriptor executionDescriptor, Consumer<DebuggerEngine> startedEngine) {
+    public CompletableFuture<Void> start(StartDebugParameters debugParameters, Consumer<DebuggerEngine> startedEngine) {
         if (debugger != null) {
             throw new IllegalStateException("Debugger has started already.");
         }
+        List<String> command = debugParameters.getCommand();
+        String miDebugger = debugParameters.getDebugger();
+        String displayName = debugParameters.getDisplayName();
+        boolean printObjects = debugParameters.isDebuggerDisplayObjects();
+        Long processId = debugParameters.getProcessId();
+        ExecutionDescriptor executionDescriptor = debugParameters.getExecutionDescriptor();
+        Lookup contextLookup = debugParameters.getContextLookup();
+        ExplicitProcessParameters explicitParameters = contextLookup != null ? ExplicitProcessParameters.buildExplicitParameters(contextLookup) : null;
+        if (explicitParameters == null) {
+            explicitParameters = ExplicitProcessParameters.builder().workingDirectory(debugParameters.getWorkingDirectory()).build();
+        }
+        final ExplicitProcessParameters processParameters = explicitParameters;
         if (executionDescriptor == null) {
             executionDescriptor = new ExecutionDescriptor()
                 .showProgress(true)
@@ -104,7 +119,7 @@ public class NIDebuggerProviderImpl implements NIDebuggerProvider {
             try {
                 LifecycleManager.getDefault().saveAll();
                 engineProcess = CPPLiteDebugger.startDebugging(
-                        new CPPLiteDebuggerConfig(command, workingDirectory, null, miDebugger),
+                        new CPPLiteDebuggerConfig(command, processParameters, printObjects, processId, miDebugger),
                         engine -> {
                             debugger[0] = engine.lookupFirst(null, CPPLiteDebugger.class);
                             this.debugger = debugger[0];
@@ -130,6 +145,9 @@ public class NIDebuggerProviderImpl implements NIDebuggerProvider {
                         },
                         frameDisplayer,
                         variablesDisplayer);
+            } catch (Exception ex) {
+                completed.completeExceptionally(ex);
+                throw ex;
             } finally {
                 started.release();
             }
@@ -139,47 +157,6 @@ public class NIDebuggerProviderImpl implements NIDebuggerProvider {
         // Wait for the debugger to actually start up.
         // This is necessary to be able to safely call other methods on the NIDebuggerProvider.
         started.acquireUninterruptibly();
-        return completed;
-    }
-
-    @Override
-    public CompletableFuture<Void> attach(String executablePath, long processId, String miDebugger, Consumer<DebuggerEngine> startedEngine) {
-        if (debugger != null) {
-            throw new IllegalStateException("Debugger has started already.");
-        }
-        CompletableFuture<Void> completed = new CompletableFuture<>();
-        try {
-            CPPLiteDebugger.startDebugging(
-                    new CPPLiteDebuggerConfig(Collections.singletonList(executablePath), new File(System.getProperty("user.dir")), processId, miDebugger),
-                    engine -> {
-                        CPPLiteDebugger debugger = engine.lookupFirst(null, CPPLiteDebugger.class);
-                        this.debugger = debugger;
-                        if (startedEngine != null) {
-                            startedEngine.accept(engine);
-                        }
-                        debugger.addStateListener(new CPPLiteDebugger.StateListener() {
-                            @Override
-                            public void currentThread(CPPThread thread) {}
-
-                            @Override
-                            public void currentFrame(CPPFrame frame) {}
-
-                            @Override
-                            public void suspended(boolean suspended) {}
-
-                            @Override
-                            public void finished() {
-                                breakpointsHandler.dispose();
-                                completed.complete(null);
-                            }
-                        });
-                    },
-                    frameDisplayer,
-                    variablesDisplayer);
-        } catch (IOException ex) {
-            completed.completeExceptionally(ex);
-            return completed;
-        }
         return completed;
     }
 

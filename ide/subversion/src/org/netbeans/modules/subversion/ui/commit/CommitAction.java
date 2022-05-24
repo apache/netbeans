@@ -566,8 +566,9 @@ public class CommitAction extends ContextAction {
         boolean enabled = commit.isEnabled();
         commit.setEnabled(false);
 
-        for (SvnFileNode fileNode : files.keySet()) {
-            CommitOptions options = files.get(fileNode);
+        for (Map.Entry<SvnFileNode, CommitOptions> entry : files.entrySet()) {
+            SvnFileNode fileNode = entry.getKey();
+            CommitOptions options = entry.getValue();
             if (options == CommitOptions.EXCLUDE) {
                 continue;
             }

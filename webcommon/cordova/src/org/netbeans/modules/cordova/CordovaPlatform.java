@@ -43,7 +43,7 @@ public class CordovaPlatform {
     private final Map<String, Version> versions = Collections.synchronizedMap(new HashMap<>());
     private boolean isGitReady;
 
-    private transient final java.beans.PropertyChangeSupport propertyChangeSupport = new java.beans.PropertyChangeSupport(this);
+    private final transient java.beans.PropertyChangeSupport propertyChangeSupport = new java.beans.PropertyChangeSupport(this);
 
     private CordovaPlatform() {
     }

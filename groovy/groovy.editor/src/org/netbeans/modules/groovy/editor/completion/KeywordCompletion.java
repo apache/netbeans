@@ -82,7 +82,19 @@ class KeywordCompletion extends BaseCompletion {
         // filter-out keywords in a step-by-step approach
         filterPackageStatement(havePackage);
         filterPrefix(prefix);
-        filterLocation(request.location);
+        if (keywords.contains(GroovyKeyword.KEYWORD_package) && SpockUtils.isFirstStatement(request)) {
+            // This is a hack for offering package keyword in the script as the first statement.
+            // The current implementation use INSIDE_LOCATION for the top context in script, which is OK, 
+            // but package is only above class keyword and will not be displayed here. 
+            // This covers case, when you have empty file and you want to write package as the first. 
+            filterLocation(request.location);
+            if (!keywords.contains(GroovyKeyword.KEYWORD_package)) {
+                // the package is only above class keyword, but on the first position we should offer it
+                keywords.add(GroovyKeyword.KEYWORD_package);
+            }
+        } else {
+            filterLocation(request.location);
+        }
         filterClassInterfaceOrdering(request.context);
         filterMethodDefinitions(request.context);
         filterKeywordsNextToEachOther(request.context);

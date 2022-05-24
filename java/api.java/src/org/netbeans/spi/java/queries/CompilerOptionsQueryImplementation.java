@@ -46,7 +46,7 @@ public interface CompilerOptionsQueryImplementation {
      * Result of finding compiler options, encapsulating the answer as well as the
      * ability to listen to it.
      */
-    public static abstract class Result {
+    public abstract static class Result {
         /**
          * Gets the explicit compiler options.
          * @return the list of the compiler options

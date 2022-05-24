@@ -43,22 +43,22 @@ import org.netbeans.modules.web.monitor.data.DataRecord;
 import org.netbeans.modules.web.monitor.data.Param; 
 import org.openide.awt.Mnemonics;
 
-abstract public class DataDisplay extends JPanel {
+public abstract class DataDisplay extends JPanel {
     
     //
     // Common Insets
     // Insets(top, left, bottom, right)
-    final static Insets zeroInsets =       new Insets( 0,  0,  0,  0);
-    final static Insets tableInsets =      new Insets( 0, 18, 12, 12);
-    final static Insets labelInsets =      new Insets( 0,  6,  0,  0);
-    final static Insets buttonInsets =     new Insets( 6,  0,  5,  6);
-    final static Insets sortButtonInsets = new Insets( 0, 12,  0,  0);
-    final static Insets indentInsets =     new Insets( 0, 18,  0,  0);
-    final static Insets topSpacerInsets =  new Insets(12,  0,  0,  0);
+    static final Insets zeroInsets =       new Insets( 0,  0,  0,  0);
+    static final Insets tableInsets =      new Insets( 0, 18, 12, 12);
+    static final Insets labelInsets =      new Insets( 0,  6,  0,  0);
+    static final Insets buttonInsets =     new Insets( 6,  0,  5,  6);
+    static final Insets sortButtonInsets = new Insets( 0, 12,  0,  0);
+    static final Insets indentInsets =     new Insets( 0, 18,  0,  0);
+    static final Insets topSpacerInsets =  new Insets(12,  0,  0,  0);
 
-    final static int fullGridWidth = java.awt.GridBagConstraints.REMAINDER;
-    final static double tableWeightX = 1.0;
-    final static double tableWeightY = 0;
+    static final int fullGridWidth = java.awt.GridBagConstraints.REMAINDER;
+    static final double tableWeightX = 1.0;
+    static final double tableWeightY = 0;
 
     public DataDisplay() {
 	super();

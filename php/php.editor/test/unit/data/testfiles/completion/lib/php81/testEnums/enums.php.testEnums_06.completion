@@ -1,0 +1,6 @@
+Code completion result for source line:
+Simple::PRIV|ATE_CONST;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     privateStaticEnumMethod()       [PRIVATE,  \Enum1\Simple
+METHOD     privateStaticTraitMethod()      [PRIVATE,  \Enum1\TestTrait
+CONSTANT   PRIVATE_CONST "private"         [PRIVATE]  \Enum1\Simple

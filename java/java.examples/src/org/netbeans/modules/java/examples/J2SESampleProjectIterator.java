@@ -78,7 +78,7 @@ public class J2SESampleProjectIterator implements WizardDescriptor.AsynchronousI
         }
         String name = displayName;
         if (name != null) {
-            name = name.replaceAll(" ", ""); //NOI18N
+            name = name.replace(" ", ""); //NOI18N
         }
         templateWizard.putProperty (WizardProperties.NAME, name);        
         basicPanel = new PanelConfigureProject(displayName);

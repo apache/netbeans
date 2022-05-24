@@ -73,7 +73,6 @@ import org.netbeans.modules.php.editor.api.elements.TypeConstantElement;
 import org.netbeans.modules.php.editor.api.elements.TypeElement;
 import org.netbeans.modules.php.editor.api.elements.TypeMemberElement;
 import org.netbeans.modules.php.editor.api.elements.TypeResolver;
-import org.netbeans.modules.php.editor.api.elements.TypedInstanceElement;
 import org.netbeans.modules.php.editor.index.PHPDOCTagElement;
 import org.netbeans.modules.php.editor.index.PredefinedSymbolElement;
 import org.netbeans.modules.php.editor.lexer.LexUtilities;
@@ -432,9 +431,9 @@ final class DocRenderer {
             // field without phpdoc
             if (phpDocBlock == null
                     && indexedElement instanceof FieldElement) {
-                TypedInstanceElement fieldElement = (FieldElement) indexedElement;
+                FieldElement fieldElement = (FieldElement) indexedElement;
                 Set<TypeResolver> types = fieldElement.getInstanceTypes();
-                others.append(composeTypesAndDescription(composeType(types), "")); // NOI18N
+                others.append(composeTypesAndDescription(composeType(types, getTypeKind(fieldElement)), "")); // NOI18N
             }
 
             phpDoc.append(composeFunctionDoc(processDescription(
@@ -570,19 +569,20 @@ final class DocRenderer {
         }
 
         /**
-         * Create types separated with "|".
+         * Create types separated with "|" or "&".
          *
          * @param types types
-         * @return types separated with "|"
+         * @return types separated with "|" or "&"
          */
-        private String composeType(Collection<TypeResolver> types) {
+        private String composeType(Collection<TypeResolver> types, Type.Kind typeKind) {
             StringBuilder sb = new StringBuilder();
             for (TypeResolver type : types) {
                 if (type.isResolved()) {
                     QualifiedName typeName = type.getTypeName(true);
                     if (typeName != null) {
-                        if (sb.length() > 0) {
-                            sb.append(" ").append(Type.SEPARATOR).append(" "); // NOI18N
+                        if (sb.length() > 0
+                                && (typeKind == Type.Kind.UNION || typeKind == Type.Kind.INTERSECTION)) {
+                            sb.append(" ").append(typeKind.getSign()).append(" "); // NOI18N
                         }
                         if (type.isNullableType()) {
                             sb.append(CodeUtils.NULLABLE_TYPE_PREFIX);
@@ -689,7 +689,7 @@ final class DocRenderer {
                     } else {
                         // use actual parameter types
                         Set<TypeResolver> types = parameter.getTypes();
-                        String paramLine = composeParameterLine(composeType(types), name, ""); // NOI18N
+                        String paramLine = composeParameterLine(composeType(types, getTypeKind(parameter)), name, ""); // NOI18N
                         params.append(paramLine);
                     }
                 }
@@ -760,10 +760,40 @@ final class DocRenderer {
                 if (indexedElement instanceof BaseFunctionElement) {
                     BaseFunctionElement functionElement = (BaseFunctionElement) indexedElement;
                     // currently, fully qualified type names are shown
-                    returnValue.append(composeTypesAndDescription(composeType(functionElement.getReturnTypes()), "")); // NOI18N
+                    returnValue.append(composeTypesAndDescription(composeType(functionElement.getReturnTypes(), getTypeKind(functionElement)), "")); // NOI18N
                 }
             }
             return returnValue.toString();
+        }
+
+        private Type.Kind getTypeKind(BaseFunctionElement element) {
+            Type.Kind kind = Type.Kind.NORMAL;
+            if (element.isReturnIntersectionType()) {
+                kind = Type.Kind.INTERSECTION;
+            } else if (element.isReturnUnionType()) {
+                kind = Type.Kind.UNION;
+            }
+            return kind;
+        }
+
+        private Type.Kind getTypeKind(ParameterElement element) {
+            Type.Kind kind = Type.Kind.NORMAL;
+            if (element.isIntersectionType()) {
+                kind = Type.Kind.INTERSECTION;
+            } else if (element.isUnionType()) {
+                kind = Type.Kind.UNION;
+            }
+            return kind;
+        }
+
+        private Type.Kind getTypeKind(FieldElement element) {
+            Type.Kind kind = Type.Kind.NORMAL;
+            if (element.isIntersectionType()) {
+                kind = Type.Kind.INTERSECTION;
+            } else if (element.isUnionType()) {
+                kind = Type.Kind.UNION;
+            }
+            return kind;
         }
 
         private List<PhpElement> getInheritedElements() {

@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 9.21
+#Version 9.24
 
 CLSS public java.awt.datatransfer.Clipboard
 cons public init(java.lang.String)
@@ -649,8 +649,6 @@ fld public final static int OS_UNIX_MASK = 1709048
 fld public final static int OS_UNIX_OTHER = 524288
 fld public final static int OS_VMS = 16384
 fld public final static int OS_WIN2000 = 8192
-fld public final static int OS_WIN95 = 2
-fld public final static int OS_WIN98 = 4
 fld public final static int OS_WINDOWS_MASK = 303111
  anno 0 java.lang.Deprecated()
 fld public final static int OS_WINNT = 1
@@ -805,6 +803,7 @@ CLSS public abstract interface static org.openide.util.HelpCtx$Provider
 meth public abstract org.openide.util.HelpCtx getHelpCtx()
 
 CLSS public final org.openide.util.ImageUtilities
+fld public final static java.lang.String PROPERTY_URL = "url"
 meth public final static java.awt.Image addToolTipToImage(java.awt.Image,java.lang.String)
 meth public final static java.awt.Image assignToolTipToImage(java.awt.Image,java.lang.String)
 meth public final static java.awt.Image icon2Image(javax.swing.Icon)
@@ -815,9 +814,10 @@ meth public final static java.lang.String getImageToolTip(java.awt.Image)
 meth public final static javax.swing.Icon image2Icon(java.awt.Image)
 meth public final static javax.swing.ImageIcon loadImageIcon(java.lang.String,boolean)
 meth public static java.awt.Image createDisabledImage(java.awt.Image)
+meth public static java.net.URL findImageBaseURL(java.awt.Image)
 meth public static javax.swing.Icon createDisabledIcon(javax.swing.Icon)
 supr java.lang.Object
-hfds DARK_LAF_SUFFIX,ERR,LOGGER,NO_ICON,PNG_READER,TOOLTIP_SEPAR,cache,classLoaderLoader,component,compositeCache,dummyIconComponent,extraInitialSlashes,imageIconFilter,imageToolTipCache,localizedCache,mediaTrackerID,svgLoaderLoader,tracker
+hfds DARK_LAF_SUFFIX,ERR,LOGGER,NO_ICON,PNG_READER,TOOLTIP_SEPAR,cache,classLoaderLoader,component,compositeCache,dummyIconComponentButton,dummyIconComponentLabel,extraInitialSlashes,imageIconFilter,imageToolTipCache,localizedCache,mediaTrackerID,svgLoaderLoader,tracker
 hcls ActiveRef,CachedLookupLoader,CompositeImageKey,DisabledButtonFilter,IconImageIcon,MergedIcon,ToolTipImage,ToolTipImageKey
 
 CLSS public abstract org.openide.util.Lookup
@@ -1261,8 +1261,6 @@ fld public final static int OS_UNIX_MASK = 1709048
 fld public final static int OS_UNIX_OTHER = 524288
 fld public final static int OS_VMS = 16384
 fld public final static int OS_WIN2000 = 8192
-fld public final static int OS_WIN95 = 2
-fld public final static int OS_WIN98 = 4
 fld public final static int OS_WINDOWS_MASK = 303111
  anno 0 java.lang.Deprecated()
 fld public final static int OS_WINNT = 1

@@ -28,7 +28,7 @@ public interface AxisMark {
     public int getPosition();
 
 
-    public static abstract class Abstract implements AxisMark {
+    public abstract static class Abstract implements AxisMark {
 
         private final int position;
 

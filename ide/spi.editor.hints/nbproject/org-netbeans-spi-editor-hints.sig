@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.55.0
+#Version 1.57.0
 
 CLSS public abstract interface java.io.Serializable
 
@@ -263,6 +263,7 @@ innr public abstract interface static GlobalHintPreferencesProvider
 meth public static java.util.prefs.Preferences getFilePreferences(org.openide.filesystems.FileObject,java.lang.String)
 meth public static void addChangeListener(javax.swing.event.ChangeListener)
 meth public static void fireChange()
+meth public static void openFilePreferences(org.openide.filesystems.FileObject,java.lang.String,java.lang.String)
 meth public static void removeChangeListener(javax.swing.event.ChangeListener)
 supr java.lang.Object
 hfds FIRE_WORKER,cs

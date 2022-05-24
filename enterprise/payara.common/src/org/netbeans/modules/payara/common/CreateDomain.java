@@ -76,7 +76,7 @@ public class CreateDomain extends Thread {
         computePorts(instanceProperties,map, useDefaultPorts);
     }
 
-    static private void computePorts(Map<String, String> ip, Map<String, String> createProps, boolean useDefaultPorts) {
+    private static void computePorts(Map<String, String> ip, Map<String, String> createProps, boolean useDefaultPorts) {
         int portBase = 8900;
         int kicker = ((new Date()).toString() + ip.get(PayaraModule.DOMAINS_FOLDER_ATTR)+ip.get(PayaraModule.DOMAIN_NAME_ATTR)).hashCode() % 40000;
         kicker = kicker < 0 ? -kicker : kicker;
@@ -234,8 +234,8 @@ public class CreateDomain extends Thread {
 
     static class PDCancel implements Cancellable {
 
-        final private Process p;
-        final private String dirname;
+        private final Process p;
+        private final String dirname;
         private boolean notFired = true;
 
         PDCancel(Process p, String newDirName) {
@@ -243,12 +243,12 @@ public class CreateDomain extends Thread {
             this.dirname = newDirName;
         }
 
-        synchronized public boolean isNotFired() {
+        public synchronized boolean isNotFired() {
             return notFired;
         }
 
         @Override
-        synchronized public boolean cancel() {
+        public synchronized boolean cancel() {
             notFired = false;
             p.destroy();
             File domainDir = new File(dirname);

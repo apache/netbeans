@@ -124,6 +124,8 @@ public class TomcatProperties {
             NbBundle.getMessage(TomcatProperties.class, "LBL_DefaultDisplayName");
     private static final boolean DEF_VALUE_DRIVER_DEPLOYMENT = true;
     private static final int     DEF_VALUE_DEPLOYMENT_TIMEOUT = 120;
+    private static final int     DEF_VALUE_STARTUP_TIMEOUT = 120;
+    private static final int     DEF_VALUE_SHUTDOWN_TIMEOUT = 120;
     
     private TomcatManager tm;
     private InstanceProperties ip;
@@ -414,7 +416,7 @@ public class TomcatProperties {
     
     public boolean getSecManager() {
         String val = ip.getProperty(PROP_SEC_MANAGER);
-        return val != null ? Boolean.valueOf(val).booleanValue()
+        return val != null ? Boolean.valueOf(val)
                            : DEF_VALUE_SEC_MANAGER;
     }
     
@@ -425,7 +427,7 @@ public class TomcatProperties {
     
     public boolean getCustomScript() {
         String val = ip.getProperty(PROP_CUSTOM_SCRIPT);
-        return val != null ? Boolean.valueOf(val).booleanValue()
+        return val != null ? Boolean.valueOf(val)
                            : DEF_VALUE_CUSTOM_SCRIPT;
     }
     
@@ -448,7 +450,7 @@ public class TomcatProperties {
             return false;
         }
         String val = ip.getProperty(PROP_FORCE_STOP);
-        return val != null ? Boolean.valueOf(val).booleanValue()
+        return val != null ? Boolean.valueOf(val)
                            : DEF_VALUE_FORCE_STOP;
     }
     
@@ -471,7 +473,7 @@ public class TomcatProperties {
     
     public boolean getMonitor() {
         String val = ip.getProperty(PROP_MONITOR);
-        return val != null ? Boolean.valueOf(val).booleanValue()
+        return val != null ? Boolean.valueOf(val)
                            : DEF_VALUE_MONITOR;
     }
     
@@ -481,7 +483,7 @@ public class TomcatProperties {
     
     public boolean getProxyEnabled() {
         String val = ip.getProperty(PROP_PROXY_ENABLED);
-        return val != null ? Boolean.valueOf(val).booleanValue()
+        return val != null ? Boolean.valueOf(val)
                            : DEF_VALUE_PROXY_ENABLED;
     }
     
@@ -594,9 +596,47 @@ public class TomcatProperties {
         ip.setProperty(InstanceProperties.DEPLOYMENT_TIMEOUT, Integer.toString(timeout));
     }
     
+    public int getStartupTimeout() {
+        String val = ip.getProperty(InstanceProperties.STARTUP_TIMEOUT);
+        if (val != null) {
+            try {
+                int timeout = Integer.parseInt(val);
+                if (timeout >= 1) {
+                    return timeout;
+                }
+            } catch (NumberFormatException nfe) {
+                Logger.getLogger(TomcatProperties.class.getName()).log(Level.INFO, null, nfe);
+            }
+        }
+        return DEF_VALUE_STARTUP_TIMEOUT;
+    }
+    
+    public void setStartupTimeout(int timeout) {
+        ip.setProperty(InstanceProperties.STARTUP_TIMEOUT, Integer.toString(timeout));
+    }
+    
+    public int getShutdownTimeout() {
+        String val = ip.getProperty(InstanceProperties.SHUTDOWN_TIMEOUT);
+        if (val != null) {
+            try {
+                int timeout = Integer.parseInt(val);
+                if (timeout >= 1) {
+                    return timeout;
+                }
+            } catch (NumberFormatException nfe) {
+                Logger.getLogger(TomcatProperties.class.getName()).log(Level.INFO, null, nfe);
+            }
+        }
+        return DEF_VALUE_SHUTDOWN_TIMEOUT;
+    }
+    
+    public void setShutdownTimeout(int timeout) {
+        ip.setProperty(InstanceProperties.SHUTDOWN_TIMEOUT, Integer.toString(timeout));
+    }
+    
     public boolean getDriverDeployment() {
         String val = ip.getProperty(PROP_DRIVER_DEPLOYMENT);
-        return val != null ? Boolean.valueOf(val).booleanValue()
+        return val != null ? Boolean.valueOf(val)
                            : DEF_VALUE_DRIVER_DEPLOYMENT;
     }
     
@@ -718,7 +758,7 @@ public class TomcatProperties {
     public boolean getOpenContextLogOnRun() {
         Object val = ip.getProperty(PROP_OPEN_LOG);
         if (val != null) {
-            return Boolean.valueOf(val.toString()).booleanValue();
+            return Boolean.valueOf(val.toString());
         }
         return DEF_VALUE_OPEN_LOG;
     }

@@ -358,7 +358,7 @@ public class ServerVolumeCustomizer extends javax.swing.JPanel implements Custom
         for (int i = 0; i < fileNames.length; i++) {
             File f = new File(fileNames[i]);
             URI uri = LibrariesSupport.convertFilePathToURI(fileNames[i]);
-            if (allowRelativePaths != null && allowRelativePaths.booleanValue()) {
+            if (allowRelativePaths != null && allowRelativePaths) {
                 File realFile = f;
                 if (!f.isAbsolute()) {
                     assert area != null;
@@ -411,7 +411,7 @@ public class ServerVolumeCustomizer extends javax.swing.JPanel implements Custom
         LibraryCustomizerContext context = (LibraryCustomizerContext)bean;
         area = context.getLibraryStorageArea();
         impl = context.getLibraryImplementation();
-        allowRelativePaths = Boolean.valueOf(context.getLibraryImplementation2() != null);
+        allowRelativePaths = context.getLibraryImplementation2() != null;
         model = new ServerVolumeContentModel(impl, area, volumeType);
         content.setModel(model);
         if (model.getSize()>0) {

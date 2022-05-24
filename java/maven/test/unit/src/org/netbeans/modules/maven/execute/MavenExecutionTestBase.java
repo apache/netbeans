@@ -22,14 +22,13 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.StringReader;
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.Consumer;
-import static junit.framework.TestCase.assertTrue;
-import static junit.framework.TestCase.fail;
 import org.codehaus.plexus.component.configurator.expression.ExpressionEvaluationException;
 import org.codehaus.plexus.component.configurator.expression.ExpressionEvaluator;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
@@ -65,6 +64,7 @@ import org.openide.util.lookup.Lookups;
 import org.openide.util.test.MockLookup;
 import org.openide.windows.InputOutput;
 
+
 /**
  *
  * @author sdedic
@@ -90,6 +90,7 @@ public class MavenExecutionTestBase extends NbTestCase {
     protected String mavenAppArgs = ""; // NOI18N
     protected Map<String, String> mavenExecutorDefines = new HashMap<>();
     protected Map<String, String> mavenExecutorRawDefines = new HashMap<>();
+    protected Map<String, String> mavenExecutorEnvironment = new HashMap<>();
     
     protected final InstanceContent actionData = new InstanceContent();
     protected final Lookup actionLookup = new AbstractLookup(actionData);
@@ -137,7 +138,7 @@ public class MavenExecutionTestBase extends NbTestCase {
             Map<String, String> profileProperties) throws IOException, XmlPullParserException {
         StringBuilder sb = new StringBuilder();
         try (BufferedReader rdr = new BufferedReader(new InputStreamReader(
-                getClass().getResourceAsStream("nbactions-template.xml"), "UTF-8"))) {
+                getClass().getResourceAsStream("nbactions-template.xml"), StandardCharsets.UTF_8))) {
             String l;
             
             while ((l = rdr.readLine()) != null) {
@@ -240,7 +241,7 @@ public class MavenExecutionTestBase extends NbTestCase {
      * Evaluates property references in arguments. Uses Maven evaluator for the project + properties defined in the 
      * ModelRunConfig (which are passed as -D to the maven executor). Collects all -D defines into {@link #mavenExecutorDefines}
      */
-    protected List<String> substituteProperties(List<String> args, Project p, Map<? extends String, ? extends String> properties) {
+    protected List<String> substituteProperties(List<String> args, Map<String, String> environment, Project p, Map<? extends String, ? extends String> properties) {
         Map<String, String> props = new HashMap<>(properties);
         for (int i = 0; i < args.size(); i++) {
             String a = args.get(i);
@@ -261,6 +262,7 @@ public class MavenExecutionTestBase extends NbTestCase {
             pE.setValue(interpolate(pE.getValue(), e, props));
         }
         mavenExecutorDefines = props;
+        mavenExecutorEnvironment = new HashMap<>(environment);
         return args;
     }
     
@@ -327,7 +329,7 @@ public class MavenExecutionTestBase extends NbTestCase {
         MavenCommandLineExecutor exec = new MavenCommandLineExecutor(cfg, InputOutput.NULL, null) {
             @Override
             int executeProcess(CommandLineOutputHandler out, ProcessBuilder builder, Consumer<Process> processSetter) throws IOException, InterruptedException {
-                List<String> args = substituteProperties(builder.command(), project, cfg.getProperties());
+                List<String> args = substituteProperties(builder.command(), builder.environment(), project, cfg.getProperties());
                 commandLineAcceptor.accept(args);
                 return 0;
             }

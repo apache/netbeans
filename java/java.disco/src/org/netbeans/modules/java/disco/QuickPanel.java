@@ -18,7 +18,7 @@
  */
 package org.netbeans.modules.java.disco;
 
-import io.foojay.api.discoclient.pkg.TermOfSupport;
+import eu.hansolo.jdktools.TermOfSupport;
 import java.awt.Font;
 import java.util.ArrayList;
 import java.util.Hashtable;
@@ -121,7 +121,7 @@ public class QuickPanel extends javax.swing.JPanel {
             this.versionJDKs = new ArrayList<>(jdks);
             //quick panel shows only maintained JDKs
             versionJDKs.removeIf(v -> !lts.containsKey(v));
-            versionJDKs.removeIf(v -> v <= 6); //TODO: Normally the minimum is 6 but we wouldn't do that, would we?
+            versionJDKs.removeIf(v -> v < 8);
             this.lts = lts;
         }
 

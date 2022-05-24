@@ -18,7 +18,6 @@
  */
 package org.netbeans.modules.javaee.wildfly.ide.ui;
 
-import org.netbeans.modules.javaee.wildfly.ide.ui.WildflyPluginUtils;
 import org.netbeans.junit.NbTestCase;
 
 /**

@@ -83,6 +83,15 @@
                     </run-dependency>
                 </dependency>
                 <dependency>
+                    <code-name-base>org.netbeans.libs.commons_compress</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <release-version>0-1</release-version>
+                        <specification-version>0.22.0</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
                     <code-name-base>org.netbeans.modules.java.j2seplatform</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
@@ -201,24 +210,12 @@
             </module-dependencies>
             <public-packages/>
             <class-path-extension>
-                <runtime-relative-path>ext/commons-compress-1.20.jar</runtime-relative-path>
-                <binary-origin>external/commons-compress-1.20.jar</binary-origin>
+                <runtime-relative-path>ext/discoclient-2.0.23.jar</runtime-relative-path>
+                <binary-origin>external/discoclient-2.0.23.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/httpcore5-5.0.2.jar</runtime-relative-path>
-                <binary-origin>external/httpcore5-5.0.2.jar</binary-origin>
-            </class-path-extension>
-            <class-path-extension>
-                <runtime-relative-path>ext/httpcore5-h2-5.0.2.jar</runtime-relative-path>
-                <binary-origin>external/httpcore5-h2-5.0.2.jar</binary-origin>
-            </class-path-extension>
-            <class-path-extension>
-                <runtime-relative-path>ext/discoclient-1.0.1.jar</runtime-relative-path>
-                <binary-origin>external/discoclient-1.0.1.jar</binary-origin>
-            </class-path-extension>
-            <class-path-extension>
-                <runtime-relative-path>ext/httpclient5-5.0.3.jar</runtime-relative-path>
-                <binary-origin>external/httpclient5-5.0.3.jar</binary-origin>
+                <runtime-relative-path>ext/jdktools-11.0.8.jar</runtime-relative-path>
+                <binary-origin>external/jdktools-11.0.8.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>ext/checker-qual-3.9.1.jar</runtime-relative-path>

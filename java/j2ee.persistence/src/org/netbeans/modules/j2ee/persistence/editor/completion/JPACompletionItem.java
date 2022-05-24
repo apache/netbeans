@@ -285,7 +285,7 @@ public abstract class JPACompletionItem implements CompletionItem {
         return substituteText(component, substOffset, component.getCaret().getDot() - substOffset, false);
     }
 
-    private abstract static class DBElementItem extends JPACompletionItem {
+    abstract static class DBElementItem extends JPACompletionItem {
 
         private String name;
         private boolean quote;
@@ -689,9 +689,9 @@ public abstract class JPACompletionItem implements CompletionItem {
     }
     public static final class IndexElementItem extends DBElementItem {
 
-        public final static String ASC = "ASC";
-        public final static String DESC = "DESC";
-        public final static String[] PARAMS = {ASC, DESC};
+        public static final String ASC = "ASC";
+        public static final String DESC = "DESC";
+        public static final String[] PARAMS = {ASC, DESC};
         private final int shift;
         
         protected static CCPaintComponent.TableElementPaintComponent paintComponent = null;
@@ -851,7 +851,7 @@ public abstract class JPACompletionItem implements CompletionItem {
         }
     }
     
-    abstract private static class PersistenceXmlCompletionItem extends JPACompletionItem {
+    private abstract static class PersistenceXmlCompletionItem extends JPACompletionItem {
         /////////
 
         protected int substitutionOffset;

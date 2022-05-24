@@ -52,7 +52,7 @@ public class SaasMethodNode extends AbstractNode {
         return method.getDocumentation();
     }
 
-    static private final Image ICON = ImageUtilities.loadImage("org/netbeans/modules/websvc/saas/ui/resources/method.png"); // NOI18N
+    private static final Image ICON = ImageUtilities.loadImage("org/netbeans/modules/websvc/saas/ui/resources/method.png"); // NOI18N
     
     @Override
     public Image getIcon(int type){

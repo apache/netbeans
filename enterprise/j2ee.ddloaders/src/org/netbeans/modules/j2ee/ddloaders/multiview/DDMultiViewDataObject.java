@@ -48,7 +48,6 @@ public abstract class DDMultiViewDataObject extends XmlMultiViewDataObject
         implements DDProviderDataObject {
 
 
-    private WeakReference transactionReference = null;
     private static final int HANDLE_UNPARSABLE_TIMEOUT = 2000;
     private DDMultiViewDataObject.ModelSynchronizer modelSynchronizer;
 
@@ -91,9 +90,6 @@ public abstract class DDMultiViewDataObject extends XmlMultiViewDataObject
     }
 
     public void writeModel(RootInterface model) throws IOException {
-        if (transactionReference != null && transactionReference.get() != null) {
-            return;
-        }
         FileLock dataLock = waitForLock();
         if (dataLock == null) {
             return;
@@ -169,27 +165,6 @@ public abstract class DDMultiViewDataObject extends XmlMultiViewDataObject
      */
     protected abstract boolean isDocumentParseable();
 
-//    public Transaction openTransaction() {
-//        final XmlMultiViewDataSynchronizer.Transaction synchronizerTransaction = getModelSynchronizer().openTransaction();
-//        if (synchronizerTransaction == null) {
-//            return null;
-//        } else {
-//            Transaction transaction = new Transaction() {
-//                public void rollback() {
-//                    synchronizerTransaction.rollback();
-//                    transactionReference = null;
-//                }
-//
-//                public void commit() throws IOException {
-//                    synchronizerTransaction.commit();
-//                    transactionReference = null;
-//                }
-//            };
-//            transactionReference = new WeakReference(transaction);
-//            return transaction;
-//        }
-//    }
-
     private class ModelSynchronizer extends XmlMultiViewDataSynchronizer {
         private long handleUnparseableTimeout = 0;
         private Boolean overwriteUnparseable = Boolean.TRUE;
@@ -218,13 +193,13 @@ public abstract class DDMultiViewDataObject extends XmlMultiViewDataObject
                             NotifyDescriptor desc = new NotifyDescriptor.Confirmation(message,
                                     NotifyDescriptor.YES_NO_OPTION, NotifyDescriptor.WARNING_MESSAGE);
                             DialogDisplayer.getDefault().notify(desc);
-                            overwriteUnparseable = Boolean.valueOf(desc.getValue() == NotifyDescriptor.YES_OPTION);
+                            overwriteUnparseable = desc.getValue() == NotifyDescriptor.YES_OPTION;
                             handleUnparseableTimeout = new Date().getTime() + HANDLE_UNPARSABLE_TIMEOUT;
                         }
                     });
                 }
             }
-            return overwriteUnparseable.booleanValue();
+            return overwriteUnparseable;
         }
 
         public void updateData(FileLock dataLock, boolean modify) {

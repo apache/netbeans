@@ -169,7 +169,7 @@ public class JSFFrameworkProvider extends WebFrameworkProvider {
                 // packed them to the war file by default.  classpath/compile_only (for scope provided)
                 boolean modified = false;
                 Boolean isMaven = (Boolean)panel.getController().getProperties().getProperty("maven");  //NOI18N
-                if (isMaven!=null && isMaven.booleanValue()) {
+                if (isMaven!=null && isMaven) {
                     Project prj = FileOwnerQuery.getOwner(webModule.getDocumentBase());
                     J2eeModuleProvider provider = prj.getLookup().lookup(J2eeModuleProvider.class);
                     if (provider != null) {
@@ -515,7 +515,7 @@ public class JSFFrameworkProvider extends WebFrameworkProvider {
                                     String content = readResource(getClass().getResourceAsStream(RESOURCE_FOLDER + FORWARD_JSF), "UTF-8"); //NOI18N
                                     content = content.replace("__FORWARD__", ConfigurationUtils.translateURI(facesMapping, WELCOME_JSF));
                                     Charset encoding = FileEncodingQuery.getDefaultEncoding();
-                                    content = content.replaceAll("__ENCODING__", encoding.name());
+                                    content = content.replace("__ENCODING__", encoding.name());
                                     FileObject target = FileUtil.createData(webModule.getDocumentBase(), FORWARD_JSF);//NOI18N
                                     createFile(target, content, encoding.name());  //NOI18N
                                     DataObject dob = DataObject.find(target);
@@ -706,7 +706,7 @@ public class JSFFrameworkProvider extends WebFrameworkProvider {
             if (!panel.isEnableFacelets() && createWelcome && canCreateNewFile(webModule.getDocumentBase(), WELCOME_JSF)) {
                 String content = readResource(getClass().getResourceAsStream(RESOURCE_FOLDER + WELCOME_JSF), "UTF-8"); //NOI18N
                 Charset encoding = FileEncodingQuery.getDefaultEncoding();
-                content = content.replaceAll("__ENCODING__", encoding.name());
+                content = content.replace("__ENCODING__", encoding.name());
                 FileObject target = FileUtil.createData(webModule.getDocumentBase(), WELCOME_JSF);
                 createFile(target, content, encoding.name());
                 DataObject dob = DataObject.find(target);

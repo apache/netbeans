@@ -110,5 +110,11 @@ Contributor(s): Vincent Brabant, Maxym Mykhalchuk
       <branding name="nb"/>
     </locjar>
 
+    <locjar warnMissingDir="true"
+      basedir="o.n.swing.plaf/src"
+      jarfile="${cluster}/modules/org-netbeans-swing-plaf.jar">
+      <branding name="nb"/>
+    </locjar>
+
   </target>
 </project>

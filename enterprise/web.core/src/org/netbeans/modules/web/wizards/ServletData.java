@@ -122,10 +122,10 @@ class ServletData extends DeployData {
 
     private List<String> getUrlPatterns() {
         if (webApp == null) {
-            return new ArrayList<String>();
+            return new ArrayList<>();
         }
         ServletMapping[] maps = webApp.getServletMapping();
-        List<String> l = new ArrayList<String>();
+        List<String> l = new ArrayList<>();
         for (int i = 0; i < maps.length; i++) {
             l.addAll(Arrays.asList(((ServletMapping25)maps[i]).getUrlPatterns()));
         }
@@ -137,7 +137,7 @@ class ServletData extends DeployData {
             return filterMappings;
         }
         if (webApp == null) {
-            return new ArrayList<FilterMappingData>();
+            return new ArrayList<>();
         }
 
         LOG.finer("Creating the filter mapping list"); //NOI18N
@@ -146,7 +146,7 @@ class ServletData extends DeployData {
         for (int i = 0; i < fm.length; ++i) {
             LOG.finer("Servlet name: " + fm[i].getFilterName()); //NOI18N
         }
-        filterMappings = new ArrayList<FilterMappingData>();
+        filterMappings = new ArrayList<>();
         filterMappings.add(new FilterMappingData(getName()));
 
         String string;
@@ -276,7 +276,7 @@ class ServletData extends DeployData {
         char ch = id.charAt(id.length() - 1);
         if (Character.isDigit(ch)) {
             String lastDigit = id.substring(id.length() - 1);
-            int num = new Integer(lastDigit).intValue() + 1;
+            int num = Integer.parseInt(lastDigit) + 1;
             return id.substring(0, id.length() - 1) + num;
         } else {
             return id + "_1"; //NOI18N
@@ -302,7 +302,7 @@ class ServletData extends DeployData {
     void parseUrlMappingString(String raw) {
         urlMappings = null;
         StringTokenizer st = new StringTokenizer(raw, ",");
-        List<String> list = new ArrayList<String>();
+        List<String> list = new ArrayList<>();
 
         while (st.hasMoreTokens()) {
             String mapping = st.nextToken().trim();

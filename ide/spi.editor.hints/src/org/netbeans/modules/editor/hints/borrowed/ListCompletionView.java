@@ -25,17 +25,13 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
-import java.awt.RenderingHints;
-import java.awt.Toolkit;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.AbstractListModel;
@@ -60,6 +56,7 @@ import org.netbeans.modules.editor.hints.FixData;
 import org.netbeans.modules.editor.hints.HintsControllerImpl;
 import org.netbeans.modules.editor.hints.HintsUI;
 import org.netbeans.spi.editor.hints.Fix;
+import org.openide.awt.GraphicsUtils;
 import org.openide.awt.HtmlRenderer;
 import org.openide.util.ImageUtilities;
 
@@ -73,8 +70,8 @@ public class ListCompletionView extends JList {
     private static final Logger LOG = Logger.getLogger(ListCompletionView.class.getName());
     public static final int COMPLETION_ITEM_HEIGHT = 16;
     private static final int DARKER_COLOR_COMPONENT = 5;
-    private final static Icon icon = ImageUtilities.loadImageIcon("org/netbeans/modules/editor/hints/resources/suggestion.gif", false); // NOI18N
-    private final static Icon subMenuIcon;
+    private static final Icon icon = ImageUtilities.loadImageIcon("org/netbeans/modules/editor/hints/resources/suggestion.gif", false); // NOI18N
+    private static final Icon subMenuIcon;
     private final int fixedItemHeight;
     private final HtmlRenderer.Renderer defaultRenderer = HtmlRenderer.createRenderer();
     private Font font;
@@ -225,20 +222,8 @@ public class ListCompletionView extends JList {
     }
 
     public @Override void paint(Graphics g) {
-        Object value = (Map)(Toolkit.getDefaultToolkit().getDesktopProperty("awt.font.desktophints")); //NOI18N
-        Map renderingHints = (value instanceof Map) ? (java.util.Map)value : null;
-        if (renderingHints != null && g instanceof Graphics2D) {
-            Graphics2D g2d = (Graphics2D) g;
-            RenderingHints oldHints = g2d.getRenderingHints();
-            g2d.setRenderingHints(renderingHints);
-            try {
-                super.paint(g2d);
-            } finally {
-                g2d.setRenderingHints(oldHints);
-            }
-        } else {
-            super.paint(g);
-        }
+        GraphicsUtils.configureDefaultRenderingHints(g);
+        super.paint(g);
     }
     
     static class Model extends AbstractListModel implements PropertyChangeListener {

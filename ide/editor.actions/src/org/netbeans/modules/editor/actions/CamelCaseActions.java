@@ -45,7 +45,7 @@ public class CamelCaseActions {
     /* package */ static final String deleteNextCamelCasePosition = "delete-next-camel-case-position"; //NOI18N
     static final String SYSTEM_ACTION_CLASS_NAME_PROPERTY = "systemActionClassName";
 
-    public static abstract class CamelCaseAction extends AbstractEditorAction {
+    public abstract static class CamelCaseAction extends AbstractEditorAction {
 
         public CamelCaseAction(Map<String, ?> attrs) {
             super(attrs);

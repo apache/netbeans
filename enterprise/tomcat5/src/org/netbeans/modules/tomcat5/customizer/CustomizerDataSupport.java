@@ -74,6 +74,8 @@ public class CustomizerDataSupport {
     private SpinnerNumberModel      shutdownPortModel;
     private SpinnerNumberModel      debugPortModel;
     private SpinnerNumberModel      deploymentTimeoutModel;
+    private SpinnerNumberModel      startupTimeoutModel;
+    private SpinnerNumberModel      shutdownTimeoutModel;
     private ButtonModel             driverDeploymentModel;
     
     // model dirty flags    
@@ -97,6 +99,8 @@ public class CustomizerDataSupport {
     private boolean debugPortModelFlag;
     private boolean deploymentTimeoutModelFlag;
     private boolean driverDeploymentModelFlag;
+    private boolean startupTimeoutModelFlag;
+    private boolean shutdownTimeoutModelFlag;
     
     private TomcatProperties tp;
     private TomcatManager tm;
@@ -315,6 +319,24 @@ public class CustomizerDataSupport {
                 store(); // This is just temporary until the server manager has OK and Cancel buttons
             }
         });
+        
+        // startupTimeoutModel
+        startupTimeoutModel = new SpinnerNumberModel(tp.getStartupTimeout(), 1, Integer.MAX_VALUE, 1);
+        startupTimeoutModel.addChangeListener(new ModelChangeAdapter() {
+            public void modelChanged() {
+                startupTimeoutModelFlag = true;
+                store(); // This is just temporary until the server manager has OK and Cancel buttons
+            }
+        });
+        
+        // shutdownTimeoutModel
+        shutdownTimeoutModel = new SpinnerNumberModel(tp.getShutdownTimeout(), 1, Integer.MAX_VALUE, 1);
+        shutdownTimeoutModel.addChangeListener(new ModelChangeAdapter() {
+            public void modelChanged() {
+                shutdownTimeoutModelFlag = true;
+                store(); // This is just temporary until the server manager has OK and Cancel buttons
+            }
+        });
     }
     
 
@@ -444,6 +466,14 @@ public class CustomizerDataSupport {
         return deploymentTimeoutModel;
     }
     
+    public SpinnerNumberModel getStartupTimeoutModel() {
+        return startupTimeoutModel;
+    }
+    
+    public SpinnerNumberModel getShutdownTimeoutModel() {
+        return shutdownTimeoutModel;
+    }
+    
     public ButtonModel getDriverDeploymentModel() {
         return driverDeploymentModel;
     }
@@ -531,28 +561,38 @@ public class CustomizerDataSupport {
         }
         
         if (serverPortModelFlag) {
-            tm.setServerPort(((Integer)serverPortModel.getValue()).intValue());
+            tm.setServerPort(((Integer)serverPortModel.getValue()));
             serverPortModelFlag = false;
         }
         
         if (shutdownPortModelFlag) {
-            tm.setShutdownPort(((Integer)shutdownPortModel.getValue()).intValue());
+            tm.setShutdownPort(((Integer)shutdownPortModel.getValue()));
             shutdownPortModelFlag = false;
         }
         
         if (debugPortModelFlag) {
-            tp.setDebugPort(((Integer)debugPortModel.getValue()).intValue());
+            tp.setDebugPort(((Integer)debugPortModel.getValue()));
             debugPortModelFlag = false;
         }
         
         if (deploymentTimeoutModelFlag) {
-            tp.setDeploymentTimeout(((Integer)deploymentTimeoutModel.getValue()).intValue());
+            tp.setDeploymentTimeout(((Integer)deploymentTimeoutModel.getValue()));
             deploymentTimeoutModelFlag = false;
         }
         
         if (driverDeploymentModelFlag) {
             tp.setDriverDeployment(driverDeploymentModel.isSelected());
             driverDeploymentModelFlag = false;
+        }
+        
+        if (startupTimeoutModelFlag) {
+            tp.setStartupTimeout((Integer)startupTimeoutModel.getValue());
+            startupTimeoutModelFlag = false;
+        }
+        
+        if (shutdownTimeoutModelFlag) {
+            tp.setShutdownTimeout((Integer)shutdownTimeoutModel.getValue());
+            shutdownTimeoutModelFlag = false;
         }
     }
     

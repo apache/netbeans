@@ -138,7 +138,7 @@ public class NbCollections {
         return m2;
     }
 
-    private static abstract class CheckedIterator<E> implements Iterator<E> {
+    private abstract static class CheckedIterator<E> implements Iterator<E> {
 
         private static final Object WAITING = new Object();
 

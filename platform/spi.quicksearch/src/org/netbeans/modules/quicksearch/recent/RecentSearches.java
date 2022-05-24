@@ -305,6 +305,6 @@ public class RecentSearches {
      * results.
      */
     private String translateHTMLEntities(String s) {
-        return s.replaceAll("\\&amp;", "&");                            //NOI18N
+        return s.replace("&amp;", "&");                            //NOI18N
     }
 }

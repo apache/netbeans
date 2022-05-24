@@ -67,17 +67,14 @@ public class SearchScopeListTest extends NbTestCase {
         ssl.addChangeListener(cl);
         ssl.addChangeListener(cl2);
 
-        Mutex.EVENT.writeAccess(new Mutex.Action<Boolean>() {
-            @Override
-            public Boolean run() {
-                for (SearchScopeDefinition ssd
-                        : ssl.getSeachScopeDefinitions()) {
-                    if (ssd instanceof CustomSearchScope) {
-                        ((CustomSearchScope) ssd).fireChangeEvent();
-                    }
+        Mutex.EVENT.writeAccess((Mutex.Action<Boolean>) () -> {
+            for (SearchScopeDefinition ssd
+                    : ssl.getSeachScopeDefinitions()) {
+                if (ssd instanceof CustomSearchScope) {
+                    ((CustomSearchScope) ssd).fireChangeEvent();
                 }
-                return true;
             }
+            return true;
         });
 
         assertEquals(3, cl.getCounter());
@@ -90,12 +87,9 @@ public class SearchScopeListTest extends NbTestCase {
         SearchScopeList ssl = new SearchScopeList(css);
         final Semaphore s = new Semaphore(0);
         final AtomicBoolean notifiedInEDT = new AtomicBoolean(false);
-        ssl.addChangeListener(new ChangeListener() {
-            @Override
-            public void stateChanged(ChangeEvent e) {
-                notifiedInEDT.set(EventQueue.isDispatchThread());
-                s.release();
-            }
+        ssl.addChangeListener((ChangeEvent e) -> {
+            notifiedInEDT.set(EventQueue.isDispatchThread());
+            s.release();
         });
         css.fireChangeEvent();
         boolean acqrd = s.tryAcquire(10, TimeUnit.SECONDS);
@@ -135,7 +129,7 @@ public class SearchScopeListTest extends NbTestCase {
 
         private boolean applicable = true;
         private int priority;
-        private Set<ChangeListener> listeners = new HashSet<ChangeListener>();
+        private Set<ChangeListener> listeners = new HashSet<>();
 
         public CustomSearchScope(boolean applicable, int priority) {
             this.applicable = applicable;
@@ -171,7 +165,7 @@ public class SearchScopeListTest extends NbTestCase {
                 this.applicable = applicable;
                 if (applicable != oldVal) {
 
-                    listenersCopy = new HashSet<ChangeListener>(listeners);
+                    listenersCopy = new HashSet<>(listeners);
                 }
             }
             for (ChangeListener l : listenersCopy) {
@@ -199,7 +193,7 @@ public class SearchScopeListTest extends NbTestCase {
         @Override
         public List<SearchScopeDefinition> createSearchScopeDefinitions() {
             List<SearchScopeDefinition> list =
-                    new LinkedList<SearchScopeDefinition>();
+                    new LinkedList<>();
             list.add(new CustomSearchScope(true, 2));
             list.add(new CustomSearchScope(true, 1));
             list.add(new CustomSearchScope(false, 3));

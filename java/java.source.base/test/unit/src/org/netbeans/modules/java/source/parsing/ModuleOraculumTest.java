@@ -23,6 +23,7 @@ import com.sun.tools.javac.util.Options;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -526,7 +527,7 @@ public class ModuleOraculumTest extends NbTestCase {
             fld = root;
         }
         final FileObject file = FileUtil.createData(fld, name);
-        try(PrintWriter out = new PrintWriter(new OutputStreamWriter(file.getOutputStream(), "UTF-8"))) {   //NOI18N
+        try(PrintWriter out = new PrintWriter(new OutputStreamWriter(file.getOutputStream(), StandardCharsets.UTF_8))) {
             out.println(content);
         }
         return file;

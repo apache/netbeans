@@ -19,6 +19,8 @@
 package org.netbeans.modules.java.lsp.server.protocol;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonSyntaxException;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.util.TreePath;
@@ -26,8 +28,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 import javax.lang.model.element.Element;
@@ -35,12 +38,9 @@ import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
-import org.eclipse.lsp4j.ApplyWorkspaceEditParams;
 import org.eclipse.lsp4j.CodeAction;
 import org.eclipse.lsp4j.CodeActionKind;
 import org.eclipse.lsp4j.CodeActionParams;
-import org.eclipse.lsp4j.MessageParams;
-import org.eclipse.lsp4j.MessageType;
 import org.eclipse.lsp4j.TextEdit;
 import org.eclipse.lsp4j.WorkspaceEdit;
 import org.netbeans.api.java.source.CompilationController;
@@ -60,13 +60,11 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service = CodeActionsProvider.class, position = 50)
 public final class ToStringGenerator extends CodeActionsProvider {
 
-    public static final String GENERATE_TO_STRING =  "java.generate.toString";
+    private static final String URI =  "uri";
+    private static final String OFFSET =  "offset";
+    private static final String FIELDS =  "fields";
 
-    private final Set<String> commands = Collections.singleton(GENERATE_TO_STRING);
     private final Gson gson = new Gson();
-
-    public ToStringGenerator() {
-    }
 
     @Override
     @NbBundle.Messages({
@@ -110,62 +108,70 @@ public final class ToStringGenerator extends CodeActionsProvider {
             }
         }
         String uri = Utils.toUri(info.getFileObject());
-        return Collections.singletonList(createCodeAction(Bundle.DN_GenerateToString(), CODE_GENERATOR_KIND, GENERATE_TO_STRING, uri, offset, fields));
-    }
-
-    @Override
-    public Set<String> getCommands() {
-        return commands;
+        Map<String, Object> data = new HashMap<>();
+        data.put(URI, uri);
+        data.put(OFFSET, offset);
+        data.put(FIELDS, fields);
+        return Collections.singletonList(createCodeAction(Bundle.DN_GenerateToString(), CODE_GENERATOR_KIND, data, fields.isEmpty() ? null : "workbench.action.focusActiveEditorGroup"));
     }
 
     @Override
     @NbBundle.Messages({
         "DN_SelectToString=Select fields to be included in toString()",
     })
-    public CompletableFuture<Object> processCommand(NbCodeLanguageClient client, String command, List<Object> arguments) {
-        if (arguments.size() > 2) {
-            String uri = gson.fromJson(gson.toJson(arguments.get(0)), String.class);
-            int offset = gson.fromJson(gson.toJson(arguments.get(1)), Integer.class);
-            List<QuickPickItem> fields = Arrays.asList(gson.fromJson(gson.toJson(arguments.get(2)), QuickPickItem[].class));
+    public CompletableFuture<CodeAction> resolve(NbCodeLanguageClient client, CodeAction codeAction, Object data) {
+        CompletableFuture<CodeAction> future = new CompletableFuture<>();
+        try {
+            String uri = ((JsonObject) data).getAsJsonPrimitive(URI).getAsString();
+            int offset = ((JsonObject) data).getAsJsonPrimitive(OFFSET).getAsInt();
+            List<QuickPickItem> fields = Arrays.asList(gson.fromJson(((JsonObject) data).get(FIELDS), QuickPickItem[].class));
             if (fields.isEmpty()) {
-                generate(client, uri, offset, fields);
+                WorkspaceEdit edit = generate(uri, offset, fields);
+                if (edit != null) {
+                    codeAction.setEdit(edit);
+                }
+                future.complete(codeAction);
             } else {
                 client.showQuickPick(new ShowQuickPickParams(Bundle.DN_SelectToString(), true, fields)).thenAccept(selected -> {
-                    if (selected != null) {
-                        generate(client, uri, offset, selected);
+                    try {
+                        if (selected != null) {
+                            WorkspaceEdit edit = generate(uri, offset, fields);
+                            if (edit != null) {
+                                codeAction.setEdit(edit);
+                            }
+                        }
+                        future.complete(codeAction);
+                    } catch (IOException | IllegalArgumentException ex) {
+                        future.completeExceptionally(ex);
                     }
                 });
             }
-        } else {
-            client.logMessage(new MessageParams(MessageType.Error, String.format("Illegal number of arguments received for command: %s", command)));
+        } catch (JsonSyntaxException | IOException | IllegalArgumentException ex) {
+            future.completeExceptionally(ex);
         }
-        return CompletableFuture.completedFuture(true);
+        return future;
     }
 
-    private void generate(NbCodeLanguageClient client, String uri, int offset, List<QuickPickItem> fields) {
-        try {
-            FileObject file = Utils.fromUri(uri);
-            JavaSource js = JavaSource.forFileObject(file);
-            if (js == null) {
-                throw new IOException("Cannot get JavaSource for: " + uri);
-            }
-            List<TextEdit> edits = TextDocumentServiceImpl.modify2TextEdits(js, wc -> {
-                wc.toPhase(JavaSource.Phase.RESOLVED);
-                TreePath tp = wc.getTreeUtilities().pathFor(offset);
-                tp = wc.getTreeUtilities().getPathElementOfKind(TreeUtilities.CLASS_TREE_KINDS, tp);
-                if (tp != null) {
-                    ClassTree cls = (ClassTree) tp.getLeaf();
-                    List<VariableElement> selectedFields = fields.stream().map(item -> {
-                        ElementData data = gson.fromJson(gson.toJson(item.getUserData()), ElementData.class);
-                        return (VariableElement)data.resolve(wc);
-                    }).collect(Collectors.toList());
-                    MethodTree method = org.netbeans.modules.java.editor.codegen.ToStringGenerator.createToStringMethod(wc, selectedFields, cls.getSimpleName().toString(), true);
-                    wc.rewrite(cls, GeneratorUtilities.get(wc).insertClassMember(cls, method));
-                }
-            });
-            client.applyEdit(new ApplyWorkspaceEditParams(new WorkspaceEdit(Collections.singletonMap(uri, edits))));
-        } catch (IOException | IllegalArgumentException ex) {
-            client.logMessage(new MessageParams(MessageType.Error, ex.getLocalizedMessage()));
+    private WorkspaceEdit generate(String uri, int offset, List<QuickPickItem> fields) throws IOException, IllegalArgumentException {
+        FileObject file = Utils.fromUri(uri);
+        JavaSource js = JavaSource.forFileObject(file);
+        if (js == null) {
+            throw new IOException("Cannot get JavaSource for: " + uri);
         }
+        List<TextEdit> edits = TextDocumentServiceImpl.modify2TextEdits(js, wc -> {
+            wc.toPhase(JavaSource.Phase.RESOLVED);
+            TreePath tp = wc.getTreeUtilities().pathFor(offset);
+            tp = wc.getTreeUtilities().getPathElementOfKind(TreeUtilities.CLASS_TREE_KINDS, tp);
+            if (tp != null) {
+                ClassTree cls = (ClassTree) tp.getLeaf();
+                List<VariableElement> selectedFields = fields.stream().map(item -> {
+                    ElementData data = gson.fromJson(gson.toJson(item.getUserData()), ElementData.class);
+                    return (VariableElement)data.resolve(wc);
+                }).collect(Collectors.toList());
+                MethodTree method = org.netbeans.modules.java.editor.codegen.ToStringGenerator.createToStringMethod(wc, selectedFields, cls.getSimpleName().toString(), true);
+                wc.rewrite(cls, GeneratorUtilities.get(wc).insertClassMember(cls, method));
+            }
+        });
+        return edits.isEmpty() ? null : new WorkspaceEdit(Collections.singletonMap(uri, edits));
     }
 }

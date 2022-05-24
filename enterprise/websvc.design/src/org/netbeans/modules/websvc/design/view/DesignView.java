@@ -217,7 +217,7 @@ public class DesignView extends JPanel  implements Flushable {
             List<Widget> children = contentWidget.getChildren();
             for (Widget widget : children) {
                 if ( widget instanceof Flushable ){
-                    ((Flushable)widget).flushContent();;
+                    ((Flushable)widget).flushContent();
                 }
             }
         }

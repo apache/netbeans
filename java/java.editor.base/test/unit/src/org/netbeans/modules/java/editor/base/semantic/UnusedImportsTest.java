@@ -41,6 +41,7 @@ import org.netbeans.api.lexer.Language;
 import org.netbeans.core.startup.Main;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.java.editor.base.imports.UnusedImports;
+import org.netbeans.modules.java.source.parsing.JavacParser;
 import org.netbeans.modules.parsing.impl.indexing.CacheFolder;
 import org.netbeans.modules.parsing.impl.indexing.RepositoryUpdater;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
@@ -333,8 +334,44 @@ public class UnusedImportsTest extends NbTestCase {
                                                "}\n"));
     }
 
+    public void testModuleInfo() throws Exception {
+        SourceUtilsTestUtil.setSourceLevel(src, "11");
+        writeFilesAndWaitForScan(src,
+                                 new File("module-info.java",
+                                          "import java.util.List;\n" +
+                                          "import test.Ann;\n" +
+                                          "import test.Service1;\n" +
+                                          "import test.Service2;\n" +
+                                          "import test.Service2Impl;\n" +
+                                          "@Ann\n" +
+                                          "module m {\n" +
+                                          "    uses Service1;\n" +
+                                          "    uses Service2;\n" +
+                                          "    provides Service2 with Service2Impl;\n" +
+                                          "}\n"),
+                                 new File("test/Ann.java",
+                                          "package test;\n" +
+                                          "public @interface Ann { }"),
+                                 new File("test/Service1.java",
+                                          "package test;\n" +
+                                          "public interface Service1 { }"),
+                                 new File("test/Service2.java",
+                                          "package test;\n" +
+                                          "public interface Service2 { }"),
+                                 new File("test/Service2Impl.java",
+                                          "package test;\n" +
+                                          "public class Service2Impl implements Service2 { }"));
+
+        performUnusedImportsTestForFile("module-info.java",
+                                        "import java.util.List;\n");
+    }
+
     private void performUnusedImportsTest(String... golden) throws Exception {
-        CompilationInfo ci = SourceUtilsTestUtil.getCompilationInfo(JavaSource.forFileObject(src.getFileObject("test/Main.java")), Phase.RESOLVED);
+        performUnusedImportsTestForFile("test/Main.java", golden);
+    }
+
+    private void performUnusedImportsTestForFile(String fileName, String... golden) throws Exception {
+        CompilationInfo ci = SourceUtilsTestUtil.getCompilationInfo(JavaSource.forFileObject(src.getFileObject(fileName)), Phase.RESOLVED);
         SourceUtilsTestUtil2.disableConfinementTest();
         Document doc = ci.getSnapshot().getSource().getDocument(true);
         doc.putProperty(Language.class, JavaTokenId.language());
@@ -398,4 +435,7 @@ public class UnusedImportsTest extends NbTestCase {
         }
     }
 
+    static {
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
+    }
 }

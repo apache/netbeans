@@ -43,7 +43,7 @@ import org.openide.util.NbBundle;
  */
 public class DefaultSearchResultsPanel<T> extends AbstractSearchResultsPanel {
 
-    private List<T> matchingObjects = new ArrayList<T>();
+    private List<T> matchingObjects = new ArrayList<>();
     private final NodeDisplayer<T> nodeDisplayer;
     private ResultsNode resultsNode;
     private OutlineView outlineView;
@@ -65,13 +65,10 @@ public class DefaultSearchResultsPanel<T> extends AbstractSearchResultsPanel {
     }
 
     private void initExpandButton() {
-        btnExpand.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                getOutlineView().expandNode(resultsNode);
-                for (Node n : resultsNode.getChildren().getNodes(true)) {
-                    toggleExpand(n, btnExpand.isSelected());
-                }
+        btnExpand.addActionListener((ActionEvent e) -> {
+            getOutlineView().expandNode(resultsNode);
+            for (Node n : resultsNode.getChildren().getNodes(true)) {
+                toggleExpand(n, btnExpand.isSelected());
             }
         });
         btnExpand.setEnabled(true);

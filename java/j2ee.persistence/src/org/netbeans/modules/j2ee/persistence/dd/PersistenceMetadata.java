@@ -38,10 +38,10 @@ import org.xml.sax.SAXException;
 public final class PersistenceMetadata {
     
     private static final PersistenceMetadata DEFAULT = new PersistenceMetadata();
-    private Map ddMap;
+    private Map<FileObject, Persistence> ddMap;
     
     private PersistenceMetadata() {
-        ddMap = new WeakHashMap(5);
+        ddMap = new WeakHashMap<>(5);
     }
     
     /**
@@ -69,7 +69,7 @@ public final class PersistenceMetadata {
         }
         Persistence persistence = null;
         synchronized (ddMap) {
-            persistence = (Persistence) ddMap.get(fo);
+            persistence = ddMap.get(fo);
             if (persistence == null) {
                 InputStream is=fo.getInputStream();
                 String version=Persistence.VERSION_1_0;

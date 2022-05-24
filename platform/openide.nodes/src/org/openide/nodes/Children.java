@@ -1070,7 +1070,7 @@ public abstract class Children extends Object {
 
         /** Entry mapping one key to the node.
         */
-        final static class ME extends Object implements Entry {
+        static final class ME extends Object implements Entry {
             /** key */
             public Object key;
 
@@ -1312,7 +1312,7 @@ public abstract class Children extends Object {
     *
     * @param T the type of the key
     */
-    public static abstract class Keys<T> extends Children.Array {
+    public abstract static class Keys<T> extends Children.Array {
         /** the last runnable (created in method setKeys) for each children object.
          */
         private static java.util.Map<Keys<?>,Runnable> lastRuns = new HashMap<Keys<?>,Runnable>(11);
@@ -1679,7 +1679,8 @@ public abstract class Children extends Object {
     * added to the collection and if the same object is added
     * more than once it is indexed by a number.
     */
-    private static abstract class Dupl<T> implements Cloneable, Entry {
+    // package-private for tests only!
+    abstract static class Dupl<T> implements Cloneable, Entry {
         /** the key either real value or Dupl (Dupl (Dupl (... value ...)))*/
         protected Object key;
 

@@ -33,7 +33,7 @@ public class ServletData extends BaseBean {
 
     static Vector<BeanComparator> comparators = new Vector<>();
 
-    static public final String PARAM = "Param"; //NOI18N
+    public static final String PARAM = "Param"; //NOI18N
 
     public ServletData() {
 	this(Common.USE_DEFAULT_VALUES);
@@ -104,12 +104,12 @@ public class ServletData extends BaseBean {
     }
 
     //
-    static public void addComparator(BeanComparator c) {
+    public static void addComparator(BeanComparator c) {
 	ServletData.comparators.add(c);
     }
 
     //
-    static public void removeComparator(BeanComparator c) {
+    public static void removeComparator(BeanComparator c) {
 	ServletData.comparators.remove(c);
     }
     //

@@ -19,6 +19,8 @@
 package org.netbeans.modules.java.lsp.server.protocol;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonSyntaxException;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.util.TreePath;
@@ -26,9 +28,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
@@ -36,12 +40,9 @@ import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.util.ElementFilter;
-import org.eclipse.lsp4j.ApplyWorkspaceEditParams;
 import org.eclipse.lsp4j.CodeAction;
 import org.eclipse.lsp4j.CodeActionKind;
 import org.eclipse.lsp4j.CodeActionParams;
-import org.eclipse.lsp4j.MessageParams;
-import org.eclipse.lsp4j.MessageType;
 import org.eclipse.lsp4j.Range;
 import org.eclipse.lsp4j.TextEdit;
 import org.eclipse.lsp4j.WorkspaceEdit;
@@ -66,15 +67,13 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service = CodeActionsProvider.class, position = 30)
 public final class GetterSetterGenerator extends CodeActionsProvider {
 
-    public static final String GENERATE_GETTERS =  "java.generate.getters";
-    public static final String GENERATE_SETTERS =  "java.generate.setters";
-    public static final String GENERATE_GETTERS_SETTERS =  "java.generate.getters.setters";
+    private static final String KIND =  "kind";
+    private static final String URI =  "uri";
+    private static final String OFFSET =  "offset";
+    private static final String ALL =  "all";
+    private static final String FIELDS =  "fields";
 
-    private final Set<String> commands = Collections.unmodifiableSet(new HashSet(Arrays.asList(GENERATE_GETTERS, GENERATE_SETTERS, GENERATE_GETTERS_SETTERS)));
     private final Gson gson = new Gson();
-
-    public GetterSetterGenerator() {
-    }
 
     @Override
     @NbBundle.Messages({
@@ -101,35 +100,30 @@ public final class GetterSetterGenerator extends CodeActionsProvider {
         List<CodeAction> result = new ArrayList<>();
         if (missingGetters) {
             String name = pair.first().size() == 1 ? Bundle.DN_GenerateGetterFor(pair.first().iterator().next().getSimpleName().toString()) : Bundle.DN_GenerateGetters();
-            result.add(createCodeAction(name, all ? CODE_GENERATOR_KIND : CodeActionKind.QuickFix, GENERATE_GETTERS, uri, offset, all, pair.first().stream().map(variableElement -> {
+            result.add(createCodeAction(name, all ? CODE_GENERATOR_KIND : CodeActionKind.QuickFix, data(GeneratorUtils.GETTERS_ONLY, uri, offset, all, pair.first().stream().map(variableElement -> {
                 QuickPickItem item = new QuickPickItem(createLabel(info, variableElement));
                 item.setUserData(new ElementData(variableElement));
                 return item;
-            }).collect(Collectors.toList())));
+            }).collect(Collectors.toList())), all && pair.first().size() > 1 ? "workbench.action.focusActiveEditorGroup" : null));
         }
         if (missingSetters) {
             String name = pair.second().size() == 1 ? Bundle.DN_GenerateSetterFor(pair.second().iterator().next().getSimpleName().toString()) : Bundle.DN_GenerateSetters();
-            result.add(createCodeAction(name, all ? CODE_GENERATOR_KIND : CodeActionKind.QuickFix, GENERATE_SETTERS, uri, offset, all, pair.second().stream().map(variableElement -> {
+            result.add(createCodeAction(name, all ? CODE_GENERATOR_KIND : CodeActionKind.QuickFix, data(GeneratorUtils.SETTERS_ONLY, uri, offset, all, pair.second().stream().map(variableElement -> {
                 QuickPickItem item = new QuickPickItem(createLabel(info, variableElement));
                 item.setUserData(new ElementData(variableElement));
                 return item;
-            }).collect(Collectors.toList())));
+            }).collect(Collectors.toList())), all && pair.first().size() > 1 ? "workbench.action.focusActiveEditorGroup" : null));
         }
         if (missingGetters && missingSetters) {
             pair.first().retainAll(pair.second());
             String name = pair.first().size() == 1 ? Bundle.DN_GenerateGetterSetterFor(pair.first().iterator().next().getSimpleName().toString()) : Bundle.DN_GenerateGettersSetters();
-            result.add(createCodeAction(name, all ? CODE_GENERATOR_KIND : CodeActionKind.QuickFix, GENERATE_GETTERS_SETTERS, uri, offset, all, pair.first().stream().map(variableElement -> {
+            result.add(createCodeAction(name, all ? CODE_GENERATOR_KIND : CodeActionKind.QuickFix, data(0, uri, offset, all, pair.first().stream().map(variableElement -> {
                 QuickPickItem item = new QuickPickItem(createLabel(info, variableElement));
                 item.setUserData(new ElementData(variableElement));
                 return item;
-            }).collect(Collectors.toList())));
+            }).collect(Collectors.toList())), all && pair.first().size() > 1 ? "workbench.action.focusActiveEditorGroup" : null));
         }
         return result;
-    }
-
-    @Override
-    public Set<String> getCommands() {
-        return commands;
     }
 
     @Override
@@ -138,57 +132,66 @@ public final class GetterSetterGenerator extends CodeActionsProvider {
         "DN_SelectSetters=Select fields to generate setters for",
         "DN_SelectGettersSetters=Select fields to generate getters and setters for",
     })
-    public CompletableFuture<Object> processCommand(NbCodeLanguageClient client, String command, List<Object> arguments) {
-        if (arguments.size() > 3) {
-            String uri = gson.fromJson(gson.toJson(arguments.get(0)), String.class);
-            int offset = gson.fromJson(gson.toJson(arguments.get(1)), Integer.class);
-            boolean all = gson.fromJson(gson.toJson(arguments.get(2)), boolean.class);
-            List<QuickPickItem> fields = Arrays.asList(gson.fromJson(gson.toJson(arguments.get(3)), QuickPickItem[].class));
-            int kind;
+    public CompletableFuture<CodeAction> resolve(NbCodeLanguageClient client, CodeAction codeAction, Object data) {
+        CompletableFuture<CodeAction> future = new CompletableFuture<>();
+        try {
+            int kind = ((JsonObject) data).getAsJsonPrimitive(KIND).getAsInt();
+            String uri = ((JsonObject) data).getAsJsonPrimitive(URI).getAsString();
+            int offset = ((JsonObject) data).getAsJsonPrimitive(OFFSET).getAsInt();
+            boolean all = ((JsonObject) data).getAsJsonPrimitive(ALL).getAsBoolean();
+            List<QuickPickItem> fields = Arrays.asList(gson.fromJson(((JsonObject) data).get(FIELDS), QuickPickItem[].class));
             String text;
-            switch (command) {
-                case GENERATE_GETTERS: kind = GeneratorUtils.GETTERS_ONLY; text = Bundle.DN_SelectGetters(); break;
-                case GENERATE_SETTERS: kind = GeneratorUtils.SETTERS_ONLY; text = Bundle.DN_SelectSetters(); break;
-                default: kind = 0; text = Bundle.DN_SelectGettersSetters(); break;
+            switch (kind) {
+                case GeneratorUtils.GETTERS_ONLY: text = Bundle.DN_SelectGetters(); break;
+                case GeneratorUtils.SETTERS_ONLY: text = Bundle.DN_SelectSetters(); break;
+                default: text = Bundle.DN_SelectGettersSetters(); break;
             }
             if (all && fields.size() > 1) {
                 client.showQuickPick(new ShowQuickPickParams(text, true, fields)).thenAccept(selected -> {
-                    if (selected != null && !selected.isEmpty()) {
-                        generate(client, kind, uri, offset, selected);
+                    try {
+                        if (selected != null && !selected.isEmpty()) {
+                            WorkspaceEdit edit = generate(kind, uri, offset, selected);
+                            if (edit != null) {
+                                codeAction.setEdit(edit);
+                            }
+                        }
+                        future.complete(codeAction);
+                    } catch (IOException | IllegalArgumentException ex) {
+                        future.completeExceptionally(ex);
                     }
                 });
-            } else if (fields.size() == 1) {
-                generate(client, kind, uri, offset, fields);
+            } else {
+                WorkspaceEdit edit = generate(kind, uri, offset, fields);
+                if (edit != null) {
+                    codeAction.setEdit(edit);
+                }
+                future.complete(codeAction);
             }
-        } else {
-            client.logMessage(new MessageParams(MessageType.Error, String.format("Illegal number of arguments received for command: %s", command)));
+        } catch(JsonSyntaxException | IOException | IllegalArgumentException ex) {
+            future.completeExceptionally(ex);
         }
-        return CompletableFuture.completedFuture(true);
+        return future;
     }
 
-    private void generate(NbCodeLanguageClient client, int kind, String uri, int offset, List<QuickPickItem> fields) throws IllegalArgumentException {
-        try {
-            FileObject file = Utils.fromUri(uri);
-            JavaSource js = JavaSource.forFileObject(file);
-            if (js == null) {
-                throw new IOException("Cannot get JavaSource for: " + uri);
-            }
-            List<TextEdit> edits = TextDocumentServiceImpl.modify2TextEdits(js, wc -> {
-                wc.toPhase(JavaSource.Phase.RESOLVED);
-                TreePath tp = wc.getTreeUtilities().pathFor(offset);
-                tp = wc.getTreeUtilities().getPathElementOfKind(TreeUtilities.CLASS_TREE_KINDS, tp);
-                if (tp != null) {
-                    List<VariableElement> variableElements = fields.stream().map(item -> {
-                        ElementData data = gson.fromJson(gson.toJson(item.getUserData()), ElementData.class);
-                        return (VariableElement) data.resolve(wc);
-                    }).collect(Collectors.toList());
-                    GeneratorUtils.generateGettersAndSetters(wc, tp, variableElements, kind, -1);
-                }
-            });
-            client.applyEdit(new ApplyWorkspaceEditParams(new WorkspaceEdit(Collections.singletonMap(uri, edits))));
-        } catch (IOException ex) {
-            client.logMessage(new MessageParams(MessageType.Error, ex.getLocalizedMessage()));
+    private WorkspaceEdit generate(int kind, String uri, int offset, List<QuickPickItem> fields) throws IOException, IllegalArgumentException {
+        FileObject file = Utils.fromUri(uri);
+        JavaSource js = JavaSource.forFileObject(file);
+        if (js == null) {
+            throw new IOException("Cannot get JavaSource for: " + uri);
         }
+        List<TextEdit> edits = TextDocumentServiceImpl.modify2TextEdits(js, wc -> {
+            wc.toPhase(JavaSource.Phase.RESOLVED);
+            TreePath tp = wc.getTreeUtilities().pathFor(offset);
+            tp = wc.getTreeUtilities().getPathElementOfKind(TreeUtilities.CLASS_TREE_KINDS, tp);
+            if (tp != null) {
+                List<VariableElement> variableElements = fields.stream().map(item -> {
+                    ElementData data = gson.fromJson(gson.toJson(item.getUserData()), ElementData.class);
+                    return (VariableElement) data.resolve(wc);
+                }).collect(Collectors.toList());
+                GeneratorUtils.generateGettersAndSetters(wc, tp, variableElements, kind, -1);
+            }
+        });
+        return edits.isEmpty() ? null : new WorkspaceEdit(Collections.singletonMap(uri, edits));
     }
 
     private static Pair<Set<VariableElement>, Set<VariableElement>> findMissingGettersSetters(CompilationInfo info, Range range, boolean all) {
@@ -253,5 +256,15 @@ public final class GetterSetterGenerator extends CodeActionsProvider {
         }
 
         return Pair.of(missingGetters, missingSetters);
+    }
+
+    private static Map<String, Object> data(int kind, String uri, int offset, boolean all, List<QuickPickItem> fields) {
+        Map<String, Object> data = new HashMap<>();
+        data.put(KIND, kind);
+        data.put(URI, uri);
+        data.put(OFFSET, offset);
+        data.put(ALL, all);
+        data.put(FIELDS, fields);
+        return data;
     }
 }

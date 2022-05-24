@@ -216,7 +216,7 @@ public final class MethodModelSupport {
                     Iterator<Map.Entry<String, Object>> it = annotation.getArguments().entrySet().iterator();
                     while (it.hasNext()) {
                         Map.Entry<String, Object> pairs = it.next();
-                        annotationArgs.add(genUtils.createAnnotationArgument((String) pairs.getKey(),pairs.getValue()));
+                        annotationArgs.add(genUtils.createAnnotationArgument(pairs.getKey(), pairs.getValue()));
                     }
                     annotationTree = genUtils.createAnnotation(annotation.getType(), annotationArgs);
                 }

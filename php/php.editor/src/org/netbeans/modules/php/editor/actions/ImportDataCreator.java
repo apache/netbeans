@@ -38,6 +38,7 @@ import org.netbeans.modules.php.editor.api.QualifiedName;
 import org.netbeans.modules.php.editor.api.elements.AliasedElement;
 import org.netbeans.modules.php.editor.api.elements.ClassElement;
 import org.netbeans.modules.php.editor.api.elements.ConstantElement;
+import org.netbeans.modules.php.editor.api.elements.EnumElement;
 import org.netbeans.modules.php.editor.api.elements.FullyQualifiedElement;
 import org.netbeans.modules.php.editor.api.elements.FunctionElement;
 import org.netbeans.modules.php.editor.api.elements.InterfaceElement;
@@ -136,6 +137,9 @@ public class ImportDataCreator {
             possibleTypes.addAll(phpIndex.getFunctions(nameKind));
             possibleTypes.addAll(phpIndex.getConstants(nameKind));
         }
+        if (options.getPhpVersion().compareTo(PhpVersion.PHP_81) >= 0) {
+            possibleTypes.addAll(phpIndex.getEnums(nameKind));
+        }
         return possibleTypes;
     }
 
@@ -157,7 +161,8 @@ public class ImportDataCreator {
         for (FullyQualifiedElement fqElement : possibleFQElements) {
             if (fqElement instanceof ClassElement
                     || fqElement instanceof InterfaceElement
-                    || fqElement instanceof TraitElement) {
+                    || fqElement instanceof TraitElement
+                    || fqElement instanceof EnumElement) {
                 result.add(fqElement);
             } else if (!fqElement.isPlatform()) {
                 result.add(fqElement);

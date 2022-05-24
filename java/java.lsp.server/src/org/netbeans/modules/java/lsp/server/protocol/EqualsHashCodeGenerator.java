@@ -19,15 +19,17 @@
 package org.netbeans.modules.java.lsp.server.protocol;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonSyntaxException;
 import com.sun.source.tree.Tree;
 import com.sun.source.util.TreePath;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 import javax.lang.model.element.ElementKind;
@@ -36,12 +38,9 @@ import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.util.ElementFilter;
-import org.eclipse.lsp4j.ApplyWorkspaceEditParams;
 import org.eclipse.lsp4j.CodeAction;
 import org.eclipse.lsp4j.CodeActionKind;
 import org.eclipse.lsp4j.CodeActionParams;
-import org.eclipse.lsp4j.MessageParams;
-import org.eclipse.lsp4j.MessageType;
 import org.eclipse.lsp4j.TextEdit;
 import org.eclipse.lsp4j.WorkspaceEdit;
 import org.netbeans.api.java.source.CompilationController;
@@ -59,15 +58,14 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service = CodeActionsProvider.class, position = 40)
 public final class EqualsHashCodeGenerator extends CodeActionsProvider {
 
-    public static final String GENERATE_EQUALS =  "java.generate.equals";
-    public static final String GENERATE_HASH_CODE =  "java.generate.hashCode";
-    public static final String GENERATE_EQUALS_HASH_CODE =  "java.generate.equals.hashCode";
+    private static final String KIND =  "kind";
+    private static final String URI =  "uri";
+    private static final String OFFSET =  "offset";
+    private static final String FIELDS =  "fields";
+    private static final int EQUALS_ONLY = 1;
+    private static final int HASH_CODE_ONLY = 2;
 
-    private final Set<String> commands = Collections.unmodifiableSet(new HashSet<>(Arrays.asList(GENERATE_EQUALS_HASH_CODE, GENERATE_EQUALS, GENERATE_HASH_CODE)));
     private final Gson gson = new Gson();
-
-    public EqualsHashCodeGenerator() {
-    }
 
     @Override
     @NbBundle.Messages({
@@ -113,16 +111,11 @@ public final class EqualsHashCodeGenerator extends CodeActionsProvider {
         String uri = Utils.toUri(info.getFileObject());
         if (equalsHashCode[0] == null) {
             if (equalsHashCode[1] == null) {
-                return Collections.singletonList(createCodeAction(Bundle.DN_GenerateEqualsHashCode(), CODE_GENERATOR_KIND, GENERATE_EQUALS_HASH_CODE, uri, offset, fields));
+                return Collections.singletonList(createCodeAction(Bundle.DN_GenerateEqualsHashCode(), CODE_GENERATOR_KIND, data(0, uri, offset, fields), "workbench.action.focusActiveEditorGroup"));
             }
-            return Collections.singletonList(createCodeAction(Bundle.DN_GenerateEquals(), CODE_GENERATOR_KIND, GENERATE_EQUALS, uri, offset, fields));
+            return Collections.singletonList(createCodeAction(Bundle.DN_GenerateEquals(), CODE_GENERATOR_KIND, data(EQUALS_ONLY, uri, offset, fields), "workbench.action.focusActiveEditorGroup"));
         }
-        return Collections.singletonList(createCodeAction(Bundle.DN_GenerateHashCode(), CODE_GENERATOR_KIND, GENERATE_HASH_CODE, uri, offset, fields));
-    }
-
-    @Override
-    public Set<String> getCommands() {
-        return commands;
+        return Collections.singletonList(createCodeAction(Bundle.DN_GenerateHashCode(), CODE_GENERATOR_KIND, data(HASH_CODE_ONLY, uri, offset, fields), "workbench.action.focusActiveEditorGroup"));
     }
 
     @Override
@@ -131,22 +124,24 @@ public final class EqualsHashCodeGenerator extends CodeActionsProvider {
         "DN_SelectHashCode=Select fields to be included in hashCode()",
         "DN_SelectEqualsHashCode=Select fields to be included in equals() and hashCode()",
     })
-    public CompletableFuture<Object> processCommand(NbCodeLanguageClient client, String command, List<Object> arguments) {
-        if (arguments.size() > 2) {
-            String uri = gson.fromJson(gson.toJson(arguments.get(0)), String.class);
-            int offset = gson.fromJson(gson.toJson(arguments.get(1)), Integer.class);
-            List<QuickPickItem> fields = Arrays.asList(gson.fromJson(gson.toJson(arguments.get(2)), QuickPickItem[].class));
+    public CompletableFuture<CodeAction> resolve(NbCodeLanguageClient client, CodeAction codeAction, Object data) {
+        CompletableFuture<CodeAction> future = new CompletableFuture<>();
+        try {
+            int kind = ((JsonObject) data).getAsJsonPrimitive(KIND).getAsInt();
+            String uri = ((JsonObject) data).getAsJsonPrimitive(URI).getAsString();
+            int offset = ((JsonObject) data).getAsJsonPrimitive(OFFSET).getAsInt();
+            List<QuickPickItem> fields = Arrays.asList(gson.fromJson(((JsonObject) data).get(FIELDS), QuickPickItem[].class));
             String text;
-            boolean generateEquals = !GENERATE_HASH_CODE.equals(command);
-            boolean generateHashCode = !GENERATE_EQUALS.equals(command);
-            switch (command) {
-                case GENERATE_EQUALS: text = Bundle.DN_SelectEquals(); break;
-                case GENERATE_HASH_CODE: text = Bundle.DN_SelectHashCode(); break;
+            boolean generateEquals = HASH_CODE_ONLY != kind;
+            boolean generateHashCode = EQUALS_ONLY != kind;
+            switch (kind) {
+                case EQUALS_ONLY: text = Bundle.DN_SelectEquals(); break;
+                case HASH_CODE_ONLY: text = Bundle.DN_SelectHashCode(); break;
                 default: text = Bundle.DN_SelectEqualsHashCode(); break;
             }
             client.showQuickPick(new ShowQuickPickParams(text, true, fields)).thenAccept(selected -> {
-                if (selected != null) {
-                    try {
+                try {
+                    if (selected != null) {
                         FileObject file = Utils.fromUri(uri);
                         JavaSource js = JavaSource.forFileObject(file);
                         if (js == null) {
@@ -158,21 +153,33 @@ public final class EqualsHashCodeGenerator extends CodeActionsProvider {
                             tp = wc.getTreeUtilities().getPathElementOfKind(Tree.Kind.CLASS, tp);
                             if (tp != null) {
                                 List<VariableElement> selectedFields = selected.stream().map(item -> {
-                                    ElementData data = gson.fromJson(gson.toJson(item.getUserData()), ElementData.class);
-                                    return (VariableElement)data.resolve(wc);
+                                    ElementData userData = gson.fromJson(gson.toJson(item.getUserData()), ElementData.class);
+                                    return (VariableElement) userData.resolve(wc);
                                 }).collect(Collectors.toList());
                                 org.netbeans.modules.java.editor.codegen.EqualsHashCodeGenerator.generateEqualsAndHashCode(wc, tp, generateEquals ? selectedFields : null, generateHashCode ? selectedFields : null, -1);
                             }
                         });
-                        client.applyEdit(new ApplyWorkspaceEditParams(new WorkspaceEdit(Collections.singletonMap(uri, edits))));
-                    } catch (IOException | IllegalArgumentException ex) {
-                        client.logMessage(new MessageParams(MessageType.Error, ex.getLocalizedMessage()));
+                        if (!edits.isEmpty()) {
+                            codeAction.setEdit(new WorkspaceEdit(Collections.singletonMap(uri, edits)));
+                        }
                     }
+                    future.complete(codeAction);
+                } catch (IOException | IllegalArgumentException ex) {
+                    future.completeExceptionally(ex);
                 }
             });
-        } else {
-            client.logMessage(new MessageParams(MessageType.Error, String.format("Illegal number of arguments received for command: %s", command)));
+        } catch(JsonSyntaxException ex) {
+            future.completeExceptionally(ex);
         }
-        return CompletableFuture.completedFuture(true);
+        return future;
+    }
+
+    private static Map<String, Object> data(int kind, String uri, int offset, List<QuickPickItem> fields) {
+        Map<String, Object> data = new HashMap<>();
+        data.put(KIND, kind);
+        data.put(URI, uri);
+        data.put(OFFSET, offset);
+        data.put(FIELDS, fields);
+        return data;
     }
 }

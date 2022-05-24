@@ -1,0 +1,1047 @@
+<testresult testFile='attributeSyntax_03.php'>
+    <scanner>
+        <token id='T_ATTRIBUTE' start='815' end='817'>
+            <text>#[</text>
+        </token>
+        <token id='T_STRING' start='817' end='827'>
+            <text>Interface1</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='827' end='828'>
+            <text>]</text>
+        </token>
+        <token id='T_INTERFACE' start='829' end='838'>
+            <text>interface</text>
+        </token>
+        <token id='T_STRING' start='839' end='840'>
+            <text>I</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='841' end='842'>
+            <text>{</text>
+        </token>
+        <token id='T_ATTRIBUTE' start='847' end='849'>
+            <text>#[</text>
+        </token>
+        <token id='T_STRING' start='849' end='858'>
+            <text>Constant1</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='858' end='859'>
+            <text>(</text>
+        </token>
+        <token id='T_LNUMBER' start='859' end='860'>
+            <text>1</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='860' end='861'>
+            <text>)</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='861' end='862'>
+            <text>]</text>
+        </token>
+        <token id='T_CONST' start='867' end='872'>
+            <text>const</text>
+        </token>
+        <token id='T_STRING' start='873' end='881'>
+            <text>I_CONST1</text>
+        </token>
+        <token id='T_EQUAL' start='882' end='883'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='884' end='895'>
+            <text>"interface"</text>
+        </token>
+        <token id='T_SEMICOLON' start='895' end='896'>
+            <text>;</text>
+        </token>
+        <token id='T_ATTRIBUTE' start='901' end='903'>
+            <text>#[</text>
+        </token>
+        <token id='T_STRING' start='903' end='912'>
+            <text>Constant2</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='912' end='913'>
+            <text>(</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='913' end='919'>
+            <text>"test"</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='919' end='920'>
+            <text>)</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='920' end='921'>
+            <text>]</text>
+        </token>
+        <token id='T_PUBLIC' start='926' end='932'>
+            <text>public</text>
+        </token>
+        <token id='T_CONST' start='933' end='938'>
+            <text>const</text>
+        </token>
+        <token id='T_STRING' start='939' end='947'>
+            <text>I_CONST2</text>
+        </token>
+        <token id='T_EQUAL' start='948' end='949'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='950' end='961'>
+            <text>"interface"</text>
+        </token>
+        <token id='T_SEMICOLON' start='961' end='962'>
+            <text>;</text>
+        </token>
+        <token id='T_ATTRIBUTE' start='967' end='969'>
+            <text>#[</text>
+        </token>
+        <token id='T_STRING' start='969' end='976'>
+            <text>Method1</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='976' end='977'>
+            <text>]</text>
+        </token>
+        <token id='T_PUBLIC' start='982' end='988'>
+            <text>public</text>
+        </token>
+        <token id='T_FUNCTION' start='989' end='997'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='998' end='1004'>
+            <text>method</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1004' end='1005'>
+            <text>(</text>
+        </token>
+        <token id='T_ATTRIBUTE' start='1005' end='1007'>
+            <text>#[</text>
+        </token>
+        <token id='T_STRING' start='1007' end='1017'>
+            <text>Parameter1</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='1017' end='1018'>
+            <text>]</text>
+        </token>
+        <token id='T_VARIABLE' start='1019' end='1026'>
+            <text>$param1</text>
+        </token>
+        <token id='T_COMMA' start='1026' end='1027'>
+            <text>,</text>
+        </token>
+        <token id='T_ATTRIBUTE' start='1028' end='1030'>
+            <text>#[</text>
+        </token>
+        <token id='T_STRING' start='1030' end='1040'>
+            <text>Parameter2</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1040' end='1041'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1041' end='1042'>
+            <text>)</text>
+        </token>
+        <token id='T_COMMA' start='1042' end='1043'>
+            <text>,</text>
+        </token>
+        <token id='T_STRING' start='1044' end='1054'>
+            <text>Parameter2</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1054' end='1055'>
+            <text>(</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='1055' end='1061'>
+            <text>"test"</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1061' end='1062'>
+            <text>)</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='1062' end='1063'>
+            <text>]</text>
+        </token>
+        <token id='T_VARIABLE' start='1064' end='1071'>
+            <text>$param2</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1071' end='1072'>
+            <text>)</text>
+        </token>
+        <token id='T_NEKUDOTAIM' start='1072' end='1073'>
+            <text>:</text>
+        </token>
+        <token id='T_STRING' start='1074' end='1078'>
+            <text>void</text>
+        </token>
+        <token id='T_SEMICOLON' start='1078' end='1079'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1080' end='1081'>
+            <text>}</text>
+        </token>
+        <token id='T_VARIABLE' start='1083' end='1087'>
+            <text>$ref</text>
+        </token>
+        <token id='T_EQUAL' start='1088' end='1089'>
+            <text>=</text>
+        </token>
+        <token id='T_NEW' start='1090' end='1093'>
+            <text>new</text>
+        </token>
+        <token id='T_NS_SEPARATOR' start='1094' end='1095'>
+            <text>\</text>
+        </token>
+        <token id='T_STRING' start='1095' end='1110'>
+            <text>ReflectionClass</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1110' end='1111'>
+            <text>(</text>
+        </token>
+        <token id='T_STRING' start='1111' end='1112'>
+            <text>I</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='1112' end='1114'>
+            <text>::</text>
+        </token>
+        <token id='T_CLASS' start='1114' end='1119'>
+            <text>class</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1119' end='1120'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='1120' end='1121'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='1122' end='1130'>
+            <text>$sources</text>
+        </token>
+        <token id='T_EQUAL' start='1131' end='1132'>
+            <text>=</text>
+        </token>
+        <token id='T_OPEN_RECT' start='1133' end='1134'>
+            <text>[</text>
+        </token>
+        <token id='T_VARIABLE' start='1139' end='1143'>
+            <text>$ref</text>
+        </token>
+        <token id='T_COMMA' start='1143' end='1144'>
+            <text>,</text>
+        </token>
+        <token id='T_VARIABLE' start='1149' end='1153'>
+            <text>$ref</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='1153' end='1155'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='1155' end='1176'>
+            <text>getReflectionConstant</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1176' end='1177'>
+            <text>(</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='1177' end='1187'>
+            <text>&apos;I_CONST1&apos;</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1187' end='1188'>
+            <text>)</text>
+        </token>
+        <token id='T_COMMA' start='1188' end='1189'>
+            <text>,</text>
+        </token>
+        <token id='T_VARIABLE' start='1194' end='1198'>
+            <text>$ref</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='1198' end='1200'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='1200' end='1221'>
+            <text>getReflectionConstant</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1221' end='1222'>
+            <text>(</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='1222' end='1232'>
+            <text>&apos;I_CONST2&apos;</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1232' end='1233'>
+            <text>)</text>
+        </token>
+        <token id='T_COMMA' start='1233' end='1234'>
+            <text>,</text>
+        </token>
+        <token id='T_VARIABLE' start='1239' end='1243'>
+            <text>$ref</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='1243' end='1245'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='1245' end='1254'>
+            <text>getMethod</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1254' end='1255'>
+            <text>(</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='1255' end='1263'>
+            <text>&apos;method&apos;</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1263' end='1264'>
+            <text>)</text>
+        </token>
+        <token id='T_COMMA' start='1264' end='1265'>
+            <text>,</text>
+        </token>
+        <token id='T_VARIABLE' start='1270' end='1274'>
+            <text>$ref</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='1274' end='1276'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='1276' end='1285'>
+            <text>getMethod</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1285' end='1286'>
+            <text>(</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='1286' end='1294'>
+            <text>&apos;method&apos;</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1294' end='1295'>
+            <text>)</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='1295' end='1297'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='1297' end='1310'>
+            <text>getParameters</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1310' end='1311'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1311' end='1312'>
+            <text>)</text>
+        </token>
+        <token id='T_OPEN_RECT' start='1312' end='1313'>
+            <text>[</text>
+        </token>
+        <token id='T_LNUMBER' start='1313' end='1314'>
+            <text>0</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='1314' end='1315'>
+            <text>]</text>
+        </token>
+        <token id='T_COMMA' start='1315' end='1316'>
+            <text>,</text>
+        </token>
+        <token id='T_VARIABLE' start='1321' end='1325'>
+            <text>$ref</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='1325' end='1327'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='1327' end='1336'>
+            <text>getMethod</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1336' end='1337'>
+            <text>(</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='1337' end='1345'>
+            <text>&apos;method&apos;</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1345' end='1346'>
+            <text>)</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='1346' end='1348'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='1348' end='1361'>
+            <text>getParameters</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1361' end='1362'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1362' end='1363'>
+            <text>)</text>
+        </token>
+        <token id='T_OPEN_RECT' start='1363' end='1364'>
+            <text>[</text>
+        </token>
+        <token id='T_LNUMBER' start='1364' end='1365'>
+            <text>1</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='1365' end='1366'>
+            <text>]</text>
+        </token>
+        <token id='T_COMMA' start='1366' end='1367'>
+            <text>,</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='1368' end='1369'>
+            <text>]</text>
+        </token>
+        <token id='T_SEMICOLON' start='1369' end='1370'>
+            <text>;</text>
+        </token>
+        <token id='T_FOREACH' start='1372' end='1379'>
+            <text>foreach</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1380' end='1381'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='1381' end='1389'>
+            <text>$sources</text>
+        </token>
+        <token id='T_AS' start='1390' end='1392'>
+            <text>as</text>
+        </token>
+        <token id='T_VARIABLE' start='1393' end='1395'>
+            <text>$r</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1395' end='1396'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1397' end='1398'>
+            <text>{</text>
+        </token>
+        <token id='T_VARIABLE' start='1400' end='1405'>
+            <text>$attr</text>
+        </token>
+        <token id='T_EQUAL' start='1406' end='1407'>
+            <text>=</text>
+        </token>
+        <token id='T_VARIABLE' start='1408' end='1410'>
+            <text>$r</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='1410' end='1412'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='1412' end='1425'>
+            <text>getAttributes</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1425' end='1426'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1426' end='1427'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='1427' end='1428'>
+            <text>;</text>
+        </token>
+        <token id='T_STRING' start='1430' end='1438'>
+            <text>var_dump</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1438' end='1439'>
+            <text>(</text>
+        </token>
+        <token id='T_STRING' start='1439' end='1448'>
+            <text>get_class</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1448' end='1449'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='1449' end='1451'>
+            <text>$r</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1451' end='1452'>
+            <text>)</text>
+        </token>
+        <token id='T_COMMA' start='1452' end='1453'>
+            <text>,</text>
+        </token>
+        <token id='T_STRING' start='1454' end='1459'>
+            <text>count</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1459' end='1460'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='1460' end='1465'>
+            <text>$attr</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1465' end='1466'>
+            <text>)</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1466' end='1467'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='1467' end='1468'>
+            <text>;</text>
+        </token>
+        <token id='T_FOREACH' start='1474' end='1481'>
+            <text>foreach</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1482' end='1483'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='1483' end='1488'>
+            <text>$attr</text>
+        </token>
+        <token id='T_AS' start='1489' end='1491'>
+            <text>as</text>
+        </token>
+        <token id='T_VARIABLE' start='1492' end='1494'>
+            <text>$a</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1494' end='1495'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1496' end='1497'>
+            <text>{</text>
+        </token>
+        <token id='T_STRING' start='1506' end='1514'>
+            <text>var_dump</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1514' end='1515'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='1515' end='1517'>
+            <text>$a</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='1517' end='1519'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='1519' end='1526'>
+            <text>getName</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1526' end='1527'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1527' end='1528'>
+            <text>)</text>
+        </token>
+        <token id='T_COMMA' start='1528' end='1529'>
+            <text>,</text>
+        </token>
+        <token id='T_VARIABLE' start='1530' end='1532'>
+            <text>$a</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='1532' end='1534'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='1534' end='1546'>
+            <text>getArguments</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1546' end='1547'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1547' end='1548'>
+            <text>)</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1548' end='1549'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='1549' end='1550'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1555' end='1556'>
+            <text>}</text>
+        </token>
+        <token id='T_ECHO' start='1562' end='1566'>
+            <text>echo</text>
+        </token>
+        <token id='T_STRING' start='1567' end='1574'>
+            <text>PHP_EOL</text>
+        </token>
+        <token id='T_SEMICOLON' start='1574' end='1575'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1576' end='1577'>
+            <text>}</text>
+        </token>
+        <token id='EOF' start='1578' end='1578'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='1578'>
+        <Comments>
+            <Comment start='6' end='813' commentType='multiLine'/>
+            <Comment start='6' end='813' commentType='multiLine'/>
+        </Comments>
+        <Statements>
+            <InterfaceDeclaration start='815' end='1081'>
+                <Attributes>
+                    <Attribute start='815' end='828'>
+                        <AttributeDeclarations>
+                            <AttributeDeclaration start='817' end='827'>
+                                <AttributeName>
+                                    <NamespaceName start='817' end='827' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='817' end='827' name='Interface1'/>
+                                    </NamespaceName>
+                                </AttributeName>
+                            </AttributeDeclaration>
+                        </AttributeDeclarations>
+                    </Attribute>
+                </Attributes>
+                <Name>
+                    <Identifier start='839' end='840' name='I'/>
+                </Name>
+                <Block start='841' end='1081' isCurly='true'>
+                    <ClassConstantDeclaration start='847' end='896' modifier='public'>
+                        <Attributes>
+                            <Attribute start='847' end='862'>
+                                <AttributeDeclarations>
+                                    <AttributeDeclaration start='849' end='861'>
+                                        <AttributeName>
+                                            <NamespaceName start='849' end='858' isCurrent='false' isGlobal='false'>
+                                                <Identifier start='849' end='858' name='Constant1'/>
+                                            </NamespaceName>
+                                        </AttributeName>
+                                        <AttributeParameters>
+                                            <Scalar start='859' end='860' type='INT' value='1'/>
+                                        </AttributeParameters>
+                                    </AttributeDeclaration>
+                                </AttributeDeclarations>
+                            </Attribute>
+                        </Attributes>
+                        <Names>
+                            <Identifier start='873' end='881' name='I_CONST1'/>
+                        </Names>
+                        <Initializers>
+                            <Scalar start='884' end='895' type='STRING' value='"interface"'/>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='901' end='962' modifier='public'>
+                        <Attributes>
+                            <Attribute start='901' end='921'>
+                                <AttributeDeclarations>
+                                    <AttributeDeclaration start='903' end='920'>
+                                        <AttributeName>
+                                            <NamespaceName start='903' end='912' isCurrent='false' isGlobal='false'>
+                                                <Identifier start='903' end='912' name='Constant2'/>
+                                            </NamespaceName>
+                                        </AttributeName>
+                                        <AttributeParameters>
+                                            <Scalar start='913' end='919' type='STRING' value='"test"'/>
+                                        </AttributeParameters>
+                                    </AttributeDeclaration>
+                                </AttributeDeclarations>
+                            </Attribute>
+                        </Attributes>
+                        <Names>
+                            <Identifier start='939' end='947' name='I_CONST2'/>
+                        </Names>
+                        <Initializers>
+                            <Scalar start='950' end='961' type='STRING' value='"interface"'/>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <MethodDeclaration start='967' end='1079' modifiers='public'>
+                        <Attributes>
+                            <Attribute start='967' end='977'>
+                                <AttributeDeclarations>
+                                    <AttributeDeclaration start='969' end='976'>
+                                        <AttributeName>
+                                            <NamespaceName start='969' end='976' isCurrent='false' isGlobal='false'>
+                                                <Identifier start='969' end='976' name='Method1'/>
+                                            </NamespaceName>
+                                        </AttributeName>
+                                    </AttributeDeclaration>
+                                </AttributeDeclarations>
+                            </Attribute>
+                        </Attributes>
+                        <FunctionDeclaration start='989' end='1079' isReference='false'>
+                            <Identifier start='998' end='1004' name='method'/>
+                            <FormalParameters>
+                                <FormalParameter start='1005' end='1026' isMandatory='true' isVariadic='false'>
+                                    <Attributes>
+                                        <Attribute start='1005' end='1018'>
+                                            <AttributeDeclarations>
+                                                <AttributeDeclaration start='1007' end='1017'>
+                                                    <AttributeName>
+                                                        <NamespaceName start='1007' end='1017' isCurrent='false' isGlobal='false'>
+                                                            <Identifier start='1007' end='1017' name='Parameter1'/>
+                                                        </NamespaceName>
+                                                    </AttributeName>
+                                                </AttributeDeclaration>
+                                            </AttributeDeclarations>
+                                        </Attribute>
+                                    </Attributes>
+                                    <ParametrType>
+                                    </ParametrType>
+                                    <ParametrName>
+                                        <Variable start='1019' end='1026' isDollared='true'>
+                                            <Identifier start='1020' end='1026' name='param1'/>
+                                        </Variable>
+                                    </ParametrName>
+                                    <DefaultValue>
+                                    </DefaultValue>
+                                </FormalParameter>
+                                <FormalParameter start='1028' end='1071' isMandatory='true' isVariadic='false'>
+                                    <Attributes>
+                                        <Attribute start='1028' end='1063'>
+                                            <AttributeDeclarations>
+                                                <AttributeDeclaration start='1030' end='1042'>
+                                                    <AttributeName>
+                                                        <NamespaceName start='1030' end='1040' isCurrent='false' isGlobal='false'>
+                                                            <Identifier start='1030' end='1040' name='Parameter2'/>
+                                                        </NamespaceName>
+                                                    </AttributeName>
+                                                    <AttributeParameters>
+                                                    </AttributeParameters>
+                                                </AttributeDeclaration>
+                                                <AttributeDeclaration start='1044' end='1062'>
+                                                    <AttributeName>
+                                                        <NamespaceName start='1044' end='1054' isCurrent='false' isGlobal='false'>
+                                                            <Identifier start='1044' end='1054' name='Parameter2'/>
+                                                        </NamespaceName>
+                                                    </AttributeName>
+                                                    <AttributeParameters>
+                                                        <Scalar start='1055' end='1061' type='STRING' value='"test"'/>
+                                                    </AttributeParameters>
+                                                </AttributeDeclaration>
+                                            </AttributeDeclarations>
+                                        </Attribute>
+                                    </Attributes>
+                                    <ParametrType>
+                                    </ParametrType>
+                                    <ParametrName>
+                                        <Variable start='1064' end='1071' isDollared='true'>
+                                            <Identifier start='1065' end='1071' name='param2'/>
+                                        </Variable>
+                                    </ParametrName>
+                                    <DefaultValue>
+                                    </DefaultValue>
+                                </FormalParameter>
+                            </FormalParameters>
+                            <NamespaceName start='1074' end='1078' isCurrent='false' isGlobal='false'>
+                                <Identifier start='1074' end='1078' name='void'/>
+                            </NamespaceName>
+                            <Block start='1078' end='1079' isCurly='flase'>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                </Block>
+            </InterfaceDeclaration>
+            <ExpressionStatement start='1083' end='1121'>
+                <Assignment start='1083' end='1120' operator='EQUAL'>
+                    <Variable start='1083' end='1087' isDollared='true'>
+                        <Identifier start='1084' end='1087' name='ref'/>
+                    </Variable>
+                    <ClassInstanceCreation start='1090' end='1120' anonymous='false'>
+                        <ClassName start='1094' end='1110'>
+                            <NamespaceName start='1094' end='1110' isCurrent='false' isGlobal='true'>
+                                <Identifier start='1095' end='1110' name='ReflectionClass'/>
+                            </NamespaceName>
+                        </ClassName>
+                        <Parameters>
+                            <StaticConstantAccess start='1111' end='1119'>
+                                <NamespaceName start='1111' end='1112' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='1111' end='1112' name='I'/>
+                                </NamespaceName>
+                                <Constant>
+                                    <Identifier start='1114' end='1119' name='class'/>
+                                </Constant>
+                                <Member>
+                                    <Identifier start='1114' end='1119' name='class'/>
+                                </Member>
+                            </StaticConstantAccess>
+                        </Parameters>
+                    </ClassInstanceCreation>
+                </Assignment>
+            </ExpressionStatement>
+            <ExpressionStatement start='1122' end='1370'>
+                <Assignment start='1122' end='1369' operator='EQUAL'>
+                    <Variable start='1122' end='1130' isDollared='true'>
+                        <Identifier start='1123' end='1130' name='sources'/>
+                    </Variable>
+                    <ArrayCreation start='1133' end='1369' type='NEW'>
+                        <ArrayElement start='1139' end='1143'>
+                            <Key>
+                            </Key>
+                            <Value>
+                                <Variable start='1139' end='1143' isDollared='true'>
+                                    <Identifier start='1140' end='1143' name='ref'/>
+                                </Variable>
+                            </Value>
+                        </ArrayElement>
+                        <ArrayElement start='1149' end='1188'>
+                            <Key>
+                            </Key>
+                            <Value>
+                                <MethodInvocation start='1149' end='1188' isNullsafe='false'>
+                                    <Variable start='1149' end='1153' isDollared='true'>
+                                        <Identifier start='1150' end='1153' name='ref'/>
+                                    </Variable>
+                                    <Method>
+                                        <FunctionInvocation start='1155' end='1188'>
+                                            <FucntionName start='1155' end='1176'>
+                                                <Variable start='1155' end='1176' isDollared='false'>
+                                                    <Identifier start='1155' end='1176' name='getReflectionConstant'/>
+                                                </Variable>
+                                            </FucntionName>
+                                            <Parameters>
+                                                <Scalar start='1177' end='1187' type='STRING' value='&apos;I_CONST1&apos;'/>
+                                            </Parameters>
+                                        </FunctionInvocation>
+                                    </Method>
+                                </MethodInvocation>
+                            </Value>
+                        </ArrayElement>
+                        <ArrayElement start='1194' end='1233'>
+                            <Key>
+                            </Key>
+                            <Value>
+                                <MethodInvocation start='1194' end='1233' isNullsafe='false'>
+                                    <Variable start='1194' end='1198' isDollared='true'>
+                                        <Identifier start='1195' end='1198' name='ref'/>
+                                    </Variable>
+                                    <Method>
+                                        <FunctionInvocation start='1200' end='1233'>
+                                            <FucntionName start='1200' end='1221'>
+                                                <Variable start='1200' end='1221' isDollared='false'>
+                                                    <Identifier start='1200' end='1221' name='getReflectionConstant'/>
+                                                </Variable>
+                                            </FucntionName>
+                                            <Parameters>
+                                                <Scalar start='1222' end='1232' type='STRING' value='&apos;I_CONST2&apos;'/>
+                                            </Parameters>
+                                        </FunctionInvocation>
+                                    </Method>
+                                </MethodInvocation>
+                            </Value>
+                        </ArrayElement>
+                        <ArrayElement start='1239' end='1264'>
+                            <Key>
+                            </Key>
+                            <Value>
+                                <MethodInvocation start='1239' end='1264' isNullsafe='false'>
+                                    <Variable start='1239' end='1243' isDollared='true'>
+                                        <Identifier start='1240' end='1243' name='ref'/>
+                                    </Variable>
+                                    <Method>
+                                        <FunctionInvocation start='1245' end='1264'>
+                                            <FucntionName start='1245' end='1254'>
+                                                <Variable start='1245' end='1254' isDollared='false'>
+                                                    <Identifier start='1245' end='1254' name='getMethod'/>
+                                                </Variable>
+                                            </FucntionName>
+                                            <Parameters>
+                                                <Scalar start='1255' end='1263' type='STRING' value='&apos;method&apos;'/>
+                                            </Parameters>
+                                        </FunctionInvocation>
+                                    </Method>
+                                </MethodInvocation>
+                            </Value>
+                        </ArrayElement>
+                        <ArrayElement start='1270' end='1315'>
+                            <Key>
+                            </Key>
+                            <Value>
+                                <DereferencedArrayAccess start='1270' end='1315'>
+                                    <ArrayDimension start='1312' end='1315'>
+                                        <Index>
+                                            <Scalar start='1313' end='1314' type='INT' value='0'/>
+                                        </Index>
+                                    </ArrayDimension>
+                                    <MethodInvocation start='1270' end='1312' isNullsafe='false'>
+                                        <MethodInvocation start='1270' end='1295' isNullsafe='false'>
+                                            <Variable start='1270' end='1274' isDollared='true'>
+                                                <Identifier start='1271' end='1274' name='ref'/>
+                                            </Variable>
+                                            <Method>
+                                                <FunctionInvocation start='1276' end='1295'>
+                                                    <FucntionName start='1276' end='1285'>
+                                                        <Variable start='1276' end='1285' isDollared='false'>
+                                                            <Identifier start='1276' end='1285' name='getMethod'/>
+                                                        </Variable>
+                                                    </FucntionName>
+                                                    <Parameters>
+                                                        <Scalar start='1286' end='1294' type='STRING' value='&apos;method&apos;'/>
+                                                    </Parameters>
+                                                </FunctionInvocation>
+                                            </Method>
+                                        </MethodInvocation>
+                                        <Method>
+                                            <FunctionInvocation start='1297' end='1312'>
+                                                <FucntionName start='1297' end='1310'>
+                                                    <Variable start='1297' end='1310' isDollared='false'>
+                                                        <Identifier start='1297' end='1310' name='getParameters'/>
+                                                    </Variable>
+                                                </FucntionName>
+                                                <Parameters>
+                                                </Parameters>
+                                            </FunctionInvocation>
+                                        </Method>
+                                    </MethodInvocation>
+                                </DereferencedArrayAccess>
+                            </Value>
+                        </ArrayElement>
+                        <ArrayElement start='1321' end='1366'>
+                            <Key>
+                            </Key>
+                            <Value>
+                                <DereferencedArrayAccess start='1321' end='1366'>
+                                    <ArrayDimension start='1363' end='1366'>
+                                        <Index>
+                                            <Scalar start='1364' end='1365' type='INT' value='1'/>
+                                        </Index>
+                                    </ArrayDimension>
+                                    <MethodInvocation start='1321' end='1363' isNullsafe='false'>
+                                        <MethodInvocation start='1321' end='1346' isNullsafe='false'>
+                                            <Variable start='1321' end='1325' isDollared='true'>
+                                                <Identifier start='1322' end='1325' name='ref'/>
+                                            </Variable>
+                                            <Method>
+                                                <FunctionInvocation start='1327' end='1346'>
+                                                    <FucntionName start='1327' end='1336'>
+                                                        <Variable start='1327' end='1336' isDollared='false'>
+                                                            <Identifier start='1327' end='1336' name='getMethod'/>
+                                                        </Variable>
+                                                    </FucntionName>
+                                                    <Parameters>
+                                                        <Scalar start='1337' end='1345' type='STRING' value='&apos;method&apos;'/>
+                                                    </Parameters>
+                                                </FunctionInvocation>
+                                            </Method>
+                                        </MethodInvocation>
+                                        <Method>
+                                            <FunctionInvocation start='1348' end='1363'>
+                                                <FucntionName start='1348' end='1361'>
+                                                    <Variable start='1348' end='1361' isDollared='false'>
+                                                        <Identifier start='1348' end='1361' name='getParameters'/>
+                                                    </Variable>
+                                                </FucntionName>
+                                                <Parameters>
+                                                </Parameters>
+                                            </FunctionInvocation>
+                                        </Method>
+                                    </MethodInvocation>
+                                </DereferencedArrayAccess>
+                            </Value>
+                        </ArrayElement>
+                    </ArrayCreation>
+                </Assignment>
+            </ExpressionStatement>
+            <ForEachStatement start='1372' end='1577'>
+                <Key>
+                </Key>
+                <Expression>
+                    <Variable start='1381' end='1389' isDollared='true'>
+                        <Identifier start='1382' end='1389' name='sources'/>
+                    </Variable>
+                </Expression>
+                <Statement>
+                    <Block start='1397' end='1577' isCurly='true'>
+                        <ExpressionStatement start='1400' end='1428'>
+                            <Assignment start='1400' end='1427' operator='EQUAL'>
+                                <Variable start='1400' end='1405' isDollared='true'>
+                                    <Identifier start='1401' end='1405' name='attr'/>
+                                </Variable>
+                                <MethodInvocation start='1408' end='1427' isNullsafe='false'>
+                                    <Variable start='1408' end='1410' isDollared='true'>
+                                        <Identifier start='1409' end='1410' name='r'/>
+                                    </Variable>
+                                    <Method>
+                                        <FunctionInvocation start='1412' end='1427'>
+                                            <FucntionName start='1412' end='1425'>
+                                                <Variable start='1412' end='1425' isDollared='false'>
+                                                    <Identifier start='1412' end='1425' name='getAttributes'/>
+                                                </Variable>
+                                            </FucntionName>
+                                            <Parameters>
+                                            </Parameters>
+                                        </FunctionInvocation>
+                                    </Method>
+                                </MethodInvocation>
+                            </Assignment>
+                        </ExpressionStatement>
+                        <ExpressionStatement start='1430' end='1468'>
+                            <FunctionInvocation start='1430' end='1467'>
+                                <FucntionName start='1430' end='1438'>
+                                    <NamespaceName start='1430' end='1438' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='1430' end='1438' name='var_dump'/>
+                                    </NamespaceName>
+                                </FucntionName>
+                                <Parameters>
+                                    <FunctionInvocation start='1439' end='1452'>
+                                        <FucntionName start='1439' end='1448'>
+                                            <NamespaceName start='1439' end='1448' isCurrent='false' isGlobal='false'>
+                                                <Identifier start='1439' end='1448' name='get_class'/>
+                                            </NamespaceName>
+                                        </FucntionName>
+                                        <Parameters>
+                                            <Variable start='1449' end='1451' isDollared='true'>
+                                                <Identifier start='1450' end='1451' name='r'/>
+                                            </Variable>
+                                        </Parameters>
+                                    </FunctionInvocation>
+                                    <FunctionInvocation start='1454' end='1466'>
+                                        <FucntionName start='1454' end='1459'>
+                                            <NamespaceName start='1454' end='1459' isCurrent='false' isGlobal='false'>
+                                                <Identifier start='1454' end='1459' name='count'/>
+                                            </NamespaceName>
+                                        </FucntionName>
+                                        <Parameters>
+                                            <Variable start='1460' end='1465' isDollared='true'>
+                                                <Identifier start='1461' end='1465' name='attr'/>
+                                            </Variable>
+                                        </Parameters>
+                                    </FunctionInvocation>
+                                </Parameters>
+                            </FunctionInvocation>
+                        </ExpressionStatement>
+                        <ForEachStatement start='1474' end='1556'>
+                            <Key>
+                            </Key>
+                            <Expression>
+                                <Variable start='1483' end='1488' isDollared='true'>
+                                    <Identifier start='1484' end='1488' name='attr'/>
+                                </Variable>
+                            </Expression>
+                            <Statement>
+                                <Block start='1496' end='1556' isCurly='true'>
+                                    <ExpressionStatement start='1506' end='1550'>
+                                        <FunctionInvocation start='1506' end='1549'>
+                                            <FucntionName start='1506' end='1514'>
+                                                <NamespaceName start='1506' end='1514' isCurrent='false' isGlobal='false'>
+                                                    <Identifier start='1506' end='1514' name='var_dump'/>
+                                                </NamespaceName>
+                                            </FucntionName>
+                                            <Parameters>
+                                                <MethodInvocation start='1515' end='1528' isNullsafe='false'>
+                                                    <Variable start='1515' end='1517' isDollared='true'>
+                                                        <Identifier start='1516' end='1517' name='a'/>
+                                                    </Variable>
+                                                    <Method>
+                                                        <FunctionInvocation start='1519' end='1528'>
+                                                            <FucntionName start='1519' end='1526'>
+                                                                <Variable start='1519' end='1526' isDollared='false'>
+                                                                    <Identifier start='1519' end='1526' name='getName'/>
+                                                                </Variable>
+                                                            </FucntionName>
+                                                            <Parameters>
+                                                            </Parameters>
+                                                        </FunctionInvocation>
+                                                    </Method>
+                                                </MethodInvocation>
+                                                <MethodInvocation start='1530' end='1548' isNullsafe='false'>
+                                                    <Variable start='1530' end='1532' isDollared='true'>
+                                                        <Identifier start='1531' end='1532' name='a'/>
+                                                    </Variable>
+                                                    <Method>
+                                                        <FunctionInvocation start='1534' end='1548'>
+                                                            <FucntionName start='1534' end='1546'>
+                                                                <Variable start='1534' end='1546' isDollared='false'>
+                                                                    <Identifier start='1534' end='1546' name='getArguments'/>
+                                                                </Variable>
+                                                            </FucntionName>
+                                                            <Parameters>
+                                                            </Parameters>
+                                                        </FunctionInvocation>
+                                                    </Method>
+                                                </MethodInvocation>
+                                            </Parameters>
+                                        </FunctionInvocation>
+                                    </ExpressionStatement>
+                                </Block>
+                            </Statement>
+                            <Value>
+                                <Variable start='1492' end='1494' isDollared='true'>
+                                    <Identifier start='1493' end='1494' name='a'/>
+                                </Variable>
+                            </Value>
+                        </ForEachStatement>
+                        <EchoStatement start='1562' end='1575'>
+                            <NamespaceName start='1567' end='1574' isCurrent='false' isGlobal='false'>
+                                <Identifier start='1567' end='1574' name='PHP_EOL'/>
+                            </NamespaceName>
+                        </EchoStatement>
+                    </Block>
+                </Statement>
+                <Value>
+                    <Variable start='1393' end='1395' isDollared='true'>
+                        <Identifier start='1394' end='1395' name='r'/>
+                    </Variable>
+                </Value>
+            </ForEachStatement>
+        </Statements>
+    </Program>
+</testresult>

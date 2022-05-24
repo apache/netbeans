@@ -76,7 +76,14 @@ public abstract class Sampler {
      * is in nonstandard mode or sampling is not supported.
      */
     public static @CheckForNull Sampler createSampler(@NonNull String name) {
-        return InternalSampler.createInternalSampler(name);
+        if (SamplesOutputStream.isSupported()) {
+            try {
+                return InternalSampler.createInternalSampler(name);
+            } catch (LinkageError ex) {
+                return new StandaloneSampler(name);
+            }
+        }
+        return null;
     }
     
     /**
@@ -89,7 +96,11 @@ public abstract class Sampler {
      */
     public static @CheckForNull Sampler createManualSampler(@NonNull String name) {
         if (SamplesOutputStream.isSupported()) {
-            return new InternalSampler(name);
+            try {
+                return new InternalSampler(name);
+            } catch (LinkageError ex) {
+                return new StandaloneSampler(name);
+            }
         }
         return null;
     }

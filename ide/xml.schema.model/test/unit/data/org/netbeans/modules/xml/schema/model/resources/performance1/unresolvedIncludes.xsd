@@ -1,0 +1,130 @@
+<?xml version = "1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            xmlns="hl7_performance_test"
+            targetNamespace="hl7_performance_test">
+
+    <xsd:include schemaLocation="A001.xsd"/>
+    <xsd:include schemaLocation="A002.xsd"/>
+    <xsd:include schemaLocation="A003.xsd"/>
+    <xsd:include schemaLocation="A004.xsd"/>
+    <xsd:include schemaLocation="A005.xsd"/>
+    <xsd:include schemaLocation="A006.xsd"/>
+    <xsd:include schemaLocation="A007.xsd"/>
+    <xsd:include schemaLocation="A008.xsd"/>
+    <xsd:include schemaLocation="A009.xsd"/>
+
+    <xsd:include schemaLocation="A011.xsd"/>
+    <xsd:include schemaLocation="A012.xsd"/>
+    <xsd:include schemaLocation="A013.xsd"/>
+    <xsd:include schemaLocation="A014.xsd"/>
+    <xsd:include schemaLocation="A015.xsd"/>
+    <xsd:include schemaLocation="A016.xsd"/>
+    <xsd:include schemaLocation="A017.xsd"/>
+    <xsd:include schemaLocation="A018.xsd"/>
+    <xsd:include schemaLocation="A019.xsd"/>
+
+    <xsd:include schemaLocation="A021.xsd"/>
+    <xsd:include schemaLocation="A022.xsd"/>
+    <xsd:include schemaLocation="A023.xsd"/>
+    <xsd:include schemaLocation="A024.xsd"/>
+    <xsd:include schemaLocation="A025.xsd"/>
+    <xsd:include schemaLocation="A026.xsd"/>
+    <xsd:include schemaLocation="A027.xsd"/>
+    <xsd:include schemaLocation="A028.xsd"/>
+    <xsd:include schemaLocation="A029.xsd"/>
+
+    <xsd:include schemaLocation="A031.xsd"/>
+    <xsd:include schemaLocation="A032.xsd"/>
+    <xsd:include schemaLocation="A033.xsd"/>
+    <xsd:include schemaLocation="A034.xsd"/>
+    <xsd:include schemaLocation="A035.xsd"/>
+    <xsd:include schemaLocation="A036.xsd"/>
+    <xsd:include schemaLocation="A037.xsd"/>
+    <xsd:include schemaLocation="A038.xsd"/>
+    <xsd:include schemaLocation="A039.xsd"/>
+
+    <xsd:include schemaLocation="A041.xsd"/>
+    <xsd:include schemaLocation="A042.xsd"/>
+    <xsd:include schemaLocation="A043.xsd"/>
+    <xsd:include schemaLocation="A044.xsd"/>
+    <xsd:include schemaLocation="A045.xsd"/>
+    <xsd:include schemaLocation="A046.xsd"/>
+    <xsd:include schemaLocation="A047.xsd"/>
+    <xsd:include schemaLocation="A048.xsd"/>
+    <xsd:include schemaLocation="A049.xsd"/>
+
+    <xsd:include schemaLocation="A051.xsd"/>
+    <xsd:include schemaLocation="A052.xsd"/>
+    <xsd:include schemaLocation="A053.xsd"/>
+    <xsd:include schemaLocation="A054.xsd"/>
+    <xsd:include schemaLocation="A055.xsd"/>
+    <xsd:include schemaLocation="A056.xsd"/>
+    <xsd:include schemaLocation="A057.xsd"/>
+    <xsd:include schemaLocation="A058.xsd"/>
+    <xsd:include schemaLocation="A059.xsd"/>
+
+    <xsd:include schemaLocation="A061.xsd"/>
+    <xsd:include schemaLocation="A062.xsd"/>
+    <xsd:include schemaLocation="A063.xsd"/>
+    <xsd:include schemaLocation="A064.xsd"/>
+    <xsd:include schemaLocation="A065.xsd"/>
+    <xsd:include schemaLocation="A066.xsd"/>
+    <xsd:include schemaLocation="A067.xsd"/>
+    <xsd:include schemaLocation="A068.xsd"/>
+    <xsd:include schemaLocation="A069.xsd"/>
+
+    <xsd:include schemaLocation="A071.xsd"/>
+    <xsd:include schemaLocation="A072.xsd"/>
+    <xsd:include schemaLocation="A073.xsd"/>
+    <xsd:include schemaLocation="A074.xsd"/>
+    <xsd:include schemaLocation="A075.xsd"/>
+    <xsd:include schemaLocation="A076.xsd"/>
+    <xsd:include schemaLocation="A077.xsd"/>
+    <xsd:include schemaLocation="A078.xsd"/>
+    <xsd:include schemaLocation="A079.xsd"/>
+
+    <xsd:include schemaLocation="A081.xsd"/>
+    <xsd:include schemaLocation="A082.xsd"/>
+    <xsd:include schemaLocation="A083.xsd"/>
+    <xsd:include schemaLocation="A084.xsd"/>
+    <xsd:include schemaLocation="A085.xsd"/>
+    <xsd:include schemaLocation="A086.xsd"/>
+    <xsd:include schemaLocation="A087.xsd"/>
+    <xsd:include schemaLocation="A088.xsd"/>
+    <xsd:include schemaLocation="A089.xsd"/>
+
+    <xsd:include schemaLocation="A091.xsd"/>
+    <xsd:include schemaLocation="A092.xsd"/>
+    <xsd:include schemaLocation="A093.xsd"/>
+    <xsd:include schemaLocation="A094.xsd"/>
+    <xsd:include schemaLocation="A095.xsd"/>
+    <xsd:include schemaLocation="A096.xsd"/>
+    <xsd:include schemaLocation="A097.xsd"/>
+    <xsd:include schemaLocation="A098.xsd"/>
+    <xsd:include schemaLocation="A099.xsd"/>
+
+
+    <xsd:include schemaLocation="C.xsd"/>
+
+
+</xsd:schema>

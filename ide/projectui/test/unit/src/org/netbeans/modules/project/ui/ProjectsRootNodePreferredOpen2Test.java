@@ -54,6 +54,7 @@ public class ProjectsRootNodePreferredOpen2Test extends ProjectsRootNodePreferre
         super.setUp();
         log = Log.enable("", Level.WARNING);
         Logger.getLogger("org.netbeans.ui").setLevel(Level.OFF);
+        Logger.getLogger("org.openide.util").setLevel(Level.OFF);
          //compute project root node children in sync mode
         System.setProperty("test.projectnode.sync", "true");
     }

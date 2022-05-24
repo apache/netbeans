@@ -102,6 +102,22 @@
                 </or>
             </and>
         </condition>
+
+        <exec executable="${nbjdk.home}/bin/java" outputproperty="nbjdk.versioninfo">
+            <arg value="-version" />
+        </exec>
+
+        <condition property="nbjdk.enable_security_manager" value="-Djava.security.manager=allow" else="">
+            <not>
+                <or>
+                    <matches pattern=".*version &quot;1\.8\.?.*" string="${nbjdk.versioninfo}" />
+                    <matches pattern=".*version &quot;9(&quot;|\.).*" string="${nbjdk.versioninfo}" />
+                    <matches pattern=".*version &quot;10(&quot;|\.).*" string="${nbjdk.versioninfo}" />
+                    <matches pattern=".*version &quot;11(&quot;|\.).*" string="${nbjdk.versioninfo}" />
+                </or>
+            </not>
+        </condition>
+
         <available property="have-jdk-1.4" classname="java.lang.CharSequence" classpath="${nbjdk.bootclasspath}" ignoresystemclasses="true"/>
         <available property="have-jdk-1.5" classname="java.lang.StringBuilder" classpath="${nbjdk.bootclasspath}" ignoresystemclasses="true"/>
         <available property="have-jdk-1.6" classname="java.util.ServiceLoader" classpath="${nbjdk.bootclasspath}" ignoresystemclasses="true"/>
@@ -206,7 +222,24 @@
         </condition>
 
         <!-- Fallback? -->
+
         <property name="nbjdk.home" location="${java.home}"/>
+
+        <exec executable="${nbjdk.home}/bin/java" outputproperty="nbjdk.versioninfo">
+            <arg value="-version" />
+        </exec>
+
+        <condition property="nbjdk.enable_security_manager" value="-Djava.security.manager=allow" else="">
+            <not>
+                <or>
+                    <matches pattern=".*version &quot;1\.8\.?.*" string="${nbjdk.versioninfo}" />
+                    <matches pattern=".*version &quot;9(&quot;|\.).*" string="${nbjdk.versioninfo}" />
+                    <matches pattern=".*version &quot;10(&quot;|\.).*" string="${nbjdk.versioninfo}" />
+                    <matches pattern=".*version &quot;11(&quot;|\.).*" string="${nbjdk.versioninfo}" />
+                </or>
+            </not>
+        </condition>
+
         <available property="have-jdk-1.4" classname="java.lang.CharSequence"/>
         <available property="have-jdk-1.5" classname="java.lang.StringBuilder"/>
         <available property="have-jdk-1.6" classname="java.util.ServiceLoader"/>
@@ -224,11 +257,27 @@
             <os family="windows"/> <!-- #72467 -->
         </condition>
         <property name=".exe" value=""/>
+        <property name="test.nbjdk.home" location="" />
         <condition property="test.nbjdk.java" value="${test.nbjdk.home}/bin/java${.exe}" else="${nbjdk.home}/bin/java${.exe}">
             <and>
                 <isset property="test.nbjdk.home" />
                 <available file="${test.nbjdk.home}/bin/java${.exe}" type="file"/>
             </and>
+        </condition>
+        <available property="have-jdk-1.9" file="${nbjdk.home}/bin/jmod${.exe}"/>
+        <condition property="test-have-jdk-1.9">
+            <or>
+                <and>
+                    <isset property="test.nbjdk.home" />
+                    <available file="${test.nbjdk.home}/bin/jmod${.exe}" type="file"/>
+                </and>
+                <and>
+                    <not>
+                        <isset property="test.nbjdk.home" />
+                    </not>
+                    <available file="${nbjdk.home}/bin/java${.exe}" type="file"/>
+                </and>
+            </or>
         </condition>
     </target>
     

@@ -115,7 +115,7 @@
             <file name="PHPClass.php" url="nbresloc:/org/netbeans/modules/php/project/ui/resources/emptyClassPHP.php">
                 <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
                 <attr name="displayName" bundlevalue="org.netbeans.modules.php.project.ui.wizards.Bundle#Templates/Scripting/PHPClass"/>
-                <attr name="instantiatingIterator" methodvalue="org.netbeans.modules.php.project.ui.wizards.NewFileWizardIterator.withNamespace"/>
+                <attr name="instantiatingIterator" methodvalue="org.netbeans.modules.php.project.ui.wizards.NewFileWizardIteratorWithNamespace.create"/>
                 <attr name="template" boolvalue="true"/>
                 <attr name="templateWizardURL" urlvalue="nbresloc:/org/netbeans/modules/php/project/ui/resources/emptyPHPClassDescription.html"/>
                 <attr name="templateCategory" stringvalue="PHP"/>
@@ -124,7 +124,7 @@
             <file name="PHPInterface.php" url="nbresloc:/org/netbeans/modules/php/project/ui/resources/emptyInterfacePHP.php">
                 <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
                 <attr name="displayName" bundlevalue="org.netbeans.modules.php.project.ui.wizards.Bundle#Templates/Scripting/PHPInterface"/>
-                <attr name="instantiatingIterator" methodvalue="org.netbeans.modules.php.project.ui.wizards.NewFileWizardIterator.withNamespace"/>
+                <attr name="instantiatingIterator" methodvalue="org.netbeans.modules.php.project.ui.wizards.NewFileWizardIteratorWithNamespace.create"/>
                 <attr name="template" boolvalue="true"/>
                 <attr name="templateWizardURL" urlvalue="nbresloc:/org/netbeans/modules/php/project/ui/resources/emptyPHPInterfaceDescription.html"/>
                 <attr name="templateCategory" stringvalue="PHP"/>
@@ -133,11 +133,20 @@
             <file name="PHPTrait.php" url="nbresloc:/org/netbeans/modules/php/project/ui/resources/emptyTraitPHP.php">
                 <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
                 <attr name="displayName" bundlevalue="org.netbeans.modules.php.project.ui.wizards.Bundle#Templates/Scripting/PHPTrait"/>
-                <attr name="instantiatingIterator" methodvalue="org.netbeans.modules.php.project.ui.wizards.NewFileWizardIterator.withNamespace"/>
+                <attr name="instantiatingIterator" methodvalue="org.netbeans.modules.php.project.ui.wizards.NewFileWizardIteratorWithNamespace.create"/>
                 <attr name="template" boolvalue="true"/>
                 <attr name="templateWizardURL" urlvalue="nbresloc:/org/netbeans/modules/php/project/ui/resources/emptyPHPTraitDescription.html"/>
                 <attr name="templateCategory" stringvalue="PHP"/>
                 <attr name="position" intvalue="400"/>
+            </file>
+            <file name="PHPEnum.php" url="nbresloc:/org/netbeans/modules/php/project/ui/resources/emptyEnumPHP.php">
+                <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
+                <attr name="displayName" bundlevalue="org.netbeans.modules.php.project.ui.wizards.Bundle#Templates/Scripting/PHPEnum"/>
+                <attr name="instantiatingIterator" methodvalue="org.netbeans.modules.php.project.ui.wizards.NewFileWizardIteratorWithNamespace.create"/>
+                <attr name="template" boolvalue="true"/>
+                <attr name="templateWizardURL" urlvalue="nbresloc:/org/netbeans/modules/php/project/ui/resources/emptyPHPEnumDescription.html"/>
+                <attr name="templateCategory" stringvalue="PHP"/>
+                <attr name="position" intvalue="410"/>
             </file>
         </folder>
     </folder>

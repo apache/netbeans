@@ -337,7 +337,7 @@ public class BreadcrumbsImpl implements BackgroundTask {
                 LSPBindings bindings = file != null ? LSPBindings.getBindings(file) : null;
                 Runnable r;
 
-                if (bindings != null && Utils.isTrue(bindings.getInitResult().getCapabilities().getDocumentSymbolProvider())) {
+                if (bindings != null && Utils.isEnabled(bindings.getInitResult().getCapabilities().getDocumentSymbolProvider())) {
                     r = () -> {
                         setPreferredSize(sidebar.getPreferredSize());
                         setMaximumSize(sidebar.getMaximumSize());

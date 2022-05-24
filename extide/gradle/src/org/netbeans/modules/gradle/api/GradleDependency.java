@@ -68,7 +68,7 @@ public abstract class GradleDependency implements Serializable, Comparable<Gradl
      * Dependency for modules usually downloaded from a remote repository.
      * @since 1.0
      */
-    public final static class ModuleDependency extends GradleDependency {
+    public static final class ModuleDependency extends GradleDependency {
 
         final Set<File> artifacts;
         Set<File> sources;
@@ -163,7 +163,7 @@ public abstract class GradleDependency implements Serializable, Comparable<Gradl
      * Dependency for sub-project in the current multi-project setup.
      * @since 1.0
      */
-    public final static class ProjectDependency extends GradleDependency {
+    public static final class ProjectDependency extends GradleDependency {
 
         final File path;
         String description;
@@ -220,7 +220,7 @@ public abstract class GradleDependency implements Serializable, Comparable<Gradl
      * Dependency for files available on local filesystem.
      * @since 1.0
      */
-    public final static class FileCollectionDependency extends GradleDependency {
+    public static final class FileCollectionDependency extends GradleDependency {
 
         final Set<File> files;
 
@@ -242,7 +242,7 @@ public abstract class GradleDependency implements Serializable, Comparable<Gradl
     /**
      * Dependency for modules which was not able to be resolved by Gradle.
      */
-    public final static class UnresolvedDependency extends GradleDependency {
+    public static final class UnresolvedDependency extends GradleDependency {
 
         String problem;
 

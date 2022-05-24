@@ -50,7 +50,7 @@ import org.openide.util.Utilities;
  */
 public class EnvironmentTest extends NativeExecutionBaseTestCase {
 
-    private final static String nonexistentVarName = "SOME_NEW_VAR";
+    private static final String nonexistentVarName = "SOME_NEW_VAR";
 
     public EnvironmentTest(String name) {
         super(name);

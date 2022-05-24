@@ -208,7 +208,7 @@ final class Compile implements DiagnosticListener<JavaFileObject> {
             }
         };
 
-        ToolProvider.getSystemJavaCompiler().getTask(null, jfm, this, /*XXX:*/Arrays.asList("-source", sourceLevel, "-target", "1.7"), null, Arrays.asList(file)).call();
+        ToolProvider.getSystemJavaCompiler().getTask(null, jfm, this, Arrays.asList("-source", sourceLevel, "-target", "1.7"), null, Arrays.asList(file)).call();
 
         Map<String, byte[]> result = new HashMap<String, byte[]>();
 

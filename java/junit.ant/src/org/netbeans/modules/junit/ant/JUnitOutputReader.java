@@ -23,7 +23,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.nio.charset.UnsupportedCharsetException;
+import java.nio.charset.StandardCharsets;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -33,7 +33,6 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Properties;
 import java.util.logging.Level;
-import static java.util.logging.Level.FINER;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -56,15 +55,6 @@ import org.netbeans.modules.gsf.testrunner.api.TestSuite;
 import org.netbeans.modules.gsf.testrunner.api.Testcase;
 import org.netbeans.modules.gsf.testrunner.api.Trouble;
 import org.netbeans.modules.java.testrunner.JavaRegexpUtils;
-import static org.netbeans.modules.java.testrunner.JavaRegexpUtils.ADD_ERROR_PREFIX;
-import static org.netbeans.modules.java.testrunner.JavaRegexpUtils.ADD_FAILURE_PREFIX;
-import static org.netbeans.modules.java.testrunner.JavaRegexpUtils.END_OF_TEST_PREFIX;
-import static org.netbeans.modules.java.testrunner.JavaRegexpUtils.START_OF_TEST_PREFIX;
-import static org.netbeans.modules.java.testrunner.JavaRegexpUtils.TESTCASE_PREFIX;
-import static org.netbeans.modules.java.testrunner.JavaRegexpUtils.TESTSUITE_PREFIX;
-import static org.netbeans.modules.java.testrunner.JavaRegexpUtils.TESTSUITE_STATS_PREFIX;
-import static org.netbeans.modules.java.testrunner.JavaRegexpUtils.TESTS_COUNT_PREFIX;
-import static org.netbeans.modules.java.testrunner.JavaRegexpUtils.TEST_LISTENER_PREFIX;
 import org.netbeans.modules.java.testrunner.ant.utils.AntProject;
 import org.netbeans.modules.junit.api.JUnitTestSuite;
 import org.netbeans.modules.junit.api.JUnitTestcase;
@@ -76,6 +66,17 @@ import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.util.Utilities;
 import org.xml.sax.SAXException;
+
+import static java.util.logging.Level.FINER;
+import static org.netbeans.modules.java.testrunner.JavaRegexpUtils.ADD_ERROR_PREFIX;
+import static org.netbeans.modules.java.testrunner.JavaRegexpUtils.ADD_FAILURE_PREFIX;
+import static org.netbeans.modules.java.testrunner.JavaRegexpUtils.END_OF_TEST_PREFIX;
+import static org.netbeans.modules.java.testrunner.JavaRegexpUtils.START_OF_TEST_PREFIX;
+import static org.netbeans.modules.java.testrunner.JavaRegexpUtils.TESTCASE_PREFIX;
+import static org.netbeans.modules.java.testrunner.JavaRegexpUtils.TESTSUITE_PREFIX;
+import static org.netbeans.modules.java.testrunner.JavaRegexpUtils.TESTSUITE_STATS_PREFIX;
+import static org.netbeans.modules.java.testrunner.JavaRegexpUtils.TESTS_COUNT_PREFIX;
+import static org.netbeans.modules.java.testrunner.JavaRegexpUtils.TEST_LISTENER_PREFIX;
 
 /**
  * Obtains events from a single session of an Ant <code>junit</code> task
@@ -692,7 +693,8 @@ final class JUnitOutputReader {
         int addFail = failures;
         int addError = errors;
         int addPass = total - failures - errors;
-        for(Testcase tc: testSession.getCurrentSuite().getTestcases()){
+        TestSuite suite = testSession.getCurrentSuite();
+        for(Testcase tc: suite.getTestcases()){
             switch(tc.getStatus()){
                 case ERROR: addError--;break;
                 case FAILED: addFail--;break;
@@ -717,6 +719,7 @@ final class JUnitOutputReader {
 
         lastSuiteTime = time;
         state = State.SUITE_FINISHED;
+        testSession.finishSuite(suite);
     }
 
     private void testCaseStarted(String name){
@@ -894,11 +897,7 @@ final class JUnitOutputReader {
         JUnitTestSuite suite = null;
         try {
             suite = XmlOutputParser.parseXmlOutput(
-                    new InputStreamReader(
-                            new FileInputStream(reportFile),
-                            "UTF-8"), testSession);                                  //NOI18N
-        } catch (UnsupportedCharsetException ex) {
-            assert false;
+                    new InputStreamReader(new FileInputStream(reportFile), StandardCharsets.UTF_8), testSession);
         } catch (SAXException ex) {
             /* This exception has already been handled. */
         } catch (IOException ex) {

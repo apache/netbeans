@@ -173,6 +173,7 @@ public class JavaPlatformsComboBox
      * @throws UnsupportedOperationException is thrown any time
      *         this constructor is called.
      */
+    @Deprecated
     public JavaPlatformsComboBox(final ComboBoxModel comboBoxModel)
             throws UnsupportedOperationException {
         throw new UnsupportedOperationException(CONSTRUCTOR_EXCEPTION_MSG);
@@ -188,6 +189,7 @@ public class JavaPlatformsComboBox
      * @throws UnsupportedOperationException is thrown any time
      *         this constructor is called.
      */
+    @Deprecated
     public JavaPlatformsComboBox(final Object items[])
             throws UnsupportedOperationException {
         throw new UnsupportedOperationException(CONSTRUCTOR_EXCEPTION_MSG);
@@ -203,6 +205,7 @@ public class JavaPlatformsComboBox
      * @throws UnsupportedOperationException is thrown any time
      *         this constructor is called.
      */
+    @Deprecated
     public JavaPlatformsComboBox(final Vector<?> items)
             throws UnsupportedOperationException {
         throw new UnsupportedOperationException(CONSTRUCTOR_EXCEPTION_MSG);

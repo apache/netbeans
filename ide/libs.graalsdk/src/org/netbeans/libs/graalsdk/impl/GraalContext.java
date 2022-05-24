@@ -38,7 +38,7 @@ import org.graalvm.polyglot.PolyglotAccess;
 import org.openide.util.io.ReaderInputStream;
 
 final class GraalContext implements ScriptContext {
-    private final static String ALLOW_ALL_ACCESS = "allowAllAccess"; // NOI18N
+    private static final String ALLOW_ALL_ACCESS = "allowAllAccess"; // NOI18N
     private Context ctx;
     private final WriterOutputStream writer = new WriterOutputStream(new OutputStreamWriter(System.out));
     private final WriterOutputStream errorWriter = new WriterOutputStream(new OutputStreamWriter(System.err));
@@ -65,7 +65,7 @@ final class GraalContext implements ScriptContext {
         this.globals = globals;
     }
     
-    synchronized final Context ctx() {
+    final synchronized Context ctx() {
         if (ctx == null) {
             final Context.Builder b = Context.newBuilder();
             b.out(writer);

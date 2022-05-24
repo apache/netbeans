@@ -213,7 +213,7 @@ final class PropUtils {
     //Comparators copied from original propertysheet implementation
 
     /** Comparator which compares types */
-    private final static Comparator<Node.Property> SORTER_TYPE = new Comparator<Node.Property>() {
+    private static final Comparator<Node.Property> SORTER_TYPE = new Comparator<Node.Property>() {
             @Override
             public int compare(Node.Property l, Node.Property r) {
 
@@ -241,7 +241,7 @@ final class PropUtils {
         };
 
     /** Comparator which compares PropertyDetils names */
-    private final static Comparator<Node.Property> SORTER_NAME = new Comparator<Node.Property>() {
+    private static final Comparator<Node.Property> SORTER_NAME = new Comparator<Node.Property>() {
         @Override
         public int compare(Node.Property l, Node.Property r) {
             String s1 = l.getDisplayName();

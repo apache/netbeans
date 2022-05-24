@@ -271,9 +271,9 @@ public class Server implements Node.Cookie {
 
     private static boolean getBooleanValue(Object v, boolean dvalue) {
         if (v instanceof Boolean)
-            return ((Boolean)v).booleanValue();
+            return ((Boolean)v);
         if (v instanceof String)
-            return Boolean.valueOf((String) v).booleanValue();
+            return Boolean.valueOf((String) v);
         return dvalue;
     }
 

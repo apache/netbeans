@@ -94,13 +94,13 @@ public class CookieIn extends BaseBean {
     public void setValue(String  v)  {this.setAttributeValue("value", v);} //NOI18N
     
     //
-    static public void addComparator(BeanComparator c)
+    public static void addComparator(BeanComparator c)
     {
 	CookieIn.comparators.add(c);
     }
 
     //
-    static public void removeComparator(BeanComparator c)
+    public static void removeComparator(BeanComparator c)
     {
 	CookieIn.comparators.remove(c);
     }

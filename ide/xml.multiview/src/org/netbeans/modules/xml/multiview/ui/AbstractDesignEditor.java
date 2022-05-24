@@ -151,9 +151,9 @@ public abstract class AbstractDesignEditor extends TopComponent implements Explo
      * Used to create an instance of the JComponent used for the structure component. Usually a subclass of BeanTreeView.
      * @return the JComponent
      */
-    abstract public JComponent createStructureComponent() ;
+    public abstract JComponent createStructureComponent() ;
 
-    abstract public ErrorPanel getErrorPanel();
+    public abstract ErrorPanel getErrorPanel();
     
     /**
      * A parent TopComponent can use this method to notify the ComponentPanel and it PanelView children that it was opened

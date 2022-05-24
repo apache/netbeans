@@ -2040,14 +2040,14 @@ public class FormatingTest extends NbTestCase {
                 + "            case 0:\n"
                 + "                System.out.println(i);\n"
                 + "                break;\n"
-                + "            case default:\n"
+                + "            default:\n"
                 + "                System.out.println(\"DEFAULT\");\n"
                 + "        }\n"
                 + "        switch( i ){\n"
                 + "            case 0:\n"
                 + "                System.out.println(i);\n"
                 + "                break;\n"
-                + "            case default:\n"
+                + "            default:\n"
                 + "                System.out.println(\"DEFAULT\");\n"
                 + "        }\n"
                 + "        switch (i)\n"
@@ -2055,7 +2055,7 @@ public class FormatingTest extends NbTestCase {
                 + "            case 0:\n"
                 + "                System.out.println(i);\n"
                 + "                break;\n"
-                + "            case default:\n"
+                + "            default:\n"
                 + "                System.out.println(\"DEFAULT\");\n"
                 + "        }\n"
                 + "        switch (i)\n"
@@ -2063,7 +2063,7 @@ public class FormatingTest extends NbTestCase {
                 + "            case 0:\n"
                 + "                System.out.println(i);\n"
                 + "                break;\n"
-                + "            case default:\n"
+                + "            default:\n"
                 + "                System.out.println(\"DEFAULT\");\n"
                 + "          }\n"
                 + "        switch (i)\n"
@@ -2071,14 +2071,14 @@ public class FormatingTest extends NbTestCase {
                 + "            case 0:\n"
                 + "                System.out.println(i);\n"
                 + "                break;\n"
-                + "            case default:\n"
+                + "            default:\n"
                 + "                System.out.println(\"DEFAULT\");\n"
                 + "            }\n"
                 + "        switch (i) {\n"
                 + "        case 0:\n"
                 + "            System.out.println(i);\n"
                 + "            break;\n"
-                + "        case default:\n"
+                + "        default:\n"
                 + "            System.out.println(\"DEFAULT\");\n"
                 + "        }\n"
                 + "    }\n"
@@ -2971,7 +2971,7 @@ public class FormatingTest extends NbTestCase {
                 + "    void testSwitchCaseParenthesizedBindingPattern() {\n"
                 + "        Object str = \"pattern matching switch\";\n"
                 + "        switch (str) {\n"
-                + "            case (String s ) ->\n"
+                + "            case (String s) ->\n"
                 + "                System.out.println(\"case with Parenthesized Binding Pattern formatting\");\n"
                 + "            default ->\n"
                 + "                System.out.println(\"default formatting\");\n"
@@ -3020,7 +3020,7 @@ public class FormatingTest extends NbTestCase {
                 + "    void testSwitchCaseNullAndParenthesizedBindingPattern() {\n"
                 + "        Object str = \"pattern matching switch\";\n"
                 + "        switch (str) {\n"
-                + "            case null, (String s ) ->\n"
+                + "            case null, (String s) ->\n"
                 + "                System.out.println(\"case with null and Parenthesized Binding Pattern formatting\");\n"
                 + "            default ->\n"
                 + "                System.out.println(\"default formatting\");\n"
@@ -3071,7 +3071,7 @@ public class FormatingTest extends NbTestCase {
                 + "    void testSwitchCaseParenthesizedGuardedPattern() {\n"
                 + "        Object str = \"pattern matching switch\";\n"
                 + "        switch (str) {\n"
-                + "            case (String s && s.length() == 1 ) ->\n"
+                + "            case (String s && s.length() == 1) ->\n"
                 + "                System.out.println(\"case with Parenthesized Guarded Pattern formatting\");\n"
                 + "            default ->\n"
                 + "                System.out.println(\"default formatting\");\n"
@@ -3123,7 +3123,7 @@ public class FormatingTest extends NbTestCase {
                 + "    void testSwitchCaseParenthesizedGuardedPatternAndNull() {\n"
                 + "        Object str = \"pattern matching switch\";\n"
                 + "        switch (str) {\n"
-                + "            case (String s && s.length() == 1 ) , null ->\n"
+                + "            case (String s && s.length() == 1) , null ->\n"
                 + "                System.out.println(\"case with Parenthesized Binding Pattern formatting\");\n"
                 + "            default ->\n"
                 + "                System.out.println(\"default formatting\");\n"
@@ -3175,7 +3175,7 @@ public class FormatingTest extends NbTestCase {
                 + "    void testSwitchCaseGuardedPatternNestedParenthesizedPattern() {\n"
                 + "        Object str = \"pattern matching switch\";\n"
                 + "        switch (str) {\n"
-                + "            case (String s ) && s.length() == 1 , null ->\n"
+                + "            case (String s) && s.length() == 1 , null ->\n"
                 + "                System.out.println(\"SwitchCaseGuardedPatternNestedParenthesizedPattern\");\n"
                 + "            default ->\n"
                 + "                System.out.println(\"default formatting\");\n"
@@ -3292,7 +3292,7 @@ public class FormatingTest extends NbTestCase {
                 + "                System.out.println(\"case with pattern matching + condition + lambda expression formatting\");\n"
                 + "            case String s && s.length() == 1 ->\n"
                 + "                System.out.println(\"case with pattern matching + condition formatting\");\n"
-                + "            case (String s && true ) ->\n"
+                + "            case (String s && true) ->\n"
                 + "                System.out.println(\"case with pattern matching + condition formatting\");\n"
                 + "            case CharSequence s ->\n"
                 + "                System.out.println(\"case with pattern matching formatting\");\n"
@@ -3361,7 +3361,7 @@ public class FormatingTest extends NbTestCase {
                 + "                \"case with pattern matching + condition + lambda expression formatting\";\n"
                 + "            case String s && s.length() == 1 ->\n"
                 + "                \"case with pattern matching + condition formatting\";\n"
-                + "            case (String s && true ) ->\n"
+                + "            case (String s && true) ->\n"
                 + "                \"case with pattern matching + condition formatting\";\n"
                 + "            case CharSequence s ->\n"
                 + "                \"case with pattern matching formatting\";\n"
@@ -5413,6 +5413,84 @@ public class FormatingTest extends NbTestCase {
         preferences.putBoolean("spaceWithinMethodCallParens", false);
     }
 
+    public void testJavadocSnippetAnnotation()throws Exception{
+        
+        try {
+            SourceVersion.valueOf("RELEASE_18"); //NOI18N
+        } catch (IllegalArgumentException ex) {
+            //OK, no RELEASE_17, skip test
+            return;
+        }
+        
+        testFile = new File(getWorkDir(), "Test.java");
+        TestUtilities.copyStringToFile(testFile,
+                "package hierbas.del.litoral;\n\n"
+                + "public class Test {\n"
+                + "    public void taragui(CharSequence cs, Object obj) {\n"
+                + "    }\n"
+                + "}\n");
+        FileObject testSourceFO = FileUtil.toFileObject(testFile);
+        DataObject testSourceDO = DataObject.find(testSourceFO);
+        EditorCookie ec = (EditorCookie)testSourceDO.getCookie(EditorCookie.class);
+        final Document doc = ec.openDocument();
+        doc.putProperty(Language.class, JavaTokenId.language());
+        
+        String content =
+                "package hierbas.del.litoral;\n"
+                + "\n"
+                + "public class Test {\n"
+                + "\n"
+                + "/**\n"
+                + "     * {@snippet :\n"
+                + "     *   public static void main (String... args) {\n"
+                + "     *       for (var arg : args) {                 //@highlight substring=\"arg\" regi = rg1 type=\"highlighted\"\n"
+                + "     *           if (!arg.isBlargk()) {\n"
+                + "     *               System.arg.println(\"arg\");     //@highlight region substring=\"print\"\n"
+                + "     *               System.arg.println(\"arg\");\n"
+                + "     *               System.arg.println(\"tests\");\n"
+                + "     *               System.out.println(\"\\barg\\b\"); // @highlight substring = \"\\barg\\b\" @end\n"
+                + "     *               System.out.println(\"\\barg\\b\");         // to-do\n"
+                + "     *               System.out.println(\"bargs\"); //@highlight regex = \"bargs\" @highlight regex=\"b\"\n"
+                + "     *               System.arg.println(\"arg\");   //@highlight substring=\"arg\" type=\"highlighted\" @highlight substring=\"span\" type=\"highlighted\"\n"
+                + "     * }\n"
+                + "     * }\n"
+                + "     * }\n"
+                + "     * }\n"
+                + "     */"
+                + "    public Object get(Object o) {\n"
+                + "        return o;\n"
+                + "    }\n"
+                + "}\n";
+        String golden = "package hierbas.del.litoral;\n"
+                + "\n"
+                + "public class Test {\n"
+                + "\n"
+                + "    /**\n"
+                + "     * {@snippet :\n"
+                + "     *   public static void main (String... args) {\n"
+                + "     *       for (var arg : args) {                 //@highlight substring=\"arg\" regi = rg1 type=\"highlighted\"\n"
+                + "     *           if (!arg.isBlargk()) {\n"
+                + "     *               System.arg.println(\"arg\");     //@highlight region substring=\"print\"\n"
+                + "     *               System.arg.println(\"arg\");\n"
+                + "     *               System.arg.println(\"tests\");\n"
+                + "     *               System.out.println(\"\\barg\\b\"); // @highlight substring = \"\\barg\\b\" @end\n"
+                + "     *               System.out.println(\"\\barg\\b\");         // to-do\n"
+                + "     *               System.out.println(\"bargs\"); //@highlight regex = \"bargs\" @highlight regex=\"b\"\n"
+                + "     *               System.arg.println(\"arg\");   //@highlight substring=\"arg\" type=\"highlighted\" @highlight substring=\"span\" type=\"highlighted\"\n"
+                + "     * }\n"
+                + "     * }\n"
+                + "     * }\n"
+                + "     * }\n"
+                + "     */\n"
+                + "    public Object get(Object o) {\n"
+                + "        return o;\n"
+                + "    }\n"
+                + "}\n"
+                + "";
+
+        reformat(doc, content, golden);
+    }
+    
     /**
      * Problems with code formatting and comments put in the wrong place.
      * Regression test.

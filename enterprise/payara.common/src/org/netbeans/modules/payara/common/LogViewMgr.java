@@ -173,11 +173,11 @@ public class LogViewMgr {
      * Reads a newly included InputSreams.
      *
      * @param recognizers
-     * @param fromFile
+     * @param ignoreEof
      * @param instance
      * @param serverLogs
      */
-    public void readInputStreams(List<Recognizer> recognizers, boolean fromFile,
+    public void readInputStreams(List<Recognizer> recognizers, boolean ignoreEof,
             PayaraInstance instance, FetchLog... serverLogs) {
         synchronized (readers) {
             stopReaders();
@@ -185,7 +185,7 @@ public class LogViewMgr {
             for(FetchLog serverLog : serverLogs){
                 // LoggerRunnable will close the stream if necessary.
                 LoggerRunnable logger = new LoggerRunnable(recognizers,
-                        serverLog, fromFile, instance);
+                        serverLog, ignoreEof, instance);
                 readers.add(new WeakReference<>(logger));
                 Thread t = new Thread(logger);
                 t.start();
@@ -357,7 +357,7 @@ public class LogViewMgr {
         }
         if(setClosedMethod != null) {
             try {
-                setClosedMethod.invoke(io, Boolean.valueOf(closed));
+                setClosedMethod.invoke(io, closed);
             } catch (Exception ex) {
                 if(LOGGER.isLoggable(Level.FINER)) {
                     LOGGER.log(Level.FINER, "invokeSetClosed", ex); // NOI18N
@@ -421,9 +421,8 @@ public class LogViewMgr {
 
                 // ignoreEof is true for log files and false for process streams.
                 // FIXME Should differentiate filter types more cleanly.
-                Filter filter = ignoreEof ? new LogFileFilter(localizedLevels) : 
-                    (uri.contains("]deployer:pfv3ee6") ? new LogFileFilter(localizedLevels) :new StreamFilter());
-                
+                Filter filter = ignoreEof ? new LogFileFilter(localizedLevels) : new StreamFilter();
+
                 // read from the input stream and put all the changes to the I/O window
                 char [] chars = new char[1024];
                 int len = 0;
@@ -683,7 +682,7 @@ public class LogViewMgr {
         
     }
     
-    private static abstract class StateFilter implements Filter {
+    private abstract static class StateFilter implements Filter {
         
         protected String message;
         
@@ -1030,7 +1029,7 @@ public class LogViewMgr {
         return newIO;
     }
 
-    static public void displayOutput(PayaraInstance instance, Lookup lookup) {
+    public static void displayOutput(PayaraInstance instance, Lookup lookup) {
         String uri = instance.getProperty(PayaraModule.URL_ATTR);
         if (null != uri && (uri.contains("pfv3ee6wc") || uri.contains("localhost"))) {
                 FetchLog log = getServerLogStream(instance);
@@ -1044,7 +1043,7 @@ public class LogViewMgr {
         }
     }
 
-    static private List<Recognizer> getRecognizers(Collection<? extends RecognizerCookie> cookies) {
+    private static List<Recognizer> getRecognizers(Collection<? extends RecognizerCookie> cookies) {
         List<Recognizer> recognizers;
         if(!cookies.isEmpty()) {
             recognizers = new LinkedList<Recognizer>();
@@ -1171,7 +1170,7 @@ public class LogViewMgr {
      *         cerated one when no log fetcher was found.
      * @throws IOException 
      */
-    static private FetchLog getServerLogStream(
+    private static FetchLog getServerLogStream(
             final PayaraInstance instance) {
         FetchLog log;
         FetchLog deadLog = null;

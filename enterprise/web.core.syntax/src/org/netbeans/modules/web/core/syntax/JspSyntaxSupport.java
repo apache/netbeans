@@ -1534,7 +1534,7 @@ public class JspSyntaxSupport extends ExtSyntaxSupport implements FileChangeList
         if (tag) {
             boolean endslash= false;
             if (item != null)
-                endslash = (item.getImage().equals("/>"))? true: false;   // NOI18N
+                endslash = (item.getImage().equals("/>"));   // NOI18N
 
             return new SyntaxElement.Tag(this, firstToken.getOffset(),
                     (item != null)? getTokenEnd(item): getDocument().getLength(),

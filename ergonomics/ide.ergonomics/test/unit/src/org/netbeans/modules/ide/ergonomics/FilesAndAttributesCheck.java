@@ -168,6 +168,9 @@ public class FilesAndAttributesCheck extends NbTestCase {
             Enumeration<String> allAttributes = Collections.enumeration(filesAndAttribs.get(fo));
             while (allAttributes.hasMoreElements()) {
                 String name = allAttributes.nextElement();
+                if ("template.createTemplateHandler".equals(name)) {
+                    continue;
+                }
                 Object attr = clone.getAttribute(name);
                 if (attr == null && "templateWizardIterator".equals(name)) {
                     attr = clone.getAttribute("instantiatingIterator");

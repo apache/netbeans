@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.96
+#Version 1.98
 
 CLSS public abstract interface java.io.Serializable
 
@@ -397,6 +397,7 @@ fld public final static org.netbeans.modules.css.lib.api.CssTokenId SASS_ERROR
 fld public final static org.netbeans.modules.css.lib.api.CssTokenId SASS_EXTEND
 fld public final static org.netbeans.modules.css.lib.api.CssTokenId SASS_EXTEND_ONLY_SELECTOR
 fld public final static org.netbeans.modules.css.lib.api.CssTokenId SASS_FOR
+fld public final static org.netbeans.modules.css.lib.api.CssTokenId SASS_FORWARD
 fld public final static org.netbeans.modules.css.lib.api.CssTokenId SASS_FUNCTION
 fld public final static org.netbeans.modules.css.lib.api.CssTokenId SASS_GLOBAL
 fld public final static org.netbeans.modules.css.lib.api.CssTokenId SASS_IF
@@ -404,6 +405,7 @@ fld public final static org.netbeans.modules.css.lib.api.CssTokenId SASS_INCLUDE
 fld public final static org.netbeans.modules.css.lib.api.CssTokenId SASS_MIXIN
 fld public final static org.netbeans.modules.css.lib.api.CssTokenId SASS_OPTIONAL
 fld public final static org.netbeans.modules.css.lib.api.CssTokenId SASS_RETURN
+fld public final static org.netbeans.modules.css.lib.api.CssTokenId SASS_USE
 fld public final static org.netbeans.modules.css.lib.api.CssTokenId SASS_VAR
 fld public final static org.netbeans.modules.css.lib.api.CssTokenId SASS_WARN
 fld public final static org.netbeans.modules.css.lib.api.CssTokenId SASS_WHILE
@@ -590,6 +592,12 @@ fld public final static org.netbeans.modules.css.lib.api.NodeType sass_error
 fld public final static org.netbeans.modules.css.lib.api.NodeType sass_extend
 fld public final static org.netbeans.modules.css.lib.api.NodeType sass_extend_only_selector
 fld public final static org.netbeans.modules.css.lib.api.NodeType sass_for
+fld public final static org.netbeans.modules.css.lib.api.NodeType sass_forward
+fld public final static org.netbeans.modules.css.lib.api.NodeType sass_forward_as
+fld public final static org.netbeans.modules.css.lib.api.NodeType sass_forward_hide
+fld public final static org.netbeans.modules.css.lib.api.NodeType sass_forward_show
+fld public final static org.netbeans.modules.css.lib.api.NodeType sass_forward_with
+fld public final static org.netbeans.modules.css.lib.api.NodeType sass_forward_with_declaration
 fld public final static org.netbeans.modules.css.lib.api.NodeType sass_function_declaration
 fld public final static org.netbeans.modules.css.lib.api.NodeType sass_function_name
 fld public final static org.netbeans.modules.css.lib.api.NodeType sass_function_return
@@ -601,6 +609,10 @@ fld public final static org.netbeans.modules.css.lib.api.NodeType sass_map_pair
 fld public final static org.netbeans.modules.css.lib.api.NodeType sass_map_pairs
 fld public final static org.netbeans.modules.css.lib.api.NodeType sass_nested_properties
 fld public final static org.netbeans.modules.css.lib.api.NodeType sass_selector_interpolation_exp
+fld public final static org.netbeans.modules.css.lib.api.NodeType sass_use
+fld public final static org.netbeans.modules.css.lib.api.NodeType sass_use_as
+fld public final static org.netbeans.modules.css.lib.api.NodeType sass_use_with
+fld public final static org.netbeans.modules.css.lib.api.NodeType sass_use_with_declaration
 fld public final static org.netbeans.modules.css.lib.api.NodeType sass_while
 fld public final static org.netbeans.modules.css.lib.api.NodeType selector
 fld public final static org.netbeans.modules.css.lib.api.NodeType selectorsGroup
@@ -936,6 +948,7 @@ meth public static org.netbeans.modules.css.lib.api.properties.PropertyDefinitio
 supr java.lang.Object
 
 CLSS public final !enum org.netbeans.modules.css.lib.api.properties.PropertyCategory
+fld public final static org.netbeans.modules.css.lib.api.properties.PropertyCategory ALIGNMENT
 fld public final static org.netbeans.modules.css.lib.api.properties.PropertyCategory ANIMATIONS
 fld public final static org.netbeans.modules.css.lib.api.properties.PropertyCategory BACKGROUND
 fld public final static org.netbeans.modules.css.lib.api.properties.PropertyCategory BOX
@@ -946,6 +959,7 @@ fld public final static org.netbeans.modules.css.lib.api.properties.PropertyCate
 fld public final static org.netbeans.modules.css.lib.api.properties.PropertyCategory FIREFOX
 fld public final static org.netbeans.modules.css.lib.api.properties.PropertyCategory FLEXIBLE_BOX_LAYOUT
 fld public final static org.netbeans.modules.css.lib.api.properties.PropertyCategory FONTS
+fld public final static org.netbeans.modules.css.lib.api.properties.PropertyCategory FRAGMENTATION
 fld public final static org.netbeans.modules.css.lib.api.properties.PropertyCategory GRID
 fld public final static org.netbeans.modules.css.lib.api.properties.PropertyCategory HYPERLINKS
 fld public final static org.netbeans.modules.css.lib.api.properties.PropertyCategory IMAGES
@@ -1297,6 +1311,7 @@ CLSS public abstract static org.netbeans.modules.parsing.spi.Parser$Result
  outer org.netbeans.modules.parsing.spi.Parser
 cons protected init(org.netbeans.modules.parsing.api.Snapshot)
 meth protected abstract void invalidate()
+meth protected boolean processingFinished()
 meth public org.netbeans.modules.parsing.api.Snapshot getSnapshot()
 supr java.lang.Object
 hfds snapshot

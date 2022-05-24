@@ -340,6 +340,8 @@ PHP_ITERABLE=[i][t][e][r][a][b][l][e]
 PHP_TYPE_OBJECT=[o][b][j][e][c][t]
 // NETBEANS-4443 PHP8.0
 PHP_TYPE_MIXED=[m][i][x][e][d]
+// NETBEANS-5599 PHP8.1
+PHP_TYPE_NEVER=[n][e][v][e][r]
 
 
 
@@ -643,6 +645,16 @@ PHP_TYPE_MIXED=[m][i][x][e][d]
     return PHPTokenId.PHP_INTERFACE;
 }
 
+<ST_PHP_IN_SCRIPTING>"enum"{WHITESPACE}("extends"|"implements") {
+    yypushback(yylength() - 4); // 4: enum length
+    return PHPTokenId.PHP_STRING;
+}
+
+<ST_PHP_IN_SCRIPTING>"enum"{WHITESPACE}[a-zA-Z_\x80-\xff] {
+    yypushback(yylength() - 4); // 4: enum length
+    return PHPTokenId.PHP_ENUM;
+}
+
 <ST_PHP_IN_SCRIPTING>"extends" {
     return PHPTokenId.PHP_EXTENDS;
 }
@@ -681,6 +693,10 @@ PHP_TYPE_MIXED=[m][i][x][e][d]
 
 <ST_PHP_IN_SCRIPTING>{PHP_TYPE_MIXED} {
     return PHPTokenId.PHP_TYPE_MIXED;
+}
+
+<ST_PHP_IN_SCRIPTING>{PHP_TYPE_NEVER} {
+    return PHPTokenId.PHP_TYPE_NEVER;
 }
 
 <ST_PHP_IN_SCRIPTING>"->" {
@@ -883,6 +899,10 @@ PHP_TYPE_MIXED=[m][i][x][e][d]
 
 <ST_PHP_IN_SCRIPTING>"public" {
     return PHPTokenId.PHP_PUBLIC;
+}
+
+<ST_PHP_IN_SCRIPTING>"readonly" {
+    return PHPTokenId.PHP_READONLY;
 }
 
 <ST_PHP_IN_SCRIPTING>"unset" {

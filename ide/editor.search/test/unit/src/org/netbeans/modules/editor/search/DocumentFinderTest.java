@@ -32,7 +32,7 @@ import org.netbeans.modules.editor.search.DocumentFinder.FindReplaceResult;
  */
 public class DocumentFinderTest {
 
-    private final static int[] NOT_FOUND_RESULT = new int[]{-1, 0};
+    private static final int[] NOT_FOUND_RESULT = new int[]{-1, 0};
 
     public DocumentFinderTest() {
     }

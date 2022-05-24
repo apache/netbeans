@@ -21,6 +21,7 @@ package org.netbeans.modules.settings.convertors;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import org.netbeans.junit.NbTestCase;
 import org.openide.util.test.AnnotationProcessorTestUtils;
 
@@ -61,7 +62,7 @@ public class FactoryMethodTest extends NbTestCase {
         boolean res = AnnotationProcessorTestUtils.runJavac(src, null, dst, null, os);
         
         assertFalse("Compilation fails", res);
-        String out = new String(os.toByteArray(), "UTF-8");
+        String out = new String(os.toByteArray(), StandardCharsets.UTF_8);
         
         if (out.indexOf(" Method named create was not found") == -1) {
             fail("Should warn about missing method\n" + out);
@@ -81,7 +82,7 @@ public class FactoryMethodTest extends NbTestCase {
         boolean res = AnnotationProcessorTestUtils.runJavac(src, null, dst, null, os);
         
         assertFalse("Compilation fails", res);
-        String out = new String(os.toByteArray(), "UTF-8");
+        String out = new String(os.toByteArray(), StandardCharsets.UTF_8);
         
         if (out.indexOf("no parameters") == -1) {
             fail("Should warn about arguments of the method\n" + out);
@@ -100,7 +101,7 @@ public class FactoryMethodTest extends NbTestCase {
         boolean res = AnnotationProcessorTestUtils.runJavac(src, null, dst, null, os);
         
         assertFalse("Compilation fails", res);
-        String out = new String(os.toByteArray(), "UTF-8");
+        String out = new String(os.toByteArray(), StandardCharsets.UTF_8);
         
         if (out.indexOf("has to be static") == -1) {
             fail("Should warn method not being static\n" + out);
@@ -120,7 +121,7 @@ public class FactoryMethodTest extends NbTestCase {
         boolean res = AnnotationProcessorTestUtils.runJavac(src, null, dst, null, os);
         
         assertFalse("Compilation fails", res);
-        String out = new String(os.toByteArray(), "UTF-8");
+        String out = new String(os.toByteArray(), StandardCharsets.UTF_8);
         
         if (out.indexOf("must return Bean") == -1) {
             fail("Should about wrong return type\n" + out);

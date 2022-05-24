@@ -50,7 +50,7 @@ public class RootTest {
     
     public static class ObjectWithField {
         
-        public final static String FIELD = "field";
+        public static final String FIELD = "field";
 
     }
     

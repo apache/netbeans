@@ -28,7 +28,6 @@ public class TrufleSuiteTest extends SuiteCheck {
     }
 
     public void testParseTruffleSourcesWithoutError() throws Exception {
-// XXX: disable as it yields OutOfMemoryErrors
-//        verifyNoErrorsInSuite("truffle");
+        verifyNoErrorsInSuite("truffle");
     }
 }

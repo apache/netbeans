@@ -20,6 +20,7 @@
 package org.netbeans.upgrade.systemoptions;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import org.openide.util.NotImplementedException;
 
@@ -225,7 +226,7 @@ public final class SerParser implements ObjectStreamConstants {
         for (int i = 0; i < len; i++) {
             buf[i] = readByte();
         }
-        String s = new String(buf, "UTF-8"); // NOI18N
+        String s = new String(buf, StandardCharsets.UTF_8);
         if (DEBUG) System.err.println("readUTF: " + s); // NOI18N
         return s;
     }
@@ -493,15 +494,15 @@ public final class SerParser implements ObjectStreamConstants {
         aw.values = new ArrayList<Object>(size);
         for (int i = 0; i < size; i++) {
             if (aw.classdesc.name.equals("[B")) { // NOI18N
-                aw.values.add(new Byte(readByte()));
+                aw.values.add(readByte());
             } else if (aw.classdesc.name.equals("[S")) { // NOI18N
-                aw.values.add(new Short(readShort()));
+                aw.values.add(readShort());
             } else if (aw.classdesc.name.equals("[I")) { // NOI18N
                 aw.values.add(new Integer(readInt()));
             } else if (aw.classdesc.name.equals("[J")) { // NOI18N
                 aw.values.add(new Long(readLong()));
             } else if (aw.classdesc.name.equals("[F")) { // NOI18N
-                aw.values.add(new Float(Float.intBitsToFloat(readInt())));
+                aw.values.add(Float.intBitsToFloat(readInt()));
             } else if (aw.classdesc.name.equals("[D")) { // NOI18N
                 aw.values.add(new Double(Double.longBitsToDouble(readLong())));
             } else if (aw.classdesc.name.equals("[C")) { // NOI18N
@@ -553,19 +554,19 @@ public final class SerParser implements ObjectStreamConstants {
     
     private List<NameValue> readNoWrClass(ClassDesc cd) throws IOException {
         List<FieldDesc> fields = cd.fields;
-        List<NameValue> values = new ArrayList<NameValue>(fields.size());
+        List<NameValue> values = new ArrayList<>(fields.size());
         for (int i = 0; i < fields.size(); i++) {
             FieldDesc fd = (FieldDesc)fields.get(i);
             if (fd.type.equals("B")) { // NOI18N
-                values.add(new NameValue(fd, new Byte(readByte())));
+                values.add(new NameValue(fd, readByte()));
             } else if (fd.type.equals("S")) { // NOI18N
-                values.add(new NameValue(fd, new Short(readShort())));
+                values.add(new NameValue(fd, readShort()));
             } else if (fd.type.equals("I")) { // NOI18N
                 values.add(new NameValue(fd, new Integer(readInt())));
             } else if (fd.type.equals("J")) { // NOI18N
                 values.add(new NameValue(fd, new Long(readLong())));
             } else if (fd.type.equals("F")) { // NOI18N
-                values.add(new NameValue(fd, new Float(Float.intBitsToFloat(readInt()))));
+                values.add(new NameValue(fd, Float.intBitsToFloat(readInt())));
             } else if (fd.type.equals("D")) { // NOI18N
                 values.add(new NameValue(fd, new Double(Double.longBitsToDouble(readLong()))));
             } else if (fd.type.equals("C")) { // NOI18N
@@ -579,5 +580,4 @@ public final class SerParser implements ObjectStreamConstants {
         if (DEBUG) System.err.println("readNoWrClass: " + values); // NOI18N
         return values;
     }
-
 }

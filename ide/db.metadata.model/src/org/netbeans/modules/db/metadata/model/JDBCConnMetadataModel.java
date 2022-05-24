@@ -41,7 +41,7 @@ import org.netbeans.modules.db.metadata.model.jdbc.oracle.OracleMetadata;
  */
 public class JDBCConnMetadataModel implements MetadataModelImplementation {
 
-    private final static Logger LOGGER = Logger.getLogger(JDBCConnMetadataModel.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(JDBCConnMetadataModel.class.getName());
 
     private final ReentrantLock lock = new ReentrantLock();
     private final WeakReference<Connection> connRef;

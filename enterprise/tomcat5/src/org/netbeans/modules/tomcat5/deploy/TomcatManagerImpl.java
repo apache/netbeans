@@ -19,7 +19,6 @@
 
 package org.netbeans.modules.tomcat5.deploy;
 
-import org.netbeans.modules.tomcat5.deploy.TomcatManager;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
@@ -47,6 +46,7 @@ import org.openide.util.RequestProcessor;
 import org.openide.util.NbBundle;
 import java.io.*;
 import java.net.Proxy;
+import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -498,7 +498,7 @@ public class TomcatManagerImpl implements ProgressObject, Runnable {
 
                 // Create a connection for this command
                 String uri = tm.getPlainUri ();
-                String withoutSpaces = (uri + command).replaceAll(" ", "%20");  //NOI18N
+                String withoutSpaces = (uri + command).replace(" ", "%20");  //NOI18N
                 urlToConnectTo = new URL(withoutSpaces);
                 
                 if (Boolean.getBoolean("org.netbeans.modules.tomcat5.LogManagerCommands")) { // NOI18N
@@ -571,7 +571,7 @@ public class TomcatManagerImpl implements ProgressObject, Runnable {
                 }
 
                 // Process the response message
-                reader = new InputStreamReader(hconn.getInputStream(),"UTF-8"); //NOI18N
+                reader = new InputStreamReader(hconn.getInputStream(), StandardCharsets.UTF_8);
                 retries = -1;
                 StringBuffer buff = new StringBuffer();
                 String error = null;

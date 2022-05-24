@@ -39,7 +39,6 @@ import org.netbeans.modules.j2ee.deployment.devmodules.spi.J2eeModuleFactory;
 import org.netbeans.modules.j2ee.deployment.devmodules.spi.J2eeModuleImplementation2;
 import org.netbeans.modules.j2ee.metadata.model.api.MetadataModel;
 import org.netbeans.modules.tomcat5.deploy.TomcatManager.TomcatVersion;
-import org.netbeans.modules.tomcat5.config.TomcatModuleConfiguration;
 import org.netbeans.modules.tomcat5.config.gen.Context;
 import org.netbeans.modules.tomcat5.config.gen.Parameter;
 import org.netbeans.modules.tomcat5.config.gen.ResourceParams;

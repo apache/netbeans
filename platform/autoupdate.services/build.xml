@@ -52,18 +52,50 @@
     <target name="netbeans-extra" depends="jar-updater"/>
 
     <target name="do-unit-test-build" depends="projectized.do-unit-test-build">
+        <macrodef name="package-nbm-from-jardir">
+            <attribute name="nbmbasename"/>
+            <attribute name="jarbasename"/>
+            <sequential>
+                <zip destfile="${build.test.unit.dir}/data/nbm-source/@{nbmbasename}/netbeans/modules/@{jarbasename}.jar">
+                    <fileset dir="${build.test.unit.dir}/data/nbm-source/@{nbmbasename}/netbeans/modules/@{jarbasename}.jardir" includes="**"/>
+                </zip>
+                <jar destfile="${build.test.unit.classes.dir}/org/netbeans/api/autoupdate/data/@{nbmbasename}.nbm">
+                    <fileset dir="${build.test.unit.dir}/data/nbm-source/@{nbmbasename}" includes="**" excludes="**/*.jardir **/*.jardir/**" />
+                </jar>  
+            </sequential>
+        </macrodef>
+        
+        <package-nbm-from-jardir nbmbasename="com-example-testmodule-cluster" jarbasename="com-example-testmodule-cluster" />
+        <package-nbm-from-jardir nbmbasename="org-yourorghere-brokendepending" jarbasename="org-yourorghere-brokendepending" />
+        <package-nbm-from-jardir nbmbasename="org-yourorghere-depending" jarbasename="org-yourorghere-depending" />
+        <package-nbm-from-jardir nbmbasename="org-yourorghere-depending_on_new_one_engine" jarbasename="org-yourorghere-depending_on_new_one_engine" />
+        <package-nbm-from-jardir nbmbasename="org-yourorghere-engine" jarbasename="org-yourorghere-engine" />
+        <package-nbm-from-jardir nbmbasename="org-yourorghere-engine-1-1" jarbasename="org-yourorghere-engine" />
+        <package-nbm-from-jardir nbmbasename="org-yourorghere-engine-1-2" jarbasename="org-yourorghere-engine" />
+        <package-nbm-from-jardir nbmbasename="org-yourorghere-executable-permissions" jarbasename="org-yourorghere-executable-permissions" />
+        <package-nbm-from-jardir nbmbasename="org-yourorghere-fragment" jarbasename="org-yourorghere-fragment" />
+        <package-nbm-from-jardir nbmbasename="org-yourorghere-independent-1-1" jarbasename="org-yourorghere-independent" />
+        <package-nbm-from-jardir nbmbasename="org-yourorghere-independent" jarbasename="org-yourorghere-independent" />
+        <package-nbm-from-jardir nbmbasename="org-yourorghere-refresh_providers_test" jarbasename="org-yourorghere-refresh_providers_test" />
+
+        <jar destfile="${build.test.unit.classes.dir}/org/netbeans/api/autoupdate/data/empty.jar">
+        </jar>
         <property name="validation-store" value="${build.test.unit.classes.dir}/org/netbeans/api/autoupdate/data/test-validate-keystore.jks" />
         <delete file="${validation-store}" />
         <genkey
             keystore="${validation-store}"
-            alias="demo-key" storepass="password"
+            alias="demo-key"
+            storepass="password"
+            keyalg="RSA"
             dname="CN=Demo Key, OU=NetBeans, O=Apache.org, C=US"
         />
         <property name="unvalidation-store" value="${build.test.unit.classes.dir}/org/netbeans/api/autoupdate/data/test-unvalidate-keystore.jks" />
         <delete file="${unvalidation-store}" />
         <genkey
             keystore="${unvalidation-store}"
-            alias="demo-key-unvalidated" storepass="password"
+            alias="demo-key-unvalidated"
+            storepass="password"
+            keyalg="RSA"
             dname="CN=Demo Key (unvalidated), OU=NetBeans, O=Apache.org, C=US"
         />
         <touch file="${build.dir}/Dummy.class" />

@@ -24,6 +24,7 @@ import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.function.Consumer;
 import org.netbeans.modules.java.lsp.server.ui.IOContext;
 import org.openide.util.Exceptions;
@@ -91,7 +92,7 @@ public final class NbProcessConsole extends IOContext {
     public void stdIn(String line) throws IOException {
         synchronized (this) {
             if (inputBuffer == null) {
-                inputBuffer = new BufferedWriter(new OutputStreamWriter(inputSource, "UTF-8"));
+                inputBuffer = new BufferedWriter(new OutputStreamWriter(inputSource, StandardCharsets.UTF_8));
             }
         }
         inputBuffer.write(line);

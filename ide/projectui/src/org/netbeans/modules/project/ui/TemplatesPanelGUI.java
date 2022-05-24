@@ -37,6 +37,7 @@ import java.beans.VetoableChangeListener;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.Locale;
 import java.util.StringTokenizer;
 import java.util.logging.Level;
@@ -63,7 +64,6 @@ import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.text.html.StyleSheet;
 import javax.swing.tree.TreePath;
 import org.netbeans.api.annotations.common.StaticResource;
-import static org.netbeans.modules.project.ui.Bundle.*;
 import org.openide.ErrorManager;
 import org.openide.WizardDescriptor;
 import org.openide.awt.HtmlBrowser;
@@ -89,6 +89,8 @@ import org.openide.util.Exceptions;
 import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.RequestProcessor;
+
+import static org.netbeans.modules.project.ui.Bundle.*;
 
 /**
  *
@@ -499,7 +501,7 @@ public class TemplatesPanelGUI extends javax.swing.JPanel implements PropertyCha
         return desc;
     }
     
-    private static abstract class ExplorerProviderPanel extends JPanel implements ExplorerManager.Provider, PropertyChangeListener, VetoableChangeListener {
+    private abstract static class ExplorerProviderPanel extends JPanel implements ExplorerManager.Provider, PropertyChangeListener, VetoableChangeListener {
         
         private ExplorerManager manager;
         
@@ -825,7 +827,7 @@ public class TemplatesPanelGUI extends javax.swing.JPanel implements PropertyCha
         try {
             byte[] arr = new byte[4096];
             int len = stream.read (arr, 0, arr.length);
-            String txt = new String(arr, 0, (len >= 0 ) ? len : 0, "ISO-8859-1").toUpperCase(Locale.ENGLISH);
+            String txt = new String(arr, 0, (len >= 0 ) ? len : 0, StandardCharsets.ISO_8859_1).toUpperCase(Locale.ENGLISH);
             // encoding
             return findEncoding (txt);
         } catch (IOException x) {

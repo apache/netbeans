@@ -24,10 +24,14 @@ class TestField
     public int $typed;
     private ?string $nullable;
     protected static Foo|Bar|\Test\Baz $unionType;
+    public Foo&Bar&\Test\Baz $intersectionType;
+    public Foo&Bar&Looooooooooooooooooooooooooong $longNameType;
 
     public function test(): void {
         $this->typed;
         $this->nullable;
         self::$unionType;
+        $this->intersectionType;
+        $this->longNameType;
     }
 }

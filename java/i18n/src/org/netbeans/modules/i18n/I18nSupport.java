@@ -197,7 +197,7 @@ public abstract class I18nSupport {
     }
 
     /** Factory inteface for creating {@code I18nSupport} instances. */
-    public static abstract class Factory {
+    public abstract static class Factory {
         
         /** Gets <code>I18nSupport</code> instance for specified data object and document.
          * @exception IOException when the document could not be loaded */

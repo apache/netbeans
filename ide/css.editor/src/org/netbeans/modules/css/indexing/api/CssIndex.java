@@ -484,8 +484,9 @@ public class CssIndex {
         if(LOGGER.isLoggable(Level.FINE)) {
             StringBuilder deps = new StringBuilder();
             deps.append("dest2source:\n");
-            for(FileObject dest : allDepsCache.dest2source.keySet()) {
-                Collection<FileReference> source = allDepsCache.dest2source.get(dest);
+            for(Map.Entry<FileObject, Collection<FileReference>> entry : allDepsCache.dest2source.entrySet()) {
+                FileObject dest = entry.getKey();
+                Collection<FileReference> source = entry.getValue();
                 deps.append(dest.getNameExt());
                 deps.append("->");
                 for(FileReference fref : source) {
@@ -495,8 +496,9 @@ public class CssIndex {
                 deps.append('\n');
             }
             deps.append("source2dest:\n");
-            for(FileObject source : allDepsCache.source2dest.keySet()) {
-                Collection<FileReference> dest = allDepsCache.source2dest.get(source);
+            for(Map.Entry<FileObject, Collection<FileReference>> entry : allDepsCache.source2dest.entrySet()) {
+                FileObject source = entry.getKey();
+                Collection<FileReference> dest = entry.getValue();
                 deps.append(source.getNameExt());
                 deps.append("->");
                 for(FileReference fref : dest) {

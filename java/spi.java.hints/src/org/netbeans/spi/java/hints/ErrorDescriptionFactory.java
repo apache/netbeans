@@ -70,6 +70,7 @@ import org.netbeans.spi.editor.hints.EnhancedFix;
 import org.netbeans.spi.editor.hints.ErrorDescription;
 import org.netbeans.spi.editor.hints.Fix;
 import org.netbeans.spi.editor.hints.LazyFixList;
+import org.netbeans.spi.editor.hints.settings.FileHintPreferences;
 import org.openide.filesystems.FileObject;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
@@ -234,11 +235,11 @@ public class ErrorDescriptionFactory {
     }
 
     static List<Fix> resolveDefaultFixes(HintContext ctx, Fix... provided) {
-        List<Fix> auxiliaryFixes = new LinkedList<Fix>();
+        List<Fix> auxiliaryFixes = new LinkedList<>();
         HintMetadata hm = SPIAccessor.getINSTANCE().getHintMetadata(ctx);
 
         if (hm != null) {
-            Set<String> suppressWarningsKeys = new LinkedHashSet<String>();
+            Set<String> suppressWarningsKeys = new LinkedHashSet<>();
 
             for (String key : hm.suppressWarnings) {
                 if (key == null || key.length() == 0) {
@@ -249,8 +250,8 @@ public class ErrorDescriptionFactory {
             }
 
 
-            auxiliaryFixes.add(new DisableConfigure(hm, true, SPIAccessor.getINSTANCE().getHintSettings(ctx)));
-            auxiliaryFixes.add(new DisableConfigure(hm, false, null));
+            auxiliaryFixes.add(new DisableConfigure(ctx.getInfo().getFileObject(), hm, true, SPIAccessor.getINSTANCE().getHintSettings(ctx)));
+            auxiliaryFixes.add(new DisableConfigure(ctx.getInfo().getFileObject(), hm, false, null));
 
             if (hm.kind == Hint.Kind.INSPECTION && !hm.options.contains(Options.NO_BATCH)) {
                 auxiliaryFixes.add(new InspectFix(hm, false));
@@ -263,7 +264,7 @@ public class ErrorDescriptionFactory {
                 auxiliaryFixes.addAll(createSuppressWarnings(ctx.getInfo(), ctx.getPath(), suppressWarningsKeys.toArray(new String[0])));
             }
 
-            List<Fix> result = new LinkedList<Fix>();
+            List<Fix> result = new LinkedList<>();
 
             for (Fix f : provided != null ? provided : new Fix[0]) {
                 if (f == null) continue;
@@ -272,7 +273,7 @@ public class ErrorDescriptionFactory {
             }
 
             if (result.isEmpty()) {
-                result.add(org.netbeans.spi.editor.hints.ErrorDescriptionFactory.attachSubfixes(new TopLevelConfigureFix(hm), auxiliaryFixes));
+                result.add(org.netbeans.spi.editor.hints.ErrorDescriptionFactory.attachSubfixes(new TopLevelConfigureFix(ctx.getInfo().getFileObject(), hm), auxiliaryFixes));
             }
 
             return result;
@@ -282,11 +283,13 @@ public class ErrorDescriptionFactory {
     }
 
     private static class DisableConfigure implements Fix, SyntheticFix {
+        private final @NonNull FileObject file;
         private final @NonNull HintMetadata metadata;
         private final boolean disable;
         private final HintsSettings hintsSettings;
 
-        DisableConfigure(@NonNull HintMetadata metadata, boolean disable, HintsSettings hintsSettings) {
+        DisableConfigure(@NonNull FileObject file, @NonNull HintMetadata metadata, boolean disable, HintsSettings hintsSettings) {
+            this.file = file;
             this.metadata = metadata;
             this.disable = disable;
             this.hintsSettings = hintsSettings;
@@ -316,7 +319,7 @@ public class ErrorDescriptionFactory {
                 hintsSettings.setEnabled(metadata, false);
                 //XXX: re-run hints task
             } else {
-                OptionsDisplayer.getDefault().open("Editor/Hints/text/x-java/" + metadata.id);
+                FileHintPreferences.openFilePreferences(file, "text/x-java", metadata.id);
             }
 
             return null;
@@ -353,8 +356,8 @@ public class ErrorDescriptionFactory {
 
     private static final class TopLevelConfigureFix extends DisableConfigure implements EnhancedFix {
 
-        public TopLevelConfigureFix(@NonNull HintMetadata metadata) {
-            super(metadata, false, null);
+        public TopLevelConfigureFix(@NonNull FileObject file, @NonNull HintMetadata metadata) {
+            super(file, metadata, false, null);
         }
 
         @Override
@@ -384,20 +387,17 @@ public class ErrorDescriptionFactory {
 
         @Override
         public ChangeInfo implement() throws Exception {
-            SwingUtilities.invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                    if (transform) {
-                        final InspectAndTransformOpener o = Lookup.getDefault().lookup(InspectAndTransformOpener.class);
-
-                        if (o != null) {
-                            o.openIAT(metadata);
-                        } else {
-                            //warn
-                        }
+            SwingUtilities.invokeLater(() -> {
+                if (transform) {
+                    final InspectAndTransformOpener o = Lookup.getDefault().lookup(InspectAndTransformOpener.class);
+                    
+                    if (o != null) {
+                        o.openIAT(metadata);
                     } else {
-                        CodeAnalysis.open(WarningDescription.create("text/x-java:" + metadata.id, null, null, null));
+                        //warn
                     }
+                } else {
+                    CodeAnalysis.open(WarningDescription.create("text/x-java:" + metadata.id, null, null, null));
                 }
             });
             
@@ -517,6 +517,7 @@ public class ErrorDescriptionFactory {
             this.file = file;
         }
 
+        @Override
         public String getText() {
             StringBuilder keyNames = new StringBuilder();
             for (int i = 0; i < keys.length; i++) {
@@ -530,10 +531,12 @@ public class ErrorDescriptionFactory {
             return NbBundle.getMessage(ErrorDescriptionFactory.class, "LBL_FIX_Suppress_Waning",  keyNames.toString() );  // NOI18N
         }
 
+        @Override
         public ChangeInfo implement() throws IOException {
             JavaSource js = JavaSource.forFileObject(file);
 
             js.runModificationTask(new Task<WorkingCopy>() {
+                @Override
                 public void run(WorkingCopy copy) throws IOException {
                     copy.toPhase(Phase.RESOLVED); //XXX: performance
                     TreePath path = handle.resolve(copy);

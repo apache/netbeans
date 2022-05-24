@@ -107,7 +107,7 @@ public class UpdateProjectImpl implements UpdateImplementation {
                 synchronized (this) {
                     if (isCurrent == null) {
                         if ((cfg.getConfigurationFragment("data","http://www.netbeans.org/ns/web-project/1",true) != null) || // NOI18N
-                        (cfg.getConfigurationFragment("data","http://www.netbeans.org/ns/web-project/2",true) != null)) { // NOI18N
+                                (cfg.getConfigurationFragment("data","http://www.netbeans.org/ns/web-project/2",true) != null)) { // NOI18N
                             isCurrent = Boolean.FALSE;
                         } else {
                             isCurrent = Boolean.TRUE;
@@ -116,7 +116,7 @@ public class UpdateProjectImpl implements UpdateImplementation {
                     return isCurrent;
                 }
             }
-        }).booleanValue();
+        });
     }
 
     public boolean canUpdate () {

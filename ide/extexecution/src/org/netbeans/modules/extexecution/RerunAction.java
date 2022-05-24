@@ -131,7 +131,7 @@ public final class RerunAction extends AbstractAction implements ChangeListener 
         }
     }
 
-    public static abstract class Accessor {
+    public abstract static class Accessor {
 
         private static volatile Accessor accessor;
 

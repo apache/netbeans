@@ -84,7 +84,7 @@ public abstract class IOConnect {
         return find(io) != null;
     }
 
-    abstract protected boolean isConnected();
+    protected abstract boolean isConnected();
 
-    abstract protected void disconnectAll(Runnable continuation);
+    protected abstract void disconnectAll(Runnable continuation);
 }

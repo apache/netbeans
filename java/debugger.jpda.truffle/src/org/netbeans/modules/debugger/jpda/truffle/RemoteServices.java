@@ -95,17 +95,21 @@ public final class RemoteServices {
     
     private static final Logger logger = Logger.getLogger(RemoteServices.class.getName());
     
-    static final String REMOTE_CLASSES_ZIPFILE = "/org/netbeans/modules/debugger/jpda/truffle/resources/JPDATruffleBackend.jar";
+    static final String REMOTE_CLASSES_ZIPFILE = "/org/netbeans/modules/debugger/jpda/truffle/resources/JPDATruffleBackend.jar";    // NOI18N
 
-    private static final String TRUFFLE_CLASS = "com.oracle.truffle.api.Truffle";
-    private static final String EXPORT_TRUFFLE_CLASS = "com.oracle.truffle.polyglot.LanguageCache$Loader";
-    private static final String EXPORT_TRUFFLE_METHOD = "exportTruffle";
-    private static final String EXPORT_TRUFFLE_SIGNAT = "(Ljava/lang/ClassLoader;)V";
+    private static final String TRUFFLE_CLASS = "com.oracle.truffle.api.Truffle";       // NOI18N
+    private static final String[] TRUFFLE_PACKAGES = {
+            "com.oracle.truffle.api",           // NOI18N
+            "com.oracle.truffle.api.debug",     // NOI18N
+            "com.oracle.truffle.api.frame",     // NOI18N
+            "com.oracle.truffle.api.instrumentation",   // NOI18N
+            "com.oracle.truffle.api.nodes",     // NOI18N
+            "com.oracle.truffle.api.source" };  // NOI18N
     
     private static final Map<JPDADebugger, ClassObjectReference> remoteServiceClasses = new WeakHashMap<>();
     private static final Map<JPDADebugger, ThreadReference> remoteServiceAccess = new WeakHashMap<>();
     
-    private static final RequestProcessor AUTORESUME_AFTER_SUSPEND_RP = new RequestProcessor("Autoresume after suspend", 1);
+    private static final RequestProcessor AUTORESUME_AFTER_SUSPEND_RP = new RequestProcessor("Autoresume after suspend", 1);    // NOI18N
     
     private static final Set<PropertyChangeListener> serviceListeners = new WeakSet<>();
 
@@ -269,17 +273,20 @@ public final class RemoteServices {
 
                 // We have an agent class loader that we'll use to define Truffle backend debugging classes.
                 // We need to export the agent class loader to Truffle so that we can upload classes that access Truffle APIs.
-                ClassType languageLoader = getClass(vm, EXPORT_TRUFFLE_CLASS);
-                if (languageLoader == null) {
-                    Exceptions.printStackTrace(new IllegalStateException("Class " + EXPORT_TRUFFLE_CLASS + " not found in the debuggee."));
-                    return null;
+                // We need to export packages from Truffle to our unnamed module.
+                // We must call the Modeule.addExports() method from the Truffle module, we must be suspended in a Truffle class.
+                Method getModule = ClassTypeWrapper.concreteMethodByName(theClass, "getModule", "()Ljava/lang/Module;");
+                // truffleModule = Truffle.class.getModule()
+                ObjectReference truffleModule = (ObjectReference) ObjectReferenceWrapper.invokeMethod(ReferenceTypeWrapper.classObject(truffleLocatorClass), tawt, getModule, Collections.emptyList(), ObjectReference.INVOKE_SINGLE_THREADED);
+                ClassType newClassLoaderClass = (ClassType) ObjectReferenceWrapper.referenceType(classLoader);
+                Method getUnnamedModule = ClassTypeWrapper.concreteMethodByName(newClassLoaderClass, "getUnnamedModule", "()Ljava/lang/Module;");
+                // unnamedModule = newInstanceOfClassLoader.getUnnamedModule()
+                ObjectReference unnamedModule = (ObjectReference) ObjectReferenceWrapper.invokeMethod(classLoader, tawt, getUnnamedModule, Collections.emptyList(), ObjectReference.INVOKE_SINGLE_THREADED);
+                Method addExports = ClassTypeWrapper.concreteMethodByName((ClassType) ObjectReferenceWrapper.referenceType(truffleModule), "addExports", "(Ljava/lang/String;Ljava/lang/Module;)Ljava/lang/Module;");
+                for (String tPackage : TRUFFLE_PACKAGES) {
+                    // Add exports: truffleModule.addExports(package, unnamedModule)
+                    ObjectReferenceWrapper.invokeMethod(truffleModule, tawt, addExports, Arrays.asList(values.mirrorOf(tPackage), unnamedModule), ObjectReference.INVOKE_SINGLE_THREADED);
                 }
-                Method exportTruffle = ClassTypeWrapper.concreteMethodByName(languageLoader, EXPORT_TRUFFLE_METHOD, EXPORT_TRUFFLE_SIGNAT);
-                if (exportTruffle == null) {
-                    Exceptions.printStackTrace(new IllegalStateException("Method " + EXPORT_TRUFFLE_METHOD + " was not found in " + EXPORT_TRUFFLE_CLASS +" in the debuggee."));
-                    return null;
-                }
-                ClassTypeWrapper.invokeMethod(languageLoader, tawt, exportTruffle, Collections.singletonList(classLoader), ObjectReference.INVOKE_SINGLE_THREADED);
             } else {
                 ObjectReference cl;
                 cl = getTruffleClassLoader(tawt, vm);

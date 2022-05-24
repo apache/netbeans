@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.121
+#Version 1.124
 
 CLSS public abstract interface java.io.Serializable
 
@@ -1021,8 +1021,6 @@ fld public final static int OS_TRU64 = 512
 fld public final static int OS_UNIX_MASK = 3064
 fld public final static int OS_VMS = 8192
 fld public final static int OS_WIN2000 = 4096
-fld public final static int OS_WIN95 = 2
-fld public final static int OS_WIN98 = 4
 fld public final static int OS_WINDOWS_MASK = 20487
 fld public final static int OS_WINNT = 1
 fld public final static int OS_WIN_OTHER = 16384
@@ -1175,13 +1173,14 @@ CLSS public org.netbeans.lib.profiler.heap.HeapFactory
 cons public init()
 meth public static org.netbeans.lib.profiler.heap.Heap createHeap(java.io.File) throws java.io.IOException
 meth public static org.netbeans.lib.profiler.heap.Heap createHeap(java.io.File,int) throws java.io.IOException
+meth public static org.netbeans.lib.profiler.heap.Heap createHeap(java.nio.ByteBuffer,int) throws java.io.IOException
 supr java.lang.Object
 
 CLSS public final org.netbeans.lib.profiler.heap.HeapProgress
 fld public final static int PROGRESS_MAX = 1000
 meth public static javax.swing.BoundedRangeModel getProgress()
 supr java.lang.Object
-hfds progressThreadLocal
+hfds listener,progressThreadLocal
 hcls ModelInfo
 
 CLSS public abstract interface org.netbeans.lib.profiler.heap.HeapSummary

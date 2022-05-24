@@ -84,7 +84,7 @@ public class FastMatcher extends AbstractMatcher {
             this.searchPattern = searchPattern;
             String expr = searchPattern.getSearchExpression();
             this.pattern = TextRegexpUtil.makeTextPattern(searchPattern);
-            this.multiline = TextRegexpUtil.canBeMultilinePattern(expr);
+            this.multiline = TextRegexpUtil.isMultilineOrMatchesMultiline(expr);
             asciiPattern = expr.matches("\\p{ASCII}+") //NOI18N
                     && !expr.contains(".") //NOI18N
                     && !expr.matches(".*\\\\[0xXuU].*");                //NOI18N
@@ -155,7 +155,7 @@ public class FastMatcher extends AbstractMatcher {
 
         while (textMatcher.find()) {
             if (textDetails == null) {
-                textDetails = new LinkedList<TextDetail>();
+                textDetails = new LinkedList<>();
                 dataObject = DataObject.find(fo);
                 fileMatches++;
             }
@@ -192,7 +192,7 @@ public class FastMatcher extends AbstractMatcher {
             Matcher m = pattern.matcher(line.getString());
             while (m.find() && canRun) {
                 if (dets == null) {
-                    dets = new ArrayList<TextDetail>();
+                    dets = new ArrayList<>();
                     dataObject = DataObject.find(fo);
 
                 }

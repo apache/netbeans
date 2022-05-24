@@ -861,7 +861,7 @@ public final class WebProject implements Project {
                 GeneratedFilesHelper.BUILD_IMPL_XML_PATH,
                 WebProject.class.getResource("resources/build-impl.xsl"));
             final Boolean projectPropertiesSave = WebProject.this.projectPropertiesSave.get();
-            if ((projectPropertiesSave.booleanValue() && (state & GeneratedFilesHelper.FLAG_MODIFIED) == GeneratedFilesHelper.FLAG_MODIFIED) ||
+            if ((projectPropertiesSave && (state & GeneratedFilesHelper.FLAG_MODIFIED) == GeneratedFilesHelper.FLAG_MODIFIED) ||
                 state == (GeneratedFilesHelper.FLAG_UNKNOWN | GeneratedFilesHelper.FLAG_MODIFIED |
                     GeneratedFilesHelper.FLAG_OLD_PROJECT_XML | GeneratedFilesHelper.FLAG_OLD_STYLESHEET)) {  //missing genfiles.properties
                 try {

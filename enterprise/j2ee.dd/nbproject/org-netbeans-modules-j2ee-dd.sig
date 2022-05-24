@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.53.0
+#Version 1.55.0
 
 CLSS public abstract interface java.io.Serializable
 
@@ -258,6 +258,7 @@ meth public org.netbeans.modules.j2ee.dd.api.client.AppClient getDDRoot(java.io.
 meth public org.netbeans.modules.j2ee.dd.api.client.AppClient getDDRoot(org.openide.filesystems.FileObject) throws java.io.IOException
 meth public org.netbeans.modules.j2ee.dd.api.client.AppClient getDDRootCopy(org.openide.filesystems.FileObject) throws java.io.IOException
 meth public org.netbeans.modules.schema2beans.BaseBean getBaseBean(org.netbeans.modules.j2ee.dd.api.common.CommonDDBean)
+ anno 0 java.lang.Deprecated()
 meth public static org.netbeans.modules.j2ee.dd.api.client.DDProvider getDefault()
 supr java.lang.Object
 hfds baseBeanMap,ddMap,ddProvider,errorMap,fileChangeListener
@@ -925,6 +926,7 @@ fld public final static java.lang.String VERSION_2_1 = "2.1"
 fld public final static java.lang.String VERSION_3_0 = "3.0"
 fld public final static java.lang.String VERSION_3_1 = "3.1"
 fld public final static java.lang.String VERSION_3_2 = "3.2"
+fld public final static java.lang.String VERSION_4_0 = "4.0"
 intf org.netbeans.modules.j2ee.dd.api.common.RootInterface
 meth public abstract int getStatus()
 meth public abstract java.lang.String getSingleEjbClientJar()
@@ -1675,6 +1677,7 @@ meth public org.netbeans.modules.j2ee.dd.api.web.WebApp getDDRoot(org.openide.fi
 meth public org.netbeans.modules.j2ee.dd.api.web.WebApp getDDRoot(org.openide.filesystems.FileObject,boolean) throws java.io.IOException
 meth public org.netbeans.modules.j2ee.dd.api.web.WebApp getDDRootCopy(org.openide.filesystems.FileObject) throws java.io.IOException
 meth public org.netbeans.modules.schema2beans.BaseBean getBaseBean(org.netbeans.modules.j2ee.dd.api.common.CommonDDBean)
+ anno 0 java.lang.Deprecated()
 meth public org.xml.sax.SAXParseException parse(org.openide.filesystems.FileObject) throws java.io.IOException,org.xml.sax.SAXException
 meth public static org.netbeans.modules.j2ee.dd.api.web.DDProvider getDefault()
 supr java.lang.Object
@@ -1943,6 +1946,7 @@ fld public final static java.lang.String VERSION_2_5 = "2.5"
 fld public final static java.lang.String VERSION_3_0 = "3.0"
 fld public final static java.lang.String VERSION_3_1 = "3.1"
 fld public final static java.lang.String VERSION_4_0 = "4.0"
+fld public final static java.lang.String VERSION_5_0 = "5.0"
 intf org.netbeans.modules.j2ee.dd.api.common.RootInterface
 meth public abstract boolean isDistributable()
 meth public abstract boolean isMetadataComplete() throws org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException

@@ -23,10 +23,10 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -55,7 +55,6 @@ import org.netbeans.modules.apisupport.project.api.ManifestManager;
 import org.netbeans.modules.apisupport.project.api.Util;
 import org.netbeans.modules.apisupport.project.ui.customizer.ClusterInfo;
 import org.netbeans.modules.apisupport.project.ui.customizer.SuiteUtils;
-import static org.netbeans.modules.apisupport.project.universe.Bundle.*;
 import org.netbeans.spi.project.support.ant.PropertyEvaluator;
 import org.netbeans.spi.project.support.ant.PropertyProvider;
 import org.netbeans.spi.project.support.ant.PropertyUtils;
@@ -73,6 +72,8 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
+
+import static org.netbeans.modules.apisupport.project.universe.Bundle.*;
 
 /**
  * Represents list of known modules.
@@ -614,9 +615,9 @@ public final class ModuleList {
                 } else {
                     // Wildcard. Convert to regexp and do a brute-force search.
                     // Not the most efficient option but should probably suffice.
-                    String regex = "\\Q" + pattern.replaceAll("\\*\\*", "__DBLASTERISK__"). // NOI18N
-                                                   replaceAll("\\*", "\\\\E[^/]*\\\\Q"). // NOI18N
-                                                   replaceAll("__DBLASTERISK__", "\\\\E.*\\\\Q") + "\\E"; // NOI18N
+                    String regex = "\\Q" + pattern.replace("**", "__DBLASTERISK__") // NOI18N
+                                                  .replace("*", "\\E[^/]*\\Q") // NOI18N
+                                                  .replace("__DBLASTERISK__", "\\E.*\\Q") + "\\E"; // NOI18N
                     Pattern regexp = Pattern.compile(regex);
                     for (String clusterFile : scanDirForFiles(cluster)) {
                         if (regexp.matcher(clusterFile).matches()) {
@@ -868,7 +869,7 @@ public final class ModuleList {
         @Messages("junit_placeholder=JUnit from Maven")
         @Override protected LocalizedBundleInfo getBundleInfo() {
             try {
-                return LocalizedBundleInfo.load(new InputStream[] {new ByteArrayInputStream((LocalizedBundleInfo.NAME + '=' + junit_placeholder()).getBytes("ISO-8859-1"))});
+                return LocalizedBundleInfo.load(new InputStream[] {new ByteArrayInputStream((LocalizedBundleInfo.NAME + '=' + junit_placeholder()).getBytes(StandardCharsets.ISO_8859_1))});
             } catch (IOException x) {
                 assert false : x;
                 return LocalizedBundleInfo.EMPTY;

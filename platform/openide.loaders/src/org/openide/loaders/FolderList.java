@@ -86,31 +86,31 @@ implements FileChangeListener, DataObject.Container {
     * Whenever a new change notification arrives (thru file listener)
     * the previous task is canceled (if not running) and new is created.
     */
-    transient private volatile RequestProcessor.Task refreshTask;
+    private transient volatile RequestProcessor.Task refreshTask;
     /** task that is non-null if a setOrder has been called
      */
-    transient private volatile ComparatorTask comparatorTask;
+    private transient volatile ComparatorTask comparatorTask;
 
     /** Primary files in this folder. Maps (FileObject, Reference (DataObject))
     */
-    transient private Map<FileObject, Reference<DataObject>> primaryFiles = null;
+    private transient Map<FileObject, Reference<DataObject>> primaryFiles = null;
 
     /** order of primary files (FileObject) */
-    transient private List<FileObject> order;
+    private transient List<FileObject> order;
 
     private static final Logger err = Logger.getLogger("org.openide.loaders.FolderList"); // NOI18N
     
     /** property change support */
-    transient private PropertyChangeSupport pcs;
+    private transient PropertyChangeSupport pcs;
     
     /**
      * If true, this folder has been fully created (though it might
      * still be refreshing etc.). Used to avoid e.g. MDO.PROP_FILES
      * firing before the folder is ready.
      */
-    transient private boolean folderCreated = false;
+    private transient boolean folderCreated = false;
     
-    transient private FileChangeListener weakFCL = FileUtil.weakFileChangeListener(this, null);
+    private transient FileChangeListener weakFCL = FileUtil.weakFileChangeListener(this, null);
 
     static {
         // Ensure it is loaded so that WeakListenerImpl does not have to load it later:

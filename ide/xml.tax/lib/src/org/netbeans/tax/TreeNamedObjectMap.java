@@ -352,7 +352,7 @@ public class TreeNamedObjectMap extends TreeObjectList {
     /**
      *
      */
-    protected static abstract class ContentManager extends TreeObjectList.ContentManager {
+    protected abstract static class ContentManager extends TreeObjectList.ContentManager {
         
         /** @throws ClassCastException
          */

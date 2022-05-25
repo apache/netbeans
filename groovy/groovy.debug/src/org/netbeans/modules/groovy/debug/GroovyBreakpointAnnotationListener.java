@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.groovy.support.debug;
+package org.netbeans.modules.groovy.debug;
 
 import java.beans.PropertyChangeEvent;
 import java.util.HashMap;
@@ -25,8 +25,10 @@ import org.netbeans.api.debugger.Breakpoint;
 import org.netbeans.api.debugger.DebuggerEngine;
 import org.netbeans.api.debugger.DebuggerManager;
 import org.netbeans.api.debugger.DebuggerManagerAdapter;
+import org.netbeans.api.debugger.LazyDebuggerManagerListener;
 import org.netbeans.api.debugger.jpda.JPDADebugger;
 import org.netbeans.api.debugger.jpda.LineBreakpoint;
+import org.netbeans.spi.debugger.DebuggerServiceRegistration;
 
 /**
  * Listens on {@org.netbeans.api.debugger.DebuggerManager} on
@@ -37,16 +39,17 @@ import org.netbeans.api.debugger.jpda.LineBreakpoint;
  * @author Martin Grebac
  * @author Martin Adamek
  */
+@DebuggerServiceRegistration(types=LazyDebuggerManagerListener.class)
 public class GroovyBreakpointAnnotationListener extends DebuggerManagerAdapter {
-    
+
     private HashMap<LineBreakpoint, Object> breakpointToAnnotation = new HashMap<>();
     private boolean listen = true;
-    
+
     @Override
     public String[] getProperties () {
         return new String[] {DebuggerManager.PROP_BREAKPOINTS};
     }
-    
+
     @Override
     public void propertyChange (PropertyChangeEvent e) {
         String propertyName = e.getPropertyName ();
@@ -80,7 +83,7 @@ public class GroovyBreakpointAnnotationListener extends DebuggerManagerAdapter {
             removeAnnotation ((LineBreakpoint) b);
         }
     }
-    
+
     private void annotate (LineBreakpoint b) {
         // remove old annotation
         Object annotation = breakpointToAnnotation.get (b);
@@ -90,31 +93,31 @@ public class GroovyBreakpointAnnotationListener extends DebuggerManagerAdapter {
         if (b.isHidden ()) {
             return;
         }
-        
+
         // add new one
         annotation = Context.annotate (b);
         if (annotation == null) {
             return;
         }
-        
+
         breakpointToAnnotation.put (b, annotation);
-        
+
         DebuggerEngine de = DebuggerManager.getDebuggerManager().getCurrentEngine ();
         Object timeStamp = null;
         if (de != null) {
             timeStamp = de.lookupFirst (null, JPDADebugger.class);
         }
-        update (b, timeStamp);        
+        update (b, timeStamp);
     }
 
     public void updateGroovyLineBreakpoints () {
-        Iterator<LineBreakpoint> it = breakpointToAnnotation.keySet ().iterator (); 
+        Iterator<LineBreakpoint> it = breakpointToAnnotation.keySet ().iterator ();
         while (it.hasNext ()) {
             LineBreakpoint lb = it.next();
             update (lb, null);
         }
     }
-    
+
     private void update (LineBreakpoint b, Object timeStamp) {
         Object annotation = breakpointToAnnotation.get (b);
         if (annotation == null) {
@@ -125,7 +128,7 @@ public class GroovyBreakpointAnnotationListener extends DebuggerManagerAdapter {
         b.setLineNumber (ln);
         listen = true;
     }
-    
+
     private void removeAnnotation(LineBreakpoint b) {
         Object annotation = breakpointToAnnotation.remove (b);
         if (annotation != null) {

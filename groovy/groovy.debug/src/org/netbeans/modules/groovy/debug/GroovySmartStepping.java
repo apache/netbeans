@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.groovy.support.debug;
+package org.netbeans.modules.groovy.debug;
 
 import java.util.Arrays;
 import java.util.Collections;

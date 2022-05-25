@@ -16,11 +16,11 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.groovy.support.debug;
+package org.netbeans.modules.groovy.debug;
 
 import javax.swing.Action;
 import org.netbeans.api.debugger.jpda.LineBreakpoint;
-import static org.netbeans.modules.groovy.support.debug.Bundle.*;
+import org.netbeans.spi.debugger.DebuggerServiceRegistration;
 import org.netbeans.spi.viewmodel.ModelListener;
 import org.netbeans.spi.viewmodel.Models;
 import org.netbeans.spi.viewmodel.NodeActionsProvider;
@@ -32,11 +32,12 @@ import org.openide.util.NbBundle.Messages;
  * @author Martin Grebac
  * @author Martin Adamek
  */
+@DebuggerServiceRegistration(path="BreakpointsView", types=NodeActionsProviderFilter.class)
 public class GroovyBreakpointActionsProvider implements NodeActionsProviderFilter {
 
     @Messages("LBL_Action_Go_To_Source=Go to Source")
     private static final Action GO_TO_SOURCE_ACTION = Models.createAction(
-            LBL_Action_Go_To_Source(),
+            Bundle.LBL_Action_Go_To_Source(),
             new Models.ActionPerformer() {
                 @Override
                 public boolean isEnabled(Object node) {
@@ -52,7 +53,7 @@ public class GroovyBreakpointActionsProvider implements NodeActionsProviderFilte
     
     @Messages("LBL_Action_Customize=Customize")
     private static final Action CUSTOMIZE_ACTION = Models.createAction(
-            LBL_Action_Customize(),
+            Bundle.LBL_Action_Customize(),
             new Models.ActionPerformer() {
                 @Override
                 public boolean isEnabled(Object node) {

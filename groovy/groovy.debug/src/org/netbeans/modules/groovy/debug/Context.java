@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.groovy.support.debug;
+package org.netbeans.modules.groovy.debug;
 
 import java.beans.PropertyChangeListener;
 import java.io.File;
@@ -40,9 +40,9 @@ public class Context {
 
     private static EditorContext getContext() {
         if (editorContext == null) {
-            List l = DebuggerManager.getDebuggerManager().lookup(null, EditorContext.class);
+            List<? extends EditorContext> l = DebuggerManager.getDebuggerManager().lookup(null, EditorContext.class);
             if (!l.isEmpty()) {
-                editorContext = (EditorContext) l.get(0);
+                editorContext = l.get(0);
             }
         }
         return editorContext;

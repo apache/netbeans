@@ -225,6 +225,9 @@
                 <package>org.apache.maven.settings.io.xpp3</package>
                 <package>org.apache.maven.shared.dependency.tree</package>
                 <package>org.apache.maven.shared.dependency.tree.traversal</package>
+                <package>org.apache.maven.shared.dependency.graph</package>
+                <package>org.apache.maven.shared.dependency.graph.filter</package>
+                <package>org.apache.maven.shared.dependency.graph.traversal</package>
                 <package>org.apache.maven.wagon</package>
                 <package>org.apache.maven.wagon.authentication</package>
                 <package>org.apache.maven.wagon.authorization</package>

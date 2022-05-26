@@ -832,8 +832,5 @@
 		"jsonc-parser": "3.0.0",
 		"vscode-debugadapter": "1.51.0",
 		"vscode-languageclient": "8.0.1"
-		"vsce": "^2.7.0",
-		"vscode-debugadapter": "1.42.1",
-		"vscode-languageclient": "7.0.0"
 	}
 }

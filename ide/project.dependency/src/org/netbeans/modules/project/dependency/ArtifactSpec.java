@@ -52,12 +52,7 @@ public final class ArtifactSpec<T> {
         /**
          * Snapshot artifact
          */
-        SNAPSHOT, 
-        
-        /**
-         * Regular artifact, floating version
-         */
-        LATEST
+        SNAPSHOT
     };
     
     private final VersionKind kind;

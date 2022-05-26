@@ -26,8 +26,6 @@ import java.nio.file.StandardOpenOption;
 import java.util.Arrays;
 import java.util.List;
 import static junit.framework.TestCase.assertNotNull;
-import org.netbeans.api.java.classpath.ClassPath;
-import org.netbeans.api.java.classpath.JavaClassPathConstants;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.junit.NbTestCase;
@@ -126,7 +124,7 @@ public class MavenDependenciesImplementationTest extends NbTestCase {
         Path pomPath = p.getLookup().lookup(NbMavenProject.class).getMavenProject().getFile().toPath();
         assertEquals(pomPath.toFile(), FileUtil.toFile(srcLoc.getFile()));
 
-        String s = Files.readString(pomPath);
+        String s = String.join("\n", Files.readAllLines(pomPath));
         assertEquals("<dependency", s.substring(srcLoc.getStartOffset(), srcLoc.getStartOffset() + 11));
         assertEquals("</dependency>", s.substring(srcLoc.getEndOffset() - 13, srcLoc.getEndOffset()));
     }
@@ -150,7 +148,7 @@ public class MavenDependenciesImplementationTest extends NbTestCase {
         Path pomPath = p.getLookup().lookup(NbMavenProject.class).getMavenProject().getFile().toPath();
         assertEquals(pomPath.toFile(), FileUtil.toFile(srcLoc.getFile()));
 
-        String s = Files.readString(pomPath);
+        String s = String.join("\n", Files.readAllLines(pomPath));
         assertEquals("<dependency", s.substring(srcLoc.getStartOffset(), srcLoc.getStartOffset() + 11));
         assertEquals("</dependency>", s.substring(srcLoc.getEndOffset() - 13, srcLoc.getEndOffset()));
     }

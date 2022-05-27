@@ -25,6 +25,8 @@ import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 import static junit.framework.TestCase.assertNotNull;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
@@ -36,8 +38,13 @@ import org.netbeans.modules.project.dependency.DependencyResult;
 import org.netbeans.modules.project.dependency.ProjectDependencies;
 import org.netbeans.modules.project.dependency.Scopes;
 import org.netbeans.modules.project.dependency.SourceLocation;
+import org.netbeans.spi.project.ActionProgress;
+import org.netbeans.spi.project.ActionProvider;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
+import org.openide.modules.DummyInstalledFileLocator;
+import org.openide.util.lookup.Lookups;
+import org.openide.windows.IOProvider;
 
 /**
  *
@@ -53,15 +60,34 @@ public class MavenDependenciesImplementationTest extends NbTestCase {
         super(name);
     }
     
-    
-    
+    // InstalledFilesLocator is needed so that Maven module finds maven's installation
+    @org.openide.util.lookup.ServiceProvider(service=org.openide.modules.InstalledFileLocator.class, position = 1000)
+    public static class InstalledFileLocator extends DummyInstalledFileLocator {
+    }
+
+    private static File getTestNBDestDir() {
+        String destDir = System.getProperty("test.netbeans.dest.dir");
+        // set in project.properties as test-unit-sys-prop.test.netbeans.dest.dir
+        assertNotNull("test.netbeans.dest.dir property has to be set when running within binary distribution", destDir);
+        return new File(destDir);
+    }
     protected @Override void setUp() throws Exception {
         clearWorkDir();
+        
+        // This is needed, otherwose the core window's startup code will redirect
+        // System.out/err to the IOProvider, and its Trivial implementation will redirect
+        // it back to System.err - loop is formed. Initialize IOProvider first, it gets
+        // the real System.err/out references.
+        IOProvider p = IOProvider.getDefault();
         d = FileUtil.toFileObject(getWorkDir());
         System.setProperty("test.reload.sync", "true");
         repo = EmbedderFactory.getProjectEmbedder().getLocalRepositoryFile();
         repoFO = FileUtil.toFileObject(repo);
         dataFO = FileUtil.toFileObject(getDataDir());
+        
+        // Configure the DummyFilesLocator with NB harness dir
+        File destDirF = getTestNBDestDir();
+        DummyInstalledFileLocator.registerDestDir(destDirF);
     }
     
     private void installCompileResources() throws Exception {
@@ -75,7 +101,33 @@ public class MavenDependenciesImplementationTest extends NbTestCase {
             nbtest.delete();
         }
     }
+    
+    /**
+     * Primes the project including dependency fetch, waits for the operation to complete.
+     * @throws Exception 
+     */
+    void primeProject(Project p) throws Exception {
+        ActionProvider ap = p.getLookup().lookup(ActionProvider.class);
+        if (ap == null) {
+            throw new IllegalStateException("No action provider");
+        }
+        assertTrue(Arrays.asList(ap.getSupportedActions()).contains(ActionProvider.COMMAND_PRIME));
+        
+        CountDownLatch primeLatch = new CountDownLatch(1);
+        ActionProgress prg = new ActionProgress() {
+            @Override
+            protected void started() {
+            }
 
+            @Override
+            public void finished(boolean success) {
+                primeLatch.countDown();
+            }
+        };
+        ap.invokeAction(ActionProvider.COMMAND_PRIME, Lookups.fixed(prg));
+        primeLatch.await(20, TimeUnit.SECONDS);
+    }
+    
     public void testCompileDependencies() throws Exception {
         FileUtil.toFileObject(getWorkDir()).refresh();
         installCompileResources();
@@ -85,6 +137,9 @@ public class MavenDependenciesImplementationTest extends NbTestCase {
         
         Project p = ProjectManager.getDefault().findProject(prjCopy);
         assertNotNull(p);
+        
+        primeProject(p);
+        
         DependencyResult dr = ProjectDependencies.findDependencies(p, null, Scopes.COMPILE);
         Dependency root = dr.getRoot();
         assertContents(printDependencyTree(root), getName());
@@ -99,6 +154,9 @@ public class MavenDependenciesImplementationTest extends NbTestCase {
         
         Project p = ProjectManager.getDefault().findProject(prjCopy);
         assertNotNull(p);
+        
+        primeProject(p);
+        
         DependencyResult dr = ProjectDependencies.findDependencies(p, null, Scopes.RUNTIME);
         Dependency root = dr.getRoot();
         assertContents(printDependencyTree(root), getName());
@@ -113,6 +171,9 @@ public class MavenDependenciesImplementationTest extends NbTestCase {
         
         Project p = ProjectManager.getDefault().findProject(prjCopy);
         assertNotNull(p);
+ 
+        primeProject(p);
+
         DependencyResult dr = ProjectDependencies.findDependencies(p, null, Scopes.RUNTIME);
         
         Dependency dep = dr.getRoot().getChildren().stream().filter(d -> d.getArtifact().getArtifactId().equals("test-lib")).findAny().get();
@@ -138,6 +199,9 @@ public class MavenDependenciesImplementationTest extends NbTestCase {
         
         Project p = ProjectManager.getDefault().findProject(prjCopy);
         assertNotNull(p);
+
+        primeProject(p);
+
         DependencyResult dr = ProjectDependencies.findDependencies(p, null, Scopes.RUNTIME);
         
         Dependency libDep = dr.getRoot().getChildren().stream().filter(d -> d.getArtifact().getArtifactId().equals("test-lib")).findAny().get();

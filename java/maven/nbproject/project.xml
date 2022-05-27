@@ -600,6 +600,11 @@
                         <code-name-base>org.netbeans.modules.editor.mimelookup.impl</code-name-base>
                         <recursive/>
                     </test-dependency>
+                    <test-dependency>
+                        <code-name-base>org.openide.modules</code-name-base>
+                        <compile-dependency/>
+                        <test/>
+                    </test-dependency>
                 </test-type>
             </test-dependencies>
             <friend-packages>

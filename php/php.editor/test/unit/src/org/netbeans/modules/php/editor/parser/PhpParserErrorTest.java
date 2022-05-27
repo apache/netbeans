@@ -1294,6 +1294,10 @@ public class PhpParserErrorTest extends PHPTestBase {
         checkErrors("testfiles/parser/php81/enumerations_02.php");
     }
 
+    public void testEnumerations_03() throws Exception {
+        checkErrors("testfiles/parser/php81/enumerations_03.php");
+    }
+
     public void testEnumAsTypeName() throws Exception {
         // We can use "enum" as a type name
         checkErrors("testfiles/parser/php81/enumAsTypeName.php");

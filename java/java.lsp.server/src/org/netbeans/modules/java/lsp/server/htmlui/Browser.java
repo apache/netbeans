@@ -128,9 +128,8 @@ public class Browser implements Closeable {
 
     private void emitScript(StringBuilder sb, String id) throws IOException {
         sb.append("<script id='exec' type='text/javascript'>\n"
+                + "const vscode = acquireVsCodeApi();\n"
                 + "(function () {\n"
-                + "  const self = this;\n"
-                + "  this.vscode = acquireVsCodeApi();\n"
                 + "  window.addEventListener('message', event => {\n"
                 + "    const message = event.data;\n"
                 + "    if (message.execScript) {\n"
@@ -141,7 +140,7 @@ public class Browser implements Closeable {
                 + "      }\n"
                 + "    }\n"
                 + "  });\n"
-                + "  this.vscode.postMessage({\n"
+                + "  vscode.postMessage({\n"
                 + "    command: 'command',\n"
                 + "    data: {\n"
                 + "      id: '" + id + "'\n"
@@ -162,24 +161,20 @@ public class Browser implements Closeable {
     }
 
     private String createCallbackFn(String id) {
-        return /*"const self = this;\n"
-                +*/ "this.toBrwsrSrvr = function(name, a1, a2, a3, a4) {\n"
-                + "  self.vscode.postMessage({\n"
-                + "    command: 'command',\n"
-                + "    data: {\n"
-                + "      id: '" + id + "',\n"
-                + "      name,\n"
-                + "      p0: encodeURIComponent(a1),\n"
-                + "      p1: encodeURIComponent(a2),\n"
-                + "      p2: encodeURIComponent(a3),\n"
-                + "      p3: encodeURIComponent(a4)\n"
-                + "    }"
-                + "  });\n"
-                + "  if (name !== 'p') {\n"
-                + "    console.warn(`Cannot provide correct result for synchronous call: name=${name}, a1=${a1}, a2=${a2}, a3=${a3}, a4=${a4}`);\n"
-                + "  }\n"
-                + "  return '';\n"
-                + "};\n";
+        return "this.toBrwsrSrvr = function(name, a1, a2, a3, a4) {\n"
+             + "  vscode.postMessage({\n"
+             + "    command: 'command',\n"
+             + "    data: {\n"
+             + "      id: '" + id + "',\n"
+             + "      name,\n"
+             + "      p0: encodeURIComponent(a1),\n"
+             + "      p1: encodeURIComponent(a2),\n"
+             + "      p2: encodeURIComponent(a3),\n"
+             + "      p3: encodeURIComponent(a4)\n"
+             + "    }"
+             + "  });\n"
+             + "  return '';\n"
+             + "};\n";
     }
 
     private static String findCalleeClassName() {

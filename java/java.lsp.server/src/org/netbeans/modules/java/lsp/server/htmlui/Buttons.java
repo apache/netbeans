@@ -30,7 +30,7 @@ public final class Buttons {
 
     @JavaScriptBody(args = {}, body = "\n"
         + "window.close = function() {\n"
-        + "  self.vscode.postMessage({\n"
+        + "  vscode.postMessage({\n"
         + "    command: 'dispose'\n"
         + "  });\n"
         + "};\n"

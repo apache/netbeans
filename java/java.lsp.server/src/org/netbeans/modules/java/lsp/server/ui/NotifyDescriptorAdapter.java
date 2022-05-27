@@ -44,9 +44,9 @@ import javax.swing.JButton;
 import org.eclipse.lsp4j.MessageActionItem;
 import org.eclipse.lsp4j.MessageType;
 import org.eclipse.lsp4j.ShowMessageRequestParams;
-import org.netbeans.modules.java.lsp.server.protocol.QuickPickItem;
-import org.netbeans.modules.java.lsp.server.protocol.ShowInputBoxParams;
-import org.netbeans.modules.java.lsp.server.protocol.ShowQuickPickParams;
+import org.netbeans.modules.java.lsp.server.input.QuickPickItem;
+import org.netbeans.modules.java.lsp.server.input.ShowInputBoxParams;
+import org.netbeans.modules.java.lsp.server.input.ShowQuickPickParams;
 import org.openide.NotifyDescriptor;
 import org.openide.awt.Actions;
 import org.openide.util.NbBundle;
@@ -346,7 +346,7 @@ class NotifyDescriptorAdapter {
             for (NotifyDescriptor.QuickPick.Item item : qp.getItems()) {
                 items.put(new QuickPickItem(item.getLabel(), item.getDescription(), null, item.isSelected(), null), item);
             }
-            ShowQuickPickParams params = new ShowQuickPickParams(qp.getTitle(), qp.isMultipleSelection(), new ArrayList<>(items.keySet()));
+            ShowQuickPickParams params = new ShowQuickPickParams(null, qp.getTitle(), qp.isMultipleSelection(), new ArrayList<>(items.keySet()));
             CompletableFuture<List<QuickPickItem>> qpF = client.showQuickPick(params);
             Ctrl<T> ctrl = new Ctrl<>(qpF);
             qpF.thenAccept(selected -> {

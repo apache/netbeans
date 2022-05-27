@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.java.lsp.server.protocol;
+package org.netbeans.modules.java.lsp.server.input;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +33,11 @@ import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
  */
 @SuppressWarnings("all")
 public class ShowQuickPickParams {
+
+    /**
+     * An optional title of the quick pick.
+     */
+    private String title;
 
     /**
      * A string to show as placeholder in the input box to guide the user what to pick on.
@@ -60,9 +65,25 @@ public class ShowQuickPickParams {
         this.items = Preconditions.checkNotNull(items, "items");
     }
 
-    public ShowQuickPickParams(final String placeHolder, final boolean canPickMany, @NonNull final List<QuickPickItem> items) {
+    public ShowQuickPickParams(final String title, @NonNull final String placeHolder, final boolean canPickMany, @NonNull final List<QuickPickItem> items) {
         this(placeHolder, items);
+        this.title = title;
         this.canPickMany = canPickMany;
+    }
+
+    /**
+     * An optional title of the quick pick.
+     */
+    @Pure
+    public String getTitle() {
+        return title;
+    }
+
+    /**
+     * An optional title of the quick pick.
+     */
+    public void setTitle(final String title) {
+        this.title = title;
     }
 
     /**
@@ -116,6 +137,7 @@ public class ShowQuickPickParams {
     @Pure
     public String toString() {
         ToStringBuilder b = new ToStringBuilder(this);
+        b.add("title", title);
         b.add("placeHolder", placeHolder);
         b.add("canPickMany", canPickMany);
         b.add("items", items);
@@ -126,6 +148,7 @@ public class ShowQuickPickParams {
     @Pure
     public int hashCode() {
         int hash = 7;
+        hash = 29 * hash + Objects.hashCode(this.title);
         hash = 29 * hash + Objects.hashCode(this.placeHolder);
         hash = 29 * hash + (this.canPickMany ? 1 : 0);
         hash = 29 * hash + Objects.hashCode(this.items);
@@ -148,12 +171,12 @@ public class ShowQuickPickParams {
         if (this.canPickMany != other.canPickMany) {
             return false;
         }
+        if (!Objects.equals(this.title, other.title)) {
+            return false;
+        }
         if (!Objects.equals(this.placeHolder, other.placeHolder)) {
             return false;
         }
-        if (!Objects.equals(this.items, other.items)) {
-            return false;
-        }
-        return true;
+        return Objects.equals(this.items, other.items);
     }
 }

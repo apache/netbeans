@@ -50,6 +50,9 @@ import org.netbeans.api.project.SourceGroup;
 import org.netbeans.api.project.SourceGroupModifier;
 import org.netbeans.api.templates.CreateDescriptor;
 import org.netbeans.api.templates.FileBuilder;
+import org.netbeans.modules.java.lsp.server.input.QuickPickItem;
+import org.netbeans.modules.java.lsp.server.input.ShowQuickPickParams;
+import org.netbeans.modules.java.lsp.server.input.ShowInputBoxParams;
 import org.netbeans.modules.parsing.api.indexing.IndexingManager;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -243,7 +246,7 @@ final class LspTemplateUI {
 
     private static CompletionStage<DataObject> findTemplate(DataFolder templates, NbCodeLanguageClient client) {
         final List<QuickPickItem> categories = quickPickTemplates(templates);
-        final CompletionStage<List<QuickPickItem>> pickGroup = client.showQuickPick(new ShowQuickPickParams(Bundle.CTL_TemplateUI_SelectGroup(), false, categories));
+        final CompletionStage<List<QuickPickItem>> pickGroup = client.showQuickPick(new ShowQuickPickParams(Bundle.CTL_TemplateUI_SelectGroup(), categories));
         final CompletionStage<DataFolder> group = pickGroup.thenApply((selectedGroups) -> {
             final String chosen = singleSelection(selectedGroups);
             FileObject chosenFo = templates.getPrimaryFile().getFileObject(chosen);
@@ -251,7 +254,7 @@ final class LspTemplateUI {
         });
         final CompletionStage<List<QuickPickItem>> pickProject = group.thenCompose(chosenGroup -> {
             List<QuickPickItem> projectTypes = quickPickTemplates(chosenGroup);
-            return client.showQuickPick(new ShowQuickPickParams(Bundle.CTL_TemplateUI_SelectTemplate(), false, projectTypes));
+            return client.showQuickPick(new ShowQuickPickParams(Bundle.CTL_TemplateUI_SelectTemplate(), projectTypes));
         });
         final CompletionStage<DataObject> findTemplate = pickProject.thenCombine(group, (selectedTemplates, chosenGroup) -> {
             try {

@@ -55,6 +55,7 @@ import { createTreeViewService, TreeViewService, TreeItemDecorator, Visualizer, 
 import { initializeRunConfiguration, runConfigurationProvider, runConfigurationNodeProvider, configureRunSettings, runConfigurationUpdateAll } from './runConfiguration';
 import { TLSSocket } from 'tls';
 import { InputStep, MultiStepInput } from './utils';
+import { env } from 'process';
 
 const API_VERSION : string = "1.0";
 const DATABASE: string = 'Database';
@@ -639,7 +640,7 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
 
     const netbeansConfig = workspace.getConfiguration('netbeans');
     const beVerbose : boolean = netbeansConfig.get('verbose', false);
-    let userdir = netbeansConfig.get('userdir', 'global');
+    let userdir = process.env['nbcode_userdir'] || netbeansConfig.get('userdir', 'local');
     switch (userdir) {
         case 'local':
             if (context.storagePath) {
@@ -689,6 +690,7 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
         }
         let p = launcher.launch(info, ...extras);
         handleLog(log, "LSP server launching: " + p.pid);
+        handleLog(log, "LSP server user directory: " + userdir);
         p.stdout.on('data', function(d: any) {
             logAndWaitForEnabled(d.toString(), true);
         });

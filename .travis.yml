@@ -495,6 +495,7 @@ matrix:
             - nbbuild/travis/ant.sh $OPTS build
           script:
             - ant $OPTS -f profiler/profiler.oql test
+            - ant $OPTS -f profiler/profiler test-unit
 
         - name: Test webcommon modules
           jdk: openjdk8

@@ -28,7 +28,7 @@ import org.netbeans.spi.editor.mimelookup.MimeLocation;
 /**
  * A provider for code lens for a given document.
  *
- * @since 1.10
+ * @since 1.11
  */
 @MimeLocation(subfolderName = "CodeLensProvider")
 public interface CodeLensProvider {

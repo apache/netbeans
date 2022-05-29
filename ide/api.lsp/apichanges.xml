@@ -54,7 +54,7 @@
     <change id="CodeLensProvider">
         <api name="LSP_API"/>
         <summary>Added CodeLensProvider and relevant elements</summary>
-        <version major="1" minor="10"/>
+        <version major="1" minor="11"/>
         <date day="5" month="6" year="2022"/>
         <author login="jlahoda"/>
         <compatibility binary="compatible" source="compatible" addition="yes" deletion="no"/>

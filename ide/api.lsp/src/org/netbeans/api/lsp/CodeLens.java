@@ -21,7 +21,7 @@ package org.netbeans.api.lsp;
 /**
  * Description of code lens from the LSP.
  *
- * @since 1.10
+ * @since 1.11
  */
 public class CodeLens {
     private final Range range;

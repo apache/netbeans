@@ -130,10 +130,8 @@ public final class ElementHandle<T extends Element> {
         }
         T result = resolveImpl (module, compilationInfo.impl.getJavacTask());
         if (result == null) {
-            if (log.isLoggable(Level.INFO)) {
-                log.log(Level.INFO, "Cannot resolve: {0}", toString()); //NOI18N
-                resolveImpl (module, compilationInfo.impl.getJavacTask());
-            }
+            if (log.isLoggable(Level.INFO))
+                log.log(Level.INFO, "Cannot resolve: {0}", toString()); //NOI18N                
         } else {
             if (log.isLoggable(Level.FINE))
                 log.log(Level.FINE, "Resolved element = {0}", result);

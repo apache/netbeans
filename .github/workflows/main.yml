@@ -113,6 +113,7 @@ jobs:
         with:
           check_name: JUnit Report (Commit Validation on Linux/JDK ${{ matrix.java }})
           report_paths: './nbbuild/build/test/commit-validation/results/TEST-*.xml'
+          token: ${{ secrets.GITHUB_TOKEN }}
 
   linux-build-system-test:
     needs: base-build
@@ -228,6 +229,7 @@ jobs:
         with:
           check_name: JUnit Report (Tests on MacOS/JDK ${{ matrix.java }})
           report_paths: './*/*/build/test/*/results/TEST-*.xml'
+          token: ${{ secrets.GITHUB_TOKEN }}
 
   php:
     needs: base-build
@@ -371,6 +373,7 @@ jobs:
         with:
           check_name: JUnit Report (PHP on ${{ matrix.os }}/JDK ${{ matrix.java }})
           report_paths: './*/*/build/test/*/results/TEST-*.xml'
+          token: ${{ secrets.GITHUB_TOKEN }}
 
 # last job depends on everything so that it is forced to run last even if a long job fails early
   cleanup:

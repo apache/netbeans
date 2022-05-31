@@ -25,6 +25,7 @@ import org.eclipse.xtext.xbase.lib.Pure;
 public class HtmlPageParams  {
     private String id;
     private String text;
+    private boolean pause;
     private Map<String, String> resources;
 
     public HtmlPageParams(String id, String text) {
@@ -40,6 +41,15 @@ public class HtmlPageParams  {
     public HtmlPageParams setId(String id) {
         this.id = id;
         return this;
+    }
+
+    @Pure
+    public boolean isPause() {
+        return pause;
+    }
+
+    public void setPause(boolean pause) {
+        this.pause = pause;
     }
 
     @Pure
@@ -68,6 +78,7 @@ public class HtmlPageParams  {
         int hash = 5;
         hash = 83 * hash + Objects.hashCode(this.id);
         hash = 83 * hash + Objects.hashCode(this.text);
+        hash = 83 * hash + Objects.hashCode(this.pause);
         hash = 83 * hash + Objects.hashCode(this.resources);
         return hash;
     }
@@ -86,6 +97,9 @@ public class HtmlPageParams  {
         }
         final HtmlPageParams other = (HtmlPageParams) obj;
         if (!Objects.equals(this.id, other.id)) {
+            return false;
+        }
+        if (this.pause != other.pause) {
             return false;
         }
         if (!Objects.equals(this.text, other.text)) {

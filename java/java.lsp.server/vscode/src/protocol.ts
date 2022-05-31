@@ -35,6 +35,7 @@ import {
 export interface HtmlPageParams {
     id: string;
     text: string;
+    pause: boolean;
     resources?: {
         [name: string]: string;
     };

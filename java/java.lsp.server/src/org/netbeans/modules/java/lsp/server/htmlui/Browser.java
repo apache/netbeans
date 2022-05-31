@@ -127,11 +127,15 @@ public class Browser implements Closeable {
     }
 
     private void emitScript(StringBuilder sb, String id) throws IOException {
+        
         sb.append("<script id='exec' type='text/javascript'>\n"
                 + "const vscode = acquireVsCodeApi();\n"
                 + "(function () {\n"
-                + "  window.addEventListener('message', event => {\n"
+                + "  window.addEventListener('message', new Function('event', `\n"
                 + "    const message = event.data;\n"
+                + "    if (message.pause) {\n"
+                + "      debugger;\n"
+                + "    }\n"
                 + "    if (message.execScript) {\n"
                 + "      try {\n"
                 + "        (0 || eval)(message.execScript);\n"
@@ -139,7 +143,7 @@ public class Browser implements Closeable {
                 + "        console.warn(e); \n"
                 + "      }\n"
                 + "    }\n"
-                + "  });\n"
+                + "  `));\n"
                 + "  vscode.postMessage({\n"
                 + "    command: 'command',\n"
                 + "    data: {\n"
@@ -281,8 +285,8 @@ public class Browser implements Closeable {
             return t;
         }
 
-        private void add(Object obj) {
-            client.execInHtmlPage(new HtmlPageParams(id, obj.toString()));
+        private void execScript(String obj) {
+            client.execInHtmlPage(new HtmlPageParams(id, obj));
         }
 
         private void initialize(NbCodeLanguageClient client) {
@@ -314,7 +318,7 @@ public class Browser implements Closeable {
 
         private void callbackFn(ProtoPresenterBuilder.OnPrepared onReady) {
             String sb = this.browser.createCallbackFn(id);
-            add(sb);
+            execScript(sb);
             onReady.callbackIsPrepared("toBrwsrSrvr");
         }
 
@@ -329,7 +333,7 @@ public class Browser implements Closeable {
         }
 
         private void loadJS(String js) {
-            add(js);
+            execScript(js);
         }
 
         private void displayPage(URL url, Runnable r) {

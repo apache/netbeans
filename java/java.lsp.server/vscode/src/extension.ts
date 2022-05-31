@@ -83,7 +83,7 @@ export class NbLanguageClient extends LanguageClient {
         this._treeViewService.dispose();
         return r;
     }
-    
+
 }
 
 function handleLog(log: vscode.OutputChannel, msg: string): void {
@@ -232,7 +232,7 @@ function contextUri(ctx : any) : vscode.Uri | undefined {
 /**
  * Executes a project action. It is possible to provide an explicit configuration to use (or undefined), display output from the action etc.
  * Arguments are attempted to parse as file or editor references or Nodes; otherwise they are attempted to be passed to the action as objects.
- * 
+ *
  * @param action ID of the project action to run
  * @param configuration configuration to use or undefined - use default/active one.
  * @param title Title for the progress displayed in vscode
@@ -267,7 +267,7 @@ function wrapCommandWithProgress(lsCommand : string, title : string, log? : vsco
             const commands = await vscode.commands.getCommands();
             if (commands.includes(lsCommand)) {
                 p.report({ message: title });
-                c.outputChannel.show(true); 
+                c.outputChannel.show(true);
                 const start = new Date().getTime();
                 if (log) {
                     handleLog(log, `starting ${lsCommand}`);
@@ -326,7 +326,7 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
                 activateWithJDK(specifiedJDK, context, log, true);
             }
         }));
-        activateWithJDK(specifiedJDK, context, log, true);  
+        activateWithJDK(specifiedJDK, context, log, true);
     });
 
     //register debugger:
@@ -1011,13 +1011,13 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
 
     function createDatabaseView(c : NbLanguageClient) {
         let decoRegister : CustomizableTreeDataProvider<Visualizer>;
-        c.findTreeViewService().createView('database.connections', undefined , { 
-            canSelectMany : true,  
-            
-            providerInitializer : (customizable) => 
+        c.findTreeViewService().createView('database.connections', undefined , {
+            canSelectMany : true,
+
+            providerInitializer : (customizable) =>
                 customizable.addItemDecorator(new Decorator(customizable, c))
         });
-        
+
     }
 
     async function createProjectView(ctx : ExtensionContext, client : NbLanguageClient) {
@@ -1097,7 +1097,8 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
             const webview = webviews.get(params.id);
             if (webview) {
                 webview.postMessage({
-                    execScript: params.text
+                    execScript: params.text,
+                    pause: params.pause
                 }).then(ret => {
                     resolve(ret);
                 });

@@ -259,6 +259,7 @@ public final class RunUtils {
     public static GradleDistribution getCompatibleGradleDistribution(Project prj) {
         GradleDistributionProvider pvd = prj.getLookup().lookup(GradleDistributionProvider.class);
         GradleDistribution ret = pvd != null ? pvd.getGradleDistribution() : GradleDistributionManager.get().defaultDistribution();
+        ret = ret != null ? ret : GradleDistributionManager.get().defaultDistribution();
         ret = ret.isCompatibleWithSystemJava() ? ret : GradleDistributionManager.get().defaultDistribution();
         return ret;
 

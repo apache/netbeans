@@ -659,7 +659,7 @@ matrix:
             - nbbuild/travis/ant.sh $OPTS clean
             - nbbuild/travis/ant.sh $OPTS build
           script:
-            - (cd java/java.lsp.server; ant build-vscode-ext -D3rdparty.modules=.*nbjavac.*)
+            - (cd java/java.lsp.server; ant build-vscode-ext -D3rdparty.modules=.*externalcodeformatter.*)
             - (cd java/java.lsp.server; ant test-vscode-ext)
 
         - name: "GraalVM Tests (latest)"

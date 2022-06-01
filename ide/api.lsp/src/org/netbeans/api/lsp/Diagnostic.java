@@ -18,8 +18,13 @@
  */
 package org.netbeans.api.lsp;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.function.Consumer;
+import org.netbeans.api.annotations.common.NullAllowed;
+import org.netbeans.modules.lsp.DiagnosticUtils;
+import org.openide.filesystems.FileObject;
+import org.openide.util.Lookup;
 
 /**
  * A diagnostic for LSP. Use a {@link Diagnostic.Builder} to create an instance.
@@ -186,4 +191,36 @@ public class Diagnostic {
          */
         public List<CodeAction> computeCodeActions(Consumer<Exception> errorReporter);
     }
+    
+   /**
+    * Allows to trigger diagnostics collection. The implementation will
+    * coordinate potential push of the diagnostic information to the LSP client.
+    */
+   public interface ReporterControl {
+       /**
+        * Notifies that the diagnostics for {@code file} may have changed. The 
+        * implementation should coordinate collection of {@link Diagnostic} information
+        * for the affected files.
+        * @param files files whose diagnostics may have changed.
+        * @param mimeType optional; mimetype selector for changed files.
+        */
+       public void diagnosticChanged(Collection<FileObject> files, String mimeType);
+   }  
+   
+    /**
+     * Returns a Control object appropriate for the context and the file. The returned 
+     * object can be used to fire changes to LSP client(s). It is important to call
+     * the method while the context is in effect, i.e. during the client's request. May
+     * return {@code null} if no suitable LSP can be found.
+     * 
+     * @param context the Optional. Context used to identify the LSP client. If {@code null},
+     * the default Lookup will be used.
+     * @param file Optional. The file or folder whose diagnostic will be reported.
+     * @return the control object.
+     * @since 1.11
+     */
+   public static ReporterControl findReporterControl(@NullAllowed Lookup context, @NullAllowed FileObject file) {
+       return DiagnosticUtils.findReporterControl(context, file);
+   }
+
 }

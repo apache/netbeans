@@ -39,6 +39,7 @@ import java.net.URL;
 import java.time.Instant;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -235,6 +236,7 @@ import org.netbeans.modules.refactoring.spi.RefactoringElementImplementation;
 import org.netbeans.modules.refactoring.spi.Transaction;
 import org.netbeans.api.lsp.StructureElement;
 import org.netbeans.modules.editor.indent.api.Reformat;
+import org.netbeans.modules.java.lsp.server.URITranslator;
 import org.netbeans.spi.editor.hints.ErrorDescription;
 import org.netbeans.spi.editor.hints.Fix;
 import org.netbeans.spi.lsp.CallHierarchyProvider;
@@ -245,6 +247,7 @@ import org.netbeans.spi.project.ProjectConfiguration;
 import org.netbeans.spi.project.ProjectConfigurationProvider;
 import org.openide.cookies.EditorCookie;
 import org.openide.filesystems.FileObject;
+import org.openide.filesystems.URLMapper;
 import org.openide.text.NbDocument;
 import org.openide.text.PositionBounds;
 import org.openide.util.BaseUtilities;
@@ -1721,7 +1724,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
 
     private static final int DELAY = 500;
 
-    private List<Diagnostic> computeDiags(String uri, int offset, ErrorProvider.Kind errorKind, long originalVersion) {
+    private List<Diagnostic> computeDiags(String uri, int offset, ErrorProvider.Kind errorKind, long orgV) {
         List<Diagnostic> result = new ArrayList<>();
         FileObject file = fromURI(uri);
         if (file == null) {
@@ -1732,6 +1735,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
             String keyPrefix = key(errorKind);
             EditorCookie ec = file.getLookup().lookup(EditorCookie.class);
             Document doc = ec.openDocument();
+            long originalVersion = orgV != -1 ? orgV : documentVersion(doc);
             Map<String, org.netbeans.api.lsp.Diagnostic> id2Errors = new HashMap<>();
             ErrorProvider errorProvider = MimeLookup.getLookup(DocumentUtilities.getMimeType(doc))
                                                     .lookup(ErrorProvider.class);
@@ -1769,7 +1773,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
             if (errors == null) {
                 errors = Collections.emptyList();
             }
-            if (documentVersion(doc) != originalVersion) {
+            if (originalVersion != -1 && documentVersion(doc) != originalVersion) {
                 return result;
             }
             for (org.netbeans.api.lsp.Diagnostic err : errors) {
@@ -1880,6 +1884,31 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
             return;
         }
         client.publishDiagnostics(new PublishDiagnosticsParams(uri, new ArrayList<>()));
+    }
+    
+    private org.netbeans.api.lsp.Diagnostic.ReporterControl reporterControl = new org.netbeans.api.lsp.Diagnostic.ReporterControl() {
+        @Override
+        public void diagnosticChanged(Collection<FileObject> files, String mimeType) {
+            // possibly duplicities are handled by runDiagnosticTasks
+            for (FileObject f : files) {
+                // do not process directories at the moment
+                if (mimeType != null && !f.getMIMEType().equals(mimeType)) {
+                    continue;
+                }
+                URL url = URLMapper.findURL(f, URLMapper.EXTERNAL);
+                try {
+                    String uriString = url.toURI().toString();
+                    String lspUri = URITranslator.getDefault().uriToLSP(uriString);
+                    runDiagnosticTasks(lspUri);
+                } catch (URISyntaxException ex) {
+                    // should not happen
+                }
+            }
+        }
+    };
+    
+    public org.netbeans.api.lsp.Diagnostic.ReporterControl createReporterControl() {
+        return reporterControl;
     }
     
     /**

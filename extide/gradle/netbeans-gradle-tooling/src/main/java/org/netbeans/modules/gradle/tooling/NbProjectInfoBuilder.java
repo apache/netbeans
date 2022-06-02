@@ -28,6 +28,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -53,6 +54,8 @@ import org.gradle.api.artifacts.result.ComponentArtifactsResult;
 import org.gradle.api.artifacts.result.ResolvedArtifactResult;
 import org.gradle.api.artifacts.result.ResolvedDependencyResult;
 import org.gradle.api.artifacts.result.UnresolvedDependencyResult;
+import org.gradle.api.attributes.Attribute;
+import org.gradle.api.attributes.AttributeContainer;
 import org.gradle.api.distribution.DistributionContainer;
 import org.gradle.api.file.ConfigurableFileCollection;
 import org.gradle.api.initialization.IncludedBuild;
@@ -417,8 +420,16 @@ class NbProjectInfoBuilder {
             String propBase = "configuration_" + it.getName() + "_";
             model.getInfo().put(propBase + "non_resolving", !resolvable(it));
             model.getInfo().put(propBase + "transitive",  it.isTransitive());
+            model.getInfo().put(propBase + "canBeConsumed", it.isCanBeConsumed());
             model.getInfo().put(propBase + "extendsFrom",  it.getExtendsFrom().stream().map(c -> c.getName()).collect(Collectors.toCollection(HashSet::new)));
             model.getInfo().put(propBase + "description",  it.getDescription());
+
+            Map<String, String> attributes = new LinkedHashMap<>();
+            AttributeContainer attrs = it.getAttributes();
+            for (Attribute<?> attr : attrs.keySet()) {
+                attributes.put(attr.getName(), String.valueOf(attrs.getAttribute(attr)));
+            }
+            model.getInfo().put(propBase + "attributes", attributes);
         });
         //visibleConfigurations = visibleConfigurations.findAll() { resolvable(it) }
         visibleConfigurations.forEach(it -> {

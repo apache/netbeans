@@ -284,6 +284,11 @@ class GradleBaseProjectBuilder implements ProjectInfoExtractor.Result {
                 Boolean transitive = (Boolean) info.get("configuration_" + name + "_transitive");
                 conf.transitive = transitive == null ? true : transitive;
 
+                Boolean canBeConsumed = (Boolean) info.get("configuration_" + name + "_canBeConsumed");
+                conf.canBeConsumed = canBeConsumed == null ? false : canBeConsumed;
+
+                conf.attributes = (Map<String, String>) info.get("configuration_" + name + "_attributes");
+
                 conf.description = (String) info.get("configuration_" + name + "_description");
             }
             for (String name : configurationNames) {

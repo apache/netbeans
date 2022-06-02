@@ -16,20 +16,23 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.java.lsp.server.protocol;
+package org.netbeans.modules.java.lsp.server.input;
 
-import org.eclipse.lsp4j.jsonrpc.services.JsonDelegate;
-import org.eclipse.lsp4j.services.LanguageServer;
-import org.netbeans.modules.java.lsp.server.explorer.api.TreeViewService;
-import org.netbeans.modules.java.lsp.server.input.InputService;
+import java.util.concurrent.CompletableFuture;
+import org.eclipse.lsp4j.jsonrpc.messages.Either;
+import org.eclipse.lsp4j.jsonrpc.services.JsonRequest;
+import org.eclipse.lsp4j.jsonrpc.services.JsonSegment;
 
 /**
  *
- * @author sdedic
+ * @author Dusan Balek
  */
-public interface NbLanguageServer extends LanguageServer {
-    @JsonDelegate
-    public TreeViewService getTreeViewService();
-    @JsonDelegate
-    public InputService getInputService();
+@JsonSegment("input")
+public interface InputService {
+
+    @JsonRequest("step")
+    public CompletableFuture<Either<QuickPickStep, InputBoxStep>> step(InputCallbackParams params);
+
+    @JsonRequest("validate")
+    public CompletableFuture<String> validate(InputCallbackParams params);
 }

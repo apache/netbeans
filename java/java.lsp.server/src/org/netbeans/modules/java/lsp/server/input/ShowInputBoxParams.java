@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.java.lsp.server.protocol;
+package org.netbeans.modules.java.lsp.server.input;
 
 import java.util.Objects;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
@@ -42,6 +42,11 @@ public class ShowInputBoxParams {
      */
     @NonNull
     private String value;
+
+    /**
+     * An optional title of the input box.
+     */
+    private String title;
     
     /**
      * Controls if a password input is shown. Password input hides the typed text.
@@ -53,13 +58,29 @@ public class ShowInputBoxParams {
     }
 
     public ShowInputBoxParams(@NonNull final String prompt, @NonNull final String value) {
-        this(prompt, value, false);
-    }
-    
-    public ShowInputBoxParams(@NonNull final String prompt, @NonNull final String value, final boolean password) {
         this.prompt = Preconditions.checkNotNull(prompt, "prompt");
         this.value = Preconditions.checkNotNull(value, "value");
+    }
+
+    public ShowInputBoxParams(final String title, @NonNull final String prompt, @NonNull final String value, final boolean password) {
+        this(prompt, value);
+        this.title = title;
         this.password = password;
+    }
+
+    /**
+     * An optional title of the input box.
+     */
+    @Pure
+    public String getTitle() {
+        return title;
+    }
+
+    /**
+     * An optional title of the input box.
+     */
+    public void setTitle(final String title) {
+        this.title = title;
     }
 
     /**
@@ -93,11 +114,9 @@ public class ShowInputBoxParams {
     public void setValue(@NonNull final String value) {
         this.value = Preconditions.checkNotNull(value, "value");
     }
-    
+
     /**
      * Controls if a password input is shown. Password input hides the typed text.
-     * 
-     * @since 1.16
      */
     @Pure
     @NonNull
@@ -107,8 +126,6 @@ public class ShowInputBoxParams {
 
     /**
      * Controls if a password input is shown. Password input hides the typed text.
-     * 
-     * @since 1.16
      */
     public void setPassword(boolean password) {
         this.password = password;
@@ -118,20 +135,26 @@ public class ShowInputBoxParams {
     @Pure
     public String toString() {
         ToStringBuilder b = new ToStringBuilder(this);
+        b.add("title", title);
         b.add("prompt", prompt);
         b.add("value", value);
+        b.add("password" , password);
         return b.toString();
     }
 
     @Override
+    @Pure
     public int hashCode() {
         int hash = 5;
+        hash = 59 * hash + Objects.hashCode(this.title);
         hash = 59 * hash + Objects.hashCode(this.prompt);
         hash = 59 * hash + Objects.hashCode(this.value);
+        hash = 59 * hash + (this.password ? 1 : 0);
         return hash;
     }
 
     @Override
+    @Pure
     public boolean equals(Object obj) {
         if (this == obj) {
             return true;
@@ -143,12 +166,15 @@ public class ShowInputBoxParams {
             return false;
         }
         final ShowInputBoxParams other = (ShowInputBoxParams) obj;
+        if (this.password != other.password) {
+            return false;
+        }
+        if (!Objects.equals(this.title, other.title)) {
+            return false;
+        }
         if (!Objects.equals(this.prompt, other.prompt)) {
             return false;
         }
-        if (!Objects.equals(this.value, other.value)) {
-            return false;
-        }
-        return true;
+        return Objects.equals(this.value, other.value);
     }
 }

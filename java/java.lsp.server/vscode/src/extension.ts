@@ -46,17 +46,15 @@ import { ChildProcess } from 'child_process';
 import * as vscode from 'vscode';
 import * as launcher from './nbcode';
 import {NbTestAdapter} from './testAdapter';
-import { asRanges, StatusMessageRequest, ShowStatusMessageParams, QuickPickRequest, InputBoxRequest, TestProgressNotification, DebugConnector,
+import { asRanges, StatusMessageRequest, ShowStatusMessageParams, QuickPickRequest, InputBoxRequest, MutliStepInputRequest, TestProgressNotification, DebugConnector,
          TextEditorDecorationCreateRequest, TextEditorDecorationSetNotification, TextEditorDecorationDisposeNotification, HtmlPageRequest, HtmlPageParams,
-         SetTextEditorDecorationParams,
-         ProjectActionParams,
-         UpdateConfigurationRequest,
-         UpdateConfigParams
+         SetTextEditorDecorationParams, ProjectActionParams, UpdateConfigurationRequest, QuickPickStep, InputBoxStep
 } from './protocol';
 import * as launchConfigurations from './launchConfigurations';
 import { createTreeViewService, TreeViewService, TreeItemDecorator, Visualizer, CustomizableTreeDataProvider } from './explorer';
 import { initializeRunConfiguration, runConfigurationProvider, runConfigurationNodeProvider, configureRunSettings, runConfigurationUpdateAll } from './runConfiguration';
 import { TLSSocket } from 'tls';
+import { InputStep, MultiStepInput } from './utils';
 
 const API_VERSION : string = "1.0";
 const DATABASE: string = 'Database';
@@ -829,7 +827,7 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
             c.onRequest(HtmlPageRequest.type, showHtmlPage);
             c.onNotification(LogMessageNotification.type, (param) => handleLog(log, param.message));
             c.onRequest(QuickPickRequest.type, async param => {
-                const selected = await window.showQuickPick(param.items, { placeHolder: param.placeHolder, canPickMany: param.canPickMany });
+                const selected = await window.showQuickPick(param.items, { title: param.title, placeHolder: param.placeHolder, canPickMany: param.canPickMany });
                 return selected ? Array.isArray(selected) ? selected : [selected] : undefined;
             });
             c.onRequest(UpdateConfigurationRequest.type, async (param) => {
@@ -837,7 +835,44 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
                 runConfigurationUpdateAll();
             });
             c.onRequest(InputBoxRequest.type, async param => {
-                return await window.showInputBox({ prompt: param.prompt, value: param.value, password: param.password });
+                return await window.showInputBox({ title: param.title, prompt: param.prompt, value: param.value, password: param.password });
+            });
+            c.onRequest(MutliStepInputRequest.type, async param => {
+                const data: { [name: string]: readonly vscode.QuickPickItem[] | string } = {};
+                async function nextStep(input: MultiStepInput, step: number, state: { [name: string]: readonly vscode.QuickPickItem[] | string }): Promise<InputStep | void> {
+                    const inputStep = await c.sendRequest(MutliStepInputRequest.step, { inputId: param.id, step, data: state });
+                    if (inputStep && inputStep.hasOwnProperty('items')) {
+                        const quickPickStep = inputStep as QuickPickStep;
+                        state[inputStep.stepId] = await input.showQuickPick({
+                            title: param.title,
+                            step,
+                            totalSteps: quickPickStep.totalSteps,
+                            placeholder: quickPickStep.placeHolder,
+                            items: quickPickStep.items,
+                            canSelectMany: quickPickStep.canPickMany,
+                            selectedItems: quickPickStep.items.filter(item => item.picked)
+                        });
+                        return (input: MultiStepInput) => nextStep(input, step + 1, state);
+                    } else if (inputStep && inputStep.hasOwnProperty('value')) {
+                        const inputBoxStep = inputStep as InputBoxStep;
+                        state[inputStep.stepId] = await input.showInputBox({
+                            title: param.title,
+                            step,
+                            totalSteps: inputBoxStep.totalSteps,
+                            value: state[inputStep.stepId] as string || inputBoxStep.value,
+                            prompt: inputBoxStep.prompt,
+                            password: inputBoxStep.password,
+                            validate: (val) => {
+                                const d = { ...state };
+                                d[inputStep.stepId] = val;
+                                return c.sendRequest(MutliStepInputRequest.validate, { inputId: param.id, step, data: d });
+                            }
+                        });
+                        return (input: MultiStepInput) => nextStep(input, step + 1, state);
+                    }
+                }
+                await MultiStepInput.run(input => nextStep(input, 1, data));
+                return data;
             });
             c.onNotification(TestProgressNotification.type, param => {
                 if (testAdapter) {

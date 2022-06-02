@@ -66,6 +66,10 @@ export namespace StatusMessageRequest {
 
 export interface ShowQuickPickParams {
     /**
+     * An optional title of the quick pick.
+     */
+    title?: string;
+    /**
      * A string to show as placeholder in the input box to guide the user what to pick on.
      */
     placeHolder: string;
@@ -85,6 +89,10 @@ export namespace QuickPickRequest {
 
 export interface ShowInputBoxParams {
     /**
+     * An optional title of the input box.
+     */
+    title?: string;
+     /**
      * The text to display underneath the input box.
      */
     prompt: string;
@@ -100,6 +108,38 @@ export interface ShowInputBoxParams {
 
 export namespace InputBoxRequest {
     export const type = new ProtocolRequestType<ShowInputBoxParams, string | undefined, never, void, void>('window/showInputBox');
+}
+
+export interface ShowMutliStepInputParams {
+    /**
+     * ID of the input.
+     */
+    id: string;
+    /**
+     * An optional title.
+     */
+    title?: string;
+}
+
+export interface InputCallbackParams {
+    inputId : string;
+    step: number;
+    data: { [name: string]: readonly vscode.QuickPickItem[] | string };
+}
+
+export interface StepInfo {
+	totalSteps: number;
+    stepId: string;
+}
+
+export type QuickPickStep = StepInfo & ShowQuickPickParams;
+
+export type InputBoxStep = StepInfo & ShowInputBoxParams;
+
+export namespace MutliStepInputRequest {
+    export const type = new ProtocolRequestType<ShowMutliStepInputParams, { [name: string]: readonly vscode.QuickPickItem[] | string }, never, void, void>('window/showMultiStepInput');
+    export const step = new ProtocolRequestType<InputCallbackParams, QuickPickStep | InputBoxStep | undefined, never, void, void>('input/step');
+    export const validate = new ProtocolRequestType<InputCallbackParams, string | undefined, never, void, void>('input/validate');
 }
 
 export interface TestProgressParams {

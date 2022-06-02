@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.java.lsp.server.protocol;
+package org.netbeans.modules.java.lsp.server.input;
 
 import java.util.Objects;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
@@ -168,7 +168,6 @@ public class QuickPickItem {
         hash = 83 * hash + Objects.hashCode(this.label);
         hash = 83 * hash + Objects.hashCode(this.description);
         hash = 83 * hash + Objects.hashCode(this.detail);
-        hash = 83 * hash + (this.picked ? 1 : 0);
         hash = 83 * hash + Objects.hashCode(this.userData);
         return hash;
     }
@@ -186,9 +185,6 @@ public class QuickPickItem {
             return false;
         }
         final QuickPickItem other = (QuickPickItem) obj;
-        if (this.picked != other.picked) {
-            return false;
-        }
         if (!Objects.equals(this.label, other.label)) {
             return false;
         }

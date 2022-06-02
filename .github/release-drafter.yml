@@ -19,7 +19,8 @@ categories:
   - title: 'API Changes'
     labels:
       - 'API Change'
-
+include-labels:
+  - 'API Change'
 template: |
   ## What’s Changed
 

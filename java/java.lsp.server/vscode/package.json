@@ -439,6 +439,11 @@
 				"category": "Java"
 			},
 			{
+				"command": "java.open.type",
+				"title": "Open Type...",
+				"category": "Java"
+			},
+			{
 				"command": "graalvm.pause.script",
 				"title": "Pause in Script",
 				"category": "GraalVM"

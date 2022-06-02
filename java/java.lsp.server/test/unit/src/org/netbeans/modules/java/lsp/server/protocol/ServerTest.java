@@ -3234,7 +3234,12 @@ public class ServerTest extends NbTestCase {
 
             @Override
             public CompletableFuture<List<QuickPickItem>> showQuickPick(ShowQuickPickParams params) {
-                return CompletableFuture.completedFuture(params.getItems().size() > 2 ? params.getItems().subList(0, 2) : params.getItems());
+                List<QuickPickItem> selection = params.getItems().stream()
+                        .filter((i) -> i.getLabel().equals("f1.chars(): IntStream") || i.getLabel().equals("f1.codePoints(): IntStream"))
+                        .sorted((i1, i2) -> i1.getLabel().compareTo(i2.getLabel()))
+                        .collect(Collectors.toList());
+                assertEquals(2, selection.size());
+                return CompletableFuture.completedFuture(selection);
             }
 
             @Override

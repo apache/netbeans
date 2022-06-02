@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.7
+#Version 1.9
 
 CLSS public abstract interface java.io.Serializable
 
@@ -61,6 +61,26 @@ CLSS public abstract interface !annotation java.lang.annotation.Target
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE])
 intf java.lang.annotation.Annotation
 meth public abstract java.lang.annotation.ElementType[] value()
+
+CLSS public final org.netbeans.api.lsp.CallHierarchyEntry
+cons public init(org.netbeans.api.lsp.StructureElement,java.lang.String)
+innr public final static Call
+meth public java.lang.String getCustomData()
+ anno 0 org.netbeans.api.annotations.common.CheckForNull()
+meth public org.netbeans.api.lsp.StructureElement getElement()
+ anno 0 org.netbeans.api.annotations.common.NonNull()
+supr java.lang.Object
+hfds customData,element
+
+CLSS public final static org.netbeans.api.lsp.CallHierarchyEntry$Call
+ outer org.netbeans.api.lsp.CallHierarchyEntry
+cons public init(org.netbeans.api.lsp.CallHierarchyEntry,java.util.List<org.netbeans.api.lsp.Range>)
+ anno 1 org.netbeans.api.annotations.common.NonNull()
+meth public java.util.List<org.netbeans.api.lsp.Range> getRanges()
+meth public org.netbeans.api.lsp.CallHierarchyEntry getItem()
+ anno 0 org.netbeans.api.annotations.common.NonNull()
+supr java.lang.Object
+hfds item,ranges
 
 CLSS public org.netbeans.api.lsp.CodeAction
 cons public init(java.lang.String,org.netbeans.api.lsp.Command)
@@ -248,6 +268,13 @@ hfds endOffset,fileObject,startOffset
 CLSS public abstract interface org.netbeans.api.lsp.Position
 meth public abstract int getOffset()
 
+CLSS public final org.netbeans.api.lsp.Range
+cons public init(int,int)
+meth public int getEndOffset()
+meth public int getStartOffset()
+supr java.lang.Object
+hfds endOffset,startOffset
+
 CLSS public org.netbeans.api.lsp.ResourceOperation
 cons public init()
 innr public final static CreateFile
@@ -259,6 +286,65 @@ cons public init(java.lang.String)
 meth public java.lang.String getNewFile()
 supr org.netbeans.api.lsp.ResourceOperation
 hfds newFile
+
+CLSS public final org.netbeans.api.lsp.StructureElement
+innr public final static !enum Kind
+innr public final static !enum Tag
+meth public int getExpandedEndOffset()
+meth public int getExpandedStartOffset()
+meth public int getSelectionEndOffset()
+meth public int getSelectionStartOffset()
+meth public java.lang.String getDetail()
+meth public java.lang.String getName()
+ anno 0 org.netbeans.api.annotations.common.NonNull()
+meth public java.util.List<org.netbeans.api.lsp.StructureElement> getChildren()
+meth public java.util.Set<org.netbeans.api.lsp.StructureElement$Tag> getTags()
+meth public org.netbeans.api.lsp.Range getExpandedRange()
+meth public org.netbeans.api.lsp.Range getSelectionRange()
+meth public org.netbeans.api.lsp.StructureElement$Kind getKind()
+meth public org.openide.filesystems.FileObject getFile()
+ anno 0 org.netbeans.api.annotations.common.CheckForNull()
+supr java.lang.Object
+hfds children,detail,expandedRange,file,kind,name,selectionRange,tags
+
+CLSS public final static !enum org.netbeans.api.lsp.StructureElement$Kind
+ outer org.netbeans.api.lsp.StructureElement
+fld public final static org.netbeans.api.lsp.StructureElement$Kind Array
+fld public final static org.netbeans.api.lsp.StructureElement$Kind Boolean
+fld public final static org.netbeans.api.lsp.StructureElement$Kind Class
+fld public final static org.netbeans.api.lsp.StructureElement$Kind Constant
+fld public final static org.netbeans.api.lsp.StructureElement$Kind Constructor
+fld public final static org.netbeans.api.lsp.StructureElement$Kind Enum
+fld public final static org.netbeans.api.lsp.StructureElement$Kind EnumMember
+fld public final static org.netbeans.api.lsp.StructureElement$Kind Event
+fld public final static org.netbeans.api.lsp.StructureElement$Kind Field
+fld public final static org.netbeans.api.lsp.StructureElement$Kind File
+fld public final static org.netbeans.api.lsp.StructureElement$Kind Function
+fld public final static org.netbeans.api.lsp.StructureElement$Kind Interface
+fld public final static org.netbeans.api.lsp.StructureElement$Kind Key
+fld public final static org.netbeans.api.lsp.StructureElement$Kind Method
+fld public final static org.netbeans.api.lsp.StructureElement$Kind Module
+fld public final static org.netbeans.api.lsp.StructureElement$Kind Namespace
+fld public final static org.netbeans.api.lsp.StructureElement$Kind Null
+fld public final static org.netbeans.api.lsp.StructureElement$Kind Number
+fld public final static org.netbeans.api.lsp.StructureElement$Kind Object
+fld public final static org.netbeans.api.lsp.StructureElement$Kind Operator
+fld public final static org.netbeans.api.lsp.StructureElement$Kind Package
+fld public final static org.netbeans.api.lsp.StructureElement$Kind Property
+fld public final static org.netbeans.api.lsp.StructureElement$Kind String
+fld public final static org.netbeans.api.lsp.StructureElement$Kind Struct
+fld public final static org.netbeans.api.lsp.StructureElement$Kind TypeParameter
+fld public final static org.netbeans.api.lsp.StructureElement$Kind Variable
+meth public static org.netbeans.api.lsp.StructureElement$Kind valueOf(java.lang.String)
+meth public static org.netbeans.api.lsp.StructureElement$Kind[] values()
+supr java.lang.Enum<org.netbeans.api.lsp.StructureElement$Kind>
+
+CLSS public final static !enum org.netbeans.api.lsp.StructureElement$Tag
+ outer org.netbeans.api.lsp.StructureElement
+fld public final static org.netbeans.api.lsp.StructureElement$Tag Deprecated
+meth public static org.netbeans.api.lsp.StructureElement$Tag valueOf(java.lang.String)
+meth public static org.netbeans.api.lsp.StructureElement$Tag[] values()
+supr java.lang.Enum<org.netbeans.api.lsp.StructureElement$Tag>
 
 CLSS public org.netbeans.api.lsp.TextDocumentEdit
 cons public init(java.lang.String,java.util.List<org.netbeans.api.lsp.TextEdit>)
@@ -290,6 +376,17 @@ CLSS public abstract interface !annotation org.netbeans.spi.editor.mimelookup.Mi
 intf java.lang.annotation.Annotation
 meth public abstract !hasdefault java.lang.Class<? extends org.netbeans.spi.editor.mimelookup.InstanceProvider> instanceProviderClass()
 meth public abstract java.lang.String subfolderName()
+
+CLSS public abstract interface org.netbeans.spi.lsp.CallHierarchyProvider
+meth public abstract java.util.concurrent.CompletableFuture<java.util.List<org.netbeans.api.lsp.CallHierarchyEntry$Call>> findIncomingCalls(org.netbeans.api.lsp.CallHierarchyEntry)
+ anno 0 org.netbeans.api.annotations.common.CheckForNull()
+ anno 1 org.netbeans.api.annotations.common.NonNull()
+meth public abstract java.util.concurrent.CompletableFuture<java.util.List<org.netbeans.api.lsp.CallHierarchyEntry$Call>> findOutgoingCalls(org.netbeans.api.lsp.CallHierarchyEntry)
+ anno 0 org.netbeans.api.annotations.common.CheckForNull()
+ anno 1 org.netbeans.api.annotations.common.NonNull()
+meth public abstract java.util.concurrent.CompletableFuture<java.util.List<org.netbeans.api.lsp.CallHierarchyEntry>> findCallOrigin(javax.swing.text.Document,int)
+ anno 0 org.netbeans.api.annotations.common.CheckForNull()
+ anno 1 org.netbeans.api.annotations.common.NonNull()
 
 CLSS public abstract interface org.netbeans.spi.lsp.CompletionCollector
  anno 0 org.netbeans.spi.editor.mimelookup.MimeLocation(java.lang.Class<? extends org.netbeans.spi.editor.mimelookup.InstanceProvider> instanceProviderClass=class org.netbeans.spi.editor.mimelookup.InstanceProvider, java.lang.String subfolderName="CompletionCollectors")
@@ -398,4 +495,52 @@ CLSS public abstract interface org.netbeans.spi.lsp.HyperlinkTypeDefLocationProv
  anno 0 org.netbeans.spi.editor.mimelookup.MimeLocation(java.lang.Class<? extends org.netbeans.spi.editor.mimelookup.InstanceProvider> instanceProviderClass=class org.netbeans.spi.editor.mimelookup.InstanceProvider, java.lang.String subfolderName="HyperlinkTypeDefLocationProviders")
 meth public abstract java.util.concurrent.CompletableFuture<org.netbeans.api.lsp.HyperlinkLocation> getHyperlinkTypeDefLocation(javax.swing.text.Document,int)
  anno 1 org.netbeans.api.annotations.common.NonNull()
+
+CLSS public abstract interface org.netbeans.spi.lsp.StructureProvider
+innr public final static Builder
+meth public abstract java.util.List<org.netbeans.api.lsp.StructureElement> getStructure(javax.swing.text.Document)
+ anno 0 org.netbeans.api.annotations.common.NonNull()
+ anno 1 org.netbeans.api.annotations.common.NonNull()
+meth public static org.netbeans.spi.lsp.StructureProvider$Builder copy(org.netbeans.api.lsp.StructureElement)
+ anno 1 org.netbeans.api.annotations.common.NonNull()
+meth public static org.netbeans.spi.lsp.StructureProvider$Builder newBuilder(java.lang.String,org.netbeans.api.lsp.StructureElement$Kind)
+ anno 1 org.netbeans.api.annotations.common.NonNull()
+ anno 2 org.netbeans.api.annotations.common.NonNull()
+
+CLSS public final static org.netbeans.spi.lsp.StructureProvider$Builder
+ outer org.netbeans.spi.lsp.StructureProvider
+meth public !varargs org.netbeans.spi.lsp.StructureProvider$Builder children(org.netbeans.api.lsp.StructureElement[])
+ anno 0 org.netbeans.api.annotations.common.NonNull()
+ anno 1 org.netbeans.api.annotations.common.NonNull()
+meth public org.netbeans.api.lsp.StructureElement build()
+ anno 0 org.netbeans.api.annotations.common.NonNull()
+meth public org.netbeans.spi.lsp.StructureProvider$Builder addTag(org.netbeans.api.lsp.StructureElement$Tag)
+ anno 0 org.netbeans.api.annotations.common.NonNull()
+ anno 1 org.netbeans.api.annotations.common.NonNull()
+meth public org.netbeans.spi.lsp.StructureProvider$Builder children(java.util.List<org.netbeans.api.lsp.StructureElement>)
+ anno 0 org.netbeans.api.annotations.common.NonNull()
+ anno 1 org.netbeans.api.annotations.common.NonNull()
+meth public org.netbeans.spi.lsp.StructureProvider$Builder detail(java.lang.String)
+ anno 0 org.netbeans.api.annotations.common.NonNull()
+ anno 1 org.netbeans.api.annotations.common.NonNull()
+meth public org.netbeans.spi.lsp.StructureProvider$Builder expandedEndOffset(int)
+ anno 0 org.netbeans.api.annotations.common.NonNull()
+meth public org.netbeans.spi.lsp.StructureProvider$Builder expandedStartOffset(int)
+ anno 0 org.netbeans.api.annotations.common.NonNull()
+meth public org.netbeans.spi.lsp.StructureProvider$Builder file(org.openide.filesystems.FileObject)
+meth public org.netbeans.spi.lsp.StructureProvider$Builder kind(org.netbeans.api.lsp.StructureElement$Kind)
+ anno 0 org.netbeans.api.annotations.common.NonNull()
+ anno 1 org.netbeans.api.annotations.common.NonNull()
+meth public org.netbeans.spi.lsp.StructureProvider$Builder name(java.lang.String)
+ anno 0 org.netbeans.api.annotations.common.NonNull()
+ anno 1 org.netbeans.api.annotations.common.NonNull()
+meth public org.netbeans.spi.lsp.StructureProvider$Builder selectionEndOffset(int)
+ anno 0 org.netbeans.api.annotations.common.NonNull()
+meth public org.netbeans.spi.lsp.StructureProvider$Builder selectionStartOffset(int)
+ anno 0 org.netbeans.api.annotations.common.NonNull()
+meth public org.netbeans.spi.lsp.StructureProvider$Builder tags(java.util.Set<org.netbeans.api.lsp.StructureElement$Tag>)
+ anno 0 org.netbeans.api.annotations.common.NonNull()
+ anno 1 org.netbeans.api.annotations.common.NonNull()
+supr java.lang.Object
+hfds children,detail,expandedEndOffset,expandedStartOffset,file,kind,name,selectionEndOffset,selectionStartOffset,tags
 

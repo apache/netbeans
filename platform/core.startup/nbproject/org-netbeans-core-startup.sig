@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.77.0
+#Version 1.78.0
 
 CLSS public abstract interface java.io.Serializable
 
@@ -150,7 +150,7 @@ meth public static java.lang.String getLogDir()
 meth public static java.lang.String getUserDir()
 meth public static void initialize()
 supr org.netbeans.CLIHandler
-hfds DIR_MODULES,cacheDir,defaultsLoaded,fallbackToMemory,gui,homeDir,noSplash,systemDir,uiFontSize,userDir
+hfds DIR_MODULES,cacheDir,defaultsLoaded,fallbackToMemory,gui,homeDir,noSplash,systemDir,uiClassName,uiFontSize,userDir
 
 CLSS public final org.netbeans.core.startup.CLITestModuleReload
 cons public init()

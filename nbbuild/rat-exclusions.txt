@@ -157,6 +157,7 @@ websvccommon/websvc.saas.api/src/org/netbeans/modules/websvc/saas/oauth/*.templa
 **/*.oql
 **/*.ser
 harness/jellytools.platform/src/org/netbeans/jellytools/version_info
+**/*.npss
 
 ######  generated test files 
 **/*.pass

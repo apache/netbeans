@@ -33,14 +33,15 @@ Apache NetBeans is an open source development environment, tooling platform, and
      * [![Build Status](https://app.travis-ci.com/apache/netbeans.svg?branch=master)](https://app.travis-ci.com/apache/netbeans)
    * Apache Jenkins:
      * Linux: [![Build Status](https://ci-builds.apache.org/job/Netbeans/job/netbeans-linux/badge/icon)](https://ci-builds.apache.org/job/Netbeans/job/netbeans-linux/)
-     * Windows: [![Build Status](https://ci-builds.apache.org/job/Netbeans/job/netbeans-windows/badge/icon)](https://ci-builds.apache.org/job/Netbeans/job/netbeans-windows)
+     * Windows: [![Build Status](https://ci-builds.apache.org/job/Netbeans/job/netbeans-windows/badge/icon)](https://ci-builds.apache.org/job/Netbeans/job/netbeans-windows) 
+   * License Status ( Apache Rat and ant verify-libs-and-licenses )
+     * [![Build Status](https://ci-builds.apache.org/job/Netbeans/job/netbeans-license/badge/icon)](https://ci-builds.apache.org/job/Netbeans/job/netbeans-license/)
 
 ### Requirements
 
   * Git
   * Ant 1.9.9 or above
   * JDK 11 or above (to build and run NetBeans)
-  * MinGW (optional), to build Windows Launchers
 
 #### Notes:
 
@@ -68,22 +69,6 @@ $ ant -Dcluster.config=platform
 
 #### Notes:
 * You can also use `php`, `enterprise`, etc. See the [cluster.properties](https://github.com/apache/netbeans/blob/master/nbbuild/cluster.properties) file.
-
-#### Building Windows Launchers
-Windows launchers can be build using [MinGW](http://www.mingw.org/) both on Windows and Linux.
-
-**Note:** In Windows [MSYS](http://www.mingw.org/wiki/MSYS/) must be installed.
-
-
-As of [NETBEANS-1145](https://issues.apache.org/jira/browse/NETBEANS-1145), the Windows Launchers can be built adding ```do.build.windows.launchers=true``` property to the build process.
-```
-$ ant -Ddo.build.windows.launchers=true
-```
-
-##### Software Requirement to Build Windows Launchers on Ubuntu (16.04+):
-```
-sudo apt install make mingw-w64
-```
 
 #### Generating Javadoc
 

@@ -32,11 +32,14 @@ import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
 import java.nio.charset.CodingErrorAction;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -76,6 +79,12 @@ public class VerifyLibsAndLicenses extends Task {
     public void setReport(File report) {
         this.reportFile = report;
     }
+    
+    private File mavenfolderFile;
+    /** JUnit-format XML result file to generate, rather than halting the build. */
+    public void setMavenFolder(File report) {
+        this.mavenfolderFile = report;
+    }
 
     private boolean haltonfailure;
     /** JUnit-format XML result file to generate, rather than halting the build. */
@@ -108,6 +117,7 @@ public class VerifyLibsAndLicenses extends Task {
             testLicenses();
             testBinaryUniqueness();
             testLicenseinfo();
+            buildLibPomForMaven();
         } catch (IOException x) {
             throw new BuildException(x, getLocation());
         }
@@ -120,6 +130,125 @@ public class VerifyLibsAndLicenses extends Task {
         } catch (NullPointerException | IOException x) {x.printStackTrace(); throw new BuildException(x);}
     }
 
+    private void buildLibPomForMaven() throws IOException {
+        Path pseudoMaven = mavenfolderFile.toPath();
+        if (Files.exists(pseudoMaven)) {
+            Files.walk(pseudoMaven).sorted(Comparator.reverseOrder()).map(Path::toFile).forEach(File::delete);
+        }
+        Path pseudoMavendirectory = Files.createDirectory(pseudoMaven);
+        Path parentPom = Files.createFile(pseudoMavendirectory.resolve("pom.xml"));
+        Files.write(parentPom,("<project>"
+                + "\n  <modelVersion>4.0.0</modelVersion>"
+                + "\n  <groupId>com.mycompany.app</groupId>"
+                + "\n  <artifactId>my-app</artifactId>"
+                + "\n  <version>1</version>"
+                + "\n  <packaging>pom</packaging>"+
+                "<distributionManagement>\n" +
+"    <site><id>dummy</id><url>https://netbeans.apache.org/dummy</url><name>dummy</name></site>\n" +
+"  </distributionManagement>").getBytes(StandardCharsets.UTF_8),StandardOpenOption.CREATE,StandardOpenOption.APPEND);
+        Files.write(parentPom,"\n  <modules>".getBytes(StandardCharsets.UTF_8),StandardOpenOption.APPEND);
+        for (String module : modules) {
+            File d = new File(new File(nball, module), "external");
+            if (d.exists() && d.isDirectory()) {
+                String moduleName = module.replace("/", "").replace(".", "");
+                Files.write(parentPom, ("\n    <module>" + moduleName + "</module>").getBytes(StandardCharsets.UTF_8), StandardOpenOption.APPEND);
+                Path modulesPathFolder = Files.createDirectory(pseudoMavendirectory.resolve(moduleName));
+                Path moduleparentPom = Files.createFile(modulesPathFolder.resolve("pom.xml"));
+                Files.write(moduleparentPom, ("<project>"
+                        + "\n  <modelVersion>4.0.0</modelVersion>"
+                        + "\n  <parent><groupId>com.mycompany.app</groupId><artifactId>my-app</artifactId><version>1</version></parent>"
+                        + "\n  <groupId>com.mycompany.app</groupId>"
+                        + "\n  <artifactId>" + moduleName + "</artifactId>"
+                        + "\n  <version>1</version>").getBytes(StandardCharsets.UTF_8), StandardOpenOption.CREATE, StandardOpenOption.APPEND);
+                Files.write(moduleparentPom, "\n  <dependencies>".getBytes(StandardCharsets.UTF_8), StandardOpenOption.APPEND);
+
+                File list = new File(d, "binaries-list");
+                if (list.isFile()) {
+                    
+                    try ( Reader r = new FileReader(list)) {
+                        BufferedReader br = new BufferedReader(r);
+                        String line;
+                        while ((line = br.readLine()) != null) {
+                            if (line.startsWith("#")) {
+                                continue;
+                            }
+                            if (line.trim().length() == 0) {
+                                continue;
+                            }
+                            String[] hashAndFile = line.split(" ", 2);
+                            if (hashAndFile.length < 2) {
+                                throw new BuildException("Bad line '" + line + "' in " + list);
+                            }
+                            if (MavenCoordinate.isMavenFile(hashAndFile[1])) {
+                                MavenCoordinate coordinate = MavenCoordinate.fromGradleFormat(hashAndFile[1]);
+                                Files.write(moduleparentPom,("\n    <dependency>").getBytes(StandardCharsets.UTF_8),StandardOpenOption.APPEND);
+                                Files.write(moduleparentPom,("\n    <groupId>"+coordinate.getGroupId()+"</groupId>").getBytes(StandardCharsets.UTF_8),StandardOpenOption.APPEND);
+                                Files.write(moduleparentPom,("\n    <artifactId>"+coordinate.getArtifactId()+"</artifactId>").getBytes(StandardCharsets.UTF_8),StandardOpenOption.APPEND);
+                                Files.write(moduleparentPom,("\n    <version>"+coordinate.getVersion()+"</version>").getBytes(StandardCharsets.UTF_8),StandardOpenOption.APPEND);
+                                Files.write(moduleparentPom,("\n    <type>"+coordinate.getExtension()+"</type>").getBytes(StandardCharsets.UTF_8),StandardOpenOption.APPEND);
+                                
+                                if (coordinate.hasClassifier()) {
+                                   Files.write(moduleparentPom,("\n    <classifier>"+coordinate.getClassifier()+"</classifier>").getBytes(StandardCharsets.UTF_8),StandardOpenOption.APPEND);
+                                }
+                                Files.write(moduleparentPom,("\n    </dependency>").getBytes(StandardCharsets.UTF_8),StandardOpenOption.APPEND);                                                   
+                            } 
+                        }
+                    }
+                }
+                Files.write(moduleparentPom,"\n  </dependencies>".getBytes(StandardCharsets.UTF_8),StandardOpenOption.APPEND);
+                Files.write(moduleparentPom,"</project>".getBytes(StandardCharsets.UTF_8),StandardOpenOption.APPEND);
+        
+            }
+        }
+        Files.write(parentPom, "\n  </modules>".getBytes(StandardCharsets.UTF_8), StandardOpenOption.APPEND);
+        Files.write(parentPom, ("\n  <build>\n"
+                + "        <pluginManagement>\n"
+                + "            <plugins>\n"
+                + "                <plugin>\n"
+                + "                    <artifactId>maven-site-plugin</artifactId>\n"
+                + "                    <version>4.0.0-M1</version>\n"
+                + "                </plugin>\n"
+                + "            </plugins>\n"
+                + "        </pluginManagement>\n"
+                + "  </build>").getBytes(StandardCharsets.UTF_8), StandardOpenOption.APPEND);
+
+        Files.write(parentPom, ("\n  <reporting>\n"
+                + "    <plugins>\n"
+                + "      <plugin>\n"
+                + "        <groupId>org.owasp</groupId>\n"
+                + "        <artifactId>dependency-check-maven</artifactId>\n"
+                + "        <version>7.1.0</version>\n"
+                + "        <configuration>\n"
+                + "          <assemblyAnalyzerEnabled>false</assemblyAnalyzerEnabled>\n"
+                + "          <failOnError>false</failOnError>\n"
+                + "        </configuration>\n"
+                + "        <reportSets>\n"
+                + "          <reportSet>\n"
+                + "            <reports>\n"
+                + "              <report>aggregate</report>\n"
+                + "            </reports>\n"
+                + "          </reportSet>\n"
+                + "        </reportSets>\n"
+                + "      </plugin>\n"
+                + "      \n"
+                + "      <plugin>\n"
+                + "        <groupId>org.codehaus.mojo</groupId>\n"
+                + "        <artifactId>versions-maven-plugin</artifactId>\n"
+                + "        <version>2.11.0</version>\n"
+                + "        <reportSets>\n"
+                + "          <reportSet>\n"
+                + "            <reports>\n"
+                + "              <report>dependency-updates-report</report>\n"
+                + "            </reports>\n"
+                + "          </reportSet>\n"
+                + "        </reportSets>\n"
+                + "      </plugin>\n"
+                + "    </plugins>\n"
+                + "  </reporting>").getBytes(StandardCharsets.UTF_8), StandardOpenOption.APPEND);
+        Files.write(parentPom,"</project>".getBytes(StandardCharsets.UTF_8),StandardOpenOption.APPEND);
+        
+    }
+    
     private void testBinaryUniqueness() throws IOException {
         List<String> ignoredPatterns = loadPatterns("ignored-overlaps");
         StringBuffer msg = new StringBuffer();

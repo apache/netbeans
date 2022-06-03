@@ -334,7 +334,7 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
     context.subscriptions.push(vscode.debug.registerDebugAdapterDescriptorFactory('nativeimage', debugDescriptionFactory));
 
     // register content provider
-    let sourceForContentProvider = new NetBeansSourceForContentProvider();
+    let sourceForContentProvider = new NetBeansSourceForContentProvider(context);
     context.subscriptions.push(vscode.workspace.registerTextDocumentContentProvider('sourceFor', sourceForContentProvider));
 
     // initialize Run Configuration
@@ -1330,13 +1330,27 @@ class NetBeansConfigurationNativeResolver implements vscode.DebugConfigurationPr
 
 class NetBeansSourceForContentProvider implements vscode.TextDocumentContentProvider {
 
+    private uri: vscode.Uri | undefined;
+
+    constructor(context: ExtensionContext) {
+        context.subscriptions.push(vscode.window.onDidChangeVisibleTextEditors(eds => {
+            eds.forEach(ed => {
+                if (this.uri && this.uri.toString() === ed.document.uri.toString()) {
+                    ed.hide();
+                    this.uri = undefined;
+                }
+            });
+        }));
+    }
+
     provideTextDocumentContent(uri: vscode.Uri, token: vscode.CancellationToken): vscode.ProviderResult<string> {
+        this.uri = uri;
         vscode.window.withProgress({location: ProgressLocation.Notification, title: 'Finding source...', cancellable: false}, () => {
             return vscode.commands.executeCommand('java.source.for', uri.toString()).then(() => {
             }, (reason: any) => {
                 vscode.window.showErrorMessage(reason.data);
             });
         });
-        return Promise.reject();
+        return Promise.resolve('');
     }
 }

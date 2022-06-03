@@ -138,6 +138,7 @@ import org.eclipse.lsp4j.WorkspaceEdit;
 import org.eclipse.lsp4j.WorkspaceEditCapabilities;
 import org.eclipse.lsp4j.WorkspaceFolder;
 import org.eclipse.lsp4j.WorkspaceSymbol;
+import org.eclipse.lsp4j.WorkspaceSymbolLocation;
 import org.eclipse.lsp4j.WorkspaceSymbolParams;
 import org.eclipse.lsp4j.jsonrpc.Launcher;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
@@ -1782,12 +1783,13 @@ public class ServerTest extends NbTestCase {
         InitializeResult result = server.initialize(initParams).get();
         indexingComplete.await();
         Either<List<? extends SymbolInformation>, List<? extends WorkspaceSymbol>> symbols = server.getWorkspaceService().symbol(new WorkspaceSymbolParams("Tes")).get();
-        List<String> actual = symbols.getRight().stream().map(ws -> ws.getKind() + ":" + ws.getName() + ":" + ws.getContainerName() + ":" + toString(ws.getLocation().getLeft())).collect(Collectors.toList());
-        assertEquals(Arrays.asList("Class:Test:null:Test:0:0-0:0",
-                                   "Constructor:Test():Test:Test.java:0:7-0:7",
+        List<String> actual = symbols.getRight().stream().map(ws -> ws.getKind() + ":" + ws.getName() + ":" + ws.getContainerName() + ":"
+                + (ws.getLocation().isLeft() ? toString(ws.getLocation().getLeft()) : toString(ws.getLocation().getRight()))).collect(Collectors.toList());
+        assertEquals(Arrays.asList("Constructor:Test():Test:Test.java:0:7-0:7",
                                    "Method:testMethod():Test:Test.java:2:4-2:38",
-                                   "Class:TestNested:Test:Test%24TestNested:0:0-0:0",
-                                   "Constructor:TestNested():Test.TestNested:Test.java:1:18-1:18"),
+                                   "Constructor:TestNested():Test.TestNested:Test.java:1:18-1:18",
+                                   "Class:Test:null:Test",
+                                   "Class:TestNested:Test:Test%24TestNested"),
                      actual);
     }
 
@@ -5025,6 +5027,16 @@ public class ServerTest extends NbTestCase {
             simpleName = simpleName.substring(idx + 3);
         }
         return simpleName + ":" + toString(location.getRange());
+    }
+
+    private String toString(WorkspaceSymbolLocation location) {
+        String path = location.getUri();
+        String simpleName = path.substring(path.lastIndexOf('/') + 1);
+        int idx = simpleName.lastIndexOf("%23");
+        if (idx >= 0) {
+            simpleName = simpleName.substring(idx + 3);
+        }
+        return simpleName;
     }
 
     private String uriToString(String uri) {

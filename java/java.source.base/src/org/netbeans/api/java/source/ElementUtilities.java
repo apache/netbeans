@@ -93,23 +93,23 @@ import org.openide.util.Parameters;
  * @author Jan Lahoda, Dusan Balek, Tomas Zezula
  */
 public final class ElementUtilities {
-    
+
+    private static final ElementAcceptor ALL_ACCEPTOR = (Element e, TypeMirror type) -> true;
+
     private final Context ctx;
     private final ElementsService delegate;
     private final CompilationInfo info;
     
     /** Creates a new instance of ElementUtilities */
     ElementUtilities(@NonNull final CompilationInfo info) {
-        this((JavacTaskImpl)info.impl.getJavacTask(),info);
+        this((JavacTaskImpl)info.impl.getJavacTask(), info);
     }
 
     ElementUtilities(@NonNull final JavacTaskImpl jt) {
-        this(jt,null);
+        this(jt, null);
     }
 
-    private ElementUtilities(
-        @NonNull final JavacTaskImpl jt,
-        @NullAllowed final CompilationInfo info) {
+    private ElementUtilities(@NonNull final JavacTaskImpl jt, @NullAllowed final CompilationInfo info) {
         this.ctx = jt.getContext();
         this.delegate = ElementsService.instance(ctx);
         this.info = info;
@@ -130,9 +130,9 @@ public final class ElementUtilities {
     
     static TypeElement enclosingTypeElementImpl( Element element ) throws IllegalArgumentException {
 	
-	if( element.getKind() == ElementKind.PACKAGE ) {
-	    throw new IllegalArgumentException();
-	}
+        if( element.getKind() == ElementKind.PACKAGE ) {
+            throw new IllegalArgumentException();
+        }
 
         element = element.getEnclosingElement();
 	
@@ -141,11 +141,11 @@ public final class ElementUtilities {
             return null;
         }
         
-	while(element != null && !(element.getKind().isClass() || element.getKind().isInterface())) {
-	    element = element.getEnclosingElement();
-	}
-	
-	return (TypeElement)element;
+        while(element != null && !(element.getKind().isClass() || element.getKind().isInterface())) {
+            element = element.getEnclosingElement();
+        }
+
+        return (TypeElement)element;
     }
     
     /**
@@ -217,6 +217,9 @@ public final class ElementUtilities {
     public Iterable<? extends Element> getMembers(TypeMirror type, ElementAcceptor acceptor) {
         Map<String, List<Element>> members = new HashMap<>();
         if (type != null) {
+            if (acceptor == null) {
+                acceptor = ALL_ACCEPTOR;
+            }
             Elements elements = JavacElements.instance(ctx);
             Types types = JavacTypes.instance(ctx);
             switch (type.getKind()) {
@@ -226,18 +229,18 @@ public final class ElementUtilities {
                     TypeElement te = (TypeElement)((DeclaredType)type).asElement();
                     if (te == null) break;
                     for (Element member : elements.getAllMembers(te)) {
-                        if (acceptor == null || acceptor.accept(member, type)) {
+                        if (acceptor.accept(member, type)) {
                             addIfNotHidden(member, members, elements, types);
                         }
                     }
                     if (te.getKind().isClass() || te.getKind().isInterface() && SourceLevelUtils.allowDefaultMethods(Source.instance(ctx))) {
                         VarSymbol thisPseudoMember = new VarSymbol(Flags.FINAL | Flags.HASINIT, Names.instance(ctx)._this, (ClassType)te.asType(), (ClassSymbol)te);
-                        if (acceptor == null || acceptor.accept(thisPseudoMember, type)) {
+                        if (acceptor.accept(thisPseudoMember, type)) {
                             addAlways(thisPseudoMember, members);
                         }
                         if (te.getSuperclass().getKind() == TypeKind.DECLARED) {
                             VarSymbol superPseudoMember = new VarSymbol(Flags.FINAL | Flags.HASINIT, Names.instance(ctx)._super, (ClassType)te.getSuperclass(), (ClassSymbol)te);
-                            if (acceptor == null || acceptor.accept(superPseudoMember, type)) {
+                            if (acceptor.accept(superPseudoMember, type)) {
                                 addAlways(superPseudoMember, members);
                             }
                         }
@@ -255,13 +258,13 @@ public final class ElementUtilities {
                     com.sun.tools.javac.util.List<Type> typeargs = com.sun.tools.javac.util.List.of((Type)type);
                     t = new ClassType(t.getEnclosingType(), typeargs, t.tsym);
                     Element classPseudoMember = new VarSymbol(Flags.STATIC | Flags.PUBLIC | Flags.FINAL, Names.instance(ctx)._class, t, ((Type)type).tsym);
-                    if (acceptor == null || acceptor.accept(classPseudoMember, type)) {
+                    if (acceptor.accept(classPseudoMember, type)) {
                         addAlways(classPseudoMember, members);
                     }
                     break;
                 case ARRAY:
                     for (Element member : elements.getAllMembers((TypeElement)((Type)type).tsym)) {
-                        if (acceptor == null || acceptor.accept(member, type)) {
+                        if (acceptor.accept(member, type)) {
                             addAlways(member, members);
                         }
                     }
@@ -269,7 +272,7 @@ public final class ElementUtilities {
                     typeargs = com.sun.tools.javac.util.List.of((Type)type);
                     t = new ClassType(t.getEnclosingType(), typeargs, t.tsym);
                     classPseudoMember = new VarSymbol(Flags.STATIC | Flags.PUBLIC | Flags.FINAL, Names.instance(ctx)._class, t, ((Type)type).tsym);
-                    if (acceptor == null || acceptor.accept(classPseudoMember, type)) {
+                    if (acceptor.accept(classPseudoMember, type)) {
                         addAlways(classPseudoMember, members);
                     }
                     break;
@@ -302,7 +305,6 @@ public final class ElementUtilities {
     public @NonNull Map<? extends Element, Scope> findElementsAndOrigins(@NonNull Scope scope, ElementAcceptor acceptor) {
         Parameters.notNull("scope", scope); // NOI18N
         final Map<Element, Scope> result = new HashMap<>();
-
         if (acceptor == null) {
             acceptor = ALL_ACCEPTOR;
         }
@@ -334,20 +336,20 @@ public final class ElementUtilities {
             }
             if (cls != null) {
                 for (Element local : scope.getLocalElements()) {
-                    if (acceptor == null || acceptor.accept(local, null)) {
+                    if (acceptor.accept(local, null)) {
                         addIfNotHidden(local, members, elements, types);
                     }
                 }
                 TypeMirror type = cls.asType();
                 for (Element member : elements.getAllMembers(cls)) {
-                    if (acceptor == null || acceptor.accept(member, type)) {
+                    if (acceptor.accept(member, type)) {
                         addIfNotHidden(member, members, elements, types);
                     }
                 }
             } else {
                 for (Element local : scope.getLocalElements()) {
                     if (!local.getKind().isClass() && !local.getKind().isInterface() &&
-                        (acceptor == null || local.getEnclosingElement() != null && acceptor.accept(local, local.getEnclosingElement().asType()))) {
+                        (local.getEnclosingElement() != null && acceptor.accept(local, local.getEnclosingElement().asType()))) {
                         addIfNotHidden(local, members, elements, types);
                     }
                 }
@@ -367,13 +369,6 @@ public final class ElementUtilities {
         
         return result;
     }
-    
-    private static final ElementAcceptor ALL_ACCEPTOR = new ElementAcceptor() {
-        @Override
-        public boolean accept(Element e, TypeMirror type) {
-            return true;
-        }
-    };
 
     private static void addAlways(Element element, Map<String, List<Element>> members) {
         String name = element.getSimpleName().toString();
@@ -408,27 +403,30 @@ public final class ElementUtilities {
     /**Return members declared in the given scope.
      */
     public Iterable<? extends Element> getLocalMembersAndVars(Scope scope, ElementAcceptor acceptor) {
-        Map<String,List<Element>> members = new HashMap<>();
+        Map<String, List<Element>> members = new HashMap<>();
+        if (acceptor == null) {
+            acceptor = ALL_ACCEPTOR;
+        }
         Elements elements = JavacElements.instance(ctx);
         Types types = JavacTypes.instance(ctx);
         TypeElement cls;
         while(scope != null) {
             if ((cls = scope.getEnclosingClass()) != null) {
                 for (Element local : scope.getLocalElements()) {
-                    if (acceptor == null || acceptor.accept(local, null)) {
+                    if (acceptor.accept(local, null)) {
                         addIfNotHidden(local, members, elements, types);
                     }
                 }
                 TypeMirror type = cls.asType();
                 for (Element member : elements.getAllMembers(cls)) {
-                    if (acceptor == null || acceptor.accept(member, type)) {
+                    if (acceptor.accept(member, type)) {
                         addIfNotHidden(member, members, elements, types);
                     }
                 }
             } else {
                 for (Element local : scope.getLocalElements()) {
                     if (!local.getKind().isClass() && !local.getKind().isInterface() &&
-                        (acceptor == null || local.getEnclosingElement() != null && acceptor.accept(local, local.getEnclosingElement().asType()))) {
+                        (local.getEnclosingElement() != null && acceptor.accept(local, local.getEnclosingElement().asType()))) {
                         addIfNotHidden(local, members, elements, types);
                     }
                 }
@@ -443,11 +441,14 @@ public final class ElementUtilities {
      */
     public Iterable<? extends Element> getLocalVars(Scope scope, ElementAcceptor acceptor) {
         Map<String, List<Element>> members = new HashMap<>();
+        if (acceptor == null) {
+            acceptor = ALL_ACCEPTOR;
+        }
         Elements elements = JavacElements.instance(ctx);
         Types types = JavacTypes.instance(ctx);
         while(scope != null && scope.getEnclosingClass() != null) {
             for (Element local : scope.getLocalElements()) {
-                if (acceptor == null || acceptor.accept(local, null)) {
+                if (acceptor.accept(local, null)) {
                     addIfNotHidden(local, members, elements, types);
                 }
             }
@@ -465,16 +466,19 @@ public final class ElementUtilities {
      */
     public Iterable<? extends TypeElement> getGlobalTypes(ElementAcceptor acceptor) {
         Map<String, List<TypeElement>> members = new HashMap<>();
+        if (acceptor == null) {
+            acceptor = ALL_ACCEPTOR;
+        }
         Trees trees = JavacTrees.instance(ctx);
         Elements elements = JavacElements.instance(ctx);
         Types types = JavacTypes.instance(ctx);
         for (CompilationUnitTree unit : Collections.singletonList(info.getCompilationUnit())) {
             TreePath path = new TreePath(unit);
             Scope scope = trees.getScope(path);
-            while (scope != null && scope instanceof JavacScope && !((JavacScope)scope).isStarImportScope()) {
+            while (scope instanceof JavacScope && !((JavacScope)scope).isStarImportScope()) {
                 for (Element local : scope.getLocalElements()) {
                     if (local.getKind().isClass() || local.getKind().isInterface()) {
-                        if (acceptor == null || acceptor.accept(local, null)) {
+                        if (acceptor.accept(local, null)) {
                             addIfNotHidden((TypeElement)local, members, elements, types);
                         }
                     }
@@ -484,7 +488,7 @@ public final class ElementUtilities {
             Element element = trees.getElement(path);
             if (element != null && element.getKind() == ElementKind.PACKAGE) {
                 for (Element member : element.getEnclosedElements()) {
-                    if (acceptor == null || acceptor.accept(member, null)) {
+                    if (acceptor.accept(member, null)) {
                         addIfNotHidden((TypeElement)member, members, elements, types);
                     }
                 }
@@ -492,7 +496,7 @@ public final class ElementUtilities {
             while (scope != null) {
                 for (Element local : scope.getLocalElements()) {
                     if (local.getKind().isClass() || local.getKind().isInterface()) {
-                        if (acceptor == null || acceptor.accept(local, null)) {
+                        if (acceptor.accept(local, null)) {
                             addIfNotHidden((TypeElement)local, members, elements, types);
                         }
                     }
@@ -557,7 +561,7 @@ public final class ElementUtilities {
         return new ElementNameVisitor().visit(el, fqn);
     }
 
-    private static class ElementNameVisitor extends SimpleElementVisitor9<StringBuilder,Boolean> {
+    private static class ElementNameVisitor extends SimpleElementVisitor9<StringBuilder, Boolean> {
         
         private ElementNameVisitor() {
             super(new StringBuilder());
@@ -650,7 +654,7 @@ public final class ElementUtilities {
     /**Find all methods in given type and its supertypes, which are not implemented.
      * Will not return default methods implemented directly in interfaces in impl type closure.
      * 
-     * @param type to inspect
+     * @param impl to inspect
      * @return list of all unimplemented methods
      * 
      * @since 0.20
@@ -826,7 +830,7 @@ public final class ElementUtilities {
             int lastParamStart = 0;
             int angleDepth = 0;
             //XXX:
-            List<TypeMirror> types = new ArrayList<TypeMirror>();
+            List<TypeMirror> types = new ArrayList<>();
             
             while (paramIndex < parameters.length()) {
                 switch (parameters.charAt(paramIndex)) {
@@ -912,7 +916,7 @@ public final class ElementUtilities {
     private static final Set<Modifier> NOT_OVERRIDABLE = EnumSet.of(Modifier.STATIC, Modifier.FINAL, Modifier.PRIVATE);
     
     private List<? extends ExecutableElement> findUnimplementedMethods(TypeElement impl, TypeElement element, boolean includeDefaults) {
-        List<ExecutableElement> undef = new ArrayList<ExecutableElement>();
+        List<ExecutableElement> undef = new ArrayList<>();
         Types types = JavacTypes.instance(ctx);
         com.sun.tools.javac.code.Types implTypes = com.sun.tools.javac.code.Types.instance(ctx);
         DeclaredType implType = (DeclaredType)impl.asType();
@@ -1034,12 +1038,11 @@ public final class ElementUtilities {
     }
     
     private List<DeclaredType> getSubtypes(DeclaredType baseType, Env<AttrContext> env) {
-        LinkedList<DeclaredType> subtypes = new LinkedList<DeclaredType>();
-        HashSet<TypeElement> elems = new HashSet<TypeElement>();
-        LinkedList<DeclaredType> bases = new LinkedList<DeclaredType>();
+        LinkedList<DeclaredType> subtypes = new LinkedList<>();
+        HashSet<TypeElement> elems = new HashSet<>();
+        LinkedList<DeclaredType> bases = new LinkedList<>();
         bases.add(baseType);
         ClassIndex index = info.getClasspathInfo().getClassIndex();
-        Trees trees = info.getTrees();
         Types types = info.getTypes();
         Resolve resolve = Resolve.instance(ctx);
         while(!bases.isEmpty()) {
@@ -1061,7 +1064,7 @@ public final class ElementUtilities {
                             DeclaredType dt = types.getDeclaredType(e);
                             bases.add(dt);
                         } else {
-                            HashMap<Element, TypeMirror> map = new HashMap<Element, TypeMirror>();
+                            HashMap<Element, TypeMirror> map = new HashMap<>();
                             TypeMirror sup = e.getSuperclass();
                             if (sup.getKind() == TypeKind.DECLARED && ((DeclaredType)sup).asElement() == elem) {
                                 DeclaredType dt = (DeclaredType)sup;

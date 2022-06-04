@@ -16,35 +16,13 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.javascript.nodejs.util;
+package org.netbeans.modules.javascript.nodejs.spi;
 
+import java.util.List;
+import java.util.concurrent.Future;
+import java.util.concurrent.atomic.AtomicReference;
 import org.netbeans.api.project.Project;
-import org.netbeans.modules.javascript.nodejs.platform.NodeJsSupport;
-import org.netbeans.modules.javascript.nodejs.preferences.NodeJsPreferences;
 
-public final class RunInfo {
-
-    private final String startFile;
-    private final String startArgs;
-
-
-    public RunInfo(Project project) {
-        NodeJsPreferences preferences = NodeJsSupport.forProject(project).getPreferences();
-        startFile = preferences.getStartFile();
-        startArgs = preferences.getStartArgs();
-    }
-
-    public RunInfo(String startFile, String startArgs, int debugPort) {
-        this.startFile = startFile;
-        this.startArgs = startArgs;
-    }
-
-    public String getStartFile() {
-        return startFile;
-    }
-
-    public String getStartArgs() {
-        return startArgs;
-    }
-
+public interface DebuggerStartModifierFactory {
+    public DebuggerStartModifier create(Project project, List<String> localPaths, List<String> remotePaths, List<String> localPathsExclusionFilter, AtomicReference<Future<Integer>> taskRef);
 }

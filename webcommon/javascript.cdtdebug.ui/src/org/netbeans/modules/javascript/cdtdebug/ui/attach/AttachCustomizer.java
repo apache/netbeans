@@ -202,6 +202,7 @@ public class AttachCustomizer extends javax.swing.JPanel {
     // End of variables declaration//GEN-END:variables
 
     @NbBundle.Messages({"MSG_NoPort=Port number is missing.",
+                        "# {0} - invalid port number",
                         "MSG_InvalidPort=Port number {0} is invalid.",
                         "MSG_LocalPathNotExists=The local sources directory does not exist.",
                         "MSG_LocalPathNotDir=The local sources path is not a directory.",

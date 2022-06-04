@@ -24,16 +24,15 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.ButtonGroup;
 import javax.swing.GroupLayout;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
-import javax.swing.JSpinner;
 import javax.swing.LayoutStyle;
-import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.netbeans.api.options.OptionsDisplayer;
@@ -54,12 +53,11 @@ final class NodeJsCustomizerPanel extends JPanel implements HelpCtx.Provider {
     private final ProjectCustomizer.Category category;
     private final NodeJsPreferences preferences;
     final NodeJsPathPanel nodeJsPathPanel;
-    private final SpinnerNumberModel debugPortModel;
+    final List<String> debuggerProtocols = new ArrayList<>();
 
     volatile boolean enabled;
     volatile boolean defaultNode;
     volatile String node;
-    volatile int debugPort;
     volatile boolean syncChanges;
 
 
@@ -71,7 +69,6 @@ final class NodeJsCustomizerPanel extends JPanel implements HelpCtx.Provider {
         this.category = category;
         preferences = NodeJsSupport.forProject(project).getPreferences();
         nodeJsPathPanel = new NodeJsPathPanel();
-        debugPortModel = new SpinnerNumberModel(65534, 1, 65534, 1);
 
         initComponents();
         init();
@@ -85,15 +82,13 @@ final class NodeJsCustomizerPanel extends JPanel implements HelpCtx.Provider {
         node = preferences.getNode();
         nodeJsPathPanel.setNode(node);
         nodeJsPathPanel.setNodeSources(preferences.getNodeSources());
+        nodeJsPathPanel.setDebugProtocol(preferences.getDebugProtocol());
         defaultNode = preferences.isDefaultNode();
         if (defaultNode) {
             defaultNodeRadioButton.setSelected(true);
         } else {
             customNodeRadioButton.setSelected(true);
         }
-        debugPortSpinner.setModel(debugPortModel);
-        debugPort = preferences.getDebugPort();
-        debugPortModel.setValue(debugPort);
         syncChanges = preferences.isSyncEnabled();
         syncCheckBox.setSelected(syncChanges);
         // ui
@@ -124,7 +119,6 @@ final class NodeJsCustomizerPanel extends JPanel implements HelpCtx.Provider {
                 validateData();
             }
         });
-        debugPortModel.addChangeListener(new DefaultChangeListener());
         syncCheckBox.addItemListener(defaultItemListener);
     }
 
@@ -135,17 +129,13 @@ final class NodeJsCustomizerPanel extends JPanel implements HelpCtx.Provider {
         // custom
         customNodeRadioButton.setEnabled(enabled);
         nodeJsPathPanel.enablePanel(enabled && !defaultNode);
-        // debug port
-        debugPortLabel.setEnabled(enabled);
-        debugPortSpinner.setEnabled(enabled);
-        localDebugInfoLabel.setEnabled(enabled);
         // sync
         syncCheckBox.setEnabled(enabled);
     }
 
     void validateData() {
         ValidationResult result = new NodeJsPreferencesValidator()
-                .validateCustomizer(enabled, defaultNode, node, nodeJsPathPanel.getNodeSources(), debugPort)
+                .validateCustomizer(enabled, defaultNode, node, nodeJsPathPanel.getNodeSources())
                 .getResult();
         if (result.hasErrors()) {
             category.setErrorMessage(result.getFirstErrorMessage());
@@ -166,8 +156,8 @@ final class NodeJsCustomizerPanel extends JPanel implements HelpCtx.Provider {
         preferences.setNode(node);
         preferences.setNodeSources(nodeJsPathPanel.getNodeSources());
         preferences.setDefaultNode(defaultNode);
-        preferences.setDebugPort(debugPort);
         preferences.setSyncEnabled(syncChanges);
+        preferences.setDebugProtocol(nodeJsPathPanel.getDebugProtocol());
     }
     
     @Override
@@ -188,9 +178,6 @@ final class NodeJsCustomizerPanel extends JPanel implements HelpCtx.Provider {
         defaultNodeRadioButton = new JRadioButton();
         customNodeRadioButton = new JRadioButton();
         nodePathPanel = new JPanel();
-        debugPortLabel = new JLabel();
-        debugPortSpinner = new JSpinner();
-        localDebugInfoLabel = new JLabel();
         syncCheckBox = new JCheckBox();
 
         Mnemonics.setLocalizedText(enabledCheckBox, NbBundle.getMessage(NodeJsCustomizerPanel.class, "NodeJsCustomizerPanel.enabledCheckBox.text")); // NOI18N
@@ -210,13 +197,6 @@ final class NodeJsCustomizerPanel extends JPanel implements HelpCtx.Provider {
 
         nodePathPanel.setLayout(new BorderLayout());
 
-        debugPortLabel.setLabelFor(debugPortSpinner);
-        Mnemonics.setLocalizedText(debugPortLabel, NbBundle.getMessage(NodeJsCustomizerPanel.class, "NodeJsCustomizerPanel.debugPortLabel.text")); // NOI18N
-
-        debugPortSpinner.setEditor(new JSpinner.NumberEditor(debugPortSpinner, "#"));
-
-        Mnemonics.setLocalizedText(localDebugInfoLabel, NbBundle.getMessage(NodeJsCustomizerPanel.class, "NodeJsCustomizerPanel.localDebugInfoLabel.text")); // NOI18N
-
         Mnemonics.setLocalizedText(syncCheckBox, NbBundle.getMessage(NodeJsCustomizerPanel.class, "NodeJsCustomizerPanel.syncCheckBox.text")); // NOI18N
 
         GroupLayout layout = new GroupLayout(this);
@@ -230,19 +210,11 @@ final class NodeJsCustomizerPanel extends JPanel implements HelpCtx.Provider {
                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(configureNodeButton))
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(localDebugInfoLabel)
-                .addGap(0, 0, Short.MAX_VALUE))
-            .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                     .addComponent(enabledCheckBox)
                     .addComponent(customNodeRadioButton)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(debugPortLabel)
-                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(debugPortSpinner, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                     .addComponent(syncCheckBox))
-                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(141, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
@@ -256,13 +228,8 @@ final class NodeJsCustomizerPanel extends JPanel implements HelpCtx.Provider {
                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(nodePathPanel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                    .addComponent(debugPortLabel)
-                    .addComponent(debugPortSpinner, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(localDebugInfoLabel)
-                .addGap(18, 18, 18)
-                .addComponent(syncCheckBox))
+                .addComponent(syncCheckBox)
+                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -275,11 +242,8 @@ final class NodeJsCustomizerPanel extends JPanel implements HelpCtx.Provider {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private JButton configureNodeButton;
     private JRadioButton customNodeRadioButton;
-    private JLabel debugPortLabel;
-    private JSpinner debugPortSpinner;
     private JRadioButton defaultNodeRadioButton;
     private JCheckBox enabledCheckBox;
-    private JLabel localDebugInfoLabel;
     private ButtonGroup nodeBbuttonGroup;
     private JPanel nodePathPanel;
     private JCheckBox syncCheckBox;
@@ -297,16 +261,6 @@ final class NodeJsCustomizerPanel extends JPanel implements HelpCtx.Provider {
                 enableAllFields();
                 validateData();
             }
-        }
-
-    }
-
-    private final class DefaultChangeListener implements ChangeListener {
-
-        @Override
-        public void stateChanged(ChangeEvent e) {
-            debugPort = debugPortModel.getNumber().intValue();
-            validateData();
         }
 
     }

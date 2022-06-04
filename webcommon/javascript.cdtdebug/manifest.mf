@@ -1,5 +1,6 @@
 Manifest-Version: 1.0
 OpenIDE-Module: org.netbeans.modules.javascript.cdtdebug/1
+OpenIDE-Module-Layer: org/netbeans/modules/javascript/cdtdebug/layer.xml
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/javascript/cdtdebug/Bundle.properties
 OpenIDE-Module-Implementation-Version: 1
 AutoUpdate-Show-In-Client: false

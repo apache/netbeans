@@ -16,35 +16,21 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.javascript.nodejs.util;
+package org.netbeans.modules.debugger.jpda.truffle.node;
 
+import java.util.List;
+import java.util.concurrent.Future;
+import java.util.concurrent.atomic.AtomicReference;
 import org.netbeans.api.project.Project;
-import org.netbeans.modules.javascript.nodejs.platform.NodeJsSupport;
-import org.netbeans.modules.javascript.nodejs.preferences.NodeJsPreferences;
 
-public final class RunInfo {
+import org.netbeans.modules.javascript.nodejs.spi.DebuggerStartModifier;
+import org.netbeans.modules.javascript.nodejs.spi.DebuggerStartModifierFactory;
 
-    private final String startFile;
-    private final String startArgs;
+public class DebuggerStartModifierFactoryImpl implements DebuggerStartModifierFactory {
 
-
-    public RunInfo(Project project) {
-        NodeJsPreferences preferences = NodeJsSupport.forProject(project).getPreferences();
-        startFile = preferences.getStartFile();
-        startArgs = preferences.getStartArgs();
-    }
-
-    public RunInfo(String startFile, String startArgs, int debugPort) {
-        this.startFile = startFile;
-        this.startArgs = startArgs;
-    }
-
-    public String getStartFile() {
-        return startFile;
-    }
-
-    public String getStartArgs() {
-        return startArgs;
+    @Override
+    public DebuggerStartModifier create(Project project, List<String> localPaths, List<String> serverPaths, List<String> localPathsExclusionFilter, AtomicReference<Future<Integer>> taskRef) {
+        return new DebuggerStartModifierImpl();
     }
 
 }

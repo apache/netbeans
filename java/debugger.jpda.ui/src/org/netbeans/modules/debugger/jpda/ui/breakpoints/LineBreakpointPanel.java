@@ -103,6 +103,7 @@ public class LineBreakpointPanel extends JPanel implements ControllerProvider, o
         if (createBreakpoint) {
             tfFileName.setEditable(true);
         }
+        tfClassName.setText(b.getPreferredClassName());
 
         String urlStr = b.getURL();
         logger.fine("LineBreakpointPanel("+urlStr+")");
@@ -142,6 +143,7 @@ public class LineBreakpointPanel extends JPanel implements ControllerProvider, o
         pActions.add (actionsPanel, "Center");  // NOI18N
 
         tfFileName.getDocument().addDocumentListener(validityDocumentListener);
+        tfClassName.getDocument().addDocumentListener(validityDocumentListener);
         tfLineNumber.getDocument().addDocumentListener(validityDocumentListener);
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
@@ -192,6 +194,8 @@ public class LineBreakpointPanel extends JPanel implements ControllerProvider, o
         tfFileName = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
         tfLineNumber = new javax.swing.JTextField();
+        jLabel2 = new javax.swing.JLabel();
+        tfClassName = new javax.swing.JTextField();
         cPanel = new javax.swing.JPanel();
         pActions = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
@@ -229,7 +233,7 @@ public class LineBreakpointPanel extends JPanel implements ControllerProvider, o
         org.openide.awt.Mnemonics.setLocalizedText(jLabel1, bundle.getString("L_Line_Breakpoint_Line_Number")); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridy = 4;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
@@ -239,7 +243,7 @@ public class LineBreakpointPanel extends JPanel implements ControllerProvider, o
         tfLineNumber.setToolTipText(bundle.getString("TTT_TF_Line_Breakpoint_Line_Number")); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridy = 4;
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
@@ -247,6 +251,30 @@ public class LineBreakpointPanel extends JPanel implements ControllerProvider, o
         pSettings.add(tfLineNumber, gridBagConstraints);
         tfLineNumber.getAccessibleContext().setAccessibleName("Line number");
         tfLineNumber.getAccessibleContext().setAccessibleDescription(bundle.getString("ACSD_TF_Line_Breakpoint_Line_Number")); // NOI18N
+
+        jLabel2.setLabelFor(tfClassName);
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel2, "Class name:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        pSettings.add(jLabel2, gridBagConstraints);
+
+        tfClassName.setToolTipText(org.openide.util.NbBundle.getMessage(LineBreakpointPanel.class, "TTT_TF_Class_Name")); // NOI18N
+        tfClassName.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tfClassNameActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        pSettings.add(tfClassName, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
@@ -278,6 +306,9 @@ public class LineBreakpointPanel extends JPanel implements ControllerProvider, o
         getAccessibleContext().setAccessibleName(org.openide.util.NbBundle.getMessage(LineBreakpointPanel.class, "ACSN_LineBreakpoint")); // NOI18N
     }// </editor-fold>//GEN-END:initComponents
 
+    private void tfClassNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfClassNameActionPerformed
+    }//GEN-LAST:event_tfClassNameActionPerformed
+
     
     // Controller implementation ...............................................
     
@@ -285,14 +316,39 @@ public class LineBreakpointPanel extends JPanel implements ControllerProvider, o
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel cPanel;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel pActions;
     private javax.swing.JPanel pSettings;
+    private javax.swing.JTextField tfClassName;
     private javax.swing.JTextField tfFileName;
     private javax.swing.JTextField tfLineNumber;
     // End of variables declaration//GEN-END:variables
 
+    static boolean isClassNamePatternValid(String pn) {
+        if (pn != null) {
+            if (pn.equals("*")) {
+                return false;
+            }
+            boolean starts = pn.startsWith("*");
+            boolean ends = pn.endsWith("*");
+            if (starts && ends) {
+                return false;
+            }
+            if (starts) {
+                pn = pn.substring(1);
+            }
+            if (ends) {
+                pn = pn.substring(0, pn.length() - 1);
+            }
+            if (pn.contains("*")) {
+                return false;
+            }
+        }
+        return true;
+    }
+    
     public Controller getController() {
         return controller;
     }
@@ -322,10 +378,18 @@ public class LineBreakpointPanel extends JPanel implements ControllerProvider, o
             breakpoint.setCondition (conditionsPanel.getCondition());
             breakpoint.setHitCountFilter(conditionsPanel.getHitCount(),
                     conditionsPanel.getHitCountFilteringStyle());
-
+            breakpoint.setPreferredClassName(findPreferredClassName());
             if (createBreakpoint)
                 DebuggerManager.getDebuggerManager ().addBreakpoint (breakpoint);
             return true;
+        }
+
+        private String findPreferredClassName() {
+            final String text = tfClassName.getText();
+            if (text != null && text.trim().length() == 0) {
+                return null;
+            }
+            return text;
         }
 
         /**
@@ -357,9 +421,16 @@ public class LineBreakpointPanel extends JPanel implements ControllerProvider, o
                 setValid(false);
                 return ;
             } else if (!"text/x-java".equals(fo.getMIMEType())) {
-                setErrorMessage(NbBundle.getMessage(LineBreakpointPanel.class, "MSG_NonJava_File_Spec"));
+                if (findPreferredClassName() == null) {
+                    setErrorMessage(NbBundle.getMessage(LineBreakpointPanel.class, "MSG_NonJava_File_Spec"));
+                    setValid(false);
+                    return ;
+                }
+            }
+            if (!isClassNamePatternValid(findPreferredClassName())) {
+                setErrorMessage(NbBundle.getMessage(LineBreakpointPanel.class, "MSG_ClassPatternWrong"));
                 setValid(false);
-                return ;
+                return;
             }
             int line;
             try {

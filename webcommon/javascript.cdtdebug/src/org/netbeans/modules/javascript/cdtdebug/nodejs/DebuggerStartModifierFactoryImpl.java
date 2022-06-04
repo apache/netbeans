@@ -16,35 +16,20 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.javascript.nodejs.util;
+package org.netbeans.modules.javascript.cdtdebug.nodejs;
 
+import java.util.List;
+import java.util.concurrent.Future;
+import java.util.concurrent.atomic.AtomicReference;
 import org.netbeans.api.project.Project;
-import org.netbeans.modules.javascript.nodejs.platform.NodeJsSupport;
-import org.netbeans.modules.javascript.nodejs.preferences.NodeJsPreferences;
+import org.netbeans.modules.javascript.nodejs.spi.DebuggerStartModifier;
+import org.netbeans.modules.javascript.nodejs.spi.DebuggerStartModifierFactory;
 
-public final class RunInfo {
+public class DebuggerStartModifierFactoryImpl implements DebuggerStartModifierFactory {
 
-    private final String startFile;
-    private final String startArgs;
-
-
-    public RunInfo(Project project) {
-        NodeJsPreferences preferences = NodeJsSupport.forProject(project).getPreferences();
-        startFile = preferences.getStartFile();
-        startArgs = preferences.getStartArgs();
-    }
-
-    public RunInfo(String startFile, String startArgs, int debugPort) {
-        this.startFile = startFile;
-        this.startArgs = startArgs;
-    }
-
-    public String getStartFile() {
-        return startFile;
-    }
-
-    public String getStartArgs() {
-        return startArgs;
+    @Override
+    public DebuggerStartModifier create(Project project, List<String> localPaths, List<String> serverPaths, List<String> localPathsExclusionFilter, AtomicReference<Future<Integer>> taskRef) {
+        return new DebuggerStartModifierImpl(project, localPaths, serverPaths, localPathsExclusionFilter, taskRef);
     }
 
 }

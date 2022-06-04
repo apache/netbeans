@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package org.netbeans.modules.javascript.cdtdebug;
+package org.netbeans.modules.javascript.nodejs.api;
 
 import java.util.prefs.PreferenceChangeListener;
 import java.util.prefs.Preferences;
@@ -33,6 +33,7 @@ public final class DebuggerOptions {
     private static final String DEBUGGER_PREFS = "nodejs.debugger"; // NOI18N
     private static final String PROP_LIVE_EDIT = "liveEdit";        // NOI18N
     private static final String PROP_BRK_1ST = "breakOn1stLine";    // NOI18N
+    private static final String PROP_DEBUGGER_PROTOCOL = "debuggerProtocol";    // NOI18N
     
     private static final DebuggerOptions INSTANCE = new DebuggerOptions();
     
@@ -54,18 +55,20 @@ public final class DebuggerOptions {
         prefs.putBoolean(PROP_LIVE_EDIT, doLiveEdit);
     }
 
-    /**
-     * @since 1.7
-     */
     public boolean isBreakAtFirstLine() {
         return prefs.getBoolean(PROP_BRK_1ST, true);
     }
 
-    /**
-     * @since 1.7
-     */
     public void setBreakAtFirstLine(boolean brk1st) {
         prefs.putBoolean(PROP_BRK_1ST, brk1st);
+    }
+
+    public String getDebuggerProtocol() {
+        return prefs.get(PROP_DEBUGGER_PROTOCOL, null);
+    }
+
+    public void setDebuggerProtocol(String brk1st) {
+        prefs.put(PROP_DEBUGGER_PROTOCOL, brk1st);
     }
     
     public void addPreferenceChangeListener(PreferenceChangeListener listener) {

@@ -70,6 +70,15 @@
                     </run-dependency>
                 </dependency>
                 <dependency>
+                    <code-name-base>org.netbeans.modules.javascript.nodejs</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <release-version>0</release-version>
+                        <specification-version>0.46</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
                     <code-name-base>org.netbeans.modules.javascript2.debug</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
@@ -93,6 +102,14 @@
                     <compile-dependency/>
                     <run-dependency>
                         <specification-version>1.95</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.openide.dialogs</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>7.62</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -128,10 +145,6 @@
                     </run-dependency>
                 </dependency>
             </module-dependencies>
-<!--            <friend-packages>
-                <friend>org.netbeans.modules.javascript.nodejs</friend>
-                <package>org.netbeans.modules.javascript.v8debug.api</package>
-            </friend-packages>-->
             <public-packages/>
         </data>
     </configuration>

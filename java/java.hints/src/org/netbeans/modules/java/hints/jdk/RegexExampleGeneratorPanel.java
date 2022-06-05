@@ -29,13 +29,13 @@ import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.util.NbBundle;
 
-public final class RegexExampleVisualPanel1 extends JPanel {
+public final class RegexExampleGeneratorPanel extends JPanel {
     
     private final String expression;
     /**
      * Creates new form RegexExampleVisualPanel1
      */
-    public RegexExampleVisualPanel1() {
+    public RegexExampleGeneratorPanel() {
         initComponents();
         this.expression = CheckRegexTopComponent.findInstance().getExpression();
         expressionLabel.setText(expression);
@@ -44,7 +44,7 @@ public final class RegexExampleVisualPanel1 extends JPanel {
 
     @Override
     public String getName() {
-        return NbBundle.getMessage(RegexExampleVisualPanel1.class, "RegexExampleVisualPanel1.REGEX_EXAMPLES");
+        return NbBundle.getMessage(RegexExampleGeneratorPanel.class, "RegexExampleGeneratorPanel.REGEX_EXAMPLES");
     }
 
     /**
@@ -55,25 +55,25 @@ public final class RegexExampleVisualPanel1 extends JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        regExLabel = new javax.swing.JLabel();
-        exampleScrollPane = new javax.swing.JScrollPane();
+        javax.swing.JLabel regExLabel = new javax.swing.JLabel();
+        javax.swing.JScrollPane exampleScrollPane = new javax.swing.JScrollPane();
         exampleTextArea = new javax.swing.JTextArea();
         expressionLabel = new javax.swing.JLabel();
         numberField = new javax.swing.JTextField();
-        NoLabel = new javax.swing.JLabel();
+        javax.swing.JLabel NoLabel = new javax.swing.JLabel();
         regenerateButton = new javax.swing.JButton();
 
-        org.openide.awt.Mnemonics.setLocalizedText(regExLabel, org.openide.util.NbBundle.getMessage(RegexExampleVisualPanel1.class, "RegexExampleVisualPanel1.regExLabel.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(regExLabel, org.openide.util.NbBundle.getMessage(RegexExampleGeneratorPanel.class, "RegexExampleGeneratorPanel.regExLabel.text")); // NOI18N
 
         exampleTextArea.setColumns(20);
         exampleTextArea.setRows(5);
         exampleScrollPane.setViewportView(exampleTextArea);
 
-        numberField.setText(org.openide.util.NbBundle.getMessage(RegexExampleVisualPanel1.class, "RegexExampleVisualPanel1.numberField.text")); // NOI18N
+        numberField.setText(org.openide.util.NbBundle.getMessage(RegexExampleGeneratorPanel.class, "RegexExampleGeneratorPanel.numberField.text")); // NOI18N
 
-        org.openide.awt.Mnemonics.setLocalizedText(NoLabel, org.openide.util.NbBundle.getMessage(RegexExampleVisualPanel1.class, "RegexExampleVisualPanel1.NoLabel.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(NoLabel, org.openide.util.NbBundle.getMessage(RegexExampleGeneratorPanel.class, "RegexExampleGeneratorPanel.NoLabel.text")); // NOI18N
 
-        org.openide.awt.Mnemonics.setLocalizedText(regenerateButton, org.openide.util.NbBundle.getMessage(RegexExampleVisualPanel1.class, "RegexExampleVisualPanel1.regenerateButton.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(regenerateButton, org.openide.util.NbBundle.getMessage(RegexExampleGeneratorPanel.class, "RegexExampleGeneratorPanel.regenerateButton.text")); // NOI18N
         regenerateButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 regenerateButtonActionPerformed(evt);
@@ -111,7 +111,7 @@ public final class RegexExampleVisualPanel1 extends JPanel {
                     .addComponent(numberField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(NoLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(exampleScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 207, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(exampleScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 203, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(regenerateButton)
                 .addContainerGap())
@@ -123,12 +123,9 @@ public final class RegexExampleVisualPanel1 extends JPanel {
     }//GEN-LAST:event_regenerateButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel NoLabel;
-    private javax.swing.JScrollPane exampleScrollPane;
     private javax.swing.JTextArea exampleTextArea;
     private javax.swing.JLabel expressionLabel;
     private javax.swing.JTextField numberField;
-    private javax.swing.JLabel regExLabel;
     private javax.swing.JButton regenerateButton;
     // End of variables declaration//GEN-END:variables
 
@@ -136,17 +133,17 @@ public final class RegexExampleVisualPanel1 extends JPanel {
         RegExParser r = new RegExParser(expression);        
         RegEx p = r.parse();        
         ExampleGenerator eg = new ExampleGenerator(p);
-        int noFieldVal = 0;
+        int noFieldVal;
         try{
-         noFieldVal = Integer.parseInt(numberField.getText());    
+            noFieldVal = Integer.parseInt(numberField.getText());
         }catch(NumberFormatException e){
-            return NbBundle.getMessage(RegexExampleVisualPanel1.class, "RegexExampleVisualPanel1.exampleTextArea.invalidText");
+            return NbBundle.getMessage(RegexExampleGeneratorPanel.class, "RegexExampleGeneratorPanel.exampleTextArea.invalidText");
         }    
         ArrayList<String> generate = eg.generate(noFieldVal); 
-        StringBuilder sb = new StringBuilder();        
+        StringBuilder sb = new StringBuilder();
         generate.forEach(example -> {
-            sb.append(example + "\n");
-        });        
+            sb.append(example).append("\n");
+        });
         return sb.toString();
     }
 }
@@ -155,7 +152,7 @@ final class RegexExampleAction implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        DialogDescriptor dd = new DialogDescriptor(new RegexExampleVisualPanel1(), NbBundle.getMessage(RegexExampleVisualPanel1.class, "RegexExampleVisualPanel1.REGEX_EXAMPLES"));        
+        DialogDescriptor dd = new DialogDescriptor(new RegexExampleGeneratorPanel(), NbBundle.getMessage(RegexExampleGeneratorPanel.class, "RegexExampleGeneratorPanel.REGEX_EXAMPLES"));
         dd.setOptions(new Object[0]);
         DialogDisplayer.getDefault().notify(dd);
     }

@@ -24,6 +24,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -33,6 +34,7 @@ import org.netbeans.api.project.ProjectManager;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.maven.api.NbMavenProject;
 import org.netbeans.modules.maven.embedder.EmbedderFactory;
+import org.netbeans.modules.project.dependency.ArtifactSpec;
 import org.netbeans.modules.project.dependency.Dependency;
 import org.netbeans.modules.project.dependency.DependencyResult;
 import org.netbeans.modules.project.dependency.ProjectDependencies;
@@ -187,7 +189,32 @@ public class MavenDependenciesImplementationTest extends NbTestCase {
 
         String s = String.join("\n", Files.readAllLines(pomPath));
         assertEquals("<dependency", s.substring(srcLoc.getStartOffset(), srcLoc.getStartOffset() + 11));
-        assertEquals("</dependency>", s.substring(srcLoc.getEndOffset() - 13, srcLoc.getEndOffset()));
+        assertEquals("</dependency>", s.substring(srcLoc.getEndOffset() - 13, srcLoc.getEndOffset())); 
+        
+        String text = s.substring(srcLoc.getStartOffset(), srcLoc.getEndOffset());
+        assertTrue(text.contains("<artifactId>test-lib</artifactId>"));
+    }
+    
+    public void testUnknownDependencySource() throws Exception {
+        FileUtil.toFileObject(getWorkDir()).refresh();
+        installCompileResources();
+        
+        FileObject testApp = dataFO.getFileObject("projects/dependencies/src/simpleProject");
+        FileObject prjCopy = FileUtil.copyFile(testApp, FileUtil.toFileObject(getWorkDir()), "simpleProject");
+        
+        Project p = ProjectManager.getDefault().findProject(prjCopy);
+        assertNotNull(p);
+ 
+        primeProject(p);
+
+        DependencyResult dr = ProjectDependencies.findDependencies(p, ProjectDependencies.newQuery(Scopes.RUNTIME));
+        
+        Dependency dep = dr.getRoot().getChildren().stream().filter(d -> d.getArtifact().getArtifactId().equals("test-lib")).findAny().get();
+        ArtifactSpec unknown = ArtifactSpec.createVersionSpec("nbtest", "unknown", "jar", null, "13", false, null, null);
+        Dependency unknownDep = Dependency.create(unknown, Scopes.COMPILE, Collections.emptyList(), dep);
+        
+        SourceLocation srcLoc = dr.getDeclarationRange(unknownDep);
+        assertNull(srcLoc);
     }
     
     public void testNestedDependencySource() throws Exception {
@@ -208,6 +235,7 @@ public class MavenDependenciesImplementationTest extends NbTestCase {
         Dependency annoDep = libDep.getChildren().stream().filter(d -> d.getArtifact().getArtifactId().equals("javax.annotation-api")).findAny().get();
 
         SourceLocation srcLoc = dr.getDeclarationRange(annoDep);
+        assertNotNull(srcLoc);
 
         Path pomPath = p.getLookup().lookup(NbMavenProject.class).getMavenProject().getFile().toPath();
         assertEquals(pomPath.toFile(), FileUtil.toFile(srcLoc.getFile()));
@@ -215,6 +243,9 @@ public class MavenDependenciesImplementationTest extends NbTestCase {
         String s = String.join("\n", Files.readAllLines(pomPath));
         assertEquals("<dependency", s.substring(srcLoc.getStartOffset(), srcLoc.getStartOffset() + 11));
         assertEquals("</dependency>", s.substring(srcLoc.getEndOffset() - 13, srcLoc.getEndOffset()));
+
+        String text = s.substring(srcLoc.getStartOffset(), srcLoc.getEndOffset());
+        assertTrue(text.contains("<artifactId>test-lib</artifactId>"));
     }
     
     void assertContents(String contents, String golden) throws IOException {

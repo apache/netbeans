@@ -38,7 +38,7 @@
         <dependency>
             <groupId>nbtest.grp</groupId>
             <artifactId>test-lib</artifactId>
-            <version>12.6</version>
+            <version>13</version>
         </dependency>
         <dependency>
             <groupId>nbtest.grp</groupId>

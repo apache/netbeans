@@ -21,6 +21,7 @@ package org.netbeans.modules.project.dependency;
 import java.util.Objects;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
+import org.openide.filesystems.FileObject;
 
 /**
  * Represents an artifact. Each artifact is identified by
@@ -62,9 +63,10 @@ public final class ArtifactSpec<T> {
     private final String versionSpec;
     private final String classifier;
     private final boolean optional;
+    private final FileObject localFile;
     final T data;
 
-    ArtifactSpec(VersionKind kind, String groupId, String artifactId, String versionSpec, String type, String classifier, boolean optional, T impl) {
+    ArtifactSpec(VersionKind kind, String groupId, String artifactId, String versionSpec, String type, String classifier, boolean optional, FileObject localFile, T impl) {
         this.kind = kind;
         this.groupId = groupId;
         this.artifactId = artifactId;
@@ -73,6 +75,15 @@ public final class ArtifactSpec<T> {
         this.optional = optional;
         this.data = impl;
         this.type = type;
+        this.localFile = localFile;
+    }
+
+    public T getData() {
+        return data;
+    }
+
+    public FileObject getLocalFile() {
+        return localFile;
     }
 
     public VersionKind getKind() {
@@ -174,15 +185,15 @@ public final class ArtifactSpec<T> {
     public static <V> ArtifactSpec<V> createVersionSpec(
             @NonNull String groupId, @NonNull String artifactId, 
             @NullAllowed String type, @NullAllowed String classifier, 
-            @NonNull String versionSpec, boolean optional, @NonNull V data) {
-        return new ArtifactSpec<V>(VersionKind.REGULAR, groupId, artifactId, versionSpec, type, classifier, optional, data);
+            @NonNull String versionSpec, boolean optional, @NullAllowed FileObject localFile, @NonNull V data) {
+        return new ArtifactSpec<V>(VersionKind.REGULAR, groupId, artifactId, versionSpec, type, classifier, optional, localFile, data);
     }
 
     public static <V> ArtifactSpec<V> createSnapshotSpec(
             @NonNull String groupId, @NonNull String artifactId, 
             @NullAllowed String type, @NullAllowed String classifier, 
-            @NonNull String versionSpec, boolean optional, @NonNull V data) {
-        return new ArtifactSpec<V>(VersionKind.SNAPSHOT, groupId, artifactId, versionSpec, type, classifier, false, data);
+            @NonNull String versionSpec, boolean optional, @NullAllowed FileObject localFile, @NonNull V data) {
+        return new ArtifactSpec<V>(VersionKind.SNAPSHOT, groupId, artifactId, versionSpec, type, classifier, optional, localFile, data);
     }
 
 }

@@ -18,7 +18,9 @@
  */
 package org.netbeans.modules.project.dependency;
 
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -37,11 +39,6 @@ public final class Scopes {
     public static final Scope EXTERNAL = new DefaultScope("external", Collections.emptySet(), Collections.emptySet());
     
     /**
-     * Test dependencies.
-     */
-    public static final Scope TEST = new DefaultScope("test", Collections.emptySet(), Collections.emptySet());
-    
-    /**
      * Compile dependencies. Resources used by build tools to build the application. Includes 
      * {@link #PROCESS} but does not export it further.
      */
@@ -54,6 +51,24 @@ public final class Scopes {
     public static final Scope RUNTIME = new DefaultScope("runtime", Collections.singleton(COMPILE), Collections.emptySet());
     
     /**
+     * Test compile dependencies.
+     */
+    public static final Scope TEST_COMPILE = new DefaultScope("testCompile", 
+            new HashSet<>(Arrays.asList(PROCESS, COMPILE)), Collections.emptySet());
+    
+    /**
+     * Test compile dependencies.
+     */
+    public static final Scope TEST_RUNTIME = new DefaultScope("testRuntime", 
+            new HashSet<>(Arrays.asList(TEST_COMPILE)), Collections.emptySet());
+    
+    /**
+     * Test dependencies.
+     */
+    public static final Scope TEST = new DefaultScope("test", 
+            new HashSet<>(Arrays.asList(PROCESS, COMPILE, RUNTIME)), Collections.emptySet()).imply(TEST_RUNTIME, TEST_COMPILE);
+    
+    /**
      * Included resources.
     public static final Scope INCLUDED = new DefaultScope("included", Collections.emptySet(), Collections.emptySet());
      */
@@ -61,6 +76,7 @@ public final class Scopes {
     static final class DefaultScope extends Scope {
         private final Set<Scope> includes;
         private final Set<Scope> stops;
+        private Set<Scope> implies;
 
         public DefaultScope(String name, Set<Scope> includes, Set<Scope> stops) {
             super(name);
@@ -81,6 +97,16 @@ public final class Scopes {
         @Override
         public String toString() {
             return name();
+        }
+
+        @Override
+        public boolean implies(Scope s) {
+            return implies != null && implies.contains(s);
+        }
+        
+        public DefaultScope imply(Scope... scopes) {
+            this.implies = new HashSet<>(Arrays.asList(scopes));
+            return this;
         }
     }
 }

@@ -16,23 +16,23 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.project.dependency.spi;
+package org.netbeans.modules.java.lsp.server.input;
 
-import org.netbeans.api.annotations.common.NonNull;
-import org.netbeans.modules.project.dependency.ArtifactSpec;
-import org.netbeans.modules.project.dependency.DependencyResult;
-import org.netbeans.modules.project.dependency.ProjectDependencies;
-import org.netbeans.modules.project.dependency.ProjectOperationException;
+import java.util.concurrent.CompletableFuture;
+import org.eclipse.lsp4j.jsonrpc.messages.Either;
+import org.eclipse.lsp4j.jsonrpc.services.JsonRequest;
+import org.eclipse.lsp4j.jsonrpc.services.JsonSegment;
 
 /**
  *
- * @author sdedic
+ * @author Dusan Balek
  */
-public interface ProjectDependenciesImplementation {
-    @NonNull
-    public ArtifactSpec getProjectArtifact();
-    
-    @NonNull
-    public DependencyResult findDependencies(@NonNull ProjectDependencies.DependencyQuery query)
-            throws ProjectOperationException;
+@JsonSegment("input")
+public interface InputService {
+
+    @JsonRequest("step")
+    public CompletableFuture<Either<QuickPickStep, InputBoxStep>> step(InputCallbackParams params);
+
+    @JsonRequest("validate")
+    public CompletableFuture<String> validate(InputCallbackParams params);
 }

@@ -75,6 +75,7 @@ import org.eclipse.lsp4j.Range;
 import org.eclipse.lsp4j.ShowDocumentParams;
 import org.eclipse.lsp4j.SymbolInformation;
 import org.eclipse.lsp4j.WorkspaceSymbol;
+import org.eclipse.lsp4j.WorkspaceSymbolLocation;
 import org.eclipse.lsp4j.WorkspaceSymbolParams;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.eclipse.lsp4j.services.LanguageClient;
@@ -124,7 +125,6 @@ import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.URLMapper;
-import org.openide.modules.Places;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.NbPreferences;
@@ -708,7 +708,7 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
         };
         WORKER.post(() -> {
             try {
-                List<SymbolInformation> symbols = new ArrayList<>();
+                List<WorkspaceSymbol> symbols = new ArrayList<>();
                 SearchType searchType = getSearchType(queryFin, exactFin, false, null, null);
                 JavaSymbolProvider.ResultHandler symbolHandler = new JavaSymbolProvider.ResultHandler() {
                     @Override
@@ -751,7 +751,7 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                                                             final String symbolName = te.getSimpleName().toString();
                                                             final ElementKind kind = te.getKind();
                                                             if (!kind.isClass() && !kind.isInterface()) {
-                                                                SymbolInformation symbol = new SymbolInformation(symbolName, Utils.elementKind2SymbolKind(kind), tree2Location(cc, path), te.getQualifiedName().toString());
+                                                                WorkspaceSymbol symbol = new WorkspaceSymbol(symbolName, Utils.elementKind2SymbolKind(kind), Either.forLeft(tree2Location(cc, path)), te.getQualifiedName().toString());
                                                                 symbols.add(symbol);
                                                             }
                                                         }
@@ -765,7 +765,7 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                                                                 final String symbolName = name.first() + (name.second() != null ? name.second() : "");
                                                                 final ElementKind kind = ne.getKind();
                                                                 if (!kind.isClass() && !kind.isInterface()) {
-                                                                    SymbolInformation symbol = new SymbolInformation(symbolName, Utils.elementKind2SymbolKind(kind), tree2Location(cc, path), te.getQualifiedName().toString());
+                                                                    WorkspaceSymbol symbol = new WorkspaceSymbol(symbolName, Utils.elementKind2SymbolKind(kind), Either.forLeft(tree2Location(cc, path)), te.getQualifiedName().toString());
                                                                     symbols.add(symbol);
                                                                 }
                                                             }
@@ -831,11 +831,10 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                     String simpleName = idx < 0 ? fqn : fqn.substring(idx + 1);
                     String contextName = idx < 0 ? null : fqn.substring(0, idx);
                     String uri = URLEncoder.encode(pair.second().toURI().toString() + '?' + handle.getKind().name() + '#' + handle.getBinaryName(), StandardCharsets.UTF_8.toString());
-                    SymbolInformation symbol = new SymbolInformation(simpleName, Utils.elementKind2SymbolKind(handle.getKind()), new Location(SOURCE_FOR + uri, NO_RANGE), contextName);
+                    WorkspaceSymbol symbol = new WorkspaceSymbol(simpleName, Utils.elementKind2SymbolKind(handle.getKind()), Either.forRight(new WorkspaceSymbolLocation(SOURCE_FOR + uri)), contextName);
                     symbols.add(symbol);
                 }
-                Collections.sort(symbols, (i1, i2) -> i1.getName().compareToIgnoreCase(i2.getName()));
-                result.complete(Either.forLeft(symbols));
+                result.complete(Either.forRight(symbols));
             } catch (Throwable t) {
                 result.completeExceptionally(t);
             }

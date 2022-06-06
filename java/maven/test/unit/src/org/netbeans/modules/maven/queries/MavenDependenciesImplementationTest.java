@@ -140,7 +140,7 @@ public class MavenDependenciesImplementationTest extends NbTestCase {
         
         primeProject(p);
         
-        DependencyResult dr = ProjectDependencies.findDependencies(p, null, Scopes.COMPILE);
+        DependencyResult dr = ProjectDependencies.findDependencies(p, ProjectDependencies.newQuery(Scopes.COMPILE));
         Dependency root = dr.getRoot();
         assertContents(printDependencyTree(root), getName());
     }
@@ -157,7 +157,7 @@ public class MavenDependenciesImplementationTest extends NbTestCase {
         
         primeProject(p);
         
-        DependencyResult dr = ProjectDependencies.findDependencies(p, null, Scopes.RUNTIME);
+        DependencyResult dr = ProjectDependencies.findDependencies(p, ProjectDependencies.newQuery(Scopes.RUNTIME));
         Dependency root = dr.getRoot();
         assertContents(printDependencyTree(root), getName());
     }
@@ -174,7 +174,7 @@ public class MavenDependenciesImplementationTest extends NbTestCase {
  
         primeProject(p);
 
-        DependencyResult dr = ProjectDependencies.findDependencies(p, null, Scopes.RUNTIME);
+        DependencyResult dr = ProjectDependencies.findDependencies(p, ProjectDependencies.newQuery(Scopes.RUNTIME));
         
         Dependency dep = dr.getRoot().getChildren().stream().filter(d -> d.getArtifact().getArtifactId().equals("test-lib")).findAny().get();
         SourceLocation srcLoc = dr.getDeclarationRange(dep);
@@ -202,7 +202,7 @@ public class MavenDependenciesImplementationTest extends NbTestCase {
 
         primeProject(p);
 
-        DependencyResult dr = ProjectDependencies.findDependencies(p, null, Scopes.RUNTIME);
+        DependencyResult dr = ProjectDependencies.findDependencies(p, ProjectDependencies.newQuery(Scopes.RUNTIME));
         
         Dependency libDep = dr.getRoot().getChildren().stream().filter(d -> d.getArtifact().getArtifactId().equals("test-lib")).findAny().get();
         Dependency annoDep = libDep.getChildren().stream().filter(d -> d.getArtifact().getArtifactId().equals("javax.annotation-api")).findAny().get();

@@ -16,23 +16,14 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.project.dependency.spi;
-
-import org.netbeans.api.annotations.common.NonNull;
-import org.netbeans.modules.project.dependency.ArtifactSpec;
-import org.netbeans.modules.project.dependency.DependencyResult;
-import org.netbeans.modules.project.dependency.ProjectDependencies;
-import org.netbeans.modules.project.dependency.ProjectOperationException;
+package org.netbeans.modules.maven.embedder.impl;
 
 /**
- *
+ * Marks abortion because of offline operation mode. The error is thrown internally
+ * by Maven embedder, when an online operation is attempted despite the session was
+ * marked as read-only
  * @author sdedic
+ * @since 2.71
  */
-public interface ProjectDependenciesImplementation {
-    @NonNull
-    public ArtifactSpec getProjectArtifact();
-    
-    @NonNull
-    public DependencyResult findDependencies(@NonNull ProjectDependencies.DependencyQuery query)
-            throws ProjectOperationException;
+public final class OfflineOperationError extends AssertionError {
 }

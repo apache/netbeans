@@ -406,6 +406,9 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
     context.subscriptions.push(commands.registerCommand('java.project.clean', (args) => {
         wrapProjectActionWithProgress('clean', undefined, 'Cleaning...', log, true, args);
     }));
+    context.subscriptions.push(commands.registerCommand('java.open.type', () => {
+        wrapCommandWithProgress('java.quick.open', 'Opening type...', log, true);
+    }));
     context.subscriptions.push(commands.registerCommand('java.goto.super.implementation', async () => {
         if (window.activeTextEditor?.document.languageId !== "java") {
             return;

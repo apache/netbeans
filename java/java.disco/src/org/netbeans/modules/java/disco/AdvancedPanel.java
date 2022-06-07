@@ -124,29 +124,27 @@ public abstract class AdvancedPanel extends javax.swing.JPanel {
 
         javax.swing.JPanel filterPanel = new javax.swing.JPanel();
         javax.swing.JPanel distributionsPanel = new javax.swing.JPanel();
-        javax.swing.JLabel jLabel1 = new javax.swing.JLabel();
+        javax.swing.JLabel distLabel = new javax.swing.JLabel();
         distributionComboBox = new javax.swing.JComboBox<>();
         javax.swing.JPanel versionsPanel = new javax.swing.JPanel();
-        javax.swing.JLabel jLabel2 = new javax.swing.JLabel();
+        javax.swing.JLabel versionLabel = new javax.swing.JLabel();
         versionComboBox = new javax.swing.JComboBox<>();
         javax.swing.JPanel architecturePanel = new javax.swing.JPanel();
         javax.swing.JLabel architectureLabel = new javax.swing.JLabel();
         architectureComboBox = new javax.swing.JComboBox<>();
         javax.swing.JPanel typePanel = new javax.swing.JPanel();
-        javax.swing.JLabel jLabel3 = new javax.swing.JLabel();
+        javax.swing.JLabel typeLabel = new javax.swing.JLabel();
         packageTypeComboBox = new javax.swing.JComboBox<>();
         javax.swing.JPanel latestPanel = new javax.swing.JPanel();
-        javax.swing.JLabel jLabel4 = new javax.swing.JLabel();
+        javax.swing.JLabel latestLabel = new javax.swing.JLabel();
         latestCheckBox = new javax.swing.JCheckBox();
         tableScrollPane = new javax.swing.JScrollPane();
         table = new javax.swing.JTable();
 
         filterPanel.setLayout(new javax.swing.BoxLayout(filterPanel, javax.swing.BoxLayout.LINE_AXIS));
 
-        distributionsPanel.setLayout(new javax.swing.BoxLayout(distributionsPanel, javax.swing.BoxLayout.Y_AXIS));
-
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(AdvancedPanel.class, "AdvancedPanel.jLabel1.text")); // NOI18N
-        distributionsPanel.add(jLabel1);
+        distLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        org.openide.awt.Mnemonics.setLocalizedText(distLabel, org.openide.util.NbBundle.getMessage(AdvancedPanel.class, "AdvancedPanel.distLabel.text")); // NOI18N
 
         distributionComboBox.setModel(createDistributionComboboxModel());
         distributionComboBox.addActionListener(new java.awt.event.ActionListener() {
@@ -154,14 +152,29 @@ public abstract class AdvancedPanel extends javax.swing.JPanel {
                 distributionComboBoxActionPerformed(evt);
             }
         });
-        distributionsPanel.add(distributionComboBox);
+
+        javax.swing.GroupLayout distributionsPanelLayout = new javax.swing.GroupLayout(distributionsPanel);
+        distributionsPanel.setLayout(distributionsPanelLayout);
+        distributionsPanelLayout.setHorizontalGroup(
+            distributionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(distLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(distributionsPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(distributionComboBox, 0, 88, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        distributionsPanelLayout.setVerticalGroup(
+            distributionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(distributionsPanelLayout.createSequentialGroup()
+                .addComponent(distLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(distributionComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
 
         filterPanel.add(distributionsPanel);
 
-        versionsPanel.setLayout(new javax.swing.BoxLayout(versionsPanel, javax.swing.BoxLayout.Y_AXIS));
-
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel2, org.openide.util.NbBundle.getMessage(AdvancedPanel.class, "AdvancedPanel.jLabel2.text")); // NOI18N
-        versionsPanel.add(jLabel2);
+        versionLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        org.openide.awt.Mnemonics.setLocalizedText(versionLabel, org.openide.util.NbBundle.getMessage(AdvancedPanel.class, "AdvancedPanel.versionLabel.text")); // NOI18N
 
         versionComboBox.setModel(createVersionComboboxModel());
         versionComboBox.addActionListener(new java.awt.event.ActionListener() {
@@ -169,14 +182,29 @@ public abstract class AdvancedPanel extends javax.swing.JPanel {
                 versionComboBoxActionPerformed(evt);
             }
         });
-        versionsPanel.add(versionComboBox);
+
+        javax.swing.GroupLayout versionsPanelLayout = new javax.swing.GroupLayout(versionsPanel);
+        versionsPanel.setLayout(versionsPanelLayout);
+        versionsPanelLayout.setHorizontalGroup(
+            versionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(versionLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(versionsPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(versionComboBox, 0, 88, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        versionsPanelLayout.setVerticalGroup(
+            versionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(versionsPanelLayout.createSequentialGroup()
+                .addComponent(versionLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(versionComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
 
         filterPanel.add(versionsPanel);
 
-        architecturePanel.setLayout(new javax.swing.BoxLayout(architecturePanel, javax.swing.BoxLayout.Y_AXIS));
-
+        architectureLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         org.openide.awt.Mnemonics.setLocalizedText(architectureLabel, org.openide.util.NbBundle.getMessage(AdvancedPanel.class, "AdvancedPanel.architectureLabel.text")); // NOI18N
-        architecturePanel.add(architectureLabel);
 
         architectureComboBox.setModel(createArchitectureComboboxModel());
         architectureComboBox.addActionListener(new java.awt.event.ActionListener() {
@@ -184,14 +212,29 @@ public abstract class AdvancedPanel extends javax.swing.JPanel {
                 architectureComboBoxActionPerformed(evt);
             }
         });
-        architecturePanel.add(architectureComboBox);
+
+        javax.swing.GroupLayout architecturePanelLayout = new javax.swing.GroupLayout(architecturePanel);
+        architecturePanel.setLayout(architecturePanelLayout);
+        architecturePanelLayout.setHorizontalGroup(
+            architecturePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(architectureLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(architecturePanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(architectureComboBox, 0, 88, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        architecturePanelLayout.setVerticalGroup(
+            architecturePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(architecturePanelLayout.createSequentialGroup()
+                .addComponent(architectureLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(architectureComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
 
         filterPanel.add(architecturePanel);
 
-        typePanel.setLayout(new javax.swing.BoxLayout(typePanel, javax.swing.BoxLayout.Y_AXIS));
-
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel3, org.openide.util.NbBundle.getMessage(AdvancedPanel.class, "AdvancedPanel.jLabel3.text")); // NOI18N
-        typePanel.add(jLabel3);
+        typeLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        org.openide.awt.Mnemonics.setLocalizedText(typeLabel, org.openide.util.NbBundle.getMessage(AdvancedPanel.class, "AdvancedPanel.typeLabel.text")); // NOI18N
 
         packageTypeComboBox.setModel(createPackageTypeComboboxModel());
         packageTypeComboBox.addActionListener(new java.awt.event.ActionListener() {
@@ -199,23 +242,56 @@ public abstract class AdvancedPanel extends javax.swing.JPanel {
                 packageTypeComboBoxActionPerformed(evt);
             }
         });
-        typePanel.add(packageTypeComboBox);
+
+        javax.swing.GroupLayout typePanelLayout = new javax.swing.GroupLayout(typePanel);
+        typePanel.setLayout(typePanelLayout);
+        typePanelLayout.setHorizontalGroup(
+            typePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(typeLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(typePanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(packageTypeComboBox, 0, 88, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        typePanelLayout.setVerticalGroup(
+            typePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(typePanelLayout.createSequentialGroup()
+                .addComponent(typeLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(packageTypeComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
 
         filterPanel.add(typePanel);
 
-        latestPanel.setLayout(new javax.swing.BoxLayout(latestPanel, javax.swing.BoxLayout.Y_AXIS));
-
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel4, org.openide.util.NbBundle.getMessage(AdvancedPanel.class, "AdvancedPanel.jLabel4.text")); // NOI18N
-        latestPanel.add(jLabel4);
+        latestLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        org.openide.awt.Mnemonics.setLocalizedText(latestLabel, org.openide.util.NbBundle.getMessage(AdvancedPanel.class, "AdvancedPanel.latestLabel.text")); // NOI18N
 
         latestCheckBox.setSelected(true);
         org.openide.awt.Mnemonics.setLocalizedText(latestCheckBox, org.openide.util.NbBundle.getMessage(AdvancedPanel.class, "AdvancedPanel.latestCheckBox.text")); // NOI18N
+        latestCheckBox.setPreferredSize(new java.awt.Dimension(19, 23));
         latestCheckBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 latestCheckBoxActionPerformed(evt);
             }
         });
-        latestPanel.add(latestCheckBox);
+
+        javax.swing.GroupLayout latestPanelLayout = new javax.swing.GroupLayout(latestPanel);
+        latestPanel.setLayout(latestPanelLayout);
+        latestPanelLayout.setHorizontalGroup(
+            latestPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(latestLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 47, Short.MAX_VALUE)
+            .addGroup(latestPanelLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(latestCheckBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        latestPanelLayout.setVerticalGroup(
+            latestPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(latestPanelLayout.createSequentialGroup()
+                .addComponent(latestLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(latestCheckBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
 
         filterPanel.add(latestPanel);
 
@@ -229,7 +305,7 @@ public abstract class AdvancedPanel extends javax.swing.JPanel {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(filterPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(tableScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 541, Short.MAX_VALUE)
+            .addComponent(tableScrollPane)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

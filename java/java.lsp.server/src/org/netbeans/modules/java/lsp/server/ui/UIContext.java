@@ -22,15 +22,18 @@ import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import org.eclipse.lsp4j.MessageActionItem;
 import org.eclipse.lsp4j.MessageParams;
 import org.eclipse.lsp4j.MessageType;
 import org.eclipse.lsp4j.ShowMessageRequestParams;
+import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.modules.java.lsp.server.protocol.HtmlPageParams;
 import org.netbeans.modules.java.lsp.server.input.QuickPickItem;
 import org.netbeans.modules.java.lsp.server.input.ShowInputBoxParams;
+import org.netbeans.modules.java.lsp.server.input.ShowMutliStepInputParams;
 import org.netbeans.modules.java.lsp.server.input.ShowQuickPickParams;
 import org.netbeans.modules.java.lsp.server.protocol.ShowStatusMessageParams;
 import org.openide.awt.StatusDisplayer.Message;
@@ -103,6 +106,10 @@ public abstract class UIContext {
     }
 
     protected CompletableFuture<List<QuickPickItem>> showQuickPick(ShowQuickPickParams params) {
+        throw new AbstractMethodError();
+    }
+
+    protected CompletableFuture<Map<String, Either<List<QuickPickItem>, String>>> showMultiStepInput(ShowMutliStepInputParams params) {
         throw new AbstractMethodError();
     }
 

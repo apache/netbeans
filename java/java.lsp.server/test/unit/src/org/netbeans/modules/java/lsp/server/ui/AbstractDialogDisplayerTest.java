@@ -36,9 +36,11 @@ import org.eclipse.lsp4j.MessageActionItem;
 import org.eclipse.lsp4j.MessageParams;
 import org.eclipse.lsp4j.MessageType;
 import org.eclipse.lsp4j.ShowMessageRequestParams;
+import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.java.lsp.server.input.QuickPickItem;
 import org.netbeans.modules.java.lsp.server.input.ShowInputBoxParams;
+import org.netbeans.modules.java.lsp.server.input.ShowMutliStepInputParams;
 import org.netbeans.modules.java.lsp.server.input.ShowQuickPickParams;
 import org.netbeans.modules.java.lsp.server.protocol.ShowStatusMessageParams;
 import org.openide.NotifyDescriptor;
@@ -78,6 +80,11 @@ public class AbstractDialogDisplayerTest extends NbTestCase {
         @Override
         protected CompletableFuture<List<QuickPickItem>> showQuickPick(ShowQuickPickParams params) {
             return CompletableFuture.completedFuture(Collections.emptyList());
+        }
+
+        @Override
+        protected CompletableFuture<Map<String, Either<List<QuickPickItem>, String>>> showMultiStepInput(ShowMutliStepInputParams params) {
+            return CompletableFuture.completedFuture(Collections.emptyMap());
         }
 
         @Override

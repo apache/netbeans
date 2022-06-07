@@ -29,7 +29,7 @@ import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
  *
  * @author Dusan Balek
  */
-public class QuickPickStep extends ShowQuickPickParams {
+public final class QuickPickStep extends ShowQuickPickParams {
 
     /**
      * An optional total step count.

@@ -56,7 +56,7 @@ import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.TreeUtilities;
 import org.netbeans.modules.java.lsp.server.Utils;
 import org.netbeans.modules.java.lsp.server.input.InputBoxStep;
-import org.netbeans.modules.java.lsp.server.input.LspInputServiceImpl;
+import org.netbeans.modules.java.lsp.server.input.InputService;
 import org.netbeans.modules.java.lsp.server.input.QuickPickItem;
 import org.netbeans.modules.java.lsp.server.input.QuickPickStep;
 import org.netbeans.modules.java.lsp.server.input.ShowMutliStepInputParams;
@@ -150,10 +150,10 @@ public final class DelegateMethodGenerator extends CodeActionsProvider {
             int offset = ((JsonObject) data).getAsJsonPrimitive(OFFSET).getAsInt();
             QuickPickItem type = gson.fromJson(gson.toJson(((JsonObject) data).get(TYPE)), QuickPickItem.class);
             List<QuickPickItem> fields = Arrays.asList(gson.fromJson(((JsonObject) data).get(FIELDS), QuickPickItem[].class));
-            LspInputServiceImpl inputService = Lookup.getDefault().lookup(LspInputServiceImpl.class);
-            if (inputService != null) {
+            InputService.Registry inputServiceRegistry = Lookup.getDefault().lookup(InputService.Registry.class);
+            if (inputServiceRegistry != null) {
                 int totalSteps = fields.size() > 1 ? 2 : 1;
-                String inputId = inputService.registerInput(params -> {
+                String inputId = inputServiceRegistry.registerInput(params -> {
                     CompletableFuture<Either<QuickPickStep, InputBoxStep>> f = new CompletableFuture<>();
                     if (params.getStep() < totalSteps) {
                         Either<List<QuickPickItem>, String> fieldData = params.getData().get(FIELDS);
@@ -215,9 +215,8 @@ public final class DelegateMethodGenerator extends CodeActionsProvider {
                         f.complete(null);
                     }
                     return f;
-                }, null);
+                });
                 client.showMultiStepInput(new ShowMutliStepInputParams(inputId, Bundle.DN_GenerateDelegateMethod())).thenAccept(result -> {
-                    inputService.unregisterInput(inputId);
                     Either<List<QuickPickItem>, String> selectedFields = result.get(FIELDS);
                     QuickPickItem selectedField = (selectedFields != null ? selectedFields.getLeft() : fields).get(0);
                     Either<List<QuickPickItem>, String> selectedMethods = result.get(METHODS);

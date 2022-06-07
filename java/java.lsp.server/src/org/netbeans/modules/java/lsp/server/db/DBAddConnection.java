@@ -43,12 +43,12 @@ import org.netbeans.api.db.explorer.DatabaseException;
 import org.netbeans.api.db.explorer.JDBCDriver;
 import org.netbeans.api.db.explorer.JDBCDriverManager;
 import org.netbeans.modules.java.lsp.server.input.InputBoxStep;
-import org.netbeans.modules.java.lsp.server.input.LspInputServiceImpl;
+import org.netbeans.modules.java.lsp.server.input.InputCallbackParams;
+import org.netbeans.modules.java.lsp.server.input.InputService;
 import org.netbeans.modules.java.lsp.server.protocol.CodeActionsProvider;
 import org.netbeans.modules.java.lsp.server.protocol.NbCodeLanguageClient;
 import org.netbeans.modules.java.lsp.server.input.QuickPickItem;
 import org.netbeans.modules.java.lsp.server.input.QuickPickStep;
-import org.netbeans.modules.java.lsp.server.input.ShowInputBoxParams;
 import org.netbeans.modules.java.lsp.server.input.ShowMutliStepInputParams;
 import org.netbeans.modules.parsing.api.ResultIterator;
 import org.openide.filesystems.FileObject;
@@ -98,8 +98,8 @@ public class DBAddConnection extends CodeActionsProvider {
         if (!DB_ADD_CONNECTION.equals(command)) {
             return null;
         }
-        LspInputServiceImpl inputService = Lookup.getDefault().lookup(LspInputServiceImpl.class);
-        if (inputService == null) {
+        InputService.Registry inputServiceRegistry = Lookup.getDefault().lookup(InputService.Registry.class);
+        if (inputServiceRegistry == null) {
             return null;
         }
         
@@ -114,7 +114,7 @@ public class DBAddConnection extends CodeActionsProvider {
                 JDBCDriver[] driver = JDBCDriverManager.getDefault().getDrivers(driverClass); //NOI18N
                 if (driver != null && driver.length > 0) {
                     if (userId == null || password == null) {
-                        String inuptId = inputService.registerInput(param -> {
+                        String inputId = inputServiceRegistry.registerInput(param -> {
                             int totalSteps = 2;
                             switch (param.getStep()) {
                                 case 1:
@@ -129,8 +129,8 @@ public class DBAddConnection extends CodeActionsProvider {
                                 default:
                                     return CompletableFuture.completedFuture(null);
                             }
-                        }, null);
-                        client.showMultiStepInput(new ShowMutliStepInputParams(userId, Bundle.MSG_AddDBConnection())).thenAccept(result -> {
+                        });
+                        client.showMultiStepInput(new ShowMutliStepInputParams(inputId, Bundle.MSG_AddDBConnection())).thenAccept(result -> {
                             Either<List<QuickPickItem>, String> userData = result.get(USER_ID);
                             Either<List<QuickPickItem>, String> passwordData = result.get(PASSWORD);
                             DatabaseConnection dbconn = DatabaseConnection.create(driver[0], dbUrl, userData.getRight(), (String) m.get(SCHEMA), passwordData.getRight(), true, (String) m.get(DISPLAY_NAME));
@@ -172,82 +172,88 @@ public class DBAddConnection extends CodeActionsProvider {
             client.showMessage(new MessageParams(MessageType.Error, Bundle.MSG_DriverNotFound()));
         } else {
             List<String> schemas = new ArrayList<>();
-            String inputId = inputService.registerInput(params -> {
-                Map<String, Either<List<QuickPickItem>, String>> data = params.getData();
-                int totalSteps = 4;
-                switch (params.getStep()) {
-                    case 1:
-                        return CompletableFuture.completedFuture(Either.forLeft(new QuickPickStep(totalSteps, DRIVER, Bundle.MSG_SelectDriver(), items)));
-                    case 2: {
-                        Either<List<QuickPickItem>,String> driverData = data.get(DRIVER);
-                        if (driverData != null && !driverData.getLeft().isEmpty()) {
-                            int i = ((Double) driverData.getLeft().get(0).getUserData()).intValue();
-                            JDBCDriver driver = drivers[i];
-                            String urlTemplate = driver.getClassName() != null ? urlTemplates.get(driver.getClassName()) : "";
-                            if (urlTemplate == null) {
-                                urlTemplate = "";
-                            }
-                            return CompletableFuture.completedFuture(Either.forRight(new InputBoxStep(totalSteps, DB_URL, Bundle.MSG_EnterDbUrl(), urlTemplate)));
-                        }
-                        return CompletableFuture.completedFuture(null);
-                    }
-                    case 3: {
-                        Either<List<QuickPickItem>,String> urlData = data.get(DB_URL);
-                        if (urlData != null && !urlData.getRight().isEmpty()) {
-                            return CompletableFuture.completedFuture(Either.forRight(new InputBoxStep(totalSteps, USER_ID, Bundle.MSG_EnterUsername(), "")));
-                        }
-                        return CompletableFuture.completedFuture(null);
-                    }
-                    case 4: {
-                        Either<List<QuickPickItem>,String> userData = data.get(USER_ID);
-                        if (userData != null && !userData.getRight().isEmpty()) {
-                            return CompletableFuture.completedFuture(Either.forRight(new InputBoxStep(totalSteps, PASSWORD, null, Bundle.MSG_EnterPassword(), "", true)));
-                        }
-                        return CompletableFuture.completedFuture(null);
-                    }
-                    case 5: {
-                        Either<List<QuickPickItem>,String> passwordData = data.get(PASSWORD);
-                        if (passwordData != null) {
-                            if (schemas.isEmpty()) {
-                                client.showMessage(new MessageParams(MessageType.Info, Bundle.MSG_ConnectionAdded()));
-                                return CompletableFuture.completedFuture(null);
-                            } else {
-                                List<QuickPickItem> schemaItems = schemas.stream().map(schema -> new QuickPickItem(schema)).collect(Collectors.toList());
-                                return CompletableFuture.completedFuture(Either.forLeft(new QuickPickStep(totalSteps + 1, SCHEMA, Bundle.MSG_SelectSchema(), schemaItems)));
-                            }
-                        }
-                        return CompletableFuture.completedFuture(null);
-                    }
-                    default:
-                        return CompletableFuture.completedFuture(null);
-                }
-            }, params -> {
-                Map<String, Either<List<QuickPickItem>, String>> data = params.getData();
-                switch (params.getStep()) {
-                    case 4:
-                        Either<List<QuickPickItem>,String> passwordData = data.get(PASSWORD);
-                        if (passwordData != null && !passwordData.getRight().isEmpty()) {
+            String inputId = inputServiceRegistry.registerInput(new InputService.Callback() {
+                @Override
+                public CompletableFuture<Either<QuickPickStep, InputBoxStep>> step(InputCallbackParams params) {
+                    Map<String, Either<List<QuickPickItem>, String>> data = params.getData();
+                    int totalSteps = 4;
+                    switch (params.getStep()) {
+                        case 1:
+                            return CompletableFuture.completedFuture(Either.forLeft(new QuickPickStep(totalSteps, DRIVER, Bundle.MSG_SelectDriver(), items)));
+                        case 2: {
                             Either<List<QuickPickItem>,String> driverData = data.get(DRIVER);
-                            Either<List<QuickPickItem>,String> urlData = data.get(DB_URL);
-                            Either<List<QuickPickItem>,String> userData = data.get(USER_ID);
-                            int i = ((Double) driverData.getLeft().get(0).getUserData()).intValue();
-                            JDBCDriver driver = drivers[i];
-                            schemas.clear();
-                            DatabaseConnection dbconn = DatabaseConnection.create(driver, urlData.getRight(), userData.getRight(), null, passwordData.getRight(), true);
-                            try {
-                                ConnectionManager.getDefault().addConnection(dbconn);
-                                schemas.addAll(getSchemas(dbconn));
-                            } catch(DatabaseException | SQLException ex) {
-                                return CompletableFuture.completedFuture(ex.getMessage());
-                            } finally {
-                                try {
-                                    ConnectionManager.getDefault().removeConnection(dbconn);
-                                } catch (DatabaseException ex) {}
+                            if (driverData != null && !driverData.getLeft().isEmpty()) {
+                                int i = ((Double) driverData.getLeft().get(0).getUserData()).intValue();
+                                JDBCDriver driver = drivers[i];
+                                String urlTemplate = driver.getClassName() != null ? urlTemplates.get(driver.getClassName()) : "";
+                                if (urlTemplate == null) {
+                                    urlTemplate = "";
+                                }
+                                return CompletableFuture.completedFuture(Either.forRight(new InputBoxStep(totalSteps, DB_URL, Bundle.MSG_EnterDbUrl(), urlTemplate)));
                             }
+                            return CompletableFuture.completedFuture(null);
                         }
-                        break;
+                        case 3: {
+                            Either<List<QuickPickItem>,String> urlData = data.get(DB_URL);
+                            if (urlData != null && !urlData.getRight().isEmpty()) {
+                                return CompletableFuture.completedFuture(Either.forRight(new InputBoxStep(totalSteps, USER_ID, Bundle.MSG_EnterUsername(), "")));
+                            }
+                            return CompletableFuture.completedFuture(null);
+                        }
+                        case 4: {
+                            Either<List<QuickPickItem>,String> userData = data.get(USER_ID);
+                            if (userData != null && !userData.getRight().isEmpty()) {
+                                return CompletableFuture.completedFuture(Either.forRight(new InputBoxStep(totalSteps, PASSWORD, null, Bundle.MSG_EnterPassword(), "", true)));
+                            }
+                            return CompletableFuture.completedFuture(null);
+                        }
+                        case 5: {
+                            Either<List<QuickPickItem>,String> passwordData = data.get(PASSWORD);
+                            if (passwordData != null) {
+                                if (schemas.isEmpty()) {
+                                    client.showMessage(new MessageParams(MessageType.Info, Bundle.MSG_ConnectionAdded()));
+                                    return CompletableFuture.completedFuture(null);
+                                } else {
+                                    List<QuickPickItem> schemaItems = schemas.stream().map(schema -> new QuickPickItem(schema)).collect(Collectors.toList());
+                                    return CompletableFuture.completedFuture(Either.forLeft(new QuickPickStep(totalSteps + 1, SCHEMA, Bundle.MSG_SelectSchema(), schemaItems)));
+                                }
+                            }
+                            return CompletableFuture.completedFuture(null);
+                        }
+                        default:
+                            return CompletableFuture.completedFuture(null);
+                    }
                 }
-                return CompletableFuture.completedFuture(null);
+
+                @Override
+                public CompletableFuture<String> validate(InputCallbackParams params) {
+                    Map<String, Either<List<QuickPickItem>, String>> data = params.getData();
+                    switch (params.getStep()) {
+                        case 4:
+                            Either<List<QuickPickItem>,String> passwordData = data.get(PASSWORD);
+                            if (passwordData != null && !passwordData.getRight().isEmpty()) {
+                                Either<List<QuickPickItem>,String> driverData = data.get(DRIVER);
+                                Either<List<QuickPickItem>,String> urlData = data.get(DB_URL);
+                                Either<List<QuickPickItem>,String> userData = data.get(USER_ID);
+                                int i = ((Double) driverData.getLeft().get(0).getUserData()).intValue();
+                                JDBCDriver driver = drivers[i];
+                                schemas.clear();
+                                DatabaseConnection dbconn = DatabaseConnection.create(driver, urlData.getRight(), userData.getRight(), null, passwordData.getRight(), true);
+                                try {
+                                    ConnectionManager.getDefault().addConnection(dbconn);
+                                    schemas.addAll(getSchemas(dbconn));
+                                } catch(DatabaseException | SQLException ex) {
+                                    return CompletableFuture.completedFuture(ex.getMessage());
+                                } finally {
+                                    try {
+                                        ConnectionManager.getDefault().removeConnection(dbconn);
+                                    } catch (DatabaseException ex) {}
+                                }
+                            }
+                            break;
+                    }
+                    return CompletableFuture.completedFuture(null);
+                }
             });
             return client.showMultiStepInput(new ShowMutliStepInputParams(inputId, Bundle.MSG_AddDBConnection())).thenApply(result -> {
                 Either<List<QuickPickItem>,String> driverData = result.get(DRIVER);

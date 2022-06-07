@@ -44,11 +44,18 @@ import javax.swing.JButton;
 import org.eclipse.lsp4j.MessageActionItem;
 import org.eclipse.lsp4j.MessageType;
 import org.eclipse.lsp4j.ShowMessageRequestParams;
+import org.eclipse.lsp4j.jsonrpc.messages.Either;
+import org.netbeans.modules.java.lsp.server.input.InputBoxStep;
+import org.netbeans.modules.java.lsp.server.input.InputCallbackParams;
+import org.netbeans.modules.java.lsp.server.input.InputService;
 import org.netbeans.modules.java.lsp.server.input.QuickPickItem;
+import org.netbeans.modules.java.lsp.server.input.QuickPickStep;
 import org.netbeans.modules.java.lsp.server.input.ShowInputBoxParams;
+import org.netbeans.modules.java.lsp.server.input.ShowMutliStepInputParams;
 import org.netbeans.modules.java.lsp.server.input.ShowQuickPickParams;
 import org.openide.NotifyDescriptor;
 import org.openide.awt.Actions;
+import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 
 /**
@@ -313,6 +320,9 @@ class NotifyDescriptorAdapter {
         }
     }
     
+    @NbBundle.Messages({
+        "MSG_InvalidInput=Invalid input"
+    })
     public <T extends NotifyDescriptor> CompletableFuture<T> clientNotifyCompletion() {
         // wrapper that allows to externally control the client's Future
         if (descriptor instanceof NotifyDescriptor.InputLine) {
@@ -342,11 +352,11 @@ class NotifyDescriptorAdapter {
             return ctrl;
         } else if (descriptor instanceof NotifyDescriptor.QuickPick) {
             NotifyDescriptor.QuickPick qp = (NotifyDescriptor.QuickPick) descriptor;
-            Map<QuickPickItem, NotifyDescriptor.QuickPick.Item> items = new HashMap<>();
+            List<QuickPickItem> items = new ArrayList<>();
             for (NotifyDescriptor.QuickPick.Item item : qp.getItems()) {
-                items.put(new QuickPickItem(item.getLabel(), item.getDescription(), null, item.isSelected(), null), item);
+                items.add(new QuickPickItem(item.getLabel(), item.getDescription(), null, item.isSelected(), Integer.toString(System.identityHashCode(item))));
             }
-            ShowQuickPickParams params = new ShowQuickPickParams(null, qp.getTitle(), qp.isMultipleSelection(), new ArrayList<>(items.keySet()));
+            ShowQuickPickParams params = new ShowQuickPickParams(qp.getLabel(), qp.getTitle(), qp.isMultipleSelection(), items);
             CompletableFuture<List<QuickPickItem>> qpF = client.showQuickPick(params);
             Ctrl<T> ctrl = new Ctrl<>(qpF);
             qpF.thenAccept(selected -> {
@@ -354,9 +364,73 @@ class NotifyDescriptorAdapter {
                     descriptor.setValue(NotifyDescriptor.CLOSED_OPTION);
                     ctrl.completeExceptionally(new CancellationException());
                 } else {
-                    for (Map.Entry<QuickPickItem, NotifyDescriptor.QuickPick.Item> entry : items.entrySet()) {
-                        entry.getValue().setSelected(selected.contains(entry.getKey()));
+                    List<Object> selectedIds = selected.stream().map(t -> t.getUserData()).collect(Collectors.toList());
+                    for (NotifyDescriptor.QuickPick.Item item : qp.getItems()) {
+                        item.setSelected(selectedIds.contains(Integer.toString(System.identityHashCode(item))));
                     }
+                    descriptor.setValue(NotifyDescriptor.OK_OPTION);
+                    ctrl.complete((T)descriptor);
+                }
+            }).exceptionally(t -> {
+                if (t instanceof CompletionException) {
+                    t = t.getCause();
+                }
+                ctrl.completeExceptionally(t);
+                return null;
+            });
+            return ctrl;
+        } else if (descriptor instanceof NotifyDescriptor.ComposedInput) {
+            NotifyDescriptor.ComposedInput ci = (NotifyDescriptor.ComposedInput) descriptor;
+            InputService.Registry inputServiceRegistry = Lookup.getDefault().lookup(InputService.Registry.class);
+            if (inputServiceRegistry == null) {
+                Ctrl<T> ctrl = new Ctrl<>(null);
+                ctrl.completeExceptionally(new IllegalStateException("No LSPInputService found"));
+                return ctrl;
+            }
+            Map<String, NotifyDescriptor> data = new HashMap<>();
+            String inputId = inputServiceRegistry.registerInput(new InputService.Callback() {
+                @Override
+                public CompletableFuture<Either<QuickPickStep, InputBoxStep>> step(InputCallbackParams params) {
+                    String stepId = "ID:" + params.getStep();
+                    updateData(params.getData(), data);
+                    NotifyDescriptor input = ci.getInput(params.getStep());
+                    if (input instanceof NotifyDescriptor.InputLine) {
+                        data.put(stepId, input);
+                        InputBoxStep step = new InputBoxStep(ci.getTotalInputs(), stepId,
+                                null, input.getTitle(), ((NotifyDescriptor.InputLine) input).getInputText(),
+                                input instanceof NotifyDescriptor.PasswordLine);
+                        return CompletableFuture.completedFuture(Either.forRight(step));
+                    } else if (input instanceof NotifyDescriptor.QuickPick) {
+                        data.put(stepId, input);
+                        List<QuickPickItem> items = new ArrayList<>();
+                        for (NotifyDescriptor.QuickPick.Item item : ((NotifyDescriptor.QuickPick) input).getItems()) {
+                            items.add(new QuickPickItem(item.getLabel(), item.getDescription(), null, item.isSelected(), Integer.toString(System.identityHashCode(item))));
+                        }
+                        QuickPickStep step = new QuickPickStep(ci.getTotalInputs(), stepId,
+                                null, input.getTitle(), ((NotifyDescriptor.QuickPick) input).isMultipleSelection(),
+                                items);
+                        return CompletableFuture.completedFuture(Either.forLeft(step));
+                    }
+                    return CompletableFuture.completedFuture(null);
+                }
+
+                @Override
+                public CompletableFuture<String> validate(InputCallbackParams params) {
+                    String stepId = "ID:" + params.getStep();
+                    updateData(params.getData(), data);
+                    NotifyDescriptor input = data.get(stepId);
+                    return CompletableFuture.completedFuture(input == null || input.isValid() ? null : Bundle.MSG_InvalidInput());
+                }
+            });
+            ShowMutliStepInputParams params = new ShowMutliStepInputParams(inputId, ci.getTitle());
+            CompletableFuture<Map<String, Either<List<QuickPickItem>, String>>> msiF = client.showMultiStepInput(params);
+            Ctrl<T> ctrl = new Ctrl<>(msiF);
+            msiF.thenAccept(result -> {
+                if (result == null || result.size() < data.size()) {
+                    descriptor.setValue(NotifyDescriptor.CLOSED_OPTION);
+                    ctrl.completeExceptionally(new CancellationException());
+                } else {
+                    updateData(result, data);
                     descriptor.setValue(NotifyDescriptor.OK_OPTION);
                     ctrl.complete((T)descriptor);
                 }
@@ -435,5 +509,21 @@ class NotifyDescriptorAdapter {
         }
         
         return option;
+    }
+
+    private static void updateData(Map<String, Either<List<QuickPickItem>, String>> from, Map<String, NotifyDescriptor> to) {
+        for (Map.Entry<String, Either<List<QuickPickItem>, String>> entry : from.entrySet()) {
+            NotifyDescriptor desc = to.get(entry.getKey());
+            if (desc instanceof NotifyDescriptor.InputLine) {
+                assert entry.getValue().isRight();
+                ((NotifyDescriptor.InputLine) desc).setInputText(entry.getValue().getRight());
+            } else if (desc instanceof NotifyDescriptor.QuickPick) {
+                assert entry.getValue().isLeft();
+                List<Object> selected = entry.getValue().getLeft().stream().map(t -> t.getUserData()).collect(Collectors.toList());
+                for (NotifyDescriptor.QuickPick.Item item : ((NotifyDescriptor.QuickPick) desc).getItems()) {
+                    item.setSelected(selected.contains(Integer.toString(System.identityHashCode(item))));
+                }
+            }
+        }
     }
 }

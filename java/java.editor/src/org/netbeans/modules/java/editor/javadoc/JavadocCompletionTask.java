@@ -74,6 +74,7 @@ import org.netbeans.api.java.source.TreeUtilities;
 import org.netbeans.api.java.source.support.ReferencesCount;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenSequence;
+import org.netbeans.api.lexer.TokenUtilities;
 import org.netbeans.modules.java.completion.Utilities;
 import org.netbeans.modules.java.editor.base.javadoc.JavadocCompletionUtils;
 import org.netbeans.modules.java.editor.javadoc.TagRegistery.TagEntry;
@@ -1216,7 +1217,10 @@ public class JavadocCompletionTask<T> extends UserTask {
         DocTreePath tag = getTag(jdctx, caretOffset);
         int startPos = (int) jdctx.positions.getStartPosition(jdctx.javac.getCompilationUnit(), jdctx.comment, tag.getLeaf());
         String subStr = JavadocCompletionUtils.getCharSequence(jdctx.doc, startPos, caretOffset).toString();
-        insideInlineSnippet(subStr);
+        int index = subStr.lastIndexOf("\n");
+        String markupLine = JavadocCompletionUtils.getCharSequence(jdctx.doc, (index + startPos), caretOffset).toString();
+        insideInlineSnippet(markupLine);
+
         if (pos > 0 && pos <= text.length() && text.charAt(pos - 1) == '{') {
             if (tag != null && !JavadocCompletionUtils.isBlockTag(tag)) {
                 int start = (int) jdctx.positions.getStartPosition(jdctx.javac.getCompilationUnit(), jdctx.comment, tag.getLeaf());
@@ -1238,31 +1242,39 @@ public class JavadocCompletionTask<T> extends UserTask {
     }
 
     void insideInlineSnippet(String subStr) {
-        subStr = subStr.replaceAll("\\s","");
-        boolean match = Pattern.compile("(?<=//)@$").matcher(subStr).find();
-        if(match) {
-            List<String> inlineAttr =new ArrayList() {{
-                add("highlight");
-                add("replace");
-                add("link");
-                add("start");
-                add("end");
-            }};
-            for(String str: inlineAttr) {
-                items.add(factory.createNameItem(str, this.caretOffset));
-            }
-        } else {
-            String[] tags = {"@highlight","@replace","@link","@start","@end"};
-            String str = subStr.substring(subStr.lastIndexOf("@"));
-            if(Arrays.asList(tags).contains(str)) {
-                completeInlineMarkupTag(str, new ArrayList(){{add("substring");add("regex");add("region");}});
+        if (subStr.contains("//")) {
+            if (subStr.endsWith("@")) {
+                List<String> inlineAttr = new ArrayList() {
+                    {
+                        add("highlight");
+                        add("replace");
+                        add("link");
+                        add("start");
+                        add("end");
+                    }
+                };
+                for (String str : inlineAttr) {
+                    items.add(factory.createNameItem(str, this.caretOffset));
+                }
+            } else {
+                String[] tags = {"@highlight", "@replace", "@link", "@start", "@end"};
+                String str = (subStr.substring(subStr.lastIndexOf("@"))).strip();
+                if (Arrays.asList(tags).contains(str)) {
+                    completeInlineMarkupTag(str, new ArrayList() {
+                        {
+                            add("substring");
+                            add("regex");
+                            add("region");
+                        }
+                    });
+                }
             }
         }
     }
 
     private void completeInlineMarkupTag(String str, List<String> attr) {
         String value = " = \"<value>\"";
-        switch(str) {
+        switch (str) {
             case "@highlight":
                 attr.add("type");
                 break;
@@ -1281,9 +1293,9 @@ public class JavadocCompletionTask<T> extends UserTask {
             default:
                 break;
         }
-        if(!attr.isEmpty()) {
-            for(String entry:attr) {
-                items.add(factory.createNameItem(entry+value, this.caretOffset));
+        if (!attr.isEmpty()) {
+            for (String entry : attr) {
+                items.add(factory.createNameItem(entry + value, this.caretOffset));
             }
         }
     }

@@ -84,7 +84,7 @@ public abstract class AdvancedPanel extends javax.swing.JPanel {
     
     protected void setVersions(List<Integer> versions, Map<Integer, TermOfSupport> lts) {
         List<Integer> reversedVersions = new ArrayList<>(versions);
-        Collections.sort(reversedVersions, Collections.reverseOrder());
+        reversedVersions.sort(Collections.reverseOrder());
         ((VersionListCellRenderer) versionComboBox.getRenderer()).setLTS(lts);
         DefaultComboBoxModel versionModel = (DefaultComboBoxModel<Integer>) versionComboBox.getModel();
         reversedVersions.forEach(v -> versionModel.addElement(v));
@@ -113,30 +113,28 @@ public abstract class AdvancedPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        javax.swing.JPanel jPanel1 = new javax.swing.JPanel();
-        javax.swing.JPanel jPanel4 = new javax.swing.JPanel();
+        javax.swing.JPanel filterPanel = new javax.swing.JPanel();
+        javax.swing.JPanel distributionsPanel = new javax.swing.JPanel();
         javax.swing.JLabel jLabel1 = new javax.swing.JLabel();
         distributionComboBox = new javax.swing.JComboBox<>();
-        javax.swing.JPanel jPanel5 = new javax.swing.JPanel();
+        javax.swing.JPanel versionsPanel = new javax.swing.JPanel();
         javax.swing.JLabel jLabel2 = new javax.swing.JLabel();
         versionComboBox = new javax.swing.JComboBox<>();
-        javax.swing.JPanel jPanel3 = new javax.swing.JPanel();
+        javax.swing.JPanel typePanel = new javax.swing.JPanel();
         javax.swing.JLabel jLabel3 = new javax.swing.JLabel();
         packageTypeComboBox = new javax.swing.JComboBox<>();
-        javax.swing.JPanel jPanel2 = new javax.swing.JPanel();
+        javax.swing.JPanel latestPanel = new javax.swing.JPanel();
         javax.swing.JLabel jLabel4 = new javax.swing.JLabel();
         latestCheckBox = new javax.swing.JCheckBox();
-        jScrollPane1 = new javax.swing.JScrollPane();
+        tableScrollPane = new javax.swing.JScrollPane();
         table = new javax.swing.JTable();
 
-        setLayout(new java.awt.BorderLayout());
+        filterPanel.setLayout(new javax.swing.BoxLayout(filterPanel, javax.swing.BoxLayout.LINE_AXIS));
 
-        jPanel1.setLayout(new javax.swing.BoxLayout(jPanel1, javax.swing.BoxLayout.LINE_AXIS));
-
-        jPanel4.setLayout(new javax.swing.BoxLayout(jPanel4, javax.swing.BoxLayout.Y_AXIS));
+        distributionsPanel.setLayout(new javax.swing.BoxLayout(distributionsPanel, javax.swing.BoxLayout.Y_AXIS));
 
         org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(AdvancedPanel.class, "AdvancedPanel.jLabel1.text")); // NOI18N
-        jPanel4.add(jLabel1);
+        distributionsPanel.add(jLabel1);
 
         distributionComboBox.setModel(createDistributionComboboxModel());
         distributionComboBox.addActionListener(new java.awt.event.ActionListener() {
@@ -144,14 +142,14 @@ public abstract class AdvancedPanel extends javax.swing.JPanel {
                 distributionComboBoxActionPerformed(evt);
             }
         });
-        jPanel4.add(distributionComboBox);
+        distributionsPanel.add(distributionComboBox);
 
-        jPanel1.add(jPanel4);
+        filterPanel.add(distributionsPanel);
 
-        jPanel5.setLayout(new javax.swing.BoxLayout(jPanel5, javax.swing.BoxLayout.Y_AXIS));
+        versionsPanel.setLayout(new javax.swing.BoxLayout(versionsPanel, javax.swing.BoxLayout.Y_AXIS));
 
         org.openide.awt.Mnemonics.setLocalizedText(jLabel2, org.openide.util.NbBundle.getMessage(AdvancedPanel.class, "AdvancedPanel.jLabel2.text")); // NOI18N
-        jPanel5.add(jLabel2);
+        versionsPanel.add(jLabel2);
 
         versionComboBox.setModel(createVersionComboboxModel());
         versionComboBox.addActionListener(new java.awt.event.ActionListener() {
@@ -159,14 +157,14 @@ public abstract class AdvancedPanel extends javax.swing.JPanel {
                 versionComboBoxActionPerformed(evt);
             }
         });
-        jPanel5.add(versionComboBox);
+        versionsPanel.add(versionComboBox);
 
-        jPanel1.add(jPanel5);
+        filterPanel.add(versionsPanel);
 
-        jPanel3.setLayout(new javax.swing.BoxLayout(jPanel3, javax.swing.BoxLayout.Y_AXIS));
+        typePanel.setLayout(new javax.swing.BoxLayout(typePanel, javax.swing.BoxLayout.Y_AXIS));
 
         org.openide.awt.Mnemonics.setLocalizedText(jLabel3, org.openide.util.NbBundle.getMessage(AdvancedPanel.class, "AdvancedPanel.jLabel3.text")); // NOI18N
-        jPanel3.add(jLabel3);
+        typePanel.add(jLabel3);
 
         packageTypeComboBox.setModel(createPackageTypeComboboxModel());
         packageTypeComboBox.addActionListener(new java.awt.event.ActionListener() {
@@ -174,14 +172,14 @@ public abstract class AdvancedPanel extends javax.swing.JPanel {
                 packageTypeComboBoxActionPerformed(evt);
             }
         });
-        jPanel3.add(packageTypeComboBox);
+        typePanel.add(packageTypeComboBox);
 
-        jPanel1.add(jPanel3);
+        filterPanel.add(typePanel);
 
-        jPanel2.setLayout(new javax.swing.BoxLayout(jPanel2, javax.swing.BoxLayout.Y_AXIS));
+        latestPanel.setLayout(new javax.swing.BoxLayout(latestPanel, javax.swing.BoxLayout.Y_AXIS));
 
         org.openide.awt.Mnemonics.setLocalizedText(jLabel4, org.openide.util.NbBundle.getMessage(AdvancedPanel.class, "AdvancedPanel.jLabel4.text")); // NOI18N
-        jPanel2.add(jLabel4);
+        latestPanel.add(jLabel4);
 
         latestCheckBox.setSelected(true);
         org.openide.awt.Mnemonics.setLocalizedText(latestCheckBox, org.openide.util.NbBundle.getMessage(AdvancedPanel.class, "AdvancedPanel.latestCheckBox.text")); // NOI18N
@@ -190,18 +188,30 @@ public abstract class AdvancedPanel extends javax.swing.JPanel {
                 latestCheckBoxActionPerformed(evt);
             }
         });
-        jPanel2.add(latestCheckBox);
+        latestPanel.add(latestCheckBox);
 
-        jPanel1.add(jPanel2);
-
-        add(jPanel1, java.awt.BorderLayout.CENTER);
+        filterPanel.add(latestPanel);
 
         table.setAutoCreateRowSorter(true);
         table.setModel(createTableModel());
         table.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        jScrollPane1.setViewportView(table);
+        tableScrollPane.setViewportView(table);
 
-        add(jScrollPane1, java.awt.BorderLayout.PAGE_END);
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        this.setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(filterPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(tableScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 541, Short.MAX_VALUE)
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(10, 10, 10)
+                .addComponent(filterPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(tableScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 332, Short.MAX_VALUE))
+        );
     }// </editor-fold>//GEN-END:initComponents
 
     private void latestCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_latestCheckBoxActionPerformed
@@ -235,10 +245,10 @@ public abstract class AdvancedPanel extends javax.swing.JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox<Distribution> distributionComboBox;
-    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JCheckBox latestCheckBox;
     private javax.swing.JComboBox<PackageType> packageTypeComboBox;
     protected javax.swing.JTable table;
+    private javax.swing.JScrollPane tableScrollPane;
     private javax.swing.JComboBox<Integer> versionComboBox;
     // End of variables declaration//GEN-END:variables
 }

@@ -76,7 +76,7 @@ public class NamespaceName extends Expression {
         boolean isCurrent = namespaceName.startsWith("namespace\\"); // NOI18N
         String[] names = namespaceName.split("\\\\"); // NOI18N
         int startSegment = start;
-        List<Identifier> list = new ArrayList<>();
+        List<Identifier> list = new ArrayList<>(names.length);
         for (String n : names) {
             if (n.equals("namespace") || n.isEmpty()) { // NOI18N
                 startSegment += n.length() + 1; // length + \

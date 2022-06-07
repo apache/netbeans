@@ -1088,4 +1088,24 @@ public class PHP81CodeCompletionTest extends PHPCodeCompletionTestBase {
         checkCompletion("enumsFieldTypeTyping04", "    private static Enum^");
     }
 
+    public void testEnumsUnionAndBackedMembers_01() throws Exception {
+        checkCompletion("enumsUnionAndBackedMembers", "        self::^from(\"apple\");");
+    }
+
+    public void testEnumsUnionAndBackedMembers_02() throws Exception {
+        checkCompletion("enumsUnionAndBackedMembers", "            self::APPLE => \"apple\" === self::APPLE->^value,");
+    }
+
+    public void testEnumsUnionAndBackedMembers_03() throws Exception {
+        checkCompletion("enumsUnionAndBackedMembers", "            self::BANANA => \"banana\" === self::BANANA?->^value,");
+    }
+
+    public void testEnumsUnionAndBackedMembers_04() throws Exception {
+        checkCompletion("enumsUnionAndBackedMembers", "        self::TEST1->^value;");
+    }
+
+    public void testEnumsUnionAndBackedMembers_05() throws Exception {
+        checkCompletion("enumsUnionAndBackedMembers", "Union::^cases();");
+    }
+
 }

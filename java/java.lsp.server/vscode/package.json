@@ -140,6 +140,23 @@
 					"default": 100,
 					"description": "Timeout (in milliseconds) for loading Javadoc in code completion (-1 for unlimited)"
 				},
+				"netbeans.format.codeFormatter": {
+					"type": "string",
+					"enum": [
+						"NetBeans",
+						"Eclipse",
+						"Google",
+						"Spring"
+					],
+					"enumDescriptions": [
+						"Internal NetBeans Code Formatter",
+						"Eclipse Code Formatter",
+						"Goolge Code Formatter",
+						"Spring Code Formatter"
+					],
+					"description": "Code formatter to use",
+					"default": "NetBeans"
+				},
 				"netbeans.format.settingsPath": {
 					"type": "string",
 					"description": "Path to the file containing exported formatter settings",
@@ -835,7 +852,7 @@
 	},
 	"dependencies": {
 		"jsonc-parser": "3.0.0",
-		"vscode-debugadapter": "1.51.0",
+		"@vscode/debugadapter": "1.55.1",
 		"vscode-languageclient": "8.0.1"
 	}
 }

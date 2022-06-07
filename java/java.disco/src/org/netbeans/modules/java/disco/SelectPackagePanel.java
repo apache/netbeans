@@ -174,13 +174,12 @@ public class SelectPackagePanel extends FirstPanel {
 
     @UIEffect
     @Override
-    protected void updateData(Distribution distribution, Integer featureVersion, Latest latest, PackageType bundleType) {
+    protected void updateData(Distribution distribution, Integer featureVersion, Architecture architecture, Latest latest, PackageType bundleType) {
         if (distribution == null)
             return;
         if (featureVersion == null)
             return;
         OperatingSystem operatingSystem = getOperatingSystem();
-        Architecture architecture = Architecture.NONE;
         ArchiveType extension = ArchiveType.NONE;
         Boolean fx = false;
         this.setEnabled(false);

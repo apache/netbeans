@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.java.disco;
 
+import eu.hansolo.jdktools.Architecture;
 import eu.hansolo.jdktools.Latest;
 import eu.hansolo.jdktools.PackageType;
 import eu.hansolo.jdktools.TermOfSupport;
@@ -46,6 +47,8 @@ public abstract class AdvancedPanel extends javax.swing.JPanel {
         distributionComboBox.setRenderer(new DistributionListCellRenderer());
         versionComboBox.setRenderer(new VersionListCellRenderer());
         packageTypeComboBox.setRenderer(new PackageTypeListCellRenderer());
+        architectureComboBox.setRenderer(new ArchitectureListCellRenderer());
+        architectureComboBox.setSelectedItem(OS.getArchitecture());
     }
 
     @UIEffect
@@ -69,7 +72,7 @@ public abstract class AdvancedPanel extends javax.swing.JPanel {
     }
 
     @UIEffect
-    protected abstract void updateData(Distribution distribution, Integer featureVersion, Latest latest, PackageType bundleType);
+    protected abstract void updateData(Distribution distribution, Integer featureVersion, Architecture architecture, Latest latest, PackageType bundleType);
 
     protected void updateDistributions(List<Distribution> distros) {
         distrosModel.removeAllElements();
@@ -100,8 +103,14 @@ public abstract class AdvancedPanel extends javax.swing.JPanel {
     }
 
     private ComboBoxModel<PackageType> createPackageTypeComboboxModel() {
-        PackageType[] bundleTypes = Arrays.stream(PackageType.values()).filter(bundleType -> PackageType.NONE != bundleType).filter(bundleType -> PackageType.NOT_FOUND != bundleType).toArray(PackageType[]::new);
+        PackageType[] bundleTypes = Arrays.stream(PackageType.values())
+                .filter(bundleType -> PackageType.NONE != bundleType)
+                .filter(bundleType -> PackageType.NOT_FOUND != bundleType).toArray(PackageType[]::new);
         return new DefaultComboBoxModel<>(bundleTypes);
+    }
+
+    private ComboBoxModel<Architecture> createArchitectureComboboxModel() {
+        return new DefaultComboBoxModel<>(Architecture.values());
     }
 
     /**
@@ -120,6 +129,9 @@ public abstract class AdvancedPanel extends javax.swing.JPanel {
         javax.swing.JPanel versionsPanel = new javax.swing.JPanel();
         javax.swing.JLabel jLabel2 = new javax.swing.JLabel();
         versionComboBox = new javax.swing.JComboBox<>();
+        javax.swing.JPanel architecturePanel = new javax.swing.JPanel();
+        javax.swing.JLabel architectureLabel = new javax.swing.JLabel();
+        architectureComboBox = new javax.swing.JComboBox<>();
         javax.swing.JPanel typePanel = new javax.swing.JPanel();
         javax.swing.JLabel jLabel3 = new javax.swing.JLabel();
         packageTypeComboBox = new javax.swing.JComboBox<>();
@@ -160,6 +172,21 @@ public abstract class AdvancedPanel extends javax.swing.JPanel {
         versionsPanel.add(versionComboBox);
 
         filterPanel.add(versionsPanel);
+
+        architecturePanel.setLayout(new javax.swing.BoxLayout(architecturePanel, javax.swing.BoxLayout.Y_AXIS));
+
+        org.openide.awt.Mnemonics.setLocalizedText(architectureLabel, org.openide.util.NbBundle.getMessage(AdvancedPanel.class, "AdvancedPanel.architectureLabel.text")); // NOI18N
+        architecturePanel.add(architectureLabel);
+
+        architectureComboBox.setModel(createArchitectureComboboxModel());
+        architectureComboBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                architectureComboBoxActionPerformed(evt);
+            }
+        });
+        architecturePanel.add(architectureComboBox);
+
+        filterPanel.add(architecturePanel);
 
         typePanel.setLayout(new javax.swing.BoxLayout(typePanel, javax.swing.BoxLayout.Y_AXIS));
 
@@ -215,35 +242,35 @@ public abstract class AdvancedPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void latestCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_latestCheckBoxActionPerformed
-        updateData((Distribution) distributionComboBox.getSelectedItem(),
-                (Integer) versionComboBox.getSelectedItem(),
-                latestCheckBox.isSelected() ? Latest.OVERALL : Latest.NONE,
-                (PackageType) packageTypeComboBox.getSelectedItem());
+        filterChanged();
     }//GEN-LAST:event_latestCheckBoxActionPerformed
 
     private void distributionComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_distributionComboBoxActionPerformed
-        updateData((Distribution) distributionComboBox.getSelectedItem(),
-                (Integer) versionComboBox.getSelectedItem(),
-                latestCheckBox.isSelected() ? Latest.OVERALL : Latest.NONE,
-                (PackageType) packageTypeComboBox.getSelectedItem());
+        filterChanged();
     }//GEN-LAST:event_distributionComboBoxActionPerformed
 
     private void versionComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_versionComboBoxActionPerformed
-        updateData((Distribution) distributionComboBox.getSelectedItem(),
-                (Integer) versionComboBox.getSelectedItem(),
-                latestCheckBox.isSelected() ? Latest.OVERALL : Latest.NONE,
-                (PackageType) packageTypeComboBox.getSelectedItem());
+        filterChanged();
     }//GEN-LAST:event_versionComboBoxActionPerformed
 
     private void packageTypeComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_packageTypeComboBoxActionPerformed
-        updateData((Distribution) distributionComboBox.getSelectedItem(),
-                (Integer) versionComboBox.getSelectedItem(),
-                latestCheckBox.isSelected() ? Latest.OVERALL : Latest.NONE,
-                (PackageType) packageTypeComboBox.getSelectedItem());
+        filterChanged();
     }//GEN-LAST:event_packageTypeComboBoxActionPerformed
 
+    private void architectureComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_architectureComboBoxActionPerformed
+        filterChanged();
+    }//GEN-LAST:event_architectureComboBoxActionPerformed
+
+    private void filterChanged() {
+        updateData( (Distribution) distributionComboBox.getSelectedItem(),
+                    (Integer) versionComboBox.getSelectedItem(),
+                    (Architecture) architectureComboBox.getSelectedItem(),
+                    latestCheckBox.isSelected() ? Latest.OVERALL : Latest.NONE,
+                    (PackageType) packageTypeComboBox.getSelectedItem());
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JComboBox<Architecture> architectureComboBox;
     private javax.swing.JComboBox<Distribution> distributionComboBox;
     private javax.swing.JCheckBox latestCheckBox;
     private javax.swing.JComboBox<PackageType> packageTypeComboBox;

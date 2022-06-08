@@ -222,12 +222,16 @@ public final class GradleModuleFileCache21 {
     }
 
     public CachedArtifactVersion resolveCachedArtifactVersion(Path artifact) throws IllegalArgumentException {
-        return new CachedArtifactVersion(artifact.getParent().getParent());
+        return artifact == null
+                || artifact.getParent() == null
+                || artifact.getParent().getParent() == null
+                ?  null
+                :  new CachedArtifactVersion(artifact.getParent().getParent());
     }
 
     public CachedArtifactVersion.Entry resolveEntry(Path artifact) throws IllegalArgumentException {
         CachedArtifactVersion av = resolveCachedArtifactVersion(artifact);
-        return av.entries.get(artifact.getFileName().toString());
+        return av != null ? av.entries.get(artifact.getFileName().toString()) : null;
     }
 
     public CachedArtifactVersion resolveModule(String moduleId) throws IllegalArgumentException {

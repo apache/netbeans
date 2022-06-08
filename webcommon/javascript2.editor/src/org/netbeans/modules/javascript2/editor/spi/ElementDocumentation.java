@@ -23,7 +23,7 @@ import org.netbeans.modules.csl.api.Documentation;
 
 /**
  * Mixin interface for ElementHandles to provide a documentation.
- * 
+ *
  * @author sdedic
  * @since 0.84
  */

@@ -4,4 +4,4 @@ var d = g.next().v|
 ------------------------------------
 CLASS      value                           [PUBLIC]   <font color=#999999>generator02.js</font>
 METHOD     valueOf(): Object               [PUBLIC]   JS Platform
-METHOD     values(obj: Object): Array      [PUBLIC,   JS Platform
+METHOD     values(o: Object): Object       [PUBLIC,   JS Platform

@@ -105,6 +105,14 @@ jobs:
       - name: Commit Validation tests
         run: ant -Dcluster.config=release commit-validation
 
+      - name: Upload Build
+        if: failure()
+        uses: actions/upload-artifact@v3
+        with:
+          name: validation-log-linux-${{ matrix.java }}
+          path: /home/runner/work/netbeans/netbeans/nbbuild/build/test/commit-validation/results/
+          retention-days: 1
+
   linux-build-system-test:
     needs: base-build
     name: Build-System Test on Linux/JDK ${{ matrix.java }} 

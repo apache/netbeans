@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
+import java.util.StringJoiner;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JLabel;
@@ -147,13 +148,15 @@ public class QuickPanel extends javax.swing.JPanel {
 
         private final List<Integer> versionJDKs;
         private final Map<Integer, TermOfSupport> lts;
+        private final int currentJdk;
 
-        private VersionsModel(List<Integer> jdks, Map<Integer, TermOfSupport> lts) {
+        private VersionsModel(List<Integer> jdks, Map<Integer, TermOfSupport> lts, int currentJdk) {
             this.versionJDKs = new ArrayList<>(jdks);
             //quick panel shows only maintained JDKs
             versionJDKs.removeIf(v -> !lts.containsKey(v));
-            versionJDKs.removeIf(v -> v < 8);
+            versionJDKs.removeIf(v -> v < 8 || v > currentJdk);
             this.lts = lts;
+            this.currentJdk = currentJdk;
         }
 
         public int getMinimum() {
@@ -174,14 +177,20 @@ public class QuickPanel extends javax.swing.JPanel {
             Hashtable<Integer, JLabel> labels = new Hashtable<>();
             for (Integer v : versionJDKs) {
                 boolean isLTS = lts.get(v) == TermOfSupport.LTS;
-                String name = LTSes.text(v, lts.get(v));
-                JLabel label = new JLabel(name);
+                JLabel label = new JLabel();
+                StringJoiner info = new StringJoiner(", ", " (", ")");
+                info.setEmptyValue("");
+                if (v == currentJdk) {
+                    info.add("latest");
+                }
                 if (isLTS) {
+                    info.add("LTS");
                     //these decorations do nothing on macOS...
                     Font font = label.getFont();
                     label.setFont(font.deriveFont(font.getStyle() | Font.BOLD));
                     label.setToolTipText("Long Term Support");
                 }
+                label.setText(v.toString() + info.toString());
                 labels.put(versionJDKs.indexOf(v), label);
             }
             return labels;
@@ -196,8 +205,8 @@ public class QuickPanel extends javax.swing.JPanel {
     @MonotonicNonNull
     private VersionsModel versionsModel;
 
-    void setVersions(List<Integer> jdks, Map<Integer, TermOfSupport> lts) {
-        versionsModel = new VersionsModel(jdks, lts);
+    void setVersions(List<Integer> jdks, Map<Integer, TermOfSupport> lts, int current) {
+        versionsModel = new VersionsModel(jdks, lts, current);
         versions.setMaximum(versionsModel.getMaximum());
         versions.setMinimum(versionsModel.getMinimum());
         versions.setLabelTable(versionsModel.createLabels());

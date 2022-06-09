@@ -72,23 +72,24 @@ public abstract class AdvancedPanel extends javax.swing.JPanel {
     }
 
     @UIEffect
-    protected abstract void updateData(Distribution distribution, Integer featureVersion, Architecture architecture, Latest latest, PackageType bundleType);
+    protected abstract void updateData(Distribution distribution, Integer featureVersion, Architecture architecture, Latest latest, PackageType bundleType, boolean ea);
 
     protected void updateDistributions(List<Distribution> distros) {
         distrosModel.removeAllElements();
         distros.stream()
                 .sorted((o1, o2) -> o1.getUiString().compareTo(o2.getUiString()))
                 .forEachOrdered(distrosModel::addElement);
-        Client.getInstance().getDistribution(
-                DiscoPlatformInstall.defaultDistribution())
+        Client.getInstance().getDistribution(DiscoPlatformInstall.defaultDistribution())
                 .filter(distros::contains)
                 .ifPresent(distrosModel::setSelectedItem);
     }
     
-    protected void setVersions(List<Integer> versions, Map<Integer, TermOfSupport> lts) {
+    protected void setVersions(List<Integer> versions, Map<Integer, TermOfSupport> lts, int currentJdk) {
         List<Integer> reversedVersions = new ArrayList<>(versions);
         reversedVersions.sort(Collections.reverseOrder());
-        ((VersionListCellRenderer) versionComboBox.getRenderer()).setLTS(lts);
+        VersionListCellRenderer renderer = (VersionListCellRenderer) versionComboBox.getRenderer();
+        renderer.setLTS(lts);
+        renderer.setCurrentJDK(currentJdk);
         DefaultComboBoxModel versionModel = (DefaultComboBoxModel<Integer>) versionComboBox.getModel();
         reversedVersions.forEach(v -> versionModel.addElement(v));
         versionModel.setSelectedItem(LTSes.latest(lts));
@@ -105,7 +106,8 @@ public abstract class AdvancedPanel extends javax.swing.JPanel {
     private ComboBoxModel<PackageType> createPackageTypeComboboxModel() {
         PackageType[] bundleTypes = Arrays.stream(PackageType.values())
                 .filter(bundleType -> PackageType.NONE != bundleType)
-                .filter(bundleType -> PackageType.NOT_FOUND != bundleType).toArray(PackageType[]::new);
+                .filter(bundleType -> PackageType.NOT_FOUND != bundleType)
+                .toArray(PackageType[]::new);
         return new DefaultComboBoxModel<>(bundleTypes);
     }
 
@@ -138,6 +140,9 @@ public abstract class AdvancedPanel extends javax.swing.JPanel {
         javax.swing.JPanel latestPanel = new javax.swing.JPanel();
         javax.swing.JLabel latestLabel = new javax.swing.JLabel();
         latestCheckBox = new javax.swing.JCheckBox();
+        javax.swing.JPanel eaPanel = new javax.swing.JPanel();
+        javax.swing.JLabel eaLabel = new javax.swing.JLabel();
+        eaCheckBox = new javax.swing.JCheckBox();
         tableScrollPane = new javax.swing.JScrollPane();
         table = new javax.swing.JTable();
 
@@ -160,7 +165,7 @@ public abstract class AdvancedPanel extends javax.swing.JPanel {
             .addComponent(distLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(distributionsPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(distributionComboBox, 0, 88, Short.MAX_VALUE)
+                .addComponent(distributionComboBox, 0, 85, Short.MAX_VALUE)
                 .addContainerGap())
         );
         distributionsPanelLayout.setVerticalGroup(
@@ -190,7 +195,7 @@ public abstract class AdvancedPanel extends javax.swing.JPanel {
             .addComponent(versionLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(versionsPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(versionComboBox, 0, 88, Short.MAX_VALUE)
+                .addComponent(versionComboBox, 0, 80, Short.MAX_VALUE)
                 .addContainerGap())
         );
         versionsPanelLayout.setVerticalGroup(
@@ -220,7 +225,7 @@ public abstract class AdvancedPanel extends javax.swing.JPanel {
             .addComponent(architectureLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(architecturePanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(architectureComboBox, 0, 88, Short.MAX_VALUE)
+                .addComponent(architectureComboBox, 0, 85, Short.MAX_VALUE)
                 .addContainerGap())
         );
         architecturePanelLayout.setVerticalGroup(
@@ -250,7 +255,7 @@ public abstract class AdvancedPanel extends javax.swing.JPanel {
             .addComponent(typeLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(typePanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(packageTypeComboBox, 0, 88, Short.MAX_VALUE)
+                .addComponent(packageTypeComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
         typePanelLayout.setVerticalGroup(
@@ -279,7 +284,7 @@ public abstract class AdvancedPanel extends javax.swing.JPanel {
         latestPanel.setLayout(latestPanelLayout);
         latestPanelLayout.setHorizontalGroup(
             latestPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(latestLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 47, Short.MAX_VALUE)
+            .addComponent(latestLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 56, Short.MAX_VALUE)
             .addGroup(latestPanelLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(latestCheckBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -295,6 +300,37 @@ public abstract class AdvancedPanel extends javax.swing.JPanel {
 
         filterPanel.add(latestPanel);
 
+        eaLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        org.openide.awt.Mnemonics.setLocalizedText(eaLabel, org.openide.util.NbBundle.getMessage(AdvancedPanel.class, "AdvancedPanel.eaLabel.text")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(eaCheckBox, org.openide.util.NbBundle.getMessage(AdvancedPanel.class, "AdvancedPanel.eaCheckBox.text")); // NOI18N
+        eaCheckBox.setPreferredSize(new java.awt.Dimension(19, 23));
+        eaCheckBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                eaCheckBoxActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout eaPanelLayout = new javax.swing.GroupLayout(eaPanel);
+        eaPanel.setLayout(eaPanelLayout);
+        eaPanelLayout.setHorizontalGroup(
+            eaPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(eaLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(eaPanelLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(eaCheckBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        eaPanelLayout.setVerticalGroup(
+            eaPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(eaPanelLayout.createSequentialGroup()
+                .addComponent(eaLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(eaCheckBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
+
+        filterPanel.add(eaPanel);
+
         table.setAutoCreateRowSorter(true);
         table.setModel(createTableModel());
         table.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
@@ -304,8 +340,8 @@ public abstract class AdvancedPanel extends javax.swing.JPanel {
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(filterPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(tableScrollPane)
+            .addComponent(filterPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+            .addComponent(tableScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 468, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -337,17 +373,23 @@ public abstract class AdvancedPanel extends javax.swing.JPanel {
         filterChanged();
     }//GEN-LAST:event_architectureComboBoxActionPerformed
 
+    private void eaCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eaCheckBoxActionPerformed
+        filterChanged();
+    }//GEN-LAST:event_eaCheckBoxActionPerformed
+
     private void filterChanged() {
         updateData( (Distribution) distributionComboBox.getSelectedItem(),
                     (Integer) versionComboBox.getSelectedItem(),
                     (Architecture) architectureComboBox.getSelectedItem(),
-                    latestCheckBox.isSelected() ? Latest.OVERALL : Latest.NONE,
-                    (PackageType) packageTypeComboBox.getSelectedItem());
+                    latestCheckBox.isSelected() ? Latest.OVERALL : Latest.ALL_OF_VERSION,
+                    (PackageType) packageTypeComboBox.getSelectedItem(),
+                    eaCheckBox.isSelected());
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox<Architecture> architectureComboBox;
     private javax.swing.JComboBox<Distribution> distributionComboBox;
+    private javax.swing.JCheckBox eaCheckBox;
     private javax.swing.JCheckBox latestCheckBox;
     private javax.swing.JComboBox<PackageType> packageTypeComboBox;
     protected javax.swing.JTable table;

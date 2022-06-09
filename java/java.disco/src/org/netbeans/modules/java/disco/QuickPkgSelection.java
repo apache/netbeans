@@ -91,8 +91,9 @@ class QuickPkgSelection implements PkgSelection {
     public @Nullable Pkg get(@Nullable Client d) {
         if (pkg != null || d == null)
             return pkg;
-        List<Pkg> pkgs = d.getPkgs(distribution, version, Latest.OVERALL, OS.getOperatingSystem(),
-                    OS.getArchitecture(), ArchiveType.NONE, PackageType.JDK, false);
+        List<Pkg> pkgs = d.getPkgs(distribution, version, Latest.AVAILABLE, OS.getOperatingSystem(),
+                    OS.getArchitecture(), ArchiveType.NONE, PackageType.JDK, false, false);
+
         Optional<Pkg> found = pkgs.stream().filter(filter).findAny();
 
         if (found.isPresent()) {

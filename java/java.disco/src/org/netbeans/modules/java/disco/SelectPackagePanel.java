@@ -132,8 +132,10 @@ public class SelectPackagePanel extends FirstPanel {
             //hide 'please wait' message, show tabs
             ((CardLayout) getLayout()).next(SelectPackagePanel.this);
 
+            Distribution defaultDist = discoClient.getDistribution(DiscoPlatformInstall.defaultDistribution()).orElse(null);
             advancedPanel.updateDistributions(c.distributions);
             advancedPanel.setVersions(c.versionNumbers, c.versionNumberSupport);
+            quickPanel.updateDistributions(c.distributions, defaultDist);
             quickPanel.setVersions(c.versionNumbers, c.versionNumberSupport);
 
             SelectPackagePanel.this.firePropertyChange(PROP_VALIDITY_CHANGED, false, true);

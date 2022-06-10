@@ -221,6 +221,8 @@
                 <friend>org.netbeans.modules.javaee.project</friend>
                 <friend>org.netbeans.modules.javascript.bower</friend>
                 <friend>org.netbeans.modules.javascript.cdnjs</friend>
+                <friend>org.netbeans.modules.javascript.cdtdebug</friend>
+                <friend>org.netbeans.modules.javascript.cdtdebug.ui</friend>
                 <friend>org.netbeans.modules.javascript.grunt</friend>
                 <friend>org.netbeans.modules.javascript.gulp</friend>
                 <friend>org.netbeans.modules.javascript.jstestdriver</friend>

@@ -19,6 +19,7 @@
 
 package org.netbeans.modules.javascript2.debug.ui.models.breakpoints;
 
+import java.awt.Color;
 import java.awt.datatransfer.Transferable;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -30,6 +31,7 @@ import org.netbeans.modules.javascript2.debug.ui.JSUtils;
 import org.netbeans.modules.javascript2.debug.breakpoints.JSBreakpointStatus;
 import org.netbeans.modules.javascript2.debug.breakpoints.JSBreakpointsInfoManager;
 import org.netbeans.modules.javascript2.debug.breakpoints.JSLineBreakpoint;
+import org.netbeans.modules.javascript2.debug.ui.models.ViewModelSupport;
 import org.netbeans.spi.debugger.DebuggerServiceRegistration;
 import org.netbeans.spi.viewmodel.ExtendedNodeModel;
 import org.netbeans.spi.viewmodel.ModelEvent;
@@ -90,7 +92,13 @@ public class BreakpointNodeModel implements ExtendedNodeModel {
             JSLineBreakpoint breakpoint = (JSLineBreakpoint) node;
             String fileName = JSUtils.getFileName(breakpoint);
             int lineNumber = breakpoint.getLineNumber();
-            return Bundle.LBL_LineBreakpoint_on(fileName + ":" + lineNumber);
+            if(breakpoint.isActive()) {
+                return ViewModelSupport.toHTML(
+                        Bundle.LBL_LineBreakpoint_on(fileName + ":" + lineNumber),
+                        true, false, null);
+            } else {
+                return Bundle.LBL_LineBreakpoint_on(fileName + ":" + lineNumber);
+            }
         }
         throw new UnknownTypeException(node);
     }
@@ -112,7 +120,7 @@ public class BreakpointNodeModel implements ExtendedNodeModel {
                 iconBase = DEACTIVATED_DISABLED_LINE_BREAKPOINT;
             }
         } else {
-            if (b == JSBreakpointStatus.getActive()) {
+            if (b.isActive()) {
                 iconBase = CURRENT_LINE_BREAKPOINT;
             } else {
                 if (active) {

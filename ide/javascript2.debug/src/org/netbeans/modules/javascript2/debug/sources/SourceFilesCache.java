@@ -21,6 +21,7 @@ package org.netbeans.modules.javascript2.debug.sources;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Objects;
 import org.openide.filesystems.FileObject;
 
 /**
@@ -48,7 +49,12 @@ public final class SourceFilesCache {
     }
     
     public URL getSourceFile(String name, int hash, SourceContent content) {
-        String path = Integer.toHexString(hash) + '/' + name;
+        return getSourceFile(name, Integer.toHexString(hash), content);
+    }
+
+    public URL getSourceFile(String name, String hash, SourceContent content) {
+        Objects.requireNonNull(hash, "hash was null");
+        String path = hash + '/' + name;
         FileObject fo = fs.findResource(path);
         if (fo == null) {
             fo = fs.createFile(path, content);

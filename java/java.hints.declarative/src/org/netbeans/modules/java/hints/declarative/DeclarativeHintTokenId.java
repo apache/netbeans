@@ -65,6 +65,7 @@ public enum DeclarativeHintTokenId implements TokenId {
         this.cat = cat;
     }
 
+    @Override
     public String primaryCategory() {
         return cat;
     }

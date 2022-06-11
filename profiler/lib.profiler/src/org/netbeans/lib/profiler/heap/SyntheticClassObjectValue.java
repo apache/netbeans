@@ -34,7 +34,7 @@ class SyntheticClassObjectValue extends HprofInstanceObjectValue {
     //~ Methods ------------------------------------------------------------------------------------------------------------------
 
     Object getTypeValue() {
-        return new Long(getInstanceId());
+        return getInstanceId();
     }
 
     public Instance getInstance() {

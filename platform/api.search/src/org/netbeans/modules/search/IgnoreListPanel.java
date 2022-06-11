@@ -57,13 +57,7 @@ public final class IgnoreListPanel extends javax.swing.JPanel {
         initComponents();
         setMnemonics();
         updateEnabledButtons();
-        table.getSelectionModel().addListSelectionListener(
-                new ListSelectionListener() {
-                    @Override
-                    public void valueChanged(ListSelectionEvent e) {
-                        updateEnabledButtons();
-                    }
-                });
+        table.getSelectionModel().addListSelectionListener((ListSelectionEvent e) -> updateEnabledButtons());
         // double click invokes edit action
         table.addMouseListener(new MouseAdapter() {
             @Override
@@ -201,7 +195,7 @@ public final class IgnoreListPanel extends javax.swing.JPanel {
 
     private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
         int firstSelectedRow = table.getSelectedRow();
-        List<IgnoreListItem> itemsToDelete = new ArrayList<IgnoreListItem>();
+        List<IgnoreListItem> itemsToDelete = new ArrayList<>();
         //get all selected objects
         //NOTE: remove the item from model later, so that the selected index
         //always points to the correct object
@@ -359,6 +353,7 @@ public final class IgnoreListPanel extends javax.swing.JPanel {
             this.value = value;
         }
 
+        @Override
         public String toString() {
             return type.getTypePrefix() + value;
         }
@@ -427,7 +422,7 @@ public final class IgnoreListPanel extends javax.swing.JPanel {
 
         public IgnoredListModel() {
             List<String> orig = FindDialogMemory.getDefault().getIgnoreList();
-            list = new ArrayList<IgnoreListItem>(orig.size());
+            list = new ArrayList<>(orig.size());
             for (String s : orig) {
                 IgnoreListItem ili = IgnoreListItem.fromString(s);
                 if (ili.type != ItemType.INVALID) {
@@ -437,7 +432,7 @@ public final class IgnoreListPanel extends javax.swing.JPanel {
         }
 
         public void persist() {
-            List<String> copy = new ArrayList<String>(list.size());
+            List<String> copy = new ArrayList<>(list.size());
             for (IgnoreListItem ili : list) {
                 copy.add(ili.toString());
             }
@@ -554,7 +549,7 @@ public final class IgnoreListPanel extends javax.swing.JPanel {
         List<IgnoredItemDefinition> items;
 
         public IgnoreListManager(List<String> ignoreList) {
-            items = new LinkedList<IgnoredItemDefinition>();
+            items = new LinkedList<>();
             for (String s : ignoreList) {
                 IgnoreListItem ili = IgnoreListItem.fromString(s);
                 switch (ili.type) {

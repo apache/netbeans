@@ -124,7 +124,7 @@ public class NewPluginPanel extends javax.swing.JPanel implements ChangeListener
 
     public List<String> getGoals () {
         List<String> goals = new ArrayList<String>();
-        Enumeration e  = listModel.elements();
+        Enumeration<GoalEntry> e  = listModel.elements();
         GoalEntry ge;
         while (e.hasMoreElements()) {
             ge = (GoalEntry) e.nextElement();

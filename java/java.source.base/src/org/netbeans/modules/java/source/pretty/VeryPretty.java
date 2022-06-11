@@ -1342,7 +1342,7 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
                 sep = ", "; //TODO: space or not should be a configuration setting
             }
         }
-        Object caseKind = CasualDiff.getCaseKind(tree);
+        Object caseKind = tree.getCaseKind();
         if (caseKind == null || !String.valueOf(caseKind).equals("RULE")) {
             print(':');
             newline();
@@ -2738,7 +2738,7 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
         
         str = Reformatter.reformat(str + " class A{}", cs, cs.getRightMargin() - col);
 
-        str = str.trim().replaceAll("\n", "\n" + whitespace(col));
+        str = str.trim().replace("\n", "\n" + whitespace(col));
 
         try {
             adjustSpans(annotations, str);

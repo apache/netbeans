@@ -37,7 +37,7 @@ import junit.framework.Assert;
  */
 public final class ConcurrentTasksSupport {
 
-    final private static Logger log = Logger.getLogger(ConcurrentTasksSupport.class.getName());
+    private static final Logger log = Logger.getLogger(ConcurrentTasksSupport.class.getName());
     final int concurrentTasks;
     final ArrayList<TaskFactory> factories = new ArrayList<>();
     final CyclicBarrier startSignal;

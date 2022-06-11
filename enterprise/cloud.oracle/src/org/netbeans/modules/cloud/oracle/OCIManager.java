@@ -18,13 +18,25 @@
  */
 package org.netbeans.modules.cloud.oracle;
 
+import org.netbeans.modules.cloud.oracle.items.OCIItem;
+import org.netbeans.modules.cloud.oracle.items.DatabaseItem;
 import com.oracle.bmc.ConfigFileReader;
 import com.oracle.bmc.auth.ConfigFileAuthenticationDetailsProvider;
 import com.oracle.bmc.database.DatabaseClient;
+import com.oracle.bmc.database.model.AutonomousDatabaseSummary;
+import com.oracle.bmc.database.model.CreateAutonomousDatabaseBase;
+import com.oracle.bmc.database.model.CreateAutonomousDatabaseDetails;
+import com.oracle.bmc.database.model.DatabaseConnectionStringProfile;
 import com.oracle.bmc.database.model.GenerateAutonomousDatabaseWalletDetails;
+import com.oracle.bmc.database.requests.CreateAutonomousDatabaseRequest;
 import com.oracle.bmc.database.requests.GenerateAutonomousDatabaseWalletRequest;
 import com.oracle.bmc.database.requests.ListAutonomousDatabasesRequest;
+import com.oracle.bmc.database.responses.CreateAutonomousDatabaseResponse;
 import com.oracle.bmc.database.responses.GenerateAutonomousDatabaseWalletResponse;
+import com.oracle.bmc.devops.DevopsClient;
+import com.oracle.bmc.devops.model.ProjectSummary;
+import com.oracle.bmc.devops.requests.ListProjectsRequest;
+import com.oracle.bmc.devops.responses.ListProjectsResponse;
 import com.oracle.bmc.identity.Identity;
 import com.oracle.bmc.identity.IdentityClient;
 import com.oracle.bmc.identity.model.Tenancy;
@@ -32,6 +44,7 @@ import com.oracle.bmc.identity.requests.GetTenancyRequest;
 import com.oracle.bmc.identity.requests.ListCompartmentsRequest;
 import com.oracle.bmc.identity.responses.GetTenancyResponse;
 import com.oracle.bmc.identity.responses.ListCompartmentsResponse;
+import com.oracle.bmc.model.BmcException;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -43,13 +56,21 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
+import org.netbeans.modules.cloud.oracle.items.CompartmentItem;
 import org.openide.util.Exceptions;
+import org.openide.util.NbBundle;
 
 /**
  * Manages access to Oracle Cloud Resources
  * 
  * @author Jan Horvath
  */
+@NbBundle.Messages({
+    "LBL_HomeRegion=Home Region: {0}",
+    "LBL_WorkloadType=Workload Type: {0}\n",
+    "LBL_DatabaseVersion=Database version: {0}\n",
+    "LBL_Storage=Storage: {0}TB"
+})
 public final class OCIManager {
 
     
@@ -97,6 +118,7 @@ public final class OCIManager {
             GetTenancyResponse response = identityClient.getTenancy(gtr);
             Tenancy tenancy = response.getTenancy();
             OCIItem item = new OCIItem(tenancy.getId(), tenancy.getName());
+            item.setDescription(Bundle.LBL_HomeRegion(tenancy.getHomeRegionKey()));
             return Optional.of(item);
         } catch (Throwable t) {
             Exceptions.printStackTrace(t);
@@ -110,11 +132,11 @@ public final class OCIManager {
      * @param tenancyId OCID of the Tenancy
      * @return List of {@code OCIItem} describing tenancy Compartments
      */
-    public List<OCIItem> getCompartments(String tenancyId) {
+    public List<CompartmentItem> getCompartments(String tenancyId) {
         Identity identityClient = new IdentityClient(provider);
         identityClient.setRegion(configProvider.getRegion());
 
-        List<OCIItem> compartments = new ArrayList<>();
+        List<CompartmentItem> compartments = new ArrayList<>();
 
         String nextPageToken = null;
         do {
@@ -128,7 +150,7 @@ public final class OCIManager {
                                     .page(nextPageToken)
                                     .build());
             response.getItems().stream()
-                    .map(c -> new OCIItem(c.getId(), c.getName()))
+                    .map(c -> new CompartmentItem(c.getId(), c.getName()))
                     .collect(Collectors.toCollection(() -> compartments));
             nextPageToken = response.getOpcNextPage();
         } while (nextPageToken != null);
@@ -151,8 +173,57 @@ public final class OCIManager {
         return client.listAutonomousDatabases(listAutonomousDatabasesRequest)
                 .getItems()
                 .stream()
-                .map(d -> new DatabaseItem(d.getId(), d.getDbName(), d.getServiceConsoleUrl()))
+                .map(d -> {
+                    DatabaseItem item = new DatabaseItem(d.getId(), d.getDbName(), d.getServiceConsoleUrl(), getConnectionName(d));
+                    StringBuilder sb = new StringBuilder();
+                    sb.append(Bundle.LBL_WorkloadType(d.getDbWorkload().getValue()));
+                    sb.append(Bundle.LBL_DatabaseVersion(d.getDbVersion()));
+                    sb.append(Bundle.LBL_Storage(d.getDataStorageSizeInTBs()));
+                    item.setDescription(sb.toString());
+                    return item;
+                })
                 .collect(Collectors.toList());
+    }
+    
+    private String getConnectionName(AutonomousDatabaseSummary summary) {
+        List<DatabaseConnectionStringProfile> profiles = summary.getConnectionStrings().getProfiles();
+        if (profiles != null) {
+            for (DatabaseConnectionStringProfile profile : profiles) {
+                if (profile.getDisplayName().contains("high")) { //NOI18N
+                    return profile.getDisplayName();
+                }
+            }
+        }
+        return null;
+    }
+    
+    /**
+     * Creates a new Autonomous Oracle Database.
+     * 
+     * @param compartmentId Id of Compartment where the Database will be created
+     * @param dbName Name of Database
+     * @param password Password of ADMIN user
+     * @return true if DB was created
+     */
+    public Optional<String> createAutonomousDatabase(String compartmentId, String dbName, char[] password) {
+        DatabaseClient client = new DatabaseClient(configProvider);
+        CreateAutonomousDatabaseBase createAutonomousDatabaseBase = CreateAutonomousDatabaseDetails.builder()
+                .compartmentId(compartmentId)
+                .dbName(dbName)
+                .adminPassword(new String(password))
+                .cpuCoreCount(1)
+                .dataStorageSizeInTBs(1)
+                .build();
+                
+        CreateAutonomousDatabaseRequest createAutonomousDatabaseRequest = CreateAutonomousDatabaseRequest.builder()
+                .createAutonomousDatabaseDetails(createAutonomousDatabaseBase).build();
+        
+        try {
+            CreateAutonomousDatabaseResponse response = client.createAutonomousDatabase(createAutonomousDatabaseRequest);
+        } catch (BmcException e) {
+            return Optional.of(e.getMessage());
+        }
+        return Optional.empty();
     }
 
     /**
@@ -197,6 +268,15 @@ public final class OCIManager {
             Files.copy(zin, entryPath);
         }
         return walletPath;
+    }
+    
+    public List<OCIItem> listDevopsProjects(String compartmentId) {
+        DevopsClient client = new DevopsClient(provider);
+        ListProjectsRequest request = ListProjectsRequest.builder().compartmentId(compartmentId).build();
+        ListProjectsResponse response = client.listProjects(request);
+        
+        List<ProjectSummary> projects = response.getProjectCollection().getItems();
+        return projects.stream().map(p -> new OCIItem(p.getId(), p.getName())).collect(Collectors.toList());
     }
 
 }

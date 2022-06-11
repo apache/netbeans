@@ -76,7 +76,7 @@ import org.openide.util.NbBundle;
  */
 public class EntityClassesPanel extends javax.swing.JPanel {
 
-    private final static Logger LOGGER = Logger.getLogger(EntityClassesPanel.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(EntityClassesPanel.class.getName());
 
     private final ChangeSupport changeSupport = new ChangeSupport(this);
 
@@ -92,7 +92,7 @@ public class EntityClassesPanel extends javax.swing.JPanel {
     private final JMenuItem allToRecreateItem;
 
 
-    private EntityClassesPanel(boolean puRequired, boolean JAXBRequired) {
+    private EntityClassesPanel(boolean puRequired, boolean JAXBRequired, boolean isJPA) {
         this.puRequired = puRequired;
 
         initComponents();
@@ -138,6 +138,12 @@ public class EntityClassesPanel extends javax.swing.JPanel {
                 packageChanged();
             }
         });
+        if (!isJPA) {
+            createPUCheckbox.setVisible(false);
+            generateFinderMethodsCheckBox.setVisible(false);
+            generateJAXBCheckBox.setVisible(false);
+            mappedSuperclassCheckBox.setVisible(false);
+        }
     }
 
     public void addChangeListener(ChangeListener listener) {
@@ -610,6 +616,7 @@ public class EntityClassesPanel extends javax.swing.JPanel {
         private boolean puRequired;
         private boolean JAXBRequired;
         private boolean isFinishable;
+        private boolean isJPA;
 
         private List<Provider> providers;
 
@@ -618,25 +625,31 @@ public class EntityClassesPanel extends javax.swing.JPanel {
         }
         
         public WizardPanel(boolean persistenceUnitRequired, boolean JAXBRequired,
-                boolean isFinishable )
+                boolean isFinishable ) {
+            this(persistenceUnitRequired, JAXBRequired, isFinishable, true);
+        }
+
+        WizardPanel(boolean persistenceUnitRequired, boolean JAXBRequired,
+                boolean isFinishable, boolean isJPA )
         {
             puRequired = persistenceUnitRequired;
             this.JAXBRequired = JAXBRequired;
             this.isFinishable = isFinishable;
+            this.isJPA = isJPA;
         }
 
         public WizardPanel(boolean persistenceUnitRequired, boolean JAXBRequired){
-            this( persistenceUnitRequired , JAXBRequired , true );
+            this( persistenceUnitRequired , JAXBRequired , true, true );
         }
 
         public WizardPanel(boolean persistenceUnitRequired){
-            this( persistenceUnitRequired , false , true );
+            this( persistenceUnitRequired , false , true, true );
         }
         
         @Override
         public EntityClassesPanel getComponent() {
             if (component == null) {
-                component = new EntityClassesPanel(puRequired, JAXBRequired);
+                component = new EntityClassesPanel(puRequired, JAXBRequired, isJPA);
                 component.addChangeListener(this);
             }
             return component;

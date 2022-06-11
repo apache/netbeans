@@ -80,7 +80,7 @@ public final class SearchNbEditorKit extends NbEditorKit {
     }
     private static PropertyChangeListener searchAndReplaceBarPersistentListener = null;
 
-    public synchronized static void makeSearchAndReplaceBarPersistent() {
+    public static synchronized void makeSearchAndReplaceBarPersistent() {
         if (searchAndReplaceBarPersistentListener == null) {
             searchAndReplaceBarPersistentListener = new PropertyChangeListener() {
                 @Override

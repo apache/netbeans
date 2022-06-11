@@ -38,8 +38,8 @@ public class HtmlPanel implements Panel<WizardDescriptor> {
     
     public static final String HTML_FILE = "html-file";     // NOI18N
     
-    final static String PROP_DOCUMENT_BASE ="document_base"; // NOI18N
-    final static String PUBLIC_HTML ="public_html"; // NOI18N
+    static final String PROP_DOCUMENT_BASE ="document_base"; // NOI18N
+    static final String PUBLIC_HTML ="public_html"; // NOI18N
     
     HtmlPanel(WizardDescriptor descriptor){
         myDescriptor = descriptor;

@@ -30,18 +30,17 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
 import java.lang.management.ManagementFactory;
 import java.lang.ref.Reference;
 import java.lang.ref.SoftReference;
 import java.lang.ref.WeakReference;
+import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.jar.Attributes;
@@ -51,7 +50,6 @@ import java.util.jar.Manifest;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.ZipException;
-import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
 import org.openide.util.RequestProcessor.Task;
@@ -1331,12 +1329,7 @@ public class JarFileSystem extends AbstractFileSystem {
                 for (int i = 0; i < ret.length; i++) {
                     byte[] name = new byte[indices[(2 * i) + 1]];
                     System.arraycopy(names, indices[2 * i], name, 0, name.length);
-
-                    try {
-                        ret[i] = new String(name, "UTF-8");
-                    } catch (UnsupportedEncodingException e) {
-                        throw new InternalError("No UTF-8");
-                    }
+                    ret[i] = new String(name, StandardCharsets.UTF_8);
                 }
 
                 return ret;
@@ -1350,13 +1343,9 @@ public class JarFileSystem extends AbstractFileSystem {
                     indices = newInd;
                 }
 
-                try {
-                    byte[] bytes = name.getBytes("UTF-8");
-                    indices[idx++] = putName(bytes);
-                    indices[idx++] = bytes.length;
-                } catch (UnsupportedEncodingException e) {
-                    throw new InternalError("No UTF-8");
-                }
+                byte[] bytes = name.getBytes(StandardCharsets.UTF_8);
+                indices[idx++] = putName(bytes);
+                indices[idx++] = bytes.length;
             }
 
             void trunc() {

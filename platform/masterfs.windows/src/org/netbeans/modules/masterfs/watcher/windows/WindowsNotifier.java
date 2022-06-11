@@ -217,7 +217,7 @@ public final class WindowsNotifier extends Notifier<Void> {
 
     }
 
-    final static Kernel32 KERNEL32 = Native.load("kernel32", Kernel32.class, W32APIOptions.UNICODE_OPTIONS);
+    static final Kernel32 KERNEL32 = Native.load("kernel32", Kernel32.class, W32APIOptions.UNICODE_OPTIONS);
 
     public WindowsNotifier() { // prepare port, start thread?
     }

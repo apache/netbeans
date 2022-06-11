@@ -45,7 +45,7 @@ public class RequestAttributesIn extends BaseBean {
 
     static Vector<BeanComparator> comparators = new Vector<>();
 
-    static public final String PARAM = "Param"; // NOI18N
+    public static final String PARAM = "Param"; // NOI18N
 
     public RequestAttributesIn() {
 	this(Common.USE_DEFAULT_VALUES);
@@ -130,12 +130,12 @@ public class RequestAttributesIn extends BaseBean {
     }
 
     //
-    static public void addComparator(BeanComparator c) {
+    public static void addComparator(BeanComparator c) {
 	RequestAttributesIn.comparators.add(c);
     }
 
     //
-    static public void removeComparator(BeanComparator c) {
+    public static void removeComparator(BeanComparator c) {
 	RequestAttributesIn.comparators.remove(c);
     }
     //

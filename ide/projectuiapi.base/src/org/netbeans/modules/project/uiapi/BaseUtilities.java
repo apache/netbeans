@@ -69,7 +69,7 @@ public final class BaseUtilities {
         }
     }
 
-    public static abstract class ProjectGroupAccessor {
+    public abstract static class ProjectGroupAccessor {
 
         public abstract ProjectGroup createGroup(String name, Preferences prefs);
 

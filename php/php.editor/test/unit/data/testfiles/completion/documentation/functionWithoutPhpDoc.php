@@ -30,6 +30,9 @@ class TestClass
 
     public function testUnionType(int|float $param1, Foo|Bar $param2, \Test\Foo|\Test\Bar $param3): int|Foo|\Test\Bar {
     }
+
+    public function testIntersectionType(Foo&Bar $param1, \Test\Foo&\Test\Bar $param2): Foo&\Test\Bar {
+    }
 }
 
 function testTyped(int $param1, Baz $param2, \Test\Bar $param3): Foo {
@@ -41,11 +44,16 @@ function testNullableType(?int $param1, ?Foo $param2, ?\Test\Bar $param3): ?\Tes
 function testUnionType(int|float $param1, Foo|Bar $param2, \Test\Foo|\Test\Bar $param3): int|Foo|\Test\Bar {
 }
 
+function testIntersectionType(Foo&Bar $param1, \Test\Foo&\Test\Bar $param2): Foo&\Test\Bar {
+}
+
 $instance = new TestClass();
 $instance->testTyped(1, null, null);
 TestClass::testNullableType(null, null, null);
 $instance->testUnionType(1, null, null);
+$instance->testIntersectionType(null, null);
 
 testTyped(2, null, null);
 testNullableType(2, null, null);
 testUnionType(2, null, null);
+testIntersectionType(null, null); // function

@@ -78,7 +78,7 @@ public final class PatternAnalyser {
     /** deep introspection analyzes also super classes; useful for bean info*/
     private boolean deepIntrospection = false;
 
-    final static Logger LOG = Logger.getLogger(PatternAnalyser.class.getName());
+    static final Logger LOG = Logger.getLogger(PatternAnalyser.class.getName());
 
     public PatternAnalyser( FileObject fileObject, BeanPanelUI ui ) {
         this(fileObject, ui, false);

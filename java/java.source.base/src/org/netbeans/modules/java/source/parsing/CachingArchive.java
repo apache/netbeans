@@ -24,7 +24,7 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -66,7 +66,7 @@ public class CachingArchive implements Archive, FileChangeListener {
     //@GuardedBy("this")
     byte[] names;// = new byte[16384];
     private int nameOffset = 0;
-    final static int[] EMPTY = new int[0];
+    static final int[] EMPTY = new int[0];
     //@GuardedBy("this")
     private Map<String, Folder> folders;
     private volatile Boolean multiRelease;
@@ -408,11 +408,7 @@ public class CachingArchive implements Archive, FileChangeListener {
         }
         byte[] name = new byte[len];
         System.arraycopy(names, off, name, 0, len);
-        try {
-            return new String(name, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            throw new InternalError("No UTF-8");
-        }
+        return new String(name, StandardCharsets.UTF_8);
     }
 
     /*test*/ static long join(int higher, int lower) {
@@ -534,18 +530,14 @@ public class CachingArchive implements Archive, FileChangeListener {
                 indices = newInd;
             }
 
-            try {
-                byte[] bytes = name.getBytes("UTF-8");
-                indices[idx++] = outer.putName(bytes);
-                indices[idx++] = bytes.length;
-                indices[idx++] = (int)(mtime & 0xFFFFFFFF);
-                indices[idx++] = (int)(mtime >> 32);
-                if (delta == 6) {
-                    indices[idx++] = (int)(offset & 0xFFFFFFFF);
-                    indices[idx++] = (int)(offset >> 32);
-                }
-            } catch (UnsupportedEncodingException e) {
-                throw new InternalError("No UTF-8");
+            byte[] bytes = name.getBytes(StandardCharsets.UTF_8);
+            indices[idx++] = outer.putName(bytes);
+            indices[idx++] = bytes.length;
+            indices[idx++] = (int)(mtime & 0xFFFFFFFF);
+            indices[idx++] = (int)(mtime >> 32);
+            if (delta == 6) {
+                indices[idx++] = (int)(offset & 0xFFFFFFFF);
+                indices[idx++] = (int)(offset >> 32);
             }
         }
 

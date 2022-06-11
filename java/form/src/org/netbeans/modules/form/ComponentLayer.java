@@ -170,7 +170,7 @@ class ComponentLayer extends JPanel
                 msg = "<html><b>" + msg + "</b><br><br>"; // NOI18N
                 StringWriter sw = new StringWriter();
                 ex.printStackTrace(new PrintWriter(sw));
-                msg += sw.toString().replaceAll("\n", "<br>"); // NOI18N
+                msg += sw.toString().replace("\n", "<br>"); // NOI18N
                 Insets insets = getInsets();
                 JLabel label = new JLabel(msg);
                 label.setBorder(BorderFactory.createEmptyBorder(insets.top, insets.left, insets.bottom, insets.right));

@@ -367,7 +367,7 @@ public class ButtonWidget extends ImageLabelWidget implements PropertyChangeList
     private static final Color BACKGROUND_COLOR_PRESSED = new Color(0xCCCCCC);
     private static final Color BACKGROUND_COLOR_DISABLED = new Color(0xE4E4E4);
     
-    private final static class ButtonSelectProvider implements SelectProvider {
+    private static final class ButtonSelectProvider implements SelectProvider {
         
         public static ButtonSelectProvider DEFAULT = new ButtonSelectProvider();
         
@@ -390,7 +390,7 @@ public class ButtonWidget extends ImageLabelWidget implements PropertyChangeList
         
     }
 
-    public final static class ButtonHotKeyProvider implements HotKeyAction.HotKeyProvider {
+    public static final class ButtonHotKeyProvider implements HotKeyAction.HotKeyProvider {
 
         private ButtonWidget widget;
         

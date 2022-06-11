@@ -28,6 +28,7 @@ import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URI;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -83,10 +84,10 @@ public class TreeShimsCopier extends AbstractProcessor {
                             baos.write(r);
                         }
                     }
-                    String content = new String(baos.toByteArray(), "UTF-8");
+                    String content = new String(baos.toByteArray(), StandardCharsets.UTF_8);
                     content = content.replace("package org.netbeans.modules.java.source;", "package " + targetPackage + ";");
                     try (OutputStream out = filer.createSourceFile(targetPackage + ".TreeShims", type).openOutputStream()) {
-                        out.write(content.getBytes("UTF-8"));
+                        out.write(content.getBytes(StandardCharsets.UTF_8));
                     }
                 } catch (IOException ex) {
                     throw new IllegalStateException(ex);

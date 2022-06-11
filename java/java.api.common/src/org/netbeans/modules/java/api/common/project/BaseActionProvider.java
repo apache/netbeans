@@ -127,20 +127,20 @@ public abstract class BaseActionProvider implements ActionProvider {
         this.delegate = new AtomicReference<>();
     }
 
-    abstract protected String[] getPlatformSensitiveActions();
+    protected abstract String[] getPlatformSensitiveActions();
 
-    abstract protected String[] getActionsDisabledForQuickRun();
+    protected abstract String[] getActionsDisabledForQuickRun();
 
     /** Return map from commands to ant targets */
-    abstract public Map<String,String[]> getCommands();
+    public abstract Map<String,String[]> getCommands();
 
     /**Return set of commands which are affected by background scanning*/
-    abstract protected Set<String> getScanSensitiveActions();
+    protected abstract Set<String> getScanSensitiveActions();
 
     /**Return set of commands which need java model up to date*/
-    abstract protected Set<String> getJavaModelActions();
+    protected abstract Set<String> getJavaModelActions();
 
-    abstract protected boolean isCompileOnSaveEnabled();
+    protected abstract boolean isCompileOnSaveEnabled();
     
     /**
      * Returns CoS update status.

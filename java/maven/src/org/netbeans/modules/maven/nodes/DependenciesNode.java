@@ -250,7 +250,7 @@ public class DependenciesNode extends AbstractNode {
         }
     }
     
-    private final static class DependencyWrapper {
+    private static final class DependencyWrapper {
 
         private final Artifact artifact;        
         private final FileObject fileObject;        

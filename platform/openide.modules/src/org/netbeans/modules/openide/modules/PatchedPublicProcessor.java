@@ -23,6 +23,7 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -87,7 +88,7 @@ public class PatchedPublicProcessor extends AbstractProcessor {
                     StandardLocation.CLASS_OUTPUT,
                     "", "META-INF/.bytecodePatched",
                     originatingElements.toArray(new Element[originatingElements.size()])).openOutputStream()) {
-                BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
+                BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(os, StandardCharsets.UTF_8));
                 for (Map.Entry<String, String> exEntry : superclasses.entrySet()) {
                     String api = exEntry.getKey();
                     String sup = exEntry.getValue();

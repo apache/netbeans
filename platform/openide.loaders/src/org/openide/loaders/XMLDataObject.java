@@ -24,6 +24,7 @@ import java.io.*;
 import java.lang.ref.*;
 import java.lang.reflect.*;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.logging.*;
 import javax.xml.parsers.DocumentBuilder;

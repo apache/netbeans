@@ -53,13 +53,7 @@ public class OpenMatchingObjectsAction extends NodeAction {
             if (mo != null) {
                 if (mo.getTextDetails() != null
                         && !mo.getTextDetails().isEmpty()) { // #219428
-                    EventQueue.invokeLater(new Runnable() {
-                        @Override
-                        public void run() {
-                            mo.getTextDetails().get(0).showDetail(
-                                    TextDetail.DH_GOTO);
-                        }
-                    });
+                    EventQueue.invokeLater(() -> mo.getTextDetails().get(0).showDetail(TextDetail.DH_GOTO));
                 } else {
                     DataObject dob = mo.getDataObject();
                     if (dob != null) {

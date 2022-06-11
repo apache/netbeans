@@ -322,7 +322,7 @@ public final class TemplateOperation implements Runnable {
         steps.add(new PreloadProject(projectDir));
     }
 
-    private static abstract class BaseOperationStep implements OperationStep {
+    private abstract static class BaseOperationStep implements OperationStep {
         @Override
         public final String toString() {
             return "Step: " + getMessage();

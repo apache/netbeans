@@ -285,7 +285,7 @@ public abstract class DataView extends JPanel {
     }
     
     
-    public static abstract class PopupCustomizer {
+    public abstract static class PopupCustomizer {
         
         public abstract JMenuItem[] getMenuItems(JComponent invoker, DataView source, Object value, ClientUtils.SourceCodeSelection userValue);
         

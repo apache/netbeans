@@ -23,12 +23,12 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JPanel;
-import org.apache.commons.net.util.Base64;
 import org.netbeans.api.keyring.Keyring;
 import org.netbeans.modules.hudson.api.HudsonManager;
 import org.netbeans.modules.hudson.api.HudsonVersion;
@@ -108,7 +108,7 @@ public class APITokenConnectionAuthenticator extends JPanel {
             String token = new String(panel.tokField.getPassword());
             panel.tokField.setText("");
             Keyring.save(key, token.toCharArray(), Bundle.APITokenConnectionAuthenticator_password_description(home, username));
-            BASIC_AUTH.put(home.toString(), new Base64(0).encodeToString((username + ':' + token).getBytes()).trim());
+            BASIC_AUTH.put(home.toString(), Base64.getEncoder().encodeToString((username + ':' + token).getBytes()).trim());
             try {
                 return conn.getURL().openConnection();
             } catch (IOException x) {

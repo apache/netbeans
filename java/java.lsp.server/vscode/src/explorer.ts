@@ -20,7 +20,7 @@ import * as vscode from 'vscode';
 import { ThemeIcon } from 'vscode';
 import {  LanguageClient } from 'vscode-languageclient/node';
 import { NbLanguageClient } from './extension';
-import { NodeChangedParams, NodeInfoNotification, NodeInfoRequest } from './protocol';
+import { NodeChangedParams, NodeInfoNotification, NodeInfoRequest, GetResourceParams } from './protocol';
 
 const doLog : boolean = false;
 
@@ -32,7 +32,7 @@ class CachedImage {
     /**
      * Base URI of the image, if available.
      */
-    public baseUri? : string,
+    public baseUri? : vscode.Uri,
 
     /**
      * Icon URI as sent by the LSP server. Images translated to ThemeIcons have this field undefined.
@@ -51,12 +51,19 @@ class CachedImage {
   ) {}
 }
 
+class ViewInfo {
+  constructor(
+    readonly treeView : vscode.TreeView<Visualizer>,
+    readonly visProvider : VisualizerProvider)
+    {}
+}
+
 export class TreeViewService extends vscode.Disposable {  
   
   private handler : vscode.Disposable | undefined;
   private client : NbLanguageClient;
-  private trees : Map<string, vscode.TreeView<Visualizer>> = new Map();
-  private images : Map<number, CachedImage> = new Map();
+  private trees : Map<string, ViewInfo> = new Map();
+  private images : Map<number | vscode.Uri, CachedImage> = new Map();
   private providers : Map<number, VisualizerProvider> = new Map();
   log : vscode.OutputChannel;
   private entries : ImageEntry[] = [];
@@ -81,10 +88,8 @@ export class TreeViewService extends vscode.Disposable {
 
   private disposeAllViews() : void {
     for (let tree of this.trees.values()) {
-      tree.dispose();
-    }
-    for (let provider of this.providers.values()) {
-      provider.dispose();
+      tree.visProvider.dispose();
+      tree.treeView.dispose();
     }
     this.trees.clear();
     this.providers.clear();
@@ -95,9 +100,9 @@ export class TreeViewService extends vscode.Disposable {
       Partial<vscode.TreeViewOptions<any> & { 
           providerInitializer : (provider : CustomizableTreeDataProvider<Visualizer>) => void }
       >) : Promise<vscode.TreeView<Visualizer>> {
-    let tv : vscode.TreeView<Visualizer> | undefined  = this.trees.get(id);
+    let tv : ViewInfo | undefined  = this.trees.get(id);
     if (tv) {
-      return tv;
+      return tv.treeView;
     }
     const res = await createViewProvider(this.client, id);
     this.providers.set(res.getRoot().data.id, res);
@@ -115,7 +120,7 @@ export class TreeViewService extends vscode.Disposable {
       opts.showCollapseAll = options.showCollapseAll;
     }
     let view = vscode.window.createTreeView(id, opts);
-    this.trees.set(id, view);
+    this.trees.set(id, new ViewInfo(view, res));
     // this will replace the handler over and over, but never mind
     this.handler = this.client.onNotification(NodeInfoNotification.type, params => this.nodeChanged(params));
     return view;
@@ -128,40 +133,59 @@ export class TreeViewService extends vscode.Disposable {
     }
   }
 
-  imageUri(nodeData : NodeInfoRequest.Data) : vscode.Uri | string | ThemeIcon | undefined {
+  /**
+   * Requests an image data from the LSP server. 
+   * @param nodeData 
+   * @returns icon specification or undefined
+   */
+   async fetchImageUri(nodeData : NodeInfoRequest.Data) : Promise<vscode.Uri | string | ThemeIcon | undefined> {
+    let res : vscode.Uri | string | ThemeIcon | undefined = this.imageUri(nodeData);
+
+    if (res) {
+      return res;
+    }
+    if (!nodeData?.iconDescriptor) {
+      return undefined;
+    }
     let ci : CachedImage | undefined;
-    if (nodeData.iconIndex) {
-      ci = this.images.get(nodeData.iconIndex);
-      if (ci && ci.baseUri) {
-        // hack because of bad protocol: will be fixed when client actively asks for icon data and server will not cache icons.
-        const r = this.findProductIcon(ci.baseUri, nodeData.name, nodeData.contextValue);
-        if (r) {
-          return r;
-        }
-      }
+    ci = this.images.get(nodeData.iconDescriptor.baseUri);
+    if (ci != null) {
+      return ci?.iconUri;
+    }
+    const p : GetResourceParams = {
+      acceptEncoding: [ 'base64' ],
+      uri : nodeData.iconDescriptor.baseUri
+    };
+    let iconData = await this.client.sendRequest(NodeInfoRequest.getresource, p);
+    if (!iconData?.content) {
+      return undefined;
+    }
+    let iconString = `data: ${iconData.contentType || 'image/png'};${iconData.encoding || 'base64'},${iconData.content}`;
+    ci = new CachedImage(nodeData.iconDescriptor.baseUri, vscode.Uri.parse(iconString), undefined);
+    this.images.set(nodeData.iconDescriptor.baseUri, ci);
+    return ci.iconUri;
+  }
+
+  imageUri(nodeData : NodeInfoRequest.Data) : vscode.Uri | string | ThemeIcon | undefined {
+    if (nodeData.id < 0) {
+      return undefined;
     }
 
+    let ci : CachedImage | undefined;
+    if (nodeData.iconDescriptor?.baseUri) {
+      const r = this.findProductIcon(nodeData.iconDescriptor.baseUri, nodeData.name, nodeData.contextValue);
+      // override the icon with local.
+      if (r) {
+        ci = new CachedImage(nodeData.iconDescriptor.baseUri, undefined, r, [ nodeData.name, nodeData.contextValue ]);
+        this.images.set(nodeData.iconIndex, ci);
+      }
+    }
     if (!ci) {
-      if (nodeData.iconDescriptor?.baseUri) {
-        const r = this.findProductIcon(nodeData.iconDescriptor.baseUri, nodeData.name, nodeData.contextValue);
-        // override the icon with local.
-        if (r) {
-          ci = new CachedImage(nodeData.iconDescriptor.baseUri, undefined, r, [ nodeData.name, nodeData.contextValue ]);
-          this.images.set(nodeData.iconIndex, ci);
-        }
-      }
-      if (!ci) {
-        // hardcode visual vscode's File icons for regular files:
-        if (nodeData.resourceUri && nodeData.contextValue.includes('is:file')) {
-          const uri : vscode.Uri | undefined  = nodeData.iconUri ? vscode.Uri.parse(nodeData.iconUri) : undefined;
-          // do not cache
-          return ThemeIcon.File;
-        }
-      }
-      if (!ci && nodeData.iconUri) {
-          const uri : vscode.Uri = vscode.Uri.parse(nodeData.iconUri);
-          ci = new CachedImage(nodeData?.iconDescriptor?.baseUri, uri, undefined);
-          this.images.set(nodeData.iconIndex, ci);
+      // hardcode visual vscode's File icons for regular files:
+      if (nodeData.resourceUri && nodeData.contextValue.includes('is:file')) {
+        const uri : vscode.Uri | undefined  = nodeData.iconUri ? vscode.Uri.parse(nodeData.iconUri) : undefined;
+        // do not cache
+        return ThemeIcon.File;
       }
     }
     return ci?.icon ? ci.icon : ci?.iconUri;
@@ -171,13 +195,14 @@ export class TreeViewService extends vscode.Disposable {
     this.entries = entries;
   }
 
-  public findProductIcon(res : string, ...values: string[]) : string | ThemeIcon | undefined {
-  outer: for (let e of this.entries) {
-      if (e.uriRegexp.exec(res)) {
+  public findProductIcon(res : vscode.Uri, ...values: string[]) : string | ThemeIcon | undefined {
+    const s : string = res.toString();
+    outer: for (let e of this.entries) {
+      if (e.uriRegexp.test(s)) {
         if (e.valueRegexps) {
           let s : string = " " + values.join(" ") + " ";
           for (let vr of e.valueRegexps) {
-            if (!vr.exec(s)) {
+            if (!vr.test(s)) {
               continue outer;
             }
           }
@@ -222,6 +247,21 @@ export class TreeViewService extends vscode.Disposable {
     }
     this.setTranslations(newEntries);
   }
+
+  public async findPath(tree : vscode.TreeView<Visualizer>, selectData : any) : Promise<Visualizer | undefined> {
+    let selected : ViewInfo | undefined;
+
+    for (let vinfo of this.trees.values()) {
+      if (vinfo.treeView === tree) {
+        selected = vinfo;
+      }
+    }
+    if (!selected) {
+      return undefined;
+    }
+
+    return selected.visProvider.findTreeItem(selectData);
+  }
 }
 
 export interface TreeItemDecorator<T> extends vscode.Disposable {
@@ -242,11 +282,12 @@ class VisualizerProvider extends vscode.Disposable implements CustomizableTreeDa
     private client: LanguageClient,
     private ts : TreeViewService,
     private log : vscode.OutputChannel,
-    id : string,
-    rootData : NodeInfoRequest.Data
+    readonly id : string,
+    rootData : NodeInfoRequest.Data,
+    uri : vscode.Uri | string | ThemeIcon | undefined
   ) {
     super(() => this.disconnect());
-    this.root = new Visualizer(rootData, ts.imageUri(rootData));
+    this.root = new Visualizer(rootData.id, rootData, uri);
     this.treeData.set(rootData.id, this.root);
   }
 
@@ -304,8 +345,51 @@ class VisualizerProvider extends vscode.Disposable implements CustomizableTreeDa
       }
   }
 
+  async findTreeItem(toSelect : any) : Promise<Visualizer | undefined> {
+    let path : number[] = await this.client.sendRequest(NodeInfoRequest.findparams, { 
+      selectData : toSelect,
+      rootNodeId : Number(this.root.id)
+    });
+    if (!path) {
+      return;
+    }
+    let current : Visualizer = this.root;
+    if (path.length > 1 && path[0] == Number(this.root.id)) {
+      path.shift();
+    }
+    
+    for (let nodeId of path) {
+      let children : Visualizer[];
+      if (current.children) {
+        children = Array.from(current.children.values());
+      } else {
+        children = await this.getChildren(current);
+      }
+      if (!children) {
+        return undefined;
+      }
+      let selected : Visualizer | null = null;
+      for (let c of children) {
+        if (c.id == String(nodeId)) {
+          selected = c;
+          break;
+        }
+      }
+      if (!selected) {
+        return undefined;
+      }
+      current = selected;
+    }
+    return current;
+  }
+
   getRoot() : Visualizer {
     return this.root.copy();
+  }
+
+  getParent(element : Visualizer) : Visualizer | null | Thenable<Visualizer | null> {
+    // rely on that children was called first
+    return element.parent;
   }
 
   getTreeItem(element: Visualizer): vscode.TreeItem | Thenable<vscode.TreeItem> {
@@ -316,9 +400,40 @@ class VisualizerProvider extends vscode.Disposable implements CustomizableTreeDa
     }
 
     return this.wrap(async (arr) => {
-      let fetched = await this.queryVisualizer(element, arr, () => this.fetchItem(n));
-      element.update(fetched);
-      return self.getTreeItem2(fetched);
+      const pn : number = Number(element.parent?.id) || -1;
+      let fetched = await this.queryVisualizer(element, arr, () => this.fetchItem(pn, n));
+      let origin : vscode.TreeItem;
+      if (fetched) {
+        element.update(fetched);
+        origin = await self.getTreeItem2(fetched);
+      } else {
+        // fire a change, this was unexpected
+        const pn : number = Number(element.parent?.id) || -1;
+        let pv = this.treeData.get(pn);
+        if (pv) {
+          this.fireItemChange(pv);
+        }
+        origin = element;
+      }
+      let ti : vscode.TreeItem = new vscode.TreeItem(origin.label || "", origin.collapsibleState);
+
+      // See #4113 -- vscode broke icons display, if resourceUri is defined in TreeItem. We're OK with files,
+      // but folders can have a semantic icon, so let hide resourceUri from vscode for folders.
+      ti.command = origin.command;
+      ti.contextValue = origin.contextValue;
+      ti.description = origin.description;
+      ti.iconPath = origin.iconPath;
+      ti.id = origin.id;
+      ti.label = origin.label;
+      ti.tooltip = origin.tooltip;
+      ti.accessibilityInformation = origin.accessibilityInformation;
+
+      if (origin.resourceUri) {
+        if (!origin.resourceUri.toString().endsWith("/")) {
+          ti.resourceUri = origin.resourceUri;
+        }
+      }
+      return ti;
     });
   }
 
@@ -430,9 +545,13 @@ class VisualizerProvider extends vscode.Disposable implements CustomizableTreeDa
 
   delayedFire : Set<Visualizer> = new Set<Visualizer>();
 
-  async fetchItem(n : number) : Promise<Visualizer> {
+  async fetchItem(parent : number, n : number) : Promise<Visualizer | undefined> {
     let d = await this.client.sendRequest(NodeInfoRequest.info, { nodeId : n });
-    let v = new Visualizer(d, this.ts.imageUri(d));
+    if (!d || d?.id < 0) {
+      return undefined;
+    }
+    let iconUri = await this.ts.fetchImageUri(d);
+    let v = new Visualizer(n, d, iconUri);
     if (d.command) {
       // PENDING: provide an API to register command (+ parameters) -> command translators.
       if (d.command === 'vscode.open') {
@@ -454,14 +573,16 @@ class VisualizerProvider extends vscode.Disposable implements CustomizableTreeDa
     async function collectResults(list : Visualizer[], arr: any, element: Visualizer): Promise<Visualizer[]> {
       let res : Visualizer[] = [];
       let now : Visualizer[] | undefined;
+      const pn : number = Number(element.id) || -1;
       for (let i = 0; i < arr.length; i++) {
         const old : Visualizer | undefined = self.treeData.get(arr[i]);
-        res.push(
-          await self.queryVisualizer(old, list, () => self.fetchItem(arr[i]))
-        );
+        let v : Visualizer | undefined = await self.queryVisualizer(old, list, () => self.fetchItem(pn, arr[i]));
+        if (v) {
+          res.push(v);
+        }
       }
       now = element.updateChildren(res, self);
-      for (let i = 0; i < arr.length; i++) {
+      for (let i = 0; i < now.length; i++) {
         const v = now[i];
         const n : number = Number(v.id || -1);
         self.treeData.set(n, v);
@@ -507,13 +628,15 @@ export class Visualizer extends vscode.TreeItem {
   visId : number;
   pendingQueries : number = 0;
   pendingChange : boolean = false;
+
   constructor(
+    explicitId : number,
     public data : NodeInfoRequest.Data,
     public image : vscode.Uri | string | ThemeIcon | undefined
   ) {
-    super(data.label, data.collapsibleState);
+    super(data.id < 0 ? "< obsolete >" : data.label, data.collapsibleState);
     this.visId = visualizerSerial++;
-    this.id = "" + data.id;
+    this.id = "" + explicitId;
     this.label = data.label;
     this.description = data.description;
     this.tooltip = data.tooltip;
@@ -526,7 +649,7 @@ export class Visualizer extends vscode.TreeItem {
   }
 
   copy() : Visualizer {
-    let v : Visualizer = new Visualizer(this.data, this.image);
+    let v : Visualizer = new Visualizer(Number(this.id), this.data, this.image);
     v.id = this.id;
     v.label = this.label;
     v.description = this.description;
@@ -617,11 +740,11 @@ class ImageTranslator {
 export async function createViewProvider(c : NbLanguageClient, id : string) : Promise<VisualizerProvider> {
   const ts = c.findTreeViewService();
   const client = ts.getClient();
-  const res = client.sendRequest(NodeInfoRequest.explorermanager, { explorerId: id }).then(node => {
+  const res = client.sendRequest(NodeInfoRequest.explorermanager, { explorerId: id }).then(async node => {
     if (!node) {
       throw "Unsupported view: " + id;
     }
-    return new VisualizerProvider(client, ts, ts.log, id, node);
+    return new VisualizerProvider(client, ts, ts.log, id, node, await ts.fetchImageUri(node));
   });
   if (!res) {
     throw "Unsupported view: " + id;

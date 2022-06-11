@@ -873,7 +873,7 @@ public class GraphManager extends Object {
     //
     /////////////////////////////
     
-    static public void debug(boolean d) {
+    public static void debug(boolean d) {
 	DDLogFlags.debug = d;
     }
     
@@ -888,21 +888,21 @@ public class GraphManager extends Object {
 	    case Common.TYPE_BOOLEAN:
 		return Boolean.FALSE;
 	    case Common.TYPE_BYTE:
-		return new Byte((byte)0);
+		return (byte)0;
 	    case Common.TYPE_CHAR:
 		return new Character('\0');
 	    case Common.TYPE_SHORT:
-		return new Short((short)0);
+		return (short)0;
 	    case Common.TYPE_INT:
 		return Integer.valueOf(0);
 	    case Common.TYPE_LONG:
 		return new Long(0);
 	    case Common.TYPE_FLOAT:
-		return new Float(0.0);
+		return 0.0F;
 	    case Common.TYPE_DOUBLE:
 		return new Double(0.0);
 	    default:
-            throw new IllegalArgumentException(Common.getMessage("UnknownType", type));
+                throw new IllegalArgumentException(Common.getMessage("UnknownType", type));
 	}
     }
 }

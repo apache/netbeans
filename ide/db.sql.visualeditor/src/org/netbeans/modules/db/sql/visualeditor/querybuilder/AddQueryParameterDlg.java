@@ -151,9 +151,9 @@ public class AddQueryParameterDlg extends JPanel {
 
         // Append criterion value or parameter
         if ( parmRadioBtn.isSelected() ) {
-            criteriaStringBuffer.append ((String) parmTxtField.getText());
+            criteriaStringBuffer.append(parmTxtField.getText());
         } else if ( valueRadioBtn.isSelected() )
-            criteriaStringBuffer.append ((String) valueTxtField.getText());
+            criteriaStringBuffer.append(valueTxtField.getText());
 
         /* Ask Jeff how to handle this ?
            criteriaStringBuffer.append ((String) defaultValTxtField.getText());

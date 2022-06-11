@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.cloud.oracle;
 
+import org.netbeans.modules.cloud.oracle.items.OCIItem;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Desktop;
@@ -27,8 +28,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 import javax.swing.JPanel;
 import javax.swing.JTextPane;
 import javax.swing.event.ChangeListener;
@@ -39,7 +38,6 @@ import org.openide.WizardValidationException;
 import org.openide.util.ChangeSupport;
 import org.openide.util.HelpCtx;
 import org.openide.util.NbBundle;
-import org.openide.util.RequestProcessor;
 
 /**
  *
@@ -55,6 +53,7 @@ import org.openide.util.RequestProcessor;
 public class OracleCloudWizardIterator implements WizardDescriptor.AsynchronousInstantiatingIterator {
 
     private static final String TENANCY = "TENANCY";
+    private Panel panel;
 
     public OracleCloudWizardIterator() {
     }
@@ -76,7 +75,10 @@ public class OracleCloudWizardIterator implements WizardDescriptor.AsynchronousI
 
     @Override
     public WizardDescriptor.Panel current() {
-        return new Panel();
+        if (panel == null) {
+            panel = new Panel();
+        }
+        return panel;
     }
 
     @Override
@@ -115,6 +117,7 @@ public class OracleCloudWizardIterator implements WizardDescriptor.AsynchronousI
         private JTextPane text;
         private boolean valid = false;
         private final JPanel panel;
+        private final ChangeSupport changeSupport;
 
         public Panel() {
             text = new JTextPane();
@@ -140,6 +143,7 @@ public class OracleCloudWizardIterator implements WizardDescriptor.AsynchronousI
             panel.putClientProperty(WizardDescriptor.PROP_CONTENT_DATA, new String[]{Bundle.LBL_OC()});
             panel.putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, 0);
             text.setText(Bundle.MSG_CheckingSetup());
+            changeSupport = new ChangeSupport(this);
         }
 
         @Override
@@ -161,7 +165,10 @@ public class OracleCloudWizardIterator implements WizardDescriptor.AsynchronousI
             CompletionStage<Optional<OCIItem>> cs = (CompletionStage<Optional<OCIItem>>) o;
             cs.thenAccept(t -> {
                 if (t.isPresent()) {
-                    valid = true;
+                    if (!valid) {
+                        valid = true;
+                        changeSupport.fireChange();
+                    }
                     text.setText(Bundle.MSG_TenancyFound(t.get().getName()));
                 } else {
                     text.setText(Bundle.MSG_OCI_Setup(Bundle.URL_OCI_Setup()));
@@ -180,11 +187,12 @@ public class OracleCloudWizardIterator implements WizardDescriptor.AsynchronousI
 
         @Override
         public void addChangeListener(ChangeListener l) {
-
+            changeSupport.addChangeListener(l);
         }
 
         @Override
         public void removeChangeListener(ChangeListener l) {
+            changeSupport.removeChangeListener(l);
         }
 
         @Override

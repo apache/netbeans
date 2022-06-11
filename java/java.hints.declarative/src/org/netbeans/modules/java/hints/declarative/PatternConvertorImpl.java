@@ -35,7 +35,7 @@ public class PatternConvertorImpl extends PatternConvertor {
 
     @Override
     protected Iterable<? extends HintDescription> parseString(String code) {
-        List<HintDescription> hints = new LinkedList<HintDescription>();
+        List<HintDescription> hints = new LinkedList<>();
         
         for (Collection<? extends HintDescription> descs : DeclarativeHintRegistry.parseHints(null, code).values()) {
             hints.addAll(descs);

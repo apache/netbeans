@@ -190,8 +190,8 @@ public class FontEditor implements PropertyEditor, XMLPropertyEditor {
             else return NbBundle.getMessage(FontEditor.class, "CTL_Plain");
     }
     
-    static private String[] fonts;
-    static private String [] getFonts () {
+    private static String[] fonts;
+    private static String [] getFonts () {
         if (fonts == null) {
             try {
                 fonts = GraphicsEnvironment.getLocalGraphicsEnvironment ().getAvailableFontFamilyNames();

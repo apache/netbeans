@@ -57,7 +57,7 @@ public abstract class ProfilerPlugin {
     
     // --- Provider ------------------------------------------------------------
     
-    public static abstract class Provider {
+    public abstract static class Provider {
         
         public abstract ProfilerPlugin createPlugin(Lookup.Provider project, SessionStorage storage);
         

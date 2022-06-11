@@ -1,0 +1,5 @@
+Code completion result for source line:
+ni|m || square
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+VARIABLE   nim                                        Object

@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -79,24 +80,18 @@ public final class ModelElementFactory {
 
     public JsObject loadGlobalObject(FileObject fileObject, int length,
             String sourceLabel, URL defaultDocURL) throws IOException {
-        InputStream is = fileObject.getInputStream();
-        try {
+        try (InputStream is = fileObject.getInputStream()) {
             return loadGlobalObject(is, sourceLabel, defaultDocURL);
-        } finally {
-            is.close();
         }
     }
 
     public JsObject loadGlobalObject(InputStream is, String sourceLabel, URL defaultDocURL) throws IOException {
         JsFunction global = newGlobalObject(null, Integer.MAX_VALUE);
-        BufferedReader reader = new BufferedReader(new InputStreamReader(is, "UTF-8")); // NOI18N
-        try {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8))) {
             for (JsObject object : Model.readModel(reader, global, sourceLabel, defaultDocURL)) {
                 putGlobalProperty(global, object);
             }
             return global;
-        } finally {
-            reader.close();
         }
     }
 
@@ -118,7 +113,7 @@ public final class ModelElementFactory {
         global.addProperty(wrapped.getName(), wrapped);
         return wrapped;
     }
-    
+
     public JsObject newObject(JsObject parent, String name, OffsetRange offsetRange, boolean isDeclared) {
         return newObject(parent, name, offsetRange, isDeclared, null);
     }
@@ -126,35 +121,35 @@ public final class ModelElementFactory {
     public JsObject newObject(JsObject parent, String name, OffsetRange offsetRange, boolean isDeclared, String sourceLabel) {
         return new JsObjectImpl(parent, new Identifier(name, offsetRange), offsetRange, isDeclared, null, sourceLabel);
     }
-    
+
     public JsFunction newFunction(DeclarationScope scope, JsObject parent, String name, Collection<String> params) {
         return newFunction(scope, parent, name, params, null);
     }
-    
+
     public JsFunction newFunction(DeclarationScope scope, JsObject parent, String name, Collection<String> params, String sourceLabel) {
-        List<Identifier> realParams = new ArrayList<Identifier>();
+        List<Identifier> realParams = new ArrayList<>();
         for (String param : params) {
             realParams.add(new Identifier(param, OffsetRange.NONE));
         }
         return newFunction(scope, parent, new Identifier(name, OffsetRange.NONE), realParams, OffsetRange.NONE, sourceLabel);
     }
-    
+
     public JsFunction newFunction(DeclarationScope scope, JsObject parent, String name, Collection<String> params, OffsetRange range, String sourceLabel) {
-        List<Identifier> realParams = new ArrayList<Identifier>();
+        List<Identifier> realParams = new ArrayList<>();
         for (String param : params) {
             realParams.add(new Identifier(param, OffsetRange.NONE));
-        } 
+        }
         return newFunction(scope, parent, new Identifier(name, OffsetRange.NONE), realParams, range, sourceLabel);
     }
-    
+
     public JsFunction newFunction(DeclarationScope scope, JsObject parent, Identifier name, List<Identifier> params, OffsetRange range) {
         return newFunction(scope, parent, name, params, range, null);
     }
-    
+
     public JsFunction newFunction(DeclarationScope scope, JsObject parent, Identifier name, List<Identifier> params, OffsetRange range, String sourceLabel) {
         return new JsFunctionImpl(scope, parent, name, params, range, null, sourceLabel);
     }
-    
+
     public JsObject newReference(JsObject parent, String name, OffsetRange offsetRange,
             JsObject original, boolean isDeclared, @NullAllowed Set<Modifier> modifiers) {
         if (original instanceof JsFunction) {
@@ -176,13 +171,13 @@ public final class ModelElementFactory {
         }
         return new OriginalParentObjectReference(new Identifier(name, OffsetRange.NONE), original, isDeclared);
     }
-    
+
     public JsObject newReference(String name, JsObject original, boolean isDeclared, boolean isVirtual) {
         JsObject object = newReference(name, original, isDeclared);
         ((JsObjectImpl)object).setVirtual(isVirtual);
         return object;
     }
-    
+
     public TypeUsage newType(String name, int offset, boolean resolved) {
         return new TypeUsage(name, offset, resolved);
     }
@@ -199,7 +194,7 @@ public final class ModelElementFactory {
             return getOriginal().getParent();
         }
     }
-    
+
     private static class OriginalParentArrayReference extends JsArrayReference {
 
         public OriginalParentArrayReference(Identifier declarationName, JsArray original,
@@ -306,7 +301,7 @@ public final class ModelElementFactory {
         public void clearAssignments() {
             delegate.clearAssignments();
         }
-        
+
         @Override
         public boolean isAnonymous() {
             return delegate.isAnonymous();
@@ -316,7 +311,7 @@ public final class ModelElementFactory {
         public void setAnonymous(boolean value) {
             delegate.setAnonymous(value);
         }
-        
+
         @Override
         public boolean isDeprecated() {
             return delegate.isDeprecated();
@@ -421,7 +416,7 @@ public final class ModelElementFactory {
         public boolean moveProperty(String name, JsObject newParent) {
             return delegate.moveProperty(name, newParent);
         }
-        
+
     }
 
     private static class GlobalFunction implements JsFunction {
@@ -462,7 +457,7 @@ public final class ModelElementFactory {
         public JsObject getProperty(String name) {
             return delegate.getProperty(name);
         }
-        
+
         @Override
         public Collection<? extends DeclarationScope> getChildrenScopes() {
             return delegate.getChildrenScopes();
@@ -647,7 +642,7 @@ public final class ModelElementFactory {
         public OffsetRange getOffsetRange(ParserResult result) {
             return delegate.getOffsetRange(result);
         }
-        
+
         @Override
         public boolean containsOffset(int offset) {
             return delegate.containsOffset(offset);
@@ -662,6 +657,6 @@ public final class ModelElementFactory {
         public boolean moveProperty(String name, JsObject newParent) {
             return delegate.moveProperty(name, newParent);
         }
-        
+
     }
 }

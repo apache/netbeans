@@ -29,6 +29,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.text.Document;
@@ -60,7 +61,7 @@ public class Util {
     
     public static String getResourceAsString(String path) throws Exception {
         InputStream in = Util.class.getResourceAsStream(path);
-        BufferedReader br = new BufferedReader(new InputStreamReader(in,"UTF-8"));
+        BufferedReader br = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
         StringBuffer sbuf = new StringBuffer();
         try {
             String line = null;
@@ -81,7 +82,7 @@ public class Util {
     
     public static Document loadDocument(InputStream in) throws Exception {
         Document sd = new BaseDocument(true, "text/xml"); //NOI18N
-        BufferedReader br = new BufferedReader(new InputStreamReader(in,"UTF-8"));
+        BufferedReader br = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
         StringBuffer sbuf = new StringBuffer();
         try {
             String line = null;

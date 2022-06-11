@@ -85,8 +85,25 @@ public final class Main extends Object {
    * process.
    */
     public static void initUICustomizations() {
-      if (!CLIOptions.isGui ()) {
+      if (!CLIOptions.isGui () && CLIOptions.uiClassName == null) {
           return;
+      }
+      
+      Class uiClass = CLIOptions.uiClass;
+      // try again loading L&F class, this time with full module system.
+      if (CLIOptions.uiClassName != null && CLIOptions.uiClass == null) {
+          // try again
+          ClassLoader loader = Lookup.getDefault().lookup(ClassLoader.class);
+          try {
+              uiClass = loader.loadClass(CLIOptions.uiClassName);
+              CLIOptions.uiClass = uiClass;
+          } catch (ClassNotFoundException ex) {
+              // ignore
+              System.err.println(NbBundle.getMessage(Main.class, "ERR_UINotFound", CLIOptions.uiClassName));
+              if (!CLIOptions.isGui ()) {
+                  return;
+              }
+          }
       }
     
       URL themeURL = null;

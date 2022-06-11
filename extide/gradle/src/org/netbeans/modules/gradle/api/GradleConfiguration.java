@@ -22,6 +22,7 @@ package org.netbeans.modules.gradle.api;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import org.netbeans.modules.gradle.GradleModuleFileCache21;
 
@@ -41,6 +42,8 @@ public final class GradleConfiguration implements Serializable, ModuleSearchSupp
     GradleDependency.FileCollectionDependency files;
     boolean transitive;
     boolean canBeResolved = true;
+    boolean canBeConsumed;
+    Map<String, String> attributes;
 
     GradleConfiguration(String name) {
         this.name = name;
@@ -117,6 +120,29 @@ public final class GradleConfiguration implements Serializable, ModuleSearchSupp
 
     public boolean isCanBeResolved() {
         return canBeResolved;
+    }
+
+    /**
+     * Returns {@code true} if this configuration is to be consumed.
+     * 
+     * @return {@code true} if this configuration is consumable.
+     * @since 2.24
+     */
+    public boolean isCanBeConsumed() {
+        return canBeConsumed;
+    }
+
+    /**
+     * Returns the attributes of this configuration. The returned map is a
+     * simplified version of the Gradle configuration
+     * {@link https://docs.gradle.org/current/javadoc/org/gradle/api/attributes/AttributeContainer.html AttributeContainer},
+     * where the attribute names are the keys and the attribute string values are the values.
+     *
+     * @return the attributes of this configuration
+     * @since 2.24
+     */
+    public Map<String, String> getAttributes() {
+        return attributes != null ? attributes : Collections.emptyMap();
     }
 
     public boolean isEmpty() {

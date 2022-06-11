@@ -55,7 +55,7 @@ public final class BeforeSaveTasks {
         return beforeSaveTasks;
     }
 
-    private final static ThreadLocal<Boolean> ignoreOnSaveTasks = new ThreadLocal<Boolean>() {
+    private static final ThreadLocal<Boolean> ignoreOnSaveTasks = new ThreadLocal<Boolean>() {
         @Override protected Boolean initialValue() {
             return false;
         }

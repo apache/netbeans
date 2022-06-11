@@ -98,7 +98,8 @@
             <packaging>*</packaging>
         </packagings>
         <goals>
-            <goal>integration-test</goal>
+            <goal>pre-integration-test</goal>
+            <goal>failsafe:integration-test</goal>
         </goals>
         <properties>
             <test>DummyToSkipUnitTests</test>
@@ -202,7 +203,8 @@
             <packaging>*</packaging>
         </packagings>
         <goals>
-            <goal>integration-test</goal>
+            <goal>pre-integration-test</goal>
+            <goal>failsafe:integration-test</goal>
         </goals>
         <properties>
             <test>DummyToSkipUnitTests</test>

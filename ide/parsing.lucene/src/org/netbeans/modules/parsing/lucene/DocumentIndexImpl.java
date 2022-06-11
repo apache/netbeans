@@ -319,7 +319,7 @@ public class DocumentIndexImpl implements DocumentIndex2, Runnable {
         return new DocumentIndexImpl.Transactional(index, cache);
     }
 
-    private final static class Transactional extends DocumentIndexImpl implements DocumentIndex2.Transactional {
+    private static final class Transactional extends DocumentIndexImpl implements DocumentIndex2.Transactional {
 
         private Transactional(
             @NonNull final Index.Transactional index,

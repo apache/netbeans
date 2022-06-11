@@ -54,7 +54,7 @@ public abstract class AbstractDebugTest extends NbTestCase {
         super(s);
     }
 
-    protected final static void createSourceFile(String fileName, File wd, String content) throws IOException {
+    protected static final void createSourceFile(String fileName, File wd, String content) throws IOException {
         FileObject source = FileUtil.createData(FileUtil.toFileObject(wd), "main.cpp");
         try (OutputStream os = source.getOutputStream();
             Writer w = new OutputStreamWriter(os)) {
@@ -62,12 +62,12 @@ public abstract class AbstractDebugTest extends NbTestCase {
         }
     }
 
-    protected final static void compileC(String name, File wd) throws IOException, InterruptedException {
+    protected static final void compileC(String name, File wd) throws IOException, InterruptedException {
         Process compile = new ProcessBuilder("gcc", "-o", name, "-g", name + ".c").directory(wd).start();
         assertEquals(0, compile.waitFor());
     }
 
-    protected final static void compileCPP(String name, File wd) throws IOException, InterruptedException {
+    protected static final void compileCPP(String name, File wd) throws IOException, InterruptedException {
         Process compile = new ProcessBuilder("g++", "-o", name, "-g", name + ".cpp").directory(wd).start();
         assertEquals(0, compile.waitFor());
     }
@@ -83,7 +83,7 @@ public abstract class AbstractDebugTest extends NbTestCase {
 
     protected final void startDebugging(List<String> executable, ExplicitProcessParameters processParameters) throws IOException {
         this.process = CPPLiteDebugger.startDebugging(
-                new CPPLiteDebuggerConfig(executable, processParameters, null, "gdb"),
+                new CPPLiteDebuggerConfig(executable, processParameters, true, null, "gdb"),
                 engine -> this.engine = engine);
         stdOut = outputFrom(process.getInputStream());
         stdErr = outputFrom(process.getErrorStream());

@@ -74,6 +74,28 @@ public interface PayaraServer {
     public String getAdminPassword();
 
     /**
+     * Get information if this Payara server instance is running in docker container.
+     * <p/>
+     * @return Value of <code>true</code> when this Payara server instance
+     *         is docker instance or <code>false</code> otherwise.
+     */
+    public boolean isDocker();
+
+    /**
+     * Get the docker host path.
+     * <p/>
+     * @return The dcoker volume host path.
+     */
+    public String getHostPath();
+
+    /**
+     * Get the docker container path.
+     * <p/>
+     * @return The dcoker volume container path.
+     */
+    public String getContainerPath();
+
+    /**
      * Get Payara server domains folder.
      * <p/>
      * @return Domains folder.

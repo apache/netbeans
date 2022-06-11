@@ -362,7 +362,7 @@ public class ProfilerClient implements CommonConstants {
     private MemoryCCTProvider memCctProvider;
     private JdbcCCTProvider jdbcCctProvider;
     private final Object execInSeparateThreadLock = new Object();
-    final private Object forceObtainedResultsDumpLock = new Object(); // To make dump processing and other commands mutually
+    private final Object forceObtainedResultsDumpLock = new Object(); // To make dump processing and other commands mutually
                                                                 // exclusive
 
     /*instrMethodGroupFromRootComplete, */

@@ -26,15 +26,13 @@ import java.io.ByteArrayOutputStream;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.charset.Charset;
-import java.text.MessageFormat;
-import java.util.MissingResourceException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.netbeans.modules.keyring.gnome.libsecret.Glib.GError;
 import org.netbeans.modules.keyring.gnome.libsecret.LibSecret.SecretSchema;
 import org.netbeans.modules.keyring.gnome.libsecret.LibSecret.SecretSchemaAttribute;
+import org.netbeans.modules.keyring.impl.KeyringSupport;
 import org.netbeans.spi.keyring.KeyringProvider;
-import org.openide.util.NbBundle;
 import org.openide.util.lookup.ServiceProvider;
 
 @ServiceProvider(service = KeyringProvider.class, position = 90)
@@ -49,7 +47,7 @@ public class GnomeLibSecretProvider implements KeyringProvider {
     private SecretSchema secretSchema = null;
 
     public GnomeLibSecretProvider() {
-        appName = getAppName();
+        appName = KeyringSupport.getAppName();
     }
 
     private SecretSchema getSchema() {
@@ -64,16 +62,6 @@ public class GnomeLibSecretProvider implements KeyringProvider {
         secretSchema.attributes[0].name = KEY;
         secretSchema.attributes[0].type = LibSecret.SECRET_SCHEMA_ATTRIBUTE_STRING;
         return secretSchema;
-    }
-
-    private String getAppName() {
-        try {
-            return MessageFormat.format(
-                    NbBundle.getBundle("org.netbeans.core.windows.view.ui.Bundle").getString("CTL_MainWindow_Title_No_Project"),
-                    "…");
-        } catch (MissingResourceException x) {
-            return "NetBeans"; // NOI18N
-        }
     }
 
     @Override
@@ -143,7 +131,7 @@ public class GnomeLibSecretProvider implements KeyringProvider {
         try {
             GError gerror = Structure.newInstance(GError.class, gerrorBuffer.getValue());
             gerror.read();
-            LOG.warning(String.format("%d/%d: %s", gerror.domain, gerror.code, gerror.message));
+            throw new RuntimeException(String.format("%d/%d: %s", gerror.domain, gerror.code, gerror.message));
         } finally {
             Glib.INSTANCE.g_error_free(gerrorBuffer.getValue());
         }

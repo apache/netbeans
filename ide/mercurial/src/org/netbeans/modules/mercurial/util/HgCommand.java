@@ -271,21 +271,21 @@ public abstract class HgCommand<T> implements Callable<T> {
     private static final String HG_MERGE_UNAVAILABLE_ERR = "is not recognized as an internal or external command";
 
     private static final String HG_NO_CHANGES_ERR = "no changes found"; // NOI18N
-    private final static String HG_CREATE_NEW_BRANCH_ERR = "abort: push creates new remote "; // NOI18N
-    private final static String HG_HEADS_CREATED_ERR = "(+1 heads)"; // NOI18N
-    private final static String HG_NO_HG_CMD_FOUND_ERR = "hg: not found";
-    private final static String HG_ARG_LIST_TOO_LONG_ERR = "Arg list too long";
-    private final static String HG_ARGUMENT_LIST_TOO_LONG_ERR = "Argument list too long"; //NOI18N
+    private static final String HG_CREATE_NEW_BRANCH_ERR = "abort: push creates new remote "; // NOI18N
+    private static final String HG_HEADS_CREATED_ERR = "(+1 heads)"; // NOI18N
+    private static final String HG_NO_HG_CMD_FOUND_ERR = "hg: not found";
+    private static final String HG_ARG_LIST_TOO_LONG_ERR = "Arg list too long";
+    private static final String HG_ARGUMENT_LIST_TOO_LONG_ERR = "Argument list too long"; //NOI18N
 
-    private final static String HG_HEADS_CMD = "heads"; // NOI18N
-    private final static String HG_BRANCHES_CMD = "branches"; // NOI18N
-    private final static String HG_BRANCH_CMD = "branch"; // NOI18N
-    private final static String HG_TAG_CMD = "tag"; // NOI18N
-    private final static String HG_TAG_OPT_MESSAGE = "--message"; // NOI18N
-    private final static String HG_TAG_OPT_REMOVE = "--remove"; // NOI18N
-    private final static String HG_TAG_OPT_REVISION = "--rev"; // NOI18N
-    private final static String HG_TAG_OPT_LOCAL = "--local"; // NOI18N
-    private final static String HG_TAGS_CMD = "tags"; // NOI18N
+    private static final String HG_HEADS_CMD = "heads"; // NOI18N
+    private static final String HG_BRANCHES_CMD = "branches"; // NOI18N
+    private static final String HG_BRANCH_CMD = "branch"; // NOI18N
+    private static final String HG_TAG_CMD = "tag"; // NOI18N
+    private static final String HG_TAG_OPT_MESSAGE = "--message"; // NOI18N
+    private static final String HG_TAG_OPT_REMOVE = "--remove"; // NOI18N
+    private static final String HG_TAG_OPT_REVISION = "--rev"; // NOI18N
+    private static final String HG_TAG_OPT_LOCAL = "--local"; // NOI18N
+    private static final String HG_TAGS_CMD = "tags"; // NOI18N
 
     private static final String HG_NO_REPOSITORY_ERR = "There is no Mercurial repository here"; // NOI18N
     private static final String HG_NO_RESPONSE_ERR = "no suitable response from remote hg!"; // NOI18N

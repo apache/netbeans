@@ -1359,6 +1359,71 @@ public class ASTPHP5ParserTest extends ParserTestBase {
         performTest("parser/php81/pureIntersectionTypesWithUnionTypeError_03");
     }
 
+    public void testEnumerations_01() throws Exception {
+        performTest("parser/php81/enumerations_01");
+    }
+
+    public void testEnumerations_02() throws Exception {
+        performTest("parser/php81/enumerations_02");
+    }
+
+    public void testEnumerations_03() throws Exception {
+        performTest("parser/php81/enumerations_03");
+    }
+
+    public void testEnumAsTypeName() throws Exception {
+        // We can use "enum" as a type name
+        performTest("parser/php81/enumAsTypeName");
+    }
+
+    public void testTreatNamespacedNamesAsSingleToken_01a() throws Exception {
+        performTest("parser/php80/treatNamespacedNamesAsSingleToken_01a");
+    }
+
+    public void testTreatNamespacedNamesAsSingleToken_01b() throws Exception {
+        performTest("parser/php80/treatNamespacedNamesAsSingleToken_01b");
+    }
+
+    public void testTreatNamespacedNamesAsSingleToken_02a() throws Exception {
+        performTest("parser/php80/treatNamespacedNamesAsSingleToken_02a");
+    }
+
+    public void testTreatNamespacedNamesAsSingleToken_02b() throws Exception {
+        performTest("parser/php80/treatNamespacedNamesAsSingleToken_02b");
+    }
+
+    public void testTreatNamespacedNamesAsSingleToken_03() throws Exception {
+        performTest("parser/php80/treatNamespacedNamesAsSingleToken_03");
+    }
+
+    public void testTreatNamespacedNamesAsSingleToken_04() throws Exception {
+        performTest("parser/php80/treatNamespacedNamesAsSingleToken_04");
+    }
+
+    public void testTreatNamespacedNamesAsSingleTokenError_01a() throws Exception {
+        performTest("parser/php80/treatNamespacedNamesAsSingleTokenError_01a");
+    }
+
+    public void testTreatNamespacedNamesAsSingleTokenError_01b() throws Exception {
+        performTest("parser/php80/treatNamespacedNamesAsSingleTokenError_01b");
+    }
+
+    public void testTreatNamespacedNamesAsSingleTokenError_02a() throws Exception {
+        performTest("parser/php80/treatNamespacedNamesAsSingleTokenError_02a");
+    }
+
+    public void testTreatNamespacedNamesAsSingleTokenError_02b() throws Exception {
+        performTest("parser/php80/treatNamespacedNamesAsSingleTokenError_02b");
+    }
+
+    public void testTreatNamespacedNamesAsSingleTokenError_03a() throws Exception {
+        performTest("parser/php80/treatNamespacedNamesAsSingleTokenError_03a");
+    }
+
+    public void testTreatNamespacedNamesAsSingleTokenError_03b() throws Exception {
+        performTest("parser/php80/treatNamespacedNamesAsSingleTokenError_03b");
+    }
+
     @Override
     protected String getTestResult(String filename) throws Exception {
         // the same <Comment /> is shown twice becase the scanner is used twice

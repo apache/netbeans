@@ -67,6 +67,10 @@ final class CallOccurrence implements CallDescriptor {
         }
     }
 
+    public PositionBounds getSelectionBounds() {
+        return selectionBounds;
+    }
+
     public static CallOccurrence createOccurrence(
             CompilationInfo javac, TreePath selection, Call parent) {
         WhereUsedElement wue = WhereUsedElement.create(javac, selection, false);

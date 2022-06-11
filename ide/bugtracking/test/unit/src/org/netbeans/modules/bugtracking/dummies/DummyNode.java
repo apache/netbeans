@@ -37,7 +37,7 @@ import org.openide.util.lookup.Lookups;
  * @author Marian Petras
  */
 public class DummyNode extends AbstractNode {
-    final static String TEST_REPO = "testrepo";
+    static final String TEST_REPO = "testrepo";
 
     private final String name;
     private final Repository repository;

@@ -141,7 +141,7 @@ public final class DDProvider {
     }
 
     private WebServicesProxy getFromCache (FileObject fo) {
-         return (WebServicesProxy) ddMap.get(fo);
+         return ddMap.get(fo);
     }
     
     /**

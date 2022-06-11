@@ -1,0 +1,16 @@
+public  function getFooBar(): Foo&Bar  {
+return $$this->fooBar;
+}
+
+public  function getFooBarBaz(): Foo&Bar&Baz  {
+return $$this->fooBarBaz;
+}
+
+public  function getFoo(): Foo  {
+return $$this->foo;
+}
+
+public static function getStaticFooBar(): Foo&Bar  {
+return self::$$staticFooBar;
+}
+

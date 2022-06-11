@@ -26,6 +26,7 @@ import java.awt.im.InputMethodHighlight;
 import java.text.AttributedCharacterIterator;
 import java.text.AttributedString;
 import java.util.Map;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.event.DocumentEvent;
@@ -127,8 +128,9 @@ public final class ComposedTextHighlighting extends AbstractHighlightsContainer 
                 for(char c = aci.first(); c != AttributedCharacterIterator.DONE; c = aci.next()) {
                     sb.append("'").append(c).append("' = {"); //NOI18N
                     Map<AttributedCharacterIterator.Attribute, ?> attributes = aci.getAttributes();
-                    for(AttributedCharacterIterator.Attribute key : attributes.keySet()) {
-                        Object value = attributes.get(key);
+                    for(Map.Entry<AttributedCharacterIterator.Attribute, ?> attributeEntry : attributes.entrySet()) {
+                        AttributedCharacterIterator.Attribute key = attributeEntry.getKey();
+                        Object value = attributeEntry.getValue();
                         if (value instanceof InputMethodHighlight) {
                             sb.append("'").append(key).append("' = {"); //NOI18N
                             Map<TextAttribute, ?> style = ((InputMethodHighlight) value).getStyle();
@@ -136,8 +138,9 @@ public final class ComposedTextHighlighting extends AbstractHighlightsContainer 
                                 style = Toolkit.getDefaultToolkit().mapInputMethodHighlight((InputMethodHighlight) value);
                             }
                             if (style != null) {
-                                for(TextAttribute ta : style.keySet()) {
-                                    Object tav = style.get(ta);
+                                for(Map.Entry<TextAttribute, ?> styleEntry : style.entrySet()) {
+                                    TextAttribute ta = styleEntry.getKey();
+                                    Object tav = styleEntry.getValue();
                                     sb.append("'").append(ta).append("' = '").append(tav).append("', "); //NOI18N
                                 }
                             } else {
@@ -201,8 +204,7 @@ public final class ComposedTextHighlighting extends AbstractHighlightsContainer 
     }
 
     private AttributeSet translateAttributes(Map<AttributedCharacterIterator.Attribute, ?> source) {
-        for(AttributedCharacterIterator.Attribute sourceKey : source.keySet()) {
-            Object sourceValue = source.get(sourceKey);
+        for(Object sourceValue : source.values()) {
             
             // Ignore any non-input method related highlights
             if (!(sourceValue instanceof InputMethodHighlight)) {

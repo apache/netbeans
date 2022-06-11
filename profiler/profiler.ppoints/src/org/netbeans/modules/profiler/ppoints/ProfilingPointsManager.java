@@ -317,7 +317,7 @@ public final class ProfilingPointsManager extends ProfilingPointsProcessor
     private boolean ignoreStoreProfilingPoints = false;
     
     private boolean processesProfilingPoints;
-    final private Object pointsLock = new Object();
+    private final Object pointsLock = new Object();
     // @GuardedBy pointsLock
     private RuntimeProfilingPoint[] points = null;
     

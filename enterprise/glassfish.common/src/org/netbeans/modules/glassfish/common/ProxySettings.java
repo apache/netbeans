@@ -157,8 +157,8 @@ class ProxySettings {
     }
 
     private static String getModifiedNonProxyHosts (String systemPreset) {
-        String fromSystem = systemPreset.replaceAll (";", "|").replaceAll (",", "|"); //NOI18N
-        String fromUser = getPresetNonProxyHosts () == null ? "" : getPresetNonProxyHosts ().replaceAll (";", "|").replaceAll (",", "|"); //NOI18N
+        String fromSystem = systemPreset.replace (";", "|").replace (",", "|"); //NOI18N
+        String fromUser = getPresetNonProxyHosts () == null ? "" : getPresetNonProxyHosts ().replace (";", "|").replace (",", "|"); //NOI18N
         if (Utilities.isWindows ()) {
             fromSystem = addReguralToNonProxyHosts (fromSystem);
         }

@@ -57,7 +57,7 @@ public class FormModel
         NB71, // since NB 7.1, form file version 1.8
         NB74 // since NB 7.4, form file version 1.9
     }
-    final static FormVersion LATEST_VERSION = FormVersion.NB74;
+    static final FormVersion LATEST_VERSION = FormVersion.NB74;
 
     private String leadingComment;
 
@@ -1396,9 +1396,9 @@ public class FormModel
     // ---------------
 
     /** For debugging purposes only. */
-    static private int traceCount = 0;
+    private static int traceCount = 0;
     /** For debugging purposes only. */
-    static private final boolean TRACE = false;
+    private static final boolean TRACE = false;
     /** For debugging purposes only. */
     static void t(String str) {
         if (TRACE)

@@ -41,6 +41,7 @@ import org.netbeans.modules.php.editor.api.elements.TypeConstantElement;
 import org.netbeans.modules.php.editor.api.elements.TypeElement;
 import org.netbeans.modules.php.editor.index.PHPIndexer;
 import org.netbeans.modules.php.editor.index.Signature;
+import org.netbeans.modules.php.editor.model.CaseElement;
 import org.netbeans.modules.php.editor.model.ClassConstantElement;
 import org.netbeans.modules.php.editor.model.ClassScope;
 import org.netbeans.modules.php.editor.model.FieldElement;
@@ -78,6 +79,7 @@ class ClassScopeImpl extends TypeScopeImpl implements ClassScope, VariableNameFa
     void addElement(ModelElementImpl element) {
         assert element instanceof TypeScope || element instanceof VariableName
                 || element instanceof MethodScope || element instanceof FieldElement
+                || element instanceof CaseElement // allowed by parser although class can't have cases
                 || element instanceof ClassConstantElement : element.getPhpElementKind();
         if (element instanceof TypeScope) {
             Scope inScope = getInScope();

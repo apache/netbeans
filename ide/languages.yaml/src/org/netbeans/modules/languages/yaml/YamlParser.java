@@ -130,7 +130,7 @@ public class YamlParser extends org.netbeans.modules.parsing.spi.Parser {
         replaceWithSpaces(source, "{{", "}}");
     }
 
-    final static Pattern[] SPEC_PATTERN_REPLACEMENTS = new Pattern[]{
+    static final Pattern[] SPEC_PATTERN_REPLACEMENTS = new Pattern[]{
         Pattern.compile("@"),
         Pattern.compile("\\?"),
         Pattern.compile("!(?!(omap|!omap))"),};
@@ -195,7 +195,7 @@ public class YamlParser extends org.netbeans.modules.parsing.spi.Parser {
             if (stallCounter < 2) {
                 YamlSection section = sources.pop();
                 try {
-                    List<?  extends StructureItem> items = section.collectItems();
+                    List<?  extends StructureItem> items = section.collectItems(snapshot);
                     result.addStructure(items);
                 } catch (ScannerException se) {
                     result.addError(section.processException(snapshot, se));

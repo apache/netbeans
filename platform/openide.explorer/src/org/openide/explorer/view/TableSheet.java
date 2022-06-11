@@ -41,12 +41,12 @@ import org.openide.util.NbBundle;
 */
 class TableSheet extends JScrollPane {
     /** table */
-    transient protected JTable table;
+    protected transient JTable table;
 
     /** model */
-    transient private NodeTableModel tableModel;
+    private transient NodeTableModel tableModel;
     
-    transient private TableSheetCell tableCell;
+    private transient TableSheetCell tableCell;
 
     /** Create table view with default table model.
      */

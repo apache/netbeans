@@ -388,11 +388,11 @@ public final class Queries {
         return -1;
     }
 
-    private static abstract class TCFilter extends Filter {
+    private abstract static class TCFilter extends Filter {
         public abstract void attach (TermCollector collector);
     }
 
-    private static abstract class AbstractTCFilter extends TCFilter {
+    private abstract static class AbstractTCFilter extends TCFilter {
 
         private  TermCollector termCollector;
 

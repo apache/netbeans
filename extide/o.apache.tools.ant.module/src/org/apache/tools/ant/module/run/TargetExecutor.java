@@ -453,7 +453,7 @@ public final class TargetExecutor implements Runnable {
     /** Call execute(), not this method directly!
      */
     @SuppressWarnings("NestedSynchronizedStatement")
-    synchronized public @Override void run () {
+    public synchronized @Override void run () {
         final LastTargetExecuted[] thisExec = new LastTargetExecuted[1];
         final StopAction sa = stopActions.get(io);
         assert sa != null;

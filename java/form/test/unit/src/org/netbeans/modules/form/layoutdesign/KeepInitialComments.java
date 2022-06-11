@@ -25,6 +25,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.lang.reflect.Field;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import junit.framework.TestCase;
@@ -78,7 +79,7 @@ public class KeepInitialComments extends TestCase {
                       "  </Layout>\n" +
                       "</Form>\n";
         try (OutputStream out = file.getOutputStream();
-             Writer w = new OutputStreamWriter(out, "UTF-8")) {
+            Writer w = new OutputStreamWriter(out, StandardCharsets.UTF_8)) {
             w.append(code);
         }
 

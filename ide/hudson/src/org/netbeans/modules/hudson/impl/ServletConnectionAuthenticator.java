@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.netbeans.modules.hudson.api.ConnectionBuilder;
@@ -58,7 +59,7 @@ public class ServletConnectionAuthenticator implements ConnectionAuthenticator {
                         }
                         new ConnectionBuilder().url(new URL(home, realmURI)).
                                 postData(("j_username=" + URLEncoder.encode(auth[0], "UTF-8") + "&j_password=" + // NOI18N
-                                URLEncoder.encode(auth[1], "UTF-8")).getBytes("UTF-8")). // NOI18N
+                                URLEncoder.encode(auth[1], "UTF-8")).getBytes(StandardCharsets.UTF_8)). // NOI18N
                                 homeURL(home).authentication(false).connection();
                         LOGGER.log(Level.FINER, "Posted authentication to {0} worked", realmURI);
                         return conn.getURL().openConnection();

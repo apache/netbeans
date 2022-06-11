@@ -1707,7 +1707,7 @@ public final class ReferenceHelper {
             }
             String[] values = new String[6];
             for (int i = 0; i < 6; i++) {
-                Element el = (Element)nl.get(i);
+                Element el = nl.get(i);
                 if (!REFS_NS2.equals(el.getNamespaceURI())) {
                     throw new IllegalArgumentException("bad subelement ns: " + el); // NOI18N
                 }
@@ -1727,7 +1727,7 @@ public final class ReferenceHelper {
             }
             Properties props = new Properties();
             if (nl.size() == 7) {
-                Element el = (Element)nl.get(6);
+                Element el = nl.get(6);
                 if (!REFS_NS2.equals(el.getNamespaceURI())) {
                     throw new IllegalArgumentException("bad subelement ns: " + el); // NOI18N
                 }

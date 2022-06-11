@@ -117,7 +117,7 @@ public final class VCSContext {
      * @return VCSContext containing nodes and corresponding files they represent
      */
     // XXX any chance to replace with lookup? 
-    public synchronized static VCSContext forNodes(Node[] nodes) {
+    public static synchronized VCSContext forNodes(Node[] nodes) {
         if (Arrays.equals(contextNodesCached.get(), nodes)) {
             VCSContext ctx = contextCached.get();
             if (ctx != null) return ctx;

@@ -26,7 +26,6 @@ import org.netbeans.spi.jumpto.symbol.SymbolDescriptor;
 import org.netbeans.spi.quicksearch.SearchProvider;
 import org.netbeans.spi.quicksearch.SearchRequest;
 import org.netbeans.spi.quicksearch.SearchResponse;
-import org.openide.filesystems.FileObject;
 import org.openide.util.NbBundle;
 
 /**
@@ -72,9 +71,7 @@ public class GoToSymbolProvider implements SearchProvider {
     }
      
     private static String escapeLtGt(String input) {
-        String temp = input.replaceAll("<", "&lt;"); // NOI18N
-        temp = temp.replaceAll(">", "&gt;"); // NOI18N
-        return temp;
+        return input.replace("<", "&lt;").replace(">", "&gt;"); // NOI18N
     }
      
     private static class GoToSymbolCommand implements Runnable {

@@ -29,7 +29,7 @@ body {
     flex-direction: column;
     overflow-x: scroll;
 }
-input, select {
+input[type="text"], select {
     width: 100%;
     font-family: var(--vscode-editor-font-family) !important;
     border: var(--vscode-input-border);
@@ -41,8 +41,22 @@ input, select {
 input:focus, select:focus {
     outline-color: var(--vscode-focusBorder);
 }
-input {
+input[type="text"] {
     padding: 5px 4px !important;
+}
+input[type="checkbox"] {
+    width: 1.2em;
+    min-width: 1.2em;
+    height: 1.2em;
+    min-height: 1.2em;
+    cursor: pointer;
+    filter: opacity(80%);
+}
+input[type="checkbox"]:disabled {
+    filter: brightness(90%);
+}
+input[type="checkbox"]:checked {
+    filter: opacity(100%);
 }
 select {
     padding: 4px !important;
@@ -59,6 +73,10 @@ label {
     font-family: var(--vscode-font-family);
     font-size: var(--vscode-font-size);
     text-decoration: none;
+}
+.vscode-editor-font {
+    font-family: var(--vscode-editor-font-family) !important;
+    /*font-size: var(--vscode-editor-font-size);*/
 }
 .button-text {
     margin-left: 5px;
@@ -111,6 +129,13 @@ label {
     background-color: var(--vscode-button-hoverBackground);
     outline: none;
 }
+.checkbox-label {
+    align-self: center;
+    display: initial;
+    cursor: pointer;
+    margin: 0px;
+    margin-left: 3px;
+}
 .params-caption {
     margin-bottom: 8px;
 }
@@ -134,8 +159,20 @@ label {
     padding: 0px 10px;
 	margin-top: -6px;
 }
+.section3 {
+    padding: 0px 20px 0px;
+}
+.section-newline {
+    padding: 0px 20px 0px;
+}
+.section-nested {
+    padding: 5px 40px;
+}
 .vdivider {
     margin-bottom: 20px;
+}
+.vdivider2 {
+    margin-bottom: 6px;
 }
 .hdivider {
     margin-left: 6px;
@@ -156,6 +193,10 @@ label {
     flex-grow: 1;
     display: block;
 }
+.flex-equal {
+    flex: 1 1 0;
+    display: block;
+}
 .flex-vscrollable {
     overflow-x: hidden;
     overflow-y: auto;
@@ -166,4 +207,7 @@ label {
 .add-param {
     padding: 0px 15px;
     padding-top: 2px;
+}
+.row-always-visible {
+    min-height: calc(var(--vscode-font-size) * 2.2);
 }

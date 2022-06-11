@@ -34,7 +34,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.StreamCorruptedException;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -197,14 +196,15 @@ public final class GradleDaemonExecutor extends AbstractGradleExecutor {
                     cmd = GradleCommandLine.combine(addConfigParts, cmd);
                 }
             }
+
+            cmd = new GradleCommandLine(dist, cmd);
             
             // will not show augmented in the output
             GradleCommandLine augmented = cmd;
 
             if (RunUtils.isAugmentedBuildEnabled(config.getProject())) {
                 augmented = new GradleCommandLine(cmd);
-                augmented.addParameter(GradleCommandLine.Parameter.INIT_SCRIPT, GradleDaemon.INIT_SCRIPT);
-                augmented.addSystemProperty(GradleDaemon.PROP_TOOLING_JAR, GradleDaemon.TOOLING_JAR);
+                augmented.addParameter(GradleCommandLine.Parameter.INIT_SCRIPT, GradleDaemon.initScript());
             }
             GradleBaseProject gbp = GradleBaseProject.get(config.getProject());
             augmented.configure(buildLauncher, gbp != null ? gbp.getRootDir() : null);

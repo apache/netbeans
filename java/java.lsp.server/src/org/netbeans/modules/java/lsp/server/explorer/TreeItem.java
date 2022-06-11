@@ -59,8 +59,6 @@ public class TreeItem {
     // NBLS-specific items, to be processed by the client:
     // Metadata for the icon.
     public IconDescriptor iconDescriptor;
-    // The icon's index
-    public int iconIndex;
     
     /**
      * Metadata that describe an icon origin or contents.
@@ -110,5 +108,12 @@ public class TreeItem {
         if (fo != null) {
             this.resourceUri = URLMapper.findURL(fo, URLMapper.EXTERNAL).toString();
         }
+    }
+    
+    public String toString() {
+        return String.format(
+            "TreeItem[%s, id = %d, resource = %s, context = %s",
+            name, id, resourceUri, contextValue
+        );
     }
 }

@@ -456,7 +456,7 @@ public final class JavaNode extends DataNode implements ChangeListener {
         return result;
     }
 
-    private static abstract class IconTask implements Runnable {
+    private abstract static class IconTask implements Runnable {
         protected final JavaNode node;
 
         IconTask(@NonNull final JavaNode node) {

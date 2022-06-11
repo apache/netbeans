@@ -19,6 +19,7 @@
 package org.netbeans.modules.openide.filesystems.declmime;
 
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import org.netbeans.junit.NbTestCase;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -57,7 +58,7 @@ public class UserDefinedMIMETest extends NbTestCase {
         
         
         OutputStream os = udmr.getOutputStream();
-        os.write(txt.getBytes("UTF-8"));
+        os.write(txt.getBytes(StandardCharsets.UTF_8));
         os.close();
         udmr.setAttribute("position", 555);
         udmr.setAttribute("user-defined-mime-resolver", Boolean.TRUE);

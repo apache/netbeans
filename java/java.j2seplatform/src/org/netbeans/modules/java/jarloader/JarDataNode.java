@@ -80,7 +80,7 @@ final class JarDataNode extends DataNode {
      * So, in order to fix #83595, here is a little hack that schedules
      * replacement of this dummy children on addNotify call.
      */
-    final static class DummyChildren extends Children implements Runnable {
+    static final class DummyChildren extends Children implements Runnable {
 
         private JarDataNode node;
 

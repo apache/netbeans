@@ -111,7 +111,7 @@ public final class CPPLiteDebugger {
         engineProvider = (CPPLiteDebuggerEngineProvider) contextProvider.lookupFirst(null, DebuggerEngineProvider.class);
     }
 
-    void setDebuggee(Process debuggee) {
+    void setDebuggee(Process debuggee, boolean printObjects) {
         this.debuggee = debuggee;
 
         CPPLiteInjector injector = new CPPLiteInjector(debuggee.getOutputStream());
@@ -139,7 +139,9 @@ public final class CPPLiteDebugger {
         proxy.send(new Command("-gdb-set target-async"));
         //proxy.send(new Command("-gdb-set scheduler-locking on"));
         proxy.send(new Command("-gdb-set non-stop on"));
-        proxy.send(new Command("-gdb-set print object on"));
+        if (printObjects) {
+            proxy.send(new Command("-gdb-set print object on"));
+        }
     }
 
     public void execRun() {
@@ -396,12 +398,12 @@ public final class CPPLiteDebugger {
         MIRecord memory;
         String offsetArg;
         if (offset != 0) {
-            offsetArg = "-o " + offset + " ";
+            offsetArg = "-o " + offset + " \"";
         } else {
-            offsetArg = "";
+            offsetArg = "\"";
         }
         try {
-            memory = sendAndGet("-data-read-memory-bytes " + offsetArg + address + " " + length);
+            memory = sendAndGet("-data-read-memory-bytes " + offsetArg + address + "\" " + length);
         } catch (InterruptedException ex) {
             return null;
         }
@@ -432,7 +434,7 @@ public final class CPPLiteDebugger {
     public List<Location> listLocations(String filePath) {
         MIRecord lines;
         try {
-            lines = sendAndGet("-symbol-list-lines " + filePath);
+            lines = sendAndGet("-symbol-list-lines \"" + filePath + "\"");
         } catch (InterruptedException ex) {
             return null;
         }
@@ -843,7 +845,7 @@ public final class CPPLiteDebugger {
                 }
             }
         });
-        debugger.setDebuggee(debuggee);
+        debugger.setDebuggee(debuggee, configuration.isPrintObjects());
         AtomicInteger exitCode = debugger.exitCode;
 
         return new Process() {

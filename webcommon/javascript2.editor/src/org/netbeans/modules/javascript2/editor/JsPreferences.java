@@ -28,7 +28,7 @@ import org.netbeans.api.project.ProjectUtils;
 
 public class JsPreferences {
 
-    private static final JsVersion DEFAULT_JS_VERSION = JsVersion.ECMA6;
+    private static final JsVersion DEFAULT_JS_VERSION = JsVersion.EMCANEXT;
 
     private static final String JS_PREF_TAG = "jsversion"; // NOI18N
 
@@ -62,12 +62,7 @@ public class JsPreferences {
         return ProjectUtils.getPreferences(project, JsPreferences.class, true);
     }
 
-    public static boolean isPreECMAScript6(Project project) {
-        return getECMAScriptVersion(project).ordinal() < JsVersion.ECMA6.ordinal();
+    public static boolean isPreECMAVersion(Project project, JsVersion target) {
+        return getECMAScriptVersion(project).ordinal() < target.ordinal();
     }
-
-    public static boolean isPreECMAScript7(Project project) {
-        return getECMAScriptVersion(project).ordinal() < JsVersion.ECMA7.ordinal();
-    }
-
 }

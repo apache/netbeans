@@ -101,7 +101,7 @@ public class AgentWorker extends RemoteExecutionControl implements Executor, Run
      * Threads which execute user code, keyed by agent's socket local port.
      */
     // @GuardedBy(self)
-    private final static Map<Integer, Thread>     userCodeExecutingThreads = new HashMap<Integer, Thread>();
+    private static final Map<Integer, Thread>     userCodeExecutingThreads = new HashMap<Integer, Thread>();
         
     private AgentWorker() {
         agent = null;

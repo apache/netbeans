@@ -31,6 +31,7 @@ import org.xml.sax.*;
 import org.xml.sax.helpers.DefaultHandler;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.logging.Logger;
 
@@ -255,8 +256,7 @@ class GroupParser {
             tcGroupConfigMap.put(sc.tcGroupConfigs[i].tc_id, sc.tcGroupConfigs[i]);
         }
         List<String> toDelete = new ArrayList<String>(10);
-        for (String s: tcGroupParserMap.keySet()) {
-            TCGroupParser tcGroupParser = tcGroupParserMap.get(s);
+        for (TCGroupParser tcGroupParser: tcGroupParserMap.values()) {
             if (!tcGroupConfigMap.containsKey(tcGroupParser.getName())) {
                 toDelete.add(tcGroupParser.getName());
             }
@@ -615,7 +615,7 @@ class GroupParser {
                 try {
                     lock = cfgFOOutput.lock();
                     os = cfgFOOutput.getOutputStream(lock);
-                    osw = new OutputStreamWriter(os, "UTF-8"); // NOI18N
+                    osw = new OutputStreamWriter(os, StandardCharsets.UTF_8);
                     osw.write(buff.toString());
                     //if (DEBUG) Debug.log(GroupParser.class, "-- DUMP Group: " + GroupParser.this.getName());
                     //if (DEBUG) Debug.log(GroupParser.class, buff.toString());

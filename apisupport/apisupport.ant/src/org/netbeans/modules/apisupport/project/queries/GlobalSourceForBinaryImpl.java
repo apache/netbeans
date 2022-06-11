@@ -129,7 +129,7 @@ public final class GlobalSourceForBinaryImpl implements SourceForBinaryQueryImpl
         }
     }
 
-    static abstract class SourceRootsProviderResult implements SourceForBinaryQuery.Result {
+    abstract static class SourceRootsProviderResult implements SourceForBinaryQuery.Result {
         private SourceRootsProvider srp;
         final String cnb;
 

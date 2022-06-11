@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.nio.charset.StandardCharsets;
 import org.netbeans.api.editor.mimelookup.MimePath;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.java.JavaDataLoader;
@@ -120,7 +121,7 @@ public abstract class SourceTestSupport extends NbTestCase{
     protected FileObject copyStringToFileObject(FileObject fo, String content) throws Exception {
         OutputStream os = fo.getOutputStream();
         try {
-            InputStream is = new ByteArrayInputStream(content.getBytes("UTF-8"));
+            InputStream is = new ByteArrayInputStream(content.getBytes(StandardCharsets.UTF_8));
             FileUtil.copy(is, os);
             return fo;
         } finally {
@@ -144,7 +145,7 @@ public abstract class SourceTestSupport extends NbTestCase{
         
     }
 
-    static private class JavaFileResolver extends MIMEResolver
+    private static class JavaFileResolver extends MIMEResolver
     {
 
         public JavaFileResolver() {

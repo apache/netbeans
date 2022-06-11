@@ -6,5 +6,5 @@ METHOD     publicMethodTrait1(Class2|Clas  [PUBLIC]   \UnionTypes1\Trait1
 METHOD     publicStaticMethodTrait1()      [STATIC]   \UnionTypes1\Trait1
 METHOD     testMethodPhpDoc($object)       [PUBLIC]   \UnionTypes1\InterfaceImpl
 METHOD     testWithWhitespaces(Class1|Cla  [PUBLIC]   \UnionTypes1\InterfaceImpl
-VARIABLE   mixed publicFieldInterfaceImpl  [PUBLIC]   \UnionTypes1\InterfaceImpl
-VARIABLE   mixed publicFieldTrait1         [PUBLIC]   \UnionTypes1\Trait1
+VARIABLE   Class1|Class2 publicFieldInter  [PUBLIC]   \UnionTypes1\InterfaceImpl
+VARIABLE   Class1|Class2 publicFieldTrait  [PUBLIC]   \UnionTypes1\Trait1

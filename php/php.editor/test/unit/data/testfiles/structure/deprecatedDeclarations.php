@@ -65,4 +65,18 @@ trait TraitName {
     private function bar3() {}
 }
 
-?>
+/** @deprecated */
+enum EnumName1 {
+    /** @deprecated */
+    case Foo;
+    /** @deprecated */
+    case Bar;
+}
+
+/** @deprecated */
+enum EnumName2: int {
+    /** @deprecated */
+    case Foo = 0;
+    /** @deprecated */
+    case Bar = 1;
+}

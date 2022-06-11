@@ -30,7 +30,7 @@ import org.openide.util.Lookup;
  * @author Jiri Sedlacek
  * @author Jaroslav Bachorik
  */
-final public class EditorSupport {
+public final class EditorSupport {
     
     private static EditorSupportProvider getSupport() {
         EditorSupportProvider support = Lookup.getDefault().lookup(EditorSupportProvider.class);

@@ -119,6 +119,14 @@ public class MicronautConfigCompletionCollector implements CompletionCollector {
                             }
                             return builder.build();
                         }
+
+                        @Override
+                        public Completion createValueItem(String value, int offset, boolean isEnum) {
+                            return CompletionCollector.newBuilder(value)
+                                    .kind(isEnum ? Completion.Kind.EnumMember : Completion.Kind.Keyword)
+                                    .sortText(String.format("%04d%s", 5, value))
+                                    .build();
+                        }
                     }).stream().forEach(consumer);
                 }
             }

@@ -35,7 +35,7 @@ import org.netbeans.modules.payara.spi.PayaraModule;
 public class Hk2ResourceContainers extends Children.Keys<Object> implements Refreshable {
 
     private Lookup lookup;
-    private final static Node WAIT_NODE = Hk2ItemNode.createWaitNode();
+    private static final Node WAIT_NODE = Hk2ItemNode.createWaitNode();
     
     Hk2ResourceContainers(Lookup lookup) {
         this.lookup = lookup;

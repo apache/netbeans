@@ -149,7 +149,7 @@ public final class TermOptions {
         return color;
     }
 
-    public synchronized static TermOptions getDefault(Preferences prefs) {
+    public static synchronized TermOptions getDefault(Preferences prefs) {
 	if (DEFAULT == null) {
 	    DEFAULT = new TermOptions();
 	    DEFAULT.loadFrom(prefs);

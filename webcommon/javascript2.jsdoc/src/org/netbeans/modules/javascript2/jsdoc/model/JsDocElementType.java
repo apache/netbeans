@@ -99,9 +99,9 @@ public enum JsDocElementType {
      * @param value {@code String} value of the {@code Type}
      * @return {@code Type}
      */
-    public synchronized static JsDocElementType fromString(String value) {
+    public static synchronized JsDocElementType fromString(String value) {
         if (types == null) {
-           types = new HashMap<String, JsDocElementType>();
+           types = new HashMap<>();
            for (JsDocElementType type : JsDocElementType.values()) {
                types.put(type.toString().toLowerCase(Locale.ENGLISH), type);
            }

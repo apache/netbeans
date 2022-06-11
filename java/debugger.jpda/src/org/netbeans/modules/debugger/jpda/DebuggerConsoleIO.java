@@ -54,7 +54,7 @@ public final class DebuggerConsoleIO {
         output.getIOManager().println(text, line, important);
     }
     
-    public final static class Line {
+    public static final class Line {
         
         private final String url;
         private final int lineNumber;

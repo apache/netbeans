@@ -18,6 +18,8 @@
  */
 package org.netbeans.modules.java.source;
 
+import com.sun.source.doctree.DocTree;
+import com.sun.source.doctree.TextTree;
 import com.sun.source.doctree.ReferenceTree;
 import com.sun.source.tree.BreakTree;
 import com.sun.source.tree.CaseTree;
@@ -364,6 +366,31 @@ public class TreeShims {
 //        }
 //        return null;
 //    }
+    public static List<DocTree> getSnippetDocTreeAttributes(DocTree node) {
+        try {
+            Class gpt = Class.forName("com.sun.source.doctree.SnippetTree"); //NOI18N
+            return isJDKVersionRelease18_Or_Above()
+                    ? (List<DocTree>) gpt.getDeclaredMethod("getAttributes").invoke(node) //NOI18N
+                    : Collections.emptyList();
+        } catch (NoSuchMethodException | ClassNotFoundException ex) {
+            return null;
+        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+            throw TreeShims.<RuntimeException>throwAny(ex);
+        }
+    }
+
+    public static TextTree getSnippetDocTreeText(DocTree node) {
+        try {
+            Class gpt = Class.forName("com.sun.source.doctree.SnippetTree"); //NOI18N
+            return isJDKVersionRelease18_Or_Above()
+                    ? (TextTree) gpt.getDeclaredMethod("getBody").invoke(node) //NOI18N
+                    : null;
+        } catch (NoSuchMethodException | ClassNotFoundException ex) {
+            return null;
+        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+            throw TreeShims.<RuntimeException>throwAny(ex);
+        }
+    }
 
     public static Element toRecordComponent(Element el) {
         if (el == null ||el.getKind() != ElementKind.FIELD) {
@@ -385,7 +412,9 @@ public class TreeShims {
         if (isJDKVersionRelease17_Or_Above()) {
             try {
                 return node.getClass().getField("patternSwitch").getBoolean(node);
-            } catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException | SecurityException ex) {
+            } catch(NoSuchFieldException e){
+                return false;
+            }catch (IllegalArgumentException | IllegalAccessException | SecurityException ex) {
                 throw TreeShims.<RuntimeException>throwAny(ex);
             }
         }
@@ -394,6 +423,10 @@ public class TreeShims {
 
     public static boolean isJDKVersionRelease17_Or_Above(){
         return Integer.valueOf(SourceVersion.latest().name().split("_")[1]).compareTo(17) >= 0;
+    }
+
+    public static boolean isJDKVersionRelease18_Or_Above() {
+        return Integer.valueOf(SourceVersion.latest().name().split("_")[1]).compareTo(18) >= 0;
     }
 
     @SuppressWarnings("unchecked")

@@ -102,5 +102,5 @@ public abstract class IOSelect {
      * @param extraOps Additional operations to apply to the containing
      * TopComponent.
      */
-    abstract protected void select(Set<AdditionalOperation> extraOps);
+    protected abstract void select(Set<AdditionalOperation> extraOps);
 }

@@ -102,10 +102,8 @@ public class CloverLogParserTest extends NbTestCase {
         Path path = file.toPath();
         Charset charset = StandardCharsets.UTF_8;
         String content = new String(Files.readAllBytes(path), charset);
-        String workdirReplacement = Matcher.quoteReplacement(getDataDir().getAbsolutePath());
-        content = content.replaceAll("%WORKDIR%", workdirReplacement);
-        String separatorReplacement = Matcher.quoteReplacement(File.separator);
-        content = content.replaceAll("%SEP%", separatorReplacement);
+        content = content.replace("%WORKDIR%", getDataDir().getAbsolutePath());
+        content = content.replace("%SEP%", File.separator);
         Files.write(path, content.getBytes(charset));
     }
 

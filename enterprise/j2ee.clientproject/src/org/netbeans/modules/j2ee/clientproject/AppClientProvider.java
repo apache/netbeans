@@ -520,8 +520,7 @@ public final class AppClientProvider extends J2eeModuleProvider
     }
 
     private static class IT implements Iterator<J2eeModule.RootedEntry> {
-        
-        Enumeration ch;
+        Enumeration<? extends FileObject> ch;
         FileObject root;
         
         private IT(FileObject f) {

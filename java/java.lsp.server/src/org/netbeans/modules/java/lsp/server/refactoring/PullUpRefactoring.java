@@ -46,6 +46,7 @@ import org.eclipse.lsp4j.CodeActionKind;
 import org.eclipse.lsp4j.CodeActionParams;
 import org.eclipse.lsp4j.MessageParams;
 import org.eclipse.lsp4j.MessageType;
+import org.netbeans.api.java.lexer.JavaTokenId;
 import org.netbeans.api.java.source.ClasspathInfo;
 import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.CompilationInfo;
@@ -54,11 +55,12 @@ import org.netbeans.api.java.source.ElementUtilities;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.TreePathHandle;
 import org.netbeans.api.java.source.TreeUtilities;
+import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.modules.java.lsp.server.Utils;
+import org.netbeans.modules.java.lsp.server.input.QuickPickItem;
+import org.netbeans.modules.java.lsp.server.input.ShowQuickPickParams;
 import org.netbeans.modules.java.lsp.server.protocol.CodeActionsProvider;
 import org.netbeans.modules.java.lsp.server.protocol.NbCodeLanguageClient;
-import org.netbeans.modules.java.lsp.server.protocol.QuickPickItem;
-import org.netbeans.modules.java.lsp.server.protocol.ShowQuickPickParams;
 import org.netbeans.modules.parsing.api.ResultIterator;
 import org.netbeans.modules.refactoring.java.api.JavaRefactoringUtils;
 import org.netbeans.modules.refactoring.java.api.MemberInfo;
@@ -94,6 +96,11 @@ public final class PullUpRefactoring extends CodeRefactoring {
         }
         info.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
         int offset = getOffset(info, params.getRange().getStart());
+        TokenSequence<JavaTokenId> ts = info.getTokenHierarchy().tokenSequence(JavaTokenId.language());
+        ts.move(offset);
+        if (ts.moveNext() && ts.token().id() != JavaTokenId.WHITESPACE && ts.offset() == offset) {
+            offset += 1;
+        }
         String uri = Utils.toUri(info.getFileObject());
         Trees trees = info.getTrees();
         TreeUtilities treeUtilities = info.getTreeUtilities();
@@ -140,12 +147,12 @@ public final class PullUpRefactoring extends CodeRefactoring {
                 QuickPickItem sourceItem = gson.fromJson(gson.toJson(arguments.get(2)), QuickPickItem.class);
                 List<QuickPickItem> superclasses = Arrays.asList(gson.fromJson(gson.toJson(arguments.get(3)), QuickPickItem[].class));
                 if (superclasses.size() > 1) {
-                    client.showQuickPick(new ShowQuickPickParams(Bundle.DN_SelectTargetSupertype(), false, superclasses)).thenAccept(selected -> {
+                    client.showQuickPick(new ShowQuickPickParams(Bundle.DN_SelectTargetSupertype(), superclasses)).thenAccept(selected -> {
                         if (selected != null && !selected.isEmpty()) {
                             QuickPickItem targetItem = selected.get(0);
                             List<QuickPickItem> members = getMembers(client, uri, offset, sourceItem, targetItem);
                             if (!members.isEmpty()) {
-                                client.showQuickPick(new ShowQuickPickParams(Bundle.DN_SelectMembersToPullUp(), true, members)).thenAccept(selectedMembers -> {
+                                client.showQuickPick(new ShowQuickPickParams(null, Bundle.DN_SelectMembersToPullUp(), true, members)).thenAccept(selectedMembers -> {
                                     if (selectedMembers != null && !selectedMembers.isEmpty()) {
                                         pullUp(client, uri, sourceItem, targetItem, selectedMembers);
                                     }
@@ -157,7 +164,7 @@ public final class PullUpRefactoring extends CodeRefactoring {
                     QuickPickItem targetItem = superclasses.get(0);
                     List<QuickPickItem> members = getMembers(client, uri, offset, sourceItem, targetItem);
                     if (!members.isEmpty()) {
-                        client.showQuickPick(new ShowQuickPickParams(Bundle.DN_SelectMembersToPullUp(), true, members)).thenAccept(selectedMembers -> {
+                        client.showQuickPick(new ShowQuickPickParams(null, Bundle.DN_SelectMembersToPullUp(), true, members)).thenAccept(selectedMembers -> {
                             if (selectedMembers != null && !selectedMembers.isEmpty()) {
                                 pullUp(client, uri, sourceItem, targetItem, selectedMembers);
                             }

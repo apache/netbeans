@@ -16,20 +16,29 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.netbeans.modules.apisupport.project.ui.branding;
 
 import org.netbeans.modules.apisupport.project.spi.BrandingModel;
-import java.awt.AlphaComposite;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import javax.swing.ImageIcon;
+import java.util.Map;
+import java.util.SortedMap;
+import java.util.TreeMap;
+import static java.util.stream.Collectors.toMap;
+import java.util.stream.IntStream;
+import javax.imageio.ImageIO;
+import javax.swing.DefaultListCellRenderer;
+import javax.swing.DefaultListModel;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JPanel;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import org.netbeans.modules.apisupport.project.api.UIUtil;
@@ -42,18 +51,33 @@ import org.openide.util.Utilities;
  *
  * @author Radek Matous, S. Aubrecht
  */
-final class BasicBrandingPanel extends AbstractBrandingPanel  {
-    
-    private URL iconSource48;
-    private URL iconSource32;
-    private URL iconSource16;
+final class BasicBrandingPanel extends AbstractBrandingPanel {
 
+    private final SortedMap<Integer, URL> iconSources;
     private boolean titleValueModified;
 
     public BasicBrandingPanel(BrandingModel model) {
         super(NbBundle.getMessage(BasicBrandingPanel.class, "LBL_BasicTab"), model); //NOI18N
-        initComponents();        
-        refresh(); 
+        this.iconSources = IntStream.of(16, 32, 48, 256, 512, 1024).boxed()
+                .collect(toMap(size -> size, model::getIconSource,
+                        (a, b) -> a, TreeMap::new));
+
+        initComponents();
+        final DefaultListModel<Map.Entry<Integer, URL>> listModel = new DefaultListModel<>();
+        iconSources.entrySet().forEach(listModel::addElement);
+        sizeList.setModel(listModel);
+        sizeList.setCellRenderer(new DefaultListCellRenderer() {
+            @Override
+            public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+                final JLabel ret = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+                final Integer size = ((Map.Entry<Integer, URL>) value).getKey();
+                ret.setText(String.format("Application Icon (%dx%d)", size, size));
+                return ret;
+            }
+        });
+        sizeList.setSelectedIndex(0);
+
+        refresh();
         checkValidity();
         DocumentListener textFieldChangeListener = new UIUtil.DocumentAdapter() {
             @Override
@@ -66,243 +90,165 @@ final class BasicBrandingPanel extends AbstractBrandingPanel  {
         titleValue.getDocument().addDocumentListener(textFieldChangeListener);
         titleValueModified = false;
     }
-    
+
     protected void checkValidity() {
         boolean panelValid = true;
-        
+
         if (panelValid && titleValue.getText().trim().length() == 0) {
             setErrorMessage(NbBundle.getMessage(BasicBrandingPanel.class, "ERR_EmptyTitle"));//NOI18N
             panelValid = false;
-        }        
-        
-        if (panelValid) {        
+        }
+
+        if (panelValid) {
             setErrorMessage(null);
         }
         setValid(panelValid);
     }
-    
+
     void refresh() {
         BrandingModel model = getBranding();
         model.brandingEnabledRefresh();
         model.initTitle(true);
         titleValue.setText(model.getTitle());
-        iconSource48 = model.getIconSource(48);
-        if (iconSource48 != null) {
-            ((ImagePreview)iconPreview48).setImage(new ImageIcon(iconSource48));
-        }
-        iconSource32 = model.getIconSource(32);
-        if (iconSource32 != null) {
-            ((ImagePreview)iconPreview32).setImage(new ImageIcon(iconSource32));
-        }
-        iconSource16 = model.getIconSource(16);
-        if (iconSource16 != null) {
-            ((ImagePreview)iconPreview16).setImage(new ImageIcon(iconSource16));
-        }
-        browse16.setEnabled(null != iconSource16 && model.isBrandingEnabled());
-        browse32.setEnabled(null != iconSource32 && model.isBrandingEnabled());
-        browse48.setEnabled(null != iconSource48 && model.isBrandingEnabled());
+        browse.setEnabled(model.isBrandingEnabled());
         titleValue.setEnabled(model.isBrandingEnabled());
     }
-    
-    public @Override void store() {
-        if (titleValueModified)
+
+    public @Override
+    void store() {
+        if (titleValueModified) {
             getBranding().setTitle(titleValue.getText());
-        getBranding().setIconSource(48, iconSource48);
-        getBranding().setIconSource(32, iconSource32);
-        getBranding().setIconSource(16, iconSource16);
+        }
+
+        iconSources.entrySet()
+                .forEach(e -> getBranding().setIconSource(e.getKey(), e.getValue()));
     }
-    
-    /** This method is called from within the constructor to
-     * initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is
-     * always regenerated by the Form Editor.
+
+    private void setPreview(final URL res) {
+        try {
+            final BufferedImage img = ImageIO.read(res);
+            ((ImagePreview) preview).setImage(img);
+        } catch (IOException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+    }
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
      */
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
-        java.awt.GridBagConstraints gridBagConstraints;
 
-        buttonGroup1 = new javax.swing.ButtonGroup();
         title = new javax.swing.JLabel();
         titleValue = new javax.swing.JTextField();
-        iconPreview48 = new ImagePreview(48,48);
-        browse48 = new javax.swing.JButton();
-        icon48 = new javax.swing.JLabel();
-        icon16 = new javax.swing.JLabel();
-        iconPreview16 = new ImagePreview(16,16);
-        browse16 = new javax.swing.JButton();
-        icon32 = new javax.swing.JLabel();
-        iconPreview32 = new ImagePreview(32,32);
-        browse32 = new javax.swing.JButton();
-        lblSpacer = new javax.swing.JLabel();
+        javax.swing.JScrollPane listScrollPane = new javax.swing.JScrollPane();
+        sizeList = new javax.swing.JList<>();
+        browse = new javax.swing.JButton();
+        javax.swing.JScrollPane previewScrollPane = new javax.swing.JScrollPane();
+        preview = new ImagePreview();
 
-        setLayout(new java.awt.GridBagLayout());
-
-        title.setLabelFor(titleValue);
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/netbeans/modules/apisupport/project/ui/branding/Bundle"); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(title, bundle.getString("LBL_AppTitle")); // NOI18N
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.insets = new java.awt.Insets(10, 10, 0, 0);
-        add(title, gridBagConstraints);
-        title.getAccessibleContext().setAccessibleDescription(bundle.getString("ACS_Title")); // NOI18N
 
         titleValue.setColumns(20);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.gridwidth = 2;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.insets = new java.awt.Insets(10, 0, 0, 0);
-        add(titleValue, gridBagConstraints);
 
-        iconPreview48.setLabelFor(iconPreview48);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 3;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.insets = new java.awt.Insets(5, 0, 0, 12);
-        add(iconPreview48, gridBagConstraints);
-
-        org.openide.awt.Mnemonics.setLocalizedText(browse48, bundle.getString("CTL_Browse")); // NOI18N
-        browse48.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                browse48ActionPerformed(evt);
+        sizeList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                sizeListValueChanged(evt);
             }
         });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 3;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
-        gridBagConstraints.insets = new java.awt.Insets(5, 0, 0, 0);
-        add(browse48, gridBagConstraints);
-        browse48.getAccessibleContext().setAccessibleDescription(bundle.getString("ACS_Browse")); // NOI18N
+        listScrollPane.setViewportView(sizeList);
 
-        org.openide.awt.Mnemonics.setLocalizedText(icon48, bundle.getString("LBL_AppIcon48")); // NOI18N
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 3;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.insets = new java.awt.Insets(5, 10, 0, 12);
-        add(icon48, gridBagConstraints);
-
-        org.openide.awt.Mnemonics.setLocalizedText(icon16, bundle.getString("LBL_AppIcon16")); // NOI18N
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.insets = new java.awt.Insets(23, 10, 0, 12);
-        add(icon16, gridBagConstraints);
-
-        iconPreview16.setLabelFor(iconPreview48);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.insets = new java.awt.Insets(23, 0, 0, 12);
-        add(iconPreview16, gridBagConstraints);
-
-        org.openide.awt.Mnemonics.setLocalizedText(browse16, bundle.getString("CTL_Browse")); // NOI18N
-        browse16.addActionListener(new java.awt.event.ActionListener() {
+        org.openide.awt.Mnemonics.setLocalizedText(browse, org.openide.util.NbBundle.getMessage(BasicBrandingPanel.class, "CTL_Browse")); // NOI18N
+        browse.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                browse16ActionPerformed(evt);
+                browseActionPerformed(evt);
             }
         });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
-        gridBagConstraints.insets = new java.awt.Insets(23, 0, 0, 0);
-        add(browse16, gridBagConstraints);
-        browse16.getAccessibleContext().setAccessibleDescription(NbBundle.getMessage(BasicBrandingPanel.class, "ACS_Browse")); // NOI18N
 
-        org.openide.awt.Mnemonics.setLocalizedText(icon32, bundle.getString("LBL_AppIcon32")); // NOI18N
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.insets = new java.awt.Insets(5, 10, 0, 12);
-        add(icon32, gridBagConstraints);
+        javax.swing.GroupLayout previewLayout = new javax.swing.GroupLayout(preview);
+        preview.setLayout(previewLayout);
+        previewLayout.setHorizontalGroup(
+            previewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 1058, Short.MAX_VALUE)
+        );
+        previewLayout.setVerticalGroup(
+            previewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 1898, Short.MAX_VALUE)
+        );
 
-        iconPreview32.setLabelFor(iconPreview48);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.insets = new java.awt.Insets(5, 0, 0, 12);
-        add(iconPreview32, gridBagConstraints);
+        previewScrollPane.setViewportView(preview);
 
-        org.openide.awt.Mnemonics.setLocalizedText(browse32, bundle.getString("CTL_Browse")); // NOI18N
-        browse32.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                browse32ActionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
-        gridBagConstraints.insets = new java.awt.Insets(5, 0, 0, 0);
-        add(browse32, gridBagConstraints);
-        browse32.getAccessibleContext().setAccessibleDescription(NbBundle.getMessage(BasicBrandingPanel.class, "ACS_Browse")); // NOI18N
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        this.setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(title, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(titleValue))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(listScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 264, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(browse)
+                            .addComponent(previewScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 319, Short.MAX_VALUE))))
+                .addContainerGap())
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(title)
+                    .addComponent(titleValue, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(browse)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(previewScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 389, Short.MAX_VALUE))
+                    .addComponent(listScrollPane))
+                .addContainerGap())
+        );
 
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 3;
-        gridBagConstraints.gridy = 4;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.weighty = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 10, 10);
-        add(lblSpacer, gridBagConstraints);
+        title.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(BasicBrandingPanel.class, "ACS_Title")); // NOI18N
+        browse.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(BasicBrandingPanel.class, "ACS_Browse")); // NOI18N
     }// </editor-fold>//GEN-END:initComponents
-    
-    private void browse48ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_browse48ActionPerformed
-        iconSource48 = browseIcon( (ImagePreview) iconPreview48);
-    }//GEN-LAST:event_browse48ActionPerformed
 
-    private void browse16ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_browse16ActionPerformed
-        iconSource16 = browseIcon( (ImagePreview) iconPreview16);
-    }//GEN-LAST:event_browse16ActionPerformed
+    private void sizeListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_sizeListValueChanged
+        setPreview(sizeList.getSelectedValue().getValue());
+    }//GEN-LAST:event_sizeListValueChanged
 
-    private void browse32ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_browse32ActionPerformed
-        iconSource32 = browseIcon( (ImagePreview) iconPreview32);
-    }//GEN-LAST:event_browse32ActionPerformed
-        
-    
+    private void browseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_browseActionPerformed
+        final URL res = browseIcon();
+        setPreview(res);
+        setModified();
+        sizeList.getSelectedValue().setValue(res);
+    }//GEN-LAST:event_browseActionPerformed
+
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton browse16;
-    private javax.swing.JButton browse32;
-    private javax.swing.JButton browse48;
-    private javax.swing.ButtonGroup buttonGroup1;
-    private javax.swing.JLabel icon16;
-    private javax.swing.JLabel icon32;
-    private javax.swing.JLabel icon48;
-    private javax.swing.JLabel iconPreview16;
-    private javax.swing.JLabel iconPreview32;
-    private javax.swing.JLabel iconPreview48;
-    private javax.swing.JLabel lblSpacer;
+    private javax.swing.JButton browse;
+    private javax.swing.JPanel preview;
+    private javax.swing.JList<Map.Entry<Integer, URL>> sizeList;
     private javax.swing.JLabel title;
     private javax.swing.JTextField titleValue;
     // End of variables declaration//GEN-END:variables
 
-    private URL browseIcon( ImagePreview preview ) {
+    private URL browseIcon() {
         URL res = null;
         JFileChooser chooser = UIUtil.getIconFileChooser();
         int ret = chooser.showDialog(this, NbBundle.getMessage(getClass(), "LBL_Select")); // NOI18N
         if (ret == JFileChooser.APPROVE_OPTION) {
-            File file =  chooser.getSelectedFile();
+            File file = chooser.getSelectedFile();
             try {
                 res = Utilities.toURI(file).toURL();
-                preview.setImage(new ImageIcon(res));
-                setModified();
             } catch (MalformedURLException ex) {
                 Exceptions.printStackTrace(ex);
             }
@@ -310,40 +256,26 @@ final class BasicBrandingPanel extends AbstractBrandingPanel  {
         return res;
     }
 
-    static class ImagePreview extends JLabel {
-        private ImageIcon image = null;
-        private int width;
-        private int height;
-        ImagePreview(int width, int height){
-            this.width = width;
-            this.height = height;            
-        }
-        
+    private static class ImagePreview extends JPanel {
+
+        private BufferedImage image = new BufferedImage(10, 10, BufferedImage.TYPE_INT_RGB);
+
         @Override
-        public void paint(Graphics g) {
-            super.paint(g);
-            Graphics2D g2d = (Graphics2D)g;
-            
-            if (!isEnabled()) {
-                g2d.setComposite(AlphaComposite.getInstance(
-                        AlphaComposite.SRC_OVER, 0.3f));
-            }
-            
-            if ((getWidth() >= width) && (getHeight() >= height) && image != null) {
-                int x = 0;//(getWidth()/2)-(width/2);
-                int y = 0;//(getHeight()/2)-(height/2);
-                g.drawImage(image.getImage(),x, y, width, height, this.getBackground(),null);
-            }
+        protected void paintComponent(Graphics g) {
+            super.paintComponent(g);
+            g.clearRect(0, 0, getWidth(), getHeight());
+            g.drawImage(this.image, 0, 0, image.getWidth(), image.getHeight(), this);
         }
-        
-        private void setImage(ImageIcon image) {
+
+        public void setImage(BufferedImage image) {
             this.image = image;
+            revalidate();
             repaint();
         }
 
         @Override
         public Dimension getPreferredSize() {
-            return new Dimension(width, height);
+            return new Dimension(image.getWidth(), image.getHeight());
         }
     }
 }

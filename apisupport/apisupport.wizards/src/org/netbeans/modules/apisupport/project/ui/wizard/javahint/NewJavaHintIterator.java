@@ -72,8 +72,8 @@ public class NewJavaHintIterator extends BasicWizardIterator {
         cmf.add(cmf.addTestModuleDependency("org.netbeans.modules.java.hints.test", "java"));
         cmf.add(cmf.addTestModuleDependency("org.netbeans.libs.junit4", "extra"));
         cmf.add(cmf.addTestModuleDependency("org.netbeans.modules.nbjunit", "harness")); // NOI18N
-        cmf.add(cmf.addTestModuleDependency("org.netbeans.modules.parsing.nb", "ide")); // NOI18N
-        cmf.add(cmf.addTestModuleDependency("org.netbeans.modules.projectapi.nb", "ide")); // NOI18N
+        cmf.add(cmf.addTestModuleDependency("org.netbeans.modules.parsing.api", "ide")); // NOI18N
+        cmf.add(cmf.addTestModuleDependency("org.netbeans.modules.projectapi", "ide")); // NOI18N
         
         NbProjectProvider nbProjectProvider = getProjectProvider(model.getProject());
 
@@ -129,7 +129,6 @@ public class NewJavaHintIterator extends BasicWizardIterator {
             cmf.add(cmf.addModuleToTargetPlatform("org.netbeans.modules.parsing.api", "ide")); // NOI18N
             cmf.add(cmf.addModuleToTargetPlatform("org.netbeans.modules.parsing.indexing", "ide")); // NOI18N
             cmf.add(cmf.addModuleToTargetPlatform("org.netbeans.modules.parsing.lucene", "ide")); // NOI18N
-            cmf.add(cmf.addModuleToTargetPlatform("org.netbeans.modules.parsing.nb", "ide")); // NOI18N
             cmf.add(cmf.addModuleToTargetPlatform("org.netbeans.modules.projectapi", "ide")); // NOI18N
             cmf.add(cmf.addModuleToTargetPlatform("org.netbeans.modules.project.indexingbridge", "ide")); // NOI18N
             cmf.add(cmf.addModuleToTargetPlatform("org.netbeans.modules.project.spi.intern", "ide")); // NOI18N

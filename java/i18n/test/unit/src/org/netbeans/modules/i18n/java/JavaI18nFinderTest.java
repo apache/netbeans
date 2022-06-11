@@ -22,6 +22,7 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import javax.swing.text.StyledDocument;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -92,7 +93,7 @@ public class JavaI18nFinderTest extends NbTestCase {
     
     private void writeFile(String content, FileObject file) throws Exception {
         OutputStream os = file.getOutputStream();
-        os.write(content.getBytes("UTF-8"));
+        os.write(content.getBytes(StandardCharsets.UTF_8));
         os.close();
     }
     

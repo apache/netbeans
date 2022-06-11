@@ -27,6 +27,7 @@ import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.CharBuffer;
+import java.nio.charset.StandardCharsets;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -96,7 +97,7 @@ public final class XMLBeanConvertor extends Convertor implements PropertyChangeL
             Thread.currentThread().setContextClassLoader(ccl);
         }
         e.close();
-        String data = new String(out.toByteArray(), "UTF-8");
+        String data = new String(out.toByteArray(), StandardCharsets.UTF_8);
         data = data.replaceFirst("<java", "<!DOCTYPE xmlbeans PUBLIC \"-//NetBeans//DTD XML beans 1.0//EN\" \"http://www.netbeans.org/dtds/xml-beans-1_0.dtd\">\n<java");
         w.write(data);
     }

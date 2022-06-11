@@ -26,10 +26,10 @@ import java.util.Properties;
  * @author  Jan Pokorsky
  */
 public final class JavaCompilerSetting {
-    private final static String PROP_DEBUG = "debug"; //NOI18N
-    private final static String PROP_DEPRECATION = "deprecation"; //NOI18N
-    private final static String PROP_CLASS_PATH = "classPath"; //NOI18N
-    private final static String PROP_EXEC_PATH = "path"; //NOI18N
+    private static final String PROP_DEBUG = "debug"; //NOI18N
+    private static final String PROP_DEPRECATION = "deprecation"; //NOI18N
+    private static final String PROP_CLASS_PATH = "classPath"; //NOI18N
+    private static final String PROP_EXEC_PATH = "path"; //NOI18N
 
 
     private java.beans.PropertyChangeSupport propertyChangeSupport =  new java.beans.PropertyChangeSupport(this);

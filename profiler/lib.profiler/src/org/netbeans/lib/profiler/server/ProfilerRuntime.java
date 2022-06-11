@@ -62,7 +62,7 @@ public class ProfilerRuntime implements CommonConstants {
     protected static int globalEvBufPosThreshold;
     protected static volatile boolean sendingBuffer;
     private static boolean printEvents; // For debugging
-    private volatile static Set knownMonitors;
+    private static volatile Set knownMonitors;
 
     //~ Methods ------------------------------------------------------------------------------------------------------------------
 
@@ -717,7 +717,7 @@ public class ProfilerRuntime implements CommonConstants {
         if (id == null || !lockContentionMonitoringEnabled) return -1;
         initThreadInfo(ti);
         int hash = System.identityHashCode(id);
-        Integer hashInt = new Integer(hash);
+        Integer hashInt = hash;
         if (knownMonitors.add(hashInt)) {
             int curPos = ti.evBufPos; // It's important to use a local copy for evBufPos, so that evBufPos is at event boundary at any moment
 

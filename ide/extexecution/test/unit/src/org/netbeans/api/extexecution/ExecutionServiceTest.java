@@ -26,6 +26,7 @@ import java.io.OutputStream;
 import java.io.Reader;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.BrokenBarrierException;
@@ -331,7 +332,7 @@ public class ExecutionServiceTest extends NbTestCase {
     }
 
     public void testCharset() throws InterruptedException, ExecutionException, TimeoutException {
-        Charset charset = Charset.forName("UTF-16LE");
+        Charset charset = StandardCharsets.UTF_16LE;
         final String[] lines = new String[] {"Process line \u1234", "Process line \u1235", "Process line \u1236"};
 
         TestInputStream is = new TestInputStream(TestInputUtils.prepareInputStream(lines, "\n", charset, true));

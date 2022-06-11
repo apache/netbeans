@@ -20,6 +20,8 @@ package org.netbeans.modules.payara.tooling.admin;
 
 import java.io.*;
 import java.net.HttpURLConnection;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.logging.Level;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -93,7 +95,7 @@ public class RunnerHttpDeploy extends RunnerHttp {
      * @param command Payara server administration deploy command entity.
      * @return Deploy query string for given command.
      */
-    private static String query(final Command command) {
+    private static String query(final PayaraServer server, final Command command) {
         // Prepare values
         String name; 
         String path;
@@ -109,6 +111,17 @@ public class RunnerHttpDeploy extends RunnerHttp {
             }
             name = Utils.sanitizeName(deploy.name);
             path = deploy.path.getAbsolutePath();
+            if (server.isDocker()
+                    && server.getHostPath() != null
+                    && !server.getHostPath().isEmpty()
+                    && server.getContainerPath() != null
+                    && !server.getContainerPath().isEmpty()) {
+                Path relativePath = Paths.get(server.getHostPath()).relativize(deploy.path.toPath());
+                path = Paths.get(server.getContainerPath(), relativePath.toString()).toString();
+                if (server.getContainerPath().startsWith("/")) {
+                    path = path.replace("\\", "/");
+                }
+            }
             target =deploy.target;
             ctxRoot = deploy.contextRoot;
             hotDeploy = Boolean.toString(deploy.hotDeploy);
@@ -186,7 +199,7 @@ public class RunnerHttpDeploy extends RunnerHttp {
      */
     public RunnerHttpDeploy(final PayaraServer server,
             final Command command) {
-        super(server, command, query(command));
+        super(server, command, query(server, command));
         this.command = (CommandDeploy)command;
     }
 

@@ -22,6 +22,7 @@ package org.netbeans.modules.apisupport.project.api;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
@@ -288,7 +289,7 @@ public class EditableManifestTest extends NbTestCase {
     }
     
     private static EditableManifest string2Manifest(String text) throws Exception {
-        return new EditableManifest(new ByteArrayInputStream(text.getBytes("UTF-8")));
+        return new EditableManifest(new ByteArrayInputStream(text.getBytes(StandardCharsets.UTF_8)));
     }
     
     private static String manifest2String(EditableManifest em) throws Exception {

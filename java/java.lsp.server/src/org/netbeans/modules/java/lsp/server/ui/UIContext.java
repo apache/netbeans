@@ -20,6 +20,8 @@ package org.netbeans.modules.java.lsp.server.ui;
 
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import org.eclipse.lsp4j.MessageActionItem;
 import org.eclipse.lsp4j.MessageParams;
@@ -27,6 +29,9 @@ import org.eclipse.lsp4j.MessageType;
 import org.eclipse.lsp4j.ShowMessageRequestParams;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.modules.java.lsp.server.protocol.HtmlPageParams;
+import org.netbeans.modules.java.lsp.server.input.QuickPickItem;
+import org.netbeans.modules.java.lsp.server.input.ShowInputBoxParams;
+import org.netbeans.modules.java.lsp.server.input.ShowQuickPickParams;
 import org.netbeans.modules.java.lsp.server.protocol.ShowStatusMessageParams;
 import org.openide.awt.StatusDisplayer.Message;
 import org.openide.util.Lookup;
@@ -85,7 +90,21 @@ public abstract class UIContext {
     protected abstract CompletableFuture<MessageActionItem> showMessageRequest(ShowMessageRequestParams msg);
     protected abstract void logMessage(MessageParams msg);
     protected abstract Message showStatusMessage(ShowStatusMessageParams msg);
+    
+    /**
+     * Shows an input box to ask the user for a text input.
+     *
+     * @param params properties of input to display
+     * @return future that yields the entered value
+     * @since 1.18
+     */
+    protected CompletableFuture<String> showInputBox(ShowInputBoxParams params) {
+        throw new AbstractMethodError();
+    }
 
+    protected CompletableFuture<List<QuickPickItem>> showQuickPick(ShowQuickPickParams params) {
+        throw new AbstractMethodError();
+    }
 
     private static final class LogImpl extends UIContext {
         static final LogImpl DEFAULT = new LogImpl();
@@ -125,6 +144,19 @@ public abstract class UIContext {
         protected CompletableFuture<String> showHtmlPage(HtmlPageParams msg) {
             System.out.println("Open in browser: " + msg.getUri());
             return CompletableFuture.completedFuture(null);
+        }
+
+        @Override
+        protected CompletableFuture<String> showInputBox(ShowInputBoxParams params) {
+            System.err.println("input: " + params.getPrompt());
+            CompletableFuture<String> ai = CompletableFuture.completedFuture(null);
+            return ai;
+        }
+
+        @Override
+        protected CompletableFuture<List<QuickPickItem>> showQuickPick(ShowQuickPickParams params) {
+            System.err.println("quickPick: " + params.getPlaceHolder());
+            return CompletableFuture.completedFuture(Collections.emptyList());
         }
     }
 }

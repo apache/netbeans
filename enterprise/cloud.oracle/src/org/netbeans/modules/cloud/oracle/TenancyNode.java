@@ -18,11 +18,14 @@
  */
 package org.netbeans.modules.cloud.oracle;
 
+import org.netbeans.modules.cloud.oracle.items.OCIItem;
 import java.awt.Image;
 import java.util.List;
 import javax.swing.Action;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import org.netbeans.modules.cloud.oracle.items.CompartmentItem;
+import org.openide.loaders.DataNode;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
 import org.openide.nodes.Node;
@@ -41,6 +44,7 @@ public class TenancyNode extends AbstractNode {
         setName(tenancy.getName()); 
         setDisplayName(tenancy.getName());
         setIconBaseWithExtension(ORCL_ICON);
+        setShortDescription(tenancy.getDescription());
     }
     
     @Override
@@ -63,7 +67,7 @@ public class TenancyNode extends AbstractNode {
         };
     }
     
-    public static class TenancyChildFactory extends org.openide.nodes.ChildFactory<OCIItem>
+    public static class TenancyChildFactory extends org.openide.nodes.ChildFactory<CompartmentItem>
             implements ChangeListener {
 
         private final OCIItem tenancy;
@@ -73,7 +77,7 @@ public class TenancyNode extends AbstractNode {
         }
 
         @Override
-        protected boolean createKeys(List<OCIItem> toPopulate) {
+        protected boolean createKeys(List<CompartmentItem> toPopulate) {
             toPopulate.addAll(OCIManager.getDefault().getCompartments(tenancy.getId()));
             return true;
         }
@@ -84,7 +88,7 @@ public class TenancyNode extends AbstractNode {
         }
 
         @Override
-        protected Node createNodeForKey(OCIItem key) {
+        protected Node createNodeForKey(CompartmentItem key) {
             CompartmentNode node = new CompartmentNode(key);
             return node;
         }

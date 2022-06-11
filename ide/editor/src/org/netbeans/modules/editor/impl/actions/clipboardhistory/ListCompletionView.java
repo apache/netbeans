@@ -46,7 +46,7 @@ public class ListCompletionView extends JList {
 
     public static final int COMPLETION_ITEM_HEIGHT = 16;
     private static final int DARKER_COLOR_COMPONENT = 5;
-    private final static Icon icon = ImageUtilities.loadImageIcon("org/netbeans/modules/editor/hints/resources/suggestion.gif", false); // NOI18N
+    private static final Icon icon = ImageUtilities.loadImageIcon("org/netbeans/modules/editor/hints/resources/suggestion.gif", false); // NOI18N
     private final int fixedItemHeight;
     private Font font;
     private final RenderComponent renderComponent;

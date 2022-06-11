@@ -215,7 +215,7 @@ Executor, Closeable {
      * to {@link Browser#Browser(org.netbeans.html.presenters.browser.Browser.Config) }
      * constructor.
      */
-    public final static class Config implements Cloneable {
+    public static final class Config implements Cloneable {
         private Consumer<URI> browser;
         Integer port;
         boolean debug = Boolean.getBoolean("com.dukescript.presenters.browserDebug");

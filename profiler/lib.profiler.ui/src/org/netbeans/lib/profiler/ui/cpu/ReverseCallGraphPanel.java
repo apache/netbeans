@@ -366,7 +366,7 @@ public class ReverseCallGraphPanel extends SnapshotCPUResultsPanel implements Sc
                 }
 
                 private Float getNodeTimeRel(PrestimeCPUCCTNode pNode) {
-                    return new Float(pNode.getTotalTime0InPerCent());
+                    return pNode.getTotalTime0InPerCent();
                 }
 
                 private String getNodeTime(PrestimeCPUCCTNode pNode) {

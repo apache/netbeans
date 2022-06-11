@@ -474,9 +474,10 @@ final class VanillaCompileWorker extends CompileWorker {
 
             for (FileObject f : listed) {
                 String name = f.getNameExt();
-                if (name.endsWith(".class"))
+                if (name.endsWith(".class")) {
                     name = name.substring(0, name.length() - FileObjects.CLASS.length()) + FileObjects.SIG;
-                copyRecursively(f, targetRoot, new File(target, name), filter, fmtx, copied);
+                    copyRecursively(f, targetRoot, new File(target, name), filter, fmtx, copied);
+                }
             }
         } else {
             if (target.isDirectory()) {
@@ -687,6 +688,11 @@ final class VanillaCompileWorker extends CompileWorker {
                 Symbol.ClassSymbol csym = clazz.sym;
                 if (isErroneousClass(csym)) {
                     //likely a duplicate of another class, don't touch:
+                    return null;
+                }
+                if (isOtherClass(csym)) {
+                    // Something went somewhere the csym.type is Type.Unknown,
+                    // do not go any further
                     return null;
                 }
                 currentClass = csym;
@@ -1048,8 +1054,13 @@ final class VanillaCompileWorker extends CompileWorker {
         }
         return isErroneousClass(((JCClassDecl) tree).sym);
     }
+
     private boolean isErroneousClass(Element el) {
         return el instanceof ClassSymbol && (((ClassSymbol) el).asType() == null || ((ClassSymbol) el).asType().getKind() == TypeKind.ERROR);
+    }
+
+    private boolean isOtherClass(Element el) {
+        return el instanceof ClassSymbol && (((ClassSymbol) el).asType() == null || ((ClassSymbol) el).asType().getKind() == TypeKind.OTHER);
     }
 
     public static Function<Diagnostic<?>, String> DIAGNOSTIC_TO_TEXT = d -> d.getMessage(null);

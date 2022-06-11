@@ -300,7 +300,7 @@ public abstract class XMLJ2eeDataObject extends XMLDataObject implements CookieS
             OutputWriter outputWriter = inOut.getOut();
             int line   = Math.max(0,error.getErrorLine());
             
-            LineCookie cookie = (LineCookie)getCookie(LineCookie.class);
+            LineCookie cookie = getCookie(LineCookie.class);
             // getting Line object
             Line xline = cookie.getLineSet ().getCurrent(line==0?0:line-1);
             // attaching Annotation

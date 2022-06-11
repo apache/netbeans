@@ -204,7 +204,7 @@ class InterfaceScopeImpl extends TypeScopeImpl implements InterfaceScope {
         StringBuilder sb = new StringBuilder();
         sb.append(super.toString());
         List<? extends InterfaceScope> implementedInterfaces = getSuperInterfaceScopes();
-        if (implementedInterfaces.size() > 0) {
+        if (!implementedInterfaces.isEmpty()) {
             sb.append(" implements ");
             for (InterfaceScope interfaceScope : implementedInterfaces) {
                 sb.append(interfaceScope.getName()).append(" ");

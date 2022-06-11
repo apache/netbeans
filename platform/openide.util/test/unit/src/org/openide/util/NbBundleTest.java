@@ -26,6 +26,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLStreamHandler;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -38,12 +39,13 @@ import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.TreeMap;
 import java.util.jar.Attributes;
+import org.openide.util.base.BundleClass;
 import junit.framework.TestCase;
+
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertNotNull;
 import static junit.framework.TestCase.fail;
 import static org.junit.Assert.assertNotEquals;
-import org.openide.util.base.BundleClass;
 
 // XXX testGetClassBundle
 // XXX testGetLocalizedFile
@@ -347,7 +349,7 @@ public class NbBundleTest extends TestCase {
         // XXX value beginning with \
     }
     private static String debugIS(String s, boolean loc) throws IOException {
-        InputStream dis = new NbBundle.DebugLoader.DebugInputStream(new ByteArrayInputStream(s.getBytes("ISO-8859-1")), 17, loc);
+        InputStream dis = new NbBundle.DebugLoader.DebugInputStream(new ByteArrayInputStream(s.getBytes(StandardCharsets.ISO_8859_1)), 17, loc);
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         byte[] buf = new byte[4096];
         int read;

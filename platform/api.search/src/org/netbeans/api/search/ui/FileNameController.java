@@ -83,7 +83,7 @@ public final class FileNameController extends ComponentController<JComboBox> {
         component.setEditable(true);
         List<String> entries = FindDialogMemory.getDefault().getFileNamePatterns();
         if (!entries.isEmpty()) {
-            component.setModel(new ListComboBoxModel<String>(entries, true));
+            component.setModel(new ListComboBoxModel<>(entries, true));
         }
     }
 

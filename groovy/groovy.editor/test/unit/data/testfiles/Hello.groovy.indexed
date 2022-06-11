@@ -52,8 +52,8 @@ Document 3
 Searchable Keys:
   class : SecondTestClass
   class-ig : secondtestclass
-  ctor : SecondTestClass;String;01
   ctor : SecondTestClass;int;01
+  ctor : SecondTestClass;java.lang.String;01
   fqn : foo.SecondTestClass
   method : getMetaClass;groovy.lang.MetaClass;01
   method : setMetaClass(groovy.lang.MetaClass);void;01
@@ -65,8 +65,8 @@ Document 4
 Searchable Keys:
   class : ThirdTestClass
   class-ig : thirdtestclass
-  ctor : ThirdTestClass;String;01
   ctor : ThirdTestClass;int;01
+  ctor : ThirdTestClass;java.lang.String;01
   fqn : foo.ThirdTestClass
   method : getMetaClass;groovy.lang.MetaClass;01
   method : setMetaClass(groovy.lang.MetaClass);void;01

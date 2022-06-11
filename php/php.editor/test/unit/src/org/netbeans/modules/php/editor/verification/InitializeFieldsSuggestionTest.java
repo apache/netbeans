@@ -207,6 +207,22 @@ public class InitializeFieldsSuggestionTest extends PHPHintsTestBase {
         applyHint(new InitializeFieldSuggestionStub(PhpVersion.PHP_73), "unionTypes_01.php", "            \\Test\\Foo|Bar $mi^xed,", "Initialize Field");
     }
 
+    public void testIntersectionTypes_01a() throws Exception {
+        checkHints(new InitializeFieldSuggestion(), "intersectionTypes_01.php", "            Foo&Bar $para^m1,");
+    }
+
+    public void testIntersectionTypes_01b() throws Exception {
+        checkHints(new InitializeFieldSuggestion(), "intersectionTypes_01.php", "            \\Test\\Foo&Bar $par^am2,");
+    }
+
+    public void testIntersectionTypesFix_01a() throws Exception {
+        applyHint(new InitializeFieldSuggestionStub(PhpVersion.PHP_81), "intersectionTypes_01.php", "            Foo&Bar $par^am1,", "Initialize Field");
+    }
+
+    public void testIntersectionTypesFix_01b() throws Exception {
+        applyHint(new InitializeFieldSuggestionStub(PhpVersion.PHP_81), "intersectionTypes_01.php", "            \\Test\\Foo&Bar $par^am2,", "Initialize Field");
+    }
+
     //~ Inner classes
     private static class InitializeFieldSuggestionStub extends InitializeFieldSuggestion {
 

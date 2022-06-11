@@ -34,6 +34,7 @@ import java.io.PrintWriter;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.HashSet;
@@ -138,7 +139,7 @@ public class TaskCache {
             boolean existed = interestedInReturnValue && output.exists();
             output.getParentFile().mkdirs();
             try {
-                final PrintWriter pw = new PrintWriter(new OutputStreamWriter(new FileOutputStream(output), "UTF-8")); //NOI18N
+                final PrintWriter pw = new PrintWriter(new OutputStreamWriter(new FileOutputStream(output), StandardCharsets.UTF_8));
                 try {
                     for (T err : errors) {
                         pw.print(convertor.getKind(err).name());
@@ -148,10 +149,9 @@ public class TaskCache {
 
                         String description = convertor.getMessage(err);
                         if (description != null && description.length() > 0) {
-                            description = description.replaceAll("\\\\", "\\\\\\\\"); //NOI18N
-                            description = description.replaceAll("\n", "\\\\n"); //NOI18N
-                            description = description.replaceAll(":", "\\\\d"); //NOI18N
-
+                            description = description.replace("\\", "\\\\") //NOI18N
+                                                     .replace("\n", "\\n") //NOI18N
+                                                     .replace(":", "\\d"); //NOI18N
                             pw.println(description);
                         }
                     }
@@ -257,7 +257,7 @@ public class TaskCache {
 
     private List<Task> loadErrors(File input, FileObject file) throws IOException {
         List<Task> result = new LinkedList<Task>();
-        BufferedReader pw = new BufferedReader(new InputStreamReader(new FileInputStream(input), "UTF-8")); //NOI18N
+        BufferedReader pw = new BufferedReader(new InputStreamReader(new FileInputStream(input), StandardCharsets.UTF_8));
         String line;
 
         while ((line = pw.readLine()) != null) {

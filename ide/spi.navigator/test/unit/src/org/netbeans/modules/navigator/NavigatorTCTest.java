@@ -702,7 +702,7 @@ public class NavigatorTCTest extends NbTestCase {
     /** Test provider base, to test that infrastucture calls correct
      * methods in correct order.
      */ 
-    private static abstract class CorrectCallsProvider implements NavigatorPanel {
+    private abstract static class CorrectCallsProvider implements NavigatorPanel {
         
         private int panelActCalls = 0;
         private int panelDeactCalls = 0;
@@ -965,7 +965,7 @@ public class NavigatorTCTest extends NbTestCase {
         }
     }
     
-    public static abstract class LastSelBase implements NavigatorPanel {
+    public abstract static class LastSelBase implements NavigatorPanel {
         
         public Lookup getLookup () {
             return null;

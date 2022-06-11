@@ -28,7 +28,7 @@
     <change id="RemotePlatform">
         <api name="javasource_base" />
         <summary>Adding org.netbeans.spi.java.source.RemotePlatform</summary>
-        <version major="1" minor="2.56"/>
+        <version major="1" minor="2.58"/>
         <date day="27" month="1" year="2022"/>
         <author login="jlahoda"/>
         <compatibility addition="yes" binary="compatible" source="compatible"/>
@@ -36,6 +36,18 @@
                 Adding org.netbeans.spi.java.source.RemotePlatform and related elements.
         </description>
         <class name="RemotePlatform" package="org.netbeans.spi.java.source"/>
+    </change>
+    <change id="TreeUtilities.isClassFile">
+        <api name="javasource_base" />
+        <summary>Adding TreeUtilities.isExpressionStatement(ExpressionTree)</summary>
+        <version major="1" minor="2.56"/>
+        <date day="23" month="3" year="2021"/>
+        <author login="dbalek"/>
+        <compatibility addition="yes" binary="compatible" source="compatible"/>
+        <description>
+                Adding TreeUtilities.isExpressionStatement(ExpressionTree).
+        </description>
+        <class name="TreeUtilities" package="org.netbeans.api.java.source"/>
     </change>
     <change id="SourceUtils.isClassFile">
         <api name="javasource_base" />

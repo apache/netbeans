@@ -72,7 +72,7 @@ public final class J2eeProjectView {
      */
     public static EjbNodesFactory getEjbNodesFactory () {
         if (factoryInstance == null) {
-            factoryInstance = (EjbNodesFactory) Lookup.getDefault().lookup(EjbNodesFactory.class);
+            factoryInstance = Lookup.getDefault().lookup(EjbNodesFactory.class);
         }
         if (factoryInstance == null) {
             Logger.getLogger("global").log(Level.INFO, "No EjbNodesFactory instance available: Enterprise Beans nodes cannot be creater");

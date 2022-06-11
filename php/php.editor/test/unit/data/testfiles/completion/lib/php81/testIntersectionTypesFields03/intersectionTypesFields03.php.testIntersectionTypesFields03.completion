@@ -1,0 +1,8 @@
+Code completion result for source line:
+private Test&\Test1\IntersectionTypes2&|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+PACKAGE    Test1                           [PUBLIC]   null
+PACKAGE    Test2                           [PUBLIC]   null
+CLASS      IntersectionTypes1              [PUBLIC]   Test1
+CLASS      IntersectionTypes2              [PUBLIC]   Test1
+CLASS      Test                            [PUBLIC]   Test2

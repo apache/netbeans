@@ -67,7 +67,7 @@ public final class ServerRegistry implements java.io.Serializable {
     public static final String SERVER_NAME = "serverName"; //NOI18N
     
     private static ServerRegistry instance = null;
-    public synchronized static ServerRegistry getInstance() {
+    public static synchronized ServerRegistry getInstance() {
         if(instance == null) instance = new ServerRegistry();
         return instance;
 
@@ -78,7 +78,7 @@ public final class ServerRegistry implements java.io.Serializable {
     /** Utility method that returns true if the ServerRegistry was initialized
      * during the current IDE session and false otherwise.
      */
-    public synchronized static boolean wasInitialized () {
+    public static synchronized boolean wasInitialized () {
         return instance != null && instance.servers != null && instance.instances != null;
     }
     private transient Map<String, Server> servers = null;

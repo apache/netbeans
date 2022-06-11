@@ -24,6 +24,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.jar.JarOutputStream;
@@ -112,7 +113,7 @@ public class UpdateDisabledModuleTest extends NbTestCase {
 "        <file crc=\"3486416273\" name=\"modules/com-example-testmodule-cluster.jar\"/>\n" +
 "    </module_version>\n" +
 "</module>\n";
-        utos.write(utcfg.getBytes("UTF-8"));
+        utos.write(utcfg.getBytes(StandardCharsets.UTF_8));
         utos.close();
 
         StringBuilder msg = new StringBuilder();
@@ -139,7 +140,7 @@ public class UpdateDisabledModuleTest extends NbTestCase {
                 "   <param name='specversion'>1.0</param>\n" +
                 "</module>\n" +
                 "\n";
-        os.write(cfg.getBytes("UTF-8"));
+        os.write(cfg.getBytes(StandardCharsets.UTF_8));
         os.close();
     }
 

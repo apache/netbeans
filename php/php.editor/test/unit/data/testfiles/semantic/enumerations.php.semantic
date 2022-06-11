@@ -1,0 +1,105 @@
+<?php
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
+enum |>CLASS:Simple<| {}
+
+enum |>CLASS:Simple1<| {
+    case |>FIELD,STATIC:A<|;
+    case |>FIELD,STATIC:B<|;
+    case |>FIELD,STATIC:C<|;
+    case |>FIELD,STATIC:D<|;
+}
+
+enum |>CLASS:BackedCaseInt<|: int {}
+
+enum |>CLASS:BackedCaseInt1<|: int {
+    case |>FIELD,STATIC:A<| = 1;
+    case |>FIELD,STATIC:B<| = 2;
+    case |>FIELD,STATIC:C<| = 3;
+    case |>FIELD,STATIC:D<| = 4;
+    case |>FIELD,STATIC:E<| = 1 << 3;
+    case |>FIELD,STATIC:F<| = -1;
+}
+
+enum |>CLASS:BackedCaseString<|: string {}
+
+enum |>CLASS:BackedCaseString1<|: string {
+    case |>FIELD,STATIC:A<| = "A";
+    case |>FIELD,STATIC:B<| = "B";
+    case |>FIELD,STATIC:C<| = "C";
+    case |>FIELD,STATIC:D<| = "D";
+    case |>FIELD,STATIC:E<| = "E" . "E";
+    case |>FIELD,STATIC:F<| = <<<F
+    Test
+    Test
+    Test
+    F;
+    case |>FIELD,STATIC:G<| = <<<'G'
+    Test
+    Test
+    Test
+    G;
+}
+
+enum |>CLASS:Impl<| implements Iface1, Iface2 {
+    case |>FIELD,STATIC:A<|;
+    case |>FIELD,STATIC:B<|;
+    case |>FIELD,STATIC:C<|;
+
+    public function |>METHOD:implMethod<|(Test $test): void {
+    }
+}
+
+#[A1]
+enum |>CLASS:Attributes<|: int implements Iface {
+    #[A1]
+    case |>FIELD,STATIC:A<| = 1;
+    #[A1]
+    case |>FIELD,STATIC:B<| = 2;
+
+    #[A1]
+    const |>FIELD,STATIC:CONSTANT1<| = "constant";
+    const |>FIELD,STATIC:CONSTANT2<| = self::|>FIELD,STATIC:A<|;
+
+    #[A1]
+    public function |>METHOD:implMethod<|(#[A1] Test $test): void {
+        self::|>FIELD,STATIC:CONSTANT1<|;
+        self::|>FIELD,STATIC:A<|;
+    }
+}
+
+trait |>CLASS:TestTrait<| {
+    public static function |>METHOD,STATIC:test<|(): void {
+    }
+}
+
+enum |>CLASS:WithTrait<| {
+    use TestTrait;
+
+    case |>FIELD,STATIC:A<|;
+    case |>FIELD,STATIC:B<|;
+
+    public static function |>METHOD,STATIC:staticMethod<|(): void {
+    }
+}
+
+interface |>CLASS:Iface<| {}
+interface |>CLASS:Iface1<| {}
+interface |>CLASS:Iface2<| {}

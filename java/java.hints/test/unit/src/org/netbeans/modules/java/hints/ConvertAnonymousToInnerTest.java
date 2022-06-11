@@ -651,7 +651,7 @@ public class ConvertAnonymousToInnerTest extends NbTestCase {
     }
     
     private static String removeWhitespaces(String text) {
-        return text.replaceAll(" ", "").replaceAll("\n", "");
+        return text.replace(" ", "").replace("\n", "");
     }
 
     public void test179766a() throws Exception {

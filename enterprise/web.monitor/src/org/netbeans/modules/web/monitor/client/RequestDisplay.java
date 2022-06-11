@@ -43,7 +43,7 @@ import javax.swing.event.TableModelListener;
 
 public class RequestDisplay extends DataDisplay {
     
-    private final static boolean debug = false;
+    private static final boolean debug = false;
     
     private DisplayTable dt = null; 
     DisplayTable paramTable = null;

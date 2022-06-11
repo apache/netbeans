@@ -3,14 +3,8 @@
         <token id='T_NAMESPACE' start='815' end='824'>
             <text>namespace</text>
         </token>
-        <token id='T_STRING' start='825' end='829'>
-            <text>Test</text>
-        </token>
-        <token id='T_NS_SEPARATOR' start='829' end='830'>
-            <text>\</text>
-        </token>
-        <token id='T_STRING' start='830' end='845'>
-            <text>AttributeSyntax</text>
+        <token id='T_NAME_QUALIFIED' start='825' end='845'>
+            <text>Test\AttributeSyntax</text>
         </token>
         <token id='T_CURLY_OPEN' start='846' end='847'>
             <text>{</text>
@@ -108,20 +102,8 @@
         <token id='T_USE' start='1048' end='1051'>
             <text>use</text>
         </token>
-        <token id='T_STRING' start='1052' end='1056'>
-            <text>Test</text>
-        </token>
-        <token id='T_NS_SEPARATOR' start='1056' end='1057'>
-            <text>\</text>
-        </token>
-        <token id='T_STRING' start='1057' end='1072'>
-            <text>AttributeSyntax</text>
-        </token>
-        <token id='T_NS_SEPARATOR' start='1072' end='1073'>
-            <text>\</text>
-        </token>
-        <token id='T_STRING' start='1073' end='1086'>
-            <text>AttributeTest</text>
+        <token id='T_NAME_QUALIFIED' start='1052' end='1086'>
+            <text>Test\AttributeSyntax\AttributeTest</text>
         </token>
         <token id='T_SEMICOLON' start='1086' end='1087'>
             <text>;</text>

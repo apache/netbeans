@@ -29,7 +29,7 @@ public class FindJSPServletHelper {
     private FindJSPServletHelper() {
     }
         
-    static public String getServletResourcePath(String moduleContextPath, String jspResourcePath) {
+    public static String getServletResourcePath(String moduleContextPath, String jspResourcePath) {
         Parameters.notWhitespace("jspResourcePath", jspResourcePath);
         String s = getServletPackageName(jspResourcePath) + '/' +
             getServletClassName(jspResourcePath) + ".java";// NOI18N
@@ -38,7 +38,7 @@ public class FindJSPServletHelper {
 
     // After Apace donation, should use org.apache.jasper utilities in 
     // JspUtil and JspCompilationContext
-    static private String getServletPackageName(String jspUri) {
+    private static String getServletPackageName(String jspUri) {
         String jspBasePackageName = "org/apache/jsp";//NOI18N
         int iSep = jspUri.lastIndexOf('/');
         String packageName = (iSep > 0) ? jspUri.substring(0, iSep) : "";//NOI18N
@@ -51,7 +51,7 @@ public class FindJSPServletHelper {
     
     // After Apace donation, should use org.apache.jasper utilities in 
     // JspUtil and JspCompilationContext
-    static private String getServletClassName(String jspUri) {
+    private static String getServletClassName(String jspUri) {
         int iSep = jspUri.lastIndexOf('/') + 1;
         String className = jspUri.substring(iSep);
         StringBuilder modClassName = new StringBuilder("");//NOI18N

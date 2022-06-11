@@ -30,7 +30,7 @@ import org.netbeans.api.annotations.common.CheckForNull;
  * e.g.
  * var $a, $b;
  * public $a = 3;
- * final private static $var;
+ * private static final $var;
  * protected ?int $int = 0; // PHP 7.4
  * </pre>
  */

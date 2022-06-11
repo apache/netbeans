@@ -111,8 +111,8 @@ public final class UIJavaUtils {
 		    try {
 			TypeElement enclosingTypeElement = compilationController.getElementUtilities().enclosingTypeElement(method);
 			String originalPath = FileUtil.toFile(fo2open[0]).getAbsolutePath();
-			String elementFQP = element.toString().replaceAll("\\.", Matcher.quoteReplacement(File.separator)); //NOI18N
-			String newPath = originalPath.substring(0, originalPath.indexOf(elementFQP)) + enclosingTypeElement.getQualifiedName().toString().replaceAll("\\.", Matcher.quoteReplacement(File.separator)) + ".java"; //NOI18N
+			String elementFQP = element.toString().replace(".", File.separator); //NOI18N
+			String newPath = originalPath.substring(0, originalPath.indexOf(elementFQP)) + enclosingTypeElement.getQualifiedName().toString().replace(".", File.separator) + ".java"; //NOI18N
 			fo2open[0] = FileUtil.toFileObject(new File(newPath));
                         
                         if(fo2open[0] == null) {

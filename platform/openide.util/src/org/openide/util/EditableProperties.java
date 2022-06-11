@@ -26,6 +26,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.AbstractMap;
 import java.util.AbstractSet;
 import java.util.ArrayList;
@@ -39,7 +40,6 @@ import java.util.ListIterator;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
-import org.openide.util.Parameters;
 
 // XXX: consider adding getInitialComment() and setInitialComment() methods
 // (useful e.g. for GeneratedFilesHelper)
@@ -142,7 +142,7 @@ public final class EditableProperties extends AbstractMap<String,String> impleme
      */
     public void load(InputStream stream) throws IOException {
         int parseState = WAITING_FOR_KEY_VALUE;
-        BufferedReader input = new BufferedReader(new InputStreamReader(stream, "ISO-8859-1"));
+        BufferedReader input = new BufferedReader(new InputStreamReader(stream, StandardCharsets.ISO_8859_1));
         List<String> tempList = new LinkedList<String>();
         String line;
         int commentLinesCount = 0;
@@ -189,7 +189,7 @@ public final class EditableProperties extends AbstractMap<String,String> impleme
      */
     public void store(OutputStream stream) throws IOException {
         boolean previousLineWasEmpty = true;
-        BufferedWriter output = new BufferedWriter(new OutputStreamWriter(stream, "ISO-8859-1"));
+        BufferedWriter output = new BufferedWriter(new OutputStreamWriter(stream, StandardCharsets.ISO_8859_1));
         for (Item item : state.items) {
             if (item.isSeparate() && !previousLineWasEmpty) {
                 output.newLine();

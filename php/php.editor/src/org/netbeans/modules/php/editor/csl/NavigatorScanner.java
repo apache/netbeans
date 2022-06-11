@@ -42,9 +42,11 @@ import org.netbeans.modules.php.editor.api.elements.ElementFilter;
 import org.netbeans.modules.php.editor.api.elements.ParameterElement;
 import org.netbeans.modules.php.editor.api.elements.TypeElement;
 import org.netbeans.modules.php.editor.api.elements.TypeResolver;
+import org.netbeans.modules.php.editor.model.CaseElement;
 import org.netbeans.modules.php.editor.model.ClassConstantElement;
 import org.netbeans.modules.php.editor.model.ClassScope;
 import org.netbeans.modules.php.editor.model.ConstantElement;
+import org.netbeans.modules.php.editor.model.EnumScope;
 import org.netbeans.modules.php.editor.model.FieldElement;
 import org.netbeans.modules.php.editor.model.FileScope;
 import org.netbeans.modules.php.editor.model.FunctionScope;
@@ -73,6 +75,7 @@ public final class NavigatorScanner {
     private static final String CLOSE_FONT = "</font>"; //NOI18N
     private static ImageIcon interfaceIcon = null;
     private static ImageIcon traitIcon = null;
+    private static ImageIcon enumIcon = null;
     private static boolean isLogged = false;
     private final FileScope fileScope;
     private final Set<TypeElement> deprecatedTypes;
@@ -138,6 +141,8 @@ public final class NavigatorScanner {
                 namespaceChildren.add(new PHPInterfaceStructureItem((InterfaceScope) type, children));
             } else if (type instanceof TraitScope) {
                 namespaceChildren.add(new PHPTraitStructureItem((TraitScope) type, children));
+            } else if (type instanceof EnumScope) {
+                namespaceChildren.add(new PHPEnumStructureItem((EnumScope) type, children));
             }
 
             // methods
@@ -204,6 +209,14 @@ public final class NavigatorScanner {
                 Collection<? extends FieldElement> declaredFields = trait.getDeclaredFields();
                 for (FieldElement field : declaredFields) {
                     children.add(new PHPFieldStructureItem(field));
+                }
+            }
+            if (type instanceof EnumScope) {
+                EnumScope enumScope = (EnumScope) type;
+                Collection<? extends CaseElement> declaredEnumCases = enumScope.getDeclaredEnumCases();
+                for (CaseElement enumCase : declaredEnumCases) {
+                    children.add(new PHPEnumCaseStructureItem(enumCase, "con")); // NOI18N
+                    declClsConstantNames.add(enumCase.getName());
                 }
             }
         }
@@ -391,7 +404,7 @@ public final class NavigatorScanner {
                                 QualifiedName typeName = typeResolver.getTypeName(false);
                                 if (typeName != null) {
                                     if (i > 1) {
-                                        formatter.appendText(Type.SEPARATOR);
+                                        formatter.appendText(Type.getTypeSeparator(formalParameter.isIntersectionType()));
                                     }
                                     if (typeResolver.isNullableType()) {
                                         formatter.appendText(CodeUtils.NULLABLE_TYPE_PREFIX);
@@ -423,7 +436,7 @@ public final class NavigatorScanner {
                 if (!ignoredTypes.contains(type)) {
                     i++;
                     if (i > 1) {
-                        formatter.appendText(", "); //NOI18N
+                        formatter.appendText(Type.getTypeSeparator(function.isReturnIntersectionType()));
                     }
                     processTypeName(type, function, formatter);
                 }
@@ -510,13 +523,14 @@ public final class NavigatorScanner {
                 formatter.deprecated(false);
             }
             Collection<? extends String> types = field.getDefaultTypeNames();
+            boolean isIntersectionType = field.getDefaultType() != null && field.getDefaultType().contains(Type.SEPARATOR_INTERSECTION);
             if (!types.isEmpty()) {
                 formatter.appendHtml(FONT_GRAY_COLOR + ":"); //NOI18N
                 int i = 0;
                 for (String type : types) {
                     i++;
                     if (i > 1) {
-                        formatter.appendText(", "); //NOI18N
+                        formatter.appendText(Type.getTypeSeparator(isIntersectionType));
                     }
                     processTypeName(type, field, formatter);
                 }
@@ -827,6 +841,88 @@ public final class NavigatorScanner {
             return formatter.getText();
         }
 
+    }
+
+    private class PHPEnumStructureItem extends PHPStructureItem {
+
+        @StaticResource
+        private static final String PHP_ENUM_ICON = "org/netbeans/modules/php/editor/resources/enum.png"; //NOI18N
+        private final Collection<? extends InterfaceScope> interfaces;
+        private final Collection<? extends TraitScope> usedTraits;
+        private final QualifiedName backingType;
+
+        public PHPEnumStructureItem(ModelElement elementHandle, List<? extends StructureItem> children) {
+            super(elementHandle, children, "cl"); //NOI18N
+            interfaces = getEnumScope().getSuperInterfaceScopes();
+            usedTraits = getEnumScope().getTraits();
+            backingType = getEnumScope().getBackingType();
+        }
+
+        @Override
+        public ImageIcon getCustomIcon() {
+            if (enumIcon == null) {
+                enumIcon = new ImageIcon(ImageUtilities.loadImage(PHP_ENUM_ICON));
+            }
+            return enumIcon;
+        }
+
+        private EnumScope getEnumScope() {
+            return (EnumScope) getModelElement();
+        }
+
+        @Override
+        public String getHtml(HtmlFormatter formatter) {
+            formatter.reset();
+            appendName(getEnumScope(), formatter);
+            if (backingType != null) {
+                formatter.appendHtml(FONT_GRAY_COLOR + "("); // NOI18N
+                formatter.appendText(backingType.toString());
+                formatter.appendHtml(")" + CLOSE_FONT); // NOI18N
+            }
+            if (interfaces != null && !interfaces.isEmpty()) {
+                formatter.appendHtml(FONT_GRAY_COLOR + ":"); // NOI18N
+                appendInterfaces(interfaces, formatter);
+                formatter.appendHtml(CLOSE_FONT);
+            }
+            if (usedTraits != null && !usedTraits.isEmpty()) {
+                formatter.appendHtml(FONT_GRAY_COLOR + "#"); // NOI18N
+                appendUsedTraits(usedTraits, formatter);
+                formatter.appendHtml(CLOSE_FONT);
+            }
+            return formatter.getText();
+        }
+    }
+
+    private class PHPEnumCaseStructureItem extends PHPStructureItem {
+
+        public PHPEnumCaseStructureItem(CaseElement elementHandle, String prefix) {
+            super(elementHandle, null, prefix);
+        }
+
+        public CaseElement getEnumCase() {
+            return (CaseElement) getModelElement();
+        }
+
+        @Override
+        public String getHtml(HtmlFormatter formatter) {
+            formatter.reset();
+            if (getEnumCase().isDeprecated()) {
+                formatter.deprecated(true);
+            }
+            formatter.appendText(getName());
+            if (getEnumCase().isDeprecated()) {
+                formatter.deprecated(false);
+            }
+            final CaseElement enumCase = getEnumCase();
+            String value = enumCase.getValue();
+            if (value != null) {
+                formatter.appendText(" "); //NOI18N
+                formatter.appendHtml(FONT_GRAY_COLOR); //NOI18N
+                formatter.appendText(value);
+                formatter.appendHtml(CLOSE_FONT);
+            }
+            return formatter.getText();
+        }
     }
 
     private class PHPConstructorStructureItem extends PHPStructureInheritedItem {

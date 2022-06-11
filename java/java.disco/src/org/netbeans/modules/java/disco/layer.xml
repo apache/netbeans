@@ -27,7 +27,7 @@
             <folder name="installers">
                 <file name="new-remote-j2se2.instance">
                     <attr name="instanceOf" stringvalue="org.netbeans.spi.java.platform.GeneralPlatformInstall,org.netbeans.spi.java.platform.CustomPlatformInstall"/>
-                    <attr name="instanceCreate" methodvalue="org.netbeans.modules.java.disco.FoojayPlatformInstall.create"/>
+                    <attr name="instanceCreate" methodvalue="org.netbeans.modules.java.disco.DiscoPlatformInstall.create"/>
                     <attr name="position" intvalue="200"/>
                 </file>
             </folder>
@@ -35,4 +35,3 @@
     </folder>
     
 </filesystem>
-

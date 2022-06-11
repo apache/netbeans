@@ -42,9 +42,9 @@ import org.openide.util.Utilities;
  */
 public class DirectoryNode extends DefaultMutableTreeNode {
     
-    public final static int SINGLE_SELECTION = 0;
+    public static final int SINGLE_SELECTION = 0;
     
-    public final static int DIG_IN_SELECTION = 4;
+    public static final int DIG_IN_SELECTION = 4;
 
     /** case insensitive file name's comparator */
     static final FileNameComparator FILE_NAME_COMPARATOR = new FileNameComparator();

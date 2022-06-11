@@ -22,6 +22,8 @@ package org.netbeans.modules.settings;
 import java.beans.PropertyChangeEvent;
 import java.lang.ref.SoftReference;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.netbeans.modules.settings.convertors.SerialDataNode;
@@ -286,9 +288,7 @@ implements java.beans.PropertyChangeListener, FileSystem.AtomicAction {
             try {
                 synchronized (READWRITE_LOCK) {
                     java.io.Reader r = ContextProvider.createReaderContextProvider(
-                        new java.io.InputStreamReader(settingFO.getInputStream(),"UTF-8"), //NOI18N
-                        getFile()
-                    );
+                        new InputStreamReader(settingFO.getInputStream(), StandardCharsets.UTF_8), getFile());
                     inst = getConvertor().read(r);
                 }
             } catch (IOException ex) {

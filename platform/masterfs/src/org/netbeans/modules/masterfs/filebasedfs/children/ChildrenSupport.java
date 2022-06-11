@@ -391,7 +391,7 @@ public class ChildrenSupport {
         return notExistingChildren != null ? notExistingChildren : Collections.<FileNaming>emptySet();
     }
     
-    protected synchronized final void copyTo(ChildrenSupport newCache, FileNaming name) {
+    protected final synchronized void copyTo(ChildrenSupport newCache, FileNaming name) {
         assert newCache != this && newCache.existingChildren == null && newCache.notExistingChildren == null;
         for (FileNaming fn : getExisting(false)) {
             newCache.getChild(fn.getName(), name, true);

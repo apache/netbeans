@@ -268,7 +268,7 @@ public class AntSettings {
         pcs.firePropertyChange(prop, null, null);
     }
 
-    public static abstract class IntrospectedInfoSerializer {
+    public abstract static class IntrospectedInfoSerializer {
         public static IntrospectedInfoSerializer instance;
         public abstract IntrospectedInfo load(Preferences node);
         public abstract void store(Preferences node, IntrospectedInfo info);

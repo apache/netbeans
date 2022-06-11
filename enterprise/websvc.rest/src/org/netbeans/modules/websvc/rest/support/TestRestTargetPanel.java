@@ -226,8 +226,7 @@ public class TestRestTargetPanel extends javax.swing.JPanel {
          */
         @Override
         public Node createNode( Project project ) {
-            LogicalViewProvider logicalProvider = (LogicalViewProvider)project.
-                getLookup().lookup(LogicalViewProvider.class);
+            LogicalViewProvider logicalProvider = project.getLookup().lookup(LogicalViewProvider.class);
             RestSupport support = project.getLookup().lookup(RestSupport.class);
             SourceGroup[] sourceGroups = ProjectUtils.getSources(project).
                 getSourceGroups(WebProjectConstants.TYPE_DOC_ROOT);

@@ -46,7 +46,7 @@ import org.openide.windows.TopComponent;
 class TabsComponent extends JPanel {
 
     private JComponent EMPTY;
-    private final static String TOOLBAR_MARKER = "MultiViewPanel"; //NOI18N
+    private static final String TOOLBAR_MARKER = "MultiViewPanel"; //NOI18N
 
     MultiViewModel model;
     private MouseListener buttonMouseListener = null;

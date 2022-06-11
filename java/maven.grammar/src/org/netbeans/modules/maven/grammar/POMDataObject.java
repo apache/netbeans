@@ -59,11 +59,6 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 @Messages("CTL_SourceTabCaption=&Source")
-@MIMEResolver.Registration(
-    displayName="#POMResolver",
-    position=309,
-    resource="POMResolver.xml"
-)
 public class POMDataObject extends MultiDataObject {
 
     public static final String SETTINGS_MIME_TYPE = "text/x-maven-settings+xml";

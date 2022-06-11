@@ -41,7 +41,7 @@ public class Debugger {
         CPPLiteDebugger[] debugger = new CPPLiteDebugger[] { null };
         ExplicitProcessParameters processParameters = ExplicitProcessParameters.builder().workingDirectory(directory).build();
         Process engineProcess = CPPLiteDebugger.startDebugging(
-                new CPPLiteDebuggerConfig(command, processParameters, null, "gdb"),
+                new CPPLiteDebuggerConfig(command, processParameters, true, null, "gdb"),
                 engine -> {
                     debugger[0] = engine.lookupFirst(null, CPPLiteDebugger.class);
                 });

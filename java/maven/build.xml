@@ -87,6 +87,13 @@
          <package-artifact-from-dir jarbasename="test-lib3-12.6" relpath="projects/processors/repo/grp/test-lib3/12.6"/>
          <package-artifact-from-dir jarbasename="test-lib4-12.6" relpath="projects/processors/repo/grp/test-lib4/12.6"/>
          <package-artifact-from-dir jarbasename="test-processor-12.6" relpath="projects/processors/repo/grp/test-processor/12.6"/>
+
+         <package-artifact-from-dir jarbasename="annotation-12.6" relpath="projects/dependencies/repo/grp/annotation/12.6"/>
+         <package-artifact-from-dir jarbasename="test-lib-12.6" relpath="projects/dependencies/repo/grp/test-lib/12.6"/>
+         <package-artifact-from-dir jarbasename="test-lib3-12.6" relpath="projects/dependencies/repo/grp/test-lib3/12.6"/>
+         <package-artifact-from-dir jarbasename="test-lib4-12.6" relpath="projects/dependencies/repo/grp/test-lib4/12.6"/>
+         <package-artifact-from-dir jarbasename="test-processor-12.6" relpath="projects/dependencies/repo/grp/test-processor/12.6"/>
+
     </target>
 
 </project>

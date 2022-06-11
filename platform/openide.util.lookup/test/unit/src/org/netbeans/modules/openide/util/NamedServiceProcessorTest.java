@@ -25,6 +25,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.nio.charset.StandardCharsets;
 import java.util.concurrent.Callable;
 import org.netbeans.junit.NbTestCase;
 import org.openide.util.Lookup;
@@ -105,7 +106,7 @@ public class NamedServiceProcessorTest extends NbTestCase {
         assertFalse("Compilation fails",
             AnnotationProcessorTestUtils.runJavac(getWorkDir(), null, getWorkDir(), null, os)
         );
-        String err = new String(os.toByteArray(), "UTF-8");
+        String err = new String(os.toByteArray(), StandardCharsets.UTF_8);
         if (err.indexOf("java.lang.Runnable") == -1) {
             fail("The error messages should say something about interface Runnable\n" + err);
         }
@@ -139,7 +140,7 @@ public class NamedServiceProcessorTest extends NbTestCase {
         assertFalse("Compilation fails",
             AnnotationProcessorTestUtils.runJavac(getWorkDir(), null, getWorkDir(), null, os)
         );
-        String err = new String(os.toByteArray(), "UTF-8");
+        String err = new String(os.toByteArray(), StandardCharsets.UTF_8);
         if (err.indexOf("@when()") == -1) {
             fail("The error messages should say something about missing @when\n" + err);
         }
@@ -156,7 +157,7 @@ public class NamedServiceProcessorTest extends NbTestCase {
         assertFalse("Compilation fails",
             AnnotationProcessorTestUtils.runJavac(getWorkDir(), null, getWorkDir(), null, os)
         );
-        String err = new String(os.toByteArray(), "UTF-8");
+        String err = new String(os.toByteArray(), StandardCharsets.UTF_8);
         if (err.indexOf("@when()") == -1) {
             fail("The error messages should say something about missing @when\n" + err);
         }
@@ -173,7 +174,7 @@ public class NamedServiceProcessorTest extends NbTestCase {
         assertFalse("Compilation fails",
             AnnotationProcessorTestUtils.runJavac(getWorkDir(), null, getWorkDir(), null, os)
         );
-        String err = new String(os.toByteArray(), "UTF-8");
+        String err = new String(os.toByteArray(), StandardCharsets.UTF_8);
         if (err.indexOf("where") == -1) {
             fail("The error messages should say something about missing where\n" + err);
         }
@@ -189,7 +190,7 @@ public class NamedServiceProcessorTest extends NbTestCase {
         assertFalse("Compilation fails",
             AnnotationProcessorTestUtils.runJavac(getWorkDir(), null, getWorkDir(), null, os)
         );
-        String err = new String(os.toByteArray(), "UTF-8");
+        String err = new String(os.toByteArray(), StandardCharsets.UTF_8);
         if (err.indexOf("where") == -1) {
             fail("The error messages should say something about missing where\n" + err);
         }
@@ -205,7 +206,7 @@ public class NamedServiceProcessorTest extends NbTestCase {
         assertFalse("Compilation fails",
             AnnotationProcessorTestUtils.runJavac(getWorkDir(), null, getWorkDir(), null, os)
         );
-        String err = new String(os.toByteArray(), "UTF-8");
+        String err = new String(os.toByteArray(), StandardCharsets.UTF_8);
         if (err.indexOf("specify @Retention") == -1) {
             fail("The error messages should say something about missing where\n" + err);
         }
@@ -224,7 +225,7 @@ public class NamedServiceProcessorTest extends NbTestCase {
         assertFalse("Compilation fails",
             AnnotationProcessorTestUtils.runJavac(getWorkDir(), null, getWorkDir(), null, os)
         );
-        String err = new String(os.toByteArray(), "UTF-8");
+        String err = new String(os.toByteArray(), StandardCharsets.UTF_8);
         if (err.indexOf("specify @Retention") != -1) {
             fail("Be silent about Retention\n" + err);
         }

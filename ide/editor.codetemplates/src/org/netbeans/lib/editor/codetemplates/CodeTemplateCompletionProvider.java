@@ -130,6 +130,8 @@ public final class CodeTemplateCompletionProvider implements CompletionProvider 
                 String name = matcher.group(1);
                 switch (name) {
                     case CodeTemplateParameter.CURSOR_PARAMETER_NAME:
+                        sb.append("$0");
+                        break;
                     case CodeTemplateParameter.NO_FORMAT_PARAMETER_NAME:
                     case CodeTemplateParameter.NO_INDENT_PARAMETER_NAME:
                         break;

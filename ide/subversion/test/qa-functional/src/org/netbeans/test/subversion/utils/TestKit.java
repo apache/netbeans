@@ -52,17 +52,17 @@ import org.netbeans.modules.versioning.util.IndexingBridge;
  * @author peter
  */
 public final class TestKit {
-    public final static String MODIFIED_COLOR = "#0000ff";
-    public final static String NEW_COLOR = "#008000";
-    public final static String CONFLICT_COLOR = "#ff0000";
-    public final static String IGNORED_COLOR = "#999999";
+    public static final String MODIFIED_COLOR = "#0000ff";
+    public static final String NEW_COLOR = "#008000";
+    public static final String CONFLICT_COLOR = "#ff0000";
+    public static final String IGNORED_COLOR = "#999999";
     
-    public final static String MODIFIED_STATUS = "[Modified ]";
-    public final static String NEW_STATUS = "[New ]";
-    public final static String CONFLICT_STATUS = "[Conflict ]";
-    public final static String IGNORED_STATUS = "[Ignored ]";
-    public final static String UPTODATE_STATUS = "";
-    public final static String LOGGER_NAME = "org.netbeans.modules.subversion.t9y";
+    public static final String MODIFIED_STATUS = "[Modified ]";
+    public static final String NEW_STATUS = "[New ]";
+    public static final String CONFLICT_STATUS = "[Conflict ]";
+    public static final String IGNORED_STATUS = "[Ignored ]";
+    public static final String UPTODATE_STATUS = "";
+    public static final String LOGGER_NAME = "org.netbeans.modules.subversion.t9y";
     public static int TIME_OUT = 15;
     
     public static File prepareProject(String category, String project, String project_name) throws Exception {

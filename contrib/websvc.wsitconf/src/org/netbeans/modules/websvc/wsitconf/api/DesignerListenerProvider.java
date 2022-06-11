@@ -34,7 +34,7 @@ public final class DesignerListenerProvider {
     
     private static List<WeakReference<PropertyChangeListener>> listeners = new ArrayList<WeakReference<PropertyChangeListener>>();
     
-    public static synchronized final void registerListener(PropertyChangeListener pcl) {
+    public static final synchronized void registerListener(PropertyChangeListener pcl) {
         if (pcl == null) throw new IllegalArgumentException("Cannot pass nulls here!");
         listeners.add(new WeakReference(pcl));
     }

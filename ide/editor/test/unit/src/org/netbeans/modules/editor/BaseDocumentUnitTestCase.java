@@ -106,7 +106,7 @@ public class BaseDocumentUnitTestCase extends NbTestCase {
      *
      * @return caret instance.
      */
-    protected synchronized final Caret getCaret () {
+    protected final synchronized Caret getCaret () {
         if (caret == null) {
             caret = new CaretImpl(getDocument(), loadCaretOffset);
         }

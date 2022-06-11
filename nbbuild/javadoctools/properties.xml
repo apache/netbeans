@@ -91,7 +91,6 @@
 <property name="javadoc.docs.org-netbeans-api-mdr" value="${javadoc.web.root}/org-netbeans-api-mdr"/>
 <property name="javadoc.docs.org-netbeans-api-progress" value="${javadoc.web.root}/org-netbeans-api-progress"/>
 <property name="javadoc.docs.org-openide-filesystems" value="${javadoc.web.root}/org-openide-filesystems"/>
-<property name="javadoc.docs.org-openide-util-enumerations" value="${javadoc.web.root}/org-openide-util-enumerations"/>
 <property name="javadoc.docs.org-netbeans-modules-editor-completion" value="${javadoc.web.root}/org-netbeans-modules-editor-completion"/>
 <property name="javadoc.docs.org-netbeans-modules-adaptable" value="${javadoc.web.root}/org-netbeans-modules-adaptable"/>
 <property name="javadoc.docs.org-netbeans-spi-navigator" value="${javadoc.web.root}/org-netbeans-spi-navigator"/>

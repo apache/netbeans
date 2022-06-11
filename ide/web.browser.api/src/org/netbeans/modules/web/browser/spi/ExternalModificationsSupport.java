@@ -60,7 +60,7 @@ public final class ExternalModificationsSupport {
      *   difference from url param is that currentBrowserURL can be index.html
      *   while url might be some.js file on which index.html depends
      */
-    public synchronized static void handle(String url, String type, String content, URL currentBrowserURL) {
+    public static synchronized void handle(String url, String type, String content, URL currentBrowserURL) {
         Helper.urlBeingRefreshedFromBrowser.set(currentBrowserURL != null ? currentBrowserURL.toExternalForm() : null);
         try {
         URL u = WebUtils.stringToUrl(url);

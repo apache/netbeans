@@ -369,7 +369,7 @@ public abstract class Breakpoint {
      * groups and associated breakpoints.
      * @since 1.25
      */
-    public static abstract class GroupProperties {
+    public abstract static class GroupProperties {
 
         /**
          * Get the language of the source file with the breakpoint.

@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.netbeans.modules.php.editor.model.ClassScope;
+import org.netbeans.modules.php.editor.model.EnumScope;
 import org.netbeans.modules.php.editor.model.FunctionScope;
 import org.netbeans.modules.php.editor.model.InterfaceScope;
 import org.netbeans.modules.php.editor.model.MethodScope;
@@ -31,9 +32,11 @@ import org.netbeans.modules.php.editor.model.NamespaceScope;
 import org.netbeans.modules.php.editor.model.Scope;
 import org.netbeans.modules.php.editor.model.TraitScope;
 import org.netbeans.modules.php.editor.model.TypeScope;
+import org.netbeans.modules.php.editor.model.nodes.CaseDeclarationInfo;
 import org.netbeans.modules.php.editor.model.nodes.ClassConstantDeclarationInfo;
 import org.netbeans.modules.php.editor.model.nodes.ClassDeclarationInfo;
 import org.netbeans.modules.php.editor.model.nodes.ClassInstanceCreationInfo;
+import org.netbeans.modules.php.editor.model.nodes.EnumDeclarationInfo;
 import org.netbeans.modules.php.editor.model.nodes.IncludeInfo;
 import org.netbeans.modules.php.editor.model.nodes.InterfaceDeclarationInfo;
 import org.netbeans.modules.php.editor.model.nodes.MagicMethodDeclarationInfo;
@@ -41,9 +44,11 @@ import org.netbeans.modules.php.editor.model.nodes.MethodDeclarationInfo;
 import org.netbeans.modules.php.editor.model.nodes.NamespaceDeclarationInfo;
 import org.netbeans.modules.php.editor.model.nodes.SingleFieldDeclarationInfo;
 import org.netbeans.modules.php.editor.model.nodes.TraitDeclarationInfo;
+import org.netbeans.modules.php.editor.parser.astnodes.CaseDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.ClassDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.ClassInstanceCreation;
 import org.netbeans.modules.php.editor.parser.astnodes.ConstantDeclaration;
+import org.netbeans.modules.php.editor.parser.astnodes.EnumDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.FieldsDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.Include;
 import org.netbeans.modules.php.editor.parser.astnodes.InterfaceDeclaration;
@@ -108,6 +113,18 @@ class ModelBuilder {
         setCurrentScope(traitScope);
         occurencesBuilder.prepare(node, traitScope);
         return traitScope;
+    }
+
+    EnumScope build(EnumDeclaration node, OccurenceBuilder occurencesBuilder) {
+        EnumScopeImpl enumScope = ModelElementFactory.create(EnumDeclarationInfo.create(node), this);
+        setCurrentScope(enumScope);
+        occurencesBuilder.prepare(node, enumScope);
+        return enumScope;
+    }
+
+    void build(CaseDeclaration node, OccurenceBuilder occurencesBuilder) {
+        CaseDeclarationInfo info = CaseDeclarationInfo.create(node);
+        occurencesBuilder.prepare(info, ModelElementFactory.create(info, this));
     }
 
     void build(FieldsDeclaration node, OccurenceBuilder occurencesBuilder) {
@@ -292,6 +309,11 @@ class ModelBuilder {
             return new TraitScopeImpl(context.getCurrentScope(), nodeInfo, isDeprecated);
         }
 
+        static EnumScopeImpl create(EnumDeclarationInfo nodeInfo, ModelBuilder context) {
+            boolean isDeprecated = VariousUtils.isDeprecatedFromPHPDoc(context.getProgram(), nodeInfo.getOriginalNode());
+            return new EnumScopeImpl(context.getCurrentScope(), nodeInfo, isDeprecated);
+        }
+
         static MethodScopeImpl create(MethodDeclarationInfo nodeInfo, ModelBuilder context, ModelVisitor visitor) {
             String returnType = VariousUtils.getReturnType(context.getProgram(), nodeInfo.getOriginalNode().getFunction());
             boolean isDeprecated = VariousUtils.isDeprecatedFromPHPDoc(context.getProgram(), nodeInfo.getOriginalNode().getFunction());
@@ -321,6 +343,11 @@ class ModelBuilder {
         static ClassConstantElementImpl create(ClassConstantDeclarationInfo clsConst, ModelBuilder context) {
             boolean isDeprecated = VariousUtils.isDeprecatedFromPHPDoc(context.getProgram(), clsConst.getOriginalNode());
             return new ClassConstantElementImpl(context.getCurrentScope(), clsConst, isDeprecated);
+        }
+
+        static CaseElementImpl create(CaseDeclarationInfo enumCase, ModelBuilder context) {
+            boolean isDeprecated = VariousUtils.isDeprecatedFromPHPDoc(context.getProgram(), enumCase.getOriginalNode());
+            return new CaseElementImpl(context.getCurrentScope(), enumCase, isDeprecated);
         }
     }
 }

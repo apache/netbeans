@@ -125,8 +125,10 @@ public abstract class CodeActionsProvider {
     protected static String createLabel(CompilationInfo info, VariableElement e, boolean fqn) {
         StringBuilder sb = new StringBuilder();
         sb.append(Utils.label(info, e, fqn));
-        sb.append(" : "); // NOI18N
-        sb.append(Utils.detail(info, e, fqn));
+        String detail = Utils.detail(info, e, fqn);
+        if (detail != null) {
+            sb.append(detail);
+        }
         return sb.toString();
     }
 
@@ -137,8 +139,10 @@ public abstract class CodeActionsProvider {
     protected static String createLabel(CompilationInfo info, ExecutableElement e, boolean fqn) {
         StringBuilder sb = new StringBuilder();
         sb.append(Utils.label(info, e, fqn));
-        sb.append(" : "); // NOI18N
-        sb.append(Utils.detail(info, e, fqn));
+        String detail = Utils.detail(info, e, fqn);
+        if (detail != null) {
+            sb.append(detail);
+        }
         return sb.toString();
     }
 
@@ -159,11 +163,11 @@ public abstract class CodeActionsProvider {
             this.signature = ElementHandleAccessor.getInstance().getJVMSignature(handle);
         }
 
-        ElementHandle toHandle() {
+        public ElementHandle toHandle() {
             return ElementHandleAccessor.getInstance().create(ElementKind.valueOf(kind), signature);
         }
 
-        Element resolve(CompilationInfo info) {
+        public Element resolve(CompilationInfo info) {
             return toHandle().resolve(info);
         }
 

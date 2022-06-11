@@ -50,9 +50,9 @@ import org.openide.util.WeakListeners;
 public final class SessionChildren extends Children.Keys<SessionChildren.Key> implements PropertyChangeListener {
     
     // indexes into fields with results for model query
-    private final static int REMOTE = 0;
-    private final static int LOCAL = 1;
-    private final static int BEAN = 2;
+    private static final int REMOTE = 0;
+    private static final int LOCAL = 1;
+    private static final int BEAN = 2;
 
     public enum Key {REMOTE, LOCAL, BEAN};
     
@@ -60,7 +60,7 @@ public final class SessionChildren extends Children.Keys<SessionChildren.Key> im
     private final String ejbClass;
     private final EjbJar ejbModule;
     private final SessionMethodController controller;
-    private final static RequestProcessor RP = new RequestProcessor(SessionChildren.class.getName(), 5);
+    private static final RequestProcessor RP = new RequestProcessor(SessionChildren.class.getName(), 5);
 
     public SessionChildren(EjbViewController ejbViewController) {
         this.cpInfo = ejbViewController.getClasspathInfo();

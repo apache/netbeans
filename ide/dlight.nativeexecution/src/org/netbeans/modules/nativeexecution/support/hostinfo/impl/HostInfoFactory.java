@@ -203,7 +203,7 @@ public final class HostInfoFactory {
         return result;
     }
 
-    static private class HostInfoImpl implements HostInfo {
+    private static class HostInfoImpl implements HostInfo {
 
         private OS os;
         private CpuFamily cpuFamily;

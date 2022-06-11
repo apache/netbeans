@@ -384,7 +384,7 @@ public class BootCPNodeFactory implements NodeFactory {
             Preferences prefs = NbGradleProject.getPreferences(project, false);
             prefs.addPreferenceChangeListener(
                     WeakListeners.create(PreferenceChangeListener.class, this, prefs));
-            NbGradleProject.addPropertyChangeListener(project, WeakListeners.propertyChange(this,project));
+            NbGradleProject.addPropertyChangeListener(project, WeakListeners.propertyChange(this, NbGradleProject.get(project)));
             
             if (this.boot != null) {
                 this.boot.addPropertyChangeListener(WeakListeners.propertyChange(this, this.boot));

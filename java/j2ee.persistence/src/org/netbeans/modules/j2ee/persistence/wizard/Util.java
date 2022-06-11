@@ -26,11 +26,11 @@ import javax.swing.JLabel;
 import java.awt.Container;
 import java.io.IOException;
 import java.util.ArrayList;
+import static java.util.Arrays.asList;
 import javax.swing.JComponent;
 import java.util.Vector;
 import java.util.Iterator;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -178,11 +178,11 @@ public class Util {
             return false;
         }
         if (JPAModuleInfo.ModuleType.EJB == moduleInfo.getType()
-                && ("3.1".equals(moduleInfo.getVersion()) || "3.0".equals(moduleInfo.getVersion()) || "3.2".equals(moduleInfo.getVersion()))) {
+                && asList("3.0", "3.1", "3.2", "3.2.6", "4.0").contains(moduleInfo.getVersion())) {
             return true;
         }
         if (JPAModuleInfo.ModuleType.WEB == moduleInfo.getType()
-                && ("3.1".equals(moduleInfo.getVersion()) || "3.0".equals(moduleInfo.getVersion()) || "2.5".equals(moduleInfo.getVersion()))) {
+                && asList("2.5", "3.1", "3.0", "4.0", "5.0").contains(moduleInfo.getVersion())) {
             return true;
         }
         return false;
@@ -786,7 +786,7 @@ public class Util {
      * @return true if the given <code>candidate</code> represents a unique
      * name within the names of the given <code>punits</code>, false otherwise.
      */
-    static private boolean isUnique(String candidate, PersistenceUnit[] punits) {
+    private static boolean isUnique(String candidate, PersistenceUnit[] punits) {
         for (PersistenceUnit punit : punits) {
             if (candidate.equals(punit.getName())) {
                 return false;

@@ -108,7 +108,6 @@ public class NewWebFreeformProjectWizardIterator implements WizardDescriptor.Ins
                     if (webModules != null) {
                         // Save the web classpath for the web module
                         String webClasspath = (String)wiz.getProperty(NewWebFreeformProjectWizardIterator.PROP_WEB_CLASSPATH);
-                        Iterator iter = webModules.iterator();
                         for (WebProjectGenerator.WebModule wm : webModules) {
                             wm.classpath = webClasspath;
                         }

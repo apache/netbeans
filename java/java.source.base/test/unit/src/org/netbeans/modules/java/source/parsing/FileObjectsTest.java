@@ -19,6 +19,7 @@
 
 package org.netbeans.modules.java.source.parsing;
 
+import com.sun.tools.javac.api.ClientCodeWrapper;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -229,6 +230,7 @@ public class FileObjectsTest extends NbTestCase {
         
     }
     
+    @ClientCodeWrapper.Trusted
     private static class TestZipFileObject extends FileObjects.ZipFileBase {
         
         private final String archiveURI;

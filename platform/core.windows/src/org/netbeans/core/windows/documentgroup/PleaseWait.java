@@ -33,7 +33,7 @@ import org.netbeans.core.windows.WindowManagerImpl;
  */
 class PleaseWait extends JPanel {
     
-    private final static Color FILL_COLOR = new Color(0,0,0,128);
+    private static final Color FILL_COLOR = new Color(0,0,0,128);
     private Component oldGlass;
     
     public PleaseWait() {

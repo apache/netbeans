@@ -78,14 +78,14 @@ public abstract class SearchResultsDisplayer<T> {
             @NullAllowed SearchProvider.Presenter presenter,
             @NonNull String title) {
 
-        return new DefaultSearchResultsDisplayer<U>(helper, searchComposition,
+        return new DefaultSearchResultsDisplayer<>(helper, searchComposition,
                 presenter, title);
     }
 
     /**
      * Helper class for transforming matching objects to nodes.
      */
-    public static abstract class NodeDisplayer<T> {
+    public abstract static class NodeDisplayer<T> {
         
         /** Constructor for subclasses. */
         protected NodeDisplayer() {}

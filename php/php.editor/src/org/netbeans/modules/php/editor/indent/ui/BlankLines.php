@@ -16,6 +16,13 @@ public function method($text, $number){
 }
 function connect() {
 }
+enum Enumeration: int implements I {
+    case A = 1;
+    case B = 2;
+    const CONSTANT = self::A;
+    public function impl(): void {
+    }
+}
 namespace AnotherProject;
 const CONNECT_OK = 1;
 class Connection {

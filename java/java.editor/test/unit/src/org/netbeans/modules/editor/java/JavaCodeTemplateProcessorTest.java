@@ -203,6 +203,28 @@ public class JavaCodeTemplateProcessorTest extends NbTestCase {
                              "}");
     }
 
+    public void testInfiteLoop() throws Exception {
+         doTestTemplateInsert("for (${IT_TYPE rightSideType type=\"java.util.Iterator\" default=\"Iterator\" editable=false} ${IT newVarName default=\"it\"} = ${COL instanceof=\"java.util.Collection\" default=\"col\"}.iterator(); ${IT}.hasNext();) {\n" +
+                              "    ${TYPE rightSideType default=\"Object\"} ${ELEM newVarName default=\"elem\"} = ${TYPE_CAST cast default=\"\" editable=false}${IT}.next();\n" +
+                              "    ${selection}${cursor}\n" +
+                              "}\n",
+                             "import java.util.Collection;\n" +
+                             "public class Test<E> {\n" +
+                             "    private void t(Collection<? extends E> c) {\n" +
+                             "        |\n" +
+                             "    }\n" +
+                             "}",
+                             "import java.util.Collection;\n" +
+                             "public class Test<E> {\n" +
+                             "    private void t(Collection<? extends E> c) {\n" +
+                             "        for (Iterator<? extends E> iterator| = c.iterator(); iterator.hasNext();) {\n" +
+                             "            E next = iterator.next();\n" +
+                             "            \n" +
+                             "        }\n" +
+                             "    }\n" +
+                             "}");
+    }
+
     private void assertFileObjectTextMatchesRegex(String regex) throws IOException {
         String text = testFile.asText();
         assertTrue("The file text must match the regular expression", text.matches(regex));

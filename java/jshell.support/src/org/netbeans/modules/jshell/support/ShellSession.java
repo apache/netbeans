@@ -44,6 +44,7 @@ import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
 import java.nio.charset.CoderResult;
 import java.nio.charset.CodingErrorAction;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -96,7 +97,6 @@ import org.netbeans.modules.jshell.model.SnippetHandle;
 import org.netbeans.modules.jshell.parsing.ShellAccessBridge;
 import org.netbeans.modules.jshell.parsing.SnippetRegistry;
 import org.netbeans.modules.jshell.project.ShellProjectUtils;
-import static org.netbeans.modules.jshell.tool.JShellLauncher.quote;
 import org.netbeans.modules.jshell.support.ShellHistory.Item;
 import org.netbeans.modules.parsing.api.ParserManager;
 import org.netbeans.modules.parsing.api.ResultIterator;
@@ -120,6 +120,8 @@ import org.openide.util.NbPreferences;
 import org.openide.util.Pair;
 import org.openide.util.RequestProcessor;
 import org.openide.util.Task;
+
+import static org.netbeans.modules.jshell.tool.JShellLauncher.quote;
 
 /**
  * The root object for any JShell session. A shell session consists of:
@@ -395,7 +397,7 @@ public class ShellSession  {
         
         public WriterOutputStream(Writer out) {
             this.writer = out;
-            this.decoder = Charset.forName("UTF-8"). //NOI18N
+            this.decoder = StandardCharsets.UTF_8.
                     newDecoder().
                     onMalformedInput(CodingErrorAction.REPLACE).
                     onUnmappableCharacter(CodingErrorAction.REPLACE).

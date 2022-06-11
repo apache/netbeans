@@ -28,7 +28,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.URI;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -86,9 +86,9 @@ import org.openide.util.NbBundle;
 public class WSUtils {
 
     private static final String GENERATE_NON_JSR109 = "generate_nonjsr109"; //NOI18N
-    private final static String SERVLET_CLASS_NAME =
+    private static final String SERVLET_CLASS_NAME =
             "com.sun.xml.ws.transport.http.servlet.WSServlet"; //NOI18N
-    private final static String SERVLET_LISTENER =
+    private static final String SERVLET_LISTENER =
             "com.sun.xml.ws.transport.http.servlet.WSServletContextListener"; //NOI18N
     /** downloads XML resources from source URI to target folder
      * (USAGE : this method can download a wsdl file and all wsdl/XML schemas,
@@ -143,7 +143,7 @@ public class WSUtils {
                 OutputStreamWriter osw = null;
                 try {
                     os = sunJaxwsFo.getOutputStream(lock);
-                    osw = new OutputStreamWriter(os, Charset.forName("UTF-8"));     // NOI18N
+                    osw = new OutputStreamWriter(os, StandardCharsets.UTF_8);
                     bw = new BufferedWriter(osw);
                     bw.write(sunJaxwsContent);
                 } finally {
@@ -168,8 +168,7 @@ public class WSUtils {
         // read the config from resource first
         StringBuffer sb = new StringBuffer();
         String lineSep = System.getProperty("line.separator");//NOI18N
-        BufferedReader br = new BufferedReader(new InputStreamReader(is, 
-                Charset.forName("UTF-8")));
+        BufferedReader br = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
         String line = br.readLine();
         while (line != null) {
             sb.append(line);

@@ -59,9 +59,9 @@ import org.openide.util.Parameters;
  */
 public final class PersistenceProviderComboboxHelper {
     
-    private final static String SEPARATOR = "PersistenceProviderComboboxHelper.SEPARATOR";
-    private final static String EMPTY = "PersistenceProviderComboboxHelper.EMPTY";
-    private final static Provider preferredProvider = ProviderUtil.ECLIPSELINK_PROVIDER;
+    private static final String SEPARATOR = "PersistenceProviderComboboxHelper.SEPARATOR";
+    private static final String EMPTY = "PersistenceProviderComboboxHelper.EMPTY";
+    private static final Provider preferredProvider = ProviderUtil.ECLIPSELINK_PROVIDER;
 
     private final PersistenceProviderSupplier providerSupplier;
     private final Project project;

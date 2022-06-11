@@ -49,9 +49,9 @@ import org.openide.filesystems.FileObject;
 @FunctionInterceptor.Registration(priority = 360)
 public class CreateInterceptor implements FunctionInterceptor {
 
-    private final static Pattern PATTERN = Pattern.compile("Class\\.create");  //NOI18N
-    private final static String CLASS = "Class";    //NOI18N
-    private final static String INITIALIZE_METHOD_NAME = "initialize"; //NOI18N
+    private static final Pattern PATTERN = Pattern.compile("Class\\.create");  //NOI18N
+    private static final String CLASS = "Class";    //NOI18N
+    private static final String INITIALIZE_METHOD_NAME = "initialize"; //NOI18N
 
     @Override
     public Pattern getNamePattern() {

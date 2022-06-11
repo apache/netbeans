@@ -54,12 +54,12 @@ public class ClientData extends BaseBean {
     }
 
     //
-    static public void addComparator(BeanComparator c) {
+    public static void addComparator(BeanComparator c) {
 	ClientData.comparators.add(c);
     }
 
     //
-    static public void removeComparator(BeanComparator c) {
+    public static void removeComparator(BeanComparator c) {
 	ClientData.comparators.remove(c);
     }
     //

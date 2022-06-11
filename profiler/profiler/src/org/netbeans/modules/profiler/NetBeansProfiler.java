@@ -371,7 +371,7 @@ public abstract class NetBeansProfiler extends Profiler {
     private ProfilingMonitor monitor = null;
     private TargetAppRunner targetAppRunner;
     private FileObject profiledSingleFile;
-    final private ProfilerEngineSettings sharedSettings;
+    private final ProfilerEngineSettings sharedSettings;
     
     private final Object setupLock = new Object();
     private ProfilingSettings lastProfilingSettings;
@@ -1668,7 +1668,7 @@ public abstract class NetBeansProfiler extends Profiler {
         }
                 
         new SwingWorker(false) {
-            volatile private ProgressDisplayer pd;
+            private volatile ProgressDisplayer pd;
             @Override
             protected void doInBackground() {
                 if (isCancelled()) return;

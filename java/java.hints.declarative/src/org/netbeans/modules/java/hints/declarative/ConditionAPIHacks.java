@@ -23,7 +23,6 @@ import com.sun.source.util.TreePath;
 import javax.lang.model.element.Element;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
-import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.modules.java.hints.declarative.conditionapi.Context;
 import org.netbeans.modules.java.hints.declarative.conditionapi.Variable;

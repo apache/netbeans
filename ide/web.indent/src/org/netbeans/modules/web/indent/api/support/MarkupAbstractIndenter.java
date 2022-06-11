@@ -41,7 +41,7 @@ import org.netbeans.modules.web.indent.api.LexUtilities;
  *
  * @since org.netbeans.modules.css.editor/1 1.3
  */
-abstract public class MarkupAbstractIndenter<T1 extends TokenId> extends AbstractIndenter<T1> {
+public abstract class MarkupAbstractIndenter<T1 extends TokenId> extends AbstractIndenter<T1> {
 
     private Stack<MarkupItem> stack = null;
     private List<EliminatedTag> eliminatedTags;
@@ -55,44 +55,44 @@ abstract public class MarkupAbstractIndenter<T1 extends TokenId> extends Abstrac
         super(language, context);
     }
 
-    abstract protected boolean isOpenTagNameToken(Token<T1> token);
-    abstract protected boolean isCloseTagNameToken(Token<T1> token);
+    protected abstract boolean isOpenTagNameToken(Token<T1> token);
+    protected abstract boolean isCloseTagNameToken(Token<T1> token);
     /**  <   */
-    abstract protected boolean isStartTagSymbol(Token<T1> token);
+    protected abstract boolean isStartTagSymbol(Token<T1> token);
     /**  </   */
-    abstract protected boolean isStartTagClosingSymbol(Token<T1> token);
+    protected abstract boolean isStartTagClosingSymbol(Token<T1> token);
     /**  >    */
-    abstract protected boolean isEndTagSymbol(Token<T1> token);
+    protected abstract boolean isEndTagSymbol(Token<T1> token);
     /**  />    */
-    abstract protected boolean isEndTagClosingSymbol(Token<T1> token);
+    protected abstract boolean isEndTagClosingSymbol(Token<T1> token);
 
-    abstract protected boolean isTagArgumentToken(Token<T1> token);
+    protected abstract boolean isTagArgumentToken(Token<T1> token);
 
-    abstract protected boolean isBlockCommentToken(Token<T1> token);
+    protected abstract boolean isBlockCommentToken(Token<T1> token);
 
-    abstract protected boolean isTagContentToken(Token<T1> token);
+    protected abstract boolean isTagContentToken(Token<T1> token);
 
-    abstract protected boolean isClosingTagOptional(CharSequence tagName);
+    protected abstract boolean isClosingTagOptional(CharSequence tagName);
 
-    abstract protected boolean isOpeningTagOptional(CharSequence tagName);
+    protected abstract boolean isOpeningTagOptional(CharSequence tagName);
 
-    abstract protected Boolean isEmptyTag(CharSequence tagName);
+    protected abstract Boolean isEmptyTag(CharSequence tagName);
 
-    abstract protected boolean isTagContentUnformattable(CharSequence tagName);
+    protected abstract boolean isTagContentUnformattable(CharSequence tagName);
 
-    abstract protected Set<String> getTagChildren(CharSequence tagName);
+    protected abstract Set<String> getTagChildren(CharSequence tagName);
 
-    abstract protected boolean isPreservedLine(Token<T1> token, IndenterContextData<T1> context);
+    protected abstract boolean isPreservedLine(Token<T1> token, IndenterContextData<T1> context);
 
-    abstract protected int getPreservedLineInitialIndentation(JoinedTokenSequence<T1> ts) throws BadLocationException;
+    protected abstract int getPreservedLineInitialIndentation(JoinedTokenSequence<T1> ts) throws BadLocationException;
 
     protected boolean isStableFormattingStartToken(Token<T1> token, JoinedTokenSequence<T1> ts) {
         return false;
     }
 
-    abstract protected boolean isForeignLanguageStartToken(Token<T1> token, JoinedTokenSequence<T1> ts);
+    protected abstract boolean isForeignLanguageStartToken(Token<T1> token, JoinedTokenSequence<T1> ts);
 
-    abstract protected boolean isForeignLanguageEndToken(Token<T1> token, JoinedTokenSequence<T1> ts);
+    protected abstract boolean isForeignLanguageEndToken(Token<T1> token, JoinedTokenSequence<T1> ts);
 
     private Stack<MarkupItem> getStack() {
         return stack;

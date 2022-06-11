@@ -36,7 +36,6 @@ public final class TreeItemData {
     public static final String NO_COMMAND = new String("<no command>"); // NOI18N
     
     private Image iconImage;
-    private URI iconURI;
     private String[] contextValues;
     private String command;
     private URI resourceURI;
@@ -64,12 +63,26 @@ public final class TreeItemData {
     public String[] getContextValues() {
         return contextValues;
     }
-
-    public TreeItemData setContextValues(String[] contextValues) {
-        this.contextValues = contextValues;
+    
+    public TreeItemData addContextValues(String... addValues) {
+        if (addValues == null || addValues.length == 0) {
+            return this;
+        }
+        if (this.contextValues == null) {
+            this.contextValues = addValues;
+        } else {
+            String[] v = Arrays.copyOf(this.contextValues, this.contextValues.length + addValues.length);
+            System.arraycopy(addValues, 0, v, this.contextValues.length, addValues.length);
+            this.contextValues = v;
+        }
         return this;
     }
 
+    public TreeItemData setContextValues(String... contextValues) {
+        this.contextValues = contextValues;
+        return this;
+    }
+    
     public String getCommand() {
         return command;
     }
@@ -85,20 +98,9 @@ public final class TreeItemData {
 
     public TreeItemData setIconImage(Image iconImage) {
         this.iconImage = iconImage;
-        this.iconURI = null;
         return this;
     }
 
-    public URI getIconURI() {
-        return iconURI;
-    }
-
-    public TreeItemData setIconURI(URI iconURI) {
-        this.iconURI = iconURI;
-        this.iconImage = null;
-        return this;
-    }
-    
     public TreeItemData merge(TreeItemData data) {
         if (data.getResourceURI() != null) {
             URI u = data.getResourceURI();
@@ -119,10 +121,6 @@ public final class TreeItemData {
         }
         if (data.getIconImage() != null) {
             setIconImage(data.getIconImage());
-        }
-        if (data.getIconURI() != null) {
-            URI u = data.getIconURI();
-            setIconURI(u == NO_URI ? null : u);
         }
         return this;
     }

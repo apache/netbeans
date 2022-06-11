@@ -20,13 +20,15 @@
 package org.netbeans;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.netbeans.junit.*;
-import static org.netbeans.CLIHandlerTest.*;
 import org.openide.util.RequestProcessor;
+
+import static org.netbeans.CLIHandlerTest.*;
 
 /**
  * Test the command-line-interface handler ability to send zero output
@@ -36,8 +38,8 @@ import org.openide.util.RequestProcessor;
  */
 public class CLIHandlerGrepTest extends NbTestCase {
 
-    final static ByteArrayInputStream nullInput = new ByteArrayInputStream(new byte[0]);
-    final static ByteArrayOutputStream nullOutput = new ByteArrayOutputStream();
+    static final ByteArrayInputStream nullInput = new ByteArrayInputStream(new byte[0]);
+    static final ByteArrayOutputStream nullOutput = new ByteArrayOutputStream();
     
     static Logger LOG;
 
@@ -101,7 +103,7 @@ public class CLIHandlerGrepTest extends NbTestCase {
                 try {
                     PrintStream ps = new PrintStream(args.getOutputStream());
                     BufferedReader r = new BufferedReader(
-                        new InputStreamReader(args.getInputStream(), "UTF-8")
+                        new InputStreamReader(args.getInputStream(), StandardCharsets.UTF_8)
                     );
                     for (;;) {
                         String line = r.readLine();
@@ -203,11 +205,7 @@ public class CLIHandlerGrepTest extends NbTestCase {
         }
 
         private void pushMsg(String p) {
-            try {
-                pending.offer(p.getBytes("UTF-8"));
-            } catch (UnsupportedEncodingException ex) {
-                throw new IllegalStateException(ex);
-            }
+            pending.offer(p.getBytes(StandardCharsets.UTF_8));
         }
     }
 

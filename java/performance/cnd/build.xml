@@ -50,7 +50,7 @@
     </condition>
 
 
-    <property name="test.run.args" value="-Dnetbeans.keyring.no.master=true -client -Xss4m -Xms64m -Xmx1024m -XX:PermSize=64m -XX:MaxPermSize=300m -Xverify:none -Dsun.java2d.noddraw=true -Dcom.sun.aas.installRoot=&quot;${j2ee.appserver.path}&quot; -Dtomcat.installRoot=&quot;${tomcat.webserver.path}&quot; -Dorg.netbeans.performance.repeat=&quot;${repeat}&quot;"/>
+    <property name="test.run.args" value="-Dnetbeans.keyring.no.master=true -client -Xss4m -Xms64m -Xmx1024m -Xverify:none -Dsun.java2d.noddraw=true -Dcom.sun.aas.installRoot=&quot;${j2ee.appserver.path}&quot; -Dtomcat.installRoot=&quot;${tomcat.webserver.path}&quot; -Dorg.netbeans.performance.repeat=&quot;${repeat}&quot;"/>
 
     <import file="nbproject/build-impl.xml"/>
 </project>

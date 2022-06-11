@@ -39,7 +39,7 @@ import org.openide.util.Exceptions;
  * @author sdedic
  */
 @OnStart
-final public class EditorRegistryMonitor implements PropertyChangeListener, Runnable {
+public final class EditorRegistryMonitor implements PropertyChangeListener, Runnable {
     
     public void run() {
         EditorRegistry.addPropertyChangeListener(this);

@@ -38,6 +38,7 @@
                 <package>com.oracle.truffle.api</package>
                 <package>com.oracle.truffle.api.debug</package>
                 <package>com.oracle.truffle.api.dsl</package>
+                <package>com.oracle.truffle.api.exception</package>
                 <package>com.oracle.truffle.api.frame</package>
                 <package>com.oracle.truffle.api.instrumentation</package>
                 <package>com.oracle.truffle.api.interop</package>

@@ -104,7 +104,7 @@ public class YamlSection {
         return source.length();
     }
 
-    List<? extends StructureItem> collectItems() {
+    List<? extends StructureItem> collectItems(Snapshot snapshot) {
         if (parser != null) {
             throw new IllegalStateException("This YAML segment is already parsed.");
         }
@@ -112,7 +112,7 @@ public class YamlSection {
         ScannerImpl scanner = new ScannerImpl(SETTINGS, new StreamReader(SETTINGS, source));
         parser = new ParserImpl(SETTINGS, scanner);
         while (parser.hasNext()) {
-            YamlStructureItem root = processItem();
+            YamlStructureItem root = processItem(snapshot);
             if (root != null) {
                 ret.addAll(root.getNestedItems());
             }
@@ -120,21 +120,21 @@ public class YamlSection {
         return ret;
     }
 
-    private YamlStructureItem processItem() {
+    private YamlStructureItem processItem(Snapshot snapshot) {
         YamlStructureItem ret = null;
         while ((ret == null) && parser.hasNext()) {
             switch (parser.peekEvent().getEventId()) {
                 case MappingStart:
-                    ret = processMapping((MappingStartEvent) parser.next());
+                    ret = processMapping(snapshot, (MappingStartEvent) parser.next());
                     break;
                 case SequenceStart:
-                    ret = processSequence((SequenceStartEvent) parser.next());
+                    ret = processSequence(snapshot, (SequenceStartEvent) parser.next());
                     break;
                 case Scalar:
-                    ret = processScalar((ScalarEvent) parser.next());
+                    ret = processScalar(snapshot, (ScalarEvent) parser.next());
                     break;
                 case Alias:
-                    ret = processAlias((AliasEvent) parser.next());
+                    ret = processAlias(snapshot, (AliasEvent) parser.next());
                     break;
                 default:
                     parser.next();
@@ -143,19 +143,19 @@ public class YamlSection {
         return ret;
     }
 
-    private YamlStructureItem processAlias(AliasEvent evt) {
-        return new YamlStructureItem.Simple(ALIAS, evt.getAlias().getValue(), getIndex(evt.getStartMark()), getIndex(evt.getEndMark()));
+    private YamlStructureItem processAlias(Snapshot snapshot, AliasEvent evt) {
+        return new YamlStructureItem.Simple(ALIAS, snapshot.getSource().getFileObject(), evt.getAlias().getValue(), getIndex(evt.getStartMark()), getIndex(evt.getEndMark()));
     }
 
-    private YamlStructureItem processScalar(ScalarEvent evt) {
-        return new YamlStructureItem.Simple(SCALAR, evt.getValue(), getIndex(evt.getStartMark()), getIndex(evt.getEndMark()));
+    private YamlStructureItem processScalar(Snapshot snapshot, ScalarEvent evt) {
+        return new YamlStructureItem.Simple(SCALAR, snapshot.getSource().getFileObject(), evt.getValue(), getIndex(evt.getStartMark()), getIndex(evt.getEndMark()));
     }
 
-    private YamlStructureItem processMapping(MappingStartEvent evt) {
-        YamlStructureItem.Collection item = new YamlStructureItem.Collection(MAP, getIndex(evt.getStartMark()));
+    private YamlStructureItem processMapping(Snapshot snapshot, MappingStartEvent evt) {
+        YamlStructureItem.Collection item = new YamlStructureItem.Collection(MAP, snapshot.getSource().getFileObject(), getIndex(evt.getStartMark()));
         while (parser.hasNext() && !parser.checkEvent(Event.ID.MappingEnd)) {
-            YamlStructureItem keyItem = processItem();
-            YamlStructureItem valueItem = processItem();
+            YamlStructureItem keyItem = processItem(snapshot);
+            YamlStructureItem valueItem = processItem(snapshot);
             item.add(new YamlStructureItem.MapEntry(keyItem, valueItem));
         }
         if (parser.hasNext()) {
@@ -167,10 +167,10 @@ public class YamlSection {
         return item;
     }
 
-    private YamlStructureItem processSequence(SequenceStartEvent evt) {
-        YamlStructureItem.Collection item = new YamlStructureItem.Collection(SEQUENCE, getIndex(evt.getStartMark()));
+    private YamlStructureItem processSequence(Snapshot snapshot, SequenceStartEvent evt) {
+        YamlStructureItem.Collection item = new YamlStructureItem.Collection(SEQUENCE, snapshot.getSource().getFileObject(), getIndex(evt.getStartMark()));
         while (parser.hasNext() && !parser.checkEvent(Event.ID.SequenceEnd)) {
-            item.add(processItem());
+            item.add(processItem(snapshot));
         }
         if (parser.hasNext()) {
             SequenceEndEvent eevt = (SequenceEndEvent) parser.next();

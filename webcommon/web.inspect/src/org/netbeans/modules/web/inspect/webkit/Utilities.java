@@ -142,7 +142,7 @@ public class Utilities {
                     int startLine = range.getStartLine();
                     if (start == -1 && startLine != -1) {
                         try {
-                            styleSheetText = styleSheetText.replaceAll("\r", ""); // NOI18N
+                            styleSheetText = styleSheetText.replace("\r", ""); // NOI18N
                             start = LexerUtils.getLineBeginningOffset(sourceModel.getModelSource(), startLine);
                             start += range.getStartColumn();
                             end = LexerUtils.getLineBeginningOffset(sourceModel.getModelSource(), range.getEndLine());

@@ -312,7 +312,7 @@ public abstract class TokenAcceptor {
             Float f = super.getNumberValue(image);
             if(f == null) {
                 if(image.length() > 0 && image.charAt(0) == '0') {
-                    f = new Float(0);
+                    f = 0F;
                 }
             } 
             return f;
@@ -506,7 +506,7 @@ public abstract class TokenAcceptor {
         
     }
 
-    public static abstract class TokenImageAcceptor extends TokenAcceptor {
+    public abstract static class TokenImageAcceptor extends TokenAcceptor {
 
         public TokenImageAcceptor(String id) {
             super(id);

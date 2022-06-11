@@ -175,7 +175,7 @@ public class ConstantPool {
 
     // Entries inner classes
 
-    public static abstract class Entry {
+    public abstract static class Entry {
 
         private final byte tag;
 

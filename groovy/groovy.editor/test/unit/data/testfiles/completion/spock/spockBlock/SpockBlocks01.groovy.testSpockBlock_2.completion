@@ -1,0 +1,5 @@
+Code completion result for source line:
+the|n:
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+KEYWORD    then                                       null

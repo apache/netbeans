@@ -62,11 +62,18 @@ public final class NbLaunchRequestHandler {
         // validation
         List<String> modulePaths = (List<String>) launchArguments.getOrDefault("modulePaths", Collections.emptyList());
         List<String> classPaths = (List<String>) launchArguments.getOrDefault("classPaths", Collections.emptyList());
-        if (!isNative && (StringUtils.isBlank((String)launchArguments.get("mainClass"))
+
+        // "file" key is provided by DAP client infrastructure, sometimes in an unsuitable manner, e.g. some cryptic ID for Output window etc. 
+        // the "projectFile" allows to override the infrastructure from client logic.
+        String filePath = (String)launchArguments.get("file");
+        String projectFilePath = (String)launchArguments.get("projectFile");
+        String mainFilePath = (String)launchArguments.get("mainClass");
+
+        if (!isNative && (StringUtils.isBlank(mainFilePath) && StringUtils.isBlank(filePath) && StringUtils.isBlank(projectFilePath)
                           || modulePaths.isEmpty() && classPaths.isEmpty())) {
             ErrorUtilities.completeExceptionally(resultFuture,
                 "Failed to launch debuggee VM. Missing mainClass or modulePaths/classPaths options in launch configuration.",
-                ResponseErrorCode.serverErrorStart);
+                ResponseErrorCode.ServerNotInitialized);
             return resultFuture;
         }
         if (StringUtils.isBlank((String)launchArguments.get("encoding"))) {
@@ -75,7 +82,7 @@ public final class NbLaunchRequestHandler {
             if (!Charset.isSupported((String)launchArguments.get("encoding"))) {
                 ErrorUtilities.completeExceptionally(resultFuture,
                     "Failed to launch debuggee VM. 'encoding' options in the launch configuration is not recognized.",
-                    ResponseErrorCode.serverErrorStart);
+                    ResponseErrorCode.ServerNotInitialized);
                 return resultFuture;
             }
             context.setDebuggeeEncoding(Charset.forName((String)launchArguments.get("encoding")));
@@ -93,27 +100,23 @@ public final class NbLaunchRequestHandler {
 
         activeLaunchHandler.preLaunch(launchArguments, context);
 
-        String filePath = (String)launchArguments.get("mainClass");
+        if (projectFilePath != null) {
+            filePath = projectFilePath;
+        }
+        boolean preferProjActions = true; // True when we prefer project actions to the current (main) file actions.
+        if (filePath == null || mainFilePath != null) {
+            // main overides the current file
+            preferProjActions = false;
+            filePath = mainFilePath;
+        }
         FileObject file = null;
         File nativeImageFile = null;
         if (!isNative) {
-            File ioFile = null;
-            if (filePath != null) {
-                ioFile = new File(filePath);
-                if (!ioFile.exists()) {
-                    try {
-                        URI uri = new URI(filePath);
-                        ioFile = Utilities.toFile(uri);
-                    } catch (URISyntaxException ex) {
-                        // Not a valid file
-                    }
-                }
-            }
-            file = ioFile != null ? FileUtil.toFileObject(ioFile) : null;
+            file = getFileObject(filePath);
             if (file == null) {
                 ErrorUtilities.completeExceptionally(resultFuture,
                         "Missing file: " + filePath,
-                        ResponseErrorCode.serverErrorStart);
+                        ResponseErrorCode.ServerNotInitialized);
                 return resultFuture;
             }
         } else {
@@ -121,7 +124,7 @@ public final class NbLaunchRequestHandler {
             if (nativeImage == null) {
                 ErrorUtilities.completeExceptionally(resultFuture,
                     "Failed to launch debuggee native image. No native image is specified.",
-                    ResponseErrorCode.serverErrorStart);
+                    ResponseErrorCode.ServerNotInitialized);
                 return resultFuture;
             }
             nativeImageFile = new File(nativeImage);
@@ -141,7 +144,7 @@ public final class NbLaunchRequestHandler {
         }
         String singleMethod = (String)launchArguments.get("methodName");
         boolean testRun = (Boolean) launchArguments.getOrDefault("testRun", Boolean.FALSE);
-        activeLaunchHandler.nbLaunch(file, nativeImageFile, singleMethod, launchArguments, context, !noDebug, testRun, new OutputListener(context)).thenRun(() -> {
+        activeLaunchHandler.nbLaunch(file, preferProjActions, nativeImageFile, singleMethod, launchArguments, context, !noDebug, testRun, new OutputListener(context)).thenRun(() -> {
             activeLaunchHandler.postLaunch(launchArguments, context);
             resultFuture.complete(null);
         }).exceptionally(e -> {
@@ -149,6 +152,22 @@ public final class NbLaunchRequestHandler {
             return null;
         });
         return resultFuture;
+    }
+
+    private static FileObject getFileObject(String filePath) {
+        File ioFile = null;
+        if (filePath != null) {
+            ioFile = new File(filePath);
+            if (!ioFile.exists()) {
+                try {
+                    URI uri = new URI(filePath);
+                    ioFile = Utilities.toFile(uri);
+                } catch (URISyntaxException ex) {
+                    // Not a valid file
+                }
+            }
+        }
+        return ioFile != null ? FileUtil.toFileObject(ioFile) : null;
     }
 
     private static final Pattern STACKTRACE_PATTERN = Pattern.compile("\\s+at\\s+(([\\w$]+\\.)*[\\w$]+)\\(([\\w-$]+\\.java:\\d+)\\)");

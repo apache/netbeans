@@ -44,7 +44,7 @@ public interface PostMessageDisplayer {
 
     public String getPostMessage(NativeProcess.State state, int rc, long time);
 
-    public final static class Default implements PostMessageDisplayer2 {
+    public static final class Default implements PostMessageDisplayer2 {
 
         private final String actionName;
 
@@ -199,7 +199,7 @@ public interface PostMessageDisplayer {
     /*
      * @since 1.30.1
      */
-    public static abstract class AbstractDisplayer implements PostMessageDisplayer2 {
+    public abstract static class AbstractDisplayer implements PostMessageDisplayer2 {
 
         private final Default defaultImpl;
 

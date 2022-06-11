@@ -38,17 +38,18 @@ import org.netbeans.modules.gsf.testrunner.api.Status;
 import org.netbeans.modules.gsf.testrunner.api.TestSession;
 import org.netbeans.modules.gsf.testrunner.api.Testcase;
 import org.netbeans.modules.gsf.testrunner.api.Trouble;
+import org.netbeans.modules.java.lsp.server.TestCodeLanguageClient;
 import org.netbeans.modules.java.lsp.server.protocol.DecorationRenderOptions;
 import org.netbeans.modules.java.lsp.server.protocol.NbCodeClientCapabilities;
-import org.netbeans.modules.java.lsp.server.protocol.NbCodeLanguageClient;
 import org.netbeans.modules.java.lsp.server.explorer.api.NodeChangedParams;
-import org.netbeans.modules.java.lsp.server.protocol.QuickPickItem;
+import org.netbeans.modules.java.lsp.server.input.QuickPickItem;
 import org.netbeans.modules.java.lsp.server.protocol.SetTextEditorDecorationParams;
-import org.netbeans.modules.java.lsp.server.protocol.ShowInputBoxParams;
-import org.netbeans.modules.java.lsp.server.protocol.ShowQuickPickParams;
+import org.netbeans.modules.java.lsp.server.input.ShowInputBoxParams;
+import org.netbeans.modules.java.lsp.server.input.ShowQuickPickParams;
 import org.netbeans.modules.java.lsp.server.protocol.ShowStatusMessageParams;
 import org.netbeans.modules.java.lsp.server.protocol.TestProgressParams;
 import org.netbeans.modules.java.lsp.server.protocol.TestSuiteInfo;
+import org.netbeans.modules.java.lsp.server.protocol.UpdateConfigParams;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Exceptions;
@@ -139,7 +140,7 @@ public class TestProgressHandlerTest extends NbTestCase {
         assertNotNull(testCase.getStackTrace());
     }
 
-    private static final class MockLanguageClient implements NbCodeLanguageClient {
+    private static final class MockLanguageClient extends TestCodeLanguageClient {
         private final List<TestProgressParams> messages;
 
         MockLanguageClient(List<TestProgressParams> messages) {
@@ -219,6 +220,11 @@ public class TestProgressHandlerTest extends NbTestCase {
         @Override
         public void notifyNodeChange(NodeChangedParams params) {
             fail();
+        }
+
+        @Override
+        public CompletableFuture<Void> configurationUpdate(UpdateConfigParams params) {
+            return CompletableFuture.completedFuture(null);
         }
 
     }

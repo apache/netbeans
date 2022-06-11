@@ -658,7 +658,7 @@ public class HistoryDiffView implements PropertyChangeListener {
             task.schedule(500);        
         }
         
-        synchronized protected boolean isCancelled() {
+        protected synchronized boolean isCancelled() {
             if(cancelled) {
                 History.LOG.finer("DiffTask is cancelled"); // NOI18N
             }

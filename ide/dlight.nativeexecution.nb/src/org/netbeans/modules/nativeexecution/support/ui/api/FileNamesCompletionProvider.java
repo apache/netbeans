@@ -35,8 +35,8 @@ import org.openide.util.RequestProcessor.Task;
  */
 public abstract class FileNamesCompletionProvider implements AutocompletionProvider {
 
-    private final static int cacheSizeLimit = 20;
-    private final static int cacheLifetime = 1000 * 60 * 10; // 10 min
+    private static final int cacheSizeLimit = 20;
+    private static final int cacheLifetime = 1000 * 60 * 10; // 10 min
     private final ExecutionEnvironment env;
     private final LinkedList<CachedValue> cache = new LinkedList<>();
     private final Task cleanUpTask;
@@ -143,7 +143,7 @@ public abstract class FileNamesCompletionProvider implements AutocompletionProvi
         }
     }
 
-    private final static class CachedValue {
+    private static final class CachedValue {
 
         final String key;
         final List<String> value;

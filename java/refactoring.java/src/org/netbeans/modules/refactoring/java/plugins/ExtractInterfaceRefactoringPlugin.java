@@ -271,7 +271,7 @@ public final class ExtractInterfaceRefactoringPlugin extends JavaRefactoringPlug
 
     // --- REFACTORING ELEMENTS ------------------------------------------------
     
-    private final static class UpdateClassTask implements CancellableTask<WorkingCopy> {
+    private static final class UpdateClassTask implements CancellableTask<WorkingCopy> {
         private final ExtractInterfaceRefactoring refactoring;
         private final ElementHandle<TypeElement> sourceType;
         

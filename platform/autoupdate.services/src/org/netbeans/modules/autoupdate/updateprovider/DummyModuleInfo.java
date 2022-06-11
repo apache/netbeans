@@ -171,7 +171,7 @@ public final class DummyModuleInfo extends ModuleInfo {
         return deps;
     }
     
-    private final static Set<Dependency> parseDeps(Attributes attr, String cnb) throws IllegalArgumentException {
+    private static final Set<Dependency> parseDeps(Attributes attr, String cnb) throws IllegalArgumentException {
         Set<Dependency> s = new HashSet<Dependency> ();
         s.addAll(Dependency.create(Dependency.TYPE_MODULE, attr.getValue("OpenIDE-Module-Module-Dependencies"))); // NOI18N
         s.addAll(Dependency.create(Dependency.TYPE_PACKAGE, attr.getValue("OpenIDE-Module-Package-Dependencies"))); // NOI18N

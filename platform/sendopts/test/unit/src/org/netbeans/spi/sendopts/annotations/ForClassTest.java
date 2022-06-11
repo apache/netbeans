@@ -26,6 +26,7 @@ import org.netbeans.spi.sendopts.Arg;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import org.netbeans.api.sendopts.CommandException;
 import org.netbeans.api.sendopts.CommandLine;
 import org.netbeans.junit.NbTestCase;
@@ -109,7 +110,7 @@ public class ForClassTest extends NbTestCase {
     public void testHelpOnEnv() throws CommandException, UnsupportedEncodingException {
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         cmd.process(new String[] { "--tellmehow" }, System.in, os, System.err, null);
-        String out = new String(os.toByteArray(), "UTF-8");
+        String out = new String(os.toByteArray(), StandardCharsets.UTF_8);
         assertTrue("contains additionalParams:\n" + out, out.contains(("MyParams")));
         assertTrue("contains short help:\n" + out, out.contains(("ShorterHelp")));
     }

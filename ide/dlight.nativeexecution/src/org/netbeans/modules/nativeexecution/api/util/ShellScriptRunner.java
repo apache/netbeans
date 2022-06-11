@@ -275,7 +275,7 @@ public final class ShellScriptRunner {
         }
     }
 
-    public final static class LoggerLineProcessor implements LineProcessor {
+    public static final class LoggerLineProcessor implements LineProcessor {
 
         private final String prefix;
 
@@ -297,7 +297,7 @@ public final class ShellScriptRunner {
         }
     }
 
-    public final static class BufferedLineProcessor implements LineProcessor {
+    public static final class BufferedLineProcessor implements LineProcessor {
 
         private final List<String> buffer = new ArrayList<>();
 

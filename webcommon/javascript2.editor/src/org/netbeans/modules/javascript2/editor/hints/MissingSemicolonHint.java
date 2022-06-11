@@ -42,5 +42,5 @@ public class MissingSemicolonHint extends JsConventionHint {
     public String getDisplayName() {
         return Bundle.MissingSemicolonDisplayName();
     }
-    
+
 }

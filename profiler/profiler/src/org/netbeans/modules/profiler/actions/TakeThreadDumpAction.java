@@ -51,7 +51,7 @@ public class TakeThreadDumpAction extends ProfilingAwareAction {
 
     private static final class Singleton {
 
-        final private static TakeThreadDumpAction INSTANCE = new TakeThreadDumpAction();
+        private static final TakeThreadDumpAction INSTANCE = new TakeThreadDumpAction();
     }
 
     @ActionID(id = "org.netbeans.modules.profiler.actions.TakeThreadDumpAction", category = "Profile")

@@ -74,7 +74,7 @@ final class PaletteSwitch implements Runnable, LookupListener {
         propertySupport = new PropertyChangeSupport( this );
     }
     
-    public synchronized static PaletteSwitch getDefault() {
+    public static synchronized PaletteSwitch getDefault() {
         if( null == theInstance ) {
             theInstance = new PaletteSwitch();
         }

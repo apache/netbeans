@@ -1,0 +1,15 @@
+class |>MARK_OCCURRENCES:B^ar<| {}
+function paramType(Foo&|>MARK_OCCURRENCES:Bar<| $test): void {
+function returnType(): Foo&|>MARK_OCCURRENCES:Bar<| {
+    private Foo&|>MARK_OCCURRENCES:Bar<| $test; // class
+    public function paramType(Foo&|>MARK_OCCURRENCES:Bar<| $test): void { // class
+    public function returnType(): Foo&|>MARK_OCCURRENCES:Bar<| { // class
+    private Foo&|>MARK_OCCURRENCES:Bar<| $test; // trait
+    public function paramType(Foo&|>MARK_OCCURRENCES:Bar<| $test1, Foo&|>MARK_OCCURRENCES:Bar<| $test2): void { // trait
+    public function returnType(): Foo&|>MARK_OCCURRENCES:Bar<| { // trait
+    public function paramType(Foo&|>MARK_OCCURRENCES:Bar<| $test);
+    public function returnType(): Foo&|>MARK_OCCURRENCES:Bar<|;
+$closure = function(Foo&|>MARK_OCCURRENCES:Bar<| $test1, $test2): void {};
+$closure = function(int $test): Foo&|>MARK_OCCURRENCES:Bar<| {};
+$arrow = fn(Foo&|>MARK_OCCURRENCES:Bar<| $test) => $test;
+$arrow = fn(Foo&|>MARK_OCCURRENCES:Bar<| $test): Foo&|>MARK_OCCURRENCES:Bar<| => $test;

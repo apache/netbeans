@@ -273,9 +273,9 @@ public class DefaultOutlineCellRenderer extends DefaultTableCellRenderer {
                 if (displayName != null) {
                     if (rendata.isHtmlDisplayName(value) && !(displayName.startsWith("<html") || displayName.startsWith("<HTML"))) {
                         if (swingRendering) {
-                            setText("<html>" + displayName.replaceAll(" ", "&nbsp;") + "</html>"); // NOI18N
+                            setText("<html>" + displayName.replace(" ", "&nbsp;") + "</html>"); // NOI18N
                         } else {
-                            label.setText("<html>" + displayName.replaceAll(" ", "&nbsp;") + "</html>"); // NOI18N
+                            label.setText("<html>" + displayName.replace(" ", "&nbsp;") + "</html>"); // NOI18N
                         }
                     } else {
                         if (swingRendering) {

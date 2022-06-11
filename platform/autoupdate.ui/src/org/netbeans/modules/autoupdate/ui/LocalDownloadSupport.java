@@ -192,7 +192,7 @@ public class LocalDownloadSupport {
             }        
     }
 
-    synchronized private void initCodeName2Unit () {
+    private synchronized void initCodeName2Unit () {
         assert nbm2unitCodeName == null : "Cannot initialize nbm2unit twice!";
         nbm2unitCodeName = new HashMap<File, String> ();
         codeName2unit = new HashMap<String, UpdateUnit> ();

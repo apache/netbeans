@@ -24,6 +24,7 @@ import java.util.*;
 import java.util.regex.Pattern;
 import java.io.*;
 import java.nio.channels.SocketChannel;
+import java.nio.charset.StandardCharsets;
 import org.netbeans.api.keyring.Keyring;
 import org.openide.util.NetworkSettings;
 
@@ -331,7 +332,7 @@ public class ProxySocketFactory extends SocketFactory {
     }
 
     static String encodeCredentials(String credentials) throws UnsupportedEncodingException {
-        return Base64.getEncoder().encodeToString(credentials.getBytes("US-ASCII"));
+        return Base64.getEncoder().encodeToString(credentials.getBytes(StandardCharsets.US_ASCII));
     }
 
     /**

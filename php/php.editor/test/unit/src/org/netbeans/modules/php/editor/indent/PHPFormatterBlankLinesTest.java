@@ -1646,4 +1646,45 @@ public class PHPFormatterBlankLinesTest extends PHPFormatterTestBase {
         reformatFileContents("testfiles/formatting/blankLines/php80/AttributeSyntaxAfterFields_02b.php", options);
     }
 
+    public void testBLBetweenEnumCases_01a() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.BLANK_LINES_BETWEEN_FIELDS, 2);
+        options.put(FmtOptions.BLANK_LINES_GROUP_FIELDS_WITHOUT_DOC_AND_ATTRIBUTES, true);
+        reformatFileContents("testfiles/formatting/blankLines/php81/enumCasesBLBetween_01a.php", options);
+    }
+
+    public void testBLBetweenEnumCases_01b() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.BLANK_LINES_BETWEEN_FIELDS, 2);
+        options.put(FmtOptions.BLANK_LINES_GROUP_FIELDS_WITHOUT_DOC_AND_ATTRIBUTES, false);
+        reformatFileContents("testfiles/formatting/blankLines/php81/enumCasesBLBetween_01b.php", options);
+    }
+
+    public void testBLAfterEnumCases_01a() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.BLANK_LINES_AFTER_FIELDS, 0);
+        reformatFileContents("testfiles/formatting/blankLines/php81/enumCasesBLAfter_01a.php", options);
+    }
+
+
+    public void testBLAfterEnumCases_01b() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.BLANK_LINES_AFTER_FIELDS, 1);
+        reformatFileContents("testfiles/formatting/blankLines/php81/enumCasesBLAfter_01b.php", options);
+    }
+
+
+    public void testBLBeforeEnumCases_01a() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.BLANK_LINES_BEFORE_FIELDS, 0);
+        reformatFileContents("testfiles/formatting/blankLines/php81/enumCasesBLBefore_01a.php", options);
+    }
+
+
+    public void testBLBeforeEnumCases_01b() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.BLANK_LINES_BEFORE_FIELDS, 1);
+        reformatFileContents("testfiles/formatting/blankLines/php81/enumCasesBLBefore_01b.php", options);
+    }
+
 }

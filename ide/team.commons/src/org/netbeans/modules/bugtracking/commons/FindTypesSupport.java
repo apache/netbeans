@@ -51,10 +51,10 @@ import org.openide.util.NbBundle;
  */
 final class FindTypesSupport implements MouseMotionListener, MouseListener {
     
-    private final static Pattern JAVA_CLASS_NAME_PATTERN = Pattern.compile("\\.?([a-z0-9\\.]*)([A-Z]\\w+)+");  // NOI18N
-    private final static String HIGHLIGHTS_PROPERTY = "highlights.property";                                             // NOI18N
-    private final static String PREV_HIGHLIGHT_PROPERTY = "prev.highlights.property";                                    // NOI18N
-    private final static String PREV_HIGHLIGHT_ATTRIBUTES = "prev.highlights.attributes";                                    // NOI18N
+    private static final Pattern JAVA_CLASS_NAME_PATTERN = Pattern.compile("\\.?([a-z0-9\\.]*)([A-Z]\\w+)+");  // NOI18N
+    private static final String HIGHLIGHTS_PROPERTY = "highlights.property";                                             // NOI18N
+    private static final String PREV_HIGHLIGHT_PROPERTY = "prev.highlights.property";                                    // NOI18N
+    private static final String PREV_HIGHLIGHT_ATTRIBUTES = "prev.highlights.attributes";                                    // NOI18N
             
     private static FindTypesSupport instance;
     private final Style defStyle;

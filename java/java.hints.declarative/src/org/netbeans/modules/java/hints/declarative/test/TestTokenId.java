@@ -48,6 +48,7 @@ public enum TestTokenId implements TokenId {
         this.category = category;
     }
 
+    @Override
     public String primaryCategory() {
         return category;
     }

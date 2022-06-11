@@ -34,7 +34,7 @@ public abstract class ProgressApiAccessor {
         INSTANCE = inst;
     }
 
-    public synchronized static ProgressApiAccessor getInstance() {
+    public static synchronized ProgressApiAccessor getInstance() {
         if (INSTANCE == null) {
             try {
                 Class.forName(ProgressHandle.class.getName(), true, ProgressApiAccessor.class.getClassLoader());

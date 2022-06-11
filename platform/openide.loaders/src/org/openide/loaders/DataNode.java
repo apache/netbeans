@@ -1185,7 +1185,7 @@ public class DataNode extends AbstractNode {
         
         private Set<FileObject> obj_files;
         
-        synchronized private void lazyInitialization () {
+        private synchronized void lazyInitialization () {
            obj_files = obj.files();
         }
         

@@ -22,6 +22,7 @@ package org.netbeans.modules.maven.model;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -237,7 +238,7 @@ public class Utilities {
                         }
                         OutputStream os = fo.getOutputStream();
                         try {
-                            os.write(text.getBytes("UTF-8"));
+                            os.write(text.getBytes(StandardCharsets.UTF_8));
                         } finally {
                             os.close();
                         }

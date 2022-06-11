@@ -229,7 +229,7 @@ final class Memory {
     }
 
     /** Limited size LRU map implementation. */
-    private final static class LRU extends LinkedHashMap {
+    private static final class LRU extends LinkedHashMap {
 
         private final int maxSize;
 

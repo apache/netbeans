@@ -143,13 +143,10 @@ public class FavoritesTest extends NbTestCase {
         fav.add(file);
         assertTrue(fav.isInFavorites(file));
         final boolean[] isDeleted = new boolean[] { false };
-        PropertyChangeListener pcl = new PropertyChangeListener() {
-
-            public void propertyChange(PropertyChangeEvent evt) {
-                System.out.println("Property change: " + evt.getPropertyName());
-                if (DataObject.Container.PROP_CHILDREN.equals(evt.getPropertyName())) {
-                    isDeleted[0] = true;
-                }
+        PropertyChangeListener pcl = (PropertyChangeEvent evt) -> {
+            System.out.println("Property change: " + evt.getPropertyName());
+            if (DataObject.Container.PROP_CHILDREN.equals(evt.getPropertyName())) {
+                isDeleted[0] = true;
             }
         };
         FavoritesNode.getFolder().addPropertyChangeListener(pcl);
@@ -178,18 +175,17 @@ public class FavoritesTest extends NbTestCase {
         assertFalse(fav.isInFavorites(file));
         fav.selectWithAddition(file);
         assertFalse(EventQueue.isDispatchThread());
-        EventQueue.invokeAndWait(new Runnable() {   // Favorites tab EM refreshed in invokeLater, we have to wait too
-            public void run() {
-                TopComponent win = RootsTest.getBareFavoritesTabInstance();
-                assertNotNull(win);
-                assertTrue(win.isOpened());
-                assertTrue(fav.isInFavorites(file));
-                ExplorerManager man = ((ExplorerManager.Provider) win).getExplorerManager();
-                assertNotNull(man);
-                Node[] nodes = man.getSelectedNodes();
-                assertEquals(1, nodes.length);
-                assertEquals(nodes[0].getName(), TEST_TXT);
-            }
+        EventQueue.invokeAndWait(() -> {
+            // Favorites tab EM refreshed in invokeLater, we have to wait too
+            TopComponent win1 = RootsTest.getBareFavoritesTabInstance();
+            assertNotNull(win1);
+            assertTrue(win1.isOpened());
+            assertTrue(fav.isInFavorites(file));
+            ExplorerManager man = ((ExplorerManager.Provider) win1).getExplorerManager();
+            assertNotNull(man);
+            Node[] nodes = man.getSelectedNodes();
+            assertEquals(1, nodes.length);
+            assertEquals(nodes[0].getName(), TEST_TXT);
         });
     }
 
@@ -205,16 +201,13 @@ public class FavoritesTest extends NbTestCase {
         assertNotNull(win);
         assertTrue(win.isOpened());
         assertTrue(fav.isInFavorites(file));
-        EventQueue.invokeAndWait(new Runnable() {   // Favorites tab EM refreshed in invokeLater, we have to wait too
-
-            public void run() {
-                ExplorerManager man = ((ExplorerManager.Provider) RootsTest.getBareFavoritesTabInstance()).getExplorerManager();
-                assertNotNull(man);
-                Node[] nodes = man.getSelectedNodes();
-                assertEquals(Arrays.toString(nodes), 1, nodes.length);
-                assertEquals(TEST_TXT, nodes[0].getName());
-            }
-
+        EventQueue.invokeAndWait(() -> {
+            // Favorites tab EM refreshed in invokeLater, we have to wait too
+            ExplorerManager man = ((ExplorerManager.Provider) RootsTest.getBareFavoritesTabInstance()).getExplorerManager();
+            assertNotNull(man);
+            Node[] nodes = man.getSelectedNodes();
+            assertEquals(Arrays.toString(nodes), 1, nodes.length);
+            assertEquals(TEST_TXT, nodes[0].getName());
         });
     }
 

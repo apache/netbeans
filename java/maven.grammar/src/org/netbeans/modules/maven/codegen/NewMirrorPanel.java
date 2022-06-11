@@ -56,10 +56,10 @@ public class NewMirrorPanel extends javax.swing.JPanel {
     private SettingsModel model;
     private NotificationLineSupport nls;
 
-    private final static String ALL = "*"; //2.0.5+ //NOI18N
-    private final static String ALL_NON_LOCAL = "external:*"; //2.0.9+ //NOI18N
-    private final static String ALL_BUT_FOO = "*,!foo"; //2.0.9+ //NOI18N
-    private final static String LIST = "foo,bar"; //2.0.9+ //NOI18N
+    private static final String ALL = "*"; //2.0.5+ //NOI18N
+    private static final String ALL_NON_LOCAL = "external:*"; //2.0.9+ //NOI18N
+    private static final String ALL_BUT_FOO = "*,!foo"; //2.0.9+ //NOI18N
+    private static final String LIST = "foo,bar"; //2.0.9+ //NOI18N
 
     private final String[] MIRROROFS = new String[] {
         RepositorySystem.DEFAULT_REMOTE_REPO_ID,

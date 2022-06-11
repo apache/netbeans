@@ -22,6 +22,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.RandomAccessFile;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -207,7 +208,7 @@ public final class FastJar {
     private static final String name(final RandomAccessFile b, final int cennam) throws IOException {
 	byte[] name = new byte[cennam];
 	b.read(name, 0, cennam);
-	return new String(name, "UTF-8");       //NOI18N
+	return new String(name, StandardCharsets.UTF_8);
     }
 
     private static final long getsig(final byte[] b) throws IOException {return get32(b,0);}

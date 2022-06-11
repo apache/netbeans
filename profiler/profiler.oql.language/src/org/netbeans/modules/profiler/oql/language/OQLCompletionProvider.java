@@ -41,9 +41,9 @@ import org.netbeans.spi.editor.completion.support.AsyncCompletionTask;
  * @author Jaroslav Bachorik
  */
 public class OQLCompletionProvider implements CompletionProvider {
-    final private Set<String> keywords = new HashSet<String>();
-    final private Set<String> functions = new HashSet<String>();
-    final private Set<String> heapMethods = new HashSet<String>();
+    private final Set<String> keywords = new HashSet<String>();
+    private final Set<String> functions = new HashSet<String>();
+    private final Set<String> heapMethods = new HashSet<String>();
     
     public OQLCompletionProvider() {
         keywords.add("select"); // NOI18N
@@ -250,7 +250,7 @@ public class OQLCompletionProvider implements CompletionProvider {
 
                         clzs = e.getHeap().getJavaClassesByRegExp(prefix).iterator();
                         while(clzs.hasNext()) {
-                            String className = ((JavaClass)clzs.next()).getName();
+                            String className = clzs.next().getName();
 
                             String[] sig = splitClassName(className);
 
@@ -270,7 +270,7 @@ public class OQLCompletionProvider implements CompletionProvider {
                         if (camel != null) {
                             clzs = e.getHeap().getJavaClassesByRegExp(camel).iterator();
                             while(clzs.hasNext()) {
-                                String className = ((JavaClass)clzs.next()).getName();
+                                String className = clzs.next().getName();
                                 completions.add("02 " + className); // NOI18N
                             }
                         }

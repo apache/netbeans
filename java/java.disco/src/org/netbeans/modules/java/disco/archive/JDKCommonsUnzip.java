@@ -26,7 +26,7 @@ import org.openide.windows.InputOutput;
 
 public class JDKCommonsUnzip extends CommonsUnzip {
 
-    private final static File[] EMPTY_FILES = new File[0];
+    private static final File[] EMPTY_FILES = new File[0];
 
     @Override
     public void uncompress(File zip, File targetDir, InputOutput io) throws IOException {

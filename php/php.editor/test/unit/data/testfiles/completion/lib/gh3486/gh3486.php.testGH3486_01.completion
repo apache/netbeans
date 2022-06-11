@@ -1,0 +1,16 @@
+Code completion result for source line:
+parent::|protectedTraitMethod();
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     protectedClassMethod()          [PROTECTE  A
+METHOD     protectedStaticClassMethod()    [PROTECTE  A
+METHOD     protectedStaticTraitMethod()    [PROTECTE  TestTrait
+METHOD     protectedTraitMethod()          [PROTECTE  A
+METHOD     publicClassMethod()             [PUBLIC]   A
+METHOD     publicStaticClassMethod()       [STATIC]   A
+METHOD     publicStaticTraitMethod()       [STATIC]   TestTrait
+METHOD     publicTraitMethod()             [PUBLIC]   TestTrait
+VARIABLE   int $protectedStaticClassField  [PROTECTE  A
+VARIABLE   int $protectedStaticTraitField  [PROTECTE  TestTrait
+VARIABLE   int $publicStaticClassField     [STATIC]   A
+VARIABLE   int $publicStaticTraitField     [STATIC]   TestTrait
+CONSTANT   class \A                        [PUBLIC]   Magic Constant

@@ -57,8 +57,8 @@ public abstract class LinkButton extends JButton
 
     private final Color defaultForeground;
 
-    private final static Border regularBorder = ButtonBorder.createRegular();
-    private final static Border mouseoverBorder = ButtonBorder.createMouseOver();
+    private static final Border regularBorder = ButtonBorder.createRegular();
+    private static final Border mouseoverBorder = ButtonBorder.createMouseOver();
 
     private String usageTrackingId;
 

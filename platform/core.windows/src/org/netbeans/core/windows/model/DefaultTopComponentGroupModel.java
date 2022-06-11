@@ -202,12 +202,8 @@ final class DefaultTopComponentGroupModel implements TopComponentGroupModel {
     
     public boolean removeUnloadedTopComponent(String tcID) {
         synchronized(LOCK_TOPCOMPONENTS) {
-            if(openingTopComponents.contains(tcID)) {
-                openingTopComponents.remove(tcID);
-            }
-            if(closingTopComponents.contains(tcID)) {
-                closingTopComponents.remove(tcID);
-            }
+            openingTopComponents.remove(tcID);
+            closingTopComponents.remove(tcID);
             return topComponents.remove(tcID);
         }
     }

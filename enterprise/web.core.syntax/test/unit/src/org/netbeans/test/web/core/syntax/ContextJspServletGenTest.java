@@ -213,8 +213,8 @@ public class ContextJspServletGenTest extends TestBase2 {
     private static class TestWebModuleImplementation2 
         implements WebModuleImplementation2 
     {
-        private final static String WEB_INF = "WEB-INF";    // NOI18N
-        private final static String DD      = "web.xml";    // NOI18N
+        private static final String WEB_INF = "WEB-INF";    // NOI18N
+        private static final String DD      = "web.xml";    // NOI18N
 
         public TestWebModuleImplementation2(FileObject webRoot, 
                 ClassPathProvider provider ) 

@@ -28,12 +28,20 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.event.ChangeListener;
+import org.netbeans.modules.gradle.GradleModuleFileCache21;
 import org.netbeans.modules.gradle.GradleProject;
 import org.openide.modules.OnStart;
 import org.openide.modules.Places;
@@ -45,7 +53,8 @@ import org.openide.util.RequestProcessor;
  * @author Laszlo Kishalmi
  */
 public class GradleArtifactStore {
-
+    private static Logger LOG = Logger.getLogger(GradleArtifactStore.class.getName());
+    
     private static final String GRADLE_ARTIFACT_STORE_INFO = "gradle/artifact-store-info.ser";
     public static final RequestProcessor RP = new RequestProcessor("Gradle Artifact Store", 1); //NOI18
 
@@ -78,6 +87,24 @@ public class GradleArtifactStore {
     public Set<File> getBinaries(String id) {
         Set<File> ret = binaries.get(id);
         return ret;
+    }
+    
+    public Set<File> getSources(Set<File> binaries) {
+        if (binaries.size() != 1) {
+            return null;
+        } else {
+            File f = sources.get(binaries.iterator().next());
+            return f == null ? null : Collections.singleton(f);
+        }
+    }
+    
+    public Set<File> getJavadocs(Set<File> binaries) {
+        if (binaries.size() != 1) {
+            return null;
+        } else {
+            File f = javadocs.get(binaries.iterator().next());
+            return f == null ? null : Collections.singleton(f);
+        }
     }
     
     public File getSources(File binary) {
@@ -114,13 +141,16 @@ public class GradleArtifactStore {
         if (gp.getQuality().worseThan(Quality.FULL)) {
             return;
         }
+        List<String> gavs = new ArrayList<>();
         boolean changed = false;
         for (GradleConfiguration conf : gp.getBaseProject().getConfigurations().values()) {
             for (GradleDependency.ModuleDependency module : conf.getModules()) {
                 Set<File> oldBins = binaries.get(module.getId());
                 Set<File> newBins = module.getArtifacts();
-                if (oldBins != newBins) {
+                gavs.add(module.getId());
+                if (!Objects.equals(oldBins, newBins)) {
                     binaries.put(module.getId(), newBins);
+                    LOG.log(Level.FINER, "Updating JAR {0} to {1}", new Object[] { module.getId(), newBins });
                     changed = true;
                 }
                 if (module.getArtifacts().size() == 1) {
@@ -129,19 +159,29 @@ public class GradleArtifactStore {
                         File source = module.getSources().iterator().next();
                         if (binary.isFile() && source.isFile()) {
                             File old = sources.put(binary, source);
-                            changed |= (old == null) || !old.equals(source);
+                            boolean c = (old == null) || !old.equals(source);
+                            if (c && LOG.isLoggable(Level.FINER)) {
+                                LOG.log(Level.FINER, "Updating source {0} to {1}", new Object[] { module.getId(), source });
+                            }
+                            changed |= c;
                         }
                     }
                     if (module.getJavadoc().size() == 1) {
                         File javadoc = module.getJavadoc().iterator().next();
                         if (binary.isFile() && javadoc.isFile()) {
                             File old = javadocs.put(binary, javadoc);
-                            changed |= (old == null) || !old.equals(javadoc);
+                            boolean c = (old == null) || !old.equals(javadoc);
+                            if (c && LOG.isLoggable(Level.FINER)) {
+                                LOG.log(Level.FINER, "Updating javadoc {0} to {1}", new Object[] { module.getId(), javadoc });
+                            }
                         }
                     }
                 }
             }
         }
+        LOG.log(Level.FINE, "Cache refresh for project {0}, changed {2}, module deps {1}", new Object[] {
+            gp.getBaseProject().getProjectDir(), gavs, changed
+        });
         if (changed) {
             store();
             notifyTask.schedule(1000);
@@ -159,7 +199,63 @@ public class GradleArtifactStore {
             store();
         }
     }
-
+    
+    /**
+     * Checks that all dependencies the project thinks should be in the global cache
+     * are actually in the global cache. If the global artifact cache does not contain
+     * an entry from a resolved dependency in the project cache then many random failures can
+     * occur, as an artifact is formally OK, but its JAR cannot be looked up.
+     * 
+     * @param gp cached project
+     * @return true if the cached project resolves.
+     */
+    public final boolean sanityCheckCachedProject(GradleProject gp) {
+        GradleModuleFileCache21 modCache = GradleModuleFileCache21.getGradleFileCache();
+        for (GradleConfiguration conf : gp.getBaseProject().getConfigurations().values()) {
+            for (GradleDependency.ModuleDependency module : conf.getModules()) {
+                Set<File> oldBins = binaries.get(module.getId());
+                boolean empty = module.getArtifacts() == null || module.getArtifacts().isEmpty();
+                boolean binsEmpty = oldBins == null || oldBins.isEmpty();
+                boolean cacheEmpty;
+                GradleModuleFileCache21.CachedArtifactVersion cav = modCache.resolveModule(module.getId());
+                if (cav != null && cav.getBinary() != null) {
+                    // possibly trigger project reload if the artifact store does not match the GradleModuleFileCache21.
+                    cacheEmpty = !Files.exists(cav.getBinary().getPath());
+                } else {
+                    cacheEmpty = true;
+                }
+                if (empty != (cacheEmpty && binsEmpty)) {
+                    LOG.log(Level.FINE, "Checking {0}: Module dependency {1} not found in cache.", new Object[] { gp.getBaseProject().getProjectDir(), module.getId() });
+                    return false;
+                }
+                if (!binsEmpty && oldBins.size() == 1) {
+                    File binary = oldBins.iterator().next();
+                    if (cav == null) {
+                        LOG.log(Level.FINE, "Checking {0}: Cached artifact not found for {1}", new Object[] { gp.getBaseProject().getProjectDir(), module.getId() });
+                        return false;
+                    }
+                    GradleModuleFileCache21.CachedArtifactVersion.Entry javadocEntry = cav.getJavaDoc();
+                    GradleModuleFileCache21.CachedArtifactVersion.Entry sourceEntry = cav.getSources();
+                    if (sourceEntry != null && Files.exists(sourceEntry.getPath())) {
+                        File check = sources.get(binary);
+                        if (check != null && !check.toPath().equals(sourceEntry.getPath())) {
+                            LOG.log(Level.FINE, "Checking {0}: cache does not list CachedArtifact for source {2}", new Object[] { gp.getBaseProject().getProjectDir(), module.getId(), sourceEntry.getPath() });
+                            return false;
+                        }
+                    }
+                    if (javadocEntry != null && Files.exists(javadocEntry.getPath())) {
+                        File check = javadocs.get(binary);
+                        if (check != null && !check.toPath().equals(javadocEntry.getPath())) {
+                            LOG.log(Level.FINE, "Checking {0}: cache does not list CachedArtifact for javadoc {2}", new Object[] { gp.getBaseProject().getProjectDir(), module.getId(), javadocEntry.getPath() });
+                            return false;
+                        }
+                    }
+                }
+            }
+        }
+        return true;
+    }
+    
     public final void addChangeListener(ChangeListener l) {
         cs.addChangeListener(l);
     }

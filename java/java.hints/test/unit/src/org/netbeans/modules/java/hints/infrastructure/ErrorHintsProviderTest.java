@@ -46,7 +46,6 @@ import org.netbeans.modules.java.source.usages.IndexUtil;
 import org.netbeans.modules.parsing.impl.indexing.RepositoryUpdater;
 import org.netbeans.spi.editor.hints.ErrorDescription;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
-import org.netbeans.modules.java.completion.TreeShims;
 import org.openide.cookies.EditorCookie;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;

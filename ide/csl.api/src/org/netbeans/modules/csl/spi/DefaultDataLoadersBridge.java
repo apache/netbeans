@@ -189,7 +189,7 @@ public class DefaultDataLoadersBridge extends DataLoadersBridge {
      * Adds listener on a given FileObject and notify if the dataobject is being deleted or
      * disposed.
      */
-    private final static class DataObjectListener implements PropertyChangeListener {
+    private static final class DataObjectListener implements PropertyChangeListener {
 
         private DataObject dobj;
         private final FileObject fobj;

@@ -78,7 +78,7 @@ public class AntJUnitTestMethodNode extends JUnitTestMethodNode {
             try {
                 String text = testFO.asText();
                 if (text != null) {
-                    text = text.replaceAll("\n", "").replaceAll(" ", "");
+                    text = text.replace("\n", "").replace(" ", "");
                     if ((text.contains("@RunWith") || text.contains("@org.junit.runner.RunWith")) //NOI18N
                             && text.contains("Parameterized.class)")) {  //NOI18N
                         parameterized = true;

@@ -29,7 +29,7 @@ import org.openide.util.NbBundle;
 public final class RequestPrivilegesAction
         extends ObservableAction<Boolean> {
 
-    private final static ConcurrentHashMap<Key, RequestPrivilegesAction> cache =
+    private static final ConcurrentHashMap<Key, RequestPrivilegesAction> cache =
             new ConcurrentHashMap<>();
     private final SPSCommonImpl support;
     private final Collection<String> requestedPrivileges;

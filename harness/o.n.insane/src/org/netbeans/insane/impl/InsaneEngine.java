@@ -67,7 +67,7 @@ public final class InsaneEngine {
     
     public void traverse(Collection roots) throws Exception {
         // process all given roots first - remember them and put them into queue
-        for (Iterator it = roots.iterator(); it.hasNext(); ) recognize(it.next());
+        for (Iterator<?> it = roots.iterator(); it.hasNext(); ) recognize(it.next());
         
         while (!queue.isEmpty()) {
             process(queue.get());

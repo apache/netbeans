@@ -23,7 +23,6 @@ import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -35,11 +34,6 @@ import javax.swing.SwingUtilities;
 import javax.swing.event.DocumentEvent;
 import javax.swing.text.AbstractDocument;
 import javax.swing.text.BadLocationException;
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertSame;
-import static junit.framework.Assert.assertTrue;
 import org.netbeans.api.editor.fold.Fold;
 import org.netbeans.api.editor.fold.FoldHierarchy;
 import org.netbeans.api.editor.fold.FoldHierarchyEvent;
@@ -472,7 +466,7 @@ public class FoldOperationTest extends NbTestCase {
     
     private List<FoldInfo> readFoldData(String pathName) throws Exception {
         List<FoldInfo> result = new ArrayList<FoldInfo>();
-        File f = new File(getDataDir(), pathName.replaceAll("/", Matcher.quoteReplacement(File.separator)));
+        File f = new File(getDataDir(), pathName.replace("/", File.separator));
         if (!f.exists()) {
             throw new IllegalArgumentException("Data file not found: " + pathName);
         }

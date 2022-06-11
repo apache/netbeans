@@ -33,8 +33,8 @@ import org.netbeans.lib.profiler.results.cpu.cct.nodes.ThreadCPUCCTNode;
  * 
  * @author Jaroslav Bachorik
  */
-final public class RuntimeCCTNodeProcessor {
-    final private static Logger LOGGER = Logger.getLogger(RuntimeCCTNodeProcessor.class.getName());
+public final class RuntimeCCTNodeProcessor {
+    private static final Logger LOGGER = Logger.getLogger(RuntimeCCTNodeProcessor.class.getName());
     
     /**
      * A processor plugin definition. <br/>
@@ -66,9 +66,9 @@ final public class RuntimeCCTNodeProcessor {
      * Provides default empty implementations and implements simple dispatching
      * mechanism for typed <b>onNode</b> calls.
      */
-    public static abstract class PluginAdapter implements Plugin {
+    public abstract static class PluginAdapter implements Plugin {
         @Override
-        final public void onBackout(RuntimeCCTNode node) {
+        public final void onBackout(RuntimeCCTNode node) {
             if (node instanceof MethodCPUCCTNode) {
                 onBackout((MethodCPUCCTNode)node);
             } else if (node instanceof MarkedCPUCCTNode) {
@@ -85,7 +85,7 @@ final public class RuntimeCCTNodeProcessor {
         }
 
         @Override
-        final public void onNode(RuntimeCCTNode node) {
+        public final void onNode(RuntimeCCTNode node) {
             if (node instanceof MethodCPUCCTNode) {
                 onNode((MethodCPUCCTNode)node);
             } else if (node instanceof MarkedCPUCCTNode) {
@@ -150,9 +150,9 @@ final public class RuntimeCCTNodeProcessor {
         protected void onBackout(ServletRequestCPUCCTNode node) {}
     }
     
-    private static abstract class Item<T extends RuntimeCCTNode> {
-        final protected T instance;
-        final protected Plugin[] plugins;
+    private abstract static class Item<T extends RuntimeCCTNode> {
+        protected final T instance;
+        protected final Plugin[] plugins;
         
         public Item(T instance, Plugin ... plugins) {
             this.instance = instance;
@@ -163,7 +163,7 @@ final public class RuntimeCCTNodeProcessor {
     }
     
     private static class SimpleItem extends Item<RuntimeCCTNode> {
-        final private Deque<Item<RuntimeCCTNode>> stack;
+        private final Deque<Item<RuntimeCCTNode>> stack;
         public SimpleItem(Deque<Item<RuntimeCCTNode>> stack, RuntimeCCTNode instance, Plugin ... plugins) {
             super(instance, plugins);
             this.stack = stack;

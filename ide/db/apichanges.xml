@@ -85,6 +85,47 @@ is the proper place.
     <changes>
         <change>
             <api name="database_explorer_api"/>
+            <summary>Return a fallback quoter if no DatabaseMetaData is available.</summary>
+            <version major="1" minor="84"/>
+            <date day="4" month="12" year="2021"/>
+            <author login="matthiasblaesing"/>
+            <compatibility addition="yes"/>
+            <description>
+                <code>SQLIdentifiers</code> now returns a fallback
+                <code>Quoter</code> if there is no <code>DatabaseMetaData</code>.
+                The fallback quoter supports unquoting most common identifier
+                quoting formats, uses SQL-99 quotes for quoting and quotes all
+                identifiers, that don't start with an ascii character or
+                contain ascii non-characters or non-numbers.
+            </description>
+            <class package="org.netbeans.api.db.sql.support" name="SQLIdentifiers"/>
+        </change>
+        <change>
+            <api name="database_explorer_api"/>
+            <summary>Concept of preferred connection introduced</summary>
+            <version major="1" minor="83"/>
+            <author login="sdedic"/>
+            <compatibility addition="yes"/>
+            <description>
+                Preferred connection can be defined to be used throughout the IDE as the default
+                or fallback one.
+            </description>
+            <class package="org.netbeans.api.db.explorer" name="ConnectionManager"/>
+        </change>
+        <change>
+            <api name="database_explorer_api"/>
+            <summary>Provided access to connection nodes list.</summary>
+            <version major="1" minor="82"/>
+            <author login="sdedic"/>
+            <compatibility addition="yes"/>
+            <description>
+                A utility that provides a Node hierarchy for defined database connections,
+                including disconnected (but defined) ones. Usable for selectors etc.
+            </description>
+            <class package="org.netbeans.api.db.explorer.support" name="DatabaseExplorerUIs"/>
+        </change>
+        <change>
+            <api name="database_explorer_api"/>
             <summary>
                 Configure usage of scrollable cursors.
             </summary>

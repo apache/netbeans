@@ -46,7 +46,7 @@ public class WebProjectNatureTest extends NbTestCase {
                       "    <foo bar=\"baz\" quux=\"whatever\">hello</foo>\n" +
                       "    <x>OK</x>\n" +
                       "</web-data>\n";
-        String xml2expected = xml1.replaceAll("/1", "/2");
+        String xml2expected = xml1.replace("/1", "/2");
         Document doc1 = XMLUtil.parse(new InputSource(new StringReader(xml1)), false, true, null, null);
         Element el1 = doc1.getDocumentElement();
         Element el2 = LookupProviderImpl.upgradeSchema(el1);

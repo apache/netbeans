@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -113,7 +114,7 @@ public class DifferentReleaseVersionsTest extends NbTestCase {
             catalogFile = File.createTempFile("catalog-", ".xml", tmpDirectory);
             catalogURL = Utilities.toURI(catalogFile).toURL();
         }
-        PrintWriter pw = new PrintWriter(new OutputStreamWriter(new FileOutputStream(catalogFile), "UTF-8"));
+        PrintWriter pw = new PrintWriter(new OutputStreamWriter(new FileOutputStream(catalogFile), StandardCharsets.UTF_8));
         pw.write(res);
         pw.close();
     }
@@ -169,10 +170,10 @@ public class DifferentReleaseVersionsTest extends NbTestCase {
         }
 
         jos.putNextEntry(new ZipEntry(moduleDir + "Bundle.properties"));
-        jos.write(new String(MODULE_NAME_PROP + "=" + moduleName).getBytes("UTF-8"));
+        jos.write(new String(MODULE_NAME_PROP + "=" + moduleName).getBytes(StandardCharsets.UTF_8));
         jos.putNextEntry(new ZipEntry("META-INF/"));
         jos.putNextEntry(new ZipEntry("META-INF/manifest.mf"));
-        jos.write(getManifest(codeName, releaseVersion, implVersion, moduleDir, specVersion, visible, dependency).getBytes("UTF-8"));
+        jos.write(getManifest(codeName, releaseVersion, implVersion, moduleDir, specVersion, visible, dependency).getBytes(StandardCharsets.UTF_8));
         jos.close();
 
         Manifest mf = new Manifest();
@@ -180,7 +181,7 @@ public class DifferentReleaseVersionsTest extends NbTestCase {
         jos = new JarOutputStream(new FileOutputStream(nbm), mf);
         jos.putNextEntry(new ZipEntry("Info/"));
         jos.putNextEntry(new ZipEntry("Info/info.xml"));
-        jos.write(createInfoXML(visible, codeName, releaseVersion, implVersion, moduleName, Utilities.toURI(nbm).toURL().toString(), specVersion, dependency).getBytes("UTF-8"));
+        jos.write(createInfoXML(visible, codeName, releaseVersion, implVersion, moduleName, Utilities.toURI(nbm).toURL().toString(), specVersion, dependency).getBytes(StandardCharsets.UTF_8));
 
         jos.putNextEntry(new ZipEntry("netbeans/"));
         jos.putNextEntry(new ZipEntry("netbeans/modules/"));
@@ -188,7 +189,7 @@ public class DifferentReleaseVersionsTest extends NbTestCase {
         jos.putNextEntry(new ZipEntry("netbeans/config/Modules/"));
         jos.putNextEntry(new ZipEntry("netbeans/config/Modules/" + moduleFile + ".xml"));
 
-        jos.write(getConfigXML(codeName, moduleFile, specVersion).getBytes("UTF-8"));
+        jos.write(getConfigXML(codeName, moduleFile, specVersion).getBytes(StandardCharsets.UTF_8));
 
 
         jos.putNextEntry(new ZipEntry("netbeans/modules/" + moduleFile + ".jar"));

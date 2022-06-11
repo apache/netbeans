@@ -33,6 +33,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -76,7 +77,7 @@ public class RequireJsDataProvider {
     /**
      * Translating names from documentation to the real option names
      */
-    private final static HashMap<String, String> TRANSLATE_NAME = new HashMap<>();
+    private static final HashMap<String, String> TRANSLATE_NAME = new HashMap<>();
 
     static {
         TRANSLATE_NAME.put("moduleconfig", "config");//NOI18N
@@ -231,8 +232,8 @@ public class RequireJsDataProvider {
         synchronized (cacheFile) {
             String tmpFileName = cacheFile.getAbsolutePath() + ".tmp";
             File tmpFile = new File(tmpFileName);
-            try (Writer writer = new OutputStreamWriter(new FileOutputStream(tmpFile), "UTF-8")) { // NOI18N
-                loadURL(url, writer, Charset.forName("UTF-8")); //NOI18N
+            try (Writer writer = new OutputStreamWriter(new FileOutputStream(tmpFile), StandardCharsets.UTF_8)) {
+                loadURL(url, writer, StandardCharsets.UTF_8);
                 writer.close();
                 boolean success = tmpFile.renameTo(cacheFile);
                 if (!success) {
@@ -268,7 +269,7 @@ public class RequireJsDataProvider {
     }
 
     private String getFileContent(File file) throws IOException {
-        Reader r = new InputStreamReader(new FileInputStream(file), "UTF-8"); // NOI18N
+        Reader r = new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8);
         StringBuilder sb = new StringBuilder();
         try {
             char[] buf = new char[2048];

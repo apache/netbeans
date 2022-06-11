@@ -134,7 +134,7 @@ public class Inflector {
      * <p>The singleton instance returned by the default <code>getInstance()</code>
      * method.</p>
      */
-    private transient static Inflector instance = null;
+    private static transient Inflector instance = null;
 
 
     /**
@@ -516,7 +516,7 @@ public class Inflector {
 
         // Scan our patterns for a match and return the correct replacement
         for (int i = 0; i < plurals.size(); i++) {
-            Replacer replacer = (Replacer) plurals.get(i);
+            Replacer replacer = plurals.get(i);
             if (replacer.matches(word)) {
                 return replacer.replacement();
             }
@@ -545,7 +545,7 @@ public class Inflector {
 
         // Scan our patterns for a match and return the correct replacement
         for (int i = 0; i < singulars.size(); i++) {
-            Replacer replacer = (Replacer) singulars.get(i);
+            Replacer replacer = singulars.get(i);
             if (replacer.matches(word)) {
                 return replacer.replacement();
             }

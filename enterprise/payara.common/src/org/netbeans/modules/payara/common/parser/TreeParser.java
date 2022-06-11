@@ -195,7 +195,7 @@ public final class TreeParser extends DefaultHandler {
         return source;
     }
 
-    public static abstract class NodeReader {
+    public abstract static class NodeReader {
 
         public void readAttributes(String qname, Attributes attributes) throws SAXException {
         }

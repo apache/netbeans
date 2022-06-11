@@ -20,6 +20,7 @@
 package org.netbeans.spi.settings;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import org.openide.filesystems.FileObject;
 import org.openide.util.Lookup;
@@ -37,10 +38,10 @@ import org.xml.sax.SAXException;
  */
 public abstract class DOMConvertor extends Convertor {
     /** an attribute containing public ID of DTD describing nested elements */
-    private final static String ATTR_PUBLIC_ID = "dtd_public_id"; // NOI18N
+    private static final String ATTR_PUBLIC_ID = "dtd_public_id"; // NOI18N
     
-    private final static String ATTR_ID = "id"; // NOI18N
-    private final static String ATTR_IDREF = "idref"; // NOI18N
+    private static final String ATTR_ID = "id"; // NOI18N
+    private static final String ATTR_IDREF = "idref"; // NOI18N
     /** element used to wrap output from non-DOMConvertor or to reference
      * already written object.
      * @see #ATTR_ID
@@ -54,12 +55,12 @@ public abstract class DOMConvertor extends Convertor {
     // ...
     // <domconvertor idref='1'/>
 
-    private final static String ELM_DELEGATE = "domconvertor"; // NOI18N
+    private static final String ELM_DELEGATE = "domconvertor"; // NOI18N
     
-    private final static java.util.Map<Document, Map<Object,CacheRec>> refsCache = 
+    private static final java.util.Map<Document, Map<Object,CacheRec>> refsCache = 
             new java.util.HashMap<Document, Map<Object,CacheRec>>();
     /** cache of contexts <Document, Lookup>*/
-    private final static java.util.Map<Document, Lookup> ctxCache = new java.util.HashMap<Document, Lookup>();
+    private static final java.util.Map<Document, Lookup> ctxCache = new java.util.HashMap<Document, Lookup>();
     
     private String publicID;
     private String systemID;
@@ -161,7 +162,7 @@ public abstract class DOMConvertor extends Convertor {
      * @see #readElement
      * @since 1.1
      */
-    protected final static Object delegateRead(org.w3c.dom.Element element) throws java.io.IOException, ClassNotFoundException {
+    protected static final Object delegateRead(org.w3c.dom.Element element) throws java.io.IOException, ClassNotFoundException {
         Object obj;
         
         // in case of a reference a cache of already read objects should
@@ -232,7 +233,7 @@ public abstract class DOMConvertor extends Convertor {
      * @see #writeElement
      * @since 1.1
      */
-    protected final static org.w3c.dom.Element delegateWrite(org.w3c.dom.Document doc, Object obj) throws java.io.IOException, org.w3c.dom.DOMException {
+    protected static final org.w3c.dom.Element delegateWrite(org.w3c.dom.Document doc, Object obj) throws java.io.IOException, org.w3c.dom.DOMException {
         // first lookup a cache of already written objects to prevent
         // storing of the same instance multiple times.
         CacheRec cache = setCache(doc, obj);

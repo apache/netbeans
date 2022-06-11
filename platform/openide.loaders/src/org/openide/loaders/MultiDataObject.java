@@ -1229,7 +1229,7 @@ public class MultiDataObject extends DataObject {
         }
     }
     
-    final static class Pair {
+    static final class Pair {
         MultiDataObject.Entry entry;
         FileObject file;
 

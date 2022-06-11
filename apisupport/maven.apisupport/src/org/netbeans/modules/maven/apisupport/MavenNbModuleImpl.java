@@ -25,9 +25,9 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -78,10 +78,6 @@ import org.openide.filesystems.FileSystem;
 import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.XMLFileSystem;
 import org.openide.modules.SpecificationVersion;
-import org.openide.util.RequestProcessor;
-
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -93,10 +89,7 @@ public class MavenNbModuleImpl implements NbModuleProvider {
     
     private final Project project;
     private final DependencyAdder dependencyAdder = new DependencyAdder();
-    private static final RequestProcessor RP = new RequestProcessor(MavenNbModuleImpl.class);
-    
-    private final RequestProcessor.Task tsk = RP.create(dependencyAdder);
-    
+
     public static final String MAVEN_CENTRAL = "central";
     public static final String APACHE_SNAPSHOT_REPO_ID = "apache.snapshots";
     // this repository is not good anymore, dev-SNAPSHOT version are buil on apache snapshot
@@ -110,11 +103,9 @@ public class MavenNbModuleImpl implements NbModuleProvider {
     public static final String GROUPID_MOJO = "org.codehaus.mojo";
     public static final String GROUPID_APACHE = "org.apache.netbeans.utilities";
     public static final String NBM_PLUGIN = "nbm-maven-plugin";
-    private static final String LATEST_NBM_PLUGIN_VERSION = "4.3";
+    static final String LATEST_NBM_PLUGIN_VERSION = "4.7";
 
     public static final String NETBEANSAPI_GROUPID = "org.netbeans.api";
-
-    private static final Logger LOG = Logger.getLogger("org.netbeans.modules.maven.apisupport.MavenNbModuleImpl");
 
     /** Creates a new instance of MavenNbModuleImpl 
      * @param project 
@@ -128,23 +119,17 @@ public class MavenNbModuleImpl implements NbModuleProvider {
                 RepositoryPreferences.getInstance().getRepositoryInfoById(MAVEN_CENTRAL));
     }
 
+    /**
+     * Returns the latest known version of the NetBeans maven plugin.
+     * This method will not wait for the index to be downloaded, it will return a default value instead.
+     */
     public static String getLatestNbmPluginVersion() {
-        try {
-            RepositoryQueries.Result<NBVersionInfo> versionsResult = RepositoryQueries.getVersionsResult(GROUPID_APACHE, NBM_PLUGIN, null);
+        RepositoryQueries.Result<NBVersionInfo> versionsResult = RepositoryQueries.getVersionsResult(GROUPID_APACHE, NBM_PLUGIN, null);
 
-            if (versionsResult.isPartial()) {
-                versionsResult.waitForSkipped();
-            }
-
-            // Versions are sorted in descending order
-            List<NBVersionInfo> results = versionsResult.getResults();
-            if (!results.isEmpty()) {
-                return results.get(0).getVersion();
-            }
-        }
-        catch (NullPointerException ex) {
-            // This exceptions occurs during unit tests so default to LATEST_NBM_PLUGIN_VERSION
-            LOG.log(Level.WARNING, "Unable to get latest nbm-maven-plugin version number");
+        // Versions are sorted in descending order
+        List<NBVersionInfo> results = versionsResult.getResults();
+        if (!results.isEmpty()) {
+            return results.get(0).getVersion();
         }
         return LATEST_NBM_PLUGIN_VERSION;
     }
@@ -162,14 +147,14 @@ public class MavenNbModuleImpl implements NbModuleProvider {
         return FileUtil.normalizeFile(rel);
     }
     
-    private Xpp3Dom getModuleDom() throws UnsupportedEncodingException, IOException, XmlPullParserException {
+    private Xpp3Dom getModuleDom() throws IOException, XmlPullParserException {
         //TODO convert to FileOBject and have the IO stream from there..
         File file = getModuleXmlLocation();
         if (!file.exists()) {
             return null;
         }
         FileInputStream is = new FileInputStream(file);
-        Reader reader = new InputStreamReader(is, "UTF-8"); //NOI18N
+        Reader reader = new InputStreamReader(is, StandardCharsets.UTF_8);
         try {
             return Xpp3DomBuilder.build(reader);
         } finally {
@@ -211,7 +196,7 @@ public class MavenNbModuleImpl implements NbModuleProvider {
             MavenProject prj = project.getLookup().lookup(NbMavenProject.class).getMavenProject();
             //same fallback is in nbm-maven-plugin, keep it synchronized with codeNameBase parameter
             codename = prj.getGroupId() + "." + prj.getArtifactId(); //NOI18N
-            codename = codename.replaceAll( "-", "." ); //NOI18N
+            codename = codename.replace( "-", "." ); //NOI18N
         }
         return codename;
     }
@@ -295,7 +280,7 @@ public class MavenNbModuleImpl implements NbModuleProvider {
         for (NbModuleProvider.ModuleDependency mdep : dependencies) {
         String codeNameBase = mdep.getCodeNameBase();
         SpecificationVersion version = mdep.getVersion();
-        String artifactId = codeNameBase.replaceAll("\\.", "-"); //NOI18N
+        String artifactId = codeNameBase.replace(".", "-"); //NOI18N
         NbMavenProject watch = project.getLookup().lookup(NbMavenProject.class);
         if (hasDependency(codeNameBase)) {
             //TODO
@@ -379,7 +364,7 @@ public class MavenNbModuleImpl implements NbModuleProvider {
     }
 
     public @Override boolean hasDependency(String codeNameBase) throws IOException {
-        String artifactId = codeNameBase.replaceAll("\\.", "-"); //NOI18N
+        String artifactId = codeNameBase.replace(".", "-"); //NOI18N
         NbMavenProject watch = project.getLookup().lookup(NbMavenProject.class);
         Set<Artifact> set = watch.getMavenProject().getDependencyArtifacts();
         if (set != null) {
@@ -485,7 +470,7 @@ public class MavenNbModuleImpl implements NbModuleProvider {
      */ 
     @Override
     public SpecificationVersion getDependencyVersion(String codenamebase) throws IOException {
-        String artifactId = codenamebase.replaceAll("\\.", "-"); //NOI18N
+        String artifactId = codenamebase.replace(".", "-"); //NOI18N
         NbMavenProject watch = project.getLookup().lookup(NbMavenProject.class);
         for (Artifact art : watch.getMavenProject().getArtifacts()) {
             if (art.getGroupId().startsWith("org.netbeans") && art.getArtifactId().equals(artifactId)) { //NOI18N

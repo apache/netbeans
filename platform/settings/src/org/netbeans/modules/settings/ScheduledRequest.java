@@ -33,9 +33,9 @@ import org.openide.util.RequestProcessor.*;
  * @author  Jan Pokorsky
  */
 public final class ScheduledRequest implements Runnable {
-    private final static RequestProcessor PROCESSOR =
+    private static final RequestProcessor PROCESSOR =
         new RequestProcessor("Settings Processor"); //NOI18N
-    private final static int DELAY = 2000;
+    private static final int DELAY = 2000;
     
     private Object inst;
     private Task task;

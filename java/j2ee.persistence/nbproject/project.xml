@@ -53,6 +53,15 @@
                     </run-dependency>
                 </dependency>
                 <dependency>
+                    <code-name-base>org.netbeans.api.lsp</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <release-version>1</release-version>
+                        <specification-version>1.7</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
                     <code-name-base>org.netbeans.api.progress</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
@@ -620,6 +629,7 @@
                 <friend>org.netbeans.modules.javaee.project</friend>
                 <friend>org.netbeans.modules.javaee.specs.support</friend>
                 <friend>org.netbeans.modules.maven.j2ee</friend>
+                <friend>org.netbeans.modules.micronaut</friend>
                 <friend>org.netbeans.modules.profiler.j2ee</friend>
                 <friend>org.netbeans.modules.web.jsf</friend>
                 <friend>org.netbeans.modules.web.project</friend>

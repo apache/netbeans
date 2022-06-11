@@ -25,7 +25,7 @@
 
     <property name="test-unit-sys-prop.test.data.dir" location="test/data"/>
     <property name="tooling" value="netbeans-gradle-tooling"/>
-    <property name="gradle.version" value="7.3" />
+    <property name="gradle.version" value="7.4" />
 
     <target name="-process.release.files" depends="projectized.-process.release.files">
         <unzip src="external/gradle-${gradle.version}-bin.zip" dest="external">

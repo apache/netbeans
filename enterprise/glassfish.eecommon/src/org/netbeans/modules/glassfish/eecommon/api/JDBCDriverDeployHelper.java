@@ -60,7 +60,7 @@ import org.openide.util.Parameters;
 
 public class JDBCDriverDeployHelper {
 
-    static public ProgressObject getProgressObject(File driverLoc, List listOfURLS) {
+    public static ProgressObject getProgressObject(File driverLoc, List listOfURLS) {
         return new JDBCDriversProgressObject(driverLoc, listOfURLS);
     }
 
@@ -70,7 +70,7 @@ public class JDBCDriverDeployHelper {
      * @param drivers Target ULR list where to add drivers.
      * @param jdbcDrivers JDBC drivers to be searched for URLs.
      */
-    static private void addDriversURLs(List<URL> drivers, JDBCDriver[] jdbcDrivers) {
+    private static void addDriversURLs(List<URL> drivers, JDBCDriver[] jdbcDrivers) {
         for (JDBCDriver jdbcDriver : jdbcDrivers) {
             URL[] allUrls = jdbcDriver.getURLs();
             for (int i = 0; i < allUrls.length; i++) {
@@ -98,7 +98,7 @@ public class JDBCDriverDeployHelper {
      * @param datasources Server data sources from server resources files.
      * @return List of JDBC drivers URLs to be deployed.
      */
-    static public List<URL> getMissingDrivers(File[] driverLocs, Set<Datasource> datasources) {
+    public static List<URL> getMissingDrivers(File[] driverLocs, Set<Datasource> datasources) {
         List<URL> drivers = new ArrayList<URL>();
         for (Datasource datasource : datasources) {
             String className = datasource.getDriverClassName();
@@ -149,7 +149,7 @@ public class JDBCDriverDeployHelper {
         return drivers;
     }
 
-    static private class JDBCDriversProgressObject implements ProgressObject, Runnable {
+    private static class JDBCDriversProgressObject implements ProgressObject, Runnable {
 
         private final ProgressEventSupport eventSupport;
         private final File driverLoc;

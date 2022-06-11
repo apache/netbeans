@@ -535,7 +535,7 @@ public class ServiceModelTest extends NbTestCase {
      * @param f the file to be read
      * @return the contents of the file(s).
      */
-    public final static String copyFileToString(java.io.File f) throws IOException {
+    public static final String copyFileToString(java.io.File f) throws IOException {
         int s = (int) f.length();
         byte[] data = new byte[s];
         int len = new FileInputStream(f).read(data);

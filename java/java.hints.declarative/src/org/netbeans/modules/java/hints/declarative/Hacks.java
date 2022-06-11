@@ -56,7 +56,6 @@ import org.netbeans.api.java.source.ClasspathInfo;
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.modules.java.hints.spiimpl.Utilities;
 import org.openide.filesystems.FileUtil;
-import org.openide.util.Exceptions;
 
 /**
  *
@@ -65,7 +64,7 @@ import org.openide.util.Exceptions;
 public class Hacks {
 
     public static Scope constructScope(CompilationInfo info, String... importedClasses) {
-        Collection<String> imports = new LinkedList<String>();
+        Collection<String> imports = new LinkedList<>();
 
         for (String i : importedClasses) {
             imports.add("import " + i + ";\n");
@@ -77,18 +76,10 @@ public class Hacks {
     private static final String SOURCE_LEVEL = "1.8"; //TODO: could be possibly inferred from the current Java platform
 
     public static Map<String, byte[]> compile(ClassPath compile, final String code) throws IOException {
-        DiagnosticListener<JavaFileObject> devNull = new DiagnosticListener<JavaFileObject>() {
-            public void report(Diagnostic<? extends JavaFileObject> diagnostic) {}
-        };
-        StandardJavaFileManager sjfm;
-        try {
-            sjfm = ToolProvider.getSystemJavaCompiler().getStandardFileManager(devNull, null, null);
-        } catch (Error err) {
-            Exceptions.printStackTrace(err);
-            return Collections.emptyMap();
-        }
+        DiagnosticListener<JavaFileObject> devNull = (Diagnostic<? extends JavaFileObject> diagnostic) -> {};
+        StandardJavaFileManager sjfm = ToolProvider.getSystemJavaCompiler().getStandardFileManager(devNull, null, null);
 
-        final Map<String, ByteArrayOutputStream> class2BAOS = new HashMap<String, ByteArrayOutputStream>();
+        final Map<String, ByteArrayOutputStream> class2BAOS = new HashMap<>();
         sjfm.setLocation(StandardLocation.CLASS_PATH, toFiles(compile));
 
 
@@ -115,7 +106,7 @@ public class Hacks {
         };
         ToolProvider.getSystemJavaCompiler().getTask(null, jfm, devNull, /*XXX:*/Arrays.asList("-source", SOURCE_LEVEL, "-target", SOURCE_LEVEL, "-proc:none"), null, Arrays.asList(file)).call();
 
-        Map<String, byte[]> result = new HashMap<String, byte[]>();
+        Map<String, byte[]> result = new HashMap<>();
 
         for (Map.Entry<String, ByteArrayOutputStream> e : class2BAOS.entrySet()) {
             result.put(e.getKey(), e.getValue().toByteArray());
@@ -125,7 +116,7 @@ public class Hacks {
     }
 
     private static Iterable<? extends File> toFiles(ClassPath cp) {
-        List<File> result = new LinkedList<File>();
+        List<File> result = new LinkedList<>();
 
         for (Entry e : cp.entries()) {
             File f = FileUtil.archiveOrDirForURL(e.getURL());
@@ -143,7 +134,7 @@ public class Hacks {
 
 
     public static @CheckForNull TypeMirror parseFQNType(@NonNull CompilationInfo info, @NonNull String spec) {
-        if (spec.length() == 0) {
+        if (spec.isEmpty()) {
             return null;
         }
         

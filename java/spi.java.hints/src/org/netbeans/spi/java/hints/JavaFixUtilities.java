@@ -58,6 +58,7 @@ import com.sun.source.tree.VariableTree;
 import com.sun.source.tree.WhileLoopTree;
 import com.sun.source.util.SourcePositions;
 import com.sun.source.util.TreePath;
+import com.sun.source.util.TreePathScanner;
 import com.sun.source.util.TreeScanner;
 import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import org.netbeans.api.java.source.support.ErrorAwareTreeScanner;
@@ -78,6 +79,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.Callable;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -224,7 +226,21 @@ public class JavaFixUtilities {
      * @return an editor fix that removes the give tree from the source code
      */
     public static Fix removeFromParent(HintContext ctx, String displayName, TreePath what) {
-        return new RemoveFromParent(displayName, ctx.getInfo(), what).toEditorFix();
+        return new RemoveFromParent(displayName, ctx.getInfo(), what, false).toEditorFix();
+    }
+
+    /**Creates a fix that removes the given code corresponding to the given tree
+     * node together with all its usages from the source code
+     * 
+     * @param ctx basic context for which the fix should be created
+     * @param displayName the display name of the fix
+     * @param what the tree node that should be removed
+     * @return an editor fix that removes the give tree from the source code
+     * 
+     * @since 1.48
+     */
+    public static Fix safelyRemoveFromParent(HintContext ctx, String displayName, TreePath what) {
+        return RemoveFromParent.canSafelyRemove(ctx.getInfo(), what) ? new RemoveFromParent(displayName, ctx.getInfo(), what, true).toEditorFix() : null;
     }
 
     private static String defaultFixDisplayName(CompilationInfo info, Map<String, TreePath> variables, String replaceTarget) {
@@ -1612,10 +1628,12 @@ public class JavaFixUtilities {
     private static final class RemoveFromParent extends JavaFix {
 
         private final String displayName;
+        private final boolean safely;
 
-        public RemoveFromParent(String displayName, CompilationInfo info, TreePath toRemove) {
+        public RemoveFromParent(String displayName, CompilationInfo info, TreePath toRemove, boolean safely) {
             super(info, toRemove);
             this.displayName = displayName;
+            this.safely = safely;
         }
 
         @Override
@@ -1629,6 +1647,24 @@ public class JavaFixUtilities {
             TreePath tp = ctx.getPath();
             
             doRemoveFromParent(wc, tp);
+            if (safely) {
+                Element el = wc.getTrees().getElement(tp);
+                if (el != null) {
+                    new TreePathScanner<Void, Void>() {
+                        @Override
+                        public Void scan(Tree tree, Void p) {
+                            if (tree != null && tree != tp.getLeaf()) {
+                                TreePath treePath = new TreePath(getCurrentPath(), tree);
+                                Element e = wc.getTrees().getElement(treePath);
+                                if (el == e) {
+                                    doRemoveFromParent(wc, treePath);
+                                }
+                            }
+                            return super.scan(tree, p);
+                        }
+                    }.scan(new TreePath(wc.getCompilationUnit()), null);
+                }
+            }
         }
         
         private void doRemoveFromParent(WorkingCopy wc, TreePath what) {
@@ -1768,12 +1804,123 @@ public class JavaFixUtilities {
                 case EXPRESSION_STATEMENT:
                     doRemoveFromParent(wc, what.getParentPath());
                     break;
+                case ASSIGNMENT:
+                    AssignmentTree assignmentTree = (AssignmentTree) parentLeaf;
+                    if (leaf == assignmentTree.getVariable()) {
+                        if (wc.getTreeUtilities().isExpressionStatement(assignmentTree.getExpression())) {
+                            wc.rewrite(parentLeaf, assignmentTree.getExpression());
+                        } else {
+                            doRemoveFromParent(wc, what.getParentPath());
+                        }
+                    } else {
+                        throw new UnsupportedOperationException();
+                    }
+                    break;
+                case AND_ASSIGNMENT:
+                case DIVIDE_ASSIGNMENT:
+                case LEFT_SHIFT_ASSIGNMENT:
+                case MINUS_ASSIGNMENT:
+                case MULTIPLY_ASSIGNMENT:
+                case OR_ASSIGNMENT:
+                case PLUS_ASSIGNMENT:
+                case REMAINDER_ASSIGNMENT:
+                case RIGHT_SHIFT_ASSIGNMENT:
+                case UNSIGNED_RIGHT_SHIFT_ASSIGNMENT:
+                case XOR_ASSIGNMENT:
+                    CompoundAssignmentTree compoundAssignmentTree = (CompoundAssignmentTree) parentLeaf;
+                    if (leaf == compoundAssignmentTree.getVariable()) {
+                        if (wc.getTreeUtilities().isExpressionStatement(compoundAssignmentTree.getExpression())) {
+                            wc.rewrite(parentLeaf, compoundAssignmentTree.getExpression());
+                        } else {
+                            doRemoveFromParent(wc, what.getParentPath());
+                        }
+                    } else {
+                        throw new UnsupportedOperationException();
+                    }
+                    break;
                 default:
                     wc.rewrite(what.getLeaf(), make.Block(Collections.<StatementTree>emptyList(), false));
                     break;
             }
         }
 
+        private static boolean canSafelyRemove(CompilationInfo info, TreePath tp) {
+            AtomicBoolean ret = new AtomicBoolean(true);
+            Element el = info.getTrees().getElement(tp);
+            if (el != null) {
+                new TreePathScanner<Void, Void>() {
+                    @Override
+                    public Void scan(Tree tree, Void p) {
+                        if (tree != null && tree != tp.getLeaf()) {
+                            TreePath treePath = new TreePath(getCurrentPath(), tree);
+                            Element e = info.getTrees().getElement(treePath);
+                            if (el == e) {
+                                Tree parentLeaf = treePath.getParentPath().getLeaf();
+                                switch (parentLeaf.getKind()) {
+                                    case ASSIGNMENT:
+                                        AssignmentTree assignmentTree = (AssignmentTree) parentLeaf;
+                                        if (tree == assignmentTree.getVariable()) {
+                                            if (!info.getTreeUtilities().isExpressionStatement(assignmentTree.getExpression()) && canHaveSideEffects(assignmentTree.getExpression())) {
+                                                ret.set(false);
+                                            }
+                                        } else {
+                                            ret.set(false);
+                                        }
+                                        break;
+                                    case AND_ASSIGNMENT:
+                                    case DIVIDE_ASSIGNMENT:
+                                    case LEFT_SHIFT_ASSIGNMENT:
+                                    case MINUS_ASSIGNMENT:
+                                    case MULTIPLY_ASSIGNMENT:
+                                    case OR_ASSIGNMENT:
+                                    case PLUS_ASSIGNMENT:
+                                    case REMAINDER_ASSIGNMENT:
+                                    case RIGHT_SHIFT_ASSIGNMENT:
+                                    case UNSIGNED_RIGHT_SHIFT_ASSIGNMENT:
+                                    case XOR_ASSIGNMENT:
+                                        CompoundAssignmentTree compoundAssignmentTree = (CompoundAssignmentTree) parentLeaf;
+                                        if (tree == compoundAssignmentTree.getVariable()) {
+                                            if (!info.getTreeUtilities().isExpressionStatement(compoundAssignmentTree.getExpression()) && canHaveSideEffects(compoundAssignmentTree.getExpression())) {
+                                                ret.set(false);
+                                            }
+                                        } else {
+                                            ret.set(false);
+                                        }
+                                        break;
+                                    default:
+                                        ret.set(false);
+                                }
+                            }
+                        }
+                        return super.scan(tree, p);
+                    }
+                }.scan(new TreePath(info.getCompilationUnit()), null);
+            }
+            return ret.get();
+        }
+        
+        private static boolean canHaveSideEffects(Tree tree) {
+            AtomicBoolean ret = new AtomicBoolean();
+            new TreeScanner<Void, Void>() {
+                @Override
+                public Void scan(Tree tree, Void p) {
+                    if (tree != null) {
+                        switch (tree.getKind()) {
+                            case METHOD_INVOCATION:
+                            case NEW_CLASS:
+                            case POSTFIX_DECREMENT:
+                            case POSTFIX_INCREMENT:
+                            case PREFIX_DECREMENT:
+                            case PREFIX_INCREMENT:
+                                ret.set(true);
+                                break;
+                        }
+                    }
+                    return super.scan(tree, p);
+                }
+            }.scan(tree, null);
+            return ret.get();
+        }
     }
 
     //TODO: from FileMovePlugin

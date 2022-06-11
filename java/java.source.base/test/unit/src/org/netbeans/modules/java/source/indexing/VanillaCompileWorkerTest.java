@@ -52,8 +52,10 @@ import javax.swing.event.ChangeListener;
 import javax.tools.JavaFileObject;
 import javax.tools.StandardLocation;
 import junit.framework.Test;
+
 import static junit.framework.TestCase.assertFalse;
 import static junit.framework.TestCase.assertTrue;
+
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.queries.AnnotationProcessingQuery.Result;
 import org.netbeans.api.java.queries.AnnotationProcessingQuery.Trigger;
@@ -66,7 +68,6 @@ import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.SourceUtilsTestUtil;
 import org.netbeans.junit.NbTestSuite;
 import org.netbeans.modules.classfile.ClassFile;
-import org.netbeans.modules.java.source.NoJavacHelper;
 import org.netbeans.modules.java.source.indexing.CompileWorker.ParsingOutput;
 import org.netbeans.modules.java.source.indexing.JavaCustomIndexer.CompileTuple;
 import org.netbeans.modules.parsing.spi.indexing.Context;
@@ -2056,14 +2057,8 @@ public class VanillaCompileWorkerTest extends CompileWorkerTestBase {
         VanillaCompileWorker.fixedListener = (file, cut) -> {};
     }
 
-    public static Test suiteXX() {
-        if (NoJavacHelper.hasNbJavac()) {
-            return new VanillaCompileWorkerTest("noop");
-        } else {
-//            return new VanillaCompileWorkerTest("testAnonymousClasses");
-//            return new VanillaCompileWorkerTest("testPreserveValidInitializers");
-            return new NbTestSuite(VanillaCompileWorkerTest.class);
-        }
+    public static Test suite() {
+        return new NbTestSuite(VanillaCompileWorkerTest.class);
     }
 
     static {

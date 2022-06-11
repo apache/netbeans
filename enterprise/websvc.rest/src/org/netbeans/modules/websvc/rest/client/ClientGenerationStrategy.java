@@ -518,8 +518,9 @@ abstract class ClientGenerationStrategy {
                 queryP.append(".header(\""+headerParam+"\","+javaIdentifier+")"); //NOI18N
             }
             Map<String, String> fixedHeaderParams = httpParams.getFixedHeaderParams();
-            for (String paramName : fixedHeaderParams.keySet()) {
-                String paramValue = fixedHeaderParams.get(paramName);
+            for (Entry<String, String> entry : fixedHeaderParams.entrySet()) {
+                String paramName = entry.getKey();
+                String paramValue = entry.getValue();
                 queryP.append(".header(\""+paramName+"\",\""+paramValue+"\")"); //NOI18N
             }
         }

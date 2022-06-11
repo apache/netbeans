@@ -184,8 +184,8 @@ public class OutlineView extends JScrollPane {
     transient boolean dropTargetPopupAllowed = true;
 
     // default DnD actions
-    transient private int allowedDragActions = DnDConstants.ACTION_COPY_OR_MOVE | DnDConstants.ACTION_REFERENCE;
-    transient private int allowedDropActions = DnDConstants.ACTION_COPY_OR_MOVE | DnDConstants.ACTION_REFERENCE;
+    private transient int allowedDragActions = DnDConstants.ACTION_COPY_OR_MOVE | DnDConstants.ACTION_REFERENCE;
+    private transient int allowedDropActions = DnDConstants.ACTION_COPY_OR_MOVE | DnDConstants.ACTION_REFERENCE;
 
     /** Listener on keystroke to invoke default action */
     private ActionListener defaultTreeActionListener;

@@ -41,9 +41,9 @@ import org.openide.util.NbBundle;
 class InitParamPanel extends JPanel implements ActionListener,
         ListSelectionListener {
 
-    private final static String ADD = "add";
-    private final static String EDIT = "edit";
-    private final static String REMOVE = "remove";
+    private static final String ADD = "add";
+    private static final String EDIT = "edit";
+    private static final String REMOVE = "remove";
     private ServletData deployData;
     private BaseWizardPanel parent;
     private JLabel jLinitparams;

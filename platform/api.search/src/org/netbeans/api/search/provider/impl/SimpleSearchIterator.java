@@ -48,7 +48,7 @@ public class SimpleSearchIterator extends AbstractFileObjectIterator {
      * stack of the ancestor folders' children enumerations
      */
     private final Stack<Enumeration<? extends FileObject>> enums
-            = new Stack<Enumeration<? extends FileObject>>();   //unsynced stack
+            = new Stack<>();   //unsynced stack
     /**
      * whether value of {@link #nextObject} is up-to-date
      */
@@ -225,7 +225,7 @@ public class SimpleSearchIterator extends AbstractFileObjectIterator {
     static <T extends FileObject> Enumeration<T> sortEnum(
             Enumeration<T> enm) {
 
-        TreeMap<String, T> map = new TreeMap<String, T>();
+        TreeMap<String, T> map = new TreeMap<>();
         while (enm.hasMoreElements()) {
             T o = enm.nextElement();
             map.put(o.getNameExt(), o);

@@ -55,7 +55,7 @@ public class AngularJsDeclarationFinder2Test extends JsCodeCompletionBase {
         super(testName);
     }
 
-    static private boolean isSetup = false;
+    private static boolean isSetup = false;
     
     @Override
     protected void setUp() throws Exception {

@@ -32,7 +32,7 @@
 // Rebuild the lexer and parser:
 // 1. Update Css3.g
 // 2. Update the lexer/parser sources by running
-//    ant -Dantlr.jar=<PATH_TO_ANTLR3_JAR> generate-antlr-parser
+//    ant generate-antlr-parser
 //    from the module directory (ide/css.lib)
 // 3. Rerun unittests
 // 4. Commit Css3.g together with generated Css3Lexer.java and Css3Parser.java
@@ -44,7 +44,7 @@ grammar Css3;
 //}
 
 @header {
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -120,7 +120,7 @@ package org.netbeans.modules.css.lib;
             && input.LT(1).getText().startsWith(prefix);
     }
 
-/**
+    /**
      * Use the current stacked followset to work out the valid tokens that
      * can follow on from the current point in the parse, then recover by
      * eating tokens that are not a member of the follow set we compute.
@@ -197,7 +197,7 @@ package org.netbeans.modules.css.lib;
         }
     }
 
-    /**
+        /**
          * synces to next RBRACE "}" taking nesting into account
          */
         protected void syncToRBRACE(int nest)
@@ -250,7 +250,7 @@ package org.netbeans.modules.css.lib;
 }
 
 @lexer::header {
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -596,11 +596,16 @@ webkitKeyframeSelectors
 	;
 
 page
+@init {
+    boolean semiRequired = false;
+}
     : PAGE_SYM ws? ( IDENT ws? )? (pseudoPage ws?)?
-        LBRACE ws?
+        LBRACE
             //the grammar in the http://www.w3.org/TR/css3-page/ says the declaration/margins should be delimited by the semicolon,
             //but there's no such char in the examples => making it arbitrary
-            ((propertyDeclaration|margin) ws?)? (SEMI ws? ((propertyDeclaration|margin) ws?)?)*
+            ( ws? ({semiRequired}? (SEMI ws?) | (SEMI ws?)?) (propertyDeclaration{semiRequired=true;}|margin{semiRequired=false;}))*
+            SEMI?
+            ws?
         RBRACE
     ;
 
@@ -889,10 +894,9 @@ pseudo
                     )?
                 )
                 | {isScssSource()}? sass_interpolation_expression_var
-                |
-                ( NOT ws? LPAREN ws? (simpleSelectorSequence ws?)? RPAREN )
-                | 
-                ({isLessSource()}? {tokenNameEquals("extend")}? IDENT ws? LPAREN ws? selectorsGroup? RPAREN)
+                | ( NOT ws? LPAREN ws? ( selectorsGroup ws?)? RPAREN )
+                | {tokenNameEquals("is") || tokenNameEquals("where")}? ( IDENT ws? LPAREN ws? ( selectorsGroup ws?)? RPAREN )
+                | ({isLessSource()}? {tokenNameEquals("extend")}? IDENT ws? LPAREN ws? selectorsGroup? RPAREN)
              ) 
     ;
 
@@ -975,7 +979,7 @@ term
     (
         (functionName ws? LPAREN)=>function //"myfunction(" as predicate
         | VARIABLE
-        | IDENT
+        | {! (isScssSource() && tokenNameEquals2("."))}? IDENT
         | (LBRACKET WS? IDENT (WS IDENT)* WS? RBRACKET)
         | NUMBER
         | URANGE
@@ -1080,7 +1084,7 @@ cp_variable
         //every token which might possibly begin with the at sign
         {isLessSource()}? ( AT_IDENT | IMPORT_SYM | PAGE_SYM | MEDIA_SYM | NAMESPACE_SYM | CHARSET_SYM | COUNTER_STYLE_SYM | FONT_FACE_SYM | TOPLEFTCORNER_SYM | TOPLEFT_SYM | TOPCENTER_SYM | TOPRIGHT_SYM | TOPRIGHTCORNER_SYM | BOTTOMLEFTCORNER_SYM | BOTTOMLEFT_SYM | BOTTOMCENTER_SYM | BOTTOMRIGHT_SYM | BOTTOMRIGHTCORNER_SYM | LEFTTOP_SYM | LEFTMIDDLE_SYM | LEFTBOTTOM_SYM | RIGHTTOP_SYM | RIGHTMIDDLE_SYM | RIGHTBOTTOM_SYM | MOZ_DOCUMENT_SYM | WEBKIT_KEYFRAMES_SYM | SASS_CONTENT | SASS_MIXIN | SASS_INCLUDE | SASS_EXTEND | SASS_DEBUG | SASS_WARN | SASS_IF | SASS_ELSE | SASS_FOR | SASS_FUNCTION | SASS_RETURN | SASS_EACH | SASS_WHILE | SASS_AT_ROOT )
         |
-        {isScssSource()}? ( SASS_VAR )
+        {isScssSource()}? ( SASS_VAR | IDENT DOT SASS_VAR )
     ;
 
 //comma separated list of cp_expression-s

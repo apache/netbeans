@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.21
+#Version 2.22
 
 CLSS public abstract interface java.io.Serializable
 
@@ -230,23 +230,6 @@ meth public java.lang.String getPath()
 supr java.lang.Object
 hfds CAMLE_CASE_SPLITTER,description,group,name,path
 
-CLSS public final org.netbeans.modules.gradle.api.ModelFetcher
-cons public init()
-cons public init(java.util.concurrent.ExecutorService)
-meth public <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.concurrent.Future<{%%0}> requestModel(java.lang.Class<{%%0}>,java.lang.Class<{%%1}>,org.gradle.api.Action<? super {%%1}>)
-meth public <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.concurrent.Future<{%%0}> requestModel(java.lang.String,java.lang.Class<{%%0}>,java.lang.Class<{%%1}>,org.gradle.api.Action<? super {%%1}>)
-meth public <%0 extends java.lang.Object, %1 extends java.lang.Object> void modelAction(java.lang.String,java.lang.Class<{%%0}>,java.lang.Class<{%%1}>,org.gradle.api.Action<? super {%%1}>,org.gradle.api.Action<{%%0}>,org.gradle.api.Action<java.lang.Exception>)
-meth public <%0 extends java.lang.Object, %1 extends java.lang.Object> void modelAction(java.lang.String,java.lang.Class<{%%0}>,org.gradle.api.Action<{%%0}>)
-meth public <%0 extends java.lang.Object, %1 extends java.lang.Object> void modelAction(java.lang.String,java.lang.Class<{%%0}>,org.gradle.api.Action<{%%0}>,org.gradle.api.Action<java.lang.Exception>)
-meth public <%0 extends java.lang.Object> java.util.concurrent.Future<{%%0}> requestModel(java.lang.Class<{%%0}>)
-meth public <%0 extends java.lang.Object> java.util.concurrent.Future<{%%0}> requestModel(java.lang.String,java.lang.Class<{%%0}>)
-meth public boolean awaitTermination(long,java.util.concurrent.TimeUnit) throws java.lang.InterruptedException
-meth public boolean isAcceptingRequests()
-meth public void fetchModels(org.gradle.tooling.ProjectConnection,org.gradle.api.Action<? super org.gradle.tooling.BuildActionExecuter>)
-supr java.lang.Object
-hfds REQUEST_SEQUENCER,action,executor,lock,modelResults
-hcls ModelRequest,ModelResult,MultiModelAction
-
 CLSS public abstract interface org.netbeans.modules.gradle.api.ModuleSearchSupport
 meth public abstract java.util.Set<org.netbeans.modules.gradle.api.GradleDependency$ModuleDependency> findModules(java.lang.String)
 meth public abstract java.util.Set<org.netbeans.modules.gradle.api.GradleDependency$ModuleDependency> findModules(java.lang.String,java.lang.String,java.lang.String)
@@ -296,14 +279,6 @@ meth public boolean worseThan(org.netbeans.modules.gradle.api.NbGradleProject$Qu
 meth public static org.netbeans.modules.gradle.api.NbGradleProject$Quality valueOf(java.lang.String)
 meth public static org.netbeans.modules.gradle.api.NbGradleProject$Quality[] values()
 supr java.lang.Enum<org.netbeans.modules.gradle.api.NbGradleProject$Quality>
-
-CLSS public abstract interface org.netbeans.modules.gradle.api.NbProjectInfo
-intf org.gradle.tooling.model.Model
-intf org.netbeans.modules.gradle.tooling.Model
-meth public abstract boolean getMiscOnly()
-meth public abstract java.util.Map<java.lang.String,java.lang.Object> getExt()
-meth public abstract java.util.Map<java.lang.String,java.lang.Object> getInfo()
-meth public abstract java.util.Set<java.lang.String> getProblems()
 
 CLSS public abstract interface org.netbeans.modules.gradle.api.execute.ActionMapping
 fld public final static java.lang.String CUSTOM_PREFIX = "custom-"
@@ -492,6 +467,7 @@ meth public boolean isCompatibleWithJava(int)
 meth public boolean isCompatibleWithSystemJava()
 meth public int compareTo(org.netbeans.modules.gradle.api.execute.GradleDistributionManager$GradleDistribution)
 meth public int hashCode()
+meth public int lastSupportedJava()
 meth public java.io.File getDistributionDir()
 meth public java.io.File getGradleUserHome()
 meth public java.lang.String getVersion()
@@ -935,8 +911,8 @@ meth public void openFromFile(java.lang.String,java.io.File,java.util.Map<java.l
 meth public void openFromTemplate(java.lang.String,java.io.File,java.util.Map<java.lang.String,?>)
 meth public void run()
 supr java.lang.Object
-hfds handle,importantFiles,steps
-hcls ConfigureProjectStep,CopyFromFileTemplate,CopyFromTemplate,CreateDirStep,InitGradleWrapper,InitStep,OperationStep,PreloadProject
+hfds LOG,handle,importantFiles,steps
+hcls BaseOperationStep,ConfigureProjectStep,CopyFromFileTemplate,CopyFromTemplate,CreateDirStep,InitGradleWrapper,InitStep,OperationStep,PreloadProject
 
 CLSS public abstract org.netbeans.modules.gradle.spi.newproject.TemplateOperation$InitOperation
  outer org.netbeans.modules.gradle.spi.newproject.TemplateOperation

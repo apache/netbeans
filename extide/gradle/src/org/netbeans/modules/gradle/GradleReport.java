@@ -46,7 +46,7 @@ public final class GradleReport {
         this.errorClass = errorClass;
         this.location = location;
         this.line = line;
-        this.message = message;
+        this.message = message == null ? "" : message;
         this.causedBy = causedBy;
     }
     

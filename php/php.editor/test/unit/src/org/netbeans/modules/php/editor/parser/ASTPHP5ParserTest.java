@@ -1376,6 +1376,10 @@ public class ASTPHP5ParserTest extends ParserTestBase {
         performTest("parser/php81/enumAsTypeName");
     }
 
+    public void testFirstClassCallableSyntax_01() throws Exception {
+        performTest("parser/php81/firstClassCallableSyntax_01");
+    }
+
     public void testTreatNamespacedNamesAsSingleToken_01a() throws Exception {
         performTest("parser/php80/treatNamespacedNamesAsSingleToken_01a");
     }

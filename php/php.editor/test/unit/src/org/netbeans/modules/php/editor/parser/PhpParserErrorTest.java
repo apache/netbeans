@@ -1303,6 +1303,10 @@ public class PhpParserErrorTest extends PHPTestBase {
         checkErrors("testfiles/parser/php81/enumAsTypeName.php");
     }
 
+    public void testFirstClassCallableSyntax_01() throws Exception {
+        checkErrors("testfiles/parser/php81/firstClassCallableSyntax_01.php");
+    }
+
     public void testTreatNamespacedNamesAsSingleToken_01a() throws Exception {
         checkErrors("testfiles/parser/php80/treatNamespacedNamesAsSingleToken_01a.php");
     }

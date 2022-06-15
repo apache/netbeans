@@ -57,18 +57,14 @@ public final class FormatContext {
 
     private static final Pattern SAFE_DELETE_PATTERN = Pattern.compile("\\s*"); // NOI18N
 
-    private static final Comparator<Region> REGION_COMPARATOR = new Comparator<Region>() {
-
-        @Override
-        public int compare(Region o1, Region o2) {
-            if (o1.getOriginalStart() < o2.getOriginalStart()) {
-                return -1;
-            }
-            if (o1.getOriginalStart() > o2.getOriginalStart()) {
-                return 1;
-            }
-            return 0;
+    private static final Comparator<Region> REGION_COMPARATOR = (Region o1, Region o2) -> {
+        if (o1.getOriginalStart() < o2.getOriginalStart()) {
+            return -1;
         }
+        if (o1.getOriginalStart() > o2.getOriginalStart()) {
+            return 1;
+        }
+        return 0;
     };
 
     private final Context context;
@@ -94,7 +90,7 @@ public final class FormatContext {
     private final Stack<JsxBlock> jsxIndents = new Stack<>();
 
     private final Map<FormatToken, JsxBlock> jsxIndentsMap = new HashMap<>();
-    
+
     private final Deque<JsxElement> jsxPath = new ArrayDeque<>();
 
     private LineWrap lastLineWrap;
@@ -122,7 +118,7 @@ public final class FormatContext {
         this.initialStart = context.startOffset();
         this.initialEnd = context.endOffset();
 
-        regions = new ArrayList<Region>(context.indentRegions().size());
+        regions = new ArrayList<>(context.indentRegions().size());
         for (Context.Region region : context.indentRegions()) {
             regions.add(new Region(region));
         }
@@ -248,7 +244,7 @@ public final class FormatContext {
     public boolean isInsideJsx() {
         return !jsxIndents.isEmpty();
     }
-    
+
     public void updateJsxPath(char first, Character second) {
         assert isInsideJsx();
         switch (first) {
@@ -377,8 +373,11 @@ public final class FormatContext {
 
         for (Region region : regions) {
             try {
-                LOGGER.log(Level.FINE, region.getOriginalStart() + ":" + region.getOriginalEnd()
-                        + ":" + getDocument().getText(region.getOriginalStart(), region.getOriginalEnd() - region.getOriginalStart()));
+                LOGGER.log(Level.FINE, "{0}:{1}:{2}", new Object[]{
+                    region.getOriginalStart(),
+                    region.getOriginalEnd(),
+                    getDocument().getText(region.getOriginalStart(), region.getOriginalEnd() - region.getOriginalStart())
+                });
             } catch (BadLocationException ex) {
                 LOGGER.log(Level.FINE, null, ex);
             }
@@ -818,16 +817,16 @@ public final class FormatContext {
     }
 
     public static class JsxElement {
-        
+
         public enum Type {
 
             TAG,
-            
+
             ATTRIBUTE
         }
-        
+
         private final Type type;
-        
+
         private final Character closingChar;
 
         public JsxElement(Type type, Character closingChar) {
@@ -842,7 +841,7 @@ public final class FormatContext {
 
         public Character getClosingChar() {
             return closingChar;
-        }        
+        }
     }
 
     private static class JsxBlock {

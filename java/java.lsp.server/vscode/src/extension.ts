@@ -55,6 +55,7 @@ import { createTreeViewService, TreeViewService, TreeItemDecorator, Visualizer, 
 import { initializeRunConfiguration, runConfigurationProvider, runConfigurationNodeProvider, configureRunSettings, runConfigurationUpdateAll } from './runConfiguration';
 import { TLSSocket } from 'tls';
 import { InputStep, MultiStepInput } from './utils';
+import { env } from 'process';
 
 const API_VERSION : string = "1.0";
 const DATABASE: string = 'Database';
@@ -334,7 +335,7 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
     context.subscriptions.push(vscode.debug.registerDebugAdapterDescriptorFactory('nativeimage', debugDescriptionFactory));
 
     // register content provider
-    let sourceForContentProvider = new NetBeansSourceForContentProvider();
+    let sourceForContentProvider = new NetBeansSourceForContentProvider(context);
     context.subscriptions.push(vscode.workspace.registerTextDocumentContentProvider('sourceFor', sourceForContentProvider));
 
     // initialize Run Configuration
@@ -405,6 +406,9 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
     }));
     context.subscriptions.push(commands.registerCommand('java.project.clean', (args) => {
         wrapProjectActionWithProgress('clean', undefined, 'Cleaning...', log, true, args);
+    }));
+    context.subscriptions.push(commands.registerCommand('java.open.type', () => {
+        wrapCommandWithProgress('java.quick.open', 'Opening type...', log, true);
     }));
     context.subscriptions.push(commands.registerCommand('java.goto.super.implementation', async () => {
         if (window.activeTextEditor?.document.languageId !== "java") {
@@ -639,7 +643,7 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
 
     const netbeansConfig = workspace.getConfiguration('netbeans');
     const beVerbose : boolean = netbeansConfig.get('verbose', false);
-    let userdir = netbeansConfig.get('userdir', 'global');
+    let userdir = process.env['nbcode_userdir'] || netbeansConfig.get('userdir', 'local');
     switch (userdir) {
         case 'local':
             if (context.storagePath) {
@@ -689,6 +693,7 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
         }
         let p = launcher.launch(info, ...extras);
         handleLog(log, "LSP server launching: " + p.pid);
+        handleLog(log, "LSP server user directory: " + userdir);
         p.stdout.on('data', function(d: any) {
             logAndWaitForEnabled(d.toString(), true);
         });
@@ -1330,13 +1335,27 @@ class NetBeansConfigurationNativeResolver implements vscode.DebugConfigurationPr
 
 class NetBeansSourceForContentProvider implements vscode.TextDocumentContentProvider {
 
+    private uri: vscode.Uri | undefined;
+
+    constructor(context: ExtensionContext) {
+        context.subscriptions.push(vscode.window.onDidChangeVisibleTextEditors(eds => {
+            eds.forEach(ed => {
+                if (this.uri && this.uri.toString() === ed.document.uri.toString()) {
+                    ed.hide();
+                    this.uri = undefined;
+                }
+            });
+        }));
+    }
+
     provideTextDocumentContent(uri: vscode.Uri, token: vscode.CancellationToken): vscode.ProviderResult<string> {
+        this.uri = uri;
         vscode.window.withProgress({location: ProgressLocation.Notification, title: 'Finding source...', cancellable: false}, () => {
             return vscode.commands.executeCommand('java.source.for', uri.toString()).then(() => {
             }, (reason: any) => {
                 vscode.window.showErrorMessage(reason.data);
             });
         });
-        return Promise.reject();
+        return Promise.resolve('');
     }
 }

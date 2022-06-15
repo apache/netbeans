@@ -1,3 +1,4 @@
+<?php
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -16,12 +17,20 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.javascript2.model;
 
-/**
- *
- * @author Petr Pisl
- */
-public class UsageBuilder {
-    
+namespace {
+
+	interface UnitEnum {
+		public static function cases(): array;
+	}
+
+	interface BackedEnum extends UnitEnum {
+
+		public static function cases(): array;
+
+		public static function from(int|string $value): static;
+
+		public static function tryFrom(int|string $value): ?static;
+	}
+
 }

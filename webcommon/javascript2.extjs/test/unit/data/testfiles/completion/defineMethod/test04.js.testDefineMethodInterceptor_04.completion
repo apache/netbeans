@@ -3,5 +3,5 @@ NetBeans.stuff.engineer.d|
 (QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
 ------------------------------------
 CLASS      developer                       [PUBLIC]   defineMethod.js
-METHOD     defineProperties(obj, props):   [PUBLIC,   JS Platform
-METHOD     defineProperty(obj, prop, desc  [PUBLIC,   JS Platform
+METHOD     defineProperties(o, properties  [PUBLIC,   JS Platform
+METHOD     defineProperty(o, p, attribute  [PUBLIC,   JS Platform

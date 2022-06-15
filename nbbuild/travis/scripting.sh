@@ -39,11 +39,26 @@ $GRAALVM/bin/gu install ruby
 
 # Test on GraalVM
 
-JAVA_HOME=$GRAALVM ant -f platform/api.scripting/build.xml test
-JAVA_HOME=$GRAALVM ant -f ide/libs.graalsdk/build.xml test
+JAVA_HOME=$GRAALVM
+echo "ant -f platform/api.scripting/build.xml test"
+hide-logs.sh ant -f platform/api.scripting/build.xml test
+JAVA_HOME=$GRAALVM
+echo "ant -f ide/libs.graalsdk/build.xml test"
+hide-logs.sh ant -f ide/libs.graalsdk/build.xml test
+JAVA_HOME=$GRAALVM
+echo "ant -f platform/core.network/build.xml test"
+hide-logs.sh ant -f platform/core.network/build.xml test
+JAVA_HOME=$GRAALVM
+echo "ant -f webcommon/libs.graaljs/build.xml test"
+hide-logs.sh ant -f webcommon/libs.graaljs/build.xml test
+JAVA_HOME=$GRAALVM
+echo "ant -f profiler/profiler.oql/build.xml test"
+hide-logs.sh ant -f profiler/profiler.oql/build.xml test
+JAVA_HOME=$GRAALVM
+echo "ant -f java/nashorn.execution/build.xml test"
+hide-logs.sh ant -f java/nashorn.execution/build.xml test
+JAVA_HOME=$GRAALVM
+echo "ant -f java/debugger.jpda.truffle/build.xml test"
+hide-logs.sh ant -f java/debugger.jpda.truffle/build.xml test
 
-JAVA_HOME=$GRAALVM ant -f platform/core.network/build.xml test
-JAVA_HOME=$GRAALVM ant -f webcommon/libs.graaljs/build.xml test
-JAVA_HOME=$GRAALVM ant -f profiler/profiler.oql/build.xml test
-JAVA_HOME=$GRAALVM ant -f java/nashorn.execution/build.xml test
-JAVA_HOME=$GRAALVM ant -f java/debugger.jpda.truffle/build.xml test
+echo "DONE"

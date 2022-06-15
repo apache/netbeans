@@ -659,7 +659,7 @@ matrix:
             - nbbuild/travis/ant.sh $OPTS clean
             - nbbuild/travis/ant.sh $OPTS build
           script:
-            - (cd java/java.lsp.server; ant build-vscode-ext -D3rdparty.modules=.*nbjavac.*)
+            - (cd java/java.lsp.server; ant build-vscode-ext -D3rdparty.modules=.*externalcodeformatter.*)
             - (cd java/java.lsp.server; ant test-vscode-ext)
 
         - name: "GraalVM Tests (latest)"
@@ -671,7 +671,7 @@ matrix:
             - nbbuild/travis/ant.sh $OPTS clean
             - nbbuild/travis/ant.sh $OPTS build
           script:
-            - nbbuild/travis/scripting.sh
+            - travis_wait nbbuild/travis/scripting.sh
 
         - name: "GraalVM Tests (LTS)"
           jdk: openjdk8
@@ -682,7 +682,7 @@ matrix:
             - nbbuild/travis/ant.sh $OPTS clean
             - nbbuild/travis/ant.sh $OPTS build
           script:
-            - nbbuild/travis/scripting.sh
+            - travis_wait nbbuild/travis/scripting.sh
 
 #   exile: for tests which don't behave. Job should be kept short to be easily restartable
         - name: Test unreliable tests on Java 8

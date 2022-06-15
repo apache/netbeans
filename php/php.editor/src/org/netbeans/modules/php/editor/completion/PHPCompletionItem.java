@@ -853,6 +853,45 @@ public abstract class PHPCompletionItem implements CompletionProposal {
         }
     }
 
+    // Backed cases have an additional read-only property (value)
+    // e.g. EnumName::CASE_NAME->value;
+    // see https://www.php.net/manual/en/language.enumerations.backed.php
+    static class AdditionalFieldItem extends BasicFieldItem {
+
+        private final String fieldName;
+        private final String fieldTypeName;
+        private final String typeName;
+
+        public static AdditionalFieldItem getItem(String fieldName, String fieldTypeName, String typeName, CompletionRequest request) {
+            return new AdditionalFieldItem(fieldName, fieldTypeName, typeName, request);
+        }
+
+        private AdditionalFieldItem(String fieldName, String filedTypeName, String typeName, CompletionRequest request) {
+            super(null, fieldName, request);
+            this.fieldName = fieldName;
+            this.fieldTypeName = filedTypeName;
+            this.typeName = typeName;
+        }
+
+        @Override
+        public String getRhsHtml(HtmlFormatter formatter) {
+            if (typeName != null) {
+                formatter.appendText(typeName);
+            }
+            return formatter.getText();
+        }
+
+        @Override
+        public String getName() {
+            return fieldName;
+        }
+
+        @Override
+        protected String getTypeName() {
+            return fieldTypeName;
+        }
+    }
+
     static class FieldItem extends BasicFieldItem {
         private final boolean forceDollared;
         private final boolean completeAccessPrefix;

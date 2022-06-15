@@ -62,14 +62,14 @@ import org.openide.util.NbBundle;
  * @author Petr Pisl
  */
 public class JsConventionRule extends JsAstRule {
-    
+
     private static final List<JsTokenId> IGNORED = new ArrayList<>();
-    
+
     static {
         Collections.addAll(IGNORED, JsTokenId.BLOCK_COMMENT, JsTokenId.DOC_COMMENT,
                 JsTokenId.LINE_COMMENT, JsTokenId.WHITESPACE, JsTokenId.EOL);
     }
-    
+
     @Override
     void computeHints(JsRuleContext context, List<Hint> hints, int offset, HintsProvider.HintsManager manager) {
         Map<?, List<? extends AstRule>> allHints = manager.getHints();
@@ -140,7 +140,7 @@ public class JsConventionRule extends JsAstRule {
 
         private JsRuleContext context;
 
-        public ConventionVisitor(Rule betterCondition, Rule missingSemicolon, 
+        public ConventionVisitor(Rule betterCondition, Rule missingSemicolon,
                 Rule duplicatePropertyName, Rule assignmentInCondition,
                 Rule objectTrailingComma, Rule arrayTrailingComma) {
             this.betterConditionRule = betterCondition;
@@ -150,7 +150,7 @@ public class JsConventionRule extends JsAstRule {
             this.objectTrailingComma = objectTrailingComma;
             this.arrayTrailingComma = arrayTrailingComma;
         }
-        
+
         @NbBundle.Messages({"# {0} - expected char or string",
             "# {1} - usually text, where is expected the first parameter",
             "ExpectedInstead=Expected \"{0}\" and instead saw \"{1}\"."})
@@ -162,7 +162,7 @@ public class JsConventionRule extends JsAstRule {
                 context.getJsParserResult().getRoot().accept(this);
             }
         }
-        
+
         @NbBundle.Messages({"# {0} - char where is expected the semicolon",
             "MissingSemicolon=Expected semicolon ; after \"{0}\"."})
         private void checkSemicolon(int offset) {
@@ -189,7 +189,7 @@ public class JsConventionRule extends JsAstRule {
             if (ts.movePrevious() && ts.moveNext()) {
                 JsTokenId id = ts.token().id();
                 if (id == JsTokenId.ERROR) {
-                    // don't display hints for error tokens. 
+                    // don't display hints for error tokens.
                     return;
                 }
                 if ((id == JsTokenId.STRING_END || id == JsTokenId.TEMPLATE_END) && ts.moveNext()) {
@@ -209,7 +209,7 @@ public class JsConventionRule extends JsAstRule {
                     id = ts.token().id();
                 }
                 if (id == JsTokenId.BLOCK_COMMENT || id == JsTokenId.DOC_COMMENT || id == JsTokenId.LINE_COMMENT || id == JsTokenId.WHITESPACE) {
-                    int position = ts.offset();                    
+                    int position = ts.offset();
                     //try to find ; or , before
                     Token<? extends JsTokenId> prev = LexUtilities.findPrevious(ts, IGNORED);
                     if (prev != null && (prev.id() == JsTokenId.OPERATOR_SEMICOLON || prev.id() == JsTokenId.OPERATOR_COMMA)) {
@@ -252,7 +252,7 @@ public class JsConventionRule extends JsAstRule {
                 addMissingSemicolonHint(fileOffset, originalText.toString());
             }
         }
-        
+
         private void addMissingSemicolonHint(int offset, String problemText) {
             String correctedText = problemText;
             int index = correctedText.indexOf('\n');
@@ -283,7 +283,7 @@ public class JsConventionRule extends JsAstRule {
                     int parenBalance = 0;
                     if (ts.moveNext()) {
                         JsTokenId id = ts.token().id();
-                        
+
                         while ( id != JsTokenId.KEYWORD_IF && id != JsTokenId.KEYWORD_FOR && id != JsTokenId.KEYWORD_WHILE && ts.movePrevious()) {
                             id = ts.token().id();
                             if (id == JsTokenId.BRACKET_RIGHT_PAREN) {
@@ -357,7 +357,7 @@ public class JsConventionRule extends JsAstRule {
             int bracketBalance = 0;
             boolean isGetterSetter = false;
             if (ts.movePrevious() && ts.moveNext()) {
-                HashSet<String> names = new HashSet<String>();
+                HashSet<String> names = new HashSet<>();
                 while (ts.moveNext() && ts.offset() < objectNode.getFinish()) {
                     JsTokenId id = ts.token().id();
                     switch (state) {
@@ -464,14 +464,14 @@ public class JsConventionRule extends JsAstRule {
             }
             return super.enterExpressionStatement(expressionStatement);
         }
-        
+
         @Override
         public boolean enterThrowNode(ThrowNode throwNode) {
             checkSemicolon(throwNode.getExpression().getFinish());
             return super.enterThrowNode(throwNode);
         }
-        
-        
+
+
 
         @Override
         @NbBundle.Messages({"# {0} - the eunexpected token",

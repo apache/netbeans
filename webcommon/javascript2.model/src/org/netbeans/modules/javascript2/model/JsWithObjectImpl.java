@@ -43,10 +43,10 @@ public class JsWithObjectImpl extends JsObjectImpl implements JsWith {
 
     private final Collection<TypeUsage> withTypes;
     private final JsWith outerWith;
-    private final Collection<JsWith> innerWith = new ArrayList<JsWith>();
+    private final Collection<JsWith> innerWith = new ArrayList<>();
     private final OffsetRange expressionRange;
-    private final Set<JsObject> assignedIn = new HashSet<JsObject>();
-    
+    private final Set<JsObject> assignedIn = new HashSet<>();
+
     public JsWithObjectImpl(JsObject parent, String name, Collection<TypeUsage> withTypes,
             OffsetRange offsetRange, OffsetRange expressionRange, JsWith outer, String mimeType, String sourceLabel) {
         super(parent, name, false, offsetRange, EnumSet.of(Modifier.PUBLIC), mimeType, sourceLabel);
@@ -65,26 +65,26 @@ public class JsWithObjectImpl extends JsObjectImpl implements JsWith {
     public Collection<TypeUsage> getTypes() {
         return withTypes;
     }
-    
+
     protected void addInnerWith(JsWith inner) {
         innerWith.add(inner);
     }
-    
-    
+
+
     @Override
     public Collection<JsWith> getInnerWiths() {
-        Collection<JsWith> result = innerWith.isEmpty() ? Collections.emptyList(): new ArrayList<JsWith>(innerWith);
+        Collection<JsWith> result = innerWith.isEmpty() ? Collections.emptyList(): new ArrayList<>(innerWith);
         return result;
     }
-    
+
     @Override
     public JsWith getOuterWith() {
         return outerWith;
     }
-    
+
     @Override
     public void resolveTypes(JsDocumentationHolder jsDocHolder) {
-        Collection<JsObject> withProperties = new ArrayList<JsObject>(getProperties().values());
+        Collection<JsObject> withProperties = new ArrayList<>(getProperties().values());
         for (JsObject withProperty: withProperties) {
             if (resolveWith(this, withProperty)) {
                 properties.remove(withProperty.getName());
@@ -95,11 +95,11 @@ public class JsWithObjectImpl extends JsObjectImpl implements JsWith {
     public Collection<JsObject> getObjectWithAssignment() {
         return this.assignedIn;
     }
-    
+
     public void addObjectWithAssignment(JsObject object) {
         this.assignedIn.add(object);
     }
-    
+
     private boolean resolveWith(JsWithObjectImpl withObject, JsObject property) {
         JsObject global = ModelUtils.getGlobalObject(withObject.getParent());
         for (TypeUsage typeUsage : withObject.getTypes()) {
@@ -130,12 +130,12 @@ public class JsWithObjectImpl extends JsObjectImpl implements JsWith {
         }
         return false;
     }
-    
+
     @Override
     public Kind getJSKind() {
         return JsElement.Kind.WITH_OBJECT;
     }
-    
+
     @Override
     public int getOffset() {
         return getOffsetRange().getStart();
@@ -156,7 +156,7 @@ public class JsWithObjectImpl extends JsObjectImpl implements JsWith {
         }
         copy.clearOccurrences();
     }
-    
+
     protected void moveFromWith(JsObjectImpl original, JsObjectImpl inWith) {
         if (original.equals(inWith)) {
             return;
@@ -168,9 +168,9 @@ public class JsWithObjectImpl extends JsObjectImpl implements JsWith {
             original.getParent().addProperty(original.getName(), inWith);
             return;
         }
-        
+
         Collection<JsObject> prototypeChains = findPrototypeChain(original);
-        Collection<JsObject> propertiesCopy = new ArrayList<JsObject>(inWith.getProperties().values());
+        Collection<JsObject> propertiesCopy = new ArrayList<>(inWith.getProperties().values());
         for (JsObject withProperty : propertiesCopy) {
             if (withProperty.isDeclared()) {
                 boolean accessible = false;
@@ -188,7 +188,7 @@ public class JsWithObjectImpl extends JsObjectImpl implements JsWith {
                 }
             }
         }
-        
+
         for (JsObject jsObject : prototypeChains) {
             for (JsObject origProperty : jsObject.getProperties().values()) {
                 if(origProperty.getModifiers().contains(Modifier.PUBLIC)
@@ -212,9 +212,9 @@ public class JsWithObjectImpl extends JsObjectImpl implements JsWith {
                 moveFromWith((JsObjectImpl)prototype, inWith);
             }
         }
-        
-        
+
+
     }
-    
-    
+
+
 }

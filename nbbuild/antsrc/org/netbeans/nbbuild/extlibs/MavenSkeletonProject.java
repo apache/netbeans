@@ -31,8 +31,8 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
 
@@ -50,7 +50,8 @@ public class MavenSkeletonProject extends Task {
     private File mavenfolderFile;
 
     /**
-     * JUnit-format XML result file to generate, rather than halting the build.
+     * Folder to put the skeleton project in.
+     * @param report
      */
     public void setMavenFolder(File report) {
         this.mavenfolderFile = report;
@@ -66,13 +67,15 @@ public class MavenSkeletonProject extends Task {
                 modules.add("nbbuild");
             } else {
                 Path nbAllPath = nball.toPath();
-                modules = new TreeSet<>(
-                        Files.walk(nbAllPath)
-                                .filter(p -> Files.exists(p.resolve("external/binaries-list")))
-                                .map(p -> nbAllPath.relativize(p))
-                                .map(p -> p.toString())
-                                .collect(Collectors.toSet())
-                );
+                modules = new TreeSet<>();
+                try ( Stream<Path> walk = Files.walk(nbAllPath)) {
+                    modules = new TreeSet<>(
+                            walk.filter(p -> Files.exists(p.resolve("external/binaries-list")))
+                                    .map(p -> nbAllPath.relativize(p))
+                                    .map(p -> p.toString())
+                                    .collect(Collectors.toSet())
+                    );
+                }
             }
             try {
                 buildLibPomForMaven();
@@ -89,7 +92,9 @@ public class MavenSkeletonProject extends Task {
     private void buildLibPomForMaven() throws IOException {
         Path pseudoMaven = mavenfolderFile.toPath();
         if (Files.exists(pseudoMaven)) {
-            Files.walk(pseudoMaven).sorted(Comparator.reverseOrder()).map(Path::toFile).forEach(File::delete);
+            try ( Stream<Path> walk = Files.walk(pseudoMaven)) {
+                walk.sorted(Comparator.reverseOrder()).map(Path::toFile).forEach(File::delete);
+            }
         }
         Path pseudoMavendirectory = Files.createDirectory(pseudoMaven);
         Path parentPom = Files.createFile(pseudoMavendirectory.resolve("pom.xml"));

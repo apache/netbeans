@@ -43,6 +43,7 @@ import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
@@ -1258,9 +1259,9 @@ public class JavadocCompletionTask<T> extends UserTask {
                 }
             } else {
                 String[] tags = {"@highlight", "@replace", "@link", "@start", "@end"};
-                String str = (subStr.substring(subStr.lastIndexOf("@"))).strip();
-                if (Arrays.asList(tags).contains(str)) {
-                    completeInlineMarkupTag(str, new ArrayList() {
+                Matcher match = Pattern.compile("@\\b\\w{1,}\\b\\s+(?!.*@\\b\\w{1,}\\b\\s+)").matcher(subStr);
+                if (match.find() && Arrays.asList(tags).contains(match.group(0).trim())) {
+                    completeInlineMarkupTag(match.group(0).trim(), new ArrayList() {
                         {
                             add("substring");
                             add("regex");

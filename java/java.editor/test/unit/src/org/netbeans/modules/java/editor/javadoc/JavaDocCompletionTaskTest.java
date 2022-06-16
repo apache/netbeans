@@ -26,161 +26,190 @@ import org.netbeans.modules.java.editor.base.javadoc.JavadocTestSupport;
  *
  * @author mjayan
  */
-public class JavaDocCompletionTaskTest extends JavadocTestSupport{
+public class JavaDocCompletionTaskTest extends JavadocTestSupport {
+
     public JavaDocCompletionTaskTest(String name) {
         super(name);
     }
 
     public void testMarkupTagHint() throws Exception {
-        String code =
-                "public static void main(String... args) {\n" +
-                " *       for (var arg : args) {      // @highlight region regex = \"\\barg\\b\"\n" +
-                " *           if (!arg.isBlank()) {\n" +
-                " *               System.out.println(arg); //@";
-        JavadocCompletionTask task = JavadocCompletionTask.create(0,new JavadocCompletionItem.Factory(),false,null);
+        String code = "System.out.println(arg); //@";
+        JavadocCompletionTask task = JavadocCompletionTask.create(0, new JavadocCompletionItem.Factory(), false, null);
         task.insideInlineSnippet(code);
         List<JavadocCompletionItem> list = task.getResults();
         assertNotNull(list);
         List<String> listStr = new ArrayList<>();
-        for(JavadocCompletionItem item : list) {
+        for (JavadocCompletionItem item : list) {
             listStr.add(item.getSortText().toString());
         }
-        List<String> inlineAttr =new ArrayList() {{
-            add("highlight");
-            add("replace");
-            add("link");
-            add("start");
-            add("end");
-        }};
-        assertEquals(listStr,inlineAttr);
+        List<String> inlineAttr = new ArrayList() {
+            {
+                add("highlight");
+                add("replace");
+                add("link");
+                add("start");
+                add("end");
+            }
+        };
+        assertEquals(listStr, inlineAttr);
     }
 
     public void testMarkupTagHintNoMatch() throws Exception {
-        String code =
-                "public static void main(String... args) {\n" +
-                " *       for (var arg : args) {      // @highlight region regex = \"\\barg\\b\"\n" +
-                " *           if (!arg.isBlank()) {\n" +
-                " *               System.out.println(arg); //@qwerty";
-        JavadocCompletionTask task = JavadocCompletionTask.create(0,new JavadocCompletionItem.Factory(),false,null);
+        String code = "System.out.println(arg); //@qwerty ";
+        JavadocCompletionTask task = JavadocCompletionTask.create(0, new JavadocCompletionItem.Factory(), false, null);
         task.insideInlineSnippet(code);
         List<JavadocCompletionItem> list = task.getResults();
         assertNotNull(list);
         List<String> listStr = new ArrayList<>();
-        assertEquals(list,listStr);
+        assertEquals(list, listStr);
     }
 
     public void testHighlightTagHint() throws Exception {
-        String code =
-                "public static void main(String... args) {\n" +
-                " *       for (var arg : args) {      // @highlight region regex = \"\\barg\\b\"\n" +
-                " *           if (!arg.isBlank()) {\n" +
-                " *               System.out.println(arg); //@highlight";
-        JavadocCompletionTask task = JavadocCompletionTask.create(0,new JavadocCompletionItem.Factory(),false,null);
+        String code = "System.out.println(arg); //@highlight ";
+        JavadocCompletionTask task = JavadocCompletionTask.create(0, new JavadocCompletionItem.Factory(), false, null);
         task.insideInlineSnippet(code);
         List<JavadocCompletionItem> list = task.getResults();
         assertNotNull(list);
         List<String> listStr = new ArrayList<>();
-        for(JavadocCompletionItem item : list) {
+        for (JavadocCompletionItem item : list) {
             listStr.add(item.getSortText().toString());
         }
         String value = " = \"<value>\"";
-        List<String> inlineAttr =new ArrayList() {{
-            add("substring" + value);
-            add("regex"+value);
-            add("region"+value);
-            add("type"+value);
-        }};
-        assertEquals(listStr,inlineAttr);
+        List<String> inlineAttr = new ArrayList() {
+            {
+                add("substring" + value);
+                add("regex" + value);
+                add("region" + value);
+                add("type" + value);
+            }
+        };
+        assertEquals(listStr, inlineAttr);
     }
 
     public void testReplaceTagHint() throws Exception {
-        String code =
-                "public static void main(String... args) {\n" +
-                " *       for (var arg : args) {      // @highlight region regex = \"\\barg\\b\"\n" +
-                " *           if (!arg.isBlank()) {\n" +
-                " *               System.out.println(arg); //@replace";
-        JavadocCompletionTask task = JavadocCompletionTask.create(0,new JavadocCompletionItem.Factory(),false,null);
+        String code = "System.out.println(arg); //@replace ";
+        JavadocCompletionTask task = JavadocCompletionTask.create(0, new JavadocCompletionItem.Factory(), false, null);
         task.insideInlineSnippet(code);
         List<JavadocCompletionItem> list = task.getResults();
         assertNotNull(list);
         List<String> listStr = new ArrayList<>();
-        for(JavadocCompletionItem item : list) {
+        for (JavadocCompletionItem item : list) {
             listStr.add(item.getSortText().toString());
         }
         String value = " = \"<value>\"";
-        List<String> inlineAttr =new ArrayList() {{
-            add("substring" + value);
-            add("regex"+value);
-            add("region"+value);
-            add("replacement"+value);
-        }};
-        assertEquals(listStr,inlineAttr);
+        List<String> inlineAttr = new ArrayList() {
+            {
+                add("substring" + value);
+                add("regex" + value);
+                add("region" + value);
+                add("replacement" + value);
+            }
+        };
+        assertEquals(listStr, inlineAttr);
     }
 
     public void testLinkTagHint() throws Exception {
-        String code =
-                "public static void main(String... args) {\n" +
-                " *       for (var arg : args) {      // @highlight region regex = \"\\barg\\b\"\n" +
-                " *           if (!arg.isBlank()) {\n" +
-                " *               System.out.println(arg); //@link";
-        JavadocCompletionTask task = JavadocCompletionTask.create(0,new JavadocCompletionItem.Factory(),false,null);
+        String code = "System.out.println(arg); //@link ";
+        JavadocCompletionTask task = JavadocCompletionTask.create(0, new JavadocCompletionItem.Factory(), false, null);
         task.insideInlineSnippet(code);
         List<JavadocCompletionItem> list = task.getResults();
         assertNotNull(list);
         List<String> listStr = new ArrayList<>();
-        for(JavadocCompletionItem item : list) {
+        for (JavadocCompletionItem item : list) {
             listStr.add(item.getSortText().toString());
         }
         String value = " = \"<value>\"";
-        List<String> inlineAttr =new ArrayList() {{
-            add("substring" + value);
-            add("regex"+value);
-            add("region"+value);
-            add("target"+value);
-            add("type"+value);
-        }};
-        assertEquals(listStr,inlineAttr);
+        List<String> inlineAttr = new ArrayList() {
+            {
+                add("substring" + value);
+                add("regex" + value);
+                add("region" + value);
+                add("target" + value);
+                add("type" + value);
+            }
+        };
+        assertEquals(listStr, inlineAttr);
     }
 
     public void testStartTagHint() throws Exception {
-        String code =
-                "public static void main(String... args) {\n" +
-                " *       for (var arg : args) {      // @highlight region regex = \"\\barg\\b\"\n" +
-                " *           if (!arg.isBlank()) {\n" +
-                " *               System.out.println(arg); //@start";
-        JavadocCompletionTask task = JavadocCompletionTask.create(0,new JavadocCompletionItem.Factory(),false,null);
+        String code = "System.out.println(arg); //@start ";
+        JavadocCompletionTask task = JavadocCompletionTask.create(0, new JavadocCompletionItem.Factory(), false, null);
         task.insideInlineSnippet(code);
         List<JavadocCompletionItem> list = task.getResults();
         assertNotNull(list);
         List<String> listStr = new ArrayList<>();
-        for(JavadocCompletionItem item : list) {
+        for (JavadocCompletionItem item : list) {
             listStr.add(item.getSortText().toString());
         }
         String value = " = \"<value>\"";
-        List<String> inlineAttr =new ArrayList() {{
-            add("region"+value);
-        }};
-        assertEquals(listStr,inlineAttr);
+        List<String> inlineAttr = new ArrayList() {
+            {
+                add("region" + value);
+            }
+        };
+        assertEquals(listStr, inlineAttr);
     }
 
     public void testEndTagHint() throws Exception {
-        String code =
-                "public static void main(String... args) {\n" +
-                " *       for (var arg : args) {      // @highlight region regex = \"\\barg\\b\"\n" +
-                " *           if (!arg.isBlank()) {\n" +
-                " *               System.out.println(arg); //@end";
-        JavadocCompletionTask task = JavadocCompletionTask.create(0,new JavadocCompletionItem.Factory(),false,null);
+        String code = "System.out.println(arg); //@end ";
+        JavadocCompletionTask task = JavadocCompletionTask.create(0, new JavadocCompletionItem.Factory(), false, null);
         task.insideInlineSnippet(code);
         List<JavadocCompletionItem> list = task.getResults();
         assertNotNull(list);
         List<String> listStr = new ArrayList<>();
-        for(JavadocCompletionItem item : list) {
+        for (JavadocCompletionItem item : list) {
             listStr.add(item.getSortText().toString());
         }
         String value = " = \"<value>\"";
-        List<String> inlineAttr =new ArrayList() {{
-            add("region"+value);
-        }};
-        assertEquals(listStr,inlineAttr);
+        List<String> inlineAttr = new ArrayList() {
+            {
+                add("region" + value);
+            }
+        };
+        assertEquals(listStr, inlineAttr);
+    }
+
+    public void testMultipleTags() throws Exception {
+        String code = "System.out.println(arg); //@highlight region @";
+        JavadocCompletionTask task = JavadocCompletionTask.create(0, new JavadocCompletionItem.Factory(), false, null);
+        task.insideInlineSnippet(code);
+        List<JavadocCompletionItem> list = task.getResults();
+        assertNotNull(list);
+        List<String> listStr = new ArrayList<>();
+        for (JavadocCompletionItem item : list) {
+            listStr.add(item.getSortText().toString());
+        }
+        List<String> inlineAttr = new ArrayList() {
+            {
+                add("highlight");
+                add("replace");
+                add("link");
+                add("start");
+                add("end");
+            }
+        };
+        assertEquals(listStr, inlineAttr);
+    }
+
+    public void testMultipleAttr() throws Exception {
+        String code = "System.out.println(arg); //@highlight region=\"<value>\" ";
+        JavadocCompletionTask task = JavadocCompletionTask.create(0, new JavadocCompletionItem.Factory(), false, null);
+        task.insideInlineSnippet(code);
+        List<JavadocCompletionItem> list = task.getResults();
+        assertNotNull(list);
+        List<String> listStr = new ArrayList<>();
+        for (JavadocCompletionItem item : list) {
+            listStr.add(item.getSortText().toString());
+        }
+        String value = " = \"<value>\"";
+        List<String> inlineAttr = new ArrayList() {
+            {
+                add("substring" + value);
+                add("regex" + value);
+                add("region" + value);
+                add("type" + value);
+            }
+        };
+        assertEquals(listStr, inlineAttr);
     }
 }

@@ -19,6 +19,8 @@
 package org.netbeans.modules.java.hints.errors;
 
 import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
 import org.netbeans.api.java.source.ModificationResult;
 import org.netbeans.spi.editor.hints.Fix;
 
@@ -26,7 +28,12 @@ import org.netbeans.spi.editor.hints.Fix;
  *
  * @author Dusan Balek
  */
-public abstract class CreateFixBase implements Fix {
+public abstract class ModificationResultBasedFix implements Fix {
 
     public abstract ModificationResult getModificationResult() throws IOException;
+
+    public List<ModificationResult> getModificationResults() throws IOException {
+        ModificationResult result = getModificationResult();
+        return result != null ? Collections.singletonList(result) : Collections.emptyList();
+    }
 }

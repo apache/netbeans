@@ -54,7 +54,7 @@ import org.netbeans.api.lsp.ResourceOperation.CreateFile;
 import org.netbeans.api.lsp.TextDocumentEdit;
 import org.netbeans.api.lsp.TextEdit;
 import org.netbeans.api.lsp.WorkspaceEdit;
-import org.netbeans.modules.java.hints.errors.CreateFixBase;
+import org.netbeans.modules.java.hints.errors.ModificationResultBasedFix;
 import org.netbeans.modules.java.hints.errors.ImportClass;
 import org.netbeans.modules.java.hints.project.IncompleteClassPath;
 import org.netbeans.modules.java.hints.spiimpl.JavaFixImpl;
@@ -237,40 +237,41 @@ public class JavaErrorProvider implements ErrorProvider {
                     errorReporter.accept(ex);
                 }
             }
-            if (f instanceof CreateFixBase) {
+            if (f instanceof ModificationResultBasedFix) {
                 try {
-                    CreateFixBase cf = (CreateFixBase) f;
-                    ModificationResult changes = cf.getModificationResult();
+                    ModificationResultBasedFix cf = (ModificationResultBasedFix) f;
                     List<Union2<TextDocumentEdit, ResourceOperation>> documentChanges = new ArrayList<>();
-                    Set<File> newFiles = changes.getNewFiles();
-                    if (newFiles.size() > 1) {
-                        throw new IllegalStateException();
-                    }
-                    String newFilePath = null;
-                    for (File newFile : newFiles) {
-                        newFilePath = newFile.toURI().toString();
-                        documentChanges.add(Union2.createSecond(new CreateFile(newFilePath)));
-                    }
-                    outer: for (FileObject fileObject : changes.getModifiedFileObjects()) {
-                        List<? extends ModificationResult.Difference> diffs = changes.getDifferences(fileObject);
-                        if (diffs != null) {
-                            List<TextEdit> edits = new ArrayList<>();
-                            for (ModificationResult.Difference diff : diffs) {
-                                String newText = diff.getNewText();
-                                if (diff.getKind() == ModificationResult.Difference.Kind.CREATE) {
-                                    if (newFilePath != null) {
-                                        documentChanges.add(Union2.createFirst(new TextDocumentEdit(newFilePath,
-                                                Collections.singletonList(new TextEdit(0, 0,
-                                                        newText != null ? newText : "")))));
+                    for (ModificationResult changes : cf.getModificationResults()) {
+                        Set<File> newFiles = changes.getNewFiles();
+                        if (newFiles.size() > 1) {
+                            throw new IllegalStateException();
+                        }
+                        String newFilePath = null;
+                        for (File newFile : newFiles) {
+                            newFilePath = newFile.toURI().toString();
+                            documentChanges.add(Union2.createSecond(new CreateFile(newFilePath)));
+                        }
+                        outer: for (FileObject fileObject : changes.getModifiedFileObjects()) {
+                            List<? extends ModificationResult.Difference> diffs = changes.getDifferences(fileObject);
+                            if (diffs != null) {
+                                List<TextEdit> edits = new ArrayList<>();
+                                for (ModificationResult.Difference diff : diffs) {
+                                    String newText = diff.getNewText();
+                                    if (diff.getKind() == ModificationResult.Difference.Kind.CREATE) {
+                                        if (newFilePath != null) {
+                                            documentChanges.add(Union2.createFirst(new TextDocumentEdit(newFilePath,
+                                                    Collections.singletonList(new TextEdit(0, 0,
+                                                            newText != null ? newText : "")))));
+                                        }
+                                        continue outer;
+                                    } else {
+                                        edits.add(new TextEdit(diff.getStartPosition().getOffset(),
+                                                               diff.getEndPosition().getOffset(),
+                                                               newText != null ? newText : ""));
                                     }
-                                    continue outer;
-                                } else {
-                                    edits.add(new TextEdit(diff.getStartPosition().getOffset(),
-                                                           diff.getEndPosition().getOffset(),
-                                                           newText != null ? newText : ""));
                                 }
+                                documentChanges.add(Union2.createFirst(new TextDocumentEdit(fileObject.toURI().toString(), edits))); //XXX: toURI
                             }
-                            documentChanges.add(Union2.createFirst(new TextDocumentEdit(fileObject.toURI().toString(), edits))); //XXX: toURI
                         }
                     }
                     if (!documentChanges.isEmpty()) {

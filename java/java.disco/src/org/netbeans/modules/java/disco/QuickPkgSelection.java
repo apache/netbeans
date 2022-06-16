@@ -33,12 +33,14 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 
 class QuickPkgSelection implements PkgSelection {
 
+    private final Distribution distribution;
     private final VersionNumber version;
     private final Predicate<Pkg> filter;
 
     private @MonotonicNonNull Pkg pkg = null;
 
     public QuickPkgSelection(QuickPanel.QuickSelection quick) {
+        this.distribution = quick.distribution;
         this.version = new VersionNumber(quick.version);
         this.filter = quick.zip
                 ? (p) -> {
@@ -57,6 +59,9 @@ class QuickPkgSelection implements PkgSelection {
                     switch (OS.getOperatingSystem()) {
                         case WINDOWS:
                             return ArchiveType.MSI == p.getArchiveType() || ArchiveType.EXE == p.getArchiveType();
+                        case LINUX:
+                            return (ArchiveType.ZIP == p.getArchiveType() || ArchiveType.TAR_GZ == p.getArchiveType()) &&
+                                    (LibCType.MUSL != p.getLibCType());
                         case MACOS:
                             return ArchiveType.DMG == p.getArchiveType() || ArchiveType.PKG == p.getArchiveType();
                         default:
@@ -86,12 +91,9 @@ class QuickPkgSelection implements PkgSelection {
     public @Nullable Pkg get(@Nullable Client d) {
         if (pkg != null || d == null)
             return pkg;
-        Distribution defDist = d.getDistribution(DiscoPlatformInstall.defaultDistribution())
-                .orElse(null);
-        List<Pkg> pkgs;
-            pkgs = d.getPkgs(defDist, version, Latest.OVERALL, OS.getOperatingSystem(),
-                    OS.getArchitecture(),
-                    ArchiveType.NONE, PackageType.JDK, false);
+        List<Pkg> pkgs = d.getPkgs(distribution, version, Latest.AVAILABLE, OS.getOperatingSystem(),
+                    OS.getArchitecture(), ArchiveType.NONE, PackageType.JDK, false, false);
+
         Optional<Pkg> found = pkgs.stream().filter(filter).findAny();
 
         if (found.isPresent()) {

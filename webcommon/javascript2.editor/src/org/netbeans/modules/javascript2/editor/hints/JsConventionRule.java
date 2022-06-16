@@ -31,11 +31,14 @@ import com.oracle.js.parser.ir.ReturnNode;
 import com.oracle.js.parser.ir.ThrowNode;
 import com.oracle.js.parser.ir.VarNode;
 import com.oracle.js.parser.ir.WhileNode;
+
 import static com.oracle.js.parser.TokenType.EQ;
 import static com.oracle.js.parser.TokenType.NE;
+
 import com.oracle.js.parser.ir.ClassNode;
 import com.oracle.js.parser.ir.ExpressionStatement;
 import com.oracle.js.parser.ir.IdentNode;
+import com.oracle.js.parser.ir.PropertyNode;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -593,6 +596,29 @@ public class JsConventionRule extends JsAstRule {
         public boolean enterBinaryNode(BinaryNode binaryNode) {
             checkCondition(binaryNode);
             return super.enterBinaryNode(binaryNode);
+        }
+
+        @Override
+        public boolean enterPropertyNode(PropertyNode propertyNode) {
+            ClassNode enclosingClass = classDefinitionHierarchie.isEmpty() ? null : classDefinitionHierarchie.get(classDefinitionHierarchie.size() - 1);
+            if(enclosingClass != null && propertyNode.getToken() == enclosingClass.getToken()) {
+                return false;
+            }
+            return super.enterPropertyNode(propertyNode);
+        }
+
+        private List<ClassNode> classDefinitionHierarchie = new ArrayList<>();
+
+        @Override
+        public boolean enterClassNode(ClassNode classNode) {
+            classDefinitionHierarchie.add(classNode);
+            return super.enterClassNode(classNode);
+        }
+
+        @Override
+        public Node leaveClassNode(ClassNode classNode) {
+            classDefinitionHierarchie.remove(classDefinitionHierarchie.size() - 1);
+            return super.leaveClassNode(classNode);
         }
     }
 }

@@ -19,8 +19,15 @@ categories:
   - title: 'API Changes'
     labels:
       - 'API Change'
-include-labels:
-  - 'API Change'
+  - title: 'UI Changes'
+    labels:
+      - 'UI'
+  - title: 'Gradle'
+    labels:
+      - 'Gradle'
+  - title: 'Maven'
+    labels:
+      - 'Maven'    
 template: |
   ## What’s Changed
 

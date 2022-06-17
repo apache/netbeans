@@ -184,30 +184,54 @@ public class ChangeMethodParameters implements ErrorRule<Void> {
             NewClassTree invocation = (NewClassTree) error;
             
             TreePath enclosingTypePath = findEnclosingType(errorPath.getParentPath());
-            if(enclosingTypePath == null) {
+            if (enclosingTypePath == null) {
                 return Collections.<Fix>emptyList();
             }
             
+            List<? extends ExpressionTree> arguments = invocation.getArguments();
+
             Element element = info.getTrees().getElement(new TreePath(errorPath, invocation.getIdentifier()));
             Element enclosingType = info.getTrees().getElement(enclosingTypePath);
             
-            if (element != null && element.equals(enclosingType))  {
-
-                List<? extends ExpressionTree> arguments = invocation.getArguments();
-                Pair<List<? extends TypeMirror>, List<String>> formalArguments = Utilities.resolveArguments(info, errorPath.getParentPath(), arguments, info.getTrees().getElement(enclosingTypePath));
-
-                //currently, we cannot handle error types, TYPEVARs and WILDCARDs:
-                if (formalArguments == null) {
-                    return Collections.<Fix>emptyList();
-                }
-
-                for (ExecutableElement method : ElementFilter.constructorsIn(((TypeElement)enclosingType).getEnclosedElements())) {
-                    if(cancel) return Collections.<Fix>emptyList();
-                    
-                    TreePath path = info.getTrees().getPath(method);
-                    if(path == null) continue;
-                    if (!createFixes(info, arguments, path, enclosingTypePath, method, fixes)) {
+            if (element != null) {
+                if (element.equals(enclosingType)) {
+                    Pair<List<? extends TypeMirror>, List<String>> formalArguments = Utilities.resolveArguments(info, errorPath.getParentPath(), arguments, info.getTrees().getElement(enclosingTypePath));
+                    //currently, we cannot handle error types, TYPEVARs and WILDCARDs:
+                    if (formalArguments == null) {
                         return Collections.<Fix>emptyList();
+                    }
+
+                    for (ExecutableElement method : ElementFilter.constructorsIn(((TypeElement)enclosingType).getEnclosedElements())) {
+                        if(cancel) return Collections.<Fix>emptyList();
+
+                        TreePath path = info.getTrees().getPath(method);
+                        if(path == null) continue;
+                        if (!createFixes(info, arguments, path, enclosingTypePath, method, fixes)) {
+                            return Collections.<Fix>emptyList();
+                        }
+                    }
+                } else {
+                    ElementHandle<Element> eh = ElementHandle.create(element);
+                    FileObject file = SourceUtils.getFile(eh, info.getClasspathInfo());
+                    JavaSource js = file != null ? JavaSource.forFileObject(file) : null;
+                    if (js != null) {
+                        Pair<List<? extends TypeMirror>, List<String>> formalArguments = Utilities.resolveArguments(info, errorPath.getParentPath(), arguments, element);
+                        if (formalArguments != null) {
+                            js.runUserActionTask(cInfo -> {
+                                cInfo.toPhase(JavaSource.Phase.RESOLVED);
+                                Element e = eh.resolve(cInfo);
+                                TreePath elPath = e != null && e.getKind().isClass() ? cInfo.getTrees().getPath(e): null;
+                                if (elPath != null) {
+                                    for (ExecutableElement method : ElementFilter.constructorsIn(((TypeElement)e).getEnclosedElements())) {
+                                        TreePath path = cInfo.getTrees().getPath(method);
+                                        if (path != null) {
+                                            createFixes(cInfo, arguments, path, elPath, method, fixes);
+                                        }
+                                    }
+                                }
+                            }, true);
+                            return fixes;
+                        }
                     }
                 }
             }

@@ -95,15 +95,14 @@ public class VerifyLibsAndLicenses extends Task {
             modules.add("nbbuild");
         } else {
             Path nbAllPath = nball.toPath();
-            modules = new TreeSet<>();
-                try ( Stream<Path> walk = Files.walk(nbAllPath)) {
-                    modules = new TreeSet<>(
-                            walk.filter(p -> Files.exists(p.resolve("external/binaries-list")))
-                                    .map(p -> nbAllPath.relativize(p))
-                                    .map(p -> p.toString())
-                                    .collect(Collectors.toSet())
-                    );
-                }
+            try ( Stream<Path> walk = Files.walk(nbAllPath)) {
+                modules = new TreeSet<>(
+                        walk.filter(p -> Files.exists(p.resolve("external/binaries-list")))
+                                .map(p -> nbAllPath.relativize(p))
+                                .map(p -> p.toString())
+                                .collect(Collectors.toSet())
+                );
+            }
         }
         try {
             testNoStrayThirdPartyBinaries();
@@ -429,7 +428,7 @@ public class VerifyLibsAndLicenses extends Task {
 
     private void testLicenseinfo() throws IOException {
         Path nballPath = nball.toPath();
-        List<File> licenseinfofiles = new ArrayList<>();
+        List<File> licenseinfofiles;
         try ( Stream<Path> walk = Files.walk(nballPath)) {
             licenseinfofiles = walk
                     .filter(p -> p.endsWith("licenseinfo.xml"))

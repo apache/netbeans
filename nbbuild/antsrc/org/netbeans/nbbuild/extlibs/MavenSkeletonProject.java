@@ -67,7 +67,6 @@ public class MavenSkeletonProject extends Task {
                 modules.add("nbbuild");
             } else {
                 Path nbAllPath = nball.toPath();
-                modules = new TreeSet<>();
                 try ( Stream<Path> walk = Files.walk(nbAllPath)) {
                     modules = new TreeSet<>(
                             walk.filter(p -> Files.exists(p.resolve("external/binaries-list")))

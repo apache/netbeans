@@ -1337,43 +1337,57 @@ public class NotifyDescriptor extends Object {
         }
     }
 
-    /** Notification providing a composed input of multiple nested selection lists and/or input lines.
+    /** Notification providing a composed input of multiple chained selection lists and/or input lines.
     * @since 7.63
     */
     public static final class ComposedInput extends NotifyDescriptor {
 
+        /** Name of property for the estimated number of chained inputs. */
+        public static final String PROP_ESTIMATED_NUMBER_OF_INPUTS = "estimatedNumberOfInputs"; // NOI18N
+
         private final List<NotifyDescriptor> inputs = new ArrayList<>();
         private final Callback callback;
-        private int total;
+        private int estimatedNumberOfInputs;
 
-        /** Construct dialog with the specified title and nested inputs.
+        /** Construct dialog with the specified title and chained inputs.
         * @param title title of the dialog
-        * @param total total number of nested inputs
-        * @param callback callback used to create nested inputs
+        * @param estimatedNumberOfInputs estimated number of chained inputs
+        * @param callback callback used to create chained inputs
         * @since 7.63
         */
-        public ComposedInput(final String title, final int total, final Callback callback) {
+        public ComposedInput(final String title, final int estimatedNumberOfInputs, final Callback callback) {
             super(null, title, OK_CANCEL_OPTION, PLAIN_MESSAGE, null, null);
             this.callback = callback;
-            this.total = total;
+            this.estimatedNumberOfInputs = estimatedNumberOfInputs;
         }
 
         /**
-         * Total number of nested inputs.
+         * Estimated number of chained inputs.
          * @since 7.63
          */
-        public int getTotalInputs() {
-            return total;
+        public int getEstimatedNumberOfInputs() {
+            return estimatedNumberOfInputs;
         }
 
         /**
-         * Lazy creates nested input of the given ordinal.
+         * Set estimated number of chained inputs.
+         * @param estimatedNumberOfInputs estimated number of chained inputs
+         * @since 7.63
+         */
+        public void setEstimatedNumberOfInputs(int estimatedNumberOfInputs) {
+            int oldNumber = this.estimatedNumberOfInputs;
+            this.estimatedNumberOfInputs = estimatedNumberOfInputs;
+            firePropertyChange(PROP_ESTIMATED_NUMBER_OF_INPUTS, oldNumber, estimatedNumberOfInputs);
+        }
+
+        /**
+         * Lazy creates chained input of the given ordinal.
          * @param number input number from interval &lt;1, totalInputs+1&gt;
          * @return nested selection list, input line, or null
          * @since 7.63
          */
         public NotifyDescriptor getInput(int number) {
-            NotifyDescriptor step = callback.getInput(number);
+            NotifyDescriptor step = callback.getInput(this, number);
             if (step != null) {
                 if (number - 1 < inputs.size()) {
                     inputs.set(number - 1, step);
@@ -1382,15 +1396,15 @@ public class NotifyDescriptor extends Object {
                 } else {
                     return null;
                 }
-                if (number >= total) {
-                    total = number;
+                if (number >= estimatedNumberOfInputs) {
+                    estimatedNumberOfInputs = number;
                 }
             }
             return step;
         }
 
         /**
-         * Returns all created nested inputs.
+         * Returns all created chained inputs.
          * @since 7.63
          */
         public NotifyDescriptor[] getInputs() {
@@ -1428,18 +1442,19 @@ public class NotifyDescriptor extends Object {
         }
 
         /**
-         * Callback used to lazy create nested inputs.
+         * Callback used to lazy create chained inputs.
          * @since 7.63
          */
         public static interface Callback {
 
             /**
-             * Lazy creates nested input of the given ordinal.
+             * Lazy creates chained input of the given ordinal.
+             * @param input {@link ComposedInput} instance
              * @param number input ordinal from interval &lt;1, totalInputs+1&gt;
-             * @return nested selection list, input line, or null
+             * @return selection list, input line, or null
              * @since 7.63
              */
-            public NotifyDescriptor getInput(int number);
+            public NotifyDescriptor getInput(ComposedInput input, int number);
         }
     }
 }

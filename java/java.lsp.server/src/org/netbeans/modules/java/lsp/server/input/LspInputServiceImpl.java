@@ -18,9 +18,9 @@
  */
 package org.netbeans.modules.java.lsp.server.input;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.eclipse.lsp4j.jsonrpc.services.JsonSegment;
@@ -40,12 +40,20 @@ public class LspInputServiceImpl implements InputService {
         if (callback == null) {
             return CompletableFuture.completedFuture(null);
         }
-        return callback.step(params).handle((step, ex) -> {
-            if (ex != null || step == null)  {
+        CompletableFuture<Either<QuickPickStep, InputBoxStep>> future = new CompletableFuture<>();
+        callback.step(params).handle((step, ex) -> {
+            if (ex != null) {
                 registry.callbacks.remove(params.getInputId());
+                future.completeExceptionally(ex);
+            } else {
+                if (step == null) {
+                    registry.callbacks.remove(params.getInputId());
+                }
+                future.complete(step);
             }
-            return step;
+            return null;
         });
+        return future;
     }
 
     @Override
@@ -60,7 +68,7 @@ public class LspInputServiceImpl implements InputService {
 
     private static class RegistryImpl implements Registry {
 
-        private final Map<String, Callback> callbacks = new HashMap<>();
+        private final Map<String, Callback> callbacks = new ConcurrentHashMap<>();
         private final AtomicInteger cnt = new AtomicInteger();
 
         @Override

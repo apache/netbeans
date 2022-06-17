@@ -53,6 +53,7 @@ import org.netbeans.modules.java.lsp.server.input.QuickPickStep;
 import org.netbeans.modules.java.lsp.server.input.ShowInputBoxParams;
 import org.netbeans.modules.java.lsp.server.input.ShowMutliStepInputParams;
 import org.netbeans.modules.java.lsp.server.input.ShowQuickPickParams;
+import org.openide.NotificationLineSupport;
 import org.openide.NotifyDescriptor;
 import org.openide.awt.Actions;
 import org.openide.util.Lookup;
@@ -352,9 +353,11 @@ class NotifyDescriptorAdapter {
             return ctrl;
         } else if (descriptor instanceof NotifyDescriptor.QuickPick) {
             NotifyDescriptor.QuickPick qp = (NotifyDescriptor.QuickPick) descriptor;
-            List<QuickPickItem> items = new ArrayList<>();
-            for (NotifyDescriptor.QuickPick.Item item : qp.getItems()) {
-                items.add(new QuickPickItem(item.getLabel(), item.getDescription(), null, item.isSelected(), Integer.toString(System.identityHashCode(item))));
+            List<NotifyDescriptor.QuickPick.Item> qpItems = qp.getItems();
+            List<QuickPickItem> items = new ArrayList<>(qpItems.size());
+            for (int i = 0; i < qpItems.size(); i++) {
+                NotifyDescriptor.QuickPick.Item item = qpItems.get(i);
+                items.add(new QuickPickItem(item.getLabel(), item.getDescription(), null, item.isSelected(), Integer.toString(i)));
             }
             ShowQuickPickParams params = new ShowQuickPickParams(qp.getLabel(), qp.getTitle(), qp.isMultipleSelection(), items);
             CompletableFuture<List<QuickPickItem>> qpF = client.showQuickPick(params);
@@ -365,8 +368,9 @@ class NotifyDescriptorAdapter {
                     ctrl.completeExceptionally(new CancellationException());
                 } else {
                     List<Object> selectedIds = selected.stream().map(t -> t.getUserData()).collect(Collectors.toList());
-                    for (NotifyDescriptor.QuickPick.Item item : qp.getItems()) {
-                        item.setSelected(selectedIds.contains(Integer.toString(System.identityHashCode(item))));
+                    for (int i = 0; i < qpItems.size(); i++) {
+                        NotifyDescriptor.QuickPick.Item item = qpItems.get(i);
+                        item.setSelected(selectedIds.contains(Integer.toString(i)));
                     }
                     descriptor.setValue(NotifyDescriptor.OK_OPTION);
                     ctrl.complete((T)descriptor);
@@ -396,17 +400,19 @@ class NotifyDescriptorAdapter {
                     NotifyDescriptor input = ci.getInput(params.getStep());
                     if (input instanceof NotifyDescriptor.InputLine) {
                         data.put(stepId, input);
-                        InputBoxStep step = new InputBoxStep(ci.getTotalInputs(), stepId,
+                        InputBoxStep step = new InputBoxStep(ci.getEstimatedNumberOfInputs(), stepId,
                                 null, input.getTitle(), ((NotifyDescriptor.InputLine) input).getInputText(),
                                 input instanceof NotifyDescriptor.PasswordLine);
                         return CompletableFuture.completedFuture(Either.forRight(step));
                     } else if (input instanceof NotifyDescriptor.QuickPick) {
                         data.put(stepId, input);
+                        List<NotifyDescriptor.QuickPick.Item> qpItems = ((NotifyDescriptor.QuickPick) input).getItems();
                         List<QuickPickItem> items = new ArrayList<>();
-                        for (NotifyDescriptor.QuickPick.Item item : ((NotifyDescriptor.QuickPick) input).getItems()) {
-                            items.add(new QuickPickItem(item.getLabel(), item.getDescription(), null, item.isSelected(), Integer.toString(System.identityHashCode(item))));
+                        for (int i = 0; i < qpItems.size(); i++) {
+                            NotifyDescriptor.QuickPick.Item item = qpItems.get(i);
+                            items.add(new QuickPickItem(item.getLabel(), item.getDescription(), null, item.isSelected(), Integer.toString(i)));
                         }
-                        QuickPickStep step = new QuickPickStep(ci.getTotalInputs(), stepId,
+                        QuickPickStep step = new QuickPickStep(ci.getEstimatedNumberOfInputs(), stepId,
                                 null, input.getTitle(), ((NotifyDescriptor.QuickPick) input).isMultipleSelection(),
                                 items);
                         return CompletableFuture.completedFuture(Either.forLeft(step));
@@ -419,7 +425,12 @@ class NotifyDescriptorAdapter {
                     String stepId = "ID:" + params.getStep();
                     updateData(params.getData(), data);
                     NotifyDescriptor input = data.get(stepId);
-                    return CompletableFuture.completedFuture(input == null || input.isValid() ? null : Bundle.MSG_InvalidInput());
+                    if (input != null && !input.isValid()) {
+                        NotificationLineSupport nls = input.getNotificationLineSupport();
+                        String errMsg = nls != null ? nls.getErrorMessage() : null;
+                        return CompletableFuture.completedFuture(errMsg != null ? errMsg : Bundle.MSG_InvalidInput());
+                    }
+                    return CompletableFuture.completedFuture(null);
                 }
             });
             ShowMutliStepInputParams params = new ShowMutliStepInputParams(inputId, ci.getTitle());
@@ -520,8 +531,10 @@ class NotifyDescriptorAdapter {
             } else if (desc instanceof NotifyDescriptor.QuickPick) {
                 assert entry.getValue().isLeft();
                 List<Object> selected = entry.getValue().getLeft().stream().map(t -> t.getUserData()).collect(Collectors.toList());
-                for (NotifyDescriptor.QuickPick.Item item : ((NotifyDescriptor.QuickPick) desc).getItems()) {
-                    item.setSelected(selected.contains(Integer.toString(System.identityHashCode(item))));
+                List<NotifyDescriptor.QuickPick.Item> qpItems = ((NotifyDescriptor.QuickPick) desc).getItems();
+                for (int i = 0; i < qpItems.size(); i++) {
+                    NotifyDescriptor.QuickPick.Item item = qpItems.get(i);
+                    item.setSelected(selected.contains(Integer.toString(i)));
                 }
             }
         }

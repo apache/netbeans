@@ -166,9 +166,6 @@ jobs:
       - name: Extract
         run: tar --zstd -xf build.tar.zst
 
-      - name: Get maven coordinates
-        run: ant getallmavencoordinates
-
       - name: Build nbms
         run: ant build-nbms
 

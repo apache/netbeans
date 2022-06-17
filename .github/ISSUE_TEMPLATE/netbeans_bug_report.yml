@@ -64,6 +64,7 @@ body:
       multiple: false
       options:
         - "No"
+        - "Apache NetBeans 14"
         - "Apache NetBeans 13"
         - "Apache NetBeans 12.6"
         - "Apache NetBeans 12.5"

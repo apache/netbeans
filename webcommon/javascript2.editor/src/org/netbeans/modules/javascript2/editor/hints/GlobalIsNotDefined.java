@@ -59,12 +59,10 @@ import org.openide.util.NbBundle;
  */
 public class GlobalIsNotDefined extends JsAstRule {
 
-    private static final List<String> KNOWN_GLOBAL_OBJECTS = Arrays.asList("window", "document", "console", //NOI18N
-            "clearInterval", "clearTimeout", "event", "frames", "history", //NOI18N
-            "Image", "location", "name", "navigator", "Option", "parent", "screen", "setInterval", "setTimeout", "super", //NOI18N
-            "XMLHttpRequest", "JSON", "Date", "undefined", "Math", "$", "jQuery",  //NOI18N
-            "Error", "EvalError", "RangeError", "ReferenceError", "SyntaxError", "TypeError", "URIError", //NOI18N
-            Type.ARRAY, Type.OBJECT, Type.BOOLEAN, Type.NULL, Type.NUMBER, Type.REGEXP, Type.STRING, Type.UNDEFINED, Type.UNRESOLVED);
+    private static final List<String> KNOWN_GLOBAL_OBJECTS = Arrays.asList(
+            "super",  "$", "jQuery",  //NOI18N
+            Type.ARRAY, Type.OBJECT, Type.BOOLEAN, Type.NULL, Type.NUMBER,
+            Type.REGEXP, Type.STRING, Type.UNDEFINED, Type.UNRESOLVED);
 
     @Override
     void computeHints(JsRuleContext context, List<Hint> hints, int offset, HintsProvider.HintsManager manager) throws BadLocationException {
@@ -96,9 +94,10 @@ public class GlobalIsNotDefined extends JsAstRule {
                     return;
                 }
 
-                // check whether is defined as window property
-                Collection<? extends IndexResult> findByFqn = jsIndex.findByFqn("window." + varName, Index.FIELD_BASE_NAME);
-                if (findByFqn.isEmpty()) {
+                // check whether is defined as window property or defined in classpath
+                Collection<? extends IndexResult> findByFqnOnWindow = jsIndex.findByFqn("window." + varName, Index.FIELD_BASE_NAME);
+                Collection<? extends IndexResult> findByFqnPlain = jsIndex.findByFqn(varName, Index.FIELD_BASE_NAME);
+                if (findByFqnOnWindow.isEmpty() && findByFqnPlain.isEmpty()) {
                     if (variable.getOccurrences().isEmpty()) {
                         addHint(context, hints, offset, varName, variable.getOffsetRange());
                     } else {
@@ -197,7 +196,7 @@ public class GlobalIsNotDefined extends JsAstRule {
 
         private final Snapshot snapshot;
         private final String name;
-        private int offset;
+        private final int offset;
 
         public AddJsHintFix(final Snapshot snapshot, final int offset, final String name) {
             this.snapshot = snapshot;

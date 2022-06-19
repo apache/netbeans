@@ -19,18 +19,39 @@
 
 package org.netbeans.modules.javascript2.prototypejs.model;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import org.netbeans.api.java.classpath.ClassPath;
+import org.netbeans.modules.javascript2.editor.JsCodeCompletionBase;
+import org.netbeans.modules.javascript2.editor.classpath.ClasspathProviderImplAccessor;
+import org.netbeans.spi.java.classpath.support.ClassPathSupport;
+import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileUtil;
+
+import static org.netbeans.modules.javascript2.editor.JsTestBase.JS_SOURCE_ID;
+
 /**
  *
  * @author Petr Pisl
  */
-public class TestIssue201885 extends PrototypeJsTestBase {
+public class Issue201885_Test extends JsCodeCompletionBase {
 
-    private static final String filePath = "basic/issue201885.js";
+    private static final String filePath = "testfiles/basic/issue201885.js";
     
-    public TestIssue201885(String testName) {
+    public Issue201885_Test(String testName) {
         super(testName);
     }
-    
+
+    @Override
+    protected void assertDescriptionMatches(FileObject fileObject,
+            String description, boolean includeTestName, String ext, boolean goldenFileInTestFileDir) throws IOException {
+        super.assertDescriptionMatches(fileObject, description, includeTestName, ext, true);
+    }
+
     public void testStructure() throws Exception {
         checkStructure(filePath);
     }
@@ -54,5 +75,19 @@ public class TestIssue201885 extends PrototypeJsTestBase {
     public void testOccurreces_02() throws Exception {
         checkOccurrences(filePath, "initialize: function(nam^e){", true);
     }
-   
+
+    @Override
+    protected Map<String, ClassPath> createClassPathsForTest() {
+        List<FileObject> cpRoots = new ArrayList<>(3);
+        cpRoots.add(FileUtil.toFileObject(new File(getDataDir(), "/testfiles/basic")));
+        return Collections.singletonMap(
+            JS_SOURCE_ID,
+            ClassPathSupport.createClassPath(cpRoots.toArray(new FileObject[0]))
+        );
+    }
+
+    @Override
+    protected boolean classPathContainsBinaries() {
+        return true;
+    }
 }

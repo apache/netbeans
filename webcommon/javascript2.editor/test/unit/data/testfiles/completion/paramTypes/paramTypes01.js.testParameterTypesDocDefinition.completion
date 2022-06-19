@@ -6,7 +6,7 @@ CLASS      prototype                       [PUBLIC]   JS Platform
 METHOD     anchor(name: String): String    [PUBLIC]   JS Platform
 METHOD     apply(thisArg: Object): Object  [PUBLIC]   JS Platform
 METHOD     assign(target: Object, sources  [PUBLIC,   JS Platform
-METHOD     at(index: Number): String | un  [PUBLIC]   JS Platform
+METHOD     at(index: Number): String|unde  [PUBLIC]   JS Platform
 METHOD     big(): String                   [PUBLIC]   JS Platform
 METHOD     bind(thisArg: Object, argArray  [PUBLIC]   JS Platform
 METHOD     blink(): String                 [PUBLIC]   JS Platform
@@ -14,11 +14,11 @@ METHOD     bold(): String                  [PUBLIC]   JS Platform
 METHOD     call(thisArg: Object, argArray  [PUBLIC]   JS Platform
 METHOD     charAt(pos: Number): String     [PUBLIC]   JS Platform
 METHOD     charCodeAt(index: Number): Num  [PUBLIC]   JS Platform
-METHOD     codePointAt(pos: Number):  und  [PUBLIC]   JS Platform
+METHOD     codePointAt(pos: Number): Numb  [PUBLIC]   JS Platform
 METHOD     concat(strings: String): Strin  [PUBLIC]   JS Platform
-METHOD     create(o:  nul|Object , proper  [PUBLIC,   JS Platform
+METHOD     create(o: null|Object, propert  [PUBLIC,   JS Platform
 METHOD     defineProperties(o: Object, pr  [PUBLIC,   JS Platform
-METHOD     defineProperty(o: Object, p: S  [PUBLIC,   JS Platform
+METHOD     defineProperty(o: Object, p: N  [PUBLIC,   JS Platform
 METHOD     endsWith(searchString: String)  [PUBLIC]   JS Platform
 METHOD     entries(o: Object): Object      [PUBLIC,   JS Platform
 METHOD     fixed(): String                 [PUBLIC]   JS Platform
@@ -33,8 +33,8 @@ METHOD     getOwnPropertyDescriptors(o: O  [PUBLIC,   JS Platform
 METHOD     getOwnPropertyNames(o: Object)  [PUBLIC,   JS Platform
 METHOD     getOwnPropertySymbols(o: Objec  [PUBLIC,   JS Platform
 METHOD     getPrototypeOf(o: Object): Obj  [PUBLIC,   JS Platform
-METHOD     hasOwn(o: Object, v: String |   [PUBLIC,   JS Platform
-METHOD     hasOwnProperty(v: String | Sym  [PUBLIC]   JS Platform
+METHOD     hasOwn(o: Object, v: Number|Sy  [PUBLIC,   JS Platform
+METHOD     hasOwnProperty(v: Number|Symbo  [PUBLIC]   JS Platform
 METHOD     includes(searchString: String)  [PUBLIC]   JS Platform
 METHOD     indexOf(searchString: String):  [PUBLIC]   JS Platform
 METHOD     is(value1: Object, value2: Obj  [PUBLIC,   JS Platform
@@ -47,17 +47,17 @@ METHOD     keys(o: Object): String         [PUBLIC,   JS Platform
 METHOD     lastIndexOf(searchString: Stri  [PUBLIC]   JS Platform
 METHOD     link(url: String): String       [PUBLIC]   JS Platform
 METHOD     localeCompare(that: String): N  [PUBLIC]   JS Platform
-METHOD     match(matcher: Object):  nul|R  [PUBLIC]   JS Platform
+METHOD     match(matcher: Object): null|R  [PUBLIC]   JS Platform
 METHOD     matchAll(regexp: RegExp): Iter  [PUBLIC]   JS Platform
 METHOD     normalize(): String             [PUBLIC]   JS Platform
 METHOD     padEnd(maxLength: Number): Str  [PUBLIC]   JS Platform
 METHOD     padStart(maxLength: Number): S  [PUBLIC]   JS Platform
 METHOD     preventExtensions(o: Object):   [PUBLIC,   JS Platform
-METHOD     propertyIsEnumerable(v: String  [PUBLIC]   JS Platform
+METHOD     propertyIsEnumerable(v: Number  [PUBLIC]   JS Platform
 METHOD     raw(template: Object, substitu  [PUBLIC,   JS Platform
 METHOD     repeat(count: Number): String   [PUBLIC]   JS Platform
 METHOD     replace(searchValue: Object, r  [PUBLIC]   JS Platform
-METHOD     replaceAll(searchValue: String  [PUBLIC]   JS Platform
+METHOD     replaceAll(searchValue: RegExp  [PUBLIC]   JS Platform
 METHOD     seal(o: Object): Object         [PUBLIC,   JS Platform
 METHOD     search(searcher: Object): Numb  [PUBLIC]   JS Platform
 METHOD     setPrototypeOf(o: Object, prot  [PUBLIC,   JS Platform

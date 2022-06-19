@@ -4,31 +4,31 @@ fw.|language;
 ------------------------------------
 CLASS      prototype                       [PUBLIC]   JS Platform
 METHOD     assign(target: Object, sources  [PUBLIC,   JS Platform
-METHOD     at(index: Number):  undefine|O  [PUBLIC]   JS Platform
-METHOD     concat(items:  ConcatArra|Obje  [PUBLIC]   JS Platform
+METHOD     at(index: Number): Object|unde  [PUBLIC]   JS Platform
+METHOD     concat(items: ConcatArray|Obje  [PUBLIC]   JS Platform
 METHOD     copyWithin(target: Number, sta  [PUBLIC]   JS Platform
-METHOD     create(o:  nul|Object , proper  [PUBLIC,   JS Platform
+METHOD     create(o: null|Object, propert  [PUBLIC,   JS Platform
 METHOD     defineProperties(o: Object, pr  [PUBLIC,   JS Platform
-METHOD     defineProperty(o: Object, p: S  [PUBLIC,   JS Platform
+METHOD     defineProperty(o: Object, p: N  [PUBLIC,   JS Platform
 METHOD     entries(): IterableIterator     [PUBLIC]   JS Platform
 METHOD     every(predicate: Function): Bo  [PUBLIC]   JS Platform
 METHOD     fill(value: Object): Array      [PUBLIC]   JS Platform
 METHOD     filter(predicate: Function): T  [PUBLIC]   JS Platform
-METHOD     find(predicate: Function):  un  [PUBLIC]   JS Platform
+METHOD     find(predicate: Function): Obj  [PUBLIC]   JS Platform
 METHOD     findIndex(predicate: Function)  [PUBLIC]   JS Platform
 METHOD     flat(): FlatArray[]             [PUBLIC]   JS Platform
 METHOD     flatMap(callback: Function): U  [PUBLIC]   JS Platform
 METHOD     forEach(callbackfn: Function):  [PUBLIC]   JS Platform
 METHOD     freeze(o: Object): Object       [PUBLIC,   JS Platform
-METHOD     from(iterable: Iterable | Arra  [PUBLIC,   JS Platform
+METHOD     from(iterable: Iterable|ArrayL  [PUBLIC,   JS Platform
 METHOD     fromEntries(entries: Iterable)  [PUBLIC,   JS Platform
 METHOD     getOwnPropertyDescriptor(o: Ob  [PUBLIC,   JS Platform
 METHOD     getOwnPropertyDescriptors(o: O  [PUBLIC,   JS Platform
 METHOD     getOwnPropertyNames(o: Object)  [PUBLIC,   JS Platform
 METHOD     getOwnPropertySymbols(o: Objec  [PUBLIC,   JS Platform
 METHOD     getPrototypeOf(o: Object): Obj  [PUBLIC,   JS Platform
-METHOD     hasOwn(o: Object, v: String |   [PUBLIC,   JS Platform
-METHOD     hasOwnProperty(v: String | Sym  [PUBLIC]   JS Platform
+METHOD     hasOwn(o: Object, v: Number|Sy  [PUBLIC,   JS Platform
+METHOD     hasOwnProperty(v: Number|Symbo  [PUBLIC]   JS Platform
 METHOD     includes(searchElement: Object  [PUBLIC]   JS Platform
 METHOD     indexOf(searchElement: Object)  [PUBLIC]   JS Platform
 METHOD     is(value1: Object, value2: Obj  [PUBLIC,   JS Platform
@@ -42,16 +42,16 @@ METHOD     keys(): IterableIterator        [PUBLIC]   JS Platform
 METHOD     lastIndexOf(searchElement: Obj  [PUBLIC]   JS Platform
 METHOD     map(callbackfn: Function): U[]  [PUBLIC]   JS Platform
 METHOD     of(items: T[]): T[]             [PUBLIC,   JS Platform
-METHOD     pop():  undefine|Object         [PUBLIC]   JS Platform
+METHOD     pop(): Object|undefined         [PUBLIC]   JS Platform
 METHOD     preventExtensions(o: Object):   [PUBLIC,   JS Platform
-METHOD     propertyIsEnumerable(v: String  [PUBLIC]   JS Platform
+METHOD     propertyIsEnumerable(v: Number  [PUBLIC]   JS Platform
 METHOD     push(items: T[]): Number        [PUBLIC]   JS Platform
 METHOD     reduce(callbackfn: Function, i  [PUBLIC]   JS Platform
 METHOD     reduceRight(callbackfn: Functi  [PUBLIC]   JS Platform
 METHOD     reverse(): T[]                  [PUBLIC]   JS Platform
 METHOD     seal(o: Object): Object         [PUBLIC,   JS Platform
 METHOD     setPrototypeOf(o: Object, prot  [PUBLIC,   JS Platform
-METHOD     shift():  undefine|Object       [PUBLIC]   JS Platform
+METHOD     shift(): Object|undefined       [PUBLIC]   JS Platform
 METHOD     slice(): T[]                    [PUBLIC]   JS Platform
 METHOD     some(predicate: Function): Boo  [PUBLIC]   JS Platform
 METHOD     sort(): Array                   [PUBLIC]   JS Platform

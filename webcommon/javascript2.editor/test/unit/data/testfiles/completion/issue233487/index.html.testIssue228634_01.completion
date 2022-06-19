@@ -4,6 +4,6 @@ Code completion result for source line:
 ------------------------------------
 CLASS      prototype                       [PUBLIC]   JS Platform
 METHOD     preventExtensions(o: Object):   [PUBLIC,   JS Platform
-METHOD     propertyIsEnumerable(v: String  [PUBLIC]   JS Platform
+METHOD     propertyIsEnumerable(v: Number  [PUBLIC]   JS Platform
 FIELD      prop1: String                   [PUBLIC]   definition.js
 FIELD      prop2: String                   [PUBLIC]   definition.js

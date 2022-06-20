@@ -1386,8 +1386,8 @@ public class NotifyDescriptor extends Object {
          * @return nested selection list, input line, or null
          * @since 7.63
          */
-        public NotifyDescriptor getInput(int number) {
-            NotifyDescriptor step = callback.getInput(this, number);
+        public NotifyDescriptor createInput(int number) {
+            NotifyDescriptor step = callback.createInput(this, number);
             if (step != null) {
                 if (number - 1 < inputs.size()) {
                     inputs.set(number - 1, step);
@@ -1424,7 +1424,7 @@ public class NotifyDescriptor extends Object {
             NotifyDescriptor input;
             int i = 0;
             java.awt.GridBagConstraints gridBagConstraints = null;
-            while ((input = getInput(++i)) != null) {
+            while ((input = createInput(++i)) != null) {
                 gridBagConstraints = new java.awt.GridBagConstraints();
                 gridBagConstraints.gridx = 0;
                 gridBagConstraints.gridy = i - 1;
@@ -1454,7 +1454,7 @@ public class NotifyDescriptor extends Object {
              * @return selection list, input line, or null
              * @since 7.63
              */
-            public NotifyDescriptor getInput(ComposedInput input, int number);
+            public NotifyDescriptor createInput(ComposedInput input, int number);
         }
     }
 }

@@ -397,7 +397,7 @@ class NotifyDescriptorAdapter {
                 public CompletableFuture<Either<QuickPickStep, InputBoxStep>> step(InputCallbackParams params) {
                     String stepId = "ID:" + params.getStep();
                     updateData(params.getData(), data);
-                    NotifyDescriptor input = ci.getInput(params.getStep());
+                    NotifyDescriptor input = ci.createInput(params.getStep());
                     if (input instanceof NotifyDescriptor.InputLine) {
                         data.put(stepId, input);
                         InputBoxStep step = new InputBoxStep(ci.getEstimatedNumberOfInputs(), stepId,

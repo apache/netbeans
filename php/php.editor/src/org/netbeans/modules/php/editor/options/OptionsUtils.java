@@ -97,6 +97,11 @@ public final class OptionsUtils {
                         CodeCompletionPanel.PHP_CODE_COMPLETION_SMART_PARAMETERS_PRE_FILLING,
                         CodeCompletionPanel.PHP_CODE_COMPLETION_SMART_PARAMETERS_PRE_FILLING_DEFAULT);
             }
+            if (settingName == null || CodeCompletionPanel.PHP_CODE_COMPLETION_FIRST_CLASS_CALLABLE.equals(settingName)) {
+                codeCompletionFirstClassCallable = preferences.getBoolean(
+                        CodeCompletionPanel.PHP_CODE_COMPLETION_FIRST_CLASS_CALLABLE,
+                        CodeCompletionPanel.PHP_CODE_COMPLETION_FIRST_CLASS_CALLABLE_DEFAULT);
+            }
 
             if (settingName == null || CodeCompletionPanel.PHP_CODE_COMPLETION_VARIABLES_SCOPE.equals(settingName)) {
                 codeCompletionVariablesScope = CodeCompletionPanel.VariablesScope.resolve(preferences.get(CodeCompletionPanel.PHP_CODE_COMPLETION_VARIABLES_SCOPE, null));
@@ -122,6 +127,7 @@ public final class OptionsUtils {
     private static Boolean codeCompletionStaticMethods = null;
     private static Boolean codeCompletionNonStaticMethods = null;
     private static Boolean codeCompletionSmartParametersPreFilling = null;
+    private static Boolean codeCompletionFirstClassCallable = null;
 
     private static CodeCompletionPanel.VariablesScope codeCompletionVariablesScope = null;
 
@@ -200,6 +206,17 @@ public final class OptionsUtils {
         lazyInit();
         assert codeCompletionSmartParametersPreFilling != null;
         return codeCompletionSmartParametersPreFilling;
+    }
+
+    /**
+     * Code completion for first-class callable syntax. e.g. strlen(...)
+     *
+     * @return {@code true} if add (...) as a CC item, otherwise {@code false}
+     */
+    public static boolean codeCompletionFirstClassCallable() {
+        lazyInit();
+        assert codeCompletionFirstClassCallable != null;
+        return codeCompletionFirstClassCallable;
     }
 
     /**

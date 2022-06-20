@@ -1,0 +1,5 @@
+Code completion result for source line:
+$fn = $test->met|hod(...);
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     method($param1, $param2)        [PUBLIC]   Test
+METHOD     method(...)                     [PUBLIC]   Test

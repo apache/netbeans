@@ -2701,6 +2701,13 @@ non_empty_function_call_parameter_list:paramsList possible_comma
     RESULT = paramsList;
 :}
 
+| T_ELLIPSIS:e
+{:
+    // NETBEANS-5899 PHP 8.1: First class callable syntax
+    // e.g. strlen(...);
+    RESULT = Collections.singletonList(new FirstClassCallableArg(eleft, eright));
+:}
+
 | /* empty */
 {:
     RESULT = new LinkedList();

@@ -28,7 +28,7 @@ import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
  *
  * @author Dusan Balek
  */
-public class InputBoxStep extends ShowInputBoxParams {
+public final class InputBoxStep extends ShowInputBoxParams {
 
     /**
      * An optional total step count.

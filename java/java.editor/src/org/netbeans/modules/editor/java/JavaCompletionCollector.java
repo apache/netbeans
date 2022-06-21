@@ -215,13 +215,19 @@ public class JavaCompletionCollector implements CompletionCollector {
         }
     }
 
-    public static Supplier<List<TextEdit>> addImport(Document doc, ElementHandle<?> handle) {
+    public static Supplier<List<TextEdit>> addImport(Document doc, int offset, ElementHandle<?> handle) {
         return () -> {
             try {
                 TextEdit textEdit = modify2TextEdit(JavaSource.forDocument(doc), copy -> {
                     copy.toPhase(JavaSource.Phase.RESOLVED);
                     Element e = handle.resolve(copy);
                     if (e != null) {
+                        Scope scope = copy.getTreeUtilities().scopeFor(offset);
+                        for (Element el : copy.getElementUtilities().getLocalMembersAndVars(scope, (el, type) -> el.getKind().isClass() || el.getKind().isInterface())) {
+                            if (el == e) {
+                                return;
+                            }
+                        }
                         copy.rewrite(copy.getCompilationUnit(), GeneratorUtilities.get(copy).addImports(copy.getCompilationUnit(), Collections.singleton(e)));
                     }
                 });
@@ -1009,7 +1015,7 @@ public class JavaCompletionCollector implements CompletionCollector {
             if (handle != null) {
                 builder.documentation(getDocumentation(doc, offset, handle));
                 if (!addSimpleName && !inImport) {
-                    builder.additionalTextEdits(addImport(doc, handle));
+                    builder.additionalTextEdits(addImport(doc, offset, handle));
                 }
             }
             if (isDeprecated) {

@@ -1281,7 +1281,7 @@ public class CompilationUnitTest extends GeneratorTestMDRCompat {
             "    public I(java.util.Collection c) {\n" +
             "        super(c);\n" +
             "    }\n" +
-            "  \n" +//XXX
+            "    \n" +//XXX
             "}\n";
 
         JavaSource javaSource = JavaSource.create(cpInfo, FileUtil.toFileObject(testFile));

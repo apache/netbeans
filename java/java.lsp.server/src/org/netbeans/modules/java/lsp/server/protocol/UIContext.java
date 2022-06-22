@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.java.lsp.server.ui;
+package org.netbeans.modules.java.lsp.server.protocol;
 
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
@@ -30,12 +30,10 @@ import org.eclipse.lsp4j.MessageType;
 import org.eclipse.lsp4j.ShowMessageRequestParams;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.netbeans.api.annotations.common.NonNull;
-import org.netbeans.modules.java.lsp.server.protocol.HtmlPageParams;
 import org.netbeans.modules.java.lsp.server.input.QuickPickItem;
 import org.netbeans.modules.java.lsp.server.input.ShowInputBoxParams;
 import org.netbeans.modules.java.lsp.server.input.ShowMutliStepInputParams;
 import org.netbeans.modules.java.lsp.server.input.ShowQuickPickParams;
-import org.netbeans.modules.java.lsp.server.protocol.ShowStatusMessageParams;
 import org.openide.awt.StatusDisplayer.Message;
 import org.openide.util.Lookup;
 
@@ -84,15 +82,15 @@ public abstract class UIContext {
         return find(Lookup.getDefault());
     }
 
-    protected abstract boolean isValid();
-    protected abstract void showMessage(MessageParams msg);
-    protected CompletableFuture<String> showHtmlPage(HtmlPageParams msg) {
+    public abstract boolean isValid();
+    public abstract void showMessage(MessageParams msg);
+    public CompletableFuture<String> showHtmlPage(HtmlPageParams msg) {
         showMessage(new MessageParams(MessageType.Log, msg.getUri()));
         return CompletableFuture.completedFuture(null);
     }
-    protected abstract CompletableFuture<MessageActionItem> showMessageRequest(ShowMessageRequestParams msg);
-    protected abstract void logMessage(MessageParams msg);
-    protected abstract Message showStatusMessage(ShowStatusMessageParams msg);
+    public abstract CompletableFuture<MessageActionItem> showMessageRequest(ShowMessageRequestParams msg);
+    public abstract void logMessage(MessageParams msg);
+    public abstract Message showStatusMessage(ShowStatusMessageParams msg);
     
     /**
      * Shows an input box to ask the user for a text input.
@@ -101,15 +99,15 @@ public abstract class UIContext {
      * @return future that yields the entered value
      * @since 1.18
      */
-    protected CompletableFuture<String> showInputBox(ShowInputBoxParams params) {
+    public CompletableFuture<String> showInputBox(ShowInputBoxParams params) {
         throw new AbstractMethodError();
     }
 
-    protected CompletableFuture<List<QuickPickItem>> showQuickPick(ShowQuickPickParams params) {
+    public CompletableFuture<List<QuickPickItem>> showQuickPick(ShowQuickPickParams params) {
         throw new AbstractMethodError();
     }
 
-    protected CompletableFuture<Map<String, Either<List<QuickPickItem>, String>>> showMultiStepInput(ShowMutliStepInputParams params) {
+    public CompletableFuture<Map<String, Either<List<QuickPickItem>, String>>> showMultiStepInput(ShowMutliStepInputParams params) {
         throw new AbstractMethodError();
     }
 
@@ -120,48 +118,48 @@ public abstract class UIContext {
         }
 
         @Override
-        protected CompletableFuture<MessageActionItem> showMessageRequest(ShowMessageRequestParams msg) {
+        public CompletableFuture<MessageActionItem> showMessageRequest(ShowMessageRequestParams msg) {
             System.err.println(msg.getType() + ": " + msg.getMessage());
             CompletableFuture<MessageActionItem> ai = CompletableFuture.completedFuture(null);
             return ai;
         }
 
         @Override
-        protected void showMessage(MessageParams msg) {
+        public void showMessage(MessageParams msg) {
             System.err.println(msg.getType() + ": " + msg.getMessage());
         }
 
         @Override
-        protected void logMessage(MessageParams msg) {
+        public void logMessage(MessageParams msg) {
             System.err.println(msg.getType() + ": " + msg.getMessage());
         }
 
         @Override
-        protected Message showStatusMessage(ShowStatusMessageParams msg) {
+        public Message showStatusMessage(ShowStatusMessageParams msg) {
             System.out.println(msg.getType() + ": " + msg.getMessage());
             return (int timeInMillis) -> {};
         }
 
         @Override
-        protected boolean isValid() {
+        public boolean isValid() {
             return true;
         }
 
         @Override
-        protected CompletableFuture<String> showHtmlPage(HtmlPageParams msg) {
+        public CompletableFuture<String> showHtmlPage(HtmlPageParams msg) {
             System.out.println("Open in browser: " + msg.getUri());
             return CompletableFuture.completedFuture(null);
         }
 
         @Override
-        protected CompletableFuture<String> showInputBox(ShowInputBoxParams params) {
+        public CompletableFuture<String> showInputBox(ShowInputBoxParams params) {
             System.err.println("input: " + params.getPrompt());
             CompletableFuture<String> ai = CompletableFuture.completedFuture(null);
             return ai;
         }
 
         @Override
-        protected CompletableFuture<List<QuickPickItem>> showQuickPick(ShowQuickPickParams params) {
+        public CompletableFuture<List<QuickPickItem>> showQuickPick(ShowQuickPickParams params) {
             System.err.println("quickPick: " + params.getPlaceHolder());
             return CompletableFuture.completedFuture(Collections.emptyList());
         }

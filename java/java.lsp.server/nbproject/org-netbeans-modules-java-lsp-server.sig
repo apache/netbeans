@@ -123,24 +123,6 @@ supr java.lang.Object
 hfds lastCtx
 hcls StdErrContext
 
-CLSS public abstract org.netbeans.modules.java.lsp.server.ui.UIContext
-cons public init()
-meth protected abstract boolean isValid()
-meth protected abstract java.util.concurrent.CompletableFuture<org.eclipse.lsp4j.MessageActionItem> showMessageRequest(org.eclipse.lsp4j.ShowMessageRequestParams)
-meth protected abstract org.openide.awt.StatusDisplayer$Message showStatusMessage(org.netbeans.modules.java.lsp.server.protocol.ShowStatusMessageParams)
-meth protected abstract void logMessage(org.eclipse.lsp4j.MessageParams)
-meth protected abstract void showMessage(org.eclipse.lsp4j.MessageParams)
-meth protected java.util.concurrent.CompletableFuture<java.lang.String> showHtmlPage(org.netbeans.modules.java.lsp.server.protocol.HtmlPageParams)
-meth protected java.util.concurrent.CompletableFuture<java.lang.String> showInputBox(org.netbeans.modules.java.lsp.server.protocol.ShowInputBoxParams)
-meth protected java.util.concurrent.CompletableFuture<java.util.List<org.netbeans.modules.java.lsp.server.protocol.QuickPickItem>> showQuickPick(org.netbeans.modules.java.lsp.server.protocol.ShowQuickPickParams)
-meth public static org.netbeans.modules.java.lsp.server.ui.UIContext find()
- anno 0 org.netbeans.api.annotations.common.NonNull()
-meth public static org.netbeans.modules.java.lsp.server.ui.UIContext find(org.openide.util.Lookup)
- anno 0 org.netbeans.api.annotations.common.NonNull()
-supr java.lang.Object
-hfds lastCtx
-hcls LogImpl
-
 CLSS public abstract interface org.netbeans.modules.progress.spi.ProgressEnvironment
 meth public abstract org.netbeans.api.progress.ProgressHandle createHandle(java.lang.String,org.openide.util.Cancellable,boolean)
 meth public abstract org.netbeans.modules.progress.spi.Controller getController()

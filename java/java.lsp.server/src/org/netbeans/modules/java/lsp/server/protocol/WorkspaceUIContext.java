@@ -29,7 +29,6 @@ import org.netbeans.modules.java.lsp.server.input.QuickPickItem;
 import org.netbeans.modules.java.lsp.server.input.ShowQuickPickParams;
 import org.netbeans.modules.java.lsp.server.input.ShowInputBoxParams;
 import org.netbeans.modules.java.lsp.server.input.ShowMutliStepInputParams;
-import org.netbeans.modules.java.lsp.server.ui.UIContext;
 import org.openide.awt.StatusDisplayer;
 
 /**
@@ -44,22 +43,22 @@ class WorkspaceUIContext extends UIContext {
     }
 
     @Override
-    protected boolean isValid() {
+    public boolean isValid() {
         return true;
     }
 
     @Override
-    protected CompletableFuture<MessageActionItem> showMessageRequest(ShowMessageRequestParams msg) {
+    public CompletableFuture<MessageActionItem> showMessageRequest(ShowMessageRequestParams msg) {
         return client.showMessageRequest(msg);
     }
 
     @Override
-    protected void showMessage(MessageParams msg) {
+    public void showMessage(MessageParams msg) {
         client.showMessage(msg);
     }
 
     @Override
-    protected CompletableFuture<String> showInputBox(ShowInputBoxParams params) {
+    public CompletableFuture<String> showInputBox(ShowInputBoxParams params) {
         return client.showInputBox(params);
     }
 
@@ -74,12 +73,12 @@ class WorkspaceUIContext extends UIContext {
     }
 
     @Override
-    protected void logMessage(MessageParams msg) {
+    public void logMessage(MessageParams msg) {
         client.logMessage(msg);
     }
 
     @Override
-    protected StatusDisplayer.Message showStatusMessage(ShowStatusMessageParams msg) {
+    public StatusDisplayer.Message showStatusMessage(ShowStatusMessageParams msg) {
         if (client.getNbCodeCapabilities().hasStatusBarMessageSupport()) {
             client.showStatusBarMessage(msg);
         } else {
@@ -89,7 +88,7 @@ class WorkspaceUIContext extends UIContext {
     }
 
     @Override
-    protected CompletableFuture<String> showHtmlPage(HtmlPageParams msg) {
+    public CompletableFuture<String> showHtmlPage(HtmlPageParams msg) {
         return client.showHtmlPage(msg);
     }
 

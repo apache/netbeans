@@ -338,17 +338,17 @@ public class GroovyIndexer extends EmbeddingIndexer {
 
             // maintain index compatibility; althogh
             int flags = getFieldModifiersFlag(child.isProperty(), child.getModifiers());
+            sb.append(';');
             if (flags != 0 || child.isProperty()) {
-                sb.append(';');
                 sb.append(IndexedElement.flagToFirstChar(flags));
                 sb.append(IndexedElement.flagToSecondChar(flags));
             }
 
+            sb.append(';');
             if (child.isProperty()) {
-                sb.append(';');
                 sb.append(child.isProperty());
             }
-            
+
             sb.append(';');
             appendOffsetRange(sb, node, doc);
 
@@ -371,12 +371,12 @@ public class GroovyIndexer extends EmbeddingIndexer {
                 // Removing last ","
                 sb.deleteCharAt(sb.length() - 1);
             }
-
+            
             Set<Modifier> modifiers = constructor.getModifiers();
 
             int flags = getMethodModifiersFlag(modifiers);
+            sb.append(';');
             if (flags != 0) {
-                sb.append(';');
                 sb.append(IndexedElement.flagToFirstChar(flags));
                 sb.append(IndexedElement.flagToSecondChar(flags));
             }
@@ -398,9 +398,9 @@ public class GroovyIndexer extends EmbeddingIndexer {
             Set<Modifier> modifiers = child.getModifiers();
 
             int flags = getMethodModifiersFlag(modifiers);
-
+            
+            sb.append(';');
             if (flags != 0) {
-                sb.append(';');
                 sb.append(IndexedElement.flagToFirstChar(flags));
                 sb.append(IndexedElement.flagToSecondChar(flags));
             }

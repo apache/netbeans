@@ -32,9 +32,9 @@ Searchable Keys:
   field : field1;int;00;true;[38,44]
   field : greeting;java.lang.Object;00;true;[394,402]
   field : name;java.lang.Object;00;true;[147,151]
-  field : privateField;java.lang.Object;02;[122,134]
-  field : protectedField;java.lang.Object;04;[91,105]
-  field : publicField;java.lang.Object;01;[61,72]
+  field : privateField;java.lang.Object;02;;[122,134]
+  field : protectedField;java.lang.Object;04;;[91,105]
+  field : publicField;java.lang.Object;01;;[61,72]
   fqn : foo.Hello1
   method : dynamicmethod;void;01;[317,330]
   method : getField1;int;01;[0,0]

@@ -243,7 +243,7 @@ public final class GroovyIndex {
 
             for (String constructor : constructors) {
                 String[] parts = constructor.split(";");
-                String paramList = parts.length > 1 ? parts[1] : ""; // NOI18N
+                String paramList = parts[1];
                 String[] params = paramList.split(",");
 
                 List<MethodParameter> methodParams = new ArrayList<>();
@@ -253,13 +253,12 @@ public final class GroovyIndex {
                     }
                 }
                 int flags = 0;
-                if (parts.length > 3) {
+                if (!parts[2].isEmpty()) {
                     flags = IndexedElement.stringToFlag(parts[2], 0);
                 }
                 
                 IndexedMethod c = new IndexedMethod(map, className, className, "void", methodParams, "", flags);
-                
-                OffsetRange range = createOffsetRange(parts[parts.length - 1]);
+                OffsetRange range = createOffsetRange(parts[3]);
                 if (range != null) {
                     c.setOffsetRange(range);
                 }
@@ -616,41 +615,19 @@ public final class GroovyIndex {
 
         //String fqn = map.getValue(GroovyIndexer.FQN_NAME);
 
-        int typeIndex = signature.indexOf(';');
-        String methodSignature = signature;
-        String type = "void";
-        if (typeIndex != -1) {
-            int endIndex = signature.indexOf(';', typeIndex + 1);
-            if (endIndex == -1) {
-                endIndex = signature.length();
-            }
-            type = signature.substring(typeIndex + 1, endIndex);
-            methodSignature = signature.substring(0, typeIndex);
-        }
-
-        // Extract attributes
-        int attributeIndex = signature.indexOf(';', typeIndex + 1);
-        int offsetRangeIndex = signature.indexOf(";[", attributeIndex == -1 ? typeIndex + 1 : attributeIndex + 1);
-        String attributes = null;
-        int flags = 0;
-
-        if (attributeIndex != -1 && offsetRangeIndex != attributeIndex) {
-            flags = IndexedElement.stringToFlag(signature, attributeIndex+1);
-
-            if (signature.length() > attributeIndex+1) {
-                attributes = signature.substring(attributeIndex+1, offsetRangeIndex != -1 ? offsetRangeIndex : signature.length());
-            }
-        }
+        String[] parts = signature.split(";");
+        String methodSignature = parts[0];
+        String type = parts[1].isEmpty() ? "void" : parts[1];
+        int flags = parts[2].isEmpty() ? 0 : IndexedElement.stringToFlag(parts[2], 0);
+        OffsetRange range = createOffsetRange(parts[3]);        
+        String attributes = parts[2];
 
         IndexedMethod m = new IndexedMethod(map, clz, getMethodName(methodSignature), type, getMethodParameter(methodSignature), attributes, flags);
         
-        if (offsetRangeIndex != -1) {
-            OffsetRange range = createOffsetRange(signature.substring(offsetRangeIndex + 1));
-            if (range != null) {
-                m.setOffsetRange(range);
-            }   
-        }
-        
+        if (range != null) {
+            m.setOffsetRange(range);
+        }   
+
         return m;
     }
 
@@ -696,42 +673,19 @@ public final class GroovyIndex {
 
         //String fqn = map.getValue(GroovyIndexer.FQN_NAME);
 
-        int typeIndex = signature.indexOf(';');
-        String name = signature;
-        String type = "java.lang.Object";
-        if (typeIndex != -1) {
-            int endIndex = signature.indexOf(';', typeIndex + 1);
-            if (endIndex == -1) {
-                endIndex = signature.length();
-            }
-            type = signature.substring(typeIndex + 1, endIndex);
-            name = signature.substring(0, typeIndex);
-        }
-
-        int attributeIndex = signature.indexOf(';', typeIndex + 1);
-        int offsetRangeIndex = signature.indexOf(";[", attributeIndex == -1 ? typeIndex + 1 : attributeIndex + 1);
-        String attributes = null;
-        int flags = 0;
-
-        if (attributeIndex != -1 && attributeIndex != offsetRangeIndex) {
-            flags = IndexedElement.stringToFlag(signature, attributeIndex + 1);
-
-            if (signature.length() > attributeIndex + 1) {
-                attributes = signature.substring(attributeIndex + 1, offsetRangeIndex != -1 ? offsetRangeIndex : signature.length());
-            }
-
-            //signature = signature.substring(0, attributeIndex);
-        }
-
+        String[] parts = signature.split(";");
+        String name = parts[0];
+        String type = parts[1].isEmpty() ? "java.lang.Object" : parts[1];
+        int flags = parts[2].isEmpty() ? 0 : IndexedElement.stringToFlag(parts[2], 0);
+        String isProperty = parts[3];
+        String attributes = flags + ";" + isProperty;
+        OffsetRange range = createOffsetRange(parts[4]);
+        
         IndexedField m = IndexedField.create(type, name, clz, map, attributes, flags);
         m.setInherited(inherited);
-
-        if (offsetRangeIndex != -1) {
-            OffsetRange range = createOffsetRange(signature.substring(offsetRangeIndex + 1));
-            if (range != null) {
-                m.setOffsetRange(range);
-            }   
-        }
+        if (range != null) {
+            m.setOffsetRange(range);
+        }   
         return m;
     }
 

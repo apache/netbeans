@@ -180,6 +180,7 @@ public class GroovyError implements Badging {
         hash = (11 * hash) + this.id.hashCode();
         hash = (11 * hash) + this.key.hashCode();
         hash = (11 * hash) + this.severity.hashCode();
+
         return hash;
     }
     

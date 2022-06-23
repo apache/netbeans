@@ -601,4 +601,72 @@ public class TinyTest extends NbTestCase {
                 .run(Tiny.class)
                 .assertWarnings();
     }
+
+    public void testInlineRedundantVariable1() throws Exception {
+        HintTest
+                .create()
+                .setCaretMarker('|')
+                .input("package test;\n" +
+                       "public class Test {\n" +
+                       "    private int test() {\n" +
+                       "        int i =| 10;\n" +
+                       "        return i;\n" +
+                       "    }\n" +
+                       "}\n")
+                .sourceLevel("1.7")
+                .run(Tiny.class)
+                .findWarning("3:15-3:15:hint:ERR_Tiny.inlineRedundantVar")
+                .applyFix("FIX_Tiny.inlineRedundantVar")
+                .assertCompilable()
+                .assertOutput("package test;\n" +
+                              "public class Test {\n" +
+                              "    private int test() {\n" +
+                              "        return 10;\n" +
+                              "    }\n" +
+                              "}\n");
+    }
+
+    public void testInlineRedundantVariable2() throws Exception {
+        HintTest
+                .create()
+                .setCaretMarker('|')
+                .input("package test;\n" +
+                       "public class Test {\n" +
+                       "    private int test() {\n" +
+                       "        System.out.println(\"Start\");\n" +
+                       "        int i =| 10;\n" +
+                       "        System.out.println(\"Stop\");\n" +
+                       "        return i;\n" +
+                       "    }\n" +
+                       "}\n")
+                .sourceLevel("1.7")
+                .run(Tiny.class)
+                .findWarning("4:15-4:15:hint:ERR_Tiny.inlineRedundantVar")
+                .applyFix("FIX_Tiny.inlineRedundantVar")
+                .assertCompilable()
+                .assertOutput("package test;\n" +
+                              "public class Test {\n" +
+                              "    private int test() {\n" +
+                              "        System.out.println(\"Start\");\n" +
+                              "        System.out.println(\"Stop\");\n" +
+                              "        return 10;\n" +
+                              "    }\n" +
+                              "}\n");
+    }
+    public void testInlineRedundantVariable3() throws Exception {
+        HintTest
+                .create()
+                .setCaretMarker('|')
+                .input("package test;\n" +
+                       "public class Test {\n" +
+                       "    private int test() {\n" +
+                       "        int i =| 10;\n" +
+                       "        System.out.println(i);\n" +
+                       "        return i;\n" +
+                       "    }\n" +
+                       "}\n")
+                .sourceLevel("1.7")
+                .run(Tiny.class)
+                .assertNotContainsWarnings("ERR_Tiny.inlineRedundantVar");
+    }
 }

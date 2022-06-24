@@ -28,7 +28,6 @@ import com.sun.source.tree.LiteralTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.ParenthesizedTree;
-import com.sun.source.tree.ReturnTree;
 import com.sun.source.tree.Scope;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.SwitchTree;
@@ -38,10 +37,10 @@ import com.sun.source.util.SourcePositions;
 import com.sun.source.util.TreePath;
 import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.lang.model.SourceVersion;
@@ -53,6 +52,7 @@ import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.GeneratorUtilities;
 import org.netbeans.api.java.source.TreeMaker;
 import org.netbeans.api.java.source.WorkingCopy;
+import org.netbeans.modules.java.hints.errors.Utilities;
 import org.netbeans.modules.java.hints.suggestions.FillSwitchCustomizer.CustomizerProviderImpl;
 import org.netbeans.spi.editor.hints.ErrorDescription;
 import org.netbeans.spi.editor.hints.Fix;
@@ -402,83 +402,18 @@ public class Tiny {
 
     }
 
-    @Hint(displayName = "#DN_org.netbeans.modules.java.hints.suggestions.Tiny.inlineRedundantVar", description = "#DESC_org.netbeans.modules.java.hints.suggestions.Tiny.inlineRedundantVar", category="suggestions", hintKind=Kind.ACTION, severity=Severity.HINT)
-    @TriggerPattern(value="$type $var = $init; $statements$ return $var;")
+    @Hint(displayName = "#DN_org.netbeans.modules.java.hints.suggestions.Tiny.inlineRedundantVar", description = "#DESC_org.netbeans.modules.java.hints.suggestions.Tiny.inlineRedundantVar", category="suggestions", severity=Severity.HINT)
+    @TriggerPattern(value="$before$; $type $var = $init; $statements$; return $var;")
     public static ErrorDescription inlineRedundantVar(HintContext ctx) {
         TreePath var = ctx.getVariables().get("$var");
-        if (var != null) {
+        Collection<? extends TreePath> stats = ctx.getMultiVariables().get("$statements$");
+        if (var != null && stats != null) {
             Element element = ctx.getInfo().getTrees().getElement(var);
-            if (element != null && element.getKind() == ElementKind.LOCAL_VARIABLE) {
-                TreePath parent = var.getParentPath();
-                if (parent.getLeaf().getKind() == Tree.Kind.BLOCK) {
-                    AtomicInteger usageFound = new AtomicInteger(0);
-                    new ErrorAwareTreePathScanner<Void, Element>() {
-                        @Override
-                        public Void visitIdentifier(IdentifierTree node, Element e) {
-                            TreePath currentPath = getCurrentPath();
-                            Element el = ctx.getInfo().getTrees().getElement(currentPath);
-                            if (el == e) {
-                                usageFound.incrementAndGet();
-                            }
-                            return null;
-                        }
-                    }.scan(parent, element);
-                    if (usageFound.get() == 1) {
-                        return ErrorDescriptionFactory.forName(ctx, var, NbBundle.getMessage(Tiny.class, "ERR_Tiny.inlineRedundantVar", element.getSimpleName()), new InlineRedundantVar(ctx.getInfo(), var).toEditorFix());
-                    }
-                }
+            if (element != null && element.getKind() == ElementKind.LOCAL_VARIABLE && !Utilities.isReferencedIn(ctx.getInfo(), var, stats)) {
+                Fix fix = JavaFixUtilities.rewriteFix(ctx, NbBundle.getMessage(Tiny.class, "FIX_Tiny.inlineRedundantVar", element.getSimpleName()), ctx.getPath(), "$before$; $statements$; return $init;");
+                return ErrorDescriptionFactory.forName(ctx, var, NbBundle.getMessage(Tiny.class, "ERR_Tiny.inlineRedundantVar", element.getSimpleName()), fix);
             }
         }
         return null;
-    }
-
-    private static class InlineRedundantVar extends JavaFix {
-
-        private final String name;
-
-        public InlineRedundantVar(CompilationInfo info, TreePath tp) {
-            super(info, tp);
-            this.name = ((VariableTree) tp.getLeaf()).getName().toString();
-        }
-
-        @Override
-        protected String getText() {
-            return NbBundle.getMessage(Tiny.class, "FIX_Tiny.inlineRedundantVar", name);
-        }
-
-        @Override
-        protected void performRewrite(TransformationContext ctx) throws Exception {
-            WorkingCopy wc = ctx.getWorkingCopy();
-            TreePath tp = ctx.getPath();
-            Tree parent = tp.getParentPath().getLeaf();
-            List<? extends StatementTree> statements;
-            switch (parent.getKind()) {
-                case BLOCK: statements = ((BlockTree) parent).getStatements(); break;
-                case CASE: statements = ((CaseTree) parent).getStatements(); break;
-                default: throw new IllegalStateException(parent.getKind().name());
-            }
-            VariableTree var = (VariableTree) tp.getLeaf();
-            Element el = wc.getTrees().getElement(tp);
-            int current = statements.indexOf(tp.getLeaf());
-            Tree target;
-            TreeMaker make = wc.getTreeMaker();
-            switch (parent.getKind()) {
-                case BLOCK: target = make.removeBlockStatement((BlockTree) parent, current); break;
-                case CASE: target = make.removeCaseStatement((CaseTree) parent, current); break;
-                default: throw new IllegalStateException(parent.getKind().name());
-            }
-            for (int i = current; i < statements.size(); i++) {
-                StatementTree stat = statements.get(i);
-                if (stat.getKind() == Tree.Kind.RETURN) {
-                    ExpressionTree exp = ((ReturnTree) stat).getExpression();
-                    if (exp.getKind() == Tree.Kind.IDENTIFIER) {
-                        if (wc.getTrees().getElement(new TreePath(tp, exp)) == el) {
-                            wc.rewrite(exp, var.getInitializer());
-                        }
-                    }
-                }
-            }
-            wc.rewrite(parent, target);
-        }
     }
 }

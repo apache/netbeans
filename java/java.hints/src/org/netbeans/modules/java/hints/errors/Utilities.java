@@ -126,6 +126,7 @@ import org.openide.util.Exceptions;
 import static com.sun.source.tree.Tree.Kind.*;
 import com.sun.source.tree.UnaryTree;
 import com.sun.source.util.TreePathScanner;
+import com.sun.source.util.Trees;
 import com.sun.tools.javac.api.JavacScope;
 import com.sun.tools.javac.api.JavacTaskImpl;
 import com.sun.tools.javac.code.Type;
@@ -1047,6 +1048,67 @@ public class Utilities {
         Element enclosingMethodElement = ctx.getInfo().getTrees().getElement(method);
         return (enclosingMethodElement != null &&
                 enclosingMethodElement.getKind() == ElementKind.CONSTRUCTOR);
+    }
+
+    @SuppressWarnings("BoxedValueEquality")
+    public static boolean isReferencedIn(CompilationInfo info, TreePath variable, Iterable<? extends TreePath> in) {
+        final Trees trees = info.getTrees();
+        final Element e = trees.getElement(variable);
+
+        if (e == null) { //TODO: check also error
+            return false;
+        }
+
+        for (TreePath tp : in) {
+
+            if (e.equals(trees.getElement(tp))) {
+                return true;
+            }
+
+            boolean occurs = new ErrorAwareTreePathScanner<Boolean, Void>() {
+                private boolean found = false;
+                @Override
+                public Boolean scan(Tree tree, Void p) {
+                    if (found) {
+                        return true; // fast path
+                    }
+
+                    if (tree == null) {
+                        return false;
+                    }
+
+                    TreePath currentPath = new TreePath(getCurrentPath(), tree);
+                    Element currentElement = trees.getElement(currentPath);
+
+                    if (e.equals(currentElement)) {
+                        found = true;
+                        return true;
+                    }
+
+                    return super.scan(tree, p);
+                }
+
+                @Override
+                public Boolean reduce(Boolean r1, Boolean r2) {
+                    if (r1 == null) {
+                        return r2;
+                    }
+
+                    if (r2 == null) {
+                        return r1;
+                    }
+
+                    return r1 || r2;
+                }
+
+            }.scan(tp, null) == Boolean.TRUE;
+
+            if (occurs) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public static Pair<List<? extends TypeMirror>, List<String>> resolveArguments(CompilationInfo info, TreePath invocation, List<? extends ExpressionTree> realArguments, Element target) {

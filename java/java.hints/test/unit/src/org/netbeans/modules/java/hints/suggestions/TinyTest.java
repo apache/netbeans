@@ -615,7 +615,7 @@ public class TinyTest extends NbTestCase {
                        "}\n")
                 .sourceLevel("1.7")
                 .run(Tiny.class)
-                .findWarning("3:15-3:15:hint:ERR_Tiny.inlineRedundantVar")
+                .findWarning("3:12-3:13:hint:ERR_Tiny.inlineRedundantVar")
                 .applyFix("FIX_Tiny.inlineRedundantVar")
                 .assertCompilable()
                 .assertOutput("package test;\n" +
@@ -641,7 +641,7 @@ public class TinyTest extends NbTestCase {
                        "}\n")
                 .sourceLevel("1.7")
                 .run(Tiny.class)
-                .findWarning("4:15-4:15:hint:ERR_Tiny.inlineRedundantVar")
+                .findWarning("4:12-4:13:hint:ERR_Tiny.inlineRedundantVar")
                 .applyFix("FIX_Tiny.inlineRedundantVar")
                 .assertCompilable()
                 .assertOutput("package test;\n" +

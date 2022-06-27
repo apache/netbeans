@@ -173,7 +173,9 @@ public final class ErrorHintsProvider extends JavaParserResultTask {
             ERR.log(ErrorManager.INFORMATIONAL, "ehm=" + ehm);
         }
 
-        final Position[] range = getLine(info, d, doc, pos, (int) d.getEndPosition());
+        int endPos = (int) d.getEndPosition();
+
+        final Position[] range = getLine(info, d, doc, pos, endPos < 0 ? pos : endPos);
 
         if (isCanceled()) {
             return null;

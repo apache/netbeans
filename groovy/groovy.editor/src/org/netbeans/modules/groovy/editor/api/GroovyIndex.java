@@ -55,6 +55,10 @@ public final class GroovyIndex {
     private static final GroovyIndex EMPTY = new GroovyIndex(null);
     private static final String CLUSTER_URL = "cluster:"; // NOI18N
     private static String clusterUrl = null;
+    private static String cachedPrefix = null;
+    private static boolean cachedInsensitive = true;
+    private static Pattern cachedCamelCasePattern = null;
+    
     private final QuerySupport querySupport;
 
 
@@ -168,42 +172,15 @@ public final class GroovyIndex {
             }
 
             if (classFqn != null) {
-                if (kind == QuerySupport.Kind.CASE_INSENSITIVE_PREFIX ||
-                        kind == QuerySupport.Kind.CASE_INSENSITIVE_REGEXP) {
+                String in = map.getValue(GroovyIndexer.IN);
+                if (kind == QuerySupport.Kind.CASE_INSENSITIVE_REGEXP) {
                     if (!classFqn.equalsIgnoreCase(map.getValue(GroovyIndexer.IN))) {
                         continue;
                     }
-                } else if (kind == QuerySupport.Kind.CAMEL_CASE) {
-                    String in = map.getValue(GroovyIndexer.IN);
-                    if (in != null) {
-                        // Superslow, make faster 
-                        StringBuilder sb = new StringBuilder();
-                        int lastIndex = 0;
-                        int idx;
-                        do {
-
-                            int nextUpper = -1;
-                            for( int i = lastIndex+1; i < classFqn.length(); i++ ) {
-                                if ( Character.isUpperCase(classFqn.charAt(i)) ) {
-                                    nextUpper = i;
-                                    break;
-                                }
-                            }
-                            idx = nextUpper;
-                            String token = classFqn.substring(lastIndex, idx == -1 ? classFqn.length(): idx);
-                            sb.append(token); 
-                            sb.append( idx != -1 ?  "[\\p{javaLowerCase}\\p{Digit}_\\$]*" : ".*"); // NOI18N         
-                            lastIndex = idx;
-                        }
-                        while(idx != -1);
-
-                        final Pattern pattern = Pattern.compile(sb.toString());
-                        if (!pattern.matcher(in).matches()) {
-                            continue;
-                        }
-                    } else {
-                        continue;
-                    }
+                } else if (kind == QuerySupport.Kind.CAMEL_CASE && !matchCamelCase(classFqn, in, false)) {    
+                    continue;
+                } else if (kind == QuerySupport.Kind.CASE_INSENSITIVE_CAMEL_CASE && !matchCamelCase(classFqn, in, true)) {    
+                    continue;
                 } else {
                     if (!classFqn.equals(map.getValue(GroovyIndexer.IN))) {
                         continue;
@@ -243,6 +220,9 @@ public final class GroovyIndex {
 
             for (String constructor : constructors) {
                 String[] parts = constructor.split(";");
+                if (parts.length < 4) {
+                    continue;
+                }
                 String paramList = parts[1];
                 String[] params = paramList.split(",");
 
@@ -318,7 +298,9 @@ public final class GroovyIndex {
                         continue;
                     } else if (kind == QuerySupport.Kind.CASE_INSENSITIVE_PREFIX && !signature.regionMatches(true, 0, name, 0, name.length())) {
                         continue;
-                    } else if (kind == QuerySupport.Kind.CASE_INSENSITIVE_CAMEL_CASE && !matchInsensitiveCamelCase(name, signature)) {    
+                    } else if (kind == QuerySupport.Kind.CASE_INSENSITIVE_CAMEL_CASE && !matchCamelCase(name, signature, true)) {    
+                        continue;
+                    } else if (kind == QuerySupport.Kind.CAMEL_CASE && !matchCamelCase(name, signature, false)) {    
                         continue;
                     } else if (kind == QuerySupport.Kind.CASE_INSENSITIVE_REGEXP) {
                         int len = signature.length();
@@ -350,31 +332,54 @@ public final class GroovyIndex {
 
                     // XXX THIS DOES NOT WORK WHEN THERE ARE IDENTICAL SIGNATURES!!!
                     assert map != null;
-                    methods.add(createMethod(signature, map));
+                    IndexedMethod method = createMethod(signature, map);
+                    if (method != null) {
+                        methods.add(method);
+                    }
                 }
             }
         }
 
         return methods;
     }
-
-    private boolean matchInsensitiveCamelCase(String text, String where) {
-        if (text.length() > where.length()) {
+    
+    // protected for test reasons.
+    protected static boolean matchCamelCase(String prefix, String where, boolean insensitive) {
+        if (where == null || where.length() == 0 || prefix == null || prefix.length() == 0) {
             return false;
         }
-        String textP = text.toLowerCase();
-        String whereP = where.toLowerCase();
-        int index = -1;
-        for (int i = 0; i < textP.length(); i++) {
-            index = whereP.indexOf(textP.charAt(i), index + 1);
-            if (index == -1) {
-                return false;
-            }
-            if (whereP.length() <= (index + 1)) {
-                return false;
+        if (!prefix.equals(cachedPrefix) || cachedInsensitive != insensitive) {
+            cachedCamelCasePattern = null;
+        }
+        if (cachedCamelCasePattern == null) {
+            StringBuilder sb = new StringBuilder();
+            int lastIndex = 0;
+            int index;
+            do {
+                index = findNextUpper(prefix, lastIndex + 1);
+                String token = prefix.substring(lastIndex, index == -1 ? prefix.length() : index);
+                if (insensitive) {
+                    sb.append('(').append(token).append('|').append(token.toLowerCase()).append(')');
+                } else {
+                    sb.append(token);
+                }
+                sb.append(index != -1 ? "[\\p{javaLowerCase}\\p{Digit}_\\$]*" : ".*"); // NOI18N         
+                lastIndex = index;
+            } while (index != -1);
+            cachedPrefix = prefix;
+            cachedInsensitive = insensitive;
+            cachedCamelCasePattern = Pattern.compile(sb.toString());
+        }
+        return cachedCamelCasePattern.matcher(where).matches();
+    }
+    
+    private static int findNextUpper(String text, int offset) {
+        for (int i = offset; i < text.length(); i++) {
+            if (Character.isUpperCase(text.charAt(i))) {
+                return i;
             }
         }
-        return true;
+        return -1;
     }
     
     /**
@@ -447,34 +452,37 @@ public final class GroovyIndex {
                         continue;
                     } else if (kind == QuerySupport.Kind.CASE_INSENSITIVE_PREFIX && !signature.regionMatches(true, 0, name, 0, name.length())) {
                         continue;
-                    } else if (kind == QuerySupport.Kind.CASE_INSENSITIVE_REGEXP) {
+                    } else {
                         int len = signature.length();
                         int end = signature.indexOf(';');
                         if (end == -1) {
                             end = len;
                         }
 
-                        String n = end != len ? signature.substring(0, end) : signature;
-                        try {
-                            if (!n.matches(name)) {
-                                continue;
+                        String fieldName = end != len ? signature.substring(0, end) : signature;
+                        if (originalKind == QuerySupport.Kind.EXACT && !name.equals(fieldName)) {
+                            continue;
+                        } else if (kind == QuerySupport.Kind.CASE_INSENSITIVE_REGEXP) {
+                            try {
+                                if (!fieldName.matches(name)) {
+                                    continue;
+                                }
+                            } catch (PatternSyntaxException e) {
+                                // Silently ignore regexp failures in the search expression
                             }
-                        } catch (PatternSyntaxException e) {
-                            // Silently ignore regexp failures in the search expression
-                        }
-                    } else if (originalKind == QuerySupport.Kind.EXACT) {
-                        // Make sure the name matches exactly
-                        // We know that the prefix is correct from the first part of
-                        // this if clause, by the signature may have more
-                        if ((signature.length() > name.length()) &&
-                                (signature.charAt(name.length()) != ';')) {
+                        } else if (kind == QuerySupport.Kind.CAMEL_CASE && !matchCamelCase(name, fieldName, false)) {
+                            continue;
+                        } else if (kind == QuerySupport.Kind.CASE_INSENSITIVE_CAMEL_CASE && !matchCamelCase(name, fieldName, true)) {
                             continue;
                         }
                     }
 
                     // XXX THIS DOES NOT WORK WHEN THERE ARE IDENTICAL SIGNATURES!!!
                     assert map != null;
-                    fields.add(createField(signature, map, inherited));
+                    IndexedField createdField = createField(signature, map, inherited);
+                    if (createdField != null) {
+                        fields.add(createdField);
+                    }
                 }
             }
         }
@@ -560,7 +568,9 @@ public final class GroovyIndex {
                             seenSignatures.add(signature);
 
                             IndexedMethod method = createMethod(signature, map);
-                            methods.add(method);
+                            if (method != null) {
+                                methods.add(method);
+                            }
                         }
                     }
                 }
@@ -616,6 +626,9 @@ public final class GroovyIndex {
         //String fqn = map.getValue(GroovyIndexer.FQN_NAME);
 
         String[] parts = signature.split(";");
+        if (parts.length < 4) {
+            return null;
+        }
         String methodSignature = parts[0];
         String type = parts[1].isEmpty() ? "void" : parts[1];
         int flags = parts[2].isEmpty() ? 0 : IndexedElement.stringToFlag(parts[2], 0);
@@ -674,6 +687,9 @@ public final class GroovyIndex {
         //String fqn = map.getValue(GroovyIndexer.FQN_NAME);
 
         String[] parts = signature.split(";");
+        if (parts.length < 5) {
+            return null;
+        }
         String name = parts[0];
         String type = parts[1].isEmpty() ? "java.lang.Object" : parts[1];
         int flags = parts[2].isEmpty() ? 0 : IndexedElement.stringToFlag(parts[2], 0);
@@ -693,7 +709,7 @@ public final class GroovyIndex {
         OffsetRange result = null;
         int offsetStartIndex = text.indexOf('[');
         int commaIndex = text.indexOf(',', offsetStartIndex + 1);
-        int offsetLastIndex = text.indexOf(']', commaIndex != -1 ? commaIndex : offsetStartIndex);
+        int offsetLastIndex = text.indexOf(']', commaIndex + 1);
         if (offsetStartIndex != -1 && commaIndex != -1 && offsetLastIndex != -1) {
             int startOffset = Integer.parseInt(text.substring(offsetStartIndex + 1, commaIndex));
             int endOffset = Integer.parseInt(text.substring(commaIndex + 1, offsetLastIndex));

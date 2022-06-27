@@ -66,7 +66,7 @@ public class GroovyTypeSearcher implements IndexSearcher {
 
         kind = adjustKind(kind, textForQuery);
         
-        if (kind == QuerySupport.Kind.CASE_INSENSITIVE_PREFIX /*|| kind == QuerySupport.Kind.CASE_INSENSITIVE_REGEXP*/) {
+        if (kind == QuerySupport.Kind.CASE_INSENSITIVE_PREFIX) {
             textForQuery = textForQuery.toLowerCase(Locale.ENGLISH);
         }
         

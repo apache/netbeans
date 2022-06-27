@@ -22,12 +22,14 @@ package org.netbeans.modules.gradle.tooling;
 import groovy.lang.MissingPropertyException;
 import java.io.File;
 import java.io.Serializable;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import static java.util.Arrays.asList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -58,6 +60,7 @@ import org.gradle.api.attributes.Attribute;
 import org.gradle.api.attributes.AttributeContainer;
 import org.gradle.api.distribution.DistributionContainer;
 import org.gradle.api.file.ConfigurableFileCollection;
+import org.gradle.api.file.DirectoryProperty;
 import org.gradle.api.initialization.IncludedBuild;
 import org.gradle.api.plugins.JavaPlatformPlugin;
 import org.gradle.api.specs.Specs;
@@ -267,6 +270,29 @@ class NbProjectInfoBuilder {
                 .forEach(e -> nbprops.put(e.getKey().substring(NB_PREFIX.length()), String.valueOf(e.getValue())));
         model.getInfo().put("nbprops", nbprops);
     }
+    
+    private Path longestPrefixPath(List<Path> files) {
+        if (files.size() < 2) {
+            return null;
+        }
+        Path first = files.get(0);
+        Path result = null;
+        Path root = first.getRoot();
+        int count = first.getNameCount();
+        for (int i = 1; i <= count; i++) {
+            Path match = root != null ? root.resolve(first.subpath(0, i)) : first.subpath(0, i);
+            
+            for (int pi = 1; pi < files.size(); pi++) {
+                Path p = files.get(pi);
+                if (!p.startsWith(match)) {
+                    return result;
+                }
+            }
+            result = match;
+        }
+        // if all paths (more than one) are the same, something is strange.
+        return null;
+    }
 
     private void detectSources(NbProjectInfoModel model) {
         long time = System.currentTimeMillis();
@@ -277,15 +303,36 @@ class NbProjectInfoBuilder {
         boolean hasKotlin = project.getPlugins().hasPlugin("org.jetbrains.kotlin.android") ||
                             project.getPlugins().hasPlugin("org.jetbrains.kotlin.js") ||
                             project.getPlugins().hasPlugin("org.jetbrains.kotlin.jvm");
-
+        Map<String, Boolean> available = new HashMap<>();
+        available.put("java", hasJava);
+        available.put("groovy", hasGroovy);
+        available.put("kotlin", hasKotlin);
+        
         if (hasJava) {
             SourceSetContainer sourceSets = (SourceSetContainer) getProperty(project, "sourceSets");
             if (sourceSets != null) {
                 model.getInfo().put("sourcesets", storeSet(sourceSets.getNames()));
                 for(SourceSet sourceSet: sourceSets) {
                     String propBase = "sourceset_" + sourceSet.getName() + "_";
+                    
+                    Set<File> outDirs = new LinkedHashSet<>();
+                    sinceGradle("4.0", () -> {
+                        // classesDirs is just an iterable
+                        for (File dir: (ConfigurableFileCollection) getProperty(sourceSet, "output", "classesDirs")) {
+                            outDirs.add(dir);
+                        }
+                    });
+                    beforeGradle("4.0", () -> {
+                        outDirs.add((File)getProperty(sourceSet, "output", "classesDir"));
+                    });
+                    
+                    List<Path> outPaths = outDirs.stream().map(File::toPath).collect(Collectors.toList());
+                    // find the longest common prefix:
+                    Path base = longestPrefixPath(outPaths);
+                    
                     for(String lang: new String[] {"JAVA", "GROOVY", "SCALA", "KOTLIN"}) {
-                        Task compileTask = project.getTasks().findByName(sourceSet.getCompileTaskName(lang.toLowerCase()));
+                        String langId = lang.toLowerCase();
+                        Task compileTask = project.getTasks().findByName(sourceSet.getCompileTaskName(langId));
                         if (compileTask != null) {
                             model.getInfo().put(
                                     propBase + lang + "_source_compatibility",
@@ -307,6 +354,43 @@ class NbProjectInfoBuilder {
                             }
                             model.getInfo().put(propBase + lang + "_compiler_args", new ArrayList<>(compilerArgs));
                         }
+                        if (Boolean.TRUE.equals(available.get(langId))) {
+                            model.getInfo().put(propBase + lang, storeSet(getProperty(sourceSet, langId, "srcDirs")));
+                            DirectoryProperty dirProp = (DirectoryProperty)getProperty(sourceSet, langId, "classesDirectory");
+                            if (dirProp != null) {
+                                File outDir;
+                                
+                                if (dirProp.isPresent()) {
+                                    outDir = dirProp.get().getAsFile();
+                                } else {
+                                    // kotlin plugin uses some weird late binding, so it has the output item, but it cannot be resolved to a 
+                                    // concrete file path at this time. Let's make an approximation from 
+                                    Path candidate = null;
+                                    if (base != null) {
+                                        Path prefix = base.resolve(langId);
+                                        // assume the language has just one output dir in the source set:
+                                        for (int i = 0; i < outPaths.size(); i++) {
+                                            Path p = outPaths.get(i);
+                                            if (p.startsWith(prefix)) {
+                                                if (candidate != null) {
+                                                    candidate = null;
+                                                    break;
+                                                } else {
+                                                    candidate = p;
+                                                }
+                                            }
+                                        }
+                                    }
+                                    if (candidate != null) {
+                                        outDir = candidate.toFile();
+                                    } else {
+                                        outDir = new File("");
+                                    }
+                                }
+                                
+                                model.getInfo().put(propBase + lang + "_output_classes", outDir);
+                            }
+                        }
                     }
    
                     model.getInfo().put(propBase + "JAVA", storeSet(getProperty(sourceSet, "java", "srcDirs")));
@@ -320,17 +404,7 @@ class NbProjectInfoBuilder {
                     if (hasKotlin) {
                         model.getInfo().put(propBase + "KOTLIN", storeSet(getProperty(getProperty(sourceSet, "kotlin"), "srcDirs")));
                     }
-                    sinceGradle("4.0", () -> {
-                        Set<File> dirs = new LinkedHashSet<>();
-                        // classesDirs is just an iterable
-                        for (File dir: (ConfigurableFileCollection) getProperty(sourceSet, "output", "classesDirs")) {
-                            dirs.add(dir);
-                        }
-                        model.getInfo().put(propBase + "output_classes", dirs);
-                    });
-                    beforeGradle("4.0", () -> {
-                        model.getInfo().put(propBase + "output_classes", Collections.singleton(getProperty(sourceSet, "output", "classesDir")));
-                    });
+                    model.getInfo().put(propBase + "output_classes", outDirs);
                     model.getInfo().put(propBase + "output_resources", sourceSet.getOutput().getResourcesDir());
                     sinceGradle("5.2", () -> {
                         model.getInfo().put(propBase + "GENERATED", storeSet(getProperty(sourceSet, "output", "generatedSourcesDirs", "files")));

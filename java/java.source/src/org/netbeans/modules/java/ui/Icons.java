@@ -95,8 +95,8 @@ public final class Icons {
                     icon = ImageUtilities.loadImageIcon(ICON_BASE + "record" + PNG_EXTENSION, false);
                     break;
                 }
-                if (elementKind.name().equals("STATE_COMPONENT")) {
-                    icon = ImageUtilities.loadImageIcon(ICON_BASE + "stateComponent" + PNG_EXTENSION, false);
+                if (elementKind.name().equals("RECORD_COMPONENT")) {
+                    icon = ImageUtilities.loadImageIcon(ICON_BASE + "recordComponent" + PNG_EXTENSION, false);
                     break;
                 }
 	        icon = null;

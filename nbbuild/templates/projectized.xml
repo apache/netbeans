@@ -290,7 +290,7 @@
     <target name="test-lib-init" depends="-init-bootclasspath-prepend,init,-build-libs.junit4">
         <path id="test.unit.lib.cp"/>
         <property name="test.jms.flags" value=""/>
-        <property name="test.run.args" value="-ea -Xmx700m ${metabuild.jms-flags.jvm} ${test.jms.flags} -XX:+IgnoreUnrecognizedVMOptions"/>
+        <property name="test.run.args" value="-ea -Xms1200m -Xmx1200m -XX:+UseParallelGC ${metabuild.jms-flags.jvm} ${test.jms.flags} -XX:+IgnoreUnrecognizedVMOptions"/>
         <property name="extra.test.libs.dir" location="${test.dist.dir}/extralibs"/>
         <macrodef name="test-init-nborg">
             <attribute name="test.type"/>

@@ -215,7 +215,8 @@ public final class ElementUtilities {
      * @see Elements#getAllMembers
      */
     public Iterable<? extends Element> getMembers(TypeMirror type, ElementAcceptor acceptor) {
-        Map<String, List<Element>> members = new HashMap<>();
+        List<Element> membersList = new ArrayList<>();
+        Map<String, List<Element>> membersMap = new HashMap<>();
         if (type != null) {
             if (acceptor == null) {
                 acceptor = ALL_ACCEPTOR;
@@ -230,18 +231,18 @@ public final class ElementUtilities {
                     if (te == null) break;
                     for (Element member : elements.getAllMembers(te)) {
                         if (acceptor.accept(member, type)) {
-                            addIfNotHidden(member, members, elements, types);
+                            addIfNotHidden(member, membersList, membersMap, elements, types);
                         }
                     }
                     if (te.getKind().isClass() || te.getKind().isInterface() && SourceLevelUtils.allowDefaultMethods(Source.instance(ctx))) {
                         VarSymbol thisPseudoMember = new VarSymbol(Flags.FINAL | Flags.HASINIT, Names.instance(ctx)._this, (ClassType)te.asType(), (ClassSymbol)te);
                         if (acceptor.accept(thisPseudoMember, type)) {
-                            addAlways(thisPseudoMember, members);
+                            addAlways(thisPseudoMember, membersList, membersMap);
                         }
                         if (te.getSuperclass().getKind() == TypeKind.DECLARED) {
                             VarSymbol superPseudoMember = new VarSymbol(Flags.FINAL | Flags.HASINIT, Names.instance(ctx)._super, (ClassType)te.getSuperclass(), (ClassSymbol)te);
                             if (acceptor.accept(superPseudoMember, type)) {
-                                addAlways(superPseudoMember, members);
+                                addAlways(superPseudoMember, membersList, membersMap);
                             }
                         }
                     }
@@ -259,13 +260,13 @@ public final class ElementUtilities {
                     t = new ClassType(t.getEnclosingType(), typeargs, t.tsym);
                     Element classPseudoMember = new VarSymbol(Flags.STATIC | Flags.PUBLIC | Flags.FINAL, Names.instance(ctx)._class, t, ((Type)type).tsym);
                     if (acceptor.accept(classPseudoMember, type)) {
-                        addAlways(classPseudoMember, members);
+                        addAlways(classPseudoMember, membersList, membersMap);
                     }
                     break;
                 case ARRAY:
                     for (Element member : elements.getAllMembers((TypeElement)((Type)type).tsym)) {
                         if (acceptor.accept(member, type)) {
-                            addAlways(member, members);
+                            addAlways(member, membersList, membersMap);
                         }
                     }
                     t = Symtab.instance(ctx).classType;
@@ -273,12 +274,12 @@ public final class ElementUtilities {
                     t = new ClassType(t.getEnclosingType(), typeargs, t.tsym);
                     classPseudoMember = new VarSymbol(Flags.STATIC | Flags.PUBLIC | Flags.FINAL, Names.instance(ctx)._class, t, ((Type)type).tsym);
                     if (acceptor.accept(classPseudoMember, type)) {
-                        addAlways(classPseudoMember, members);
+                        addAlways(classPseudoMember, membersList, membersMap);
                     }
                     break;
             }
         }
-        return flattenMembers(members);
+        return membersList;
     }
     
     /**
@@ -337,20 +338,20 @@ public final class ElementUtilities {
             if (cls != null) {
                 for (Element local : scope.getLocalElements()) {
                     if (acceptor.accept(local, null)) {
-                        addIfNotHidden(local, members, elements, types);
+                        addIfNotHidden(local, null, members, elements, types);
                     }
                 }
                 TypeMirror type = cls.asType();
                 for (Element member : elements.getAllMembers(cls)) {
                     if (acceptor.accept(member, type)) {
-                        addIfNotHidden(member, members, elements, types);
+                        addIfNotHidden(member, null, members, elements, types);
                     }
                 }
             } else {
                 for (Element local : scope.getLocalElements()) {
                     if (!local.getKind().isClass() && !local.getKind().isInterface() &&
                         (local.getEnclosingElement() != null && acceptor.accept(local, local.getEnclosingElement().asType()))) {
-                        addIfNotHidden(local, members, elements, types);
+                        addIfNotHidden(local, null, members, elements, types);
                     }
                 }
             }
@@ -370,14 +371,25 @@ public final class ElementUtilities {
         return result;
     }
 
-    private static void addAlways(Element element, Map<String, List<Element>> members) {
+    /**
+     * @param list is used to collect elements in encounter order
+     * @param members is only used for fast isHidden() checks later
+     */
+    private static void addAlways(Element element, List<Element> list, Map<String, List<Element>> members) {
         String name = element.getSimpleName().toString();
         members.computeIfAbsent(name, (e) -> new ArrayList<>()).add(element);
+        if (list != null) {
+            list.add(element);
+        }
     }
-    
-    private static <E extends Element> void addIfNotHidden(E element, Map<String, List<E>> members, Elements elements, Types types) {
+
+    /**
+     * @param list is used to collect elements in encounter order
+     * @param map is only used for fast isHidden() checks later
+     */
+    private static <E extends Element> void addIfNotHidden(E element, List<E> list, Map<String, List<E>> map, Elements elements, Types types) {
         String name = element.getSimpleName().toString();
-        List<E> namedMembers = members.get(name);
+        List<E> namedMembers = map.get(name);
         if (namedMembers != null) {
             // PENDING: isHidden will not report variables, which are effectively hidden by anonymous or local class' variables.
             // there is no way how to denote such hidden local variable/paremeter from the inner class, so such vars should
@@ -387,23 +399,19 @@ public final class ElementUtilities {
             }
         } else {
             namedMembers = new ArrayList<>();
-            members.put(name, namedMembers);
+            map.put(name, namedMembers);
+        }
+        if (list != null) {
+            list.add(element);
         }
         namedMembers.add(element);
-    }
-
-    private static <E> List<E> flattenMembers(Map<String, List<E>> members) {
-        List<E> result = new ArrayList<>();
-        for (List<E> list : members.values()) {
-            result.addAll(list);
-        }
-        return result;
     }
 
     /**Return members declared in the given scope.
      */
     public Iterable<? extends Element> getLocalMembersAndVars(Scope scope, ElementAcceptor acceptor) {
-        Map<String, List<Element>> members = new HashMap<>();
+        ArrayList<Element> membersList = new ArrayList<>();
+        Map<String, List<Element>> membersMap = new HashMap<>();
         if (acceptor == null) {
             acceptor = ALL_ACCEPTOR;
         }
@@ -414,33 +422,34 @@ public final class ElementUtilities {
             if ((cls = scope.getEnclosingClass()) != null) {
                 for (Element local : scope.getLocalElements()) {
                     if (acceptor.accept(local, null)) {
-                        addIfNotHidden(local, members, elements, types);
+                        addIfNotHidden(local, membersList, membersMap, elements, types);
                     }
                 }
                 TypeMirror type = cls.asType();
                 for (Element member : elements.getAllMembers(cls)) {
                     if (acceptor.accept(member, type)) {
-                        addIfNotHidden(member, members, elements, types);
+                        addIfNotHidden(member, membersList, membersMap, elements, types);
                     }
                 }
             } else {
                 for (Element local : scope.getLocalElements()) {
                     if (!local.getKind().isClass() && !local.getKind().isInterface() &&
                         (local.getEnclosingElement() != null && acceptor.accept(local, local.getEnclosingElement().asType()))) {
-                        addIfNotHidden(local, members, elements, types);
+                        addIfNotHidden(local, membersList, membersMap, elements, types);
                     }
                 }
             }
             scope = scope.getEnclosingScope();
         }
 
-        return flattenMembers(members);
+        return membersList;
     }
 
     /**Return variables declared in the given scope.
      */
     public Iterable<? extends Element> getLocalVars(Scope scope, ElementAcceptor acceptor) {
-        Map<String, List<Element>> members = new HashMap<>();
+        ArrayList<Element> membersList = new ArrayList<>();
+        Map<String, List<Element>> membersMap = new HashMap<>();
         if (acceptor == null) {
             acceptor = ALL_ACCEPTOR;
         }
@@ -449,12 +458,12 @@ public final class ElementUtilities {
         while(scope != null && scope.getEnclosingClass() != null) {
             for (Element local : scope.getLocalElements()) {
                 if (acceptor.accept(local, null)) {
-                    addIfNotHidden(local, members, elements, types);
+                    addIfNotHidden(local, membersList, membersMap, elements, types);
                 }
             }
             scope = scope.getEnclosingScope();
         }
-        return flattenMembers(members);
+        return membersList;
     }
     
     /**Return {@link TypeElement}s:
@@ -465,7 +474,8 @@ public final class ElementUtilities {
      * </ul>
      */
     public Iterable<? extends TypeElement> getGlobalTypes(ElementAcceptor acceptor) {
-        Map<String, List<TypeElement>> members = new HashMap<>();
+        ArrayList<TypeElement> membersList = new ArrayList<>();
+        Map<String, List<TypeElement>> membersMap = new HashMap<>();
         if (acceptor == null) {
             acceptor = ALL_ACCEPTOR;
         }
@@ -479,7 +489,7 @@ public final class ElementUtilities {
                 for (Element local : scope.getLocalElements()) {
                     if (local.getKind().isClass() || local.getKind().isInterface()) {
                         if (acceptor.accept(local, null)) {
-                            addIfNotHidden((TypeElement)local, members, elements, types);
+                            addIfNotHidden((TypeElement)local, membersList, membersMap, elements, types);
                         }
                     }
                 }
@@ -489,7 +499,7 @@ public final class ElementUtilities {
             if (element != null && element.getKind() == ElementKind.PACKAGE) {
                 for (Element member : element.getEnclosedElements()) {
                     if (acceptor.accept(member, null)) {
-                        addIfNotHidden((TypeElement)member, members, elements, types);
+                        addIfNotHidden((TypeElement)member, membersList, membersMap, elements, types);
                     }
                 }
             }
@@ -497,14 +507,14 @@ public final class ElementUtilities {
                 for (Element local : scope.getLocalElements()) {
                     if (local.getKind().isClass() || local.getKind().isInterface()) {
                         if (acceptor.accept(local, null)) {
-                            addIfNotHidden((TypeElement)local, members, elements, types);
+                            addIfNotHidden((TypeElement)local, membersList, membersMap, elements, types);
                         }
                     }
                 }
                 scope = scope.getEnclosingScope();
             }
         }
-        return flattenMembers(members);
+        return membersList;
     }
 
     /**Filter {@link Element}s

@@ -4,6 +4,6 @@ var myObject10 = (new myObject()).p|roperty1.toLocaleString().fontsize().toPreci
 ------------------------------------
 CLASS      prototype                       [PUBLIC]   JS Platform
 METHOD     preventExtensions(o: Object):   [PUBLIC,   JS Platform
-METHOD     propertyIsEnumerable(v: String  [PUBLIC]   JS Platform
+METHOD     propertyIsEnumerable(v: Number  [PUBLIC]   JS Platform
 FIELD      property1: Number               [PUBLIC]   issue230784.js
 FIELD      property2: String               [PUBLIC]   issue230784.js

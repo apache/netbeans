@@ -4,9 +4,9 @@ p| // cc doesn't offer e.g. pull() or push()
 ------------------------------------
 METHOD     parseFloat(string: String): Nu  [PUBLIC]   JS Platform
 METHOD     parseInt(string: String): Numb  [PUBLIC]   JS Platform
-METHOD     pop():  undefine|Object         [PUBLIC]   JS Platform
+METHOD     pop(): Object|undefined         [PUBLIC]   JS Platform
 METHOD     preventExtensions(o: Object):   [PUBLIC,   JS Platform
-METHOD     propertyIsEnumerable(v: String  [PUBLIC]   JS Platform
+METHOD     propertyIsEnumerable(v: Number  [PUBLIC]   JS Platform
 METHOD     push(items: T[]): Number        [PUBLIC]   JS Platform
 VARIABLE   pavel: Man                      [PUBLIC]   test02.js
 VARIABLE   pe234390: Person234390          [PUBLIC]   issue234390.js

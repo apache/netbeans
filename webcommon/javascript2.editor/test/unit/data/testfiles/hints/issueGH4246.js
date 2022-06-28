@@ -17,25 +17,8 @@
  * under the License.
  */
 
-package org.netbeans.modules.javascript2.prototypejs.model;
+const p1 = Promise.resolve(3);
 
-import java.io.IOException;
-import org.netbeans.modules.javascript2.editor.JsCodeCompletionBase;
-import org.openide.filesystems.FileObject;
-
-/**
- *
- * @author Petr Pisl
- */
-public class PrototypeJsTestBase extends JsCodeCompletionBase {
-
-    public PrototypeJsTestBase(String testName) {
-        super(testName);
-    }
-    
-    @Override
-    protected void assertDescriptionMatches(FileObject fileObject,
-            String description, boolean includeTestName, String ext, boolean goldenFileInTestFileDir) throws IOException {
-        super.assertDescriptionMatches(fileObject, description, includeTestName, ext, true);
-    }
-}
+fetch('http://example.com/movies.json')
+  .then(response => response.json())
+  .then(data => console.log(data));

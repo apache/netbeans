@@ -2,5 +2,5 @@ Code completion result for source line:
 location.h|
 (QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
 ------------------------------------
-METHOD     hasOwn(o: Object, v: String |   [PUBLIC,   JS Platform
-METHOD     hasOwnProperty(v: String | Sym  [PUBLIC]   JS Platform
+METHOD     hasOwn(o: Object, v: Number|Sy  [PUBLIC,   JS Platform
+METHOD     hasOwnProperty(v: Number|Symbo  [PUBLIC]   JS Platform

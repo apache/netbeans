@@ -113,7 +113,7 @@
 						"Share data between all workspaces (more effective)",
 						"Each workspace has its own data (more isolated)"
 					],
-					"default": "global"
+					"default": "local"
 				},
 				"netbeans.conflict.check": {
 					"type": "boolean",

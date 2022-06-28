@@ -348,27 +348,23 @@ public final class GroovyIndex {
         if (where == null || where.length() == 0 || prefix == null || prefix.length() == 0) {
             return false;
         }
-        if (!prefix.equals(cachedPrefix) || cachedInsensitive != insensitive) {
-            cachedCamelCasePattern = null;
-        }
-        if (cachedCamelCasePattern == null) {
-            StringBuilder sb = new StringBuilder();
-            int lastIndex = 0;
-            int index;
-            do {
-                index = findNextUpper(prefix, lastIndex + 1);
-                String token = prefix.substring(lastIndex, index == -1 ? prefix.length() : index);
-                if (insensitive) {
-                    sb.append('(').append(token).append('|').append(token.toLowerCase()).append(')');
-                } else {
+        
+        synchronized (GroovyIndex.class) {
+            if (!prefix.equals(cachedPrefix) || cachedInsensitive != insensitive) {
+                StringBuilder sb = new StringBuilder();
+                int lastIndex = 0;
+                int index;
+                do {
+                    index = findNextUpper(prefix, lastIndex + 1);
+                    String token = prefix.substring(lastIndex, index == -1 ? prefix.length() : index);
                     sb.append(token);
-                }
-                sb.append(index != -1 ? "[\\p{javaLowerCase}\\p{Digit}_\\$]*" : ".*"); // NOI18N         
-                lastIndex = index;
-            } while (index != -1);
-            cachedPrefix = prefix;
-            cachedInsensitive = insensitive;
-            cachedCamelCasePattern = Pattern.compile(sb.toString());
+                    sb.append(index != -1 ? "[\\p{javaLowerCase}\\p{Digit}_\\$]*" : ".*"); // NOI18N         
+                    lastIndex = index;
+                } while (index != -1);
+                cachedPrefix = prefix;
+                cachedInsensitive = insensitive;
+                cachedCamelCasePattern = insensitive ? Pattern.compile(sb.toString(), Pattern.CASE_INSENSITIVE) : Pattern.compile(sb.toString());
+            }
         }
         return cachedCamelCasePattern.matcher(where).matches();
     }

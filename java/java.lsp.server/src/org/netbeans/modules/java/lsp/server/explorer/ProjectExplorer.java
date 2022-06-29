@@ -26,6 +26,9 @@ import java.util.concurrent.CompletionStage;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ui.OpenProjects;
+import org.netbeans.modules.java.lsp.server.explorer.api.TreeDataListener;
+import org.netbeans.modules.java.lsp.server.explorer.api.TreeDataProvider;
+import org.netbeans.modules.java.lsp.server.explorer.api.TreeItemData;
 import org.netbeans.spi.project.ui.LogicalViewProvider;
 import org.openide.explorer.ExplorerManager;
 import org.openide.filesystems.FileObject;
@@ -43,9 +46,10 @@ import org.openide.util.lookup.ServiceProviders;
  */
 @ServiceProviders({
     @ServiceProvider(path = "Explorers/" + ProjectExplorer.ID_PROJECT_LOGICAL_VIEW, service = ExplorerManagerFactory.class),
-    @ServiceProvider(path = "Explorers/" + ProjectExplorer.ID_PROJECT_LOGICAL_VIEW, service = PathFinder.class)
+    @ServiceProvider(path = "Explorers/" + ProjectExplorer.ID_PROJECT_LOGICAL_VIEW, service = PathFinder.class),
+    @ServiceProvider(service = TreeDataProvider.Factory.class, path = "Explorers/" + ProjectExplorer.ID_PROJECT_LOGICAL_VIEW)
 })
-public class ProjectExplorer implements ExplorerManagerFactory, PathFinder {
+public class ProjectExplorer implements ExplorerManagerFactory, PathFinder, TreeDataProvider.Factory {
     static final String ID_PROJECT_LOGICAL_VIEW = "foundProjects"; // NOI18N
     
     private static final RequestProcessor PROJECT_INIT_RP = new RequestProcessor(ProjectExplorer.class.getName());
@@ -111,5 +115,37 @@ public class ProjectExplorer implements ExplorerManagerFactory, PathFinder {
             return ppf.findPath(n, file);
         }
         return null;
+    }
+
+    @Override
+    public TreeDataProvider createProvider(String treeId) {
+        return new ProjectDecorator();
+    }
+    
+    static class ProjectDecorator implements TreeDataProvider {
+
+        @Override
+        public TreeItemData createDecorations(Node n, boolean expanded) {
+            TreeItemData tid = new TreeItemData();
+            FileObject f = n.getLookup().lookup(FileObject.class);
+            if (f != null && f.isData()) {
+                // set leaf status for all files in the projects view.
+                tid.makeLeaf();
+            }
+            return tid;
+        }
+
+        @Override
+        public void addTreeItemDataListener(TreeDataListener l) {
+        }
+
+        @Override
+        public void removeTreeItemDataListener(TreeDataListener l) {
+        }
+
+        @Override
+        public void nodeReleased(Node n) {
+            
+        }
     }
 }

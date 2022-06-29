@@ -385,9 +385,7 @@ public final class GradleJavaSourceSet implements Serializable {
      */
     public File getOutputClassDir(SourceType srcType) {
         File f = outputs.get(srcType);
-        if (f == null) {
-            return null;
-        } else if (UNKNOWN.equals(f)) {
+        if (UNKNOWN.equals(f)) {
             // make the value canonical, so == can be used.
             return UNKNOWN;
         }

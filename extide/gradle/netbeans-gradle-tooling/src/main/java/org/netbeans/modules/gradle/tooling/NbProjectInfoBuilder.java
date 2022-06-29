@@ -381,11 +381,7 @@ class NbProjectInfoBuilder {
                                             }
                                         }
                                     }
-                                    if (candidate != null) {
-                                        outDir = candidate.toFile();
-                                    } else {
-                                        outDir = new File("");
-                                    }
+                                    outDir = candidate != null ? candidate.toFile() : new File("");
                                 }
                                 
                                 model.getInfo().put(propBase + lang + "_output_classes", outDir);

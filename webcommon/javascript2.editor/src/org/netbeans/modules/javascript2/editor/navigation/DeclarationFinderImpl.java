@@ -398,6 +398,7 @@ public class DeclarationFinderImpl implements DeclarationFinder {
         private final int offset;
         private final DeclarationLocation location;
         private final IndexedElement element;
+        private String stringLocation;
 
         public AlternativeLocationImpl(IndexResult iResult) {
             this.iResult = iResult;
@@ -412,7 +413,10 @@ public class DeclarationFinderImpl implements DeclarationFinder {
             return element;
         }
 
-        private  String getStringLocation() {
+        private String getStringLocation() {
+            if(stringLocation != null) {
+                return stringLocation;
+            }
             int lineNumber = 0;
             int count = 0;
             List<String> asLines;
@@ -435,6 +439,7 @@ public class DeclarationFinderImpl implements DeclarationFinder {
             if (lineNumber > 0) {
                 result = result + " : " + lineNumber; //NOI18N
             }
+            stringLocation = result;
             return result;
         }
 
@@ -452,7 +457,13 @@ public class DeclarationFinderImpl implements DeclarationFinder {
         @Override
         public int compareTo(AlternativeLocation o) {
             AlternativeLocationImpl ali = (AlternativeLocationImpl)o;
-            return getStringLocation().compareTo(ali.getStringLocation());
+            String relPath1 = iResult.getRelativePath();
+            String relPath2 = ali.iResult.getRelativePath();
+            int comparison = relPath1.compareTo(relPath2);
+            if(comparison != 0) {
+                return comparison;
+            }
+            return offset - ali.offset;
         }
 
     }

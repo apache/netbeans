@@ -60,8 +60,8 @@ public final class NbLaunchRequestHandler {
         activeLaunchHandler = noDebug ? new NbLaunchWithoutDebuggingDelegate(terminateHandle)
                 : new NbLaunchWithDebuggingDelegate(terminateHandle);
         // validation
-        List<String> modulePaths = (List<String>) launchArguments.getOrDefault("modulePaths", Collections.emptyList());
-        List<String> classPaths = (List<String>) launchArguments.getOrDefault("classPaths", Collections.emptyList());
+        List<String> modulePaths = (List<String>) launchArguments.getOrDefault("modulePaths", Collections.<String>emptyList());
+        List<String> classPaths = (List<String>) launchArguments.getOrDefault("classPaths", Collections.<String>emptyList());
 
         // "file" key is provided by DAP client infrastructure, sometimes in an unsuitable manner, e.g. some cryptic ID for Output window etc. 
         // the "projectFile" allows to override the infrastructure from client logic.

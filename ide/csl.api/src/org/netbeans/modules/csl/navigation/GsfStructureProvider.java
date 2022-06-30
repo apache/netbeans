@@ -53,7 +53,7 @@ public class GsfStructureProvider implements StructureProvider {
 
     private static final Logger LOGGER = Logger.getLogger(GsfStructureProvider.class.getName());
     
-    private static StructureElement.Kind convertKind(ElementKind elementKind) {
+    public static StructureElement.Kind convertKind(ElementKind elementKind) {
         switch(elementKind) {
             case ATTRIBUTE: return StructureElement.Kind.Property;
             case CALL: return StructureElement.Kind.Event;

@@ -51,6 +51,19 @@
 <!-- ACTUAL CHANGES BEGIN HERE: -->
 
 <changes>
+    <change id="SymbolProvider">
+        <api name="LSP_API"/>
+        <summary>Added SymbolProvider</summary>
+        <version major="1" minor="12"/>
+        <date day="30" month="6" year="2022"/>
+        <author login="ppisl"/>
+        <compatibility binary="compatible" source="compatible" addition="yes" deletion="no"/>
+        <description>
+             A <code>SymbolProvider</code> interface allows to compute symbols provided for example for GoTo Symbol dialog. 
+        </description>
+        <class package="org.netbeans.api.lsp" name="Diagnostic"/>
+        <class package="org.netbeans.spi.lsp" name="DiagnosticReporter"/>
+    </change>
     <change id="diagnosticReporter">
         <api name="LSP_API"/>
         <summary>Added DiagnosticReporter to trigger diagnostic collection</summary>

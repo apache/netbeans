@@ -19,15 +19,22 @@
 
 package org.netbeans.modules.csl.core;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.Icon;
+import org.netbeans.api.lsp.StructureElement;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.csl.api.ElementHandle;
 import org.netbeans.modules.csl.api.IndexSearcher;
+import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.csl.api.UiUtils;
+import org.netbeans.modules.csl.navigation.GsfStructureProvider;
 import org.netbeans.modules.csl.navigation.Icons;
 import org.netbeans.modules.parsing.api.Source;
 import org.netbeans.modules.parsing.spi.indexing.support.QuerySupport;
@@ -37,6 +44,7 @@ import org.netbeans.spi.jumpto.symbol.SymbolProvider;
 import org.netbeans.spi.jumpto.type.SearchType;
 import org.netbeans.spi.jumpto.type.TypeDescriptor;
 import org.netbeans.spi.jumpto.type.TypeProvider;
+import org.netbeans.spi.lsp.StructureProvider;
 import org.openide.filesystems.FileObject;
 
 /**
@@ -105,6 +113,42 @@ public class TypeAndSymbolProvider {
             }
         }
     } // End of SymbolProviderProxy class
+    
+    public static final class LSPSymbolProviderImpl extends TypeAndSymbolProvider implements org.netbeans.spi.lsp.SymbolProvider {
+
+        public LSPSymbolProviderImpl() {
+            super(false);
+        }
+
+        
+        @Override
+        public List<StructureElement> findSymbols(SearchType searchType, String query, AtomicBoolean canceled) {
+            Set<? extends IndexSearcher.Descriptor> descriptors = compute(
+                    query,
+                    searchType,
+                    null
+            );
+            if (descriptors != null) {
+                List<StructureElement> result = new ArrayList<>();
+                for(IndexSearcher.Descriptor d : descriptors) {
+                    ElementHandle element = d.getElement();
+                    StructureProvider.Builder builder = StructureProvider.newBuilder(d.getSimpleName(), GsfStructureProvider.convertKind(element.getKind()));
+                    builder.file(d.getFileObject());
+                    OffsetRange range = element.getOffsetRange(null);
+                    if (range != null) {
+                        builder.selectionStartOffset(range.getStart());
+                        builder.selectionEndOffset(range.getEnd());
+                    }
+                    builder.detail(d.getContextName());
+                    result.add(builder.build());
+                }
+                return result;
+            }
+            return Collections.EMPTY_LIST;
+        }
+        
+    }
+    
     // ------------------------------------------------------------------------
     // Private implementation
     // ------------------------------------------------------------------------

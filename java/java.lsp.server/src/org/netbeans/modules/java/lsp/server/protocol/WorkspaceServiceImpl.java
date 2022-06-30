@@ -97,6 +97,7 @@ import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.JavaSource.Phase;
 import org.netbeans.api.java.source.SourceUtils;
 import org.netbeans.api.java.source.ui.ElementOpen;
+import org.netbeans.api.lsp.StructureElement;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
@@ -116,6 +117,7 @@ import org.netbeans.modules.java.source.ui.JavaTypeProvider;
 import org.netbeans.modules.java.source.usages.ClassIndexImpl;
 import org.netbeans.modules.parsing.lucene.support.Queries;
 import org.netbeans.spi.jumpto.type.SearchType;
+import org.netbeans.spi.lsp.SymbolProvider;
 import org.netbeans.spi.project.ActionProgress;
 import org.netbeans.spi.project.ActionProvider;
 import org.netbeans.spi.project.ProjectConfiguration;
@@ -710,6 +712,27 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
             try {
                 List<WorkspaceSymbol> symbols = new ArrayList<>();
                 SearchType searchType = getSearchType(queryFin, exactFin, false, null, null);
+                // Non java part
+                Collection<? extends SymbolProvider> providers = Lookup.getDefault().lookupAll(SymbolProvider.class);
+                for (SymbolProvider provider: providers) {
+                    List<StructureElement> providerSymbols = provider.findSymbols(searchType, queryFin, cancel);
+                    for (StructureElement providerSymbol : providerSymbols) {
+                        FileObject fo = providerSymbol.getFile();
+                        if (fo != null) {
+                            Position startPos = Utils.createPosition(fo, providerSymbol.getSelectionStartOffset());
+                            Position endPos = Utils.createPosition(fo, providerSymbol.getSelectionEndOffset());
+                            WorkspaceSymbol symbol = new WorkspaceSymbol(
+                                    providerSymbol.getName(), 
+                                    Utils.structureElementKind2SymbolKind(providerSymbol.getKind()), 
+                                    Either.forLeft(new Location(Utils.toUri(fo), new Range(startPos, endPos))), 
+                                    providerSymbol.getDetail());
+                            symbols.add(symbol);
+                        }
+                    }
+                }
+                
+                // java part
+                // TODO rewrite the java part into a SymbolProvider
                 JavaSymbolProvider.ResultHandler symbolHandler = new JavaSymbolProvider.ResultHandler() {
                     @Override
                     public void setHighlightText(String text) {

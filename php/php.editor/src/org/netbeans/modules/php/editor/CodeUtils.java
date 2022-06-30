@@ -43,6 +43,7 @@ import org.netbeans.modules.php.editor.parser.astnodes.ClassDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.ClassInstanceCreation;
 import org.netbeans.modules.php.editor.parser.astnodes.ClassName;
 import org.netbeans.modules.php.editor.parser.astnodes.Expression;
+import org.netbeans.modules.php.editor.parser.astnodes.ExpressionArrayAccess;
 import org.netbeans.modules.php.editor.parser.astnodes.FieldAccess;
 import org.netbeans.modules.php.editor.parser.astnodes.FormalParameter;
 import org.netbeans.modules.php.editor.parser.astnodes.FunctionDeclaration;
@@ -288,6 +289,8 @@ public final class CodeUtils {
         } else if (typeName instanceof NullableType) {
             NullableType nullableType = (NullableType) typeName;
             return NULLABLE_TYPE_PREFIX + extractQualifiedName(nullableType.getType());
+        } else if (typeName instanceof ExpressionArrayAccess) {
+            return extractQualifiedName(((ExpressionArrayAccess) typeName).getExpression());
         } else if (typeName instanceof UnionType) {
             UnionType unionType = (UnionType) typeName;
             StringBuilder sb = new StringBuilder();

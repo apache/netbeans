@@ -34,7 +34,7 @@ import org.netbeans.api.db.explorer.DatabaseException;
 import org.netbeans.api.db.explorer.JDBCDriver;
 import org.netbeans.api.db.explorer.JDBCDriverManager;
 import org.netbeans.modules.cloud.oracle.OCIManager;
-import org.netbeans.modules.cloud.oracle.items.DatabaseItem;
+import org.netbeans.modules.cloud.oracle.database.DatabaseItem;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.awt.ActionID;

@@ -32,13 +32,35 @@
    viewBox="0 0 16 16"
    style="enable-background:new 0 0 16 16;"
    xml:space="preserve"
-   sodipodi:docname="devops_project.svg"
+   sodipodi:docname="build_pipeline.svg"
    inkscape:version="1.1.2 (b8e25be8, 2022-02-05)"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns="http://www.w3.org/2000/svg"
    xmlns:svg="http://www.w3.org/2000/svg"><defs
-   id="defs17027" /><sodipodi:namedview
+   id="defs17027"><linearGradient
+     id="linearGradient1092"
+     inkscape:swatch="solid"><stop
+       style="stop-color:#ffffff;stop-opacity:1;"
+       offset="0"
+       id="stop1090" /></linearGradient><linearGradient
+     inkscape:collect="always"
+     xlink:href="#linearGradient1092"
+     id="linearGradient1094"
+     x1="5.3252449"
+     y1="-1.8610693"
+     x2="10.424227"
+     y2="-1.8610693"
+     gradientUnits="userSpaceOnUse" /><linearGradient
+     inkscape:collect="always"
+     xlink:href="#linearGradient1092"
+     id="linearGradient1096"
+     x1="5.3252449"
+     y1="-14.023302"
+     x2="10.424227"
+     y2="-14.023302"
+     gradientUnits="userSpaceOnUse" /></defs><sodipodi:namedview
    id="namedview17025"
    pagecolor="#ffffff"
    bordercolor="#666666"
@@ -52,8 +74,8 @@
    inkscape:cy="5.109304"
    inkscape:window-width="1570"
    inkscape:window-height="1049"
-   inkscape:window-x="202"
-   inkscape:window-y="77"
+   inkscape:window-x="167"
+   inkscape:window-y="46"
    inkscape:window-maximized="0"
    inkscape:current-layer="Vector_Icons" />
 <style
@@ -123,14 +145,28 @@
 	.st61{fill:#303030;}
 </style>
 
-<circle
-   style="fill:none;stroke:#9d9d9d;stroke-width:0.5;stroke-miterlimit:2.2;stroke-dasharray:none;paint-order:markers stroke fill"
-   id="circle1256"
-   cx="4.5191202"
-   cy="4.6877437"
-   r="3.7097256" /><circle
-   style="fill:none;stroke:#9d9d9d;stroke-width:0.5;stroke-miterlimit:2.2;stroke-dasharray:none;paint-order:markers stroke fill"
-   id="circle1256-3"
-   cx="11.533875"
-   cy="11.466424"
-   r="3.7097256" /></svg>
+<g
+   inkscape:groupmode="layer"
+   id="layer1"
+   inkscape:label="Layer 1" /><rect
+   style="fill:none;stroke:#9d9d9d;stroke-width:0.5;stroke-miterlimit:2.2;paint-order:markers stroke fill"
+   id="rect1110"
+   width="4.0132489"
+   height="13.793435"
+   x="5.8681116"
+   y="-14.838903"
+   transform="rotate(90)" /><rect
+   style="fill:url(#linearGradient1094);stroke:#9d9d9d;stroke-width:0.5;stroke-miterlimit:2.20000005;stroke-dasharray:none;paint-order:markers fill stroke;fill-opacity:1"
+   id="rect1110-2"
+   width="4.5989823"
+   height="1.6312021"
+   x="5.5752449"
+   y="-2.6766703"
+   transform="rotate(90)" /><rect
+   style="fill:url(#linearGradient1096);stroke:#9d9d9d;stroke-width:0.5;stroke-miterlimit:2.20000005;stroke-dasharray:none;paint-order:markers fill stroke;fill-opacity:1"
+   id="rect1110-2-0"
+   width="4.5989823"
+   height="1.6312021"
+   x="5.5752449"
+   y="-14.838903"
+   transform="rotate(90)" /></svg>

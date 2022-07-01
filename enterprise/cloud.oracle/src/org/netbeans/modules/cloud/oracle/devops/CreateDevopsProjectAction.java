@@ -16,48 +16,40 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.cloud.oracle.actions;
+package org.netbeans.modules.cloud.oracle.devops;
 
-import org.netbeans.modules.cloud.oracle.database.DatabaseItem;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.net.MalformedURLException;
-import java.net.URL;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
 import org.openide.awt.ActionRegistration;
-import org.openide.awt.HtmlBrowser.URLDisplayer;
-import org.openide.util.Exceptions;
-import org.openide.util.NbBundle.Messages;
+import org.openide.util.NbBundle;
 
+/**
+ *
+ * @author Jan Horvath
+ */
 @ActionID(
         category = "Tools",
-        id = "org.netbeans.modules.cloud.oracle.OpenServiceConsoleAction"
+        id = "org.netbeans.modules.cloud.oracle.actions.CreateDevopsProject"
 )
 @ActionRegistration(
-        displayName = "#CTL_OpenServiceConsoleAction"
+        displayName = "#CTL_CreateDevopsProjectAction",
+        asynchronous = true
 )
+
 @ActionReferences(value = {
-    @ActionReference(path = "Cloud/Oracle/Databases/Actions", position = 260)
+    @ActionReference(path = "Cloud/Oracle/Compartment/Actions", position = 260)
 })
-@Messages({"CTL_OpenServiceConsoleAction=Open Service Console",
-        "MSG_ServiceConsole=Service Console URL: {0}"})
-public final class OpenServiceConsoleAction implements ActionListener {
+@NbBundle.Messages({
+    "CTL_CreateDevopsProjectAction=Create Devops Project",
 
-    private final DatabaseItem context;
-
-    public OpenServiceConsoleAction(DatabaseItem context) {
-        this.context = context;
-    }
+})
+public class CreateDevopsProjectAction implements ActionListener {
 
     @Override
-    public void actionPerformed(ActionEvent ev) {
-        try {
-            URLDisplayer.getDefault().showURLExternal(
-                    new URL(context.getServiceUrl()));
-        } catch (MalformedURLException ex) {
-            Exceptions.printStackTrace(ex);
-        }
+    public void actionPerformed(ActionEvent e) {
     }
+    
 }

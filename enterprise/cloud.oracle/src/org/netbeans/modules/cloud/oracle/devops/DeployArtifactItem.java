@@ -16,40 +16,33 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.cloud.oracle;
+package org.netbeans.modules.cloud.oracle.devops;
 
+import java.util.List;
+import org.netbeans.modules.cloud.oracle.items.OCID;
 import org.netbeans.modules.cloud.oracle.items.OCIItem;
-import java.awt.Image;
 
 /**
  *
  * @author Jan Horvath
  */
-public class TenancyNode extends OCINode {
-    
-    private static final String ORCL_ICON = "org/netbeans/modules/cloud/oracle/resources/tenancy.svg"; // NOI18N
-    
-    public TenancyNode(OCIItem tenancy) {
-        super(tenancy);
-//        super(Children.create(new TenancyChildFactory(tenancy), true), Lookups.fixed(tenancy));
-        setName(tenancy.getName()); 
-        setDisplayName(tenancy.getName());
-        setIconBaseWithExtension(ORCL_ICON);
-        setShortDescription(tenancy.getDescription());
+public class DeployArtifactItem extends OCIItem {
+
+    public DeployArtifactItem(OCID id, String name) {
+        super(id, name);
     }
+
+    public static class DeployArtifactFolder extends OCIItem {
+
+        private final List<DeployArtifactItem> artifacts;
+
+        public DeployArtifactFolder(OCID project, String name, List<DeployArtifactItem> artifacts) {
+            super(project, name);
+            this.artifacts = artifacts;
+        }
     
-    @Override
-    public Image getIcon(int type) {
-        return badgeIcon(super.getIcon(type));
+        public List<DeployArtifactItem> getArtidfacts() {
+            return artifacts;
+        }
     }
-    
-    @Override
-    public Image getOpenedIcon(int type) {
-        return badgeIcon(super.getOpenedIcon(type));
-    }
-    
-    private Image badgeIcon(Image origImg) {
-        return origImg;
-    }
-    
 }

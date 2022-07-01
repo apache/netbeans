@@ -22,10 +22,14 @@ package org.netbeans.modules.cloud.oracle.items;
  *
  * @author Jan Horvath
  */
-public class CompartmentItem extends OCIItem {
+public class TenancyItem extends OCIItem {
 
-    public CompartmentItem(String id, String name) {
+    public TenancyItem(OCID id, String name) {
         super(id, name);
     }
+
+    public TenancyItem() {
+    }
+
     
 }

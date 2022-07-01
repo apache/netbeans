@@ -16,40 +16,35 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.cloud.oracle;
+package org.netbeans.modules.cloud.oracle.devops;
 
+import java.util.List;
+import org.netbeans.modules.cloud.oracle.items.OCID;
 import org.netbeans.modules.cloud.oracle.items.OCIItem;
-import java.awt.Image;
+import org.openide.util.NbBundle;
 
 /**
  *
  * @author Jan Horvath
  */
-public class TenancyNode extends OCINode {
-    
-    private static final String ORCL_ICON = "org/netbeans/modules/cloud/oracle/resources/tenancy.svg"; // NOI18N
-    
-    public TenancyNode(OCIItem tenancy) {
-        super(tenancy);
-//        super(Children.create(new TenancyChildFactory(tenancy), true), Lookups.fixed(tenancy));
-        setName(tenancy.getName()); 
-        setDisplayName(tenancy.getName());
-        setIconBaseWithExtension(ORCL_ICON);
-        setShortDescription(tenancy.getDescription());
+public class RepositoryItem extends OCIItem {
+
+    public RepositoryItem(OCID id, String name) {
+        super(id, name);
     }
     
-    @Override
-    public Image getIcon(int type) {
-        return badgeIcon(super.getIcon(type));
-    }
+    public static class RepositoryFolder extends OCIItem {
+
+        private final List<RepositoryItem> repositories;
+
+        public RepositoryFolder(OCID project, String name, List<RepositoryItem> repositories) {
+            super(project, name);
+            this.repositories = repositories;
+        }
     
-    @Override
-    public Image getOpenedIcon(int type) {
-        return badgeIcon(super.getOpenedIcon(type));
+        public List<RepositoryItem> getRepositories() {
+            return repositories;
+        }
     }
-    
-    private Image badgeIcon(Image origImg) {
-        return origImg;
-    }
-    
+
 }

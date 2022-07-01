@@ -18,55 +18,45 @@
  */
 package org.netbeans.modules.cloud.oracle;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import org.netbeans.modules.cloud.oracle.items.OCIItem;
-import javax.swing.JComponent;
-import org.netbeans.spi.server.ServerInstanceImplementation;
-import org.openide.nodes.Node;
+import org.openide.awt.ActionID;
+import org.openide.awt.ActionReference;
+import org.openide.awt.ActionReferences;
+import org.openide.awt.ActionRegistration;
+import org.openide.util.NbBundle;
 
 /**
  *
  * @author Jan Horvath
  */
-public class TenancyInstance implements ServerInstanceImplementation {
+@ActionID(
+        category = "Tools",
+        id = "org.netbeans.modules.cloud.oracle.actions.CloudRefresh"
+)
+@ActionRegistration( 
+        displayName = "#CloudRefresh", 
+        asynchronous = true
+)
 
-    private final OCIItem tenancy;
+@ActionReferences(value = {
+    @ActionReference(path = "Cloud/Oracle/Common/Actions", position = 250)
+})
+@NbBundle.Messages({
+    "CloudRefresh=Refresh"
+})
+public class CloudRefreshAction implements ActionListener {
 
-    public TenancyInstance(OCIItem tenancy) {
-        this.tenancy = tenancy;
-    }
-    
-    @Override
-    public String getDisplayName() {
-        return tenancy.getName();
-    }
+    private final OCIItem context;
 
-    @Override
-    public String getServerDisplayName() {
-        return tenancy.getKey().getValue();
-    }
-
-    @Override
-    public Node getFullNode() {
-        return getBasicNode();
-    }
-
-    @Override
-    public Node getBasicNode() {
-        return new TenancyNode(tenancy);
+    public CloudRefreshAction(OCIItem context) {
+        this.context = context;
     }
 
     @Override
-    public JComponent getCustomizer() {
-        return null;
-    }
-
-    @Override
-    public void remove() {
-    }
-
-    @Override
-    public boolean isRemovable() {
-        return false;
+    public void actionPerformed(ActionEvent e) {
+        context.refresh();
     }
     
 }

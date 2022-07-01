@@ -209,6 +209,7 @@ function find(): string | null {
 
 interface VSNetBeansAPI {
     version : string;
+    apiVersion: string;
 }
 
 function contextUri(ctx : any) : vscode.Uri | undefined {
@@ -526,7 +527,8 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
     // register completions:
     launchConfigurations.registerCompletion(context);
     return Object.freeze({
-        version : API_VERSION
+        version : API_VERSION,
+        apiVersion : API_VERSION
     });
 }
 

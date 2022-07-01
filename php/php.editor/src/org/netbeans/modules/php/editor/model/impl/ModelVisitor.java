@@ -862,9 +862,11 @@ public final class ModelVisitor extends DefaultTreePathVisitor {
                 && ((FunctionScope)inScope).isAnonymous()) {
             FunctionScope functionScope = (FunctionScope) inScope;
             Collection<? extends VariableName> declaredVariables = functionScope.getDeclaredVariables();
+            List<? extends String> parameterNames = functionScope.getParameterNames();
             for (VariableName declaredVariable : declaredVariables) {
                 if (declaredVariable.getName().equals(CodeUtils.extractVariableName(node))) {
-                    if (isLexicalVariable(node)) {
+                    if (isLexicalVariable(node)
+                            || (functionScope instanceof ArrowFunctionScope) && !parameterNames.contains(declaredVariable.getName())) { // GH-4209
                         occurencesBuilder.prepare(node, inScope.getInScope());
                     } else {
                         occurencesBuilder.prepare(node, inScope);

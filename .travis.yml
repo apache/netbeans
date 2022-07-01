@@ -43,14 +43,14 @@ git:
 matrix:
     include:
         - name: Check line endings and verify RAT report
-          script: 
+          script:
             - nbbuild/travis/check-line-endings.sh
             - ant -quiet build-source-config
             - mkdir scratch
             - cd scratch
             - unzip -qq ../nbbuild/build/release-src*
             - ant -quiet rat -Drat-report.haltonfailure=true -Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json
-          
+
         - name: Verify libs and licenses
           script:
             - ant verify-libs-and-licenses -Dverify-libs-and-licenses.haltonfailure=true -Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json
@@ -70,19 +70,19 @@ matrix:
           jdk: openjdk8
           script:
             - nbbuild/travis/gensigtest.sh
-        
+
         - name: Pristine platform build
           jdk: openjdk8
           env:
             - ANT_OPTS="-Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false"
-          script: 
+          script:
             - nbbuild/travis/ant.sh -quiet build-source-config -Dcluster.config=platform
             - mkdir tmpplatform
             - cd tmpplatform
             - unzip -qq ../nbbuild/build/platform-src*
             - chmod a+x nbbuild/travis/ant.sh
             - nbbuild/travis/ant.sh build -Dcluster.config=platform
-        
+
         - name: Compile all modules & tests
           jdk: openjdk8
           env:
@@ -156,7 +156,7 @@ matrix:
             - hide-logs.sh ant $OPTS -f platform/o.n.core test-unit
             - hide-logs.sh ant $OPTS -f platform/o.n.swing.outline test
             - hide-logs.sh ant $OPTS -f platform/o.n.swing.tabcontrol test
-            
+
         - name: Test platform modules, Batch 2
           jdk: openjdk8
           env:
@@ -198,7 +198,7 @@ matrix:
             - hide-logs.sh ant $OPTS -f platform/templates test
             - hide-logs.sh ant $OPTS -f platform/templatesui test
             - hide-logs.sh ant $OPTS -f platform/uihandler test
-          
+
         - name: Test ide modules
           jdk: openjdk8
           env:
@@ -310,7 +310,7 @@ matrix:
             - ant $OPTS -f ide/xml.xam test
             - ant $OPTS -f ide/xml.xdm test
             - ant $OPTS -f ide/xsl test
-            
+
         - name: Test nb modules
           jdk: openjdk8
           env:
@@ -324,7 +324,7 @@ matrix:
             - ant $OPTS -f nb/o.n.upgrader test
             #- ant $OPTS -f nb/updatecenters test
             - ant $OPTS -f nb/welcome test
-            
+
         - name: Test extide modules
           jdk: openjdk8
           env:
@@ -335,7 +335,7 @@ matrix:
           script:
             - ant $OPTS -f extide/o.apache.tools.ant.module test
             - ant $OPTS -f extide/gradle test
-            
+
         - name: Test Java modules with nb-javac on Java 8
           jdk: openjdk8
           env:
@@ -452,7 +452,7 @@ matrix:
 
         - name: Test apisupport modules
           jdk: openjdk8
-          env: 
+          env:
             - OPTS="-Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json -quiet -Dcluster.config=release -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true"
           before_script:
             - nbbuild/travis/ant.sh $OPTS clean
@@ -478,7 +478,7 @@ matrix:
 
         - name: Test ergonomics modules
           jdk: openjdk8
-          env: 
+          env:
             - OPTS="-Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json -quiet -Dcluster.config=release -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false"
           before_script:
             - nbbuild/travis/ant.sh $OPTS clean
@@ -495,6 +495,7 @@ matrix:
             - nbbuild/travis/ant.sh $OPTS build
           script:
             - ant $OPTS -f profiler/profiler.oql test
+            - ant $OPTS -f profiler/profiler test-unit
 
         - name: Test webcommon modules
           jdk: openjdk8
@@ -506,7 +507,7 @@ matrix:
           script:
             - hide-logs.sh ant $OPTS -f webcommon/api.knockout test
             #- hide-logs.sh ant $OPTS -f webcommon/cordova test
-            #- hide-logs.sh ant $OPTS -f webcommon/html.angular test
+            - hide-logs.sh ant $OPTS -f webcommon/html.angular test-unit
             - hide-logs.sh ant $OPTS -f webcommon/html.knockout test-unit
             - hide-logs.sh ant $OPTS -f webcommon/javascript.bower test
             - hide-logs.sh ant $OPTS -f webcommon/javascript.cdnjs test
@@ -515,7 +516,7 @@ matrix:
             - hide-logs.sh ant $OPTS -f webcommon/javascript.nodejs test
             - hide-logs.sh ant $OPTS -f webcommon/javascript.v8debug test
             - hide-logs.sh ant $OPTS -f webcommon/javascript2.doc test
-            #- hide-logs.sh ant $OPTS -f webcommon/javascript2.editor test
+            - ant $OPTS -f webcommon/javascript2.editor test-unit
             - hide-logs.sh ant $OPTS -f webcommon/javascript2.extdoc test
             - hide-logs.sh ant $OPTS -f webcommon/javascript2.extjs test
             - hide-logs.sh ant $OPTS -f webcommon/javascript2.jade test
@@ -525,9 +526,9 @@ matrix:
             - hide-logs.sh ant $OPTS -f webcommon/javascript2.knockout test
             - hide-logs.sh ant $OPTS -f webcommon/javascript2.lexer test
             - hide-logs.sh ant $OPTS -f webcommon/javascript2.model test
-            #- hide-logs.sh ant $OPTS -f webcommon/javascript2.nodejs test
-            #- hide-logs.sh ant $OPTS -f webcommon/javascript2.prototypejs test
-            #- hide-logs.sh ant $OPTS -f webcommon/javascript2.requirejs test
+            - ant $OPTS -f webcommon/javascript2.nodejs test-unit
+            - hide-logs.sh ant $OPTS -f webcommon/javascript2.prototypejs test
+            - hide-logs.sh ant $OPTS -f webcommon/javascript2.requirejs test-unit
             - hide-logs.sh ant $OPTS -f webcommon/javascript2.sdoc test
             - hide-logs.sh ant $OPTS -f webcommon/languages.apacheconf test
             - hide-logs.sh ant $OPTS -f webcommon/languages.ini test
@@ -557,13 +558,13 @@ matrix:
               - touch ide/versioning.core/test/qa-functional/data/tck.properties
               - echo "test.root = $GIT_TEST_REPO" > ide/versioning.core/test/qa-functional/data/tck.properties
               - echo "test.vcs = org.netbeans.modules.versioning.DelegatingVCS" >> ide/versioning.core/test/qa-functional/data/tck.properties
-              # Run functional tests for ide/versioning.core module  
+              # Run functional tests for ide/versioning.core module
               - ant $OPTS $OPTS_TEST -f ide/versioning.core test-qa-functional
               # Prepare config file for ide/versioning module
               - touch ide/versioning/test/qa-functional/data/tck.properties
               - echo "test.root = $GIT_TEST_REPO" > ide/versioning/test/qa-functional/data/tck.properties
               - echo "test.vcs = org.netbeans.modules.git.GitVCS" >> ide/versioning/test/qa-functional/data/tck.properties
-              # Run functional tests for ide/versioning module  
+              # Run functional tests for ide/versioning module
               - ant $OPTS $OPTS_TEST -f ide/versioning test-qa-functional
 
         - name: "Tests with mysql database"
@@ -580,7 +581,7 @@ matrix:
           script:
             - travis_retry ant $OPTS $OPTS_TEST -f ide/db.metadata.model test
             - travis_retry ant $OPTS $OPTS_TEST -f ide/db.mysql test
-            
+
         - name: Test enterprise modules
           jdk: openjdk8
           env:
@@ -593,7 +594,7 @@ matrix:
             - ant $OPTS -f enterprise/websvc.editor.hints test
             - ant $OPTS -f enterprise/websvc.websvcapi test
             - ant $OPTS -f enterprise/websvc.wsstackapi test
-            
+
         - name: Test groovy modules on Java 8
           jdk: openjdk8
           env:
@@ -609,7 +610,7 @@ matrix:
             - ant $TEST_OPTS -f groovy/groovy.gsp test
             #- ant $TEST_OPTS -f groovy/groovy.kit test
             - ant $TEST_OPTS -f groovy/groovy.support test
-            
+
         - name: Test groovy modules on Java 11
           jdk: openjdk8
           env:
@@ -620,7 +621,7 @@ matrix:
             - nbbuild/travis/ant.sh $BUILD_OPTS build
             - wget https://raw.githubusercontent.com/sormuras/bach/master/install-jdk.sh
             - export TEST_JDK=`bash install-jdk.sh --feature 11 --license GPL --emit-java-home --silent | tail -1`
-            - export OPTS="-Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json $OPTS  -Dtest.nbjdk.home=$TEST_JDK -Dtest.run.args=--limit-modules=java.base,java.logging,java.xml,java.prefs,java.desktop,java.management,java.instrument,jdk.zipfs,java.scripting,java.naming -Dtest.bootclasspath.prepend.args=-Dno.netbeans.bootclasspath.prepend.needed=true"            
+            - export OPTS="-Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json $OPTS  -Dtest.nbjdk.home=$TEST_JDK -Dtest.run.args=--limit-modules=java.base,java.logging,java.xml,java.prefs,java.desktop,java.management,java.instrument,jdk.zipfs,java.scripting,java.naming -Dtest.bootclasspath.prepend.args=-Dno.netbeans.bootclasspath.prepend.needed=true"
           script:
             #- ant $TEST_OPTS -f groovy/groovy test
             #- ant $TEST_OPTS -f groovy/groovy.java test
@@ -628,7 +629,7 @@ matrix:
             - ant $TEST_OPTS -f groovy/groovy.gsp test
             #- ant $TEST_OPTS -f groovy/groovy.kit test
             - ant $TEST_OPTS -f groovy/groovy.support test
-            
+
         - name: Test groovy modules on Java 17
           jdk: openjdk8
           env:
@@ -639,7 +640,7 @@ matrix:
             - nbbuild/travis/ant.sh $BUILD_OPTS build
             - wget https://raw.githubusercontent.com/sormuras/bach/master/install-jdk.sh
             - export TEST_JDK=`bash install-jdk.sh --feature 17 --license GPL --emit-java-home --silent | tail -1`
-            - export OPTS="-Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json $OPTS  -Dtest.nbjdk.home=$TEST_JDK -Dtest.run.args=--limit-modules=java.base,java.logging,java.xml,java.prefs,java.desktop,java.management,java.instrument,jdk.zipfs,java.scripting,java.naming -Dtest.bootclasspath.prepend.args=-Dno.netbeans.bootclasspath.prepend.needed=true"            
+            - export OPTS="-Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json $OPTS  -Dtest.nbjdk.home=$TEST_JDK -Dtest.run.args=--limit-modules=java.base,java.logging,java.xml,java.prefs,java.desktop,java.management,java.instrument,jdk.zipfs,java.scripting,java.naming -Dtest.bootclasspath.prepend.args=-Dno.netbeans.bootclasspath.prepend.needed=true"
           script:
             #- ant $TEST_OPTS -f groovy/groovy test
             #- ant $TEST_OPTS -f groovy/groovy.java test
@@ -658,30 +659,30 @@ matrix:
             - nbbuild/travis/ant.sh $OPTS clean
             - nbbuild/travis/ant.sh $OPTS build
           script:
-            - (cd java/java.lsp.server; ant build-vscode-ext -D3rdparty.modules=.*nbjavac.*)
+            - (cd java/java.lsp.server; ant build-vscode-ext -D3rdparty.modules=.*externalcodeformatter.*)
             - (cd java/java.lsp.server; ant test-vscode-ext)
 
         - name: "GraalVM Tests (latest)"
           jdk: openjdk8
-          env: 
+          env:
             - GRAAL_VERSION="21.1.0"
             - OPTS="-Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json -quiet -Dcluster.config=release -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false"
           before_script:
             - nbbuild/travis/ant.sh $OPTS clean
             - nbbuild/travis/ant.sh $OPTS build
           script:
-            - nbbuild/travis/scripting.sh
+            - travis_wait nbbuild/travis/scripting.sh
 
         - name: "GraalVM Tests (LTS)"
           jdk: openjdk8
-          env: 
+          env:
             - GRAAL_VERSION="20.3.0"
             - OPTS="-Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json -quiet -Dcluster.config=release -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false"
           before_script:
             - nbbuild/travis/ant.sh $OPTS clean
             - nbbuild/travis/ant.sh $OPTS build
           script:
-            - nbbuild/travis/scripting.sh
+            - travis_wait nbbuild/travis/scripting.sh
 
 #   exile: for tests which don't behave. Job should be kept short to be easily restartable
         - name: Test unreliable tests on Java 8

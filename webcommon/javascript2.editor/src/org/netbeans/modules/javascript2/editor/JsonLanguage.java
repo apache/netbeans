@@ -47,7 +47,7 @@ import org.openide.windows.TopComponent;
 @LanguageRegistration(mimeType="text/x-json", useMultiview = true) //NOI18N
 @PathRecognizerRegistration(mimeTypes="text/x-json", libraryPathIds=ClassPathProviderImpl.BOOT_CP, binaryLibraryPathIds={})
 public class JsonLanguage extends DefaultLanguageConfig {
-    
+
     private static final boolean NAVIGATOR = Boolean.valueOf(
             System.getProperty(String.format("%s.navigator", JsonLanguage.class.getSimpleName()),   //NOI18N
                     Boolean.TRUE.toString()));

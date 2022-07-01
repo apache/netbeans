@@ -34,7 +34,9 @@ import {
     MessageType,
     LogMessageNotification,
     RevealOutputChannelOn,
-    DocumentSelector
+    DocumentSelector,
+    ErrorHandlerResult,
+    CloseHandlerResult
 } from 'vscode-languageclient';
 
 import * as net from 'net';
@@ -44,17 +46,16 @@ import { ChildProcess } from 'child_process';
 import * as vscode from 'vscode';
 import * as launcher from './nbcode';
 import {NbTestAdapter} from './testAdapter';
-import { asRanges, StatusMessageRequest, ShowStatusMessageParams, QuickPickRequest, InputBoxRequest, TestProgressNotification, DebugConnector,
+import { asRanges, StatusMessageRequest, ShowStatusMessageParams, QuickPickRequest, InputBoxRequest, MutliStepInputRequest, TestProgressNotification, DebugConnector,
          TextEditorDecorationCreateRequest, TextEditorDecorationSetNotification, TextEditorDecorationDisposeNotification, HtmlPageRequest, HtmlPageParams,
-         SetTextEditorDecorationParams,
-         ProjectActionParams,
-         UpdateConfigurationRequest,
-         UpdateConfigParams
+         SetTextEditorDecorationParams, ProjectActionParams, UpdateConfigurationRequest, QuickPickStep, InputBoxStep
 } from './protocol';
 import * as launchConfigurations from './launchConfigurations';
 import { createTreeViewService, TreeViewService, TreeItemDecorator, Visualizer, CustomizableTreeDataProvider } from './explorer';
 import { initializeRunConfiguration, runConfigurationProvider, runConfigurationNodeProvider, configureRunSettings, runConfigurationUpdateAll } from './runConfiguration';
 import { TLSSocket } from 'tls';
+import { InputStep, MultiStepInput } from './utils';
+import { env } from 'process';
 
 const API_VERSION : string = "1.0";
 const DATABASE: string = 'Database';
@@ -334,7 +335,7 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
     context.subscriptions.push(vscode.debug.registerDebugAdapterDescriptorFactory('nativeimage', debugDescriptionFactory));
 
     // register content provider
-    let sourceForContentProvider = new NetBeansSourceForContentProvider();
+    let sourceForContentProvider = new NetBeansSourceForContentProvider(context);
     context.subscriptions.push(vscode.workspace.registerTextDocumentContentProvider('sourceFor', sourceForContentProvider));
 
     // initialize Run Configuration
@@ -405,6 +406,9 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
     }));
     context.subscriptions.push(commands.registerCommand('java.project.clean', (args) => {
         wrapProjectActionWithProgress('clean', undefined, 'Cleaning...', log, true, args);
+    }));
+    context.subscriptions.push(commands.registerCommand('java.open.type', () => {
+        wrapCommandWithProgress('java.quick.open', 'Opening type...', log, true);
     }));
     context.subscriptions.push(commands.registerCommand('java.goto.super.implementation', async () => {
         if (window.activeTextEditor?.document.languageId !== "java") {
@@ -639,7 +643,7 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
 
     const netbeansConfig = workspace.getConfiguration('netbeans');
     const beVerbose : boolean = netbeansConfig.get('verbose', false);
-    let userdir = netbeansConfig.get('userdir', 'global');
+    let userdir = process.env['nbcode_userdir'] || netbeansConfig.get('userdir', 'local');
     switch (userdir) {
         case 'local':
             if (context.storagePath) {
@@ -689,6 +693,7 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
         }
         let p = launcher.launch(info, ...extras);
         handleLog(log, "LSP server launching: " + p.pid);
+        handleLog(log, "LSP server user directory: " + userdir);
         p.stdout.on('data', function(d: any) {
             logAndWaitForEnabled(d.toString(), true);
         });
@@ -799,15 +804,15 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
                 }
             },
             errorHandler: {
-                error : function(_error: Error, _message: Message, count: number): ErrorAction {
-                    return ErrorAction.Continue;
+                error : function(error: Error, _message: Message, count: number): ErrorHandlerResult {
+                    return { action: ErrorAction.Continue, message: error.message };
                 },
-                closed : function(): CloseAction {
+                closed : function(): CloseHandlerResult {
                     handleLog(log, "Connection to Apache NetBeans Language Server closed.");
                     if (!activationPending) {
                         restartWithJDKLater(10000, false);
                     }
-                    return CloseAction.DoNotRestart;
+                    return { action: CloseAction.DoNotRestart };
                 }
             }
         }
@@ -821,14 +826,13 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
                 clientOptions
         );
         handleLog(log, 'Language Client: Starting');
-        c.start();
-        c.onReady().then(() => {
+        c.start().then(() => {
             testAdapter = new NbTestAdapter();
             c.onNotification(StatusMessageRequest.type, showStatusBarMessage);
             c.onRequest(HtmlPageRequest.type, showHtmlPage);
             c.onNotification(LogMessageNotification.type, (param) => handleLog(log, param.message));
             c.onRequest(QuickPickRequest.type, async param => {
-                const selected = await window.showQuickPick(param.items, { placeHolder: param.placeHolder, canPickMany: param.canPickMany });
+                const selected = await window.showQuickPick(param.items, { title: param.title, placeHolder: param.placeHolder, canPickMany: param.canPickMany });
                 return selected ? Array.isArray(selected) ? selected : [selected] : undefined;
             });
             c.onRequest(UpdateConfigurationRequest.type, async (param) => {
@@ -836,7 +840,44 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
                 runConfigurationUpdateAll();
             });
             c.onRequest(InputBoxRequest.type, async param => {
-                return await window.showInputBox({ prompt: param.prompt, value: param.value, password: param.password });
+                return await window.showInputBox({ title: param.title, prompt: param.prompt, value: param.value, password: param.password });
+            });
+            c.onRequest(MutliStepInputRequest.type, async param => {
+                const data: { [name: string]: readonly vscode.QuickPickItem[] | string } = {};
+                async function nextStep(input: MultiStepInput, step: number, state: { [name: string]: readonly vscode.QuickPickItem[] | string }): Promise<InputStep | void> {
+                    const inputStep = await c.sendRequest(MutliStepInputRequest.step, { inputId: param.id, step, data: state });
+                    if (inputStep && inputStep.hasOwnProperty('items')) {
+                        const quickPickStep = inputStep as QuickPickStep;
+                        state[inputStep.stepId] = await input.showQuickPick({
+                            title: param.title,
+                            step,
+                            totalSteps: quickPickStep.totalSteps,
+                            placeholder: quickPickStep.placeHolder,
+                            items: quickPickStep.items,
+                            canSelectMany: quickPickStep.canPickMany,
+                            selectedItems: quickPickStep.items.filter(item => item.picked)
+                        });
+                        return (input: MultiStepInput) => nextStep(input, step + 1, state);
+                    } else if (inputStep && inputStep.hasOwnProperty('value')) {
+                        const inputBoxStep = inputStep as InputBoxStep;
+                        state[inputStep.stepId] = await input.showInputBox({
+                            title: param.title,
+                            step,
+                            totalSteps: inputBoxStep.totalSteps,
+                            value: state[inputStep.stepId] as string || inputBoxStep.value,
+                            prompt: inputBoxStep.prompt,
+                            password: inputBoxStep.password,
+                            validate: (val) => {
+                                const d = { ...state };
+                                d[inputStep.stepId] = val;
+                                return c.sendRequest(MutliStepInputRequest.validate, { inputId: param.id, step, data: d });
+                            }
+                        });
+                        return (input: MultiStepInput) => nextStep(input, step + 1, state);
+                    }
+                }
+                await MultiStepInput.run(input => nextStep(input, 1, data));
+                return data;
             });
             c.onNotification(TestProgressNotification.type, param => {
                 if (testAdapter) {
@@ -1294,13 +1335,27 @@ class NetBeansConfigurationNativeResolver implements vscode.DebugConfigurationPr
 
 class NetBeansSourceForContentProvider implements vscode.TextDocumentContentProvider {
 
+    private uri: vscode.Uri | undefined;
+
+    constructor(context: ExtensionContext) {
+        context.subscriptions.push(vscode.window.onDidChangeVisibleTextEditors(eds => {
+            eds.forEach(ed => {
+                if (this.uri && this.uri.toString() === ed.document.uri.toString()) {
+                    ed.hide();
+                    this.uri = undefined;
+                }
+            });
+        }));
+    }
+
     provideTextDocumentContent(uri: vscode.Uri, token: vscode.CancellationToken): vscode.ProviderResult<string> {
+        this.uri = uri;
         vscode.window.withProgress({location: ProgressLocation.Notification, title: 'Finding source...', cancellable: false}, () => {
             return vscode.commands.executeCommand('java.source.for', uri.toString()).then(() => {
             }, (reason: any) => {
                 vscode.window.showErrorMessage(reason.data);
             });
         });
-        return Promise.reject();
+        return Promise.resolve('');
     }
 }

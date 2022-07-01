@@ -620,9 +620,7 @@ public class NexusRepositoryIndexerImpl implements RepositoryIndexerImplementati
         } catch (ComponentLookupException x) {
             throw new IOException("could not find protocol handler for " + repo.getRepositoryUrl(), x);
         } finally {
-            if(isDiag()) {
-                LOGGER.log(Level.INFO, "Indexing of {0} took {1} millis.", new Object[]{repo.getId(), System.currentTimeMillis() - t});
-            }
+            LOGGER.log(Level.INFO, "Indexing of {0} took {1} s.", new Object[]{repo.getId(), String.format("%.2f", (System.currentTimeMillis() - t)/1000.0f)});
             synchronized (indexingMutexes) {
                 indexingMutexes.remove(mutex);
             }
@@ -1690,21 +1688,6 @@ public class NexusRepositoryIndexerImpl implements RepositoryIndexerImplementati
     }
 
     private void storeGroupCache(RepositoryInfo repoInfo, IndexingContext ic) throws IOException {
-        // MINDEXER-157: After import all groups and root groups are inverted in the IndexingContext
-        Set<String> allGroups = ic.getAllGroups();
-        Set<String> rootGroups = ic.getRootGroups();
-        if(rootGroups.size() > allGroups.size()) {
-            // Inversion - allGroups should always have the same size as rootGroups or be larger
-            ic.setAllGroups(rootGroups);
-            ic.setRootGroups(allGroups);
-        } else if (rootGroups.size() == allGroups.size()) {
-            // Inversion if any groupId in rootGroups contains a dot (so is not a root id)
-            boolean inversion = rootGroups.stream().anyMatch(s -> s.contains("."));
-            if (inversion) {
-                ic.setAllGroups(rootGroups);
-                ic.setRootGroups(allGroups);
-            }
-        }
 
         Path indexDir = getIndexDirectory(repoInfo).toPath();
         Path tempAllCache = Files.createTempFile(indexDir, GROUP_CACHE_ALL_PREFIX, GROUP_CACHE_ALL_SUFFIX);

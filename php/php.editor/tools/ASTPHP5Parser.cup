@@ -219,6 +219,22 @@ parser code {:
         return attributedStatement;
     }
 
+    List<Identifier> createNamespaceNameSegments(int start, String name) {
+        assert name != null;
+        String[] names = name.split("\\\\"); // NOI18N
+        int startSegment = start;
+        List<Identifier> list = new ArrayList<>();
+        for (String n : names) {
+            if (n.equals("namespace") || n.isEmpty()) { // NOI18N
+                startSegment += n.length() + 1; // length + \
+                continue;
+            }
+            list.add(new Identifier(startSegment, startSegment + n.length(), n));
+            startSegment += n.length() + 1; // length + \
+        }
+        return list;
+    }
+
     interface ErrorStrategy {
         public boolean errorRecovery(boolean debug) throws Exception;
     }
@@ -417,13 +433,18 @@ terminal T_COALESCE_EQUAL;
 terminal T_ATTRIBUTE;
 terminal String T_READONLY;
 terminal T_AMPERSAND_NOT_FOLLOWED_BY_VAR_OR_VARARG; /* & */
-terminal T_ENUM; /* PHP 8.1 */
+terminal String T_ENUM; /* PHP 8.1 */
+terminal String T_NAME_RELATIVE; /* PHP 8.0 namespace\Foo */
+terminal String T_NAME_QUALIFIED; /* PHP 8.0 Foo\Bar */
+terminal String T_NAME_FULLY_QUALIFIED; /* PHP 8.0 \Foo\Bar */
 
 /* Non terminals */
 
 non terminal Program thestart;
 non terminal List namespace_name;
 non terminal NamespaceName namespace_name_access;
+non terminal NamespaceName legacy_namespace_name;
+non terminal List namespace_declaration_name;
 non terminal List group_namespace_parts;
 non terminal List non_empty_group_namespace_parts;
 non terminal SingleUseStatementPart group_namespace_part;
@@ -708,28 +729,70 @@ T_DEFINE:n
     RESULT = list;
 :}
 
-|
-namespace_name:list T_NS_SEPARATOR T_STRING:n
+| T_NAME_QUALIFIED:name
 {:
-    list.add(new Identifier(nleft, nright, n));
-    RESULT = list;
+    // e.g. Foo\Bar
+    RESULT = parser.createNamespaceNameSegments(nameleft, name);
 :}
 ;
 
-namespace_name_access ::=
+namespace_declaration_name ::=
+identifier: identifier
+{:
+    // e.g. Foo
+    List list = new LinkedList();
+    list.add(identifier);
+    RESULT = list;
+
+:}
+
+| T_NAME_QUALIFIED:name
+{:
+    // e.g. Foo\Bar
+    RESULT = parser.createNamespaceNameSegments(nameleft, name);
+:}
+;
+
+legacy_namespace_name ::=
 namespace_name:list
 {:
     RESULT = new NamespaceName(listleft, listright, list, false, false);
 :}
 
-| T_NAMESPACE:s T_NS_SEPARATOR namespace_name:list
+| T_NAME_FULLY_QUALIFIED:name
 {:
-    RESULT = new NamespaceName(sleft, listright, list, false, true);
+    // e.g. \Foo\Bar
+    RESULT = NamespaceName.create(nameleft, nameright, name);
+:}
+;
+
+namespace_name_access ::=
+T_STRING:name
+{:
+    RESULT = NamespaceName.create(nameleft, nameright, name);
 :}
 
-| T_NS_SEPARATOR:s namespace_name:list
+| T_DEFINE:name
 {:
-    RESULT = new NamespaceName(sleft, listright, list, true, false);
+    RESULT = NamespaceName.create(nameleft, nameright, name);
+:}
+
+| T_NAME_QUALIFIED:name
+{:
+    // e.g. Foo\Bar
+    RESULT = NamespaceName.create(nameleft, nameright, name);
+:}
+
+| T_NAME_FULLY_QUALIFIED:name
+{:
+    // e.g. \Foo\Bar
+    RESULT = NamespaceName.create(nameleft, nameright, name);
+:}
+
+| T_NAME_RELATIVE:name
+{:
+    // e.g. namespace\Foo\Bar
+    RESULT = NamespaceName.create(nameleft, nameright, name);
 :}
 ;
 
@@ -1216,13 +1279,13 @@ statement:statement
     RESULT = new HaltCompiler(haltleft, haltright);
 :}
 
-| T_NAMESPACE:s namespace_name:list T_SEMICOLON:e
+| T_NAMESPACE:s namespace_declaration_name:list T_SEMICOLON:e
 {:
     RESULT = new NamespaceDeclaration(sleft, eright,
         new NamespaceName(listleft, listright, list, false, false), null, false);
 :}
 
-| T_NAMESPACE:s namespace_name:list T_CURLY_OPEN:token top_statement_list:sList T_CURLY_CLOSE:e
+| T_NAMESPACE:s namespace_declaration_name:list T_CURLY_OPEN:token top_statement_list:sList T_CURLY_CLOSE:e
 {:
     RESULT = new NamespaceDeclaration(sleft, eright,
         new NamespaceName(listleft, listright, list, false, false),
@@ -1321,40 +1384,20 @@ use_declarations:list T_COMMA use_declaration:useDecl
 ;
 
 use_declaration ::=
-namespace_name:list
+legacy_namespace_name:name
 {:
-    RESULT = new SingleUseStatementPart(listleft, listright,
-        new NamespaceName(listleft, listright, list, false, false), null);
+    RESULT = new SingleUseStatementPart(nameleft, nameright, name, null);
 :}
 
-| namespace_name:list T_AS T_STRING:aliasName
+| legacy_namespace_name:name T_AS T_STRING:aliasName
 {:
-    RESULT = new SingleUseStatementPart(listleft, aliasNameright,
-        new NamespaceName(listleft, listright, list, false, false),
+    RESULT = new SingleUseStatementPart(nameleft, aliasNameright, name,
         new Identifier(aliasNameleft, aliasNameright, aliasName));
 :}
 
-| namespace_name:basens T_NS_SEPARATOR:s T_CURLY_OPEN:open group_namespace_parts:parts T_CURLY_CLOSE:close
+| legacy_namespace_name:basens T_NS_SEPARATOR:s T_CURLY_OPEN:open group_namespace_parts:parts T_CURLY_CLOSE:close
 {:
-    RESULT = new GroupUseStatementPart(basensleft, closeright, new NamespaceName(basensleft, basensright, basens, false, false), parts);
-:}
-
-| T_NS_SEPARATOR:s namespace_name:list
-{:
-    RESULT = new SingleUseStatementPart(sleft, listright,
-        new NamespaceName(sleft, listright, list, true, false), null);
-:}
-
-| T_NS_SEPARATOR:s namespace_name:list T_AS T_STRING:aliasName
-{:
-    RESULT = new SingleUseStatementPart(sleft, aliasNameright,
-        new NamespaceName(sleft, listright, list, true, false),
-        new Identifier(aliasNameleft, aliasNameright, aliasName));
-:}
-
-| T_NS_SEPARATOR:s namespace_name:basens T_NS_SEPARATOR:ss T_CURLY_OPEN:open group_namespace_parts:parts T_CURLY_CLOSE:close
-{:
-    RESULT = new GroupUseStatementPart(sleft, closeright, new NamespaceName(basensleft, basensright, basens, true, false), parts);
+    RESULT = new GroupUseStatementPart(basensleft, closeright, basens, parts);
 :}
 ;
 
@@ -2658,6 +2701,13 @@ non_empty_function_call_parameter_list:paramsList possible_comma
     RESULT = paramsList;
 :}
 
+| T_ELLIPSIS:e
+{:
+    // NETBEANS-5899 PHP 8.1: First class callable syntax
+    // e.g. strlen(...);
+    RESULT = Collections.singletonList(new FirstClassCallableArg(eleft, eright));
+:}
+
 | /* empty */
 {:
     RESULT = new LinkedList();
@@ -2926,14 +2976,9 @@ use_traits:list T_COMMA use_trait:useDecl
 ;
 
 use_trait ::=
-namespace_name:list
+legacy_namespace_name:name
 {:
-    RESULT = new UseTraitStatementPart(listleft, listright, new NamespaceName(listleft, listright, list, false, false));
-:}
-
-| T_NS_SEPARATOR:s namespace_name:list
-{:
-    RESULT = new UseTraitStatementPart(sleft, listright, new NamespaceName(sleft, listright, list, true, false));
+    RESULT = new UseTraitStatementPart(nameleft, nameright, name);
 :}
 ;
 
@@ -4039,25 +4084,10 @@ lexical_var_list:list T_COMMA T_VARIABLE:var
 ;
 
 function_call ::=
-namespace_name:list T_OPEN_PARENTHESE function_call_parameter_list:parameters T_CLOSE_PARENTHESE:e
+fully_qualified_class_name:list T_OPEN_PARENTHESE function_call_parameter_list:parameters T_CLOSE_PARENTHESE:e
 {:
     RESULT = new FunctionInvocation(listleft, eright,
-        new FunctionName(listleft, listright,
-            new NamespaceName(listleft, listright, list, false, false)), parameters);
-:}
-
-| T_NAMESPACE:s T_NS_SEPARATOR namespace_name:list T_OPEN_PARENTHESE function_call_parameter_list:parameters T_CLOSE_PARENTHESE:e
-{:
-    RESULT = new FunctionInvocation(sleft, eright,
-        new FunctionName(sleft, listright,
-            new NamespaceName(sleft, listright, list, false, true)), parameters);
-:}
-
-| T_NS_SEPARATOR:s namespace_name:list T_OPEN_PARENTHESE function_call_parameter_list:parameters T_CLOSE_PARENTHESE:e
-{:
-    RESULT = new FunctionInvocation(sleft, eright,
-        new FunctionName(sleft, listright,
-            new NamespaceName(sleft, listright, list, true, false)), parameters);
+        new FunctionName(listleft, listright, list), parameters);
 :}
 
 | class_name:className T_PAAMAYIM_NEKUDOTAYIM identifier:fn T_OPEN_PARENTHESE function_call_parameter_list:parameters T_CLOSE_PARENTHESE:e
@@ -4230,37 +4260,37 @@ T_STATIC:s
     RESULT = new Identifier(sleft, sright, "static");
 :}
 
-| namespace_name:list
+| fully_qualified_class_name:name
 {:
-    RESULT = new NamespaceName(listleft, listright, list, false, false);
-:}
-
-| T_NAMESPACE:s T_NS_SEPARATOR namespace_name:list
-{:
-    RESULT = new NamespaceName(sleft, listright, list, false, true);
-:}
-
-| T_NS_SEPARATOR:s namespace_name:list
-{:
-    RESULT = new NamespaceName(sleft, listright, list, true, false);
+    RESULT = name;
 :}
 ;
 
 
 fully_qualified_class_name ::=
-namespace_name:list
+T_STRING:name
 {:
-    RESULT = new NamespaceName(listleft, listright, list, false, false);
+    RESULT = NamespaceName.create(nameleft, nameright, name);
 :}
 
-| T_NAMESPACE:s T_NS_SEPARATOR namespace_name:list
+| T_DEFINE:name
 {:
-    RESULT = new NamespaceName(sleft, listright, list, false, true);
+    RESULT = NamespaceName.create(nameleft, nameright, name);
 :}
 
-| T_NS_SEPARATOR:s namespace_name:list
+| T_NAME_QUALIFIED:name
 {:
-    RESULT = new NamespaceName(sleft, listright, list, true, false);
+    RESULT = NamespaceName.create(nameleft, nameright, name);
+:}
+
+| T_NAME_FULLY_QUALIFIED:name
+{:
+    RESULT = NamespaceName.create(nameleft, nameright, name);
+:}
+
+| T_NAME_RELATIVE:name
+{:
+    RESULT = NamespaceName.create(nameleft, nameright, name);
 :}
 ;
 
@@ -4434,29 +4464,20 @@ common_scalar:scalar
     RESULT = scalar;
 :}
 
-| namespace_name:list
+| namespace_name_access:nsn
 {:
-    if (list.size() == 1) {
-        String itemName = ((Identifier)list.get(0)).getName();
+    List<Identifier> list = nsn.getSegments();
+    if (!nsn.isGlobal() && list.size() == 1) {
+        String itemName = ((Identifier) list.get(0)).getName();
         String itemNameLower = itemName.toLowerCase();
-        if ("true".equals(itemNameLower) || "false".equals(itemNameLower)) { //NOI18N
-            RESULT = new Scalar(listleft, listright, itemName, Scalar.Type.STRING);
+        if ("true".equals(itemNameLower) || "false".equals(itemNameLower)) { // NOI18N
+            RESULT = new Scalar(nsnleft, nsnright, itemName, Scalar.Type.STRING);
         } else {
-            RESULT = new NamespaceName(listleft, listright, list, false, false);
+            RESULT = nsn;
         }
     } else {
-        RESULT = new NamespaceName(listleft, listright, list, false, false);
+        RESULT = nsn;
     }
-:}
-
-| T_NAMESPACE:s T_NS_SEPARATOR namespace_name:list
-{:
-    RESULT = new NamespaceName(sleft, listright, list, false, true);
-:}
-
-| T_NS_SEPARATOR:s namespace_name:list
-{:
-    RESULT = new NamespaceName(sleft, listright, list, true, false);
 :}
 
 | static_class_constant:classConstant
@@ -4799,29 +4820,20 @@ T_STRING_VARNAME:scalar
     RESULT = classConstant;
 :}
 
-| namespace_name:list
+| namespace_name_access:nsn
 {:
-    if (list.size() == 1) {
-        String itemName = ((Identifier)list.get(0)).getName();
+    List<Identifier> list = nsn.getSegments();
+    if (!nsn.isGlobal() && list.size() == 1) {
+        String itemName = ((Identifier) list.get(0)).getName();
         String itemNameLower = itemName.toLowerCase();
-        if ("true".equals(itemNameLower) || "false".equals(itemNameLower)) { //NOI18N
-            RESULT = new Scalar(listleft, listright, itemName, Scalar.Type.STRING);
+        if ("true".equals(itemNameLower) || "false".equals(itemNameLower)) { // NOI18N
+            RESULT = new Scalar(nsnleft, nsnright, itemName, Scalar.Type.STRING);
         } else {
-            RESULT = new NamespaceName(listleft, listright, list, false, false);
+            RESULT = nsn;
         }
     } else {
-        RESULT = new NamespaceName(listleft, listright, list, false, false);
+        RESULT = nsn;
     }
-:}
-
-| T_NAMESPACE:s T_NS_SEPARATOR namespace_name:list
-{:
-    RESULT = new NamespaceName(sleft, listright, list, false, true);
-:}
-
-| T_NS_SEPARATOR:s namespace_name:list
-{:
-    RESULT = new NamespaceName(sleft, listright, list, true, false);
 :}
 
 | common_scalar:scalar
@@ -5089,6 +5101,33 @@ base_variable_with_function_calls:var T_OBJECT_OPERATOR object_property:memberPr
     // e.g. ($uvs = new UVS())::staticMethod();
     DereferencableVariable var = new DereferencableVariable(peleft, peright, pe.getExpression());
     RESULT = parser.createDispatch(ASTPHP5Parser.Access.STATIC, var, memberProperty, memberPropertyleft, memberPropertyright, paramsList, paramsListright, propertyList, aa);
+:}
+
+// Backed cases have an additional read-only property (value)
+// e.g. EnumName::CASE_NAME->value;
+// see https://www.php.net/manual/en/language.enumerations.backed.php
+| class_name:className T_PAAMAYIM_NEKUDOTAYIM identifier:constant T_OBJECT_OPERATOR identifier:varName
+{:
+    RESULT = new FieldAccess(classNameleft, varNameright, new StaticConstantAccess(classNameleft, constantright, className, constant),
+            new Variable(varNameleft, varNameright, varName.getName()), false);
+:}
+
+| variable_class_name:className T_PAAMAYIM_NEKUDOTAYIM identifier:constant T_OBJECT_OPERATOR identifier:varName
+{:
+    RESULT = new FieldAccess(classNameleft, varNameright, new StaticConstantAccess(classNameleft, constantright, className, constant),
+            new Variable(varNameleft, varNameright, varName.getName()), false);
+:}
+
+| class_name:className T_PAAMAYIM_NEKUDOTAYIM identifier:constant T_NULLSAFE_OBJECT_OPERATOR identifier:varName
+{:
+    RESULT = new FieldAccess(classNameleft, varNameright, new StaticConstantAccess(classNameleft, constantright, className, constant),
+            new Variable(varNameleft, varNameright, varName.getName()), true);
+:}
+
+| variable_class_name:className T_PAAMAYIM_NEKUDOTAYIM identifier:constant T_NULLSAFE_OBJECT_OPERATOR identifier:varName
+{:
+    RESULT = new FieldAccess(classNameleft, varNameright, new StaticConstantAccess(classNameleft, constantright, className, constant),
+            new Variable(varNameleft, varNameright, varName.getName()), true);
 :}
 ;
 

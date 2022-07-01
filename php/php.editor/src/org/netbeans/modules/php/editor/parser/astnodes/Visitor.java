@@ -116,6 +116,8 @@ public interface Visitor {
 
     public void visit(FinallyClause finallyClause);
 
+    public void visit(FirstClassCallableArg firstClassCallableArg);
+
     //public void endVisit(FieldsDeclaration fieldsDeclaration);
     public void visit(ForEachStatement forEachStatement);
 

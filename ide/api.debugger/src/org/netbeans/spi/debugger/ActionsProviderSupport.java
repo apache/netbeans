@@ -64,7 +64,7 @@ public abstract class ActionsProviderSupport extends ActionsProvider {
      * @param enabled the new state
      */
     protected final void setEnabled (Object action, boolean enabled) {
-        boolean fire = false;
+        boolean fire;
         if (enabled)
             fire = this.enabled.add (action);
         else

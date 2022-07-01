@@ -36,7 +36,7 @@ public class JsParserError implements FilterableError, Error.Badging {
     private final Object[] parameters;
     private final boolean showExplorerBadge;
     private final boolean showInEditor;
-    
+
     private final Collection<SetFilterAction> enableFilter;
     private final SetFilterAction disableFilter;
 

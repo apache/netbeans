@@ -21,7 +21,7 @@ package org.netbeans.modules.gradle.loaders;
 import java.util.Set;
 import org.netbeans.modules.gradle.GradleProjectStructure;
 import org.netbeans.modules.gradle.api.NbGradleProject.Quality;
-import org.netbeans.modules.gradle.api.NbProjectInfo;
+import org.netbeans.modules.gradle.tooling.internal.NbProjectInfo;
 import org.netbeans.modules.gradle.api.execute.GradleCommandLine;
 import org.netbeans.modules.gradle.cache.ProjectInfoDiskCache;
 import org.netbeans.modules.gradle.spi.GradleFiles;

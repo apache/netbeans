@@ -169,7 +169,7 @@ public class JsDocumentationCompleter {
         }
         return result;
     }
-    
+
     private static boolean isWrapperObject(JsParserResult jsParserResult, JsObject jsObject, Node nearestNode) {
         List<Identifier> nodeName = Model.getModel(jsParserResult, false).getNodeName(nearestNode);
         if (nodeName == null || nodeName.isEmpty()) {

@@ -31,8 +31,6 @@ import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
-import com.sun.source.util.TreePathScanner;
-import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -44,6 +42,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.concurrent.Callable;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
@@ -52,11 +51,19 @@ import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
+import org.netbeans.api.java.classpath.ClassPath;
+import org.netbeans.api.java.project.JavaProjectConstants;
 import org.netbeans.api.java.source.ClassIndex;
+import org.netbeans.api.java.source.ClasspathInfo;
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
+import org.netbeans.api.project.FileOwnerQuery;
+import org.netbeans.api.project.Project;
+import org.netbeans.api.project.ProjectUtils;
+import org.netbeans.api.project.SourceGroup;
+import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.openide.filesystems.FileObject;
 import org.openide.util.Exceptions;
 
@@ -92,7 +99,7 @@ public class UnusedDetector {
 
     }
 
-    public static List<UnusedDescription> findUnused(CompilationInfo info) {
+    public static List<UnusedDescription> findUnused(CompilationInfo info, Callable<Boolean> cancel) {
         List<UnusedDescription> cached = (List<UnusedDescription>) info.getCachedValue(UnusedDetector.class);
         if (cached != null) {
             return cached;
@@ -122,26 +129,26 @@ public class UnusedDetector {
                     boolean isWritten = uses.contains(UseTypes.WRITTEN);
                     boolean isRead = uses.contains(UseTypes.READ);
                     if (!isWritten && !isRead) {
-                        if (isPrivate || isUnusedInPkg(info, el)) {
+                        if (isPrivate || isUnusedInPkg(info, el, cancel)) {
                             result.add(new UnusedDescription(el, declaration, UnusedReason.NOT_WRITTEN_READ));
                         }
                     } else if (!isWritten) {
                         result.add(new UnusedDescription(el, declaration, UnusedReason.NOT_WRITTEN));
                     } else if (!isRead) {
-                        if (isPrivate || isUnusedInPkg(info, el)) {
+                        if (isPrivate || isUnusedInPkg(info, el, cancel)) {
                             result.add(new UnusedDescription(el, declaration, UnusedReason.NOT_READ));
                         }
                     }
                 }
             } else if ((el.getKind() == ElementKind.CONSTRUCTOR || el.getKind() == ElementKind.METHOD) && (isPrivate || isPkgPrivate)) {
                 if (!isSerializationMethod(info, (ExecutableElement)el) && !uses.contains(UseTypes.USED)) {
-                    if (isPrivate || isUnusedInPkg(info, el)) {
+                    if (isPrivate || isUnusedInPkg(info, el, cancel)) {
                         result.add(new UnusedDescription(el, declaration, UnusedReason.NOT_USED));
                     }
                 }
             } else if ((el.getKind().isClass() || el.getKind().isInterface()) && (isPrivate || isPkgPrivate)) {
                 if (!uses.contains(UseTypes.USED)) {
-                    if (isPrivate || isUnusedInPkg(info, el)) {
+                    if (isPrivate || isUnusedInPkg(info, el, cancel)) {
                         result.add(new UnusedDescription(el, declaration, UnusedReason.NOT_USED));
                     }
                 }
@@ -272,7 +279,7 @@ public class UnusedDetector {
                LOCAL_VARIABLES.contains(el.getKind());
     }
 
-    private static boolean isUnusedInPkg(CompilationInfo info, Element el) {
+    private static boolean isUnusedInPkg(CompilationInfo info, Element el, Callable<Boolean> cancel) {
         TypeElement typeElement;
         Set<? extends String> packageSet = Collections.singleton(info.getElements().getPackageOf(el).getQualifiedName().toString());
         Set<ClassIndex.SearchKind> searchKinds;
@@ -318,19 +325,35 @@ public class UnusedDetector {
                 return true;
         }
         ElementHandle eh = ElementHandle.create(el);
-        Set<FileObject> res = info.getClasspathInfo().getClassIndex().getResources(ElementHandle.create(typeElement), searchKinds, scope);
+        Project prj = FileOwnerQuery.getOwner(info.getFileObject());
+        ClasspathInfo cpInfo;
+        if (prj != null) {
+            SourceGroup[] sourceGroups = ProjectUtils.getSources(prj).getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA);
+            FileObject[] roots = new FileObject[sourceGroups.length];
+            for (int i = 0; i < sourceGroups.length; i++) {
+                SourceGroup sourceGroup = sourceGroups[i];
+                roots[i] = sourceGroup.getRootFolder();
+            }
+            cpInfo = ClasspathInfo.create(ClassPath.EMPTY, ClassPath.EMPTY, ClassPathSupport.createClassPath(roots));
+        } else {
+            cpInfo = info.getClasspathInfo();
+        }
+        Set<FileObject> res = cpInfo.getClassIndex().getResources(ElementHandle.create(typeElement), searchKinds, scope);
         if (res != null) {
             for (FileObject fo : res) {
-                if (fo != info.getFileObject()) {
-                    JavaSource js = JavaSource.forFileObject(fo);
-                    if (js == null) {
+                try {
+                    if (Boolean.TRUE.equals(cancel.call())) {
                         return false;
                     }
-                    AtomicBoolean found = new AtomicBoolean();
-                    try {
+                    if (fo != info.getFileObject()) {
+                        JavaSource js = JavaSource.forFileObject(fo);
+                        if (js == null) {
+                            return false;
+                        }
+                        AtomicBoolean found = new AtomicBoolean();
                         js.runUserActionTask(cc -> {
                             cc.toPhase(JavaSource.Phase.RESOLVED);
-                            new TreePathScanner<Void, Element>() {
+                            new ErrorAwareTreePathScanner<Void, Element>() {
                                 @Override
                                 public Void scan(Tree tree, Element p) {
                                     if (!found.get() && tree != null) {
@@ -344,12 +367,12 @@ public class UnusedDetector {
                                 }
                             }.scan(new TreePath(cc.getCompilationUnit()), el);
                         }, true);
-                    } catch (IOException ex) {
-                        Exceptions.printStackTrace(ex);
+                        if (found.get()) {
+                            return false;
+                        }
                     }
-                    if (found.get()) {
-                        return false;
-                    }
+                } catch (Exception ex) {
+                    Exceptions.printStackTrace(ex);
                 }
             }
             return true;

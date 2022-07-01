@@ -37,6 +37,7 @@ import com.sun.source.util.SourcePositions;
 import com.sun.source.util.TreePath;
 import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -51,6 +52,7 @@ import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.GeneratorUtilities;
 import org.netbeans.api.java.source.TreeMaker;
 import org.netbeans.api.java.source.WorkingCopy;
+import org.netbeans.modules.java.hints.errors.Utilities;
 import org.netbeans.modules.java.hints.suggestions.FillSwitchCustomizer.CustomizerProviderImpl;
 import org.netbeans.spi.editor.hints.ErrorDescription;
 import org.netbeans.spi.editor.hints.Fix;
@@ -64,6 +66,7 @@ import org.netbeans.spi.java.hints.JavaFix;
 import org.netbeans.spi.java.hints.JavaFix.TransformationContext;
 import org.netbeans.spi.java.hints.JavaFixUtilities;
 import org.netbeans.spi.java.hints.TriggerPattern;
+import org.netbeans.spi.java.hints.TriggerPatterns;
 import org.netbeans.spi.java.hints.TriggerTreeKind;
 import org.openide.util.NbBundle;
 
@@ -400,4 +403,29 @@ public class Tiny {
 
     }
 
+    @Hint(displayName = "#DN_org.netbeans.modules.java.hints.suggestions.Tiny.inlineRedundantVar", description = "#DESC_org.netbeans.modules.java.hints.suggestions.Tiny.inlineRedundantVar", category="suggestions", severity=Severity.HINT)
+    @TriggerPatterns({
+        @TriggerPattern(value="$type $var = $init; return $var;"),
+        @TriggerPattern(value="$type $var = $init; $type2 $var2 = $var; $statements$")
+    })
+    public static ErrorDescription inlineRedundantVar(HintContext ctx) {
+        TreePath var = ctx.getVariables().get("$var");
+        if (var != null) {
+            Element element = ctx.getInfo().getTrees().getElement(var);
+            if (element != null && element.getKind() == ElementKind.LOCAL_VARIABLE) {
+                TreePath var2 = ctx.getVariables().get("$var2");
+                Collection<? extends TreePath> stats = ctx.getMultiVariables().get("$statements$");
+                if (var2 != null) {
+                    if (stats != null && !Utilities.isReferencedIn(ctx.getInfo(), var, stats)) {
+                        Fix fix = JavaFixUtilities.rewriteFix(ctx, NbBundle.getMessage(Tiny.class, "FIX_Tiny.inlineRedundantVar", element.getSimpleName()), ctx.getPath(), "$type2 $var2 = $init; $statements$");
+                        return ErrorDescriptionFactory.forName(ctx, var, NbBundle.getMessage(Tiny.class, "ERR_Tiny.inlineRedundantVar", element.getSimpleName()), fix);
+                    }
+                } else {
+                    Fix fix = JavaFixUtilities.rewriteFix(ctx, NbBundle.getMessage(Tiny.class, "FIX_Tiny.inlineRedundantVar", element.getSimpleName()), ctx.getPath(), "return $init;");
+                    return ErrorDescriptionFactory.forName(ctx, var, NbBundle.getMessage(Tiny.class, "ERR_Tiny.inlineRedundantVar", element.getSimpleName()), fix);
+                }
+            }
+        }
+        return null;
+    }
 }

@@ -80,7 +80,7 @@ public abstract class ActionsProviderSupport extends ActionsProvider {
      * @param enabled the new state
      */
     protected void fireActionStateChanged (Object action, boolean enabled) {
-        Vector<ActionsProviderListener> v = (Vector<ActionsProviderListener>)listeners.clone();
+        Vector<ActionsProviderListener> v = new Vector<>(listeners);
         int i, k = v.size ();
         for (i = 0; i < k; i++)
             v.elementAt (i).actionStateChange (

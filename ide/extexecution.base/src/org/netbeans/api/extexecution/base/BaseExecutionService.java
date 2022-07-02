@@ -215,19 +215,36 @@ public final class BaseExecutionService {
                         // output from command line invocations to strings. That encoding is
                         // derived from the system file.encoding. From JDK 18 onwards its
                         // default value changed to UTF-8.
-                        // JDK 18+ exposes the native encoding as the new system property
-                        // native.encoding, prior versions don't have that property and will
+                        // JDK 17+ exposes the native encoding as the new system property
+                        // 'native.encoding', prior versions don't have that property and will
                         // report NULL for it.
-                        // The algorithm is simple: If native.encoding is set, it will be used
+                        // The algorithm is simple: If 'netbeans.cmdline.inout.forcedencoding' is set prefer it, else check whether 'native.encoding' is set, it will be used
                         // else the old default will be queried via Charset#defaultCharset.
-                        String nativeEncoding = System.getProperty("native.encoding");
-                        if (nativeEncoding != null) {
-                            try {
-                                charset = Charset.forName(nativeEncoding);
-                            } catch (Exception ex) {
-                                LOGGER.log(java.util.logging.Level.WARNING, "Failed to get charset for native.encoding value : '" + nativeEncoding + "'", ex);
-                            }
+						String preferredEncoding = null;
+						String usedEncodingProperty = null;
+						
+						final String forcedEncodingProperty = "netbeans.cmdline.inout.forcedencoding";
+						final String forcedEncoding = System.getProperty(forcedEncodingProperty);
+						if(forcedEncoding != null){
+							preferredEncoding = forcedEncoding;
+							usedEncodingProperty = forcedEncodingProperty;
+						}
+						
+						if (preferredEncoding == null){
+							final String nativeEncodingProperty = "native.encoding";
+							final String nativeEncoding = System.getProperty(nativeEncodingProperty);
+							if(nativeEncoding != null) {
+								preferredEncoding = nativeEncoding;
+								usedEncodingProperty = nativeEncodingProperty;
+							}
+						}
+						
+						try {
+                            charset = Charset.forName(preferredEncoding);
+                        } catch (Exception ex) {
+                            LOGGER.log(java.util.logging.Level.WARNING, "Failed to get charset for '" + usedEncodingProperty + "' value : '" + preferredEncoding + "'", ex);
                         }
+						
                         if (charset == null) {
                             charset = Charset.defaultCharset();
                         }

@@ -26,7 +26,7 @@
     <Container class="javax.swing.JPanel" name="findPanel">
       <Properties>
         <Property name="background" type="java.awt.Color" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-          <Connection code="treeView.getViewport().getView().getBackground()" type="code"/>
+          <Connection code="UIManager.getColor(&quot;Tree.background&quot;)" type="code"/>
         </Property>
       </Properties>
 
@@ -124,7 +124,7 @@
     <Component class="javax.swing.JLabel" name="messageLabel">
       <Properties>
         <Property name="background" type="java.awt.Color" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-          <Connection code="treeView.getViewport().getView().getBackground()" type="code"/>
+          <Connection code="UIManager.getColor(&quot;Tree.background&quot;)" type="code"/>
         </Property>
         <Property name="horizontalAlignment" type="int" value="0"/>
         <Property name="enabled" type="boolean" value="false"/>

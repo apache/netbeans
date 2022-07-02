@@ -265,7 +265,7 @@ public class DomPanel extends JPanel implements ExplorerManager.Provider {
         noDomLabel.setHorizontalAlignment(SwingConstants.CENTER);
         noDomLabel.setVerticalAlignment(SwingConstants.CENTER);
         noDomLabel.setEnabled(false);
-        noDomLabel.setBackground(treeView.getViewport().getView().getBackground());
+        noDomLabel.setBackground(UIManager.getColor("Tree.background"));
         noDomLabel.setOpaque(true);
     }
 

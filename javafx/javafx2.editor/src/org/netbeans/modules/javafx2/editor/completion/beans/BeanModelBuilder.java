@@ -92,11 +92,11 @@ public final class BeanModelBuilder {
     /**
      * Names of factory methods usable to create the bean instance
      */
-    private Map<String, TypeMirrorHandle> factoryMethods = Collections.<String, TypeMirrorHandle>emptyMap();
+    private Map<String, TypeMirrorHandle> factoryMethods = Collections.emptyMap();
     
     private FxBean  resultInfo;
     
-    private Set<String> constants = Collections.<String>emptySet();
+    private Set<String> constants = Collections.emptySet();
     
     /**
      * Type element for the class.
@@ -741,7 +741,7 @@ public final class BeanModelBuilder {
         events.put(ei.getName(), ei);
     }
     
-    private Map<String, FxEvent>    events = Collections.<String, FxEvent>emptyMap();
+    private Map<String, FxEvent>    events = Collections.emptyMap();
     
     private FxBeanCache beanCache;
     

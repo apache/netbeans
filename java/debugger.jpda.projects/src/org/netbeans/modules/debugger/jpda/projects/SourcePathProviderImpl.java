@@ -409,7 +409,7 @@ public class SourcePathProviderImpl extends SourcePathProvider {
         Properties sourcesProperties = Properties.getDefault ().getProperties ("debugger").getProperties ("sources");
         List<String> additionalSourceRoots = (List<String>) sourcesProperties.
                 getProperties("additional_source_roots").
-                getCollection("src_roots", Collections.<String>emptyList());
+                getCollection("src_roots", Collections.emptyList());
         if (additionalSourceRoots == null || additionalSourceRoots.isEmpty()) {
             return null;
         }
@@ -472,7 +472,7 @@ public class SourcePathProviderImpl extends SourcePathProvider {
     private Set<String> getRemoteDisabledSourceRoots() {
         Properties sourcesProperties = Properties.getDefault ().getProperties ("debugger").getProperties ("sources");
         return (Set<String>) sourcesProperties.getProperties("source_roots").
-            getCollection("remote_disabled", Collections.<String>emptySet());
+            getCollection("remote_disabled", Collections.emptySet());
     }
 
     private void storeDisabledSourceRoots(Set<String> disabledSourceRoots) {
@@ -516,7 +516,7 @@ public class SourcePathProviderImpl extends SourcePathProvider {
     public static Map<String, Integer> getRemoteSourceRootsOrder() {
         Properties sourcesProperties = Properties.getDefault ().getProperties ("debugger").getProperties ("sources");
         return (Map<String, Integer>) sourcesProperties.getProperties("source_roots").
-            getMap("remote_order", Collections.<String, Integer>emptyMap());
+            getMap("remote_order", Collections.emptyMap());
     }
 
     private static void storeSourceRootsOrder(File baseDir, String[] roots, int[] permutation) {

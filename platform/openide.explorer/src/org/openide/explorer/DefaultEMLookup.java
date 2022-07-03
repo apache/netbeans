@@ -82,7 +82,7 @@ final class DefaultEMLookup extends ProxyLookup implements LookupListener, Prope
 
         synchronized (this) {
             if (attachedTo == null) {
-                copy = Collections.<Lookup, Lookup.Result>emptyMap();
+                copy = Collections.emptyMap();
             } else {
                 copy = new HashMap<>(attachedTo);
             }

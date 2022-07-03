@@ -704,7 +704,7 @@ public final class DebuggerManager implements ContextProvider {
                 throw new IllegalArgumentException("Permutation of length "+permutation.length+", but have "+watches.size()+" watches.");
             }
             checkPermutation(permutation);
-            Vector<Watch> v = (Vector<Watch>)watches.clone();
+            Vector<Watch> v = new Vector<>(watches);
             for (int i = 0; i < v.size(); i++) {
                 watches.set(permutation[i], v.get(i));
             }

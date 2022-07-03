@@ -304,11 +304,12 @@ public class Browser implements Closeable {
                 future.complete(null);
             } else {
                 try {
-                    future.complete(presenter.js2java(methodName,
+                    final String result = presenter.js2java(methodName,
                             URLDecoder.decode((String) params.get("p0"), "UTF-8"),
                             URLDecoder.decode((String) params.get("p1"), "UTF-8"),
                             URLDecoder.decode((String) params.get("p2"), "UTF-8"),
-                            URLDecoder.decode((String) params.get("p3"), "UTF-8")));
+                            URLDecoder.decode((String) params.get("p3"), "UTF-8"));
+                    future.complete(result);
                 } catch (Exception ex) {
                     future.complete("error:" + ex.getMessage());
                 }

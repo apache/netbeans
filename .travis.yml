@@ -55,17 +55,6 @@ matrix:
           script:
             - ant verify-libs-and-licenses -Dverify-libs-and-licenses.haltonfailure=true -Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json
 
-        - name: Run sigtests
-          jdk: openjdk8
-          env:
-            - OPTS="-Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json -quiet -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false"
-          before_script:
-            - nbbuild/travis/ant.sh $OPTS clean
-            - nbbuild/travis/ant.sh $OPTS build
-          script:
-            - nbbuild/travis/ant.sh $OPTS check-sigtests-release -Dfail.on.error=true
-            - nbbuild/travis/ant.sh $OPTS gen-sigtests-release
-
         - name: Run gen-sigtests-release for platform cluster
           jdk: openjdk8
           script:
@@ -430,26 +419,6 @@ matrix:
             - ant $OPTS -f java/whitelist test
             - ant $OPTS -f java/xml.jaxb test
 
-        - name: Test java.hints batch 1 with nb-javac on Java 8
-          jdk: openjdk8
-          env:
-            - OPTS="-Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json -quiet -Dcluster.config=java -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true"
-          before_script:
-            - nbbuild/travis/ant.sh $OPTS clean
-            - nbbuild/travis/ant.sh $OPTS build
-          script:
-            - ant $OPTS -Dtest.config=batch1 -f java/java.hints test
-
-        - name: Test java.hints batch 2 with nb-javac on Java 8
-          jdk: openjdk8
-          env:
-            - OPTS="-Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json -quiet -Dcluster.config=java -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true"
-          before_script:
-            - nbbuild/travis/ant.sh $OPTS clean
-            - nbbuild/travis/ant.sh $OPTS build
-          script:
-            - ant $OPTS -Dtest.config=batch2 -f java/java.hints test
-
         - name: Test Java modules with nb-javac on Java 11
           jdk: openjdk8
           env:
@@ -480,17 +449,6 @@ matrix:
             - ant $OPTS -f apisupport/apisupport.wizards test
             - ant $OPTS -f apisupport/maven.apisupport test
             - ant $OPTS -f apisupport/timers test -Dtest.config=stable
-
-        - name: Test JavaFX modules
-          jdk: openjdk8
-          env:
-            - OPTS="-Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json -quiet -Dcluster.config=java -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true"
-          before_script:
-            - nbbuild/travis/ant.sh $OPTS clean
-            - nbbuild/travis/ant.sh $OPTS build
-          script:
-            - ant $OPTS -f javafx/javafx2.editor test -Dtest.config=stable
-            #- ant $OPTS -f javafx/javafx2.project test
 
         - name: Test ergonomics modules
           jdk: openjdk8
@@ -597,19 +555,6 @@ matrix:
           script:
             - travis_retry ant $OPTS $OPTS_TEST -f ide/db.metadata.model test
             - travis_retry ant $OPTS $OPTS_TEST -f ide/db.mysql test
-
-        - name: Test enterprise modules
-          jdk: openjdk8
-          env:
-            - OPTS="-Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json -quiet -Dcluster.config=enterprise -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true"
-          before_script:
-            - nbbuild/travis/ant.sh $OPTS clean
-            - nbbuild/travis/ant.sh $OPTS build
-          script:
-            - ant $OPTS -f enterprise/spring.webmvc test
-            - ant $OPTS -f enterprise/websvc.editor.hints test
-            - ant $OPTS -f enterprise/websvc.websvcapi test
-            - ant $OPTS -f enterprise/websvc.wsstackapi test
 
         - name: Test groovy modules on Java 8
           jdk: openjdk8

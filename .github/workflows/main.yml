@@ -132,6 +132,37 @@ jobs:
           retention-days: 1
 
 
+  sig-test:
+    name: Signature Tests on Linux/JDK ${{ matrix.java }} 
+    needs: base-build
+    runs-on: ubuntu-latest
+    env:
+      ANT_OPTS: -Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json
+    strategy:
+      matrix:
+        java: [ '11' ]
+    steps:
+
+      - name: Set up JDK ${{ matrix.java }} 
+        uses: actions/setup-java@v2
+        with:
+          java-version: ${{ matrix.java }} 
+          distribution: 'zulu'
+
+      - name: Download Build
+        uses: actions/download-artifact@v3
+        with:
+          name: build
+
+      - name: Extract
+        run: tar --zstd -xf build.tar.zst
+
+      - name: Run check-sigtests-release
+        run: ant $OPTS check-sigtests-release -Dfail.on.error=true
+        
+      - name: Run gen-sigtests-release
+        run: ant $OPTS gen-sigtests-release
+
   build-system-test:
     name: Build-System Test on Linux/JDK ${{ matrix.java }}
     needs: base-build
@@ -192,6 +223,45 @@ jobs:
         run: ant $OPTS build-javadoc
 
 
+  java-hints-test:
+    name: Java Hints ${{ matrix.config }} on Linux/JDK ${{ matrix.java }}
+    needs: base-build
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        java: [ '11' ]
+        config: [ 'batch1', 'batch2' ]
+    steps:
+
+      - name: Set up JDK ${{ matrix.java }} 
+        uses: actions/setup-java@v2
+        with:
+          java-version: ${{ matrix.java }} 
+          distribution: 'zulu'
+
+      - name: Setup Xvfb
+        run: |
+          echo "DISPLAY=:99.0" >> $GITHUB_ENV
+          Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
+
+      - name: Download Build
+        uses: actions/download-artifact@v3
+        with:
+          name: build
+
+      - name: Extract
+        run: tar --zstd -xf build.tar.zst
+
+      - name: Java.hints ${{ matrix.config }}
+        run: ant $OPTS -Dtest.config=${{ matrix.config }} -f java/java.hints test
+
+      - name: Create Test Summary
+        uses: test-summary/action@v1
+        if: failure()
+        with:
+          paths: "./*/*/build/test/*/results/*.xml"
+
+
   macos:
     name: Tests on MacOS/JDK ${{ matrix.java }}
     needs: base-build
@@ -240,6 +310,94 @@ jobs:
           paths: |
             "./*/*/build/test/*/results/*.xml"
             "./nbbuild/build/test/commit-validation/results/*.xml"
+
+
+  javafx-test:
+    name: JavaFX on Linux/JDK ${{ matrix.java }}
+    needs: base-build
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        java: [ '11' ]
+    steps:
+
+      - name: Set up JDK ${{ matrix.java }} 
+        uses: actions/setup-java@v2
+        with:
+          java-version: ${{ matrix.java }} 
+          distribution: 'zulu'
+
+      - name: Setup Xvfb
+        run: |
+          echo "DISPLAY=:99.0" >> $GITHUB_ENV
+          Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
+
+      - name: Download Build
+        uses: actions/download-artifact@v3
+        with:
+          name: build
+
+      - name: Extract
+        run: tar --zstd -xf build.tar.zst
+
+      - name: javafx2.editor
+        run: ant $OPTS -f javafx/javafx2.editor test -Dtest.config=stable
+
+#      - name: javafx2.project
+#        run: ant $OPTS -f javafx/javafx2.project test
+
+      - name: Create Test Summary
+        uses: test-summary/action@v1
+        if: failure()
+        with:
+          paths: "./*/*/build/test/*/results/*.xml"
+
+
+  enterprise-test:
+    name: Enterprise on Linux/JDK ${{ matrix.java }}
+    needs: base-build
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        java: [ '8' ]
+    steps:
+
+      - name: Set up JDK ${{ matrix.java }} 
+        uses: actions/setup-java@v2
+        with:
+          java-version: ${{ matrix.java }} 
+          distribution: 'zulu'
+
+      - name: Setup Xvfb
+        run: |
+          echo "DISPLAY=:99.0" >> $GITHUB_ENV
+          Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
+
+      - name: Download Build
+        uses: actions/download-artifact@v3
+        with:
+          name: build
+
+      - name: Extract
+        run: tar --zstd -xf build.tar.zst
+
+      - name: spring.webmvc
+        run: ant $OPTS -f enterprise/spring.webmvc test
+
+      - name: websvc.editor.hints
+        run: ant $OPTS -f enterprise/websvc.editor.hints test
+
+      - name: websvc.websvcapi
+        run: ant $OPTS -f enterprise/websvc.websvcapi test
+
+      - name: websvc.wsstackapi
+        run: ant $OPTS -f enterprise/websvc.wsstackapi test
+
+      - name: Create Test Summary
+        uses: test-summary/action@v1
+        if: failure()
+        with:
+          paths: "./*/*/build/test/*/results/*.xml"
 
 
   php:
@@ -392,8 +550,12 @@ jobs:
       - linux-commit-validation
       - build-system-test
       - build-nbms
+      - java-hints-test
       - macos
       - php
+      - sig-test
+      - javafx-test
+      - enterprise-test
 
     # don't cleanup on failure() or always(), because someone might want to restart an unreliable secondary job
     if: ${{ always() && contains(needs.*.result, 'success') && !(contains(needs.*.result, 'failure')) }}

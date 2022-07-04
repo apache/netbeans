@@ -227,16 +227,24 @@
                 <binary-origin>external/jersey-apache-connector-2.34.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/oci-java-sdk-identity-2.10.0.jar</runtime-relative-path>
-                <binary-origin>external/oci-java-sdk-identity-2.10.0.jar</binary-origin>
+                <runtime-relative-path>ext/oci-java-sdk-identity-2.27.0.jar</runtime-relative-path>
+                <binary-origin>external/oci-java-sdk-identity-2.27.0.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>ext/resilience4j-circuitbreaker-1.2.0.jar</runtime-relative-path>
                 <binary-origin>external/resilience4j-circuitbreaker-1.2.0.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/oci-java-sdk-common-2.10.0.jar</runtime-relative-path>
-                <binary-origin>external/oci-java-sdk-common-2.10.0.jar</binary-origin>
+                <runtime-relative-path>ext/oci-java-sdk-common-2.27.0.jar</runtime-relative-path>
+                <binary-origin>external/oci-java-sdk-common-2.27.0.jar</binary-origin>
+            </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path>ext/oci-java-sdk-devops-2.27.0.jar</runtime-relative-path>
+                <binary-origin>external/oci-java-sdk-devops-2.27.0.jar</binary-origin>
+            </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path>ext/oci-java-sdk-adm-2.27.0.jar</runtime-relative-path>
+                <binary-origin>external/oci-java-sdk-adm-2.27.0.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>ext/jakarta.activation-api-1.2.1.jar</runtime-relative-path>
@@ -251,16 +259,16 @@
                 <binary-origin>external/vavr-0.10.2.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/oci-java-sdk-database-2.10.0.jar</runtime-relative-path>
-                <binary-origin>external/oci-java-sdk-database-2.10.0.jar</binary-origin>
+                <runtime-relative-path>ext/oci-java-sdk-database-2.27.0.jar</runtime-relative-path>
+                <binary-origin>external/oci-java-sdk-database-2.27.0.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>ext/jersey-media-json-jackson-2.34.jar</runtime-relative-path>
                 <binary-origin>external/jersey-media-json-jackson-2.34.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/oci-java-sdk-circuitbreaker-2.10.0.jar</runtime-relative-path>
-                <binary-origin>external/oci-java-sdk-circuitbreaker-2.10.0.jar</binary-origin>
+                <runtime-relative-path>ext/oci-java-sdk-circuitbreaker-2.27.0.jar</runtime-relative-path>
+                <binary-origin>external/oci-java-sdk-circuitbreaker-2.27.0.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>ext/vavr-match-0.10.2.jar</runtime-relative-path>
@@ -271,8 +279,8 @@
                 <binary-origin>external/nimbus-jose-jwt-9.11.1.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/oci-java-sdk-workrequests-2.10.0.jar</runtime-relative-path>
-                <binary-origin>external/oci-java-sdk-workrequests-2.10.0.jar</binary-origin>
+                <runtime-relative-path>ext/oci-java-sdk-workrequests-2.27.0.jar</runtime-relative-path>
+                <binary-origin>external/oci-java-sdk-workrequests-2.27.0.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>ext/resilience4j-core-1.2.0.jar</runtime-relative-path>

@@ -528,7 +528,7 @@ public class ASTUtils {
     }
 
     public static ClassNode getOwningClass(AstPath path) {
-        Iterator<ASTNode> it = path.rootToLeaf();
+        Iterator<ASTNode> it = path.leafToRoot();
         while (it.hasNext()) {
             ASTNode node = it.next();
             if (node instanceof ClassNode) {

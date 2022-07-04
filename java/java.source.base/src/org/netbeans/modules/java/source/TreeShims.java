@@ -412,7 +412,9 @@ public class TreeShims {
         if (isJDKVersionRelease17_Or_Above()) {
             try {
                 return node.getClass().getField("patternSwitch").getBoolean(node);
-            } catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException | SecurityException ex) {
+            } catch(NoSuchFieldException e){
+                return false;
+            }catch (IllegalArgumentException | IllegalAccessException | SecurityException ex) {
                 throw TreeShims.<RuntimeException>throwAny(ex);
             }
         }

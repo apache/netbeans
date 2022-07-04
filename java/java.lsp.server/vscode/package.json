@@ -1,11 +1,11 @@
 {
 	"name": "apache-netbeans-java",
-	"displayName": "Language Server",
+	"displayName": "Language Server for Java by Apache NetBeans",
 	"description": "Apache NetBeans Language Server Extension for Visual Studio Code",
 	"author": "Apache NetBeans",
 	"license": "Apache 2.0",
 	"version": "0.1.0",
-	"preview": true,
+	"preview": false,
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/apache/netbeans"
@@ -22,7 +22,7 @@
 		"multi-root ready"
 	],
 	"engines": {
-		"vscode": "^1.60.0"
+		"vscode": "^1.67.0"
 	},
 	"activationEvents": [
 		"onLanguage:java",
@@ -94,7 +94,8 @@
 						"null"
 					],
 					"default": null,
-					"description": "Specifies JDK for the Apache NetBeans Language Server"
+					"description": "Specifies JDK for the Apache NetBeans Language Server",
+					"scope": "machine"
 				},
 				"netbeans.verbose": {
 					"type": "boolean",
@@ -138,6 +139,28 @@
 					"type": "integer",
 					"default": 100,
 					"description": "Timeout (in milliseconds) for loading Javadoc in code completion (-1 for unlimited)"
+				},
+				"netbeans.format.codeFormatter": {
+					"type": "string",
+					"enum": [
+						"NetBeans",
+						"Eclipse",
+						"Google",
+						"Spring"
+					],
+					"enumDescriptions": [
+						"Internal NetBeans Code Formatter",
+						"Eclipse Code Formatter",
+						"Goolge Code Formatter",
+						"Spring Code Formatter"
+					],
+					"description": "Code formatter to use",
+					"default": "NetBeans"
+				},
+				"netbeans.format.settingsPath": {
+					"type": "string",
+					"description": "Path to the file containing exported formatter settings",
+					"default": null
 				},
 				"netbeans.java.onSave.organizeImports": {
 					"type": "boolean",
@@ -430,6 +453,11 @@
 			{
 				"command": "java.goto.super.implementation",
 				"title": "Go to Super Implementation",
+				"category": "Java"
+			},
+			{
+				"command": "java.open.type",
+				"title": "Open Type...",
 				"category": "Java"
 			},
 			{
@@ -815,16 +843,16 @@
 		"@types/mocha": "^9.0.0",
 		"@types/node": "^13.11.0",
 		"@types/ps-node": "^0.1.0",
-		"@types/vscode": "^1.60.0",
+		"@types/vscode": "^1.67.0",
 		"glob": "^7.1.6",
 		"mocha": "^9.1.2",
 		"ps-node": "^0.1.6",
-		"typescript": "^3.8.3",
+		"typescript": "^4.6.4",
 		"vscode-test": "^1.3.0"
 	},
 	"dependencies": {
 		"jsonc-parser": "3.0.0",
-		"vscode-debugadapter": "1.42.1",
-		"vscode-languageclient": "7.0.0"
+		"@vscode/debugadapter": "1.55.1",
+		"vscode-languageclient": "8.0.1"
 	}
 }

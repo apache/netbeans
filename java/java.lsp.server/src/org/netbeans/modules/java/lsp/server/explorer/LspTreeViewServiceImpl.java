@@ -28,6 +28,8 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
 import java.util.concurrent.CompletionStage;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.eclipse.lsp4j.jsonrpc.services.JsonSegment;
 import org.eclipse.lsp4j.services.LanguageClient;
 import org.eclipse.lsp4j.services.LanguageClientAware;
@@ -48,6 +50,8 @@ import org.openide.util.Lookup;
  */
 @JsonSegment("nodes")
 public class LspTreeViewServiceImpl implements TreeViewService, LanguageClientAware {
+    private static final Logger LOG = Logger.getLogger(LspTreeViewServiceImpl.class.getName());
+    
     private final Lookup sessionLookup;
     /**
      * The delegate tree service.
@@ -62,6 +66,7 @@ public class LspTreeViewServiceImpl implements TreeViewService, LanguageClientAw
             @Override
             protected void notifyItemChanged(NodeChangedParams itemId) {
                 if (langClient != null) {
+                    LOG.log(Level.FINER, "Firing item {0} changed", itemId);
                     langClient.notifyNodeChange(itemId);
                 }
             }
@@ -127,6 +132,7 @@ public class LspTreeViewServiceImpl implements TreeViewService, LanguageClientAw
     // export const info = new ProtocolRequestType<NodeOperationParams, Data, never,void, void>('nodes/info');
     public CompletableFuture<TreeItem> info(NodeOperationParams params) {
         int nodeId = params.getNodeId();
+        LOG.log(Level.FINER, "> info({0})", nodeId);
         TreeViewProvider tvp = treeService.providerOf(nodeId);
         return tvp.getTreeItem(nodeId).toCompletableFuture();
     }
@@ -141,6 +147,7 @@ public class LspTreeViewServiceImpl implements TreeViewService, LanguageClientAw
     @Override
     public CompletableFuture<int[]> getChildren(NodeOperationParams params) {
         int id = params.getNodeId();
+        LOG.log(Level.FINER, "> children({0})", id);
         TreeViewProvider tvp = treeService.providerOf(id);
         return tvp.getChildren(id).toCompletableFuture();
     }
@@ -154,6 +161,7 @@ public class LspTreeViewServiceImpl implements TreeViewService, LanguageClientAw
     @Override
     public CompletableFuture<Boolean> delete(NodeOperationParams params) {
         int id = params.getNodeId();
+        LOG.log(Level.FINER, "> delete({0})", id);
         TreeViewProvider tvp = treeService.providerOf(id);
         if (tvp != null) {
             Node n = tvp.findNode(id);
@@ -186,6 +194,7 @@ public class LspTreeViewServiceImpl implements TreeViewService, LanguageClientAw
     @Override
     public CompletableFuture<int[]> findPath(FindPathParams params) {
         Object toSelect = params.getSelectData();
+        LOG.log(Level.FINER, "> findPath(fromId = {0}, select = {1})", new Object[] { params.getRootNodeId(), toSelect });
         TreeViewProvider tvp = treeService.providerOf(params.getRootNodeId());
         if (tvp == null) {
             return null;

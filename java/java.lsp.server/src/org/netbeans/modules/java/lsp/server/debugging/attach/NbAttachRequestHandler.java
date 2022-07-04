@@ -104,7 +104,7 @@ public final class NbAttachRequestHandler {
                 if (nativeImagePath == null) {
                     ErrorUtilities.completeExceptionally(resultFuture,
                             Bundle.MSG_UnknownNIPath(),
-                            ResponseErrorCode.serverErrorStart);
+                            ResponseErrorCode.ServerNotInitialized);
                     return resultFuture;
                 }
             }
@@ -113,7 +113,7 @@ public final class NbAttachRequestHandler {
         } catch (NumberFormatException nfex) {
             ErrorUtilities.completeExceptionally(resultFuture,
                     nfex.getLocalizedMessage(),
-                    ResponseErrorCode.serverErrorStart);
+                    ResponseErrorCode.ServerNotInitialized);
         }
         return resultFuture;
     }
@@ -169,7 +169,7 @@ public final class NbAttachRequestHandler {
             String name = (String) attachArguments.get("name");     // NOI18N
             ErrorUtilities.completeExceptionally(resultFuture,
                     Bundle.MSG_InvalidConnector(name),
-                    ResponseErrorCode.serverErrorStart);
+                    ResponseErrorCode.ServerNotInitialized);
         }
         return resultFuture;
     }
@@ -187,7 +187,7 @@ public final class NbAttachRequestHandler {
             if (!arg.isValid(value)) {
                 ErrorUtilities.completeExceptionally(resultFuture,
                     Bundle.MSG_ConnectorInvalidValue(argName, value),
-                    ResponseErrorCode.serverErrorStart);
+                    ResponseErrorCode.ServerNotInitialized);
                 return ;
             }
             arg.setValue(value);

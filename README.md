@@ -27,21 +27,21 @@ Apache NetBeans is an open source development environment, tooling platform, and
 
 ### Build status
    * GitHub actions
-     * [![Build Status](https://github.com/apache/netbeans/actions/workflows/main.yml/badge.svg)](https://github.com/apache/netbeans/actions/workflows/main.yml)
-     * [![Profiler Lib Native Binaries](https://github.com/apache/netbeans/actions/workflows/native-binary-build-lib.profiler.yml/badge.svg)](https://github.com/apache/netbeans/actions/workflows/native-binary-build-lib.profiler.yml)
+     * [![Build Status](https://github.com/apache/netbeans/actions/workflows/main.yml/badge.svg?branch=master)](https://github.com/apache/netbeans/actions/workflows/main.yml)
+     * [![Profiler Lib Native Binaries](https://github.com/apache/netbeans/actions/workflows/native-binary-build-lib.profiler.yml/badge.svg?branch=master)](https://github.com/apache/netbeans/actions/workflows/native-binary-build-lib.profiler.yml)
    * TravisCI:
      * [![Build Status](https://app.travis-ci.com/apache/netbeans.svg?branch=master)](https://app.travis-ci.com/apache/netbeans)
    * Apache Jenkins:
      * Linux: [![Build Status](https://ci-builds.apache.org/job/Netbeans/job/netbeans-linux/badge/icon)](https://ci-builds.apache.org/job/Netbeans/job/netbeans-linux/)
-     * Windows: [![Build Status](https://ci-builds.apache.org/job/Netbeans/job/netbeans-windows/badge/icon)](https://ci-builds.apache.org/job/Netbeans/job/netbeans-windows)
+     * Windows: [![Build Status](https://ci-builds.apache.org/job/Netbeans/job/netbeans-windows/badge/icon)](https://ci-builds.apache.org/job/Netbeans/job/netbeans-windows) 
+   * License Status ( Apache Rat and ant verify-libs-and-licenses )
+     * [![Build Status](https://ci-builds.apache.org/job/Netbeans/job/netbeans-license/badge/icon)](https://ci-builds.apache.org/job/Netbeans/job/netbeans-license/)
 
 ### Requirements
 
   * Git
   * Ant 1.9.9 or above
-  * JDK 11 (to build NetBeans)
-  * JDK 11 or above (to run NetBeans)
-  * MinGW (optional), to build Windows Launchers
+  * JDK 11 or above (to build and run NetBeans)
 
 #### Notes:
 
@@ -70,22 +70,6 @@ $ ant -Dcluster.config=platform
 #### Notes:
 * You can also use `php`, `enterprise`, etc. See the [cluster.properties](https://github.com/apache/netbeans/blob/master/nbbuild/cluster.properties) file.
 
-#### Building Windows Launchers
-Windows launchers can be build using [MinGW](http://www.mingw.org/) both on Windows and Linux.
-
-**Note:** In Windows [MSYS](http://www.mingw.org/wiki/MSYS/) must be installed.
-
-
-As of [NETBEANS-1145](https://issues.apache.org/jira/browse/NETBEANS-1145), the Windows Launchers can be built adding ```do.build.windows.launchers=true``` property to the build process.
-```
-$ ant -Ddo.build.windows.launchers=true
-```
-
-##### Software Requirement to Build Windows Launchers on Ubuntu (16.04+):
-```
-sudo apt install make mingw-w64
-```
-
 #### Generating Javadoc
 
 Build javadoc:
@@ -112,13 +96,26 @@ $ ant tryme
 
 ### Download
 
-Developer builds can be downloaded: [Latest build (netbeans-xxx.zip)](https://ci-builds.apache.org/job/Netbeans/job/netbeans-linux/lastSuccessfulBuild/artifact/nbbuild/NetBeans-dev-Netbeans/).
+Developer builds can be downloaded: [Latest build (netbeans-xxx.zip)](https://ci-builds.apache.org/job/Netbeans/job/netbeans-linux/lastSuccessfulBuild/artifact/nbbuild/).
 
-Convenience binary of released source artifacts: https://netbeans.apache.org/download/index.html.
+Latest release (convenience binary of released source artifacts): https://netbeans.apache.org/download/index.html.
 
 ### Reporting Bugs
 
-Bugs should be reported to https://issues.apache.org/jira/projects/NETBEANS/issues/
+Bugs should be reported to https://github.com/apache/netbeans/issues
+
+### Log, Config and Cache Locations
+
+ * start config (JVM settings, default JDK, userdir, cachedir location and more):  
+   `netbeans/etc/netbeans.conf`
+ * user settings storage (preferences, installed plugins, logs):  
+   system dependent, see `Help -> About` for concrete location
+ * cache files (maven index, search index etc):  
+   system dependent, see `Help -> About` for concrete location
+ * default log location (tip: can be inspected via `View -> IDE Log`):  
+   `$DEFAULT_USERDIR_ROOT/var/log/messages.log`
+
+**Note:** removing/changing the user settings directory will reset NetBeans to first launch defaults
 
 ### Full History
 

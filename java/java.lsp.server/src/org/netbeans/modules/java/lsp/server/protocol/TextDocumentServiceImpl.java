@@ -31,12 +31,15 @@ import com.sun.source.util.TreePath;
 import com.sun.source.util.TreePathScanner;
 import com.sun.source.util.Trees;
 import com.vladsch.flexmark.html2md.converter.FlexmarkHtmlConverter;
+import java.awt.Color;
+import java.awt.Font;
 import java.io.FileNotFoundException;
 import java.net.URI;
 import java.net.URL;
 import java.time.Instant;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -73,8 +76,12 @@ import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.event.UndoableEditListener;
+import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
+import javax.swing.text.Segment;
+import javax.swing.text.Style;
 import javax.swing.text.StyledDocument;
 import org.eclipse.lsp4j.CallHierarchyIncomingCall;
 import org.eclipse.lsp4j.CallHierarchyIncomingCallsParams;
@@ -155,6 +162,8 @@ import org.eclipse.lsp4j.services.LanguageClient;
 import org.eclipse.lsp4j.services.LanguageClientAware;
 import org.eclipse.lsp4j.services.TextDocumentService;
 import org.netbeans.api.annotations.common.CheckForNull;
+import org.netbeans.api.editor.document.AtomicLockDocument;
+import org.netbeans.api.editor.document.AtomicLockListener;
 import org.netbeans.api.editor.document.LineDocument;
 import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.editor.mimelookup.MimeLookup;
@@ -226,6 +235,8 @@ import org.netbeans.modules.refactoring.spi.RefactoringCommit;
 import org.netbeans.modules.refactoring.spi.RefactoringElementImplementation;
 import org.netbeans.modules.refactoring.spi.Transaction;
 import org.netbeans.api.lsp.StructureElement;
+import org.netbeans.modules.editor.indent.api.Reformat;
+import org.netbeans.modules.java.lsp.server.URITranslator;
 import org.netbeans.spi.editor.hints.ErrorDescription;
 import org.netbeans.spi.editor.hints.Fix;
 import org.netbeans.spi.lsp.CallHierarchyProvider;
@@ -236,6 +247,7 @@ import org.netbeans.spi.project.ProjectConfiguration;
 import org.netbeans.spi.project.ProjectConfigurationProvider;
 import org.openide.cookies.EditorCookie;
 import org.openide.filesystems.FileObject;
+import org.openide.filesystems.URLMapper;
 import org.openide.text.NbDocument;
 import org.openide.text.PositionBounds;
 import org.openide.util.BaseUtilities;
@@ -1182,13 +1194,46 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
     }
 
     @Override
-    public CompletableFuture<List<? extends TextEdit>> formatting(DocumentFormattingParams arg0) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public CompletableFuture<List<? extends TextEdit>> formatting(DocumentFormattingParams params) {
+        String uri = params.getTextDocument().getUri();
+        Document doc = server.getOpenedDocuments().getDocument(uri);
+        return format((LineDocument) doc, 0, doc.getLength());
     }
 
     @Override
-    public CompletableFuture<List<? extends TextEdit>> rangeFormatting(DocumentRangeFormattingParams arg0) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public CompletableFuture<List<? extends TextEdit>> rangeFormatting(DocumentRangeFormattingParams params) {
+        String uri = params.getTextDocument().getUri();
+        LineDocument lDoc = LineDocumentUtils.as(server.getOpenedDocuments().getDocument(uri), LineDocument.class);
+        if (lDoc != null) {
+            Range range = params.getRange();
+            return format(lDoc, Utils.getOffset(lDoc, range.getStart()), Utils.getOffset(lDoc, range.getEnd()));
+        }
+        return CompletableFuture.completedFuture(Collections.emptyList());
+    }
+
+    private CompletableFuture<List<? extends TextEdit>> format(Document doc, int startOffset, int endOffset) {
+        CompletableFuture<List<? extends TextEdit>> result = new CompletableFuture<>();
+        StyledDocument sDoc = LineDocumentUtils.as(doc, StyledDocument.class);
+        if (sDoc != null) {
+            FormatterDocument formDoc = new FormatterDocument(sDoc);
+            Reformat reformat = Reformat.get(formDoc);
+            if (reformat != null) {
+                reformat.lock();
+                try {
+                    reformat.reformat(startOffset, endOffset);
+                    result.complete(formDoc.getEdits());
+                } catch (BadLocationException ex) {
+                    result.completeExceptionally(ex);
+                } finally {
+                    reformat.unlock();
+                }
+            } else {
+                result.complete(Collections.emptyList());
+            }
+        } else {
+            result.complete(Collections.emptyList());
+        }
+        return result;
     }
 
     @Override
@@ -1679,7 +1724,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
 
     private static final int DELAY = 500;
 
-    private List<Diagnostic> computeDiags(String uri, int offset, ErrorProvider.Kind errorKind, long originalVersion) {
+    private List<Diagnostic> computeDiags(String uri, int offset, ErrorProvider.Kind errorKind, long orgV) {
         List<Diagnostic> result = new ArrayList<>();
         FileObject file = fromURI(uri);
         if (file == null) {
@@ -1690,6 +1735,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
             String keyPrefix = key(errorKind);
             EditorCookie ec = file.getLookup().lookup(EditorCookie.class);
             Document doc = ec.openDocument();
+            long originalVersion = orgV != -1 ? orgV : documentVersion(doc);
             Map<String, org.netbeans.api.lsp.Diagnostic> id2Errors = new HashMap<>();
             ErrorProvider errorProvider = MimeLookup.getLookup(DocumentUtilities.getMimeType(doc))
                                                     .lookup(ErrorProvider.class);
@@ -1727,7 +1773,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
             if (errors == null) {
                 errors = Collections.emptyList();
             }
-            if (documentVersion(doc) != originalVersion) {
+            if (originalVersion != -1 && documentVersion(doc) != originalVersion) {
                 return result;
             }
             for (org.netbeans.api.lsp.Diagnostic err : errors) {
@@ -1838,6 +1884,31 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
             return;
         }
         client.publishDiagnostics(new PublishDiagnosticsParams(uri, new ArrayList<>()));
+    }
+    
+    private org.netbeans.api.lsp.Diagnostic.ReporterControl reporterControl = new org.netbeans.api.lsp.Diagnostic.ReporterControl() {
+        @Override
+        public void diagnosticChanged(Collection<FileObject> files, String mimeType) {
+            // possibly duplicities are handled by runDiagnosticTasks
+            for (FileObject f : files) {
+                // do not process directories at the moment
+                if (mimeType != null && !f.getMIMEType().equals(mimeType)) {
+                    continue;
+                }
+                URL url = URLMapper.findURL(f, URLMapper.EXTERNAL);
+                try {
+                    String uriString = url.toURI().toString();
+                    String lspUri = URITranslator.getDefault().uriToLSP(uriString);
+                    runDiagnosticTasks(lspUri);
+                } catch (URISyntaxException ex) {
+                    // should not happen
+                }
+            }
+        }
+    };
+    
+    public org.netbeans.api.lsp.Diagnostic.ReporterControl createReporterControl() {
+        return reporterControl;
     }
     
     /**
@@ -2242,5 +2313,221 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
             }
         };
         return t.processRequest();
+    }
+
+    private static class FormatterDocument implements StyledDocument, LineDocument, AtomicLockDocument {
+
+        private final StyledDocument doc;
+        private final List<TextEdit> edits = new ArrayList<>();
+        private TextEdit last = null;
+
+        private FormatterDocument(StyledDocument lineDocument) {
+            this.doc = lineDocument;
+        }
+
+        private List<TextEdit> getEdits() {
+            return edits;
+        }
+
+        @Override
+        public Style addStyle(String nm, Style parent) {
+            return doc.addStyle(nm, parent);
+        }
+
+        @Override
+        public void removeStyle(String nm) {
+            doc.removeStyle(nm);
+        }
+
+        @Override
+        public Style getStyle(String nm) {
+            return doc.getStyle(nm);
+        }
+
+        @Override
+        public void setCharacterAttributes(int offset, int length, AttributeSet s, boolean replace) {
+            doc.setCharacterAttributes(offset, length, s, replace);
+        }
+
+        @Override
+        public void setParagraphAttributes(int offset, int length, AttributeSet s, boolean replace) {
+            doc.setParagraphAttributes(offset, length, s, replace);
+        }
+
+        @Override
+        public void setLogicalStyle(int pos, Style s) {
+            doc.setLogicalStyle(pos, s);
+        }
+
+        @Override
+        public Style getLogicalStyle(int p) {
+            return doc.getLogicalStyle(p);
+        }
+
+        @Override
+        public javax.swing.text.Element getParagraphElement(int pos) {
+            return doc.getParagraphElement(pos);
+        }
+
+        @Override
+        public javax.swing.text.Element getCharacterElement(int pos) {
+            return doc.getCharacterElement(pos);
+        }
+
+        @Override
+        public Color getForeground(AttributeSet attr) {
+            return doc.getForeground(attr);
+        }
+
+        @Override
+        public Color getBackground(AttributeSet attr) {
+            return doc.getBackground(attr);
+        }
+
+        @Override
+        public Font getFont(AttributeSet attr) {
+            return doc.getFont(attr);
+        }
+
+        @Override
+        public int getLength() {
+            return doc.getLength();
+        }
+
+        @Override
+        public void addDocumentListener(DocumentListener listener) {
+            doc.addDocumentListener(listener);
+        }
+
+        @Override
+        public void removeDocumentListener(DocumentListener listener) {
+            doc.removeDocumentListener(listener);
+        }
+
+        @Override
+        public void addUndoableEditListener(UndoableEditListener listener) {
+            doc.addUndoableEditListener(listener);
+        }
+
+        @Override
+        public void removeUndoableEditListener(UndoableEditListener listener) {
+            doc.removeUndoableEditListener(listener);
+        }
+
+        @Override
+        public Object getProperty(Object key) {
+            return doc.getProperty(key);
+        }
+
+        @Override
+        public void putProperty(Object key, Object value) {
+        }
+
+        @Override
+        public void remove(int offs, int len) throws BadLocationException {
+            LineDocument ldoc = LineDocumentUtils.as(doc, LineDocument.class);
+            Position pos = Utils.createPosition(ldoc, offs);
+            if (last != null && pos.equals(last.getRange().getStart()) && pos.equals(last.getRange().getEnd())) {
+                last.getRange().setEnd(Utils.createPosition(ldoc, offs + len));
+            } else {
+                last = new TextEdit(new Range(pos, Utils.createPosition(ldoc, offs + len)), "");
+                edits.add(last);
+            }
+        }
+
+        @Override
+        public void insertString(int offset, String str, AttributeSet a) throws BadLocationException {
+            LineDocument ldoc = LineDocumentUtils.as(doc, LineDocument.class);
+            Position pos = Utils.createPosition(ldoc, offset);
+            if (last != null && pos.equals(last.getRange().getStart())) {
+                if (str != null) {
+                    last.setNewText(last.getNewText() + str);
+                }
+            } else {
+                last = new TextEdit(new Range(pos, pos), str != null ? str : "");
+                edits.add(last);
+            }
+        }
+
+        @Override
+        public String getText(int offset, int length) throws BadLocationException {
+            return doc.getText(offset, length);
+        }
+
+        @Override
+        public void getText(int offset, int length, Segment txt) throws BadLocationException {
+            doc.getText(offset, length, txt);
+        }
+
+        @Override
+        public javax.swing.text.Position getStartPosition() {
+            return doc.getStartPosition();
+        }
+
+        @Override
+        public javax.swing.text.Position getEndPosition() {
+            return doc.getEndPosition();
+        }
+
+        @Override
+        public javax.swing.text.Position createPosition(int offs) throws BadLocationException {
+            return doc.createPosition(offs);
+        }
+
+        @Override
+        public javax.swing.text.Element[] getRootElements() {
+            return doc.getRootElements();
+        }
+
+        @Override
+        public javax.swing.text.Element getDefaultRootElement() {
+            return doc.getDefaultRootElement();
+        }
+
+        @Override
+        public void render(Runnable r) {
+            doc.render(r);
+        }
+
+        @Override
+        public javax.swing.text.Position createPosition(int offset, javax.swing.text.Position.Bias bias) throws BadLocationException {
+            LineDocument ldoc = LineDocumentUtils.as(doc, LineDocument.class);
+            return ldoc.createPosition(offset, bias);
+        }
+
+        @Override
+        public Document getDocument() {
+            return this;
+        }
+
+        @Override
+        public void atomicUndo() {
+            AtomicLockDocument bdoc = LineDocumentUtils.as(doc, AtomicLockDocument.class);
+            bdoc.atomicUndo();
+        }
+
+        @Override
+        public void runAtomic(Runnable r) {
+            AtomicLockDocument bdoc = LineDocumentUtils.as(doc, AtomicLockDocument.class);
+            bdoc.runAtomic(r);
+        }
+
+        @Override
+        public void runAtomicAsUser(Runnable r) {
+            AtomicLockDocument bdoc = LineDocumentUtils.as(doc, AtomicLockDocument.class);
+            bdoc.runAtomicAsUser(r);
+        }
+
+        @Override
+        public void addAtomicLockListener(AtomicLockListener l) {
+            AtomicLockDocument bdoc = LineDocumentUtils.as(doc, AtomicLockDocument.class);
+            bdoc.addAtomicLockListener(l);
+        }
+
+        @Override
+        public void removeAtomicLockListener(AtomicLockListener l) {
+            AtomicLockDocument bdoc = LineDocumentUtils.as(doc, AtomicLockDocument.class);
+            bdoc.removeAtomicLockListener(l);
+        }
     }
 }

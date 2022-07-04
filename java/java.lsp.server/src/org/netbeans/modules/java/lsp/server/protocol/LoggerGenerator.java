@@ -49,6 +49,7 @@ import org.netbeans.api.java.source.GeneratorUtilities;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.TreeUtilities;
 import org.netbeans.modules.java.lsp.server.Utils;
+import org.netbeans.modules.java.lsp.server.input.ShowInputBoxParams;
 import org.netbeans.modules.parsing.api.ResultIterator;
 import org.openide.filesystems.FileObject;
 import org.openide.util.BaseUtilities;
@@ -117,7 +118,7 @@ public final class LoggerGenerator extends CodeActionsProvider {
         try {
             String uri = ((JsonObject) data).getAsJsonPrimitive(URI).getAsString();
             int offset = ((JsonObject) data).getAsJsonPrimitive(OFFSET).getAsInt();
-            client.showInputBox(new ShowInputBoxParams(Bundle.DN_SelectLoggerName(), "LOG")).thenAccept(value -> {
+            client.showInputBox(new ShowInputBoxParams(Bundle.DN_GenerateLogger(), Bundle.DN_SelectLoggerName(), "LOG", false)).thenAccept(value -> {
                 try {
                     if (value != null && BaseUtilities.isJavaIdentifier(value)) {
                         FileObject file = Utils.fromUri(uri);

@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.netbeans.api.java.source.ui.snippet;
 
 import java.util.ArrayList;
@@ -32,7 +31,7 @@ import java.util.TreeMap;
  */
 public class MarkupTagProcessor {
     
-    private static final List<String> SUPPORTED_SNIPPET_MARKUP_TAGS = Arrays.asList("highlight", "replace", "link");
+    private static final List<String> SUPPORTED_SNIPPET_MARKUP_TAGS = Arrays.asList("highlight", "replace", "link", "start");
 
     public ProcessedTags process(List<SourceLineMeta> parseResult ){
         Map<Integer, List<ApplicableMarkupTag>> markUpTagOnLine = new TreeMap<>();
@@ -78,8 +77,7 @@ public class MarkupTagProcessor {
                             markupAttribute.remove("region");
                             Region region = new Region(regionVal, markupAttribute, markUpTag.getTagName());
                             regionList.add(region);
-                            List<Region> newRegionList = new ArrayList<>();
-                            newRegionList.add(region);
+                            List<Region> newRegionList = new ArrayList<>(regionList);
                             regionTagOnLine.put(markUpTag.isTagApplicableToNextLine() ? nextLine : thisLine, newRegionList);
                             if(!markUpTag.isTagApplicableToNextLine()){
                                 addMarkupTags(thisLine, transformRegionAttributeToMarkupTag(newRegionList), markUpTagOnLine);
@@ -151,7 +149,7 @@ public class MarkupTagProcessor {
         }
     }
     
-    private class Region{
+    public class Region{
         private final String markupTagName;
         private final String value;
         private final Map<String, String> attributes;

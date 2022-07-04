@@ -51,7 +51,7 @@ public class ExamineManifest  {
     private String locBundle;
     private boolean publicPackages;
     private boolean populateDependencies = false;
-    private List dependencyTokens = Collections.emptyList();
+    private List<String> dependencyTokens = Collections.emptyList();
    
     
     public void checkFile() throws MojoExecutionException {
@@ -278,7 +278,7 @@ public class ExamineManifest  {
         return dependencyTokens;
     }
 
-    public void setDependencyTokens(List dependencyTokens) {
+    public void setDependencyTokens(List<String> dependencyTokens) {
         this.dependencyTokens = dependencyTokens;
     }
     

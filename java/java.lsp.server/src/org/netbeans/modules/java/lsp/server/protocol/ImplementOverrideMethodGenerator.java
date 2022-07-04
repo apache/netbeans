@@ -40,7 +40,6 @@ import javax.lang.model.element.TypeElement;
 import org.eclipse.lsp4j.CodeAction;
 import org.eclipse.lsp4j.CodeActionKind;
 import org.eclipse.lsp4j.CodeActionParams;
-import org.eclipse.lsp4j.Command;
 import org.eclipse.lsp4j.TextEdit;
 import org.eclipse.lsp4j.WorkspaceEdit;
 import org.netbeans.api.java.source.CompilationController;
@@ -49,6 +48,8 @@ import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.TreeUtilities;
 import org.netbeans.modules.java.editor.codegen.GeneratorUtils;
 import org.netbeans.modules.java.lsp.server.Utils;
+import org.netbeans.modules.java.lsp.server.input.QuickPickItem;
+import org.netbeans.modules.java.lsp.server.input.ShowQuickPickParams;
 import org.netbeans.modules.parsing.api.ResultIterator;
 import org.openide.filesystems.FileObject;
 import org.openide.util.NbBundle;
@@ -140,8 +141,9 @@ public final class ImplementOverrideMethodGenerator extends CodeActionsProvider 
             int offset = ((JsonObject) data).getAsJsonPrimitive(OFFSET).getAsInt();
             boolean isImplement = ((JsonObject) data).getAsJsonPrimitive(IS_IMPLEMET).getAsBoolean();
             List<QuickPickItem> methods = Arrays.asList(gson.fromJson(((JsonObject) data).get(METHODS), QuickPickItem[].class));
+            String title = isImplement ? Bundle.DN_GenerateImplementMethod(): Bundle.DN_GenerateOverrideMethod();
             String text = isImplement ? Bundle.DN_SelectImplementMethod() : Bundle.DN_SelectOverrideMethod();
-            client.showQuickPick(new ShowQuickPickParams(text, true, methods)).thenAccept(selected -> {
+            client.showQuickPick(new ShowQuickPickParams(title, text, true, methods)).thenAccept(selected -> {
                 try {
                     if (selected != null && !selected.isEmpty()) {
                         WorkspaceEdit edit = generate(uri, offset, isImplement, selected);

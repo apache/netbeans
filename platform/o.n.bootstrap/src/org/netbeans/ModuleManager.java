@@ -1982,6 +1982,15 @@ public final class ModuleManager extends Modules {
     FIND_AUTOLOADS:
         while (it.hasNext()) {
             Module m = it.next();
+            String host = m.getFragmentHostCodeName();
+            if (host != null) {
+                Module theHost = modulesByName.get(host);
+                if (theHost != null && theHost.isEnabled()) {
+                    // will not disable fragment module, as it is merged to an
+                    // enabled host.
+                    continue;
+                }
+            }
             if (m.isAutoload()) {
                 for (Module other: stillEnabled) {
                     Dependency[] dependencies = other.getDependenciesArray();

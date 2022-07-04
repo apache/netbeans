@@ -27,8 +27,8 @@ import org.eclipse.lsp4j.jsonrpc.messages.ResponseErrorCode;
 import org.netbeans.modules.java.lsp.server.debugging.attach.Processes.ProcessInfo;
 import org.netbeans.modules.java.lsp.server.debugging.utils.ErrorUtilities;
 import org.netbeans.modules.java.lsp.server.protocol.NbCodeLanguageClient;
-import org.netbeans.modules.java.lsp.server.protocol.QuickPickItem;
-import org.netbeans.modules.java.lsp.server.protocol.ShowQuickPickParams;
+import org.netbeans.modules.java.lsp.server.input.QuickPickItem;
+import org.netbeans.modules.java.lsp.server.input.ShowQuickPickParams;
 
 import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;

@@ -1,0 +1,1131 @@
+<testresult testFile='firstClassCallableSyntax_01.php'>
+    <scanner>
+        <token id='T_STRING' start='816' end='820'>
+            <text>test</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='820' end='821'>
+            <text>(</text>
+        </token>
+        <token id='T_ELLIPSIS' start='821' end='824'>
+            <text>...</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='824' end='825'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='825' end='826'>
+            <text>;</text>
+        </token>
+        <token id='T_STRING' start='828' end='834'>
+            <text>strlen</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='834' end='835'>
+            <text>(</text>
+        </token>
+        <token id='T_ELLIPSIS' start='835' end='838'>
+            <text>...</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='838' end='839'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='839' end='840'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='841' end='844'>
+            <text>$fn</text>
+        </token>
+        <token id='T_EQUAL' start='845' end='846'>
+            <text>=</text>
+        </token>
+        <token id='T_STRING' start='847' end='853'>
+            <text>strlen</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='853' end='854'>
+            <text>(</text>
+        </token>
+        <token id='T_ELLIPSIS' start='854' end='857'>
+            <text>...</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='857' end='858'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='858' end='859'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='860' end='863'>
+            <text>$fn</text>
+        </token>
+        <token id='T_EQUAL' start='864' end='865'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='866' end='874'>
+            <text>&apos;strlen&apos;</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='874' end='875'>
+            <text>(</text>
+        </token>
+        <token id='T_ELLIPSIS' start='875' end='878'>
+            <text>...</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='878' end='879'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='879' end='880'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='881' end='884'>
+            <text>$fn</text>
+        </token>
+        <token id='T_EQUAL' start='885' end='886'>
+            <text>=</text>
+        </token>
+        <token id='T_VARIABLE' start='887' end='894'>
+            <text>$strlen</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='894' end='895'>
+            <text>(</text>
+        </token>
+        <token id='T_ELLIPSIS' start='895' end='898'>
+            <text>...</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='898' end='899'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='899' end='900'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='902' end='905'>
+            <text>$fn</text>
+        </token>
+        <token id='T_EQUAL' start='906' end='907'>
+            <text>=</text>
+        </token>
+        <token id='T_VARIABLE' start='908' end='915'>
+            <text>$object</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='915' end='917'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='917' end='923'>
+            <text>method</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='923' end='924'>
+            <text>(</text>
+        </token>
+        <token id='T_ELLIPSIS' start='924' end='927'>
+            <text>...</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='927' end='928'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='928' end='929'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='931' end='934'>
+            <text>$fn</text>
+        </token>
+        <token id='T_EQUAL' start='935' end='936'>
+            <text>=</text>
+        </token>
+        <token id='T_VARIABLE' start='937' end='944'>
+            <text>$object</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='944' end='946'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='946' end='954'>
+            <text>__invoke</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='954' end='955'>
+            <text>(</text>
+        </token>
+        <token id='T_ELLIPSIS' start='955' end='958'>
+            <text>...</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='958' end='959'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='959' end='960'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='962' end='965'>
+            <text>$fn</text>
+        </token>
+        <token id='T_EQUAL' start='966' end='967'>
+            <text>=</text>
+        </token>
+        <token id='T_VARIABLE' start='968' end='975'>
+            <text>$object</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='975' end='977'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_VARIABLE' start='977' end='984'>
+            <text>$method</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='984' end='985'>
+            <text>(</text>
+        </token>
+        <token id='T_ELLIPSIS' start='985' end='988'>
+            <text>...</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='988' end='989'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='989' end='990'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='992' end='995'>
+            <text>$fn</text>
+        </token>
+        <token id='T_EQUAL' start='996' end='997'>
+            <text>=</text>
+        </token>
+        <token id='T_STRING' start='998' end='1002'>
+            <text>Test</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='1002' end='1004'>
+            <text>::</text>
+        </token>
+        <token id='T_STRING' start='1004' end='1010'>
+            <text>method</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1010' end='1011'>
+            <text>(</text>
+        </token>
+        <token id='T_ELLIPSIS' start='1011' end='1014'>
+            <text>...</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1014' end='1015'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='1015' end='1016'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='1017' end='1020'>
+            <text>$fn</text>
+        </token>
+        <token id='T_EQUAL' start='1021' end='1022'>
+            <text>=</text>
+        </token>
+        <token id='T_VARIABLE' start='1023' end='1028'>
+            <text>$test</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='1028' end='1030'>
+            <text>::</text>
+        </token>
+        <token id='T_STRING' start='1030' end='1036'>
+            <text>method</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1036' end='1037'>
+            <text>(</text>
+        </token>
+        <token id='T_ELLIPSIS' start='1037' end='1040'>
+            <text>...</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1040' end='1041'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='1041' end='1042'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='1043' end='1046'>
+            <text>$fn</text>
+        </token>
+        <token id='T_EQUAL' start='1047' end='1048'>
+            <text>=</text>
+        </token>
+        <token id='T_VARIABLE' start='1049' end='1054'>
+            <text>$test</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='1054' end='1056'>
+            <text>::</text>
+        </token>
+        <token id='T_VARIABLE' start='1056' end='1063'>
+            <text>$method</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1063' end='1064'>
+            <text>(</text>
+        </token>
+        <token id='T_ELLIPSIS' start='1064' end='1067'>
+            <text>...</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1067' end='1068'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='1068' end='1069'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='1071' end='1074'>
+            <text>$fn</text>
+        </token>
+        <token id='T_EQUAL' start='1075' end='1076'>
+            <text>=</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1077' end='1078'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='1078' end='1085'>
+            <text>$object</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='1085' end='1087'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='1087' end='1095'>
+            <text>property</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1095' end='1096'>
+            <text>)</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1096' end='1097'>
+            <text>(</text>
+        </token>
+        <token id='T_ELLIPSIS' start='1097' end='1100'>
+            <text>...</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1100' end='1101'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='1101' end='1102'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='1105' end='1108'>
+            <text>$fn</text>
+        </token>
+        <token id='T_EQUAL' start='1109' end='1110'>
+            <text>=</text>
+        </token>
+        <token id='T_STRING' start='1111' end='1115'>
+            <text>self</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='1115' end='1117'>
+            <text>::</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1117' end='1118'>
+            <text>{</text>
+        </token>
+        <token id='T_VARIABLE' start='1118' end='1126'>
+            <text>$complex</text>
+        </token>
+        <token id='T_NEKUDA' start='1127' end='1128'>
+            <text>.</text>
+        </token>
+        <token id='T_VARIABLE' start='1129' end='1140'>
+            <text>$expression</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1140' end='1141'>
+            <text>}</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1141' end='1142'>
+            <text>(</text>
+        </token>
+        <token id='T_ELLIPSIS' start='1142' end='1145'>
+            <text>...</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1145' end='1146'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='1146' end='1147'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='1149' end='1152'>
+            <text>$fn</text>
+        </token>
+        <token id='T_EQUAL' start='1153' end='1154'>
+            <text>=</text>
+        </token>
+        <token id='T_OPEN_RECT' start='1155' end='1156'>
+            <text>[</text>
+        </token>
+        <token id='T_VARIABLE' start='1156' end='1161'>
+            <text>$test</text>
+        </token>
+        <token id='T_COMMA' start='1161' end='1162'>
+            <text>,</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='1163' end='1171'>
+            <text>&apos;method&apos;</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='1171' end='1172'>
+            <text>]</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1172' end='1173'>
+            <text>(</text>
+        </token>
+        <token id='T_ELLIPSIS' start='1173' end='1176'>
+            <text>...</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1176' end='1177'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='1177' end='1178'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='1180' end='1183'>
+            <text>$fn</text>
+        </token>
+        <token id='T_EQUAL' start='1184' end='1185'>
+            <text>=</text>
+        </token>
+        <token id='T_OPEN_RECT' start='1186' end='1187'>
+            <text>[</text>
+        </token>
+        <token id='T_STRING' start='1187' end='1191'>
+            <text>Test</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='1191' end='1193'>
+            <text>::</text>
+        </token>
+        <token id='T_CLASS' start='1193' end='1198'>
+            <text>class</text>
+        </token>
+        <token id='T_COMMA' start='1198' end='1199'>
+            <text>,</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='1200' end='1208'>
+            <text>&apos;method&apos;</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='1208' end='1209'>
+            <text>]</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1209' end='1210'>
+            <text>(</text>
+        </token>
+        <token id='T_ELLIPSIS' start='1210' end='1213'>
+            <text>...</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1213' end='1214'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='1214' end='1215'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='1217' end='1222'>
+            <text>$test</text>
+        </token>
+        <token id='T_NULLSAFE_OBJECT_OPERATOR' start='1222' end='1225'>
+            <text>?-&gt;</text>
+        </token>
+        <token id='T_STRING' start='1225' end='1231'>
+            <text>method</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1231' end='1232'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='1232' end='1237'>
+            <text>$test</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='1237' end='1239'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='1239' end='1243'>
+            <text>test</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1243' end='1244'>
+            <text>(</text>
+        </token>
+        <token id='T_ELLIPSIS' start='1244' end='1247'>
+            <text>...</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1247' end='1248'>
+            <text>)</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1248' end='1249'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='1249' end='1250'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='1252' end='1255'>
+            <text>$fn</text>
+        </token>
+        <token id='T_EQUAL' start='1256' end='1257'>
+            <text>=</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1258' end='1259'>
+            <text>(</text>
+        </token>
+        <token id='T_NEW' start='1259' end='1262'>
+            <text>new</text>
+        </token>
+        <token id='T_STRING' start='1263' end='1267'>
+            <text>Test</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1267' end='1268'>
+            <text>)</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='1268' end='1270'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_VARIABLE' start='1270' end='1277'>
+            <text>$method</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1277' end='1278'>
+            <text>(</text>
+        </token>
+        <token id='T_ELLIPSIS' start='1278' end='1281'>
+            <text>...</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1281' end='1282'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='1282' end='1283'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='1301' end='1306'>
+            <text>$test</text>
+        </token>
+        <token id='T_NULLSAFE_OBJECT_OPERATOR' start='1306' end='1309'>
+            <text>?-&gt;</text>
+        </token>
+        <token id='T_STRING' start='1309' end='1315'>
+            <text>method</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1315' end='1316'>
+            <text>(</text>
+        </token>
+        <token id='T_ELLIPSIS' start='1316' end='1319'>
+            <text>...</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1319' end='1320'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='1320' end='1321'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='1322' end='1327'>
+            <text>$test</text>
+        </token>
+        <token id='T_NULLSAFE_OBJECT_OPERATOR' start='1327' end='1330'>
+            <text>?-&gt;</text>
+        </token>
+        <token id='T_STRING' start='1330' end='1334'>
+            <text>prop</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='1334' end='1336'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='1336' end='1342'>
+            <text>method</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1342' end='1343'>
+            <text>(</text>
+        </token>
+        <token id='T_ELLIPSIS' start='1343' end='1346'>
+            <text>...</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1346' end='1347'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='1347' end='1348'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='1350' end='1355'>
+            <text>$test</text>
+        </token>
+        <token id='T_EQUAL' start='1356' end='1357'>
+            <text>=</text>
+        </token>
+        <token id='T_NEW' start='1358' end='1361'>
+            <text>new</text>
+        </token>
+        <token id='T_STRING' start='1362' end='1366'>
+            <text>Test</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1366' end='1367'>
+            <text>(</text>
+        </token>
+        <token id='T_ELLIPSIS' start='1367' end='1370'>
+            <text>...</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1370' end='1371'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='1371' end='1372'>
+            <text>;</text>
+        </token>
+        <token id='T_ATTRIBUTE' start='1374' end='1376'>
+            <text>#[</text>
+        </token>
+        <token id='T_STRING' start='1376' end='1377'>
+            <text>A</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1377' end='1378'>
+            <text>(</text>
+        </token>
+        <token id='T_ELLIPSIS' start='1378' end='1381'>
+            <text>...</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1381' end='1382'>
+            <text>)</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='1382' end='1383'>
+            <text>]</text>
+        </token>
+        <token id='T_CLASS' start='1384' end='1389'>
+            <text>class</text>
+        </token>
+        <token id='T_STRING' start='1390' end='1394'>
+            <text>Test</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1395' end='1396'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1396' end='1397'>
+            <text>}</text>
+        </token>
+        <token id='EOF' start='1398' end='1398'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='1398'>
+        <Comments>
+            <Comment start='7' end='814' commentType='multiLine'/>
+            <Comment start='1285' end='1301' commentType='singleLine'/>
+            <Comment start='7' end='814' commentType='multiLine'/>
+            <Comment start='1285' end='1301' commentType='singleLine'/>
+        </Comments>
+        <Statements>
+            <ExpressionStatement start='816' end='826'>
+                <FunctionInvocation start='816' end='825'>
+                    <FucntionName start='816' end='820'>
+                        <NamespaceName start='816' end='820' isCurrent='false' isGlobal='false'>
+                            <Identifier start='816' end='820' name='test'/>
+                        </NamespaceName>
+                    </FucntionName>
+                    <Parameters>
+                        <FirstClassCallableArg start='821' end='824'/>
+                    </Parameters>
+                </FunctionInvocation>
+            </ExpressionStatement>
+            <ExpressionStatement start='828' end='840'>
+                <FunctionInvocation start='828' end='839'>
+                    <FucntionName start='828' end='834'>
+                        <NamespaceName start='828' end='834' isCurrent='false' isGlobal='false'>
+                            <Identifier start='828' end='834' name='strlen'/>
+                        </NamespaceName>
+                    </FucntionName>
+                    <Parameters>
+                        <FirstClassCallableArg start='835' end='838'/>
+                    </Parameters>
+                </FunctionInvocation>
+            </ExpressionStatement>
+            <ExpressionStatement start='841' end='859'>
+                <Assignment start='841' end='858' operator='EQUAL'>
+                    <Variable start='841' end='844' isDollared='true'>
+                        <Identifier start='842' end='844' name='fn'/>
+                    </Variable>
+                    <FunctionInvocation start='847' end='858'>
+                        <FucntionName start='847' end='853'>
+                            <NamespaceName start='847' end='853' isCurrent='false' isGlobal='false'>
+                                <Identifier start='847' end='853' name='strlen'/>
+                            </NamespaceName>
+                        </FucntionName>
+                        <Parameters>
+                            <FirstClassCallableArg start='854' end='857'/>
+                        </Parameters>
+                    </FunctionInvocation>
+                </Assignment>
+            </ExpressionStatement>
+            <ExpressionStatement start='860' end='880'>
+                <Assignment start='860' end='879' operator='EQUAL'>
+                    <Variable start='860' end='863' isDollared='true'>
+                        <Identifier start='861' end='863' name='fn'/>
+                    </Variable>
+                    <FunctionInvocation start='866' end='879'>
+                        <FucntionName start='866' end='874'>
+                            <Scalar start='866' end='874' type='STRING' value='&apos;strlen&apos;'/>
+                        </FucntionName>
+                        <Parameters>
+                            <FirstClassCallableArg start='875' end='878'/>
+                        </Parameters>
+                    </FunctionInvocation>
+                </Assignment>
+            </ExpressionStatement>
+            <ExpressionStatement start='881' end='900'>
+                <Assignment start='881' end='899' operator='EQUAL'>
+                    <Variable start='881' end='884' isDollared='true'>
+                        <Identifier start='882' end='884' name='fn'/>
+                    </Variable>
+                    <FunctionInvocation start='887' end='899'>
+                        <FucntionName start='887' end='894'>
+                            <Variable start='887' end='894' isDollared='true'>
+                                <Identifier start='888' end='894' name='strlen'/>
+                            </Variable>
+                        </FucntionName>
+                        <Parameters>
+                            <FirstClassCallableArg start='895' end='898'/>
+                        </Parameters>
+                    </FunctionInvocation>
+                </Assignment>
+            </ExpressionStatement>
+            <ExpressionStatement start='902' end='929'>
+                <Assignment start='902' end='928' operator='EQUAL'>
+                    <Variable start='902' end='905' isDollared='true'>
+                        <Identifier start='903' end='905' name='fn'/>
+                    </Variable>
+                    <MethodInvocation start='908' end='928' isNullsafe='false'>
+                        <Variable start='908' end='915' isDollared='true'>
+                            <Identifier start='909' end='915' name='object'/>
+                        </Variable>
+                        <Method>
+                            <FunctionInvocation start='917' end='928'>
+                                <FucntionName start='917' end='923'>
+                                    <Variable start='917' end='923' isDollared='false'>
+                                        <Identifier start='917' end='923' name='method'/>
+                                    </Variable>
+                                </FucntionName>
+                                <Parameters>
+                                    <FirstClassCallableArg start='924' end='927'/>
+                                </Parameters>
+                            </FunctionInvocation>
+                        </Method>
+                    </MethodInvocation>
+                </Assignment>
+            </ExpressionStatement>
+            <ExpressionStatement start='931' end='960'>
+                <Assignment start='931' end='959' operator='EQUAL'>
+                    <Variable start='931' end='934' isDollared='true'>
+                        <Identifier start='932' end='934' name='fn'/>
+                    </Variable>
+                    <MethodInvocation start='937' end='959' isNullsafe='false'>
+                        <Variable start='937' end='944' isDollared='true'>
+                            <Identifier start='938' end='944' name='object'/>
+                        </Variable>
+                        <Method>
+                            <FunctionInvocation start='946' end='959'>
+                                <FucntionName start='946' end='954'>
+                                    <Variable start='946' end='954' isDollared='false'>
+                                        <Identifier start='946' end='954' name='__invoke'/>
+                                    </Variable>
+                                </FucntionName>
+                                <Parameters>
+                                    <FirstClassCallableArg start='955' end='958'/>
+                                </Parameters>
+                            </FunctionInvocation>
+                        </Method>
+                    </MethodInvocation>
+                </Assignment>
+            </ExpressionStatement>
+            <ExpressionStatement start='962' end='990'>
+                <Assignment start='962' end='989' operator='EQUAL'>
+                    <Variable start='962' end='965' isDollared='true'>
+                        <Identifier start='963' end='965' name='fn'/>
+                    </Variable>
+                    <MethodInvocation start='968' end='989' isNullsafe='false'>
+                        <Variable start='968' end='975' isDollared='true'>
+                            <Identifier start='969' end='975' name='object'/>
+                        </Variable>
+                        <Method>
+                            <FunctionInvocation start='977' end='989'>
+                                <FucntionName start='977' end='984'>
+                                    <Variable start='977' end='984' isDollared='true'>
+                                        <Identifier start='978' end='984' name='method'/>
+                                    </Variable>
+                                </FucntionName>
+                                <Parameters>
+                                    <FirstClassCallableArg start='985' end='988'/>
+                                </Parameters>
+                            </FunctionInvocation>
+                        </Method>
+                    </MethodInvocation>
+                </Assignment>
+            </ExpressionStatement>
+            <ExpressionStatement start='992' end='1016'>
+                <Assignment start='992' end='1015' operator='EQUAL'>
+                    <Variable start='992' end='995' isDollared='true'>
+                        <Identifier start='993' end='995' name='fn'/>
+                    </Variable>
+                    <StaticMethodInvocation start='998' end='1015'>
+                        <NamespaceName start='998' end='1002' isCurrent='false' isGlobal='false'>
+                            <Identifier start='998' end='1002' name='Test'/>
+                        </NamespaceName>
+                        <Member>
+                            <FunctionInvocation start='1004' end='1015'>
+                                <FucntionName start='1004' end='1010'>
+                                    <Identifier start='1004' end='1010' name='method'/>
+                                </FucntionName>
+                                <Parameters>
+                                    <FirstClassCallableArg start='1011' end='1014'/>
+                                </Parameters>
+                            </FunctionInvocation>
+                        </Member>
+                        <FunctionInvocation start='1004' end='1015'>
+                            <FucntionName start='1004' end='1010'>
+                                <Identifier start='1004' end='1010' name='method'/>
+                            </FucntionName>
+                            <Parameters>
+                                <FirstClassCallableArg start='1011' end='1014'/>
+                            </Parameters>
+                        </FunctionInvocation>
+                    </StaticMethodInvocation>
+                </Assignment>
+            </ExpressionStatement>
+            <ExpressionStatement start='1017' end='1042'>
+                <Assignment start='1017' end='1041' operator='EQUAL'>
+                    <Variable start='1017' end='1020' isDollared='true'>
+                        <Identifier start='1018' end='1020' name='fn'/>
+                    </Variable>
+                    <StaticMethodInvocation start='1023' end='1041'>
+                        <Variable start='1023' end='1028' isDollared='true'>
+                            <Identifier start='1024' end='1028' name='test'/>
+                        </Variable>
+                        <Member>
+                            <FunctionInvocation start='1030' end='1041'>
+                                <FucntionName start='1030' end='1036'>
+                                    <Identifier start='1030' end='1036' name='method'/>
+                                </FucntionName>
+                                <Parameters>
+                                    <FirstClassCallableArg start='1037' end='1040'/>
+                                </Parameters>
+                            </FunctionInvocation>
+                        </Member>
+                        <FunctionInvocation start='1030' end='1041'>
+                            <FucntionName start='1030' end='1036'>
+                                <Identifier start='1030' end='1036' name='method'/>
+                            </FucntionName>
+                            <Parameters>
+                                <FirstClassCallableArg start='1037' end='1040'/>
+                            </Parameters>
+                        </FunctionInvocation>
+                    </StaticMethodInvocation>
+                </Assignment>
+            </ExpressionStatement>
+            <ExpressionStatement start='1043' end='1069'>
+                <Assignment start='1043' end='1068' operator='EQUAL'>
+                    <Variable start='1043' end='1046' isDollared='true'>
+                        <Identifier start='1044' end='1046' name='fn'/>
+                    </Variable>
+                    <StaticMethodInvocation start='1049' end='1068'>
+                        <Variable start='1049' end='1054' isDollared='true'>
+                            <Identifier start='1050' end='1054' name='test'/>
+                        </Variable>
+                        <Member>
+                            <FunctionInvocation start='1056' end='1068'>
+                                <FucntionName start='1056' end='1063'>
+                                    <Variable start='1056' end='1063' isDollared='true'>
+                                        <Identifier start='1057' end='1063' name='method'/>
+                                    </Variable>
+                                </FucntionName>
+                                <Parameters>
+                                    <FirstClassCallableArg start='1064' end='1067'/>
+                                </Parameters>
+                            </FunctionInvocation>
+                        </Member>
+                        <FunctionInvocation start='1056' end='1068'>
+                            <FucntionName start='1056' end='1063'>
+                                <Variable start='1056' end='1063' isDollared='true'>
+                                    <Identifier start='1057' end='1063' name='method'/>
+                                </Variable>
+                            </FucntionName>
+                            <Parameters>
+                                <FirstClassCallableArg start='1064' end='1067'/>
+                            </Parameters>
+                        </FunctionInvocation>
+                    </StaticMethodInvocation>
+                </Assignment>
+            </ExpressionStatement>
+            <ExpressionStatement start='1071' end='1102'>
+                <Assignment start='1071' end='1101' operator='EQUAL'>
+                    <Variable start='1071' end='1074' isDollared='true'>
+                        <Identifier start='1072' end='1074' name='fn'/>
+                    </Variable>
+                    <FunctionInvocation start='1077' end='1101'>
+                        <FucntionName start='1077' end='1096'>
+                            <DereferencableVariable start='1077' end='1096'>
+                                <FieldAccess start='1078' end='1095' isNullsafe='false'>
+                                    <Variable start='1078' end='1085' isDollared='true'>
+                                        <Identifier start='1079' end='1085' name='object'/>
+                                    </Variable>
+                                    <Field>
+                                        <Variable start='1087' end='1095' isDollared='false'>
+                                            <Identifier start='1087' end='1095' name='property'/>
+                                        </Variable>
+                                    </Field>
+                                </FieldAccess>
+                            </DereferencableVariable>
+                        </FucntionName>
+                        <Parameters>
+                            <FirstClassCallableArg start='1097' end='1100'/>
+                        </Parameters>
+                    </FunctionInvocation>
+                </Assignment>
+            </ExpressionStatement>
+            <ExpressionStatement start='1105' end='1147'>
+                <Assignment start='1105' end='1146' operator='EQUAL'>
+                    <Variable start='1105' end='1108' isDollared='true'>
+                        <Identifier start='1106' end='1108' name='fn'/>
+                    </Variable>
+                    <StaticMethodInvocation start='1111' end='1146'>
+                        <NamespaceName start='1111' end='1115' isCurrent='false' isGlobal='false'>
+                            <Identifier start='1111' end='1115' name='self'/>
+                        </NamespaceName>
+                        <Member>
+                            <FunctionInvocation start='1117' end='1146'>
+                                <FucntionName start='1117' end='1141'>
+                                    <ReflectionVariable start='1117' end='1141'>
+                                        <InfixExpression start='1118' end='1140' operator='CONCAT'>
+                                            <Variable start='1118' end='1126' isDollared='true'>
+                                                <Identifier start='1119' end='1126' name='complex'/>
+                                            </Variable>
+                                            <Variable start='1129' end='1140' isDollared='true'>
+                                                <Identifier start='1130' end='1140' name='expression'/>
+                                            </Variable>
+                                        </InfixExpression>
+                                    </ReflectionVariable>
+                                </FucntionName>
+                                <Parameters>
+                                    <FirstClassCallableArg start='1142' end='1145'/>
+                                </Parameters>
+                            </FunctionInvocation>
+                        </Member>
+                        <FunctionInvocation start='1117' end='1146'>
+                            <FucntionName start='1117' end='1141'>
+                                <ReflectionVariable start='1117' end='1141'>
+                                    <InfixExpression start='1118' end='1140' operator='CONCAT'>
+                                        <Variable start='1118' end='1126' isDollared='true'>
+                                            <Identifier start='1119' end='1126' name='complex'/>
+                                        </Variable>
+                                        <Variable start='1129' end='1140' isDollared='true'>
+                                            <Identifier start='1130' end='1140' name='expression'/>
+                                        </Variable>
+                                    </InfixExpression>
+                                </ReflectionVariable>
+                            </FucntionName>
+                            <Parameters>
+                                <FirstClassCallableArg start='1142' end='1145'/>
+                            </Parameters>
+                        </FunctionInvocation>
+                    </StaticMethodInvocation>
+                </Assignment>
+            </ExpressionStatement>
+            <ExpressionStatement start='1149' end='1178'>
+                <Assignment start='1149' end='1177' operator='EQUAL'>
+                    <Variable start='1149' end='1152' isDollared='true'>
+                        <Identifier start='1150' end='1152' name='fn'/>
+                    </Variable>
+                    <FunctionInvocation start='1155' end='1177'>
+                        <FucntionName start='1155' end='1172'>
+                            <ArrayCreation start='1155' end='1172' type='NEW'>
+                                <ArrayElement start='1156' end='1161'>
+                                    <Key>
+                                    </Key>
+                                    <Value>
+                                        <Variable start='1156' end='1161' isDollared='true'>
+                                            <Identifier start='1157' end='1161' name='test'/>
+                                        </Variable>
+                                    </Value>
+                                </ArrayElement>
+                                <ArrayElement start='1163' end='1171'>
+                                    <Key>
+                                    </Key>
+                                    <Value>
+                                        <Scalar start='1163' end='1171' type='STRING' value='&apos;method&apos;'/>
+                                    </Value>
+                                </ArrayElement>
+                            </ArrayCreation>
+                        </FucntionName>
+                        <Parameters>
+                            <FirstClassCallableArg start='1173' end='1176'/>
+                        </Parameters>
+                    </FunctionInvocation>
+                </Assignment>
+            </ExpressionStatement>
+            <ExpressionStatement start='1180' end='1215'>
+                <Assignment start='1180' end='1214' operator='EQUAL'>
+                    <Variable start='1180' end='1183' isDollared='true'>
+                        <Identifier start='1181' end='1183' name='fn'/>
+                    </Variable>
+                    <FunctionInvocation start='1186' end='1214'>
+                        <FucntionName start='1186' end='1209'>
+                            <ArrayCreation start='1186' end='1209' type='NEW'>
+                                <ArrayElement start='1187' end='1198'>
+                                    <Key>
+                                    </Key>
+                                    <Value>
+                                        <StaticConstantAccess start='1187' end='1198'>
+                                            <NamespaceName start='1187' end='1191' isCurrent='false' isGlobal='false'>
+                                                <Identifier start='1187' end='1191' name='Test'/>
+                                            </NamespaceName>
+                                            <Constant>
+                                                <Identifier start='1193' end='1198' name='class'/>
+                                            </Constant>
+                                            <Member>
+                                                <Identifier start='1193' end='1198' name='class'/>
+                                            </Member>
+                                        </StaticConstantAccess>
+                                    </Value>
+                                </ArrayElement>
+                                <ArrayElement start='1200' end='1208'>
+                                    <Key>
+                                    </Key>
+                                    <Value>
+                                        <Scalar start='1200' end='1208' type='STRING' value='&apos;method&apos;'/>
+                                    </Value>
+                                </ArrayElement>
+                            </ArrayCreation>
+                        </FucntionName>
+                        <Parameters>
+                            <FirstClassCallableArg start='1210' end='1213'/>
+                        </Parameters>
+                    </FunctionInvocation>
+                </Assignment>
+            </ExpressionStatement>
+            <ExpressionStatement start='1217' end='1250'>
+                <MethodInvocation start='1217' end='1249' isNullsafe='true'>
+                    <Variable start='1217' end='1222' isDollared='true'>
+                        <Identifier start='1218' end='1222' name='test'/>
+                    </Variable>
+                    <Method>
+                        <FunctionInvocation start='1225' end='1249'>
+                            <FucntionName start='1225' end='1231'>
+                                <Variable start='1225' end='1231' isDollared='false'>
+                                    <Identifier start='1225' end='1231' name='method'/>
+                                </Variable>
+                            </FucntionName>
+                            <Parameters>
+                                <MethodInvocation start='1232' end='1248' isNullsafe='false'>
+                                    <Variable start='1232' end='1237' isDollared='true'>
+                                        <Identifier start='1233' end='1237' name='test'/>
+                                    </Variable>
+                                    <Method>
+                                        <FunctionInvocation start='1239' end='1248'>
+                                            <FucntionName start='1239' end='1243'>
+                                                <Variable start='1239' end='1243' isDollared='false'>
+                                                    <Identifier start='1239' end='1243' name='test'/>
+                                                </Variable>
+                                            </FucntionName>
+                                            <Parameters>
+                                                <FirstClassCallableArg start='1244' end='1247'/>
+                                            </Parameters>
+                                        </FunctionInvocation>
+                                    </Method>
+                                </MethodInvocation>
+                            </Parameters>
+                        </FunctionInvocation>
+                    </Method>
+                </MethodInvocation>
+            </ExpressionStatement>
+            <ExpressionStatement start='1252' end='1283'>
+                <Assignment start='1252' end='1282' operator='EQUAL'>
+                    <Variable start='1252' end='1255' isDollared='true'>
+                        <Identifier start='1253' end='1255' name='fn'/>
+                    </Variable>
+                    <MethodInvocation start='1258' end='1282' isNullsafe='false'>
+                        <AnonymousObjectVariable start='1258' end='1268'>
+                            <ClassInstanceCreation start='1259' end='1267' anonymous='false'>
+                                <ClassName start='1263' end='1267'>
+                                    <NamespaceName start='1263' end='1267' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='1263' end='1267' name='Test'/>
+                                    </NamespaceName>
+                                </ClassName>
+                                <Parameters>
+                                </Parameters>
+                            </ClassInstanceCreation>
+                        </AnonymousObjectVariable>
+                        <Method>
+                            <FunctionInvocation start='1270' end='1282'>
+                                <FucntionName start='1270' end='1277'>
+                                    <Variable start='1270' end='1277' isDollared='true'>
+                                        <Identifier start='1271' end='1277' name='method'/>
+                                    </Variable>
+                                </FucntionName>
+                                <Parameters>
+                                    <FirstClassCallableArg start='1278' end='1281'/>
+                                </Parameters>
+                            </FunctionInvocation>
+                        </Method>
+                    </MethodInvocation>
+                </Assignment>
+            </ExpressionStatement>
+            <ExpressionStatement start='1301' end='1321'>
+                <MethodInvocation start='1301' end='1320' isNullsafe='true'>
+                    <Variable start='1301' end='1306' isDollared='true'>
+                        <Identifier start='1302' end='1306' name='test'/>
+                    </Variable>
+                    <Method>
+                        <FunctionInvocation start='1309' end='1320'>
+                            <FucntionName start='1309' end='1315'>
+                                <Variable start='1309' end='1315' isDollared='false'>
+                                    <Identifier start='1309' end='1315' name='method'/>
+                                </Variable>
+                            </FucntionName>
+                            <Parameters>
+                                <FirstClassCallableArg start='1316' end='1319'/>
+                            </Parameters>
+                        </FunctionInvocation>
+                    </Method>
+                </MethodInvocation>
+            </ExpressionStatement>
+            <ExpressionStatement start='1322' end='1348'>
+                <MethodInvocation start='1322' end='1347' isNullsafe='false'>
+                    <FieldAccess start='1322' end='1334' isNullsafe='true'>
+                        <Variable start='1322' end='1327' isDollared='true'>
+                            <Identifier start='1323' end='1327' name='test'/>
+                        </Variable>
+                        <Field>
+                            <Variable start='1330' end='1334' isDollared='false'>
+                                <Identifier start='1330' end='1334' name='prop'/>
+                            </Variable>
+                        </Field>
+                    </FieldAccess>
+                    <Method>
+                        <FunctionInvocation start='1336' end='1347'>
+                            <FucntionName start='1336' end='1342'>
+                                <Variable start='1336' end='1342' isDollared='false'>
+                                    <Identifier start='1336' end='1342' name='method'/>
+                                </Variable>
+                            </FucntionName>
+                            <Parameters>
+                                <FirstClassCallableArg start='1343' end='1346'/>
+                            </Parameters>
+                        </FunctionInvocation>
+                    </Method>
+                </MethodInvocation>
+            </ExpressionStatement>
+            <ExpressionStatement start='1350' end='1372'>
+                <Assignment start='1350' end='1371' operator='EQUAL'>
+                    <Variable start='1350' end='1355' isDollared='true'>
+                        <Identifier start='1351' end='1355' name='test'/>
+                    </Variable>
+                    <ClassInstanceCreation start='1358' end='1371' anonymous='false'>
+                        <ClassName start='1362' end='1366'>
+                            <NamespaceName start='1362' end='1366' isCurrent='false' isGlobal='false'>
+                                <Identifier start='1362' end='1366' name='Test'/>
+                            </NamespaceName>
+                        </ClassName>
+                        <Parameters>
+                            <FirstClassCallableArg start='1367' end='1370'/>
+                        </Parameters>
+                    </ClassInstanceCreation>
+                </Assignment>
+            </ExpressionStatement>
+            <ClassDeclaration start='1374' end='1397' modifier='NONE'>
+                <Attributes>
+                    <Attribute start='1374' end='1383'>
+                        <AttributeDeclarations>
+                            <AttributeDeclaration start='1376' end='1382'>
+                                <AttributeName>
+                                    <NamespaceName start='1376' end='1377' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='1376' end='1377' name='A'/>
+                                    </NamespaceName>
+                                </AttributeName>
+                                <AttributeParameters>
+                                    <FirstClassCallableArg start='1378' end='1381'/>
+                                </AttributeParameters>
+                            </AttributeDeclaration>
+                        </AttributeDeclarations>
+                    </Attribute>
+                </Attributes>
+                <ClassName>
+                    <Identifier start='1390' end='1394' name='Test'/>
+                </ClassName>
+                <SuperClassName>
+                </SuperClassName>
+                <Interfaces>
+                </Interfaces>
+                <Block start='1395' end='1397' isCurly='true'>
+                </Block>
+            </ClassDeclaration>
+        </Statements>
+    </Program>
+</testresult>

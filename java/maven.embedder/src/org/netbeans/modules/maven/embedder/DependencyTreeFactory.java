@@ -18,11 +18,17 @@
  */
 package org.netbeans.modules.maven.embedder;
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.apache.maven.MavenExecutionException;
 import org.apache.maven.artifact.factory.ArtifactFactory;
 import org.apache.maven.artifact.metadata.ArtifactMetadataSource;
 import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.artifact.resolver.ArtifactCollector;
 import org.apache.maven.artifact.resolver.filter.ArtifactFilter;
+import org.apache.maven.artifact.resolver.filter.CumulativeScopeArtifactFilter;
 import org.apache.maven.artifact.resolver.filter.ScopeArtifactFilter;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.shared.dependency.tree.DependencyNode;
@@ -34,9 +40,28 @@ import org.apache.maven.shared.dependency.tree.DependencyTreeBuilderException;
  * @author mkleint
  */
 public class DependencyTreeFactory {
-
+    private static final Logger LOG = Logger.getLogger(DependencyTreeFactory.class.getName());
+    
+    @Deprecated
     public static DependencyNode createDependencyTree(MavenProject project, MavenEmbedder embedder, String scope) {
-        
+        try {
+            return createDependencyTree(project, embedder, Collections.singleton(scope));
+        } catch (MavenExecutionException ex) {
+            LOG.log(Level.INFO, "Dependency tree scan failed", ex);
+            return null;
+        }
+    }
+    
+    /**
+     * Constructs a Dependency tree. Throws MavenExecutionException on any problems.
+     * @param project the project
+     * @param embedder embedder instance / session to execute the query with
+     * @param scopes artifact scopes to include
+     * @return root of the constructed tree
+     * @throws MavenExecutionException wraps any maven-specific exception thrown by the implementation.
+     * @since 2.71
+     */
+    public static DependencyNode createDependencyTree(MavenProject project, MavenEmbedder embedder, Collection<String> scopes) throws MavenExecutionException {
         //TODO: check alternative for deprecated maven components 
         DependencyTreeBuilder builder = embedder.lookupComponent(DependencyTreeBuilder.class);
         assert builder !=null : "DependencyTreeBuilder component not found in maven";
@@ -51,28 +76,27 @@ public class DependencyTreeFactory {
         assert collector !=null : "ArtifactCollector component not found in maven";
 
         embedder.setUpLegacySupport();
-       
-        return createDependencyTree(project, builder, embedder.getLocalRepository(), factory, source, collector, scope);
+        
+        return createDependencyTree(project, builder, embedder.getLocalRepository(), factory, source, collector, scopes);
 
     }
-
-
+    
     //copied from dependency:tree mojo
     private static DependencyNode createDependencyTree(MavenProject project,
             DependencyTreeBuilder dependencyTreeBuilder, ArtifactRepository localRepository,
             ArtifactFactory artifactFactory, ArtifactMetadataSource artifactMetadataSource,
             ArtifactCollector artifactCollector,
-            String scope) {
-        ArtifactFilter artifactFilter = createResolvingArtifactFilter(scope);
-
+            Collection<String> scopes) throws MavenExecutionException {
+        ArtifactFilter artifactFilter = createResolvingArtifactFilter(scopes);
+        
         try {
             // TODO: note that filter does not get applied due to MNG-3236
             return dependencyTreeBuilder.buildDependencyTree(project,
                     localRepository, artifactFactory,
                     artifactMetadataSource, artifactFilter, artifactCollector);
         } catch (DependencyTreeBuilderException exception) {
+            throw new MavenExecutionException("Dependency tree scan failed", exception);
         }
-        return null;
     }
 
     //copied from dependency:tree mojo
@@ -81,13 +105,16 @@ public class DependencyTreeFactory {
      *
      * @return the artifact filter
      */
-    private static ArtifactFilter createResolvingArtifactFilter(String scope) {
+    private static ArtifactFilter createResolvingArtifactFilter(Collection<String> scopes) {
         ArtifactFilter filter;
 
         // filter scope
-        if (scope != null) {
-
-            filter = new ScopeArtifactFilter(scope);
+        if (scopes != null) {
+            if (scopes.size() == 1) {
+                filter = new ScopeArtifactFilter(scopes.iterator().next());
+            } else {
+                filter = new CumulativeScopeArtifactFilter(scopes);
+            }
         } else {
             filter = null;
         }

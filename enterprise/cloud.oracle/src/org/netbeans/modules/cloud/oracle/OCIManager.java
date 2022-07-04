@@ -33,6 +33,10 @@ import com.oracle.bmc.database.requests.GenerateAutonomousDatabaseWalletRequest;
 import com.oracle.bmc.database.requests.ListAutonomousDatabasesRequest;
 import com.oracle.bmc.database.responses.CreateAutonomousDatabaseResponse;
 import com.oracle.bmc.database.responses.GenerateAutonomousDatabaseWalletResponse;
+import com.oracle.bmc.devops.DevopsClient;
+import com.oracle.bmc.devops.model.ProjectSummary;
+import com.oracle.bmc.devops.requests.ListProjectsRequest;
+import com.oracle.bmc.devops.responses.ListProjectsResponse;
 import com.oracle.bmc.identity.Identity;
 import com.oracle.bmc.identity.IdentityClient;
 import com.oracle.bmc.identity.model.Tenancy;
@@ -264,6 +268,15 @@ public final class OCIManager {
             Files.copy(zin, entryPath);
         }
         return walletPath;
+    }
+    
+    public List<OCIItem> listDevopsProjects(String compartmentId) {
+        DevopsClient client = new DevopsClient(provider);
+        ListProjectsRequest request = ListProjectsRequest.builder().compartmentId(compartmentId).build();
+        ListProjectsResponse response = client.listProjects(request);
+        
+        List<ProjectSummary> projects = response.getProjectCollection().getItems();
+        return projects.stream().map(p -> new OCIItem(p.getId(), p.getName())).collect(Collectors.toList());
     }
 
 }

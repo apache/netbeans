@@ -20,6 +20,8 @@ package org.netbeans.modules.lsp.client.bindings;
 
 import javax.swing.Icon;
 import org.eclipse.lsp4j.SymbolInformation;
+import org.eclipse.lsp4j.WorkspaceSymbol;
+import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.netbeans.spi.jumpto.symbol.SymbolDescriptor;
 import org.netbeans.spi.jumpto.symbol.SymbolProvider;
 import org.openide.filesystems.FileObject;
@@ -46,16 +48,16 @@ public class SymbolProviderImpl extends BaseSymbolProvider implements SymbolProv
 
     public static class SymbolDescriptorImpl extends SymbolDescriptor implements BaseSymbolDescriptor {
 
-        private final SymbolInformation info;
+        private final Either<SymbolInformation, WorkspaceSymbol> info;
         private final String simpleName;
 
-        public SymbolDescriptorImpl(SymbolInformation info, String simpleName) {
+        public SymbolDescriptorImpl(Either<SymbolInformation, WorkspaceSymbol> info, String simpleName) {
             this.info = info;
             this.simpleName = simpleName;
         }
 
         @Override
-        public SymbolInformation getInfo() {
+        public Either<SymbolInformation, WorkspaceSymbol> getInfo() {
             return info;
         }
 

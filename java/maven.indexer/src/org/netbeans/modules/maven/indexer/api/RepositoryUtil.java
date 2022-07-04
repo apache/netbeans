@@ -35,7 +35,6 @@ import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.artifact.resolver.AbstractArtifactResolutionException;
 import org.apache.maven.repository.RepositorySystem;
 import org.netbeans.modules.maven.embedder.EmbedderFactory;
-import org.codehaus.plexus.util.IOUtil;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.modules.maven.embedder.MavenEmbedder;
@@ -116,22 +115,15 @@ public final class RepositoryUtil {
 
     private static byte[] readFile(File file) throws IOException {
 
-        InputStream is = null; 
         byte[] bytes = new byte[(int) file.length()];
-        try {
-            is = new FileInputStream(file);
+        try (InputStream is = new FileInputStream(file)) {
 
+            int offset = 0;
+            int numRead = 0;
 
-        int offset = 0;
-        int numRead = 0;
-
-        while (offset < bytes.length &&
-                (numRead = is.read(bytes, offset, bytes.length - offset)) >= 0) {
-
-            offset += numRead;
-        }
-        } finally {
-            IOUtil.close(is);
+            while (offset < bytes.length && (numRead = is.read(bytes, offset, bytes.length - offset)) != -1) {
+                offset += numRead;
+            }
         }
 
         return bytes;

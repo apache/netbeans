@@ -246,14 +246,8 @@
         <token id='T_USE' start='1190' end='1193'>
             <text>use</text>
         </token>
-        <token id='T_STRING' start='1194' end='1197'>
-            <text>Foo</text>
-        </token>
-        <token id='T_NS_SEPARATOR' start='1197' end='1198'>
-            <text>\</text>
-        </token>
-        <token id='T_STRING' start='1198' end='1209'>
-            <text>UnpackClass</text>
+        <token id='T_NAME_QUALIFIED' start='1194' end='1209'>
+            <text>Foo\UnpackClass</text>
         </token>
         <token id='T_SEMICOLON' start='1209' end='1210'>
             <text>;</text>
@@ -363,17 +357,8 @@
         <token id='T_ELLIPSIS' start='1391' end='1394'>
             <text>...</text>
         </token>
-        <token id='T_NS_SEPARATOR' start='1394' end='1395'>
-            <text>\</text>
-        </token>
-        <token id='T_STRING' start='1395' end='1398'>
-            <text>Foo</text>
-        </token>
-        <token id='T_NS_SEPARATOR' start='1398' end='1399'>
-            <text>\</text>
-        </token>
-        <token id='T_STRING' start='1399' end='1410'>
-            <text>UnpackClass</text>
+        <token id='T_NAME_FULLY_QUALIFIED' start='1394' end='1410'>
+            <text>\Foo\UnpackClass</text>
         </token>
         <token id='T_PAAMAYIM_NEKUDOTAYIM' start='1410' end='1412'>
             <text>::</text>

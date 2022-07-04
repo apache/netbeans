@@ -91,6 +91,9 @@ final class GitOptionsPanel extends javax.swing.JPanel {
         org.openide.awt.Mnemonics.setLocalizedText(cbIgnoreNotSharableFiles, org.openide.util.NbBundle.getMessage(GitOptionsPanel.class, "GitOptionsPanel.cbIgnoreNotSharableFiles.text")); // NOI18N
         cbIgnoreNotSharableFiles.setToolTipText(org.openide.util.NbBundle.getMessage(GitOptionsPanel.class, "GitOptionsPanel.cbIgnoreNotSharableFiles.toolTipText")); // NOI18N
 
+        org.openide.awt.Mnemonics.setLocalizedText(cbReplaceInvalidBranchNameCharacters, org.openide.util.NbBundle.getMessage(GitOptionsPanel.class, "GitOptionsPanel.cbReplaceInvalidBranchNameCharacters.text")); // NOI18N
+        cbReplaceInvalidBranchNameCharacters.setToolTipText(org.openide.util.NbBundle.getMessage(GitOptionsPanel.class, "GitOptionsPanel.cbReplaceInvalidBranchNameCharacters.toolTipText")); // NOI18N
+
         org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(GitOptionsPanel.class, "GitOptionsPanel.jLabel1.text")); // NOI18N
 
         jLabel2.setLabelFor(txtProjectAnnotation);
@@ -127,7 +130,10 @@ final class GitOptionsPanel extends javax.swing.JPanel {
                                     .addComponent(cbOpenOutputWindow)
                                     .addComponent(cbIgnoreNotSharableFiles))
                                 .addGap(0, 0, Short.MAX_VALUE)))
-                        .addGap(12, 12, 12))))
+                        .addGap(12, 12, 12))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(cbReplaceInvalidBranchNameCharacters)
+                        .addGap(0, 0, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -140,7 +146,9 @@ final class GitOptionsPanel extends javax.swing.JPanel {
                 .addComponent(signOffCheckBox)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(cbIgnoreNotSharableFiles)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(cbReplaceInvalidBranchNameCharacters)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel1)
                     .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -161,6 +169,7 @@ final class GitOptionsPanel extends javax.swing.JPanel {
     final javax.swing.JButton btnAddVariable = new javax.swing.JButton();
     final javax.swing.JCheckBox cbIgnoreNotSharableFiles = new javax.swing.JCheckBox();
     final javax.swing.JCheckBox cbOpenOutputWindow = new javax.swing.JCheckBox();
+    final javax.swing.JCheckBox cbReplaceInvalidBranchNameCharacters = new javax.swing.JCheckBox();
     final javax.swing.JCheckBox excludeNewFiles = new javax.swing.JCheckBox();
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;

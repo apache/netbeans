@@ -31,8 +31,8 @@ import org.netbeans.spi.editor.fold.FoldTypeProvider;
  */
 @MimeRegistration(mimeType = "text/javascript", service = FoldTypeProvider.class, position = 1101)
 public class JsFoldTypeProvider implements FoldTypeProvider {
-    
-    private final Collection<FoldType>   types = new ArrayList<FoldType>(4);
+
+    private final Collection<FoldType>   types = new ArrayList<>(4);
 
     public JsFoldTypeProvider() {
         types.add(FoldType.COMMENT);
@@ -40,7 +40,7 @@ public class JsFoldTypeProvider implements FoldTypeProvider {
         types.add(FoldType.DOCUMENTATION);
         types.add(FoldType.MEMBER);
     }
-    
+
     @Override
     public Collection getValues(Class type) {
         return types;
@@ -50,5 +50,5 @@ public class JsFoldTypeProvider implements FoldTypeProvider {
     public boolean inheritable() {
         return false;
     }
-    
+
 }

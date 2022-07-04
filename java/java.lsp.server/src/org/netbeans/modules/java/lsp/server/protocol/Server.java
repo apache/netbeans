@@ -18,7 +18,6 @@
  */
 package org.netbeans.modules.java.lsp.server.protocol;
 
-import com.google.gson.InstanceCreator;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -46,6 +45,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import com.google.gson.InstanceCreator;
 import com.google.gson.JsonObject;
+import java.util.LinkedHashSet;
 import org.eclipse.lsp4j.CallHierarchyRegistrationOptions;
 import org.eclipse.lsp4j.CodeActionKind;
 import org.eclipse.lsp4j.CodeActionOptions;
@@ -77,6 +77,7 @@ import org.eclipse.lsp4j.jsonrpc.JsonRpcException;
 import org.eclipse.lsp4j.jsonrpc.Launcher;
 import org.eclipse.lsp4j.jsonrpc.MessageConsumer;
 import org.eclipse.lsp4j.jsonrpc.MessageIssueException;
+import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.eclipse.lsp4j.jsonrpc.messages.Message;
 import org.eclipse.lsp4j.jsonrpc.messages.NotificationMessage;
 import org.eclipse.lsp4j.jsonrpc.messages.RequestMessage;
@@ -105,6 +106,12 @@ import org.netbeans.modules.java.lsp.server.explorer.LspTreeViewServiceImpl;
 import org.netbeans.modules.java.lsp.server.explorer.api.NodeChangedParams;
 import org.netbeans.modules.java.lsp.server.explorer.api.TreeViewService;
 import org.netbeans.modules.java.lsp.server.files.OpenedDocuments;
+import org.netbeans.modules.java.lsp.server.input.InputService;
+import org.netbeans.modules.java.lsp.server.input.LspInputServiceImpl;
+import org.netbeans.modules.java.lsp.server.input.QuickPickItem;
+import org.netbeans.modules.java.lsp.server.input.ShowQuickPickParams;
+import org.netbeans.modules.java.lsp.server.input.ShowMutliStepInputParams;
+import org.netbeans.modules.java.lsp.server.input.ShowInputBoxParams;
 import org.netbeans.modules.java.lsp.server.progress.OperationContext;
 import org.netbeans.modules.progress.spi.InternalHandle;
 import org.netbeans.spi.project.ActionProgress;
@@ -308,6 +315,7 @@ public final class Server {
 
     public static class LanguageServerImpl implements LanguageServer, LanguageClientAware, LspServerState, NbLanguageServer {
 
+        private static final String NETBEANS_FORMAT = "netbeans.format";
         private static final String NETBEANS_JAVA_IMPORTS = "netbeans.java.imports";
 
         // change to a greater throughput if the initialization waits on more processes than just (serialized) project open.
@@ -324,6 +332,7 @@ public final class Server {
         );
 
         private final LspTreeViewServiceImpl treeService = new LspTreeViewServiceImpl(sessionLookup);
+        private final LspInputServiceImpl inputService = new LspInputServiceImpl();
 
                 /**
          * Projects that are or were opened. After projects open, their CompletableFutures
@@ -668,7 +677,7 @@ public final class Server {
         @Override
         public OpenedDocuments getOpenedDocuments() {
             return openedDocuments;
-        }
+        } 
 
         private JavaSource showIndexingCompleted(Project[] opened) {
             try {
@@ -702,7 +711,7 @@ public final class Server {
                 capabilities.setTextDocumentSync(textDocumentSyncOptions);
                 CompletionOptions completionOptions = new CompletionOptions();
                 completionOptions.setResolveProvider(true);
-                completionOptions.setTriggerCharacters(Collections.singletonList("."));
+                completionOptions.setTriggerCharacters(Arrays.asList(".", "#", "@", "*"));
                 capabilities.setCompletionProvider(completionOptions);
                 capabilities.setHoverProvider(true);
                 CodeActionOptions codeActionOptions = new CodeActionOptions(Arrays.asList(CodeActionKind.QuickFix, CodeActionKind.Source, CodeActionKind.SourceOrganizeImports, CodeActionKind.Refactor));
@@ -713,12 +722,14 @@ public final class Server {
                 capabilities.setTypeDefinitionProvider(true);
                 capabilities.setImplementationProvider(true);
                 capabilities.setDocumentHighlightProvider(true);
+                capabilities.setDocumentFormattingProvider(true);
+                capabilities.setDocumentRangeFormattingProvider(true);
                 capabilities.setReferencesProvider(true);
                 
                 CallHierarchyRegistrationOptions chOpts = new CallHierarchyRegistrationOptions();
                 chOpts.setWorkDoneProgress(true);
                 capabilities.setCallHierarchyProvider(chOpts);
-                List<String> commands = new ArrayList<>(Arrays.asList(GRAALVM_PAUSE_SCRIPT,
+                Set<String> commands = new LinkedHashSet<>(Arrays.asList(GRAALVM_PAUSE_SCRIPT,
                         JAVA_BUILD_WORKSPACE,
                         JAVA_CLEAN_WORKSPACE,
                         JAVA_RUN_PROJECT_ACTION,
@@ -740,7 +751,7 @@ public final class Server {
                 for (CodeActionsProvider codeActionsProvider : Lookup.getDefault().lookupAll(CodeActionsProvider.class)) {
                     commands.addAll(codeActionsProvider.getCommands());
                 }
-                capabilities.setExecuteCommandProvider(new ExecuteCommandOptions(commands));
+                capabilities.setExecuteCommandProvider(new ExecuteCommandOptions(new ArrayList<>(commands)));
                 capabilities.setWorkspaceSymbolProvider(true);
                 capabilities.setCodeLensProvider(new CodeLensOptions(false));
                 RenameOptions renOpt = new RenameOptions();
@@ -804,6 +815,12 @@ public final class Server {
                     ConfigurationItem item = new ConfigurationItem();
                     FileObject fo = projects[0].getProjectDirectory();
                     item.setScopeUri(Utils.toUri(fo));
+                    item.setSection(NETBEANS_FORMAT);
+                    client.configuration(new ConfigurationParams(Collections.singletonList(item))).thenAccept(c -> {
+                        if (c != null && !c.isEmpty() && c.get(0) instanceof JsonObject) {
+                            workspaceService.updateJavaFormatPreferences(fo, (JsonObject) c.get(0));
+                        }
+                    });
                     item.setSection(NETBEANS_JAVA_IMPORTS);
                     client.configuration(new ConfigurationParams(Collections.singletonList(item))).thenAccept(c -> {
                         if (c != null && !c.isEmpty() && c.get(0) instanceof JsonObject) {
@@ -840,6 +857,11 @@ public final class Server {
             return treeService;
         }
 
+        @JsonDelegate
+        public InputService getInputService() {
+            return inputService;
+        }
+
         @Override
         public TextDocumentService getTextDocumentService() {
             return textDocumentService;
@@ -868,6 +890,7 @@ public final class Server {
             });
             sessionServices.add(new WorkspaceUIContext(client));
             sessionServices.add(treeService.getNodeRegistry());
+            sessionServices.add(inputService.getRegistry());
             ((LanguageClientAware) getTextDocumentService()).connect(client);
             ((LanguageClientAware) getWorkspaceService()).connect(client);
             ((LanguageClientAware) treeService).connect(client);
@@ -945,6 +968,12 @@ public final class Server {
         public CompletableFuture<String> showInputBox(ShowInputBoxParams params) {
             logWarning(params);
             return CompletableFuture.completedFuture(params.getValue());
+        }
+
+        @Override
+        public CompletableFuture<Map<String, Either<List<QuickPickItem>, String>>> showMultiStepInput(ShowMutliStepInputParams params) {
+            logWarning(params);
+            return CompletableFuture.completedFuture(null);
         }
 
         @Override

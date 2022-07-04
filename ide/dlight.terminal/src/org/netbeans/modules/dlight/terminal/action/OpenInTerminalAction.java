@@ -49,6 +49,7 @@ import org.openide.util.actions.NodeAction;
 )
 @ActionReferences({
     @ActionReference(path = "UI/ToolActions/Files", position = 2050),
+    @ActionReference(path = "Projects/Actions", position = 100),
     @ActionReference(path = "Shortcuts", name = "SO-K")
 })
 public class OpenInTerminalAction extends NodeAction {

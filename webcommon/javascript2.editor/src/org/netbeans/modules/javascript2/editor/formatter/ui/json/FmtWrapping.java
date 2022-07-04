@@ -19,7 +19,6 @@
 
 package org.netbeans.modules.javascript2.editor.formatter.ui.json;
 
-import org.netbeans.modules.javascript2.editor.formatter.ui.*;
 import java.awt.Dimension;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
@@ -30,7 +29,6 @@ import org.netbeans.modules.javascript2.lexer.api.JsTokenId;
 import org.netbeans.modules.javascript2.editor.formatter.Utils;
 import org.netbeans.modules.options.editor.spi.PreferencesCustomizer;
 
-
 /**
  *
  * @author  Petr Pisl
@@ -38,6 +36,7 @@ import org.netbeans.modules.options.editor.spi.PreferencesCustomizer;
 public class FmtWrapping extends javax.swing.JPanel implements FocusListener {
 
     /** Creates new form FmtWrapping */
+    @SuppressWarnings("LeakingThisInConstructor")
     public FmtWrapping() {
         initComponents();
 
@@ -67,10 +66,12 @@ public class FmtWrapping extends javax.swing.JPanel implements FocusListener {
                 preview);
     }
 
+    @Override
     public void focusGained(FocusEvent e) {
         scrollPane.getViewport().scrollRectToVisible(e.getComponent().getBounds());
     }
 
+    @Override
     public void focusLost(FocusEvent e) {
     }
 

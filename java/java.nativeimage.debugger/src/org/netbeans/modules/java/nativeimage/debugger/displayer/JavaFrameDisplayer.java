@@ -77,17 +77,30 @@ public final class JavaFrameDisplayer implements FrameDisplayer {
         if (methodEnd < 0) {
             methodEnd = functionName.length();
         }
-        int methodStart = functionName.lastIndexOf('.', methodEnd);
-        if (methodStart < 0) {
-            clsMethod = functionName.substring(0, methodEnd);
-        } else {
-            int clsStart = functionName.lastIndexOf('.', methodStart - 1);
+        int methodStart = functionName.indexOf("::");
+        if (methodStart > 0) {
+            int clsStart = functionName.lastIndexOf('.', methodStart);
             if (clsStart < 0) {
                 clsStart = 0;
             } else {
                 clsStart++;
             }
-            clsMethod = functionName.substring(clsStart, methodEnd);
+            String clazz = functionName.substring(clsStart, methodStart);
+            String method = functionName.substring(methodStart + 2, methodEnd);
+            clsMethod = clazz + '.' + method;
+        } else {
+            methodStart = functionName.lastIndexOf('.', methodEnd);
+            if (methodStart < 0) {
+                clsMethod = functionName.substring(0, methodEnd);
+            } else {
+                int clsStart = functionName.lastIndexOf('.', methodStart - 1);
+                if (clsStart < 0) {
+                    clsStart = 0;
+                } else {
+                    clsStart++;
+                }
+                clsMethod = functionName.substring(clsStart, methodEnd);
+            }
         }
         int line = frame.getLine();
         if (line < 0) {
@@ -104,6 +117,7 @@ public final class JavaFrameDisplayer implements FrameDisplayer {
             methodEnd = functionName.length();
         }
         String clsMethod = functionName.substring(0, methodEnd);
+        clsMethod = clsMethod.replace("::", ".");
         int line = frame.getLine();
         if (line < 0) {
             return clsMethod;
@@ -119,7 +133,10 @@ public final class JavaFrameDisplayer implements FrameDisplayer {
             methodEnd = functionName.length();
         }
         if (methodEnd > 0) {
-            int methodStart = functionName.lastIndexOf('.', methodEnd);
+            int methodStart = functionName.indexOf("::");
+            if (methodStart < 0) {
+                methodStart = functionName.lastIndexOf('.', methodEnd);
+            }
             if (methodStart > 0) {
                 String className = functionName.substring(0, methodStart);
                 URI uri = findClassURI(sourcePath, className);

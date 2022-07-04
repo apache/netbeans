@@ -73,7 +73,7 @@ public final class NbLaunchRequestHandler {
                           || modulePaths.isEmpty() && classPaths.isEmpty())) {
             ErrorUtilities.completeExceptionally(resultFuture,
                 "Failed to launch debuggee VM. Missing mainClass or modulePaths/classPaths options in launch configuration.",
-                ResponseErrorCode.serverErrorStart);
+                ResponseErrorCode.ServerNotInitialized);
             return resultFuture;
         }
         if (StringUtils.isBlank((String)launchArguments.get("encoding"))) {
@@ -82,7 +82,7 @@ public final class NbLaunchRequestHandler {
             if (!Charset.isSupported((String)launchArguments.get("encoding"))) {
                 ErrorUtilities.completeExceptionally(resultFuture,
                     "Failed to launch debuggee VM. 'encoding' options in the launch configuration is not recognized.",
-                    ResponseErrorCode.serverErrorStart);
+                    ResponseErrorCode.ServerNotInitialized);
                 return resultFuture;
             }
             context.setDebuggeeEncoding(Charset.forName((String)launchArguments.get("encoding")));
@@ -116,7 +116,7 @@ public final class NbLaunchRequestHandler {
             if (file == null) {
                 ErrorUtilities.completeExceptionally(resultFuture,
                         "Missing file: " + filePath,
-                        ResponseErrorCode.serverErrorStart);
+                        ResponseErrorCode.ServerNotInitialized);
                 return resultFuture;
             }
         } else {
@@ -124,7 +124,7 @@ public final class NbLaunchRequestHandler {
             if (nativeImage == null) {
                 ErrorUtilities.completeExceptionally(resultFuture,
                     "Failed to launch debuggee native image. No native image is specified.",
-                    ResponseErrorCode.serverErrorStart);
+                    ResponseErrorCode.ServerNotInitialized);
                 return resultFuture;
             }
             nativeImageFile = new File(nativeImage);

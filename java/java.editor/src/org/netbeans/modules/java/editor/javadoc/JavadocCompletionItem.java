@@ -23,7 +23,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
-import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.List;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
@@ -43,10 +43,12 @@ import javax.swing.text.JTextComponent;
 import javax.swing.text.StyledDocument;
 import org.netbeans.api.editor.completion.Completion;
 import org.netbeans.api.java.source.CompilationInfo;
+import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.java.source.support.ReferencesCount;
 import org.netbeans.modules.editor.java.JavaCompletionItem;
+import org.netbeans.modules.editor.java.LazyJavaCompletionItem;
 import org.netbeans.modules.editor.java.Utilities;
-import org.netbeans.modules.java.editor.javadoc.TagRegistery.TagEntry;
+import org.netbeans.modules.parsing.api.Source;
 import org.netbeans.spi.editor.completion.CompletionItem;
 import org.netbeans.spi.editor.completion.CompletionTask;
 import org.netbeans.spi.editor.completion.support.CompletionUtilities;
@@ -69,10 +71,10 @@ final class JavadocCompletionItem implements CompletionItem {
     private static final String BOLD = "<b>"; //NOI18N
     private static final String BOLD_END = "</b>"; //NOI18N
     
-    private int substitutionOffset;
-    private String txt;
-    private String leftHtmlText;
-    private String rightHtmlText;
+    private final int substitutionOffset;
+    private final String txt;
+    private final String leftHtmlText;
+    private final String rightHtmlText;
     private final String iconPath;
     private final int sortPriority;
     private ImageIcon icon = null;
@@ -89,26 +91,27 @@ final class JavadocCompletionItem implements CompletionItem {
         this.sortPriority = sortPriority;
     }
 
+    @Override
     public void defaultAction(JTextComponent component) {
         Completion.get().hideAll();
         complete(component, txt + ' ', substitutionOffset);
     }
 
+    @Override
     public void processKeyEvent(KeyEvent evt) {
     }
 
+    @Override
     public final int getPreferredWidth(Graphics g, Font defaultFont) {
-        return CompletionUtilities.getPreferredWidth(
-                getLeftHtmlText(), getRightHtmlText(), g, defaultFont);
+        return CompletionUtilities.getPreferredWidth(getLeftHtmlText(), getRightHtmlText(), g, defaultFont);
     }
 
-    public final void render(Graphics g, Font defaultFont, Color defaultColor,
-            Color backgroundColor, int width, int height, boolean selected) {
+    @Override
+    public final void render(Graphics g, Font defaultFont, Color defaultColor, Color backgroundColor, int width, int height, boolean selected) {
         if (icon == null) {
             icon = createIcon();
         }
-        CompletionUtilities.renderHtml(icon, getLeftHtmlText(), getRightHtmlText(),
-                g, defaultFont, defaultColor, width, height, selected);
+        CompletionUtilities.renderHtml(icon, getLeftHtmlText(), getRightHtmlText(), g, defaultFont, defaultColor, width, height, selected);
     }
     
     protected ImageIcon createIcon() {
@@ -116,36 +119,39 @@ final class JavadocCompletionItem implements CompletionItem {
     }
     
     protected String getLeftHtmlText() {
-        if (leftHtmlText == null) {
-            leftHtmlText = txt;
-        }
-        return leftHtmlText;
+        return leftHtmlText == null ? txt : leftHtmlText;
     }
     
     protected String getRightHtmlText() {
         return rightHtmlText;
     }
     
+    @Override
     public CompletionTask createDocumentationTask() {
         return null;
     }
 
+    @Override
     public CompletionTask createToolTipTask() {
         return null;
     }
 
+    @Override
     public boolean instantSubstitution(JTextComponent component) {
         return false;
     }
 
+    @Override
     public int getSortPriority() {
         return sortPriority;
     }
 
+    @Override
     public CharSequence getSortText() {
         return txt;
     }
 
+    @Override
     public CharSequence getInsertPrefix() {
         return txt;
     }
@@ -154,62 +160,6 @@ final class JavadocCompletionItem implements CompletionItem {
     public String toString() {
         return super.toString() + String.format("[txt:%1$s, substitutionOffset:%2$d]",
                 txt, substitutionOffset);
-    }
-
-    public static List<CompletionItem> addBlockTagItems(ElementKind kind,
-            String prefix, int startOffset) {
-        
-        List<TagEntry> tags = TagRegistery.getDefault().getTags(kind, false);
-        List<CompletionItem> items = new ArrayList<CompletionItem>(tags.size());
-        for (TagEntry tagEntry : tags) {
-            if (tagEntry.name.startsWith(prefix)) {
-                items.add(new JavadocCompletionItem(tagEntry.name, startOffset,
-                        null, null, JAVADOC_TAG_ICON, 500));
-            }
-        }
-        return items;
-    }
-
-    public static List<CompletionItem> addInlineTagItems(ElementKind kind,
-            String prefix, int startOffset) {
-        
-        List<TagEntry> tags = TagRegistery.getDefault().getTags(kind, true);
-        List<CompletionItem> items = new ArrayList<CompletionItem>(tags.size());
-        for (TagEntry tagEntry : tags) {
-            if (tagEntry.name.startsWith(prefix)) {
-                items.add(new JavadocCompletionItem(tagEntry.name, startOffset,
-                        null, null, JAVADOC_TAG_ICON, 500));
-            }
-        }
-        return items;
-    }
-    
-    public static CompletionItem createNameItem(String name, int startOffset) {
-        // escape type variable name
-        String html = name.charAt(0) == '<'
-                ? "&lt;" + name.substring(1, name.length() - 1) + "&gt;" // NOI18N
-                : name;
-        return new JavadocCompletionItem(name, startOffset,
-                PARAMETER_COLOR + BOLD + html + BOLD_END + COLOR_END,
-                null, JAVADOC_PARAM_ICON, 100);
-    }
-    
-    public static CompletionItem createExecutableItem(CompilationInfo info, ExecutableElement e,
-            ExecutableType et, int startOffset, boolean isInherited,
-            boolean isDeprecated) {
-        
-        CompletionItem delegate = JavaCompletionItem.createExecutableItem(
-                info, e, et, null, startOffset, null, isInherited, isDeprecated, false, false, false, -1, false, null);
-        return new JavadocExecutableItem(delegate, e, startOffset);
-    }
-    
-    public static CompletionItem createTypeItem(CompilationInfo info, TypeElement elem,
-            int startOffset, ReferencesCount referencesCount, boolean isDeprecated) {
-        
-        CompletionItem delegate = JavaCompletionItem.createTypeItem(
-                info, elem, (DeclaredType) elem.asType(), startOffset,
-                referencesCount, isDeprecated, false, false, false, false, false, null);
-        return new JavadocTypeItem(delegate, startOffset);
     }
     
     private static void complete(final JTextComponent comp, final String what, final int where) {
@@ -241,6 +191,59 @@ final class JavadocCompletionItem implements CompletionItem {
         }
     }
     
+    public static final class Factory implements JavadocCompletionTask.ItemFactory<CompletionItem> {
+
+        @Override
+        public CompletionItem createTagItem(String name, int startOffset) {
+            return new JavadocCompletionItem(name, startOffset, null, null, JAVADOC_TAG_ICON, 500);
+        }
+
+        @Override
+        public CompletionItem createNameItem(String name, int startOffset) {
+            // escape type variable name
+            String html = name.charAt(0) == '<'
+                    ? "&lt;" + name.substring(1, name.length() - 1) + "&gt;" // NOI18N
+                    : name;
+            return new JavadocCompletionItem(name, startOffset,
+                    PARAMETER_COLOR + BOLD + html + BOLD_END + COLOR_END,
+                    null, JAVADOC_PARAM_ICON, 100);
+        }
+
+        @Override
+        public CompletionItem createJavadocExecutableItem(CompilationInfo info, ExecutableElement e, ExecutableType et, int startOffset, boolean isInherited, boolean isDeprecated) {
+            CompletionItem delegate = JavaCompletionItem.createExecutableItem(
+                    info, e, et, null, startOffset, null, isInherited, isDeprecated, false, false, false, -1, false, null);
+            return new JavadocExecutableItem(delegate, e, startOffset);
+        }
+
+        @Override
+        public CompletionItem createJavadocTypeItem(CompilationInfo info, TypeElement elem, int startOffset, boolean isDeprecated) {
+            CompletionItem delegate = JavaCompletionItem.createTypeItem(
+                    info, elem, (DeclaredType) elem.asType(), startOffset, null, isDeprecated, false, false, false, false, false, null);
+            return new JavadocTypeItem(delegate, startOffset);
+        }
+
+        @Override
+        public CompletionItem createJavaTypeItem(CompilationInfo info, TypeElement elem, DeclaredType type, int startOffset, ReferencesCount referencesCount, boolean isDeprecated, boolean smartType) {
+            return JavaCompletionItem.createTypeItem(info, elem, type, startOffset, referencesCount, isDeprecated, false, false, false, smartType, false, null);
+        }
+
+        @Override
+        public CompletionItem createLazyTypeItem(ElementHandle<TypeElement> handle, EnumSet<ElementKind> kinds, int startOffset, ReferencesCount referencesCount, Source source) {
+            return LazyJavaCompletionItem.createTypeItem(handle, kinds, startOffset, referencesCount, source, false, false, false, null);
+        }
+
+        @Override
+        public CompletionItem createJavaVariableItem(CompilationInfo info, VariableElement elem, TypeMirror type, int startOffset, boolean isInherited, boolean isDeprecated) {
+            return JavaCompletionItem.createVariableItem(info, elem, type, null, startOffset, null, isInherited, isDeprecated, false, -1, null);
+        }
+
+        @Override
+        public CompletionItem createPackageItem(String pkgFQN, int startOffset) {
+            return JavaCompletionItem.createPackageItem(pkgFQN, startOffset, false);
+        }
+    }
+
     /**
      * Reuses UI of {@code JavaCompletionItem.createExecutableItem} and
      * implements own text substitution.
@@ -298,6 +301,7 @@ final class JavadocCompletionItem implements CompletionItem {
             return ptype;
         }
 
+        @Override
         public void defaultAction(JTextComponent component) {
             if (component != null) {
                 Completion.get().hideDocumentation();
@@ -319,29 +323,32 @@ final class JavadocCompletionItem implements CompletionItem {
             }
         }
 
+        @Override
         public void processKeyEvent(KeyEvent evt) {
             // nothing special
         }
 
+        @Override
         public int getPreferredWidth(Graphics g, Font defaultFont) {
             return delegate.getPreferredWidth(g, defaultFont);
         }
 
-        public void render(Graphics g, Font defaultFont, Color defaultColor,
-                Color backgroundColor, int width, int height, boolean selected) {
-            
-            delegate.render(g, defaultFont, defaultColor, backgroundColor,
-                    width, height, selected);
+        @Override
+        public void render(Graphics g, Font defaultFont, Color defaultColor, Color backgroundColor, int width, int height, boolean selected) {
+            delegate.render(g, defaultFont, defaultColor, backgroundColor, width, height, selected);
         }
 
+        @Override
         public CompletionTask createDocumentationTask() {
             return delegate.createDocumentationTask();
         }
 
+        @Override
         public CompletionTask createToolTipTask() {
             return delegate.createToolTipTask();
         }
 
+        @Override
         public boolean instantSubstitution(JTextComponent component) {
             if (component != null) {
                 try {
@@ -359,14 +366,17 @@ final class JavadocCompletionItem implements CompletionItem {
             return true;
         }
 
+        @Override
         public int getSortPriority() {
             return delegate.getSortPriority();
         }
 
+        @Override
         public CharSequence getSortText() {
             return delegate.getSortText();
         }
 
+        @Override
         public CharSequence getInsertPrefix() {
             return delegate.getInsertPrefix();
         }
@@ -389,10 +399,12 @@ final class JavadocCompletionItem implements CompletionItem {
             this.delegate = item;
         }
         
+        @Override
         public void defaultAction(JTextComponent component) {
             delegate.defaultAction(component);
         }
 
+        @Override
         public void processKeyEvent(KeyEvent evt) {
             if (evt.getID() == KeyEvent.KEY_TYPED) {
                 if (Utilities.getJavadocCompletionSelectors().indexOf(evt.getKeyChar()) >= 0) {
@@ -406,37 +418,43 @@ final class JavadocCompletionItem implements CompletionItem {
             }
         }
 
+        @Override
         public int getPreferredWidth(Graphics g, Font defaultFont) {
             return delegate.getPreferredWidth(g, defaultFont);
         }
 
+        @Override
         public void render(Graphics g, Font defaultFont, Color defaultColor,
                 Color backgroundColor, int width, int height, boolean selected) {
-            
-            delegate.render(g, defaultFont, defaultColor, backgroundColor,
-                    width, height, selected);
+            delegate.render(g, defaultFont, defaultColor, backgroundColor, width, height, selected);
         }
 
+        @Override
         public CompletionTask createDocumentationTask() {
             return delegate.createDocumentationTask();
         }
 
+        @Override
         public CompletionTask createToolTipTask() {
             return delegate.createToolTipTask();
         }
 
+        @Override
         public boolean instantSubstitution(JTextComponent component) {
             return delegate.instantSubstitution(component);
         }
 
+        @Override
         public int getSortPriority() {
             return delegate.getSortPriority();
         }
 
+        @Override
         public CharSequence getSortText() {
             return delegate.getSortText();
         }
 
+        @Override
         public CharSequence getInsertPrefix() {
             return delegate.getInsertPrefix();
         }

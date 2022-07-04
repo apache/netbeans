@@ -157,6 +157,7 @@ websvccommon/websvc.saas.api/src/org/netbeans/modules/websvc/saas/oauth/*.templa
 **/*.oql
 **/*.ser
 harness/jellytools.platform/src/org/netbeans/jellytools/version_info
+**/*.npss
 
 ######  generated test files 
 **/*.pass
@@ -221,3 +222,7 @@ ide/xml.text/src/org/netbeans/modules/xml/text/resources/DTDExample
 ide/xml.text/src/org/netbeans/modules/xml/text/resources/XMLExample
 ide/xml.text/src/org/netbeans/modules/xml/text/resources/XMLExampleIndent
 ide/properties.syntax/src/org/netbeans/modules/properties/syntax/PropertiesExample
+
+
+###### GitHub Issue tooling
+.github/**

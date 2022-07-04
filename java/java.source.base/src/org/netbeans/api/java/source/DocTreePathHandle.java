@@ -175,7 +175,8 @@ public final class DocTreePathHandle {
             assert index != (-1);
             return new DocTreePathHandle(new CountingDelegate(treePathHandle, index, docTreePath.getLeaf().getKind()));
         }
-        Position pos = createPositionRef(treePathHandle.getFileObject(), position.getPreferredPosition(), Bias.Forward);
+        int preferredPosition = position.getPreferredPosition();
+        Position pos = preferredPosition >= 0 ? createPositionRef(treePathHandle.getFileObject(), preferredPosition, Bias.Forward) : null;
         return new DocTreePathHandle(new DocTreeDelegate(pos, new DocTreeDelegate.KindPath(docTreePath), treePathHandle));
     }
 
@@ -284,8 +285,8 @@ public final class DocTreePathHandle {
                 // no doc comment for the TreePath
                 return null;
             }
-            int pos = position.getOffset();
-            tp = resolvePathForPos(javac, treePath, doc, pos + 1);
+            int pos = position != null ? position.getOffset() : -1;
+            tp = pos < 0 ? new DocTreePath(treePath, doc) : resolvePathForPos(javac, treePath, doc, pos + 1);
             if (tp != null) {
                 return tp;
             }
@@ -308,7 +309,9 @@ public final class DocTreePathHandle {
 
         public boolean equalsHandle(Delegate obj) {
             DocTreeDelegate other = (DocTreeDelegate) obj;
-            if (this.position.getOffset() != this.position.getOffset()) {
+            int otherOffset = other.position != null ? other.position.getOffset() : -1;
+            int thisOffset = this.position != null ? this.position.getOffset() : -1;
+            if (thisOffset != otherOffset) {
                 return false;
             }
             return other.getTreePathHandle().equals(treePathHandle);

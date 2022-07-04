@@ -32,6 +32,7 @@ import java.net.URI;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
@@ -43,6 +44,7 @@ import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.ArrayType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
+import javax.swing.text.BadLocationException;
 import javax.swing.text.StyledDocument;
 import org.eclipse.lsp4j.Position;
 import org.eclipse.lsp4j.Range;
@@ -272,6 +274,17 @@ public class Utils {
         }
     }
 
+    public static Position createPosition(LineDocument doc, int offset) {
+        try {
+            int line = LineDocumentUtils.getLineIndex(doc, offset);
+            int column = offset - LineDocumentUtils.getLineStart(doc, offset);
+
+            return new Position(line, column);
+        } catch (BadLocationException ex) {
+            throw new IllegalStateException(ex);
+        }
+    }
+
     public static int getOffset(LineDocument doc, Position pos) {
         return LineDocumentUtils.getLineStartFromIndex(doc, pos.getLine()) + pos.getCharacter();
     }
@@ -335,6 +348,47 @@ public class Utils {
         String encoded = sw.toString();
         // We have ["value"], remove the array and quotes
         return encoded.substring(2, encoded.length() - 2);
+    }
+
+    /**
+     * Simple conversion from HTML to plaintext. Removes all html tags incl. attributes,
+     * replaces BR, P and HR tags with newlines.
+     * @param s html text
+     * @return plaintext
+     */
+    public static String html2plain(String s) {
+        boolean inTag = false;
+        int tagStart = -1;
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < s.length(); i++) {
+            char ch = s.charAt(i);
+            if (inTag) {
+                boolean alpha = Character.isAlphabetic(ch);
+                if (tagStart > 0 && !alpha) {
+                    String t = s.substring(tagStart, i).toLowerCase(Locale.ENGLISH);
+                    switch (t) {
+                        case "br": case "p": case "hr": // NOI1N
+                            sb.append("\n");
+                            break;
+                    }
+                    // prevent entering tagstart state again
+                    tagStart = -2;
+                }
+                if (ch == '>') { // NOI18N
+                    inTag = false;
+                } else if (tagStart == -1 && alpha) {
+                    tagStart = i;
+                }
+            } else {
+                if (ch == '<') { // NOI18N
+                    tagStart = -1;
+                    inTag = true;
+                    continue;
+                }
+                sb.append(ch);
+            }
+        }
+        return sb.toString();
     }
 
 }

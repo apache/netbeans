@@ -36,12 +36,14 @@ import org.netbeans.api.debugger.DebuggerEngine;
 import org.netbeans.api.debugger.DebuggerManager;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
+import org.netbeans.spi.debugger.jpda.BreakpointStratifier;
 import org.openide.filesystems.FileAttributeEvent;
 import org.openide.filesystems.FileChangeListener;
 import org.openide.filesystems.FileEvent;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileRenameEvent;
 import org.openide.filesystems.URLMapper;
+import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.util.WeakListeners;
 
@@ -111,6 +113,12 @@ public class LineBreakpoint extends JPDABreakpoint {
     ) {
         LineBreakpoint b = new LineBreakpointImpl (url);
         b.setLineNumber (lineNumber);
+        if (url != null && !url.isEmpty()) {
+            Collection<? extends BreakpointStratifier> stratifiers = Lookup.getDefault().lookupAll(BreakpointStratifier.class);
+            for (BreakpointStratifier stratifier : stratifiers) {
+                stratifier.stratify(b);
+            }
+        }
         return b;
     }
 

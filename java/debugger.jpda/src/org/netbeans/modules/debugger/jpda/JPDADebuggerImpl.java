@@ -615,7 +615,7 @@ public class JPDADebuggerImpl extends JPDADebugger {
     /**
      * Test whether we should stop here according to the smart-stepping rules.
      */
-    StopOrStep stopHere(JPDAThread t) {
+    StopOrStep stopHere(JPDAThread t, SmartSteppingFilter filter) {
         CallStackFrame topFrame = null;
         try {
             CallStackFrame[] topFrameArr = t.getCallStack(0, 1);
@@ -624,12 +624,11 @@ public class JPDADebuggerImpl extends JPDADebugger {
             }
         } catch (AbsentInformationException aiex) {}
         if (topFrame != null) {
-            return getCompoundSmartSteppingListener().stopAt
-                        (lookupProvider, topFrame, getSmartSteppingFilter());
+            return getCompoundSmartSteppingListener().stopAt(lookupProvider, topFrame, filter);
         } else {
-            return getCompoundSmartSteppingListener().stopHere
-                        (lookupProvider, t, getSmartSteppingFilter()) ?
-                    StopOrStep.stop() : StopOrStep.skip();
+            return getCompoundSmartSteppingListener().stopHere(lookupProvider, t, filter) ?
+                    StopOrStep.stop() :
+                    StopOrStep.skip();
         }
     }
 

@@ -67,8 +67,8 @@ import org.netbeans.modules.gradle.api.NbGradleProject.Quality;
 import static org.netbeans.modules.gradle.api.NbGradleProject.Quality.EVALUATED;
 import static org.netbeans.modules.gradle.api.NbGradleProject.Quality.FULL_ONLINE;
 import static org.netbeans.modules.gradle.api.NbGradleProject.Quality.SIMPLE;
-import org.netbeans.modules.gradle.api.NbProjectInfo;
-import org.netbeans.modules.gradle.api.NbProjectInfo.Report;
+import org.netbeans.modules.gradle.tooling.internal.NbProjectInfo;
+import org.netbeans.modules.gradle.tooling.internal.NbProjectInfo.Report;
 import org.netbeans.modules.gradle.api.execute.GradleCommandLine;
 import org.netbeans.modules.gradle.api.execute.RunUtils;
 import org.netbeans.modules.gradle.cache.ProjectInfoDiskCache;
@@ -353,7 +353,7 @@ public class LegacyProjectLoader extends AbstractProjectLoader {
      * LocationAwareException uses ScriptSource.getDisplayName() in its location; so the filename is prepended by 'build file', usually
      * capitalized. Who knows what other labels the resources gradle uses can have ? Add newly discovered ones to the regexp.
      */
-    private static final Pattern FILE_PATH_FROM_LOCATION = Pattern.compile("build file '(.*)'(?: line:.*)$", Pattern.CASE_INSENSITIVE);
+    private static final Pattern FILE_PATH_FROM_LOCATION = Pattern.compile("(?:build|settings) file '(.*)'(?: line:.*)$", Pattern.CASE_INSENSITIVE);
 
     /**
      * Converts exception hierarchy into chain of {@link GradleReports}. Each LocationAwareException's data

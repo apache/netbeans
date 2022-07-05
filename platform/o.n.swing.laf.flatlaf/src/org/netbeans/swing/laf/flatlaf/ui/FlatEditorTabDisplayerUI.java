@@ -48,6 +48,7 @@ public class FlatEditorTabDisplayerUI extends BasicScrollingTabDisplayerUI {
     private final Color background = UIManager.getColor("EditorTab.background"); // NOI18N
     private final Color activeBackground = Utils.getUIColor("EditorTab.activeBackground", background); // NOI18N
     private final Color contentBorderColor = UIManager.getColor("TabbedContainer.editor.contentBorderColor"); // NOI18N
+    private final boolean unscaledBorders = Utils.getUIBoolean("EditorTab.unscaledBorders", false); // NOI18N
     private final Insets tabInsets = UIScale.scale(UIManager.getInsets("EditorTab.tabInsets")); // NOI18N
 
     public FlatEditorTabDisplayerUI(TabDisplayer displayer) {
@@ -118,7 +119,7 @@ public class FlatEditorTabDisplayerUI extends BasicScrollingTabDisplayerUI {
         g.fillRect (0, 0, width, height);
 
         // paint bottom border
-        int contentBorderWidth = HiDPIUtils.deviceBorderWidth(scale, 1);
+        int contentBorderWidth = unscaledBorders ? 1 : HiDPIUtils.deviceBorderWidth(scale, 1);
         g.setColor(contentBorderColor);
         g.fillRect(0, height - contentBorderWidth, width, contentBorderWidth);
     }

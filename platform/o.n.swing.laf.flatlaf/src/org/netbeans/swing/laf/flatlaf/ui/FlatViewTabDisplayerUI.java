@@ -62,12 +62,14 @@ public class FlatViewTabDisplayerUI extends AbstractViewTabDisplayerUI {
             activeBackground,       // background of tabs and tabs area if view group is active;  optional; defaults to foreground
             selectedBackground,     // background of tab if tab is selected in active view group; optional; defaults to activeBackground
             hoverBackground,        // background of tab if mouse is over tab
+            selectedHoverBackground, // if defined, use this color instead of hoverBackground for selected tabs
             attentionBackground,    // background of tab if tab is in attension mode
 
             foreground,             // text color if view group is inactive;               optional; defaults to TabbedPane.foreground
             activeForeground,       // text color if view group is active;                 optional; defaults to foreground
             selectedForeground,     // text color if tab is selected in active view group; optional; defaults to activeForeground
             hoverForeground,        // text color if mouse is over tab;                    optional; defaults to foreground
+            selectedHoverForeground,  // if defined, use this color instead of hoverForeground for selected tabs
             attentionForeground,    // text color if tab is in attension mode;             optional; defaults to foreground
 
             underlineColor,         // underline color of selected active tabs
@@ -79,6 +81,9 @@ public class FlatViewTabDisplayerUI extends AbstractViewTabDisplayerUI {
     private static int underlineHeight;     // height of "underline" painted at bottom of tab to indicate selection
     private static boolean underlineAtTop;  // paint "underline" at top of tab
     private static boolean showTabSeparators; // paint tab separators
+
+    private static boolean showSelectedTabBorder; // Paint a border around the selected tab
+    private static boolean unscaledBorders; // Leave the thickness of borders unaffected by HiDPI scaling
 
     private Font font;
 
@@ -133,14 +138,15 @@ public class FlatViewTabDisplayerUI extends AbstractViewTabDisplayerUI {
             }
         }
 
-        // paint busy icon
+        final Icon busyIcon;
+        final int busyWidth;
         if (isTabBusy(index)) {
-            Icon busyIcon = BusyTabsSupport.getDefault().getBusyIcon(isSelected(index));
-            availTxtWidth -= busyIcon.getIconWidth() - UIScale.scale(3) - txtLeftPad;
-            busyIcon.paintIcon(displayer, g, x + txtLeftPad, y + (height - busyIcon.getIconHeight()) / 2);
-            int busyWidth = busyIcon.getIconWidth() + UIScale.scale(3);
-            x += busyWidth;
-            width -= busyWidth;
+            busyIcon = BusyTabsSupport.getDefault().getBusyIcon(isSelected(index));
+            busyWidth = busyIcon.getIconWidth() + UIScale.scale(3);
+            availTxtWidth -= busyWidth;
+        } else {
+            busyIcon = null;
+            busyWidth = 0;
         }
 
         // make sure that as much text as possible is shown (and avoid empty tabs)
@@ -150,7 +156,7 @@ public class FlatViewTabDisplayerUI extends AbstractViewTabDisplayerUI {
                 : fm.stringWidth(text);
         if (realTxtWidth > availTxtWidth) {
             // add left and right insets to available width
-            int left = Math.min(txtLeftPad - 1, realTxtWidth - availTxtWidth);
+            int left = Math.min(txtLeftPad - 2, realTxtWidth - availTxtWidth);
             availTxtWidth += left + txtRightPad;
             txtLeftPad -= left;
 
@@ -170,9 +176,15 @@ public class FlatViewTabDisplayerUI extends AbstractViewTabDisplayerUI {
             }
         }
 
+        if (busyIcon != null) {
+            busyIcon.paintIcon(displayer, g, x + txtLeftPad, y + (height - busyIcon.getIconHeight()) / 2);
+            x += busyWidth;
+            width -= busyWidth;
+        }
+
         // text color
         Color c = colorForState(index, foreground, activeForeground, selectedForeground,
-                hoverForeground, attentionForeground);
+                selectedHoverForeground, hoverForeground, attentionForeground);
 
         // paint text
         int txtX = x + txtLeftPad;
@@ -192,7 +204,8 @@ public class FlatViewTabDisplayerUI extends AbstractViewTabDisplayerUI {
 
     @Override
     protected void paintTabBorder(Graphics g, int index, int x, int y, int width, int height) {
-        // not using borders
+        /* In the showSelectedTabBorder case, we draw borders as part of paintTabBackground, for
+        consistency with FlatEditorTabCellRenderer. */
     }
 
     @Override
@@ -206,41 +219,60 @@ public class FlatViewTabDisplayerUI extends AbstractViewTabDisplayerUI {
                 });
     }
 
+    private boolean shouldShowSeparator(int index) {
+        if (!showTabSeparators) {
+            return false;
+        }
+        /* Don't show separators around the selected tab, if there's already a border or color
+        contrast at its sides. */
+        boolean selectedTabHasContrastWithAdjacentTabs =
+                showSelectedTabBorder || !selectedBackground.equals(activeBackground);
+        boolean separatorIsAdjacentToSelectedTab = isSelected(index) || isSelected(index + 1);
+        if (selectedTabHasContrastWithAdjacentTabs && separatorIsAdjacentToSelectedTab) {
+            return false;
+        }
+        // Show separators _between_ tabs (not after the last one), like for editor tabs.
+        return index >= 0 && index < getDataModel().size() - 1;
+    }
+
     private void paintTabBackgroundAtScale1x(Graphics2D g, int index, int width, int height, double scale) {
-        // do not round tab separator width to get nice small lines at 125%, 150% and 175%
-        int tabSeparatorWidth = (showTabSeparators && index >= 0) ? (int) (1 * scale) : 0;
+        Color bg = colorForState(index, background, activeBackground, selectedBackground,
+                selectedHoverBackground, hoverBackground, attentionBackground);
+
+        boolean showSeparator = shouldShowSeparator(index);
+
+        int contentBorderWidth = unscaledBorders ? 1 : HiDPIUtils.deviceBorderWidth(scale, 1);
+        int tabSeparatorWidth = showSeparator ? contentBorderWidth : 0;
 
         // paint background
-        Color bg = colorForState(index, background, activeBackground, selectedBackground,
-                hoverBackground, attentionBackground);
         g.setColor(bg);
         g.fillRect(0, 0, width - (bg != background ? tabSeparatorWidth : 0), height);
 
-        if (isSelected(index) && underlineHeight > 0) {
-            // paint underline if tab is selected
-            int underlineHeight = (int) Math.round(this.underlineHeight * scale);
-            g.setColor(isActive() ? underlineColor : inactiveUnderlineColor);
-            if (underlineAtTop) {
+        if (isSelected(index)) {
+            if (showSelectedTabBorder) {
                 g.setColor(contentBorderColor);
-                int borderWidth = (int) (1 * scale);
-                g.fillRect(0, 0, borderWidth, height);
-                g.fillRect(width - tabSeparatorWidth - borderWidth, 0, borderWidth, height);
+                g.fillRect(0, 0, width - tabSeparatorWidth, contentBorderWidth); // Top
+                g.fillRect(0, 0, contentBorderWidth, height); // Left
+                g.fillRect(width - tabSeparatorWidth - contentBorderWidth, 0, contentBorderWidth, height); // Right
+            }
+
+            if (underlineHeight > 0) {
+                // paint underline if tab is selected
+                int underlineHeight = (int) Math.round(this.underlineHeight * scale);
                 g.setColor(isActive() ? underlineColor : inactiveUnderlineColor);
-                g.fillRect(0, 0, width - tabSeparatorWidth, underlineHeight);
-            } else {
-                g.setColor(isActive() ? underlineColor : inactiveUnderlineColor);
-                g.fillRect(0, height - underlineHeight, width - tabSeparatorWidth, underlineHeight);
+                if (underlineAtTop) {
+                    g.fillRect(0, 0, width - tabSeparatorWidth, underlineHeight);
+                } else {
+                    g.fillRect(0, height - underlineHeight, width - tabSeparatorWidth, underlineHeight);
+                }
             }
         } else {
             // paint bottom border
-            int contentBorderWidth = HiDPIUtils.deviceBorderWidth(scale, 1);
             g.setColor(contentBorderColor);
             g.fillRect(0, height - contentBorderWidth, width, contentBorderWidth);
         }
 
-        if (showTabSeparators && index >= 0 &&
-                ((!isSelected(index) && index < getDataModel().size() - 1 && !isSelected(index + 1))
-                || selectedBackground.equals(activeBackground))) {
+        if (showSeparator) {
             int offset = (int) (4 * scale);
             g.setColor(tabSeparatorColor);
             g.fillRect(width - tabSeparatorWidth, offset, tabSeparatorWidth, height - (offset * 2) - 1);
@@ -256,9 +288,11 @@ public class FlatViewTabDisplayerUI extends AbstractViewTabDisplayerUI {
         super.paintDisplayerBackground(g, c);
     }
 
-    private Color colorForState(int index, Color normal, Color active, Color selected, Color hover, Color attention) {
+    private Color colorForState(int index, Color normal, Color active, Color selected,
+            Color selectedHover, Color unselectedHover, Color attention)
+    {
         return isAttention(index) ? attention
-                : isMouseOver(index) ? hover
+                : isMouseOver(index) ? (isSelected(index) ? selectedHover : unselectedHover)
                 : isSelected(index) ? selected
                 : isActive() ? active
                 : normal;
@@ -294,12 +328,14 @@ public class FlatViewTabDisplayerUI extends AbstractViewTabDisplayerUI {
             activeBackground = Utils.getUIColor("ViewTab.activeBackground", background); // NOI18N
             selectedBackground = Utils.getUIColor("ViewTab.selectedBackground", activeBackground); // NOI18N
             hoverBackground = UIManager.getColor("ViewTab.hoverBackground"); // NOI18N
+            selectedHoverBackground = Utils.getUIColor("ViewTab.selectedHoverBackground", hoverBackground); // NOI18N
             attentionBackground = UIManager.getColor("ViewTab.attentionBackground"); // NOI18N
 
             foreground = Utils.getUIColor("ViewTab.foreground", "TabbedPane.foreground"); // NOI18N
             activeForeground = Utils.getUIColor("ViewTab.activeForeground", foreground); // NOI18N
             selectedForeground = Utils.getUIColor("ViewTab.selectedForeground", activeForeground); // NOI18N
             hoverForeground = Utils.getUIColor("ViewTab.hoverForeground", foreground); // NOI18N
+            selectedHoverForeground = Utils.getUIColor("ViewTab.selectedHoverForeground", hoverForeground); // NOI18N
             attentionForeground = Utils.getUIColor("ViewTab.attentionForeground", foreground); // NOI18N
 
             underlineColor = UIManager.getColor("ViewTab.underlineColor"); // NOI18N
@@ -315,6 +351,9 @@ public class FlatViewTabDisplayerUI extends AbstractViewTabDisplayerUI {
             // scale on Java 8 and Linux
             tabInsets = UIScale.scale(tabInsets);
             underlineHeight = UIScale.scale(underlineHeight);
+
+            showSelectedTabBorder = Utils.getUIBoolean("ViewTab.showSelectedTabBorder", underlineAtTop); // NOI18N
+            unscaledBorders = Utils.getUIBoolean("ViewTab.unscaledBorders", false); // NOI18N
 
             colorsReady = true;
         }

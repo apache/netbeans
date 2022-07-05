@@ -638,6 +638,17 @@ public final class OutputSettingsPanel extends javax.swing.JPanel {
         cmbLinkStyle.repaint();
     }
 
+    @Override
+    public void updateUI() {
+        super.updateUI();
+
+        // update when look and feel changed
+        if (outputOptions != null) {
+            outputOptions.assign(OutputOptions.getDefault());
+            updateControlsByModel();
+        }
+    }
+
     private static class OutputListenerImpl implements OutputListener {
 
         public OutputListenerImpl() {

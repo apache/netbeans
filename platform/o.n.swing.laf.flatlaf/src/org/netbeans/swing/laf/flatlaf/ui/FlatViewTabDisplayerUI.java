@@ -52,12 +52,7 @@ public class FlatViewTabDisplayerUI extends AbstractViewTabDisplayerUI {
     // Scaling ICON_X_PAD would truncate tab title.
     private static final int ICON_X_PAD = 4;
 
-    /**
-     * True when colors were already initialized, false otherwise
-     */
-    private static boolean colorsReady = false;
-
-    private static Color
+    private Color
             background,             // background of tabs and tabs area if view group is inactive
             activeBackground,       // background of tabs and tabs area if view group is active;  optional; defaults to foreground
             selectedBackground,     // background of tab if tab is selected in active view group; optional; defaults to activeBackground
@@ -75,10 +70,10 @@ public class FlatViewTabDisplayerUI extends AbstractViewTabDisplayerUI {
             tabSeparatorColor,      // tab separator color
             contentBorderColor;     // bottom border color
 
-    private static Insets tabInsets;
-    private static int underlineHeight;     // height of "underline" painted at bottom of tab to indicate selection
-    private static boolean underlineAtTop;  // paint "underline" at top of tab
-    private static boolean showTabSeparators; // paint tab separators
+    private Insets tabInsets;
+    private int underlineHeight;     // height of "underline" painted at bottom of tab to indicate selection
+    private boolean underlineAtTop;  // paint "underline" at top of tab
+    private boolean showTabSeparators; // paint tab separators
 
     private Font font;
 
@@ -279,36 +274,32 @@ public class FlatViewTabDisplayerUI extends AbstractViewTabDisplayerUI {
     /**
      * Initialization of colors
      */
-    private static void initColors() {
-        if (!colorsReady) {
-            background = UIManager.getColor("ViewTab.background"); // NOI18N
-            activeBackground = Utils.getUIColor("ViewTab.activeBackground", background); // NOI18N
-            selectedBackground = Utils.getUIColor("ViewTab.selectedBackground", activeBackground); // NOI18N
-            hoverBackground = UIManager.getColor("ViewTab.hoverBackground"); // NOI18N
-            attentionBackground = UIManager.getColor("ViewTab.attentionBackground"); // NOI18N
+    private void initColors() {
+        background = UIManager.getColor("ViewTab.background"); // NOI18N
+        activeBackground = Utils.getUIColor("ViewTab.activeBackground", background); // NOI18N
+        selectedBackground = Utils.getUIColor("ViewTab.selectedBackground", activeBackground); // NOI18N
+        hoverBackground = UIManager.getColor("ViewTab.hoverBackground"); // NOI18N
+        attentionBackground = UIManager.getColor("ViewTab.attentionBackground"); // NOI18N
 
-            foreground = Utils.getUIColor("ViewTab.foreground", "TabbedPane.foreground"); // NOI18N
-            activeForeground = Utils.getUIColor("ViewTab.activeForeground", foreground); // NOI18N
-            selectedForeground = Utils.getUIColor("ViewTab.selectedForeground", activeForeground); // NOI18N
-            hoverForeground = Utils.getUIColor("ViewTab.hoverForeground", foreground); // NOI18N
-            attentionForeground = Utils.getUIColor("ViewTab.attentionForeground", foreground); // NOI18N
+        foreground = Utils.getUIColor("ViewTab.foreground", "TabbedPane.foreground"); // NOI18N
+        activeForeground = Utils.getUIColor("ViewTab.activeForeground", foreground); // NOI18N
+        selectedForeground = Utils.getUIColor("ViewTab.selectedForeground", activeForeground); // NOI18N
+        hoverForeground = Utils.getUIColor("ViewTab.hoverForeground", foreground); // NOI18N
+        attentionForeground = Utils.getUIColor("ViewTab.attentionForeground", foreground); // NOI18N
 
-            underlineColor = UIManager.getColor("ViewTab.underlineColor"); // NOI18N
-            inactiveUnderlineColor = UIManager.getColor("ViewTab.inactiveUnderlineColor"); // NOI18N
-            tabSeparatorColor = UIManager.getColor("ViewTab.tabSeparatorColor"); // NOI18N
-            contentBorderColor = UIManager.getColor("TabbedContainer.view.contentBorderColor"); // NOI18N
+        underlineColor = UIManager.getColor("ViewTab.underlineColor"); // NOI18N
+        inactiveUnderlineColor = UIManager.getColor("ViewTab.inactiveUnderlineColor"); // NOI18N
+        tabSeparatorColor = UIManager.getColor("ViewTab.tabSeparatorColor"); // NOI18N
+        contentBorderColor = UIManager.getColor("TabbedContainer.view.contentBorderColor"); // NOI18N
 
-            tabInsets = UIManager.getInsets("ViewTab.tabInsets"); // NOI18N
-            underlineHeight = UIManager.getInt("ViewTab.underlineHeight"); // NOI18N
-            underlineAtTop = UIManager.getBoolean("ViewTab.underlineAtTop"); // NOI18N
-            showTabSeparators = UIManager.getBoolean("ViewTab.showTabSeparators"); // NOI18N
+        tabInsets = UIManager.getInsets("ViewTab.tabInsets"); // NOI18N
+        underlineHeight = UIManager.getInt("ViewTab.underlineHeight"); // NOI18N
+        underlineAtTop = UIManager.getBoolean("ViewTab.underlineAtTop"); // NOI18N
+        showTabSeparators = UIManager.getBoolean("ViewTab.showTabSeparators"); // NOI18N
 
-            // scale on Java 8 and Linux
-            tabInsets = UIScale.scale(tabInsets);
-            underlineHeight = UIScale.scale(underlineHeight);
-
-            colorsReady = true;
-        }
+        // scale on Java 8 and Linux
+        tabInsets = UIScale.scale(tabInsets);
+        underlineHeight = UIScale.scale(underlineHeight);
     }
 
     @Override

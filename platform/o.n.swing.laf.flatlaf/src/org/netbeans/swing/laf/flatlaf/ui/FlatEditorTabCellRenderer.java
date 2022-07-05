@@ -44,34 +44,21 @@ public class FlatEditorTabCellRenderer extends AbstractTabCellRenderer {
 
     private static final int CLOSE_ICON_RIGHT_PAD = 2;
 
-    private static final Color background = UIManager.getColor("EditorTab.background"); // NOI18N
-    private static final Color activeBackground = Utils.getUIColor("EditorTab.activeBackground", background); // NOI18N
-    private static final Color selectedBackground = Utils.getUIColor("EditorTab.selectedBackground", activeBackground); // NOI18N
-    private static final Color hoverBackground = UIManager.getColor("EditorTab.hoverBackground"); // NOI18N
-    private static final Color attentionBackground = UIManager.getColor("EditorTab.attentionBackground"); // NOI18N
-
-    private static final Color foreground = Utils.getUIColor( "EditorTab.foreground", "TabbedPane.foreground" ); // NOI18N
-    private static final Color activeForeground = Utils.getUIColor( "EditorTab.activeForeground", foreground ); // NOI18N
-    private static final Color selectedForeground = Utils.getUIColor( "EditorTab.selectedForeground", activeForeground ); // NOI18N
-    private static final Color hoverForeground = Utils.getUIColor( "EditorTab.hoverForeground", foreground ); // NOI18N
-    private static final Color attentionForeground = Utils.getUIColor( "EditorTab.attentionForeground", foreground ); // NOI18N
-
-    private static final Color underlineColor = UIManager.getColor("EditorTab.underlineColor"); // NOI18N
-    private static final Color inactiveUnderlineColor = UIManager.getColor("EditorTab.inactiveUnderlineColor"); // NOI18N
-    private static final Color tabSeparatorColor = UIManager.getColor("EditorTab.tabSeparatorColor"); // NOI18N
-    private static final Color contentBorderColor = UIManager.getColor("TabbedContainer.editor.contentBorderColor"); // NOI18N
-
-    private static final Insets tabInsets = UIScale.scale(UIManager.getInsets("EditorTab.tabInsets")); // NOI18N
-    private static final int underlineHeight = UIScale.scale(UIManager.getInt("EditorTab.underlineHeight")); // NOI18N
-    private static final boolean underlineAtTop = UIManager.getBoolean("EditorTab.underlineAtTop"); // NOI18N
-    private static boolean showTabSeparators = UIManager.getBoolean("EditorTab.showTabSeparators"); // NOI18N
-
-    private static final FlatTabPainter painter = new FlatTabPainter();
+    private final Color foreground = Utils.getUIColor( "EditorTab.foreground", "TabbedPane.foreground" ); // NOI18N
+    private final Color activeForeground = Utils.getUIColor( "EditorTab.activeForeground", foreground ); // NOI18N
+    private final Color selectedForeground = Utils.getUIColor( "EditorTab.selectedForeground", activeForeground ); // NOI18N
+    private final Color hoverForeground = Utils.getUIColor( "EditorTab.hoverForeground", foreground ); // NOI18N
+    private final Color attentionForeground = Utils.getUIColor( "EditorTab.attentionForeground", foreground ); // NOI18N
 
     boolean nextTabSelected;
 
     public FlatEditorTabCellRenderer() {
-        super(painter, new Dimension(tabInsets.left + tabInsets.right, tabInsets.top + tabInsets.bottom));
+        super(new FlatTabPainter(), defaultPadding());
+    }
+
+    private static Dimension defaultPadding() {
+        Insets tabInsets = UIScale.scale(UIManager.getInsets("EditorTab.tabInsets")); // NOI18N
+        return new Dimension(tabInsets.left + tabInsets.right, tabInsets.top + tabInsets.bottom);
     }
 
     @Override
@@ -130,6 +117,22 @@ public class FlatEditorTabCellRenderer extends AbstractTabCellRenderer {
     }
 
     private static class FlatTabPainter implements TabPainter {
+
+        private final Color background = UIManager.getColor("EditorTab.background"); // NOI18N
+        private final Color activeBackground = Utils.getUIColor("EditorTab.activeBackground", background); // NOI18N
+        private final Color selectedBackground = Utils.getUIColor("EditorTab.selectedBackground", activeBackground); // NOI18N
+        private final Color hoverBackground = UIManager.getColor("EditorTab.hoverBackground"); // NOI18N
+        private final Color attentionBackground = UIManager.getColor("EditorTab.attentionBackground"); // NOI18N
+
+        private final Color underlineColor = UIManager.getColor("EditorTab.underlineColor"); // NOI18N
+        private final Color inactiveUnderlineColor = UIManager.getColor("EditorTab.inactiveUnderlineColor"); // NOI18N
+        private final Color tabSeparatorColor = UIManager.getColor("EditorTab.tabSeparatorColor"); // NOI18N
+        private final Color contentBorderColor = UIManager.getColor("TabbedContainer.editor.contentBorderColor"); // NOI18N
+
+        private final Insets tabInsets = UIScale.scale(UIManager.getInsets("EditorTab.tabInsets")); // NOI18N
+        private final int underlineHeight = UIScale.scale(UIManager.getInt("EditorTab.underlineHeight")); // NOI18N
+        private final boolean underlineAtTop = UIManager.getBoolean("EditorTab.underlineAtTop"); // NOI18N
+        private boolean showTabSeparators = UIManager.getBoolean("EditorTab.showTabSeparators"); // NOI18N
 
         @Override
         public Insets getBorderInsets(Component c) {
@@ -218,7 +221,7 @@ public class FlatEditorTabCellRenderer extends AbstractTabCellRenderer {
 
             if (selected && underlineHeight > 0) {
                 // paint underline if tab is selected
-                int underlineHeight = (int) Math.round(FlatEditorTabCellRenderer.underlineHeight * scale);
+                int underlineHeight = (int) Math.round(this.underlineHeight * scale);
                 g.setColor(ren.isActive() ? underlineColor : inactiveUnderlineColor);
                 if (underlineAtTop)
                     g.fillRect(0, 0, width - tabSeparatorWidth, underlineHeight);

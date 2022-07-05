@@ -63,6 +63,11 @@ class SearchResultRender extends JLabel implements ListCellRenderer {
     public SearchResultRender (QuickSearchPopup popup) {
         super();
         this.popup = popup;
+    }
+
+    @Override
+    public void updateUI() {
+        super.updateUI();
         configRenderer();
     }
 
@@ -125,6 +130,8 @@ class SearchResultRender extends JLabel implements ListCellRenderer {
     }
 
     private boolean isCut (String text, int realWidth) {
+        if (realWidth == 0)
+            return false; // avoid that "cut" label is temporary shown
         double width = HtmlRenderer.renderHTML(text, resultLabel.getGraphics(), 0, 10, Integer.MAX_VALUE, 20, resultLabel.getFont(), Color.BLACK, HtmlRenderer.STYLE_CLIP, false);
         return ((int)width) > (realWidth-4);
     }

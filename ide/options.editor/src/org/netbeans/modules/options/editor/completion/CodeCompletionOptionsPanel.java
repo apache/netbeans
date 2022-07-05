@@ -28,13 +28,16 @@ import java.util.Collections;
 import java.util.Comparator;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListCellRenderer;
+import javax.swing.JComponent;
 import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 import org.netbeans.api.options.OptionsDisplayer;
 import org.netbeans.modules.editor.settings.storage.api.EditorSettings;
 import org.netbeans.modules.options.editor.spi.PreferencesCustomizer;
 import org.netbeans.spi.options.OptionsPanelController;
 import org.openide.util.WeakListeners;
+import org.openide.util.WeakSet;
 
 /**
  * @author Dusan Balek
@@ -45,6 +48,7 @@ public class CodeCompletionOptionsPanel extends JPanel implements PropertyChange
     private CodeCompletionOptionsSelector selector;
     private PropertyChangeListener weakListener;
     private Object lastSelectedItem = null;
+    private final WeakSet<JComponent> customizerComponents = new WeakSet<>();
     
     /** 
      * Creates new form CodeCompletionOptionsPanel.
@@ -66,10 +70,25 @@ public class CodeCompletionOptionsPanel extends JPanel implements PropertyChange
         });
 
     }
+
+    @Override
+    public void updateUI() {
+        super.updateUI();
+
+        // Update customizer components that are not shown when look and feel changed.
+        if (customizerComponents != null) {
+            for (JComponent c : customizerComponents) {
+                if (!c.isDisplayable()) {
+                    SwingUtilities.updateComponentTreeUI(c);
+                }
+            }
+        }
+    }
     
     public void setSelector(CodeCompletionOptionsSelector selector) {
         if (this.selector != null) {
             this.selector.removePropertyChangeListener(weakListener);
+            customizerComponents.clear();
         }
 
         this.selector = selector;
@@ -105,8 +124,11 @@ public class CodeCompletionOptionsPanel extends JPanel implements PropertyChange
         panel.setVisible(false);
         panel.removeAll();
         PreferencesCustomizer c = selector.getSelectedCustomizer();
-        if (c != null)
-            panel.add(c.getComponent(), BorderLayout.CENTER);
+        if (c != null) {
+            JComponent comp = c.getComponent();
+            panel.add(comp, BorderLayout.CENTER);
+            customizerComponents.add(comp);
+        }
         panel.setVisible(true);
         cbLanguage.setSelectedItem(evt.getNewValue());
     }

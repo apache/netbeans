@@ -263,6 +263,10 @@ public abstract class AbstractViewTabDisplayerUI extends TabDisplayerUI {
             displayer.remove(controlButtons);
             controlButtons = null;
         }
+        if (btnMinimizeMode != null) {
+            displayer.remove(btnMinimizeMode);
+            btnMinimizeMode = null;
+        }
         layoutModel = null;
         selectionModel = null;
         dataModel = null;

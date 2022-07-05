@@ -33,6 +33,7 @@ import java.util.Map;
 import java.util.Set;
 import javax.swing.Icon;
 import javax.swing.JComponent;
+import javax.swing.UIManager;
 import org.netbeans.spi.options.OptionsCategory;
 import org.netbeans.spi.options.OptionsPanelController;
 import org.openide.util.HelpCtx;
@@ -365,7 +366,13 @@ public final class CategoryModel implements LookupListener {
         final void update(PropertyChangeListener l, boolean forceUpdate) {
             if ((!isUpdated && !forceUpdate) || (isUpdated && forceUpdate)) {
                 isUpdated = true;
-                getComponent();
+                JComponent jcomp = getComponent();
+
+                // remember look and feel used to create component
+                if (!jcomp.isDisplayable() && jcomp.getClientProperty("nb.internal.componentLaf") == null) { //NOI18N
+                    jcomp.putClientProperty("nb.internal.componentLaf", UIManager.getLookAndFeel().getClass().getName()); //NOI18N
+                }
+
                 create().update();
                 if (l != null && !controllerListeners.contains(l)) {
                     create().addPropertyChangeListener(l);

@@ -211,6 +211,14 @@ import org.openide.util.lookup.ProxyLookup;
         setBorder(new LineBorder(getBackground(), 1));
     }
 
+    @Override
+    public void updateUI() {
+        super.updateUI();
+
+        // update the border set in addNotify() on look and feel switching
+        setBorder(new LineBorder(getBackground(), 1));
+    }
+
     // issue #69642
     private void installNoOpActionMappings(){
         InputMap im = getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);

@@ -121,10 +121,6 @@ public class OptionsPanel extends JPanel {
 
     private Map<String, CategoryButton> buttons = new LinkedHashMap<String, CategoryButton>();    
     private final boolean isMac = UIManager.getLookAndFeel ().getID ().equals ("Aqua");
-    private final Color selected = isMac ? new Color(221, 221, 221) : getSelectionBackground();
-    private final Color selectedB = isMac ? new Color(183, 183, 183) : getUIColorOrDefault("nb.options.categories.selectionBorderColor", new Color (149, 106, 197));
-    private final Color highlighted = isMac ? new Color(221, 221, 221) : getHighlightBackground();
-    private final Color highlightedB = getUIColorOrDefault("nb.options.categories.highlightBorderColor", new Color (152, 180, 226));
     private final ControllerListener controllerListener = new ControllerListener ();
     
     private final Color borderMac = new Color(141, 141, 141);
@@ -229,6 +225,13 @@ public class OptionsPanel extends JPanel {
                 category.update(controllerListener, false);
                 final Dimension size = component.getSize();
                 if (component.getParent() == null || !pOptions.equals(component.getParent())) {
+                    // update component UI if components were created using a different look and feel
+                    Object componentLaf = component.getClientProperty("nb.internal.componentLaf"); //NOI18N
+                    if (componentLaf != null && !componentLaf.equals(UIManager.getLookAndFeel().getClass().getName())) {
+                        SwingUtilities.updateComponentTreeUI(component);
+                    }
+                    component.putClientProperty("nb.internal.componentLaf", null); //NOI18N
+
                     pOptions.add(component, category.getCategoryName());
                 }
                 cLayout.show(pOptions, category.getCategoryName());
@@ -387,12 +390,17 @@ public class OptionsPanel extends JPanel {
         });
         showHint(true);
         
-        pCategories = new JPanel (new BorderLayout ());
-        pCategories.setBorder (BorderFactory.createMatteBorder(0, 0, 1, 0, getUIColorOrDefault(OPTIONS_CATEGORIES_SEPARATOR_COLOR, Color.lightGray)));
-        pCategories.setBackground (getTabPanelBackground());
+        pCategories = new JPanel (new BorderLayout ()) {
+            @Override
+            public void updateUI() {
+                super.updateUI();
+                setBorder (BorderFactory.createMatteBorder(0, 0, 1, 0, getUIColorOrDefault(OPTIONS_CATEGORIES_SEPARATOR_COLOR, Color.lightGray)));
+                setBackground (getTabPanelBackground());
+            }
+        };
 
         categoriesScrollPane = new JScrollPane(pCategories2, ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-        categoriesScrollPane.setBorder(null);
+        categoriesScrollPane.setBorder(BorderFactory.createEmptyBorder());
         categoriesScrollPane.getHorizontalScrollBar().setUnitIncrement(Utils.ScrollBarUnitIncrement);
         pCategories.add ("Center", categoriesScrollPane);
         pCategories.add ("East", quickSearch);
@@ -452,6 +460,12 @@ public class OptionsPanel extends JPanel {
         categoryid2tabs = new HashMap<String, HashMap<Integer, TabInfo>>();
         for (Map.Entry<String, CategoryModel.Category> set : categories) {
             JComponent jcomp = set.getValue().getComponent();
+
+            // remember look and feel used to create component
+            if (!jcomp.isDisplayable() && jcomp.getClientProperty("nb.internal.componentLaf") == null) { //NOI18N
+                jcomp.putClientProperty("nb.internal.componentLaf", UIManager.getLookAndFeel().getClass().getName()); //NOI18N
+            }
+
             String id = set.getValue().getID();
             if(jcomp instanceof JTabbedPane) {
                 categoryid2tabbedpane.put(id, (JTabbedPane)jcomp);
@@ -1138,7 +1152,16 @@ public class OptionsPanel extends JPanel {
     @NbBundle.Messages({"# {0} - name of the category button",
         "CategoryButton_AccessibleDescription={0} category button. Use the arrow keys to move between top level categories."})
     class CategoryButton extends JLabel implements MouseListener {
-        private final CategoryModel.Category category;                
+        private final CategoryModel.Category category;
+
+        private Color selected;
+        private Color selectedB;
+        private Color highlighted;
+        private Color highlightedB;
+
+        private boolean isSelected;
+        private boolean isHighlighted;
+
         CategoryButton (final CategoryModel.Category category) {
             super (category.getIcon());
             this.category = category;
@@ -1153,17 +1176,36 @@ public class OptionsPanel extends JPanel {
             addMouseListener (this);
             setFocusable (false);
             setFocusTraversalKeysEnabled (false);
-            setForeground (getTabPanelForeground());
             
             if (isMac) {
                 setFont(labelFontMac);
                 setIconTextGap(2);
             }
-            
-            setNormal ();
+        }
+
+        @Override
+        public void updateUI() {
+            super.updateUI();
+
+            selected = isMac ? new Color(221, 221, 221) : getSelectionBackground();
+            selectedB = isMac ? new Color(183, 183, 183) : getUIColorOrDefault("nb.options.categories.selectionBorderColor", new Color (149, 106, 197));
+            highlighted = isMac ? new Color(221, 221, 221) : getHighlightBackground();
+            highlightedB = getUIColorOrDefault("nb.options.categories.highlightBorderColor", new Color (152, 180, 226));
+
+            setForeground (getTabPanelForeground());
+
+            if (isSelected) {
+                setSelected();
+            } else if (isHighlighted) {
+                setHighlighted();
+            } else {
+                setNormal();
+            }
         }
             
         void setNormal () {
+            isSelected = isHighlighted = false;
+
             if (isMac) {
                 setBorder (new EmptyBorder (5, 6, 3, 6));
             } else {
@@ -1173,6 +1215,9 @@ public class OptionsPanel extends JPanel {
         }
         
         void setSelected () {
+            isSelected = true;
+            isHighlighted = false;
+
             if (isMac) {
                 setBorder(new CompoundBorder (
                         new VariableBorder(null, selectedB, null, selectedB),
@@ -1191,6 +1236,9 @@ public class OptionsPanel extends JPanel {
         }
         
         void setHighlighted() {
+            isSelected = false;
+            isHighlighted = true;
+
             if (!isMac) {
                 setBorder(new CompoundBorder(
                         new CompoundBorder(

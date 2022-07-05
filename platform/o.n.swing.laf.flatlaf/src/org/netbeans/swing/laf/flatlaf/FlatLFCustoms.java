@@ -56,7 +56,7 @@ public class FlatLFCustoms extends LFCustoms {
     public Object[] createApplicationSpecificKeysAndValues() {
         updateUnifiedBackground();
 
-        Color editorContentBorderColor = UIManager.getColor("TabbedContainer.editor.contentBorderColor"); // NOI18N
+        String editorContentBorderColorKey = "TabbedContainer.editor.contentBorderColor"; // NOI18N
 
         Object[] removeCtrlPageUpDownKeyBindings = {
             "ctrl PAGE_UP", null, // NOI18N
@@ -82,10 +82,10 @@ public class FlatLFCustoms extends LFCustoms {
             VIEW_TAB_DISPLAYER_UI, "org.netbeans.swing.laf.flatlaf.ui.FlatViewTabDisplayerUI", // NOI18N
             SLIDING_BUTTON_UI, "org.netbeans.swing.laf.flatlaf.ui.FlatSlidingButtonUI", // NOI18N
 
-            EDITOR_TABSCOMPONENT_BORDER, DPISafeBorder.matte(1, 1, 1, 1, editorContentBorderColor),
-            EDITOR_TOOLBAR_BORDER, DPISafeBorder.matte(0, 0, 1, 0, editorContentBorderColor),
-            EDITOR_TAB_CONTENT_BORDER, DPISafeBorder.matte(0, 1, 1, 1, editorContentBorderColor),
-            VIEW_TAB_CONTENT_BORDER, DPISafeBorder.matte(0, 1, 1, 1, UIManager.getColor("TabbedContainer.view.contentBorderColor")), // NOI18N
+            EDITOR_TABSCOMPONENT_BORDER, DPISafeBorder.matte(1, 1, 1, 1, editorContentBorderColorKey),
+            EDITOR_TOOLBAR_BORDER, DPISafeBorder.matte(0, 0, 1, 0, editorContentBorderColorKey),
+            EDITOR_TAB_CONTENT_BORDER, DPISafeBorder.matte(0, 1, 1, 1, editorContentBorderColorKey),
+            VIEW_TAB_CONTENT_BORDER, DPISafeBorder.matte(0, 1, 1, 1, "TabbedContainer.view.contentBorderColor"), // NOI18N
 
             // scale on Java 8 and Linux
             SPLIT_PANE_DIVIDER_SIZE_VERTICAL, UIScale.scale(4),

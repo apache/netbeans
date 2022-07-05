@@ -23,6 +23,7 @@ import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Insets;
+import javax.swing.UIManager;
 import javax.swing.border.Border;
 import javax.swing.border.MatteBorder;
 
@@ -34,7 +35,7 @@ import javax.swing.border.MatteBorder;
  */
 final class DPISafeBorder implements Border {
     private final Insets insets;
-    private final Color color;
+    private final String colorKey;
 
     /**
      * Create a new instance with the same semantics as that produced by
@@ -42,17 +43,17 @@ final class DPISafeBorder implements Border {
      *
      * @param color may not be null
      */
-    public static Border matte(int top, int left, int bottom, int right, Color color) {
-        return new DPISafeBorder(new Insets(top, left, bottom, right), color);
+    static Border matte(int top, int left, int bottom, int right, String colorKey) {
+        return new DPISafeBorder(new Insets(top, left, bottom, right), colorKey);
     }
 
-    private DPISafeBorder(Insets insets, Color color) {
+    private DPISafeBorder(Insets insets, String colorKey) {
         if (insets == null)
             throw new NullPointerException();
-        if (color == null)
+        if (colorKey == null)
             throw new NullPointerException();
         this.insets = new Insets(insets.top, insets.left, insets.bottom, insets.right);
-        this.color = color;
+        this.colorKey = colorKey;
     }
 
     @Override
@@ -67,7 +68,7 @@ final class DPISafeBorder implements Border {
         final int deviceTop    = HiDPIUtils.deviceBorderWidth(scale, insets.top);
         final int deviceBottom = HiDPIUtils.deviceBorderWidth(scale, insets.bottom);
 
-        g.setColor(color);
+        g.setColor(UIManager.getColor(colorKey));
 
         // Top border.
         g.fillRect(0, 0, deviceWidth - deviceRight, deviceTop);

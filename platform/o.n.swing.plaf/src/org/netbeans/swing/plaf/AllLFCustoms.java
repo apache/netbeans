@@ -19,8 +19,6 @@
 
 package org.netbeans.swing.plaf;
 
-import org.netbeans.swing.plaf.util.GuaranteedValue;
-
 import javax.swing.*;
 import javax.swing.plaf.ColorUIResource;
 import javax.swing.plaf.FontUIResource;
@@ -37,15 +35,15 @@ final class AllLFCustoms extends LFCustoms {
 
             //Tab control in case of unknown look and feel
             TAB_ACTIVE_SELECTION_BACKGROUND,
-                new GuaranteedValue (new String[] {"Table.selectionBackground",
+                new GuaranteedActiveValue (new String[] {"Table.selectionBackground",
                 "info"}, Color.BLUE.brighter()),
 
             TAB_ACTIVE_SELECTION_FOREGROUND,
-                new GuaranteedValue ("Table.selectionForeground",
+                new GuaranteedActiveValue ("Table.selectionForeground",
                 Color.WHITE),
 
             TAB_SELECTION_FOREGROUND,
-                new GuaranteedValue("textText", Color.BLACK),
+                new GuaranteedActiveValue("textText", Color.BLACK),
 
             //Likely to be the same for all look and feels - doesn't do anything
             //exciting
@@ -87,17 +85,17 @@ final class AllLFCustoms extends LFCustoms {
         Object[] uiDefaults = {
             //XXX once jdk 1.5 b2 is out, these can be deleted
             
-            "control", new GuaranteedValue ("control", Color.LIGHT_GRAY),
-            "controlShadow", new GuaranteedValue ("controlShadow", Color.GRAY),
-            "controlDkShadow", new GuaranteedValue ("controlDkShadow", Color.DARK_GRAY),
-            "textText", new GuaranteedValue ("textText", Color.BLACK),
-            "controlFont", new GuaranteedValue ("controlFont",
+            "control", new GuaranteedActiveValue ("control", Color.LIGHT_GRAY),
+            "controlShadow", new GuaranteedActiveValue ("controlShadow", Color.GRAY),
+            "controlDkShadow", new GuaranteedActiveValue ("controlDkShadow", Color.DARK_GRAY),
+            "textText", new GuaranteedActiveValue ("textText", Color.BLACK),
+            "controlFont", new GuaranteedActiveValue ("controlFont",
                 new Font ("Dialog", Font.PLAIN, fontsize)),
             
             DEFAULT_FONT_SIZE, new Integer(11),
-            ERROR_FOREGROUND, new GuaranteedValue(ERROR_FOREGROUND, errorColor),
+            ERROR_FOREGROUND, new GuaranteedActiveValue(ERROR_FOREGROUND, errorColor),
 
-            WARNING_FOREGROUND, new GuaranteedValue(WARNING_FOREGROUND, warningColor ),
+            WARNING_FOREGROUND, new GuaranteedActiveValue(WARNING_FOREGROUND, warningColor ),
 
         };
         return uiDefaults;
@@ -175,5 +173,37 @@ final class AllLFCustoms extends LFCustoms {
             fontTranslation.put( oldFont, newFont );
         }
         UIManager.put( uiKey, newFont );
+    }
+
+
+    /**
+     * An active value that gets UI value from active LaF defaults on each access.
+     * This is necessary for LaF switching.
+     */
+    private static class GuaranteedActiveValue implements UIDefaults.ActiveValue {
+
+        private final String[] keys;
+        private final Object fallback;
+
+        GuaranteedActiveValue(String key, Object fallback) {
+            this(new String[] { key }, fallback);
+        }
+
+        GuaranteedActiveValue(String[] keys, Object fallback) {
+            this.keys = keys;
+            this.fallback = fallback;
+        }
+
+        @Override
+        public Object createValue(UIDefaults table) {
+            // get value from LaF defaults (and not from global defaults)
+            UIDefaults lafDefaults = UIManager.getLookAndFeelDefaults();
+            for (String key : keys) {
+                Object value = lafDefaults.get(key);
+                if (value != null) 
+                    return value;
+            }
+            return fallback;
+        }
     }
 }

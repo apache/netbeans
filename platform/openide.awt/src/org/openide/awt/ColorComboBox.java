@@ -75,7 +75,6 @@ public final class ColorComboBox extends JComboBox {
         super.setModel( createModel(values, names, allowCustomColors) );
         this.allowCustomColors = allowCustomColors;
         setEditable( false );
-        setRenderer( new ColorComboBoxRendererWrapper( this ) );
         if( allowCustomColors ) {
             addItemListener( new ItemListener() {
 
@@ -95,6 +94,12 @@ public final class ColorComboBox extends JComboBox {
                 }
             });
         }
+    }
+
+    @Override
+    public void updateUI() {
+        super.updateUI();
+        setRenderer( new ColorComboBoxRendererWrapper( this ) );
     }
 
     /**

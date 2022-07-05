@@ -94,6 +94,9 @@ public class GlyphGutter extends JComponent implements Annotations.AnnotationsLi
     /** EditorUI which part this gutter is */
     private volatile EditorUI editorUI;
     
+    /** JTextComponent which part this gutter is */
+    private JTextComponent component;
+
     /** Annotations manager responsible for annotations for this line */
     private Annotations annos;
     
@@ -191,6 +194,7 @@ public class GlyphGutter extends JComponent implements Annotations.AnnotationsLi
     public GlyphGutter(EditorUI eui) {
         super();
         this.editorUI = eui;
+        this.component = eui.getComponent();
         init = false;
         annos = eui.getDocument().getAnnotations();
         
@@ -203,11 +207,10 @@ public class GlyphGutter extends JComponent implements Annotations.AnnotationsLi
         update();
         setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
         editorUIListener = new EditorUIListener();
-        eui.addPropertyChangeListener(editorUIListener);
-        eui.getComponent().addPropertyChangeListener(editorUIListener);
+        component.addPropertyChangeListener(editorUIListener);
         setOpaque (true);
         
-        String mimeType = org.netbeans.lib.editor.util.swing.DocumentUtilities.getMimeType(eui.getComponent());
+        String mimeType = org.netbeans.lib.editor.util.swing.DocumentUtilities.getMimeType(component);
         coloringMap = ColoringMap.get(mimeType);
         coloringMap.addPropertyChangeListener(WeakListeners.propertyChange(coloringMapListener, coloringMap));
 
@@ -462,8 +465,6 @@ public class GlyphGutter extends JComponent implements Annotations.AnnotationsLi
         return (int)comp.getSize().getHeight(); // + highestLineNumber * eui.getLineHeight()
     }
     
-    private static final Color DEFAULT_GUTTER_LINE = UIManager.getColor("controlShadow");
-    
     /** Paint the gutter itself */
     public @Override void paintComponent(final Graphics g) {
         super.paintComponent(g);
@@ -494,7 +495,7 @@ public class GlyphGutter extends JComponent implements Annotations.AnnotationsLi
         g.fillRect(clip.x, clip.y, clip.width, clip.height);
         
         //painting gutter line
-        g.setColor(DEFAULT_GUTTER_LINE);
+        g.setColor(UIManager.getColor("controlShadow"));
         g.drawLine(glyphGutterWidth-1, clip.y, glyphGutterWidth-1, clip.height + clip.y);
 
         final Document doc = component.getDocument();
@@ -1070,41 +1071,45 @@ public class GlyphGutter extends JComponent implements Annotations.AnnotationsLi
     /** Listening to EditorUI to properly deinstall attached listeners */
     class EditorUIListener implements PropertyChangeListener{
         public @Override void propertyChange (PropertyChangeEvent evt) {
-            if (evt.getSource() instanceof EditorUI) {
-                if (evt.getPropertyName() == null || EditorUI.COMPONENT_PROPERTY.equals(evt.getPropertyName())) {
-                    if (evt.getNewValue() == null){
-                        // component deinstalled, lets uninstall all listeners
-                        editorUI.removePropertyChangeListener(this);
-                        if (evt.getOldValue() instanceof JTextComponent) {
-                            ((JTextComponent) evt.getOldValue()).removePropertyChangeListener(this);
-                        }
-                        annos.removeAnnotationsListener(GlyphGutter.this);
-                        if (gutterMouseListener!=null){
-                            removeMouseListener(gutterMouseListener);
-                            removeMouseMotionListener(gutterMouseListener);
-                        }
-                        if (annoTypesListener !=null){
-                            AnnotationTypes.getTypes().removePropertyChangeListener(annoTypesListener);
-                        }
-                        editorUI = null;
-                        annos = null;
-                    }
-                }
-            } else if (evt.getSource() instanceof JTextComponent) {
-                if (evt.getPropertyName() == null || "document".equals(evt.getPropertyName())) { //NOI18N
-                    annos.removeAnnotationsListener(GlyphGutter.this);
-                    EditorUI eui = editorUI;
-                    if (eui != null && eui.getDocument() != null) {
-                        annos = eui.getDocument().getAnnotations();
-                    }
-                    annos.addAnnotationsListener(GlyphGutter.this);
+            if ("UI".equals(evt.getPropertyName()) && component != null) {
+                // Not using evt.getNewValue() here because it may be out-of-date
+                // when switching look and feel. This is because first the default
+                // UI delegate is set in JTextComponent.updateUI() (e.g. to FlatEditorPaneUI),
+                // and then immediately replaced in BaseTextUI.UIWatcher.propertyChange()
+                // with BaseTextUI. So this listener receives two events (in reverse order).
+                EditorUI newUI = Utilities.getEditorUI(component);
 
-                    update();
-                } else if (TEXT_ZOOM_PROPERTY.equals(evt.getPropertyName())) {
-                    update();
-                } else if ("font".equals(evt.getPropertyName())) {
-                    update();
+                if (newUI != null && ((EditorUI)newUI).getComponent() == component) {
+                    // update editorUI if look and feel changed
+                    editorUI = newUI;
+                } else {
+                    // component deinstalled, lets uninstall all listeners
+                    component.removePropertyChangeListener(this);
+                    annos.removeAnnotationsListener(GlyphGutter.this);
+                    if (gutterMouseListener!=null){
+                        removeMouseListener(gutterMouseListener);
+                        removeMouseMotionListener(gutterMouseListener);
+                    }
+                    if (annoTypesListener !=null){
+                        AnnotationTypes.getTypes().removePropertyChangeListener(annoTypesListener);
+                    }
+                    editorUI = null;
+                    component = null;
+                    annos = null;
                 }
+            } else if (evt.getPropertyName() == null || "document".equals(evt.getPropertyName())) { //NOI18N
+                annos.removeAnnotationsListener(GlyphGutter.this);
+                EditorUI eui = editorUI;
+                if (eui != null && eui.getDocument() != null) {
+                    annos = eui.getDocument().getAnnotations();
+                }
+                annos.addAnnotationsListener(GlyphGutter.this);
+
+                update();
+            } else if (TEXT_ZOOM_PROPERTY.equals(evt.getPropertyName())) {
+                update();
+            } else if ("font".equals(evt.getPropertyName())) {
+                update();
             }
         }
     }

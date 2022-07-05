@@ -170,6 +170,34 @@ public final class MainWindow {
                WindowManagerImpl.getInstance().mainWindowPainted();
            }
 
+            @Override
+            public void updateUI() {
+                boolean init = (getUI() == null);
+                super.updateUI();
+
+                if (init) {
+                    return; // not yet created; invoked from constructor
+                }
+
+                // Update top components that are currently not shown when look and feel changed.
+                // Include also all parent(s) of the top components to make sure
+                // that they are also updated, which is e.g. necessary for minimized views 
+                // that are children of a sliding tabbed component (see class SlideBar).
+                TopComponent.Registry registry =  WindowManager.getDefault().getRegistry();
+                IdentityHashMap<Component, Object> roots = new IdentityHashMap<>();
+                for (TopComponent tc : registry.getOpened()) {
+                    if (!tc.isDisplayable()) {
+                        Component c = tc;
+                        for (Container p = c.getParent(); p != null; p = p.getParent()) {
+                            c = p;
+                        }
+                        roots.put(c, null);
+                    }
+                }
+                for (Component c : roots.keySet()) {
+                    SwingUtilities.updateComponentTreeUI(c);
+                }
+            }
        };
        if( isShowCustomBackground() )
            contentPane.setOpaque( false );

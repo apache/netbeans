@@ -24,18 +24,19 @@ import org.netbeans.modules.db.sql.visualeditor.querymodel.Column;
 import org.netbeans.modules.db.sql.visualeditor.api.VisualSQLEditorMetaData;
 import org.netbeans.modules.db.sql.visualeditor.Log;
 
-import java.util.Hashtable;
-import java.util.List;
-import java.util.Iterator;
 import java.util.ArrayList;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 import java.sql.SQLException;
 
 public class QueryBuilderMetaData {
 
     // Metadata managed by the QueryEditor
-    private Hashtable 		importKcTable = new Hashtable();
-    private Hashtable 		allColumnNames = null;
+    private Map<String, List<String>>   importKcTable = new Hashtable<>();
+    private Map<String, String>         allColumnNames = null;
 
     // Metadata object
     // This will contain *either* a metadata object provided by the client,
@@ -99,7 +100,7 @@ public class QueryBuilderMetaData {
     // Implemented by fetching all columns for all known tables
     // ToDo: Decide how to avoid re-fetching all the information
     void getAllColumnNames() throws SQLException {
-        allColumnNames = new Hashtable(500);
+        allColumnNames = new Hashtable<>(500);
         List<List<String>> tables = getTables();
         for (List<String> table : tables) {
             List<String> columns = getColumns(table.get(0), table.get(1));
@@ -609,14 +610,14 @@ public class QueryBuilderMetaData {
      * This was formerly included in SqlStatementMetaDataCache, now implemented
      * in the QueryEditor
      */
-    List getImportedKeyColumns(String fullTableName) throws SQLException {
-        List keys = (List) importKcTable.get(fullTableName);
+    List<String> getImportedKeyColumns(String fullTableName) throws SQLException {
+        List<String> keys = importKcTable.get(fullTableName);
         if (keys != null) {
             return keys;
         }
         String[] tb = parseTableName(fullTableName);
         List<List<String>> importedKeys = getImportedKeys(tb[0], tb[1]);
-        keys = new ArrayList();
+        keys = new ArrayList<>();
         for (List<String> key : importedKeys) {
             keys.add(key.get(1));
         }
@@ -682,7 +683,7 @@ public class QueryBuilderMetaData {
         keys.addAll(getExportedKeys(tableSpec[0], tableSpec[1]));
 
         // Convert to a List(String[]), for compatibility with the rest of the QueryEditor
-        List result = new ArrayList();
+        List<Object> result = new ArrayList<>();
         for (List<String> key : keys) {
             result.add(key.toArray());
         }
@@ -804,7 +805,7 @@ public class QueryBuilderMetaData {
         }
     }
 
-    public List getColumnNames(String fullTableName) throws SQLException {
+    public List<String> getColumnNames(String fullTableName) throws SQLException {
 
         // Log.getLogger().entering("QueryBuilderMetaData", "getColumnNames", fullTableName ); // NOI18N
         String[] tb = parseTableName(fullTableName);

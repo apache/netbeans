@@ -1053,7 +1053,7 @@ public class QueryBuilder extends TopComponent
 
     // Wrappers for schema methods that are used by other classes in the query builder
 
-    List getColumnNames(String fullTableName) throws SQLException {
+    List<String> getColumnNames(String fullTableName) throws SQLException {
 	return qbMetaData.getColumnNames( fullTableName );
     }
 

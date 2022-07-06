@@ -236,14 +236,14 @@ public class ThreadsNodeModel implements NodeModel {
     }
     
     private void fireTreeChanged () {
-        Vector v = (Vector) listeners.clone ();
+        Vector<ModelListener> v = new Vector<>(listeners);
         int i, k = v.size ();
         for (i = 0; i < k; i++)
             ((ModelListener) v.get (i)).modelChanged (null);
     }
     
     private void fireNodeChanged (Object node) {
-        Vector v = (Vector) listeners.clone ();
+        Vector<ModelListener> v = new Vector<>(listeners);
         int i, k = v.size ();
         ModelEvent event = new ModelEvent.NodeChanged(this, node,
                 ModelEvent.NodeChanged.DISPLAY_NAME_MASK |

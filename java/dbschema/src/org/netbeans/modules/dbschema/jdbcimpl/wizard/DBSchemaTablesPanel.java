@@ -696,10 +696,10 @@ public class DBSchemaTablesPanel extends JPanel implements ListDataListener {
     }
 
     public void fireChange (Object source) {
-        ArrayList lst;
+        List<ChangeListener> lst;
 
         synchronized (this) {
-            lst = (ArrayList) this.list.clone();
+            lst = new ArrayList<>(this.list);
         }
 
         ChangeEvent event = new ChangeEvent(source);

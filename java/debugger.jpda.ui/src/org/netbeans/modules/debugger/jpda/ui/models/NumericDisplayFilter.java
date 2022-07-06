@@ -146,14 +146,14 @@ NodeActionsProviderFilter, Constants {
 
     public void addModelListener (ModelListener l) {
         HashSet newListeners = (listeners == null) ? 
-            new HashSet () : (HashSet) listeners.clone ();
+            new HashSet () : new HashSet<>(listeners);
         newListeners.add (l);
         listeners = newListeners;
     }
 
     public void removeModelListener (ModelListener l) {
         if (listeners == null) return;
-        HashSet newListeners = (HashSet) listeners.clone();
+        HashSet newListeners = new HashSet<>(listeners);
         newListeners.remove (l);
         listeners = newListeners;
     }

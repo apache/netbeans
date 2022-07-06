@@ -20,6 +20,7 @@
 package org.netbeans.modules.dbschema.jdbcimpl.wizard;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import javax.swing.*;
@@ -168,10 +169,10 @@ public class DBSchemaConnectionPanel extends JPanel implements ListDataListener 
     }
 
     public void fireChange (Object source) {
-        ArrayList lst;
+        List<ChangeListener> lst;
 
         synchronized (this) {
-            lst = (ArrayList) this.list.clone();
+            lst = new ArrayList<>(this.list);
         }
 
         ChangeEvent event = new ChangeEvent(source);

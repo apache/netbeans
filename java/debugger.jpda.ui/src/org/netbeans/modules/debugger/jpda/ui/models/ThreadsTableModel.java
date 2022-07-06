@@ -212,7 +212,7 @@ public class ThreadsTableModel implements TableModel, Constants {
     }
     
     private void fireTableValueChanged (Object o, String propertyName) {
-        Vector v = (Vector) listeners.clone ();
+        Vector<ModelListener> v = new Vector<>(listeners);
         int i, k = v.size ();
         for (i = 0; i < k; i++)
             ((ModelListener) v.get (i)).modelChanged (
@@ -221,7 +221,7 @@ public class ThreadsTableModel implements TableModel, Constants {
     }
     
     private void fireNodeChanged (Object node) {
-        Vector v = (Vector) listeners.clone ();
+        Vector<ModelListener> v = new Vector<>(listeners);
         int i, k = v.size ();
         for (i = 0; i < k; i++)
             ((ModelListener) v.get (i)).modelChanged (

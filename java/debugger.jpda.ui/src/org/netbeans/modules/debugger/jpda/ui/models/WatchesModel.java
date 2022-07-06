@@ -212,7 +212,7 @@ public class WatchesModel implements TreeModel, JPDAWatchRefreshModel {
                 it.next().setEvaluated(null);
             }
         }
-        Vector v = (Vector) listeners.clone ();
+        Vector<ModelListener> v = new Vector<>(listeners);
         int i, k = v.size ();
         ModelEvent event = new ModelEvent.TreeChanged(this);
         for (i = 0; i < k; i++)
@@ -220,7 +220,7 @@ public class WatchesModel implements TreeModel, JPDAWatchRefreshModel {
     }
     
     private void fireWatchesChanged () {
-        Vector v = (Vector) listeners.clone ();
+        Vector<ModelListener> v = new Vector<>(listeners);
         int i, k = v.size ();
         ModelEvent event = new ModelEvent.NodeChanged(this, ROOT, ModelEvent.NodeChanged.CHILDREN_MASK);
         for (i = 0; i < k; i++)
@@ -233,7 +233,7 @@ public class WatchesModel implements TreeModel, JPDAWatchRefreshModel {
     }
         
     void fireTableValueChangedComputed (Object node, String propertyName) {
-        Vector v = (Vector) listeners.clone ();
+        Vector<ModelListener> v = new Vector<>(listeners);
         int i, k = v.size ();
         for (i = 0; i < k; i++)
             ((ModelListener) v.get (i)).modelChanged (
@@ -242,7 +242,7 @@ public class WatchesModel implements TreeModel, JPDAWatchRefreshModel {
     }
 
     public void fireChildrenChanged(Object node) {
-        Vector v = (Vector) listeners.clone ();
+        Vector<ModelListener> v = new Vector<>(listeners);
         int i, k = v.size ();
         for (i = 0; i < k; i++)
             ((ModelListener) v.get (i)).modelChanged (
@@ -707,7 +707,7 @@ public class WatchesModel implements TreeModel, JPDAWatchRefreshModel {
             }
             DebuggerManager.getDebuggerManager().createWatch(expr);
             
-            Vector v = (Vector) listeners.clone ();
+            Vector<ModelListener> v = new Vector(listeners);
             int i, k = v.size ();
             for (i = 0; i < k; i++)
                 ((ModelListener) v.get (i)).modelChanged (

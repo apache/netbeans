@@ -1300,12 +1300,12 @@ public class FormModel
     }
 
     void fireEvents(FormModelEvent ... events) {
-        java.util.List targets;
+        List<FormModelListener> targets;
         synchronized(this) {
             if (listeners == null || listeners.isEmpty()) {
                 return;
             }
-            targets = (ArrayList) listeners.clone();
+            targets = new ArrayList<>(listeners);
         }
         for (int i=0; i < targets.size(); i++) {
             FormModelListener l = (FormModelListener) targets.get(i);

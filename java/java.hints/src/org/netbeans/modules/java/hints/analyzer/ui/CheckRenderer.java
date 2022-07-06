@@ -128,7 +128,7 @@ class CheckRenderer extends JPanel implements TreeCellRenderer {
     }
     
     public Rectangle getCheckBounds() {
-        return (Rectangle)check.getBounds().clone();
+        return new Rectangle(check.getBounds());
     }
         
     enum State {

@@ -147,7 +147,7 @@ PropertyChangeListener {
     }
     
     private void fireTreeChanged () {
-        Vector v = (Vector) listeners.clone ();
+        Vector<ModelListener> v = new Vector<>(listeners);
         int i, k = v.size ();
         for (i = 0; i < k; i++)
             ((ModelListener) v.get (i)).modelChanged (null);

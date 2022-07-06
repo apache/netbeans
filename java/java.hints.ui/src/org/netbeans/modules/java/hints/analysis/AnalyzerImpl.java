@@ -102,7 +102,7 @@ public class AnalyzerImpl implements Analyzer {
         todo.addAll(ctx.getScope().getFiles());
 
         BatchResult candidates = BatchSearch.findOccurrences(hints, Scopes.specifiedFoldersScope(Folder.convert(todo)), w, settings);
-        List<MessageImpl> problems = new LinkedList<MessageImpl>(candidates.problems);
+        List<MessageImpl> problems = new LinkedList<>(candidates.problems);
         
         BatchSearch.getVerifiedSpans(candidates, w, new BatchSearch.VerifiedSpansCallBack() {
             public void groupStarted() {}

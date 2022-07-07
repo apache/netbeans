@@ -43,6 +43,7 @@ import org.netbeans.modules.php.editor.model.impl.Type;
 import org.netbeans.modules.php.editor.parser.astnodes.ASTError;
 import org.netbeans.modules.php.editor.parser.astnodes.ASTErrorExpression;
 import org.netbeans.modules.php.editor.parser.astnodes.ASTNode;
+import org.netbeans.modules.php.editor.parser.astnodes.AnonymousObjectVariable;
 import org.netbeans.modules.php.editor.parser.astnodes.ArrayCreation;
 import org.netbeans.modules.php.editor.parser.astnodes.ArrayElement;
 import org.netbeans.modules.php.editor.parser.astnodes.ArrowFunctionDeclaration;
@@ -274,6 +275,15 @@ public class FormatVisitor extends DefaultVisitor {
                 formatTokens.add(new FormatToken.IndentToken(expression.getEndOffset(), -1 * options.continualIndentSize));
             }
         }
+    }
+
+    @Override
+    public void visit(AnonymousObjectVariable node) {
+        // (new Test)->method();
+        super.visit(node);
+        // avoid adding incorrect space for "within a method call"
+        // e.g. (new Test)->method(); -> (new Test )->method();
+        addAllUntilOffset(node.getEndOffset());
     }
 
     @Override

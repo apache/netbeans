@@ -22,47 +22,45 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Queue;
 import java.util.Set;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.StyledDocument;
-import org.apache.maven.DefaultMaven;
-import org.apache.maven.Maven;
+import org.apache.maven.MavenExecutionException;
 import org.apache.maven.artifact.Artifact;
-import org.apache.maven.artifact.resolver.filter.ArtifactFilter;
-import org.apache.maven.artifact.resolver.filter.CumulativeScopeArtifactFilter;
-import org.apache.maven.execution.MavenExecutionRequest;
 import org.apache.maven.model.InputLocation;
 import org.apache.maven.model.InputSource;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.building.ModelBuildingException;
-import org.apache.maven.model.building.ModelBuildingRequest;
 import org.apache.maven.model.building.ModelBuildingResult;
-import org.apache.maven.project.DependencyResolutionException;
 import org.apache.maven.project.MavenProject;
-import org.apache.maven.project.ProjectBuildingRequest;
-import org.apache.maven.shared.dependency.graph.DependencyGraphBuilder;
-import org.apache.maven.shared.dependency.graph.DependencyGraphBuilderException;
-import org.apache.maven.shared.dependency.graph.DependencyNode;
-import org.codehaus.plexus.component.repository.exception.ComponentLookupException;
+import org.apache.maven.shared.dependency.tree.DependencyNode;
+import org.codehaus.plexus.PlexusContainerException;
 import org.netbeans.api.editor.document.LineDocument;
 import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.maven.api.NbMavenProject;
+import org.netbeans.modules.maven.embedder.DependencyTreeFactory;
 import org.netbeans.modules.maven.embedder.EmbedderFactory;
 import org.netbeans.modules.maven.embedder.MavenEmbedder;
 import org.netbeans.modules.project.dependency.ArtifactSpec;
 import org.netbeans.modules.project.dependency.Dependency;
 import org.netbeans.modules.project.dependency.DependencyResult;
+import org.netbeans.modules.project.dependency.ProjectDependencies;
 import org.netbeans.modules.project.dependency.ProjectOperationException;
 import org.netbeans.modules.project.dependency.Scope;
 import org.netbeans.modules.project.dependency.Scopes;
@@ -73,7 +71,6 @@ import org.openide.cookies.EditorCookie;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.loaders.DataObject;
-import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.util.WeakListeners;
@@ -84,6 +81,8 @@ import org.openide.util.WeakListeners;
  */
 @ProjectServiceProvider(service = ProjectDependenciesImplementation.class, projectType="org-netbeans-modules-maven")
 public class MavenDependenciesImplementation implements ProjectDependenciesImplementation {
+    private static final Logger LOG = Logger.getLogger(MavenDependenciesImplementation.class.getName());
+    
     private final Project project;
     private NbMavenProject nbMavenProject;
     
@@ -127,13 +126,17 @@ public class MavenDependenciesImplementation implements ProjectDependenciesImple
     @Override
     public ArtifactSpec getProjectArtifact() {
         init();
-        Artifact a = nbMavenProject.getMavenProject().getArtifact();
+        return mavenToArtifactSpec(nbMavenProject.getMavenProject().getArtifact());
+    }
+    
+    private ArtifactSpec mavenToArtifactSpec(Artifact a) {
+        FileObject f = a.getFile() == null ? null : FileUtil.toFileObject(a.getFile());
         if (a.isSnapshot()) {
             return ArtifactSpec.createSnapshotSpec(a.getGroupId(), a.getArtifactId(), 
-                    a.getType(), a.getClassifier(), a.getVersion(), a.isOptional(), a);
+                    a.getType(), a.getClassifier(), a.getVersion(), a.isOptional(), f, a);
         } else {
             return ArtifactSpec.createVersionSpec(a.getGroupId(), a.getArtifactId(), 
-                    a.getType(), a.getClassifier(), a.getVersion(), a.isOptional(), a);
+                    a.getType(), a.getClassifier(), a.getVersion(), a.isOptional(), f, a);
         }
     }
     
@@ -141,11 +144,15 @@ public class MavenDependenciesImplementation implements ProjectDependenciesImple
         "ERR_DependencyOnBrokenProject=Unable to collect dependencies from a broken project",
         "ERR_DependencyNotPrimed=Unable to collect dependencies from a broken project",
         "ERR_DependencyMissing=Cannot resolve project dependencies",
-        "ERR_DependencyGraphError=Cannot construct dependency graph"
+        "ERR_DependencyGraphError=Cannot construct dependency graph",
+        "ERR_DependencyGraphOffline=Not all artifacts are available locally, run priming build."
     })
     @Override
-    public DependencyResult findDependencies(Collection<Scope> scopes, Dependency.Filter filter) {
+    public DependencyResult findDependencies(ProjectDependencies.DependencyQuery query) {
         init();
+        Collection<Scope> scopes = query.getScopes();
+        Dependency.Filter filter = query.getFilter();
+        
         MavenProject mp = nbMavenProject.getMavenProject();
         if (NbMavenProject.isErrorPlaceholder(mp)) {
             if (nbMavenProject.isMavenProjectLoaded()) {
@@ -154,46 +161,74 @@ public class MavenDependenciesImplementation implements ProjectDependenciesImple
                 throw new ProjectOperationException(project, ProjectOperationException.State.UNINITIALIZED, Bundle.ERR_DependencyNotPrimed());
             }
         }
-        MavenEmbedder embedder = EmbedderFactory.getProjectEmbedder();
-        MavenExecutionRequest req = embedder.createMavenExecutionRequest();
-        req.setPom(mp.getFile());
-        req.setOffline(true);
         
-        ProjectBuildingRequest configuration = req.getProjectBuildingRequest();
-        configuration.setValidationLevel(ModelBuildingRequest.VALIDATION_LEVEL_MINIMAL);
-        configuration.setResolveDependencies(true);
+        MavenEmbedder embedder;
+        
+        if (query.isOffline()) {
+            try {
+                if (query.isFlushChaches()) {
+                    embedder = EmbedderFactory.createProjectLikeEmbedder();
+                } else {
+                    embedder = EmbedderFactory.getProjectEmbedder();
+                }
+            } catch (PlexusContainerException ex) {
+                throw new ProjectOperationException(project, ProjectOperationException.State.ERROR, Bundle.ERR_DependencyGraphError(), ex.getCause());
+            }
+        } else {
+            try {
+                embedder = EmbedderFactory.getOnlineEmbedder();
+            } catch (IllegalStateException ex) {
+                // yuck, the real exc. is wrapped
+                throw new ProjectOperationException(project, ProjectOperationException.State.ERROR, Bundle.ERR_DependencyGraphError(), ex.getCause());
+            }
+        }
         
         Collection<String> mavenScopes = scopes.stream().
                 map(MavenDependenciesImplementation::mavenScope).
                 collect(Collectors.toList());
         
-        ArtifactFilter artFilter = new CumulativeScopeArtifactFilter(mavenScopes);
-        
-        DependencyGraphBuilder depBuilder = embedder.lookupComponent(DependencyGraphBuilder.class);
-        DependencyNode n;
+        org.apache.maven.shared.dependency.tree.DependencyNode n;
         try {
-            DefaultMaven maven = (DefaultMaven)embedder.getPlexus().lookup(Maven.class);
-            configuration.setRepositorySession(maven.newRepositorySession(req));
-            MavenProject copy = mp.clone();
-            copy.setProjectBuildingRequest(configuration);
-            n = depBuilder.buildDependencyGraph(copy, artFilter);
-        } catch (DependencyGraphBuilderException ex) {
-            Throwable cause = ex.getCause();
-            if (cause instanceof DependencyResolutionException) {
-                throw new ProjectOperationException(project, ProjectOperationException.State.BROKEN, 
-                        Bundle.ERR_DependencyMissing(), ex);
+            n = DependencyTreeFactory.createDependencyTree(mp, embedder, mavenScopes);
+        } catch (MavenExecutionException ex) {
+            throw new ProjectOperationException(project, ProjectOperationException.State.OK, Bundle.ERR_DependencyGraphError(), ex.getCause());
+        } catch (AssertionError e) {
+            if (EmbedderFactory.isOfflineException(e)) {
+                // HACK: special assertion error from our embedder
+                throw new ProjectOperationException(project, ProjectOperationException.State.OFFLINE, Bundle.ERR_DependencyGraphOffline());
             } else {
-                Exceptions.printStackTrace(ex);
-                return null;
+                throw e;
             }
-        } catch (ComponentLookupException ex) {
-            Exceptions.printStackTrace(ex);
-            // unavailable
-            return null;
         }
+        Set<Scope> allScopes = new HashSet<>();
+        
+        Queue<Scope> processScopes = new ArrayDeque<>(scopes);
+        while (!processScopes.isEmpty()) {
+            Scope s = processScopes.poll();
+            Set<Scope> newScopes = new HashSet<>();
+            newScopes.add(s);
+            for (Scope t : SCOPES) {
+                if (s.includes(t)) {
+                    newScopes.add(t);
+                } else if (t.implies(s)) {
+                    newScopes.add(t);
+                }
+            }
+            newScopes.removeAll(allScopes);
+            allScopes.addAll(newScopes);
+            processScopes.addAll(newScopes);
+        }
+        Set<ArtifactSpec> broken = new HashSet<>();
+        Dependency.Filter compositeFiter = new Dependency.Filter() {
+            @Override
+            public boolean accept(Scope s, ArtifactSpec a) {
+                return allScopes.contains(s) && 
+                    (filter == null || filter.accept(s, a));
+            }
+        };
         
         return new Result(nbMavenProject.getMavenProject(), 
-                convert(n, filter), new ArrayList<>(scopes));
+                convert2(n, compositeFiter, broken), new ArrayList<>(scopes), broken);
     }
     
     static Scope scope(Artifact a) {
@@ -221,10 +256,10 @@ public class MavenDependenciesImplementation implements ProjectDependenciesImple
         }
     }
     
-    private Dependency convert(DependencyNode n, Dependency.Filter filter) {
+    private Dependency convert2(org.apache.maven.shared.dependency.tree.DependencyNode n, Dependency.Filter filter, Set<ArtifactSpec> broken) {
         List<Dependency> ch = new ArrayList<>();
-        for (DependencyNode c : n.getChildren()) {
-            Dependency cd = convert(c, filter);
+        for (org.apache.maven.shared.dependency.tree.DependencyNode c : n.getChildren()) {
+            Dependency cd = convert2(c, filter, broken);
             if (cd != null) {
                 ch.add(cd);
             }
@@ -235,12 +270,9 @@ public class MavenDependenciesImplementation implements ProjectDependenciesImple
         if ("".equals(cs)) {
             cs = null;
         }
-        if (a.isSnapshot()) {
-            aspec = ArtifactSpec.createSnapshotSpec(a.getGroupId(), a.getArtifactId(), a.getType(), 
-                    cs, a.getVersion(), a.isOptional(), a);
-        } else {
-            aspec = ArtifactSpec.createVersionSpec(a.getGroupId(), a.getArtifactId(), a.getType(), 
-                    cs, a.getVersion(), a.isOptional(), a);
+        aspec = mavenToArtifactSpec(a);
+        if (aspec.getLocalFile() == null) {
+            broken.add(aspec);
         }
         Scope s = scope(a);
         
@@ -255,20 +287,28 @@ public class MavenDependenciesImplementation implements ProjectDependenciesImple
         final MavenProject  project;
         final Dependency    rootNode;
         final Collection<Scope> scopes;
+        final Collection<ArtifactSpec> problems;
+        
         PropertyChangeListener wL;
         Model effectiveModel;
         Map<FileObject, StyledDocument> openedPoms = new HashMap<>();
         private List<ChangeListener> listeners;
 
-        public Result(MavenProject proj, Dependency rootNode, Collection<Scope> scopes) {
+        public Result(MavenProject proj, Dependency rootNode, Collection<Scope> scopes, Collection<ArtifactSpec> problems) {
             this.project = proj;
             this.rootNode = rootNode;
             this.scopes = scopes;
+            this.problems = problems;
         }
         
         @Override
         public Project getProject() {
             return MavenDependenciesImplementation.this.project;
+        }
+
+        @Override
+        public Collection<ArtifactSpec> getProblemArtifacts() {
+            return Collections.unmodifiableCollection(problems);
         }
 
         @Override

@@ -328,7 +328,7 @@ public class SchemaElementImpl extends DBElementImpl implements SchemaElement.Im
         return result;
     }
     
-    private List checkReferences(List tables, DDLBridge bridge, String schema) throws SQLException {
+    private List checkReferences(List<String> tables, DDLBridge bridge, String schema) throws SQLException {
         ResultSet rs;
         String pkSchema;
         String fkSchema;

@@ -56,6 +56,15 @@ public abstract class Scope {
     public abstract boolean exports(Scope s);
     
     /**
+     * Determines if artifacts in this scope apply to the other one. This is the reverse of {@link includes} and
+     * allows injection to existing scopes.
+     * 
+     * @param s the scope to test.
+     * @return true, if the scope 's' is implied (includes) this one.
+     */
+    public abstract boolean implies(Scope s);
+    
+    /**
      * @return name / identifier for the scope. Not subject to L10N.
      */
     public String name() {

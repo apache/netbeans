@@ -22,6 +22,7 @@ import java.awt.Dialog;
 import java.awt.HeadlessException;
 import java.util.concurrent.CompletableFuture;
 import org.netbeans.modules.java.lsp.server.LspServerUtils;
+import org.netbeans.modules.java.lsp.server.protocol.UIContext;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;

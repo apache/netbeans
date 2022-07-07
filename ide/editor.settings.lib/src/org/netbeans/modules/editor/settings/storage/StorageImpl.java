@@ -441,7 +441,7 @@ public final class StorageImpl <K extends Object, V extends Object> {
                 }
                 
                 Filters filtersForId = filters.get(storageDescriptionId);
-                return filtersForId == null ? Collections.<StorageFilter>emptyList() : filtersForId.filtersForId;
+                return filtersForId == null ? Collections.emptyList() : filtersForId.filtersForId;
             }
         }
 

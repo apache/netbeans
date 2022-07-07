@@ -80,7 +80,7 @@ class ModeParser {
     private InternalConfig internalConfig;
     
     /** Map of TCRefParser instances. Used for fast access. */
-    private Map<String, TCRefParser> tcRefParserMap = new HashMap<String, TCRefParser>(19);
+    private Map<String, TCRefParser> tcRefParserMap = new HashMap<>(19);
     
     /** map of names of tcRefs to their index or null */
     private Map<String,Integer> tcRefOrder;
@@ -730,7 +730,7 @@ class ModeParser {
 
             // Update order
             List<TCRefParser> localList = new ArrayList<TCRefParser>(10);
-            Map<String,TCRefParser> localMap = (Map) ((HashMap) tcRefParserMap).clone();
+            Map<String, TCRefParser> localMap = new HashMap<>(tcRefParserMap);
 
             if( null == tcRefOrder ) {
                 //#232307

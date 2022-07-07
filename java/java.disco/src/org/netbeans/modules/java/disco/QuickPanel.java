@@ -19,11 +19,15 @@
 package org.netbeans.modules.java.disco;
 
 import eu.hansolo.jdktools.TermOfSupport;
+import io.foojay.api.discoclient.pkg.Distribution;
 import java.awt.Font;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
+import java.util.StringJoiner;
+import javax.swing.ComboBoxModel;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JLabel;
 import org.checkerframework.checker.guieffect.qual.UIEffect;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
@@ -31,8 +35,11 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 
 public class QuickPanel extends javax.swing.JPanel {
 
+    private final DefaultComboBoxModel<Distribution> distrosModel = new DefaultComboBoxModel<>();
+
     public QuickPanel() {
         initComponents();
+        distributionComboBox.setRenderer(new DistributionListCellRenderer());
     }
 
     /**
@@ -45,12 +52,14 @@ public class QuickPanel extends javax.swing.JPanel {
     private void initComponents() {
 
         buttonGroup1 = new javax.swing.ButtonGroup();
-        javax.swing.JLabel jLabel1 = new javax.swing.JLabel();
+        javax.swing.JLabel versionLabel = new javax.swing.JLabel();
         versions = new javax.swing.JSlider();
         autoInstallJDK = new javax.swing.JRadioButton();
         manualJDK = new javax.swing.JRadioButton();
+        javax.swing.JLabel distributionLabel = new javax.swing.JLabel();
+        distributionComboBox = new javax.swing.JComboBox<>();
 
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(QuickPanel.class, "QuickPanel.jLabel1.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(versionLabel, org.openide.util.NbBundle.getMessage(QuickPanel.class, "QuickPanel.versionLabel.text")); // NOI18N
 
         versions.setMaximum(20);
         versions.setMinimum(8);
@@ -69,6 +78,10 @@ public class QuickPanel extends javax.swing.JPanel {
         org.openide.awt.Mnemonics.setLocalizedText(manualJDK, org.openide.util.NbBundle.getMessage(QuickPanel.class, "QuickPanel.manualJDK.text")); // NOI18N
         manualJDK.setToolTipText(org.openide.util.NbBundle.getMessage(QuickPanel.class, "QuickPanel.manualJDK.toolTipText")); // NOI18N
 
+        org.openide.awt.Mnemonics.setLocalizedText(distributionLabel, org.openide.util.NbBundle.getMessage(QuickPanel.class, "QuickPanel.distributionLabel.text")); // NOI18N
+
+        distributionComboBox.setModel(createDistrosModel());
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -76,29 +89,35 @@ public class QuickPanel extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(autoInstallJDK, javax.swing.GroupLayout.DEFAULT_SIZE, 450, Short.MAX_VALUE)
+                    .addComponent(manualJDK, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel1)
+                        .addComponent(distributionLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(distributionComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(versionLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(versions, javax.swing.GroupLayout.DEFAULT_SIZE, 481, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(autoInstallJDK)
-                            .addComponent(manualJDK))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addComponent(versions, javax.swing.GroupLayout.DEFAULT_SIZE, 399, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(versions, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel1))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(23, 23, 23)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(versionLabel)
+                    .addComponent(versions, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(distributionLabel)
+                    .addComponent(distributionComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
                 .addComponent(autoInstallJDK)
-                .addGap(12, 12, 12)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(manualJDK)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(70, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -106,9 +125,22 @@ public class QuickPanel extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JRadioButton autoInstallJDK;
     private javax.swing.ButtonGroup buttonGroup1;
+    private javax.swing.JComboBox<Distribution> distributionComboBox;
     private javax.swing.JRadioButton manualJDK;
     private javax.swing.JSlider versions;
     // End of variables declaration//GEN-END:variables
+
+    private ComboBoxModel<Distribution> createDistrosModel() {
+        return distrosModel;
+    }
+
+    public void updateDistributions(List<Distribution> distributions, Distribution defaultDist) {
+        distrosModel.removeAllElements();
+        distributions.stream()
+                .sorted((o1, o2) -> o1.getUiString().compareTo(o2.getUiString()))
+                .forEachOrdered(distrosModel::addElement);
+        distributionComboBox.setSelectedItem(defaultDist);
+    }
 
     //The `versions` slider holds *the index* in versionsJDKs and
     //this model holds the actual JDKs and the mapping between
@@ -116,13 +148,15 @@ public class QuickPanel extends javax.swing.JPanel {
 
         private final List<Integer> versionJDKs;
         private final Map<Integer, TermOfSupport> lts;
+        private final int currentJdk;
 
-        private VersionsModel(List<Integer> jdks, Map<Integer, TermOfSupport> lts) {
+        private VersionsModel(List<Integer> jdks, Map<Integer, TermOfSupport> lts, int currentJdk) {
             this.versionJDKs = new ArrayList<>(jdks);
             //quick panel shows only maintained JDKs
             versionJDKs.removeIf(v -> !lts.containsKey(v));
-            versionJDKs.removeIf(v -> v < 8);
+            versionJDKs.removeIf(v -> v < 8 || v > currentJdk);
             this.lts = lts;
+            this.currentJdk = currentJdk;
         }
 
         public int getMinimum() {
@@ -143,14 +177,20 @@ public class QuickPanel extends javax.swing.JPanel {
             Hashtable<Integer, JLabel> labels = new Hashtable<>();
             for (Integer v : versionJDKs) {
                 boolean isLTS = lts.get(v) == TermOfSupport.LTS;
-                String name = LTSes.text(v, lts.get(v));
-                JLabel label = new JLabel(name);
+                JLabel label = new JLabel();
+                StringJoiner info = new StringJoiner(", ", " (", ")");
+                info.setEmptyValue("");
+                if (v == currentJdk) {
+                    info.add("latest");
+                }
                 if (isLTS) {
+                    info.add("LTS");
                     //these decorations do nothing on macOS...
                     Font font = label.getFont();
                     label.setFont(font.deriveFont(font.getStyle() | Font.BOLD));
                     label.setToolTipText("Long Term Support");
                 }
+                label.setText(v.toString() + info.toString());
                 labels.put(versionJDKs.indexOf(v), label);
             }
             return labels;
@@ -165,8 +205,8 @@ public class QuickPanel extends javax.swing.JPanel {
     @MonotonicNonNull
     private VersionsModel versionsModel;
 
-    void setVersions(List<Integer> jdks, Map<Integer, TermOfSupport> lts) {
-        versionsModel = new VersionsModel(jdks, lts);
+    void setVersions(List<Integer> jdks, Map<Integer, TermOfSupport> lts, int current) {
+        versionsModel = new VersionsModel(jdks, lts, current);
         versions.setMaximum(versionsModel.getMaximum());
         versions.setMinimum(versionsModel.getMinimum());
         versions.setLabelTable(versionsModel.createLabels());
@@ -176,15 +216,17 @@ public class QuickPanel extends javax.swing.JPanel {
     @UIEffect
     @NonNull
     QuickSelection getSelectedPackage() {
-        return new QuickSelection(versionsModel.getJDK(versions.getValue()), autoInstallJDK.isSelected());
+        return new QuickSelection((Distribution) distributionComboBox.getSelectedItem(), versionsModel.getJDK(versions.getValue()), autoInstallJDK.isSelected());
     }
 
     static class QuickSelection {
 
         final int version;
         final boolean zip;
+        final Distribution distribution;
 
-        public QuickSelection(int version, boolean zip) {
+        public QuickSelection(Distribution dist, int version, boolean zip) {
+            this.distribution = dist;
             this.version = version;
             this.zip = zip;
         }

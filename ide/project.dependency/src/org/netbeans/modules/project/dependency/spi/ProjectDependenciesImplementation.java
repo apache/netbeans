@@ -18,14 +18,11 @@
  */
 package org.netbeans.modules.project.dependency.spi;
 
-import java.util.Collection;
 import org.netbeans.api.annotations.common.NonNull;
-import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.modules.project.dependency.ArtifactSpec;
-import org.netbeans.modules.project.dependency.Dependency;
 import org.netbeans.modules.project.dependency.DependencyResult;
+import org.netbeans.modules.project.dependency.ProjectDependencies;
 import org.netbeans.modules.project.dependency.ProjectOperationException;
-import org.netbeans.modules.project.dependency.Scope;
 
 /**
  *
@@ -36,11 +33,6 @@ public interface ProjectDependenciesImplementation {
     public ArtifactSpec getProjectArtifact();
     
     @NonNull
-    public DependencyResult findDependencies(
-            @NullAllowed Collection<Scope> scopes, @NullAllowed Dependency.Filter filter)
+    public DependencyResult findDependencies(@NonNull ProjectDependencies.DependencyQuery query)
             throws ProjectOperationException;
-    /*
-    @CheckForNull
-    public Dependency mergeDependencies(@NonNull Dependency one, @NonNull Dependency two);
-    */
 }

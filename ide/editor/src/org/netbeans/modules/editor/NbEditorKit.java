@@ -47,6 +47,7 @@ import javax.swing.JPopupMenu;
 import javax.swing.Action;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JEditorPane;
+import javax.swing.JSeparator;
 import javax.swing.KeyStroke;
 import javax.swing.UIDefaults;
 import javax.swing.UIManager;
@@ -392,7 +393,7 @@ public class NbEditorKit extends ExtKit implements Callable {
         }
 
         public void run() {
-            List l = PopupMenuActionsProvider.getPopupMenuItems(mimeType);
+            List<String> l = PopupMenuActionsProvider.getPopupMenuItems(mimeType);
 
             if (l.isEmpty()){
                 Preferences prefs = MimeLookup.getLookup(mimeType).lookup(Preferences.class);
@@ -407,7 +408,7 @@ public class NbEditorKit extends ExtKit implements Callable {
                 }
             }
             
-            initedObjects = new ArrayList<Object>(l.size());
+            initedObjects = new ArrayList<>(l.size());
             instructions = new int[l.size()];
 
             for (Iterator i = l.iterator(); i.hasNext(); ) {
@@ -588,7 +589,7 @@ public class NbEditorKit extends ExtKit implements Callable {
         private final NbEditorKit editorKit;
         private final String localizedName;
         
-        List    objects;
+        List<Object>    objects;
         int[]   instructions;
         int     index;
         
@@ -618,13 +619,13 @@ public class NbEditorKit extends ExtKit implements Callable {
             this.localizedName = getLocalizedName(folder);
             
             List items = ActionsList.convert(sort(folder.getChildren()), false);
-            objects = new ArrayList(items.size());
+            objects = new ArrayList<>(items.size());
             instructions = new int[items.size()];
             
             for (Iterator i = items.iterator(); i.hasNext(); ) {
                 Object obj = i.next();
                 
-                if (obj == null || obj instanceof javax.swing.JSeparator) {
+                if (obj == null || obj instanceof JSeparator) {
                     objects.add(null);
                     instructions[index++] = ACTION_SEPARATOR;
                 } else if (obj instanceof String) {

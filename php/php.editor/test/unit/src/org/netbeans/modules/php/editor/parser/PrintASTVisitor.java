@@ -482,6 +482,11 @@ public class PrintASTVisitor implements Visitor {
     }
 
     @Override
+    public void visit(FirstClassCallableArg firstClassCallableArg) {
+        (new XMLPrintNode(firstClassCallableArg, "FirstClassCallableArg")).print(this);
+    }
+
+    @Override
     public void visit(ForEachStatement node) {
         XMLPrintNode printNode = new XMLPrintNode(node, "ForEachStatement");
         printNode.addChild("Key", node.getKey());

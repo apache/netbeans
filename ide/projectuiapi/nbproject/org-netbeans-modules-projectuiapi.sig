@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.103.0
+#Version 1.105.0
 
 CLSS public abstract interface java.io.Serializable
 
@@ -194,6 +194,12 @@ CLSS public abstract interface org.netbeans.spi.project.ui.ProjectProblemResolve
 meth public abstract boolean equals(java.lang.Object)
 meth public abstract int hashCode()
 meth public abstract java.util.concurrent.Future<org.netbeans.spi.project.ui.ProjectProblemsProvider$Result> resolve()
+
+CLSS public abstract interface org.netbeans.spi.project.ui.ProjectProblemsImplementation
+meth public abstract java.util.concurrent.CompletableFuture<java.lang.Void> showAlert(org.netbeans.api.project.Project)
+ anno 1 org.netbeans.api.annotations.common.NonNull()
+meth public abstract java.util.concurrent.CompletableFuture<java.lang.Void> showCustomizer(org.netbeans.api.project.Project)
+ anno 1 org.netbeans.api.annotations.common.NonNull()
 
 CLSS public abstract interface org.netbeans.spi.project.ui.ProjectProblemsProvider
 fld public final static java.lang.String PROP_PROBLEMS = "problems"

@@ -16,10 +16,13 @@
 # under the License.
 name: Release Drafter
 on:
-  push:
-    branches:
-      - master
-      - 'release*'
+#  push:
+#    branches:
+#      - master
+#      - 'release*'
+  # manual trigger via github workflow UI
+  workflow_dispatch:
+
 jobs:
   update_release_draft:
     runs-on: ubuntu-latest

@@ -19,8 +19,8 @@
 package org.netbeans.modules.javascript2.editor;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import org.netbeans.api.java.classpath.ClassPath;
@@ -34,23 +34,24 @@ import org.openide.filesystems.FileUtil;
  * @author Petr Pisl
  */
 public class JsCodeCompletionIssue223891Test extends JsCodeCompletionBase {
-    
+
     public JsCodeCompletionIssue223891Test(String testName) {
         super(testName);
     }
-    
+
     public void testIssue223891_01() throws Exception {
         checkCompletion("testfiles/structure/issue223891/issue223891.js", "    this.test.to^LocaleString();", false);
     }
 
-    
+
     @Override
     protected Map<String, ClassPath> createClassPathsForTest() {
-        List<FileObject> cpRoots = new LinkedList<FileObject>(ClasspathProviderImplAccessor.getJsStubs());
+        List<FileObject> cpRoots = new ArrayList<>(2);
+        cpRoots.add(ClasspathProviderImplAccessor.getJsStubs().get(0)); // Only use core stubs in unittests
         cpRoots.add(FileUtil.toFileObject(new File(getDataDir(), "/testfiles/structure/issue223891")));
         return Collections.singletonMap(
             JS_SOURCE_ID,
-            ClassPathSupport.createClassPath(cpRoots.toArray(new FileObject[cpRoots.size()]))
+            ClassPathSupport.createClassPath(cpRoots.toArray(new FileObject[0]))
         );
     }
 

@@ -46,7 +46,7 @@ public class Unused {
 
     @TriggerTreeKind(Kind.COMPILATION_UNIT)
     public static List<ErrorDescription> unused(HintContext ctx) {
-         return UnusedDetector.findUnused(ctx.getInfo())
+         return UnusedDetector.findUnused(ctx.getInfo(), () -> ctx.isCanceled())
                              .stream()
                              .map(ud -> convertUnused(ctx, ud))
                              .filter(err -> err != null)

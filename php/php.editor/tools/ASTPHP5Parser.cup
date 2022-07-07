@@ -2701,6 +2701,13 @@ non_empty_function_call_parameter_list:paramsList possible_comma
     RESULT = paramsList;
 :}
 
+| T_ELLIPSIS:e
+{:
+    // NETBEANS-5899 PHP 8.1: First class callable syntax
+    // e.g. strlen(...);
+    RESULT = Collections.singletonList(new FirstClassCallableArg(eleft, eright));
+:}
+
 | /* empty */
 {:
     RESULT = new LinkedList();
@@ -5094,6 +5101,33 @@ base_variable_with_function_calls:var T_OBJECT_OPERATOR object_property:memberPr
     // e.g. ($uvs = new UVS())::staticMethod();
     DereferencableVariable var = new DereferencableVariable(peleft, peright, pe.getExpression());
     RESULT = parser.createDispatch(ASTPHP5Parser.Access.STATIC, var, memberProperty, memberPropertyleft, memberPropertyright, paramsList, paramsListright, propertyList, aa);
+:}
+
+// Backed cases have an additional read-only property (value)
+// e.g. EnumName::CASE_NAME->value;
+// see https://www.php.net/manual/en/language.enumerations.backed.php
+| class_name:className T_PAAMAYIM_NEKUDOTAYIM identifier:constant T_OBJECT_OPERATOR identifier:varName
+{:
+    RESULT = new FieldAccess(classNameleft, varNameright, new StaticConstantAccess(classNameleft, constantright, className, constant),
+            new Variable(varNameleft, varNameright, varName.getName()), false);
+:}
+
+| variable_class_name:className T_PAAMAYIM_NEKUDOTAYIM identifier:constant T_OBJECT_OPERATOR identifier:varName
+{:
+    RESULT = new FieldAccess(classNameleft, varNameright, new StaticConstantAccess(classNameleft, constantright, className, constant),
+            new Variable(varNameleft, varNameright, varName.getName()), false);
+:}
+
+| class_name:className T_PAAMAYIM_NEKUDOTAYIM identifier:constant T_NULLSAFE_OBJECT_OPERATOR identifier:varName
+{:
+    RESULT = new FieldAccess(classNameleft, varNameright, new StaticConstantAccess(classNameleft, constantright, className, constant),
+            new Variable(varNameleft, varNameright, varName.getName()), true);
+:}
+
+| variable_class_name:className T_PAAMAYIM_NEKUDOTAYIM identifier:constant T_NULLSAFE_OBJECT_OPERATOR identifier:varName
+{:
+    RESULT = new FieldAccess(classNameleft, varNameright, new StaticConstantAccess(classNameleft, constantright, className, constant),
+            new Variable(varNameleft, varNameright, varName.getName()), true);
 :}
 ;
 

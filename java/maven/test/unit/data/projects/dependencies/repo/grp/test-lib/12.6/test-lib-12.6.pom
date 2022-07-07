@@ -39,7 +39,7 @@
             <groupId>nbtest.grp</groupId>
             <artifactId>test-lib3</artifactId>
             <version>12.6</version>
-            <scope>runtime</scope>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>javax.annotation</groupId>

@@ -3,5 +3,4 @@ document.getElementById("in1").va|;
 (QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
 ------------------------------------
 METHOD     valueOf(): Object               [PUBLIC]   JS Platform
-METHOD     values(obj: Object): Array      [PUBLIC,   JS Platform
-ATTRIBUTE  value                                      <font color=#999999>HTML Attribute</font>
+METHOD     values(o: Object): Object       [PUBLIC,   JS Platform

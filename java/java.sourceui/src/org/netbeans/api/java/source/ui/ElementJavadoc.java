@@ -35,6 +35,7 @@ import com.sun.source.doctree.ReferenceTree;
 import com.sun.source.doctree.ReturnTree;
 import com.sun.source.doctree.SeeTree;
 import com.sun.source.doctree.SinceTree;
+import com.sun.source.doctree.SnippetTree;
 import com.sun.source.doctree.StartElementTree;
 import com.sun.source.doctree.TextTree;
 import com.sun.source.doctree.ThrowsTree;
@@ -1319,27 +1320,27 @@ public class ElementJavadoc {
                 case TEXT:
                     TextTree ttag = (TextTree)tag;
                     sb.append(ttag.getBody());
-					break;
-		default:
-                    if (tag.getKind().toString().equals("SNIPPET")) { 
-                        snippetCount++;
-                        processDocSnippet(sb, tag, snippetCount,docPath, doc, trees);
-                    }	
+                    break;
+                case SNIPPET:
+                    snippetCount++;
+                    processDocSnippet(sb, (SnippetTree)tag, snippetCount,docPath, doc, trees);
+                    break;
             }
         }
         return sb;
     }
 
-    private void processDocSnippet(StringBuilder sb, DocTree tag, Integer snippetCount, TreePath docPath,DocCommentTree doc, DocTrees trees) {
+    private void processDocSnippet(StringBuilder sb, SnippetTree javadocSnippet, Integer snippetCount, TreePath docPath,DocCommentTree doc, DocTrees trees) {
         sb.append("<div id=\"snippet").append(snippetCount).append("\" style=\"font-size: 10px; border: 1px solid black; margin-top: 2px; margin-bottom: 2px\">"); //NOI18N
         sb.append("<div align=right>" //NOI18N
                 + "<a href=\"copy.snippet").append(snippetCount).append("\">Copy</a>" //NOI18N
                 + "</div>\n"); //NOI18N
+        
         sb.append("<pre>"); //NOI18N
         sb.append("<code>"); //NOI18N
   
 
-        List<DocTree> attributes = (List<DocTree>) TreeShims.getSnippetDocTreeAttributes(tag);
+        List<? extends DocTree> attributes = javadocSnippet.getAttributes();
         
         String fileName = null;
         String regionName = null;
@@ -1394,8 +1395,8 @@ public class ElementJavadoc {
         }
         
         if (!isExternalSnippet) {
-            if(TreeShims.getSnippetDocTreeText(tag)!=null) {
-                text = TreeShims.getSnippetDocTreeText(tag).toString();
+            if(javadocSnippet.getBody() != null) {
+                text = javadocSnippet.getBody().toString();
             }
         }
 

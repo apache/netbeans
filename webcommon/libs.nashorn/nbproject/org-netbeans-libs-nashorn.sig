@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.49
+#Version 2.0
 
 CLSS public abstract com.oracle.js.parser.AbstractParser
 cons protected init(com.oracle.js.parser.Source,com.oracle.js.parser.ErrorManager,boolean,int)
@@ -572,6 +572,7 @@ meth public boolean isSupported(int)
 meth public boolean needsParens(com.oracle.js.parser.TokenType,boolean)
 meth public com.oracle.js.parser.TokenKind getKind()
 meth public com.oracle.js.parser.TokenType getNext()
+meth public int getEcmascriptEdition()
 meth public int getLength()
 meth public int getPrecedence()
 meth public java.lang.String getName()

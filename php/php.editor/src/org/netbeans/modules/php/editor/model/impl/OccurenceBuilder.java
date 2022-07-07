@@ -1006,12 +1006,12 @@ class OccurenceBuilder {
             if (EnumSet.<Occurence.Accuracy>of(Accuracy.EXACT, Accuracy.EXACT_TYPE,
                     Accuracy.UNIQUE, Accuracy.EXACT_TYPE, Accuracy.MORE_MEMBERS, Accuracy.MORE).contains(accuracy)) {
                 buildMethodInvocations(elementInfo, fileScope, accuracy, cachedOccurences);
-                if (OptionsUtils.codeCompletionNonStaticMethods()) {
-                    buildStaticMethodInvocations(elementInfo, fileScope, cachedOccurences, false);
-                } else {
-                    // we need to build also static methods on parent (syntax is always 'parent::...')
-                    buildStaticMethodInvocations(elementInfo, fileScope, cachedOccurences, true);
-                }
+                // these static invocations are valid
+                // previous fix: #208309
+                // $test->publicStaticMethod();
+                // $test::publicStaticMethod();
+                // Test::publicStaticMethod();
+                buildStaticMethodInvocations(elementInfo, fileScope, cachedOccurences, false);
                 buildMethodDeclarations(elementInfo, fileScope, cachedOccurences);
                 buildMagicMethodDeclarations(elementInfo, fileScope, cachedOccurences);
             } else if (!accuracy.equals(Accuracy.NO)) {

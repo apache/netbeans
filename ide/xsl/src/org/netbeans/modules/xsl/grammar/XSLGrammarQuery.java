@@ -134,7 +134,7 @@ public final class XSLGrammarQuery implements GrammarQuery{
             attrDecls = new HashMap<>();
 
             // Commonly used variables
-            Set emptySet = new TreeSet();
+            Set<String> emptySet = new TreeSet<>();
             String spaceAtt = "xml:space";  // NOI18N
             Set<String> tmpSet;
 

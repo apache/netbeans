@@ -77,6 +77,7 @@ import org.eclipse.lsp4j.jsonrpc.JsonRpcException;
 import org.eclipse.lsp4j.jsonrpc.Launcher;
 import org.eclipse.lsp4j.jsonrpc.MessageConsumer;
 import org.eclipse.lsp4j.jsonrpc.MessageIssueException;
+import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.eclipse.lsp4j.jsonrpc.messages.Message;
 import org.eclipse.lsp4j.jsonrpc.messages.NotificationMessage;
 import org.eclipse.lsp4j.jsonrpc.messages.RequestMessage;
@@ -105,6 +106,12 @@ import org.netbeans.modules.java.lsp.server.explorer.LspTreeViewServiceImpl;
 import org.netbeans.modules.java.lsp.server.explorer.api.NodeChangedParams;
 import org.netbeans.modules.java.lsp.server.explorer.api.TreeViewService;
 import org.netbeans.modules.java.lsp.server.files.OpenedDocuments;
+import org.netbeans.modules.java.lsp.server.input.InputService;
+import org.netbeans.modules.java.lsp.server.input.LspInputServiceImpl;
+import org.netbeans.modules.java.lsp.server.input.QuickPickItem;
+import org.netbeans.modules.java.lsp.server.input.ShowQuickPickParams;
+import org.netbeans.modules.java.lsp.server.input.ShowMutliStepInputParams;
+import org.netbeans.modules.java.lsp.server.input.ShowInputBoxParams;
 import org.netbeans.modules.java.lsp.server.progress.OperationContext;
 import org.netbeans.modules.progress.spi.InternalHandle;
 import org.netbeans.spi.project.ActionProgress;
@@ -325,6 +332,7 @@ public final class Server {
         );
 
         private final LspTreeViewServiceImpl treeService = new LspTreeViewServiceImpl(sessionLookup);
+        private final LspInputServiceImpl inputService = new LspInputServiceImpl();
 
                 /**
          * Projects that are or were opened. After projects open, their CompletableFutures
@@ -849,6 +857,11 @@ public final class Server {
             return treeService;
         }
 
+        @JsonDelegate
+        public InputService getInputService() {
+            return inputService;
+        }
+
         @Override
         public TextDocumentService getTextDocumentService() {
             return textDocumentService;
@@ -877,6 +890,7 @@ public final class Server {
             });
             sessionServices.add(new WorkspaceUIContext(client));
             sessionServices.add(treeService.getNodeRegistry());
+            sessionServices.add(inputService.getRegistry());
             ((LanguageClientAware) getTextDocumentService()).connect(client);
             ((LanguageClientAware) getWorkspaceService()).connect(client);
             ((LanguageClientAware) treeService).connect(client);
@@ -954,6 +968,12 @@ public final class Server {
         public CompletableFuture<String> showInputBox(ShowInputBoxParams params) {
             logWarning(params);
             return CompletableFuture.completedFuture(params.getValue());
+        }
+
+        @Override
+        public CompletableFuture<Map<String, Either<List<QuickPickItem>, String>>> showMultiStepInput(ShowMutliStepInputParams params) {
+            logWarning(params);
+            return CompletableFuture.completedFuture(null);
         }
 
         @Override

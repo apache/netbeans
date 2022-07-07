@@ -334,7 +334,7 @@ ${selection}${cursor}
     <!-- Arrays and List conversion and sorting -->
     <codetemplate abbreviation="2ar">
          <code>
- <![CDATA[${clazz}[] ${var newVarName default="arr"} = ${typeCast cast default="" editable=false} ${coll instanceof="java.util.Collection"}.toArray(new ${clazz}[${coll}.size()]);
+ <![CDATA[${clazz}[] ${var newVarName default="arr"} = ${typeCast cast default="" editable=false} ${coll instanceof="java.util.Collection"}.toArray(new ${clazz}[0]);
  ]]>
          </code>
      </codetemplate>

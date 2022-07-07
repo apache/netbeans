@@ -619,7 +619,7 @@ public final class BeanModelBuilder {
         TypeMirrorHandle returnType = TypeMirrorHandle.create(m.getReturnType());
         
         if (factoryMethods.isEmpty()) {
-            factoryMethods = new HashMap<String, TypeMirrorHandle>();
+            factoryMethods = new HashMap<>();
         }
         factoryMethods.put(m.getSimpleName().toString(), returnType);
         consumed = true;

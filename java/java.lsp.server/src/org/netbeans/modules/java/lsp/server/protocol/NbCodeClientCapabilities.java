@@ -22,7 +22,6 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import org.eclipse.lsp4j.ClientCapabilities;
 import org.eclipse.lsp4j.InitializeParams;
-import org.netbeans.modules.java.lsp.server.ui.UIContext;
 
 /**
  * Encapsulates all nbcode-specific client capabilities. Need to be passed in

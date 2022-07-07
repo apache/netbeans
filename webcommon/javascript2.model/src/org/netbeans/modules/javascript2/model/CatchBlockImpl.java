@@ -36,7 +36,7 @@ import org.netbeans.modules.javascript2.types.api.TypeUsage;
 public class CatchBlockImpl extends DeclarationScopeImpl implements JsFunction {
 
     private final List<JsObject> parameters;
-    
+
     public CatchBlockImpl(DeclarationScope inFunction, Identifier exception, OffsetRange range, String mimeType) {
         super(inFunction, (JsObject)inFunction, new Identifier(getBlockName((JsObject)inFunction), OffsetRange.NONE),
                 range, mimeType, null); //NOI18N
@@ -56,7 +56,7 @@ public class CatchBlockImpl extends DeclarationScopeImpl implements JsFunction {
         }
         return "catch_" + index;
     }
-    
+
     @Override
     public Collection<? extends JsObject> getParameters() {
         return new ArrayList(this.parameters);

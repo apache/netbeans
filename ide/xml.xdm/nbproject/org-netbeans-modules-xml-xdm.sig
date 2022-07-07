@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.49.0
+#Version 1.50.0
 
 CLSS public abstract interface java.beans.PropertyChangeListener
 intf java.util.EventListener
@@ -689,7 +689,7 @@ meth public void setName(java.lang.String)
 meth public void setPrefix(java.lang.String)
 meth public void setValue(java.lang.String)
 supr org.netbeans.modules.xml.xdm.nodes.NodeImpl
-hfds AMPERSAND_PATTERN,APOSTROPHE_PATTERN,LESS_THAN_PATTERN,QUOTE_PATTERN,name,value
+hfds name,value
 
 CLSS public org.netbeans.modules.xml.xdm.nodes.CData
 intf org.w3c.dom.CDATASection
@@ -930,7 +930,6 @@ meth public void replaceData(int,int,java.lang.String)
 meth public void setData(java.lang.String)
 meth public void setText(java.lang.String)
 supr org.netbeans.modules.xml.xdm.nodes.NodeImpl
-hfds AMPERSAND_PATTERN,GREATER_THAN_PATTERN,LESS_THAN_PATTERN
 
 CLSS public org.netbeans.modules.xml.xdm.nodes.Token
 fld public final static org.netbeans.modules.xml.xdm.nodes.Token CDATA_END

@@ -68,6 +68,8 @@ public class FlatEditorTabCellRenderer extends AbstractTabCellRenderer {
 
     private static final FlatTabPainter painter = new FlatTabPainter();
 
+    boolean firstTab;
+    boolean lastTab;
     boolean nextTabSelected;
 
     public FlatEditorTabCellRenderer() {
@@ -207,7 +209,8 @@ public class FlatEditorTabCellRenderer extends AbstractTabCellRenderer {
                     background, activeBackground, selectedBackground,
                     hoverBackground, attentionBackground);
 
-            boolean showSeparator = showTabSeparators && !selected && !ren.nextTabSelected;
+            boolean showSeparator = showTabSeparators && !selected && !ren.nextTabSelected
+                    && !ren.lastTab;
 
             // do not round tab separator width to get nice small lines at 125%, 150% and 175%
             int tabSeparatorWidth = showSeparator ? (int) (1 * scale) : 0;
@@ -219,11 +222,17 @@ public class FlatEditorTabCellRenderer extends AbstractTabCellRenderer {
             if (selected && underlineHeight > 0) {
                 // paint underline if tab is selected
                 int underlineHeight = (int) Math.round(FlatEditorTabCellRenderer.underlineHeight * scale);
-                g.setColor(ren.isActive() ? underlineColor : inactiveUnderlineColor);
-                if (underlineAtTop)
+                if (underlineAtTop) {
+                    g.setColor(contentBorderColor);
+                    int borderWidth = (int) (1 * scale);
+                    g.fillRect(0, 0, borderWidth, height);
+                    g.fillRect(width - tabSeparatorWidth - borderWidth, 0, borderWidth, height);
+                    g.setColor(ren.isActive() ? underlineColor : inactiveUnderlineColor);
                     g.fillRect(0, 0, width - tabSeparatorWidth, underlineHeight);
-                else
+                } else {
+                    g.setColor(ren.isActive() ? underlineColor : inactiveUnderlineColor);
                     g.fillRect(0, height - underlineHeight, width - tabSeparatorWidth, underlineHeight);
+                }
             } else {
                 // paint bottom border
                 int contentBorderWidth = HiDPIUtils.deviceBorderWidth(scale, 1);

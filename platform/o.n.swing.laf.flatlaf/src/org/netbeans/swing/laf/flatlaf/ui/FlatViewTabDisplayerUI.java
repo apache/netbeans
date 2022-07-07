@@ -221,8 +221,14 @@ public class FlatViewTabDisplayerUI extends AbstractViewTabDisplayerUI {
             int underlineHeight = (int) Math.round(this.underlineHeight * scale);
             g.setColor(isActive() ? underlineColor : inactiveUnderlineColor);
             if (underlineAtTop) {
+                g.setColor(contentBorderColor);
+                int borderWidth = (int) (1 * scale);
+                g.fillRect(0, 0, borderWidth, height);
+                g.fillRect(width - tabSeparatorWidth - borderWidth, 0, borderWidth, height);
+                g.setColor(isActive() ? underlineColor : inactiveUnderlineColor);
                 g.fillRect(0, 0, width - tabSeparatorWidth, underlineHeight);
             } else {
+                g.setColor(isActive() ? underlineColor : inactiveUnderlineColor);
                 g.fillRect(0, height - underlineHeight, width - tabSeparatorWidth, underlineHeight);
             }
         } else {
@@ -232,7 +238,9 @@ public class FlatViewTabDisplayerUI extends AbstractViewTabDisplayerUI {
             g.fillRect(0, height - contentBorderWidth, width, contentBorderWidth);
         }
 
-        if (showTabSeparators && index >= 0) {
+        if (showTabSeparators && index >= 0 &&
+                ((!isSelected(index) && index < getDataModel().size() - 1 && !isSelected(index + 1))
+                || selectedBackground.equals(activeBackground))) {
             int offset = (int) (4 * scale);
             g.setColor(tabSeparatorColor);
             g.fillRect(width - tabSeparatorWidth, offset, tabSeparatorWidth, height - (offset * 2) - 1);
@@ -251,7 +259,8 @@ public class FlatViewTabDisplayerUI extends AbstractViewTabDisplayerUI {
     private Color colorForState(int index, Color normal, Color active, Color selected, Color hover, Color attention) {
         return isAttention(index) ? attention
                 : isMouseOver(index) ? hover
-                : isActive() ? (isSelected(index) ? selected : active)
+                : isSelected(index) ? selected
+                : isActive() ? active
                 : normal;
     }
 

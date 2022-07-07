@@ -80,8 +80,12 @@ public class FlatEditorTabDisplayerUI extends BasicScrollingTabDisplayerUI {
     @Override
     public TabCellRenderer getTabCellRenderer(int tab) {
         TabCellRenderer ren = super.getTabCellRenderer(tab);
-        if (ren instanceof FlatEditorTabCellRenderer && tab + 1 < displayer.getModel().size()) {
-            ((FlatEditorTabCellRenderer)ren).nextTabSelected = (tabState.getState(tab + 1) & TabState.SELECTED) != 0;
+        if (ren instanceof FlatEditorTabCellRenderer) {
+            FlatEditorTabCellRenderer fren = (FlatEditorTabCellRenderer) ren;
+            int N = displayer.getModel().size();
+            fren.firstTab = (tab == 0);
+            fren.lastTab = (tab == N - 1);
+            fren.nextTabSelected = tab + 1 < N && (tabState.getState(tab + 1) & TabState.SELECTED) != 0;
         }
         return ren;
     }

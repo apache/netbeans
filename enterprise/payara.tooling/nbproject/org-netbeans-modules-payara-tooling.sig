@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.10
+#Version 2.11
 
 CLSS public abstract interface java.io.Closeable
 intf java.lang.AutoCloseable
@@ -1377,17 +1377,17 @@ meth public abstract short getMinor()
 meth public abstract short getUpdate()
 
 CLSS public abstract interface org.netbeans.modules.payara.tooling.data.PayaraServer
+meth public abstract boolean isDocker()
 meth public abstract boolean isRemote()
 meth public abstract int getAdminPort()
 meth public abstract int getPort()
 meth public abstract java.lang.String getAdminPassword()
 meth public abstract java.lang.String getAdminUser()
-meth public abstract boolean isDocker()
-meth public abstract java.lang.String getHostPath()
 meth public abstract java.lang.String getContainerPath()
 meth public abstract java.lang.String getDomainName()
 meth public abstract java.lang.String getDomainsFolder()
 meth public abstract java.lang.String getHost()
+meth public abstract java.lang.String getHostPath()
 meth public abstract java.lang.String getName()
 meth public abstract java.lang.String getServerHome()
 meth public abstract java.lang.String getServerRoot()
@@ -1401,17 +1401,17 @@ CLSS public org.netbeans.modules.payara.tooling.data.PayaraServerEntity
 cons public init()
 cons public init(java.lang.String,java.lang.String,java.lang.String,java.lang.String)
 intf org.netbeans.modules.payara.tooling.data.PayaraServer
+meth public boolean isDocker()
 meth public boolean isRemote()
 meth public int getAdminPort()
 meth public int getPort()
 meth public java.lang.String getAdminPassword()
 meth public java.lang.String getAdminUser()
-meth public abstract boolean isDocker()
-meth public abstract java.lang.String getHostPath()
-meth public abstract java.lang.String getContainerPath()
+meth public java.lang.String getContainerPath()
 meth public java.lang.String getDomainName()
 meth public java.lang.String getDomainsFolder()
 meth public java.lang.String getHost()
+meth public java.lang.String getHostPath()
 meth public java.lang.String getName()
 meth public java.lang.String getServerHome()
 meth public java.lang.String getServerRoot()
@@ -1424,9 +1424,12 @@ meth public void setAdminInterface(org.netbeans.modules.payara.tooling.data.Paya
 meth public void setAdminPassword(java.lang.String)
 meth public void setAdminPort(int)
 meth public void setAdminUser(java.lang.String)
+meth public void setContainerPath(java.lang.String)
+meth public void setDocker(boolean)
 meth public void setDomainName(java.lang.String)
 meth public void setDomainsFolder(java.lang.String)
 meth public void setHost(java.lang.String)
+meth public void setHostPath(java.lang.String)
 meth public void setName(java.lang.String)
 meth public void setPlatformVersion(org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI)
 meth public void setPort(int)
@@ -1436,7 +1439,7 @@ meth public void setUrl(java.lang.String)
 meth public void setVersion(org.netbeans.modules.payara.tooling.data.PayaraVersion)
  anno 0 java.lang.Deprecated()
 supr java.lang.Object
-hfds adminInterface,adminPassword,adminPort,adminUser,domainName,domainsFolder,host,name,platformVersion,port,serverHome,serverRoot,url,version
+hfds adminInterface,adminPassword,adminPort,adminUser,containerPath,docker,domainName,domainsFolder,host,hostPath,name,platformVersion,port,serverHome,serverRoot,url,version
 
 CLSS public abstract interface org.netbeans.modules.payara.tooling.data.PayaraServerStatus
 meth public abstract org.netbeans.modules.payara.tooling.PayaraStatus getStatus()
@@ -1904,6 +1907,7 @@ CLSS public final !enum org.netbeans.modules.payara.tooling.server.config.JavaSE
 fld public final static char SEPARATOR = '.'
 fld public final static int length
 fld public final static org.netbeans.modules.payara.tooling.server.config.JavaSEPlatform v11
+fld public final static org.netbeans.modules.payara.tooling.server.config.JavaSEPlatform v17
 fld public final static org.netbeans.modules.payara.tooling.server.config.JavaSEPlatform v1_1
 fld public final static org.netbeans.modules.payara.tooling.server.config.JavaSEPlatform v1_2
 fld public final static org.netbeans.modules.payara.tooling.server.config.JavaSEPlatform v1_3
@@ -1917,7 +1921,7 @@ meth public static org.netbeans.modules.payara.tooling.server.config.JavaSEPlatf
 meth public static org.netbeans.modules.payara.tooling.server.config.JavaSEPlatform valueOf(java.lang.String)
 meth public static org.netbeans.modules.payara.tooling.server.config.JavaSEPlatform[] values()
 supr java.lang.Enum<org.netbeans.modules.payara.tooling.server.config.JavaSEPlatform>
-hfds V11_STR,V1_1_STR,V1_2_STR,V1_3_STR,V1_4_STR,V1_5_STR,V1_6_STR,V1_7_STR,V1_8_STR,stringValuesMap
+hfds V11_STR,V17_STR,V1_1_STR,V1_2_STR,V1_3_STR,V1_4_STR,V1_5_STR,V1_6_STR,V1_7_STR,V1_8_STR,stringValuesMap
 
 CLSS public org.netbeans.modules.payara.tooling.server.config.JavaSESet
 cons public init(java.util.List<java.lang.String>,java.lang.String)

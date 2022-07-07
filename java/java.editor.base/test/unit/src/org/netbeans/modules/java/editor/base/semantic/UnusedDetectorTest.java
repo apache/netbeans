@@ -344,7 +344,7 @@ public class UnusedDetectorTest extends NbTestCase {
                 try {
                     parameter.toPhase(JavaSource.Phase.UP_TO_DATE);
 
-                    Set<String> result = UnusedDetector.findUnused(parameter)
+                    Set<String> result = UnusedDetector.findUnused(parameter, () -> false)
                                                        .stream()
                                                        .map(ud -> parameter.getCompilationUnit().getLineMap().getLineNumber(parameter.getTrees().getSourcePositions().getStartPosition(ud.unusedElementPath.getCompilationUnit(), ud.unusedElementPath.getLeaf())) + ":" + ud.unusedElement.getSimpleName() + ":" + ud.reason.name())
                                                        .collect(Collectors.toSet());

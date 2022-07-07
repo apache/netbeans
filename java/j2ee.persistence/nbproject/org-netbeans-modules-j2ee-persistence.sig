@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.69.0
+#Version 1.71.0
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -1064,6 +1064,7 @@ meth public abstract org.openide.filesystems.FileObject getLocation()
 
 CLSS public final org.netbeans.modules.j2ee.persistence.api.entity.generator.EntitiesFromDBGenerator
 cons public init(java.util.List<java.lang.String>,boolean,boolean,boolean,org.netbeans.modules.j2ee.persistence.entitygenerator.EntityRelation$FetchType,org.netbeans.modules.j2ee.persistence.entitygenerator.EntityRelation$CollectionType,java.lang.String,org.netbeans.api.project.SourceGroup,org.netbeans.api.db.explorer.DatabaseConnection,org.netbeans.api.project.Project,org.netbeans.modules.j2ee.persistence.dd.common.PersistenceUnit)
+cons public init(java.util.List<java.lang.String>,boolean,boolean,boolean,org.netbeans.modules.j2ee.persistence.entitygenerator.EntityRelation$FetchType,org.netbeans.modules.j2ee.persistence.entitygenerator.EntityRelation$CollectionType,java.lang.String,org.netbeans.api.project.SourceGroup,org.netbeans.api.db.explorer.DatabaseConnection,org.netbeans.api.project.Project,org.netbeans.modules.j2ee.persistence.dd.common.PersistenceUnit,org.netbeans.modules.j2ee.persistence.wizard.fromdb.PersistenceGenerator)
 cons public init(java.util.List<java.lang.String>,boolean,java.lang.String,org.netbeans.api.project.SourceGroup,org.netbeans.api.db.explorer.DatabaseConnection,org.netbeans.api.project.Project,org.netbeans.modules.j2ee.persistence.dd.common.PersistenceUnit)
 meth public java.util.Set<org.openide.filesystems.FileObject> generate(org.netbeans.api.progress.aggregate.ProgressContributor) throws java.io.IOException,java.sql.SQLException
 supr java.lang.Object
@@ -2285,7 +2286,7 @@ meth public void removeChangeListener(javax.swing.event.ChangeListener)
 meth public void stateChanged(javax.swing.event.ChangeEvent)
 meth public void storeSettings(java.lang.Object)
 supr java.lang.Object
-hfds JAXBRequired,changeSupport,component,componentInitialized,isFinishable,project,providers,puRequired,wizardDescriptor
+hfds JAXBRequired,changeSupport,component,componentInitialized,isFinishable,isJPA,project,providers,puRequired,wizardDescriptor
 
 CLSS public abstract interface org.netbeans.modules.j2ee.persistence.wizard.fromdb.FacadeGenerator
 fld public final static java.lang.String FACADE_SUFFIX = "Facade"
@@ -3125,6 +3126,8 @@ fld public final static java.lang.String PROP_VALID = "valid"
 fld public final static java.lang.String PROP_VALUE = "value"
 fld public final static java.lang.String PROP_WARNING_NOTIFICATION = "warningNotification"
 innr public final static Exception
+innr public final static PasswordLine
+innr public final static QuickPick
 innr public static Confirmation
 innr public static InputLine
 innr public static Message

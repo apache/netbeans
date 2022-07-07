@@ -4,41 +4,45 @@ console.log("cat".|startsWith("ca", 0));
 ------------------------------------
 CLASS      prototype                       [PUBLIC]   JS Platform
 METHOD     anchor(name: String): String    [PUBLIC]   JS Platform
-METHOD     big(): String                   [PUBLIC,   JS Platform
-METHOD     bold(): String                  [PUBLIC,   JS Platform
-METHOD     charAt(index: Number): String   [PUBLIC]   JS Platform
+METHOD     at(index: Number): String|unde  [PUBLIC]   JS Platform
+METHOD     big(): String                   [PUBLIC]   JS Platform
+METHOD     blink(): String                 [PUBLIC]   JS Platform
+METHOD     bold(): String                  [PUBLIC]   JS Platform
+METHOD     charAt(pos: Number): String     [PUBLIC]   JS Platform
 METHOD     charCodeAt(index: Number): Num  [PUBLIC]   JS Platform
-METHOD     codePointAt(pos: String): Numb  [PUBLIC]   JS Platform
-METHOD     concat(string2, string3): Stri  [PUBLIC]   JS Platform
+METHOD     codePointAt(pos: Number): Numb  [PUBLIC]   JS Platform
+METHOD     concat(strings: String): Strin  [PUBLIC]   JS Platform
 METHOD     endsWith(searchString: String)  [PUBLIC]   JS Platform
-METHOD     fixed(): String                 [PUBLIC,   JS Platform
-METHOD     fontcolor(color: String): Stri  [PUBLIC,   JS Platform
-METHOD     fontsize(size: Number): Number  [PUBLIC,   JS Platform
-METHOD     hasOwnProperty(prop: String):   [PUBLIC]   JS Platform
+METHOD     fixed(): String                 [PUBLIC]   JS Platform
+METHOD     fontcolor(color: String): Stri  [PUBLIC]   JS Platform
+METHOD     fontsize(size: String): String  [PUBLIC]   JS Platform
+METHOD     hasOwnProperty(v: Number|Symbo  [PUBLIC]   JS Platform
 METHOD     includes(searchString: String)  [PUBLIC]   JS Platform
-METHOD     indexOf(searchValue: String):   [PUBLIC]   JS Platform
-METHOD     isPrototypeOf(obj): Boolean     [PUBLIC]   JS Platform
-METHOD     italics(): String               [PUBLIC,   JS Platform
-METHOD     lastIndexOf(searchValue: Strin  [PUBLIC]   JS Platform
+METHOD     indexOf(searchString: String):  [PUBLIC]   JS Platform
+METHOD     isPrototypeOf(v: Object): Bool  [PUBLIC]   JS Platform
+METHOD     italics(): String               [PUBLIC]   JS Platform
+METHOD     lastIndexOf(searchString: Stri  [PUBLIC]   JS Platform
 METHOD     link(url: String): String       [PUBLIC]   JS Platform
-METHOD     localeCompare(compareString: S  [PUBLIC]   JS Platform
-METHOD     match(regexp: RegExp): Array    [PUBLIC]   JS Platform
+METHOD     localeCompare(that: String): N  [PUBLIC]   JS Platform
+METHOD     match(matcher: Object): null|R  [PUBLIC]   JS Platform
+METHOD     matchAll(regexp: RegExp): Iter  [PUBLIC]   JS Platform
 METHOD     normalize(): String             [PUBLIC]   JS Platform
 METHOD     padEnd(maxLength: Number): Str  [PUBLIC]   JS Platform
 METHOD     padStart(maxLength: Number): S  [PUBLIC]   JS Platform
-METHOD     propertyIsEnumerable(prop: Str  [PUBLIC]   JS Platform
+METHOD     propertyIsEnumerable(v: Number  [PUBLIC]   JS Platform
 METHOD     repeat(count: Number): String   [PUBLIC]   JS Platform
-METHOD     replace(regexp, newSubStr): St  [PUBLIC]   JS Platform
-METHOD     search(regexp: RegExp): Number  [PUBLIC]   JS Platform
-METHOD     slice(beginSlice: Number): Str  [PUBLIC]   JS Platform
-METHOD     small(): String                 [PUBLIC,   JS Platform
-METHOD     split(): Array                  [PUBLIC]   JS Platform
+METHOD     replace(searchValue: Object, r  [PUBLIC]   JS Platform
+METHOD     replaceAll(searchValue: RegExp  [PUBLIC]   JS Platform
+METHOD     search(searcher: Object): Numb  [PUBLIC]   JS Platform
+METHOD     slice(): String                 [PUBLIC]   JS Platform
+METHOD     small(): String                 [PUBLIC]   JS Platform
+METHOD     split(splitter: Object): Strin  [PUBLIC]   JS Platform
 METHOD     startsWith(searchString: Strin  [PUBLIC]   JS Platform
-METHOD     strike(): String                [PUBLIC,   JS Platform
-METHOD     sub(): String                   [PUBLIC,   JS Platform
-METHOD     substr(start: Number): String   [PUBLIC]   JS Platform
-METHOD     substring(indexStart: Number):  [PUBLIC]   JS Platform
-METHOD     sup(): String                   [PUBLIC,   JS Platform
+METHOD     strike(): String                [PUBLIC]   JS Platform
+METHOD     sub(): String                   [PUBLIC]   JS Platform
+METHOD     substr(from: Number): String    [PUBLIC]   JS Platform
+METHOD     substring(start: Number): Stri  [PUBLIC]   JS Platform
+METHOD     sup(): String                   [PUBLIC]   JS Platform
 METHOD     toLocaleLowerCase(): String     [PUBLIC]   JS Platform
 METHOD     toLocaleString(): String        [PUBLIC]   JS Platform
 METHOD     toLocaleUpperCase(): String     [PUBLIC]   JS Platform
@@ -46,5 +50,9 @@ METHOD     toLowerCase(): String           [PUBLIC]   JS Platform
 METHOD     toString(): String              [PUBLIC]   JS Platform
 METHOD     toUpperCase(): String           [PUBLIC]   JS Platform
 METHOD     trim(): String                  [PUBLIC]   JS Platform
+METHOD     trimEnd(): String               [PUBLIC]   JS Platform
+METHOD     trimLeft(): String              [PUBLIC]   JS Platform
+METHOD     trimRight(): String             [PUBLIC]   JS Platform
+METHOD     trimStart(): String             [PUBLIC]   JS Platform
 METHOD     valueOf(): String               [PUBLIC]   JS Platform
-FIELD      constructor: Function           [PUBLIC]   JS Platform
+FIELD      length: Number                  [PUBLIC]   JS Platform

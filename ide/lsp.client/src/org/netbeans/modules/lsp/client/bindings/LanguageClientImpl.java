@@ -158,10 +158,11 @@ public class LanguageClientImpl implements LanguageClient, Endpoint {
     public void publishDiagnostics(PublishDiagnosticsParams pdp) {
         try {
             FileObject file = URLMapper.findFileObject(new URI(pdp.getUri()).toURL());
-            EditorCookie ec = file.getLookup().lookup(EditorCookie.class);
+            EditorCookie ec = file != null ? file.getLookup().lookup(EditorCookie.class) : null;
             Document doc = ec != null ? ec.getDocument() : null;
-            if (doc == null)
+            if (doc == null) {
                 return ; //ignore...
+            }
             List<ErrorDescription> diags = pdp.getDiagnostics().stream().map(d -> {
                 LazyFixList fixList = allowCodeActions ? new DiagnosticFixList(pdp.getUri(), d) : ErrorDescriptionFactory.lazyListForFixes(Collections.emptyList());
                 return ErrorDescriptionFactory.createErrorDescription(severityMap.get(d.getSeverity()), d.getMessage(), fixList, file, Utils.getOffset(doc, d.getRange().getStart()), Utils.getOffset(doc, d.getRange().getEnd()));

@@ -158,7 +158,7 @@ public final class DebuggerManager implements ContextProvider {
     private static DebuggerManager            debuggerManager;
     private Session                           currentSession;
     private DebuggerEngine                    currentEngine;
-    private final List                        sessions = new ArrayList();
+    private final List<Session>               sessions = new ArrayList<>();
     private final Set                         engines = new HashSet ();
     private final Vector<Breakpoint>          breakpoints = new Vector<>();
     private boolean                           breakpointsInitializing = false;
@@ -265,8 +265,8 @@ public final class DebuggerManager implements ContextProvider {
         //S ystem.out.println("@StartDebugging info: " + info);
         
         // init sessions
-        List sessionProviders = new ArrayList();
-        List<DebuggerEngine> engines = new ArrayList<DebuggerEngine>();
+        List sessionProviders = new ArrayList<>();
+        List<DebuggerEngine> engines = new ArrayList<>();
         Lookup l = info.getLookup ();
         Lookup l2 = info.getLookup ();
         synchronized (l) {
@@ -315,7 +315,7 @@ public final class DebuggerManager implements ContextProvider {
             }
             
             // init DebuggerEngines
-            ArrayList engineProviders = new ArrayList ();
+            List<Object> engineProviders = new ArrayList<>();
             synchronized (l2) {
                 engineProviders.addAll (
                     l2.lookup (null, DebuggerEngineProvider.class)
@@ -704,7 +704,7 @@ public final class DebuggerManager implements ContextProvider {
                 throw new IllegalArgumentException("Permutation of length "+permutation.length+", but have "+watches.size()+" watches.");
             }
             checkPermutation(permutation);
-            Vector<Watch> v = (Vector<Watch>)watches.clone();
+            Vector<Watch> v = new Vector<>(watches);
             for (int i = 0; i < v.size(); i++) {
                 watches.set(permutation[i], v.get(i));
             }
@@ -1699,52 +1699,5 @@ public final class DebuggerManager implements ContextProvider {
             }
         }
     }
-    
-    /*
-    private class ModuleUnloadListeners {
-        
-        private Map<ClassLoader, ModuleChangeListener> moduleChangeListeners
-                = new HashMap<ClassLoader, ModuleChangeListener>();
-        
-        public void listenOn(ClassLoader cl) {
-            /*
-            org.openide.util.Lookup.Result<ModuleInfo> moduleLookupResult =
-                    org.openide.util.Lookup.getDefault ().lookup(
-                        new org.openide.util.Lookup.Template<ModuleInfo>(ModuleInfo.class));
-            synchronized(moduleChangeListeners) {
-                if (!moduleChangeListeners.containsKey(cl)) {
-                    for (ModuleInfo mi : moduleLookupResult.allInstances()) {
-                        if (mi.isEnabled() && mi.getClassLoader() == cl) {
-                            ModuleChangeListener l = new ModuleChangeListener(cl);
-                            mi.addPropertyChangeListener(WeakListeners.propertyChange(l, mi));
-                            moduleChangeListeners.put(cl, l);
-                        }
-                    }
-                }
-            }
-             *//*
-        }
-        
-        private final class ModuleChangeListener implements PropertyChangeListener {
-            
-            private ClassLoader cl;
-
-            public ModuleChangeListener(ClassLoader cl) {
-                this.cl = cl;
-            }
-
-            public void propertyChange(PropertyChangeEvent evt) {
-                ModuleInfo mi = (ModuleInfo) evt.getSource();
-                if (!mi.isEnabled()) {
-                    synchronized (moduleChangeListeners) {
-                        moduleChangeListeners.remove(cl);
-                    }
-                    moduleUnloaded(cl);
-                }
-            }
-
-        }
-    }
-                */
 }
 

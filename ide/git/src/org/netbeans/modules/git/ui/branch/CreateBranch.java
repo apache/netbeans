@@ -37,6 +37,7 @@ import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.util.HelpCtx;
 import org.openide.util.NbBundle;
+import org.netbeans.modules.git.GitModuleConfig;
 
 /**
  *
@@ -68,6 +69,9 @@ public class CreateBranch implements DocumentListener {
     }
     
     String getBranchName () {
+        if (GitModuleConfig.getDefault().getAutoReplaceInvalidBranchNameCharacters()) {
+            return GitUtils.normalizeBranchName(panel.branchNameField.getText());
+        }
         return panel.branchNameField.getText().trim();
     }
 

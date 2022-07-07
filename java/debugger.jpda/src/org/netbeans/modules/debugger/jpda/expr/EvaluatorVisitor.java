@@ -4519,7 +4519,7 @@ public class EvaluatorVisitor extends ErrorAwareTreePathScanner<Mirror, Evaluati
             com.sun.jdi.Method forName = clazz.concreteMethodByName("forName", "(Ljava/lang/String;ZLjava/lang/ClassLoader;)Ljava/lang/Class;");
             StackFrame frame = evaluationContext.getFrame();
             ClassLoaderReference executingClassloader = frame.location().declaringType().classLoader();
-            List args = new ArrayList();
+            List<Value> args = new ArrayList<>();
             StringReference className = createStringMirrorWithDisabledCollection(name, vm, evaluationContext);
             args.add(className);
             args.add(vm.mirrorOf(true));
@@ -5512,7 +5512,7 @@ public class EvaluatorVisitor extends ErrorAwareTreePathScanner<Mirror, Evaluati
 
         @Override
         public Map<Field, Value> getValues(List<? extends Field> list) {
-            List[] listByTypes = new List[types.length];
+            List<Field>[] listByTypes = new List[types.length];
             for (int i = 0; i < types.length; i++) {
                 listByTypes[i] = new ArrayList();
                 ReferenceType t = types[i];
@@ -5532,7 +5532,7 @@ public class EvaluatorVisitor extends ErrorAwareTreePathScanner<Mirror, Evaluati
                         singleMap = tmap;
                     } else {
                         if (map == null) {
-                            map = new HashMap<Field, Value>(list.size());
+                            map = new HashMap<>(list.size());
                             map.putAll(singleMap);
                         }
                         map.putAll(tmap);

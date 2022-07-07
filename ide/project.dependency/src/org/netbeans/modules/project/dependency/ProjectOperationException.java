@@ -31,6 +31,11 @@ import org.netbeans.api.project.Project;
 public final class ProjectOperationException extends IllegalStateException {
     public enum State {
         /**
+         * Unexpected project system error, see the exception cause for details.
+         */
+        ERROR,
+        
+        /**
          * The project has not been yet fully initialized. The query can not
          * produce sane results.
          */
@@ -48,9 +53,9 @@ public final class ProjectOperationException extends IllegalStateException {
         OFFLINE,
         
         /**
-         * The project is OK
+         * The project is OK. The project operation threw an exception.
          */
-        OK,
+        OK
     }
     
     private final Project project;

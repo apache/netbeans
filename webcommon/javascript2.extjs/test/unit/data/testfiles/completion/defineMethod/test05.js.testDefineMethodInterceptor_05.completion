@@ -3,4 +3,4 @@ NetBeans.stuff.engineer.developer.a|
 (QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
 ------------------------------------
 CLASS      address                         [PUBLIC]   defineMethod.js
-METHOD     assign(target): undefined       [PUBLIC,   JS Platform
+METHOD     assign(target, sources): undef  [PUBLIC,   JS Platform

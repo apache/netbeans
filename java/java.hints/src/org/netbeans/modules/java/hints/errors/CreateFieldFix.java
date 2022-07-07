@@ -48,7 +48,7 @@ import org.openide.util.NbBundle;
  *
  * @author Jan Lahoda
  */
-public final class CreateFieldFix extends CreateFixBase implements EnhancedFix {
+public final class CreateFieldFix extends ModificationResultBasedFix implements EnhancedFix {
     
     private FileObject targetFile;
     private ElementHandle<TypeElement> target;

@@ -38,6 +38,7 @@ import org.netbeans.modules.php.editor.parser.astnodes.ClassInstanceCreation;
 import org.netbeans.modules.php.editor.parser.astnodes.ConstantDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.EnumDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.Expression;
+import org.netbeans.modules.php.editor.parser.astnodes.FirstClassCallableArg;
 import org.netbeans.modules.php.editor.parser.astnodes.FormalParameter;
 import org.netbeans.modules.php.editor.parser.astnodes.Identifier;
 import org.netbeans.modules.php.editor.parser.astnodes.IntersectionType;
@@ -177,6 +178,16 @@ public final class PHP81UnhandledError extends UnhandledErrorRule {
 
         @Override
         public void visit(CaseDeclaration node) {
+            if (CancelSupport.getDefault().isCancelled()) {
+                return;
+            }
+            createError(node);
+            super.visit(node);
+        }
+
+        @Override
+        public void visit(FirstClassCallableArg node) {
+            // e.g. strlen(...)
             if (CancelSupport.getDefault().isCancelled()) {
                 return;
             }

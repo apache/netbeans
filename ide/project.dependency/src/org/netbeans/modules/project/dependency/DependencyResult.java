@@ -19,6 +19,7 @@
 package org.netbeans.modules.project.dependency;
 
 import java.io.IOException;
+import java.util.Collection;
 import javax.swing.event.ChangeListener;
 import org.netbeans.api.project.Project;
 import org.openide.util.Lookup;
@@ -45,7 +46,17 @@ public interface DependencyResult extends Lookup.Provider {
      */
     public Dependency getRoot();
     
+    /**
+     * Checks if the data is still valid
+     * @return true, if the data is valid
+     */
     public boolean isValid();
+    
+    /**
+     * Returns artifacts that may be unavailable or erroneous.
+     * @return problem artifacts
+     */
+    public Collection<ArtifactSpec> getProblemArtifacts();
     
     /**
      * Registers a Listener to be notified when validity changes.

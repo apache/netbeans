@@ -4184,7 +4184,11 @@ public final class JavaCompletionTask<T> extends BaseTask {
                     continue;
                 }
                 if (!kinds.contains(name.getKind()) && !doNotRemove.contains(name.getQualifiedName())) {
-                    removed.put(name.getQualifiedName(), name);
+                    int idx = name.getQualifiedName().lastIndexOf('.');
+                    String sName = idx < 0 ? name.getQualifiedName() : name.getQualifiedName().substring(idx + 1);
+                    if (startsWith(env, sName, prefix)) {
+                        removed.put(name.getQualifiedName(), name);
+                    }
                     continue;
                 }
                 String qName = name.getQualifiedName();

@@ -70,27 +70,27 @@ class ModelElementFactory {
         int start = Token.descPosition(functionNode.getFirstToken());
         int end = Token.descPosition(functionNode.getLastToken()) + Token.descLength(functionNode.getLastToken());
         if (end <= start) {
-            end = start + 1;  
+            end = start + 1;
             assert false: "The end offset of a function is before the start offset: [" + start + ", " + end + "] in file: " + parserResult.getSnapshot().getSource().getFileObject().getPath(); //NOI18N
         }
         List<Identifier> parameters = new ArrayList<>(functionNode.getParameters().size());
         for(IdentNode node: functionNode.getParameters()) {
             Identifier param = create(parserResult, node);
             if (param != null) {
-                // can be null, if it's a generated embeding. 
+                // can be null, if it's a generated embeding.
                 parameters.add(param);
             }
         }
-        JsFunctionImpl result; 
+        JsFunctionImpl result;
         if (fqName.size() > 1) {
             List<Identifier> objectName = fqName.subList(0, fqName.size() - 1);
             parentObject = isAnnonymous ? globalObject : ModelUtils.getJsObject(modelBuilder, objectName, false);
-            result = new JsFunctionImpl(modelBuilder.getCurrentDeclarationFunction(), 
+            result = new JsFunctionImpl(modelBuilder.getCurrentDeclarationFunction(),
                     parentObject, fqName.get(fqName.size() - 1), parameters,
                     new OffsetRange(start, end), parserResult.getSnapshot().getMimeType(), null);
             if (parentObject instanceof JsFunction && !ModelUtils.PROTOTYPE.equals(parentObject.getName())) {
                 result.addModifier(Modifier.STATIC);
-            } 
+            }
         } else {
             result = new JsFunctionImpl(modelBuilder.getCurrentDeclarationFunction(),
                     parentObject, fqName.get(fqName.size() - 1), parameters,
@@ -101,7 +101,7 @@ class ModelElementFactory {
             parentObject = globalObject;
         }
         JsObject property = parentObject.getProperty(propertyName); // the already existing property
-        
+
         parentObject.addProperty(result.getDeclarationName().getName(), result);
         if (property != null) {
             if (property.getDeclarationName() != null) {
@@ -121,7 +121,7 @@ class ModelElementFactory {
 
     @NonNull
     static JsFunctionImpl createVirtualFunction(ParserResult parserResult, JsObject parentObject, Identifier name, int paramCount) {
-        List<Identifier> params = new ArrayList<Identifier>(paramCount);
+        List<Identifier> params = new ArrayList<>(paramCount);
         if (paramCount == 1) {
             params.add(new Identifier("param", OffsetRange.NONE));
         } else {
@@ -162,7 +162,6 @@ class ModelElementFactory {
         }
         JsObjectImpl scope = modelBuilder.getCurrentObject();
         JsObject parent = scope;
-        JsObject result = null;
         Identifier name = fqName.get(fqName.size() - 1);
         JsObjectImpl newObject;
         if (!belongsToParent) {
@@ -175,7 +174,7 @@ class ModelElementFactory {
                 parent = modelBuilder.getGlobal();
             }
         }
-        result = parent.getProperty(name.getName());
+        JsObject result = parent.getProperty(name.getName());
         newObject = new JsObjectImpl(parent, name, new OffsetRange(objectNode.getStart(), objectNode.getFinish()),
                 parserResult.getSnapshot().getMimeType(), null);
         newObject.setDeclared(true);
@@ -196,22 +195,21 @@ class ModelElementFactory {
         }
         return newObject;
     }
-    
+
     @CheckForNull
     static JsArrayImpl create(ParserResult parserResult, LiteralNode.ArrayLiteralNode aNode, List<Identifier> fqName, ModelBuilder modelBuilder, boolean belongsToParent, JsObject suggestedParent) {
         if (EmbeddingHelper.containsGeneratedIdentifier(fqName.get(fqName.size() - 1).getName())) {
             return null;
         }
         JsObject parent = suggestedParent != null ? suggestedParent : modelBuilder.getCurrentObject();
-        JsObject result = null;
         Identifier name = fqName.get(fqName.size() - 1);
         JsArrayImpl newObject;
         if (!belongsToParent) {
             List<Identifier> objectName = fqName.size() > 1 ? fqName.subList(0, fqName.size() - 1) : fqName;
             parent = ModelUtils.getJsObject(modelBuilder, objectName, false);
         }
-        result = parent.getProperty(name.getName());
-        newObject = new JsArrayImpl(parent, name, new OffsetRange(aNode.getStart(), aNode.getFinish()), 
+        JsObject result = parent.getProperty(name.getName());
+        newObject = new JsArrayImpl(parent, name, new OffsetRange(aNode.getStart(), aNode.getFinish()),
                 parserResult.getSnapshot().getMimeType(), null);
         newObject.setDeclared(true);
         if (result != null) {
@@ -253,7 +251,7 @@ class ModelElementFactory {
         }
         return result;
     }
-    
+
     @NonNull
     static JsArrayImpl createAnonymousObject(ParserResult parserResult, LiteralNode.ArrayLiteralNode aNode, ModelBuilder modelBuilder) {
         String name = modelBuilder.getUnigueNameForAnonymObject(parserResult);

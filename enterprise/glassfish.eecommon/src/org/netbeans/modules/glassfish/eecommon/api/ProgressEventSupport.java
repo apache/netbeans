@@ -100,7 +100,7 @@ public class ProgressEventSupport {
 	Vector<ProgressListener> targets = null;
 	synchronized (this) {
 	    if (listeners != null) {
-	        targets = (Vector<ProgressListener>)listeners.clone();
+	        targets = new Vector<>(listeners);
 	    }
 	}
 

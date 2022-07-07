@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 0.179.0
+#Version 0.180.0
 
 CLSS public abstract interface com.sun.source.tree.TreeVisitor<%0 extends java.lang.Object, %1 extends java.lang.Object>
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitAnnotatedType(com.sun.source.tree.AnnotatedTypeTree,{com.sun.source.tree.TreeVisitor%1})
@@ -1572,6 +1572,7 @@ meth public boolean isEndOfCompoundVariableDeclaration(com.sun.source.tree.Tree)
 meth public boolean isEnum(com.sun.source.tree.ClassTree)
  anno 0 java.lang.Deprecated()
 meth public boolean isEnumConstant(com.sun.source.tree.VariableTree)
+meth public boolean isExpressionStatement(com.sun.source.tree.ExpressionTree)
 meth public boolean isInterface(com.sun.source.tree.ClassTree)
  anno 0 java.lang.Deprecated()
 meth public boolean isModuleInfo(com.sun.source.tree.CompilationUnitTree)

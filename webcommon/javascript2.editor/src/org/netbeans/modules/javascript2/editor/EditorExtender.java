@@ -55,10 +55,10 @@ public final class EditorExtender {
     }
 
     public List<CompletionProvider> getCompletionProviders() {
-        return new ArrayList<CompletionProvider>(COMPLETION_PROVIDERS.allInstances());
+        return new ArrayList<>(COMPLETION_PROVIDERS.allInstances());
     }
 
     public List<DeclarationFinder> getDeclarationFinders() {
-        return new ArrayList<DeclarationFinder>(DECLARATION_FINDERS.allInstances());
+        return new ArrayList<>(DECLARATION_FINDERS.allInstances());
     }
 }

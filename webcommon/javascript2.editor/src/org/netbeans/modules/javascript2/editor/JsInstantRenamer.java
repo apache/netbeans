@@ -60,5 +60,5 @@ public class JsInstantRenamer implements InstantRenamer {
         }
 
     }
-    
+
 }

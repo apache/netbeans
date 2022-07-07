@@ -40,7 +40,7 @@ import org.netbeans.modules.javascript2.types.api.TypeUsage;
  */
 public class JsArrayImpl extends JsObjectImpl implements JsArray {
 
-    private List<TypeUsage> typesInArray = new ArrayList<TypeUsage>();
+    private final List<TypeUsage> typesInArray = new ArrayList<>();
 
     public JsArrayImpl(JsObject parent, Identifier name, OffsetRange offsetRange, String mimeType, String sourceLabel) {
         super(parent, name, offsetRange, mimeType, sourceLabel);
@@ -49,20 +49,21 @@ public class JsArrayImpl extends JsObjectImpl implements JsArray {
     public JsArrayImpl(JsObject parent, String name, boolean isDeclared, OffsetRange offsetRange, Set<Modifier> modifiers, String mimeType, String sourceLabel) {
         super(parent, name, isDeclared, offsetRange, modifiers, mimeType, sourceLabel);
     }
-    
+
     public JsArrayImpl(JsObject parent, Identifier name, OffsetRange offsetRange, boolean isDeclared, Set<Modifier> modifiers, String mimeType, String sourceLabel) {
         super(parent, name, offsetRange, isDeclared, modifiers, mimeType, sourceLabel);
     }
 
+    @Override
     public Collection<? extends TypeUsage> getTypesInArray() {
         List<TypeUsage> values;
-        values = new ArrayList<TypeUsage>();
+        values = new ArrayList<>();
         for(TypeUsage type : typesInArray) {
             values.add(type);
         }
         return Collections.unmodifiableCollection(values);
     }
-   
+
     public void addTypeInArray(TypeUsage type) {
         boolean isHere = false;
         for (TypeUsage typeUsage : typesInArray) {
@@ -75,7 +76,7 @@ public class JsArrayImpl extends JsObjectImpl implements JsArray {
             typesInArray.add(type);
         }
     }
-    
+
     public void addTypesInArray(Collection<TypeUsage> types) {
         for (TypeUsage type : types) {
             addTypeInArray(type);
@@ -84,8 +85,8 @@ public class JsArrayImpl extends JsObjectImpl implements JsArray {
 
     @Override
     public void resolveTypes(JsDocumentationHolder jsDocHolder) {
-        super.resolveTypes(jsDocHolder); 
-        HashSet<String> nameTypesInArray = new HashSet<String>();
+        super.resolveTypes(jsDocHolder);
+        HashSet<String> nameTypesInArray = new HashSet<>();
         Collection<TypeUsage> resolved = new ArrayList<>();
         Collection<? extends TypeUsage> typesIA = getTypesInArray();
         for (TypeUsage type : typesIA) {
@@ -108,7 +109,7 @@ public class JsArrayImpl extends JsObjectImpl implements JsArray {
                 }
             }
         }
-        
+
         for (TypeUsage type : resolved) {
             if (type.getOffset() > 0) {
                 JsObject jsObject = ModelUtils.findJsObjectByName(this, type.getType());
@@ -125,9 +126,9 @@ public class JsArrayImpl extends JsObjectImpl implements JsArray {
         }
         typesInArray.clear();
         typesInArray.addAll(resolved);
-                
+
     }
-    
-    
-    
+
+
+
 }

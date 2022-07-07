@@ -94,32 +94,6 @@ public class DatabaseNode extends OCINode {
         };
     }
 
-//    @ItemLoader.Registration(path = "Oracle/Database")
-//    public static class DatabaseLoader implements ItemLoader<OCID> {
-//
-//        @Override
-//        public OCIItem loadItem(OCID key) {
-//            
-//            try ( DatabaseClient client = new DatabaseClient(getDefault().getConfigProvider())) {
-//                GetAutonomousDatabaseRequest request = GetAutonomousDatabaseRequest.builder()
-//                        .autonomousDatabaseId(key.getValue()).build();
-//                GetAutonomousDatabaseResponse response = client.getAutonomousDatabase(request);
-//                AutonomousDatabase ad = response.getAutonomousDatabase();
-//                List<DatabaseConnectionStringProfile> profiles = ad.getConnectionStrings().getProfiles();
-//                return new DatabaseItem(key, ad.getDbName(), ad.getServiceConsoleUrl(), getConnectionName(profiles));
-//            } catch (BmcException e) {
-//                Exceptions.printStackTrace(e);
-//            }
-//            return null;
-//        }
-//
-//        @Override
-//        public OCID fromPersistentForm(String persistedKey) {
-//            return OCID.of(persistedKey, "Oracle/Database");
-//        }
-//
-//    }
-
     private static String getConnectionName(List<DatabaseConnectionStringProfile> profiles) {
         
         if (profiles != null && !profiles.isEmpty()) {

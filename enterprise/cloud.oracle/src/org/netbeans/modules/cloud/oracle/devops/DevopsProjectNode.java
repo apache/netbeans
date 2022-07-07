@@ -74,26 +74,4 @@ public class DevopsProjectNode extends OCINode {
         };
     }
     
-//    public static class DevopsLoader implements ItemLoader<OCID> {
-//
-//        @Override
-//        public OCIItem loadItem(OCID key) {
-//            try (DevopsClient client = new DevopsClient(OCIManager.getDefault().getConfigProvider())) {
-//                GetProjectRequest request = GetProjectRequest.builder().projectId(key.getValue()).build();
-//                GetProjectResponse response = client.getProject(request);
-//                Project project = response.getProject();
-//                return new DevopsProjectItem(key, project.getName());
-//            } catch(BmcException e) {
-//                Exceptions.printStackTrace(e);
-//            }
-//            return null;
-//        }
-//
-//        @Override
-//        public OCID fromPersistentForm(String persistedKey) {
-//            return OCID.of(persistedKey, "Oracle/DevopsProject");
-//        }
-//
-//    }
-    
 }

@@ -59,13 +59,6 @@
                 </folder>
             </folder>
             <folder name="DevopsProject">
-                <folder name="Actions">
-                    <file name="org-netbeans-modules-cloud-oracle-actions-AddRepository.shadow">
-                        <!--org.netbeans.modules.cloud.oracle.devops.AddRepositoryAction-->
-                        <attr name="originalFile" stringvalue="Actions/Tools/org-netbeans-modules-cloud-oracle-actions-AddRepository.instance"/>
-                        <attr intvalue="260" name="position"/>
-                    </file>
-                </folder>
                 <folder name="Nodes">
                     <file name="org-netbeans-modules-cloud-oracle-devops-BuildPipelineNode-listDevopsPipelines.instance">
                         <!--org.netbeans.modules.cloud.oracle.devops.BuildPipelineNode.listDevopsPipelines()-->
@@ -82,9 +75,6 @@
                     <file name="org-netbeans-modules-cloud-oracle-devops-RepositoryNode-listRepositories.instance">
                         <!--org.netbeans.modules.cloud.oracle.devops.RepositoryNode.listRepositories()-->
                         <attr methodvalue="org.netbeans.modules.cloud.oracle.devops.RepositoryNode.listRepositories" name="instanceCreate"/>
-                    </file>
-                    <file name="org-netbeans-modules-cloud-oracle-devops-DevopsProjectNode$DevopsLoader.instance">
-                        <!--org.netbeans.modules.cloud.oracle.devops.DevopsProjectNode.DevopsLoader-->
                     </file>
                     <file name="org-netbeans-modules-cloud-oracle-devops-DevopsProjectNode-createNode.instance">
                         <!--org.netbeans.modules.cloud.oracle.devops.DevopsProjectNode.createNode()-->
@@ -126,9 +116,6 @@
                         <!--org.netbeans.modules.cloud.oracle.devops.BuildRunNode.expandBuildRuns()-->
                         <attr methodvalue="org.netbeans.modules.cloud.oracle.devops.BuildRunNode.expandBuildRuns" name="instanceCreate"/>
                     </file>
-                    <file name="org-netbeans-modules-cloud-oracle-devops-BuildRunNode$BuildRunLoader.instance">
-                        <!--org.netbeans.modules.cloud.oracle.devops.BuildRunNode.BuildRunLoader-->
-                    </file>
                     <file name="org-netbeans-modules-cloud-oracle-devops-BuildRunNode-createFolderNode.instance">
                         <!--org.netbeans.modules.cloud.oracle.devops.BuildRunNode.createFolderNode()-->
                         <attr methodvalue="org.netbeans.modules.cloud.oracle.devops.BuildRunNode.createFolderNode" name="instanceCreate"/>
@@ -161,9 +148,6 @@
             </folder>
             <folder name="KnowledgeBase">
                 <folder name="Nodes">
-                    <file name="org-netbeans-modules-cloud-oracle-adm-KnowledgeBaseNode$KnowledgeBaseLoader.instance">
-                        <!--org.netbeans.modules.cloud.oracle.adm.KnowledgeBaseNode.KnowledgeBaseLoader-->
-                    </file>
                     <file name="org-netbeans-modules-cloud-oracle-adm-KnowledgeBaseNode-createNode.instance">
                         <!--org.netbeans.modules.cloud.oracle.adm.KnowledgeBaseNode.createNode()-->
                         <attr methodvalue="org.netbeans.modules.cloud.oracle.adm.KnowledgeBaseNode.createNode" name="instanceCreate"/>
@@ -172,9 +156,6 @@
             </folder>
             <folder name="Database">
                 <folder name="Nodes">
-                    <file name="org-netbeans-modules-cloud-oracle-database-DatabaseNode$DatabaseLoader.instance">
-                        <!--org.netbeans.modules.cloud.oracle.database.DatabaseNode.DatabaseLoader-->
-                    </file>
                     <file name="org-netbeans-modules-cloud-oracle-database-DatabaseNode-createNode.instance">
                         <!--org.netbeans.modules.cloud.oracle.database.DatabaseNode.createNode()-->
                         <attr methodvalue="org.netbeans.modules.cloud.oracle.database.DatabaseNode.createNode" name="instanceCreate"/>

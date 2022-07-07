@@ -90,33 +90,6 @@ public class BuildRunNode extends OCINode {
             }
         };
     }
-
-//    public static class BuildRunLoader implements ItemLoader<OCID> {
-//        
-//        @Override
-//        public OCIItem loadItem(OCID key) {
-//            try ( DevopsClient client = new DevopsClient(OCIManager.getDefault().getConfigProvider())) {
-//                GetBuildRunRequest request = GetBuildRunRequest.builder()
-//                        .buildRunId(key.getValue()).build();
-//                GetBuildRunResponse response = client.getBuildRun(request);
-//                BuildRun buildRun = response.getBuildRun();
-//                Map<String, BuildPipelineStageRunProgress> stages = buildRun.getBuildRunProgress().getBuildPipelineStageRunProgress();
-//                for (Map.Entry<String, BuildPipelineStageRunProgress> entry : stages.entrySet()) {
-//                    entry.getKey();
-//                    entry.getValue().getBuildPipelineStageId();
-//                    entry.getValue().getTimeStarted();
-//                    entry.getValue().getTimeFinished();
-//                }
-//                return new BuildRunItem(key, buildRun.getDisplayName(), buildRun.getLifecycleState().getValue());
-//            }
-//        }
-//
-//        @Override
-//        public OCID fromPersistentForm(String persistedKey) {
-//            return OCID.of("Oracle/BuildRun", persistedKey);
-//        }
-//
-//    }
     
     public static class BuildRunFolderNode extends OCINode {
 

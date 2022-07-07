@@ -120,7 +120,7 @@ public enum ServerDetails {
      * details for an instance of GlassFish Server 4.0.0
      */
     GLASSFISH_SERVER_4_0(NbBundle.getMessage(ServerDetails.class, "STR_40_SERVER_NAME", new Object[]{}), // NOI18N
-        "deployer:gfv3ee6wc", // NOI18N
+        "deployer:gfv4ee7", // NOI18N
         400,
         "https://download.oracle.com/glassfish/4.0/release/glassfish-4.0-ml.zip", // NOI18N
         "https://download.oracle.com/glassfish/4.0/release/glassfish-4.0-ml.zip", // NOI18N
@@ -131,7 +131,7 @@ public enum ServerDetails {
      * details for an instance of GlassFish Server 4.0.1
      */
     GLASSFISH_SERVER_4_0_1(NbBundle.getMessage(ServerDetails.class, "STR_401_SERVER_NAME", new Object[]{}), // NOI18N
-        "deployer:gfv3ee6wc", // NOI18N
+        "deployer:gfv4ee7", // NOI18N
         401,
         "https://download.oracle.com/glassfish/4.0.1/release/glassfish-4.0.1-ml.zip", // NOI18N
         "https://download.oracle.com/glassfish/4.0.1/release/glassfish-4.0.1-ml.zip", // NOI18N
@@ -139,10 +139,10 @@ public enum ServerDetails {
     ),
 
     /**
-     * details for an instance of GlassFish Server 4.1 and dev 4.2
+     * details for an instance of GlassFish Server 4.1
      */
     GLASSFISH_SERVER_4_1(NbBundle.getMessage(ServerDetails.class, "STR_41_SERVER_NAME", new Object[]{}), // NOI18N
-        "deployer:gfv3ee6wc", // NOI18N
+        "deployer:gfv4ee7", // NOI18N
         410,
         "https://download.oracle.com/glassfish/4.1/release/glassfish-4.1.zip", // NOI18N
         "https://download.oracle.com/glassfish/4.1/release/glassfish-4.1.zip", // NOI18N
@@ -150,10 +150,10 @@ public enum ServerDetails {
     ),
 
     /**
-     * details for an instance of GlassFish Server 4.1.1 and dev 4.2
+     * details for an instance of GlassFish Server 4.1.1
      */
     GLASSFISH_SERVER_4_1_1(NbBundle.getMessage(ServerDetails.class, "STR_411_SERVER_NAME", new Object[]{}), // NOI18N
-        "deployer:gfv3ee6wc", // NOI18N
+        "deployer:gfv4ee7", // NOI18N
         411,
         "https://download.oracle.com/glassfish/4.1.1/release/glassfish-4.1.1.zip", // NOI18N
         "https://download.oracle.com/glassfish/4.1.1/release/glassfish-4.1.1.zip", // NOI18N
@@ -164,7 +164,7 @@ public enum ServerDetails {
      * details for an instance of GlassFish Server 4.1.2
      */
     GLASSFISH_SERVER_4_1_2(NbBundle.getMessage(ServerDetails.class, "STR_412_SERVER_NAME", new Object[]{}), // NOI18N
-        "deployer:gfv3ee6wc", // NOI18N
+        "deployer:gfv4ee7", // NOI18N
         412,
         "https://download.oracle.com/glassfish/4.1.2/release/glassfish-4.1.2.zip", // NOI18N
         "https://download.oracle.com/glassfish/4.1.2/release/glassfish-4.1.2.zip", // NOI18N

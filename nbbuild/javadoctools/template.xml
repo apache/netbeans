@@ -291,7 +291,8 @@ cause it to fail.
                 name="org.apidesign.javadoc.codesnippet.Doclet"
                 path="${nb_all}/nbbuild/external/codesnippet-doclet-0.82.jar"
             >
-                <param name="-snippetpath" value="${javadoc.base}"/>
+                <param name="-snippetpath" value="${javadoc.base}/src"/>
+                <param name="-snippetpath" value="${javadoc.base}/test/unit/src"/>
                 <param name="-maxLineLength" value="120"/>
             </doclet>
             <classpath path="${javadoc.classpath}"/>

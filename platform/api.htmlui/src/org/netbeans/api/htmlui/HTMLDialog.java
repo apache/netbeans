@@ -33,7 +33,7 @@ import org.netbeans.modules.htmlui.HTMLDialogBase;
  * usage follows.
  * <h5>HTML Page <small>dialog.html</small></h5>
  * <p>
- * {@codesnippet org.netbeans.api.htmlui.dialog.html}
+ * {@snippet file="org/netbeans/api/htmlui/dialog.html" region="org.netbeans.api.htmlui.dialog.html"}
  * The <code>dialog.html</code> page defines two buttons as <em>hidden</em> - 
  * they are re-rendered by the embedding "chrome" (for example as Swing buttons),
  * but they can be enabled/disabled. For example the <code>ok</code> property
@@ -41,7 +41,7 @@ import org.netbeans.modules.htmlui.HTMLDialogBase;
  * the <em>Good</em> button.
  * 
  * <h5>Java Source <small>AskQuestion.java</small></h5>
- * {@codesnippet org.netbeans.api.htmlui.AskQuestion}
+ * {@snippet file="org/netbeans/api/htmlui/AskQuestion.java" region="ask"}
  * <p>
  * The method is generated into <code>AskPages</code> class (specified in the
  * {@code className} attribute)
@@ -111,7 +111,7 @@ public @interface HTMLDialog {
      * implementation of this interface from a method annotated by
      * {@link HTMLDialog} annotation:
      * <p>
-     * {@codesnippet org.netbeans.api.htmlui.AskQuestion}
+     * {@snippet file="org/netbeans/api/htmlui/AskQuestion.java" region="ask"}
      *
      * The example returns a <em>lambda</em> function which gets automatically
      * converted into {@code OnSubmit} instance.

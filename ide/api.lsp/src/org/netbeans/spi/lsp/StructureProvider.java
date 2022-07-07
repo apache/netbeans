@@ -23,7 +23,6 @@ import java.util.HashSet;
 import org.netbeans.api.lsp.StructureElement;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.CompletableFuture;
 import javax.swing.text.Document;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.modules.lsp.StructureElementAccessor;
@@ -32,14 +31,12 @@ import org.openide.filesystems.FileObject;
 /**
  * Interface for building structure of symbols at a given document.
  * Implementations of the interface should be registered in MimeLookup.
- * <pre>
- *
- *  {@codesnippet @MimeRegistration(mimeType = "text/foo", service = StructureProvider.class)
+ * {@snippet :
+ *   {@code @}MimeRegistration(mimeType = "text/foo", service = StructureProvider.class)
  *   public class FooStructureProvider implements StructureProvider {
  *     ...
  *   }
- *  }
- * </pre>
+ * }
  *
  * @author Petr Pisl
  * @since 1.8

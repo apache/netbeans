@@ -94,6 +94,7 @@ public abstract class IDENativeMavenWizardIterator implements WizardDescriptor.I
         return new FileBuilder(w.getTemplate().getPrimaryFile(), w.getTargetFolder().getPrimaryFile().getParent()).
             param(TemplateUtils.PARAM_PACKAGE, (String) wiz.getProperty("package")).
             param(TemplateUtils.PARAM_PACKAGING, (String) this.packaging).
+            param(TemplateUtils.PARAM_VERSION, (String) wiz.getProperty("version")).
             defaultMode(FileBuilder.Mode.COPY).
             name(w.getTargetName()).
             useLookup(Lookups.fixed(h));

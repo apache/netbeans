@@ -121,7 +121,10 @@ public abstract class DialogDisplayer {
      * or similar to execute in a specific thread. Prefer usage of {@link RequestProcessor} to the
      * builtin thread pool.
      * <div class="nonnormative">
-     * The following snippet is an example of chained dialogs (can be any other processing): {@codesnippet dialogdisplayer-notifyFuture}
+     * The following snippet is an example of chained dialogs (can be any other processing): 
+     * <div>
+     * {@snippet file="org/openide/DialogDisplayerTest.java" region="notifyFuture"}
+     * </div>
      * </div>
      * @param <T> actual subclass of {@link NotifyDescriptor} passed as a parameter.
      * @param descriptor describes the UI / dialog.

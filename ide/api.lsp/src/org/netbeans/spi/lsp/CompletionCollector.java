@@ -40,14 +40,13 @@ import org.openide.util.RequestProcessor;
  * to collect completions and send them for presentation outside of NetBeans using
  * the Language Server Protocol. Implementations of the interface should be registered
  * in MimeLookup.
- * <pre>
+ * {@snippet :
  *
- *  {@code @MimeRegistration(mimeType = "text/foo", service = CompletionCollector.class)
- *   public class FooCompletionCollector implements CompletionCollector {
+ *  {@code @}MimeRegistration(mimeType = "text/foo", service = CompletionCollector.class)
+ *  public class FooCompletionCollector implements CompletionCollector {
  *     ...
- *   }
  *  }
- * </pre>
+ * }
  *
  * @author Dusan Balek
  * @since 1.0
@@ -83,7 +82,7 @@ public interface CompletionCollector {
 
     /**
      * Builder for {@link Completion} instances. Its usage can be illustrated by:
-     * {@codesnippet CompletionTest.FooCompletionCollector#builder}
+     * {@snippet file="org/netbeans/api/lsp/CompletionTest.java" region="builder"}
      *
      * @since 1.0
      */

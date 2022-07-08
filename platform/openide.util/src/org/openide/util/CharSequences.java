@@ -34,22 +34,22 @@ import java.util.Comparator;
  * stored as efficiently as possible. As can be seen from the following example,
  * many languages benefit from the <em>compaction</em>:
  * <p>
- * {@codesnippet CharSequencesTest#createSample}
+ * {@snippet  file="org/openide/util/CharSequencesTest.java" region="createSample"}
  * <p>
  * To compare two sequences use dedicated {@link CharSequences#comparator()}
  * which understands the compacted representation and uses it, prior to falling
  * back to {@code char} by {@code char} comparision:
  * <p>
- * {@codesnippet CharSequencesTest#compareStrings}
+ * {@snippet  file="org/openide/util/CharSequencesTest.java" region="compareStrings"}
  * <p>
  * Use {@link CharSequences#indexOf(java.lang.CharSequence, java.lang.CharSequence)} method
  * to search the compacted strings efficiently:
  * <p>
- * {@codesnippet CharSequencesTest#indexOfSample}
+ * {@snippet  file="org/openide/util/CharSequencesTest.java" region="indexOfSample"}
  * <p>
  * This <a target="_blank" href="https://search.maven.org/artifact/org.netbeans.api/org-openide-util/RELEASE110/jar">
  * library is available on Maven central</a>. Use it with following co-ordinates:
- * {@codesnippet CharSequencesPomDependency}
+ * {@snippet  file="org/openide/util/CharSequencesTest.xml" region="CharSequencesPomDependency"}
  *
  * @since 8.3
  * @author Alexander Simon
@@ -114,7 +114,7 @@ public final class CharSequences {
      * Creates new {@link CharSequence} instance representing the content
      * of another sequence or {@link String} efficiently.
      * <p>
-     * {@codesnippet CharSequencesTest#createSample}
+     * {@snippet  file="org/openide/util/CharSequencesTest.java" region="createSample"}
      * <p>
      * @param s existing string or sequence of chars
      * @return immutable char sequence efficiently representing the data
@@ -162,7 +162,7 @@ public final class CharSequences {
     /**
      * Provides optimized char sequences comparator.
      *
-     * {@codesnippet CharSequencesTest#compareStrings}
+     * {@snippet  file="org/openide/util/CharSequencesTest.java" region="compareStrings"}
      *
      * @return comparator for {@link CharSequence} objects
      */
@@ -191,7 +191,7 @@ public final class CharSequences {
     /**
      * Implementation of {@link String#indexOf(String)} for character sequences.
      *
-     * {@codesnippet CharSequencesTest#indexOfSample}
+     * {@snippet  file="org/openide/util/CharSequencesTest.java" region="indexOfSample"}
      *
      * @param text the text to search
      * @param seq the sequence to find in the {@code text}

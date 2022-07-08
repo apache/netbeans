@@ -261,12 +261,12 @@ public class ConfigurableActionsProviderImplTest {
         });
         
         
-        // BEGIN:invokeActionWithConfiguraiton
+        // @start region="invokeActionWithConfiguration"
         GradleExecConfiguration providedConf = configs.get(1);
 
         ActionProvider ap = project.getLookup().lookup(ActionProvider.class);
         ap.invokeAction(ActionProvider.COMMAND_RUN_SINGLE, Lookups.fixed(providedConf));
-        // END:invokeActionWithConfiguraiton
+        // @end region="invokeActionWithConfiguration"
         
         assertNotEquals(providedConf, pcp.getActiveConfiguration());
 

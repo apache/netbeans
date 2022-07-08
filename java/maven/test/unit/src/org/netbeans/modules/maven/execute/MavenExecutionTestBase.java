@@ -377,7 +377,7 @@ public class MavenExecutionTestBase extends NbTestCase {
     //====================== samples =====================
     public static void samplePassAdditionalVMargs() {
         Project prj = null;
-        // BEGIN: MavenExecutionTestBase#samplePassAdditionalVMargs
+        // @start region="samplePassAdditionalVMargs"
         // get action provider:
         ActionProvider projectActionProvider = prj.getLookup().lookup(ActionProvider.class);
         
@@ -388,6 +388,6 @@ public class MavenExecutionTestBase extends NbTestCase {
                 build();
         // pass explicit parameters to the Run action:
         projectActionProvider.invokeAction(ActionProvider.COMMAND_RUN, Lookups.fixed(params));
-        // END: MavenExecutionTestBase#samplePassAdditionalVMargs
+        // @end region="samplePassAdditionalVMargs"
     }
 }

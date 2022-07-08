@@ -65,7 +65,9 @@ import org.openide.util.Lookup;
  * <div class="nonnormative">
  * If the combining algorithm is acceptable for the caller's purpose, the following pattern may be used to build the final
  * command line:
- * {@codesnippet ExplicitProcessParametersTest#decorateWithExplicitParametersSample}
+ * <div>
+ * {@snippet file="org/netbeans/api/extexecution/base/ExplicitProcessParametersTest.java" region="decorateWithExplicitParametersSample"}
+ * </div>
  * This example will combine some args and extra args from project, or configuration with arguments passed from the
  * {@code runContext} Lookup. 
  * Supposing that a Maven project module supports {@code ExplicitProcessParameters} (it does from version 2/2.144), the caller may influence or override the
@@ -81,7 +83,7 @@ import org.openide.util.Lookup;
  * By default, <b>args</b> instruction(s) will discard the default parameters, so the above example will also <b>ignore</b> all application
  * parameters provided in maven action mapping. The caller may, for example, want to just <b>append</b> parameters (i.e. list of files ?) and
  * completely replace (default) VM parameters which may be unsuitable for the operation:
- * {@codesnippet ExplicitProcessParametersTest#testDiscardDefaultVMParametersAppendAppParameters}
+ * {@snippet file="org/netbeans/api/extexecution/base/ExplicitProcessParametersTest.java" region="testDiscardDefaultVMParametersAppendAppParameters"}
  * <p>
  * Note that multiple {@code ExplicitProcessParameters} instances may be added to the Lookup, acting as append or replacement
  * for the parameters collected so far.
@@ -238,7 +240,7 @@ public final class ExplicitProcessParameters {
      * Merges individual instruction. 
      * This method serves as a convenience and uniform ("standard") methods to merge argument lists for process execution. Should be used
      * whenever a process (build, run, tool, ...) is executed. If the feature diverges, it should document how it processes the
-     * {@link ExplicitProcessParamters}. It is <b>strongly recommended</b> to support explicit parameters in order to allow for 
+     * {@link ExplicitProcessParameters}. It is <b>strongly recommended</b> to support explicit parameters in order to allow for 
      * customizations and automation.
      * <p>
      * Processes instructions in the order of {@link Builder#position(int)} and appearance. Whenever an item is flagged as

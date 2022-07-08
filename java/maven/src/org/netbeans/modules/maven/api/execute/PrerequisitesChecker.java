@@ -40,9 +40,9 @@ package org.netbeans.modules.maven.api.execute;
  * <p>
  * <div class="nonnormative">
  * Let's have some examples:
- * {@codesnippet RunUtilsTest.GeneralPrerequisiteChecker}
- * {@codesnippet RunUtilsTest.SpecificPrerequisiteChecker}
- * {@codesnippet RunUtilsTest.FallbackPrerequisiteChecker}
+ * {@snippet file="org/netbeans/modules/maven/api/execute/RunUtilsTest.java" region="GeneralPrerequisiteChecker"}
+ * {@snippet file="org/netbeans/modules/maven/api/execute/RunUtilsTest.java" region="SpecificPrerequisiteChecker"}
+ * {@snippet file="org/netbeans/modules/maven/api/execute/RunUtilsTest.java" region="FallbackPrerequisiteChecker"}
  * </div>
 
 * @see LateBoundPrerequisitesChecker

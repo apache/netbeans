@@ -338,7 +338,7 @@ public final class RunUtils {
      * </ol>
      * <div class="nonnormative">
      * Example of branding: 
-     * {@codesnippet org.netbeans.modules.gradle.api.execute.Bundle#trustDialgoBranding}
+     * {@snippet file="org/netbeans/modules/gradle/api/execute/TestBundle.properties" region="trustDialogBranding"}
      * This branding enables all supported options, and will make the "Trust Permanently" the default one.
      * </div>
      * 

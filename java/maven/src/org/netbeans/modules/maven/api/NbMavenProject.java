@@ -75,7 +75,7 @@ import org.openide.util.Utilities;
  * artifact ID. 
  * <p/>
  * <div class="nonnormative">
- * {@codesnippet ProjectServiceProvider.pluginSpecific}
+ * {@snippet file="org/netbeans/modules/maven/NbMavenProjectImplTest.java" region="ProjectServiceProvider.pluginSpecific"}
  * Shows a service, that will become available from project Lookup whenever the project uses {@code org.netbeans.modules.maven:test.plugin}
  * plugin in its model.
  * </div>

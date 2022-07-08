@@ -35,7 +35,6 @@ import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
 
-import static org.netbeans.modules.gradle.execute.Bundle.*;
 import java.io.File;
 import java.util.ArrayList;
 import org.netbeans.api.project.Project;
@@ -179,8 +178,8 @@ public abstract class AbstractGradleExecutor extends OutputTabMaintainer<Abstrac
             this.putValue(Action.SMALL_ICON, debug ? ImageUtilities.loadImageIcon("org/netbeans/modules/gradle/resources/refreshdebug.png", false) : //NOI18N
                     ImageUtilities.loadImageIcon("org/netbeans/modules/gradle/resources/refresh.png", false));//NOI18N
 
-            putValue(Action.NAME, debug ? TXT_Rerun_extra() : TXT_Rerun());
-            putValue(Action.SHORT_DESCRIPTION, debug ? TIP_Rerun_Extra() : TIP_Rerun());
+            putValue(Action.NAME, debug ? Bundle.TXT_Rerun_extra() : Bundle.TXT_Rerun());
+            putValue(Action.SHORT_DESCRIPTION, debug ? Bundle.TIP_Rerun_Extra() : Bundle.TIP_Rerun());
             setEnabled(false);
 
         }
@@ -194,7 +193,7 @@ public abstract class AbstractGradleExecutor extends OutputTabMaintainer<Abstrac
         public void actionPerformed(ActionEvent e) {
             if (debug) {
                 GradleExecutorOptionsPanel pnl = new GradleExecutorOptionsPanel(config.getProject());
-                DialogDescriptor dd = new DialogDescriptor(pnl, TIT_Run_Gradle());
+                DialogDescriptor dd = new DialogDescriptor(pnl, Bundle.TIT_Run_Gradle());
                 pnl.setCommandLine(config.getCommandLine(), config.getExecConfig());
                 Object retValue = DialogDisplayer.getDefault().notify(dd);
                 if (retValue == DialogDescriptor.OK_OPTION) {
@@ -222,8 +221,8 @@ public abstract class AbstractGradleExecutor extends OutputTabMaintainer<Abstrac
         StopAction() {
             putValue(Action.SMALL_ICON, ImageUtilities.loadImageIcon("org/netbeans/modules/gradle/resources/stop.png", false)); //NOi18N
 
-            putValue(Action.NAME, TXT_Stop_execution());
-            putValue(Action.SHORT_DESCRIPTION, TIP_Stop_Execution());
+            putValue(Action.NAME, Bundle.TXT_Stop_execution());
+            putValue(Action.SHORT_DESCRIPTION, Bundle.TIP_Stop_Execution());
             setEnabled(false);
         }
 
@@ -247,8 +246,8 @@ public abstract class AbstractGradleExecutor extends OutputTabMaintainer<Abstrac
 
         @NbBundle.Messages("LBL_OptionsAction=Gradle Settings")
         public OptionsAction() {
-            super(LBL_OptionsAction(), ImageUtilities.loadImageIcon("org/netbeans/modules/gradle/resources/options.png", true));
-            putValue(Action.SHORT_DESCRIPTION, LBL_OptionsAction());
+            super(Bundle.LBL_OptionsAction(), ImageUtilities.loadImageIcon("org/netbeans/modules/gradle/resources/options.png", true));
+            putValue(Action.SHORT_DESCRIPTION, Bundle.LBL_OptionsAction());
         }
 
         @Override

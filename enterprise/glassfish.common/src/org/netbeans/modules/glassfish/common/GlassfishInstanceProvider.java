@@ -73,10 +73,9 @@ public final class GlassfishInstanceProvider implements ServerInstanceProvider, 
     private static String EE6_INSTANCES_PATH = "/GlassFishEE6/Instances"; // NOI18N
     private static String EE7_INSTANCES_PATH = "/GlassFishEE7/Instances"; // NOI18N
     private static String EE8_INSTANCES_PATH = "/GlassFishEE8/Instances"; // NOI18N
-    private static String EE9_INSTANCES_PATH = "/GlassFishEE9/Instances"; // NOI18N
     private static String JAKARTAEE8_INSTANCES_PATH = "/GlassFishJakartaEE8/Instances"; // NOI18N
     private static String JAKARTAEE9_INSTANCES_PATH = "/GlassFishJakartaEE9/Instances"; // NOI18N
-  //  static private String JAKARTAEE91_INSTANCES_PATH = "/GlassFishJakartaEE91/Instances"; // NOI18N
+    private static String JAKARTAEE91_INSTANCES_PATH = "/GlassFishJakartaEE91/Instances"; // NOI18N
     private static String EE6WC_INSTANCES_PATH = "/GlassFishEE6WC/Instances"; // NOI18N
 
     public static String PRELUDE_DEFAULT_NAME = "GlassFish_v3_Prelude"; //NOI18N
@@ -100,10 +99,12 @@ public final class GlassfishInstanceProvider implements ServerInstanceProvider, 
                     glassFishProvider = new GlassfishInstanceProvider(
                             new String[]{EE6_DEPLOYER_FRAGMENT, EE6WC_DEPLOYER_FRAGMENT, 
                                     EE7_DEPLOYER_FRAGMENT, EE8_DEPLOYER_FRAGMENT, 
-                                    JAKARTAEE8_DEPLOYER_FRAGMENT, JAKARTAEE9_DEPLOYER_FRAGMENT},
+                                    JAKARTAEE8_DEPLOYER_FRAGMENT, JAKARTAEE9_DEPLOYER_FRAGMENT,
+                                    JAKARTAEE91_DEPLOYER_FRAGMENT},
                             new String[]{EE6_INSTANCES_PATH, EE6WC_INSTANCES_PATH, 
                                     EE7_INSTANCES_PATH, EE8_INSTANCES_PATH, 
-                                    JAKARTAEE8_INSTANCES_PATH, JAKARTAEE9_INSTANCES_PATH},
+                                    JAKARTAEE8_INSTANCES_PATH, JAKARTAEE9_INSTANCES_PATH,
+                                    JAKARTAEE91_INSTANCES_PATH},
                             null,
                             true,
                             new String[]{"--nopassword"}, // NOI18N

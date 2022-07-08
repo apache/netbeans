@@ -111,7 +111,15 @@ jobs:
       - name: Commit Validation tests
         run: ant -Dcluster.config=release commit-validation
 
-      - name: Upload Build
+      - name: Create Test Summary
+        uses: test-summary/action@v1
+        if: failure()
+        with:
+          paths: "./nbbuild/build/test/commit-validation/results/*.xml"
+
+# the test-summary action above is currently only looking for failures and ignores errors,
+# this step can be removed as soon this is fixed upstream
+      - name: Upload Test Results
         if: failure()
         uses: actions/upload-artifact@v3
         with:
@@ -223,6 +231,12 @@ jobs:
 
       - name: Commit Validation tests
         run: ant -Dcluster.config=release commit-validation
+
+      - name: Create Test Summary
+        uses: test-summary/action@v1
+        if: failure()
+        with:
+          paths: "./*/*/build/test/*/results/*.xml"
 
   php:
     needs: base-build
@@ -359,6 +373,12 @@ jobs:
 
       - name: Test PHP Spellchecker Bindings
         run: ant $OPTS -f php/spellchecker.bindings.php test
+
+      - name: Create Test Summary
+        uses: test-summary/action@v1
+        if: failure()
+        with:
+          paths: "./*/*/build/test/*/results/*.xml"
  
 
 # last job depends on everything so that it is forced to run last even if a long job fails early

@@ -225,7 +225,7 @@ public abstract class AbstractViewTabDisplayerUI extends TabDisplayerUI {
 
             if( null != btnClose ) {
                 Icon icon = btnClose.getIcon();
-                btnClose.setBounds( width, height/2-icon.getIconHeight()/2, icon.getIconWidth(), icon.getIconHeight() );
+                btnClose.setBounds( width, (height - icon.getIconHeight()) / 2, icon.getIconWidth(), icon.getIconHeight() );
                 width += icon.getIconWidth();
             }
 
@@ -233,7 +233,7 @@ public abstract class AbstractViewTabDisplayerUI extends TabDisplayerUI {
                 if( 0 != width )
                     width += ICON_X_PAD;
                 Icon icon = btnAutoHidePin.getIcon();
-                btnAutoHidePin.setBounds( width, height/2-icon.getIconHeight()/2, icon.getIconWidth(), icon.getIconHeight() );
+                btnAutoHidePin.setBounds( width, (height - icon.getIconHeight()) / 2, icon.getIconWidth(), icon.getIconHeight() );
                 width += icon.getIconWidth();
                 width += ICON_X_PAD;
             }

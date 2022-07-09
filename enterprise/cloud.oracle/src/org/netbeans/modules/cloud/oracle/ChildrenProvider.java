@@ -18,55 +18,16 @@
  */
 package org.netbeans.modules.cloud.oracle;
 
+import java.util.List;
 import org.netbeans.modules.cloud.oracle.items.OCIItem;
-import javax.swing.JComponent;
-import org.netbeans.spi.server.ServerInstanceImplementation;
-import org.openide.nodes.Node;
 
 /**
  *
  * @author Jan Horvath
  */
-public class TenancyInstance implements ServerInstanceImplementation {
+@FunctionalInterface
+public interface ChildrenProvider<T extends OCIItem, U extends OCIItem> {
 
-    private final OCIItem tenancy;
-
-    public TenancyInstance(OCIItem tenancy) {
-        this.tenancy = tenancy;
-    }
-    
-    @Override
-    public String getDisplayName() {
-        return tenancy.getName();
-    }
-
-    @Override
-    public String getServerDisplayName() {
-        return tenancy.getKey().getValue();
-    }
-
-    @Override
-    public Node getFullNode() {
-        return getBasicNode();
-    }
-
-    @Override
-    public Node getBasicNode() {
-        return new TenancyNode(tenancy);
-    }
-
-    @Override
-    public JComponent getCustomizer() {
-        return null;
-    }
-
-    @Override
-    public void remove() {
-    }
-
-    @Override
-    public boolean isRemovable() {
-        return false;
-    }
+    public List<U> apply(T t);
     
 }

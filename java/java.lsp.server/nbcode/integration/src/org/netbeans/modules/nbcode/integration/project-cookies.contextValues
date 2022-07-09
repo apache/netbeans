@@ -15,9 +15,13 @@
 # specific language governing permissions and limitations
 # under the License.
 
+# Use fully qualified names, one class per line. Syntax is:
+#   qualified.name=value    : value will be used instead of qualified name.
+#   [prefix.]qualified.name : the prefix will be stripped
+#   [prefix=subst]          : the prefix in all classes will be replaced by subst, possibly empty
+#   * as the first character: watch for changes in this interface, fire changes.
+# Names will be converted to "class:<name>" tokens.
+
 [org.netbeans.modules.cloud.=]
-org.netbeans.modules.cloud.oracle.database.DatabaseItem
-org.netbeans.modules.cloud.oracle.compartment.CompartmentItem
-org.netbeans.modules.cloud.oracle.items.OCIItem
 org.netbeans.modules.cloud.oracle.devops.BuildPipelineItem
-org.netbeans.modules.cloud.oracle.devops.DevopsProjectItem
+org.netbeans.modules.cloud.oracle.devops.BuildRunFolderItem

@@ -18,12 +18,31 @@
  */
 package org.netbeans.modules.cloud.oracle.devops;
 
+import java.util.List;
+import org.netbeans.modules.cloud.oracle.items.OCID;
 import org.netbeans.modules.cloud.oracle.items.OCIItem;
 
 /**
  *
  * @author Jan Horvath
  */
-public class DevopsProject extends OCIItem {
+public class BuildPipelineItem extends OCIItem {
+
+    public BuildPipelineItem(OCID id, String name) {
+        super(id, name);
+    }
+
+    public static class BuildPipelineFolder extends OCIItem {
+
+        private final List<BuildPipelineItem> pipelines;
+
+        public BuildPipelineFolder(OCID project, String name, List<BuildPipelineItem> pipelines) {
+            super(project, name);
+            this.pipelines = pipelines;
+        }
     
+        public List<BuildPipelineItem> getPipelines() {
+            return pipelines;
+        }
+    }
 }

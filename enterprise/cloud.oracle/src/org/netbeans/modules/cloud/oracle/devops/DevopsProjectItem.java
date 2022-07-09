@@ -16,34 +16,25 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.cloud.oracle.items;
+package org.netbeans.modules.cloud.oracle.devops;
+
+import org.netbeans.modules.cloud.oracle.items.OCID;
+import org.netbeans.modules.cloud.oracle.items.OCIItem;
 
 /**
  *
  * @author Jan Horvath
  */
-public class DatabaseItem extends OCIItem {
-    private final String serviceUrl;
-    private final String connectionName;
+public class DevopsProjectItem extends OCIItem {
 
-    public DatabaseItem(String id, String name, String serviceUrl, String connectionName) {
+    public DevopsProjectItem(OCID id, String name) {
         super(id, name);
-        this.serviceUrl = serviceUrl;
-        this.connectionName = connectionName;
     }
 
-    public DatabaseItem() {
-        super();
-        serviceUrl = null;
-        connectionName = null;
-    }
-    
-    public String getServiceUrl() {
-        return serviceUrl;
+    @Override
+    public int maxInProject() {
+        return 1;
     }
 
-    public String getConnectionName() {
-        return connectionName;
-    }
     
 }

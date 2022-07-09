@@ -16,57 +16,24 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.cloud.oracle;
+package org.netbeans.modules.cloud.oracle.adm;
 
+import org.netbeans.modules.cloud.oracle.items.OCID;
 import org.netbeans.modules.cloud.oracle.items.OCIItem;
-import javax.swing.JComponent;
-import org.netbeans.spi.server.ServerInstanceImplementation;
-import org.openide.nodes.Node;
 
 /**
  *
  * @author Jan Horvath
  */
-public class TenancyInstance implements ServerInstanceImplementation {
+public class KnowledgeBaseItem extends OCIItem {
 
-    private final OCIItem tenancy;
-
-    public TenancyInstance(OCIItem tenancy) {
-        this.tenancy = tenancy;
-    }
-    
-    @Override
-    public String getDisplayName() {
-        return tenancy.getName();
+    public KnowledgeBaseItem(OCID id, String name) {
+        super(id, name);
     }
 
     @Override
-    public String getServerDisplayName() {
-        return tenancy.getKey().getValue();
+    public int maxInProject() {
+        return 1;
     }
 
-    @Override
-    public Node getFullNode() {
-        return getBasicNode();
-    }
-
-    @Override
-    public Node getBasicNode() {
-        return new TenancyNode(tenancy);
-    }
-
-    @Override
-    public JComponent getCustomizer() {
-        return null;
-    }
-
-    @Override
-    public void remove() {
-    }
-
-    @Override
-    public boolean isRemovable() {
-        return false;
-    }
-    
 }

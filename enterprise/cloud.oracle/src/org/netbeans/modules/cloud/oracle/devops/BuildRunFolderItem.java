@@ -16,40 +16,19 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.cloud.oracle;
+package org.netbeans.modules.cloud.oracle.devops;
 
+import org.netbeans.modules.cloud.oracle.items.OCID;
 import org.netbeans.modules.cloud.oracle.items.OCIItem;
-import java.awt.Image;
 
 /**
  *
  * @author Jan Horvath
  */
-public class TenancyNode extends OCINode {
+public class BuildRunFolderItem extends OCIItem {
     
-    private static final String ORCL_ICON = "org/netbeans/modules/cloud/oracle/resources/tenancy.svg"; // NOI18N
-    
-    public TenancyNode(OCIItem tenancy) {
-        super(tenancy);
-//        super(Children.create(new TenancyChildFactory(tenancy), true), Lookups.fixed(tenancy));
-        setName(tenancy.getName()); 
-        setDisplayName(tenancy.getName());
-        setIconBaseWithExtension(ORCL_ICON);
-        setShortDescription(tenancy.getDescription());
-    }
-    
-    @Override
-    public Image getIcon(int type) {
-        return badgeIcon(super.getIcon(type));
-    }
-    
-    @Override
-    public Image getOpenedIcon(int type) {
-        return badgeIcon(super.getOpenedIcon(type));
-    }
-    
-    private Image badgeIcon(Image origImg) {
-        return origImg;
+    public BuildRunFolderItem(OCID project, String name) {
+        super(project, name);
     }
     
 }

@@ -93,6 +93,24 @@ public class AutomaticRegistrationTest {
     }
     
     @Test
+    public void testRegistrationGF4() {
+        GlassFishVersion version = GlassFishVersion.GF_4_1_2;
+        if (GlassFishVersion.ge(version, GlassFishVersion.GF_6_1_0)) {
+            fail("GF_6_1_0");
+        } else if (GlassFishVersion.ge(version, GlassFishVersion.GF_6)) {
+            fail("GF_6");
+        } else if (GlassFishVersion.ge(version, GlassFishVersion.GF_5_1_0)) {
+            fail("GF_5_1_0");
+        } else if (GlassFishVersion.ge(version, GlassFishVersion.GF_5)) {
+            fail("GF_5");
+        } else if (GlassFishVersion.ge(version, GlassFishVersion.GF_4)) {
+            assertTrue("Success!", true);
+        } else if (GlassFishVersion.ge(version, GlassFishVersion.GF_3_1)) {
+            fail("GF_3_1");
+        }
+    }
+    
+    @Test
     public void testRegistrationGF31() {
         GlassFishVersion version = GlassFishVersion.GF_3_1;
         if (GlassFishVersion.ge(version, GlassFishVersion.GF_6_1_0)) {

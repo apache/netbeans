@@ -391,9 +391,9 @@ Found GraalVM:python
  * a java object called from the script. 
  * <ul>
  * <li>Exceptions from the script code are always
- * reported as {@link ScriptException} that provides the appropriate details.
+ * reported as {@link javax.script.ScriptException} that provides the appropriate details.
  * <li>Checked exceptions from host (java) code, unhandled by the script are raised as
- * some {@link RuntimeException} subclasses; the {@link Throwable#getCause} then indicates
+ * some {@link java.lang.RuntimeException} subclasses; the {@link java.lang.Throwable#getCause} then indicates
  * the original cause for the exception.
  * <li>Unchecked exceptions are directly propagated.
  * {@snippet file="org/netbeans/libs/graalsdk/ScriptingTutorial.java" region="handleScriptExceptions"}

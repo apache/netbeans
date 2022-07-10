@@ -222,7 +222,7 @@ public class ScriptingTutorial extends NbTestCase {
         // FastR currently needs access to native libraries:
         final ScriptEngineManager manager = Scripting.newBuilder().allowAllAccess(true).build();
         ScriptEngine rEngine = manager.getEngineByMimeType("application/x-r");
-        // END: org.netbeans.libs.graalsdk.ScriptingTutorial#allowAllAccess
+        // @end region="allowAllAccess"
 
         final Object funcRaw = rEngine.eval("qbinom");
         BinomQuantile func = ((Invocable) rEngine).getInterface(funcRaw, BinomQuantile.class);

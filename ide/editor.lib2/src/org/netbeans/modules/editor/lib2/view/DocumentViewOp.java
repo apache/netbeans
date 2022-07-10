@@ -924,7 +924,7 @@ public final class DocumentViewOp
         float lineHeightCorrectionOrig = rowHeightCorrection;
         rowHeightCorrection = prefs.getFloat(SimpleValueNames.LINE_HEIGHT_CORRECTION, 1.0f);
         boolean inlineHintsEnableOrig = inlineHintsEnable;
-        inlineHintsEnable = Boolean.TRUE.equals(prefs.getBoolean("enable.inline.hints", false)); // NOI18N
+        inlineHintsEnable = Boolean.TRUE.equals(prefs.getBoolean("enable.inline.hints", true)); // NOI18N
         boolean updateMetrics = (rowHeightCorrection != lineHeightCorrectionOrig);
         boolean releaseChildren = nonInitialUpdate && 
                 ((nonPrintableCharactersVisible != nonPrintableCharactersVisibleOrig) ||

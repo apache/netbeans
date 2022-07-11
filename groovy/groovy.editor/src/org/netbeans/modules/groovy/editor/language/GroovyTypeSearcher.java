@@ -51,11 +51,13 @@ import org.openide.NotifyDescriptor;
 import org.openide.filesystems.FileObject;
 import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  *
  * @author Martin Adamek
  */
+@ServiceProvider(service=IndexSearcher.class)
 public class GroovyTypeSearcher implements IndexSearcher {
 
     private static final Logger LOGGER = Logger.getLogger(GroovyTypeSearcher.class.getName());

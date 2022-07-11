@@ -19,12 +19,9 @@
 package org.netbeans.modules.java.lsp.server;
 
 import com.google.gson.stream.JsonWriter;
-import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.LineMap;
-import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
-import com.sun.source.tree.VariableTree;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.net.MalformedURLException;
@@ -104,6 +101,7 @@ public class Utils {
     
     @NonNull
     public static QuerySupport.Kind searchType2QueryKind(@NonNull final SearchType searchType) {
+        // copy of org.netbeans.modules.jumpto.common.Utils.toQueryKind
         switch (searchType) {
             case CAMEL_CASE:
                 return QuerySupport.Kind.CAMEL_CASE;
@@ -126,6 +124,7 @@ public class Utils {
     }
     
     public static SymbolKind cslElementKind2SymbolKind(final org.netbeans.modules.csl.api.ElementKind elementKind) {
+        // copy of org.netbeans.modules.csl.navigation.GsfStructureProvider.convertKind
         switch(elementKind) {
             case ATTRIBUTE: return SymbolKind.Property;
             case CALL: return SymbolKind.Event;
@@ -144,7 +143,7 @@ public class Utils {
             case KEYWORD: return SymbolKind.Key;
             case OTHER: return SymbolKind.Object;
             case PACKAGE: return SymbolKind.Package;
-            case PARAMETER: return SymbolKind.TypeParameter;
+            case PARAMETER: return SymbolKind.Variable;
             case PROPERTY: return SymbolKind.Property;
             case RULE: return SymbolKind.Event;
             case TAG: return SymbolKind.Operator;

@@ -83,7 +83,7 @@ public abstract class AdvancedPanel extends javax.swing.JPanel {
                 .filter(distros::contains)
                 .ifPresent(distrosModel::setSelectedItem);
     }
-    
+
     protected void setVersions(List<Integer> versions, Map<Integer, TermOfSupport> lts, int currentJdk) {
         List<Integer> reversedVersions = new ArrayList<>(versions);
         reversedVersions.sort(Collections.reverseOrder());
@@ -93,6 +93,23 @@ public abstract class AdvancedPanel extends javax.swing.JPanel {
         DefaultComboBoxModel versionModel = (DefaultComboBoxModel<Integer>) versionComboBox.getModel();
         reversedVersions.forEach(v -> versionModel.addElement(v));
         versionModel.setSelectedItem(LTSes.latest(lts));
+    }
+
+    Distribution getSelectedDistribution() {
+        return (Distribution) distributionComboBox.getSelectedItem();
+    }
+
+    Integer getSelectedVersion() {
+        return (Integer) versionComboBox.getSelectedItem();
+    }
+
+    void switchFocus(Distribution distribution, Integer version) {
+        if (distribution != null) {
+            distributionComboBox.setSelectedItem(distribution);
+        }
+        if (version != null) {
+            versionComboBox.setSelectedItem(version);
+        }
     }
 
     private ComboBoxModel<Integer> createVersionComboboxModel() {
@@ -378,12 +395,12 @@ public abstract class AdvancedPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_eaCheckBoxActionPerformed
 
     private void filterChanged() {
-        updateData( (Distribution) distributionComboBox.getSelectedItem(),
-                    (Integer) versionComboBox.getSelectedItem(),
-                    (Architecture) architectureComboBox.getSelectedItem(),
-                    latestCheckBox.isSelected() ? Latest.OVERALL : Latest.ALL_OF_VERSION,
-                    (PackageType) packageTypeComboBox.getSelectedItem(),
-                    eaCheckBox.isSelected());
+        updateData((Distribution) distributionComboBox.getSelectedItem(),
+                (Integer) versionComboBox.getSelectedItem(),
+                (Architecture) architectureComboBox.getSelectedItem(),
+                latestCheckBox.isSelected() ? Latest.OVERALL : Latest.ALL_OF_VERSION,
+                (PackageType) packageTypeComboBox.getSelectedItem(),
+                eaCheckBox.isSelected());
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

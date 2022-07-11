@@ -45,7 +45,14 @@ import javax.swing.event.ChangeEvent;
 import org.checkerframework.checker.guieffect.qual.UIEffect;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.openide.util.Exceptions;
+import org.openide.util.NbBundle;
 
+@NbBundle.Messages({
+    "SelectPackage.quick=Quick",
+    "SelectPackage.advanced=Advanced",
+    "SelectPackage.componentName=Connect to OpenJDK Discovery Service",
+    "SelectPackage.loadingError=Could not load list. Please check network access or try again later."
+})
 @SuppressWarnings("initialization")
 public class SelectPackagePanel extends FirstPanel {
     private static final Logger log = Logger.getLogger(SelectPackagePanel.class.getName());
@@ -68,21 +75,28 @@ public class SelectPackagePanel extends FirstPanel {
     private SelectPackagePanel() {
         // Setup disco client
         discoClient = Client.getInstance();
-        quickPanel = new QuickPanel();
+        quickPanel = new QuickPanel(this);
         advancedPanel = new FooAdvancedPanel();
 
         //please wait message
         ((CardLayout) getLayout()).first(this);
-        tabs.add("Quick", quickPanel);
-        tabs.add("Advanced", advancedPanel);
+        tabs.add(Bundle.SelectPackage_quick(), quickPanel);
+        tabs.add(Bundle.SelectPackage_advanced(), advancedPanel);
         tabs.addChangeListener((ChangeEvent e) -> {
-            SelectPackagePanel.this.firePropertyChange(PROP_VALIDITY_CHANGED, false, true);
+            SelectPackagePanel.this.fireValidityChange();
+            if (tabs.getSelectedComponent() == quickPanel) {
+                quickPanel.switchFocus(advancedPanel.getSelectedDistribution(),
+                        advancedPanel.getSelectedVersion());
+            } else {
+                advancedPanel.switchFocus(quickPanel.getSelectedDistribution(),
+                        quickPanel.getSelectedVersion());
+            }
         });
     }
 
     @UIEffect
     private void init() {
-        setName("Connect to OpenJDK Discovery Service");
+        setName(Bundle.SelectPackage_componentName());
     }
 
     private boolean initialLoad = false; //track the async load in addNotify
@@ -136,10 +150,10 @@ public class SelectPackagePanel extends FirstPanel {
             advancedPanel.setVersions(c.versionNumbers, c.versionNumberSupport, c.current);
             quickPanel.updateDistributions(c.distributions, defaultDist);
             quickPanel.setVersions(c.versionNumbers, c.versionNumberSupport, c.current);
-
-            SelectPackagePanel.this.firePropertyChange(PROP_VALIDITY_CHANGED, false, true);
+            quickPanel.initFocus();
+            fireValidityChange();
         }).handle(ex -> {
-            loadingLabel.setText("Could not load list due to an error. Please try again later.");
+            loadingLabel.setText(Bundle.SelectPackage_loadingError());
             initialLoad = false;
 
             long currentTimeMillisStart = System.currentTimeMillis();
@@ -164,12 +178,16 @@ public class SelectPackagePanel extends FirstPanel {
         }).execute();
     }
 
+    void fireValidityChange() {
+        firePropertyChange(PROP_VALIDITY_CHANGED, null, null);
+    }
+
     class FooAdvancedPanel extends AdvancedPanel {
 
         FooAdvancedPanel() {
             ListSelectionModel selectionModel = table.getSelectionModel();
             selectionModel.addListSelectionListener(e -> {
-                SelectPackagePanel.this.firePropertyChange(PROP_VALIDITY_CHANGED, false, true);
+                SelectPackagePanel.this.fireValidityChange();
             });
         }
 
@@ -206,20 +224,22 @@ public class SelectPackagePanel extends FirstPanel {
 
     @UIEffect
     public @Nullable PkgSelection getSelectedPackage() {
-        if (!tabs.isVisible())
+        if (!tabs.isVisible()) {
             return null;
+        }
 
+        Pkg pkg = null;
         switch (tabs.getSelectedIndex()) {
             case 0:
-                return new QuickPkgSelection(quickPanel.getSelectedPackage());
+                pkg = quickPanel.getSelectedPackage();
+                break;
             case 1:
-                Pkg pkg = advancedPanel.getSelectedPackage();
-                if (pkg == null)
-                    return null;
-                return PkgSelection.of(pkg);
+                pkg = advancedPanel.getSelectedPackage();
+                break;
             default:
                 throw new IllegalStateException();
         }
+        return pkg == null ? null : PkgSelection.of(pkg);
     }
 
 }

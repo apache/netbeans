@@ -97,13 +97,13 @@ import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.JavaSource.Phase;
 import org.netbeans.api.java.source.SourceUtils;
 import org.netbeans.api.java.source.ui.ElementOpen;
-import org.netbeans.api.lsp.StructureElement;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.project.SourceGroup;
 import org.netbeans.api.project.ui.OpenProjects;
+import org.netbeans.modules.csl.api.IndexSearcher;
 import org.netbeans.modules.editor.indent.spi.CodeStylePreferences;
 import org.netbeans.modules.gsf.testrunner.ui.api.TestMethodController;
 import org.netbeans.modules.gsf.testrunner.ui.api.TestMethodFinder;
@@ -117,7 +117,6 @@ import org.netbeans.modules.java.source.ui.JavaTypeProvider;
 import org.netbeans.modules.java.source.usages.ClassIndexImpl;
 import org.netbeans.modules.parsing.lucene.support.Queries;
 import org.netbeans.spi.jumpto.type.SearchType;
-import org.netbeans.spi.lsp.SymbolProvider;
 import org.netbeans.spi.project.ActionProgress;
 import org.netbeans.spi.project.ActionProvider;
 import org.netbeans.spi.project.ProjectConfiguration;
@@ -710,23 +709,28 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
         };
         WORKER.post(() -> {
             try {
-                List<WorkspaceSymbol> symbols = new ArrayList<>();
                 SearchType searchType = getSearchType(queryFin, exactFin, false, null, null);
-                // Non java part
-                Collection<? extends SymbolProvider> providers = Lookup.getDefault().lookupAll(SymbolProvider.class);
-                for (SymbolProvider provider: providers) {
-                    List<StructureElement> providerSymbols = provider.findSymbols(searchType, queryFin, cancel);
-                    for (StructureElement providerSymbol : providerSymbols) {
-                        FileObject fo = providerSymbol.getFile();
-                        if (fo != null) {
-                            Position startPos = Utils.createPosition(fo, providerSymbol.getSelectionStartOffset());
-                            Position endPos = Utils.createPosition(fo, providerSymbol.getSelectionEndOffset());
-                            WorkspaceSymbol symbol = new WorkspaceSymbol(
-                                    providerSymbol.getName(), 
-                                    Utils.structureElementKind2SymbolKind(providerSymbol.getKind()), 
-                                    Either.forLeft(new Location(Utils.toUri(fo), new Range(startPos, endPos))), 
-                                    providerSymbol.getDetail());
-                            symbols.add(symbol);
+                List<WorkspaceSymbol> symbols = new ArrayList<>();
+                
+                // CSL Part
+                Collection<? extends IndexSearcher> providers = Lookup.getDefault().lookupAll(IndexSearcher.class);
+                Set<? extends IndexSearcher.Descriptor> descriptors;
+                if (!providers.isEmpty()) {
+                    for (IndexSearcher provider : providers) {
+                        descriptors = provider.getSymbols(null, queryFin, Utils.searchType2QueryKind(searchType), null);
+                        for (IndexSearcher.Descriptor desc : descriptors) {
+                            FileObject fo = desc.getFileObject();
+                            org.netbeans.modules.csl.api.ElementHandle element = desc.getElement();
+                            if (fo != null) {
+                                Position startPos = Utils.createPosition(fo, desc.getOffset());
+                                Position endPos = Utils.createPosition(fo, desc.getOffset() + desc.getSimpleName().length());
+                                WorkspaceSymbol symbol = new WorkspaceSymbol(
+                                        desc.getSimpleName(),
+                                        Utils.cslElementKind2SymbolKind(element.getKind()),
+                                        Either.forLeft(new Location(Utils.toUri(fo), new Range(startPos, endPos))),
+                                        desc.getContextName());
+                                symbols.add(symbol);
+                            }
                         }
                     }
                 }

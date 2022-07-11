@@ -113,42 +113,7 @@ public class TypeAndSymbolProvider {
             }
         }
     } // End of SymbolProviderProxy class
-    
-    public static final class LSPSymbolProviderImpl extends TypeAndSymbolProvider implements org.netbeans.spi.lsp.SymbolProvider {
-
-        public LSPSymbolProviderImpl() {
-            super(false);
-        }
-
-        
-        @Override
-        public List<StructureElement> findSymbols(SearchType searchType, String query, AtomicBoolean canceled) {
-            Set<? extends IndexSearcher.Descriptor> descriptors = compute(
-                    query,
-                    searchType,
-                    null
-            );
-            if (descriptors != null) {
-                List<StructureElement> result = new ArrayList<>();
-                for(IndexSearcher.Descriptor d : descriptors) {
-                    ElementHandle element = d.getElement();
-                    StructureProvider.Builder builder = StructureProvider.newBuilder(d.getSimpleName(), GsfStructureProvider.convertKind(element.getKind()));
-                    builder.file(d.getFileObject());
-                    OffsetRange range = element.getOffsetRange(null);
-                    if (range != null) {
-                        builder.selectionStartOffset(range.getStart());
-                        builder.selectionEndOffset(range.getEnd());
-                    }
-                    builder.detail(d.getContextName());
-                    result.add(builder.build());
-                }
-                return result;
-            }
-            return Collections.EMPTY_LIST;
-        }
-        
-    }
-    
+   
     // ------------------------------------------------------------------------
     // Private implementation
     // ------------------------------------------------------------------------

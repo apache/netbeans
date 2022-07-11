@@ -31,6 +31,7 @@ import com.sun.source.util.TreePath;
 import com.sun.source.util.Trees;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.HashMap;
@@ -42,6 +43,8 @@ import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
@@ -72,6 +75,7 @@ import org.netbeans.api.java.source.TreeUtilities;
 import org.netbeans.api.java.source.support.ReferencesCount;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenSequence;
+import org.netbeans.api.lexer.TokenUtilities;
 import org.netbeans.modules.java.completion.Utilities;
 import org.netbeans.modules.java.editor.base.javadoc.JavadocCompletionUtils;
 import org.netbeans.modules.java.editor.javadoc.TagRegistery.TagEntry;
@@ -1212,6 +1216,12 @@ public class JavadocCompletionTask<T> extends UserTask {
         CharSequence text = token.text();
         int pos = caretOffset - jdts.offset();
         DocTreePath tag = getTag(jdctx, caretOffset);
+        int startPos = (int) jdctx.positions.getStartPosition(jdctx.javac.getCompilationUnit(), jdctx.comment, tag.getLeaf());
+        String subStr = JavadocCompletionUtils.getCharSequence(jdctx.doc, startPos, caretOffset).toString();
+        int index = subStr.lastIndexOf("\n");
+        String markupLine = JavadocCompletionUtils.getCharSequence(jdctx.doc, (index + startPos), caretOffset).toString();
+        insideInlineSnippet(markupLine);
+
         if (pos > 0 && pos <= text.length() && text.charAt(pos - 1) == '{') {
             if (tag != null && !JavadocCompletionUtils.isBlockTag(tag)) {
                 int start = (int) jdctx.positions.getStartPosition(jdctx.javac.getCompilationUnit(), jdctx.comment, tag.getLeaf());
@@ -1229,6 +1239,65 @@ public class JavadocCompletionTask<T> extends UserTask {
             }
         } else if (JavadocCompletionUtils.isLineBreak(token, pos)) {
             resolveBlockTag(null, jdctx);
+        }
+    }
+
+    void insideInlineSnippet(String subStr) {
+        if (subStr.contains("//")) {
+            if (subStr.endsWith("@")) {
+                List<String> inlineAttr = new ArrayList() {
+                    {
+                        add("highlight");
+                        add("replace");
+                        add("link");
+                        add("start");
+                        add("end");
+                    }
+                };
+                for (String str : inlineAttr) {
+                    items.add(factory.createNameItem(str, this.caretOffset));
+                }
+            } else {
+                String[] tags = {"@highlight", "@replace", "@link", "@start", "@end"};
+                Matcher match = Pattern.compile("@\\b\\w{1,}\\b\\s+(?!.*@\\b\\w{1,}\\b\\s+)").matcher(subStr);
+                if (match.find() && Arrays.asList(tags).contains(match.group(0).trim())) {
+                    completeInlineMarkupTag(match.group(0).trim(), new ArrayList() {
+                        {
+                            add("substring");
+                            add("regex");
+                            add("region");
+                        }
+                    });
+                }
+            }
+        }
+    }
+
+    private void completeInlineMarkupTag(String str, List<String> attr) {
+        String value = " = \"<value>\"";
+        switch (str) {
+            case "@highlight":
+                attr.add("type");
+                break;
+            case "@replace":
+                attr.add("replacement");
+                break;
+            case "@link":
+                attr.add("target");
+                attr.add("type");
+                break;
+            case "@start":
+            case "@end":
+                attr.clear();
+                attr.add("region");
+                break;
+            default:
+                break;
+        }
+        if (!attr.isEmpty()) {
+            for (String entry : attr) {
+                items.add(factory.createNameItem(entry + value, this.caretOffset));
+            }
         }
     }
 

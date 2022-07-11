@@ -45,6 +45,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import com.google.gson.InstanceCreator;
 import com.google.gson.JsonObject;
+import java.util.prefs.Preferences;
 import java.util.LinkedHashSet;
 import org.eclipse.lsp4j.CallHierarchyRegistrationOptions;
 import org.eclipse.lsp4j.CodeActionKind;
@@ -120,6 +121,7 @@ import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
+import org.openide.util.NbPreferences;
 import org.openide.util.Pair;
 import org.openide.util.RequestProcessor;
 import org.openide.util.lookup.AbstractLookup;
@@ -769,6 +771,7 @@ public final class Server {
             NbCodeClientCapabilities capa = NbCodeClientCapabilities.get(init);
             client.setClientCaps(capa);
             hackConfigureGroovySupport(capa);
+            hackNoReuseOfOutputsForAntProjects();
             List<FileObject> projectCandidates = new ArrayList<>();
             List<WorkspaceFolder> folders = init.getWorkspaceFolders();
             if (folders != null) {
@@ -1070,6 +1073,21 @@ public final class Server {
             if (!groovyClassWarningLogged) {
                 groovyClassWarningLogged = true;
                 LOG.log(Level.WARNING, "Unable to configure Groovy support", ex);
+            }
+        }
+    }
+
+    private static boolean antClassWarningLogged;
+    private static void hackNoReuseOfOutputsForAntProjects() {
+        final String PROP_AUTO_CLOSE_TABS = "autoCloseTabs"; // NOI18N
+        try {
+            Class antSettings = Lookup.getDefault().lookup(ClassLoader.class).loadClass("org.apache.tools.ant.module.AntSettings");
+            Preferences prefs = NbPreferences.forModule(antSettings);
+            prefs.putBoolean(PROP_AUTO_CLOSE_TABS, false);
+        } catch (ReflectiveOperationException ex) {
+            if (!antClassWarningLogged) {
+                antClassWarningLogged = true;
+                LOG.log(Level.WARNING, "Unable to configure Ant support", ex);
             }
         }
     }

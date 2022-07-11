@@ -19,22 +19,15 @@
 
 package org.netbeans.modules.csl.core;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.Icon;
-import org.netbeans.api.lsp.StructureElement;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.csl.api.ElementHandle;
 import org.netbeans.modules.csl.api.IndexSearcher;
-import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.csl.api.UiUtils;
-import org.netbeans.modules.csl.navigation.GsfStructureProvider;
 import org.netbeans.modules.csl.navigation.Icons;
 import org.netbeans.modules.parsing.api.Source;
 import org.netbeans.modules.parsing.spi.indexing.support.QuerySupport;
@@ -44,7 +37,6 @@ import org.netbeans.spi.jumpto.symbol.SymbolProvider;
 import org.netbeans.spi.jumpto.type.SearchType;
 import org.netbeans.spi.jumpto.type.TypeDescriptor;
 import org.netbeans.spi.jumpto.type.TypeProvider;
-import org.netbeans.spi.lsp.StructureProvider;
 import org.openide.filesystems.FileObject;
 
 /**
@@ -113,7 +105,6 @@ public class TypeAndSymbolProvider {
             }
         }
     } // End of SymbolProviderProxy class
-   
     // ------------------------------------------------------------------------
     // Private implementation
     // ------------------------------------------------------------------------

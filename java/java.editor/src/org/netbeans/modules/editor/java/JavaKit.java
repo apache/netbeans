@@ -42,7 +42,6 @@ import org.netbeans.api.editor.mimelookup.MimeRegistrations;
 import org.netbeans.api.java.lexer.JavaTokenId;
 import org.netbeans.api.java.source.CodeStyle;
 import org.netbeans.api.lexer.InputAttributes;
-import org.netbeans.api.lexer.Language;
 import org.netbeans.editor.*;
 import org.netbeans.editor.Utilities;
 import org.netbeans.api.java.queries.SourceLevelQuery;
@@ -90,13 +89,6 @@ public class JavaKit extends NbEditorKit {
     
     public String getContentType() {
         return JAVA_MIME_TYPE;
-    }
-
-    @Override
-    public Document createDefaultDocument() {
-      final Document document = super.createDefaultDocument();
-      document.putProperty(Language.class, JavaTokenId.language());
-      return document;
     }
 
 //    /** Create new instance of syntax coloring scanner

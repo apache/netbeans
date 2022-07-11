@@ -83,6 +83,20 @@ is the proper place.
     <!-- ACTUAL CHANGES BEGIN HERE: -->
 
     <changes>
+        <change id="gradleproject-files">
+            <api name="general"/>
+            <summary>GradleFiles can be obtained from API</summary>
+            <version major="2" minor="24"/>
+            <date day="30" month="4" year="2022"/>
+            <author login="sdedic"/>
+            <compatibility semantic="compatible" addition="yes"/>
+            <description>
+                <a href="@TOP@/org/netbeans/modules/gradle/spi/GradleFiles.html">GradleFiles</a> can be obtained from
+                <a href="@TOP@/org/netbeans/modules/gradle/api/NbGradleProject.html">NbGradleProject</a> instance. Gradle project
+                users can use <code>GradleFiles</code> to get important files or pathnames in the project.
+            </description>
+            <class package="org.netbeans.modules.gradle.api" name="NbGradleProject"/>
+        </change>
         <change id="gradle-reports">
             <api name="general"/>
             <summary>Rich exception reports are exported from Gradle process.</summary>

@@ -66,7 +66,9 @@ public class DDHelper {
      */
     public static FileObject createWebXml(Profile j2eeProfile, boolean webXmlRequired, FileObject dir) throws IOException {
         String template = null;
-        if ((Profile.JAKARTA_EE_9_FULL == j2eeProfile || Profile.JAKARTA_EE_9_WEB == j2eeProfile) && webXmlRequired) {
+        if ((Profile.JAKARTA_EE_9_1_FULL == j2eeProfile || Profile.JAKARTA_EE_9_1_WEB == j2eeProfile) && webXmlRequired) {
+            template = "web-4.0.xml"; //NOI18N
+        } else if ((Profile.JAKARTA_EE_9_FULL == j2eeProfile || Profile.JAKARTA_EE_9_WEB == j2eeProfile) && webXmlRequired) {
             template = "web-4.0.xml"; //NOI18N
         } else if ((Profile.JAKARTA_EE_8_FULL == j2eeProfile || Profile.JAKARTA_EE_8_WEB == j2eeProfile) && webXmlRequired) {
             template = "web-4.0.xml"; //NOI18N
@@ -103,7 +105,9 @@ public class DDHelper {
      */
     public static FileObject createWebFragmentXml(Profile j2eeProfile, FileObject dir) throws IOException {
         String template = null;
-        if (Profile.JAKARTA_EE_9_FULL == j2eeProfile || Profile.JAKARTA_EE_9_WEB == j2eeProfile) {
+        if (Profile.JAKARTA_EE_9_1_FULL == j2eeProfile || Profile.JAKARTA_EE_9_1_WEB == j2eeProfile) {
+            template = "web-fragment-4.0.xml"; //NOI18N
+        } else if (Profile.JAKARTA_EE_9_FULL == j2eeProfile || Profile.JAKARTA_EE_9_WEB == j2eeProfile) {
             template = "web-fragment-4.0.xml"; //NOI18N
         } else if (Profile.JAKARTA_EE_8_FULL == j2eeProfile || Profile.JAKARTA_EE_8_WEB == j2eeProfile) {
             template = "web-fragment-4.0.xml"; //NOI18N

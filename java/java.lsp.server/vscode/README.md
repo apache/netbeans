@@ -134,11 +134,11 @@ Go to VSCode `Preferences | Settings`  and search for _NetBeans_ to set `Netbean
 And `Netbeans > Java > On Save: Organize Imports` - Enable organize imports action on a document save
 
 ## JavaDoc smart editing
-When adding JavaDoc to code NetBeans assits by suggesting to insert preformatted and prepopullated JavaDoc comment. Type `/**` above method signature and IDE offers to complete the JavaDoc. The action creates JavaDoc comment with all arguments prepared
+When adding JavaDoc to code NetBeans assists by suggesting to insert preformatted and prepopulated JavaDoc comment. Type `/**` above method signature and IDE offers to complete the JavaDoc. The action creates JavaDoc comment with all arguments prepared.
 ![JavaDoc Completion](images/javadoc.png)
 
 ## Source Code formatting
-Formatting source code is possible using also other styles than NetBeans. Eclipse, Google and Spring formatters can be used. For Eclipse formatter simply export settings from Eclipse IDE into standard file and then set `Netbeans > Format: Settings Path:` in VSCode Settings
+Formatting source code is possible using also other styles than NetBeans. Eclipse, Google and Spring formatters can be used. For Eclipse formatter simply export settings from Eclipse IDE into standard file and then set `Netbeans > Format: Settings Path:` in VSCode Settings.
 ![Source Code formatter](images/SourceCodeFormatter.png) 
 ## Test Explorer
 NetBeans Language Server provides Test Explorer view which allows to run all tests in a project, examine the results, go to source code and  run particular test.

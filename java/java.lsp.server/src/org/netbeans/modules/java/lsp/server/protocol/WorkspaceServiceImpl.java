@@ -103,6 +103,7 @@ import org.netbeans.api.project.ProjectManager;
 import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.project.SourceGroup;
 import org.netbeans.api.project.ui.OpenProjects;
+import org.netbeans.modules.csl.api.IndexSearcher;
 import org.netbeans.modules.editor.indent.spi.CodeStylePreferences;
 import org.netbeans.modules.gsf.testrunner.ui.api.TestMethodController;
 import org.netbeans.modules.gsf.testrunner.ui.api.TestMethodFinder;
@@ -708,8 +709,34 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
         };
         WORKER.post(() -> {
             try {
-                List<WorkspaceSymbol> symbols = new ArrayList<>();
                 SearchType searchType = getSearchType(queryFin, exactFin, false, null, null);
+                List<WorkspaceSymbol> symbols = new ArrayList<>();
+                
+                // CSL Part
+                Collection<? extends IndexSearcher> providers = Lookup.getDefault().lookupAll(IndexSearcher.class);
+                Set<? extends IndexSearcher.Descriptor> descriptors;
+                if (!providers.isEmpty()) {
+                    for (IndexSearcher provider : providers) {
+                        descriptors = provider.getSymbols(null, queryFin, Utils.searchType2QueryKind(searchType), null);
+                        for (IndexSearcher.Descriptor desc : descriptors) {
+                            FileObject fo = desc.getFileObject();
+                            org.netbeans.modules.csl.api.ElementHandle element = desc.getElement();
+                            if (fo != null) {
+                                Position startPos = Utils.createPosition(fo, desc.getOffset());
+                                Position endPos = Utils.createPosition(fo, desc.getOffset() + desc.getSimpleName().length());
+                                WorkspaceSymbol symbol = new WorkspaceSymbol(
+                                        desc.getSimpleName(),
+                                        Utils.cslElementKind2SymbolKind(element.getKind()),
+                                        Either.forLeft(new Location(Utils.toUri(fo), new Range(startPos, endPos))),
+                                        desc.getContextName());
+                                symbols.add(symbol);
+                            }
+                        }
+                    }
+                }
+                
+                // java part
+                // TODO rewrite the java part into a SymbolProvider
                 JavaSymbolProvider.ResultHandler symbolHandler = new JavaSymbolProvider.ResultHandler() {
                     @Override
                     public void setHighlightText(String text) {

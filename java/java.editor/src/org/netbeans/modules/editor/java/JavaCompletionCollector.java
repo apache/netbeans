@@ -866,7 +866,7 @@ public class JavaCompletionCollector implements CompletionCollector {
         }
 
         @Override
-        public Completion createLambdaItem(CompilationInfo info, TypeElement elem, DeclaredType type, int substitutionOffset, boolean addSemicolon) {
+        public Completion createLambdaItem(CompilationInfo info, TypeElement elem, DeclaredType type, int substitutionOffset, boolean expression, boolean addSemicolon) {
             StringBuilder label = new StringBuilder();
             StringBuilder insertText = new StringBuilder();
             StringBuilder sortText = new StringBuilder();

@@ -3360,6 +3360,25 @@ public final class TreeMaker {
     }
 
     /**
+     * Creates a new ExpressionTree for provided <tt>bodyText</tt>.
+     * 
+     * @param   lambda    figures out the scope for attribution.
+     * @param   bodyText  text which will be used for lambda body creation.
+     * @return  a new tree for <tt>bodyText</tt>.
+     * @since 2.54
+     */
+    public ExpressionTree createLambdaExpression(LambdaExpressionTree lambda, String bodyText) {
+        SourcePositions[] positions = new SourcePositions[1];
+        final TreeUtilities treeUtils = copy.getTreeUtilities();
+        ExpressionTree body = treeUtils.parseExpression(bodyText, positions);
+        Scope scope = copy.getTrees().getScope(TreePath.getPath(copy.getCompilationUnit(), lambda));
+        treeUtils.attributeTree(body, scope);
+//        mapComments((BlockTree) body, bodyText, copy, handler, positions[0]);
+        new TreePosCleaner().scan(body, null);
+        return (ExpressionTree) body;
+    }
+
+    /**
      * Creates a new MethodTree.
      *
      * @param modifiers the modifiers of this method.

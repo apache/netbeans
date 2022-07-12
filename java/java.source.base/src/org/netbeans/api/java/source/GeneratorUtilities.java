@@ -133,6 +133,8 @@ import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Exceptions;
 
+import static javax.lang.model.type.TypeKind.VOID;
+
 /**
  *
  * @author Jan Lahoda, Dusan Balek
@@ -1047,6 +1049,22 @@ public final class GeneratorUtilities {
             return copy.getTreeMaker().createLambdaBody(lambda, bodyTemplate);
         } catch (Exception e) {}
         return copy.getTreeMaker().Block(Collections.emptyList(), false);
+    }
+
+    /**
+     * Creates a default lambda expression.
+     *
+     * @param lambda a lambda to generate the expression for
+     * @param method a method of a functional interface to be implemented by the lambda expression
+     * @return the lambda expression
+     * @since 2.57
+     */
+    public ExpressionTree createDefaultLambdaExpression(LambdaExpressionTree lambda, ExecutableElement method) {
+        try {
+            String bodyTemplate = readFromTemplate(LAMBDA_EXPRESSION, createBindings(null, method)); //NOI18N
+            return copy.getTreeMaker().createLambdaExpression(lambda, bodyTemplate);
+        } catch (Exception e) {}
+        return null;
     }
     
     private boolean isStarImport(ImportTree imp) {
@@ -2175,6 +2193,7 @@ public final class GeneratorUtilities {
     private static final String GENERATED_METHOD_BODY = "Templates/Classes/Code/GeneratedMethodBody"; //NOI18N
     private static final String OVERRIDDEN_METHOD_BODY = "Templates/Classes/Code/OverriddenMethodBody"; //NOI18N
     private static final String LAMBDA_BODY = "Templates/Classes/Code/LambdaBody"; //NOI18N
+    private static final String LAMBDA_EXPRESSION = "Templates/Classes/Code/LambdaExpression"; //NOI18N
     private static final String METHOD_RETURN_TYPE = "method_return_type"; //NOI18N
     private static final String DEFAULT_RETURN_TYPE_VALUE = "default_return_value"; //NOI18N
     private static final String SUPER_METHOD_CALL = "super_method_call"; //NOI18N

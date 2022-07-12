@@ -21,7 +21,15 @@
 
 -->
 ## Version 14.0.301
-* Format Document and Format Selection added.
+* Settings: `NetBeans:UserDir` is set to `Local` as default value. This means each instance of VSCode runs own VSNetBeans LS
+* Format Document and Format Selection added 
+* External formatters using Eclipse, Google and Spring added.
+* JavaDoc completion added
+* Groovy Go To Symbol added
+* Several refactorings added
+* Settings are Remote-SSH aware
+* Native Image debugging provided by GraalVM works now for GraalVM CE and EE
+* Number of bug fixes and improvements in Java, projects and databases support
 
 ## Version 14.0
 * Workaround for VSCode 1.67 error which breaks Projects explorer icon

@@ -46,7 +46,7 @@ import org.openide.util.lookup.ServiceProvider;
 public final class J2SEPlatformDefaultJavadocImpl implements J2SEPlatformDefaultJavadoc {
 
     private static final Logger LOG = Logger.getLogger(J2SEPlatformDefaultJavadocImpl.class.getName());
-    private static final Map<String,String> OFFICIAL_JAVADOC = new HashMap<String,String>();
+    private static final Map<String,String> OFFICIAL_JAVADOC = new HashMap<>();
     static {
         OFFICIAL_JAVADOC.put("1.0", null); // NOI18N
         OFFICIAL_JAVADOC.put("1.1", null); // NOI18N
@@ -68,6 +68,7 @@ public final class J2SEPlatformDefaultJavadocImpl implements J2SEPlatformDefault
         OFFICIAL_JAVADOC.put("17", "https://docs.oracle.com/en/java/javase/17/docs/api/"); // NOI18N
         OFFICIAL_JAVADOC.put("18", "https://docs.oracle.com/en/java/javase/18/docs/api/"); // NOI18N
         OFFICIAL_JAVADOC.put("19", "https://download.java.net/java/early_access/jdk19/docs/api/"); // NOI18N Early access
+        OFFICIAL_JAVADOC.put("20", "https://download.java.net/java/early_access/jdk20/docs/api/"); // NOI18N Early access
     }
 
     @Override

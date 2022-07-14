@@ -50,6 +50,10 @@
                 <attr name="action:org.netbeans.modules.cloud.oracle.actions.AddRepository" stringvalue="Tools"/>
             </file>
         </folder>
+        <folder name="AutoupdateType">
+            <file name="82pluginportal-update-provider.instance_hidden"/>
+            <file name="pluginportal-update-provider.instance_hidden"/>
+        </folder>
     </folder>
     <folder name="Explorers">
         <folder name="database.connections">
@@ -64,12 +68,6 @@
     </folder>
     <folder name="Debugger">
         <file name="org-netbeans-modules-debugger-jpda-ui-CurrentThreadAnnotationListener.instance_hidden"/>
-    </folder>
-    <folder name="Services">
-        <folder name="AutoupdateType">
-            <file name="82pluginportal-update-provider.instance_hidden"/>
-            <file name="pluginportal-update-provider.instance_hidden"/>
-        </folder>
     </folder>
     <folder name="Templates">
         <folder name="Classes">

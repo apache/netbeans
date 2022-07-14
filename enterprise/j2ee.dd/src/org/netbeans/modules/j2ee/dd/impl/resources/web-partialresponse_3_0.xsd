@@ -1,0 +1,403 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:jakartaee="https://jakarta.ee/xml/ns/jakartaee"
+            attributeFormDefault="unqualified"
+            elementFormDefault="qualified"
+            targetNamespace="https://jakarta.ee/xml/ns/jakartaee"
+            version="3.0"
+            xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <xsd:include schemaLocation="jakartaee_9.xsd"/>
+
+  <xsd:annotation>
+    <xsd:documentation>
+
+      Copyright (c) 2009, 2020 Oracle and/or its affiliates. All rights reserved.
+      
+      This program and the accompanying materials are made available under the
+      terms of the Eclipse Public License v. 2.0, which is available at
+      http://www.eclipse.org/legal/epl-2.0.
+      
+      This Source Code may also be made available under the following Secondary
+      Licenses when the conditions for such availability set forth in the
+      Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+      version 2 with the GNU Classpath Exception, which is available at
+      https://www.gnu.org/software/classpath/license.html.
+      
+      SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+      
+    </xsd:documentation>
+  </xsd:annotation>
+
+  <xsd:annotation>
+    <xsd:documentation>
+      <![CDATA[
+      [
+      <p>
+      
+      The XML Schema for the Jakarta Server Faces (Version 3.0)  
+      Partial Response used in JSF Ajax frameworks.
+      
+      </p>
+      
+      ]]>
+    </xsd:documentation>
+  </xsd:annotation>
+
+
+<!-- **************************************************** -->
+
+  <xsd:element name="partial-response"
+               type="jakartaee:partial-responseType">
+    <xsd:annotation>
+      <xsd:documentation>
+        <![CDATA[
+        [
+        <p>
+        
+        The "partial-response" element is the root of the
+        partial response information hierarchy, and contains
+        nested elements for all possible elements that can exist
+        in the response.</p>
+        
+        <p>This element must have an "id" attribute whose value
+        is the return from calling getContainerClientId() on the
+        UIViewRoot to which this response pertains.
+        
+        </p>
+        
+        ]]>
+      </xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+
+
+<!-- **************************************************** -->
+
+  <xsd:complexType name="partial-responseType">
+    <xsd:annotation>
+      <xsd:documentation>
+        <![CDATA[
+        [
+        <p>
+        
+        The "partial-response" element is the root of the
+        partial response information hierarchy, and contains
+        nested elements for all possible elements that can exist
+        in the response.
+        
+        <p>
+        
+        </p>
+        
+        ]]>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:choice minOccurs="0"
+                maxOccurs="unbounded">
+      <xsd:element name="changes"
+                   type="jakartaee:partial-response-changesType"
+                   minOccurs="0"
+                   maxOccurs="1"/>
+      <xsd:element name="redirect"
+                   type="jakartaee:partial-response-redirectType"
+                   minOccurs="0"
+                   maxOccurs="1"/>
+      <xsd:element name="error"
+                   type="jakartaee:partial-response-errorType"
+                   minOccurs="0"
+                   maxOccurs="1"/>
+    </xsd:choice>
+    <xsd:attribute name="id"
+                   type="xsd:ID"
+                   use="required">
+      <xsd:annotation>
+        <xsd:documentation>
+          <![CDATA[
+          [
+          <p class="changed_added_2_2">This element must have an "id" attribute whose value
+          is the return from calling getContainerClientId() on the
+          UIViewRoot to which this response pertains.<p> 
+          
+          ]]>
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+  </xsd:complexType>
+
+
+<!-- **************************************************** -->
+
+  <xsd:complexType name="partial-response-changesType">
+    <xsd:annotation>
+      <xsd:documentation>
+        <![CDATA[
+        [
+        <p>
+        
+        The "changes" element contains a collection of child elements,
+        each of which describes a different change to be applied to the
+        view in the user agent.
+        
+        </p>
+        
+        ]]>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:choice minOccurs="0"
+                maxOccurs="unbounded">
+      <xsd:element name="update"
+                   type="jakartaee:partial-response-updateType"/>
+      <xsd:element name="insert"
+                   type="jakartaee:partial-response-insertType"/>
+      <xsd:element name="delete"
+                   type="jakartaee:partial-response-deleteType"/>
+      <xsd:element name="attributes"
+                   type="jakartaee:partial-response-attributesType"/>
+      <xsd:element name="eval"
+                   type="xsd:string">
+        <xsd:annotation>
+          <xsd:documentation>
+            <![CDATA[
+            [
+            <p>
+            
+            The "eval" element enables this element's
+            contents to be executed as JavaScript.
+            
+            </p>
+            
+            ]]>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="extension"
+                   type="jakartaee:partial-response-extensionType"/>
+    </xsd:choice>
+  </xsd:complexType>
+
+
+<!-- **************************************************** -->
+
+  <xsd:complexType name="partial-response-updateType">
+    <xsd:annotation>
+      <xsd:documentation>
+        <![CDATA[
+        [
+        <p>
+        
+        The "update" element enables DOM elements matching the "id"
+        attribute to be updated with the contents of this element. 
+        
+        </p>
+        
+        ]]>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence maxOccurs="unbounded">
+      <xsd:any processContents="skip"
+               namespace="##any"/>
+    </xsd:sequence>
+    <xsd:attribute name="id"
+                   type="xsd:string"
+                   use="required"/>
+  </xsd:complexType>
+
+
+<!-- **************************************************** -->
+
+  <xsd:complexType name="partial-response-insertType">
+    <xsd:annotation>
+      <xsd:documentation>
+        <![CDATA[
+        [
+        <p>
+        
+        The "insert" element enables content to be inserted into the DOM
+        before or after an existing DOM element as specified by the
+        nested "before" or "after" elements.  The elements "before" and
+        "after" are mutually exclusive - one of them must be specified. 
+        
+        </p>
+        
+        ]]>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:choice minOccurs="1"
+                maxOccurs="1">
+      <xsd:element name="before">
+
+<!-- **************************************************** -->
+
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:any namespace="##any"
+                     processContents="lax"
+                     minOccurs="0"
+                     maxOccurs="unbounded"/>
+          </xsd:sequence>
+          <xsd:attribute name="id"
+                         type="xsd:string"
+                         use="required"/>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="after">
+
+<!-- **************************************************** -->
+
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:any namespace="##any"
+                     processContents="lax"
+                     minOccurs="0"
+                     maxOccurs="unbounded"/>
+          </xsd:sequence>
+          <xsd:attribute name="id"
+                         type="xsd:string"
+                         use="required"/>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:choice>
+  </xsd:complexType>
+
+
+<!-- **************************************************** -->
+
+  <xsd:complexType name="partial-response-deleteType">
+    <xsd:annotation>
+      <xsd:documentation>
+        <![CDATA[
+        [
+        <p>
+        
+        The "delete" element enables DOM elements matching the "id"
+        attribute to be removed. 
+        
+        </p>
+        
+        ]]>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:attribute name="id"
+                   type="xsd:string"
+                   use="required"/>
+  </xsd:complexType>
+
+
+<!-- **************************************************** -->
+
+  <xsd:complexType name="partial-response-attributesType">
+    <xsd:annotation>
+      <xsd:documentation>
+        <![CDATA[
+        [
+        <p>
+        
+        The "attributes" element enables attributes of DOM elements matching the "id"
+        attribute to be updated.  If this element is used, then it must contain at
+        least one "attribute" element. 
+        
+        </p>
+        
+        ]]>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="attribute"
+                   minOccurs="1"
+                   maxOccurs="unbounded">
+
+<!-- **************************************************** -->
+
+        <xsd:complexType>
+          <xsd:attribute name="name"
+                         type="xsd:string"
+                         use="required"/>
+          <xsd:attribute name="value"
+                         type="xsd:string"
+                         use="required"/>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:sequence>
+    <xsd:attribute name="id"
+                   type="xsd:string"
+                   use="required"/>
+  </xsd:complexType>
+
+
+<!-- **************************************************** -->
+
+  <xsd:complexType name="partial-response-redirectType">
+    <xsd:annotation>
+      <xsd:documentation>
+        <![CDATA[
+        [
+        <p>
+        
+        The "redirect" element enables a redirect to the location as specified by the
+        "url" attribute. 
+        
+        </p>
+        
+        ]]>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:attribute name="url"
+                   type="xsd:string"
+                   use="required"/>
+  </xsd:complexType>
+
+
+<!-- **************************************************** -->
+
+  <xsd:complexType name="partial-response-errorType">
+    <xsd:annotation>
+      <xsd:documentation>
+        <![CDATA[
+        [
+        <p>
+        
+        The "error" element contains error information from the server. 
+        
+        </p>
+        
+        ]]>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="error-name"
+                   type="xsd:string"
+                   minOccurs="1"
+                   maxOccurs="1"/>
+      <xsd:element name="error-message"
+                   type="xsd:string"
+                   minOccurs="1"
+                   maxOccurs="1"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+
+<!-- **************************************************** -->
+
+  <xsd:complexType name="partial-response-extensionType">
+    <xsd:annotation>
+      <xsd:documentation>
+        <![CDATA[
+        [
+        <p>
+        Extension element for partial response.  It may contain
+        implementation specific content.
+        </p>
+        
+        ]]>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:any namespace="##any"
+               processContents="lax"
+               minOccurs="0"
+               maxOccurs="unbounded"/>
+    </xsd:sequence>
+    <xsd:attribute name="id"
+                   type="xsd:ID"/>
+  </xsd:complexType>
+
+</xsd:schema>

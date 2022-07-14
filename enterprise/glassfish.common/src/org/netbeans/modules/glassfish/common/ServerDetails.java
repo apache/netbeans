@@ -236,7 +236,7 @@ public enum ServerDetails {
         "https://repo1.maven.org/maven2/org/glassfish/main/distributions/glassfish/6.2.0/glassfish-6.2.0.zip", // NOI18N
         "http://www.eclipse.org/legal/epl-2.0" //NOI18N
     ),
-    
+
     /**
      * details for an instance of GlassFish Server 6.2.1
      */
@@ -247,7 +247,7 @@ public enum ServerDetails {
         "https://repo1.maven.org/maven2/org/glassfish/main/distributions/glassfish/6.2.1/glassfish-6.2.1.zip", // NOI18N
         "http://www.eclipse.org/legal/epl-2.0" //NOI18N
     ),
-    
+
     /**
      * details for an instance of GlassFish Server 6.2.2
      */
@@ -258,7 +258,7 @@ public enum ServerDetails {
         "https://repo1.maven.org/maven2/org/glassfish/main/distributions/glassfish/6.2.2/glassfish-6.2.2.zip", // NOI18N
         "http://www.eclipse.org/legal/epl-2.0" //NOI18N
     ),
-    
+
     /**
      * details for an instance of GlassFish Server 6.2.3
      */
@@ -269,7 +269,7 @@ public enum ServerDetails {
         "https://repo1.maven.org/maven2/org/glassfish/main/distributions/glassfish/6.2.3/glassfish-6.2.3.zip", // NOI18N
         "http://www.eclipse.org/legal/epl-2.0" //NOI18N
     ),
-    
+
     /**
      * details for an instance of GlassFish Server 6.2.4
      */
@@ -280,7 +280,7 @@ public enum ServerDetails {
         "https://repo1.maven.org/maven2/org/glassfish/main/distributions/glassfish/6.2.4/glassfish-6.2.4.zip", // NOI18N
         "http://www.eclipse.org/legal/epl-2.0" //NOI18N
     ),
-    
+
     /**
      * details for an instance of GlassFish Server 6.2.5
      */

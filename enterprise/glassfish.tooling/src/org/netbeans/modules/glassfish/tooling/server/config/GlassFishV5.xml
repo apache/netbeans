@@ -85,7 +85,7 @@
     <library id="JAX-RS">
         <classpath>
             <fileset dir="modules">
-                <include name="jakarta.ws.rs-api.jar"/>
+                <include name="javax.ws.rs-api.jar"/>
             </fileset>
         </classpath>
         <javadocs>

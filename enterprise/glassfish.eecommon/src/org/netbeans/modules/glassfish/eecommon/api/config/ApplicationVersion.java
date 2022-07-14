@@ -53,21 +53,21 @@ public final class ApplicationVersion extends J2EEBaseVersion {
         "6.0", 6000,	// NOI18N
         "6.0", 6000	// NOI18N
         );
-    
+
     /** Represents application version 7.0
      */
     public static final ApplicationVersion APPLICATION_7_0 = new ApplicationVersion(
         "7.0", 7000,	// NOI18N
         "7.0", 7000	// NOI18N
         );
-    
+
     /** Represents application version 8.0
      */
     public static final ApplicationVersion APPLICATION_8_0 = new ApplicationVersion(
         "8.0", 8000,	// NOI18N
         "8.0", 8000	// NOI18N
         );
-    
+
     /** Represents application version 9.0
      */
     public static final ApplicationVersion APPLICATION_9_0 = new ApplicationVersion(

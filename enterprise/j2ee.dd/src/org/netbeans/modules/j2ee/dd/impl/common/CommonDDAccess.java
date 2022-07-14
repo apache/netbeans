@@ -41,9 +41,9 @@ import org.netbeans.modules.j2ee.dd.api.common.CommonDDBean;
 public class CommonDDAccess {
 
     public static final String DOT = "."; //NOI18N
-    
+
     public static final String COMMON_API = "org.netbeans.modules.j2ee.dd.api.common."; //NOI18N
-    
+
     public static final String SERVLET_2_4 = "2_4"; //NOI18N
     public static final String WEB_API = "org.netbeans.modules.j2ee.dd.api.web."; //NOI18N
     public static final String WEB_PACKAGE_PREFIX = "org.netbeans.modules.j2ee.dd.impl.web.model_"; //NOI18N
@@ -51,11 +51,16 @@ public class CommonDDAccess {
     public static final String APP_1_4 = "1_4"; //NOI18N
     public static final String APP_API = "org.netbeans.modules.j2ee.dd.api.application."; //NOI18N
     public static final String APP_PACKAGE_PREFIX = "org.netbeans.modules.j2ee.dd.impl.application.model_"; //NOI18N
-    
+
     public static final String EJB_2_1 = "2_1"; //NOI18N
     public static final String EJB_API = "org.netbeans.modules.j2ee.dd.api.ejb."; //NOI18N
     public static final String EJB_PACKAGE_PREFIX = "org.netbeans.modules.j2ee.dd.impl.ejb.model_"; //NOI18N
-    
+
+    public static final String EJB_3_0 = "3_0"; //NOI18N
+    public static final String EJB_3_1 = "3_1"; //NOI18N
+    public static final String EJB_3_2 = "3_2"; //NOI18N
+    public static final String EJB_4_0 = "4_0"; //NOI18N
+
     private static Set COMMON_BEANS = new HashSet ();
     static {
         COMMON_BEANS.add("Icon"); //NOI18N
@@ -73,14 +78,14 @@ public class CommonDDAccess {
         COMMON_BEANS.add("SecurityRole"); //NOI18N
         COMMON_BEANS.add("SecurityRoleRef"); //NOI18N
     }
-    
+
     /**
      * Return a new instance of the specified type
      *
      * @param parent 	parent bean
      * @param beanName 	which bean to create
      * @param pkgName   implementation package name
-     * @return BaseBean object 
+     * @return BaseBean object
      */
 
    public static BaseBean newBean(CommonDDBean parent, String beanName, String pkgName)  throws ClassNotFoundException {
@@ -93,20 +98,20 @@ public class CommonDDAccess {
 	    return (BaseBean) beanClass.newInstance();
 
 	} catch (Exception e) {
-            if (e instanceof ClassNotFoundException) 
+            if (e instanceof ClassNotFoundException)
                 throw (ClassNotFoundException)e;
             else {
                 // This is a programming error.
                 e.printStackTrace();
                 throw new RuntimeException(
                     NbBundle.getMessage(CommonDDAccess.class,
-                        "MSG_COMMONDDACCESS_ERROR", "newBean",	
+                        "MSG_COMMONDDACCESS_ERROR", "newBean",
                         ", package = " + pkgName + ", beanName = " + beanName, e+ ": " +e.getMessage()));
             }
 	}
    }
-	
-       
+
+
    public static void addBean(CommonDDBean parent, CommonDDBean child, String beanName, String pkgName) {
 	beanName = getImplementationBeanName(parent, beanName, pkgName);
         String apiPrefix = getAPIPrefix(beanName, pkgName);
@@ -128,12 +133,12 @@ public class CommonDDAccess {
             e.printStackTrace();
             throw new RuntimeException(
                 NbBundle.getMessage(CommonDDAccess.class,
-                    "MSG_COMMONDDACCESS_ERROR", "addBean",	
+                    "MSG_COMMONDDACCESS_ERROR", "addBean",
                     ", package = " + pkgName + ", beanName = " + beanName, e+ ": " +e.getMessage()));
 	}
     }
-	
-   
+
+
    /**
      * Handle special cases of version differences
      */
@@ -143,7 +148,7 @@ public class CommonDDAccess {
         } else
             return beanName;
     }
-    
+
     private static String getAPIPrefix(String beanName, String pkgName){
         if (COMMON_BEANS.contains(beanName))
             return COMMON_API;
@@ -156,7 +161,7 @@ public class CommonDDAccess {
         assert false : "Invalid package prefix:" + pkgName;
         return "";  //NOI18N
     }
-    
+
     /**
      * Get a BaseBean object from parent BaseBean
      *
@@ -197,11 +202,11 @@ public class CommonDDAccess {
 	    e.printStackTrace();
 	    throw new RuntimeException(
 		NbBundle.getMessage(CommonDDAccess.class,
-		    "MSG_COMMONDDACCESS_ERROR", "getBeanByName",	
+		    "MSG_COMMONDDACCESS_ERROR", "getBeanByName",
 		    "parent = " + parent + ", beanProperty = " + beanProperty
                     + ", nameProperty = " + nameProperty
-                    + ", value = " + value, 
-		    e+ ": " +e.getMessage()));	
+                    + ", value = " + value,
+		    e+ ": " +e.getMessage()));
 	}
     }
 

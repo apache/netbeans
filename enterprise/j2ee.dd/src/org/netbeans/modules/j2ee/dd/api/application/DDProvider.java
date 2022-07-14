@@ -52,21 +52,21 @@ import org.xml.sax.SAXParseException;
  * @author  Milan Kuchtiak
  */
 public final class DDProvider {
-    
+
     private static final String APP_13_DOCTYPE = "-//Sun Microsystems, Inc.//DTD J2EE Application 1.3//EN"; //NOI18N
     private static final DDProvider ddProvider = new DDProvider();
-    
+
     private final Map<FileObject, ApplicationProxy> ddMap;
 
     private static final Logger LOGGER = Logger.getLogger(DDProvider.class.getName());
 
     ResourceBundle bundle = ResourceBundle.getBundle("org/netbeans/modules/j2ee/dd/Bundle");
-    
+
     private DDProvider() {
         //ddMap=new java.util.WeakHashMap(5);
         ddMap = new HashMap<>(5);
     }
-    
+
     /**
     * Accessor method for DDProvider singleton
     * @return DDProvider object
@@ -74,15 +74,15 @@ public final class DDProvider {
     public static DDProvider getDefault() {
         return ddProvider;
     }
-    
+
     /**
      * Returns the root of deployment descriptor bean graph for given file object.
      * The method is useful for clients planning to read only the deployment descriptor
      * or to listen to the changes.
      * <p>
      * There is no guarantee the return value will contain all the changes
-     * which happened in the underlaying file recently due to caching. 
-     * 
+     * which happened in the underlaying file recently due to caching.
+     *
      * @param fo FileObject representing the application.xml file
      * @return Application object - root of the deployment descriptor bean graph
      * @throws IOException
@@ -98,7 +98,7 @@ public final class DDProvider {
                 return applicationProxy;
             }
         }
-        
+
         fo.addFileChangeListener(new FileChangeAdapter() {
             @Override
             public void fileChanged(FileEvent evt) {
@@ -147,7 +147,7 @@ public final class DDProvider {
                 }
             }
         });
-        
+
         try {
             DDParse parseResult = parseDD(fo);
             Application original = createApplication(parseResult);
@@ -189,7 +189,7 @@ public final class DDProvider {
     private ApplicationProxy getFromCache (FileObject fo) {
         return ddMap.get(fo);
     }
-    
+
     /**
      * Returns the root of deployment descriptor bean graph for java.io.File object.
      *
@@ -197,7 +197,7 @@ public final class DDProvider {
      * @return Application object - root of the deployment descriptor bean graph
      * @throws IOException
      * @throws SAXException
-     */    
+     */
     public Application getDDRoot(InputSource is) throws IOException, SAXException {
         DDParse parse = parseDD(is);
         Application application = createApplication(parse);
@@ -205,12 +205,12 @@ public final class DDProvider {
         setProxyErrorStatus(proxy, parse);
         return proxy;
     }
-    
+
     // PENDING j2eeserver needs BaseBean - this is a temporary workaround to avoid dependency of web project on DD impl
-    /** 
+    /**
      * Convenient method for getting the BaseBean object from CommonDDBean object.
      * @param bean
-     * @return 
+     * @return
      */
     public BaseBean getBaseBean(CommonDDBean bean) {
         if (bean instanceof BaseBean) {
@@ -230,7 +230,7 @@ public final class DDProvider {
             applicationProxy.setStatus(Application.STATE_VALID);
         }
     }
-    
+
     private static Application createApplication(DDParse parse) {
         Application jar = null;
         String version = parse.getVersion();
@@ -244,10 +244,12 @@ public final class DDProvider {
             return new org.netbeans.modules.j2ee.dd.impl.application.model_7.Application(parse.getDocument(),  Common.USE_DEFAULT_VALUES);
         } else if (Application.VERSION_8.equals(version)) {
             return new org.netbeans.modules.j2ee.dd.impl.application.model_8.Application(parse.getDocument(),  Common.USE_DEFAULT_VALUES);
+        } else if (Application.VERSION_9.equals(version)) {
+            return (Application) new org.netbeans.modules.j2ee.dd.impl.application.model_9.Application(parse.getDocument(),  Common.USE_DEFAULT_VALUES);
         }
         return jar;
     }
-    
+
     private static class DDResolver implements EntityResolver {
         static DDResolver resolver;
         static synchronized DDResolver getInstance() {
@@ -255,7 +257,7 @@ public final class DDProvider {
                 resolver=new DDResolver();
             }
             return resolver;
-        }        
+        }
         @Override
         public InputSource resolveEntity (String publicId, String systemId) {
             if ("http://java.sun.com/xml/ns/j2ee/application_1_4.xsd".equals(systemId)) {
@@ -268,13 +270,15 @@ public final class DDProvider {
                 return new InputSource("nbres:/org/netbeans/modules/javaee/dd/impl/resources/application_7.xsd"); //NOI18N
             } else if ("http://xmlns.jcp.org/xml/ns/javaee/application_8.xsd".equals(systemId)) {
                 return new InputSource("nbres:/org/netbeans/modules/javaee/dd/impl/resources/application_8.xsd"); //NOI18N
+            } else if ("https://jakarta.ee/xml/ns/jakartaee/application_9.xsd".equals(systemId)) {
+                return new InputSource("nbres:/org/netbeans/modules/javaee/dd/impl/resources/application_9.xsd"); //NOI18N
             } else {
                 // use the default behaviour
                 return null;
             }
         }
     }
-    
+
     private static class ErrorHandler implements org.xml.sax.ErrorHandler {
         private int errorType=-1;
         SAXParseException error;
@@ -294,43 +298,43 @@ public final class DDProvider {
                 error=sAXParseException;
             }
             //throw sAXParseException;
-        }        
+        }
         @Override
         public void fatalError(SAXParseException sAXParseException) throws SAXException {
             errorType=2;
             throw sAXParseException;
         }
-        
+
         public int getErrorType() {
             return errorType;
         }
         public SAXParseException getError() {
             return error;
-        }        
+        }
     }
 
-    public SAXParseException parse(FileObject fo) 
+    public SAXParseException parse(FileObject fo)
     throws SAXException, IOException {
         DDParse parseResult = parseDD(fo);
         return parseResult.getWarning();
     }
-    
-    private DDParse parseDD (FileObject fo) 
+
+    private DDParse parseDD (FileObject fo)
     throws SAXException, IOException {
         try (InputStream inputStream = fo.getInputStream()) {
             return parseDD(inputStream);
         }
     }
-    
-    private DDParse parseDD (InputStream is) 
+
+    private DDParse parseDD (InputStream is)
     throws SAXException, IOException {
         return parseDD(new InputSource(is));
     }
-    
-    private DDParse parseDD (InputSource is) 
+
+    private DDParse parseDD (InputSource is)
     throws SAXException, IOException {
         DDProvider.ErrorHandler errorHandler = new DDProvider.ErrorHandler();
-        
+
         DocumentBuilder parser=null;
         try {
             DocumentBuilderFactory fact = DocumentBuilderFactory.newInstance();
@@ -344,7 +348,7 @@ public final class DDProvider {
         SAXParseException error = errorHandler.getError();
         return new DDParse(d, error);
     }
-    
+
     /**
      * This class represents one parse of the deployment descriptor
      */
@@ -357,21 +361,21 @@ public final class DDProvider {
             saxException = saxEx;
             extractVersion();
         }
-        
+
         /**
          * @return document from last parse
          */
         public Document getDocument() {
             return document;
         }
-        
+
         /**
-         * @return version of deployment descriptor. 
+         * @return version of deployment descriptor.
          */
         private void extractVersion () {
             // This is the default version
             version = Application.VERSION_7;
-            
+
             // first check the doc type to see if there is one
             DocumentType dt = document.getDoctype();
 
@@ -384,7 +388,9 @@ public final class DDProvider {
                     Node vNode = attrs.getNamedItem("version");//NOI18N
                     if(vNode != null) {
                         String versionValue = vNode.getNodeValue();
-                        if (Application.VERSION_8.equals(versionValue)) {
+                        if (Application.VERSION_9.equals(versionValue)) {
+                            version = Application.VERSION_9;
+                        } else if (Application.VERSION_8.equals(versionValue)) {
                             version = Application.VERSION_8;
                         } else if (Application.VERSION_7.equals(versionValue)) {
                             version = Application.VERSION_7;
@@ -401,17 +407,17 @@ public final class DDProvider {
                 }
             }
         }
-        
+
         public String getVersion() {
             return version;
         }
-        
-        /** 
+
+        /**
          * @return validation error encountered during the parse
          */
         public SAXParseException getWarning() {
             return saxException;
         }
     }
-    
+
 }

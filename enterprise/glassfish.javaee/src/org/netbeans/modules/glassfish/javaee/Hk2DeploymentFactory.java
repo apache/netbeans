@@ -128,7 +128,7 @@ public class Hk2DeploymentFactory implements DeploymentFactory {
         // FIXME -- these strings should come from some constant place
         if (jakartaee9Instance == null) {
             ServerUtilities tmp = ServerUtilities.getJakartaEe9Utilities();
-            jakartaee9Instance = new Hk2DeploymentFactory(new String[]{"deployer:gfv6ee9:", "deployer:gfv6"}, "0.6", // NOI18N
+            jakartaee9Instance = new Hk2DeploymentFactory(new String[]{"deployer:gfv610ee9:", "deployer:gfv610"}, "0.6", // NOI18N
                     NbBundle.getMessage(Hk2DeploymentFactory.class, "TXT_FactoryDisplayName"));  // NOI18N
             DeploymentFactoryManager.getInstance().registerDeploymentFactory(jakartaee9Instance);
             jakartaee9Instance.setServerUtilities(tmp);
@@ -137,7 +137,7 @@ public class Hk2DeploymentFactory implements DeploymentFactory {
     }
 
     /**
-     * 
+     *
      * @return
      */
     public static synchronized DeploymentFactory createJakartaEe91() {

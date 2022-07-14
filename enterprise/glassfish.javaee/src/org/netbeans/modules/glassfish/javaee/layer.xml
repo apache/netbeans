@@ -347,7 +347,7 @@
                 </folder>
               </folder>
                 <folder name="gfv610ee9">
-                    <file name="Descriptor" url="nbdepjakartaee91.xml"/>
+                    <file name="Descriptor" url="nbdepjakartaee9.xml"/>
                     <!-- -->
                     <file name="Factory.instance">
                         <attr name="urlPattern" stringvalue="^\[.*deployer:gfv610ee9[w]?[c]?:.*$"/>
@@ -406,8 +406,8 @@
                             <file name="META-INF\glassfish-resources.xml"/>
                         </folder>
                     </folder>
+                  </folder>
             </folder>
-          </folder>
     </folder>
 
     <folder name="Plugins">

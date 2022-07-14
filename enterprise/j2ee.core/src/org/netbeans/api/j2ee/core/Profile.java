@@ -68,7 +68,7 @@ public final class Profile {
     public static final Profile JAKARTA_EE_9_WEB  = new Profile(12, "9.0", "web", "JakartaEE9Web.displayName");
 
     public static final Profile JAKARTA_EE_9_FULL  = new Profile(13, "9.0", null, "JakartaEE9Full.displayName");
-    
+
     public static final Profile JAKARTA_EE_9_1_WEB  = new Profile(14, "9.1", "web", "JakartaEE91Web.displayName");
 
     public static final Profile JAKARTA_EE_9_1_FULL  = new Profile(15, "9.1", null, "JakartaEE91Full.displayName");

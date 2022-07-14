@@ -28,7 +28,7 @@ package org.netbeans.modules.j2ee.dd.api.application;
 import org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException;
 
 public interface Application extends org.netbeans.modules.j2ee.dd.api.common.RootInterface {
-	
+
         public static final String MODULE = "Module";	// NOI18N
 	public static final String SECURITY_ROLE = "SecurityRole";	// NOI18N
 
@@ -47,11 +47,12 @@ public interface Application extends org.netbeans.modules.j2ee.dd.api.common.Roo
          * @since 2
          */
         public static final String VERSION_8 = "8"; //NOI18N
+				public static final String VERSION_9 = "9"; //NOI18N
         public static final int STATE_VALID=0;
         public static final int STATE_INVALID_PARSABLE=1;
         public static final int STATE_INVALID_UNPARSABLE=2;
         public static final String PROPERTY_STATUS="dd_status"; //NOI18N
-    
+
         //public void setVersion(java.lang.String value);
         /** Getter for version property.
          * @return property value
@@ -66,7 +67,7 @@ public interface Application extends org.netbeans.modules.j2ee.dd.api.common.Roo
          * @return property value
          */
         public int getStatus();
-    
+
 	public void setModule(int index, Module value);
 
 	public Module getModule(int index);
@@ -99,7 +100,7 @@ public interface Application extends org.netbeans.modules.j2ee.dd.api.common.Roo
 
 	public org.netbeans.modules.j2ee.dd.api.common.SecurityRole newSecurityRole();
 
-        
+
         //1.4
         public void setIcon(int index, org.netbeans.modules.j2ee.dd.api.common.Icon value) throws VersionNotSupportedException;
 
@@ -115,7 +116,7 @@ public interface Application extends org.netbeans.modules.j2ee.dd.api.common.Roo
 
 	public int removeIcon(org.netbeans.modules.j2ee.dd.api.common.Icon value) throws VersionNotSupportedException;
 
-	public org.netbeans.modules.j2ee.dd.api.common.Icon newIcon(); 
+	public org.netbeans.modules.j2ee.dd.api.common.Icon newIcon();
 
 }
 

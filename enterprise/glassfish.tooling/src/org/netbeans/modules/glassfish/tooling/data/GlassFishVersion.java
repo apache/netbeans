@@ -196,52 +196,52 @@ public enum GlassFishVersion {
     static final String GF_5_STR = "5";
     /** Additional <code>String</code> representations of GF_5 value. */
     static final String GF_5_STR_NEXT[] = {"5.0", "5.0.0", "5.0.0.0"};
-    
+
     /**  A <code>String</code> representation of GF_5_0_1 value. */
     static final String GF_5_0_1_STR = "5.0.1";
     /** Additional <code>String</code> representations of GF_5_0_1 value. */
     static final String GF_5_0_1_STR_NEXT[] = {"5.0.1", "5.0.1.0"};
-    
+
     /**  A <code>String</code> representation of GF_5_1_0 value. */
     static final String GF_5_1_0_STR = "5.1.0";
     /** Additional <code>String</code> representations of GF_5_1_0 value. */
     static final String GF_5_1_0_STR_NEXT[] = {"5.1.0", "5.1.0.0"};
-    
+
     /** A <code>String</code> representation of GF_6 value. */
     static final String GF_6_STR = "6";
     /** Additional <code>String</code> representations of GF_6 value. */
     static final String GF_6_STR_NEXT[] = {"6.0", "6.0.0", "6.0.0.0"};
-    
+
     /** A <code>String</code> representation of GF_6_1_0 value. */
     static final String GF_6_1_0_STR = "6.1.0";
     /** Additional <code>String</code> representations of GF_6_1_0 value. */
     static final String GF_6_1_0_STR_NEXT[] = {"6.1", "6.1.0", "6.1.0.0"};
-    
+
     /** A <code>String</code> representation of GF_6_2_0 value. */
     static final String GF_6_2_0_STR = "6.2.0";
     /** Additional <code>String</code> representations of GF_6_2_0 value. */
     static final String GF_6_2_0_STR_NEXT[] = {"6.2", "6.2.0", "6.2.0.0"};
-    
+
     /** A <code>String</code> representation of GF_6_2_1 value. */
     static final String GF_6_2_1_STR = "6.2.1";
     /** Additional <code>String</code> representations of GF_6_2_1 value. */
     static final String GF_6_2_1_STR_NEXT[] = {"6.2.1", "6.2.1.0"};
-    
+
     /** A <code>String</code> representation of GF_6_2_2 value. */
     static final String GF_6_2_2_STR = "6.2.2";
     /** Additional <code>String</code> representations of GF_6_2_2 value. */
     static final String GF_6_2_2_STR_NEXT[] = {"6.2.2", "6.2.2.0"};
-    
+
     /** A <code>String</code> representation of GF_6_2_3 value. */
     static final String GF_6_2_3_STR = "6.2.3";
     /** Additional <code>String</code> representations of GF_6_2_3 value. */
     static final String GF_6_2_3_STR_NEXT[] = {"6.2.3", "6.2.3.0"};
-    
+
     /** A <code>String</code> representation of GF_6_2_4 value. */
     static final String GF_6_2_4_STR = "6.2.4";
     /** Additional <code>String</code> representations of GF_6_2_4 value. */
     static final String GF_6_2_4_STR_NEXT[] = {"6.2.4", "6.2.4.0"};
-    
+
     /** A <code>String</code> representation of GF_6_2_5 value. */
     static final String GF_6_2_5_STR = "6.2.5";
     /** Additional <code>String</code> representations of GF_6_2_5 value. */

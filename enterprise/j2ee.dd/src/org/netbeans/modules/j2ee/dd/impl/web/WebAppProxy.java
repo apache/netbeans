@@ -961,6 +961,9 @@ public class WebAppProxy implements WebApp {
             } else if (WebApp.VERSION_4_0.equals(version)) {
                 ((org.netbeans.modules.j2ee.dd.impl.web.model_4_0.WebApp)clonedWebApp)._setSchemaLocation
                     ("http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd");
+            } else if (WebApp.VERSION_5_0.equals(version)) {
+                ((org.netbeans.modules.j2ee.dd.impl.web.model_5_0.WebApp)clonedWebApp)._setSchemaLocation
+                    ("https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_5_0.xsd");
             }
         }
         proxy.setError(error);

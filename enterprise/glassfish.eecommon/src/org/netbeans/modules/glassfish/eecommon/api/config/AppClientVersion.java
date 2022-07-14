@@ -53,21 +53,21 @@ public final class AppClientVersion extends J2EEBaseVersion {
         "6.0", 6000,	// NOI18N
         "6.0", 6000	// NOI18N
         );
-    
+
     /** Represents application-client version 7.0
      */
     public static final AppClientVersion APP_CLIENT_7_0 = new AppClientVersion(
         "7.0", 7000,	// NOI18N
         "7.0", 7000	// NOI18N
         );
-    
+
     /** Represents application-client version 8.0
      */
     public static final AppClientVersion APP_CLIENT_8_0 = new AppClientVersion(
         "8.0", 8000,	// NOI18N
         "8.0", 8000	// NOI18N
         );
-    
+
     /** Represents application-client version 9.0
      */
     public static final AppClientVersion APP_CLIENT_9_0 = new AppClientVersion(

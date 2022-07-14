@@ -73,7 +73,7 @@ public enum JavaEEProfile {
 
     /** JakartaEE 9 full profile. */
     v9_0_0(Version.v9_0_0, Type.FULL, "9.0.0"),
-    
+
     /** JakartaEE 9.1 web profile. */
     v9_1_0_web(Version.v9_1_0, Type.WEB, "9.1.0-web"),
 

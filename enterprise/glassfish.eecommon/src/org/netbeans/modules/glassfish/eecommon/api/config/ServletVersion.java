@@ -60,14 +60,14 @@ public final class ServletVersion extends J2EEBaseVersion {
         "3.1", 3100,	// NOI18N
         "7.0", 7000	// NOI18N
         );
-    
+
     /** Represents servlet version 4.0
      */
     public static final ServletVersion SERVLET_4_0 = new ServletVersion(
         "4.0", 4000,	// NOI18N
         "8.0", 8000	// NOI18N
         );
-    
+
     /** Represents servlet version 5.0
      */
     public static final ServletVersion SERVLET_5_0 = new ServletVersion(

@@ -1140,17 +1140,25 @@ CLSS public org.netbeans.modules.glassfish.javaee.RunTimeDDCatalog
 cons public init()
 fld public final static java.lang.String APPCLIENT_1_4_ID = "SCHEMA:http://java.sun.com/xml/ns/j2ee/application-client_1_4.xsd"
 fld public final static java.lang.String APPCLIENT_5_ID = "SCHEMA:http://java.sun.com/xml/ns/javaee/application-client_5.xsd"
+fld public final static java.lang.String APPCLIENT_9_ID = "SCHEMA:https://jakarta.ee/xml/ns/jakartaee/application-client_9.xsd"
 fld public final static java.lang.String APP_1_4_ID = "SCHEMA:http://java.sun.com/xml/ns/j2ee/application_1_4.xsd"
 fld public final static java.lang.String APP_5_ID = "SCHEMA:http://java.sun.com/xml/ns/javaee/application_5.xsd"
+fld public final static java.lang.String APP_9_ID = "SCHEMA:https://jakarta.ee/xml/ns/jakartaee/application_9.xsd"
 fld public final static java.lang.String EJBJAR_2_1_ID = "SCHEMA:http://java.sun.com/xml/ns/j2ee/ejb-jar_2_1.xsd"
 fld public final static java.lang.String EJBJAR_3_0_ID = "SCHEMA:http://java.sun.com/xml/ns/javaee/ejb-jar_3_0.xsd"
+fld public final static java.lang.String EJBJAR_4_0_ID = "SCHEMA:https://jakarta.ee/xml/ns/jakartaee/ejb-jar_4_0.xsd"
 fld public final static java.lang.String IBM_J2EE_NS = "http://www.ibm.com/webservices/xsd"
 fld public final static java.lang.String J2EE_NS = "http://java.sun.com/xml/ns/j2ee"
 fld public final static java.lang.String JAVAEE_NS = "http://java.sun.com/xml/ns/javaee"
+fld public final static java.lang.String JAKARTAEE_NS = "https://jakarta.ee/xml/ns/jakartaee"
 fld public final static java.lang.String PERSISTENCEORM_ID = "SCHEMA:http://java.sun.com/xml/ns/persistence/orm_1_0.xsd"
 fld public final static java.lang.String PERSISTENCEORM_NS = "http://java.sun.com/xml/ns/persistence/orm"
 fld public final static java.lang.String PERSISTENCE_ID = "SCHEMA:http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd"
 fld public final static java.lang.String PERSISTENCE_NS = "http://java.sun.com/xml/ns/persistence"
+fld public final static java.lang.String PERSISTENCEORM_3_ID = "SCHEMA:https://jakarta.ee/xml/ns/persistence/orm_3_0.xsd"
+fld public final static java.lang.String PERSISTENCEORM_3_NS = "https://jakarta.ee/xml/ns/persistence/orm"
+fld public final static java.lang.String PERSISTENCE_3_ID = "SCHEMA:https://jakarta.ee/xml/ns/persistence/persistence_3_0.xsd"
+fld public final static java.lang.String PERSISTENCE_3_NS = "https://jakarta.ee/xml/ns/persistence"
 fld public final static java.lang.String RI_CONFIG_NS = "http://java.sun.com/xml/ns/jax-rpc/ri/config"
 fld public final static java.lang.String WEBAPP_2_5_ID = "SCHEMA:http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 fld public final static java.lang.String WEBSERVICES_1_1_ID = "SCHEMA:http://www.ibm.com/webservices/xsd/j2ee_web_services_1_1.xsd"
@@ -1676,4 +1684,3 @@ meth public void startPrefixMapping(java.lang.String,java.lang.String) throws or
 meth public void unparsedEntityDecl(java.lang.String,java.lang.String,java.lang.String,java.lang.String) throws org.xml.sax.SAXException
 meth public void warning(org.xml.sax.SAXParseException) throws org.xml.sax.SAXException
 supr java.lang.Object
-

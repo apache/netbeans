@@ -101,7 +101,7 @@ public class EjbJarProxy implements EjbJar {
             throw new RuntimeException("Only the upgrade from lower to upper version is supported"); //NOI18N
         }
         if (!EjbJar.VERSION_2_1.equals(newVersion) || EjbJar.VERSION_3_0.equals(newVersion)){
-            throw new RuntimeException("Unsupported version: " + newVersion 
+            throw new RuntimeException("Unsupported version: " + newVersion
                         + ". Only " + EjbJar.VERSION_2_1 + " and " + EjbJar.VERSION_3_0 + " are supported."); //NOI18N
         }
         if (ejbJar!=null) {
@@ -109,7 +109,10 @@ public class EjbJarProxy implements EjbJar {
             if (ejbJar instanceof org.netbeans.modules.j2ee.dd.impl.ejb.model_2_1.EjbJar){
                 document =
                     ((org.netbeans.modules.j2ee.dd.impl.ejb.model_2_1.EjbJar)ejbJar).graphManager().getXmlDocument();
-                
+
+            } else if (ejbJar instanceof org.netbeans.modules.j2ee.dd.impl.ejb.model_4_0.EjbJar){
+                document =
+                    ((org.netbeans.modules.j2ee.dd.impl.ejb.model_4_0.EjbJar)ejbJar).graphManager().getXmlDocument();
             }
             if (document!=null) {
                 org.w3c.dom.Element docElement = document.getDocumentElement();
@@ -119,7 +122,10 @@ public class EjbJarProxy implements EjbJar {
                         document.removeChild(docType); //NOI18N
                     }
                     boolean setTo30 = EjbJar.VERSION_3_0.equals(newVersion);
-                    if (setTo30){
+                    boolean setTo40 = EjbJar.VERSION_4_0.equals(newVersion);
+                    if (setTo40){
+                        setVersionTo40(docElement);
+                    } else if (setTo30){
                         setVersionTo30(docElement);
                     } else {
                         setVersionTo21(docElement);
@@ -143,6 +149,14 @@ public class EjbJarProxy implements EjbJar {
         docElement.setAttribute("xmlns:xsi","http://www.w3.org/2001/XMLSchema-instance"); //NOI18N
         docElement.setAttribute("xsi:schemaLocation", //NOI18N
                         "http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/ejb-jar_3_0.xsd"); //NOI18N
+    }
+
+    private void setVersionTo40(Element docElement){
+        docElement.setAttribute("version","4.0"); //NOI18N
+        docElement.setAttribute("xmlns","https://jakarta.ee/xml/ns/jakartaee"); //NOI18N
+        docElement.setAttribute("xmlns:xsi","http://www.w3.org/2001/XMLSchema-instance"); //NOI18N
+        docElement.setAttribute("xsi:schemaLocation", //NOI18N
+                        "https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/ejb-jar_4_0.xsd"); //NOI18N
     }
 
     @Override
@@ -457,7 +471,11 @@ public class EjbJarProxy implements EjbJar {
         else {
             EjbJar clonedEjbJar=(EjbJar)ejbJar.clone();
             proxy = new EjbJarProxy(clonedEjbJar,version);
-            if (EjbJar.VERSION_3_2.equals(version)) {
+            if (EjbJar.VERSION_4_0.equals(version)) {
+                ((org.netbeans.modules.j2ee.dd.impl.ejb.model_4_0.EjbJar)clonedEjbJar)._setSchemaLocation
+                    ("https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/ejb-jar_4_0.xsd");
+                clonedEjbJar.setVersion(new java.math.BigDecimal(EjbJar.VERSION_4_0));
+            } else if (EjbJar.VERSION_3_2.equals(version)) {
                 ((org.netbeans.modules.j2ee.dd.impl.ejb.model_3_2.EjbJar)clonedEjbJar)._setSchemaLocation
                     ("http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/ejb-jar_3_2.xsd");
                 clonedEjbJar.setVersion(new java.math.BigDecimal(EjbJar.VERSION_3_2));

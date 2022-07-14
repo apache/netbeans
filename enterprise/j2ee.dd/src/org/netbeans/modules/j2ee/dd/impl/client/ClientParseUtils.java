@@ -29,15 +29,15 @@ import org.xml.sax.*;
 import org.xml.sax.helpers.DefaultHandler;
 
 
-/** Class that collects XML parsing utility methods for appclient applications. It is 
- * implementation private for this module, however it is also intended to be used by 
- * the DDLoaders modules, which requires tighter coupling with ddapi and has an 
+/** Class that collects XML parsing utility methods for appclient applications. It is
+ * implementation private for this module, however it is also intended to be used by
+ * the DDLoaders modules, which requires tighter coupling with ddapi and has an
  * implementation dependency on it.
  *
  * @author Petr Jiricka
  */
 public class ClientParseUtils {
-  
+
     private static final Logger LOGGER = Logger.getLogger(ClientParseUtils.class.getName());
 
     /** Parsing just for detecting the version  SAX parser used
@@ -56,13 +56,13 @@ public class ClientParseUtils {
             inputStream.close();
         }
     }
-    
+
     /** Parsing just for detecting the version  SAX parser used
     */
     public static String getVersion(InputSource is) throws IOException, SAXException {
         return ParseUtils.getVersion(is, new VersionHandler(), DDResolver.getInstance());
     }
-    
+
     private static class VersionHandler extends DefaultHandler {
         @Override
         public void startElement(String uri, String localName, String rawName, Attributes atts) throws SAXException {
@@ -72,7 +72,7 @@ public class ClientParseUtils {
                 throw new SAXException(msg);
             }
         }
-        
+
         private String parseVersion(String version){
             if (version == null){
                 return null;
@@ -86,7 +86,7 @@ public class ClientParseUtils {
             }
         }
     }
-    
+
     //XXX: note that this resolver does not handle entities from included schemas
     // correctly. See #116379.
     private static class DDResolver implements EntityResolver {
@@ -106,6 +106,12 @@ public class ClientParseUtils {
                 return new InputSource("nbres:/org/netbeans/modules/j2ee/dd/impl/resources/application-client_5.xsd"); //NOI18N
             } else if ("http://java.sun.com/xml/ns/javaee/application-client_6.xsd".equals(systemId)) {
                 return new InputSource("nbres:/org/netbeans/modules/j2ee/dd/impl/resources/application-client_6.xsd"); //NOI18N
+            } else if ("http://xmlns.jcp.org/xml/ns/javaee/application-client_7.xsd".equals(systemId)) {
+                return new InputSource("nbres:/org/netbeans/modules/j2ee/dd/impl/resources/application-client_7.xsd"); //NOI18N
+            } else if ("http://xmlns.jcp.org/xml/ns/javaee/application-client_8.xsd".equals(systemId)) {
+                return new InputSource("nbres:/org/netbeans/modules/j2ee/dd/impl/resources/application-client_8.xsd"); //NOI18N
+            } else if ("https://jakarta.ee/xml/ns/jakartaee/application-client_9.xsd".equals(systemId)) {
+                return new InputSource("nbres:/org/netbeans/modules/j2ee/dd/impl/resources/application-client_9.xsd"); //NOI18N
             } else {
                 // use the default behaviour
                 return null;
@@ -123,8 +129,8 @@ public class ClientParseUtils {
             inputStream.close();
         }
     }
-    
-    public static SAXParseException parse (InputSource is) 
+
+    public static SAXParseException parse (InputSource is)
             throws org.xml.sax.SAXException, java.io.IOException {
         return ParseUtils.parseDD(is, DDResolver.getInstance());
     }

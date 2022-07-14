@@ -67,9 +67,9 @@ public class DDHelper {
     public static FileObject createWebXml(Profile j2eeProfile, boolean webXmlRequired, FileObject dir) throws IOException {
         String template = null;
         if ((Profile.JAKARTA_EE_9_1_FULL == j2eeProfile || Profile.JAKARTA_EE_9_1_WEB == j2eeProfile) && webXmlRequired) {
-            template = "web-4.0.xml"; //NOI18N
+            template = "web-5.0.xml"; //NOI18N
         } else if ((Profile.JAKARTA_EE_9_FULL == j2eeProfile || Profile.JAKARTA_EE_9_WEB == j2eeProfile) && webXmlRequired) {
-            template = "web-4.0.xml"; //NOI18N
+            template = "web-5.0.xml"; //NOI18N
         } else if ((Profile.JAKARTA_EE_8_FULL == j2eeProfile || Profile.JAKARTA_EE_8_WEB == j2eeProfile) && webXmlRequired) {
             template = "web-4.0.xml"; //NOI18N
         } else if ((Profile.JAVA_EE_8_FULL == j2eeProfile || Profile.JAVA_EE_8_WEB == j2eeProfile) && webXmlRequired) {
@@ -106,9 +106,9 @@ public class DDHelper {
     public static FileObject createWebFragmentXml(Profile j2eeProfile, FileObject dir) throws IOException {
         String template = null;
         if (Profile.JAKARTA_EE_9_1_FULL == j2eeProfile || Profile.JAKARTA_EE_9_1_WEB == j2eeProfile) {
-            template = "web-fragment-4.0.xml"; //NOI18N
+            template = "web-fragment-5.0.xml"; //NOI18N
         } else if (Profile.JAKARTA_EE_9_FULL == j2eeProfile || Profile.JAKARTA_EE_9_WEB == j2eeProfile) {
-            template = "web-fragment-4.0.xml"; //NOI18N
+            template = "web-fragment-5.0.xml"; //NOI18N
         } else if (Profile.JAKARTA_EE_8_FULL == j2eeProfile || Profile.JAKARTA_EE_8_WEB == j2eeProfile) {
             template = "web-fragment-4.0.xml"; //NOI18N
         } else if (Profile.JAVA_EE_8_FULL == j2eeProfile || Profile.JAVA_EE_8_WEB == j2eeProfile) {
@@ -163,7 +163,7 @@ public class DDHelper {
         }
 
         if (Profile.JAKARTA_EE_9_FULL == j2eeProfile || Profile.JAKARTA_EE_9_WEB == j2eeProfile) {
-            template = "beans-2.0.xml"; //NOI18N
+            template = "beans-3.0.xml"; //NOI18N
         }
 
         if (template == null)
@@ -274,7 +274,9 @@ public class DDHelper {
     public static FileObject createApplicationXml(final Profile profile, final FileObject dir,
             boolean forceCreation) throws IOException {
         String template = null;
-        if (profile != null && profile.equals(Profile.JAKARTA_EE_8_FULL) && forceCreation) {
+        if (profile != null && profile.equals(Profile.JAKARTA_EE_9_FULL) && forceCreation) {
+            template = "ear-8.xml"; // NOI18N
+        } else if (profile != null && profile.equals(Profile.JAKARTA_EE_8_FULL) && forceCreation) {
             template = "ear-8.xml"; // NOI18N
         } else if (profile != null && profile.equals(Profile.JAVA_EE_8_FULL) && forceCreation) {
             template = "ear-8.xml"; // NOI18N

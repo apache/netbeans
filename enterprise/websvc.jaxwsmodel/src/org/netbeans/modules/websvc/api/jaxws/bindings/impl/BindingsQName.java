@@ -34,14 +34,15 @@ public enum BindingsQName {
     HANDLER_CLASS(createHandlerQName("handler-class")),
     HANDLER_NAME(createHandlerQName("handler-name")),
     BINDINGS(createBindingsQName("bindings"));
-    
+
     public static final String JAVAEE_NS_URI = "http://java.sun.com/xml/ns/javaee";
+    public static final String JAKARTAEE_NS_URI = "https://jakarta.ee/xml/ns/jakartaee";
     public static final String JAVAEE_NS_PREFIX = "jws";
     public static final String JAXWS_NS_URI = "http://java.sun.com/xml/ns/jaxws";
     public static final String JAXWS_NS_PREFIX = "jaxws";
 
     public static QName createHandlerQName(String localName) {
-        return new QName(JAVAEE_NS_URI, localName, JAVAEE_NS_PREFIX);
+        return new QName(JAKARTAEE_NS_URI, localName, JAVAEE_NS_PREFIX);
     }
 
     public static QName createBindingsQName(String localName) {
@@ -60,18 +61,17 @@ public enum BindingsQName {
     public static Set<QName> getQNames() {
         return qnames;
     }
-    
+
     public static void initQNames() {
         qnames = new HashSet<QName>();
         for (BindingsQName wq : values()) {
             qnames.add(wq.getQName());
         }
     }
-    
+
     static {
         initQNames();
     }
-    
+
     private final QName qName;
 }
-

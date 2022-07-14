@@ -85,7 +85,7 @@ public final class J2EEVersion extends J2EEBaseVersion {
     public static final J2EEVersion JAKARTAEE_9_1 = new J2EEVersion(
             "9.1.0", 91000,    // NOI18N
             "9.1.0", 91000);   // NOI18N
-    
+
     /** -----------------------------------------------------------------------
      *  Implementation
      */

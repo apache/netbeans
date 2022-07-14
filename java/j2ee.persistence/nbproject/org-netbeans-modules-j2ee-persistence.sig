@@ -1894,7 +1894,7 @@ meth public void refresh()
 meth public void removeCatalogListener(org.netbeans.modules.xml.catalog.spi.CatalogListener)
 meth public void removePropertyChangeListener(java.beans.PropertyChangeListener)
 supr java.lang.Object
-hfds ORM_NS,ORM_OLD_NS,PERSISTENCE_NS,PERSISTENCE_OLD_NS,RESOURCE_PATH,schemas
+hfds ORM_NS,ORM_3_0_NS,ORM_OLD_NS,PERSISTENCE_NS,PERSISTENCE_3_0_NS,PERSISTENCE_OLD_NS,RESOURCE_PATH,schemas
 hcls SchemaInfo
 
 CLSS public org.netbeans.modules.j2ee.persistence.unit.PersistenceCfgProperties

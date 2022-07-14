@@ -41,13 +41,15 @@ import org.openide.util.Utilities;
  * @author Erno Mononen
  */
 public class PersistenceCatalog implements CatalogReader, CatalogDescriptor2, org.xml.sax.EntityResolver {
-    
+
     private static final String PERSISTENCE_OLD_NS = "http://java.sun.com/xml/ns/persistence"; // NOI18N
     private static final String PERSISTENCE_NS = "http://xmlns.jcp.org/xml/ns/persistence"; // NOI18N
+    private static final String PERSISTENCE_3_0_NS = "https://jakarta.ee/xml/ns/jakartaee"; // NOI18N
     private static final String ORM_OLD_NS = PERSISTENCE_OLD_NS +  "/orm"; // NOI18N
     private static final String ORM_NS = PERSISTENCE_NS +  "/orm"; // NOI18N
-    private static final String RESOURCE_PATH = "nbres:/org/netbeans/modules/j2ee/persistence/dd/resources/"; //NOI18N 
-    
+    private static final String ORM_3_0_NS = PERSISTENCE_3_0_NS +  "/orm"; // NOI18N
+    private static final String RESOURCE_PATH = "nbres:/org/netbeans/modules/j2ee/persistence/dd/resources/"; //NOI18N
+
     private List<SchemaInfo> schemas = new ArrayList<SchemaInfo>();
 
     public PersistenceCatalog() {
@@ -59,12 +61,14 @@ public class PersistenceCatalog implements CatalogReader, CatalogDescriptor2, or
         schemas.add(new SchemaInfo("persistence_1_0.xsd", RESOURCE_PATH, PERSISTENCE_OLD_NS));
         schemas.add(new SchemaInfo("persistence_2_0.xsd", RESOURCE_PATH, PERSISTENCE_OLD_NS));
         schemas.add(new SchemaInfo("persistence_2_1.xsd", RESOURCE_PATH, PERSISTENCE_NS));
+        schemas.add(new SchemaInfo("persistence_3_0.xsd", RESOURCE_PATH, PERSISTENCE_3_0_NS));
         // orm
         schemas.add(new SchemaInfo("orm_1_0.xsd", RESOURCE_PATH, ORM_OLD_NS));
         schemas.add(new SchemaInfo("orm_2_0.xsd", RESOURCE_PATH, ORM_OLD_NS));
         schemas.add(new SchemaInfo("orm_2_1.xsd", RESOURCE_PATH, ORM_NS));
+        schemas.add(new SchemaInfo("orm_3_0.xsd", RESOURCE_PATH, ORM_3_0_NS));
     }
-    
+
     public InputSource resolveEntity(String publicId, String systemId) throws SAXException, IOException {
         if (systemId == null){
             return null;
@@ -76,7 +80,7 @@ public class PersistenceCatalog implements CatalogReader, CatalogDescriptor2, or
         }
         return null;
     }
-    
+
     public Iterator getPublicIDs() {
         List<String> result = new ArrayList<String>();
         for (SchemaInfo each : schemas){
@@ -84,10 +88,10 @@ public class PersistenceCatalog implements CatalogReader, CatalogDescriptor2, or
         }
         return result.iterator();
     }
-    
+
     public void refresh() {
     }
-    
+
     public String getSystemID(String publicId) {
         if (publicId == null){
             return null;
@@ -99,36 +103,36 @@ public class PersistenceCatalog implements CatalogReader, CatalogDescriptor2, or
         }
         return null;
     }
-    
+
     public String resolveURI(String name) {
         return null;
     }
-    
+
     public String resolvePublic(String publicId) {
         return null;
     }
-    
+
     public void addCatalogListener(CatalogListener l) {
     }
-    
+
     public void removeCatalogListener(CatalogListener l) {
     }
-    
+
     public String getIconResource(int type) {
         return "org/netbeans/modules/j2ee/persistence/dd/resources/persistenceCatalog.gif"; // NOI18N
     }
-    
+
     public String getDisplayName() {
         return NbBundle.getMessage(PersistenceCatalog.class, "LBL_PersistenceCatalog");
     }
-    
+
     public String getShortDescription() {
         return NbBundle.getMessage(PersistenceCatalog.class, "DESC_PersistenceCatalog");
     }
-    
+
     public void addPropertyChangeListener(PropertyChangeListener l) {
     }
-    
+
     public void removePropertyChangeListener(PropertyChangeListener l) {
     }
 
@@ -136,9 +140,9 @@ public class PersistenceCatalog implements CatalogReader, CatalogDescriptor2, or
      * A simple holder for the information needed
      * for resolving the resource path and public id of a schema.
      * <i>copied from j2ee/ddloaders EnterpriseCatalog</i>
-     */ 
+     */
     private static class SchemaInfo {
-        
+
         private final String schemaName;
         private final String resourcePath;
         private final String namespace;
@@ -156,11 +160,11 @@ public class PersistenceCatalog implements CatalogReader, CatalogDescriptor2, or
         public String getSchemaName() {
             return schemaName;
         }
-        
+
         public String getPublicId(){
             return "SCHEMA:" + namespace + "/" + schemaName; //NOI18N
         }
-        
+
     }
-    
+
 }

@@ -132,7 +132,7 @@ public class ErrorAnnotationImpl implements ErrorAnnotation {
             Runnable docRenderer = () -> {
                 LineCookie cookie = (LineCookie)doJsp2.getCookie(LineCookie.class);
                 Line.Set lines = cookie.getLineSet();
-                                
+
                 for (LineSetAnnotation ann : finalAdded) {
                     ann.attachToLineSet(lines);
                 }

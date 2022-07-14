@@ -200,7 +200,7 @@ final class J2eeVersionWarningPanel extends javax.swing.JPanel {
         JavaPlatform defaultPlatform = JavaPlatformManager.getDefault().getDefaultPlatform();
         SpecificationVersion version = defaultPlatform.getSpecification().getVersion();
         String sourceLevel = version.toString();
-        
+
         // no warning if 1.5 is the default for jee5
         if (j2eeProfile == Profile.JAVA_EE_5 && isAcceptableSourceLevel("1.5", sourceLevel, acceptableSourceLevels)) { // NOI18N
             return null;
@@ -235,7 +235,7 @@ final class J2eeVersionWarningPanel extends javax.swing.JPanel {
                 isAcceptableSourceLevel("11", sourceLevel, acceptableSourceLevels)) { // NOI18N
             return null;
         }
-        
+
         if (j2eeProfile == Profile.JAVA_EE_5) {
             JavaPlatform[] java15Platforms = getJavaPlatforms("1.5"); //NOI18N
             if (java15Platforms.length > 0) {

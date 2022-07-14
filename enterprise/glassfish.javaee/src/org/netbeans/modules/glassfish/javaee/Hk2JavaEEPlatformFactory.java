@@ -65,7 +65,7 @@ public class Hk2JavaEEPlatformFactory extends J2eePlatformFactory {
      *  when changing it. */
     private static final String V5_LOOKUP_KEY = "J2EE/DeploymentPlugins/gfv5ee8/Lookup";
     private static final String V510_LOOKUP_KEY = "J2EE/DeploymentPlugins/gfv510ee8/Lookup";
-    
+
     /** GlassFish V6 JakartaEE platform lookup key.
      *  <p/>We will keep V3 value now because no one knows what will get broken
      *  when changing it. */
@@ -109,7 +109,7 @@ public class Hk2JavaEEPlatformFactory extends J2eePlatformFactory {
         if(ord >= GlassFishVersion.GF_6_2_0.ordinal()) {
             return NbBundle.getMessage(
                     Hk2JavaEEPlatformFactory.class, "MSG_V620ServerPlatform");
-        } else if(ord >= GlassFishVersion.GF_6_1_0.ordinal()) {
+        } else if (ord >= GlassFishVersion.GF_6_1_0.ordinal()) {
             return NbBundle.getMessage(
                     Hk2JavaEEPlatformFactory.class, "MSG_V610ServerPlatform");
         } else if(ord >= GlassFishVersion.GF_6.ordinal()) {

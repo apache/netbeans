@@ -153,6 +153,7 @@
                 <friend>org.netbeans.modules.j2ee.jpa.verification</friend>
                 <friend>org.netbeans.modules.j2ee.persistence</friend>
                 <friend>org.netbeans.modules.j2ee.persistenceapi</friend>
+                <friend>org.netbeans.modules.jakarta.dd</friend>
                 <friend>org.netbeans.modules.javaee.resources</friend>
                 <friend>org.netbeans.modules.spring.beans</friend>
                 <friend>org.netbeans.modules.web.beans</friend>

@@ -105,16 +105,16 @@ public enum JavaSEPlatform {
 
     /**  A <code>String</code> representation of v11 value. */
     static final String V11_STR = "11";
-    
+
     /**  A <code>String</code> representation of v12 value. */
     static final String V12_STR = "12";
-    
+
     /**  A <code>String</code> representation of v13 value. */
     static final String V13_STR = "13";
-    
+
     /**  A <code>String</code> representation of v14 value. */
     static final String V14_STR = "14";
-    
+
     /**  A <code>String</code> representation of v15 value. */
     static final String V15_STR = "15";
 
@@ -123,13 +123,13 @@ public enum JavaSEPlatform {
 
     /**  A <code>String</code> representation of v17 value. */
     static final String V17_STR = "17";
-    
+
     /**  A <code>String</code> representation of v18 value. */
     static final String V18_STR = "18";
-    
+
     /**  A <code>String</code> representation of v19 value. */
     static final String V19_STR = "19";
-    
+
     /**  A <code>String</code> representation of v20 value. */
     static final String V20_STR = "20";
 

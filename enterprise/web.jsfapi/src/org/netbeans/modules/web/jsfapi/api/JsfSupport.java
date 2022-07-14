@@ -47,4 +47,6 @@ public interface JsfSupport {
     public Lookup getLookup();
 
     public boolean isJsf22Plus();
+
+    public boolean isJsf30Plus();
 }

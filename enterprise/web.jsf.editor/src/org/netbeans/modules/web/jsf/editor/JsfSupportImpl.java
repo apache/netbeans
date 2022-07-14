@@ -266,6 +266,17 @@ public class JsfSupportImpl implements JsfSupport {
         // return the latest supported one until somebody will complain about that
         return true;
     }
+    
+    @Override
+    public boolean isJsf30Plus() {
+        if (wm != null) {
+            JSFVersion version = JSFVersion.forWebModule(wm);
+            // caching is done inside the method
+            return version != null && version.isAtLeast(JSFVersion.JSF_3_0);
+        }
+        // return the latest supported one until somebody will complain about that
+        return true;
+    }
 
     @Override
     public String toString() {

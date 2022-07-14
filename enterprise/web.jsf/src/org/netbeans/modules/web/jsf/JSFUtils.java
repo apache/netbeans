@@ -67,6 +67,7 @@ public class JSFUtils {
     public static final String DEFAULT_JSF_1_1_NAME = "jsf1102";  //NOI18N
     public static final String DEFAULT_JSF_1_2_NAME = "jsf12";    //NOI18N
     public static final String DEFAULT_JSF_2_0_NAME = "jsf20";    //NOI18N
+    public static final String DEFAULT_JSF_3_0_NAME = "jsf30";    //NOI18N
 
     // the name of jstl library
     public static final String DEFAULT_JSTL_1_1_NAME = "jstl11";  //NOI18N
@@ -87,6 +88,9 @@ public class JSFUtils {
     protected static final String FACELETS_DEVELOPMENT = "facelets.DEVELOPMENT";
     protected static final String FACELETS_DEFAULT_SUFFIX = "javax.faces.DEFAULT_SUFFIX";
     public static final String FACES_PROJECT_STAGE = "javax.faces.PROJECT_STAGE";
+    protected static final String JAKARTA_FACELETS_SKIPCOMMNETS = "jakarta.faces.FACELETS_SKIP_COMMENTS";
+    protected static final String JAKARTA_FACELETS_DEFAULT_SUFFIX = "jakarta.faces.DEFAULT_SUFFIX";
+    public static final String JAKARTA_FACES_PROJECT_STAGE = "jakarta.faces.PROJECT_STAGE";
 
     // usages logger
     private static final Logger USG_LOGGER = Logger.getLogger("org.netbeans.ui.metrics.web.jsf"); // NOI18N

@@ -473,6 +473,9 @@
                         <code-name-base>org.netbeans.modules.web.jsf20</code-name-base>
                     </test-dependency>
                     <test-dependency>
+                        <code-name-base>org.netbeans.modules.web.jsf30</code-name-base>
+                    </test-dependency>
+                    <test-dependency>
                         <code-name-base>org.netbeans.modules.web.project</code-name-base>
                         <recursive/>
                         <compile-dependency/>

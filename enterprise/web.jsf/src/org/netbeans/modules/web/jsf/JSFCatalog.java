@@ -50,6 +50,7 @@ public class JSFCatalog implements CatalogReader, CatalogDescriptor2, org.xml.sa
 
     public static final String JAVAEE_NS = "http://java.sun.com/xml/ns/javaee";  // NOI18N
     public static final String NEW_JAVAEE_NS = "http://xmlns.jcp.org/xml/ns/javaee"; //NOI18N
+    public static final String JAKARTAEE_NS = "https://jakarta.ee/xml/ns/jakartaee";  // NOI18N
     private static final String JSF_1_2_XSD="web-facesconfig_1_2.xsd"; // NOI18N
     private static final String JSF_2_0_XSD="web-facesconfig_2_0.xsd"; // NOI18N
     private static final String JSF_2_1_XSD="web-facesconfig_2_1.xsd"; // NOI18N
@@ -61,7 +62,7 @@ public class JSFCatalog implements CatalogReader, CatalogDescriptor2, org.xml.sa
     private static final String JSF_2_1=JAVAEE_NS+"/"+JSF_2_1_XSD; // NOI18N
     private static final String JSF_2_2=NEW_JAVAEE_NS+"/"+JSF_2_2_XSD; // NOI18N
     private static final String JSF_2_3=NEW_JAVAEE_NS+"/"+JSF_2_3_XSD; // NOI18N
-    private static final String JSF_3_0=NEW_JAVAEE_NS+"/"+JSF_3_0_XSD; // NOI18N
+    private static final String JSF_3_0=JAKARTAEE_NS+"/"+JSF_3_0_XSD; // NOI18N
     public static final String JSF_ID_1_2="SCHEMA:"+JSF_1_2; // NOI18N
     public static final String JSF_ID_2_0="SCHEMA:"+JSF_2_0; // NOI18N
     public static final String JSF_ID_2_1="SCHEMA:"+JSF_2_1; // NOI18N
@@ -86,7 +87,7 @@ public class JSFCatalog implements CatalogReader, CatalogDescriptor2, org.xml.sa
     private static final String FILE_FACELETS_TAGLIB_SCHEMA_20="web-facelettaglibrary_2_0.xsd"; //NOI18N
     private static final String FILE_FACELETS_TAGLIB_DTD_10="facelet-taglib_1_0.dtd"; //NOI18N
 
-    private static final String URL_FACELETS_TAGLIB_SCHEMA_30 = NEW_JAVAEE_NS + "/" + FILE_FACELETS_TAGLIB_SCHEMA_30; // NOI18N
+    private static final String URL_FACELETS_TAGLIB_SCHEMA_30 = JAKARTAEE_NS + "/" + FILE_FACELETS_TAGLIB_SCHEMA_30; // NOI18N
     private static final String ID_FACELETS_TAGLIB_SCHEMA_30 ="SCHEMA:" + URL_FACELETS_TAGLIB_SCHEMA_30;
     private static final String URL_FACELETS_TAGLIB_SCHEMA_23 = NEW_JAVAEE_NS + "/" + FILE_FACELETS_TAGLIB_SCHEMA_23; // NOI18N
     private static final String ID_FACELETS_TAGLIB_SCHEMA_23 ="SCHEMA:" + URL_FACELETS_TAGLIB_SCHEMA_23;

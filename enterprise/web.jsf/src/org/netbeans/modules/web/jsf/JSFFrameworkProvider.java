@@ -397,6 +397,7 @@ public class JSFFrameworkProvider extends WebFrameworkProvider {
 
     private class  CreateFacesConfig implements FileSystem.AtomicAction{
         private static final String FACES_SERVLET_CLASS = "javax.faces.webapp.FacesServlet";  //NOI18N
+        private static final String JAKARTA_FACES_SERVLET_CLASS = "jakarta.faces.webapp.FacesServlet";  //NOI18N
         private static final String FACES_SERVLET_NAME = "Faces Servlet";                     //NOI18N
         private static final String MYFACES_STARTUP_LISTENER_CLASS = "org.apache.myfaces.webapp.StartupServletContextListener";//NOI18N
 
@@ -460,7 +461,11 @@ public class JSFFrameworkProvider extends WebFrameworkProvider {
                             servlet = (Servlet)ddRoot.createBean("Servlet"); //NOI18N
                             String servletName = (panel == null) ? FACES_SERVLET_NAME : panel.getServletName();
                             servlet.setServletName(servletName);
-                            servlet.setServletClass(FACES_SERVLET_CLASS);
+                            if (jsfVersion != null && jsfVersion.isAtLeast(JSFVersion.JSF_3_0)) {
+                              servlet.setServletClass(JAKARTA_FACES_SERVLET_CLASS);
+                            } else {
+                              servlet.setServletClass(FACES_SERVLET_CLASS);
+                            }
                             servlet.setLoadOnStartup(new BigInteger("1"));//NOI18N
                             ddRoot.addServlet(servlet);
 
@@ -473,7 +478,12 @@ public class JSFFrameworkProvider extends WebFrameworkProvider {
                     }
                     boolean faceletsEnabled = panel.isEnableFacelets();
 
-                    if (jsfVersion != null && jsfVersion.isAtLeast(JSFVersion.JSF_2_0)) {
+                    if (jsfVersion != null && jsfVersion.isAtLeast(JSFVersion.JSF_3_0)) {
+                        InitParam contextParam = (InitParam) ddRoot.createBean("InitParam");    //NOI18N
+                        contextParam.setParamName(JSFUtils.JAKARTA_FACES_PROJECT_STAGE);
+                        contextParam.setParamValue("Development"); //NOI18N
+                        ddRoot.addContextParam(contextParam);
+                    } else if (jsfVersion != null && jsfVersion.isAtLeast(JSFVersion.JSF_2_0)) {
                         InitParam contextParam = (InitParam) ddRoot.createBean("InitParam");    //NOI18N
                         contextParam.setParamName(JSFUtils.FACES_PROJECT_STAGE);
                         contextParam.setParamValue("Development"); //NOI18N
@@ -575,7 +585,9 @@ public class JSFFrameworkProvider extends WebFrameworkProvider {
                 if (ddRoot != null) {
                     Profile profile = webModule.getJ2eeProfile();
                     if (profile != null && profile.isAtLeast(Profile.JAVA_EE_5) && jsfVersion != null) {
-                        if (jsfVersion.isAtLeast(JSFVersion.JSF_2_3)) {
+                        if (jsfVersion.isAtLeast(JSFVersion.JSF_3_0)) {
+                          facesConfigTemplate = JSFCatalog.RES_FACES_CONFIG_3_0;
+                        } else if (jsfVersion.isAtLeast(JSFVersion.JSF_2_3)) {
                           facesConfigTemplate = JSFCatalog.RES_FACES_CONFIG_2_3;
                         } else if (jsfVersion.isAtLeast(JSFVersion.JSF_2_2)) {
                             facesConfigTemplate = JSFCatalog.RES_FACES_CONFIG_2_2;
@@ -741,7 +753,7 @@ public class JSFFrameworkProvider extends WebFrameworkProvider {
             String shortName;
             try {
                 shortName = Deployment.getDefault().getServerInstance(serverInstanceID).getServerID();
-                if ("gfv610ee9".equals(shortName) || "gfv6ee9".equals(shortName) || "gfv510ee8".equals(shortName) || "gfv5ee8".equals(shortName) || "gfv5".equals(shortName) || "gfv4ee7".equals(shortName) || "gfv4".equals(shortName) || "gfv3ee6".equals(shortName) || "gfv3".equals(shortName)) {
+                if ("gfv610ee9".equals(shortName) || "gfv6ee9".equals(shortName) || "gfv510ee8".equals(shortName) || "gfv5ee8".equals(shortName) || "gfv5".equals(shortName) || "gfv3ee6".equals(shortName) || "gfv3".equals(shortName)) {
                     return true;
                 }
             } catch (InstanceRemovedException ex) {

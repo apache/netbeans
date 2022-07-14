@@ -5,25 +5,25 @@
             targetNamespace="https://jakarta.ee/xml/ns/jakartaee"
             version="3.0"
             xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <xsd:include schemaLocation="jakartaee_9.xsd"/>
+  <xsd:include schemaLocation="jakartaee_10.xsd"/>
 
   <xsd:annotation>
     <xsd:documentation>
 
       Copyright (c) 2009, 2020 Oracle and/or its affiliates. All rights reserved.
-      
+
       This program and the accompanying materials are made available under the
       terms of the Eclipse Public License v. 2.0, which is available at
       http://www.eclipse.org/legal/epl-2.0.
-      
+
       This Source Code may also be made available under the following Secondary
       Licenses when the conditions for such availability set forth in the
       Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
       version 2 with the GNU Classpath Exception, which is available at
       https://www.gnu.org/software/classpath/license.html.
-      
+
       SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
-      
+
     </xsd:documentation>
   </xsd:annotation>
 
@@ -32,29 +32,29 @@
       <![CDATA[
       <p>The XML Schema for the Jakarta Server Faces Application
       Configuration File (Version 3.0).</p>
-      
+
       <p>All JavaServer Faces configuration files must indicate
       the JavaServer Faces schema by indicating the JavaServer
       Faces namespace:</p>
-      
+
       <p>https://jakarta.ee/xml/ns/jakartaee</p>
-      
+
       <p>and by indicating the version of the schema by
       using the version element as shown below:</p>
-      
+
       <pre>&lt;faces-config xmlns="https://jakarta.ee/xml/ns/jakartaee"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="..."
       version="3.0"&gt;
       ...
       &lt;/faces-config&gt;</pre>
-      
+
       <p>The instance documents may indicate the published
       version of the schema using xsi:schemaLocation attribute
       for jakartaee namespace with the following location:</p>
-      
+
       <p>https://jakarta.ee/xml/ns/jakartaee/web-facesconfig_3_0.xsd</p>
-      
+
       ]]>
     </xsd:documentation>
   </xsd:annotation>
@@ -70,7 +70,7 @@
         <p>The "faces-config" element is the root of the configuration
         information hierarchy, and contains nested elements for all
         of the other configuration settings.</p>
-        
+
         ]]>
       </xsd:documentation>
     </xsd:annotation>
@@ -79,7 +79,7 @@
         <xsd:documentation>
           <![CDATA[
           <p>Behavior IDs must be unique within a document.</p>
-          
+
           ]]>
         </xsd:documentation>
       </xsd:annotation>
@@ -91,7 +91,7 @@
         <xsd:documentation>
           <![CDATA[
           <p>Converter IDs must be unique within a document.</p>
-          
+
           ]]>
         </xsd:documentation>
       </xsd:annotation>
@@ -104,7 +104,7 @@
           <![CDATA[
           <p>'converter-for-class' element values must be unique
           within a document.</p>
-          
+
           ]]>
         </xsd:documentation>
       </xsd:annotation>
@@ -116,7 +116,7 @@
         <xsd:documentation>
           <![CDATA[
           <p> Validator IDs must be unique within a document.</p>
-          
+
           ]]>
         </xsd:documentation>
       </xsd:annotation>
@@ -128,7 +128,7 @@
         <xsd:documentation>
           <![CDATA[
           <p> Managed bean names must be unique within a document.</p>
-          
+
           ]]>
         </xsd:documentation>
       </xsd:annotation>
@@ -147,7 +147,7 @@
         <p> The "faces-config" element is the root of the configuration
         information hierarchy, and contains nested elements for all
         of the other configuration settings.</p>
-        
+
         ]]>
       </xsd:documentation>
     </xsd:annotation>
@@ -176,19 +176,19 @@
         <xsd:annotation>
           <xsd:documentation>
             <![CDATA[
-            <p> <span class="changed_modified_2_2">The</span> "name" element 
+            <p> <span class="changed_modified_2_2">The</span> "name" element
             within the top level "faces-config"
             element declares the name of this application
             configuration resource.  Such names are used
             in the document ordering scheme specified in section
             JSF.11.4.6.</p>
-            
-            <p class="changed_added_2_2">This value is taken to be the 
-            defining document id of any &lt;flow-definition&gt; elements 
+
+            <p class="changed_added_2_2">This value is taken to be the
+            defining document id of any &lt;flow-definition&gt; elements
             defined in this Application Configuration Resource file.  If this
-            element is not specified, the runtime must take the empty string 
+            element is not specified, the runtime must take the empty string
             as its value.</p>
-            
+
             ]]>
           </xsd:documentation>
         </xsd:annotation>
@@ -225,31 +225,31 @@
           the class files available to this module and packaged with
           this application should be examined for annotations
           that specify configuration information.
-          
-          This attribute is only inspected on the application 
+
+          This attribute is only inspected on the application
           configuration resource file located at "WEB-INF/faces-config.xml".
           The presence of this attribute on any application configuration
           resource other than the one located at "WEB-INF/faces-config.xml",
           including any files named using the jakarta.faces.CONFIG_FILES
           attribute, must be ignored.
-          
+
           If metadata-complete is set to "true", the JavaServer Faces
           runtime must ignore any annotations that specify configuration
           information, which might be present in the class files
           of the application.
-          
+
           If metadata-complete is not specified or is set to
           "false", the JavaServer Faces runtime must examine the class
           files of the application for annotations, as specified by
           the specification.
-          
+
           If "WEB-INF/faces-config.xml" is not present, the JavaServer
           Faces runtime will assume metadata-complete to be "false".
-          
+
           The value of this attribute will have no impact on
           runtime annotations such as @ResourceDependency or
           @ListenerFor.
-          
+
         </xsd:documentation>
       </xsd:annotation>
     </xsd:attribute>
@@ -269,7 +269,7 @@
         <![CDATA[
         <p> Extension element for faces-config.  It may contain
         implementation specific content.</p>
-        
+
         ]]>
       </xsd:documentation>
     </xsd:annotation>
@@ -291,7 +291,7 @@
       <xsd:documentation>
         <![CDATA[
         <p> Please see section JSF.11.4.6 for the specification of this element.</p>
-        
+
         ]]>
       </xsd:documentation>
     </xsd:annotation>
@@ -319,7 +319,7 @@
         declared on its faces-config element.  This element can also contain
         a single "others" element which specifies that this document comes
         before or after other documents within the application.</p>
-        
+
         ]]>
       </xsd:documentation>
     </xsd:annotation>
@@ -348,7 +348,7 @@
         of this application resource relative to other
         application configuration resources.  See section JSF.11.4.6
         for the complete specification.</p>
-        
+
         ]]>
       </xsd:documentation>
     </xsd:annotation>
@@ -365,7 +365,7 @@
         <![CDATA[
         <p> Only relevant if this is placed within the /WEB-INF/faces-config.xml.
         Please see section JSF.11.4.6 for the specification for details.</p>
-        
+
         ]]>
       </xsd:documentation>
     </xsd:annotation>
@@ -394,9 +394,9 @@
         various per-application-singleton implementation artifacts for
         a particular web application that is utilizing
         JavaServer Faces.  For nested elements that are not specified,
-        the Jakarta Server Faces implementation must provide a suitable 
+        the Jakarta Server Faces implementation must provide a suitable
         default.</p>
-        
+
         ]]>
       </xsd:documentation>
     </xsd:annotation>
@@ -412,7 +412,7 @@
             ActionListener implementation class that will be
             called during the Invoke Application phase of the
             request processing lifecycle.</p>
-            
+
             ]]>
           </xsd:documentation>
         </xsd:annotation>
@@ -425,7 +425,7 @@
             <p> The "default-render-kit-id" element allows the
             application to define a renderkit to be used other
             than the standard one.</p>
-            
+
             ]]>
           </xsd:documentation>
         </xsd:annotation>
@@ -440,7 +440,7 @@
             the JavaDocs for the "java.util.ResourceBundle"
             class for more information on the syntax of
             resource bundle names.</p>
-            
+
             ]]>
           </xsd:documentation>
         </xsd:annotation>
@@ -455,9 +455,9 @@
             NavigationHandler implementation class that will
             be called during the Invoke Application phase
             of the request processing lifecycle, if the
-            default ActionListener (provided by the Jakarta Server 
+            default ActionListener (provided by the Jakarta Server
             Faces implementation) is used.</p>
-            
+
             ]]>
           </xsd:documentation>
         </xsd:annotation>
@@ -474,7 +474,7 @@
             request processing lifecycle.  The faces
             implementation must provide a default
             implementation of this class.</p>
-            
+
             ]]>
           </xsd:documentation>
         </xsd:annotation>
@@ -491,7 +491,7 @@
             request processing lifecycle.  The faces
             implementation must provide a default
             implementation of this class.</p>
-            
+
             ]]>
           </xsd:documentation>
         </xsd:annotation>
@@ -506,7 +506,7 @@
             jakarta.el.ELResolver implementation class
             that will be used during the processing of
             EL expressions.</p>
-            
+
             ]]>
           </xsd:documentation>
         </xsd:annotation>
@@ -521,7 +521,7 @@
             PropertyResolver implementation class that will
             be used during the processing of value binding
             expressions.</p>
-            
+
             ]]>
           </xsd:documentation>
         </xsd:annotation>
@@ -536,7 +536,7 @@
             VariableResolver implementation class that will
             be used during the processing of value binding
             expressions.</p>
-            
+
             ]]>
           </xsd:documentation>
         </xsd:annotation>
@@ -554,7 +554,7 @@
             constructor based decorator pattern used for
             other application singletons will be
             honored.</p>
-            
+
             ]]>
           </xsd:documentation>
         </xsd:annotation>
@@ -569,7 +569,7 @@
             library contracts that, if present in the application, must be made
             available for use as templates of the specified views.
             </p>
-            
+
             ]]>
           </xsd:documentation>
         </xsd:annotation>
@@ -584,7 +584,7 @@
             concrete jakarta.faces.component.search.SearchExpressionHandler
             implementation class that will be used for processing of a
             search expression.</p>
-            
+
             ]]>
           </xsd:documentation>
         </xsd:annotation>
@@ -599,7 +599,7 @@
             concrete jakarta.faces.component.search.SearchKeywordResolver
             implementation class that will be used during the processing
             of a search expression keyword.</p>
-            
+
             ]]>
           </xsd:documentation>
         </xsd:annotation>
@@ -637,7 +637,7 @@
         Application.getResourceBundle() passing the current
         FacesContext for this request and the value of the var
         element below.</p>
-        
+
         ]]>
       </xsd:documentation>
     </xsd:annotation>
@@ -650,7 +650,7 @@
             <![CDATA[
             <p> The fully qualified class name of the
             java.util.ResourceBundle instance.</p>
-            
+
             ]]>
           </xsd:documentation>
         </xsd:annotation>
@@ -663,7 +663,7 @@
             <p> The name by which this ResourceBundle instance
             is retrieved by a call to
             Application.getResourceBundle().</p>
-            
+
             ]]>
           </xsd:documentation>
         </xsd:annotation>
@@ -685,7 +685,7 @@
         library contracts that, if present in the application, must be made
         available for use as templates of the specified views.
         </p>
-        
+
         ]]>
       </xsd:documentation>
     </xsd:annotation>
@@ -700,7 +700,7 @@
             <p classes="changed_added_2_2">Declare a mapping between a collection
             of views in the application and the list of contracts (if present in the application)
             that may be used as a source for templates and resources for those views.</p>
-            
+
             ]]>
           </xsd:documentation>
         </xsd:annotation>
@@ -722,7 +722,7 @@
         library contracts that, if present in the application, must be made
         available for use as templates of the specified views.
         </p>
-        
+
         ]]>
       </xsd:documentation>
     </xsd:annotation>
@@ -735,10 +735,10 @@
           <xsd:documentation>
             <![CDATA[
             <p class="changed_added_2_2">The "url-pattern" element
-            specifies the collection of views in this application that 
+            specifies the collection of views in this application that
             are allowed to use the corresponding contracts.
             </p>
-            
+
             ]]>
           </xsd:documentation>
         </xsd:annotation>
@@ -754,7 +754,7 @@
             if available to the application, may be used by the views
             matched by the corresponding "url-pattern"
             </p>
-            
+
             ]]>
           </xsd:documentation>
         </xsd:annotation>
@@ -773,7 +773,7 @@
         <![CDATA[
         <p> Extension element for application.  It may contain
         implementation specific content.</p>
-        
+
         ]]>
       </xsd:documentation>
     </xsd:annotation>
@@ -797,9 +797,9 @@
         <p> The "factory" element provides a mechanism to define the
         various Factories that comprise parts of the implementation
         of JavaServer Faces.  For nested elements that are not
-        specified, the Jakarta Server Faces implementation must provide a 
+        specified, the Jakarta Server Faces implementation must provide a
         suitable default.</p>
-        
+
         ]]>
       </xsd:documentation>
     </xsd:annotation>
@@ -816,7 +816,7 @@
             be called when
             FactoryFinder.getFactory(APPLICATION_FACTORY) is
             called.</p>
-            
+
             ]]>
           </xsd:documentation>
         </xsd:annotation>
@@ -832,7 +832,7 @@
             be called when
             FactoryFinder.getFactory(EXCEPTION_HANDLER_FACTORY)
             is called.</p>
-            
+
             ]]>
           </xsd:documentation>
         </xsd:annotation>
@@ -848,7 +848,7 @@
             be called when
             FactoryFinder.getFactory(EXTERNAL_CONTEXT_FACTORY)
             is called.</p>
-            
+
             ]]>
           </xsd:documentation>
         </xsd:annotation>
@@ -864,7 +864,7 @@
             be called when
             FactoryFinder.getFactory(FACES_CONTEXT_FACTORY)
             is called.</p>
-            
+
             ]]>
           </xsd:documentation>
         </xsd:annotation>
@@ -880,7 +880,7 @@
             be called when
             FactoryFinder.getFactory(FACELET_CACHE_FACTORY)
             is called.</p>
-            
+
             ]]>
           </xsd:documentation>
         </xsd:annotation>
@@ -895,7 +895,7 @@
             PartialViewContextFactory implementation class that will
             be called when FactoryFinder.getFactory
             (FactoryFinder.PARTIAL_VIEW_CONTEXT_FACTORY) is called.</p>
-            
+
             ]]>
           </xsd:documentation>
         </xsd:annotation>
@@ -909,7 +909,7 @@
             qualified class name of the concrete LifecycleFactory
             implementation class that will be called when
             FactoryFinder.getFactory(LIFECYCLE_FACTORY) is called.</p>
-            
+
             ]]>
           </xsd:documentation>
         </xsd:annotation>
@@ -924,7 +924,7 @@
             ViewDeclarationLanguageFactory
             implementation class that will be called when
             FactoryFinder.getFactory(VIEW_DECLARATION_FACTORY) is called.</p>
-            
+
             ]]>
           </xsd:documentation>
         </xsd:annotation>
@@ -939,7 +939,7 @@
             ViewDeclarationLanguageFactory
             implementation class that will be called when
             FactoryFinder.getFactory(TAG_HANDLER_DELEGATE_FACTORY) is called.</p>
-            
+
             ]]>
           </xsd:documentation>
         </xsd:annotation>
@@ -954,7 +954,7 @@
             implementation class that will be called when
             FactoryFinder.getFactory(RENDER_KIT_FACTORY) is
             called.</p>
-            
+
             ]]>
           </xsd:documentation>
         </xsd:annotation>
@@ -969,7 +969,7 @@
             implementation class that will be called when
             FactoryFinder.getFactory(VISIT_CONTEXT_FACTORY) is
             called.</p>
-            
+
             ]]>
           </xsd:documentation>
         </xsd:annotation>
@@ -985,7 +985,7 @@
             be called when
             FactoryFinder.getFactory(FLASH_FACTORY) is
             called.</p>
-            
+
             ]]>
           </xsd:documentation>
         </xsd:annotation>
@@ -1001,7 +1001,7 @@
             be called when
             FactoryFinder.getFactory(FLOW_HANDLER_FACTORY) is
             called.</p>
-            
+
             ]]>
           </xsd:documentation>
         </xsd:annotation>
@@ -1011,10 +1011,10 @@
         <xsd:annotation>
           <xsd:documentation>
             <![CDATA[
-            <p class="changed_added_2_3"> The "client-window-factory" element contains the fully 
-            qualified class name of the concrete ClientWindowFactory implementation class that 
-            will be called when FactoryFinder.getFactory(CLIENT_WINDOW_FACTORY) is called.</p>  
-            
+            <p class="changed_added_2_3"> The "client-window-factory" element contains the fully
+            qualified class name of the concrete ClientWindowFactory implementation class that
+            will be called when FactoryFinder.getFactory(CLIENT_WINDOW_FACTORY) is called.</p>
+
             ]]>
           </xsd:documentation>
         </xsd:annotation>
@@ -1031,7 +1031,7 @@
             be called when
             FactoryFinder.getFactory(SEARCH_EXPRESSION_CONTEXT_FACTORY)
             is called.</p>
-            
+
             ]]>
           </xsd:documentation>
         </xsd:annotation>
@@ -1054,7 +1054,7 @@
         <![CDATA[
         <p> Extension element for factory.  It may contain
         implementation specific content.</p>
-        
+
         ]]>
       </xsd:documentation>
     </xsd:annotation>
@@ -1078,10 +1078,10 @@
         <p> The "attribute" element represents a named, typed, value
         associated with the parent UIComponent via the generic
         attributes mechanism.</p>
-        
+
         <p>Attribute names must be unique within the scope of the parent
         (or related) component.</p>
-        
+
         ]]>
       </xsd:documentation>
     </xsd:annotation>
@@ -1096,7 +1096,7 @@
             which the corresponding value will be stored, in the
             generic attributes of the UIComponent we are related
             to.</p>
-            
+
             ]]>
           </xsd:documentation>
         </xsd:annotation>
@@ -1108,7 +1108,7 @@
             <![CDATA[
             <p> The "attribute-class" element represents the Java type
             of the value associated with this attribute name.</p>
-            
+
             ]]>
           </xsd:documentation>
         </xsd:annotation>
@@ -1137,7 +1137,7 @@
         <![CDATA[
         <p> Extension element for attribute.  It may contain
         implementation specific content.</p>
-        
+
         ]]>
       </xsd:documentation>
     </xsd:annotation>
@@ -1163,13 +1163,13 @@
         specified type identifier, along with its associated
         properties and attributes.  Component types must be unique
         within the entire web application.</p>
-        
+
         <p>Nested "attribute" elements identify generic attributes that
         are recognized by the implementation logic of this component.
         Nested "property" elements identify JavaBeans properties of
         the component class that may be exposed for manipulation
         via tools.</p>
-        
+
         ]]>
       </xsd:documentation>
     </xsd:annotation>
@@ -1183,7 +1183,7 @@
             <p> The "component-type" element represents the name under
             which the corresponding UIComponent class should be
             registered.</p>
-            
+
             ]]>
           </xsd:documentation>
         </xsd:annotation>
@@ -1196,7 +1196,7 @@
             <p> The "component-class" element represents the fully
             qualified class name of a concrete UIComponent
             implementation class.</p>
-            
+
             ]]>
           </xsd:documentation>
         </xsd:annotation>
@@ -1231,7 +1231,7 @@
         <![CDATA[
         <p> Extension element for component.  It may contain
         implementation specific content.</p>
-        
+
         ]]>
       </xsd:documentation>
     </xsd:annotation>
@@ -1254,17 +1254,17 @@
         <![CDATA[
         <p> The "default-locale" element declares the default locale
         for this application instance.</p>
-        
+
         <p class="modified_added_2_3">
         To facilitate BCP 47 this element first needs to be parsed by the
         Locale.forLanguageTag method. If it does not return a Locale with
         a language the old specification below needs to take effect.
         </p>
-        
+
         <p>It must be specified as :language:[_:country:[_:variant:]]
         without the colons, for example "ja_JP_SJIS".  The
         separators between the segments may be '-' or '_'.</p>
-        
+
         ]]>
       </xsd:documentation>
     </xsd:annotation>
@@ -1288,7 +1288,7 @@
         from the "suggested-value" in that the property or attribute
         must take the value, whereas in "suggested-value" taking the
         value is optional.</p>
-        
+
         ]]>
       </xsd:documentation>
     </xsd:annotation>
@@ -1307,7 +1307,7 @@
         <p> EL expressions present within a faces config file
         must start with the character sequence of '#{' and
         end with '}'.</p>
-        
+
         ]]>
       </xsd:documentation>
     </xsd:annotation>
@@ -1325,7 +1325,7 @@
         <![CDATA[
         <p> Define the name and other design-time information for a facet
         that is associated with a renderer or a component.</p>
-        
+
         ]]>
       </xsd:documentation>
     </xsd:annotation>
@@ -1339,7 +1339,7 @@
             <p> The "facet-name" element represents the facet name
             under which a UIComponent will be added to its parent.
             It must be of type "Identifier".</p>
-            
+
             ]]>
           </xsd:documentation>
         </xsd:annotation>
@@ -1362,7 +1362,7 @@
         <![CDATA[
         <p> Extension element for facet.  It may contain implementation
         specific content.</p>
-        
+
         ]]>
       </xsd:documentation>
     </xsd:annotation>
@@ -1386,28 +1386,28 @@
         <p><span class="changed_modified_2_2">The</span>
         value of from-view-id must contain one of the following
         values:</p>
-        
+
         <ul>
-        
+
         <li><p>The exact match for a view identifier that is recognized
         by the the ViewHandler implementation being used (such as
         "/index.jsp" if you are using the default ViewHandler).</p></li>
-        
+
         <li><p class="changed_added_2_2">The exact match of a flow node id
         in the current flow, or a flow id of another flow.</p></li>
-        
+
         <li><p> A proper prefix of a view identifier, plus a trailing
         "*" character.  This pattern indicates that all view
         identifiers that match the portion of the pattern up to the
         asterisk will match the surrounding rule.  When more than one
         match exists, the match with the longest pattern is selected.
         </p></li>
-        
+
         <li><p>An "*" character, which means that this pattern applies
         to all view identifiers.  </p></li>
-        
+
         </ul>
-        
+
         ]]>
       </xsd:documentation>
     </xsd:annotation>
@@ -1432,7 +1432,7 @@
         in order to select the navigation rule.  If not specified,
         this rule will be relevant no matter which action reference
         was executed (or if no action reference was executed).</p>
-        
+
         ]]>
       </xsd:documentation>
     </xsd:annotation>
@@ -1462,17 +1462,17 @@
         present, the navigation handler will match a null outcome
         and use the condition return value to determine if the
         case should be considered a match.</p>
-        
+
         <div class="changed_added_2_2">
-        
+
         <p>When used in a <code>&lt;switch&gt;</code> within a flow, if the
         expresion returns <code>true</code>, the
         <code>&lt;from-outcome&gt;</code> sibling element's outcome is used as
         the id of the node in the flow graph to which control must be
         passed.</p>
-        
+
         </div>
-        
+
         ]]>
       </xsd:documentation>
     </xsd:annotation>
@@ -1492,11 +1492,11 @@
       <xsd:documentation>
         <![CDATA[
         <p class="changed_added_2_2"></p>
-        
+
         <div class="changed_added_2_2">
-        
+
         </div>
-        
+
         ]]>
       </xsd:documentation>
     </xsd:annotation>
@@ -1519,7 +1519,7 @@
         implementation class that should be registered under the
         specified converter identifier.  Converter identifiers must
         be unique within the entire web application.</p>
-        
+
         <p>Nested "attribute" elements identify generic attributes that
         may be configured on the corresponding UIComponent in order
         to affect the operation of the Converter.  Nested "property"
@@ -1529,7 +1529,7 @@
         elements are intended to allow component developers to
         more completely describe their components to tools and users.
         These elements have no required runtime semantics.</p>
-        
+
         ]]>
       </xsd:documentation>
     </xsd:annotation>
@@ -1544,7 +1544,7 @@
               <p> The "converter-id" element represents the
               identifier under which the corresponding
               Converter class should be registered.</p>
-              
+
               ]]>
             </xsd:documentation>
           </xsd:annotation>
@@ -1557,7 +1557,7 @@
               <p> The "converter-for-class" element represents the
               fully qualified class name for which a Converter
               class will be registered.</p>
-              
+
               ]]>
             </xsd:documentation>
           </xsd:annotation>
@@ -1571,7 +1571,7 @@
             <p> The "converter-class" element represents the fully
             qualified class name of a concrete Converter
             implementation class.</p>
-            
+
             ]]>
           </xsd:documentation>
         </xsd:annotation>
@@ -1589,7 +1589,7 @@
             operation of the Converter.  This attribute is
             primarily for design-time tools and is not
             specified to have any meaning at runtime.</p>
-            
+
             ]]>
           </xsd:documentation>
         </xsd:annotation>
@@ -1607,7 +1607,7 @@
             the Converter.  This attribute is primarily for
             design-time tools and is not specified to have
             any meaning at runtime.</p>
-            
+
             ]]>
           </xsd:documentation>
         </xsd:annotation>
@@ -1630,7 +1630,7 @@
         <![CDATA[
         <p> Extension element for converter.  It may contain
         implementation specific content.</p>
-        
+
         ]]>
       </xsd:documentation>
     </xsd:annotation>
@@ -1654,7 +1654,7 @@
         <p> The "lifecycle" element provides a mechanism to specify
         modifications to the behaviour of the default Lifecycle
         implementation for this web application.</p>
-        
+
         ]]>
       </xsd:documentation>
     </xsd:annotation>
@@ -1670,7 +1670,7 @@
             qualified class name of the concrete PhaseListener
             implementation class that will be registered on
             the Lifecycle.</p>
-            
+
             ]]>
           </xsd:documentation>
         </xsd:annotation>
@@ -1693,7 +1693,7 @@
         <![CDATA[
         <p> Extension element for lifecycle.  It may contain
         implementation specific content.</p>
-        
+
         ]]>
       </xsd:documentation>
     </xsd:annotation>
@@ -1713,7 +1713,7 @@
         <![CDATA[
         <p> The localeType defines valid locale defined by ISO-639-1
         and ISO-3166.</p>
-        
+
         ]]>
       </xsd:documentation>
     </xsd:annotation>
@@ -1731,7 +1731,7 @@
         <![CDATA[
         <p> The "locale-config" element allows the app developer to
         declare the supported locales for this application.</p>
-        
+
         ]]>
       </xsd:documentation>
     </xsd:annotation>
@@ -1759,7 +1759,7 @@
         register a set of validators, referenced by identifier, that
         are automatically assigned to any EditableValueHolder component
         in the application, unless overridden or disabled locally.</p>
-        
+
         ]]>
       </xsd:documentation>
     </xsd:annotation>
@@ -1773,7 +1773,7 @@
             <![CDATA[
             <p> The "validator-id" element represents the identifier
             of a registered validator.</p>
-            
+
             ]]>
           </xsd:documentation>
         </xsd:annotation>
@@ -1800,7 +1800,7 @@
         the nested managed-property elements can be used to
         initialize the contents of settable JavaBeans properties of
         the created instance.</p>
-        
+
         ]]>
       </xsd:documentation>
     </xsd:annotation>
@@ -1815,7 +1815,7 @@
             attribute name under which a managed bean will
             be searched for, as well as stored (unless the
             "managed-bean-scope" value is "none").</p>
-            
+
             ]]>
           </xsd:documentation>
         </xsd:annotation>
@@ -1829,12 +1829,12 @@
             qualified class name of the Java class that will be
             used`to instantiate a new instance if creation of the
             specified`managed bean is requested.</p>
-            
+
             <p>The specified class must conform to standard JavaBeans
             conventions.  In particular, it must have a public
             zero-arguments constructor, and zero or more public
             property setters.</p>
-            
+
             ]]>
           </xsd:documentation>
         </xsd:annotation>
@@ -1848,7 +1848,7 @@
             into which a newly created instance of the specified
             managed bean will be stored (unless the value is
             "none").</p>
-            
+
             ]]>
           </xsd:documentation>
         </xsd:annotation>
@@ -1879,11 +1879,11 @@
           attribute is true the runtime must instantiate this class
           and store the instance within the application scope when the
           application starts.</p>
-          
+
           <p>If eager is unspecified or is false, the default "lazy"
           instantiation and scoped storage of the managed bean
           will occur.</p>
-          
+
           ]]>
         </xsd:documentation>
       </xsd:annotation>
@@ -1901,14 +1901,14 @@
         <![CDATA[
         <p class="changed_added_2_2">Top level element for a flow
         definition.</p>
-        
+
         <div class="changed_added_2_2">
-        
+
         <p>If there is no <code>&lt;start-node&gt;</code> element declared, it
         is assumed to be <code>&lt;flowName&gt;.xhtml</code>.</p>
-        
+
         </div>
-        
+
         ]]>
       </xsd:documentation>
     </xsd:annotation>
@@ -1924,7 +1924,7 @@
             flow graph.  The start node may be any of the node types mentioned in
             the class javadocs for <code><a target="_"
             href="jakarta/faces/flow/FlowHandler.html">FlowHandler</a></code>.</p>
-            
+
             ]]>
           </xsd:documentation>
         </xsd:annotation>
@@ -1972,10 +1972,10 @@
           <![CDATA[
           <p class="changed_added_2_2">The id of this flow.  The id
           must be unique within the Application configuration Resource
-          file in which this flow is defined.  The value of this attribute, 
+          file in which this flow is defined.  The value of this attribute,
           combined with the value of the &lt;faces-config&gt;&lt;name&gt; element
-          must globally identify the flow within the application.<p> 
-          
+          must globally identify the flow within the application.<p>
+
           ]]>
         </xsd:documentation>
       </xsd:annotation>
@@ -1991,8 +1991,8 @@
         <![CDATA[
         <p class="changed_added_2_2">Invoke a method, passing parameters if necessary.
         The return from the method is used as the outcome for where to go next in the
-        flow.  If the method is a void method, the default outcome is used.<p> 
-        
+        flow.  If the method is a void method, the default outcome is used.<p>
+
         ]]>
       </xsd:documentation>
     </xsd:annotation>
@@ -2010,7 +2010,7 @@
             <![CDATA[
             <p class="changed_added_2_2">A parameter to pass when calling the method
             identified in the "method" element that is a sibling of this element.<p>
-            
+
             ]]>
           </xsd:documentation>
         </xsd:annotation>
@@ -2039,7 +2039,7 @@
         <![CDATA[
         <p class="changed_added_2_2">A parameter to pass when calling the method
         identified in the "method" element that is a sibling of this element.<p>
-        
+
         ]]>
       </xsd:documentation>
     </xsd:annotation>
@@ -2050,10 +2050,10 @@
         <xsd:annotation>
           <xsd:documentation>
             <![CDATA[
-            <p class="changed_added_2_2"> The optional "class" element within a "parameter" element 
+            <p class="changed_added_2_2"> The optional "class" element within a "parameter" element
             will be interpreted as the fully qualified class name for the type
             of the "value" element.</p>
-            
+
             ]]>
           </xsd:documentation>
         </xsd:annotation>
@@ -2066,7 +2066,7 @@
             <p class="changed_added_2_2"> The "value" element within an "parameter"
             must be a literal string or an EL Expression whose "get" will be called when the "method"
             associated with this element is invoked.</p>
-            
+
             ]]>
           </xsd:documentation>
         </xsd:annotation>
@@ -2082,10 +2082,10 @@
       <xsd:documentation>
         <![CDATA[
         <p class="changed_added_2_2">Define a view node in a flow graph.</p>
-        
+
         <p>This element must contain exactly one
         <code>&lt;vdl-document&gt;</code> element.</p>
-        
+
         ]]>
       </xsd:documentation>
     </xsd:annotation>
@@ -2098,7 +2098,7 @@
             <p class="changed_added_2_2 changed_modified_2_3">
             Define the path to the vdl-document for the enclosing view.
             <p>
-            
+
             ]]>
           </xsd:documentation>
         </xsd:annotation>
@@ -2112,7 +2112,7 @@
           <![CDATA[
           <p class="changed_added_2_2">The id of this view.  It must be
           unique within the flow.</p>
-          
+
           ]]>
         </xsd:documentation>
       </xsd:annotation>
@@ -2127,18 +2127,18 @@
       <xsd:documentation>
         <![CDATA[
         <p class="changed_added_2_2">Define a switch node in a flow graph.</p>
-        
+
         <div class="changed_added_2_2">
-        
+
         <p>This element must contain one or more
         <code>&lt;case&gt;</code> elements.  When control passes to the
         <code>&lt;switch&gt;</code> node, each of the cases must be considered
         in order and control must past to the <code>&lt;from-outcome&gt;</code>
-        of the first one whose <code>&lt;if&gt;</code> expression evaluates to 
+        of the first one whose <code>&lt;if&gt;</code> expression evaluates to
         <code>true</code>.</p>
-        
+
         </div>
-        
+
         ]]>
       </xsd:documentation>
     </xsd:annotation>
@@ -2153,7 +2153,7 @@
             <p class="changed_added_2_2">Defines a case that must be
             considered in the list of cases in the
             <code>&lt;switch&gt;</code>.</p>
-            
+
             ]]>
           </xsd:documentation>
         </xsd:annotation>
@@ -2167,7 +2167,7 @@
             <p class="changed_added_2_2">Defines the default case that will
             be taken if none of the other cases in the
             <code>&lt;switch&gt;</code> are taken.</p>
-            
+
             ]]>
           </xsd:documentation>
         </xsd:annotation>
@@ -2181,7 +2181,7 @@
           <![CDATA[
           <p class="changed_added_2_2">The id of this switch.  It must be
           unique within the flow.</p>
-          
+
           ]]>
         </xsd:documentation>
       </xsd:annotation>
@@ -2197,7 +2197,7 @@
         <![CDATA[
         <p class="changed_added_2_2">Defines a case that will
         be considered in the <code>&lt;switch&gt;</code>.</p>
-        
+
         ]]>
       </xsd:documentation>
     </xsd:annotation>
@@ -2210,9 +2210,9 @@
           <xsd:documentation>
             <![CDATA[
             <p class="changed_added_2_2">If this EL expression evaluates to
-            <code>true</code>, the corresponding <code>from-outcome</code> will 
+            <code>true</code>, the corresponding <code>from-outcome</code> will
             be the outcome taken by the enclosing <code>&lt;switch&gt;</code></p>
-            
+
             ]]>
           </xsd:documentation>
         </xsd:annotation>
@@ -2235,10 +2235,10 @@
             for any outcome value, with the assumption that the
             condition specified in the "if" element ultimately
             determines if this rule is a match.</p>
-            
+
             <p class="changed_added_2_2">If used in a faces flow, this element
             represents the node id to which control will be passed.</p>
-            
+
             ]]>
           </xsd:documentation>
         </xsd:annotation>
@@ -2257,12 +2257,12 @@
       <xsd:documentation>
         <![CDATA[
         <p class="changed_added_2_2">Define a return node in a flow graph.</p>
-        
+
         <div class="changed_added_2_2">
-        
+
         <p>This element must contain exactly one <code>&lt;from-outcome&gt;</code> element.</p>
         </div>
-        
+
         ]]>
       </xsd:documentation>
     </xsd:annotation>
@@ -2274,7 +2274,7 @@
             <![CDATA[
             <p class="changed_added_2_2">This element
             represents the node id to which control will be passed.</p>
-            
+
             ]]>
           </xsd:documentation>
         </xsd:annotation>
@@ -2287,7 +2287,7 @@
         <xsd:documentation>
           <![CDATA[
           <p class="changed_added_2_2">The id of this flow-return.</p>
-          
+
           ]]>
         </xsd:documentation>
       </xsd:annotation>
@@ -2302,13 +2302,13 @@
       <xsd:documentation>
         <![CDATA[
         <p class="changed_added_2_2">Define a call node in a flow graph.</p>
-        
+
         <div class="changed_added_2_2">
-        
-        <p>This element must contain exactly one <code>&lt;flow-reference&gt;</code> element, 
+
+        <p>This element must contain exactly one <code>&lt;flow-reference&gt;</code> element,
         which must contain exactly one <code>&lt;flow-id&gt;</code> element.</p>
         </div>
-        
+
         ]]>
       </xsd:documentation>
     </xsd:annotation>
@@ -2319,7 +2319,7 @@
           <xsd:documentation>
             <![CDATA[
             <p class="changed_added_2_2">The flow id of the called flow.<p>
-            
+
             ]]>
           </xsd:documentation>
         </xsd:annotation>
@@ -2333,7 +2333,7 @@
             <![CDATA[
             <p class="changed_added_2_2">A parameter to pass when calling the flow
             identified in the "flow-reference" element that is a sibling of this element.<p>
-            
+
             ]]>
           </xsd:documentation>
         </xsd:annotation>
@@ -2346,7 +2346,7 @@
         <xsd:documentation>
           <![CDATA[
           <p class="changed_added_2_2">The id of this flow-return.</p>
-          
+
           ]]>
         </xsd:documentation>
       </xsd:annotation>
@@ -2361,11 +2361,11 @@
       <xsd:documentation>
         <![CDATA[
         <p class="changed_added_2_2">Identifiy the called flow.</p>
-        
+
         <div class="changed_added_2_2">
-        
+
         </div>
-        
+
         ]]>
       </xsd:documentation>
     </xsd:annotation>
@@ -2377,7 +2377,7 @@
           <xsd:documentation>
             <![CDATA[
             <p>The document id of the called flow.</p>
-            
+
             ]]>
           </xsd:documentation>
         </xsd:annotation>
@@ -2388,7 +2388,7 @@
           <xsd:documentation>
             <![CDATA[
             <p>The id of the called flow.</p>
-            
+
             ]]>
           </xsd:documentation>
         </xsd:annotation>
@@ -2404,7 +2404,7 @@
       <xsd:documentation>
         <![CDATA[
         <p class="changed_added_2_2">A <code>MethodExpression</code> that will be invoked when the flow is entered.<p>
-        
+
         ]]>
       </xsd:documentation>
     </xsd:annotation>
@@ -2424,7 +2424,7 @@
       <xsd:documentation>
         <![CDATA[
         <p class="changed_added_2_2">A <code>MethodExpression</code> that will be invoked when the flow is exited.<p>
-        
+
         ]]>
       </xsd:documentation>
     </xsd:annotation>
@@ -2445,7 +2445,7 @@
         <![CDATA[
         <p class="changed_added_2_2">A named parameter whose value will be populated
         with a correspondingly named parameter within an "outbound-parameter" element.<p>
-        
+
         ]]>
       </xsd:documentation>
     </xsd:annotation>
@@ -2457,9 +2457,9 @@
             <![CDATA[
             <p class="changed_added_2_2"> The "name" element within an "inbound-parameter"
             element declares the name of this parameter
-            to be passed into a flow.  There must be 
+            to be passed into a flow.  There must be
             a sibling "value" element in the same parent as this element.</p>
-            
+
             ]]>
           </xsd:documentation>
         </xsd:annotation>
@@ -2471,9 +2471,9 @@
             <![CDATA[
             <p class="changed_added_2_2"> The "value" element within an "inbound-parameter"
             must be an EL Expression whose value will be set with the correspondingly
-            named "outbound-parameter" when this flow is entered, if such a 
+            named "outbound-parameter" when this flow is entered, if such a
             parameter exists.</p>
-            
+
             ]]>
           </xsd:documentation>
         </xsd:annotation>
@@ -2488,10 +2488,10 @@
     <xsd:annotation>
       <xsd:documentation>
         <![CDATA[
-        <p class="changed_added_2_2">A named parameter whose value will be 
+        <p class="changed_added_2_2">A named parameter whose value will be
         passed to a correspondingly named parameter within an "inbound-parameter" element
         on the target flow.<p>
-        
+
         ]]>
       </xsd:documentation>
     </xsd:annotation>
@@ -2501,10 +2501,10 @@
         <xsd:annotation>
           <xsd:documentation>
             <![CDATA[
-            <p class="changed_added_2_2"> The "name" element within an "outbound-parameter" element 
-            declares the name of this parameter to be passed out of a flow.  There must be 
+            <p class="changed_added_2_2"> The "name" element within an "outbound-parameter" element
+            declares the name of this parameter to be passed out of a flow.  There must be
             a sibling "value" element in the same parent as this element.</p>
-            
+
             ]]>
           </xsd:documentation>
         </xsd:annotation>
@@ -2517,7 +2517,7 @@
             <p class="changed_added_2_2"> The "value" element within an "outbound-parameter"
             must be a literal string or an EL Expression whose "get" will be called when the "flow-call"
             containing this element is traversed to go to a new flow.</p>
-            
+
             ]]>
           </xsd:documentation>
         </xsd:annotation>
@@ -2534,7 +2534,7 @@
         <![CDATA[
         <p> Extension element for managed-bean.  It may contain
         implementation specific content.</p>
-        
+
         ]]>
       </xsd:documentation>
     </xsd:annotation>
@@ -2556,7 +2556,7 @@
       <xsd:documentation>
         <![CDATA[
         [
-        
+
         <p> Defines the legal values for the <managed-bean-scope>
         element's body content, which includes all of the scopes
         normally used in a web application, plus the "none" value
@@ -2564,7 +2564,7 @@
         any scope.  Alternatively, an EL expression may be used
         as the value of this element.  The result of evaluating this
         expression must by of type java.util.Map.</p>
-        
+
         ]]>
       </xsd:documentation>
     </xsd:annotation>
@@ -2586,7 +2586,7 @@
         property of a managed bean that will be configured to the
         specified value (or value set) if the corresponding
         managed bean is automatically created.</p>
-        
+
         ]]>
       </xsd:documentation>
     </xsd:annotation>
@@ -2600,7 +2600,7 @@
             <p> The "property-name" element represents the JavaBeans
             property name under which the corresponding value may
             be stored.</p>
-            
+
             ]]>
           </xsd:documentation>
         </xsd:annotation>
@@ -2617,7 +2617,7 @@
             classes; however, this element should be specified
             if the configuration file is going to be the source
             for generating the corresponding classes.</p>
-            
+
             ]]>
           </xsd:documentation>
         </xsd:annotation>
@@ -2647,7 +2647,7 @@
         <p> The "map-entry" element reprsents a single key-entry pair
         that will be added to the computed value of a managed
         property of type java.util.Map.</p>
-        
+
         ]]>
       </xsd:documentation>
     </xsd:annotation>
@@ -2660,7 +2660,7 @@
             <p> The "key" element is the String representation of a
             map key that will be stored in a managed property of
             type java.util.Map.</p>
-            
+
             ]]>
           </xsd:documentation>
         </xsd:annotation>
@@ -2687,7 +2687,7 @@
         that will be added to the computed value of a managed property
         of type java.util.Map.  In addition, the Java class types
         of the key and entry values may be optionally declared.</p>
-        
+
         ]]>
       </xsd:documentation>
     </xsd:annotation>
@@ -2702,7 +2702,7 @@
             each "key" element in a set of "map-entry" elements
             will be converted to.  If omitted, "java.lang.String"
             is assumed.</p>
-            
+
             ]]>
           </xsd:documentation>
         </xsd:annotation>
@@ -2731,7 +2731,7 @@
         combination of conditions that must match for this case to
         be executed, and the view id of the component tree that
         should be selected next.</p>
-        
+
         ]]>
       </xsd:documentation>
     </xsd:annotation>
@@ -2758,7 +2758,7 @@
             for any outcome value, with the assumption that the
             condition specified in the "if" element ultimately
             determines if this rule is a match.</p>
-            
+
             ]]>
           </xsd:documentation>
         </xsd:annotation>
@@ -2770,7 +2770,7 @@
           <xsd:documentation>
             <![CDATA[
             <p> Please see section JSF.7.4.2 for the specification of this element.</p>
-            
+
             ]]>
           </xsd:documentation>
         </xsd:annotation>
@@ -2780,17 +2780,17 @@
         <xsd:annotation>
           <xsd:documentation>
             <![CDATA[
-            <p><span class="changed_modified_2_2">The "to-view-id" element 
-            contains the view identifier (<span class="changed_added_2_2">or 
+            <p><span class="changed_modified_2_2">The "to-view-id" element
+            contains the view identifier (<span class="changed_added_2_2">or
             flow node id, or flow id</span>)
-            of the next view (<span class="changed_added_2_2">or flow node or 
+            of the next view (<span class="changed_added_2_2">or flow node or
             flow</span>) that should be displayed if this
             navigation rule is matched. If the contents is a
             value expression, it should be resolved by the
             navigation handler to obtain the view (
-            <span class="changed_added_2_2">or flow node or flow</span>) 
+            <span class="changed_added_2_2">or flow node or flow</span>)
             identifier.</p>
-            
+
             ]]>
           </xsd:documentation>
         </xsd:annotation>
@@ -2802,11 +2802,11 @@
           <xsd:documentation>
             <![CDATA[
             <p class="changed_added_2_2">The document id of the called flow.
-            If this element appears in a &lt;navigation-case&gt; nested within 
+            If this element appears in a &lt;navigation-case&gt; nested within
             a &lt;flow-definition&gt;, it must be ignored because navigation
-            cases within flows may only navigate among the view nodes of that 
+            cases within flows may only navigate among the view nodes of that
             flow.</p>
-            
+
             ]]>
           </xsd:documentation>
         </xsd:annotation>
@@ -2831,7 +2831,7 @@
         NavigationHandler implementation to make decisions on
         what view should be displayed next, based on the
         view id being processed.</p>
-        
+
         ]]>
       </xsd:documentation>
     </xsd:annotation>
@@ -2861,7 +2861,7 @@
         <![CDATA[
         <p> Extension element for navigation-rule.  It may contain
         implementation specific content.</p>
-        
+
         ]]>
       </xsd:documentation>
     </xsd:annotation>
@@ -2888,11 +2888,11 @@
         created.  This is different from omitting the managed
         property element entirely, which will cause no
         property setter to be called for this property.</p>
-        
+
         <p>The "null-value" element can only be used when the
         associated "property-class" identifies a Java class,
         not a Java primitive.</p>
-        
+
         ]]>
       </xsd:documentation>
     </xsd:annotation>
@@ -2909,13 +2909,13 @@
         <![CDATA[
         <p> The "property" element represents a JavaBean property of the
         Java class represented by our parent element.</p>
-        
+
         <p>Property names must be unique within the scope of the Java
         class that is represented by the parent element, and must
         correspond to property names that will be recognized when
         performing introspection against that class via
         java.beans.Introspector.</p>
-        
+
         ]]>
       </xsd:documentation>
     </xsd:annotation>
@@ -2929,7 +2929,7 @@
             <p> The "property-name" element represents the JavaBeans
             property name under which the corresponding value
             may be stored.</p>
-            
+
             ]]>
           </xsd:documentation>
         </xsd:annotation>
@@ -2945,7 +2945,7 @@
             classes; however, this element should be specified if
             the configuration file is going to be the source for
             generating the corresponding classes.</p>
-            
+
             ]]>
           </xsd:documentation>
         </xsd:annotation>
@@ -2973,12 +2973,12 @@
       <xsd:documentation>
         <![CDATA[
         <p class="changed_added_2_2">Any view that matches any of the
-        url-patterns in this element may only be reached from another Jakarta Server 
+        url-patterns in this element may only be reached from another Jakarta Server
         Faces view in the same web application. Because the runtime is aware of
         which views are protected, any navigation from an unprotected
         view to a protected view is automatically subject to
         protection.</p>
-        
+
         ]]>
       </xsd:documentation>
     </xsd:annotation>
@@ -2998,7 +2998,7 @@
         <![CDATA[
         <p> Extension element for property.  It may contain
         implementation specific content.</p>
-        
+
         ]]>
       </xsd:documentation>
     </xsd:annotation>
@@ -3023,7 +3023,7 @@
         specified "to-view-id" should be accomplished by
         performing an HTTP redirect rather than the usual
         ViewHandler mechanisms.</p>
-        
+
         ]]>
       </xsd:documentation>
     </xsd:annotation>
@@ -3054,7 +3054,7 @@
         maintained to preserve backwards compatibility.
         Implementations must treat this element the same as
         "redirect-param".</p>
-        
+
         ]]>
       </xsd:documentation>
     </xsd:annotation>
@@ -3079,7 +3079,7 @@
         a "redirect" element, contains child "name"
         and "value" elements that must be included in the
         redirect url when the redirect is performed.</p>
-        
+
         ]]>
       </xsd:documentation>
     </xsd:annotation>
@@ -3107,7 +3107,7 @@
         based on the properties of the specified class.  The presence
         or absence of a referenced bean element has no impact on the
         JavaServer Faces runtime environment inside a web application.</p>
-        
+
         ]]>
       </xsd:documentation>
     </xsd:annotation>
@@ -3123,7 +3123,7 @@
             referenced bean may be assumed to be stored, in one
             of 'request', 'session', 'view', 'application'
             or a custom scope.</p>
-            
+
             ]]>
           </xsd:documentation>
         </xsd:annotation>
@@ -3137,7 +3137,7 @@
             fully qualified class name of the Java class
             (either abstract or concrete) or Java interface
             implemented by the corresponding referenced bean.</p>
-            
+
             ]]>
           </xsd:documentation>
         </xsd:annotation>
@@ -3159,7 +3159,7 @@
         render-kit-id.  If no render-kit-id is specified, the
         identifier of the default RenderKit
         (RenderKitFactory.DEFAULT_RENDER_KIT) is assumed.</p>
-        
+
         ]]>
       </xsd:documentation>
     </xsd:annotation>
@@ -3174,7 +3174,7 @@
             <p> The "render-kit-id" element represents an identifier
             for the RenderKit represented by the parent
             "render-kit" element.</p>
-            
+
             ]]>
           </xsd:documentation>
         </xsd:annotation>
@@ -3188,7 +3188,7 @@
             <p> The "render-kit-class" element represents the fully
             qualified class name of a concrete RenderKit
             implementation class.</p>
-            
+
             ]]>
           </xsd:documentation>
         </xsd:annotation>
@@ -3223,10 +3223,10 @@
         in the RenderKit associated with the parent "render-kit"
         element.  Client Behavior renderer type must be unique within the RenderKit
         associated with the parent "render-kit" element.</p>
-        
+
         <p>Nested "attribute" elements identify generic component
         attributes that are recognized by this renderer.</p>
-        
+
         ]]>
       </xsd:documentation>
     </xsd:annotation>
@@ -3239,7 +3239,7 @@
             <p> The "client-behavior-renderer-type" element represents a renderer type
             identifier for the Client Behavior Renderer represented by the parent
             "client-behavior-renderer" element.</p>
-            
+
             ]]>
           </xsd:documentation>
         </xsd:annotation>
@@ -3252,7 +3252,7 @@
             <p> The "client-behavior-renderer-class" element represents the fully
             qualified class name of a concrete Client Behavior Renderer
             implementation class.</p>
-            
+
             ]]>
           </xsd:documentation>
         </xsd:annotation>
@@ -3276,10 +3276,10 @@
         element.  Combinations of component family and
         renderer type must be unique within the RenderKit
         associated with the parent "render-kit" element.</p>
-        
+
         <p>Nested "attribute" elements identify generic component
         attributes that are recognized by this renderer.</p>
-        
+
         ]]>
       </xsd:documentation>
     </xsd:annotation>
@@ -3293,7 +3293,7 @@
             <p> The "component-family" element represents the
             component family for which the Renderer represented
             by the parent "renderer" element will be used.</p>
-            
+
             ]]>
           </xsd:documentation>
         </xsd:annotation>
@@ -3306,7 +3306,7 @@
             <p> The "renderer-type" element represents a renderer type
             identifier for the Renderer represented by the parent
             "renderer" element.</p>
-            
+
             ]]>
           </xsd:documentation>
         </xsd:annotation>
@@ -3319,7 +3319,7 @@
             <p> The "renderer-class" element represents the fully
             qualified class name of a concrete Renderer
             implementation class.</p>
-            
+
             ]]>
           </xsd:documentation>
         </xsd:annotation>
@@ -3350,7 +3350,7 @@
         <![CDATA[
         <p> Extension element for renderer.  It may contain implementation
         specific content.</p>
-        
+
         ]]>
       </xsd:documentation>
     </xsd:annotation>
@@ -3373,7 +3373,7 @@
         <![CDATA[
         <p> Extension element for render-kit.  It may contain
         implementation specific content.</p>
-        
+
         ]]>
       </xsd:documentation>
     </xsd:annotation>
@@ -3398,7 +3398,7 @@
         attribute in which this element resides.  This value is
         advisory only and is intended for tools to use when
         populating pallettes.</p>
-        
+
         ]]>
       </xsd:documentation>
     </xsd:annotation>
@@ -3416,17 +3416,17 @@
         <![CDATA[
         <p> The "supported-locale" element allows authors to declare
         which locales are supported in this application instance.</p>
-        
+
         <p class="modified_added_2_3">
         To facilitate BCP 47 this element first needs to be parsed by the
         Locale.forLanguageTag method. If it does not return a Locale with
         a language the old specification below needs to take effect.
         </p>
-        
+
         <p>It must be specified as :language:[_:country:[_:variant:]]
         without the colons, for example "ja_JP_SJIS".  The
         separators between the segments may be '-' or '_'.</p>
-        
+
         ]]>
       </xsd:documentation>
     </xsd:annotation>
@@ -3449,7 +3449,7 @@
         implementation class that should be registered under the
         specified behavior identifier.  Behavior identifiers must
         be unique within the entire web application.</p>
-        
+
         <p>Nested "attribute" elements identify generic attributes that
         may be configured on the corresponding UIComponent in order
         to affect the operation of the Behavior.  Nested "property"
@@ -3459,7 +3459,7 @@
         elements are intended to allow component developers to
         more completely describe their components to tools and users.
         These elements have no required runtime semantics.</p>
-        
+
         ]]>
       </xsd:documentation>
     </xsd:annotation>
@@ -3473,7 +3473,7 @@
             <p> The "behavior-id" element represents the identifier
             under which the corresponding Behavior class should
             be registered.</p>
-            
+
             ]]>
           </xsd:documentation>
         </xsd:annotation>
@@ -3486,7 +3486,7 @@
             <p> The "behavior-class" element represents the fully
             qualified class name of a concrete Behavior
             implementation class.</p>
-            
+
             ]]>
           </xsd:documentation>
         </xsd:annotation>
@@ -3504,7 +3504,7 @@
             operation of the Behavior.  This attribute is
             primarily for design-time tools and is not
             specified to have any meaning at runtime.</p>
-            
+
             ]]>
           </xsd:documentation>
         </xsd:annotation>
@@ -3522,7 +3522,7 @@
             the Behavior.  This attribute is primarily for
             design-time tools and is not specified to have
             any meaning at runtime.</p>
-            
+
             ]]>
           </xsd:documentation>
         </xsd:annotation>
@@ -3545,7 +3545,7 @@
         <![CDATA[
         <p> Extension element for behavior.  It may contain
         implementation specific content.</p>
-        
+
         ]]>
       </xsd:documentation>
     </xsd:annotation>
@@ -3570,7 +3570,7 @@
         implementation class that should be registered under the
         specified validator identifier.  Validator identifiers must
         be unique within the entire web application.</p>
-        
+
         <p>Nested "attribute" elements identify generic attributes that
         may be configured on the corresponding UIComponent in order
         to affect the operation of the Validator.  Nested "property"
@@ -3580,7 +3580,7 @@
         elements are intended to allow component developers to
         more completely describe their components to tools and users.
         These elements have no required runtime semantics.</p>
-        
+
         ]]>
       </xsd:documentation>
     </xsd:annotation>
@@ -3594,7 +3594,7 @@
             <p> The "validator-id" element represents the identifier
             under which the corresponding Validator class should
             be registered.</p>
-            
+
             ]]>
           </xsd:documentation>
         </xsd:annotation>
@@ -3607,7 +3607,7 @@
             <p> The "validator-class" element represents the fully
             qualified class name of a concrete Validator
             implementation class.</p>
-            
+
             ]]>
           </xsd:documentation>
         </xsd:annotation>
@@ -3625,7 +3625,7 @@
             operation of the Validator.  This attribute is
             primarily for design-time tools and is not
             specified to have any meaning at runtime.</p>
-            
+
             ]]>
           </xsd:documentation>
         </xsd:annotation>
@@ -3643,7 +3643,7 @@
             the Validator.  This attribute is primarily for
             design-time tools and is not specified to have
             any meaning at runtime.</p>
-            
+
             ]]>
           </xsd:documentation>
         </xsd:annotation>
@@ -3666,7 +3666,7 @@
         <![CDATA[
         <p> Extension element for validator.  It may contain
         implementation specific content.</p>
-        
+
         ]]>
       </xsd:documentation>
     </xsd:annotation>
@@ -3690,7 +3690,7 @@
         that will be used to calculate the required value.
         It will be converted as specified for the actual
         property type.</p>
-        
+
         ]]>
       </xsd:documentation>
     </xsd:annotation>
@@ -3709,7 +3709,7 @@
         it to the "list-entries" list for a managed property that is
         a java.util.List, or a "map-entries" map for a managed
         property that is a java.util.Map.</p>
-        
+
         ]]>
       </xsd:documentation>
     </xsd:annotation>
@@ -3733,7 +3733,7 @@
         array.  In the former case, the "value-class" element can
         optionally be used to declare the Java type to which each
         value should be converted before adding it to the Collection.</p>
-        
+
         ]]>
       </xsd:documentation>
     </xsd:annotation>
@@ -3768,7 +3768,7 @@
         listener instance, and allow selecting the kinds of classes that
         can be the source of events that are delivered to the listener
         instance.</p>
-        
+
         ]]>
       </xsd:documentation>
     </xsd:annotation>
@@ -3783,7 +3783,7 @@
             SystemEventListener implementation class that will be
             called when events of the type specified by the
             "system-event-class" are sent by the runtime.</p>
-            
+
             ]]>
           </xsd:documentation>
         </xsd:annotation>
@@ -3798,7 +3798,7 @@
             which events will be delivered to the class whose fully
             qualified class name is given by the
             "system-event-listener-class" element.</p>
-            
+
             ]]>
           </xsd:documentation>
         </xsd:annotation>
@@ -3814,7 +3814,7 @@
             source for the event to be delivered to the class whose
             fully qualified class name is given by the
             "system-event-listener-class" element.</p>
-            
+
             ]]>
           </xsd:documentation>
         </xsd:annotation>
@@ -3830,7 +3830,7 @@
         <![CDATA[
         <p> This type contains the recognized versions of
         faces-config supported.</p>
-        
+
         ]]>
       </xsd:documentation>
     </xsd:annotation>

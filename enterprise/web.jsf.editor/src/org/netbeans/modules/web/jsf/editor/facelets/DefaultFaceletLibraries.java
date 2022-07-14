@@ -44,6 +44,7 @@ import org.openide.modules.InstalledFileLocator;
  * default prefix.
  *
  * @author marekfukala
+ * @author juneau
  */
 public class DefaultFaceletLibraries {
 
@@ -65,8 +66,8 @@ public class DefaultFaceletLibraries {
 
     private void init() {
         File jsfImplJar = InstalledFileLocator.getDefault().locate(
-                "modules/ext/jsf-2_2/javax.faces.jar", //NOI18N
-                "org.netbeans.modules.web.jsf20", false); //NOI18N
+                "modules/ext/jsf-3_0/jakarta.faces.jar", //NOI18N
+                "org.netbeans.modules.web.jsf30", false); //NOI18N
         assert jsfImplJar != null;
 
         FileObject jsfImplJarFo = FileUtil.getArchiveRoot(FileUtil.toFileObject(jsfImplJar));
@@ -94,7 +95,7 @@ public class DefaultFaceletLibraries {
                 librariesDescriptors.put(descritor.getNamespace(), descritor);
             } catch (LibraryDescriptorException ex) {
                 Logger.global.log(Level.WARNING, "Error parsing facelets library " +
-                        FileUtil.getFileDisplayName(lfo) + " in javax.faces.jar from bundled web.jsf20 library", ex);
+                        FileUtil.getFileDisplayName(lfo) + " in jakarta.faces.jar from bundled web.jsf30 library", ex);
             }
         }
 

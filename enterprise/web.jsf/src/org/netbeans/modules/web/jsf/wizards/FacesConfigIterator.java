@@ -57,6 +57,8 @@ import static org.netbeans.modules.web.jsf.api.facesmodel.JSFVersion.JSF_1_2;
 import static org.netbeans.modules.web.jsf.api.facesmodel.JSFVersion.JSF_2_0;
 import static org.netbeans.modules.web.jsf.api.facesmodel.JSFVersion.JSF_2_1;
 import static org.netbeans.modules.web.jsf.api.facesmodel.JSFVersion.JSF_2_2;
+import static org.netbeans.modules.web.jsf.api.facesmodel.JSFVersion.JSF_2_3;
+import static org.netbeans.modules.web.jsf.api.facesmodel.JSFVersion.JSF_3_0;
 import org.netbeans.modules.web.wizards.Utilities;
 import org.netbeans.spi.java.classpath.ClassPathProvider;
 import org.netbeans.spi.project.ui.templates.support.Templates;
@@ -220,6 +222,8 @@ public class FacesConfigIterator implements TemplateWizard.Iterator {
 
     private static String facesConfigForVersion(JSFVersion jsfVersion) {
         switch (jsfVersion) {
+            case JSF_3_0:
+                return JSFCatalog.RES_FACES_CONFIG_3_0;
             case JSF_2_3:
                 return JSFCatalog.RES_FACES_CONFIG_2_3;
             case JSF_2_2:

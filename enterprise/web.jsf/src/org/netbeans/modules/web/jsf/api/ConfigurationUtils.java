@@ -48,7 +48,7 @@ import org.openide.util.Exceptions;
  * @author Po-Ting Wu
  */
 public class ConfigurationUtils {
-    
+
     // We can override equals() and hashcode() methods here for accepting 2 keys in HashMap
     // However due to the performance issue and clear codes, use 2 HashMap here will be better
     private static WeakHashMap<FileObject, WeakReference<JSFConfigModel>> configModelsEditable = new WeakHashMap<>();
@@ -57,9 +57,9 @@ public class ConfigurationUtils {
     /**
      * This methods returns the model source for the faces config file.
      * @param confFile - the faces config file
-     * @param editable - if the source will be editable. Clients should use true. 
+     * @param editable - if the source will be editable. Clients should use true.
      * @return The ModelSource for the configuration file. If the file is not faces config file
-     * or a version which is not handled, then returns null. 
+     * or a version which is not handled, then returns null.
      */
     public static synchronized JSFConfigModel getConfigModel(FileObject confFile, boolean editable) {
         JSFConfigModel configModel = null;
@@ -86,12 +86,12 @@ public class ConfigurationUtils {
         }
         return configModel;
     }
-    
+
     /**
      * The methods finds the definition of the Faces Servlet in the deployment descriptor
      * of the given web module.
      * @param webModule the given web module, where the Faces Servlet is.
-     * @return Faces Servlet definition or null if the Faces Servlet definition is not 
+     * @return Faces Servlet definition or null if the Faces Servlet definition is not
      * found in the given web module.
      */
     public static Servlet getFacesServlet(WebModule webModule) {
@@ -99,18 +99,33 @@ public class ConfigurationUtils {
         if (deploymentDescriptor == null) {
             return null;
         }
+        Servlet returnedServlet = null;
         try {
             WebApp webApp = DDProvider.getDefault().getDDRoot(deploymentDescriptor);
-            
+
             // Try to find according the servlet class name. The javax.faces.webapp.FacesServlet is final, so
             // it can not be extended.
-            return (Servlet) webApp
+            returnedServlet = (Servlet) webApp
                     .findBeanByName("Servlet", "ServletClass", "javax.faces.webapp.FacesServlet"); //NOI18N;
+
+
         } catch (java.io.IOException e) {
-            return null;
+            returnedServlet = null;
         }
+        // Try to load jakarta Faces Servlet if the javax FacesServlet is null
+        if(returnedServlet == null) {
+          try {
+              WebApp webApp = DDProvider.getDefault().getDDRoot(deploymentDescriptor);
+              returnedServlet = (Servlet) webApp
+                      .findBeanByName("Servlet", "ServletClass", "jakarta.faces.webapp.FacesServlet"); //NOI18N;
+          } catch (java.io.IOException e) {
+              returnedServlet = null;
+          }
+        }
+        return returnedServlet;
+
     }
-    
+
     /** Returns the mapping for the Faces Servlet.
      * @param webModule web module, where the JSF framework should be defined
      * @return The maping for the faces servlet. Null if the web module doesn't
@@ -133,18 +148,18 @@ public class ConfigurationUtils {
         }
         return null;
     }
-    
+
     /**
      * The method returns all faces configuration files in the web module.
-     * If there is faces-config.xml file in the web project, then it's returned 
-     * as the first one. Other configuration files are in the same order as are 
+     * If there is faces-config.xml file in the web project, then it's returned
+     * as the first one. Other configuration files are in the same order as are
      * listed in the javax.faces.CONFIG_FILES attribute in the web.xml file.
      * @param webModule - the web module, where you want to find the faces
      * configuration files
-     * @return array of all faces configuration files. If there are not any 
+     * @return array of all faces configuration files. If there are not any
      * configuration file, then empty array is returned.
      **/
-    
+
     public static FileObject[] getFacesConfigFiles(WebModule webModule){
         String[] sFiles = JSFConfigUtilities.getConfigFiles(webModule);
         if (sFiles.length > 0){
@@ -164,7 +179,7 @@ public class ConfigurationUtils {
         }
         return new FileObject [0];
     }
-    
+
     /**
      * Translates an URI to be executed with faces serlvet with the given mapping.
      * For example, the servlet has mapping <i>*.jsf</i> then uri <i>hello.jsp</i> will be
@@ -189,19 +204,19 @@ public class ConfigurationUtils {
         }
         return resource;
     }
-    
+
     /**
      * Helper method which finds the faces configuration file, where is the managed bean
      * defined.
      * @param webModule the web module, wher the managed bean is defined.
-     * @param name Name of the managed bean. 
+     * @param name Name of the managed bean.
      * @return faces configuration file, where the managed bean is defined. Null, if a bean
      * with the given name is not defined in the web module.
      */
     public static FileObject findFacesConfigForManagedBean(WebModule webModule, String name){
         FileObject[] configs = ConfigurationUtils.getFacesConfigFiles(webModule);
-        
-        
+
+
         for (int i = 0; i < configs.length; i++) {
             //DataObject dObject = DataObject.find(configs[i]);
             FacesConfig facesConfig = getConfigModel(configs[i], true).getRootComponent();
@@ -211,9 +226,9 @@ public class ConfigurationUtils {
                 if(name.equals(managedBean.getManagedBeanName()))
                     return configs[i];
             }
-            
+
         }
         return null;
     }
-    
+
 }

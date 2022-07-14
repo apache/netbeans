@@ -98,6 +98,7 @@ public final class GradleDistributionManager {
         GradleVersion.version("6.7"), // JDK-15
         GradleVersion.version("7.0"), // JDK-16
         GradleVersion.version("7.3"), // JDK-17
+        GradleVersion.version("7.5"), // JDK-18
     };
     private static final int JAVA_VERSION;
 

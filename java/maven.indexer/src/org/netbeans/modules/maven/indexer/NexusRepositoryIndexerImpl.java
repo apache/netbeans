@@ -1275,10 +1275,10 @@ public class NexusRepositoryIndexerImpl implements RepositoryIndexerImplementati
     private ResultImplementation<NBVersionInfo> findBySHA1(final String sha1, final ResultImpl<NBVersionInfo> result, List<RepositoryInfo> repos, final boolean skipUnIndexed) {
         final List<NBVersionInfo> infos = new ArrayList<>(result.getResults());
         final SkippedAction skipAction = new SkippedAction(result);
-        BooleanQuery bq = new BooleanQuery.Builder()
-                .add(new BooleanClause((setBooleanRewrite(constructQuery(MAVEN.SHA1, sha1))), BooleanClause.Occur.SHOULD))
-                .build();
         iterate(repos, (RepositoryInfo repo, IndexingContext context) -> {
+            BooleanQuery bq = new BooleanQuery.Builder()
+                    .add(new BooleanClause((setBooleanRewrite(constructQuery(MAVEN.SHA1, sha1))), BooleanClause.Occur.SHOULD))
+                    .build();
             IteratorSearchResponse response = repeatedPagedSearch(bq, Collections.singletonList(context), MAX_RESULT_COUNT);
             if (response != null) {
                 try {

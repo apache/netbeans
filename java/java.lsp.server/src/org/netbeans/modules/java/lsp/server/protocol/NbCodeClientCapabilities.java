@@ -66,6 +66,11 @@ public final class NbCodeClientCapabilities {
     private Boolean showHtmlPageSupport;
 
     /**
+     * Asks for java support.
+     */
+    private Boolean wantsJavaSupport = Boolean.TRUE;
+
+    /**
      * Asks for groovy support. Temporary option, will be removed.
      */
     private Boolean wantsGroovySupport = Boolean.TRUE;
@@ -108,6 +113,18 @@ public final class NbCodeClientCapabilities {
 
     public void setShowHtmlPageSupport(Boolean showHtmlPageSupport) {
         this.showHtmlPageSupport = showHtmlPageSupport;
+    }
+
+    public Boolean getWantsJavaSupport() {
+        return wantsJavaSupport;
+    }
+
+    public void setWantsJavaSupport(Boolean enableJava) {
+        this.wantsJavaSupport = enableJava == null ? Boolean.TRUE : enableJava;
+    }
+
+    public boolean wantsJavaSupport() {
+        return wantsJavaSupport.booleanValue();
     }
 
     public Boolean getWantsGroovySupport() {

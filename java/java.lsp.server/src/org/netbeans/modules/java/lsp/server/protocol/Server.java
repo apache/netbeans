@@ -732,8 +732,8 @@ public final class Server {
                 chOpts.setWorkDoneProgress(true);
                 capabilities.setCallHierarchyProvider(chOpts);
                 Set<String> commands = new LinkedHashSet<>(Arrays.asList(GRAALVM_PAUSE_SCRIPT,
-                        JAVA_BUILD_WORKSPACE,
-                        JAVA_CLEAN_WORKSPACE,
+                        NBLS_BUILD_WORKSPACE,
+                        NBLS_CLEAN_WORKSPACE,
                         JAVA_RUN_PROJECT_ACTION,
                         JAVA_FIND_DEBUG_ATTACH_CONFIGURATIONS,
                         JAVA_FIND_DEBUG_PROCESS_TO_ATTACH,
@@ -900,8 +900,8 @@ public final class Server {
         }
     }
 
-    public static final String JAVA_BUILD_WORKSPACE =  "java.build.workspace";
-    public static final String JAVA_CLEAN_WORKSPACE =  "java.clean.workspace";
+    public static final String NBLS_BUILD_WORKSPACE =  "nbls.build.workspace";
+    public static final String NBLS_CLEAN_WORKSPACE =  "nbls.clean.workspace";
     public static final String JAVA_NEW_FROM_TEMPLATE =  "java.new.from.template";
     public static final String JAVA_NEW_PROJECT =  "java.new.project";
     public static final String JAVA_GET_PROJECT_SOURCE_ROOTS = "java.get.project.source.roots";

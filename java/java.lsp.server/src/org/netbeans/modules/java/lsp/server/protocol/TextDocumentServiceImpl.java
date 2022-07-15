@@ -1083,6 +1083,9 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                         "# {0} - method name", "# {1} - configuration name", "LBL_DebugWith=Debug {0} with {1}"})
     @Override
     public CompletableFuture<List<? extends CodeLens>> codeLens(CodeLensParams params) {
+        if (!client.getNbCodeCapabilities().wantsJavaSupport()) {
+            return CompletableFuture.completedFuture(Collections.emptyList());
+        }
         // shortcut: if the projects are not yet initialized, return empty:
         if (server.openedProjects().getNow(null) == null) {
             return CompletableFuture.completedFuture(Collections.emptyList());
@@ -1977,7 +1980,9 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
 
     @CheckForNull
     public JavaSource getJavaSource(String fileUri) {
-        
+        if (!client.getNbCodeCapabilities().wantsJavaSupport()) {
+            return null;
+        }
         Document doc = server.getOpenedDocuments().getDocument(fileUri);
         if (doc == null) {
             FileObject file = fromURI(fileUri);

@@ -153,7 +153,8 @@ export function awaitClient() : Promise<NbLanguageClient> {
 
 function findJDK(onChange: (path : string | null) => void): void {
     let nowDark : boolean = isDarkColorTheme();
-function find(): string | null {
+    let nowJavaEnabled : boolean = isJavaSupportEnabled();
+    function find(): string | null {
         let nbJdk = workspace.getConfiguration('netbeans').get('jdkhome');
         if (nbJdk) {
             return nbJdk as string;
@@ -196,8 +197,10 @@ function find(): string | null {
             timeout = undefined;
             let newJdk = find();
             let newD = isDarkColorTheme();
-            if (newJdk !== currentJdk || newD != nowDark) {
+            let newJavaEnabled = isJavaSupportEnabled();
+            if (newJdk !== currentJdk || newD != nowDark || newJavaEnabled != nowJavaEnabled) {
                 nowDark = newD;
+                nowJavaEnabled = newJavaEnabled;
                 currentJdk = newJdk;
                 onChange(currentJdk);
             }
@@ -292,24 +295,31 @@ function wrapCommandWithProgress(lsCommand : string, title : string, log? : vsco
 export function activate(context: ExtensionContext): VSNetBeansAPI {
     let log = vscode.window.createOutputChannel("Apache NetBeans Language Server");
 
-    let conf = workspace.getConfiguration();
-    if (conf.get("netbeans.conflict.check")) {
-        const id = 'redhat.java';
-        let e = vscode.extensions.getExtension(id);
-        function disablingFailed(reason: any) {
-            handleLog(log, 'Disabling some services failed ' + reason);
-        }
-        if (e && workspace.name) {
-            vscode.window.showInformationMessage(`Another Java support extension is already installed. It is recommended to use only one Java support per workspace.`, `Manually disable`).then(() => {
-                vscode.commands.executeCommand('workbench.extensions.action.showInstalledExtensions');
-            });
+    function checkConflict(): void {
+        let conf = workspace.getConfiguration();
+        if (conf.get("netbeans.conflict.check") && conf.get("netbeans.javaSupport.enabled")) {
+            const id = 'redhat.java';
+            let e = vscode.extensions.getExtension(id);
+            if (e && workspace.name) {
+                const DISABLE_EXTENSION = `Manually disable extension`;
+                const DISABLE_JAVA = `Disable Java in Apache NetBeans Language Server`;
+                vscode.window.showInformationMessage(`Another Java support extension is already installed. It is recommended to use only one Java support per workspace.`, DISABLE_EXTENSION, DISABLE_JAVA).then((selected) => {
+                    if (DISABLE_EXTENSION === selected) {
+                        vscode.commands.executeCommand('workbench.extensions.action.showInstalledExtensions');
+                    } else if (DISABLE_JAVA === selected) {
+                        conf.update("netbeans.javaSupport.enabled", true, false);
+                    }
+                });
+            }
         }
     }
+    checkConflict();
 
     // find acceptable JDK and launch the Java part
     findJDK((specifiedJDK) => {
         let currentClusters = findClusters(context.extensionPath).sort();
         context.subscriptions.push(vscode.extensions.onDidChange(() => {
+            checkConflict();
             const newClusters = findClusters(context.extensionPath).sort();
             if (newClusters.length !== currentClusters.length || newClusters.find((value, index) => value !== currentClusters[index])) {
                 currentClusters = newClusters;
@@ -396,11 +406,11 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
             throw `Client ${c} doesn't support new project`;
         }
     }));
-    context.subscriptions.push(commands.registerCommand('java.workspace.compile', () => 
-        wrapCommandWithProgress('java.build.workspace', 'Compiling workspace...', log, true)
+    context.subscriptions.push(commands.registerCommand('nbls.workspace.compile', () =>
+        wrapCommandWithProgress('nbls.build.workspace', 'Compiling workspace...', log, true)
     ));
-    context.subscriptions.push(commands.registerCommand('java.workspace.clean', () => 
-        wrapCommandWithProgress('java.build.workspace', 'Cleaning workspace...', log, true)
+    context.subscriptions.push(commands.registerCommand('nbls.workspace.clean', () =>
+        wrapCommandWithProgress('nbls.clean.workspace', 'Cleaning workspace...', log, true)
     ));
     context.subscriptions.push(commands.registerCommand('java.project.compile', (args) => {
         wrapProjectActionWithProgress('build', undefined, 'Compiling...', log, true, args);
@@ -632,6 +642,10 @@ function isDarkColorTheme() : boolean {
     return false;
 }
 
+function isJavaSupportEnabled() : boolean {
+    return workspace.getConfiguration('netbeans')?.get('javaSupport.enabled') as boolean;
+}
+
 function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContext, log : vscode.OutputChannel, notifyKill: boolean,
     setClient : [(c : NbLanguageClient) => void, (err : any) => void]
 ): void {
@@ -692,6 +706,11 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
         let extras : string[] = ["--modules", "--list", "-J-XX:PerfMaxStringConstLength=10240"];
         if (isDarkColorTheme()) {
             extras.push('--laf', 'com.formdev.flatlaf.FlatDarkLaf');
+        }
+        if (isJavaSupportEnabled()) {
+            extras.push('--direct-disable', 'org.netbeans.modules.nbcode.integration.java');
+        } else {
+            extras.push('--enable', 'org.netbeans.modules.nbcode.integration.java');
         }
         let p = launcher.launch(info, ...extras);
         handleLog(log, "LSP server launching: " + p.pid);
@@ -777,7 +796,8 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
                 { language: 'xml', pattern: '**/pom.xml' },
                 { pattern: '**/build.gradle'}
         ];
-        const enableGroovy : boolean = conf.get("netbeans.groovySupport.enabled") || true;
+        const enableJava = isJavaSupportEnabled();
+        const enableGroovy : boolean = conf.get("netbeans.groovySupport.enabled") as boolean;
         if (enableGroovy) {
             documentSelectors.push({ language: 'groovy'});
         }
@@ -802,6 +822,7 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
                     'statusBarMessageSupport' : true,
                     'testResultsSupport' : true,
                     'showHtmlPageSupport' : true,
+                    'wantsJavaSupport' : enableJava,
                     'wantsGroovySupport' : enableGroovy
                 }
             },
@@ -829,7 +850,9 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
         );
         handleLog(log, 'Language Client: Starting');
         c.start().then(() => {
-            testAdapter = new NbTestAdapter();
+            if (isJavaSupportEnabled()) {
+                testAdapter = new NbTestAdapter();
+            }
             c.onNotification(StatusMessageRequest.type, showStatusBarMessage);
             c.onRequest(HtmlPageRequest.type, showHtmlPage);
             c.onNotification(LogMessageNotification.type, (param) => handleLog(log, param.message));
@@ -933,9 +956,11 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
             setClient[0](c);
             commands.executeCommand('setContext', 'nbJavaLSReady', true);
         
-            // create project explorer:
-            //c.findTreeViewService().createView('foundProjects', 'Projects', { canSelectMany : false });
-            createProjectView(context, c);
+            if (enableJava) {
+                // create project explorer:
+                //c.findTreeViewService().createView('foundProjects', 'Projects', { canSelectMany : false });
+                createProjectView(context, c);
+            }
 
             createDatabaseView(c);
             c.findTreeViewService().createView('cloud.resources', undefined, { canSelectMany : false });

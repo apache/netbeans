@@ -291,7 +291,7 @@
 -->
  <answer id="deploy-jar">
   <p>
-   docs/jakartaee-doc-api.jar, modules/docs/org-netbeans-modules-jakartaee-platform.jar
+   docs/jakartaee9-doc-api.jar, modules/docs/org-netbeans-modules-jakartaee-platform.jar
   </p>
  </answer>
 

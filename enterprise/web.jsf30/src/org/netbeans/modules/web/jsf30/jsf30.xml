@@ -30,7 +30,7 @@
     </volume>
     <volume>
         <type>javadoc</type>
-        <resource>jar:nbinst://org.netbeans.modules.j2ee.platform/docs/jakartaee9-doc-api.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.modules.jakartaee.platform/docs/jakartaee9-doc-api.jar!/</resource>
     </volume>
     <properties>
         <property>

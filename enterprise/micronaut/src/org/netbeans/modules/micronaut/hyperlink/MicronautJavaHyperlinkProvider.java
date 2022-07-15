@@ -61,10 +61,12 @@ import org.openide.util.Exceptions;
 import org.springframework.boot.configurationmetadata.ConfigurationMetadataProperty;
 
 /**
+ * CURRENTLY NOT ACTIVE - @MimeRegistration DISABLED to work around
+ * <a href="https://github.com/apache/netbeans/issues/3913">GITHUB-3913</a>
  *
  * @author Dusan Balek
  */
-@MimeRegistration(mimeType = "text/x-java", service = HyperlinkProviderExt.class, position = 1250)
+//@MimeRegistration(mimeType = "text/x-java", service = HyperlinkProviderExt.class, position = 1250)
 public class MicronautJavaHyperlinkProvider implements HyperlinkProviderExt {
 
     private static final Pattern INJECT = Pattern.compile("\\$\\{(\\S+)(:\\S*)?}");

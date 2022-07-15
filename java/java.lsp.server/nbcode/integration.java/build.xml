@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project name="org.netbeans.modules.nbcode.integration.java" default="netbeans" basedir=".">
+<project name="org.netbeans.modules.nbcode.integration.vscode.java" default="netbeans" basedir=".">
     <description>Builds, tests, and runs the project org.netbeans.modules.nbcode.integration.java.</description>
     <import file="nbproject/build-impl.xml"/>
 </project>

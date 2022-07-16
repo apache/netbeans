@@ -51,7 +51,7 @@ public final class GradleReport {
     }
     
     public static GradleReport simple(Path script, String message) {
-        return new GradleReport(null, script != null ? script.toString() : null, -1, message, null);
+        return new GradleReport(null, Objects.toString(script), -1, message, null);
     }
 
     public GradleReport(Path scriptLocation, String message, GradleReport causedBy) {

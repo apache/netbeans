@@ -1155,16 +1155,19 @@ fld public final static java.lang.String PERSISTENCEORM_ID = "SCHEMA:http://java
 fld public final static java.lang.String PERSISTENCEORM_NS = "http://java.sun.com/xml/ns/persistence/orm"
 fld public final static java.lang.String PERSISTENCE_ID = "SCHEMA:http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd"
 fld public final static java.lang.String PERSISTENCE_NS = "http://java.sun.com/xml/ns/persistence"
-fld public final static java.lang.String PERSISTENCEORM_3_ID = "SCHEMA:https://jakarta.ee/xml/ns/persistence/orm_3_0.xsd"
-fld public final static java.lang.String PERSISTENCEORM_3_NS = "https://jakarta.ee/xml/ns/persistence/orm"
-fld public final static java.lang.String PERSISTENCE_3_ID = "SCHEMA:https://jakarta.ee/xml/ns/persistence/persistence_3_0.xsd"
-fld public final static java.lang.String PERSISTENCE_3_NS = "https://jakarta.ee/xml/ns/persistence"
+fld public final static java.lang.String PERSISTENCEORM_3_0_ID = "SCHEMA:https://jakarta.ee/xml/ns/persistence/orm_3_0.xsd"
+fld public final static java.lang.String PERSISTENCEORM_3_0_NS = "https://jakarta.ee/xml/ns/persistence/orm"
+fld public final static java.lang.String PERSISTENCE_3_0_ID = "SCHEMA:https://jakarta.ee/xml/ns/persistence/persistence_3_0.xsd"
+fld public final static java.lang.String PERSISTENCE_3_0_NS = "https://jakarta.ee/xml/ns/persistence"
 fld public final static java.lang.String RI_CONFIG_NS = "http://java.sun.com/xml/ns/jax-rpc/ri/config"
 fld public final static java.lang.String WEBAPP_2_5_ID = "SCHEMA:http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+fld public final static java.lang.String WEBAPP_5_0_ID = "SCHEMA:https://jakarta.ee/xml/ns/jakartaee/web-app_5.0.xsd"
 fld public final static java.lang.String WEBSERVICES_1_1_ID = "SCHEMA:http://www.ibm.com/webservices/xsd/j2ee_web_services_1_1.xsd"
 fld public final static java.lang.String WEBSERVICES_1_2_ID = "SCHEMA:http://java.sun.com/xml/ns/javaee/javaee_web_services_1_2.xsd"
+fld public final static java.lang.String WEBSERVICES_2_0_ID = "SCHEMA:https://jakarta.ee/xml/ns/jakartaee/jakartaee_web_services_2_0.xsd"
 fld public final static java.lang.String WEBSERVICES_CLIENT_1_1_ID = "SCHEMA:http://java.sun.com/xml/ns/j2ee/j2ee_web_services_client_1_1.xsd"
 fld public final static java.lang.String WEBSERVICES_CLIENT_1_2_ID = "SCHEMA:http://java.sun.com/xml/ns/javaee/javaee_web_services_client_1_2.xsd"
+fld public final static java.lang.String WEBSERVICES_CLIENT_2_0_ID = "SCHEMA:https://jakarta.ee/xml/ns/jakartaee/jakarta_web_services_client_2_0.xsd"
 intf org.netbeans.modules.xml.catalog.spi.CatalogDescriptor2
 intf org.netbeans.modules.xml.catalog.spi.CatalogReader
 intf org.xml.sax.EntityResolver

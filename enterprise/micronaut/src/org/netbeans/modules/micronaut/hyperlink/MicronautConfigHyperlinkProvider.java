@@ -51,17 +51,19 @@ import org.springframework.boot.configurationmetadata.ConfigurationMetadataPrope
 import org.springframework.boot.configurationmetadata.ConfigurationMetadataSource;
 
 /**
+ * CURRENTLY NOT ACTIVE - @MimeRegistration DISABLED to work around 
+ * <a href="https://github.com/apache/netbeans/issues/3913">GITHUB-3913</a>
  *
  * @author Dusan Balek
  */
 public class MicronautConfigHyperlinkProvider implements HyperlinkProviderExt {
 
-    @MimeRegistration(mimeType = "text/x-yaml", service = HyperlinkProviderExt.class, position = 1250)
+    //@MimeRegistration(mimeType = "text/x-yaml", service = HyperlinkProviderExt.class, position = 1250)
     public static MicronautConfigHyperlinkProvider createYamlProvider() {
         return new MicronautConfigHyperlinkProvider();
     }
 
-    @MimeRegistration(mimeType = "text/x-properties", service = HyperlinkProviderExt.class, position = 1250)
+    //@MimeRegistration(mimeType = "text/x-properties", service = HyperlinkProviderExt.class, position = 1250)
     public static MicronautConfigHyperlinkProvider createPropertiesProvider() {
         return new MicronautConfigHyperlinkProvider();
     }
@@ -169,12 +171,12 @@ public class MicronautConfigHyperlinkProvider implements HyperlinkProviderExt {
 
     public static class LocationProvider implements HyperlinkLocationProvider {
 
-        @MimeRegistration(mimeType = "text/x-yaml", service = HyperlinkLocationProvider.class)
+        //@MimeRegistration(mimeType = "text/x-yaml", service = HyperlinkLocationProvider.class)
         public static LocationProvider createYamlProvider() {
             return new LocationProvider();
         }
 
-        @MimeRegistration(mimeType = "text/x-properties", service = HyperlinkLocationProvider.class)
+        //@MimeRegistration(mimeType = "text/x-properties", service = HyperlinkLocationProvider.class)
         public static LocationProvider createPropertiesProvider() {
             return new LocationProvider();
         }

@@ -121,7 +121,7 @@ public final class GradleProject implements Serializable, Lookup.Provider {
 
     public final GradleProject invalidate(String... reason) {
         GradleFiles gf = new GradleFiles(baseProject.getProjectDir(), true);
-        Path scriptPath = gf.getBuildScript().toPath();
+        Path scriptPath = gf.getBuildScript() != null ? gf.getBuildScript().toPath() : null;
         List<GradleReport> reports = new ArrayList<>();
         for (String s : reason) {
             reports.add(GradleReport.simple(scriptPath, s));

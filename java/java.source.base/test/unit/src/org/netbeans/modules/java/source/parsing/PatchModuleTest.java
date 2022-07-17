@@ -19,15 +19,26 @@
 
 package org.netbeans.modules.java.source.parsing;
 
-import com.sun.tools.javac.Main;
+import com.sun.tools.javac.api.JavacTool;
 import java.io.File;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 import javax.swing.event.ChangeListener;
+import javax.tools.ForwardingJavaFileManager;
+import javax.tools.JavaFileManager;
+import javax.tools.JavaFileManager.Location;
+import javax.tools.JavaFileObject;
+import javax.tools.JavaFileObject.Kind;
+import javax.tools.SimpleJavaFileObject;
 import static junit.framework.TestCase.assertEquals;
 import org.netbeans.api.java.queries.BinaryForSourceQuery;
+import org.netbeans.api.java.source.ClasspathInfo;
 import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.JavaSource.Phase;
@@ -36,6 +47,7 @@ import org.netbeans.api.java.source.Task;
 import org.netbeans.api.java.source.TestUtilities;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.java.source.tasklist.CompilerSettings;
+import org.netbeans.modules.java.source.usages.ClasspathInfoAccessor;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.netbeans.spi.java.queries.BinaryForSourceQueryImplementation;
@@ -71,18 +83,19 @@ public class PatchModuleTest extends NbTestCase {
         FileObject sourceModule = createFile("module-info.java", "module patch {}"); SourceUtilsTestUtil.setSourceLevel(sourceModule, "11");
         FileObject source1 = createFile("patch/Patch.java", "package patch; class Patch { Dep dep; }"); SourceUtilsTestUtil.setSourceLevel(source1, "11");
         FileObject source2 = createFile("patch/Dep.java", "package patch; class Dep { }"); SourceUtilsTestUtil.setSourceLevel(source2, "11");
-        File classDir = FileUtil.toFile(classRoot);
-        List<String> options = new ArrayList<>();
-        options.add("-d");
-        options.add(classDir.getAbsolutePath());
-        Enumeration<? extends FileObject> en = sourceRoot.getChildren(true);
-        while (en.hasMoreElements()) {
-            FileObject f = en.nextElement();
-            if (f.isData()) {
-                options.add(FileUtil.toFile(f).getAbsolutePath());
+        ClasspathInfo cpInfo = ClasspathInfo.create(sourceModule);
+        try (JavaFileManager fm = ClasspathInfoAccessor.getINSTANCE().createFileManager(cpInfo, "11");
+             JavaFileManager output = new OutputFileManager(fm)) {
+            List<JavaFileObject> files = new ArrayList<>();
+            Enumeration<? extends FileObject> en = sourceRoot.getChildren(true);
+            while (en.hasMoreElements()) {
+                FileObject f = en.nextElement();
+                if (f.isData()) {
+                    files.add(FileObjects.fileObjectFileObject(f, sourceRoot, null, null));
+                }
             }
+            assertTrue(JavacTool.create().getTask(null, output, null, null, null, files).call());
         }
-        assertEquals(0, Main.compile(options.toArray(new String[0])));
         JavaSource js = JavaSource.forFileObject(source1);
 
         js.runUserActionTask(new Task<CompilationController>() {
@@ -144,5 +157,26 @@ public class PatchModuleTest extends NbTestCase {
             return result;
         }
 
+    }
+
+    private class OutputFileManager extends ForwardingJavaFileManager {
+
+        public OutputFileManager(JavaFileManager fileManager) {
+            super(fileManager);
+        }
+
+        @Override
+        public JavaFileObject getJavaFileForOutput(Location location, String className, Kind kind, javax.tools.FileObject sibling) throws IOException {
+            try {
+                return new SimpleJavaFileObject(new URI("mem://" + className + kind.extension), kind) {
+                    @Override
+                    public OutputStream openOutputStream() throws IOException {
+                        return FileUtil.createData(classRoot, className.replace(".", "/") + kind.extension).getOutputStream();
+                    }
+                };
+            } catch (URISyntaxException ex) {
+                throw new IOException(ex);
+            }
+        }
     }
 }

@@ -39,6 +39,7 @@ public enum BindingsQName {
     public static final String JAKARTAEE_NS_URI = "https://jakarta.ee/xml/ns/jakartaee";
     public static final String JAVAEE_NS_PREFIX = "jws";
     public static final String JAXWS_NS_URI = "http://java.sun.com/xml/ns/jaxws";
+    public static final String JAKARTAEE_JAXWS_NS_URI = "https://jakarta.ee/xml/ns/jaxws";
     public static final String JAXWS_NS_PREFIX = "jaxws";
 
     public static QName createHandlerQName(String localName) {
@@ -46,7 +47,7 @@ public enum BindingsQName {
     }
 
     public static QName createBindingsQName(String localName) {
-        return new QName(JAXWS_NS_URI, localName, JAXWS_NS_PREFIX);
+        return new QName(JAKARTAEE_JAXWS_NS_URI, localName, JAXWS_NS_PREFIX);
     }
 
     BindingsQName(QName name) {
